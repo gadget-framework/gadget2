@@ -320,7 +320,7 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
         handle.logMessage("Calculating likelihood score for recaptures component", recname);
         check++;
       }
-     
+
       aggregator[t]->Sum(TimeInfo);
       const AgeBandMatrixPtrVector& alptr = aggregator[t]->returnSum();
 

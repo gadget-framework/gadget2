@@ -15,7 +15,7 @@ PopPredator::PopPredator(const char* givenname, const IntVector& Areas,
       dv[i] = GivenLgrpDiv->minLength(i);
     dv[i] = GivenLgrpDiv->maxLength(i - 1);
     LgrpDiv = new LengthGroupDivision(dv);
-  } else 
+  } else
     LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
 
   CI = new ConversionIndex(OtherLgrpDiv, LgrpDiv);

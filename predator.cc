@@ -124,7 +124,7 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
   strncpy(text, "", MaxStrLength);
 
   keeper->addString("suitabilityfor");
-  keeper->addString("fake");  //want to call clearLastAddString() next 
+  keeper->addString("fake");  //want to call clearLastAddString() next
 
   infile >> preyname >> ws;
   while (!(strcasecmp(preyname, FinalString) == 0) && infile.good()) {

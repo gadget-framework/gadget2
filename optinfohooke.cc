@@ -40,10 +40,10 @@ void OptInfoHooke::Read(CommentStream& infile, char* text) {
     } else {
       handle.logWarning("Warning in optinfofile - unknown option", text);
       infile >> text >> ws >> text >> ws;
-    } 
+    }
   }
 }
-  
+
 void OptInfoHooke::MaximizeLikelihood() {
   int i, nopt, count;
   double tmp;
@@ -52,13 +52,13 @@ void OptInfoHooke::MaximizeLikelihood() {
   DoubleVector lbds(nopt);
   DoubleVector ubds(nopt);
   DoubleVector initialval(nopt);
-  
+
   EcoSystem->ScaleVariables();
   EcoSystem->ScaledOptValues(val);
   EcoSystem->LowerBds(lbds);
   EcoSystem->UpperBds(ubds);
   EcoSystem->InitialOptValues(initialval);
-  
+
   double* startpoint = new double[nopt];
   double* endpoint = new double[nopt];
   double* upperb = new double[nopt];

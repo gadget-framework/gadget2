@@ -106,7 +106,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       infile >> text >> ws;
     }
     infile >> overcons >> ws;
-    
+
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
     readWordAndValue(infile, "lenaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);

@@ -544,7 +544,7 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec) const {
       else
         outfile << "\n; because the maximum number of function evaluations was reached\n";
     }
-      
+
     if (EcoSystem->getFuncEvalHJ() != 0) {
       outfile << "; the Hooke & Jeeves algorithm ran for " << EcoSystem->getFuncEvalHJ()
         << " function evaluations\n; and stopped when the likelihood value was "

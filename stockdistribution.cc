@@ -509,7 +509,7 @@ void StockDistribution::SummaryPrint(ofstream& outfile) {
     for (area = 0; area < likelihoodValues.Ncol(year); area++)
       outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
         << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(largewidth) << sdname << sep << setw(smallwidth) << weight << sep 
+        << setw(largewidth) << sdname << sep << setw(smallwidth) << weight << sep
         << setprecision(largeprecision) << setw(largewidth)
         << likelihoodValues[year][area] << endl;
 

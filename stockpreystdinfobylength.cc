@@ -27,10 +27,10 @@ void StockPreyStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
   timeratio = TimeInfo->LengthOfYear() / TimeInfo->LengthOfCurrent();
   for (l = 0; l < BconbyLength.Ncol(inarea); l++) {
     BconbyLength[inarea][l] = Bconsumption[l];
-    
+
     if (isZero(PopBylength[l].W))
       NconbyLength[inarea][l] = 0.0;
-    else 
+    else
       NconbyLength[inarea][l] = BconbyLength[inarea][l] / PopBylength[l].W;
 
     if (isZero(PopBylength[l].N))

@@ -59,7 +59,7 @@ void TimeClass::IncrementTime() {
     currentyear++;
     currentsubstep = 1;
     handle.logMessage("Increased time in the simulation to timestep", this->CurrentTime());
- 
+
   } else {
     currentstep++;
     currentsubstep = 1;

@@ -9,7 +9,7 @@ NaturalM::NaturalM(CommentStream& infile, int minage, int maxage, const TimeClas
   Keeper* const keeper) : mortality(maxage - minage + 1, minage), proportion(maxage - minage + 1, 0.0) {
 
   keeper->addString("naturalm");
-  mortality.read(infile, TimeInfo, keeper);  
+  mortality.read(infile, TimeInfo, keeper);
   this->Reset(TimeInfo);
   keeper->clearLast();
 }

@@ -13,14 +13,14 @@ OptInfo::OptInfo(MainInfo* MainInfo) {
   optBFGS   = NULL;
   // Initialise random number generator with system time [morten 02.02.26]
   srand(time(NULL));
-  if (MainInfo->getOptInfoGiven()){      
+  if (MainInfo->getOptInfoGiven()) {
     ReadOptInfo(MainInfo->optInfoFile());
     MainInfo->closeOptInfoFile();
   } else {
     handle.logMessage("Warning - no optinfofile given, using default information");
     useHJ = 1;
     optHJ = new OptInfoHooke();
-  } 
+  }
 }
 
 OptInfo::~OptInfo() {
@@ -42,7 +42,7 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
     if ((strcasecmp(text, "seed")) == 0 && (!infile.eof())) {
       handle.logMessage("Reading seed from optinfofile");
       infile >> seed >> ws >> text >> ws;
-      srand(seed);	
+      srand(seed);
 
     } else if (strcasecmp(text, "[simann]") == 0) {
       handle.logMessage("Reading Simulated Annealing parameters from optinfofile");
@@ -51,7 +51,7 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
       if (!infile.eof()) {
         infile >> text >> ws;
         optSimann->Read(infile, text);
-      } else 
+      } else
         handle.logWarning("Warning - no parameters specified for Simulated Annealing, using default values");
       useSimann = 1;
 
@@ -70,7 +70,7 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
       handle.logMessage("Reading BFGS parameters from optinfofile");
       optBFGS = new OptInfoBfgs();
 
-      if(!infile.eof()) {
+      if (!infile.eof()) {
         infile >> text >> ws;
         optBFGS->Read(infile,text);
       } else

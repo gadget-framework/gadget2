@@ -11,22 +11,22 @@
  * \brief This is the base class for the optimization, methods declared here are implemented in the derived classes
 */
 class OptSearch {
- public: 
+ public:
   /**
    * \brief This is the default constructor
    */
-  OptSearch(){};
+  OptSearch() {};
   /**
    * \brief This is the default destructor
    */
-  ~OptSearch(){};
-  virtual void Read(CommentStream& infile, char* text){};
-  virtual void MaximizeLikelihood(){};
+  ~OptSearch() {};
+  virtual void Read(CommentStream& infile, char* text) {};
+  virtual void MaximizeLikelihood() {};
 };
 
 /**
  * \class OptInfo
- * \brief This is the master class that syncronizes gadget's optimization 
+ * \brief This is the master class that syncronizes gadget's optimization
  */
 class OptInfo {
  public:
@@ -204,7 +204,7 @@ class OptInfoBfgs : public OptSearch  {
  private:
   int iteration(double* x0);
   void gradient(double* p, double fp);
-  int gaussian(double mult);  
+  int gaussian(double mult);
   double linesearch();
   double* gk;        //new gradient direction
   double* g0;        //old gradient direction
@@ -214,9 +214,9 @@ class OptInfoBfgs : public OptSearch  {
   double fk;         //current function value
   double (*f)(double*, int);
   int numvar;
-  int maxiter;
-  double eps;
   double rho;        //linesearch convergence parameters
   double tau;        //---------------------------------
+  int maxiter;
+  double eps;
 };
 #endif

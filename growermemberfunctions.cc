@@ -15,7 +15,7 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
 
   if (isZero(Lengths->dl()))
     handle.logFailure("Error in growth - recieved illegal value for length step");
-    
+
   int inarea = AreaNr[area];
   int type = getGrowthType();
   double tmpMult = getMultValue();

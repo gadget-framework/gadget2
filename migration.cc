@@ -157,7 +157,7 @@ const DoubleMatrix& Migration::Migrationmatrix(const TimeClass* const TimeInfo, 
         return *CalcMigList[MatrixNumbers[AgeNr[age]][TimeInfo->CurrentTime()]];
 
     handle.logFailure("Error in migration - failed to match age", age);
-  } 
+  }
 
   return *CalcMigList[MatrixNumbers[0][TimeInfo->CurrentTime()]];
 }

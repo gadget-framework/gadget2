@@ -58,7 +58,7 @@ protected:
   virtual double CalculateLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum) = 0;
   DoubleMatrixPtrMatrix stomachcontent;   //[timeindex][areas][pred_l][prey_l]
   DoubleMatrixPtrMatrix modelConsumption; //[timeindex][areas][pred_l][prey_l]
-  DoubleMatrix likelihoodValues;          //[time][area] 
+  DoubleMatrix likelihoodValues;          //[time][area]
   CharPtrVector predatornames;
   CharPtrMatrix preynames;
   CharPtrVector areaindex;

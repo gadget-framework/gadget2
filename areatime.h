@@ -140,14 +140,14 @@ public:
   double LengthOfYear() const { return lengthofyear; };
   /**
    * \brief This will return the length of the specified step of the model simulation
-   * \param step is the specified timestep 
+   * \param step is the specified timestep
    * \return length of step
    */
   double LengthOfStep(int step) const { return timesteps[step]; };
   /**
    * \brief This will return the total number of timesteps that have taken place in the simulation from the start of the model simulation until a specifed year and step
-   * \param year is the specified year 
-   * \param step is the specified step 
+   * \param year is the specified year
+   * \param step is the specified step
    * \return number of timesteps taken
    */
   int CalcSteps(int year, int step) const {
@@ -169,8 +169,8 @@ public:
   void IncrementTime();
   /**
    * \brief This is the function that will check to see if specified year and step are within the time period covered by the model simulation
-   * \param year is the specified year 
-   * \param step is the specified step 
+   * \param year is the specified year
+   * \param step is the specified step
    * \return 1 if the timestep is within the model period, 0 otherwise
    */
   int IsWithinPeriod(int year, int step) const;

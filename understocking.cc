@@ -118,7 +118,7 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
       likelihoodValues.AddRows(1, areas.Nrow(), 0.0);
       for (k = 0; k < areas.Nrow(); k++)
         likelihoodValues[likelihoodValues.Nrow() - 1][k] = store[k];
-        
+
       handle.logMessage("The likelihood score for this component on this timestep is", l);
       likelihood += l;
     }
@@ -159,8 +159,8 @@ void UnderStocking::SummaryPrint(ofstream& outfile) {
   for (year = 0; year < likelihoodValues.Nrow(); year++)
     for (area = 0; area < likelihoodValues.Ncol(year); area++)
       outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
-        << Steps[year] << sep << setw(printwidth) << areaindex[area] 
-        << " understocking"  << setw(smallwidth) << weight << sep 
+        << Steps[year] << sep << setw(printwidth) << areaindex[area]
+        << " understocking"  << setw(smallwidth) << weight << sep
         << setprecision(largeprecision) << setw(largewidth)
         << likelihoodValues[year][area] << endl;
 

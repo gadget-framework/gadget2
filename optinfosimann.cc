@@ -60,7 +60,7 @@ void OptInfoSimann::Read(CommentStream& infile, char* text) {
     } else {
       handle.logWarning("Warning in optinfofile - unknown option", text);
       infile >> text >> ws >> text >> ws;
-    }  
+    }
   }
 }
 

@@ -24,7 +24,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
 
   //default value is to print biomass
   biomass = 1;
-  
+
   //read in the predator names
   i = 0;
   infile >> text >> ws;
@@ -191,7 +191,7 @@ void PredatorPrinter::Print(const TimeClass* const TimeInfo) {
     aggregator->Sum();
   else
     aggregator->NumberSum();
-    
+
   int i, j, k;
   for (i = 0; i < areas.Nrow(); i++) {
     const BandMatrix* bptr = &aggregator->returnSum()[i];

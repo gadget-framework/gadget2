@@ -236,7 +236,7 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
   double xp[NUMVARS];
   int param[NUMVARS];   //Vector containing the order of the parameters at each time
 
-  
+
   //check the values specified in the optinfo file ...
   if ((uratio < 0.5) || (uratio > 1)) {
     cout << "\nError in value of uratio - setting to default value of 0.7\n";

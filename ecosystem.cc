@@ -272,7 +272,7 @@ void Ecosystem::writeLikeSummaryInformation(const char* filename) const {
   int i;
   for (i = 0; i < Likely.Size(); i++)
     Likely[i]->SummaryPrint(outfile);
-    
+
   handle.Close();
   outfile.close();
   outfile.clear();

@@ -137,7 +137,7 @@ int readVectorInLine(CommentStream& infile, ParameterVector& Vec) {
     if (i == Vec.Size())
       Vec.resize(1);
     istr >> Vec[i];
-    if (istr.fail() && !istr.eof()) 
+    if (istr.fail() && !istr.eof())
       return 0;
 
     istr >> ws;
