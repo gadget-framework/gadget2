@@ -86,7 +86,7 @@ protected:
   ActionAtTimes AAT;
   /**
    * \brief This is a flag used to denote whether the printing takes place at the start or the end of the timestep
-   * \note the default value is 1, which corresponds to printing at the end of the timestep
+   * \note the default value is 0, which corresponds to printing at the end of the timestep
    */
   int printtimeid;
 private:

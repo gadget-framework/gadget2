@@ -40,7 +40,7 @@ MortPrinter::MortPrinter(CommentStream& infile,
   sumM2 = 0;
   sumN = 0;
   totalNbar = 0;
-  printtimeid = 1; //not used
+  printtimeid = 0; //not used
 
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
@@ -171,7 +171,7 @@ void MortPrinter::setStock(StockPtrVector& stockvec) {
  */
 void MortPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
-  if (printtime == 0)
+  if (printtime == 1)
     return;
 
   int s, i, j, area, inarea, age, yo;

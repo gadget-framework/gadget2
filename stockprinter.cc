@@ -88,10 +88,10 @@ StockPrinter::StockPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "printatend") == 0)
+  if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
   else
-    printtimeid = 1;
+    printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
     handle.Message("Error in stockprinter - invalid value of printatend");
@@ -116,7 +116,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
 
-  if (printtimeid == 1)
+  if (printtimeid == 0)
     outfile << "\n; Printing the following information at the end of each timestep";
   else
     outfile << "\n; Printing the following information at the start of each timestep";

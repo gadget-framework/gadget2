@@ -75,10 +75,10 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
   outfile.flush();
 
   infile >> text >> ws;
-  if (strcasecmp(text, "printatend") == 0)
+  if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
   else
-    printtimeid = 1;
+    printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
     handle.Message("Error in formatedchatprinter - invalid value of printatend");

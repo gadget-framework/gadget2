@@ -104,7 +104,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
 
     if (print)
       for (j = 0; j < printvec.Size(); j++)
-        printvec[j]->Print(TimeInfo, 0);  //start of timestep, so printtime is 0
+        printvec[j]->Print(TimeInfo, 1);  //start of timestep, so printtime is 1
 
     if (TimeInfo->CurrentStep() == 1) //Migration calculated once per year.
       for (j = 0; j < basevec.Size(); j++)
@@ -117,7 +117,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
 
     if (print)
       for (j = 0; j < printvec.Size(); j++)
-        printvec[j]->Print(TimeInfo, 1);  //end of timestep, so printtime is 1
+        printvec[j]->Print(TimeInfo, 0);  //end of timestep, so printtime is 0
 
     for (j = 0; j < Area->numAreas(); j++)
       updateAgesOneArea(j);

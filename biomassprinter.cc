@@ -33,7 +33,7 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
   strncpy(text, "", MaxStrLength);
   int i;
 
-  printtimeid = 1; //not used
+  printtimeid = 0; //not used
   //read in the immatrure stock name
   immname = new char[MaxStrLength];
   strncpy(immname, "", MaxStrLength);
@@ -155,7 +155,7 @@ void BiomassPrinter::setStock(StockPtrVector& stockvec) {
 
 void BiomassPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
-  if (printtime == 0)
+  if (printtime == 1)
     return;
 
   int i, a, y, area, minagem, maxagem;

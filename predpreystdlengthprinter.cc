@@ -16,7 +16,7 @@ PredPreyStdLengthPrinter::PredPreyStdLengthPrinter(CommentStream& infile,
   RUNID.print(outfile);
   outfile << "; Predation file by length for predator " << predname << " and prey " << preyname;
 
-  if (printtimeid == 1)
+  if (printtimeid == 0)
     outfile << "\n; Printing the following information at the end of each timestep";
   else
     outfile << "\n; Printing the following information at the start of each timestep";

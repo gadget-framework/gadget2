@@ -43,7 +43,7 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile,
   printCatch = 0;
   printSurvey = 0;
   printStomach = 0;
-  printtimeid = 1; //not used
+  printtimeid = 0; //not used
   infile >> text >> ws;
   while (!(strcasecmp(text, "[component]")==0) && !infile.eof()) {
     if ((strcasecmp(text, "catchfile") == 0)) {
@@ -123,7 +123,7 @@ void LikelihoodPrinter::setLikely(LikelihoodPtrVector& likevec) {
  */
 void LikelihoodPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
-  if (printtime == 0)
+  if (printtime == 1)
     return;
 
   int i;

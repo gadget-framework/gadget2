@@ -64,10 +64,10 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "printatend") == 0)
+  if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
   else
-    printtimeid = 1;
+    printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
     handle.Message("Error in stockpreyfullprinter - invalid value of printatend");
@@ -90,7 +90,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   RUNID.print(outfile);
   outfile << "; Output file for the prey " << stockname;
   
-  if (printtimeid == 1)
+  if (printtimeid == 0)
     outfile << "\n; Printing the following information at the end of each timestep";
   else
     outfile << "\n; Printing the following information at the start of each timestep";
