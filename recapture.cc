@@ -97,7 +97,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
       }
     }
     if (check == 0) {
-      cerr << "Error: when searching for names of tags for recaptures data\n"
+      cerr << "Error - when searching for names of tags for recaptures data\n"
        << "Did not find any name matching " << tagid[j] << endl;
       exit(EXIT_FAILURE);
     }
@@ -237,7 +237,7 @@ void Recaptures::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       }
 
     if (found == 0) {
-      cerr << "Error: when searching for names of fleets for recaptures data\n"
+      cerr << "Error - when searching for names of fleets for recaptures data\n"
         << "Did not find any name matching " << fleetnames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -260,7 +260,7 @@ void Recaptures::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
         }
       }
       if (found == 0) {
-        cerr << "Error: when searching for names of stocks for recaptures data\n"
+        cerr << "Error - when searching for names of stocks for recaptures data\n"
           << "Did not find any name matching " << stocknames->operator[](j) << endl;
         exit(EXIT_FAILURE);
       }
@@ -271,7 +271,7 @@ void Recaptures::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       for (l = 0; l < areas.Ncol(i); l++)
         for (j = 0; j < stocks.Size(); j++)
           if (!stocks[j]->IsInArea(areas[i][l])) {
-            cerr << "Error: when reading recaptures data on the area " << areas[i][l]
+            cerr << "Error - when reading recaptures data on the area " << areas[i][l]
               << "\nfor the stock " << stocks[j]->Name() << " which does not live on that area\n";
             exit(EXIT_FAILURE);
           }

@@ -1,5 +1,4 @@
 #include "commentstream.h"
-#include "gadget.h"
 
 istream& operator >> (istream& istr, Whitespace& ws) {
   int ch;

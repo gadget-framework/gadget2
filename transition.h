@@ -74,6 +74,10 @@ public:
    * \param tagname is the name of the tagging experiment
    */
   void DeleteTag(const char* tagname);
+  /**
+   * \brief This function will reset the transition data
+   */
+  void Reset();
 protected:
   /**
    * \brief This is the StockPtrVector of the stocks that the young stock will move to
@@ -96,7 +100,7 @@ protected:
    */
   LengthGroupDivision* LgrpDiv;
   /**
-   * \brief This is the timestep that the movement betwen stocks will occur on
+   * \brief This is the timestep that the movement between stocks will occur on
    */
   int TransitionStep;
   /**
@@ -111,6 +115,10 @@ protected:
    * \brief This is the age that the younger stock will move into the older stocks
    */
   int age;
+  /**
+   * \brief This is the minimum length group of the younger stock that exists in the older stock
+   */
+  int minLength;
 };
 
 #endif

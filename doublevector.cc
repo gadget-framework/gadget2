@@ -181,7 +181,7 @@ DoubleVector& DoubleVector::operator -= (const DoubleVector& d) {
 
 double DoubleVector::operator * (const DoubleVector& d) const {
   if (size !=d.Size()) {
-    cerr << "Error: vectors must be of equal length for multiplication!\n";
+    cerr << "Error - vectors must be of equal length for multiplication!\n";
     exit(EXIT_FAILURE);
   }
   double result = 0;

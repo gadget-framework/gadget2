@@ -253,7 +253,7 @@ void CatchInTons::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
       }
 
     if (found == 0) {
-      cerr << "Error: when searching for names of fleets for catchintons.\n"
+      cerr << "Error when searching for names of fleets for catchintons.\n"
         << "Did not find any name matching " << fleetnames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -269,7 +269,7 @@ void CatchInTons::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
         }
     }
     if (found == 0) {
-      cerr << "Error: when searching for names of stocks for catchintons.\n"
+      cerr << "Error when searching for names of stocks for catchintons.\n"
         << "Did not find any name matching " << stocknames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -287,7 +287,7 @@ void CatchInTons::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
         }
 
     if (found == 0)
-      cerr << "Warning: when searching for names of stocks and fleets for catchintons.\n"
+      cerr << "Warning when searching for names of stocks and fleets for catchintons.\n"
         << "Fleet " << fleetnames[i] << " is not catching any of the included stocks\n";
   }
 

@@ -85,12 +85,12 @@ void StockPtrVector::Delete(int pos) {
 
 StockPtrVector& StockPtrVector::operator = (const StockPtrVector& d) {
   if (this == &d)
-    return(*this);
+    return *this;
   int i;
   if (size == d.size) {
     for (i = 0; i < size; i++)
       v[i] = d[i];
-    return(*this);
+    return *this;
   }
   if (v != 0) {
     delete[] v;

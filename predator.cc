@@ -34,28 +34,31 @@ void Predator::SetPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
           preys[j] = preyvec[i];
           found = 1;
         } else {
-          cerr << "Error: It seems as if the predator " << this->Name()
-            << "\nhas read suitability for "
-            << (const char*)(preyvec[i]->Name()) << " twice.\n";
+          cerr << "Error - the predator " << this->Name() << " has read suitability for "
+            << (const char*)(preyvec[i]->Name()) << " twice\n";
           exit(EXIT_FAILURE);
         }
       }
     }
   }
 
-  for (i = 0; i < preys.Size(); i++)
+  found = 0;
+  for (i = 0; i < preys.Size(); i++) {
     //If we find a prey that we have read the suitability for, but not
     //received a pointer to, we issue a warning and delete it through the
     //virtual function DeleteParametersForPrey.
     if (preys[i] == 0) {
-      cerr << "Warning: The predator " << this->Name()  << " read suitability for "
+      found++;
+      cerr << "Warning - the predator " << this->Name()  << " read suitability for "
         << this->Preyname(i) << "\nwhich was not found in the input files.\n";
       this->DeleteParametersForPrey(i, keeper);
       //This function allows derived classes to delete the information they keep.
       //Since we have deleted element no. i from the vectors, we must take
       //care not to miss the element that is now no. i
-      i--;
+      if (found != preys.Size())
+        i--;
     }
+  }
   //Now we can resize objects according to the size of this->NoPreys().
   this->ResizeObjects();
 }

@@ -100,7 +100,7 @@ void PredPreyStdPrinter::SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
     if (stockvec[i]->DoesEat()) {
       if (strcasecmp(stockvec[i]->ReturnPredator()->Name(), predname) == 0) {
         if (predator) {
-          cerr << "Error: Found more than one predator with the name " << predname << endl;
+          cerr << "Error - found more than one predator with the name " << predname << endl;
           exit(EXIT_FAILURE);
         }
         stockpred = 1;
@@ -110,7 +110,7 @@ void PredPreyStdPrinter::SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
     if (stockvec[i]->IsEaten()) {
       if (strcasecmp(stockvec[i]->ReturnPrey()->Name(), preyname) == 0) {
         if (prey) {
-          cerr << "Error: found more than one prey with the name " << preyname << endl;
+          cerr << "Error - found more than one prey with the name " << preyname << endl;
           exit(EXIT_FAILURE);
         }
         stockprey = 1;
@@ -123,7 +123,7 @@ void PredPreyStdPrinter::SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
   for (i = 0; i < predvec.Size(); i++) {
     if (strcasecmp(predvec[i]->Name(), predname) == 0) {
       if (predvec[i] != predator && predator) {
-        cerr << "Error: found more than one predator with the name " << predname << endl;
+        cerr << "Error - found more than one predator with the name " << predname << endl;
         exit(EXIT_FAILURE);
       }
       predator = predvec[i];
@@ -134,7 +134,7 @@ void PredPreyStdPrinter::SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
   for (i = 0; i < preyvec.Size(); i++) {
     if (strcasecmp(preyvec[i]->Name(), preyname) == 0) {
       if (preyvec[i] != prey && prey) {
-        cerr << "Error: found more than one prey with the name " << preyname << endl;
+        cerr << "Error - found more than one prey with the name " << preyname << endl;
         exit(EXIT_FAILURE);
       }
       prey = preyvec[i];
@@ -142,21 +142,21 @@ void PredPreyStdPrinter::SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
   }
 
   if (prey == 0)
-    cerr << "Error: found no prey with the name " << preyname << endl;
+    cerr << "Error - found no prey with the name " << preyname << endl;
   if (predator == 0)
-    cerr << "Error: found no predator with the name " << predname << endl;
+    cerr << "Error - found no predator with the name " << predname << endl;
   if (prey == 0 || predator == 0)
     exit(EXIT_FAILURE);
 
   for (i = 0; i < areas.Size(); i++)
     if (!prey->IsInArea(areas[i])) {
-      cerr << "Error: prey " << preyname << " is not defined on area " << i << endl;
+      cerr << "Error - prey " << preyname << " is not defined on area " << i << endl;
       exit(EXIT_FAILURE);
     }
 
   for (i = 0; i < areas.Size(); i++)
     if (!predator->IsInArea(areas[i])) {
-      cerr << "Error: predator " << predname << " is not defined on area " << i << endl;
+      cerr << "Error - predator " << predname << " is not defined on area " << i << endl;
       exit(EXIT_FAILURE);
     }
 

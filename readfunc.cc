@@ -28,7 +28,7 @@ int readMatrix(CommentStream& infile, DoubleMatrix& M) {
       if (!infile.fail())
         M[i][j] = N;
       else {
-        cerr << "Warning: Could not read data file in readmatrix\n"
+        cerr << "Warning - could not read data file in readmatrix\n"
           << "Last character read was " << c << endl;
         return 0;
       }
@@ -184,7 +184,7 @@ int read2ColVector(CommentStream& infile, DoubleMatrix& M) {
       if (!infile.fail())
         M[i][j] = N;
       else {
-        cerr << "Warning: could not read data file in read2colvector\n";
+        cerr << "Warning - could not read data file in read2colvector\n";
         return 0;
       }
     }

@@ -48,8 +48,8 @@ void GrowthCalcA::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
-  const double stepsize = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-  const double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
+  double stepsize = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
+  double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
 
   int i;
   double tempL, tempW;
@@ -63,9 +63,8 @@ void GrowthCalcA::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
     if (GrEatNumber[i].W < verysmall)
       Wgrowth[i] = 0.0;
-    else {
+    else
       Wgrowth[i] = tempW * pow(GrEatNumber[i].W, growthPar[5]) * (Fphi[i] - growthPar[6]);
-    }
   }
 }
 
@@ -132,7 +131,7 @@ void GrowthCalcB::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
   int i;
-  const int inarea = AreaNr[area];
+  int inarea = AreaNr[area];
   DoubleVector l((*lgrowth[inarea])[TimeInfo->CurrentTime()].Size());
   DoubleVector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
 
@@ -240,10 +239,10 @@ void GrowthCalcC::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
-  const double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-  const double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
-  const double ratio = lgrowthPar[0] + lgrowthPar[8] * (lgrowthPar[1] + lgrowthPar[2] * lgrowthPar[8]);
-  const double tempW = stepsize * wgrowthPar[0] * exp(wgrowthPar[1] * Temperature);
+  double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
+  double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
+  double ratio = lgrowthPar[0] + lgrowthPar[8] * (lgrowthPar[1] + lgrowthPar[2] * lgrowthPar[8]);
+  double tempW = stepsize * wgrowthPar[0] * exp(wgrowthPar[1] * Temperature);
 
   int i;
   double x, fx;
@@ -272,7 +271,7 @@ void GrowthCalcC::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
       } else {
         x = (GrEatNumber[i].W - ratio * Wref[i]) / GrEatNumber[i].W;
         fx = lgrowthPar[3] + lgrowthPar[4] * x;
-        if (fx < 0)
+        if (fx < verysmall)
           fx = 0.0;
         if (fx > lgrowthPar[5])
           fx = lgrowthPar[5];
@@ -372,9 +371,9 @@ void GrowthCalcD::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
-  const double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-  const double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
-  const double tempW = stepsize * exp(wgrowthPar[4] * Temperature + wgrowthPar[5]) * TimeInfo->NrOfSubsteps();
+  double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
+  double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
+  double tempW = stepsize * exp(wgrowthPar[4] * Temperature + wgrowthPar[5]) * TimeInfo->NrOfSubsteps();
 
   int i;
   double ratio, fx, x;
@@ -403,7 +402,7 @@ void GrowthCalcD::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
         ratio = lgrowthPar[0] + Fphi[i] * (lgrowthPar[1] + lgrowthPar[2] * Fphi[i]);
         x = (GrEatNumber[i].W - ratio * Wref[i]) / GrEatNumber[i].W;
         fx = lgrowthPar[3] + lgrowthPar[4] * x;
-        if (fx < 0)
+        if (fx < verysmall)
           fx = 0.0;
         if (fx > lgrowthPar[5])
           fx = lgrowthPar[5];
@@ -537,13 +536,12 @@ void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
-  const double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-  const double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
-  const double factor = yearEffect[TimeInfo->CurrentYear() - TimeInfo->FirstYear()]
-                        * stepEffect[TimeInfo->CurrentStep() - 1]
-                        * areaEffect[AreaNr[area]];
-  const double ratio = lgrowthPar[0] + lgrowthPar[8] * (lgrowthPar[1] + lgrowthPar[2] * lgrowthPar[8]);
-  const double tempW = factor * stepsize * wgrowthPar[0] * exp(wgrowthPar[1] * Temperature);
+  double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
+  double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
+  double factor = yearEffect[TimeInfo->CurrentYear() - TimeInfo->FirstYear()]
+                    * stepEffect[TimeInfo->CurrentStep() - 1] * areaEffect[AreaNr[area]];
+  double ratio = lgrowthPar[0] + lgrowthPar[8] * (lgrowthPar[1] + lgrowthPar[2] * lgrowthPar[8]);
+  double tempW = factor * stepsize * wgrowthPar[0] * exp(wgrowthPar[1] * Temperature);
 
   int i;
   double x, fx;
@@ -570,7 +568,7 @@ void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
       } else {
         x = (GrEatNumber[i].W - ratio * Wref[i]) / GrEatNumber[i].W;
         fx = lgrowthPar[3] + lgrowthPar[4] * x;
-        if (fx < 0)
+        if (fx < verysmall)
           fx = 0.0;
         if (fx > lgrowthPar[5])
           fx = lgrowthPar[5];
@@ -648,8 +646,8 @@ void GrowthCalcF::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
-  const double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-  const int inarea = AreaNr[area];
+  int inarea = AreaNr[area];
+  double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   double kval = k_values[TimeInfo->CurrentYear() - TimeInfo->FirstYear()] * stepsize;
 
   int i;
@@ -733,8 +731,8 @@ void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   //written by kgf 24/10 00
   //Gives linear growth (Growthpar[0] == 0) or
   //growth decreasing with length (Growthpar[0] < 0).
-  const double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-  const int inarea = AreaNr[area];
+  int inarea = AreaNr[area];
+  double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   double kval = k_values[TimeInfo->CurrentYear() - TimeInfo->FirstYear()] * stepsize;
 
   int i;
@@ -800,7 +798,7 @@ void GrowthCalcH::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
-  const double mult = 1.0 - exp(-growthPar[1] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
+  double mult = 1.0 - exp(-growthPar[1] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
 
   //JMB - first some error checking
   if (isZero(growthPar[1]) || isZero(growthPar[2]))

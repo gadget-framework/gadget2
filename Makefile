@@ -78,7 +78,7 @@ VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 	vectorofcharptr.o suitfuncptrvector.o tagptrvector.o printerptrvector.o \
 	formulamatrixptrvector.o variableinfoptrvector.o agebandmatrixptrmatrix.o
 
-GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregator.o \
+GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.o \
 	predatorindex.o abstrpredstdinfo.o abstrpreystdinfo.o catchdistribution.o \
 	predatorprinter.o abstrpreystdinfobylength.o predatoroveraggregator.o \
 	actionattimes.o predatoroverprinter.o addresskeeper.o predprey.o strstack.o \
@@ -100,12 +100,12 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	stockstdprinter.o maturity.o suitfunc.o suits.o stomachcontent.o runid.o \
 	migration.o variableinfo.o binarytree.o vectorusingkeeper.o recaggregator.o \
 	surveyindices.o migrationpenalty.o recapture.o stock.o readaggregation.o \
-	migvariables.o multinomial.o totalpredator.o naturalm.o optinfo.o gadget.o \
-	transition.o otherfood.o mathfunc.o understocking.o poppredator.o tags.o \
+	migvariables.o multinomial.o totalpredator.o understocking.o poppredator.o \
+	transition.o otherfood.o mathfunc.o recstatistics.o spawnfunc.o optinfo.o\
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
-	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o \
+	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o tags.o \
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \
-	taggrow.o initialinputfile.o popratio.o popinfo.o recstatistics.o \
+	taggrow.o initialinputfile.o popratio.o naturalm.o predator.o popinfo.o \
 	agebandmatrixratio.o ludecomposition.o popinfomemberfunctions.o \
 	agebandmatrixratiomemberfunctions.o
 
@@ -120,10 +120,12 @@ LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
 gadget	:	$(OBJECTS) libvec.a
 	$(CXX) -o gadget $(OBJECTS) $(LDFLAGS)
 
-libvec.a: $(VECTORS)
+libvec.a:	$(VECTORS)
 	ar rs libvec.a $?
-install: gadget
-	mv gadget ../../bin
+
+install	:	gadget
+	cp gadget ../../bin
+
 ##########################################################################
 # The following line is needed to create the gadget input library
 # for newer versions of paramin.  To create this library, you need
@@ -131,9 +133,11 @@ install: gadget
 ##########################################################################
 libgadgetinput.a: $(GADGETINPUT)
 	ar rs libgadgetinput.a $?
-clean:
+
+clean	:
 	rm -f $(OBJECTS) $(VECTORS) libvec.a libgadgetinput.a
-depend:
+
+depend	:
 	$(CXX) -M -MM $(CXXFLAGS) *.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.

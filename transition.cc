@@ -59,7 +59,7 @@ void Transition::SetStock(StockPtrVector& stockvec) {
       }
 
   if (index != TransitionStockNames.Size()) {
-    cerr << "Error: Did not find the stock(s) matching:\n";
+    cerr << "Error -did not find all the stock(s) matching:\n";
     for (i = 0; i < TransitionStockNames.Size(); i++)
       cerr << (const char*)TransitionStockNames[i] << sep;
     cerr << "\nwhen searching for transition stock(s) - found only:\n";
@@ -80,7 +80,8 @@ void Transition::SetStock(StockPtrVector& stockvec) {
   for (i = 0; i < numstocks; i++)
     CI[i] = new ConversionIndex(LgrpDiv, TransitionStocks[i]->ReturnLengthGroupDiv());
 
-  //JMB - check that the tranistion stocks are defined on the areas
+  //JMB - check that the transition stocks are defined on the areas
+  double mlength = 9999.0;
   for (i = 0; i < numstocks; i++) {
     index = 0;
     for (j = 0; j < areas.Size(); j++)
@@ -88,14 +89,18 @@ void Transition::SetStock(StockPtrVector& stockvec) {
         index++;
 
     if (index != 0)
-      cerr << "Warning: transition requested to stock " << (const char*)TransitionStocks[i]->Name()
+      cerr << "Warning - transition requested to stock " << (const char*)TransitionStocks[i]->Name()
         << "\nwhich might not be defined on " << index << " areas\n";
+
+    if (TransitionStocks[i]->ReturnLengthGroupDiv()->Minlength(0) < mlength)
+      mlength = TransitionStocks[i]->ReturnLengthGroupDiv()->Minlength(0);
   }
 
   IntVector minlv(2, 0);
   IntVector sizev(2, LgrpDiv->NoLengthGroups());
   AgeGroup.resize(areas.Size(), age, minlv, sizev);
   TagAgeGroup.resize(areas.Size(), age, minlv, sizev);
+  minLength = LgrpDiv->NoLengthGroup(mlength);
 }
 
 void Transition::Print(ofstream& outfile) const {
@@ -118,15 +123,17 @@ void Transition::KeepAgegroup(int area, AgeBandMatrix& Alkeys,
   double tagnumber;
 
   if (TimeInfo->CurrentStep() == TransitionStep) {
-    AgeGroup[inarea].SettoZero();
-    TagAgeGroup[inarea].SettoZero();
     minl = AgeGroup[inarea].Minlength(age);
     maxl = AgeGroup[inarea].Maxlength(age);
     for (l = minl; l < maxl; l++) {
       AgeGroup[inarea][age][l].N = Alkeys[age][l].N;
       AgeGroup[inarea][age][l].W = Alkeys[age][l].W;
-      Alkeys[age][l].N = 0.0;
-      Alkeys[age][l].W = 0.0;
+
+      if (l >= minLength) {
+        Alkeys[age][l].N = 0.0;
+        Alkeys[age][l].W = 0.0;
+      }
+
       for (i = 0; i < numtags; i++) {
         tagnumber = *(TagAlkeys[age][l][i].N);
         if (tagnumber < verysmall)
@@ -148,7 +155,7 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
   if (TimeInfo->CurrentStep() == TransitionStep) {
     for (s = 0; s < TransitionStocks.Size(); s++) {
       if (!TransitionStocks[s]->IsInArea(area)) {
-        cerr << "Error: Transition to stock " << (const char*)(TransitionStocks[s]->Name())
+        cerr << "Error - transition to stock " << (const char*)(TransitionStocks[s]->Name())
           << " cannot take place on area " << area << " since it doesnt live there!\n";
         exit(EXIT_FAILURE);
       }
@@ -170,6 +177,14 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
   }
 }
 
+void Transition::Reset() {
+  int i;
+  for (i = 0; i < AgeGroup.Size(); i++) {
+    AgeGroup[i].SettoZero();
+    TagAgeGroup[i].SettoZero();
+  }
+}
+
 const StockPtrVector& Transition::GetTransitionStocks() {
   return TransitionStocks;
 }
@@ -179,7 +194,7 @@ void Transition::AddTag(const char* tagname) {
 }
 
 void Transition::DeleteTag(const char* tagname) {
-  int minage, maxage, minlen, maxlen, age, length, i;
+  int minage, maxage, minlen, maxlen, a, length, i;
   int id = TagAgeGroup.getId(tagname);
 
   if (id >= 0) {
@@ -188,12 +203,12 @@ void Transition::DeleteTag(const char* tagname) {
 
     // Remove allocated memory
     for (i = 0; i < TagAgeGroup.Size(); i++) {
-      for (age = minage; age <= maxage; age++) {
-        minlen = TagAgeGroup[i].Minlength(age);
-        maxlen = TagAgeGroup[i].Maxlength(age);
+      for (a = minage; a <= maxage; a++) {
+        minlen = TagAgeGroup[i].Minlength(a);
+        maxlen = TagAgeGroup[i].Maxlength(a);
         for (length = minlen; length < maxlen; length++) {
-          delete[] (TagAgeGroup[i][age][length][id].N);
-          (TagAgeGroup[i][age][length][id].N) = NULL;
+          delete[] (TagAgeGroup[i][a][length][id].N);
+          (TagAgeGroup[i][a][length][id].N) = NULL;
         }
       }
     }

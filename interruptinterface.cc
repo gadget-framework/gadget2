@@ -39,22 +39,26 @@ int InterruptInterface::menu() {
   printMenu();
   char s[MaxStrLength];
   s[0] = 0;
-  while (s[0] != 'c') {
+  while ((s[0] != 'c') && (s[0] != 'C')) {
     cout << "> ";
     cout.flush();
     while (fgets(s, MaxStrLength, stdin) == 0);
-      switch(s[0]) {
-        case 'q':
-          cout << "\nQuitting current simulation ...\nCurrent parameter values have been written to file (called interrupt.out)\n";
-          return 0;
-        case 'f':
-          cout << "\nWriting current model to file (called modeldump.out) ...\n";
-          dumpAll();
-          break;
-        case 'h':
-          printMenu();
-          break;
-      }
+    switch(s[0]) {
+      case 'q':
+      case 'Q':
+        cout << "\nQuitting current simulation ...\nCurrent parameter values have been written to file (called interrupt.out)\n";
+        return 0;
+      case 'f':
+      case 'F':
+        cout << "\nWriting current model to file (called modeldump.out) ...\n";
+        dumpAll();
+        break;
+      case 'h':
+      case 'H':
+      case '?':
+        printMenu();
+        break;
+    }
   }
   cout << "\nContinuing current simulation ...\n";
   cout.flush();

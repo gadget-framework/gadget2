@@ -151,6 +151,9 @@ void Stock::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* 
     UpdateTransitionStockWithTags(TimeInfo);
     transition->Move(area, TimeInfo);
   }
+  if (doesspawn) {
+    spawner->addSpawnStock(area, TimeInfo);
+  }
 }
 
 void Stock::FirstSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {

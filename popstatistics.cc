@@ -30,7 +30,7 @@ void PopStatistics::CalcStatistics(const PopInfoVector& pop,
 
   for (i = 0; i < pop.Size(); i++) {
     if ((isZero(pop[i].W)) && (!(isZero(pop[i].N))) && (calcweight == 0)) {
-      cerr << "Warning: when calculating statistics on a population, a nonzero\n"
+      cerr << "Warning - when calculating statistics on a population, a nonzero\n"
         << "population (" << pop[i].N << ") had zero mean weight\n";
     }
 

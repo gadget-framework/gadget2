@@ -307,7 +307,7 @@ void StockDistribution::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
         fleets.resize(1, Fleets[j]);
       }
     if (found == 0) {
-      cerr << "Error: when searching for names of fleets for stockdistribution.\n"
+      cerr << "Error when searching for names of fleets for stockdistribution.\n"
         << "Did not find any name matching " << fleetnames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -324,7 +324,7 @@ void StockDistribution::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
         }
     }
     if (found == 0) {
-      cerr << "Error: when searching for names of stocks for stockdistribution.\n"
+      cerr << "Error when searching for names of stocks for stockdistribution.\n"
         << "Did not find any name matching " << stocknames[i] << endl;
       exit(EXIT_FAILURE);
     }

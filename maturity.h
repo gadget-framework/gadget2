@@ -41,7 +41,7 @@ public:
    * \brief This will select the stocks required for the maturation process
    * \param stockvec is the StockPtrVector listing all the available stocks
    */
-  void SetStock(StockPtrVector& stockvec);
+  virtual void SetStock(StockPtrVector& stockvec);
   /**
    * \brief This function will print the maturation information
    * \param outfile is the ofstream that all the model information gets sent to
@@ -178,6 +178,11 @@ public:
    */
   virtual ~MaturityA() {};
   /**
+   * \brief This will select the stocks required for the maturation process
+   * \param stockvec is the StockPtrVector listing all the available stocks
+   */
+  virtual void SetStock(StockPtrVector& stockvec);
+  /**
    * \brief This will do the maturation calculations that only need to be performed once for the current model run
    * \param TimeInfo is the TimeClass for the current model
    */
@@ -219,7 +224,11 @@ protected:
   /**
    * \brief This is the minimum age when maturation will take place
    */
-  int MinMatureAge;
+  int minMatureAge;
+  /**
+   * \brief This is the minimum length group division when maturation will take place
+   */
+  int minMatureLength;
 };
 
 /**
@@ -246,6 +255,11 @@ public:
    * \brief This is the default MaturityB destructor
    */
   virtual ~MaturityB() {};
+  /**
+   * \brief This will select the stocks required for the maturation process
+   * \param stockvec is the StockPtrVector listing all the available stocks
+   */
+  virtual void SetStock(StockPtrVector& stockvec);
   /**
    * \brief This will do the maturation calculations that only need to be performed once for the current model run
    * \param TimeInfo is the TimeClass for the current model
@@ -313,6 +327,11 @@ public:
    */
   virtual ~MaturityC() {};
   /**
+   * \brief This will select the stocks required for the maturation process
+   * \param stockvec is the StockPtrVector listing all the available stocks
+   */
+  virtual void SetStock(StockPtrVector& stockvec);
+  /**
    * \brief This will do the maturation calculations that only need to be performed once for the current model run
    * \param TimeInfo is the TimeClass for the current model
    */
@@ -369,6 +388,11 @@ public:
    * \brief This is the default MaturityD destructor
    */
   virtual ~MaturityD() {};
+  /**
+   * \brief This will select the stocks required for the maturation process
+   * \param stockvec is the StockPtrVector listing all the available stocks
+   */
+  virtual void SetStock(StockPtrVector& stockvec);
   /**
    * \brief This will do the maturation calculations that only need to be performed once for the current model run
    * \param TimeInfo is the TimeClass for the current model
@@ -427,6 +451,11 @@ public:
    * \brief This is the default MaturityE destructor
    */
   virtual ~MaturityE() {};
+  /**
+   * \brief This will select the stocks required for the maturation process
+   * \param stockvec is the StockPtrVector listing all the available stocks
+   */
+  virtual void SetStock(StockPtrVector& stockvec);
   /**
    * \brief This will do the maturation calculations that only need to be performed once for the current model run
    * \param TimeInfo is the TimeClass for the current model

@@ -413,7 +413,7 @@ void LogCatches::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       }
 
     if (found == 0) {
-      cerr << "Error: when searching for names of fleets for logcatch.\n"
+      cerr << "Error when searching for names of fleets for logcatch.\n"
         << "Did not find any name matching " << fleetnames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -436,7 +436,7 @@ void LogCatches::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       }
     }
     if (found == 0) {
-      cerr << "Error: when searching for names of stocks for logcatch.\n"
+      cerr << "Error when searching for names of stocks for logcatch.\n"
         << "Did not find any name matching " << stocknames[i] << endl;
       exit(EXIT_FAILURE);
     }

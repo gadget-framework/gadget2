@@ -92,9 +92,9 @@ void Keeper::ChangeVariable(const double& pre, double& post) {
       }
 
   if (found == 1 && pre != post) {
-    cerr << "Error: Trying to put variable with value " << post
-      << " instead of variable " << address[--i][--j].name << endl
-      << "which has the value " << pre << endl;
+    cerr << "Error when trying to put variable with value " << post
+      << " instead of variable " << address[--i][--j].name
+      << " which has the value " << pre << endl;
     exit(EXIT_FAILURE);
   }
 }
@@ -614,17 +614,17 @@ void Keeper::CheckBounds() const {
   for (i = 0; i < values.Size(); i++) {
     if (lowerbds[i] > values[i]) {
       count++;
-      cerr << "Error: for switch " << switches[i] << " lowerbound " << lowerbds[i]
+      cerr << "Error - for switch " << switches[i] << " lowerbound " << lowerbds[i]
         << " is greater than the starting value " << values[i] << endl;
     }
     if (upperbds[i] < values[i]) {
       count++;
-      cerr << "Error: for switch " << switches[i] << " upperbound " << upperbds[i]
+      cerr << "Error - for switch " << switches[i] << " upperbound " << upperbds[i]
         << " is less than the starting value " << values[i] << endl;
     }
     if (upperbds[i] < lowerbds[i]) {
       count++;
-      cerr << "Error: for switch " << switches[i] << " upperbound " << upperbds[i]
+      cerr << "Error - for switch " << switches[i] << " upperbound " << upperbds[i]
         << " is less than the lowerbound " << lowerbds[i] << endl;
     }
   }

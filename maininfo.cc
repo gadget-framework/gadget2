@@ -122,7 +122,7 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         netrun = 1;
 
         #ifndef GADGET_NETWORK
-          cout << "\nWarning: Gadget is trying to run in the network mode for paramin without\n"
+          cout << "\nWarning - Gadget is trying to run in the network mode for paramin without\n"
             << "the network support being compiled - no network communication can take place!\n";
         #endif
 
@@ -236,14 +236,14 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
 
   printinfo.CheckNumbers();
   if ((stochastic != 1) && (netrun == 1)) {
-    cout << "\nWarning: Gadget for the paramin network should be used with -s option\n"
+    cout << "\nWarning - Gadget for the paramin network should be used with -s option\n"
       << "Gadget will now set the -s switch to perform a stochastic run\n";
     stochastic = 1;
     calclikelihood = 1;
   }
 
   if ((stochastic == 1) && (optimize == 1)) {
-    cout << "\nWarning: Gadget has been started with both the -s switch and the -l switch\n"
+    cout << "\nWarning - Gadget has been started with both the -s switch and the -l switch\n"
       << "However, it is not possible to do both a stochastic run and an optimizing run!\n"
       << "Gadget will perform only the stochastic run (and ignore the -l switch)\n";
     optimize = 0;

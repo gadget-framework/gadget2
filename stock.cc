@@ -78,9 +78,8 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   //JMB need to set the lowerlgrp and size vectors to a default
   //value to allow the whole range of lengths to be calculated
-  tmpint = int((maxlength - minlength) / dl);
   IntVector lowerlgrp(maxage - minage + 1, 0);
-  IntVector size(maxage - minage + 1, tmpint);
+  IntVector size(maxage - minage + 1, LgrpDiv->NoLengthGroups());
 
   Alkeys.resize(areas.Size(), minage, lowerlgrp, size);
   tagAlkeys.resize(areas.Size(), minage, lowerlgrp, size);
@@ -104,7 +103,12 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   if (GrowLgrpDiv->Error())
     printLengthGroupError(grlengths, "growthandeatlengths for stock");
 
+  //Check the growth length groups cover the stock length groups
   checkLengthGroupIsFiner(LgrpDiv, GrowLgrpDiv, this->Name(), "growth and eat lengths");
+  if (LgrpDiv->Minlength(0) != GrowLgrpDiv->Minlength(0))
+    cerr << "Warning - minimum lengths don't match for the growth functions of " << this->Name() << endl;
+  if (LgrpDiv->Maxlength(LgrpDiv->NoLengthGroups() - 1) != GrowLgrpDiv->Maxlength(GrowLgrpDiv->NoLengthGroups() - 1))
+    cerr << "Warning - maximum lengths don't match for the growth functions of " << this->Name() << endl;
 
   //Read the growth function data
   readWordAndVariable(infile, "doesgrow", doesgrow);
@@ -172,15 +176,15 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     handle.Open(filename);
 
     if (strcasecmp(text, "continuous") == 0)
-      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv, 3);
+      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 3);
     else if (strcasecmp(text, "fixedlength") == 0)
-      maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv);
+      maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv);
     else if (strcasecmp(text, "ageandlength") == 0)
-      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv, 4);
+      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
     else if (strcasecmp(text, "constant") == 0)
-      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv, 4);
+      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
     else if (strcasecmp(text, "constantweight") == 0)
-      maturity = new MaturityE(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv, 6, refweight);
+      maturity = new MaturityE(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 6, refweight);
     else
       handle.Message("Error in stock file - unrecognised maturity", text);
 
@@ -223,10 +227,24 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //Read the spawning data
   readWordAndVariable(infile, "doesspawn", doesspawn);
   if (doesspawn) {
-    spawner = new Spawner(infile, maxage, LgrpDiv->NoLengthGroups(), Area, TimeInfo, keeper);
+    readWordAndValue(infile, "spawnfile", filename);
+    ifstream subfile;
+    subfile.open(filename, ios::in);
+    CommentStream subcomment(subfile);
+    checkIfFailure(subfile, filename);
+    handle.Open(filename);
+    spawner = new Spawner(subcomment, maxage, LgrpDiv, Area, TimeInfo, keeper);
+    handle.Close();
+    subfile.close();
+    subfile.clear();
 
   } else
     spawner = 0;
+
+  if (!infile.eof()) {
+    infile >> text >> ws;
+    handle.Unexpected("<end of file>", text);
+  }
 
   //Set the birthday for the stock
   birthdate = TimeInfo->StepsInYear();
@@ -287,6 +305,10 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
       grower->Reset();
     if (doesmigrate)
       migration->Reset();
+    if (doesmove)
+      transition->Reset();
+    if (doesspawn)
+      spawner->Precalc(TimeInfo);
   }
   NatM->Reset(TimeInfo);
   if (doeseat)
@@ -311,6 +333,8 @@ void Stock::SetStock(StockPtrVector& stockvec) {
     maturity->SetStock(stockvec);
   if (doesmove)
     transition->SetStock(stockvec);
+  if (doesspawn)
+    spawner->SetStock(stockvec);
 }
 
 void Stock::SetCI() {

@@ -14,8 +14,8 @@
 Maturity::Maturity(const IntVector& tmpareas, int minage, const IntVector& minlength,
   const IntVector& size, const LengthGroupDivision* const lgrpdiv)
   : LivesOnAreas(tmpareas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)),
-    Storage(tmpareas.Size(), minage, minlength, size) {
-    TagStorage.resize(tmpareas.Size(), minage, minlength, size);
+    Storage(tmpareas.Size(), minage, minlength, size),
+    TagStorage(tmpareas.Size(), minage, minlength, size) {
 
 }
 
@@ -44,7 +44,7 @@ void Maturity::SetStock(StockPtrVector& stockvec) {
       }
 
   if (index != MatureStockNames.Size()) {
-    cerr << "Error: Did not find the stock(s) matching:\n";
+    cerr << "Error - did not find the stock(s) matching:\n";
     for (i = 0; i < MatureStockNames.Size(); i++)
       cerr << (const char*)MatureStockNames[i] << sep;
     cerr << "\nwhen searching for mature stock(s) - found only:\n";
@@ -60,9 +60,9 @@ void Maturity::SetStock(StockPtrVector& stockvec) {
   for (i = 0; i < tmpratio.Size(); i++)
     Ratio[i] = tmpratio[i];
 
-  CI.resize(MatureStocks.Size());
+  CI.resize(MatureStocks.Size(), 0);
   for (i = 0; i < MatureStocks.Size(); i++)
-    CI[i] = new ConversionIndex(MatureStocks[i]->ReturnLengthGroupDiv(), LgrpDiv);
+    CI[i] = new ConversionIndex(LgrpDiv, MatureStocks[i]->ReturnLengthGroupDiv());
 
   for (i = 0; i < MatureStocks.Size(); i++) {
     index = 0;
@@ -71,7 +71,7 @@ void Maturity::SetStock(StockPtrVector& stockvec) {
         index++;
 
     if (index != 0)
-      cerr << "Warning: maturation requested to stock " << (const char*)MatureStocks[i]->Name()
+      cerr << "Warning - maturation requested to stock " << (const char*)MatureStocks[i]->Name()
         << "\nwhich might not be defined on " << index << " areas\n";
   }
 }
@@ -194,8 +194,8 @@ void Maturity::DeleteTag(const char* tagname) {
     TagStorage.deleteTag(tagname);
 
   } else {
-    cerr << "Error in tagging maturity - trying to delete tag with name: "
-      << tagname << " in maturity but there is not any tag with that name\n";
+    cerr << "Error in tagging maturity - trying to delete tag with name "
+      << tagname << " but there is no tag with that name\n";
   }
 }
 
@@ -232,8 +232,6 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
     handle.Failure("coefficients");
   Coefficient.resize(NoMatconst, keeper);
   Coefficient.Read(infile, TimeInfo, keeper);
-
-  readWordAndVariable(infile, "minmatureage", MinMatureAge);
   keeper->ClearLast();
 }
 
@@ -241,28 +239,46 @@ void MaturityA::Precalc(const TimeClass* const TimeInfo) {
   this->Maturity::Precalc(TimeInfo);
   Coefficient.Update(TimeInfo);
   double my;
-  int age, j;
+  int age, len;
 
   if (Coefficient.DidChange(TimeInfo)) {
     for (age = PrecalcMaturation.Minage(); age <= PrecalcMaturation.Maxage(); age++) {
-      for (j = PrecalcMaturation.Minlength(age); j < PrecalcMaturation.Maxlength(age); j++) {
-        if (age >= MinMatureAge) {
-          my = exp(-Coefficient[0] - Coefficient[1] * LgrpDiv->Meanlength(j) - Coefficient[2] * age);
-          PrecalcMaturation[age][j] = 1 / (1 + my);
+      for (len = PrecalcMaturation.Minlength(age); len < PrecalcMaturation.Maxlength(age); len++) {
+        if ((age >= minMatureAge) && (len >= minMatureLength)) {
+          my = exp(-Coefficient[0] - Coefficient[1] * LgrpDiv->Meanlength(len) - Coefficient[2] * age);
+          PrecalcMaturation[age][len] = 1 / (1 + my);
         } else
-          PrecalcMaturation[age][j] = 0.0;
+          PrecalcMaturation[age][len] = 0.0;
       }
     }
   }
+}
+
+void MaturityA::SetStock(StockPtrVector& stockvec) {
+  this->Maturity::SetStock(stockvec);
+
+  int i;
+  minMatureAge = 9999;
+  double minlength = 9999.0;
+  for (i = 0; i < MatureStocks.Size(); i++) {
+    if (MatureStocks[i]->Minage() < minMatureAge)
+      minMatureAge = MatureStocks[i]->Minage();
+    if (MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0) < minlength)
+      minlength = MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0);
+  }
+  minMatureLength = LgrpDiv->NoLengthGroup(minlength);
 }
 
 //Calculate the percentage that becomes Mature each timestep.
 double MaturityA::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight) {
 
-  double ratio = PrecalcMaturation[age][length] * (Coefficient[1] * growth * LgrpDiv->dl() +
-                   Coefficient[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
-  return (min(max(0.0, ratio), 1.0));
+  if ((age >= minMatureAge) && (length >= minMatureLength)) {
+    double ratio = PrecalcMaturation[age][length] * (Coefficient[1] * growth * LgrpDiv->dl() +
+                     Coefficient[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
+    return (min(max(0.0, ratio), 1.0));
+  }
+  return 0.0;
 }
 
 void MaturityA::Print(ofstream& outfile) const {
@@ -322,6 +338,11 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
   if (maturitylength.Size() != maturitystep.Size())
     handle.Message("Number of maturitysteps does not equal number of maturitylengths");
   keeper->ClearLast();
+
+  if (!infile.eof()) {
+    infile >> text >> ws;
+    handle.Unexpected("<end of file>", text);
+  }
 }
 
 void MaturityB::Print(ofstream& outfile) const {
@@ -334,6 +355,10 @@ void MaturityB::Print(ofstream& outfile) const {
   for (i = 0; i < maturitylength.Size(); i++)
     outfile << sep << maturitylength[i];
   outfile << endl;
+}
+
+void MaturityB::SetStock(StockPtrVector& stockvec) {
+  this->Maturity::SetStock(stockvec);
 }
 
 void MaturityB::Precalc(const TimeClass* const TimeInfo) {
@@ -387,34 +412,54 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
   for (i = 0; i < maturitystep.Size(); i++)
     if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->StepsInYear())
       handle.Message("Illegal maturity step in ageandlength maturation function");
+
+  if (!infile.eof()) {
+    infile >> text >> ws;
+    handle.Unexpected("<end of file>", text);
+  }
 }
 
 void MaturityC::Precalc(const TimeClass* const TimeInfo) {
   this->Maturity::Precalc(TimeInfo);
   Coefficient.Update(TimeInfo);
   double my;
-  int age, j;
+  int age, len;
 
   if (Coefficient.DidChange(TimeInfo)) {
     for (age = PrecalcMaturation.Minage(); age <= PrecalcMaturation.Maxage(); age++) {
-      for (j = PrecalcMaturation.Minlength(age); j < PrecalcMaturation.Maxlength(age); j++) {
-        if (age >= MinMatureAge) {
-          my = exp(-Coefficient[0] * (LgrpDiv->Meanlength(j) - Coefficient[1])
+      for (len = PrecalcMaturation.Minlength(age); len < PrecalcMaturation.Maxlength(age); len++) {
+        if ((age >= minMatureAge) && (len >= minMatureLength)) {
+          my = exp(-Coefficient[0] * (LgrpDiv->Meanlength(len) - Coefficient[1])
                  - Coefficient[2] * (age - Coefficient[3]));
-          PrecalcMaturation[age][j] = 1 / (1 + my);
+          PrecalcMaturation[age][len] = 1 / (1 + my);
         } else
-          PrecalcMaturation[age][j] = 0.0;
+          PrecalcMaturation[age][len] = 0.0;
       }
     }
   }
 }
 
+void MaturityC::SetStock(StockPtrVector& stockvec) {
+  this->Maturity::SetStock(stockvec);
+
+  int i;
+  minMatureAge = 9999;
+  double minlength = 9999.0;
+  for (i = 0; i < MatureStocks.Size(); i++) {
+    if (MatureStocks[i]->Minage() < minMatureAge)
+      minMatureAge = MatureStocks[i]->Minage();
+    if (MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0) < minlength)
+      minlength = MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0);
+  }
+  minMatureLength = LgrpDiv->NoLengthGroup(minlength);
+}
+
 double MaturityC::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight) {
 
-  if (this->IsMaturationStep(area, TimeInfo)) {
-    double ratio =  PrecalcMaturation[age][length] * (Coefficient[0] * growth * LgrpDiv->dl()
-                      + Coefficient[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
+  if ((this->IsMaturationStep(area, TimeInfo)) && (age >= minMatureAge) && (length >= minMatureLength)) {
+    double ratio = PrecalcMaturation[age][length] * (Coefficient[0] * growth * LgrpDiv->dl()
+                     + Coefficient[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
     return (min(max(0.0, ratio), 1.0));
   }
   return 0.0;
@@ -454,23 +499,43 @@ MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
   for (i = 0; i < maturitystep.Size(); i++)
     if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->StepsInYear())
       handle.Message("Illegal maturity step in constant maturation function");
+
+  if (!infile.eof()) {
+    infile >> text >> ws;
+    handle.Unexpected("<end of file>", text);
+  }
+}
+
+void MaturityD::SetStock(StockPtrVector& stockvec) {
+  this->Maturity::SetStock(stockvec);
+
+  int i;
+  minMatureAge = 9999;
+  double minlength = 9999.0;
+  for (i = 0; i < MatureStocks.Size(); i++) {
+    if (MatureStocks[i]->Minage() < minMatureAge)
+      minMatureAge = MatureStocks[i]->Minage();
+    if (MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0) < minlength)
+      minlength = MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0);
+  }
+  minMatureLength = LgrpDiv->NoLengthGroup(minlength);
 }
 
 void MaturityD::Precalc(const TimeClass* const TimeInfo) {
   this->Maturity::Precalc(TimeInfo);
   Coefficient.Update(TimeInfo);
   double my;
-  int age, j;
+  int age, len;
 
   if (Coefficient.DidChange(TimeInfo)) {
     for (age = PrecalcMaturation.Minage(); age <= PrecalcMaturation.Maxage(); age++) {
-      for (j = PrecalcMaturation.Minlength(age); j < PrecalcMaturation.Maxlength(age); j++){
-        if (age >= MinMatureAge) {
-          my = exp(-4.0 * Coefficient[0] * (LgrpDiv->Meanlength(j) - Coefficient[1])
+      for (len = PrecalcMaturation.Minlength(age); len < PrecalcMaturation.Maxlength(age); len++) {
+        if ((age >= minMatureAge) && (len >= minMatureLength)) {
+          my = exp(-4.0 * Coefficient[0] * (LgrpDiv->Meanlength(len) - Coefficient[1])
                  - 4.0 * Coefficient[2] * (age - Coefficient[3]));
-          PrecalcMaturation[age][j] = 1 / (1 + my);
+          PrecalcMaturation[age][len] = 1 / (1 + my);
         } else
-          PrecalcMaturation[age][j] = 0.0;
+          PrecalcMaturation[age][len] = 0.0;
       }
     }
   }
@@ -519,6 +584,11 @@ MaturityE::MaturityE(CommentStream& infile, const TimeClass* const TimeInfo,
     if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->StepsInYear())
       handle.Message("Illegal maturity step in constantweight maturation function");
 
+  if (!infile.eof()) {
+    infile >> text >> ws;
+    handle.Unexpected("<end of file>", text);
+  }
+
   //Read information on reference weights.
   ifstream subweightfile;
   subweightfile.open(refWeightFile, ios::in);
@@ -533,7 +603,7 @@ MaturityE::MaturityE(CommentStream& infile, const TimeClass* const TimeInfo,
   subweightfile.clear();
 
   //Aggregate the reference weight data to be the same length groups
-  refWeight.resize(LgrpDiv->NoLengthGroups());
+  refWeight.resize(LgrpDiv->NoLengthGroups(), 0.0);
   int j, pos = 0;
   double tmp;
   for (j = 0; j < LgrpDiv->NoLengthGroups(); j++) {
@@ -547,6 +617,21 @@ MaturityE::MaturityE(CommentStream& infile, const TimeClass* const TimeInfo,
   }
 }
 
+void MaturityE::SetStock(StockPtrVector& stockvec) {
+  this->Maturity::SetStock(stockvec);
+
+  int i;
+  minMatureAge = 9999;
+  double minlength = 9999.0;
+  for (i = 0; i < MatureStocks.Size(); i++) {
+    if (MatureStocks[i]->Minage() < minMatureAge)
+      minMatureAge = MatureStocks[i]->Minage();
+    if (MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0) < minlength)
+      minlength = MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0);
+  }
+  minMatureLength = LgrpDiv->NoLengthGroup(minlength);
+}
+
 void MaturityE::Precalc(const TimeClass* const TimeInfo) {
   this->Maturity::Precalc(TimeInfo);
   Coefficient.Update(TimeInfo);
@@ -555,10 +640,12 @@ void MaturityE::Precalc(const TimeClass* const TimeInfo) {
 double MaturityE::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight) {
 
-  if (this->IsMaturationStep(area, TimeInfo)) {
+  if ((this->IsMaturationStep(area, TimeInfo)) && (age >= minMatureAge) && (length >= minMatureLength)) {
     double tmpweight, my, ratio;
 
-    if (isZero(refWeight[length]))
+    if (length >= refWeight.Size())
+      tmpweight = Coefficient[5];
+    else if (isZero(refWeight[length]))
       tmpweight = Coefficient[5];
     else
       tmpweight = weight / refWeight[length];

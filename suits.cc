@@ -79,6 +79,10 @@ const BandMatrix& Suits::Suitable(int prey) const {
 }
 
 void Suits::DeletePrey(int prey, Keeper* const keeper) {
+
+  if ((SuitFunction.Size() + MatrixPreynames.Size()) == 0)
+    return;
+
   if (prey < SuitFunction.Size())
     this->DeleteFuncPrey(prey, keeper);
   else

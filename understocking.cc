@@ -8,7 +8,7 @@
 
 UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight)
-  :Likelihood(UNDERSTOCKINGLIKELIHOOD, weight), powercoeff(2) {
+  : Likelihood(UNDERSTOCKINGLIKELIHOOD, weight), powercoeff(2) {
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -30,10 +30,6 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   handle.Close();
   datafile.close();
   datafile.clear();
-
-  //Check if we read sufficient input.
-  if (numarea < 1)
-    handle.Message("Read no areas");
 
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)

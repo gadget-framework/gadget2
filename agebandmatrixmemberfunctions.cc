@@ -20,7 +20,7 @@ void AgebandmAdd(AgeBandMatrix& Alkeys, const AgeBandMatrix& Addition,
   if (maxage < minage)
     return;
 
-  if (CI.SameDl()) { //Same dl on length distributions
+  if (CI.SameDl()) {
     offset = CI.Offset();
     for (age = minage; age <= maxage; age++) {
       minl = max(Alkeys.Minlength(age), Addition.Minlength(age) + offset);
@@ -31,7 +31,7 @@ void AgebandmAdd(AgeBandMatrix& Alkeys, const AgeBandMatrix& Addition,
         Alkeys[age][l] += pop;
       }
     }
-  } else { //Not same dl on length distributions
+  } else {
     if (CI.TargetIsFiner()) {
       for (age = minage; age <= maxage; age++) {
         minl = max(Alkeys.Minlength(age), CI.Minpos(Addition.Minlength(age)));
@@ -75,7 +75,7 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& C
     if (isZero(UsedRatio[i]))
       UsedRatio[i] = 0.0;
     else if (UsedRatio[i] < 0) {
-      cerr << "Warning: negative stock population - setting to zero\n";
+      cerr << "Warning - negative stock population - setting to zero\n";
       UsedRatio[i] = 0.0;
     }
   }
@@ -87,7 +87,7 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& C
       for (j = j1; j < j2; j++)
         (*v[i])[j].N *= UsedRatio[j - CI.Offset()];
     }
-  } else {  //Not same dl
+  } else {
     for (i = 0; i < nrow; i++) {
       j1 = max(v[i]->Mincol(), CI.Minlength());
       j2 = min(v[i]->Maxcol(), CI.Maxlength());

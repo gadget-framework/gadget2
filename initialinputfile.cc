@@ -156,19 +156,46 @@ void InitialInputFile::readFromFile() {
     double lower;
     double upper;
     int opt;
+    int check = 0;
 
     infile >> ws;
-    while (!infile.eof()) {
+    while (check == 0) {
       infile >> sw >> ws;
       switches.resize(1, sw);
-      infile >> val >> ws;
-      values.resize(1, val);
-      infile >> lower >> ws;
-      lowerbound.resize(1, lower);
-      infile >> upper >> ws;
-      upperbound.resize(1, upper);
-      infile >> opt >> ws;
-      optimize.resize(1, opt);
+      if (infile.eof())
+        check++;
+
+      if (isdigit(infile.peek()) || (infile.peek() == '-')) {
+        infile >> val >> ws;
+        values.resize(1, val);
+      } else
+        check++;
+      if (infile.eof())
+        check++;
+
+      if (isdigit(infile.peek()) || (infile.peek() == '-')) {
+        infile >> lower >> ws;
+        lowerbound.resize(1, lower);
+      } else
+        check++;
+      if (infile.eof())
+        check++;
+
+      if (isdigit(infile.peek()) || (infile.peek() == '-')) {
+        infile >> upper >> ws;
+        upperbound.resize(1, upper);
+      } else
+        check++;
+      if (infile.eof())
+        check++;
+
+      if (isdigit(infile.peek())) {
+        infile >> opt >> ws;
+        optimize.resize(1, opt);
+      } else
+        check++;
+      if (infile.eof())
+        check++;
     }
     checkIfFailure();
 

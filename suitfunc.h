@@ -51,16 +51,6 @@ public:
    */
   virtual int usesPreyLength() = 0;
   /**
-   * \brief This will return the predator length
-   * \return -1 (will be overridden in derived classes)
-   */
-  virtual double getPredLength();
-  /**
-   * \brief This will return the prey length
-   * \return -1 (will be overridden in derived classes)
-   */
-  virtual double getPreyLength();
-  /**
    * \brief This will set the predator length
    * \param length is the predator length
    */
@@ -128,16 +118,6 @@ public:
    * \param length is the prey length
    */
   virtual void setPreyLength(double length) { preyLength = length; };
-  /**
-   * \brief This will return the predator length
-   * \return predLength
-   */
-  virtual double getPredLength() { return predLength; };
-  /**
-   * \brief This will return the prey length
-   * \return preyLength
-   */
-  virtual double getPreyLength() { return preyLength; };
   /**
    * \brief This will return the suitability value that has been calculated
    * \return value
@@ -220,16 +200,6 @@ public:
    */
   virtual void setPreyLength(double length) { preyLength = length; };
   /**
-   * \brief This will return the predator length
-   * \return predLength
-   */
-  virtual double getPredLength() { return predLength; };
-  /**
-   * \brief This will return the prey length
-   * \return preyLength
-   */
-  virtual double getPreyLength() { return preyLength; };
-  /**
    * \brief This will return the suitability value that has been calculated
    * \return value
    */
@@ -247,7 +217,7 @@ private:
 
 /**
  * \class ExpSuitFuncL50
- * \brief This is the class used to calculate the suitability based on a exponential function of the prey length
+ * \brief This is the class used to calculate the suitability based on an exponential function of the prey length
  */
 class ExpSuitFuncL50 : public SuitFunc {
 public:
@@ -274,11 +244,6 @@ public:
    * \param length is the prey length
    */
   virtual void setPreyLength(double length) { preyLength = length; };
-  /**
-   * \brief This will return the prey length
-   * \return preyLength
-   */
-  virtual double getPreyLength() { return preyLength; };
   /**
    * \brief This will return the suitability value that has been calculated
    * \return value
@@ -321,10 +286,46 @@ public:
    */
   virtual void setPreyLength(double length) { preyLength = length; };
   /**
-   * \brief This will return the prey length
-   * \return preyLength
+   * \brief This will return the suitability value that has been calculated
+   * \return value
    */
-  virtual double getPreyLength() { return preyLength; };
+  virtual double calculate();
+private:
+  /**
+   * \brief This is the length of the prey
+   */
+  double preyLength;
+};
+
+/**
+ * \class InverseExpSuitFuncL50
+ * \brief This is the class used to calculate the suitability based on an inverse exponential function of the prey length
+ */
+class InverseExpSuitFuncL50 : public SuitFunc {
+public:
+  /**
+   * \brief This is the default InverseExpSuitFuncL50 constructor
+   */
+  InverseExpSuitFuncL50();
+  /**
+   * \brief This is the default InverseExpSuitFuncL50 destructor
+   */
+  virtual ~InverseExpSuitFuncL50();
+  /**
+   * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
+   * \return 0
+   */
+  virtual int usesPredLength() { return 0; };
+  /**
+   * \brief This will return 1 if the suitability function is based on the prey length, 0 otherwise
+   * \return 1
+   */
+  virtual int usesPreyLength() { return 1; };
+  /**
+   * \brief This will set the prey length
+   * \param length is the prey length
+   */
+  virtual void setPreyLength(double length) { preyLength = length; };
   /**
    * \brief This will return the suitability value that has been calculated
    * \return value

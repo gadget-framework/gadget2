@@ -130,7 +130,7 @@ void OptInfoHooke::MaximizeLikelihood() {
   for (i = 0; i < nopt; i++) {
     if (isZero(val[i])) {
       count++;
-      cerr << "Error: for switch " << optswitches[i] << " starting value is zero\n"
+      cerr << "Error - for switch " << optswitches[i] << " starting value is zero\n"
         << "which will give poor convergence for Hooke and Jeeves optimisation\n";
     }
   }
@@ -373,7 +373,7 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
   for (i = 0; i < nopt; i++) {
     if (isZero(val[i])) {
       count++;
-      cerr << "Error: for switch " << optswitches[i] << " starting value is zero\n"
+      cerr << "Error - for switch " << optswitches[i] << " starting value is zero\n"
         << "which will give poor convergence for Hooke and Jeeves optimisation\n";
     }
   }

@@ -302,11 +302,11 @@ DoubleMatrix& DoubleMatrix::operator + (double d) const {
 DoubleMatrix& DoubleMatrix::operator * (const DoubleMatrix& d) const {
   int i, j, k;
   if (!isRectangular() || !d.isRectangular()) {
-    cerr << "Error: matrix must be rectangular for multiplication!\n";
+    cerr << "Error - matrix must be rectangular for multiplication!\n";
     exit(EXIT_FAILURE);
   }
   if (Ncol() != d.Nrow()) {
-    cerr << "Error: wrong dimensions for matrix multiplication!\n";
+    cerr << "Error - wrong dimensions for matrix multiplication!\n";
     exit(EXIT_FAILURE);
   }
   DoubleMatrix* result = new DoubleMatrix(Nrow(), d.Ncol(), 0);

@@ -154,17 +154,17 @@ void StochasticData::ReadFromNetwork() {
     for (i = 0; i < values.Size(); i++) {
       if (lowerbound[i] > upperbound[i]) {
         check++;
-        cerr << "Error: for switch " << i << " the lowerbound " << lowerbound[i]
+        cerr << "Error - for switch " << i << " the lowerbound " << lowerbound[i]
           << " is greater than upperbound " << upperbound[i] << endl;
       }
       if (values[i] > upperbound[i]) {
         check++;
-        cerr << "Error: for switch " << i << " the value " << values[i]
+        cerr << "Error - for switch " << i << " the value " << values[i]
           << " is greater than upperbound " << upperbound[i] << endl;
       }
       if (values[i] < lowerbound[i]) {
         check++;
-        cerr << "Error: for switch " << i << " the value " << values[i]
+        cerr << "Error - for switch " << i << " the value " << values[i]
           << " is lower than lowerbound " << lowerbound[i] << endl;
       }
     }

@@ -6,7 +6,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 
   if (L1->Maxlength(L1->NoLengthGroups() - 1) <= L2->Minlength(0)
       || L2->Maxlength(L2->NoLengthGroups() - 1) <= L1->Minlength(0)) {
-    cerr << "Error: cannot create a mapping between length groups whose "
+    cerr << "Error - cannot create a mapping between length groups whose "
       << "intersection is empty\nThe length group divisions are:\n";
     printLengthGroupDivisionError(L1);
     cerr << " and\n";
@@ -14,7 +14,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     exit(EXIT_FAILURE);
   }
 
-  int i, j;
+  int i, j, k;
   int Mpos, NrOf;
   const LengthGroupDivision* Lf;  //Will be the finer length group division.
   const LengthGroupDivision* Lc;  //Will be the coarser length group division.
@@ -31,6 +31,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       Lc = L2;
       Lf = L1;
     }
+
   } else {
     checkLengthGroupIsFiner(L1, L2, "CI - finer", "CI - coarser");
     targetisfiner = 0;
@@ -39,6 +40,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   }
 
   //do the length group divisions have same dl?
+  offset = 0;
   if (Lf->dl() != 0 && Lf->dl() == Lc->dl()) {
     offset = int((Lf->Meanlength(0) - Lc->Meanlength(0)) / Lf->dl());
     samedl = 1;
@@ -74,8 +76,8 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       break;
     }
 
-  int k = 0;
-  pos.resize(nf, 0); //JMB - default value
+  k = 0;
+  pos.resize(nf, 0);
   for (i = minlength; i < maxlength; i++)
     for (j = k; j < nc; j++)
       if (Lf->Meanlength(i) >= Lc->Minlength(j) && Lf->Meanlength(i) <= Lc->Maxlength(j)) {
@@ -83,6 +85,9 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
         k = j;
         break;
       }
+
+  for (i = maxlength; i < nf; i++)
+    pos[i] = nc;
 
   //If Minpos and Maxpos are needed.
   if (Mpos == 1) {

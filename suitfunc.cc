@@ -30,6 +30,11 @@ int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname) {
     suitf.resize(1, tempFunc);
     found++;
 
+  } else if (strcasecmp(suitname, "inverseexpsuitfuncl50") == 0) {
+    tempFunc = new ExpSuitFuncL50();
+    suitf.resize(1, tempFunc);
+    found++;
+
   } else if (strcasecmp(suitname, "improvedexpsuitfunc") == 0) {
     cout << "The improvedexpsuitfunc suitability function is no longer supported\n";
 
@@ -86,18 +91,6 @@ SuitFunc::~SuitFunc() {
     delete[] name;
     name = NULL;
   }
-}
-
-double SuitFunc::getPredLength() {
-  cerr << "Error - trying to get predlength for a suitability function "
-    << this->getName() << " but this function does not use predlength\n";
-  return -1.0;
-}
-
-double SuitFunc::getPreyLength() {
-  cerr << "Error - trying to get preylength for a suitability function "
-    << this->getName() << " but this function does not use preylength\n";
-  return -1.0;
 }
 
 void SuitFunc::setPredLength(double length) {
@@ -286,6 +279,34 @@ double StraightSuitFunc::calculate() {
   /* Line as a function of preylength only, predlength is dummy
    * written by kgf 5/3 01 */
   check = coeff[0] * preyLength + coeff[1];
+  if (check < 0.0) {
+    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    return 0.0;
+  } else if (check > 1.0) {
+    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    return 1.0;
+  } else
+    return check;
+}
+
+// ********************************************************
+// Functions for InverseExpSuitFuncL50 suitability function
+// ********************************************************
+InverseExpSuitFuncL50::InverseExpSuitFuncL50() {
+  this->setName("InverseExpSuitFuncL50");
+  coeff.resize(2);
+  preyLength = -1.0;
+}
+
+InverseExpSuitFuncL50::~InverseExpSuitFuncL50() {
+}
+
+double InverseExpSuitFuncL50::calculate() {
+  assert(coeff.Size() == 2);
+  double check = 0.0;
+  /* created from the ExpSuitFuncL50 function by JMB after DST2 meeting in Bergen */
+  assert((coeff[0] > 0) && (coeff[1] > 0));
+  check = 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
   if (check < 0.0) {
     cerr << "Warning in suitability - function outside bounds " << check << endl;
     return 0.0;

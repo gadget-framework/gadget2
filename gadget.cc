@@ -70,6 +70,7 @@ int main(int aNumber, char* const aVector[]) {
   OptInfo* Optinfo = 0;
   StochasticData* Stochasticdata = 0;
   ErrorHandler handle;
+  int check = 0;
 
   //Test to see if the function double lgamma(double) is returning an integer.
   //lgamma is a non-ansi function and on some platforms when compiled with the
@@ -83,6 +84,7 @@ int main(int aNumber, char* const aVector[]) {
       cerr << "Failed to malloc space for current working directory\n";
       exit(EXIT_FAILURE);
     }
+    check = 1;
     if (getcwd(workingdir, LongString) == NULL) {
       cerr << "Failed to get current working directory - pathname too long\n";
       exit(EXIT_FAILURE);
@@ -175,7 +177,8 @@ int main(int aNumber, char* const aVector[]) {
   if (!(MainInfo.Net()))
     EcoSystem->PrintParamsinColumns((MainInfo.getPI()).paramFile(), (MainInfo.getPI()).precision());
 
-  free(workingdir);
+  if (check == 1)
+    free(workingdir);
   delete Optinfo;
   delete EcoSystem;
   return EXIT_SUCCESS;

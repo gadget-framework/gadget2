@@ -263,7 +263,7 @@ void PredatorAggregator::Sum(int dummy) {
           total[i][j][k] /= tot_predators[i][j];
         else
           if (total[i][j][k] > 0 && isZero(tot_predators[i][j]))
-            cerr << "Warning: consumption without predators!\n";
+            cerr << "Warning - consumption without predators!\n";
       }
 }
 

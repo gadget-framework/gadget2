@@ -110,7 +110,7 @@ void Tags::ReadNumbers(CommentStream& infile, const char* tagname, const TimeCla
 
     //only keep the data if the number is positive
     if (tmpnumber < 0) {
-      cerr << "Warning: found a negative number for the tagging experiment - number set to zero\n";
+      cerr << "Warning - found a negative number for the tagging experiment - number set to zero\n";
       keepdata = 1;
     }
 
