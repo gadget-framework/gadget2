@@ -174,32 +174,6 @@ void StockDistribution::ReadStockData(CommentStream& infile,
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmpstock >> tmpage >> tmplen >> tmpnumber >> ws;
 
-    //check if the year and step are in the simulation
-    timeid = -1;
-    if (TimeInfo->IsWithinPeriod(year, step)) {
-      //if this is a new timestep, resize to store the data
-      for (i = 0; i < Years.Size(); i++)
-        if ((Years[i] == year) && (Steps[i] == step))
-          timeid = i;
-
-      if (timeid == -1) {
-        Years.resize(1, year);
-        Steps.resize(1, step);
-        timeid = (Years.Size() - 1);
-
-        AgeLengthData.AddRows(1, numarea);
-        Proportions.AddRows(1, numarea);
-        for (i = 0; i < numarea; i++) {
-          AgeLengthData[timeid][i] = new DoubleMatrix(numstock, (numage * numlen), 0.0);
-          Proportions[timeid][i] = new DoubleMatrix(numstock, (numage * numlen), 0.0);
-        }
-      }
-
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
-
     //if tmpstock is in stocknames find stockid, else dont keep the data
     stockid = -1;
     for (i = 0; i < stocknames.Size(); i++)
@@ -235,6 +209,32 @@ void StockDistribution::ReadStockData(CommentStream& infile,
 
     if (lenid == -1)
       keepdata = 1;
+
+    //check if the year and step are in the simulation
+    timeid = -1;
+    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
+      //if this is a new timestep, resize to store the data
+      for (i = 0; i < Years.Size(); i++)
+        if ((Years[i] == year) && (Steps[i] == step))
+          timeid = i;
+
+      if (timeid == -1) {
+        Years.resize(1, year);
+        Steps.resize(1, step);
+        timeid = (Years.Size() - 1);
+
+        AgeLengthData.AddRows(1, numarea);
+        Proportions.AddRows(1, numarea);
+        for (i = 0; i < numarea; i++) {
+          AgeLengthData[timeid][i] = new DoubleMatrix(numstock, (numage * numlen), 0.0);
+          Proportions[timeid][i] = new DoubleMatrix(numstock, (numage * numlen), 0.0);
+        }
+      }
+
+    } else {
+      //dont keep the data
+      keepdata = 1;
+    }
 
     if (keepdata == 0) {
       //stock distribution data is required, so store it
@@ -282,7 +282,6 @@ void StockDistribution::Reset(const Keeper* const keeper) {
 
 void StockDistribution::Print(ofstream& outfile) const {
   int i;
-
   outfile << "\nStock Distribution " << sdname << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)

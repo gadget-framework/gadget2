@@ -128,6 +128,7 @@
 
 #include "gadget.h"    //All the required standard header files are in here
 #include "mathfunc.h"
+#include "ecosystem.h"
 
 #define VARS   (350)   //Maximum number of variables.
 
@@ -136,6 +137,9 @@ double oldf = 0.0;
 /* global variable --- defined, initialized in main.cc. */
 /* Its value is not changed in this file.               */
 extern int FuncEval;
+
+/* global ecosystem used to store whether the model converged */
+extern Ecosystem* EcoSystem;
 
 /* given a point, look for a better one nearby, one coord at a time */
 double bestNearby(double (*f)(double*, int), double delta[], double point[],
@@ -344,8 +348,10 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
   if (iters == itermax)
     cout << "The optimisation stopped because the maximum number of iterations"
       << "\nwas reached and NOT because an optimum was found for this run\n";
-  else
+  else {
     cout << "The optimisation stopped because an optimum was found for this run\n";
+    EcoSystem->SetConverge(1);
+  }
 
   for (i = 0; i < nvars; i++)
     newx[param[i]] = xbefore[param[i]];

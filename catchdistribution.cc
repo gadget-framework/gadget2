@@ -240,32 +240,6 @@ void CatchDistribution::ReadDistributionData(CommentStream& infile,
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmpage >> tmplen >> tmpnumber >> ws;
 
-    //check if the year and step are in the simulation
-    timeid = -1;
-    if (TimeInfo->IsWithinPeriod(year, step)) {
-      //if this is a new timestep, resize to store the data
-      for (i = 0; i < Years.Size(); i++)
-        if ((Years[i] == year) && (Steps[i] == step))
-          timeid = i;
-
-      if (timeid == -1) {
-        Years.resize(1, year);
-        Steps.resize(1, step);
-        timeid = (Years.Size() - 1);
-
-        AgeLengthData.AddRows(1, numarea);
-        Proportions.AddRows(1, numarea);
-        for (i = 0; i < numarea; i++) {
-          AgeLengthData[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
-          Proportions[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
-        }
-      }
-
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
-
     //if tmparea is in areaindex find areaid, else dont keep the data
     areaid = -1;
     for (i = 0; i < areaindex.Size(); i++)
@@ -292,6 +266,32 @@ void CatchDistribution::ReadDistributionData(CommentStream& infile,
 
     if (lenid == -1)
       keepdata = 1;
+
+    //check if the year and step are in the simulation
+    timeid = -1;
+    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
+      //if this is a new timestep, resize to store the data
+      for (i = 0; i < Years.Size(); i++)
+        if ((Years[i] == year) && (Steps[i] == step))
+          timeid = i;
+
+      if (timeid == -1) {
+        Years.resize(1, year);
+        Steps.resize(1, step);
+        timeid = (Years.Size() - 1);
+
+        AgeLengthData.AddRows(1, numarea);
+        Proportions.AddRows(1, numarea);
+        for (i = 0; i < numarea; i++) {
+          AgeLengthData[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
+          Proportions[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
+        }
+      }
+
+    } else {
+      //dont keep the data
+      keepdata = 1;
+    }
 
     if (keepdata == 0) {
       //distribution data is required, so store it

@@ -74,6 +74,7 @@ public:
   void ScaledOptValues(DoubleVector &val) const;
   void OptSwitches(ParameterVector& sw) const;
   void OptValues(DoubleVector &val) const;
+  void CheckBounds() const;
 protected:
   AddressKeeperMatrix address;
   DoubleVector initialvalues;

@@ -22,16 +22,6 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
   CI = new ConversionIndex(OtherLgrpDiv, LgrpDiv, 1);
 
-  //Next we read a number to determine which growthfunction to use
-  //1. The Gadget function (from MULTSPEC)
-  //2. Read growth from file
-  //3. Von Bertanlanffy growth function
-  //4. Jones growth function
-  //5. Von Bertanlanffy growth function with year, step and area effects
-  //6. Von Bertanlanffy growth function (length), weight read from file
-  //7. Growth as a function of l^p, and p < 0 to have length growth decreasing
-  //8. Simplified length Von Bertanlanffy growth function
-
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
   readWordAndValue(infile, "growthfunction", functionname);
@@ -88,7 +78,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   int rows = 0; //Number of rows in wgrowth and lgrowth
   infile >> ws >>  text;
   if ((strcasecmp(text, "beta") == 0)) {
-    //New beta binomial growth distribution code is used
+    //Beta binomial growth distribution code is used
     version = 1;
 
     infile >> beta;
@@ -122,6 +112,10 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     subfile.close();
     subfile.clear();
     rows = GrIPar->MaxLengthgroupGrowth() - GrIPar->MinLengthgroupGrowth() + 1;
+
+    cout << "\nWarning: the mean variance parameters implementation of the growth will be discontinued soon\n"
+      << "It is recommended that you change your model to use the beta-binomial distribution instead\n"
+      << "Please email gadgethelp@hafro.is if this will cause a problem for your model\n\n";
 
   } else
     handle.Unexpected("beta or meanvarianceparameters", text);
@@ -164,7 +158,7 @@ Grower::~Grower() {
 void Grower::Print(ofstream& outfile) const {
   int i, j, area;
 
-  outfile << "\nGrower\n\tMean lengths of length groups.\n\t";
+  outfile << "\nGrower\n\tMean lengths of length groups:\n\t";
   for (i = 0; i < LgrpDiv->NoLengthGroups(); i++)
     outfile << sep << LgrpDiv->Meanlength(i);
 

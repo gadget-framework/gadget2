@@ -24,6 +24,7 @@
 #include "understocking.h"
 #include "catchdistribution.h"
 #include "catchstatistics.h"
+#include "recstatistics.h"
 #include "stomachcontent.h"
 #include "tagdata.h"
 #include "stockpredator.h"
@@ -161,6 +162,9 @@ void Ecosystem::Initialize(int optimize) {
           break;
         case CATCHINTONSLIKELIHOOD:
           ((CatchInTons*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
+          break;
+        case RECSTATISTICSLIKELIHOOD:
+          ((RecStatistics*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
           break;
         case AGGREGATEDCDLIKELIHOOD:
           break;

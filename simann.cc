@@ -176,9 +176,13 @@
 
 #include "gadget.h"    //All the required standard header files are in here
 #include "mathfunc.h"
+#include "ecosystem.h"
 
 #define NEPS   (6)     //Number of final func. values to decide upon termination.
 #define VARS   (350)   //Maximum number of variables.
+
+/* global ecosystem used to store whether the model converged */
+extern Ecosystem* EcoSystem;
 
 //This function replaces exp to avoid under- and overflow.
 double expRep(double inn) {
@@ -399,6 +403,7 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
         << "because an optimum was found for this run\n";
 
       fp = (*f)(endpoint, n);
+      EcoSystem->SetConverge(1);
       return nfcnev;
     }
 

@@ -33,9 +33,6 @@ public:
   void Sum(const PopInfoVector& NumberInArea, int area);
   void Reset();
   void Print(ofstream& outfile) const;
-  //From GrowthImplementParameters.
-  int MaxLengthgroupGrowth() const { return maxlengthgroupgrowth; };
-  int MinLengthgroupGrowth() const { return 0; };
   int getGrowthType() { return growthtype; };
   int Version() const { return version; };
   double getPowerValue();

@@ -338,27 +338,6 @@ void CatchInTons::ReadCatchInTonsData(CommentStream& infile,
     else
       infile >> year >> step >> tmparea >> tmpfleet >> tmpnumber >> ws;
 
-    //check if the year and step are in the simulation
-    timeid = -1;
-    if (TimeInfo->IsWithinPeriod(year, step)) {
-      //if this is a new timestep, resize to store the data
-      for (i = 0; i < Years.Size(); i++)
-        if ((Years[i] == year) && (yearly || (Steps[i] == step)))
-          timeid = i;
-
-      if (timeid == -1) {
-        Years.resize(1, year);
-        Steps.resize(1, step);
-        timeid = (Years.Size() - 1);
-
-        DataCatch.AddRows(1, numarea, 0.0);
-        ModelCatch.AddRows(1, numarea, 0.0);
-      }
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
-
     //if tmparea is in areaindex find areaid, else dont keep the data
     areaid = -1;
     for (i = 0; i < areaindex.Size(); i++)
@@ -376,6 +355,27 @@ void CatchInTons::ReadCatchInTonsData(CommentStream& infile,
 
     if (fleetid == -1)
       keepdata = 1;
+
+    //check if the year and step are in the simulation
+    timeid = -1;
+    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
+      //if this is a new timestep, resize to store the data
+      for (i = 0; i < Years.Size(); i++)
+        if ((Years[i] == year) && (yearly || (Steps[i] == step)))
+          timeid = i;
+
+      if (timeid == -1) {
+        Years.resize(1, year);
+        Steps.resize(1, step);
+        timeid = (Years.Size() - 1);
+
+        DataCatch.AddRows(1, numarea, 0.0);
+        ModelCatch.AddRows(1, numarea, 0.0);
+      }
+    } else {
+      //dont keep the data
+      keepdata = 1;
+    }
 
     if (keepdata == 0) {
       //distribution data is required, so store it

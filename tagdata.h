@@ -4,39 +4,40 @@
 #include "likelihood.h"
 #include "commentstream.h"
 #include "recaggregator.h"
-#include "actionattimes.h"
+#include "doublematrixptrmatrix.h"
 #include "tagptrvector.h"
 
 class TagData : public Likelihood {
 public:
   TagData(CommentStream& infile, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, double w, TagPtrVector Tag);
+    const TimeClass* const TimeInfo, double w, TagPtrVector Tag, const char* name);
   virtual ~TagData();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
-  virtual void Print(ofstream& outfile) const {};
+  virtual void Print(ofstream& outfile) const;
+  virtual void LikelihoodPrint(ofstream& outfile);
   virtual void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
-  void ReadRecaptureData(CommentStream& infile,
-    const TimeClass* const TimeInfo, CharPtrVector areaindex);
+  void ReadRecaptureData(CommentStream& infile, const TimeClass* const TimeInfo);
+  double LikPoisson(const TimeClass* const TimeInfo);
   RecAggregator** aggregator;
-  CharPtrVector fleetnames;
-  CharPtrVector stocknames;
   CharPtrVector tagid;
-  IntVector areas;
-  IntVector index;
+  CharPtrVector fleetnames;
+  CharPtrVector areaindex;
+  CharPtrVector lenindex;
+  IntMatrix areas;
+  DoubleVector lengths;
   IntMatrix Years;
   IntMatrix Steps;
-  IntMatrix recTime;
-  IntMatrix recAreas;
-  IntMatrix recAge;
-  IntMatrix recFleet;
-  IntMatrix recMaturity;
-  DoubleMatrix tagLength;
-  DoubleMatrix recLength;
-  IntMatrix recaptures;
-  IntMatrix p;
+  DoubleMatrixPtrMatrix recaptures;
+  DoubleMatrixPtrMatrix modelRecaptures;
+  LengthGroupDivision* lgrpdiv;
   TagPtrVector tagvec;
+  char* tagname;
+  int functionnumber;
+  char* functionname;
+  int numarea;
+  int numlen;
 };
 
 #endif

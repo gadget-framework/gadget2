@@ -70,9 +70,7 @@ void Stock::AdjustEat(int area, const AreaClass* const Area, const TimeClass* co
 //-------------------------------------------------------------------
 void Stock::ReducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  int i;
   int inarea = AreaNr[area];
-  double timeratio = 1 / TimeInfo->NrOfSubsteps();
 
   //Predation
   if (iseaten)
@@ -81,14 +79,17 @@ void Stock::ReducePop(int area, const AreaClass* const Area, const TimeClass* co
   //Natural Mortality changed with more substeps
   DoubleVector* PropSurviving;
   PropSurviving = new DoubleVector(NatM->ProportionSurviving(TimeInfo));
+  double timeratio = 1 / TimeInfo->NrOfSubsteps();
 
+  int i;
   for (i = 0; i < PropSurviving->Size(); i++)
     (*PropSurviving)[i] = pow((*PropSurviving)[i], timeratio);
 
   Alkeys[inarea].Multiply(*PropSurviving);
+  delete PropSurviving;
+
   if (tagAlkeys.NrOfTagExp() > 0)
     tagAlkeys[inarea].UpdateAndTagLoss(Alkeys[inarea], tagAlkeys.tagloss());
-  delete PropSurviving;
 }
 
 //-----------------------------------------------------------------------
@@ -205,10 +206,8 @@ void Stock::Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
 void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
   int area, double ratio, int MinAge, int MaxAge) {
 
-  int numtag = Addition.NrOfTagExp();
-  int inarea = AreaNr[area];
-
-  if (numtag > 0 && numtag <= tagAlkeys.NrOfTagExp()) {
+  if (Addition.NrOfTagExp() > 0 && Addition.NrOfTagExp() <= tagAlkeys.NrOfTagExp()) {
+    int inarea = AreaNr[area];
     AgebandmratioAdd(tagAlkeys, inarea, Addition, AddArea, *CI, ratio, MinAge, MaxAge);
     tagAlkeys[inarea].UpdateRatio(Alkeys[inarea]);
   }

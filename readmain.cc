@@ -19,6 +19,7 @@
 #include "catchdistribution.h"
 #include "stockdistribution.h"
 #include "catchstatistics.h"
+#include "recstatistics.h"
 #include "stomachcontent.h"
 #include "tagdata.h"
 #include "predatorindex.h"
@@ -299,8 +300,8 @@ void Ecosystem::ReadLikelihood(CommentStream& infile) {
     } else if (strcasecmp(type, "stomachcontent") == 0) {
       Likely[i] = new StomachContent(infile, Area, TimeInfo, keeper, weight, name);
 
-    } else if (strcasecmp(type, "tagdata") == 0) {
-      Likely[i] = new TagData(infile, Area, TimeInfo, weight, tagvec);
+    } else if (strcasecmp(type, "recaptures") == 0) {
+      Likely[i] = new TagData(infile, Area, TimeInfo, weight, tagvec, name);
 
     } else if (strcasecmp(type, "catchintons") == 0) {
       Likely[i] = new CatchInTons(infile, Area, TimeInfo, weight);
@@ -310,6 +311,9 @@ void Ecosystem::ReadLikelihood(CommentStream& infile) {
 
     } else if (strcasecmp(type, "migrationpenalty") == 0) {
       Likely[i] = new MigrationPenalty(infile, weight);
+
+    } else if (strcasecmp(type, "recstatistics") == 0) {
+      Likely[i] = new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name);
 
     } else if (strcasecmp(type, "randomwalk") == 0) {
       cout << "The random walk likelihood component is no longer supported\n";

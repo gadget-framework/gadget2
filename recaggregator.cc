@@ -40,15 +40,15 @@ RecAggregator::~RecAggregator() {
 }
 
 void RecAggregator::Print(ofstream& outfile) const {
-  int a, i, j;
+  int i, j, k;
 
-  for (a = 0; a < areas.Nrow(); a++) {
-    outfile << "\tInner areas " << a << endl;
-    for (j = 0; j < ages.Nrow(); j++) {
+  for (i = 0; i < totalcatch.Size(); i++) {
+    outfile << "\tInner areas " << 1 << endl;
+    for (j = 0; j < totalcatch[i].Nrow(); j++) {
       outfile << TAB;
-      for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+      for (k = 0; k < totalcatch[i].Maxlength(j); k++) {
         outfile.width(smallwidth);
-        outfile << totalcatch[a][j][i].N;
+        outfile << totalcatch[i][j][k].N;
         outfile << sep;
       }
       outfile << endl;

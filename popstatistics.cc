@@ -2,7 +2,8 @@
 #include "popinfo.h"
 #include "gadget.h"
 
-PopStatistics::PopStatistics(const PopInfoIndexVector& pop, const LengthGroupDivision* const lgrpdiv)
+PopStatistics::PopStatistics(const PopInfoIndexVector& pop,
+  const LengthGroupDivision* const lgrpdiv, int calcweight)
   : meanlength(0.0), meanweight(0.0), totalnumber(0.0), stddevoflength(0.0) {
 
   PopInfo nullpop;
@@ -10,24 +11,25 @@ PopStatistics::PopStatistics(const PopInfoIndexVector& pop, const LengthGroupDiv
   int i;
   for (i = pop.Mincol(); i < pop.Maxcol(); i++)
     p[i] = pop[i];
-  this->CalcStatistics(p, lgrpdiv);
+  this->CalcStatistics(p, lgrpdiv, calcweight);
 }
 
-PopStatistics::PopStatistics(const PopInfoVector& pop, const LengthGroupDivision* const lgrpdiv)
+PopStatistics::PopStatistics(const PopInfoVector& pop,
+  const LengthGroupDivision* const lgrpdiv, int calcweight)
   : meanlength(0.0), meanweight(0.0), totalnumber(0.0), stddevoflength(0.0) {
 
-  this->CalcStatistics(pop, lgrpdiv);
+  this->CalcStatistics(pop, lgrpdiv, calcweight);
 }
 
-void PopStatistics::CalcStatistics(const PopInfoVector& pop, const LengthGroupDivision* const lgrpdiv) {
-  assert(pop.Size() == lgrpdiv->NoLengthGroups());
+void PopStatistics::CalcStatistics(const PopInfoVector& pop,
+  const LengthGroupDivision* const lgrpdiv, int calcweight) {
 
   PopInfo sum;
   int i;
   double length;
 
   for (i = 0; i < pop.Size(); i++) {
-    if ((isZero(pop[i].W)) && (!(isZero(pop[i].N)))) {
+    if ((isZero(pop[i].W)) && (!(isZero(pop[i].N))) && (calcweight == 0)) {
       cerr << "Warning: when calculating statistics on a population, a nonzero\n"
         << "population (" << pop[i].N << ") had zero mean weight\n";
     }
@@ -45,7 +47,12 @@ void PopStatistics::CalcStatistics(const PopInfoVector& pop, const LengthGroupDi
   } else {
     totalnumber = sum.N;
     meanlength /= totalnumber;
-    meanweight = sum.W;
+
+    if (calcweight == 0)
+      meanweight = sum.W;
+    else
+      meanweight = 0.0;
+
     for (i = 0; i < pop.Size(); i++) {
       length = lgrpdiv->Meanlength(i);
       stddevoflength += pop[i].N * (meanlength - length) * (meanlength - length);

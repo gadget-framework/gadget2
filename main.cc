@@ -37,6 +37,7 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
   } else if (MainInfo->InitialCondareGiven) {
     Stochasticdata = new StochasticData(MainInfo->InitialCommentFilename);
     EcoSystem->Update(Stochasticdata);
+    EcoSystem->CheckBounds();
     EcoSystem->Simulate(MainInfo->CalcLikelihood, print);
     if ((MainInfo->printinfo).Print())
       EcoSystem->PrintValues((MainInfo->printinfo).OutputFile, (MainInfo->printinfo).givenPrecision);
@@ -152,6 +153,7 @@ int main(int aNumber, char *const aVector[]) {
     if (MainInfo.InitialCondareGiven) {
       Stochasticdata = new StochasticData(MainInfo.InitialCommentFilename);
       EcoSystem->Update(Stochasticdata);
+      EcoSystem->CheckBounds();
     }
     Optinfo->MaximizeLikelihood();
     if ((MainInfo.printinfo).forcePrint)

@@ -463,7 +463,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
             cerr << "Warning - cannot scale switch " << switches[j] << " with initial value zero\n";
             scaledvalues[j] = values[j];
           } else
-            scaledvalues[j] = Stoch->Values(i) / initialvalues[j];
+            scaledvalues[j] = values[j] / initialvalues[j];
 
           lowerbds[j] = Stoch->Lower(i);
           upperbds[j] = Stoch->Upper(i);
@@ -534,9 +534,22 @@ void Keeper::WriteParamsInColumns(const char* const filename,
 
   outfile << "; ";
   RUNID.print(outfile);
-  outfile << "; optimisation ran for " << EcoSystem->GetFuncEval()
-    << " function evaluations\n; the final likelihood value was "
-    << setprecision(p) << functionValue << "\nswitch\tvalue\t\tlower\tupper\toptimise\n";
+
+  if (EcoSystem->GetFuncEval() == 0) {
+    outfile << "; a stochastic run was performed giving a likelihood value of "
+      << setprecision(p) << functionValue;
+
+  } else {
+    outfile << "; the optimisation ran for " << EcoSystem->GetFuncEval()
+      << " function evaluations\n; the final likelihood value was "
+      << setprecision(p) << functionValue;
+
+    if (EcoSystem->GetConverge() == 1)
+      outfile << "\n; the optimisation stopped because the converge criteria was met";
+    else
+      outfile << "\n; the optimisation stopped because the maximum number of iterations was exceeded";
+  }
+  outfile << "\nswitch\tvalue\t\tlower\tupper\toptimise\n";
 
   for (i = 0; i < values.Size(); i++) {
     outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i] << TAB;
@@ -593,6 +606,32 @@ void Keeper::UpperOptBds(DoubleVector& ubs) const {
         ubs[j] = upperbds[i];
         j++;
       }
+  }
+}
+
+void Keeper::CheckBounds() const {
+  int i, count = 0;
+  for (i = 0; i < values.Size(); i++) {
+    if (lowerbds[i] > values[i]) {
+      count++;
+      cerr << "Error: for switch " << switches[i] << " lowerbound " << lowerbds[i]
+        << " is greater than the starting value " << values[i] << endl;
+    }
+    if (upperbds[i] < values[i]) {
+      count++;
+      cerr << "Error: for switch " << switches[i] << " upperbound " << upperbds[i]
+        << " is less than the starting value " << values[i] << endl;
+    }
+    if (upperbds[i] < lowerbds[i]) {
+      count++;
+      cerr << "Error: for switch " << switches[i] << " upperbound " << upperbds[i]
+        << " is less than the lowerbound " << lowerbds[i] << endl;
+    }
+  }
+
+  if (count > 0) {
+    cerr << "Exiting with " << count << " errors in the initial parameter values\n";
+    exit(EXIT_FAILURE);
   }
 }
 

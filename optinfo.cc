@@ -114,7 +114,7 @@ void OptInfoHooke::MaximizeLikelihood() {
   ParameterVector optswitches(nopt);
   EcoSystem->OptSwitches(optswitches);
 
-  /* Scaling the bounds, because tha parameters are scaled. */
+  /* Scaling the bounds, because the parameters are scaled. */
   for (i = 0; i < nopt; i++) {
     lowerb[i] = lowerb[i] / initialval[i];
     upperb[i] = upperb[i] / initialval[i];
@@ -133,19 +133,6 @@ void OptInfoHooke::MaximizeLikelihood() {
       cerr << "Error: for switch " << optswitches[i] << " starting value is zero\n"
         << "which will give poor convergence for Hooke and Jeeves optimisation\n";
     }
-    if ((lowerb[i] > 1) || (upperb[i] < 1)) {
-      count++;
-      cerr << "Error: for switch " << optswitches[i] << " the initial value is outside the bounds\n";
-    }
-    if (upperb[i] < lowerb[i]) {
-      count++;
-      cerr << "Error: for switch " << optswitches[i] << " the upperbound is less than the lowerbound\n";
-    }
-  }
-
-  if (count > 0) {
-    cerr << "Exiting with " << count << " errors in the initial parameter values\n";
-    exit(EXIT_FAILURE);
   }
 
   //JMB - swapped the order of upperb and lowerb to match entries for hooke()
@@ -247,29 +234,6 @@ void OptInfoSimann::MaximizeLikelihood() {
 
   ParameterVector optswitches(nopt);
   EcoSystem->OptSwitches(optswitches);
-  count = 0;
-  for (i = 0; i < nopt; i++) {
-    if (lowerb[i] > val[i]) {
-      count++;
-      cerr << "Error: for switch " << optswitches[i] << " lowerbound " << lowerb[i]
-        << " is greater than the starting value " << val[i] << endl;
-    }
-    if (upperb[i] < val[i]) {
-      count++;
-      cerr << "Error: for switch " << optswitches[i] << " upperbound " << upperb[i]
-        << " is less that the starting value " << val[i] << endl;
-    }
-    if (upperb[i] < lowerb[i]) {
-      count++;
-      cerr << "Error: for switch " << optswitches[i] << " upperbound " << upperb[i]
-        << " is less than the lowerbound " << lowerb[i] << endl;
-    }
-  }
-
-  if (count > 0) {
-    cerr << "Exiting with " << count << " errors in the initial parameter values\n";
-    exit(EXIT_FAILURE);
-  }
 
   count = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, 0,
     simanniter, cstep, T, vmstep, rt, ns, nt, simanneps);
@@ -288,8 +252,7 @@ void OptInfoSimann::MaximizeLikelihood() {
 
 OptInfoHookeAndSimann::OptInfoHookeAndSimann()
   : OptInfo(), hookeiter(10), rho(0.5), lambda(0), hookeeps(1e-6),
-  simanniter(2000), rt(0.85), simanneps(1e-4),
-  ns(15), nt(10), T(100), cs(2), vm(1) {
+  simanniter(2000), rt(0.85), simanneps(1e-4), ns(15), nt(10), T(100), cs(2), vm(1) {
 }
 
 OptInfoHookeAndSimann::~OptInfoHookeAndSimann() {
@@ -380,29 +343,6 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
 
   ParameterVector optswitches(nopt);
   EcoSystem->OptSwitches(optswitches);
-  count = 0;
-  for (i = 0; i < nopt; i++) {
-    if (lowerb[i] > val[i]) {
-      count++;
-      cerr << "Error: for switch " << optswitches[i] << " lowerbound " << lowerb[i]
-        << " is greater than the starting value " << val[i] << endl;
-    }
-    if (upperb[i] < val[i]) {
-      count++;
-      cerr << "Error: for switch " << optswitches[i] << " upperbound " << upperb[i]
-        << " is less that the starting value " << val[i] << endl;
-    }
-    if (upperb[i] < lowerb[i]) {
-      count++;
-      cerr << "Error: for switch " << optswitches[i] << " upperbound " << upperb[i]
-        << " is less than the lowerbound " << lowerb[i] << endl;
-    }
-  }
-
-  if (count > 0) {
-    cerr << "Exiting with " << count << " errors in the initial parameter values\n";
-    exit(EXIT_FAILURE);
-  }
 
   count = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, 0,
     simanniter, cstep, T, vmstep, rt, ns, nt, simanneps);
@@ -417,7 +357,7 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
   for (i = 0; i < nopt; i++)
     startpoint[i] = val[i];
 
-  /* Scaling the bounds, because tha parameters are now scaled. */
+  /* Scaling the bounds, because the parameters are now scaled. */
   for (i = 0; i < nopt; i++) {
     lowerb[i] = lowerb[i] / initialval[i];
     upperb[i] = upperb[i] / initialval[i];
@@ -442,6 +382,9 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
     cerr << "Exiting with " << count << " errors in the parameter values\n";
     exit(EXIT_FAILURE);
   }
+
+  /* Reset the converge flag for the hooke optimisation */
+  EcoSystem->SetConverge(0);
 
   count = hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
     rho, lambda, hookeeps, hookeiter);

@@ -7,8 +7,10 @@ Ecosystem::Ecosystem() {
 
 Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   int calclikelihood, const char* const inputdir,
-  const char* const workingdir, const PrintInfo& pi) : funceval(0), printinfo(pi) {
+  const char* const workingdir, const PrintInfo& pi) : printinfo(pi) {
 
+  funceval = 0;
+  converge = 0;
   interrupted = 0;
   TimeInfo = 0;
   keeper = new Keeper;
@@ -220,4 +222,8 @@ void Ecosystem::LowerBds(DoubleVector& lbds) const {
 
 void Ecosystem::UpperBds(DoubleVector& ubds) const {
   keeper->UpperOptBds(ubds);
+}
+
+void Ecosystem::CheckBounds() const {
+  keeper->CheckBounds();
 }

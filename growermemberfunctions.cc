@@ -26,6 +26,10 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
       if (growth >= maxlengthgroupgrowth)
         growth = double(maxlengthgroupgrowth) - 0.1;
 
+      //JMB - check for negative growth
+      if (growth < verysmall)
+        growth = 0.0;
+
       alpha = beta * growth / (maxlengthgroupgrowth - growth);
       for (j = 0; j < maxlengthgroupgrowth; j++)
         part3 = part3 * (alpha + beta + double(j));
@@ -106,6 +110,8 @@ void Grower::GrowthImplement(int area, const LengthGroupDivision* const Lengths)
       growth = InterpLgrowth[inarea][lgroup] * tmpDl;
       if (growth >= maxlengthgroupgrowth)
         growth = double(maxlengthgroupgrowth) - 0.1;
+      if (growth < verysmall)
+        growth = 0.0;
       alpha = beta * growth / (maxlengthgroupgrowth - growth);
       for (j = 0; j < maxlengthgroupgrowth; j++)
         part3 = part3 * (alpha + beta + double(j));

@@ -11,8 +11,8 @@ MortPredator::MortPredator(CommentStream& infile, const char* givenname, const I
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
   const TimeClass* const TimeInfo, Keeper* const keeper)
   : LengthPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv, 1.0),
-  effort(Areas.Size(),TimeInfo->TotalNoSteps(), 0.),
-  f_level(Areas.Size(),TimeInfo->TotalNoSteps(), 0.) {
+  effort(Areas.Size(), TimeInfo->TotalNoSteps(), 0.),
+  f_level(Areas.Size(), TimeInfo->TotalNoSteps(), 0.) {
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -77,7 +77,7 @@ void MortPredator::Eat(int area, double LengthOfStep, double Temperature, double
 
   //Written by kgf 20/5 98
   //The parameters LengthOfStep, Temperature and Areasize will not be used.
-  const int inarea = AreaNr[area];
+  int inarea = AreaNr[area];
   int prey, predl, preyl;
   double time_frac, pres_f_lev;
 
@@ -136,7 +136,7 @@ void MortPredator::calcCHat(int area, const TimeClass* const TimeInfo) {
 
   int prey, predl, preyl, age, minl, maxl;
   int timestep = TimeInfo->CurrentTime() - 1;
-  const int inarea = AreaNr[area];
+  int inarea = AreaNr[area];
   double time_frac, pres_f_lev;
 
   if (TimeInfo->NrOfSubsteps() > 1)
@@ -225,7 +225,7 @@ const PopInfoVector& MortPredator::NumberPriortoEating(int area, const char* pre
 double MortPredator::getFlevel(int area, const TimeClass* const TimeInfo) {
   //written by kgf 16/9 98
   double pres_f_lev = 0.0;
-  const int inarea = AreaNr[area];
+  int inarea = AreaNr[area];
   if (calc_f_lev == 1)  //f_level calculated from effort
     pres_f_lev = f_level[inarea][TimeInfo->CurrentTime() - 1];
   else //f_level read from file, may be optimized
@@ -247,7 +247,7 @@ void MortPredator::calcFlevel() {
 
 void MortPredator::InitializeCHat(int area, int prey, const AgeBandMatrix& mean_n) {
   //written by kgf 14/7 98
-  const int inarea = AreaNr[area];
+  int inarea = AreaNr[area];
   int i = 0;
   int age;
   IntVector size(mean_n.Nrow());

@@ -61,8 +61,8 @@ void GrowthCalcA::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
     if (Lgrowth[i] < 0)
       Lgrowth[i] = 0;
 
-    if (GrEatNumber[i].W <= rathersmall)
-      Wgrowth[i] = 0;
+    if (GrEatNumber[i].W < verysmall)
+      Wgrowth[i] = 0.0;
     else {
       Wgrowth[i] = tempW * pow(GrEatNumber[i].W, growthPar[5]) * (Fphi[i] - growthPar[6]);
     }
@@ -256,7 +256,7 @@ void GrowthCalcC::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
     cerr << "Warning - length growth parameter is negative\n";
 
   for (i = 0; i < Wgrowth.Size(); i++) {
-    if (isZero(GrEatNumber[i].W)) {
+    if (GrEatNumber[i].W < verysmall || isZero(tempW)) {
       Wgrowth[i] = 0.0;
       Lgrowth[i] = 0.0;
     } else {
@@ -265,7 +265,7 @@ void GrowthCalcC::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
       //Here after the code is similar as for GrowthCalcD except an extra
       //parameter Lgrowthpar[8] comes instead of Fphi[i]
-      if (Wgrowth[i] <= verysmall) {
+      if (Wgrowth[i] < verysmall) {
         Wgrowth[i] = 0.0;
         Lgrowth[i] = 0.0;
       } else {
@@ -386,7 +386,7 @@ void GrowthCalcD::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
     cerr << "Warning - length growth parameter is negative\n";
 
   for (i = 0; i < Wgrowth.Size(); i++) {
-    if (isZero(GrEatNumber[i].W)) {
+    if (GrEatNumber[i].W < verysmall || isZero(tempW)) {
       Wgrowth[i] = 0.0;
       Lgrowth[i] = 0.0;
     } else {
@@ -394,7 +394,7 @@ void GrowthCalcD::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
         (wgrowthPar[0] * pow(GrEatNumber[i].W, wgrowthPar[1])) -
         wgrowthPar[2] * pow(GrEatNumber[i].W, wgrowthPar[3]);
 
-      if (Wgrowth[i] <= verysmall) {
+      if (Wgrowth[i] < verysmall) {
         Wgrowth[i] = 0.0;
         Lgrowth[i] = 0.0;
       } else {
@@ -554,14 +554,14 @@ void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
     cerr << "Warning - length growth parameter is negative\n";
 
   for (i = 0; i < Wgrowth.Size(); i++) {
-    if (isZero(GrEatNumber[i].W) || isZero(tempW)) {
+    if (GrEatNumber[i].W < verysmall || isZero(tempW)) {
       Wgrowth[i] = 0.0;
       Lgrowth[i] = 0.0;
     } else {
       Wgrowth[i] = tempW * (pow(GrEatNumber[i].W / wgrowthPar[2], wgrowthPar[4]) -
         pow(GrEatNumber[i].W / wgrowthPar[3], wgrowthPar[5]));
 
-      if (Wgrowth[i] <= verysmall) {
+      if (Wgrowth[i] < verysmall) {
         Wgrowth[i] = 0.0;
         Lgrowth[i] = 0.0;
       } else {

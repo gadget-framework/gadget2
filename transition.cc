@@ -129,7 +129,7 @@ void Transition::KeepAgegroup(int area, AgeBandMatrix& Alkeys,
       Alkeys[age][l].W = 0.0;
       for (i = 0; i < numtags; i++) {
         tagnumber = *(TagAlkeys[age][l][i].N);
-        if (isZero(tagnumber) || tagnumber < verysmall)
+        if (tagnumber < verysmall)
           *(TagAgeGroup[inarea][age][l][i].N) = 0.0;
         else
           *(TagAgeGroup[inarea][age][l][i].N) = tagnumber;

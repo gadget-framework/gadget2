@@ -23,7 +23,6 @@ public:
   void ChangeElement(int nr, const AgeBandMatrixRatio& value);
   void resize(int add, AgeBandMatrixRatio* matr);
   void resize(int add, int minage, const IntVector& minl, const IntVector& size);
-  void resize();
   void addTag(AgeBandMatrixPtrVector* initial, const AgeBandMatrixPtrVector& Alkeys, const char* id, double tagloss);
   void addTag(const char* name);
   void deleteTag(const char* tagname);
@@ -37,7 +36,7 @@ public:
   void Migrate(const DoubleMatrix& Migrationmatrix, const AgeBandMatrixPtrVector& Total);
   const int NrOfTagExp() const { return tagID.Size(); };
   const CharPtrVector tagids() const { return tagID; };
-  const DoubleVector tagloss() const { return tagLoss; };
+  const DoubleVector& tagloss() const { return tagLoss; };
   friend void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
     const AgeBandMatrixRatioPtrVector& Addition, int AdditionArea, const ConversionIndex &CI,
     double ratio, int minage, int maxage);

@@ -52,6 +52,7 @@ public:
   void OptValues(DoubleVector& val) const;
   void LowerBds(DoubleVector& lbds) const;
   void UpperBds(DoubleVector& ubds) const;
+  void CheckBounds() const;
   void InitialValues(DoubleVector& initialval) const;
   void ScaleVariables() const;
   void ScaledValues(DoubleVector& val) const;
@@ -65,10 +66,13 @@ public:
   int Simulate(int optimize, int print = 0);
   double Likelihood() const { return likelihood; };
   int GetFuncEval() const { return funceval; };
+  int GetConverge() const { return converge; };
+  void SetConverge(int setConverge) { converge = setConverge; };
   volatile int interrupted;
 protected:
   double likelihood;
   int funceval;
+  int converge;
   BaseClassPtrVector basevec;
   LikelihoodPtrVector Likely;
   PrinterPtrVector printvec;

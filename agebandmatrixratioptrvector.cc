@@ -119,17 +119,13 @@ void AgeBandMatrixRatioPtrVector::addTag(AgeBandMatrixPtrVector* initial,
       maxlength = v[0]->Maxlength(age);
       for (length = minlength; length < maxlength; length++) {
         totalnum = Alkeys[i][age][length].N;
-        if (isZero(totalnum) || totalnum < verysmall)
+        if (totalnum < verysmall)
           (*v[i])[age][length].resize(1, (&(*initial)[i][age][length].N), 0.0);
         else
           (*v[i])[age][length].resize(1, (&(*initial)[i][age][length].N), (*initial)[i][age][length].N / totalnum);
       }
     }
   }
-}
-
-void AgeBandMatrixRatioPtrVector::resize() {
-  size = 0;
 }
 
 void AgeBandMatrixRatioPtrVector::addTagName(const char* name) {

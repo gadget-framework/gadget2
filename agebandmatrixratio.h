@@ -35,7 +35,7 @@ public:
   const PopRatioIndexVector& operator [] (int age) const;
   void UpdateRatio(const AgeBandMatrix& Total);
   void UpdateNumbers(const AgeBandMatrix& Total);
-  void UpdateAndTagLoss(const AgeBandMatrix& Total, DoubleVector tagloss);
+  void UpdateAndTagLoss(const AgeBandMatrix& Total, const DoubleVector& tagloss);
   int NrOfTagExp() const;
   void SettoZero();
 protected:

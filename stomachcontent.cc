@@ -333,29 +333,6 @@ void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass*
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmppred >> tmpprey >> tmpnumber >> ws;
 
-    //check if the year and step are in the simulation
-    timeid = -1;
-    if (TimeInfo->IsWithinPeriod(year, step)) {
-      //if this is a new timestep, resize to store the data
-      for (i = 0; i < Years.Size(); i++)
-        if ((Years[i] == year) && (Steps[i] == step))
-          timeid = i;
-
-      if (timeid == -1) {
-        Years.resize(1, year);
-        Steps.resize(1, step);
-        timeid = (Years.Size() - 1);
-
-        stomachcontent.AddRows(1, numarea);
-        for (i = 0; i < numarea; i++)
-          stomachcontent[timeid][i] = new DoubleMatrix(pred_size, nopreygroups, 0.0);
-      }
-
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
-
     //if tmparea is in areaindex find areaid, else dont keep the data
     areaid = -1;
     for (i = 0; i < areaindex.Size(); i++)
@@ -382,6 +359,29 @@ void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass*
 
     if (preyid == -1)
       keepdata = 1;
+
+    //check if the year and step are in the simulation
+    timeid = -1;
+    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
+      //if this is a new timestep, resize to store the data
+      for (i = 0; i < Years.Size(); i++)
+        if ((Years[i] == year) && (Steps[i] == step))
+          timeid = i;
+
+      if (timeid == -1) {
+        Years.resize(1, year);
+        Steps.resize(1, step);
+        timeid = (Years.Size() - 1);
+
+        stomachcontent.AddRows(1, numarea);
+        for (i = 0; i < numarea; i++)
+          stomachcontent[timeid][i] = new DoubleMatrix(pred_size, nopreygroups, 0.0);
+      }
+
+    } else {
+      //dont keep the data
+      keepdata = 1;
+    }
 
     if (keepdata == 0) {
       //stomach content data is required, so store it
@@ -438,32 +438,6 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmppred >> tmpprey >> tmpnumber >> tmpstddev >> ws;
 
-    //check if the year and step are in the simulation
-    timeid = -1;
-    if (TimeInfo->IsWithinPeriod(year, step)) {
-      //if this is a new timestep, resize to store the data
-      for (i = 0; i < Years.Size(); i++)
-        if ((Years[i] == year) && (Steps[i] == step))
-          timeid = i;
-
-      if (timeid == -1) {
-        Years.resize(1, year);
-        Steps.resize(1, step);
-        timeid = (Years.Size() - 1);
-
-        stomachcontent.AddRows(1, numarea);
-        stddev.AddRows(1, numarea);
-        for (i = 0; i < numarea; i++) {
-          stomachcontent[timeid][i] = new DoubleMatrix(pred_size, nopreygroups, 0.0);
-          stddev[timeid][i] = new DoubleMatrix(pred_size, nopreygroups, 0.0);
-        }
-      }
-
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
-
     //if tmparea is in areaindex find areaid, else dont keep the data
     areaid = -1;
     for (i = 0; i < areaindex.Size(); i++)
@@ -490,6 +464,32 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
 
     if (preyid == -1)
       keepdata = 1;
+
+    //check if the year and step are in the simulation
+    timeid = -1;
+    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata = 0)) {
+      //if this is a new timestep, resize to store the data
+      for (i = 0; i < Years.Size(); i++)
+        if ((Years[i] == year) && (Steps[i] == step))
+          timeid = i;
+
+      if (timeid == -1) {
+        Years.resize(1, year);
+        Steps.resize(1, step);
+        timeid = (Years.Size() - 1);
+
+        stomachcontent.AddRows(1, numarea);
+        stddev.AddRows(1, numarea);
+        for (i = 0; i < numarea; i++) {
+          stomachcontent[timeid][i] = new DoubleMatrix(pred_size, nopreygroups, 0.0);
+          stddev[timeid][i] = new DoubleMatrix(pred_size, nopreygroups, 0.0);
+        }
+      }
+
+    } else {
+      //dont keep the data
+      keepdata = 1;
+    }
 
     if (keepdata == 0) {
       //stomach content data is required, so store it

@@ -21,7 +21,6 @@ public:
     const TimeClass* const TimeInfo, Keeper* const keeper);
   ~Tags();
   void Update();
-  void Update(int year, int step);
   void UpdateTags(int year, int step);
   void DeleteFromStock();
   const int getTagYear() const { return tagyear; };
@@ -36,12 +35,12 @@ public:
   void UpdateTransitionStock(const TimeClass* const TimeInfo);
   void StoreNumberPriorToEating(int area, const char* stockname);
   const AgeBandMatrix& NumberPriorToEating(int area, const char* stockname);
-  void Reset(const TimeClass* const TimeInfo) {};
+  void Reset(const TimeClass* const TimeInfo);
+  int IsWithinPeriod(int year, int step);
   int stockIndex(const char* stockname);
 private:
-  void ReadNumbers(CommentStream& infile, const char* tagname, double minlength, double dl);
-  void ReadMultiNumbers(CommentStream& infile, const char* tagname, double minlength,
-    double dl, const AreaClass* const Area, const TimeClass* const TimeInfo) {}; //JMB
+  void ReadNumbers(CommentStream& infile, const char* tagname, double minlength,
+    double dl, const AreaClass* const Area, const TimeClass* const TimeInfo);
   void AddToTagStock(int time, int area);
   CharPtrVector stocknames;
   //area-age-length distribution of tags by stocks
@@ -67,6 +66,5 @@ private:
   IntVector Years;
   IntVector Steps;
   IntMatrix Areas;
-  int multiTags;
 };
 #endif

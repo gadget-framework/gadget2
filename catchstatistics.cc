@@ -165,9 +165,27 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
     else
       infile >> year >> step >> tmparea >> tmpage >> tmpnumber >> tmpmean >> ws;
 
+    //if tmparea is in areaindex find areaid, else dont keep the data
+    areaid = -1;
+    for (i = 0; i < areaindex.Size(); i++)
+      if (strcasecmp(areaindex[i], tmparea) == 0)
+        areaid = i;
+
+    if (areaid == -1)
+      keepdata = 1;
+
+    //if tmpage is in ageindex find ageid, else dont keep the data
+    ageid = -1;
+    for (i = 0; i < ageindex.Size(); i++)
+      if (strcasecmp(ageindex[i], tmpage) == 0)
+        ageid = i;
+
+    if (ageid == -1)
+      keepdata = 1;
+
     //check if the year and step are in the simulation
     timeid = -1;
-    if (TimeInfo->IsWithinPeriod(year, step)) {
+    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -187,24 +205,6 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
       //dont keep the data
       keepdata = 1;
     }
-
-    //if tmparea is in areaindex find areaid, else dont keep the data
-    areaid = -1;
-    for (i = 0; i < areaindex.Size(); i++)
-      if (strcasecmp(areaindex[i], tmparea) == 0)
-        areaid = i;
-
-    if (areaid == -1)
-      keepdata = 1;
-
-    //if tmpage is in ageindex find ageid, else dont keep the data
-    ageid = -1;
-    for (i = 0; i < ageindex.Size(); i++)
-      if (strcasecmp(ageindex[i], tmpage) == 0)
-        ageid = i;
-
-    if (ageid == -1)
-      keepdata = 1;
 
     if (keepdata == 0) {
       //statistics data is required, so store it
@@ -382,7 +382,7 @@ double CatchStatistics::SOSWeightOrLength() {
            * (that is, we get some fairly high number, instead of zero before).
            * Further, the reason why the population is multiplied with a 20 is simply to
            * avoid the penalty to come in to quickly. */
-          lik += simdiff * simdiff * (simvar > 0 ? 1 / simvar : 0) * (*numbers[timeindex])[nareas][age]
+          lik += simdiff * simdiff * (simvar > 0 ? 1 / simvar : 0.0) * (*numbers[timeindex])[nareas][age]
             * (1 - exp(-20 * simnumber)) + ((*mean[timeindex])[nareas][age]
             * (*mean[timeindex])[nareas][age] * exp(-20 * simnumber));
           break;
@@ -390,7 +390,7 @@ double CatchStatistics::SOSWeightOrLength() {
           if (isZero(simmean))
             lik += (*numbers[timeindex])[nareas][age];
           else if (simmean > verysmall && (*mean[timeindex])[nareas][age] > verysmall)
-            lik += simdiff * simdiff * (simvar > 0 ? 1 / simvar : 0) * (*numbers[timeindex])[nareas][age];
+            lik += simdiff * simdiff * (simvar > 0 ? 1 / simvar : 0.0) * (*numbers[timeindex])[nareas][age];
 
           break;
         default:

@@ -6,8 +6,8 @@ GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat=2 \
               -Wreorder -Wwrite-strings -Wsynth -Wchar-subscripts \
               -Wuninitialized -W
 
-#DEFINE_FLAGS = -D GADGET_INLINE -D DEBUG -D INTERRUPT_HANDLER -g -O
-DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
+DEFINE_FLAGS = -D GADGET_INLINE -D DEBUG -D INTERRUPT_HANDLER -g -O
+#DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
 
 ##########################################################################
 # Pick the appropriate compiler from the following switches
@@ -106,8 +106,8 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o \
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \
-	initialinputfile.o popratio.o popinfo.o taggrow.o recaggregator.o \
-	popinfomemberfunctions.o agebandmatrixratiomemberfunctions.o
+	initialinputfile.o popratio.o popinfo.o recaggregator.o recstatistics.o \
+	taggrow.o popinfomemberfunctions.o agebandmatrixratiomemberfunctions.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
