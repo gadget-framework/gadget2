@@ -98,18 +98,21 @@ void UnderStocking::Reset(const Keeper* const keeper) {
 
 void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
   int i, j, k;
-  double err;
+  double err, l;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    handle.logMessage("Checking likelihood components for understocking");
+    handle.logMessage("Checking understocking likelihood component");
+    l = 0.0;
     for (k = 0; k < areas.Nrow(); k++) {
       err = 0.0;
       for (i = 0; i < fleets.Size(); i++)
         for (j = 0; j < areas[k].Size(); j++)
           if (fleets[i]->IsInArea(areas[k][j]))
             err += fleets[i]->OverConsumption(areas[k][j]);
-      likelihood += pow(err, powercoeff);
+      l += pow(err, powercoeff);
     }
-    if (!(isZero(likelihood)))
-      handle.logMessage("The understocking likelihood score has increased to", likelihood);
+    if (!(isZero(l))) {
+      handle.logMessage("The likelihood score for this component on this timestep is", l);
+      likelihood += l;
+    }
   }
 }

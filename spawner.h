@@ -40,12 +40,9 @@ protected:
   DoubleMatrix ssb;
   LengthGroupDivision* spawnLgrpDiv;
   FormulaVector spawnParameters;
+  FormulaVector stockParameters;
   int onlyParent;
   int spawnage;
-  Formula meanlength;
-  Formula sdev;
-  Formula alpha;
-  Formula beta;
 };
 
 #endif

@@ -288,6 +288,7 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
       (*obsDistribution[timeid][areaid])[ageid][lenid] = tmpnumber;
     }
   }
+
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logWarning("Warning in catchdistribution - found no data in the data file for", cdname);
@@ -406,7 +407,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
       outfile << endl;
       break;
     case 6:
-      outfile << "Multivariate logistic distribution parameter: sigma " << sigma << endl;
+      outfile << "\tMultivariate logistic distribution parameter: sigma " << sigma << endl;
       break;
     default:
       handle.logWarning("Warning in catchdistribution - unknown function", functionname);
@@ -463,7 +464,6 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
 
     if (found == 0)
       handle.logFailure("Error in catchdistribution - unknown fleet", fleetnames[i]);
-
   }
 
   for (i = 0; i < stocknames.Size(); i++) {
@@ -477,7 +477,6 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     }
     if (found == 0)
       handle.logFailure("Error in catchdistribution - unknown stock", stocknames[i]);
-
   }
   
   stocktype = stocks[0]->Type();
@@ -495,6 +494,7 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
 
 void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
+  double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
     handle.logMessage("Calculating likelihood score for catchdistribution component", cdname);
 
@@ -507,43 +507,40 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
     switch(functionnumber) {
       case 1:
-        likelihood += calcLikMultinomial();
+        l = calcLikMultinomial();
         break;
       case 2:
-        likelihood += calcLikPearson(TimeInfo);
+        l = calcLikPearson(TimeInfo);
         break;
       case 3:
-        likelihood += calcLikGamma(TimeInfo);
+        l = calcLikGamma(TimeInfo);
         break;
       case 4:
-        likelihood += calcLikSumSquares();
+        l = calcLikSumSquares();
         break;
       case 5:
         if (timeindex == 0) {
           Correlation();
           if (illegal == 1 || LU.IsIllegal() == 1) {
             handle.logWarning("Warning in catchdistribution - multivariate normal out of bounds");
-            likelihood += verybig;
+            l = verybig;
           }
         }
-
         if (illegal != 1 && LU.IsIllegal() != 1)
-          likelihood += calcLikMVNormal();
-        else
-          likelihood += 0.0;
-
+          l = calcLikMVNormal();
         break;
       case 6:
-        likelihood += calcLikMVLogistic();
+        l = calcLikMVLogistic();
         break;
       case 7:
-        likelihood += calcLikLog(TimeInfo);
+        l = calcLikLog(TimeInfo);
         break;
       default:
         handle.logWarning("Warning in catchdistribution - unknown function", functionname);
         break;
     }
-    handle.logMessage("The likelihood score for this component has increased to", likelihood);
+    likelihood += l;
+    handle.logMessage("The likelihood score for this component on this timestep is", l);
     timeindex++;
   }
 }
@@ -758,7 +755,7 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
         for (age = minrow; age <= maxrow; age++) {
           for (length = mincol[age]; length <= maxcol[age]; length++) {
             totalmodel += (*calc_c[nareas])[age][length];
-            totaldata +=  (*obs_c[nareas])[age][length];
+            totaldata += (*obs_c[nareas])[age][length];
           }
         }
         ratio = log(totaldata / totalmodel);
@@ -994,7 +991,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
       catchfile << endl;
       break;
     case 6:
-      catchfile << "Multivariate logistic distribution parameter: sigma " << sigma << endl;
+      catchfile << "\tMultivariate logistic distribution parameter: sigma " << sigma << endl;
       break;
     default:
       handle.logWarning("Warning in catchdistribution - unknown function", functionname);

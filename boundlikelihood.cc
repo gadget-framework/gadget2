@@ -133,5 +133,7 @@ void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keepe
     } else
       likelihoods[i] = 0.0;
   }
-  handle.logMessage("Calculated likelihood score for boundlikelihood component", likelihood);
+  handle.logMessage("Calculated likelihood score for boundlikelihood component to be", likelihood);
+  if (isZero(likelihood))
+    handle.logMessage("For this model simulation, no parameters are outside the bounds");
 }

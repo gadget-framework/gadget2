@@ -332,6 +332,7 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
 
 void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   int i;
+  double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
     handle.logMessage("Calculating likelihood score for stockdistribution component", sdname);
     for (i = 0; i < stocknames.Size(); i++)
@@ -339,16 +340,17 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
     switch(functionnumber) {
       case 1:
-        likelihood += calcLikMultinomial();
+        l = calcLikMultinomial();
         break;
       case 2:
-        likelihood += calcLikSumSquares();
+        l = calcLikSumSquares();
         break;
       default:
         handle.logWarning("Warning in stockdistribution - unknown function", functionname);
         break;
     }
-    handle.logMessage("The likelihood score for this component has increased to", likelihood);
+    likelihood += l;
+    handle.logMessage("The likelihood score for this component on this timestep is", l);
     timeindex++;
   }
 }

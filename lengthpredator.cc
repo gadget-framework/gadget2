@@ -5,7 +5,7 @@ LengthPredator::LengthPredator(const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const GivenLgrpDiv, double multi)
   : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv) {
 
-  scaler.resize(Areas.Size(), 0);
+  scaler.resize(Areas.Size(), 0.0);
   Multiplicative = multi;
 }
 

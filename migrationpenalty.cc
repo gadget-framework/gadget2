@@ -27,13 +27,15 @@ MigrationPenalty::MigrationPenalty(CommentStream& infile, double weight)
 
 void MigrationPenalty::addLikelihood(const TimeClass* const TimeInfo) {
   int i;
+  double l = 0.0;
   if ((stock->doesMigrate()) && (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps())) {
     handle.logMessage("Calculating likelihood score for migrationpenalty component");
     DoubleVector penalty(stock->returnMigration()->Penalty());
     for (i = 0; i < penalty.Size(); i++)
-      likelihood += pow(penalty[i], powercoeffs[0]);
-    likelihood = pow(likelihood, powercoeffs[1]);
-    handle.logMessage("The likelihood score for this component has increased to", likelihood);
+      l += pow(penalty[i], powercoeffs[0]);
+    l = pow(l, powercoeffs[1]);
+    likelihood += l;
+    handle.logMessage("The likelihood score for this component on this timestep is", l);
  }
 }
 

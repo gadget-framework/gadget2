@@ -23,6 +23,11 @@ int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname) {
     suitf.resize(1, tempFunc);
     found++;
 
+  } else if (strcasecmp(suitname, "straightlineunbounded") == 0) {
+    tempFunc = new StraightUnboundedSuitFunc();
+    suitf.resize(1, tempFunc);
+    found++;
+
   } else if (strcasecmp(suitname, "expsuitfuncl50") == 0) {
     tempFunc = new ExpSuitFuncL50();
     suitf.resize(1, tempFunc);
@@ -298,6 +303,31 @@ double InverseExpSuitFuncL50::calculate() {
   } else if (check > 1.0) {
     handle.logWarning("Warning in suitability - function outside bounds", check);
     return 1.0;
+  } else
+    return check;
+}
+
+// ********************************************************
+// Functions for StraightUnboundedSuitFunc suitability function
+// ********************************************************
+StraightUnboundedSuitFunc::StraightUnboundedSuitFunc() {
+  this->setName("StraightUnboundedSuitFunc");
+  coeff.resize(2);
+  preyLength = -1.0;
+}
+
+StraightUnboundedSuitFunc::~StraightUnboundedSuitFunc() {
+}
+
+double StraightUnboundedSuitFunc::calculate() {
+  double check = coeff[0] * preyLength + coeff[1];
+  if (check < 0.0) {
+    handle.logWarning("Warning in suitability - function outside bounds", check);
+    return 0.0;
+  /*JMB this has been removed to create the 'unbounded' part of the suitability function
+  } else if (check > 1.0) {
+    handle.logWarning("Warning in suitability - function outside bounds", check);
+    return 1.0; */
   } else
     return check;
 }

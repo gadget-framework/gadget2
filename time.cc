@@ -90,5 +90,6 @@ void TimeClass:: ResetToBeginning() {
   currentyear = firstyear;
   currentstep = firststep;
   currentsubstep = 1;
+  handle.logMessage("");  //write a blank line to the log file
   handle.logMessage("Reset time in the simulation to timestep", this->CurrentTime());
 }

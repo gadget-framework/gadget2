@@ -139,14 +139,17 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
       }
     } else
       handle.Unexpected("spawnparameters", text);
-    readWordAndFormula(infile, "meanlength", meanlength);
-    meanlength.Inform(keeper);
-    readWordAndFormula(infile, "sdev", sdev);
-    sdev.Inform(keeper);
-    readWordAndFormula(infile, "alpha", alpha);
-    alpha.Inform(keeper);
-    readWordAndFormula(infile, "beta", beta);
-    beta.Inform(keeper);
+
+    stockParameters.resize(4, keeper);
+    infile >> text;
+    if (strcasecmp(text, "stockparameters") == 0) {
+      for (i = 0; i < stockParameters.Size(); i++) {
+        if (!(infile >> stockParameters[i]))
+          handle.Message("Wrong format for spawning stock parameters");
+        spawnParameters[i].Inform(keeper);
+      }
+    } else
+      handle.Unexpected("stockparameters", text);
   }
 
   infile >> ws;
@@ -286,10 +289,10 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
       TEP += ssb[age][len];
 
   //create a length distribution and mean weight for the new stock
-  if (sdev > verysmall) {
-    tmpsdev = 1.0 / (2 * sdev * sdev);
+  if (stockParameters[1] > verysmall) {
+    tmpsdev = 1.0 / (2 * stockParameters[1] * stockParameters[1]);
     for (len = 0; len < spawnLgrpDiv->NoLengthGroups(); len++) {
-      length = spawnLgrpDiv->meanLength(len) - meanlength;
+      length = spawnLgrpDiv->meanLength(len) - stockParameters[0];
       N = exp(-(length * length * tmpsdev));
       Storage[area][spawnage][len].N = N;
       sum += N;
@@ -300,7 +303,7 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
     for (len = 0; len < spawnLgrpDiv->NoLengthGroups(); len++) {
       length = spawnLgrpDiv->meanLength(len);
       Storage[area][spawnage][len].N *= TEP / sum;
-      Storage[area][spawnage][len].W = alpha * pow(length, beta);
+      Storage[area][spawnage][len].W = stockParameters[2] * pow(length, stockParameters[3]);
     }
   }
 

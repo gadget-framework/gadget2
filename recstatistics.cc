@@ -305,7 +305,8 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
 
 void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
   int t, i, check;
-  
+  double l = 0.0;
+ 
   check = 0;
   for (t = 0; t < tagvec.Size(); t++) {
     timeindex[t] = -1;
@@ -322,8 +323,9 @@ void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
   }
 
   if (check > 0) {
-    likelihood += calcLikSumSquares();
-    handle.logMessage("The likelihood score for this component has increased to", likelihood);
+    l = calcLikSumSquares();
+    likelihood += l;
+    handle.logMessage("The likelihood score for this component on this timestep is", l);
   }
 }
 

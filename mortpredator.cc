@@ -195,14 +195,13 @@ void MortPredator::calcCHat(int area, const TimeClass* const TimeInfo) {
   }
 }
 
-const double MortPredator::consumedBiomass(int prey_nr, int area_nr) const {
-
+const double MortPredator::consumedBiomass(int prey, int area) const {
   double tons = 0.0;
   int age, len;
-  const AgeBandMatrix& mean = ((MortPrey*)Preys(prey_nr))->getMeanN(area_nr);
+  const AgeBandMatrix& mean = ((MortPrey*)Preys(prey))->getMeanN(area);
   for (age = mean.minAge(); age <= mean.maxAge(); age++)
     for (len = mean.minLength(age); len < mean.maxLength(age); len++)
-      tons += c_hat[area_nr][prey_nr][age][len] * mean[age][len].W;
+      tons += c_hat[area][prey][age][len] * mean[age][len].W;
 
   return tons;
 }

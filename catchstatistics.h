@@ -50,6 +50,11 @@ public:
    * \param Stocks is the StockPtrVector of all the available stocks
    */
   void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
+  /**
+   * \brief This function will print information from each CatchStatistics likelihood calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   */
+  virtual void LikelihoodPrint(ofstream& outfile);
 private:
   /**
    * \brief This function will read the CatchStatistics data from the input file
@@ -74,12 +79,22 @@ private:
    * \brief This is the DoubleMatrixPtrVector used to store mean length/weight information specified in the input file
    * \note the indices for this object are [time][area][age]
    */
-  DoubleMatrixPtrVector mean;
+  DoubleMatrixPtrVector obsMean;
+  /**
+   * \brief This is the DoubleMatrixPtrVector used to store mean length/weight information calculated in the model
+   * \note the indices for this object are [time][area][age]
+   */
+  DoubleMatrixPtrVector modelMean;
   /**
    * \brief This is the DoubleMatrixPtrVector used to store variance of length/weight information specified in the input file
    * \note the indices for this object are [time][area][age]
    */
   DoubleMatrixPtrVector variance;
+  /**
+   * \brief This is the DoubleMatrix used to store the calculated likelihood information
+   * \note the indices for this object are [time][area]
+   */
+  DoubleMatrix likelihoodValues;
   /**
    * \brief This is the FleetPreyAggregator used to collect information about the fleets
    */
@@ -128,6 +143,14 @@ private:
    * \brief This ActionAtTimes stores information about when the likelihood score should be calculated
    */
   ActionAtTimes AAT;
+  /**
+   * \brief This is the IntVector used to store information about the years when the likelihood score should be calculated
+   */
+  IntVector Years;
+  /**
+   * \brief This is the IntVector used to store information about the steps when the likelihood score should be calculated
+   */
+  IntVector Steps;
   /**
    * \brief This is the name of the CatchStatistics likelihood component
    */

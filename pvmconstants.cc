@@ -3,7 +3,7 @@
 #ifdef GADGET_NETWORK
 #include "gadget.h"
 #else
-#include "../paramin/paramin.h"
+#include "paramin.h"
 #endif
 
 PVMConstants::PVMConstants() {

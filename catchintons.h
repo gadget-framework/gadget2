@@ -82,8 +82,7 @@ private:
    */
   CharPtrVector areaindex;
   /**
-   * \brief This is the IntMatrix used to which fleets catch which stocks
-   * \note predindex[i][j] denotes whether fleet i catches stock j
+   * \brief This is the IntMatrix used to denote which fleets catch which stocks
    */
   IntMatrix preyindex;
   /**

@@ -9,16 +9,15 @@ PopPredator::PopPredator(const char* givenname, const IntVector& Areas,
   : Predator(givenname, Areas) {
 
   int i;
-  if (GivenLgrpDiv->dl() != 0)
-    LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
-
-  else {
+  if (isZero(GivenLgrpDiv->dl())) {
     DoubleVector dv(GivenLgrpDiv->NoLengthGroups() + 1);
     for (i = 0; i < dv.Size() - 1; i++)
       dv[i] = GivenLgrpDiv->minLength(i);
     dv[i] = GivenLgrpDiv->maxLength(i - 1);
     LgrpDiv = new LengthGroupDivision(dv);
-  }
+  } else 
+    LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
+
   CI = new ConversionIndex(OtherLgrpDiv, LgrpDiv);
 }
 
@@ -77,11 +76,10 @@ const BandMatrix& PopPredator::Consumption(int area, const char* preyname) const
   exit(EXIT_FAILURE);
 }
 
-const double PopPredator::consumedBiomass(int prey_nr, int area_nr) const{
-
+const double PopPredator::consumedBiomass(int prey, int area) const{
   int age, len;
   double tons = 0.0;
-  const BandMatrix& bio = consumption[area_nr][prey_nr];
+  const BandMatrix& bio = consumption[area][prey];
   for (age = bio.minAge(); age <= bio.maxAge(); age++)
     for (len = bio.minLength(age); len < bio.maxLength(age); len++)
       tons += bio[age][len];

@@ -10,6 +10,8 @@
 #include "readword.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
   const StockPtrVector& Stocks, LengthGroupDivision* const Lgrpdiv,
   const IntMatrix& Areas, const IntMatrix& Ages, const int overcons)
@@ -158,6 +160,17 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
       }
     }
   }
+
+  //JMB - check that we actually have a catch on this timestep
+  //it would be better to check things in the setFleetsAndStocks() function
+  //in the likelihood component (so we only do this once).
+  double check = 0.0;
+  for (i = 0; i < total.Size(); i++)
+    for (j = 0; j < total[i].Nrow(); j++)
+      for (k = 0; k < total[i].maxLength(j); k++)
+        check += total[i][j][k].N;
+  if (isZero(check))
+    handle.logWarning("Warning - zero catch found when aggregating for likelihood component");	
 }
 
 void FleetPreyAggregator::MeanSum(const TimeClass* const TimeInfo) {
@@ -209,4 +222,12 @@ void FleetPreyAggregator::MeanSum(const TimeClass* const TimeInfo) {
       }
     }
   }
+
+  double check = 0.0;
+  for (i = 0; i < total.Size(); i++)
+    for (j = 0; j < total[i].Nrow(); j++)
+      for (k = 0; k < total[i].maxLength(j); k++)
+        check += total[i][j][k].N;
+  if (isZero(check))
+    handle.logWarning("Warning - zero catch found when aggregating for likelihood component");	
 }

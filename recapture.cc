@@ -302,8 +302,8 @@ void Recaptures::addLikelihood(const TimeClass* const TimeInfo) {
 
   if (!(isZero(l))) {
     likelihood += l;
-    handle.logMessage("The likelihood score for this component has increased to", likelihood);
-  }
+    handle.logMessage("The likelihood score for this component on this timestep is", l);
+ }
 }
 
 double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {

@@ -64,11 +64,10 @@ StomachContent::~StomachContent() {
 }
 
 void StomachContent::addLikelihood(const TimeClass* const TimeInfo) {
-  double l = StomCont->Likelihood(TimeInfo);
-  if (!(isZero(l))) {
-    likelihood += l;
-    handle.logMessage("The likelihood score for this component has increased to", likelihood);
-  }
+  double l = 0.0;
+  l = StomCont->Likelihood(TimeInfo);
+  likelihood += l;
+  handle.logMessage("The likelihood score for this component on this timestep is", l);
 }
 
 void StomachContent::Print(ofstream& outfile) const {

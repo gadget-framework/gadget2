@@ -289,12 +289,12 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   NumberInArea.AddRows(areas.Size(), LgrpDiv->NoLengthGroups());
   int nrofyears = TimeInfo->LastYear() - TimeInfo->FirstYear() + 1;
   for (i = 0; i < areas.Size(); i++) {
-    F.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0));
-    M1.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0));
-    M2.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0));
-    Nbar.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0));
-    Nsum.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0));
-    bio.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0));
+    F.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0.0));
+    M1.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0.0));
+    M2.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0.0));
+    Nbar.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0.0));
+    Nsum.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0.0));
+    bio.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0.0));
   }
   C.resize(maxage - minage + 1);
   D1.resize(maxage - minage + 1);

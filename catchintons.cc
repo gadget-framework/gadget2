@@ -171,14 +171,7 @@ double CatchInTons::calcLikSumSquares(const TimeClass* const TimeInfo) {
       }
     }
 
-    if (!yearly) {
-      likelihoodValues[timeindex][a] +=
-        (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon))
-        * (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon));
-
-      totallikelihood += likelihoodValues[timeindex][a];
-
-    } else if (TimeInfo->CurrentStep() == TimeInfo->StepsInYear()) {
+    if ((!yearly) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
       likelihoodValues[timeindex][a] +=
         (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon))
         * (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon));
@@ -191,19 +184,23 @@ double CatchInTons::calcLikSumSquares(const TimeClass* const TimeInfo) {
 
 void CatchInTons::addLikelihood(const TimeClass* const TimeInfo) {
 
+  double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    handle.logMessage("Calculating likelihood score for catchintons component", ctname);
     switch(functionnumber) {
       case 1:
-        likelihood += calcLikSumSquares(TimeInfo);
+        l = calcLikSumSquares(TimeInfo);
         break;
       default:
         handle.logWarning("Warning in catchintons - unknown function", functionname);
         break;
     }
-    handle.logMessage("The likelihood score for this component has increased to", likelihood);
-    if ((!yearly) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear()))
+
+    if ((!yearly) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
+      likelihood += l;
+      handle.logMessage("Calculating likelihood score for catchintons component", ctname);
+      handle.logMessage("The likelihood score for this component on this timestep is", l);
       timeindex++;
+    }
   }
 }
 
@@ -295,6 +292,7 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
   if (!(((yearly == 1) && ((check == 4) || (check == 5))) || ((yearly == 0) && (check == 5))))
     handle.Message("Wrong number of columns in inputfile - should be 4 or 5");
 
+  step = 1; //default value in case there are only 4 columns in the datafile
   while (!infile.eof()) {
     keepdata = 0;
     if ((yearly == 1) && (check == 4))
@@ -314,7 +312,7 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
     //if tmpfleet is a required fleet keep the data, else ignore it
     fleetid = -1;
     for (i = 0; i < fleetnames.Size(); i++)
-      if (!(strcasecmp(fleetnames[i], tmpfleet) == 0))
+      if (strcasecmp(fleetnames[i], tmpfleet) == 0)
         fleetid = i;
 
     if (fleetid == -1)
@@ -330,7 +328,8 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
 
       if (timeid == -1) {
         Years.resize(1, year);
-        Steps.resize(1, step);
+	if (!(yearly))
+          Steps.resize(1, step);
         timeid = (Years.Size() - 1);
         obsDistribution.AddRows(1, numarea, 0.0);
       }
