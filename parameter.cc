@@ -149,7 +149,7 @@ CommentStream& operator >> (CommentStream& in, Parameter& p) {
 
   tempString[i] = 0;
   if (strlen(tempString) == MaxStrLength - 1)
-    cout << "Warning: name of switch has reached maximum allowed length\n";
+    cerr << "Warning: name of switch has reached maximum allowed length\n";
 
   //return memory possibly used by p.
   if (p.name != NULL) {

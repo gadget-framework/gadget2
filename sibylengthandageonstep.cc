@@ -97,7 +97,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
       infile >> q_l[i];
 
   } else {
-    handle.Message("Error in SIByLengthAndAge - unrecognised suitability", text);
+    handle.Message("Error in surveyindex - unrecognised suitability", text);
   }
 //end of code to read in q_y, b and q_l data
 
@@ -210,7 +210,7 @@ void SIByLengthAndAgeOnStep::ReadSurveyData(CommentStream& infile, const char* a
     }
   }
   if (count == 0)
-    cout << "Warning in SurveyIndices - found no data in the data file\n";
+    cerr << "Warning in surveyindex - found no data in the data file\n";
 }
 
 SIByLengthAndAgeOnStep::~SIByLengthAndAgeOnStep() {
@@ -278,7 +278,7 @@ void SIByLengthAndAgeOnStep::Sum(const class TimeClass* const TimeInfo) {
       likelihood += calcLikLog();
       break;
     default:
-      cerr << "Error in SIByLengthAndAge::Sum - unknown opttype\n";
+      cerr << "Error in surveyindex - unknown opttype\n";
       break;
   }
   index++;
@@ -302,7 +302,7 @@ void SIByLengthAndAgeOnStep::calcIndex(const Agebandmatrix* alptr, FitType ftype
           (*calc_index[index])[age][len] = q_year * q_l[len] * pow((*alptr)[age][len].N, b_vec[len]);
       break;
     default:
-      cerr << "Error in SIByLengthAndAge::calcIndex - unknown fittype\n";
+      cerr << "Error in surveyindex - unknown fittype\n";
       break;
   }
 }

@@ -318,7 +318,7 @@ int Ecosystem::ReadLikelihood(CommentStream& infile) {
       Likely[i] = new MigrationPenalty(infile, weight);
 
     } else if (strcasecmp(type, "RandomWalk") == 0) {
-      cout << "The random walk likelihood component is not currently implemented\n";
+      cout << "The random walk likelihood component is no longer supported\n";
 
     } else if (strcasecmp(type, "LogSurveyIndices") == 0) {
       cout << "The log survey indices likelihood component is no longer supported\n"

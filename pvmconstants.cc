@@ -24,7 +24,7 @@ const void pvmconstants::setDataEncode(int dc) {
   if (dc == 0 || dc == 1 || dc == 2)
     dataencode = dc;
   else {
-    cerr << "Illegal value for DataEncode\n";
+    cerr << "Illegal value for dataencode\n";
     exit(EXIT_FAILURE);
   }
 }

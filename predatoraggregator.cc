@@ -79,7 +79,7 @@ PredatorAggregator::PredatorAggregator(const charptrvector& pred_names, Preyptrv
       found++;
     }
   if (found == 0) {
-    cerr << "No preys with cannibalism in PredatorAggregator!\n";
+    cerr << "No preys with cannibalism in predatoraggregator!\n";
     return;
   }
   if (found < Preys.Size())
@@ -267,7 +267,7 @@ void PredatorAggregator::Sum(int dummy) {
           total[i][j][k] /= tot_predators[i][j];
         else
           if (total[i][j][k] > 0 && iszero(tot_predators[i][j]))
-            cout << "Warning: Consumption without predators!!\n";
+            cerr << "Warning: consumption without predators!\n";
       }
 }
 

@@ -300,7 +300,7 @@ void CatchDistribution::ReadDistributionData(CommentStream& infile,
   }
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cout << "Warning in catchdistribution - found no data in the data file for " << cdname << endl;
+    cerr << "Warning in catchdistribution - found no data in the data file for " << cdname << endl;
 }
 
 void CatchDistribution::aggregateBiomass() {
@@ -402,7 +402,7 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
 void CatchDistribution::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch Distribution " << cdname << "\nlikelihood " << likelihood
+  outfile << "\nCatch distribution " << cdname << "\nlikelihood " << likelihood
     << "\nfunction " << functionname;
   outfile << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
@@ -418,7 +418,7 @@ void CatchDistribution::Print(ofstream& outfile) const {
 void CatchDistribution::LikelihoodPrint(ofstream& outfile) const {
   int i, j, y, a;
 
-  outfile << "\nCatch Distribution\n\tlikelihood " << likelihood
+  outfile << "\nCatch distribution\n\tlikelihood " << likelihood
     << "\n\tfunction " << functionname << endl << TAB;
   Likelihood::LikelihoodPrint(outfile);
   outfile << "\tStock names:";
@@ -445,7 +445,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) const {
   outfile << endl;
 
   //aggregator->Print(outfile);
-  outfile << "\tAge-Length Distribution Data:\n";
+  outfile << "\tAge-Length distribution data:\n";
   for (y = 0; y < AgeLengthData.Nrow(); y++) {
     outfile << "\nyear and step " << Years[y] << sep << Steps[y] << endl;
     for (a = 0; a < AgeLengthData.Ncol(y); a++) {
@@ -493,7 +493,7 @@ void CatchDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvecto
       }
 
     if (found == 0) {
-      cerr << "Error: when searching for names of fleets for Catchdistribution.\n"
+      cerr << "Error: when searching for names of fleets for catchdistribution.\n"
         << "Did not find any name matching " << fleetnames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -515,7 +515,7 @@ void CatchDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvecto
         }
     }
     if (found == 0) {
-      cerr << "Error: when searching for names of stocks for Catchdistribution.\n"
+      cerr << "Error: when searching for names of stocks for catchdistribution.\n"
         << "Did not find any name matching " << stocknames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -943,7 +943,7 @@ void CatchDistribution::PrintLikelihoodHeader(ofstream& catchfile) {
   int i;
   int mina = ages[minrow][0];
   int maxa = ages[maxrow][0];
-  catchfile << "Likelihood:       CatchDistribution\nFunction:         "
+  catchfile << "Likelihood:       catchdistribution\nFunction:         "
     << functionname << "\nCalculated every: ";
   if (agg_lev == 0)
     catchfile << "step\n";

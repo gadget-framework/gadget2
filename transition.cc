@@ -47,7 +47,7 @@ void Transition::SetStock(Stockptrvector& stockvec) {
     }
 
   if (found != 1) {
-    cerr << "Error: When pairing together stock and transition stock (" << TransitionStockName
+    cerr << "Error: when pairing together stock and transition stock (" << TransitionStockName
       << "), " << found << " stocks were found\nBut there should have been only 1\n";
     exit(EXIT_FAILURE);
   }
@@ -62,7 +62,7 @@ void Transition::SetStock(Stockptrvector& stockvec) {
       found++;
 
   if (found != 0) {
-    cerr << "Warning: Transition requested to stock " << (const char*)TransitionStock->Name()
+    cerr << "Warning: transition requested to stock " << (const char*)TransitionStock->Name()
       << "\nwhich might not be defined on " << found << " areas\n";
   }
 }

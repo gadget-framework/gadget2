@@ -28,8 +28,8 @@ int ReadMatrix(CommentStream& infile, doublematrix& M) {
       if (!infile.fail())
         M[i][j] = N;
       else {
-        cerr << "Warning: Could not read data file in ReadMatrix"
-          << "\nLast character read was " << c << endl;
+        cerr << "Warning: Could not read data file in readmatrix\n"
+          << "Last character read was " << c << endl;
         return 0;
       }
     }
@@ -38,7 +38,7 @@ int ReadMatrix(CommentStream& infile, doublematrix& M) {
       infile.get(c);
     if (c != '\n') {
       cerr << "Expected to find end of line after " << N << " in line "
-        << i + 1 << " in ReadMatrix.\nFound instead " << c << endl;
+        << i + 1 << " in readmatrix.\nFound instead " << c << endl;
       return 0;
     }
   }
@@ -63,7 +63,7 @@ int ReadVector(CommentStream& infile, intvector& Vec) {
     infile >> Vec[i];
     if (infile.fail()) {
       cerr << "Error occurred when read element no " << i + 1
-        << " out of " << Vec.Size() << " in ReadVector.\n";
+        << " out of " << Vec.Size() << " in readvector.\n";
       return 0;
     }
   }
@@ -78,7 +78,7 @@ int ReadVector(CommentStream& infile, doublevector& Vec) {
     infile >> Vec[i];
     if (infile.fail()) {
       cerr << "Error occurred when read element no " << i + 1
-        << " out of " << Vec.Size() << " in ReadVector.\n";
+        << " out of " << Vec.Size() << " in readvector.\n";
       return 0;
     }
   }
@@ -106,7 +106,7 @@ int ReadIndexVector(CommentStream& infile, doubleindexvector& Vec) {
     infile >> Vec[i];
     if (infile.fail()) {
       cerr << "Error occurred when read element no " << i + 1 - lower
-        << " out of " << upper - lower << " in ReadIndexVector.\n";
+        << " out of " << upper - lower << " in readindexvector.\n";
       return 0;
     }
   }
@@ -184,7 +184,7 @@ int Read2ColVector(CommentStream& infile, doublematrix& M) {
       if (!infile.fail())
         M[i][j] = N;
       else {
-        cerr << "Warning: Could not read data file in Read2ColVector\n";
+        cerr << "Warning: could not read data file in read2colvector\n";
         return 0;
       }
     }
@@ -215,7 +215,7 @@ int ReadTextInLine(CommentStream& infile, charptrvector& text) {
     }
     istr >> text[i];
     if (istr.fail()) {
-      cerr << "Error occurred when read element no " << i + 1 << " in ReadTextInLine.\n";
+      cerr << "Error occurred when read element no " << i + 1 << " in readtextinline.\n";
       return 0;
     }
     istr >> ws;

@@ -101,24 +101,24 @@ SuitFunc::~SuitFunc() {
 }
 
 double SuitFunc::getPredLength() {
-  cout << "Error - trying to get predlength for a suitability function "
+  cerr << "Error - trying to get predlength for a suitability function "
     << this->getName() << " but this function does not use predlength\n";
   return -1.0;
 }
 
 double SuitFunc::getPreyLength() {
-  cout << "Error - trying to get preylength for a suitability function "
+  cerr << "Error - trying to get preylength for a suitability function "
     << this->getName() << " but this function does not use preylength\n";
   return -1.0;
 }
 
 void SuitFunc::setPredLength(double length) {
-  cout << "Error - trying to set predlength for a suitability function "
+  cerr << "Error - trying to set predlength for a suitability function "
     << this->getName() << " but this function does not use predlength\n";
 }
 
 void SuitFunc::setPreyLength(double length) {
-  cout << "Error - trying to set preylength for a suitability function "
+  cerr << "Error - trying to set preylength for a suitability function "
     << this->getName() << " but this function does not use preylength\n";
 }
 

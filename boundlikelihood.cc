@@ -47,7 +47,7 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
 
     for (i = 0; i < switches.Size(); i++)
       if (switchnr[i] == -1)
-        cout << "Bound likelihood warning " << switches[i] << " does not exist\n";
+        cerr << "Warning in boundlikelihood - switch " << switches[i] << " does not exist\n";
   }
 
   //set flag to initialise the bounds - called in Reset

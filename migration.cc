@@ -233,7 +233,7 @@ const doublematrix& Migration::Migrationmatrix(const TimeClass* const TimeInfo, 
       if (AgeNr[age] >= 0)
         return *CalcMigList[MatrixNumbers[AgeNr[age]][TimeInfo->CurrentTime()]];
 
-    cerr << "Received illegal age in Migration. Age was " << age << endl;
+    cerr << "Received illegal age in migration -age was " << age << endl;
     exit(EXIT_FAILURE);
   } else
     return *CalcMigList[ MatrixNumbers[0][TimeInfo->CurrentTime()]];
@@ -272,7 +272,7 @@ void Migration::Clear() {
 
 void Migration::Print(ofstream& outfile) const {
   int i, j, k;
-  outfile << "Migration." << endl << "Age dependent migration " << AgeDepMigration << endl;
+  outfile << "Migration\nAge dependent migration " << AgeDepMigration << endl;
   if (AgeDepMigration) {
     outfile << "Ages\n";
     for (i = 0; i < ages.Nrow(); i++) {
@@ -495,7 +495,7 @@ void Migration::AdjustMigListAndCheckIfError(MigrationList& MigList) {
         }
 
         if (iszero(colsum)) {
-          cerr << "Error in migration: column " << k + 1 << " in mig. matrix "
+          cerr << "Error in migration: column " << k + 1 << " in migration matrix "
             << i << " sums up to " << colsum << " instead of 1\n";
           error = 1;
           return;

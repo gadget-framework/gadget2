@@ -216,7 +216,7 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
   }
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cout << "Warning in catchstatistics - found no data in the data file for " << csname << endl;
+    cerr << "Warning in catchstatistics - found no data in the data file for " << csname << endl;
 }
 
 CatchStatistics::~CatchStatistics() {
@@ -252,7 +252,7 @@ void CatchStatistics::Reset(const Keeper* const keeper) {
 void CatchStatistics::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch Statistics " << csname << "\nlikelihood " << likelihood
+  outfile << "\nCatch statistics " << csname << "\nlikelihood " << likelihood
     << "\nfunction " << functionname;
   outfile << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
@@ -279,7 +279,7 @@ void CatchStatistics::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector&
       }
 
     if (found == 0) {
-      cerr << "Error when searching for names of fleets for Catchstatistics\n"
+      cerr << "Error when searching for names of fleets for catchstatistics\n"
         << "Did not find any name matching " << fleetnames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -295,7 +295,7 @@ void CatchStatistics::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector&
         }
 
     if (found == 0) {
-      cerr << "Error when searching for names of stocks for Catchstatistics\n"
+      cerr << "Error when searching for names of stocks for catchstatistics\n"
         << "Did not find any name matching " << stocknames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -304,7 +304,7 @@ void CatchStatistics::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector&
   lgrpDiv = new LengthGroupDivision(*(stocks[0]->ReturnPrey()->ReturnLengthGroupDiv()));
   for (i = 1; i < stocks.Size(); i++)
     if (!lgrpDiv->Combine(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv())) {
-      cerr << "Length group divisions for preys in Catchstatistic not compatible\n";
+      cerr << "Length group divisions for preys in catchstatistics not compatible\n";
       exit(EXIT_FAILURE);
     }
 

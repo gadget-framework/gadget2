@@ -103,7 +103,7 @@ void CheckLengthGroupIsFiner(const LengthGroupDivision* finer,
   int isfiner = LengthGroupIsFiner(finer, coarser, BogusLengthGroup);
   switch(isfiner) {
     case -1:
-      cerr << "Error: the algorithm in LengthGroupIsFiner does not work.\n"
+      cerr << "Error: the algorithm in lengthgroupisfiner does not work.\n"
         << "The length group division for " << finername << " is:\n";
       ErrorPrintLengthGroupDivision(finer);
       cerr << "The length group division for " << coarsername << " is:\n";
@@ -116,7 +116,7 @@ void CheckLengthGroupIsFiner(const LengthGroupDivision* finer,
     case 1:
       return;
     case 2:
-      cout << "Warning - empty intersection when checking length groups\n";
+      cerr << "Warning - empty intersection when checking length groups\n";
       return;
     default:
       cerr << "Error when comparing length group divisions.\n"

@@ -36,7 +36,8 @@ int OptInfo::Read(CommentStream &infile, char* text) {
     return 1;
   } else if (strcasecmp(text, "bounds") == 0) {
     // JMB - removed code to read in bounds here
-    cout << "Error in optinfo - bounds are no longer read here\n";
+    cerr << "Error in optinfofile - bounds are no longer read here\n"
+      << "Specify the bounds with the -i inputfile switch instead\n";
     return 0;
   } else
     return 0;
@@ -58,7 +59,7 @@ void OptInfoHooke::Read(CommentStream& infile) {
     infile >> text >> ws;
 
     if (!Read(infile, text))
-      cout << "Error in optinfo - unknown option " << text << endl;
+      cerr << "Warning in optinfo hooke - unknown option " << text << endl;
   }
 }
 
@@ -179,7 +180,7 @@ void OptInfoSimann::Read(CommentStream& infile) {
   while (!infile.eof()) {
     infile >> text >> ws;
     if (!Read(infile, text))
-      cout << "Error in optinfo - unknown option " << text << endl;
+      cerr << "Warning in optinfo simann - unknown option " << text << endl;
   }
 }
 
@@ -302,7 +303,7 @@ void OptInfoHookeAndSimann::Read(CommentStream& infile) {
   while (!infile.eof()) {
     infile >> text >> ws;
     if (!Read(infile, text))
-      cout << "Error in optinfo - unknown option " << text << endl;
+      cerr << "Warning in optinfo simannandhooke - unknown option " << text << endl;
   }
 }
 

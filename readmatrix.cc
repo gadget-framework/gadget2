@@ -97,7 +97,7 @@ int ReadAmounts(CommentStream& infile, const intvector& tmpareas,
   }
 
   if (count == 0)
-    cout << "Warning - found no data in the data file for " << givenname << endl;
+    cerr << "Warning - found no data in the data file for " << givenname << endl;
   return 1;
 }
 
@@ -248,6 +248,6 @@ int ReadGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
     }
   }
   if (count == 0)
-    cout << "Warning in GrowthAmounts - found no data in the data file\n";
+    cerr << "Warning for growthamounts - found no data in the data file\n";
   return 1;
 }

@@ -131,7 +131,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       keeper, lenindex, ageindex, areaindex[0], datafilename);
 
   } else
-    handle.Message("Error in surveyindices - unrecognised type", sitype);
+    handle.Message("Error in surveyindex - unrecognised type", sitype);
 
   //prepare for next likelihood component
   infile >> ws;
@@ -192,7 +192,7 @@ void SurveyIndices::SetStocks(Stockptrvector& Stocks) {
         s.resize(1, Stocks[j]);
       }
     if (found == 0) {
-      cerr << "Error when searching for names of stocks for survey indices.\n"
+      cerr << "Error when searching for names of stocks for surveyindex.\n"
         << "Did not find any name matching " << stocknames[i] << endl;
       exit(EXIT_FAILURE);
     }

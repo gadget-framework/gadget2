@@ -365,7 +365,7 @@ void LogCatches::Reset(const Keeper* const keeper) {
 void LogCatches::LikelihoodPrint(ofstream& outfile) const {
   int i, j, a, y;
 
-  outfile << "\nLogCatch Likelihood\n\tlikelihood " << likelihood
+  outfile << "\nLogCatch likelihood\n\tlikelihood " << likelihood
     << "\n\tfunction " << functionname << endl << TAB;
   Likelihood::LikelihoodPrint(outfile);
   outfile << "\tStocknames: " << sep;
@@ -392,7 +392,7 @@ void LogCatches::LikelihoodPrint(ofstream& outfile) const {
   outfile << endl;
 
   //aggregator->Print(outfile);
-  outfile << "\tAge-Length Distribution Data:\n";
+  outfile << "\tAge-Length distribution data:\n";
   for (y = 0; y < AgeLengthData.Nrow(); y++) {
     outfile << "\nyear and step " << Years[y] << sep << Steps[y] << endl;
     for (a = 0; a < AgeLengthData.Ncol(y); a++) {
@@ -440,7 +440,7 @@ void LogCatches::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stoc
       }
 
     if (found == 0) {
-      cerr << "Error: when searching for names of fleets for Catchdistribtuion.\n"
+      cerr << "Error: when searching for names of fleets for logcatch.\n"
         << "Did not find any name matching " << fleetnames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -463,7 +463,7 @@ void LogCatches::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stoc
       }
     }
     if (found == 0) {
-      cerr << "Error: when searching for names of stocks for Catchdistribution.\n"
+      cerr << "Error: when searching for names of stocks for logcatch.\n"
         << "Did not find any name matching " << stocknames[i] << endl;
       exit(EXIT_FAILURE);
     }

@@ -233,7 +233,7 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
   }
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cout << "Warning in surveyindex - found no data in the data file\n";
+    cerr << "Warning in surveyindex - found no data in the data file\n";
 }
 
 void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,

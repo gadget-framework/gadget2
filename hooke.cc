@@ -328,7 +328,7 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
   }
 
   /* JMB 19.06.02 - adding comments for end of optimisation */
-  cout << "\nStopping Hooke and Jeves\n\nThe optimisation stopped after " << iters
+  cout << "\nStopping Hooke and Jeeves\n\nThe optimisation stopped after " << iters
     << " iterations (max " << itermax << ")\nThe steplength was reduced to "
     << steplength << " (min " << epsilon << ")\nA total of " << FuncEval
     << " function evaluations have been completed\n";

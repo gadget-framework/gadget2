@@ -241,7 +241,7 @@ void StockDistribution::ReadStockData(CommentStream& infile,
   }
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cout << "Warning in stockdistribution - found no data in the data file\n";
+    cerr << "Warning in stockdistribution - found no data in the data file\n";
 }
 
 StockDistribution::~StockDistribution() {
@@ -277,7 +277,7 @@ void StockDistribution::Reset(const Keeper* const keeper) {
 void StockDistribution::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nStock Distribution\nlikelihood " << likelihood
+  outfile << "\nStock distribution\nlikelihood " << likelihood
     << "\nfunction " << functionname << "\n\tStocknames:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];

@@ -265,7 +265,7 @@ void Agebandmatrixratiovector::print(char* filename) {
   ofstream outfile;
   outfile.open(filename);
   if (!outfile) {
-    cout << "Error - Can't open outputfile for printing tagging information\n";
+    cerr << "Error - Can't open outputfile for printing tagging information\n";
     exit(EXIT_FAILURE);
   }
 

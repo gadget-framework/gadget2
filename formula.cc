@@ -35,7 +35,7 @@ CommentStream& operator>>(CommentStream& infile, Formula& F) {
     infile.get(c);
     infile >> F.inattr;
     if (F.inattr.Size() <= 0)
-      cout << "Error in formula - not read entry correctly\n";
+      cerr << "Error in formula - not read entry correctly\n";
     return infile;   //success or not if could not read from infile into F.inattr
   }
 
@@ -59,7 +59,7 @@ CommentStream& operator>>(CommentStream& infile, Formula& F) {
     infile.get(c);
     infile >> F.inattr;
     if (F.inattr.Size() <= 0)
-      cout << "Error in formula - not read entry correctly\n";
+      cerr << "Error in formula - not read entry correctly\n";
     return infile;   //success or not if could not read from infile into F.inattr.
   }
 

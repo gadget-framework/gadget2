@@ -252,14 +252,10 @@ void InterruptInterface::dumpStock(charptrvector& args) {
   else
     for (i = 1; i < args.Size(); i++)
       for (j = 0; j < eco->stockvec.Size(); j++) {
-        cout << args[i] << " & " << eco->stockvec[j]->Name() << endl;
         if (strcasecmp(args[i], eco->stockvec[j]->Name()) == 0)
            svec.resize(1, (Stock*)eco->stockvec[j]);
       }
 
-  cout << "svec: " << svec.Size() << " stockvec: " << eco->stockvec.Size()
-    << " args: " << args.Size() << endl;
-  cout.flush();
   for (i = 0; i < svec.Size(); i++) {
     intmatrix areas, ages;
     intvector agevector;

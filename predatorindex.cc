@@ -146,7 +146,7 @@ void PredatorIndices::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptr
         predators.resize(1, Predators[j]);
       }
     if (found == 0) {
-      cerr << "Error when searching for names of predators for PredatorIndices\n"
+      cerr << "Error when searching for names of predators for predatorindex\n"
         << "Did not find any name matching " << predatornames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -161,7 +161,7 @@ void PredatorIndices::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptr
         preys.resize(1, Preys[j]);
       }
     if (found == 0) {
-      cerr << "Error when searching for names of preys for PredatorIndices\n"
+      cerr << "Error when searching for names of preys for predatorindex\n"
         << "Did not find any name matching " << preynames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -284,7 +284,7 @@ void PIOnStep::ReadPredatorData(CommentStream& infile, const char* arealabel,
     }
   }
   if (count == 0)
-    cout << "Warning in predatorindex - found no data in the data file\n";
+    cerr << "Warning in predatorindex - found no data in the data file\n";
 }
 
 void PIOnStep::Sum(const class TimeClass* const TimeInfo) {

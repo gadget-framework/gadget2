@@ -195,7 +195,7 @@ int StochasticData::getDataFromNet() {
 void StochasticData::SendDataToMaster(double funcValue) {
   int info = slave->sendToMaster(funcValue);
   if (info < 0) {
-    cout << "Could not send data to master, slave is bailing out\n";
+    cerr << "Could not send data to master, slave is bailing out\n";
     slave->stopNetCommunication();
     exit(EXIT_FAILURE);
   }

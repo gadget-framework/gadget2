@@ -153,7 +153,7 @@ void CatchInTons::Reset(const Keeper* const keeper) {
 void CatchInTons::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch in Tons\nlikelihood " << likelihood
+  outfile << "\nCatch in tons\nlikelihood " << likelihood
     << "\nfunction " << functionname;
   outfile << "\n\tStocknames:";
   for (i = 0; i < stocknames.Size(); i++)
@@ -250,7 +250,7 @@ void CatchInTons::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Sto
       }
 
     if (found == 0) {
-      cerr << "Error: when searching for names of fleets for CatchInTons.\n"
+      cerr << "Error: when searching for names of fleets for catchintons.\n"
         << "Did not find any name matching " << fleetnames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -266,7 +266,7 @@ void CatchInTons::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Sto
         }
     }
     if (found == 0) {
-      cerr << "Error: when searching for names of stocks for CatchInTons.\n"
+      cerr << "Error: when searching for names of stocks for catchintons.\n"
         << "Did not find any name matching " << stocknames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -284,7 +284,7 @@ void CatchInTons::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Sto
         }
 
     if (found == 0)
-      cerr << "Warning: when searching for names of stocks and fleets for CatchInTons.\n"
+      cerr << "Warning: when searching for names of stocks and fleets for catchintons.\n"
         << "Fleet " << fleetnames[i] << " is not catching any of the included stocks\n";
   }
 
@@ -388,5 +388,5 @@ void CatchInTons::ReadCatchInTonsData(CommentStream& infile,
     AAT.AddActions(Years, Steps, TimeInfo);
 
   if (count == 0)
-    cout << "Warning in catchintons - found no data in the data file\n";
+    cerr << "Warning in catchintons - found no data in the data file\n";
 }

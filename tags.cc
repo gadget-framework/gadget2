@@ -139,7 +139,7 @@ void Tags::SetStock(Stockptrvector& Stocks) {
       j++;
     }
     if (found == 0) {
-      cerr << "Error when searching for names of stocks for Tags\n"
+      cerr << "Error when searching for names of stocks for tags\n"
         << "Did not find any name matching " << stocknames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -155,8 +155,8 @@ void Tags::SetStock(Stockptrvector& Stocks) {
         << " does not live on area: " << tagarea << "\nthe stock lives on areas: ";
       const intvector* tempareas = &tagstocks[i]->Areas();
       for (numareas= 0; numareas < tempareas->Size(); numareas++)
-        cout << (*tempareas)[numareas] << sep;
-      cout << endl;
+        cerr << (*tempareas)[numareas] << sep;
+      cerr << endl;
       exit(EXIT_FAILURE);
     }
 
@@ -286,7 +286,7 @@ void Tags::printPopInfo(char* filename) {
   ofstream outfile;
   outfile.open(filename);
   if (!outfile) {
-    cout << "Error - Can't open outputfile for printing tagging information\n";
+    cerr << "Error - can't open outputfile for printing tagging information\n";
     exit(EXIT_FAILURE);
   }
 
@@ -321,7 +321,7 @@ void Tags::UpdateMatureStock(const TimeClass* const TimeInfo) {
   int currentStep = TimeInfo->CurrentStep();
 
   if (endyear < currentYear || (endyear == currentYear && endstep < currentStep))
-    cout << "Warning - tagging experiment is not part of the simulation anymore\n";
+    cerr << "Warning - tagging experiment is not part of the simulation anymore\n";
   else
     for (i = 0; i < maturestocks.Size(); i++)
       maturestocks[i]->UpdateTags(AgeLengthStock[i + 1], this);

@@ -177,7 +177,7 @@ void TagData::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks)
       }
 
     if (found == 0) {
-      cerr << "Error: when searching for names of fleets for TagData.\n"
+      cerr << "Error: when searching for names of fleets for tagdata.\n"
         << "Did not find any name matching " << fleetnames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -195,7 +195,7 @@ void TagData::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks)
 
   //only possible if two stocks have the same name
   if (found == 0) {
-    cerr << "Error: when searching for names of stocks for TagData.\n"
+    cerr << "Error: when searching for names of stocks for tagdata.\n"
       << "Did not find any name matching " << stockname << endl;
     exit(EXIT_FAILURE);
   }

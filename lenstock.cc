@@ -501,7 +501,7 @@ void LenStock::Grow(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   if (!doesgrow && doesmature) {
-    cerr << "Error in " << this->Name() << " Maturation with no growth is not implemented\n";
+    cerr << "Error in " << this->Name() << " - maturation with no growth is not implemented\n";
     exit(EXIT_FAILURE);
   }
 
@@ -621,7 +621,7 @@ void LenStock::SetStock(Stockptrvector& stockvec) {
         }
 
       if (found == 0) {
-        cout << "Error in Cannibalism on prey " << Name() << " - predator " << cann->predatorName(i) << " not found\n";
+        cerr << "Error in cannibalism on prey " << Name() << " - predator " << cann->predatorName(i) << " not found\n";
         exit(EXIT_FAILURE);
       }
 
@@ -630,7 +630,7 @@ void LenStock::SetStock(Stockptrvector& stockvec) {
       tmpsize = maxage - minage + 1;
 
       if (cannPredators[i]->Minage() != minage || cannPredators[i]->Maxage() != maxage) {
-        cout << "Error in Cannibalism on prey " << Name() << " - predatorages in cannibalism does not match predators\n";
+        cerr << "Error in cannibalism on prey " << Name() << " - predatorages in cannibalism does not match predators\n";
         exit(EXIT_FAILURE);
       }
 

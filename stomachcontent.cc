@@ -67,7 +67,7 @@ void StomachContent::AddToLikelihood(const TimeClass* const TimeInfo) {
 }
 
 void StomachContent::Print(ofstream& outfile) const {
-  outfile << "\nStomach Content " << stomachname << "\nlikelihood " << likelihood
+  outfile << "\nStomach content " << stomachname << "\nlikelihood " << likelihood
     << "\nfunction " << functionname << endl;
   StomCont->Print(outfile);
 }
@@ -392,7 +392,7 @@ void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass*
   AAT.AddActions(Years, Steps, TimeInfo);
   modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol());
   if (count == 0)
-    cout << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
+    cerr << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
 }
 
 void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -501,7 +501,7 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
   AAT.AddActions(Years, Steps, TimeInfo);
   modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
   if (count == 0)
-    cout << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
+    cerr << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
 }
 
 void SCAmounts::ReadStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -582,7 +582,7 @@ void SCAmounts::ReadStomachSampleContent(CommentStream& infile, const TimeClass*
     }
   }
   if (count == 0)
-    cout << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
+    cerr << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
 }
 
 SC::~SC() {
@@ -644,7 +644,7 @@ void SC::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys
         }
 
       if (found == 0) {
-        cerr << "Error when searching for names of predators for StomachContent\n"
+        cerr << "Error when searching for names of predators for stomachcontent\n"
           << "Did not find any name matching " << predatornames[i] << endl;
         exit(EXIT_FAILURE);
       }
@@ -666,7 +666,7 @@ void SC::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys
         }
 
       if (found == 0) {
-        cerr << "Error when searching for names of preys for StomachContent\n"
+        cerr << "Error when searching for names of preys for stomachcontent\n"
           << "Did not find any name matching " << preynames[i][j] << endl;
         exit(EXIT_FAILURE);
       }

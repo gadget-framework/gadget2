@@ -124,7 +124,7 @@ void Ecosystem::Initialize(int optimize) {
         printvec[i]->SetStock(stockvec);
         break;
       default:
-        cerr << "Unrecognized PrinterType " << printvec[i]->Type() << " when initializing\n";
+        cerr << "Unrecognized printer type " << printvec[i]->Type() << " when initializing\n";
         exit(EXIT_FAILURE);
         break;
     }
@@ -174,7 +174,7 @@ void Ecosystem::Initialize(int optimize) {
         case BOUNDLIKELIHOOD:
           break;
         default:
-          cerr << "Unrecognized Likelihood Type " << Likely[i]->Type() << " when initializing\n";
+          cerr << "Unrecognized likelihood type " << Likely[i]->Type() << " when initializing\n";
           exit(EXIT_FAILURE);
           break;
       }
@@ -191,7 +191,7 @@ void Ecosystem::Initialize(int optimize) {
         ((LikelihoodPrinter*)(likprintvec[i]))->SetLikely(Likely);
         break;
       default:
-        cerr << "Unrecognized Likelihood PrinterType " << likprintvec[i]->Type() << " when initializing\n";
+        cerr << "Unrecognized likelihood printer type " << likprintvec[i]->Type() << " when initializing\n";
         exit(EXIT_FAILURE);
         break;
     }
