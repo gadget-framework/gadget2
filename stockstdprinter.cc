@@ -37,6 +37,13 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
   if (scale <= 0)
     handle.Message("Error in stockstdprinter - invalid value of scale");
 
+  //JMB - removed the need to read in the area aggregation file
+  if (strcasecmp(text, "areaaggfile") == 0) {
+    infile >> text >> ws;
+    handle.Warning("Warning in stockstdprinter - area aggreagtion file ignored");
+    infile >> text >> ws;
+  }
+
   //open the printfile
   if (strcasecmp(text, "printfile") == 0)
     infile >> filename >> ws >> text >> ws;

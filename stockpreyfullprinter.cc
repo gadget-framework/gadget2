@@ -25,12 +25,25 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
   strncpy(stockname, "", MaxStrLength);
   readWordAndValue(infile, "stockname", stockname);
 
+  //JMB - removed the need to read in the area aggregation file
+  infile >> text >> ws;
+  if (strcasecmp(text, "areaaggfile") == 0) {
+    infile >> text >> ws;
+    handle.Warning("Warning in stockpreyfullprinter - area aggreagtion file ignored");
+    infile >> text >> ws;
+  }
+
   //open the printfile
-  readWordAndValue(infile, "printfile", filename);
+  //readWordAndValue(infile, "printfile", filename);
+  if (strcasecmp(text, "printfile") == 0)
+    infile >> filename >> ws >> text >> ws;
+  else
+    handle.Unexpected("printfile", text);
+
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
 
-  infile >> text >> ws;
+  //infile >> text >> ws;
   if (strcasecmp(text, "precision") == 0)
     infile >> precision >> ws >> text >> ws;
   else
