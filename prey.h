@@ -11,7 +11,7 @@
 #include "keeper.h"
 #include "gadget.h"
 
-enum PreyType { STOCKPREYTYPE = 1, LENGTHPREYTYPE, MORTPREYTYPE };
+enum PreyType { STOCKPREYTYPE = 1, LENGTHPREYTYPE };
 
 /**
  * \class Prey

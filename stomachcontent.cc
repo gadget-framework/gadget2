@@ -163,6 +163,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
     datafile.close();
     datafile.clear();
   } else if (strcasecmp(text, "predatorages") == 0) { //read predator ages
+    handle.Message("Stomach content data for age-based predators is currently not suppported");
     usepredages = 1; //predator is age structured
     readWordAndValue(infile, "ageaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
@@ -195,10 +196,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
 }
 
 void SC::Aggregate(int i) {
-  if (usepredages)
-    aggregator[i]->MeanSum();
-  else
-    aggregator[i]->Sum();
+  aggregator[i]->Sum();
 }
 
 double SC::calcLikelihood(const TimeClass* const TimeInfo) {
@@ -394,19 +392,16 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
   PredatorPtrVector predators;
   aggregator = new PredatorAggregator*[preynames.Nrow()];
 
-  if (usepredages == 0) { //the test is done in aggregator for age structured predators
-    for (i = 0; i < predatornames.Size(); i++) {
-      found = 0;
-      for (j = 0; j < Predators.Size(); j++)
-        if (strcasecmp(predatornames[i], Predators[j]->Name()) == 0) {
-          found++;
-          predators.resize(1, Predators[j]);
-        }
+  for (i = 0; i < predatornames.Size(); i++) {
+    found = 0;
+    for (j = 0; j < Predators.Size(); j++)
+      if (strcasecmp(predatornames[i], Predators[j]->Name()) == 0) {
+        found++;
+        predators.resize(1, Predators[j]);
+      }
 
-      if (found == 0)
-        handle.logFailure("Error in stomachcontent - failed to match predator", predatornames[i]);
-
-    }
+    if (found == 0)
+      handle.logFailure("Error in stomachcontent - failed to match predator", predatornames[i]);
   }
 
   preyLgrpDiv = new LengthGroupDivision*[preynames.Nrow()];
@@ -433,7 +428,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
       predLgrpDiv[i] = new LengthGroupDivision(predatorlengths);
       aggregator[i] = new PredatorAggregator(predators, preys, areas, predLgrpDiv[i], preyLgrpDiv[i]);
     } else
-      aggregator[i] = new PredatorAggregator(predatornames, preys, areas, predatorages, preyLgrpDiv[i]);
+      handle.logMessage("Stomach contents data for age-based predators is currently not supported");
   }
 }
 
@@ -916,7 +911,7 @@ void SCRatios::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector&
           sum += (*obsConsumption[i][j])[k][l];
 
         if (!(isZero(sum))) {
-          tmpdivide = 1 / sum;
+          tmpdivide = 1.0 / sum;
           for (l = 0; l < obsConsumption[i][j]->Ncol(k); l++)
             (*obsConsumption[i][j])[k][l] *= tmpdivide;
         }
@@ -932,7 +927,7 @@ double SCRatios::calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix
     likelihoodValues[timeindex][a] = 0.0;
     for (predl = 0; predl < consumption[a]->Nrow(); predl++) {
       if (!(isZero(sum[a][predl]))) {
-        tmpdivide = 1 / sum[a][predl];
+        tmpdivide = 1.0 / sum[a][predl];
         tmplik = 0.0;
         for (preyl = 0; preyl < consumption[a]->Ncol(); preyl++) {
           if (!(isZero((*stddev[timeindex][a])[predl][preyl])))
@@ -1090,7 +1085,7 @@ void SCSimple::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector&
           sum += (*obsConsumption[i][j])[k][l];
 
         if (!(isZero(sum))) {
-          tmpdivide = 1 / sum;
+          tmpdivide = 1.0 / sum;
           for (l = 0; l < obsConsumption[i][j]->Ncol(k); l++)
             (*obsConsumption[i][j])[k][l] *= tmpdivide;
         }
@@ -1106,7 +1101,7 @@ double SCSimple::calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix
     likelihoodValues[timeindex][a] = 0.0;
     for (predl = 0; predl < consumption[a]->Nrow(); predl++) {
       if (!(isZero(sum[a][predl]))) {
-        tmpdivide = 1 / sum[a][predl];
+        tmpdivide = 1.0 / sum[a][predl];
         tmplik = 0.0;
         for (preyl = 0; preyl < consumption[a]->Ncol(); preyl++) {
           tmplik += ((*consumption[a])[predl][preyl] * tmpdivide -

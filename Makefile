@@ -79,7 +79,6 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	preyoveraggregator.o lengthgroup.o preyoverprinter.o catchstatistics.o \
 	preystdinfo.o preystdinfobylength.o timevariable.o boundlikelihood.o stray.o \
 	commentstream.o printinfo.o readfunc.o conversionindex.o readmain.o keeper.o \
-	mortprey.o \
 	fleet.o sibyageonstep.o fleetpreyaggregator.o sibyfleetonstep.o predator.o \
 	sibylengthonstep.o formula.o grower.o growthcalc.o simulation.o hooke.o \
 	simann.o sionstep.o initialcond.o spawner.o initialize.o stochasticdata.o \

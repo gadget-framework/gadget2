@@ -25,17 +25,6 @@ public:
     const IntMatrix& Areas, const LengthGroupDivision* const predLgrpDiv,
     const LengthGroupDivision* const preyLgrpDiv);
   /**
-   * \brief This is the PredatorAggregator constructor for a fleksibest-style mortality model
-   * \param prednames is the CharPtrVector of the names of the predators that will be aggregated
-   * \param preys is the PreyPtrVector of the preys that will be aggregated
-   * \param Areas is the IntMatrix of areas that the predation can take place on
-   * \param ages is the IntMatrix of ages of the predators
-   * \param preyLgrpDiv is the LengthGroupDivision of the preys
-   */
-  PredatorAggregator(const CharPtrVector& prednames, PreyPtrVector& preys,
-    const IntMatrix& Areas, const IntVector& ages,
-    const LengthGroupDivision* const preyLgrpDiv);
-  /**
    * \brief This is the default PredatorAggregator destructor
    */
   ~PredatorAggregator() {};
@@ -43,10 +32,6 @@ public:
    * \brief This function will aggregate the predation biomass data
    */
   void Sum();
-  /**
-   * \brief This function will aggregate the predation biomass data for a fleksibest-style mortality model
-   */
-  void MeanSum();
   /**
    * \brief This function will aggregate the predation number data
    */
