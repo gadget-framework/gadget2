@@ -24,7 +24,7 @@ int OptInfoBfgs::iteration(double* x0) {
     x[i] = x0[i];
   }
 
-  while (k < maxiter) {
+  while (k < bfgsiter) {
     k++;
 
     if (check == 0 || isZero(alpha)) {
@@ -77,7 +77,7 @@ int OptInfoBfgs::iteration(double* x0) {
       check = 0;
 
 
-    if ((normgrad/(1.0 + abs(fk)) < eps) && (normdeltax < eps)) {
+    if ((normgrad/(1.0 + abs(fk)) < bfgseps) && (normdeltax < bfgseps)) {
       EcoSystem->setConvergeBFGS(1);
       break;
     }
