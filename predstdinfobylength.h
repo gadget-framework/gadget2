@@ -2,7 +2,7 @@
 #define predstdinfobylength_h
 
 #include "areatime.h"
-#include "conversion.h"
+#include "lengthgroup.h"
 #include "livesonareas.h"
 #include "bandmatrix.h"
 

@@ -1,0 +1,44 @@
+#ifndef lengthgroup_h
+#define lengthgroup_h
+
+#include "doublevector.h"
+
+class LengthGroupDivision;
+
+extern void printLengthGroupError(double minl, double maxl, double dl, const char* str);
+extern void printLengthGroupError(const DoubleVector& breaks, const char* str);
+
+extern void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
+  const LengthGroupDivision* coarser, const char* finername, const char* coarsername);
+
+extern int lengthGroupIsFiner(const LengthGroupDivision* finer,
+  const LengthGroupDivision* coarser, int& BogusLengthGroup);
+
+extern void printLengthGroupDivisionError(const LengthGroupDivision* lgrpdiv);
+
+extern void printLengthGroupDivisionError(const LengthGroupDivision* finer,
+  const LengthGroupDivision* coarser, const char* finername, const char* coarsername);
+
+class LengthGroupDivision {
+public:
+  LengthGroupDivision(double minlength, double maxlength, double dl);
+  LengthGroupDivision(const DoubleVector& vec);
+  LengthGroupDivision(const LengthGroupDivision& lgrpdiv);
+  ~LengthGroupDivision();
+  double Meanlength(int i) const;
+  double Minlength(int i) const;
+  double Maxlength(int i) const;
+  double dl() const { return Dl; };
+  int NoLengthGroups() const { return size; };
+  int NoLengthGroup(double length) const;
+  int Combine(const LengthGroupDivision* const addition);
+  int Error() const { return error; }
+protected:
+  int error;
+  int size;
+  double Dl;
+  DoubleVector meanlength;
+  DoubleVector minlength;
+};
+
+#endif

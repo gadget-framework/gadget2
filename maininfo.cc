@@ -1,4 +1,4 @@
-#include "mainfiles.h"
+#include "maininfo.h"
 #include "errorhandler.h"
 #include "gadget.h"
 

@@ -417,26 +417,24 @@ void CatchDistribution::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void CatchDistribution::LikelihoodPrint(ofstream& outfile) const {
+void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
   int i, j, y, a;
 
-  outfile << "\nCatch distribution\n\tlikelihood " << likelihood
-    << "\n\tfunction " << functionname << endl << TAB;
-  Likelihood::LikelihoodPrint(outfile);
-  outfile << "\tStock names:";
+  outfile << "\nCatch Distribution\n\nLikelihood " << likelihood << "\nFunction "
+    << functionname << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
   outfile << "\nAreas:";
   for (i  = 0; i < areas.Nrow(); i++) {
+    outfile << endl;
     for (j = 0; j < areas.Ncol(i); j++)
-      outfile << sep << areas[i][j];
-    outfile << "\n\t";
+      outfile << areas[i][j] << sep;
   }
   outfile << "\nAges:";
   for (i  = 0; i < ages.Nrow(); i++) {
+    outfile << endl;
     for (j = 0; j < ages.Ncol(i); j++)
-      outfile << sep << ages[i][j];
-    outfile << "\n\t";
+      outfile << ages[i][j] << sep;
   }
   outfile << "\nLengths:";
   for (i = 0; i < lengths.Size(); i++)
@@ -447,27 +445,27 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) const {
   outfile << endl;
 
   //aggregator->Print(outfile);
-  outfile << "\tAge-Length distribution data:\n";
+  outfile << "Age-Length distribution data:";
   for (y = 0; y < AgeLengthData.Nrow(); y++) {
-    outfile << "\nyear and step " << Years[y] << sep << Steps[y] << endl;
+    outfile << "\nYear " << Years[y] << " and step " << Steps[y];
     for (a = 0; a < AgeLengthData.Ncol(y); a++) {
-      outfile << "\nArea: " << a << "\n\nmeasurements\n";
+      outfile << "\nArea: " << a << "\nMeasurements";
       for (i = 0; i < AgeLengthData[y][a]->Nrow(); i++) {
+        outfile << endl;
         for (j = 0; j < AgeLengthData[y][a]->Ncol(i); j++) {
           outfile.width(printwidth);
           outfile.precision(lowprecision);
           outfile << sep << (*AgeLengthData[y][a])[i][j];
         }
-        outfile << endl;
       }
-      outfile << "\nNumber caught according to model\n";
+      outfile << "\nNumber caught according to model";
       for (i = 0; i < Proportions[y][a]->Nrow(); i++) {
+        outfile << endl;
         for (j = 0; j < Proportions[y][a]->Ncol(i); j++) {
           outfile.width(printwidth);
           outfile.precision(smallprecision);
           outfile << sep << (*Proportions[y][a])[i][j];
         }
-        outfile << endl;
       }
     }
     outfile << "\nLikelihood values:";

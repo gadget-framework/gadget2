@@ -2,7 +2,6 @@
 #include "areatime.h"
 #include "errorhandler.h"
 #include "readfunc.h"
-#include "checkconversion.h"
 #include "stock.h"
 #include "stockprey.h"
 #include "mortprey.h"

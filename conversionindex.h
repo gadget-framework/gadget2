@@ -1,42 +1,18 @@
-#ifndef conversion_h
-#define conversion_h
+#ifndef conversionindex_h
+#define conversionindex_h
 
 #include "doublevector.h"
 #include "intvector.h"
+#include "lengthgroup.h"
 
-class LengthGroupDivision;
 class ConversionIndex;
 
 extern void interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc, const ConversionIndex* CI);
-extern void printLengthGroupError(double minl, double maxl, double dl, const char* str);
-extern void printLengthGroupError(const DoubleVector& breaks, const char* str);
-
-class LengthGroupDivision {
-public:
-  LengthGroupDivision(double minlength, double maxlength, double dl);
-  LengthGroupDivision(const DoubleVector& vec);
-  LengthGroupDivision(const LengthGroupDivision& lgrpdiv);
-  ~LengthGroupDivision();
-  double Meanlength(int i) const;
-  double Minlength(int i) const;
-  double Maxlength(int i) const;
-  double dl() const { return Dl; };
-  int NoLengthGroups() const { return size; };
-  int NoLengthGroup(double length) const;
-  int Combine(const LengthGroupDivision* const addition);
-  int Error() const { return error; }
-protected:
-  int error;
-  int size;
-  double Dl;
-  DoubleVector meanlength;
-  DoubleVector minlength;
-};
 
 class ConversionIndex {
 public:
   ConversionIndex(const LengthGroupDivision* const LF, const LengthGroupDivision* const LC, int interp = 0);
-  ~ConversionIndex();
+  ~ConversionIndex() {};
   int Pos(int j) const { return pos[j]; };
   int Minlength() const { return minlength; };
   int Maxlength() const { return maxlength; };

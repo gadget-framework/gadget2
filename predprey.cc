@@ -3,7 +3,7 @@
 #include "mathfunc.h"
 #include "readfunc.h"
 #include "prey.h"
-#include "conversion.h"
+#include "lengthgroup.h"
 #include "areatime.h"
 #include "gadget.h"
 

@@ -2,7 +2,7 @@
 #define prey_h
 
 #include "popinfovector.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "commentstream.h"
 #include "charptrvector.h"
 #include "hasname.h"

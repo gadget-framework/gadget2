@@ -2,7 +2,7 @@
 #define mortpredlength_h
 
 #include "lengthpredator.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "commentstream.h"
 #include "formulamatrix.h"
 #include "readfunc.h"

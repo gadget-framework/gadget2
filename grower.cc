@@ -2,7 +2,6 @@
 #include "errorhandler.h"
 #include "readfunc.h"
 #include "readword.h"
-#include "conversion.h"
 #include "keeper.h"
 #include "areatime.h"
 #include "growthcalc.h"

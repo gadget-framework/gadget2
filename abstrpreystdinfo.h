@@ -12,7 +12,7 @@ class AbstrPreyStdInfo : protected LivesOnAreas {
 public:
   AbstrPreyStdInfo(const Prey* p, const IntVector& areas,
     int minage = 0, int maxage = 0);
-  virtual ~AbstrPreyStdInfo();
+  virtual ~AbstrPreyStdInfo() {};
   virtual const DoubleVector& NconsumptionByLength(int area) const = 0;
   virtual const DoubleVector& BconsumptionByLength(int area) const = 0;
   virtual const DoubleVector& MortalityByLength(int area) const = 0;

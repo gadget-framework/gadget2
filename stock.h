@@ -5,7 +5,7 @@
 #include "agebandmatrix.h"
 #include "agebandmatrixratioptrvector.h"
 #include "base.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "stockptrvector.h"
 #include "tagptrvector.h"
 #include "commentstream.h"

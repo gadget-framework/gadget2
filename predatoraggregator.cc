@@ -2,7 +2,6 @@
 #include "prey.h"
 #include "mortprey.h"
 #include "predator.h"
-#include "checkconversion.h"
 #include "mathfunc.h"
 #include "popinfovector.h"
 #include "gadget.h"

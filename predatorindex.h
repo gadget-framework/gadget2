@@ -4,7 +4,7 @@
 #include "commentstream.h"
 #include "predatorptrvector.h"
 #include "preyptrvector.h"
-#include "conversion.h"
+#include "lengthgroup.h"
 #include "pionstep.h"
 
 class PredatorIndices;

@@ -2,7 +2,7 @@
 #define poppredator_h
 
 #include "areatime.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "commentstream.h"
 #include "agebandmatrix.h"
 #include "predator.h"

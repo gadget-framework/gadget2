@@ -15,9 +15,6 @@ AbstrPreyStdInfo::AbstrPreyStdInfo(const Prey* prey, const IntVector& Areas,
   MortbyAgeAndLength.resize(NoAreas, bm);
 }
 
-AbstrPreyStdInfo::~AbstrPreyStdInfo() {
-}
-
 const BandMatrix& AbstrPreyStdInfo::NconsumptionByAgeAndLength(int area) const {
   return NconbyAgeAndLength[AreaNr[area]];
 }

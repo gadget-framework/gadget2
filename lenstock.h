@@ -2,7 +2,6 @@
 #define lenstock_h
 
 #include "commentstream.h"
-#include "conversion.h"
 #include "lennaturalm.h"
 #include "cannibalism.h"
 #include "mortpredlength.h"

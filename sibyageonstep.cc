@@ -1,5 +1,4 @@
 #include "sibyageonstep.h"
-#include "conversion.h"
 #include "stock.h"
 #include "areatime.h"
 #include "loglinearregression.h"

@@ -1,5 +1,5 @@
 #include "formatedchatprinter.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "areatime.h"
 #include "readword.h"
 #include "readaggregation.h"

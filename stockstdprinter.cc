@@ -6,7 +6,7 @@
 #include "stockptrvector.h"
 #include "stock.h"
 #include "popstatistics.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "stockpreystdinfo.h"
 #include "readword.h"
 #include "readaggregation.h"

@@ -1,7 +1,6 @@
 #include "mathfunc.h"
 #include "keeper.h"
 #include "prey.h"
-#include "conversion.h"
 #include "print.h"
 #include "suits.h"
 #include "predator.h"

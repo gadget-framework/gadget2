@@ -16,7 +16,6 @@
 #include "spawner.h"
 #include "readword.h"
 #include "readaggregation.h"
-#include "checkconversion.h"
 #include "lenstock.h"
 #include "readfunc.h"
 #include "gadget.h"

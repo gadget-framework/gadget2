@@ -4,7 +4,6 @@
 #include "keeper.h"
 #include "readfunc.h"
 #include "readword.h"
-#include "conversion.h"
 #include "gadget.h"
 
 // ********************************************************

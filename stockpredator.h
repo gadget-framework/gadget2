@@ -2,7 +2,7 @@
 #define stockpredator_h
 
 #include "areatime.h"
-#include "conversion.h"
+#include "lengthgroup.h"
 #include "commentstream.h"
 #include "agebandmatrixptrvector.h"
 #include "poppredator.h"

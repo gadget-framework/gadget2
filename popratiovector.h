@@ -1,7 +1,7 @@
 #ifndef popratiovector_h
 #define popratiovector_h
 
-#include "conversion.h"
+#include "conversionindex.h"
 #include "popratio.h"
 
 /**

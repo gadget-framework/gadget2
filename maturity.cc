@@ -3,7 +3,7 @@
 #include "mathfunc.h"
 #include "readfunc.h"
 #include "readword.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "print.h"
 #include "errorhandler.h"
 #include "gadget.h"

@@ -1,7 +1,7 @@
 #ifndef popstatistics_h
 #define popstatistics_h
 
-#include "conversion.h"
+#include "lengthgroup.h"
 #include "popinfovector.h"
 #include "popinfoindexvector.h"
 

@@ -2,7 +2,7 @@
 #define fleetpreyaggregator_h
 
 #include "areatime.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "agebandmatrix.h"
 #include "agebandmatrixptrvector.h"
 #include "commentstream.h"

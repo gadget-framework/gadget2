@@ -1,9 +1,6 @@
 #include "strstack.h"
 #include "gadget.h"
 
-StrStack::StrStack() : sz(0) {
-}
-
 StrStack::~StrStack() {
   int i;
   for (i = 0; i < v.Size(); i++)
@@ -48,16 +45,7 @@ char* StrStack::SendAll() const {
 }
 
 char* StrStack::SendTop() const {
-  assert(sz > 0);
   char* rstr = new char[strlen(v[sz - 1]) + 1];
   strcpy(rstr, v[sz - 1]);
-  return rstr;
-}
-
-char* StrStack::Send(int i) const {
-  assert(sz > 0);
-  assert(i >= 0 && i < sz);
-  char* rstr = new char[strlen(v[i]) + 1];
-  strcpy(rstr, v[i]);
   return rstr;
 }

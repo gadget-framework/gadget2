@@ -18,7 +18,6 @@
 #include "spawner.h"
 #include "readword.h"
 #include "readaggregation.h"
-#include "checkconversion.h"
 #include "gadget.h"
 
 Stock::Stock(CommentStream& infile, const char* givenname,

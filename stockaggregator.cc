@@ -1,8 +1,7 @@
 #include "stockaggregator.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "stock.h"
 #include "mathfunc.h"
-#include "checkconversion.h"
 #include "extravector.h" //for PopInfoAdd
 
 StockAggregator::StockAggregator(const StockPtrVector& Stocks,

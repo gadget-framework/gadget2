@@ -14,7 +14,7 @@ public:
   void SetStocks(StockPtrVector& Stocks);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
-  virtual void LikelihoodPrint(ofstream& outfile) const;
+  virtual void LikelihoodPrint(ofstream& outfile);
   virtual void CommandLinePrint(ofstream& outfile, const TimeClass& time, const PrintInfo& print) {
     SI->CommandLinePrint(outfile, time, print); };
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time) {

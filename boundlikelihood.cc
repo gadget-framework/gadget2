@@ -126,6 +126,3 @@ void BoundLikelihood::AddToLikelihoodTimeAndKeeper(
       likelihoods[i] = 0;
   }
 }
-
-BoundLikelihood::~BoundLikelihood() {
-}

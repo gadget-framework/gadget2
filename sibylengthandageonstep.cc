@@ -654,7 +654,7 @@ void SIByLengthAndAgeOnStep::Reset(const Keeper* const keeper) {
   }
 }
 
-void SIByLengthAndAgeOnStep::LikelihoodPrint(ofstream& outfile) const {
+void SIByLengthAndAgeOnStep::LikelihoodPrint(ofstream& outfile) {
   int i;
   outfile << "Likelihood component on step\n";
   for (i = 0; i < Years.Size(); i++) {

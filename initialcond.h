@@ -2,7 +2,7 @@
 #define initialcond_h
 
 #include "formulamatrix.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "commentstream.h"
 #include "agebandmatrix.h"
 #include "agebandmatrixptrvector.h"

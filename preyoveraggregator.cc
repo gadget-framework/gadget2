@@ -1,8 +1,6 @@
 #include "preyoveraggregator.h"
 #include "prey.h"
 #include "mathfunc.h"
-#include "conversion.h"
-#include "checkconversion.h"
 
 PreyOverAggregator::PreyOverAggregator(const PreyPtrVector& Preys,
   const IntMatrix& Areas, const LengthGroupDivision* const preyLgrpDiv)

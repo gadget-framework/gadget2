@@ -2,7 +2,7 @@
 #define predator_h
 
 #include "areatime.h"
-#include "conversion.h"
+#include "lengthgroup.h"
 #include "commentstream.h"
 #include "preyptrvector.h"
 #include "hasname.h"

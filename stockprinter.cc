@@ -1,5 +1,5 @@
 #include "stockprinter.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "stockaggregator.h"
 #include "areatime.h"
 #include "readfunc.h"

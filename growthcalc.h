@@ -2,7 +2,7 @@
 #define growthcalc_h
 
 #include "areatime.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "formulamatrixptrvector.h"
 #include "commentstream.h"
 #include "popinfovector.h"

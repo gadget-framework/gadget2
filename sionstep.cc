@@ -319,7 +319,7 @@ void SIOnStep::Reset(const Keeper* const keeper) {
 
 void SIOnStep::Print(ofstream& outfile) const {
   int i, j;
-  outfile << "\tSurvey indices -- error " << error << endl;
+  outfile << "\tSurvey Indices\n";
   for (i = 0; i < Years.Size(); i++) {
     outfile << TAB << Years[i] << sep << Steps[i] << sep;
     for (j = 0; j < Indices.Ncol(i); j++) {
@@ -342,9 +342,9 @@ void SIOnStep::Print(ofstream& outfile) const {
   outfile << flush;
 }
 
-void SIOnStep::LikelihoodPrint(ofstream& outfile) const {
+void SIOnStep::LikelihoodPrint(ofstream& outfile) {
   int i, j;
-  outfile << "error " << error << "\nAbundance indices\n";
+  outfile << "Abundance indices\n";
   for (i = 0; i < Years.Size(); i++) {
     outfile << TAB << Years[i] << sep << Steps[i] << sep;
     for (j = 0; j < Indices.Ncol(i); j++) {
@@ -365,20 +365,20 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile) const {
     outfile << endl;
   }
 
-  outfile << "\tNumber of sums " << NumberOfSums
-    << "\nRegression information\n\nintercepts" << sep;
+  outfile << "Number of sums " << NumberOfSums << "\nError " << error
+    << "\nRegression information\nintercept ";
   for (j = 0; j < Indices.Ncol(0); j++) {
     outfile.width(printwidth);
     outfile.precision(smallprecision);
     outfile << intercepts[j] << sep;
   }
-  outfile << "\nSlopes" << sep;
+  outfile << "\nslope ";
   for (j = 0; j < Indices.Ncol(0); j++) {
     outfile.width(printwidth);
     outfile.precision(smallprecision);
     outfile << slopes[j] << sep;
   }
-  outfile << "\nsse" << sep;
+  outfile << "\nsse   ";
   for (j = 0; j < Indices.Ncol(0); j++) {
     outfile.width(printwidth);
     outfile.precision(smallprecision);

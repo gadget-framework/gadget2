@@ -3,7 +3,7 @@
 #include "mathfunc.h"
 #include "bandmatrix.h"
 #include "doublevector.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "popinfovector.h"
 #include "gadget.h"
 

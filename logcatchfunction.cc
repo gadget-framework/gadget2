@@ -362,67 +362,66 @@ void LogCatches::Reset(const Keeper* const keeper) {
   timeindex = 0;
 }
 
-void LogCatches::LikelihoodPrint(ofstream& outfile) const {
+void LogCatches::LikelihoodPrint(ofstream& outfile) {
   int i, j, a, y;
 
-  outfile << "\nLogCatch likelihood\n\tlikelihood " << likelihood
-    << "\n\tfunction " << functionname << endl << TAB;
-  Likelihood::LikelihoodPrint(outfile);
-  outfile << "\tStocknames: " << sep;
+  outfile << "\nLogCatch\n\nLikelihood " << likelihood << "\nFunction "
+    << functionname << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
-    outfile << stocknames[i] << sep;
-  outfile << "\nAreas : ";
-  for (i = 0; i < areas.Nrow(); i++) {
+    outfile << sep << stocknames[i];
+  outfile << "\nAreas:";
+  for (i  = 0; i < areas.Nrow(); i++) {
+    outfile << endl;
     for (j = 0; j < areas.Ncol(i); j++)
       outfile << areas[i][j] << sep;
-    outfile << "\n\t";
   }
-  outfile << "\nAges : ";
-  for (i = 0; i < ages.Nrow(); i++) {
+  outfile << "\nAges:";
+  for (i  = 0; i < ages.Nrow(); i++) {
+    outfile << endl;
     for (j = 0; j < ages.Ncol(i); j++)
       outfile << ages[i][j] << sep;
-    outfile << "\n\t";
   }
-  outfile << "\nLengths : ";
+  outfile << "\nLengths:";
   for (i = 0; i < lengths.Size(); i++)
-    outfile << lengths[i] << sep;
-  outfile << "\nFleetnames: " << sep;
+    outfile << sep << lengths[i];
+  outfile << "\nFleet names:";
   for (i = 0; i < fleetnames.Size(); i++)
-    outfile << fleetnames[i] << sep;
+    outfile << sep << fleetnames[i];
   outfile << endl;
 
   //aggregator->Print(outfile);
   outfile << "\tAge-Length distribution data:\n";
   for (y = 0; y < AgeLengthData.Nrow(); y++) {
-    outfile << "\nyear and step " << Years[y] << sep << Steps[y] << endl;
+    outfile << "\nYear " << Years[y] << " and step " << Steps[y];
     for (a = 0; a < AgeLengthData.Ncol(y); a++) {
-      outfile << "\nArea : " << a << "\nmeasurements\n";
+      outfile << "\nArea: " << a << "\nMeasurements";
       for (i = 0; i < AgeLengthData[y][a]->Nrow(); i++) {
+        outfile << endl;
         for (j = 0; j < AgeLengthData[y][a]->Ncol(i); j++) {
           outfile.width(printwidth);
-          outfile.precision(smallprecision);
-          outfile << (*AgeLengthData[y][a])[i][j] << sep;
+          outfile.precision(lowprecision);
+          outfile << sep << (*AgeLengthData[y][a])[i][j];
         }
-        outfile << endl;
       }
-      outfile << "\nNumber caught according to model\n";
+      outfile << "\nNumber caught according to model";
       for (i = 0; i < Proportions[y][a]->Nrow(); i++) {
+        outfile << endl;
         for (j = 0; j < Proportions[y][a]->Ncol(i); j++) {
           outfile.width(printwidth);
           outfile.precision(smallprecision);
-          outfile << (*Proportions[y][a])[i][j] << sep;
+          outfile << sep << (*Proportions[y][a])[i][j];
         }
-        outfile << endl;
       }
     }
-    outfile << "Likelihood values : ";
+    outfile << "\nLikelihood values:";
     for (a = 0; a < AgeLengthData.Ncol(y); a++) {
        outfile.width(printwidth);
        outfile.precision(smallprecision);
-       outfile << Likelihoodvalues[y][a] << sep;
+       outfile << sep << Likelihoodvalues[y][a];
     }
     outfile << endl;
   }
+  outfile.flush();
 }
 
 void LogCatches::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {

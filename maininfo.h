@@ -1,5 +1,5 @@
-#ifndef mainfiles_h
-#define mainfiles_h
+#ifndef maininfo_h
+#define maininfo_h
 
 #include "optinfo.h"
 #include "printinfo.h"

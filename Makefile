@@ -86,9 +86,9 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	predpreystdageprinter.o agebandmatrix.o predpreystdlengthprinter.o grow.o \
 	agebandmatrixmemberfunctions.o predpreystdprinter.o area.o predstdinfo.o \
 	bandmatrix.o predstdinfobylength.o prey.o logcatchfunction.o popstatistics.o \
-	preyoveraggregator.o checkconversion.o preyoverprinter.o catchstatistics.o \
+	preyoveraggregator.o lengthgroup.o preyoverprinter.o catchstatistics.o \
 	preystdinfo.o preystdinfobylength.o print.o timevariable.o boundlikelihood.o \
-	commentstream.o printinfo.o readfunc.o conversion.o readmain.o keeper.o \
+	commentstream.o printinfo.o readfunc.o conversionindex.o readmain.o keeper.o \
 	ecosystem.o readword.o renewal.o mortpredlength.o mortprey.o mortprinter.o \
 	errorhandler.o extravector.o fleet.o sibyageonstep.o fleetpreyaggregator.o \
 	sibylengthonstep.o formula.o grower.o growthcalc.o simulation.o hooke.o \
@@ -96,7 +96,7 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	lengthpredator.o stockaggregator.o lengthprey.o sibylengthandageonstep.o \
 	stockdistribution.o linearpredator.o stockfullprinter.o linearregression.o \
 	stockmemberfunctions.o livesonareas.o stockpredator.o stockpredstdinfo.o \
-	loglinearregression.o main.o stockprey.o mainfiles.o stockpreyfullprinter.o \
+	loglinearregression.o main.o stockprey.o maininfo.o stockpreyfullprinter.o \
 	stockpreystdinfo.o stockpreystdinfobylength.o stockprinter.o lenstock.o \
 	stockstdprinter.o maturity.o suitfunc.o suits.o stomachcontent.o runid.o \
 	migration.o variableinfo.o binarytree.o vectorusingkeeper.o growthimplement.o \

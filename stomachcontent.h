@@ -2,7 +2,7 @@
 #define stomachcontent_h
 
 #include "commentstream.h"
-#include "conversion.h"
+#include "lengthgroup.h"
 #include "predatorptrvector.h"
 #include "preyptrvector.h"
 #include "doublematrixptrmatrix.h"

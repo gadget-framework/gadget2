@@ -1,5 +1,4 @@
 #include "popstatistics.h"
-#include "conversion.h"
 #include "popinfo.h"
 #include "gadget.h"
 

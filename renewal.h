@@ -2,7 +2,7 @@
 #define renewal_h
 
 #include "formulavector.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "commentstream.h"
 #include "stock.h"
 #include "livesonareas.h"

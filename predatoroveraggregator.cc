@@ -1,7 +1,7 @@
 #include "predatoroveraggregator.h"
 #include "predator.h"
 #include "mathfunc.h"
-#include "checkconversion.h"
+#include "lengthgroup.h"
 
 PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
   const IntMatrix& Areas, const LengthGroupDivision* const predLgrpDiv)

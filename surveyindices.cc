@@ -158,19 +158,18 @@ SurveyIndices::~SurveyIndices() {
   delete[] surveyname;
 }
 
-void SurveyIndices::LikelihoodPrint(ofstream& outfile) const {
+void SurveyIndices::LikelihoodPrint(ofstream& outfile) {
   int i;
-  outfile << "\nSurvey Indices\nlikelihood " << likelihood
-    << "\nStock names: ";
+  outfile << "\nSurvey Indices\n\nLikelihood " << likelihood
+    << "\nWeight " << weight << "\nStocknames:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << stocknames[i] << sep;
-  outfile << endl;
-  Likelihood::LikelihoodPrint(outfile);
-  outfile << "Areas\n";
+  outfile << "\nAreas ";
   for (i = 0; i < areas.Size(); i++)
-    outfile << areas[i] << TAB;
+    outfile << areas[i] << sep;
   outfile << endl;
   SI->LikelihoodPrint(outfile);
+  outfile << endl;
 }
 
 void SurveyIndices::AddToLikelihood(const TimeClass* const TimeInfo) {

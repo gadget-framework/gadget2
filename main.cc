@@ -1,5 +1,5 @@
 #include "ecosystem.h"
-#include "mainfiles.h"
+#include "maininfo.h"
 #include "runid.h"
 #include "gadget.h"
 
@@ -174,4 +174,5 @@ int main(int aNumber, char *const aVector[]) {
   free(workingdir);
   delete Optinfo;
   delete EcoSystem;
+  return EXIT_SUCCESS;
 }

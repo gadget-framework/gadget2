@@ -2,7 +2,7 @@
 #include "areatime.h"
 #include "stockpreystdinfo.h"
 #include "errorhandler.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "charptrvector.h"
 #include "stock.h"
 #include "readword.h"

@@ -2,7 +2,7 @@
 #include "stockfullprinter.h"
 #include "errorhandler.h"
 #include "stock.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "stockptrvector.h"
 #include "readword.h"
 #include "readaggregation.h"

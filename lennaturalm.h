@@ -3,7 +3,7 @@
 
 #include "areatime.h"
 #include "commentstream.h"
-#include "conversion.h"
+#include "lengthgroup.h"
 #include "formulavector.h"
 
 class LenNaturalM;

@@ -3,7 +3,6 @@
 #include "errorhandler.h"
 #include "readfunc.h"
 #include "prey.h"
-#include "conversion.h"
 #include "areatime.h"
 #include "print.h"
 #include "suits.h"

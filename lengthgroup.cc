@@ -1,5 +1,4 @@
-#include "conversion.h"
-#include "checkconversion.h"
+#include "lengthgroup.h"
 #include "gadget.h"
 
 void printLengthGroupError(double minl, double maxl, double dl, const char* explain) {
@@ -184,170 +183,126 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
   return 1;
 }
 
-ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
-  const LengthGroupDivision* const L2, int interp) {
-
-  if (L1->Maxlength(L1->NoLengthGroups() - 1) <= L2->Minlength(0)
-      || L2->Maxlength(L2->NoLengthGroups() - 1) <= L1->Minlength(0)) {
-    cerr << "Error: cannot create a mapping between length groups whose "
-      << "intersection is empty\nThe length group divisions are:\n";
-    printLengthGroupDivisionError(L1);
-    cerr << " and\n";
-    printLengthGroupDivisionError(L2);
-    exit(EXIT_FAILURE);
-  }
-
-  int i, j;
-  int Mpos, NrOf;
-  const LengthGroupDivision* Lf;  //Will be the finer length group division.
-  const LengthGroupDivision* Lc;  //Will be the coarser length group division.
-
-  //Here after is a check to see which lengthgroupdivision is coarser.
-  //targetisfiner means that L1 is strictly coarser than L2.
-  if (L1->dl() != 0 && L2->dl() != 0) {
-    if (L1->dl() > L2->dl()) {
-      targetisfiner = 1;
-      Lc = L1;
-      Lf = L2;
-    } else {
-      targetisfiner = 0;
-      Lc = L2;
-      Lf = L1;
-    }
-  } else {
-    checkLengthGroupIsFiner(L1, L2, "CI - finer", "CI - coarser");
-    targetisfiner = 0;
-    Lc = L2;
-    Lf = L1;
-  }
-
-  //do the length group divisions have same dl?
-  if (Lf->dl() != 0 && Lf->dl() == Lc->dl()) {
-    offset = int((Lf->Meanlength(0) - Lc->Meanlength(0)) / Lf->dl());
-    samedl = 1;
-  } else
-    samedl = 0;
-
-  //Set the switches Mpos and NrOf. They determine how much is needed
-  //of the conversionindex.
-  if (targetisfiner == 1 && samedl == 0)
-    NrOf = 1;
-  else
-    NrOf = 0;
-
-  if (samedl == 0)
-    Mpos = 1;
-  else
-    Mpos = 0;
-
-  nf = Lf->NoLengthGroups();
-  nc = Lc->NoLengthGroups();
-
-  //Set minlength and maxlength if coarser LengthGroupDivision does
-  //not span all the range of the finer one.
-  for (i = 0; i < nf; i++)
-    if (Lf->Minlength(i) >= Lc->Minlength(0)) {
-      minlength = i;
-      break;
-    }
-
-  for (i = nf - 1; i >= 0; i--)
-    if (Lf->Maxlength(i) <= Lc->Maxlength(nc - 1)) {
-      maxlength = i + 1;
-      break;
-    }
-
-  int k = 0;
-  pos.resize(Lf->NoLengthGroups(), 0); //JMB - default value
-  for (i = minlength; i < maxlength; i++)
-    for (j = k; j < Lc->NoLengthGroups(); j++)
-      if (Lf->Meanlength(i) >= Lc->Minlength(j) && Lf->Meanlength(i) <= Lc->Maxlength(j)) {
-        pos[i] = j;
-        k = j;
-        break;
-      }
-
-  //If Minpos and Maxpos are needed.
-  if (Mpos == 1) {
-    minpos.resize(Lc->NoLengthGroups(), Lf->NoLengthGroups() - 1); //initialized to Lf->Size() - 1.
-    for (i = minlength; i < maxlength; i++)
-      if (i < minpos[pos[i]])
-        minpos[pos[i]] = i;
-
-    for (i = Lc->NoLengthGroups() - 1; i > 0; i--)
-      if (minpos[i - 1] > minpos[i])
-        minpos[i - 1] = minpos[i];
-
-    maxpos.resize(Lc->NoLengthGroups(), 0);
-    for (i = minlength; i < maxlength; i++)
-      if (i > maxpos[pos[i]])
-        maxpos[pos[i]] = i;
-
-    for (i = 0; i < Lc->NoLengthGroups() - 1;i++)
-      if (maxpos[i + 1] < maxpos[i])
-        maxpos[i + 1] = maxpos[i];
-  }
-
-  //If number in each length group is needed.
-  if (NrOf) {
-    nrof.resize(Lf->NoLengthGroups(), 0);
-    for (i = minlength; i < maxlength; i++)
-      nrof[i] = maxpos[pos[i]] - minpos[pos[i]] + 1;
-  }
-
-  //if the conversionindex is to be used for interpolation.
-  if (interp) {
-    interpratio.resize(Lf->NoLengthGroups());
-    interppos.resize(Lf->NoLengthGroups(), -1);
-    k = 0;
-    for (i = minlength; i < maxlength; i++)
-      for (j = k; j < Lc->NoLengthGroups() - 1; j++)
-        if (Lf->Meanlength(i) >= Lc->Meanlength(j) && Lf->Meanlength(i) < Lc->Meanlength(j + 1)) {
-          interppos[i] = j;
-          k = j;
-          break;
-        }
-
-    for (i = 0; i < Lf->NoLengthGroups(); i++)
-      if (interppos[i] != -1)
-        interpratio[i] = (Lf->Meanlength(i) - Lc->Meanlength(interppos[i])) /
-          (Lc->Meanlength(interppos[i] + 1) - Lc->Meanlength(interppos[i]));
-      else {
-        interpratio[i] = -1; //-1 when outside range.
-        if (Lf->Meanlength(i) < Lc->Meanlength(0))
-          interppos[i] = 0;
-        else
-          interppos[i] = nc - 1;
-      }
-  }
-}
-
-ConversionIndex::~ConversionIndex() {
-}
-
-//The function Interpolates values calculated on a coarse Length distribution
-//Vc to a finer length distribution Vf using the conversionindex CI.
-void interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc, const ConversionIndex* CI) {
-  int i, offset;
-  if (CI -> SameDl()) {
-    offset = CI->Offset();
-    if (CI->Minlength() > 0)
-      for (i = 0; i < CI->Minlength(); i++)
-        Vf[i] = Vc[0];
-
-    for (i = CI->Minlength(); i < CI->Maxlength(); i++)
-      Vf[i] = Vc[i + offset];
-
-    if (CI->Maxlength() < Vf.Size())
-      for (i = CI->Maxlength(); i < Vf.Size(); i++)
-        Vf[i] = Vc[Vc.Size() - 1];
+void printLengthGroupDivisionError(const LengthGroupDivision* lgrpdiv) {
+  int i;
+  if (lgrpdiv->dl() != 0) {
+    cerr << "Length group with minimum length " << lgrpdiv->Minlength(0) << ", maximum length "
+      << lgrpdiv->Maxlength(lgrpdiv->NoLengthGroups() - 1) << " and stepsize " << lgrpdiv->dl();
 
   } else {
-    for (i = 0; i < Vf.Size(); i++) {
-      if (CI->InterpRatio(i) != -1)
-        Vf[i] = Vc[CI->InterpPos(i)] * (1 - CI->InterpRatio(i)) + Vc[CI->InterpPos(i) + 1] * CI->InterpRatio(i);
-      else
-        Vf[i] = Vc[CI->InterpPos(i)];
+    cerr << "Length group with lengths ";
+    for (i = 0; i < lgrpdiv->NoLengthGroups(); i++)
+      cerr << lgrpdiv->Minlength(i) << ", ";
+
+    cerr << lgrpdiv->Maxlength(lgrpdiv->NoLengthGroups() - 1);
+  }
+  cerr << endl;
+}
+
+void printLengthGroupDivisionError(const LengthGroupDivision* finer,
+  const LengthGroupDivision* coarser, const char* finername, const char* coarsername) {
+
+  cerr << "Error: Length group divisions for " << finername
+    << " is not finer than the length group division for " << coarsername
+    << "\nThe length group division for " << finername << " is:\n";
+  printLengthGroupDivisionError(finer);
+  cerr << "The length group division for " << coarsername << " is:\n";
+  printLengthGroupDivisionError(coarser);
+}
+
+/* returns -1 if algorithm fails. Should never happen, but Murphys law ...
+ * returns 0 if finer is not finer than coarser and -1 and 2 did not happen.
+ * returns 1 if finer is indeed finer than coarser.
+ * returns 2 if comparison failed -- e.g. the intersection is empty,...
+ * If finer is not finer than coarser, BogusLengthGroup will have
+ * changed after the function has returned, and keep the number of a
+ * length group in coarser that is not wholly contained in a single
+ * length group in coarser.*/
+
+int lengthGroupIsFiner(const LengthGroupDivision* finer,
+  const LengthGroupDivision* coarser, int& BogusLengthGroup) {
+
+  if (coarser->NoLengthGroups() == 0 || finer->NoLengthGroups() == 0)
+    return 2;
+  int c = 0;
+  const int cmax = coarser->NoLengthGroups() - 1;
+  double allowederror = (coarser->Maxlength(cmax) - coarser->Minlength(0)) *
+    rathersmall / coarser->NoLengthGroups();
+
+  int f = 0;
+  int fmin = 0;
+  int fmax = finer->NoLengthGroups() - 1;
+  double minlength = max(coarser->Minlength(0), finer->Minlength(0));
+  double maxlength = min(coarser->Maxlength(cmax), finer->Maxlength(fmax));
+
+  //check to see if the intersection is empty
+  if (minlength - allowederror >= maxlength)
+    return 2;
+
+  if (minlength - allowederror > finer->Minlength(0))
+    if (absolute(minlength -
+       finer->Minlength(finer->NoLengthGroup(minlength))) > allowederror) {
+      BogusLengthGroup = finer->NoLengthGroup(minlength);
+      return 0;
+    }
+
+  if (maxlength + allowederror < finer->Maxlength(fmax))
+    if (absolute(maxlength -
+       finer->Minlength(finer->NoLengthGroup(maxlength))) > allowederror) {
+      BogusLengthGroup = finer->NoLengthGroup(maxlength);
+      return 0;
+    }
+
+  fmin = finer->NoLengthGroup(minlength);
+  fmax = finer->NoLengthGroup(maxlength);
+
+  //if fmax is finer is not in the intersection of the length groups
+  if (absolute(maxlength - finer->Minlength(fmax)) < allowederror)
+    fmax--;
+
+  //fmin is the first length group in finer that is wholly contained
+  //in the intersection of finer and coarser.
+  //fmax is the last length group in finer in the intersection
+  for (f = fmin; f <= fmax; f++) {
+    c = coarser->NoLengthGroup(finer->Minlength(f));
+    if (c < 0)
+      return -1;
+    if (!(coarser->Minlength(c) - allowederror <= finer->Minlength(f)
+        && finer->Maxlength(f) <= coarser->Maxlength(c) + allowederror)) {
+      BogusLengthGroup = f;
+      return 0;
     }
   }
+  return 1;
+}
+
+void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
+  const LengthGroupDivision* coarser, const char* finername, const char* coarsername) {
+
+  int BogusLengthGroup = 0;
+  int isfiner = lengthGroupIsFiner(finer, coarser, BogusLengthGroup);
+  switch(isfiner) {
+    case -1:
+      cerr << "Error: the algorithm in lengthgroupisfiner does not work.\n"
+        << "The length group division for " << finername << " is:\n";
+      printLengthGroupDivisionError(finer);
+      cerr << "The length group division for " << coarsername << " is:\n";
+      printLengthGroupDivisionError(coarser);
+      exit(EXIT_FAILURE);
+    case 0:
+      cerr << "Error in length group " << BogusLengthGroup << " for " << finername << endl;
+      printLengthGroupDivisionError(finer, coarser, finername, coarsername);
+      exit(EXIT_FAILURE);
+    case 1:
+      return;
+    case 2:
+      cerr << "Warning - empty intersection when checking length groups\n";
+      return;
+    default:
+      cerr << "Error when comparing length group divisions.\n"
+        << "Unrecognized return code " << isfiner << " from IsLengthGroupFiner.\n"
+        << "Please find someone to blame for this.\n";
+      printLengthGroupDivisionError(finer, coarser, finername, coarsername);
+      exit(EXIT_FAILURE);
+    }
 }

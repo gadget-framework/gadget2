@@ -5,7 +5,7 @@
 #include "doublematrix.h"
 #include "intmatrix.h"
 #include "charptrvector.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "commentstream.h"
 #include "actionattimes.h"
 #include "keeper.h"
@@ -27,7 +27,7 @@ public:
   virtual double Regression();
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
-  virtual void LikelihoodPrint(ofstream& outfile) const;
+  virtual void LikelihoodPrint(ofstream& outfile);
   virtual void CommandLinePrint(ofstream&, const TimeClass& time, const PrintInfo&) {};
   virtual void PrintLikelihood(ofstream&, const TimeClass& time, const char*) {};
   virtual void PrintLikelihoodHeader(ofstream&, const char*) {};

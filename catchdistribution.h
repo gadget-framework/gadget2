@@ -15,7 +15,7 @@ public:
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
-  virtual void LikelihoodPrint(ofstream& outfile) const;
+  virtual void LikelihoodPrint(ofstream& outfile);
   virtual void PrintLikelihood(ofstream&, const TimeClass& time);
   virtual void PrintLikelihoodHeader(ofstream&);
   const DoubleMatrix& getCalcBiomass(int area) const { return *(calc_biomass[area]); };

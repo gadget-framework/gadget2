@@ -1,5 +1,5 @@
 #include "biomassprinter.h"
-#include "conversion.h"
+#include "conversionindex.h"
 #include "stockaggregator.h"
 #include "readword.h"
 #include "readaggregation.h"

@@ -2,7 +2,7 @@
 #define stockpreystdinfo_h
 
 #include "areatime.h"
-#include "conversion.h"
+#include "lengthgroup.h"
 #include "abstrpreystdinfo.h"
 #include "stockpreystdinfobylength.h"
 

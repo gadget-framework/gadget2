@@ -11,7 +11,7 @@ class AbstrPredStdInfo : protected LivesOnAreas {
 public:
   AbstrPredStdInfo(const IntVector& areas, int predminage = 0,
     int predmaxage = 0, int preyminage = 0, int preymaxage = 0);
-  virtual ~AbstrPredStdInfo();
+  virtual ~AbstrPredStdInfo() {};
   virtual const BandMatrix& NconsumptionByLength(int area) const = 0;
   virtual const BandMatrix& BconsumptionByLength(int area) const = 0;
   virtual const BandMatrix& MortalityByLength(int area) const = 0;

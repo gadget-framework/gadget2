@@ -2,7 +2,7 @@
 #define agebandmatrixratio_h
 
 #include "popratio.h"
-#include "conversion.h"
+#include "lengthgroup.h"
 #include "bandmatrix.h"
 #include "popratiomatrix.h"
 #include "popratioindexvector.h"

@@ -12,11 +12,22 @@
 
 class Maturity;
 
+/**
+ * \class Maturity
+ * \brief This is the base class used to calculate the maturity of a stock within the model
+ * \note This will always be overridden by the derived classes that actually calculate the maturity
+ */
 class Maturity: protected LivesOnAreas {
 public:
+  /**
+   * \brief This is the default Maturity constructor
+   */
   Maturity();
   Maturity(const IntVector& areas, int minage, const IntVector& minabslength,
     const IntVector& size, const LengthGroupDivision* const LgrpDiv);
+  /**
+   * \brief This is the default Maturity destructor
+   */
   virtual ~Maturity();
   void SetStock(StockPtrVector& stockvec);
   virtual void Print(ofstream& outfile) const;

@@ -1,7 +1,7 @@
 #ifndef popinfovector_h
 #define popinfovector_h
 
-#include "conversion.h"
+#include "conversionindex.h"
 #include "popinfo.h"
 
 /**

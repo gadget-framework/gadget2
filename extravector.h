@@ -3,7 +3,7 @@
 
 #include "popinfoindexvector.h"
 #include "doubleindexvector.h"
-#include "conversion.h"
+#include "conversionindex.h"
 
 extern void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
   const ConversionIndex& CI, double ratio, const DoubleIndexVector& Ratio);

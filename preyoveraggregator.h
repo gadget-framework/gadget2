@@ -1,7 +1,7 @@
 #ifndef preyoveraggregator_h
 #define preyoveraggregator_h
 
-#include "conversion.h"
+#include "conversionindex.h"
 #include "doublematrix.h"
 #include "intmatrix.h"
 #include "preyptrvector.h"
