@@ -237,9 +237,10 @@ public:
 private:
   /**
    * \brief The actual BFGS iteration
-   * \param x0 is the starting point of the optimisation
+   * \param x0 is the (scaled) starting point of the optimisation
+   * \param init is the rescaler
    */
-  int iteration(double* x0);
+  int iteration(double* x0, double* init);
   /**
    * \brief This method calculates the gradient
    * \param p is the point where the gradinent should be calculated
@@ -250,10 +251,20 @@ private:
    * \brief This method performes a linesearch a long the search direction s
    */
   double Armijo();
+  double SmallestEigenValue();
+  void printInverseHessian(); 
   /**
    * \brief This is the current gradient
    */
   double* gk;
+  /**
+   * \brief This is the current estimation the diagonal of the hessian matrix
+   */
+  double* diaghess;
+  /**
+   * \brief 
+   */
+  //  double* deltavec;
   /**
    * \brief This is the search direction (for linesearch)
    */
@@ -294,5 +305,9 @@ private:
   double step;
   double gradacc;
   double gradstep;
+  int bfgsDebug;
+  int difficultgrad;
+  int usescaling;
+  double xtol;
 };
 #endif

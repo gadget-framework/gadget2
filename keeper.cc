@@ -558,9 +558,10 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec, int inte
       outfile << "; the BFGS algorithm ran for " << EcoSystem->getFuncEvalBFGS()
         << " function evaluations\n; and stopped when the likelihood value was "
         << setprecision(p) << EcoSystem->getLikelihoodBFGS();
-      if (EcoSystem->getConvergeBFGS() == 1)
+      if (EcoSystem->getConvergeBFGS() == 1) {
         outfile << "\n; because the convergence criteria were met\n";
-      else
+	outfile << "; The smallest eigenvalue of the hessian matrix is " << EcoSystem->getEigenBFGS() << endl;
+      } else
         outfile << "\n; because the maximum number of function evaluations was reached\n";
     }
   }
