@@ -24,7 +24,10 @@ agebandmatrixptrmatrix::agebandmatrixptrmatrix(int sz, agebandmatrixptrvector* v
 }
 
 agebandmatrixptrmatrix::~agebandmatrixptrmatrix() {
+  int i;
   if (v != 0) {
+    for (i = 0; i < size; i++)
+      delete v[i];
     delete[] v;
     v = 0;
   }

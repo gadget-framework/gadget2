@@ -26,7 +26,6 @@ class Predator;
 class PopPredator;
 class StockPrey;
 class Prey;
-class Catch;
 class StockRecruitment;
 class Maturity;
 class RenewalData;
@@ -108,7 +107,6 @@ protected:
   agebandmatrixratioptrvector tagAlkeys;
   Tagptrvector matureTags;
   Spawner* spawner;
-  Catch* catchptr;
   RenewalData* renewal;
   Maturity* maturity;
   Transition* transition;

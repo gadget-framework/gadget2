@@ -39,7 +39,10 @@ agebandmatrixptrvector::agebandmatrixptrvector(int size1, int minage,
 }
 
 agebandmatrixptrvector::~agebandmatrixptrvector() {
+  int i;
   if (v != 0) {
+    for (i = 0; i < size; i++)
+      delete v[i];
     delete[] v;
     v = 0;
   }

@@ -36,7 +36,7 @@ popinfoindexvector::popinfoindexvector(const popinfoindexvector& initial) {
 }
 
 popinfoindexvector::~popinfoindexvector() {
-if (v != 0) {
+  if (v != 0) {
     delete[] v;
     v = 0;
   }

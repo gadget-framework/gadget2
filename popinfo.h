@@ -10,6 +10,7 @@ public:
   inline
   #endif
   popinfo();
+  ~popinfo() {};
   #ifdef GADGET_INLINE
   inline
   #endif

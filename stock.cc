@@ -26,8 +26,8 @@
 
 Stock::Stock(CommentStream& infile, const char* givenname,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
-  : BaseClass(givenname), spawner(0), catchptr(0), renewal(0), maturity(0),
-  transition(0), migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), NatM(0) {
+  : BaseClass(givenname), spawner(0), renewal(0), maturity(0), transition(0),
+    migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), NatM(0) {
 
   haslgr = 1; //fixme: read this in from data file?
   int i, tmpint;
@@ -242,9 +242,8 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 }
 
 Stock::Stock(const char* givenname)
-  : BaseClass(givenname), spawner(0), catchptr(0), renewal(0), maturity(0),
-  transition(0), migration(0), prey(0), predator(0), initial(0),
-  LgrpDiv(0), grower(0), NatM(0) {
+  : BaseClass(givenname), spawner(0), renewal(0), maturity(0), transition(0),
+    migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), NatM(0) {
   //dummy constructor for use in derived classes
 }
 
