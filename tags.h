@@ -18,16 +18,12 @@
 class Tags : public HasName {
 public:
   Tags(CommentStream& infile, const char* givenname, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, Keeper* const keeper);
+    const TimeClass* const TimeInfo, Keeper* const keeper, StockPtrVector stockvec);
   ~Tags();
   void Update();
   void UpdateTags(int year, int step);
   void DeleteFromStock();
-  const int getTagYear() const { return tagyear; };
-  const int getTagStep() const { return tagstep; };
   const int getEndYear() const { return endyear; };
-  const int getEndStep() const { return endstep; };
-  const int getTagArea() const { return tagarea; };
   const CharPtrVector* getStocknames() const { return &stocknames; };
   void SetStock(StockPtrVector& Stocks);
   const char* TagName() const { return this->Name(); };
@@ -39,9 +35,7 @@ public:
   int IsWithinPeriod(int year, int step);
   int stockIndex(const char* stockname);
 private:
-  void ReadNumbers(CommentStream& infile, const char* tagname, double minlength,
-    double dl, const AreaClass* const Area, const TimeClass* const TimeInfo);
-  void AddToTagStock(int time, int area);
+  void ReadNumbers(CommentStream& infile, const char* tagname, const TimeClass* const TimeInfo);
   CharPtrVector stocknames;
   //area-age-length distribution of tags by stocks
   AgeBandMatrixPtrMatrix AgeLengthStock;
@@ -51,7 +45,6 @@ private:
   int tagyear;     //year of tagging
   int tagstep;     //step of tagging
   int endyear;     //year of last recapture
-  int endstep;     //step of last recapture
   DoubleVector NumberByLength;
   DoubleMatrixPtrVector NumberByLengthMulti;
   LengthGroupDivision* LgrpDiv;
@@ -62,9 +55,7 @@ private:
   Stock* taggingstock;
   IntVector preyindex;
   IntVector updated;
-  IntVector areaindex;
   IntVector Years;
   IntVector Steps;
-  IntMatrix Areas;
 };
 #endif

@@ -206,7 +206,7 @@ void Stock::Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
 void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
   int area, double ratio, int MinAge, int MaxAge) {
 
-  if (Addition.NrOfTagExp() > 0 && Addition.NrOfTagExp() <= tagAlkeys.NrOfTagExp()) {
+  if ((Addition.NrOfTagExp() > 0) && (Addition.NrOfTagExp() <= tagAlkeys.NrOfTagExp())) {
     int inarea = AreaNr[area];
     AgebandmratioAdd(tagAlkeys, inarea, Addition, AddArea, *CI, ratio, MinAge, MaxAge);
     tagAlkeys[inarea].UpdateRatio(Alkeys[inarea]);

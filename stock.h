@@ -180,7 +180,6 @@ public:
   int Minage() const { return Alkeys[0].Minage(); };
   int Maxage() const { return Alkeys[0].Maxage(); };
   const DoubleIndexVector& mortality() const { return NatM->getMortality(); };
-  //const void getBiomass(int area) const {};
   const StockPtrVector& GetMatureStocks();
   const StockPtrVector& GetTransitionStocks();
   void UpdateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss);

@@ -10,8 +10,6 @@
  */
 class MainInfo {
 public:
-  void ShowCorrectUsage(char* error);
-  void ShowUsage();
   /**
    * \brief This is the default MainInfo constructor
    */
@@ -20,8 +18,9 @@ public:
    * \brief This is the default MainInfo destructor
    */
   ~MainInfo();
+  void ShowCorrectUsage(char* error);
+  void ShowUsage();
   void Read(int aNumber, char* const aVector[]);
-  void Read(CommentStream& file);
   void OpenOptinfofile(char* filename);
   void CloseOptinfofile();
   void SetPrintLikelihoodFilename(char* filename);
@@ -29,6 +28,24 @@ public:
   void SetPrintFinalCondFilename(char* filename);
   void SetInitialCommentFilename(char* filename);
   void SetMainGadgetFilename(char* filename);
+  int Optimize() const { return optimize; };
+  int CalcLikelihood() const { return calclikelihood; };
+  int Stochastic() const { return stochastic; };
+  int Net() const { return netrun; };
+  int OptInfoGiven() const { return OptInfoFileisGiven; };
+  int InitCondGiven() const { return InitialCondareGiven; };
+  PrintInfo getPI() const { return printinfo; };
+  int printInitial() const { return PrintInitialcond; };
+  int printFinal() const { return PrintFinalcond; };
+  int printLikelihood() const { return PrintLikelihoodInfo; };
+  CommentStream& optFile() { return OptinfoCommentFile; };
+  char* initParamFile() const { return InitialCommentFilename; };
+  char* initFile() const { return PrintInitialCondFilename; };
+  char* finalFile() const { return PrintFinalCondFilename; };
+  char* likelihoodFile() const { return PrintLikelihoodFilename; };
+  char* mainFile() const { return MainGadgetFilename; };
+private:
+  void Read(CommentStream& file);
   CommentStream OptinfoCommentFile;
   ifstream OptinfoFile;
   /**
@@ -64,13 +81,13 @@ public:
    * \brief This is the flag used to denote that the initial values for the model parameters have been given
    */
   int InitialCondareGiven;
-  int CalcLikelihood;
-  int Optimize;
-  int Stochastic;
+  int calclikelihood;
+  int optimize;
+  int stochastic;
   int PrintInitialcond;
   int PrintFinalcond;
   int PrintLikelihoodInfo;
-  int Net;
+  int netrun;
 };
 
 #endif

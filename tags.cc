@@ -8,7 +8,8 @@
 #include "gadget.h"
 
 Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, Keeper* const keeper) : HasName(givenname) {
+  const TimeClass* const TimeInfo, Keeper* const keeper, StockPtrVector stockvec)
+  : HasName(givenname) {
 
   LgrpDiv = NULL;
   taggingstock = 0;
@@ -33,29 +34,26 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   if ((tagarea = Area->InnerArea(tmparea)) == -1)
     handle.UndefinedArea(tmparea);
 
-  readWordAndVariable(infile, "tagyear", tagyear);
-  readWordAndVariable(infile, "tagstep", tagstep);
-  readWordAndVariable(infile, "endyear", endyear);
-  readWordAndVariable(infile, "endstep", endstep);
+  infile >> ws;
+  char c = infile.peek();
+  if ((c == 'e') || (c == 'E'))
+    readWordAndVariable(infile, "endyear", endyear);
+  else
+    endyear = TimeInfo->LastYear();
 
-  if (!TimeInfo->IsWithinPeriod(tagyear, tagstep))
-    handle.Message("Time for start of tagging experiment is not within given time for the model");
-
-  if (!TimeInfo->IsWithinPeriod(endyear, endstep))
-    handle.Message("Time for end of tagging experiment is not within given time for the model");
-
-  if ((tagyear > endyear) || (tagyear == endyear && tagstep > endstep))
-    handle.Message("Error in reading time data for tagging experiment");
-
-  //Now read in the length information
-  double minlength, maxlength, dl;
-  readWordAndVariable(infile, "minlength", minlength);
-  readWordAndVariable(infile, "maxlength", maxlength);
-  readWordAndVariable(infile, "dl", dl);
-
-  LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
-  if (LgrpDiv->Error())
-    printLengthGroupError(minlength, maxlength, dl, "length groups for tags");
+  int i = 0, found = 0;
+  while (found == 0 && i < stockvec.Size()) {
+    if (strcasecmp(stockvec[i]->Name(), stocknames[0]) == 0) {
+      LgrpDiv = new LengthGroupDivision(*(stockvec[i]->ReturnLengthGroupDiv()));
+      found++;
+    }
+    i++;
+  }
+  if (found == 0) {
+    cerr << "Error when searching for names of stocks for tags\n"
+      << "Did not find any name matching " << stocknames[0] << endl;
+    exit(EXIT_FAILURE);
+  }
   NumberByLength.resize(LgrpDiv->NoLengthGroups(), 0.0);
 
   //Now read in the tagloss information
@@ -71,7 +69,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   subfile.open(text);
   checkIfFailure(subfile, text);
   handle.Open(text);
-  ReadNumbers(subcomment, givenname, minlength, dl, Area, TimeInfo);
+  ReadNumbers(subcomment, givenname, TimeInfo);
   handle.Close();
   subfile.close();
   subfile.clear();
@@ -79,11 +77,10 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   keeper->ClearLast();
 }
 
-void Tags::ReadNumbers(CommentStream& infile, const char* tagname, double minlength,
-  double dl, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Tags::ReadNumbers(CommentStream& infile, const char* tagname, const TimeClass* const TimeInfo) {
 
-  int year, step, area, tmparea;
-  int i, lenid, areaid, keepdata, timeid, found;
+  int year, step;
+  int i, lenid, keepdata, timeid;
   double tmplength, tmpnumber;
   char tmpname[MaxStrLength];
   strncpy(tmpname, "", MaxStrLength);
@@ -91,42 +88,30 @@ void Tags::ReadNumbers(CommentStream& infile, const char* tagname, double minlen
 
   infile >> ws;
   //Check the number of columns in the inputfile
-  if (countColumns(infile) != 6)
-    handle.Message("Wrong number of columns in inputfile - should be 6");
+  if (countColumns(infile) != 5)
+    handle.Message("Wrong number of columns in inputfile - should be 5");
 
   while (!infile.eof()) {
     keepdata = 0;
-    infile >> tmpname >> year >> step >> area >> tmplength >> tmpnumber >> ws;
+    infile >> tmpname >> year >> step >> tmplength >> tmpnumber >> ws;
 
     //only keep the data if tmpname matches tagname
     if (!(strcasecmp(tagname, tmpname) == 0))
       keepdata = 1;
 
-    //only keep the data if 0 <= lenid < number of length groups.
-    lenid = int((tmplength - minlength) / dl);
-    if ((lenid < 0) || (lenid >= NumberByLength.Size()))
+    //only keep the data if the length is valid
+    lenid = -1;
+    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++)
+      if (tmplength == LgrpDiv->Minlength(i))
+        lenid = i;
+
+    if (lenid == -1)
       keepdata = 1;
 
     //only keep the data if the number is positive
     if (tmpnumber < 0) {
-      cerr << "Found a negative number for the tagging experiment - number set to zero\n";
+      cerr << "Warning: found a negative number for the tagging experiment - number set to zero\n";
       keepdata = 1;
-    }
-
-    //only keep the data if the area is valid
-    areaid = -1;
-    if ((tmparea = Area->InnerArea(area)) == -1)
-      keepdata = 1;
-
-    if (keepdata == 0) {
-      for (i = 0; i < areaindex.Size(); i++)
-        if (areaindex[i] == tmparea)
-          areaid = i;
-
-      if (areaid == -1) {
-        areaindex.resize(1, tmparea);
-        areaid = areaindex.Size() - 1;
-      }
     }
 
     timeid = -1;
@@ -139,26 +124,18 @@ void Tags::ReadNumbers(CommentStream& infile, const char* tagname, double minlen
         Years.resize(1, year);
         Steps.resize(1, step);
         timeid = Years.Size() - 1;
-        Areas.AddRows(1, 1, tmparea);
-        NumberByLengthMulti.resize(1);
-        NumberByLengthMulti[timeid] = new DoubleMatrix(Area->NoAreas(), LgrpDiv->NoLengthGroups(), 0.0);
-      } else {
-        found = -1;
-        for (i = 0; i < Areas.Ncol(timeid); i++)
-          if (Areas[timeid][i] == tmparea)
-            found = 1;
-
-        if (found == -1)
-          Areas[timeid].resize(1, tmparea);
+        NumberByLengthMulti.resize(1, new DoubleMatrix(1, LgrpDiv->NoLengthGroups(), 0.0));
       }
 
     } else
       keepdata = 1;
 
     if (keepdata == 0)
-      (*NumberByLengthMulti[timeid])[areaid][lenid] = tmpnumber;
+      (*NumberByLengthMulti[timeid])[0][lenid] = tmpnumber;
   }
 
+  tagyear = 9999;
+  tagstep = 9999;
   for (i = 0; i < Years.Size(); i++)
     if ((Years[i] < tagyear) || (Years[i] == tagyear && Steps[i] < tagstep)) {
       tagyear = Years[i];
@@ -171,22 +148,12 @@ void Tags::ReadNumbers(CommentStream& infile, const char* tagname, double minlen
       timeid = i;
 
   if (timeid == -1) {
-    cerr << "Could not find year: " << tagyear << " and step: " << tagstep << " while reading numbers in Tags" << endl;
+    cerr << "Error in tagging experiment - invalid year " << tagyear << " and step " << tagstep << endl;
     exit(EXIT_FAILURE);
   }
 
-  for (i = 0; i < Areas.Ncol(timeid); i++)
-    if (Areas[timeid][i] < tagarea)
-      tagarea = Areas[timeid][i];
-
-  areaid = -1;
-  for (i = 0; i < areaindex.Size(); i++)
-    if (areaindex[i] == tagarea)
-      areaid = i;
-
   for (i = 0; i < LgrpDiv->NoLengthGroups(); i++)
-    NumberByLength[i] = (*NumberByLengthMulti[timeid])[areaid][i];
-
+    NumberByLength[i] = (*NumberByLengthMulti[timeid])[0][i];
 }
 
 Tags::~Tags() {
@@ -365,8 +332,7 @@ void Tags::Update() {
         (*AgeLengthStock[0])[tagareaindex][age][length].N = (NumberByLength[length - minl] * numstockinarea) / numfishinarea;
     }
   }
-
-  taggingstock->UpdateTags(AgeLengthStock[0], this, 1 - tagloss);
+  taggingstock->UpdateTags(AgeLengthStock[0], this, exp(-tagloss));
   updated[0] = 1;
 
   if (taggingstock->IsEaten()) {
@@ -427,67 +393,16 @@ void Tags::Update() {
 }
 
 void Tags::UpdateTags(int year, int step) {
-  int i, k, areaid, timeid;
+  int i, timeid;
 
   timeid = -1;
   for (i = 0; i < Years.Size(); i++)
     if (Years[i] == year && Steps[i] == step)
       timeid = i;
 
-  if (timeid != -1) {
-    if (tagyear == year && tagstep == step)
-      this->Update();
+  if ((timeid != -1) && (tagyear == year && tagstep == step))
+    this->Update();
 
-    for (i = 0; i < Areas.Ncol(timeid); i++) {
-      areaid = -1;
-      for (k = 0; k < areaindex.Size(); k++)
-        if (Areas[timeid][i] == areaindex[k])
-          areaid = k;
-      if (areaid > -1 && areaindex[areaid] != tagarea)
-        AddToTagStock(timeid, areaid);
-    }
-  }
-}
-
-void Tags::AddToTagStock(int tid, int aid) {
-  int minl, maxl, i, age, length;
-  double numfishinarea, numstockinarea;
-
-  PopInfoVector NumberInArea;
-  NumberInArea.resize(LgrpDiv->NoLengthGroups());
-  PopInfo nullpop;
-  for (i = 0; i < NumberInArea.Size(); i++)
-    NumberInArea[i] = nullpop;
-
-  const AgeBandMatrix* stockPopInArea;
-  stockPopInArea = &(taggingstock->Agelengthkeys(areaindex[aid]));
-  stockPopInArea->Colsum(NumberInArea);
-
-  IntVector stockareas = taggingstock->Areas();
-  int tagareaindex = -1;
-  i = 0;
-  while (i <= stockareas.Size() && tagareaindex == -1) {
-    if (tagarea == stockareas[i])
-      tagareaindex = i;
-    i++;
-  }
-  if (tagareaindex == -1) {
-    cerr << "Error - Could not calculate area while updating tagging for " << this->Name() << endl;
-    exit(EXIT_FAILURE);
-  }
-
-  for (age = stockPopInArea->Minage(); age <= stockPopInArea->Maxage(); age++) {
-    minl = stockPopInArea->Minlength(age);
-    maxl = stockPopInArea->Maxlength(age);
-    for (length = minl; length < maxl; length++) {
-      numfishinarea = NumberInArea[length].N;
-      numstockinarea = (*stockPopInArea)[age][length].N;
-      if (numfishinarea < verysmall || numstockinarea < verysmall)
-        (*AgeLengthStock[0])[tagareaindex][age][length].N += 0.0;
-      else
-        (*AgeLengthStock[0])[tagareaindex][age][length].N += ((*NumberByLengthMulti[tid])[aid][length - minl] * numstockinarea) / numfishinarea;
-    }
-  }
 }
 
 void Tags::DeleteFromStock() {
@@ -506,7 +421,7 @@ void Tags::UpdateMatureStock(const TimeClass* const TimeInfo) {
   int currentYear = TimeInfo->CurrentYear();
   int currentStep = TimeInfo->CurrentStep();
 
-  if (endyear < currentYear || (endyear == currentYear && endstep < currentStep))
+  if (endyear <= currentYear)
     cerr << "Warning - tagging experiment is not part of the simulation anymore\n";
   else
     for (i = 0; i < maturestocks.Size(); i++) {
@@ -516,7 +431,7 @@ void Tags::UpdateMatureStock(const TimeClass* const TimeInfo) {
         exit(EXIT_FAILURE);
       }
       if (updated[id] == 0) {
-        maturestocks[i]->UpdateTags(AgeLengthStock[id], this, 1 - tagloss);
+        maturestocks[i]->UpdateTags(AgeLengthStock[id], this, exp(-tagloss));
         updated[id] = 1;
       }
     }
@@ -528,7 +443,7 @@ void Tags::UpdateTransitionStock(const TimeClass* const TimeInfo) {
   int currentYear = TimeInfo->CurrentYear();
   int currentStep = TimeInfo->CurrentStep();
 
-  if (endyear < currentYear || (endyear == currentYear && endstep < currentStep))
+  if (endyear <= currentYear)
     cerr << "Warning - tagging experiment is not part of the simulation anymore\n";
   else
     for (i = 0; i < transitionstocks.Size(); i++) {
@@ -538,7 +453,7 @@ void Tags::UpdateTransitionStock(const TimeClass* const TimeInfo) {
         exit(EXIT_FAILURE);
       }
       if (updated[id] == 0) {
-        transitionstocks[i]->UpdateTags(AgeLengthStock[id], this, 1 - tagloss);
+        transitionstocks[i]->UpdateTags(AgeLengthStock[id], this, exp(-tagloss));
         updated[id] = 1;
       }
     }
@@ -586,9 +501,8 @@ const AgeBandMatrix& Tags::NumberPriorToEating(int area, const char* stockname) 
 }
 
 int Tags::IsWithinPeriod(int year, int step) {
-  if (year > this->getTagYear() || (year == this->getTagYear() && step >= this->getTagStep()))
-    if (year < this->getEndYear() || (year == this->getEndYear() && step <= this->getEndStep()))
-      return 1;
-
-  return 0;
+  if ((year > tagyear || (year == tagyear && step >= tagstep)) && (year <= endyear))
+    return 1;
+  else
+    return 0;
 }

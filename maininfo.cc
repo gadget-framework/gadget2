@@ -45,8 +45,8 @@ void MainInfo::ShowUsage() {
 
 MainInfo::MainInfo()
   : OptinfoCommentFile(OptinfoFile), OptInfoFileisGiven(0), InitialCondareGiven(0),
-    CalcLikelihood(0), Optimize(0), Stochastic(0), PrintInitialcond(0), PrintFinalcond(0),
-    PrintLikelihoodInfo(0), Net(0) {
+    calclikelihood(0), optimize(0), stochastic(0), PrintInitialcond(0), PrintFinalcond(0),
+    PrintLikelihoodInfo(0), netrun(0) {
 
   char tmpname[10];
   strncpy(tmpname, "", 10);
@@ -115,11 +115,11 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
     k = 1;
     while (k < aNumber) {
       if (strcasecmp(aVector[k], "-l") == 0) {
-        CalcLikelihood = 1;
-        Optimize = 1;
+        calclikelihood = 1;
+        optimize = 1;
 
       } else if (strcasecmp(aVector[k], "-n") == 0) {
-        Net = 1;
+        netrun = 1;
 
         #ifndef GADGET_NETWORK
           cout << "\nWarning: Gadget is trying to run in the network mode for paramin without\n"
@@ -127,8 +127,8 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         #endif
 
       } else if (strcasecmp(aVector[k], "-s") == 0) {
-        Stochastic = 1;
-        CalcLikelihood = 1;
+        stochastic = 1;
+        calclikelihood = 1;
 
       } else if (strcasecmp(aVector[k], "-m") == 0) {
         ifstream infile;
@@ -163,25 +163,25 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         printinfo.SetParamOutFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-print") == 0) {
-        printinfo.forcePrint = 1;
+        printinfo.setForcePrint(1);
 
       } else if (strcasecmp(aVector[k], "-surveyprint") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage(aVector[k]);
         k++;
-        printinfo.surveyprint = atoi(aVector[k]);
+        printinfo.setSurveyPrint(atoi(aVector[k]));
 
       } else if (strcasecmp(aVector[k], "-stomachprint") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage(aVector[k]);
         k++;
-        printinfo.stomachprint = atoi(aVector[k]);
+        printinfo.setStomachPrint(atoi(aVector[k]));
 
       } else if (strcasecmp(aVector[k], "-catchprint") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage(aVector[k]);
         k++;
-        printinfo.catchprint = atoi(aVector[k]);
+        printinfo.setCatchPrint(atoi(aVector[k]));
 
       } else if (strcasecmp(aVector[k], "-co") == 0) {
         if (k == aNumber - 1)
@@ -223,32 +223,20 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         if (k == aNumber - 1)
           ShowCorrectUsage(aVector[k]);
         k++;
-        stringstream str;
-        str << aVector[k];
-        str >> printinfo.PrintInterVal1;
-        if (str.fail())  //str.eof() depends on compilers
-          ShowCorrectUsage(aVector[k]);
+        printinfo.setPrint1(atoi(aVector[k]));
 
       } else if (strcasecmp(aVector[k], "-print2") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage(aVector[k]);
         k++;
-        stringstream str;
-        str << aVector[k];
-        str >> printinfo.PrintInterVal2;
-        if (str.fail())  //str.eof() depends on compilers
-          ShowCorrectUsage(aVector[k]);
+        printinfo.setPrint2(atoi(aVector[k]));
 
       } else if (strcasecmp(aVector[k], "-precision") == 0) {
         //JMB - experimental setting of printing precision
         if (k == aNumber - 1)
           ShowCorrectUsage(aVector[k]);
         k++;
-        stringstream str;
-        str << aVector[k];
-        str >> printinfo.givenPrecision;
-        if (str.fail())  //str.eof() depends on compilers
-          ShowCorrectUsage(aVector[k]);
+        printinfo.setPrecision(atoi(aVector[k]));
 
       } else if ((strcasecmp(aVector[k], "-v") == 0) || (strcasecmp(aVector[k], "--version") == 0)) {
         RUNID.print(cout);
@@ -265,22 +253,23 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
   }
 
   printinfo.CheckNumbers();
-  if ((Stochastic != 1) && (Net == 1)) {
+  if ((stochastic != 1) && (netrun == 1)) {
     cout << "\nWarning: Gadget for the paramin network should be used with -s option\n"
       << "Gadget will now set the -s switch to perform a stochastic run\n";
-    Stochastic = 1;
-    CalcLikelihood = 1;
+    stochastic = 1;
+    calclikelihood = 1;
   }
 
-  if ((Stochastic == 1) && (Optimize == 1)) {
+  if ((stochastic == 1) && (optimize == 1)) {
     cout << "\nWarning: Gadget has been started with both the -s switch and the -l switch\n"
       << "However, it is not possible to do both a stochastic run and an optimizing run!\n"
       << "Gadget will perform only the stochastic run (and ignore the -l switch)\n";
-    Optimize = 0;
+    optimize = 0;
   }
 }
 
 void MainInfo::Read(CommentStream& infile) {
+  int dummy = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> ws;
@@ -317,11 +306,14 @@ void MainInfo::Read(CommentStream& infile) {
       infile >> text >> ws;
       OpenOptinfofile(text);
     } else if (strcasecmp(text, "-print1") == 0) {
-      infile >> printinfo.PrintInterVal1 >> ws;
+      infile >> dummy >> ws;
+      printinfo.setPrint1(dummy);
     } else if (strcasecmp(text, "-print2") == 0) {
-      infile >> printinfo.PrintInterVal2 >> ws;
+      infile >> dummy >> ws;
+      printinfo.setPrint2(dummy);
     } else if (strcasecmp(text, "-precision") == 0) {
-      infile >> printinfo.givenPrecision >> ws;
+      infile >> dummy >> ws;
+      printinfo.setPrecision(dummy);
     } else
       ShowCorrectUsage(text);
   }

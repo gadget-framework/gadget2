@@ -95,7 +95,7 @@ void Ecosystem::ReadTagging(CommentStream& infile) {
 
     if (strcasecmp(text, "tagid") == 0) {
       strcpy(tagnames[i], value);
-      tagvec[i] = new Tags(infile, tagnames[i], Area, TimeInfo, keeper);
+      tagvec[i] = new Tags(infile, tagnames[i], Area, TimeInfo, keeper, stockvec);
     } else
       handle.Unexpected("tagid", text);
 
@@ -377,7 +377,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
   while (!((strcasecmp(text, "[stock]") == 0) || infile.eof())) {
     //Do not read printfile if we are doing a net run, or if we are
     //optimizing without the forcePrint option set. 07.04.00 AJ & mnaa.
-    if (!netrun  && (printinfo.forcePrint || !optimize)) {
+    if (!netrun  && (printinfo.forcePrint() || !optimize)) {
       subfile.open(text);
       checkIfFailure(subfile, text);
       handle.Open(text);

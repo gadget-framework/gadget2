@@ -107,8 +107,8 @@ void Ecosystem::Update(const DoubleVector& values) const {
 double Ecosystem::SimulateAndUpdate(double* x, int n) {
   int optimize = 1;
   ::FuncEval++;
-  static int PrintCounter1 = printinfo.PrintInterVal1 - 1;
-  static int PrintCounter2 = printinfo.PrintInterVal2 - 1;
+  static int PrintCounter1 = printinfo.print1() - 1;
+  static int PrintCounter2 = printinfo.print2() - 1;
 
   PrintCounter1++;
   PrintCounter2++;
@@ -132,12 +132,12 @@ double Ecosystem::SimulateAndUpdate(double* x, int n) {
   if (!Simulate(optimize))
     likelihood = verybig;
 
-  if (PrintCounter1 == printinfo.PrintInterVal1 && printinfo.Print()) {
-    this->PrintValues(printinfo.OutputFile, printinfo.givenPrecision);
+  if (PrintCounter1 == printinfo.print1() && printinfo.Print()) {
+    this->PrintValues(printinfo.oFile(), printinfo.precision());
     PrintCounter1 = 0;
   }
-  if (PrintCounter2 == printinfo.PrintInterVal2 && printinfo.PrintinColumns()) {
-    this->PrintValuesinColumns(printinfo.ColumnOutputFile, printinfo.givenPrecision);
+  if (PrintCounter2 == printinfo.print2() && printinfo.PrintinColumns()) {
+    this->PrintValuesinColumns(printinfo.coFile(), printinfo.precision());
     PrintCounter2 = 0;
   }
   funceval++;
@@ -165,9 +165,9 @@ void Ecosystem::PrintParamsinColumns(const char* const filename, int prec) const
   //JMB - print the final values to any output files specified
   //in case they have been missed by the -print1 or -print2 values
   if (printinfo.Print())
-    this->PrintValues(printinfo.OutputFile, printinfo.givenPrecision);
+    this->PrintValues(printinfo.oFile(), printinfo.precision());
   if (printinfo.PrintinColumns())
-    this->PrintValuesinColumns(printinfo.ColumnOutputFile, printinfo.givenPrecision);
+    this->PrintValuesinColumns(printinfo.coFile(), printinfo.precision());
 
   keeper->WriteParamsInColumns(filename, likelihood, Likely, prec);
 }
@@ -210,11 +210,14 @@ void Ecosystem::OptSwitches(ParameterVector& sw) const {
 
 void Ecosystem::PrintLikelihoodInfo(const char* filename) const {
   ofstream outfile;
-  outfile.open(filename, ios::app);
+  outfile.open(filename, ios::out);
   checkIfFailure(outfile, filename);
+  RUNID.print(outfile);
   int i;
   for (i = 0; i < Likely.Size(); i++)
     Likely[i]->LikelihoodPrint(outfile);
+  outfile.close();
+  outfile.clear();
 }
 
 void Ecosystem::OptValues(DoubleVector& val) const {

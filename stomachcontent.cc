@@ -1016,8 +1016,8 @@ void SC::Reset() {
 void SC::CommandLinePrint(ofstream& stomachfile, const TimeClass& time, const PrintInfo& print) {
   if (!AAT.AtCurrentTime(&time))
     return;
-  else if (print.stomachprint) {
-    PrintLikelihoodOnStep(stomachfile, timeindex, time, print.stomachprint - 1);
+  else if (print.stomachPrint()) {
+    PrintLikelihoodOnStep(stomachfile, timeindex, time, print.stomachPrint() - 1);
     timeindex++;
   }
 }

@@ -27,6 +27,7 @@ private:
   double LikGamma(const TimeClass* const TimeInfo); //kgf 24/5 00
   double LikSumSquares();
   double LikMVNormal();
+  double LikMVLogistic();
   DoubleMatrixPtrMatrix AgeLengthData; //[time][area][age][length]
   DoubleMatrixPtrMatrix Proportions; //kgf 17/9 98
   DoubleMatrix Likelihoodvalues; //kgf 17/9 98
@@ -58,6 +59,7 @@ private:
   int maxrow;
   LengthGroupDivision* LgrpDiv;
   double epsilon;
+  Formula tau;
   Formula sigma;
   Formula rho;
   Formula a;

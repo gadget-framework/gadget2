@@ -682,10 +682,10 @@ void SIByLengthAndAgeOnStep::CommandLinePrint(ofstream& surveyfile,
   if (!AAT.AtCurrentTime(&time))
     return;
 
-  if (print.surveyprint) {
+  if (print.surveyPrint()) {
     surveyfile << "year " << time.CurrentYear() << " step "
       << time.CurrentStep() << endl;
-    PrintLikelihoodOnStep(surveyfile, print.surveyprint - 1);
+    PrintLikelihoodOnStep(surveyfile, print.surveyPrint() - 1);
     index++;
   }
 }

@@ -738,8 +738,8 @@ void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
 void LogCatches::CommandLinePrint(ofstream& catchfile, const TimeClass& time, const PrintInfo& print) {
   if (!AAT.AtCurrentTime(&time))
     return;
-  else if (print.catchprint) {
-    PrintLikelihoodOnStep(catchfile, time, print.catchprint - 1);
+  else if (print.catchPrint()) {
+    PrintLikelihoodOnStep(catchfile, time, (print.catchPrint() - 1));
     timeindex++;
   }
 }

@@ -45,7 +45,7 @@ int InterruptInterface::menu() {
     while (fgets(s, MaxStrLength, stdin) == 0);
       switch(s[0]) {
         case 'q':
-          cout << "\nQuitting current simulation ...\ncurrent parameter values have been written to file (called interrupt.out)\n";
+          cout << "\nQuitting current simulation ...\nCurrent parameter values have been written to file (called interrupt.out)\n";
           return 0;
         case 'f':
           cout << "\nWriting current model to file (called modeldump.out) ...\n";

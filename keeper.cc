@@ -376,7 +376,7 @@ void Keeper::WriteValues(const char* const filename,
   outfile << EcoSystem->GetFuncEval() << TAB;
 
   p = prec;
-  w = p + 2;
+  w = p + 4;
   if (prec == 0) {
     p = printprecision;
     w = printwidth;
@@ -423,7 +423,7 @@ void Keeper::WriteValuesInColumns(const char* const filename,
   p = prec;
   if (prec == 0)
     p = largeprecision;
-  w = p + 2;
+  w = p + 4;
 
   outfile << ";\n; the optimisation has run for " << EcoSystem->GetFuncEval()
     << " function evaluations\n; the current likelihood value is "
@@ -530,7 +530,7 @@ void Keeper::WriteParamsInColumns(const char* const filename,
   p = prec;
   if (prec == 0)
     p = largeprecision;
-  w = p + 2;
+  w = p + 4;
 
   outfile << "; ";
   RUNID.print(outfile);
@@ -545,12 +545,12 @@ void Keeper::WriteParamsInColumns(const char* const filename,
       << setprecision(p) << functionValue;
 
     if (EcoSystem->GetConverge() == 1)
-      outfile << "\n; the optimisation stopped because the converge criteria was met";
+      outfile << "\n; the optimisation stopped because the convergence criteria were met";
     else
-      outfile << "\n; the optimisation stopped because the maximum number of iterations was exceeded";
+      outfile << "\n; the optimisation stopped because the maximum number of iterations was reached";
   }
-  outfile << "\nswitch\tvalue\t\tlower\tupper\toptimise\n";
 
+  outfile << "\nswitch\tvalue\t\tlower\tupper\toptimise\n";
   for (i = 0; i < values.Size(); i++) {
     outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i] << TAB;
     outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i]

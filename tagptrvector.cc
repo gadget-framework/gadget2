@@ -109,7 +109,7 @@ void TagPtrVector::UpdateTags(const TimeClass* const TimeInfo) {
 
 void TagPtrVector::DeleteTags(const TimeClass* const TimeInfo) {
   for (index = 0; index < size; index++) {
-    if ((v[index]->getEndYear() == TimeInfo->CurrentYear()) && (v[index]->getEndStep() == TimeInfo->CurrentStep()))
+    if ((v[index]->getEndYear() == TimeInfo->CurrentYear()) && (TimeInfo->CurrentStep() == TimeInfo->LastStep()))
       v[index]->DeleteFromStock();
 
   }

@@ -1,7 +1,7 @@
 #include "printinfo.h"
 #include "gadget.h"
 
-PrintInfo::PrintInfo() : PrintInterVal1(-2), PrintInterVal2(-2), forcePrint(0),
+PrintInfo::PrintInfo() : PrintInterVal1(-2), PrintInterVal2(-2), forceprint(0),
   surveyprint(0), catchprint(0), stomachprint(0), oprint(0), coprint(0), givenPrecision(0) {
 
   OutputFile = NULL;
@@ -44,7 +44,7 @@ PrintInfo::PrintInfo(const PrintInfo& pi) {
   if (pi.ColumnOutputFile != NULL)
     SetColumnOutputFile(pi.ColumnOutputFile);
 
-  forcePrint = pi.forcePrint;
+  forceprint = pi.forceprint;
   surveyprint = pi.surveyprint;
   catchprint = pi.catchprint;
   stomachprint = pi.stomachprint;
