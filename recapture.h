@@ -16,9 +16,9 @@ public:
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile);
-  virtual void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
+  virtual void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
-  void ReadRecaptureData(CommentStream& infile, const TimeClass* const TimeInfo);
+  void readRecaptureData(CommentStream& infile, const TimeClass* const TimeInfo);
   double LikPoisson(const TimeClass* const TimeInfo);
   RecAggregator** aggregator;
   CharPtrVector tagid;

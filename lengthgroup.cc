@@ -168,7 +168,7 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
     }
   }
 
-  //Set this to the new division
+  //set this to the new division
   Dl = 0.0;
   for (i = 0; i < size; i++) {
     minlength[i] = lower[i];

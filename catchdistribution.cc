@@ -110,7 +110,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     epsilon = 10;
   }
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -120,7 +120,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   datafile.close();
   datafile.clear();
 
-  //Read in age aggregation from file
+  //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -130,7 +130,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   datafile.close();
   datafile.clear();
 
-  //Read in length aggregation from file
+  //read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -149,7 +149,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
         handle.UndefinedArea(areas[i][j]);
 
 
-  //Read in the fleetnames
+  //read in the fleetnames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
@@ -162,7 +162,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     infile >> text >> ws;
   }
 
-  //Read in the stocknames
+  //read in the stocknames
   i = 0;
   if (!(strcasecmp(text, "stocknames") == 0))
     handle.Unexpected("stocknames", text);
@@ -180,7 +180,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadDistributionData(subdata, TimeInfo, numarea, numage, numlen);
+  readDistributionData(subdata, TimeInfo, numarea, numage, numlen);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -194,7 +194,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   }
 }
 
-void CatchDistribution::ReadDistributionData(CommentStream& infile,
+void CatchDistribution::readDistributionData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea, int numage, int numlen) {
 
   int i;
@@ -442,7 +442,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
   outfile.flush();
 }
 
-void CatchDistribution::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
+void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, found;
   FleetPtrVector fleets;
   StockPtrVector stocks;
@@ -468,7 +468,7 @@ void CatchDistribution::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->IsEaten())
-        if (strcasecmp(stocknames[i], Stocks[j]->ReturnPrey()->Name()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
           found = 1;
           stocks.resize(1, Stocks[j]);
           if (stocks[stocks.Size() - 1]->Minage() < min_stock_age) //kgf 3/5 99
@@ -545,8 +545,7 @@ void CatchDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
 double CatchDistribution::LikMultinomial() {
   int area, age, len, nareas;
 
-  //Get numbers from aggregator->AgeLengthDist()
-  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   DoubleMatrixPtrVector Dist(alptr->Size(), NULL);
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     Dist[nareas] = new DoubleMatrix(aggregator->NoAgeGroups(), aggregator->NoLengthGroups(), 0.0);
@@ -585,7 +584,7 @@ double CatchDistribution::LikMultinomial() {
     }
     delete Dist[nareas];
   }
-  return MN.ReturnLogLikelihood();
+  return MN.returnLogLikelihood();
 }
 
 double CatchDistribution::LikPearson(const TimeClass* const TimeInfo) {
@@ -600,8 +599,7 @@ double CatchDistribution::LikPearson(const TimeClass* const TimeInfo) {
   double totallikelihood = 0.0;
   int age, length, min_age, max_age, nareas;
 
-  //Get numbers from aggregator->AgeLengthDist()
-  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
@@ -662,8 +660,7 @@ double CatchDistribution::LikGamma(const TimeClass* const TimeInfo) {
   double totallikelihood = 0.0;
   int age, length, min_age, max_age, nareas;
 
-  //Get numbers from aggregator->AgeLengthDist()
-  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
@@ -719,7 +716,7 @@ double CatchDistribution::LikSumSquares() {
   double totalmodel, totaldata;
   int age, len, nareas;
 
-  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     totalmodel = 0.0;
     totaldata = 0.0;
@@ -785,7 +782,7 @@ double CatchDistribution::LikMVNormal() {
   int age, len, nareas;
   int i, j, p;
 
-  const AgeBandMatrixPtrVector* alptr= &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr= &aggregator->returnSum();
   p = aggregator->NoLengthGroups();
   DoubleVector diff(p, 0.0);
 
@@ -834,7 +831,7 @@ double CatchDistribution::LikMVLogistic() {
   double sumdata = 0.0, sumdist = 0.0, sumnu = 0.0;
   int age, len, nareas, p;
 
-  const AgeBandMatrixPtrVector* alptr= &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr= &aggregator->returnSum();
   p = aggregator->NoLengthGroups();
   DoubleVector nu(p, 0.0);
 
@@ -912,8 +909,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
   int age, length, nareas;
   int time = timeindex - 1; //timeindex was increased before this is called.
 
-  //Get age and length intervals from aggregator->AgeLengthDist()
-  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   catchfile << "\nTime:    Year " << TimeInfo.CurrentYear()
     << " Step " << TimeInfo.CurrentStep() << "\nFleets: ";
   for (i = 0; i < fleetnames.Size(); i++)

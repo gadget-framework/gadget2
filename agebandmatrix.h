@@ -41,15 +41,12 @@ public:
   void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight);
   void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight, Maturity* const Mat,
     const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
+  void Add(const AgeBandMatrix& Addition, const ConversionIndex& CI, double ratio = 1.0, int minaddage = 0, int maxaddage = 9999);
 protected:
   int minage;
   int nrow;
   PopInfoIndexVector** v;
 };
-
-//And then we have some functions that are defined in a .cc file.
-extern void AgebandmAdd(AgeBandMatrix& Alkeys, const AgeBandMatrix& Addition,
-  const ConversionIndex& CI, double ratio = 1, int minage = 0, int maxage = 100);
 
 #ifdef GADGET_INLINE
 #include "agebandmatrix.icc"

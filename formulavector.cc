@@ -56,14 +56,14 @@ void FormulaVector::Inform(Keeper* keeper) {
   }
 }
 
-CommentStream& operator >> (CommentStream& infile, FormulaVector& Fvec) {
+CommentStream& operator >> (CommentStream& infile, FormulaVector& Fvector) {
   if (infile.fail()) {
     infile.makebad();
     return infile;
   }
   int i;
-  for (i = 0; i < Fvec.size; i++) {
-    if (!(infile >> Fvec[i])) {
+  for (i = 0; i < Fvector.size; i++) {
+    if (!(infile >> Fvector[i])) {
       infile.makebad();
       return infile;
     }

@@ -107,7 +107,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   GrEatNumber.AddRows(noareas, len, nullpop);
   keeper->ClearLast();
 
-  //Setting storage spaces for Growth.
+  //setting storage spaces for Growth.
   CalcLgrowth.AddRows(noareas, len, 0.0);
   CalcWgrowth.AddRows(noareas, len, 0.0);
   InterpLgrowth.AddRows(noareas, otherlen, 0.0);

@@ -28,7 +28,7 @@ public:
    */
   PopRatioIndexVector(int sz, int minpos, const PopRatioVector& initial);
   /**
-   * \brief This is the PopRatioIndexVector constructor that create a copy of an existing PopRatioIndexVector
+   * \brief This is the PopRatioIndexVector constructor that creates a copy of an existing PopRatioIndexVector
    * \param initial is the PopRatioIndexVector to copy
    */
   PopRatioIndexVector(const PopRatioIndexVector& initial);
@@ -73,7 +73,7 @@ public:
   int Size() const { return size; };
 protected:
   /**
-   * \brief This is index for the vector
+   * \brief This is the index for the vector
    */
   int minpos;
   /**

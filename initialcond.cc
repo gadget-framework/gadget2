@@ -12,7 +12,7 @@
 //
 // A function to read initial stock data in normal distribution format
 //
-void InitialCond::ReadNormalData(CommentStream& infile, Keeper* const keeper,
+void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
   ErrorHandler handle;
@@ -105,7 +105,7 @@ void InitialCond::ReadNormalData(CommentStream& infile, Keeper* const keeper,
 //
 // A function to read initial stock data in number data format
 //
-void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
+void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
   ErrorHandler handle;
@@ -134,7 +134,7 @@ void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
   if (countColumns(infile) != 4)
     handle.Message("Wrong number of columns in inputfile - should be 4");
 
-  //Set the numbers in the AgeBandMatrixPtrVector to zero (in case some arent in the inputfile)
+  //set the numbers in the AgeBandMatrixPtrVector to zero (in case some arent in the inputfile)
   for (areaid = 0; areaid < noareas; areaid++)
     for (ageid = minage; ageid < noagegr + minage; ageid++)
       for (lengthid = 0; lengthid < nolengr; lengthid++)
@@ -221,7 +221,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   int noagegr = maxage - minage + 1; //Number of age groups
   int nolengr = LgrpDiv->NoLengthGroups(); //Number of length groups
 
-  //Read the standard deviation multiplier - default to 1.0
+  //read the standard deviation multiplier - default to 1.0
   keeper->AddString("sdevmultiplier");
   infile >> text >> ws;
   if ((strcasecmp(text, "sdev") == 0))
@@ -252,7 +252,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     subfile.open(text, ios::in);
     checkIfFailure(subfile, text);
     handle.Open(text);
-    this->ReadNormalData(subcomment, keeper, noagegr, minage, Area);
+    this->readNormalData(subcomment, keeper, noagegr, minage, Area);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -264,7 +264,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     subfile.open(text, ios::in);
     checkIfFailure(subfile, text);
     handle.Open(text);
-    this->ReadNumberData(subcomment, keeper, noagegr, minage, Area);
+    this->readNumberData(subcomment, keeper, noagegr, minage, Area);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -279,7 +279,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   double rCond, rWeight;
   DoubleMatrix tmpRefW;
 
-  //Read information on reference weights.
+  //read information on reference weights.
   keeper->AddString("referenceweights");
   ifstream subweightfile;
   subweightfile.open(refWeightFile, ios::in);
@@ -347,7 +347,7 @@ InitialCond::~InitialCond() {
   delete CI;
 }
 
-void InitialCond::SetCI(const LengthGroupDivision* const GivenLDiv) {
+void InitialCond::setCI(const LengthGroupDivision* const GivenLDiv) {
   CI = new ConversionIndex(LgrpDiv, GivenLDiv);
 }
 
@@ -375,7 +375,7 @@ void InitialCond::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void InitialCond::Initialize(AgeBandMatrixPtrVector& Alkeys) {
+void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
 
   int area, age, l;
   int minage, maxage;
@@ -420,7 +420,7 @@ void InitialCond::Initialize(AgeBandMatrixPtrVector& Alkeys) {
       if (mult < 0)
         mult = -mult;
 
-      PopinfoAdd(Alkeys[area][age], AreaAgeLength[area][age], *CI, mult);
+      Alkeys[area][age].Add(AreaAgeLength[area][age], *CI, mult);
     }
   }
 }

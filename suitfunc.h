@@ -36,9 +36,28 @@ public:
    * \return name
    */
   const char* getName();
+  /**
+   * \brief This function will return the value of the selection function parameters
+   * \return v, a TimeVariableVector of the parameters
+   */
   const TimeVariableVector& getConstants() const;
+  /**
+   * \brief This function will read the value of the suitability function parameters from file
+   * \param infile is the CommentStream to read the parameters from
+   * \param TimeInfo is the TimeClass for the current model
+   * \param keeper is the Keeper for the current model
+   */
   void readConstants(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
+  /**
+   * \brief This function will update the suitability function parameters
+   * \param TimeInfo is the TimeClass for the current model
+   */
   void updateConstants(const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will check to see if the suitability function parameters have changed
+   * \param TimeInfo is the TimeClass for the current model
+   * \return 1 if the parameters have changed, 0 otherwise
+   */
   int constantsHaveChanged(const TimeClass* const TimeInfo);
   /**
    * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
@@ -79,7 +98,7 @@ protected:
    */
   char* name;
   /**
-   * \brief This is the vector of suitability function constants
+   * \brief This is the TimeVariableVector of suitability function constants
    */
   TimeVariableVector coeff;
 };
@@ -91,7 +110,7 @@ protected:
 class ExpSuitFuncA : public SuitFunc {
 public:
   /**
-   * \brief This is the default ExpSuitFuncA constructor
+   * \brief This is the ExpSuitFuncA constructor
    */
   ExpSuitFuncA();
   /**
@@ -141,7 +160,7 @@ private:
 class ConstSuitFunc : public SuitFunc {
 public:
   /**
-   * \brief This is the default ConstSuitFunc constructor
+   * \brief This is the ConstSuitFunc constructor
    */
   ConstSuitFunc();
   /**
@@ -172,7 +191,7 @@ public:
 class AndersenSuitFunc : public SuitFunc {
 public:
   /**
-   * \brief This is the default AndersenSuitFunc constructor
+   * \brief This is the AndersenSuitFunc constructor
    */
   AndersenSuitFunc();
   /**
@@ -222,7 +241,7 @@ private:
 class ExpSuitFuncL50 : public SuitFunc {
 public:
   /**
-   * \brief This is the default ExpSuitFuncL50 constructor
+   * \brief This is the ExpSuitFuncL50 constructor
    */
   ExpSuitFuncL50();
   /**
@@ -263,7 +282,7 @@ private:
 class StraightSuitFunc : public SuitFunc {
 public:
   /**
-   * \brief This is the default StraightSuitFunc constructor
+   * \brief This is the StraightSuitFunc constructor
    */
   StraightSuitFunc();
   /**
@@ -304,7 +323,7 @@ private:
 class InverseExpSuitFuncL50 : public SuitFunc {
 public:
   /**
-   * \brief This is the default InverseExpSuitFuncL50 constructor
+   * \brief This is the InverseExpSuitFuncL50 constructor
    */
   InverseExpSuitFuncL50();
   /**

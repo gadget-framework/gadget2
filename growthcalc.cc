@@ -135,7 +135,7 @@ void GrowthCalcB::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   DoubleVector l((*lgrowth[inarea])[TimeInfo->CurrentTime()].Size());
   DoubleVector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
 
-  //Initialize l and w with values from vector lgrowth[][] and wgrowth[][].
+  //Initialise l and w with values from vector lgrowth[][] and wgrowth[][].
   for (i = 0; i < l.Size(); i++)
     l[i] = (*lgrowth[inarea])[TimeInfo->CurrentTime()][i];
   for (i = 0; i < w.Size(); i++)
@@ -186,7 +186,7 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
     handle.Unexpected("lgrowthparameters", text);
   keeper->ClearLast();
 
-  //Read information on reference weights.
+  //read information on reference weights.
   keeper->AddString("referenceweights");
   //JMB - changed since filename is passed as refWeight
   ifstream subfile;
@@ -195,7 +195,7 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
   handle.Open(refWeight);
   CommentStream subcomment(subfile);
 
-  //Read information on length increase.
+  //read information on length increase.
   DoubleMatrix tmpRefW;
   if (!read2ColVector(subcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");
@@ -317,7 +317,7 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
     handle.Unexpected("lgrowthparameters", text);
   keeper->ClearLast();
 
-  //Read information on reference weights.
+  //read information on reference weights.
   keeper->AddString("referenceweights");
   //JMB - changed since filename is passed as refWeight
   ifstream subfile;
@@ -326,7 +326,7 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
   handle.Open(refWeight);
   CommentStream subcomment(subfile);
 
-  //Read information on length increase.
+  //read information on length increase.
   DoubleMatrix tmpRefW;
   if (!read2ColVector(subcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");
@@ -475,7 +475,7 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
     handle.Unexpected("areaeffect", text);
   keeper->ClearLast();
 
-  //Read information on reference weights.
+  //read information on reference weights.
   keeper->AddString("referenceweights");
   //JMB - changed since filename is passed as refWeight
   ifstream subfile;
@@ -484,7 +484,7 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   handle.Open(refWeight);
   CommentStream subcomment(subfile);
 
-  //Read information on length increase.
+  //read information on length increase.
   DoubleMatrix tmpRefW;
   if (!read2ColVector(subcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");

@@ -27,7 +27,7 @@ public:
   /**
    * \brief This is the InitialCond constructor
    * \param infile is the CommentStream to read the initial conditions data from
-   * \param areas is the list of areas that the initial population will be calculated on
+   * \param areas is the IntVector of areas that the initial population will be calculated on
    * \param keeper is the Keeper for the current model
    * \param refWeightFile is the name of the reference weight file
    * \param Area is the AreaClass for the current model
@@ -42,12 +42,12 @@ public:
    * \brief This function will set the initial population of the stock to that specified in the initial conditions file
    * \param Alkeys is the AgeBandMatrixPtrVector that will contain the initial population of the stock
    */
-  void Initialize(AgeBandMatrixPtrVector& Alkeys);
+  void Initialise(AgeBandMatrixPtrVector& Alkeys);
   /**
    * \brief This will set the ConversionIndex required for to calculate the initial conditions
    * \param GivenLDiv is the LengthGroupDivision for the stock
    */
-  void SetCI(const LengthGroupDivision* const GivenLDiv);
+  void setCI(const LengthGroupDivision* const GivenLDiv);
   /**
    * \brief This function will print the initial population
    * \param outfile is the ofstream that all the model information gets sent to
@@ -62,7 +62,7 @@ protected:
    * \param minage is the minimum age for the initial population
    * \param Area is the AreaClass for the current model
    */
-  void ReadNormalData(CommentStream& infile, Keeper* const keeper,
+  void readNormalData(CommentStream& infile, Keeper* const keeper,
      int noagegr, int minage, const AreaClass* const Area);
   /**
    * \brief This is the function used to read the numbers of the initial population
@@ -72,7 +72,7 @@ protected:
    * \param minage is the minimum age for the initial population
    * \param Area is the AreaClass for the current model
    */
-  void ReadNumberData(CommentStream& infile, Keeper* const keeper,
+  void readNumberData(CommentStream& infile, Keeper* const keeper,
      int noagegr, int minage, const AreaClass* const Area);
   /**
    * \brief This is the LengthGroupDivision of the initial population of the stock

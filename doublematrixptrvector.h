@@ -26,7 +26,7 @@ public:
    */
   DoubleMatrixPtrVector(int sz, DoubleMatrix* initial);
   /**
-   * \brief This is the DoubleMatrixPtrVector constructor that create a copy of an existing DoubleMatrixPtrVector
+   * \brief This is the DoubleMatrixPtrVector constructor that creates a copy of an existing DoubleMatrixPtrVector
    * \param initial is the DoubleMatrixPtrVector to copy
    */
   DoubleMatrixPtrVector(const DoubleMatrixPtrVector& initial);

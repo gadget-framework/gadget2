@@ -100,7 +100,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
       if ((areas[i][j] = areainfo->InnerArea(areas[i][j])) == -1)
         handle.UndefinedArea(areas[i][j]);
 
-  //Read in the fleetnames
+  //read in the fleetnames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
@@ -113,7 +113,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
     infile >> text >> ws;
   }
 
-  //Read in the stocknames
+  //read in the stocknames
   i = 0;
   if (!(strcasecmp(text, "stocknames") == 0))
     handle.Unexpected("stocknames", text);
@@ -138,7 +138,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
   datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadCatchInTonsData(subdata, timeinfo, numarea);
+  readCatchInTonsData(subdata, timeinfo, numarea);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -183,7 +183,7 @@ void CatchInTons::AddToLikelihood(const TimeClass* const TimeInfo) {
     for (a = 0; a < areas.Nrow(); a++) {
       for (a2 = 0; a2 < areas.Ncol(a); a2++) {
         for (f = 0; f < preyindex.Nrow(); f++) {
-          pred = (PopPredator*)fleets[f]->ReturnPredator();
+          pred = (PopPredator*)fleets[f]->returnPredator();
           for (p = 0; p < preyindex.Ncol(f); p++)
             ModelCatch[timeindex][a] += pred->consumedBiomass(preyindex[f][p], a2);
         }
@@ -241,7 +241,7 @@ CatchInTons::~CatchInTons() {
   delete[] functionname;
 }
 
-void CatchInTons::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
+void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, k, found;
 
   for (i = 0; i < fleetnames.Size(); i++) {
@@ -263,7 +263,7 @@ void CatchInTons::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->IsEaten())
-        if (strcasecmp(stocknames[i], Stocks[j]->ReturnPrey()->Name()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
           found = 1;
           stocks.resize(1, Stocks[j]);
         }
@@ -278,7 +278,7 @@ void CatchInTons::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
   for (i = 0; i < fleets.Size(); i++) {
     found = 0;
     preyindex.AddRows(1, 0);
-    Predator* pred = fleets[i]->ReturnPredator();
+    Predator* pred = fleets[i]->returnPredator();
     for (j = 0; j < pred->NoPreys(); j++)
       for (k = 0; k < stocknames.Size(); k++)
         if (strcasecmp(stocknames[k], pred->Preys(j)->Name()) == 0) {
@@ -302,7 +302,7 @@ void CatchInTons::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
   }
 }
 
-void CatchInTons::ReadCatchInTonsData(CommentStream& infile,
+void CatchInTons::readCatchInTonsData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea) {
 
   int i;

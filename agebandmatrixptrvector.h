@@ -25,9 +25,16 @@ public:
    * \param initial is the initial value for all the entries of the vector
    */
   AgeBandMatrixPtrVector(int sz, AgeBandMatrix* initial);
-  AgeBandMatrixPtrVector(int size1, int Minage, const IntVector& minl, const IntVector& size2);
   /**
-   * \brief This is the AgeBandMatrixPtrVector constructor that create a copy of an existing AgeBandMatrixPtrVector
+   * \brief This is the AgeBandMatrixPtrVector constructor for a specified size with an initial value specified by the minimum age and length of the new AgeBandMatrix created
+   * \param size1 is the size of the vector to be created
+   * \param minage is the minimum age of the AgeBandMatrix to be created
+   * \param minl is the IntVector of minimum lengths of the AgeBandMatrix to be created
+   * \param size2 is the IntVector of sizes of the AgeBandMatrix to be created
+   */
+  AgeBandMatrixPtrVector(int size1, int minage, const IntVector& minl, const IntVector& size2);
+  /**
+   * \brief This is the AgeBandMatrixPtrVector constructor that creates a copy of an existing AgeBandMatrixPtrVector
    * \param initial is the AgeBandMatrixPtrVector to copy
    */
   AgeBandMatrixPtrVector(const AgeBandMatrixPtrVector& initial);
@@ -48,7 +55,21 @@ public:
    * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
+  /**
+   * \brief This will add new entries to the vector and create new AgeBandMatrix initial values
+   * \param add is the number of new entries to the vector
+   * \param minage is the minimum age of the AgeBandMatrix to be created
+   * \param minl is the IntVector of minimum lengths of the AgeBandMatrix to be created
+   * \param size is the IntVector of sizes of the AgeBandMatrix to be created
+   */
   void resize(int add, int minage, const IntVector& minl, const IntVector& size);
+  /**
+   * \brief This will add new entries to the vector and create new AgeBandMatrix initial values
+   * \param add is the number of new entries to the vector
+   * \param minage is the minimum age of the AgeBandMatrix to be created
+   * \param minl is the minimum length of the AgeBandMatrix to be created
+   * \param matr is the PopInfoMatrix that the initial values are to be copied from
+   */
   void resize(int add, int minage, int minl, const PopInfoMatrix& matr);
   /**
    * \brief This will delete an entry from the vector
@@ -73,10 +94,14 @@ public:
    * \return the value of the specified element
    */
   const AgeBandMatrix& operator [] (int pos) const;
-  void Migrate(const DoubleMatrix& Migrationmatrix);
+  /**
+   * \brief This function will implement the migration of entries from one AgeBandMatrix to another within the vector of values
+   * \param MI is the DoubleMatrix describing the migration
+   */
+  void Migrate(const DoubleMatrix& MI);
 protected:
   /**
-   * \brief This is the vector of AddressKeeper values
+   * \brief This is the vector of AgeBandMatrix values
    */
   AgeBandMatrix** v;
   /**

@@ -34,9 +34,9 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  keeper->SetString(this->Name());
+  keeper->setString(this->Name());
 
-  //Read the area data
+  //read the area data
   infile >> ws;
   if (infile.eof())
     handle.Eof();
@@ -57,7 +57,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   this->LetLiveOnAreas(tmpareas);
 
-  //Read the stock age and length data
+  //read the stock age and length data
   int minage, maxage;
   double minlength, maxlength, dl;
   readWordAndVariable(infile, "minage", minage);
@@ -85,7 +85,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   for (i = 0; i < Alkeys.Size(); i++)
     Alkeys[i].setToZero();
 
-  //Read the growth length group data
+  //read the growth length group data
   DoubleVector grlengths;
   CharPtrVector grlenindex;
 
@@ -109,28 +109,28 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   if (!(isZero(LgrpDiv->maxLength() - GrowLgrpDiv->maxLength())))
     cerr << "Warning - maximum lengths don't match for the growth functions of " << this->Name() << endl;
 
-  //Read the growth function data
+  //read the growth function data
   readWordAndVariable(infile, "doesgrow", doesgrow);
   if (doesgrow)
     grower = new Grower(infile, LgrpDiv, GrowLgrpDiv, areas, TimeInfo, keeper, refweight, Area, grlenindex);
   else
     grower = 0;
 
-  //Read the natural mortality data
+  //read the natural mortality data
   infile >> text;
   if (strcasecmp(text, "naturalmortality") == 0)
     NatM = new NaturalM(infile, minage, maxage, TimeInfo, keeper);
   else
     handle.Unexpected("naturalmortality", text);
 
-  //Read the prey data
+  //read the prey data
   readWordAndVariable(infile, "iseaten", iseaten);
   if (iseaten)
     prey = new StockPrey(infile, areas, this->Name(), minage, maxage, keeper);
   else
     prey = 0;
 
-  //Read the predator data
+  //read the predator data
   readWordAndVariable(infile, "doeseat", doeseat);
   if (doeseat)
     predator = new StockPredator(infile, this->Name(), areas, LgrpDiv,
@@ -138,14 +138,14 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   else
     predator = 0;
 
-  //Read the initial conditions
+  //read the initial conditions
   infile >> text;
   if (strcasecmp(text, "initialconditions") == 0)
     initial = new InitialCond(infile, areas, keeper, refweight, Area);
   else
     handle.Unexpected("initialconditions", text);
 
-  //Read the migration data
+  //read the migration data
   readWordAndVariable(infile, "doesmigrate", doesmigrate);
   if (doesmigrate) {
     readWordAndVariable(infile, "agedependentmigration", AgeDepMigration);
@@ -163,7 +163,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   } else
     migration = 0;
 
-  //Read the maturation data
+  //read the maturation data
   readWordAndVariable(infile, "doesmature", doesmature);
   if (doesmature) {
     readWordAndValue(infile, "maturityfunction", text);
@@ -175,15 +175,15 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     handle.Open(filename);
 
     if (strcasecmp(text, "continuous") == 0)
-      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 3);
+      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
     else if (strcasecmp(text, "fixedlength") == 0)
       maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv);
-    else if (strcasecmp(text, "ageandlength") == 0)
-      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
     else if (strcasecmp(text, "constant") == 0)
-      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
+      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
     else if (strcasecmp(text, "constantweight") == 0)
-      maturity = new MaturityE(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 6, refweight);
+      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 6, refweight);
+    else if (strcasecmp(text, "ageandlength") == 0)
+      handle.Message("Error in stock file - the ageandlength maturity function is no longer supported");
     else
       handle.Message("Error in stock file - unrecognised maturity", text);
 
@@ -197,7 +197,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   } else
     maturity = 0;
 
-  //Read the movement data
+  //read the movement data
   readWordAndVariable(infile, "doesmove", doesmove);
   if (doesmove) {
     //transition handles the movements of the age group maxage:
@@ -206,7 +206,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   } else
     transition = 0;
 
-  //Read the renewal data
+  //read the renewal data
   readWordAndVariable(infile, "doesrenew", doesrenew);
   if (doesrenew) {
     readWordAndValue(infile, "renewaldatafile", filename);
@@ -223,7 +223,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   } else
     renewal = 0;
 
-  //Read the spawning data
+  //read the spawning data
   readWordAndVariable(infile, "doesspawn", doesspawn);
   if (doesspawn) {
     readWordAndValue(infile, "spawnfile", filename);
@@ -246,7 +246,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     handle.Unexpected("<end of file>", text);
   }
 
-  //Set the birthday for the stock
+  //set the birthday for the stock
   birthdate = TimeInfo->StepsInYear();
 
   //Finished reading from infile - resize objects and clean up
@@ -294,7 +294,7 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
 
   if (TimeInfo->CurrentTime() == 1) {
     this->Clear();
-    initial->Initialize(Alkeys);
+    initial->Initialise(Alkeys);
     if (iseaten)
       prey->Reset();
     if (doesmature)
@@ -320,29 +320,29 @@ void Stock::Clear() {
     migration->Clear();
 }
 
-Prey* Stock::ReturnPrey() const {
+Prey* Stock::returnPrey() const {
   return prey;
 }
 
-PopPredator* Stock::ReturnPredator() const {
+PopPredator* Stock::returnPredator() const {
   return predator;
 }
 
-void Stock::SetStock(StockPtrVector& stockvec) {
+void Stock::setStock(StockPtrVector& stockvec) {
   if (doesmature)
-    maturity->SetStock(stockvec);
+    maturity->setStock(stockvec);
   if (doesmove)
-    transition->SetStock(stockvec);
+    transition->setStock(stockvec);
   if (doesspawn)
-    spawner->SetStock(stockvec);
+    spawner->setStock(stockvec);
 }
 
-void Stock::SetCI() {
-  initial->SetCI(LgrpDiv);
+void Stock::setCI() {
+  initial->setCI(LgrpDiv);
   if (iseaten)
-    prey->SetCI(LgrpDiv);
+    prey->setCI(LgrpDiv);
   if (doesrenew)
-    renewal->SetCI(LgrpDiv);
+    renewal->setCI(LgrpDiv);
 }
 
 void Stock::Print(ofstream& outfile) const {

@@ -28,7 +28,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   strncpy(stockname, "", MaxStrLength);
   readWordAndValue(infile, "stockname", stockname);
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
@@ -66,7 +66,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!AAT.ReadFromFile(infile, TimeInfo))
+  if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in stockpreyfullprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -97,7 +97,7 @@ StockPreyFullPrinter::~StockPreyFullPrinter() {
   delete[] stockname;
 }
 
-void StockPreyFullPrinter::SetStock(StockPtrVector& stockvec) {
+void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
   CharPtrVector stocknames(1, stockname);
   StockPtrVector stocks;
   int index = 0;
@@ -132,7 +132,7 @@ void StockPreyFullPrinter::SetStock(StockPtrVector& stockvec) {
 
   //Here comes some code that is only useful when handling one stock.
   if (stocks[0]->IsEaten())
-    preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->ReturnPrey(), areas);
+    preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->returnPrey(), areas);
   else {
     cerr << "Error in full printout for stock preys. The stock "
       << stocks[0]->Name() << " is not eaten\n";
@@ -148,7 +148,7 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo) {
   for (a = 0; a < areas.Size(); a++)
     preyinfo->Sum(TimeInfo, areas[a]);
 
-  const LengthGroupDivision* LgrpDiv = preyinfo->ReturnPreyLengthGroupDiv();
+  const LengthGroupDivision* LgrpDiv = preyinfo->returnPreyLengthGroupDiv();
 
   for (a = 0; a < areas.Size(); a++) {
     const BandMatrix& Nbyageandl = preyinfo->NconsumptionByAgeAndLength(areas[a]);

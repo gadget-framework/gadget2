@@ -17,7 +17,7 @@ public:
   virtual ~PredatorIndices();
   virtual void Print(ofstream& outfile) const;
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
-  virtual void SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys);
+  virtual void setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys);
   virtual void Reset(const Keeper* const keeper);
 protected:
   CharPtrVector predatornames;

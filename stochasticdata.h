@@ -24,7 +24,7 @@ public:
   int NoVariables() const;
   int Error() const;
   int DataFromFile();
-  void ReadDataFromNextLine();
+  void readDataFromNextLine();
   double Values(int i) const { return values[i]; };
   double Lower(int i) const { return lowerbound[i]; };
   double Upper(int i) const { return upperbound[i]; };
@@ -43,9 +43,9 @@ public:
       return (optimize.Size() > 0 ? 1 : 0);
   };
   #ifdef GADGET_NETWORK
-    void ReadFromNetwork();
+    void readFromNetwork();
     void SendDataToMaster(double funcValue);
-    void ReadNextLineFromNet();
+    void readNextLineFromNet();
     int getDataFromNet();
   #endif
 protected:

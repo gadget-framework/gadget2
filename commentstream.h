@@ -24,7 +24,7 @@ public:
   CommentStream() { istrptr = NULL; };
   CommentStream(istream& istr) { istrptr = &istr; };
   ~CommentStream() {};
-  void SetStream(istream& istr) { istrptr = &istr; };
+  void setStream(istream& istr) { istrptr = &istr; };
   CommentStream& operator >> (int& a) {
     killComments(istrptr);
     istrptr->operator >> (a);

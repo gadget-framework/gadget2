@@ -25,7 +25,7 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
   strncpy(stockname, "", MaxStrLength);
   readWordAndValue(infile, "stockname", stockname);
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
@@ -63,7 +63,7 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!AAT.ReadFromFile(infile, TimeInfo))
+  if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in stockfullprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -94,7 +94,7 @@ StockFullPrinter::~StockFullPrinter() {
   delete[] stockname;
 }
 
-void StockFullPrinter::SetStock(StockPtrVector& stockvec) {
+void StockFullPrinter::setStock(StockPtrVector& stockvec) {
   assert(stockvec.Size() > 0);
   Stock* stock = 0;
   int err = 0;
@@ -118,7 +118,7 @@ void StockFullPrinter::SetStock(StockPtrVector& stockvec) {
   }
 
   StockPtrVector stocks = StockPtrVector(1, stock);
-  LgrpDiv = new LengthGroupDivision(*stock->ReturnLengthGroupDiv());
+  LgrpDiv = new LengthGroupDivision(*stock->returnLengthGroupDiv());
 
   //Prepare for the creation of the aggregator
   minage = 100;
@@ -148,7 +148,7 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo) {
   int a, age, l;
 
   for (a = 0; a < areas.Size(); a++) {
-    const AgeBandMatrix& alk = aggregator->ReturnSum()[a];
+    const AgeBandMatrix& alk = aggregator->returnSum()[a];
     for (age = alk.Minage(); age <= alk.Maxage(); age++) {
       for (l = alk.Minlength(age); l < alk.Maxlength(age); l++) {
         outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep

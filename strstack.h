@@ -15,13 +15,30 @@ public:
   StrStack() { sz = 0; };
   /**
    * \brief This is the default StrStack destructor
-   * \note This will free all the memory allocated to the strings in the stack
    */
   ~StrStack();
+  /**
+   * \brief This function will remove the top string from the stack
+   */
   void OutOfStack();
-  void PutInStack(const char*);
+  /**
+   * \brief This function will put a new string on to the top of the stack
+   * \param str is the name of the string
+   */
+  void PutInStack(const char* str);
+  /**
+   * \brief This function will clear all the strings from the stack
+   */
   void ClearStack();
+  /**
+   * \brief This function will send all the strings on the stack as one long new string
+   * \return stack
+   */
   char* SendAll() const;
+  /**
+   * \brief This function will send the top string from the stack as a new string
+   * \return string
+   */
   char* SendTop() const;
 private:
   /**

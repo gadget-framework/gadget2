@@ -33,7 +33,7 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
   strncpy(text, "", MaxStrLength);
   int i;
 
-  //Read in the fleetnames
+  //read in the fleetnames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
@@ -46,7 +46,7 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
     infile >> text >> ws;
   }
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
@@ -77,7 +77,7 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!AAT.ReadFromFile(infile, TimeInfo))
+  if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in formatedchatprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -89,7 +89,7 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
   }
 }
 
-void FormatedCHatPrinter::SetFleet(FleetPtrVector& fleetvec) {
+void FormatedCHatPrinter::setFleet(FleetPtrVector& fleetvec) {
   int i, j;
   int index = 0;
   for (i = 0; i < fleetvec.Size(); i++)
@@ -108,8 +108,8 @@ void FormatedCHatPrinter::Print(const TimeClass* const TimeInfo) {
   printTime(outfile, *TimeInfo);
   for (i = 0; i < areas.Size(); i++) {
     for (j = 0; j < fleets.Size(); j++) {
-      ((MortPredator*)fleets[j]->ReturnPredator())->calcCHat(0, TimeInfo);
-      printc_hat(outfile, *(MortPredator*)fleets[j]->ReturnPredator(), *Area);
+      ((MortPredator*)fleets[j]->returnPredator())->calcCHat(0, TimeInfo);
+      printc_hat(outfile, *(MortPredator*)fleets[j]->returnPredator(), *Area);
     }
   }
 }

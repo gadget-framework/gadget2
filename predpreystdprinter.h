@@ -30,11 +30,11 @@ public:
   virtual ~PredPreyStdPrinter();
   /**
    * \brief This will select the stocks, predators and preys required for the printer class to print the requested information
-   * \param stockvec is the StockPtrVector listing all the available stocks
-   * \param predvec is the PopPredatorPtrVector listing all the available predators
-   * \param preyvec is the PreyPtrVector listing all the available preys
+   * \param stockvec is the StockPtrVector of all the available stocks
+   * \param predvec is the PopPredatorPtrVector of all the available predators
+   * \param preyvec is the PreyPtrVector of all the available preys
    */
-  virtual void SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
+  virtual void setStocksAndPredAndPrey(const StockPtrVector& stockvec,
     const PopPredatorPtrVector& predvec, const PreyPtrVector& preyvec);
 protected:
   /**
@@ -44,7 +44,7 @@ protected:
    * \param IsStockPredator is a flag to denite whether the predator is a modelled stock
    * \param IsStockPrey is a flag to denite whether the prey is a modelled stock
    */
-  virtual void SetPopPredAndPrey(const PopPredator* predator,
+  virtual void setPopPredAndPrey(const PopPredator* predator,
     const Prey* prey, int IsStockPredator, int IsStockPrey) = 0;
   /**
    * \brief This is the name of the predator
@@ -59,11 +59,11 @@ protected:
    */
   ofstream outfile;
   /**
-   * \brief This vector stores information about the internal areas used for printing
+   * \brief This is the IntVector used to store aggregated internal area information
    */
   IntVector areas;
   /**
-   * \brief This vector stores information about the outer areas used for printing
+   * \brief This is the IntVector used to store aggregated area information
    */
   IntVector outerareas;
 };
@@ -98,7 +98,7 @@ protected:
    * \param IsStockPredator is a flag to denite whether the predator is a modelled stock
    * \param IsStockPrey is a flag to denite whether the prey is a modelled stock
    */
-  virtual void SetPopPredAndPrey(const PopPredator* predator, const Prey* prey,
+  virtual void setPopPredAndPrey(const PopPredator* predator, const Prey* prey,
     int IsStockPredator, int IsStockPrey);
 private:
   /**
@@ -145,7 +145,7 @@ protected:
    * \param IsStockPredator is a flag to denite whether the predator is a modelled stock
    * \param IsStockPrey is a flag to denite whether the prey is a modelled stock
    */
-  virtual void SetPopPredAndPrey(const PopPredator* predator, const Prey* prey,
+  virtual void setPopPredAndPrey(const PopPredator* predator, const Prey* prey,
     int IsStockPredator, int IsStockPrey);
 private:
   /**

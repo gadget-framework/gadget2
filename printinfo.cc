@@ -1,7 +1,7 @@
 #include "printinfo.h"
 #include "gadget.h"
 
-PrintInfo::PrintInfo() : PrintInterVal1(-2), PrintInterVal2(-2), forceprint(0),
+PrintInfo::PrintInfo() : printIter1(-2), printIter2(-2), forceprint(0),
   oprint(0), coprint(0), givenPrecision(0) {
 
   OutputFile = NULL;
@@ -30,8 +30,8 @@ PrintInfo::PrintInfo(const PrintInfo& pi) {
   oprint = pi.oprint;
   coprint = pi.coprint;
   givenPrecision = pi.givenPrecision;
-  PrintInterVal1 = pi.PrintInterVal1;
-  PrintInterVal2 = pi.PrintInterVal2;
+  printIter1 = pi.printIter1;
+  printIter2 = pi.printIter2;
 }
 
 PrintInfo::~PrintInfo() {
@@ -91,10 +91,10 @@ void PrintInfo::setParamOutFile(char* filename) {
 }
 
 void PrintInfo::checkNumbers() {
-  if (PrintInterVal2 < 0)
-    PrintInterVal2 = 5;
-  if (PrintInterVal1 < 0)
-    PrintInterVal1 = 1;
+  if (printIter2 < 0)
+    printIter2 = 5;
+  if (printIter1 < 0)
+    printIter1 = 1;
   if (givenPrecision < 0)
     givenPrecision = 0;
 }

@@ -112,7 +112,7 @@ void Keeper::ClearAll() {
   stack->ClearStack();
 }
 
-void Keeper::SetString(const char* str) {
+void Keeper::setString(const char* str) {
   stack->ClearStack();
   stack->PutInStack(str);
 }
@@ -292,7 +292,7 @@ void Keeper::Update(int pos, double& value) {
     scaledvalues[pos] = value / initialvalues[pos];
 }
 
-void Keeper::WriteOptValues(double functionValue, const LikelihoodPtrVector& Likely) const {
+void Keeper::writeOptValues(double functionValue, const LikelihoodPtrVector& Likely) const {
   int i;
   for (i = 0; i < values.Size(); i++)
     if (opt[i] == 1 || opt.Size() == 0)
@@ -300,12 +300,12 @@ void Keeper::WriteOptValues(double functionValue, const LikelihoodPtrVector& Lik
 
   cout << "\n\nThe likelihood components are\n";
   for (i = 0; i < Likely.Size(); i++)
-    cout << Likely[i]->UnweightedLikelihood() << sep;
+    cout << Likely[i]->returnUnweightedLikelihood() << sep;
 
   cout << "\n\nThe overall likelihood score is " << functionValue << endl;
 }
 
-void Keeper::WriteInitialInformation(const char* const filename, const LikelihoodPtrVector& Likely) {
+void Keeper::writeInitialInformation(const char* const filename, const LikelihoodPtrVector& Likely) {
   ofstream outfile;
   outfile.open(filename, ios::out);
   checkIfFailure(outfile, filename);
@@ -350,7 +350,7 @@ void Keeper::WriteInitialInformation(const char* const filename, const Likelihoo
   outfile << ";\n; Listing of the likelihood components used in the current Gadget run\n;\n";
   outfile << "; Component\tType\tWeight\n";
   for (i = 0; i < tmpLikely.Size(); i++)
-    outfile << tmpLikely[i] << TAB << Likely[i]->Type() << TAB << Likely[i]->Weight() << endl;
+    outfile << tmpLikely[i] << TAB << Likely[i]->Type() << TAB << Likely[i]->returnWeight() << endl;
   outfile << ";\n; Listing of the output from the likelihood components for the current Gadget run\n;\n";
   outfile.close();
   outfile.clear();
@@ -362,7 +362,7 @@ void Keeper::WriteInitialInformation(const char* const filename, const Likelihoo
   delete[] strTemp;
 }
 
-void Keeper::WriteValues(const char* const filename,
+void Keeper::writeValues(const char* const filename,
   double functionValue, const LikelihoodPtrVector& Likely, int prec) const {
 
   int i, p, w;
@@ -388,7 +388,7 @@ void Keeper::WriteValues(const char* const filename,
   }
   outfile << TAB << TAB;
   for (i = 0; i < Likely.Size(); i++)
-    outfile << setw(w) << setprecision(p) << Likely[i]->UnweightedLikelihood() << sep;
+    outfile << setw(w) << setprecision(p) << Likely[i]->returnUnweightedLikelihood() << sep;
 
   if (prec == 0) {
     p = fullprecision;
@@ -399,7 +399,7 @@ void Keeper::WriteValues(const char* const filename,
   outfile.clear();
 }
 
-void Keeper::WriteInitialInformationInColumns(const char* const filename) const {
+void Keeper::writeInitialInformationInColumns(const char* const filename) const {
   ofstream outfile;
   outfile.open(filename, ios::out);
   checkIfFailure(outfile, filename);
@@ -410,7 +410,7 @@ void Keeper::WriteInitialInformationInColumns(const char* const filename) const 
   outfile.clear();
 }
 
-void Keeper::WriteValuesInColumns(const char* const filename,
+void Keeper::writeValuesInColumns(const char* const filename,
   double functionValue, const LikelihoodPtrVector& Likely, int prec) const {
 
   int i, p, w;
@@ -517,7 +517,7 @@ void Keeper::Switches(ParameterVector& sw) const {
     sw[i] = switches[i];
 }
 
-void Keeper::WriteParamsInColumns(const char* const filename,
+void Keeper::writeParamsInColumns(const char* const filename,
   double functionValue, const LikelihoodPtrVector& Likely, int prec) const {
 
   int i, p, w;

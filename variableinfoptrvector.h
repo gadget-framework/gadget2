@@ -26,7 +26,7 @@ public:
    */
   VariableInfoPtrVector(int sz, VariableInfo* initial);
   /**
-   * \brief This is the VariableInfoPtrVector constructor that create a copy of an existing VariableInfoPtrVector
+   * \brief This is the VariableInfoPtrVector constructor that creates a copy of an existing VariableInfoPtrVector
    * \param initial is the VariableInfoPtrVector to copy
    */
   VariableInfoPtrVector(const VariableInfoPtrVector& initial);

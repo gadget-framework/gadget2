@@ -11,7 +11,7 @@ class FormatedCHatPrinter : public Printer {
 public:
   FormatedCHatPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~FormatedCHatPrinter();
-  void SetFleet(FleetPtrVector& fleetvec);
+  void setFleet(FleetPtrVector& fleetvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
   IntVector areas;

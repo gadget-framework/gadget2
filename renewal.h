@@ -18,7 +18,7 @@ public:
   /**
    * \brief This is the RenewalData constructor
    * \param infile is the CommentStream to read the recruits data from
-   * \param areas is the list of areas that the recruits will be calculated on
+   * \param areas is the IntVector of areas that the recruits will be calculated on
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
@@ -40,7 +40,7 @@ public:
    * \brief This will set the ConversionIndex required for to calculate the recruits
    * \param GivenLDiv is the LengthGroupDivision for the stock
    */
-  void SetCI(const LengthGroupDivision* const GivenLDiv);
+  void setCI(const LengthGroupDivision* const GivenLDiv);
   /**
    * \brief This function will print the recruits
    * \param outfile is the ofstream that all the model information gets sent to
@@ -54,13 +54,13 @@ protected:
   /**
    * \brief This is flag to denote which option was used when reading in the recruits data from file
    */
-  int ReadOption;
+  int readOption;
   /**
-   * \brief This is the vector of timesteps that the recruitment will take place on
+   * \brief This is the IntVector of timesteps that the recruitment will take place on
    */
   IntVector RenewalTime;
   /**
-   * \brief This is the vector of areas that the recruitment will take place on
+   * \brief This is the IntVector of areas that the recruitment will take place on
    */
   IntVector RenewalArea;
   /**
@@ -68,23 +68,23 @@ protected:
    */
   AgeBandMatrixPtrVector Distribution;
   /**
-   * \brief This is the number of recruits used to calculate the recruitment population
+   * \brief This is the FormulaVector of the number of recruits used to calculate the recruitment population
    */
   FormulaVector Number;
   /**
-   * \brief This is the mean lengths of the recruits used to calculate the recruitment population
+   * \brief This is the FormulaVector of mean lengths of the recruits used to calculate the recruitment population
    */
   FormulaVector Meanlengths;
   /**
-   * \brief This is the standard deviation of the lengths of the recruits used to calculate the recruitment population
+   * \brief This is the FormulaVector of the standard deviation of the lengths of the recruits used to calculate the recruitment population
    */
   FormulaVector Sdev;
   /**
-   * \brief This is the multiplier used to calculate the weight-length relationship for the recruits
+   * \brief This is the FormulaVector of the multipliers used to calculate the weight-length relationship for the recruits
    */
   FormulaVector Wcoeff1;
   /**
-   * \brief This is the power used to calculate the weight-length relationship for the recruits
+   * \brief This is the FormulaVector of the powers used to calculate the weight-length relationship for the recruits
    */
   FormulaVector Wcoeff2;
   /**

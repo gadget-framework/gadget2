@@ -25,10 +25,10 @@ MortPredator::MortPredator(CommentStream& infile, const char* givenname, const I
   pres_time_step = TimeInfo->CurrentTime();
   no_of_time_steps = TimeInfo->TotalNoSteps();
 
-  this->ReadSuitabilityMatrix(infile, "calcflev", TimeInfo, keeper);
+  this->readSuitabilityMatrix(infile, "calcflev", TimeInfo, keeper);
   keeper->ClearLast();
   keeper->ClearLast();
-  //Predator::SetPrey will call ResizeObjects.
+  //Predator::setPrey will call resizeObjects.
 
   infile >> calc_f_lev;
   if (calc_f_lev == 1) { //f_level is calculated as a function
@@ -152,7 +152,7 @@ void MortPredator::calcCHat(int area, const TimeClass* const TimeInfo) {
     for (prey = 0; prey < NoPreys(); prey++) {
       if (Preys(prey)->IsInArea(area)) {
         //set correct dimensions in c_hat
-        this->InitializeCHat(area, prey, ((MortPrey*)Preys(prey))->getMeanN(area));
+        this->InitialiseCHat(area, prey, ((MortPrey*)Preys(prey))->getMeanN(area));
       }
     }
     initialisedCHat = 1;
@@ -245,7 +245,7 @@ void MortPredator::calcFlevel() {
   }
 }
 
-void MortPredator::InitializeCHat(int area, int prey, const AgeBandMatrix& mean_n) {
+void MortPredator::InitialiseCHat(int area, int prey, const AgeBandMatrix& mean_n) {
   //written by kgf 14/7 98
   int inarea = AreaNr[area];
   int i = 0;

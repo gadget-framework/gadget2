@@ -166,7 +166,7 @@ Spawner::~Spawner() {
   delete fnWeightLoss;
 }
 
-void Spawner::SetStock(StockPtrVector& stockvec) {
+void Spawner::setStock(StockPtrVector& stockvec) {
   int index = 0;
   int i, j;
   DoubleVector tmpratio;
@@ -218,12 +218,12 @@ void Spawner::SetStock(StockPtrVector& stockvec) {
 
     if (SpawnStocks[i]->Minage() < spawnage)
       spawnage = SpawnStocks[i]->Minage();
-    if (SpawnStocks[i]->ReturnLengthGroupDiv()->minLength() < minlength)
-      minlength = SpawnStocks[i]->ReturnLengthGroupDiv()->minLength();
-    if (SpawnStocks[i]->ReturnLengthGroupDiv()->maxLength() > maxlength)
-      maxlength = SpawnStocks[i]->ReturnLengthGroupDiv()->maxLength();
-    if (SpawnStocks[i]->ReturnLengthGroupDiv()->dl() < dl)
-      dl = SpawnStocks[i]->ReturnLengthGroupDiv()->dl();
+    if (SpawnStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
+      minlength = SpawnStocks[i]->returnLengthGroupDiv()->minLength();
+    if (SpawnStocks[i]->returnLengthGroupDiv()->maxLength() > maxlength)
+      maxlength = SpawnStocks[i]->returnLengthGroupDiv()->maxLength();
+    if (SpawnStocks[i]->returnLengthGroupDiv()->dl() < dl)
+      dl = SpawnStocks[i]->returnLengthGroupDiv()->dl();
   }
 
   spawnLgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
@@ -234,7 +234,7 @@ void Spawner::SetStock(StockPtrVector& stockvec) {
 
   CI.resize(SpawnStocks.Size(), 0);
   for (i = 0; i < SpawnStocks.Size(); i++)
-    CI[i] = new ConversionIndex(spawnLgrpDiv, SpawnStocks[i]->ReturnLengthGroupDiv());
+    CI[i] = new ConversionIndex(spawnLgrpDiv, SpawnStocks[i]->returnLengthGroupDiv());
 
 }
 

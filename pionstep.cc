@@ -29,13 +29,13 @@ PIOnStep::PIOnStep(CommentStream& infile, const IntMatrix& areas,
   datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadPredatorData(subdata, areaindex, predlenindex, preylenindex, TimeInfo, name);
+  readPredatorData(subdata, areaindex, predlenindex, preylenindex, TimeInfo, name);
   handle.Close();
   datafile.close();
   datafile.clear();
 }
 
-void PIOnStep::ReadPredatorData(CommentStream& infile, const CharPtrVector& areaindex,
+void PIOnStep::readPredatorData(CommentStream& infile, const CharPtrVector& areaindex,
   const CharPtrVector& predlenindex, const CharPtrVector& preylenindex,
   const TimeClass* TimeInfo, const char* name) {
 
@@ -107,7 +107,7 @@ void PIOnStep::ReadPredatorData(CommentStream& infile, const CharPtrVector& area
     cerr << "Warning in predatorindex - found no data in the data file for " << name << endl;
 }
 
-void PIOnStep::SetPredatorsAndPreys(const PredatorPtrVector& predators, const PreyPtrVector& preys) {
+void PIOnStep::setPredatorsAndPreys(const PredatorPtrVector& predators, const PreyPtrVector& preys) {
   aggregator = new PredatorAggregator(predators, preys, Areas, PredatorLgrpDiv, PreyLgrpDiv);
 }
 
@@ -119,7 +119,7 @@ void PIOnStep::Sum(const TimeClass* const TimeInfo) {
   else
     aggregator->NumberSum();
 
-  const BandMatrixVector* cons = &(aggregator->ReturnSum());
+  const BandMatrixVector* cons = &(aggregator->returnSum());
   int ncol = (*cons)[0].Nrow() * (*cons)[0].Ncol();
   DoubleVector numbers(ncol);
   int k = 0;

@@ -19,7 +19,7 @@ public:
     const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper);
   ~Spawner();
   void Print(ofstream& outfile) const;
-  void SetStock(StockPtrVector& stockvec);
+  void setStock(StockPtrVector& stockvec);
   void addSpawnStock(int area, const TimeClass* const TimeInfo);
   void Spawn(AgeBandMatrix& Alkeys, int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   int IsSpawnStepArea(int area, const TimeClass* const TimeInfo);

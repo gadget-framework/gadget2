@@ -21,7 +21,7 @@ public:
   virtual double Likelihood(const TimeClass* const TimeInfo);
   virtual void Reset();
   virtual void Print(ofstream& outfile) const;
-  virtual void SetPredatorsAndPreys(PredatorPtrVector&, PreyPtrVector&);
+  virtual void setPredatorsAndPreys(PredatorPtrVector&, PreyPtrVector&);
   virtual void Aggregate(int i);
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time) {};
   virtual void PrintLikelihoodHeader(ofstream& outfile) {};
@@ -60,7 +60,7 @@ public:
   virtual ~SCNumbers() {};
   virtual void Aggregate(int i);
 protected:
-  void ReadStomachNumberContent(CommentStream& infile, const TimeClass* const TimeInfo);
+  void readStomachNumberContent(CommentStream& infile, const TimeClass* const TimeInfo);
   virtual double CalculateLikelihood(DoubleMatrixPtrVector&, DoubleMatrix&);
 };
 
@@ -75,8 +75,8 @@ public:
   virtual void PrintLikelihood(ofstream&, const TimeClass& time);
   virtual void PrintLikelihoodHeader(ofstream&);
 protected:
-  void ReadStomachAmountContent(CommentStream& infile, const TimeClass* const TimeInfo);
-  void ReadStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo);
+  void readStomachAmountContent(CommentStream& infile, const TimeClass* const TimeInfo);
+  void readStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo);
   virtual double CalculateLikelihood(DoubleMatrixPtrVector&, DoubleMatrix&);
   DoubleMatrixPtrMatrix stddev;  //[timeindex][areas][pred_l][prey_l]
   DoubleMatrixPtrVector number;  //[timeindex][areas][pred_l]
@@ -89,7 +89,7 @@ public:
     const char* datafilename, const char* numfilename, const char* name)
     : SCAmounts(infile, Area, TimeInfo, keeper, datafilename, numfilename, name) {};
   virtual ~SCRatios() {};
-  virtual void SetPredatorsAndPreys(PredatorPtrVector&, PreyPtrVector&);
+  virtual void setPredatorsAndPreys(PredatorPtrVector&, PreyPtrVector&);
 protected:
   virtual double CalculateLikelihood(DoubleMatrixPtrVector&, DoubleMatrix&);
 };
@@ -103,8 +103,8 @@ public:
   virtual void Reset(const Keeper* const keeper)
     { Likelihood::Reset(keeper); StomCont->Reset(); };
   virtual void Print(ofstream& outfile) const;
-  void SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys)
-    { StomCont->SetPredatorsAndPreys(Predators, Preys); };
+  void setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys)
+    { StomCont->setPredatorsAndPreys(Predators, Preys); };
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time)
     { StomCont->PrintLikelihood(outfile, time); };
   virtual void PrintLikelihoodHeader(ofstream& outfile)

@@ -8,7 +8,10 @@
 #include "poppredatorptrvector.h"
 #include "predatorptrvector.h"
 #include "preyptrvector.h"
-#include "ecosystem.h"
+#include "stockptrvector.h"
+#include "fleetptrvector.h"
+#include "charptrvector.h"
+#include "intmatrix.h"
 #include "gadget.h"
 
 enum PrinterType { STOCKPRINTER = 1, PREDATORPRINTER, PREDATOROVERPRINTER,
@@ -39,38 +42,38 @@ public:
   virtual void Print(const TimeClass* const TimeInfo) = 0;
   /**
    * \brief This will select the stocks required for the printer class to print the requested information
-   * \param stockvec is the StockPtrVector listing all the available stocks
+   * \param stockvec is the StockPtrVector of all the available stocks
    */
-  virtual void SetStock(StockPtrVector& stockvec) {};
+  virtual void setStock(StockPtrVector& stockvec) {};
   /**
    * \brief This will select the fleets required for the printer class to print the requested information
-   * \param fleetvec is the FleetPtrVector listing all the available fleets
+   * \param fleetvec is the FleetPtrVector of all the available fleets
    */
-  virtual void SetFleet(FleetPtrVector& fleetvec) {};
+  virtual void setFleet(FleetPtrVector& fleetvec) {};
   /**
    * \brief This will select the predators and preys required for the printer class to print the requested information
-   * \param predatorvec is the PredatorPtrVector listing all the available predators
-   * \param preyvec is the PreyPtrVector listing all the available preys
+   * \param predatorvec is the PredatorPtrVector of all the available predators
+   * \param preyvec is the PreyPtrVector of all the available preys
    */
-  virtual void SetPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVector& preyvec) {};
+  virtual void setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVector& preyvec) {};
   /**
    * \brief This will select the preys required for the printer class to print the requested information
-   * \param preyvec is the PreyPtrVector listing all the available preys
+   * \param preyvec is the PreyPtrVector of all the available preys
    */
-  virtual void SetPrey(PreyPtrVector& preyvec) {};
+  virtual void setPrey(PreyPtrVector& preyvec) {};
   /**
    * \brief This will select the stocks, predators and preys required for the printer class to print the requested information
-   * \param stockvec is the StockPtrVector listing all the available stocks
-   * \param poppredvec is the PopPredatorPtrVector listing all the available predators
-   * \param preyvec is the PreyPtrVector listing all the available preys
+   * \param stockvec is the StockPtrVector of all the available stocks
+   * \param poppredvec is the PopPredatorPtrVector of all the available predators
+   * \param preyvec is the PreyPtrVector of all the available preys
    */
-  virtual void SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
+  virtual void setStocksAndPredAndPrey(const StockPtrVector& stockvec,
     const PopPredatorPtrVector& poppredvec, const PreyPtrVector& preyvec) {};
   /**
    * \brief This will select the predators required for the printer class to print the requested information
-   * \param predatorvec is the PredatorPtrVector listing all the available predators
+   * \param predatorvec is the PredatorPtrVector of all the available predators
    */
-  virtual void SetPredator(PredatorPtrVector& predatorvec) {};
+  virtual void setPredator(PredatorPtrVector& predatorvec) {};
   /**
    * \brief This will return the type of printer class
    * \return type
@@ -78,7 +81,7 @@ public:
   PrinterType Type() { return type; };
 protected:
   /**
-   * \brief This stores information about when the printer output is required in the model
+   * \brief This ActionAtTimes stores information about when the printer output is required in the model
    */
   ActionAtTimes AAT;
 private:

@@ -40,7 +40,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   readWordAndValue(infile, "datafile", datafilename);
   readWordAndValue(infile, "sitype", sitype);
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -102,7 +102,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   } else
     handle.Unexpected("lengths, ages or ageandlengths", sitype);
 
-  //Read in the stocknames
+  //read in the stocknames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "stocknames") == 0))
@@ -180,7 +180,7 @@ void SurveyIndices::AddToLikelihood(const TimeClass* const TimeInfo) {
     likelihood += SI->Regression();
 }
 
-void SurveyIndices::SetStocks(StockPtrVector& Stocks) {
+void SurveyIndices::setStocks(StockPtrVector& Stocks) {
   int i, j;
   int found = 0;
   StockPtrVector s;
@@ -197,7 +197,7 @@ void SurveyIndices::SetStocks(StockPtrVector& Stocks) {
       exit(EXIT_FAILURE);
     }
   }
-  SI->SetStocks(s);
+  SI->setStocks(s);
 }
 
 void SurveyIndices::Reset(const Keeper* const keeper) {

@@ -21,10 +21,10 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   double dl;
   infile >> text;
   if (strcasecmp(text, "normaldistribution") == 0) {
-    ReadOption = 1;
+    readOption = 1;
     readWordAndVariable(infile, "minlength", minlength);
   } else if (strcasecmp(text, "minlength") == 0) {
-    ReadOption = 0;
+    readOption = 0;
     infile >> minlength;
   } else
     handle.Unexpected("normaldistribution or minlength", text);
@@ -58,7 +58,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
 
       Number.resize(1, keeper);
 
-      if (ReadOption == 0) {
+      if (readOption == 0) {
         infile >> minlength >> no >> ws;
 
         if (!(infile >> Number[i]))
@@ -91,7 +91,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
         delete numtmpindvec;
         delete weighttmpindvec;
 
-      } else if (ReadOption == 1) { //use meanlengths.
+      } else if (readOption == 1) { //use meanlengths.
         Meanlengths.resize(1, keeper);
         Sdev.resize(1, keeper);
         Wcoeff1.resize(1, keeper);
@@ -139,7 +139,7 @@ RenewalData::~RenewalData() {
   delete CI;
 }
 
-void RenewalData::SetCI(const LengthGroupDivision* const GivenLDiv) {
+void RenewalData::setCI(const LengthGroupDivision* const GivenLDiv) {
   CI = new ConversionIndex(LgrpDiv, GivenLDiv);
 }
 
@@ -159,7 +159,7 @@ void RenewalData::Reset() {
   int i, age, l;
   double sum, length, N, tmpSdev;
 
-  if (ReadOption == 1) {
+  if (readOption == 1) {
     for (i = 0; i < Distribution.Size(); i++) {
       age = Distribution[i].Minage();
       sum = 0.0;
@@ -221,7 +221,7 @@ void RenewalData::AddRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* c
 
     if (RenewalNumber > verysmall) {
       assert(Alkeys.Minage() <= Distribution[renewalid].Minage());
-      AgebandmAdd(Alkeys, Distribution[renewalid], *CI, RenewalNumber);
+      Alkeys.Add(Distribution[renewalid], *CI, RenewalNumber);
     }
   }
 }

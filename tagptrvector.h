@@ -14,7 +14,7 @@ public:
   /**
    * \brief This is the default TagPtrVector constructor
    */
-  TagPtrVector() { size = 0; v = 0; teljari = 0; index = 0;};
+  TagPtrVector() { size = 0; v = 0; };
   /**
    * \brief This is the TagPtrVector constructor for a specified size
    * \param sz is the size of the vector to be created
@@ -28,7 +28,7 @@ public:
    */
   TagPtrVector(int sz, Tags* initial);
   /**
-   * \brief This is the TagPtrVector constructor that create a copy of an existing TagPtrVector
+   * \brief This is the TagPtrVector constructor that creates a copy of an existing TagPtrVector
    * \param initial is the TagPtrVector to copy
    */
   TagPtrVector(const TagPtrVector& initial);
@@ -72,10 +72,20 @@ public:
    * \return the value of the specified element
    */
   Tags* const& operator [] (int pos) const;
-  void UpdateTags(const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will update all the elements of the vector for the current timestep
+   * \param TimeInfo is the TimeClass for the current model
+   */
+  void updateTags(const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will delete all the elements of the vector that have expired for the current timestep
+   * \param TimeInfo is the TimeClass for the current model
+   */
   void DeleteTags(const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will delete all the elements of the vector
+   */
   void DeleteAll();
-  void SetTaggedStocks(const CharPtrVector Names);
 protected:
   /**
    * \brief This is the vector of Tags values
@@ -85,9 +95,6 @@ protected:
    * \brief This is the size of the vector
    */
   int size;
-  int index;
-  CharPtrVector tagstocknames;
-  int teljari;
 };
 
 #ifdef GADGET_INLINE

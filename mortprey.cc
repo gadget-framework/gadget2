@@ -12,7 +12,7 @@ MortPrey::MortPrey(CommentStream& infile, const IntVector& Areas,
   delete LgrpDiv; //wrong dimensions set in Prey's constructor
   LgrpDiv = new LengthGroupDivision(*stock_lgrp);
 
-  this->InitializeObjects();
+  this->InitialiseObjects();
 
   IntVector size(maxage - minage + 1, LgrpDiv->NoLengthGroups());
   IntVector minlength(maxage - minage + 1, 0);
@@ -27,7 +27,7 @@ MortPrey::~MortPrey() {
     delete[] cannprednames[i];
 }
 
-void MortPrey::InitializeObjects() {
+void MortPrey::InitialiseObjects() {
 
   while (Number.Nrow())
     Number.DeleteRow(0);
@@ -75,13 +75,11 @@ void MortPrey::InitializeObjects() {
   ratio.AddRows(numarea, numlength, 0.0);
   overcons.AddRows(numarea, numlength, 0.0);
   overconsumption.AddRows(numarea, numlength, 0.0);
-
   haveCalculatedMeanN.resize(numarea, 0);
   z.AddRows(numarea, numlength, 0.0);
   mort_fact.AddRows(numarea, numlength, 0.0);
   prop_surv.AddRows(numarea, numlength, 0.0);
   cannibalism.AddRows(numarea, numlength, 0.0);
-
   cann_is_true = 0;
 }
 
@@ -99,9 +97,9 @@ void MortPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
     cannibalism[inarea][i] = 0.0;
 
   mean_n[inarea].setToZero();
-  Alkeys[inarea].setToZero(); //The next line copies stock to Alkeys and mean_n
-  AgebandmAdd(mean_n[inarea], stock, *CI);
-  AgebandmAdd(Alkeys[inarea], stock, *CI);
+  Alkeys[inarea].setToZero();
+  mean_n[inarea].Add(stock, *CI);
+  Alkeys[inarea].Add(stock, *CI);
   Alkeys[inarea].Colsum(Number[inarea]);
   haveCalculatedMeanN[inarea] = 0;
 

@@ -24,7 +24,7 @@ public:
    */
   CharPtrVector(int sz, char* initial);
   /**
-   * \brief This is the CharPtrVector constructor that create a copy of an existing CharPtrVector
+   * \brief This is the CharPtrVector constructor that creates a copy of an existing CharPtrVector
    * \param initial is the CharPtrVector to copy
    */
   CharPtrVector(const CharPtrVector& initial);

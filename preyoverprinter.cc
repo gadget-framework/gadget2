@@ -21,7 +21,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   strncpy(text, "", MaxStrLength);
   int i, j;
 
-  //Read in the prey names
+  //read in the prey names
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "preys") == 0))
@@ -34,7 +34,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
     infile >> text >> ws;
   }
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
@@ -49,7 +49,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
-  //Read in length aggregation from file
+  //read in length aggregation from file
   DoubleVector lengths;
   readWordAndValue(infile, "lenaggfile", filename);
   datafile.open(filename, ios::in);
@@ -79,7 +79,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!AAT.ReadFromFile(infile, TimeInfo))
+  if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in preyoverprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -101,7 +101,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   outfile.flush();
 }
 
-void PreyOverPrinter::SetPrey(PreyPtrVector& preyvec) {
+void PreyOverPrinter::setPrey(PreyPtrVector& preyvec) {
   PreyPtrVector preys;
   int index = 0;
   int i, j;
@@ -129,7 +129,7 @@ void PreyOverPrinter::Print(const TimeClass* const TimeInfo) {
   if (!AAT.AtCurrentTime(TimeInfo))
     return;
   aggregator->Sum();
-  const DoubleMatrix *dptr = &aggregator->ReturnSum();
+  const DoubleMatrix *dptr = &aggregator->returnSum();
   int i, j;
   for (i = 0; i < areas.Nrow(); i++) {
     for (j = 0; j < dptr->Ncol(i); j++) {

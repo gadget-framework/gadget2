@@ -17,7 +17,7 @@ public:
   void ClearLast();
   void ClearLastAddString(const char* str);
   void ClearAll();
-  void SetString(const char* str);
+  void setString(const char* str);
   void AddString(const char* str);
   void AddString(const string str);
   void AddComponent(const char* name);
@@ -40,7 +40,7 @@ public:
   void Update(const DoubleVector& val);
   void Update(const StochasticData * const Stoch);
   /* AJ 08.08.00 Changes made to the following five functions for printing
-   * Use:  keeper.WriteInitialInformation(filename, likely)
+   * Use:  keeper.writeInitialInformation(filename, likely)
    * the output has been written to file with filename = filename in the format:
    * For all switches print to filename:
    * Switch "switch-number i" "tab"
@@ -56,19 +56,19 @@ public:
    * For all weights print to filename:
    * "weight" "tab"
    * Print to filename "New line" */
-  void WriteInitialInformation(const char* const filename, const LikelihoodPtrVector& Likely);
-  /* Use: keeper.WriteValues(filename, funcValue, likely)
+  void writeInitialInformation(const char* const filename, const LikelihoodPtrVector& Likely);
+  /* Use: keeper.writeValues(filename, funcValue, likely)
    * the output has been appended to file with filename = filename in the format:
    * For all values print to filename showing 8 digits:
    * "value" " " "tab"
    * For all values in likely print to filename showing 4 digits:
    * "unweighted likelihood" " " "tab" funcValue showing 15 digits. */
-  void WriteValues(const char* const filename, double FunctionValue, const LikelihoodPtrVector& Likely, int prec) const;
-  void WriteInitialInformationInColumns(const char* const filenam) const;
-  void WriteValuesInColumns(const char* const filename, double functionValue, const LikelihoodPtrVector& Likely, int prec) const;
-  void WriteParamsInColumns(const char* const filename, double functionValue, const LikelihoodPtrVector& Likely, int prec) const;
+  void writeValues(const char* const filename, double FunctionValue, const LikelihoodPtrVector& Likely, int prec) const;
+  void writeInitialInformationInColumns(const char* const filenam) const;
+  void writeValuesInColumns(const char* const filename, double functionValue, const LikelihoodPtrVector& Likely, int prec) const;
+  void writeParamsInColumns(const char* const filename, double functionValue, const LikelihoodPtrVector& Likely, int prec) const;
   //AJ 08.08.00 end of change to functions.
-  void WriteOptValues(double FunctionValue, const LikelihoodPtrVector& Likely) const;
+  void writeOptValues(double FunctionValue, const LikelihoodPtrVector& Likely) const;
   void ScaleVariables();
   void InitialOptValues(DoubleVector &val) const;
   void ScaledOptValues(DoubleVector &val) const;

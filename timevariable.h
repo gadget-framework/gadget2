@@ -7,8 +7,8 @@
 class TimeVariable {
 public:
   TimeVariable();
-  void Read(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
-  void ReadFromFile(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
+  void read(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
+  void readFromFile(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
   operator double() const { return value; };
   void Interchange(TimeVariable& Newtvar, Keeper* const keeper) const;
   void Update(const TimeClass* const TimeInfo);

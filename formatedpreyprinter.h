@@ -11,7 +11,7 @@ class FormatedPreyPrinter : public Printer {
 public:
   FormatedPreyPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~FormatedPreyPrinter();
-  void SetStock(StockPtrVector& stockvec);
+  void setStock(StockPtrVector& stockvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
   IntVector areas;

@@ -37,14 +37,14 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector&  Are
     MatrixNumbers.AddRows(1, TimeInfo->TotalNoSteps() + 1, 0);
   infile >> text;
 
-  //Read the numbers of the migration matrices we are going to use.
+  //read the numbers of the migration matrices we are going to use.
   //File format: matrixnumbers
-  //and then the file format for ReadNoMigrationMatrices
+  //and then the file format for readNoMigrationMatrices
   keeper->AddString("matrixnumbers");
   if (!(strcasecmp(text, "matrixnumbers") == 0))
     handle.Unexpected("matrixnumbers", text);
   else
-    this->ReadNoMigrationMatrices(infile, TimeInfo, keeper);
+    this->readNoMigrationMatrices(infile, TimeInfo, keeper);
 
   //Now we have read the matrix numbers.
   //Skip input from infile until we find a nonnumeric character.
@@ -56,23 +56,23 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector&  Are
 
   //Proceed to read the variables.
   //File format: variables
-  //and then the file format for ReadOptVariables
+  //and then the file format for readOptVariables
   keeper->ClearLastAddString("variables");
   strcpy(text, " ");
   infile >> text;
   if (!(strcasecmp(text, "variables") == 0))
     handle.Unexpected("variables", text);
   IntVector novariables;
-  this->ReadOptVariables(infile, novariables, TimeInfo, keeper);
+  this->readOptVariables(infile, novariables, TimeInfo, keeper);
 
-  //Read the coefficients for the variables.
+  //read the coefficients for the variables.
   //File format: coefficients
-  //and then the file format for ReadCoefficients
+  //and then the file format for readCoefficients
   keeper->ClearLastAddString("coefficients");
   infile >> text;
   if (!(strcasecmp(text, "coefficients") == 0))
     handle.Unexpected("coefficients", text);
-  this->ReadCoefficients(infile, Area, keeper);
+  this->readCoefficients(infile, Area, keeper);
 
   int maxim = 0;
   int age = 0;
@@ -389,7 +389,7 @@ void Migration::AdjustMigListAndCheckIfError(MigrationList& MigList) {
   //However, it is not obvious what to do about (1). Three obvious alternatives:
   //(i) Replace x(i,j) with absolute_value(x(i, j))
   //(ii) Replace x(i,j) with max(0, x(i, j))
-  //(iii) Set error bit if x(i, j) < 0.
+  //(iii) set error bit if x(i, j) < 0.
   //Now we choose (iii) and to return immediately.
   int i, j, k;
   double colsum, colsum1;
@@ -431,7 +431,7 @@ void Migration::AdjustMigListAndCheckIfError(MigrationList& MigList) {
 //year, step, n1 ... nl
 //...
 //The latter being the file format if migration is age dependent.
-void Migration::ReadNoMigrationMatrices(CommentStream& infile,
+void Migration::readNoMigrationMatrices(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   ErrorHandler handle;
@@ -460,12 +460,12 @@ void Migration::ReadNoMigrationMatrices(CommentStream& infile,
 //.  .
 //nm vm
 //where the ni's are integer numbers and vi's doubles.
-void Migration::ReadOptVariables(CommentStream& infile, IntVector& novariables,
+void Migration::readOptVariables(CommentStream& infile, IntVector& novariables,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   //They are in two columns, first is number of variable, next is its value.
   //Have to be a bit careful, not to inform keeper of the variables in
-  //ReadDoubleWithSwitches, and then change their addresses using resize.
+  //readDoubleWithSwitches, and then change their addresses using resize.
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -516,7 +516,7 @@ void Migration::ReadOptVariables(CommentStream& infile, IntVector& novariables,
 }
 
 //File format: File format for VarInfo.
-void Migration::ReadCoefficients(CommentStream& infile,
+void Migration::readCoefficients(CommentStream& infile,
   const AreaClass* const Area, Keeper* const keeper) {
 
   //Now we read the coefficients. The operator >> for VariableInfo does almost

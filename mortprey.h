@@ -15,7 +15,7 @@ public:
   MortPrey(CommentStream& infile, const IntVector& areas, const char* givenname,
     int minage, int maxage, Keeper* const keeper, const LengthGroupDivision* const stock_lgrp);
   virtual ~MortPrey();
-  void InitializeObjects();
+  void InitialiseObjects();
   virtual void Sum(const AgeBandMatrix& Alkeys, int area, int NrofSubstep);
   const AgeBandMatrix& AlkeysPriorToEating(int area) const;
   virtual void Print(ofstream& outfile) const;

@@ -54,7 +54,7 @@ Transition::~Transition() {
   delete LgrpDiv;
 }
 
-void Transition::SetStock(StockPtrVector& stockvec) {
+void Transition::setStock(StockPtrVector& stockvec) {
   int index = 0;
   int i, j, numstocks;
   DoubleVector tmpratio;
@@ -89,7 +89,7 @@ void Transition::SetStock(StockPtrVector& stockvec) {
   numstocks = TransitionStocks.Size();
   CI.resize(numstocks, 0);
   for (i = 0; i < numstocks; i++)
-    CI[i] = new ConversionIndex(LgrpDiv, TransitionStocks[i]->ReturnLengthGroupDiv());
+    CI[i] = new ConversionIndex(LgrpDiv, TransitionStocks[i]->returnLengthGroupDiv());
 
   //JMB - check that the transition stocks are defined on the areas
   double mlength = 9999.0;
@@ -103,8 +103,8 @@ void Transition::SetStock(StockPtrVector& stockvec) {
       cerr << "Warning - transition requested to stock " << (const char*)TransitionStocks[i]->Name()
         << "\nwhich might not be defined on " << index << " areas\n";
 
-    if (TransitionStocks[i]->ReturnLengthGroupDiv()->minLength() < mlength)
-      mlength = TransitionStocks[i]->ReturnLengthGroupDiv()->minLength();
+    if (TransitionStocks[i]->returnLengthGroupDiv()->minLength() < mlength)
+      mlength = TransitionStocks[i]->returnLengthGroupDiv()->minLength();
   }
 
   IntVector minlv(2, 0);

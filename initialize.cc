@@ -35,7 +35,7 @@
 #include "logcatchfunction.h"
 #include "catchintons.h"
 
-void Ecosystem::Initialize(int optimize) {
+void Ecosystem::Initialise(int optimize) {
   PreyPtrVector preyvec;
   PredatorPtrVector predvec;
   PopPredatorPtrVector poppredvec;
@@ -47,79 +47,79 @@ void Ecosystem::Initialize(int optimize) {
   for (i = 0; i < stockvec.Size(); i++) {
     if (stockvec[i]->IsEaten()) {
       preyvec.resize(1);
-      preyvec[preyindex++] = stockvec[i]->ReturnPrey();
+      preyvec[preyindex++] = stockvec[i]->returnPrey();
     }
     if (stockvec[i]->doesEat()) {
       predvec.resize(1);
       poppredvec.resize(1);
-      predvec[predindex++] = stockvec[i]->ReturnPredator();
-      poppredvec[poppredindex++] = stockvec[i]->ReturnPredator();
+      predvec[predindex++] = stockvec[i]->returnPredator();
+      poppredvec[poppredindex++] = stockvec[i]->returnPredator();
     }
   }
 
   for (i = 0; i < otherfoodvec.Size(); i++) {
     preyvec.resize(1);
-    preyvec[preyindex++] = otherfoodvec[i]->ReturnPrey();
+    preyvec[preyindex++] = otherfoodvec[i]->returnPrey();
   }
 
   for (i = 0; i < fleetvec.Size(); i++) {
     predvec.resize(1);
     poppredvec.resize(1);
-    predvec[predindex++] = fleetvec[i]->ReturnPredator();
-    poppredvec[poppredindex++] = fleetvec[i]->ReturnPredator();
+    predvec[predindex++] = fleetvec[i]->returnPredator();
+    poppredvec[poppredindex++] = fleetvec[i]->returnPredator();
   }
 
   for (i = 0; i < predvec.Size(); i++)
-    predvec[i]->SetPrey(preyvec, keeper);
+    predvec[i]->setPrey(preyvec, keeper);
   for (i = 0; i < stockvec.Size(); i++)
-    stockvec[i]->SetStock(stockvec);
+    stockvec[i]->setStock(stockvec);
   for (i = 0; i < stockvec.Size(); i++)
-    stockvec[i]->SetCI();
+    stockvec[i]->setCI();
   for (i = 0; i < tagvec.Size(); i++)
-    tagvec[i]->SetStock(stockvec);
+    tagvec[i]->setStock(stockvec);
 
   /*JMB code removed from here - see RemovedCode.txt for details*/
-  //This is a good place to initialize the printer classes.
+  //This is a good place to initialise the printer classes.
   for (i = 0; i < printvec.Size(); i++)
     switch(printvec[i]->Type()) {
       case STOCKSTDPRINTER:
-        printvec[i]->SetStock(stockvec);
+        printvec[i]->setStock(stockvec);
         break;
       case STOCKPRINTER:
-        printvec[i]->SetStock(stockvec);
+        printvec[i]->setStock(stockvec);
         break;
       case PREDATORPRINTER:
-        printvec[i]->SetPredAndPrey(predvec, preyvec);
+        printvec[i]->setPredAndPrey(predvec, preyvec);
         break;
       case PREDATOROVERPRINTER:
-        printvec[i]->SetPredator(predvec);
+        printvec[i]->setPredator(predvec);
         break;
       case PREYOVERPRINTER:
-        printvec[i]->SetPrey(preyvec);
+        printvec[i]->setPrey(preyvec);
         break;
       case STOCKPREYFULLPRINTER:
-        printvec[i]->SetStock(stockvec);
+        printvec[i]->setStock(stockvec);
         break;
       case PREDPREYSTDPRINTER:
-        printvec[i]->SetStocksAndPredAndPrey(stockvec, poppredvec, preyvec);
+        printvec[i]->setStocksAndPredAndPrey(stockvec, poppredvec, preyvec);
         break;
       case STOCKFULLPRINTER:
-        printvec[i]->SetStock(stockvec);
+        printvec[i]->setStock(stockvec);
         break;
       case FORMATEDSTOCKPRINTER:
-        printvec[i]->SetStock(stockvec);
+        printvec[i]->setStock(stockvec);
         break;
       case FORMATEDCHATPRINTER:
-        printvec[i]->SetFleet(fleetvec);
+        printvec[i]->setFleet(fleetvec);
         break;
       case FORMATEDPREYPRINTER:
-        printvec[i]->SetStock(stockvec);
+        printvec[i]->setStock(stockvec);
         break;
       case MORTPRINTER:
-        printvec[i]->SetStock(stockvec);
+        printvec[i]->setStock(stockvec);
         break;
       case BIOMASSPRINTER:
-        printvec[i]->SetStock(stockvec);
+        printvec[i]->setStock(stockvec);
         break;
       default:
         cerr << "Unrecognized printer type " << printvec[i]->Type() << " when initializing\n";
@@ -131,40 +131,40 @@ void Ecosystem::Initialize(int optimize) {
     for (i = 0; i < Likely.Size(); i++)
       switch(Likely[i]->Type()) {
         case SURVEYINDICESLIKELIHOOD:
-          ((SurveyIndices*)Likely[i])->SetStocks(stockvec);
+          ((SurveyIndices*)Likely[i])->setStocks(stockvec);
           break;
         case UNDERSTOCKINGLIKELIHOOD:
-          ((UnderStocking*)Likely[i])->SetFleets(fleetvec);
+          ((UnderStocking*)Likely[i])->setFleets(fleetvec);
           break;
         case CATCHDISTRIBUTIONLIKELIHOOD:
-          ((CatchDistribution*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
+          ((CatchDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
         case LOGCATCHLIKELIHOOD:
-          ((LogCatches*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
+          ((LogCatches*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
         case CATCHSTATISTICSLIKELIHOOD:
-          ((CatchStatistics*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
+          ((CatchStatistics*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
         case STOMACHCONTENTLIKELIHOOD:
-          ((StomachContent*)Likely[i])->SetPredatorsAndPreys(predvec, preyvec);
+          ((StomachContent*)Likely[i])->setPredatorsAndPreys(predvec, preyvec);
           break;
         case TAGLIKELIHOOD:
-          ((Recaptures*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
+          ((Recaptures*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
         case STOCKDISTRIBUTIONLIKELIHOOD:
-          ((StockDistribution*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
+          ((StockDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
         case PREDATORINDICESLIKELIHOOD:
-          ((PredatorIndices*)Likely[i])->SetPredatorsAndPreys(predvec, preyvec);
+          ((PredatorIndices*)Likely[i])->setPredatorsAndPreys(predvec, preyvec);
           break;
         case MIGRATIONPENALTYLIKELIHOOD:
-          ((MigrationPenalty*)Likely[i])->SetStocks(stockvec);
+          ((MigrationPenalty*)Likely[i])->setStocks(stockvec);
           break;
         case CATCHINTONSLIKELIHOOD:
-          ((CatchInTons*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
+          ((CatchInTons*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
         case RECSTATISTICSLIKELIHOOD:
-          ((RecStatistics*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
+          ((RecStatistics*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
         case AGGREGATEDCDLIKELIHOOD:
           break;
@@ -180,15 +180,15 @@ void Ecosystem::Initialize(int optimize) {
           break;
       }
 
-  //Initialize likelihood printers in likprintvec [10.04.00 MNAA]
-  //Moved this to the end, so the likelihood classes is initialized
+  //Initialise likelihood printers in likprintvec [10.04.00 MNAA]
+  //Moved this to the end, so the likelihood classes are initialised
   //before the printer classes [12.07.00]
   for (i = 0; i < likprintvec.Size(); i++)
     switch(likprintvec[i]->Type()) {
       case FORMATEDCATCHPRINTER:
         break;
       case LIKELIHOODPRINTER:
-        ((LikelihoodPrinter*)(likprintvec[i]))->SetLikely(Likely);
+        ((LikelihoodPrinter*)(likprintvec[i]))->setLikely(Likely);
         break;
       default:
         cerr << "Unrecognized likelihood printer type " << likprintvec[i]->Type() << " when initializing\n";

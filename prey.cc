@@ -16,7 +16,7 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
   strncpy(text, "", MaxStrLength);
   int i;
 
-  //Read the prey length group data
+  //read the prey length group data
   DoubleVector preylengths;
   CharPtrVector preylenindex;
   char aggfilename[MaxStrLength];
@@ -38,7 +38,7 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
     printLengthGroupError(preylengths, "length groups for prey");
 
   keeper->ClearLast();
-  this->InitializeObjects();
+  this->InitialiseObjects();
 
   //preylenindex is not required - free up memory
   for (i = 0; i < preylenindex.Size(); i++)
@@ -52,10 +52,10 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas, const char* give
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
     printLengthGroupError(lengths, givenname);
-  this->InitializeObjects();
+  this->InitialiseObjects();
 }
 
-void Prey::InitializeObjects() {
+void Prey::InitialiseObjects() {
 
   while (Number.Nrow())
     Number.DeleteRow(0);
@@ -100,7 +100,7 @@ Prey::~Prey() {
   delete LgrpDiv;
 }
 
-void Prey::SetCI(const LengthGroupDivision* const GivenLDiv) {
+void Prey::setCI(const LengthGroupDivision* const GivenLDiv) {
   CI = new ConversionIndex(GivenLDiv, LgrpDiv);
 }
 

@@ -25,7 +25,7 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
   strncpy(preyname, "", MaxStrLength);
   readWordAndValue(infile, "prey", preyname);
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
@@ -63,7 +63,7 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!AAT.ReadFromFile(infile, TimeInfo))
+  if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in predpreystdprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -86,7 +86,7 @@ PredPreyStdPrinter::~PredPreyStdPrinter() {
   delete[] preyname;
 }
 
-void PredPreyStdPrinter::SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
+void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
   const PopPredatorPtrVector& predvec, const PreyPtrVector& preyvec) {
 
   //First we try comparing the StockPredators and StockPreys to predname and preyname.
@@ -98,23 +98,23 @@ void PredPreyStdPrinter::SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
 
   for (i = 0; i < stockvec.Size(); i++) {
     if (stockvec[i]->doesEat()) {
-      if (strcasecmp(stockvec[i]->ReturnPredator()->Name(), predname) == 0) {
+      if (strcasecmp(stockvec[i]->returnPredator()->Name(), predname) == 0) {
         if (predator) {
           cerr << "Error - found more than one predator with the name " << predname << endl;
           exit(EXIT_FAILURE);
         }
         stockpred = 1;
-        predator = stockvec[i]->ReturnPredator();
+        predator = stockvec[i]->returnPredator();
       }
     }
     if (stockvec[i]->IsEaten()) {
-      if (strcasecmp(stockvec[i]->ReturnPrey()->Name(), preyname) == 0) {
+      if (strcasecmp(stockvec[i]->returnPrey()->Name(), preyname) == 0) {
         if (prey) {
           cerr << "Error - found more than one prey with the name " << preyname << endl;
           exit(EXIT_FAILURE);
         }
         stockprey = 1;
-        prey = stockvec[i]->ReturnPrey();
+        prey = stockvec[i]->returnPrey();
       }
     }
   }
@@ -161,6 +161,6 @@ void PredPreyStdPrinter::SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
     }
 
   //If we get here, we have found exactly one predator and one prey defined on all the areas
-  //so we can call the virtual function SetPredAndPrey to set the predators and preys
-  this->SetPopPredAndPrey(predator, prey, stockpred, stockprey);
+  //so we can call the virtual function setPredAndPrey to set the predators and preys
+  this->setPopPredAndPrey(predator, prey, stockpred, stockprey);
 }

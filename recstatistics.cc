@@ -46,7 +46,7 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   else
     handle.Message("Error in recstatistics - unrecognised function", functionname);
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -62,7 +62,7 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
       if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
         handle.UndefinedArea(areas[i][j]);
 
-  //Read in the fleetnames
+  //read in the fleetnames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
@@ -81,13 +81,13 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadStatisticsData(subdata, TimeInfo, numarea, Tags);
+  readStatisticsData(subdata, TimeInfo, numarea, Tags);
   handle.Close();
   datafile.close();
   datafile.clear();
 }
 
-void RecStatistics::ReadStatisticsData(CommentStream& infile,
+void RecStatistics::readStatisticsData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea, TagPtrVector Tags) {
 
   int year, step;
@@ -247,7 +247,7 @@ void RecStatistics::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void RecStatistics::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
+void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, t, found, minage, maxage;
   FleetPtrVector fleets;
   StockPtrVector stocks;
@@ -274,7 +274,7 @@ void RecStatistics::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       found = 0;
       for (j = 0; j < Stocks.Size(); j++)
         if (Stocks[j]->IsEaten())
-          if (strcasecmp(stocknames->operator[](i), Stocks[j]->ReturnPrey()->Name()) == 0) {
+          if (strcasecmp(stocknames->operator[](i), Stocks[j]->returnPrey()->Name()) == 0) {
             found = 1;
             stocks.resize(1, Stocks[j]);
           }
@@ -286,9 +286,9 @@ void RecStatistics::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       }
     }
 
-    lgrpDiv = new LengthGroupDivision(*(stocks[0]->ReturnPrey()->ReturnLengthGroupDiv()));
+    lgrpDiv = new LengthGroupDivision(*(stocks[0]->returnPrey()->returnLengthGroupDiv()));
     for (i = 1; i < stocks.Size(); i++)
-      if (!lgrpDiv->Combine(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv())) {
+      if (!lgrpDiv->Combine(stocks[i]->returnPrey()->returnLengthGroupDiv())) {
         cerr << "Length group divisions for preys in recstatistics not compatible\n";
         exit(EXIT_FAILURE);
       }
@@ -331,9 +331,9 @@ double RecStatistics::SOSWeightOrLength() {
 
   for (t = 0; t < tagvec.Size(); t++) {
     if (timeindex[t] > -1) {
-      const AgeBandMatrixPtrVector *alptr = &aggregator[t]->AgeLengthDist();
+      const AgeBandMatrixPtrVector *alptr = &aggregator[t]->returnSum();
       for (nareas = 0; nareas < alptr->Size(); nareas++) {
-        PopStatistics PopStat((*alptr)[nareas][0], aggregator[t]->ReturnLgrpDiv(), 1);
+        PopStatistics PopStat((*alptr)[nareas][0], aggregator[t]->returnLengthGroupDiv(), 1);
 
         simmean = PopStat.MeanLength();
         simdiff = simmean - (*mean[t])[timeindex[t]][nareas];

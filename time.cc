@@ -17,21 +17,21 @@ TimeClass::TimeClass(CommentStream& infile) {
   readWordAndVariable(infile, "notimesteps", notimesteps);
 
   infile >> ws;
-  timesteps.resize(notimesteps, 1, 0);  //index starts at 1, initialized to 0
+  timesteps.resize(notimesteps, 1, 0.0);
   readIndexVector(infile, timesteps);
 
   infile >> ws;
   if (infile.eof())
-    nrofsubsteps.resize(notimesteps, 1, 1);
+    nrofsubsteps.resize(notimesteps, 1, 1.0);
   else {
     infile >> text >> ws;
     if (!(strcasecmp(text, "nrofsubsteps") == 0))
       handle.Message("Failure in reading time substeps");
-    nrofsubsteps.resize(notimesteps, 1, 0);
+    nrofsubsteps.resize(notimesteps, 1, 0.0);
     readIndexVector(infile, nrofsubsteps);
   }
 
-  lengthofyear = 0;
+  lengthofyear = 0.0;
   for (i = timesteps.Mincol(); i < timesteps.Maxcol(); i++)
     lengthofyear += timesteps[i];
 

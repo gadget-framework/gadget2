@@ -15,7 +15,6 @@ StockDistribution::StockDistribution(CommentStream& infile,
   double w, const char* name)
   : Likelihood(STOCKDISTRIBUTIONLIKELIHOOD, w) {
 
-
   ErrorHandler handle;
   int i, j;
   char text[MaxStrLength];
@@ -62,7 +61,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
     epsilon = 10;
   }
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -72,7 +71,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
-  //Read in age aggregation from file
+  //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -82,7 +81,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
-  //Read in length aggregation from file
+  //read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -101,7 +100,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   //Must create the length group division
   lgrpdiv = new LengthGroupDivision(lengths);
 
-  //Read in the fleetnames
+  //read in the fleetnames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
@@ -114,7 +113,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
     infile >> text >> ws;
   }
 
-  //Read in the stocknames
+  //read in the stocknames
   i = 0;
   if (!(strcasecmp(text, "stocknames") == 0))
     handle.Unexpected("stocknames", text);
@@ -132,13 +131,13 @@ StockDistribution::StockDistribution(CommentStream& infile,
   datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadStockData(subdata, TimeInfo, numarea, numage, numlen);
+  readStockData(subdata, TimeInfo, numarea, numage, numlen);
   handle.Close();
   datafile.close();
   datafile.clear();
 }
 
-void StockDistribution::ReadStockData(CommentStream& infile,
+void StockDistribution::readStockData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea, int numage, int numlen) {
 
   ErrorHandler handle;
@@ -294,7 +293,7 @@ void StockDistribution::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void StockDistribution::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
+void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, found, stocknumber;
   FleetPtrVector fleets;
   aggregator = new FleetPreyAggregator*[stocknames.Size()];
@@ -318,7 +317,7 @@ void StockDistribution::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->IsEaten())
-        if (strcasecmp(stocknames[i], Stocks[j]->ReturnPrey()->Name()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
           found = 1;
           stocks.resize(1, Stocks[j]);
         }
@@ -367,7 +366,7 @@ double StockDistribution::LikMultinomial() {
     Dist[area] = new DoubleMatrix(aggregator[0]->NoAgeGroups() *
       aggregator[0]->NoLengthGroups(), stocknames.Size(), 0.0);
     for (sn = 0; sn < stocknames.Size(); sn++) {
-      alptr = &aggregator[sn]->AgeLengthDist();
+      alptr = &aggregator[sn]->returnSum();
       minage = (*alptr)[area].Minage();
       maxage = (*alptr)[area].Maxage();
       for (age = minage; age <= maxage; age++) {
@@ -392,7 +391,7 @@ double StockDistribution::LikMultinomial() {
     }
     delete Dist[nareas];
   }
-  return MN.ReturnLogLikelihood();
+  return MN.returnLogLikelihood();
 }
 
 double StockDistribution::LikSumSquares() {
@@ -404,7 +403,7 @@ double StockDistribution::LikSumSquares() {
   const AgeBandMatrixPtrVector* alptr;
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     for (sn = 0; sn < stocknames.Size(); sn++) {
-      alptr = &aggregator[sn]->AgeLengthDist();
+      alptr = &aggregator[sn]->returnSum();
       totalmodel = 0.0;
       totaldata = 0.0;
 

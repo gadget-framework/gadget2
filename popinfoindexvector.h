@@ -30,7 +30,7 @@ public:
    */
   PopInfoIndexVector(int sz, int minpos, PopInfo initial);
   /**
-   * \brief This is the PopInfoIndexVector constructor that create a copy of an existing PopInfoIndexVector
+   * \brief This is the PopInfoIndexVector constructor that creates a copy of an existing PopInfoIndexVector
    * \param initial is the PopInfoIndexVector to copy
    */
   PopInfoIndexVector(const PopInfoIndexVector& initial);
@@ -74,14 +74,29 @@ public:
    */
   int Size() const { return size; };
   /**
-   * \brief This will return the value of an element of the vector
-   * \param pos is the element of the vector to be returned
-   * \return the value of the specified element
+   * \brief This will delete an entry from the vector
+   * \param pos is the element of the vector to be deleted
+   * \note This will free the memory allocated to the deleted element of the vector
    */
   void Delete(int pos);
+  /**
+   * \brief This function will add a PopInfoIndexVector to the current vector
+   * \param Addition is the PopInfoIndexVector that will be added to the current vector
+   * \param CI is the ConversionIndex that will convert between the length groups of the 2 vectors
+   * \param ratio is a multiplicative constant applied to each entry
+   */
+  void Add(const PopInfoIndexVector& Addition, const ConversionIndex& CI, double ratio = 1.0);
+  /**
+   * \brief This function will add a PopInfoIndexVector to the current vector
+   * \param Addition is the PopInfoIndexVector that will be added to the current vector
+   * \param CI is the ConversionIndex that will convert between the length groups of the 2 vectors
+   * \param ratio is a multiplicative constant applied to each entry
+   * \param Ratio is a DoubleIndexVector of multiplicative constants to be applied to entries individually
+   */
+  void Add(const PopInfoIndexVector& Addition, const ConversionIndex& CI, double ratio, const DoubleIndexVector& Ratio);
 protected:
   /**
-   * \brief This is index for the vector
+   * \brief This is the index for the vector
    */
   int minpos;
   /**
@@ -93,12 +108,6 @@ protected:
    */
   PopInfo* v;
 };
-
-extern void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
-  const ConversionIndex& CI, double ratio, const DoubleIndexVector& Ratio);
-
-extern void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
-  const ConversionIndex& CI, double ratio = 1.0);
 
 #ifdef GADGET_INLINE
 #include "popinfoindexvector.icc"

@@ -22,8 +22,8 @@ public:
   Parameter();
   Parameter(const Parameter& p);
   ~Parameter();
-  //Reads and discards ' ', '\t', '\n' and EOF from start of pointer in ??????.
-  //Reads string until find a character which is not legal or have read MaxStrLength-1
+  //reads and discards ' ', '\t', '\n' and EOF from start of pointer in ??????.
+  //reads string until find a character which is not legal or have read MaxStrLength-1
   //characters into name. name has been terminated by '\0'.
   //If in fails while trying to read then returns in.makebad ??
   //do not know what this is else returns in.

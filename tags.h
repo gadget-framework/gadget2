@@ -21,21 +21,21 @@ public:
     const TimeClass* const TimeInfo, Keeper* const keeper, StockPtrVector stockvec);
   ~Tags();
   void Update();
-  void UpdateTags(int year, int step);
+  void updateTags(int year, int step);
   void DeleteFromStock();
   const int getEndYear() const { return endyear; };
   const CharPtrVector* getStocknames() const { return &stocknames; };
-  void SetStock(StockPtrVector& Stocks);
+  void setStock(StockPtrVector& Stocks);
   const char* TagName() const { return this->Name(); };
-  void UpdateMatureStock(const TimeClass* const TimeInfo);
-  void UpdateTransitionStock(const TimeClass* const TimeInfo);
+  void updateMatureStock(const TimeClass* const TimeInfo);
+  void updateTransitionStock(const TimeClass* const TimeInfo);
   void StoreNumberPriorToEating(int area, const char* stockname);
   const AgeBandMatrix& NumberPriorToEating(int area, const char* stockname);
   void Reset(const TimeClass* const TimeInfo);
   int IsWithinPeriod(int year, int step);
   int stockIndex(const char* stockname);
 private:
-  void ReadNumbers(CommentStream& infile, const char* tagname, const TimeClass* const TimeInfo);
+  void readNumbers(CommentStream& infile, const char* tagname, const TimeClass* const TimeInfo);
   CharPtrVector stocknames;
   //area-age-length distribution of tags by stocks
   AgeBandMatrixPtrMatrix AgeLengthStock;

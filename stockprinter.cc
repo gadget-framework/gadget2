@@ -22,7 +22,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
   strncpy(text, "", MaxStrLength);
   int i, j;
 
-  //Read in the stocknames
+  //read in the stocknames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "stocknames") == 0))
@@ -35,7 +35,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
     infile >> text >> ws;
   }
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
@@ -50,7 +50,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
-  //Read in age aggregation from file
+  //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", filename);
   datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
@@ -60,7 +60,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
-  //Read in length aggregation from file
+  //read in length aggregation from file
   DoubleVector lengths;
   readWordAndValue(infile, "lenaggfile", filename);
   datafile.open(filename, ios::in);
@@ -90,7 +90,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!AAT.ReadFromFile(infile, TimeInfo))
+  if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in stockprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -112,7 +112,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
   outfile.flush();
 }
 
-void StockPrinter::SetStock(StockPtrVector& stockvec) {
+void StockPrinter::setStock(StockPtrVector& stockvec) {
   assert(stockvec.Size() > 0);
   StockPtrVector stocks;
   int index = 0;
@@ -145,7 +145,7 @@ void StockPrinter::Print(const TimeClass* const TimeInfo) {
   aggregator->Sum();
 
   for (a = 0; a < areas.Nrow(); a++) {
-    const AgeBandMatrix& alk = aggregator->ReturnSum()[a];
+    const AgeBandMatrix& alk = aggregator->returnSum()[a];
     for (age = alk.Minage(); age <= alk.Maxage(); age++) {
       for (l = alk.Minlength(age); l < alk.Maxlength(age); l++) {
         outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep

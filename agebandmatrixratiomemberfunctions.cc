@@ -1,7 +1,7 @@
 #include "agebandmatrixratio.h"
 #include "agebandmatrixratioptrvector.h"
 
-void AgeBandMatrixRatio::UpdateAndTagLoss(const AgeBandMatrix& Total, const DoubleVector& tagloss) {
+void AgeBandMatrixRatio::updateAndTagLoss(const AgeBandMatrix& Total, const DoubleVector& tagloss) {
 
   int NrOfTagExp = this->NrOfTagExp();
   int minlen, maxlen, age, length, tag;
@@ -19,7 +19,7 @@ void AgeBandMatrixRatio::UpdateAndTagLoss(const AgeBandMatrix& Total, const Doub
   }
 }
 
-void AgeBandMatrixRatio::UpdateNumbers(const AgeBandMatrix& Total) {
+void AgeBandMatrixRatio::updateNumbers(const AgeBandMatrix& Total) {
 
   int NrOfTagExp = this->NrOfTagExp();
   int minlen, maxlen, age, length, tag;
@@ -45,7 +45,7 @@ void AgeBandMatrixRatio::UpdateNumbers(const AgeBandMatrix& Total) {
   }
 }
 
-void AgeBandMatrixRatio::UpdateRatio(const AgeBandMatrix& Total) {
+void AgeBandMatrixRatio::updateRatio(const AgeBandMatrix& Total) {
 
   int NrOfTagExp = this->NrOfTagExp();
   int minlen, maxlen, age, length, tag;
@@ -123,12 +123,12 @@ void AgeBandMatrixRatio::IncrementAge(const AgeBandMatrix& Total) {
       }
     }
 
-    //Set number in age zero to zero.
+    //set number in age zero to zero.
     for (j = v[0]->Mincol(); j < v[0]->Maxcol(); j++)
       for (tag = 0; tag < NrOfTagExp; tag++)
         (*(*v[0])[j][tag].N) = 0;
 
-    this->UpdateRatio(Total);
+    this->updateRatio(Total);
   }
 }
 

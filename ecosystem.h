@@ -16,23 +16,23 @@
 class Ecosystem {
 public:
   Ecosystem();
-  //Changed constructor and Readmain, to take a parameter saying if this
+  //Changed constructor and readmain, to take a parameter saying if this
   //is a netrun. This is done to prevent EcoSystem from reading the
   //print files when doing a net run. 07.04.00 AJ & mnaa.
   Ecosystem(const char* const filename, int optimize, int netrun,
     int calclikelihood, const char* const inputdir,
     const char* const workingdir, const PrintInfo& pi);
-  void Readmain(CommentStream& infile, int optimize, int netrun,
+  void readMain(CommentStream& infile, int optimize, int netrun,
     int calclikelihood, const char* const inputdir,
     const char* const workingdir);
   ~Ecosystem();
-  void ReadLikelihood(CommentStream& infile);
-  void ReadPrinters(CommentStream& infile);
-  void ReadFleet(CommentStream& infile);
-  void ReadTagging(CommentStream& infile);
-  void ReadOtherFood(CommentStream& infile);
-  void ReadStock(CommentStream& infile, int mortmodel);
-  void Initialize(int optimize);
+  void readLikelihood(CommentStream& infile);
+  void readPrinters(CommentStream& infile);
+  void readFleet(CommentStream& infile);
+  void readTagging(CommentStream& infile);
+  void readOtherFood(CommentStream& infile);
+  void readStock(CommentStream& infile, int mortmodel);
+  void Initialise(int optimize);
   void PrintStatus(const char* filename) const;
   void PrintLikelihoodInfo(const char* filename) const;
   void PrintInitialInformation(const char* const filename) const;
@@ -57,8 +57,8 @@ public:
   void ScaledValues(DoubleVector& val) const;
   void SimulateOneAreaOneTimeSubstep(int area);
   void GrowthAndSpecialTransactions(int area);
-  void UpdateOneTimestepOneArea(int area);
-  void SimulateOneTimestep(int print);
+  void updateOneTimestepOneArea(int area);
+  void SimulateOneTimestep();
   int NoVariables() const { return keeper->NoVariables(); };
   int NoOptVariables() const { return keeper->NoOptVariables(); };
   double SimulateAndUpdate(double* x, int n);

@@ -26,9 +26,9 @@ public:
   virtual ~StockStdPrinter();
   /**
    * \brief This will select the stocks required for the printer class to print the requested information
-   * \param stockvec is the StockPtrVector listing all the available stocks
+   * \param stockvec is the StockPtrVector of all the available stocks
    */
-  virtual void SetStock(StockPtrVector& stockvec);
+  virtual void setStock(StockPtrVector& stockvec);
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model
@@ -44,11 +44,11 @@ protected:
    */
   LengthGroupDivision* LgrpDiv;
   /**
-   * \brief This vector stores information about the internal areas used for printing
+   * \brief This is the IntVector used to store aggregated area information
    */
   IntVector areas;
   /**
-   * \brief This vector stores information about the outer areas used for printing
+   * \brief This is the IntVector used to store aggregated age information
    */
   IntVector outerareas;
   /**

@@ -35,7 +35,7 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
   strncpy(text, "", MaxStrLength);
   int i, j;
 
-  //Read in the stocknames
+  //read in the stocknames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "stocknames") == 0))
@@ -48,7 +48,7 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
     infile >> text >> ws;
   }
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
@@ -63,7 +63,7 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
-  //Read in age aggregation from file
+  //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", filename);
   datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
@@ -73,7 +73,7 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
-  //Read in length aggregation from file
+  //read in length aggregation from file
   DoubleVector lengths;
   CharPtrVector lenindex;
   readWordAndValue(infile, "lenaggfile", filename);
@@ -116,7 +116,7 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!AAT.ReadFromFile(infile, TimeInfo))
+  if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in formatedstockprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -131,19 +131,19 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
     delete[] lenindex[i];
 }
 
-/*  SetStock
+/*  setStock
  *
- *  Purpose:  Initialize vector of stocks to be printed
+ *  Purpose:  Initialise vector of stocks to be printed
  *
  *  In:       StockPtrVector& stockvec    :vector of all stocks, the stock names from the
  *                                         input files are matched with these.
  *
- *  Usage:  SetStock(stockvec)
+ *  Usage:  setStock(stockvec)
  *
  *  Pre:  stockvec.Size() > 0, all stocks names in input file are in stockvec
  */
 
-void FormatedStockPrinter::SetStock(StockPtrVector& stockvec) {
+void FormatedStockPrinter::setStock(StockPtrVector& stockvec) {
   assert(stockvec.Size() > 0);
   StockPtrVector stocks;
   int i, j, index = 0;
@@ -207,13 +207,13 @@ void FormatedStockPrinter::Print(const TimeClass* const TimeInfo) {
   for (i = 0; i < areas.Nrow(); i++) {
     printAreasHeader(noutfile, areas[i]);
     printMatrixHeader(noutfile, agevector, *LgrpDiv, "number", 1);
-    printN(noutfile, aggregator->ReturnSum()[i], &agevector);
+    printN(noutfile, aggregator->returnSum()[i], &agevector);
   }
   printTime(woutfile, *TimeInfo);
   for (i = 0; i < areas.Nrow(); i++) {
     printAreasHeader(woutfile, areas[i]);
     printMatrixHeader(woutfile, agevector, *LgrpDiv, "weight", 1);
-    printW(woutfile, aggregator->ReturnSum()[i], &agevector);
+    printW(woutfile, aggregator->returnSum()[i], &agevector);
   }
 }
 

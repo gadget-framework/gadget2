@@ -15,11 +15,11 @@ public:
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const {};
-  void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
+  void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
   virtual void LikelihoodPrint(ofstream& outfile);
 private:
-  void ReadLogCatchData(CommentStream&, const TimeClass*, int, int, int);
-  void ReadLogWeightsData(CommentStream&, const TimeClass*, int);
+  void readLogCatchData(CommentStream&, const TimeClass*, int, int, int);
+  void readLogWeightsData(CommentStream&, const TimeClass*, int);
   double LogLik(const TimeClass* const TimeInfo);
   DoubleMatrixPtrMatrix AgeLengthData;
   DoubleMatrixPtrMatrix Proportions;

@@ -28,7 +28,7 @@ public:
    */
   SuitFuncPtrVector(int sz, SuitFunc* initial);
   /**
-   * \brief This is the SuitFuncPtrVector constructor that create a copy of an existing SuitFuncPtrVector
+   * \brief This is the SuitFuncPtrVector constructor that creates a copy of an existing SuitFuncPtrVector
    * \param initial is the SuitFuncPtrVector to copy
    */
   SuitFuncPtrVector(const SuitFuncPtrVector& initial);

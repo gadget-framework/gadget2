@@ -7,7 +7,7 @@
 void SelectFunc::readConstants(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
-  coeff.Read(infile, TimeInfo, keeper);
+  coeff.read(infile, TimeInfo, keeper);
   coeff.Update(TimeInfo);
 }
 

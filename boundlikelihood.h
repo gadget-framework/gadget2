@@ -52,29 +52,32 @@ public:
    */
   virtual void AddToLikelihoodTimeAndKeeper(const TimeClass* const TimeInfo, Keeper* const keeper);
 protected:
+  /**
+   * \brief This is the IntVector of the index of the parameters
+   */
   IntVector switchnr;
   /**
-   * \brief This is the vector of the upper bounds
+   * \brief This is the DoubleVector of the upper bounds
    */
   DoubleVector upperbound;
   /**
-   * \brief This is the vector of the lower bounds
+   * \brief This is the DoubleVector of the lower bounds
    */
   DoubleVector lowerbound;
   /**
-   * \brief This is the vector of the power applied when the bound has been exceeded
+   * \brief This is the DoubleVector of the power applied when the bound has been exceeded
    */
   DoubleVector powers;
   /**
-   * \brief This is the vector of the weights applied when the lower bound has been exceeded
+   * \brief This is the DoubleVector of the weights applied when the lower bound has been exceeded
    */
   DoubleVector lowerweights;
   /**
-   * \brief This is the vector of the weights applied when the upper bound has been exceeded
+   * \brief This is the DoubleVector of the weights applied when the upper bound has been exceeded
    */
   DoubleVector upperweights;
   /**
-   * \brief This is the vector of the penalty applied when the bound has been exceeded
+   * \brief This is the DoubleVector of the penalty applied when the bound has been exceeded
    */
   DoubleVector likelihoods;
   /**

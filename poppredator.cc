@@ -121,8 +121,8 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
   }
 }
 
-void PopPredator::ResizeObjects() {
-  Predator::ResizeObjects();
+void PopPredator::resizeObjects() {
+  Predator::resizeObjects();
   while (consumption.Nrow())
     consumption.DeleteRow(0);
   while (cons.Nrow())
@@ -135,7 +135,7 @@ void PopPredator::ResizeObjects() {
     Prednumber.DeleteRow(0);
 
   PopInfo nullpop;
-  //Add rows to matrices and initialize.
+  //Add rows to matrices and initialise
   int numareas = areas.Size();
   int numlengths = LgrpDiv->NoLengthGroups();
   cons.AddRows(numareas, NoPreys());

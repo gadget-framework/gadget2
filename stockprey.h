@@ -15,7 +15,7 @@ public:
   /**
    * \brief This is the StockPrey constructor
    * \param infile is the CommentStream to read the prey parameters from
-   * \param areas is the list of areas that the prey lives on
+   * \param areas is the IntVector of areas that the prey lives on
    * \param givenname is the name of the prey
    * \param minage is the minimum age of the prey
    * \param maxage is the maximum age of the prey

@@ -35,9 +35,9 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  keeper->SetString(this->Name());
+  keeper->setString(this->Name());
 
-  //Read the area data
+  //read the area data
   infile >> ws;
   if (infile.eof())
     handle.Eof();
@@ -58,7 +58,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
 
   this->LetLiveOnAreas(tmpareas);
 
-  //Read the stock age and length data
+  //read the stock age and length data
   int minage, maxage;
   double minlength, maxlength, dl;
   readWordAndVariable(infile, "minage", minage);
@@ -86,7 +86,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   for (i = 0; i < Alkeys.Size(); i++)
     Alkeys[i].setToZero();
 
-  //Read the length group division used in Grower and in Predator
+  //read the length group division used in Grower and in Predator
   DoubleVector grlengths;
   CharPtrVector grlenindex;
 
@@ -110,14 +110,14 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   if (!(isZero(LgrpDiv->maxLength() - GrowLgrpDiv->maxLength())))
     cerr << "Warning - maximum lengths don't match for the growth functions of " << this->Name() << endl;
 
-  //Read the growth function data
+  //read the growth function data
   readWordAndVariable(infile, "doesgrow", doesgrow);
   if (doesgrow)
     grower = new Grower(infile, LgrpDiv, GrowLgrpDiv, areas, TimeInfo, keeper, refweight, Area, grlenindex);
   else
     grower = 0;
 
-  //Read the prey data.
+  //read the prey data.
   readWordAndVariable(infile, "iseaten", iseaten);
   if (iseaten)
     prey = new MortPrey(infile, areas, this->Name(), minage, maxage, keeper, LgrpDiv);
@@ -130,12 +130,12 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     cannibalism = 0; //cannibalism is true only for stocks that are
                      //subject to cannibalism, ie immature stocks.
   if (cannibalism) {
-    cann = new Cannibalism(infile, prey->ReturnLengthGroupDiv(), TimeInfo, keeper);
-    cann_vec.resize(prey->ReturnLengthGroupDiv()->NoLengthGroups());
+    cann = new Cannibalism(infile, prey->returnLengthGroupDiv(), TimeInfo, keeper);
+    cann_vec.resize(prey->returnLengthGroupDiv()->NoLengthGroups());
   } else
     cann = 0;
 
-  //Read the predator data
+  //read the predator data
   readWordAndVariable(infile, "doeseat", doeseat);
   if (doeseat) { //must be a new predator type for multispecies purpose
     //Predator not allowed in single species case.
@@ -145,30 +145,30 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     predator = 0;
 
   if (iseaten && cann_vec.Size() == 0)
-    cann_vec.resize(prey->ReturnLengthGroupDiv()->NoLengthGroups(), 0);
+    cann_vec.resize(prey->returnLengthGroupDiv()->NoLengthGroups(), 0);
 
-  //Read the length dependant natural mortality data
+  //read the length dependant natural mortality data
   infile >> text;
   if (strcasecmp(text, "lennaturalm") == 0) {
     if (iseaten) //len_natm is normally added to total mortality in prey
-      len_natm = new LenNaturalM(infile, prey->ReturnLengthGroupDiv(), keeper);
+      len_natm = new LenNaturalM(infile, prey->returnLengthGroupDiv(), keeper);
     else {
       if (predator != 0)
-        len_natm = new LenNaturalM(infile, predator->ReturnLengthGroupDiv(), keeper);
+        len_natm = new LenNaturalM(infile, predator->returnLengthGroupDiv(), keeper);
       else
         len_natm = new LenNaturalM(infile, LgrpDiv, keeper);
     }
   } else
     handle.Unexpected("lennaturalm", text);
 
-  //Read the initial condition data
+  //read the initial condition data
   infile >> text;
   if (strcasecmp(text, "initialconditions") == 0)
     initial = new InitialCond(infile, areas, keeper, refweight, Area);
   else
     handle.Unexpected("initialconditions", text);
 
-  //Read the migration data
+  //read the migration data
   readWordAndVariable(infile, "doesmigrate", doesmigrate);
   if (doesmigrate) {
     readWordAndVariable(infile, "agedependentmigration", AgeDepMigration);
@@ -186,7 +186,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   } else
     migration = 0;
 
-  //Read the maturation data
+  //read the maturation data
   readWordAndVariable(infile, "doesmature", doesmature);
   if (doesmature) {
     readWordAndValue(infile, "maturityfunction", text);
@@ -198,15 +198,15 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     handle.Open(filename);
 
     if (strcasecmp(text, "continuous") == 0)
-      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 3);
+      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
     else if (strcasecmp(text, "fixedlength") == 0)
       maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv);
-    else if (strcasecmp(text, "ageandlength") == 0)
-      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
     else if (strcasecmp(text, "constant") == 0)
-      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
+      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
     else if (strcasecmp(text, "constantweight") == 0)
-      maturity = new MaturityE(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 6, refweight);
+      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 6, refweight);
+    else if (strcasecmp(text, "ageandlength") == 0)
+      handle.Message("Error in stock file - the ageandlength maturity function is no longer supported");
     else
       handle.Message("Error in stock file - unrecognised maturity", text);
 
@@ -221,7 +221,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     maturity = 0;
 
   /*JMB code removed from here - see RemovedCode.txt for details*/
-  //Read the movement data
+  //read the movement data
   readWordAndVariable(infile, "doesmove", doesmove);
   if (doesmove) {
     //transition handles the movements of the age group maxage:
@@ -230,7 +230,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   } else
     transition = 0;
 
-  //Read the renewal data
+  //read the renewal data
   readWordAndVariable(infile, "doesrenew", doesrenew);
   if (doesrenew) {
     readWordAndValue(infile, "renewaldatafile", filename);
@@ -247,7 +247,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   } else
     renewal = 0;
 
-  //Read the spawning data
+  //read the spawning data
   readWordAndVariable(infile, "doesspawn", doesspawn);
   if (doesspawn) {
     readWordAndValue(infile, "spawnfile", filename);
@@ -264,7 +264,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   } else
     spawner = 0;
 
-  //Read the filter data
+  //read the filter data
   readWordAndVariable(infile, "filter", filter);
 
   infile >> ws;
@@ -273,7 +273,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     handle.Unexpected("<end of file>", text);
   }
 
-  //Set the birthday for the stock
+  //set the birthday for the stock
   birthdate = TimeInfo->StepsInYear();
 
   //Finished reading from infile - resize objects and clean up
@@ -328,7 +328,7 @@ void LenStock::Reset(const TimeClass* const TimeInfo) {
   int i;
   if (TimeInfo->CurrentTime() == 1) {
     this->Clear();
-    initial->Initialize(Alkeys);
+    initial->Initialise(Alkeys);
     if (iseaten)
       prey->Reset();
     if (doesmature)
@@ -352,11 +352,11 @@ void LenStock::Reset(const TimeClass* const TimeInfo) {
     predator->Reset(TimeInfo);
 }
 
-Prey* LenStock::ReturnPrey() const {
+Prey* LenStock::returnPrey() const {
   return prey;
 }
 
-Predator* LenStock::ReturnPredator() const {
+Predator* LenStock::returnPredator() const {
   return predator;
 }
 
@@ -404,7 +404,7 @@ void LenStock::Print(ofstream& outfile) const {
   }
 }
 
-void LenStock::CalcEat(int area,
+void LenStock::calcEat(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   int i, nrofpredators;
@@ -421,7 +421,7 @@ void LenStock::CalcEat(int area,
       // add cannibalism mortality on this prey from each predator in turn
       cann_vec += cann->Mortality(Alkeys[AreaNr[area]],
         cannPredators[i]->Agelengthkeys(area), LgrpDiv,
-        cannPredators[i]->ReturnLengthGroupDiv(), TimeInfo, i, len_natm->NatMortality());
+        cannPredators[i]->returnLengthGroupDiv(), TimeInfo, i, len_natm->NatMortality());
     }
 
     for (i = 0; i < nrofpredators; i++) {
@@ -460,7 +460,7 @@ void LenStock::ReducePop(int area,
     predator->Multiply(Alkeys[inarea], len_natm->NatMortality());
 
   if (tagAlkeys.NrOfTagExp() > 0)
-    tagAlkeys[inarea].UpdateNumbers(Alkeys[AreaNr[area]]);
+    tagAlkeys[inarea].updateNumbers(Alkeys[AreaNr[area]]);
 }
 
 void LenStock::CalcNumbers(int area,
@@ -562,7 +562,7 @@ void LenStock::Grow(int area,
   }
   Alkeys[inarea].FilterN(filter); //mnaa
   if (tagAlkeys.NrOfTagExp() > 0)
-    tagAlkeys[inarea].UpdateNumbers(Alkeys[AreaNr[area]]);
+    tagAlkeys[inarea].updateNumbers(Alkeys[AreaNr[area]]);
 }
 
 void LenStock::calcForPrinting(int area, const TimeClass& time) {
@@ -606,19 +606,19 @@ void LenStock::SecondSpecialTransactions(int area,
 
   if (doesmature)
     if (maturity->IsMaturationStep(area, TimeInfo)) {
-      UpdateMatureStockWithTags(TimeInfo);
+      updateMatureStockWithTags(TimeInfo);
       maturity->Move(area, TimeInfo);
     }
 }
 
-void LenStock::SetStock(StockPtrVector& stockvec) {
+void LenStock::setStock(StockPtrVector& stockvec) {
   int i, j, found;
   int minage, maxage, tmpsize;
 
   if (doesmature)
-    maturity->SetStock(stockvec);
+    maturity->setStock(stockvec);
   if (doesmove)
-    transition->SetStock(stockvec);
+    transition->setStock(stockvec);
 
   if (iseaten && cannibalism) {
     ((MortPrey*)prey)->cannIsTrue(1);
@@ -650,7 +650,7 @@ void LenStock::SetStock(StockPtrVector& stockvec) {
       ((MortPrey*)prey)->setMinPredAge(minage);
       ((MortPrey*)prey)->setMaxPredAge(maxage);
 
-      BandMatrix tmp(0, prey->ReturnLengthGroupDiv()->NoLengthGroups(), minage, tmpsize, 0.0);
+      BandMatrix tmp(0, prey->returnLengthGroupDiv()->NoLengthGroups(), minage, tmpsize, 0.0);
       DoubleMatrix* stmp = new DoubleMatrix(areas.Size(), tmpsize, 0.0);
       ((MortPrey*)prey)->addConsMatrix(i, tmp);
       ((MortPrey*)prey)->addAgeGroupMatrix(stmp);
@@ -658,5 +658,5 @@ void LenStock::SetStock(StockPtrVector& stockvec) {
   }
 
   if (doesspawn)
-    spawner->SetStock(stockvec);
+    spawner->setStock(stockvec);
 }

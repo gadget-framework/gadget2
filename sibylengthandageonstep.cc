@@ -60,7 +60,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   for (i = 0; i < firsty; i++)
     infile >> dummy;
 
-  //Read the yearfactors we will keep.
+  //read the yearfactors we will keep.
   q_y.resize(lasty + 1 - firsty, keeper);
   infile >> q_y;
 
@@ -131,7 +131,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadSurveyData(subdata, areaindex, lenindex, ageindex, TimeInfo, name);
+  readSurveyData(subdata, areaindex, lenindex, ageindex, TimeInfo, name);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -152,7 +152,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   keeper->ClearLast();
 }
 
-void SIByLengthAndAgeOnStep::ReadSurveyData(CommentStream& infile, const CharPtrVector& areaindex,
+void SIByLengthAndAgeOnStep::readSurveyData(CommentStream& infile, const CharPtrVector& areaindex,
   const CharPtrVector& lenindex, const CharPtrVector& ageindex, const TimeClass* TimeInfo, const char* name) {
 
   int i;
@@ -237,7 +237,7 @@ SIByLengthAndAgeOnStep::~SIByLengthAndAgeOnStep() {
   delete LgrpDiv;
 }
 
-void SIByLengthAndAgeOnStep::SetStocks(const StockPtrVector& Stocks) {
+void SIByLengthAndAgeOnStep::setStocks(const StockPtrVector& Stocks) {
   int i, j;
 
   aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, Ages);
@@ -263,8 +263,8 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   FitType ftype = this->getFitType();
   OptType otype = this->getOptType();
   aggregator->MeanSum(); //aggregate mean N values in present time step
-  //Use that the AgeBandMatrixPtrVector aggregator->ReturnMeanSum returns only one element.
-  const AgeBandMatrix* alptr = &(aggregator->ReturnMeanSum()[0]);
+  //Use that the AgeBandMatrixPtrVector aggregator->returnMeanSum returns only one element.
+  const AgeBandMatrix* alptr = &(aggregator->returnMeanSum()[0]);
   this->calcIndex(alptr, ftype);
   switch(otype) {
     case PEARSONOPTTYPE:

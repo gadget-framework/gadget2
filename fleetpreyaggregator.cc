@@ -18,16 +18,16 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
 
   int i, j, k, l = 0;
   maxcol.resize(ages.Nrow(), 0);
-  mincol.resize(ages.Nrow(), 99999);
+  mincol.resize(ages.Nrow(), 9999);
   maxrow = 0;
-  minrow = ages.Nrow();
-  numlengths = LgrpDiv->NoLengthGroups();
+  minrow = 9999;
+  int numlengths = LgrpDiv->NoLengthGroups();
 
   for (i = 0; i < stocks.Size(); i++) {
-    checkLengthGroupIsFiner(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv(),
+    checkLengthGroupIsFiner(stocks[i]->returnPrey()->returnLengthGroupDiv(),
       LgrpDiv, stocks[i]->Name(), "fleet consumption");
     CI.resize(1);
-    CI[i] = new ConversionIndex(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv(), LgrpDiv);
+    CI[i] = new ConversionIndex(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);
 
     //For convinience, use ap as shorthand for &(stocks[i]->Agelengthkeys(0))
     //Changed 25-9 2001 and the memberfunction Areas added to livesinareas
@@ -72,21 +72,12 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
     }
   }
 
-  //Resize totalcatch using dummy variables tmppop and popmatrix. Take care
-  //to make totalcatch a full matrix, i.e. a rectangular matrix, with
-  //minage = 0 and minlength = 0.
+  //Resize total using dummy variables tmppop and popmatrix.
   PopInfo tmppop;
   tmppop.N = 1.0;
   tmppop.W = 1.0;
   PopInfoMatrix popmatrix(ages.Nrow(), numlengths, tmppop);
-  totalcatch.resize(areas.Nrow(), 0, 0, popmatrix);
-  totalpop.resize(areas.Nrow(), 0, 0, popmatrix);
-
-  //Resize catchratios using dummy variables tmpband. Take care
-  //to make catchratios a full matrix, i.e. a rectangular matrix, with
-  //minage = 0 and minlength = 0.
-  const BandMatrix tmpband(0, numlengths, 0, ages.Nrow(), 1);
-  catchratios.resize(areas.Nrow(), tmpband);
+  total.resize(areas.Nrow(), 0, 0, popmatrix);
 }
 
 FleetPreyAggregator::~FleetPreyAggregator() {
@@ -96,15 +87,15 @@ FleetPreyAggregator::~FleetPreyAggregator() {
 }
 
 void FleetPreyAggregator::Print(ofstream& outfile) const {
-  int a, i, j;
+  int i, j, k;
 
-  for (a = 0; a < areas.Nrow(); a++) {
-    outfile << "\tInternal areas " << a << endl;
-    for (j = 0; j < ages.Nrow(); j++) {
+  for (i = 0; i < total.Size(); i++) {
+    outfile << "\tInternal areas " << i << endl;
+    for (j = 0; j < total[i].Nrow(); j++) {
       outfile << TAB;
-      for (i = 0; i < numlengths; i++) {
+      for (k = 0; k < total[i].Maxlength(j); k++) {
         outfile.width(smallwidth);
-        outfile << totalcatch[a][j][i].N;
+        outfile << total[i][j][k].N;
         outfile << sep;
       }
       outfile << endl;
@@ -120,27 +111,23 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
   double fleetscale;
   PopInfo nullpop;
 
-  //Initialize totalcatch and totalpop to 0
-  for (i = 0; i < totalcatch.Size(); i++)
-    for (j = 0; j < totalcatch[i].Nrow(); j++)
-      for (k = 0; k < totalcatch[i].Maxlength(j); k++) {
-        totalcatch[i][j][k] = nullpop;
-        totalpop[i][j][k] = nullpop;
-        catchratios[i][j][k] = 0.0;
-      }
+  for (i = 0; i < total.Size(); i++)
+    for (j = 0; j < total[i].Nrow(); j++)
+      for (k = 0; k < total[i].Maxlength(j); k++)
+        total[i][j][k] = nullpop;
 
   //Sum over the appropriate fleets, stocks, areas, ages and length groups.
-  //The index aggrArea is for the dummy area in totalcatch.
-  //The index aggrAge is for the dummy age in totalcatch.
+  //The index aggrArea is for the dummy area in total.
+  //The index aggrAge is for the dummy age in total.
   for (f = 0; f < fleets.Size(); f++) {
-    LengthPredator* pred = fleets[f]->ReturnPredator();
+    LengthPredator* pred = fleets[f]->returnPredator();
     for (h = 0; h < stocks.Size(); h++) {
-      //AJ 06.06.00 Typecast Prey which is returned from ReturnPrey to (StockPrey*)
-      StockPrey* prey = (StockPrey*)stocks[h]->ReturnPrey();
+      //AJ 06.06.00 Typecast Prey which is returned from returnPrey to (StockPrey*)
+      StockPrey* prey = (StockPrey*)stocks[h]->returnPrey();
       for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
         for (j = 0; j < areas.Ncol(aggrArea); j++) {
           //All the areas in areas[aggrArea] will be aggregated to the
-          //area aggrArea in totalcatch.
+          //area aggrArea in total.
           area = areas[aggrArea][j];
           if (prey->IsInArea(area) && fleets[f]->IsInArea(area)) {
             fleetscale = fleets[f]->Amount(area, TimeInfo) * pred->Scaler(area);
@@ -161,8 +148,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
                         for (z = Ratio.Mincol(); z < Ratio.Maxcol(); z++)
                           Ratio[z] *= (prey->Ratio(area, z) > 1 ? 1.0 / prey->Ratio(area, z) : 1.0);
 
-                      PopinfoAdd(totalcatch[aggrArea][aggrAge], (*alptr)[age], *CI[h], fleetscale, Ratio);
-                      PopinfoAdd(totalpop[aggrArea][aggrAge], (*alptr)[age], *CI[h]);
+                      total[aggrArea][aggrAge].Add((*alptr)[age], *CI[h], fleetscale, Ratio);
                     }
                   }
                 }
@@ -173,13 +159,6 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
       }
     }
   }
-
-  //Set the "fishing mortalities"
-  for (i = 0; i < totalcatch.Size(); i++)
-    for (j = 0; j < totalcatch[i].Nrow(); j++)
-      for (k = 0; k < totalcatch[i].Maxlength(j); k++)
-        if (totalpop[i][j][k].N > 0)
-          catchratios[i][j][k] = totalcatch[i][j][k].N / totalpop[i][j][k].N;
 }
 
 void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo, int dummy) {
@@ -192,27 +171,23 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo, int dummy) {
   int aggrArea, aggrAge, area, age;
   PopInfo nullpop;
 
-  //Initialize totalcatch and totalpop to 0
-  for (i = 0; i < totalcatch.Size(); i++)
-    for (j = 0; j < totalcatch[i].Nrow(); j++)
-      for (k = 0; k < totalcatch[i].Maxlength(j); k++) {
-        totalcatch[i][j][k] = nullpop;
-        totalpop[i][j][k] = nullpop;
-        catchratios[i][j][k] = 0.0;
-      }
+  for (i = 0; i < total.Size(); i++)
+    for (j = 0; j < total[i].Nrow(); j++)
+      for (k = 0; k < total[i].Maxlength(j); k++)
+        total[i][j][k] = nullpop;
 
   //Sum over the appropriate fleets, stocks, areas, ages and length groups.
-  //The index aggrArea is for the dummy area in totalcatch.
-  //The index aggrAge is for the dummy age in totalcatch.
+  //The index aggrArea is for the dummy area in total.
+  //The index aggrAge is for the dummy age in total.
   for (f = 0; f < fleets.Size(); f++) {
-    LengthPredator* pred = fleets[f]->ReturnPredator();
+    LengthPredator* pred = fleets[f]->returnPredator();
     for (h = 0; h < stocks.Size(); h++) {
-      MortPrey* prey = (MortPrey*)stocks[h]->ReturnPrey();
+      MortPrey* prey = (MortPrey*)stocks[h]->returnPrey();
       for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
         for (j = 0; j < areas.Ncol(aggrArea); j++) {
 
           //All the areas in areas[aggrArea] will be aggregated to the
-          //area aggrArea in totalcatch.
+          //area aggrArea in total.
           area = areas[aggrArea][j];
           if (prey->IsInArea(area) && fleets[f]->IsInArea(area)) {
             for (i = 0; i < pred->NoPreys(); i++) {
@@ -224,10 +199,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo, int dummy) {
                     age = ages[aggrAge][k];
                     if ((alptr->Minage() <= age) && (age <= alptr->Maxage())) {
                       DoubleIndexVector Ratio = *suitptr;
-                      PopinfoAdd(totalcatch[aggrArea][aggrAge],
-                        (*alptr)[age], *CI[h], pred->getFlevel(area, TimeInfo), Ratio);
-                      PopinfoAdd(totalpop[aggrArea][aggrAge],
-                        (*alptr)[age], *CI[h]);
+                      total[aggrArea][aggrAge].Add((*alptr)[age], *CI[h], pred->getFlevel(area, TimeInfo), Ratio);
                     }
                   }
                 }
@@ -238,11 +210,4 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo, int dummy) {
       }
     }
   }
-
-  //Set the "fishing percentage"
-  for (i = 0; i < totalcatch.Size(); i++)
-    for (j = 0; j < totalcatch[i].Nrow(); j++)
-      for (k = 0; k < totalcatch[i].Maxlength(j); k++)
-        if (totalpop[i][j][k].N > 0)
-          catchratios[i][j][k] = totalcatch[i][j][k].N / totalpop[i][j][k].N;
 }

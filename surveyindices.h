@@ -11,7 +11,7 @@ public:
     const TimeClass* const TimeInfo, Keeper* const keeper, double w, const char* name);
   virtual ~SurveyIndices();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
-  void SetStocks(StockPtrVector& Stocks);
+  void setStocks(StockPtrVector& Stocks);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile);

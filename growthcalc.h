@@ -19,7 +19,7 @@ class GrowthCalcBase : protected LivesOnAreas {
 public:
   /**
    * \brief This is the default GrowthCalcBase constructor
-   * \param areas is the list of areas that the growth calculation can take place on
+   * \param areas is the IntVector of areas that the growth calculation can take place on
    */
   GrowthCalcBase(const IntVector& areas);
   /**
@@ -29,14 +29,15 @@ public:
   /**
    * \brief This is the function that calculates the growth
    * \param area is the area that the growth is being calculated on
-   * \param Lgrowth is the mean length increase for each length group of the stock
-   * \param Wgrowth is the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the current population of the stock
+   * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
+   * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
+   * \param GrEatNumber is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
-   * \param Fphi is the feeding level of the stock
-   * \param MaxCon is the maximum consumption of the stock
+   * \param Fphi is the DoubleVector of the feeding level of the stock
+   * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
+   * \note This will be overridden by the derived classes that actually calculate the growth
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
     const PopInfoVector& GrEatNumber, const AreaClass* const Area,
@@ -63,7 +64,7 @@ public:
   /**
    * \brief This is the default GrowthCalcA constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the list of areas that the growth calculation can take place on
+   * \param areas is the IntVector of areas that the growth calculation can take place on
    * \param keeper is the Keeper for the current model
    */
   GrowthCalcA(CommentStream& infile, const IntVector& areas, Keeper* const keeper);
@@ -74,13 +75,13 @@ public:
   /**
    * \brief This is the function that calculates the growth using the MULTSPEC function
    * \param area is the area that the growth is being calculated on
-   * \param Lgrowth is the mean length increase for each length group of the stock
-   * \param Wgrowth is the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the current population of the stock
+   * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
+   * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
+   * \param GrEatNumber is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
-   * \param Fphi is the feeding level of the stock
-   * \param MaxCon is the maximum consumption of the stock
+   * \param Fphi is the DoubleVector of the feeding level of the stock
+   * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
@@ -93,7 +94,7 @@ protected:
    */
   int NumberOfGrowthConstants;
   /**
-   * \brief This is the vector of growth parameters
+   * \brief This is the FormulaVector of growth parameters
    */
   FormulaVector growthPar;
 };
@@ -107,11 +108,11 @@ public:
   /**
    * \brief This is the default GrowthCalcB constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the list of areas that the growth calculation can take place on
+   * \param areas is the IntVector of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param Area is the AreaClass for the current model
-   * \param lenindex is the listing of the lengths used for the growth of the stock
+   * \param lenindex is the CharPtrVector of the lengths used for the growth of the stock
    */
   GrowthCalcB(CommentStream& infile, const IntVector& areas, const TimeClass* const TimeInfo,
     Keeper* const keeper, const AreaClass* const Area, const CharPtrVector& lenindex);
@@ -122,13 +123,13 @@ public:
   /**
    * \brief This is the function that calculates the growth read from file
    * \param area is the area that the growth is being calculated on
-   * \param Lgrowth is the mean length increase for each length group of the stock
-   * \param Wgrowth is the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the current population of the stock
+   * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
+   * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
+   * \param GrEatNumber is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
-   * \param Fphi is the feeding level of the stock
-   * \param MaxCon is the maximum consumption of the stock
+   * \param Fphi is the DoubleVector of the feeding level of the stock
+   * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
@@ -136,8 +137,14 @@ public:
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
     const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
 protected:
-  FormulaMatrixPtrVector lgrowth; //[area][timestep][length group]
-  FormulaMatrixPtrVector wgrowth; //[area][timestep][length group]
+  /**
+   * \brief This is the FormulaMatrixPtrVector of increase in length for each length group
+   */
+  FormulaMatrixPtrVector lgrowth;
+  /**
+   * \brief This is the FormulaMatrixPtrVector of increase in weight for each length group
+   */
+  FormulaMatrixPtrVector wgrowth;
 };
 
 /**
@@ -149,7 +156,7 @@ public:
   /**
    * \brief This is the default GrowthCalcC constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the list of areas that the growth calculation can take place on
+   * \param areas is the IntVector of areas that the growth calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision of the stock
    * \param keeper is the Keeper for the current model
    * \param refWeight is the name of the file containing the reference weight information for the stock
@@ -163,13 +170,13 @@ public:
   /**
    * \brief This is the function that calculates the growth using a weight-based Von Bertalanffy function
    * \param area is the area that the growth is being calculated on
-   * \param Lgrowth is the mean length increase for each length group of the stock
-   * \param Wgrowth is the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the current population of the stock
+   * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
+   * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
+   * \param GrEatNumber is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
-   * \param Fphi is the feeding level of the stock
-   * \param MaxCon is the maximum consumption of the stock
+   * \param Fphi is the DoubleVector of the feeding level of the stock
+   * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
@@ -196,15 +203,15 @@ protected:
    */
   int NumberOfLGrowthConstants;
   /**
-   * \brief This is the vector of weight growth parameters
+   * \brief This is the FormulaVector of weight growth parameters
    */
   FormulaVector wgrowthPar;
   /**
-   * \brief This is the vector of length growth parameters
+   * \brief This is the FormulaVector of length growth parameters
    */
   FormulaVector lgrowthPar;
   /**
-   * \brief This is the vector of the reference weight values
+   * \brief This is the DoubleVector of the reference weight values
    */
   DoubleVector Wref;
 };
@@ -218,7 +225,7 @@ public:
   /**
    * \brief This is the default GrowthCalcD constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the list of areas that the growth calculation can take place on
+   * \param areas is the IntVector of areas that the growth calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision of the stock
    * \param keeper is the Keeper for the current model
    * \param refWeight is the name of the file containing the reference weight information for the stock
@@ -232,13 +239,13 @@ public:
   /**
    * \brief This is the function that calculates the growth using the Jones growth function
    * \param area is the area that the growth is being calculated on
-   * \param Lgrowth is the mean length increase for each length group of the stock
-   * \param Wgrowth is the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the current population of the stock
+   * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
+   * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
+   * \param GrEatNumber is PopInfoVector of the the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
-   * \param Fphi is the feeding level of the stock
-   * \param MaxCon is the maximum consumption of the stock
+   * \param Fphi is the DoubleVector of the feeding level of the stock
+   * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
@@ -265,15 +272,15 @@ protected:
    */
   int NumberOfLGrowthConstants;
   /**
-   * \brief This is the vector of weight growth parameters
+   * \brief This is the FormulaVector of weight growth parameters
    */
   FormulaVector wgrowthPar;
   /**
-   * \brief This is the vector of length growth parameters
+   * \brief This is the FormulaVector of length growth parameters
    */
   FormulaVector lgrowthPar;
   /**
-   * \brief This is the vector of the reference weight values
+   * \brief This is the DoubleVector of the reference weight values
    */
   DoubleVector Wref;
 };
@@ -287,7 +294,7 @@ public:
   /**
    * \brief This is the default GrowthCalcE constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the list of areas that the growth calculation can take place on
+   * \param areas is the IntVector of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
    * \param LgrpDiv is the LengthGroupDivision of the stock
    * \param keeper is the Keeper for the current model
@@ -302,13 +309,13 @@ public:
   /**
    * \brief This is the function that calculates the growth using an extended Von Bertalanffy growth function
    * \param area is the area that the growth is being calculated on
-   * \param Lgrowth is the mean length increase for each length group of the stock
-   * \param Wgrowth is the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the current population of the stock
+   * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
+   * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
+   * \param GrEatNumber is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
-   * \param Fphi is the feeding level of the stock
-   * \param MaxCon is the maximum consumption of the stock
+   * \param Fphi is the DoubleVector of the feeding level of the stock
+   * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
@@ -335,27 +342,27 @@ protected:
    */
   int NumberOfLGrowthConstants;
   /**
-   * \brief This is the vector of weight growth parameters
+   * \brief This is the FormulaVector of weight growth parameters
    */
   FormulaVector wgrowthPar;
   /**
-   * \brief This is the vector of length growth parameters
+   * \brief This is the FormulaVector of length growth parameters
    */
   FormulaVector lgrowthPar;
   /**
-   * \brief This is the vector of the reference weight values
+   * \brief This is the DoubleVector of the reference weight values
    */
   DoubleVector Wref;
   /**
-   * \brief This is the vector of parameters for the effect of the year
+   * \brief This is the FormulaVector of parameters for the year effect
    */
   FormulaVector yearEffect;
   /**
-   * \brief This is the vector of parameters for the effect of the step
+   * \brief This is the FormulaVector of parameters for the step effect
    */
   FormulaVector stepEffect;
   /**
-   * \brief This is the vector of parameters for the effect of the area
+   * \brief This is the FormulaVector of parameters for the area effect
    */
   FormulaVector areaEffect;
 };
@@ -369,11 +376,11 @@ public:
   /**
    * \brief This is the default GrowthCalcF constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the list of areas that the growth calculation can take place on
+   * \param areas is the IntVector of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param Area is the AreaClass for the current model
-   * \param lenindex is the listing of the lengths used for the growth of the stock
+   * \param lenindex is the CharPtrVector of the lengths used for the growth of the stock
    */
   GrowthCalcF(CommentStream& infile, const IntVector& areas, const TimeClass* const TimeInfo,
     Keeper* const keeper, const AreaClass* const Area, const CharPtrVector& lenindex);
@@ -384,13 +391,13 @@ public:
   /**
    * \brief This is the function that calculates the growth using a length based Von Bertalanffy growth function
    * \param area is the area that the growth is being calculated on
-   * \param Lgrowth is the mean length increase for each length group of the stock
-   * \param Wgrowth is the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the current population of the stock
+   * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
+   * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
+   * \param GrEatNumber is the DPopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
-   * \param Fphi is the feeding level of the stock
-   * \param MaxCon is the maximum consumption of the stock
+   * \param Fphi is the DoubleVector of the feeding level of the stock
+   * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
@@ -403,11 +410,17 @@ protected:
    */
   int NumberOfGrowthConstants;
   /**
-   * \brief This is the vector of growth parameters
+   * \brief This is the FormulaVector of growth parameters
    */
   FormulaVector growthPar;
+  /**
+   * \brief This is the FormulaVector of growth rate parameters
+   */
   FormulaVector k_values;
-  FormulaMatrixPtrVector wgrowth; //[area][timestep][length group]
+  /**
+   * \brief This is the FormulaMatrixPtrVector of increase in weight for each length group
+   */
+  FormulaMatrixPtrVector wgrowth;
 };
 
 /**
@@ -419,11 +432,11 @@ public:
   /**
    * \brief This is the default GrowthCalcG constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the list of areas that the growth calculation can take place on
+   * \param areas is the IntVector of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param Area is the AreaClass for the current model
-   * \param lenindex is the listing of the lengths used for the growth of the stock
+   * \param lenindex is the CharPtrVector of the lengths used for the growth of the stock
    */
   GrowthCalcG(CommentStream& infile, const IntVector& areas, const TimeClass* const TimeInfo,
     Keeper* const keeper, const AreaClass* const Area, const CharPtrVector& lenindex);
@@ -434,13 +447,13 @@ public:
   /**
    * \brief This is the function that calculates the growth using a power growth function
    * \param area is the area that the growth is being calculated on
-   * \param Lgrowth is the mean length increase for each length group of the stock
-   * \param Wgrowth is the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the current population of the stock
+   * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
+   * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
+   * \param GrEatNumber is PopInfoVector of the the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
-   * \param Fphi is the feeding level of the stock
-   * \param MaxCon is the maximum consumption of the stock
+   * \param Fphi is the DoubleVector of the feeding level of the stock
+   * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
@@ -453,11 +466,17 @@ protected:
    */
   int NumberOfGrowthConstants;
   /**
-   * \brief This is the vector of growth parameters
+   * \brief This is the FormulaVector of growth parameters
    */
   FormulaVector growthPar;
+  /**
+   * \brief This is the FormulaVector of growth rate parameters
+   */
   FormulaVector k_values;
-  FormulaMatrixPtrVector wgrowth; //[area][timestep][length group]
+  /**
+   * \brief This is the FormulaMatrixPtrVector of increase in weight for each length group
+   */
+  FormulaMatrixPtrVector wgrowth;
 };
 
 /**
@@ -469,7 +488,7 @@ public:
   /**
    * \brief This is the default GrowthCalcH constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the list of areas that the growth calculation can take place on
+   * \param areas is the IntVector of areas that the growth calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision of the stock
    * \param keeper is the Keeper for the current model
    */
@@ -482,13 +501,13 @@ public:
   /**
    * \brief This is the function that calculates the growth using a simple length based Von Bertalanffy growth function
    * \param area is the area that the growth is being calculated on
-   * \param Lgrowth is the mean length increase for each length group of the stock
-   * \param Wgrowth is the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the current population of the stock
+   * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
+   * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
+   * \param GrEatNumber is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
-   * \param Fphi is the feeding level of the stock
-   * \param MaxCon is the maximum consumption of the stock
+   * \param Fphi is the DoubleVector of the feeding level of the stock
+   * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
@@ -511,7 +530,7 @@ protected:
    */
   int NumberOfGrowthConstants;
   /**
-   * \brief This is the vector of growth parameters
+   * \brief This is the FormulaVector of growth parameters
    */
   FormulaVector growthPar;
 };

@@ -45,7 +45,7 @@ private:
 public:
   InitialInputFile(const char* const filename);
   ~InitialInputFile();
-  void getReadValues(ParameterVector& sw, DoubleVector& val,
+  void getValues(ParameterVector& sw, DoubleVector& val,
     DoubleVector& low, DoubleVector& upp, IntVector& opt);
   void getVectorValue(DoubleVector& val);
   void getSwitchValue(ParameterVector& sw);

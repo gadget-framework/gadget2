@@ -20,7 +20,7 @@ public:
   virtual ~Predator();
   virtual void Eat(int area, double LengthOfStep, double Temperature, double Areasize,
     int CurrentSubstep, int NrOfSubsteps) = 0;
-  void SetPrey(PreyPtrVector& preyvec, Keeper* const keeper);
+  void setPrey(PreyPtrVector& preyvec, Keeper* const keeper);
   int doesEat(const char* preyname) const;
   virtual void AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) = 0;
   virtual void Print(ofstream& outfile) const;
@@ -28,7 +28,7 @@ public:
   virtual const DoubleVector& Consumption(int area) const = 0;
   virtual const DoubleVector& OverConsumption(int area) const = 0;
   virtual const PopInfoVector& NumberPriortoEating(int area, const char* preyname) const = 0;
-  virtual const LengthGroupDivision* ReturnLengthGroupDiv() const = 0;
+  virtual const LengthGroupDivision* returnLengthGroupDiv() const = 0;
   virtual int NoLengthGroups() const = 0;
   virtual double Length(int i) const = 0;
   virtual void Reset(const TimeClass* const TimeInfo);
@@ -40,10 +40,10 @@ public:
   };
 protected:
   virtual void DeleteParametersForPrey(int prey, Keeper* const keeper);
-  virtual void ResizeObjects();
-  void SetSuitability(const Suits* const S, Keeper* const keeper);
+  virtual void resizeObjects();
+  void setSuitability(const Suits* const S, Keeper* const keeper);
   const char* Preyname(int i) const { return Suitable->Preyname(i); };
-  int ReadSuitabilityMatrix(CommentStream& infile, const char* FinalString,
+  int readSuitabilityMatrix(CommentStream& infile, const char* FinalString,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   friend class Suits;
 private:

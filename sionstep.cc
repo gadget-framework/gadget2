@@ -85,7 +85,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadSIData(subdata, areaindex, index1, index2, TimeInfo);
+  readSIData(subdata, areaindex, index1, index2, TimeInfo);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -161,7 +161,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadSIData(subdata, areaindex, colindex, TimeInfo, name);
+  readSIData(subdata, areaindex, colindex, TimeInfo, name);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -174,7 +174,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   }
 }
 
-void SIOnStep::ReadSIData(CommentStream& infile, const CharPtrVector& areaindex,
+void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
   const CharPtrVector& colindex, const TimeClass* const TimeInfo, const char* name) {
 
   int i;
@@ -244,7 +244,7 @@ void SIOnStep::ReadSIData(CommentStream& infile, const CharPtrVector& areaindex,
     cerr << "Warning in surveyindex - found no data in the data file for " << name << endl;
 }
 
-void SIOnStep::ReadSIData(CommentStream& infile, const CharPtrVector& areaindex,
+void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
   const CharPtrVector& index1, const CharPtrVector& index2, const TimeClass* const TimeInfo) {
 
   int i;
@@ -466,7 +466,7 @@ double SIOnStep::Fit(const DoubleVector& stocksize, const DoubleVector& indices,
       intercepts[col] = LLR.intersection();
       sse[col] = LLR.SSE();
       if (LLR.Error())
-        this->SetError();
+        this->setError();
       return LLR.SSE();
       break;
     case LINEARFIT:
@@ -477,7 +477,7 @@ double SIOnStep::Fit(const DoubleVector& stocksize, const DoubleVector& indices,
       intercepts[col] = LR.intersection();
       sse[col] = LR.SSE();
       if (LR.Error())
-        this->SetError();
+        this->setError();
       return LR.SSE();
       break;
     default:

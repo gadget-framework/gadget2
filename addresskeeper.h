@@ -21,7 +21,7 @@ public:
       delete[] name;
     name = new char[strlen(str1) + 1];
     strcpy(name, str1);
-    delete[] str1;  //JMB - free memory from strstack->sendall()
+    delete[] str1;
   };
   void operator = (const AddressKeeper a) {
     if (name != 0)

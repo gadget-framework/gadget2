@@ -26,7 +26,7 @@ public:
    */
   AgeBandMatrixPtrMatrix(int sz, AgeBandMatrixPtrVector* initial);
   /**
-   * \brief This is the AgeBandMatrixPtrMatrix constructor that create a copy of an existing AgeBandMatrixPtrMatrix
+   * \brief This is the AgeBandMatrixPtrMatrix constructor that creates a copy of an existing AgeBandMatrixPtrMatrix
    * \param initial is the AgeBandMatrixPtrMatrix to copy
    */
   AgeBandMatrixPtrMatrix(const AgeBandMatrixPtrMatrix& initial);

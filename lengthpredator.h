@@ -12,7 +12,7 @@ public:
   /**
    * \brief This is the LengthPredator constructor
    * \param givenname is the name of the predator
-   * \param Areas is the list of areas that the predator lives on
+   * \param Areas is the IntVector of areas that the predator lives on
    * \param OtherLgrpDiv is the LengthGroupDivision that the predation will be applied to
    * \param GivenLgrpDiv is the LengthGroupDivision that will be used to calculate the predation
    * \param multi is a multiplicative constant that can be used to scale the biomass consumed
@@ -47,7 +47,7 @@ public:
   virtual double getFlevel(int area, const TimeClass* const TimeInfo) { return -1.0; };
 protected:
   /**
-   * \brief This is the vector of scalers used to split the total catch between the areas of the prey
+   * \brief This is the DoubleVector of scalers used to split the total catch between the areas of the prey
    */
   DoubleVector scaler;
   /**

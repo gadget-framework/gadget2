@@ -26,9 +26,9 @@ public:
   virtual ~PredatorOverPrinter();
   /**
    * \brief This will select the predators required for the printer class to print the requested information
-   * \param predatorvec is the PredatorPtrVector listing all the available predators
+   * \param predatorvec is the PredatorPtrVector of all the available predators
    */
-  void SetPredator(PredatorPtrVector& predatorvec);
+  void setPredator(PredatorPtrVector& predatorvec);
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model
@@ -36,19 +36,19 @@ public:
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
   /**
-   * \brief This matrix stores information about the aggregated areas used for printing
+   * \brief This is the IntMatrix used to store aggregated area information
    */
   IntMatrix areas;
   /**
-   * \brief This is the CharPtrVector of the names for the areas used for printing
+   * \brief This is the CharPtrVector of the names of the aggregated areas to print
    */
   CharPtrVector areaindex;
   /**
-   * \brief This is the CharPtrVector of the names for the lengths used for printing
+   * \brief This is the CharPtrVector of the names of the lengths to print
    */
   CharPtrVector lenindex;
   /**
-   * \brief This is the CharPtrVector of the names for the predator names used for printing
+   * \brief This is the CharPtrVector of the names of the predator names to print
    */
   CharPtrVector predatornames;
   /**

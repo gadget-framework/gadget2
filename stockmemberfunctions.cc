@@ -51,7 +51,7 @@ void Stock::CalcNumbers(int area, const AreaClass* const Area, const TimeClass* 
 }
 
 //-------------------------------------------------------------------
-void Stock::CalcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::calcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doeseat)
     predator->Eat(area, TimeInfo->LengthOfCurrent(), Area->Temperature(area, TimeInfo->CurrentTime()),
       Area->Size(area), TimeInfo->CurrentSubstep(), TimeInfo->NrOfSubsteps());
@@ -89,7 +89,7 @@ void Stock::ReducePop(int area, const AreaClass* const Area, const TimeClass* co
   delete PropSurviving;
 
   if (tagAlkeys.NrOfTagExp() > 0)
-    tagAlkeys[inarea].UpdateAndTagLoss(Alkeys[inarea], tagAlkeys.tagloss());
+    tagAlkeys[inarea].updateAndTagLoss(Alkeys[inarea], tagAlkeys.tagloss());
 }
 
 //-----------------------------------------------------------------------
@@ -148,7 +148,7 @@ void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass*
 
 void Stock::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doesmove) {
-    UpdateTransitionStockWithTags(TimeInfo);
+    updateTransitionStockWithTags(TimeInfo);
     transition->Move(area, TimeInfo);
   }
   if (doesspawn) {
@@ -161,31 +161,31 @@ void Stock::FirstSpecialTransactions(int area, const AreaClass* const Area, cons
     int inarea = AreaNr[area];
     spawner->Spawn(Alkeys[inarea], area, Area, TimeInfo);
     if (tagAlkeys.NrOfTagExp() > 0)
-      tagAlkeys[inarea].UpdateNumbers(Alkeys[inarea]);
+      tagAlkeys[inarea].updateNumbers(Alkeys[inarea]);
   }
 }
 
 void Stock::SecondSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doesmature)
     if (maturity->IsMaturationStep(area, TimeInfo)) {
-      UpdateMatureStockWithTags(TimeInfo);
+      updateMatureStockWithTags(TimeInfo);
       maturity->Move(area, TimeInfo);
     }
   if (doesrenew)
     this->Renewal(area, TimeInfo);
 }
 
-void Stock::UpdateMatureStockWithTags(const TimeClass* const TimeInfo) {
+void Stock::updateMatureStockWithTags(const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < matureTags.Size(); i++)
-    matureTags[i]->UpdateMatureStock(TimeInfo);
+    matureTags[i]->updateMatureStock(TimeInfo);
   matureTags.DeleteAll();
 }
 
-void Stock::UpdateTransitionStockWithTags(const TimeClass* const TimeInfo) {
+void Stock::updateTransitionStockWithTags(const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < transitionTags.Size(); i++)
-    transitionTags[i]->UpdateTransitionStock(TimeInfo);
+    transitionTags[i]->updateTransitionStock(TimeInfo);
   transitionTags.DeleteAll();
 }
 
@@ -194,7 +194,7 @@ void Stock::Renewal(int area, const TimeClass* const TimeInfo) {
     int inarea = AreaNr[area];
     renewal->AddRenewal(Alkeys[inarea], area, TimeInfo);
     if (tagAlkeys.NrOfTagExp() > 0)
-      tagAlkeys[inarea].UpdateRatio(Alkeys[inarea]);
+      tagAlkeys[inarea].updateRatio(Alkeys[inarea]);
   }
 }
 
@@ -203,7 +203,7 @@ void Stock::Renewal(int area, const TimeClass* const TimeInfo) {
 void Stock::Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
   int area, double ratio, int MinAge, int MaxAge) {
 
-  AgebandmAdd(Alkeys[AreaNr[area]], Addition, *CI, ratio, MinAge, MaxAge);
+  Alkeys[AreaNr[area]].Add(Addition, *CI, ratio, MinAge, MaxAge);
 }
 
 void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
@@ -212,7 +212,7 @@ void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const 
   if ((Addition.NrOfTagExp() > 0) && (Addition.NrOfTagExp() <= tagAlkeys.NrOfTagExp())) {
     int inarea = AreaNr[area];
     AgebandmratioAdd(tagAlkeys, inarea, Addition, AddArea, *CI, ratio, MinAge, MaxAge);
-    tagAlkeys[inarea].UpdateRatio(Alkeys[inarea]);
+    tagAlkeys[inarea].updateRatio(Alkeys[inarea]);
   }
 }
 
@@ -221,7 +221,7 @@ void Stock::RecalcMigration(const TimeClass* const TimeInfo) {
     migration->MigrationRecalc(TimeInfo->CurrentYear());
 }
 
-void Stock::UpdateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss) {
+void Stock::updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss) {
 
   tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->Name(), tagloss);
   allTags.resize(1, newtag);

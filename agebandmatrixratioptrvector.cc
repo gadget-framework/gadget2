@@ -202,6 +202,6 @@ void AgeBandMatrixRatioPtrVector::Migrate(const DoubleMatrix& MI, const AgeBandM
       }
     }
     for (i = 0; i < size; i++)
-      v[i]->UpdateRatio(Total[i]);
+      v[i]->updateRatio(Total[i]);
   }
 }

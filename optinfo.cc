@@ -20,19 +20,19 @@ extern int simann(int nvar, double point[], double endpoint[], double lb[],
 
 OptInfo::OptInfo() {
   nopt = EcoSystem->NoOptVariables();
-  // Initialize random number generator with system time [morten 02.02.26]
+  // Initialise random number generator with system time [morten 02.02.26]
   srand(time(NULL));
 }
 
 OptInfo::~OptInfo() {
 }
 
-int OptInfo::Read(CommentStream &infile, char* text) {
+int OptInfo::read(CommentStream &infile, char* text) {
   if (strcasecmp(text, "seed") == 0) {
-    // Use seed to initialize random number generator [morten 02.02.26]
+    // Use seed to initialise random number generator [morten 02.02.26]
     int seed;
     infile >> seed >> ws;
-    srand(seed); // Initialize random number generator with seed
+    srand(seed);
     return 1;
   } else if (strcasecmp(text, "") == 0) {
     // JMB - stripping whitespace hasnt worked so passed nothing!
@@ -53,7 +53,7 @@ OptInfoHooke::OptInfoHooke()
 OptInfoHooke::~OptInfoHooke() {
 }
 
-void OptInfoHooke::Read(CommentStream& infile) {
+void OptInfoHooke::read(CommentStream& infile) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
@@ -61,13 +61,13 @@ void OptInfoHooke::Read(CommentStream& infile) {
   while (!infile.eof()) {
     infile >> text >> ws;
 
-    if (!Read(infile, text))
+    if (!read(infile, text))
       cerr << "Warning in optinfo hooke - unknown option " << text << endl;
   }
 }
 
-int OptInfoHooke::Read(CommentStream& infile, char* text) {
-  if (OptInfo::Read(infile, text))
+int OptInfoHooke::read(CommentStream& infile, char* text) {
+  if (OptInfo::read(infile, text))
     return 1;
 
   if (strcasecmp(text, "rho") == 0) {
@@ -160,20 +160,20 @@ OptInfoSimann::OptInfoSimann()
 OptInfoSimann::~OptInfoSimann() {
 }
 
-void OptInfoSimann::Read(CommentStream& infile) {
+void OptInfoSimann::read(CommentStream& infile) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
   infile >> ws;
   while (!infile.eof()) {
     infile >> text >> ws;
-    if (!Read(infile, text))
+    if (!read(infile, text))
       cerr << "Warning in optinfo simann - unknown option " << text << endl;
   }
 }
 
-int OptInfoSimann::Read(CommentStream& infile, char* text) {
-  if (OptInfo::Read(infile, text))
+int OptInfoSimann::read(CommentStream& infile, char* text) {
+  if (OptInfo::read(infile, text))
     return 1;
 
   if (strcasecmp(text, "simanniter") == 0) {
@@ -262,20 +262,20 @@ OptInfoHookeAndSimann::OptInfoHookeAndSimann()
 OptInfoHookeAndSimann::~OptInfoHookeAndSimann() {
 }
 
-void OptInfoHookeAndSimann::Read(CommentStream& infile) {
+void OptInfoHookeAndSimann::read(CommentStream& infile) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
   infile >> ws;
   while (!infile.eof()) {
     infile >> text >> ws;
-    if (!Read(infile, text))
+    if (!read(infile, text))
       cerr << "Warning in optinfo simannandhooke - unknown option " << text << endl;
   }
 }
 
-int OptInfoHookeAndSimann::Read(CommentStream& infile, char* text) {
-  if (OptInfo::Read(infile, text))
+int OptInfoHookeAndSimann::read(CommentStream& infile, char* text) {
+  if (OptInfo::read(infile, text))
     return 1;
 
   if (strcasecmp(text, "rho") == 0) {

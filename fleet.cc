@@ -108,7 +108,7 @@ Fleet::~Fleet() {
   delete predator;
 }
 
-void Fleet::CalcEat(int area,
+void Fleet::calcEat(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   predator->Eat(area, TimeInfo->LengthOfCurrent()/TimeInfo->LengthOfYear(),
@@ -152,7 +152,7 @@ void Fleet::Print(ofstream& outfile) const {
   predator->Print(outfile);
 }
 
-LengthPredator* Fleet::ReturnPredator() const {
+LengthPredator* Fleet::returnPredator() const {
   return predator;
 }
 

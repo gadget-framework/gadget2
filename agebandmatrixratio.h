@@ -32,9 +32,9 @@ public:
     const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
   PopRatioIndexVector& operator [] (int age);
   const PopRatioIndexVector& operator [] (int age) const;
-  void UpdateRatio(const AgeBandMatrix& Total);
-  void UpdateNumbers(const AgeBandMatrix& Total);
-  void UpdateAndTagLoss(const AgeBandMatrix& Total, const DoubleVector& tagloss);
+  void updateRatio(const AgeBandMatrix& Total);
+  void updateNumbers(const AgeBandMatrix& Total);
+  void updateAndTagLoss(const AgeBandMatrix& Total, const DoubleVector& tagloss);
   int NrOfTagExp() const;
   void setToZero();
 protected:

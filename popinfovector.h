@@ -27,7 +27,7 @@ public:
    */
   PopInfoVector(int sz, PopInfo initial);
   /**
-   * \brief This is the PopInfoVector constructor that create a copy of an existing PopInfoVector
+   * \brief This is the PopInfoVector constructor that creates a copy of an existing PopInfoVector
    * \param initial is the PopInfoVector to copy
    */
   PopInfoVector(const PopInfoVector& initial);

@@ -3,26 +3,38 @@
 
 #include "ecosystem.h"
 
-/* InterruptInterface
- *
- * Purpose:  Comunication with user after interrupt.
- *
- * Usage: The reference to Ecosystem is needed for printing of data
- *   from Ecosystem. This class is a friend class of Ecosystem, for
- *   easy access to data in Ecosystem. Call the method printMenu()
- *   to start interaction with the user. This method will return 0
- *   if the user ends the session with 'q' (quit) and 1 if the
- *   user pressed 'c' (continue).
- *   see interruptinterface.cc for further information.
+/**
+ * \class InterruptInterface
+ * \brief This is the class used to communicate with the user after an interrupt
  */
 class InterruptInterface {
 public:
+  /**
+   * \brief This is the InterruptInterface constructor
+   * \param ecosystem is the Ecosystem that the model is currently simulating
+   */
   InterruptInterface(const Ecosystem& ecosystem);
+  /**
+   * \brief This is the default InterruptInterface destructor
+   */
   ~InterruptInterface() {};
+  /**
+   * \brief This is the function used to communicate with the user
+   * \return 0 to quit, else 1 to continue simulation
+   */
   int menu();
 private:
+  /**
+   * \brief This is the function used to print a menu to communicate with the user
+   */
   void printMenu();
+  /**
+   * \brief This is the function used to dump the current model to a file
+   */
   void dumpAll();
+  /**
+   * \brief This is the Ecosystem that the model is currently simulating
+   */
   const Ecosystem* eco;
 };
 

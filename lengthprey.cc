@@ -9,7 +9,7 @@ LengthPrey::LengthPrey(const DoubleVector& lengths,
 
 /* Sum number in Prey length groups. Prey length division is not
  * allowed to be finer than stock length division.
- * Also, initialize variables to 0. */
+ * Also, initialise variables to 0. */
 void LengthPrey::SumUsingPopInfo(const PopInfoVector& NumberInArea, int area, int CurrentSubstep) {
   int inarea = AreaNr[area];
   int i;

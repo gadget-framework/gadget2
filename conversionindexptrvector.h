@@ -26,7 +26,7 @@ public:
    */
   ConversionIndexPtrVector(int sz, ConversionIndex* initial);
   /**
-   * \brief This is the ConversionIndexPtrVector constructor that create a copy of an existing ConversionIndexPtrVector
+   * \brief This is the ConversionIndexPtrVector constructor that creates a copy of an existing ConversionIndexPtrVector
    * \param initial is the ConversionIndexPtrVector to copy
    */
   ConversionIndexPtrVector(const ConversionIndexPtrVector& initial);

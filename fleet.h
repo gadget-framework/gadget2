@@ -42,7 +42,7 @@ public:
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void CalcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void calcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will check the modelled consumption for an area in the model
    * \param area is an integer to denote the internal area of interest
@@ -132,7 +132,7 @@ public:
    * \brief This will return the fleet, as a predator type, for use in other functions
    * \return predator
    */
-  LengthPredator* ReturnPredator() const;
+  LengthPredator* returnPredator() const;
   /**
    * \brief This will return the amount that the fleet has over consumed, for a given area
    * \param area is an integer to denote the internal area of interest

@@ -13,11 +13,11 @@ LinearPredator::LinearPredator(CommentStream& infile, const char* givenname,
   keeper->AddString("predator");
   keeper->AddString(givenname);
 
-  ReadSuitabilityMatrix(infile, "amount", TimeInfo, keeper);
+  readSuitabilityMatrix(infile, "amount", TimeInfo, keeper);
 
   keeper->ClearLast();
   keeper->ClearLast();
-  //Predator::SetPrey will call ResizeObjects.
+  //Predator::setPrey will call resizeObjects.
 }
 
 void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,

@@ -12,7 +12,7 @@ NaturalM::NaturalM(CommentStream& infile, int minage, int maxage, const TimeClas
 
   ErrorHandler handle;
   keeper->AddString("naturalm");
-  mortality.Read(infile, TimeInfo, keeper);
+  mortality.read(infile, TimeInfo, keeper);
   this->Reset(TimeInfo);
   keeper->ClearLast();
 }

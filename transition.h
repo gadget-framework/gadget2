@@ -19,7 +19,7 @@ public:
   /**
    * \brief This is the Transition constructor
    * \param infile is the CommentStream to read the transition data from
-   * \param areas is the list of areas that the movements will be calculated on
+   * \param areas is the IntVector of areas that the movements will be calculated on
    * \param age is the maximum age for the (young) stock
    * \param lgrpdiv is the LengthGroupDivision for the stock
    * \param keeper is the Keeper for the current model
@@ -32,9 +32,9 @@ public:
   ~Transition();
   /**
    * \brief This will select the stocks required for the movement between stocks
-   * \param stockvec is the StockPtrVector listing all the available stocks
+   * \param stockvec is the StockPtrVector of all the available stocks
    */
-  void SetStock(StockPtrVector& stockvec);
+  void setStock(StockPtrVector& stockvec);
   /**
    * \brief This will store the part of the younger stock that will move into the older stocks
    * \param area is the area that the maturation is being calculated on
@@ -88,7 +88,7 @@ protected:
    */
   CharPtrVector TransitionStockNames;
   /**
-   * \brief This is the vector of the ratio of the young stock to move into each older stock
+   * \brief This is the DoubleVector of the ratio of the young stock to move into each older stock
    */
   DoubleVector Ratio;
   /**

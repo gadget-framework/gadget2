@@ -37,7 +37,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   if (Scale <= 0)
     handle.Message("Illegal value of scale - must be strictly positive");
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
@@ -80,7 +80,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!AAT.ReadFromFile(infile, TimeInfo))
+  if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in stockstdprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -116,7 +116,7 @@ StockStdPrinter::~StockStdPrinter() {
   delete[] stockname;
 }
 
-void StockStdPrinter::SetStock(StockPtrVector& stockvec) {
+void StockStdPrinter::setStock(StockPtrVector& stockvec) {
   CharPtrVector stocknames(1, stockname);
   //by using the vector stocknames, some of the code below can be used
   //even if the StockStdPrinter is used for aggregation of many stocks.
@@ -171,11 +171,11 @@ void StockStdPrinter::SetStock(StockPtrVector& stockvec) {
   for (i = 0; i < areamatrix.Nrow(); i++)
     areamatrix[i][0] = areas[i];
 
-  LgrpDiv = new LengthGroupDivision(*stocks[0]->ReturnLengthGroupDiv());
+  LgrpDiv = new LengthGroupDivision(*stocks[0]->returnLengthGroupDiv());
   aggregator = new StockAggregator(stocks, LgrpDiv, areamatrix, agematrix);
   //Here comes some code that is only useful when handling one stock.
   if (stocks[0]->IsEaten())
-    preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->ReturnPrey(), areas);
+    preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->returnPrey(), areas);
 }
 
 void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
@@ -188,7 +188,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
   for (a = 0; a < areas.Size(); a++) {
     if (preyinfo)
       preyinfo->Sum(TimeInfo, areas[a]);
-    const AgeBandMatrix& alk = aggregator->ReturnSum()[a];
+    const AgeBandMatrix& alk = aggregator->returnSum()[a];
 
     for (age = alk.Minage(); age <= alk.Maxage(); age++) {
       PopStatistics popstat(alk[age], LgrpDiv);

@@ -26,7 +26,7 @@ public:
    */
   AddressKeeperVector(int sz, AddressKeeper initial);
   /**
-   * \brief This is the AddressKeeperVector constructor that create a copy of an existing AddressKeeperVector
+   * \brief This is the AddressKeeperVector constructor that creates a copy of an existing AddressKeeperVector
    * \param initial is the AddressKeeperVector to copy
    */
   AddressKeeperVector(const AddressKeeperVector& initial);

@@ -10,11 +10,11 @@ public:
   BandMatrix(const BandMatrix& initial);
   BandMatrix() { minage = 0; nrow = 0; v = 0; };
   BandMatrix(const IntVector& minl, const IntVector& size,
-    int Minage = 0, double initial = 0);
+    int Minage = 0, double initial = 0.0);
   BandMatrix(const DoubleMatrix& initial, int Minage = 0, int minl = 0);
   BandMatrix(const DoubleIndexVector& initial, int age);
   BandMatrix(int minl, int lengthsize, int minage,
-    int nrow, double initial = 0);
+    int nrow, double initial = 0.0);
   ~BandMatrix();
   int Nrow() const { return nrow; };
   DoubleIndexVector& operator [] (int row);
@@ -117,7 +117,7 @@ public:
    */
   BandMatrixMatrix() { nrow = 0; v = 0; };
   /**
-   * \brief This is the BandMatrixVector constructor for a specified size
+   * \brief This is the BandMatrixMatrix constructor for a specified size
    * \param nrow is the size of the vector to be created
    * \param ncol is the length of each row to be created (ie. the size of the BandMatrixVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero

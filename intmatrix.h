@@ -42,7 +42,7 @@ public:
    */
   IntMatrix(int nrow, const IntVector& ncol, int initial);
   /**
-   * \brief This is the IntMatrix constructor that create a copy of an existing IntMatrix
+   * \brief This is the IntMatrix constructor that creates a copy of an existing IntMatrix
    * \param initial is the IntMatrix to copy
    */
   IntMatrix(const IntMatrix& initial);

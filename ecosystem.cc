@@ -25,12 +25,12 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   checkIfFailure(infile, filename);
   chdir(inputdir);
   //New parameter netrun, to prevent reading of printfiles. 07.04.00 AJ & mnaa
-  Readmain(commin, optimize, netrun, calclikelihood, inputdir, workingdir);
+  readMain(commin, optimize, netrun, calclikelihood, inputdir, workingdir);
   handle.Close();
   infile.close();
   infile.clear();
 
-  Initialize(calclikelihood);
+  Initialise(calclikelihood);
   basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size(), 0);
 
   int i;
@@ -134,11 +134,11 @@ double Ecosystem::SimulateAndUpdate(double* x, int n) {
     likelihood = verybig;
 
   if (PrintCounter1 == printinfo.getPrint1() && printinfo.Print()) {
-    this->PrintValues(printinfo.oFile(), printinfo.getPrecision());
+    this->PrintValues(printinfo.getOutputFile(), printinfo.getPrecision());
     PrintCounter1 = 0;
   }
   if (PrintCounter2 == printinfo.getPrint2() && printinfo.PrintinColumns()) {
-    this->PrintValuesinColumns(printinfo.coFile(), printinfo.getPrecision());
+    this->PrintValuesinColumns(printinfo.getColumnOutputFile(), printinfo.getPrecision());
     PrintCounter2 = 0;
   }
   funceval++;
@@ -146,19 +146,19 @@ double Ecosystem::SimulateAndUpdate(double* x, int n) {
 }
 
 void Ecosystem::PrintInitialInformation(const char* const filename) const {
-  keeper->WriteInitialInformation(filename, Likely);
+  keeper->writeInitialInformation(filename, Likely);
 }
 
 void Ecosystem::PrintInitialInformationinColumns(const char* const filename) const {
-  keeper->WriteInitialInformationInColumns(filename);
+  keeper->writeInitialInformationInColumns(filename);
 }
 
 void Ecosystem::PrintValues(const char* const filename, int prec) const {
-  keeper->WriteValues(filename, likelihood, Likely, prec);
+  keeper->writeValues(filename, likelihood, Likely, prec);
 }
 
 void Ecosystem::PrintValuesinColumns(const char* const filename, int prec) const {
-  keeper->WriteValuesInColumns(filename, likelihood, Likely, prec);
+  keeper->writeValuesInColumns(filename, likelihood, Likely, prec);
 }
 
 void Ecosystem::PrintParamsinColumns(const char* const filename, int prec) const {
@@ -166,11 +166,11 @@ void Ecosystem::PrintParamsinColumns(const char* const filename, int prec) const
   //JMB - print the final values to any output files specified
   //in case they have been missed by the -print1 or -print2 values
   if (printinfo.Print())
-    this->PrintValues(printinfo.oFile(), printinfo.getPrecision());
+    this->PrintValues(printinfo.getOutputFile(), printinfo.getPrecision());
   if (printinfo.PrintinColumns())
-    this->PrintValuesinColumns(printinfo.coFile(), printinfo.getPrecision());
+    this->PrintValuesinColumns(printinfo.getColumnOutputFile(), printinfo.getPrecision());
 
-  keeper->WriteParamsInColumns(filename, likelihood, Likely, prec);
+  keeper->writeParamsInColumns(filename, likelihood, Likely, prec);
 }
 
 void Ecosystem::Opt(IntVector& opt) const {
@@ -190,7 +190,7 @@ void Ecosystem::ScaleVariables() const {
 }
 
 void Ecosystem::PrintOptValues() const {
-  keeper->WriteOptValues(likelihood, Likely);
+  keeper->writeOptValues(likelihood, Likely);
 }
 
 void Ecosystem::ScaledValues(DoubleVector& val) const {

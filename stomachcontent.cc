@@ -113,7 +113,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
     epsilon = 10;
   }
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -129,7 +129,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
       if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
         handle.UndefinedArea(areas[i][j]);
 
-  //Read in the predators
+  //read in the predators
   i = 0;
   infile >> text >> ws;
   if (strcasecmp(text, "predators") != 0)
@@ -166,7 +166,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
   } else
     handle.Eof("predator lengths or ages");
 
-  //Read in the preys
+  //read in the preys
   readWordAndValue(infile, "preyaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -217,7 +217,7 @@ double SC::Likelihood(const TimeClass* const TimeInfo) {
   DoubleMatrix sum(areas.Nrow(), pred_size, 0.0);
   for (i = 0; i < preynames.Nrow(); i++) {
     Aggregate(i);
-    const BandMatrixVector* cons = &aggregator[i]->ReturnSum();
+    const BandMatrixVector* cons = &aggregator[i]->returnSum();
     for (a = 0; a < areas.Nrow(); a++) {
       for (k = 0; k < (*cons)[a].Nrow(); k++) {
         for (prey_l = 0; prey_l < (*cons)[a].Ncol(); prey_l++) {
@@ -253,11 +253,11 @@ SCNumbers::SCNumbers(CommentStream& infile, const AreaClass* const Area,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  //Read in stomach content from file
+  //read in stomach content from file
   datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadStomachNumberContent(subdata, TimeInfo);
+  readStomachNumberContent(subdata, TimeInfo);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -272,26 +272,26 @@ SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  //Read in stomach content amounts from file
+  //read in stomach content amounts from file
   datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadStomachAmountContent(subdata, TimeInfo);
+  readStomachAmountContent(subdata, TimeInfo);
   handle.Close();
   datafile.close();
   datafile.clear();
 
-  //Read in stomach content sample size from file
+  //read in stomach content sample size from file
   datafile.open(numfilename, ios::in);
   checkIfFailure(datafile, numfilename);
   handle.Open(numfilename);
-  ReadStomachSampleContent(subdata, TimeInfo);
+  readStomachSampleContent(subdata, TimeInfo);
   handle.Close();
   datafile.close();
   datafile.clear();
 }
 
-void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass* const TimeInfo) {
+void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
   ErrorHandler handle;
   int i;
@@ -397,7 +397,7 @@ void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass*
     modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
 }
 
-void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass* const TimeInfo) {
+void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
   ErrorHandler handle;
   int i;
@@ -507,7 +507,7 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
     modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
 }
 
-void SCAmounts::ReadStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo) {
+void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
   ErrorHandler handle;
   int i;
@@ -632,7 +632,7 @@ SC::~SC() {
     delete[] preyindex[i];
 }
 
-void SC::SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
+void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
   int i, j, k, found;
   PredatorPtrVector predators;
   aggregator = new PredatorAggregator*[preynames.Nrow()];
@@ -855,10 +855,10 @@ void SCAmounts::PrintLikelihoodHeader(ofstream& out) {
   out.flush();
 }
 
-void SCRatios::SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
+void SCRatios::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
   int i, j, k, l;
   double sum = 0.0;
-  SC::SetPredatorsAndPreys(Predators, Preys);
+  SC::setPredatorsAndPreys(Predators, Preys);
   //Scale each row such that it sums up to 1
   for (i = 0; i < stomachcontent.Nrow(); i++)
     for (j = 0; j < stomachcontent.Ncol(i); j++)
@@ -918,7 +918,7 @@ double SCNumbers::CalculateLikelihood(DoubleMatrixPtrVector& consumption, Double
       }
     }
   }
-  return MN.ReturnLogLikelihood();
+  return MN.returnLogLikelihood();
 }
 
 void SC::Reset() {

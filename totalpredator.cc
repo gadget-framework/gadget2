@@ -13,11 +13,11 @@ TotalPredator::TotalPredator(CommentStream& infile, const char* givenname,
   keeper->AddString("predator");
   keeper->AddString(givenname);
 
-  ReadSuitabilityMatrix(infile, "amount", TimeInfo, keeper);
+  readSuitabilityMatrix(infile, "amount", TimeInfo, keeper);
 
   keeper->ClearLast();
   keeper->ClearLast();
-  //Predator::SetPrey will call ResizeObjects.
+  //Predator::setPrey will call resizeObjects.
 }
 
 void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
@@ -101,7 +101,7 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
           Preys(prey)->AddConsumption(area, cons[inarea][prey][predl]);
 
-  //Set totalconsumption to the actual total consumption
+  //set totalconsumption to the actual total consumption
   for (prey = 0; prey < NoPreys(); prey++)
     if (Preys(prey)->IsInArea(area))
       if (Preys(prey)->Biomass(area) > verysmall)

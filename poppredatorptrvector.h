@@ -26,7 +26,7 @@ public:
    */
   PopPredatorPtrVector(int sz, PopPredator* initial);
   /**
-   * \brief This is the PopPredatorPtrVector constructor that create a copy of an existing PopPredatorPtrVector
+   * \brief This is the PopPredatorPtrVector constructor that creates a copy of an existing PopPredatorPtrVector
    * \param initial is the PopPredatorPtrVector to copy
    */
   PopPredatorPtrVector(const PopPredatorPtrVector& initial);

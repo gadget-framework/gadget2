@@ -57,7 +57,7 @@ LogCatches::LogCatches(CommentStream& infile,
   else
     handle.Message("Error in logcatch - unrecognised function", functionname);
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -67,7 +67,7 @@ LogCatches::LogCatches(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
-  //Read in age aggregation from file
+  //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -77,7 +77,7 @@ LogCatches::LogCatches(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
-  //Read in length aggregation from file
+  //read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -93,7 +93,7 @@ LogCatches::LogCatches(CommentStream& infile,
       if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
         handle.UndefinedArea(areas[i][j]);
 
-  //Read in the fleetnames
+  //read in the fleetnames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
@@ -106,7 +106,7 @@ LogCatches::LogCatches(CommentStream& infile,
     infile >> text >> ws;
   }
 
-  //Read in the stocknames
+  //read in the stocknames
   i = 0;
   if (!(strcasecmp(text, "stocknames") == 0))
     handle.Unexpected("stocknames", text);
@@ -124,7 +124,7 @@ LogCatches::LogCatches(CommentStream& infile,
   datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadLogCatchData(subdata, TimeInfo, numarea, numage, numlen);
+  readLogCatchData(subdata, TimeInfo, numarea, numage, numlen);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -134,7 +134,7 @@ LogCatches::LogCatches(CommentStream& infile,
     datafile.open(weightfilename, ios::in);
     checkIfFailure(datafile, weightfilename);
     handle.Open(weightfilename);
-    ReadLogWeightsData(subdata, TimeInfo, numlen);
+    readLogWeightsData(subdata, TimeInfo, numlen);
     handle.Close();
     datafile.close();
     datafile.clear();
@@ -156,7 +156,7 @@ LogCatches::LogCatches(CommentStream& infile,
   }
 }
 
-void LogCatches::ReadLogCatchData(CommentStream& infile,
+void LogCatches::readLogCatchData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea, int numage, int numlen) {
 
   ErrorHandler handle;
@@ -245,7 +245,7 @@ void LogCatches::ReadLogCatchData(CommentStream& infile,
   AAT.AddActions(Years, Steps, TimeInfo);
 }
 
-void LogCatches::ReadLogWeightsData(CommentStream& infile,
+void LogCatches::readLogWeightsData(CommentStream& infile,
   const TimeClass* TimeInfo, int numlen) {
 
   ErrorHandler handle;
@@ -398,7 +398,7 @@ void LogCatches::LikelihoodPrint(ofstream& outfile) {
   outfile.flush();
 }
 
-void LogCatches::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
+void LogCatches::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j;
   int found = 0;
   FleetPtrVector fleets;
@@ -425,7 +425,7 @@ void LogCatches::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->IsEaten()) {
-        if (strcasecmp(stocknames[i], Stocks[j]->ReturnPrey()->Name()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
           found = 1;
           stocks.resize(1, Stocks[j]);
         }
@@ -473,8 +473,7 @@ double LogCatches::LogLik(const TimeClass* const TimeInfo) {
   int min_age = 0;
   int max_age = 0;
 
-  //Get numbers from aggregator->AgeLengthDist()
-  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);

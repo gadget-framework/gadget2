@@ -34,7 +34,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
   strncpy(text, "", MaxStrLength);
   int i;
 
-  //Read in the stocknames
+  //read in the stocknames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "stocknames") == 0))
@@ -47,7 +47,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
     infile >> text >> ws;
   }
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
@@ -108,7 +108,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
     handle.Eof(text);
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!AAT.ReadFromFile(infile, TimeInfo))
+  if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in formatedpreyprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -120,7 +120,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
   }
 }
 
-void FormatedPreyPrinter::SetStock(StockPtrVector& stockvec) {
+void FormatedPreyPrinter::setStock(StockPtrVector& stockvec) {
   int i, j;
   int index = 0;
   for (i = 0; i < stockvec.Size(); i++)
@@ -157,11 +157,11 @@ void FormatedPreyPrinter::Print(const TimeClass* const TimeInfo) {
   for (i = 0; i<stocks.Size(); i++)
     if (stocks[i]->IsEaten()) {
       if (printzp)
-        printz(zoutfile, *(MortPrey*)stocks[i]->ReturnPrey(), *Area);
+        printz(zoutfile, *(MortPrey*)stocks[i]->returnPrey(), *Area);
       if (printnp)
-        printmean_n(noutfile, *(MortPrey*)stocks[i]->ReturnPrey(), *Area);
+        printmean_n(noutfile, *(MortPrey*)stocks[i]->returnPrey(), *Area);
       if (printcp)
-        printcannibalism(coutfile, *(MortPrey*)stocks[i]->ReturnPrey(), *Area);
+        printcannibalism(coutfile, *(MortPrey*)stocks[i]->returnPrey(), *Area);
     }
 
   if (printzp)

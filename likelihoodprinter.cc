@@ -73,7 +73,7 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile,
   }
 }
 
-void LikelihoodPrinter::SetLikely(LikelihoodPtrVector& likevec) {
+void LikelihoodPrinter::setLikely(LikelihoodPtrVector& likevec) {
   int i;
   for (i = 0; i < likevec.Size(); i++) {
     if (likevec[i]->Type() == CATCHDISTRIBUTIONLIKELIHOOD)
@@ -118,7 +118,7 @@ void LikelihoodPrinter::SetLikely(LikelihoodPtrVector& likevec) {
  *
  *  Usage:  Print(TimeInfo)
  *
- *  Pre:  SetStock has been called
+ *  Pre:  setStock has been called
  */
 void LikelihoodPrinter::Print(const TimeClass* const TimeInfo) {
   int i;

@@ -26,10 +26,10 @@ public:
   virtual ~PredatorPrinter();
   /**
    * \brief This will select the predators and preys required for the printer class to print the requested information
-   * \param predatorvec is the PredatorPtrVector listing all the available predators
-   * \param preyvec is the PreyPtrVector listing all the available preys
+   * \param predatorvec is the PredatorPtrVector of all the available predators
+   * \param preyvec is the PreyPtrVector of all the available preys
    */
-  virtual void SetPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVector& preyvec);
+  virtual void setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVector& preyvec);
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model
@@ -37,27 +37,27 @@ public:
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
   /**
-   * \brief This matrix stores information about the aggregated areas used for printing
+   * \brief This is the IntMatrix used to store aggregated area information
    */
   IntMatrix areas;
   /**
-   * \brief This is the CharPtrVector of the names for the areas used for printing
+   * \brief This is the CharPtrVector of the names of the aggregated areas to print
    */
   CharPtrVector areaindex;
   /**
-   * \brief This is the CharPtrVector of the names for the predator lengths used for printing
+   * \brief This is the CharPtrVector of the names of the predator lengths to print
    */
   CharPtrVector predlenindex;
   /**
-   * \brief This is the CharPtrVector of the names for the prey lengths used for printing
+   * \brief This is the CharPtrVector of the names of the prey lengths to print
    */
   CharPtrVector preylenindex;
   /**
-   * \brief This is the CharPtrVector of the names for the predator names used for printing
+   * \brief This is the CharPtrVector of the names of the predator names to print
    */
   CharPtrVector predatornames;
   /**
-   * \brief This is the CharPtrVector of the names for the prey names used for printing
+   * \brief This is the CharPtrVector of the names of the prey names to print
    */
   CharPtrVector preynames;
   /**

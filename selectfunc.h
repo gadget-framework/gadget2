@@ -30,9 +30,28 @@ public:
    * \return name
    */
   const char* getName();
+  /**
+   * \brief This function will return the value of the selection function parameters
+   * \return v, a TimeVariableVector of the parameters
+   */
   const TimeVariableVector& getConstants() const;
+  /**
+   * \brief This function will read the value of the selection function parameters from file
+   * \param infile is the CommentStream to read the parameters from
+   * \param TimeInfo is the TimeClass for the current model
+   * \param keeper is the Keeper for the current model
+   */
   void readConstants(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
+  /**
+   * \brief This function will update the selection function parameters
+   * \param TimeInfo is the TimeClass for the current model
+   */
   void updateConstants(const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will check to see if the selection function parameters have changed
+   * \param TimeInfo is the TimeClass for the current model
+   * \return 1 if the parameters have changed, 0 otherwise
+   */
   int constantsHaveChanged(const TimeClass* const TimeInfo);
   /**
    * \brief This will return the selection level that has been calculated
@@ -51,7 +70,7 @@ protected:
    */
   char* name;
   /**
-   * \brief This is the vector of the selection function constants
+   * \brief This is the TimeVariableVector of the selection function constants
    */
   TimeVariableVector coeff;
 };
@@ -63,7 +82,7 @@ protected:
 class ConstSelectFunc : public SelectFunc {
 public:
   /**
-   * \brief This is the default ConstSelectFunc constructor
+   * \brief This is the ConstSelectFunc constructor
    */
   ConstSelectFunc();
   /**
@@ -85,7 +104,7 @@ public:
 class ExpSelectFunc : public SelectFunc {
 public:
   /**
-   * \brief This is the default ExpSelectFunc constructor
+   * \brief This is the ExpSelectFunc constructor
    */
   ExpSelectFunc();
   /**
@@ -107,7 +126,7 @@ public:
 class StraightSelectFunc : public SelectFunc {
 public:
   /**
-   * \brief This is the default StraightSelectFunc constructor
+   * \brief This is the StraightSelectFunc constructor
    */
   StraightSelectFunc();
   /**

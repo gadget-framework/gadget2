@@ -38,7 +38,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   else
     handle.Message("Error in recaptures - unrecognised function", functionname);
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -54,7 +54,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
       if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
         handle.UndefinedArea(areas[i][j]);
 
-  //Read in length aggregation from file
+  //read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -65,7 +65,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   datafile.clear();
   lgrpdiv = new LengthGroupDivision(lengths);
 
-  //Read in the fleetnames
+  //read in the fleetnames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
@@ -83,7 +83,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadRecaptureData(subdata, TimeInfo);
+  readRecaptureData(subdata, TimeInfo);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -104,7 +104,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   }
 }
 
-void Recaptures::ReadRecaptureData(CommentStream& infile, const TimeClass* const TimeInfo) {
+void Recaptures::readRecaptureData(CommentStream& infile, const TimeClass* const TimeInfo) {
 
   ErrorHandler handle;
   int i, j, k;
@@ -222,7 +222,7 @@ void Recaptures::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
 }
 
-void Recaptures::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
+void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, k, l, found;
   FleetPtrVector fleets;
   StockPtrVector stocks;
@@ -253,7 +253,7 @@ void Recaptures::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       found = 0;
       for (j = 0; j < Stocks.Size(); j++) {
         if (Stocks[j]->IsEaten()) {
-          if (strcasecmp(stocknames->operator[](i), Stocks[j]->ReturnPrey()->Name()) == 0) {
+          if (strcasecmp(stocknames->operator[](i), Stocks[j]->returnPrey()->Name()) == 0) {
             found = 1;
             stocks.resize(1, Stocks[j]);
           }
@@ -316,7 +316,7 @@ double Recaptures::LikPoisson(const TimeClass* const TimeInfo) {
   for (t = 0; t < tagvec.Size(); t++) {
     if (tagvec[t]->IsWithinPeriod(year, step)) {
       aggregator[t]->Sum(TimeInfo);
-      const AgeBandMatrixPtrVector& alptr = aggregator[t]->AgeLengthDist();
+      const AgeBandMatrixPtrVector& alptr = aggregator[t]->returnSum();
 
       for (i = 0; i < alptr.Size(); i++) {
         for (len = 0; len < numlen; len++) {

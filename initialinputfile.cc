@@ -10,8 +10,8 @@ int InitialInputFile::reachedEndOfFile() {
   return infile.eof();
 }
 
-void InitialInputFile::getReadValues(ParameterVector& sw,
-  DoubleVector& val, DoubleVector& low, DoubleVector& upp, IntVector& opt) {
+void InitialInputFile::getValues(ParameterVector& sw, DoubleVector& val,
+  DoubleVector& low, DoubleVector& upp, IntVector& opt) {
 
   sw = switches;
   val = values;
@@ -34,7 +34,7 @@ void InitialInputFile::getSwitchValue(ParameterVector& sw) {
 
 InitialInputFile::InitialInputFile(const char* const filename) : header(0) {
   tmpinfile.open(filename, ios::in);
-  infile.SetStream(tmpinfile);
+  infile.setStream(tmpinfile);
   if (infile.fail()) {
     cerr << "Error in initialinput - failed to open " << filename << endl;
     exit(EXIT_FAILURE);

@@ -40,7 +40,6 @@ public:
    * \note This will free all the memory allocated to all the elements of the vector
    */
   ~FormulaMatrix();
-  FormulaMatrix& operator = (const FormulaMatrix& formulaM);
   /**
    * \brief This will return the number of columns in row i of the vector
    * \param i is the row of the vector to have the number of columns counted
@@ -79,7 +78,12 @@ public:
    * \param formula is the value that will be entered for the new entries
    */
   void AddRows(int add, int length, Formula formula);
+  /**
+   * \brief This function will inform Keeper of the values of the stored Formula
+   * \param keeper is the Keeper for the current model
+   */
   void Inform(Keeper* keeper);
+  FormulaMatrix& operator = (const FormulaMatrix& formulaM);
   friend CommentStream& operator >> (CommentStream& infile, FormulaMatrix& Fmatrix);
 protected:
   /**

@@ -13,7 +13,7 @@ StochasticData::StochasticData(const char* const filename) {
     readInfo->getVectorValue(values);
 
   } else
-    readInfo->getReadValues(switches, values, lowerbound, upperbound, optimize);
+    readInfo->getValues(switches, values, lowerbound, upperbound, optimize);
 
   if (this->SwitchesGiven()) {
     if (switches.Size() != values.Size()) {
@@ -34,7 +34,7 @@ StochasticData::StochasticData(int netrun) {
       GETDATA = 0;
       dataFromMaster = NULL;
       numberOfParam = 0;
-      this->ReadFromNetwork();
+      this->readFromNetwork();
     #endif
   }
 }
@@ -59,7 +59,7 @@ StochasticData::~StochasticData() {
   }
 }
 
-void StochasticData::ReadDataFromNextLine() {
+void StochasticData::readDataFromNextLine() {
   readInfo->readVectorFromLine();
   values.Reset();
   readInfo->getVectorValue(values);
@@ -82,7 +82,7 @@ int StochasticData::DataFromFile() {
 }
 
 #ifdef GADGET_NETWORK
-void StochasticData::ReadFromNetwork() {
+void StochasticData::readFromNetwork() {
   int i, check;
 
   //Receive first data from master
@@ -175,7 +175,7 @@ void StochasticData::ReadFromNetwork() {
   }
 }
 
-void StochasticData::ReadNextLineFromNet() {
+void StochasticData::readNextLineFromNet() {
   int i;
   GETDATA = slave->receiveFromMaster();
   if (GETDATA == 1) {

@@ -109,7 +109,7 @@ void MainInfo::CloseOptinfofile() {
   OptinfoFile.clear();
 }
 
-void MainInfo::Read(int aNumber, char* const aVector[]) {
+void MainInfo::read(int aNumber, char* const aVector[]) {
   int k, len;
   if (aNumber > 1) {
     k = 1;
@@ -140,7 +140,7 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         infile.open(aVector[k], ios::in);
         if (infile.fail())
           showCorrectUsage(aVector[k]);
-        this->Read(incomment);
+        this->read(incomment);
         infile.close();
         infile.clear();
 
@@ -148,7 +148,7 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
         k++;
-        setInitialCommentFilename(aVector[k]);
+        setInitialParamFilename(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-o") == 0) {
         if (k == aNumber - 1)
@@ -250,7 +250,7 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
   }
 }
 
-void MainInfo::Read(CommentStream& infile) {
+void MainInfo::read(CommentStream& infile) {
   int dummy = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -332,7 +332,7 @@ void MainInfo::setPrintLikelihoodFilename(char* filename) {
   PrintLikelihoodInfo = 1;
 }
 
-void MainInfo::setInitialCommentFilename(char* filename) {
+void MainInfo::setInitialParamFilename(char* filename) {
   if (InitialCommentFilename != NULL) {
     delete[] InitialCommentFilename;
     InitialCommentFilename = NULL;

@@ -5,7 +5,7 @@
 ActionAtTimes::ActionAtTimes() : EveryStep(0) {
 }
 
-int ActionAtTimes::ReadFromFile(CommentStream& infile, const TimeClass* const TimeInfo) {
+int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const TimeInfo) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 

@@ -169,7 +169,7 @@
 /*    nacc - The number of accepted function evaluations. (INT)             */
 /*    nfcnev - The total number of function evaluations. In a minor point,  */
 /*             note that the first evaluation is not used in the core of    */
-/*             the algorithm; it simply initializes the algorithm (INT)     */
+/*             the algorithm; it simply initialises the algorithm (INT)     */
 /*    nobds - The total number of trial function evaluations that           */
 /*            would have been out of bounds of LB and UB. Note that         */
 /*            a trial point is randomly selected between LB and UB. (INT)   */
@@ -181,7 +181,7 @@
 /* global ecosystem used to store whether the model converged */
 extern Ecosystem* EcoSystem;
 
-/* global variable, defined and initialized in gadget.cc and not modified here */
+/* global variable, defined and initialised in gadget.cc and not modified here */
 extern int FuncEval;
 
 //This function replaces exp to give an answer in the range 0.0 to 1.0
@@ -225,7 +225,7 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
   int nacp[NUM_VARS];   //Number of accepted tries for each parameter
   int quit = 0;         //Used to check the exit criteria
 
-  //Set initial values
+  //set initial values
   int nacc = 0;         //The number of accepted function evaluations
   int nrej = 0;         //The number of rejected function evaluations
   int naccmet = 0;      //The number of accepted function evaluations according to the metropolis condition

@@ -26,7 +26,7 @@ public:
    */
   LikelihoodPtrVector(int sz, Likelihood* initial);
   /**
-   * \brief This is the LikelihoodPtrVector constructor that create a copy of an existing LikelihoodPtrVector
+   * \brief This is the LikelihoodPtrVector constructor that creates a copy of an existing LikelihoodPtrVector
    * \param initial is the LikelihoodPtrVector to copy
    */
   LikelihoodPtrVector(const LikelihoodPtrVector& initial);

@@ -37,7 +37,7 @@ public:
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void CalcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) = 0;
+  virtual void calcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) = 0;
   /**
    * \brief This function will check the modelled consumption for an area in the model
    * \param area is an integer to denote the internal area of interest

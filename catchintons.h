@@ -16,9 +16,9 @@ public:
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile);
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
-  void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
+  void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
-  void ReadCatchInTonsData(CommentStream&, const TimeClass*, int);
+  void readCatchInTonsData(CommentStream&, const TimeClass*, int);
   double SumOfSquares(double obs, double mod);
   CharPtrVector fleetnames;
   CharPtrVector stocknames;

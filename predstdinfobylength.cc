@@ -12,21 +12,21 @@ PredStdInfoByLength::PredStdInfoByLength(const PopPredator* pred, const Prey* pR
   : LivesOnAreas(Areas), preyinfo(new PreyStdInfoByLength(pRey, Areas)),
   predator(pred), prey(pRey) {
 
-  this->AdjustObjects();
+  this->InitialiseObjects();
 }
 
 PredStdInfoByLength::PredStdInfoByLength(const PopPredator* pred, const StockPrey* pRey, const IntVector& Areas)
   : LivesOnAreas(Areas), preyinfo(new StockPreyStdInfoByLength(pRey, Areas)),
   predator(pred), prey(pRey) {
 
-  this->AdjustObjects();
+  this->InitialiseObjects();
 }
 
 PredStdInfoByLength::~PredStdInfoByLength() {
   delete preyinfo;
 }
 
-void PredStdInfoByLength::AdjustObjects() {
+void PredStdInfoByLength::InitialiseObjects() {
   while (MortbyLength.Size() > 0) {
     MortbyLength.Delete(0);
     NconbyLength.Delete(0);
@@ -43,8 +43,8 @@ void PredStdInfoByLength::AdjustObjects() {
   NconbyLength.resize(areas.Size(), bm);
   BconbyLength.resize(areas.Size(), bm);
 
-  PredLgrpDiv = predator->ReturnLengthGroupDiv();
-  PreyLgrpDiv = prey->ReturnLengthGroupDiv();
+  PredLgrpDiv = predator->returnLengthGroupDiv();
+  PreyLgrpDiv = prey->returnLengthGroupDiv();
 }
 
 void PredStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {

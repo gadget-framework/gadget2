@@ -26,7 +26,7 @@ public:
    */
   BaseClassPtrVector(int sz, BaseClass* initial);
   /**
-   * \brief This is the BaseClassPtrVector constructor that create a copy of an existing AgeBandMatrixPtrVector
+   * \brief This is the BaseClassPtrVector constructor that creates a copy of an existing AgeBandMatrixPtrVector
    * \param initial is the BaseClassPtrVector to copy
    */
   BaseClassPtrVector(const BaseClassPtrVector& initial);

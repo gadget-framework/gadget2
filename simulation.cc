@@ -21,7 +21,7 @@ void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {
   //Calculate consumption and Growth;
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
-      basevec[i]->CalcEat(area, Area, TimeInfo);  //Calculate consumption
+      basevec[i]->calcEat(area, Area, TimeInfo);  //Calculate consumption
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
       basevec[i]->CheckEat(area, Area, TimeInfo);   //Check consumption
@@ -49,7 +49,7 @@ void Ecosystem::GrowthAndSpecialTransactions(int area) {
       basevec[i]->SecondSpecialTransactions(area, Area, TimeInfo);
 }
 
-void Ecosystem::UpdateOneTimestepOneArea(int area) {
+void Ecosystem::updateOneTimestepOneArea(int area) {
   //Age related update and movements between stocks.
   int i;
   for (i = 0; i < basevec.Size(); i++)
@@ -63,7 +63,7 @@ void Ecosystem::UpdateOneTimestepOneArea(int area) {
       basevec[i]->ThirdUpdate(area, Area, TimeInfo);
 }
 
-void Ecosystem::SimulateOneTimestep(int print) {
+void Ecosystem::SimulateOneTimestep() {
   int i;
   while (TimeInfo->CurrentSubstep() <=  TimeInfo->NrOfSubsteps()) {
     for (i = 0; i < basevec.Size(); i++)
@@ -75,13 +75,6 @@ void Ecosystem::SimulateOneTimestep(int print) {
 
   for (i = 0; i < Area->NoAreas(); i++)
     GrowthAndSpecialTransactions(i);
-
-  if (print)
-    for (i = 0; i < printvec.Size(); i++)
-      printvec[i]->Print(TimeInfo);
-
-  for (i = 0; i < Area->NoAreas(); i++)
-    UpdateOneTimestepOneArea(i);
 }
 
 //Returns 1 when success, 0 when failure.
@@ -110,20 +103,26 @@ int Ecosystem::Simulate(int Optimize, int print) {
         basevec[j]->Reset(TimeInfo);
 
     //Add in any new tagging experiments
-    tagvec.UpdateTags(TimeInfo);
+    tagvec.updateTags(TimeInfo);
 
     if (TimeInfo->CurrentStep() == 1) //Migrations recalculated once per year.
       for (j = 0; j < basevec.Size(); j++)
         basevec[j]->RecalcMigration(TimeInfo);
 
-    SimulateOneTimestep(print);
+    SimulateOneTimestep();
     if (Optimize)
       for (j = 0; j < Likely.Size(); j++)
         Likely[j]->AddToLikelihood(TimeInfo);
 
-    if (print)
+    if (print) {
+      for (j = 0; j < printvec.Size(); j++)
+        printvec[j]->Print(TimeInfo);
       for (j = 0; j < likprintvec.Size(); j++)
         likprintvec[j]->Print(TimeInfo);
+    }
+
+    for (j = 0; j < Area->NoAreas(); j++)
+      updateOneTimestepOneArea(j);
 
     #ifdef INTERRUPT_HANDLER
       if (interrupted) {
@@ -148,7 +147,7 @@ int Ecosystem::Simulate(int Optimize, int print) {
   }
 
   for (i = 0; i < Likely.Size(); i++)
-    likelihood += Likely[i]->ReturnLikelihood();
+    likelihood += Likely[i]->returnLikelihood();
 
   return 1;
 }

@@ -7,55 +7,53 @@
 #include "popinfovector.h"
 #include "gadget.h"
 
-//Function that adds one AgeBandMatrix to another.
-//Pre: At least that CI contains the mapping from Addition to Alkeys.
-void AgebandmAdd(AgeBandMatrix& Alkeys, const AgeBandMatrix& Addition,
-  const ConversionIndex &CI, double ratio, int minage, int maxage) {
+void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
+  const ConversionIndex &CI, double ratio, int minaddage, int maxaddage) {
 
   PopInfo pop;
-  minage = max(Alkeys.Minage(), Addition.Minage(), minage);
-  maxage = min(Alkeys.Maxage(), Addition.Maxage(), maxage);
+  minaddage = max(this->Minage(), Addition.Minage(), minaddage);
+  maxaddage = min(this->Maxage(), Addition.Maxage(), maxaddage);
   int age, l, minl, maxl, offset;
 
-  if (maxage < minage)
+  if (maxaddage < minaddage)
     return;
 
   if (CI.SameDl()) {
     offset = CI.Offset();
-    for (age = minage; age <= maxage; age++) {
-      minl = max(Alkeys.Minlength(age), Addition.Minlength(age) + offset);
-      maxl = min(Alkeys.Maxlength(age), Addition.Maxlength(age) + offset);
+    for (age = minaddage; age <= maxaddage; age++) {
+      minl = max(this->Minlength(age), Addition.Minlength(age) + offset);
+      maxl = min(this->Maxlength(age), Addition.Maxlength(age) + offset);
       for (l = minl; l < maxl; l++) {
         pop = Addition[age][l - offset];
         pop *= ratio;
-        Alkeys[age][l] += pop;
+        (*v[age - minage])[l] += pop;
       }
     }
   } else {
     if (CI.TargetIsFiner()) {
-      for (age = minage; age <= maxage; age++) {
-        minl = max(Alkeys.Minlength(age), CI.Minpos(Addition.Minlength(age)));
-        maxl = min(Alkeys.Maxlength(age), CI.Maxpos(Addition.Maxlength(age) - 1) + 1);
+      for (age = minaddage; age <= maxaddage; age++) {
+        minl = max(this->Minlength(age), CI.Minpos(Addition.Minlength(age)));
+        maxl = min(this->Maxlength(age), CI.Maxpos(Addition.Maxlength(age) - 1) + 1);
         for (l = minl; l < maxl; l++) {
           pop = Addition[age][CI.Pos(l)];
           pop *= ratio;
           if (isZero(CI.Nrof(l)))
-            cerr << "Error - divide by zero in agebandmadd\n";
+            cerr << "Error - divide by zero in AgeBandMatrix Add\n";
           else
             pop.N /= CI.Nrof(l);
-          Alkeys[age][l] += pop;
+          (*v[age - minage])[l] += pop;
         }
       }
     } else {
-      for (age = minage; age <= maxage; age++) {
-        minl = max(CI.Minpos(Alkeys.Minlength(age)), Addition.Minlength(age));
-        maxl = min(CI.Maxpos(Alkeys.Maxlength(age) - 1) + 1, Addition.Maxlength(age));
-        if (maxl > minl && CI.Pos(maxl - 1) < Alkeys.Maxlength(age)
-            && CI.Pos(minl) >= Alkeys.Minlength(age)) {
+      for (age = minaddage; age <= maxaddage; age++) {
+        minl = max(CI.Minpos(this->Minlength(age)), Addition.Minlength(age));
+        maxl = min(CI.Maxpos(this->Maxlength(age) - 1) + 1, Addition.Maxlength(age));
+        if (maxl > minl && CI.Pos(maxl - 1) < this->Maxlength(age)
+            && CI.Pos(minl) >= this->Minlength(age)) {
           for (l = minl; l < maxl; l++) {
             pop = Addition[age][l];
             pop *= ratio;
-            Alkeys[age][CI.Pos(l)] += pop;
+            (*v[age - minage])[CI.Pos(l)] += pop;
           }
         }
       }
@@ -172,7 +170,7 @@ void AgeBandMatrix::IncrementAge() {
     }
   }
 
-  //Set number in age zero to zero.
+  //set number in age zero to zero.
   for (j = v[0]->Mincol(); j < v[0]->Maxcol(); j++) {
     (*v[0])[j].N = 0.0;
     (*v[0])[j].W = 0.0;
@@ -276,7 +274,6 @@ void AgeBandMatrix::PrintWeights(ofstream& outfile) const {
   }
 }
 
-// Function that implements the migration
 void AgeBandMatrixPtrVector::Migrate(const DoubleMatrix& MI) {
   assert(MI.Nrow() == size);
   PopInfoVector tmp(size);

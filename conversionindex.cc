@@ -46,7 +46,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   } else
     samedl = 0;
 
-  //Set the switches Mpos and NrOf. They determine how much is needed
+  //set the switches Mpos and NrOf. They determine how much is needed
   //of the conversionindex.
   if (targetisfiner == 1 && samedl == 0)
     NrOf = 1;
@@ -61,7 +61,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   nf = Lf->NoLengthGroups();
   nc = Lc->NoLengthGroups();
 
-  //Set minlength and maxlength if coarser LengthGroupDivision does
+  //set minlength and maxlength if coarser LengthGroupDivision does
   //not span all the range of the finer one.
   for (i = 0; i < nf; i++)
     if (Lf->Minlength(i) >= Lc->minLength()) {
@@ -90,7 +90,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 
   //If Minpos and Maxpos are needed.
   if (Mpos == 1) {
-    minpos.resize(nc, nf - 1); //initialized to Lf->Size() - 1.
+    minpos.resize(nc, nf - 1); //initialised to Lf->Size() - 1.
     for (i = minlength; i < maxlength; i++)
       if (i < minpos[pos[i]])
         minpos[pos[i]] = i;

@@ -119,7 +119,7 @@ public:
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void CalcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void calcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will check the modelled consumption for an area in the model
    * \param area is an integer to denote the internal area of interest
@@ -155,20 +155,20 @@ public:
     int area, double ratio = 1, int MinAge = 0, int MaxAge = 100);
   void Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
     int area, double ratio = 1, int MinAge = 0, int MaxAge = 100);
-  Prey* ReturnPrey() const;
-  const Migration* ReturnMigration() const { return migration; };
-  PopPredator* ReturnPredator() const;
+  Prey* returnPrey() const;
+  const Migration* returnMigration() const { return migration; };
+  PopPredator* returnPredator() const;
   const AgeBandMatrix& Agelengthkeys(int area) const;
   const AgeBandMatrix& getMeanN(int area) const;
-  virtual void SetStock(StockPtrVector& stockvec);
-  void SetCI();
+  virtual void setStock(StockPtrVector& stockvec);
+  void setCI();
   /**
    * \brief This function will print the model population
    * \param outfile is the ofstream that all the model information gets sent to
    */
   void Print(ofstream& outfile) const;
   int Birthday(const TimeClass* const TimeInfo) const;
-  const LengthGroupDivision* ReturnLengthGroupDiv() const { return LgrpDiv; };
+  const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   int IsEaten() const { return iseaten; };
   int doesSpawn() const { return doesspawn; };
   int doesMove() const { return doesmove; };
@@ -182,10 +182,10 @@ public:
   const DoubleIndexVector& mortality() const { return NatM->getMortality(); };
   const StockPtrVector& getMatureStocks();
   const StockPtrVector& getTransitionStocks();
-  void UpdateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss);
+  void updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss);
   void DeleteTags(const char* tagname);
-  void UpdateMatureStockWithTags(const TimeClass* const TimeInfo);
-  void UpdateTransitionStockWithTags(const TimeClass* const TimeInfo);
+  void updateMatureStockWithTags(const TimeClass* const TimeInfo);
+  void updateTransitionStockWithTags(const TimeClass* const TimeInfo);
   const CharPtrVector TaggingExperimentIDs();
   /**
    * \brief This will return the type of stock class

@@ -25,32 +25,32 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
         EcoSystem->Update(Stochasticdata);
         EcoSystem->Simulate(MainInfo->CalcLikelihood(), print);
         if ((MainInfo->getPI()).Print())
-          EcoSystem->PrintValues((MainInfo->getPI()).oFile(), (MainInfo->getPI()).getPrecision());
+          EcoSystem->PrintValues((MainInfo->getPI()).getOutputFile(), (MainInfo->getPI()).getPrecision());
         if ((MainInfo->getPI()).PrintinColumns())
-          EcoSystem->PrintValuesinColumns((MainInfo->getPI()).coFile(), (MainInfo->getPI()).getPrecision());
+          EcoSystem->PrintValuesinColumns((MainInfo->getPI()).getColumnOutputFile(), (MainInfo->getPI()).getPrecision());
         Stochasticdata->SendDataToMaster(EcoSystem->Likelihood());
-        Stochasticdata->ReadNextLineFromNet();
+        Stochasticdata->readNextLineFromNet();
       }
       delete Stochasticdata;
     #endif
 
   } else if (MainInfo->InitCondGiven()) {
-    Stochasticdata = new StochasticData(MainInfo->initParamFile());
+    Stochasticdata = new StochasticData(MainInfo->getInitialParamFilename());
     EcoSystem->Update(Stochasticdata);
     EcoSystem->CheckBounds();
     EcoSystem->Simulate(MainInfo->CalcLikelihood(), print);
     if ((MainInfo->getPI()).Print())
-      EcoSystem->PrintValues((MainInfo->getPI()).oFile(), (MainInfo->getPI()).getPrecision());
+      EcoSystem->PrintValues((MainInfo->getPI()).getOutputFile(), (MainInfo->getPI()).getPrecision());
     if ((MainInfo->getPI()).PrintinColumns())
-      EcoSystem->PrintValuesinColumns((MainInfo->getPI()).coFile(), (MainInfo->getPI()).getPrecision());
+      EcoSystem->PrintValuesinColumns((MainInfo->getPI()).getColumnOutputFile(), (MainInfo->getPI()).getPrecision());
     while (Stochasticdata->DataIsLeft()) {
-      Stochasticdata->ReadDataFromNextLine();
+      Stochasticdata->readDataFromNextLine();
       EcoSystem->Update(Stochasticdata);
       EcoSystem->Simulate(MainInfo->CalcLikelihood(), print);
       if ((MainInfo->getPI()).Print())
-        EcoSystem->PrintValues((MainInfo->getPI()).oFile(), (MainInfo->getPI()).getPrecision());
+        EcoSystem->PrintValues((MainInfo->getPI()).getOutputFile(), (MainInfo->getPI()).getPrecision());
       if ((MainInfo->getPI()).PrintinColumns())
-        EcoSystem->PrintValuesinColumns((MainInfo->getPI()).coFile(), (MainInfo->getPI()).getPrecision());
+        EcoSystem->PrintValuesinColumns((MainInfo->getPI()).getColumnOutputFile(), (MainInfo->getPI()).getPrecision());
     }
     delete Stochasticdata;
 
@@ -58,9 +58,9 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
     cerr << "Warning - no parameter input file given, using default values" << endl;
     EcoSystem->Simulate(MainInfo->CalcLikelihood(), print);
     if ((MainInfo->getPI()).Print())
-      EcoSystem->PrintValues((MainInfo->getPI()).oFile(), (MainInfo->getPI()).getPrecision());
+      EcoSystem->PrintValues((MainInfo->getPI()).getOutputFile(), (MainInfo->getPI()).getPrecision());
     if ((MainInfo->getPI()).PrintinColumns())
-      EcoSystem->PrintValuesinColumns((MainInfo->getPI()).coFile(), (MainInfo->getPI()).getPrecision());
+      EcoSystem->PrintValuesinColumns((MainInfo->getPI()).getColumnOutputFile(), (MainInfo->getPI()).getPrecision());
   }
 }
 
@@ -101,7 +101,7 @@ int main(int aNumber, char* const aVector[]) {
   }
 
   if (aNumber > 1)
-    MainInfo.Read(aNumber, aVector);
+    MainInfo.read(aNumber, aVector);
 
   //JMB - dont print output if doing a network run
   if (!(MainInfo.Net())) {
@@ -112,7 +112,7 @@ int main(int aNumber, char* const aVector[]) {
 
   //Added MainInfo.Net to Ecosystem constructor, to let EcoSystem know if
   //we are doing a net run. 07.04.00 AJ
-  EcoSystem = new Ecosystem(MainInfo.mainFile(), MainInfo.Optimize(),
+  EcoSystem = new Ecosystem(MainInfo.getMainGadgetFilename(), MainInfo.Optimize(),
     MainInfo.Net(), MainInfo.CalcLikelihood(), inputdir, workingdir, MainInfo.getPI());
 
   #ifdef INTERRUPT_HANDLER
@@ -135,7 +135,7 @@ int main(int aNumber, char* const aVector[]) {
     else
       handle.Unexpected("hooke, simann, or simannandhooke", type);
 
-    Optinfo->Read(MainInfo.optFile());
+    Optinfo->read(MainInfo.optFile());
     MainInfo.CloseOptinfofile();
 
   } else {
@@ -144,24 +144,24 @@ int main(int aNumber, char* const aVector[]) {
   }
 
   if (MainInfo.printInitial())
-    EcoSystem->PrintStatus(MainInfo.initFile());
+    EcoSystem->PrintStatus(MainInfo.getPrintInitialCondFilename());
   if ((MainInfo.getPI()).Print())
-    EcoSystem->PrintInitialInformation((MainInfo.getPI()).oFile());
+    EcoSystem->PrintInitialInformation((MainInfo.getPI()).getOutputFile());
   if ((MainInfo.getPI()).PrintinColumns())
-    EcoSystem->PrintInitialInformationinColumns((MainInfo.getPI()).coFile());
+    EcoSystem->PrintInitialInformationinColumns((MainInfo.getPI()).getColumnOutputFile());
   if (MainInfo.Stochastic())
     stochasticRun(EcoSystem, &MainInfo);
 
   if (MainInfo.Optimize()) {
     if (MainInfo.InitCondGiven()) {
-      Stochasticdata = new StochasticData(MainInfo.initParamFile());
+      Stochasticdata = new StochasticData(MainInfo.getInitialParamFilename());
       EcoSystem->Update(Stochasticdata);
       EcoSystem->CheckBounds();
     } else
       cerr << "Warning - no parameter input file given, using default values" << endl;
 
     Optinfo->MaximizeLikelihood();
-    if ((MainInfo.getPI()).forcePrint())
+    if ((MainInfo.getPI()).getForcePrint())
       EcoSystem->Simulate(0, 1);
 
     if (MainInfo.InitCondGiven())
@@ -169,13 +169,13 @@ int main(int aNumber, char* const aVector[]) {
   }
 
   if (MainInfo.printLikelihood())
-    EcoSystem->PrintLikelihoodInfo(MainInfo.likelihoodFile());
+    EcoSystem->PrintLikelihoodInfo(MainInfo.getPrintLikelihoodFilename());
   if (MainInfo.printFinal())
-    EcoSystem->PrintStatus(MainInfo.finalFile());
+    EcoSystem->PrintStatus(MainInfo.getPrintFinalCondFilename());
 
   //JMB - print final values of parameters
   if (!(MainInfo.Net()))
-    EcoSystem->PrintParamsinColumns((MainInfo.getPI()).paramFile(), (MainInfo.getPI()).getPrecision());
+    EcoSystem->PrintParamsinColumns((MainInfo.getPI()).getParamOutFile(), (MainInfo.getPI()).getPrecision());
 
   if (check == 1)
     free(workingdir);

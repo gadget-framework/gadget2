@@ -27,7 +27,7 @@ public:
    */
   PopRatioVector(int sz, PopRatio initial);
   /**
-   * \brief This is the PopRatioVector constructor that create a copy of an existing PopRatioVector
+   * \brief This is the PopRatioVector constructor that creates a copy of an existing PopRatioVector
    * \param initial is the PopRatioVector to copy
    */
   PopRatioVector(const PopRatioVector& initial);
@@ -42,6 +42,12 @@ public:
    * \param value is the value that will be entered for the new entries
    */
   void resize(int add, PopRatio value);
+  /**
+   * \brief This will add new PopRatio entries to add to the vector
+   * \param add is the number of new entries to the vector
+   * \param num is the value of N of the new PopRatio entries
+   * \param rat is the value of R of the new PopRatio entries
+   */
   void resize(int add, double* num, double rat);
   /**
    * \brief This will add new empty entries to the vector

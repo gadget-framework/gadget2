@@ -23,7 +23,7 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   if (!(strcasecmp(text, "suitability") == 0))
     handle.Unexpected("suitability", text);
 
-  this->ReadSuitabilityMatrix(infile, "maxconsumption", TimeInfo, keeper);
+  this->readSuitabilityMatrix(infile, "maxconsumption", TimeInfo, keeper);
 
   keeper->AddString("maxconsumption");
   maxConsumption.resize(4, keeper);  //Maxnumber of constants is 4
@@ -49,7 +49,7 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   Phi.AddRows(numarea, numlength, 0.0);
   fphi.AddRows(numarea, numlength, 0.0);
   fphI.AddRows(numarea, numlength, 0.0);
-  //Predator::SetPrey will call ResizeObjects.
+  //Predator::setPrey will call resizeObjects.
 }
 
 void StockPredator::Print(ofstream& outfile) const {
@@ -89,15 +89,15 @@ void StockPredator::Print(ofstream& outfile) const {
   outfile << endl;
 }
 
-void StockPredator::ResizeObjects() {
-  PopPredator::ResizeObjects();
+void StockPredator::resizeObjects() {
+  PopPredator::resizeObjects();
 }
 
 void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
+  int length;
   const int inarea = AreaNr[area];
   Alkeys[inarea].setToZero();
-  AgebandmAdd(Alkeys[inarea], stock, *CI);
-  int length;
+  Alkeys[inarea].Add(stock, *CI);
   for (length = 0; length < Prednumber.Ncol(inarea); length++)
     Prednumber[inarea][length].N = 0.0;
   Alkeys[inarea].Colsum(Prednumber[inarea]);

@@ -25,9 +25,9 @@ public:
   virtual ~PreyOverPrinter();
   /**
    * \brief This will select the preys required for the printer class to print the requested information
-   * \param preyvec is the PreyPtrVector listing all the available preys
+   * \param preyvec is the PreyPtrVector of all the available preys
    */
-  void SetPrey(PreyPtrVector& preyvec);
+  void setPrey(PreyPtrVector& preyvec);
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model
@@ -35,19 +35,19 @@ public:
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
   /**
-   * \brief This matrix stores information about the aggregated areas used for printing
+   * \brief This is the IntMatrix used to store aggregated age information
    */
   IntMatrix areas;
   /**
-   * \brief This is the CharPtrVector of the names for the areas used for printing
+   * \brief This is the CharPtrVector of the names of the aggregated areas to print
    */
   CharPtrVector areaindex;
   /**
-   * \brief This is the CharPtrVector of the names for the lengths used for printing
+   * \brief This is the CharPtrVector of the names of the lengths to print
    */
   CharPtrVector lenindex;
   /**
-   * \brief This is the CharPtrVector of the names for the prey names used for printing
+   * \brief This is the CharPtrVector of the names of the prey names to print
    */
   CharPtrVector preynames;
   /**

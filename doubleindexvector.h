@@ -26,7 +26,7 @@ public:
    */
   DoubleIndexVector(int sz, int minpos, double initial);
   /**
-   * \brief This is the DoubleIndexVector constructor that create a copy of an existing DoubleIndexVector
+   * \brief This is the DoubleIndexVector constructor that creates a copy of an existing DoubleIndexVector
    * \param initial is the DoubleIndexVector to copy
    */
   DoubleIndexVector(const DoubleIndexVector& initial);
@@ -78,7 +78,7 @@ public:
   void Delete(int pos);
 protected:
   /**
-   * \brief This is index for the vector
+   * \brief This is the index for the vector
    */
   int minpos;
   /**

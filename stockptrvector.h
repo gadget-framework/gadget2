@@ -26,7 +26,7 @@ public:
    */
   StockPtrVector(int sz, Stock* initial);
   /**
-   * \brief This is the StockPtrVector constructor that create a copy of an existing StockPtrVector
+   * \brief This is the StockPtrVector constructor that creates a copy of an existing StockPtrVector
    * \param initial is the StockPtrVector to copy
    */
   StockPtrVector(const StockPtrVector& initial);

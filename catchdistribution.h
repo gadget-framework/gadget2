@@ -17,12 +17,12 @@ public:
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
-  void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
+  void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
   virtual void LikelihoodPrint(ofstream& outfile);
   virtual void PrintLikelihood(ofstream&, const TimeClass& time);
   virtual void PrintLikelihoodHeader(ofstream&);
 private:
-  void ReadDistributionData(CommentStream& infile, const TimeClass* TimeInfo,
+  void readDistributionData(CommentStream& infile, const TimeClass* TimeInfo,
     int numarea, int numage, int numlen);
   double LikMultinomial();
   double LikPearson(const TimeClass* const TimeInfo);

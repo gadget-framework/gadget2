@@ -25,8 +25,8 @@ public:
   Prey(CommentStream& infile, const IntVector& areas, const char* givenname, Keeper* const keeper);
   /**
    * \brief This is the Prey constructor for a prey with a given length group
-   * \param lengths is the list of length groups of the prey
-   * \param areas is the list of areas that the prey lives on
+   * \param lengths is the DoubleVector of length groups of the prey
+   * \param areas is the IntVector of areas that the prey lives on
    * \param givenname is the name of the prey
    */
   Prey(const DoubleVector& lengths, const IntVector& areas, const char* givenname);
@@ -37,7 +37,7 @@ public:
   virtual void Sum(const AgeBandMatrix& Alkeys, int area, int NrofSubstep) {};
   virtual void Subtract(AgeBandMatrix& Alkeys, int area);
   void AddConsumption(int area, const DoubleIndexVector& predconsumption);
-  virtual void SetCI(const LengthGroupDivision* const GivenLDiv);
+  virtual void setCI(const LengthGroupDivision* const GivenLDiv);
   virtual void Print(ofstream& outfile) const;
   double Biomass(int area, int length) const { return biomass[AreaNr[area]][length]; };
   double Biomass(int area) const { return total[AreaNr[area]]; };
@@ -48,7 +48,7 @@ public:
   int NoLengthGroups() const { return LgrpDiv->NoLengthGroups(); };
   const DoubleVector& Bconsumption(int area) const { return consumption[AreaNr[area]]; };
   const DoubleVector& OverConsumption(int area) const { return overconsumption[AreaNr[area]]; };
-  const LengthGroupDivision* ReturnLengthGroupDiv() const { return LgrpDiv; };
+  const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   virtual void Reset();
   const PopInfoVector& NumberPriortoEating(int area) const { return numberPriortoEating[AreaNr[area]]; };
   //The following functions are added 3/8 98 by kgf
@@ -65,7 +65,7 @@ public:
    */
   PreyType Type() { return type; };
 protected:
-  void InitializeObjects();
+  void InitialiseObjects();
   ConversionIndex* CI;
   LengthGroupDivision* LgrpDiv;
   PopInfoMatrix Number;
@@ -73,7 +73,7 @@ protected:
   DoubleMatrix biomass;
   DoubleMatrix ratio;
   DoubleMatrix consumption;
-  IntVector tooMuchConsumption;      //Set if any lengthgr is overconsumed in area
+  IntVector tooMuchConsumption;      //set if any lengthgr is overconsumed in area
   DoubleVector total;
   DoubleMatrix overconsumption;
   DoubleMatrix overcons;             //overconsumption of prey in subinterval

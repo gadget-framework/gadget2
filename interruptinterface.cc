@@ -2,22 +2,11 @@
 #include "charptrvector.h"
 #include "gadget.h"
 
-/*  InterruptInterface(const Ecosystem& const ecosystem)
- *
- *  Purpose: Constructor
- *  In: ecosystem: ecosystem object to print from.
- *  Usage: InterruptInterface interface(ecosystem)
- *  Pre: &ecosystem != NULL
- */
 InterruptInterface::InterruptInterface(const Ecosystem& ecosystem) {
   assert(&ecosystem != NULL);
   eco = &ecosystem;
 }
 
-/*  printMenu()
- *
- *  Purpose:    Print menu to standard output.
- */
 void InterruptInterface::printMenu() {
   cout << "\nInterrupted at year " << eco->TimeInfo->CurrentYear() << ", step "
     << eco->TimeInfo->CurrentStep() << " (" << eco->TimeInfo->CurrentTime()
@@ -28,13 +17,6 @@ void InterruptInterface::printMenu() {
   cout.flush();
 }
 
-/*  int menu()
- *
- *  Purpose: Interact with user.
- *  Out: int: 1 if simulation should continue, 0 if simulation should end.
- *  Usage: if (menu() == 0) exit(0)
- *  Pre: none
- */
 int InterruptInterface::menu() {
   printMenu();
   char s[MaxStrLength];
@@ -46,7 +28,7 @@ int InterruptInterface::menu() {
     switch(s[0]) {
       case 'q':
       case 'Q':
-        cout << "\nQuitting current simulation ...\nCurrent parameter values have been written to file (called interrupt.out)\n";
+        cout << "\nQuitting current simulation ...\nCurrent parameter values will be written to file (called interrupt.out)\n";
         return 0;
       case 'f':
       case 'F':
@@ -65,12 +47,6 @@ int InterruptInterface::menu() {
   return 1;
 }
 
-
-/*  void dumpAll()
- *
- *  Purpose: Dump all ecosystem data to file.
- *  Usage:  dumpall()
- */
 void InterruptInterface::dumpAll() {
   char interruptfile[15];
   strncpy(interruptfile, "", 15);

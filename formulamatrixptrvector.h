@@ -26,7 +26,7 @@ public:
    */
   FormulaMatrixPtrVector(int sz, FormulaMatrix* initial);
   /**
-   * \brief This is the FormulaMatrixPtrVector constructor that create a copy of an existing FormulaMatrixPtrVector
+   * \brief This is the FormulaMatrixPtrVector constructor that creates a copy of an existing FormulaMatrixPtrVector
    * \param initial is the FormulaMatrixPtrVector to copy
    */
   FormulaMatrixPtrVector(const FormulaMatrixPtrVector& initial);

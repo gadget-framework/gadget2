@@ -26,7 +26,7 @@ public:
    */
   PreyPtrVector(int sz, Prey* initial);
   /**
-   * \brief This is the PreyPtrVector constructor that create a copy of an existing PreyPtrVector
+   * \brief This is the PreyPtrVector constructor that creates a copy of an existing PreyPtrVector
    * \param initial is the PreyPtrVector to copy
    */
   PreyPtrVector(const PreyPtrVector& initial);

@@ -24,7 +24,7 @@ public:
    */
   VectorOfCharPtr(int sz, char* initial);
   /**
-   * \brief This is the VectorOfCharPtr constructor that create a copy of an existing VectorOfCharPtr
+   * \brief This is the VectorOfCharPtr constructor that creates a copy of an existing VectorOfCharPtr
    * \param initial is the VectorOfCharPtr to copy
    */
   VectorOfCharPtr(const VectorOfCharPtr& initial);

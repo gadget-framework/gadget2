@@ -21,7 +21,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   strncpy(text, "", MaxStrLength);
   int i, j;
 
-  //Read in the predator names
+  //read in the predator names
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "predators") == 0))
@@ -34,7 +34,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
     infile >> text >> ws;
   }
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
@@ -49,7 +49,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
-  //Read in length aggregation from file
+  //read in length aggregation from file
   DoubleVector lengths;
   readWordAndValue(infile, "lenaggfile", filename);
   datafile.open(filename, ios::in);
@@ -79,7 +79,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!AAT.ReadFromFile(infile, TimeInfo))
+  if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in predatoroverprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -101,7 +101,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   outfile.flush();
 }
 
-void PredatorOverPrinter::SetPredator(PredatorPtrVector& predatorvec) {
+void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec) {
   PredatorPtrVector predators;
   int index = 0;
   int i, j;
@@ -131,7 +131,7 @@ void PredatorOverPrinter::Print(const TimeClass* const TimeInfo) {
   if (!AAT.AtCurrentTime(TimeInfo))
     return;
   aggregator->Sum();
-  const DoubleMatrix* dptr = &aggregator->ReturnSum();
+  const DoubleMatrix* dptr = &aggregator->returnSum();
   int i, j;
   for (i = 0; i < areas.Nrow(); i++) {
     for (j = 0; j < dptr->Ncol(i); j++) {

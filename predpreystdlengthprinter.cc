@@ -23,7 +23,7 @@ PredPreyStdLengthPrinter::~PredPreyStdLengthPrinter() {
   delete predinfo;
 }
 
-void PredPreyStdLengthPrinter::SetPopPredAndPrey(const PopPredator* pred,
+void PredPreyStdLengthPrinter::setPopPredAndPrey(const PopPredator* pred,
   const Prey* pRey, int IsStockPredator, int IsStockPrey) {
 
   assert(!predinfo);
@@ -44,8 +44,8 @@ void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo) {
   for (a = 0; a < areas.Size(); a++)
     predinfo->Sum(TimeInfo, areas[a]);
 
-  const LengthGroupDivision* PredLgrpDiv = predinfo->ReturnPredLengthGroupDiv();
-  const LengthGroupDivision* PreyLgrpDiv = predinfo->ReturnPreyLengthGroupDiv();
+  const LengthGroupDivision* PredLgrpDiv = predinfo->returnPredLengthGroupDiv();
+  const LengthGroupDivision* PreyLgrpDiv = predinfo->returnPreyLengthGroupDiv();
 
   for (a = 0; a < areas.Size(); a++) {
     for (predl = 0; predl < PredLgrpDiv->NoLengthGroups(); predl++) {

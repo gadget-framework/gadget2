@@ -21,7 +21,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -41,7 +41,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   if (strcasecmp(text, "powercoeff") == 0)
     infile >> powercoeff >> ws >> text >> ws;
 
-  //Read in the fleetnames
+  //read in the fleetnames
   i = 0;
   if (!(strcasecmp(text, "fleetnames") == 0))
     handle.Unexpected("fleetnames", text);
@@ -53,7 +53,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
     infile >> text >> ws;
   }
 
-  if (!AAT.ReadFromFile(infile, TimeInfo))
+  if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in understocking - wrong format for yearsandsteps");
 
   //prepare for next likelihood component
@@ -73,7 +73,7 @@ UnderStocking::~UnderStocking() {
     delete[] areaindex[i];
 }
 
-void UnderStocking::SetFleets(FleetPtrVector& Fleets) {
+void UnderStocking::setFleets(FleetPtrVector& Fleets) {
   int i, j;
   int found;
   for (i = 0; i < fleetnames.Size(); i++) {

@@ -24,7 +24,7 @@ public:
    */
   IntVector(int sz, int initial);
   /**
-   * \brief This is the IntVector constructor that create a copy of an existing IntVector
+   * \brief This is the IntVector constructor that creates a copy of an existing IntVector
    * \param initial is the IntVector to copy
    */
   IntVector(const IntVector& initial);

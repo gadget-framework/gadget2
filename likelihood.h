@@ -28,7 +28,7 @@ public:
    * \param T is the LikelihoodType for the likelihood component
    * \param w is the weight for the likelihood component
    */
-  Likelihood(LikelihoodType T, double w = 0) { likelihood = 0; weight = w; type = T; };
+  Likelihood(LikelihoodType T, double w = 0.0) { likelihood = 0.0; weight = w; type = T; };
   /**
    * \brief This is the default Likelihood destructor
    */
@@ -48,7 +48,7 @@ public:
    * \brief This function will reset the likelihood information
    * \param keeper is the Keeper for the current model
    */
-  virtual void Reset(const Keeper* const keeper) { likelihood = 0; };
+  virtual void Reset(const Keeper* const keeper) { likelihood = 0.0; };
   /**
    * \brief This function will print the summary likelihood information
    * \param outfile is the ofstream that all the model information gets sent to
@@ -63,7 +63,7 @@ public:
    * \brief This will return the weighted likelihood score for the likelihood component
    * \return weight*likelihood
    */
-  double ReturnLikelihood() const { return weight * likelihood; };
+  double returnLikelihood() const { return weight * likelihood; };
   /**
    * \brief This will return the type of likelihood class
    * \return type
@@ -73,18 +73,18 @@ public:
    * \brief This will return the unweighted likelihood score for the likelihood component
    * \return likelihood
    */
-  double UnweightedLikelihood() const { return likelihood; };
+  double returnUnweightedLikelihood() const { return likelihood; };
   /**
    * \brief This will return the weight applied to the likelihood component
    * \return weight
    */
-  double Weight() const { return weight; };
+  double returnWeight() const { return weight; };
   /**
-   * \brief This will select the fleets and stocks required for to calculate the likelihood score
-   * \param Fleets is the FleetPtrVector listing all the available fleets
-   * \param Stocks is the StockPtrVector listing all the available stocks
+   * \brief This will select the fleets and stocks required to calculate the likelihood score
+   * \param Fleets is the FleetPtrVector of all the available fleets
+   * \param Stocks is the StockPtrVector of all the available stocks
    */
-  virtual void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {};
+  virtual void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {};
 protected:
   /**
    * \brief This stores the calculated score for the likelihood component

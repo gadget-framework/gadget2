@@ -70,14 +70,14 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   keeper->ClearLast();
   keeper->ClearLast();
 
-  prey->SetCI(&LgrpDiv);
+  prey->setCI(&LgrpDiv);
 }
 
 OtherFood::~OtherFood() {
   delete prey;
 }
 
-LengthPrey* OtherFood::ReturnPrey() const {
+LengthPrey* OtherFood::returnPrey() const {
   return prey;
 }
 

@@ -37,7 +37,7 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
   strcpy(piname, name);
   readWordAndValue(infile, "datafile", datafilename);
 
-  //Read in the predator names and lengths
+  //read in the predator names and lengths
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "predatornames") == 0))
@@ -61,7 +61,7 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
   datafile.close();
   datafile.clear();
 
-  //Read in the prey names and lengths
+  //read in the prey names and lengths
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "preynames") == 0))
@@ -85,7 +85,7 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
   datafile.close();
   datafile.clear();
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -130,7 +130,7 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
     delete[] predlenindex[i];
 }
 
-void PredatorIndices::SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
+void PredatorIndices::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
   int i, j;
   int found = 0;
   PredatorPtrVector predators;
@@ -162,7 +162,7 @@ void PredatorIndices::SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtr
       exit(EXIT_FAILURE);
     }
   }
-  PI->SetPredatorsAndPreys(predators, preys);
+  PI->setPredatorsAndPreys(predators, preys);
 }
 
 void PredatorIndices::Reset(const Keeper* const keeper) {

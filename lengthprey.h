@@ -14,8 +14,8 @@ class LengthPrey : public Prey {
 public:
   /**
    * \brief This is the LengthPrey constructor
-   * \param lengths is the list of length groups of the prey (only one length group)
-   * \param areas is the list of areas that the prey lives on
+   * \param lengths is the DoubleVector of length groups of the prey (only one length group)
+   * \param areas is the IntVector of areas that the prey lives on
    * \param givenname is the name of the prey
    */
   LengthPrey(const DoubleVector& lengths, const IntVector& areas, const char* givenname);

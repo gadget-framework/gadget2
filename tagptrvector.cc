@@ -10,7 +10,6 @@ TagPtrVector::TagPtrVector(int sz) {
     v = new Tags*[size];
   else
     v = 0;
-  index = 0;
 }
 
 TagPtrVector::TagPtrVector(int sz, Tags* value) {
@@ -22,8 +21,6 @@ TagPtrVector::TagPtrVector(int sz, Tags* value) {
       v[i] = value;
   } else
     v = 0;
-
-  index = 0;
 }
 
 TagPtrVector::TagPtrVector(const TagPtrVector& initial) {
@@ -35,8 +32,6 @@ TagPtrVector::TagPtrVector(const TagPtrVector& initial) {
       v[i] = initial.v[i];
   } else
     v = 0;
-
-  index = 0;
 }
 
 TagPtrVector::~TagPtrVector() {
@@ -53,16 +48,6 @@ void TagPtrVector::resize(int addsize, Tags* value) {
   if (addsize > 0)
     for (i = oldsize; i < size; i++)
       v[i] = value;
-}
-
-//Set the names of all tagged stocks
-void TagPtrVector::SetTaggedStocks(const CharPtrVector Names) {
-  int i;
-  for (i = 0; i < Names.Size(); i++) {
-    tagstocknames.resize(1);
-    tagstocknames[i] = new char[strlen(Names[i]) + 1];
-    strcpy(tagstocknames[i], Names[i]);
-  }
 }
 
 void TagPtrVector::resize(int addsize) {
@@ -98,19 +83,20 @@ void TagPtrVector::Delete(int pos) {
   }
 }
 
-void TagPtrVector::UpdateTags(const TimeClass* const TimeInfo) {
+void TagPtrVector::updateTags(const TimeClass* const TimeInfo) {
   int year = TimeInfo->CurrentYear();
   int step = TimeInfo->CurrentStep();
-
-  for (index = 0; index < size; index++)
-    if (v[index]->IsWithinPeriod(year, step))
-      v[index]->UpdateTags(year, step);
+  int i;
+  for (i = 0; i < size; i++)
+    if (v[i]->IsWithinPeriod(year, step))
+      v[i]->updateTags(year, step);
 }
 
 void TagPtrVector::DeleteTags(const TimeClass* const TimeInfo) {
-  for (index = 0; index < size; index++) {
-    if ((v[index]->getEndYear() == TimeInfo->CurrentYear()) && (TimeInfo->CurrentStep() == TimeInfo->LastStep()))
-      v[index]->DeleteFromStock();
+  int i;
+  for (i = 0; i < size; i++) {
+    if ((v[i]->getEndYear() == TimeInfo->CurrentYear()) && (TimeInfo->CurrentStep() == TimeInfo->LastStep()))
+      v[i]->DeleteFromStock();
 
   }
 }
@@ -121,5 +107,4 @@ void TagPtrVector::DeleteAll() {
     v = 0;
   }
   size = 0;
-  index = 0;
 }

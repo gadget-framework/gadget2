@@ -42,11 +42,11 @@ protected:
   int errornr;
   DoubleVector penalty;  //Addition Oct 1997
 private:
-  void ReadNoMigrationMatrices(CommentStream& infile,
+  void readNoMigrationMatrices(CommentStream& infile,
     const TimeClass* const TimeInfo, Keeper* const keeper);
-  void ReadOptVariables(CommentStream& infile, IntVector& novariables,
+  void readOptVariables(CommentStream& infile, IntVector& novariables,
     const TimeClass* const TimeInfo, Keeper* const keeper);
-  void ReadCoefficients(CommentStream& infile,
+  void readCoefficients(CommentStream& infile,
     const AreaClass* const Area, Keeper* const keeper);
   void CheckInfoAndDelete(IntVector& novariables, Keeper* const keeper);
 };

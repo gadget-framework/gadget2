@@ -28,7 +28,7 @@ public:
    */
   OtherFoodPtrVector(int sz, OtherFood* initial);
   /**
-   * \brief This is the OtherFoodPtrVector constructor that create a copy of an existing OtherFoodPtrVector
+   * \brief This is the OtherFoodPtrVector constructor that creates a copy of an existing OtherFoodPtrVector
    * \param initial is the OtherFoodPtrVector to copy
    */
   OtherFoodPtrVector(const OtherFoodPtrVector& initial);

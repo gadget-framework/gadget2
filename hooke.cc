@@ -130,7 +130,7 @@
 #include "mathfunc.h"
 #include "ecosystem.h"
 
-/* global variable, defined and initialized in gadget.cc and not modified here */
+/* global variable, defined and initialised in gadget.cc and not modified here */
 extern int FuncEval;
 
 /* global ecosystem used to store whether the model converged */

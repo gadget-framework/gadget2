@@ -34,7 +34,7 @@ public:
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void CalcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
+  virtual void calcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
   /**
    * \brief This function will check the modelled consumption for an area in the model
    * \param area is an integer to denote the internal area of interest
@@ -124,7 +124,7 @@ public:
    * \brief This will return the otherfood, as a prey type, for use in other functions
    * \return prey
    */
-  LengthPrey* ReturnPrey() const;
+  LengthPrey* returnPrey() const;
   /**
    * \brief This function will print the model population
    * \param outfile is the ofstream that all the model information gets sent to

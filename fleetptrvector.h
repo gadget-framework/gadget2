@@ -26,7 +26,7 @@ public:
    */
   FleetPtrVector(int sz, Fleet* initial);
   /**
-   * \brief This is the FleetPtrVector constructor that create a copy of an existing FleetPtrVector
+   * \brief This is the FleetPtrVector constructor that creates a copy of an existing FleetPtrVector
    * \param initial is the FleetPtrVector to copy
    */
   FleetPtrVector(const FleetPtrVector& initial);

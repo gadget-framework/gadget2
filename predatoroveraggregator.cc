@@ -2,20 +2,19 @@
 #include "predator.h"
 
 PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
-  const IntMatrix& Areas, const LengthGroupDivision* const predLgrpDiv)
+  const IntMatrix& Areas, const LengthGroupDivision* const LgrpDiv)
   : predators(preds), areas(Areas) {
 
   int i, j;
   for (i = 0; i < predators.Size(); i++)
-    checkLengthGroupIsFiner(preds[i]->ReturnLengthGroupDiv(),
-      predLgrpDiv, preds[i]->Name(), "predator overconsumption");
+    checkLengthGroupIsFiner(preds[i]->returnLengthGroupDiv(),
+      LgrpDiv, preds[i]->Name(), "predator overconsumption");
 
-  total.AddRows(areas.Nrow(), predLgrpDiv->NoLengthGroups(), 0.0);
-  // predConv has [pred][predLengthGroup]
+  total.AddRows(areas.Nrow(), LgrpDiv->NoLengthGroups(), 0.0);
   for (i = 0; i < predators.Size(); i++) {
     predConv.AddRows(1, predators[i]->NoLengthGroups(), 0);
     for (j = 0; j < predConv.Ncol(i); j++)
-      predConv[i][j] = predLgrpDiv->NoLengthGroup(predators[i]->Length(j));
+      predConv[i][j] = LgrpDiv->NoLengthGroup(predators[i]->Length(j));
   }
 }
 
@@ -23,10 +22,9 @@ void PredatorOverAggregator::Sum() {
   int i, j, g, l;
   int area, predlength;
 
-  //Initialize total to 0.
   for (i = 0; i < total.Nrow(); i++)
     for (j = 0; j < total.Ncol(i); j++)
-      total[i][j] = 0;
+      total[i][j] = 0.0;
 
   //Sum over the appropriate predators, areas, and lengths.
   for (g = 0; g < predators.Size(); g++) {

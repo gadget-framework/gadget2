@@ -44,7 +44,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   int i = 0, found = 0;
   while (found == 0 && i < stockvec.Size()) {
     if (strcasecmp(stockvec[i]->Name(), stocknames[0]) == 0) {
-      LgrpDiv = new LengthGroupDivision(*(stockvec[i]->ReturnLengthGroupDiv()));
+      LgrpDiv = new LengthGroupDivision(*(stockvec[i]->returnLengthGroupDiv()));
       found++;
     }
     i++;
@@ -60,12 +60,12 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   readWordAndFormula(infile, "tagloss", tagloss);
   tagloss.Inform(keeper);
 
-  //Read in the numbers format: tagid - length - number
+  //read in the numbers format: tagid - length - number
   readWordAndValue(infile, "numbers", text);
   subfile.open(text, ios::in);
   checkIfFailure(subfile, text);
   handle.Open(text);
-  ReadNumbers(subcomment, givenname, TimeInfo);
+  readNumbers(subcomment, givenname, TimeInfo);
   handle.Close();
   subfile.close();
   subfile.clear();
@@ -73,7 +73,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   keeper->ClearLast();
 }
 
-void Tags::ReadNumbers(CommentStream& infile, const char* tagname, const TimeClass* const TimeInfo) {
+void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeClass* const TimeInfo) {
 
   int year, step;
   int i, lenid, keepdata, timeid;
@@ -185,7 +185,7 @@ void Tags::Reset(const TimeClass* const TimeInfo) {
   }
 }
 
-void Tags::SetStock(StockPtrVector& Stocks) {
+void Tags::setStock(StockPtrVector& Stocks) {
   int i, j, found;
   StockPtrVector tempMatureStock, tempTransitionStock;
   char* stockname;
@@ -215,7 +215,7 @@ void Tags::SetStock(StockPtrVector& Stocks) {
     exit(EXIT_FAILURE);
   }
 
-  const LengthGroupDivision* tempLgrpDiv = taggingstock->ReturnLengthGroupDiv();
+  const LengthGroupDivision* tempLgrpDiv = taggingstock->returnLengthGroupDiv();
   if (LgrpDiv->NoLengthGroups() != tempLgrpDiv->NoLengthGroups()) {
     cerr << "Error in tagging experiment - invalid length groups\n";
     exit(EXIT_FAILURE);
@@ -266,7 +266,7 @@ void Tags::SetStock(StockPtrVector& Stocks) {
   }
 }
 
-//Must have set stocks according to stocknames using SetStock before calling Update()
+//Must have set stocks according to stocknames using setStock before calling Update()
 //Now we need to distribute the tagged fish to the same age/length groups as the tagged stock.
 void Tags::Update() {
   PopInfoVector NumberInArea;
@@ -283,7 +283,7 @@ void Tags::Update() {
   stockPopInArea->Colsum(NumberInArea);
 
   //Now we have total number of stock per length in tagarea, N(., l) (NumberInArea) and
-  //number of stock per age/length, N(a, l) (stockPopInArea) so we must initialize
+  //number of stock per age/length, N(a, l) (stockPopInArea) so we must initialise
   //AgeLengthStock so that it can hold all information of number of tagged stock
   //per area/age/length after endtime. We must make AgeBandMatrixPtrVector same size as
   //the one in stock even though have only one area entry at the beginning
@@ -328,11 +328,11 @@ void Tags::Update() {
         (*AgeLengthStock[0])[tagareaindex][age][length].N = (NumberByLength[length - minl] * numstockinarea) / numfishinarea;
     }
   }
-  taggingstock->UpdateTags(AgeLengthStock[0], this, exp(-tagloss));
+  taggingstock->updateTags(AgeLengthStock[0], this, exp(-tagloss));
   updated[0] = 1;
 
   if (taggingstock->IsEaten()) {
-    tmpLgrpDiv = taggingstock->ReturnPrey()->ReturnLengthGroupDiv();
+    tmpLgrpDiv = taggingstock->returnPrey()->returnLengthGroupDiv();
     IntVector preysize(numberofagegroups, tmpLgrpDiv->NoLengthGroups());
     IntVector preyminlength(numberofagegroups, 0);
     NumBeforeEating.resize(1, new AgeBandMatrixPtrVector(numareas, minage, preyminlength, preysize));
@@ -371,7 +371,7 @@ void Tags::Update() {
 
     AgeLengthStock.resize(1, new AgeBandMatrixPtrVector(numareas, minage, lowerlengthgroups, sizeoflengthgroups));
     if (tmpStock->IsEaten()) {
-      tmpLgrpDiv = tmpStock->ReturnPrey()->ReturnLengthGroupDiv();
+      tmpLgrpDiv = tmpStock->returnPrey()->returnLengthGroupDiv();
       IntVector preysize(numberofagegroups, tmpLgrpDiv->NoLengthGroups());
       IntVector preyminlength(numberofagegroups, 0);
       NumBeforeEating.resize(1, new AgeBandMatrixPtrVector(numareas, minage, preyminlength, preysize));
@@ -388,7 +388,7 @@ void Tags::Update() {
   }
 }
 
-void Tags::UpdateTags(int year, int step) {
+void Tags::updateTags(int year, int step) {
   int i, timeid;
 
   timeid = -1;
@@ -411,8 +411,7 @@ void Tags::DeleteFromStock() {
   }
 }
 
-void Tags::UpdateMatureStock(const TimeClass* const TimeInfo) {
-
+void Tags::updateMatureStock(const TimeClass* const TimeInfo) {
   int i, id;
   int currentYear = TimeInfo->CurrentYear();
   int currentStep = TimeInfo->CurrentStep();
@@ -427,14 +426,13 @@ void Tags::UpdateMatureStock(const TimeClass* const TimeInfo) {
         exit(EXIT_FAILURE);
       }
       if (updated[id] == 0) {
-        maturestocks[i]->UpdateTags(AgeLengthStock[id], this, exp(-tagloss));
+        maturestocks[i]->updateTags(AgeLengthStock[id], this, exp(-tagloss));
         updated[id] = 1;
       }
     }
 }
 
-void Tags::UpdateTransitionStock(const TimeClass* const TimeInfo) {
-
+void Tags::updateTransitionStock(const TimeClass* const TimeInfo) {
   int i, id;
   int currentYear = TimeInfo->CurrentYear();
   int currentStep = TimeInfo->CurrentStep();
@@ -449,7 +447,7 @@ void Tags::UpdateTransitionStock(const TimeClass* const TimeInfo) {
         exit(EXIT_FAILURE);
       }
       if (updated[id] == 0) {
-        transitionstocks[i]->UpdateTags(AgeLengthStock[id], this, exp(-tagloss));
+        transitionstocks[i]->updateTags(AgeLengthStock[id], this, exp(-tagloss));
         updated[id] = 1;
       }
     }
@@ -478,7 +476,7 @@ void Tags::StoreNumberPriorToEating(int area, const char* stockname) {
     exit(EXIT_FAILURE);
   }
   (*NumBeforeEating[preyid])[area].setToZero();
-  AgebandmAdd((*NumBeforeEating[preyid])[area], (*AgeLengthStock[stockid])[area], *CI[preyid]);
+  (*NumBeforeEating[preyid])[area].Add((*AgeLengthStock[stockid])[area], *CI[preyid]);
 }
 
 const AgeBandMatrix& Tags::NumberPriorToEating(int area, const char* stockname) {

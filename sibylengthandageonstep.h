@@ -19,7 +19,7 @@ public:
     const CharPtrVector& areaindex, const char* datafilename, const char* name);
   virtual ~SIByLengthAndAgeOnStep();
   virtual void Sum(const TimeClass* const TimeInfo);
-  virtual void SetStocks(const StockPtrVector& Stocks);
+  virtual void setStocks(const StockPtrVector& Stocks);
   virtual double Regression() {return likelihood; };
   void calcIndex(const AgeBandMatrix* alptr, FitType ftype);
   virtual void PrintLikelihood(ofstream&, const TimeClass& time, const char* name);
@@ -28,7 +28,7 @@ public:
   virtual void LikelihoodPrint(ofstream& outfile);
   OptType getOptType() { return opttype; };
 protected:
-  void ReadSurveyData(CommentStream& infile, const CharPtrVector& areaindex,
+  void readSurveyData(CommentStream& infile, const CharPtrVector& areaindex,
     const CharPtrVector& lenindex, const CharPtrVector& ageindex,
     const TimeClass* TimeInfo, const char* name);
   double calcLikPearson();

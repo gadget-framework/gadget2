@@ -75,10 +75,10 @@ void TimeVariableVector::Update(const TimeClass* const TimeInfo) {
     v[i].Update(TimeInfo);
 }
 
-void TimeVariableVector::Read(CommentStream& infile,
+void TimeVariableVector::read(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   int i;
   for (i = 0; i < size; i++)
-    v[i].Read(infile, TimeInfo, keeper);
+    v[i].read(infile, TimeInfo, keeper);
 }

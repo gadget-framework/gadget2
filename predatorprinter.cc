@@ -22,7 +22,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   strncpy(text, "", MaxStrLength);
   int i, j;
 
-  //Read in the predator names
+  //read in the predator names
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "predators") == 0))
@@ -35,7 +35,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
     infile >> text >> ws;
   }
 
-  //Read in the prey names
+  //read in the prey names
   i = 0;
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "areaaggfile") == 0)) {
@@ -45,7 +45,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
     infile >> text >> ws;
   }
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
@@ -60,7 +60,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
-  //Read in predator length aggregation from file
+  //read in predator length aggregation from file
   DoubleVector predlengths;
   readWordAndValue(infile, "predlenaggfile", filename);
   datafile.open(filename, ios::in);
@@ -71,7 +71,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
-  //Read in prey length aggregation from file
+  //read in prey length aggregation from file
   DoubleVector preylengths;
   readWordAndValue(infile, "preylenaggfile", filename);
   datafile.open(filename, ios::in);
@@ -104,7 +104,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!AAT.ReadFromFile(infile, TimeInfo))
+  if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in predatorprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -130,7 +130,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   outfile.flush();
 }
 
-void PredatorPrinter::SetPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVector& preyvec) {
+void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVector& preyvec) {
   PredatorPtrVector predators;
   PreyPtrVector preys;
   int index = 0;
@@ -182,7 +182,7 @@ void PredatorPrinter::Print(const TimeClass* const TimeInfo) {
   int i, j, k;
 
   for (i = 0; i < areas.Nrow(); i++) {
-    const BandMatrix* bptr = &aggregator->ReturnSum()[i];
+    const BandMatrix* bptr = &aggregator->returnSum()[i];
     for (j = 0; j < bptr->Nrow(); j++) {
       for (k = 0; k < bptr->Ncol(j); k++) {
         outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep

@@ -25,9 +25,9 @@ public:
   virtual ~StockPrinter();
   /**
    * \brief This will select the stocks required for the printer class to print the requested information
-   * \param stockvec is the StockPtrVector listing all the available stocks
+   * \param stockvec is the StockPtrVector of all the available stocks
    */
-  virtual void SetStock(StockPtrVector& stockvec);
+  virtual void setStock(StockPtrVector& stockvec);
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model
@@ -35,27 +35,27 @@ public:
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
   /**
-   * \brief This matrix stores information about the aggregated areas used for printing
+   * \brief This is the IntMatrix used to store aggregated area information
    */
   IntMatrix areas;
   /**
-   * \brief This matrix stores information about the aggregated ages used for printing
+   * \brief This is the IntMatrix used to store aggregated age information
    */
   IntMatrix ages;
   /**
-   * \brief This is the CharPtrVector of the names for the areas used for printing
+   * \brief This is the CharPtrVector of the names of the aggregated areas to print
    */
   CharPtrVector areaindex;
   /**
-   * \brief This is the CharPtrVector of the names for the ages used for printing
+   * \brief This is the CharPtrVector of the names of the aggregated ages to print
    */
   CharPtrVector ageindex;
   /**
-   * \brief This is the CharPtrVector of the names for the lengths used for printing
+   * \brief This is the CharPtrVector of the names of the lengths to print
    */
   CharPtrVector lenindex;
   /**
-   * \brief This is the CharPtrVector of the names for the stock names used for printing
+   * \brief This is the CharPtrVector of the names of the stocks to print
    */
   CharPtrVector stocknames;
   /**

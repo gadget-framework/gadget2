@@ -20,7 +20,7 @@ public:
    */
   FormulaVector(int sz);
   /**
-   * \brief This is the FormulaVector constructor that create a copy of an existing FormulaVector
+   * \brief This is the FormulaVector constructor that creates a copy of an existing FormulaVector
    * \param initial is the FormulaVector to copy
    */
   FormulaVector(const FormulaVector& initial);
@@ -29,7 +29,13 @@ public:
    * \note This will free all the memory allocated to all the elements of the vector
    */
   ~FormulaVector();
-  void resize(int, Keeper*);
+   /**
+   * \brief This will add new empty entries to the vector and inform Keeper of the change
+   * \param addsize is the number of new entries to the vector
+   * \param keeper is the Keeper for the current model
+   * \note The new elements of the vector will be created, and set to zero
+   */
+ void resize(int addsize, Keeper* keeper);
   /**
    * \brief This will return the size of the vector
    * \return the size of the vector
@@ -47,8 +53,12 @@ public:
    * \return the value of the specified element
    */
   const Formula& operator [] (int pos) const;
-  void Inform(Keeper*);
-  friend CommentStream& operator >> (CommentStream&, FormulaVector&);
+  /**
+   * \brief This function will inform Keeper of the values of the stored Formula
+   * \param keeper is the Keeper for the current model
+   */
+  void Inform(Keeper* keeper);
+  friend CommentStream& operator >> (CommentStream& infile, FormulaVector& Fvector);
 protected:
   /**
    * \brief This is the size of the vector

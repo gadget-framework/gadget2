@@ -6,20 +6,20 @@
 #include "popinfovector.h"
 #include "gadget.h"
 
-PredatorAggregator::PredatorAggregator(const PredatorPtrVector& preds, const PreyPtrVector& Preys,
-  const IntMatrix& Areas, const LengthGroupDivision* const predLgrpDiv,
-  const LengthGroupDivision* const preyLgrpDiv)
-  : predators(preds), preys(Preys), areas(Areas), doeseat(preds.Size(), Preys.Size(), 0) {
+PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
+  const PreyPtrVector& Preys, const IntMatrix& Areas,
+  const LengthGroupDivision* const predLgrpDiv, const LengthGroupDivision* const preyLgrpDiv)
+  : predators(Predators), preys(Preys), areas(Areas), doeseat(Predators.Size(), Preys.Size(), 0) {
 
   int i, j, k;
   //First we check that the length group of every predator is finer
   //(not necessarily strictly finer) than that of predLgrpDiv;
   for (i = 0; i < predators.Size(); i++)
-    checkLengthGroupIsFiner(predators[i]->ReturnLengthGroupDiv(), predLgrpDiv,
+    checkLengthGroupIsFiner(predators[i]->returnLengthGroupDiv(), predLgrpDiv,
       predators[i]->Name(), "predator consumption");
   //Same check for preys.
   for (i = 0; i < preys.Size(); i++)
-    checkLengthGroupIsFiner(preys[i]->ReturnLengthGroupDiv(), preyLgrpDiv,
+    checkLengthGroupIsFiner(preys[i]->returnLengthGroupDiv(), preyLgrpDiv,
       preys[i]->Name(), "predator aggregator");
 
   for (i = 0; i < predators.Size(); i++) {
@@ -45,14 +45,14 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& preds, const Pre
         doeseat[i][j] = 1;
 
   //Resize total using dummy variable dm
-  DoubleMatrix dm(predLgrpDiv->NoLengthGroups(), preyLgrpDiv->NoLengthGroups(), 1);
+  DoubleMatrix dm(predLgrpDiv->NoLengthGroups(), preyLgrpDiv->NoLengthGroups(), 1.0);
   BandMatrix bm(dm, 0, 0);
   total.resize(areas.Nrow(), bm);
-  //Now total is initialized to 1, change it to 0.
+  //Now total is initialised to 1, change it to 0.
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)
       for (k = 0; k < total[i].Ncol(j); k++)
-        total[i][j][k] = 0;
+        total[i][j][k] = 0.0;
 }
 
 PredatorAggregator::PredatorAggregator(const CharPtrVector& prednames, PreyPtrVector& Preys,
@@ -117,7 +117,7 @@ PredatorAggregator::PredatorAggregator(const CharPtrVector& prednames, PreyPtrVe
 
   //Length check for preys.
   for (i = 0; i < preys.Size(); i++)
-    checkLengthGroupIsFiner(preys[i]->ReturnLengthGroupDiv(), preyLgrpDiv,
+    checkLengthGroupIsFiner(preys[i]->returnLengthGroupDiv(), preyLgrpDiv,
       preys[i]->Name(), "predator aggregator");
 
   predtot = 0;
@@ -155,26 +155,25 @@ PredatorAggregator::PredatorAggregator(const CharPtrVector& prednames, PreyPtrVe
   //the range of preyLgrpDiv.
 
   //Resize total using dummy variable dm
-  DoubleMatrix dm(ages.Size(), preyLgrpDiv->NoLengthGroups(), 1);
+  DoubleMatrix dm(ages.Size(), preyLgrpDiv->NoLengthGroups(), 1.0);
   BandMatrix bm(dm, 0, 0);
   total.resize(areas.Nrow(), bm);
 
-  //Now total is initialized to 1, change it to 0.
+  //Now total is initialised to 1, change it to 0.
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)
       for (k = 0; k < total[i].Ncol(j); k++)
-        total[i][j][k] = 0;
+        total[i][j][k] = 0.0;
 }
 
 void PredatorAggregator::Sum() {
   int g, h, i, j, k, l;
   int area, predLength, preyLength;
 
-  //Initialize total to 0.
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)
       for (k = 0; k < total[i].Ncol(j); k++)
-        total[i][j][k] = 0;
+        total[i][j][k] = 0.0;
 
   //Sum over the appropriate preys, predators, areas, and lengths.
   for (g = 0; g < predators.Size(); g++) {
@@ -216,12 +215,11 @@ void PredatorAggregator::Sum(int dummy) {
   DoubleMatrix tot_predators; //kgf 29/3 99 Keep total number of predators
                               //in an age group in each area
 
-  //Initialize total to 0 and set correct dimensions in tot_predators
   for (i = 0; i < total.Size(); i++) {
     tot_predators.AddRows(1, total[i].Nrow(), 0.0);
     for (j = 0; j < total[i].Nrow(); j++)
       for (k = 0; k < total[i].Ncol(j); k++)
-        total[i][j][k] = 0;
+        total[i][j][k] = 0.0;
   }
 
   //Sum over the appropriate preys, predators, areas, ages and lengths.
@@ -272,11 +270,10 @@ void PredatorAggregator::NumberSum() {
   int i, j, k, g, h, l;
   int area, predLength, preyLength;
 
-  //Initialize total to 0.
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)
       for (k = 0; k < total[i].Ncol(j); k++)
-        total[i][j][k] = 0;
+        total[i][j][k] = 0.0;
 
   //Sum over the appropriate preys, predators, areas, and lengths.
   for (g = 0; g < predators.Size(); g++) {

@@ -34,7 +34,7 @@
 //
 // A function to read fleet information
 //
-void Ecosystem::ReadFleet(CommentStream& infile) {
+void Ecosystem::readFleet(CommentStream& infile) {
   ErrorHandler handle;
   char text[MaxStrLength];
   char value[MaxStrLength];
@@ -74,7 +74,7 @@ void Ecosystem::ReadFleet(CommentStream& infile) {
 //
 // A function to read tagging information
 //
-void Ecosystem::ReadTagging(CommentStream& infile) {
+void Ecosystem::readTagging(CommentStream& infile) {
   ErrorHandler handle;
   char text[MaxStrLength];
   char value[MaxStrLength];
@@ -105,7 +105,7 @@ void Ecosystem::ReadTagging(CommentStream& infile) {
 //
 // A function to read otherfood information
 //
-void Ecosystem::ReadOtherFood(CommentStream& infile) {
+void Ecosystem::readOtherFood(CommentStream& infile) {
   ErrorHandler handle;
   char text[MaxStrLength];
   char value[MaxStrLength];
@@ -137,7 +137,7 @@ void Ecosystem::ReadOtherFood(CommentStream& infile) {
 // A function to read stock information
 // Note: there is only ever one stock in each file
 //
-void Ecosystem::ReadStock(CommentStream& infile, int mortmodel) {
+void Ecosystem::readStock(CommentStream& infile, int mortmodel) {
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -168,7 +168,7 @@ void Ecosystem::ReadStock(CommentStream& infile, int mortmodel) {
 //
 // A function to read information on printing
 //
-void Ecosystem::ReadPrinters(CommentStream& infile) {
+void Ecosystem::readPrinters(CommentStream& infile) {
   ErrorHandler handle;
   char text[MaxStrLength];
   char type[MaxStrLength];
@@ -227,7 +227,7 @@ void Ecosystem::ReadPrinters(CommentStream& infile) {
 //
 // A function to read likelihood information
 //
-void Ecosystem::ReadLikelihood(CommentStream& infile) {
+void Ecosystem::readLikelihood(CommentStream& infile) {
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -334,7 +334,7 @@ void Ecosystem::ReadLikelihood(CommentStream& infile) {
 //
 //The main reading function
 //
-void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
+void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
   int calclikelihood, const char* const inputdir, const char* const workingdir) {
 
   ErrorHandler handle;
@@ -376,13 +376,13 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
   infile >> text >> ws;
   while (!((strcasecmp(text, "[stock]") == 0) || infile.eof())) {
     //Do not read printfile if we are doing a net run, or if we are
-    //optimizing without the forcePrint option set. 07.04.00 AJ & mnaa.
-    if (!netrun  && (printinfo.forcePrint() || !optimize)) {
+    //optimizing without the getForcePrint option set. 07.04.00 AJ & mnaa.
+    if (!netrun  && (printinfo.getForcePrint() || !optimize)) {
       subfile.open(text, ios::in);
       checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
-      this->ReadPrinters(subcomment);
+      this->readPrinters(subcomment);
       chdir(inputdir);
       handle.Close();
       subfile.close();
@@ -412,7 +412,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
     checkIfFailure(subfile, text);
     handle.Open(text);
     chdir(workingdir);
-    this->ReadStock(subcomment, mort_mod);
+    this->readStock(subcomment, mort_mod);
     chdir(inputdir);
     handle.Close();
     subfile.close();
@@ -433,7 +433,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
       checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
-      this->ReadTagging(subcomment);
+      this->readTagging(subcomment);
       chdir(inputdir);
       handle.Close();
       subfile.close();
@@ -455,7 +455,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
       checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
-      this->ReadOtherFood(subcomment);
+      this->readOtherFood(subcomment);
       chdir(inputdir);
       handle.Close();
       subfile.close();
@@ -477,7 +477,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
       checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
-      this->ReadFleet(subcomment);
+      this->readFleet(subcomment);
       chdir(inputdir);
       handle.Close();
       subfile.close();
@@ -500,7 +500,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
         checkIfFailure(subfile, text);
         handle.Open(text);
         chdir(workingdir);
-        this->ReadLikelihood(subcomment);
+        this->readLikelihood(subcomment);
         chdir(inputdir);
         handle.Close();
         subfile.close();

@@ -31,6 +31,9 @@ protected:
    * \brief This is the time stamp used to denote the time that the current model run started
    */
   const char* timestring;
+  /**
+   * \brief This is the host machine that is running the current model
+   */
   struct utsname host;
 };
 

@@ -12,7 +12,7 @@ class NaturalM {
 public:
   NaturalM(CommentStream& infile, int minage, int maxage,
     const TimeClass* const TimeInfo, Keeper* const keeper);
-  NaturalM() {};
+  ~NaturalM() {};
   const DoubleVector& ProportionSurviving(const TimeClass* const TimeInfo) const;
   const DoubleIndexVector& getMortality() const;
   void Reset(const TimeClass* const TimeInfo);

@@ -27,23 +27,23 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 for success, 0 for failure
    */
-  int ReadFromFile(CommentStream& infile, const TimeClass* const TimeInfo);
+  int readFromFile(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This is the function used to add the action for a set of steps and years
-   * \param steps is a list of all the steps that have the action taking place
-   * \param years is a list of all the years that have the action taking place
+   * \param steps is the IntVector of all the steps that have the action taking place
+   * \param years is the IntVector of all the years that have the action taking place
    * \param TimeInfo is the TimeClass for the current model
    */
   void AddActions(const IntVector& years, const IntVector& steps, const TimeClass* const TimeInfo);
   /**
    * \brief This is the function used to add the action on all years for a set of steps
-   * \param steps is a list of all the steps that have the action taking place
+   * \param steps is the IntVector of all the steps that have the action taking place
    * \param TimeInfo is the TimeClass for the current model
    */
   void AddActionsAtAllYears(const IntVector& steps, const TimeClass* const TimeInfo);
   /**
    * \brief This is the function used to add the action on all steps for a set of years
-   * \param years is a list of all the years that have the action taking place
+   * \param years is the IntVector of all the years that have the action taking place
    * \param TimeInfo is the TimeClass for the current model
    */
   void AddActionsAtAllSteps(const IntVector& years, const TimeClass* const TimeInfo);
@@ -59,15 +59,15 @@ protected:
    */
   int EveryStep;
   /**
-   * \brief This is a vector of the timesteps on which the action takes place
+   * \brief This is the IntVector of the timesteps on which the action takes place
    */
   IntVector TimeSteps;
   /**
-   * \brief This is a vector of the years on which the action takes place
+   * \brief This is the IntVector of the years on which the action takes place
    */
   IntVector Years;
   /**
-   * \brief This is a vector of the steps on which the action takes place
+   * \brief This is the IntVector of the steps on which the action takes place
    */
   IntVector Steps;
 };

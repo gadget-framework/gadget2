@@ -23,7 +23,7 @@ PredPreyStdAgePrinter::~PredPreyStdAgePrinter() {
   delete predinfo;
 }
 
-void PredPreyStdAgePrinter::SetPopPredAndPrey(const PopPredator* pred,
+void PredPreyStdAgePrinter::setPopPredAndPrey(const PopPredator* pred,
   const Prey* pRey, int IsStockPredator, int IsStockPrey) {
 
   assert(!predinfo);

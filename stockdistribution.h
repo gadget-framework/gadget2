@@ -16,9 +16,9 @@ public:
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile);
-  void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
+  void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
-  void ReadStockData(CommentStream&, const TimeClass*, int, int, int);
+  void readStockData(CommentStream&, const TimeClass*, int, int, int);
   double LikMultinomial();
   double LikSumSquares();
   DoubleMatrixPtrMatrix AgeLengthData;

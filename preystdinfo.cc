@@ -13,7 +13,7 @@ PreyStdInfo::~PreyStdInfo() {
 
 void PreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   //We never have to change the values of NconByAge and NconByAgeAndLength,
-  //since they are initialized to 0.
+  //since they are initialised to 0.
   PSIByLength.Sum(TimeInfo, area);
   const int inarea = AreaNr[area];
   const int age = 0;

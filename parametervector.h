@@ -28,7 +28,7 @@ public:
    */
   ParameterVector(int sz, Parameter& initial);
   /**
-   * \brief This is the ParameterVector constructor that create a copy of an existing ParameterVector
+   * \brief This is the ParameterVector constructor that creates a copy of an existing ParameterVector
    * \param initial is the ParameterVector to copy
    */
   ParameterVector(const ParameterVector& initial);

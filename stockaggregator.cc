@@ -9,16 +9,16 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
 
   int i, j, k, l = 0;
   maxcol.resize(Ages.Nrow(), 0);
-  mincol.resize(Ages.Nrow(), 99999);
+  mincol.resize(Ages.Nrow(), 9999);
   maxrow = 0;
-  minrow = Ages.Nrow();
+  minrow = 9999;
   int numlengths = LgrpDiv->NoLengthGroups();
 
   for (i = 0; i < stocks.Size(); i++) {
-    checkLengthGroupIsFiner(stocks[i]->ReturnLengthGroupDiv(),
+    checkLengthGroupIsFiner(stocks[i]->returnLengthGroupDiv(),
       LgrpDiv, stocks[i]->Name(), "stock abundance numbers");
     CI.resize(1);
-    CI[i] = new ConversionIndex(stocks[i]->ReturnLengthGroupDiv(), LgrpDiv);
+    CI[i] = new ConversionIndex(stocks[i]->returnLengthGroupDiv(), LgrpDiv);
 
     //For convenience, use ap as shorthand for &(stocks[i]->Agelengthkeys(0))
     //Changed 25-9 2001 and the memberfunction Areas added to livesinareas
@@ -85,7 +85,6 @@ void StockAggregator::Sum() {
   int aggrArea, aggrAge, area, age;
   PopInfo nullpop;
 
-  //Initialize total to 0.
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)
       for (k = 0; k < total[i].Maxlength(j); k++)
@@ -105,7 +104,7 @@ void StockAggregator::Sum() {
             for (k = 0; k < ages.Ncol(aggrAge); k++) {
               age = ages[aggrAge][k];
               if ((alptr->Minage() <= age) && (age <= alptr->Maxage()))
-                PopinfoAdd(total[aggrArea][aggrAge], (*alptr)[age], *CI[i]);
+                total[aggrArea][aggrAge].Add((*alptr)[age], *CI[i]);
             }
           }
         }
@@ -119,7 +118,6 @@ void StockAggregator::MeanSum() {
   int aggrArea, aggrAge, area, age;
   PopInfo nullpop;
 
-  //Initialize meanTotal to 0.
   for (i = 0; i < meanTotal.Size(); i++)
     for (j = 0; j < meanTotal[i].Nrow(); j++)
       for (k = 0; k < meanTotal[i].Maxlength(j); k++)
@@ -139,7 +137,7 @@ void StockAggregator::MeanSum() {
             for (k = 0; k < ages.Ncol(aggrAge); k++) {
               age = ages[aggrAge][k];
               if ((alptr->Minage() <= age) && (age <= alptr->Maxage()))
-                PopinfoAdd(meanTotal[aggrArea][aggrAge], (*alptr)[age], *CI[i]);
+                meanTotal[aggrArea][aggrAge].Add((*alptr)[age], *CI[i]);
             }
           }
         }

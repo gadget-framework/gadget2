@@ -56,7 +56,7 @@ MortPrinter::MortPrinter(CommentStream& infile,
   readWordAndVariable(infile, "printm2", printm2);
   readWordAndVariable(infile, "printn", printn);
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", filename);
   datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
@@ -66,7 +66,7 @@ MortPrinter::MortPrinter(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
-  //Read in the stocknames
+  //read in the stocknames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "stocks") == 0))
@@ -81,7 +81,7 @@ MortPrinter::MortPrinter(CommentStream& infile,
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!AAT.ReadFromFile(infile, TimeInfo))
+  if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in mortprinter - wrong format for yearsandsteps");
 
   //JMB - changed so that firstyear is not read from file
@@ -103,18 +103,18 @@ MortPrinter::MortPrinter(CommentStream& infile,
   outfile.flush();
 }
 
-/*  SetStock
+/*  setStock
  *
- *  Purpose:  Initialize vector of stocks to be printed
+ *  Purpose:  Initialise vector of stocks to be printed
  *
  *  In:  StockPtrVector& stockvec     :vector of all stocks, the stock names from the
  *                                     input files are matched with these.
  *
- *  Usage:  SetStock(stockvec)
+ *  Usage:  setStock(stockvec)
  *
  *  Pre:  stockvec.Size() > 0, all stocks names in input file are in stockvec
  */
-void MortPrinter::SetStock(StockPtrVector& stockvec) {
+void MortPrinter::setStock(StockPtrVector& stockvec) {
   int index = 0;
   int i, j;
   for (i = 0; i < stockvec.Size(); i++)
@@ -168,7 +168,7 @@ void MortPrinter::SetStock(StockPtrVector& stockvec) {
  *
  *  Usage:  Print(TimeInfo)
  *
- *  Pre:  SetStock has been called
+ *  Pre:  setStock has been called
  */
 void MortPrinter::Print(const TimeClass* const TimeInfo) {
   int s, i, j, area, inarea, age, yo;

@@ -203,8 +203,8 @@ ostream& printAgeGroups(ostream& o, const IntVector& ages, int indent) {
     << pred.Name() << endl;
   for (i = 0; i < pred.NoPreys(); i++) {
     o << ind << "  prey\n" << ind << "    " << pred.Preys(i)->Name() << endl;
-    printMatrixHeader(o, *pred.Preys(i)->ReturnLengthGroupDiv(),
-      *pred.ReturnLengthGroupDiv(), "suitability", 0, indent + 2);
+    printMatrixHeader(o, *pred.Preys(i)->returnLengthGroupDiv(),
+      *pred.returnLengthGroupDiv(), "suitability", 0, indent + 2);
     printSuitMatrix(o, pred.Suitability(i), 0);
   }
   delete[] ind;
@@ -276,7 +276,7 @@ ostream& printc_hat(ostream& o, const MortPredator& pred, AreaClass area, int in
       if (pred.Preys(p)->IsInArea(a)) {
         o << ind << "  prey\n" << ind << "    " << pred.Preys(p)->Name() << endl;
         printMatrixHeader(o, pred.minPreyAge(p, a), pred.maxPreyAge(p, a),
-          *pred.Preys(p)->ReturnLengthGroupDiv(), "c_hat", 0, indent + 2);
+          *pred.Preys(p)->returnLengthGroupDiv(), "c_hat", 0, indent + 2);
         if (&(pred.c_hat[a][p]) != 0)
           printBandMatrix(o, pred.c_hat[a][p], 0, indent);
         else
@@ -293,7 +293,7 @@ ostream& printz(ostream& o, const MortPrey& prey, AreaClass area, int indent) {
   int ar;
   for (ar = 0; ar < area.NoAreas(); ar++) {
     printAreasHeader(o, IntVector(1, ar), indent + 2);
-    printVectorHeader(o, *prey.ReturnLengthGroupDiv(), "z", indent + 2);
+    printVectorHeader(o, *prey.returnLengthGroupDiv(), "z", indent + 2);
     printVector(o, prey.z[ar], indent);
   }
   delete[] ind;
@@ -307,7 +307,7 @@ ostream& printcannibalism(ostream& o, const MortPrey& prey, AreaClass area, int 
   int ar;
   for (ar = 0; ar < area.NoAreas(); ar++) {
     printAreasHeader(o, IntVector(1, ar), indent + 2);
-    printVectorHeader(o, *prey.ReturnLengthGroupDiv(), "cannibalism", indent + 2);
+    printVectorHeader(o, *prey.returnLengthGroupDiv(), "cannibalism", indent + 2);
     printVector(o, prey.cannibalism[ar], indent);
   }
   delete[] ind;
@@ -334,7 +334,7 @@ ostream& printmean_n(ostream& o, const MortPrey& prey, AreaClass area, int inden
   int ar;
   for (ar = 0; ar < area.NoAreas(); ar++) {
     printAreasHeader(o, IntVector(1, ar), indent + 2);
-    printMatrixHeader(o, 1, 1, *(prey.ReturnLengthGroupDiv()), "mean_n", 0, indent + 2);
+    printMatrixHeader(o, 1, 1, *(prey.returnLengthGroupDiv()), "mean_n", 0, indent + 2);
     printN(o, prey.Alkeys[ar], 0, indent);
   }
   delete[] ind;
@@ -386,7 +386,7 @@ ostream& printmean_n(ostream& o, const MortPrey& prey, AreaClass area, int inden
   int i;
   char* ind = makeSpaces(indent);
   o << ind << "stock\n" << ind << sep << stock.Name() << endl;
-  printVectorHeader(o, *stock.ReturnLengthGroupDiv(), "mortality", indent);
+  printVectorHeader(o, *stock.returnLengthGroupDiv(), "mortality", indent);
   o << ind;
   for (i = 0; i < stock.mortality().Size(); i++)
     o << stock.mortality()[i] << sep;

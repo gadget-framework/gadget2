@@ -15,9 +15,9 @@ public:
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
-  void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
+  void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
-  void ReadStatisticsData(CommentStream& infile, const TimeClass* TimeInfo,
+  void readStatisticsData(CommentStream& infile, const TimeClass* TimeInfo,
     int numarea, int numage);
   double SOSWeightOrLength();
   DoubleMatrixPtrVector numbers;

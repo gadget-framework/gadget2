@@ -27,9 +27,9 @@ public:
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   /**
    * \brief This will select the stocks required for the likelihood class to calculate the requested information
-   * \param Stocks is the StockPtrVector listing all the available stocks
+   * \param Stocks is the StockPtrVector of all the available stocks
    */
-  void SetStocks(StockPtrVector Stocks);
+  void setStocks(StockPtrVector Stocks);
   /**
    * \brief This function will print the summary likelihood information
    * \param outfile is the ofstream that all the model information gets sent to
@@ -42,11 +42,11 @@ private:
    */
   char* stockname;
   /**
-   * \brief This is the stock that will be checked for incorrect migration
+   * \brief This is the Stock that will be checked for incorrect migration
    */
   Stock* stock;
   /**
-   * \brief This is the vector of the coefficients to be applied when there is incorrect migration
+   * \brief This is the DoubleVector of the coefficients to be applied when there is incorrect migration
    */
   DoubleVector powercoeffs;
 };

@@ -60,7 +60,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
           (*(*v[i])[lgrp][tag].N) = number[tag];
       }
     }
-    this->UpdateRatio(Total);
+    this->updateRatio(Total);
   }
 }
 
@@ -86,7 +86,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
       //The part that grows to or above the highest length group.
       for (lgrp = maxlgrp; lgrp >= v[i]->Maxcol() - Lgrowth.Nrow(); lgrp--) {
         for (grow = v[i]->Maxcol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
-          ratio =  Mat->MaturationProbability(age, lgrp, grow, TimeInfo, Area, area, Total[i + minage][lgrp].W);
+          ratio =  Mat->MaturationProbability(age, lgrp, grow, TimeInfo, area, Total[i + minage][lgrp].W);
           for (tag = 0; tag < NrOfTagExp; tag++) {
             upfj = Lgrowth[grow][lgrp] * (*(*v[i])[lgrp][tag].N);
             matnum[tag] += upfj * ratio;
@@ -111,7 +111,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
         }
 
         for (grow = 0; grow < Lgrowth.Nrow(); grow++) {
-          ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, Area, area, Total[i + minage][lgrp - grow].W);
+          ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, area, Total[i + minage][lgrp - grow].W);
           for (tag = 0; tag < NrOfTagExp; tag++) {
             upfj = Lgrowth[grow][lgrp - grow] * (*(*v[i])[lgrp - grow][tag].N);
             matnum[tag] += upfj * ratio;
@@ -136,7 +136,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
         }
 
         for (grow = 0; grow <= lgrp - v[i]->Mincol(); grow++) {
-          ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, Area, area, Total[i + minage][lgrp - grow].W);
+          ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, area, Total[i + minage][lgrp - grow].W);
           for (tag = 0; tag < NrOfTagExp; tag++) {
             upfj = Lgrowth[grow][lgrp - grow] * (*(*v[i])[lgrp - grow][tag].N);
             matnum[tag] += upfj * ratio;
@@ -153,6 +153,6 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
         }
       }
     }
-    this->UpdateRatio(Total);
+    this->updateRatio(Total);
   }
 }

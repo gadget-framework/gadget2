@@ -18,13 +18,12 @@ Predator::~Predator() {
   delete Suitable;
 }
 
-void Predator::SetPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
+void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   assert(preys.Size() == 0);
-  //Resize the vector preys and initialize pointers to 0.
-  preys.resize(this->NoPreys(), 0);
   int i, j;
   int found = 0;
 
+  preys.resize(this->NoPreys(), 0);
   for (i = 0; i < preyvec.Size(); i++) {
     found = 0;
     for (j = 0; j < this->NoPreys(); j++) {
@@ -59,7 +58,7 @@ void Predator::SetPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     }
   }
   //Now we can resize objects according to the size of this->NoPreys().
-  this->ResizeObjects();
+  this->resizeObjects();
 }
 
 int Predator::doesEat(const char* preyname) const {
@@ -101,10 +100,10 @@ void Predator::DeleteParametersForPrey(int p, Keeper* const keeper) {
   Suitable->DeletePrey(p, keeper);
 }
 
-void Predator::ResizeObjects() {
+void Predator::resizeObjects() {
 }
 
-void Predator::SetSuitability(const Suits* const S, Keeper* const keeper) {
+void Predator::setSuitability(const Suits* const S, Keeper* const keeper) {
   if (Suitable != 0) {
     cerr << "Error in predator " << this->Name()
       << "\nTrying to set suitability twice\n";
@@ -114,7 +113,7 @@ void Predator::SetSuitability(const Suits* const S, Keeper* const keeper) {
   Suitable = new Suits(*S, keeper);
 }
 
-int Predator::ReadSuitabilityMatrix(CommentStream& infile,
+int Predator::readSuitabilityMatrix(CommentStream& infile,
   const char* FinalString, const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   // the suitability matrix has each line either

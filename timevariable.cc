@@ -7,7 +7,7 @@ TimeVariable::TimeVariable()
   firsttimestepnr(0), lastvalue(-1.0), value(0), description(0) {
 }
 
-void TimeVariable::Read(CommentStream& infile,
+void TimeVariable::read(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   keeper->AddString("TimeVariable");
@@ -30,13 +30,13 @@ void TimeVariable::Read(CommentStream& infile,
     delete number;
   } else {
     handle.Open(text);
-    ReadFromFile(subcomment, TimeInfo, keeper);
+    readFromFile(subcomment, TimeInfo, keeper);
     handle.Close();
   }
   keeper->ClearLast();
 }
 
-void TimeVariable::ReadFromFile(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper) {
+void TimeVariable::readFromFile(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper) {
   int i, j;
   ValuesReadFromFile = 1;
   int nrofcoeff = 0;

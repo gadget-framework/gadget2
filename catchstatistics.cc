@@ -56,7 +56,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   else
     handle.Message("Error in catchstatistics - unrecognised function", functionname);
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -66,7 +66,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   datafile.close();
   datafile.clear();
 
-  //Read in age aggregation from file
+  //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
@@ -82,7 +82,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
       if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
         handle.UndefinedArea(areas[i][j]);
 
-  //Read in the fleetnames
+  //read in the fleetnames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
@@ -95,7 +95,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     infile >> text >> ws;
   }
 
-  //Read in the stocknames
+  //read in the stocknames
   i = 0;
   if (!(strcasecmp(text, "stocknames") == 0))
     handle.Unexpected("stocknames", text);
@@ -113,13 +113,13 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadStatisticsData(subdata, TimeInfo, numarea, numage);
+  readStatisticsData(subdata, TimeInfo, numarea, numage);
   handle.Close();
   datafile.close();
   datafile.clear();
 }
 
-void CatchStatistics::ReadStatisticsData(CommentStream& infile,
+void CatchStatistics::readStatisticsData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea, int numage) {
 
   int i;
@@ -266,7 +266,7 @@ void CatchStatistics::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void CatchStatistics::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
+void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, found;
   FleetPtrVector fleets;
   StockPtrVector stocks;
@@ -290,7 +290,7 @@ void CatchStatistics::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
     found = 0;
     for (j = 0; j < Stocks.Size(); j++)
       if (Stocks[j]->IsEaten())
-        if (strcasecmp(stocknames[i], Stocks[j]->ReturnPrey()->Name()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
           found = 1;
           stocks.resize(1, Stocks[j]);
         }
@@ -302,9 +302,9 @@ void CatchStatistics::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
     }
   }
 
-  lgrpDiv = new LengthGroupDivision(*(stocks[0]->ReturnPrey()->ReturnLengthGroupDiv()));
+  lgrpDiv = new LengthGroupDivision(*(stocks[0]->returnPrey()->returnLengthGroupDiv()));
   for (i = 1; i < stocks.Size(); i++)
-    if (!lgrpDiv->Combine(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv())) {
+    if (!lgrpDiv->Combine(stocks[i]->returnPrey()->returnLengthGroupDiv())) {
       cerr << "Length group divisions for preys in catchstatistics not compatible\n";
       exit(EXIT_FAILURE);
     }
@@ -328,10 +328,10 @@ double CatchStatistics::SOSWeightOrLength() {
   double simmean, simvar, simnumber, simdiff;
 
   simmean = simvar = simnumber = simdiff = 0.0;
-  const AgeBandMatrixPtrVector *alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector *alptr = &aggregator->returnSum();
   for (nareas = 0; nareas < alptr->Size(); nareas++) {
     for (age = 0; age < (*alptr)[nareas].Nrow(); age++) {
-      PopStatistics PopStat((*alptr)[nareas][age], aggregator->ReturnLgrpDiv());
+      PopStatistics PopStat((*alptr)[nareas][age], aggregator->returnLengthGroupDiv());
 
       switch(functionnumber) {
         case 1:

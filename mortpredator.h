@@ -24,7 +24,7 @@ public:
   virtual void Print(ofstream& infile) const;
   virtual const PopInfoVector& NumberPriortoEating(int area, const char* preyname) const;
   void calcFlevel();
-  void InitializeCHat(int area, int prey, const AgeBandMatrix& mean_n);
+  void InitialiseCHat(int area, int prey, const AgeBandMatrix& mean_n);
   void calcCHat(int area, const TimeClass* const TimeInfo);
   void Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& ratio);
   virtual const double consumedBiomass(int prey_nr, int area_nr) const;

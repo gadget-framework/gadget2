@@ -26,7 +26,7 @@ public:
    */
   PrinterPtrVector(int sz, Printer* initial);
   /**
-   * \brief This is the PrinterPtrVector constructor that create a copy of an existing PrinterPtrVector
+   * \brief This is the PrinterPtrVector constructor that creates a copy of an existing PrinterPtrVector
    * \param initial is the PrinterPtrVector to copy
    */
   PrinterPtrVector(const PrinterPtrVector& initial);

@@ -21,7 +21,7 @@ public:
   virtual const BandMatrix& Consumption(int area, const char* preyname) const;
   virtual const DoubleVector& Consumption(int area) const { return totalconsumption[AreaNr[area]]; };
   virtual const DoubleVector& OverConsumption(int area) const { return overconsumption[AreaNr[area]]; };
-  virtual const LengthGroupDivision* ReturnLengthGroupDiv() const { return LgrpDiv; };
+  virtual const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   virtual int NoLengthGroups() const { return LgrpDiv->NoLengthGroups(); };
   virtual double Length(int i) const { return LgrpDiv->Meanlength(i); };
   virtual void Reset(const TimeClass* const TimeInfo);
@@ -29,7 +29,7 @@ public:
   void Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& ratio); //kgf 3/8 98
 protected:
   virtual void DeleteParametersForPrey(int prey, Keeper* const keeper);
-  virtual void ResizeObjects();
+  virtual void resizeObjects();
   LengthGroupDivision* LgrpDiv;
   ConversionIndex* CI;
   //storage variables for intermediate calculations.

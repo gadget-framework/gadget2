@@ -17,35 +17,35 @@ public:
    */
   DoubleMatrixPtrMatrix() { nrow = 0; v = 0; };
   /**
-   * \brief This is the DoubleMatrixPtrVector constructor for a specified size
+   * \brief This is the DoubleMatrixPtrMatrix constructor for a specified size
    * \param nrow is the size of the vector to be created
    * \param ncol is the length of each row to be created (ie. the size of the DoubleMatrixPtrVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
   DoubleMatrixPtrMatrix(int nrow, int ncol);
   /**
-   * \brief This is the DoubleMatrixPtrVector constructor for a specified size
+   * \brief This is the DoubleMatrixPtrMatrix constructor for a specified size
    * \param nrow is the size of the vector to be created
    * \param ncol is the length of each row to be created (ie. the size of the DoubleMatrixPtrVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
   DoubleMatrixPtrMatrix(int nrow, int ncol, DoubleMatrix* initial);
   /**
-   * \brief This is the DoubleMatrixPtrVector constructor for a specified size
+   * \brief This is the DoubleMatrixPtrMatrix constructor for a specified size
    * \param nrow is the size of the vector to be created
    * \param ncol is the length of the rows to be created (ie. the size of the DoubleMatrixPtrVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
   DoubleMatrixPtrMatrix(int nrow, const IntVector& ncol);
   /**
-   * \brief This is the DoubleMatrixPtrVector constructor for a specified size
+   * \brief This is the DoubleMatrixPtrMatrix constructor for a specified size
    * \param nrow is the size of the vector to be created
    * \param ncol is the length of the rows to be created (ie. the size of the DoubleMatrixPtrVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
   DoubleMatrixPtrMatrix(int nrow, const IntVector& ncol, DoubleMatrix* initial);
   /**
-   * \brief This is the DoubleMatrixPtrMatrix constructor that create a copy of an existing DoubleMatrixPtrMatrix
+   * \brief This is the DoubleMatrixPtrMatrix constructor that creates a copy of an existing DoubleMatrixPtrMatrix
    * \param initial is the DoubleMatrixPtrMatrix to copy
    */
   DoubleMatrixPtrMatrix(const DoubleMatrixPtrMatrix& initial);

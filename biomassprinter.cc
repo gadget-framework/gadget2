@@ -33,12 +33,12 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
   strncpy(text, "", MaxStrLength);
   int i;
 
-  //Read in the immatrure stock name
+  //read in the immatrure stock name
   immname = new char[MaxStrLength];
   strncpy(immname, "", MaxStrLength);
   readWordAndValue(infile, "immature", immname);
 
-  //Read in the mature stock names
+  //read in the mature stock names
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "mature") == 0))
@@ -51,7 +51,7 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
     infile >> text >> ws;
   }
 
-  //Read in area aggregation from file
+  //read in area aggregation from file
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
@@ -89,7 +89,7 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
   firstyear = TimeInfo->FirstYear();
 }
 
-/*  SetStock
+/*  setStock
  *
  *  Purpose: Initialise vector of stocks to be printed
  *
@@ -97,12 +97,12 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
  *                                    names from the input files are
  *                                    matched with these.
  *
- *  Usage: SetStock(stockvec)
+ *  Usage: setStock(stockvec)
  *
  *  Pre: stockvec.Size() > 0, all stocks names in input file are in stockvec
  */
 
-void BiomassPrinter::SetStock(StockPtrVector& stockvec) {
+void BiomassPrinter::setStock(StockPtrVector& stockvec) {
   assert(stockvec.Size() > 0);
   int index = 0;
   immindex = -1;
@@ -153,7 +153,7 @@ void BiomassPrinter::SetStock(StockPtrVector& stockvec) {
  *
  *  Usage: Print(TimeInfo)
  *
- *  Pre: SetStock has been called
+ *  Pre: setStock has been called
  */
 
 void BiomassPrinter::Print(const TimeClass* const TimeInfo) {
