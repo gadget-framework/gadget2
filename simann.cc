@@ -208,21 +208,21 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
   double vmlen, double rt, int ns, int nt, double eps, double ur, double lr, int check) {
 
   int n = nvar;         //Number of variables in the function to be optimized
-  double x[NUM_VARS];   //The starting values for the variables
+  double x[NUMVARS];    //The starting values for the variables
   int max = m;          //Denotes whether the func. should be maximized or
                         //minimized: 1 = maximization 0 = minimization
   int maxevl = maxeval; //Maximum number of func. evaluations
   double t = tempt;     //On input, the initial temperature
                         //On output, the final temperature
-  double vm[NUM_VARS];  //The step length vector
-  double fstar[NUM_VARS];
+  double vm[NUMVARS];   //The step length vector
+  double fstar[NUMVARS];
   double fopt;          //The optimal value of the function
   double funcval, fp;
   double ratio;         //Dummy variable for updating vm
   double cs;            //Dummy variable for updating vm
   double uratio = ur;   //Value for the upper bound when updating vm
   double lratio = lr;   //Value for the lower bound when updating vm
-  int nacp[NUM_VARS];   //Number of accepted tries for each parameter
+  int nacp[NUMVARS];    //Number of accepted tries for each parameter
   int quit = 0;         //Used to check the exit criteria
 
   //set initial values
@@ -233,8 +233,8 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
   int nobds = 0;        //Total number of trial functions that were out of bounds
   int i, a, j, h, k, change, l, offset;
   double p, pp;
-  double xp[NUM_VARS];
-  int param[NUM_VARS];  //Vector containing the order of the parameters at each time
+  double xp[NUMVARS];
+  int param[NUMVARS];   //Vector containing the order of the parameters at each time
 
   cout << "\nStarting Simulated Annealing\n";
   //check the values specified in the optinfo file ...

@@ -129,36 +129,6 @@ int readVectorInLine(CommentStream& infile, DoubleVector& Vec) {
   return 1;
 }
 
-int readVectorInLine(CommentStream& infile, ParameterVector& Vec) {
-  if (infile.fail())
-    return 0;
-
-  int i;
-  char line[MaxStrLength];
-  strncpy(line, "", MaxStrLength);
-  infile.getLine(line, MaxStrLength);
-  if (infile.fail()) {
-    handle.Message("Error in readvectorinline - failed to read data");
-    return 0;
-  }
-
-  istringstream istr(line);
-  istr >> ws;
-  i = 0;
-  while (!istr.eof()) {
-    if (i == Vec.Size())
-      Vec.resize(1);
-    istr >> Vec[i];
-    if (istr.fail() && !istr.eof()) {
-      handle.Message("Error in readvectorinline - failed to read data");
-      return 0;
-    }
-    istr >> ws;
-    i++;
-  }
-  return 1;
-}
-
 int readRefWeights(CommentStream& infile, DoubleMatrix& M) {
   if (infile.fail())
     return 0;

@@ -140,7 +140,7 @@ extern Ecosystem* EcoSystem;
 double bestNearby(double (*f)(double*, int), double delta[], double point[],
   double prevbest, int nvars, int param[]) {
 
-  double z[NUM_VARS];
+  double z[NUMVARS];
   double minf, ftmp;
   int    i;
 
@@ -173,17 +173,17 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
   double upperb[], double lowerb[], double rho, double lambda, double epsilon,
   int maxevl, double init[], double bndcheck) {
 
-  double delta[NUM_VARS];
-  double xbefore[NUM_VARS];
-  double newx[NUM_VARS];
+  double delta[NUMVARS];
+  double xbefore[NUMVARS];
+  double newx[NUMVARS];
   double oldf, newf, fbefore, steplength, tmp, check;
   int    i, k, h, keep, change, nobds, iters, offset;
-  int    param[NUM_VARS];
+  int    param[NUMVARS];
 
-  int    lbounds[NUM_VARS];     //counts how often it has hit the lowerbounds
-  int    rbounds[NUM_VARS];     //counts how often it has hit the upperbounds
-  double initialstep[NUM_VARS]; //the stepsize when it hits the bound first
-  int    trapped[NUM_VARS];     // = 1 if it is trapped at a bound else = 0
+  int    lbounds[NUMVARS];     //counts how often it has hit the lowerbounds
+  int    rbounds[NUMVARS];     //counts how often it has hit the upperbounds
+  double initialstep[NUMVARS]; //the stepsize when it hits the bound first
+  int    trapped[NUMVARS];     // = 1 if it is trapped at a bound else = 0
 
   cout << "\nStarting Hooke and Jeeves\n";
   //check the values specified in the optinfo file ...

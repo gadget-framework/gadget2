@@ -74,7 +74,6 @@ public:
    */
   Parameter const& operator [] (int pos) const;
   friend CommentStream& operator >> (CommentStream& infile, ParameterVector& paramVec);
-  //int readVectorInLine(CommentStream& infile);
 protected:
   /**
    * \brief This is the vector of Parameter values
@@ -85,6 +84,8 @@ protected:
    */
   int size;
 };
+
+int readVectorInLine(CommentStream& infile, ParameterVector& Vec);
 
 #ifdef GADGET_INLINE
 #include "parametervector.icc"

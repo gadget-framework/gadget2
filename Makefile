@@ -93,7 +93,7 @@ SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
 GADGETINPUT = initialinputfile.o vectorofcharptr.o charptrvector.o \
 	commentstream.o parameter.o parametervector.o doubleindexvector.o \
-	intvector.o doublevector.o intmatrix.o doublematrix.o 
+	intvector.o doublevector.o intmatrix.o doublematrix.o
 
 LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
 

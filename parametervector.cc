@@ -99,31 +99,6 @@ CommentStream& operator >> (CommentStream& infile, ParameterVector& paramVec) {
   return infile;
 }
 
-/*int ParameterVector::readVectorInLine(CommentStream& infile) {
-  if (infile.fail())
-    return 0;
-  char line[MaxStrLength];
-  strncpy(line, "", MaxStrLength);
-  infile.getLine(line, MaxStrLength);
-  if (infile.fail())
-    return 0;
-  istringstream istr(line);
-  istr >> ws;
-  int i = 0;
-  while (!istr.eof()) {
-    if (i == Size())
-      resize(1);
-    istr >> v[i];
-    if (istr.fail())
-      //could return the number of the last read element...
-      //but compatibility with older code has to be assured
-      return 0;
-    istr >> ws;
-    i++;
-  }
-  return 1;
-}*/
-
 ParameterVector& ParameterVector::operator = (const ParameterVector& paramv) {
   if (this == &paramv)
     return *this;
@@ -142,4 +117,31 @@ ParameterVector& ParameterVector::operator = (const ParameterVector& paramv) {
   } else
     v = 0;
   return *this;
+}
+
+int readVectorInLine(CommentStream& infile, ParameterVector& Vec) {
+  if (infile.fail())
+    return 0;
+
+  int i;
+  char line[MaxStrLength];
+  strncpy(line, "", MaxStrLength);
+  infile.getLine(line, MaxStrLength);
+  if (infile.fail())
+    return 0;
+
+  istringstream istr(line);
+  istr >> ws;
+  i = 0;
+  while (!istr.eof()) {
+    if (i == Vec.Size())
+      Vec.resize(1);
+    istr >> Vec[i];
+    if (istr.fail() && !istr.eof()) 
+      return 0;
+
+    istr >> ws;
+    i++;
+  }
+  return 1;
 }
