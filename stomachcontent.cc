@@ -140,8 +140,8 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
   //read in the predators
   i = 0;
   infile >> text >> ws;
-  if (strcasecmp(text, "predators") != 0)
-    handle.Unexpected("predators", text);
+  if (!((strcasecmp(text, "predators") == 0) || (strcasecmp(text, "predatornames") == 0)))
+    handle.Unexpected("predatornames", text);
   infile >> text >> ws;
   while (!infile.eof() && ((strcasecmp(text, "predatorlengths") != 0)
       && (strcasecmp(text, "predatorages") != 0))) {

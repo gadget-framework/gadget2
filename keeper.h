@@ -182,8 +182,9 @@ public:
   void writeOptValues(const LikelihoodPtrVector& Likely) const;
   /**
    * \brief This function will check that the values of the parameters are within the bounds specified in the input file
+   * \param Likely is the LikelihoodPtrVector containing the likelihood components for the current model
    */
-  void checkBounds() const;
+  void checkBounds(const LikelihoodPtrVector& Likely) const;
   /**
    * \brief This function will return the flag used to denote whether the bounds of the parameters have been specified or not
    */

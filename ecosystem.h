@@ -200,7 +200,7 @@ public:
   /**
    * \brief This function will check that the values of the parameters are within the specified bounds
    */
-  void checkBounds() const { keeper->checkBounds(); };
+  void checkBounds() const { keeper->checkBounds(Likely); };
   /**
    * \brief This function will return the number of variables to be optimised
    * \return number of variables to be optimised

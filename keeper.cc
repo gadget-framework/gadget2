@@ -510,7 +510,7 @@ void Keeper::Switches(ParameterVector& sw) const {
 
 void Keeper::writeParamsInColumns(const char* const filename, int prec, int interrupt) const {
 
-  int i, p, w;
+  int i, p, w, check;
   ofstream outfile;
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
@@ -567,10 +567,25 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec, int inte
 
   outfile << "switch\tvalue\t\tlower\tupper\toptimise\n";
   for (i = 0; i < bestvalues.Size(); i++) {
-    outfile << switches[i] << TAB << setw(w) << setprecision(p) << bestvalues[i] << TAB;
+    //JMB - if a switch is outside the bounds, we need to reset this back to the bound
+    //note that the simulation should have used the value of the bound anyway ...
+    check = 0;
+    if (lowerbds[i] > bestvalues[i]) {
+      check++;
+      outfile << switches[i] << TAB << setw(w) << setprecision(p) << lowerbds[i] << TAB;
+    } else if (upperbds[i] < bestvalues[i]) {
+      check++;
+      outfile << switches[i] << TAB << setw(w) << setprecision(p) << upperbds[i] << TAB;
+    } else
+      outfile << switches[i] << TAB << setw(w) << setprecision(p) << bestvalues[i] << TAB;
+    
     outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i]
       << setw(smallwidth) << setprecision(smallprecision) << upperbds[i]
-      << setw(smallwidth) << opt[i] << endl;
+      << setw(smallwidth) << opt[i];
+
+    if (check)
+      outfile << " ; warning - parameter has been reset to bound";
+    outfile << endl;
   }
   handle.Close();
   outfile.close();
@@ -623,11 +638,23 @@ void Keeper::UpperOptBds(DoubleVector& ubs) const {
   }
 }
 
-void Keeper::checkBounds() const {
+void Keeper::checkBounds(const LikelihoodPtrVector& Likely) const {
   if (boundsgiven == 0)
     return;
 
-  int i, count = 0; 
+  int i, count;
+  
+  //check that we have a boundlikelihood component
+  count = 0;
+  for (i = 0; i < Likely.Size(); i++) {
+    if (Likely[i]->Type() == BOUNDLIKELIHOOD)
+      count++;
+  }
+  if (count == 0)
+    handle.logWarning("Warning in keeper - no boundlikelihood component found");
+  
+  //check the values of the switches are within the bounds to start with
+  count = 0;
   for (i = 0; i < values.Size(); i++) {
     if (lowerbds[i] > values[i]) {
       count++;
