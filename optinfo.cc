@@ -152,7 +152,7 @@ void OptInfoHooke::MaximizeLikelihood() {
 }
 
 OptInfoSimann::OptInfoSimann()
-  : OptInfo(), rt(0.85), simanneps(1e-4), ns(15), nt(10), T(100),
+  : OptInfo(), rt(0.85), simanneps(1e-4), ns(5), nt(2), T(100),
     cs(2), vm(1), simanniter(2000), uratio(0.7), lratio(0.3), check(4) {
 }
 
@@ -259,7 +259,7 @@ void OptInfoSimann::MaximizeLikelihood() {
 
 OptInfoHookeAndSimann::OptInfoHookeAndSimann()
   : OptInfo(), hookeiter(1000), rho(0.5), lambda(0), hookeeps(1e-4), bndcheck(0.9999),
-    simanniter(2000), rt(0.85), simanneps(1e-4), ns(15), nt(10), T(100),
+    simanniter(2000), rt(0.85), simanneps(1e-4), ns(5), nt(2), T(100),
     cs(2), vm(1), uratio(0.7), lratio(0.3), check(4) {
 }
 

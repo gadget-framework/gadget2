@@ -108,7 +108,7 @@ libvec.a:	$(VECTORS)
 install	:	gadget
 	strip gadget
 	cp gadget /usr/local/bin/
-	cp gadget.1.gz /usr/local/man/man1/
+	cp gadget.1 /usr/local/man/man1/
 
 ##########################################################################
 # The following line is needed to create the gadget input library
