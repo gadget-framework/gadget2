@@ -383,11 +383,11 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     subfile.clear();
 
   } else
-    handle.Unexpected("normalcondfile, normalparamfile or numberfile", text);
+    handle.Message("Error in initial conditions - unrecognised data format", text);
 
   keeper->clearLast();
 
-  if ((readoption == 0) || (readoption == 2)) {
+  if (readoption == 0) {
     //read information on reference weights.
     DoubleMatrix tmpRefW;
     keeper->addString("referenceweights");
