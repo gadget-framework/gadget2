@@ -27,7 +27,7 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
   double Areasize, int CurrentSubstep, int numsubsteps) {
 
   //The parameters Temperature and Areasize will not be used.
-  const int inarea = AreaNr[area];
+  int inarea = AreaNr[area];
   int prey, predl, preyl;
   double tmp;
 
@@ -93,7 +93,7 @@ void LinearPredator::adjustConsumption(int area, int numsubsteps, int CurrentSub
   int prey, predl, preyl;
   int AnyPreyEatenUp = 0;
   double ratio, tmp;
-  const int inarea = AreaNr[area];
+  int inarea = AreaNr[area];
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     overcons[inarea][predl] = 0.0;

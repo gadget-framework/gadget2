@@ -39,6 +39,7 @@ void PredStdInfoByLength::InitialiseObjects() {
   for (i = 0; i < bm.Nrow(); i++)
     for (j = 0; j < bm.Ncol(i); j++)
       bm[i][j] = 0;
+
   MortbyLength.resize(areas.Size(), bm);
   NconbyLength.resize(areas.Size(), bm);
   BconbyLength.resize(areas.Size(), bm);
@@ -48,18 +49,19 @@ void PredStdInfoByLength::InitialiseObjects() {
 }
 
 void PredStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
-  const int inarea = AreaNr[area];
+  int inarea = AreaNr[area];
   preyinfo->Sum(TimeInfo, area);
   const DoubleVector& NpreyEaten = preyinfo->NconsumptionByLength(area);
   const DoubleVector& BpreyEaten = preyinfo->BconsumptionByLength(area);
   const DoubleVector& TotpreyMort = preyinfo->MortalityByLength(area);
   const BandMatrix& BpredEaten = predator->Consumption(area, prey->Name());
   int predl, preyl;
+  double proportion;
 
   for (predl = 0; predl < NconbyLength[inarea].Nrow(); predl++)
     for (preyl = 0; preyl < NconbyLength[inarea].Ncol(); preyl++) {
       //proportion equals the proportion of the predation on preyl that predl acounts for.
-      const double proportion = (isZero(BpreyEaten[preyl]) ? 0 : BpredEaten[predl][preyl] / BpreyEaten[preyl]);
+      proportion = (isZero(BpreyEaten[preyl]) ? 0 : BpredEaten[predl][preyl] / BpreyEaten[preyl]);
       NconbyLength[inarea][predl][preyl] = proportion * NpreyEaten[preyl];
       BconbyLength[inarea][predl][preyl] = proportion * BpreyEaten[preyl];
       MortbyLength[inarea][predl][preyl] = proportion * TotpreyMort[preyl];

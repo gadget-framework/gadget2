@@ -202,8 +202,12 @@ void Stock::updatePopulationPart2(int area, const AreaClass* const Area, const T
 }
 
 void Stock::updatePopulationPart3(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  if (doesrenew)
-    this->Renewal(area, TimeInfo);
+  int inarea = AreaNr[area];
+  if (doesrenew) {
+    renewal->addRenewal(Alkeys[inarea], area, TimeInfo);
+    if (tagAlkeys.numTagExperiments() > 0)
+      tagAlkeys[inarea].updateRatio(Alkeys[inarea]);
+  }
 
   if (doesspawn)
     if (spawner->isSpawnStepArea(area, TimeInfo))
@@ -247,17 +251,6 @@ void Stock::updateStrayStockWithTags(const TimeClass* const TimeInfo) {
   strayTags.deleteAll();
 }
 
-void Stock::Renewal(int area, const TimeClass* const TimeInfo) {
-  if (doesrenew) {
-    int inarea = AreaNr[area];
-    renewal->addRenewal(Alkeys[inarea], area, TimeInfo);
-    if (tagAlkeys.numTagExperiments() > 0)
-      tagAlkeys[inarea].updateRatio(Alkeys[inarea]);
-  }
-}
-
-//Add to a stock.  A function frequently accessed from other stocks.
-//Used by Transition and Maturity and Renewal.
 void Stock::Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
   int area, double ratio, int MinAge, int MaxAge) {
 

@@ -172,7 +172,7 @@ void MortPrey::calcMeanN(int area) {
     else
       mort_fact[inarea][l] = (1.0 - prop_surv[inarea][l]) / z[inarea][l];
   }
-  mean_n[inarea].Multiply(mort_fact[inarea], *CI);
+  //JMB mean_n[inarea].Multiply(mort_fact[inarea], *CI);
 }
 
 void MortPrey::calcZ(int area, const DoubleVector& natural_m) {

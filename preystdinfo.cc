@@ -15,13 +15,12 @@ void PreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   //We never have to change the values of NconByAge and NconByAgeAndLength,
   //since they are initialised to 0.
   PSIByLength.Sum(TimeInfo, area);
-  const int inarea = AreaNr[area];
-  const int age = 0;
-  BconbyAge[inarea][age] = 0.0;
-
-  int l;
+  int inarea = AreaNr[area];
+  int l, age;
   double timeratio;
 
+  age = 0;
+  BconbyAge[inarea][age] = 0.0;
   timeratio = TimeInfo->LengthOfYear() / TimeInfo->LengthOfCurrent();
   for (l = 0; l < prey->numLengthGroups(); l++) {
     BconbyAgeAndLength[inarea][age][l] = PSIByLength.BconsumptionByLength(area)[l];

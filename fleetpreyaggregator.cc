@@ -13,7 +13,7 @@ extern ErrorHandler handle;
 
 FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
   const StockPtrVector& Stocks, LengthGroupDivision* const Lgrpdiv,
-  const IntMatrix& Areas, const IntMatrix& Ages, const int overcons)
+  const IntMatrix& Areas, const IntMatrix& Ages, int overcons)
   : fleets(Fleets), stocks(Stocks), LgrpDiv(Lgrpdiv),
     areas(Areas), ages(Ages), overconsumption(overcons) {
 

@@ -11,7 +11,6 @@ extern ErrorHandler handle;
 Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname, Keeper* const keeper)
   : HasName(givenname), LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
-  type = PREYTYPE;
   keeper->addString("prey");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -49,7 +48,6 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
 Prey::Prey(const DoubleVector& lengths, const IntVector& Areas, const char* givenname)
   : HasName(givenname), LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
-  type = PREYTYPE;
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
     handle.Message("Error in prey - failed to create length group");
@@ -150,7 +148,7 @@ void Prey::Print(ofstream& outfile) const {
 
 //Reduce the population of the stock by the consumption.
 void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
-  const int inarea = AreaNr[area];
+  int inarea = AreaNr[area];
   DoubleVector conS(cons[inarea].Size());
   int len;
   for (len = 0; len < conS.Size(); len++)
@@ -212,10 +210,4 @@ void Prey::Reset() {
       overconsumption[area][l] = 0.0;
     }
   }
-}
-
-void Prey::Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& rat) {
-  //written by kgf 31/7 98
-  //Note! ratio is supposed to have equal dimensions to Prey.
-  stock_alkeys.Multiply(rat, *CI);
 }

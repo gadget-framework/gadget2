@@ -37,14 +37,6 @@ public:
    * \return scaler
    */
   double Scaler(int area) const { return scaler[AreaNr[area]]; };
-  /**
-   * \brief This will return a the fleet fishing level for an area and timestep
-   * \param area is the area that the prey consumption is being calculated on
-   * \param TimeInfo is the TimeClass for the current model
-   * \return -1 (will be overridden in derived classes)
-   * \note This is only meaningfull for a mortality model
-   */
-  virtual double getFlevel(int area, const TimeClass* const TimeInfo) { return -1.0; };
 protected:
   /**
    * \brief This is the DoubleVector of scalers used to split the total catch between the areas of the prey

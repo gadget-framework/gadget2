@@ -11,7 +11,7 @@
 #include "keeper.h"
 #include "gadget.h"
 
-enum PreyType { PREYTYPE = 1, MORTPREYTYPE, STOCKPREYTYPE, LENGTHPREYTYPE };
+enum PreyType { STOCKPREYTYPE = 1, LENGTHPREYTYPE, MORTPREYTYPE };
 
 /**
  * \class Prey
@@ -49,14 +49,6 @@ public:
   const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   virtual void Reset();
   const PopInfoVector& getNumberPriorToEating(int area) const { return numberPriorToEating[AreaNr[area]]; };
-  //The following functions are added 3/8 98 by kgf
-  void Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& rat);
-  virtual void calcZ(int area, const DoubleVector& nat_m) {};
-  virtual void calcMeanN(int area) {};
-  virtual void setCannibalism(int area, const DoubleVector& cann) {};
-  virtual void setAgeMatrix(int pred_no, int area, const DoubleVector& agegroupno) {};
-  virtual void setConsumption(int area, int pred_no, const BandMatrix& consum) {};
-  const DoubleVector& getCons(int area) const { return cons[AreaNr[area]]; };
   /**
    * \brief This will return the type of prey class
    * \return type

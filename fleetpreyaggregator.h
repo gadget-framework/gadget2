@@ -28,7 +28,7 @@ public:
    */
   FleetPreyAggregator(const FleetPtrVector& Fleets, const StockPtrVector& Stocks,
     LengthGroupDivision* const Lgrpdiv, const IntMatrix& Areas,
-    const IntMatrix& Ages, const int overcons);
+    const IntMatrix& Ages, int overcons);
   /**
    * \brief This is the default FleetPreyAggregator destructor
    */

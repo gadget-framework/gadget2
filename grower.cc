@@ -100,9 +100,9 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     handle.Unexpected("beta", text);
 
   //Finished reading from input files.
-  const int noareas = areas.Size();
-  const int len = LgrpDiv->numLengthGroups();
-  const int otherlen = OtherLgrpDiv->numLengthGroups();
+  int noareas = areas.Size();
+  int len = LgrpDiv->numLengthGroups();
+  int otherlen = OtherLgrpDiv->numLengthGroups();
   PopInfo nullpop;
   numGrow.AddRows(noareas, len, nullpop);
   keeper->clearLast();

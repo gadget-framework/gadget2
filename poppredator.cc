@@ -143,12 +143,6 @@ void PopPredator::resizeObjects() {
   Prednumber.AddRows(numareas, numlengths, nullpop);
 }
 
-void PopPredator::Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& ratio) {
-  //written by kgf 31/7 98
-  //Note! ratio is supposed to have equal dimensions to PopPredator.
-  stock_alkeys.Multiply(ratio, *CI);
-}
-
 double PopPredator::getTotalOverConsumption(int area) const {
   int i, areaid;
   double total;

@@ -162,7 +162,6 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void calcMigration(const TimeClass* const TimeInfo);
-  void Renewal(int area, const TimeClass* const TimeInfo);
   void Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
     int area, double ratio = 1.0, int MinAge = 0, int MaxAge = 100);
   void Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
