@@ -234,22 +234,29 @@ void SIOnStep::Print(ofstream& outfile) const {
 
 void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  if (!AAT.AtCurrentTime(TimeInfo))
-    return;
-
   int t, area, i;
-  t = timeindex - 1; //timeindex was increased before this is called
 
-  if ((t >= Years.Size()) || t < 0)
-    handle.logFailure("Error in catchdistribution - invalid timestep", t);
+  if (AAT.AtCurrentTime(TimeInfo)) {
+    t = timeindex - 1; //timeindex was increased before this is called
+    if ((t >= Years.Size()) || t < 0)
+      handle.logFailure("Error in catchdistribution - invalid timestep", t);
 
-  //JMB - this is nasty hack since there is only one area
-  area = 0;
-  for (i = 0; i < modelIndex.Ncol(t); i++) {
-    outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
-      << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
-      << setw(printwidth) << colindex[i] << sep << setprecision(largeprecision)
-      << setw(largewidth) << modelIndex[t][i] << endl;
+    //JMB - this is nasty hack since there is only one area
+    area = 0;
+    for (i = 0; i < modelIndex.Ncol(t); i++) {
+      outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
+        << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
+        << setw(printwidth) << colindex[i] << sep << setprecision(largeprecision)
+        << setw(largewidth) << modelIndex[t][i] << endl;
+    }
+  }
+
+  //JMB - this is nasty hack to output the regression information
+  if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps()) {
+    outfile << "; Regression information\n";
+    for (i = 0; i < colindex.Size(); i++)
+      outfile << "; " << colindex[i] << " slope " << slopes[i]
+        << " intercept " << intercepts[i] << endl;
   }
 }
 
