@@ -20,13 +20,13 @@ NaturalM::NaturalM(CommentStream& infile, int minage, int maxage, const TimeClas
 void NaturalM::Reset(const TimeClass* const TimeInfo) {
   mortality.Update(TimeInfo);
   double timeratio;
-  int age;
+  int age, shift;
 
   if (mortality.DidChange(TimeInfo) || TimeInfo->SizeOfStepDidChange()) {
-    const int shift = mortality.Mincol();
+    shift = mortality.Mincol();
     timeratio = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
     for (age = mortality.Mincol(); age < mortality.Maxcol(); age++)
-      if (mortality[age] > 0)
+      if (mortality[age] > verysmall)
         proportion[age - shift] = exp(-mortality[age] * timeratio);
       else
         proportion[age - shift] = 1.0; //i.e. use mortality rate 0

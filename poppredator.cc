@@ -114,7 +114,7 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
       for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
         Prednumber[area][i].N = 0.0;
         Prednumber[area][i].W = 0.0;
-        overconsumption[area][i] = 0;
+        overconsumption[area][i] = 0.0;
         totalconsumption[area][i] = 0.0;
       }
     }
@@ -140,10 +140,10 @@ void PopPredator::ResizeObjects() {
   int numlengths = LgrpDiv->NoLengthGroups();
   cons.AddRows(numareas, NoPreys());
   totalcons.AddRows(numareas, numlengths, 0.0);
-  overcons.AddRows(numareas, numlengths, 0);
+  overcons.AddRows(numareas, numlengths, 0.0);
   consumption.AddRows(numareas, NoPreys());
   totalconsumption.AddRows(numareas, numlengths, 0.0);
-  overconsumption.AddRows(numareas, numlengths, 0);
+  overconsumption.AddRows(numareas, numlengths, 0.0);
   Prednumber.AddRows(numareas, numlengths, nullpop);
 }
 

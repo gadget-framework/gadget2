@@ -54,7 +54,7 @@ int readLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrV
       //first length entry to be read
       lengths.resize(1, dblA);
 
-    if (lengths[i] == dblA)
+    if (isZero(lengths[i] - dblA))
       //add next length entry
       lengths.resize(1, dblB);
     else

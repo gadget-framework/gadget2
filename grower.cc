@@ -42,6 +42,8 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     growthtype = 7;
   else if (strcasecmp(functionname, "lengthvbsimple") == 0)
     growthtype = 8;
+  else if (strcasecmp(functionname, "test") == 0)
+    growthtype = 9;
   else
     handle.Message("Error in stock file - unrecognised growth function", functionname);
 
@@ -70,6 +72,9 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     case 8:
       growthcalc = new GrowthCalcH(infile, areas, LgrpDiv, keeper);
       break;
+    case 9:
+      growthcalc = new GrowthCalcI(infile, areas, LgrpDiv, keeper);
+      break;
     default:
       handle.Message("Illegal growthfunction number");
       break;
@@ -87,9 +92,9 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
 
     //Finished reading from input files.
     rows = maxlengthgroupgrowth + 1;
-    part1.resize(rows);
-    part2.resize(rows);
-    part4.resize(rows);
+    part1.resize(rows, 0.0);
+    part2.resize(rows, 0.0);
+    part4.resize(rows, 0.0);
 
   } else if ((strcasecmp(text, "meanvarianceparameters") == 0)) {
     //Old growth distribution, with distribution file
@@ -197,9 +202,9 @@ void Grower::Sum(const PopInfoVector& NumberInArea, int area) {
 void Grower::GrowthCalc(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  DoubleVector FPhi(CalcLgrowth[AreaNr[area]].Size(), 0.0);
+  DoubleVector dummy(CalcLgrowth[AreaNr[area]].Size(), 0.0);
   //Let the feeding level and consumption equal 0.
-  this->GrowthCalc(area, Area, TimeInfo, FPhi, FPhi);
+  this->GrowthCalc(area, Area, TimeInfo, dummy, dummy);
 }
 
 void Grower::GrowthCalc(int area,

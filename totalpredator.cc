@@ -51,7 +51,7 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
   //Calculate consumption up to a multiplicative constant.
   for (prey = 0; prey < NoPreys(); prey++) {
     if (Preys(prey)->IsInArea(area)) {
-      if (Preys(prey)->Biomass(area) > 0) {
+      if (Preys(prey)->Biomass(area) > verysmall) {
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++) {
           for (preyl = Suitability(prey)[predl].Mincol();
               preyl < Suitability(prey)[predl].Maxcol(); preyl++) {
@@ -72,10 +72,10 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
   }
 
   //Adjust the consumption by the multiplicative factor.
-  tmpsteps = 1 / NrOfSubsteps;
+  tmpsteps = 1.0 / NrOfSubsteps;
   for (prey = 0; prey < NoPreys(); prey++) {
     if (Preys(prey)->IsInArea(area)) {
-      if (Preys(prey)->Biomass(area) > 0) {
+      if (Preys(prey)->Biomass(area) > verysmall) {
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++) {
           wanttoeat = Prednumber[inarea][predl].N * Prednumber[inarea][predl].W * tmpsteps;
           for (preyl = Suitability(prey)[predl].Mincol();
@@ -91,20 +91,20 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
   for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
     scaler[inarea] += totalcons[inarea][predl];
   if (CurrentSubstep == NrOfSubsteps)
-    if (scaler[inarea] > 0)
+    if (scaler[inarea] > verysmall)
       scaler[inarea] = 1.0 / scaler[inarea];
 
   //Inform the preys of the consumption.
   for (prey = 0; prey < NoPreys(); prey++)
     if (Preys(prey)->IsInArea(area))
-      if (Preys(prey)->Biomass(area) > 0)
+      if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
           Preys(prey)->AddConsumption(area, cons[inarea][prey][predl]);
 
   //Set totalconsumption to the actual total consumption
   for (prey = 0; prey < NoPreys(); prey++)
     if (Preys(prey)->IsInArea(area))
-      if (Preys(prey)->Biomass(area) > 0)
+      if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
           totalcons[inarea][predl] = Prednumber[inarea][predl].N *
             Prednumber[inarea][predl].W * tmpsteps;
@@ -122,7 +122,7 @@ void TotalPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSub
   double ratio, tmp;
   for (prey = 0; prey < NoPreys(); prey++) {
     if (Preys(prey)->IsInArea(area)) {
-      if (Preys(prey)->Biomass(area) > 0) {
+      if (Preys(prey)->Biomass(area) > verysmall) {
         AnyPreyOnArea = 1;
         if (Preys(prey)->TooMuchConsumption(area) == 1) {
           AnyPreyEatenUp = 1;
@@ -142,7 +142,7 @@ void TotalPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSub
     }
   }
 
-  tmp = 1 / NrOfSubsteps;
+  tmp = 1.0 / NrOfSubsteps;
   if (AnyPreyEatenUp == 1)
     for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
       totalcons[inarea][predl] -= overcons[inarea][predl];
@@ -161,7 +161,7 @@ void TotalPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSub
 
   for (prey = 0; prey < NoPreys(); prey++)
     if (Preys(prey)->IsInArea(area))
-      if (Preys(prey)->Biomass(area) > 0)
+      if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
           for (preyl = Suitability(prey)[predl].Mincol();
               preyl < Suitability(prey)[predl].Maxcol(); preyl++)

@@ -49,7 +49,7 @@ void Ecosystem::Initialize(int optimize) {
       preyvec.resize(1);
       preyvec[preyindex++] = stockvec[i]->ReturnPrey();
     }
-    if (stockvec[i]->DoesEat()){
+    if (stockvec[i]->DoesEat()) {
       predvec.resize(1);
       poppredvec.resize(1);
       predvec[predindex++] = stockvec[i]->ReturnPredator();

@@ -184,7 +184,7 @@ void Prey::CheckConsumption(int area, int NrOfSubsteps) {
     rat = 0.0;
     biom = Number[inarea][i].N * Number[inarea][i].W;
     //We must be careful -- it is possible that biomass will equal 0.
-    if (!isZero(biom))
+    if (biom > verysmall)
       rat = cons[inarea][i] / biom;
 
     ratio[inarea][i] = rat;

@@ -244,16 +244,14 @@ void Keeper::OptSwitches(ParameterVector& sw) const {
 void Keeper::ScaleVariables() {
   int i;
   for (i = 0; i < values.Size(); i++) {
-    if (values[i] != 0)
-      initialvalues[i] = values[i];
-    else
-      initialvalues[i] = 1.0;
-
-    if (isZero(initialvalues[i])) {
+    if (isZero(values[i])) {
       cerr << "Warning - cannot scale switch " << switches[i] << " with initial value zero\n";
+      initialvalues[i] = 1.0;
       scaledvalues[i] = values[i];
-    } else
-      scaledvalues[i] = values[i] / initialvalues[i];
+    } else {
+      initialvalues[i] = values[i];
+      scaledvalues[i] = 1.0;
+    }
   }
 }
 

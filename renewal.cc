@@ -165,11 +165,10 @@ void RenewalData::Reset() {
       age = Distribution[i].Minage();
       sum = 0.0;
       N = 0.0;
-      length = 0.0;
       if (isZero(Sdev[i]))
         tmpSdev = 0.0;
       else
-        tmpSdev = 1 / (2 * Sdev[i] * Sdev[i]);
+        tmpSdev = 1.0 / (2.0 * Sdev[i] * Sdev[i]);
 
       for (l = Distribution[i].Minlength(age); l < Distribution[i].Maxlength(age); l++) {
         length = LgrpDiv->Meanlength(l) - Meanlengths[i];
@@ -183,7 +182,7 @@ void RenewalData::Reset() {
 
       for (l = Distribution[i].Minlength(age); l < Distribution[i].Maxlength(age); l++) {
         length = LgrpDiv->Meanlength(l);
-        if (sum > rathersmall * 1e6)
+        if (sum > rathersmall)
           Distribution[i][age][l].N *= 10000 / sum;
         else
           Distribution[i][age][l].N = 0.0;
@@ -216,10 +215,12 @@ void RenewalData::AddRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* c
     else
       RenewalNumber = Number[renewalid];
 
-    if (RenewalNumber < 0)
+    if (RenewalNumber < 0) {
+      cerr << "Error in renewal - received illegal number of recruits (" << RenewalNumber << ")\n";
       RenewalNumber = -RenewalNumber;
+    }
 
-    if (RenewalNumber > 0) {
+    if (RenewalNumber > verysmall) {
       assert(Alkeys.Minage() <= Distribution[renewalid].Minage());
       AgebandmAdd(Alkeys, Distribution[renewalid], *CI, RenewalNumber);
     }

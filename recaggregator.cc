@@ -75,7 +75,7 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
   //The index aggrAge is for the dummy age in totalcatch.
   for (f = 0; f < fleets.Size(); f++) {
     LengthPredator* pred = fleets[f]->ReturnPredator();
-    for (h = 0; h < stocks.Size(); h++){
+    for (h = 0; h < stocks.Size(); h++) {
       //AJ 06.06.00 Typecast Prey which is returned from ReturnPrey to (StockPrey*)
       StockPrey* prey = (StockPrey*)stocks[h]->ReturnPrey();
       for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {

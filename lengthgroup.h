@@ -28,6 +28,8 @@ public:
   double Meanlength(int i) const;
   double Minlength(int i) const;
   double Maxlength(int i) const;
+  double minLength() const { return minlen; };
+  double maxLength() const { return maxlen; };
   double dl() const { return Dl; };
   int NoLengthGroups() const { return size; };
   int NoLengthGroup(double length) const;
@@ -37,6 +39,8 @@ protected:
   int error;
   int size;
   double Dl;
+  double minlen;
+  double maxlen;
   DoubleVector meanlength;
   DoubleVector minlength;
 };

@@ -4,8 +4,7 @@
 ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   const LengthGroupDivision* const L2, int interp) {
 
-  if (L1->Maxlength(L1->NoLengthGroups() - 1) <= L2->Minlength(0)
-      || L2->Maxlength(L2->NoLengthGroups() - 1) <= L1->Minlength(0)) {
+  if (L1->maxLength() <= L2->minLength() || L2->maxLength() <= L1->minLength()) {
     cerr << "Error - cannot create a mapping between length groups whose "
       << "intersection is empty\nThe length group divisions are:\n";
     printLengthGroupDivisionError(L1);
@@ -65,13 +64,13 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   //Set minlength and maxlength if coarser LengthGroupDivision does
   //not span all the range of the finer one.
   for (i = 0; i < nf; i++)
-    if (Lf->Minlength(i) >= Lc->Minlength(0)) {
+    if (Lf->Minlength(i) >= Lc->minLength()) {
       minlength = i;
       break;
     }
 
   for (i = nf - 1; i >= 0; i--)
-    if (Lf->Maxlength(i) <= Lc->Maxlength(nc - 1)) {
+    if (Lf->Maxlength(i) <= Lc->maxLength()) {
       maxlength = i + 1;
       break;
     }

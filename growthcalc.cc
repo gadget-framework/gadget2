@@ -199,19 +199,18 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
   DoubleMatrix tmpRefW;
   if (!read2ColVector(subcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");
+  handle.Close();
+  subfile.close();
+  subfile.clear();
 
   //Interpolate the reference weights. First there are some error checks.
   for (i = 0; i < tmpRefW.Nrow() - 1; i++)
     if ((tmpRefW[i + 1][0] - tmpRefW[i][0]) <= 0)
-      handle.Message("Lengths in must be strictly increasing");
+      handle.Message("Lengths for reference weights must be strictly increasing");
 
   if (LgrpDiv->Meanlength(0) < tmpRefW[0][0] ||
       LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-    handle.Message("Lengths must span the range of growth lengths");
-
-  handle.Close();
-  subfile.close();
-  subfile.clear();
+    handle.Message("Lengths for reference weights must span the range of growth lengths");
 
   double ratio;
   pos = 0;
@@ -331,19 +330,18 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
   DoubleMatrix tmpRefW;
   if (!read2ColVector(subcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");
+  handle.Close();
+  subfile.close();
+  subfile.clear();
 
   //Interpolate the reference weights. First there are some error checks.
   for (i = 0; i < tmpRefW.Nrow() - 1; i++)
     if ((tmpRefW[i + 1][0] - tmpRefW[i][0]) <= 0)
-      handle.Message("Lengths must be strictly increasing");
+      handle.Message("Lengths for reference weights must be strictly increasing");
 
   if (LgrpDiv->Meanlength(0) < tmpRefW[0][0] ||
       LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-    handle.Message("Lengths must span the range of growth lengths");
-
-  handle.Close();
-  subfile.close();
-  subfile.clear();
+    handle.Message("Lengths for reference weights must span the range of growth lengths");
 
   double ratio;
   pos = 0;
@@ -490,19 +488,18 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   DoubleMatrix tmpRefW;
   if (!read2ColVector(subcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");
+  handle.Close();
+  subfile.close();
+  subfile.clear();
 
   //Some error checks.
   for (i = 0; i < tmpRefW.Nrow() - 1; i++)
     if ((tmpRefW[i + 1][0] - tmpRefW[i][0]) <= 0)
-      handle.Message("Lengths must be strictly increasing");
+      handle.Message("Lengths for reference weights must be strictly increasing");
 
   if (LgrpDiv->Meanlength(0) < tmpRefW[0][0] ||
       LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-    handle.Message("Lengths must span the range of growth lengths");
-
-  handle.Close();
-  subfile.close();
-  subfile.clear();
+    handle.Message("Lengths for reference weights must span the range of growth lengths");
 
   //Interpolate the reference weights.
   double ratio;
@@ -519,7 +516,7 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   keeper->ClearLast();
 }
 
-GrowthCalcE::~GrowthCalcE(){
+GrowthCalcE::~GrowthCalcE() {
 }
 
 /* Growthfunction to be tested for capelin.
@@ -803,7 +800,57 @@ void GrowthCalcH::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   //JMB - first some error checking
   if (isZero(growthPar[1]) || isZero(growthPar[2]))
     cerr << "Warning - growth parameter is zero\n";
-  if (LgrpDiv->Maxlength(LgrpDiv->NoLengthGroups() - 1) > growthPar[0])
+  if (LgrpDiv->maxLength() > growthPar[0])
+    cerr << "Warning - length greater than length infinity\n";
+
+  int i;
+  for (i = 0; i < Wgrowth.Size(); i++) {
+    Lgrowth[i] = (growthPar[0] - LgrpDiv->Meanlength(i)) * mult;
+    Wgrowth[i] = growthPar[2] * (pow(LgrpDiv->Meanlength(i) + Lgrowth[i], growthPar[3])
+      - pow(LgrpDiv->Meanlength(i), growthPar[3]));
+  }
+}
+
+// ********************************************************
+// Functions for GrowthCalcI
+// ********************************************************
+GrowthCalcI::GrowthCalcI(CommentStream& infile, const IntVector& Areas,
+  const LengthGroupDivision* const LgrpDiv, Keeper* const keeper)
+  : GrowthCalcBase(Areas), NumberOfGrowthConstants(4) {
+
+  int i, j, pos;
+  ErrorHandler handle;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  growthPar.resize(NumberOfGrowthConstants, keeper);
+
+  keeper->AddString("growthcalcI");
+  infile >> text;
+  //parameters are linf, k and a and b for the weight
+  if (strcasecmp(text, "growthparameters") == 0) {
+    if (!(infile >> growthPar))
+      handle.Message("Incorrect format of growthpar vector");
+    growthPar.Inform(keeper);
+  } else
+    handle.Unexpected("growthparameters", text);
+
+  keeper->ClearLast();
+}
+
+GrowthCalcI::~GrowthCalcI() {
+}
+
+void GrowthCalcI::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+
+  double mult = 1.0 - exp((-growthPar[1] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear()) / growthPar[0]);
+
+  //JMB - first some error checking
+  if (isZero(growthPar[1]) || isZero(growthPar[2]))
+    cerr << "Warning - growth parameter is zero\n";
+  if (LgrpDiv->maxLength() > growthPar[0])
     cerr << "Warning - length greater than length infinity\n";
 
   int i;

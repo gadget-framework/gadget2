@@ -100,7 +100,7 @@ CommentStream& operator >> (CommentStream& infile, ParameterVector& paramVec) {
   }
   int i;
   for (i = 0; i < paramVec.size; i++) {
-    if (!(infile >> paramVec[i])){
+    if (!(infile >> paramVec[i])) {
       infile.makebad();
       return infile;
     }

@@ -27,12 +27,12 @@ void LenNaturalM::NatCalc() {
   int i;
   for (i = 0; i < lengroup->NoLengthGroups(); i++)
     if (lengroup->Meanlength(i) < xparammort[0])
-      natmort[i] = Hyperbola(lengroup->Minlength(0), xparammort[0],
+      natmort[i] = Hyperbola(lengroup->minLength(), xparammort[0],
         parammort[0], parammort[2], lengroup->Meanlength(i));
     else if (lengroup->Meanlength(i) <= xparammort[1])
       natmort[i] = parammort[2];
     else
-      natmort[i] = Hyperbola(xparammort[1], lengroup->Maxlength(lengroup->NoLengthGroups() - 1),
+      natmort[i] = Hyperbola(xparammort[1], lengroup->maxLength(),
         parammort[2], parammort[1], lengroup->Meanlength(i));
 }
 

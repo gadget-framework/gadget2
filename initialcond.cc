@@ -229,7 +229,6 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     infile >> SdevMult >> ws >> text >> ws;
   else
     SdevMult.setValue(1.0);
-
   SdevMult.Inform(keeper);
   keeper->ClearLast();
 
@@ -293,6 +292,15 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   handle.Close();
   subweightfile.close();
   subweightfile.clear();
+
+  //Interpolate the reference weights. First there are some error checks.
+  for (i = 0; i < tmpRefW.Nrow() - 1; i++)
+    if ((tmpRefW[i + 1][0] - tmpRefW[i][0]) <= 0)
+      handle.Message("Lengths for reference weights must be strictly increasing");
+
+  if (LgrpDiv->Meanlength(0) < tmpRefW[0][0] ||
+      LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
+    handle.Message("Lengths for reference weights must span the range of initial condition lengths");
 
   //Aggregate the reference weight data to be the same format
   DoubleVector Wref(nolengr);
@@ -386,6 +394,7 @@ void InitialCond::Initialize(AgeBandMatrixPtrVector& Alkeys) {
             dnorm(LgrpDiv->Meanlength(l), Mean[area][age - minage], Sdev[area][age - minage] * SdevMult);
           scaler += AreaAgeLength[area][age][l].N;
         }
+
         scaler = (scaler > rathersmall ? 10000 / scaler : 0.0);
         for (l = AreaAgeLength[area].Minlength(age);
             l < AreaAgeLength[area].Maxlength(age); l++) {

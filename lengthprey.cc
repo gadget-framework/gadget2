@@ -26,8 +26,8 @@ void LengthPrey::SumUsingPopInfo(const PopInfoVector& NumberInArea, int area, in
     for (i = 0; i < Number.Ncol(inarea); i++) {
       sum += Number[inarea][i];
       biomass[inarea][i] = Number[inarea][i].N * Number[inarea][i].W;
-      total[inarea] = sum.N * sum.W;
     }
+    total[inarea] = sum.N * sum.W; //JMB - was inside for loop
     for (i = 0; i < consumption.Ncol(inarea); i++)
       cons[inarea][i] = 0.0;
   }

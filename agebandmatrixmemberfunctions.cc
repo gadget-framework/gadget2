@@ -75,7 +75,7 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& C
     if (isZero(UsedRatio[i]))
       UsedRatio[i] = 0.0;
     else if (UsedRatio[i] < 0) {
-      cerr << "Warning - negative stock population - setting to zero\n";
+      cerr << "Warning in AgeBandMatrix Multiply - negative ratio\n";
       UsedRatio[i] = 0.0;
     }
   }
@@ -104,9 +104,6 @@ void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIn
   for (i = 0; i < Consumption.Size(); i++) {
     if (Nrof[i].N > verysmall)
       Ratio[i] = 1 - (Consumption[i] / Nrof[i].N);
-
-    if ((Consumption[i] < rathersmall) && (Nrof[i].N < rathersmall))
-      Ratio[i] = 1.0;
   }
 
   this->Multiply(Ratio, CI);
@@ -117,7 +114,8 @@ void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIn
 //Natural mortality. Investigate if NaturalM should be allowed to be shorter.
 void AgeBandMatrix::Multiply(const DoubleVector& NatM) {
   int i, j;
-  for (i = 0; i < NatM.Size() && i < nrow; i++)
+  int check = min(NatM.Size(), nrow);
+  for (i = 0; i < check; i++)
     for (j = v[i]->Mincol(); j < v[i]->Maxcol(); j++)
       (*v[i])[j] *= NatM[i];
 }

@@ -92,6 +92,10 @@ protected:
    * \brief This is the minimum step length
    */
   double hookeeps;
+  /**
+   * \brief This is the limit when checking if a parameter is stuck on the bound
+   */
+  double bndcheck;
 };
 
 /**
@@ -161,6 +165,18 @@ protected:
    * \brief This is the maximum number of function evaluations
    */
   int simanniter;
+  /**
+   * \brief This is the upper bound when adjusting the step length
+   */
+  double uratio;
+  /**
+   * \brief This is the lower bound when adjusting the step length
+   */
+  double lratio;
+  /**
+   * \brief This is the number of temperature loops to check
+   */
+  int check;
 };
 
 /**
@@ -216,6 +232,10 @@ protected:
    */
   double hookeeps;
   /**
+   * \brief This is the limit when checking if a parameter is stuck on the bound
+   */
+  double bndcheck;
+  /**
    * \brief This is the maximum number of function evaluations for the Simulated Annealing algorithm
    */
   int simanniter;
@@ -247,6 +267,18 @@ protected:
    * \brief This is the step length
    */
   double vm;
+  /**
+   * \brief This is the upper bound when adjusting the step length
+   */
+  double uratio;
+  /**
+   * \brief This is the lower bound when adjusting the step length
+   */
+  double lratio;
+  /**
+   * \brief This is the number of temperature loops to check
+   */
+  int check;
 };
 
 #endif

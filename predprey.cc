@@ -24,7 +24,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
   for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++) {
     Phi[Iarea][predl] = 0.0;
     if (CurrentSubstep == 1) {
-      fphi[Iarea][predl] = 0;
+      fphi[Iarea][predl] = 0.0;
       totalconsumption[Iarea][predl] = 0.0;
       overconsumption[Iarea][predl] = 0.0;
       for (prey = 0; prey < NoPreys(); prey++)
@@ -41,7 +41,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
   //Calculating Phi(L) and O(l,L,prey) (stored in consumption)
   for (prey = 0; prey < NoPreys(); prey++) {
     if (Preys(prey)->IsInArea(area)) {
-      if (Preys(prey)->Biomass(area) > 0) {
+      if (Preys(prey)->Biomass(area) > verysmall) {
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
           for (preyl = Suitability(prey)[predl].Mincol();
               preyl < Suitability(prey)[predl].Maxcol(); preyl++) {
@@ -72,7 +72,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
   //Distributing the totalconsumption on the Preys().
   for (prey = 0; prey < NoPreys(); prey++)
     if (Preys(prey)->IsInArea(area))
-      if (Preys(prey)->Biomass(area) > 0)
+      if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
           if (!(isZero(Phi[Iarea][predl]))) {
             tmpcons = totalcons[Iarea][predl] / Phi[Iarea][predl];
@@ -87,7 +87,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
   //memberfunctions in prey.
   for (prey = 0; prey < NoPreys(); prey++)
     if (Preys(prey)->IsInArea(area))
-      if (Preys(prey)->Biomass(area) > 0)
+      if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
           Preys(prey)->AddConsumption(area, cons[Iarea][prey][predl]);
 }
@@ -103,11 +103,11 @@ void StockPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSub
   double ratio, rat1, rat2, tmp;
 
   for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
-    overcons[Iarea][predl] = 0;
+    overcons[Iarea][predl] = 0.0;
 
   for (prey = 0; prey < NoPreys(); prey++)
     if (Preys(prey)->IsInArea(area))
-      if (Preys(prey)->Biomass(area) > 0)
+      if (Preys(prey)->Biomass(area) > verysmall)
         if (Preys(prey)->TooMuchConsumption(area) == 1) {
           AnyPreyEatenUp = 1;
           for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
@@ -139,7 +139,7 @@ void StockPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSub
   for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++) {
     totalconsumption[Iarea][predl] += totalcons[Iarea][predl];
     overconsumption[Iarea][predl] += overcons[Iarea][predl];
-    fphi[Iarea][predl] = rat2 * fphI[Iarea][predl] + rat1 * fphi[Iarea][predl];
+    fphi[Iarea][predl] = (rat2 * fphI[Iarea][predl]) + (rat1 * fphi[Iarea][predl]);
   }
   for (prey = 0; prey < NoPreys(); prey++)
     if (Preys(prey)->IsInArea(area))

@@ -19,41 +19,40 @@ void printLengthGroupError(const DoubleVector& breaks, const char* explain) {
 
 //Constructor for length division with even increments.
 LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : error(0), Dl(DL) {
-  assert(MinL >= 0 && Dl > 0 && MaxL >= MinL);
-  size = int((MaxL - MinL) / Dl);
-  double small = 0.01 * size;  //JMB - changed multiplier from rathersmall
-
-  if (!(-size - small < (MaxL - MinL) / Dl && (MaxL - MinL) / Dl < size + small)) {
+  if ((MaxL < MinL) || (MinL < 0.0) || (DL < verysmall)) {
     error = 1;
     return;
   }
 
+  double tmp = (MaxL - MinL) / Dl;
+  size = int(tmp + rathersmall);
+  minlen = MinL;
+  maxlen = MaxL;
+
   meanlength.resize(size);
   minlength.resize(size);
-  meanlength[0] = MinL + (0.5 * Dl);
-  minlength[0] = MinL;
+  tmp = 0.5 * Dl;
   int i;
-  for (i = 1; i < size; i++) {
-    meanlength[i] = meanlength[i - 1] + Dl;
-    minlength[i] = minlength[i - 1] + Dl;
+  for (i = 0; i < size; i++) {
+    minlength[i] = MinL + (Dl * i);
+    meanlength[i] = minlength[i] + tmp;
   }
 }
 
 //Constructor for length division with uneven increments.
 LengthGroupDivision::LengthGroupDivision(const DoubleVector& Breaks) : error(0), Dl(0) {
-  int i;
-  if (Breaks.Size() < 2) {
-    error = 1;
-    return;
-  }
-  if (Breaks[0] < 0) {
+  if ((Breaks.Size() < 2) || (Breaks[0] < 0)) {
     error = 1;
     return;
   }
 
   size = Breaks.Size() - 1;
+  minlen = Breaks[0];
+  maxlen = Breaks[size];
+
   minlength.resize(size);
   meanlength.resize(size);
+  int i;
   for (i = 0; i < size; i++) {
     minlength[i] = Breaks[i];
     meanlength[i] = 0.5 * (Breaks[i] + Breaks[i + 1]);
@@ -63,7 +62,8 @@ LengthGroupDivision::LengthGroupDivision(const DoubleVector& Breaks) : error(0),
 }
 
 LengthGroupDivision::LengthGroupDivision(const LengthGroupDivision& l)
-  : error(l.error), size(l.size), Dl(l.Dl), meanlength(l.meanlength), minlength(l.minlength) {
+  : error(l.error), size(l.size), Dl(l.Dl), minlen(l.minlen), maxlen(l.maxlen),
+    meanlength(l.meanlength), minlength(l.minlength) {
 }
 
 LengthGroupDivision::~LengthGroupDivision() {
@@ -71,15 +71,17 @@ LengthGroupDivision::~LengthGroupDivision() {
 
 int LengthGroupDivision::NoLengthGroup(double length) const {
   //Allow some error.
-  const double err = (Maxlength(size - 1) - Minlength(size - 1)) * rathersmall;
+  const double err = (maxlen - Minlength(size - 1)) * rathersmall;
   int i;
+
+  //shift the length group down 'err' length units to allow some
+  //error in its representation as a double.
   for (i = 0; i < size; i++)
-    //shift the length group down 'err' length units to allow some
-    //error in its representation as a double.
     if (this->Minlength(i) - err <= length && length < this->Maxlength(i) - err)
       return i;
+
   //Check if length equals the maximum length.
-  if (absolute(this->Maxlength(size - 1) - length) < err)
+  if (absolute(maxlen - length) < err)
     return size - 1;
   else
     return -1;
@@ -100,31 +102,28 @@ double LengthGroupDivision::Minlength(int i) const {
 }
 
 double LengthGroupDivision::Maxlength(int i) const {
-  int j;
-  if (i >= size)
-    j = size;
-  else
-    j = i;
+  if (i >= (size - 1))
+    return maxlen;
 
-  if (isZero(Dl))
-    return minlength[j] + 2 * (meanlength[j] - minlength[j]);
-  else
-    return minlength[j] + Dl;
+  return minlength[i + 1];
 }
 
 int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
-  if (Minlength(0) > addition->Minlength(addition->NoLengthGroups() - 1)
-      || Minlength(size - 1) < addition->Minlength(0))
-    //Empty intersection
+  if (minlen > addition->Minlength(addition->NoLengthGroups() - 1)
+      || Minlength(size - 1) < addition->minLength())
     return 0;
 
   int i = 0;
   int j = 0;
-  if (Minlength(0) <= addition->Minlength(0) &&
+
+  double tempmin = min(minlen, addition->minLength());
+  double tempmax = max(maxlen, addition->maxLength());
+
+  if (minlen <= addition->minLength() &&
       Minlength(size - 1) >= addition->Minlength(addition->NoLengthGroups() - 1)) {
     //If this is broader, we only have to check if the divisions are the same
     //in the overlapping region.
-    while (Minlength(i) < addition->Minlength(0))
+    while (Minlength(i) < addition->minLength())
       i++;
     for (j = 0; j < addition->NoLengthGroups(); j++)
       if (Minlength(i + j) != addition->Minlength(j)) {
@@ -135,8 +134,8 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
   }
 
   DoubleVector lower, middle;  //hold the minlength and meanlength of this
-  if (Minlength(0) >= addition->Minlength(0)) {
-    for (; Minlength(0) > addition->Minlength(i); i++) {
+  if (minlen >= addition->minLength()) {
+    for (; minlen > addition->Minlength(i); i++) {
       lower.resize(1, addition->Minlength(i));
       middle.resize(1, addition->Meanlength(i));
     }
@@ -159,7 +158,7 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
         middle.resize(1, Meanlength(j - i));
       }
   } else {
-    for (; Minlength(i) < addition->Minlength(0); i++) {
+    for (; Minlength(i) < addition->minLength(); i++) {
       lower.resize(1, Minlength(i));
       middle.resize(1, Meanlength(i));
     }
@@ -170,7 +169,7 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
   }
 
   //Set this to the new division
-  Dl = 0;
+  Dl = 0.0;
   for (i = 0; i < size; i++) {
     minlength[i] = lower[i];
     meanlength[i] = middle[i];
@@ -180,21 +179,23 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
     minlength.resize(1, lower[i]);
     meanlength.resize(1, middle[i]);
   }
+  minlen = tempmin;
+  maxlen = tempmax;
   return 1;
 }
 
 void printLengthGroupDivisionError(const LengthGroupDivision* lgrpdiv) {
   int i;
   if (lgrpdiv->dl() != 0) {
-    cerr << "Length group with minimum length " << lgrpdiv->Minlength(0) << ", maximum length "
-      << lgrpdiv->Maxlength(lgrpdiv->NoLengthGroups() - 1) << " and stepsize " << lgrpdiv->dl();
+    cerr << "Length group with minimum length " << lgrpdiv->minLength() << ", maximum length "
+      << lgrpdiv->maxLength() << " and stepsize " << lgrpdiv->dl();
 
   } else {
-    cerr << "Length group with lengths ";
-    for (i = 0; i < lgrpdiv->NoLengthGroups(); i++)
+    cerr << "Length group with lengths " << lgrpdiv->minLength() << ", ";
+    for (i = 1; i < lgrpdiv->NoLengthGroups(); i++)
       cerr << lgrpdiv->Minlength(i) << ", ";
 
-    cerr << lgrpdiv->Maxlength(lgrpdiv->NoLengthGroups() - 1);
+    cerr << lgrpdiv->maxLength();
   }
   cerr << endl;
 }
@@ -229,11 +230,11 @@ int lengthGroupIsFiner(const LengthGroupDivision* finer,
 
   int cmax = coarser->NoLengthGroups() - 1;
   int fmax = finer->NoLengthGroups() - 1;
-  double allowederror = (coarser->Maxlength(cmax) - coarser->Minlength(0)) *
+  double allowederror = (coarser->maxLength() - coarser->minLength()) *
     rathersmall / coarser->NoLengthGroups();
 
-  double minlength = max(coarser->Minlength(0), finer->Minlength(0));
-  double maxlength = min(coarser->Maxlength(cmax), finer->Maxlength(fmax));
+  double minlength = max(coarser->minLength(), finer->minLength());
+  double maxlength = min(coarser->maxLength(), finer->maxLength());
 
   //check to see if the intersection is empty
   if (minlength - allowederror >= maxlength)
@@ -242,13 +243,13 @@ int lengthGroupIsFiner(const LengthGroupDivision* finer,
   fmin = finer->NoLengthGroup(minlength);
   fmax = finer->NoLengthGroup(maxlength);
 
-  if (minlength - allowederror > finer->Minlength(0))
+  if (minlength - allowederror > finer->minLength())
     if (absolute(minlength - finer->Minlength(fmin)) > allowederror) {
       BogusLengthGroup = fmin;
       return 0;
     }
 
-  if (maxlength + allowederror < finer->Maxlength(fmax))
+  if (maxlength + allowederror < finer->maxLength())
     if (absolute(maxlength - finer->Minlength(fmax)) > allowederror) {
       BogusLengthGroup = fmax;
       return 0;

@@ -100,8 +100,8 @@ ostream& printLengthGroupDivision(ostream& o, const LengthGroupDivision& lgrp, i
   int i;
   char* ind = makeSpaces(indent);
   o << ind << "lengthgroupdivision\n" << ind << "  minlength "
-    << lgrp.Minlength(0) << endl << ind << "  maxlength "
-    << lgrp.Maxlength(lgrp.NoLengthGroups() - 1) << endl;
+    << lgrp.minLength() << endl << ind << "  maxlength "
+    << lgrp.maxLength() << endl;
   if (lgrp.dl() != 0)
     o << ind << "  dl " << lgrp.dl() << endl;
   else {
@@ -822,7 +822,7 @@ ostream& printNbyAge(ostream& o, const DoubleMatrix& a, int minage, int firstyea
       o << minage + i << "+      ";
     else
       o << minage + i << "       ";
-    for (j = 0; j<a.Ncol(i); j++){
+    for (j = 0; j<a.Ncol(i); j++) {
       o.precision(lowprecision);
       o.width(lowwidth);
       o << a[i][j] << sep;

@@ -130,7 +130,7 @@ void ActionAtTimes::AddActionsAtAllYears(const IntVector& steps, const TimeClass
     }
 }
 
-void ActionAtTimes::AddActionsAtAllSteps(const IntVector& years, const TimeClass* const TimeInfo){
+void ActionAtTimes::AddActionsAtAllSteps(const IntVector& years, const TimeClass* const TimeInfo) {
   int i;
   if (EveryStep)
     return;

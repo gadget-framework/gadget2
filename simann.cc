@@ -43,7 +43,7 @@
 /*       vastly different speed for optimization. Also try NT = 20. Note    */
 /*       that this sample function is quite easy to optimize, so it will    */
 /*       tolerate big changes in these parameters. RT and NT are the        */
-/*       parameters one should adjust to modify the runtime of th           */
+/*       parameters one should adjust to modify the runtime of the          */
 /*       algorithm and its robustness.                                      */
 /*    5. Try constraining the algorithm with either LB or UB.               */
 
@@ -97,7 +97,7 @@
 /*  For modifications to the algorithm and many details on its use,         */
 /*  (particularly for econometric applications) see Goffe, Ferrier          */
 /*  and Rogers, "Global Optimization of Statistical Functions with          */
-/*  the Simulated Annealing," Journal of Econometrics (forthcomming)        */
+/*  the Simulated Annealing," Journal of Econometrics (forthcoming)         */
 /*  For a pre-publication copy, contact                                     */
 /*              Bill Goffe                                                  */
 /*              Department of Economics                                     */
@@ -178,82 +178,90 @@
 #include "mathfunc.h"
 #include "ecosystem.h"
 
-#define NEPS   (6)     //Number of final func. values to decide upon termination.
-#define VARS   (350)   //Maximum number of variables.
-
 /* global ecosystem used to store whether the model converged */
 extern Ecosystem* EcoSystem;
 
-//This function replaces exp to avoid under- and overflow.
-double expRep(double inn) {
-  double rdum, exprep;
-  rdum = inn;
-  if (rdum > 174.)
-    exprep = 3.69e75;
-  else if (rdum < -180.)
-    exprep = 0.0;
+/* global variable, defined and initialized in gadget.cc and not modified here */
+extern int FuncEval;
+
+//This function replaces exp to give an answer in the range 0.0 to 1.0
+double expRep(double n) {
+  double exprep = 0.0;
+  if (n > verysmall)
+    exprep = 1.0;
+  else if (n < -25.0)
+    exprep = rathersmall;
   else
-    exprep = exp(rdum);
+    exprep = exp(n);
   return exprep;
 }
 
-//Returns uniformly-distributed doubles in range 0.0 to 1.0
+//Returns uniformly-distributed doubles in the range 0.0 to 1.0
 double randomNumber() {
   int r = rand();
   double k = r % 32767;
-  return k / 32767.;
+  return k / 32767.0;
 }
 
 int simann(int nvar, double point[], double endpoint[], double lb[], double ub[],
-  double (*f)(double*, int), int m, int maxeval, double step[],
-  double tempt, double stepl[], double rt, int ns, int nt, double eps) {
+  double (*f)(double*, int), int m, int maxeval, double cstep, double tempt,
+  double vmlen, double rt, int ns, int nt, double eps, double ur, double lr, int check) {
 
   int n = nvar;         //Number of variables in the function to be optimized
-  double x[VARS];       //The starting values for the variables
+  double x[NUM_VARS];   //The starting values for the variables
   int max = m;          //Denotes whether the func. should be maximized or
                         //minimized: 1 = maximization 0 = minimization
   int maxevl = maxeval; //Maximum number of func. evaluations
-  double c[VARS];       //Vector that controls the step length adjustment
-                        //Suggested to be 2.0 for all elements
   double t = tempt;     //On input, the initial temperature
                         //On output, the final temperature
-  double vm[VARS];      //The step length vector
-  double fstar[NEPS];
+  double vm[NUM_VARS];  //The step length vector
+  double fstar[NUM_VARS];
   double fopt;          //The optimal value of the function
   double funcval, fp;
   double ratio;         //Dummy variable for updating vm
-  int nacp[VARS];       //Number of accepted tries for each parameter
+  double cs;            //Dummy variable for updating vm
+  double uratio = ur;   //Value for the upper bound when updating vm
+  double lratio = lr;   //Value for the lower bound when updating vm
+  int nacp[NUM_VARS];   //Number of accepted tries for each parameter
   int quit = 0;         //Used to check the exit criteria
 
   //Set initial values
   int nacc = 0;         //The number of accepted function evaluations
   int nrej = 0;         //The number of rejected function evaluations
-  int nnew = 0;         //Number of optimum found
+  int naccmet = 0;      //The number of accepted function evaluations according to the metropolis condition
+  int nnew = 0;         //The number of new optima found
   int nobds = 0;        //Total number of trial functions that were out of bounds
-  int nfcnev = 0;       //Total number of function evaluations
-  int i, a, j, h, k, change, l;
+  int i, a, j, h, k, change, l, offset;
   double p, pp;
-  double xp[VARS];
-  int param[VARS];  //Vector containing the order of the parameters at each time
+  double xp[NUM_VARS];
+  int param[NUM_VARS];  //Vector containing the order of the parameters at each time
 
   for (i = 0; i < n; i++) {
     x[i] = point[i];
     endpoint[i] = point[i];
-    c[i] = step[i];
-    vm[i] = stepl[i];
+    vm[i] = vmlen;
     nacp[i] = 0;
-  }
-  for (i = 0; i < NEPS; i++)
-    fstar[i] = 1.0e20;
-  for (i = 0; i < n; i++)
     param[i] = i;
+  }
 
   cout << "\nStarting Simulated Annealing\n";
   //funcval is the function value at x
   funcval = (*f)(x, n);
-  nfcnev++;
+  nacc++;  //accept the first point no matter what
+  offset = FuncEval;  //number of function evaluations done before loop
 
-  //If the function is to be minmized, switch the sign of the function
+  //check the values for uratio and lratio
+  if ((uratio < 0.5) || (uratio > 1)) {
+    cout << "\nError in value of uratio - setting to default value of 0.7\n";
+    uratio = 0.7;
+  }
+  if ((lratio < 0) || (lratio > 0.5)) {
+    cout << "\nError in value of lratio - setting to default value of 0.3\n";
+    lratio = 0.3;
+  }
+  cs = cstep / lratio;
+
+  //If the function is to be minimised, switch the sign of the function
   if (!max)
     funcval = -funcval;
 
@@ -264,45 +272,48 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
   }
 
   fopt = funcval;
-  fstar[0] = funcval;
+  for (i = 0; i < check; i++)
+    fstar[i] = funcval;
 
   //Start the main loop.  Note that it terminates if
   //(i) the algorithm succesfully optimizes the function or
   //(ii) there are too many function evaluations
   while (1) {
     for (a = 0; a < nt; a++) {
+      //Randomize the order of the parameters once in a while, to avoid
+      //the order having an influence on which changes are accepted
+      change = 0;
+      while (change < n) {
+        h = rand() % n;
+        k = 1;
+        for (i = 0; i < change; i++)
+          if (param[i] == h)
+            k = 0;
+
+        if (k) {
+          param[change] = h;
+          change++;
+        }
+      }
+
       for (j = 0; j < ns; j++) {
         for (l = 0; l < n; l++) {
-          if (nfcnev % (15 * n) == 0) {
-            //Randomize the order of the parameters once in a while, to avoid
-            //the order having an influence on which changes are accepted
-            change = 0;
-            while (change < n) {
-              h = rand() % n;
-              k = 1;
-              for (i = 0; i < change; i++)
-                if (param[i] == h)
-                  k = 0;
-
-              if (k) {
-                param[change] = h;
-                change++;
-              }
-            }
-          }
-
           //Generate xp, the trial value of x
           for (i = 0; i < n; i++) {
-            if (i == param[l])
-              xp[i] = x[i] + (randomNumber() * 2.0 - 1.0) * vm[i];
-            else
-              xp[i] = x[i];
+            if (i == param[l]) {
+              xp[i] = x[i] + ((randomNumber() * 2.0) - 1.0) * vm[i];
 
-            //If xp is out of bounds, select a point in bounds for the trial
-            if ((xp[i] < lb[i]) || (xp[i] > ub[i])) {
-              xp[i] = lb[i] + (ub[i] - lb[i]) * randomNumber();
-              nobds++;
-            }
+              //If xp is out of bounds, try again until we find a point that is OK
+              if ((xp[i] < lb[i]) || (xp[i] > ub[i])) {
+                nobds++;
+                //JMB - this used to select a random point between the bounds
+                while ((xp[i] < lb[i]) || (xp[i] > ub[i])) {
+                  xp[i] = x[i] + ((randomNumber() * 2.0) - 1.0) * vm[i];
+                }
+              }
+
+            } else
+              xp[i] = x[i];
           }
 
           //Evaluate the function with the trial point xp and return as fp
@@ -310,26 +321,29 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
           if (!max)
             fp = -fp;
 
-          nfcnev++;
           //If too many function evaluations occur, terminate the algorithm
-          if (nfcnev >= maxevl) {
-            cout << "\nStopping Simulated Annealing\n\nThe optimisation stopped after " << nfcnev
-              << " function evaluations (max " << maxevl << ")\nThe optimisation stopped "
-              << "because the maximum number of function evaluations\nwas reached and "
-              << "NOT because an optimum was found for this run\n";
+          if ((FuncEval - offset) > maxevl) {
+            cout << "\nStopping Simulated Annealing\n\nThe optimisation stopped after "
+              << (FuncEval - offset) << " function evaluations (max " << maxevl
+              << ")\nThe temperature was reduced to " << t
+              << "\nThe optimisation stopped because the maximum number of function "
+              << "evaluations\nwas reached and NOT because an optimum was found for this run\n";
+
+cout << "Number of directly accepted points " << nacc << endl;
+cout << "Number of metropolis accepted points " << naccmet << endl;
+cout << "Number of rejected points " << nrej << endl;
 
             fp = (*f)(endpoint, n);
-            return nfcnev;
+            return 0;
           }
 
           //Accept the new point if the new function value better
           if (fp >= funcval) {
-            //Accept point.
             for (i = 0; i < n; i++)
               x[i] = xp[i];
             funcval = fp;
             nacc++;
-            nacp[l]++;
+            nacp[param[l]]++;  //JMB - not sure about this ...
 
           } else {
             //Accept according to metropolis condition
@@ -340,23 +354,24 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
               for (i = 0; i < n; i++)
                 x[i] = xp[i];
               funcval = fp;
-              nacc++;
-              nacp[l]++;
-            } else
+              naccmet++;
+              nacp[param[l]]++;
+            } else {
               //Reject point
               nrej++;
+            }
           }
 
           // JMB added check for really silly values
           if (isZero(fp)) {
-            cout << "\nError in Simulated Annealing optimisation after " << nfcnev
+            cout << "\nError in Simulated Annealing optimisation after " << FuncEval
               << " function evaluations f(x) = 0\nReturning to calling routine ...\n";
             return 0;
           }
 
           //If greater than any other point, record as new optimum
-          if ((fp > fopt) && (fp == fp)){
-            cout << "\nNew optimum after " << nfcnev << " function evaluations, f(x) = " << -fp << " at\n";
+          if ((fp > fopt) && (fp == fp)) {
+            cout << "\nNew optimum after " << FuncEval << " function evaluations, f(x) = " << -fp << " at\n";
             for (i = 0; i < n; i++) {
               endpoint[i] = xp[i];
               cout << endpoint[i] << sep;
@@ -370,47 +385,61 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
 
       //Adjust vm so that approximately half of all evaluations are accepted
       for (i = 0; i < n; i++) {
-        ratio =  nacp[i] / ns;
-        if (ratio > 0.8) {
-          vm[i] = vm[i] * (1.0 + c[i] * (ratio - 0.6) * 2.5);
-        } else if (ratio < 0.5) {
-          vm[i] = vm[i] / (1.0 + c[i] * (0.4 - ratio) * 2.5);
+        ratio = (double) nacp[i] / ns;
+        nacp[i] = 0;
+        if (ratio > uratio) {
+          vm[i] = vm[i] * (1.0 + cs * (ratio - uratio));
+        } else if (ratio < lratio) {
+          vm[i] = vm[i] / (1.0 + cs * (lratio - ratio));
         }
 
-        if (vm[i] > (ub[i] - lb[i])) {
+        if (vm[i] < rathersmall)
+          vm[i] = rathersmall;
+        if (vm[i] > (ub[i] - lb[i]))
           vm[i] = ub[i] - lb[i];
-        } else if (vm[i] < 1e-6) {
-          vm[i] = stepl[i];
-        }
       }
-      for (i = 0; i < n; i++)
-        nacp[i] = 0;
     }
 
     //Check termination criteria
+    for (i = check - 1; i > 0; i--)
+      fstar[i] = fstar[i - 1];
+    fstar[0] = funcval;  //JMB should this be fopt or funcval??
+
     quit = 0;
-    fstar[0] = funcval;
-    if ((fopt - fstar[0]) <= eps)
+    if (absolute(fopt - funcval) < eps) {
       quit = 1;
-    for (i = 0; i < NEPS; i++)
-      if (absolute(funcval - fstar[i]) > eps)
-        quit = 0;
+      for (i = 0; i < check - 1; i++)
+        if (absolute(fstar[i + 1] - fstar[i]) > eps)
+          quit = 0;
+    }
+
+cout << "\nChecking convergence criteria after " << (FuncEval - offset) << " function evaluations ...\n";
+/*cout << absolute(fopt - funcval) << sep;
+for (i = 0; i < check - 1; i++)
+  cout << absolute(fstar[i + 1] - fstar[i]) << sep;
+cout << endl;*/
 
     //Terminate SA if appropriate
     if (quit) {
-      cout << "\nStopping Simulated Annealing\n\nThe optimisation stopped after " << nfcnev
-        << " function evaluations (max " << maxevl << ")\nThe optimisation stopped "
-        << "because an optimum was found for this run\n";
+      cout << "\nStopping Simulated Annealing\n\nThe optimisation stopped after " << (FuncEval - offset)
+        << " function evaluations (max " << maxevl << ")\nThe temperature was reduced to " << t
+        << "\nThe optimisation stopped because an optimum was found for this run\n";
+
+cout << "Number of directly accepted points " << nacc << endl;
+cout << "Number of metropolis accepted points " << naccmet << endl;
+cout << "Number of rejected points " << nrej << endl;
 
       fp = (*f)(endpoint, n);
       EcoSystem->SetConverge(1);
-      return nfcnev;
+      return 1;
     }
 
     //If termination criteria is not met, prepare for another loop.
     t = rt * t;
-    for (i = NEPS - 1; i > 0; i--)
-      fstar[i] = fstar[i - 1];
+    if (t < rathersmall)
+      t = rathersmall;  //JMB make sure temperature doesnt get too small
+
+cout << "Reducing the temperature to " << t << endl;
     funcval = fopt;
     for (i = 0; i < n; i++)
       x[i] = endpoint[i];

@@ -70,7 +70,7 @@ void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
     maxl = min(target.Maxcol(), Addition.Maxcol() + offset, Ratio.Maxcol());
     for (l = minl; l < maxl; l++) {
       pop = Addition[l - offset];
-      pop *= ratio * Ratio[l];
+      pop *= (ratio * Ratio[l]);
       target[l] += pop;
     }
   } else {             //Not same dl on length distributions
@@ -80,7 +80,7 @@ void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
       maxl = min(target.Maxcol(), CI.Maxpos(Addition.Maxcol() - 1) + 1, Ratio.Mincol());
       for (l = minl; l < maxl; l++) {
         pop = Addition[CI.Pos(l)];
-        pop *= ratio * Ratio[l];
+        pop *= (ratio * Ratio[l]);
         target[l] += pop;
         if (isZero(CI.Nrof(l)))
           cerr << "Error - divide by zero in popinfoadd\n";
@@ -93,7 +93,7 @@ void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
       maxl = min(CI.Maxpos(target.Maxcol() - 1) + 1, Addition.Maxcol(), Ratio.Maxcol());
       for (l = minl; l < maxl; l++) {
         pop = Addition[l];
-        pop *= ratio * Ratio[l];
+        pop *= (ratio * Ratio[l]);
         target[CI.Pos(l)] += pop;
       }
     }

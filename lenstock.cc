@@ -106,9 +106,9 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
 
   //Check the growth length groups cover the stock length groups
   checkLengthGroupIsFiner(LgrpDiv, GrowLgrpDiv, this->Name(), "growth and eat lengths");
-  if (LgrpDiv->Minlength(0) != GrowLgrpDiv->Minlength(0))
+  if (!(isZero(LgrpDiv->minLength() - GrowLgrpDiv->minLength())))
     cerr << "Warning - minimum lengths don't match for the growth functions of " << this->Name() << endl;
-  if (LgrpDiv->Maxlength(LgrpDiv->NoLengthGroups() - 1) != GrowLgrpDiv->Maxlength(GrowLgrpDiv->NoLengthGroups() - 1))
+  if (!(isZero(LgrpDiv->maxLength() - GrowLgrpDiv->maxLength())))
     cerr << "Warning - maximum lengths don't match for the growth functions of " << this->Name() << endl;
 
   //Read the growth function data

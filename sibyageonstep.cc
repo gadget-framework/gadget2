@@ -29,12 +29,12 @@ void SIByAgeOnStep::SetStocks(const StockPtrVector& Stocks) {
 
   //create a LengthGroupDivision for aggregator to use.
   int i;
-  double minlength = Stocks[0]->ReturnLengthGroupDiv()->Minlength(0);
+  double minlength = Stocks[0]->ReturnLengthGroupDiv()->minLength();
   double maxlength = minlength;
   double stockminlength, stockmaxlength;
   for (i = 0; i < Stocks.Size(); i++) {
-    stockminlength = Stocks[i]->ReturnLengthGroupDiv()->Minlength(0);
-    stockmaxlength = Stocks[i]->ReturnLengthGroupDiv()->Maxlength(Stocks[i]->ReturnLengthGroupDiv()->NoLengthGroups() - 1);
+    stockminlength = Stocks[i]->ReturnLengthGroupDiv()->minLength();
+    stockmaxlength = Stocks[i]->ReturnLengthGroupDiv()->maxLength();
     if (stockminlength < minlength)
       minlength = stockminlength;
     if (maxlength < stockmaxlength)

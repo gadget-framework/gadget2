@@ -1,6 +1,6 @@
 #include "ludecomposition.h"
 
-LUDecomposition::LUDecomposition(const DoubleMatrix& A){
+LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
   assert(A.Ncol() == A.Nrow());
 
   int i, k, j;
@@ -25,7 +25,7 @@ LUDecomposition::LUDecomposition(const DoubleMatrix& A){
 }
 
 //calculates the solution of Ax=b using the LU decomposition calculated in the constructor
-DoubleVector LUDecomposition::Solve(const DoubleVector& b){
+DoubleVector LUDecomposition::Solve(const DoubleVector& b) {
   assert(size == b.Size());
 
   int i, j;

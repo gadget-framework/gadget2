@@ -486,6 +486,9 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
     }
   }
 
+  if (!(strcasecmp(text, "[likelihood]") == 0))
+    handle.Unexpected("[likelihood]", text);
+
   //Now we have either read the word likelihood or reached end of file.
   if (!infile.eof() && calclikelihood) {
     infile >> text >> ws;

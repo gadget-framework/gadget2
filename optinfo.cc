@@ -10,12 +10,13 @@ double f(double* x, int n) {
 }
 
 extern int hooke(double (*f)(double*, int), int n, double startingpoint[],
-  double endpoint[], double lowerb[], double upperb[],
-  double rho, double lambda, double epsilon, int itermax);
+  double endpoint[], double lowerb[], double upperb[], double rho,
+  double lambda, double epsilon, int itermax, double init[], double bndcheck);
 
 extern int simann(int nvar, double point[], double endpoint[], double lb[],
-  double ub[], double (*f)(double*, int), int m, int maxeval, double step[],
-  double tempt, double stepl[], double rt, int ns, int nt, double eps);
+  double ub[], double (*f)(double*, int), int m, int maxeval, double cstep,
+  double tempt, double vmlen, double rt, int ns, int nt, double eps,
+  double uratio, double lratio, int check);
 
 OptInfo::OptInfo() {
   nopt = EcoSystem->NoOptVariables();
@@ -46,7 +47,7 @@ int OptInfo::Read(CommentStream &infile, char* text) {
 }
 
 OptInfoHooke::OptInfoHooke()
-  : OptInfo(), hookeiter(10), rho(0.5), lambda(0), hookeeps(1e-6) {
+  : OptInfo(), hookeiter(1000), rho(0.5), lambda(0), hookeeps(1e-4), bndcheck(0.9999) {
 }
 
 OptInfoHooke::~OptInfoHooke() {
@@ -81,6 +82,9 @@ int OptInfoHooke::Read(CommentStream& infile, char* text) {
   } else if (strcasecmp(text, "hookeiter") == 0) {
     infile >> hookeiter >> ws;
     return 1;
+  } else if (strcasecmp(text, "bndcheck") == 0) {
+    infile >> bndcheck >> ws;
+    return 1;
   } else
     return 0;
 }
@@ -104,11 +108,13 @@ void OptInfoHooke::MaximizeLikelihood() {
   double* endpoint = new double[nopt];
   double* upperb = new double[nopt];
   double* lowerb = new double[nopt];
+  double* init = new double[nopt];
 
   for (i = 0; i < nopt; i++) {
     startpoint[i] = val[i];
     lowerb[i] = lbds[i];
     upperb[i] = ubds[i];
+    init[i] = initialval[i];
   }
 
   ParameterVector optswitches(nopt);
@@ -119,28 +125,21 @@ void OptInfoHooke::MaximizeLikelihood() {
     lowerb[i] = lowerb[i] / initialval[i];
     upperb[i] = upperb[i] / initialval[i];
     if (lowerb[i] > upperb[i]) {
-      /* If bounds smaller than 0 */
+      /* If bounds smaller than zero */
       tmp = lowerb[i];
       lowerb[i] = upperb[i];
       upperb[i] = tmp;
     }
-  }
 
-  count = 0;
-  for (i = 0; i < nopt; i++) {
+    /* Warn if the starting point is zero */
     if (isZero(val[i])) {
-      count++;
-      cerr << "Error - for switch " << optswitches[i] << " starting value is zero\n"
+      cerr << "Warning - for switch " << optswitches[i] << " starting value is zero\n"
         << "which will give poor convergence for Hooke and Jeeves optimisation\n";
     }
   }
 
-  //JMB - swapped the order of upperb and lowerb to match entries for hooke()
   count = hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
-    rho, lambda, hookeeps, hookeiter);
-
-  for (i = 0; i < nopt; i++)
-    val[i] = initialval[i] * endpoint[i];
+    rho, lambda, hookeeps, hookeiter, init, bndcheck);
 
   cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
     << "\nafter " << EcoSystem->GetFuncEval() << " function evaluations at the point\n";
@@ -150,11 +149,12 @@ void OptInfoHooke::MaximizeLikelihood() {
   delete[] startpoint;
   delete[] upperb;
   delete[] lowerb;
+  delete[] init;
 }
 
 OptInfoSimann::OptInfoSimann()
   : OptInfo(), rt(0.85), simanneps(1e-4), ns(15), nt(10), T(100),
-    cs(2), vm(1), simanniter(2000) {
+    cs(2), vm(1), simanniter(2000), uratio(0.7), lratio(0.3), check(4) {
 }
 
 OptInfoSimann::~OptInfoSimann() {
@@ -179,7 +179,7 @@ int OptInfoSimann::Read(CommentStream& infile, char* text) {
   if (strcasecmp(text, "simanniter") == 0) {
     infile >> simanniter >> ws;
     return 1;
-  } else if (strcasecmp(text, "T") == 0) {
+  } else if (strcasecmp(text, "t") == 0) {
     infile >> T >> ws;
     return 1;
   } else if (strcasecmp(text, "rt") == 0) {
@@ -199,6 +199,15 @@ int OptInfoSimann::Read(CommentStream& infile, char* text) {
     return 1;
   } else if (strcasecmp(text, "cstep") == 0) {
     infile >> cs >> ws;
+    return 1;
+  } else if (strcasecmp(text, "check") == 0) {
+    infile >> check >> ws;
+    return 1;
+  } else if (strcasecmp(text, "uratio") == 0) {
+    infile >> uratio >> ws;
+    return 1;
+  } else if (strcasecmp(text, "lratio") == 0) {
+    infile >> lratio >> ws;
     return 1;
   } else
     return 0;
@@ -221,12 +230,8 @@ void OptInfoSimann::MaximizeLikelihood() {
   double* endpoint = new double[nopt];
   double* lowerb = new double[nopt];
   double* upperb = new double[nopt];
-  double* cstep = new double[nopt];
-  double* vmstep = new double[nopt];
 
   for (i = 0; i < nopt; i++) {
-    cstep[i] = cs;
-    vmstep[i] = vm;
     lowerb[i] = lbds[i];
     upperb[i] = ubds[i];
     startpoint[i] = val[i];
@@ -236,7 +241,7 @@ void OptInfoSimann::MaximizeLikelihood() {
   EcoSystem->OptSwitches(optswitches);
 
   count = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, 0,
-    simanniter, cstep, T, vmstep, rt, ns, nt, simanneps);
+    simanniter, cs, T, vm, rt, ns, nt, simanneps, uratio, lratio, check);
 
   cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
     << "\nafter " << EcoSystem->GetFuncEval() << " function evaluations at the point\n";
@@ -244,15 +249,14 @@ void OptInfoSimann::MaximizeLikelihood() {
 
   delete[] startpoint;
   delete[] endpoint;
-  delete[] vmstep;
-  delete[] cstep;
   delete[] lowerb;
   delete[] upperb;
 }
 
 OptInfoHookeAndSimann::OptInfoHookeAndSimann()
-  : OptInfo(), hookeiter(10), rho(0.5), lambda(0), hookeeps(1e-6),
-  simanniter(2000), rt(0.85), simanneps(1e-4), ns(15), nt(10), T(100), cs(2), vm(1) {
+  : OptInfo(), hookeiter(1000), rho(0.5), lambda(0), hookeeps(1e-4), bndcheck(0.9999),
+    simanniter(2000), rt(0.85), simanneps(1e-4), ns(15), nt(10), T(100),
+    cs(2), vm(1), uratio(0.7), lratio(0.3), check(4) {
 }
 
 OptInfoHookeAndSimann::~OptInfoHookeAndSimann() {
@@ -286,10 +290,13 @@ int OptInfoHookeAndSimann::Read(CommentStream& infile, char* text) {
   } else if (strcasecmp(text, "hookeiter") == 0) {
     infile >> hookeiter >> ws;
     return 1;
+  } else if (strcasecmp(text, "bndcheck") == 0) {
+    infile >> hookeiter >> ws;
+    return 1;
   } else if (strcasecmp(text, "simanniter") == 0) {
     infile >> simanniter >> ws;
     return 1;
-  } else if (strcasecmp(text, "T") == 0) {
+  } else if (strcasecmp(text, "t") == 0) {
     infile >> T >> ws;
     return 1;
   } else if (strcasecmp(text, "rt") == 0) {
@@ -309,6 +316,15 @@ int OptInfoHookeAndSimann::Read(CommentStream& infile, char* text) {
     return 1;
   } else if (strcasecmp(text, "cstep") == 0) {
     infile >> cs >> ws;
+    return 1;
+  } else if (strcasecmp(text, "check") == 0) {
+    infile >> check >> ws;
+    return 1;
+  } else if (strcasecmp(text, "uratio") == 0) {
+    infile >> uratio >> ws;
+    return 1;
+  } else if (strcasecmp(text, "lratio") == 0) {
+    infile >> lratio >> ws;
     return 1;
   } else
     return 0;
@@ -330,12 +346,9 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
   double* endpoint = new double[nopt];
   double* lowerb = new double[nopt];
   double* upperb = new double[nopt];
-  double* cstep = new double[nopt];
-  double* vmstep = new double[nopt];
+  double* init = new double[nopt];
 
   for (i = 0; i < nopt; i++) {
-    cstep[i] = cs;
-    vmstep[i] = vm;
     lowerb[i] = lbds[i];
     upperb[i] = ubds[i];
     startpoint[i] = val[i];
@@ -345,52 +358,38 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
   EcoSystem->OptSwitches(optswitches);
 
   count = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, 0,
-    simanniter, cstep, T, vmstep, rt, ns, nt, simanneps);
-
-  for (i = 0; i < nopt; i++)
-    val[i] = endpoint[i];
+    simanniter, cs, T, vm, rt, ns, nt, simanneps, uratio, lratio, check);
 
   double tmp;
   EcoSystem->ScaleVariables();
   EcoSystem->ScaledOptValues(val);
   EcoSystem->InitialOptValues(initialval);
-  for (i = 0; i < nopt; i++)
-    startpoint[i] = val[i];
 
   /* Scaling the bounds, because the parameters are now scaled. */
   for (i = 0; i < nopt; i++) {
+    init[i] = initialval[i];
+    startpoint[i] = val[i];
     lowerb[i] = lowerb[i] / initialval[i];
     upperb[i] = upperb[i] / initialval[i];
     if (lowerb[i] > upperb[i]) {
-      /* If bounds smaller than 0 */
+      /* If bounds smaller than zero */
       tmp = lowerb[i];
       lowerb[i] = upperb[i];
       upperb[i] = tmp;
     }
-  }
 
-  count = 0;
-  for (i = 0; i < nopt; i++) {
+    /* Warn if the starting point is zero */
     if (isZero(val[i])) {
-      count++;
-      cerr << "Error - for switch " << optswitches[i] << " starting value is zero\n"
+      cerr << "Warning - for switch " << optswitches[i] << " starting value is zero\n"
         << "which will give poor convergence for Hooke and Jeeves optimisation\n";
     }
-  }
-
-  if (count > 0) {
-    cerr << "Exiting with " << count << " errors in the parameter values\n";
-    exit(EXIT_FAILURE);
   }
 
   /* Reset the converge flag for the hooke optimisation */
   EcoSystem->SetConverge(0);
 
   count = hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
-    rho, lambda, hookeeps, hookeiter);
-
-  for (i = 0; i < nopt; i++)
-    val[i] = initialval[i] * endpoint[i];
+    rho, lambda, hookeeps, hookeiter, init, bndcheck);
 
   cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
     << "\nafter " << EcoSystem->GetFuncEval() << " function evaluations at the point\n";
@@ -398,8 +397,7 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
 
   delete[] startpoint;
   delete[] endpoint;
-  delete[] vmstep;
-  delete[] cstep;
   delete[] lowerb;
   delete[] upperb;
+  delete[] init;
 }

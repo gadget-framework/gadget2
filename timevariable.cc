@@ -65,7 +65,7 @@ void TimeVariable::ReadFromFile(CommentStream& infile, const TimeClass* const Ti
     handle.Unexpected("data", text);
   const char* errtext = "Something wrong with model matrix, years or steps in timevariable";
   i = 0;
-  while (!infile.eof()){
+  while (!infile.eof()) {
     years.resize(1);
     steps.resize(1);
     if (nrofcoeff > 0)

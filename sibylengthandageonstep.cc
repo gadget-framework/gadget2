@@ -542,8 +542,8 @@ void SIByLengthAndAgeOnStep::PrintLikelihoodHeader(ofstream& surveyfile, const c
     surveyfile << sep <<stocknames[i];
 
   surveyfile << "\nAges:             min " << Ages[minrow][0] << " max "
-    << Ages[maxrow][0] << "\nLengths:          min " << LgrpDiv->Minlength(0) << " max "
-    << LgrpDiv->Maxlength(LgrpDiv->NoLengthGroups() - 1) << " dl " << LgrpDiv->dl()  << endl;
+    << Ages[maxrow][0] << "\nLengths:          min " << LgrpDiv->minLength() << " max "
+    << LgrpDiv->maxLength() << " dl " << LgrpDiv->dl()  << endl;
 }
 
 void SIByLengthAndAgeOnStep::Reset(const Keeper* const keeper) {

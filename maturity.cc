@@ -263,8 +263,8 @@ void MaturityA::SetStock(StockPtrVector& stockvec) {
   for (i = 0; i < MatureStocks.Size(); i++) {
     if (MatureStocks[i]->Minage() < minMatureAge)
       minMatureAge = MatureStocks[i]->Minage();
-    if (MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0) < minlength)
-      minlength = MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0);
+    if (MatureStocks[i]->ReturnLengthGroupDiv()->minLength() < minlength)
+      minlength = MatureStocks[i]->ReturnLengthGroupDiv()->minLength();
   }
   minMatureLength = LgrpDiv->NoLengthGroup(minlength);
 }
@@ -448,8 +448,8 @@ void MaturityC::SetStock(StockPtrVector& stockvec) {
   for (i = 0; i < MatureStocks.Size(); i++) {
     if (MatureStocks[i]->Minage() < minMatureAge)
       minMatureAge = MatureStocks[i]->Minage();
-    if (MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0) < minlength)
-      minlength = MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0);
+    if (MatureStocks[i]->ReturnLengthGroupDiv()->minLength() < minlength)
+      minlength = MatureStocks[i]->ReturnLengthGroupDiv()->minLength();
   }
   minMatureLength = LgrpDiv->NoLengthGroup(minlength);
 }
@@ -515,8 +515,8 @@ void MaturityD::SetStock(StockPtrVector& stockvec) {
   for (i = 0; i < MatureStocks.Size(); i++) {
     if (MatureStocks[i]->Minage() < minMatureAge)
       minMatureAge = MatureStocks[i]->Minage();
-    if (MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0) < minlength)
-      minlength = MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0);
+    if (MatureStocks[i]->ReturnLengthGroupDiv()->minLength() < minlength)
+      minlength = MatureStocks[i]->ReturnLengthGroupDiv()->minLength();
   }
   minMatureLength = LgrpDiv->NoLengthGroup(minlength);
 }
@@ -626,8 +626,8 @@ void MaturityE::SetStock(StockPtrVector& stockvec) {
   for (i = 0; i < MatureStocks.Size(); i++) {
     if (MatureStocks[i]->Minage() < minMatureAge)
       minMatureAge = MatureStocks[i]->Minage();
-    if (MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0) < minlength)
-      minlength = MatureStocks[i]->ReturnLengthGroupDiv()->Minlength(0);
+    if (MatureStocks[i]->ReturnLengthGroupDiv()->minLength() < minlength)
+      minlength = MatureStocks[i]->ReturnLengthGroupDiv()->minLength();
   }
   minMatureLength = LgrpDiv->NoLengthGroup(minlength);
 }

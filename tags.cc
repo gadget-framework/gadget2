@@ -220,11 +220,11 @@ void Tags::SetStock(StockPtrVector& Stocks) {
     cerr << "Error in tagging experiment - invalid length groups\n";
     exit(EXIT_FAILURE);
   }
-  if(LgrpDiv->dl() != tempLgrpDiv->dl()) {
+  if (LgrpDiv->dl() != tempLgrpDiv->dl()) {
     cerr << "Error in tagging experiment - invalid length groups\n";
     exit(EXIT_FAILURE);
   }
-  if (LgrpDiv->Minlength(0) != tempLgrpDiv->Minlength(0)) {
+  if (!(isZero(LgrpDiv->minLength() - tempLgrpDiv->minLength()))) {
     cerr << "Error in tagging experiment - invalid length groups\n";
     exit(EXIT_FAILURE);
   }

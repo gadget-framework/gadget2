@@ -31,6 +31,17 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
     handle.Unexpected("transitionstocksandratios", text);
 
   infile >> TransitionStep >> ws;
+
+  //read in an optional mortality for the transition process
+  keeper->AddString("mortality");
+  char c = infile.peek();
+  if ((c == 't') || (c == 'T'))
+    readWordAndFormula(infile, "transitionmortality", mortality);
+  else
+    mortality.setValue(0.0); //default value for mortality
+  mortality.Inform(keeper);
+  keeper->ClearLast();
+
   keeper->ClearLast();
 }
 
@@ -92,8 +103,8 @@ void Transition::SetStock(StockPtrVector& stockvec) {
       cerr << "Warning - transition requested to stock " << (const char*)TransitionStocks[i]->Name()
         << "\nwhich might not be defined on " << index << " areas\n";
 
-    if (TransitionStocks[i]->ReturnLengthGroupDiv()->Minlength(0) < mlength)
-      mlength = TransitionStocks[i]->ReturnLengthGroupDiv()->Minlength(0);
+    if (TransitionStocks[i]->ReturnLengthGroupDiv()->minLength() < mlength)
+      mlength = TransitionStocks[i]->ReturnLengthGroupDiv()->minLength();
   }
 
   IntVector minlv(2, 0);
@@ -111,7 +122,8 @@ void Transition::Print(ofstream& outfile) const {
   outfile << "\n\tNames of transition stocks (through pointers):";
   for (i = 0; i < TransitionStocks.Size(); i++)
     outfile << sep << (const char*)(TransitionStocks[i]->Name());
-  outfile << "\n\tTransition step " << TransitionStep  << endl;
+  outfile << "\n\tTransition step " << TransitionStep
+    << "\n\tTransition mortality " << mortality << endl;
 }
 
 void Transition::KeepAgegroup(int area, AgeBandMatrix& Alkeys,
@@ -141,8 +153,10 @@ void Transition::KeepAgegroup(int area, AgeBandMatrix& Alkeys,
         else
           *(TagAgeGroup[inarea][age][l][i].N) = tagnumber;
 
-        *(TagAlkeys[age][l][i].N) = 0.0;
-        TagAlkeys[age][l][i].R = 0.0;
+        if (l >= minLength) {
+          *(TagAlkeys[age][l][i].N) = 0.0;
+          TagAlkeys[age][l][i].R = 0.0;
+        }
       }
     }
   }
@@ -153,6 +167,7 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
   int s, inarea = AreaNr[area];
 
   if (TimeInfo->CurrentStep() == TransitionStep) {
+    double mort = exp(-mortality);
     for (s = 0; s < TransitionStocks.Size(); s++) {
       if (!TransitionStocks[s]->IsInArea(area)) {
         cerr << "Error - transition to stock " << (const char*)(TransitionStocks[s]->Name())
@@ -166,11 +181,11 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
           TagAgeGroup[inarea].IncrementAge(AgeGroup[inarea]);
       }
 
-      TransitionStocks[s]->Add(AgeGroup[inarea], CI[s], area, Ratio[s],
+      TransitionStocks[s]->Add(AgeGroup[inarea], CI[s], area, (Ratio[s] * mort),
         AgeGroup[inarea].Minage(), AgeGroup[inarea].Maxage());
 
       if (TagAgeGroup.NrOfTagExp() > 0)
-        TransitionStocks[s]->Add(TagAgeGroup, inarea, CI[s], area, Ratio[s],
+        TransitionStocks[s]->Add(TagAgeGroup, inarea, CI[s], area, (Ratio[s] * mort),
           TagAgeGroup[inarea].Minage(), TagAgeGroup[inarea].Maxage());
 
     }

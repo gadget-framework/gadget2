@@ -217,10 +217,10 @@ void Spawner::SetStock(StockPtrVector& stockvec) {
 
     if (SpawnStocks[i]->Minage() < spawnage)
       spawnage = SpawnStocks[i]->Minage();
-    if (SpawnStocks[i]->ReturnLengthGroupDiv()->Minlength(0) < minlength)
-      minlength = SpawnStocks[i]->ReturnLengthGroupDiv()->Minlength(0);
-    if (SpawnStocks[i]->ReturnLengthGroupDiv()->Maxlength(SpawnStocks[i]->ReturnLengthGroupDiv()->NoLengthGroups() - 1) > maxlength)
-      maxlength = SpawnStocks[i]->ReturnLengthGroupDiv()->Maxlength(SpawnStocks[i]->ReturnLengthGroupDiv()->NoLengthGroups() - 1);
+    if (SpawnStocks[i]->ReturnLengthGroupDiv()->minLength() < minlength)
+      minlength = SpawnStocks[i]->ReturnLengthGroupDiv()->minLength();
+    if (SpawnStocks[i]->ReturnLengthGroupDiv()->maxLength() > maxlength)
+      maxlength = SpawnStocks[i]->ReturnLengthGroupDiv()->maxLength();
     if (SpawnStocks[i]->ReturnLengthGroupDiv()->dl() < dl)
       dl = SpawnStocks[i]->ReturnLengthGroupDiv()->dl();
   }

@@ -134,7 +134,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
   //The index aggrAge is for the dummy age in totalcatch.
   for (f = 0; f < fleets.Size(); f++) {
     LengthPredator* pred = fleets[f]->ReturnPredator();
-    for (h = 0; h < stocks.Size(); h++){
+    for (h = 0; h < stocks.Size(); h++) {
       //AJ 06.06.00 Typecast Prey which is returned from ReturnPrey to (StockPrey*)
       StockPrey* prey = (StockPrey*)stocks[h]->ReturnPrey();
       for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
@@ -159,7 +159,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
                       DoubleIndexVector Ratio = *suitptr;
                       if (overconsumption)
                         for (z = Ratio.Mincol(); z < Ratio.Maxcol(); z++)
-                          Ratio[z] *= (prey->Ratio(area, z) > 1 ? 1 / prey->Ratio(area, z) : 1);
+                          Ratio[z] *= (prey->Ratio(area, z) > 1 ? 1.0 / prey->Ratio(area, z) : 1.0);
 
                       PopinfoAdd(totalcatch[aggrArea][aggrAge], (*alptr)[age], *CI[h], fleetscale, Ratio);
                       PopinfoAdd(totalpop[aggrArea][aggrAge], (*alptr)[age], *CI[h]);

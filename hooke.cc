@@ -130,12 +130,7 @@
 #include "mathfunc.h"
 #include "ecosystem.h"
 
-#define VARS   (350)   //Maximum number of variables.
-
-double oldf = 0.0;
-
-/* global variable --- defined, initialized in main.cc. */
-/* Its value is not changed in this file.               */
+/* global variable, defined and initialized in gadget.cc and not modified here */
 extern int FuncEval;
 
 /* global ecosystem used to store whether the model converged */
@@ -145,7 +140,7 @@ extern Ecosystem* EcoSystem;
 double bestNearby(double (*f)(double*, int), double delta[], double point[],
   double prevbest, int nvars, int param[]) {
 
-  double z[VARS];
+  double z[NUM_VARS];
   double minf, ftmp;
   int    i;
 
@@ -174,46 +169,48 @@ double bestNearby(double (*f)(double*, int), double delta[], double point[],
   return minf;
 }
 
-int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[],
+int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[],
   double upperb[], double lowerb[], double rho, double lambda, double epsilon,
-  int itermax) {
+  int maxevl, double init[], double bndcheck) {
 
-  double delta[VARS];
-  double newf, fbefore, steplength, tmp;
-  double xbefore[VARS], newx[VARS];
-  int    i, k, h, keep, change, nobds;
-  int    iters;
-  int    param[VARS];
+  double delta[NUM_VARS];
+  double oldf, newf, fbefore, steplength, tmp, check;
+  double xbefore[NUM_VARS], newx[NUM_VARS];
+  int    i, k, h, keep, change, nobds, iters, offset;
+  int    param[NUM_VARS];
 
-  int    lbounds[VARS];     //counts how often it has hit the lowerbounds
-  int    rbounds[VARS];     //counts how often it has hit the upperbounds
-  double initialstep[VARS]; //the stepsize when it hits the bound first
-  int    trapped[VARS];     // = 1 if it is trapped at a bound else = 0
+  int    lbounds[NUM_VARS];     //counts how often it has hit the lowerbounds
+  int    rbounds[NUM_VARS];     //counts how often it has hit the upperbounds
+  double initialstep[NUM_VARS]; //the stepsize when it hits the bound first
+  int    trapped[NUM_VARS];     // = 1 if it is trapped at a bound else = 0
 
   for (i = 0; i < nvars; i++) {
     lbounds[i] = 0;
     rbounds[i] = 0;
     trapped[i] = 0;
     param[i] = i;
-    newx[i] = xbefore[i] = startpt[i];
-    delta[i] = rho;
+    newx[i] = startpt[i];
+    xbefore[i] = startpt[i];
+    delta[i] = ((2 * (rand() % 2)) - 1) * rho;  //JMB - randomise the sign
     initialstep[i] = rho;   //JMB - initialise this to something? rho?
   }
-  steplength = ((lambda <= 0) ? rho : lambda);
+  steplength = ((lambda < verysmall) ? rho : lambda);
   nobds = 0;
-  iters = 0;
-  h = 0;
 
   cout << "\nStarting Hooke and Jeeves\n";
   fbefore = (*f)(newx, nvars);
+  offset = FuncEval;  //number of function evaluations done before loop
+  newf = fbefore;
+  oldf = fbefore;
+  check = fbefore;
+
   if (fbefore != fbefore) { //check for NaN
     cout << "\nError starting Hooke and Jeeves optimisation with"
       << " f(x) = infinity\nReturning to calling routine ...\n";
     return 0;
   }
 
-  newf = fbefore;
-  while ((iters < itermax) && (steplength > epsilon)) {
+  while (1) {
     /* JMB added check for really silly values */
     if (isZero(fbefore)) {
       cout << "\nError in Hooke and Jeeves optimisation after " << FuncEval
@@ -238,9 +235,28 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
 
     /* find best new point, one coord at a time */
     for (i = 0; i < nvars; i++)
-      newx[param[i]] = xbefore[param[i]];
-
+      newx[i] = xbefore[i];
     newf = bestNearby(f, delta, newx, fbefore, nvars, param);
+
+    //If too many function evaluations occur, terminate the algorithm
+    if ((FuncEval - offset) > maxevl) {
+      cout << "\nStopping Hooke and Jeeves\n\nThe optimisation stopped after "
+        << (FuncEval - offset) << " function evaluations (max " << maxevl
+        << ")\nThe steplength was reduced to " << steplength << " (min " << epsilon
+        << ")\nThe optimisation stopped because the maximum number of function "
+        << "evaluations\nwas reached and NOT because an optimum was found for this run\n";
+
+      if (newf < fbefore) {
+        for (i = 0; i < nvars; i++)
+          endpt[param[i]] = newx[param[i]];
+      } else {
+        for (i = 0; i < nvars; i++)
+          endpt[param[i]] = xbefore[param[i]];
+      }
+
+      newf = (*f)(endpt, nvars);
+      return 0;
+    }
 
     /* if we made some improvements, pursue that direction */
     keep = 1;
@@ -249,34 +265,41 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
         /* if it has been trapped but f has now gotten better by 5%  */
         /* we assume that we are out of the trap, reset the counters */
         /* and go back to the stepsize we had when we got trapped    */
-        if ((trapped[param[i]] == 1) && (newf < oldf * 0.95)) {
+        if ((trapped[param[i]] == 1) && (newf < oldf * bndcheck)) {
+cout << "Resetting bounds for parameter " << param[i] << endl;
           trapped[param[i]] = 0;
           lbounds[param[i]] = 0;
           rbounds[param[i]] = 0;
           delta[param[i]] = initialstep[param[i]];
 
-        } else if ((newx[param[i]] - lowerb[param[i]]) <= verysmall) {
+        } else if (newx[param[i]] < (lowerb[param[i]] + verysmall)) {
+cout << "Parameter " << param[i] << " hit lower bound at " << lowerb[param[i]] << " value " << newx[param[i]] << endl;
           nobds++;
           lbounds[param[i]]++;    /* counts how often it hits a lower bound */
+          newx[param[i]] = lowerb[param[i]];
           if (trapped[param[i]] == 0) {
             initialstep[param[i]] = delta[param[i]];
             trapped[param[i]] = 1;
           }
           /* if it has hit the bounds 2 times then increase the stepsize */
           if (lbounds[param[i]] >= 2) {
-            delta[param[i]] += rho * 10;
+            delta[param[i]] /= rho;
+cout << "Delta increased to " << delta[param[i]] << endl;
           }
 
-        } else if ((upperb[param[i]] - newx[param[i]]) <= verysmall) {
+        } else if (newx[param[i]] > (upperb[param[i]] - verysmall)) {
+cout << "Parameter " << param[i] << " hit upper bound at " << upperb[param[i]] << " value " << newx[param[i]] << endl;
           nobds++;
           rbounds[param[i]]++;    /* counts how often it hits a upper bound */
+          newx[param[i]] = upperb[param[i]];
           if (trapped[param[i]] == 0) {
             initialstep[param[i]] = delta[param[i]];
             trapped[param[i]] = 1;
           }
           /* if it has hit the bounds 2 times then increase the stepsize */
           if (rbounds[param[i]] >= 2) {
-            delta[param[i]] += rho * 10;
+            delta[param[i]] /= rho;
+cout << "Delta increased to " << delta[param[i]] << endl;
           }
         }
       }
@@ -297,7 +320,7 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
 
       /*  only move forward if this is really an improvement    */
       fbefore = newf;
-      newf =  (*f)(newx, nvars);
+      newf = (*f)(newx, nvars);
       if (newf >= fbefore)
         break;
 
@@ -306,6 +329,26 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
       for (i = 0; i < nvars; i++)
         xbefore[param[i]] = newx[param[i]];
       newf = bestNearby(f, delta, newx, fbefore, nvars, param);
+
+      //If too many function evaluations occur, terminate the algorithm
+      if ((FuncEval - offset) > maxevl) {
+        cout << "\nStopping Hooke and Jeeves\n\nThe optimisation stopped after "
+          << (FuncEval - offset) << " function evaluations (max " << maxevl
+          << ")\nThe steplength was reduced to " << steplength << " (min " << epsilon
+          << ")\nThe optimisation stopped because the maximum number of function "
+          << "evaluations\nwas reached and NOT because an optimum was found for this run\n";
+
+        if (newf < fbefore) {
+          for (i = 0; i < nvars; i++)
+            endpt[param[i]] = newx[param[i]];
+        } else {
+          for (i = 0; i < nvars; i++)
+            endpt[param[i]] = xbefore[param[i]];
+        }
+
+        newf = (*f)(endpt, nvars);
+        return 0;
+      }
 
       /* if the further (optimistic) move was bad */
       if (newf >= fbefore)
@@ -324,39 +367,34 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
       }
     }
 
-    if ((steplength >= epsilon) && (newf >= fbefore)) {
-      steplength = steplength * rho;
-      for (i = 0; i < nvars; i++) {
-        delta[param[i]] *= rho;
-      }
+    if (fbefore < check) {
+      cout << "\nNew optimum after " << (FuncEval - offset) << " function evaluations, f(x) = "
+        << fbefore << " at\n";
+      for (i = 0; i < nvars; i++)
+        cout << xbefore[i] * init[i] << sep;
+      check = fbefore;
+    } else
+      cout << "\nChecking convergence criteria after " << (FuncEval - offset) << " function evaluations ...";
+
+    //If the step length is less than epsilon, terminate the algorithm
+    if (steplength < epsilon) {
+      cout << "\nStopping Hooke and Jeeves\n\nThe optimisation stopped after "
+        << (FuncEval - offset) << " function evaluations (max " << maxevl
+        << ")\nThe steplength was reduced to " << steplength << " (min " << epsilon
+        << ")\nThe optimisation stopped because an optimum was found for this run\n";
+      EcoSystem->SetConverge(1);
+
+      for (i = 0; i < nvars; i++)
+        endpt[i] = xbefore[i];
+      newf = (*f)(endpt, nvars);
+      return 1;
     }
 
-    cout << "\nNew optimum after " << FuncEval << " function evaluations, f(x) = "
-      << fbefore << " at\n";
-    for (i = 0; i < nvars; i++)
-      cout << xbefore[param[i]] << sep;
-    cout << endl;
-    iters++;
+    if (newf >= fbefore) {
+      steplength = steplength * rho;
+      cout << "\nReducing the steplength to " << steplength << endl;
+      for (i = 0; i < nvars; i++)
+        delta[i] *= rho;
+    }
   }
-
-  /* JMB 19.06.02 - adding comments for end of optimisation */
-  cout << "\nStopping Hooke and Jeeves\n\nThe optimisation stopped after " << iters
-    << " iterations (max " << itermax << ")\nThe steplength was reduced to "
-    << steplength << " (min " << epsilon << ")\nA total of " << FuncEval
-    << " function evaluations have been completed\n";
-
-  if (iters == itermax)
-    cout << "The optimisation stopped because the maximum number of iterations"
-      << "\nwas reached and NOT because an optimum was found for this run\n";
-  else {
-    cout << "The optimisation stopped because an optimum was found for this run\n";
-    EcoSystem->SetConverge(1);
-  }
-
-  for (i = 0; i < nvars; i++)
-    newx[param[i]] = xbefore[param[i]];
-  newf = (*f)(newx, nvars);
-  for (i = 0; i < nvars; i++)
-    endpt[param[i]] = newx[param[i]];
-  return FuncEval;
 }

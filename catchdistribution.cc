@@ -91,6 +91,10 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     readWordAndFormula(infile, "tau", tau);
     tau.Inform(keeper);
 
+  } else if (strcasecmp(functionname, "test") == 0) {
+    functionnumber = 10;
+  } else if (strcasecmp(functionname, "test2") == 0) {
+    functionnumber = 11;
   } else
     handle.Message("Error in catchdistribution - unrecognised function", functionname);
 
@@ -358,6 +362,8 @@ void CatchDistribution::Print(ofstream& outfile) const {
     case 2:
     case 3:
     case 4:
+    case 10:
+    case 11:
       break;
     case 5:
       outfile << "\tMultivariate normal distribution parameters: sigma " << sigma << " rho " << rho << endl;
@@ -411,6 +417,8 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
     case 2:
     case 3:
     case 4:
+    case 10:
+    case 11:
       break;
     case 5:
       outfile << "Multivariate normal distribution parameters: sigma " << sigma << " rho " << rho << endl;
@@ -433,7 +441,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
   for (year = 0; year < AgeLengthData.Nrow(); year++) {
     outfile << "\nYear " << Years[year] << " and step " << Steps[year];
     for (area = 0; area < AgeLengthData.Ncol(year); area++) {
-      outfile << "\nInternal area: " << area << "\nMeasurements";
+      outfile << "\nInternal area: " << area << "\nObserved measurements";
       for (i = 0; i < AgeLengthData[year][area]->Nrow(); i++) {
         outfile << endl;
         for (j = 0; j < AgeLengthData[year][area]->Ncol(i); j++) {
@@ -442,7 +450,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
           outfile << sep << (*AgeLengthData[year][area])[i][j];
         }
       }
-      outfile << "\nNumber caught according to model";
+      outfile << "\nModelled measurements";
       for (i = 0; i < Proportions[year][area]->Nrow(); i++) {
         outfile << endl;
         for (j = 0; j < Proportions[year][area]->Ncol(i); j++) {
@@ -454,9 +462,9 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
     }
     outfile << "\nLikelihood values:";
     for (area = 0; area < AgeLengthData.Ncol(year); area++) {
-       outfile.width(smallwidth);
-       outfile.precision(smallprecision);
-       outfile << sep << Likelihoodvalues[year][area];
+      outfile.width(smallwidth);
+      outfile.precision(smallprecision);
+      outfile << sep << Likelihoodvalues[year][area];
     }
     outfile << endl;
   }
@@ -543,6 +551,14 @@ void CatchDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
       case 9:
         aggregator->Sum(TimeInfo);
         likelihood += LikMVLogistic();
+        break;
+      case 10:
+        aggregator->Sum(TimeInfo);
+        likelihood += LikTest();
+        break;
+      case 11:
+        aggregator->Sum(TimeInfo);
+        likelihood += LikTest2();
         break;
       default:
         cerr << "Error in catchdistribution - unknown function " << functionname << endl;
@@ -733,6 +749,7 @@ double CatchDistribution::LikSumSquares() {
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     totalmodel = 0.0;
     totaldata = 0.0;
+    Likelihoodvalues[timeindex][nareas] = 0.0;
     for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
       for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
         (*Proportions[timeindex][nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
@@ -753,9 +770,88 @@ double CatchDistribution::LikSumSquares() {
           temp = (((*AgeLengthData[timeindex][nareas])[age][len] / totaldata)
             - ((*Proportions[timeindex][nareas])[age][len] / totalmodel));
 
-        totallikelihood += (temp * temp);
+        Likelihoodvalues[timeindex][nareas] += (temp * temp);
       }
     }
+    totallikelihood += Likelihoodvalues[timeindex][nareas];
+  }
+  return totallikelihood;
+}
+
+double CatchDistribution::LikTest() {
+
+  double totallikelihood = 0.0, temp = 0.0;
+  double totalmodel, totaldata;
+  int age, len, nareas;
+
+  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
+  for (nareas = 0; nareas < areas.Nrow(); nareas++) {
+    totalmodel = 0.0;
+    totaldata = 0.0;
+    Likelihoodvalues[timeindex][nareas] = 0.0;
+    for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
+      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+        (*Proportions[timeindex][nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
+        totalmodel += (*Proportions[timeindex][nareas])[age][len];
+        totaldata += (*AgeLengthData[timeindex][nareas])[age][len];
+      }
+    }
+
+    for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
+      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+        if ((isZero(totaldata)) && (isZero(totalmodel)))
+          temp = 0.0;
+        else if (isZero(totaldata))
+          temp = sqrt((*Proportions[timeindex][nareas])[age][len] / totalmodel);
+        else if (isZero(totalmodel))
+          temp = sqrt((*AgeLengthData[timeindex][nareas])[age][len] / totaldata);
+        else
+          temp = (sqrt((*AgeLengthData[timeindex][nareas])[age][len] / totaldata)
+            - sqrt((*Proportions[timeindex][nareas])[age][len] / totalmodel));
+
+        Likelihoodvalues[timeindex][nareas] += (temp * temp);
+      }
+    }
+    totallikelihood += Likelihoodvalues[timeindex][nareas];
+  }
+  return totallikelihood;
+}
+
+double CatchDistribution::LikTest2() {
+
+  double totallikelihood = 0.0, temp = 0.0;
+  double totalmodel, totaldata;
+  int age, len, nareas;
+
+  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
+  for (nareas = 0; nareas < areas.Nrow(); nareas++) {
+    totalmodel = 0.0;
+    totaldata = 0.0;
+    Likelihoodvalues[timeindex][nareas] = 0.0;
+    for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
+      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+        (*Proportions[timeindex][nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
+        totalmodel += (*Proportions[timeindex][nareas])[age][len];
+        totaldata += (*AgeLengthData[timeindex][nareas])[age][len];
+      }
+    }
+
+    for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
+      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+        if ((isZero(totaldata)) && (isZero(totalmodel)))
+          temp = 0.0;
+        else if (isZero(totaldata))
+          temp = asin(sqrt((*Proportions[timeindex][nareas])[age][len] / totalmodel));
+        else if (isZero(totalmodel))
+          temp = asin(sqrt((*AgeLengthData[timeindex][nareas])[age][len] / totaldata));
+        else
+          temp = (asin(sqrt((*AgeLengthData[timeindex][nareas])[age][len] / totaldata))
+            - asin(sqrt((*Proportions[timeindex][nareas])[age][len] / totalmodel)));
+
+        Likelihoodvalues[timeindex][nareas] += (temp * temp);
+      }
+    }
+    totallikelihood += Likelihoodvalues[timeindex][nareas];
   }
   return totallikelihood;
 }
@@ -915,8 +1011,8 @@ void CatchDistribution::PrintLikelihoodHeader(ofstream& catchfile) {
   for (i = 0; i < stocknames.Size(); i++)
     catchfile << sep << stocknames[i];
   catchfile << "\nAges:             min " << ages[minrow][0] << " max " << ages[maxrow][0]
-    << "\nLengths:          min " << LgrpDiv->Minlength(0) << " max "
-    << LgrpDiv->Maxlength(LgrpDiv->NoLengthGroups() - 1) << " dl " << LgrpDiv->dl() << endl;
+    << "\nLengths:          min " << LgrpDiv->minLength() << " max "
+    << LgrpDiv->maxLength() << " dl " << LgrpDiv->dl() << endl;
 }
 
 //Print Observed and modelled catch for further processing by external scripts
@@ -943,6 +1039,8 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
     case 2:
     case 3:
     case 4:
+    case 10:
+    case 11:
       break;
     case 5:
       catchfile << "Multivariate normal distribution parameters: sigma " << sigma << " rho " << rho << endl;

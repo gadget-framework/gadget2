@@ -96,7 +96,7 @@ void StockAggregator::Sum() {
   //The index aggrAge is for the dummy age in total.
   for (i = 0; i < stocks.Size(); i++) {
     for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
-      for (j = 0; j < areas.Ncol(aggrArea); j++){
+      for (j = 0; j < areas.Ncol(aggrArea); j++) {
         //All the areas in areas[aggrArea] will be aggregated to the area aggrArea in total.
         area = areas[aggrArea][j];
         if (stocks[i]->IsInArea(area)) {
