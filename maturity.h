@@ -7,14 +7,16 @@
 #include "conversionindexptrvector.h"
 #include "charptrvector.h"
 #include "commentstream.h"
+#include "agebandmatrixptrvector.h"
 #include "agebandmatrixratioptrvector.h"
 #include "timevariablevector.h"
-
-class Maturity;
 
 /**
  * \class Maturity
  * \brief This is the base class used to calculate the maturity of a stock within the model
+ *
+ * This class moves fish from an immature stock to matures stocks within the model.  The proportion of those fish in the immature stock that mature is calulated according to the different maturity functions of the derived classes, and then that propotion is moved into the mature stocks.  The length and age groups of the mature stocks are checked, and any fish that haven't yet reached the minimum length or age of the mature stock remain in the immature stock.
+ *
  * \note This will always be overridden by the derived classes that actually calculate the maturity
  */
 class Maturity: protected LivesOnAreas {

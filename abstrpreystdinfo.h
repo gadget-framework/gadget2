@@ -4,9 +4,7 @@
 #include "bandmatrix.h"
 #include "livesonareas.h"
 #include "areatime.h"
-
-class AbstrPreyStdInfo;
-class Prey;
+#include "prey.h"
 
 /**
  * \class AbstrPreyStdInfo

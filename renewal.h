@@ -7,11 +7,11 @@
 #include "stock.h"
 #include "livesonareas.h"
 
-class RenewalData;
-
 /**
  * \class RenewalData
  * \brief This is the class used to calculate the recruits to a stock
+ *
+ * This class adds new fish into a stock, usually into the youngest age group.  The total number of the recruits (in units of 10,000 fish) for each specified timestep is given in the input file.  The lengths of the recruits are calculated from a Normal distribution, from a given mean and standard deviation.  The mean weights of these length groups are then calculated from a specified length-weight relationship.
  */
 class RenewalData : protected LivesOnAreas {
 public:

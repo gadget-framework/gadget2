@@ -2,9 +2,7 @@
 #define biomassprinter_h
 
 #include "printer.h"
-
-class BiomassPrinter;
-class StockAggregator;
+#include "stockaggregator.h"
 
 /*  BiomassPrinter
  *

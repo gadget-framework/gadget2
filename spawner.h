@@ -10,9 +10,6 @@
 #include "selectfunc.h"
 #include "stock.h"
 
-class Stock;
-class Keeper;
-
 class Spawner : protected LivesOnAreas {
 public:
   Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* const LgrpDiv,

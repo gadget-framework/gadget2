@@ -3,8 +3,6 @@
 
 #include "prey.h"
 
-class LengthPrey;
-
 /**
  * \class LengthPrey
  * \brief This is the class used to model a simple length based prey

@@ -11,7 +11,7 @@
  * \class UnderStocking
  * \brief This is the class used to calculate a likelihood score based on the overconsumption of a stock by a fleet
  *
- * This class calculates a penalty that is applied if there are insufficient fish of a particular stock to meet the requirements set by the fleet landings data.  This indicates that there are less fish in the model than have been landed (as recorded by the landings data), which is <b>very</b> wrong, and so this gets a high penalty.  A 'reasonable' model will have a zero likelihood score from this component.
+ * This class calculates a penalty that is applied if there are insufficient fish of a particular stock to meet the requirements set by the fleet landings data.  This indicates that there are less fish in the model than have been landed (as recorded by the landings data), which is \b very wrong, and so this gets a high penalty.  A 'reasonable' model will have a zero likelihood score from this component.
  */
 class UnderStocking : public Likelihood {
 public:

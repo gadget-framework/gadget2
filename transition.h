@@ -8,11 +8,11 @@
 #include "agebandmatrixratioptrvector.h"
 #include "stock.h"
 
-class Keeper;
-
 /**
  * \class Transition
  * \brief This is the class used to calculate the movement from a young stock to older stocks
+ *
+ * This class moves the oldest age group of a young stock up to older stocks.  This is a simpler method than the Maturity classes of moving fish between stocks, and is used to move the fish that haven't matured according to the maturation functions.  The length groups of the older stocks are checked, and any fish that haven't yet reached the minimum length of the older stock remain in the younger stock, effectively as an age-plus group.
  */
 class Transition : protected LivesOnAreas {
 public:

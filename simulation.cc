@@ -88,7 +88,7 @@ int Ecosystem::Simulate(int Optimize, int print) {
     Likely[i]->Reset(keeper);
 
   if (Optimize)
-    //put here for boundlikelihood is allowed to change values
+    //put here since boundlikelihood is allowed to change values
     for (i = 0; i < Likely.Size(); i++)
       Likely[i]->addLikelihoodKeeper(TimeInfo, keeper);
 

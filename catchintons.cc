@@ -12,8 +12,8 @@
 
 extern ErrorHandler handle;
 
-CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
-  const TimeClass* const timeinfo, double weight)
+CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, double weight, const char* name)
   : Likelihood(CATCHINTONSLIKELIHOOD, weight) {
 
   int i, j;
@@ -28,6 +28,9 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
   strncpy(aggfilename, "", MaxStrLength);
   ifstream datafile;
   CommentStream subdata(datafile);
+
+  ctname = new char[strlen(name) + 1];
+  strcpy(ctname, name);
 
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
@@ -85,7 +88,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = areainfo->InnerArea(areas[i][j])) == -1)
+      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
         handle.UndefinedArea(areas[i][j]);
 
   //read in the fleetnames
@@ -119,26 +122,28 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
   datafile.open(datafilename, ios::in);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  readCatchInTonsData(subdata, timeinfo, numarea);
+  readCatchInTonsData(subdata, TimeInfo, numarea);
   handle.Close();
   datafile.close();
   datafile.clear();
-  Likelihoodvalues.AddRows(DataCatch.Nrow(), numarea, 0.0);
+
+  modelDistribution.AddRows(obsDistribution.Nrow(), numarea, 0.0);
+  likelihoodValues.AddRows(obsDistribution.Nrow(), numarea, 0.0);
 }
 
 void CatchInTons::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
   int i, j;
-  for (i = 0; i < ModelCatch.Nrow(); i++)
-    for (j = 0; j < ModelCatch.Ncol(i); j++)
-      ModelCatch[i][j] = 0.0;
+  for (i = 0; i < modelDistribution.Nrow(); i++)
+    for (j = 0; j < modelDistribution.Ncol(i); j++)
+      modelDistribution[i][j] = 0.0;
 }
 
 void CatchInTons::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch in Tons - likelihood value " << likelihood
+  outfile << "\nCatch in Tons " << ctname << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname;
   outfile << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
@@ -156,28 +161,28 @@ double CatchInTons::calcLikSumSquares(const TimeClass* const TimeInfo) {
   PopPredator* pred;
 
   for (a = 0; a < areas.Nrow(); a++) {
-    Likelihoodvalues[timeindex][a] = 0.0;
+    likelihoodValues[timeindex][a] = 0.0;
     for (a2 = 0; a2 < areas.Ncol(a); a2++) {
       for (f = 0; f < preyindex.Nrow(); f++) {
         pred = (PopPredator*)fleets[f]->returnPredator();
         for (p = 0; p < preyindex.Ncol(f); p++)
-          ModelCatch[timeindex][a] += pred->consumedBiomass(preyindex[f][p], a2);
+          modelDistribution[timeindex][a] += pred->consumedBiomass(preyindex[f][p], a2);
       }
     }
 
     if (!yearly) {
-      Likelihoodvalues[timeindex][a] +=
-        (log(ModelCatch[timeindex][a] + epsilon) - log(DataCatch[timeindex][a] + epsilon))
-        * (log(ModelCatch[timeindex][a] + epsilon) - log(DataCatch[timeindex][a] + epsilon));
+      likelihoodValues[timeindex][a] +=
+        (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon))
+        * (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon));
 
-      totallikelihood += Likelihoodvalues[timeindex][a];
+      totallikelihood += likelihoodValues[timeindex][a];
 
     } else if (TimeInfo->CurrentStep() == TimeInfo->StepsInYear()) {
-      Likelihoodvalues[timeindex][a] +=
-        (log(ModelCatch[timeindex][a] + epsilon) - log(DataCatch[timeindex][a] + epsilon))
-        * (log(ModelCatch[timeindex][a] + epsilon) - log(DataCatch[timeindex][a] + epsilon));
+      likelihoodValues[timeindex][a] +=
+        (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon))
+        * (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon));
 
-      totallikelihood += Likelihoodvalues[timeindex][a];
+      totallikelihood += likelihoodValues[timeindex][a];
     }
   }
   return totallikelihood;
@@ -208,6 +213,7 @@ CatchInTons::~CatchInTons() {
   for (i = 0; i < areaindex.Size(); i++)
     delete[] areaindex[i];
   delete[] functionname;
+  delete[] ctname;
 }
 
 void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
@@ -217,7 +223,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
     found = 0;
     for (j = 0; j < Fleets.Size(); j++)
       if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
-        found = 1;
+        found++;
         fleets.resize(1, Fleets[j]);
       }
 
@@ -231,7 +237,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->IsEaten())
         if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
-          found = 1;
+          found++;
           stocks.resize(1, Stocks[j]);
         }
     }
@@ -247,7 +253,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
     for (j = 0; j < pred->NoPreys(); j++)
       for (k = 0; k < stocknames.Size(); k++)
         if (strcasecmp(stocknames[k], pred->Preys(j)->Name()) == 0) {
-          found = 1;
+          found++;
           preyindex[i].resize(1, j);
         }
 
@@ -323,10 +329,9 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
         Years.resize(1, year);
         Steps.resize(1, step);
         timeid = (Years.Size() - 1);
-
-        DataCatch.AddRows(1, numarea, 0.0);
-        ModelCatch.AddRows(1, numarea, 0.0);
+        obsDistribution.AddRows(1, numarea, 0.0);
       }
+
     } else {
       //dont keep the data
       keepdata = 1;
@@ -336,7 +341,7 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
       //distribution data is required, so store it
       count++;
       //note that we use += to sum the data over all fleets (and possibly time)
-      DataCatch[timeid][areaid] += tmpnumber;
+      obsDistribution[timeid][areaid] += tmpnumber;
     }
   }
 
@@ -346,7 +351,7 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
     AAT.addActions(Years, Steps, TimeInfo);
 
   if (count == 0)
-    handle.logWarning("Warning in catchintons - found no data in the data file");
+    handle.logWarning("Warning in catchintons - found no data in the data file for", ctname);
   handle.logMessage("Read catchintons data file - number of entries", count);
 }
 
@@ -367,9 +372,9 @@ void CatchInTons::LikelihoodPrint(ofstream& outfile) {
     if (!(yearly))
       outfile << " and step " << Steps[y];
 
-    for (a = 0; a < DataCatch.Ncol(y); a++)
-      outfile << "\nInternal area: " << a << "\nMeasured catch is " << DataCatch[y][a]
-        << " modelled catch is " << ModelCatch[y][a] << " likelihood value " << Likelihoodvalues[y][a];
+    for (a = 0; a < obsDistribution.Ncol(y); a++)
+      outfile << "\nInternal area: " << a << "\nMeasured catch is " << obsDistribution[y][a]
+        << " modelled catch is " << modelDistribution[y][a] << " likelihood value " << likelihoodValues[y][a];
 
     outfile << endl;
   }

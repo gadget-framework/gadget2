@@ -14,7 +14,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     exit(EXIT_FAILURE);
   }
 
-  int i, j, k;
+  int i, j, k, nc, nf;
   int Mpos, NrOf;
   const LengthGroupDivision* Lf;  //Will be the finer length group division.
   const LengthGroupDivision* Lc;  //Will be the coarser length group division.
@@ -38,6 +38,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     Lc = L2;
     Lf = L1;
   }
+
   //do the length group divisions have same dl?
   offset = 0;
   if ((Lf->dl() != 0) && (Lf->dl() == Lc->dl())) {
@@ -46,6 +47,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   } else
     samedl = 0;
 
+  interpolate = interp;
   //set the switches Mpos and NrOf. They determine how much is needed
   //of the conversionindex.
   if (targetisfiner == 1 && samedl == 0)
@@ -116,9 +118,8 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       nrof[i] = maxpos[pos[i]] - minpos[pos[i]] + 1;
   }
 
-
   //if the conversionindex is to be used for interpolation.
-  if (interp) {
+  if (interpolate) {
     interpratio.resize(nf);
     interppos.resize(nf, -1);
     k = 0;
@@ -146,27 +147,30 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 
 //The function interpolates values calculated on a coarse length distribution
 //Vc to a finer length distribution Vf using the conversionindex CI.
-void interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc, const ConversionIndex* CI) {
-  int i, offset;
-  if (CI -> SameDl()) {
-    offset = CI->Offset();
-    if (CI->minLength() > 0)
-      for (i = 0; i < CI->minLength(); i++)
+void ConversionIndex::interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc) {
+
+  if (!(interpolate))
+    handle.logFailure("Error in conversionindex - cannot interpolate between lengthgroups");
+
+  int i;
+  if (samedl) {
+    if (minlength > 0)
+      for (i = 0; i < minlength; i++)
         Vf[i] = Vc[0];
 
-    for (i = CI->minLength(); i < CI->maxLength(); i++)
+    for (i = minlength; i < maxlength; i++)
       Vf[i] = Vc[i + offset];
 
-    if (CI->maxLength() < Vf.Size())
-      for (i = CI->maxLength(); i < Vf.Size(); i++)
+    if (maxlength < Vf.Size())
+      for (i = maxlength; i < Vf.Size(); i++)
         Vf[i] = Vc[Vc.Size() - 1];
 
   } else {
     for (i = 0; i < Vf.Size(); i++) {
-      if (CI->InterpRatio(i) != -1)
-        Vf[i] = Vc[CI->InterpPos(i)] * (1 - CI->InterpRatio(i)) + Vc[CI->InterpPos(i) + 1] * CI->InterpRatio(i);
+      if (interpratio[i] != -1)
+        Vf[i] = Vc[interppos[i]] * (1 - interpratio[i]) + Vc[interppos[i] + 1] * interpratio[i];
       else
-        Vf[i] = Vc[CI->InterpPos(i)];
+        Vf[i] = Vc[interppos[i]];
     }
   }
 }

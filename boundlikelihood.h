@@ -11,6 +11,8 @@
 /**
  * \class BoundLikelihood
  * \brief This is the class used to calculate the likelihood scores based on the bounds of the parameters for the current model
+ *
+ * This class calculates a penalty that is applied if any parameters go outside the specified bounds during the optimisation process.  The Simulated Annealing algorithm restricts the parameters to be within the bounds, so this component will give a zero likelihood score when that algorithm is being used.  The Hooke & Jeeves algorithm doesn't have this restriction, so a penalty is applied to any parameter that is beyond the bound, and the parameter is moved back to the bounds.  A 'reasonable' model will have a zero likelihood score from this component.
  */
 class BoundLikelihood : public Likelihood {
 public:

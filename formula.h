@@ -4,6 +4,7 @@
 #include "keeper.h"
 #include "doublevector.h"
 #include "parameter.h"
+#include "parametervector.h"
 #include "gadget.h"
 
 class Keeper;

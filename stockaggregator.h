@@ -7,8 +7,6 @@
 #include "conversionindexptrvector.h"
 #include "intmatrix.h"
 
-class StockAggregator;
-
 /**
  * \class StockAggregator
  * \brief This is the class used to aggregate stock information

@@ -2,9 +2,7 @@
 #define stockfullprinter_h
 
 #include "printer.h"
-
-class StockFullPrinter;
-class StockAggregator;
+#include "stockaggregator.h"
 
 /**
  * \class StockFullPrinter

@@ -3,14 +3,12 @@
 
 #include "areatime.h"
 #include "lengthgroup.h"
-#include "livesonareas.h"
 #include "bandmatrix.h"
-
-class PredStdInfoByLength;
-class AbstrPreyStdInfoByLength;
-class PopPredator;
-class Prey;
-class StockPrey;
+#include "abstrpredstdinfo.h"
+#include "abstrpreystdinfobylength.h"
+#include "poppredator.h"
+#include "prey.h"
+#include "stockprey.h"
 
 /**
  * \class PredStdInfoByLength

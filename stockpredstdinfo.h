@@ -3,13 +3,7 @@
 
 #include "areatime.h"
 #include "abstrpredstdinfo.h"
-
-class StockPredStdInfo;
-class AbstrPreyStdInfo;
-class PredStdInfoByLength;
-class Prey;
-class StockPredator;
-class StockPrey;
+#include "stockpredator.h"
 
 /**
  * \class StockPredStdInfo

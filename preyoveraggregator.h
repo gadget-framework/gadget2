@@ -5,8 +5,6 @@
 #include "intmatrix.h"
 #include "preyptrvector.h"
 
-class PreyOverAggregator;
-
 /**
  * \class PreyOverAggregator
  * \brief This is the class used to aggregate the calculated overconsumption of preys

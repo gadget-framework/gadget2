@@ -5,9 +5,6 @@
 #include "sionstep.h"
 #include "suitfunc.h"
 
-class SIByLengthAndAgeOnStep;
-class StockAggregator;
-
 enum OptType { PEARSONOPTTYPE = 1, MULTINOMIALOPTTYPE, EXPERIMENTALOPTTYPE, GAMMAOPTTYPE, LOGFUNCOPTTYPE };
 
 class SIByLengthAndAgeOnStep : public SIOnStep {

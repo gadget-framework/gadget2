@@ -24,12 +24,12 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
       Stochasticdata = new StochasticData(1);
       while (Stochasticdata->getDataFromNet()) {
         EcoSystem->Update(Stochasticdata);
-        EcoSystem->Simulate(MainInfo->CalcLikelihood(), print);
+        EcoSystem->Simulate(MainInfo->runLikelihood(), print);
         if ((MainInfo->getPI()).getPrint())
           EcoSystem->writeValues((MainInfo->getPI()).getOutputFile(), (MainInfo->getPI()).getPrecision());
         if ((MainInfo->getPI()).getPrintColumn())
           EcoSystem->writeValuesInColumns((MainInfo->getPI()).getColumnOutputFile(), (MainInfo->getPI()).getPrecision());
-        Stochasticdata->SendDataToMaster(EcoSystem->Likelihood());
+        Stochasticdata->SendDataToMaster(EcoSystem->getLikelihood());
         Stochasticdata->readNextLineFromNet();
       }
       delete Stochasticdata;

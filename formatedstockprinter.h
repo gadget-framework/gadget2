@@ -3,9 +3,7 @@
 
 #include "printer.h"
 #include "gadget.h"
-
-class FormatedStockPrinter;
-class StockAggregator;
+#include "stockaggregator.h"
 
 /*  FormatedStockPrinter
  *

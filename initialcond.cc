@@ -7,13 +7,6 @@
 
 extern ErrorHandler handle;
 
-/* JMB - I've removed all the code to deal with the basis functions
- * This code is still available from the tarfile for gadget verion 2.0.02
- * However, it will need some thinking to get it to work again though */
-
-//
-// A function to read initial stock data in normal distribution format
-//
 void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
@@ -39,8 +32,8 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
   strncpy(tmpnumber, "", MaxStrLength);
 
   //Resize the matrices to hold the data
-  AreaDist.AddRows(noareas, noagegr, number);
-  AgeDist.AddRows(noareas, noagegr, number);
+  areaFactor.AddRows(noareas, noagegr, number);
+  ageFactor.AddRows(noareas, noagegr, number);
   meanLength.AddRows(noareas, noagegr, number);
   sdevLength.AddRows(noareas, noagegr, number);
   relCond.AddRows(noareas, noagegr, number);
@@ -81,8 +74,8 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
     if (keepdata == 0) {
       //initial data is required, so store it
       count++;
-      infile >> AgeDist[areaid][ageid] >> ws;
-      infile >> AreaDist[areaid][ageid] >> ws;
+      infile >> ageFactor[areaid][ageid] >> ws;
+      infile >> areaFactor[areaid][ageid] >> ws;
       infile >> meanLength[areaid][ageid] >> ws;
       infile >> sdevLength[areaid][ageid] >> ws;
       infile >> relCond[areaid][ageid] >> ws;
@@ -98,17 +91,14 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
   }
 
   handle.logMessage("Read initial conditions data file - number of entries", count);
-  AreaDist.Inform(keeper);
-  AgeDist.Inform(keeper);
+  areaFactor.Inform(keeper);
+  ageFactor.Inform(keeper);
   meanLength.Inform(keeper);
   sdevLength.Inform(keeper);
   relCond.Inform(keeper);
   keeper->clearLast();
 }
 
-//
-// A function to read initial stock data in number data format
-//
 void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
@@ -142,7 +132,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   for (areaid = 0; areaid < noareas; areaid++)
     for (ageid = minage; ageid < noagegr + minage; ageid++)
       for (lengthid = 0; lengthid < nolengr; lengthid++)
-        AreaAgeLength[areaid][ageid][lengthid].N = 0.0;
+        initialPop[areaid][ageid][lengthid].N = 0.0;
 
   ageid = -1;
   areaid = -1;
@@ -187,16 +177,13 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
     if (keepdata == 0) {
       //initial data is required, so store it
       count++;
-      AreaAgeLength[areaid][ageid][lengthid].N = tmpnumber;
+      initialPop[areaid][ageid][lengthid].N = tmpnumber;
     }
   }
   handle.logMessage("Read initial conditions data file - number of entries", count);
   keeper->clearLast();
 }
 
-//
-// Constructor for the initial conditions
-//
 InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   Keeper* const keeper, const char* refWeightFile, const AreaClass* const Area)
   : LivesOnAreas(Areas), LgrpDiv(0), CI(0) {
@@ -239,7 +226,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   //default values
   readNumbers = 0;
 
-  //create the AreaAgeLength object of the correct size
+  //create the initialPop object of the correct size
   PopInfoMatrix tmpPop(noagegr, nolengr);
   for (i = 0; i < noagegr; i++) {
     for (j = 0; j < nolengr; j++) {
@@ -248,7 +235,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
       tmpPop[i][j].W = 1.0;
     }
   }
-  AreaAgeLength.resize(noareas, minage, 0, tmpPop);
+  initialPop.resize(noareas, minage, 0, tmpPop);
 
   keeper->addString("readinitialdata");
   if ((strcasecmp(text, "initstockfile") == 0)) {
@@ -316,7 +303,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   }
   keeper->clearLast();
 
-  //finaly copy the information into AreaAgeLength
+  //finaly copy the information into initialPop
   keeper->addString("weightdata");
   for (i = 0; i < noareas; i++) {
     for (j = 0; j < noagegr; j++) {
@@ -331,8 +318,8 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
         if (isZero(rWeight))
           handle.logWarning("Warning in initial conditions - zero mean weight");
 
-        //for AreaAgeLength the age is taken from the minimum age
-        AreaAgeLength[i][j + minage][k].W = rWeight;
+        //for initialPop the age is taken from the minimum age
+        initialPop[i][j + minage][k].W = rWeight;
       }
     }
   }
@@ -356,7 +343,7 @@ void InitialCond::Print(ofstream& outfile) const {
   outfile << "\nInitial conditions\n";
   for (i = 0; i < areas.Size(); i++) {
     outfile << "\tInternal area " << areas[i] << endl;
-    AreaAgeLength[i].printNumbers(outfile);
+    initialPop[i].printNumbers(outfile);
   }
   outfile << "\tMean lengths\n";
   for (i = 0; i < meanLength.Nrow(); i++) {
@@ -381,22 +368,22 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
   double mult, scaler;
 
   if (readNumbers == 0) {
-    for (area = 0; area < AreaAgeLength.Size(); area++) {
-      minage = AreaAgeLength[area].minAge();
-      maxage = AreaAgeLength[area].maxAge();
+    for (area = 0; area < initialPop.Size(); area++) {
+      minage = initialPop[area].minAge();
+      maxage = initialPop[area].maxAge();
       for (age = minage; age <= maxage; age++) {
         scaler = 0.0;
-        for (l = AreaAgeLength[area].minLength(age);
-            l < AreaAgeLength[area].maxLength(age); l++) {
-          AreaAgeLength[area][age][l].N =
+        for (l = initialPop[area].minLength(age);
+            l < initialPop[area].maxLength(age); l++) {
+          initialPop[area][age][l].N =
             dnorm(LgrpDiv->meanLength(l), meanLength[area][age - minage], sdevLength[area][age - minage] * sdevMult);
-          scaler += AreaAgeLength[area][age][l].N;
+          scaler += initialPop[area][age][l].N;
         }
 
         scaler = (scaler > rathersmall ? 10000 / scaler : 0.0);
-        for (l = AreaAgeLength[area].minLength(age);
-            l < AreaAgeLength[area].maxLength(age); l++) {
-          AreaAgeLength[area][age][l].N *= scaler;
+        for (l = initialPop[area].minLength(age);
+            l < initialPop[area].maxLength(age); l++) {
+          initialPop[area][age][l].N *= scaler;
         }
       }
     }
@@ -404,22 +391,22 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
 
   for (area = 0; area < areas.Size(); area++) {
     Alkeys[area].setToZero();
-    minage = max(Alkeys[area].minAge(), AreaAgeLength[area].minAge());
-    maxage = min(Alkeys[area].maxAge(), AreaAgeLength[area].maxAge());
+    minage = max(Alkeys[area].minAge(), initialPop[area].minAge());
+    maxage = min(Alkeys[area].maxAge(), initialPop[area].maxAge());
 
     if (maxage < minage)
       return;
 
     for (age = minage; age <= maxage; age++) {
       if (readNumbers == 0)
-        mult = AreaDist[area][age - minage] * AgeDist[area][age - minage];
+        mult = areaFactor[area][age - minage] * ageFactor[area][age - minage];
       else
         mult = 1.0;
 
       if (mult < 0)
         mult = -mult;
 
-      Alkeys[area][age].Add(AreaAgeLength[area][age], *CI, mult);
+      Alkeys[area][age].Add(initialPop[area][age], *CI, mult);
     }
   }
 }

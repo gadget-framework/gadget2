@@ -3,6 +3,8 @@
 
 #include "agebandmatrix.h"
 
+class AgeBandMatrix;
+
 /**
  * \class AgeBandMatrixPtrVector
  * \brief This class implements a dynamic vector of AgeBandMatrix values

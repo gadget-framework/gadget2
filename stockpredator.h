@@ -7,10 +7,6 @@
 #include "agebandmatrixptrvector.h"
 #include "poppredator.h"
 
-class StockPredator;
-class Keeper;
-class Prey;
-
 class StockPredator : public PopPredator {
 public:
   StockPredator(CommentStream& infile, const char* givenname, const IntVector& areas,

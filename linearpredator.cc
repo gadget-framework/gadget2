@@ -117,11 +117,12 @@ void LinearPredator::adjustConsumption(int area, int NrOfSubsteps, int CurrentSu
         }
       }
     }
-
-    if (AnyPreyEatenUp == 1)
-      for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
-        totalcons[inarea][predl] -= overcons[inarea][predl];
   }
+
+  //JMB - this was inside the for loop ...
+  if (AnyPreyEatenUp == 1)
+    for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
+      totalcons[inarea][predl] -= overcons[inarea][predl];
 
   //Changes after division of timestep in substeps was possible.
   for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)

@@ -42,7 +42,7 @@ void MigrationPenalty::setStocks(StockPtrVector Stocks) {
   int found = 0;
   for (i = 0; i < Stocks.Size(); i++)
     if (strcasecmp(stockname, Stocks[i]->Name()) == 0) {
-      found = 1;
+      found++;
       stock = Stocks[i];
     }
 

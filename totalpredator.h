@@ -3,8 +3,6 @@
 
 #include "lengthpredator.h"
 
-class TotalPredator;
-
 /**
  * \class TotalPredator
  * \brief This is the class used to model the predation of stocks by a fleet that will catch a given biomass

@@ -9,22 +9,15 @@
 #include "stockptrvector.h"
 #include "tagptrvector.h"
 #include "commentstream.h"
-#include "naturalm.h"
 
 class Stock;
 class Keeper;
 class NaturalM;
 class Grower;
 class InitialCond;
-class Spawner;
-class Alkeys;
 class Migration;
-class Maturity;
 class Transition;
-class StockPredator;
-class Predator;
 class PopPredator;
-class StockPrey;
 class Prey;
 class Maturity;
 class RenewalData;
@@ -152,9 +145,9 @@ public:
   virtual void Clear();
   void Renewal(int area, const TimeClass* const TimeInfo);
   void Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
-    int area, double ratio = 1, int MinAge = 0, int MaxAge = 100);
+    int area, double ratio = 1.0, int MinAge = 0, int MaxAge = 100);
   void Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
-    int area, double ratio = 1, int MinAge = 0, int MaxAge = 100);
+    int area, double ratio = 1.0, int MinAge = 0, int MaxAge = 100);
   Prey* returnPrey() const;
   const Migration* returnMigration() const { return migration; };
   PopPredator* returnPredator() const;
@@ -179,7 +172,7 @@ public:
   int doesMigrate() const { return doesmigrate; };
   int minAge() const { return Alkeys[0].minAge(); };
   int maxAge() const { return Alkeys[0].maxAge(); };
-  const DoubleIndexVector& mortality() const { return NatM->getMortality(); };
+  const DoubleIndexVector& mortality() const;
   const StockPtrVector& getMatureStocks();
   const StockPtrVector& getTransitionStocks();
   void updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss);

@@ -240,7 +240,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
       found = 0;
       for (j = 0; j < transitionStocks.Size(); j++)
         if (!(strcasecmp(transitionStocks[j]->Name(), tempMatureStock[i]->Name()) == 0))
-          found = 1;
+          found++;
 
       if (found == 0) {
         preyindex.resize(1, -1);

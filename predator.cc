@@ -32,7 +32,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
       if (strcasecmp(this->Preyname(j), preyvec[i]->Name()) == 0) {
         if (found == 0) {
           preys[j] = preyvec[i];
-          found = 1;
+          found++;
         } else
           handle.logFailure("Error in predator - repeated suitability values for prey", preyvec[i]->Name());
 

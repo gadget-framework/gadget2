@@ -5,10 +5,6 @@
 #include "intvector.h"
 #include "lengthgroup.h"
 
-class ConversionIndex;
-
-extern void interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc, const ConversionIndex* CI);
-
 class ConversionIndex {
 public:
   ConversionIndex(const LengthGroupDivision* const LF, const LengthGroupDivision* const LC, int interp = 0);
@@ -22,17 +18,13 @@ public:
   int Offset() const { return offset; };
   int SameDl() const { return samedl; };
   int TargetIsFiner() const { return targetisfiner; };
-  double InterpRatio(int i) const { return interpratio[i]; };
-  int InterpPos(int i) const { return interppos[i]; };
-  int Nf() const { return nf; };
-  int Nc() const { return nc; };
   int Size() const { return pos.Size(); };
+  void interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc);
 protected:
   int targetisfiner;
   int samedl;
+  int interpolate;
   int offset;
-  int nf;
-  int nc;
   int minlength;
   int maxlength;
   IntVector pos;

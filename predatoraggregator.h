@@ -7,8 +7,6 @@
 #include "preyptrvector.h"
 #include "charptrvector.h"
 
-class PredatorAggregator;
-
 /**
  * \class PredatorAggregator
  * \brief This is the class used to aggregate predation information

@@ -7,9 +7,6 @@
 #include "lengthgroup.h"
 #include "pionstep.h"
 
-class PredatorIndices;
-class PIOnStep;
-
 class PredatorIndices : public Likelihood {
 public:
   /**
@@ -61,6 +58,9 @@ protected:
    * \brief This is the IntMatrix used to store area information
    */
   IntMatrix areas;
+  /**
+   * \brief This is the name of the PredatorIndices likelihood component
+   */
   char* piname;
 };
 

@@ -4,9 +4,7 @@
 #include "doublematrix.h"
 #include "livesonareas.h"
 #include "areatime.h"
-
-class AbstrPreyStdInfoByLength;
-class Prey;
+#include "prey.h"
 
 /**
  * \class AbstrPreyStdInfoByLength

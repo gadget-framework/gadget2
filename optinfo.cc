@@ -22,7 +22,6 @@ extern int simann(int nvar, double point[], double endpoint[], double lb[],
   double uratio, double lratio, int check);
 
 OptInfo::OptInfo() {
-  nopt = EcoSystem->NoOptVariables();
   // Initialise random number generator with system time [morten 02.02.26]
   srand(time(NULL));
 }
@@ -92,7 +91,7 @@ int OptInfoHooke::read(CommentStream& infile, char* text) {
 }
 
 void OptInfoHooke::MaximizeLikelihood() {
-  int i, count;
+  int i, nopt, count;
   double tmp;
   nopt = EcoSystem->NoOptVariables();
   DoubleVector val(nopt);
@@ -141,7 +140,7 @@ void OptInfoHooke::MaximizeLikelihood() {
   count = hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
     rho, lambda, hookeeps, hookeiter, init, bndcheck);
 
-  cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
+  cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->getLikelihood()
     << "\nafter " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
   EcoSystem->writeOptValues();
 
@@ -216,7 +215,7 @@ int OptInfoSimann::read(CommentStream& infile, char* text) {
 //Considered better to skip scaling of variables here.  Had to change keeper
 //so initialvalues start as 1 but scaled values as the same as values
 void OptInfoSimann::MaximizeLikelihood() {
-  int i, count;
+  int i, nopt, count;
   nopt = EcoSystem->NoOptVariables();
   DoubleVector val(nopt);
   DoubleVector lbds(nopt);
@@ -243,7 +242,7 @@ void OptInfoSimann::MaximizeLikelihood() {
   count = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, 0,
     simanniter, cs, T, vm, rt, ns, nt, simanneps, uratio, lratio, check);
 
-  cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
+  cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->getLikelihood()
     << "\nafter " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
   EcoSystem->writeOptValues();
 
@@ -331,7 +330,7 @@ int OptInfoHookeAndSimann::read(CommentStream& infile, char* text) {
 }
 
 void OptInfoHookeAndSimann::MaximizeLikelihood() {
-  int i, count;
+  int i, nopt, count;
   nopt = EcoSystem->NoOptVariables();
   DoubleVector val(nopt);
   DoubleVector initialval(nopt);
@@ -389,7 +388,7 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
   count = hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
     rho, lambda, hookeeps, hookeiter, init, bndcheck);
 
-  cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
+  cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->getLikelihood()
     << "\nafter " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
   EcoSystem->writeOptValues();
 

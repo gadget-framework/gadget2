@@ -11,8 +11,6 @@
 #include "intmatrix.h"
 #include "conversionindexptrvector.h"
 
-class FleetPreyAggregator;
-
 /**
  * \class FleetPreyAggregator
  * \brief This is the class used to aggregate fleet catch information

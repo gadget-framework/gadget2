@@ -14,7 +14,7 @@
 extern ErrorHandler handle;
 
 RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double weight, TagPtrVector Tags, const char* name)
+  const TimeClass* const TimeInfo, double weight, TagPtrVector Tag, const char* name)
   : Likelihood(RECSTATISTICSLIKELIHOOD, weight) {
 
   LgrpDiv = NULL;
@@ -82,14 +82,14 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   datafile.open(datafilename, ios::in);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  readStatisticsData(subdata, TimeInfo, numarea, Tags);
+  readStatisticsData(subdata, TimeInfo, numarea, Tag);
   handle.Close();
   datafile.close();
   datafile.clear();
 }
 
 void RecStatistics::readStatisticsData(CommentStream& infile,
-  const TimeClass* TimeInfo, int numarea, TagPtrVector Tags) {
+  const TimeClass* TimeInfo, int numarea, TagPtrVector Tag) {
 
   int year, step;
   double tmpnumber, tmpmean, tmpstddev;
@@ -138,14 +138,14 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
 
       if (tagid == -1) {
         tmpindex = -1;
-        for (i = 0; i < Tags.Size(); i++)
-          if (strcasecmp(Tags[i]->TagName(), tmptag) == 0)
+        for (i = 0; i < Tag.Size(); i++)
+          if (strcasecmp(Tag[i]->TagName(), tmptag) == 0)
             tmpindex = i;
 
         if (tmpindex == -1) {
           keepdata = 1;
         } else {
-          tagvec.resize(1, Tags[tmpindex]);
+          tagvec.resize(1, Tag[tmpindex]);
           tagnames.resize(1, new char[strlen(tmptag) + 1]);
           strcpy(tagnames[tagnames.Size() - 1], tmptag);
           tagid = tagvec.Size() - 1;
@@ -258,7 +258,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     found = 0;
     for (j = 0; j < Fleets.Size(); j++)
       if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
-        found = 1;
+        found++;
         fleets.resize(1, Fleets[j]);
       }
 
@@ -275,7 +275,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       for (j = 0; j < Stocks.Size(); j++)
         if (Stocks[j]->IsEaten())
           if (strcasecmp(stocknames->operator[](i), Stocks[j]->returnPrey()->Name()) == 0) {
-            found = 1;
+            found++;
             stocks.resize(1, Stocks[j]);
           }
 

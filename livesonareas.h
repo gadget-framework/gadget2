@@ -3,8 +3,6 @@
 
 #include "intvector.h"
 
-class LivesOnAreas;
-
 /**
  * \class LivesOnAreas
  * \brief This is the class used to store information about the areas an object is defined on for the current model

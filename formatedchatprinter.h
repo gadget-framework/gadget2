@@ -4,9 +4,6 @@
 #include "printer.h"
 #include "mortpredator.h"
 
-class FormatedCHatPrinter;
-class StockAggregator;
-
 class FormatedCHatPrinter : public Printer {
 public:
   FormatedCHatPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);

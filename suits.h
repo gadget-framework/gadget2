@@ -5,8 +5,8 @@
 #include "suitfuncptrvector.h"
 #include "doublematrixptrvector.h"
 #include "bandmatrix.h"
+#include "keeper.h"
 
-class Keeper;
 class Predator;
 
 class Suits {

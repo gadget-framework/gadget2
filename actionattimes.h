@@ -5,11 +5,11 @@
 #include "areatime.h"
 #include "intvector.h"
 
-class ActionAtTimes;
-
 /**
  * \class ActionAtTimes
  * \brief This is the class used to associate actions with specific timesteps within the model
+ *
+ * This class is used to determine whether an action should take place on the current timestep in the model.  The actions include changing the population of the stock (either by fishing from the stock or adding to the stock) calculating the score from a likelihood component or printing output from the model.  This is done by storing a list of timesteps when the action takes place, and comparing it to the current timestep in the model.
  */
 class ActionAtTimes {
 public:

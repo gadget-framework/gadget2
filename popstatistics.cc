@@ -31,6 +31,9 @@ void PopStatistics::calcStatistics(const PopInfoVector& pop,
   int i;
   double length;
 
+  if (pop.Size() != lgrpdiv->NoLengthGroups())
+    handle.logFailure("Error in popstatistics - length groups dont match population");
+
   for (i = 0; i < pop.Size(); i++) {
     if ((isZero(pop[i].W)) && (!(isZero(pop[i].N))) && (calcweight == 0))
       handle.logWarning("Warning in popstatistics - non-zero population has zero mean weight");

@@ -143,13 +143,13 @@ void RenewalData::setCI(const LengthGroupDivision* const GivenLDiv) {
 }
 
 void RenewalData::Print(ofstream& outfile) const {
-  outfile << "\nRenewal\n\tDistribution\n";
+  outfile << "\nRenewal data\n\tDistribution\n";
   int i;
   for (i = 0; i < Distribution.Size(); i++) {
     outfile << "\tTime " << RenewalTime[i] << " internal area " << RenewalArea[i]
-      << " age " << Distribution[i].minAge() << " number " << Number[i] << endl;
+      << " age " << Distribution[i].minAge() << " number " << Number[i] << "\n\tNumbers\n";
     Distribution[i].printNumbers(outfile);
-    outfile << "\tmean weights\n";
+    outfile << "\tMean weights\n";
     Distribution[i].printWeights(outfile);
   }
 }

@@ -4,18 +4,6 @@
 #include "printer.h"
 #include "readword.h"
 
-class LikelihoodPrinter;
-class StockAggregator;
-
-/* LikelihoodPrinter
- *
- * Purpose: Print likelihood information by age and length on step/year
- *
- * Input:
- *
- * Usage:
- */
-
 class LikelihoodPrinter : public Printer {
 public:
   LikelihoodPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);

@@ -6,11 +6,7 @@
 #include "commentstream.h"
 #include "agebandmatrix.h"
 #include "predator.h"
-
-class PopPredator;
-class Keeper;
-class Prey;
-class AgeBandMatrix;
+#include "keeper.h"
 
 class PopPredator : public Predator {
 public:

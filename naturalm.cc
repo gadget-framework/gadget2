@@ -2,18 +2,14 @@
 #include "readfunc.h"
 #include "areatime.h"
 #include "keeper.h"
-#include "errorhandler.h"
 #include "doubleindexvector.h"
 #include "gadget.h"
 
-extern ErrorHandler handle;
-
-//A simple beginning, only one mortality for each yearclass.
 NaturalM::NaturalM(CommentStream& infile, int minage, int maxage, const TimeClass* const TimeInfo,
   Keeper* const keeper) : mortality(maxage - minage + 1, minage), proportion(maxage - minage + 1, 0.0) {
 
   keeper->addString("naturalm");
-  mortality.read(infile, TimeInfo, keeper);
+  mortality.read(infile, TimeInfo, keeper);  
   this->Reset(TimeInfo);
   keeper->clearLast();
 }

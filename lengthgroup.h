@@ -3,14 +3,6 @@
 
 #include "doublevector.h"
 
-class LengthGroupDivision;
-
-extern void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
-  const LengthGroupDivision* coarser);
-
-extern int lengthGroupIsFiner(const LengthGroupDivision* finer,
-  const LengthGroupDivision* coarser, int& BogusLengthGroup);
-
 class LengthGroupDivision {
 public:
   LengthGroupDivision(double minlength, double maxlength, double dl);
@@ -28,6 +20,7 @@ public:
   int Combine(const LengthGroupDivision* const addition);
   int Error() const { return error; }
   void printError() const;
+  void Print(ofstream& outfile) const;
 protected:
   int error;
   int size;
@@ -37,5 +30,11 @@ protected:
   DoubleVector meanlength;
   DoubleVector minlength;
 };
+
+extern void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
+  const LengthGroupDivision* coarser);
+
+extern int lengthGroupIsFiner(const LengthGroupDivision* finer,
+  const LengthGroupDivision* coarser, int& BogusLengthGroup);
 
 #endif

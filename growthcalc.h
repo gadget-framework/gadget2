@@ -7,8 +7,7 @@
 #include "commentstream.h"
 #include "popinfovector.h"
 #include "livesonareas.h"
-
-class Keeper;
+#include "keeper.h"
 
 /**
  * \class GrowthCalcBase

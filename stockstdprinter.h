@@ -2,10 +2,8 @@
 #define stockstdprinter_h
 
 #include "printer.h"
-
-class StockStdPrinter;
-class StockAggregator;
-class StockPreyStdInfo;
+#include "stockaggregator.h"
+#include "stockpreystdinfo.h"
 
 /**
  * \class StockStdPrinter

@@ -4,10 +4,8 @@
 #include "areatime.h"
 #include "lengthgroup.h"
 #include "abstrpreystdinfo.h"
+#include "stockprey.h"
 #include "stockpreystdinfobylength.h"
-
-class StockPreyStdInfo;
-class StockPrey;
 
 /**
  * \class StockPreyStdInfo

@@ -2,10 +2,8 @@
 #define predatoroverprinter_h
 
 #include "predatorptrvector.h"
+#include "predatoroveraggregator.h"
 #include "printer.h"
-
-class PredatorOverPrinter;
-class PredatorOverAggregator;
 
 /**
  * \class PredatorOverPrinter

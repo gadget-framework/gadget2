@@ -7,7 +7,6 @@
 #include "printinfo.h"
 #include "gadget.h"
 
-class Ecosystem;
 class Keeper;
 
 enum LikelihoodType { SURVEYINDICESLIKELIHOOD = 1, UNDERSTOCKINGLIKELIHOOD,

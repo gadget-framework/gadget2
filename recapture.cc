@@ -19,6 +19,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j, check;
+  int numarea = 0, numlen = 0;
 
   char datafilename[MaxStrLength];
   char aggfilename[MaxStrLength];
@@ -29,8 +30,8 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
 
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
-  tagname = new char[strlen(name) + 1];
-  strcpy(tagname, name);
+  recname = new char[strlen(name) + 1];
+  strcpy(recname, name);
 
   readWordAndValue(infile, "datafile", datafilename);
   readWordAndValue(infile, "function", functionname);
@@ -83,26 +84,27 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   datafile.open(datafilename, ios::in);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  readRecaptureData(subdata, TimeInfo);
+  readRecaptureData(subdata, TimeInfo, numarea, numlen);
   handle.Close();
   datafile.close();
   datafile.clear();
 
-  for (j = 0; j < tagid.Size(); j++) {
+  for (j = 0; j < tagnames.Size(); j++) {
     check = 0;
     for (i = 0; i < Tag.Size(); i++) {
-      if (strcasecmp(tagid[j], Tag[i]->TagName()) == 0) {
+      if (strcasecmp(tagnames[j], Tag[i]->TagName()) == 0) {
         check++;
         tagvec.resize(1, Tag[i]);
       }
     }
     if (check == 0)
-      handle.logFailure("Error in recaptures - failed to match tag", tagid[j]);
+      handle.logFailure("Error in recaptures - failed to match tag", tagnames[j]);
 
   }
 }
 
-void Recaptures::readRecaptureData(CommentStream& infile, const TimeClass* const TimeInfo) {
+void Recaptures::readRecaptureData(CommentStream& infile,
+  const TimeClass* const TimeInfo, int numarea, int numlen) {
 
   int i, j, k;
   int year, step;
@@ -146,22 +148,22 @@ void Recaptures::readRecaptureData(CommentStream& infile, const TimeClass* const
     tid = -1;
     if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
       //if this is a new tagging exp. then resize
-      for (i = 0; i < tagid.Size(); i++)
-        if (strcasecmp(tagid[i], tmptagid) == 0)
+      for (i = 0; i < tagnames.Size(); i++)
+        if (strcasecmp(tagnames[i], tmptagid) == 0)
           tid = i;
 
       if (tid == -1) {
         tagName = new char[strlen(tmptagid) + 1];
         strcpy(tagName, tmptagid);
-        tagid.resize(1, tagName);
-        tid = tagid.Size() - 1;
+        tagnames.resize(1, tagName);
+        tid = tagnames.Size() - 1;
         Years.AddRows(1, 1, year);
         Steps.AddRows(1, 1, step);
         timeid = 0;
-        obsRecaptures.AddRows(1, 1);
-        obsRecaptures[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
-        modelRecaptures.AddRows(1, 1);
-        modelRecaptures[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
+        obsDistribution.AddRows(1, 1);
+        obsDistribution[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
+        modelDistribution.AddRows(1, 1);
+        modelDistribution[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
 
       } else {
         //if this is a new timestep, resize to store the data
@@ -173,20 +175,20 @@ void Recaptures::readRecaptureData(CommentStream& infile, const TimeClass* const
           Years[tid].resize(1, year);
           Steps[tid].resize(1, step);
           timeid = Years.Ncol(tid) - 1;
-          obsRecaptures[tid].resize(1);
-          obsRecaptures[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
-          modelRecaptures[tid].resize(1);
-          modelRecaptures[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
+          obsDistribution[tid].resize(1);
+          obsDistribution[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
+          modelDistribution[tid].resize(1);
+          modelDistribution[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
         }
       }
 
-      //store the number of the obsRecaptures
+      //store the number of the obsDistribution
       count++;
-      (*obsRecaptures[tid][timeid])[areaid][lenid] = tmpnumber;
+      (*obsDistribution[tid][timeid])[areaid][lenid] = tmpnumber;
     }
   }
   if (count == 0)
-    handle.logWarning("Warning in recaptures - found no data in the data file for", tagname);
+    handle.logWarning("Warning in recaptures - found no data in the data file for", recname);
   handle.logMessage("Read recaptures data file - number of entries", count);
 }
 
@@ -198,12 +200,12 @@ Recaptures::~Recaptures() {
     delete[] areaindex[i];
   for (i = 0; i < lenindex.Size(); i++)
     delete[] lenindex[i];
-  for (i = 0; i < tagid.Size(); i++)
-    delete[] tagid[i];
-  for (i = 0; i < obsRecaptures.Nrow(); i++)
-    for (j = 0; j < obsRecaptures.Ncol(i); j++) {
-      delete obsRecaptures[i][j];
-      delete modelRecaptures[i][j];
+  for (i = 0; i < tagnames.Size(); i++)
+    delete[] tagnames[i];
+  for (i = 0; i < obsDistribution.Nrow(); i++)
+    for (j = 0; j < obsDistribution.Ncol(i); j++) {
+      delete obsDistribution[i][j];
+      delete modelDistribution[i][j];
     }
   if (aggregator != 0)  {
     for (i = 0; i < tagvec.Size(); i++)
@@ -211,7 +213,7 @@ Recaptures::~Recaptures() {
     delete[] aggregator;
     aggregator = 0;
   }
-  delete[] tagname;
+  delete[] recname;
   delete[] functionname;
 }
 
@@ -229,7 +231,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
     found = 0;
     for (j = 0; j < Fleets.Size(); j++)
       if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
-        found = 1;
+        found++;
         fleets.resize(1, Fleets[j]);
       }
 
@@ -249,7 +251,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       for (j = 0; j < Stocks.Size(); j++) {
         if (Stocks[j]->IsEaten()) {
           if (strcasecmp(stocknames->operator[](i), Stocks[j]->returnPrey()->Name()) == 0) {
-            found = 1;
+            found++;
             stocks.resize(1, Stocks[j]);
           }
         }
@@ -309,7 +311,7 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
       const AgeBandMatrixPtrVector& alptr = aggregator[t]->returnSum();
 
       for (i = 0; i < alptr.Size(); i++) {
-        for (len = 0; len < numlen; len++) {
+        for (len = 0; len < lengths.Size(); len++) {
           n = 0;
           x = alptr[i][0][len].N;
 
@@ -319,8 +321,8 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
               timeid = ti;
 
           if (timeid > -1) {
-            n = (*obsRecaptures[t][timeid])[i][len];
-            (*modelRecaptures[t][timeid])[i][len] = x;
+            n = (*obsDistribution[t][timeid])[i][len];
+            (*modelDistribution[t][timeid])[i][len] = x;
           }
 
           if (isZero(n))
@@ -339,20 +341,20 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
 
 void Recaptures::Print(ofstream& outfile) const {
   int t, ti, i, j;
-  outfile << "\nRecaptures Data " << tagname << " - likelihood value " << likelihood
+  outfile << "\nRecaptures Data " << recname << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << endl;
   for (t = 0; t < tagvec.Size(); t++) {
-    outfile << "\tTagging experiment:\t" << tagid[t];
+    outfile << "\tTagging experiment:\t" << tagnames[t];
     for (ti = 0; ti < Years.Ncol(t); ti++) {
       outfile << "\n\tyear " << Years[t][ti] << " and step " << Steps[t][ti] << "\n\tobserved recaptures";
-      for (i = 0; i < (*obsRecaptures[t][ti]).Nrow(); i++)
-        for (j = 0; j < (*obsRecaptures[t][ti]).Ncol(i); j++)
-          outfile << TAB << (*obsRecaptures[t][ti])[i][j];
+      for (i = 0; i < (*obsDistribution[t][ti]).Nrow(); i++)
+        for (j = 0; j < (*obsDistribution[t][ti]).Ncol(i); j++)
+          outfile << TAB << (*obsDistribution[t][ti])[i][j];
 
       outfile << "\n\tmodelled recaptures";
-      for (i = 0; i < (*modelRecaptures[t][ti]).Nrow(); i++)
-        for (j = 0; j < (*modelRecaptures[t][ti]).Ncol(i); j++)
-          outfile << TAB << (*modelRecaptures[t][ti])[i][j];
+      for (i = 0; i < (*modelDistribution[t][ti]).Nrow(); i++)
+        for (j = 0; j < (*modelDistribution[t][ti]).Ncol(i); j++)
+          outfile << TAB << (*modelDistribution[t][ti])[i][j];
     }
     outfile << endl;
   }
@@ -364,17 +366,17 @@ void Recaptures::LikelihoodPrint(ofstream& outfile) {
   outfile << "\nRecaptures Data\n\nLikelihood " << likelihood
     << "\nWeight " << weight << endl;
   for (t = 0; t < tagvec.Size(); t++) {
-    outfile << "\tTagging experiment:\t" << tagid[t];
+    outfile << "\tTagging experiment:\t" << tagnames[t];
     for (ti = 0; ti < Years.Ncol(t); ti++) {
       outfile << "\n\tyear " << Years[t][ti] << " and step " << Steps[t][ti] << "\n\tobserved recaptures";
-      for (i = 0; i < (*obsRecaptures[t][ti]).Nrow(); i++)
-        for (j = 0; j < (*obsRecaptures[t][ti]).Ncol(i); j++)
-          outfile << TAB << (*obsRecaptures[t][ti])[i][j];
+      for (i = 0; i < (*obsDistribution[t][ti]).Nrow(); i++)
+        for (j = 0; j < (*obsDistribution[t][ti]).Ncol(i); j++)
+          outfile << TAB << (*obsDistribution[t][ti])[i][j];
 
       outfile << "\n\tmodelled recaptures";
-      for (i = 0; i < (*modelRecaptures[t][ti]).Nrow(); i++)
-        for (j = 0; j < (*modelRecaptures[t][ti]).Ncol(i); j++)
-          outfile << TAB << (*modelRecaptures[t][ti])[i][j];
+      for (i = 0; i < (*modelDistribution[t][ti]).Nrow(); i++)
+        for (j = 0; j < (*modelDistribution[t][ti]).Ncol(i); j++)
+          outfile << TAB << (*modelDistribution[t][ti])[i][j];
     }
     outfile << endl;
   }

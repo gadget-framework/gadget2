@@ -12,8 +12,6 @@
 #include "conversionindexptrvector.h"
 #include "tags.h"
 
-class RecAggregator;
-
 /**
  * \class RecAggregator
  * \brief This is the class used to aggregate the recaptured tagged stock information

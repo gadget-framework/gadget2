@@ -139,7 +139,7 @@ void PredatorIndices::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtr
     found = 0;
     for (j = 0; j < Predators.Size(); j++)
       if (strcasecmp(predatornames[i], Predators[j]->Name()) == 0) {
-        found = 1;
+        found++;
         predators.resize(1, Predators[j]);
       }
     if (found == 0)
@@ -152,7 +152,7 @@ void PredatorIndices::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtr
     found = 0;
     for (j = 0; j < Preys.Size(); j++)
       if (strcasecmp(preynames[i], Preys[j]->Name()) == 0) {
-        found = 1;
+        found++;
         preys.resize(1, Preys[j]);
       }
     if (found == 0)

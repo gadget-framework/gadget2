@@ -3,8 +3,6 @@
 
 #include "doublevector.h"
 
-class LinearRegression;
-
 /**
  * \class LinearRegression
  * \brief This is the class that fits a linear regression line to compare 2 vectors
@@ -58,11 +56,6 @@ public:
    */
   double SSE();
   /**
-   * \brief This will return the sum of squares value if an error has occured
-   * \return SSEerror
-   */
-  double errorSSE() { return SSEerror; };
-  /**
    * \brief This will return the intercept of the linear regression line
    * \return a
    */
@@ -89,10 +82,6 @@ protected:
    * \brief This is the slope of the linear regression line
    */
   double b;
-  /**
-   * \brief This is the value for the sum of squares of errors, if an error has occured
-   */
-  double SSEerror;
 };
 
 #endif

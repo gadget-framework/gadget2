@@ -2,14 +2,12 @@
 #define predstdinfo_h
 
 #include "areatime.h"
+#include "abstrpreystdinfo.h"
+#include "predstdinfobylength.h"
 #include "abstrpredstdinfo.h"
-
-class PredStdInfo;
-class AbstrPreyStdInfo;
-class PopPredator;
-class PredStdInfoByLength;
-class Prey;
-class StockPrey;
+#include "poppredator.h"
+#include "stockprey.h"
+#include "prey.h"
 
 /**
  * \class PredStdInfo

@@ -2,9 +2,10 @@
 #define preyoverprinter_h
 
 #include "printer.h"
+#include "preyoveraggregator.h"
 
-class PreyOverPrinter;
-class PreyOverAggregator;
+//class PreyOverPrinter;
+//class PreyOverAggregator;
 
 /**
  * \class PreyOverPrinter

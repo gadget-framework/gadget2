@@ -64,7 +64,7 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	actionattimes.o predatoroverprinter.o addresskeeper.o predprey.o strstack.o \
 	predpreystdageprinter.o agebandmatrix.o predpreystdlengthprinter.o grow.o \
 	agebandmatrixmemberfunctions.o predpreystdprinter.o area.o predstdinfo.o \
-	bandmatrix.o predstdinfobylength.o prey.o logcatchfunction.o popstatistics.o \
+	bandmatrix.o predstdinfobylength.o prey.o popstatistics.o ludecomposition.o \
 	preyoveraggregator.o lengthgroup.o preyoverprinter.o catchstatistics.o \
 	preystdinfo.o preystdinfobylength.o timevariable.o boundlikelihood.o \
 	commentstream.o printinfo.o readfunc.o conversionindex.o readmain.o keeper.o \
@@ -86,7 +86,7 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o tags.o \
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \
 	taggrow.o initialinputfile.o popratio.o naturalm.o predator.o popinfo.o \
-	agebandmatrixratio.o ludecomposition.o popinfomemberfunctions.o \
+	agebandmatrixratio.o popinfomemberfunctions.o \
 	agebandmatrixratiomemberfunctions.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o

@@ -8,8 +8,6 @@
 #include "livesonareas.h"
 #include "keeper.h"
 
-class Stock;
-
 /**
  * \class InitialCond
  * \brief This is the class used to calculate the initial population of a stock
@@ -85,15 +83,15 @@ protected:
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store the initial population
    */
-  AgeBandMatrixPtrVector AreaAgeLength;
+  AgeBandMatrixPtrVector initialPop;
   /**
    * \brief This is the area factor used to calculate the initial population
    */
-  FormulaMatrix AreaDist;
+  FormulaMatrix areaFactor;
   /**
    * \brief This is the age factor used to calculate the initial population
    */
-  FormulaMatrix AgeDist;
+  FormulaMatrix ageFactor;
   /**
    * \brief This is the condition factor used to calculate the weight of the initial population
    */

@@ -10,12 +10,11 @@
 #include "actionattimes.h"
 #include "keeper.h"
 #include "agebandmatrix.h"
+#include "stockaggregator.h"
 #include "gadget.h"
 
 enum FitType { LOGLINEARFIT = 1, FIXEDSLOPELOGLINEARFIT, FIXEDLOGLINEARFIT, LINEARFIT, POWERFIT,
     FIXEDSLOPELINEARFIT, FIXEDLINEARFIT, FIXEDINTERCEPTLINEARFIT, FIXEDINTERCEPTLOGLINEARFIT };
-
-class SIOnStep;
 
 class SIOnStep {
 public:

@@ -60,7 +60,7 @@ int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname) {
     handle.Warning("The combination suitability function is no longer supported");
 
   } else
-    handle.Message("Error in suitability fucntion - no valid suitability function found");
+    handle.Message("Error in suitability function - no valid suitability function found");
 
   return found;
 }

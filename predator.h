@@ -9,10 +9,8 @@
 #include "livesonareas.h"
 #include "popinfovector.h"
 #include "suits.h"
-
-class Predator;
-class Keeper;
-class Prey;
+#include "keeper.h"
+#include "prey.h"
 
 class Predator : public HasName, public LivesOnAreas {
 public:

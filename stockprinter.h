@@ -2,9 +2,7 @@
 #define stockprinter_h
 
 #include "printer.h"
-
-class StockPrinter;
-class StockAggregator;
+#include "stockaggregator.h"
 
 /**
  * \class StockPrinter
@@ -63,7 +61,7 @@ protected:
    */
   LengthGroupDivision* LgrpDiv;
   /**
-   * \brief This is the StockAggregator used to collect information about the stock
+   * \brief This is the StockAggregator used to collect information about the stocks
    */
   StockAggregator* aggregator;
   /**

@@ -634,7 +634,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
       found = 0;
       for (j = 0; j < Predators.Size(); j++)
         if (strcasecmp(predatornames[i], Predators[j]->Name()) == 0) {
-          found = 1;
+          found++;
           predators.resize(1, Predators[j]);
         }
 
@@ -654,7 +654,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
       found = 0;
       for (k = 0; k < Preys.Size(); k++)
         if (strcasecmp(preynames[i][j], Preys[k]->Name()) == 0) {
-          found = 1;
+          found++;
           preys.resize(1, Preys[k]);
         }
 
@@ -753,94 +753,94 @@ double SCAmounts::CalculateLikelihood(DoubleMatrixPtrVector& consumption, Double
   return lik;
 }
 
-void SCAmounts::PrintLikelihood(ofstream& out, const TimeClass& timeInfo) {
-  if (!AAT.AtCurrentTime(&timeInfo))
+void SCAmounts::PrintLikelihood(ofstream& outfile, const TimeClass& TimeInfo) {
+  if (!AAT.AtCurrentTime(&TimeInfo))
     return;
 
-  out.setf(ios::fixed);
+  outfile.setf(ios::fixed);
   int a, pd, py;
 
   //timeindex was increased before this is called, so we subtract 1.
   int time = timeindex - 1;
 
-  out << "\nTime:    Year " << timeInfo.CurrentYear()
-    << " Step " << timeInfo.CurrentStep() << "\nName:    " << scname << endl;
+  outfile << "\nTime:    Year " << TimeInfo.CurrentYear()
+    << " Step " << TimeInfo.CurrentStep() << "\nName:    " << scname << endl;
   for (a = 0; a < modelConsumption[time].Size(); a++) {
-    out << "Internal area  :" << a << "\nObserved:\n";
+    outfile << "Internal area  :" << a << "\nObserved:\n";
     for (pd = 0; pd < stomachcontent[time][a]->Nrow(); pd++) {
       for (py = 0; py < (*stomachcontent[time][a])[pd].Size(); py++) {
-        out.precision(printprecision);
-        out.width(printwidth);
-        out << (*stomachcontent[time][a])[pd][py] << sep;
+        outfile.precision(printprecision);
+        outfile.width(printwidth);
+        outfile << (*stomachcontent[time][a])[pd][py] << sep;
       }
-      out << endl;
+      outfile << endl;
     }
-    out << "Modelled:\n";
+    outfile << "Modelled:\n";
     for (pd = 0; pd < modelConsumption[time][a]->Nrow(); pd++) {
       for (py = 0; py < (*modelConsumption[time][a])[pd].Size(); py++) {
-        out.precision(printprecision);
-        out.width(printwidth);
-        out << (*modelConsumption[time][a])[pd][py] << sep;
+        outfile.precision(printprecision);
+        outfile.width(printwidth);
+        outfile << (*modelConsumption[time][a])[pd][py] << sep;
       }
-      out << endl;
+      outfile << endl;
     }
-    out << "Standard deviation:\n";
+    outfile << "Standard deviation:\n";
     for (pd = 0; pd < modelConsumption[time][a]->Nrow(); pd++) {
       for (py = 0; py < (*modelConsumption[time][a])[pd].Size(); py++) {
-        out.precision(printprecision);
-        out.width(printwidth);
-        out << (*stddev[time][a])[pd][py] << sep;
+        outfile.precision(printprecision);
+        outfile.width(printwidth);
+        outfile << (*stddev[time][a])[pd][py] << sep;
       }
-      out << endl;
+      outfile << endl;
     }
-    out << "Number of stomachs:\n";
+    outfile << "Number of stomachs:\n";
     for (pd = 0; pd < modelConsumption[time][a]->Nrow(); pd++) {
-      out.precision(lowprecision);
-      out.width(lowwidth);
-      out << (*number[time])[a][pd] << sep;
+      outfile.precision(lowprecision);
+      outfile.width(lowwidth);
+      outfile << (*number[time])[a][pd] << sep;
     }
-    out << endl;
+    outfile << endl;
   }
-  out.flush();
+  outfile.flush();
 }
 
-void SCAmounts::PrintLikelihoodHeader(ofstream& out) {
+void SCAmounts::PrintLikelihoodHeader(ofstream& outfile) {
   int i, j;
 
-  out << "Likelihood:       stomachcontent - " << scname << "\nFunction:         -\n"
+  outfile << "Likelihood:       stomachcontent - " << scname << "\nFunction:         -\n"
     << "Calculated every: step\nFilter:           default\nPredation by:     ";
 
   if (age_pred)
-    out << "age\n";
+    outfile << "age\n";
   else
-    out << "length\n";
+    outfile << "length\n";
 
-  out << "Name:             " << scname << endl;
+  outfile << "Name:             " << scname << endl;
   for (i = 0; i < preynames.Nrow(); i++) {
-    out << "Preys:           ";
+    outfile << "Preys:           ";
     for (j = 0; j < preynames[i].Size(); j++)
-      out << sep << preynames[i][j];
-    out << " lengths:";
+      outfile << sep << preynames[i][j];
+    outfile << " lengths:";
     for (j = 0; j < preylengths[i].Size(); j++)
-      out << sep << preylengths[i][j];
-    out << endl;
+      outfile << sep << preylengths[i][j];
+    outfile << endl;
   }
 
-  out << "Predators:       ";
+  outfile << "Predators:       ";
   for (i = 0; i < predatornames.Size(); i++)
-    out << sep << predatornames[i];
+    outfile << sep << predatornames[i];
   if (age_pred) {
-    out << "\nAges:            ";
+    outfile << "\nAges:            ";
     for (i = 0; i < predatorages.Size(); i++)
-      out << sep << predatorages[i];
-    out << endl;
+      outfile << sep << predatorages[i];
+    outfile << endl;
   } else {
-    out << "\nLengths:         ";
+    outfile << "\nLengths:         ";
     for (i = 0; i < predatorlengths.Size(); i++)
-      out << sep << predatorlengths[i];
-    out << endl;
+      outfile << sep << predatorlengths[i];
+    outfile << endl;
   }
-  out.flush();
+  outfile.flush();
 }
 
 void SCRatios::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
@@ -901,7 +901,7 @@ double SCNumbers::CalculateLikelihood(DoubleMatrixPtrVector& consumption, Double
         for (preyl = 0; preyl < consumption[a]->Ncol(); preyl++)
           (*numbers)[preyl] = (*stomachcontent[timeindex][a])[predl][preyl];
 
-        tmp = MN.CalcLogLikelihood(*numbers, (*consumption[a])[predl]);
+        tmp = MN.calcLogLikelihood(*numbers, (*consumption[a])[predl]);
         delete numbers;
       }
     }

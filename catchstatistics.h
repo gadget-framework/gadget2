@@ -7,35 +7,134 @@
 #include "doublematrixptrvector.h"
 #include "actionattimes.h"
 
+/**
+ * \class CatchStatistics
+ * \brief This is the class used to calculate a likelihood score based on statistical data sampled from the stocks caught by fleets
+ *
+ * This class calculates a likelihood score based on the difference between statistical data sampled from stocks caught according to the model and that caught by fleets, according to the landings data.  This is typically used to compare biological data, such as mean length at age or mean weight at age.  The model will calculate the mean length (or weight) of the stock that is caught according to the model parameters, and aggregate this into specified age groups.  This statistical data is then compared to the corresponding data calculated from a statistical sample of the landings data.
+ */
 class CatchStatistics : public Likelihood {
 public:
+  /**
+   * \brief This is the CatchStatistics constructor
+   * \param infile is the CommentStream to read the CatchStatistics data from
+   * \param Area is the AreaClass for the current model
+   * \param TimeInfo is the TimeClass for the current model
+   * \param weight is the weight for the likelihood component
+   * \param name is the name for the likelihood component
+   */
   CatchStatistics(CommentStream& infile, const AreaClass* const Area,
     const TimeClass* const TimeInfo, double weight, const char* name);
+  /**
+   * \brief This is the default CatchStatistics destructor
+   */
   virtual ~CatchStatistics();
+  /**
+   * \brief This function will calculate the likelihood score for the CatchStatistics component
+   * \param TimeInfo is the TimeClass for the current model
+   */
   virtual void addLikelihood(const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will reset the CatchStatistics likelihood information
+   * \param keeper is the Keeper for the current model
+   */
   virtual void Reset(const Keeper* const keeper);
+  /**
+   * \brief This function will print the summary CatchStatistics likelihood information
+   * \param outfile is the ofstream that all the model information gets sent to
+   */
   virtual void Print(ofstream& outfile) const;
+  /**
+   * \brief This will select the fleets and stocks required to calculate the CatchStatistics likelihood score
+   * \param Fleets is the FleetPtrVector of all the available fleets
+   * \param Stocks is the StockPtrVector of all the available stocks
+   */
   void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
+  /**
+   * \brief This function will read the CatchStatistics data from the input file
+   * \param infile is the CommentStream to read the CatchStatistics data from
+   * \param TimeInfo is the TimeClass for the current model
+   * \param numarea is the number of areas that the likelihood data covers
+   * \param numage is the number of age groups that the likelihood data covers
+   */
   void readStatisticsData(CommentStream& infile, const TimeClass* TimeInfo,
     int numarea, int numage);
+  /**
+   * \brief This function will calculate the likelihood score for the current timestep based on a sum of squares function
+   * \return likelihood score
+   */
   double calcLikSumSquares();
+  /**
+   * \brief This is the DoubleMatrixPtrVector used to store number information specified in the input file
+   * \note the indices for this object are [time][area][age]
+   */
   DoubleMatrixPtrVector numbers;
+  /**
+   * \brief This is the DoubleMatrixPtrVector used to store mean length/weight information specified in the input file
+   * \note the indices for this object are [time][area][age]
+   */
   DoubleMatrixPtrVector mean;
+  /**
+   * \brief This is the DoubleMatrixPtrVector used to store variance of length/weight information specified in the input file
+   * \note the indices for this object are [time][area][age]
+   */
   DoubleMatrixPtrVector variance;
+  /**
+   * \brief This is the FleetPreyAggregator used to collect information about the fleets
+   */
   FleetPreyAggregator* aggregator;
+  /**
+   * \brief This is the LengthGroupDivision used to store length information about all the stocks that will be used to calculate the likelihood score
+   */
   LengthGroupDivision* LgrpDiv;
+  /**
+   * \brief This is the CharPtrVector of the names of the fleets that will be used to calculate the likelihood score
+   */
   CharPtrVector fleetnames;
+  /**
+   * \brief This is the CharPtrVector of the names of the stocks that will be used to calculate the likelihood score
+   */
   CharPtrVector stocknames;
+  /**
+   * \brief This is the IntMatrix used to store area information
+   */
   IntMatrix areas;
+  /**
+   * \brief This is the IntMatrix used to store age information
+   */
   IntMatrix ages;
+  /**
+   * \brief This is the CharPtrVector of the names of the areas
+   */
   CharPtrVector areaindex;
+  /**
+   * \brief This is the CharPtrVector of the names of the age groups
+   */
   CharPtrVector ageindex;
-  int overconsumption;    //should we take overconsumption into account
-  int timeindex;          //index for mean etc.
+  /**
+   * \brief This is a flag to denote whether the likelihood calculation should take overconsumption into account or not
+   */
+  int overconsumption;
+  /**
+   * \brief This is the index of the timesteps for the likelihood component data
+   */
+  int timeindex;
+  /**
+   * \brief This is the identifier of the function to be used to calculate the likelihood component
+   */
   int functionnumber;
+  /**
+   * \brief This ActionAtTimes stores information about when the likelihood score should be calculated
+   */
   ActionAtTimes AAT;
+  /**
+   * \brief This is the name of the CatchStatistics likelihood component
+   */
   char* csname;
+  /**
+   * \brief This is the name of the function to be used to calculate the likelihood component
+   */
   char* functionname;
 };
 

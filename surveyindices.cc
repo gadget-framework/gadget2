@@ -189,7 +189,7 @@ void SurveyIndices::setStocks(StockPtrVector& Stocks) {
     found = 0;
     for (j = 0; j < Stocks.Size(); j++)
       if (strcasecmp(stocknames[i], Stocks[j]->Name()) == 0) {
-        found = 1;
+        found++;
         s.resize(1, Stocks[j]);
       }
     if (found == 0)

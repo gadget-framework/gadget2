@@ -2,9 +2,7 @@
 #define stockpreyfullprinter_h
 
 #include "printer.h"
-
-class StockPreyFullPrinter;
-class StockPreyStdInfo;
+#include "stockpreystdinfo.h"
 
 /**
  * \class StockPreyFullPrinter

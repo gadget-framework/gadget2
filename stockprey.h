@@ -4,8 +4,6 @@
 #include "prey.h"
 #include "agebandmatrixptrvector.h"
 
-class StockPrey;
-
 /**
  * \class StockPrey
  * \brief This is the class used to model a dynamic prey based on a modelled stock

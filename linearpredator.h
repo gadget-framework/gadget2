@@ -2,11 +2,6 @@
 #define linearpredator_h
 
 #include "lengthpredator.h"
-#include "conversionindex.h"
-#include "commentstream.h"
-
-class LinearPredator;
-class Keeper;
 
 /**
  * \class LinearPredator

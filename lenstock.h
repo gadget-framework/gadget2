@@ -1,21 +1,13 @@
 #ifndef lenstock_h
 #define lenstock_h
 
-#include "commentstream.h"
-#include "lennaturalm.h"
-#include "cannibalism.h"
-#include "mortpredator.h"
 #include "stock.h"
-#include "stockptrvector.h"
+#include "mortprey.h"
+#include "mortpredator.h"
 
 class LenStock;
 class LenNaturalM;
 class Cannibalism;
-class MortPredator;
-class MortPrey;
-class Maturity;
-class RenewalData;
-class Spawner;
 
 class LenStock : public Stock {
 public:
@@ -35,7 +27,7 @@ public:
   Predator* returnPredator() const;
   void Print(ofstream& outfile) const;
   int HasCannibalism() const { return cannibalism; };
-  const DoubleVector& mortality() const { return len_natm->NatMortality(); };
+  const DoubleVector& mortality() const;
   void calcForPrinting(int, const TimeClass&);
   const DoubleMatrix& getF(int area) const { return *(F[area]); };
   const DoubleMatrix& getM1(int area) const { return *(M1[area]); };

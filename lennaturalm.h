@@ -5,9 +5,7 @@
 #include "commentstream.h"
 #include "lengthgroup.h"
 #include "formulavector.h"
-
-class LenNaturalM;
-class Keeper;
+#include "keeper.h"
 
 class LenNaturalM {
 public:

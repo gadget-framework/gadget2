@@ -238,7 +238,7 @@ void MaturityA::Precalc(const TimeClass* const TimeInfo) {
       for (len = PrecalcMaturation.minLength(age); len < PrecalcMaturation.maxLength(age); len++) {
         my = exp(-maturityParameters[0] * (LgrpDiv->meanLength(len) - maturityParameters[1])
                - maturityParameters[2] * (age - maturityParameters[3]));
-        PrecalcMaturation[age][len] = 1 / (1 + my);
+        PrecalcMaturation[age][len] = 1.0 / (1.0 + my);
       }
     }
   }
@@ -413,6 +413,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
   if (strcasecmp(text, "maturitystep") != 0)
     handle.Unexpected("maturitystep", text);
 
+  i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
     maturitystep.resize(1);
     infile >> maturitystep[i] >> ws;
@@ -459,7 +460,7 @@ void MaturityC::Precalc(const TimeClass* const TimeInfo) {
         if ((age >= minMatureAge) && (len >= minMatureLength)) {
           my = exp(-4.0 * maturityParameters[0] * (LgrpDiv->meanLength(len) - maturityParameters[1])
                  - 4.0 * maturityParameters[2] * (age - maturityParameters[3]));
-          PrecalcMaturation[age][len] = 1 / (1 + my);
+          PrecalcMaturation[age][len] = 1.0 / (1.0 + my);
         } else
           PrecalcMaturation[age][len] = 0.0;
       }
@@ -570,7 +571,7 @@ double MaturityD::MaturationProbability(int age, int length, int growth,
     my = exp(-4.0 * maturityParameters[0] * (LgrpDiv->meanLength(length) - maturityParameters[1])
            - 4.0 * maturityParameters[2] * (age - maturityParameters[3])
            - 4.0 * maturityParameters[4] * (tmpweight - maturityParameters[5]));
-    ratio = 1 / (1 + my);
+    ratio = 1.0 / (1.0 + my);
     return (min(max(0.0, ratio), 1.0));
   }
   return 0.0;

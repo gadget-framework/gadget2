@@ -383,6 +383,7 @@ void LenStock::Print(ofstream& outfile) const {
     << "\ndoes mature" << sep << doesmature << "\ndoes renew" << sep << doesrenew
     << "\ndoes grow" << sep << doesgrow << "\ndoes migrate" << sep << doesmigrate << endl;
 
+  LgrpDiv->Print(outfile);
   initial->Print(outfile);
   len_natm->Print(outfile);
   if (cannibalism)
@@ -634,7 +635,7 @@ void LenStock::setStock(StockPtrVector& stockvec) {
       found = 0;
       for (j = 0; j < stockvec.Size(); j++)
         if (strcasecmp(stockvec[j]->Name(), cann->predatorName(i)) == 0) {
-          found = 1;
+          found++;
           cannPredators.resize(1, stockvec[j]);
         }
 
@@ -661,4 +662,8 @@ void LenStock::setStock(StockPtrVector& stockvec) {
 
   if (doesspawn)
     spawner->setStock(stockvec);
+}
+
+const DoubleVector& LenStock::mortality() const {
+  return len_natm->NatMortality();
 }

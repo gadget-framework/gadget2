@@ -11,6 +11,8 @@ class TimeClass;
 /**
  * \class AreaClass
  * \brief This is the class used to store information about the areas used for the current model
+ *
+ * This class keeps an index of the areas in the model.  The areas are read in with a numerical identifier, which is stored along with an internal identifier for the areas, which is a simple index starting from 0.
  */
 class AreaClass {
 public:
@@ -72,6 +74,8 @@ protected:
 /**
  * \class TimeClass
  * \brief This is the class used to store information about the timesteps used for the current model
+ *
+ * This class keeps an index of the timesteps in the model.  A step is a subdivision of a year, and is usually defined in terms of months, and is the same in each year of the model.  A check is made to ensure that the total length of all the steps adds up to 12.
  */
 class TimeClass {
 public:

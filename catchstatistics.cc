@@ -275,7 +275,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
     found = 0;
     for (j = 0; j < Fleets.Size(); j++)
       if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
-        found = 1;
+        found++;
         fleets.resize(1, Fleets[j]);
       }
 
@@ -289,7 +289,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
     for (j = 0; j < Stocks.Size(); j++)
       if (Stocks[j]->IsEaten())
         if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
-          found = 1;
+          found++;
           stocks.resize(1, Stocks[j]);
         }
 

@@ -4,9 +4,6 @@
 #include "printer.h"
 #include "gadget.h"
 
-class FormatedPreyPrinter;
-class StockAggregator;
-
 class FormatedPreyPrinter : public Printer {
 public:
   FormatedPreyPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);

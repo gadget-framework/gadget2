@@ -8,10 +8,8 @@
 #include "doublematrixptrvector.h"
 #include "livesonareas.h"
 #include "formulavector.h"
-
-class Grower;
-class Keeper;
-class GrowthCalcBase;
+#include "keeper.h"
+#include "growthcalc.h"
 
 class Grower : protected LivesOnAreas {
 public:

@@ -34,11 +34,6 @@ public:
    * \return 1 for success, 0 for failure
    */
   int read(CommentStream& infile, char* text);
-protected:
-  /**
-   * \brief This is the number of iterations done
-   */
-  int nopt;
 };
 
 /**

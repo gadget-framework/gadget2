@@ -136,6 +136,8 @@ StockDistribution::StockDistribution(CommentStream& infile,
   handle.Close();
   datafile.close();
   datafile.clear();
+
+  likelihoodValues.AddRows(obsDistribution.Nrow(), numarea, 0.0);
 }
 
 void StockDistribution::readStockData(CommentStream& infile,
@@ -220,11 +222,11 @@ void StockDistribution::readStockData(CommentStream& infile,
         Steps.resize(1, step);
         timeid = (Years.Size() - 1);
 
-        AgeLengthData.AddRows(1, numarea);
-        Proportions.AddRows(1, numarea);
+        obsDistribution.AddRows(1, numarea);
+        modelDistribution.AddRows(1, numarea);
         for (i = 0; i < numarea; i++) {
-          AgeLengthData[timeid][i] = new DoubleMatrix(numstock, (numage * numlen), 0.0);
-          Proportions[timeid][i] = new DoubleMatrix(numstock, (numage * numlen), 0.0);
+          obsDistribution[timeid][i] = new DoubleMatrix(numstock, (numage * numlen), 0.0);
+          modelDistribution[timeid][i] = new DoubleMatrix(numstock, (numage * numlen), 0.0);
         }
       }
 
@@ -238,7 +240,7 @@ void StockDistribution::readStockData(CommentStream& infile,
       count++;
       i = ageid + (numage * lenid);
       //JMB - this should be stored as [time][area][stock][age][length]
-      (*AgeLengthData[timeid][areaid])[stockid][i] = tmpnumber;
+      (*obsDistribution[timeid][areaid])[stockid][i] = tmpnumber;
     }
   }
   AAT.addActions(Years, Steps, TimeInfo);
@@ -266,10 +268,10 @@ StockDistribution::~StockDistribution() {
     delete[] ageindex[i];
   for (i = 0; i < lenindex.Size(); i++)
     delete[] lenindex[i];
-  for (i = 0; i < AgeLengthData.Nrow(); i++)
-    for (j = 0; j < AgeLengthData.Ncol(i); j++) {
-      delete AgeLengthData[i][j];
-      delete Proportions[i][j];
+  for (i = 0; i < obsDistribution.Nrow(); i++)
+    for (j = 0; j < obsDistribution.Ncol(i); j++) {
+      delete obsDistribution[i][j];
+      delete modelDistribution[i][j];
     }
 }
 
@@ -302,7 +304,7 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     found = 0;
     for (j = 0; j < Fleets.Size(); j++)
       if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
-        found = 1;
+        found++;
         fleets.resize(1, Fleets[j]);
       }
     if (found == 0)
@@ -316,7 +318,7 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->IsEaten())
         if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
-          found = 1;
+          found++;
           stocks.resize(1, Stocks[j]);
         }
     }
@@ -355,7 +357,6 @@ double StockDistribution::calcLikMultinomial() {
   DoubleMatrixPtrVector Dist(areas.Nrow(), NULL);
   int nareas, area, age, len, sn;
   int minage, maxage, i;
-  double temp;
 
   for (area = 0; area < Dist.Size(); area++) {
     Dist[area] = new DoubleMatrix(aggregator[0]->numAgeGroups() *
@@ -367,7 +368,7 @@ double StockDistribution::calcLikMultinomial() {
       for (age = minage; age <= maxage; age++) {
         for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
           i = age + (ages.Nrow() * len);
-          (*Proportions[timeindex][area])[sn][i] = ((*alptr)[area][age][len]).N;
+          (*modelDistribution[timeindex][area])[sn][i] = ((*alptr)[area][age][len]).N;
           (*Dist[area])[i][sn] = ((*alptr)[area][age][len]).N;
         }
       }
@@ -378,11 +379,12 @@ double StockDistribution::calcLikMultinomial() {
   Multinomial MN(epsilon);
   DoubleVector likdata(stocknames.Size());
   for (nareas = 0; nareas < Dist.Size(); nareas++) {
+    likelihoodValues[timeindex][nareas] = 0.0;
     for (area = 0; area < Dist[nareas]->Nrow(); area++) {
       for (sn = 0; sn < stocknames.Size(); sn++)
-        likdata[sn] = (*AgeLengthData[timeindex][nareas])[sn][area];
+        likdata[sn] = (*obsDistribution[timeindex][nareas])[sn][area];
 
-      temp = MN.CalcLogLikelihood(likdata, (*Dist[nareas])[area]);
+      likelihoodValues[timeindex][nareas] += MN.calcLogLikelihood(likdata, (*Dist[nareas])[area]);
     }
     delete Dist[nareas];
   }
@@ -397,6 +399,7 @@ double StockDistribution::calcLikSumSquares() {
 
   const AgeBandMatrixPtrVector* alptr;
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
+    likelihoodValues[timeindex][nareas] = 0.0;
     for (sn = 0; sn < stocknames.Size(); sn++) {
       alptr = &aggregator[sn]->returnSum();
       totalmodel = 0.0;
@@ -405,9 +408,9 @@ double StockDistribution::calcLikSumSquares() {
       for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
         for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++) {
           i = age + (ages.Nrow() * len);
-          (*Proportions[timeindex][nareas])[sn][i] = ((*alptr)[nareas][age][len]).N;
-          totalmodel += (*Proportions[timeindex][nareas])[sn][i];
-          totaldata += (*AgeLengthData[timeindex][nareas])[sn][i];
+          (*modelDistribution[timeindex][nareas])[sn][i] = ((*alptr)[nareas][age][len]).N;
+          totalmodel += (*modelDistribution[timeindex][nareas])[sn][i];
+          totaldata += (*obsDistribution[timeindex][nareas])[sn][i];
         }
       }
 
@@ -417,17 +420,18 @@ double StockDistribution::calcLikSumSquares() {
           if ((isZero(totaldata)) && (isZero(totalmodel)))
             temp = 0.0;
           else if (isZero(totaldata))
-            temp = (*Proportions[timeindex][nareas])[sn][i] / totalmodel;
+            temp = (*modelDistribution[timeindex][nareas])[sn][i] / totalmodel;
           else if (isZero(totalmodel))
-            temp = (*AgeLengthData[timeindex][nareas])[sn][i] / totaldata;
+            temp = (*obsDistribution[timeindex][nareas])[sn][i] / totaldata;
           else
-            temp = (((*AgeLengthData[timeindex][nareas])[sn][i] / totaldata)
-              - ((*Proportions[timeindex][nareas])[sn][i] / totalmodel));
+            temp = (((*obsDistribution[timeindex][nareas])[sn][i] / totaldata)
+              - ((*modelDistribution[timeindex][nareas])[sn][i] / totalmodel));
 
-          totallikelihood += (temp * temp);
+          likelihoodValues[timeindex][nareas] += (temp * temp);
         }
       }
     }
+    totallikelihood += likelihoodValues[timeindex][nareas];
   }
   return totallikelihood;
 }
@@ -460,27 +464,33 @@ void StockDistribution::LikelihoodPrint(ofstream& outfile) {
   outfile << endl;
 
   outfile << "\nAge length distribution data:\n";
-  for (y = 0; y < AgeLengthData.Nrow(); y++) {
+  for (y = 0; y < obsDistribution.Nrow(); y++) {
     outfile << "\nYear " << Years[y] << " and step " << Steps[y];
-    for (a = 0; a < AgeLengthData.Ncol(y); a++) {
+    for (a = 0; a < obsDistribution.Ncol(y); a++) {
       outfile << "\nInternal area: " << a << "\nMeasurements";
-      for (i = 0; i < AgeLengthData[y][a]->Nrow(); i++) {
+      for (i = 0; i < obsDistribution[y][a]->Nrow(); i++) {
         outfile << endl;
-        for (j = 0; j < AgeLengthData[y][a]->Ncol(i); j++) {
+        for (j = 0; j < obsDistribution[y][a]->Ncol(i); j++) {
           outfile.width(smallwidth);
           outfile.precision(smallprecision);
-          outfile << sep << (*AgeLengthData[y][a])[i][j];
+          outfile << sep << (*obsDistribution[y][a])[i][j];
         }
       }
       outfile << "\nNumber caught according to model";
-      for (i = 0; i < Proportions[y][a]->Nrow(); i++) {
+      for (i = 0; i < modelDistribution[y][a]->Nrow(); i++) {
         outfile << endl;
-        for (j = 0; j < Proportions[y][a]->Ncol(i); j++) {
+        for (j = 0; j < modelDistribution[y][a]->Ncol(i); j++) {
           outfile.width(smallwidth);
           outfile.precision(smallprecision);
-          outfile << sep << (*Proportions[y][a])[i][j];
+          outfile << sep << (*modelDistribution[y][a])[i][j];
         }
       }
+    }
+    outfile << "\nLikelihood values:";
+    for (a = 0; a < obsDistribution.Ncol(y); a++) {
+      outfile.width(smallwidth);
+      outfile.precision(smallprecision);
+      outfile << sep << likelihoodValues[y][a];
     }
     outfile << endl;
   }

@@ -6,9 +6,6 @@
 #include "timevariablevector.h"
 #include "suitfuncptrvector.h"
 
-//JMB - removed some of the suitability functions that are no longer used
-//To get the removed suitability functions back, you will need gadget 2.0.03
-
 class SuitFuncPtrVector;
 
 /**
@@ -90,7 +87,7 @@ public:
    */
   int numConstants();
   friend int readSuitFunction(SuitFuncPtrVector& suitf, CommentStream& infile,
-    const char*  suitfname, const TimeClass* const TimeInfo, Keeper* const keeper);
+    const char* suitfname, const TimeClass* const TimeInfo, Keeper* const keeper);
   friend int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname);
 protected:
   /**

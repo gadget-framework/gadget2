@@ -3,9 +3,6 @@
 
 #include "sionstep.h"
 
-class SIByLengthOnStep;
-class StockAggregator;
-
 /**
  * \class SIByLengthOnStep
  * \brief This is the class used to calculate a likelihood score by fitting the model population to length based survey index data

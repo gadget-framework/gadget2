@@ -141,8 +141,7 @@ void Grower::Print(ofstream& outfile) const {
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tInternal area " << areas[area] << endl << TAB;
     for (i = 0; i < calcLengthGrowth.Ncol(area); i++)
-      outfile << sep << InterpLgrowth[area][i];
-//      outfile << sep << calcLengthGrowth[area][i];
+      outfile << sep << calcLengthGrowth[area][i];
     outfile << endl;
   }
 
@@ -150,8 +149,7 @@ void Grower::Print(ofstream& outfile) const {
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tInternal area " << areas[area] << endl << TAB;
     for (i = 0; i < calcWeightGrowth.Ncol(area); i++)
-      outfile << sep << InterpWgrowth[area][i];
-//      outfile << sep << calcWeightGrowth[area][i];
+      outfile << sep << calcWeightGrowth[area][i];
     outfile << endl;
   }
 
@@ -203,8 +201,8 @@ void Grower::GrowthCalc(int area,
   growthcalc->GrowthCalc(area, calcLengthGrowth[inarea], calcWeightGrowth[inarea],
     numGrow[inarea], Area, TimeInfo, FPhi, MaxCon, LgrpDiv);
 
-  interpolateLengths(InterpLgrowth[inarea], calcLengthGrowth[inarea], CI);
-  interpolateLengths(InterpWgrowth[inarea], calcWeightGrowth[inarea], CI);
+  CI->interpolateLengths(InterpLgrowth[inarea], calcLengthGrowth[inarea]);
+  CI->interpolateLengths(InterpWgrowth[inarea], calcWeightGrowth[inarea]);
 }
 
 const DoubleMatrix& Grower::LengthIncrease(int area) const {

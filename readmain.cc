@@ -27,7 +27,6 @@
 #include "catchintons.h"
 #include "lenstock.h"
 #include "boundlikelihood.h"
-#include "logcatchfunction.h"
 #include "readword.h"
 #include "gadget.h"
 
@@ -295,9 +294,6 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
     } else if (strcasecmp(type, "surveyindices") == 0) {
       Likely[i] = new SurveyIndices(infile, Area, TimeInfo, keeper, weight, name);
 
-    } else if (strcasecmp(type, "logcatch") == 0) {
-      Likely[i] = new LogCatches(infile, Area, TimeInfo, weight);
-
     } else if (strcasecmp(type, "stomachcontent") == 0) {
       Likely[i] = new StomachContent(infile, Area, TimeInfo, keeper, weight, name);
 
@@ -305,7 +301,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       Likely[i] = new Recaptures(infile, Area, TimeInfo, weight, tagvec, name);
 
     } else if (strcasecmp(type, "catchintons") == 0) {
-      Likely[i] = new CatchInTons(infile, Area, TimeInfo, weight);
+      Likely[i] = new CatchInTons(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "predatorindices") == 0) {
       Likely[i] = new PredatorIndices(infile, Area, TimeInfo, weight, name);
@@ -319,8 +315,11 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
     } else if (strcasecmp(type, "randomwalk") == 0) {
       handle.Warning("The random walk likelihood component is no longer supported");
 
+    } else if (strcasecmp(type, "logcatch") == 0) {
+      handle.Warning("The log catch likelihood component is no longer supported\nUse the log function from the catchdistribution likelihood compoent instead");
+
     } else if (strcasecmp(type, "logsurveyindices") == 0) {
-      handle.Warning("The log survey indices likelihood component is no longer supported");
+      handle.Warning("The log survey indices likelihood component is no longer supported\nUse the log function from the surveyindices likelihood compoent instead");
 
     } else if (strcasecmp(type, "aggregatedcatchdist") == 0) {
       handle.Warning("The aggregated catch distribution likelihood component is no longer supported");

@@ -2,10 +2,8 @@
 #define stockpreystdinfobylength_h
 
 #include "abstrpreystdinfobylength.h"
+#include "stockprey.h"
 #include "lengthgroup.h"
-
-class StockPreyStdInfoByLength;
-class StockPrey;
 
 /**
  * \class StockPreyStdInfoByLength

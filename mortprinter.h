@@ -2,10 +2,8 @@
 #define mortprinter_h
 
 #include "printer.h"
+#include "stockaggregator.h"
 #include "lenstock.h"
-
-class MortPrinter;
-class StockAggregator;
 
 /*  MortPrinter
  *

@@ -81,7 +81,7 @@ void UnderStocking::setFleets(FleetPtrVector& Fleets) {
     found = 0;
     for (j = 0; j < Fleets.Size(); j++)
       if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
-        found = 1;
+        found++;
         fleets.resize(1, Fleets[j]);
       }
 

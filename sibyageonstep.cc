@@ -6,10 +6,10 @@
 #include "gadget.h"
 
 SIByAgeOnStep::SIByAgeOnStep(CommentStream& infile, const IntMatrix& areas,
-  const IntMatrix& ages, const CharPtrVector& areaindex, const CharPtrVector& ageindex,
+  const IntMatrix& Ages, const CharPtrVector& areaindex, const CharPtrVector& ageindex,
   const TimeClass* const TimeInfo, const char* datafilename, const char* name)
   : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, ageindex, name),
-    aggregator(0), Ages(ages) {
+    aggregator(0), ages(Ages) {
 }
 
 SIByAgeOnStep::~SIByAgeOnStep() {
@@ -22,10 +22,10 @@ void SIByAgeOnStep::setStocks(const StockPtrVector& Stocks) {
    *  merge all the areas in Areas
    *  merge all length groups of the stocks
    *  merge all the stocks in Stocks
-   *  merge all the age groups in Ages[i]
+   *  merge all the age groups in ages[i]
    * This means that aggregator.returnSum will return an
    * AgeBandMatrixPtrVector with only one element. That element will have
-   * Ages.Nrow() lines (i.e. ages) and only 1 column (i.e. 1 length group)*/
+   * ages.Nrow() lines (i.e. ages) and only 1 column (i.e. 1 length group)*/
 
   //create a LengthGroupDivision for aggregator to use.
   int i;
@@ -42,7 +42,7 @@ void SIByAgeOnStep::setStocks(const StockPtrVector& Stocks) {
   }
 
   LengthGroupDivision* LgrpDiv = new LengthGroupDivision(minlength, maxlength, maxlength - minlength);
-  aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, Ages);
+  aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, ages);
 }
 
 void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {

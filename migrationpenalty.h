@@ -7,6 +7,8 @@
 /**
  * \class MigrationPenalty
  * \brief This is the class used to calculate the likelihood scores based on population errors arising from incorrect migration
+ *
+ * This class calculates a penalty that is applied if there are insufficient fish of a particular stock on a particular area, due to changes in the migration of the stock.  This can lead to values for the migration matrices that are meaningless.  This can quickly lead to a model that is \b very wrong, and so this gets a high penalty.  A 'reasonable' model will have a zero likelihood score from this component.
  */
 class MigrationPenalty : public Likelihood {
 public:
@@ -26,12 +28,12 @@ public:
    */
   virtual void addLikelihood(const TimeClass* const TimeInfo);
   /**
-   * \brief This will select the stocks required for the likelihood class to calculate the requested information
+   * \brief This will select the stocks required to calculate the MigrationPenalty likelihood score
    * \param Stocks is the StockPtrVector of all the available stocks
    */
   void setStocks(StockPtrVector Stocks);
   /**
-   * \brief This function will print the summary likelihood information
+   * \brief This function will print the summary MigrationPenalty likelihood information
    * \param outfile is the ofstream that all the model information gets sent to
    * \note This function is not used for this likelihood component
    */

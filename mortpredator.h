@@ -9,9 +9,6 @@
 #include "mortprey.h"
 #include "gadget.h"
 
-class MortPredator;
-class Keeper;
-
 class MortPredator : public LengthPredator {
 public:
   MortPredator(CommentStream& infile, const char* givenname, const IntVector& areas,

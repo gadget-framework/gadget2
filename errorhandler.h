@@ -4,6 +4,10 @@
 #include "strstack.h"
 #include "gadget.h"
 
+/**
+ * \class ErrorHandler
+ * \brief This is the class used to handle errors in the model, by displaying error messages to the user and logging information to a log file
+ */
 class ErrorHandler {
 public:
   /**

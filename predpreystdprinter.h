@@ -2,13 +2,9 @@
 #define predpreystdprinter_h
 
 #include "printer.h"
-
-class PredStdPrinter;
-class PopPredator;
-class Prey;
-class PredStdInfoByLength;
-class PredStdInfo;
-class AbstrPredStdInfo;
+#include "predstdinfo.h"
+#include "predator.h"
+#include "prey.h"
 
 /**
  * \class PredPreyStdPrinter

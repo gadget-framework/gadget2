@@ -63,7 +63,7 @@ public:
   int NoOptVariables() const { return keeper->NoOptVariables(); };
   double SimulateAndUpdate(double* x, int n);
   int Simulate(int optimize, int print = 0);
-  double Likelihood() const { return likelihood; };
+  double getLikelihood() const { return likelihood; };
   int getFuncEval() const { return funceval; };
   int getConverge() const { return converge; };
   void setConverge(int setConverge) { converge = setConverge; };

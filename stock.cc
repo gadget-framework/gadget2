@@ -370,6 +370,7 @@ void Stock::Print(ofstream& outfile) const {
     << "\ndoes mature" << sep << doesmature << "\ndoes renew" << sep << doesrenew
     << "\ndoes grow" << sep << doesgrow << "\ndoes migrate" << sep << doesmigrate << endl;
 
+  LgrpDiv->Print(outfile);
   initial->Print(outfile);
   NatM->Print(outfile);
   if (doesmature)
@@ -421,4 +422,8 @@ const StockPtrVector& Stock::getTransitionStocks() {
   if (doesmove == 0)
     handle.logFailure("Error in stock - no transition stocks defined for", this->Name());
   return transition->getTransitionStocks();
+}
+
+const DoubleIndexVector& Stock::mortality() const {
+  return NatM->getMortality();
 }

@@ -5,9 +5,6 @@
 #include "abstrpreystdinfo.h"
 #include "preystdinfobylength.h"
 
-class PreyStdInfo;
-class Prey;
-
 /**
  * \class PreyStdInfo
  * \brief This is the class used to calculate information about the non-dynamic prey (eg otherfood) from the predation by a predator of the prey

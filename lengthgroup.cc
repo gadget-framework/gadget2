@@ -171,6 +171,15 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
   return 1;
 }
 
+void LengthGroupDivision::Print(ofstream& outfile) const {
+  int i;
+  outfile << "\nLength group division with " << size << " length groups from " << minlen
+    << " up to " << maxlen << endl << TAB;
+  for (i = 0; i < size; i++)
+    outfile << minlength[i] << sep;
+  outfile << maxlen << endl;
+}
+
 void LengthGroupDivision::printError() const {
   handle.logWarning("Warning in lengthgroupdivision - failure from length group");
   handle.logWarning("Minimum length", this->minLength());

@@ -3,8 +3,6 @@
 
 #include "abstrpreystdinfobylength.h"
 
-class PreyStdInfoByLength;
-
 /**
  * \class PreyStdInfoByLength
  * \brief This is the class used to calculate information about the non-dynamic prey (eg otherfood) by length group from the predation by a predator of the prey

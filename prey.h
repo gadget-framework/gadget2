@@ -8,10 +8,8 @@
 #include "hasname.h"
 #include "livesonareas.h"
 #include "agebandmatrix.h"
+#include "keeper.h"
 #include "gadget.h"
-
-class Prey;
-class Keeper;
 
 enum PreyType { PREYTYPE = 1, MORTPREYTYPE, STOCKPREYTYPE, LENGTHPREYTYPE };
 

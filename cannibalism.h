@@ -8,9 +8,7 @@
 #include "agebandmatrix.h"
 #include "formulavector.h"
 #include "intmatrix.h"
-
-class Cannibalism;
-class Keeper;
+#include "keeper.h"
 
 class Cannibalism {
 public:

@@ -4,9 +4,7 @@
 #include "areatime.h"
 #include "commentstream.h"
 #include "timevariableindexvector.h"
-
-class NaturalM;
-class Keeper;
+#include "keeper.h"
 
 class NaturalM {
 public:

@@ -3,8 +3,6 @@
 
 #include "doublevector.h"
 
-class Multinomial;
-
 /**
  * \class Multinomial
  * \brief This is the class that calculates a log likelihood score by comparing 2 vectors based on a multinomial distribution
@@ -25,7 +23,7 @@ public:
    * \param dist is the DoubleVector containing the modelled data
    * \return likelihood
    */
-  double CalcLogLikelihood(const DoubleVector& data, const DoubleVector& dist);
+  double calcLogLikelihood(const DoubleVector& data, const DoubleVector& dist);
   /**
    * \brief This will return the log likelihood score
    * \return loglikelihood

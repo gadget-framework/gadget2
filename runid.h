@@ -19,7 +19,7 @@ public:
   ~RunID() {};
   /**
    * \brief This will print the model run information for the current model
-   * \param o is the ofstream that the model run information will be writtews to
+   * \param o is the ofstream that the model run information will be written to
    */
   void print(ostream& o);
 protected:

@@ -25,7 +25,7 @@ void TimeVariable::read(CommentStream& infile,
     Formula* number = new Formula;
     infile.seekg(readPos);
     if (!(infile >> *number))
-      handle.Message(text);
+      handle.Message("Possible error in size of vector - didnt expect to find",text);
     number->Inform(keeper);
     number->Interchange(Value, keeper);
     delete number;

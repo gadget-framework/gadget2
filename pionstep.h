@@ -6,10 +6,8 @@
 #include "charptrvector.h"
 #include "predatorptrvector.h"
 #include "preyptrvector.h"
+#include "predatoraggregator.h"
 #include "sionstep.h"
-
-class PIOnStep;
-class PredatorAggregator;
 
 class PIOnStep : public SIOnStep {
 public:

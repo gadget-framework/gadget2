@@ -5,8 +5,6 @@
 #include "livesonareas.h"
 #include "areatime.h"
 
-class AbstrPredStdInfo;
-
 /**
  * \class AbstrPredStdInfo
  * \brief This is the base class used to calculate information about the predator from the predation by the predator of a prey

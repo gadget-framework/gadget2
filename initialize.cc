@@ -33,7 +33,6 @@
 #include "stockdistribution.h"
 #include "predatorindex.h"
 #include "migrationpenalty.h"
-#include "logcatchfunction.h"
 #include "catchintons.h"
 
 extern ErrorHandler handle;
@@ -140,9 +139,6 @@ void Ecosystem::Initialise(int optimize) {
         case CATCHDISTRIBUTIONLIKELIHOOD:
           ((CatchDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
-        case LOGCATCHLIKELIHOOD:
-          ((LogCatches*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
-          break;
         case CATCHSTATISTICSLIKELIHOOD:
           ((CatchStatistics*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
@@ -168,6 +164,8 @@ void Ecosystem::Initialise(int optimize) {
           ((RecStatistics*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
         case AGGREGATEDCDLIKELIHOOD:
+          break;
+        case LOGCATCHLIKELIHOOD:
           break;
         case LOGSURVEYLIKELIHOOD:
           break;

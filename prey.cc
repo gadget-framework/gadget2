@@ -112,7 +112,7 @@ void Prey::Print(ofstream& outfile) const {
   outfile << "\n\tPrey lengths";
   for (i = 0; i < LgrpDiv->NoLengthGroups(); i++)
     outfile << sep << LgrpDiv->minLength(i);
-  outfile << sep << LgrpDiv->maxLength(i-1) << endl;
+  outfile << sep << LgrpDiv->maxLength() << endl;
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tNumber of prey on internal area " << areas[area] << ":";
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {

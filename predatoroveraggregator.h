@@ -5,8 +5,6 @@
 #include "intmatrix.h"
 #include "predatorptrvector.h"
 
-class PredatorOverAggregator;
-
 /**
  * \class PredatorOverAggregator
  * \brief This is the class used to aggregate the calculated overconsumption by predators

@@ -2,10 +2,8 @@
 #define predatorprinter_h
 
 #include "printer.h"
+#include "predatoraggregator.h"
 #include "gadget.h"
-
-class PredatorPrinter;
-class PredatorAggregator;
 
 /**
  * \class PredatorPrinter

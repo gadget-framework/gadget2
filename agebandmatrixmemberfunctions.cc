@@ -100,7 +100,7 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& C
 
 //Pre: similar to AgeBandMatrix::Multiply
 void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Nrof) {
-  DoubleVector Ratio(CI.Nf(), 1.0);
+  DoubleVector Ratio(CI.Size(), 1.0);
   int i;
   for (i = 0; i < Consumption.Size(); i++) {
     if (Nrof[i].N > verysmall)

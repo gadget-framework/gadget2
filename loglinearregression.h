@@ -3,8 +3,6 @@
 
 #include "linearregression.h"
 
-class LogLinearRegression;
-
 /**
  * \class LogLinearRegression
  * \brief This is the class that fits a log linear regression line to compare 2 vectors

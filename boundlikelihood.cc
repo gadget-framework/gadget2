@@ -62,11 +62,13 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
 
 void BoundLikelihood::Reset(const Keeper* const keeper) {
 
-  int i, j, k, numvar, numset;
-  numvar = keeper->NoVariables();
-  numset = switchnr.Size();
+  Likelihood::Reset(keeper);
 
   if (checkInitialised == 0) {
+    int i, j, k, numvar, numset;
+    numvar = keeper->NoVariables();
+    numset = switchnr.Size();
+
     IntVector done(numset, 0);
     // resize vectors to store data
     likelihoods.resize(numvar, 0.0);
@@ -113,7 +115,6 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
 
 void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keeper* const keeper) {
 
-  likelihood = 0;
   int i;
   DoubleVector values(keeper->NoVariables());
   keeper->ValuesOfVariables(values);
@@ -122,11 +123,13 @@ void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keepe
       likelihoods[i] = lowerweights[i] * pow(absolute(values[switchnr[i]] - lowerbound[i]), powers[i]);
       likelihood += likelihoods[i];
       keeper->Update(switchnr[i], lowerbound[i]);
+
     } else if (values[switchnr[i]] > upperbound[i]) {
       likelihoods[i] = upperweights[i] * pow(absolute(values[switchnr[i]] - upperbound[i]), powers[i]);
       likelihood += likelihoods[i];
       keeper->Update(switchnr[i], upperbound[i]);
+
     } else
-      likelihoods[i] = 0;
+      likelihoods[i] = 0.0;
   }
 }

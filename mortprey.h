@@ -5,10 +5,8 @@
 #include "doublematrixptrvector.h"
 #include "areatime.h"
 #include "agebandmatrixptrvector.h"
+#include "intvector.h"
 #include "gadget.h"
-
-class MortPrey;
-class IntVector;
 
 class MortPrey : public Prey {
 public:

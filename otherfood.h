@@ -2,15 +2,16 @@
 #define otherfood_h
 
 #include "formulamatrix.h"
+#include "lengthprey.h"
 #include "base.h"
-
-class OtherFood;
-class LengthPrey;
 
 /**
  * \class OtherFood
  * \brief This is the class used to model the available prey that is not modelled dynamically
- * \note The other food is defined as a *density* of other prey available
+ *
+ * This class calculates the amount of available non-dynamic prey for stocks to eat.  This is to account for the consumption of prey species that are not being modelled in the current simulation
+ *
+ * \note other food is defined as the \b density of other prey available
  */
 class OtherFood : public BaseClass {
 public:

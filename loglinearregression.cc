@@ -50,7 +50,7 @@ void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, doub
 
 double LogLinearRegression::SSE() {
   if (error)
-    return LR.errorSSE();
+    return verybig;
   else
     return LR.SSE();
 }

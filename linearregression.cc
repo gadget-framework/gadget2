@@ -7,7 +7,6 @@ LinearRegression::LinearRegression() {
   sse = 0;
   a = 0;
   b = 0;
-  SSEerror = verybig;
 }
 
 void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
@@ -134,7 +133,7 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
 
 double LinearRegression::SSE() {
   if (error)
-    return SSEerror;
+    return verybig;
   else
     return sse;
 }
