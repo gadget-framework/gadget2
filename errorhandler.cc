@@ -291,23 +291,24 @@ void ErrorHandler::checkIfFailure(ios& infile, const char* text) {
   return;
 }
 
-void ErrorHandler::logFinish(int printtime) {
+void ErrorHandler::logFinish(int opt) {
   if (uselog) {
-    logfile << "\nGadget simulation finished OK - runtime was ";
+    if (opt)
+      logfile << "\nGadget optimisation finished OK - runtime was ";
+    else
+      logfile << "\nGadget simulation finished OK - runtime was ";
     RUNID.printTime(logfile);
     logfile.flush();
   }
 
-  if (network == 0)
-    cout << "\nGadget simulation finished OK";
-
-  if (printtime && network) {
-    cout << " - runtime was ";
-    RUNID.printTime(cout);
+  if (network == 0) {
+    if (opt) {
+      cout << "\nGadget optimisation finished OK - runtime was ";
+      RUNID.printTime(cout);
+    } else
+      cout << "\nGadget simulation finished OK\n";
+    cout << endl;
   }
-
-  if (network == 0)
-    cout << endl << endl;
 }
 
 void ErrorHandler::setNetwork(int runnetwork) {

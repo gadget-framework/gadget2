@@ -280,10 +280,10 @@ void MainInfo::checkUsage() {
     runoptimize = 0;
   }
   if ((handle.checkLogFile()) && (runoptimize == 1)) {
-    handle.logWarning("\nWarning - logging information from a Gadget likelihood run is not recommended");
+    handle.logWarning("\n** logging model information from a Gadget optimisation is not recommended **");
   }
   if ((handle.checkLogFile()) && (runnetwork == 1)) {
-    handle.logWarning("\nWarning - logging information from a Gadget network run is not recommended");
+    handle.logWarning("\n** logging model information from a Gadget network run is not recommended **");
   }
   handle.logMessage(""); //write a blank line to the log file
 }

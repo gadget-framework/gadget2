@@ -22,14 +22,14 @@ public:
   /**
    * \brief This is the Ecosystem constructor specifying details about the model
    * \param filename is the name of the file to read the main model parameters from
-   * \param optimize is a flag to denote whether the current run will optimise the model or not
+   * \param optimise is a flag to denote whether the current run will optimise the model or not
    * \param netrun is a flag to denote whether the current run has been started in network mode or not
    * \param calclikelihood is a flag to denote whether the current run should calculate the likleihood score or not
    * \param inputdir is the name of the directory containing the input files to the model
    * \param workingdir is the name of the directory used for the output from the model
    * \param pi is the PrintInfo specifying the parameter output from the model run
    */
-  Ecosystem(const char* const filename, int optimize, int netrun, int calclikelihood,
+  Ecosystem(const char* const filename, int optimise, int netrun, int calclikelihood,
     const char* const inputdir, const char* const workingdir, const PrintInfo& pi);
   /**
    * \brief This is the default Ecosystem destructor
@@ -38,13 +38,13 @@ public:
   /**
    * \brief This function will read the model data from the main input file
    * \param infile is the CommentStream to read the likelihood data from
-   * \param optimize is a flag to denote whether the current run will optimise the model or not
+   * \param optimise is a flag to denote whether the current run will optimise the model or not
    * \param netrun is a flag to denote whether the current run has been started in network mode or not
    * \param calclikelihood is a flag to denote whether the current run should calculate the likleihood score or not
    * \param inputdir is the name of the directory containing the input files to the model
    * \param workingdir is the name of the directory used for the output from the model
    */
-  void readMain(CommentStream& infile, int optimize, int netrun, int calclikelihood,
+  void readMain(CommentStream& infile, int optimise, int netrun, int calclikelihood,
     const char* const inputdir, const char* const workingdir);
   /**
    * \brief This function will read the likelihood data from the input file

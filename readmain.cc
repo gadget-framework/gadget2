@@ -331,7 +331,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
 //
 // The main reading function
 //
-void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
+void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
   int calclikelihood, const char* const inputdir, const char* const workingdir) {
 
   mortmodel = 0;
@@ -372,8 +372,8 @@ void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
   infile >> text >> ws;
   while (!((strcasecmp(text, "[stock]") == 0) || infile.eof())) {
     //Do not read printfile if we are doing a net run, or if we are
-    //optimizing without the getForcePrint option set. 07.04.00 AJ & mnaa.
-    if (!netrun  && (printinfo.getForcePrint() || !optimize)) {
+    //optimising without the getForcePrint option set. 07.04.00 AJ & mnaa.
+    if (!netrun  && (printinfo.getForcePrint() || !optimise)) {
       subfile.open(text, ios::in);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);

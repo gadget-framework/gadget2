@@ -239,11 +239,12 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
 
     //If too many function evaluations occur, terminate the algorithm
     if ((FuncEval - offset) > maxevl) {
-      cout << "\nStopping Hooke and Jeeves\n\nThe optimisation stopped after "
-        << (FuncEval - offset) << " function evaluations (max " << maxevl
-        << ")\nThe steplength was reduced to " << steplength << " (min " << epsilon
-        << ")\nThe optimisation stopped because the maximum number of function "
-        << "evaluations\nwas reached and NOT because an optimum was found for this run\n";
+      cout << "\nStopping Hooke and Jeeves optimisation algorithm\n\n"
+        << "The optimisation stopped after " << (FuncEval - offset)
+        << " function evaluations (max " << maxevl << ")\nThe steplength was reduced to "
+        << steplength << " (min " << epsilon << ")\nThe optimisation stopped because the "
+        << "maximum number of function evaluations\nwas reached and NOT because an "
+        << "optimum was found for this run\n";
 
       if (newf < fbefore) {
         for (i = 0; i < nvars; i++)
@@ -326,11 +327,13 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
 
       //If too many function evaluations occur, terminate the algorithm
       if ((FuncEval - offset) > maxevl) {
-        cout << "\nStopping Hooke and Jeeves\n\nThe optimisation stopped after "
-          << (FuncEval - offset) << " function evaluations (max " << maxevl
-          << ")\nThe steplength was reduced to " << steplength << " (min " << epsilon
-          << ")\nThe optimisation stopped because the maximum number of function "
-          << "evaluations\nwas reached and NOT because an optimum was found for this run\n";
+        cout << "\nStopping Hooke and Jeeves optimisation algorithm\n\n"
+          << "The optimisation stopped after " << (FuncEval - offset)
+          << " function evaluations (max " << maxevl << ")\nThe steplength was reduced to "
+          << steplength << " (min " << epsilon << ")\nThe optimisation stopped because the "
+          << "maximum number of function evaluations\nwas reached and NOT because an "
+          << "optimum was found for this run\n";
+
 
         if (newf < fbefore) {
           for (i = 0; i < nvars; i++)
@@ -374,10 +377,11 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
 
     //If the step length is less than epsilon, terminate the algorithm
     if (steplength < epsilon) {
-      cout << "\nStopping Hooke and Jeeves\n\nThe optimisation stopped after "
-        << (FuncEval - offset) << " function evaluations (max " << maxevl
-        << ")\nThe steplength was reduced to " << steplength << " (min " << epsilon
-        << ")\nThe optimisation stopped because an optimum was found for this run\n";
+      cout << "\nStopping Hooke and Jeeves optimisation algorithm\n\n"
+        << "The optimisation stopped after " << (FuncEval - offset)
+        << " function evaluations (max " << maxevl << ")\nThe steplength was reduced to "
+        << steplength << " (min " << epsilon << ")\nThe optimisation stopped because "
+        << "an optimum was found for this run\n";
 
       for (i = 0; i < nvars; i++)
         endpt[i] = xbefore[i];

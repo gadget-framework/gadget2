@@ -162,6 +162,7 @@ int main(int aNumber, char* const aVector[]) {
       delete Stochasticdata;
   }
 
+  handle.logMessage("");  //write blank line to log file
   if (MainInfo.printLikelihood()) {
     if (MainInfo.printOneComponent() == -1)
       EcoSystem->writeLikelihoodInformation(MainInfo.getPrintLikelihoodFile());

@@ -82,6 +82,7 @@ void Ecosystem::SimulateOneTimestep() {
 void Ecosystem::Simulate(int Optimize, int print) {
   int i, j;
 
+  handle.logMessage("");  //write blank line to log file
   if (Optimize) {
     for (j = 0; j < Likely.Size(); j++)
       Likely[j]->Reset(keeper);
@@ -149,4 +150,5 @@ void Ecosystem::Simulate(int Optimize, int print) {
     for (j = 0; j < Likely.Size(); j++)
       likelihood += Likely[j]->returnLikelihood();
   }
+  handle.logMessage("The current overall likelihood score is", likelihood);
 }

@@ -11,7 +11,7 @@ double func(double* x, int n) {
 
 OptInfoBfgs::OptInfoBfgs()
   : OptSearch(), maxiter(100000), eps(0.001), rho(0.01), tau(0.5) {
-  handle.logMessage("Initialising BFGS");
+  handle.logMessage("Initialising BFGS optimisation algorithm");
   numvar = EcoSystem->numOptVariables();
   int i;
   x = new double[numvar];
@@ -38,7 +38,7 @@ OptInfoBfgs::~OptInfoBfgs() {
 void OptInfoBfgs::MaximizeLikelihood() {
   int i, count;
 
-  handle.logInformation("\nStarting BFGS");
+  handle.logInformation("\nStarting BFGS optimisation algorithm");
 
   DoubleVector val(numvar);
   double* startpoint = new double[numvar];

@@ -51,7 +51,7 @@ TimeClass::TimeClass(CommentStream& infile) {
 void TimeClass::IncrementTime() {
   handle.logMessage("");  //write a blank line to the log file
   if (currentyear == lastyear && currentstep == laststep) {
-    handle.logMessage("The simulation has reached the last timestep for the current model run\n");
+    handle.logMessage("The simulation has reached the last timestep for the current model run");
 
   } else if (currentstep == numtimesteps) {
     currentstep = 1;

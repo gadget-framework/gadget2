@@ -171,10 +171,10 @@ public:
    */
   int checkLogFile() { return uselog; };
   /**
-   * \brief This function will log information about the simulation finish to std::cout and a log file if one exists
-   * \param printtime is a flag to denote whether to print the runtime or not
+   * \brief This function will log information about the finish of the current model run to std::cout and a log file if one exists
+   * \param opt is a flag to denote whether the current model run was an optimising run or not
    */
-  void logFinish(int printtime);
+  void logFinish(int opt);
   /**
    * \brief This function will set a flag to denote whether gadget is running in network mode for paramin or not
    * \param runnetwork is a flag to denote whether gadget is running in network mode for paramin or not

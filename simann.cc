@@ -296,10 +296,10 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
 
           //If too many function evaluations occur, terminate the algorithm
           if ((FuncEval - offset) > maxevl) {
-            cout << "\nStopping Simulated Annealing\n\nThe optimisation stopped after "
-              << (FuncEval - offset) << " function evaluations (max " << maxevl
-              << ")\nThe temperature was reduced to " << t
-              << "\nThe optimisation stopped because the maximum number of function "
+            cout << "\nStopping Simulated Annealing optimisation algorithm\n\n"
+              << "The optimisation stopped after " << (FuncEval - offset)
+              << " function evaluations (max " << maxevl << ")\nThe temperature was reduced to "
+              << t << "\nThe optimisation stopped because the maximum number of function "
               << "evaluations\nwas reached and NOT because an optimum was found for this run\n"
               << "Number of directly accepted points " << nacc
               << "\nNumber of metropolis accepted points " << naccmet
@@ -390,9 +390,10 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
 
     //Terminate SA if appropriate
     if (quit) {
-      cout << "\nStopping Simulated Annealing\n\nThe optimisation stopped after " << (FuncEval - offset)
-        << " function evaluations (max " << maxevl << ")\nThe temperature was reduced to " << t
-        << "\nThe optimisation stopped because an optimum was found for this run\n"
+      cout << "\nStopping Simulated Annealing optimisation algorithm\n\n"
+        << "The optimisation stopped after " << (FuncEval - offset)
+        << " function evaluations (max " << maxevl << ")\nThe temperature was reduced to "
+        << t << "\nThe optimisation stopped because an optimum was found for this run\n"
         << "Number of directly accepted points " << nacc
         << "\nNumber of metropolis accepted points " << naccmet
         << "\nNumber of rejected points " << nrej << endl;

@@ -15,7 +15,7 @@ extern int hooke(double (*func)(double*, int), int n, double startpoint[],
 
 OptInfoHooke::OptInfoHooke()
   : OptSearch(), hookeiter(1000), rho(0.5), lambda(0), hookeeps(1e-4), bndcheck(0.9999) {
-  handle.logMessage("Initialising Hooke and Jeeves");
+  handle.logMessage("Initialising Hooke and Jeeves optimisation algorithm");
 }
 
 void OptInfoHooke::Read(CommentStream& infile, char* text) {
@@ -62,7 +62,7 @@ void OptInfoHooke::MaximizeLikelihood() {
   int i, nopt, opt;
   double tmp;
 
-  handle.logInformation("\nStarting Hooke and Jeeves");
+  handle.logInformation("\nStarting Hooke and Jeeves optimisation algorithm");
 
   nopt = EcoSystem->numOptVariables();
   DoubleVector val(nopt);

@@ -8,7 +8,7 @@ extern int FuncEval;
 Ecosystem::Ecosystem() {
 }
 
-Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun, int calclikelihood,
+Ecosystem::Ecosystem(const char* const filename, int optimise, int netrun, int calclikelihood,
   const char* const inputdir, const char* const workingdir, const PrintInfo& pi) : printinfo(pi) {
 
   funceval = 0;
@@ -37,7 +37,7 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun, int c
   handle.Open(filename);
   chdir(inputdir);
   //New parameter netrun, to prevent reading of printfiles. 07.04.00 AJ & mnaa
-  readMain(commin, optimize, netrun, calclikelihood, inputdir, workingdir);
+  readMain(commin, optimise, netrun, calclikelihood, inputdir, workingdir);
   handle.Close();
   infile.close();
   infile.clear();
@@ -52,7 +52,10 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun, int c
   for (i = 0; i < fleetvec.Size(); i++)
     basevec[i + stockvec.Size() + otherfoodvec.Size()] = fleetvec[i];
 
-  handle.logInformation("\nFinished reading input files, starting to run simulation");
+  if (optimise)
+    handle.logInformation("\nFinished reading input files, starting to run optimisation");
+  else
+    handle.logInformation("\nFinished reading input files, starting to run simulation");
   handle.logMessage("");  //write a blank line to the log file
 }
 

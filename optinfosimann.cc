@@ -17,7 +17,7 @@ extern int simann(int nvar, double point[], double endpoint[], double lb[],
 OptInfoSimann::OptInfoSimann()
   : OptSearch(), rt(0.85), simanneps(1e-4), ns(5), nt(2), T(100),
     cs(2), vm(1), simanniter(2000), uratio(0.7), lratio(0.3), check(4) {
-  handle.logMessage("Initialising Simulated Annealing");
+  handle.logMessage("Initialising Simulated Annealing optimisation algorithm");
 }
 
 void OptInfoSimann::Read(CommentStream& infile, char* text) {
@@ -83,7 +83,7 @@ void OptInfoSimann::Read(CommentStream& infile, char* text) {
 void OptInfoSimann::MaximizeLikelihood() {
   int i, nopt, opt;
 
-  handle.logInformation("\nStarting Simulated Annealing");
+  handle.logInformation("\nStarting Simulated Annealing optimisation algorithm");
 
   nopt = EcoSystem->numOptVariables();
   DoubleVector val(nopt);
