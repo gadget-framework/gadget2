@@ -2,7 +2,6 @@
 #include "keeper.h"
 #include "areatime.h"
 #include "naturalm.h"
-#include "lennaturalm.h"
 #include "grower.h"
 #include "stockprey.h"
 #include "stockpredator.h"

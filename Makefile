@@ -72,14 +72,14 @@ VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.o \
 	abstrpredstdinfo.o abstrpreystdinfo.o catchdistribution.o errorhandler.o \
 	predatorprinter.o abstrpreystdinfobylength.o predatoroveraggregator.o \
-	actionattimes.o predatoroverprinter.o predprey.o strstack.o \
+	actionattimes.o predatoroverprinter.o predprey.o strstack.o ecosystem.o \
 	predpreystdageprinter.o agebandmatrix.o predpreystdlengthprinter.o grow.o \
 	agebandmatrixmemberfunctions.o predpreystdprinter.o area.o predstdinfo.o \
 	bandmatrix.o predstdinfobylength.o prey.o popstatistics.o ludecomposition.o \
 	preyoveraggregator.o lengthgroup.o preyoverprinter.o catchstatistics.o \
 	preystdinfo.o preystdinfobylength.o timevariable.o boundlikelihood.o stray.o \
 	commentstream.o printinfo.o readfunc.o conversionindex.o readmain.o keeper.o \
-	ecosystem.o readword.o renewal.o mortprey.o cannibalism.o \
+	mortprey.o \
 	fleet.o sibyageonstep.o fleetpreyaggregator.o sibyfleetonstep.o predator.o \
 	sibylengthonstep.o formula.o grower.o growthcalc.o simulation.o hooke.o \
 	simann.o sionstep.o initialcond.o spawner.o initialize.o stochasticdata.o \
@@ -87,13 +87,13 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	stockdistribution.o linearpredator.o stockfullprinter.o linearregression.o \
 	stockmemberfunctions.o livesonareas.o stockpredator.o stockpredstdinfo.o \
 	loglinearregression.o time.o stockprey.o maininfo.o stockpreyfullprinter.o \
-	stockpreystdinfo.o stockpreystdinfobylength.o stockprinter.o lenstock.o \
+	stockpreystdinfo.o stockpreystdinfobylength.o stockprinter.o readword.o \
 	stockstdprinter.o maturity.o suitfunc.o suits.o stomachcontent.o runid.o \
 	migration.o variableinfo.o binarytree.o vectorusingkeeper.o recaggregator.o \
 	surveyindices.o migrationpenalty.o recapture.o stock.o readaggregation.o \
 	migvariables.o multinomial.o totalpredator.o understocking.o poppredator.o \
 	transition.o otherfood.o recstatistics.o selectfunc.o optinfo.o naturalm.o \
-	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o tags.o \
+	catchintons.o interruptinterface.o interrupthandler.o tags.o renewal.o \
 	taggrow.o initialinputfile.o optinfohooke.o optinfobfgs.o optinfosimann.o \
 	popratio.o popinfo.o popinfomemberfunctions.o agebandmatrixratio.o \
 	agebandmatrixratiomemberfunctions.o
