@@ -174,6 +174,11 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
           TagAgeGroup[inarea].Minage(), TagAgeGroup[inarea].Maxage());
 
     }
+
+    for (s = 0; s < AgeGroup.Size(); s++) {
+      AgeGroup[s].SettoZero();
+      TagAgeGroup[s].SettoZero();
+    }
   }
 }
 
