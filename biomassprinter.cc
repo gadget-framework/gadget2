@@ -155,6 +155,9 @@ void BiomassPrinter::setStock(StockPtrVector& stockvec) {
 
 void BiomassPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
+  if (printtime == 0)
+    return;
+
   int i, a, y, area, minagem, maxagem;
   if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps()) {
     printfile << "Stock biomass at 1/1 in tons\n";

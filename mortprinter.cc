@@ -170,6 +170,10 @@ void MortPrinter::setStock(StockPtrVector& stockvec) {
  *  Pre:  setStock has been called
  */
 void MortPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
+
+  if (printtime == 0)
+    return;
+
   int s, i, j, area, inarea, age, yo;
   for (area = 0; area < areas.Size(); area++)
     for (i = 0; i < stocks.Size(); i++)

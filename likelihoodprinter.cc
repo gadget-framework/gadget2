@@ -122,6 +122,10 @@ void LikelihoodPrinter::setLikely(LikelihoodPtrVector& likevec) {
  *  Pre:  setStock has been called
  */
 void LikelihoodPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
+
+  if (printtime == 0)
+    return;
+
   int i;
   if (printCatch) {
     for (i = 0; i < catchvec.Size(); i++)
