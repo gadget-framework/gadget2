@@ -33,6 +33,8 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
     strcpy(preynames[i++], text);
     infile >> text >> ws;
   }
+  if (preynames.Size() == 0)
+    handle.Message("Error in preyoverprinter - failed to read preys");
 
   //read in area aggregation from file
   char filename[MaxStrLength];

@@ -37,6 +37,8 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
     strcpy(predatornames[i++], text);
     infile >> text >> ws;
   }
+  if (predatornames.Size() == 0)
+    handle.Message("Error in predatorprinter - failed to read predators");
 
   //read in the prey names
   i = 0;

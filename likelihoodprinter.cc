@@ -27,6 +27,8 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
     strcpy(likenames[i++], text);
     infile >> text >> ws;
   }
+  if (likenames.Size() == 0)
+    handle.Message("Error in likelihoodprinter - failed to read component");
 
   //read the name of the printfile, and then open itthe printfile
   if (!(strcasecmp(text, "printfile") == 0))

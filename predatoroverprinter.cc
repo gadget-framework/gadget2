@@ -33,6 +33,8 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
     strcpy(predatornames[i++], text);
     infile >> text >> ws;
   }
+  if (predatornames.Size() == 0)
+    handle.Message("Error in predatoroverprinter - failed to read predators");
 
   //read in area aggregation from file
   char filename[MaxStrLength];

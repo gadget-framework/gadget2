@@ -34,6 +34,8 @@ StockPrinter::StockPrinter(CommentStream& infile,
     strcpy(stocknames[i++], text);
     infile >> text >> ws;
   }
+  if (stocknames.Size() == 0)
+    handle.Message("Error in stockprinter - failed to read stocks");
 
   //read in area aggregation from file
   char filename[MaxStrLength];
