@@ -112,7 +112,7 @@ Fleet::~Fleet() {
 void Fleet::calcEat(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  predator->Eat(area, TimeInfo->LengthOfCurrent()/TimeInfo->LengthOfYear(),
+  predator->Eat(area, TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear(),
     Area->Temperature(area, TimeInfo->CurrentTime()),
     Area->Size(area), TimeInfo->CurrentSubstep(), TimeInfo->NrOfSubsteps());
 }

@@ -300,16 +300,18 @@ Stock::~Stock() {
 }
 
 void Stock::Reset(const TimeClass* const TimeInfo) {
-  //What is only done in the beginning.
-  //Naturalm, maturity and growth will later be moved.
+  NatM->Reset(TimeInfo);
+  if (doeseat)
+    predator->Reset(TimeInfo);
+  if (doesmature)
+    maturity->Reset(TimeInfo);
+  if (doesspawn)
+    spawner->Reset(TimeInfo);
 
   if (TimeInfo->CurrentTime() == 1) {
-    this->Clear();
     initial->Initialise(Alkeys);
     if (iseaten)
       prey->Reset();
-    if (doesmature)
-      maturity->Reset(TimeInfo);
     if (doesrenew)
       renewal->Reset();
     if (doesgrow)
@@ -318,19 +320,9 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
       migration->Reset();
     if (doesmove)
       transition->Reset();
-    if (doesspawn)
-      spawner->Reset(TimeInfo);
 
     handle.logMessage("Reset stock data for stock", this->Name());
   }
-  NatM->Reset(TimeInfo);
-  if (doeseat)
-    predator->Reset(TimeInfo);
-}
-
-void Stock::Clear() {
-  if (doesmigrate)
-    migration->Clear();
 }
 
 Prey* Stock::returnPrey() const {

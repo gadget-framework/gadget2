@@ -124,10 +124,6 @@ public:
    */
   virtual void Reset(const TimeClass* const TimeInfo) = 0;
   /**
-   * \brief This function will clear any population errors from the model
-   */
-  virtual void Clear() {};
-  /**
    * \brief This function will print the model population
    * \param outfile is the ofstream that all the model information gets sent to
    */

@@ -14,7 +14,6 @@ public:
   void Update(const TimeClass* const TimeInfo);
   void Delete(Keeper* const keeper) const;
   int DidChange(const TimeClass* const TimeInfo);
-  int AtCurrentTime(const TimeClass* const TimeInfo) const;
   ~TimeVariable();
 private:
   int fromfile;

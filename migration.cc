@@ -189,10 +189,6 @@ int Migration::Error() const {
   return error;
 }
 
-void Migration::Clear() {
-  error = 0;
-}
-
 void Migration::Print(ofstream& outfile) const {
   int i, j, k;
   outfile << "Migration\nAge dependent migration " << AgeDepMigration << endl;
@@ -550,6 +546,7 @@ void Migration::readCoefficients(CommentStream& infile,
 }
 
 void Migration::Reset() {
+  error = 0;
   penalty.Reset();
   handle.logMessage("Reset migration data");
 }

@@ -333,15 +333,18 @@ LenStock::~LenStock() {
 }
 
 void LenStock::Reset(const TimeClass* const TimeInfo) {
-
   int i;
+  if (doeseat)
+    predator->Reset(TimeInfo);
+  if (doesmature)
+    maturity->Reset(TimeInfo);
+  if (doesspawn)
+    spawner->Reset(TimeInfo);
+
   if (TimeInfo->CurrentTime() == 1) {
-    this->Clear();
     initial->Initialise(Alkeys);
     if (iseaten)
       prey->Reset();
-    if (doesmature)
-      maturity->Reset(TimeInfo);
     if (doesrenew)
       renewal->Reset();
     if (doesgrow)
@@ -350,8 +353,6 @@ void LenStock::Reset(const TimeClass* const TimeInfo) {
       migration->Reset();
     if (doesmove)
       transition->Reset();
-    if (doesspawn)
-      spawner->Reset(TimeInfo);
     len_natm->NatCalc();
     year = -1;
     for (i = 0; i < Nsum.Size(); i++)
@@ -359,9 +360,6 @@ void LenStock::Reset(const TimeClass* const TimeInfo) {
 
     handle.logMessage("Reset stock data for stock", this->Name());
   }
-
-  if (doeseat)
-    predator->Reset(TimeInfo);
 }
 
 Prey* LenStock::returnPrey() const {

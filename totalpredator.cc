@@ -75,7 +75,7 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
   }
 
   //adjust the consumption by the multiplicative factor.
-  tmpsteps = 1.0 / NrOfSubsteps;
+  tmpsteps = Multiplicative / NrOfSubsteps;  //use the multiplicative factor
   for (prey = 0; prey < NoPreys(); prey++) {
     if (Preys(prey)->IsInArea(area)) {
       if (Preys(prey)->Biomass(area) > verysmall) {
@@ -145,7 +145,7 @@ void TotalPredator::adjustConsumption(int area, int NrOfSubsteps, int CurrentSub
     }
   }
 
-  tmp = 1.0 / NrOfSubsteps;
+  tmp = Multiplicative / NrOfSubsteps;
   if (AnyPreyEatenUp == 1)
     for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
       totalcons[inarea][predl] -= overcons[inarea][predl];

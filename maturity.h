@@ -53,7 +53,7 @@ public:
    * \brief This will reset the maturation information for the current model run
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void Reset(const TimeClass* const TimeInfo);
+  virtual void Reset(const TimeClass* const TimeInfo) = 0;
   /**
    * \brief This will check if the maturation process will take place on the current timestep
    * \param area is the area that the maturation is being calculated on

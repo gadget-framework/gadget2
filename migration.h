@@ -21,7 +21,6 @@ public:
   void Reset();
   void Reset(const TimeClass* const TimeInfo);
   int Error() const;
-  void Clear();
   void Print(ofstream& outfile) const;
   void Print(int nr, ofstream& outfile) const;
   int ErrorNr() { return errornr; };

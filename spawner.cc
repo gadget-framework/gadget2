@@ -130,25 +130,17 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
 
   if (onlyParent == 0) {
     spawnParameters.resize(5, keeper);
-    infile >> text;
-    if (strcasecmp(text, "spawnparameters") == 0) {
-      for (i = 0; i < spawnParameters.Size(); i++) {
-        if (!(infile >> spawnParameters[i]))
-          handle.Message("Wrong format for spawning parameters");
-        spawnParameters[i].Inform(keeper);
-      }
-    } else
+    infile >> text >> ws;
+    if (strcasecmp(text, "spawnparameters") == 0)
+      spawnParameters.read(infile, TimeInfo, keeper);
+    else
       handle.Unexpected("spawnparameters", text);
 
     stockParameters.resize(4, keeper);
-    infile >> text;
-    if (strcasecmp(text, "stockparameters") == 0) {
-      for (i = 0; i < stockParameters.Size(); i++) {
-        if (!(infile >> stockParameters[i]))
-          handle.Message("Wrong format for spawning stock parameters");
-        spawnParameters[i].Inform(keeper);
-      }
-    } else
+    infile >> text >> ws;
+    if (strcasecmp(text, "stockparameters") == 0)
+      stockParameters.read(infile, TimeInfo, keeper);
+    else
       handle.Unexpected("stockparameters", text);
   }
 
@@ -236,6 +228,8 @@ void Spawner::setStock(StockPtrVector& stockvec) {
   IntVector minlv(1, 0);
   IntVector sizev(1, spawnLgrpDiv->NoLengthGroups());
   Storage.resize(spawnarea.Size(), spawnage, minlv, sizev);
+  for (i = 0; i < Storage.Size(); i++)
+    Storage[i].setToZero();
 
   CI.resize(SpawnStocks.Size(), 0);
   for (i = 0; i < SpawnStocks.Size(); i++)
@@ -248,6 +242,7 @@ void Spawner::Spawn(AgeBandMatrix& Alkeys, int area,
 
   int age, len;
   if (this->IsSpawnStepArea(area, TimeInfo) == 1) {
+    spawnParameters.Update(TimeInfo);
     for (age = Alkeys.minAge(); age <= Alkeys.maxAge(); age++) {
       //subtract mortality and reduce the weight of the living ones.
       for (len = Alkeys.minLength(age); len < Alkeys.maxLength(age); len++) {
@@ -289,6 +284,7 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
       TEP += ssb[age][len];
 
   //create a length distribution and mean weight for the new stock
+  stockParameters.Update(TimeInfo);
   if (stockParameters[1] > verysmall) {
     tmpsdev = 1.0 / (2 * stockParameters[1] * stockParameters[1]);
     for (len = 0; len < spawnLgrpDiv->NoLengthGroups(); len++) {
@@ -330,43 +326,45 @@ int Spawner::IsSpawnStepArea(int area, const TimeClass* const TimeInfo) {
 }
 
 void Spawner::Reset(const TimeClass* const TimeInfo) {
-  int i, j;
-  double len;
-
+  int i;
+  
   fnProportion->updateConstants(TimeInfo);
-  fnWeightLoss->updateConstants(TimeInfo);
-  fnMortality->updateConstants(TimeInfo);
-  for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
-    len = LgrpDiv->meanLength(i);
-    spawnProportion[i] = fnProportion->calculate(len);
-    if (spawnProportion[i] < 0.0) {
-      handle.logWarning("Warning in spawning - function outside bounds", spawnProportion[i]);
-      spawnProportion[i] = 0.0;
+  if (fnProportion->constantsHaveChanged(TimeInfo)) {
+    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+      spawnProportion[i] = fnProportion->calculate(LgrpDiv->meanLength(i));
+      if (spawnProportion[i] < 0.0) {
+        handle.logWarning("Warning in spawning - function outside bounds", spawnProportion[i]);
+        spawnProportion[i] = 0.0;
+      }
+      if (spawnProportion[i] > 1.0) {
+        handle.logWarning("Warning in spawning - function outside bounds", spawnProportion[i]);
+        spawnProportion[i] = 1.0;
+      }
     }
-    if (spawnProportion[i] > 1.0) {
-      handle.logWarning("Warning in spawning - function outside bounds", spawnProportion[i]);
-      spawnProportion[i] = 1.0;
-    }
-    spawnWeightLoss[i] = fnWeightLoss->calculate(len);
-    if (spawnWeightLoss[i] < 0.0) {
-      handle.logWarning("Warning in spawning - function outside bounds", spawnWeightLoss[i]);
-      spawnWeightLoss[i] = 0.0;
-    }
-    if (spawnWeightLoss[i] > 1.0) {
-      handle.logWarning("Warning in spawning - function outside bounds", spawnWeightLoss[i]);
-      spawnWeightLoss[i] = 1.0;
-    }
-    spawnMortality[i] = fnMortality->calculate(len);
   }
 
-  if (onlyParent == 1)
-    return;
+  fnWeightLoss->updateConstants(TimeInfo);
+  if (fnWeightLoss->constantsHaveChanged(TimeInfo)) {
+    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+      spawnWeightLoss[i] = fnWeightLoss->calculate(LgrpDiv->meanLength(i));
+      if (spawnWeightLoss[i] < 0.0) {
+        handle.logWarning("Warning in spawning - function outside bounds", spawnWeightLoss[i]);
+        spawnWeightLoss[i] = 0.0;
+      }
+      if (spawnWeightLoss[i] > 1.0) {
+        handle.logWarning("Warning in spawning - function outside bounds", spawnWeightLoss[i]);
+        spawnWeightLoss[i] = 1.0;
+      }
+    }
+  }
 
-  for (i = 0; i < Storage.Size(); i++)
-    Storage[i].setToZero();
-  for (i = 0; i < ssb.Nrow(); i++)
-    for (j = 0; j < ssb.Ncol(i); j++)
-      ssb[i][j] = 0.0;
+  fnMortality->updateConstants(TimeInfo);
+  if (fnMortality->constantsHaveChanged(TimeInfo)) {
+    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+      spawnMortality[i] = fnMortality->calculate(LgrpDiv->meanLength(i));
+    }
+  }
+
   handle.logMessage("Reset spawning data");
 }
 

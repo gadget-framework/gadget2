@@ -2,7 +2,7 @@
 #define spawner_h
 
 #include "areatime.h"
-#include "formulavector.h"
+#include "timevariablevector.h"
 #include "commentstream.h"
 #include "agebandmatrix.h"
 #include "intmatrix.h"
@@ -39,8 +39,8 @@ protected:
   ConversionIndexPtrVector CI;
   DoubleMatrix ssb;
   LengthGroupDivision* spawnLgrpDiv;
-  FormulaVector spawnParameters;
-  FormulaVector stockParameters;
+  TimeVariableVector spawnParameters;
+  TimeVariableVector stockParameters;
   int onlyParent;
   int spawnage;
 };

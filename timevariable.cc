@@ -50,9 +50,15 @@ void TimeVariable::readFromFile(CommentStream& infile,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
-  infile >> text;  // description of time variable
+  infile >> text >> ws;  //description of time variable
   keeper->addString(text);
-  readWordAndVariable(infile, "nrofcoeff", nrofcoeff);
+
+  char c = infile.peek();
+  if ((c == 'n') || (c == 'N'))
+    readWordAndVariable(infile, "nrofcoeff", nrofcoeff);
+  else
+    nrofcoeff = 0; //default value for nrofcoeff
+
   if (nrofcoeff > 0) {
     usemodelmatrix = 1;
     coeff.resize(nrofcoeff, keeper);
@@ -112,17 +118,12 @@ void TimeVariable::readFromFile(CommentStream& infile,
 }
 
 int TimeVariable::DidChange(const TimeClass* const TimeInfo) {
-  return ((lastvalue != value && time == TimeInfo->CurrentTime()) || TimeInfo->CurrentTime() == 1);
-}
-
-int TimeVariable::AtCurrentTime(const TimeClass* const TimeInfo) const {
-  int i;
   if (TimeInfo->CurrentTime() == 1)
-    return 1;
-  for (i = timestepnr; i < steps.Size(); i++)
-    if (steps[i] == TimeInfo->CurrentStep() && years[i] == TimeInfo->CurrentYear())
-      return 1;
-  return 0;
+    return 1;  //return true for the first timestep
+  if (!fromfile)
+    return 0;  //return false if the values were not read from file
+
+  return ((!(isZero(lastvalue - value))) && (time == TimeInfo->CurrentTime()));
 }
 
 void TimeVariable::Update(const TimeClass* const TimeInfo) {
