@@ -553,8 +553,9 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   const AreaClass* const Area, const CharPtrVector& lenindex)
   : GrowthCalcBase(Areas), numGrowthConstants(2), wgrowth(Areas.Size()) {
 
-
   keeper->addString("growthcalcF");
+  growthPar.resize(numGrowthConstants, keeper);
+
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text >> ws;
@@ -622,8 +623,9 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   const AreaClass* const Area, const CharPtrVector& lenindex)
   : GrowthCalcBase(Areas), numGrowthConstants(2), wgrowth(Areas.Size()) {
 
-
   keeper->addString("growthcalcG");
+  growthPar.resize(numGrowthConstants, keeper);
+
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text >> ws;

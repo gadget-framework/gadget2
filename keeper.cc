@@ -299,6 +299,7 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
   ofstream outfile;
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
+  handle.Open(filename);
   int i, j, k;
 
   outfile << "; ";
@@ -342,6 +343,7 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
   for (i = 0; i < tmpLikely.Size(); i++)
     outfile << tmpLikely[i] << TAB << Likely[i]->Type() << TAB << Likely[i]->returnWeight() << endl;
   outfile << ";\n; Listing of the output from the likelihood components for the current Gadget run\n;\n";
+  handle.Close();
   outfile.close();
   outfile.clear();
 
@@ -359,6 +361,7 @@ void Keeper::writeValues(const char* const filename,
   ofstream outfile;
   outfile.open(filename, ios::app);
   handle.checkIfFailure(outfile, filename);
+  handle.Open(filename);
 
   //JMB - print the number of function evaluations at the start of the line
   outfile << EcoSystem->getFuncEval() << TAB;
@@ -385,6 +388,7 @@ void Keeper::writeValues(const char* const filename,
     w = fullwidth;
   }
   outfile << TAB << TAB << setw(w) << setprecision(p) << EcoSystem->getLikelihood() << endl;
+  handle.Close();
   outfile.close();
   outfile.clear();
 }
@@ -393,9 +397,11 @@ void Keeper::writeInitialInformationInColumns(const char* const filename) const 
   ofstream outfile;
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
+  handle.Open(filename);
 
   outfile << "; ";
   RUNID.print(outfile);
+  handle.Close();
   outfile.close();
   outfile.clear();
 }
@@ -406,6 +412,7 @@ void Keeper::writeValuesInColumns(const char* const filename, int prec) const {
   ofstream outfile;
   outfile.open(filename, ios::app);
   handle.checkIfFailure(outfile, filename);
+  handle.Open(filename);
 
   p = prec;
   if (prec == 0)
@@ -431,6 +438,7 @@ void Keeper::writeValuesInColumns(const char* const filename, int prec) const {
         << setw(smallwidth) << setprecision(smallprecision) << upperbds[i] << TAB << opt[i] << endl;
     }
   }
+  handle.Close();
   outfile.close();
   outfile.clear();
 }
@@ -511,6 +519,7 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec) const {
   ofstream outfile;
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
+  handle.Open(filename);
 
   p = prec;
   if (prec == 0)
@@ -553,6 +562,7 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec) const {
       << setw(smallwidth) << setprecision(smallprecision) << upperbds[i]
       << setw(smallwidth) << opt[i] << endl;
   }
+  handle.Close();
   outfile.close();
   outfile.clear();
 }

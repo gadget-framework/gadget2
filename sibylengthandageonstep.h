@@ -18,7 +18,7 @@ public:
   virtual void Sum(const TimeClass* const TimeInfo);
   virtual void setStocks(const StockPtrVector& Stocks);
   virtual double Regression() {return likelihood; };
-  void calcIndex(const AgeBandMatrix* alptr);
+  void calcIndex(const AgeBandMatrix* alptr, const TimeClass* const TimeInfo);
   virtual void PrintLikelihood(ofstream&, const TimeClass& time, const char* name);
   virtual void PrintLikelihoodHeader(ofstream&, const char* name);
   virtual void Reset(const Keeper* const keeper);
@@ -46,12 +46,10 @@ protected:
   LengthGroupDivision* LgrpDiv;
   DoubleMatrixPtrVector indexMatrix;
   DoubleMatrixPtrVector calc_index;  //for comparing with indexMatrix
-  Formula b_param; //interpreted as power or intersection term according to fit type
-  FormulaVector q_y; //year dependent catchability factor
   DoubleVector q_l; //length dependent catchability factor
   TimeVariableVector parameters;
   int index;
-  double eps_ind;
+  double epsilon;
   double likelihood;
   SuitFunc* suitfunction;
   DoubleVector lik_val_on_step; //for print purposes

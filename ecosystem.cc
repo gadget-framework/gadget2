@@ -230,10 +230,12 @@ void Ecosystem::writeLikelihoodInformation(const char* filename) const {
   ofstream outfile;
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
+  handle.Open(filename);
   RUNID.print(outfile);
   int i;
   for (i = 0; i < Likely.Size(); i++)
     Likely[i]->LikelihoodPrint(outfile);
+  handle.Close();
   outfile.close();
   outfile.clear();
 }
@@ -242,10 +244,12 @@ void Ecosystem::writeLikelihoodInformation(const char* filename, int id) const {
   ofstream outfile;
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
+  handle.Open(filename);
   RUNID.print(outfile);
   //JMB check that id is valid
   if (id < Likely.Size())
     Likely[id]->LikelihoodPrint(outfile);
+  handle.Close();
   outfile.close();
   outfile.clear();
 }
@@ -254,6 +258,7 @@ void Ecosystem::writeLikeSummaryInformation(const char* filename) const {
   ofstream outfile;
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
+  handle.Open(filename);
   outfile << "; ";
   RUNID.print(outfile);
   outfile << "; Summary likelihood information from the current run" << endl
@@ -264,6 +269,7 @@ void Ecosystem::writeLikeSummaryInformation(const char* filename) const {
   for (i = 0; i < Likely.Size(); i++)
     Likely[i]->SummaryPrint(outfile);
     
+  handle.Close();
   outfile.close();
   outfile.clear();
 }

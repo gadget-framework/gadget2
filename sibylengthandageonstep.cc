@@ -40,41 +40,16 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   strncpy(text, "", MaxStrLength);
   suitfunction = NULL;
   stocktype = 0;
+  index = 0;
 
-//read in q_y, b and q_l data
-  infile >> text;
-  if (!(strcasecmp(text, "yearfactor") == 0))
-    handle.Unexpected("yearfactor", text);
+  parameters.resize(2, keeper);
+  infile >> text >> ws;
+  if (strcasecmp(text, "parameters") == 0)
+    parameters.read(infile, TimeInfo, keeper);
+  else
+    handle.Unexpected("parameters", text);
 
-  int firsty = 0;
-  while (Years[0] != YearsInFile[firsty])
-    firsty++;
-
-  int lasty = YearsInFile.Size() - 1;
-  while (Years[Years.Size() - 1] != YearsInFile[lasty])
-    lasty--;
-
-  char dummy[MaxStrLength];
-  strncpy(dummy, "", MaxStrLength);
-
-  //Skip the first yearfactors that are outside the simulation.
-  for (i = 0; i < firsty; i++)
-    infile >> dummy;
-
-  //read the yearfactors we will keep.
-  q_y.resize(lasty + 1 - firsty, keeper);
-  infile >> q_y;
-
-  //Skip the remaining yearfactor
-  for (i = lasty; i < YearsInFile.Size() - 1; i++)
-    infile >> dummy;
-
-  q_y.Inform(keeper);
-
-  readWordAndFormula(infile, "b_param", b_param);
-  b_param.Inform(keeper);
-
-  q_l.resize(LgrpDiv->NoLengthGroups());
+  q_l.resize(LgrpDiv->NoLengthGroups(), 0.0);
   infile >> text >> ws;
   if ((strcasecmp(text, "function") == 0)) {
     infile >> text;
@@ -100,9 +75,8 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   } else {
     handle.Message("Error in surveyindex - unrecognised suitability", text);
   }
-//end of code to read in q_y, b and q_l data
 
-  readWordAndVariable(infile, "eps_ind", eps_ind);
+  readWordAndVariable(infile, "epsilon", epsilon);
   //read the likelihoodtype
   readWordAndValue(infile, "likelihoodtype", text);
   if (strcasecmp(text, "pearson") == 0)
@@ -116,9 +90,16 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   else
     handle.Unexpected("likelihoodtype", text);
 
-  //first resize indexMatrix to store the data
-  for (i = 0; i < q_y.Size(); i++)
+  //first resize objects to store the data
+  int numtime = Years.Size();
+  for (i = 0; i < numtime; i++) {
     indexMatrix.resize(1, new DoubleMatrix(Ages.Nrow(), LgrpDiv->NoLengthGroups(), 0.0));
+    calc_index.resize(1, new DoubleMatrix(Ages.Nrow(), LgrpDiv->NoLengthGroups(), 0.0));
+  }
+  lik_val_on_step.resize(numtime, 0.0);
+  max_val_on_step.resize(numtime, 0.0);
+  l_index.resize(numtime, 0);
+  a_index.resize(numtime, 0);
 
   //then read the survey indices data from the datafile
   ifstream datafile;
@@ -131,15 +112,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   handle.Close();
   datafile.close();
   datafile.clear();
-  index = 0;
-  for (i = 0; i < indexMatrix.Size(); i++)
-    calc_index.resize(1, new DoubleMatrix(Ages.Nrow(), LgrpDiv->NoLengthGroups(), 0.0));
-
-  int numtime = Years.Size();
-  lik_val_on_step.resize(numtime, 0.0);
-  max_val_on_step.resize(numtime, 0.0);
-  l_index.resize(numtime, 0);
-  a_index.resize(numtime, 0);
+  
   keeper->clearLast();
 }
 
@@ -267,7 +240,7 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   handle.logMessage("Calculating index for surveyindex component", this->SIName());
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns only one element.
   const AgeBandMatrix* alptr = &(aggregator->returnSum()[0]);
-  this->calcIndex(alptr);
+  this->calcIndex(alptr, TimeInfo);
 
   switch(opttype) {
     case PEARSONOPTTYPE:
@@ -289,22 +262,36 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   index++;
 }
 
-void SIByLengthAndAgeOnStep::calcIndex(const AgeBandMatrix* alptr) {
+void SIByLengthAndAgeOnStep::calcIndex(const AgeBandMatrix* alptr, const TimeClass* const TimeInfo) {
   //written by kgf 13/10 98
-  int age, len;
-  int maxage = alptr->maxAge();
-  int maxlen = LgrpDiv->NoLengthGroups();
-  double q_year = q_y[index];
+
+  int i, age, len;
+  if (suitfunction != NULL) {
+    suitfunction->updateConstants(TimeInfo);
+    if ((index == 0) || (suitfunction->constantsHaveChanged(TimeInfo))) {
+      if (suitfunction->usesPredLength())
+        suitfunction->setPredLength(0.0);
+
+      for (i = 0; i < q_l.Size(); i++) {
+        if (suitfunction->usesPreyLength())
+          suitfunction->setPreyLength(LgrpDiv->meanLength(i));
+
+        q_l[i] = suitfunction->calculate();
+      }
+    }
+  }
+
+  parameters.Update(TimeInfo);
   switch(this->getFitType()) {
     case LINEARFIT:
-      for (age = 0; age <= maxage; age++)
-        for (len = 0; len < maxlen; len++)
-          (*calc_index[index])[age][len] = q_year * q_l[len] * ((*alptr)[age][len].N + b_param);
+      for (age = 0; age <= alptr->maxAge(); age++)
+        for (len = 0; len < LgrpDiv->NoLengthGroups(); len++)
+          (*calc_index[index])[age][len] = parameters[0] * q_l[len] * ((*alptr)[age][len].N + parameters[1]);
       break;
     case POWERFIT:
-      for (age = 0; age <= maxage; age++)
-        for (len = 0; len < maxlen; len++)
-          (*calc_index[index])[age][len] = q_year * q_l[len] * pow((*alptr)[age][len].N, b_param);
+      for (age = 0; age <= alptr->maxAge(); age++)
+        for (len = 0; len < LgrpDiv->NoLengthGroups(); len++)
+          (*calc_index[index])[age][len] = parameters[0] * q_l[len] * pow((*alptr)[age][len].N, parameters[1]);
       break;
     default:
       handle.logWarning("Warning in surveyindex - unknown fittype", this->getFitType());
@@ -319,18 +306,13 @@ double SIByLengthAndAgeOnStep::calcLikMultinomial() {
   double step_lik = 0.0;
   double i_sum = 0.0;
   double i_hat_sum = 0.0;
-  double min_val = 0.0;
   double step_val = 0.0;
-  max_val_on_step[index] = 0.0;
-  lik_val_on_step[index] = 0.0;
-  a_index[index] = 0;
-  l_index[index] = 0;
-  int age, length;
 
+  int age, length;
   for (age = minrow; age <= maxrow; age++) {
     for (length = mincol[age]; length <= maxcol[age]; length++) {
-      if ((*indexMatrix[index])[age][length] > eps_ind) { //cell will contribute
-        (*calc_index[index])[age][length] += eps_ind;     //kgf 13/4 00, ref Skaug
+      if ((*indexMatrix[index])[age][length] > epsilon) { //cell will contribute
+        (*calc_index[index])[age][length] += epsilon;     //kgf 13/4 00, ref Skaug
         step_val = (*indexMatrix[index])[age][length] * log((*calc_index[index])[age][length]);
         step_lik -= step_val;
         i_sum += (*indexMatrix[index])[age][length];
@@ -345,8 +327,7 @@ double SIByLengthAndAgeOnStep::calcLikMultinomial() {
     }
   }
 
-  min_val = i_hat_sum / i_sum;
-  if (min_val <= 0) {
+  if (i_hat_sum <= 0) {
     lik_val_on_step[index] = 0.0;
     return 0.0;
   } else {
@@ -362,17 +343,13 @@ double SIByLengthAndAgeOnStep::calcLikPearson() {
 
   double step_lik = 0.0;
   double diff = 0.0;
-  max_val_on_step[index] = 0.0;
-  lik_val_on_step[index] = 0.0;
-  a_index[index] = 0;
-  l_index[index] = 0;
   int age, length;
 
   for (age = minrow; age <= maxrow; age++) {
     for (length = mincol[age]; length <= maxcol[age]; length++) {
       diff = ((*calc_index[index])[age][length] - (*indexMatrix[index])[age][length]);
       diff *= diff;
-      diff /= ((*calc_index[index])[age][length] + eps_ind);
+      diff /= ((*calc_index[index])[age][length] + epsilon);
       step_lik += diff;
     }
   }
@@ -389,15 +366,12 @@ double SIByLengthAndAgeOnStep::calcLikGamma() {
 
   double step_lik = 0.0;
   double cell_lik = 0.0;
-  max_val_on_step[index] = 0.0;
-  a_index[index] = 0;
-  l_index[index] = 0;
   int age, length;
 
   for (age = minrow; age <= maxrow; age++) {
     for (length = mincol[age]; length <= maxcol[age]; length++) {
-      cell_lik = (*indexMatrix[index])[age][length] / ((*calc_index[index])[age][length] + eps_ind);
-      cell_lik += log((*calc_index[index])[age][length] + eps_ind);
+      cell_lik = (*indexMatrix[index])[age][length] / ((*calc_index[index])[age][length] + epsilon);
+      cell_lik += log((*calc_index[index])[age][length] + epsilon);
       step_lik += cell_lik;
     }
   }
@@ -411,9 +385,6 @@ double SIByLengthAndAgeOnStep::calcLikLog() {
   double step_val = 0.0;
   double obs_i_sum = 0.0;
   double calc_i_sum = 0.0;
-  max_val_on_step[index] = 0.0;
-  a_index[index] = 0;
-  l_index[index] = 0;
   int age, length;
 
   for (age = minrow; age <= maxrow; age++) {
@@ -498,7 +469,7 @@ void SIByLengthAndAgeOnStep::PrintLikelihoodHeader(ofstream& surveyfile, const c
   int i;
   surveyfile << "Likelihood:       SurveyIndicesByAgeAndLengthOnStep\n"
     << "Function:         " << opttype << "\nCalculated every: step\n"
-    << "Filter:           default\nEps:              " << eps_ind
+    << "Filter:           default\nEps:              " << epsilon
     << "\nMean indices:    " << "\nName:             "
     << name << "\nStocks:          ";
   for (i = 0; i < stocknames.Size(); i++)
@@ -510,26 +481,13 @@ void SIByLengthAndAgeOnStep::PrintLikelihoodHeader(ofstream& surveyfile, const c
 }
 
 void SIByLengthAndAgeOnStep::Reset(const Keeper* const keeper) {
-  int i;
+
   likelihood = 0.0;
   index = 0;
-
-  if (suitfunction != NULL) {
-    //Fix this! Wont work if parameters are read from timevariable file.
-    suitfunction->updateConstants((TimeClass*)0);
-    if (suitfunction->usesPredLength())
-      suitfunction->setPredLength(0.0);
-
-    for (i = 0; i < q_l.Size(); i++) {
-      if (suitfunction->usesPreyLength())
-        suitfunction->setPreyLength(LgrpDiv->meanLength(i));
-
-      q_l[i] = suitfunction->calculate();
-    }
-  }
-
+  int i;
   for (i = 0; i < Years.Size(); i++) {
-    max_val_on_step[i] = 0;
+    max_val_on_step[i] = 0.0;
+    lik_val_on_step[i] = 0.0;
     l_index[i] = 0;
     a_index[i] = 0;
   }
