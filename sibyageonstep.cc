@@ -59,10 +59,9 @@ void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns has only one element.
   //Copy the information from it -- we only want to keep the abundance numbers.
   const AgeBandMatrix* Alptr = &(aggregator->returnSum()[0]);
-  int maxage = Alptr->maxAge();
-  DoubleVector numbers(maxage + 1);
+  DoubleVector numbers(Alptr->maxAge() + 1, 0.0);
   int age;
-  for (age = 0; age <= maxage; age++)
+  for (age = 0; age < numbers.Size(); age++)
     numbers[age] = (*Alptr)[age][0].N;
   this->keepNumbers(numbers);
 }

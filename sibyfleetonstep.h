@@ -20,7 +20,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param datafilename is the name of the file containing the survey index data
    * \param overcons is a flag to determine whether to calculate overconsumption of the stocks
-   * \param name is the name of the SIByLengthOnStep likelihood component
+   * \param name is the name of the SIByFleetOnStep likelihood component
    */
   SIByFleetOnStep(CommentStream& infile, const IntMatrix& areas,
     const DoubleVector& lengths, const CharPtrVector& areaindex,
@@ -31,7 +31,7 @@ public:
    */
   virtual ~SIByFleetOnStep();
   /**
-   * \brief This function will sum the survey index by length data
+   * \brief This function will sum the survey index by fleet length data
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void Sum(const TimeClass* const TimeInfo);

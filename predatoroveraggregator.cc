@@ -17,14 +17,18 @@ PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
   }
 }
 
+void PredatorOverAggregator::Reset() {
+  int i, j;
+  for (i = 0; i < total.Nrow(); i++)
+    for (j = 0; j < total.Ncol(i); j++)
+      total[i][j] = 0.0;
+}
+
 void PredatorOverAggregator::Sum() {
   int i, j, g, l;
   int area, predlength;
 
-  for (i = 0; i < total.Nrow(); i++)
-    for (j = 0; j < total.Ncol(i); j++)
-      total[i][j] = 0.0;
-
+  this->Reset();
   //Sum over the appropriate predators, areas, and lengths.
   for (g = 0; g < predators.Size(); g++) {
     for (i = 0; i < areas.Nrow(); i++) {

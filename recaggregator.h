@@ -40,6 +40,10 @@ public:
    */
   LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   /**
+   * \brief This function will reset the recapture data
+   */
+  void Reset();
+  /**
    * \brief This function will aggregate the recapture data
    * \param TimeInfo is the TimeClass for the current model
    */

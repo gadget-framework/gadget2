@@ -332,8 +332,11 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
     handle.logMessage("Calculating likelihood score for stockdistribution component", this->Name());
-    for (i = 0; i < stocknames.Size(); i++)
+    for (i = 0; i < stocknames.Size(); i++) {
       aggregator[i]->Sum(TimeInfo);
+      if (aggregator[i]->checkCatchData() == 1)
+        handle.logWarning("Warning in stockdistribution - zero catch found");
+    }
 
     switch(functionnumber) {
       case 1:

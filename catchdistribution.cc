@@ -447,6 +447,9 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
     aggregator->Sum(TimeInfo);
+    if (aggregator->checkCatchData() == 1)
+      handle.logWarning("Warning in catchdistribution - zero catch found");
+    
     switch(functionnumber) {
       case 1:
         l = calcLikMultinomial();

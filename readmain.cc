@@ -300,7 +300,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       Likely[i] = new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name);
 
     } else if (strcasecmp(type, "predatorindices") == 0) {
-      handle.Warning("The predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");
+      handle.Message("The predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");
 
     } else if (strcasecmp(type, "logcatch") == 0) {
       handle.Message("The logcatch likelihood component is no longer supported\nUse the log function from the catchdistribution likelihood component instead");

@@ -27,6 +27,10 @@ public:
    */
   ~StockAggregator();
   /**
+   * \brief This function will reset the stock data
+   */
+  void Reset();
+  /**
    * \brief This function will aggregate the stock data
    */
   void Sum();

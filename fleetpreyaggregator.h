@@ -49,10 +49,19 @@ public:
    */
   LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   /**
+   * \brief This function will reset the fleet catch information
+   */
+  void Reset();
+  /**
    * \brief This function will aggregate the fleet catch data
    * \param TimeInfo is the TimeClass for the current model
    */
   void Sum(const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will check the fleet catch data
+   * \return 1 if there is no catch data found, 0 otherwise
+   */
+  int checkCatchData();
   /**
    * \brief This will print the aggregator information to the ofstream specified
    * \param outfile is the ofstream to the file that the aggregator information gets sent to

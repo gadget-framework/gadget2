@@ -55,18 +55,23 @@ void RecAggregator::Print(ofstream& outfile) const {
   outfile << flush;
 }
 
-void RecAggregator::Sum(const TimeClass* const TimeInfo) {
-
-  int i, j, k, f, h, z;
-  int aggrArea, aggrAge, area, age;
-  double fleetscale;
+void RecAggregator::Reset() {
+  int i, j, k;
   PopInfo nullpop;
 
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)
       for (k = 0; k < total[i].maxLength(j); k++)
         total[i][j][k] = nullpop;
+}
 
+void RecAggregator::Sum(const TimeClass* const TimeInfo) {
+
+  int i, j, k, f, h, z;
+  int aggrArea, aggrAge, area, age;
+  double fleetscale;
+
+  this->Reset();
   //Sum over the appropriate fleets, stocks, areas, ages and length groups.
   //The index aggrArea is for the dummy area in total.
   //The index aggrAge is for the dummy age in total.

@@ -60,13 +60,14 @@ void SIByFleetOnStep::Sum(const TimeClass* const TimeInfo) {
 
   handle.logMessage("Calculating index for surveyindex component", this->SIName());
   aggregator->Sum(TimeInfo);
+  if (aggregator->checkCatchData() == 1)
+    handle.logWarning("Warning in surveyindex - zero catch found");
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns has only one element.
   //Copy the information from it -- we only want to keep the abundance numbers.
   const AgeBandMatrix* Alptr = &(aggregator->returnSum()[0]);
-  int length = Alptr->maxLength(0);
-  DoubleVector numbers(length);
+  DoubleVector numbers(Alptr->maxLength(0), 0.0);
   int len;
-  for (len = 0; len < length; len++)
+  for (len = 0; len < numbers.Size(); len++)
     numbers[len] = (*Alptr)[0][len].N;
   this->keepNumbers(numbers);
 }

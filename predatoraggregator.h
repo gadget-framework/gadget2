@@ -29,6 +29,10 @@ public:
    */
   ~PredatorAggregator() {};
   /**
+   * \brief This function will reset the predation  data
+   */
+  void Reset();
+  /**
    * \brief This function will aggregate the predation biomass data
    */
   void Sum();

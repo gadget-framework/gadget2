@@ -24,6 +24,10 @@ public:
    */
   ~PreyOverAggregator() {};
   /**
+   * \brief This will reset the prey overconsumption information
+   */
+  void Reset();
+  /**
    * \brief This will aggregate the prey overconsumption that has taken place
    */
   void Sum();

@@ -319,6 +319,9 @@ void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
   if (AAT.AtCurrentTime(TimeInfo)) {
     handle.logMessage("Calculating likelihood score for catchstatistics component", this->Name());
     aggregator->Sum(TimeInfo);
+    if (aggregator->checkCatchData() == 1)
+      handle.logWarning("Warning in catchstatistics - zero catch found");
+
     l = calcLikSumSquares();
     likelihood += l;
     timeindex++;

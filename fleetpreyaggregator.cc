@@ -103,21 +103,37 @@ void FleetPreyAggregator::Print(ofstream& outfile) const {
   outfile << flush;
 }
 
-void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
-
-  int i, j, k, f, h, z;
-  int aggrArea, aggrAge, area, age;
-  double fleetscale;
+void FleetPreyAggregator::Reset() {
+  int i, j, k;
   PopInfo nullpop;
 
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)
       for (k = 0; k < total[i].maxLength(j); k++)
         total[i][j][k] = nullpop;
+}
 
+int FleetPreyAggregator::checkCatchData() {
+  int i, j, k;
+  double check = 0.0;
+
+  for (i = 0; i < total.Size(); i++)
+    for (j = 0; j < total[i].Nrow(); j++)
+      for (k = 0; k < total[i].maxLength(j); k++)
+        check += total[i][j][k].N;
+  if (isZero(check))
+    return 1;
+  return 0;
+}
+
+void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
+
+  int i, j, k, f, h, z;
+  int aggrArea, aggrAge, area, age;
+  double fleetscale;
+
+  this->Reset();
   //Sum over the appropriate fleets, stocks, areas, ages and length groups.
-  //The index aggrArea is for the dummy area in total.
-  //The index aggrAge is for the dummy age in total.
   for (f = 0; f < fleets.Size(); f++) {
     LengthPredator* pred = fleets[f]->returnPredator();
     for (h = 0; h < stocks.Size(); h++) {
@@ -125,8 +141,6 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
       StockPrey* prey = (StockPrey*)stocks[h]->returnPrey();
       for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
         for (j = 0; j < areas.Ncol(aggrArea); j++) {
-          //All the areas in areas[aggrArea] will be aggregated to the
-          //area aggrArea in total.
           area = areas[aggrArea][j];
           if (prey->isInArea(area) && fleets[f]->isInArea(area)) {
             fleetscale = fleets[f]->Amount(area, TimeInfo) * pred->Scaler(area);
@@ -158,15 +172,4 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
       }
     }
   }
-
-  //JMB - check that we actually have a catch on this timestep
-  //it would be better to check things in the setFleetsAndStocks() function
-  //in the likelihood component (so we only do this once).
-  double check = 0.0;
-  for (i = 0; i < total.Size(); i++)
-    for (j = 0; j < total[i].Nrow(); j++)
-      for (k = 0; k < total[i].maxLength(j); k++)
-        check += total[i][j][k].N;
-  if (isZero(check))
-    handle.logWarning("Warning - zero catch found when aggregating for likelihood component");
 }
