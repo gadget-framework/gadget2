@@ -1,7 +1,6 @@
 #include "mathfunc.h"
 #include "keeper.h"
 #include "prey.h"
-#include "print.h"
 #include "suits.h"
 #include "predator.h"
 #include "errorhandler.h"
@@ -81,7 +80,7 @@ void Predator::Print(ofstream& outfile) const {
   outfile << endl;
   for (i = 0; i < this->NoPreys(); i++) {
     outfile << "\tSuitability for " << this->Preyname(i) << endl;
-    BandmatrixPrint(this->Suitability(i), outfile);
+    this->Suitability(i).Print(outfile);
   }
 }
 

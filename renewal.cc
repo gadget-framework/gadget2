@@ -1,7 +1,6 @@
 #include "renewal.h"
 #include "errorhandler.h"
 #include "readfunc.h"
-#include "print.h"
 #include "keeper.h"
 #include "readword.h"
 #include "gadget.h"
@@ -150,9 +149,9 @@ void RenewalData::Print(ofstream& outfile) const {
   for (i = 0; i < Distribution.Size(); i++) {
     outfile << "\tTime " << RenewalTime[i] << " internal area " << RenewalArea[i]
       << " age " << Distribution[i].Minage() << " number " << Number[i] << endl;
-    Printagebandm(outfile, Distribution[i]);
+    Distribution[i].PrintNumbers(outfile);
     outfile << "\tmean weights\n";
-    PrintWeightinagebandm(outfile, Distribution[i]);
+    Distribution[i].PrintWeights(outfile);
   }
 }
 

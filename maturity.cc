@@ -4,7 +4,6 @@
 #include "readfunc.h"
 #include "readword.h"
 #include "conversionindex.h"
-#include "print.h"
 #include "errorhandler.h"
 #include "gadget.h"
 
@@ -87,7 +86,7 @@ void Maturity::Print(ofstream& outfile) const {
   outfile << "\n\tStored numbers:\n";
   for (i = 0; i < areas.Size(); i++) {
     outfile << "\tInternal area " << areas[i] << endl;
-    Printagebandm(outfile, Storage[i]);
+    Storage[i].PrintNumbers(outfile);
   }
 }
 
@@ -284,7 +283,7 @@ double MaturityA::MaturationProbability(int age, int length, int growth,
 void MaturityA::Print(ofstream& outfile) const {
   Maturity::Print(outfile);
   outfile << "\tPrecalculated maturity:\n";
-  BandmatrixPrint(PrecalcMaturation, outfile);
+  PrecalcMaturation.Print(outfile);
 }
 
 int MaturityA::IsMaturationStep(int area, const TimeClass* const TimeInfo) {

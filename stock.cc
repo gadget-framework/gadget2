@@ -14,7 +14,6 @@
 #include "maturity.h"
 #include "renewal.h"
 #include "transition.h"
-#include "print.h"
 #include "spawner.h"
 #include "readword.h"
 #include "readaggregation.h"
@@ -382,9 +381,9 @@ void Stock::Print(ofstream& outfile) const {
   outfile << "\nAge length keys\n";
   for (i = 0; i < areas.Size(); i++) {
     outfile << "\tInternal area " << areas[i] << "\n\tNumbers\n";
-    Printagebandm(outfile, Alkeys[i]);
+    Alkeys[i].PrintNumbers(outfile);
     outfile << "\tMean weights\n";
-    PrintWeightinagebandm(outfile, Alkeys[i]);
+    Alkeys[i].PrintWeights(outfile);
   }
 }
 

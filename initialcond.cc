@@ -1,7 +1,6 @@
 #include "initialcond.h"
 #include "errorhandler.h"
 #include "readfunc.h"
-#include "print.h"
 #include "readword.h"
 #include "mathfunc.h"
 #include "gadget.h"
@@ -358,7 +357,7 @@ void InitialCond::Print(ofstream& outfile) const {
   outfile << "\nInitial conditions\n";
   for (i = 0; i < areas.Size(); i++) {
     outfile << "\tInternal area " << areas[i] << endl;
-    Printagebandm(outfile, AreaAgeLength[i]);
+    AreaAgeLength[i].PrintNumbers(outfile);
   }
   outfile << "\tMean lengths\n";
   for (i = 0; i < Mean.Nrow(); i++) {

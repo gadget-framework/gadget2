@@ -84,6 +84,38 @@ void BandMatrix::Colsum(DoubleVector& Result) const {
       Result[j] += (*v[i])[j];
 }
 
+void BandMatrix::Print(ofstream& outfile) const {
+  int i, j;
+  int maxcol = 0;
+  for (i = minage; i < minage + nrow; i++)
+    if (v[i]->Maxcol() > maxcol)
+      maxcol = v[i]->Maxcol();
+
+  for (i = minage; i < minage + nrow; i++) {
+    outfile << TAB;
+    if (v[i]->Mincol() > 0) {
+      for (j = 0; j < v[i]->Mincol(); j++) {
+        outfile.precision(smallprecision);
+        outfile.width(smallwidth);
+        outfile << 0.0 << sep;
+      }
+    }
+    for (j = v[i]->Mincol(); j < v[i]->Maxcol(); j++) {
+      outfile.precision(smallprecision);
+      outfile.width(smallwidth);
+      outfile << (*v[i])[j] << sep;
+    }
+    if (v[i]->Maxcol() < maxcol) {
+      for (j = v[i]->Maxcol(); j < maxcol; j++) {
+        outfile.precision(smallprecision);
+        outfile.width(smallwidth);
+        outfile << 0.0 << sep;
+      }
+    }
+    outfile << endl;
+  }
+}
+
 BandMatrixVector::BandMatrixVector(int sz) : size(sz) {
   assert(size >= 0);
   int i;

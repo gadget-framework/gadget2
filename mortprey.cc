@@ -1,5 +1,4 @@
 #include "mortprey.h"
-#include "print.h"
 #include "intvector.h"
 #include "gadget.h"
 
@@ -138,7 +137,7 @@ void MortPrey::Print(ofstream& outfile) const {
   int area;
   for (area = 0; area < areas.Size(); area++) {
     outfile << "Alkeys on area " << areas[area] << endl;
-    Printagebandm(outfile, Alkeys[area]);
+    Alkeys[area].PrintNumbers(outfile);
   }
   Prey::Print(outfile);
 }

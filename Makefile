@@ -86,7 +86,7 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	agebandmatrixmemberfunctions.o predpreystdprinter.o area.o predstdinfo.o \
 	bandmatrix.o predstdinfobylength.o prey.o logcatchfunction.o popstatistics.o \
 	preyoveraggregator.o lengthgroup.o preyoverprinter.o catchstatistics.o \
-	preystdinfo.o preystdinfobylength.o print.o timevariable.o boundlikelihood.o \
+	preystdinfo.o preystdinfobylength.o timevariable.o boundlikelihood.o \
 	commentstream.o printinfo.o readfunc.o conversionindex.o readmain.o keeper.o \
 	ecosystem.o readword.o renewal.o mortpredator.o mortprey.o mortprinter.o \
 	errorhandler.o pionstep.o fleet.o sibyageonstep.o fleetpreyaggregator.o \

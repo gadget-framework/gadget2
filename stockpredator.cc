@@ -4,7 +4,6 @@
 #include "readfunc.h"
 #include "prey.h"
 #include "areatime.h"
-#include "print.h"
 #include "suits.h"
 #include "readword.h"
 #include "gadget.h"
@@ -67,15 +66,15 @@ void StockPredator::Print(ofstream& outfile) const {
   }
   for (area = 0; area < areas.Size(); area++) {
     outfile << "Alkeys (numbers) on internal area " << areas[area] << endl;
-    Printagebandm(outfile, Alkeys[area]);
+    Alkeys[area].PrintNumbers(outfile);
   }
   for (area = 0; area < areas.Size(); area++) {
     outfile << "Alkeys (mean weights) on internal area " << areas[area] << endl;
-    PrintWeightinagebandm(outfile, Alkeys[area]);
+    Alkeys[area].PrintWeights(outfile);
   }
   for (area = 0; area < areas.Size(); area++) {
     outfile << "Age-length proportion on internal area " << areas[area] << endl;
-    BandmatrixPrint(Alprop[area], outfile);
+    Alprop[area].Print(outfile);
   }
   outfile << "Maximum consumption by length.\n";
   for (area = 0; area < areas.Size(); area++) {

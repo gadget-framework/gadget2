@@ -33,6 +33,8 @@ public:
   void FilterN(double minN);
   void IncrementAge();
   void CopyNumbers(const AgeBandMatrix& Alkeys);
+  void PrintNumbers(ofstream& outfile) const;
+  void PrintWeights(ofstream& outfile) const;
   void Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth);
   void Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth, Maturity* const Mat,
     const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
