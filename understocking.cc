@@ -3,7 +3,7 @@
 #include "readaggregation.h"
 #include "errorhandler.h"
 #include "areatime.h"
-#include "fleet.h"
+#include "predator.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
@@ -42,15 +42,15 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   if (strcasecmp(text, "powercoeff") == 0)
     infile >> powercoeff >> ws >> text >> ws;
 
-  //read in the fleetnames
+  //read in the predator names
   i = 0;
-  if (!(strcasecmp(text, "fleetnames") == 0))
-    handle.Unexpected("fleetnames", text);
+  if (!((strcasecmp(text, "predatornames") == 0) || (strcasecmp(text, "fleetnames") == 0)))
+    handle.Unexpected("predatornames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "yearsandsteps") == 0)) {
-    fleetnames.resize(1);
-    fleetnames[i] = new char[strlen(text) + 1];
-    strcpy(fleetnames[i++], text);
+    prednames.resize(1);
+    prednames[i] = new char[strlen(text) + 1];
+    strcpy(prednames[i++], text);
     infile >> text >> ws;
   }
 
@@ -68,25 +68,25 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
 
 UnderStocking::~UnderStocking() {
   int i;
-  for (i = 0; i < fleetnames.Size(); i++)
-    delete[] fleetnames[i];
+  for (i = 0; i < prednames.Size(); i++)
+    delete[] prednames[i];
   for (i = 0; i < areaindex.Size(); i++)
     delete[] areaindex[i];
 }
 
-void UnderStocking::setFleets(FleetPtrVector& Fleets) {
+void UnderStocking::setPredators(PredatorPtrVector& Predators) {
   int i, j;
   int found;
-  for (i = 0; i < fleetnames.Size(); i++) {
+  for (i = 0; i < prednames.Size(); i++) {
     found = 0;
-    for (j = 0; j < Fleets.Size(); j++)
-      if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
+    for (j = 0; j < Predators.Size(); j++)
+      if (strcasecmp(prednames[i], Predators[j]->Name()) == 0) {
         found++;
-        fleets.resize(1, Fleets[j]);
+        predators.resize(1, Predators[j]);
       }
 
     if (found == 0)
-      handle.logFailure("Error in understocking - unrecognised fleet", fleetnames[i]);
+      handle.logFailure("Error in understocking - unrecognised predator", prednames[i]);
 
   }
 }
@@ -105,10 +105,10 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
     l = 0.0;
     for (k = 0; k < areas.Nrow(); k++) {
       err = 0.0;
-      for (i = 0; i < fleets.Size(); i++)
+      for (i = 0; i < predators.Size(); i++)
         for (j = 0; j < areas[k].Size(); j++)
-          if (fleets[i]->IsInArea(areas[k][j]))
-            err += fleets[i]->returnPredator()->getTotalOverConsumption(areas[k][j]);
+          if (predators[i]->IsInArea(areas[k][j]))
+            err += predators[i]->getTotalOverConsumption(areas[k][j]);
 
       store[k] += pow(err, powercoeff);
       l += store[k];
@@ -130,9 +130,9 @@ void UnderStocking::LikelihoodPrint(ofstream& outfile) {
   int i, j, year, area;
 
   outfile << "\nUnderstocking\n\nLikelihood " << likelihood
-    << "\nWeight " << weight << "\nFleet names:";
-  for (i = 0; i < fleetnames.Size(); i++)
-    outfile << sep << fleetnames[i];
+    << "\nWeight " << weight << "\nPredator names:";
+  for (i = 0; i < prednames.Size(); i++)
+    outfile << sep << prednames[i];
   outfile << "\nInternal areas:";
   for (i  = 0; i < areas.Nrow(); i++) {
     outfile << endl;

@@ -1742,7 +1742,7 @@ The fleet of type LinearFleet acts a simple predator, and can be used for fleets
 %The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The total amount that has been landed by the fleet is also required - this is taken for the landings data, based on timestep and area, and is specified in a separate file.
 
 \section{Fleet Suitability}\label{sec:fleetsuit}
-Since Gadget treats the fleets as predators of the stocks, the format for the suitability functions for the fleets is the same as the format for the suitability functions of the stock when they are acting as a predator.  The format for the suitability functions as discussed in section~\ref{sec:suitability} above.
+The suitability determines how the fleets act on the stocks that are caught.  Since Gadget treats the fleets as predators of the stocks, the format for the suitability functions for the fleets is the same as the format for the suitability functions of the stock when they are acting as a predator.  The format for the suitability functions as discussed in section~\ref{sec:suitability} above.
 
 %JMB removed fleksibest stuff from the documentation
 %\section{Fleet Level}\label{sec:fleetlevel}
@@ -1859,10 +1859,10 @@ default    2        1000     1000
 would define a default penalty, where the lower and upper weights were 1000, and the power was 2.
 
 \section{Understocking}\label{sec:understocking}
-The Understocking likelihood component is used to give a penalty whenever there has been overconsumption by a fleet, and there has been insufficient fish for that fleet to catch.  The likelihood component that is used is the sum of squares of the overconsumption, given by the equation below:
+The Understocking likelihood component is used to give a penalty whenever there has been overconsumption by a predator (usually a fleet), and there has been insufficient fish for that predator to consume.  In the case of a fleet, this means that the landings data indicates that more fish have been landed than there are fish in the model, for that timetep and area combination.  The likelihood component that is used is the sum of squares of the overconsumption, given by the equation below:
 
 \begin{equation}\label{eq:understocking}
-\ell = \sum_{\it time}\sum_{\it areas} \Big(\sum_{\it fleets} U \Big)^p
+\ell = \sum_{\it time}\sum_{\it areas} \Big(\sum_{\it predators} U \Big)^p
 \end{equation}
 
 where:\newline
@@ -1879,7 +1879,7 @@ weight               <weight for the likelihood component>
 type                 understocking
 areaaggfile          <area aggregation file specifying areas>
 powercoeff           <power>
-fleetnames           <vector of the names of the fleets>
+predatornames        <vector of the names of the predators>
 yearsandsteps        <ActionAtTime when to check for understocking>
 \end{verbatim}}
 
@@ -3330,7 +3330,7 @@ where:\newline
 $<\nabla f(x)>$ is the gradient of the function at the current point
 
 \bigskip
-In comparison to the other optimising algorithms that are currently implemented in Gadget, BFGS performs a local search, and so it doesn't cover the wide search area that the Simulated Annealing algorithm can use to look for an optimum.  BFGS will usually take more computer time to find an optimum than the Hooke \& Jeeves algorithm, since numerically calculating the gradient of the function is computationally very intensive.  However, the optimum found by the BFGS algorithm will usually be better than that found by the Hooke \& Jeeves algorithm, since a gradient search method is more accurate than a stepwise search method. 
+In comparison to the other optimising algorithms that are currently implemented in Gadget, BFGS performs a local search, and so it doesn't cover the wide search area that the Simulated Annealing algorithm can use to look for an optimum.  BFGS will usually take more computer time to find an optimum than the Hooke \& Jeeves algorithm, since numerically calculating the gradient of the function is computationally very intensive.  However, the optimum found by the BFGS algorithm will usually be better than that found by the Hooke \& Jeeves algorithm, since a gradient search method is more accurate than a stepwise search method.
 
 \bigskip
 The BFGS algorithm used in Gadget is derived from that presented by Dimitri P Bertsekas, ''Nonlinear Programming'' ($2^{nd}$ edition, pp22-61) published by Athena Scientific.

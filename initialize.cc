@@ -80,7 +80,7 @@ void Ecosystem::Initialise() {
         ((SurveyIndices*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case UNDERSTOCKINGLIKELIHOOD:
-        ((UnderStocking*)Likely[i])->setFleets(fleetvec);
+        ((UnderStocking*)Likely[i])->setPredators(predvec);
         break;
       case CATCHDISTRIBUTIONLIKELIHOOD:
         ((CatchDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);

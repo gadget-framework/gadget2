@@ -6,12 +6,13 @@
 #include "commentstream.h"
 #include "intmatrix.h"
 #include "charptrvector.h"
+#include "predatorptrvector.h"
 
 /**
  * \class UnderStocking
- * \brief This is the class used to calculate a likelihood score based on the overconsumption of a stock by a fleet
+ * \brief This is the class used to calculate a likelihood score based on the overconsumption of a stock by predators
  *
- * This class calculates a penalty that is applied if there are insufficient fish of a particular stock to meet the requirements set by the fleet landings data.  This indicates that there are less fish in the model than have been landed (as recorded by the landings data), which is \b very wrong, and so this gets a high penalty.  A 'reasonable' model will have a zero likelihood score from this component.
+ * This class calculates a penalty that is applied if there are insufficient fish of a particular stock to meet the requirements for the predators - usually the fleet landings data.  This indicates that there are less fish in the model than have been landed (as recorded by the landings data), which is \b very wrong, and so this gets a high penalty.  A 'reasonable' model will have a zero likelihood score from this component.
  */
 class UnderStocking : public Likelihood {
 public:
@@ -54,19 +55,19 @@ public:
    */
   virtual void Print(ofstream& outfile) const {};
   /**
-   * \brief This will select the fleets required to calculate the UnderStocking likelihood score
-   * \param Fleets is the FleetPtrVector of all the available fleets
+   * \brief This will select the predators required to calculate the UnderStocking likelihood score
+   * \param Predators is the PredatorPtrVector of all the available predators
    */
-  void setFleets(FleetPtrVector& Fleets);
+  void setPredators(PredatorPtrVector& Predators);
 private:
   /**
-   * \brief This is the CharPtrVector of the names of the fleets that will be checked for understocking
+   * \brief This is the CharPtrVector of the names of the predators that will be checked for understocking
    */
-  CharPtrVector fleetnames;
+  CharPtrVector prednames;
   /**
-   * \brief This is the FleetPtrVector of the fleets that will be checked for understocking
+   * \brief This is the FleetPtrVector of the predators that will be checked for understocking
    */
-  FleetPtrVector fleets;
+  PredatorPtrVector predators;
   /**
    * \brief This is the IntMatrix used to store area information
    */
