@@ -11,15 +11,17 @@ OptInfo::OptInfo(MainInfo* MainInfo) {
   optSimann = NULL;
   optHJ     = NULL;
   optBFGS   = NULL;
+
   // Initialise random number generator with system time [morten 02.02.26]
   srand(time(NULL));
+
   if (MainInfo->getOptInfoGiven()) {
     ReadOptInfo(MainInfo->optInfoFile());
     MainInfo->closeOptInfoFile();
   } else {
-    handle.logMessage("Warning - no optinfofile given, using default information");
-    useHJ = 1;
+    handle.logWarning("\nWarning - no optimisation file specified, using default values");
     optHJ = new OptInfoHooke();
+    useHJ = 1;
   }
 }
 
@@ -36,52 +38,66 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
   char* text = new char[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
-  handle.logMessage("Reading OptInfofile");
-  infile >> text >> ws;
-  do {
+  handle.logMessage("\nReading optimisation information");
+  infile >> text;
+  while (!infile.eof()) {
+    infile >> ws;  //trim whitespace from infile
     if ((strcasecmp(text, "seed")) == 0 && (!infile.eof())) {
       int seed;
-      handle.logMessage("Reading seed from optinfofile");
-      infile >> seed >> ws >> text >> ws;
+      infile >> seed >> ws >> text;
+      handle.logMessage("Initialising random number generator with", seed);
       srand(seed);
 
     } else if (strcasecmp(text, "[simann]") == 0) {
-      handle.logMessage("Reading Simulated Annealing parameters from optinfofile");
+      handle.logMessage("Reading Simulated Annealing parameters");
       optSimann = new OptInfoSimann();
-
-      if (!infile.eof()) {
-        infile >> text >> ws;
-        optSimann->Read(infile, text);
-      } else
-        handle.logWarning("Warning - no parameters specified for Simulated Annealing, using default values");
       useSimann = 1;
 
-    } else if (strcasecmp(text, "[hooke]") == 0) {
-      handle.logMessage("Reading Hooke & Jeeves parameters from optinfofile");
-      optHJ = new OptInfoHooke();
-
       if (!infile.eof()) {
-        infile >> text >> ws;
-        optHJ->Read(infile, text);
+        infile >> text;
+	if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
+          handle.logWarning("Warning - no optimisation parameters specified for Simulated Annealing algorithm");
+	else
+          optSimann->Read(infile, text);
+	  
       } else
-        handle.logWarning("Warning - no parameters specified for Hooke & Jeeves, using default values");
+        handle.logWarning("Warning - no optimisation parameters specified for Simulated Annealing algorithm");
+
+    } else if (strcasecmp(text, "[hooke]") == 0) {
+      handle.logMessage("Reading Hooke and Jeeves parameters");
+      optHJ = new OptInfoHooke();
       useHJ = 1;
 
+      if (!infile.eof()) {
+        infile >> text;
+	if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
+          handle.logWarning("Warning - no optimisation parameters specified for Hooke and Jeeves algorithm");
+        else
+          optHJ->Read(infile, text);
+	  
+      } else
+        handle.logWarning("Warning - no optimisation parameters specified for Hooke and Jeeves algorithm");
+
     } else if (strcasecmp(text, "[bfgs]") == 0) {
-      handle.logMessage("Reading BFGS parameters from optinfofile");
+      handle.logMessage("Reading BFGS parameters");
       optBFGS = new OptInfoBfgs();
+      useBFGS = 1;
 
       if (!infile.eof()) {
-        infile >> text >> ws;
-        optBFGS->Read(infile, text);
+        infile >> text;
+	if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
+          handle.logWarning("Warning - no optimisation parameters specified for BFGS algorithm");
+        else
+          optBFGS->Read(infile, text);
+	  
       } else
-        handle.logWarning("Warning - no parameters specified for BFGS, using default values");
-      useBFGS = 1;
+        handle.logWarning("Warning - no optimisation parameters specified for BFGS algorithm");
+
 
     } else {
       handle.Unexpected("[hooke], [simann], [bfgs] or seed", text);
     }
-  } while (!infile.eof());
+  }
 
   delete[] text;
   if (useSimann == 0 && useHJ == 0 && useBFGS == 0)
@@ -89,7 +105,6 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
 }
 
 void OptInfo::Optimize() {
-  handle.logMessage("\nStarting optimisation");
   if (useSimann)
     optSimann->MaximizeLikelihood();
   if (useHJ)

@@ -22,44 +22,45 @@ OptInfoSimann::OptInfoSimann()
 
 void OptInfoSimann::Read(CommentStream& infile, char* text) {
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
+    infile >> ws;
     if (strcasecmp(text, "simanniter") == 0) {
-      infile >> simanniter >> ws;
+      infile >> simanniter;
 
     } else if (strcasecmp(text, "t") == 0) {
-      infile >> T >> ws;
+      infile >> T;
 
     } else if (strcasecmp(text, "rt") == 0) {
-      infile >> rt >> ws;
+      infile >> rt;
 
     } else if (strcasecmp(text, "simanneps") == 0) {
-      infile >> simanneps >> ws;
+      infile >> simanneps;
 
     } else if (strcasecmp(text, "nt") == 0) {
-      infile >> nt >> ws;
+      infile >> nt;
 
     } else if (strcasecmp(text, "ns") == 0) {
-      infile >> ns >> ws;
+      infile >> ns;
 
     } else if (strcasecmp(text, "vm") == 0) {
-      infile >> vm >> ws;
+      infile >> vm;
 
     } else if (strcasecmp(text, "cstep") == 0) {
-      infile >> cs >> ws;
+      infile >> cs;
 
     } else if (strcasecmp(text, "check") == 0) {
-      infile >> check >> ws;
+      infile >> check;
 
     } else if (strcasecmp(text, "uratio") == 0) {
-      infile >> uratio >> ws;
+      infile >> uratio;
 
     } else if (strcasecmp(text, "lratio") == 0) {
-      infile >> lratio >> ws;
+      infile >> lratio;
 
     } else {
       handle.logWarning("Warning in optinfofile - unknown option", text);
-      infile >> text >> ws;
+      infile >> text;  //read and ignore the next entry
     }
-    infile >> text >> ws;
+    infile >> text;
   }
 
   //check the values specified in the optinfo file ...
@@ -83,6 +84,7 @@ void OptInfoSimann::MaximizeLikelihood() {
   int i, nopt, opt;
 
   cout << "\nStarting Simulated Annealing\n";
+  handle.logMessage("\nStarting Simulated Annealing\n");
 
   nopt = EcoSystem->NoOptVariables();
   DoubleVector val(nopt);

@@ -15,31 +15,32 @@ extern int hooke(double (*func)(double*, int), int n, double startpoint[],
 
 OptInfoHooke::OptInfoHooke()
   : OptSearch(), hookeiter(1000), rho(0.5), lambda(0), hookeeps(1e-4), bndcheck(0.9999) {
-  handle.logMessage("Initialising Hooke & Jeeves");
+  handle.logMessage("Initialising Hooke and Jeeves");
 }
 
 void OptInfoHooke::Read(CommentStream& infile, char* text) {
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[bfgs]")) {
+    infile >> ws;
     if (strcasecmp(text, "rho") == 0) {
-      infile >> rho >> ws;
+      infile >> rho;
 
     } else if (strcasecmp(text, "lambda") == 0) {
-      infile >> lambda >> ws;
+      infile >> lambda;
 
     } else if (strcasecmp(text, "hookeeps") == 0) {
-      infile >> hookeeps >> ws;
+      infile >> hookeeps;
 
     } else if (strcasecmp(text, "hookeiter") == 0) {
-      infile >> hookeiter >> ws;
+      infile >> hookeiter;
 
     } else if (strcasecmp(text, "bndcheck") == 0) {
-      infile >> bndcheck >> ws;
+      infile >> bndcheck;
 
     } else {
       handle.logWarning("Warning in optinfofile - unknown option", text);
-      infile >> text >> ws;
+      infile >> text;  //read and ignore the next entry
     }
-    infile >> text >> ws;
+    infile >> text;
   }
 
   //check the values specified in the optinfo file ...
@@ -62,6 +63,7 @@ void OptInfoHooke::MaximizeLikelihood() {
   double tmp;
 
   cout << "\nStarting Hooke and Jeeves\n";
+  handle.logMessage("\nStarting Hooke and Jeeves\n");
 
   nopt = EcoSystem->NoOptVariables();
   DoubleVector val(nopt);

@@ -39,6 +39,7 @@ void OptInfoBfgs::MaximizeLikelihood() {
   int i, count;
 
   cout << "\nStarting BFGS\n";
+  handle.logMessage("\nStarting BFGS\n");
 
   DoubleVector val(numvar);
   double* startpoint = new double[numvar];
@@ -55,21 +56,23 @@ void OptInfoBfgs::MaximizeLikelihood() {
 
 void OptInfoBfgs::Read(CommentStream& infile, char* text) {
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]")) {
+    infile >> ws;
     if (strcasecmp(text,"rho") == 0) {
-      infile >> rho >> ws >> text >> ws;
+      infile >> rho;
 
     } else if (strcasecmp(text, "tau") == 0) {
-      infile >> tau >> ws >> text >> ws;
+      infile >> tau;
 
     } else if (strcasecmp(text, "maxiter") == 0) {
-      infile >> maxiter >> ws >> text >> ws;
+      infile >> maxiter;
 
     } else if (strcasecmp(text, "eps") == 0) {
-      infile >> eps >> ws >> text >> ws;
+      infile >> eps;
 
     } else {
       handle.logWarning("Warning in optinfofile - unknown option", text);
-      infile >> text >> ws >> text >> ws;
+      infile >> text;  //read and ignore the next entry
     }
+    infile >> text;
   }
 }
