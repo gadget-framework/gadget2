@@ -161,7 +161,7 @@ SurveyIndices::~SurveyIndices() {
 void SurveyIndices::LikelihoodPrint(ofstream& outfile) const {
   int i;
   outfile << "\nSurvey Indices\nlikelihood " << likelihood
-    << "\nStocknames: ";
+    << "\nStock names: ";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << stocknames[i] << sep;
   outfile << endl;
@@ -207,7 +207,7 @@ void SurveyIndices::Reset(const Keeper* const keeper) {
 
 void SurveyIndices::Print(ofstream& outfile) const {
   int i;
-  outfile << "\nSurvey Indices " << surveyname << "\nlikelihood " << likelihood << "\nStocknames: ";
+  outfile << "\nSurvey Indices " << surveyname << "\nlikelihood " << likelihood << "\n\tStock names: ";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << stocknames[i] << sep;
   outfile << endl;

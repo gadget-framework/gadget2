@@ -19,6 +19,7 @@ int ReadAmounts(CommentStream& infile, const intvector& tmpareas,
   char tmpnumber[MaxStrLength];
   strncpy(tmpname, "", MaxStrLength);
   strncpy(tmpnumber, "", MaxStrLength);
+  int count = 0;
   int keepdata, timeid, areaid, tmpareaid;
 
   //Find start of distribution data in datafile
@@ -85,14 +86,18 @@ int ReadAmounts(CommentStream& infile, const intvector& tmpareas,
       keepdata = 1;
 
     if (keepdata == 0) {
-      //distribution data is required, so store it
+      //data is required, so store it
+      count++;
       infile >> amount[timeid][areaid] >> ws;
 
     } else {
-      //distribution data is not required, so read but ignore it
+      //data is not required, so read but ignore it
       infile >> tmpnumber >> ws;
     }
   }
+
+  if (count == 0)
+    cout << "Warning - found no data in the data file for " << givenname << endl;
   return 1;
 }
 
@@ -169,6 +174,7 @@ int ReadGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   strncpy(tmplength, "", MaxStrLength);
   strncpy(tmpnumber, "", MaxStrLength);
   int keepdata, timeid, areaid, lenid;
+  int count = 0;
 
   //Find start of distribution data in datafile
   infile >> ws;
@@ -228,17 +234,20 @@ int ReadGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
       keepdata = 1;
 
     if (keepdata == 0) {
-      //distribution data is required, so store it
+      //data is required, so store it
       areaid = Area->InnerArea(area);
       if (areaid == -1)
         handle.UndefinedArea(area);
 
+      count++;
       infile >> (*amount[areaid])[timeid][lenid] >> ws;
 
     } else {
-      //distribution data is not required, so read but ignore it
+      //data is not required, so read but ignore it
       infile >> tmpnumber >> ws;
     }
   }
+  if (count == 0)
+    cout << "Warning in GrowthAmounts - found no data in the data file\n";
   return 1;
 }

@@ -6,8 +6,22 @@
 MigrationPenalty::MigrationPenalty(CommentStream& infile, double likweight)
   :Likelihood(MIGRATIONPENALTYLIKELIHOOD, likweight), powercoeffs(2) {
 
-  ReadWordAndValue(infile, "stock", stockname);
+  ErrorHandler handle;
+  char text[MaxStrLength];
+  stockname = new char[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  strncpy(stockname, "", MaxStrLength);
+
+  ReadWordAndValue(infile, "stockname", stockname);
   ReadWordAndTwoVariables(infile, "powercoeffs", powercoeffs[0], powercoeffs[1]);
+
+  //prepare for next likelihood component
+  infile >> ws;
+  if (!infile.eof()) {
+    infile >> text >> ws;
+    if (!(strcasecmp(text, "[component]") == 0))
+      handle.Unexpected("[component]", text);
+  }
 }
 
 void MigrationPenalty::AddToLikelihood(const TimeClass* const TimeInfo) {

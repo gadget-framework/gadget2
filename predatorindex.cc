@@ -12,7 +12,7 @@
 #include "gadget.h"
 
 PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double likweight)
+  const TimeClass* const TimeInfo, double likweight, const char* name)
   :Likelihood(PREDATORINDICESLIKELIHOOD, likweight) {
 
   ErrorHandler handle;
@@ -35,7 +35,8 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
 
   ifstream datafile;
   CommentStream subdata(datafile);
-
+  piname = new char[strlen(name) + 1];
+  strcpy(piname, name);
   ReadWordAndValue(infile, "datafile", datafilename);
 
   //Read in the predator names and lengths
@@ -44,15 +45,15 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
   if (!(strcasecmp(text, "predatornames") == 0))
     handle.Unexpected("predatornames", text);
   infile >> text >> ws;
-  while (!infile.eof() && !(strcasecmp(text, "predlenfile") == 0)) {
+  while (!infile.eof() && !(strcasecmp(text, "predlenaggfile") == 0)) {
     predatornames.resize(1);
     predatornames[i] = new char[strlen(text) + 1];
     strcpy(predatornames[i++], text);
     infile >> text >> ws;
   }
 
-  if (!(strcasecmp(text, "predlenfile") == 0))
-    handle.Unexpected("predlenfile", text);
+  if (!(strcasecmp(text, "predlenaggfile") == 0))
+    handle.Unexpected("predlenaggfile", text);
   infile >> aggfilename >> ws;
   datafile.open(aggfilename);
   CheckIfFailure(datafile, aggfilename);
@@ -68,15 +69,15 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
   if (!(strcasecmp(text, "preynames") == 0))
     handle.Unexpected("preynames", text);
   infile >> text >> ws;
-  while (!infile.eof() && !(strcasecmp(text, "preylenfile") == 0)) {
+  while (!infile.eof() && !(strcasecmp(text, "preylenaggfile") == 0)) {
     preynames.resize(1);
     preynames[i] = new char[strlen(text) + 1];
     strcpy(preynames[i++], text);
     infile >> text >> ws;
   }
 
-  if (!(strcasecmp(text, "preylenfile") == 0))
-    handle.Unexpected("preylenfile", text);
+  if (!(strcasecmp(text, "preylenaggfile") == 0))
+    handle.Unexpected("preylenaggfile", text);
   infile >> aggfilename >> ws;
   datafile.open(aggfilename);
   CheckIfFailure(datafile, aggfilename);
@@ -110,6 +111,10 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
 
   int biomass;
   ReadWordAndVariable(infile, "biomass", biomass);
+  infile >> text >> ws;
+  if (!(strcasecmp(text, "fittype") == 0))
+    handle.Unexpected("fittype", text);
+
   PI = new PIOnStep(infile, areas, predatorlengths, preylengths, TimeInfo, biomass,
     areaindex[0], preylenindex, predlenindex, datafilename);
 
@@ -169,6 +174,18 @@ void PredatorIndices::Reset(const Keeper* const keeper) {
   PI->Reset(keeper);
 }
 
+void PredatorIndices::Print(ofstream& outfile) const {
+  int i;
+  outfile << "\nPredator Indices " << piname << "\nlikelihood " << likelihood << "\n\tPredator names: ";
+  for (i = 0; i < predatornames.Size(); i++)
+    outfile << predatornames[i] << sep;
+  outfile << "\n\tPrey names: ";
+  for (i = 0; i < preynames.Size(); i++)
+    outfile << preynames[i] << sep;
+  outfile << endl;
+  PI->Print(outfile);
+}
+
 void PIOnStep::SetPredatorsAndPreys(const Predatorptrvector& predators, const Preyptrvector& preys) {
   intmatrix areas(1, Areas.Size());
   int i;
@@ -216,6 +233,7 @@ void PIOnStep::ReadPredatorData(CommentStream& infile, const char* arealabel,
   strncpy(tmpprey, "", MaxStrLength);
   int keepdata, timeid, predid, preyid, colid;
   int numprey = preylenindex.Size();
+  int count = 0;
   ErrorHandler handle;
 
   //Check the number of columns in the inputfile
@@ -259,11 +277,14 @@ void PIOnStep::ReadPredatorData(CommentStream& infile, const char* arealabel,
 
     if (keepdata == 0) {
       //survey indices data is required, so store it
+      count++;
       colid = preyid + (numprey * predid);
       //JMB - this should really be stored as [time][prey][pred]
       Indices[timeid][colid] = tmpnumber;
     }
   }
+  if (count == 0)
+    cout << "Warning in PredatorIndices - found no data in the data file\n";
 }
 
 void PIOnStep::Sum(const class TimeClass* const TimeInfo) {
@@ -299,6 +320,7 @@ PredatorIndices::~PredatorIndices() {
     delete[] predatornames[i];
   for (i = 0; i < preynames.Size(); i++)
     delete[] preynames[i];
+  delete[] piname;
   delete PI;
 }
 

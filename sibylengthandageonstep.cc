@@ -161,6 +161,7 @@ void SIByLengthAndAgeOnStep::ReadSurveyData(CommentStream& infile, const char* a
   strncpy(tmpage, "", MaxStrLength);
   strncpy(tmplen, "", MaxStrLength);
   int keepdata, timeid, ageid, lenid;
+  int count = 0;
   ErrorHandler handle;
 
   //Check the number of columns in the inputfile
@@ -204,9 +205,12 @@ void SIByLengthAndAgeOnStep::ReadSurveyData(CommentStream& infile, const char* a
 
     if (keepdata == 0) {
       //survey indices data is required, so store it
+      count++;
       (*indexMatrix[timeid])[ageid][lenid] = tmpnumber;
     }
   }
+  if (count == 0)
+    cout << "Warning in SurveyIndices - found no data in the data file\n";
 }
 
 SIByLengthAndAgeOnStep::~SIByLengthAndAgeOnStep() {
@@ -583,7 +587,7 @@ void SIByLengthAndAgeOnStep::PrintLikelihood(ofstream& surveyfile, const TimeCla
     surveyfile << endl;
   }
 
-  surveyfile << "Modeled:\n";
+  surveyfile << "Modelled:\n";
   for (age = minrow; age <= maxrow; age++) {
     for (length = 0; length < mincol[age]; length++) {
       surveyfile.precision(lowprecision);

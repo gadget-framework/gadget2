@@ -214,6 +214,7 @@ void CatchDistribution::ReadDistributionData(CommentStream& infile,
   strncpy(tmpage, "", MaxStrLength);
   strncpy(tmplen, "", MaxStrLength);
   int keepdata, timeid, ageid, areaid, lenid;
+  int count = 0;
   ErrorHandler handle;
 
   //Find start of distribution data in datafile
@@ -286,10 +287,13 @@ void CatchDistribution::ReadDistributionData(CommentStream& infile,
 
     if (keepdata == 0) {
       //distribution data is required, so store it
+      count++;
       (*AgeLengthData[timeid][areaid])[ageid][lenid] = tmpnumber;
     }
   }
   AAT.AddActions(Years, Steps, TimeInfo);
+  if (count == 0)
+    cout << "Warning in CatchDistribution - found no data in the data file for " << cdname << endl;
 }
 
 void CatchDistribution::aggregateBiomass() {
@@ -393,10 +397,10 @@ void CatchDistribution::Print(ofstream& outfile) const {
 
   outfile << "\nCatch Distribution " << cdname << "\nlikelihood " << likelihood
     << "\nfunction " << functionname;
-  outfile << "\n\tStocknames:";
+  outfile << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
-  outfile << "\n\tFleetnames:";
+  outfile << "\n\tFleet names:";
   for (i = 0; i < fleetnames.Size(); i++)
     outfile << sep << fleetnames[i];
   outfile << endl;
@@ -410,7 +414,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) const {
   outfile << "\nCatch Distribution\n\tlikelihood " << likelihood
     << "\n\tfunction " << functionname << endl << TAB;
   Likelihood::LikelihoodPrint(outfile);
-  outfile << "\tStocknames:";
+  outfile << "\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
   outfile << "\nAreas:";
@@ -428,7 +432,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) const {
   outfile << "\nLengths:";
   for (i = 0; i < lengths.Size(); i++)
     outfile << sep << lengths[i];
-  outfile << "\nFleetnames:";
+  outfile << "\nFleet names:";
   for (i = 0; i < fleetnames.Size(); i++)
     outfile << sep << fleetnames[i];
   outfile << endl;
@@ -960,7 +964,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
       catchfile << endl;
     }
 
-    catchfile << "Modeled:\n";
+    catchfile << "Modelled:\n";
     for (age = minrow; age <= maxrow; age++) {
       for (length = 0; length < mincol[age]; length++) {
         catchfile.precision(lowprecision);

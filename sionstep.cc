@@ -23,7 +23,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
   intercept = 0.0;
 
   //if numcols is 1 then this is a sibyalengthandageonstep
-  //else we have a pionstep - these use differenct fittypes
+  //else we have a pionstep - these use different fittypes
 
   if (numcols == 1) {
     infile >> text;
@@ -181,6 +181,7 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmplabel, "", MaxStrLength);
   int keepdata, timeid, colid;
+  int count = 0;
   ErrorHandler handle;
 
   //Check the number of columns in the inputfile
@@ -216,6 +217,7 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
 
     if (keepdata == 0) {
       //survey indices data is required, so store it
+      count++;
       if (timeid == -1) {
         Years.resize(1, year);
         Steps.resize(1, step);
@@ -230,6 +232,8 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
       YearsInFile.resize(1, year);
   }
   AAT.AddActions(Years, Steps, TimeInfo);
+  if (count == 0)
+    cout << "Warning in SurveyIndices - found no data in the data file\n";
 }
 
 void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,

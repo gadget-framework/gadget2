@@ -60,6 +60,6 @@ const int largewidth = 10;
 const int fullwidth = 12;
 
 /* Update the following line each time upgrades are implemented */
-#define gadget_version "2.0.03"
+#define gadget_version "2.0.04-BETA"
 
 #endif

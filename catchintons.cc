@@ -298,6 +298,7 @@ void CatchInTons::ReadCatchInTonsData(CommentStream& infile,
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpfleet, "", MaxStrLength);
   int keepdata, timeid, areaid, fleetid, check;
+  int count = 0;
   ErrorHandler handle;
 
   //Find start of distribution data in datafile
@@ -363,6 +364,7 @@ void CatchInTons::ReadCatchInTonsData(CommentStream& infile,
 
     if (keepdata == 0) {
       //distribution data is required, so store it
+      count++;
       //note that we use += to sum the data over all fleets (and possibly time)
       DataCatch[timeid][areaid] += tmpnumber;
     }
@@ -372,4 +374,7 @@ void CatchInTons::ReadCatchInTonsData(CommentStream& infile,
     AAT.AddActionsAtAllSteps(Years, TimeInfo);
   else
     AAT.AddActions(Years, Steps, TimeInfo);
+
+  if (count == 0)
+    cout << "Warning in CatchInTons - found no data in the data file\n";
 }

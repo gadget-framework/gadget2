@@ -6,8 +6,8 @@ GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat=2 \
               -Wreorder -Wwrite-strings -Wsynth -Wchar-subscripts \
               -Wuninitialized -W
 
-#DEFINE_FLAGS = -D GADGET_INLINE -D DEBUG -D INTERRUPT_HANDLER -g -O
-DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
+DEFINE_FLAGS = -D GADGET_INLINE -D DEBUG -D INTERRUPT_HANDLER -g -O
+#DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
 
 ##########################################################################
 # Pick the appropriate compiler from the following switches
@@ -45,7 +45,7 @@ OBJECTS = $(GADGETOBJECTS)
 #PVMINCLUDE = $(PVMDIR)/include
 #PVMLIB = $(PVMDIR)/lib/SUN4SOL2
 #LIBDIRS = -L.  -L/usr/local/lib  -L$(PVMLIB)
-#LIBRARIES = -lm -lvec -lpvm3 -lgpvm3 -lnsl -lsocket
+#LIBRARIES = -lm -lvec -lpvm3 -lgpvm3 -lnsl
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
 #OBJECTS = $(GADGETOBJECTS) $(SLAVEOBJECTS)
 ##########################################################################
@@ -120,7 +120,7 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
 GADGETINPUT = initialinputfile.o vectorofcharptr.o charptrvector.o \
-	commentstream.o parameter.o doubleindexvector.o \
+	commentstream.o parameter.o doubleindexvector.o mathfunc.o \
 	intvector.o doublevector.o intmatrix.o doublematrix.o
 
 LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)

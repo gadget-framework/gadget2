@@ -7,7 +7,7 @@
 class MigrationPenalty : public Likelihood {
 public:
   MigrationPenalty(CommentStream& infile, double likweight);
-  virtual~MigrationPenalty();
+  virtual ~MigrationPenalty();
   virtual void AddToLikelihood(const TimeClass* const);
   void SetStocks(Stockptrvector Stocks);
   virtual void Print(ofstream&) const {};

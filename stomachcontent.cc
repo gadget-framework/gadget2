@@ -292,6 +292,7 @@ void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass*
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmppred, "", MaxStrLength);
   strncpy(tmpprey, "", MaxStrLength);
+  int count = 0;
   int keepdata, timeid, areaid, predid, preyid;
 
   int pred_size = 0;
@@ -375,12 +376,15 @@ void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass*
 
     if (keepdata == 0) {
       //stomach content data is required, so store it
+      count++;
       (*stomachcontent[timeid][areaid])[predid][preyid] = tmpnumber;
     }
   }
 
   AAT.AddActions(Years, Steps, TimeInfo);
   modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol());
+  if (count == 0)
+    cout << "Warning in StomachContent - found no data in the data file for " << scname << endl;
 }
 
 void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -393,6 +397,7 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmppred, "", MaxStrLength);
   strncpy(tmpprey, "", MaxStrLength);
+  int count = 0;
   int keepdata, timeid, areaid, predid, preyid;
 
   int pred_size = 0;
@@ -479,6 +484,7 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
 
     if (keepdata == 0) {
       //stomach content data is required, so store it
+      count++;
       (*stomachcontent[timeid][areaid])[predid][preyid] = tmpnumber;
       (*stddev[timeid][areaid])[predid][preyid] = tmpstddev;
     }
@@ -486,6 +492,8 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
 
   AAT.AddActions(Years, Steps, TimeInfo);
   modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
+  if (count == 0)
+    cout << "Warning in StomachContent - found no data in the data file for " << scname << endl;
 }
 
 void SCAmounts::ReadStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -496,6 +504,7 @@ void SCAmounts::ReadStomachSampleContent(CommentStream& infile, const TimeClass*
   double tmpnumber;
   int keepdata, timeid, areaid, predid;
   char tmparea[MaxStrLength], tmppred[MaxStrLength];
+  int count = 0;
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmppred, "", MaxStrLength);
 
@@ -560,9 +569,12 @@ void SCAmounts::ReadStomachSampleContent(CommentStream& infile, const TimeClass*
 
     if (keepdata == 0) {
       //stomach content data is required, so store it
+      count++;
       (*number[timeid])[areaid][predid] = tmpnumber;
     }
   }
+  if (count == 0)
+    cout << "Warning in StomachContent - found no data in the data file for " << scname << endl;
 }
 
 SC::~SC() {
@@ -845,7 +857,7 @@ void SCAmounts::PrintLikelihood(ofstream& out, const TimeClass& timeInfo) {
       }
       out << endl;
     }
-    out << "Modeled:\n";
+    out << "Modelled:\n";
     for (pd = 0; pd < modelConsumption[time][a]->Nrow(); pd++) {
       for (py = 0; py < (*modelConsumption[time][a])[pd].Size(); py++) {
         out.precision(printprecision);

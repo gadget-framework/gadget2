@@ -130,6 +130,7 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
   strncpy(tmpage, "", MaxStrLength);
   int keepdata, needvar;
   int timeid, ageid, areaid;
+  int count = 0;
   ErrorHandler handle;
 
   //Find start of statistics data in datafile
@@ -206,6 +207,7 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
 
     if (keepdata == 0) {
       //statistics data is required, so store it
+      count++;
       (*numbers[timeid])[areaid][ageid] = tmpnumber;
       (*mean[timeid])[areaid][ageid] = tmpmean;
       if (needvar == 1)
@@ -213,6 +215,8 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
     }
   }
   AAT.AddActions(Years, Steps, TimeInfo);
+  if (count == 0)
+    cout << "Warning in CatchStatistics - found no data in the data file for " << csname << endl;
 }
 
 CatchStatistics::~CatchStatistics() {
@@ -250,10 +254,10 @@ void CatchStatistics::Print(ofstream& outfile) const {
 
   outfile << "\nCatch Statistics " << csname << "\nlikelihood " << likelihood
     << "\nfunction " << functionname;
-  outfile << "\n\tStocknames:";
+  outfile << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
-  outfile << "\n\tFleetnames:";
+  outfile << "\n\tFleet names:";
   for (i = 0; i < fleetnames.Size(); i++)
     outfile << sep << fleetnames[i];
   outfile << endl;

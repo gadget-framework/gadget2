@@ -138,6 +138,7 @@ void StockDistribution::ReadStockData(CommentStream& infile,
   strncpy(tmplen, "", MaxStrLength);
   int keepdata, timeid, stockid, ageid, areaid, lenid;
   int numstock = stocknames.Size();
+  int count = 0;
   intvector Years, Steps;
 
   //Find start of distribution data in datafile
@@ -219,12 +220,15 @@ void StockDistribution::ReadStockData(CommentStream& infile,
 
     if (keepdata == 0) {
       //stock distribution data is required, so store it
+      count++;
       i = ageid + (numage * lenid);
       //JMB - this should be stored as [time][area][stock][age][length]
       (*AgeLengthData[timeid][areaid])[stockid][i] = tmpnumber;
     }
   }
   AAT.AddActions(Years, Steps, TimeInfo);
+  if (count == 0)
+    cout << "Warning in StockDistribution - found no data in the data file\n";
 }
 
 StockDistribution::~StockDistribution() {

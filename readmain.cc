@@ -312,18 +312,10 @@ int Ecosystem::ReadLikelihood(CommentStream& infile) {
       Likely[i] = new CatchInTons(infile, Area, TimeInfo, weight);
 
     } else if (strcasecmp(type, "PredatorIndices") == 0) {
-      Likely[i] = new PredatorIndices(infile, Area, TimeInfo, weight);
+      Likely[i] = new PredatorIndices(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "MigrationPenalty") == 0) {
       Likely[i] = new MigrationPenalty(infile, weight);
-
-      //prepare for next likelihood component
-      infile >> ws;
-      if (!infile.eof()) {
-        infile >> text >> ws;
-        if (!(strcasecmp(text, "[component]") == 0))
-          handle.Unexpected("[component]", text);
-      }
 
     } else if (strcasecmp(type, "RandomWalk") == 0) {
       cout << "The random walk likelihood component is not currently implemented\n";

@@ -22,6 +22,7 @@ public:
   virtual void Sum(const TimeClass* const TimeInfo);
   virtual void SetStocks(const Stockptrvector& Stocks) {};
   virtual void SetPredatorsAndPreys(const Predatorptrvector& predators, const Preyptrvector& preys);
+  //virtual void Print(ofstream& outfile) const;
 protected:
   void ReadPredatorData(CommentStream&, const char*, const charptrvector&, const charptrvector&, const TimeClass*);
   LengthGroupDivision* PredatorLgrpDiv;

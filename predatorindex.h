@@ -15,9 +15,9 @@ class PIOnStep;
 class PredatorIndices : public Likelihood {
 public:
   PredatorIndices(CommentStream& infile, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, double w);
+    const TimeClass* const TimeInfo, double w, const char* name);
   virtual ~PredatorIndices();
-  virtual void Print(ofstream& outfile) const {};
+  virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile) const {};
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys);
@@ -27,6 +27,7 @@ protected:
   charptrvector preynames;
   PIOnStep* PI;
   intvector areas;
+  char* piname;
 };
 
 #endif
