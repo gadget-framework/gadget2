@@ -941,7 +941,7 @@ In equation~\ref{eq:totalcons}, the parameter $<$ F $>$ gives the amount of a gi
 In equation~\ref{eq:maxcons}, the parameter $<$ M $>$ gives the maximum possible consumption for the predator.  This is a function of temperature and the length of the predator, using the 4 parameters specified by the $<$maximum consumption$>$ vector in the input file.
 
 \bigskip
-In equation~\ref{eq:feedlevel}, the parameter $<\psi>$ gives the ''feeding level'' which denotes the fraction of the available food that the predator is consuming.  This is governed by the total amount of prey available and the $<$half feeding$>$ value which is specified in the input file.  The $<$half feeding$>$ value is the density of prey required to allow the predator to consume prey at half the maximum consumption level.  The value of $<\psi>$ can have an affect on the growth of the predator (ie. when there isn't sufficient food available) when the growth function has been set to ''MultSpec'' or ''WeightJones''.
+In equation~\ref{eq:feedlevel}, the parameter $<\psi>$ gives the ''feeding level'' which denotes the fraction of the available food that the predator is consuming.  This is governed by the total amount of prey available and the $<$half feeding$>$ value which is specified in the input file.  The $<$half feeding$>$ value is the density of prey required to allow the predator to consume prey at half the maximum consumption level.  The value of $<\psi>$ can have an affect on the growth of the predator (ie. when there isn't sufficient food available) when the growth function has been set to ''MULTSPEC'' or ''WeightJones''.
 
 \section{Suitability}\label{subsec:suitability}
 The suitability determines how the predators act on the preys.  This selectivity relationship between the predator and the prey is based on the lengths of the predator and prey, and can be defined either by declaring a matrix of suitability values, or by declaring a suitability function and the parameters for that function.  The suitability values can be thought of as the proportion of the prey length group that the predator length group can consume, and as such the suitability values should be between 0 and 1.
@@ -967,11 +967,11 @@ suitability
 The $<$functionname$>$ defines which suitability function is to be used to calculate the suitability for the predator acting on the prey.  Currently there are 5 suitability functions defined, and the valid suitability function names are:
 
 \bigskip
-ConstSuitFunc\newline
-StraightLine\newline
-ExpSuitFuncL50\newline
-ExpSuitFuncA\newline
-AndersenSuitFunc
+constsuitfunc - use the ConstSuitFunc suitabilty function\newline
+straightline - use the StraightLine suitabilty function\newline
+expsuitfuncl50 - use the ExpSuitFuncL50 suitabilty function\newline
+expsuitfunca - use the ExpSuitFuncA suitabilty function\newline
+andersensuitfunc - use the AndersenSuitFunc suitabilty function
 
 \bigskip
 For the following suitability functions, the convention used is to represent the length group of the prey by l, and the length group of the predator by L.
@@ -1146,10 +1146,10 @@ maturityfile           <name of maturity data file>
 The $<$maturity function$>$ defines the function that is to be used to calculate how the stock will mature.  Currently there are 4 maturity functions defined, and the valid maturity function names are:
 
 \bigskip
-Continuous\newline
-Constant\newline
-ConstantWeight\newline
-FixedLength
+continuous - use the Continuous maturation function\newline
+constant - use the Constant maturation function\newline
+constantweight - use the ConstantWeight maturation function\newline
+fixedlength - use the FixedLength maturation function
 
 \bigskip
 The format for the data in the maturity data file is dependent on the maturity function that is to be used.  All the maturity functions require the name of the mature stocks that the immature stock will mature into, and the ratio of the maturing part of the immature stock that is to mature into each mature stock.  This allows for part of an immature stock to mature into more than one mature stock, so for example, an immature stock could mature either into a male mature stock or a female mature stock.
@@ -1359,9 +1359,9 @@ The length selection function determines how the proportion of the length group 
 The $<$function$>$ defines how the length selection function will be used (for an example, see section~\ref{subsec:stockspawn} above).  The $<$functionname$>$ defines which selection function is to be used to calculate the selection of the stock.  Currently there are 3 selection functions defined, and the valid length selection function names are:
 
 \bigskip
-Constant\newline
-StraightLine\newline
-Exponential
+constant - use the Constant selection function\newline
+straightline - use the StraightLine selection function\newline
+exponential - use the Exponential selection function
 
 \subsection{Constant Selection Function}
 This is a selection function, where there is no dependence on the length of the stock is given by the following equation:
@@ -1732,10 +1732,11 @@ CatchDistribution\newline
 CatchStatistics\newline
 StockDistribution\newline
 SurveyIndices\newline
+SurveyDistribution\newline
 StomachContent\newline
 Recaptures\newline
 RecStatistics\newline
-PredatorIndices\newline
+%PredatorIndices\newline
 MigrationPenalty\newline
 CatchInTons
 
@@ -2257,7 +2258,7 @@ The format of the survey index data, and the contents of the datafile, depend on
 \bigskip
 ages - defining an age group based survey index\newline
 lengths - defining a length group based survey index\newline
-ageandlengths - defining an age and length group based survey index
+fleets - defining a length group based survey index, taking the fleet selectivity into account
 
 \subsection{SurveyIndices by Age}\label{subsec:sibyage}
 To specify an age group based SurveyIndices likelihood component, the format required in the main likelihood file is as follows:
@@ -2360,6 +2361,7 @@ slope                <beta>
 intercept            <alpha>
 \end{verbatim}}
 
+\newpage %JMB manual page break inserted
 \subsection{SurveyIndices by Length}\label{subsec:sibylength}
 To specify a length group based SurveyIndices likelihood component, the format required in the main likelihood file is as follows:
 
@@ -2388,8 +2390,154 @@ where $<$number$>$ is the survey index for that timestep/area/length combination
 \bigskip
 The $<$fit type$>$ defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component.  The valid fit type options are the same as for the age based survey indices, given in section~\ref{subsec:sibyage} above.
 
-\subsection{SurveyIndices by Age and Length}\label{subsec:sibyageandlength}
-[CURRENTLY BLANK - INSERT DESCRIPTION FROM BERGEN]
+\subsection{SurveyIndices by Fleet}\label{subsec:sibyfleet}
+To specify a length group based SurveyIndices likelihood component taking the fleet selectivity into account, the format required in the main likelihood file is as follows:
+
+{\small\begin{verbatim}
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 surveyindices
+datafile             <name for the datafile>
+sitype               fleets
+areaaggfile          <area aggregation file specifying areas>
+lenaggfile           <length aggregation file specifying lengths>
+fleetnames           <vector of the names of the fleets>
+overconsumption      <0 or 1> ; 1 to take overconsumption into account
+stocknames           <vector of the names of the stocks>
+fittype              <fit type>
+<fit type parameters>
+\end{verbatim}}
+
+The datafile is a list of the indices that Gadget is to use to fit the linear regression to for the numbers calculated in the model.  The format of this file is given below:
+
+{\small\begin{verbatim}
+<year>  <step>  <area>  <length>  <number>
+\end{verbatim}}
+
+where $<$number$>$ is the survey index for that timestep/area/length combination.
+
+\bigskip
+The $<$fit type$>$ defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component.  The valid fit type options are the same as for the age based survey indices, given in section~\ref{subsec:sibyage} above.
+
+\section{SurveyDistribution}\label{sec:surveydistribution}
+The SurveyDistribution likelihood component is used to compare the development of a stock in the Gadget model to age-length indices calculated from a survey for that stock.  The likelihood score that is calculated gives some measure as to how well the data from the model fits to the data from the calculated survey index distribution.
+
+\bigskip
+To specify a SurveyDistribution likelihood component, the format required in the main likelihood file is as follows:
+
+{\small\begin{verbatim}
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 surveydistribution
+datafile             <name for the datafile>
+areaaggfile          <area aggregation file specifying areas>
+lenaggfile           <length aggregation file specifying lengths>
+ageaggfile           <age aggregation file specifying ages>
+stocknames           <vector of the names of the stocks>
+fittype              <fit type>
+parameters           <fit type parameters>
+<suitability parameters>
+epsilon              <epsilon>
+likelihoodtype       <likelihood type>
+\end{verbatim}}
+
+The $<$stocknames$>$ vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison.  The $<$suitability parameters$>$ define the suitability of the survey fleet that was used to collect the survey index data.  This is the same format as the suitability functions for the stock, as discussed in section~\ref{subsec:suitability} above.  Note that only one set of suitability values is defined, which will be applied to all the stocks for this likelihood component.
+
+\bigskip
+The $<$fit type$>$ defines what function is to be used to calculate the survey index distribution from the modelled population.  Currently, there are 2 functions defined, and the valid function names are:
+
+\bigskip
+linearfit - use a linear function\newline
+powerfit - use a power function
+
+\bigskip
+The $<$fit type parameters$>$ is a vector of 2 parameters that are used to calculate the survey index values from the modelled population.  The $<$epsilon$>$ value is used whenever the calculated probability is very unlikely, although the exact format of this depends on the likelihood type that is to be used when calculating the likelihood score.
+
+\bigskip
+The $<$likelihood type$>$ defines what function is to be used to compare the modelled survey index distribution to the input survey index distribution.  Currently, there are 4 functions defined, and the valid function names are:
+
+\bigskip
+multinomial - use a multinomial function\newline
+pearson - use a Pearson function\newline
+gamma - use a gamma function\newline
+log - use a log function
+
+\bigskip
+Finally, the file specified by $<$datafile$>$ contains a list of the age-length survey indices that Gadget is to use to fit the likelihood function to, aggregated according to the aggregation files specified, for the numbers calculated in the model.  The format of this file is given below:
+
+{\small\begin{verbatim}
+<year>  <step>  <area>  <age>  <length>  <number>
+\end{verbatim}}
+
+where $<$number$>$ is the survey index for the timestep/area/age/length combination.
+
+\subsection{Linear Fit}
+The linear fit function calculates the survey index for the modelled population from equation~\ref{eq:surveydistfit1} below:
+
+\begin{equation}\label{eq:surveydistfit1}
+\widehat{I}_{tral} = q_{0} S_{l} \big( N_{tral} + q_{1} \big)
+\end{equation}
+
+where:\newline
+$<$ S $>$ is the calculated suitability value for that length group\newline
+$<$ N $>$ is the model population for that time/area/age/length combination
+
+\subsection{Power Fit}
+The power fit function calculates the survey index for the modelled population from equation~\ref{eq:surveydistfit1} below:
+
+\begin{equation}\label{eq:surveydistfit2}
+\widehat{I}_{tral} = q_{0} S_{l} N_{tral} ^{q_{1}}
+\end{equation}
+
+where:\newline
+$<$ S $>$ is the calculated suitability value for that length group\newline
+$<$ N $>$ is the model population for that time/area/age/length combination
+
+\subsection{Multinomial Function}
+The multinomial function calculates the likelihood component from equation~\ref{eq:surveydist1} below:
+
+\begin{equation}\label{eq:surveydist1}
+\ell = \sum_{\it time}\sum_{\it areas} \bigg( \log \big(\sum_{\it ages}\sum_{\it lengths} \widehat{I}_{al} \big) - {\frac { \displaystyle \sum_{\it ages}\sum_{\it lengths} \big(\widehat{I}_{al} \log (I_{al} + \epsilon) \big)} { \displaystyle \sum_{\it ages}\sum_{\it lengths} I_{al}} } \bigg)
+\end{equation}
+
+where:\newline
+$<$ I $>$ is the data survey index for that time/area/age/length combination\newline
+$<\widehat{I}>$ is the model survey index for that time/area/age/length combination
+
+\subsection{Pearson Function}
+The Pearson function calculates the likelihood component from equation~\ref{eq:surveydist2} below:
+
+\begin{equation}\label{eq:surveydist2}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ ( I_{tral} - \widehat{I}_{tral} ) ^2} {\widehat{I}_{tral} + \epsilon}} \Big)
+\end{equation}
+
+where:\newline
+$<$ I $>$ is the data survey index for that time/area/age/length combination\newline
+$<\widehat{I}>$ is the model survey index for that time/area/age/length combination
+
+\subsection{Gamma Function}
+The gamma function calculates the likelihood component from equation~\ref{eq:surveydist3} below:
+
+\begin{equation}\label{eq:surveydist3}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ I_{tral}} { (\widehat{I}_{tral} + \epsilon )} + \log ({\widehat{I}_{tral} + \epsilon}}) \Big)
+\end{equation}
+
+where:\newline
+$<$ I $>$ is the data survey index for that time/area/age/length combination\newline
+$<\widehat{I}>$ is the model survey index for that time/area/age/length combination
+
+\subsection{Log Function}
+The log function calculates the likelihood component from equation~\ref{eq:surveydist4} below:
+
+\begin{equation}\label{eq:surveydist4}
+\ell = \sum_{\it time}\sum_{\it areas} \Big(  \log \Big( {\frac{ \displaystyle \sum_{\it ages}\sum_{\it lengths}  \widehat{I}_{tral}} { \displaystyle \sum_{\it ages}\sum_{\it lengths} I_{tral}}} \Big) \Big) ^2
+\end{equation}
+
+where:\newline
+$<$ I $>$ is the data survey index for that time/area/age/length combination\newline
+$<\widehat{I}>$ is the model survey index for that time/area/age/length combination
 
 \section{StomachContent}\label{sec:stomach}
 [CURRENTLY BLANK - INSERT STOMACH CONTENT HERE]
@@ -2532,48 +2680,49 @@ For this RecStatistics function, the format of the statistical data required in 
 
 where $<$number$>$ is the number of samples for the tag/timestep/area combination, and $<$mean$>$ is the mean length of these samples.
 
-\section{PredatorIndices}\label{sec:predatorindex}
-The PredatorIndices likelihood component is an extension to the SurveyIndices likelihood component, to take the selection of the predator (usually a fleet) into account when calculating the indices in the Gadget model.  The likelihood component that is used is the sum of squares of a linear regression fitted to the difference between the modelled data and the specified index, given by equation~\ref{eq:predatorindex} below:
+%JMB removed predatorindices stuff from the documentation
+%\section{PredatorIndices}\label{sec:predatorindex}
+%The PredatorIndices likelihood component is an extension to the SurveyIndices likelihood component, to take the selection of the predator (usually a fleet) into account when calculating the indices in the Gadget model.  The likelihood component that is used is the sum of squares of a linear regression fitted to the difference between the modelled data and the specified index, given by equation~\ref{eq:predatorindex} below:
 
-\begin{equation}\label{eq:predatorindex}
-\ell = \sum_{\it time}\Big(I_{t} - (\alpha + \beta N_{t})\Big)^2
-\end{equation}
+%\begin{equation}\label{eq:predatorindex}
+%\ell = \sum_{\it time}\Big(I_{t} - (\alpha + \beta N_{t})\Big)^2
+%\end{equation}
 
-where:\newline
-$<$ I $>$ is the specified index\newline
-$<$ N $>$ is the corresponding index calculated in the Gadget model
+%where:\newline
+%$<$ I $>$ is the specified index\newline
+%$<$ N $>$ is the corresponding index calculated in the Gadget model
 
-\bigskip
-To specify a PredatorIndices likelihood component, the format required in the main likelihood file is as follows:
+%\bigskip
+%To specify a PredatorIndices likelihood component, the format required in the main likelihood file is as follows:
 
-{\small\begin{verbatim}
-[component]
-name                 <name for the likelihood component>
-weight               <weight for the likelihood component>
-type                 predatorindices
-datafile             <name for the datafile>
-predatornames        <vector of the names of the predators>
-predlenaggfile       <length aggregation file specifying predator lengths>
-preynames            <vector of the names of the preys>
-preylenaggfile       <length aggregation file specifying prey lengths>
-areaaggfile          <area aggregation file specifying areas>
-fittype              <fit type>
-<fit type parameters>
-\end{verbatim}}
+%{\small\begin{verbatim}
+%[component]
+%name                 <name for the likelihood component>
+%weight               <weight for the likelihood component>
+%type                 predatorindices
+%datafile             <name for the datafile>
+%predatornames        <vector of the names of the predators>
+%predlenaggfile       <length aggregation file specifying predator lengths>
+%preynames            <vector of the names of the preys>
+%preylenaggfile       <length aggregation file specifying prey lengths>
+%areaaggfile          <area aggregation file specifying areas>
+%fittype              <fit type>
+%<fit type parameters>
+%\end{verbatim}}
 
-The $<$predatornames$>$ vector contains a list of all the predators to be aggregated into a single pseudo predator for the purposes of the data comparison.  Similarly, the $<$preynames$>$ vector contains a list of all the preys to be aggregated into a single pseudo prey.
+%The $<$predatornames$>$ vector contains a list of all the predators to be aggregated into a single pseudo predator for the purposes of the data comparison.  Similarly, the $<$preynames$>$ vector contains a list of all the preys to be aggregated into a single pseudo prey.
 
-\bigskip
-The datafile is a list of the indices that Gadget is to use to fit the linear regression to for the numbers calculated in the model.  The format of this file is given below:
+%\bigskip
+%The datafile is a list of the indices that Gadget is to use to fit the linear regression to for the numbers calculated in the model.  The format of this file is given below:
 
-{\small\begin{verbatim}
-<year>  <step>  <area>  <predlen>  <preylen>  <number>
-\end{verbatim}}
+%{\small\begin{verbatim}
+%<year>  <step>  <area>  <predlen>  <preylen>  <number>
+%\end{verbatim}}
 
-where $<$number$>$ is the survey index for that timestep/area/predator length/ prey length combination, with the values for $<$predlen$>$ defined in the predator length aggregation file, and the values for $<$preylen$>$ defined in the prey length aggregation file.
+%where $<$number$>$ is the survey index for that timestep/area/predator length/ prey length combination, with the values for $<$predlen$>$ defined in the predator length aggregation file, and the values for $<$preylen$>$ defined in the prey length aggregation file.
 
-\bigskip
-The $<$fit type$>$ defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component.  The valid fit type options, and the $<$fit type parameters$>$, are the same as for the survey indices, given in section~\ref{subsec:sibyage} above.
+%\bigskip
+%The $<$fit type$>$ defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component.  The valid fit type options, and the $<$fit type parameters$>$, are the same as for the survey indices, given in section~\ref{subsec:sibyage} above.
 
 \section{MigrationPenalty}\label{sec:migpenalty}
 The MigrationPenalty likelihood component is used to give a penalty whenever there is a negative migration value from the migration matrices (which is meaningless).  The MigrationPenalty component is used (rather than the BoundLikelihood component) since the values in the migration matrices are calculated from more than one parameter, and it is not necessarily the individual parameters that are wrong, rather the combination of the parameters that give the migration matrix value that is wrong.  The likelihood component that is used is based on the sum of squares of the migration values, given by the equation below:
@@ -2952,10 +3101,13 @@ The optimisation file is used to specify the type of optimisation to be used, al
 -opt optinfo.txt
 \end{verbatim}}
 
-There are 3 types of optimisation algorithms currently implemented in Gadget - these are one based on the Hooke and Jeeves algorithm, one based on the Simulated Annealing algorithm and one that uses both the Simulated Annealing and Hooke and Jeeves algorithms.
+There are three types of optimisation algorithms currently implemented in Gadget - these are one based on the Hooke and Jeeves algorithm, one based on the Simulated Annealing algorithm and one based on the Broyden-Fletcher-Goldfarb-Shanno (''BFGS'') algorithm.  These algorithms are described in more detail in the following sections.  Gadget can also combine two or more of these algorithms into a single hybrid algorithm, that should result in a more efficient search for an optimum solution. 
 
 \bigskip
 All the optimisation techniques used by Gadget attempt to minimise the likelihood function. That is, they look for the best set of parameters to run the model with, in order to get the best fit according to the likelihood functions you have specified.  Thus, the optimiser is attempting to minimize a single one-dimensional measure of fit between the model output and the data, which can lead to unexpected results.
+
+\bigskip
+The optimisation process will tend to produce realistic values for the most significant parameters (typically growth, recruitment in large year classes and fishing selectivity) before finding realistic values for less significant parameters.  It should be noted that the parameters governing recruitment and growth in the last few years with data in a simulation will be among the last to settle on realistic values.  It is important to ensure that an optimum solution has been reached before accepting the model, especially if the model is to be used to predict the population into the future or to examine the strength of the last few year classes
 
 \section{Hooke and Jeeves}\label{sec:hooke}
 \subsection{Overview}\label{subsec:hookeover}
@@ -2968,10 +3120,10 @@ The Hooke and Jeeves algorithm used in Gadget is derived from that originally pr
 Hooke and Jeeves is the default optimisation method used for Gadget, and will be used if no optimisation information file is specified.
 
 \subsection{File Format}\label{subsec:hookefile}
-To specify the Hooke and Jeeves algorithm, the optimisation file should start with the keyword ''hooke'', followed by (up to) 4 lines giving the parameters for the optimisation algorithm.  Any parameters that are not given in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation algorithm, is shown below:
+To specify the Hooke and Jeeves algorithm, the optimisation file should start with the keyword ''[hooke]'', followed by (up to) 4 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, is shown below:
 
 {\small\begin{verbatim}
-hooke
+[hooke]
 hookeiter  1000  ; number of hooke and jeeves iterations
 hookeeps   1e-04 ; minimum epsilon, hooke halt criteria
 rho        0.5   ; value for the resizing multiplier
@@ -2995,7 +3147,6 @@ Small values of rho correspond to big step length changes, which make the algori
 This is the initial value for the size of the steps in the search, which will be used for the the first search, before any modification to the step length.  All the parameters in the Gadget model are initially scaled so that their value is 1, and the initial search will then look at the points $1 \pm \lambda$ for the next optimum.  Setting lambda to zero will set the initial value for the step length equal to rho.  The value of lambda must be between 0 and 1.
 
 %\subsubsection{bndcheck}
-
 \section{Simulated Annealing}\label{sec:simann}
 \subsection{Overview}\label{subsec:simannover}
 Simulated Annealing is a global optimisation method that distinguishes between different local minimum.  From the initial starting point the algorithm takes a random step in various directions, and conducts a new model run.  If the new likelihood score is better than the old one then the algorithm uses the new point as it's best guess.  If it is worse then the algorithm may accept this point, based on the probabilistic ''Metropolis Criteria'', and thus the algorithm can escape from a local minimum.  The search proceeds in series of these steps, with the point that gives the overall lowest likelihood score is stored as a ''best point''.  The algorithm exits when a stable point is found which cannot be improved on with a small step in any direction, and the Metropolis Criteria rejects all the steps away from the current best point.  The best point is then accepted as being the 'solution'.
@@ -3030,10 +3181,10 @@ In comparison to the Hooke and Jeeves optimisation algorithm, where Hooke and Je
 The Simulated Annealing algorithm used in Gadget is derived from that presented by Corana et al, ''Minimising Multimodal Functions of Continuous Variables with the 'Simulated Annealing' Algorithm'' in the September 1987 (Vol. 13, pp. 262-280) issue of the ACM Transactions on Mathematical Software and Goffe et al, ''Global Optimisation of Statistical Functions with Simulated Annealing'' in the January/February 1994 (Vol. 60, pp. 65-100) issue of the Journal of Econometrics.
 
 \subsection{File Format}\label{subsec:simannfile}
-To specify the Simulated Annealing algorithm, the optimisation file should start with the keyword ''simann'', followed by (up to) 11 lines giving the parameters for the optimisation algorithm.  Any parameters that are not given in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation algorithm, is shown below:
+To specify the Simulated Annealing algorithm, the optimisation file should start with the keyword ''[simann]'', followed by (up to) 11 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, is shown below:
 
 {\small\begin{verbatim}
-simann
+[simann]
 simanniter 2000  ; number of simulated annealing iterations
 simanneps  1e-04 ; minimum epsilon, simann halt criteria
 t          100   ; simulated annealing initial temperature
@@ -3099,18 +3250,42 @@ $<$ L $>$ is the value of the ''lratio'' parameter
 \subsubsection{check}
 This is the number of temperature loops that the Simulated Annealing algorithm will check to confirm that the current best point that has been found is a stable minimum, and so it can be accepted as a solution.
 
-\section{Simulated Annealing and Hooke and Jeeves}\label{sec:simannandhooke}
-\subsection{Overview}\label{subsec:simannandhookeover}
-This method attempts to combine the wide search of the Simulated Annealing algorithm and the rapid convergence of the Hooke and Jeeves algorithm.  It relies on the observation that the likelihood function for many Gadget models consists of a large 'valley' in which the best solution lies, surrounded by much more 'rugged' terrain.
+\section{BFGS}\label{sec:bfgs}
+\subsection{Overview}\label{subsec:bfgsover}
 
-\bigskip
-A period of Simulated Annealing at the start of the optimisation run serves to move the search into this valley, at which point the Simulated Annealing algorithm becomes inefficient so the Hooke and Jeeves algorithm takes over and homes in on a solution within that valley.  Hopefully the Simulated Annealing algorithm will have moved the current point to the correct side of any 'hills' and avoid the Hooke and Jeeves algorithm becoming trapped into an unrealistic local minimum.
-
-\subsection{File Format}\label{subsec:simannandhookefile}
-To specify the Simulated Annealing followed by the Hooke and Jeeves optimisation algorithm, the optimisation file should start with the keyword ''simannandhooke'', followed by (up to) 15 lines giving the parameters for the optimisation algorithm.  Any parameters that are not given in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation algorithm, is shown below:
+\subsection{File Format}\label{subsec:bfgsfile}
+To specify the BFGS algorithm, the optimisation file should start with the keyword ''[bfgs]'', followed by (up to) 4 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, is shown below:
 
 {\small\begin{verbatim}
-simannandhooke
+[bfgs]
+bfgsiter   10000 ; number of bfgs iterations
+bfgseps    1e-03 ; minimum epsilon, bfgs halt criteria
+rho        0.01  ; linesearch convergence parameter
+tau        0.5   ; linesearch convergence parameter
+\end{verbatim}}
+
+\subsection{Parameters}\label{subsec:bfgspar}
+\subsubsection{bfgsiter}
+This is the maximum number of Gadget model runs that the BFGS algorithm will use to try to find the best solution.  If this number is exceeded, Gadget will select the best point found so far, and accept this as the 'solution', even though it has not met the convergence criteria.  A warning that Gadget has stopped without finding a solution that meets the convergence criteria will be printed.
+
+\subsubsection{bfgseps}
+This is the criteria for halting the BFGS algorithm at a minimum, and accepting the current point as the 'solution'.  The algorithm has ''converged'' if ...
+
+\subsubsection{rho}
+\subsubsection{tau}
+
+\section{Combining Optimisation Algorithms}\label{sec:combine}
+\subsection{Overview}\label{subsec:combineover}
+This method attempts to combine the global search of the Simulated Annealing algorithm and the more rapid convergence of the local searches performed by the Hooke and Jeeves algorithm and BFGS algorithm.  It relies on the observation that the likelihood function for many Gadget models consists of a large 'valley' in which the best solution lies, surrounded by much more 'rugged' terrain.
+
+\bigskip
+A period of Simulated Annealing at the start of the optimisation run serves to move the search into this valley, at which point the Simulated Annealing algorithm becomes inefficient so the Hooke and Jeeves algorithm and/or the BFGS algorithm takes over and homes in on a solution within that valley.  Hopefully the Simulated Annealing algorithm will have moved the current point to the correct side of any 'hills' to avoid the local searches becoming trapped into an unrealistic local minimum.
+
+\subsection{File Format}\label{subsec:combinefile}
+To specify a combination of optimisation algorithms, the optimisation file should simply list the algorithms that should be used, along with the parameters for each optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  As an example, the format for this file used to specify all three optimisation algorithms, and the default values for the optimisation parameters, is shown below:
+
+{\small\begin{verbatim}
+[simann]
 simanniter 2000  ; number of simulated annealing iterations
 simanneps  1e-04 ; minimum epsilon, simann halt criteria
 t          100   ; simulated annealing initial temperature
@@ -3122,14 +3297,22 @@ cstep      2     ; step length adjustment factor
 lratio     0.3   ; lower limit for ratio when adjusting step length
 uratio     0.7   ; upper limit for ratio when adjusting step length
 check      4     ; number of temperature loops to check
+[hooke]
 hookeiter  1000  ; number of hooke and jeeves iterations
 hookeeps   1e-04 ; minimum epsilon, hooke halt criteria
 rho        0.5   ; value for the resizing multiplier
 lambda     0     ; initial value for the step length
+[bfgs]
+bfgsiter   10000 ; number of bfgs iterations
+bfgseps    1e-03 ; minimum epsilon, bfgs halt criteria
+rho        0.01  ; linesearch convergence parameter
+tau        0.5   ; linesearch convergence parameter
 \end{verbatim}}
 
-\subsection{Parameters}\label{subsec:simannandhookepar}
-The parameters for this combined optimisation algorithm are the same as for the individual algorithms, and are described in sections \ref{subsec:hookepar} (for the Hooke and Jeeves parameters) and \ref{subsec:simannpar} (for the Simulated Annealing parameters).
+It should be noted that the optimisation algorithms will always be performed in the following order, irrespective of the order that they are specified in the input file: first Simulated Annealing, second Hooke and Jeeves and finally BFGS.
+
+\subsection{Parameters}\label{subsec:combinepar}
+The parameters for this combined optimisation algorithm are the same as for the individual algorithms, and are described in sections \ref{subsec:hookepar} (for the Hooke and Jeeves parameters), \ref{subsec:simannpar} (for the Simulated Annealing parameters) and \ref{subsec:bfgspar} (for the BFGS parameters)
 
 \section{Repeatability}\label{sec:repeat}
 The optimisation algorithms used by Gadget contain a random number generator, used to randomise the order of the parameters (to ensure that the order of the parameters has no effect on the optimum found) and to generate the initial direction chosen by the algorithm to look for a solution.  For the Simulated Annealing algorithm, this is also affects the Metropolis criteria used to accept any changes in an 'uphill' direction.
