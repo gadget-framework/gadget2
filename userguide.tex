@@ -1185,7 +1185,7 @@ For this maturation function, it is assumed that maturation is an annual event, 
 {\small\begin{verbatim}
 maturestocksandratios       <stockname i>  <ratio i> ; for each stock i
 coefficients                <alpha>  <l50>  <beta>  <a50>
-maturitystep                <vector of timesteps>
+maturitysteps               <vector of timesteps>
 \end{verbatim}}
 
 The $<$maturitystep$>$ vector is a vector of timesteps that the maturation process will take place on.
@@ -1202,7 +1202,7 @@ The maturity function has been extended to include the relative condition of the
 {\small\begin{verbatim}
 maturestocksandratios       <stockname i>  <ratio i> ; for each stock i
 coefficients                <alpha>  <l50>  <beta>  <a50>  <gamma>  <k50>
-maturitystep                <vector of timesteps>
+maturitysteps               <vector of timesteps>
 \end{verbatim}}
 
 \subsection{FixedLength Maturity Function}
@@ -1320,8 +1320,8 @@ In equation \ref{eq:spawn1}, the population of the age-length cell of the mature
 Spawning is considered to be an annual event, that takes place on the same timestep and the same area in each year.  To model the spawning process as it affects the parent (without the creation of a child stock), it is necessary to specify the timestep and area that the spawning will take place on, and the length selection functions to determine proportion of each length group that will spawn, and the spawning mortality and weight loss of those that spawn.  This is done in the spawning data file, as shown below:
 
 {\small\begin{verbatim}
-spawnstep              <vector of timesteps>
-spawnarea              <vector of areas>
+spawnsteps             <vector of timesteps>
+spawnareas             <vector of areas>
 onlyparent
 proportionfunction     <see Length Selection>
 mortalityfunction      <see Length Selection>
@@ -1337,8 +1337,8 @@ TR = \sum_{\it ages}\sum_{\it lengths}\Big( p_{0} l ^{p_{1}} a ^{p_{2}} N_{al} ^
 The total number of recruits given from equation \ref{eq:spawn3} is added to the youngest age group of the spawned stock.  The lengths of the spawned stock are distributed with a Normal distribution about a specified mean length $q_0$ with a standard deviation $q_1$.  The mean weight of the fish in these age length cells is  given from equation \ref{eq:wlen}, with $\alpha$ given by parameter $q_2$ and $\beta$ given by $q_3$.  Hence, the format for the spawning data file for
 
 {\small\begin{verbatim}
-spawnstep              <vector of timesteps>
-spawnarea              <vector of areas>
+spawnsteps             <vector of timesteps>
+spawnareas             <vector of areas>
 spawnstocksandratios   <stockname i> <ratio i> ; for each stock i
 proportionfunction     <see Length Selection>
 mortalityfunction      <see Length Selection>
@@ -1424,8 +1424,8 @@ The straying data file defines what happens to the stock as it strays from one s
 Straying is considered to be an annual event, that takes place on the same timestep and the same area in each year.  To model the straying process in Gadget, it is necessary to specify the timestep and the area that the straying will take place on, the the names of the stocks to move the straying fish into, along with the ratio of the fish that will move into that particular stock (in a similar manner to that used for the transition process) and the length selection function to determine the proportion of the length group that will stray.  This is done in the straying data file, as shown below:
 
 {\small\begin{verbatim}
-straystep              <vector of timesteps>
-strayarea              <vector of areas>
+straysteps             <vector of timesteps>
+strayareas             <vector of areas>
 straystocksandratios   <stockname i> <ratio i> ; for each stock i
 proportionfunction     <see Length Selection>
 \end{verbatim}}
