@@ -1,0 +1,17 @@
+#include "popinfoindexvector.h"
+
+#ifdef GADGET_INLINE
+inline
+#endif
+PopInfoIndexVector& AgeBandMatrix::operator [] (int age) {
+  assert(minage <= age && age < (minage + nrow));
+  return *(v[age - minage]);
+}
+
+#ifdef GADGET_INLINE
+inline
+#endif
+const PopInfoIndexVector& AgeBandMatrix::operator [] (int age) const {
+  assert(minage <= age && age < (minage + nrow));
+  return *(v[age - minage]);
+}
