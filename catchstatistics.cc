@@ -51,8 +51,6 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     functionnumber = 4;
   else if ((strcasecmp(functionname, "lengthnovar") == 0) || (strcasecmp(functionname, "lengthnostddev") == 0))
     functionnumber = 5;
-  else if (strcasecmp(functionname, "experimental") == 0)
-    functionnumber = 6;
   else
     handle.Message("Error in catchstatistics - unrecognised function", functionname);
 
@@ -317,12 +315,13 @@ void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
 }
 
 double CatchStatistics::calcLikSumSquares() {
-  double lik = 0.0, totallikelihood = 0.0;
-  int nareas, age;
-  double simmean, simvar, simnumber, simdiff;
 
-  simmean = simvar = simnumber = simdiff = 0.0;
+  int nareas, age;
+  double lik, totallikelihood, simvar, simdiff;
+
+  lik = totallikelihood = simvar = simdiff = 0.0;
   const AgeBandMatrixPtrVector *alptr = &aggregator->returnSum();
+
   for (nareas = 0; nareas < alptr->Size(); nareas++) {
     likelihoodValues[timeindex][nareas] = 0.0;
     for (age = 0; age < (*alptr)[nareas].Nrow(); age++) {
@@ -334,7 +333,6 @@ double CatchStatistics::calcLikSumSquares() {
           simvar = PopStat.sdevLength() * PopStat.sdevLength();
           break;
         case 2:
-        case 6:
           (*modelMean[timeindex])[nareas][age] = PopStat.meanLength();
           simvar = (*variance[timeindex])[nareas][age];
           break;
@@ -355,38 +353,12 @@ double CatchStatistics::calcLikSumSquares() {
           break;
       }
 
-      simmean = (*modelMean[timeindex])[nareas][age];
       simdiff = (*modelMean[timeindex])[nareas][age] - (*obsMean[timeindex])[nareas][age];
-      simnumber = PopStat.totalNumber();
+      if (isZero(simvar))
+        lik = 0.0;
+      else
+        lik = simdiff * simdiff * (*numbers[timeindex])[nareas][age] / simvar;
 
-      switch(functionnumber) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-          /* THLTH 10.03.01: Changed this to make it diff. and to add a penalty, so that
-           * when the model is fishing out all the fish (aka the number in the model goes
-           * down to zero and therefore the mean length or weight as well), we get the
-           * value l^2 for that timestep, where l is the meanlength/-weight in the sample
-           * (that is, we get some fairly high number, instead of zero before).
-           * Further, the reason why the population is multiplied with a 20 is simply to
-           * avoid the penalty to come in to quickly. */
-          lik = simdiff * simdiff * (simvar > 0 ? 1 / simvar : 0.0) * (*numbers[timeindex])[nareas][age]
-            * (1 - exp(-20 * simnumber)) + ((*obsMean[timeindex])[nareas][age]
-            * (*obsMean[timeindex])[nareas][age] * exp(-20 * simnumber));
-          break;
-        case 6:
-          if (isZero(simmean))
-            lik = (*numbers[timeindex])[nareas][age];
-          else if (simmean > verysmall && (*obsMean[timeindex])[nareas][age] > verysmall)
-            lik = simdiff * simdiff * (simvar > 0 ? 1 / simvar : 0.0) * (*numbers[timeindex])[nareas][age];
-
-          break;
-        default:
-          handle.logWarning("Warning in catchstatistics - unknown function", functionname);
-          break;
-      }
       likelihoodValues[timeindex][nareas] += lik;
     }
     totallikelihood += likelihoodValues[timeindex][nareas];
@@ -423,7 +395,6 @@ void CatchStatistics::LikelihoodPrint(ofstream& outfile) {
     case 1:
     case 2:
     case 5:
-    case 6:
       outfile << "length";
       break;
     case 3:

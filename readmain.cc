@@ -309,10 +309,10 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       handle.Warning("The random walk likelihood component is no longer supported");
 
     } else if (strcasecmp(type, "logcatch") == 0) {
-      handle.Warning("The log catch likelihood component is no longer supported\nUse the log function from the catchdistribution likelihood compoent instead");
+      handle.Warning("The log catch likelihood component is no longer supported\nUse the log function from the catchdistribution likelihood component instead");
 
     } else if (strcasecmp(type, "logsurveyindices") == 0) {
-      handle.Warning("The log survey indices likelihood component is no longer supported\nUse the log function from the surveyindices likelihood compoent instead");
+      handle.Warning("The log survey indices likelihood component is no longer supported\nUse the log function from the surveyindices likelihood component instead");
 
     } else if (strcasecmp(type, "aggregatedcatchdist") == 0) {
       handle.Warning("The aggregated catch distribution likelihood component is no longer supported");
