@@ -108,7 +108,7 @@ void OptInfoHooke::OptimiseLikelihood() {
 
     /* Warn if the starting point is zero */
     if (isZero(val[i]))
-      handle.logWarning("Warning in optinfo - initial value is zero for switch", optswitches[i].getValue());
+      handle.logWarning("Warning in optinfo - initial value is zero for switch", optswitches[i].getName());
   }
 
   opt = hooke(&h, nopt, startpoint, endpoint, upperb, lowerb,

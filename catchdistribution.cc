@@ -55,14 +55,9 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     sigma.Inform(keeper);
 
     params.resize(lag, keeper);
-    for (i = 0; i < lag; i++) {
-      infile >> text >> ws;
-      if (strcasecmp(text, "param") == 0)
-        infile >> params[i] >> ws;
-      else
-        handle.Unexpected("param", text);
-      params[i].Inform(keeper);
-    }
+    for (i = 0; i < lag; i++)
+      readWordAndFormula(infile, "param", params[i]);
+    params.Inform(keeper);
 
   } else if (strcasecmp(functionname, "mvlogistic") == 0) {
     functionnumber = 6;

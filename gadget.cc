@@ -114,6 +114,7 @@ int main(int aNumber, char* const aVector[]) {
     RUNID.print(cout);
     handle.logInformation("Starting Gadget from directory:", workingdir);
     handle.logInformation("using data from directory:", inputdir);
+    handle.logMessage(""); //write a blank line to the log file
   }
   MainInfo.checkUsage();
 

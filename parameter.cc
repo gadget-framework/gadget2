@@ -30,10 +30,6 @@ int Parameter::isLegalParameter(char* param) {
   return legal;
 }
 
-char* Parameter::getValue() {
-  return name;
-}
-
 Parameter::Parameter() {
   name = NULL;
 }

@@ -206,7 +206,7 @@ void Keeper::ScaleVariables() {
     if (isZero(values[i])) {
       if ((opt.Size() == 0) || (opt[i] == 1)) {
         //JMB - only print a warning if we are optimising this variable ...
-        handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getValue());
+        handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
       }
       initialvalues[i] = 1.0;
       scaledvalues[i] = values[i];
@@ -230,7 +230,7 @@ void Keeper::Update(const DoubleVector& val) {
     if (isZero(initialvalues[i])) {
       if ((opt.Size() == 0) || (opt[i] == 1)) {
         //JMB - only print a warning if we are optimising this variable ...
-        handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getValue());
+        handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
       }
       scaledvalues[i] = val[i];
     } else
@@ -251,7 +251,7 @@ void Keeper::Update(int pos, double& value) {
   if (isZero(initialvalues[pos])) {
     if ((opt.Size() == 0) || (opt[pos] == 1)) {
       //JMB - only print a warning if we are optimising this variable ...
-      handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[pos].getValue());
+      handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[pos].getName());
     }
     scaledvalues[pos] = value;
   } else
@@ -395,7 +395,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
     IntVector match(Stoch->numVariables(), 0);
     IntVector found(switches.Size(), 0);
 
-    for (i = 0; i < Stoch->numVariables(); i++)
+    for (i = 0; i < Stoch->numVariables(); i++) {
       for (j = 0; j < switches.Size(); j++) {
         if (Stoch->Switches(i) == switches[j]) {
           values[j] = Stoch->Values(i);
@@ -409,7 +409,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
           if (isZero(initialvalues[j])) {
             if ((opt.Size() == 0) || (opt[j] == 1)) {
               //JMB - only print a warning if we are optimising this variable ...
-              handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[j].getValue());
+              handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[j].getName());
             }
             scaledvalues[j] = values[j];
           } else
@@ -419,14 +419,15 @@ void Keeper::Update(const StochasticData* const Stoch) {
           found[j]++;
         }
       }
+    }
 
     for (i = 0; i < Stoch->numVariables(); i++)
       if (match[i] == 0)
-        handle.logWarning("Warning in keeper - failed to match switch", Stoch->Switches(i).getValue());
+        handle.logWarning("Warning in keeper - failed to match switch", Stoch->Switches(i).getName());
 
     for (i = 0; i < switches.Size(); i++)
       if (found[i] == 0)
-        handle.logWarning("Warning in keeper - using default values for switch", switches[i].getValue());
+        handle.logWarning("Warning in keeper - using default values for switch", switches[i].getName());
 
   } else {
     if (this->numVariables() != Stoch->numVariables())
@@ -441,7 +442,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
       if (isZero(initialvalues[i])) {
         if ((opt.Size() == 0) || (opt[i] == 1)) {
           //JMB - only print a warning if we are optimising this variable ...
-          handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getValue());
+          handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
         }
         scaledvalues[i] = values[i];
       } else

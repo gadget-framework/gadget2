@@ -32,7 +32,7 @@ InitialInputFile::InitialInputFile(const char* const filename) : header(0) {
   tmpinfile.open(filename, ios::in);
   infile.setStream(tmpinfile);
   if (infile.fail()) {
-    cerr << "Error in initialinput - failed to open " << filename << endl;
+    cerr << "Error in initial input file - failed to open " << filename << endl;
     exit(EXIT_FAILURE);
   }
   repeatedValues = 0;
@@ -69,7 +69,7 @@ void InitialInputFile::correctHeaderText(int index, const char* name) {
   }
 
   if (correct != 0) {
-    cerr << "While reading inputfile expected to read header in exactly this order\n"
+    cerr << "While reading input file expected to read header in exactly this order\n"
       << "switch value lower upper optimise\nBut the header just read was";
 
     for (i = 0; i < header.Size(); i++)
@@ -94,7 +94,7 @@ void InitialInputFile::readHeader() {
     strncpy(textInLine, "", LongString);
     infile.get(textInLine, LongString, '\n');
     if (!infile.eof() && infile.peek() != '\n') {
-      cerr << "Error in initialinput - line to long in file\n";
+      cerr << "Error in initial input file - line to long in file\n";
       exit(EXIT_FAILURE);
     }
     istringstream line(textInLine);
@@ -106,7 +106,7 @@ void InitialInputFile::readHeader() {
       // fileformat with switches and vector value/values.
       infile >> ws;
       if (!readVectorInLine(infile, switches)) {
-        cerr << "Error in initialinput - failed to read switches\n";
+        cerr << "Error in initial input file - failed to read switches\n";
         exit(EXIT_FAILURE);
       }
       repeatedValues = 1;
@@ -129,7 +129,7 @@ void InitialInputFile::readHeader() {
       }
 
       if (numColumns != 4) {
-        cerr << "While reading inputfile expected to read header in exactly this order\n"
+        cerr << "While reading input file expected to read header in exactly this order\n"
           << "switch value lower upper optimise\nBut the header just read was\n";
 
         for (i = 0; i < header.Size(); i++)
@@ -196,31 +196,40 @@ void InitialInputFile::readFromFile() {
 
     // check that the parameters have been read correctly
     if (upperbound.Size() != lowerbound.Size()) {
-      cerr << "Error in initialinput - failed to read bounds\n";
+      cerr << "Error in initial input file - failed to read bounds\n";
       exit(EXIT_FAILURE);
 
     } else if (upperbound.Size() == 0) {
-      cerr << "Error in initialinput - failed to read bounds\n";
+      cerr << "Error in initial input file - failed to read bounds\n";
       exit(EXIT_FAILURE);
 
     } else if (values.Size() != switches.Size()) {
-      cerr << "Error in initialinput - failed to read switches\n";
+      cerr << "Error in initial input file - failed to read switches\n";
       exit(EXIT_FAILURE);
 
     } else if (values.Size() != lowerbound.Size()) {
-      cerr << "Error in initialinput - failed to read bounds\n";
+      cerr << "Error in initial input file - failed to read bounds\n";
       exit(EXIT_FAILURE);
 
     } else if (optimise.Size() != values.Size()) {
-      cerr << "Error in initialinput - failed to read optimise\n";
+      cerr << "Error in initial input file - failed to read optimise\n";
       exit(EXIT_FAILURE);
     }
 
+    //check that the names of the switches are unique
+    int i, j;
+    for (i = 0; i < switches.Size(); i++)
+      for (j = 0; j < switches.Size(); j++)
+        if ((strcasecmp(switches[i].getName(), switches[j].getName()) == 0) && (i != j)) {
+          cerr << "Error in initial input file - repeated switch " << switches[i].getName() << endl;
+          exit(EXIT_FAILURE);
+        }
+
   } else {
-    readVectorFromLine();
+    this->readVectorFromLine();
     if (this->readSwitches() == 1) {
       if (switches.Size() != values.Size()) {
-        cerr << "Error in initialinput - failed to read switches\n";
+        cerr << "Error in initial input file - failed to read switches\n";
         exit(EXIT_FAILURE);
       }
     }
@@ -234,7 +243,7 @@ void InitialInputFile::readVectorFromLine() {
 
   infile >> ws;
   if (infile.eof()) {
-    cerr << "Error in initialinput - failed to read vector\n";
+    cerr << "Error in initial input file - failed to read vector\n";
     exit(EXIT_FAILURE);
   }
 
@@ -242,7 +251,7 @@ void InitialInputFile::readVectorFromLine() {
   strncpy(text, "", LongString);
   infile.get(text, LongString, '\n');
   if (!infile.eof() && infile.peek() != '\n') {
-    cerr << "Error in initialinput - line too long in file\n";
+    cerr << "Error in initial input file - line too long in file\n";
     exit(EXIT_FAILURE);
   }
 
@@ -258,7 +267,7 @@ void InitialInputFile::readVectorFromLine() {
     values.resize(tempValues.Size());
 
   if ((line.fail() && !line.eof()) || tempValues.Size() != values.Size()) {
-    cerr << "Error in initialinput - failed to read data\n";
+    cerr << "Error in initial input file - failed to read data\n";
     exit(EXIT_FAILURE);
   }
 
@@ -272,7 +281,6 @@ int InitialInputFile::readSwitches() const {
   return (switches.Size() > 0);
 }
 
-// functions from here are only required when running in gadget from paramin
 int InitialInputFile::numVariables() {
   return values.Size();
 }

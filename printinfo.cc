@@ -1,5 +1,8 @@
 #include "printinfo.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 PrintInfo::PrintInfo() : printIter1(-2), printIter2(-2), forceprint(0),
   printoutput(0), printcolumn(0), givenPrecision(0) {
@@ -90,11 +93,32 @@ void PrintInfo::setParamOutFile(char* filename) {
   }
 }
 
-void PrintInfo::checkNumbers() {
+void PrintInfo::checkPrintInfo(int network) {
   if (printIter2 < 0)
     printIter2 = 5;
   if (printIter1 < 0)
     printIter1 = 1;
   if (givenPrecision < 0)
     givenPrecision = 0;
+
+  //JMB check to see if we can actually open required files ...
+  ifstream tmpfile;
+  if (network == 0) {
+    tmpfile.open(strParamOutFile);
+    handle.checkIfFailure(tmpfile, strParamOutFile);
+    tmpfile.close();
+    tmpfile.clear();
+  }
+  if (printoutput == 1) {
+    tmpfile.open(strOutputFile);
+    handle.checkIfFailure(tmpfile, strOutputFile);
+    tmpfile.close();
+    tmpfile.clear();
+  }
+  if (printcolumn == 1) {
+    tmpfile.open(strColumnFile);
+    handle.checkIfFailure(tmpfile, strColumnFile);
+    tmpfile.close();
+    tmpfile.clear();
+  }
 }

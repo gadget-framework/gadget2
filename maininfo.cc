@@ -232,30 +232,59 @@ void MainInfo::checkUsage() {
   else
     check = printWarning;
   handle.setWarningLevel(check);
-  printinfo.checkNumbers();
 
-  if (runnetwork == 1) {
-    handle.logMessage("\n** Gadget running in network mode for Paramin **\n");
+  //JMB check to see if we can actually open required files ...
+  ifstream tmpfile;
+  if (givenInitialParam == 1) {
+    tmpfile.open(strInitialParamFile);
+    handle.checkIfFailure(tmpfile, strInitialParamFile);
+    tmpfile.close();
+    tmpfile.clear();
   }
+  if (givenOptInfo == 1) {
+    tmpfile.open(strOptInfoFile);
+    handle.checkIfFailure(tmpfile, strOptInfoFile);
+    tmpfile.close();
+    tmpfile.clear();
+  }
+  if (printInitialInfo == 1) {
+    tmpfile.open(strPrintInitialFile);
+    handle.checkIfFailure(tmpfile, strPrintInitialFile);
+    tmpfile.close();
+    tmpfile.clear();
+  }
+  if (printFinalInfo == 1) {
+    tmpfile.open(strPrintFinalFile);
+    handle.checkIfFailure(tmpfile, strPrintFinalFile);
+    tmpfile.close();
+    tmpfile.clear();
+  }
+  printinfo.checkPrintInfo(runnetwork);
+
+  if (runnetwork == 1)
+    handle.logMessage("\n** Gadget running in network mode for Paramin **\n");
+
   if ((runstochastic != 1) && (runnetwork == 1)) {
     handle.logWarning("\nWarning - Gadget for the paramin network should be used with -s option\nGadget will now set the -s switch to perform a stochastic run");
     runstochastic = 1;
     runlikelihood = 1;
   }
+
   if ((runstochastic == 1) && (runoptimise == 1)) {
     handle.logWarning("\nWarning - Gadget has been started with both the -s switch and the -l switch\nHowever, it is not possible to do both a stochastic run and a likelihood run!\nGadget will perform only the stochastic run (and ignore the -l switch)");
     runoptimise = 0;
   }
-  if ((printWarning == 1) && (runoptimise == 0)) {
-    handle.logWarning("\n** Gadget cannot disable warnings for a stochastic run **");
-  }
-  if ((handle.checkLogFile()) && (runoptimise == 1)) {
-    handle.logWarning("\n** logging model information from a Gadget optimisation is not recommended **");
-  }
-  if ((handle.checkLogFile()) && (runnetwork == 1)) {
-    handle.logWarning("\n** logging model information from a Gadget network run is not recommended **");
-  }
-  handle.logMessage(""); //write a blank line to the log file
+
+  if ((printWarning == 1) && (runoptimise == 0))
+    handle.logWarning("\n** Gadget cannot disable warnings for a stochastic run **\n");
+
+  if ((handle.checkLogFile()) && (runoptimise == 1))
+    handle.logWarning("\n** logging model information from a Gadget optimisation is not recommended **\n");
+
+  if ((handle.checkLogFile()) && (runnetwork == 1))
+    handle.logWarning("\n** logging model information from a Gadget network run is not recommended **\n");
+
+//  handle.logMessage(""); //write a blank line to the log file
 }
 
 void MainInfo::read(CommentStream& infile) {
@@ -344,7 +373,6 @@ void MainInfo::setMainGadgetFile(char* filename) {
   }
   strMainGadgetFile = new char[strlen(filename) + 1];
   strcpy(strMainGadgetFile, filename);
-
 }
 
 void MainInfo::setInitialParamFile(char* filename) {
@@ -355,13 +383,6 @@ void MainInfo::setInitialParamFile(char* filename) {
   strInitialParamFile = new char[strlen(filename) + 1];
   strcpy(strInitialParamFile, filename);
   givenInitialParam = 1;
-
-  //JMB check to see if we can actually open the file ...
-  ifstream tmpfile;
-  tmpfile.open(strInitialParamFile);
-  handle.checkIfFailure(tmpfile, strInitialParamFile);
-  tmpfile.close();
-  tmpfile.clear();
 }
 
 void MainInfo::setOptInfoFile(char* filename) {
@@ -372,11 +393,4 @@ void MainInfo::setOptInfoFile(char* filename) {
   strOptInfoFile = new char[strlen(filename) + 1];
   strcpy(strOptInfoFile, filename);
   givenOptInfo = 1;
-
-  //JMB check to see if we can actually open the file ...
-  ifstream tmpfile;
-  tmpfile.open(strOptInfoFile);
-  handle.checkIfFailure(tmpfile, strOptInfoFile);
-  tmpfile.close();
-  tmpfile.clear();
 }

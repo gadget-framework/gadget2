@@ -38,7 +38,7 @@ public:
   int operator == (const Parameter& p) const;
   int legalchar(int c);
   int Size() const;
-  char* getValue();
+  const char* getName() const { return name; };
   int isLegalParameter(char* param);
   Parameter(char* value);
 private:

@@ -25,7 +25,7 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
     if (tmpvec.Size() != 3)  //3 values plus the name ...
       handle.Message("Error in boundlikelihood - should be 4 columns");
 
-    if (strcasecmp(tempParam.getValue(), "default") == 0) {
+    if (strcasecmp(tempParam.getName(), "default") == 0) {
       count++;
       defPower = tmpvec[0];
       defLW = tmpvec[1];
@@ -52,7 +52,7 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
 
     for (i = 0; i < switches.Size(); i++)
       if (switchnr[i] == -1)
-        handle.logWarning("Warning in boundlikelihood - failed to match switch", switches[i].getValue());
+        handle.logWarning("Warning in boundlikelihood - failed to match switch", switches[i].getName());
   }
 
   handle.logMessage("Read penalty file - number of entries", count);
