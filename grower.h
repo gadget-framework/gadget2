@@ -16,7 +16,7 @@ class LengthGroupDivision;
 class ConversionIndex;
 class GrowthCalcBase;
 
-class Grower : public LivesOnAreas {
+class Grower : protected LivesOnAreas {
 public:
   Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrpDiv,
     const LengthGroupDivision* const GivenLgrpDiv, const IntVector& Areas,

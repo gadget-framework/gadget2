@@ -2,12 +2,17 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
-LinearRegression::LinearRegression() : error(0), sse(0), a(0), b(0) {
+LinearRegression::LinearRegression() {
+  error = 0;
+  sse = 0;
+  a = 0;
+  b = 0;
+  errorLR = 1e+10;
 }
 
 void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
   error = 0;  //begin with cleaning up error status.
-  if (x.Size() != y.Size() || x.Size() == 0) {
+  if ((x.Size() != y.Size()) || (x.Size() == 0)) {
     error = 1;
     return;
   }
@@ -48,7 +53,7 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
 
 void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double slope) {
   error = 0;  //begin with cleaning up error status.
-  if (x.Size() != y.Size() || x.Size() == 0) {
+  if ((x.Size() != y.Size()) || (x.Size() == 0)) {
     error = 1;
     return;
   }
@@ -77,7 +82,7 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
 
 void LinearRegression::Fit(double intercept, const DoubleVector& x, const DoubleVector& y) {
   error = 0;  //begin with cleaning up error status.
-  if (x.Size() != y.Size() || x.Size() == 0) {
+  if ((x.Size() != y.Size()) || (x.Size() == 0)) {
     error = 1;
     return;
   }
@@ -92,7 +97,11 @@ void LinearRegression::Fit(double intercept, const DoubleVector& x, const Double
   Ymean /= y.Size();
 
   //Now we have calculated the mean and can proceed to calculate the fit.
-  b = (Ymean - intercept) / Xmean;
+  if (iszero(Xmean))
+    b = 0.0;
+  else
+    b = (Ymean - intercept) / Xmean;
+
   a = intercept;
 
   //Now we can calculate the sum of squares of errors.
@@ -106,7 +115,7 @@ void LinearRegression::Fit(double intercept, const DoubleVector& x, const Double
 
 void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double slope, double intercept) {
   error = 0;  //begin with cleaning up error status.
-  if (x.Size() != y.Size() || x.Size() == 0) {
+  if ((x.Size() != y.Size()) || (x.Size() == 0)) {
     error = 1;
     return;
   }
@@ -123,22 +132,9 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
   }
 }
 
-double LinearRegression::SSE() const {
-  return sse;
-}
-
-int LinearRegression::Error() const {
-  return error;
-}
-
-double LinearRegression::Funcval(double x) {
-  return a + b * x;
-}
-
-double LinearRegression::intersection() const {
-  return a;
-}
-
-double LinearRegression::slope() const {
-  return b;
+double LinearRegression::SSE() {
+  if (error)
+    return errorLR;
+  else
+    return sse;
 }

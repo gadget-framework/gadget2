@@ -174,7 +174,7 @@ void SurveyIndices::LikelihoodPrint(ofstream& outfile) const {
 }
 
 void SurveyIndices::AddToLikelihood(const TimeClass* const TimeInfo) {
-  likelihood = 0;
+  //likelihood = 0;
   SI->Sum(TimeInfo);
   if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps())
     likelihood += SI->Regression();

@@ -8,7 +8,7 @@ class AbstrPreyStdInfo;
 class TimeClass;
 class Prey;
 
-class AbstrPreyStdInfo : public LivesOnAreas {
+class AbstrPreyStdInfo : protected LivesOnAreas {
 public:
   AbstrPreyStdInfo(const Prey* p, const IntVector& areas,
     int minage = 0, int maxage = 0);

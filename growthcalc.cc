@@ -262,7 +262,6 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   yearEffect.resize(TimeInfo->LastYear() - TimeInfo->FirstYear() + 1, keeper);
   stepEffect.resize(TimeInfo->StepsInYear(), keeper);
   areaEffect.resize(Areas.Size(), keeper);
-
   keeper->AddString("growthcalcE");
   infile >> text;
   if (strcasecmp(text, "wgrowthparameters") == 0) {
@@ -672,10 +671,11 @@ void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   const double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   const double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
-  const int YearNr = TimeInfo->CurrentYear() - TimeInfo->FirstYear();
+  const double factor = yearEffect[TimeInfo->CurrentYear() - TimeInfo->FirstYear()]
+                        * stepEffect[TimeInfo->CurrentStep() - 1]
+                        * areaEffect[AreaNr[area]];
   const double ratio = lgrowthPar[0] + lgrowthPar[8] * (lgrowthPar[1] + lgrowthPar[2] * lgrowthPar[8]);
-  const int iarea = AreaNr[Area->InnerArea(area)];
-  const double tempW = stepsize * wgrowthPar[0] * exp(wgrowthPar[1] * Temperature);
+  const double tempW = factor * stepsize * wgrowthPar[0] * exp(wgrowthPar[1] * Temperature);
 
   int i;
   double x, fx;
@@ -689,13 +689,12 @@ void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
     cerr << "Warning - length growth parameter is negative\n";
 
   for (i = 0; i < Wgrowth.Size(); i++) {
-    if (iszero(GrEatNumber[i].W)) {
+    if (iszero(GrEatNumber[i].W) || iszero(tempW)) {
       Wgrowth[i] = 0.0;
       Lgrowth[i] = 0.0;
     } else {
       Wgrowth[i] = tempW * (pow(GrEatNumber[i].W / wgrowthPar[2], wgrowthPar[4]) -
-        pow(GrEatNumber[i].W / wgrowthPar[3], wgrowthPar[5])) *
-        yearEffect[YearNr] * stepEffect[TimeInfo->CurrentStep() - 1] * areaEffect[iarea];
+        pow(GrEatNumber[i].W / wgrowthPar[3], wgrowthPar[5]));
 
       if (Wgrowth[i] <= 0) {
         Wgrowth[i] = 0.0;

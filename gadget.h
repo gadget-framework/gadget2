@@ -1,6 +1,18 @@
 #ifndef gadget_h
 #define gadget_h
 
+/**
+ * \mainpage Draft Gadget Documentation
+ *
+ * Gadget is the <b>G</b>lobally applicable <b>A</b>rea-<b>D</b>isaggregated <b>G</b>eneric <b>%E</b>cosystem <b>T</b>oolbox.  Gadget is a flexible and powerful tool for creating ecosystem models.  The program was developed for modelling marine ecosystems in a fisheries management and biology context, however there is nothing in the program that restricts it to fish, and models have been developed to examine marine mammal populations.  Gadget has been used to investigate the population dynamics of many stocks and stock complexes in Icelandic waters, the Barents Sea, the North Sea and the Irish and Celtic Seas.
+ *
+ * Gadget can run complicated statistical ecosystem models, which take many features of the ecosystem into account. Gadget works by running an internal model based on many parameters, and then comparing the data from the output of this model to ''real'' data to get a goodness-of-fit likelihood score.  The parameters can then be adjusted, and the model re-run, until an optimum is found, which corresponds to the model with the lowest likelihood score.
+ *
+ * Gadget allows you to include a number of features into your model: One or more species, each of which may be split into multiple stocks; multiple areas with migration between areas; predation between and within species; maturation; reproduction and recruitment; multiple commercial and survey fleets taking catches from the populations.
+ *
+ * For more information about Gadget, including links to download the software, please see the webpage that has been set up at http://www.hafro.is/gadget or email us at gadgethelp@hafro.is
+ */
+
 /* A list of the standard header files that are needed for Gadget */
 /* Older compilers need these to be declared in the old format    */
 #include <cassert>

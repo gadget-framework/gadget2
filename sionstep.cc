@@ -396,6 +396,7 @@ double SIOnStep::Regression() {
     this->SetError();
     return 0.0;
   }
+
   double likelihood = 0.0;
   int col, index;
   for (col = 0; col < Indices.Ncol(0); col++) {
@@ -409,6 +410,9 @@ double SIOnStep::Regression() {
     //Now fit the log of the abundance indices as a function of stock size.
     likelihood += this->Fit(stocksize, indices, col);
   }
+
+  if (error)
+    return 0.0;
   return likelihood;
 }
 

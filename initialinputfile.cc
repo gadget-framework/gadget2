@@ -52,21 +52,21 @@ void InitialInputFile::correctHeaderText(int index, const char* name) {
 
   switch(index) {
     case 0:
-      correct = strcmp(name, "switch");
+      correct = strcasecmp(name, "switch");
       break;
     case 1:
-      correct = strcmp(name, "value");
+      correct = strcasecmp(name, "value");
       break;
     case 2:
-      correct = strcmp(name, "lower");
+      correct = strcasecmp(name, "lower");
       break;
     case 3:
-      correct = strcmp(name, "upper");
+      correct = strcasecmp(name, "upper");
       break;
     case 4:
-      correct = strcmp(name, "optimise");
+      correct = strcasecmp(name, "optimise");
       if (correct != 0)
-        correct = strcmp(name, "optimize");
+        correct = strcasecmp(name, "optimize");
       break;
     default:
       correct = 1;

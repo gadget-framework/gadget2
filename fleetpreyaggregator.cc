@@ -167,7 +167,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
                           Ratio[z] *= (prey->Ratio(area, z) > 1 ? 1 / prey->Ratio(area, z) : 1);
 
                       PopinfoAdd(totalcatch[aggrArea][aggrAge], (*alptr)[age], *CI[h],
-                        fleets[f]->Amount(area, TimeInfo)*pred->Scaler(area), Ratio);
+                        fleets[f]->Amount(area, TimeInfo) * pred->Scaler(area), Ratio);
 
                       PopinfoAdd(totalpop[aggrArea][aggrAge], (*alptr)[age], *CI[h]);
                     }

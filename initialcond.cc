@@ -16,7 +16,7 @@
 // A function to read initial stock data in mean data format
 //
 void InitialCond::ReadMeanData(CommentStream& infile, Keeper* const keeper,
-  int noareas, int noagegr, int minage, const AreaClass* const Area) {
+  int noagegr, int minage, const AreaClass* const Area) {
 
   ErrorHandler handle;
   //Find start of data in datafile
@@ -33,7 +33,8 @@ void InitialCond::ReadMeanData(CommentStream& infile, Keeper* const keeper,
       infile.get(c);
   }
 
-  int age, area, ageid, areaid, keepdata;
+  int noareas = areas.Size();
+  int i, age, area, ageid, areaid, tmparea, keepdata;
   Formula number;
   char tmpnumber[MaxStrLength];
   strncpy(tmpnumber, "", MaxStrLength);
@@ -51,7 +52,7 @@ void InitialCond::ReadMeanData(CommentStream& infile, Keeper* const keeper,
     handle.Message("Wrong number of columns in inputfile - should be 7");
 
   ageid = -1;
-  areaid = -1;
+  tmparea = -1;
   keeper->AddString("meandata");
   while (!infile.eof()) {
     keepdata = 0;
@@ -66,9 +67,17 @@ void InitialCond::ReadMeanData(CommentStream& infile, Keeper* const keeper,
 
     if (keepdata == 0) {
       //initial data is required, so store it
-      areaid = Area->InnerArea(area);
-      if (areaid == -1)
+      tmparea = Area->InnerArea(area);
+      if (tmparea == -1)
         handle.UndefinedArea(area);
+
+      areaid = -1;
+      for (i = 0; i < noareas; i++)
+        if (areas[i] == tmparea)
+          areaid = i;
+
+      if (areaid == -1)
+        handle.Message("Error - unable to calculate area identifier");
 
       infile >> AgeDist[areaid][ageid] >> ws;
       infile >> AreaDist[areaid][ageid] >> ws;
@@ -98,7 +107,7 @@ void InitialCond::ReadMeanData(CommentStream& infile, Keeper* const keeper,
 // A function to read initial stock data in number data format
 //
 void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
-  int noareas, int noagegr, int nolengr, int minage, const AreaClass* const Area) {
+  int noagegr, int nolengr, int minage, const AreaClass* const Area) {
 
   ErrorHandler handle;
   //Find start of data in datafile
@@ -125,7 +134,7 @@ void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
     handle.Message("Wrong number of columns in inputfile - should be 4");
 
   //Set the numbers in the AgeBandMatrixPtrVector to zero (in case some arent in the inputfile)
-  for (areaid = 0; areaid < noareas; areaid++)
+  for (areaid = 0; areaid < areas.Size(); areaid++)
     for (ageid = minage; ageid < noagegr + minage; ageid++)
       for (lengthid = 0; lengthid < nolengr; lengthid++)
         AreaAgeLength[areaid][ageid][lengthid].N = 0.0;
@@ -235,7 +244,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& area,
     subfile.open(text);
     CheckIfFailure(subfile, text);
     handle.Open(text);
-    this->ReadMeanData(subcomment, keeper, noareas, noagegr, minage, Area);
+    this->ReadMeanData(subcomment, keeper, noagegr, minage, Area);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -247,7 +256,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& area,
     subfile.open(text);
     CheckIfFailure(subfile, text);
     handle.Open(text);
-    this->ReadNumberData(subcomment, keeper, noareas, noagegr, nolengr, minage, Area);
+    this->ReadNumberData(subcomment, keeper, noagegr, nolengr, minage, Area);
     handle.Close();
     subfile.close();
     subfile.clear();

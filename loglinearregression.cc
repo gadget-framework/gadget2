@@ -1,9 +1,8 @@
 #include "loglinearregression.h"
 #include "gadget.h"
 
-double LogLinearRegression::ErrorSSE = 1e10;
-
-LogLinearRegression::LogLinearRegression() : error(0) {
+LogLinearRegression::LogLinearRegression() {
+  error = 0;
 }
 
 void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
@@ -50,89 +49,25 @@ void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, doub
   error = LR.Error();
 }
 
-double LogLinearRegression::SSE() const {
+double LogLinearRegression::SSE() {
   if (error)
-    return LogLinearRegression::ErrorSSE;
+    return LR.errorSSE();
   else
     return LR.SSE();
 }
 
-double LogLinearRegression::SSE(const DoubleVector& x, const DoubleVector& y) {
-  if (x.Size() != y.Size() || error) {
-    error = 1;
-    return LogLinearRegression::ErrorSSE;
-  }
-  double tmp, sum = 0.0;
-  int i;
-  for (i = 0; i < x.Size(); i++) {
-    if (!(iszero(x[i]) && iszero(y[i]))) {
-      if (x[i] <= 0 || y[i] <= 0) {
-        error = 1;
-        return LogLinearRegression::ErrorSSE;
-      }
-      tmp = log(y[i]) - LR.Funcval(log(x[i]));
-      sum += tmp * tmp;
-    }
-  }
-  return sum;
-}
-
-double LogLinearRegression::WeightedSSE(const DoubleVector& x,
-  const DoubleVector& y, const DoubleVector& weights) {
-
-  if (x.Size() != y.Size() || x.Size() != weights.Size() || error) {
-    error = 1;
-    return LogLinearRegression::ErrorSSE;
-  }
-  double tmp, sum = 0.0;
-  int i;
-  for (i = 0; i < x.Size(); i++) {
-    if (!(iszero(x[i]) && iszero(y[i]))) {
-      if (x[i] <= 0 || y[i] <= 0) {
-        error = 1;
-        return LogLinearRegression::ErrorSSE;
-      }
-      tmp = log(y[i]) - LR.Funcval(log(x[i]));
-      sum += weights[i] * tmp * tmp;
-    }
-  }
-  return sum;
-}
-
-int LogLinearRegression::Error() {
-  return error;
-}
-
-double LogLinearRegression::Funcval(double x) {
-  if (x > 0)
-    return exp(LR.Funcval(log(x)));
-  else {
-    error = 1;
-    return 0.0;
-  }
-}
-
-double LogLinearRegression::LogFuncval(double x) {
-  if (x > 0)
-    return LR.Funcval(log(x));
-  else {
-    error = 1;
-    return 0.0;
-  }
-}
-
-double LogLinearRegression::intersection() const {
+double LogLinearRegression::intersection() {
   return LR.intersection();
 }
 
-double LogLinearRegression::slope() const {
+double LogLinearRegression::slope() {
   return LR.slope();
 }
 
 void LogLinearRegression::CleanAndTakeLog(const DoubleVector& x,
   const DoubleVector& y, DoubleVector& Xlog, DoubleVector& Ylog) {
 
-  if (x.Size() != y.Size() || Xlog.Size() != x.Size() || Xlog.Size() != Ylog.Size()) {
+  if ((x.Size() != y.Size()) || (Xlog.Size() != x.Size()) || (Xlog.Size() != Ylog.Size())) {
     error = 1;
     return;
   }
@@ -144,7 +79,7 @@ void LogLinearRegression::CleanAndTakeLog(const DoubleVector& x,
       Xlog.Delete(l);
       Ylog.Delete(l);
       l--;
-    } else if (x[i] < 0 || y[i] < 0 || iszero(x[i]) || iszero(y[i])) {
+    } else if ((x[i] < 0) || (y[i] < 0) || (iszero(x[i])) || (iszero(y[i]))) {
       cerr << "Error in LLR - received illegal values of x (" << x[i] << ") and y (" << y[i] << ")\n";
       error = 1;
       return;

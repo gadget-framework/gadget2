@@ -23,33 +23,33 @@ public:
   ~ActionAtTimes();
   /**
    * \brief This is the function used to read in the action at times parameters
-   * \param infile a commentstream to read from
-   * \param TimeInfo ahe TimeClass for the current model
+   * \param infile is the CommentStream to read the actionattimes parameters from
+   * \param TimeInfo is the TimeClass for the current model
    * \return 1 for success, 0 for failure
    */
   int ReadFromFile(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This is the function used to add the action for a set of steps and years
-   * \param steps a list of all the steps that have the action taking place
-   * \param years a list of all the years that have the action taking place
-   * \param TimeInfo the TimeClass for the current model
+   * \param steps is a list of all the steps that have the action taking place
+   * \param years is a list of all the years that have the action taking place
+   * \param TimeInfo is the TimeClass for the current model
    */
   void AddActions(const IntVector& years, const IntVector& steps, const TimeClass* const TimeInfo);
   /**
    * \brief This is the function used to add the action on all years for a set of steps
-   * \param steps a list of all the steps that have the action taking place
-   * \param TimeInfo the TimeClass for the current model
+   * \param steps is a list of all the steps that have the action taking place
+   * \param TimeInfo is the TimeClass for the current model
    */
   void AddActionsAtAllYears(const IntVector& steps, const TimeClass* const TimeInfo);
   /**
    * \brief This is the function used to add the action on all steps for a set of years
-   * \param years a list of all the years that have the action taking place
-   * \param TimeInfo the TimeClass for the current model
+   * \param years is a list of all the years that have the action taking place
+   * \param TimeInfo is the TimeClass for the current model
    */
   void AddActionsAtAllSteps(const IntVector& years, const TimeClass* const TimeInfo);
   /**
    * \brief This is the function used to read check whether an action takes place onm the current timestep
-   * \param TimeInfo the TimeClass for the current model
+   * \param TimeInfo is the TimeClass for the current model
    * \return 1 if action takes place, 0 otherwise
    */
   int AtCurrentTime(const TimeClass* const TimeInfo) const;

@@ -147,30 +147,6 @@ ExpSuitFuncA::ExpSuitFuncA() {
 ExpSuitFuncA::~ExpSuitFuncA() {
 }
 
-int ExpSuitFuncA::usesPredLength() {
-  return 1;
-}
-
-int ExpSuitFuncA::usesPreyLength() {
-  return 1;
-}
-
-void ExpSuitFuncA::setPredLength(double length) {
-  predLength = length;
-}
-
-void ExpSuitFuncA::setPreyLength(double length) {
-  preyLength = length;
-}
-
-double ExpSuitFuncA::getPredLength() {
-  return predLength;
-}
-
-double ExpSuitFuncA::getPreyLength() {
-  return preyLength;
-}
-
 double ExpSuitFuncA::calculate() {
   assert(coeff.Size() == 4);
   double check = 0.0;
@@ -203,14 +179,6 @@ ConstSuitFunc::ConstSuitFunc() {
 ConstSuitFunc::~ConstSuitFunc() {
 }
 
-int ConstSuitFunc::usesPredLength() {
-  return 0;
-}
-
-int ConstSuitFunc::usesPreyLength() {
-  return 0;
-}
-
 double ConstSuitFunc::calculate() {
   assert(coeff.Size() == 1);
   if ((coeff[0] < 0.0) || (coeff[0] > 1.0)) {
@@ -228,30 +196,6 @@ AndersenSuitFunc::AndersenSuitFunc() {
 }
 
 AndersenSuitFunc::~AndersenSuitFunc() {
-}
-
-int AndersenSuitFunc::usesPredLength() {
-  return 1;
-}
-
-int AndersenSuitFunc::usesPreyLength() {
-  return 1;
-}
-
-void AndersenSuitFunc::setPredLength(double length) {
-  predLength = length;
-}
-
-void AndersenSuitFunc::setPreyLength(double length) {
-  preyLength = length;
-}
-
-double AndersenSuitFunc::getPredLength() {
-  return predLength;
-}
-
-double AndersenSuitFunc::getPreyLength() {
-  return preyLength;
 }
 
 double AndersenSuitFunc::calculate() {
@@ -289,22 +233,6 @@ ExpSuitFuncL50::ExpSuitFuncL50() {
 ExpSuitFuncL50::~ExpSuitFuncL50() {
 }
 
-int ExpSuitFuncL50::usesPredLength() {
-  return 0;
-}
-
-int ExpSuitFuncL50::usesPreyLength() {
-  return 1;
-}
-
-void ExpSuitFuncL50::setPreyLength(double length) {
-  preyLength = length;
-}
-
-double ExpSuitFuncL50::getPreyLength() {
-  return preyLength;
-}
-
 double ExpSuitFuncL50::calculate() {
   assert(coeff.Size() == 2);
   double check = 0.0;
@@ -327,22 +255,6 @@ StraightSuitFunc::StraightSuitFunc() {
 }
 
 StraightSuitFunc::~StraightSuitFunc() {
-}
-
-int StraightSuitFunc::usesPredLength() {
-  return 0;
-}
-
-int StraightSuitFunc::usesPreyLength() {
-  return 1;
-}
-
-void StraightSuitFunc::setPreyLength(double length) {
-  preyLength = length;
-}
-
-double StraightSuitFunc::getPreyLength() {
-  return preyLength;
 }
 
 double StraightSuitFunc::calculate() {

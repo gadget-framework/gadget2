@@ -49,7 +49,7 @@ public:
   BandMatrixVector() { size = 0; v = 0; };
   /**
    * \brief This is the BandMatrixVector constructor for a specified size
-   * \param sz this is the size of the vector to be created
+   * \param sz is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
   BandMatrixVector(int sz);
@@ -61,25 +61,25 @@ public:
   void ChangeElement(int nr, const BandMatrix& value);
   /**
    * \brief This will return the value of an element of the vector
-   * \param pos this is the element of the vector to be returned
+   * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
   BandMatrix& operator [] (int pos);
   /**
    * \brief This will return the value of an element of the vector
-   * \param pos this is the element of the vector to be returned
+   * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
   const BandMatrix& operator [] (int pos) const;
   /**
    * \brief This will add new entries to the vector
-   * \param add this is the number of new entries to the vector
-   * \param initial this is the value that will be entered for the new entries
+   * \param add is the number of new entries to the vector
+   * \param initial is the value that will be entered for the new entries
    */
   void resize(int add, const BandMatrix& initial);
   /**
    * \brief This will add new empty entries to the vector
-   * \param add this is the number of new entries to the vector
+   * \param add is the number of new entries to the vector
    * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
@@ -90,13 +90,13 @@ public:
   int Size() const { return size; };
   /**
    * \brief This will delete an entry from the vector
-   * \param pos this is the element of the vector to be deleted
+   * \param pos is the element of the vector to be deleted
    * \note This will free the memory allocated to the deleted element of the vector
    */
   void Delete(int pos);
 protected:
   /**
-   * \brief This is size of the vector
+   * \brief This is the size of the vector
    */
   int size;
   /**
@@ -117,8 +117,8 @@ public:
   BandMatrixMatrix() { nrow = 0; v = 0; };
   /**
    * \brief This is the BandMatrixVector constructor for a specified size
-   * \param nrow this is the size of the vector to be created
-   * \param ncol this is the length of each row to be created (ie. the size of the BandMatrixVector to be created for each row)
+   * \param nrow is the size of the vector to be created
+   * \param ncol is the length of each row to be created (ie. the size of the BandMatrixVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
   BandMatrixMatrix(int nrow, int ncol);
@@ -130,26 +130,26 @@ public:
   void ChangeElement(int nrow, int ncol, const BandMatrix& value);
   /**
    * \brief This will return the value of an element of the vector
-   * \param pos this is the element of the vector to be returned
+   * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
   BandMatrixVector& operator [] (int pos);
   /**
    * \brief This will return the value of an element of the vector
-   * \param pos this is the element of the vector to be returned
+   * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
   const BandMatrixVector& operator [] (int pos) const;
   /**
    * \brief This will add new empty entries to the vector
-   * \param addrow this is the number of new entries to the vector
-   * \param ncol this is the number of entries to the BandMatrixVector that is created
+   * \param addrow is the number of new entries to the vector
+   * \param ncol is the number of entries to the BandMatrixVector that is created
    * \note The new elements of the vector will be created, and set to zero
    */
   void AddRows(int addrow, int ncol);
   /**
    * \brief This will delete an entry from the vector
-   * \param row this is the element of the vector to be deleted
+   * \param row is the element of the vector to be deleted
    * \note This will free the memory allocated to the deleted element of the vector
    */
   void DeleteRow(int row);
@@ -160,7 +160,7 @@ public:
   int Nrow() const { return nrow; };
   /**
    * \brief This will return the number of columns in row i of the vector
-   * \param i this is the row of the vector to have the number of columns counted
+   * \param i is the row of the vector to have the number of columns counted
    * \return the number of columns in row i of the vector
    * \note This is the number of entries in the BandMatrixVector that is entry i of the BandMatrixMatrix
    */

@@ -10,7 +10,7 @@ class TimeClass;
 
 /**
  * \class AreaClass
- * \brief This is the class used store information about the areas used for the model
+ * \brief This is the class used store information about the areas used for the current model
  */
 class AreaClass {
 public:
@@ -22,29 +22,54 @@ public:
    * \brief This is the AreaClass destructor
    */
   ~AreaClass() {};
+  /**
+   * \brief This will return the number of areas for the current model
+   * \return number
+   */
   int NoAreas() const { return OuterAreas.Size(); };
+  /**
+   * \brief This will return the size of an area
+   * \param area is the identifier for the required area
+   * \return size
+   */
   double Size(int area) const { return size[area]; };
+  /**
+   * \brief This will return the temperature of an area on a timestep
+   * \param area is the identifier for the required area
+   * \param time is the identifier for the required timestep
+   * \return size
+   */
   double Temperature(int area, int time) const { return temperature[time][area]; };
+  /**
+   * \brief This will return the internal identifier of an area
+   * \param area is the identifier for the required area
+   * \return innerarea
+   */
   int InnerArea(int area) const;
-  int OuterArea(int area) const;
+  /**
+   * \brief This will return the external identifier of an area
+   * \param area is the identifier for the required area
+   * \return outerarea
+   */
+  int OuterArea(int area) const { return OuterAreas[area]; };
 protected:
   /**
-   * \brief This is a vector of the areas in the model
+   * \brief This is a vector of the areas in the current model
    */
   IntVector OuterAreas;
   /**
-   * \brief This is a vector of the size of the areas in the model
+   * \brief This is a vector of the size of the areas in the current model
    */
   DoubleVector size;
   /**
-   * \brief This is a matrix of the temperature, for each timestep, of the areas in the model
+   * \brief This is a matrix of the temperature, for each timestep, of the areas in the current model
    */
   DoubleMatrix temperature;
 };
 
 /**
  * \class TimeClass
- * \brief This is the class used store information about the timesteps used for the model
+ * \brief This is the class used store information about the timesteps used for the current model
  */
 class TimeClass {
 public:

@@ -15,13 +15,13 @@ public:
   FormulaVector() { size = 0; v = 0; };
   /**
    * \brief This is the FormulaVector constructor for a specified size
-   * \param sz this is the size of the vector to be created
+   * \param sz is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
   FormulaVector(int sz);
   /**
    * \brief This is the FormulaVector constructor that create a copy of an existing FormulaVector
-   * \param initial this is the FormulaVector to copy
+   * \param initial is the FormulaVector to copy
    */
   FormulaVector(const FormulaVector& initial);
   /**
@@ -37,13 +37,13 @@ public:
   int Size() const { return size; };
   /**
    * \brief This will return the value of an element of the vector
-   * \param pos this is the element of the vector to be returned
+   * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
   Formula& operator [] (int pos);
   /**
    * \brief This will return the value of an element of the vector
-   * \param pos this is the element of the vector to be returned
+   * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
   const Formula& operator [] (int pos) const;
@@ -51,7 +51,7 @@ public:
   friend CommentStream& operator >> (CommentStream&, FormulaVector&);
 protected:
   /**
-   * \brief This is size of the vector
+   * \brief This is the size of the vector
    */
   int size;
   /**

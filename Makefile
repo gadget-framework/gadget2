@@ -65,19 +65,19 @@ OBJECTS = $(GADGETOBJECTS)
 # the strdup and strcasecmp functions might not work correctly.
 ##########################################################################
 
-VECTORS = addresskeepermatrix.o addresskeepervector.o charptrmatrix.o charptrvector.o \
+VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 	bandmatrixptrvector.o doublematrix.o doublevector.o parametervector.o \
 	otherfoodptrvector.o baseclassptrvector.o popinfoindexvector.o \
 	migvariableptrvector.o conversionindexptrvector.o likelihoodptrvector.o \
 	popratiomatrix.o popratiovector.o popinfomatrix.o popinfovector.o \
 	doubleindexvector.o predatorptrvector.o preyptrvector.o fleetptrvector.o \
-	doublematrixptrmatrix.o doublematrixptrvector.o intmatrix.o intvector.o \
+	doublematrixptrmatrix.o doublematrixptrvector.o timevariableindexvector.o \
 	agebandmatrixptrvector.o poppredatorptrvector.o popratioindexvector.o \
-	stockptrvector.o formulamatrix.o formulavector.o \
-	timevariablevector.o timevariableindexvector.o \
+	formulamatrix.o formulavector.o charptrmatrix.o charptrvector.o \
+	timevariablevector.o stockptrvector.o agebandmatrixratioptrvector.o \
 	vectorofcharptr.o suitfuncptrvector.o tagptrvector.o printerptrvector.o \
 	formulamatrixptrvector.o variableinfoptrvector.o agebandmatrixratio.o \
-	agebandmatrixratioptrvector.o agebandmatrixptrmatrix.o
+	agebandmatrixptrmatrix.o
 
 GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregator.o \
 	growthimplement.o predatorindex.o abstrpredstdinfo.o abstrpreystdinfo.o \
@@ -100,7 +100,7 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	stockpreystdinfo.o stockpreystdinfobylength.o stockprinter.o lenstock.o \
 	stockstdprinter.o maturity.o stomachcontent.o maturitya.o variableinfo.o \
 	maturityb.o maturityc.o suitfunc.o maturityd.o suits.o migration.o keeper.o \
-	surveyindices.o migrationpenalty.o tagdata.o  stock.o readaggregation.o \
+	surveyindices.o migrationpenalty.o tagdata.o stock.o readaggregation.o \
 	migvariables.o time.o multinomial.o totalpredator.o naturalm.o optinfo.o \
 	transition.o otherfood.o mathfunc.o understocking.o poppredator.o tags.o \
 	vectorusingkeeper.o popstatistics.o boundlikelihood.o timevariable.o \

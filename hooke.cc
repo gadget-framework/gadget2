@@ -211,7 +211,7 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
 
     /* randomize the order of the parameters once in a while, to avoid */
     /* the order having an influence on which changes are accepted.    */
-    /*change = 0;
+    change = 0;
     while (change < nvars) {
       h = rand() % nvars;
       k = 1;
@@ -222,7 +222,7 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
         param[change] = h;
         change++;
       }
-    }*/
+    }
 
     /* find best new point, one coord at a time */
     for (i = 0; i < nvars; i++)

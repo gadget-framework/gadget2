@@ -21,9 +21,9 @@ public:
   void Print(ofstream& outfile) const;
 protected:
   void ReadMeanData(CommentStream& infile, Keeper* const keeper,
-     int noareas, int noagegr, int minage, const AreaClass* const Area);
+     int noagegr, int minage, const AreaClass* const Area);
   void ReadNumberData(CommentStream& infile, Keeper* const keeper,
-     int noareas, int noagegr, int nolengr, int minage, const AreaClass* const Area);
+     int noagegr, int nolengr, int minage, const AreaClass* const Area);
   LengthGroupDivision* LgrpDiv;
   ConversionIndex* CI;
   AgeBandMatrixPtrVector AreaAgeLength;

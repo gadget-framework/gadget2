@@ -13,19 +13,19 @@ public:
   IntVector() { size = 0; v = 0; };
   /**
    * \brief This is the IntVector constructor for a specified size
-   * \param sz this is the size of the vector to be created
+   * \param sz is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
   IntVector(int sz);
   /**
    * \brief This is the IntVector constructor for a specified size with an initial value
-   * \param sz this is the size of the vector to be created
-   * \param initial this is the initial value for all the entries of the vector
+   * \param sz is the size of the vector to be created
+   * \param initial is the initial value for all the entries of the vector
    */
   IntVector(int sz, int initial);
   /**
    * \brief This is the IntVector constructor that create a copy of an existing IntVector
-   * \param initial this is the IntVector to copy
+   * \param initial is the IntVector to copy
    */
   IntVector(const IntVector& initial);
   /**
@@ -35,19 +35,19 @@ public:
   ~IntVector();
   /**
    * \brief This will add new entries to the vector
-   * \param add this is the number of new entries to the vector
-   * \param value this is the value that will be entered for the new entries
+   * \param add is the number of new entries to the vector
+   * \param value is the value that will be entered for the new entries
    */
   void resize(int add, int value);
   /**
    * \brief This will add new empty entries to the vector
-   * \param add this is the number of new entries to the vector
+   * \param add is the number of new entries to the vector
    * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**
    * \brief This will delete an entry from the vector
-   * \param pos this is the element of the vector to be deleted
+   * \param pos is the element of the vector to be deleted
    * \note This will free the memory allocated to the deleted element of the vector
    */
   void Delete(int pos);
@@ -58,13 +58,13 @@ public:
   int Size() const { return size; };
   /**
    * \brief This will return the value of an element of the vector
-   * \param pos this is the element of the vector to be returned
+   * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
   int& operator [] (int pos);
   /**
    * \brief This will return the value of an element of the vector
-   * \param pos this is the element of the vector to be returned
+   * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
   const int& operator [] (int pos) const;
@@ -75,7 +75,7 @@ protected:
    */
   int* v;
   /**
-   * \brief This is size of the vector
+   * \brief This is the size of the vector
    */
   int size;
 };

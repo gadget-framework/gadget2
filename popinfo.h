@@ -34,7 +34,7 @@ public:
 };
 
 #ifdef GADGET_INLINE
-#include "PopInfo.cc"
+#include "popinfo.cc"
 #endif
 
 #endif

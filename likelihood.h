@@ -19,7 +19,7 @@ enum LikelihoodType { SURVEYINDICESLIKELIHOOD = 1, UNDERSTOCKINGLIKELIHOOD,
 
 class Likelihood {
 public:
-  Likelihood(LikelihoodType T, double w = 0) : likelihood(0), weight(w), type(T) {};
+  Likelihood(LikelihoodType T, double w = 0) { likelihood = 0; weight = w; type = T; };
   virtual ~Likelihood() {};
   virtual void AddToLikelihood(const TimeClass* const TimeInfo) = 0;
   virtual void AddToLikelihoodTimeAndKeeper(const TimeClass* const TimeInfo, Keeper* const Keeper) {};

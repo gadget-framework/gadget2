@@ -12,16 +12,10 @@ public:
   void Fit(const DoubleVector& x, const DoubleVector& y, double slope);
   void Fit(double intercept, const DoubleVector& x, const DoubleVector& y);
   void Fit(const DoubleVector& x, const DoubleVector& y, double slope, double intercept);
-  int Error();
-  double SSE() const;
-  double SSE(const DoubleVector& x, const DoubleVector& y);
-  double WeightedSSE(const DoubleVector& x,
-    const DoubleVector& y, const DoubleVector& weights);
-  double Funcval(double x);
-  double LogFuncval(double x);
-  double intersection() const;
-  double slope() const;
-  static double ErrorSSE;
+  int Error() { return error; };
+  double SSE();
+  double intersection();
+  double slope();
 protected:
   void CleanAndTakeLog(const DoubleVector& x, const DoubleVector& y,
     DoubleVector& Xlog, DoubleVector& Ylog);

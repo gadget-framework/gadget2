@@ -24,12 +24,13 @@ public:
   virtual void MaximizeLikelihood() = 0;
   /**
    * \brief This is the file reader common to all optimisation types
+   * \param infile is the CommentStream to read the optimisation parameters from
    */
   virtual void Read(CommentStream& infile) = 0;
   /**
    * \brief This is the function used to read in the specific parameters
-   * \param infile a commentstream to read from
-   * \param text a text string to compare parameter names
+   * \param infile is the CommentStream to read the optimisation parameters from
+   * \param text is a text string used to compare parameter names
    * \return 1 for success, 0 for failure
    */
   int Read(CommentStream& infile, char* text);
@@ -73,13 +74,13 @@ public:
   virtual ~OptInfoHooke();
   /**
    * \brief This is the Hooke & Jeeves file reader
-   * \param infile a commentstream to read from
+   * \param infile is the CommentStream to read the optimisation parameters from
    */
   virtual void Read(CommentStream& infile);
   /**
    * \brief This is the function used to read in the Hooke & Jeeves parameters
-   * \param infile a commentstream to read from
-   * \param text a text string to compare parameter names
+   * \param infile is the CommentStream to read the optimisation parameters from
+   * \param text is a text string used to compare parameter names
    * \return 1 for success, 0 for failure
    */
   int Read(CommentStream& infile, char* text);
@@ -139,13 +140,13 @@ public:
   virtual ~OptInfoSimann();
   /**
    * \brief This is the Simulated Annealing file reader
-   * \param infile a commentstream to read from
+   * \param infile is the CommentStream to read the optimisation parameters from
    */
   virtual void Read(CommentStream& infile);
   /**
    * \brief This is the function used to read in the Simulated Annealing parameters
-   * \param infile a commentstream to read from
-   * \param text a text string to compare parameter names
+   * \param infile is the CommentStream to read the optimisation parameters from
+   * \param text is a text string used to compare parameter names
    * \return 1 for success, 0 for failure
    */
   int Read(CommentStream& infile, char* text);
@@ -217,13 +218,13 @@ public:
   virtual ~OptInfoHookeAndSimann();
   /**
    * \brief This is the Hooke & Jeeves and Simulated Annealing file reader
-   * \param infile a commentstream to read from
+   * \param infile is the CommentStream to read the optimisation parameters from
    */
   virtual void Read(CommentStream& infile);
   /**
    * \brief This is the function used to read in the Hooke & Jeeves and Simulated Annealing parameters
-   * \param infile a commentstream to read from
-   * \param text a text string to compare parameter names
+   * \param infile is the CommentStream to read the optimisation parameters from
+   * \param text is a text string used to compare parameter names
    * \return 1 for success, 0 for failure
    */
   int Read(CommentStream& infile, char* text);

@@ -15,8 +15,8 @@ public:
   TimeVariableIndexVector() { size = 0; minpos = 0; v = 0; };
   /**
    * \brief This is the TimeVariableIndexVector constructor for a specified size
-   * \param sz this is the size of the vector to be created
-   * \param minpos this is the index for the vector to be created
+   * \param sz is the size of the vector to be created
+   * \param minpos is the index for the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
   TimeVariableIndexVector(int sz, int minpos);
@@ -35,13 +35,13 @@ public:
   void Read(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This will return the value of an element of the vector
-   * \param pos this is the element of the vector to be returned
+   * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
   TimeVariable& operator [] (int pos);
   /**
    * \brief This will return the value of an element of the vector
-   * \param pos this is the element of the vector to be returned
+   * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
   const TimeVariable& operator [] (int pos) const;
@@ -63,7 +63,7 @@ protected:
    */
   int minpos;
   /**
-   * \brief This is size of the vector
+   * \brief This is the size of the vector
    */
   int size;
   /**

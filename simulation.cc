@@ -35,6 +35,7 @@ void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {
 
 void Ecosystem::GrowthAndSpecialTransactions(int area) {
   int i;
+
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
       basevec[i]->Grow(area, Area, TimeInfo);

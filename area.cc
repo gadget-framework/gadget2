@@ -92,8 +92,3 @@ int AreaClass::InnerArea(int area) const {
       innerarea = i;
   return innerarea;
 }
-
-int AreaClass::OuterArea(int area) const {
-  assert(area >= 0 && area <= OuterAreas.Size());
-  return OuterAreas[area];
-}
