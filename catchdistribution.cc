@@ -47,7 +47,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     functionnumber = 3;
   } else if (strcasecmp(functionname, "sumofsquares") == 0) {
     functionnumber = 4;
-  } else if (strcasecmp(functionname, "mvn-normal1") == 0) {
+  } else if (strcasecmp(functionname, "mvn-rho") == 0) {
     functionnumber = 5;
     infile >> text >> ws;
     if (strcasecmp(text, "sigma") == 0)
@@ -63,7 +63,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
       handle.Unexpected("rho", text);
     rho.Inform(keeper);
 
-  } else if (strcasecmp(functionname, "mvn-notused1") == 0) {
+  } else if (strcasecmp(functionname, "mvn-abrho") == 0) {
     functionnumber = 6;
 
     infile >> text >> ws;
@@ -74,20 +74,20 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     sigma.Inform(keeper);
 
     infile >> text >> ws;
-    if (strcasecmp(text, "a") == 0)
-      infile >> a >> ws;
+    if (strcasecmp(text, "alpha") == 0)
+      infile >> alpha >> ws;
     else
-      handle.Unexpected("a", text);
-    a.Inform(keeper);
+      handle.Unexpected("alpha", text);
+    alpha.Inform(keeper);
 
     infile >> text >> ws;
-    if (strcasecmp(text, "b") == 0)
-      infile >> b >> ws;
+    if (strcasecmp(text, "beta") == 0)
+      infile >> beta >> ws;
     else
-      handle.Unexpected("b", text);
-    b.Inform(keeper);
+      handle.Unexpected("beta", text);
+    beta.Inform(keeper);
 
-  } else if (strcasecmp(functionname, "mvn-notused2") == 0) {
+  } else if (strcasecmp(functionname, "mvn-abk") == 0) {
     functionnumber = 7;
 
     infile >> text >> ws;
@@ -98,20 +98,20 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     sigma.Inform(keeper);
 
     infile >> text >> ws;
-    if (strcasecmp(text, "a") == 0)
-      infile >> a >> ws;
+    if (strcasecmp(text, "alpha") == 0)
+      infile >> alpha >> ws;
     else
-      handle.Unexpected("a", text);
-    a.Inform(keeper);
+      handle.Unexpected("alpha", text);
+    alpha.Inform(keeper);
 
     infile >> text >> ws;
-    if (strcasecmp(text, "b") == 0)
-      infile >> b >> ws;
+    if (strcasecmp(text, "beta") == 0)
+      infile >> beta >> ws;
     else
-      handle.Unexpected("b", text);
-    b.Inform(keeper);
+      handle.Unexpected("beta", text);
+    beta.Inform(keeper);
 
-  } else if (strcasecmp(functionname, "mvn-normal2") == 0) {
+  } else if (strcasecmp(functionname, "mvn-alphabeta") == 0) {
     functionnumber = 8;
 
     infile >> text >> ws;
@@ -122,18 +122,18 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     sigma.Inform(keeper);
 
     infile >> text >> ws;
-    if (strcasecmp(text, "a") == 0)
-      infile >> a >> ws;
+    if (strcasecmp(text, "alpha") == 0)
+      infile >> alpha >> ws;
     else
-      handle.Unexpected("a", text);
-    a.Inform(keeper);
+      handle.Unexpected("alpha", text);
+    alpha.Inform(keeper);
 
     infile >> text >> ws;
-    if (strcasecmp(text, "b") == 0)
-      infile >> b >> ws;
+    if (strcasecmp(text, "beta") == 0)
+      infile >> beta >> ws;
     else
-      handle.Unexpected("b", text);
-    b.Inform(keeper);
+      handle.Unexpected("beta", text);
+    beta.Inform(keeper);
 
   } else if (strcasecmp(functionname, "mvlogistic") == 0) {
     functionnumber = 9;
@@ -419,7 +419,7 @@ void CatchDistribution::Print(ofstream& outfile) const {
     case 6:
     case 7:
     case 8:
-      outfile << "\tMultivariate normal distribution parameters: sigma " << sigma << " a " << a << " b " << b << endl;
+      outfile << "\tMultivariate normal distribution parameters: sigma " << sigma << " alpha " << alpha << " beta " << beta << endl;
       break;
     case 9:
       outfile << "\tMultivariate logistic distribution parameter: tau " << tau << endl;
@@ -472,7 +472,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
     case 6:
     case 7:
     case 8:
-      outfile << "Multivariate normal distribution parameters: sigma " << sigma << " a " << a << " b " << b << endl;
+      outfile << "Multivariate normal distribution parameters: sigma " << sigma << " alpha " << alpha << " beta " << beta << endl;
       break;
     case 9:
       outfile << "Multivariate logistic distribution parameter: tau " << tau << endl;
@@ -854,34 +854,34 @@ double CatchDistribution::LikMVNormal() {
       for (j = 0; j < p; j++)
         correlation[i][j] = corr[abs(i - j)];
 
-  } else if (functionnumber == 6) {  //pattern: \rho_{ij} = a + b * \rho_{|i - j|}
-    assert(abs(a + b) < 1);
+  } else if (functionnumber == 6) {  //pattern: \rho_{ij} = \alpha + \beta * \rho_{|i - j|}
+    assert(abs(alpha + beta) < 1);
     for (i = 1; i < p; i++)
       for (j = i; j < p; j++)
-        corr[j] = a + (b * corr[j]);
+        corr[j] = alpha + (beta * corr[j]);
     for (i = 0; i < p; i++)
       for (j = 0; j < p; j++)
         correlation[i][j] = corr[abs(i - j)];
 
-  } else if (functionnumber == 7) {  //pattern: \rho_{ij} = a + b * k
-    assert(abs(a + b * p) < 1);
+  } else if (functionnumber == 7) {  //pattern: \rho_{ij} = \alpha + \beta * k
+    assert(abs(alpha + beta * p) < 1);
     for (i = 0; i < p; i++)
       for (j = 0; j < p; j++) {
         if (i == j)
           correlation[i][j] = 1.0;
         else
-          correlation[i][j] = a + (b * abs(i - j));
+          correlation[i][j] = alpha + (beta * abs(i - j));
       }
 
-  } else if (functionnumber == 8) { //pattern: \rho_{ij} = a * \rho_{|i - j| - 1} + b * \rho_{|i - j| - 2}
-    assert(abs(a + b) < 1);
+  } else if (functionnumber == 8) { //pattern: \rho_{ij} = \alpha * \rho_{|i - j| - 1} + \beta * \rho_{|i - j| - 2}
+    assert(abs(alpha + beta) < 1);
     correlation[0][0] = 1.0;
-    correlation[0][1] = a;
-    correlation[1][0] = a;
+    correlation[0][1] = alpha;
+    correlation[1][0] = alpha;
     for (i = 2; i < p; i++) {
       correlation[i][i] = 1.0;
       for (j = 0; j < i; j++) {
-        correlation[i][j] = (a * correlation[i - 1][j]) + (b * correlation[i - 2][j]);
+        correlation[i][j] = (alpha * correlation[i - 1][j]) + (beta * correlation[i - 2][j]);
         correlation[j][i] = correlation[i][j];
       }
     }
@@ -1004,7 +1004,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
     case 6:
     case 7:
     case 8:
-      catchfile << "Multivariate normal distribution parameters: sigma " << sigma << " a " << a << " b " << b << endl;
+      catchfile << "Multivariate normal distribution parameters: sigma " << sigma << " alpha " << alpha << " beta " << beta << endl;
       break;
     case 9:
       catchfile << "Multivariate logistic distribution parameter: tau " << tau << endl;

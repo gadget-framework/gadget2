@@ -62,8 +62,8 @@ private:
   Formula tau;
   Formula sigma;
   Formula rho;
-  Formula a;
-  Formula b;
+  Formula alpha;
+  Formula beta;
 };
 
 #endif
