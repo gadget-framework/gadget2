@@ -19,7 +19,7 @@ Formula::~Formula() {
 
 Formula::operator double() const {
   double v = 0.0;
-  switch (type) {
+  switch(type) {
     case CONSTANT:
     case PARAMETER:
       v = value;
@@ -35,14 +35,15 @@ Formula::operator double() const {
 }
 
 double Formula::evalFunction() const {
-  double v = 1.0;
+  double v = 0.0;
   unsigned int i;
-  switch (functiontype) {
+  switch(functiontype) {
     case NONE:
       handle.logFailure("Error in formula - no function type found");
       break;
 
     case MULT:
+      v = 1.0;
       for (i = 0; i < argList.size(); i++)
         v *= *(argList[i]);
       break;
@@ -85,6 +86,45 @@ double Formula::evalFunction() const {
     case PRINT:
       if (argList.size() == 1)
         v = *(argList[0]);
+      else
+        handle.logFailure("Error in formula - invalid number of parameters for print");
+      break;
+
+    case SIN:
+      //JMB a bit experimental - works in radians ...
+      if (argList.size() == 1)
+        v = sin(*(argList[0]));
+      else
+        handle.logFailure("Error in formula - invalid number of parameters for sin");
+      break;
+
+    case COS:
+      //JMB a bit experimental - works in radians ...
+      if (argList.size() == 1)
+        v = cos(*(argList[0]));
+      else
+        handle.logFailure("Error in formula - invalid number of parameters for cos");
+      break;
+
+    case LOG:
+      if (argList.size() == 1)
+        v = log(*(argList[0]));
+      else
+        handle.logFailure("Error in formula - invalid number of parameters for log");
+      break;
+
+    case EXP:
+      if (argList.size() == 1)
+        v = exp(*(argList[0]));
+      else
+        handle.logFailure("Error in formula - invalid number of parameters for exp");
+      break;
+
+    case SQRT:
+      if (argList.size() == 1)
+        v = sqrt(*(argList[0]));
+      else
+        handle.logFailure("Error in formula - invalid number of parameters for sqrt");
       break;
 
     default:
@@ -97,7 +137,7 @@ double Formula::evalFunction() const {
 Formula::Formula(const Formula& form) {
   type = form.type;
   functiontype = form.functiontype;
-  switch (type) {
+  switch(type) {
     case CONSTANT:
       value = form.value;
       break;
@@ -162,6 +202,16 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
       F.functiontype = MINUS;
     else if (strcasecmp(text,"print") == 0)
       F.functiontype = PRINT;
+    else if (strcasecmp(text,"sin") == 0)
+      F.functiontype = SIN;
+    else if (strcasecmp(text,"cos") == 0)
+      F.functiontype = COS;
+    else if (strcasecmp(text,"log") == 0)
+      F.functiontype = LOG;
+    else if (strcasecmp(text,"exp") == 0)
+      F.functiontype = EXP;
+    else if (strcasecmp(text,"sqrt") == 0)
+      F.functiontype = SQRT;
     else {
       infile.makebad();
       handle.Message("Error in formula - unrecognised function name", text);
@@ -174,13 +224,19 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
       infile >> *f;
       F.argList.push_back(f);
       infile >> ws;
+      if (infile.eof()) {
+        // Something has gone wrong, no closing bracket
+        infile.makebad();
+        handle.Message("Error in formula - failed to read parameter data");
+        return infile;
+      }
       c = infile.peek();
     }
     infile.get(c);
     return infile;
   }
 
-  // Read PARAMETER syntax (No initial value)
+  // Read PARAMETER syntax (no initial value)
   if (c == '#') {
     //No initial value, parameter name only - set it to 1
     F.value = 1.0;
@@ -192,12 +248,12 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     return infile;
   }
 
-  //Read initial value (Could be CONSTANT or PARAMETER)
+  // Read initial value (could be CONSTANT or PARAMETER)
   if (!(infile >> F.value)) {
     infile.makebad();
     return infile;
   }
-  //then '#' if there is one
+  // then '#' if there is one
   c = infile.peek();
   if (infile.fail() && !infile.eof()) {
     infile.makebad();
@@ -211,7 +267,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
   }
   // Read PARAMETER (with initial value)
   if (c == '#') {
-    //Only one mark
+    // Only one mark
     F.type = PARAMETER;
     infile.get(c);
     infile >> F.name;
@@ -226,8 +282,8 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
 }
 
 void Formula::Inform(Keeper* keeper) {
-  //let keeper know of the marked variables
-  switch (type) {
+  // let keeper know of the marked variables
+  switch(type) {
     case CONSTANT:
       break;
     case PARAMETER:
@@ -255,7 +311,7 @@ void Formula::Interchange(Formula& NewF, Keeper* keeper) const {
 
   assert(NewF.argList.size() == 0);
   NewF.type = type;
-  switch (type) {
+  switch(type) {
     case CONSTANT:
       NewF.value = value;
       break;
@@ -285,7 +341,7 @@ void Formula::Interchange(Formula& NewF, Keeper* keeper) const {
 }
 
 void Formula::Delete(Keeper* keeper) const {
-  switch (type) {
+  switch(type) {
     case CONSTANT:
       break;
     case PARAMETER:

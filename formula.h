@@ -9,7 +9,7 @@
 class Keeper;
 
 enum FormulaType { CONSTANT, PARAMETER, FUNCTION };
-enum FunctionType { NONE, MULT, DIV, PLUS, MINUS, PRINT };
+enum FunctionType { NONE, MULT, DIV, PLUS, MINUS, PRINT, SIN, COS, LOG, EXP, SQRT };
 
 class Formula {
 public:

@@ -4,10 +4,10 @@
 GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat \
               -Wparentheses -Wpointer-arith -Wcast-qual -Wconversion \
               -Wreorder -Wwrite-strings -Wsynth -Wchar-subscripts \
-              -Wuninitialized -pedantic -W
+              -Wuninitialized -Wextra -pedantic
 
 #DEFINE_FLAGS = -D DEBUG -D INTERRUPT_HANDLER -g -O
-DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O3 -s
+DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O2 -s
 
 ##########################################################################
 # The name of the final executable (eg gadget-paramin or gadget.exe)
