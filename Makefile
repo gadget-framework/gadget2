@@ -89,7 +89,7 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	preyoveraggregator.o lengthgroup.o preyoverprinter.o catchstatistics.o \
 	preystdinfo.o preystdinfobylength.o print.o timevariable.o boundlikelihood.o \
 	commentstream.o printinfo.o readfunc.o conversionindex.o readmain.o keeper.o \
-	ecosystem.o readword.o renewal.o mortpredlength.o mortprey.o mortprinter.o \
+	ecosystem.o readword.o renewal.o mortpredator.o mortprey.o mortprinter.o \
 	errorhandler.o extravector.o fleet.o sibyageonstep.o fleetpreyaggregator.o \
 	sibylengthonstep.o formula.o grower.o growthcalc.o simulation.o hooke.o \
 	simann.o sionstep.o initialcond.o spawner.o initialize.o stochasticdata.o \
@@ -104,9 +104,10 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	migvariables.o time.o multinomial.o totalpredator.o naturalm.o optinfo.o \
 	transition.o otherfood.o mathfunc.o understocking.o poppredator.o tags.o \
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
-	lennaturalm.o catchintons.o agebandmatrixratiomemberfunctions.o taggrow.o \
+	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o \
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \
-	interruptinterface.o interrupthandler.o initialinputfile.o popratio.o
+	initialinputfile.o popratio.o popinfo.o taggrow.o \
+	agebandmatrixratiomemberfunctions.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 

@@ -20,9 +20,6 @@ TotalPredator::TotalPredator(CommentStream& infile, const char* givenname,
   //Predator::SetPrey will call ResizeObjects.
 }
 
-TotalPredator::~TotalPredator() {
-}
-
 void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
   double Areasize, int CurrentSubstep, int NrOfSubsteps) {
 

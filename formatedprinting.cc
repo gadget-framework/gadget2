@@ -265,7 +265,7 @@ ostream& printBandMatrix(ostream& o, const BandMatrix& b, int rowindex, int inde
   return o;
 }
 
-ostream& printc_hat(ostream& o, const MortPredLength& pred, AreaClass area, int indent) {
+ostream& printc_hat(ostream& o, const MortPredator& pred, AreaClass area, int indent) {
   int a, p;
   char* ind = makeSpaces(indent);
   o << ind << "c_hat\n" << ind << "  predator\n" << ind << "    "

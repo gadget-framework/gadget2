@@ -129,7 +129,7 @@ public:
   virtual void Clear() {};
   /**
    * \brief This function will print the model population
-   * \param outfile is the ofstream that all the model information gets sent to.
+   * \param outfile is the ofstream that all the model information gets sent to
    */
   virtual void Print(ofstream& outfile) const = 0;
 };

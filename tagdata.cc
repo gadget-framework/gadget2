@@ -11,8 +11,8 @@
 
 //JMB - this is incomplete
 TagData::TagData(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double likweight)
-  :Likelihood(TAGLIKELIHOOD, likweight) {
+  const TimeClass* const TimeInfo, double w)
+  :Likelihood(TAGLIKELIHOOD, w) {
 
   ErrorHandler handle;
   char text[MaxStrLength];

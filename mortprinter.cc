@@ -174,7 +174,7 @@ void MortPrinter::Print(const TimeClass* const TimeInfo) {
   int s, i, j, area, inarea, age, yo;
   for (area = 0; area < areas.Size(); area++)
     for (i = 0; i < stocks.Size(); i++)
-      if (stocks[i]->stockType() == LENSTOCKTYPE)
+      if (stocks[i]->Type() == LENSTOCKTYPE)
         ((LenStock*)stocks[i])->calcForPrinting(Area->InnerArea(areas[area]), *TimeInfo);
 
   if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps())

@@ -229,8 +229,6 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
   int nfcnev = 0;       //Total number of function evaluations
   int i;
   double xp[VARS];
-  double dummy1;
-  double dummy2;
   int param[VARS];  //Vector containing the order of the parameters at each time
 
   for (i = 0; i < n; i++) {
@@ -313,8 +311,8 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
               << "NOT because an optimum was found for this run\n";
 
             fp = (*f)(endpoint, n);
-            if (!max)
-              fopt = -fopt;
+            //if (!max)
+            //  fopt = -fopt;
 
             return nfcnev;
           }
@@ -367,9 +365,7 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
 
       //Adjust vm so that approximately half of all evaluations are accepted
       for (i = 0; i < n; i++) {
-        dummy1 = nacp[i];
-        dummy2 = ns;
-        ratio =  dummy1 / dummy2;
+        ratio =  nacp[i] / ns;
         if (ratio > 0.8) {
           vm[i] = vm[i] * (1.0 + c[i] * (ratio - 0.6) * 2.5);
         } else if (ratio < 0.5) {
@@ -402,8 +398,8 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
         << "because an optimum was found for this run\n";
 
       fp = (*f)(endpoint, n);
-      if (!max)
-        fopt = -fopt;
+      //if (!max)
+      //  fopt = -fopt;
 
       return nfcnev;
     }

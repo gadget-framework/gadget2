@@ -11,6 +11,7 @@ class VariableInfo {
 public:
   VariableInfo(Keeper* Keep, int noareas)
     : keeper(Keep), NoMatrix(-1), row(-1), column(-1), error(0), NoAreas(noareas) {};
+  ~VariableInfo() {};
   int NoMatrix;
   int row;
   int column;

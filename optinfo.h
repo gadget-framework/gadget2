@@ -45,22 +45,9 @@ protected:
  * \class OptInfoHooke
  * \brief This is the class used for the Hooke & Jeeves optimisation
  *
- * The Hooke & Jeeves optimisation is the default optimisation, and
- * is a simple and fast optimising method, but somewhat unreliable, which
- * is often described as a "hill climbing" technique.  From the initial
- * starting point the algorithm takes a step in various directions, and
- * conducts a new model run.  If the new likelihood score is better than
- * the old one then the algorithm uses the new point as it's best guess.
- * If it is worse then the algorithm retains the old point. The search
- * proceeds in series of these steps, each step slightly smaller than the
- * previous one.  When the algorithm finds a point which it cannot improve
- * on with a small step in any direction then it accepts this point as being
- * the "solution", and exits.  It is recommended that you re-run the
- * optimisation, using the final point of one run as the start of the next.
+ * The Hooke & Jeeves optimisation is the default optimisation, and is a simple and fast optimising method, but somewhat unreliable, which is often described as a "hill climbing" technique.  From the initial starting point the algorithm takes a step in various directions, and conducts a new model run.  If the new likelihood score is better than the old one then the algorithm uses the new point as it's best guess.  If it is worse then the algorithm retains the old point. The search proceeds in series of these steps, each step slightly smaller than the previous one.  When the algorithm finds a point which it cannot improve on with a small step in any direction then it accepts this point as being the "solution", and exits.  It is recommended that you re-run the optimisation, using the final point of one run as the start of the next.
  *
- * The Hooke & Jeeves algorithm used in Gadget is derived from that presented
- * by R. Hooke and T. A. Jeeves, "Direct Search Solution of Numerical and
- * Statistical Problems", Journal of the ACM, Vol. 8, April 1961, pp. 212-229.
+ * The Hooke & Jeeves algorithm used in Gadget is derived from that presented by R. Hooke and T. A. Jeeves, "Direct Search Solution of Numerical and Statistical Problems", Journal of the ACM, Vol. 8, April 1961, pp. 212-229.
  */
 class OptInfoHooke : public OptInfo {
 public:
@@ -111,22 +98,9 @@ protected:
  * \class OptInfoSimann
  * \brief This is the class used for the Simualted Annealing optimisation
  *
- * Simulated Annealing is a global optimisation method that distinguishes
- * different local optima.  Starting from an initial point, the algorithm
- * takes a step and the function is evaluated.  When minimizing a function,
- * any downhill step is accepted and the process repeats from this new point.
- * An uphill step may be accepted (thus, it can escape from local optima).
- * This uphill decision is made by the Metropolis criteria.  It uses a
- * parameter known as "temperature" and the size of the uphill step in a
- * probabilistic manner, and varying the temperature will affect the number
- * of the uphill moves that are accepted.  As the optimisation process
- * proceeds, the length of the steps decline and the algorithm closes
- * in on the global optimum.
+ * Simulated Annealing is a global optimisation method that distinguishes different local optima.  Starting from an initial point, the algorithm takes a step and the function is evaluated.  When minimizing a function, any downhill step is accepted and the process repeats from this new point.  An uphill step may be accepted (thus, it can escape from local optima).  This uphill decision is made by the Metropolis criteria.  It uses a parameter known as "temperature" and the size of the uphill step in a probabilistic manner, and varying the temperature will affect the number of the uphill moves that are accepted.  As the optimisation process proceeds, the length of the steps decline and the algorithm closes in on the global optimum.
  *
- * The Simulated Annealing algorithm used in Gadget is derived from that
- * presented by Corana et al, "Minimizing Multimodal Functions of Continuous
- * Variables with the 'Simulated Annealing' Algorithm" in the September 1987
- * (Vol. 13, no. 3, pp. 262-280) issue of the ACM Transactions on Mathematical Software.
+ * The Simulated Annealing algorithm used in Gadget is derived from that presented by Corana et al, "Minimizing Multimodal Functions of Continuous Variables with the 'Simulated Annealing' Algorithm" in the September 1987 (Vol. 13, no. 3, pp. 262-280) issue of the ACM Transactions on Mathematical Software.
  */
 class OptInfoSimann : public OptInfo {
 public:
@@ -193,15 +167,7 @@ protected:
  * \class OptInfoHookeAndSimann
  * \brief This is the class used for both the Hooke & Jeeves and Simualted Annealing optimisations
  *
- * This method attempts to combine the wide search of Simulated Annealing
- * and the rapid convergence of Hooke & Jeeves.  It relies on the observation
- * that the likelihood function for many Gadget models consists of a large
- * "valley" in which the best solution lies, surrounded by much more "rugged"
- * terrain.  A small amount of Simulated Annealing at the start of the run
- * serves to move the search into this valley, at which point Hooke & Jeeves
- * takes over an homes in on a solution within that valley.  Hopefully the
- * Simulated Annealing will move to the correct side of any "hills" and avoid
- * Hooke & Jeeves becoming trapped into unrealistic local optima.
+ * This method attempts to combine the wide search of Simulated Annealing and the rapid convergence of Hooke & Jeeves.  It relies on the observation that the likelihood function for many Gadget models consists of a large "valley" in which the best solution lies, surrounded by much more "rugged" terrain.  A small amount of Simulated Annealing at the start of the run serves to move the search into this valley, at which point Hooke & Jeeves takes over an homes in on a solution within that valley.  Hopefully the Simulated Annealing will move to the correct side of any "hills" and avoid Hooke & Jeeves becoming trapped into unrealistic local optima.
  *
  * \see OptInfoHooke
  * \see OptInfoSimann

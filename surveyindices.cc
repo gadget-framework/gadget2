@@ -11,8 +11,8 @@
 #include "gadget.h"
 
 SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, Keeper* const keeper, double likweight, const char* name)
-  : Likelihood(SURVEYINDICESLIKELIHOOD, likweight) {
+  const TimeClass* const TimeInfo, Keeper* const keeper, double w, const char* name)
+  : Likelihood(SURVEYINDICESLIKELIHOOD, w) {
 
   ErrorHandler handle;
   char text[MaxStrLength];

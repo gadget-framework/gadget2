@@ -419,9 +419,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
     handle.Close();
     subfile.close();
     subfile.clear();
-
-    if (!infile.eof())
-      infile >> text >> ws;
+    infile >> text >> ws;
   }
 
   //Now we read the names of the tagging files
@@ -442,9 +440,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
       handle.Close();
       subfile.close();
       subfile.clear();
-
-      if (!infile.eof())
-        infile >> text >> ws;
+      infile >> text >> ws;
     }
   }
 
@@ -466,9 +462,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
       handle.Close();
       subfile.close();
       subfile.clear();
-
-      if (!infile.eof())
-        infile >> text >> ws;
+      infile >> text >> ws;
     }
   }
 
@@ -490,9 +484,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
       handle.Close();
       subfile.close();
       subfile.clear();
-
-      if (!infile.eof())
-        infile >> text >> ws;
+      infile >> text >> ws;
     }
   }
 
@@ -513,8 +505,9 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
         subfile.close();
         subfile.clear();
 
+        infile >> ws;
         if (!infile.eof())
-          infile >> text >> ws;
+          infile >> text;
       }
     }
   }

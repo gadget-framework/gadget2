@@ -13,8 +13,8 @@
 
 CatchDistribution::CatchDistribution(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
-  double likweight, const char* name)
-  : Likelihood(CATCHDISTRIBUTIONLIKELIHOOD, likweight) {
+  double w, const char* name)
+  : Likelihood(CATCHDISTRIBUTIONLIKELIHOOD, w) {
 
   ErrorHandler handle;
   int i, j;

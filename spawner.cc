@@ -27,7 +27,7 @@ Spawner::Spawner(CommentStream& infile, int maxstockage, int numlength,
   datafile.open(datafilename);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  numarea = readAggregation(subdata, areas, areaindex);
+  numarea = readAggregation(subdata, spawnareas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -37,16 +37,16 @@ Spawner::Spawner(CommentStream& infile, int maxstockage, int numlength,
   datafile.open(datafilename);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  numage = readAggregation(subdata, ages, ageindex);
+  numage = readAggregation(subdata, spawnages, ageindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Must change from outer areas to inner areas.
-  for (i = 0; i < areas.Nrow(); i++)
-    for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+  for (i = 0; i < spawnareas.Nrow(); i++)
+    for (j = 0; j < spawnareas.Ncol(i); j++)
+      if ((spawnareas[i][j] = Area->InnerArea(spawnareas[i][j])) == -1)
+        handle.UndefinedArea(spawnareas[i][j]);
 
   //Finally read in spawning data from file
   readWordAndValue(infile, "spawnfile", datafilename);
@@ -187,9 +187,9 @@ void Spawner::Spawn(AgeBandMatrix& Alkeys, int area,
     return;
 
   //spawning takes place one area at a time - find areaid
-  for (i = 0; i < areas.Nrow(); i++)
-    for (j = 0; j < areas.Ncol(i); j++)
-      if (areas[i][j] == area)
+  for (i = 0; i < spawnareas.Nrow(); i++)
+    for (j = 0; j < spawnareas.Ncol(i); j++)
+      if (spawnareas[i][j] == area)
         areaid = i;
 
   if (areaid == -1)
@@ -197,9 +197,9 @@ void Spawner::Spawn(AgeBandMatrix& Alkeys, int area,
 
   for (age = Alkeys.Minage(); age <= Alkeys.Maxage(); age++) {
     ageid = -1;
-    for (i = 0; i < ages.Nrow(); i++)
-      for (j = 0; j < ages.Ncol(i); j++)
-        if (ages[i][j] == age)
+    for (i = 0; i < spawnages.Nrow(); i++)
+      for (j = 0; j < spawnages.Ncol(i); j++)
+        if (spawnages[i][j] == age)
           ageid = i;
 
     if (ageid == -1) {

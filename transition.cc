@@ -4,9 +4,9 @@
 #include "readword.h"
 #include "gadget.h"
 
-Transition::Transition(CommentStream& infile, const IntVector& Areas, int Age,
+Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
   const LengthGroupDivision* const lgrpdiv, Keeper* const keeper)
-  : LivesOnAreas(Areas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)), age(Age) {
+  : LivesOnAreas(areas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)), age(Age) {
 
   int i;
   ErrorHandler handle;
@@ -127,7 +127,7 @@ void Transition::KeepAgegroup(int area, AgeBandMatrix& Alkeys, const TimeClass* 
 }
 
 //area in the call to this routine is not in the local area numbering of the stock.
-void Transition::MoveAgegroupToTransitionStock(int area, const TimeClass* const TimeInfo, int HasLgr) {
+void Transition::Move(int area, const TimeClass* const TimeInfo) {
   int s, inarea = AreaNr[area];
 
   if (TimeInfo->CurrentStep() == TransitionStep) {

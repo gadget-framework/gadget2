@@ -10,11 +10,11 @@
 class TagData : public Likelihood {
 public:
   TagData(CommentStream& infile, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, double likweight);
+    const TimeClass* const TimeInfo, double w);
   virtual ~TagData();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
-  virtual void Print(ofstream&) const {};
+  virtual void Print(ofstream& outfile) const {};
   virtual void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
   void ReadRecaptureData(CommentStream&, const TimeClass*, CharPtrVector);

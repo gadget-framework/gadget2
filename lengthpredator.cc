@@ -9,9 +9,6 @@ LengthPredator::LengthPredator(const char* givenname, const IntVector& Areas,
   Multiplicative = multi;
 }
 
-LengthPredator::~LengthPredator() {
-}
-
 void LengthPredator::Sum(const PopInfoVector& NumberInArea, int area) {
   int inarea = AreaNr[area];
   int i;

@@ -1,5 +1,5 @@
-#ifndef mortpredlength_h
-#define mortpredlength_h
+#ifndef mortpredator_h
+#define mortpredator_h
 
 #include "lengthpredator.h"
 #include "conversionindex.h"
@@ -9,18 +9,18 @@
 #include "mortprey.h"
 #include "gadget.h"
 
-class MortPredLength;
+class MortPredator;
 class Keeper;
 
-class MortPredLength : public LengthPredator {
+class MortPredator : public LengthPredator {
 public:
-  MortPredLength(CommentStream& infile, const char* givenname, const IntVector& areas,
+  MortPredator(CommentStream& infile, const char* givenname, const IntVector& areas,
     const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
     const TimeClass* const TimeInfo, Keeper* const keeper);
-  virtual ~MortPredLength();
+  virtual ~MortPredator();
   virtual void Eat(int area, double LengthOfStep, double Temperature, double Areasize,
     int CurrentSubstep, int NrOfSubsteps);
-  virtual void AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep);
+  virtual void AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) {};
   virtual void Print(ofstream& infile) const;
   virtual const PopInfoVector& NumberPriortoEating(int area, const char* preyname) const;
   void calcFlevel();
@@ -30,7 +30,7 @@ public:
   virtual const double consumedBiomass(int prey_nr, int area_nr) const;
   virtual void Reset(const TimeClass* const TimeInfo);
   virtual double getFlevel(int area, const TimeClass* const TimeInfo);
-  friend ostream& printc_hat(ostream& o, const MortPredLength& pred,
+  friend ostream& printc_hat(ostream& o, const MortPredator& pred,
     AreaClass area, int indent);
   int minPreyAge(int prey, int area) const {
     return ((MortPrey*)Preys(prey))->getMeanN(area).Minage();

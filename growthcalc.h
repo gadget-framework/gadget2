@@ -64,7 +64,7 @@ public:
    * \brief This is the default GrowthCalcA constructor
    * \param infile is the CommentStream to read the growth parameters from
    * \param areas is the list of areas that the growth calculation can take place on
-   * \param keeper is the Keeper for the current model switches
+   * \param keeper is the Keeper for the current model
    */
   GrowthCalcA(CommentStream& infile, const IntVector& areas, Keeper* const keeper);
   /**
@@ -109,7 +109,7 @@ public:
    * \param infile is the CommentStream to read the growth parameters from
    * \param areas is the list of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
-   * \param keeper is the Keeper for the switches for the current model
+   * \param keeper is the Keeper for the current model
    * \param Area is the AreaClass for the current model
    * \param lenindex is the listing of the lengths used for the growth of the stock
    */
@@ -151,7 +151,7 @@ public:
    * \param infile is the CommentStream to read the growth parameters from
    * \param areas is the list of areas that the growth calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision of the stock
-   * \param keeper is the Keeper for the switches for the current model
+   * \param keeper is the Keeper for the current model
    * \param refWeight is the name of the file containing the reference weight information for the stock
    */
   GrowthCalcC(CommentStream& infile, const IntVector& areas,
@@ -220,7 +220,7 @@ public:
    * \param infile is the CommentStream to read the growth parameters from
    * \param areas is the list of areas that the growth calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision of the stock
-   * \param keeper is the Keeper for the switches for the current model
+   * \param keeper is the Keeper for the current model
    * \param refWeight is the name of the file containing the reference weight information for the stock
    */
   GrowthCalcD(CommentStream& infile, const IntVector& areas,
@@ -290,7 +290,7 @@ public:
    * \param areas is the list of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
    * \param LgrpDiv is the LengthGroupDivision of the stock
-   * \param keeper is the Keeper for the switches for the current model
+   * \param keeper is the Keeper for the current model
    * \param refWeight is the name of the file containing the reference weight information for the stock
    */
   GrowthCalcE(CommentStream& infile, const IntVector& areas, const TimeClass* const TimeInfo,
@@ -371,7 +371,7 @@ public:
    * \param infile is the CommentStream to read the growth parameters from
    * \param areas is the list of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
-   * \param keeper is the Keeper for the switches for the current model
+   * \param keeper is the Keeper for the current model
    * \param Area is the AreaClass for the current model
    * \param lenindex is the listing of the lengths used for the growth of the stock
    */
@@ -421,7 +421,7 @@ public:
    * \param infile is the CommentStream to read the growth parameters from
    * \param areas is the list of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
-   * \param keeper is the Keeper for the switches for the current model
+   * \param keeper is the Keeper for the current model
    * \param Area is the AreaClass for the current model
    * \param lenindex is the listing of the lengths used for the growth of the stock
    */
@@ -471,7 +471,7 @@ public:
    * \param infile is the CommentStream to read the growth parameters from
    * \param areas is the list of areas that the growth calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision of the stock
-   * \param keeper is the Keeper for the switches for the current model
+   * \param keeper is the Keeper for the current model
    */
   GrowthCalcH(CommentStream& infile, const IntVector& areas,
     const LengthGroupDivision* const LgrpDiv, Keeper* const keeper);

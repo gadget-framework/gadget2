@@ -233,9 +233,6 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
   keeper->ClearLast();
 }
 
-MaturityA::~MaturityA() {
-}
-
 void MaturityA::Precalc(const TimeClass* const TimeInfo) {
   this->Maturity::Precalc(TimeInfo);
   Coefficient.Update(TimeInfo);
@@ -256,11 +253,11 @@ void MaturityA::Precalc(const TimeClass* const TimeInfo) {
 }
 
 //Calculate the percentage that becomes Mature each timestep.
-double MaturityA::MaturationProbability(int age, int length, int Growth,
+double MaturityA::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, const AreaClass* const Area, int area) {
 
   const double ratio =  PrecalcMaturation[age][length] *
-    (Coefficient[1] * Growth * LgrpDiv->dl() +
+    (Coefficient[1] * growth * LgrpDiv->dl() +
     Coefficient[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
   return (min(max(0.0, ratio), 1.0));
 }
@@ -325,9 +322,6 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
   keeper->ClearLast();
 }
 
-MaturityB::~MaturityB() {
-}
-
 void MaturityB::Print(ofstream& outfile) const {
   int i;
   Maturity::Print(outfile);
@@ -341,7 +335,7 @@ void MaturityB::Print(ofstream& outfile) const {
 
 //Calculate the percentage that becomes Mature each timestep.
 //Need to check units on LengthOfCurrent
-double MaturityB::MaturationProbability(int age, int length, int Growth,
+double MaturityB::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, const AreaClass* const Area, int area) {
 
   int i;
@@ -412,15 +406,12 @@ void MaturityC::Precalc(const TimeClass* const TimeInfo) {
   }
 }
 
-MaturityC::~MaturityC() {
-}
-
-double MaturityC::MaturationProbability(int age, int length, int Growth,
+double MaturityC::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, const AreaClass* const Area, int area) {
 
   if (this->IsMaturationStep(area, TimeInfo)) {
     const double ratio =  PrecalcMaturation[age][length] *
-      (Coefficient[0] * Growth * LgrpDiv->dl() + Coefficient[2] *
+      (Coefficient[0] * growth * LgrpDiv->dl() + Coefficient[2] *
       TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
     return (min(max(0.0, ratio), 1.0));
   }
@@ -483,10 +474,7 @@ void MaturityD::Precalc(const TimeClass* const TimeInfo) {
   }
 }
 
-MaturityD::~MaturityD() {
-}
-
-double MaturityD::MaturationProbability(int age, int length, int Growth,
+double MaturityD::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, const AreaClass* const Area, int area) {
 
   if (this->IsMaturationStep(area, TimeInfo)) {

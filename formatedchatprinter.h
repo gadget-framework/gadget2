@@ -2,7 +2,7 @@
 #define formatedchatprinter_h
 
 #include "printer.h"
-#include "mortpredlength.h"
+#include "mortpredator.h"
 
 class FormatedCHatPrinter;
 class StockAggregator;

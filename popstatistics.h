@@ -11,17 +11,17 @@ class PopStatistics {
 public:
   PopStatistics(const PopInfoIndexVector& pop, const LengthGroupDivision* const lgrpdiv);
   PopStatistics(const PopInfoVector& pop, const LengthGroupDivision* const lgrpdiv);
-  ~PopStatistics();
+  ~PopStatistics() {};
   double MeanLength() const { return meanlength; };
   double MeanWeight() const { return meanweight; };
   double TotalNumber() const { return totalnumber; };
-  double StdDevOfLength() const { return stddevOflength; };
+  double StdDevOfLength() const { return stddevoflength; };
 protected:
   void CalcStatistics(const PopInfoVector& pop, const LengthGroupDivision* const lgrpdiv);
   double meanlength;
   double meanweight;
   double totalnumber;
-  double stddevOflength;
+  double stddevoflength;
 };
 
 #endif

@@ -8,7 +8,7 @@
 
 class Stock;
 class LenStock;
-class MortPredLength;
+class MortPredator;
 class MortPrey;
 
 /*  Methods for printing in a format easy to read by external programs.
@@ -32,7 +32,7 @@ ostream& printMatrixHeader(ostream& o, int minage, int maxage,
   const LengthGroupDivision& collengths, const char* value, int withrowind,  int indent = 0);
 char* strcon(const char* a, const char* b);
 char* makeSpaces(int nr);
-ostream& printc_hat(ostream& o, const MortPredLength& pred, AreaClass area, int indent = 0);
+ostream& printc_hat(ostream& o, const MortPredator& pred, AreaClass area, int indent = 0);
 ostream& printmean_n(ostream& o, const MortPrey& prey, AreaClass area, int indent = 0);
 ostream& printMatrixHeader(ostream& o, const IntVector& ages,
   const LengthGroupDivision& lengths, const char* value, int withrowind, int indent = 0);

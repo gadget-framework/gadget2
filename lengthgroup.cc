@@ -224,14 +224,15 @@ int lengthGroupIsFiner(const LengthGroupDivision* finer,
 
   if (coarser->NoLengthGroups() == 0 || finer->NoLengthGroups() == 0)
     return 2;
+
   int c = 0;
-  const int cmax = coarser->NoLengthGroups() - 1;
+  int f, fmin;
+
+  int cmax = coarser->NoLengthGroups() - 1;
+  int fmax = finer->NoLengthGroups() - 1;
   double allowederror = (coarser->Maxlength(cmax) - coarser->Minlength(0)) *
     rathersmall / coarser->NoLengthGroups();
 
-  int f = 0;
-  int fmin = 0;
-  int fmax = finer->NoLengthGroups() - 1;
   double minlength = max(coarser->Minlength(0), finer->Minlength(0));
   double maxlength = min(coarser->Maxlength(cmax), finer->Maxlength(fmax));
 
@@ -239,22 +240,20 @@ int lengthGroupIsFiner(const LengthGroupDivision* finer,
   if (minlength - allowederror >= maxlength)
     return 2;
 
+  fmin = finer->NoLengthGroup(minlength);
+  fmax = finer->NoLengthGroup(maxlength);
+
   if (minlength - allowederror > finer->Minlength(0))
-    if (absolute(minlength -
-       finer->Minlength(finer->NoLengthGroup(minlength))) > allowederror) {
-      BogusLengthGroup = finer->NoLengthGroup(minlength);
+    if (absolute(minlength - finer->Minlength(fmin)) > allowederror) {
+      BogusLengthGroup = fmin;
       return 0;
     }
 
   if (maxlength + allowederror < finer->Maxlength(fmax))
-    if (absolute(maxlength -
-       finer->Minlength(finer->NoLengthGroup(maxlength))) > allowederror) {
-      BogusLengthGroup = finer->NoLengthGroup(maxlength);
+    if (absolute(maxlength - finer->Minlength(fmax)) > allowederror) {
+      BogusLengthGroup = fmax;
       return 0;
     }
-
-  fmin = finer->NoLengthGroup(minlength);
-  fmax = finer->NoLengthGroup(maxlength);
 
   //if fmax is finer is not in the intersection of the length groups
   if (absolute(maxlength - finer->Minlength(fmax)) < allowederror)

@@ -10,7 +10,7 @@
 class CatchInTons : public Likelihood {
 public:
   CatchInTons(CommentStream& infile, const AreaClass* const areas,
-    const TimeClass* const timeinfo, double likweight);
+    const TimeClass* const timeinfo, double w);
   void Reset(const Keeper* const keeper);
   void Print(ofstream& outfile) const;
   void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);

@@ -12,8 +12,8 @@
 #include "gadget.h"
 
 CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double likweight, const char* name)
-  : Likelihood(CATCHSTATISTICSLIKELIHOOD, likweight) {
+  const TimeClass* const TimeInfo, double w, const char* name)
+  : Likelihood(CATCHSTATISTICSLIKELIHOOD, w) {
 
   lgrpDiv = NULL;
   ErrorHandler handle;

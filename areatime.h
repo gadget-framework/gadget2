@@ -19,7 +19,7 @@ public:
    */
   AreaClass(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
-   * \brief This is the AreaClass destructor
+   * \brief This is the default AreaClass destructor
    */
   ~AreaClass() {};
   /**

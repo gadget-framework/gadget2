@@ -1,40 +1,33 @@
 #ifndef popinfo_h
 #define popinfo_h
 
-//Class PopInfo stores Number and Mean weights.
+/**
+ * \class PopInfo
+ * \brief This is the class used store information about the number, and mean weight, of a population cell of a stock
+ */
 class PopInfo {
 public:
-  double N;
-  double W;
-  #ifdef GADGET_INLINE
-  inline
-  #endif
+  /**
+   * \brief This is the PopInfo constructor
+   */
   PopInfo();
+  /**
+   * \brief This is the PopInfo destructor
+   */
   ~PopInfo() {};
-  #ifdef GADGET_INLINE
-  inline
-  #endif
+  /**
+   * \brief This is the number of the fish in the population cell
+   */
+  double N;
+  /**
+   * \brief This is the mean weight of the fish in the population cell
+   */
+  double W;
   PopInfo& operator += (const PopInfo& a);
-  #ifdef GADGET_INLINE
-  inline
-  #endif
   void operator -= (double a);
-  #ifdef GADGET_INLINE
-  inline
-  #endif
   void operator *= (double a);
-  #ifdef GADGET_INLINE
-  inline
-  #endif
   PopInfo operator * (double b);
-  #ifdef GADGET_INLINE
-  inline
-  #endif
   PopInfo& operator = (const PopInfo& a);
 };
-
-#ifdef GADGET_INLINE
-#include "popinfo.cc"
-#endif
 
 #endif

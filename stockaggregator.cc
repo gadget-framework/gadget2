@@ -13,7 +13,7 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
   mincol.resize(Ages.Nrow(), 99999);
   maxrow = 0;
   minrow = Ages.Nrow();
-  numlengths = LgrpDiv->NoLengthGroups();
+  int numlengths = LgrpDiv->NoLengthGroups();
 
   for (i = 0; i < stocks.Size(); i++) {
     checkLengthGroupIsFiner(stocks[i]->ReturnLengthGroupDiv(),
@@ -147,12 +147,4 @@ void StockAggregator::MeanSum() {
       }
     }
   }
-}
-
-const AgeBandMatrixPtrVector& StockAggregator::ReturnSum() const {
-  return total;
-}
-
-const AgeBandMatrixPtrVector& StockAggregator::ReturnMeanSum() const {
-  return meanTotal;
 }

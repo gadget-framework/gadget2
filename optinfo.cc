@@ -148,9 +148,8 @@ void OptInfoHooke::MaximizeLikelihood() {
     exit(EXIT_FAILURE);
   }
 
-  int FinalValue;
   //JMB - swapped the order of upperb and lowerb to match entries for hooke()
-  FinalValue = hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
+  count = hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
     rho, lambda, hookeeps, hookeiter);
 
   for (i = 0; i < nopt; i++)
@@ -272,8 +271,7 @@ void OptInfoSimann::MaximizeLikelihood() {
     exit(EXIT_FAILURE);
   }
 
-  int Finalvalue;
-  Finalvalue = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, 0,
+  count = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, 0,
     simanniter, cstep, T, vmstep, rt, ns, nt, simanneps);
 
   cout << "\nOptimization finished with final likelihood score of " << EcoSystem->Likelihood()
@@ -406,8 +404,7 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
     exit(EXIT_FAILURE);
   }
 
-  int Finalvalue;
-  Finalvalue = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, 0,
+  count = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, 0,
     simanniter, cstep, T, vmstep, rt, ns, nt, simanneps);
 
   for (i = 0; i < nopt; i++)
@@ -432,6 +429,7 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
     }
   }
 
+  count = 0;
   for (i = 0; i < nopt; i++) {
     if (isZero(val[i])) {
       count++;
@@ -445,7 +443,7 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
     exit(EXIT_FAILURE);
   }
 
-  Finalvalue += hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
+  count = hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
     rho, lambda, hookeeps, hookeiter);
 
   for (i = 0; i < nopt; i++)

@@ -120,7 +120,7 @@ int main(int aNumber, char *const aVector[]) {
     char type[MaxStrLength];
     strncpy(type, "", MaxStrLength);
 
-    MainInfo.optinfocommentfile >> ws >> type;
+    MainInfo.OptinfoCommentFile >> ws >> type;
     if ((strcasecmp(type, "hookeandsimann") == 0) || (strcasecmp(type, "simannandhooke") == 0))
       Optinfo = new OptInfoHookeAndSimann();
     else if (strcasecmp(type, "hooke") == 0)
@@ -131,17 +131,16 @@ int main(int aNumber, char *const aVector[]) {
     else
       handle.Unexpected("hooke, simann, or simannandhooke", type);
 
-    Optinfo->Read(MainInfo.optinfocommentfile);
+    Optinfo->Read(MainInfo.OptinfoCommentFile);
     MainInfo.CloseOptinfofile();
 
   } else {
     Optinfo = new OptInfoHooke();
     //JMB - no optinfo file specified so only use default values
-    //Optinfo->Read(MainInfo.optinfocommentfile);
   }
 
   if (MainInfo.PrintInitialcond)
-    EcoSystem->PrintStatus(MainInfo.PrintInitialcondfilename);
+    EcoSystem->PrintStatus(MainInfo.PrintInitialCondFilename);
   if ((MainInfo.printinfo).Print())
     EcoSystem->PrintInitialInformation((MainInfo.printinfo).OutputFile);
   if ((MainInfo.printinfo).PrintinColumns())
@@ -165,7 +164,7 @@ int main(int aNumber, char *const aVector[]) {
   if (MainInfo.PrintLikelihoodInfo)
     EcoSystem->PrintLikelihoodInfo(MainInfo.PrintLikelihoodFilename);
   if (MainInfo.PrintFinalcond)
-    EcoSystem->PrintStatus(MainInfo.PrintFinalcondfilename);
+    EcoSystem->PrintStatus(MainInfo.PrintFinalCondFilename);
 
   //JMB - print final values of parameters
   if (!(MainInfo.Net))

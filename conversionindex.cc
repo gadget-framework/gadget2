@@ -75,9 +75,9 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     }
 
   int k = 0;
-  pos.resize(Lf->NoLengthGroups(), 0); //JMB - default value
+  pos.resize(nf, 0); //JMB - default value
   for (i = minlength; i < maxlength; i++)
-    for (j = k; j < Lc->NoLengthGroups(); j++)
+    for (j = k; j < nc; j++)
       if (Lf->Meanlength(i) >= Lc->Minlength(j) && Lf->Meanlength(i) <= Lc->Maxlength(j)) {
         pos[i] = j;
         k = j;
@@ -86,46 +86,46 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 
   //If Minpos and Maxpos are needed.
   if (Mpos == 1) {
-    minpos.resize(Lc->NoLengthGroups(), Lf->NoLengthGroups() - 1); //initialized to Lf->Size() - 1.
+    minpos.resize(nc, nf - 1); //initialized to Lf->Size() - 1.
     for (i = minlength; i < maxlength; i++)
       if (i < minpos[pos[i]])
         minpos[pos[i]] = i;
 
-    for (i = Lc->NoLengthGroups() - 1; i > 0; i--)
+    for (i = nc - 1; i > 0; i--)
       if (minpos[i - 1] > minpos[i])
         minpos[i - 1] = minpos[i];
 
-    maxpos.resize(Lc->NoLengthGroups(), 0);
+    maxpos.resize(nc, 0);
     for (i = minlength; i < maxlength; i++)
       if (i > maxpos[pos[i]])
         maxpos[pos[i]] = i;
 
-    for (i = 0; i < Lc->NoLengthGroups() - 1;i++)
+    for (i = 0; i < nc - 1;i++)
       if (maxpos[i + 1] < maxpos[i])
         maxpos[i + 1] = maxpos[i];
   }
 
   //If number in each length group is needed.
   if (NrOf) {
-    nrof.resize(Lf->NoLengthGroups(), 0);
+    nrof.resize(nf, 0);
     for (i = minlength; i < maxlength; i++)
       nrof[i] = maxpos[pos[i]] - minpos[pos[i]] + 1;
   }
 
   //if the conversionindex is to be used for interpolation.
   if (interp) {
-    interpratio.resize(Lf->NoLengthGroups());
-    interppos.resize(Lf->NoLengthGroups(), -1);
+    interpratio.resize(nf);
+    interppos.resize(nf, -1);
     k = 0;
     for (i = minlength; i < maxlength; i++)
-      for (j = k; j < Lc->NoLengthGroups() - 1; j++)
+      for (j = k; j < nc - 1; j++)
         if (Lf->Meanlength(i) >= Lc->Meanlength(j) && Lf->Meanlength(i) < Lc->Meanlength(j + 1)) {
           interppos[i] = j;
           k = j;
           break;
         }
 
-    for (i = 0; i < Lf->NoLengthGroups(); i++)
+    for (i = 0; i < nf; i++)
       if (interppos[i] != -1)
         interpratio[i] = (Lf->Meanlength(i) - Lc->Meanlength(interppos[i])) /
           (Lc->Meanlength(interppos[i] + 1) - Lc->Meanlength(interppos[i]));

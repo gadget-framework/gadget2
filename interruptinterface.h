@@ -18,6 +18,7 @@
 class InterruptInterface {
 public:
   InterruptInterface(const Ecosystem& ecosystem);
+  ~InterruptInterface() {};
   int menu();
 private:
   void printMenu();

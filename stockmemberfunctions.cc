@@ -144,7 +144,7 @@ void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass*
 
 void Stock::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doesmove)
-    transition->MoveAgegroupToTransitionStock(area, TimeInfo, haslgr);
+    transition->Move(area, TimeInfo);
 }
 
 void Stock::FirstSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
@@ -173,10 +173,10 @@ void Stock::UpdateMatureStockWithTags(const TimeClass* const TimeInfo) {
   matureTags.DeleteAll();
 }
 
-void Stock::Renewal(int area, const TimeClass* const TimeInfo, double ratio) {
+void Stock::Renewal(int area, const TimeClass* const TimeInfo) {
   if (doesrenew) {
     int inarea = AreaNr[area];
-    renewal->AddRenewal(Alkeys[inarea], area, TimeInfo, ratio);
+    renewal->AddRenewal(Alkeys[inarea], area, TimeInfo);
     if (tagAlkeys.NrOfTagExp() > 0)
       tagAlkeys[inarea].UpdateRatio(Alkeys[inarea]);
   }

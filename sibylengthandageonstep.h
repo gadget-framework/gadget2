@@ -8,6 +8,8 @@
 class SIByLengthAndAgeOnStep;
 class StockAggregator;
 
+enum OptType { PEARSONOPTTYPE = 1, MULTINOMIALOPTTYPE, EXPERIMENTALOPTTYPE, GAMMAOPTTYPE, LOGFUNCOPTTYPE };
+
 class SIByLengthAndAgeOnStep : public SIOnStep {
 public:
   SIByLengthAndAgeOnStep(CommentStream& infile, const IntVector& areas,
@@ -21,11 +23,12 @@ public:
   virtual double Regression() {return likelihood; };
   void calcIndex(const AgeBandMatrix* alptr, FitType ftype);
   void PrintLikelihoodOnStep(ofstream& o, int print_type);
-  virtual void PrintLikelihood(ofstream&, const TimeClass& time, const char*);
-  virtual void PrintLikelihoodHeader(ofstream&, const char*);
+  virtual void PrintLikelihood(ofstream&, const TimeClass& time, const char* name);
+  virtual void PrintLikelihoodHeader(ofstream&, const char* name);
   virtual void Reset(const Keeper* const keeper);
   virtual void LikelihoodPrint(ofstream& outfile);
-  virtual void CommandLinePrint(ofstream& o, const TimeClass& time, const PrintInfo&);
+  virtual void CommandLinePrint(ofstream& outfile, const TimeClass& time, const PrintInfo&);
+  OptType getOptType() { return opttype; };
 protected:
   void ReadSurveyData(CommentStream&, const char*, const CharPtrVector&, const CharPtrVector&, const TimeClass*);
   double calcLikPearson();
@@ -55,7 +58,6 @@ protected:
   DoubleVector b_vec;
   IntVector l_index; //for print purposes
   IntVector a_index; //for print purposes
-  enum OptType { pearson = 0, multinomial, experimental, gamma, logfunc };
   OptType opttype;
   CharPtrVector stocknames;
   IntVector mincol;

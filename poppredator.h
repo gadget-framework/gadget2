@@ -19,11 +19,11 @@ public:
   virtual ~PopPredator();
   virtual void Print(ofstream& outfile) const;
   virtual const BandMatrix& Consumption(int area, const char* preyname) const;
-  virtual const DoubleVector& Consumption(int area) const;
-  virtual const DoubleVector& OverConsumption(int area) const;
-  virtual const LengthGroupDivision* ReturnLengthGroupDiv() const;
-  virtual int NoLengthGroups() const;
-  virtual double Length(int i) const;
+  virtual const DoubleVector& Consumption(int area) const { return totalconsumption[AreaNr[area]]; };
+  virtual const DoubleVector& OverConsumption(int area) const { return overconsumption[AreaNr[area]]; };
+  virtual const LengthGroupDivision* ReturnLengthGroupDiv() const { return LgrpDiv; };
+  virtual int NoLengthGroups() const { return LgrpDiv->NoLengthGroups(); };
+  virtual double Length(int i) const { return LgrpDiv->Meanlength(i); };
   virtual void Reset(const TimeClass* const TimeInfo);
   virtual const double consumedBiomass(int prey_nr, int area_nr) const;
   void Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& ratio); //kgf 3/8 98

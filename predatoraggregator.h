@@ -19,11 +19,11 @@ public:
   PredatorAggregator(const CharPtrVector& pred_names, PreyPtrVector& Preys,
     const IntMatrix& Areas, const IntVector&  ages,
     const LengthGroupDivision* const preyLgrpDiv);
-  ~PredatorAggregator();
+  ~PredatorAggregator() {};
   void Sum();
   void Sum(int dummy); //to be used with the second constructor
   void NumberSum();
-  const BandMatrixVector& ReturnSum() const;
+  const BandMatrixVector& ReturnSum() const { return total; };
 protected:
   PredatorPtrVector predators;
   PreyPtrVector preys;

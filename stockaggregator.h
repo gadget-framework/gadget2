@@ -16,8 +16,8 @@ public:
   ~StockAggregator();
   void Sum();
   void MeanSum();
-  const AgeBandMatrixPtrVector& ReturnSum() const;
-  const AgeBandMatrixPtrVector& ReturnMeanSum() const;
+  const AgeBandMatrixPtrVector& ReturnSum() const { return total; };
+  const AgeBandMatrixPtrVector& ReturnMeanSum() const { return meanTotal; };
   const IntVector& getMinCol() const { return mincol; };
   const IntVector& getMaxCol() const { return maxcol; };
   int getMinRow() const { return minrow; };
@@ -31,7 +31,6 @@ protected:
   IntVector AgeNr;
   AgeBandMatrixPtrVector total;
   AgeBandMatrixPtrVector meanTotal;
-  int numlengths;
   IntVector maxcol;
   IntVector mincol;
   int minrow;

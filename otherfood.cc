@@ -81,35 +81,8 @@ LengthPrey* OtherFood::ReturnPrey() const {
   return prey;
 }
 
-void OtherFood::CalcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-}
-
 void OtherFood::CheckEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   prey->CheckConsumption(area, TimeInfo->NrOfSubsteps());
-}
-
-void OtherFood::AdjustEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-}
-
-void OtherFood::ReducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-}
-
-void OtherFood::Grow(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-}
-
-void OtherFood::FirstUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-}
-
-void OtherFood::SecondUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-}
-
-void OtherFood::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-}
-
-void OtherFood::FirstSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-}
-
-void OtherFood::SecondSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
 }
 
 void OtherFood::CalcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
@@ -121,9 +94,6 @@ void OtherFood::CalcNumbers(int area, const AreaClass* const Area, const TimeCla
   prey->SumUsingPopInfo(NumberInArea, area, TimeInfo->CurrentSubstep());
 }
 
-void OtherFood::Migrate(const TimeClass* const TimeInfo) {
-}
-
 void OtherFood::Print(ofstream& outfile) const {
   outfile << "\nOtherfood " << Name() << endl;
   prey->Print(outfile);
@@ -133,7 +103,4 @@ void OtherFood::Print(ofstream& outfile) const {
 void OtherFood::Reset(const TimeClass* const TimeInfo) {
   if (TimeInfo->CurrentTime() == 1)
     prey->Reset();
-}
-
-void OtherFood::RecalcMigration(const TimeClass* const TimeInfo) {
 }

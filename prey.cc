@@ -9,6 +9,7 @@
 Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname, Keeper* const keeper)
   : HasName(givenname), LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
+  type = PREYTYPE;
   ErrorHandler handle;
   keeper->AddString("prey");
   char text[MaxStrLength];
@@ -47,6 +48,7 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
 Prey::Prey(const DoubleVector& lengths, const IntVector& Areas, const char* givenname)
   : HasName(givenname), LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
+  type = PREYTYPE;
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
     printLengthGroupError(lengths, givenname);
@@ -54,7 +56,6 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas, const char* give
 }
 
 void Prey::InitializeObjects() {
-  PopInfo nullpop;
 
   while (Number.Nrow())
     Number.DeleteRow(0);
@@ -80,6 +81,7 @@ void Prey::InitializeObjects() {
   //Now we can resize the objects.
   int numlen = LgrpDiv->NoLengthGroups();
   int numarea = areas.Size();
+  PopInfo nullpop;
 
   Number.AddRows(numarea, numlen, nullpop);
   numberPriortoEating.AddRows(numarea, numlen, nullpop);
@@ -200,15 +202,6 @@ void Prey::CheckConsumption(int area, int NrOfSubsteps) {
   tooMuchConsumption[inarea] = temp;
 }
 
-const DoubleVector& Prey::Bconsumption(int area) const {
-  return consumption[AreaNr[area]];
-}
-
-//CheckConsumption has to be called before this one is.
-const DoubleVector& Prey::OverConsumption(int area) const {
-  return overconsumption[AreaNr[area]];
-}
-
 void Prey::Reset() {
   int area, l;
   for (area = 0; area < areas.Size(); area++) {
@@ -224,11 +217,6 @@ void Prey::Reset() {
       overconsumption[area][l] = 0.0;
     }
   }
-}
-
-//Return the original number of prey in an area.
-const PopInfoVector& Prey::NumberPriortoEating(int area) const {
-  return numberPriortoEating[AreaNr[area]];
 }
 
 void Prey::Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& rat) {

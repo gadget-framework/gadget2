@@ -108,15 +108,15 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   //read the likelihoodtype
   readWordAndValue(infile, "likelihoodtype", text);
   if (strcasecmp(text, "pearson") == 0)
-    opttype = pearson;
+    opttype = PEARSONOPTTYPE;
   else if (strcasecmp(text, "multinomial") == 0)
-    opttype = multinomial;
+    opttype = MULTINOMIALOPTTYPE;
   else if (strcasecmp(text, "experimental") == 0)
-    opttype = experimental;
+    opttype = EXPERIMENTALOPTTYPE;
   else if (strcasecmp(text, "gamma") == 0)
-    opttype = gamma;
+    opttype = GAMMAOPTTYPE;
   else if (strcasecmp(text, "log") == 0)
-    opttype = logfunc;
+    opttype = LOGFUNCOPTTYPE;
   else
     handle.Unexpected("likelihoodtype", text);
 
@@ -257,24 +257,25 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!(this->IsToSum(TimeInfo)))
     return;
   FitType ftype = this->getFitType();
+  OptType otype = this->getOptType();
   aggregator->MeanSum(); //aggregate mean N values in present time step
   //Use that the AgeBandMatrixPtrVector aggregator->ReturnMeanSum returns only one element.
   const AgeBandMatrix* alptr = &(aggregator->ReturnMeanSum()[0]);
   this->calcIndex(alptr, ftype);
-  switch(opttype) {
-    case 0:
+  switch(otype) {
+    case PEARSONOPTTYPE:
       likelihood += calcLikPearson();
       break;
-    case 1:
+    case MULTINOMIALOPTTYPE:
       likelihood += calcLikMultinomial();
       break;
-    case 2:
+    case EXPERIMENTALOPTTYPE:
       likelihood += calcLikExperimental();
       break;
-    case 3:
+    case GAMMAOPTTYPE:
       likelihood += calcLikGamma();
       break;
-    case 4:
+    case LOGFUNCOPTTYPE:
       likelihood += calcLikLog();
       break;
     default:

@@ -47,7 +47,7 @@ void InterruptInterface::printMenu() {
     << " d   ->  dump Age/Length matrix (number&weight) for Stock\n"
     << " s   ->  dump Suitability matrix from Predator\n"
     << " m   ->  dump Natural M vector from Stock\n"
-    << " v   ->  dump c_hat from MortPredLength\n"
+    << " v   ->  dump c_hat from MortPredator\n"
     << " n   ->  dump mean_n from MortPrey\n"
     << " z   ->  dump z from MortPrey\n"
     << " a   ->  dump cannibalism from MortPrey\n"
@@ -145,7 +145,7 @@ void InterruptInterface::dumpNaturalM(CharPtrVector& args) {
   ofstream out(NATURALM_FILE);
   int i;
   for (i = 0; i < eco->stockvec.Size(); i++) {
-    if (eco->stockvec[i]->stockType() != LENSTOCKTYPE)
+    if (eco->stockvec[i]->Type() != LENSTOCKTYPE)
       printNaturalM(out, *eco->stockvec[i]);
     else
       printNaturalM(out, *(const LenStock*)(eco->stockvec[i]));
@@ -180,7 +180,7 @@ void InterruptInterface::dumpc_hat(CharPtrVector& args) {
   int i;
   for (i = 0; i < eco->stockvec.Size(); i++)
     if (eco->stockvec[i]->DoesEat()) {
-      printc_hat(out, *(MortPredLength*)eco->stockvec[i]->ReturnPredator(), *eco->Area);
+      printc_hat(out, *(MortPredator*)eco->stockvec[i]->ReturnPredator(), *eco->Area);
       out.flush();
     }
 }

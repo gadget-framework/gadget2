@@ -15,19 +15,19 @@ class PredatorAggregator;
 
 class SC {
 public:
-  SC(CommentStream&, const AreaClass* const, const TimeClass* const,
+  SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo,
     Keeper* const keeper, const char* datafilename, const char* name);
   virtual ~SC();
-  virtual double Likelihood(const TimeClass* const);
+  virtual double Likelihood(const TimeClass* const TimeInfo);
   virtual void Reset();
-  virtual void Print(ofstream&) const;
+  virtual void Print(ofstream& outfile) const;
   virtual void SetPredatorsAndPreys(PredatorPtrVector&, PreyPtrVector&);
   virtual void Aggregate(int i);
-  void CommandLinePrint(ofstream& stomachfile, const TimeClass& time, const PrintInfo& print);
+  void CommandLinePrint(ofstream& outfile, const TimeClass& time, const PrintInfo& print);
   virtual void PrintLikelihoodOnStep(ostream& outfile, int time,
     const TimeClass& t, int print_type);
-  virtual void PrintLikelihood(ofstream&, const TimeClass& time) {};
-  virtual void PrintLikelihoodHeader(ofstream&) {};
+  virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time) {};
+  virtual void PrintLikelihoodHeader(ofstream& outfile) {};
 protected:
   virtual double CalculateLikelihood(DoubleMatrixPtrVector&, DoubleMatrix&) = 0;
   DoubleMatrixPtrMatrix stomachcontent;   //[timeindex][areas][pred_l][prey_l]
@@ -99,17 +99,17 @@ protected:
 
 class StomachContent : public Likelihood {
 public:
-  StomachContent(CommentStream&, const AreaClass* const, const TimeClass* const,
-    Keeper* const keeper, double likweight, const char* name);
+  StomachContent(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo,
+    Keeper* const keeper, double w, const char* name);
   virtual ~StomachContent();
-  virtual void AddToLikelihood(const TimeClass* const);
+  virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper)
     { Likelihood::Reset(keeper); StomCont->Reset(); };
-  virtual void Print(ofstream&) const;
+  virtual void Print(ofstream& outfile) const;
   void SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys)
     { StomCont->SetPredatorsAndPreys(Predators, Preys); };
-  void CommandLinePrint(ofstream& stomachfile, const TimeClass& time, const PrintInfo& print)
-    { StomCont->CommandLinePrint(stomachfile, time, print); };
+  void CommandLinePrint(ofstream& outfile, const TimeClass& time, const PrintInfo& print)
+    { StomCont->CommandLinePrint(outfile, time, print); };
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time)
     { StomCont->PrintLikelihood(outfile, time); };
   virtual void PrintLikelihoodHeader(ofstream& outfile)

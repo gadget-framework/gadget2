@@ -25,8 +25,9 @@ class Printer {
 public:
   /**
    * \brief This is the default Printer constructor
+   * \param ptype is the PrinterType of the printer
    */
-  Printer(PrinterType TYPE) { type = TYPE; };
+  Printer(PrinterType ptype) { type = ptype; };
   /**
    * \brief This is the default Printer destructor
    */

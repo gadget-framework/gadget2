@@ -13,8 +13,8 @@
 
 StomachContent::StomachContent(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
-  Keeper* const keeper, double likweight, const char* name)
-  : Likelihood(STOMACHCONTENTLIKELIHOOD, likweight) {
+  Keeper* const keeper, double w, const char* name)
+  : Likelihood(STOMACHCONTENTLIKELIHOOD, w) {
 
   ErrorHandler handle;
   char datafilename[MaxStrLength];

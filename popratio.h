@@ -7,6 +7,7 @@ public:
   double* N;
   double R;
   PopRatio();
+  ~PopRatio() {};
   PopRatio& operator += (const PopRatio& a);
   PopRatio& operator = (const PopRatio& a);
   void operator -= (double a);

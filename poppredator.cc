@@ -64,10 +64,6 @@ void PopPredator::Print(ofstream& outfile) const {
   }
 }
 
-const DoubleVector& PopPredator::Consumption(int area) const {
-  return totalconsumption[AreaNr[area]];
-}
-
 const BandMatrix& PopPredator::Consumption(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < NoPreys(); prey++)
@@ -91,24 +87,8 @@ const double PopPredator::consumedBiomass(int prey_nr, int area_nr) const{
   return tons;
 }
 
-const DoubleVector& PopPredator::OverConsumption(int area) const {
-  return overconsumption[AreaNr[area]];
-}
-
-const LengthGroupDivision* PopPredator::ReturnLengthGroupDiv() const {
-  return LgrpDiv;
-}
-
 void PopPredator::DeleteParametersForPrey(int prey, Keeper* const keeper) {
   Predator::DeleteParametersForPrey(prey, keeper);
-}
-
-int PopPredator::NoLengthGroups() const {
-  return LgrpDiv->NoLengthGroups();
-}
-
-double PopPredator::Length(int i) const {
-  return LgrpDiv->Meanlength(i);
 }
 
 void PopPredator::Reset(const TimeClass* const TimeInfo) {

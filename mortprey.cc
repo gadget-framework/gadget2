@@ -8,48 +8,17 @@ MortPrey::MortPrey(CommentStream& infile, const IntVector& Areas,
   Keeper* const keeper, const LengthGroupDivision* const stock_lgrp)
   : Prey(infile, Areas, givenname, keeper) {
 
+  type = MORTPREYTYPE;
   prey_lgrp = new LengthGroupDivision(*LgrpDiv);
   delete LgrpDiv; //wrong dimensions set in Prey's constructor
   LgrpDiv = new LengthGroupDivision(*stock_lgrp);
 
   this->InitializeObjects();
 
-  int numlength = LgrpDiv->NoLengthGroups();
-  int numarea = areas.Size();
-  IntVector size(maxage - minage + 1, numlength);
+  IntVector size(maxage - minage + 1, LgrpDiv->NoLengthGroups());
   IntVector minlength(maxage - minage + 1, 0);
-  Alkeys.resize(numarea, minage, minlength, size);
-  mean_n.resize(numarea, minage, minlength, size);
-  haveCalculatedMeanN.resize(numarea, 0);
-  z.AddRows(numarea, numlength, 0.0);
-  mort_fact.AddRows(numarea, numlength, 0.0);
-  prop_surv.AddRows(numarea, numlength, 0.0);
-  cannibalism.AddRows(numarea, numlength, 0.0);
-  cann_is_true = 0;
-}
-
-MortPrey::MortPrey(const DoubleVector& lengths, const IntVector& Areas, int minage,
-  int maxage, const char* givenname, const LengthGroupDivision* const stock_lgrp)
-  : Prey(lengths, Areas, givenname) {
-
-  prey_lgrp = new LengthGroupDivision(*LgrpDiv);
-  delete LgrpDiv; //wrong dimensions set in Prey's constructor
-  LgrpDiv = new LengthGroupDivision(*stock_lgrp);
-
-  this->InitializeObjects();
-
-  int numlength = LgrpDiv->NoLengthGroups();
-  int numarea = areas.Size();
-  IntVector size(maxage - minage + 1, numlength);
-  IntVector minlength(maxage - minage + 1, 0);
-  Alkeys.resize(numarea, minage, minlength, size);
-  mean_n.resize(numarea, minage, minlength, size);
-  haveCalculatedMeanN.resize(numarea, 0);
-  z.AddRows(numarea, numlength, 0.0);
-  mort_fact.AddRows(numarea, numlength, 0.0);
-  prop_surv.AddRows(numarea, numlength, 0.0);
-  cannibalism.AddRows(numarea, numlength, 0.0);
-  cann_is_true = 0;
+  Alkeys.resize(areas.Size(), minage, minlength, size);
+  mean_n.resize(areas.Size(), minage, minlength, size);
 }
 
 MortPrey::~MortPrey() {
@@ -60,7 +29,6 @@ MortPrey::~MortPrey() {
 }
 
 void MortPrey::InitializeObjects() {
-  PopInfo nullpop;
 
   while (Number.Nrow())
     Number.DeleteRow(0);
@@ -82,10 +50,21 @@ void MortPrey::InitializeObjects() {
     overcons.DeleteRow(0);
   while (overconsumption.Nrow())
     overconsumption.DeleteRow(0);
+  while (haveCalculatedMeanN.Size())
+    haveCalculatedMeanN.Delete(0);
+  while (z.Nrow())
+    z.DeleteRow(0);
+  while (mort_fact.Nrow())
+    mort_fact.DeleteRow(0);
+  while (prop_surv.Nrow())
+    prop_surv.DeleteRow(0);
+  while (cannibalism.Nrow())
+    cannibalism.DeleteRow(0);
 
   //Now we can resize the objects.
   int numlength = LgrpDiv->NoLengthGroups();
   int numarea = areas.Size();
+  PopInfo nullpop;
 
   Number.AddRows(numarea, numlength, nullpop);
   numberPriortoEating.AddRows(numarea, numlength, nullpop);
@@ -97,6 +76,14 @@ void MortPrey::InitializeObjects() {
   ratio.AddRows(numarea, numlength, 0.0);
   overcons.AddRows(numarea, numlength, 0.0);
   overconsumption.AddRows(numarea, numlength, 0.0);
+
+  haveCalculatedMeanN.resize(numarea, 0);
+  z.AddRows(numarea, numlength, 0.0);
+  mort_fact.AddRows(numarea, numlength, 0.0);
+  prop_surv.AddRows(numarea, numlength, 0.0);
+  cannibalism.AddRows(numarea, numlength, 0.0);
+
+  cann_is_true = 0;
 }
 
 void MortPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
@@ -181,7 +168,7 @@ void MortPrey::calcMeanN(int area) {
   //written by kgf 24/6 98
   assert(haveCalculatedMeanN[area] == 0);
   haveCalculatedMeanN[area] = 1;
-  const int inarea = AreaNr[area];
+  int inarea = AreaNr[area];
   int l;
   for (l = 0; l < LgrpDiv->NoLengthGroups(); l++) {
     prop_surv[inarea][l] = exp(- z[inarea][l]);

@@ -166,9 +166,6 @@ PredatorAggregator::PredatorAggregator(const CharPtrVector& pred_names, PreyPtrV
         total[i][j][k] = 0;
 }
 
-PredatorAggregator::~PredatorAggregator() {
-}
-
 void PredatorAggregator::Sum() {
   int g, h, i, j, k, l;
   int area, predLength, preyLength;
@@ -268,10 +265,6 @@ void PredatorAggregator::Sum(int dummy) {
           if (total[i][j][k] > 0 && isZero(tot_predators[i][j]))
             cerr << "Warning: consumption without predators!\n";
       }
-}
-
-const BandMatrixVector& PredatorAggregator::ReturnSum() const {
-  return total;
 }
 
 //Sum the numbers (not biomass)

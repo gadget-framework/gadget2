@@ -8,12 +8,12 @@ public:
   PrintInfo();
   PrintInfo(const PrintInfo& pi);
   ~PrintInfo();
-  void SetParamOutFile(const char* const filename);
-  void SetOutputFile(const char* const filename);
-  void SetColumnOutputFile(const char* const filename);
-  void SetSurveyFile(const char* const filename);
-  void SetCatchFile(const char* const filename);
-  void SetStomachFile(const char* const filename);
+  void SetParamOutFile(char* filename);
+  void SetOutputFile(char* filename);
+  void SetColumnOutputFile(char* filename);
+  void SetSurveyFile(char* filename);
+  void SetCatchFile(char* filename);
+  void SetStomachFile(char* filename);
   void CheckNumbers();
   int Print() const { return oprint; };
   int PrintinColumns() const { return coprint; };

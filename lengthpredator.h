@@ -3,19 +3,56 @@
 
 #include "poppredator.h"
 
+/**
+ * \class LengthPredator
+ * \brief This is the class used to model the predation of stocks by a fleet
+ */
 class LengthPredator : public PopPredator {
 public:
-  LengthPredator(const char* givenname, const IntVector& areas,
+  /**
+   * \brief This is the LengthPredator constructor
+   * \param givenname is the name of the predator
+   * \param Areas is the list of areas that the predator lives on
+   * \param OtherLgrpDiv is the LengthGroupDivision that the predation will be applied to
+   * \param GivenLgrpDiv is the LengthGroupDivision that will be used to calculate the predation
+   * \param multi is a multiplicative constant that can be used to scale the biomass consumed
+   * \note There are 2 LengthGroupDivision objects specified - GivenLgrpDiv will be used to calculate the predation, which will then be applied to OtherLgrpDiv.  GivenLgrpDiv must not be finer than OtherLgrpDiv
+   */
+  LengthPredator(const char* givenname, const IntVector& Areas,
     const LengthGroupDivision* const OtherLgrpDiv,
-    const LengthGroupDivision* const GivenLgrpDiv,
-    double Multiplicative);
-  virtual ~LengthPredator();
-  virtual void Sum(const PopInfoVector& NumberInarea, int area);
+    const LengthGroupDivision* const GivenLgrpDiv, double multi);
+  /**
+   * \brief This is the default LengthPredator destructor
+   */
+  virtual ~LengthPredator() {};
+  /**
+   * \brief This will calculate the amount of prey that is consumed by the predator
+   * \param NumberInArea is the PopInfoVector giving the amount of prey in the area
+   * \param area is the area that the prey consumption is being calculated on
+   */
+  virtual void Sum(const PopInfoVector& NumberInArea, int area);
+  /**
+   * \brief This will return a scaler used to split the catch between the areas
+   * \param area is the area that the prey consumption is being calculated on
+   * \return scaler
+   */
   double Scaler(int area) const { return scaler[AreaNr[area]]; };
-  virtual double getFlevel(int area, const TimeClass* const TimeInfo)
-    { return -1.0; }; //meaningfull only for mortality model
+  /**
+   * \brief This will return a the fleet fishing level for an area and timestep
+   * \param area is the area that the prey consumption is being calculated on
+   * \param TimeInfo is the TimeClass for the current model
+   * \return -1 (will be overridden in derived classes)
+   * \note This is only meaningfull for a mortality model
+   */
+  virtual double getFlevel(int area, const TimeClass* const TimeInfo) { return -1.0; };
 protected:
+  /**
+   * \brief This is the vector of scalers used to split the total catch between the areas of the prey
+   */
   DoubleVector scaler;
+  /**
+   * \brief This is the multiplicative constant that can be used to scale the biomass consumed
+   */
   double Multiplicative;
 };
 

@@ -11,45 +11,39 @@ PrintInfo::PrintInfo() : PrintInterVal1(-2), PrintInterVal2(-2), forcePrint(0),
   catchfile = NULL;
   stomachfile = NULL;
 
-  int len;
-  len = strlen("lik.out");
-  OutputFile = new char[len + 1];
-  strcpy(OutputFile, "lik.out");
-  len = strlen("column.out");
-  ColumnOutputFile = new char[len + 1];
-  strcpy(ColumnOutputFile, "column.out");
-
-  SetParamOutFile("params.out");
-  SetStomachFile("stomach.out");
-  SetSurveyFile("survey.out");
-  SetCatchFile("catch.out");
+  char tmpname[12];
+  strncpy(tmpname, "", 12);
+  strcpy(tmpname, "params.out");
+  SetParamOutFile(tmpname);
+  strncpy(tmpname, "", 12);
+  strcpy(tmpname, "stomach.out");
+  SetStomachFile(tmpname);
+  strncpy(tmpname, "", 12);
+  strcpy(tmpname, "survey.out");
+  SetSurveyFile(tmpname);
+  strncpy(tmpname, "", 12);
+  strcpy(tmpname, "catch.out");
+  SetCatchFile(tmpname);
 }
 
 PrintInfo::PrintInfo(const PrintInfo& pi) {
-  OutputFile = NULL;
-  ColumnOutputFile = NULL;
+
   surveyfile = NULL;
   catchfile = NULL;
   stomachfile = NULL;
   ParamOutFile = NULL;
-  PrintInterVal1 = pi.PrintInterVal1;
-  PrintInterVal2 = pi.PrintInterVal2;
-
-  int len;
-  if (pi.OutputFile != NULL) {
-    len = strlen(pi.OutputFile);
-    OutputFile = new char[len + 1];
-    strcpy(OutputFile, pi.OutputFile);
-  }
   SetSurveyFile(pi.surveyfile);
   SetCatchFile(pi.catchfile);
   SetStomachFile(pi.stomachfile);
   SetParamOutFile(pi.ParamOutFile);
-  if (pi.ColumnOutputFile != NULL) {
-    len = strlen(pi.ColumnOutputFile);
-    ColumnOutputFile = new char[len + 1];
-    strcpy(ColumnOutputFile, pi.ColumnOutputFile);
-  }
+
+  OutputFile = NULL;
+  ColumnOutputFile = NULL;
+  if (pi.OutputFile != NULL)
+    SetOutputFile(pi.OutputFile);
+  if (pi.ColumnOutputFile != NULL)
+    SetColumnOutputFile(pi.ColumnOutputFile);
+
   forcePrint = pi.forcePrint;
   surveyprint = pi.surveyprint;
   catchprint = pi.catchprint;
@@ -57,6 +51,8 @@ PrintInfo::PrintInfo(const PrintInfo& pi) {
   oprint = pi.oprint;
   coprint = pi.coprint;
   givenPrecision = pi.givenPrecision;
+  PrintInterVal1 = pi.PrintInterVal1;
+  PrintInterVal2 = pi.PrintInterVal2;
 }
 
 PrintInfo::~PrintInfo() {
@@ -86,7 +82,7 @@ PrintInfo::~PrintInfo() {
   }
 }
 
-void PrintInfo::SetOutputFile(const char* const filename) {
+void PrintInfo::SetOutputFile(char* filename) {
   if (OutputFile != NULL) {
     delete[] OutputFile;
     OutputFile = NULL;
@@ -100,7 +96,7 @@ void PrintInfo::SetOutputFile(const char* const filename) {
   }
 }
 
-void PrintInfo::SetSurveyFile(const char* const filename) {
+void PrintInfo::SetSurveyFile(char* filename) {
   if (surveyfile != NULL) {
     delete[] surveyfile;
     surveyfile = NULL;
@@ -113,7 +109,7 @@ void PrintInfo::SetSurveyFile(const char* const filename) {
   }
 }
 
-void PrintInfo::SetCatchFile(const char* const filename) {
+void PrintInfo::SetCatchFile(char* filename) {
   if (catchfile != NULL) {
     delete[] catchfile;
     catchfile = NULL;
@@ -126,7 +122,7 @@ void PrintInfo::SetCatchFile(const char* const filename) {
   }
 }
 
-void PrintInfo::SetStomachFile(const char* const filename) {
+void PrintInfo::SetStomachFile(char* filename) {
   if (stomachfile != NULL) {
     delete[] stomachfile;
     stomachfile = NULL;
@@ -139,7 +135,7 @@ void PrintInfo::SetStomachFile(const char* const filename) {
   }
 }
 
-void PrintInfo::SetColumnOutputFile(const char* const filename) {
+void PrintInfo::SetColumnOutputFile(char* filename) {
   if (ColumnOutputFile != NULL) {
     delete[] ColumnOutputFile;
     ColumnOutputFile = NULL;
@@ -153,7 +149,7 @@ void PrintInfo::SetColumnOutputFile(const char* const filename) {
   }
 }
 
-void PrintInfo::SetParamOutFile(const char* const filename) {
+void PrintInfo::SetParamOutFile(char* filename) {
   if (ParamOutFile != NULL) {
     delete[] ParamOutFile;
     ParamOutFile = NULL;

@@ -6,12 +6,12 @@
 #include "areatime.h"
 #include "fleet.h"
 #include "stock.h"
-#include "mortpredlength.h"
+#include "mortpredator.h"
 #include "ecosystem.h"
 #include "gadget.h"
 
 CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
-  const TimeClass* const timeinfo, double likweight) : Likelihood(CATCHINTONSLIKELIHOOD, likweight) {
+  const TimeClass* const timeinfo, double w) : Likelihood(CATCHINTONSLIKELIHOOD, w) {
 
   ErrorHandler handle;
   int i, j;

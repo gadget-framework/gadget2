@@ -339,12 +339,10 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
   else
     cout << "The optimisation stopped because an optimum was found for this run\n";
 
-  if (newf > fbefore)
-    for (i = 0; i < nvars; i++)
-      newx[param[i]] = xbefore[param[i]];
-
+  for (i = 0; i < nvars; i++)
+    newx[param[i]] = xbefore[param[i]];
   newf = (*f)(newx, nvars);
   for (i = 0; i < nvars; i++)
     endpt[param[i]] = newx[param[i]];
-  return iters;
+  return FuncEval;
 }

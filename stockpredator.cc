@@ -57,9 +57,6 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   //Predator::SetPrey will call ResizeObjects.
 }
 
-StockPredator::~StockPredator() {
-}
-
 void StockPredator::Print(ofstream& outfile) const {
   int i, area;
   PopPredator::Print(outfile);
@@ -97,14 +94,6 @@ void StockPredator::Print(ofstream& outfile) const {
   outfile << endl;
 }
 
-const DoubleVector& StockPredator::FPhi(int area) const {
-  return fphi[AreaNr[area]];
-}
-
-const DoubleVector& StockPredator::MaxConByLength(int area) const {
-  return MaxconByLength[AreaNr[area]];
-}
-
 void StockPredator::ResizeObjects() {
   PopPredator::ResizeObjects();
 }
@@ -117,10 +106,6 @@ void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
   for (length = 0; length < Prednumber.Ncol(inarea); length++)
     Prednumber[inarea][length].N = 0.0;
   Alkeys[inarea].Colsum(Prednumber[inarea]);
-}
-
-const BandMatrix& StockPredator::Alproportion(int area) const {
-  return Alprop[AreaNr[area]];
 }
 
 void StockPredator::Reset(const TimeClass* const TimeInfo) {

@@ -52,7 +52,7 @@ public:
   /**
    * \brief This will delete an entry from the vector
    * \param pos is the element of the vector to be deleted
-   * \param keeper is the Keeper for the switches for the current model
+   * \param keeper is the Keeper for the current model
    * \note This will free the memory allocated to the deleted element of the vector
    */
   void Delete(int pos, Keeper* const keeper);

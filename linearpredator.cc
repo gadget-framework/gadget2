@@ -20,9 +20,6 @@ LinearPredator::LinearPredator(CommentStream& infile, const char* givenname,
   //Predator::SetPrey will call ResizeObjects.
 }
 
-LinearPredator::~LinearPredator() {
-}
-
 void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
   double Areasize, int CurrentSubstep, int NrOfSubsteps) {
 
@@ -48,8 +45,7 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
 
   for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
     totalcons[inarea][predl] = 0.0;
-
-  scaler[inarea] = Multiplicative;  //take a look
+  scaler[inarea] = Multiplicative;
   tmp = Multiplicative * LengthOfStep / NrOfSubsteps;
 
   for (prey = 0; prey < NoPreys(); prey++) {

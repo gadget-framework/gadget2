@@ -12,6 +12,9 @@
 #include "agebandmatrix.h"
 #include "gadget.h"
 
+enum FitType { LogLinearFit = 1, FixedSlopeLogLinearFit, FixedLogLinearFit, LinearFit, PowerFit,
+    FixedSlopeLinearFit, FixedLinearFit, FixedInterceptLinearFit, FixedInterceptLogLinearFit };
+
 class SIOnStep;
 
 class SIOnStep {
@@ -28,9 +31,9 @@ public:
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile);
-  virtual void CommandLinePrint(ofstream&, const TimeClass& time, const PrintInfo&) {};
-  virtual void PrintLikelihood(ofstream&, const TimeClass& time, const char*) {};
-  virtual void PrintLikelihoodHeader(ofstream&, const char*) {};
+  virtual void CommandLinePrint(ofstream& outfile, const TimeClass& time, const PrintInfo&) {};
+  virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time, const char*) {};
+  virtual void PrintLikelihoodHeader(ofstream& outfile, const char* name) {};
 protected:
   void SetError() { error = 1; };
   int IsToSum(const TimeClass* const TimeInfo) const;
@@ -41,8 +44,6 @@ protected:
   ActionAtTimes AAT;
   DoubleMatrix Indices;
   DoubleMatrix abundance;
-  enum FitType { LogLinearFit = 0, FixedSlopeLogLinearFit, FixedLogLinearFit, LinearFit, PowerFit,
-    FixedSlopeLinearFit, FixedLinearFit, FixedInterceptLinearFit, FixedInterceptLogLinearFit };
   FitType getFitType() { return fittype; };
 private:
   void ReadSIData(CommentStream&, const char*, const CharPtrVector&, const CharPtrVector&, const TimeClass*);

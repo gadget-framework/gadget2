@@ -12,7 +12,7 @@
 
 LogCatches::LogCatches(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
-  double likweight) : Likelihood(LOGCATCHLIKELIHOOD, likweight) {
+  double w) : Likelihood(LOGCATCHLIKELIHOOD, w) {
 
   lgrpDiv = NULL;
   ErrorHandler handle;

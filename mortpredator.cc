@@ -1,4 +1,4 @@
-#include "mortpredlength.h"
+#include "mortpredator.h"
 #include "keeper.h"
 #include "prey.h"
 #include "mathfunc.h"
@@ -7,7 +7,7 @@
 #include "gadget.h"
 
 //written by kgf 20/5 98 on the basis of linearpredator
-MortPredLength::MortPredLength(CommentStream& infile, const char* givenname, const IntVector& Areas,
+MortPredator::MortPredator(CommentStream& infile, const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
   const TimeClass* const TimeInfo, Keeper* const keeper)
   : LengthPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv, 1.0),
@@ -67,12 +67,12 @@ MortPredLength::MortPredLength(CommentStream& infile, const char* givenname, con
     handle.Unexpected("amount", text);
 }
 
-MortPredLength::~MortPredLength() {
+MortPredator::~MortPredator() {
   delete[] year;
   delete[] year0;
 }
 
-void MortPredLength::Eat(int area, double LengthOfStep, double Temperature, double Areasize,
+void MortPredator::Eat(int area, double LengthOfStep, double Temperature, double Areasize,
   int CurrentSubstep, int NrOfSubsteps) {
 
   //Written by kgf 20/5 98
@@ -126,10 +126,7 @@ void MortPredLength::Eat(int area, double LengthOfStep, double Temperature, doub
   }
 }
 
-void MortPredLength::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) {
-}
-
-void MortPredLength::calcCHat(int area, const TimeClass* const TimeInfo) {
+void MortPredator::calcCHat(int area, const TimeClass* const TimeInfo) {
   //written by kgf 22/5 98
   //modified by kgf 14/7 98
   //This routine supposes that the total mortality (included natural mortality)
@@ -196,7 +193,7 @@ void MortPredLength::calcCHat(int area, const TimeClass* const TimeInfo) {
   }
 }
 
-const double MortPredLength::consumedBiomass(int prey_nr, int area_nr) const {
+const double MortPredator::consumedBiomass(int prey_nr, int area_nr) const {
 
   double tons = 0.0;
   int age, len;
@@ -208,13 +205,13 @@ const double MortPredLength::consumedBiomass(int prey_nr, int area_nr) const {
   return tons;
 }
 
-void MortPredLength::Print(ofstream& outfile) const {
+void MortPredator::Print(ofstream& outfile) const {
   //Denne kan Morten modifisera!!
-  outfile << "MortPredLength\n";
+  outfile << "MortPredator\n";
   PopPredator::Print(outfile);
 }
 
-const PopInfoVector& MortPredLength::NumberPriortoEating(int area, const char* preyname) const {
+const PopInfoVector& MortPredator::NumberPriortoEating(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < NoPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)
@@ -225,7 +222,7 @@ const PopInfoVector& MortPredLength::NumberPriortoEating(int area, const char* p
   exit(EXIT_FAILURE);
 }
 
-double MortPredLength::getFlevel(int area, const TimeClass* const TimeInfo) {
+double MortPredator::getFlevel(int area, const TimeClass* const TimeInfo) {
   //written by kgf 16/9 98
   double pres_f_lev = 0.0;
   const int inarea = AreaNr[area];
@@ -236,7 +233,7 @@ double MortPredLength::getFlevel(int area, const TimeClass* const TimeInfo) {
   return pres_f_lev;
 }
 
-void MortPredLength::calcFlevel() {
+void MortPredator::calcFlevel() {
   //written by kgf 18/6 98
   //f_level = (q1 + q2 * (year - year0)) * effort
   int area, inarea, j;
@@ -248,7 +245,7 @@ void MortPredLength::calcFlevel() {
   }
 }
 
-void MortPredLength::InitializeCHat(int area, int prey, const AgeBandMatrix& mean_n) {
+void MortPredator::InitializeCHat(int area, int prey, const AgeBandMatrix& mean_n) {
   //written by kgf 14/7 98
   const int inarea = AreaNr[area];
   int i = 0;
@@ -265,13 +262,13 @@ void MortPredLength::InitializeCHat(int area, int prey, const AgeBandMatrix& mea
   c_hat.ChangeElement(inarea, prey, tmp);
 }
 
-void MortPredLength::Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& ratio) {
+void MortPredator::Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& ratio) {
   //written by kgf 31/7 98
-  //Note! ratio is supposed to have equal dimensions to MortPredLength.
+  //Note! ratio is supposed to have equal dimensions to MortPredator.
   stock_alkeys.Multiply(ratio, *CI);
 }
 
-void MortPredLength::Reset(const TimeClass* const TimeInfo) {
+void MortPredator::Reset(const TimeClass* const TimeInfo) {
   //written by kgf 21/9 98
   this->PopPredator::Reset(TimeInfo);
   if (TimeInfo->CurrentTime() == 1)

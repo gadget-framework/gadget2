@@ -14,10 +14,7 @@ class MortPrey : public Prey {
 public:
   MortPrey(CommentStream& infile, const IntVector& areas, const char* givenname,
     int minage, int maxage, Keeper* const keeper, const LengthGroupDivision* const stock_lgrp);
-  MortPrey(const DoubleVector& lengths, const IntVector& areas, int minage, int maxage,
-    const char* givenname, const LengthGroupDivision* const stock_lgrp);
   virtual ~MortPrey();
-  virtual PreyType preyType() const { return MORTPREYTYPE; };
   void InitializeObjects();
   virtual void Sum(const AgeBandMatrix& Alkeys, int area, int NrofSubstep);
   const AgeBandMatrix& AlkeysPriorToEating(int area) const;

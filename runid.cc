@@ -8,6 +8,7 @@ RunID::RunID() {
     hostname = host.nodename;
   else
     hostname = "-nohostname-";
+
   time_t runtime;
   if (time(&runtime))
     timestring = ctime(&runtime);
@@ -20,7 +21,4 @@ void RunID::print(ostream& o) {
   if (timestring[strlen(timestring) - 1] != '\n')
     o << endl;
   o.flush();
-}
-
-RunID::~RunID() {
 }

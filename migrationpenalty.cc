@@ -3,8 +3,8 @@
 #include "readword.h"
 #include "gadget.h"
 
-MigrationPenalty::MigrationPenalty(CommentStream& infile, double likweight)
-  :Likelihood(MIGRATIONPENALTYLIKELIHOOD, likweight), powercoeffs(2) {
+MigrationPenalty::MigrationPenalty(CommentStream& infile, double w)
+  :Likelihood(MIGRATIONPENALTYLIKELIHOOD, w), powercoeffs(2) {
 
   ErrorHandler handle;
   char text[MaxStrLength];

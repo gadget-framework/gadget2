@@ -10,40 +10,40 @@ void MainInfo::ShowCorrectUsage() {
 }
 
 MainInfo::MainInfo()
-  : optinfocommentfile(optinfofile), OptInfoFileisGiven(0),
+  : OptinfoCommentFile(OptinfoFile), OptInfoFileisGiven(0),
     InitialCondareGiven(0),  CalcLikelihood(0), Optimize(0),
     Stochastic(0), PrintInitialcond(0), PrintFinalcond(0),
     PrintLikelihoodInfo(0), Net(0) {
 
-  char mainfile[10];
-  strncpy(mainfile, "", 10);
-  strcpy(mainfile, "main");
+  char tmpname[10];
+  strncpy(tmpname, "", 10);
+  strcpy(tmpname, "main");
 
-  optinfofilename = NULL;
+  OptinfoFilename = NULL;
   InitialCommentFilename = NULL;
-  PrintInitialcondfilename = NULL;
-  PrintFinalcondfilename = NULL;
+  PrintInitialCondFilename = NULL;
+  PrintFinalCondFilename = NULL;
   PrintLikelihoodFilename = NULL;
   MainGadgetFilename = NULL;
-  SetMainGadgetFilename(mainfile);
+  SetMainGadgetFilename(tmpname);
 }
 
 MainInfo::~MainInfo() {
-  if (optinfofilename != NULL) {
-    delete[] optinfofilename;
-    optinfofilename = NULL;
+  if (OptinfoFilename != NULL) {
+    delete[] OptinfoFilename;
+    OptinfoFilename = NULL;
   }
   if (InitialCommentFilename != NULL) {
     delete[] InitialCommentFilename;
     InitialCommentFilename = NULL;
   }
-  if (PrintInitialcondfilename != NULL) {
-    delete[] PrintInitialcondfilename;
-    PrintInitialcondfilename = NULL;
+  if (PrintInitialCondFilename != NULL) {
+    delete[] PrintInitialCondFilename;
+    PrintInitialCondFilename = NULL;
   }
-  if (PrintFinalcondfilename != NULL) {
-    delete[] PrintFinalcondfilename;
-    PrintFinalcondfilename = NULL;
+  if (PrintFinalCondFilename != NULL) {
+    delete[] PrintFinalCondFilename;
+    PrintFinalCondFilename = NULL;
   }
   if (PrintLikelihoodFilename != NULL) {
     delete[] PrintLikelihoodFilename;
@@ -56,19 +56,24 @@ MainInfo::~MainInfo() {
 }
 
 void MainInfo::OpenOptinfofile(char* filename) {
+  if (OptinfoFilename != NULL) {
+    delete[] OptinfoFilename;
+    OptinfoFilename = NULL;
+  }
+  OptinfoFilename = new char[strlen(filename) + 1];
+  strcpy(OptinfoFilename, filename);
+
   ErrorHandler handle;
   handle.Open(filename);
-  optinfofilename = new char[strlen(filename) + 1];
-  strcpy(optinfofilename, filename);
-  optinfofile.open(optinfofilename, ios::in);
-  checkIfFailure(optinfofile, filename);
+  OptinfoFile.open(OptinfoFilename, ios::in);
+  checkIfFailure(OptinfoFile, filename);
   OptInfoFileisGiven = 1;
   handle.Close();
 }
 
 void MainInfo::CloseOptinfofile() {
-  optinfofile.close();
-  optinfofile.clear();
+  OptinfoFile.close();
+  OptinfoFile.clear();
 }
 
 void MainInfo::Read(int aNumber, char* const aVector[]) {
@@ -231,7 +236,6 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
       << "Gadget will perform only the stochastic run (and ignore the -l switch)\n";
     Optimize = 0;
   }
-
 }
 
 void MainInfo::Read(CommentStream& infile) {
@@ -281,30 +285,50 @@ void MainInfo::Read(CommentStream& infile) {
 }
 
 void MainInfo::SetPrintInitialCondFilename(char* filename) {
-  PrintInitialcondfilename = new char[strlen(filename) + 1];
-  strcpy(PrintInitialcondfilename, filename);
+  if (PrintInitialCondFilename != NULL) {
+    delete[] PrintInitialCondFilename;
+    PrintInitialCondFilename = NULL;
+  }
+  PrintInitialCondFilename = new char[strlen(filename) + 1];
+  strcpy(PrintInitialCondFilename, filename);
   PrintInitialcond = 1;
 }
 
 void MainInfo::SetPrintFinalCondFilename(char* filename) {
-  PrintFinalcondfilename = new char[strlen(filename) + 1];
-  strcpy(PrintFinalcondfilename, filename);
+  if (PrintFinalCondFilename != NULL) {
+    delete[] PrintFinalCondFilename;
+    PrintFinalCondFilename = NULL;
+  }
+  PrintFinalCondFilename = new char[strlen(filename) + 1];
+  strcpy(PrintFinalCondFilename, filename);
   PrintFinalcond = 1;
 }
 
 void MainInfo::SetPrintLikelihoodFilename(char* filename) {
+  if (PrintLikelihoodFilename != NULL) {
+    delete[] PrintLikelihoodFilename;
+    PrintLikelihoodFilename = NULL;
+  }
   PrintLikelihoodFilename = new char[strlen(filename) + 1];
   strcpy(PrintLikelihoodFilename, filename);
   PrintLikelihoodInfo = 1;
 }
 
 void MainInfo::SetInitialCommentFilename(char* filename) {
+  if (InitialCommentFilename != NULL) {
+    delete[] InitialCommentFilename;
+    InitialCommentFilename = NULL;
+  }
   InitialCommentFilename = new char[strlen(filename) + 1];
   strcpy(InitialCommentFilename, filename);
   InitialCondareGiven = 1;
 }
 
 void MainInfo::SetMainGadgetFilename(char* filename) {
+  if (MainGadgetFilename != NULL) {
+    delete[] MainGadgetFilename;
+    MainGadgetFilename = NULL;
+  }
   MainGadgetFilename = new char[strlen(filename) + 1];
   strcpy(MainGadgetFilename, filename);
 }

@@ -12,8 +12,8 @@
 #include "gadget.h"
 
 PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double likweight, const char* name)
-  :Likelihood(PREDATORINDICESLIKELIHOOD, likweight) {
+  const TimeClass* const TimeInfo, double w, const char* name)
+  :Likelihood(PREDATORINDICESLIKELIHOOD, w) {
 
   ErrorHandler handle;
   char text[MaxStrLength];

@@ -1,20 +1,14 @@
 #include "lengthprey.h"
 
-LengthPrey::LengthPrey(CommentStream& infile, const IntVector& Areas,
-  const char* givenname, Keeper* const keeper)
-  : Prey(infile, Areas, givenname, keeper) {
-}
-
 LengthPrey::LengthPrey(const DoubleVector& lengths,
   const IntVector& Areas, const char* givenname)
   : Prey(lengths, Areas, givenname) {
-}
 
-LengthPrey::~LengthPrey() {
+  type = LENGTHPREYTYPE;
 }
 
 /* Sum number in Prey length groups. Prey length division is not
- * alloved to be finer than stock length division.
+ * allowed to be finer than stock length division.
  * Also, initialize variables to 0. */
 void LengthPrey::SumUsingPopInfo(const PopInfoVector& NumberInArea, int area, int CurrentSubstep) {
   int inarea = AreaNr[area];

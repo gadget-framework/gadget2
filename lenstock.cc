@@ -26,7 +26,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
 
   //Written by kgf 16/7 98
   year = -1;
-  haslgr = 1;  //fixme: read this from data file?
+  type = LENSTOCKTYPE;
   ErrorHandler handle;
   int i, tmpint;
   char text[MaxStrLength];
@@ -60,11 +60,8 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   this->LetLiveOnAreas(tmpareas);
 
   //Read the stock age and length data
-  int minage;
-  int maxage;
-  double minlength;
-  double maxlength;
-  double dl;
+  int minage, maxage;
+  double minlength, maxlength, dl;
   readWordAndVariable(infile, "minage", minage);
   readWordAndVariable(infile, "maxage", maxage);
   readWordAndVariable(infile, "minlength", minlength);
@@ -367,6 +364,8 @@ void LenStock::Print(ofstream& outfile) const {
     grower->Print(outfile);
   if (doesmigrate)
     migration->Print(outfile);
+  if (doesspawn)
+    spawner->Print(outfile);
 
   outfile <<"\nAgelength keys\n\nCurrent status\n";
   for (i = 0; i < areas.Size(); i++){
@@ -457,7 +456,7 @@ void LenStock::CalcNumbers(int area,
   if (iseaten)
     prey->Sum(Alkeys[inarea], area, TimeInfo->CurrentSubstep());
   if (doeseat)
-    ((MortPredLength*)predator)->Sum(NumberInArea[inarea], area);
+    ((MortPredator*)predator)->Sum(NumberInArea[inarea], area);
 
   N.setElementsTo(0.0);
   int row, col;
@@ -539,7 +538,7 @@ void LenStock::Grow(int area,
 }
 
 void LenStock::calcForPrinting(int area, const TimeClass& time) {
-  if (!iseaten || !stockType() == LENSTOCKTYPE || calcDone)
+  if (!iseaten || !Type() == LENSTOCKTYPE || calcDone)
     return;
   int row, col, mcol;
   const AgeBandMatrix& mean_n = ((MortPrey*)prey)->getMeanN(area);
@@ -561,7 +560,7 @@ void LenStock::calcForPrinting(int area, const TimeClass& time) {
       (*Nbar[area])[row - mean_n.Minage()][year] += mean_n[row][mcol].N;
     }
 
-  /*JMB code removed from here - see RemovedCode.txt for details*/
+  /* JMB code removed from here - see RemovedCode.txt for details */
   for (row = 0; row < E.Size(); row++) {
     E[row] = C[row] + D1[row] + D2[row];
     if (N[row] > E[row]) {

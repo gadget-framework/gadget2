@@ -7,8 +7,8 @@
 #include "gadget.h"
 
 UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double likweight)
-  :Likelihood(UNDERSTOCKINGLIKELIHOOD, likweight), powercoeff(2) {
+  const TimeClass* const TimeInfo, double weight)
+  :Likelihood(UNDERSTOCKINGLIKELIHOOD, weight), powercoeff(2) {
 
   ErrorHandler handle;
   char text[MaxStrLength];

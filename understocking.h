@@ -9,12 +9,13 @@
 
 class UnderStocking : public Likelihood {
 public:
-  UnderStocking(CommentStream&, const AreaClass* const, const TimeClass* const, double likweight);
+  UnderStocking(CommentStream& infile, const AreaClass* const Area,
+    const TimeClass* const TimeInfo, double weight);
   virtual ~UnderStocking();
-  virtual void AddToLikelihood(const TimeClass* const);
+  virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
-  virtual void Print(ofstream&) const {};
-  void SetFleets(FleetPtrVector&);
+  virtual void Print(ofstream& outfile) const {};
+  void SetFleets(FleetPtrVector& Fleets);
 private:
   CharPtrVector fleetnames;
   FleetPtrVector fleets;

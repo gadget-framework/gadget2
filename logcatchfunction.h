@@ -10,14 +10,14 @@
 class LogCatches : public Likelihood {
 public:
   LogCatches(CommentStream& infile, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, double likweightw);
+    const TimeClass* const TimeInfo, double w);
   virtual ~LogCatches();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const {};
   void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
   virtual void LikelihoodPrint(ofstream& outfile);
-  virtual void CommandLinePrint(ofstream& surveyfile, const TimeClass& time, const PrintInfo& print);
+  virtual void CommandLinePrint(ofstream& outfile, const TimeClass& time, const PrintInfo& print);
   void PrintLikelihoodOnStep(ofstream&, const TimeClass& time, int print_type);
   const DoubleMatrix& getCalcBiomass(int area) const { return *(calc_biomass[area]); };
   const DoubleMatrix& getObsBiomass(int area) const { return *(obs_biomass[area]); };

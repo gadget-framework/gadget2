@@ -190,13 +190,7 @@ void RenewalData::Reset() {
   }
 }
 
-/* Relatively crude search algorithm for searching in the class
- * RenewalData. Maxr and Minr are integer variables used to help in
- * accessing the data. Initial value on the variable Maxr has to be -1.
- * Renewal is only used if derived from another stock that does
- * not have length division. */
-void RenewalData::AddRenewal(AgeBandMatrix& Alkeys, int area,
-  const TimeClass* const TimeInfo, double ratio) {
+void RenewalData::AddRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo) {
 
   if (RenewalTime.Size() == 0)
     return;
@@ -214,12 +208,10 @@ void RenewalData::AddRenewal(AgeBandMatrix& Alkeys, int area,
 
   //Add renewal to stock
   if (renewalid != -1) {
-    if (isZero(ratio))
-      RenewalNumber = Number[renewalid];
-    else if (isZero(Number[renewalid]))
-      RenewalNumber = ratio;
-    else
+    if (isZero(Number[renewalid]))
       RenewalNumber = 0.0;
+    else
+      RenewalNumber = Number[renewalid];
 
     if (RenewalNumber < 0)
       RenewalNumber = -RenewalNumber;

@@ -108,8 +108,8 @@ void FormatedCHatPrinter::Print(const TimeClass* const TimeInfo) {
   printTime(outfile, *TimeInfo);
   for (i = 0; i < areas.Size(); i++) {
     for (j = 0; j < fleets.Size(); j++) {
-      ((MortPredLength*)fleets[j]->ReturnPredator())->calcCHat(0, TimeInfo);
-      printc_hat(outfile, *(MortPredLength*)fleets[j]->ReturnPredator(), *Area);
+      ((MortPredator*)fleets[j]->ReturnPredator())->calcCHat(0, TimeInfo);
+      printc_hat(outfile, *(MortPredator*)fleets[j]->ReturnPredator(), *Area);
     }
   }
 }

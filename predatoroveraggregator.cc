@@ -1,26 +1,22 @@
 #include "predatoroveraggregator.h"
 #include "predator.h"
-#include "mathfunc.h"
-#include "lengthgroup.h"
 
 PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
   const IntMatrix& Areas, const LengthGroupDivision* const predLgrpDiv)
   : predators(preds), areas(Areas) {
 
   int i, j;
-  //First we check that the length group of every predator is finer
-  //(not necessarily strictly finer) than that of predLgrpDiv;
   for (i = 0; i < predators.Size(); i++)
     checkLengthGroupIsFiner(preds[i]->ReturnLengthGroupDiv(),
       predLgrpDiv, preds[i]->Name(), "predator overconsumption");
 
+  total.AddRows(areas.Nrow(), predLgrpDiv->NoLengthGroups(), 0);
+  // predConv has [pred][predLengthGroup]
   for (i = 0; i < predators.Size(); i++) {
     predConv.AddRows(1, predators[i]->NoLengthGroups());
     for (j = 0; j < predConv.Ncol(i); j++)
       predConv[i][j] = predLgrpDiv->NoLengthGroup(predators[i]->Length(j));
   }
-
-  total.AddRows(areas.Nrow(), predLgrpDiv->NoLengthGroups(), 0);
 }
 
 void PredatorOverAggregator::Sum() {
@@ -33,8 +29,8 @@ void PredatorOverAggregator::Sum() {
       total[i][j] = 0;
 
   //Sum over the appropriate predators, areas, and lengths.
-  for (g = 0; g < predators.Size(); g++)
-    for (i = 0; i < areas.Nrow(); i++)
+  for (g = 0; g < predators.Size(); g++) {
+    for (i = 0; i < areas.Nrow(); i++) {
       for (j = 0; j < areas.Ncol(i); j++) {
         area = areas[i][j];
         if (predators[g]->IsInArea(area)) {
@@ -46,8 +42,6 @@ void PredatorOverAggregator::Sum() {
           }
         }
       }
-}
-
-const DoubleMatrix& PredatorOverAggregator::ReturnSum() const {
-  return total;
+    }
+  }
 }

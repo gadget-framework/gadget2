@@ -12,6 +12,7 @@ typedef CommentStream& (*__commentmanip)(CommentStream&);
 class Whitespace {
 public:
   Whitespace() { v = 0; };
+  ~Whitespace() {};
   friend istream& operator >> (istream& istr, Whitespace& ws);
 private:
   int v;
@@ -22,6 +23,7 @@ public:
   friend CommentStream& ws(CommentStream& ins);
   CommentStream() { istrptr = NULL; };
   CommentStream(istream& istr) { istrptr = &istr; };
+  ~CommentStream() {};
   void SetStream(istream& istr) { istrptr = &istr; };
   CommentStream& operator >> (int& a) {
     killComments(istrptr);

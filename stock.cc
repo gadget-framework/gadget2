@@ -25,7 +25,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   : BaseClass(givenname), spawner(0), renewal(0), maturity(0), transition(0),
     migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), NatM(0) {
 
-  haslgr = 1; //fixme: read this in from data file?
+  type = STOCKTYPE;
   int i, tmpint;
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -59,11 +59,8 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   this->LetLiveOnAreas(tmpareas);
 
   //Read the stock age and length data
-  int minage;
-  int maxage;
-  double minlength;
-  double maxlength;
-  double dl;
+  int minage, maxage;
+  double minlength, maxlength, dl;
   readWordAndVariable(infile, "minage", minage);
   readWordAndVariable(infile, "maxage", maxage);
   readWordAndVariable(infile, "minlength", minlength);
@@ -348,6 +345,8 @@ void Stock::Print(ofstream& outfile) const {
     grower->Print(outfile);
   if (doesmigrate)
     migration->Print(outfile);
+  if (doesspawn)
+    spawner->Print(outfile);
 
   outfile << "\nAgelength keys\nCurrent status\n";
   for (i = 0; i < areas.Size(); i++) {
@@ -367,7 +366,7 @@ const AgeBandMatrix& Stock::Agelengthkeys(int area) const {
 }
 
 const AgeBandMatrix& Stock::getMeanN(int area) const {
-  assert(iseaten && prey->preyType() == MORTPREYTYPE);
+  assert(iseaten && prey->Type() == MORTPREYTYPE);
   return (((MortPrey*)prey)->getMeanN(area));
 }
 

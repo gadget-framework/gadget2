@@ -12,9 +12,9 @@
  * However, it will need some thinking to get it to work again though */
 
 //
-// A function to read initial stock data in mean data format
+// A function to read initial stock data in normal distribution format
 //
-void InitialCond::ReadMeanData(CommentStream& infile, Keeper* const keeper,
+void InitialCond::ReadNormalData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
   ErrorHandler handle;
@@ -64,20 +64,22 @@ void InitialCond::ReadMeanData(CommentStream& infile, Keeper* const keeper,
     } else
       ageid = age - minage;
 
+    //crude area data check
+    areaid = -1;
+    tmparea = Area->InnerArea(area);
+    if (tmparea == -1)
+      handle.UndefinedArea(area);
+    for (i = 0; i < noareas; i++)
+      if (areas[i] == tmparea)
+        areaid = i;
+
+    if (areaid == -1) {
+      handle.Warning("Ignoring initial conditions data found outside area range");
+      keepdata = 1;
+    }
+
     if (keepdata == 0) {
       //initial data is required, so store it
-      tmparea = Area->InnerArea(area);
-      if (tmparea == -1)
-        handle.UndefinedArea(area);
-
-      areaid = -1;
-      for (i = 0; i < noareas; i++)
-        if (areas[i] == tmparea)
-          areaid = i;
-
-      if (areaid == -1)
-        handle.Message("Error - unable to calculate area identifier");
-
       infile >> AgeDist[areaid][ageid] >> ws;
       infile >> AreaDist[areaid][ageid] >> ws;
       infile >> Mean[areaid][ageid] >> ws;
@@ -106,7 +108,7 @@ void InitialCond::ReadMeanData(CommentStream& infile, Keeper* const keeper,
 // A function to read initial stock data in number data format
 //
 void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
-  int noagegr, int nolengr, int minage, const AreaClass* const Area) {
+  int noagegr, int minage, const AreaClass* const Area) {
 
   ErrorHandler handle;
   //Find start of data in datafile
@@ -125,15 +127,17 @@ void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
 
   //Found the start of the data in the following format
   //area - age - meanlength - number
-  int i, age, area;
+  int i, age, area, tmparea;
   int keepdata, ageid, areaid, lengthid;
   double length, tmpnumber;
+  int noareas = areas.Size();
+  int nolengr = LgrpDiv->NoLengthGroups();
 
   if (countColumns(infile) != 4)
     handle.Message("Wrong number of columns in inputfile - should be 4");
 
   //Set the numbers in the AgeBandMatrixPtrVector to zero (in case some arent in the inputfile)
-  for (areaid = 0; areaid < areas.Size(); areaid++)
+  for (areaid = 0; areaid < noareas; areaid++)
     for (ageid = minage; ageid < noagegr + minage; ageid++)
       for (lengthid = 0; lengthid < nolengr; lengthid++)
         AreaAgeLength[areaid][ageid][lengthid].N = 0.0;
@@ -153,20 +157,33 @@ void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
     } else
       ageid = age;
 
+    //crude length data check
     lengthid = -1;
     for (i = 0; i < nolengr; i++)
       if (length == LgrpDiv->Minlength(i))
         lengthid = i;
 
-    if (lengthid == -1)
+    if (lengthid == -1) {
+      handle.Warning("Ignoring initial conditions data found outside length range");
       keepdata = 1;
+    }
+
+    //crude area data check
+    areaid = -1;
+    tmparea = Area->InnerArea(area);
+    if (tmparea == -1)
+      handle.UndefinedArea(area);
+    for (i = 0; i < noareas; i++)
+      if (areas[i] == tmparea)
+        areaid = i;
+
+    if (areaid == -1) {
+      handle.Warning("Ignoring initial conditions data found outside area range");
+      keepdata = 1;
+    }
 
     if (keepdata == 0) {
       //initial data is required, so store it
-      areaid = Area->InnerArea(area);
-      if (areaid == -1)
-        handle.UndefinedArea(area);
-
       AreaAgeLength[areaid][ageid][lengthid].N = tmpnumber;
     }
   }
@@ -176,9 +193,9 @@ void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
 //
 // Constructor for the initial conditions
 //
-InitialCond::InitialCond(CommentStream& infile, const IntVector& area,
+InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   Keeper* const keeper, const char* refWeightFile, const AreaClass* const Area)
-  : LgrpDiv(0), CI(0), areas(area) {
+  : LivesOnAreas(Areas), LgrpDiv(0), CI(0) {
 
   ErrorHandler handle;
   ifstream subfile;
@@ -186,18 +203,13 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& area,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
-  keeper->AddString("initialcond");
-  infile >> text;
-  if (strcasecmp(text, "numbers") != 0)
-    handle.Unexpected("numbers", text);
-
   int i, j, k;
-  int noareas = area.Size();
-  int minage = 0;
-  int maxage = 0;
-  double minlength = 0;
-  double maxlength = 0;
-  double dl = 0;
+  int noareas = areas.Size();
+  int minage, maxage;
+  double minlength, maxlength, dl;
+
+  keeper->AddString("initialcond");
+  infile >> text >> ws;  //read in 'numbers'
   readWordAndVariable(infile, "minage", minage);
   readWordAndVariable(infile, "maxage", maxage);
   readWordAndVariable(infile, "minlength", minlength);
@@ -243,7 +255,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& area,
     subfile.open(text);
     checkIfFailure(subfile, text);
     handle.Open(text);
-    this->ReadMeanData(subcomment, keeper, noagegr, minage, Area);
+    this->ReadNormalData(subcomment, keeper, noagegr, minage, Area);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -255,7 +267,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& area,
     subfile.open(text);
     checkIfFailure(subfile, text);
     handle.Open(text);
-    this->ReadNumberData(subcomment, keeper, noagegr, nolengr, minage, Area);
+    this->ReadNumberData(subcomment, keeper, noagegr, minage, Area);
     handle.Close();
     subfile.close();
     subfile.clear();

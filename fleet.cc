@@ -3,16 +3,16 @@
 #include "keeper.h"
 #include "totalpredator.h"
 #include "linearpredator.h"
-#include "mortpredlength.h"
+#include "mortpredator.h"
 #include "readfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
 
 Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, Keeper* const keeper, FleetType type)
+  const TimeClass* const TimeInfo, Keeper* const keeper, FleetType ftype)
   : BaseClass(givenname), predator(0) {
 
-  fleetType = type;
+  type = ftype;
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -76,7 +76,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
       readamount = 1;
       break;
     case MORTALITYFLEET:
-      predator = new MortPredLength(infile, givenname, areas, &LgrpDiv,
+      predator = new MortPredator(infile, givenname, areas, &LgrpDiv,
         &LgrpDiv, TimeInfo, keeper);
       readamount = 1; //should be 0
       break;
@@ -116,30 +116,10 @@ void Fleet::CalcEat(int area,
     Area->Size(area), TimeInfo->CurrentSubstep(), TimeInfo->NrOfSubsteps());
 }
 
-void Fleet::CheckEat(int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
-}
-
 void Fleet::AdjustEat(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   predator->AdjustConsumption(area, TimeInfo->NrOfSubsteps(), TimeInfo->CurrentSubstep());
-}
-
-void Fleet::ReducePop(int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
-}
-
-void Fleet::Grow(int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
-}
-
-void Fleet::FirstUpdate(int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
-}
-
-void Fleet::SecondUpdate(int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
 }
 
 void Fleet::ThirdUpdate(int area,
@@ -149,16 +129,8 @@ void Fleet::ThirdUpdate(int area,
   //to calculate the modelled catches for printing [AJ&MNAA 13.05.01]
   //This should not be called when optimizing, we should look into adding information
   //to keeper about what kind of run we are doing [AJ&MNAA 13.05.01]
-  if (fleetType == MORTALITYFLEET)
-    ((MortPredLength*)predator)->calcCHat(area, TimeInfo);
-}
-
-void Fleet::FirstSpecialTransactions(int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
-}
-
-void Fleet::SecondSpecialTransactions(int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
+  if (type == MORTALITYFLEET)
+    ((MortPredator*)predator)->calcCHat(area, TimeInfo);
 }
 
 void Fleet::CalcNumbers(int area,
@@ -171,12 +143,6 @@ void Fleet::CalcNumbers(int area,
   predator->Sum(NumberInArea, area);
 }
 
-void Fleet::Migrate(const TimeClass* const TimeInfo) {
-}
-
-void Fleet::RecalcMigration(const TimeClass* const TimeInfo) {
-}
-
 void Fleet::Reset(const TimeClass* const TimeInfo) {
   predator->Reset(TimeInfo);
 }
@@ -184,6 +150,7 @@ void Fleet::Reset(const TimeClass* const TimeInfo) {
 void Fleet::Print(ofstream& outfile) const {
   outfile << "\nFleet " << this->Name() << endl;
   predator->Print(outfile);
+  outfile << endl;
 }
 
 LengthPredator* Fleet::ReturnPredator() const {
@@ -192,4 +159,8 @@ LengthPredator* Fleet::ReturnPredator() const {
 
 double Fleet::OverConsumption(int area) const {
   return predator->OverConsumption(area)[0];
+}
+
+double Fleet::Amount(int area, const TimeClass* const TimeInfo) const {
+  return amount[TimeInfo->CurrentTime()][AreaNr[area]];
 }

@@ -4,16 +4,15 @@
 #include "commentstream.h"
 #include "lennaturalm.h"
 #include "cannibalism.h"
-#include "mortpredlength.h"
+#include "mortpredator.h"
 #include "stock.h"
 #include "stockptrvector.h"
 
 class LenStock;
 class LenNaturalM;
 class Cannibalism;
-class MortPredLength;
+class MortPredator;
 class MortPrey;
-class StockRecruitment;
 class Maturity;
 class RenewalData;
 class Spawner;
@@ -23,7 +22,6 @@ public:
   LenStock(CommentStream& infile, const char* givenname, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   virtual ~LenStock();
-  StockType stockType() const { return LENSTOCKTYPE; };
   virtual void CalcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual void ReducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual void CalcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
@@ -44,13 +42,11 @@ public:
   const DoubleMatrix& getM2(int area) const { return *(M2[area]); };
   const DoubleMatrix& getNbar(int area) const { return *(Nbar[area]); };
   const DoubleMatrix& getNsum(int area) const { return *(Nsum[area]); };
-  const DoubleVector* getN(int area) const { return new DoubleVector(N); };
   const DoubleMatrix& getBiomass(int area) const { return *(bio[area]); };
   void calcBiomass(int yr, int area);
 protected:
   LenNaturalM* len_natm;
   Cannibalism* cann;
-  int cannibalism;
 private:
   StockPtrVector cannPredators;
   DoubleVector cann_vec;
@@ -69,6 +65,7 @@ private:
   int year;
   double filter;
   int calcDone;
+  int cannibalism;
 };
 
 #endif

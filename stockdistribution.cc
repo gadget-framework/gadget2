@@ -11,8 +11,8 @@
 #include "gadget.h"
 
 StockDistribution::StockDistribution(CommentStream& infile,
-  const AreaClass* const Area, const TimeClass* const TimeInfo, double likweight)
-  : Likelihood(STOCKDISTRIBUTIONLIKELIHOOD, likweight) {
+  const AreaClass* const Area, const TimeClass* const TimeInfo, double w)
+  : Likelihood(STOCKDISTRIBUTIONLIKELIHOOD, w) {
 
 
   ErrorHandler handle;
