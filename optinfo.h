@@ -19,9 +19,18 @@ class OptSearch {
   /**
    * \brief This is the default destructor
    */
-  ~OptSearch() {};
-  virtual void Read(CommentStream& infile, char* text) {};
-  virtual void MaximizeLikelihood() {};
+  ~OptSearch(){};
+  /**
+   * \brief This is the file reader that reads parameters for the optimising
+   * \param infile is the CommentStream to read the optimisation parameters from
+   * \param text is the latest entry from infile
+   */
+  virtual void Read(CommentStream& infile, char* text){};
+  /**
+   * \brief This method calls the optimisation function
+   * \param infile is the CommentStream to read the optimisation parameters from
+   */
+  virtual void MaximizeLikelihood(){};
 };
 
 /**
@@ -48,12 +57,33 @@ class OptInfo {
    */
   void ReadOptInfo(CommentStream& infile);
  private:
+  /**
+   * \brief This switch determines whether or Simulated Annealing is use in the optimisation
+   */
   int useSimann;
+  /**
+   * \brief This switch determines whether or Hooke & Jeeves is use in the optimisation
+   */
   int useHJ;
+  /**
+   * \brief This switch determines whether or BFGS is use in the optimisation
+   */
   int useBFGS;
+  /**
+   * \brief This is the seed for the random number generator
+   */
   int seed;
+  /**
+   * \brief This is a pointer to the class that handles the Simulated Annealing optimisation
+   */
   OptSearch* optSimann;
+  /**
+   * \brief This is a pointer to the class that handles the Hooke & Jeeves optimisation
+   */
   OptSearch* optHJ;
+  /**
+   * \brief This is a pointer to the class that handles the BFGS optimisation
+   */
   OptSearch* optBFGS;
 };
 
@@ -138,13 +168,6 @@ public:
    */
   virtual void Read(CommentStream& infile, char* text);
   /**
-   * \brief This is the function used to read in the Simulated Annealing parameters
-   * \param infile is the CommentStream to read the optimisation parameters from
-   * \param text is a text string used to compare parameter names
-   * \return 1 for success, 0 for failure
-   */
-  //  int read(CommentStream& infile, char* text);
-  /**
    * \brief This is the function that will calculate the likelihood score using the Simulated Annealing optimiser
    */
   virtual void MaximizeLikelihood();
@@ -194,29 +217,97 @@ protected:
    */
   int check;
 };
-
+/**
+ * \class OptInfoBfgs
+ * \brief This is the class used for the BFGS optimisation
+ *
+ * (To be continued)
+ */
 class OptInfoBfgs : public OptSearch  {
  public:
+  /**
+   * \brief This is the BFGS constructor
+   */
   OptInfoBfgs();
+  /**
+   * \brief This is the BFGS destructor
+   */
   ~OptInfoBfgs();
+    /**
+   * \brief This is the BFGS file reader
+   * \param infile is the CommentStream to read the optimisation parameters from
+   */
   virtual void Read(CommentStream& infile, char* text);
+  /**
+   * \brief This is the function that will calculate the likelihood score using the BFGS optimiser
+   */
   virtual void MaximizeLikelihood();
  private:
+  /**
+   * \brief The actual BFGS iteration
+   * \param x0 is the starting point of the optimisation
+   */
   int iteration(double* x0);
+  /**
+   * \brief This method calculates the gradient
+   * \param p is the point where the gradinent should be calculated
+   * \param fp is the function value at p
+   */ 
   void gradient(double* p, double fp);
-  int gaussian(double mult);
+  /**
+   * \brief This method solves the equation Bk*s=-grad(f)
+   */
+  int gaussian(double mult);  
+  /**
+   * \brief This method performes a linesearch a long the search direction s
+   */
   double linesearch();
-  double* gk;        //new gradient direction
+  /**
+   * \brief This is the current gradient
+   */
+  double* gk;        
+  /**
+   * \brief This is the previous gradient
+   */
   double* g0;        //old gradient direction
-  double* s;         //search direction (for linesearch)
-  double** Bk;       //BFGS updated hessian approximation
-  double* x;         //current approximation
-  double fk;         //current function value
+  /**
+   * \brief This is the search direction (for linesearch)
+   */
+  double* s;         
+  /**
+   * \brief This is the BFGS updated hessian approximation
+   */
+  double** Bk;       
+  /**
+   * \brief This is the current approximation
+   */ 
+  double* x;         
+  /**
+   * \brief This is the current function value
+   */ 
+  double fk;    
+  /**
+   * \brief This is the function to optimise
+   */
   double (*f)(double*, int);
+  /**
+   * \brief This is the number of varibles
+   */
   int numvar;
+
+  /**
+   * \brief This is the maximum number of BFGS iterations
+   */
+  int maxiter;
+  /**
+   * \brief This is the convergence parameter (BFGS halts when norm(gk) < eps)
+   */
+  double eps;
+  /**
+   * \brief  linesearch convergence parameters
+   */
   double rho;        //linesearch convergence parameters
   double tau;        //---------------------------------
-  int maxiter;
-  double eps;
+
 };
 #endif
