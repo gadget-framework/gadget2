@@ -124,19 +124,19 @@ void LikelihoodPrinter::Print(const TimeClass* const TimeInfo) {
   int i;
   if (printCatch) {
     for (i = 0; i < catchvec.Size(); i++)
-      ((CatchDistribution*)catchvec[i]) -> PrintLikelihood(catchFile, *TimeInfo);
+      ((CatchDistribution*)catchvec[i])->PrintLikelihood(catchFile, *TimeInfo);
     catchFile.flush();
   }
 
   if (printSurvey) {
     for (i = 0; i < surveyvec.Size(); i++)
-      ((SurveyIndices*)surveyvec[i]) -> PrintLikelihood(surveyFile, *TimeInfo);
+      ((SurveyIndices*)surveyvec[i])->PrintLikelihood(surveyFile, *TimeInfo);
     surveyFile.flush();
   }
 
   if (printStomach) {
     for (i = 0; i < stomachvec.Size(); i++)
-      ((StomachContent*)stomachvec[i]) -> PrintLikelihood(stomachFile, *TimeInfo);
+      ((StomachContent*)stomachvec[i])->PrintLikelihood(stomachFile, *TimeInfo);
     stomachFile.flush();
   }
 }

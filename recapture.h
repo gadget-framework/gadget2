@@ -1,5 +1,5 @@
-#ifndef tagdata_h
-#define tagdata_h
+#ifndef recapture_h
+#define recapture_h
 
 #include "likelihood.h"
 #include "commentstream.h"
@@ -7,11 +7,11 @@
 #include "doublematrixptrmatrix.h"
 #include "tagptrvector.h"
 
-class TagData : public Likelihood {
+class Recaptures : public Likelihood {
 public:
-  TagData(CommentStream& infile, const AreaClass* const Area,
+  Recaptures(CommentStream& infile, const AreaClass* const Area,
     const TimeClass* const TimeInfo, double w, TagPtrVector Tag, const char* name);
-  virtual ~TagData();
+  virtual ~Recaptures();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
@@ -29,7 +29,7 @@ private:
   DoubleVector lengths;
   IntMatrix Years;
   IntMatrix Steps;
-  DoubleMatrixPtrMatrix recaptures;
+  DoubleMatrixPtrMatrix obsRecaptures;
   DoubleMatrixPtrMatrix modelRecaptures;
   LengthGroupDivision* lgrpdiv;
   TagPtrVector tagvec;

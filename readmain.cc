@@ -21,7 +21,7 @@
 #include "catchstatistics.h"
 #include "recstatistics.h"
 #include "stomachcontent.h"
-#include "tagdata.h"
+#include "recapture.h"
 #include "predatorindex.h"
 #include "migrationpenalty.h"
 #include "catchintons.h"
@@ -286,7 +286,7 @@ void Ecosystem::ReadLikelihood(CommentStream& infile) {
       Likely[i] = new CatchStatistics(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "catchdistribution") == 0) {
-      Likely[i] = new CatchDistribution(infile, Area, TimeInfo, weight, name);
+      Likely[i] = new CatchDistribution(infile, Area, TimeInfo, keeper, weight, name);
 
     } else if (strcasecmp(type, "stockdistribution") == 0) {
       Likely[i] = new StockDistribution(infile, Area, TimeInfo, weight, name);
@@ -301,7 +301,7 @@ void Ecosystem::ReadLikelihood(CommentStream& infile) {
       Likely[i] = new StomachContent(infile, Area, TimeInfo, keeper, weight, name);
 
     } else if (strcasecmp(type, "recaptures") == 0) {
-      Likely[i] = new TagData(infile, Area, TimeInfo, weight, tagvec, name);
+      Likely[i] = new Recaptures(infile, Area, TimeInfo, weight, tagvec, name);
 
     } else if (strcasecmp(type, "catchintons") == 0) {
       Likely[i] = new CatchInTons(infile, Area, TimeInfo, weight);

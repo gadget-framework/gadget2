@@ -78,11 +78,11 @@ int main(int aNumber, char *const aVector[]) {
   //JMB - Changed to use GADGET_ .. instead of BORMICON_ ..
   char* workingdir = getenv("GADGET_WORKING_DIR");
   if (workingdir == 0) {
-    if ((workingdir = (char*)malloc(pathmax)) == NULL) {
+    if ((workingdir = (char*)malloc(LongString)) == NULL) {
       cerr << "Failed to malloc space for current working directory\n";
       exit(EXIT_FAILURE);
     }
-    if (getcwd(workingdir, pathmax) == NULL) {
+    if (getcwd(workingdir, LongString) == NULL) {
       cerr << "Failed to get current working directory - pathname too long\n";
       exit(EXIT_FAILURE);
     }

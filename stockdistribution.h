@@ -15,6 +15,7 @@ public:
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
+  virtual void LikelihoodPrint(ofstream& outfile);
   void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
   void ReadStockData(CommentStream&, const TimeClass*, int, int, int);
@@ -27,6 +28,8 @@ private:
   CharPtrVector stocknames;
   IntMatrix areas;
   IntMatrix ages;
+  IntVector Years;
+  IntVector Steps;
   CharPtrVector areaindex;
   CharPtrVector ageindex;
   CharPtrVector lenindex;

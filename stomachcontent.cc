@@ -371,7 +371,7 @@ void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass*
       if (timeid == -1) {
         Years.resize(1, year);
         Steps.resize(1, step);
-        timeid = (Years.Size() - 1);
+        timeid = Years.Size() - 1;
 
         stomachcontent.AddRows(1, numarea);
         for (i = 0; i < numarea; i++)
@@ -391,9 +391,10 @@ void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass*
   }
 
   AAT.AddActions(Years, Steps, TimeInfo);
-  modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
   if (count == 0)
     cerr << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
+  else
+    modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
 }
 
 void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -467,7 +468,7 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata = 0)) {
+    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -476,7 +477,7 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
       if (timeid == -1) {
         Years.resize(1, year);
         Steps.resize(1, step);
-        timeid = (Years.Size() - 1);
+        timeid = Years.Size() - 1;
 
         stomachcontent.AddRows(1, numarea);
         stddev.AddRows(1, numarea);
@@ -500,9 +501,10 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
   }
 
   AAT.AddActions(Years, Steps, TimeInfo);
-  modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
   if (count == 0)
     cerr << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
+  else
+    modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
 }
 
 void SCAmounts::ReadStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo) {

@@ -1,5 +1,6 @@
 #include "ecosystem.h"
-
+#include "runid.h"
+extern RunID RUNID;
 extern int FuncEval;
 
 Ecosystem::Ecosystem() {
@@ -75,10 +76,14 @@ Ecosystem::~Ecosystem() {
 }
 
 void Ecosystem::PrintStatus(const char* filename) const {
+  int i;
   ofstream outfile;
   outfile.open(filename, ios::out);
   checkIfFailure(outfile, filename);
-  int i;
+
+  RUNID.print(outfile);
+  outfile << "The current simulation time is " << TimeInfo->CurrentYear()
+    << ", step " << TimeInfo->CurrentStep() << endl;
   for (i = 0; i < stockvec.Size(); i++)
     stockvec[i]->Print(outfile);
   for (i = 0; i < otherfoodvec.Size(); i++)
@@ -115,17 +120,17 @@ double Ecosystem::SimulateAndUpdate(double* x, int n) {
   this->ValuesOfVariables(val);
   this->Opt(opt);
 
-  int i, k;
-  k = 0;
+  int i, j;
+  j = 0;
   for (i = 0; i < numvar; i++)
     if (opt[i] == 1) {
-      val[i] = x[k] * initialvalues[i];
-      k++;
+      val[i] = x[j] * initialvalues[i];
+      j++;
     }
   this->Update(val);
   likelihood = 0.0;
   if (!Simulate(optimize))
-    likelihood = HUGE_VALUE;
+    likelihood = verybig;
 
   if (PrintCounter1 == printinfo.PrintInterVal1 && printinfo.Print()) {
     this->PrintValues(printinfo.OutputFile, printinfo.givenPrecision);

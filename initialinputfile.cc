@@ -94,9 +94,9 @@ void InitialInputFile::readHeader() {
     repeatedValues = 1;
 
   } else {
-    char textInLine[VeryLongString];
-    strncpy(textInLine, "", VeryLongString);
-    infile.get(textInLine, VeryLongString, '\n');
+    char textInLine[LongString];
+    strncpy(textInLine, "", LongString);
+    infile.get(textInLine, LongString, '\n');
     if (!infile.eof() && infile.peek() != '\n') {
       cerr << "Error in initialinput - line to long in file\n";
       exit(EXIT_FAILURE);
@@ -194,9 +194,9 @@ void InitialInputFile::readVectorFromLine() {
     exit(EXIT_FAILURE);
   }
 
-  char text[VeryLongString];
-  strncpy(text, "", VeryLongString);
-  infile.get(text, VeryLongString, '\n');
+  char text[LongString];
+  strncpy(text, "", LongString);
+  infile.get(text, LongString, '\n');
   if (!infile.eof() && infile.peek() != '\n') {
     cerr << "Error in initialinput - line too long in file\n";
     exit(EXIT_FAILURE);

@@ -121,7 +121,7 @@ void SuitFunc::setName(const char* suitFuncName) {
 }
 
 const char* SuitFunc::getName() {
-   return name;
+  return name;
 }
 
 const TimeVariableVector& SuitFunc::getConstants() const {
@@ -157,22 +157,19 @@ double ExpSuitFuncA::calculate() {
   assert(coeff.Size() == 4);
   double check = 0.0;
 
-  if (coeff[0] < 0 && coeff[1] < 0) {
-    check = coeff[3] / (1 + exp(-(coeff[0] - coeff[1] *
-      preyLength + coeff[2] * predLength)));
+  if (coeff[0] < 0 && coeff[1] < 0)
+    check = coeff[3] / (1 + exp(-(coeff[0] - coeff[1] * preyLength + coeff[2] * predLength)));
+  else if (coeff[0] > 0 && coeff[1] > 0)
+    check = coeff[3] / (1 + exp(-(-coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
+  else
+    check = coeff[3] / (1 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
 
-  } else if (coeff[0] > 0 && coeff[1] > 0) {
-    check = coeff[3] / (1 + exp(-(-coeff[0] +  coeff[1] *
-      preyLength + coeff[2] * predLength)));
-
-  } else {
-    check = coeff[3] / (1 + exp(-(coeff[0] +  coeff[1] *
-      preyLength + coeff[2] * predLength)));
-  }
-
-  if ((check < 0.0) || (check > 1.0)) {
-    cerr << "Error in suitability - function outside bounds " << check << endl;
-    exit(EXIT_FAILURE);
+  if (check < 0.0) {
+    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    return 0.0;
+  } else if (check > 1.0) {
+    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    return 1.0;
   } else
     return check;
 }
@@ -190,9 +187,12 @@ ConstSuitFunc::~ConstSuitFunc() {
 
 double ConstSuitFunc::calculate() {
   assert(coeff.Size() == 1);
-  if ((coeff[0] < 0.0) || (coeff[0] > 1.0)) {
-    cerr << "Error in suitability - function outside bounds " << coeff[0] << endl;
-    exit(EXIT_FAILURE);
+  if (coeff[0] < 0.0) {
+    cerr << "Warning in suitability - function outside bounds " << coeff[0] << endl;
+    return 0.0;
+  } else if (coeff[0] > 1.0) {
+    cerr << "Warning in suitability - function outside bounds " << coeff[0] << endl;
+    return 1.0;
   } else
     return coeff[0];
 }
@@ -229,9 +229,12 @@ double AndersenSuitFunc::calculate() {
 
   e = (l - coeff[1]) * (l - coeff[1]);
   check = coeff[0] + coeff[2] * exp(-e / q);
-  if ((check < 0.0) || (check > 1.0)) {
-    cerr << "Error in suitability - function outside bounds " << check << endl;
-    exit(EXIT_FAILURE);
+  if (check < 0.0) {
+    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    return 0.0;
+  } else if (check > 1.0) {
+    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    return 1.0;
   } else
     return check;
 }
@@ -251,14 +254,16 @@ ExpSuitFuncL50::~ExpSuitFuncL50() {
 double ExpSuitFuncL50::calculate() {
   assert(coeff.Size() == 2);
   double check = 0.0;
-
   /* Parameter [0] and [1] got to be greater then 0 because of the l_50 form.
-   * Modified by kgf 21/8 00 and mna 04.10.00
-   * Predlength is not taken into account. */
+   * Modified by kgf 21/8 00 and mna 04.10.00 */
+  assert((coeff[0] > 0) && (coeff[1] > 0));
   check = 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
-  if ((check < 0.0) || (check > 1.0)) {
-    cerr << "Error in suitability - function outside bounds " << check << endl;
-    exit(EXIT_FAILURE);
+  if (check < 0.0) {
+    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    return 0.0;
+  } else if (check > 1.0) {
+    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    return 1.0;
   } else
     return check;
 }
@@ -279,11 +284,14 @@ double StraightSuitFunc::calculate() {
   assert(coeff.Size() == 2);
   double check = 0.0;
   /* Line as a function of preylength only, predlength is dummy
-   * written by kgf 5/3 01
-   * JMB - fixed for values less than zero */
+   * written by kgf 5/3 01 */
   check = coeff[0] * preyLength + coeff[1];
-  if (check < 0.0)
+  if (check < 0.0) {
+    cerr << "Warning in suitability - function outside bounds " << check << endl;
     return 0.0;
-  else
+  } else if (check > 1.0) {
+    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    return 1.0;
+  } else
     return check;
 }

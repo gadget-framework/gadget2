@@ -6,8 +6,8 @@
 #include "predator.h"
 #include "printer.h"
 
-class Stock;
-class LenStock;
+//class Stock;
+//class LenStock;
 class MortPredator;
 class MortPrey;
 
@@ -24,7 +24,7 @@ ostream& printN(ostream& o, const AgeBandMatrix& a, const IntVector* ages, int i
 ostream& printW(ostream& o, const AgeBandMatrix& a, const IntVector* ages, int indent = 0);
 ostream& printNorW(ostream& o, const AgeBandMatrix& a, int PrintN,
   const IntVector* ages, int indent = 0);
-ostream& printSuitability(ostream& o, const Predator& p, int indent = 0);
+//ostream& printSuitability(ostream& o, const Predator& p, int indent = 0);
 ostream& printSuitMatrix(ostream& o, const BandMatrix& b, int rowindex, int indent = 0);
 ostream& printMatrixHeader(ostream& o, const LengthGroupDivision& rowlengths,
   const LengthGroupDivision& collenghts, const char* value, int withrowind, int indent = 0);
@@ -36,8 +36,8 @@ ostream& printc_hat(ostream& o, const MortPredator& pred, AreaClass area, int in
 ostream& printmean_n(ostream& o, const MortPrey& prey, AreaClass area, int indent = 0);
 ostream& printMatrixHeader(ostream& o, const IntVector& ages,
   const LengthGroupDivision& lengths, const char* value, int withrowind, int indent = 0);
-ostream& printNaturalM(ostream& o, const Stock& stock, int indent = 0);
-ostream& printNaturalM(ostream& o, const LenStock& stock, int indent = 0);
+//ostream& printNaturalM(ostream& o, const Stock& stock, int indent = 0);
+//ostream& printNaturalM(ostream& o, const LenStock& stock, int indent = 0);
 ostream& printVectorHeader(ostream& o, int minage, int maxage, int agedelta,
   const char* value, int indent = 0);
 ostream& printVectorHeader(ostream& o, const IntVector& ages, const char* value, int indent = 0);

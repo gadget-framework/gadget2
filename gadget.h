@@ -48,13 +48,13 @@ using namespace std;
 
 /* Also defined are some of the constants used by Gadget */
 const int MaxStrLength = 250;
-const int VeryLongString = 10000;
-const int pathmax = 1025;
+const int LongString = 1025;
 const double rathersmall = 1e-10;
 const double verysmall = 1e-100;
+const double verybig = 1e+10;
+const double pivalue = 3.14159265359;
 const int MAX_MORTALITY = 1000;
 const double MAX_RATIO_CONSUMED = 0.95;
-const double HUGE_VALUE = 1e+10;
 const char sep = ' ';
 
 #ifndef TAB

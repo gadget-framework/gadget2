@@ -22,26 +22,8 @@ public:
   int menu();
 private:
   void printMenu();
-  CharPtrVector& readArgs(char*);
-  void dumpStock(CharPtrVector& args);
-  void dumpAll(CharPtrVector& args);
-  void dumpSuitability(CharPtrVector& args);
-  void dumpNaturalM(CharPtrVector& args);
-  void dumpc_hat(CharPtrVector& args);
-  void dumpmean_n(CharPtrVector& args);
-  void dumpz(CharPtrVector& args);
-  void dumpcannibalism(CharPtrVector& args);
+  void dumpAll();
   const Ecosystem* eco;
-  static const int MAX_INPUT_LENGTH;
-  static const char* FULL_FILE;
-  static const char* STOCK_N_FILE;
-  static const char* STOCK_W_FILE;
-  static const char* SUITABLE_FILE;
-  static const char* NATURALM_FILE;
-  static const char* C_HAT_FILE;
-  static const char* MEAN_N_FILE;
-  static const char* Z_FILE;
-  static const char* CANNIBALISM_FILE;
 };
 
 #endif

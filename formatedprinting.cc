@@ -196,7 +196,7 @@ ostream& printAgeGroups(ostream& o, const IntVector& ages, int indent) {
  *  "  [printMatrixHeader]"
  *  "  [printSuitMatrix]"
  */
-ostream& printSuitability(ostream& o, const Predator& pred, int indent) {
+/*ostream& printSuitability(ostream& o, const Predator& pred, int indent) {
   int i;
   char* ind = makeSpaces(indent);
   o << ind << "suitability\n" << ind << "  predator\n" << ind << "    "
@@ -210,7 +210,7 @@ ostream& printSuitability(ostream& o, const Predator& pred, int indent) {
   delete[] ind;
   o.flush();
   return o;
-}
+}*/
 
 /*  printBandMatrix
  *
@@ -355,7 +355,7 @@ ostream& printmean_n(ostream& o, const MortPrey& prey, AreaClass area, int inden
  *      "[printVectorHeader]"
  *      "M_1 M_2 ... M_n
  */
-ostream& printNaturalM(ostream& o, const Stock& stock, int indent) {
+/*ostream& printNaturalM(ostream& o, const Stock& stock, int indent) {
   int i;
   char* ind = makeSpaces(indent);
   o << ind << "stock\n" << ind << sep << stock.Name() << endl;
@@ -366,7 +366,7 @@ ostream& printNaturalM(ostream& o, const Stock& stock, int indent) {
   o << endl;
   delete[] ind;
   return o;
-}
+}*/
 
 /*  printNaturalM
  *
@@ -382,7 +382,7 @@ ostream& printNaturalM(ostream& o, const Stock& stock, int indent) {
  *      "[printVectorHeader]"
  *      "M_1 M_2 ... M_n
  */
-ostream& printNaturalM(ostream& o, const LenStock& stock, int indent) {
+/*ostream& printNaturalM(ostream& o, const LenStock& stock, int indent) {
   int i;
   char* ind = makeSpaces(indent);
   o << ind << "stock\n" << ind << sep << stock.Name() << endl;
@@ -393,7 +393,7 @@ ostream& printNaturalM(ostream& o, const LenStock& stock, int indent) {
   o << endl;
   delete[] ind;
   return o;
-}
+}*/
 
 /*  printVectorHeader
  *

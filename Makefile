@@ -1,13 +1,13 @@
 ##########################################################################
 # Common for all architecture and compiler options
 ##########################################################################
-GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat=2 \
+GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat \
               -Wparentheses -Wpointer-arith -Wcast-qual -Wconversion \
               -Wreorder -Wwrite-strings -Wsynth -Wchar-subscripts \
               -Wuninitialized -W
 
-DEFINE_FLAGS = -D GADGET_INLINE -D DEBUG -D INTERRUPT_HANDLER -g -O
-#DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
+#DEFINE_FLAGS = -D GADGET_INLINE -D DEBUG -D INTERRUPT_HANDLER -g -O
+DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
 
 ##########################################################################
 # Pick the appropriate compiler from the following switches
@@ -100,14 +100,14 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	stockpreystdinfo.o stockpreystdinfobylength.o stockprinter.o lenstock.o \
 	stockstdprinter.o maturity.o suitfunc.o suits.o stomachcontent.o runid.o \
 	migration.o variableinfo.o binarytree.o vectorusingkeeper.o growthimplement.o \
-	surveyindices.o migrationpenalty.o tagdata.o stock.o readaggregation.o \
+	surveyindices.o migrationpenalty.o recapture.o stock.o readaggregation.o \
 	migvariables.o time.o multinomial.o totalpredator.o naturalm.o optinfo.o \
 	transition.o otherfood.o mathfunc.o understocking.o poppredator.o tags.o \
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o \
-	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \
+	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o taggrow.o \
 	initialinputfile.o popratio.o popinfo.o recaggregator.o recstatistics.o \
-	taggrow.o popinfomemberfunctions.o agebandmatrixratiomemberfunctions.o
+	ludecomposition.o popinfomemberfunctions.o agebandmatrixratiomemberfunctions.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 

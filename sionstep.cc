@@ -325,12 +325,12 @@ void SIOnStep::Reset(const Keeper* const keeper) {
   int i, j;
   for (i = 0; i < abundance.Nrow(); i++)
     for (j = 0; j < abundance.Ncol(i); j++)
-      abundance[i][j] = 0;
+      abundance[i][j] = 0.0;
 }
 
 void SIOnStep::Print(ofstream& outfile) const {
   int i, j;
-  outfile << "\tNumber of sums " << NumberOfSums << "\n\tSurvey indices\n";
+  outfile << "\tSurvey indices\n";
   for (i = 0; i < Years.Size(); i++) {
     outfile << TAB << Years[i] << sep << Steps[i] << sep;
     for (j = 0; j < Indices.Ncol(i); j++) {
@@ -340,17 +340,7 @@ void SIOnStep::Print(ofstream& outfile) const {
     }
     outfile << endl;
   }
-  outfile << "\n\tAbundance numbers\n";
-  for (i = 0; i < Years.Size(); i++) {
-    outfile << TAB << Years[i] << sep << Steps[i] << sep;
-    for (j = 0; j < abundance.Ncol(i); j++) {
-      outfile.width(smallwidth);
-      outfile.precision(smallprecision);
-      outfile << abundance[i][j] << sep;
-    }
-    outfile << endl;
-  }
-  outfile << flush;
+  outfile.flush();
 }
 
 void SIOnStep::LikelihoodPrint(ofstream& outfile) {
@@ -394,7 +384,7 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile) {
     outfile.precision(smallprecision);
     outfile << sse[j] << sep;
   }
-  outfile << flush;
+  outfile.flush();
 }
 
 int SIOnStep::IsToSum(const TimeClass* const TimeInfo) const {
@@ -407,7 +397,7 @@ double SIOnStep::Regression() {
 
   double likelihood = 0.0;
   int col, index;
-  for (col = 0; col < Indices.Ncol(0); col++) {
+  for (col = 0; col < Indices.Ncol(); col++) {
     //Let LLR figure out what to do in the case of zero stock size.
     DoubleVector indices(NumberOfSums);
     DoubleVector stocksize(NumberOfSums);

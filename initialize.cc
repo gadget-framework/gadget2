@@ -26,7 +26,7 @@
 #include "catchstatistics.h"
 #include "recstatistics.h"
 #include "stomachcontent.h"
-#include "tagdata.h"
+#include "recapture.h"
 #include "stockpredator.h"
 #include "lengthpredator.h"
 #include "stockdistribution.h"
@@ -149,7 +149,7 @@ void Ecosystem::Initialize(int optimize) {
           ((StomachContent*)Likely[i])->SetPredatorsAndPreys(predvec, preyvec);
           break;
         case TAGLIKELIHOOD:
-          ((TagData*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
+          ((Recaptures*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
           break;
         case STOCKDISTRIBUTIONLIKELIHOOD:
           ((StockDistribution*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
