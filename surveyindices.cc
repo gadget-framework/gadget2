@@ -17,9 +17,9 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i;
+  int i, j;
 
-  IntMatrix ages, tmpareas;
+  IntMatrix ages;
   DoubleVector lengths;
   CharPtrVector areaindex;
   CharPtrVector ageindex;
@@ -45,22 +45,20 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   datafile.open(aggfilename);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  i = readAggregation(subdata, tmpareas, areaindex);
+  i = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Check if we read correct input
-  if (tmpareas.Nrow() != 1)
+  if (areas.Nrow() != 1)
     handle.Message("Error - there should be only one area for the survey indices");
 
-  for (i = 0; i < tmpareas.Ncol(0); i++)
-    areas.resize(1, tmpareas[0][i]);
-
-  //Check area data
-  for (i = 0; i < areas.Size(); i++)
-    if ((areas[i] = Area->InnerArea(areas[i])) == -1)
-      handle.UndefinedArea(areas[i]);
+  //Must change from outer areas to inner areas.
+  for (i = 0; i < areas.Nrow(); i++)
+    for (j = 0; j < areas.Ncol(i); j++)
+      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
+        handle.UndefinedArea(areas[i][j]);
 
   if (strcasecmp(sitype, "lengths") == 0) {
     readWordAndValue(infile, "lenaggfile", aggfilename);
@@ -159,14 +157,17 @@ SurveyIndices::~SurveyIndices() {
 }
 
 void SurveyIndices::LikelihoodPrint(ofstream& outfile) {
-  int i;
+  int i, j;
   outfile << "\nSurvey Indices\n\nLikelihood " << likelihood
     << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << stocknames[i] << sep;
-  outfile << "\nInner areas ";
-  for (i = 0; i < areas.Size(); i++)
-    outfile << areas[i] << sep;
+  outfile << "\nInner areas";
+  for (i = 0; i < areas.Nrow(); i++) {
+    outfile << endl;
+    for (j = 0; j < areas.Ncol(i); j++)
+      outfile << areas[i][j] << sep;
+  }
   outfile << endl;
   SI->LikelihoodPrint(outfile);
   outfile << endl;

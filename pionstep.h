@@ -13,7 +13,7 @@ class PredatorAggregator;
 
 class PIOnStep : public SIOnStep {
 public:
-  PIOnStep(CommentStream& infile,  const IntVector& areas,
+  PIOnStep(CommentStream& infile,  const IntMatrix& areas,
     const DoubleVector& predatorlengths, const DoubleVector& preylengths,
     const TimeClass* const TimeInfo, int biomass, const CharPtrVector& areaindex,
     const CharPtrVector& preylenindex, const CharPtrVector& predlenindex,

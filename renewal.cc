@@ -166,11 +166,14 @@ void RenewalData::Reset() {
       sum = 0.0;
       N = 0.0;
       length = 0.0;
-      tmpSdev = 1 / (2 * Sdev[i] * Sdev[i]);
+      if (isZero(Sdev[i]))
+        tmpSdev = 0.0;
+      else
+        tmpSdev = 1 / (2 * Sdev[i] * Sdev[i]);
 
       for (l = Distribution[i].Minlength(age); l < Distribution[i].Maxlength(age); l++) {
         length = LgrpDiv->Meanlength(l) - Meanlengths[i];
-        if (Sdev[i] > 0)
+        if (Sdev[i] > verysmall)
           N = exp(-(length * length * tmpSdev));
         else
           N = 0.0;

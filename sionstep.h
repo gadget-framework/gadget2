@@ -20,10 +20,10 @@ class SIOnStep;
 class SIOnStep {
 public:
   SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
-    const TimeClass* const TimeInfo, int numcols, const IntVector& areas,
+    const TimeClass* const TimeInfo, int numcols, const IntMatrix& areas,
     const CharPtrVector& index1, const CharPtrVector& index2);
   SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
-    const TimeClass* const TimeInfo, const IntVector& areas,
+    const TimeClass* const TimeInfo, const IntMatrix& areas,
     const CharPtrVector& colindex, const char* name);
   virtual ~SIOnStep();
   virtual void Sum(const TimeClass* const TimeInfo) = 0;
@@ -39,7 +39,7 @@ protected:
   void SetError() { error = 1; };
   int IsToSum(const TimeClass* const TimeInfo) const;
   void KeepNumbers(const DoubleVector& numbers);
-  IntVector Areas;
+  IntMatrix Areas;
   IntVector Years;
   IntVector Steps;
   IntVector YearsInFile;

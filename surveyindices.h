@@ -23,7 +23,7 @@ public:
     SI->PrintLikelihoodHeader(outfile, surveyname); };
 protected:
   SIOnStep* SI;
-  IntVector areas;
+  IntMatrix areas;
   CharPtrVector stocknames;
   char* surveyname;
 };

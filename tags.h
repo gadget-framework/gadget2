@@ -11,6 +11,7 @@
 #include "stockaggregator.h"
 #include "agebandmatrixptrmatrix.h"
 #include "livesonareas.h"
+#include "doublematrixptrvector.h"
 #include "conversionindexptrvector.h"
 #include "formula.h"
 
@@ -20,6 +21,8 @@ public:
     const TimeClass* const TimeInfo, Keeper* const keeper);
   ~Tags();
   void Update();
+  void Update(int year, int step);
+  void UpdateTags(int year, int step);
   void DeleteFromStock();
   const int getTagYear() const { return tagyear; };
   const int getTagStep() const { return tagstep; };
@@ -37,6 +40,9 @@ public:
   int stockIndex(const char* stockname);
 private:
   void ReadNumbers(CommentStream& infile, const char* tagname, double minlength, double dl);
+  void ReadMultiNumbers(CommentStream& infile, const char* tagname, double minlength,
+    double dl, const AreaClass* const Area, const TimeClass* const TimeInfo) {}; //JMB
+  void AddToTagStock(int time, int area);
   CharPtrVector stocknames;
   //area-age-length distribution of tags by stocks
   AgeBandMatrixPtrMatrix AgeLengthStock;
@@ -48,6 +54,7 @@ private:
   int endyear;     //year of last recapture
   int endstep;     //step of last recapture
   DoubleVector NumberByLength;
+  DoubleMatrixPtrVector NumberByLengthMulti;
   LengthGroupDivision* LgrpDiv;
   StockPtrVector tagstocks;
   StockPtrVector maturestocks;
@@ -56,5 +63,10 @@ private:
   Stock* taggingstock;
   IntVector preyindex;
   IntVector updated;
+  IntVector areaindex;
+  IntVector Years;
+  IntVector Steps;
+  IntMatrix Areas;
+  int multiTags;
 };
 #endif

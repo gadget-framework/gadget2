@@ -5,7 +5,7 @@
 #include "stockaggregator.h"
 #include "gadget.h"
 
-SIByLengthOnStep::SIByLengthOnStep(CommentStream& infile, const IntVector& areas,
+SIByLengthOnStep::SIByLengthOnStep(CommentStream& infile, const IntMatrix& areas,
   const DoubleVector& lengths, const CharPtrVector& areaindex, const CharPtrVector& lenindex,
   const TimeClass* const TimeInfo, const char* datafilename, const char* name)
   : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, lenindex, name),
@@ -45,10 +45,8 @@ void SIByLengthOnStep::SetStocks(const StockPtrVector& Stocks) {
   IntMatrix agematrix(1, maxage - minage + 1);
   for (i = 0; i < agematrix.Ncol(); i++)
     agematrix[0][i] = i + minage;
-  IntMatrix areamatrix(1, Areas.Size());
-  for (i = 0; i < areamatrix.Ncol(); i++)
-    areamatrix[0][i] = Areas[i];
-  aggregator = new StockAggregator(Stocks, LgrpDiv, areamatrix, agematrix);
+
+  aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, agematrix);
 }
 
 void SIByLengthOnStep::Sum(const TimeClass* const TimeInfo) {

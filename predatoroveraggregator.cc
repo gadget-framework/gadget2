@@ -10,10 +10,10 @@ PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
     checkLengthGroupIsFiner(preds[i]->ReturnLengthGroupDiv(),
       predLgrpDiv, preds[i]->Name(), "predator overconsumption");
 
-  total.AddRows(areas.Nrow(), predLgrpDiv->NoLengthGroups(), 0);
+  total.AddRows(areas.Nrow(), predLgrpDiv->NoLengthGroups(), 0.0);
   // predConv has [pred][predLengthGroup]
   for (i = 0; i < predators.Size(); i++) {
-    predConv.AddRows(1, predators[i]->NoLengthGroups());
+    predConv.AddRows(1, predators[i]->NoLengthGroups(), 0);
     for (j = 0; j < predConv.Ncol(i); j++)
       predConv[i][j] = predLgrpDiv->NoLengthGroup(predators[i]->Length(j));
   }

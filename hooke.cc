@@ -141,28 +141,30 @@ extern int FuncEval;
 double bestNearby(double (*f)(double*, int), double delta[], double point[],
   double prevbest, int nvars, int param[]) {
 
-  double       z[VARS];
-  double       minf, ftmp;
-  int          i;
+  double z[VARS];
+  double minf, ftmp;
+  int    i;
 
   minf = prevbest;
   for (i = 0; i < nvars; i++)
     z[param[i]] = point[param[i]];
+
   for (i = 0; i < nvars; i++) {
     z[param[i]] = point[param[i]] + delta[param[i]];
     ftmp = (*f)(z, nvars);
-    if (ftmp < minf)
+    if ((ftmp < minf) && (ftmp == ftmp)) //JMB added check for NaN
       minf = ftmp;
     else {
       delta[param[i]] = 0.0 - delta[param[i]];
       z[param[i]] = point[param[i]] + delta[param[i]];
       ftmp = (*f)(z, nvars);
-      if (ftmp < minf)
+      if ((ftmp < minf) && (ftmp == ftmp)) //JMB added check for NaN
         minf = ftmp;
       else
         z[param[i]] = point[param[i]];
     }
   }
+
   for (i = 0; i < nvars; i++)
     point[param[i]] = z[param[i]];
   return minf;
@@ -194,13 +196,19 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
     initialstep[i] = rho;   //JMB - initialise this to something? rho?
   }
   steplength = ((lambda <= 0) ? rho : lambda);
-  fbefore = (*f)(newx, nvars);
-  newf = fbefore;
   nobds = 0;
   iters = 0;
   h = 0;
 
   cout << "\nStarting Hooke and Jeeves\n";
+  fbefore = (*f)(newx, nvars);
+  if (fbefore != fbefore) { //check for NaN
+    cout << "\nError starting Hooke and Jeeves optimisation with"
+      << " f(x) = infinity\nReturning to calling routine ...\n";
+    return 0;
+  }
+
+  newf = fbefore;
   while ((iters < itermax) && (steplength > epsilon)) {
     /* JMB added check for really silly values */
     if (isZero(fbefore)) {

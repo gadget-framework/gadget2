@@ -109,7 +109,7 @@ int Ecosystem::Simulate(int Optimize, int print) {
       for (j = 0; j < basevec.Size(); j++)
         basevec[j]->Reset(TimeInfo);
 
-    //Update any tagging data
+    //Add in any new tagging experiments
     tagvec.UpdateTags(TimeInfo);
 
     if (TimeInfo->CurrentStep() == 1) //Migrations recalculated once per year.
@@ -140,10 +140,11 @@ int Ecosystem::Simulate(int Optimize, int print) {
       }
     #endif
 
+    //Remove any expired tagging experiments
+    tagvec.DeleteTags(TimeInfo);
+
     if (i != TimeInfo->TotalNoSteps() - 1)
       TimeInfo->IncrementTime();
-
-    tagvec.DeleteTags(TimeInfo);
   }
 
   for (i = 0; i < Likely.Size(); i++)

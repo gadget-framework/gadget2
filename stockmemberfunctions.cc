@@ -206,8 +206,12 @@ void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const 
   int area, double ratio, int MinAge, int MaxAge) {
 
   int numtag = Addition.NrOfTagExp();
-  if (numtag > 0 && numtag <= tagAlkeys.NrOfTagExp())
-    AgebandmratioAdd(tagAlkeys, AreaNr[area], Addition, AddArea, *CI, ratio, MinAge, MaxAge);
+  int inarea = AreaNr[area];
+
+  if (numtag > 0 && numtag <= tagAlkeys.NrOfTagExp()) {
+    AgebandmratioAdd(tagAlkeys, inarea, Addition, AddArea, *CI, ratio, MinAge, MaxAge);
+    tagAlkeys[inarea].UpdateRatio(Alkeys[inarea]);
+  }
 }
 
 void Stock::RecalcMigration(const TimeClass* const TimeInfo) {
@@ -216,37 +220,17 @@ void Stock::RecalcMigration(const TimeClass* const TimeInfo) {
 }
 
 void Stock::UpdateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss) {
-//cout << "UT - 1\n";
-
-/*  int minlength, maxlength, minage, maxage,  i, age, length;
-  for (i = 0; i < Alkeys.Size(); i++)
-    for (age = Alkeys[i].Minage(); age <= Alkeys[i].Maxage(); age++)
-      for (length = Alkeys[i].Minlength(age); length < Alkeys[i].Maxlength(age); length++)
-cout << "UT i " << i << " age " << age << " length " << length << " ALK " << Alkeys[i][age][length].N << endl;*/
-
-/*  for (i = 0; i < tagbyagelength.Size(); i++)
-    for (age = tagbyagelength[i].Minage(); age <= tagbyagelength[i].Maxage(); age++)
-      for (length = tagbyagelength[i].Minlength(age); length < tagbyagelength[i].Maxlength(age); length++)
-cout << "UT i " << i << " age " << age << " length " << length << " ALK " << tagbyagelength[i][age][length].N << endl;
-*/
-
 
   tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->Name(), tagloss);
-//cout << "UT - 2\n";
   allTags.resize(1, newtag);
-//cout << "UT - 3\n";
   if (doesmature) {
-//cout << "UT - mature\n";
     maturity->AddTag(newtag->Name());
     matureTags.resize(1, newtag);
   }
-//cout << "UT - 4\n";
   if (doesmove) {
-//cout << "UT - move\n";
     transition->AddTag(newtag->Name());
     transitionTags.resize(1, newtag);
   }
-//cout << "UT - 5\n";
 }
 
 void Stock::DeleteTags(const char* tagname) {

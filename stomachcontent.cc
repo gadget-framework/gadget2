@@ -391,7 +391,7 @@ void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass*
   }
 
   AAT.AddActions(Years, Steps, TimeInfo);
-  modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol());
+  modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
   if (count == 0)
     cerr << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
 }

@@ -23,13 +23,13 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& preds, const Pre
       preys[i]->Name(), "predator aggregator");
 
   for (i = 0; i < predators.Size(); i++) {
-    predConv.AddRows(1, predators[i]->NoLengthGroups());
+    predConv.AddRows(1, predators[i]->NoLengthGroups(), 0);
     for (j = 0; j < predConv.Ncol(i); j++)
       predConv[i][j] = predLgrpDiv->NoLengthGroup(predators[i]->Length(j));
   }
 
   for (i = 0; i < preys.Size(); i++) {
-    preyConv.AddRows(1, preys[i]->NoLengthGroups());
+    preyConv.AddRows(1, preys[i]->NoLengthGroups(), 0);
     for (j = 0; j < preyConv.Ncol(i); j++)
       preyConv[i][j] = preyLgrpDiv->NoLengthGroup(preys[i]->Length(j));
   }
@@ -126,7 +126,7 @@ PredatorAggregator::PredatorAggregator(const CharPtrVector& prednames, PreyPtrVe
     for (j = 0; j < preds; j++) {
       minage = ((MortPrey*)preys[i])->getPredMinAge(j);
       maxage = ((MortPrey*)preys[i])->getPredMaxAge(j);
-      predConv.AddRows(1, maxage - minage + 1);
+      predConv.AddRows(1, maxage - minage + 1, 0);
       for (n = 0; n < predConv.Ncol(predtot + j); n++) {
         if ((minage + n) < ages[0])  //out of range
           predConv[predtot + j][n] = -1;
@@ -145,7 +145,7 @@ PredatorAggregator::PredatorAggregator(const CharPtrVector& prednames, PreyPtrVe
   }
 
   for (i = 0; i < preys.Size(); i++) {
-    preyConv.AddRows(1, preys[i]->NoLengthGroups());
+    preyConv.AddRows(1, preys[i]->NoLengthGroups(), 0);
     for (j = 0; j < preyConv.Ncol(i); j++)
       preyConv[i][j] = preyLgrpDiv->NoLengthGroup(preys[i]->Length(j));
   }
@@ -218,7 +218,7 @@ void PredatorAggregator::Sum(int dummy) {
 
   //Initialize total to 0 and set correct dimensions in tot_predators
   for (i = 0; i < total.Size(); i++) {
-    tot_predators.AddRows(1, total[i].Nrow(), 0);
+    tot_predators.AddRows(1, total[i].Nrow(), 0.0);
     for (j = 0; j < total[i].Nrow(); j++)
       for (k = 0; k < total[i].Ncol(j); k++)
         total[i][j][k] = 0;

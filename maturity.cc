@@ -98,8 +98,8 @@ void Maturity::Print(ofstream& outfile) const {
 //conversionindex for each mature stock.
 void Maturity::Move(int area, const TimeClass* const TimeInfo) {
   assert(this->IsMaturationStep(area, TimeInfo));
-  const int inarea = AreaNr[area];
-  int i;
+  int i, inarea = AreaNr[area];
+
   for (i = 0; i < MatureStocks.Size(); i++) {
     MatureStocks[i]->Add(Storage[inarea], CI[i], area, Ratio[i],
       Storage[inarea].Minage(), Storage[inarea].Maxage());
@@ -109,6 +109,7 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
         TagStorage[inarea].Minage(), TagStorage[inarea].Maxage());
   }
   Storage[inarea].SettoZero();
+  TagStorage[inarea].SettoZero();
 }
 
 //Put fish that becomes mature in temporary storage.  Later in the
@@ -116,9 +117,15 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
 void Maturity::PutInStorage(int area, int age, int length, double number,
   double weight, const TimeClass* const TimeInfo) {
 
+  int inarea = AreaNr[area];
   assert(this->IsMaturationStep(area, TimeInfo));
-  Storage[AreaNr[area]][age][length].N = (number > 0 ? number : 0.0);
-  Storage[AreaNr[area]][age][length].W = (weight > 0 ? weight : 0.0);
+  if (isZero(number) || isZero(weight)) {
+    Storage[inarea][age][length].N = 0.0;
+    Storage[inarea][age][length].W = 0.0;
+  } else {
+    Storage[inarea][age][length].N = number;
+    Storage[inarea][age][length].W = weight;
+  }
 }
 
 //Put fish which becomes mature from tagging experiement with identity = id

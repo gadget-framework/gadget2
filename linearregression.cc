@@ -69,7 +69,7 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
 
   //Now we have calculated the mean and can proceed to calculate the fit.
   b = slope;
-  a = Ymean - b * Xmean;
+  a = Ymean - (b * Xmean);
 
   //Now we can calculate the sum of squares of errors.
   double tmp;

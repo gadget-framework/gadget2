@@ -7,7 +7,7 @@
 #include "stock.h"
 #include "gadget.h"
 
-PIOnStep::PIOnStep(CommentStream& infile, const IntVector& areas,
+PIOnStep::PIOnStep(CommentStream& infile, const IntMatrix& areas,
   const DoubleVector& predatorlengths, const DoubleVector& preylengths,
   const TimeClass* const TimeInfo, int biomass, const CharPtrVector& areaindex,
   const CharPtrVector& preylenindex, const CharPtrVector& predlenindex,
@@ -108,11 +108,7 @@ void PIOnStep::ReadPredatorData(CommentStream& infile, const CharPtrVector& area
 }
 
 void PIOnStep::SetPredatorsAndPreys(const PredatorPtrVector& predators, const PreyPtrVector& preys) {
-  IntMatrix areas(1, Areas.Size());
-  int i;
-  for (i = 0; i < Areas.Size(); i++)
-    areas[0][i] = Areas[i];
-  aggregator = new PredatorAggregator(predators, preys, areas, PredatorLgrpDiv, PreyLgrpDiv);
+  aggregator = new PredatorAggregator(predators, preys, Areas, PredatorLgrpDiv, PreyLgrpDiv);
 }
 
 void PIOnStep::Sum(const TimeClass* const TimeInfo) {

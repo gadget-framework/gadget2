@@ -33,7 +33,7 @@
 //
 // A function to read fleet information
 //
-int Ecosystem::ReadFleet(CommentStream& infile) {
+void Ecosystem::ReadFleet(CommentStream& infile) {
   ErrorHandler handle;
   char text[MaxStrLength];
   char value[MaxStrLength];
@@ -68,13 +68,12 @@ int Ecosystem::ReadFleet(CommentStream& infile) {
       handle.Message("Error in main file - unrecognised fleet", text);
 
   }
-  return 1;
 }
 
 //
 // A function to read tagging information
 //
-int Ecosystem::ReadTagging(CommentStream& infile) {
+void Ecosystem::ReadTagging(CommentStream& infile) {
   ErrorHandler handle;
   char text[MaxStrLength];
   char value[MaxStrLength];
@@ -100,13 +99,12 @@ int Ecosystem::ReadTagging(CommentStream& infile) {
       handle.Unexpected("tagid", text);
 
   }
-  return 1;
 }
 
 //
 // A function to read otherfood information
 //
-int Ecosystem::ReadOtherFood(CommentStream& infile) {
+void Ecosystem::ReadOtherFood(CommentStream& infile) {
   ErrorHandler handle;
   char text[MaxStrLength];
   char value[MaxStrLength];
@@ -132,14 +130,13 @@ int Ecosystem::ReadOtherFood(CommentStream& infile) {
       handle.Unexpected("foodname", text);
 
   }
-  return 1;
 }
 
 //
 // A function to read stock information
 // Note: there is only ever one stock in each file
 //
-int Ecosystem::ReadStock(CommentStream& infile, int mortmodel) {
+void Ecosystem::ReadStock(CommentStream& infile, int mortmodel) {
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -165,13 +162,12 @@ int Ecosystem::ReadStock(CommentStream& infile, int mortmodel) {
   else                  //original bormicon stock model used
     stockvec[i] = new Stock(infile, stocknames[i], Area, TimeInfo, keeper);
 
-  return 1;
 }
 
 //
 // A function to read information on printing
 //
-int Ecosystem::ReadPrinters(CommentStream& infile) {
+void Ecosystem::ReadPrinters(CommentStream& infile) {
   ErrorHandler handle;
   char text[MaxStrLength];
   char type[MaxStrLength];
@@ -225,13 +221,12 @@ int Ecosystem::ReadPrinters(CommentStream& infile) {
       handle.Message("Error in main file - unrecognised printer", type);
 
   }
-  return 1;
 }
 
 //
 // A function to read likelihood information
 //
-int Ecosystem::ReadLikelihood(CommentStream& infile) {
+void Ecosystem::ReadLikelihood(CommentStream& infile) {
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -330,7 +325,6 @@ int Ecosystem::ReadLikelihood(CommentStream& infile) {
       handle.Message("Error in main file - unrecognised likelihood", type);
     }
   }
-  return 1;
 }
 
 //
@@ -371,12 +365,12 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
 
   //next, read in the printing information
   infile >> text >> ws;
-  if (!(strcasecmp(text, "printfile") == 0))
-    handle.Unexpected("printfile", text);
+  if (!((strcasecmp(text, "printfile") == 0) || (strcasecmp(text, "printfiles") == 0)))
+    handle.Unexpected("printfiles", text);
 
-  //check if a printfile is specified, or jump to [stock]
+  //Now we have found the string "printfiles" we can create printer clases
   infile >> text >> ws;
-  if (!(strcasecmp(text, "[stock]") == 0)) {
+  while (!((strcasecmp(text, "[stock]") == 0) || infile.eof())) {
     //Do not read printfile if we are doing a net run, or if we are
     //optimizing without the forcePrint option set. 07.04.00 AJ & mnaa.
     if (!netrun  && (printinfo.forcePrint || !optimize)) {

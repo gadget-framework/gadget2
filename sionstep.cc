@@ -10,7 +10,7 @@ SIOnStep::~SIOnStep() {
 }
 
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
-  const TimeClass* const TimeInfo, int numcols, const IntVector& areas,
+  const TimeClass* const TimeInfo, int numcols, const IntMatrix& areas,
   const CharPtrVector& index1, const CharPtrVector& index2)
   : Areas(areas) {
 
@@ -100,7 +100,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
 }
 
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
-  const TimeClass* const TimeInfo, const IntVector& areas, const CharPtrVector& colindex,
+  const TimeClass* const TimeInfo, const IntMatrix& areas, const CharPtrVector& colindex,
   const char* name) : Areas(areas) {
 
   ErrorHandler handle;
@@ -418,9 +418,6 @@ double SIOnStep::Regression() {
     //Now fit the log of the abundance indices as a function of stock size.
     likelihood += this->Fit(stocksize, indices, col);
   }
-
-  if (error)
-    return 0.0;
   return likelihood;
 }
 

@@ -275,7 +275,7 @@ void TagData::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks)
     }
 
     //Check if the stock lives on all the areas that were read in
-    for (i = 0; i < recAreas.Nrow(); i++)
+    for (i = 0; i < recAreas.Ncol(k); i++)
       for (j = 0; j < stocks.Size(); j++)
         if (!stocks[j]->IsInArea(recAreas[k][i])) {
           cerr << "Error: when reading recapture information on the area "
@@ -349,6 +349,9 @@ void TagData::AddToLikelihood(const TimeClass* const TimeInfo) {
             lik += HUGE_VALUE;
           else
             lik -= -x + (n * log(x)) - logFactorial(n);
+
+cout << "recaptures likelihood data - x " << x << " n " << n << " score " << lik << endl;
+
           index[t]++;
         } else
           lik += x;

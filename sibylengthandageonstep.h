@@ -12,7 +12,7 @@ enum OptType { PEARSONOPTTYPE = 1, MULTINOMIALOPTTYPE, EXPERIMENTALOPTTYPE, GAMM
 
 class SIByLengthAndAgeOnStep : public SIOnStep {
 public:
-  SIByLengthAndAgeOnStep(CommentStream& infile, const IntVector& areas,
+  SIByLengthAndAgeOnStep(CommentStream& infile, const IntMatrix& areas,
     const DoubleVector& lengths, const IntMatrix& ages,
     const TimeClass* const TimeInfo, Keeper* const keeper,
     const CharPtrVector& lenindex, const CharPtrVector& ageindex,

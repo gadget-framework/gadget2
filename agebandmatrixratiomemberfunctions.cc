@@ -24,14 +24,25 @@ void AgeBandMatrixRatio::UpdateNumbers(const AgeBandMatrix& Total) {
 
   int NrOfTagExp = this->NrOfTagExp();
   int maxage, minlen, maxlen, age, length, tag;
+  double number, ratio;
+
   if (NrOfTagExp > 0) {
     maxage = this->Maxage();
     for (age = minage; age <= maxage; age++) {
       minlen = this->Minlength(age);
       maxlen = this->Maxlength(age);
-      for (length = minlen; length < maxlen; length++)
-        for (tag = 0; tag < NrOfTagExp; tag++)
-          *((this->operator[](age))[length][tag].N) = (this->operator[](age))[length][tag].R * Total[age][length].N;
+      for (length = minlen; length < maxlen; length++) {
+        for (tag = 0; tag < NrOfTagExp; tag++) {
+          number = Total[age][length].N;
+          ratio = (this->operator[](age))[length][tag].R;
+          if (isZero(number) || number < verysmall || isZero(ratio) || ratio < verysmall) {
+            *((this->operator[](age))[length][tag].N) = 0.0;
+            (this->operator[](age))[length][tag].R = 0.0;
+          } else {
+            *((this->operator[](age))[length][tag].N) = ratio * number;
+          }
+        }
+      }
     }
   }
 }
@@ -40,6 +51,8 @@ void AgeBandMatrixRatio::UpdateRatio(const AgeBandMatrix& Total) {
 
   int NrOfTagExp = this->NrOfTagExp();
   int maxage, minlen, maxlen, age, length, tag;
+  double tagnum, totalnum;
+
   if (NrOfTagExp > 0) {
     maxage = this->Maxage();
     for (age = minage; age <= maxage; age++) {
@@ -47,10 +60,14 @@ void AgeBandMatrixRatio::UpdateRatio(const AgeBandMatrix& Total) {
       maxlen = this->Maxlength(age);
       for (length = minlen; length < maxlen; length++) {
         for (tag = 0; tag < NrOfTagExp; tag++) {
-          if (*((this->operator[](age))[length][tag].N) == 0 || Total[age][length].N == 0)
+          tagnum = *((this->operator[](age))[length][tag].N);
+          totalnum = Total[age][length].N;
+          if (isZero(tagnum) || tagnum < verysmall || isZero(totalnum) || totalnum < verysmall) {
+            *((this->operator[](age))[length][tag].N) = 0.0;
             (this->operator[](age))[length][tag].R = 0.0;
-          else
-            (this->operator[](age))[length][tag].R = *((this->operator[](age))[length][tag].N) / Total[age][length].N;
+          } else {
+            (this->operator[](age))[length][tag].R = tagnum / totalnum;
+          }
         }
       }
     }

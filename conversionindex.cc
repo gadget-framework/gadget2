@@ -165,3 +165,8 @@ void interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc, const Conversi
     }
   }
 }
+
+int ConversionIndex::Nrof(int i) const {
+  assert(nrof[i] > 0);
+  return nrof[i];
+}

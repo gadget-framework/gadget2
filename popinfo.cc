@@ -2,8 +2,8 @@
 #include "mathfunc.h"
 
 PopInfo::PopInfo() {
-  N = 0;
-  W = 0;
+  N = 0.0;
+  W = 0.0;
 }
 
 PopInfo& PopInfo::operator = (const PopInfo& a) {
@@ -13,8 +13,13 @@ PopInfo& PopInfo::operator = (const PopInfo& a) {
 }
 
 PopInfo& PopInfo::operator += (const PopInfo& a) {
-  W = ((isZero(N + a.N)) ? 0 : (N * W + a.N * a.W) / (N + a.N));
-  N = N + a.N;
+  if (isZero(N + a.N)) {
+    W = 0.0;
+    N = 0.0;
+  } else {
+    W = (N * W + a.N * a.W) / (N + a.N);
+    N = N + a.N;
+  }
   return *this;
 }
 

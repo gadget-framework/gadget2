@@ -157,7 +157,7 @@ LogCatches::LogCatches(CommentStream& infile,
 
   int numtime = AgeLengthData.Nrow();
   Proportions.AddRows(numtime, numarea);
-  Likelihoodvalues.AddRows(numtime, numarea);
+  Likelihoodvalues.AddRows(numtime, numarea, 0.0);
   for (i = 0; i < numtime; i++)
     for (j = 0; j <  AgeLengthData.Ncol(i); j++)
       Proportions[i][j] = new DoubleMatrix(AgeLengthData[i][j]->Nrow(), AgeLengthData[i][j]->Ncol(), 0.0);
@@ -283,7 +283,7 @@ void LogCatches::ReadLogWeightsData(CommentStream& infile,
 
   //JMB - surely weight should be area dependant as well???
   //We already know the size that weights[][] will be
-  weights.AddRows(Years.Size(), numlen);
+  weights.AddRows(Years.Size(), numlen, 0.0);
 
   //Find start of distribution data in datafile
   infile >> ws;

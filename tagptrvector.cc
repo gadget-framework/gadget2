@@ -100,9 +100,9 @@ void TagPtrVector::Delete(int pos) {
 
 void TagPtrVector::UpdateTags(const TimeClass* const TimeInfo) {
   for (index = 0; index < size; index++) {
-    if ((v[index]->getTagYear() == TimeInfo->CurrentYear()) && (v[index]->getTagStep() == TimeInfo->CurrentStep()))
-      v[index]->Update();
-
+    if (((v[index]->getTagYear() == TimeInfo->CurrentYear()) && (v[index]->getTagStep() <= TimeInfo->CurrentStep())) || (v[index]->getTagYear() < TimeInfo->CurrentYear()))
+      if (((v[index]->getEndYear() == TimeInfo->CurrentYear()) && (v[index]->getEndStep() >= TimeInfo->CurrentStep())) || (v[index]->getEndYear() > TimeInfo->CurrentYear()))
+        v[index]->UpdateTags(TimeInfo->CurrentYear(), TimeInfo->CurrentStep());
   }
 }
 

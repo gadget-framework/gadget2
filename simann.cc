@@ -227,7 +227,8 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
   int nnew = 0;         //Number of optimum found
   int nobds = 0;        //Total number of trial functions that were out of bounds
   int nfcnev = 0;       //Total number of function evaluations
-  int i;
+  int i, a, j, h, k, change, l;
+  double p, pp;
   double xp[VARS];
   int param[VARS];  //Vector containing the order of the parameters at each time
 
@@ -240,6 +241,8 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
   }
   for (i = 0; i < NEPS; i++)
     fstar[i] = 1.0e20;
+  for (i = 0; i < n; i++)
+    param[i] = i;
 
   cout << "\nStarting Simulated Annealing\n";
   //funcval is the function value at x
@@ -249,14 +252,15 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
   //If the function is to be minmized, switch the sign of the function
   if (!max)
     funcval = -funcval;
+
+  if (funcval != funcval) { //check for NaN
+    cout << "\nError starting Simulated Annealing optimisation with"
+      << " f(x) = infinity\nReturning to calling routine ...\n";
+    return 0;
+  }
+
   fopt = funcval;
   fstar[0] = funcval;
-
-  for (i = 0; i < n; i++)
-    param[i] = i;
-
-  int a, j, h, k, change, l;
-  double p, pp;
 
   //Start the main loop.  Note that it terminates if
   //(i) the algorithm succesfully optimizes the function or
@@ -311,9 +315,6 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
               << "NOT because an optimum was found for this run\n";
 
             fp = (*f)(endpoint, n);
-            //if (!max)
-            //  fopt = -fopt;
-
             return nfcnev;
           }
 
@@ -350,7 +351,7 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
           }
 
           //If greater than any other point, record as new optimum
-          if (fp > fopt) {
+          if ((fp > fopt) && (fp == fp)){
             cout << "\nNew optimum after " << nfcnev << " function evaluations, f(x) = " << -fp << " at\n";
             for (i = 0; i < n; i++) {
               endpoint[i] = xp[i];
@@ -398,9 +399,6 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
         << "because an optimum was found for this run\n";
 
       fp = (*f)(endpoint, n);
-      //if (!max)
-      //  fopt = -fopt;
-
       return nfcnev;
     }
 

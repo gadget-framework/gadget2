@@ -247,8 +247,13 @@ void Keeper::ScaleVariables() {
     if (values[i] != 0)
       initialvalues[i] = values[i];
     else
-      initialvalues[i] = 1;
-    scaledvalues[i] = values[i] / initialvalues[i];
+      initialvalues[i] = 1.0;
+
+    if (isZero(initialvalues[i])) {
+      cerr << "Warning - cannot scale switch " << switches[i] << " with initial value zero\n";
+      scaledvalues[i] = values[i];
+    } else
+      scaledvalues[i] = values[i] / initialvalues[i];
   }
 }
 
@@ -263,7 +268,11 @@ void Keeper::Update(const DoubleVector& val) {
       *address[i][j].addr = val[i];
 
     values[i] = val[i];
-    scaledvalues[i] = val[i] / initialvalues[i];
+    if (isZero(initialvalues[i])) {
+      cerr << "Warning - cannot scale switch " << switches[i] << " with initial value zero\n";
+      scaledvalues[i] = val[i];
+    } else
+      scaledvalues[i] = val[i] / initialvalues[i];
   }
 }
 
@@ -278,7 +287,11 @@ void Keeper::Update(int pos, double& value) {
     *address[pos][i].addr = value;
 
   values[pos] = value;
-  scaledvalues[pos] = value / initialvalues[pos];
+  if (isZero(initialvalues[pos])) {
+    cerr << "Warning - cannot scale switch " << switches[pos] << " with initial value zero\n";
+    scaledvalues[pos] = value;
+  } else
+    scaledvalues[pos] = value / initialvalues[pos];
 }
 
 void Keeper::WriteOptValues(double functionValue, const LikelihoodPtrVector& Likely) const {
@@ -359,10 +372,15 @@ void Keeper::WriteValues(const char* const filename,
   outfile.open(filename, ios::app);
   checkIfFailure(outfile, filename);
 
+  //JMB - print the number of function evaluations at the start of the line
+  outfile << EcoSystem->GetFuncEval() << TAB;
+
   p = prec;
-  if (prec == 0)
-    p = printprecision;
   w = p + 2;
+  if (prec == 0) {
+    p = printprecision;
+    w = printwidth;
+  }
   for (i = 0; i < values.Size(); i++)
     outfile << setw(w) << setprecision(p) << values[i] << sep;
 
@@ -430,26 +448,40 @@ void Keeper::WriteValuesInColumns(const char* const filename,
 }
 
 void Keeper::Update(const StochasticData* const Stoch) {
-  ErrorHandler handle;
+
   int i, j;
   if (Stoch->SwitchesGiven()) {
     IntVector match(Stoch->NoVariables(), 0);
+    IntVector found(switches.Size(), 0);
+
     for (i = 0; i < Stoch->NoVariables(); i++)
-      for (j = 0; j < switches.Size(); j++)
+      for (j = 0; j < switches.Size(); j++) {
         if (Stoch->Switches(i) == switches[j]) {
           values[j] = Stoch->Values(i);
-          scaledvalues[j] = Stoch->Values(i) / initialvalues[j];
+
+          if (isZero(initialvalues[j])) {
+            cerr << "Warning - cannot scale switch " << switches[j] << " with initial value zero\n";
+            scaledvalues[j] = values[j];
+          } else
+            scaledvalues[j] = Stoch->Values(i) / initialvalues[j];
+
           lowerbds[j] = Stoch->Lower(i);
           upperbds[j] = Stoch->Upper(i);
-          match[i]++;
           if (Stoch->OptGiven())
             opt[j] = Stoch->Optimize(i);
-        }
 
-    for (i = 0; i < Stoch->NoVariables(); i++) {
+          match[i]++;
+          found[j]++;
+        }
+      }
+
+    for (i = 0; i < Stoch->NoVariables(); i++)
       if (match[i] == 0)
         cerr << "Warning - unmatched switch " << Stoch->Switches(i) << endl;
-    }
+
+    for (i = 0; i < switches.Size(); i++)
+      if (found[i] == 0)
+        cerr << "Warning - using default values for switch " << switches[i] << endl;
 
   } else {
     if (this->NoVariables() != Stoch->NoVariables()) {
@@ -460,8 +492,13 @@ void Keeper::Update(const StochasticData* const Stoch) {
     for (i = 0; i < Stoch->NoVariables(); i++) {
       if (Stoch->OptGiven())
         opt[i] = Stoch->Optimize(i);
+
       values[i] = Stoch->Values(i);
-      scaledvalues[i] = Stoch->Values(i) / initialvalues[i];
+      if (isZero(initialvalues[i])) {
+        cerr << "Warning - cannot scale switch " << switches[i] << " with initial value zero\n";
+        scaledvalues[i] = values[i];
+      } else
+        scaledvalues[i] = Stoch->Values(i) / initialvalues[i];
     }
   }
 

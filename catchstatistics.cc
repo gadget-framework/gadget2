@@ -41,15 +41,15 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   if (overconsumption != 0 && overconsumption != 1)
     handle.Message("Error in catchstatistics - overconsumption must be 0 or 1");
 
-  if (strcasecmp(functionname, "lengthcalcvar") == 0)
+  if ((strcasecmp(functionname, "lengthcalcvar") == 0) || (strcasecmp(functionname, "lengthcalcstddev") == 0))
     functionnumber = 1;
-  else if (strcasecmp(functionname, "lengthgivenvar") == 0)
+  else if ((strcasecmp(functionname, "lengthgivenvar") == 0) || (strcasecmp(functionname, "lengthgivenstddev") == 0))
     functionnumber = 2;
-  else if (strcasecmp(functionname, "weightgivenvar") == 0)
+  else if ((strcasecmp(functionname, "weightgivenvar") == 0) || (strcasecmp(functionname, "weightgivenstddev") == 0))
     functionnumber = 3;
-  else if (strcasecmp(functionname, "weightnovar") == 0)
+  else if ((strcasecmp(functionname, "weightnovar") == 0) || (strcasecmp(functionname, "weightnostddev") == 0))
     functionnumber = 4;
-  else if (strcasecmp(functionname, "lengthnovar") == 0)
+  else if ((strcasecmp(functionname, "lengthnovar") == 0) || (strcasecmp(functionname, "lengthnostddev") == 0))
     functionnumber = 5;
   else if (strcasecmp(functionname, "experimental") == 0)
     functionnumber = 6;

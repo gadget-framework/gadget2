@@ -23,7 +23,7 @@ protected:
   CharPtrVector predatornames;
   CharPtrVector preynames;
   PIOnStep* PI;
-  IntVector areas;
+  IntMatrix areas;
   char* piname;
 };
 

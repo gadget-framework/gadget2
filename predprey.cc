@@ -60,7 +60,11 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
 
   //Calculating fphi(L) and Totalconsumption of predator in Area)
   for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++) {
-    fphI[Iarea][predl] = Phi[Iarea][predl] / (Phi[Iarea][predl] + halfFeedingValue * Areasize);
+    if (isZero(Phi[Iarea][predl] + halfFeedingValue * Areasize))
+      fphI[Iarea][predl] = 0.0;
+    else
+      fphI[Iarea][predl] = Phi[Iarea][predl] / (Phi[Iarea][predl] + halfFeedingValue * Areasize);
+
     totalcons[Iarea][predl] = fphI[Iarea][predl] *
       MaxconByLength[Iarea][predl] * Prednumber[Iarea][predl].N;
   }
@@ -70,7 +74,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
     if (Preys(prey)->IsInArea(area))
       if (Preys(prey)->Biomass(area) > 0)
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
-          if (Phi[Iarea][predl] != 0) {
+          if (!(isZero(Phi[Iarea][predl]))) {
             tmpcons = totalcons[Iarea][predl] / Phi[Iarea][predl];
             for (preyl = Suitability(prey)[predl].Mincol();
                 preyl < Suitability(prey)[predl].Maxcol(); preyl++)
@@ -120,7 +124,7 @@ void StockPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSub
 
   if (AnyPreyEatenUp == 1) {
     for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++) {
-      if (totalcons[Iarea][predl] > 0) {
+      if (totalcons[Iarea][predl] > verysmall) {
         ratio = 1.0 - overcons[Iarea][predl] / totalcons[Iarea][predl];
         fphI[Iarea][predl] *= ratio;
         totalcons[Iarea][predl] -= overcons[Iarea][predl];
@@ -139,7 +143,7 @@ void StockPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSub
   }
   for (prey = 0; prey < NoPreys(); prey++)
     if (Preys(prey)->IsInArea(area))
-      if (Preys(prey)->Biomass(area) > 0)
+      if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
           for (preyl = Suitability(prey)[predl].Mincol();
               preyl < Suitability(prey)[predl].Maxcol(); preyl++)
@@ -170,7 +174,7 @@ void StockPredator::CalcMaximumConsumption(double Temperature, int area,
     for (age = Alprop[inarea].Minage(); age <= Alprop[inarea].Maxage(); age++)
       for (length = Alprop[inarea].Minlength(age);
           length < Alprop[inarea].Maxlength(age); length++)
-        if (Prednumber[inarea][length].N > 0)
+        if (!(isZero(Prednumber[inarea][length].N)))
           Alprop[inarea][age][length] = Alkeys[inarea][age][length].N /
             Prednumber[inarea][length].N;
         else

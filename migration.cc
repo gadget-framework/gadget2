@@ -32,9 +32,9 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector&  Are
   }
 
   if (AgeDepMigration)
-    MatrixNumbers.AddRows(ages.Nrow(), TimeInfo->TotalNoSteps() + 1);
+    MatrixNumbers.AddRows(ages.Nrow(), TimeInfo->TotalNoSteps() + 1, 0);
   else
-    MatrixNumbers.AddRows(1, TimeInfo->TotalNoSteps() + 1);
+    MatrixNumbers.AddRows(1, TimeInfo->TotalNoSteps() + 1, 0);
   infile >> text;
 
   //Read the numbers of the migration matrices we are going to use.
@@ -148,10 +148,10 @@ const DoubleMatrix& Migration::Migrationmatrix(const TimeClass* const TimeInfo, 
       if (AgeNr[age] >= 0)
         return *CalcMigList[MatrixNumbers[AgeNr[age]][TimeInfo->CurrentTime()]];
 
-    cerr << "Received illegal age in migration -age was " << age << endl;
+    cerr << "Received illegal age in migration - age was " << age << endl;
     exit(EXIT_FAILURE);
   } else
-    return *CalcMigList[ MatrixNumbers[0][TimeInfo->CurrentTime()]];
+    return *CalcMigList[MatrixNumbers[0][TimeInfo->CurrentTime()]];
 }
 
 void Migration::MigrationRecalc(int year) {
@@ -409,7 +409,7 @@ void Migration::AdjustMigListAndCheckIfError(MigrationList& MigList) {
           colsum1 += (*dmptr)[j][k];
         }
 
-        if (isZero(colsum)) {
+        if (isZero(colsum) || isZero(colsum1)) {
           cerr << "Error in migration: column " << k + 1 << " in migration matrix "
             << i << " sums up to " << colsum << " instead of 1\n";
           error = 1;

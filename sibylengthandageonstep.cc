@@ -16,13 +16,13 @@
  *  Purpose:  Constructor
  *
  *  In:  CommentStream& infile   :file to read survey indices from
- *       IntVector& areas        :areas
+ *       IntMatrix& areas        :areas
  *       DoubleVector& lengths   :lengths
  *       IntMatrix& ages         :ages
  *       TimeClass* TimeInfo     :time defenitions
  */
 SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
-  const IntVector& areas, const DoubleVector& lengths,
+  const IntMatrix& areas, const DoubleVector& lengths,
   const IntMatrix& ages, const TimeClass* const TimeInfo, Keeper* const keeper,
   const CharPtrVector& lenindex, const CharPtrVector& ageindex,
   const CharPtrVector& areaindex, const char* datafilename, const char* name)
@@ -237,11 +237,8 @@ SIByLengthAndAgeOnStep::~SIByLengthAndAgeOnStep() {
 
 void SIByLengthAndAgeOnStep::SetStocks(const StockPtrVector& Stocks) {
   int i, j;
-  IntMatrix areas(1, Areas.Size());
-  for (i = 0; i < Areas.Size(); i++)
-    areas[0][i] = Areas[i];
 
-  aggregator = new StockAggregator(Stocks, LgrpDiv, areas, Ages);
+  aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, Ages);
 
   for (i = 0; i < Stocks.Size(); i++) {
     stocknames.resize(1);

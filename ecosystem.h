@@ -26,12 +26,13 @@ public:
   void Readmain(CommentStream& infile, int optimize, int netrun,
     int calclikelihood, const char* const inputdir,
     const char* const workingdir);
-  int ReadLikelihood(CommentStream& infile);
-  int ReadPrinters(CommentStream& infile);
-  int ReadFleet(CommentStream& infile);
-  int ReadTagging(CommentStream& infile);
-  int ReadOtherFood(CommentStream& infile);
-  int ReadStock(CommentStream& infile, int mortmodel);
+  ~Ecosystem();
+  void ReadLikelihood(CommentStream& infile);
+  void ReadPrinters(CommentStream& infile);
+  void ReadFleet(CommentStream& infile);
+  void ReadTagging(CommentStream& infile);
+  void ReadOtherFood(CommentStream& infile);
+  void ReadStock(CommentStream& infile, int mortmodel);
   void Initialize(int optimize);
   void PrintStatus(const char* filename) const;
   void PrintLikelihoodInfo(const char* filename) const;
@@ -43,28 +44,25 @@ public:
   void PrintParamsinColumns(const char* const filename, int prec) const;
   void Update(const StochasticData* const Stochastic) const;
   void Update(const DoubleVector& values) const;
-  int NoVariables() const { return keeper->NoVariables(); };
   void Opt(IntVector& opt) const;
   void ValuesOfVariables(DoubleVector& val) const;
-  void InitialOptValues(DoubleVector &initialval) const;
-  void ScaledOptValues(DoubleVector &initialval) const;
+  void InitialOptValues(DoubleVector& initialval) const;
+  void ScaledOptValues(DoubleVector& initialval) const;
   void OptSwitches(ParameterVector& sw) const;
-  void OptValues(DoubleVector &val) const;
+  void OptValues(DoubleVector& val) const;
   void LowerBds(DoubleVector& lbds) const;
   void UpperBds(DoubleVector& ubds) const;
-  void InitialValues(DoubleVector &initialval) const;
-  int NoOptVariables() const;
+  void InitialValues(DoubleVector& initialval) const;
   void ScaleVariables() const;
   void ScaledValues(DoubleVector& val) const;
   void SimulateOneAreaOneTimeSubstep(int area);
   void GrowthAndSpecialTransactions(int area);
   void UpdateOneTimestepOneArea(int area);
   void SimulateOneTimestep(int print);
-  double SimulateAndUpdate(double * x, int n);
+  int NoVariables() const { return keeper->NoVariables(); };
+  int NoOptVariables() const { return keeper->NoOptVariables(); };
+  double SimulateAndUpdate(double* x, int n);
   int Simulate(int optimize, int print = 0);
-  Stock* findStock(const char* stockname) const;
-  Fleet* findFleet(const char* fleetname) const;
-  ~Ecosystem();
   double Likelihood() const { return likelihood; };
   int GetFuncEval() const { return funceval; };
   volatile int interrupted;
@@ -77,8 +75,8 @@ protected:
   PrinterPtrVector likprintvec; //Seperate vector for likelihood printers,
                                 //so they can be called at a different time
                                 //than the normal printers. [10.04.00 mnaa]
-  TimeClass*  TimeInfo;
-  AreaClass*  Area;
+  TimeClass* TimeInfo;
+  AreaClass* Area;
   Keeper* keeper;
   CharPtrVector catchnames;
   CharPtrVector stocknames;

@@ -97,7 +97,7 @@ void Ecosystem::Update(const DoubleVector& values) const {
   keeper->Update(values);
 }
 
-double Ecosystem::SimulateAndUpdate(double *x, int n) {
+double Ecosystem::SimulateAndUpdate(double* x, int n) {
   int optimize = 1;
   ::FuncEval++;
   static int PrintCounter1 = printinfo.PrintInterVal1 - 1;
@@ -105,16 +105,17 @@ double Ecosystem::SimulateAndUpdate(double *x, int n) {
 
   PrintCounter1++;
   PrintCounter2++;
-  DoubleVector val(this->NoVariables());
-  DoubleVector initialvalues(this->NoVariables());
-  IntVector opt(this->NoVariables());
+  int numvar = this->NoVariables();
+  DoubleVector val(numvar);
+  DoubleVector initialvalues(numvar);
+  IntVector opt(numvar);
   this->InitialValues(initialvalues);
   this->ValuesOfVariables(val);
   this->Opt(opt);
 
   int i, k;
   k = 0;
-  for (i = 0; i < this->NoVariables(); i++)
+  for (i = 0; i < numvar; i++)
     if (opt[i] == 1) {
       val[i] = x[k] * initialvalues[i];
       k++;
@@ -153,6 +154,14 @@ void Ecosystem::PrintValuesinColumns(const char* const filename, int prec) const
 }
 
 void Ecosystem::PrintParamsinColumns(const char* const filename, int prec) const {
+
+  //JMB - print the final values to any output files specified
+  //in case they have been missed by the -print1 or -print2 values
+  if (printinfo.Print())
+    this->PrintValues(printinfo.OutputFile, printinfo.givenPrecision);
+  if (printinfo.PrintinColumns())
+    this->PrintValuesinColumns(printinfo.ColumnOutputFile, printinfo.givenPrecision);
+
   keeper->WriteParamsInColumns(filename, likelihood, Likely, prec);
 }
 
@@ -166,10 +175,6 @@ void Ecosystem::InitialValues(DoubleVector& initialval) const {
 
 void Ecosystem::ValuesOfVariables(DoubleVector& val) const {
   keeper->ValuesOfVariables(val);
-}
-
-int Ecosystem::NoOptVariables() const {
-  return keeper->NoOptVariables();
 }
 
 void Ecosystem::ScaleVariables() const {
@@ -207,22 +212,6 @@ void Ecosystem::PrintLikelihoodInfo(const char* filename) const {
 
 void Ecosystem::OptValues(DoubleVector& val) const {
   keeper->OptValues(val);
-}
-
-Stock* Ecosystem::findStock(const char* stockname) const {
-  int i;
-  for (i = 0; i < stockvec.Size(); i++)
-    if (strcasecmp(stockvec[i]->Name(), stockname) == 0)
-      return stockvec[i];
-  return NULL;
-}
-
-Fleet* Ecosystem::findFleet(const char* fleetname) const {
-  int i;
-  for (i = 0; i < fleetvec.Size(); i++)
-    if (strcasecmp(fleetvec[i]->Name(), fleetname) == 0)
-      return fleetvec[i];
-  return NULL;
 }
 
 void Ecosystem::LowerBds(DoubleVector& lbds) const {

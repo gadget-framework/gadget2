@@ -17,10 +17,9 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i;
+  int i, j;
 
   int numarea = 0;
-  IntMatrix tmpareas;
   CharPtrVector areaindex;
   DoubleVector predatorlengths;
   DoubleVector preylengths;
@@ -91,22 +90,20 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
   datafile.open(aggfilename);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numarea = readAggregation(subdata, tmpareas, areaindex);
+  numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Check if we read correct input
-  if (tmpareas.Nrow() != 1)
+  if (areas.Nrow() != 1)
     handle.Message("Error - there should be only one area for the predator indices");
 
-  for (i = 0; i < tmpareas.Ncol(0); i++)
-    areas.resize(1, tmpareas[0][i]);
-
-  //Check area data
-  for (i = 0; i < areas.Size(); i++)
-    if ((areas[i] = Area->InnerArea(areas[i])) == -1)
-      handle.UndefinedArea(areas[i]);
+  //Must change from outer areas to inner areas.
+  for (i = 0; i < areas.Nrow(); i++)
+    for (j = 0; j < areas.Ncol(i); j++)
+      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
+        handle.UndefinedArea(areas[i][j]);
 
   int biomass;
   readWordAndVariable(infile, "biomass", biomass);
@@ -174,13 +171,19 @@ void PredatorIndices::Reset(const Keeper* const keeper) {
 }
 
 void PredatorIndices::Print(ofstream& outfile) const {
-  int i;
+  int i, j;
   outfile << "\nPredator Indices " << piname << " - likelihood value " << likelihood << "\n\tPredator names: ";
   for (i = 0; i < predatornames.Size(); i++)
     outfile << predatornames[i] << sep;
   outfile << "\n\tPrey names: ";
   for (i = 0; i < preynames.Size(); i++)
     outfile << preynames[i] << sep;
+  outfile << "\nInner areas";
+  for (i = 0; i < areas.Nrow(); i++) {
+    outfile << endl;
+    for (j = 0; j < areas.Ncol(i); j++)
+      outfile << areas[i][j] << sep;
+  }
   outfile << endl;
   PI->Print(outfile);
 }

@@ -159,7 +159,7 @@ void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
   DoubleVector conS(cons[inarea].Size());
   int len;
   for (len = 0; len < conS.Size(); len++)
-    conS[len] = (Number[inarea][len].W > 0 ? cons[inarea][len] / Number[inarea][len].W : 0);
+    conS[len] = (Number[inarea][len].W > verysmall ? cons[inarea][len] / Number[inarea][len].W : 0.0);
   Alkeys.Subtract(conS, *CI, Number[inarea]);
 }
 

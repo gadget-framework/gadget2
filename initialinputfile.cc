@@ -147,16 +147,15 @@ void InitialInputFile::readHeader() {
 }
 
 void InitialInputFile::readFromFile() {
-  infile >> ws;
-  this->readHeader();
 
+  this->readHeader();
   if (repeatedValues == 0) {
 
+    Parameter sw;
     double val;
     double lower;
     double upper;
     int opt;
-    Parameter sw;
 
     infile >> ws;
     while (!infile.eof()) {

@@ -85,7 +85,7 @@ void AgeBandMatrixRatioPtrVector::addTag(const char* id) {
   int minlength, maxlength, age, length, i;
 
   this->addTagName(id);
-  double rat = -1.0;
+  double rat = 0.0;
   int minage = v[0]->Minage();
   int maxage = v[0]->Maxage();
   for (i = 0; i < size; i++) {
@@ -94,7 +94,7 @@ void AgeBandMatrixRatioPtrVector::addTag(const char* id) {
       maxlength = v[i]->Maxlength(age);
       for (length = minlength; length < maxlength; length++) {
         num = new double[1];
-        num[0] = -1.0;
+        num[0] = 0.0;
         (*v[i])[age][length].resize(1, num, rat);
       }
     }
@@ -107,6 +107,7 @@ void AgeBandMatrixRatioPtrVector::addTag(AgeBandMatrixPtrVector* initial,
   const AgeBandMatrixPtrVector& Alkeys, const char* id, double tagloss) {
 
   int minlength, maxlength, i, age, length;
+  double totalnum;
 
   this->addTagName(id);
   tagLoss.resize(1, tagloss);
@@ -117,10 +118,11 @@ void AgeBandMatrixRatioPtrVector::addTag(AgeBandMatrixPtrVector* initial,
       minlength = v[0]->Minlength(age);
       maxlength = v[0]->Maxlength(age);
       for (length = minlength; length < maxlength; length++) {
-        if (!(Alkeys[i][age][length].N > 0))
+        totalnum = Alkeys[i][age][length].N;
+        if (isZero(totalnum) || totalnum < verysmall)
           (*v[i])[age][length].resize(1, (&(*initial)[i][age][length].N), 0.0);
         else
-          (*v[i])[age][length].resize(1, (&(*initial)[i][age][length].N), (*initial)[i][age][length].N / Alkeys[i][age][length].N);
+          (*v[i])[age][length].resize(1, (&(*initial)[i][age][length].N), (*initial)[i][age][length].N / totalnum);
       }
     }
   }
@@ -196,10 +198,10 @@ void AgeBandMatrixRatioPtrVector::Migrate(const DoubleMatrix& MI, const AgeBandM
 
           for (j = 0; j < size; j++)
             for (i = 0; i < size; i++)
-              tmp[j] += (*(*v[i])[age][length][tag].N) * MI[j][i];
+              tmp[j] += *((*v[i])[age][length][tag].N) * MI[j][i];
 
           for (j = 0; j < size; j++)
-            (*(*v[j])[age][length][tag].N) = tmp[j];
+            *((*v[j])[age][length][tag].N) = tmp[j];
         }
       }
     }

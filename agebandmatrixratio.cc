@@ -49,10 +49,21 @@ AgeBandMatrixRatio::~AgeBandMatrixRatio() {
 }
 
 int AgeBandMatrixRatio::NrOfTagExp() const {
-  int minlength;
   if (nrow > 0) {
-    minlength = this->Minlength(minage);
+    int minlength = this->Minlength(minage);
     return (this->operator[](minage))[minlength].Size();
   } else
     return 0;
+}
+
+void AgeBandMatrixRatio::SettoZero() {
+  int i, j, k;
+  for (i = 0; i < nrow; i++) {
+    for (j = v[i]->Mincol(); j < v[i]->Maxcol(); j++) {
+      for (k = 0; k < this->NrOfTagExp(); k++) {
+        *(*v[i])[j][k].N = 0.0;
+        (*v[i])[j][k].R = 0.0;
+      }
+    }
+  }
 }

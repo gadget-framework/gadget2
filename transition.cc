@@ -115,10 +115,11 @@ void Transition::KeepAgegroup(int area, AgeBandMatrix& Alkeys,
   int inarea = AreaNr[area];
   int numtags = TagAlkeys.NrOfTagExp();
   int i, l, minl, maxl;
+  double tagnumber;
 
   if (TimeInfo->CurrentStep() == TransitionStep) {
     AgeGroup[inarea].SettoZero();
-    //TagAgeGroup[inarea].SettoZero();
+    TagAgeGroup[inarea].SettoZero();
     minl = AgeGroup[inarea].Minlength(age);
     maxl = AgeGroup[inarea].Maxlength(age);
     for (l = minl; l < maxl; l++) {
@@ -127,7 +128,12 @@ void Transition::KeepAgegroup(int area, AgeBandMatrix& Alkeys,
       Alkeys[age][l].N = 0.0;
       Alkeys[age][l].W = 0.0;
       for (i = 0; i < numtags; i++) {
-        *(TagAgeGroup[inarea][age][l][i].N) = *(TagAlkeys[age][l][i].N);
+        tagnumber = *(TagAlkeys[age][l][i].N);
+        if (isZero(tagnumber) || tagnumber < verysmall)
+          *(TagAgeGroup[inarea][age][l][i].N) = 0.0;
+        else
+          *(TagAgeGroup[inarea][age][l][i].N) = tagnumber;
+
         *(TagAlkeys[age][l][i].N) = 0.0;
         TagAlkeys[age][l][i].R = 0.0;
       }
@@ -168,12 +174,6 @@ const StockPtrVector& Transition::GetTransitionStocks() {
   return TransitionStocks;
 }
 
-// Add a new tagging experiment with name = tagname to tagStorage.
-// This tagging experiment has id = number of tagging experiment before adding the new tag.
-// For all areas, ages and lengths in TagAgeGroup have added a new tag with number of fish = -1.0 and ratio = -1.0, or
-// TagAgeGroup[area][age][length][id].N = -1.0,
-// TagAgeGroup[area][age][length][id].R = -1.0
-// New memory has been allocated for the double TagAgeGroup[area][age][length].N.
 void Transition::AddTag(const char* tagname) {
   TagAgeGroup.addTag(tagname);
 }

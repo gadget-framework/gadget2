@@ -10,10 +10,10 @@ PreyOverAggregator::PreyOverAggregator(const PreyPtrVector& Preys,
     checkLengthGroupIsFiner(preys[i]->ReturnLengthGroupDiv(),
       preyLgrpDiv, preys[i]->Name(), "prey overconsumption");
 
-  total.AddRows(areas.Nrow(), preyLgrpDiv->NoLengthGroups(), 0);
+  total.AddRows(areas.Nrow(), preyLgrpDiv->NoLengthGroups(), 0.0);
   // preyConv has [prey][preyLengthGroup]
   for (i = 0; i < preys.Size(); i++) {
-    preyConv.AddRows(1, preys[i]->NoLengthGroups());
+    preyConv.AddRows(1, preys[i]->NoLengthGroups(), 0);
     for (j = 0; j < preyConv.Ncol(i); j++)
       preyConv[i][j] = preyLgrpDiv->NoLengthGroup(preys[i]->Length(j));
   }

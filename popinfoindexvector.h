@@ -98,7 +98,7 @@ extern void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Add
   const ConversionIndex& CI, double ratio, const DoubleIndexVector& Ratio);
 
 extern void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
-  const ConversionIndex& CI, double ratio = 1);
+  const ConversionIndex& CI, double ratio = 1.0);
 
 #ifdef GADGET_INLINE
 #include "popinfoindexvector.icc"
