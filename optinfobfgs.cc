@@ -86,11 +86,11 @@ void OptInfoBfgs::read(CommentStream& infile, char* text) {
   }
 
   //check the values specified in the optinfo file ...
-  if (isZero(beta) || (beta < 0) || (beta > 0.5)) {  //these are the bounds in paramin
+  if (isZero(beta) || (beta < 0) || (beta > 1)) {
     handle.logWarning("Warning in optinfofile - value of beta outside bounds", beta);
     beta = 0.3;
   }
-  if (isZero(sigma) || (sigma < 0)|| (sigma > 0.5)) {
+  if (isZero(sigma) || (sigma < 0)|| (sigma > 1)) {
     handle.logWarning("Warning in optinfofile - value of sigma outside bounds", sigma);
     sigma = 0.01;
   }
