@@ -241,6 +241,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   } else
     spawner = 0;
 
+  infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
     handle.Unexpected("<end of file>", text);

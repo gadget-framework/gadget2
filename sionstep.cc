@@ -166,11 +166,12 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   datafile.close();
   datafile.clear();
 
-  if (Indices.Nrow() > 0)
+  if ((Indices.Nrow() > 0) && (Indices.Ncol() > 0)) {
     abundance.AddRows(Indices.Nrow(), Indices.Ncol(), 0.0);
-  slopes.resize(Indices.Ncol());
-  intercepts.resize(Indices.Ncol());
-  sse.resize(Indices.Ncol());
+    slopes.resize(Indices.Ncol());
+    intercepts.resize(Indices.Ncol());
+    sse.resize(Indices.Ncol());
+  }
 }
 
 void SIOnStep::ReadSIData(CommentStream& infile, const CharPtrVector& areaindex,

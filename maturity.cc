@@ -339,6 +339,7 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
     handle.Message("Number of maturitysteps does not equal number of maturitylengths");
   keeper->ClearLast();
 
+  infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
     handle.Unexpected("<end of file>", text);

@@ -145,6 +145,7 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
     beta.Inform(keeper);
   }
 
+  infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
     handle.Unexpected("<end of file>", text);

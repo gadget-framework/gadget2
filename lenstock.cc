@@ -268,6 +268,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   //Read the filter data
   readWordAndVariable(infile, "filter", filter);
 
+  infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
     handle.Unexpected("<end of file>", text);
