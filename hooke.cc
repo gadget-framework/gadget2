@@ -193,7 +193,7 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
     newx[i] = startpt[i];
     xbefore[i] = startpt[i];
     delta[i] = ((2 * (rand() % 2)) - 1) * rho;  //JMB - randomise the sign
-    initialstep[i] = rho;   //JMB - initialise this to something? rho?
+    initialstep[i] = rho;
   }
 
   fbefore = (*f)(newx, nvars);
@@ -237,7 +237,7 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
       newx[i] = xbefore[i];
     newf = bestNearby(f, delta, newx, fbefore, nvars, param);
 
-    //If too many function evaluations occur, terminate the algorithm
+    /* If too many function evaluations occur, terminate the algorithm */
     if ((FuncEval - offset) > maxevl) {
       cout << "\nStopping Hooke & Jeeves optimisation algorithm\n\n"
         << "The optimisation stopped after " << (FuncEval - offset)
@@ -328,7 +328,7 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
         xbefore[param[i]] = newx[param[i]];
       newf = bestNearby(f, delta, newx, fbefore, nvars, param);
 
-      //If too many function evaluations occur, terminate the algorithm
+      /* If too many function evaluations occur, terminate the algorithm */
       if ((FuncEval - offset) > maxevl) {
         cout << "\nStopping Hooke & Jeeves optimisation algorithm\n\n"
           << "The optimisation stopped after " << (FuncEval - offset)
@@ -383,7 +383,7 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
     } else
       cout << "\nChecking convergence criteria after " << (FuncEval - offset) << " function evaluations ...";
 
-    //If the step length is less than epsilon, terminate the algorithm
+    /* If the step length is less than epsilon, terminate the algorithm */
     if (steplength < epsilon) {
       cout << "\nStopping Hooke & Jeeves optimisation algorithm\n\n"
         << "The optimisation stopped after " << (FuncEval - offset)

@@ -175,7 +175,7 @@ extern Ecosystem* EcoSystem;
 /* global variable, defined and initialised in gadget.cc and not modified here */
 extern int FuncEval;
 
-//This function replaces exp to give an answer in the range 0.0 to 1.0
+/* This function replaces exp to give an answer in the range 0.0 to 1.0 */
 double expRep(double n) {
   double exprep = 0.0;
   if (n > verysmall)
@@ -187,7 +187,7 @@ double expRep(double n) {
   return exprep;
 }
 
-//Returns uniformly-distributed doubles in the range 0.0 to 1.0
+/* Returns uniformly-distributed doubles in the range 0.0 to 1.0 */
 double randomNumber() {
   int r = rand();
   double k = r % 32767;
