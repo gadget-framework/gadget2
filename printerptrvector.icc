@@ -1,0 +1,15 @@
+#include "printerptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Printer*& Printerptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Printer* const& Printerptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

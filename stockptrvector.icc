@@ -1,0 +1,15 @@
+#include "stockptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Stock*& Stockptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Stock* const& Stockptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

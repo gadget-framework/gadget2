@@ -1,0 +1,15 @@
+#include "catchdataptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+CatchData*& CatchDataptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+CatchData* const& CatchDataptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

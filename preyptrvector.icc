@@ -1,0 +1,15 @@
+#include "preyptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Prey*& Preyptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Prey* const& Preyptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

@@ -1,0 +1,15 @@
+#include "intmatrix.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+intvector& intmatrix::operator [] (int pos) {
+  return(*v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const intvector& intmatrix::operator [] (int pos) const {
+  return(*v[pos]);
+}

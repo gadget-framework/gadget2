@@ -1,0 +1,15 @@
+#include "sionstepptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+SIOnStep*& SIOnStepptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+SIOnStep* const& SIOnStepptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

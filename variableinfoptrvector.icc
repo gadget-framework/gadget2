@@ -1,0 +1,15 @@
+#include "variableinfoptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+VariableInfo*& VariableInfoptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+VariableInfo* const& VariableInfoptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

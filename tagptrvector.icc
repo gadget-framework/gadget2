@@ -1,0 +1,17 @@
+#include "tagptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Tags*& Tagptrvector::operator [] (int pos) {
+  assert(0 <= pos && pos < size);
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Tags* const& Tagptrvector::operator [] (int pos) const {
+  assert(0 <= pos && pos < size);
+  return(v[pos]);
+}

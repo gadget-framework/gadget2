@@ -1,0 +1,15 @@
+#include "predatorptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Predator*& Predatorptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Predator* const& Predatorptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

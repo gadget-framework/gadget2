@@ -1,0 +1,15 @@
+#include "formulamatrixptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Formulamatrix*& Formulamatrixptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Formulamatrix* const& Formulamatrixptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

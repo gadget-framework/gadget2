@@ -1,0 +1,15 @@
+#include "baseclassptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+BaseClass*& BaseClassptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+BaseClass* const& BaseClassptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

@@ -1,0 +1,40 @@
+#include "agebandmatrixratio.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+popratioindexvector& Agebandmatrixratio::operator [] (int age) {
+  assert(minage <= age && age < (minage + nrow));
+  return *(v[age - minage]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const popratioindexvector& Agebandmatrixratio::operator [] (int age) const {
+  assert(minage <= age && age < (minage + nrow));
+  return *(v[age - minage]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Agebandmatrixratio& Agebandmatrixratiovector::operator [] (int pos) {
+  assert(0 <= pos && pos < size);
+  return *v[pos];
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const Agebandmatrixratio& Agebandmatrixratiovector::operator [] (int pos) const {
+  assert(0 <= pos && pos < size);
+  return *v[pos];
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const Agebandmatrixratio& Agebandmatrixratiovector::operator [] (const char* name) const {
+  return *v[0];
+}

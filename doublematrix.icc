@@ -1,0 +1,15 @@
+#include "doublematrix.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+doublevector& doublematrix::operator [] (int pos) {
+  return(*v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const doublevector& doublematrix::operator [] (int pos) const {
+  return(*v[pos]);
+}

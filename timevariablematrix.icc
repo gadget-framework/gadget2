@@ -1,0 +1,15 @@
+#include "timevariablematrix.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+TimeVariablevector& TimeVariablematrix::operator [] (int pos) {
+  return(*v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const TimeVariablevector& TimeVariablematrix::operator [] (int pos) const {
+  return(*v[pos]);
+}

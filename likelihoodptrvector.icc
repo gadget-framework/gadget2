@@ -1,0 +1,15 @@
+#include "likelihoodptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Likelihood*& Likelihoodptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Likelihood* const& Likelihoodptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

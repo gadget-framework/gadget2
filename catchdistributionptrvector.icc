@@ -1,0 +1,15 @@
+#include "catchdistributionptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+CatchDistribution*& CatchDistributionptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+CatchDistribution* const& CatchDistributionptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

@@ -1,0 +1,15 @@
+#include "intvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+int& intvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const int& intvector::operator [] (int pos) const {
+  return(v[pos]);
+}

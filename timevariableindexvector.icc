@@ -1,0 +1,15 @@
+#include "timevariablevector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+TimeVariable& TimeVariableIndexVector::operator [] (int pos) {
+  return(v[pos - minpos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const TimeVariable& TimeVariableIndexVector::operator [] (int pos) const {
+  return(v[pos - minpos]);
+}

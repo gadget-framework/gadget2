@@ -1,0 +1,15 @@
+#include "formulavector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Formula& Formulavector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const Formula& Formulavector::operator [] (int pos) const {
+  return(v[pos]);
+}

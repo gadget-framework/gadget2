@@ -1,0 +1,44 @@
+#include "bandmatrix.h"
+#include "doubleindexvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+doubleindexvector& bandmatrix::operator [] (int row) {
+  return(*(v[row - minage]));
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const doubleindexvector& bandmatrix::operator [] (int row) const {
+  return(*(v[row - minage]));
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+bandmatrix& bandmatrixvector::operator [] (int pos) {
+  return(*v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const bandmatrix& bandmatrixvector::operator [] (int pos) const {
+  return(*v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+bandmatrixvector& bandmatrixmatrix::operator [] (int pos) {
+  return(*v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const bandmatrixvector& bandmatrixmatrix::operator [] (int pos) const {
+  return(*v[pos]);
+}

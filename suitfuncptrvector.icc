@@ -1,0 +1,15 @@
+#include "suitfuncptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+SuitFunc*& SuitfuncPtrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+SuitFunc* const& SuitfuncPtrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

@@ -1,0 +1,15 @@
+#include "charptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+char*& charptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+char* const& charptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

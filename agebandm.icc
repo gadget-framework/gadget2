@@ -1,0 +1,29 @@
+#include "popinfoindexvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+popinfoindexvector& Agebandmatrix::operator [] (int age) {
+  return(*(v[age - minage]));
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const popinfoindexvector& Agebandmatrix::operator [] (int age) const {
+  return(*(v[age - minage]));
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+Agebandmatrix& Agebandmatrixvector::operator [] (int pos) {
+  return(*v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const Agebandmatrix& Agebandmatrixvector::operator [] (int pos) const {
+  return(*v[pos]);
+}

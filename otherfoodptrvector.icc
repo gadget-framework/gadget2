@@ -1,0 +1,15 @@
+#include "otherfoodptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+OtherFood*& OtherFoodptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+OtherFood* const& OtherFoodptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}

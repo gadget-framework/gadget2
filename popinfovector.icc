@@ -1,0 +1,15 @@
+#include "popinfovector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+popinfo& popinfovector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+const popinfo& popinfovector::operator [] (int pos) const {
+  return(v[pos]);
+}

@@ -1,0 +1,15 @@
+#include "poppredatorptrvector.h"
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+PopPredator*& PopPredatorptrvector::operator [] (int pos) {
+  return(v[pos]);
+}
+
+#ifdef INLINE_VECTORS
+inline
+#endif
+PopPredator* const& PopPredatorptrvector::operator [] (int pos) const {
+  return(v[pos]);
+}
