@@ -274,11 +274,11 @@ void ErrorHandler::checkIfFailure(ios& infile, const char* text) {
     logfile << "Checking to see if file " << text << " can be opened ... ";
 
   if (infile.fail()) {
-    char* strFilename = files->sendTop();
     if (uselog) {
       logfile << "Failed" << endl;
       logfile.flush();
     }
+    char* strFilename = files->sendTop();
     cerr << "Error in file " << strFilename << ":\nUnable to open datafile " << text << endl;
     delete[] strFilename;
     exit(EXIT_FAILURE);

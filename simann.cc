@@ -195,12 +195,10 @@ double randomNumber() {
 }
 
 int simann(int n, double point[], double endpoint[], double lb[], double ub[],
-  double (*f)(double*, int), int m, int maxevl, double cstep, double tempt,
+  double (*f)(double*, int), int max, int maxevl, double cstep, double tempt,
   double vmlen, double rt, int ns, int nt, double eps, double uratio, double lratio, int check) {
 
   double x[NUMVARS];    //The starting values for the variables
-  int max = m;          //Denotes whether the func. should be maximized or
-                        //minimized: 1 = maximization 0 = minimization
   double t = tempt;     //The "temperature" of the algorithm
   double vm[NUMVARS];   //The step length vector
   double fstar[NUMVARS];
@@ -215,7 +213,7 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
   int nacc = 0;         //The number of accepted function evaluations
   int nrej = 0;         //The number of rejected function evaluations
   int naccmet = 0;      //The number of metropolis accepted function evaluations
-  
+
   int i, a, j, h, k, change, l, offset;
   double p, pp;
   double xp[NUMVARS];
@@ -338,7 +336,7 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
 
           // JMB added check for really silly values
           if (isZero(fp)) {
-            cout << "\nError in Simulated Annealing optimisation after " << FuncEval
+            cout << "\nError in Simulated Annealing optimisation after " << (FuncEval - offset)
               << " function evaluations f(x) = 0\nReturning to calling routine ...\n";
             return 0;
           }

@@ -10,7 +10,7 @@ double s(double* x, int n) {
 }
 
 extern int simann(int nvar, double point[], double endpoint[], double lb[],
-  double ub[], double (*func)(double*, int), int m, int maxeval, double cstep,
+  double ub[], double (*s)(double*, int), int m, int maxeval, double cstep,
   double tempt, double vmlen, double rt, int ns, int nt, double eps,
   double uratio, double lratio, int check);
 
@@ -111,7 +111,7 @@ void OptInfoSimann::MaximizeLikelihood() {
     simanniter, cs, T, vm, rt, ns, nt, simanneps, uratio, lratio, check);
 
   cout << "\nSimulated Annealing finished with a final likelihood score of " << EcoSystem->getLikelihood()
-    << "\nafter " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
+    << "\nafter a total of " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
   EcoSystem->writeOptValues();
 
   delete[] startpoint;

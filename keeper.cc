@@ -276,7 +276,7 @@ void Keeper::writeOptValues(const LikelihoodPtrVector& Likely) const {
     if (opt[i] == 1 || opt.Size() == 0)
       cout << values[i] << sep;
 
-  cout << "\n\nThe likelihood components are\n";
+  cout << "\n\nThe scores from each likelihood component are\n";
   for (i = 0; i < Likely.Size(); i++)
     cout << Likely[i]->returnUnweightedLikelihood() << sep;
 

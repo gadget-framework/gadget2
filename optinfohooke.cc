@@ -9,13 +9,13 @@ double h(double* x, int n) {
   return EcoSystem->SimulateAndUpdate(x, n);
 }
 
-extern int hooke(double (*func)(double*, int), int n, double startpoint[],
+extern int hooke(double (*h)(double*, int), int n, double startpoint[],
   double endpoint[], double lowerb[], double upperb[], double rho,
   double lambda, double epsilon, int itermax, double init[], double bndcheck);
 
 OptInfoHooke::OptInfoHooke()
   : OptSearch(), hookeiter(1000), rho(0.5), lambda(0), hookeeps(1e-4), bndcheck(0.9999) {
-  handle.logMessage("Initialising Hooke and Jeeves optimisation algorithm");
+  handle.logMessage("Initialising Hooke & Jeeves optimisation algorithm");
 }
 
 void OptInfoHooke::Read(CommentStream& infile, char* text) {
@@ -62,7 +62,7 @@ void OptInfoHooke::MaximizeLikelihood() {
   int i, nopt, opt;
   double tmp;
 
-  handle.logInformation("\nStarting Hooke and Jeeves optimisation algorithm");
+  handle.logInformation("\nStarting Hooke & Jeeves optimisation algorithm");
 
   nopt = EcoSystem->numOptVariables();
   DoubleVector val(nopt);
@@ -111,7 +111,7 @@ void OptInfoHooke::MaximizeLikelihood() {
     rho, lambda, hookeeps, hookeiter, init, bndcheck);
 
   cout << "\nHooke & Jeeves finished with a final likelihood score of " << EcoSystem->getLikelihood()
-    << "\nafter " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
+    << "\nafter a total of " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
   EcoSystem->writeOptValues();
 
   delete[] endpoint;
