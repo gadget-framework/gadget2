@@ -199,6 +199,8 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
         k++;
+        if (printComponent != -1)
+          handle.logWarning("\nWarning - Gadget can only have one -printonelikelihood switch\n");
         printComponent = atoi(aVector[k]);
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
@@ -321,6 +323,8 @@ void MainInfo::read(CommentStream& infile) {
       infile >> text >> ws;
       setPrintLikeSummaryFile(text);
     } else if (strcasecmp(text, "-printonelikelihood") == 0) {
+      if (printComponent != -1)
+        handle.logWarning("\nWarning - Gadget can only have one -printonelikelihood switch\n");
       infile >> printComponent >> ws >> text >> ws;
       setPrintLikelihoodFile(text);
     } else if (strcasecmp(text, "-opt") == 0) {
