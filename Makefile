@@ -18,6 +18,7 @@ LIBDIRS = -L. -L/usr/local/lib
 LIBRARIES = -lm -lvec
 CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 OBJECTS = $(GADGETOBJECTS)
+GADGET = gadget
 ##########################################################################
 # 2. Linux, or Solaris, with pvm3, g++ compiler
 #CXX = g++
@@ -43,6 +44,15 @@ OBJECTS = $(GADGETOBJECTS)
 #LIBRARIES = -lm -lvec
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 #OBJECTS = $(GADGETOBJECTS)
+##########################################################################
+# 5. Windows using services for unix
+#CXX = g++
+#LIBDIRS = -L. -L/usr/local/lib
+#LIBRARIES=-lm -lvec
+#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
+#OBJECTS = $(GADGETOBJECTS)
+#CPPFLAGS=-I/usr/local/include#-I/dev/fs/C/x/SDK/opt/gcc.3.3/include/c++/3.3/backward
+#GADGET = gadget-windows
 ##########################################################################
 
 VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
@@ -87,7 +97,8 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \
 	taggrow.o initialinputfile.o popratio.o predator.o popinfo.o \
 	agebandmatrixratio.o popinfomemberfunctions.o sibyfleetonstep.o \
-	agebandmatrixratiomemberfunctions.o
+	agebandmatrixratiomemberfunctions.o optinfobfgs.o optinfosimann.o \
+	optinfohooke.o 
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
@@ -95,10 +106,10 @@ GADGETINPUT = initialinputfile.o vectorofcharptr.o charptrvector.o \
 	commentstream.o parameter.o parametervector.o doubleindexvector.o \
 	intvector.o doublevector.o intmatrix.o doublematrix.o
 
-LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
+LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES) $(CPPFLAG)
 
 gadget	:	$(OBJECTS) libvec.a
-	$(CXX) -o gadget $(OBJECTS) $(LDFLAGS)
+	$(CXX) -o $(GADGET) $(OBJECTS) $(LDFLAGS)
 
 libvec.a:	$(VECTORS)
 	ar rs libvec.a $?

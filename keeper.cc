@@ -553,6 +553,17 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec) const {
       else
         outfile << "\n; because the maximum number of function evaluations was reached\n";
     }
+    
+    if (EcoSystem->getFuncEvalBFGS() != 0) {
+      outfile << "; the BFGS algorithm ran for " << EcoSystem->getFuncEvalBFGS()
+        << " function evaluations\n; and stopped when the likelihood value was "
+        << setprecision(p) << EcoSystem->getLikelihoodBFGS();
+      if (EcoSystem->getConvergeBFGS() == 1)
+        outfile << "\n; because the convergence criteria were met\n";
+      else
+        outfile << "\n; because the maximum number of iterations was reached\n";
+    }
+    
   }
 
   outfile << "switch\tvalue\t\tlower\tupper\toptimise\n";

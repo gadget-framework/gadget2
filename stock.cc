@@ -322,6 +322,7 @@ Stock::~Stock() {
 }
 
 void Stock::Reset(const TimeClass* const TimeInfo) {
+  
   NatM->Reset(TimeInfo);
   if (doeseat)
     predator->Reset(TimeInfo);

@@ -185,7 +185,7 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
   double initialstep[NUMVARS]; //the stepsize when it hits the bound first
   int    trapped[NUMVARS];     // = 1 if it is trapped at a bound else = 0
 
-  cout << "\nStarting Hooke and Jeeves\n";
+
   //check the values specified in the optinfo file ...
   if ((rho < 0) || (rho > 1)) {
     cout << "\nError in value of rho - setting to default value of 0.5\n";

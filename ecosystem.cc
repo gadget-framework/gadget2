@@ -26,6 +26,10 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   convergeHJ = 0;
   funcevalHJ = 0;
   likelihoodHJ = 0.0;
+  convergeBFGS = 0;
+  funcevalBFGS = 0;
+  likelihoodBFGS = 0.0;
+
 
   chdir(workingdir);
   ifstream infile;
@@ -60,6 +64,7 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
 }
 
 Ecosystem::~Ecosystem() {
+
   int i;
   for (i = 0; i < fleetnames.Size(); i++)
     delete[] fleetnames[i];
@@ -145,10 +150,8 @@ double Ecosystem::SimulateAndUpdate(double* x, int n) {
       val[i] = x[j] * initialvalues[i];
       j++;
     }
-
   this->Update(val);
   this->Simulate(1, 0);  //optimise and dont print
-
   if (PrintCounter1 == printinfo.getPrint1() && printinfo.getPrint()) {
     this->writeValues(printinfo.getOutputFile(), printinfo.getPrecision());
     PrintCounter1 = 0;

@@ -1,7 +1,8 @@
 #ifndef maininfo_h
 #define maininfo_h
 
-#include "optinfo.h"
+#include "gadget.h"
+#include "commentstream.h"
 #include "printinfo.h"
 
 /**

@@ -110,6 +110,12 @@ public:
   void setFuncEvalHJ(int set) { funcevalHJ = set; };
   double getLikelihoodHJ() const { return likelihoodHJ; };
   void setLikelihoodHJ(double set) { likelihoodHJ = set; };
+  int getConvergeBFGS() const { return convergeBFGS; };
+  void setConvergeBFGS(int set) { convergeBFGS = set; };
+  int getFuncEvalBFGS() const { return funcevalBFGS; };
+  void setFuncEvalBFGS(int set) { funcevalBFGS = set; };
+  double getLikelihoodBFGS() const { return likelihoodBFGS; };
+  void setLikelihoodBFGS(double set) { likelihoodBFGS = set; };
   volatile int interrupted;
 protected:
   double likelihood;
@@ -122,6 +128,10 @@ protected:
   int convergeHJ;
   int funcevalHJ;
   double likelihoodHJ;
+  // details from the bfgs optimisation
+  int convergeBFGS;
+  int funcevalBFGS;
+  double likelihoodBFGS;
   int mortmodel;
   BaseClassPtrVector basevec;
   LikelihoodPtrVector Likely;

@@ -3,37 +3,63 @@
 
 #include "ecosystem.h"
 #include "parameter.h"
+#include "maininfo.h"
+#include "errorhandler.h"
 
 /**
- * \class OptInfo
- * \brief This is the base class used for the optimisation parameters
- */
-class OptInfo {
-public:
+ * \class OptSearch
+ * \brief This is the base class for the optimization, methods declared here are implemented in the children classes.
+*/
+class OptSearch {
+ public: 
   /**
    * \brief This is the default constructor
    */
-  OptInfo();
+  OptSearch(){};
   /**
    * \brief This is the default destructor
    */
-  virtual ~OptInfo();
+  ~OptSearch(){};
+  
+  virtual void Read(CommentStream& infile, char* text){};
+
+  virtual void MaximizeLikelihood(){};
+
+};
+
+
+/**
+ * \class OptInfo
+ * \brief This is the master class that syncronizes gadget's optimization 
+ */
+class OptInfo {
+ public:
   /**
-   * \brief This is the function that will calculate the likelihood score
+   * \brief This is the default constructor
    */
-  virtual void MaximizeLikelihood() = 0;
+  OptInfo(MainInfo* MainInfo);
   /**
-   * \brief This is the file reader common to all optimisation types
+   * \brief This is the default destructor
+   */
+  ~OptInfo();
+  /**
+   * \brief This is the function that will optimize the likelihood score
+   */
+  void Optimize();
+  /**
+   * \brief This is the file reader that determines what optimization methods are to used during optimization.
    * \param infile is the CommentStream to read the optimisation parameters from
    */
-  virtual void read(CommentStream& infile) = 0;
-  /**
-   * \brief This is the function used to read in the specific parameters
-   * \param infile is the CommentStream to read the optimisation parameters from
-   * \param text is a text string used to compare parameter names
-   * \return 1 for success, 0 for failure
-   */
-  int read(CommentStream& infile, char* text);
+  void ReadOptInfo(CommentStream& infile);
+
+ private:
+  int useSimann;
+  int useHJ;
+  int useBFGS;
+  int seed;
+  OptSearch* optSimann;
+  OptSearch* optHJ;
+  OptSearch* optBFGS;
 };
 
 /**
@@ -44,7 +70,7 @@ public:
  *
  * The Hooke & Jeeves algorithm used in Gadget is derived from that presented by R. Hooke and T. A. Jeeves, "Direct Search Solution of Numerical and Statistical Problems", Journal of the ACM, Vol. 8, April 1961, pp. 212-229.
  */
-class OptInfoHooke : public OptInfo {
+class OptInfoHooke : public OptSearch {
 public:
   /**
    * \brief This is the Hooke & Jeeves constructor
@@ -58,14 +84,14 @@ public:
    * \brief This is the Hooke & Jeeves file reader
    * \param infile is the CommentStream to read the optimisation parameters from
    */
-  virtual void read(CommentStream& infile);
+  virtual void Read(CommentStream& infile, char* text);
   /**
    * \brief This is the function used to read in the Hooke & Jeeves parameters
    * \param infile is the CommentStream to read the optimisation parameters from
    * \param text is a text string used to compare parameter names
    * \return 1 for success, 0 for failure
    */
-  int read(CommentStream& infile, char* text);
+  //  int read(CommentStream& infile, char* text);
   /**
    * \brief This is the function that will calculate the likelihood score using the Hooke & Jeeves optimiser
    */
@@ -101,7 +127,7 @@ protected:
  *
  * The Simulated Annealing algorithm used in Gadget is derived from that presented by Corana et al, "Minimizing Multimodal Functions of Continuous Variables with the 'Simulated Annealing' Algorithm" in the September 1987 (Vol. 13, no. 3, pp. 262-280) issue of the ACM Transactions on Mathematical Software.
  */
-class OptInfoSimann : public OptInfo {
+class OptInfoSimann : public OptSearch {
 public:
   /**
    * \brief This is the Simulated Annealing constructor
@@ -115,14 +141,14 @@ public:
    * \brief This is the Simulated Annealing file reader
    * \param infile is the CommentStream to read the optimisation parameters from
    */
-  virtual void read(CommentStream& infile);
+  virtual void Read(CommentStream& infile, char* text);
   /**
    * \brief This is the function used to read in the Simulated Annealing parameters
    * \param infile is the CommentStream to read the optimisation parameters from
    * \param text is a text string used to compare parameter names
    * \return 1 for success, 0 for failure
    */
-  int read(CommentStream& infile, char* text);
+  //  int read(CommentStream& infile, char* text);
   /**
    * \brief This is the function that will calculate the likelihood score using the Simulated Annealing optimiser
    */
@@ -174,106 +200,28 @@ protected:
   int check;
 };
 
-/**
- * \class OptInfoHookeAndSimann
- * \brief This is the class used for both the Hooke & Jeeves and Simualted Annealing optimisations
- *
- * This method attempts to combine the wide search of Simulated Annealing and the rapid convergence of Hooke & Jeeves.  It relies on the observation that the likelihood function for many Gadget models consists of a large "valley" in which the best solution lies, surrounded by much more "rugged" terrain.  A small amount of Simulated Annealing at the start of the run serves to move the search into this valley, at which point Hooke & Jeeves takes over an homes in on a solution within that valley.  Hopefully the Simulated Annealing will move to the correct side of any "hills" and avoid Hooke & Jeeves becoming trapped into unrealistic local optima.
- *
- * \see OptInfoHooke
- * \see OptInfoSimann
- */
-class OptInfoHookeAndSimann : public OptInfo {
-public:
-  /**
-   * \brief This is the Hooke & Jeeves and Simulated Annealing constructor
-   */
-  OptInfoHookeAndSimann();
-  /**
-   * \brief This is the Hooke & Jeeves and Simulated Annealing destructor
-   */
-  virtual ~OptInfoHookeAndSimann();
-  /**
-   * \brief This is the Hooke & Jeeves and Simulated Annealing file reader
-   * \param infile is the CommentStream to read the optimisation parameters from
-   */
-  virtual void read(CommentStream& infile);
-  /**
-   * \brief This is the function used to read in the Hooke & Jeeves and Simulated Annealing parameters
-   * \param infile is the CommentStream to read the optimisation parameters from
-   * \param text is a text string used to compare parameter names
-   * \return 1 for success, 0 for failure
-   */
-  int read(CommentStream& infile, char* text);
-  /**
-   * \brief This is the function that will calculate the likelihood score using the Hooke & Jeeves and Simulated Annealing optimisers
-   */
+class OptInfoBfgs : public OptSearch  {
+ public:
+  OptInfoBfgs();
+  ~OptInfoBfgs();
+  virtual void Read(CommentStream& infile, char* text);
   virtual void MaximizeLikelihood();
-protected:
-  /**
-   * \brief This is the maximum number of Hooke & Jeeves iterations
-   */
-  int hookeiter;
-  /**
-   * \brief This is the reduction factor for each step length for the Hooke & Jeeves algorithm
-   */
-  double rho;
-  /**
-   * \brief This is the initial step length for Hooke & Jeeves
-   */
-  double lambda;
-  /**
-   * \brief This is the minimum step length for Hooke & Jeeves
-   */
-  double hookeeps;
-  /**
-   * \brief This is the limit when checking if a parameter is stuck on the bound
-   */
-  double bndcheck;
-  /**
-   * \brief This is the maximum number of function evaluations for the Simulated Annealing algorithm
-   */
-  int simanniter;
-  /**
-   * \brief This is the temperature reduction factor
-   */
-  double rt;
-  /**
-   * \brief This is the halt criteria for the Simulated Annealing algorithm
-   */
-  double simanneps;
-  /**
-   * \brief This is the number of loops before the step length is adjusted
-   */
-  int ns;
-  /**
-   * \brief This is the number of loops before the temperature is adjusted
-   */
-  int nt;
-  /**
-   * \brief This is the "temperature" used for the Simulated Annealing algorithm
-   */
-  double T;
-  /**
-   * \brief This is the factor used for to adjust the step length
-   */
-  double cs;
-  /**
-   * \brief This is the step length
-   */
-  double vm;
-  /**
-   * \brief This is the upper bound when adjusting the step length
-   */
-  double uratio;
-  /**
-   * \brief This is the lower bound when adjusting the step length
-   */
-  double lratio;
-  /**
-   * \brief This is the number of temperature loops to check
-   */
-  int check;
+ private:
+  int iteration(double* x0);
+  void gradient(double* p, double fp);
+  int gaussian(double mult);  
+  double linesearch();
+  double* gk;        //new gradient direction
+  double* g0;        //old gradient direction
+  double* s;         //search direction (for linesearch)
+  double** Bk;       //BFGS updated hessian approximation
+  double* x;         //current approximation
+  double fk;                //current function value
+  double (*f)(double*, int);
+  int numvar;
+  int maxiter;
+  double eps;
+  double rho;        //linesearch convergence parameters
+  double tau;        //---------------------------------
 };
-
 #endif
