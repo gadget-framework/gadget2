@@ -41,7 +41,10 @@ void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
         pop = Addition[CI.Pos(l)];
         pop *= ratio;
         target[l] += pop;
-        target[l].N /= CI.Nrof(l);
+        if (isZero(CI.Nrof(l)))
+          cerr << "Error - divide by zero in popinfoadd\n";
+        else
+          target[l].N /= CI.Nrof(l);
       }
     } else {
       //Stock that is added to has coarser division than the stock that is added to it.
@@ -79,7 +82,10 @@ void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
         pop = Addition[CI.Pos(l)];
         pop *= ratio * Ratio[l];
         target[l] += pop;
-        target[l].N /= CI.Nrof(l);
+        if (isZero(CI.Nrof(l)))
+          cerr << "Error - divide by zero in popinfoadd\n";
+        else
+          target[l].N /= CI.Nrof(l);
       }
     } else {
       //Stock that is added to has coarser division than the stock that is added to it.

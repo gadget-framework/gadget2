@@ -26,7 +26,7 @@ PIOnStep::PIOnStep(CommentStream& infile, const IntMatrix& areas,
   ErrorHandler handle;
   ifstream datafile;
   CommentStream subdata(datafile);
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadPredatorData(subdata, areaindex, predlenindex, preylenindex, TimeInfo, name);

@@ -93,7 +93,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   CharPtrVector grlenindex;
 
   readWordAndValue(infile, "growthandeatlengths", filename);
-  datafile.open(filename);
+  datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, grlengths, grlenindex);
@@ -170,7 +170,8 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   if (doesmigrate) {
     readWordAndVariable(infile, "agedependentmigration", AgeDepMigration);
     readWordAndValue(infile, "migrationfile", filename);
-    ifstream subfile(filename);
+    ifstream subfile;
+    subfile.open(filename, ios::in);
     CommentStream subcomment(subfile);
     checkIfFailure(subfile, filename);
     handle.Open(filename);
@@ -187,19 +188,22 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   if (doesmature) {
     readWordAndValue(infile, "maturityfunction", text);
     readWordAndValue(infile, "maturityfile", filename);
-    ifstream subfile(filename);
+    ifstream subfile;
+    subfile.open(filename, ios::in);
     CommentStream subcomment(subfile);
     checkIfFailure(subfile, filename);
     handle.Open(filename);
 
     if (strcasecmp(text, "continuous") == 0)
-      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 3);
+      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv, 3);
     else if (strcasecmp(text, "fixedlength") == 0)
-      maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv);
+      maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv);
     else if (strcasecmp(text, "ageandlength") == 0)
-      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
+      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv, 4);
     else if (strcasecmp(text, "constant") == 0)
-      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
+      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv, 4);
+    else if (strcasecmp(text, "constantweight") == 0)
+      maturity = new MaturityE(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv, 6, refweight);
     else
       handle.Message("Error in stock file - unrecognised maturity", text);
 
@@ -227,7 +231,8 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   readWordAndVariable(infile, "doesrenew", doesrenew);
   if (doesrenew) {
     readWordAndValue(infile, "renewaldatafile", filename);
-    ifstream subfile(filename);
+    ifstream subfile;
+    subfile.open(filename, ios::in);
     CommentStream subcomment(subfile);
     checkIfFailure(subfile, filename);
     handle.Open(filename);
@@ -336,7 +341,7 @@ Predator* LenStock::ReturnPredator() const {
 void LenStock::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nStock\nName" << sep << this->Name() << "\nLives on inner areas";
+  outfile << "\nStock\nName" << sep << this->Name() << "\nLives on internal areas";
 
   for (i = 0; i < areas.Size(); i++)
     outfile << sep << areas[i];
@@ -370,7 +375,7 @@ void LenStock::Print(ofstream& outfile) const {
 
   outfile << "\nAge length keys\n";
   for (i = 0; i < areas.Size(); i++) {
-    outfile << "\tInner area " << areas[i] << "\n\tNumbers\n";
+    outfile << "\tInternal area " << areas[i] << "\n\tNumbers\n";
     Printagebandm(outfile, Alkeys[i]);
     outfile << "\tMean weights\n";
     PrintWeightinagebandm(outfile, Alkeys[i]);
@@ -501,9 +506,9 @@ void LenStock::Grow(int area,
     grower->GrowthImplement(area, NumberInArea[inarea], LgrpDiv);
     if (doesmature) {
       if (maturity->IsMaturationStep(area, TimeInfo)) {
-        Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area), maturity, TimeInfo, Area, LgrpDiv, area);
+        Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area), maturity, TimeInfo, Area, area);
         if (tagAlkeys.NrOfTagExp() > 0)
-          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, LgrpDiv, area);
+          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
       } else {
         Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area));
         if (tagAlkeys.NrOfTagExp() > 0)
@@ -519,9 +524,9 @@ void LenStock::Grow(int area,
     grower->GrowthImplement(area, LgrpDiv);
     if (doesmature) {
       if (maturity->IsMaturationStep(area, TimeInfo)) {
-        Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->getWeight(area), maturity, TimeInfo, Area, LgrpDiv, area);
+        Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->getWeight(area), maturity, TimeInfo, Area, area);
         if (tagAlkeys.NrOfTagExp() > 0)
-          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, LgrpDiv, area);
+          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
       } else {
         Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->getWeight(area));
         if (tagAlkeys.NrOfTagExp() > 0)

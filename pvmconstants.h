@@ -23,6 +23,11 @@ public:
   const int getMasterReceiveDataTag() const;
   const int getDiedTag() const;
   const int getDataEncode() const;
+  const int getAddHostTag()const;
+  const int getHostSuspendTag() const;
+  const int getHostResumeTag() const;
+  const int getHostDeleteTag() const;
+  const int getTaskExitTag() const;
 private:
   // tags for messages send/received using pvm
   int endType;                // indicate halting of netcommunication
@@ -37,6 +42,12 @@ private:
   //dataencode = 0 then use XDR encoding for receiving/sending data
   //dataencode = 1 then no encoding of data
   //dataencode = 2 then data is left in place when sending/reciving
+  //For condor
+  int addHost;     // indicate that host has been added to virtual machine
+  int hostSuspend; // indicate that host has been suspended
+  int hostResume;  // indicate that host has resumed
+  int hostDelete;  // indicate that host has been deleted
+  int taskExit;    // indicate that host task has exited
 };
 
 #endif

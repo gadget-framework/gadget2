@@ -59,7 +59,7 @@ LogCatches::LogCatches(CommentStream& infile,
 
   //Read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
@@ -69,7 +69,7 @@ LogCatches::LogCatches(CommentStream& infile,
 
   //Read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numage = readAggregation(subdata, ages, ageindex);
@@ -79,7 +79,7 @@ LogCatches::LogCatches(CommentStream& infile,
 
   //Read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numlen = readLengthAggregation(subdata, lengths, lenindex);
@@ -121,7 +121,7 @@ LogCatches::LogCatches(CommentStream& infile,
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadLogCatchData(subdata, TimeInfo, numarea, numage, numlen);
@@ -131,7 +131,7 @@ LogCatches::LogCatches(CommentStream& infile,
 
   //If readWeights then read in the weight info from file
   if (readWeights == 1) {
-    datafile.open(weightfilename);
+    datafile.open(weightfilename, ios::in);
     checkIfFailure(datafile, weightfilename);
     handle.Open(weightfilename);
     ReadLogWeightsData(subdata, TimeInfo, numlen);

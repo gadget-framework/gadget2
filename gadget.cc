@@ -55,6 +55,7 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
     delete Stochasticdata;
 
   } else {
+    cerr << "Warning - no parameter input file given, using default values" << endl;
     EcoSystem->Simulate(MainInfo->CalcLikelihood(), print);
     if ((MainInfo->getPI()).Print())
       EcoSystem->PrintValues((MainInfo->getPI()).oFile(), (MainInfo->getPI()).precision());
@@ -154,7 +155,9 @@ int main(int aNumber, char* const aVector[]) {
       Stochasticdata = new StochasticData(MainInfo.initParamFile());
       EcoSystem->Update(Stochasticdata);
       EcoSystem->CheckBounds();
-    }
+    } else
+      cerr << "Warning - no parameter input file given, using default values" << endl;
+
     Optinfo->MaximizeLikelihood();
     if ((MainInfo.getPI()).forcePrint())
       EcoSystem->Simulate(0, 1);

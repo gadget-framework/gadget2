@@ -99,7 +99,7 @@ void FleetPreyAggregator::Print(ofstream& outfile) const {
   int a, i, j;
 
   for (a = 0; a < areas.Nrow(); a++) {
-    outfile << "\tInner areas " << a << endl;
+    outfile << "\tInternal areas " << a << endl;
     for (j = 0; j < ages.Nrow(); j++) {
       outfile << TAB;
       for (i = 0; i < numlengths; i++) {

@@ -93,7 +93,7 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
   keeper->AddString("growthcalcB");
 
   readWordAndValue(infile, "lengthgrowthfile", datafilename);
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   i = readGrowthAmounts(subdata, TimeInfo, Area, lgrowth, lenindex, keeper);
@@ -102,7 +102,7 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
   datafile.clear();
 
   readWordAndValue(infile, "weightgrowthfile", datafilename);
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, keeper);
@@ -190,7 +190,8 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
   //Read information on reference weights.
   keeper->AddString("referenceweights");
   //JMB - changed since filename is passed as refWeight
-  ifstream subfile(refWeight, ios::in);
+  ifstream subfile;
+  subfile.open(refWeight, ios::in);
   checkIfFailure(subfile, refWeight);
   handle.Open(refWeight);
   CommentStream subcomment(subfile);
@@ -321,7 +322,8 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
   //Read information on reference weights.
   keeper->AddString("referenceweights");
   //JMB - changed since filename is passed as refWeight
-  ifstream subfile(refWeight, ios::in);
+  ifstream subfile;
+  subfile.open(refWeight, ios::in);
   checkIfFailure(subfile, refWeight);
   handle.Open(refWeight);
   CommentStream subcomment(subfile);
@@ -479,7 +481,8 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   //Read information on reference weights.
   keeper->AddString("referenceweights");
   //JMB - changed since filename is passed as refWeight
-  ifstream subfile(refWeight, ios::in);
+  ifstream subfile;
+  subfile.open(refWeight, ios::in);
   checkIfFailure(subfile, refWeight);
   handle.Open(refWeight);
   CommentStream subcomment(subfile);
@@ -620,7 +623,7 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   ifstream datafile;
   CommentStream subdata(datafile);
   readWordAndValue(infile, "weightgrowthfile", text);
-  datafile.open(text);
+  datafile.open(text, ios::in);
   checkIfFailure(datafile, text);
   handle.Open(text);
   i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, keeper);
@@ -702,7 +705,7 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   ifstream datafile;
   CommentStream subdata(datafile);
   readWordAndValue(infile, "weightgrowthfile", text);
-  datafile.open(text);
+  datafile.open(text, ios::in);
   checkIfFailure(datafile, text);
   handle.Open(text);
   i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, keeper);

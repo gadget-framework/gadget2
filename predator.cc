@@ -70,7 +70,7 @@ int Predator::DoesEat(const char* preyname) const {
 }
 
 void Predator::Print(ofstream& outfile) const {
-  int i = 0;
+  int i;
   outfile << "\tName" << sep << this->Name()
     << "\n\tNames of preys:";
   for (i = 0; i < preys.Size(); i++)
@@ -151,8 +151,9 @@ int Predator::ReadSuitabilityMatrix(CommentStream& infile,
       infile >> text;
 
       DoubleMatrix dm;
-      ifstream subfile(text);
+      ifstream subfile;
       CommentStream subcomment(subfile);
+      subfile.open(text, ios::in);
       checkIfFailure(subfile, text);
       handle.Open(text);
       i = 0;

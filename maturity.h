@@ -67,10 +67,11 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param Area is the AreaClass for the current model
    * \param area is the area that the maturation is being calculated on
+   * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return 0 (will be overridden in derived classes)
    */
   virtual double MaturationProbability(int age, int length, int growth,
-    const TimeClass* const TimeInfo, const AreaClass* const Area, int area) = 0;
+    const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight) = 0;
   /**
    * \brief This will store the calculated mature stock
    * \param area is the area that the maturation is being calculated on
@@ -196,10 +197,11 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param Area is the AreaClass for the current model
    * \param area is the area that the maturation is being calculated on
+   * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
   virtual double MaturationProbability(int age, int length, int growth,
-    const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
+    const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight);
   /**
    * \brief This function will print the maturation information
    * \param outfile is the ofstream that all the model information gets sent to
@@ -264,10 +266,11 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param Area is the AreaClass for the current model
    * \param area is the area that the maturation is being calculated on
+   * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
   virtual double MaturationProbability(int age, int length, int growth,
-    const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
+    const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight);
   /**
    * \brief This function will print the maturation information
    * \param outfile is the ofstream that all the model information gets sent to
@@ -329,10 +332,11 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param Area is the AreaClass for the current model
    * \param area is the area that the maturation is being calculated on
+   * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
   virtual double MaturationProbability(int age, int length, int growth,
-    const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
+    const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight);
 protected:
   /**
    * \brief This is the vector of timesteps when maturation will take place
@@ -385,15 +389,78 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param Area is the AreaClass for the current model
    * \param area is the area that the maturation is being calculated on
+   * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
   virtual double MaturationProbability(int age, int length, int growth,
-    const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
+    const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight);
 protected:
   /**
    * \brief This is the vector of timesteps when maturation will take place
    */
   IntVector maturitystep;
+};
+
+/**
+ * \class MaturityE
+ * \brief This is the class used to calculate the maturity based on 'constantweight' maturity function
+ */
+class MaturityE : public MaturityA {
+public:
+  /**
+   * \brief This is the MaturityE constructor
+   * \param infile is the CommentStream to read the maturation parameters from
+   * \param TimeInfo is the TimeClass for the current model
+   * \param keeper is the Keeper for the current model
+   * \param minage is the minimum age of the stock that can mature
+   * \param minabslength is the list of minimum lengths for the stock that can mature
+   * \param size is the list of number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
+   * \param areas is the list of areas that the maturity calculation can take place on
+   * \param LgrpDiv is the LengthGroupDivision for the stock
+   * \param NoMatconst is the number of maturation parameters (6)
+   * \param refWeightFile is the name of the file to read the reference weight information from
+   */
+  MaturityE(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
+    int minage, const IntVector& minabslength, const IntVector& size, const IntVector& areas,
+    const LengthGroupDivision* const LgrpDiv, int NoMatconst, const char* refWeightFile);
+  /**
+   * \brief This is the default MaturityE destructor
+   */
+  virtual ~MaturityE() {};
+  /**
+   * \brief This will do the maturation calculations that only need to be performed once for the current model run
+   * \param TimeInfo is the TimeClass for the current model
+   */
+  virtual void Precalc(const TimeClass* const TimeInfo);
+  /**
+   * \brief This will check if the maturation process will take place on the current timestep
+   * \param area is the area that the maturation is being calculated on
+   * \param TimeInfo is the TimeClass for the current model
+   * \return 1 if the maturation process will take place, 0 otherwise
+   */
+  virtual int IsMaturationStep(int area, const TimeClass* const TimeInfo);
+  /**
+   * \brief This will calculate the probability of maturation for a given age and length of the immature stock
+   * \param age is the age of the age-length cell that the maturation is being calculated on
+   * \param length is the length of the age-length cell that the maturation is being calculated on
+   * \param growth is the length of the age-length cell that the mature stock will grow into
+   * \param TimeInfo is the TimeClass for the current model
+   * \param Area is the AreaClass for the current model
+   * \param area is the area that the maturation is being calculated on
+   * \param weight is the weight of the fish of the age-length cell that are maturing
+   * \return maturation probability
+   */
+  virtual double MaturationProbability(int age, int length, int growth,
+    const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight);
+protected:
+  /**
+   * \brief This is the vector of timesteps when maturation will take place
+   */
+  IntVector maturitystep;
+  /**
+   * \brief This is the vector of reference weight information
+   */
+  DoubleVector refWeight;
 };
 
 #endif

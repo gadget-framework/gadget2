@@ -82,7 +82,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   //read the year and step data from the datafile
   ifstream datafile;
   CommentStream subdata(datafile);
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadSIData(subdata, areaindex, index1, index2, TimeInfo);
@@ -158,7 +158,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   //read the survey indices data from the datafile
   ifstream datafile;
   CommentStream subdata(datafile);
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadSIData(subdata, areaindex, colindex, TimeInfo, name);

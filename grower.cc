@@ -142,7 +142,7 @@ void Grower::Print(ofstream& outfile) const {
 
   outfile << "\n\tLength increase:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tInner area " << areas[area];
+    outfile << "\tInternal area " << areas[area];
     for (i = 0; i < CalcLgrowth.Ncol(area); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
@@ -153,7 +153,7 @@ void Grower::Print(ofstream& outfile) const {
 
   outfile << "\tWeight increase:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tInner area " << areas[area];
+    outfile << "\tInternal area " << areas[area];
     for (i = 0; i < CalcWgrowth.Ncol(area); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
@@ -164,7 +164,7 @@ void Grower::Print(ofstream& outfile) const {
 
   outfile << "\tDistributed length increase:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tInner area " << areas[area] << endl;
+    outfile << "\tInternal area " << areas[area] << endl;
     for (i = 0; i < lgrowth[area]->Nrow(); i++) {
       outfile << TAB;
       for (j = 0; j < lgrowth[area]->Ncol(i); j++)
@@ -175,7 +175,7 @@ void Grower::Print(ofstream& outfile) const {
 
   outfile << "\tDistributed weight increase:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tInner area " << areas[area] << endl;
+    outfile << "\tInternal area " << areas[area] << endl;
     for (i = 0; i < wgrowth[area]->Nrow(); i++) {
       outfile << TAB;
       for (j = 0; j < wgrowth[area]->Ncol(i); j++)
@@ -183,7 +183,6 @@ void Grower::Print(ofstream& outfile) const {
       outfile << endl;
     }
   }
-  outfile << endl;
 }
 
 //The following function is just a copy of Prey::Sum

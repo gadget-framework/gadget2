@@ -42,7 +42,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   //Read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   i = readAggregation(subdata, areas, areaindex);
@@ -62,7 +62,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   if (strcasecmp(sitype, "lengths") == 0) {
     readWordAndValue(infile, "lenaggfile", aggfilename);
-    datafile.open(aggfilename);
+    datafile.open(aggfilename, ios::in);
     checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     i = readLengthAggregation(subdata, lengths, lenindex);
@@ -72,7 +72,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   } else if (strcasecmp(sitype, "ages") == 0) {
     readWordAndValue(infile, "ageaggfile", aggfilename);
-    datafile.open(aggfilename);
+    datafile.open(aggfilename, ios::in);
     checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     i = readAggregation(subdata, ages, ageindex);
@@ -82,7 +82,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
     readWordAndValue(infile, "lenaggfile", aggfilename);
-    datafile.open(aggfilename);
+    datafile.open(aggfilename, ios::in);
     checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     i = readLengthAggregation(subdata, lengths, lenindex);
@@ -91,7 +91,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     datafile.clear();
 
     readWordAndValue(infile, "ageaggfile", aggfilename);
-    datafile.open(aggfilename);
+    datafile.open(aggfilename, ios::in);
     checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     i = readAggregation(subdata, ages, ageindex);
@@ -162,7 +162,7 @@ void SurveyIndices::LikelihoodPrint(ofstream& outfile) {
     << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << stocknames[i] << sep;
-  outfile << "\nInner areas";
+  outfile << "\nInternal areas";
   for (i = 0; i < areas.Nrow(); i++) {
     outfile << endl;
     for (j = 0; j < areas.Ncol(i); j++)

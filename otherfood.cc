@@ -53,7 +53,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   infile >> text >> ws;
   if (strcasecmp(text, "amounts") == 0) {
     infile >> text >> ws;
-    subfile.open(text);
+    subfile.open(text, ios::in);
     checkIfFailure(subfile, text);
     handle.Open(text);
 

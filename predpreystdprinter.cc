@@ -34,7 +34,7 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
   CharPtrVector areaindex;
   IntMatrix tmpareas;
   readWordAndValue(infile, "areaaggfile", filename);
-  datafile.open(filename);
+  datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, tmpareas, areaindex);

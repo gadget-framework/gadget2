@@ -23,7 +23,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
 
   //Read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);

@@ -60,9 +60,9 @@ void Maturity::SetStock(StockPtrVector& stockvec) {
   for (i = 0; i < tmpratio.Size(); i++)
     Ratio[i] = tmpratio[i];
 
-  CI.resize(MatureStocks.Size(), 0);
+  CI.resize(MatureStocks.Size());
   for (i = 0; i < MatureStocks.Size(); i++)
-    CI[i] = new ConversionIndex(LgrpDiv, MatureStocks[i]->ReturnLengthGroupDiv());
+    CI[i] = new ConversionIndex(MatureStocks[i]->ReturnLengthGroupDiv(), LgrpDiv);
 
   for (i = 0; i < MatureStocks.Size(); i++) {
     index = 0;
@@ -86,10 +86,9 @@ void Maturity::Print(ofstream& outfile) const {
     outfile << sep << (const char*)(MatureStocks[i]->Name());
   outfile << "\n\tStored numbers:\n";
   for (i = 0; i < areas.Size(); i++) {
-    outfile << "Area " << areas[i] << endl;
+    outfile << "\tInternal area " << areas[i] << endl;
     Printagebandm(outfile, Storage[i]);
   }
-  outfile << endl;
 }
 
 //Move Immature stock to mature stocks.  Ratio is read in.  Ratio is
@@ -99,7 +98,6 @@ void Maturity::Print(ofstream& outfile) const {
 void Maturity::Move(int area, const TimeClass* const TimeInfo) {
   assert(this->IsMaturationStep(area, TimeInfo));
   int i, inarea = AreaNr[area];
-
   for (i = 0; i < MatureStocks.Size(); i++) {
     MatureStocks[i]->Add(Storage[inarea], CI[i], area, Ratio[i],
       Storage[inarea].Minage(), Storage[inarea].Maxage());
@@ -182,7 +180,6 @@ void Maturity::DeleteTag(const char* tagname) {
   if (id >= 0) {
     minage = TagStorage[0].Minage();
     maxage = TagStorage[0].Maxage();
-
     // Remove allocated memory
     for (i = 0; i < TagStorage.Size(); i++) {
       for (age = minage; age <= maxage; age++) {
@@ -261,19 +258,17 @@ void MaturityA::Precalc(const TimeClass* const TimeInfo) {
 
 //Calculate the percentage that becomes Mature each timestep.
 double MaturityA::MaturationProbability(int age, int length, int growth,
-  const TimeClass* const TimeInfo, const AreaClass* const Area, int area) {
+  const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight) {
 
-  const double ratio =  PrecalcMaturation[age][length] *
-    (Coefficient[1] * growth * LgrpDiv->dl() +
-    Coefficient[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
+  double ratio = PrecalcMaturation[age][length] * (Coefficient[1] * growth * LgrpDiv->dl() +
+                   Coefficient[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
   return (min(max(0.0, ratio), 1.0));
 }
 
 void MaturityA::Print(ofstream& outfile) const {
   Maturity::Print(outfile);
-  outfile << "\tPrecalculated maturity.\n";
+  outfile << "\tPrecalculated maturity:\n";
   BandmatrixPrint(PrecalcMaturation, outfile);
-  outfile << endl;
 }
 
 int MaturityA::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
@@ -285,7 +280,7 @@ int MaturityA::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
 // ********************************************************
 MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
   Keeper* const keeper, int minage, const IntVector& minabslength,
-  const IntVector& size, const IntVector& tmpareas, const LengthGroupDivision*const lgrpdiv)
+  const IntVector& size, const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv)
   : Maturity(tmpareas, minage, minabslength, size, lgrpdiv) {
 
   ErrorHandler handle;
@@ -332,29 +327,30 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
 void MaturityB::Print(ofstream& outfile) const {
   int i;
   Maturity::Print(outfile);
-  outfile << "maturitysteps";
+  outfile << "\tMaturity timesteps";
   for (i = 0; i < maturitystep.Size(); i++)
     outfile << sep << maturitystep[i];
-  outfile << "\nmaturitylengths";
+  outfile << "\n\tMaturity lengths";
   for (i = 0; i < maturitylength.Size(); i++)
     outfile << sep << maturitylength[i];
+  outfile << endl;
+}
+
+void MaturityB::Precalc(const TimeClass* const TimeInfo) {
+  this->Maturity::Precalc(TimeInfo);
+  maturitylength.Update(TimeInfo);
 }
 
 //Calculate the percentage that becomes Mature each timestep.
 //Need to check units on LengthOfCurrent
 double MaturityB::MaturationProbability(int age, int length, int growth,
-  const TimeClass* const TimeInfo, const AreaClass* const Area, int area) {
+  const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight) {
 
   int i;
   for (i = 0; i < maturitylength.Size(); i++)
     if (TimeInfo->CurrentStep() == maturitystep[i])
       return (LgrpDiv->Meanlength(length) >= maturitylength[i]);
   return 0.0;
-}
-
-void MaturityB::Precalc(const TimeClass* const TimeInfo) {
-  this->Maturity::Precalc(TimeInfo);
-  maturitylength.Update(TimeInfo);
 }
 
 int MaturityB::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
@@ -390,7 +386,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
 
   for (i = 0; i < maturitystep.Size(); i++)
     if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->StepsInYear())
-      handle.Message("illegal maturity step in maturation type C");
+      handle.Message("Illegal maturity step in ageandlength maturation function");
 }
 
 void MaturityC::Precalc(const TimeClass* const TimeInfo) {
@@ -403,8 +399,8 @@ void MaturityC::Precalc(const TimeClass* const TimeInfo) {
     for (age = PrecalcMaturation.Minage(); age <= PrecalcMaturation.Maxage(); age++) {
       for (j = PrecalcMaturation.Minlength(age); j < PrecalcMaturation.Maxlength(age); j++) {
         if (age >= MinMatureAge) {
-          my = exp(-Coefficient[0] * (LgrpDiv->Meanlength(j) - Coefficient[1]) -
-            Coefficient[2] * (age - Coefficient[3]));
+          my = exp(-Coefficient[0] * (LgrpDiv->Meanlength(j) - Coefficient[1])
+                 - Coefficient[2] * (age - Coefficient[3]));
           PrecalcMaturation[age][j] = 1 / (1 + my);
         } else
           PrecalcMaturation[age][j] = 0.0;
@@ -414,12 +410,11 @@ void MaturityC::Precalc(const TimeClass* const TimeInfo) {
 }
 
 double MaturityC::MaturationProbability(int age, int length, int growth,
-  const TimeClass* const TimeInfo, const AreaClass* const Area, int area) {
+  const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight) {
 
   if (this->IsMaturationStep(area, TimeInfo)) {
-    const double ratio =  PrecalcMaturation[age][length] *
-      (Coefficient[0] * growth * LgrpDiv->dl() + Coefficient[2] *
-      TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
+    double ratio =  PrecalcMaturation[age][length] * (Coefficient[0] * growth * LgrpDiv->dl()
+                      + Coefficient[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
     return (min(max(0.0, ratio), 1.0));
   }
   return 0.0;
@@ -458,7 +453,7 @@ MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
 
   for (i = 0; i < maturitystep.Size(); i++)
     if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->StepsInYear())
-      handle.Message("illegal maturity step in maturation type D");
+      handle.Message("Illegal maturity step in constant maturation function");
 }
 
 void MaturityD::Precalc(const TimeClass* const TimeInfo) {
@@ -471,8 +466,8 @@ void MaturityD::Precalc(const TimeClass* const TimeInfo) {
     for (age = PrecalcMaturation.Minage(); age <= PrecalcMaturation.Maxage(); age++) {
       for (j = PrecalcMaturation.Minlength(age); j < PrecalcMaturation.Maxlength(age); j++){
         if (age >= MinMatureAge) {
-          my = exp(-4.0 * Coefficient[0] * (LgrpDiv->Meanlength(j) -
-            Coefficient[1]) - Coefficient[2] * (age - Coefficient[3]));
+          my = exp(-4.0 * Coefficient[0] * (LgrpDiv->Meanlength(j) - Coefficient[1])
+                 - 4.0 * Coefficient[2] * (age - Coefficient[3]));
           PrecalcMaturation[age][j] = 1 / (1 + my);
         } else
           PrecalcMaturation[age][j] = 0.0;
@@ -482,12 +477,10 @@ void MaturityD::Precalc(const TimeClass* const TimeInfo) {
 }
 
 double MaturityD::MaturationProbability(int age, int length, int growth,
-  const TimeClass* const TimeInfo, const AreaClass* const Area, int area) {
+  const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight) {
 
-  if (this->IsMaturationStep(area, TimeInfo)) {
-    const double ratio = PrecalcMaturation[age][length];
-    return (min(max(0.0, ratio), 1.0));
-  }
+  if (this->IsMaturationStep(area, TimeInfo))
+    return (min(max(0.0, PrecalcMaturation[age][length]), 1.0));
   return 0.0;
 }
 
@@ -499,3 +492,90 @@ int MaturityD::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
   return 0;
 }
 
+// ********************************************************
+// Functions for MaturityE
+// ********************************************************
+MaturityE::MaturityE(CommentStream& infile, const TimeClass* const TimeInfo,
+  Keeper* const keeper, int minage, const IntVector& minabslength, const IntVector& size,
+  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int NoMatconst, const char* refWeightFile)
+  : MaturityA(infile, TimeInfo, keeper, minage, minabslength, size, tmpareas, lgrpdiv, NoMatconst) {
+
+  ErrorHandler handle;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+
+  infile >> text >> ws;
+  if (strcasecmp(text, "maturitystep") != 0)
+    handle.Unexpected("maturitystep", text);
+
+  int i = 0;
+  while (isdigit(infile.peek()) && !infile.eof()) {
+    maturitystep.resize(1);
+    infile >> maturitystep[i] >> ws;
+    i++;
+  }
+
+  for (i = 0; i < maturitystep.Size(); i++)
+    if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->StepsInYear())
+      handle.Message("Illegal maturity step in constantweight maturation function");
+
+  //Read information on reference weights.
+  ifstream subweightfile;
+  subweightfile.open(refWeightFile, ios::in);
+  checkIfFailure(subweightfile, refWeightFile);
+  handle.Open(refWeightFile);
+  CommentStream subweightcomment(subweightfile);
+  DoubleMatrix tmpRefW;
+  if (!read2ColVector(subweightcomment, tmpRefW))
+    handle.Message("Wrong format for reference weights");
+  handle.Close();
+  subweightfile.close();
+  subweightfile.clear();
+
+  //Aggregate the reference weight data to be the same length groups
+  refWeight.resize(LgrpDiv->NoLengthGroups());
+  int j, pos = 0;
+  double tmp;
+  for (j = 0; j < LgrpDiv->NoLengthGroups(); j++) {
+    for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
+      if (LgrpDiv->Meanlength(j) >= tmpRefW[i][0] && LgrpDiv->Meanlength(j) <= tmpRefW[i + 1][0]) {
+        tmp = (LgrpDiv->Meanlength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+        refWeight[j] = tmpRefW[i][1] + tmp * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
+        pos = i;
+      }
+    }
+  }
+}
+
+void MaturityE::Precalc(const TimeClass* const TimeInfo) {
+  this->Maturity::Precalc(TimeInfo);
+  Coefficient.Update(TimeInfo);
+}
+
+double MaturityE::MaturationProbability(int age, int length, int growth,
+  const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight) {
+
+  if (this->IsMaturationStep(area, TimeInfo)) {
+    double tmpweight, my, ratio;
+
+    if (isZero(refWeight[length]))
+      tmpweight = Coefficient[5];
+    else
+      tmpweight = weight / refWeight[length];
+
+    my = exp(-4.0 * Coefficient[0] * (LgrpDiv->Meanlength(length) - Coefficient[1])
+           - 4.0 * Coefficient[2] * (age - Coefficient[3])
+           - 4.0 * Coefficient[4] * (tmpweight - Coefficient[5]));
+    ratio = 1 / (1 + my);
+    return (min(max(0.0, ratio), 1.0));
+  }
+  return 0.0;
+}
+
+int MaturityE::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
+  int i;
+  for (i = 0; i < maturitystep.Size(); i++)
+    if (maturitystep[i] == TimeInfo->CurrentStep())
+      return 1;
+  return 0;
+}

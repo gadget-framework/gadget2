@@ -263,7 +263,7 @@ void Ecosystem::ReadLikelihood(CommentStream& infile) {
 
     if (strcasecmp(type, "penalty") == 0) {
       readWordAndValue(infile, "datafile", datafilename);
-      datafile.open(datafilename);
+      datafile.open(datafilename, ios::in);
       checkIfFailure(datafile, datafilename);
       handle.Open(datafilename);
       Likely[i] = new BoundLikelihood(subdata, Area, TimeInfo, keeper, weight);
@@ -349,7 +349,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
 
   //first, read in the time information
   readWordAndValue(infile, "timefile", filename);
-  subfile.open(filename);
+  subfile.open(filename, ios::in);
   checkIfFailure(subfile, filename);
   handle.Open(filename);
   TimeInfo = new TimeClass(subcomment);
@@ -359,7 +359,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
 
   //second, read in the area information
   readWordAndValue(infile, "areafile", filename);
-  subfile.open(filename);
+  subfile.open(filename, ios::in);
   checkIfFailure(subfile, filename);
   handle.Open(filename);
   Area = new AreaClass(subcomment, TimeInfo);
@@ -378,7 +378,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
     //Do not read printfile if we are doing a net run, or if we are
     //optimizing without the forcePrint option set. 07.04.00 AJ & mnaa.
     if (!netrun  && (printinfo.forcePrint() || !optimize)) {
-      subfile.open(text);
+      subfile.open(text, ios::in);
       checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
@@ -408,7 +408,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
   //Now we have found the string "stockfiles" we can create stock
   infile >> text >> ws;
   while (!((strcasecmp(text, "[tagging]") == 0) || infile.eof())) {
-    subfile.open(text);
+    subfile.open(text, ios::in);
     checkIfFailure(subfile, text);
     handle.Open(text);
     chdir(workingdir);
@@ -429,7 +429,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
     //There might not be any tagging files
     infile >> text >> ws;
     while (!((strcasecmp(text, "[otherfood]") == 0) || infile.eof())) {
-      subfile.open(text);
+      subfile.open(text, ios::in);
       checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
@@ -451,7 +451,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
     //There might not be any otherfood files
     infile >> text >> ws;
     while (!((strcasecmp(text, "[fleet]") == 0) || infile.eof())) {
-      subfile.open(text);
+      subfile.open(text, ios::in);
       checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
@@ -473,7 +473,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
     //There might not be any fleet files
     infile >> text >> ws;
     while (!((strcasecmp(text, "[likelihood]") == 0) || infile.eof())) {
-      subfile.open(text);
+      subfile.open(text, ios::in);
       checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
@@ -493,7 +493,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
       //There might not be any likelihood files
       infile >> text;
       while (!infile.eof()) {
-        subfile.open(text);
+        subfile.open(text, ios::in);
         checkIfFailure(subfile, text);
         handle.Open(text);
         chdir(workingdir);

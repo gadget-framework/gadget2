@@ -86,7 +86,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
 
   //the next entry in the file will be the name of the amounts datafile
   infile >> text >> ws;
-  subfile.open(text);
+  subfile.open(text, ios::in);
   checkIfFailure(subfile, text);
   handle.Open(text);
 
@@ -150,7 +150,6 @@ void Fleet::Reset(const TimeClass* const TimeInfo) {
 void Fleet::Print(ofstream& outfile) const {
   outfile << "\nFleet - type ";
   predator->Print(outfile);
-  outfile << endl;
 }
 
 LengthPredator* Fleet::ReturnPredator() const {

@@ -80,7 +80,7 @@ Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* preyl
   ifstream datafile;
   CommentStream subdata(datafile);
   readWordAndValue(infile, "canndatafile", filename);
-  datafile.open(filename);
+  datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
   handle.Open(filename);
 

@@ -64,7 +64,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
 
   //Read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
@@ -74,7 +74,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
 
   //Read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numage = readAggregation(subdata, ages, ageindex);
@@ -84,7 +84,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
 
   //Read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numlen = readLengthAggregation(subdata, lengths, lenindex);
@@ -129,7 +129,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadStockData(subdata, TimeInfo, numarea, numage, numlen);
@@ -445,7 +445,7 @@ void StockDistribution::LikelihoodPrint(ofstream& outfile) {
     << functionname << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
-  outfile << "\nInner areas:";
+  outfile << "\nInternal areas:";
   for (i  = 0; i < areas.Nrow(); i++) {
     outfile << endl;
     for (j = 0; j < areas.Ncol(i); j++)
@@ -469,7 +469,7 @@ void StockDistribution::LikelihoodPrint(ofstream& outfile) {
   for (y = 0; y < AgeLengthData.Nrow(); y++) {
     outfile << "\nYear " << Years[y] << " and step " << Steps[y];
     for (a = 0; a < AgeLengthData.Ncol(y); a++) {
-      outfile << "\nInner area: " << a << "\nMeasurements";
+      outfile << "\nInternal area: " << a << "\nMeasurements";
       for (i = 0; i < AgeLengthData[y][a]->Nrow(); i++) {
         outfile << endl;
         for (j = 0; j < AgeLengthData[y][a]->Ncol(i); j++) {

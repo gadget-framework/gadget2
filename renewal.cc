@@ -148,7 +148,7 @@ void RenewalData::Print(ofstream& outfile) const {
   outfile << "\nRenewal\n\tDistribution\n";
   int i;
   for (i = 0; i < Distribution.Size(); i++) {
-    outfile << "\tTime " << RenewalTime[i] << " inner area " << RenewalArea[i]
+    outfile << "\tTime " << RenewalTime[i] << " internal area " << RenewalArea[i]
       << " age " << Distribution[i].Minage() << " number " << Number[i] << endl;
     Printagebandm(outfile, Distribution[i]);
     outfile << "\tmean weights\n";

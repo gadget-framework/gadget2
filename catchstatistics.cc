@@ -58,7 +58,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
 
   //Read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
@@ -68,7 +68,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
 
   //Read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numage = readAggregation(subdata, ages, ageindex);
@@ -110,7 +110,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadStatisticsData(subdata, TimeInfo, numarea, numage);

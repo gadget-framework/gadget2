@@ -24,7 +24,7 @@ Spawner::Spawner(CommentStream& infile, int maxstockage, int numlength,
 
   //Read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", datafilename);
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   numarea = readAggregation(subdata, spawnareas, areaindex);
@@ -34,7 +34,7 @@ Spawner::Spawner(CommentStream& infile, int maxstockage, int numlength,
 
   //Read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", datafilename);
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   numage = readAggregation(subdata, spawnages, ageindex);
@@ -50,7 +50,7 @@ Spawner::Spawner(CommentStream& infile, int maxstockage, int numlength,
 
   //Finally read in spawning data from file
   readWordAndValue(infile, "spawnfile", datafilename);
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadSpawnerData(subdata, TimeInfo, numarea, numage);

@@ -33,7 +33,7 @@ void InitialInputFile::getSwitchValue(ParameterVector& sw) {
 }
 
 InitialInputFile::InitialInputFile(const char* const filename) : header(0) {
-  tmpinfile.open(filename);
+  tmpinfile.open(filename, ios::in);
   infile.SetStream(tmpinfile);
   if (infile.fail()) {
     cerr << "Error in initialinput - failed to open " << filename << endl;

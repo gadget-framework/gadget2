@@ -66,12 +66,11 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
 
 //Same program with certain number of fish made mature.
 void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total,
-  Maturity* const Mat, const TimeClass* const TimeInfo, const AreaClass* const Area,
-  const LengthGroupDivision* const GivenLDiv, int area) {
+  Maturity* const Mat, const TimeClass* const TimeInfo, const AreaClass* const Area, int area) {
 
   int NrOfTagExp = this->NrOfTagExp();
   int i, lgrp, grow, maxlgrp, age, tag;
-  double upfj;
+  double upfj, ratio;
   DoubleVector number(NrOfTagExp, 0.0);
   DoubleVector matnum(NrOfTagExp, 0.0);
 
@@ -87,7 +86,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
       //The part that grows to or above the highest length group.
       for (lgrp = maxlgrp; lgrp >= v[i]->Maxcol() - Lgrowth.Nrow(); lgrp--) {
         for (grow = v[i]->Maxcol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
-          const double ratio =  Mat->MaturationProbability(age, lgrp, grow, TimeInfo, Area, area);
+          ratio =  Mat->MaturationProbability(age, lgrp, grow, TimeInfo, Area, area, Total[i + minage][lgrp].W);
           for (tag = 0; tag < NrOfTagExp; tag++) {
             upfj = Lgrowth[grow][lgrp] * (*(*v[i])[lgrp][tag].N);
             matnum[tag] += upfj * ratio;
@@ -112,7 +111,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
         }
 
         for (grow = 0; grow < Lgrowth.Nrow(); grow++) {
-          const double ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, Area, area);
+          ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, Area, area, Total[i + minage][lgrp - grow].W);
           for (tag = 0; tag < NrOfTagExp; tag++) {
             upfj = Lgrowth[grow][lgrp - grow] * (*(*v[i])[lgrp - grow][tag].N);
             matnum[tag] += upfj * ratio;
@@ -137,7 +136,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
         }
 
         for (grow = 0; grow <= lgrp - v[i]->Mincol(); grow++) {
-          const double ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, Area, area);
+          ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, Area, area, Total[i + minage][lgrp - grow].W);
           for (tag = 0; tag < NrOfTagExp; tag++) {
             upfj = Lgrowth[grow][lgrp - grow] * (*(*v[i])[lgrp - grow][tag].N);
             matnum[tag] += upfj * ratio;

@@ -41,7 +41,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   CommentStream subdata(datafile);
 
   infile >> filename >> ws;
-  datafile.open(filename);
+  datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);
@@ -52,7 +52,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   //Read in length aggregation from file
   DoubleVector lengths;
   readWordAndValue(infile, "lenaggfile", filename);
-  datafile.open(filename);
+  datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, lengths, lenindex);

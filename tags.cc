@@ -66,7 +66,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
 
   //Read in the numbers format: tagid - length - number
   readWordAndValue(infile, "numbers", text);
-  subfile.open(text);
+  subfile.open(text, ios::in);
   checkIfFailure(subfile, text);
   handle.Open(text);
   ReadNumbers(subcomment, givenname, TimeInfo);

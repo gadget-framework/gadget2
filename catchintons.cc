@@ -76,7 +76,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
   if (readfile == 0)
     readWordAndValue(infile, "areaaggfile", aggfilename);
 
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
@@ -135,7 +135,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadCatchInTonsData(subdata, timeinfo, numarea);
@@ -412,7 +412,7 @@ void CatchInTons::LikelihoodPrint(ofstream& outfile) {
       outfile << " and step " << Steps[y];
 
     for (a = 0; a < DataCatch.Ncol(y); a++)
-      outfile << "\nInner area: " << a << "\nMeasured catch is " << DataCatch[y][a]
+      outfile << "\nInternal area: " << a << "\nMeasured catch is " << DataCatch[y][a]
         << " and modelled catch is " << ModelCatch[y][a];
     outfile << endl;
   }

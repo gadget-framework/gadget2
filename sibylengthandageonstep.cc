@@ -128,7 +128,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadSurveyData(subdata, areaindex, lenindex, ageindex, TimeInfo, name);

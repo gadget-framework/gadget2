@@ -52,7 +52,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   CommentStream subdata(datafile);
 
   infile >> filename >> ws;
-  datafile.open(filename);
+  datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);
@@ -63,7 +63,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   //Read in predator length aggregation from file
   DoubleVector predlengths;
   readWordAndValue(infile, "predlenaggfile", filename);
-  datafile.open(filename);
+  datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, predlengths, predlenindex);
@@ -74,7 +74,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   //Read in prey length aggregation from file
   DoubleVector preylengths;
   readWordAndValue(infile, "preylenaggfile", filename);
-  datafile.open(filename);
+  datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, preylengths, preylenindex);

@@ -39,7 +39,10 @@ void AgebandmAdd(AgeBandMatrix& Alkeys, const AgeBandMatrix& Addition,
         for (l = minl; l < maxl; l++) {
           pop = Addition[age][CI.Pos(l)];
           pop *= ratio;
-          pop.N /= CI.Nrof(l);
+          if (isZero(CI.Nrof(l)))
+            cerr << "Error - divide by zero in agebandmadd\n";
+          else
+            pop.N /= CI.Nrof(l);
           Alkeys[age][l] += pop;
         }
       }

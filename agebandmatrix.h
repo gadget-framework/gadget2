@@ -34,13 +34,11 @@ public:
   void IncrementAge();
   void CopyNumbers(const AgeBandMatrix& Alkeys);
   void Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth);
-  void Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth,
-    Maturity* const Mat, const TimeClass* const TimeInfo, const AreaClass* const Area,
-    const LengthGroupDivision* const GivenLDiv, int area);
+  void Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth, Maturity* const Mat,
+    const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
   void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight);
-  void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight,
-    Maturity* const Mat, const TimeClass* const TimeInfo, const AreaClass* const Area,
-    const LengthGroupDivision* const GivenLDiv, int area);
+  void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight, Maturity* const Mat,
+    const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
 protected:
   int minage;
   int nrow;

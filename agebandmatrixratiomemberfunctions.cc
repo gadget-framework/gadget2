@@ -187,7 +187,10 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
             for (tagid = 0; tagid < numtags; tagid++) {
               numfish = *(Addition[AdditionArea][age][CI.Pos(l)][tagid].N);
               numfish *= ratio;
-              numfish /= CI.Nrof(l);
+              if (isZero(CI.Nrof(l)))
+                cerr << "Error - divide by zero in agebandmratioadd\n";
+              else
+                numfish /= CI.Nrof(l);
               *(Alkeys[AlkeysArea][age][l][tagconversion[tagid]].N) += numfish;
             }
           }

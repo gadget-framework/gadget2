@@ -61,7 +61,7 @@ void StockPredator::Print(ofstream& outfile) const {
   int i, area;
   PopPredator::Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tPhi on area " << areas[area] <<  endl << TAB;
+    outfile << "\tPhi on internal area " << areas[area] <<  endl << TAB;
     for (i = 0; i < Phi.Ncol(area); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
@@ -70,20 +70,20 @@ void StockPredator::Print(ofstream& outfile) const {
     outfile << endl;
   }
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "Alkeys (numbers) on area " << areas[area] << endl;
+    outfile << "Alkeys (numbers) on internal area " << areas[area] << endl;
     Printagebandm(outfile, Alkeys[area]);
   }
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "Alkeys (mean weights) on area " << areas[area] << endl;
+    outfile << "Alkeys (mean weights) on internal area " << areas[area] << endl;
     PrintWeightinagebandm(outfile, Alkeys[area]);
   }
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "Age-length proportion on area " << areas[area] << endl;
+    outfile << "Age-length proportion on internal area " << areas[area] << endl;
     BandmatrixPrint(Alprop[area], outfile);
   }
   outfile << "Maximum consumption by length.\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tArea " << areas[area] << TAB;
+    outfile << "\tInternal area " << areas[area] << TAB;
     for (i = 0; i < MaxconByLength.Ncol(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);

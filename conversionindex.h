@@ -18,7 +18,7 @@ public:
   int Maxlength() const { return maxlength; };
   int Minpos(int i) const { return minpos[i]; };
   int Maxpos(int i) const { return maxpos[i]; };
-  int Nrof(int i) const;
+  int Nrof(int i) const { return nrof[i]; };
   int Offset() const { return offset; };
   int SameDl() const { return samedl; };
   int TargetIsFiner() const { return targetisfiner; };

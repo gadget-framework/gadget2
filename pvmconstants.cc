@@ -14,6 +14,11 @@ PVMConstants::PVMConstants() {
   masterSendString = 5;
   masterReceiveNetDataResult = 6;
   masterSendBound = 7;
+  addHost = 8;
+  hostSuspend = 9;
+  hostResume = 10;
+  hostDelete = 11;
+  taskExit = 12;
   dataencode = 1;
 }
 
@@ -24,7 +29,7 @@ const void PVMConstants::setDataEncode(int dc) {
   if (dc == 0 || dc == 1 || dc == 2)
     dataencode = dc;
   else {
-    cerr << "Illegal value for dataencode\n";
+    cerr << "Error in pvmconstants - illegal value for dataencode\n";
     exit(EXIT_FAILURE);
   }
 }
@@ -59,4 +64,24 @@ const int PVMConstants::getMasterReceiveDataTag() const {
 
 const int PVMConstants::getDataEncode() const {
   return dataencode;
+}
+
+const int PVMConstants::getAddHostTag() const {
+  return addHost;
+}
+
+const int PVMConstants::getHostSuspendTag() const {
+  return hostSuspend;
+}
+
+const int PVMConstants::getHostResumeTag() const {
+  return hostResume;
+}
+
+const int PVMConstants::getHostDeleteTag() const {
+  return hostDelete;
+}
+
+const int PVMConstants::getTaskExitTag() const {
+  return taskExit;
 }

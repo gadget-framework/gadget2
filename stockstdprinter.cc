@@ -51,7 +51,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   else
     handle.Unexpected("areaaggfile", text);
 
-  datafile.open(filename);
+  datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, tmpareas, areaindex);

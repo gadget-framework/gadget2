@@ -25,7 +25,7 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
   CommentStream subdata(datafile);
 
   readWordAndValue(infile, "preylengths", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   i = readLengthAggregation(subdata, preylengths, preylenindex);
@@ -113,7 +113,7 @@ void Prey::Print(ofstream& outfile) const {
     outfile << sep << LgrpDiv->Minlength(i);
   outfile << sep << LgrpDiv->Maxlength(i-1) << endl;
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tNumber of prey on area " << areas[area];
+    outfile << "\tNumber of prey on internal area " << areas[area] << ":";
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
@@ -122,7 +122,7 @@ void Prey::Print(ofstream& outfile) const {
     outfile << endl;
   }
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tWeight of prey on area " << areas[area];
+    outfile << "\tWeight of prey on internal area " << areas[area] << ":";
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
@@ -132,7 +132,7 @@ void Prey::Print(ofstream& outfile) const {
   }
   outfile << "\tConsumption of prey:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tArea " << areas[area];
+    outfile << "\tInternal area " << areas[area] << ":";
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
@@ -142,7 +142,7 @@ void Prey::Print(ofstream& outfile) const {
   }
   outfile << "\tOverconsumption of prey:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tArea " << areas[area];
+    outfile << "\tInternal area " << areas[area] << ":";
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
@@ -150,7 +150,6 @@ void Prey::Print(ofstream& outfile) const {
     }
     outfile << endl;
   }
-  outfile << endl;
 }
 
 //Reduce the population of the stock by the consumption.

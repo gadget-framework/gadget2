@@ -19,7 +19,7 @@ void TimeVariable::Read(CommentStream& infile,
   streampos readPos;
   readPos = infile.tellg();
   infile >> text;
-  subfile.open(text);
+  subfile.open(text, ios::in);
   if (subfile.fail()) {
     Formula* number = new Formula;
     infile.seekg(readPos);

@@ -251,7 +251,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   if ((strcasecmp(text, "initstockfile") == 0)) {
     //read initial data in mean length format
     infile >> text >> ws;
-    subfile.open(text);
+    subfile.open(text, ios::in);
     checkIfFailure(subfile, text);
     handle.Open(text);
     this->ReadNormalData(subcomment, keeper, noagegr, minage, Area);
@@ -263,7 +263,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     readNumbers = 1;
     //read initial data in number format
     infile >> text >> ws;
-    subfile.open(text);
+    subfile.open(text, ios::in);
     checkIfFailure(subfile, text);
     handle.Open(text);
     this->ReadNumberData(subcomment, keeper, noagegr, minage, Area);
@@ -283,7 +283,8 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
 
   //Read information on reference weights.
   keeper->AddString("referenceweights");
-  ifstream subweightfile(refWeightFile, ios::in);
+  ifstream subweightfile;
+  subweightfile.open(refWeightFile, ios::in);
   checkIfFailure(subweightfile, refWeightFile);
   handle.Open(refWeightFile);
   CommentStream subweightcomment(subweightfile);
@@ -348,7 +349,7 @@ void InitialCond::Print(ofstream& outfile) const {
 
   outfile << "\nInitial conditions\n";
   for (i = 0; i < areas.Size(); i++) {
-    outfile << "\tInner area " << areas[i] << endl;
+    outfile << "\tInternal area " << areas[i] << endl;
     Printagebandm(outfile, AreaAgeLength[i]);
   }
   outfile << "\tMean lengths\n";

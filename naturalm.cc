@@ -42,7 +42,7 @@ void NaturalM::Print(ofstream& outfile) {
   outfile << "Natural mortality\n\t";
   for (i = mortality.Mincol(); i < mortality.Maxcol(); i++)
     outfile << mortality[i] << sep;
-  outfile << endl << endl;
+  outfile << endl;
 }
 
 const DoubleIndexVector& NaturalM::getMortality() const {

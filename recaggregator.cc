@@ -43,7 +43,7 @@ void RecAggregator::Print(ofstream& outfile) const {
   int i, j, k;
 
   for (i = 0; i < totalcatch.Size(); i++) {
-    outfile << "\tInner areas " << 1 << endl;
+    outfile << "\tInternal areas " << 1 << endl;
     for (j = 0; j < totalcatch[i].Nrow(); j++) {
       outfile << TAB;
       for (k = 0; k < totalcatch[i].Maxlength(j); k++) {

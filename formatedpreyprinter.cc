@@ -54,7 +54,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
   CommentStream subdata(datafile);
 
   infile >> filename >> ws;
-  datafile.open(filename);
+  datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);

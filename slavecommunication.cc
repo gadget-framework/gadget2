@@ -7,7 +7,11 @@
 #endif
 
 SlaveCommunication::SlaveCommunication() {
-  MAXWAIT = 30;
+  #ifdef CONDOR
+    MAXWAIT = 100000000;
+  #else
+    MAXWAIT = 30;
+  #endif
   pvmConst = new PVMConstants();
   typeReceived = -1;
   parenttid = -1;
@@ -60,8 +64,8 @@ int SlaveCommunication::startNetCommunication() {
   } else if (bufId == 0) {
     cerr << "Error in slavecommunication - no message from master in " << MAXWAIT << " seconds\n";
     return !OK;
-  } else {
 
+  } else {
     //there is a waiting message to be received from master in buffer with id = bufId
     info = pvm_bufinfo(bufId, &bytes, &type, &source);
     if (info < 0) {
@@ -86,7 +90,7 @@ int SlaveCommunication::startNetCommunication() {
         return !OK;
       }
       if (numberOfVar <= 0) {
-        cerr << "Number of variables received from master is less than zero\n";
+        cerr << "Error in slavecommunication - number of variables received from master is less than zero\n";
         return !OK;
       }
 
@@ -96,7 +100,7 @@ int SlaveCommunication::startNetCommunication() {
         return !OK;
       }
       if (myId < 0) {
-        cerr << "Have received illegal id of " << myId << " from master\n";
+        cerr << "Error in slavecommunication - received illegal id of " << myId << endl;
         return !OK;
       }
       netDataVar = new NetDataVariables(numberOfVar);
@@ -104,7 +108,7 @@ int SlaveCommunication::startNetCommunication() {
       return numberOfVar;
 
     } else {
-      cerr << "Error - PVM master is sending a message with an unrecognised tag of type " << type << endl;
+      cerr << "Error in slavecommunication - received unrecognised tag of type " << type << endl;
       return !OK;
     }
   }
@@ -248,7 +252,7 @@ int SlaveCommunication::receiveFromMaster() {
         return !OK;
 
     } else {
-      cerr << "Error - PVM master is sending a message with an unrecognised tag of type " << type << endl;
+      cerr << "Error in slavecommunication - received unrecognised tag of type " << type << endl;
       return !OK;
     }
   }
@@ -265,7 +269,6 @@ int SlaveCommunication::receiveBound() {
     cerr << "Error in slavecommunication - receive bound failed\n";
     return !OK;
   }
-
   return OK;
 }
 

@@ -18,7 +18,8 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   Area = 0;
   ErrorHandler handle;
   chdir(workingdir);
-  ifstream infile(filename);
+  ifstream infile;
+  infile.open(filename, ios::in);
   CommentStream commin(infile);
   handle.Open(filename);
   checkIfFailure(infile, filename);

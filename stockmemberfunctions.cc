@@ -114,9 +114,9 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 
   if (doesmature) {
     if (maturity->IsMaturationStep(area, TimeInfo)) {
-      Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area), maturity, TimeInfo, Area, LgrpDiv, area);
+      Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area), maturity, TimeInfo, Area, area);
       if (tagAlkeys.NrOfTagExp() > 0)
-        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, LgrpDiv, area);
+        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
     } else {
       Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area));
       if (tagAlkeys.NrOfTagExp() > 0)

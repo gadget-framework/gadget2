@@ -115,7 +115,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
 
   //Read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
@@ -146,7 +146,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
   if (strcasecmp(text, "predatorlengths") == 0) { //read predator lengths
     age_pred = 0; //predator is length structured
     readWordAndValue(infile, "lenaggfile", aggfilename);
-    datafile.open(aggfilename);
+    datafile.open(aggfilename, ios::in);
     checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     numpred = readLengthAggregation(subdata, predatorlengths, predindex);
@@ -156,7 +156,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
   } else if (strcasecmp(text, "predatorages") == 0) { //read predator ages
     age_pred = 1; //predator is age structured
     readWordAndValue(infile, "ageaggfile", aggfilename);
-    datafile.open(aggfilename);
+    datafile.open(aggfilename, ios::in);
     checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     numpred = readAggregation(subdata, predatorages, predindex);
@@ -168,7 +168,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
 
   //Read in the preys
   readWordAndValue(infile, "preyaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numprey = readPreyAggregation(subdata, preynames, preylengths, digestioncoeff, preyindex, keeper);
@@ -254,7 +254,7 @@ SCNumbers::SCNumbers(CommentStream& infile, const AreaClass* const Area,
   CommentStream subdata(datafile);
 
   //Read in stomach content from file
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadStomachNumberContent(subdata, TimeInfo);
@@ -273,7 +273,7 @@ SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
   CommentStream subdata(datafile);
 
   //Read in stomach content amounts from file
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadStomachAmountContent(subdata, TimeInfo);
@@ -282,7 +282,7 @@ SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
   datafile.clear();
 
   //Read in stomach content sample size from file
-  datafile.open(numfilename);
+  datafile.open(numfilename, ios::in);
   checkIfFailure(datafile, numfilename);
   handle.Open(numfilename);
   ReadStomachSampleContent(subdata, TimeInfo);
@@ -718,7 +718,7 @@ void SC::Print(ofstream& outfile) const {
   for (y = 0; y < stomachcontent.Nrow(); y++) {
     outfile << "\n\trow " << y;
     for (ar = 0; ar < stomachcontent[y].Size(); ar++) {
-      outfile << "\n\tinner areas" << sep << ar << "\n\t\t";
+      outfile << "\n\tinternal areas" << sep << ar << "\n\t\t";
       for (i = 0; i < stomachcontent[y][ar]->Nrow(); i++) {
         for (j = 0; j < (*stomachcontent[y][ar])[i].Size(); j++) {
           outfile.width(smallwidth);
@@ -778,7 +778,7 @@ void SCAmounts::PrintLikelihood(ofstream& out, const TimeClass& timeInfo) {
   out << "\nTime:    Year " << timeInfo.CurrentYear()
     << " Step " << timeInfo.CurrentStep() << "\nName:    " << scname << endl;
   for (a = 0; a < modelConsumption[time].Size(); a++) {
-    out << "Inner area  :" << a << "\nObserved:\n";
+    out << "Internal area  :" << a << "\nObserved:\n";
     for (pd = 0; pd < stomachcontent[time][a]->Nrow(); pd++) {
       for (py = 0; py < (*stomachcontent[time][a])[pd].Size(); py++) {
         out.precision(printprecision);

@@ -185,7 +185,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   //Read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
@@ -195,7 +195,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   //Read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numage = readAggregation(subdata, ages, ageindex);
@@ -205,7 +205,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   //Read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numlen = readLengthAggregation(subdata, lengths, lenindex);
@@ -250,7 +250,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadDistributionData(subdata, TimeInfo, numarea, numage, numlen);
@@ -440,7 +440,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
     << functionname << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
-  outfile << "\nInner areas:";
+  outfile << "\nInternal areas:";
   for (i  = 0; i < areas.Nrow(); i++) {
     outfile << endl;
     for (j = 0; j < areas.Ncol(i); j++)
@@ -487,7 +487,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
   for (year = 0; year < AgeLengthData.Nrow(); year++) {
     outfile << "\nYear " << Years[year] << " and step " << Steps[year];
     for (area = 0; area < AgeLengthData.Ncol(year); area++) {
-      outfile << "\nInner area: " << area << "\nMeasurements";
+      outfile << "\nInternal area: " << area << "\nMeasurements";
       for (i = 0; i < AgeLengthData[year][area]->Nrow(); i++) {
         outfile << endl;
         for (j = 0; j < AgeLengthData[year][area]->Ncol(i); j++) {
@@ -1015,7 +1015,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
   }
 
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
-    catchfile << "Inner area:   " << nareas  << "\nObserved:\n";
+    catchfile << "Internal area:   " << nareas  << "\nObserved:\n";
     for (age = minrow; age <= maxrow; age++) {
       for (length = 0; length < mincol[age]; length++) {
         catchfile.precision(smallprecision);

@@ -53,7 +53,7 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
   if (!(strcasecmp(text, "predlenaggfile") == 0))
     handle.Unexpected("predlenaggfile", text);
   infile >> aggfilename >> ws;
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   i = readLengthAggregation(subdata, predatorlengths, predlenindex);
@@ -77,7 +77,7 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
   if (!(strcasecmp(text, "preylenaggfile") == 0))
     handle.Unexpected("preylenaggfile", text);
   infile >> aggfilename >> ws;
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   i = readLengthAggregation(subdata, preylengths, preylenindex);
@@ -87,7 +87,7 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
 
   //Read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
@@ -178,7 +178,7 @@ void PredatorIndices::Print(ofstream& outfile) const {
   outfile << "\n\tPrey names: ";
   for (i = 0; i < preynames.Size(); i++)
     outfile << preynames[i] << sep;
-  outfile << "\nInner areas";
+  outfile << "\nInternal areas";
   for (i = 0; i < areas.Nrow(); i++) {
     outfile << endl;
     for (j = 0; j < areas.Ncol(i); j++)

@@ -40,7 +40,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
 
   //Read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
@@ -56,7 +56,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
 
   //Read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
-  datafile.open(aggfilename);
+  datafile.open(aggfilename, ios::in);
   checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numlen = readLengthAggregation(subdata, lengths, lenindex);
@@ -80,7 +80,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the recapture data from datafilename
-  datafile.open(datafilename);
+  datafile.open(datafilename, ios::in);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadRecaptureData(subdata, TimeInfo);

@@ -58,7 +58,7 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
   CommentStream subdata(datafile);
 
   infile >> filename >> ws;
-  datafile.open(filename);
+  datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);

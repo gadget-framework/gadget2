@@ -92,7 +92,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   CharPtrVector grlenindex;
 
   readWordAndValue(infile, "growthandeatlengths", filename);
-  datafile.open(filename);
+  datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, grlengths, grlenindex);
@@ -147,7 +147,8 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   if (doesmigrate) {
     readWordAndVariable(infile, "agedependentmigration", AgeDepMigration);
     readWordAndValue(infile, "migrationfile", filename);
-    ifstream subfile(filename);
+    ifstream subfile;
+    subfile.open(filename, ios::in);
     CommentStream subcomment(subfile);
     checkIfFailure(subfile, filename);
     handle.Open(filename);
@@ -164,19 +165,22 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   if (doesmature) {
     readWordAndValue(infile, "maturityfunction", text);
     readWordAndValue(infile, "maturityfile", filename);
-    ifstream subfile(filename);
+    ifstream subfile;
+    subfile.open(filename, ios::in);
     CommentStream subcomment(subfile);
     checkIfFailure(subfile, filename);
     handle.Open(filename);
 
     if (strcasecmp(text, "continuous") == 0)
-      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 3);
+      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv, 3);
     else if (strcasecmp(text, "fixedlength") == 0)
-      maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv);
+      maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv);
     else if (strcasecmp(text, "ageandlength") == 0)
-      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
+      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv, 4);
     else if (strcasecmp(text, "constant") == 0)
-      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
+      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv, 4);
+    else if (strcasecmp(text, "constantweight") == 0)
+      maturity = new MaturityE(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, GrowLgrpDiv, 6, refweight);
     else
       handle.Message("Error in stock file - unrecognised maturity", text);
 
@@ -203,7 +207,8 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   readWordAndVariable(infile, "doesrenew", doesrenew);
   if (doesrenew) {
     readWordAndValue(infile, "renewaldatafile", filename);
-    ifstream subfile(filename);
+    ifstream subfile;
+    subfile.open(filename, ios::in);
     CommentStream subcomment(subfile);
     checkIfFailure(subfile, filename);
     handle.Open(filename);
@@ -319,7 +324,7 @@ void Stock::SetCI() {
 void Stock::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nStock\nName" << sep << this->Name() << "\nLives on inner areas";
+  outfile << "\nStock\nName" << sep << this->Name() << "\nLives on internal areas";
 
   for (i = 0; i < areas.Size(); i++)
     outfile << sep << areas[i];
@@ -351,7 +356,7 @@ void Stock::Print(ofstream& outfile) const {
 
   outfile << "\nAge length keys\n";
   for (i = 0; i < areas.Size(); i++) {
-    outfile << "\tInner area " << areas[i] << "\n\tNumbers\n";
+    outfile << "\tInternal area " << areas[i] << "\n\tNumbers\n";
     Printagebandm(outfile, Alkeys[i]);
     outfile << "\tMean weights\n";
     PrintWeightinagebandm(outfile, Alkeys[i]);

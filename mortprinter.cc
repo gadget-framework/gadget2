@@ -58,7 +58,7 @@ MortPrinter::MortPrinter(CommentStream& infile,
 
   //Read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", filename);
-  datafile.open(filename);
+  datafile.open(filename, ios::in);
   checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);

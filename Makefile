@@ -4,7 +4,7 @@
 GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat \
               -Wparentheses -Wpointer-arith -Wcast-qual -Wconversion \
               -Wreorder -Wwrite-strings -Wsynth -Wchar-subscripts \
-              -Wuninitialized -W
+              -Wuninitialized -pedantic -W
 
 #DEFINE_FLAGS = -D GADGET_INLINE -D DEBUG -D INTERRUPT_HANDLER -g -O
 DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
@@ -76,8 +76,7 @@ VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 	formulamatrix.o formulavector.o charptrmatrix.o charptrvector.o \
 	timevariablevector.o stockptrvector.o agebandmatrixratioptrvector.o \
 	vectorofcharptr.o suitfuncptrvector.o tagptrvector.o printerptrvector.o \
-	formulamatrixptrvector.o variableinfoptrvector.o agebandmatrixratio.o \
-	agebandmatrixptrmatrix.o
+	formulamatrixptrvector.o variableinfoptrvector.o agebandmatrixptrmatrix.o
 
 GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregator.o \
 	predatorindex.o abstrpredstdinfo.o abstrpreystdinfo.o catchdistribution.o \
@@ -105,9 +104,10 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	transition.o otherfood.o mathfunc.o understocking.o poppredator.o tags.o \
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o \
-	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o taggrow.o \
-	initialinputfile.o popratio.o popinfo.o recstatistics.o ludecomposition.o \
-	popinfomemberfunctions.o agebandmatrixratiomemberfunctions.o
+	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \
+	taggrow.o initialinputfile.o popratio.o popinfo.o recstatistics.o \
+	agebandmatrixratio.o ludecomposition.o popinfomemberfunctions.o \
+	agebandmatrixratiomemberfunctions.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 

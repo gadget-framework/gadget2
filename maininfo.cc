@@ -137,7 +137,7 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
           ShowCorrectUsage(aVector[k]);
 
         k++;
-        infile.open(aVector[k]);
+        infile.open(aVector[k], ios::in);
         if (infile.fail())
           ShowCorrectUsage(aVector[k]);
         this->Read(incomment);
