@@ -69,7 +69,7 @@ The most recent copy of this document will also be placed on the MRI ftp site, a
 A web site has been set up that contains details of the most recent changes to Gadget, documentation updates and other news.  This is also a good place to look for more information about Gadget.  The address of the Gadget web site is:
 
 {\small\begin{verbatim}
-http://http.hafro.is/gadget
+http://www.hafro.is/gadget
 \end{verbatim}}
 
 Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.0.05 on a Linux machine:
@@ -901,7 +901,7 @@ AndersenSuitFunc
 For the following suitability functions, the convention used is to represent the length group of the prey by l, and the length group of the predator by L.
 
 \subsubsection{ConstSuitFunc Suitability Function}
-This is a constant suitability function, where there is no dependance on either the length of the predator or the length of the prey is given by the following equation:
+This is a constant suitability function, where there is no dependence on either the length of the predator or the length of the prey is given by the following equation:
 
 \begin{equation}\label{eq:constsuit}
 S = \alpha
@@ -914,7 +914,7 @@ Hence, to specify a constant suitability function, the file format required is:
 \end{verbatim}}
 
 \subsubsection{StraightLine Suitability Function}
-This is a suitability function that has no dependance on the length of the predator, and a linear dependance on the length of the prey is given by the following equation:
+This is a suitability function that has no dependence on the length of the predator, and a linear dependence on the length of the prey is given by the following equation:
 
 \begin{equation}\label{eq:straightsuit}
 S = \alpha l + \beta
@@ -928,21 +928,21 @@ Hence, to specify a straight line suitability function, the file format required
 \end{verbatim}}
 
 \subsubsection{ExpSuitFuncL50 Suitability Function}
-This is a suitability function that has no dependance on the length of the predator, and a logarithmic dependance on the length of the prey is given by the following equation:
+This is a suitability function that has no dependence on the length of the predator, and a logarithmic dependence on the length of the prey is given by the following equation:
 
 \begin{equation}\label{eq:l50suit}
 S = { \frac{1}{1 + e^{ -4 \alpha (l - l_{50})}}}
 \end{equation}
 
 \bigskip
-Note that the prey length dependance is actually dependant on the difference between the length of the prey and $l_{50}$, which is the length of the prey with a 50\% probability of predation.  Hence, to specify this suitability function, the file format required is:
+Note that the prey length dependence is actually dependant on the difference between the length of the prey and $l_{50}$, which is the length of the prey with a 50\% probability of predation.  Hence, to specify this suitability function, the file format required is:
 
 {\small\begin{verbatim}
 <preyname>    function expsuitfuncl50 <alpha> <l50>
 \end{verbatim}}
 
 \subsubsection{ExpSuitFuncA Suitability Function}
-This is a suitability function that has a logarithmic dependance on both the length of the predator and the length of the prey is given by the following equation:
+This is a suitability function that has a logarithmic dependence on both the length of the predator and the length of the prey is given by the following equation:
 
 \begin{equation}\label{eq:expsuit}
 S = { \frac{\delta}{1 + e^{- \alpha - \beta l - \gamma  L}}}
@@ -1122,7 +1122,7 @@ This maturity function is an extension to the Constant maturity function, with t
 P(l, a) = \frac{1}{ 1 + e^{-4\alpha(l - l_{50}) -4\beta(a - a_{50}) -4\gamma(k - k_{50})}}
 \end{equation}
 
-The maturity function has been extended to include the relative condition of the stock (calculated by dividing the current weight by the reference weight) and $k_50$ which is the relative condition where 50\% of the stock is mature.  The file format for this maturity function is the similar to that for the Constant maturity function, and is shown below:
+The maturity function has been extended to include the relative condition of the stock (calculated by dividing the current weight by the reference weight) and $k_{50}$ which is the relative condition where 50\% of the stock is mature.  The file format for this maturity function is the similar to that for the Constant maturity function, and is shown below:
 
 {\small\begin{verbatim}
 maturestocksandratios       <stockname i>  <ratio i> ; for each stock i
@@ -1192,7 +1192,6 @@ The format for the first part of this file defines the limits of the length grou
 normaldistribution
 minlength              <minimum length for the recruits>
 maxlength              <maximum length for the recruits>
-dl                     <step size for the length groups of the recruits>
 <renewal data>
 \end{verbatim}}
 
@@ -1205,7 +1204,7 @@ The $<$renewal data$>$ is a list of the age, number, mean length, standard devia
 In this file, $<$age$>$ is the age of the recruits (which should match the minimum age of the stock that the recruits are to be added to), $<$number$>$ is the number of recruits (in units of 10,000 fish) $<$mean$>$ and $<$stddev$>$ are used to define the Normal distribution for the recruits (within the length groups defined at the top of the file), and $<$alpha$>$ and $<$beta$>$ define the weight-length relationship for these recruits.
 
 \subsection{Spawning}\label{subsec:stockspawn}
-The spawning section of the stock file determines if, and how, the stock will spawn in the Gadget model.   This covers the mortality and weight loss from the stock due to the spawning process, but not the creation of a new spawned stock.  In other words, the spawning process in Gadget currently only models how the spawning process affects the parent stock.  The format for the first part of the spawning section is given below:
+The spawning section of the stock file determines if, and how, the stock will spawn in the Gadget model.   This covers the mortality and weight loss from the stock due to the spawning process, and optionally the creation of a new spawned stock.  The format for the first part of the spawning section is given below:
 
 {\small\begin{verbatim}
 doesspawn              <0 or 1> ; 0 for no spawning, 1 for spawning
@@ -1215,12 +1214,10 @@ If the stock does not spawn, then the following sections don't apply, and the st
 
 {\small\begin{verbatim}
 doesspawn              1
-areaaggfile            <name of the area aggregation file>
-ageaggfile             <name of the age aggregation file>
 spawnfile              <name of the spawning data file>
 \end{verbatim}}
 
-The area aggregation file defines the areas that the stock will spawn on, and the age aggregation file defines the age groups for the stock that are to be used for the spawning process.  The spawning data file defines what happens to the stock as it spawns.  The spawning is age-dependent, and the affect that spawning has on each age-group of the mature stock is given by the spawning equations~\ref{eq:spawn1} and \ref{eq:spawn2} below:
+The spawning data file defines what happens to the stock as it spawns.  The spawning is length-dependent, and the affect that spawning has on each length-group of the mature stock is given by the spawning equations~\ref{eq:spawn1} and \ref{eq:spawn2} below:
 
 \begin{equation}\label{eq:spawn1}
 N = N {\left(1 + R {(e^{-m} - 1)}\right)}
@@ -1233,18 +1230,100 @@ W = W \frac{\left(1 + R {((2 - w)e^{-m} - 1)}\right)}{\left(1 + R {(2e^{-m} - 1)
 where:\newline
 $<$ N $>$ is the population of the age-length group\newline
 $<$ W $>$ is the mean weight of the population of the age-length group\newline
-$<$ R $>$ is the ratio of the age-length group that will spawn\newline
-$<m>$ is the spawning mortality\newline
-$<w>$ is the spawning weight loss
+$<$ R $>$ is the proportion of the length group that will spawn\newline
+$<m>$ is the spawning mortality for that length group\newline
+$<w>$ is the spawning weight loss for that length group
 
 \bigskip
-Hence, the format for the spawning file to give this information is given below:
+In equation \ref{eq:spawn1}, the population of the age-length cell of the mature stock is reduced due to the spawning mortality of the fish that spawn.  In equation \ref{eq:spawn2}, the mean weight of the population in the age-length cell is adjusted to take reduction in weight of the fish that spawn and the change in population into account.
+
+\bigskip
+Spawning is considered to be an annual event, that takes place on the same timestep and the same area in each year.  To model the spawning process as it affects the parent (without the creation of a child stock) the it is necessary to specify the timestep and area that the spawning will take place on, and the length selection functions to determine proportion of each length group that will spawn, and the spawning mortality and weight loss of those that spawn.  This is done in the spawning data file, as shown below:
 
 {\small\begin{verbatim}
-<year>  <step>  <area>  <age>  <ratio>  <mortality>  <weight loss>
+spawnstep              <vector of timesteps>
+spawnarea              <vector of areas>
+onlyparent
+proportionfunction     <see Length Selection>
+mortalityfunction      <see Length Selection>
+weightlossfunction     <see Length Selection>
 \end{verbatim}}
 
-The spawning process always affects the proportion of the spawning stock, and as such the $<$ratio$>$ for each timestep/area/age group combination should be between 0 and 1.  The spawning mortality is the proportion of the spawning stock that will die due to the spawning process, so $<$mortality$>$ for each timestep/area/age group combination should also be between 0 and 1.  Similarly, the spawning weight loss is the proportion of the mean weight of the stock that will be lost when the stock spawns, and as such the $<$weight loss$>$ for each timestep/area/age group combination should also be between 0 and 1.
+Alternatively, it is possible to consider the spawning process as part of a through life-cycle model, and so the spawning process can create recruits to be added to one or more stocks (in a similar manner to the renewal data, given in section~\ref{subsec:stockrenew} above). 
+
+\begin{equation}\label{eq:spawn3}
+TR = \sum_{\it ages}\sum_{\it lengths}\Big( p_{0} l ^{p_{1}} a ^{p_{2}} N_{al} ^{p_{3}} W_{al} ^{p_{4}} \Big)
+\end{equation}
+
+The total number of recruits given from equation \ref{eq:spawn3} is added to the youngest age group of the spawned stock.  The lengths of the spawned stock are distributed with a Normal distribution about a specified mean length $q_0$ with a standard deviation $q_1$.  The mean weight of the fish in these age length cells is  given from equation \ref{eq:wlen}, with $\alpha$ given by parameter $q_2$ and $\beta$ given by $q_3$.  Hence, the format for the spawning data file for 
+
+{\small\begin{verbatim}
+spawnstep              <vector of timesteps>
+spawnarea              <vector of areas>
+spawnstocksandratios   <stockname i> <ratio i> ; for each stock i
+proportionfunction     <see Length Selection>
+mortalityfunction      <see Length Selection>
+weightlossfunction     <see Length Selection>
+spawnparameters        <spawning parameters vector>
+stockparameters        <stock parameters vector>
+\end{verbatim}}
+
+The $<$spawning parameters vector$>$ is a vector of 5 $p_i$ parameters from equation \ref{eq:spawn3}.  The $<$stock parameters vector$>$ is a vector of the 4 $q_i$ parameters that define the new stock that is created by the spawning process.
+
+\subsection{Length Selection}\label{subsec:lselection}
+The length selection function determines how the proportion of the length group that will be selected, in a similar way to the suitability functions (see section~\ref{subsec:suitability} above).  To define a length selection function, it is necessary to specify the function, the name of the function ans the parameters for the function, as shown below:
+
+{\small\begin{verbatim}
+<function>    <functionname> <parameters>
+\end{verbatim}}
+
+The $<$function$>$ defines how the length selection function will be used (for an example, see section~\ref{subsec:stockspawn} above).  The $<$functionname$>$ defines which selection function is to be used to calculate the selection of the stock.  Currently there are 3 selection functions defined, and the valid length selection function names are:
+
+\bigskip
+Constant\newline
+StraightLine\newline
+Exponential
+
+\subsubsection{Constant Selection Function}
+This is a selection function, where there is no dependence on the length of the stock is given by the following equation:
+
+\begin{equation}\label{eq:constsel}
+S = \alpha
+\end{equation}
+
+Hence, to specify a constant selection function, the file format required is:
+
+{\small\begin{verbatim}
+<function>    constant  <alpha>
+\end{verbatim}}
+
+\subsubsection{StraightLine Selection Function}
+This is a selection function that has a linear dependence on the length of the stock is given by the following equation:
+
+\begin{equation}\label{eq:straightsel}
+S = \alpha l + \beta
+\end{equation}
+
+\bigskip
+Hence, to specify a straight line selection function, the file format required is:
+
+{\small\begin{verbatim}
+<function>    straightline  <alpha>  <beta>
+\end{verbatim}}
+
+\subsubsection{Exponential Selection Function}
+This is a selection function that has a logarithmic dependence on the length of the stock is given by the following equation:
+
+\begin{equation}\label{eq:expsel}
+S = { \frac{1}{1 + e^{ \alpha (l - l_{50})}}}
+\end{equation}
+
+\bigskip
+Note that the stock length dependence is actually dependant on the difference between the length of the stock and $l_{50}$, which is the length of the stock with a 50\% probability of selection.  Hence, to specify this selection function, the file format required is:
+
+{\small\begin{verbatim}
+<function>    exponential  <alpha>  <l50>
+\end{verbatim}}
 
 \section{Stock - Fleksibest Formulation}\label{sec:fleksistock}
 The Fleksibest formulation is an optional method for defining a Gadget model.  For this formulation, the ''main'' file needs to contain the keyword ''mortalitymodel'', followed by a list the files that define the stocks to be used in the model.  Each stock requires a separate stock file.  The section of the ''main'' file required to declare the stock files is repeated below:
@@ -1532,7 +1611,7 @@ type                 <likelihood type>
 <likelihood data>
 \end{verbatim}}
 
-The likelihood data for each likelihood type is covered in the sub sections below.  The $<$likelihood type$>$ defines the type of likelihood component that is to be used, and there are currently 13 valid likelihood types defined in Gadget.  These are:
+The likelihood data for each likelihood type is covered in the sub sections below.  The $<$likelihood type$>$ defines the type of likelihood component that is to be used, and there are currently 12 valid likelihood types defined in Gadget.  These are:
 
 \bigskip
 BoundLikelihood\newline
@@ -1546,11 +1625,10 @@ Recaptures\newline
 RecStatistics\newline
 PredatorIndices\newline
 MigrationPenalty\newline
-LogCatch\newline
 CatchInTons
 
 \section{BoundLikelihood (''Penalty'')}\label{sec:boundlike}
-The BoundLikelihood likelihood component is used to give a penalty weight to parameters that have reached the bounds, as specified in the parameter file, in any optimisation process.  This file does not specify the bounds that are to be used, only the penalty that is to be applied when these bounds are hit.
+The BoundLikelihood likelihood component is used to give a penalty weight to parameters that have moved beyond the bounds, as specified in the parameter file, in the optimisation process.  This file does not specify the bounds that are to be used, only the penalty that is to be applied when these bounds are exceeded.  Since the Simmulated Annealing (see section~\ref{sec:simann}) algorithm will always choose a value for the parameter that is within the bounds, this likelihood component will return a zero likelihood score during an optimisation using that algorithm.  However, the Hooke and Jeeves (see section~\ref{sec:hooke}) algorithm can choose a parameter outside the specified bounds, and so this likelihood component can then return a positive score.
 
 \bigskip
 To specify a BoundLikelihood likelihood component, the format required in the main likelihood file is as follows:
@@ -1563,7 +1641,7 @@ type                 penalty
 datafile             <name for the datafile>
 \end{verbatim}}
 
-The datafile defines the penalty that is to be applied to the parameter when it reaches the bounds, as given by equation~\ref{eq:bound} below:
+The datafile defines the penalty that is to be applied to the parameter when it exceeds the bounds, as given by equation~\ref{eq:bound} below:
 
 \begin{equation}\label{eq:bound}
 \ell_{i} =
@@ -1583,7 +1661,9 @@ $<lw_i>$ is the weight applied when the parameter exceeds the lower bound\newlin
 $<uw_i>$ is the weight applied when the parameter exceeds the upper bound\newline
 $<lb_i>$ is the lower bound\newline
 $<ub_i>$ is the upper bound\newline
-$<p_i>$ is the power coefficient
+$<p_i>$ is the power coefficient\newline
+
+Note: when the value of the parameter is exactly equal to the bound, this equation will give a zero likelihood score
 
 \bigskip
 The datafile lists these weights and the power that is to be used for each parameter.  The format for this file is shown below:
@@ -1736,7 +1816,7 @@ $<\pi>$ is the proportion of the model sample for that time/area/age/length comb
 The multivariate normal function calculates the likelihood component from equation~\ref{eq:catchdist5} below:
 
 \begin{equation}\label{eq:catchdist5}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} log|\Sigma|+(P_{tra}-\pi_{tra})^T \Sigma^{-1}(P_{tra}-\pi_{tra})
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big( log|\Sigma| + (P_{tra} - \pi_{tra})^T \Sigma^{-1}(P_{tra} - \pi_{tra}) \Big)
 \end{equation}
 
 where:\newline
@@ -1745,7 +1825,7 @@ $<$ P $>$ is the proportion of the data sample for that time/area/age combinatio
 $<\pi>$ is the proportion of the model sample for that time/area/age combination
 
 \bigskip
-For the formulation of the multivariate normal function, $<\Sigma>$ is calculated from equations \ref{eq:cdsigma1} and \ref{eq:cdsigma2} below:
+For the formulation of the variance-covariance matrix, $<\Sigma>$ is calculated from equations \ref{eq:cdsigma1} and \ref{eq:cdsigma2} below:
 
 \begin{equation}\label{eq:cdsigma1}
 \Sigma = (\sigma_{ij})_{ij}
@@ -1754,56 +1834,56 @@ For the formulation of the multivariate normal function, $<\Sigma>$ is calculate
 \begin{equation}\label{eq:cdsigma2}
 \sigma_{ij} =
 \begin{cases}
-  \sum^n_{l=1} c_l \sigma_{i-l,j} + \delta^i_{j} \sigma^2
+  \sum^{lag}_{l=1} c_l \sigma_{i-l,j} + \delta^i_{j} \sigma^2
   & \textrm{if $i \geq j$}\\
-  \sum^n_{l=1} c_l \sigma_{j,i-l}
+  \sum^{lag}_{l=1} c_l \sigma_{j,i-l}
   & \textrm{otherwise}
 \end{cases}
 \end{equation}
 
-In equation \ref{eq:cdsigma2} it is assumed that the number in each length group is autocorrelated with lag $< n >$.  Note that setting the lag to be zero simplifies the multivariate normal distribution to a univariate one.
+In equation \ref{eq:cdsigma2} it is assumed that the number in each length group is autocorrelated with lag $<$ lag $>$.  Note that setting the lag to be zero simplifies the multivariate normal distribution to a univariate one.
 
 \bigskip
-To specify this likelihood function, it is necessary to specify the parameters $<\sigma>$ and $< n >$ and a list of $< n >$ correlation parameters.  This is done in the likelihood file, as shown below:
+To specify this likelihood function, it is necessary to specify the parameters $<\sigma>$ and $<$ lag $>$ and a list of $<$ lag $>$ correlation parameters.  This is done in the likelihood file, as shown below:
 
 {\small\begin{verbatim}
 ...
 function             mvn
-lag                  <n>
+lag                  <lag>
 sigma                <sigma>
-param                <correlation parameter>
-param                <correlation parameter>
-...                  ; note that <n> correlation parameters are required
+param                <correlation parameter> ; note that a total of
+param                <correlation parameter> ; <lag> correlation
+...                                          ; parameters are required
 aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
 ...
 \end{verbatim}}
 
 \subsection{Multivariate Logistic function}
-The multivariate logistic function calculates the likelihood component
-from equation \ref{eq:catchdist6} below:
+The multivariate logistic function calculates the likelihood component from equations \ref{eq:catchdist6a} and \ref{eq:catchdist6b} below:
 
-\begin{equation}\label{eq:catchdist6}
-\ell = \frac{1}{2\sigma^2} \sum_{\it time}((L-1) log(\sigma)+\sum_{\it areas}\sum_{\it  ages}\sum_{\it lengths} \nu_{tral}^2 )
+\begin{equation}\label{eq:catchdist6a}
+\ell = \frac{1}{2\sigma^2} \sum_{\it time} \Big((L - 1) log(\sigma)+\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \nu_{tral}^2 \Big)
 \end{equation}
-where: $$\nu_{lt}=log(P_{tral})-log(\pi_{tral}})-\frac{1}{L}\sum_{\it length}
-(log(P_{tral})-log(\pi_{tral}))$$
-$L$ is the number of length groups\newline
-$<$ P $>$ is the proportion of the data sample for that time/area/age combination\newline
-$<\pi>$ is the proportion of the model sample for that time/area/age
-  combination
 
-\noindent To specify this likelihood function it is necessary to
-specify the parameter $<$sigma$>$. This is done in the likelihood
-file as shown below:
+\begin{equation}\label{eq:catchdist6b}
+\nu_{tral} = log(P_{tral}) - log(\pi_{tral}) - \frac{1}{L}\sum_{\it lengths} \Big(log(P_{tral}) - log(\pi_{tral}) \Big)
+\end{equation}
+
+where:\newline
+$<$ L $>$ is the number of length groups\newline
+$<$ P $>$ is the proportion of the data sample for that time/area/age/length combination\newline
+$<\pi>$ is the proportion of the model sample for that time/area/age/length combination
+
+\bigskip
+To specify this likelihood function it is necessary to specify the parameter $<$sigma$>$. This is done in the likelihood file as shown below:
+
 {\small\begin{verbatim}
 ...
 function             mvlogistic
-sigma                <sigma>   
-aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole
-year
+sigma                <sigma>
+aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
 ...
 \end{verbatim}}
-
 
 \section{CatchStatistics}\label{sec:catchstat}
 The CatchStatistics likelihood component is used to compare statistical data sampled from the model with statistical data sampled from landings or surveys.  This is typically used to compare biological data, such as the mean length at age or mean weight at age.  The likelihood score that is calculated gives some measure as to how well the data from the model fits to the data from the landings.
@@ -2350,9 +2430,6 @@ powercoeffs          <p0>  <p1>
 
 Note that it is not possible to aggregate more than one stock into a single pseudo stock for this likelihood component.
 
-\section{LogCatch}\label{sec:logcatch}
-[CURRENTLY BLANK - INSERT DESCRIPTION FROM BERGEN]
-
 \section{CatchInTons}\label{sec:catchintons}
 The CatchInTons likelihood component is used to compare the overall catch from the modelled fleets with landings data.  This can be done for any fleet that has landings data available, but will give more useful information when used with fleets of type ''LinearFleet'' of ''MortalityFleet'', since the ''TotalFleet'' fleet type will catch the amount specified in the input file (see section~\ref{chap:fleet} for more information on the available fleet types).
 
@@ -2657,7 +2734,7 @@ $<$pred$>$ is the predator length group.\newline
 $<$prey$>$ is the prey length group.\newline
 $<$number$>$ is the number consumed for that timestep/area/predator length/prey length combination.\newline
 $<$biomass$>$ is the biomass consumed for that timestep/area/predator length/prey length combination.\newline
-$<$mortality$>$ is the mortality induced in the prey by the predation for that timestep/area/predator length/prey length combination.
+$<$mortality$>$ is the effective annual mortality induced in the prey by the predation for that timestep/area/predator length/prey length combination.
 
 \section{PredPreyStdAgePrinter}\label{sec:predpreystdageprinter}
 The printer type to output detailed information about a predator-prey combination, with both the predator and prey given a age based distribution, is called ''PredPreyStdAgePrinter''.  This printer type is defined by specifying the predator name, prey name, areas and timesteps of interest.  The file format for this component is given below:
@@ -2683,7 +2760,7 @@ $<$pred$>$ is the predator age group.\newline
 $<$prey$>$ is the prey age group.\newline
 $<$number$>$ is the number consumed for that timestep/area/predator age/prey age combination.\newline
 $<$biomass$>$ is the biomass consumed for that timestep/area/predator age/prey age combination.\newline
-$<$mortality$>$ is the mortality induced in the prey by the predation for that timestep/area/predator length/prey length combination.
+$<$mortality$>$ is the effective annual mortality induced in the prey by the predation for that timestep/area/predator age/prey age combination.
 
 \chapter{Parameter File}\label{chap:param}
 The parameter file is used to specify the initial values for the switches that are to be used in the Gadget model (see What Does The \# Mean?, section~\ref{sec:whatdoeshash}).  This file is specified by a ''-i $<$filename$>$'' command line option when Gadget is started, for example, this would take the parameter information from a file called ''inputfile.txt'':
@@ -2726,8 +2803,8 @@ To specify the Hooke and Jeeves optimisation algorithm, the optimisation file sh
 
 {\small\begin{verbatim}
 hooke
-hookeiter  10    ; number of hooke and jeeves iterations (default 10)
-hookeeps   1e-06 ; minimum epsilon, hooke halt criteria (default 1e-06)
+hookeiter  1000  ; number of hooke and jeeves iterations (default 1000)
+hookeeps   1e-04 ; minimum epsilon, hooke halt criteria (default 1e-04)
 rho        0.5   ; initial value for the resizing multiplier (default 0.5)
 lambda     0     ; initial value for the step length (default 0)
 \end{verbatim}}
@@ -2743,7 +2820,7 @@ In comparison to the Hooke and Jeeves optimisation algorithm, where Hooke and Je
 The Simulated Annealing algorithm used in Gadget is derived from that presented by Corana et al, ''Minimizing Multimodal Functions of Continuous Variables with the ''Simulated Annealing'' Algorithm'' in the September 1987 (Vol. 13, no. 3, pp. 262-280) issue of the ACM Transactions on Mathematical Software.
 
 \subsection{File Format}
-To specify the Simulated Annealing optimisation algorithm, the optimisation file should start with the keyword ''simann'', followed by (up to) 8 lines giving the parameters for the optimisation algorithm.  Any parameters that are not given in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation algorithm, is shown below:
+To specify the Simulated Annealing optimisation algorithm, the optimisation file should start with the keyword ''simann'', followed by (up to) 9 lines giving the parameters for the optimisation algorithm.  Any parameters that are not given in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation algorithm, is shown below:
 
 {\small\begin{verbatim}
 simann
@@ -2751,18 +2828,19 @@ simanniter 2000  ; number of simulated annealing iterations (default 2000)
 simanneps  1e-04 ; minimum epsilon, simann halt criteria (default 1e-04)
 T          100   ; simulated annealing temperature (default 100)
 rt         0.85  ; temperature reduction factor (default 0.85)
-nt         10    ; number of loops before temperature adjusted (default 10)
-ns         15    ; number of loops before step length adjusted (default 15)
+nt         2     ; number of loops before temperature adjusted (default 2)
+ns         5     ; number of loops before step length adjusted (default 5)
 vm         1     ; step length for simulated annealing (default 1)
 cstep      2     ; step length adjustment factor (default 2)
+check      4     ; number of temperature loops to check (default 4)
 \end{verbatim}}
 
 \section{Simulated Annealing and Hooke and Jeeves}\label{sec:simannandhooke}
 \subsection{Overview}
-This method attempts to combine the wide search of Simulated Annealing and the rapid convergence of Hooke and Jeeves.  It relies on the observation that the likelihood function for many Gadget models consists of a large 'valley' in which the best solution lies, surrounded by much more 'rugged' terrain.  A small amount of Simulated Annealing at the start of the run serves to move the search into this valley, at which point Hooke and Jeeves takes over an homes in on a solution within that valley.  Hopefully the Simulated Annealing will move to the correct side of any 'hills' and avoid Hooke and Jeeves becoming trapped into unrealistic local optima.
+This method attempts to combine the wide search of Simulated Annealing and the rapid convergence of Hooke and Jeeves.  It relies on the observation that the likelihood function for many Gadget models consists of a large 'valley' in which the best solution lies, surrounded by much more 'rugged' terrain.  A small amount of Simulated Annealing at the start of the run serves to move the search into this valley, at which point Hooke and Jeeves takes over and homes in on a solution within that valley.  Hopefully the Simulated Annealing will move to the correct side of any 'hills' and avoid Hooke and Jeeves becoming trapped into unrealistic local optima.
 
 \subsection{File Format}
-To specify the Simulated Annealing followed by the Hooke and Jeeves optimisation algorithm, the optimisation file should start with the keyword ''simannandhooke'', followed by (up to) 12 lines giving the parameters for the optimisation algorithm.  Any parameters that are not given in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation algorithm, is shown below:
+To specify the Simulated Annealing followed by the Hooke and Jeeves optimisation algorithm, the optimisation file should start with the keyword ''simannandhooke'', followed by (up to) 13 lines giving the parameters for the optimisation algorithm.  Any parameters that are not given in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation algorithm, is shown below:
 
 {\small\begin{verbatim}
 simannandhooke
@@ -2770,18 +2848,19 @@ simanniter 2000  ; number of simulated annealing iterations (default 2000)
 simanneps  1e-04 ; minimum epsilon, simann halt criteria (default 1e-04)
 T          100   ; simulated annealing temperature (default 100)
 rt         0.85  ; temperature reduction factor (default 0.85)
-nt         10    ; number of loops before temperature adjusted (default 10)
-ns         15    ; number of loops before step length adjusted (default 15)
+nt         2     ; number of loops before temperature adjusted (default 2)
+ns         5     ; number of loops before step length adjusted (default 5)
 vm         1     ; step length for simulated annealing (default 1)
 cstep      2     ; step length adjustment factor (default 2)
-hookeiter  10    ; number of hooke and jeeves iterations (default 10)
-hookeeps   1e-06 ; minimum epsilon, hooke halt criteria (default 1e-06)
+check      4     ; number of temperature loops to check (default 4)
+hookeiter  1000  ; number of hooke and jeeves iterations (default 1000)
+hookeeps   1e-04 ; minimum epsilon, hooke halt criteria (default 1e-04)
 rho        0.5   ; initial value for the resizing multiplier (default 0.5)
 lambda     0     ; initial value for the step length (default 0)
 \end{verbatim}}
 
 \section{Repeatability}\label{sec:repeat}
-The optimisation algorithms used by Gadget contain a random number generator, used to randomise the order of the parameters (to ensure that the order of the parameters has no effect on the optimum found).  For the Simulated Annealing algorithm, this is also used to generate the initial direction chosen by the algorithm, and affects the Metropolis criteria used to accept any changes in an 'uphill' direction.
+The optimisation algorithms used by Gadget contain a random number generator, used to randomise the order of the parameters (to ensure that the order of the parameters has no effect on the optimum found) and to generate the initial direction chosen by the algorithm to look for a solution.  For the Simulated Annealing algorithm, this is also affects the Metropolis criteria used to accept any changes in an 'uphill' direction.
 
 \bigskip
 The use of a random number generator means that it is unlikely that 2 optimising runs will produce exactly the same 'optimum', even if they start from the same point (although it is hoped that the optima would be very similar if a stable starting point was chosen).  This causes a problem with repeatability, since there is no guarantee that an optimising run can be repeated.  However, it is possible to 'seed' the random number generator with an integer to avoid this problem.  To specify a seed for the random number generator, an extra line must be added to the optimisation file, as shown below:
