@@ -15,9 +15,9 @@ void InitialInputFile::getValues(ParameterVector& sw, DoubleVector& val,
   upp = upperbound;
 
   int i;
-  opt.resize(optimize.Size());
-  for (i = 0; i < optimize.Size(); i++)
-    opt[i] = optimize[i];
+  opt.resize(optimise.Size());
+  for (i = 0; i < optimise.Size(); i++)
+    opt[i] = optimise[i];
 }
 
 void InitialInputFile::getVectorValue(DoubleVector& val) {
@@ -114,7 +114,7 @@ void InitialInputFile::readHeader() {
 
     } else {
       // fileformat must be of the form
-      // switch value lowerbound upperbound optimize
+      // switch value lowerbound upperbound optimise
       repeatedValues = 0;
       numColumns = 0;
       correctHeaderText(numColumns, text);
@@ -187,7 +187,7 @@ void InitialInputFile::readFromFile() {
 
       if (isdigit(infile.peek())) {
         infile >> opt >> ws;
-        optimize.resize(1, opt);
+        optimise.resize(1, opt);
       } else
         check++;
       if (infile.eof())
@@ -211,7 +211,7 @@ void InitialInputFile::readFromFile() {
       cerr << "Error in initialinput - failed to read bounds\n";
       exit(EXIT_FAILURE);
 
-    } else if (optimize.Size() != values.Size()) {
+    } else if (optimise.Size() != values.Size()) {
       cerr << "Error in initialinput - failed to read optimise\n";
       exit(EXIT_FAILURE);
     }
@@ -277,8 +277,8 @@ int InitialInputFile::numVariables() {
   return values.Size();
 }
 
-int InitialInputFile::Optimize(int i) const {
-  return optimize[i];
+int InitialInputFile::Optimise(int i) const {
+  return optimise[i];
 }
 
 double InitialInputFile::Values(int i) const {

@@ -30,13 +30,13 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
 
   i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
-    straystep.resize(1);
-    infile >> straystep[i] >> ws;
+    strayStep.resize(1);
+    infile >> strayStep[i] >> ws;
     i++;
   }
 
-  for (i = 0; i < straystep.Size(); i++)
-    if (straystep[i] < 1 || straystep[i] > TimeInfo->StepsInYear())
+  for (i = 0; i < strayStep.Size(); i++)
+    if (strayStep[i] < 1 || strayStep[i] > TimeInfo->StepsInYear())
       handle.Message("Illegal stray step in straying function");
 
   infile >> text >> ws;
@@ -45,14 +45,14 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
 
   i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
-    strayarea.resize(1);
-    infile >> strayarea[i] >> ws;
+    strayArea.resize(1);
+    infile >> strayArea[i] >> ws;
     i++;
   }
 
-  for (i = 0; i < strayarea.Size(); i++)
-    if ((strayarea[i] = Area->InnerArea(strayarea[i])) == -1)
-      handle.UndefinedArea(strayarea[i]);
+  for (i = 0; i < strayArea.Size(); i++)
+    if ((strayArea[i] = Area->InnerArea(strayArea[i])) == -1)
+      handle.UndefinedArea(strayArea[i]);
 
   infile >> text;
   if (strcasecmp(text, "straystocksandratios") == 0) {
@@ -143,8 +143,8 @@ void StrayData::setStock(StockPtrVector& stockvec) {
   double minlength = 9999.0;
   for (i = 0; i < strayStocks.Size(); i++) {
     index = 0;
-    for (j = 0; j < strayarea.Size(); j++)
-      if (!strayStocks[i]->IsInArea(strayarea[j]))
+    for (j = 0; j < strayArea.Size(); j++)
+      if (!strayStocks[i]->IsInArea(strayArea[j]))
         index++;
 
     if (index != 0)
@@ -236,9 +236,9 @@ void StrayData::addStrayStock(int area, const TimeClass* const TimeInfo) {
 int StrayData::isStrayStepArea(int area, const TimeClass* const TimeInfo) {
   int i, j;
 
-  for (i = 0; i < straystep.Size(); i++)
-    for (j = 0; j < strayarea.Size(); j++)
-      if ((straystep[i] == TimeInfo->CurrentStep()) && (strayarea[j] == area))
+  for (i = 0; i < strayStep.Size(); i++)
+    for (j = 0; j < strayArea.Size(); j++)
+      if ((strayStep[i] == TimeInfo->CurrentStep()) && (strayArea[j] == area))
         return 1;
   return 0;
 }
@@ -277,8 +277,8 @@ void StrayData::Print(ofstream& outfile) const {
   for (i = 0; i < Ratio.Size(); i++)
     outfile << sep << Ratio[i];
   outfile << "\n\tStraying timesteps:";
-  for (i = 0; i < straystep.Size(); i++)
-    outfile << sep << straystep[i];
+  for (i = 0; i < strayStep.Size(); i++)
+    outfile << sep << strayStep[i];
   outfile << endl;
 }
 

@@ -28,7 +28,7 @@ public:
   /**
    * \brief This method calls the optimisation function
    */
-  virtual void MaximizeLikelihood() {};
+  virtual void OptimiseLikelihood() {};
 };
 
 /**
@@ -47,9 +47,9 @@ public:
    */
   ~OptInfo();
   /**
-   * \brief This is the function that will optimize the likelihood score
+   * \brief This is the function that will optimise the likelihood score
    */
-  void Optimize();
+  void Optimise();
   /**
    * \brief This is the function used to read in the optimisation function parameters
    * \param infile is the CommentStream to read the optimisation parameters from
@@ -109,7 +109,7 @@ public:
   /**
    * \brief This is the function that will calculate the likelihood score using the Hooke & Jeeves optimiser
    */
-  virtual void MaximizeLikelihood();
+  virtual void OptimiseLikelihood();
 protected:
   /**
    * \brief This is the maximum number of iterations for the Hooke & Jeeves optimisation
@@ -160,7 +160,7 @@ public:
   /**
    * \brief This is the function that will calculate the likelihood score using the Simulated Annealing optimiser
    */
-  virtual void MaximizeLikelihood();
+  virtual void OptimiseLikelihood();
 protected:
   /**
    * \brief This is the temperature reduction factor
@@ -233,7 +233,7 @@ public:
   /**
    * \brief This is the function that will calculate the likelihood score using the BFGS optimiser
    */
-  virtual void MaximizeLikelihood();
+  virtual void OptimiseLikelihood();
 private:
   /**
    * \brief The actual BFGS iteration

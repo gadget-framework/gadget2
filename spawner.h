@@ -45,26 +45,82 @@ public:
 protected:
   double calcSpawnNumber(int age, int len, double number, double weight);
   double calcRecruitNumber();
+  /**
+   * \brief This is the StockPtrVector of the stocks that will be spawned
+   */
   StockPtrVector spawnStocks;
+  /**
+   * \brief This is the CharPtrVector of the names of the spawned stocks
+   */
   CharPtrVector spawnStockNames;
+  /**
+   * \brief This is the DoubleVector of the ratio of the new stock to move into each spawned stock
+   */
   DoubleVector Ratio;
+  /**
+   * \brief This is the IntVector used to store information about the steps when the spawning takes place
+   */
   IntVector spawnStep;
+  /**
+   * \brief This is the IntVector used to store information about the areas where the spawning takes place
+   */
   IntVector spawnArea;
+  /**
+   * \brief This is the LengthGroupDivision of the stock
+   */
   LengthGroupDivision* LgrpDiv;
+  /**
+   * \brief This is the DoubleVector of the proportion of each length group of the stock that will spawn
+   */
   DoubleVector spawnProportion;
+  /**
+   * \brief This is the DoubleVector of the proportion of each length group of the stock that will die due to the spawning process
+   */
   DoubleVector spawnMortality;
+  /**
+   * \brief This is the DoubleVector of the weight loss of each length group of the stock due to the spawning process
+   */
   DoubleVector spawnWeightLoss;
+  /**
+   * \brief This is the SelectFunc used to calculate of the proportion of each length group of the stock that will spawn
+   */
   SelectFunc* fnProportion;
+  /**
+   * \brief This is the SelectFunc used to calculate of the proportion of each length group of the stock that will die due to the spawning process
+   */
   SelectFunc* fnMortality;
+  /**
+   * \brief This is the SelectFunc used to calculate of the weight loss of each length group of the stock due to the spawning process
+   */
   SelectFunc* fnWeightLoss;
+  /**
+   * \brief This is the AgeBandMatrixPtrVector used to store the calculated spawned stocks
+   */
   AgeBandMatrixPtrVector Storage;
+  /**
+   * \brief This is the ConversionIndexPtrVector used to convert to the stock lengths for the spawned stock
+   */
   ConversionIndexPtrVector CI;
-  DoubleMatrix spawnNumbers;
+  /**
+   * \brief This is the LengthGroupDivision of the spawned stock
+   */
   LengthGroupDivision* spawnLgrpDiv;
+  DoubleMatrix spawnNumbers;
   TimeVariableVector spawnParameters;
   TimeVariableVector stockParameters;
   int onlyParent;
+  /**
+   * \brief This is the age that the spawned stock will move into the new stocks
+   */
   int spawnAge;
+  /**
+   * \brief This is the identifier of the function to be used to calculate the number of recruits
+   */
+  int functionnumber;
+  /**
+   * \brief This is the name of the function to be used to calculate the number of recruits
+   */
+  char* functionname;
 };
 
 #endif

@@ -228,7 +228,7 @@ double MortPredator::getFlevel(int area, const TimeClass* const TimeInfo) {
   int inarea = AreaNr[area];
   if (calc_f_lev == 1)  //f_level calculated from effort
     pres_f_lev = f_level[inarea][TimeInfo->CurrentTime() - 1];
-  else //f_level read from file, may be optimized
+  else //f_level read from file, may be optimised
     pres_f_lev = f_lev[inarea][TimeInfo->CurrentTime() - 1];
   return pres_f_lev;
 }

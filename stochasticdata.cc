@@ -15,7 +15,7 @@ StochasticData::StochasticData(const char* const filename) {
     readInfo->getVectorValue(values);
 
   } else
-    readInfo->getValues(switches, values, lowerbound, upperbound, optimize);
+    readInfo->getValues(switches, values, lowerbound, upperbound, optimise);
 
   if (this->SwitchesGiven())
     if (switches.Size() != values.Size())
@@ -73,16 +73,16 @@ int StochasticData::DataFromFile() {
   return !netrun;
 }
 
-int StochasticData::Optimize(int i) const {
+int StochasticData::Optimise(int i) const {
   if (netrun == 1)
     return 0;
-  return optimize[i];
+  return optimise[i];
 }
 
 int StochasticData::OptGiven() const {
   if (netrun == 1)
     return 0;
-  return (optimize.Size() > 0 ? 1 : 0);
+  return (optimise.Size() > 0 ? 1 : 0);
 }
 
 int StochasticData::SwitchesGiven() const {

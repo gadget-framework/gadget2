@@ -140,16 +140,17 @@ int OptInfoBfgs::iteration(double* x0) {
 
 void OptInfoBfgs::gradient(double* p, double fp) {
   int i, j;
-  double h;
+  double tmpacc;
   double tmp[NUMVARS];
 
   //h = 0.00001;
+  tmpacc = 1.0 / (2.0 * gradacc);
   for (i = 0; i < numvar; i++) {
     for (j = 0; j < numvar; j++)
       tmp[j] = p[j];
 
     tmp[i] += gradacc;
-    gk[i] = ((*f)(tmp, numvar) - fp) / (2.0 * gradacc);
+    gk[i] = ((*f)(tmp, numvar) - fp) * tmpacc;
   }
 }
 

@@ -96,11 +96,11 @@ protected:
   /**
    * \brief This is the IntVector of timesteps that the straying will take place on
    */
-  IntVector straystep;
+  IntVector strayStep;
   /**
    * \brief This is the IntVector of areas that the straying will take place on
    */
-  IntVector strayarea;
+  IntVector strayArea;
   /**
    * \brief This is the LengthGroupDivision of the stock
    */

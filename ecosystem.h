@@ -131,9 +131,9 @@ public:
   void writeOptValues() const;
   /**
    * \brief This function will initialise the Ecosystem parameters
-   * \param optimize is a flag to denote whether the current run will optimise the model or not
+   * \param optimise is a flag to denote whether the current run will optimise the model or not
    */
-  void Initialise(int optimize);
+  void Initialise(int optimise);
   /**
    * \brief This function will update the Ecosystem parameters with new values from StochasticData
    * \param Stochastic is the StochasticData containing the new values of the parameters
@@ -165,7 +165,7 @@ public:
    * \return number of variables to be optimised
    */
   int numOptVariables() const { return keeper->numOptVariables(); };
-  void Simulate(int optimize, int print);
+  void Simulate(int optimise, int print);
   void SimulateOneTimestep();
   void SimulateOneAreaOneTimeSubstep(int area);
   void GrowthAndSpecialTransactions(int area);

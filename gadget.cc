@@ -122,7 +122,7 @@ int main(int aNumber, char* const aVector[]) {
   if (aNumber == 1)
     handle.logWarning("Warning - no command line options specified, using default values");
 
-  EcoSystem = new Ecosystem(MainInfo.getMainGadgetFile(), MainInfo.runOptimize(),
+  EcoSystem = new Ecosystem(MainInfo.getMainGadgetFile(), MainInfo.runOptimise(),
     MainInfo.runNetwork(), MainInfo.runLikelihood(), inputdir, workingdir, MainInfo.getPI());
 
   #ifdef INTERRUPT_HANDLER
@@ -140,7 +140,7 @@ int main(int aNumber, char* const aVector[]) {
   if (MainInfo.runStochastic())
     stochasticRun(EcoSystem, &MainInfo);
 
-  if (MainInfo.runOptimize()) {
+  if (MainInfo.runOptimise()) {
     if (MainInfo.getInitialParamGiven()) {
       Stochasticdata = new StochasticData(MainInfo.getInitialParamFile());
       EcoSystem->Update(Stochasticdata);
@@ -153,7 +153,7 @@ int main(int aNumber, char* const aVector[]) {
       EcoSystem->writeStatus(MainInfo.getPrintInitialFile());
 
     Optinfo = new OptInfo(&MainInfo);
-    Optinfo->Optimize();
+    Optinfo->Optimise();
 
     if ((MainInfo.getPI()).getForcePrint())
       EcoSystem->Simulate(0, 1);  //print and dont optimise
@@ -182,7 +182,7 @@ int main(int aNumber, char* const aVector[]) {
   if (check == 1)
     free(workingdir);
 
-  handle.logFinish(MainInfo.runOptimize());
+  handle.logFinish(MainInfo.runOptimise());
 
   delete Optinfo;
   delete EcoSystem;

@@ -103,11 +103,11 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
     handle.logFailure("Error in optinfofile - no valid optimisation methods found");
 }
 
-void OptInfo::Optimize() {
+void OptInfo::Optimise() {
   if (useSimann)
-    optSimann->MaximizeLikelihood();
+    optSimann->OptimiseLikelihood();
   if (useHJ)
-    optHJ->MaximizeLikelihood();
+    optHJ->OptimiseLikelihood();
   if (useBFGS)
-    optBFGS->MaximizeLikelihood();
+    optBFGS->OptimiseLikelihood();
 }

@@ -79,11 +79,11 @@ void Ecosystem::SimulateOneTimestep() {
     GrowthAndSpecialTransactions(i);
 }
 
-void Ecosystem::Simulate(int Optimize, int print) {
+void Ecosystem::Simulate(int Optimise, int print) {
   int i, j;
 
   handle.logMessage("");  //write blank line to log file
-  if (Optimize) {
+  if (Optimise) {
     for (j = 0; j < Likely.Size(); j++)
       Likely[j]->Reset(keeper);
     //put here since boundlikelihood is allowed to change values
@@ -107,7 +107,7 @@ void Ecosystem::Simulate(int Optimize, int print) {
         basevec[j]->RecalcMigration(TimeInfo);
 
     SimulateOneTimestep();
-    if (Optimize)
+    if (Optimise)
       for (j = 0; j < Likely.Size(); j++)
         Likely[j]->addLikelihood(TimeInfo);
 
@@ -145,7 +145,7 @@ void Ecosystem::Simulate(int Optimize, int print) {
     TimeInfo->IncrementTime();
   }
 
-  if (Optimize) {
+  if (Optimise) {
     likelihood = 0.0;
     for (j = 0; j < Likely.Size(); j++)
       likelihood += Likely[j]->returnLikelihood();

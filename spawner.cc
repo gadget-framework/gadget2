@@ -130,13 +130,33 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     handle.Unexpected("weightlossfunction", text);
 
   if (onlyParent == 0) {
-    spawnParameters.resize(5, keeper);
     infile >> text >> ws;
-    if (strcasecmp(text, "spawnparameters") == 0)
-      spawnParameters.read(infile, TimeInfo, keeper);
-    else
+    /*if (!(strcasecmp(text, "recruitment") == 0))
+      handle.Unexpected("recruitment", text);*/
+    if (!(strcasecmp(text, "spawnparameters") == 0))
       handle.Unexpected("spawnparameters", text);
 
+    //read in the recruitment function details
+    /*functionnumber = 0;
+    infile >> functionname >> ws;
+    if (strcasecmp(functionname, "simplessb") == 0) {
+      functionnumber = 1;
+      spawnParameters.resize(1, keeper);
+    } else if (strcasecmp(functionname, "ricker") == 0) {
+      functionnumber = 2;
+      spawnParameters.resize(2, keeper);
+    } else if (strcasecmp(functionname, "bevertonholt") == 0) {
+      functionnumber = 3;
+      spawnParameters.resize(2, keeper);
+    } else if (strcasecmp(functionname, "generic") == 0) {*/
+      functionnumber = 4;
+      spawnParameters.resize(5, keeper);
+    /*} else
+      handle.Message("Error in spawner - unrecognised recruitment function", functionname);*/
+
+    spawnParameters.read(infile, TimeInfo, keeper);
+
+    //read in the details about the new stock
     stockParameters.resize(4, keeper);
     infile >> text >> ws;
     if (strcasecmp(text, "stockparameters") == 0)
@@ -243,8 +263,10 @@ void SpawnData::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const Ti
   if (this->isSpawnStepArea(area, TimeInfo) == 0)
     return;
 
+  if (onlyParent == 0)
+    spawnParameters.Update(TimeInfo);
+
   int age, len;
-  spawnParameters.Update(TimeInfo);
   for (age = Alkeys.minAge(); age <= Alkeys.maxAge(); age++) {
     //subtract mortality and reduce the weight of the living ones.
     for (len = Alkeys.minLength(age); len < Alkeys.maxLength(age); len++) {
@@ -279,6 +301,11 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
 
   //create a length distribution and mean weight for the new stock
   stockParameters.Update(TimeInfo);
+  if (stockParameters[0] > spawnLgrpDiv->maxLength())
+    handle.logWarning("Warning in spawner - invalid mean length for spawned stock");
+  if (isZero(stockParameters[0]))
+    handle.logWarning("Warning in spawner - invalid standard deviation for spawned stock");
+
   if (stockParameters[1] > verysmall) {
     tmpsdev = 1.0 / (2 * stockParameters[1] * stockParameters[1]);
     for (len = 0; len < spawnLgrpDiv->numLengthGroups(); len++) {
@@ -288,9 +315,6 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
       sum += N;
     }
   }
-
-  if (stockParameters[0] > spawnLgrpDiv->maxLength())
-    handle.logWarning("Warning in spawner - invalid mean length for spawned stock");
 
   //calculate the total number of recruits and distribute this through the length groups
   double total = calcRecruitNumber();
@@ -370,21 +394,50 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
 
 double SpawnData::calcSpawnNumber(int age, int len, double number, double weight) {
   double temp = 0.0;
-  temp = spawnParameters[0] * pow(LgrpDiv->meanLength(len), spawnParameters[1])
-           * pow(age, spawnParameters[2]) * pow(number, spawnParameters[3]) * pow(weight, spawnParameters[4]);
+
+  switch(functionnumber) {
+    case 1:
+    case 2:
+    case 3:
+      temp = number * weight;
+      break;
+    case 4:
+      temp = pow(LgrpDiv->meanLength(len), spawnParameters[1]) * pow(age, spawnParameters[2])
+             * pow(number, spawnParameters[3]) * pow(weight, spawnParameters[4]);
+      break;
+    default:
+      handle.logWarning("Warning in spawner - unrecognised recruitment function", functionname);
+      break;
+  }
 
   return temp;
 }
 
 double SpawnData::calcRecruitNumber() {
   int age, len;
-  double temp = 0.0;
-
+  double recruits = 0.0, temp = 0.0;
+  
   for (age = 0; age < spawnNumbers.Nrow(); age++)
     for (len = 0; len < spawnNumbers.Ncol(age); len++)
       temp += spawnNumbers[age][len];
 
-  return temp;
+  switch(functionnumber) {
+    case 1:
+    case 4:
+      recruits = temp * spawnParameters[0];
+      break;
+    case 2:
+      recruits = temp * spawnParameters[0] * exp(-spawnParameters[1] * temp);
+      break;
+    case 3:
+      recruits = temp * spawnParameters[0] / (spawnParameters[1] + temp);
+      break;
+    default:
+      handle.logWarning("Warning in spawner - unrecognised recruitment function", functionname);
+      break;
+  }
+
+  return recruits;
 }
 
 void SpawnData::Print(ofstream& outfile) const {

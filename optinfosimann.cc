@@ -80,7 +80,7 @@ void OptInfoSimann::Read(CommentStream& infile, char* text) {
 
 //Considered better to skip scaling of variables here.  Had to change keeper
 //so initialvalues start as 1 but scaled values as the same as values
-void OptInfoSimann::MaximizeLikelihood() {
+void OptInfoSimann::OptimiseLikelihood() {
   int i, nopt, opt;
 
   handle.logInformation("\nStarting Simulated Annealing optimisation algorithm");

@@ -37,7 +37,7 @@
 
 extern ErrorHandler handle;
 
-void Ecosystem::Initialise(int optimize) {
+void Ecosystem::Initialise(int optimise) {
   PreyPtrVector preyvec;
   PredatorPtrVector predvec;
   PopPredatorPtrVector poppredvec;
@@ -127,7 +127,7 @@ void Ecosystem::Initialise(int optimize) {
         break;
     }
 
-  if (optimize) {
+  if (optimise) {
     for (i = 0; i < Likely.Size(); i++) {
       switch(Likely[i]->Type()) {
         case SURVEYINDICESLIKELIHOOD:

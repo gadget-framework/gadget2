@@ -248,7 +248,7 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
     fstar[i] = funcval;
 
   //Start the main loop.  Note that it terminates if
-  //(i) the algorithm succesfully optimizes the function or
+  //(i) the algorithm succesfully optimises the function or
   //(ii) there are too many function evaluations
   while (1) {
     for (a = 0; a < nt; a++) {

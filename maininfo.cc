@@ -48,7 +48,7 @@ void MainInfo::showUsage() {
 
 MainInfo::MainInfo()
   : optInfoComment(optInfoStream), givenOptInfo(0), givenInitialParam(0),
-    runlikelihood(0), runoptimize(0), runstochastic(0), runnetwork(0),
+    runlikelihood(0), runoptimise(0), runstochastic(0), runnetwork(0),
     printInitialInfo(0), printFinalInfo(0), printComponent(-1),
     printLikelihoodInfo(0), printLikeSummaryInfo(0) {
 
@@ -124,7 +124,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
     while (k < aNumber) {
       if (strcasecmp(aVector[k], "-l") == 0) {
         runlikelihood = 1;
-        runoptimize = 1;
+        runoptimise = 1;
 
       } else if (strcasecmp(aVector[k], "-n") == 0) {
         runnetwork = 1;
@@ -275,11 +275,11 @@ void MainInfo::checkUsage() {
     runstochastic = 1;
     runlikelihood = 1;
   }
-  if ((runstochastic == 1) && (runoptimize == 1)) {
+  if ((runstochastic == 1) && (runoptimise == 1)) {
     handle.logWarning("\nWarning - Gadget has been started with both the -s switch and the -l switch\nHowever, it is not possible to do both a stochastic run and a likelihood run!\nGadget will perform only the stochastic run (and ignore the -l switch)");
-    runoptimize = 0;
+    runoptimise = 0;
   }
-  if ((handle.checkLogFile()) && (runoptimize == 1)) {
+  if ((handle.checkLogFile()) && (runoptimise == 1)) {
     handle.logWarning("\n** logging model information from a Gadget optimisation is not recommended **");
   }
   if ((handle.checkLogFile()) && (runnetwork == 1)) {

@@ -35,7 +35,7 @@ OptInfoBfgs::~OptInfoBfgs() {
     delete[] Bk[i];
 }
 
-void OptInfoBfgs::MaximizeLikelihood() {
+void OptInfoBfgs::OptimiseLikelihood() {
   int i, opt;
 
   handle.logInformation("\nStarting BFGS optimisation algorithm");

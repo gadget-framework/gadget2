@@ -411,7 +411,7 @@ void Keeper::writeValuesInColumns(const char* const filename, int prec) const {
   outfile << ";\n; the optimisation has run for " << EcoSystem->getFuncEval()
     << " function evaluations\n; the current likelihood value is "
     << setprecision(p) << EcoSystem->getLikelihood()
-    << "\nswitch\tvalue\t\tlower\tupper\toptimize\n";
+    << "\nswitch\tvalue\t\tlower\tupper\toptimise\n";
 
   if (opt.Size() == 0) {
     for (i = 0; i < values.Size(); i++) {
@@ -454,7 +454,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
           lowerbds[j] = Stoch->Lower(i);
           upperbds[j] = Stoch->Upper(i);
           if (Stoch->OptGiven())
-            opt[j] = Stoch->Optimize(i);
+            opt[j] = Stoch->Optimise(i);
 
           match[i]++;
           found[j]++;
@@ -475,7 +475,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
 
     for (i = 0; i < Stoch->numVariables(); i++) {
       if (Stoch->OptGiven())
-        opt[i] = Stoch->Optimize(i);
+        opt[i] = Stoch->Optimise(i);
 
       values[i] = Stoch->Values(i);
       if (isZero(initialvalues[i])) {
@@ -491,10 +491,10 @@ void Keeper::Update(const StochasticData* const Stoch) {
       *address[i][j].addr = values[i];
 }
 
-void Keeper::Opt(IntVector& optimize) const {
+void Keeper::Opt(IntVector& optimise) const {
   int i;
-  for (i = 0; i < optimize.Size(); i++)
-    optimize[i] = opt[i];
+  for (i = 0; i < optimise.Size(); i++)
+    optimise[i] = opt[i];
 }
 
 void Keeper::Switches(ParameterVector& sw) const {

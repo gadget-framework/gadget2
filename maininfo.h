@@ -81,7 +81,7 @@ public:
    * \brief This function will return the flag used to determine whether the likelihood score should be optimised
    * \return flag
    */
-  int runOptimize() const { return runoptimize; };
+  int runOptimise() const { return runoptimise; };
   /**
    * \brief This function will return the flag used to determine whether the likelihood score should be calculated
    * \return flag
@@ -233,7 +233,7 @@ private:
   /**
    * \brief This is the flag used to denote whether the likelihood score should be optimised or not
    */
-  int runoptimize;
+  int runoptimise;
   /**
    * \brief This is the flag used to denote whether a stochastic (single) run should be performed or not
    */

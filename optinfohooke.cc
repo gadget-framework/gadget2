@@ -58,7 +58,7 @@ void OptInfoHooke::Read(CommentStream& infile, char* text) {
   }
 }
 
-void OptInfoHooke::MaximizeLikelihood() {
+void OptInfoHooke::OptimiseLikelihood() {
   int i, nopt, opt;
   double tmp;
 

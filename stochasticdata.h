@@ -39,7 +39,7 @@ public:
   double Values(int i) const { return values[i]; };
   double Lower(int i) const { return lowerbound[i]; };
   double Upper(int i) const { return upperbound[i]; };
-  int Optimize(int i) const;
+  int Optimise(int i) const;
   Parameter Switches(int i) const { return switches[i]; };
 #ifdef GADGET_NETWORK
   void readFromNetwork();
@@ -71,7 +71,7 @@ protected:
   /**
    * \brief This is the IntVector used to store the flag to denote whether to optimise the parameters read from file
    */
-  IntVector optimize;
+  IntVector optimise;
   /**
    * \brief This is the flag to denote whether gadget is running in network mode or not
    */

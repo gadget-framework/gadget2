@@ -53,7 +53,7 @@ public:
   int readSwitches() const;
   int reachedEndOfFile();
   int repeatedValuesFileFormat() { return repeatedValues; };
-  int Optimize(int i) const;
+  int Optimise(int i) const;
   double Values(int i) const;
   double Lower(int i) const;
   double Upper(int i) const;
@@ -82,7 +82,7 @@ private:
   /**
    * \brief This is the IntVector used to store the flag to denote whether to optimise the parameters read from file
    */
-  IntVector optimize;
+  IntVector optimise;
   int repeatedValues;
 };
 
