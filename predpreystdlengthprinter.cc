@@ -37,7 +37,7 @@ void PredPreyStdLengthPrinter::SetPopPredAndPrey(const PopPredator* pred,
 
 void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo) {
   assert(predinfo);
-  if (!aat.AtCurrentTime(TimeInfo))
+  if (!AAT.AtCurrentTime(TimeInfo))
     return;
   int a, predl, preyl;
 

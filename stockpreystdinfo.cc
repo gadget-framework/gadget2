@@ -47,7 +47,7 @@ void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
           MortbyAgeAndLength[inarea][age][l] = 0.0;
         else {
           if (NconbyAgeAndLength[inarea][age][l] >= Alk[age][l].N)
-            MortbyAgeAndLength[inarea][age][l] = MAX_MORTALITY;
+            MortbyAgeAndLength[inarea][age][l] = MaxMortality;
           else
             MortbyAgeAndLength[inarea][age][l]
               = -log(1 - NconbyAgeAndLength[inarea][age][l] / Alk[age][l].N) * timeratio;
@@ -61,7 +61,7 @@ void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
     }
     if (PopByAge[age].N > 0) {
       if (PopByAge[age].N <= NconbyAge[inarea][age])
-        MortbyAge[inarea][age] = MAX_MORTALITY;
+        MortbyAge[inarea][age] = MaxMortality;
       else
         MortbyAge[inarea][age]
           = - log(1 - NconbyAge[inarea][age] / PopByAge[age].N) * timeratio;

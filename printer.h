@@ -80,7 +80,7 @@ protected:
   /**
    * \brief This stores information about when the printer output is required in the model
    */
-  ActionAtTimes aat;
+  ActionAtTimes AAT;
 private:
   /**
    * \brief This denotes what type of printer class has been created

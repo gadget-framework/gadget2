@@ -17,7 +17,7 @@ RunID::RunID() {
 }
 
 void RunID::print(ostream& o) {
-  o << "Gadget version " << gadgetversion << " running on " << hostname << sep << timestring;
+  o << "Gadget version " << GADGETVERSION << " running on " << hostname << sep << timestring;
   if (timestring[strlen(timestring) - 1] != '\n')
     o << endl;
   o.flush();

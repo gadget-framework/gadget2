@@ -95,8 +95,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
 //Check if any of the preys of the predator are eaten up.
 //Adjust the consumption according to that.
 void StockPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) {
-
-  double MaxRatioConsumed = pow(MAX_RATIO_CONSUMED, NrOfSubsteps);
+  double maxRatio = pow(MaxRatioConsumed, NrOfSubsteps);
   int Iarea = AreaNr[area];
   int AnyPreyEatenUp = 0;
   int preyl, predl, prey;
@@ -114,8 +113,8 @@ void StockPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSub
             for (preyl = Suitability(prey)[predl].Mincol();
                 preyl < Suitability(prey)[predl].Maxcol(); preyl++) {
               ratio = Preys(prey)->Ratio(area, preyl);
-              if (ratio > MaxRatioConsumed) {
-                tmp = MaxRatioConsumed / ratio;
+              if (ratio > maxRatio) {
+                tmp = maxRatio / ratio;
                 overcons[Iarea][predl] += (1 - tmp) * cons[Iarea][prey][predl][preyl];
                 cons[Iarea][prey][predl][preyl] *= tmp;
               }

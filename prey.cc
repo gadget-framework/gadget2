@@ -175,7 +175,7 @@ void Prey::AddConsumption(int area, const DoubleIndexVector& predconsumption) {
 //in an area can be eaten in one timestep.  This is to avoid problems
 //with survy indices etc.  include maxmortailty.h was added.
 void Prey::CheckConsumption(int area, int NrOfSubsteps) {
-  double MaxRatioConsumed = pow(MAX_RATIO_CONSUMED, NrOfSubsteps);
+  double maxRatio = pow(MaxRatioConsumed, NrOfSubsteps);
   int i, temp = 0;
   int inarea = AreaNr[area];
   double rat, biom;
@@ -188,11 +188,11 @@ void Prey::CheckConsumption(int area, int NrOfSubsteps) {
       rat = cons[inarea][i] / biom;
 
     ratio[inarea][i] = rat;
-    if (rat > MaxRatioConsumed) {
+    if (rat > maxRatio) {
       temp = 1;
-      overcons[inarea][i] = (rat - MaxRatioConsumed) * biom;
+      overcons[inarea][i] = (rat - maxRatio) * biom;
       overconsumption[inarea][i] += overcons[inarea][i];
-      cons[inarea][i] = biom * MaxRatioConsumed;
+      cons[inarea][i] = biom * maxRatio;
     } else
       overcons[inarea][i] = 0.0;
 

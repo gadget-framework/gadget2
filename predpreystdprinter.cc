@@ -63,7 +63,7 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!aat.ReadFromFile(infile, TimeInfo))
+  if (!AAT.ReadFromFile(infile, TimeInfo))
     handle.Message("Error in predpreystdprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component

@@ -54,8 +54,8 @@ const double verysmall = 1e-100;
 const double verybig = 1e+10;
 const double pivalue = 3.14159265359;
 const int NUM_VARS = 350;
-const int MAX_MORTALITY = 1000;
-const double MAX_RATIO_CONSUMED = 0.95;
+const int MaxMortality = 1000;
+const double MaxRatioConsumed = 0.95;
 const char sep = ' ';
 
 #ifndef TAB
@@ -75,6 +75,6 @@ const int largewidth = 12;
 const int fullwidth = 18;
 
 /* Update the following line each time upgrades are implemented */
-#define gadgetversion "2.0.05-BETA"
+#define GADGETVERSION "2.0.05-BETA"
 
 #endif

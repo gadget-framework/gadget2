@@ -81,11 +81,11 @@ MortPrinter::MortPrinter(CommentStream& infile,
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!aat.ReadFromFile(infile, TimeInfo))
+  if (!AAT.ReadFromFile(infile, TimeInfo))
     handle.Message("Error in mortprinter - wrong format for yearsandsteps");
 
   //JMB - changed so that firstyear is not read from file
-  //but calculated from the yearsandsteps read into aat
+  //but calculated from the yearsandsteps read into AAT
   firstyear = TimeInfo->FirstYear();
   nrofyears = TimeInfo->LastYear() - firstyear + 1;
 

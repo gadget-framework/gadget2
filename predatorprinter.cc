@@ -104,7 +104,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!aat.ReadFromFile(infile, TimeInfo))
+  if (!AAT.ReadFromFile(infile, TimeInfo))
     handle.Message("Error in predatorprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -176,7 +176,7 @@ void PredatorPrinter::SetPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
 }
 
 void PredatorPrinter::Print(const TimeClass* const TimeInfo) {
-  if (!aat.AtCurrentTime(TimeInfo))
+  if (!AAT.AtCurrentTime(TimeInfo))
     return;
   aggregator->Sum();
   int i, j, k;

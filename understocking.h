@@ -21,7 +21,7 @@ private:
   FleetPtrVector fleets;
   IntMatrix areas;
   CharPtrVector areaindex;
-  ActionAtTimes aat;
+  ActionAtTimes AAT;
   double powercoeff;
 };
 

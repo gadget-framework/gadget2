@@ -32,7 +32,7 @@ void StockPreyStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
       MortbyLength[inarea][l] = 0.0;
     else {
       if (NconbyLength[inarea][l] >= PopBylength[l].N)
-        MortbyLength[inarea][l] = MAX_MORTALITY;
+        MortbyLength[inarea][l] = MaxMortality;
       else
         MortbyLength[inarea][l] = -log(1 - NconbyLength[inarea][l] / PopBylength[l].N) * timeratio;
     }

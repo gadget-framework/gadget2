@@ -111,7 +111,7 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
 }
 
 void TotalPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) {
-  double MaxRatioConsumed = pow(MAX_RATIO_CONSUMED, NrOfSubsteps);
+  double maxRatio = pow(MaxRatioConsumed, NrOfSubsteps);
   int prey, predl, preyl;
   int AnyPreyEatenUp = 0;
   int AnyPreyOnArea = 0;
@@ -130,8 +130,8 @@ void TotalPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSub
             for (preyl = Suitability(prey)[predl].Mincol();
                 preyl < Suitability(prey)[predl].Maxcol(); preyl++) {
               ratio = Preys(prey)->Ratio(area, preyl);
-              if (ratio > MaxRatioConsumed) {
-                tmp = MaxRatioConsumed / ratio;
+              if (ratio > maxRatio) {
+                tmp = maxRatio / ratio;
                 overcons[inarea][predl] += (1 - tmp) * cons[inarea][prey][predl][preyl];
                 cons[inarea][prey][predl][preyl] *= tmp;
               }

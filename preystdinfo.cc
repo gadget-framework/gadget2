@@ -32,7 +32,7 @@ void PreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   if (isZero(prey->Biomass(area)))
     MortbyAge[inarea][age] = 0.0;
   else if (prey->Biomass(area) <= BconbyAge[inarea][age])
-    MortbyAge[inarea][age] = MAX_MORTALITY;
+    MortbyAge[inarea][age] = MaxMortality;
   else
     MortbyAge[inarea][age] = -log(1 - BconbyAge[inarea][age] / prey->Biomass(area)) * timeratio;
 }

@@ -12,8 +12,8 @@
 #include "agebandmatrix.h"
 #include "gadget.h"
 
-enum FitType { LogLinearFit = 1, FixedSlopeLogLinearFit, FixedLogLinearFit, LinearFit, PowerFit,
-    FixedSlopeLinearFit, FixedLinearFit, FixedInterceptLinearFit, FixedInterceptLogLinearFit };
+enum FitType { LOGLINEARFIT = 1, FIXEDSLOPELOGLINEARFIT, FIXEDLOGLINEARFIT, LINEARFIT, POWERFIT,
+    FIXEDSLOPELINEARFIT, FIXEDLINEARFIT, FIXEDINTERCEPTLINEARFIT, FIXEDINTERCEPTLOGLINEARFIT };
 
 class SIOnStep;
 

@@ -296,12 +296,12 @@ void SIByLengthAndAgeOnStep::calcIndex(const AgeBandMatrix* alptr, FitType ftype
   int maxlen = LgrpDiv->NoLengthGroups();
   double q_year = q_y[index];
   switch(ftype) {
-    case LinearFit:
+    case LINEARFIT:
       for (age = 0; age <= maxage; age++)
         for (len = 0; len < maxlen; len++)
           (*calc_index[index])[age][len] = b_vec[len] + q_year * q_l[len] * (*alptr)[age][len].N;
       break;
-    case PowerFit:
+    case POWERFIT:
       for (age = 0; age <= maxage; age++)
         for (len = 0; len < maxlen; len++)
           (*calc_index[index])[age][len] = q_year * q_l[len] * pow((*alptr)[age][len].N, b_vec[len]);

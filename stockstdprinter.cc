@@ -80,7 +80,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!aat.ReadFromFile(infile, TimeInfo))
+  if (!AAT.ReadFromFile(infile, TimeInfo))
     handle.Message("Error in stockstdprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -179,7 +179,7 @@ void StockStdPrinter::SetStock(StockPtrVector& stockvec) {
 }
 
 void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
-  if (!aat.AtCurrentTime(TimeInfo))
+  if (!AAT.AtCurrentTime(TimeInfo))
     return;
   aggregator->Sum();
   int a, age;

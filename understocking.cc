@@ -53,7 +53,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
     infile >> text >> ws;
   }
 
-  if (!aat.ReadFromFile(infile, TimeInfo))
+  if (!AAT.ReadFromFile(infile, TimeInfo))
     handle.Message("Error in understocking - wrong format for yearsandsteps");
 
   //prepare for next likelihood component
@@ -98,7 +98,7 @@ void UnderStocking::Reset(const Keeper* const keeper) {
 void UnderStocking::AddToLikelihood(const TimeClass* const TimeInfo) {
   int i, j, k;
   double err;
-  if (aat.AtCurrentTime(TimeInfo))
+  if (AAT.AtCurrentTime(TimeInfo))
     for (k = 0; k < areas.Nrow(); k++) {
       err = 0.0;
       for (i = 0; i < fleets.Size(); i++)

@@ -108,7 +108,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
     handle.Eof(text);
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!aat.ReadFromFile(infile, TimeInfo))
+  if (!AAT.ReadFromFile(infile, TimeInfo))
     handle.Message("Error in formatedpreyprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -142,7 +142,7 @@ void FormatedPreyPrinter::SetStock(StockPtrVector& stockvec) {
 }
 
 void FormatedPreyPrinter::Print(const TimeClass* const TimeInfo) {
-  if (!aat.AtCurrentTime(TimeInfo))
+  if (!AAT.AtCurrentTime(TimeInfo))
     return;
 
   if (printzp)

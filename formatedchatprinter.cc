@@ -77,7 +77,7 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!aat.ReadFromFile(infile, TimeInfo))
+  if (!AAT.ReadFromFile(infile, TimeInfo))
     handle.Message("Error in formatedchatprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -102,7 +102,7 @@ void FormatedCHatPrinter::SetFleet(FleetPtrVector& fleetvec) {
 }
 
 void FormatedCHatPrinter::Print(const TimeClass* const TimeInfo) {
-  if (!aat.AtCurrentTime(TimeInfo))
+  if (!AAT.AtCurrentTime(TimeInfo))
     return;
   int i, j;
   printTime(outfile, *TimeInfo);

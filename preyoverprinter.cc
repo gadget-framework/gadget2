@@ -79,7 +79,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
-  if (!aat.ReadFromFile(infile, TimeInfo))
+  if (!AAT.ReadFromFile(infile, TimeInfo))
     handle.Message("Error in preyoverprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
@@ -126,7 +126,7 @@ void PreyOverPrinter::SetPrey(PreyPtrVector& preyvec) {
 }
 
 void PreyOverPrinter::Print(const TimeClass* const TimeInfo) {
-  if (!aat.AtCurrentTime(TimeInfo))
+  if (!AAT.AtCurrentTime(TimeInfo))
     return;
   aggregator->Sum();
   const DoubleMatrix *dptr = &aggregator->ReturnSum();
