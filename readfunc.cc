@@ -211,6 +211,7 @@ int ReadTextInLine(CommentStream& infile, charptrvector& text) {
     if (i == text.Size()) {
       text.resize(1);
       text[i] = new char[MaxStrLength];
+      strncpy(text[i], "", MaxStrLength);
     }
     istr >> text[i];
     if (istr.fail()) {

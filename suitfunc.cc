@@ -94,8 +94,10 @@ SuitFunc::SuitFunc() {
 }
 
 SuitFunc::~SuitFunc() {
-  if (name != NULL)
-    delete name;
+  if (name != NULL) {
+    delete[] name;
+    name = NULL;
+  }
 }
 
 double SuitFunc::getPredLength() {

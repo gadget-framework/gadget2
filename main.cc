@@ -16,7 +16,6 @@ void StochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
   StochasticData* Stochasticdata;
 
   int print = 1;
-  //CHANGE AJ, 13.03.00
   if (MainInfo->Net) {
     print = 0;  //do not print in optimizing
 
@@ -67,7 +66,7 @@ int main(int aNumber, char *const aVector[]) {
 
   MainInfo MainInfo;
   OptInfo* Optinfo = 0;
-  StochasticData *Stochasticdata;
+  StochasticData* Stochasticdata = 0;
   ErrorHandler handle;
 
   //Test to see if the function double lgamma(double) is returning an integer.
@@ -100,7 +99,7 @@ int main(int aNumber, char *const aVector[]) {
   if (aNumber > 1)
     MainInfo.Read(aNumber, aVector);
 
-  //Dont print output if doing a network run
+  //JMB - dont print output if doing a network run
   if (!(MainInfo.Net)) {
     RUNID.print(cout);
     cout << "Starting Gadget from directory: " << workingdir
@@ -130,11 +129,12 @@ int main(int aNumber, char *const aVector[]) {
       Optinfo = new OptInfoHooke();
     else if (strcasecmp(type, "Simann") == 0)
       Optinfo = new OptInfoSimann();
-    /* JMB removed the NRecipes BFGS stuff */
+    //JMB - removed the BFGS stuff
     else
       handle.Unexpected("Hooke, Simann, or SimannAndHooke", type);
 
     Optinfo->Read(MainInfo.optinfocommentfile);
+    MainInfo.CloseOptinfofile();
 
   } else {
     Optinfo = new OptInfoHooke();
@@ -159,6 +159,9 @@ int main(int aNumber, char *const aVector[]) {
     Optinfo->MaximizeLikelihood();
     if ((MainInfo.printinfo).forcePrint)
       EcoSystem->Simulate(0, 1);
+
+    if (MainInfo.InitialCondareGiven)
+      delete Stochasticdata;
   }
 
   if (MainInfo.PrintLikelihoodInfo)
@@ -170,6 +173,7 @@ int main(int aNumber, char *const aVector[]) {
   if (!(MainInfo.Net))
     EcoSystem->PrintParamsinColumns((MainInfo.printinfo).ParamOutFile);
 
-  //delete EcoSystem;
+  delete Optinfo;
+  delete EcoSystem;
 }
 

@@ -19,6 +19,7 @@ void StrStack::PutInStack(const char* str) {
   if (sz == v.Size()) {
     v.resize(1);
     v[sz] = new char[MaxStrLength];
+    strncpy(v[sz], "", MaxStrLength);
   }
   /*JMB code removed from here - see RemovedCode.txt for details*/
   strcpy(v[sz], str);

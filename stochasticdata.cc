@@ -2,9 +2,9 @@
 #include "readfunc.h"
 #include "gadget.h"
 
-StochasticData::StochasticData(const char* const filename) : error(0) {
-
+StochasticData::StochasticData(const char* const filename) {
   NETRUN = 0;
+  error = 0;
   readInfo = new InitialInputFile(filename);
   readInfo->readFromFile();
   if (readInfo->repeatedValuesFileFormat() == 1) {
@@ -27,6 +27,7 @@ StochasticData::StochasticData(const char* const filename) : error(0) {
 StochasticData::StochasticData(int netrun) {
   NETRUN = netrun;
   error = 0;
+  readInfo = NULL;
   if (NETRUN == 1) {
     #ifdef GADGET_NETWORK
       slave = new slaveCommunication();

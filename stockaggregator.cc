@@ -7,7 +7,7 @@
 
 StockAggregator::StockAggregator(const Stockptrvector& Stocks,
   const LengthGroupDivision* const LgrpDiv, const intmatrix& Areas, const intmatrix& Ages)
-  : stocks(Stocks), CI(Stocks.Size(), 0), areas(Areas), ages(Ages) {
+  : stocks(Stocks), areas(Areas), ages(Ages) {
 
   int i, j, k, l = 0;
   maxcol.resize(Ages.Nrow(), 0);
@@ -79,8 +79,6 @@ StockAggregator::~StockAggregator() {
   int i;
   for (i = 0; i < CI.Size(); i++)
     delete CI[i];
-  for (i = 0; i < stocks.Size(); i++)
-    delete stocks[i];
 }
 
 void StockAggregator::Sum() {

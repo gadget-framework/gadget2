@@ -23,7 +23,6 @@ Suits::Suits(const Suits& initial, Keeper* const keeper)
     Multiplication(initial.Multiplication), MatrixSuit(initial.MatrixSuit) {
 
   int i;
-
   for (i = 0; i < initial.NoFuncPreys(); i++)
     SuitFunction.resize(1, initial.SuitFunction[i]);
 
@@ -98,7 +97,7 @@ void Suits::DeletePrey(int prey, Keeper* const keeper) {
 void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
   //First time.
   if (PrecalcSuitability.Size() == 0)
-    PrecalcSuitability.resize(SuitFunction.Size()+MatrixPreynames.Size());
+    PrecalcSuitability.resize(SuitFunction.Size() + MatrixPreynames.Size());
 
   /* remember that Suits is a friend of Predator.
    * Therefore we access pred through protected functions, but we only
@@ -124,7 +123,7 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
 
           (*temp)[i][j] = SuitFunction[p]->calculate();
           if ((*temp)[i][j] < 0)
-            (*temp)[i][j] = 0;
+            (*temp)[i][j] = 0.0;
         }
       }
       suit = new bandmatrix(*temp);
@@ -144,7 +143,7 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
         assert(temp->Ncol(i) ==  pred->Preys(p + shift)->NoLengthGroups());
         for (j = 0; j < pred->Preys(p + shift)->NoLengthGroups(); j++)
           if ((*temp)[i][j] < 0)
-            (*temp)[i][j] = 0;
+            (*temp)[i][j] = 0.0;
           else
             (*temp)[i][j] *= mult;
       }
@@ -177,8 +176,7 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
 }
 
 void Suits::DeleteFuncPrey(int prey, Keeper* const keeper) {
-  assert( prey >= 0);
-  assert(prey < SuitFunction.Size());
+  assert((0 <= prey) && (prey < SuitFunction.Size()));
   SuitFunction.Delete(prey, keeper);
   FuncPreynames.Delete(prey);
 }
@@ -192,13 +190,11 @@ void Suits::DeleteMatrixPrey(int prey, Keeper* const keeper) {
 }
 
 int Suits::DidChange(int prey, const TimeClass* const TimeInfo) const {
-  assert(prey >= 0);
-  assert(prey < SuitFunction.Size());
+  assert((0 <= prey) && (prey < SuitFunction.Size()));
   return SuitFunction[prey]->constantsHaveChanged(TimeInfo);
 }
 
 SuitFunc* Suits::FuncPrey(int prey) {
-  assert(prey > 0);
-  assert(prey < SuitFunction.Size());
+  assert((0 <= prey) && (prey < SuitFunction.Size()));
   return SuitFunction[prey];
 }

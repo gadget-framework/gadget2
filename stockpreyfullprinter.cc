@@ -17,7 +17,7 @@ extern RunId RUNID;
 
 StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
-  : Printer(STOCKPREYFULLPRINTER), stockname(0), LgrpDiv(0), preyinfo(0) {
+  : Printer(STOCKPREYFULLPRINTER), stockname(0), preyinfo(0) {
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -90,7 +90,6 @@ StockPreyFullPrinter::~StockPreyFullPrinter() {
   outfile.close();
   outfile.clear();
   delete preyinfo;
-  delete LgrpDiv;
   delete[] stockname;
 }
 
@@ -145,7 +144,7 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo) {
   for (a = 0; a < areas.Size(); a++)
     preyinfo->Sum(TimeInfo, areas[a]);
 
-  LgrpDiv = preyinfo->ReturnPreyLengthGroupDiv();
+  const LengthGroupDivision* LgrpDiv = preyinfo->ReturnPreyLengthGroupDiv();
 
   for (a = 0; a < areas.Size(); a++) {
     const bandmatrix& Nbyageandl = preyinfo->NconsumptionByAgeAndLength(areas[a]);

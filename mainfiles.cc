@@ -21,6 +21,30 @@ MainInfo::MainInfo()
   PrintLikelihoodFilename = NULL;
 }
 
+MainInfo::~MainInfo() {
+
+  if (optinfofilename != NULL) {
+    delete[] optinfofilename;
+    optinfofilename = NULL;
+  }
+  if (InitialCommentFilename != NULL) {
+    delete[] InitialCommentFilename;
+    InitialCommentFilename = NULL;
+  }
+  if (PrintInitialcondfilename != NULL) {
+    delete[] PrintInitialcondfilename;
+    PrintInitialcondfilename = NULL;
+  }
+  if (PrintFinalcondfilename != NULL) {
+    delete[] PrintFinalcondfilename;
+    PrintFinalcondfilename = NULL;
+  }
+  if (PrintLikelihoodFilename != NULL) {
+    delete[] PrintLikelihoodFilename;
+    PrintLikelihoodFilename = NULL;
+  }
+}
+
 void MainInfo::OpenOptinfofile(char* filename) {
   ErrorHandler handle;
   handle.Open(filename);
@@ -73,10 +97,8 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
       } else if (strcasecmp(aVector[k], "-i") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage();
-        InitialCommentFilename = new char[strlen(aVector[k + 1]) + 1];
-        strcpy(InitialCommentFilename, aVector[k + 1]);
+        SetInitialCommentFilename(aVector[k + 1]);
         k++;
-        InitialCondareGiven = 1;
 
       } else if (strcasecmp(aVector[k], "-o") == 0) {
         if (k == aNumber - 1)
@@ -178,16 +200,6 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
 
 }
 
-void MainInfo::SetPrintLikelihoodFilename(char* filename) {
-  //name of file seems to cause problem.
-  ErrorHandler handle;
-  handle.Open(filename);
-  PrintLikelihoodFilename = new char[strlen(filename) + 1];
-  strcpy(PrintLikelihoodFilename, filename);
-  PrintLikelihoodInfo = 1;
-  handle.Close();
-}
-
 void MainInfo::Read(CommentStream& infile) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -226,15 +238,25 @@ void MainInfo::Read(CommentStream& infile) {
 }
 
 void MainInfo::SetPrintInitialCondFilename(char* filename) {
-  int len = strlen(filename);
-  PrintInitialcondfilename = new char[len + 1];
+  PrintInitialcondfilename = new char[strlen(filename) + 1];
   strcpy(PrintInitialcondfilename, filename);
   PrintInitialcond = 1;
 }
 
 void MainInfo::SetPrintFinalCondFilename(char* filename) {
-  int len = strlen(filename);
-  PrintFinalcondfilename = new char[len + 1];
+  PrintFinalcondfilename = new char[strlen(filename) + 1];
   strcpy(PrintFinalcondfilename, filename);
   PrintFinalcond = 1;
+}
+
+void MainInfo::SetPrintLikelihoodFilename(char* filename) {
+  PrintLikelihoodFilename = new char[strlen(filename) + 1];
+  strcpy(PrintLikelihoodFilename, filename);
+  PrintLikelihoodInfo = 1;
+}
+
+void MainInfo::SetInitialCommentFilename(char* filename) {
+  InitialCommentFilename = new char[strlen(filename) + 1];
+  strcpy(InitialCommentFilename, filename);
+  InitialCondareGiven = 1;
 }

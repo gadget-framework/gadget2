@@ -36,9 +36,15 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
   ReadWordAndVariable(infile, "functionnumber", functionnumber);
 
   infile >> ws;
-  if (infile.peek() == 'a')
-    ReadWordAndVariable(infile,"aggregation_level", agg_lev);
-  else
+  if (infile.peek() == 'a') {
+    infile >> text >> ws;
+    //JMB - changed to check for aggregation_level or aggregationlevel
+    if ((strcasecmp(text, "aggregation_level") == 0) || (strcasecmp(text, "aggregationlevel") == 0))
+      infile >> agg_lev >> ws;
+    else
+      handle.Unexpected("aggregationlevel", text);
+
+  } else
     agg_lev = 0; //default value for agg_lev
 
   ReadWordAndVariable(infile, "overconsumption", overconsumption);
@@ -78,20 +84,14 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
   datafile.close();
   datafile.clear();
 
+  LgrpDiv = new LengthGroupDivision(lengths);
+
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
       if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
         handle.UndefinedArea(areas[i][j]);
 
-  //Must create the length group division
-  dl = lengths[1] - lengths[0];
-  for (i = 2; i < lengths.Size(); i++)
-    if (lengths[i] - lengths[i - 1] != dl) {
-      dl = 0;
-      break;
-    }
-  LgrpDiv = new LengthGroupDivision(lengths);
 
   //Read in the fleetnames
   i = 0;
@@ -471,7 +471,8 @@ void CatchDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvecto
     }
   }
 
-  aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
+  LengthGroupDivision* AggLgrpDiv = new LengthGroupDivision(lengths);
+  aggregator = new FleetPreyAggregator(fleets, stocks, AggLgrpDiv, areas, ages, overconsumption);
 
   //Needed for -catchprint header
   min_data_age = ages[0][0];
@@ -520,7 +521,8 @@ void CatchDistribution::Init(const Ecosystem* eco) {
   }
 
   /*JMB code removed from here - see RemovedCode.txt for details*/
-  aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
+  LengthGroupDivision* AggLgrpDiv = new LengthGroupDivision(lengths);
+  aggregator = new FleetPreyAggregator(fleets, stocks, AggLgrpDiv, areas, ages, overconsumption);
 
   //Needed for -catchprint header
   min_data_age = ages[0][0];
@@ -560,7 +562,7 @@ void CatchDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
         likelihood += GammaLik(TimeInfo);
         break;
       default:
-        cerr << "Function number is not correct, must be from 1 - 5\n";
+        cerr << "Error in catchdistribution - unknown functionnumber " << functionnumber << endl;
         break;
     }
     //JMB if (weights.Nrow() > 0)
@@ -918,13 +920,13 @@ void CatchDistribution::PrintLikelihoodHeader(ofstream& catchfile) {
   catchfile << "Filter:           default\nMinp:             "
     << minp << "\nName:            ";
   for (i = 0; i < fleetnames.Size(); i++)
-    catchfile << sep <<fleetnames[i];
+    catchfile << sep << fleetnames[i];
   catchfile << "\nStocks:          ";
   for (i = 0; i < stocknames.Size(); i++)
-    catchfile << sep <<stocknames[i];
+    catchfile << sep << stocknames[i];
   catchfile << "\nAges:             min " << mina << " max " << maxa
     << "\nLengths:          min " << LgrpDiv->Minlength(0) << " max "
-    << LgrpDiv->Maxlength(LgrpDiv->Size() - 1) << " dl " << dl << endl;
+    << LgrpDiv->Maxlength(LgrpDiv->Size() - 1) << " dl " << LgrpDiv->dl() << endl;
 }
 
 void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& TimeInfo) {

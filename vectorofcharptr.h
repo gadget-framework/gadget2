@@ -12,7 +12,7 @@ public:
   vectorofcharptr(int sz);
   vectorofcharptr(int sz, char* initial);
   vectorofcharptr(const vectorofcharptr& initial);
-  ~vectorofcharptr();
+  ~vectorofcharptr() { delete[] v; };
   void set(int id, char* value);
   void resize(int add, char* value);
   void resize(int add);

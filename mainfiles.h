@@ -8,6 +8,7 @@ class MainInfo {
 public:
   void ShowCorrectUsage();
   MainInfo();
+  ~MainInfo();
   void Read(int aNumber, char *const aVector[]);
   void Read(CommentStream& file);
   void OpenOptinfofile(char* filename);
@@ -15,6 +16,7 @@ public:
   void SetPrintLikelihoodFilename(char* filename);
   void SetPrintInitialCondFilename(char* filename);
   void SetPrintFinalCondFilename(char* filename);
+  void SetInitialCommentFilename(char* filename);
   CommentStream optinfocommentfile;
   ifstream optinfofile;
   char* PrintLikelihoodFilename;

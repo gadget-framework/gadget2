@@ -24,18 +24,3 @@ void DeleteElementUsingKeeper(doublevector& var, Keeper* const keeper, int index
   for (i = 0; i < var.Size(); i++)
     keeper->ChangeVariable(tmp[i], var[i]);
 }
-
-//Pre. and Post.: Quite similar to DeleteElementUsingKeeper, except
-//now the function adds 'add' copies of 'initial' to 'var'.
-void ResizeVectorUsingKeeper(doublevector& var,
-  Keeper* const keeper, int add, double initial) {
-
-  assert(add > 0);
-  doublevector tmp(var);
-  int i;
-  for (i = 0; i < var.Size(); i++)
-    keeper->ChangeVariable(var[i], tmp[i]);
-  var.resize(add, initial);
-  for (i = 0; i < tmp.Size(); i++)
-    keeper->ChangeVariable(tmp[i], var[i]);
-}

@@ -20,7 +20,6 @@ public:
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
   char* stockname;
-  const LengthGroupDivision* LgrpDiv;
   intvector areas;
   intvector outerareas;
   StockPreyStdInfo* preyinfo;

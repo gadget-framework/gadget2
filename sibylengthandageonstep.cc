@@ -219,7 +219,6 @@ SIByLengthAndAgeOnStep::~SIByLengthAndAgeOnStep() {
     suitfunction = NULL;
   }
   delete aggregator;
-  delete LgrpDiv;
 }
 
 void SIByLengthAndAgeOnStep::SetStocks(const Stockptrvector& Stocks) {

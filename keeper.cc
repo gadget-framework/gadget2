@@ -53,6 +53,7 @@ void Keeper::KeepVariable(double& value, const Parameter& attr) {
 
 Keeper::~Keeper() {
   delete stack;
+  delete likcompnames;
   int i, j;
   for (i = 0; i < address.Nrow(); i++)
     for (j = 0; j < address.Ncol(i); j++)
@@ -327,7 +328,7 @@ void Keeper::WriteInitialInformation(const char* const filename, const Likelihoo
   tmpLikely.resize(Likely.Size());
   char* strLikely = new char[1 + Likely.Size() * MaxStrLength];
   char* strTemp = new char[MaxStrLength];
-  strcpy(strLikely, "");
+  strncpy(strLikely, "", 1 + Likely.Size() * MaxStrLength);
   strncpy(strTemp, "", MaxStrLength);
   strLikely = SendComponents();
   ClearComponents();

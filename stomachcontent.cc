@@ -542,14 +542,17 @@ void SCAmounts::ReadStomachSampleContent(CommentStream& infile, const TimeClass*
 SC::~SC() {
   int i, j;
   for (i = 0; i < stomachcontent.Nrow(); i++)
-    for (j = 0; j < stomachcontent[i].Size(); j++)
+    for (j = 0; j < stomachcontent[i].Size(); j++) {
       delete stomachcontent[i][j];
-  for (i = 0; i < preynames.Nrow(); i++)
+      delete modelConsumption[i][j];
+    }
+
+  for (i = 0; i < preynames.Nrow(); i++) {
     delete aggregator[i];
-  delete aggregator;
-  for (i = 0; i < preynames.Nrow(); i++)
     for (j = 0; j < preynames[i].Size(); j++)
       delete[] preynames[i][j];
+  }
+
   for (i = 0; i < predatornames.Size(); i++)
     delete[] predatornames[i];
   for (i = 0; i < areaindex.Size(); i++)
@@ -605,7 +608,7 @@ void SC::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys
         new PredatorAggregator(predators, preys, areas, predLgrpDiv, preyLgrpDiv);
     } else
       aggregator[i] =
-        new PredatorAggregator(predatornames,preys,areas, predatorages, preyLgrpDiv);
+        new PredatorAggregator(predatornames, preys, areas, predatorages, preyLgrpDiv);
   }
 }
 
@@ -744,9 +747,11 @@ void SCNumbers::Aggregate(int i) {
 
 SCAmounts::~SCAmounts() {
   int i, j;
-  for (i = 0; i < stddev.Nrow(); i++)
+  for (i = 0; i < stddev.Nrow(); i++) {
+    delete number[i];
     for (j = 0; j < stddev[i].Size(); j++)
       delete stddev[i][j];
+  }
 }
 
 double SCAmounts::CalculateLikelihood(doublematrixptrvector& consumption,
@@ -773,7 +778,7 @@ double SCAmounts::CalculateLikelihood(doublematrixptrvector& consumption,
 
 void SCAmounts::PrintLikelihood(ofstream& out, const TimeClass& timeInfo) {
 
-  if (! AAT.AtCurrentTime(&timeInfo))
+  if (!AAT.AtCurrentTime(&timeInfo))
     return;
 
   out.setf(ios::fixed);
@@ -861,9 +866,7 @@ void SCAmounts::PrintLikelihoodHeader(ofstream& out) {
   out.flush();
 }
 
-void SCRatios::SetPredatorsAndPreys(Predatorptrvector& Predators,
-  Preyptrvector& Preys) {
-
+void SCRatios::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys) {
   int i, j, k, l;
   double sum = 0.0;
   SC::SetPredatorsAndPreys(Predators, Preys);

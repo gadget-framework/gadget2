@@ -30,9 +30,7 @@ void InitialInputFile::getSwitchValue(Parametervector& sw) {
   sw = switches;
 }
 
-InitialInputFile::InitialInputFile(const char* const filename)
-  : header(0), switches(0), values(0), lowerbound(0), upperbound(0), optimize(0) {
-
+InitialInputFile::InitialInputFile(const char* const filename) : header(0) {
   tmpinfile.open(filename);
   infile.SetStream(tmpinfile);
   if (infile.fail()) {
@@ -43,6 +41,9 @@ InitialInputFile::InitialInputFile(const char* const filename)
 }
 
 InitialInputFile::~InitialInputFile() {
+  int i;
+  for (i = 0; i < header.Size(); i++)
+    delete[] header[i];
   tmpinfile.close();
   tmpinfile.clear();
 }
@@ -95,6 +96,7 @@ void InitialInputFile::readHeader() {
 
   } else {
     char textInLine[VeryLongString];
+    strncpy(textInLine, "", VeryLongString);
     infile.get(textInLine, VeryLongString, '\n');
     if (!infile.eof() && infile.peek() != '\n') {
       cerr << "Error in initialinput - line to long in file\n";
@@ -133,12 +135,12 @@ void InitialInputFile::readHeader() {
 
       if (numColumns != 4) {
         cerr << "While reading inputfile expected to read header in exactly this order\n"
-          << "switch value lower upper optimise\nBut the header just read was";
+          << "switch value lower upper optimise\nBut the header just read was\n";
 
         for (i = 0; i < header.Size(); i++)
-          cerr << sep << header[i];
+          cerr << header[i] << sep;
 
-        cerr << " from " << text << endl;
+        cerr << "from " << text << endl;
         exit(EXIT_FAILURE);
       }
     }
@@ -195,6 +197,7 @@ void InitialInputFile::readVectorFromLine() {
   }
 
   char text[VeryLongString];
+  strncpy(text, "", VeryLongString);
   infile.get(text, VeryLongString, '\n');
   if (!infile.eof() && infile.peek() != '\n') {
     cerr << "Error in initialinput - line too long in file\n";
@@ -246,10 +249,6 @@ void InitialInputFile::checkIfFailure() {
   }
 }
 
-int InitialInputFile::finishedReading() const {
-  return (values.Size() > 0);
-}
-
 int InitialInputFile::NoVariables() const {
   return values.Size();
 }
@@ -259,6 +258,7 @@ int InitialInputFile::readSwitches() const {
 }
 
 int InitialInputFile::Optimize(int i) const {
+  assert((i < optimize.Size()) && (i >= 0));
   return optimize[i];
 }
 

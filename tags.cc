@@ -135,14 +135,14 @@ void Tags::ReadNumbers(CommentStream& infile, const char* tagname, double minlen
 Tags::~Tags() {
   int i;
   for (i = 0; i < stocknames.Size(); i++)
-    delete [] stocknames[i];
+    delete[] stocknames[i];
 
   if (LgrpDiv != NULL) {
     delete LgrpDiv;
   }
 
   for (i = 0; i < AgeLengthStock.Size(); i++)
-    delete [] AgeLengthStock[i];
+    delete[] AgeLengthStock[i];
 }
 
 void Tags::SetStock(Stockptrvector& Stocks) {

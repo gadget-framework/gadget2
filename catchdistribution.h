@@ -119,7 +119,6 @@ private:
   int minrow;
   int maxrow;
   //AJ 02.06.00 Changing int dl to double dl
-  double dl;
   LengthGroupDivision* LgrpDiv;
 };
 

@@ -219,8 +219,12 @@ void StockDistribution::ReadStockData(CommentStream& infile,
 
 StockDistribution::~StockDistribution() {
   int i, j;
-  for (i = 0; i < stocknames.Size(); i++)
+  for (i = 0; i < stocknames.Size(); i++) {
     delete[] stocknames[i];
+    delete aggregator[i];
+  }
+  delete lgrpdiv;
+
   for (i = 0; i < fleetnames.Size(); i++)
     delete[] fleetnames[i];
   for (i = 0; i < areaindex.Size(); i++)
@@ -232,7 +236,6 @@ StockDistribution::~StockDistribution() {
   for (i = 0; i < AgeLengthData.Nrow(); i++)
     for (j = 0; j < AgeLengthData.Ncol(i); j++)
       delete AgeLengthData[i][j];
-  delete aggregator;
 }
 
 void StockDistribution::Reset(const Keeper* const keeper) {
@@ -306,7 +309,9 @@ void StockDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvecto
         << "Did not find any name matching " << stocknames[i] << endl;
       exit(EXIT_FAILURE);
     }
-    aggregator[i] = new FleetPreyAggregator(fleets, stocks, lgrpdiv, areas, ages, overconsumption);
+
+    LengthGroupDivision* AggLgrpDiv = new LengthGroupDivision(lengths);
+    aggregator[i] = new FleetPreyAggregator(fleets, stocks, AggLgrpDiv, areas, ages, overconsumption);
   }
 }
 
@@ -321,6 +326,7 @@ void StockDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
         likelihood += LikMultinomial();
         break;
       default:
+        cerr << "Error in stockdistribution - unknown functionnumber " << functionnumber << endl;
         break;
     }
     timeindex++;

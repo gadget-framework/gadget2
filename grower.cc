@@ -70,7 +70,6 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     //New beta binomial growth distribution code is used
     version = 1;
 
-    //Growthimplement parameters put in.
     infile >> power >> ws;
     ReadWordAndVariable(infile, "maxlengthgroupgrowth", maxlengthgroupgrowth);
 
@@ -87,7 +86,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     part4.resize(maxlengthgroupgrowth + 1);
     rows = maxlengthgroupgrowth + 1;
 
-  } else if ((strcasecmp(text, "MeanVarianceParameters") == 0)) {
+  } else if ((strcasecmp(text, "meanvarianceparameters") == 0)) {
     //Old growth distribution, with distribution file
     version = 2;
 
@@ -110,7 +109,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     rows = GrIPar->MaxLengthgroupGrowth() - GrIPar->MinLengthgroupGrowth() + 1;
 
   } else
-    handle.Unexpected("growthimplementfile or MeanVarianceParameters", text);
+    handle.Unexpected("power or meanvarianceparameters", text);
 
   //Finished reading from input files.
   const int noareas = areas.Size();
@@ -142,8 +141,8 @@ Grower::~Grower() {
   }
   delete CI;
   delete LgrpDiv;
-  delete GrIPar;
   delete growthcalc;
+  delete GrIPar;
 }
 
 void Grower::Print(ofstream& outfile) const {

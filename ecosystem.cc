@@ -47,31 +47,32 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
 
 Ecosystem::~Ecosystem() {
   int i;
-  delete Area;
-  delete TimeInfo;
-  delete keeper;
   for (i = 0; i < fleetnames.Size(); i++)
     delete[] fleetnames[i];
   for (i = 0; i < catchnames.Size(); i++)
     delete[] catchnames[i];
-  for (i = 0; i < catchdata.Size(); i++)
-    delete catchdata[i];
   for (i = 0; i < stocknames.Size(); i++)
     delete[] stocknames[i];
   for (i = 0; i < tagnames.Size(); i++)
     delete[] tagnames[i];
   for (i = 0; i < otherfoodnames.Size(); i++)
     delete[] otherfoodnames[i];
-  for (i = 0; i < Likely.Size(); i++)
-    delete Likely[i];
-  for (i = 0; i < basevec.Size(); i++)
-    delete basevec[i];
+  for (i = 0; i < catchdata.Size(); i++)
+    delete catchdata[i];
   for (i = 0; i < printvec.Size(); i++)
     delete printvec[i];
-  for (i = 0; i < tagvec.Size(); i++)
-    delete tagvec[i];
   for (i = 0; i < likprintvec.Size(); i++)
     delete likprintvec[i];
+  for (i = 0; i < Likely.Size(); i++)
+    delete Likely[i];
+  //for (i = 0; i < tagvec.Size(); i++)
+    //delete tagvec[i];
+  for (i = 0; i < basevec.Size(); i++)
+    delete basevec[i];
+
+  delete Area;
+  delete TimeInfo;
+  //delete keeper;
 }
 
 //Print status

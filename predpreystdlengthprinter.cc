@@ -9,7 +9,7 @@ extern RunId RUNID;
 
 PredPreyStdLengthPrinter::PredPreyStdLengthPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
-  : PredPreyStdPrinter(infile, Area, TimeInfo), predinfo(0), predator(0), prey(0), PredLgrpDiv(0), PreyLgrpDiv(0) {
+  : PredPreyStdPrinter(infile, Area, TimeInfo), predinfo(0), predator(0), prey(0) {
 
   //finished initializing. Now print first lines
   outfile << "; ";
@@ -20,8 +20,6 @@ PredPreyStdLengthPrinter::PredPreyStdLengthPrinter(CommentStream& infile,
 }
 
 PredPreyStdLengthPrinter::~PredPreyStdLengthPrinter() {
-  delete PredLgrpDiv;
-  delete PreyLgrpDiv;
   delete predinfo;
 }
 
@@ -46,8 +44,8 @@ void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo) {
   for (a = 0; a < areas.Size(); a++)
     predinfo->Sum(TimeInfo, areas[a]);
 
-  PredLgrpDiv = predinfo->ReturnPredLengthGroupDiv();
-  PreyLgrpDiv = predinfo->ReturnPreyLengthGroupDiv();
+  const LengthGroupDivision* PredLgrpDiv = predinfo->ReturnPredLengthGroupDiv();
+  const LengthGroupDivision* PreyLgrpDiv = predinfo->ReturnPreyLengthGroupDiv();
 
   for (a = 0; a < areas.Size(); a++) {
     for (predl = 0; predl < PredLgrpDiv->NoLengthGroups(); predl++) {

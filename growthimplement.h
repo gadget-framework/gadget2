@@ -8,25 +8,26 @@ class GrowthImplementparameters;
 
 class GrowthImplementparameters {
 public:
- GrowthImplementparameters(CommentStream& infile);
- void Print(ofstream& outfile) const;
- int MinLengthgroupGrowth() const { return minlengthgroupgrowth; };
- int MaxLengthgroupGrowth() const { return maxlengthgroupgrowth; };
- double MeanResolution() const { return meanresolution; };
- double VarResolution() const { return varresolution; };
- int NMean() const { return nmean; };
- int NVar() const { return nvar; };
- const doublematrix& Distribution() const { return distribution; };
- const doublevector& RealVariance() const { return realvariance; };
+  GrowthImplementparameters(CommentStream& infile);
+  ~GrowthImplementparameters() {};
+  void Print(ofstream& outfile) const;
+  int MinLengthgroupGrowth() const { return minlengthgroupgrowth; };
+  int MaxLengthgroupGrowth() const { return maxlengthgroupgrowth; };
+  double MeanResolution() const { return meanresolution; };
+  double VarResolution() const { return varresolution; };
+  int NMean() const { return nmean; };
+  int NVar() const { return nvar; };
+  const doublematrix& Distribution() const { return distribution; };
+  const doublevector& RealVariance() const { return realvariance; };
 protected:
- double meanresolution;
- double varresolution;
- int nmean;
- int nvar;
- int minlengthgroupgrowth;
- int maxlengthgroupgrowth;
- doublevector realvariance;
- doublematrix distribution;
+  double meanresolution;
+  double varresolution;
+  int nmean;
+  int nvar;
+  int minlengthgroupgrowth;
+  int maxlengthgroupgrowth;
+  doublevector realvariance;
+  doublematrix distribution;
 };
 
 #endif

@@ -45,8 +45,7 @@ void SIByAgeOnStep::SetStocks(const Stockptrvector& Stocks) {
     if (maxlength < stockmaxlength)
       maxlength = stockmaxlength;
   }
-  LengthGroupDivision* LgrpDiv = new LengthGroupDivision(minlength,
-    maxlength, maxlength - minlength);
+  LengthGroupDivision* LgrpDiv = new LengthGroupDivision(minlength, maxlength, maxlength - minlength);
   aggregator = new StockAggregator(Stocks, LgrpDiv, areas, Ages);
   delete LgrpDiv;
 }

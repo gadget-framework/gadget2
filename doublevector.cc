@@ -83,7 +83,7 @@ void doublevector::Delete(int pos) {
 
 void doublevector::Reset() {
   if (size > 0) {
-    delete v;
+    delete[] v;
     v = 0;
     size = 0;
   }

@@ -53,7 +53,6 @@ public:
   void readHeader();
   void readVectorFromLine();
   void checkIfFailure();
-  int finishedReading() const;
   void readFromFile();
   int NoVariables() const;
   int readSwitches() const;

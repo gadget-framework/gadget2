@@ -92,10 +92,6 @@ FleetPreyAggregator::FleetPreyAggregator(const Fleetptrvector& Fleets,
 
 FleetPreyAggregator::~FleetPreyAggregator() {
   int i;
-  for (i = 0; i < fleets.Size(); i++)
-    delete fleets[i];
-  for (i = 0; i < stocks.Size(); i++)
-    delete stocks[i];
   for (i = 0; i < CI.Size(); i++)
     delete CI[i];
   delete LgrpDiv;

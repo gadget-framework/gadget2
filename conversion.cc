@@ -45,9 +45,12 @@ LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : 
   meanlength.resize(size);
   minlength.resize(size);
   meanlength[0] = MinL + (0.5 * Dl);
+  minlength[0] = MinL;
   int i;
-  for (i = 1; i < size; i++)
+  for (i = 1; i < size; i++) {
     meanlength[i] = meanlength[i - 1] + Dl;
+    minlength[i] = minlength[i - 1] + Dl;
+  }
 }
 
 //Constructor for length division with uneven increments.

@@ -78,6 +78,7 @@ void TagData::ReadRecaptureData(CommentStream& infile,
   char tmparea[MaxStrLength], tmpfleet[MaxStrLength], tmptagid[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpfleet, "", MaxStrLength);
+  strncpy(tmptagid, "", MaxStrLength);
   int keepdata, timeid, areaid, fleetid;
 
   //Find start of recapture data in datafile
