@@ -309,7 +309,7 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
 
 int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   const AreaClass* const Area, FormulaMatrixPtrVector& amount,
-  const CharPtrVector& lenindex, Keeper* const keeper) {
+  const CharPtrVector& lenindex, Keeper* const keeper, const IntVector& tmpareas) {
 
   int i;
   int year, step, area;
@@ -318,7 +318,7 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   char tmpnumber[MaxStrLength];
   strncpy(tmplength, "", MaxStrLength);
   strncpy(tmpnumber, "", MaxStrLength);
-  int keepdata, timeid, areaid, lenid;
+  int keepdata, timeid, areaid, lenid, tmpareaid;
   int count = 0;
 
   //Find start of distribution data in datafile
@@ -377,12 +377,19 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
     if (lenid == -1)
       keepdata = 1;
 
-    if (keepdata == 0) {
-      //data is required, so store it
-      areaid = Area->InnerArea(area);
-      if (areaid == -1)
-        handle.UndefinedArea(area);
+    //only keep the data if area is a required area
+    areaid = -1;
+    tmpareaid = Area->InnerArea(area);
+    if (tmpareaid == -1)
+      handle.UndefinedArea(area);
+    for (i = 0; i < tmpareas.Size(); i++)
+      if (tmpareas[i] == tmpareaid)
+        areaid = i;
 
+    if (areaid == -1)
+      keepdata = 1;
+
+    if (keepdata == 0) {
       count++;
       infile >> (*amount[areaid])[timeid][lenid] >> ws;
 

@@ -68,7 +68,7 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
   FormulaMatrix& amount, Keeper* const keeper, const char* givenname);
 int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   const AreaClass* const Area, FormulaMatrixPtrVector& amount,
-  const CharPtrVector& lenindex, Keeper* const keeper);
+  const CharPtrVector& lenindex, Keeper* const keeper, const IntVector& tmpareas);
 
 #endif
 
