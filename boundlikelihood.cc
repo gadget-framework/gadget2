@@ -145,8 +145,8 @@ void BoundLikelihood::SummaryPrint(ofstream& outfile) {
   //JMB there is only one likelihood score here ...
   if (!(isZero(likelihood))) {
     outfile << "all   all        all" << sep << setw(largewidth) << this->Name() << sep
-      << setw(smallwidth) << weight << sep << setprecision(largeprecision)
-      << setw(largewidth) << likelihood << endl;
+      << setprecision(smallprecision) << setw(smallwidth) << weight << sep
+      << setprecision(largeprecision) << setw(largewidth) << likelihood << endl;
     outfile.flush();
   }
 }

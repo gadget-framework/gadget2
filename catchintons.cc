@@ -391,15 +391,15 @@ void CatchInTons::SummaryPrint(ofstream& outfile) {
       if (yearly == 0) {
         outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
           << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-          << setw(largewidth) << this->Name() << sep << setw(smallwidth) << weight
-          << sep << setprecision(largeprecision) << setw(largewidth)
-          << likelihoodValues[year][area] << endl;
+          << setw(largewidth) << this->Name() << sep << setprecision(smallprecision)
+          << setw(smallwidth) << weight << sep << setprecision(largeprecision)
+          << setw(largewidth) << likelihoodValues[year][area] << endl;
       } else {
         outfile << setw(lowwidth) << Years[year] << "  all "
           << setw(printwidth) << areaindex[area] << sep
-          << setw(largewidth) << this->Name() << sep << setw(smallwidth) << weight
-          << sep << setprecision(largeprecision) << setw(largewidth)
-          << likelihoodValues[year][area] << endl;
+          << setw(largewidth) << this->Name() << sep << setprecision(smallprecision)
+          << setw(smallwidth) << weight << sep << setprecision(largeprecision)
+          << setw(largewidth) << likelihoodValues[year][area] << endl;
       }
     }
   }

@@ -220,8 +220,9 @@ void SurveyIndices::SummaryPrint(ofstream& outfile) {
   //JMB - this is nasty hack since there is only one area
   for (area = 0; area < areaindex.Size(); area++) {
     outfile << "all   all " << setw(printwidth) << areaindex[area] << sep
-      << setw(largewidth) << this->Name() << sep << setw(smallwidth) << weight
-      << sep << setprecision(largeprecision) << setw(largewidth) << likelihood << endl;
+      << setw(largewidth) << this->Name() << sep << setprecision(smallprecision)
+      << setw(smallwidth) << weight << sep << setprecision(largeprecision)
+      << setw(largewidth) << likelihood << endl;
   }
   outfile.flush();
 }

@@ -514,9 +514,9 @@ void SurveyDistribution::SummaryPrint(ofstream& outfile) {
     for (area = 0; area < areaindex.Size(); area++) {
       outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
         << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(largewidth) << this->Name() << sep << setw(smallwidth)
-        << weight << sep << setprecision(largeprecision) << setw(largewidth)
-        << likelihoodValues[year] << endl;
+        << setw(largewidth) << this->Name() << sep << setprecision(smallprecision)
+        << setw(smallwidth) << weight << sep << setprecision(largeprecision)
+        << setw(largewidth) << likelihoodValues[year] << endl;
     }
   }
   outfile.flush();
