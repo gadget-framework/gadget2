@@ -371,7 +371,7 @@ void Keeper::WriteValues(const char* const filename,
   checkIfFailure(outfile, filename);
 
   //JMB - print the number of function evaluations at the start of the line
-  outfile << EcoSystem->GetFuncEval() << TAB;
+  outfile << EcoSystem->getFuncEval() << TAB;
 
   p = prec;
   w = p + 4;
@@ -423,7 +423,7 @@ void Keeper::WriteValuesInColumns(const char* const filename,
     p = largeprecision;
   w = p + 4;
 
-  outfile << ";\n; the optimisation has run for " << EcoSystem->GetFuncEval()
+  outfile << ";\n; the optimisation has run for " << EcoSystem->getFuncEval()
     << " function evaluations\n; the current likelihood value is "
     << setprecision(p) << functionValue << "\nswitch\tvalue\t\tlower\tupper\toptimize\n";
 
@@ -533,16 +533,16 @@ void Keeper::WriteParamsInColumns(const char* const filename,
   outfile << "; ";
   RUNID.print(outfile);
 
-  if (EcoSystem->GetFuncEval() == 0) {
+  if (EcoSystem->getFuncEval() == 0) {
     outfile << "; a stochastic run was performed giving a likelihood value of "
       << setprecision(p) << functionValue;
 
   } else {
-    outfile << "; the optimisation ran for " << EcoSystem->GetFuncEval()
+    outfile << "; the optimisation ran for " << EcoSystem->getFuncEval()
       << " function evaluations\n; the final likelihood value was "
       << setprecision(p) << functionValue;
 
-    if (EcoSystem->GetConverge() == 1)
+    if (EcoSystem->getConverge() == 1)
       outfile << "\n; the optimisation stopped because the convergence criteria were met";
     else
       outfile << "\n; the optimisation stopped because the maximum number of iterations was reached";

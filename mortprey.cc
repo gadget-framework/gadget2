@@ -99,8 +99,8 @@ void MortPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
   for (i = 0; i < cannibalism[inarea].Size(); i++)
     cannibalism[inarea][i] = 0.0;
 
-  mean_n[inarea].SettoZero();
-  Alkeys[inarea].SettoZero(); //The next line copies stock to Alkeys and mean_n
+  mean_n[inarea].setToZero();
+  Alkeys[inarea].setToZero(); //The next line copies stock to Alkeys and mean_n
   AgebandmAdd(mean_n[inarea], stock, *CI);
   AgebandmAdd(Alkeys[inarea], stock, *CI);
   Alkeys[inarea].Colsum(Number[inarea]);

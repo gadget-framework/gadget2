@@ -170,23 +170,23 @@ public:
   int Birthday(const TimeClass* const TimeInfo) const;
   const LengthGroupDivision* ReturnLengthGroupDiv() const { return LgrpDiv; };
   int IsEaten() const { return iseaten; };
-  int DoesSpawn() const { return doesspawn; };
-  int DoesMove() const { return doesmove; };
-  int DoesEat() const { return doeseat; };
-  int DoesMature() const { return doesmature; };
-  int DoesRenew() const { return doesrenew; };
-  int DoesGrow() const { return doesgrow; };
-  int DoesMigrate() const { return doesmigrate; };
+  int doesSpawn() const { return doesspawn; };
+  int doesMove() const { return doesmove; };
+  int doesEat() const { return doeseat; };
+  int doesMature() const { return doesmature; };
+  int doesRenew() const { return doesrenew; };
+  int doesGrow() const { return doesgrow; };
+  int doesMigrate() const { return doesmigrate; };
   int Minage() const { return Alkeys[0].Minage(); };
   int Maxage() const { return Alkeys[0].Maxage(); };
   const DoubleIndexVector& mortality() const { return NatM->getMortality(); };
-  const StockPtrVector& GetMatureStocks();
-  const StockPtrVector& GetTransitionStocks();
+  const StockPtrVector& getMatureStocks();
+  const StockPtrVector& getTransitionStocks();
   void UpdateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss);
   void DeleteTags(const char* tagname);
   void UpdateMatureStockWithTags(const TimeClass* const TimeInfo);
   void UpdateTransitionStockWithTags(const TimeClass* const TimeInfo);
-  const CharPtrVector TaggingExperimentIds();
+  const CharPtrVector TaggingExperimentIDs();
   /**
    * \brief This will return the type of stock class
    * \return type

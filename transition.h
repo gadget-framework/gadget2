@@ -63,17 +63,17 @@ public:
    * \brief This will calculate the stocks the young stock can move into
    * \return transition stocks
    */
-  const StockPtrVector& GetTransitionStocks();
+  const StockPtrVector& getTransitionStocks();
   /**
    * \brief This will add a tagging experiment to the transition calculations
    * \param tagname is the name of the tagging experiment
    */
-  void AddTag(const char* tagname);
+  void addTransitionTag(const char* tagname);
   /**
    * \brief This will remove a tagging experiment from the transition calculations
    * \param tagname is the name of the tagging experiment
    */
-  void DeleteTag(const char* tagname);
+  void deleteTransitionTag(const char* tagname);
   /**
    * \brief This function will reset the transition data
    */

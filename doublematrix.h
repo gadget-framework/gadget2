@@ -24,20 +24,18 @@ public:
   int maxRowSize() const;
   int minRowSize() const;
   int isRectangular() const;
-  DoubleMatrix& addMatrix(const DoubleMatrix& d, int nr, int ncol) const;
-  DoubleMatrix& subMatrix(const DoubleMatrix& d, int nrow, int ncol) const;
+  void setElementsTo(double d);
   DoubleMatrix& operator += (const DoubleMatrix& d);
   DoubleMatrix& operator -= (const DoubleMatrix& d);
   DoubleMatrix& operator = (const DoubleMatrix& d);
   DoubleMatrix& operator * (const DoubleMatrix& d) const;
-  int operator == (const DoubleMatrix& d) const;
-  void setElementsTo(double d);
   DoubleMatrix& operator *= (double d);
   DoubleMatrix& operator * (double d) const;
   DoubleMatrix& operator -= (double d);
   DoubleMatrix& operator - (double d) const;
   DoubleMatrix& operator += (double d);
   DoubleMatrix& operator + (double d) const;
+  int operator == (const DoubleMatrix& d) const;
   friend ostream& operator << (ostream& out, const DoubleMatrix& d);
 protected:
   int nrow;

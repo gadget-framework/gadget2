@@ -41,7 +41,7 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& preds, const Pre
   //The same applies for preyConv and preyLgrpDiv.
   for (i = 0; i < predators.Size(); i++)
     for (j = 0; j < preys.Size(); j++)
-      if (predators[i]->DoesEat(preys[j]->Name()))
+      if (predators[i]->doesEat(preys[j]->Name()))
         doeseat[i][j] = 1;
 
   //Resize total using dummy variable dm

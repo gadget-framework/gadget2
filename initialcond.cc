@@ -405,7 +405,7 @@ void InitialCond::Initialize(AgeBandMatrixPtrVector& Alkeys) {
   }
 
   for (area = 0; area < areas.Size(); area++) {
-    Alkeys[area].SettoZero();
+    Alkeys[area].setToZero();
     minage = max(Alkeys[area].Minage(), AreaAgeLength[area].Minage());
     maxage = min(Alkeys[area].Maxage(), AreaAgeLength[area].Maxage());
 

@@ -377,7 +377,7 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
         << (FuncEval - offset) << " function evaluations (max " << maxevl
         << ")\nThe steplength was reduced to " << steplength << " (min " << epsilon
         << ")\nThe optimisation stopped because an optimum was found for this run\n";
-      EcoSystem->SetConverge(1);
+      EcoSystem->setConverge(1);
 
       for (i = 0; i < nvars; i++)
         endpt[i] = xbefore[i];

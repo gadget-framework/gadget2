@@ -85,7 +85,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   Alkeys.resize(areas.Size(), minage, lowerlgrp, size);
   tagAlkeys.resize(areas.Size(), minage, lowerlgrp, size);
   for (i = 0; i < Alkeys.Size(); i++)
-    Alkeys[i].SettoZero();
+    Alkeys[i].setToZero();
 
   //Read the length group division used in Grower and in Predator
   DoubleVector grlengths;
@@ -347,7 +347,7 @@ void LenStock::Reset(const TimeClass* const TimeInfo) {
     len_natm->NatCalc();
     year = -1;
     for (i = 0; i < Nsum.Size(); i++)
-      Nsum[i]->setElementsTo(0);
+      Nsum[i]->setElementsTo(0.0);
   }
   if (doeseat)
     predator->Reset(TimeInfo);

@@ -84,7 +84,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   Alkeys.resize(areas.Size(), minage, lowerlgrp, size);
   tagAlkeys.resize(areas.Size(), minage, lowerlgrp, size);
   for (i = 0; i < Alkeys.Size(); i++)
-    Alkeys[i].SettoZero();
+    Alkeys[i].setToZero();
 
   //Read the growth length group data
   DoubleVector grlengths;
@@ -401,12 +401,12 @@ const AgeBandMatrix& Stock::getMeanN(int area) const {
   return (((MortPrey*)prey)->getMeanN(area));
 }
 
-const StockPtrVector& Stock::GetMatureStocks() {
+const StockPtrVector& Stock::getMatureStocks() {
   assert(doesmature != 0);
-  return maturity->GetMatureStocks();
+  return maturity->getMatureStocks();
 }
 
-const StockPtrVector& Stock::GetTransitionStocks() {
+const StockPtrVector& Stock::getTransitionStocks() {
   assert(doesmove != 0);
-  return transition->GetTransitionStocks();
+  return transition->getTransitionStocks();
 }

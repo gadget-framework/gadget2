@@ -29,7 +29,7 @@ public:
   void Multiply(const DoubleVector& Ratio, const ConversionIndex& CI);
   void Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Nrof);
   void Multiply(const DoubleVector& NaturalM);
-  void SettoZero();
+  void setToZero();
   void FilterN(double minN);
   void IncrementAge();
   void CopyNumbers(const AgeBandMatrix& Alkeys);

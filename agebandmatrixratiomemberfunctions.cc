@@ -154,7 +154,7 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
   if (numtags > 0) {
     IntVector tagconversion(numtags);
     for (i = 0; i < numtags; i++) {
-      tagconversion[i] = Alkeys.getId(Addition.getName(i));
+      tagconversion[i] = Alkeys.getID(Addition.getName(i));
       if (tagconversion[i] < 0) {
         cerr << "Error when searching for a tagging experiment\n"
           << "Did not find any name matching " << Addition.getName(i) << endl;

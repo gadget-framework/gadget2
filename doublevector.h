@@ -32,8 +32,6 @@ public:
   double operator * (const DoubleVector& d) const;
   int operator == (const DoubleVector& d) const;
   DoubleVector& operator = (const DoubleVector& d);
-  DoubleVector& subVector(const DoubleVector& d, int sz);
-  DoubleVector& addVector(const DoubleVector& d, int sz);
 protected:
   double* v;
   int size;

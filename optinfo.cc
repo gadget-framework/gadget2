@@ -142,7 +142,7 @@ void OptInfoHooke::MaximizeLikelihood() {
     rho, lambda, hookeeps, hookeiter, init, bndcheck);
 
   cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
-    << "\nafter " << EcoSystem->GetFuncEval() << " function evaluations at the point\n";
+    << "\nafter " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
   EcoSystem->PrintOptValues();
 
   delete[] endpoint;
@@ -244,7 +244,7 @@ void OptInfoSimann::MaximizeLikelihood() {
     simanniter, cs, T, vm, rt, ns, nt, simanneps, uratio, lratio, check);
 
   cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
-    << "\nafter " << EcoSystem->GetFuncEval() << " function evaluations at the point\n";
+    << "\nafter " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
   EcoSystem->PrintOptValues();
 
   delete[] startpoint;
@@ -386,13 +386,13 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
   }
 
   /* Reset the converge flag for the hooke optimisation */
-  EcoSystem->SetConverge(0);
+  EcoSystem->setConverge(0);
 
   count = hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
     rho, lambda, hookeeps, hookeiter, init, bndcheck);
 
   cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
-    << "\nafter " << EcoSystem->GetFuncEval() << " function evaluations at the point\n";
+    << "\nafter " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
   EcoSystem->PrintOptValues();
 
   delete[] startpoint;

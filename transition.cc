@@ -191,8 +191,8 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
     }
 
     for (s = 0; s < AgeGroup.Size(); s++) {
-      AgeGroup[s].SettoZero();
-      TagAgeGroup[s].SettoZero();
+      AgeGroup[s].setToZero();
+      TagAgeGroup[s].setToZero();
     }
   }
 }
@@ -200,22 +200,22 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
 void Transition::Reset() {
   int i;
   for (i = 0; i < AgeGroup.Size(); i++) {
-    AgeGroup[i].SettoZero();
-    TagAgeGroup[i].SettoZero();
+    AgeGroup[i].setToZero();
+    TagAgeGroup[i].setToZero();
   }
 }
 
-const StockPtrVector& Transition::GetTransitionStocks() {
+const StockPtrVector& Transition::getTransitionStocks() {
   return TransitionStocks;
 }
 
-void Transition::AddTag(const char* tagname) {
+void Transition::addTransitionTag(const char* tagname) {
   TagAgeGroup.addTag(tagname);
 }
 
-void Transition::DeleteTag(const char* tagname) {
+void Transition::deleteTransitionTag(const char* tagname) {
   int minage, maxage, minlen, maxlen, a, length, i;
-  int id = TagAgeGroup.getId(tagname);
+  int id = TagAgeGroup.getID(tagname);
 
   if (id >= 0) {
     minage = TagAgeGroup[0].Minage();

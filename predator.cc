@@ -63,7 +63,7 @@ void Predator::SetPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   this->ResizeObjects();
 }
 
-int Predator::DoesEat(const char* preyname) const {
+int Predator::doesEat(const char* preyname) const {
   int found = 0;
   int i;
   for (i = 0; i < this->NoPreys(); i++)

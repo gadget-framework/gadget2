@@ -20,7 +20,7 @@ void StockPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
   for (i = 0; i < Number[inarea].Size(); i++)
     Number[inarea][i].N = 0.0;
 
-  Alkeys[inarea].SettoZero();
+  Alkeys[inarea].setToZero();
   AgebandmAdd(Alkeys[inarea], stock, *CI);
   Alkeys[inarea].Colsum(Number[inarea]);
 

@@ -145,26 +145,6 @@ DoubleVector& DoubleVector::operator - (double d) const {
   return ((*result) -= d);
 }
 
-DoubleVector& DoubleVector::addVector(const DoubleVector& d, int sz) {
-  int i;
-  DoubleVector* result = new DoubleVector(sz, 0);
-  for (i = 0; i < min(sz, size); i++)
-    (*result)[i] = (*this)[i];
-  for (i = 0; i < min(sz, d.Size()); i++)
-    (*result)[i] += d[i];
-  return *result;
-}
-
-DoubleVector& DoubleVector::subVector(const DoubleVector& d, int sz) {
-  int i;
-  DoubleVector* result = new DoubleVector(sz, 0);
-  for (i = 0; i < min(sz, size); i++)
-    (*result)[i] = (*this)[i];
-  for (i = 0; i < min(sz, d.Size()); i++)
-    (*result)[i] -= d[i];
-  return *result;
-}
-
 DoubleVector& DoubleVector::operator += (const DoubleVector& d) {
   int i;
   for (i = 0; i < min(size, d.Size()); i++)

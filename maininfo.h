@@ -18,16 +18,16 @@ public:
    * \brief This is the default MainInfo destructor
    */
   ~MainInfo();
-  void ShowCorrectUsage(char* error);
-  void ShowUsage();
+  void showCorrectUsage(char* error);
+  void showUsage();
   void Read(int aNumber, char* const aVector[]);
   void OpenOptinfofile(char* filename);
   void CloseOptinfofile();
-  void SetPrintLikelihoodFilename(char* filename);
-  void SetPrintInitialCondFilename(char* filename);
-  void SetPrintFinalCondFilename(char* filename);
-  void SetInitialCommentFilename(char* filename);
-  void SetMainGadgetFilename(char* filename);
+  void setPrintLikelihoodFilename(char* filename);
+  void setPrintInitialCondFilename(char* filename);
+  void setPrintFinalCondFilename(char* filename);
+  void setInitialCommentFilename(char* filename);
+  void setMainGadgetFilename(char* filename);
   int Optimize() const { return optimize; };
   int CalcLikelihood() const { return calclikelihood; };
   int Stochastic() const { return stochastic; };

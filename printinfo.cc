@@ -11,20 +11,20 @@ PrintInfo::PrintInfo() : PrintInterVal1(-2), PrintInterVal2(-2), forceprint(0),
   char tmpname[12];
   strncpy(tmpname, "", 12);
   strcpy(tmpname, "params.out");
-  SetParamOutFile(tmpname);
+  setParamOutFile(tmpname);
 }
 
 PrintInfo::PrintInfo(const PrintInfo& pi) {
 
   ParamOutFile = NULL;
-  SetParamOutFile(pi.ParamOutFile);
+  setParamOutFile(pi.ParamOutFile);
 
   OutputFile = NULL;
   ColumnOutputFile = NULL;
   if (pi.OutputFile != NULL)
-    SetOutputFile(pi.OutputFile);
+    setOutputFile(pi.OutputFile);
   if (pi.ColumnOutputFile != NULL)
-    SetColumnOutputFile(pi.ColumnOutputFile);
+    setColumnOutputFile(pi.ColumnOutputFile);
 
   forceprint = pi.forceprint;
   oprint = pi.oprint;
@@ -49,7 +49,7 @@ PrintInfo::~PrintInfo() {
   }
 }
 
-void PrintInfo::SetOutputFile(char* filename) {
+void PrintInfo::setOutputFile(char* filename) {
   if (OutputFile != NULL) {
     delete[] OutputFile;
     OutputFile = NULL;
@@ -63,7 +63,7 @@ void PrintInfo::SetOutputFile(char* filename) {
   }
 }
 
-void PrintInfo::SetColumnOutputFile(char* filename) {
+void PrintInfo::setColumnOutputFile(char* filename) {
   if (ColumnOutputFile != NULL) {
     delete[] ColumnOutputFile;
     ColumnOutputFile = NULL;
@@ -77,7 +77,7 @@ void PrintInfo::SetColumnOutputFile(char* filename) {
   }
 }
 
-void PrintInfo::SetParamOutFile(char* filename) {
+void PrintInfo::setParamOutFile(char* filename) {
   if (ParamOutFile != NULL) {
     delete[] ParamOutFile;
     ParamOutFile = NULL;
@@ -90,7 +90,7 @@ void PrintInfo::SetParamOutFile(char* filename) {
   }
 }
 
-void PrintInfo::CheckNumbers() {
+void PrintInfo::checkNumbers() {
   if (PrintInterVal2 < 0)
     PrintInterVal2 = 5;
   if (PrintInterVal1 < 0)

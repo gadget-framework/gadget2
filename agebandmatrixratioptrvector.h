@@ -28,14 +28,14 @@ public:
   void deleteTag(const char* tagname);
   void deleteTag(int id);
   int Size() const { return size; };
-  int getId(const char* id);
+  int getID(const char* id);
   const char* getName(int id) const;
   AgeBandMatrixRatio& operator [] (int pos);
   const AgeBandMatrixRatio& operator [] (const char* name) const;
   const AgeBandMatrixRatio& operator [] (int pos) const;
   void Migrate(const DoubleMatrix& Migrationmatrix, const AgeBandMatrixPtrVector& Total);
   const int NrOfTagExp() const { return tagID.Size(); };
-  const CharPtrVector tagids() const { return tagID; };
+  const CharPtrVector tagIDs() const { return tagID; };
   const DoubleVector& tagloss() const { return tagLoss; };
   friend void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
     const AgeBandMatrixRatioPtrVector& Addition, int AdditionArea, const ConversionIndex &CI,

@@ -179,7 +179,7 @@ void AgeBandMatrix::IncrementAge() {
   }
 }
 
-void AgeBandMatrix::SettoZero() {
+void AgeBandMatrix::setToZero() {
   int i, j;
   for (i = 0; i < nrow; i++)
     for (j = v[i]->Mincol(); j < v[i]->Maxcol(); j++) {

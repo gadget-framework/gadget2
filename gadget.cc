@@ -25,9 +25,9 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
         EcoSystem->Update(Stochasticdata);
         EcoSystem->Simulate(MainInfo->CalcLikelihood(), print);
         if ((MainInfo->getPI()).Print())
-          EcoSystem->PrintValues((MainInfo->getPI()).oFile(), (MainInfo->getPI()).precision());
+          EcoSystem->PrintValues((MainInfo->getPI()).oFile(), (MainInfo->getPI()).getPrecision());
         if ((MainInfo->getPI()).PrintinColumns())
-          EcoSystem->PrintValuesinColumns((MainInfo->getPI()).coFile(), (MainInfo->getPI()).precision());
+          EcoSystem->PrintValuesinColumns((MainInfo->getPI()).coFile(), (MainInfo->getPI()).getPrecision());
         Stochasticdata->SendDataToMaster(EcoSystem->Likelihood());
         Stochasticdata->ReadNextLineFromNet();
       }
@@ -40,17 +40,17 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
     EcoSystem->CheckBounds();
     EcoSystem->Simulate(MainInfo->CalcLikelihood(), print);
     if ((MainInfo->getPI()).Print())
-      EcoSystem->PrintValues((MainInfo->getPI()).oFile(), (MainInfo->getPI()).precision());
+      EcoSystem->PrintValues((MainInfo->getPI()).oFile(), (MainInfo->getPI()).getPrecision());
     if ((MainInfo->getPI()).PrintinColumns())
-      EcoSystem->PrintValuesinColumns((MainInfo->getPI()).coFile(), (MainInfo->getPI()).precision());
+      EcoSystem->PrintValuesinColumns((MainInfo->getPI()).coFile(), (MainInfo->getPI()).getPrecision());
     while (Stochasticdata->DataIsLeft()) {
       Stochasticdata->ReadDataFromNextLine();
       EcoSystem->Update(Stochasticdata);
       EcoSystem->Simulate(MainInfo->CalcLikelihood(), print);
       if ((MainInfo->getPI()).Print())
-        EcoSystem->PrintValues((MainInfo->getPI()).oFile(), (MainInfo->getPI()).precision());
+        EcoSystem->PrintValues((MainInfo->getPI()).oFile(), (MainInfo->getPI()).getPrecision());
       if ((MainInfo->getPI()).PrintinColumns())
-        EcoSystem->PrintValuesinColumns((MainInfo->getPI()).coFile(), (MainInfo->getPI()).precision());
+        EcoSystem->PrintValuesinColumns((MainInfo->getPI()).coFile(), (MainInfo->getPI()).getPrecision());
     }
     delete Stochasticdata;
 
@@ -58,9 +58,9 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
     cerr << "Warning - no parameter input file given, using default values" << endl;
     EcoSystem->Simulate(MainInfo->CalcLikelihood(), print);
     if ((MainInfo->getPI()).Print())
-      EcoSystem->PrintValues((MainInfo->getPI()).oFile(), (MainInfo->getPI()).precision());
+      EcoSystem->PrintValues((MainInfo->getPI()).oFile(), (MainInfo->getPI()).getPrecision());
     if ((MainInfo->getPI()).PrintinColumns())
-      EcoSystem->PrintValuesinColumns((MainInfo->getPI()).coFile(), (MainInfo->getPI()).precision());
+      EcoSystem->PrintValuesinColumns((MainInfo->getPI()).coFile(), (MainInfo->getPI()).getPrecision());
   }
 }
 
@@ -175,7 +175,7 @@ int main(int aNumber, char* const aVector[]) {
 
   //JMB - print final values of parameters
   if (!(MainInfo.Net()))
-    EcoSystem->PrintParamsinColumns((MainInfo.getPI()).paramFile(), (MainInfo.getPI()).precision());
+    EcoSystem->PrintParamsinColumns((MainInfo.getPI()).paramFile(), (MainInfo.getPI()).getPrecision());
 
   if (check == 1)
     free(workingdir);

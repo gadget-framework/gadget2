@@ -226,24 +226,24 @@ void Stock::UpdateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, dou
   tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->Name(), tagloss);
   allTags.resize(1, newtag);
   if (doesmature) {
-    maturity->AddTag(newtag->Name());
+    maturity->addMaturityTag(newtag->Name());
     matureTags.resize(1, newtag);
   }
   if (doesmove) {
-    transition->AddTag(newtag->Name());
+    transition->addTransitionTag(newtag->Name());
     transitionTags.resize(1, newtag);
   }
 }
 
 void Stock::DeleteTags(const char* tagname) {
-  allTags.Delete(tagAlkeys.getId(tagname));
+  allTags.Delete(tagAlkeys.getID(tagname));
   tagAlkeys.deleteTag(tagname);
   if (doesmature)
-    maturity->DeleteTag(tagname);
+    maturity->deleteMaturityTag(tagname);
   if (doesmove)
-    transition->DeleteTag(tagname);
+    transition->deleteTransitionTag(tagname);
 }
 
-const CharPtrVector Stock::TaggingExperimentIds() {
-  return tagAlkeys.tagids();
+const CharPtrVector Stock::TaggingExperimentIDs() {
+  return tagAlkeys.tagIDs();
 }

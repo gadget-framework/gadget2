@@ -56,7 +56,7 @@ int AgeBandMatrixRatio::NrOfTagExp() const {
     return 0;
 }
 
-void AgeBandMatrixRatio::SettoZero() {
+void AgeBandMatrixRatio::setToZero() {
   int i, j, k;
   for (i = 0; i < nrow; i++) {
     for (j = v[i]->Mincol(); j < v[i]->Maxcol(); j++) {

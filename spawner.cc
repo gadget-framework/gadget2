@@ -276,7 +276,7 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   double tmpsdev, length, N;
 
   for (s = 0; s < Storage.Size(); s++)
-    Storage[s].SettoZero();
+    Storage[s].setToZero();
 
   //calculate the number of eggs produced
   for (age = 0; age < ssb.Nrow(); age++)
@@ -360,7 +360,7 @@ void Spawner::Precalc(const TimeClass* const TimeInfo) {
     return;
 
   for (i = 0; i < Storage.Size(); i++)
-    Storage[i].SettoZero();
+    Storage[i].setToZero();
   for (i = 0; i < ssb.Nrow(); i++)
     for (j = 0; j < ssb.Ncol(i); j++)
       ssb[i][j] = 0.0;

@@ -96,7 +96,7 @@ void StockPredator::ResizeObjects() {
 
 void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
   const int inarea = AreaNr[area];
-  Alkeys[inarea].SettoZero();
+  Alkeys[inarea].setToZero();
   AgebandmAdd(Alkeys[inarea], stock, *CI);
   int length;
   for (length = 0; length < Prednumber.Ncol(inarea); length++)

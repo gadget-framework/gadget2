@@ -36,7 +36,7 @@ public:
   void UpdateNumbers(const AgeBandMatrix& Total);
   void UpdateAndTagLoss(const AgeBandMatrix& Total, const DoubleVector& tagloss);
   int NrOfTagExp() const;
-  void SettoZero();
+  void setToZero();
 protected:
   int minage;
   int nrow;

@@ -232,8 +232,8 @@ void Tags::SetStock(StockPtrVector& Stocks) {
   preyindex.resize(1, -1);
   updated.resize(1, 0);
 
-  if (taggingstock->DoesMove()) {
-    tempTransitionStock = taggingstock->GetTransitionStocks();
+  if (taggingstock->doesMove()) {
+    tempTransitionStock = taggingstock->getTransitionStocks();
     for (i = 0; i < tempTransitionStock.Size(); i++) {
       transitionstocks.resize(1, tempTransitionStock[i]);
       preyindex.resize(1, -1);
@@ -242,8 +242,8 @@ void Tags::SetStock(StockPtrVector& Stocks) {
     }
   }
 
-  if (taggingstock->DoesMature()) {
-    tempMatureStock = taggingstock->GetMatureStocks();
+  if (taggingstock->doesMature()) {
+    tempMatureStock = taggingstock->getMatureStocks();
     for (i = 0; i < tempMatureStock.Size(); i++) {
       maturestocks.resize(1, tempMatureStock[i]);
       found = 0;
@@ -477,7 +477,7 @@ void Tags::StoreNumberPriorToEating(int area, const char* stockname) {
     cerr << "Error in tagging experiment - invalid prey identifier\n";
     exit(EXIT_FAILURE);
   }
-  (*NumBeforeEating[preyid])[area].SettoZero();
+  (*NumBeforeEating[preyid])[area].setToZero();
   AgebandmAdd((*NumBeforeEating[preyid])[area], (*AgeLengthStock[stockid])[area], *CI[preyid]);
 }
 

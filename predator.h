@@ -21,7 +21,7 @@ public:
   virtual void Eat(int area, double LengthOfStep, double Temperature, double Areasize,
     int CurrentSubstep, int NrOfSubsteps) = 0;
   void SetPrey(PreyPtrVector& preyvec, Keeper* const keeper);
-  int DoesEat(const char* preyname) const;
+  int doesEat(const char* preyname) const;
   virtual void AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) = 0;
   virtual void Print(ofstream& outfile) const;
   virtual const BandMatrix& Consumption(int area, const char* preyname) const = 0;

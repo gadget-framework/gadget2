@@ -97,7 +97,7 @@ void PredPreyStdPrinter::SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
   int i;
 
   for (i = 0; i < stockvec.Size(); i++) {
-    if (stockvec[i]->DoesEat()) {
+    if (stockvec[i]->doesEat()) {
       if (strcasecmp(stockvec[i]->ReturnPredator()->Name(), predname) == 0) {
         if (predator) {
           cerr << "Error - found more than one predator with the name " << predname << endl;

@@ -28,7 +28,7 @@ void MigrationPenalty::AddToLikelihood(const TimeClass* const TimeInfo) {
   likelihood = 0;
   int i;
 
-  if ((stock->DoesMigrate() == 1) && (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps())) {
+  if ((stock->doesMigrate()) && (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps())) {
     DoubleVector penalty(stock->ReturnMigration()->Penalty());
     for (i = 0; i < penalty.Size(); i++)
       likelihood += pow(penalty[i], powercoeffs[0]);
@@ -51,7 +51,7 @@ void MigrationPenalty::SetStocks(StockPtrVector Stocks) {
     exit(EXIT_FAILURE);
   }
 
-  if (stock->DoesMigrate() == 0)
+  if (!(stock->doesMigrate()))
     cerr << "Warning in migrationpenalty - " << stockname << " doesnt migrate\n";
 }
 

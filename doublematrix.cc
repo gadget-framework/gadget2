@@ -146,59 +146,6 @@ int DoubleMatrix::isRectangular() const {
   return minRowSize() == maxRowSize();
 }
 
-/*  addMatrix
- *
- *  Purpose:  Return a new matrix that is the sum of this and
- *            the argument matrix
- *
- *  In:   DoubleMatrix& d       :matrix to add to this
- *        int nrow              :number of rows in result
- *        int ncol      :number of columns in result
- */
-DoubleMatrix&  DoubleMatrix::addMatrix(const DoubleMatrix& d, int nr, int ncol) const {
-  DoubleMatrix* result = new DoubleMatrix(nr, ncol, 0);
-  int i, j, maxcol, maxrow;
-  maxrow = min(nr, d.Nrow());
-  for (i = 0; i < maxrow; i++) {
-    maxcol = min(ncol, d.Ncol(i));
-    for (j = 0; j < maxcol; j++)
-      (*result)[i][j] = d[i][j];
-  }
-  maxrow = min(nr, Nrow());
-  for (i = 0; i < maxrow; i++) {
-    maxcol = min(ncol, Ncol());
-    for (j = 0; j < maxcol; j++)
-      (*result)[i][j] += (*this)[i][j];
-  }
-  return *result;
-}
-
-/*  subMatrix
- *
- *  Purpose:  Return a new matrix that is the difference of this and
- *            the argument matrix
- *
- *  In:  DoubleMatrix& d       :matrix to subtract from this
- *       int nrow              :number of rows in result
- *       int ncol              :number of columns in result
- */
-DoubleMatrix& DoubleMatrix::subMatrix(const DoubleMatrix& d, int nr, int ncol) const {
-  DoubleMatrix* result = new DoubleMatrix(nr, ncol, 0);
-  int i, j, maxcol, maxrow;
-  maxrow = min(nr, Nrow());
-  for (i = 0; i < maxrow; i++) {
-    maxcol = min(ncol, Ncol(i));
-    for (j = 0; j < maxcol; j++)
-      (*result)[i][j] = (*this)[i][j];
-  }
-  maxrow = min(nr, d.Nrow());
-  for (i = 0; i < maxrow; i++) {
-    maxcol = min(ncol, d.Ncol());
-    for (j = 0; j < maxcol; j++)
-      (*result)[i][j] -= d[i][j];
-  }
-  return *result;
-}
 
 DoubleMatrix& DoubleMatrix::operator += (const DoubleMatrix& d) {
   int i, j, maxcol, maxrow;

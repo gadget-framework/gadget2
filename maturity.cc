@@ -106,8 +106,8 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
       MatureStocks[i]->Add(TagStorage, inarea, CI[i], area, Ratio[i],
         TagStorage[inarea].Minage(), TagStorage[inarea].Maxage());
   }
-  Storage[inarea].SettoZero();
-  TagStorage[inarea].SettoZero();
+  Storage[inarea].setToZero();
+  TagStorage[inarea].setToZero();
 }
 
 //Put fish that becomes mature in temporary storage.  Later in the
@@ -159,7 +159,7 @@ void Maturity::Precalc(const TimeClass* const TimeInfo) {
   }
 }
 
-const StockPtrVector& Maturity::GetMatureStocks() {
+const StockPtrVector& Maturity::getMatureStocks() {
   return MatureStocks;
 }
 
@@ -169,13 +169,13 @@ const StockPtrVector& Maturity::GetMatureStocks() {
 // TagStorage[area][age][length][id].N = -1.0,
 // TagStorage[area][age][length][id].R = -1.0
 // New memory has been allocated for the double TagStorage[area][age][length].N.
-void Maturity::AddTag(const char* tagname) {
+void Maturity::addMaturityTag(const char* tagname) {
   TagStorage.addTag(tagname);
 }
 
-void Maturity::DeleteTag(const char* tagname) {
+void Maturity::deleteMaturityTag(const char* tagname) {
   int minage, maxage, minlen, maxlen, age, length, i;
-  int id = TagStorage.getId(tagname);
+  int id = TagStorage.getID(tagname);
 
   if (id >= 0) {
     minage = TagStorage[0].Minage();

@@ -25,13 +25,13 @@ public:
    */
   LivesOnAreas(const IntVector& Areas);
   /**
-   * \brief This is check whether the object is defined on a specified area
+   * \brief This function will check whether the object is defined on a specified area
    * \param area is an integer to denote the internal area of interest
    * \return 1 if the object is defined on the area, 0 otherwise
    */
   int IsInArea(int area) const;
   /**
-   * \brief This is return the internal areas that the object is defined on
+   * \brief This function will return the internal areas that the object is defined on
    * \return areas
    */
   IntVector& Areas() { return areas; };

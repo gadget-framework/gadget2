@@ -109,17 +109,17 @@ public:
    * \brief This will calculate the mature stocks the immature stock can mature into
    * \return mature stocks
    */
-  const StockPtrVector& GetMatureStocks();
+  const StockPtrVector& getMatureStocks();
   /**
    * \brief This will add a tagging experiment to the maturation calculations
    * \param tagname is the name of the tagging experiment
    */
-  void AddTag(const char* tagname);
+  void addMaturityTag(const char* tagname);
   /**
    * \brief This will remove a tagging experiment from the maturation calculations
    * \param tagname is the name of the tagging experiment
    */
-  void DeleteTag(const char* tagname);
+  void deleteMaturityTag(const char* tagname);
 protected:
   /**
    * \brief This is the StockPtrVector of the mature stocks

@@ -65,9 +65,9 @@ public:
   double SimulateAndUpdate(double* x, int n);
   int Simulate(int optimize, int print = 0);
   double Likelihood() const { return likelihood; };
-  int GetFuncEval() const { return funceval; };
-  int GetConverge() const { return converge; };
-  void SetConverge(int setConverge) { converge = setConverge; };
+  int getFuncEval() const { return funceval; };
+  int getConverge() const { return converge; };
+  void setConverge(int setConverge) { converge = setConverge; };
   volatile int interrupted;
 protected:
   double likelihood;

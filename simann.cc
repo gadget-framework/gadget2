@@ -430,7 +430,7 @@ cout << "Number of metropolis accepted points " << naccmet << endl;
 cout << "Number of rejected points " << nrej << endl;
 
       fp = (*f)(endpoint, n);
-      EcoSystem->SetConverge(1);
+      EcoSystem->setConverge(1);
       return 1;
     }
 
