@@ -57,7 +57,7 @@ void InitialCond::ReadNormalData(CommentStream& infile, Keeper* const keeper,
     infile >> age >> area >> ws;
 
     //crude data check - perhaps there should be a better check?
-    if ((age < minage) || (age > (noagegr + minage))) {
+    if ((age < minage) || (age >= (noagegr + minage))) {
       handle.Warning("Ignoring initial conditions data found outside age range");
       keepdata = 1;
     } else
@@ -150,7 +150,7 @@ void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
     infile >> area >> age >> length >> tmpnumber >> ws;
 
     //crude data check - perhaps there should be a better check?
-    if ((age < minage) || (age > (noagegr + minage))) {
+    if ((age < minage) || (age >= (noagegr + minage))) {
       handle.Warning("Ignoring initial conditions data found outside age range");
       keepdata = 1;
     } else
