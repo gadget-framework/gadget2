@@ -42,8 +42,6 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     growthtype = 7;
   else if (strcasecmp(functionname, "lengthvbsimple") == 0)
     growthtype = 8;
-  else if (strcasecmp(functionname, "test") == 0)
-    growthtype = 9;
   else
     handle.Message("Error in stock file - unrecognised growth function", functionname);
 
@@ -71,9 +69,6 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
       break;
     case 8:
       growthcalc = new GrowthCalcH(infile, areas, LgrpDiv, keeper);
-      break;
-    case 9:
-      growthcalc = new GrowthCalcI(infile, areas, LgrpDiv, keeper);
       break;
     default:
       handle.Message("Illegal growthfunction number");

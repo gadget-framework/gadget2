@@ -40,7 +40,7 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
         for (j = 2; j <= maxlengthgroupgrowth; j++)
           part4[j] = part4[j - 1] * (j - 1 + alpha);
 
-      if ((type == 8) || (type == 9)) {
+      if (type == 8) {
         for (j = 0; j <= maxlengthgroupgrowth; j++) {
           (*lgrowth[inarea])[j][lgroup] = part1[j] * part2[j] * tmppart3 * part4[j];
           (*wgrowth[inarea])[j][lgroup] = tmpMult * (pow(LgrpDiv->Meanlength(lgroup + j), tmpPower) - pow(LgrpDiv->Meanlength(lgroup), tmpPower));

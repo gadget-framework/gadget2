@@ -516,19 +516,4 @@ protected:
   FormulaVector growthPar;
 };
 
-class GrowthCalcI : public GrowthCalcBase {
-public:
-  GrowthCalcI(CommentStream& infile, const IntVector& areas,
-    const LengthGroupDivision* const LgrpDiv, Keeper* const keeper);
-  ~GrowthCalcI();
-  virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& GrEatNumber, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
-  virtual double getPower() { return growthPar[3]; };
-  virtual double getMult() { return growthPar[2]; };
-protected:
-  int NumberOfGrowthConstants;
-  FormulaVector growthPar;
-};
 #endif
