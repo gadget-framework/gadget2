@@ -315,8 +315,6 @@ public:
   /**
    * \brief This is the flag used to denote whether the user has interrupted the current model run
    */
-  void setEigenBFGS(double set) { eigenBFGS = set; };
-  double getEigenBFGS() { return eigenBFGS; }; 
   volatile int interrupted;
 protected:
   /**
@@ -366,7 +364,6 @@ protected:
   /**
    * \brief This is the BaseClassPtrVector of the stocks, fleets and otherfood classes for the current model
    */
-  double eigenBFGS;
   BaseClassPtrVector basevec;
   /**
    * \brief This is the LikelihoodPtrVector of the likelihood components for the current model

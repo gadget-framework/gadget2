@@ -252,7 +252,6 @@ private:
    */
   double Armijo();
   double SmallestEigenValue();
-  void printInverseHessian(); 
   /**
    * \brief This is the current gradient
    */
@@ -261,10 +260,6 @@ private:
    * \brief This is the current estimation the diagonal of the hessian matrix
    */
   double* diaghess;
-  /**
-   * \brief 
-   */
-  //  double* deltavec;
   /**
    * \brief This is the search direction (for linesearch)
    */
@@ -317,10 +312,6 @@ private:
    * \brief The reduction parameter for h
    */
   double gradstep;
-  /**
-   * \brief if the value of bfgsDebug is 1 then gadget will print out the hessian matrix to the file "hessian". Also it will print out the smallest eigenvalue tp the params.out-file
-   */
-  int bfgsDebug;
   /**
    * \brief Determines how many functionevaluations is needed for the gradient calculations 0 means one pr. coordinate, 1 means two pr. coordinate and 1< means four pr. coordinate
    */

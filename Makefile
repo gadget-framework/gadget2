@@ -11,7 +11,7 @@ DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
 
 ##########################################################################
 # The name of the final executable (eg gadget-paramin or gadget.exe)
-#GADGET = gadget
+GADGET = gadget
 ##########################################################################
 # Pick the appropriate compiler from the following switches
 ##########################################################################
@@ -21,7 +21,6 @@ LIBDIRS = -L. -L/usr/local/lib
 LIBRARIES = -lm -lvec
 CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 OBJECTS = $(GADGETOBJECTS)
-GADGET = gadget
 ##########################################################################
 # 2. Linux, or Solaris, with pvm3, g++ compiler
 #CXX = g++
@@ -33,7 +32,6 @@ GADGET = gadget
 ## note that some (older) linux machines also require the -lsocket library
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
 #OBJECTS = $(GADGETOBJECTS) $(SLAVEOBJECTS)
-#GADGET = gadget-paramin
 ##########################################################################
 # 3. Solaris, without pvm3, using CC compiler
 #CXX = CC
