@@ -239,7 +239,7 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInf
   if (AAT.AtCurrentTime(TimeInfo)) {
     t = timeindex - 1; //timeindex was increased before this is called
     if ((t >= Years.Size()) || t < 0)
-      handle.logFailure("Error in catchdistribution - invalid timestep", t);
+      handle.logFailure("Error in surveyindex - invalid timestep", t);
 
     //JMB - this is nasty hack since there is only one area
     area = 0;
