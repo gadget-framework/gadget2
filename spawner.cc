@@ -261,9 +261,6 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
 
 void SpawnData::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo) {
 
-  if (this->isSpawnStepArea(area, TimeInfo) == 0)
-    return;
-
   if (onlyParent == 0)
     spawnParameters.Update(TimeInfo);
 
@@ -290,10 +287,8 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   if (onlyParent == 1)
     return;
 
-  if (this->isSpawnStepArea(area, TimeInfo) == 0)
-    return;
-
   int s, age, len;
+  int inarea = AreaNr[area];
   double sum = 0.0;
   double tmpsdev, length, N;
 
@@ -312,7 +307,7 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
     for (len = 0; len < spawnLgrpDiv->numLengthGroups(); len++) {
       length = spawnLgrpDiv->meanLength(len) - stockParameters[0];
       N = exp(-(length * length * tmpsdev));
-      Storage[area][spawnAge][len].N = N;
+      Storage[inarea][spawnAge][len].N = N;
       sum += N;
     }
   }
@@ -322,8 +317,8 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   if (sum > verysmall) {
     for (len = 0; len < spawnLgrpDiv->numLengthGroups(); len++) {
       length = spawnLgrpDiv->meanLength(len);
-      Storage[area][spawnAge][len].N *= total / sum;
-      Storage[area][spawnAge][len].W = stockParameters[2] * pow(length, stockParameters[3]);
+      Storage[inarea][spawnAge][len].N *= total / sum;
+      Storage[inarea][spawnAge][len].W = stockParameters[2] * pow(length, stockParameters[3]);
     }
   }
 
@@ -332,7 +327,7 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
     if (!spawnStocks[s]->IsInArea(area))
       handle.logFailure("Error in spawner - spawned stock doesnt live on area", area);
 
-    spawnStocks[s]->Add(Storage[area], CI[s], area, Ratio[s], spawnStocks[s]->minAge(), spawnStocks[s]->minAge());
+    spawnStocks[s]->Add(Storage[inarea], CI[s], area, Ratio[s], spawnStocks[s]->minAge(), spawnStocks[s]->minAge());
   }
 
   for (age = 0; age < spawnNumbers.Nrow(); age++)

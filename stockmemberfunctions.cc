@@ -163,8 +163,8 @@ void Stock::FirstUpdate(int area, const AreaClass* const Area, const TimeClass* 
       transition->keepAgeGroup(area, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
 
   if (doesstray)
-    if (stray->isStrayStepArea(inarea, TimeInfo))
-      stray->storeStrayingStock(inarea, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
+    if (stray->isStrayStepArea(area, TimeInfo))
+      stray->storeStrayingStock(area, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
 }
 
 void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
@@ -177,7 +177,6 @@ void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass*
 }
 
 void Stock::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  int inarea = AreaNr[area];
   if (doesmove)
     if (transition->isTransitionStep(area, TimeInfo)) {
       updateTransitionStockWithTags(TimeInfo);
@@ -185,21 +184,24 @@ void Stock::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* 
     }
 
   if (doesstray)
-    if (stray->isStrayStepArea(inarea, TimeInfo)) {
+    if (stray->isStrayStepArea(area, TimeInfo)) {
       updateStrayStockWithTags(TimeInfo);
-      stray->addStrayStock(inarea, TimeInfo);
+      stray->addStrayStock(area, TimeInfo);
     }
 
   if (doesspawn)
-    spawner->addSpawnStock(inarea, TimeInfo);
+    if (spawner->isSpawnStepArea(area, TimeInfo))
+      spawner->addSpawnStock(area, TimeInfo);
 }
 
 void Stock::FirstSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doesspawn) {
-    int inarea = AreaNr[area];
-    spawner->Spawn(Alkeys[inarea], area, TimeInfo);
-    if (tagAlkeys.numTagExperiments() > 0)
-      tagAlkeys[inarea].updateNumbers(Alkeys[inarea]);
+    if (spawner->isSpawnStepArea(area, TimeInfo)) {
+      int inarea = AreaNr[area];
+      spawner->Spawn(Alkeys[inarea], area, TimeInfo);
+      if (tagAlkeys.numTagExperiments() > 0)
+        tagAlkeys[inarea].updateNumbers(Alkeys[inarea]);
+    }
   }
 }
 

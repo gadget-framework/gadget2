@@ -177,17 +177,15 @@ void StrayData::setStock(StockPtrVector& stockvec) {
 void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
   AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo) {
 
-  if (this->isStrayStepArea(area, TimeInfo) == 0)
-    return;
-
   int age, len, tag;
+  int inarea = AreaNr[area];
   double straynumber, tagnumber;
 
-  for (age = Storage[area].minAge(); age < Storage[area].maxAge(); age++) {
-    for (len = Storage[area].minLength(age); len < Storage[area].maxLength(age); len++) {
+  for (age = Storage[inarea].minAge(); age < Storage[inarea].maxAge(); age++) {
+    for (len = Storage[inarea].minLength(age); len < Storage[inarea].maxLength(age); len++) {
       straynumber = Alkeys[age][len].N * strayProportion[len];
-      Storage[area][age][len].N = straynumber;
-      Storage[area][age][len].W = Alkeys[age][len].W;
+      Storage[inarea][age][len].N = straynumber;
+      Storage[inarea][age][len].W = Alkeys[age][len].W;
 
       if (len >= minStrayLength)
         Alkeys[age][len].N -= straynumber;
@@ -195,9 +193,9 @@ void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
       for (tag = 0; tag < TagAlkeys.numTagExperiments(); tag++) {
         tagnumber = *(TagAlkeys[age][len][tag].N) * strayProportion[len];
         if (tagnumber < verysmall)
-          *(TagStorage[area][age][len][tag].N) = 0.0;
+          *(TagStorage[inarea][age][len][tag].N) = 0.0;
         else
-          *(TagStorage[area][age][len][tag].N) = tagnumber;
+          *(TagStorage[inarea][age][len][tag].N) = tagnumber;
 
         if (len >= minStrayLength)
           *(TagAlkeys[age][len][tag].N) -= tagnumber;
@@ -210,26 +208,23 @@ void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
 
 void StrayData::addStrayStock(int area, const TimeClass* const TimeInfo) {
 
-  if (this->isStrayStepArea(area, TimeInfo) == 0)
-    return;
-
-  int s;
+  int s, inarea = AreaNr[area];
   for (s = 0; s < strayStocks.Size(); s++) {
     if (!strayStocks[s]->IsInArea(area))
       handle.logFailure("Error in straying - stray stock doesnt live on area", area);
 
     if (strayStocks[s]->Birthday(TimeInfo)) {
-      Storage[area].IncrementAge();
+      Storage[inarea].IncrementAge();
       if (TagStorage.numTagExperiments() > 0)
-        TagStorage[area].IncrementAge(Storage[area]);
+        TagStorage[inarea].IncrementAge(Storage[inarea]);
     }
 
-    strayStocks[s]->Add(Storage[area], CI[s], area, Ratio[s],
-      Storage[area].minAge(), Storage[area].maxAge());
+    strayStocks[s]->Add(Storage[inarea], CI[s], area, Ratio[s],
+      Storage[inarea].minAge(), Storage[inarea].maxAge());
 
     if (TagStorage.numTagExperiments() > 0)
-      strayStocks[s]->Add(TagStorage, area, CI[s], area, Ratio[s],
-        TagStorage[area].minAge(), TagStorage[area].maxAge());
+      strayStocks[s]->Add(TagStorage, inarea, CI[s], area, Ratio[s],
+        TagStorage[inarea].minAge(), TagStorage[inarea].maxAge());
   }
 }
 

@@ -118,9 +118,6 @@ void Transition::Print(ofstream& outfile) const {
 void Transition::keepAgeGroup(int area, AgeBandMatrix& Alkeys,
   AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo) {
 
-  if (!(this->isTransitionStep(area, TimeInfo)))
-    handle.logFailure("Error in transition - transition requested on wrong timestep");
-
   int inarea = AreaNr[area];
   int numtags = TagAlkeys.numTagExperiments();
   int i, l, minl, maxl;
@@ -154,9 +151,6 @@ void Transition::keepAgeGroup(int area, AgeBandMatrix& Alkeys,
 
 //area in the call to this routine is not in the local area numbering of the stock.
 void Transition::Move(int area, const TimeClass* const TimeInfo) {
-
-  if (!(this->isTransitionStep(area, TimeInfo)))
-    handle.logFailure("Error in transition - transition requested on wrong timestep");
 
   int s, inarea = AreaNr[area];
   for (s = 0; s < transitionStocks.Size(); s++) {
