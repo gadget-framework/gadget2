@@ -520,58 +520,13 @@ void LenStock::calcBiomass(int yr, int area) {
         Alkeys[area][row][col].N * Alkeys[area][row][col].W;
 }
 
-void LenStock::Grow(int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void LenStock::Grow(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  if (!doesgrow && doesmature)
-    handle.logFailure("Error in stock - maturation without growth is not implemented");
-
-  if (!doesgrow)
-    return;
-
+  Stock::Grow(area, Area, TimeInfo);
   int inarea = AreaNr[area];
-  grower->GrowthCalc(area, Area, TimeInfo);
-
-  if (!(grower->getFixedWeights())) {
-    //New weights at length are calculated
-    grower->GrowthImplement(area, NumberInArea[inarea], LgrpDiv);
-    if (doesmature) {
-      if (maturity->IsMaturationStep(area, TimeInfo)) {
-        Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area), maturity, TimeInfo, Area, area);
-        if (tagAlkeys.numTagExperiments() > 0)
-          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
-      } else {
-        Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area));
-        if (tagAlkeys.numTagExperiments() > 0)
-          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
-      }
-    } else {
-      Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area));
-      if (tagAlkeys.numTagExperiments() > 0)
-        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
-    }
-
-  } else { //GrowthCalcF || GrowthCalcG
-    grower->GrowthImplement(area, LgrpDiv);
-    if (doesmature) {
-      if (maturity->IsMaturationStep(area, TimeInfo)) {
-        Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->getWeight(area), maturity, TimeInfo, Area, area);
-        if (tagAlkeys.numTagExperiments() > 0)
-          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
-      } else {
-        Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->getWeight(area));
-        if (tagAlkeys.numTagExperiments() > 0)
-          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
-      }
-    } else {
-      Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->getWeight(area));
-      if (tagAlkeys.numTagExperiments() > 0)
-        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
-    }
-  }
   Alkeys[inarea].FilterN(filter); //mnaa
   if (tagAlkeys.numTagExperiments() > 0)
-    tagAlkeys[inarea].updateNumbers(Alkeys[AreaNr[area]]);
+    tagAlkeys[inarea].updateNumbers(Alkeys[inarea]);
 }
 
 void LenStock::calcForPrinting(int area, const TimeClass& time) {

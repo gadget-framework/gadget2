@@ -530,7 +530,7 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec) const {
         << " function evaluations\n; and stopped when the likelihood value was "
         << setprecision(p) << EcoSystem->getLikelihoodSA();
       if (EcoSystem->getConvergeSA() == 1)
-        outfile << "\n; because the convergence criteria was met\n";
+        outfile << "\n; because the convergence criteria were met\n";
       else
         outfile << "\n; because the maximum number of function evaluations was reached\n";
     }
@@ -540,7 +540,7 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec) const {
         << " function evaluations\n; and stopped when the likelihood value was "
         << setprecision(p) << EcoSystem->getLikelihoodHJ();
       if (EcoSystem->getConvergeHJ() == 1)
-        outfile << "\n; because the convergence criteria was met\n";
+        outfile << "\n; because the convergence criteria were met\n";
       else
         outfile << "\n; because the maximum number of function evaluations was reached\n";
     }

@@ -69,7 +69,7 @@ public:
   void writeValuesInColumns(const char* const filename, int prec) const;
   void writeParamsInColumns(const char* const filename, int prec) const;
   void writeLikelihoodInformation(const char* filename) const;
-  void writeLikelihoodInformation(const char* filename, int i) const;
+  void writeLikelihoodInformation(const char* filename, int id) const;
   void writeLikeSummaryInformation(const char* filename) const;
   void writeOptValues() const;
   void Initialise(int optimize);

@@ -551,7 +551,7 @@ void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper,
   const AreaClass* const Area, const CharPtrVector& lenindex)
-  : GrowthCalcBase(Areas), numGrowthConstants(1), wgrowth(Areas.Size()) {
+  : GrowthCalcBase(Areas), numGrowthConstants(2), wgrowth(Areas.Size()) {
 
 
   keeper->addString("growthcalcF");
@@ -563,21 +563,12 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   else
     handle.Unexpected("growthparameters", text);
 
-  infile >> text >> ws;
-  k_values.resize(TimeInfo->LastYear() - TimeInfo->FirstYear() + 1, keeper);
-  if (strcasecmp(text, "kvalues") == 0) {
-    if (!(infile >> k_values))
-      handle.Message("Incorrect format for growth k values");
-    k_values.Inform(keeper);
-  } else
-    handle.Unexpected("kvalues", text);
-
+  ifstream datafile;
   int i;
   Formula tempF;   //value of tempF is initiated to 0.0
   for (i = 0; i < Areas.Size(); i++)
     wgrowth[i] = new FormulaMatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
 
-  ifstream datafile;
   CommentStream subdata(datafile);
   readWordAndValue(infile, "weightgrowthfile", text);
   datafile.open(text, ios::in);
@@ -607,8 +598,7 @@ void GrowthCalcF::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   growthPar.Update(TimeInfo);
   int inarea = AreaNr[area];
-  double stepsize = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-  double kval = k_values[TimeInfo->CurrentYear() - TimeInfo->FirstYear()] * stepsize;
+  double kval = growthPar[1] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
 
   int i;
   DoubleVector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
@@ -630,7 +620,7 @@ void GrowthCalcF::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper,
   const AreaClass* const Area, const CharPtrVector& lenindex)
-  : GrowthCalcBase(Areas), numGrowthConstants(1), wgrowth(Areas.Size()) {
+  : GrowthCalcBase(Areas), numGrowthConstants(2), wgrowth(Areas.Size()) {
 
 
   keeper->addString("growthcalcG");
@@ -641,15 +631,6 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
     growthPar.read(infile, TimeInfo, keeper);
   else
     handle.Unexpected("growthparameters", text);
-
-  infile >> text >> ws;
-  k_values.resize(TimeInfo->LastYear() - TimeInfo->FirstYear() + 1, keeper);
-  if (strcasecmp(text, "kvalues") == 0) {
-    if (!(infile >> k_values))
-      handle.Message("Incorrect format for growth k values");
-    k_values.Inform(keeper);
-  } else
-    handle.Unexpected("kvalues", text);
 
   int i;
   Formula tempF;   //value of tempF is initiated to 0.0
@@ -689,8 +670,7 @@ void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   //growth decreasing with length (Growthpar[0] < 0).
   growthPar.Update(TimeInfo);
   int inarea = AreaNr[area];
-  double stepsize = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-  double kval = k_values[TimeInfo->CurrentYear() - TimeInfo->FirstYear()] * stepsize;
+  double kval = growthPar[1] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
 
   int i;
   DoubleVector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());

@@ -410,17 +410,13 @@ public:
     const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
 protected:
   /**
-   * \brief This is the number of growth parameters (set to 1)
+   * \brief This is the number of growth parameters (set to 2)
    */
   int numGrowthConstants;
   /**
    * \brief This is the TimeVariableVector of growth parameters
    */
   TimeVariableVector growthPar;
-  /**
-   * \brief This is the FormulaVector of growth rate parameters
-   */
-  FormulaVector k_values;
   /**
    * \brief This is the FormulaMatrixPtrVector of increase in weight for each length group
    */
@@ -466,17 +462,13 @@ public:
     const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
 protected:
   /**
-   * \brief This is the number of growth parameters (set to 1)
+   * \brief This is the number of growth parameters (set to 2)
    */
   int numGrowthConstants;
   /**
    * \brief This is the TimeVariableVector of growth parameters
    */
   TimeVariableVector growthPar;
-  /**
-   * \brief This is the FormulaVector of growth rate parameters
-   */
-  FormulaVector k_values;
   /**
    * \brief This is the FormulaMatrixPtrVector of increase in weight for each length group
    */

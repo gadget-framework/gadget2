@@ -70,9 +70,9 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
     infile >> dummy;
 
   q_y.Inform(keeper);
-  b.resize(2, keeper);
-  infile >> b; //power or linear term
-  b.Inform(keeper);
+
+  readWordAndFormula(infile, "b_param", b_param);
+  b_param.Inform(keeper);
 
   q_l.resize(LgrpDiv->NoLengthGroups());
   infile >> text >> ws;
@@ -103,17 +103,12 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
 //end of code to read in q_y, b and q_l data
 
   readWordAndVariable(infile, "eps_ind", eps_ind);
-  readWordAndVariable(infile, "mean_fact", mean_fact);
-  readWordAndVariable(infile, "max_fact", max_fact);
-
   //read the likelihoodtype
   readWordAndValue(infile, "likelihoodtype", text);
   if (strcasecmp(text, "pearson") == 0)
     opttype = PEARSONOPTTYPE;
   else if (strcasecmp(text, "multinomial") == 0)
     opttype = MULTINOMIALOPTTYPE;
-  else if (strcasecmp(text, "experimental") == 0)
-    opttype = EXPERIMENTALOPTTYPE;
   else if (strcasecmp(text, "gamma") == 0)
     opttype = GAMMAOPTTYPE;
   else if (strcasecmp(text, "log") == 0)
@@ -136,7 +131,6 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   handle.Close();
   datafile.close();
   datafile.clear();
-
   index = 0;
   for (i = 0; i < indexMatrix.Size(); i++)
     calc_index.resize(1, new DoubleMatrix(Ages.Nrow(), LgrpDiv->NoLengthGroups(), 0.0));
@@ -146,10 +140,6 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   max_val_on_step.resize(numtime, 0.0);
   l_index.resize(numtime, 0);
   a_index.resize(numtime, 0);
-  b_vec.resize(LgrpDiv->NoLengthGroups());
-  for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) //Nakken's method
-    b_vec[i] = b[0] * exp(-b[1] * LgrpDiv->meanLength(i));
-
   keeper->clearLast();
 }
 
@@ -286,9 +276,6 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
     case MULTINOMIALOPTTYPE:
       likelihood += calcLikMultinomial();
       break;
-    case EXPERIMENTALOPTTYPE:
-      likelihood += calcLikExperimental();
-      break;
     case GAMMAOPTTYPE:
       likelihood += calcLikGamma();
       break;
@@ -312,12 +299,12 @@ void SIByLengthAndAgeOnStep::calcIndex(const AgeBandMatrix* alptr) {
     case LINEARFIT:
       for (age = 0; age <= maxage; age++)
         for (len = 0; len < maxlen; len++)
-          (*calc_index[index])[age][len] = b_vec[len] + q_year * q_l[len] * (*alptr)[age][len].N;
+          (*calc_index[index])[age][len] = q_year * q_l[len] * ((*alptr)[age][len].N + b_param);
       break;
     case POWERFIT:
       for (age = 0; age <= maxage; age++)
         for (len = 0; len < maxlen; len++)
-          (*calc_index[index])[age][len] = q_year * q_l[len] * pow((*alptr)[age][len].N, b_vec[len]);
+          (*calc_index[index])[age][len] = q_year * q_l[len] * pow((*alptr)[age][len].N, b_param);
       break;
     default:
       handle.logWarning("Warning in surveyindex - unknown fittype", this->getFitType());
@@ -387,42 +374,6 @@ double SIByLengthAndAgeOnStep::calcLikPearson() {
       diff *= diff;
       diff /= ((*calc_index[index])[age][length] + eps_ind);
       step_lik += diff;
-    }
-  }
-
-  lik_val_on_step[index] = step_lik;
-  return step_lik;
-}
-
-double SIByLengthAndAgeOnStep::calcLikExperimental() {
-  //written by kgf 6/3 00
-  //The purpose of this function is to try different likelihood formulations
-  //At the moment it is (I_obs - I_hat)^2/(I_obs+I_hat)^2
-
-  double step_lik = 0.0;
-  double num = 0.0;
-  double denom = 0.0;
-  double frac = 0.0;
-  max_val_on_step[index] = 0.0;
-  lik_val_on_step[index] = 0.0;
-  a_index[index] = 0;
-  l_index[index] = 0;
-  int age, length;
-
-  for (age = minrow; age <= maxrow; age++) {
-    for (length = mincol[age]; length <= maxcol[age]; length++) {
-      num = ((*calc_index[index])[age][length] - (*indexMatrix[index])[age][length]);
-      denom = (*calc_index[index])[age][length] + (*indexMatrix[index])[age][length] + eps_ind;
-      if (denom > 0) //kgf 26/6 00
-        frac= num / denom;
-      else
-        frac = 0.0;
-      step_lik += (frac*frac);
-      if (frac > max_val_on_step[index]) {
-        max_val_on_step[index] = frac;
-        l_index[index] = length;
-        a_index[index] = age;
-      }
     }
   }
 
@@ -548,8 +499,7 @@ void SIByLengthAndAgeOnStep::PrintLikelihoodHeader(ofstream& surveyfile, const c
   surveyfile << "Likelihood:       SurveyIndicesByAgeAndLengthOnStep\n"
     << "Function:         " << opttype << "\nCalculated every: step\n"
     << "Filter:           default\nEps:              " << eps_ind
-    << "\nMean fact:        " << mean_fact << "\nMax fact:         "
-    << max_fact << "\nMean indices:    " << "\nName:             "
+    << "\nMean indices:    " << "\nName:             "
     << name << "\nStocks:          ";
   for (i = 0; i < stocknames.Size(); i++)
     surveyfile << sep <<stocknames[i];
@@ -563,8 +513,6 @@ void SIByLengthAndAgeOnStep::Reset(const Keeper* const keeper) {
   int i;
   likelihood = 0.0;
   index = 0;
-  for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) //Nakken's method
-    b_vec[i] = b[0] * exp(-b[1] * LgrpDiv->meanLength(i));
 
   if (suitfunction != NULL) {
     //Fix this! Wont work if parameters are read from timevariable file.

@@ -238,12 +238,14 @@ void Ecosystem::writeLikelihoodInformation(const char* filename) const {
   outfile.clear();
 }
 
-void Ecosystem::writeLikelihoodInformation(const char* filename, int i) const {
+void Ecosystem::writeLikelihoodInformation(const char* filename, int id) const {
   ofstream outfile;
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
   RUNID.print(outfile);
-  Likely[i]->LikelihoodPrint(outfile);
+  //JMB check that id is valid
+  if (id < Likely.Size())
+    Likely[id]->LikelihoodPrint(outfile);
   outfile.close();
   outfile.clear();
 }

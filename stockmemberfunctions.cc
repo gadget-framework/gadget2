@@ -104,6 +104,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 
   if (!doesgrow)
     return;
+
   if (doeseat)
     grower->GrowthCalc(area, Area, TimeInfo, ((StockPredator*)predator)->FPhi(area),
       ((StockPredator*)predator)->MaxConByLength(area));
@@ -111,22 +112,43 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
     grower->GrowthCalc(area, Area, TimeInfo);
 
   int inarea = AreaNr[area];
-  grower->GrowthImplement(area, NumberInArea[inarea], LgrpDiv);
-
-  if (doesmature) {
-    if (maturity->IsMaturationStep(area, TimeInfo)) {
-      Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area), maturity, TimeInfo, Area, area);
+  if (grower->getFixedWeights()) {
+    //Weights at length are fixed to the value in the input file
+    grower->GrowthImplement(area, LgrpDiv);
+    if (doesmature) {
+      if (maturity->IsMaturationStep(area, TimeInfo)) {
+        Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->getWeight(area), maturity, TimeInfo, Area, area);
+        if (tagAlkeys.numTagExperiments() > 0)
+          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
+      } else {
+        Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->getWeight(area));
+        if (tagAlkeys.numTagExperiments() > 0)
+          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
+      }
+    } else {
+      Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->getWeight(area));
       if (tagAlkeys.numTagExperiments() > 0)
-        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
+        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
+    }
+
+  } else {
+    //New weights at length are calculated
+    grower->GrowthImplement(area, NumberInArea[inarea], LgrpDiv);
+    if (doesmature) {
+      if (maturity->IsMaturationStep(area, TimeInfo)) {
+        Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area), maturity, TimeInfo, Area, area);
+        if (tagAlkeys.numTagExperiments() > 0)
+          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
+      } else {
+        Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area));
+        if (tagAlkeys.numTagExperiments() > 0)
+          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
+      }
     } else {
       Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area));
       if (tagAlkeys.numTagExperiments() > 0)
         tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
     }
-  } else {
-    Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area));
-    if (tagAlkeys.numTagExperiments() > 0)
-      tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
   }
 }
 

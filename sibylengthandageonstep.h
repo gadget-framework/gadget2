@@ -5,7 +5,7 @@
 #include "sionstep.h"
 #include "suitfunc.h"
 
-enum OptType { PEARSONOPTTYPE = 1, MULTINOMIALOPTTYPE, EXPERIMENTALOPTTYPE, GAMMAOPTTYPE, LOGFUNCOPTTYPE };
+enum OptType { PEARSONOPTTYPE = 1, MULTINOMIALOPTTYPE, GAMMAOPTTYPE, LOGFUNCOPTTYPE };
 
 class SIByLengthAndAgeOnStep : public SIOnStep {
 public:
@@ -31,7 +31,6 @@ protected:
   double calcLikPearson();
   double calcLikMultinomial();
   double calcLikGamma();
-  double calcLikExperimental();
   double calcLikLog();
   /**
    * \brief This is the StockAggregator used to collect information about the relevant stocks for the survey index data
@@ -47,19 +46,16 @@ protected:
   LengthGroupDivision* LgrpDiv;
   DoubleMatrixPtrVector indexMatrix;
   DoubleMatrixPtrVector calc_index;  //for comparing with indexMatrix
-  FormulaVector b; //interpreted as power or intersection term according to fit type
+  Formula b_param; //interpreted as power or intersection term according to fit type
   FormulaVector q_y; //year dependent catchability factor
   DoubleVector q_l; //length dependent catchability factor
   TimeVariableVector parameters;
   int index;
   double eps_ind;
-  double mean_fact;
-  double max_fact;
   double likelihood;
   SuitFunc* suitfunction;
   DoubleVector lik_val_on_step; //for print purposes
   DoubleVector max_val_on_step; //for print purposes
-  DoubleVector b_vec;
   IntVector l_index; //for print purposes
   IntVector a_index; //for print purposes
   OptType opttype;
