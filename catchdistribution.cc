@@ -901,7 +901,7 @@ double CatchDistribution::LikMVNormal() {
     }
   }
   totallikelihood = (totallikelihood / (sigma * sigma)) + ((LU.LogDet() + 2 * log(sigma) * p) * alptr->Size());
-  return abs(totallikelihood);
+  return totallikelihood;
 }
 
 double CatchDistribution::LikMVLogistic() {
