@@ -43,30 +43,30 @@ StockPrinter::StockPrinter(CommentStream& infile,
 
   infile >> filename >> ws;
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadAggregation(subdata, areas, areaindex);
+  i = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in age aggregation from file
-  ReadWordAndValue(infile, "ageaggfile", filename);
+  readWordAndValue(infile, "ageaggfile", filename);
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadAggregation(subdata, ages, ageindex);
+  i = readAggregation(subdata, ages, ageindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in length aggregation from file
   DoubleVector lengths;
-  ReadWordAndValue(infile, "lenaggfile", filename);
+  readWordAndValue(infile, "lenaggfile", filename);
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadLengthAggregation(subdata, lengths, lenindex);
+  i = readLengthAggregation(subdata, lengths, lenindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -80,12 +80,12 @@ StockPrinter::StockPrinter(CommentStream& infile,
   //Finished reading from infile.
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(lengths, "stockprinter");
+    printLengthGroupError(lengths, "stockprinter");
 
   //Open the printfile
-  ReadWordAndValue(infile, "printfile", filename);
+  readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  CheckIfFailure(outfile, filename);
+  checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))

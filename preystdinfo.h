@@ -1,11 +1,11 @@
 #ifndef preystdinfo_h
 #define preystdinfo_h
 
+#include "areatime.h"
 #include "abstrpreystdinfo.h"
 #include "preystdinfobylength.h"
 
 class PreyStdInfo;
-class TimeClass;
 class Prey;
 
 class PreyStdInfo : public AbstrPreyStdInfo {

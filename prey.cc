@@ -24,18 +24,18 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  ReadWordAndValue(infile, "preylengths", aggfilename);
+  readWordAndValue(infile, "preylengths", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  i = ReadLengthAggregation(subdata, preylengths, preylenindex);
+  i = readLengthAggregation(subdata, preylengths, preylenindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   LgrpDiv = new LengthGroupDivision(preylengths);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(preylengths, "length groups for prey");
+    printLengthGroupError(preylengths, "length groups for prey");
 
   keeper->ClearLast();
   this->InitializeObjects();
@@ -50,7 +50,7 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas, const char* give
 
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(lengths, givenname);
+    printLengthGroupError(lengths, givenname);
   this->InitializeObjects();
 }
 
@@ -184,7 +184,7 @@ void Prey::CheckConsumption(int area, int NrOfSubsteps) {
     rat = 0.0;
     biom = Number[inarea][i].N * Number[inarea][i].W;
     //We must be careful -- it is possible that biomass will equal 0.
-    if (!iszero(biom))
+    if (!isZero(biom))
       rat = cons[inarea][i] / biom;
 
     ratio[inarea][i] = rat;

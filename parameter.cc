@@ -127,7 +127,7 @@ CommentStream& operator >> (CommentStream& in, Parameter& p) {
     return in;
   }
   tempString = new char[MaxStrLength];
-  while (p.legalchar(in.peek()) && i < MaxStrLength - 1) {
+  while (p.legalchar(in.peek()) && i < (MaxStrLength - 1)) {
     if (in.fail() && !in.eof()) {
       in.makebad();
       delete[] tempString;

@@ -2,14 +2,14 @@
 #include "checkconversion.h"
 #include "gadget.h"
 
-void LengthGroupPrintError(double minl, double maxl, double dl, const char* explain) {
+void printLengthGroupError(double minl, double maxl, double dl, const char* explain) {
   cerr << "Failed to create length group division with\nminimum length " << minl
     << "\nmaximum length " << maxl << "\nand dl " << dl
     << "\nKept string for explanations is " << explain << endl;
   exit(EXIT_FAILURE);
 }
 
-void LengthGroupPrintError(const DoubleVector& breaks, const char* explain) {
+void printLengthGroupError(const DoubleVector& breaks, const char* explain) {
   cerr << "Failed to create the length group division\n";
   int i;
   for (i = 0; i < breaks.Size(); i++)
@@ -107,7 +107,7 @@ double LengthGroupDivision::Maxlength(int i) const {
   else
     j = i;
 
-  if (iszero(Dl))
+  if (isZero(Dl))
     return minlength[j] + 2 * (meanlength[j] - minlength[j]);
   else
     return minlength[j] + Dl;
@@ -191,9 +191,9 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       || L2->Maxlength(L2->NoLengthGroups() - 1) <= L1->Minlength(0)) {
     cerr << "Error: cannot create a mapping between length groups whose "
       << "intersection is empty\nThe length group divisions are:\n";
-    ErrorPrintLengthGroupDivision(L1);
+    printLengthGroupDivisionError(L1);
     cerr << " and\n";
-    ErrorPrintLengthGroupDivision(L2);
+    printLengthGroupDivisionError(L2);
     exit(EXIT_FAILURE);
   }
 
@@ -215,7 +215,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       Lf = L1;
     }
   } else {
-    CheckLengthGroupIsFiner(L1, L2, "CI - finer", "CI - coarser");
+    checkLengthGroupIsFiner(L1, L2, "CI - finer", "CI - coarser");
     targetisfiner = 0;
     Lc = L2;
     Lf = L1;
@@ -327,7 +327,7 @@ ConversionIndex::~ConversionIndex() {
 
 //The function Interpolates values calculated on a coarse Length distribution
 //Vc to a finer length distribution Vf using the conversionindex CI.
-void Interp(DoubleVector& Vf, const DoubleVector& Vc, const ConversionIndex* CI) {
+void interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc, const ConversionIndex* CI) {
   int i, offset;
   if (CI -> SameDl()) {
     offset = CI->Offset();

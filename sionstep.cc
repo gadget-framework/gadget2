@@ -61,16 +61,16 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
         break;
       case FixedSlopeLinearFit:
       case FixedSlopeLogLinearFit:
-        ReadWordAndVariable(infile, "slope", slope);
+        readWordAndVariable(infile, "slope", slope);
         break;
       case FixedInterceptLinearFit:
       case FixedInterceptLogLinearFit:
-        ReadWordAndVariable(infile, "intercept", intercept);
+        readWordAndVariable(infile, "intercept", intercept);
         break;
       case FixedLinearFit:
       case FixedLogLinearFit:
-        ReadWordAndVariable(infile, "slope", slope);
-        ReadWordAndVariable(infile, "intercept", intercept);
+        readWordAndVariable(infile, "slope", slope);
+        readWordAndVariable(infile, "intercept", intercept);
         break;
       default:
         handle.Message("Error in surveyindex - unrecognised fittype");
@@ -82,7 +82,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
   ifstream datafile;
   CommentStream subdata(datafile);
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadSIData(subdata, arealabel, index1, index2, TimeInfo);
   handle.Close();
@@ -137,16 +137,16 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
       break;
     case FixedSlopeLinearFit:
     case FixedSlopeLogLinearFit:
-      ReadWordAndVariable(infile, "slope", slope);
+      readWordAndVariable(infile, "slope", slope);
       break;
     case FixedInterceptLinearFit:
     case FixedInterceptLogLinearFit:
-      ReadWordAndVariable(infile, "intercept", intercept);
+      readWordAndVariable(infile, "intercept", intercept);
       break;
     case FixedLinearFit:
     case FixedLogLinearFit:
-      ReadWordAndVariable(infile, "slope", slope);
-      ReadWordAndVariable(infile, "intercept", intercept);
+      readWordAndVariable(infile, "slope", slope);
+      readWordAndVariable(infile, "intercept", intercept);
       break;
     default:
       handle.Message("Error in surveyindex - unrecognised fittype");
@@ -157,7 +157,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
   ifstream datafile;
   CommentStream subdata(datafile);
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadSIData(subdata, arealabel, colindex, TimeInfo);
   handle.Close();
@@ -185,7 +185,7 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
   ErrorHandler handle;
 
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 5)
+  if (countColumns(infile) != 5)
     handle.Message("Wrong number of columns in inputfile - should be 5");
 
   while (!infile.eof()) {
@@ -253,7 +253,7 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
   //for sibylengthandageonstep tmpstr1 is age, tmpstr2 is length
   //for pionstep tmpstr1 is predlength, tmpstr2 is preylength
   //check the number of columns in the inputfile
-  if (CountColumns(infile) != 6)
+  if (countColumns(infile) != 6)
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
@@ -392,10 +392,8 @@ int SIOnStep::IsToSum(const TimeClass* const TimeInfo) const {
 }
 
 double SIOnStep::Regression() {
-  if (NumberOfSums < 2) {
-    this->SetError();
+  if (NumberOfSums < 2)
     return 0.0;
-  }
 
   double likelihood = 0.0;
   int col, index;

@@ -20,21 +20,21 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   keeper->AddString(givenname);
 
   //Currently can only have one stock per tagging experiment
-  ReadWordAndValue(infile, "stock", text);
+  readWordAndValue(infile, "stock", text);
   stocknames.resize(1);
   stocknames[0] = new char[strlen(text) + 1];
   strcpy(stocknames[0], text);
 
   int tmparea;
   //Currently can only have one area per tagging experiment
-  ReadWordAndVariable(infile, "tagarea", tmparea);
+  readWordAndVariable(infile, "tagarea", tmparea);
   if ((tagarea = Area->InnerArea(tmparea)) == -1)
     handle.UndefinedArea(tmparea);
 
-  ReadWordAndVariable(infile, "tagyear", tagyear);
-  ReadWordAndVariable(infile, "tagstep", tagstep);
-  ReadWordAndVariable(infile, "endyear", endyear);
-  ReadWordAndVariable(infile, "endstep", endstep);
+  readWordAndVariable(infile, "tagyear", tagyear);
+  readWordAndVariable(infile, "tagstep", tagstep);
+  readWordAndVariable(infile, "endyear", endyear);
+  readWordAndVariable(infile, "endstep", endstep);
 
   if (!TimeInfo->IsWithinPeriod(tagyear, tagstep))
     handle.Message("Time for start of tagging experiment is not within given time for the model");
@@ -47,13 +47,13 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
 
   //Now read in the length information
   double minlength, maxlength, dl;
-  ReadWordAndVariable(infile, "minlength", minlength);
-  ReadWordAndVariable(infile, "maxlength", maxlength);
-  ReadWordAndVariable(infile, "dl", dl);
+  readWordAndVariable(infile, "minlength", minlength);
+  readWordAndVariable(infile, "maxlength", maxlength);
+  readWordAndVariable(infile, "dl", dl);
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(minlength, maxlength, dl, "length groups for tags");
+    printLengthGroupError(minlength, maxlength, dl, "length groups for tags");
   NumberByLength.resize(LgrpDiv->NoLengthGroups(), 0.0);
 
   //Now read in the tagloss information - not currently used
@@ -64,9 +64,9 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
     handle.Unexpected("tagloss", text);
 
   //Read in the numbers format: tagid - length - number
-  ReadWordAndValue(infile, "numbers", text);
+  readWordAndValue(infile, "numbers", text);
   subfile.open(text);
-  CheckIfFailure(subfile, text);
+  checkIfFailure(subfile, text);
   handle.Open(text);
   ReadNumbers(subcomment, givenname, minlength, dl);
   handle.Close();
@@ -85,7 +85,7 @@ void Tags::ReadNumbers(CommentStream& infile, const char* tagname, double minlen
 
   infile >> ws;
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 3)
+  if (countColumns(infile) != 3)
     handle.Message("Wrong number of columns in inputfile - should be 3");
 
   while (!infile.eof()) {

@@ -1,16 +1,11 @@
 #ifndef stockstdprinter_h
 #define stockstdprinter_h
 
-#include "commentstream.h"
 #include "printer.h"
-#include "gadget.h"
 
 class StockStdPrinter;
-class TimeClass;
 class StockAggregator;
 class StockPreyStdInfo;
-class AreaClass;
-class LengthGroupDivision;
 
 /**
  * \class StockStdPrinter

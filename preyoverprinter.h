@@ -2,14 +2,9 @@
 #define preyoverprinter_h
 
 #include "printer.h"
-#include "commentstream.h"
-#include "gadget.h"
 
 class PreyOverPrinter;
-class TimeClass;
-class LengthGroupDivision;
 class PreyOverAggregator;
-class AreaClass;
 
 /**
  * \class PreyOverPrinter

@@ -54,9 +54,9 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
 
   infile >> filename >> ws;
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadAggregation(subdata, areas, areaindex);
+  i = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -67,9 +67,9 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
       handle.UndefinedArea(areas[i]);
 
   //Open the printfile
-  ReadWordAndValue(infile, "printfile", filename);
+  readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  CheckIfFailure(outfile, filename);
+  checkIfFailure(outfile, filename);
   outfile << "; ";
   RUNID.print(outfile);
   outfile.flush();

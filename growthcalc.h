@@ -1,14 +1,13 @@
 #ifndef growthcalc_h
 #define growthcalc_h
 
+#include "areatime.h"
+#include "conversion.h"
 #include "formulamatrixptrvector.h"
 #include "commentstream.h"
 #include "popinfovector.h"
 #include "livesonareas.h"
 
-class AreaClass;
-class TimeClass;
-class LengthGroupDivision;
 class Keeper;
 
 /**

@@ -43,7 +43,7 @@ void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
 
         NconbyAge[inarea][age] += NconbyAgeAndLength[inarea][age][l];
         BconbyAge[inarea][age] += BconbyAgeAndLength[inarea][age][l];
-        if (iszero(Alk[age][l].N))
+        if (isZero(Alk[age][l].N))
           MortbyAgeAndLength[inarea][age][l] = 0.0;
         else {
           if (NconbyAgeAndLength[inarea][age][l] >= Alk[age][l].N)

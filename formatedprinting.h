@@ -5,11 +5,9 @@
 #include "agebandmatrix.h"
 #include "predator.h"
 #include "printer.h"
-#include "gadget.h"
 
 class Stock;
 class LenStock;
-class AreaClass;
 class MortPredLength;
 class MortPrey;
 

@@ -1,11 +1,11 @@
 #ifndef popstatistics_h
 #define popstatistics_h
 
+#include "conversion.h"
 #include "popinfovector.h"
 #include "popinfoindexvector.h"
 
 class PopStatistics;
-class LengthGroupDivision;
 
 class PopStatistics {
 public:

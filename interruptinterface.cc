@@ -145,7 +145,7 @@ void InterruptInterface::dumpNaturalM(CharPtrVector& args) {
   ofstream out(NATURALM_FILE);
   int i;
   for (i = 0; i < eco->stockvec.Size(); i++) {
-    if (eco->stockvec[i]->stockType() != LENSTOCK_TYPE)
+    if (eco->stockvec[i]->stockType() != LENSTOCKTYPE)
       printNaturalM(out, *eco->stockvec[i]);
     else
       printNaturalM(out, *(const LenStock*)(eco->stockvec[i]));

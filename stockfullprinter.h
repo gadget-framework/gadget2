@@ -1,15 +1,10 @@
 #ifndef stockfullprinter_h
 #define stockfullprinter_h
 
-#include "commentstream.h"
 #include "printer.h"
-#include "gadget.h"
 
 class StockFullPrinter;
-class TimeClass;
-class LengthGroupDivision;
 class StockAggregator;
-class AreaClass;
 
 /**
  * \class StockFullPrinter

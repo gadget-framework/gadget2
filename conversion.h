@@ -7,9 +7,9 @@
 class LengthGroupDivision;
 class ConversionIndex;
 
-extern void Interp(DoubleVector& Vf, const DoubleVector& Vc, const ConversionIndex* CI);
-extern void LengthGroupPrintError(double minl, double maxl, double dl, const char* str);
-extern void LengthGroupPrintError(const DoubleVector& breaks, const char* str);
+extern void interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc, const ConversionIndex* CI);
+extern void printLengthGroupError(double minl, double maxl, double dl, const char* str);
+extern void printLengthGroupError(const DoubleVector& breaks, const char* str);
 
 class LengthGroupDivision {
 public:

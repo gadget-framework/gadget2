@@ -3,7 +3,7 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
-void ErrorPrintLengthGroupDivision(const LengthGroupDivision* lgrpdiv) {
+void printLengthGroupDivisionError(const LengthGroupDivision* lgrpdiv) {
   int i;
   if (lgrpdiv->dl() != 0) {
     cerr << "Length group with minimum length " << lgrpdiv->Minlength(0) << ", maximum length "
@@ -19,15 +19,15 @@ void ErrorPrintLengthGroupDivision(const LengthGroupDivision* lgrpdiv) {
   cerr << endl;
 }
 
-void ErrorPrintLengthGroupDivision(const LengthGroupDivision* finer,
+void printLengthGroupDivisionError(const LengthGroupDivision* finer,
   const LengthGroupDivision* coarser, const char* finername, const char* coarsername) {
 
   cerr << "Error: Length group divisions for " << finername
     << " is not finer than the length group division for " << coarsername
     << "\nThe length group division for " << finername << " is:\n";
-  ErrorPrintLengthGroupDivision(finer);
+  printLengthGroupDivisionError(finer);
   cerr << "The length group division for " << coarsername << " is:\n";
-  ErrorPrintLengthGroupDivision(coarser);
+  printLengthGroupDivisionError(coarser);
 }
 
 /* returns -1 if algorithm fails. Should never happen, but Murphys law ...
@@ -39,7 +39,7 @@ void ErrorPrintLengthGroupDivision(const LengthGroupDivision* finer,
  * length group in coarser that is not wholly contained in a single
  * length group in coarser.*/
 
-int LengthGroupIsFiner(const LengthGroupDivision* finer,
+int lengthGroupIsFiner(const LengthGroupDivision* finer,
   const LengthGroupDivision* coarser, int& BogusLengthGroup) {
 
   if (coarser->NoLengthGroups() == 0 || finer->NoLengthGroups() == 0)
@@ -96,22 +96,22 @@ int LengthGroupIsFiner(const LengthGroupDivision* finer,
   return 1;
 }
 
-void CheckLengthGroupIsFiner(const LengthGroupDivision* finer,
+void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
   const LengthGroupDivision* coarser, const char* finername, const char* coarsername) {
 
   int BogusLengthGroup = 0;
-  int isfiner = LengthGroupIsFiner(finer, coarser, BogusLengthGroup);
+  int isfiner = lengthGroupIsFiner(finer, coarser, BogusLengthGroup);
   switch(isfiner) {
     case -1:
       cerr << "Error: the algorithm in lengthgroupisfiner does not work.\n"
         << "The length group division for " << finername << " is:\n";
-      ErrorPrintLengthGroupDivision(finer);
+      printLengthGroupDivisionError(finer);
       cerr << "The length group division for " << coarsername << " is:\n";
-      ErrorPrintLengthGroupDivision(coarser);
+      printLengthGroupDivisionError(coarser);
       exit(EXIT_FAILURE);
     case 0:
       cerr << "Error in length group " << BogusLengthGroup << " for " << finername << endl;
-      ErrorPrintLengthGroupDivision(finer, coarser, finername, coarsername);
+      printLengthGroupDivisionError(finer, coarser, finername, coarsername);
       exit(EXIT_FAILURE);
     case 1:
       return;
@@ -122,7 +122,7 @@ void CheckLengthGroupIsFiner(const LengthGroupDivision* finer,
       cerr << "Error when comparing length group divisions.\n"
         << "Unrecognized return code " << isfiner << " from IsLengthGroupFiner.\n"
         << "Please find someone to blame for this.\n";
-      ErrorPrintLengthGroupDivision(finer, coarser, finername, coarsername);
+      printLengthGroupDivisionError(finer, coarser, finername, coarsername);
       exit(EXIT_FAILURE);
     }
 }

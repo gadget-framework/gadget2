@@ -12,8 +12,8 @@ MigrationPenalty::MigrationPenalty(CommentStream& infile, double likweight)
   strncpy(text, "", MaxStrLength);
   strncpy(stockname, "", MaxStrLength);
 
-  ReadWordAndValue(infile, "stockname", stockname);
-  ReadWordAndTwoVariables(infile, "powercoeffs", powercoeffs[0], powercoeffs[1]);
+  readWordAndValue(infile, "stockname", stockname);
+  readWordAndTwoVariables(infile, "powercoeffs", powercoeffs[0], powercoeffs[1]);
 
   //prepare for next likelihood component
   infile >> ws;

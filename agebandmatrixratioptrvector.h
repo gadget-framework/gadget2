@@ -6,14 +6,13 @@
 #include "bandmatrix.h"
 #include "popratiomatrix.h"
 #include "popratioindexvector.h"
+#include "areatime.h"
 #include "agebandmatrix.h"
 #include "agebandmatrixptrvector.h"
 #include "agebandmatrixratio.h"
 #include "charptrvector.h"
 #include "gadget.h"
 
-class AreaClass;
-class TimeClass;
 class Maturity;
 
 class AgeBandMatrixRatioPtrVector {

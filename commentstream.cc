@@ -12,7 +12,7 @@ istream& operator >> (istream& istr, Whitespace& ws) {
   return istr;
 }
 
-void KillComments(istream* const istrptr) {
+void killComments(istream* const istrptr) {
   Whitespace Ws;
   if (istrptr->eof())
     return;
@@ -27,13 +27,13 @@ void KillComments(istream* const istrptr) {
 }
 
 CommentStream& ws(CommentStream& ins) {
-  KillComments(ins.istrptr);
+  killComments(ins.istrptr);
   return ins;
 }
 
 CommentStream& CommentStream::get(char& c) {
   if (istrptr->peek() == COMMENTCHAR) {
-    KillComments(istrptr);
+    killComments(istrptr);
     c = '\n';
   } else
     istrptr->get(c);

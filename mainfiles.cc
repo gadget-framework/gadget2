@@ -61,7 +61,7 @@ void MainInfo::OpenOptinfofile(char* filename) {
   optinfofilename = new char[strlen(filename) + 1];
   strcpy(optinfofilename, filename);
   optinfofile.open(optinfofilename, ios::in);
-  CheckIfFailure(optinfofile, filename);
+  checkIfFailure(optinfofile, filename);
   OptInfoFileisGiven = 1;
   handle.Close();
 }

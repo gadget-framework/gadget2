@@ -31,22 +31,22 @@ LogCatches::LogCatches(CommentStream& infile,
   CommentStream subdata(datafile);
 
   timeindex = 0;
-  ReadWordAndValue(infile, "datafile", datafilename);
+  readWordAndValue(infile, "datafile", datafilename);
   //Check to see if we read in weights
   readWeights = 0;
   char c;
   c = infile.peek();
   if (c == 'w') {
     readWeights = 1;
-    ReadWordAndValue(infile, "weightfile", weightfilename);
+    readWordAndValue(infile, "weightfile", weightfilename);
   }
 
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
-  ReadWordAndValue(infile, "function", functionname);
-  ReadWordAndVariable(infile, "overconsumption", overconsumption);
-  ReadWordAndVariable(infile, "minimumprobability", minp);
-  ReadWordAndVariable(infile, "aggregation_level", agg_lev);
+  readWordAndValue(infile, "function", functionname);
+  readWordAndVariable(infile, "overconsumption", overconsumption);
+  readWordAndVariable(infile, "minimumprobability", minp);
+  readWordAndVariable(infile, "aggregation_level", agg_lev);
 
   if (overconsumption != 0 && overconsumption != 1)
     handle.Message("Error in logcatch - overconsumption must be 0 or 1");
@@ -63,31 +63,31 @@ LogCatches::LogCatches(CommentStream& infile,
     handle.Message("Error in logcatch - unrecognised function", functionname);
 
   //Read in area aggregation from file
-  ReadWordAndValue(infile, "areaaggfile", aggfilename);
+  readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numarea = ReadAggregation(subdata, areas, areaindex);
+  numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in age aggregation from file
-  ReadWordAndValue(infile, "ageaggfile", aggfilename);
+  readWordAndValue(infile, "ageaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numage = ReadAggregation(subdata, ages, ageindex);
+  numage = readAggregation(subdata, ages, ageindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in length aggregation from file
-  ReadWordAndValue(infile, "lenaggfile", aggfilename);
+  readWordAndValue(infile, "lenaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numlen = ReadLengthAggregation(subdata, lengths, lenindex);
+  numlen = readLengthAggregation(subdata, lengths, lenindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -126,7 +126,7 @@ LogCatches::LogCatches(CommentStream& infile,
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadLogCatchData(subdata, TimeInfo, numarea, numage, numlen);
   handle.Close();
@@ -136,7 +136,7 @@ LogCatches::LogCatches(CommentStream& infile,
   //If readWeights then read in the weight info from file
   if (readWeights == 1) {
     datafile.open(weightfilename);
-    CheckIfFailure(datafile, weightfilename);
+    checkIfFailure(datafile, weightfilename);
     handle.Open(weightfilename);
     ReadLogWeightsData(subdata, TimeInfo, numlen);
     handle.Close();
@@ -206,7 +206,7 @@ void LogCatches::ReadLogCatchData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 6)
+  if (countColumns(infile) != 6)
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
@@ -297,7 +297,7 @@ void LogCatches::ReadLogWeightsData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 4)
+  if (countColumns(infile) != 4)
     handle.Message("Wrong number of columns in inputfile - should be 4");
 
   while (!infile.eof()) {
@@ -737,25 +737,7 @@ void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
   }
 }
 
-void LogCatches::printHeader(ofstream& catchfile, const PrintInfo& print) {
-  timeindex = 0;
-  int i;
-  if (print.catchprint) {
-    catchfile << "\nfleets";
-    for (i = 0; i<fleetnames.Size(); i++)
-      catchfile << sep << fleetnames[i];
-    catchfile << "\nstocks";
-    for (i = 0; i<stocknames.Size(); i++)
-      catchfile << sep << stocknames[i];
-
-    catchfile << "\n\nminage " << MinAge << " maxage " << MaxAge
-      << " minlen " << lengths[0] << " maxlen " << lengths[lengths.Size() - 1]
-      << " lenstep " << dl << "\n (as this likelihood calculation sums the\n"
-      << " values over length and age, it is not printed by length and age)\n\n";
-  }
-}
-
-void LogCatches::print(ofstream& catchfile, const TimeClass& time, const PrintInfo& print) {
+void LogCatches::CommandLinePrint(ofstream& catchfile, const TimeClass& time, const PrintInfo& print) {
   if (!AAT.AtCurrentTime(&time))
     return;
   else if (print.catchprint) {

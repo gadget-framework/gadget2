@@ -1,6 +1,5 @@
 #include "areatime.h"
 #include "readfunc.h"
-#include "readmatrix.h"
 #include "errorhandler.h"
 #include "gadget.h"
 
@@ -26,7 +25,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   size.resize(noareas);
   infile >> text;
   if (strcasecmp(text, "size") == 0)
-    ReadVector(infile, size);
+    readVector(infile, size);
   else
     handle.Unexpected("size", text);
 
@@ -41,7 +40,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   double tmpnumber;
 
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 4)
+  if (countColumns(infile) != 4)
     handle.Message("Wrong number of columns in inputfile - should be 4");
 
   while (!infile.eof()) {

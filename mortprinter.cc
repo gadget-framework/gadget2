@@ -48,21 +48,21 @@ MortPrinter::MortPrinter(CommentStream& infile,
   CommentStream subdata(datafile);
 
   //Open the printfile
-  ReadWordAndValue(infile, "printfile", filename);
+  readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  CheckIfFailure(outfile, filename);
+  checkIfFailure(outfile, filename);
 
-  ReadWordAndVariable(infile, "printf", printf);
-  ReadWordAndVariable(infile, "printm1", printm1);
-  ReadWordAndVariable(infile, "printm2", printm2);
-  ReadWordAndVariable(infile, "printn", printn);
+  readWordAndVariable(infile, "printf", printf);
+  readWordAndVariable(infile, "printm1", printm1);
+  readWordAndVariable(infile, "printm2", printm2);
+  readWordAndVariable(infile, "printn", printn);
 
   //Read in area aggregation from file
-  ReadWordAndValue(infile, "areaaggfile", filename);
+  readWordAndValue(infile, "areaaggfile", filename);
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadAggregation(subdata, areas, areaindex);
+  i = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -175,7 +175,7 @@ void MortPrinter::Print(const TimeClass* const TimeInfo) {
   int s, i, j, area, inarea, age, yo;
   for (area = 0; area < areas.Size(); area++)
     for (i = 0; i < stocks.Size(); i++)
-      if (stocks[i]->stockType() == LENSTOCK_TYPE)
+      if (stocks[i]->stockType() == LENSTOCKTYPE)
         ((LenStock*)stocks[i])->calcForPrinting(Area->InnerArea(areas[area]), *TimeInfo);
 
   if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps())

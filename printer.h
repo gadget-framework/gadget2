@@ -2,29 +2,19 @@
 #define printer_h
 
 #include "actionattimes.h"
+#include "areatime.h"
+#include "conversion.h"
+#include "commentstream.h"
 #include "poppredatorptrvector.h"
 #include "predatorptrvector.h"
 #include "preyptrvector.h"
 #include "ecosystem.h"
+#include "gadget.h"
 
-class TimeClass;
-
-typedef int PrinterType;
-const PrinterType STOCKPRINTER = 1;
-const PrinterType PREDATORPRINTER = 2;
-const PrinterType PREDATOROVERPRINTER = 3;
-const PrinterType PREYOVERPRINTER = 4;
-const PrinterType STOCKSTDPRINTER = 5;
-const PrinterType STOCKPREYFULLPRINTER = 6;
-const PrinterType PREDPREYSTDPRINTER = 7;
-const PrinterType STOCKFULLPRINTER = 8;
-const PrinterType FORMATEDSTOCKPRINTER = 9;
-const PrinterType FORMATEDCHATPRINTER = 10;
-const PrinterType FORMATEDPREYPRINTER = 11;
-const PrinterType MORTPRINTER = 12;
-const PrinterType FORMATEDCATCHPRINTER = 13;
-const PrinterType BIOMASSPRINTER = 14;
-const PrinterType LIKELIHOODPRINTER = 15;
+enum PrinterType { STOCKPRINTER = 1, PREDATORPRINTER, PREDATOROVERPRINTER,
+  PREYOVERPRINTER, STOCKSTDPRINTER, STOCKPREYFULLPRINTER, PREDPREYSTDPRINTER,
+  STOCKFULLPRINTER, FORMATEDSTOCKPRINTER, FORMATEDCHATPRINTER, FORMATEDPREYPRINTER,
+  MORTPRINTER, FORMATEDCATCHPRINTER, BIOMASSPRINTER, LIKELIHOODPRINTER };
 
 /**
  * \class Printer
@@ -36,7 +26,7 @@ public:
   /**
    * \brief This is the default Printer constructor
    */
-  Printer(PrinterType TYPE) : type(TYPE) {};
+  Printer(PrinterType TYPE) { type = TYPE; };
   /**
    * \brief This is the default Printer destructor
    */
@@ -81,20 +71,20 @@ public:
    */
   virtual void SetPredator(PredatorPtrVector& predatorvec) {};
   /**
-   * \brief This will return the type of printer clas
+   * \brief This will return the type of printer class
    * \return type
    */
-  PrinterType Type() const { return type; };
+  PrinterType Type() { return type; };
 protected:
   /**
-   * \brief This stores information about when the output is required
+   * \brief This stores information about when the printer output is required in the model
    */
   ActionAtTimes aat;
 private:
   /**
    * \brief This denotes what type of printer class has been created
    */
-  const PrinterType type;
+  PrinterType type;
 };
 
 #endif

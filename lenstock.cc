@@ -8,12 +8,8 @@
 #include "stockpredator.h"
 #include "initialcond.h"
 #include "migration.h"
-#include "readfunc.h"
 #include "errorhandler.h"
-#include "maturitya.h"
-#include "maturityb.h"
-#include "maturityc.h"
-#include "maturityd.h"
+#include "maturity.h"
 #include "renewal.h"
 #include "transition.h"
 #include "print.h"
@@ -70,20 +66,20 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   double minlength;
   double maxlength;
   double dl;
-  ReadWordAndVariable(infile, "minage", minage);
-  ReadWordAndVariable(infile, "maxage", maxage);
-  ReadWordAndVariable(infile, "minlength", minlength);
-  ReadWordAndVariable(infile, "maxlength", maxlength);
-  ReadWordAndVariable(infile, "dl", dl);
+  readWordAndVariable(infile, "minage", minage);
+  readWordAndVariable(infile, "maxage", maxage);
+  readWordAndVariable(infile, "minlength", minlength);
+  readWordAndVariable(infile, "maxlength", maxlength);
+  readWordAndVariable(infile, "dl", dl);
 
   //JMB need to read the location of the reference weights file
   char refweight[MaxStrLength];
   strncpy(refweight, "", MaxStrLength);
-  ReadWordAndValue(infile, "refweightfile", refweight);
+  readWordAndValue(infile, "refweightfile", refweight);
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(minlength, maxlength, dl, "length group for lenstock");
+    printLengthGroupError(minlength, maxlength, dl, "length group for lenstock");
 
   //JMB need to set the lowerlgrp and size vectors to a default
   //value to allow the whole range of lengths to be calculated
@@ -100,37 +96,37 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   DoubleVector grlengths;
   CharPtrVector grlenindex;
 
-  ReadWordAndValue(infile, "growthandeatlengths", filename);
+  readWordAndValue(infile, "growthandeatlengths", filename);
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadLengthAggregation(subdata, grlengths, grlenindex);
+  i = readLengthAggregation(subdata, grlengths, grlenindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   LengthGroupDivision* GrowLgrpDiv = new LengthGroupDivision(grlengths);
   if (GrowLgrpDiv->Error())
-    LengthGroupPrintError(grlengths, "growthandeatlengths for lenstock");
+    printLengthGroupError(grlengths, "growthandeatlengths for lenstock");
 
-  CheckLengthGroupIsFiner(LgrpDiv, GrowLgrpDiv, this->Name(), "growth and eat lengths");
+  checkLengthGroupIsFiner(LgrpDiv, GrowLgrpDiv, this->Name(), "growth and eat lengths");
 
   //Read the growth function data
-  ReadWordAndVariable(infile, "doesgrow", doesgrow);
+  readWordAndVariable(infile, "doesgrow", doesgrow);
   if (doesgrow)
     grower = new Grower(infile, LgrpDiv, GrowLgrpDiv, areas, TimeInfo, keeper, refweight, Area, grlenindex);
   else
     grower = 0;
 
   //Read the prey data.
-  ReadWordAndVariable(infile, "iseaten", iseaten);
+  readWordAndVariable(infile, "iseaten", iseaten);
   if (iseaten)
     prey = new MortPrey(infile, areas, this->Name(), minage, maxage, keeper, LgrpDiv);
   else
     prey = 0;
 
   if (iseaten) //check to see if cannibalism is included
-    ReadWordAndVariable(infile, "cannibalism", cannibalism);
+    readWordAndVariable(infile, "cannibalism", cannibalism);
   else
     cannibalism = 0; //cannibalism is true only for stocks that are
                      //subject to cannibalism, ie immature stocks.
@@ -141,7 +137,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     cann = 0;
 
   //Read the predator data
-  ReadWordAndVariable(infile, "doeseat", doeseat);
+  readWordAndVariable(infile, "doeseat", doeseat);
   if (doeseat) { //must be a new predator type for multispecies purpose
     //Predator not allowed in single species case.
     cerr << "Error - predator not allowed for single species model\n";
@@ -174,13 +170,13 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     handle.Unexpected("initialconditions", text);
 
   //Read the migration data
-  ReadWordAndVariable(infile, "doesmigrate", doesmigrate);
+  readWordAndVariable(infile, "doesmigrate", doesmigrate);
   if (doesmigrate) {
-    ReadWordAndVariable(infile, "agedependentmigration", AgeDepMigration);
-    ReadWordAndValue(infile, "migrationfile", filename);
+    readWordAndVariable(infile, "agedependentmigration", AgeDepMigration);
+    readWordAndValue(infile, "migrationfile", filename);
     ifstream subfile(filename);
     CommentStream subcomment(subfile);
-    CheckIfFailure(subfile, filename);
+    checkIfFailure(subfile, filename);
     handle.Open(filename);
     migration = new Migration(subcomment, AgeDepMigration, areas, Area, TimeInfo, keeper);
     handle.Close();
@@ -191,13 +187,13 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     migration = 0;
 
   //Read the maturation data
-  ReadWordAndVariable(infile, "doesmature", doesmature);
+  readWordAndVariable(infile, "doesmature", doesmature);
   if (doesmature) {
-    ReadWordAndValue(infile, "maturityfunction", text);
-    ReadWordAndValue(infile, "maturityfile", filename);
+    readWordAndValue(infile, "maturityfunction", text);
+    readWordAndValue(infile, "maturityfile", filename);
     ifstream subfile(filename);
     CommentStream subcomment(subfile);
-    CheckIfFailure(subfile, filename);
+    checkIfFailure(subfile, filename);
     handle.Open(filename);
 
     if (strcasecmp(text, "continuous") == 0)
@@ -223,7 +219,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
 
   /*JMB code removed from here - see RemovedCode.txt for details*/
   //Read the movement data
-  ReadWordAndVariable(infile, "doesmove", doesmove);
+  readWordAndVariable(infile, "doesmove", doesmove);
   if (doesmove) {
     //transition handles the movements of the age group maxage:
     transition = new Transition(infile, areas, maxage, LgrpDiv, keeper);
@@ -232,12 +228,12 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     transition = 0;
 
   //Read the renewal data
-  ReadWordAndVariable(infile, "doesrenew", doesrenew);
+  readWordAndVariable(infile, "doesrenew", doesrenew);
   if (doesrenew) {
-    ReadWordAndValue(infile, "renewaldatafile", filename);
+    readWordAndValue(infile, "renewaldatafile", filename);
     ifstream subfile(filename);
     CommentStream subcomment(subfile);
-    CheckIfFailure(subfile, filename);
+    checkIfFailure(subfile, filename);
     handle.Open(filename);
     renewal = new RenewalData(subcomment, areas, Area, TimeInfo, keeper);
     handle.Close();
@@ -248,7 +244,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     renewal = 0;
 
   //Read the spawning data
-  ReadWordAndVariable(infile, "doesspawn", doesspawn);
+  readWordAndVariable(infile, "doesspawn", doesspawn);
   if (doesspawn) {
     spawner = new Spawner(infile, maxage, LgrpDiv->NoLengthGroups(), Area, TimeInfo, keeper);
 
@@ -256,7 +252,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     spawner = 0;
 
   //Read the filter data
-  ReadWordAndVariable(infile, "filter", filter);
+  readWordAndVariable(infile, "filter", filter);
 
   //Set the birthday for the stock
   birthdate = TimeInfo->StepsInYear();
@@ -544,7 +540,7 @@ void LenStock::Grow(int area,
 }
 
 void LenStock::calcForPrinting(int area, const TimeClass& time) {
-  if (!iseaten || !stockType() == LENSTOCK_TYPE || calcDone)
+  if (!iseaten || !stockType() == LENSTOCKTYPE || calcDone)
     return;
   int row, col, mcol;
   const AgeBandMatrix& mean_n = ((MortPrey*)prey)->getMeanN(area);

@@ -2,11 +2,15 @@
 #include "stock.h"
 #include "mathfunc.h"
 #include "readfunc.h"
+#include "readword.h"
 #include "conversion.h"
 #include "print.h"
 #include "errorhandler.h"
 #include "gadget.h"
 
+// ********************************************************
+// Functions for base Maturity
+// ********************************************************
 Maturity::Maturity(const IntVector& tmpareas, int minage, const IntVector& minlength,
   const IntVector& size, const LengthGroupDivision* const lgrpdiv)
   : LivesOnAreas(tmpareas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)),
@@ -190,3 +194,313 @@ void Maturity::DeleteTag(const char* tagname) {
       << tagname << " in maturity but there is not any tag with that name\n";
   }
 }
+
+// ********************************************************
+// Functions for MaturityA
+// ********************************************************
+MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
+  Keeper* const keeper, int minage, const IntVector& minabslength, const IntVector& size,
+  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int NoMatconst)
+  : Maturity(tmpareas, minage, minabslength, size, lgrpdiv), PrecalcMaturation(minabslength, size, minage) {
+
+  ErrorHandler handle;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  int i;
+  keeper->AddString("maturity");
+  infile >> text;
+  if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
+    infile >> text;
+    i = 0;
+    while (strcasecmp(text, "coefficients") != 0 && infile.good()) {
+      MatureStockNames.resize(1);
+      MatureStockNames[i] = new char[strlen(text) + 1];
+      strcpy(MatureStockNames[i], text);
+      Ratio.resize(1);
+      infile >> Ratio[i];
+      i++;
+      infile >> text;
+    }
+  } else
+    handle.Unexpected("maturestocksandratios", text);
+
+  if (!infile.good())
+    handle.Failure("coefficients");
+  Coefficient.resize(NoMatconst, keeper);
+  Coefficient.Read(infile, TimeInfo, keeper);
+
+  readWordAndVariable(infile, "minmatureage", MinMatureAge);
+  keeper->ClearLast();
+}
+
+MaturityA::~MaturityA() {
+}
+
+void MaturityA::Precalc(const TimeClass* const TimeInfo) {
+  this->Maturity::Precalc(TimeInfo);
+  Coefficient.Update(TimeInfo);
+  double my;
+  int age, j;
+
+  if (Coefficient.DidChange(TimeInfo)) {
+    for (age = PrecalcMaturation.Minage(); age <= PrecalcMaturation.Maxage(); age++) {
+      for (j = PrecalcMaturation.Minlength(age); j < PrecalcMaturation.Maxlength(age); j++) {
+        if (age >= MinMatureAge) {
+          my = exp(-Coefficient[0] - Coefficient[1] * LgrpDiv->Meanlength(j) - Coefficient[2] * age);
+          PrecalcMaturation[age][j] = 1 / (1 + my);
+        } else
+          PrecalcMaturation[age][j] = 0.0;
+      }
+    }
+  }
+}
+
+//Calculate the percentage that becomes Mature each timestep.
+double MaturityA::MaturationProbability(int age, int length, int Growth,
+  const TimeClass* const TimeInfo, const AreaClass* const Area, int area) {
+
+  const double ratio =  PrecalcMaturation[age][length] *
+    (Coefficient[1] * Growth * LgrpDiv->dl() +
+    Coefficient[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
+  return (min(max(0.0, ratio), 1.0));
+}
+
+void MaturityA::Print(ofstream& outfile) const {
+  Maturity::Print(outfile);
+  outfile << "\tPrecalculated maturity.\n";
+  BandmatrixPrint(PrecalcMaturation, outfile);
+  outfile << endl;
+}
+
+int MaturityA::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
+  return 1;
+}
+
+// ********************************************************
+// Functions for MaturityB
+// ********************************************************
+MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
+  Keeper* const keeper, int minage, const IntVector& minabslength,
+  const IntVector& size, const IntVector& tmpareas, const LengthGroupDivision*const lgrpdiv)
+  : Maturity(tmpareas, minage, minabslength, size, lgrpdiv) {
+
+  ErrorHandler handle;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  int i;
+  infile >> text;
+  keeper->AddString("maturity");
+  if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
+    infile >> text;
+    i = 0;
+    while (!(strcasecmp(text, "maturitysteps") == 0) && infile.good()) {
+      MatureStockNames.resize(1);
+      MatureStockNames[i] = new char[strlen(text) + 1];
+      strcpy(MatureStockNames[i], text);
+      Ratio.resize(1);
+      infile >> Ratio[i];
+      i++;
+      infile >> text;
+    }
+  } else
+    handle.Unexpected("maturestocksandratios", text);
+
+  if (!infile.good())
+    handle.Failure("maturitysteps");
+  infile >> ws;
+  while (isdigit(infile.peek()) && !infile.eof()) {
+    maturitystep.resize(1);
+    infile >> maturitystep[maturitystep.Size() - 1] >> ws;
+  }
+  infile >> text;
+  if (!(strcasecmp(text, "maturitylengths") == 0))
+    handle.Unexpected("maturitylengths", text);
+  while (maturitylength.Size() < maturitystep.Size() && !infile.eof()) {
+    maturitylength.resize(1, keeper);
+    maturitylength[maturitylength.Size() - 1].Read(infile, TimeInfo, keeper);
+  }
+
+  if (maturitylength.Size() != maturitystep.Size())
+    handle.Message("Number of maturitysteps does not equal number of maturitylengths");
+  keeper->ClearLast();
+}
+
+MaturityB::~MaturityB() {
+}
+
+void MaturityB::Print(ofstream& outfile) const {
+  int i;
+  Maturity::Print(outfile);
+  outfile << "maturitysteps";
+  for (i = 0; i < maturitystep.Size(); i++)
+    outfile << sep << maturitystep[i];
+  outfile << "\nmaturitylengths";
+  for (i = 0; i < maturitylength.Size(); i++)
+    outfile << sep << maturitylength[i];
+}
+
+//Calculate the percentage that becomes Mature each timestep.
+//Need to check units on LengthOfCurrent
+double MaturityB::MaturationProbability(int age, int length, int Growth,
+  const TimeClass* const TimeInfo, const AreaClass* const Area, int area) {
+
+  int i;
+  for (i = 0; i < maturitylength.Size(); i++)
+    if (TimeInfo->CurrentStep() == maturitystep[i])
+      return (LgrpDiv->Meanlength(length) >= maturitylength[i]);
+  return 0.0;
+}
+
+void MaturityB::Precalc(const TimeClass* const TimeInfo) {
+  this->Maturity::Precalc(TimeInfo);
+  maturitylength.Update(TimeInfo);
+}
+
+int MaturityB::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
+  int i;
+  for (i = 0; i < maturitystep.Size(); i++)
+    if (maturitystep[i] == TimeInfo->CurrentStep())
+      return 1;
+  return 0;
+}
+
+// ********************************************************
+// Functions for MaturityC
+// ********************************************************
+MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
+  Keeper* const keeper, int minage, const IntVector& minabslength, const IntVector& size,
+  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int NoMatconst)
+  : MaturityA(infile, TimeInfo, keeper, minage, minabslength, size, tmpareas, lgrpdiv, NoMatconst) {
+
+  ErrorHandler handle;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+
+  infile >> text >> ws;
+  if (strcasecmp(text, "maturitystep") != 0)
+    handle.Unexpected("maturitystep", text);
+
+  int i = 0;
+  while (isdigit(infile.peek()) && !infile.eof()) {
+    maturitystep.resize(1);
+    infile >> maturitystep[i] >> ws;
+    i++;
+  }
+
+  for (i = 0; i < maturitystep.Size(); i++)
+    if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->StepsInYear())
+      handle.Message("illegal maturity step in maturation type C");
+}
+
+void MaturityC::Precalc(const TimeClass* const TimeInfo) {
+  this->Maturity::Precalc(TimeInfo);
+  Coefficient.Update(TimeInfo);
+  double my;
+  int age, j;
+
+  if (Coefficient.DidChange(TimeInfo)) {
+    for (age = PrecalcMaturation.Minage(); age <= PrecalcMaturation.Maxage(); age++) {
+      for (j = PrecalcMaturation.Minlength(age); j < PrecalcMaturation.Maxlength(age); j++) {
+        if (age >= MinMatureAge) {
+          my = exp(-Coefficient[0] * (LgrpDiv->Meanlength(j) - Coefficient[1]) -
+            Coefficient[2] * (age - Coefficient[3]));
+          PrecalcMaturation[age][j] = 1 / (1 + my);
+        } else
+          PrecalcMaturation[age][j] = 0.0;
+      }
+    }
+  }
+}
+
+MaturityC::~MaturityC() {
+}
+
+double MaturityC::MaturationProbability(int age, int length, int Growth,
+  const TimeClass* const TimeInfo, const AreaClass* const Area, int area) {
+
+  if (this->IsMaturationStep(area, TimeInfo)) {
+    const double ratio =  PrecalcMaturation[age][length] *
+      (Coefficient[0] * Growth * LgrpDiv->dl() + Coefficient[2] *
+      TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
+    return (min(max(0.0, ratio), 1.0));
+  }
+  return 0.0;
+}
+
+int MaturityC::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
+  int i;
+  for (i = 0; i < maturitystep.Size(); i++)
+    if (maturitystep[i] == TimeInfo->CurrentStep())
+      return 1;
+  return 0;
+}
+
+// ********************************************************
+// Functions for MaturityD
+// ********************************************************
+MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
+  Keeper* const keeper, int minage, const IntVector& minabslength, const IntVector& size,
+  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int NoMatconst)
+  : MaturityA(infile, TimeInfo, keeper, minage, minabslength, size, tmpareas, lgrpdiv, NoMatconst) {
+
+  ErrorHandler handle;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+
+  infile >> text >> ws;
+  if (strcasecmp(text, "maturitystep") != 0)
+    handle.Unexpected("maturitystep", text);
+
+  int i = 0;
+  while (isdigit(infile.peek()) && !infile.eof()) {
+    maturitystep.resize(1);
+    infile >> maturitystep[i] >> ws;
+    i++;
+  }
+
+  for (i = 0; i < maturitystep.Size(); i++)
+    if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->StepsInYear())
+      handle.Message("illegal maturity step in maturation type D");
+}
+
+void MaturityD::Precalc(const TimeClass* const TimeInfo) {
+  this->Maturity::Precalc(TimeInfo);
+  Coefficient.Update(TimeInfo);
+  double my;
+  int age, j;
+
+  if (Coefficient.DidChange(TimeInfo)) {
+    for (age = PrecalcMaturation.Minage(); age <= PrecalcMaturation.Maxage(); age++) {
+      for (j = PrecalcMaturation.Minlength(age); j < PrecalcMaturation.Maxlength(age); j++){
+        if (age >= MinMatureAge) {
+          my = exp(-4.0 * Coefficient[0] * (LgrpDiv->Meanlength(j) -
+            Coefficient[1]) - Coefficient[2] * (age - Coefficient[3]));
+          PrecalcMaturation[age][j] = 1 / (1 + my);
+        } else
+          PrecalcMaturation[age][j] = 0.0;
+      }
+    }
+  }
+}
+
+MaturityD::~MaturityD() {
+}
+
+double MaturityD::MaturationProbability(int age, int length, int Growth,
+  const TimeClass* const TimeInfo, const AreaClass* const Area, int area) {
+
+  if (this->IsMaturationStep(area, TimeInfo)) {
+    const double ratio = PrecalcMaturation[age][length];
+    return (min(max(0.0, ratio), 1.0));
+  }
+  return 0.0;
+}
+
+int MaturityD::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
+  int i;
+  for (i = 0; i < maturitystep.Size(); i++)
+    if (maturitystep[i] == TimeInfo->CurrentStep())
+      return 1;
+  return 0;
+}
+

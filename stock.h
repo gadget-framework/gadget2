@@ -1,9 +1,11 @@
 #ifndef stock_h
 #define stock_h
 
+#include "areatime.h"
 #include "agebandmatrix.h"
 #include "agebandmatrixratioptrvector.h"
 #include "base.h"
+#include "conversion.h"
 #include "stockptrvector.h"
 #include "tagptrvector.h"
 #include "commentstream.h"
@@ -11,8 +13,6 @@
 
 class Stock;
 class Keeper;
-class AreaClass;
-class TimeInfo;
 class NaturalM;
 class Grower;
 class InitialCond;
@@ -30,10 +30,8 @@ class StockRecruitment;
 class Maturity;
 class RenewalData;
 class Spawner;
-class LengthGroupDivision;
-class ConversionIndex;
 
-enum stock_type { STOCK_TYPE, LENSTOCK_TYPE };
+enum StockType { STOCKTYPE, LENSTOCKTYPE };
 
 class Stock : public BaseClass {
 public:
@@ -41,7 +39,7 @@ public:
     const TimeClass* const TimeInfo, Keeper* const keeper);
   Stock(const char* givenname);
   virtual ~Stock();
-  virtual stock_type stockType() const { return STOCK_TYPE; };
+  virtual StockType stockType() const { return STOCKTYPE; };
   virtual void CalcNumbers(int area,
     const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual void ReducePop(int area,
@@ -77,7 +75,6 @@ public:
   const Migration* ReturnMigration() const { return migration; };
   PopPredator* ReturnPredator() const;
   const AgeBandMatrix& Agelengthkeys(int area) const;
-  AgeBandMatrix& MutableAgelengthkeys(int area) const;
   const AgeBandMatrix& getMeanN(int area) const;
   virtual void SetStock(StockPtrVector& stockvec);
   void SetCI();

@@ -6,9 +6,7 @@
 #include "suitfunc.h"
 
 class SIByLengthAndAgeOnStep;
-class TimeClass;
 class StockAggregator;
-class LengthGroupDivision;
 
 class SIByLengthAndAgeOnStep : public SIOnStep {
 public:
@@ -27,9 +25,7 @@ public:
   virtual void PrintLikelihoodHeader(ofstream&, const char*);
   virtual void Reset(const Keeper* const keeper);
   virtual void LikelihoodPrint(ofstream& outfile) const;
-  virtual void printMoreLikInfo(ofstream& outfile) const;
-  virtual void printHeader(ofstream& o, const PrintInfo& print, const char* name);
-  virtual void print(ofstream& o, const TimeClass& time, const PrintInfo&);
+  virtual void CommandLinePrint(ofstream& o, const TimeClass& time, const PrintInfo&);
 protected:
   void ReadSurveyData(CommentStream&, const char*, const CharPtrVector&, const CharPtrVector&, const TimeClass*);
   double calcLikPearson();

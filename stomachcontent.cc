@@ -27,8 +27,8 @@ StomachContent::StomachContent(CommentStream& infile,
 
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
-  ReadWordAndValue(infile, "function", functionname);
-  ReadWordAndValue(infile, "datafile", datafilename);
+  readWordAndValue(infile, "function", functionname);
+  readWordAndValue(infile, "datafile", datafilename);
 
   if (strcasecmp(functionname, "scnumbers") == 0)
     functionnumber = 1;
@@ -44,11 +44,11 @@ StomachContent::StomachContent(CommentStream& infile,
       StomCont = new SCNumbers(infile, Area, TimeInfo, keeper, datafilename, numfilename, stomachname);
       break;
     case 2:
-      ReadWordAndValue(infile, "numberfile", numfilename);
+      readWordAndValue(infile, "numberfile", numfilename);
       StomCont = new SCRatios(infile, Area, TimeInfo, keeper, datafilename, numfilename, stomachname);
       break;
     case 3:
-      ReadWordAndValue(infile, "numberfile", numfilename);
+      readWordAndValue(infile, "numberfile", numfilename);
       StomCont = new SCAmounts(infile, Area, TimeInfo, keeper, datafilename, numfilename, stomachname);
       break;
     default:
@@ -100,10 +100,11 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
 
   //JMB - changed to make the reading of minimum probability optional
   infile >> ws;
-  if (infile.peek() == 'm')
-    ReadWordAndVariable(infile, "minimumprobability", epsilon);
-  else if (infile.peek() == 'e')
-    ReadWordAndVariable(infile, "epsilon", epsilon);
+  char c = infile.peek();
+  if ((c == 'm') || (c == 'M'))
+    readWordAndVariable(infile, "minimumprobability", epsilon);
+  else if ((c == 'e') || (c == 'E'))
+    readWordAndVariable(infile, "epsilon", epsilon);
   else
     epsilon = 10;
 
@@ -113,11 +114,11 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
   }
 
   //Read in area aggregation from file
-  ReadWordAndValue(infile, "areaaggfile", aggfilename);
+  readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numarea = ReadAggregation(subdata, areas, areaindex);
+  numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -144,21 +145,21 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
 
   if (strcasecmp(text, "predatorlengths") == 0) { //read predator lengths
     age_pred = 0; //predator is length structured
-    ReadWordAndValue(infile, "lenaggfile", aggfilename);
+    readWordAndValue(infile, "lenaggfile", aggfilename);
     datafile.open(aggfilename);
-    CheckIfFailure(datafile, aggfilename);
+    checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    numpred = ReadLengthAggregation(subdata, predatorlengths, predindex);
+    numpred = readLengthAggregation(subdata, predatorlengths, predindex);
     handle.Close();
     datafile.close();
     datafile.clear();
   } else if (strcasecmp(text, "predatorages") == 0) { //read predator ages
     age_pred = 1; //predator is age structured
-    ReadWordAndValue(infile, "ageaggfile", aggfilename);
+    readWordAndValue(infile, "ageaggfile", aggfilename);
     datafile.open(aggfilename);
-    CheckIfFailure(datafile, aggfilename);
+    checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    numpred = ReadAggregation(subdata, predatorages, predindex);
+    numpred = readAggregation(subdata, predatorages, predindex);
     handle.Close();
     datafile.close();
     datafile.clear();
@@ -166,11 +167,11 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
     handle.Eof("predator lengths or ages");
 
   //Read in the preys
-  ReadWordAndValue(infile, "preyaggfile", aggfilename);
+  readWordAndValue(infile, "preyaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numprey = ReadPreyAggregation(subdata, preynames, preylengths, digestioncoeff, preyindex, keeper);
+  numprey = readPreyAggregation(subdata, preynames, preylengths, digestioncoeff, preyindex, keeper);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -254,7 +255,7 @@ SCNumbers::SCNumbers(CommentStream& infile, const AreaClass* const Area,
 
   //Read in stomach content from file
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadStomachNumberContent(subdata, TimeInfo);
   handle.Close();
@@ -273,7 +274,7 @@ SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
 
   //Read in stomach content amounts from file
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadStomachAmountContent(subdata, TimeInfo);
   handle.Close();
@@ -282,7 +283,7 @@ SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
 
   //Read in stomach content sample size from file
   datafile.open(numfilename);
-  CheckIfFailure(datafile, numfilename);
+  checkIfFailure(datafile, numfilename);
   handle.Open(numfilename);
   ReadStomachSampleContent(subdata, TimeInfo);
   handle.Close();
@@ -325,7 +326,7 @@ void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass*
   }
 
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 6)
+  if (countColumns(infile) != 6)
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
@@ -430,7 +431,7 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
   }
 
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 7)
+  if (countColumns(infile) != 7)
     handle.Message("Wrong number of columns in inputfile - should be 7");
 
   while (!infile.eof()) {
@@ -539,7 +540,7 @@ void SCAmounts::ReadStomachSampleContent(CommentStream& infile, const TimeClass*
   }
 
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 5)
+  if (countColumns(infile) != 5)
     handle.Message("Wrong number of columns in inputfile - should be 5");
 
   while (!infile.eof()) {
@@ -985,12 +986,12 @@ double SCNumbers::CalculateLikelihood(DoubleMatrixPtrVector& consumption, Double
   int a, predl, preyl;
   for (a = 0; a < consumption.Size(); a++) {
     for (predl = 0; predl < consumption[a]->Nrow(); predl++) {
-      if (!(iszero(sum[a][predl]))) {
+      if (!(isZero(sum[a][predl]))) {
         DoubleVector* numbers = new DoubleVector(consumption[a]->Ncol(), 0.0);
         for (preyl = 0; preyl < consumption[a]->Ncol(); preyl++)
           (*numbers)[preyl] = (*stomachcontent[timeindex][a])[predl][preyl];
 
-        MN.LogLikelihood(*numbers, (*consumption[a])[predl]);
+        MN.CalcLogLikelihood(*numbers, (*consumption[a])[predl]);
         delete numbers;
       }
     }
@@ -1009,45 +1010,7 @@ void SC::Reset() {
       }
 }
 
-void SC::printHeader(ofstream& outfile, const PrintInfo& print) {
-  timeindex = 0;
-  int i, j;
-  if (print.stomachprint) {
-    outfile << "\n\n";
-    if (!age_pred)
-      outfile << "stomachcontent by prey-length and predator-length\n";
-    else
-      outfile << "stomachcontent by prey-length and predator-age\n";
-
-    outfile << "\nname " << scname << "\npreys";
-    for (i = 0; i < preynames.Nrow(); i++) {
-      outfile << "\t\t";
-      for (j = 0; j < preynames[i].Size(); j++)
-        outfile << preynames[i][j] << sep;
-      outfile << "\n\t\tlengths ";
-      for (j = 0; j < preylengths[i].Size(); j++)
-        outfile << preylengths[i][j] << sep;
-      outfile << endl;
-    }
-    outfile << "predators\t";
-    for (i = 0; i < predatornames.Size(); i++)
-      outfile << predatornames[i] << sep;
-
-    if (age_pred == 0) {
-      outfile << "\n\t\tlengths ";
-      for (i = 0; i < predatorlengths.Size(); i++)
-        outfile << predatorlengths[i] << sep;
-      outfile << endl;
-    } else {
-      outfile << "\n\t\tages ";
-      for (i = 0; i < predatorages.Size(); i++)
-        outfile << predatorages[i] << sep;
-      outfile << endl;
-    }
-  }
-}
-
-void SC::print(ofstream& stomachfile, const TimeClass& time, const PrintInfo& print) {
+void SC::CommandLinePrint(ofstream& stomachfile, const TimeClass& time, const PrintInfo& print) {
   if (!AAT.AtCurrentTime(&time))
     return;
   else if (print.stomachprint) {

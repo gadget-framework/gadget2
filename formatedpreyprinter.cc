@@ -55,9 +55,9 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
 
   infile >> filename >> ws;
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadAggregation(subdata, areas, areaindex);
+  i = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -76,7 +76,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
     if (strcasecmp(text, "zprintfile") == 0) {
       infile >> filename >> ws;
       zoutfile.open(filename, ios::out);
-      CheckIfFailure(zoutfile, filename);
+      checkIfFailure(zoutfile, filename);
       printzp = 1;
       i++;
       zoutfile << "; ";
@@ -84,7 +84,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
     } else if (strcasecmp(text, "nprintfile") == 0) {
       infile >> filename >> ws;
       noutfile.open(filename, ios::out);
-      CheckIfFailure(noutfile, filename);
+      checkIfFailure(noutfile, filename);
       printnp = 1;
       i++;
       noutfile << "; ";
@@ -92,7 +92,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
     } else if (strcasecmp(text, "cprintfile") == 0) {
       infile >> filename >> ws;
       coutfile.open(filename, ios::out);
-      CheckIfFailure(coutfile, filename);
+      checkIfFailure(coutfile, filename);
       printcp = 1;
       i++;
       coutfile << "; ";

@@ -36,7 +36,7 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
   //Read in the immatrure stock name
   immname = new char[MaxStrLength];
   strncpy(immname, "", MaxStrLength);
-  ReadWordAndValue(infile, "immature", immname);
+  readWordAndValue(infile, "immature", immname);
 
   //Read in the mature stock names
   i = 0;
@@ -59,9 +59,9 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
 
   infile >> filename >> ws;
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadAggregation(subdata, areas, areaindex);
+  i = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -71,9 +71,9 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
       handle.UndefinedArea(areas[i]);
 
   //Open the printfile
-  ReadWordAndValue(infile, "printfile", filename);
+  readWordAndValue(infile, "printfile", filename);
   printfile.open(filename, ios::out);
-  CheckIfFailure(printfile, filename);
+  checkIfFailure(printfile, filename);
   printfile << "; ";
   RUNID.print(printfile);
 
@@ -198,7 +198,7 @@ void BiomassPrinter::Print(const TimeClass* const TimeInfo) {
       }
       for (y = 0; y < nrofyears; y++) {
         for (a = minagem; a <= maxagem; a++)
-          if (iszero(mat[a - minagem][y]))
+          if (isZero(mat[a - minagem][y]))
             rel[a - minage][y] = 0.0;
           else
             rel[a - minage][y] = mat[a - minagem][y] / tot[a - minage][y];

@@ -55,7 +55,7 @@ void ErrorHandler::UndefinedArea(int area) const {
   exit(EXIT_FAILURE);
 }
 
-void CheckIfFailure(ios& infile, const char* text) {
+void checkIfFailure(ios& infile, const char* text) {
 
   if (infile.fail()) {
     ErrorHandler handle;

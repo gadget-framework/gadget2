@@ -37,11 +37,11 @@ BandMatrix::BandMatrix(const DoubleMatrix& initial, int MinAge, int minl)
   for (i = 0; i < nrow; i++) {
     lower = 0;
     upper = initial.Ncol(i) - 1;
-    while (iszero(initial[i][lower]) && (lower < upper))
+    while (isZero(initial[i][lower]) && (lower < upper))
       lower++;
-    while (iszero(initial[i][upper]) && (upper > lower))
+    while (isZero(initial[i][upper]) && (upper > lower))
       upper--;
-    if (iszero(initial[i][lower]) && (lower == upper)) {
+    if (isZero(initial[i][lower]) && (lower == upper)) {
       lower = 0;
       upper = initial.Ncol(i) - 1;
     }

@@ -67,6 +67,9 @@ int readSuitFunction(SuitFuncPtrVector& suitf, CommentStream& infile,
     return 0;
 }
 
+// ********************************************************
+// Functions for base suitability function
+// ********************************************************
 void SuitFunc::readConstants(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
@@ -137,6 +140,9 @@ int SuitFunc::noOfConstants() {
   return coeff.Size();
 }
 
+// ********************************************************
+// Functions for ExpSuitFuncA suitability function
+// ********************************************************
 ExpSuitFuncA::ExpSuitFuncA() {
   this->setName("ExpSuitFuncA");
   coeff.resize(4);
@@ -171,6 +177,9 @@ double ExpSuitFuncA::calculate() {
     return check;
 }
 
+// ********************************************************
+// Functions for ConstSuitFunc suitability function
+// ********************************************************
 ConstSuitFunc::ConstSuitFunc() {
   this->setName("ConstSuitFunc");
   coeff.resize(1);
@@ -188,6 +197,9 @@ double ConstSuitFunc::calculate() {
     return coeff[0];
 }
 
+// ********************************************************
+// Functions for AndersenSuitFunc suitability function
+// ********************************************************
 AndersenSuitFunc::AndersenSuitFunc() {
   this->setName("AndersenSuitFunc");
   coeff.resize(5);
@@ -210,7 +222,7 @@ double AndersenSuitFunc::calculate() {
   else
     q = coeff[4];
 
-  if (iszero(q))
+  if (isZero(q))
     q = 1.0;   //We do not want to divide with 0, no matter what.
   if (q < 0)
     q = -q;    //To avoid getting a big positive number as an argument for exp
@@ -224,6 +236,9 @@ double AndersenSuitFunc::calculate() {
     return check;
 }
 
+// ********************************************************
+// Functions for ExpSuitFuncL50 suitability function
+// ********************************************************
 ExpSuitFuncL50::ExpSuitFuncL50() {
   this->setName("ExpSuitFuncL50");
   coeff.resize(2);
@@ -248,6 +263,9 @@ double ExpSuitFuncL50::calculate() {
     return check;
 }
 
+// ********************************************************
+// Functions for StraightSuitFunc suitability function
+// ********************************************************
 StraightSuitFunc::StraightSuitFunc() {
   this->setName("StraightSuitFunc");
   coeff.resize(2);

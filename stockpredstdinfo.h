@@ -1,6 +1,7 @@
 #ifndef stockpredstdinfo_h
 #define stockpredstdinfo_h
 
+#include "areatime.h"
 #include "abstrpredstdinfo.h"
 
 class StockPredStdInfo;
@@ -9,7 +10,6 @@ class PredStdInfoByLength;
 class Prey;
 class StockPredator;
 class StockPrey;
-class TimeClass;
 
 class StockPredStdInfo : public AbstrPredStdInfo {
 public:

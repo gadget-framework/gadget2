@@ -31,8 +31,8 @@ StockDistribution::StockDistribution(CommentStream& infile,
   timeindex = 0;
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
-  ReadWordAndValue(infile, "datafile", datafilename);
-  ReadWordAndValue(infile, "function", functionname);
+  readWordAndValue(infile, "datafile", datafilename);
+  readWordAndValue(infile, "function", functionname);
   if (strcasecmp(functionname, "multinomial") == 0)
     functionnumber = 1;
   else if (strcasecmp(functionname, "sumofsquares") == 0)
@@ -40,16 +40,17 @@ StockDistribution::StockDistribution(CommentStream& infile,
   else
     handle.Message("Error in stockdistribution - unrecognised function", functionname);
 
-  ReadWordAndVariable(infile, "overconsumption", overconsumption);
+  readWordAndVariable(infile, "overconsumption", overconsumption);
   if (overconsumption != 0 && overconsumption != 1)
     handle.Message("Error in stockdistribution - overconsumption must be 0 or 1");
 
   //JMB - changed to make the reading of minimum probability optional
   infile >> ws;
-  if (infile.peek() == 'm')
-    ReadWordAndVariable(infile, "minimumprobability", epsilon);
-  else if (infile.peek() == 'e')
-    ReadWordAndVariable(infile, "epsilon", epsilon);
+  char c = infile.peek();
+  if ((c == 'm') || (c == 'M'))
+    readWordAndVariable(infile, "minimumprobability", epsilon);
+  else if ((c == 'e') || (c == 'E'))
+    readWordAndVariable(infile, "epsilon", epsilon);
   else
     epsilon = 10;
 
@@ -59,31 +60,31 @@ StockDistribution::StockDistribution(CommentStream& infile,
   }
 
   //Read in area aggregation from file
-  ReadWordAndValue(infile, "areaaggfile", aggfilename);
+  readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numarea = ReadAggregation(subdata, areas, areaindex);
+  numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in age aggregation from file
-  ReadWordAndValue(infile, "ageaggfile", aggfilename);
+  readWordAndValue(infile, "ageaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numage = ReadAggregation(subdata, ages, ageindex);
+  numage = readAggregation(subdata, ages, ageindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in length aggregation from file
-  ReadWordAndValue(infile, "lenaggfile", aggfilename);
+  readWordAndValue(infile, "lenaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numlen = ReadLengthAggregation(subdata, lengths, lenindex);
+  numlen = readLengthAggregation(subdata, lengths, lenindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -125,7 +126,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadStockData(subdata, TimeInfo, numarea, numage, numlen);
   handle.Close();
@@ -162,7 +163,7 @@ void StockDistribution::ReadStockData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 7)
+  if (countColumns(infile) != 7)
     handle.Message("Wrong number of columns in inputfile - should be 7");
 
   while (!infile.eof()) {
@@ -381,7 +382,7 @@ double StockDistribution::LikMultinomial() {
       for (sn = 0; sn < stocknames.Size(); sn++)
         likdata[sn] = (*AgeLengthData[timeindex][nareas])[sn][area];
 
-      MN.LogLikelihood(likdata, (*Dist[nareas])[area]);
+      MN.CalcLogLikelihood(likdata, (*Dist[nareas])[area]);
     }
     delete Dist[nareas];
   }
@@ -413,11 +414,11 @@ double StockDistribution::LikSumSquares() {
       for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
         for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
           i = age + (ages.Nrow() * len);
-          if ((iszero(totaldata)) && (iszero(totalmodel)))
+          if ((isZero(totaldata)) && (isZero(totalmodel)))
             temp = 0.0;
-          else if (iszero(totaldata))
+          else if (isZero(totaldata))
             temp = (*Proportions[timeindex][nareas])[sn][i] / totalmodel;
-          else if (iszero(totalmodel))
+          else if (isZero(totalmodel))
             temp = (*AgeLengthData[timeindex][nareas])[sn][i] / totaldata;
           else
             temp = (((*AgeLengthData[timeindex][nareas])[sn][i] / totaldata)

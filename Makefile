@@ -80,15 +80,15 @@ VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 	agebandmatrixptrmatrix.o
 
 GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregator.o \
-	growthimplement.o predatorindex.o abstrpredstdinfo.o abstrpreystdinfo.o \
+	predatorindex.o abstrpredstdinfo.o abstrpreystdinfo.o catchdistribution.o \
 	predatorprinter.o abstrpreystdinfobylength.o predatoroveraggregator.o \
 	actionattimes.o predatoroverprinter.o addresskeeper.o predprey.o strstack.o \
 	predpreystdageprinter.o agebandmatrix.o predpreystdlengthprinter.o grow.o \
 	agebandmatrixmemberfunctions.o predpreystdprinter.o area.o predstdinfo.o \
-	bandmatrix.o predstdinfobylength.o binarytree.o prey.o logcatchfunction.o \
+	bandmatrix.o predstdinfobylength.o prey.o logcatchfunction.o popstatistics.o \
 	preyoveraggregator.o checkconversion.o preyoverprinter.o catchstatistics.o \
-	preystdinfo.o preystdinfobylength.o catchdistribution.o print.o runid.o \
-	commentstream.o printinfo.o readfunc.o conversion.o readmain.o readmatrix.o \
+	preystdinfo.o preystdinfobylength.o print.o timevariable.o boundlikelihood.o \
+	commentstream.o printinfo.o readfunc.o conversion.o readmain.o keeper.o \
 	ecosystem.o readword.o renewal.o mortpredlength.o mortprey.o mortprinter.o \
 	errorhandler.o extravector.o fleet.o sibyageonstep.o fleetpreyaggregator.o \
 	sibylengthonstep.o formula.o grower.o growthcalc.o simulation.o hooke.o \
@@ -98,12 +98,11 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	stockmemberfunctions.o livesonareas.o stockpredator.o stockpredstdinfo.o \
 	loglinearregression.o main.o stockprey.o mainfiles.o stockpreyfullprinter.o \
 	stockpreystdinfo.o stockpreystdinfobylength.o stockprinter.o lenstock.o \
-	stockstdprinter.o maturity.o stomachcontent.o maturitya.o variableinfo.o \
-	maturityb.o maturityc.o suitfunc.o maturityd.o suits.o migration.o keeper.o \
+	stockstdprinter.o maturity.o suitfunc.o suits.o stomachcontent.o runid.o \
+	migration.o variableinfo.o binarytree.o vectorusingkeeper.o growthimplement.o \
 	surveyindices.o migrationpenalty.o tagdata.o stock.o readaggregation.o \
 	migvariables.o time.o multinomial.o totalpredator.o naturalm.o optinfo.o \
 	transition.o otherfood.o mathfunc.o understocking.o poppredator.o tags.o \
-	vectorusingkeeper.o popstatistics.o boundlikelihood.o timevariable.o \
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	lennaturalm.o catchintons.o agebandmatrixratiomemberfunctions.o taggrow.o \
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \

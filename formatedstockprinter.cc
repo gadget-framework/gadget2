@@ -56,19 +56,19 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
 
   infile >> filename >> ws;
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadAggregation(subdata, areas, areaindex);
+  i = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in age aggregation from file
-  ReadWordAndValue(infile, "ageaggfile", filename);
+  readWordAndValue(infile, "ageaggfile", filename);
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadAggregation(subdata, ages, ageindex);
+  i = readAggregation(subdata, ages, ageindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -76,11 +76,11 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
   //Read in length aggregation from file
   DoubleVector lengths;
   CharPtrVector lenindex;
-  ReadWordAndValue(infile, "lenaggfile", filename);
+  readWordAndValue(infile, "lenaggfile", filename);
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadLengthAggregation(subdata, lengths, lenindex);
+  i = readLengthAggregation(subdata, lengths, lenindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -94,19 +94,19 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
   //Finished reading from infile.
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(lengths, "formatedstockprinter");
+    printLengthGroupError(lengths, "formatedstockprinter");
 
   infile >> text >> ws;
   if (strcasecmp(text, "printfiles") == 0) {
     infile >> text >> ws;
     noutfile.open(text, ios::out);
-    CheckIfFailure(noutfile, text);
+    checkIfFailure(noutfile, text);
     noutfile << "; ";
     RUNID.print(noutfile);
     noutfile.flush();
     infile >> text >> ws;
     woutfile.open(text, ios::out);
-    CheckIfFailure(woutfile, text);
+    checkIfFailure(woutfile, text);
     woutfile << "; ";
     RUNID.print(woutfile);
     woutfile.flush();

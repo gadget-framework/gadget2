@@ -104,7 +104,7 @@ CommentStream& operator >> (CommentStream& infile, ParameterVector& paramVec) {
   return infile;
 }
 
-int ParameterVector::ReadVectorInLine(CommentStream& infile) {
+int ParameterVector::readVectorInLine(CommentStream& infile) {
   if (infile.fail())
     return 0;
   char line[MaxStrLength];

@@ -181,7 +181,7 @@
 #define VARS   (350)   //Maximum number of variables.
 
 //This function replaces exp to avoid under- and overflow.
-double ExpRep(double inn) {
+double expRep(double inn) {
   double rdum, exprep;
   rdum = inn;
   if (rdum > 174.)
@@ -194,7 +194,7 @@ double ExpRep(double inn) {
 }
 
 //Returns uniformly-distributed doubles in range 0.0 to 1.0
-double Random() {
+double randomNumber() {
   int r = rand();
   double k = r % 32767;
   return k / 32767.;
@@ -288,13 +288,13 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
           //Generate xp, the trial value of x
           for (i = 0; i < n; i++) {
             if (i == param[l])
-              xp[i] = x[i] + (Random() * 2.0 - 1.0) * vm[i];
+              xp[i] = x[i] + (randomNumber() * 2.0 - 1.0) * vm[i];
             else
               xp[i] = x[i];
 
             //If xp is out of bounds, select a point in bounds for the trial
             if ((xp[i] < lb[i]) || (xp[i] > ub[i])) {
-              xp[i] = lb[i] + (ub[i] - lb[i]) * Random();
+              xp[i] = lb[i] + (ub[i] - lb[i]) * randomNumber();
               nobds++;
             }
           }
@@ -330,8 +330,8 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
 
           } else {
             //Accept according to metropolis condition
-            p = ExpRep((fp - funcval) / t);
-            pp = Random();
+            p = expRep((fp - funcval) / t);
+            pp = randomNumber();
             if (pp < p) {
               //Accept point
               for (i = 0; i < n; i++)
@@ -345,7 +345,7 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
           }
 
           // JMB added check for really silly values
-          if (iszero(fp)) {
+          if (isZero(fp)) {
             cout << "\nError in Simulated Annealing optimisation after " << nfcnev
               << " function evaluations f(x) = 0\nReturning to calling routine ...\n";
             return 0;

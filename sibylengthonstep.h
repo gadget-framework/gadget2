@@ -4,9 +4,7 @@
 #include "sionstep.h"
 
 class SIByLengthOnStep;
-class TimeClass;
 class StockAggregator;
-class LengthGroupDivision;
 
 class SIByLengthOnStep : public SIOnStep {
 public:

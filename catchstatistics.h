@@ -7,10 +7,6 @@
 #include "doublematrixptrvector.h"
 #include "actionattimes.h"
 
-class Keeper;
-class TimeClass;
-class AreaClass;
-
 class CatchStatistics : public Likelihood {
 public:
   CatchStatistics(CommentStream& infile, const AreaClass* const Area,
@@ -19,7 +15,6 @@ public:
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
-  virtual void LikelihoodPrint(ofstream& outfile) const {};
   void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
   void ReadStatisticsData(CommentStream&, const TimeClass*, int, int);

@@ -53,31 +53,31 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
 
   infile >> filename >> ws;
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadAggregation(subdata, areas, areaindex);
+  i = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in predator length aggregation from file
   DoubleVector predlengths;
-  ReadWordAndValue(infile, "predlenaggfile", filename);
+  readWordAndValue(infile, "predlenaggfile", filename);
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadLengthAggregation(subdata, predlengths, predlenindex);
+  i = readLengthAggregation(subdata, predlengths, predlenindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in prey length aggregation from file
   DoubleVector preylengths;
-  ReadWordAndValue(infile, "preylenaggfile", filename);
+  readWordAndValue(infile, "preylenaggfile", filename);
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadLengthAggregation(subdata, preylengths, preylenindex);
+  i = readLengthAggregation(subdata, preylengths, preylenindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -91,15 +91,15 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   //Finished reading from infile.
   predLgrpDiv = new LengthGroupDivision(predlengths);
   if (predLgrpDiv->Error())
-    LengthGroupPrintError(predlengths, "predator lengths in predatorprinter");
+    printLengthGroupError(predlengths, "predator lengths in predatorprinter");
   preyLgrpDiv = new LengthGroupDivision(preylengths);
   if (predLgrpDiv->Error())
-    LengthGroupPrintError(preylengths, "prey lengths in predatorprinter");
+    printLengthGroupError(preylengths, "prey lengths in predatorprinter");
 
   //Open the printfile
-  ReadWordAndValue(infile, "printfile", filename);
+  readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  CheckIfFailure(outfile, filename);
+  checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))

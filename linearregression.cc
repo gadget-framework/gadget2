@@ -7,7 +7,7 @@ LinearRegression::LinearRegression() {
   sse = 0;
   a = 0;
   b = 0;
-  errorLR = 1e+10;
+  SSEerror = 1e+10;
 }
 
 void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
@@ -34,7 +34,7 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
     denom += (x[i] - Xmean) * (x[i] - Xmean);
   }
 
-  if (iszero(denom)) {
+  if (isZero(denom)) {
     b = 0.0;
     a = Ymean;
   } else {
@@ -97,7 +97,7 @@ void LinearRegression::Fit(double intercept, const DoubleVector& x, const Double
   Ymean /= y.Size();
 
   //Now we have calculated the mean and can proceed to calculate the fit.
-  if (iszero(Xmean))
+  if (isZero(Xmean))
     b = 0.0;
   else
     b = (Ymean - intercept) / Xmean;
@@ -134,7 +134,7 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
 
 double LinearRegression::SSE() {
   if (error)
-    return errorLR;
+    return SSEerror;
   else
     return sse;
 }

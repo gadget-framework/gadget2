@@ -11,7 +11,7 @@ PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
   //First we check that the length group of every predator is finer
   //(not necessarily strictly finer) than that of predLgrpDiv;
   for (i = 0; i < predators.Size(); i++)
-    CheckLengthGroupIsFiner(preds[i]->ReturnLengthGroupDiv(),
+    checkLengthGroupIsFiner(preds[i]->ReturnLengthGroupDiv(),
       predLgrpDiv, preds[i]->Name(), "predator overconsumption");
 
   for (i = 0; i < predators.Size(); i++) {

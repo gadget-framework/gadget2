@@ -4,7 +4,7 @@
 #include "gadget.h"
 
 const char COMMENTCHAR = ';';
-extern void KillComments(istream* const istrptr);
+extern void killComments(istream* const istrptr);
 
 class CommentStream;
 typedef CommentStream& (*__commentmanip)(CommentStream&);
@@ -24,17 +24,17 @@ public:
   CommentStream(istream& istr) { istrptr = &istr; };
   void SetStream(istream& istr) { istrptr = &istr; };
   CommentStream& operator >> (int& a) {
-    KillComments(istrptr);
+    killComments(istrptr);
     istrptr->operator >> (a);
     return *this;
   };
   CommentStream& operator >> (double& a) {
-    KillComments(istrptr);
+    killComments(istrptr);
     istrptr->operator >> (a);
     return *this;
   };
   CommentStream& operator >> (char* a) {
-    KillComments(istrptr);
+    killComments(istrptr);
     string s;
     (*istrptr) >> s;
     s.copy(a, string::npos);

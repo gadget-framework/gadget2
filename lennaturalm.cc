@@ -16,7 +16,7 @@ LenNaturalM::LenNaturalM(CommentStream& infile, const LengthGroupDivision* lenp,
   if (!(infile >> parammort))
     handle.Message("Incorrect format of parammort vector when reading lennaturalm");
   parammort.Inform(keeper);
-  ReadVector(infile, xparammort);
+  readVector(infile, xparammort);
   this->NatCalc();
   keeper->ClearLast();
 }

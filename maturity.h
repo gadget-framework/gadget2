@@ -8,12 +8,9 @@
 #include "charptrvector.h"
 #include "commentstream.h"
 #include "agebandmatrixratioptrvector.h"
+#include "timevariablevector.h"
 
 class Maturity;
-
-typedef double Maturityfunc(int, int, int, const TimeClass* const, const AreaClass* const,
-  const LengthGroupDivision* const, int, const DoubleVector&, const DoubleVector&, int);
-typedef Maturityfunc* MaturityfuncPtr;
 
 class Maturity: protected LivesOnAreas {
 public:
@@ -45,6 +42,68 @@ protected:
 private:
   AgeBandMatrixPtrVector Storage;
   AgeBandMatrixRatioPtrVector TagStorage;
+};
+
+class MaturityA : public Maturity {
+public:
+  MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
+    Keeper* const keeper, int minage, const IntVector& minabslength,
+    const IntVector& size, const IntVector& areas,
+    const LengthGroupDivision* const LgrpDiv, int NoMatconst);
+  virtual ~MaturityA();
+  virtual void Precalc(const TimeClass* const TimeInfo);
+  virtual int IsMaturationStep(int area, const TimeClass* const TimeInfo);
+  virtual double MaturationProbability(int age, int length, int Growth,
+    const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
+  virtual void Print(ofstream& outfile) const;
+protected:
+  BandMatrix PrecalcMaturation;
+  TimeVariableVector Coefficient;
+  int MinMatureAge;
+};
+
+class MaturityB : public Maturity {
+public:
+  MaturityB(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
+    int minage, const IntVector& minabslength, const IntVector& size,
+    const IntVector& areas, const LengthGroupDivision* const LgrpDiv);
+  virtual ~MaturityB();
+  virtual void Precalc(const TimeClass* const TimeInfo);
+  virtual int IsMaturationStep(int area, const TimeClass* const TimeInfo);
+  virtual double MaturationProbability(int age, int length, int Growth,
+    const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
+  virtual void Print(ofstream& outfile) const;
+protected:
+  IntVector maturitystep;
+  TimeVariableVector maturitylength;
+};
+
+class MaturityC : public MaturityA {
+public:
+  MaturityC(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
+    int minage, const IntVector& minabslength, const IntVector& size,
+    const IntVector& areas, const LengthGroupDivision* const LgrpDiv, int NoMatconst);
+  virtual ~MaturityC();
+  virtual void Precalc(const TimeClass* const TimeInfo);
+  virtual int IsMaturationStep(int area, const TimeClass* const TimeInfo);
+  virtual double MaturationProbability(int age, int length, int Growth,
+    const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
+protected:
+  IntVector maturitystep;
+};
+
+class MaturityD : public MaturityA {
+public:
+  MaturityD(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
+    int minage, const IntVector& minabslength, const IntVector& size,
+    const IntVector& areas, const LengthGroupDivision* const LgrpDiv, int NoMatconst);
+  virtual ~MaturityD();
+  virtual void Precalc(const TimeClass* const TimeInfo);
+  virtual int IsMaturationStep(int area, const TimeClass* const TimeInfo);
+  virtual double MaturationProbability(int age, int length, int Growth,
+    const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
+protected:
+  IntVector maturitystep;
 };
 
 #endif

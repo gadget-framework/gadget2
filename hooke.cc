@@ -138,7 +138,7 @@ double oldf = 0.0;
 extern int FuncEval;
 
 /* given a point, look for a better one nearby, one coord at a time */
-double best_nearby(double (*f)(double*, int), double delta[], double point[],
+double bestNearby(double (*f)(double*, int), double delta[], double point[],
   double prevbest, int nvars, int param[]) {
 
   double       z[VARS];
@@ -203,7 +203,7 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
   cout << "\nStarting Hooke and Jeeves\n";
   while ((iters < itermax) && (steplength > epsilon)) {
     /* JMB added check for really silly values */
-    if (iszero(fbefore)) {
+    if (isZero(fbefore)) {
       cout << "\nError in Hooke and Jeeves optimisation after " << FuncEval
        << " function evaluations f(x) = 0\nReturning to calling routine ...\n";
       return 0;
@@ -228,7 +228,7 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
     for (i = 0; i < nvars; i++)
       newx[param[i]] = xbefore[param[i]];
 
-    newf = best_nearby(f, delta, newx, fbefore, nvars, param);
+    newf = bestNearby(f, delta, newx, fbefore, nvars, param);
 
     /* if we made some improvements, pursue that direction */
     keep = 1;
@@ -293,7 +293,7 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
       fbefore = newf;
       for (i = 0; i < nvars; i++)
         xbefore[param[i]] = newx[param[i]];
-      newf = best_nearby(f, delta, newx, fbefore, nvars, param);
+      newf = bestNearby(f, delta, newx, fbefore, nvars, param);
 
       /* if the further (optimistic) move was bad */
       if (newf >= fbefore)

@@ -26,15 +26,15 @@ TagData::TagData(CommentStream& infile, const AreaClass* const Area,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  ReadWordAndValue(infile, "datafile", datafilename);
+  readWordAndValue(infile, "datafile", datafilename);
 
   //Read in area aggregation from file
-  ReadWordAndValue(infile, "areaaggfile", aggfilename);
+  readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   CharPtrVector areaindex;
-  numarea = ReadAggregation(subdata, areas, areaindex);
+  numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -60,7 +60,7 @@ TagData::TagData(CommentStream& infile, const AreaClass* const Area,
   //We have now read in all the data from the main likelihood file
   //But we have to read in the recapture data from datafilename
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadRecaptureData(subdata, TimeInfo, areaindex);
   handle.Close();
@@ -92,7 +92,7 @@ void TagData::ReadRecaptureData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 9)
+  if (countColumns(infile) != 9)
     handle.Message("Wrong number of columns in inputfile - should be 9");
 
   while (!infile.eof()) {
@@ -258,9 +258,9 @@ void TagData::AddToLikelihood(const TimeClass* const TimeInfo) {
       if (n > x)
         lik += (n - x) * n_gt_x;
       else if (p != 0.0 && p != 1.0) {
-        lik -= logGamma(x + 1.0) - logGamma(x - (double)n + 1.0) - logfactorial(n) + n * log(p) + (x - (double)n) * log(1 - p);
+        lik -= logGamma(x + 1.0) - logGamma(x - (double)n + 1.0) - logFactorial(n) + n * log(p) + (x - (double)n) * log(1 - p);
       } else if (p == 1.0 && n == (int)x); //no addition to the likelihood value
-      else if (iszero(p) && n == 0);
+      else if (isZero(p) && n == 0);
       else
         lik += HUGE_VALUE;
 

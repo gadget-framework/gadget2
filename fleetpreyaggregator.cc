@@ -26,7 +26,7 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
   numlengths = LgrpDiv->NoLengthGroups();
 
   for (i = 0; i < stocks.Size(); i++) {
-    CheckLengthGroupIsFiner(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv(),
+    checkLengthGroupIsFiner(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv(),
       LgrpDiv, stocks[i]->Name(), "fleet consumption");
     CI.resize(1);
     CI[i] = new ConversionIndex(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv(), LgrpDiv);

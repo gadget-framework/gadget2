@@ -75,7 +75,7 @@ public:
    */
   Parameter const& operator [] (int pos) const;
   friend CommentStream& operator >> (CommentStream& infile, ParameterVector& paramVec);
-  int ReadVectorInLine(CommentStream& infile);
+  int readVectorInLine(CommentStream& infile);
 protected:
   /**
    * \brief This is the vector of Parameter values

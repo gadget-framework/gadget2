@@ -2,6 +2,7 @@
 #define lenstock_h
 
 #include "commentstream.h"
+#include "conversion.h"
 #include "lennaturalm.h"
 #include "cannibalism.h"
 #include "mortpredlength.h"
@@ -17,15 +18,13 @@ class StockRecruitment;
 class Maturity;
 class RenewalData;
 class Spawner;
-class LengthGroupDivision;
-class ConversionIndex;
 
 class LenStock : public Stock {
 public:
   LenStock(CommentStream& infile, const char* givenname, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   virtual ~LenStock();
-  stock_type stockType() const { return LENSTOCK_TYPE; };
+  StockType stockType() const { return LENSTOCKTYPE; };
   virtual void CalcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual void ReducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual void CalcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);

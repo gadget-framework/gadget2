@@ -2,6 +2,7 @@
 #define mortpredlength_h
 
 #include "lengthpredator.h"
+#include "conversion.h"
 #include "commentstream.h"
 #include "formulamatrix.h"
 #include "readfunc.h"
@@ -9,7 +10,6 @@
 #include "gadget.h"
 
 class MortPredLength;
-class LengthGroupDivision;
 class Keeper;
 
 class MortPredLength : public LengthPredator {

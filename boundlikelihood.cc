@@ -18,7 +18,7 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
   infile >> ws;
   while (!infile.eof()) {
     infile >> tempParam >> ws;
-    ReadVectorInLine(infile, tmpvec);
+    readVectorInLine(infile, tmpvec);
     if (tmpvec.Size() != 3)  //3 values plus the name ...
       handle.Message("Error in boundlikelihood - should be 4 columns");
 
@@ -125,22 +125,6 @@ void BoundLikelihood::AddToLikelihoodTimeAndKeeper(
     } else
       likelihoods[i] = 0;
   }
-}
-
-void BoundLikelihood::LikelihoodPrintKeeper(ofstream& outfile, const Keeper* const keeper) const {
-  int i;
-  ParameterVector sw(keeper->NoVariables());
-  keeper->Switches(sw);
-  outfile << "\nBoundLikelihood\n\tlikelihood " << likelihood << endl;
-  Likelihood::LikelihoodPrint(outfile);
-  DoubleVector values(keeper->NoVariables());
-  keeper->ValuesOfVariables(values);
-  outfile << "switchnr" << TAB << "lowerbound" << TAB << "upperbound" << TAB <<
-    "value" << TAB << "likelihood" << endl;
-  for (i = 0; i < switchnr.Size(); i++)
-    if (switchnr[i] != -1)
-      outfile << sw[switchnr[i]] << TAB << lowerbound[i] << TAB << upperbound[i] << TAB <<
-        values[switchnr[i]] << TAB << likelihoods[i] << endl;
 }
 
 BoundLikelihood::~BoundLikelihood() {

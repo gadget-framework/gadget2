@@ -1,15 +1,10 @@
 #ifndef biomassprinter_h
 #define biomassprinter_h
 
-#include "commentstream.h"
 #include "printer.h"
-#include "gadget.h"
 
 class BiomassPrinter;
-class TimeClass;
-class LengthGroupDivision;
 class StockAggregator;
-class AreaClass;
 
 /*  BiomassPrinter
  *

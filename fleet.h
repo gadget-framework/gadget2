@@ -6,8 +6,6 @@
 
 class LengthPredator;
 class PopPredator;
-class AreaClass;
-class TimeInfo;
 class Keeper;
 
 typedef int FleetType;

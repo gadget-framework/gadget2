@@ -1,13 +1,13 @@
 #ifndef stockpreystdinfo_h
 #define stockpreystdinfo_h
 
+#include "areatime.h"
+#include "conversion.h"
 #include "abstrpreystdinfo.h"
 #include "stockpreystdinfobylength.h"
 
 class StockPreyStdInfo;
 class StockPrey;
-class TimeClass;
-class LengthGroupDivision;
 
 class StockPreyStdInfo : public AbstrPreyStdInfo {
 public:

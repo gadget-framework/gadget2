@@ -37,7 +37,7 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
   CommentStream subdata(datafile);
   piname = new char[strlen(name) + 1];
   strcpy(piname, name);
-  ReadWordAndValue(infile, "datafile", datafilename);
+  readWordAndValue(infile, "datafile", datafilename);
 
   //Read in the predator names and lengths
   i = 0;
@@ -56,9 +56,9 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
     handle.Unexpected("predlenaggfile", text);
   infile >> aggfilename >> ws;
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  i = ReadLengthAggregation(subdata, predatorlengths, predlenindex);
+  i = readLengthAggregation(subdata, predatorlengths, predlenindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -80,19 +80,19 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
     handle.Unexpected("preylenaggfile", text);
   infile >> aggfilename >> ws;
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  i = ReadLengthAggregation(subdata, preylengths, preylenindex);
+  i = readLengthAggregation(subdata, preylengths, preylenindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in area aggregation from file
-  ReadWordAndValue(infile, "areaaggfile", aggfilename);
+  readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numarea = ReadAggregation(subdata, tmpareas, areaindex);
+  numarea = readAggregation(subdata, tmpareas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -110,7 +110,7 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
       handle.UndefinedArea(areas[i]);
 
   int biomass;
-  ReadWordAndVariable(infile, "biomass", biomass);
+  readWordAndVariable(infile, "biomass", biomass);
   infile >> text >> ws;
   if (!(strcasecmp(text, "fittype") == 0))
     handle.Unexpected("fittype", text);
@@ -203,17 +203,17 @@ PIOnStep::PIOnStep(CommentStream& infile, const IntVector& areas,
 
   PredatorLgrpDiv = new LengthGroupDivision(predatorlengths);
   if (PredatorLgrpDiv->Error())
-    LengthGroupPrintError(predatorlengths, "predator index, predator lengths");
+    printLengthGroupError(predatorlengths, "predator index, predator lengths");
   PreyLgrpDiv = new LengthGroupDivision(preylengths);
   if (PreyLgrpDiv->Error())
-    LengthGroupPrintError(preylengths, "predator index, prey lengths");
+    printLengthGroupError(preylengths, "predator index, prey lengths");
 
   //read the predator indices data from the datafile
   ErrorHandler handle;
   ifstream datafile;
   CommentStream subdata(datafile);
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadPredatorData(subdata, arealabel, predlenindex, preylenindex, TimeInfo);
   handle.Close();
@@ -237,7 +237,7 @@ void PIOnStep::ReadPredatorData(CommentStream& infile, const char* arealabel,
   ErrorHandler handle;
 
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 6)
+  if (countColumns(infile) != 6)
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {

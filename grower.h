@@ -1,6 +1,8 @@
 #ifndef grower_h
 #define grower_h
 
+#include "areatime.h"
+#include "conversion.h"
 #include "commentstream.h"
 #include "popinfomatrix.h"
 #include "doublematrixptrvector.h"
@@ -9,11 +11,7 @@
 #include "formulavector.h"
 
 class Grower;
-class AreaClass;
-class TimeClass;
 class Keeper;
-class LengthGroupDivision;
-class ConversionIndex;
 class GrowthCalcBase;
 
 class Grower : protected LivesOnAreas {

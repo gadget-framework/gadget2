@@ -7,10 +7,6 @@
 #include "charptrvector.h"
 #include "intmatrix.h"
 
-class Keeper;
-class TimeClass;
-class AreaClass;
-
 class CatchInTons : public Likelihood {
 public:
   CatchInTons(CommentStream& infile, const AreaClass* const areas,

@@ -11,8 +11,6 @@
 #include "charptrvector.h"
 #include "gadget.h"
 
-class AreaClass;
-class TimeClass;
 class Maturity;
 
 class AgeBandMatrixRatio {

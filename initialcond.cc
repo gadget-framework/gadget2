@@ -48,7 +48,7 @@ void InitialCond::ReadMeanData(CommentStream& infile, Keeper* const keeper,
 
   //Found the start of the data in the following format
   //age - area - agedist - areadist - meanlen - standdev - relcond
-  if (CountColumns(infile) != 7)
+  if (countColumns(infile) != 7)
     handle.Message("Wrong number of columns in inputfile - should be 7");
 
   ageid = -1;
@@ -130,7 +130,7 @@ void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
   int keepdata, ageid, areaid, lengthid;
   double length, tmpnumber;
 
-  if (CountColumns(infile) != 4)
+  if (countColumns(infile) != 4)
     handle.Message("Wrong number of columns in inputfile - should be 4");
 
   //Set the numbers in the AgeBandMatrixPtrVector to zero (in case some arent in the inputfile)
@@ -199,15 +199,15 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& area,
   double minlength = 0;
   double maxlength = 0;
   double dl = 0;
-  ReadWordAndVariable(infile, "minage", minage);
-  ReadWordAndVariable(infile, "maxage", maxage);
-  ReadWordAndVariable(infile, "minlength", minlength);
-  ReadWordAndVariable(infile, "maxlength", maxlength);
-  ReadWordAndVariable(infile, "dl", dl);
+  readWordAndVariable(infile, "minage", minage);
+  readWordAndVariable(infile, "maxage", maxage);
+  readWordAndVariable(infile, "minlength", minlength);
+  readWordAndVariable(infile, "maxlength", maxlength);
+  readWordAndVariable(infile, "dl", dl);
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(minlength, maxlength, dl, "length groups for initial condition of stock");
+    printLengthGroupError(minlength, maxlength, dl, "length groups for initial condition of stock");
 
   int noagegr = maxage - minage + 1; //Number of age groups
   int nolengr = LgrpDiv->NoLengthGroups(); //Number of length groups
@@ -242,7 +242,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& area,
     //read initial data in mean length format
     infile >> text >> ws;
     subfile.open(text);
-    CheckIfFailure(subfile, text);
+    checkIfFailure(subfile, text);
     handle.Open(text);
     this->ReadMeanData(subcomment, keeper, noagegr, minage, Area);
     handle.Close();
@@ -254,7 +254,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& area,
     //read initial data in number format
     infile >> text >> ws;
     subfile.open(text);
-    CheckIfFailure(subfile, text);
+    checkIfFailure(subfile, text);
     handle.Open(text);
     this->ReadNumberData(subcomment, keeper, noagegr, nolengr, minage, Area);
     handle.Close();
@@ -274,10 +274,10 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& area,
   //Read information on reference weights.
   keeper->AddString("referenceweights");
   ifstream subweightfile(refWeightFile, ios::in);
-  CheckIfFailure(subweightfile, refWeightFile);
+  checkIfFailure(subweightfile, refWeightFile);
   handle.Open(refWeightFile);
   CommentStream subweightcomment(subweightfile);
-  if (!Read2ColVector(subweightcomment, tmpRefW))
+  if (!read2ColVector(subweightcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");
   handle.Close();
   subweightfile.close();
@@ -309,7 +309,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& area,
       for (k = 0; k < nolengr; k++) {
         rWeight = (Wref[k] * rCond);
 
-        if (iszero(rWeight)) {
+        if (isZero(rWeight)) {
           cerr << "Possible error: zero mean weight for the stock for the following\n"
             << "Area: " << i << " Age group: " << j << " Length group: " << k << endl;
         }

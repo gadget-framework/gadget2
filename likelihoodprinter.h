@@ -1,16 +1,11 @@
 #ifndef likelihoodprinter_h
 #define likelihoodprinter_h
 
-#include "commentstream.h"
 #include "printer.h"
 #include "readword.h"
-#include "gadget.h"
 
 class LikelihoodPrinter;
-class TimeClass;
-class LengthGroupDivision;
 class StockAggregator;
-class AreaClass;
 
 /* LikelihoodPrinter
  *

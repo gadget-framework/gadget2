@@ -1,32 +1,29 @@
 #ifndef readfunc_h
 #define readfunc_h
 
-#include "doubleindexvector.h"
 #include "doublematrix.h"
-#include "intmatrix.h"
-#include "stockptrvector.h"
-#include "charptrvector.h"
+#include "formulamatrixptrvector.h"
 #include "commentstream.h"
 
-class AreaClass;
-class TimeClass;
-class Stock;
-class OtherFood;
-class Keeper;
-
-DoubleMatrix* ReadMatrix(CommentStream& infile, int x, int y);
-int ReadMatrix(CommentStream& infile, DoubleMatrix& M);
-DoubleVector* ReadVector(CommentStream& infile, int length);
-int ReadVector(CommentStream& infile, IntVector& Vec);
-int ReadVector(CommentStream& infile, DoubleVector& Vec);
-int Read2ColVector(CommentStream& infile, DoubleMatrix& M);
-DoubleIndexVector* ReadIndexVector(CommentStream& infile, int length, int min);
-int ReadIndexVector(CommentStream& infile, DoubleIndexVector& Vec);
-int ReadTextInLine(CommentStream& infile, CharPtrVector& text);
-int ReadVectorInLine(CommentStream& infile, IntVector& Vec);
-int ReadVectorInLine(CommentStream& infile, DoubleVector& Vec);
+DoubleMatrix* readMatrix(CommentStream& infile, int x, int y);
+int readMatrix(CommentStream& infile, DoubleMatrix& M);
+DoubleVector* readVector(CommentStream& infile, int length);
+int readVector(CommentStream& infile, IntVector& Vec);
+int readVector(CommentStream& infile, DoubleVector& Vec);
+int read2ColVector(CommentStream& infile, DoubleMatrix& M);
+DoubleIndexVector* readIndexVector(CommentStream& infile, int length, int min);
+int readIndexVector(CommentStream& infile, DoubleIndexVector& Vec);
+int readVectorInLine(CommentStream& infile, IntVector& Vec);
+int readVectorInLine(CommentStream& infile, DoubleVector& Vec);
 int FindContinuousYearAndStepWithNoText(CommentStream& infile, int year, int step);
-int CountColumns(CommentStream& infile);
+int countColumns(CommentStream& infile);
+
+int readAmounts(CommentStream& infile, const IntVector& tmpareas,
+  const TimeClass* const TimeInfo, const AreaClass* const Area,
+  FormulaMatrix& amount, Keeper* const keeper, const char* givenname);
+int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
+  const AreaClass* const Area, FormulaMatrixPtrVector& amount,
+  const CharPtrVector& lenindex, Keeper* const keeper);
 
 #endif
 

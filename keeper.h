@@ -23,8 +23,8 @@ public:
   void AddComponent(const char* name);
   char* SendComponents() const;
   void ClearComponents();
-  int ErrorInUpdate() const;
-  void Clear();
+  int ErrorInUpdate() const { return error; };
+  void Clear() { error = 0; };
   void Opt(IntVector& opt) const;
   void ValuesOfVariables(DoubleVector& val) const;
   void Switches(ParameterVector& switches) const;

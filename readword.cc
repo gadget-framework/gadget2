@@ -3,7 +3,7 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
-void ReadWordAndVariable(CommentStream& infile, const char* str, double& number) {
+void readWordAndVariable(CommentStream& infile, const char* str, double& number) {
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -16,7 +16,7 @@ void ReadWordAndVariable(CommentStream& infile, const char* str, double& number)
     handle.Failure(str);
 }
 
-void ReadWordAndVariable(CommentStream& infile, const char* str, int& number) {
+void readWordAndVariable(CommentStream& infile, const char* str, int& number) {
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -29,7 +29,7 @@ void ReadWordAndVariable(CommentStream& infile, const char* str, int& number) {
     handle.Failure(str);
 }
 
-void ReadWordAndValue(CommentStream& infile, const char* str, char* value) {
+void readWordAndValue(CommentStream& infile, const char* str, char* value) {
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -42,7 +42,7 @@ void ReadWordAndValue(CommentStream& infile, const char* str, char* value) {
     handle.Failure(str);
 }
 
-void ReadWordAndTwoVariables(CommentStream& infile, const char* str, double& number1, double& number2) {
+void readWordAndTwoVariables(CommentStream& infile, const char* str, double& number1, double& number2) {
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -55,7 +55,7 @@ void ReadWordAndTwoVariables(CommentStream& infile, const char* str, double& num
     handle.Failure(str);
 }
 
-void ReadWordAndTwoVariables(CommentStream& infile, const char* str, int& number1, int& number2) {
+void readWordAndTwoVariables(CommentStream& infile, const char* str, int& number1, int& number2) {
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);

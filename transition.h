@@ -1,12 +1,11 @@
 #ifndef transition_h
 #define transition_h
 
+#include "areatime.h"
+#include "conversion.h"
 #include "commentstream.h"
 #include "stock.h"
 
-class TimeClass;
-class LengthGroupDivision;
-class ConversionIndex;
 class Keeper;
 
 class Transition : protected LivesOnAreas {

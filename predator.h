@@ -1,6 +1,8 @@
 #ifndef predator_h
 #define predator_h
 
+#include "areatime.h"
+#include "conversion.h"
 #include "commentstream.h"
 #include "preyptrvector.h"
 #include "hasname.h"
@@ -10,9 +12,7 @@
 
 class Predator;
 class Keeper;
-class LengthGroupDivision;
 class Prey;
-class AreaClass;
 
 class Predator : public HasName, public LivesOnAreas {
 public:

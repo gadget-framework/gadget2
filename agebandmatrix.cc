@@ -37,9 +37,9 @@ AgeBandMatrix::AgeBandMatrix(int MinAge, const PopInfoMatrix& initial)
   for (i = 0; i < nrow; i++) {
     lower = 0;
     upper = initial.Ncol(i) - 1;
-    while (iszero(initial[i][lower].N) && lower < upper)
+    while (isZero(initial[i][lower].N) && lower < upper)
       lower++;
-    while (iszero(initial[i][upper].N) && upper > lower)
+    while (isZero(initial[i][upper].N) && upper > lower)
       upper--;
     v[i] = new PopInfoIndexVector(upper - lower + 1, lower);
     for (j = lower; j <= upper; j++)
@@ -56,9 +56,9 @@ AgeBandMatrix::AgeBandMatrix(int MinAge, int minl, const PopInfoMatrix& initial)
   for (i = 0; i < nrow; i++) {
     lower = 0;
     upper = initial.Ncol(i) - 1;
-    while (iszero(initial[i][lower].N) && (lower < upper))
+    while (isZero(initial[i][lower].N) && (lower < upper))
       lower++;
-    while (iszero(initial[i][upper].N) && (upper > lower))
+    while (isZero(initial[i][upper].N) && (upper > lower))
       upper--;
     v[i] = new PopInfoIndexVector(upper - lower + 1, lower + minl);
     for (j = lower; j <= upper; j++)

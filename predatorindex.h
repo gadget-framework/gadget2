@@ -8,8 +8,6 @@
 #include "pionstep.h"
 
 class PredatorIndices;
-class TimeClass;
-class AreaClass;
 class PIOnStep;
 
 class PredatorIndices : public Likelihood {
@@ -18,7 +16,6 @@ public:
     const TimeClass* const TimeInfo, double w, const char* name);
   virtual ~PredatorIndices();
   virtual void Print(ofstream& outfile) const;
-  virtual void LikelihoodPrint(ofstream& outfile) const {};
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys);
   virtual void Reset(const Keeper* const keeper);

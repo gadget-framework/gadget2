@@ -2,13 +2,12 @@
 #define renewal_h
 
 #include "formulavector.h"
+#include "conversion.h"
 #include "commentstream.h"
 #include "stock.h"
 #include "livesonareas.h"
 
 class RenewalData;
-class ConversionIndex;
-class LengthGroupDivision;
 
 class RenewalData : protected LivesOnAreas {
 public:

@@ -32,7 +32,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   keeper->AddString("SIByLengthAndAgeOnStep");
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(lengths, "survey indices by length and age");
+    printLengthGroupError(lengths, "survey indices by length and age");
 
   int i;
   ErrorHandler handle;
@@ -101,12 +101,12 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   }
 //end of code to read in q_y, b and q_l data
 
-  ReadWordAndVariable(infile, "eps_ind", eps_ind);
-  ReadWordAndVariable(infile, "mean_fact", mean_fact);
-  ReadWordAndVariable(infile, "max_fact", max_fact);
+  readWordAndVariable(infile, "eps_ind", eps_ind);
+  readWordAndVariable(infile, "mean_fact", mean_fact);
+  readWordAndVariable(infile, "max_fact", max_fact);
 
   //read the likelihoodtype
-  ReadWordAndValue(infile, "likelihoodtype", text);
+  readWordAndValue(infile, "likelihoodtype", text);
   if (strcasecmp(text, "pearson") == 0)
     opttype = pearson;
   else if (strcasecmp(text, "multinomial") == 0)
@@ -129,7 +129,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   CommentStream subdata(datafile);
 
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadSurveyData(subdata, arealabel, lenindex, ageindex, TimeInfo);
   handle.Close();
@@ -165,7 +165,7 @@ void SIByLengthAndAgeOnStep::ReadSurveyData(CommentStream& infile, const char* a
   ErrorHandler handle;
 
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 6)
+  if (countColumns(infile) != 6)
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
@@ -673,34 +673,7 @@ void SIByLengthAndAgeOnStep::LikelihoodPrint(ofstream& outfile) const {
   outfile << "Total likelihood component " << likelihood << endl;
 }
 
-void SIByLengthAndAgeOnStep::printMoreLikInfo(ofstream& outfile) const {
-  //written by kgf 18/11 98 to write likelihood information on each time step
-  int i;
-  outfile << "Likelihood component in year\n";
-  for (i = 0; i < Years.Size(); i++)
-    outfile << TAB << Years[i] << sep;
-  outfile << endl;
-  for (i = 0; i < Years.Size(); i++)
-    outfile << TAB << setiosflags(ios::showpoint)
-      << setprecision(printprecision) << lik_val_on_step[i] << sep;
-  outfile << endl;
-}
-
-void SIByLengthAndAgeOnStep::printHeader(ofstream& surveyfile, const PrintInfo& print, const char* name) {
-  int i;
-  if (print.surveyprint) {
-    surveyfile << "\nsurvey " << name << "\nstocks";
-    for (i = 0; i < stocknames.Size(); i++)
-      surveyfile << sep << stocknames[i];
-
-    surveyfile << "\nminage " << Ages[0][0] << " maxage " << Ages[Ages.Nrow() - 1][0]
-      << " minlen " << LgrpDiv->Minlength(0) << " maxlen "
-      << LgrpDiv->Maxlength(LgrpDiv->NoLengthGroups() - 1) << " lenstep "
-      << LgrpDiv->dl() << endl;
-  }
-}
-
-void SIByLengthAndAgeOnStep::print(ofstream& surveyfile,
+void SIByLengthAndAgeOnStep::CommandLinePrint(ofstream& surveyfile,
   const TimeClass& time, const PrintInfo& print) {
 
   if (!AAT.AtCurrentTime(&time))

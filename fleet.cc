@@ -4,7 +4,6 @@
 #include "totalpredator.h"
 #include "linearpredator.h"
 #include "mortpredlength.h"
-#include "readmatrix.h"
 #include "readfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
@@ -45,7 +44,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   DoubleVector lengths(2, 0);
   infile >> text >> ws;
   if (strcasecmp(text, "lengths") == 0) {
-    if (!ReadVector(infile, lengths))
+    if (!readVector(infile, lengths))
       handle.Message("Failed to read lengths");
   } else
     handle.Unexpected("lengths", text);
@@ -88,11 +87,11 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   //the next entry in the file will be the name of the amounts datafile
   infile >> text >> ws;
   subfile.open(text);
-  CheckIfFailure(subfile, text);
+  checkIfFailure(subfile, text);
   handle.Open(text);
 
   if (readamount != 0) {
-    if (!ReadAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))
+    if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))
       handle.Message("Failed to read fleet amounts");
     amount.Inform(keeper);
   }

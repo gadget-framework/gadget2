@@ -19,11 +19,11 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
 
   predname = new char[MaxStrLength];
   strncpy(predname, "", MaxStrLength);
-  ReadWordAndValue(infile, "predator", predname);
+  readWordAndValue(infile, "predator", predname);
 
   preyname = new char[MaxStrLength];
   strncpy(preyname, "", MaxStrLength);
-  ReadWordAndValue(infile, "prey", preyname);
+  readWordAndValue(infile, "prey", preyname);
 
   //Read in area aggregation from file
   char filename[MaxStrLength];
@@ -33,11 +33,11 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
 
   CharPtrVector areaindex;
   IntMatrix tmpareas;
-  ReadWordAndValue(infile, "areaaggfile", filename);
+  readWordAndValue(infile, "areaaggfile", filename);
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadAggregation(subdata, tmpareas, areaindex);
+  i = readAggregation(subdata, tmpareas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -56,9 +56,9 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
       handle.UndefinedArea(outerareas[i]);
 
   //Open the printfile
-  ReadWordAndValue(infile, "printfile", filename);
+  readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  CheckIfFailure(outfile, filename);
+  checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))

@@ -59,7 +59,7 @@ void PredStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
   for (predl = 0; predl < NconbyLength[inarea].Nrow(); predl++)
     for (preyl = 0; preyl < NconbyLength[inarea].Ncol(); preyl++) {
       //proportion equals the proportion of the predation on preyl that predl acounts for.
-      const double proportion = (iszero(BpreyEaten[preyl]) ? 0 : BpredEaten[predl][preyl] / BpreyEaten[preyl]);
+      const double proportion = (isZero(BpreyEaten[preyl]) ? 0 : BpredEaten[predl][preyl] / BpreyEaten[preyl]);
       NconbyLength[inarea][predl][preyl] = proportion * NpreyEaten[preyl];
       BconbyLength[inarea][predl][preyl] = proportion * BpreyEaten[preyl];
       MortbyLength[inarea][predl][preyl] = proportion * TotpreyMort[preyl];

@@ -24,6 +24,6 @@ private:
   static StrStack files;
 };
 
-void CheckIfFailure(ios& infile, const char* text);
+void checkIfFailure(ios& infile, const char* text);
 
 #endif

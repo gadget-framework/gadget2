@@ -6,9 +6,6 @@
 #include "fleetpreyaggregator.h"
 #include "actionattimes.h"
 
-class TimeClass;
-class AreaClass;
-
 //JMB - this is incomplete
 class TagData : public Likelihood {
 public:

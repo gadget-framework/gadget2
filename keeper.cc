@@ -281,14 +281,6 @@ void Keeper::Update(int pos, double& value) {
   scaledvalues[pos] = value / initialvalues[pos];
 }
 
-int Keeper::ErrorInUpdate() const {
-  return error;
-}
-
-void Keeper::Clear() {
-  error = 0;
-}
-
 void Keeper::WriteOptValues(double functionValue, const LikelihoodPtrVector& Likely) const {
   int i;
   for (i = 0; i < values.Size(); i++)
@@ -305,7 +297,7 @@ void Keeper::WriteOptValues(double functionValue, const LikelihoodPtrVector& Lik
 void Keeper::WriteInitialInformation(const char* const filename, const LikelihoodPtrVector& Likely) {
   ofstream outfile;
   outfile.open(filename, ios::out);
-  CheckIfFailure(outfile, filename);
+  checkIfFailure(outfile, filename);
   int i, j, k;
 
   outfile << "; ";
@@ -365,7 +357,7 @@ void Keeper::WriteValues(const char* const filename,
   int i, p, w;
   ofstream outfile;
   outfile.open(filename, ios::app);
-  CheckIfFailure(outfile, filename);
+  checkIfFailure(outfile, filename);
 
   p = prec;
   if (prec == 0)
@@ -394,7 +386,7 @@ void Keeper::WriteValues(const char* const filename,
 void Keeper::WriteInitialInformationInColumns(const char* const filename) const {
   ofstream outfile;
   outfile.open(filename, ios::out);
-  CheckIfFailure(outfile, filename);
+  checkIfFailure(outfile, filename);
 
   outfile << "; ";
   RUNID.print(outfile);
@@ -408,7 +400,7 @@ void Keeper::WriteValuesInColumns(const char* const filename,
   int i, p, w;
   ofstream outfile;
   outfile.open(filename, ios::app);
-  CheckIfFailure(outfile, filename);
+  checkIfFailure(outfile, filename);
 
   p = prec;
   if (prec == 0)
@@ -496,7 +488,7 @@ void Keeper::WriteParamsInColumns(const char* const filename,
   int i, p, w;
   ofstream outfile;
   outfile.open(filename, ios::out);
-  CheckIfFailure(outfile, filename);
+  checkIfFailure(outfile, filename);
 
   p = prec;
   if (prec == 0)

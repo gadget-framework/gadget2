@@ -1,16 +1,15 @@
 #ifndef stockpredator_h
 #define stockpredator_h
 
+#include "areatime.h"
+#include "conversion.h"
 #include "commentstream.h"
 #include "agebandmatrixptrvector.h"
 #include "poppredator.h"
 
 class StockPredator;
 class Keeper;
-class LengthGroupDivision;
 class Prey;
-class ConversionIndex;
-class AreaClass;
 
 class StockPredator : public PopPredator {
 public:

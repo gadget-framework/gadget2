@@ -24,19 +24,19 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   infile >> text;
   if (strcasecmp(text, "normaldistribution") == 0) {
     ReadOption = 1;
-    ReadWordAndVariable(infile, "minlength", minlength);
+    readWordAndVariable(infile, "minlength", minlength);
   } else if (strcasecmp(text, "minlength") == 0) {
     ReadOption = 0;
     infile >> minlength;
   } else
     handle.Unexpected("normaldistribution or minlength", text);
 
-  ReadWordAndVariable(infile, "maxlength", maxlength);
-  ReadWordAndVariable(infile, "dl", dl);
+  readWordAndVariable(infile, "maxlength", maxlength);
+  readWordAndVariable(infile, "dl", dl);
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(minlength, maxlength, dl, "length groups for renewal data");
+    printLengthGroupError(minlength, maxlength, dl, "length groups for renewal data");
 
   //We now expect to find:
   //year, step, area, age and then the renewal data
@@ -72,9 +72,9 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
         //length no. We read them into the indexvectors numtmpindvec and
         //weighttmpindvec, create poptmp and then keep it in Distribution.
         DoubleIndexVector* numtmpindvec =
-          ReadIndexVector(infile, no, LgrpDiv->NoLengthGroup(minlength));
+          readIndexVector(infile, no, LgrpDiv->NoLengthGroup(minlength));
         DoubleIndexVector* weighttmpindvec =
-          ReadIndexVector(infile, no, LgrpDiv->NoLengthGroup(minlength));
+          readIndexVector(infile, no, LgrpDiv->NoLengthGroup(minlength));
         PopInfoIndexVector poptmp(no, LgrpDiv->NoLengthGroup(minlength));
 
         //Check if reading the vectors succeeded
@@ -85,7 +85,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
           poptmp[ind].N = (*numtmpindvec)[ind];
           poptmp[ind].W = (*weighttmpindvec)[ind];
           //Check if any (i.e. nonzero) part of the population has zero mean weight.
-          if (poptmp[ind].N > 0 && iszero(poptmp[ind].W))
+          if (poptmp[ind].N > 0 && isZero(poptmp[ind].W))
             handle.Message("Zero mean weight for nonzero number in renewal data");
         }
 
@@ -215,9 +215,9 @@ void RenewalData::AddRenewal(AgeBandMatrix& Alkeys, int area,
 
   //Add renewal to stock
   if (renewalid != -1) {
-    if (iszero(ratio))
+    if (isZero(ratio))
       RenewalNumber = Number[renewalid];
-    else if (iszero(Number[renewalid]))
+    else if (isZero(Number[renewalid]))
       RenewalNumber = ratio;
     else
       RenewalNumber = 0.0;

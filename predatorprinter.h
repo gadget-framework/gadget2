@@ -1,15 +1,11 @@
 #ifndef predatorprinter_h
 #define predatorprinter_h
 
-#include "commentstream.h"
 #include "printer.h"
 #include "gadget.h"
 
 class PredatorPrinter;
-class TimeClass;
-class LengthGroupDivision;
 class PredatorAggregator;
-class AreaClass;
 
 /**
  * \class PredatorPrinter

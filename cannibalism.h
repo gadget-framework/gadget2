@@ -1,6 +1,7 @@
 #ifndef cannibalism_h
 #define cannibalism_h
 
+#include "areatime.h"
 #include "doubleindexvector.h"
 #include "commentstream.h"
 #include "bandmatrixptrvector.h"
@@ -10,7 +11,6 @@
 
 class Cannibalism;
 class Keeper;
-class TimeClass;
 
 class Cannibalism {
 public:

@@ -29,7 +29,7 @@ void PreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
     MortbyAgeAndLength[inarea][age][l] = PSIByLength.MortalityByLength(area)[l];
   }
 
-  if (iszero(prey->Biomass(area)))
+  if (isZero(prey->Biomass(area)))
     MortbyAge[inarea][age] = 0.0;
   else if (prey->Biomass(area) <= BconbyAge[inarea][age])
     MortbyAge[inarea][age] = MAX_MORTALITY;

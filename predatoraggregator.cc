@@ -16,11 +16,11 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& preds, const Pre
   //First we check that the length group of every predator is finer
   //(not necessarily strictly finer) than that of predLgrpDiv;
   for (i = 0; i < predators.Size(); i++)
-    CheckLengthGroupIsFiner(predators[i]->ReturnLengthGroupDiv(), predLgrpDiv,
+    checkLengthGroupIsFiner(predators[i]->ReturnLengthGroupDiv(), predLgrpDiv,
       predators[i]->Name(), "predator consumption");
   //Same check for preys.
   for (i = 0; i < preys.Size(); i++)
-    CheckLengthGroupIsFiner(preys[i]->ReturnLengthGroupDiv(), preyLgrpDiv,
+    checkLengthGroupIsFiner(preys[i]->ReturnLengthGroupDiv(), preyLgrpDiv,
       preys[i]->Name(), "predator aggregator");
 
   for (i = 0; i < predators.Size(); i++) {
@@ -118,7 +118,7 @@ PredatorAggregator::PredatorAggregator(const CharPtrVector& pred_names, PreyPtrV
 
   //Length check for preys.
   for (i = 0; i < preys.Size(); i++)
-    CheckLengthGroupIsFiner(preys[i]->ReturnLengthGroupDiv(), preyLgrpDiv,
+    checkLengthGroupIsFiner(preys[i]->ReturnLengthGroupDiv(), preyLgrpDiv,
       preys[i]->Name(), "predator aggregator");
 
   predtot = 0;
@@ -266,7 +266,7 @@ void PredatorAggregator::Sum(int dummy) {
         if (tot_predators[i][j] > 0) //average consumption pr fish
           total[i][j][k] /= tot_predators[i][j];
         else
-          if (total[i][j][k] > 0 && iszero(tot_predators[i][j]))
+          if (total[i][j][k] > 0 && isZero(tot_predators[i][j]))
             cerr << "Warning: consumption without predators!\n";
       }
 }

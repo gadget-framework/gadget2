@@ -37,15 +37,15 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   surveyname = new char[strlen(name) + 1];
   strcpy(surveyname, name);
-  ReadWordAndValue(infile, "datafile", datafilename);
-  ReadWordAndValue(infile, "sitype", sitype);
+  readWordAndValue(infile, "datafile", datafilename);
+  readWordAndValue(infile, "sitype", sitype);
 
   //Read in area aggregation from file
-  ReadWordAndValue(infile, "areaaggfile", aggfilename);
+  readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  i = ReadAggregation(subdata, tmpareas, areaindex);
+  i = readAggregation(subdata, tmpareas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -63,40 +63,40 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       handle.UndefinedArea(areas[i]);
 
   if (strcasecmp(sitype, "lengths") == 0) {
-    ReadWordAndValue(infile, "lenaggfile", aggfilename);
+    readWordAndValue(infile, "lenaggfile", aggfilename);
     datafile.open(aggfilename);
-    CheckIfFailure(datafile, aggfilename);
+    checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    i = ReadLengthAggregation(subdata, Lengths, lenindex);
+    i = readLengthAggregation(subdata, Lengths, lenindex);
     handle.Close();
     datafile.close();
     datafile.clear();
 
   } else if (strcasecmp(sitype, "ages") == 0) {
-    ReadWordAndValue(infile, "ageaggfile", aggfilename);
+    readWordAndValue(infile, "ageaggfile", aggfilename);
     datafile.open(aggfilename);
-    CheckIfFailure(datafile, aggfilename);
+    checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    i = ReadAggregation(subdata, Ages, ageindex);
+    i = readAggregation(subdata, Ages, ageindex);
     handle.Close();
     datafile.close();
     datafile.clear();
 
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
-    ReadWordAndValue(infile, "lenaggfile", aggfilename);
+    readWordAndValue(infile, "lenaggfile", aggfilename);
     datafile.open(aggfilename);
-    CheckIfFailure(datafile, aggfilename);
+    checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    i = ReadLengthAggregation(subdata, Lengths, lenindex);
+    i = readLengthAggregation(subdata, Lengths, lenindex);
     handle.Close();
     datafile.close();
     datafile.clear();
 
-    ReadWordAndValue(infile, "ageaggfile", aggfilename);
+    readWordAndValue(infile, "ageaggfile", aggfilename);
     datafile.open(aggfilename);
-    CheckIfFailure(datafile, aggfilename);
+    checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    i = ReadAggregation(subdata, Ages, ageindex);
+    i = readAggregation(subdata, Ages, ageindex);
     handle.Close();
     datafile.close();
     datafile.clear();
@@ -174,7 +174,6 @@ void SurveyIndices::LikelihoodPrint(ofstream& outfile) const {
 }
 
 void SurveyIndices::AddToLikelihood(const TimeClass* const TimeInfo) {
-  //likelihood = 0;
   SI->Sum(TimeInfo);
   if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps())
     likelihood += SI->Regression();

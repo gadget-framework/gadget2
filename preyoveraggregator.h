@@ -1,12 +1,12 @@
 #ifndef preyoveraggregator_h
 #define preyoveraggregator_h
 
+#include "conversion.h"
 #include "doublematrix.h"
 #include "intmatrix.h"
 #include "preyptrvector.h"
 
 class PreyOverAggregator;
-class LengthGroupDivision;
 
 class PreyOverAggregator {
 public:

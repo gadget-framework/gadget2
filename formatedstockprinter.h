@@ -1,15 +1,11 @@
 #ifndef formatedstockprinter_h
 #define formatedstockprinter_h
 
-#include "commentstream.h"
 #include "printer.h"
 #include "gadget.h"
 
 class FormatedStockPrinter;
-class TimeClass;
-class LengthGroupDivision;
 class StockAggregator;
-class AreaClass;
 
 /*  FormatedStockPrinter
  *

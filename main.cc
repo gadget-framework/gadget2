@@ -12,7 +12,7 @@ RunID RUNID;
 Ecosystem* EcoSystem;
 int FuncEval = 0;
 
-void StochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
+void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
   StochasticData* Stochasticdata;
 
   int print = 1;
@@ -147,7 +147,7 @@ int main(int aNumber, char *const aVector[]) {
   if ((MainInfo.printinfo).PrintinColumns())
     EcoSystem->PrintInitialInformationinColumns((MainInfo.printinfo).ColumnOutputFile);
   if (MainInfo.Stochastic)
-    StochasticRun(EcoSystem, &MainInfo);
+    stochasticRun(EcoSystem, &MainInfo);
 
   if (MainInfo.Optimize) {
     if (MainInfo.InitialCondareGiven) {

@@ -49,7 +49,7 @@ inline double absolute(double a) {
 
 //-------------------------------------------------------
 //Checks to see if a double is very close to zero
-inline int iszero(double a) {
+inline int isZero(double a) {
   return ((absolute(a) < verysmall) ? 1 : 0);
 }
 
@@ -62,7 +62,7 @@ inline double dnorm(double length, double mean, double sdev) {
 
 //-------------------------------------------------------
 //Non ANSI functions
-double logfactorial(double n);
+double logFactorial(double n);
 
 inline double logGamma(double x) {
   return lgamma(x);

@@ -6,10 +6,6 @@
 #include "doublematrixptrmatrix.h"
 #include "actionattimes.h"
 
-class Keeper;
-class TimeClass;
-class AreaClass;
-
 class CatchDistribution : public Likelihood {
 public:
   CatchDistribution(CommentStream& infile, const AreaClass* const Area,
@@ -22,7 +18,6 @@ public:
   virtual void LikelihoodPrint(ofstream& outfile) const;
   virtual void PrintLikelihood(ofstream&, const TimeClass& time);
   virtual void PrintLikelihoodHeader(ofstream&);
-  //JMB const DoubleVector& getWeights(int year, int step, int lengthgroup) const;
   const DoubleMatrix& getCalcBiomass(int area) const { return *(calc_biomass[area]); };
   const DoubleMatrix& getObsBiomass(int area) const { return *(obs_biomass[area]); };
   const DoubleMatrix& getAggCalcBiomass(int area) const { return *(agg_calc_biomass[area]); };

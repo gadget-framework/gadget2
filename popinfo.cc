@@ -25,7 +25,7 @@ PopInfo& PopInfo::operator = (const PopInfo& a) {
 inline
 #endif
 PopInfo& PopInfo::operator += (const PopInfo& a) {
-  W = ((iszero(N + a.N)) ? 0 : (N * W + a.N * a.W) / (N + a.N));
+  W = ((isZero(N + a.N)) ? 0 : (N * W + a.N * a.W) / (N + a.N));
   N = N + a.N;
   return *this;
 }

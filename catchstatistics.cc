@@ -35,9 +35,9 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
 
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
-  ReadWordAndValue(infile, "datafile", datafilename);
-  ReadWordAndValue(infile, "function", functionname);
-  ReadWordAndVariable(infile, "overconsumption", overconsumption);
+  readWordAndValue(infile, "datafile", datafilename);
+  readWordAndValue(infile, "function", functionname);
+  readWordAndVariable(infile, "overconsumption", overconsumption);
   if (overconsumption != 0 && overconsumption != 1)
     handle.Message("Error in catchstatistics - overconsumption must be 0 or 1");
 
@@ -57,21 +57,21 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     handle.Message("Error in catchstatistics - unrecognised function", functionname);
 
   //Read in area aggregation from file
-  ReadWordAndValue(infile, "areaaggfile", aggfilename);
+  readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numarea = ReadAggregation(subdata, areas, areaindex);
+  numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in age aggregation from file
-  ReadWordAndValue(infile, "ageaggfile", aggfilename);
+  readWordAndValue(infile, "ageaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numage = ReadAggregation(subdata, ages, ageindex);
+  numage = readAggregation(subdata, ages, ageindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -110,7 +110,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadStatisticsData(subdata, TimeInfo, numarea, numage);
   handle.Close();
@@ -152,9 +152,9 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  if ((needvar == 1) && (CountColumns(infile) != 7))
+  if ((needvar == 1) && (countColumns(infile) != 7))
     handle.Message("Wrong number of columns in inputfile - should be 7");
-  else if ((needvar == 0) && (CountColumns(infile) != 6))
+  else if ((needvar == 0) && (countColumns(infile) != 6))
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
@@ -386,7 +386,7 @@ double CatchStatistics::SOSWeightOrLength() {
             * (*mean[timeindex])[nareas][age] * exp(-20 * simnumber));
           break;
         case 6:
-          if (iszero(simmean))
+          if (isZero(simmean))
             lik += (*numbers[timeindex])[nareas][age];
           else if (simmean > verysmall && (*mean[timeindex])[nareas][age] > verysmall)
             lik += simdiff * simdiff * (simvar > 0 ? 1 / simvar : 0) * (*numbers[timeindex])[nareas][age];

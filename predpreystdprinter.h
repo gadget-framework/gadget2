@@ -2,11 +2,8 @@
 #define predpreystdprinter_h
 
 #include "printer.h"
-#include "commentstream.h"
 
 class PredStdPrinter;
-class TimeClass;
-class AreaClass;
 class PopPredator;
 class Prey;
 class PredStdInfoByLength;

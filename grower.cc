@@ -35,7 +35,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
 
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
-  ReadWordAndValue(infile, "growthfunction", functionname);
+  readWordAndValue(infile, "growthfunction", functionname);
 
   if (strcasecmp(functionname, "multspec") == 0)
     growthtype = 1;
@@ -94,7 +94,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
 
     infile >> beta;
     beta.Inform(keeper);
-    ReadWordAndVariable(infile, "maxlengthgroupgrowth", maxlengthgroupgrowth);
+    readWordAndVariable(infile, "maxlengthgroupgrowth", maxlengthgroupgrowth);
 
     //Finished reading from input files.
     rows = maxlengthgroupgrowth + 1;
@@ -110,13 +110,13 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     infile >> MeanVarianceParameters;
     MeanVarianceParameters.Inform(keeper);
 
-    ReadWordAndVariable(infile, "power", power);
-    ReadWordAndValue(infile, "growthdistributionfile", text);
+    readWordAndVariable(infile, "power", power);
+    readWordAndValue(infile, "growthdistributionfile", text);
 
     ifstream subfile;
     CommentStream subcomment(subfile);
     subfile.open(text);
-    CheckIfFailure(subfile, text);
+    checkIfFailure(subfile, text);
     handle.Open(text);
     GrIPar = new GrowthImplementParameters(subcomment);
     handle.Close();
@@ -240,8 +240,8 @@ void Grower::GrowthCalc(int area,
   growthcalc->GrowthCalc(area, CalcLgrowth[inarea], CalcWgrowth[inarea],
     GrEatNumber[inarea], Area, TimeInfo, FPhi, MaxCon, LgrpDiv);
 
-  Interp(InterpLgrowth[inarea], CalcLgrowth[inarea], CI);
-  Interp(InterpWgrowth[inarea], CalcWgrowth[inarea], CI);
+  interpolateLengths(InterpLgrowth[inarea], CalcLgrowth[inarea], CI);
+  interpolateLengths(InterpWgrowth[inarea], CalcWgrowth[inarea], CI);
 }
 
 const DoubleMatrix& Grower::LengthIncrease(int area) const {

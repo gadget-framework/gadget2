@@ -4,9 +4,7 @@
 #include "sionstep.h"
 
 class SIByAgeOnStep;
-class TimeClass;
 class StockAggregator;
-class LengthGroupDivision;
 
 class SIByAgeOnStep : public SIOnStep {
 public:
@@ -16,7 +14,6 @@ public:
   virtual ~SIByAgeOnStep();
   virtual void Sum(const TimeClass* const TimeInfo);
   virtual void SetStocks(const StockPtrVector& Stocks);
-  virtual void LikelihoodPrint(ofstream& outfile) const;
 protected:
   StockAggregator* aggregator;
   IntMatrix Ages;

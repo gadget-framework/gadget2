@@ -48,7 +48,7 @@ MortPredLength::MortPredLength(CommentStream& infile, const char* givenname, con
       q2[i].Inform(keeper);
     }
     //JMB - taken out of for loop - only read matrix effort once!
-    ReadMatrix(infile, effort); //read effort from file
+    readMatrix(infile, effort); //read effort from file
     calcFlevel();
 
   } else { //f_lev is read from file, q1, q2 and effort not used

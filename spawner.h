@@ -1,6 +1,7 @@
 #ifndef spawner_h
 #define spawner_h
 
+#include "areatime.h"
 #include "formulamatrixptrvector.h"
 #include "commentstream.h"
 #include "agebandmatrix.h"
@@ -8,8 +9,6 @@
 #include "livesonareas.h"
 #include "actionattimes.h"
 
-class AreaClass;
-class TimeClass;
 class Stock;
 class Keeper;
 

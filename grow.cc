@@ -25,7 +25,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
       }
     }
 
-    if ((iszero(number)) || (wt < verysmall)) {
+    if ((isZero(number)) || (wt < verysmall)) {
       (*v[i])[maxlgrp].W = 0.0;
       (*v[i])[maxlgrp].N = 0.0;
     } else {
@@ -43,7 +43,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
         wt += upfj * ((*v[i])[lgrp - grow].W + Wgrowth[grow][lgrp - grow]);
       }
 
-      if ((iszero(number)) || (wt < verysmall)) {
+      if ((isZero(number)) || (wt < verysmall)) {
         (*v[i])[lgrp].W = 0.0;
         (*v[i])[lgrp].N = 0.0;
       } else {
@@ -62,7 +62,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
         wt += upfj * ((*v[i])[lgrp - grow].W + Wgrowth[grow][lgrp - grow]);
       }
 
-      if ((iszero(number)) || (wt < verysmall)) {
+      if ((isZero(number)) || (wt < verysmall)) {
         (*v[i])[lgrp].W = 0.0;
         (*v[i])[lgrp].N = 0.0;
       } else {
@@ -100,7 +100,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
       }
     }
 
-    if ((iszero(number)) || (number - matnum < verysmall) || (wt < verysmall)) {
+    if ((isZero(number)) || (number - matnum < verysmall) || (wt < verysmall)) {
       (*v[i])[maxlgrp].W = 0.0;
       (*v[i])[maxlgrp].N = 0.0;
       Mat->PutInStorage(area, age, maxlgrp, 0.0, 0.0, TimeInfo);
@@ -122,7 +122,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
         wt += upfj * ((*v[i])[lgrp - grow].W + Wgrowth[grow][lgrp - grow]);
       }
 
-      if ((iszero(number)) || (number - matnum < verysmall) || (wt < verysmall)) {
+      if ((isZero(number)) || (number - matnum < verysmall) || (wt < verysmall)) {
         (*v[i])[lgrp].W = 0.0;
         (*v[i])[lgrp].N = 0.0;
         Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);
@@ -146,7 +146,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
         wt += upfj * ((*v[i])[lgrp - grow].W + Wgrowth[grow][lgrp - grow]);
       }
 
-      if ((iszero(number)) || (number - matnum < verysmall) || (wt < verysmall)) {
+      if ((isZero(number)) || (number - matnum < verysmall) || (wt < verysmall)) {
         (*v[i])[lgrp].W = 0.0;
         (*v[i])[lgrp].N = 0.0;
         Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);

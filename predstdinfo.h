@@ -1,6 +1,7 @@
 #ifndef predstdinfo_h
 #define predstdinfo_h
 
+#include "areatime.h"
 #include "abstrpredstdinfo.h"
 
 class PredStdInfo;
@@ -9,7 +10,6 @@ class PopPredator;
 class PredStdInfoByLength;
 class Prey;
 class StockPrey;
-class TimeClass;
 
 class PredStdInfo : public AbstrPredStdInfo {
 public:

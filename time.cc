@@ -10,15 +10,15 @@ TimeClass::TimeClass(CommentStream& infile) {
   strncpy(text, "", MaxStrLength);
   int i;
 
-  ReadWordAndVariable(infile, "firstyear", firstyear);
-  ReadWordAndVariable(infile, "firststep", firststep);
-  ReadWordAndVariable(infile, "lastyear", lastyear);
-  ReadWordAndVariable(infile, "laststep", laststep);
-  ReadWordAndVariable(infile, "notimesteps", notimesteps);
+  readWordAndVariable(infile, "firstyear", firstyear);
+  readWordAndVariable(infile, "firststep", firststep);
+  readWordAndVariable(infile, "lastyear", lastyear);
+  readWordAndVariable(infile, "laststep", laststep);
+  readWordAndVariable(infile, "notimesteps", notimesteps);
 
   infile >> ws;
   timesteps.resize(notimesteps, 1, 0);  //index starts at 1, initialized to 0
-  ReadIndexVector(infile, timesteps);
+  readIndexVector(infile, timesteps);
 
   infile >> ws;
   if (infile.eof())
@@ -28,7 +28,7 @@ TimeClass::TimeClass(CommentStream& infile) {
     if (!(strcasecmp(text, "nrofsubsteps") == 0))
       handle.Message("Failure in reading time substeps");
     nrofsubsteps.resize(notimesteps, 1, 0);
-    ReadIndexVector(infile, nrofsubsteps);
+    readIndexVector(infile, nrofsubsteps);
   }
 
   lengthofyear = 0;

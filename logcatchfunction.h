@@ -7,10 +7,6 @@
 #include "doublematrixptrmatrix.h"
 #include "actionattimes.h"
 
-class Keeper;
-class TimeClass;
-class AreaClass;
-
 class LogCatches : public Likelihood {
 public:
   LogCatches(CommentStream& infile, const AreaClass* const Area,
@@ -21,8 +17,7 @@ public:
   virtual void Print(ofstream& outfile) const {};
   void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
   virtual void LikelihoodPrint(ofstream& outfile) const;
-  void printHeader(ofstream& surveyfile, const PrintInfo& print);
-  virtual void print(ofstream& surveyfile, const TimeClass& time, const PrintInfo& print);
+  virtual void CommandLinePrint(ofstream& surveyfile, const TimeClass& time, const PrintInfo& print);
   void PrintLikelihoodOnStep(ofstream&, const TimeClass& time, int print_type);
   const DoubleMatrix& getCalcBiomass(int area) const { return *(calc_biomass[area]); };
   const DoubleMatrix& getObsBiomass(int area) const { return *(obs_biomass[area]); };

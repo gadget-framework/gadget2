@@ -1,6 +1,8 @@
 #ifndef predstdinfobylength_h
 #define predstdinfobylength_h
 
+#include "areatime.h"
+#include "conversion.h"
 #include "livesonareas.h"
 #include "bandmatrix.h"
 
@@ -9,8 +11,6 @@ class AbstrPreyStdInfoByLength;
 class PopPredator;
 class Prey;
 class StockPrey;
-class LengthGroupDivision;
-class TimeClass;
 
 class PredStdInfoByLength : protected LivesOnAreas {
 public:

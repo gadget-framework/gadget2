@@ -48,21 +48,21 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile,
     if ((strcasecmp(text, "catchfile") == 0)) {
       infile >> filename >> ws;
       catchFile.open(filename, ios::out);
-      CheckIfFailure(catchFile, filename);
+      checkIfFailure(catchFile, filename);
       RUNID.print(catchFile);
       catchFile.flush();
       printCatch = 1;
     } else if ((strcasecmp(text, "surveyfile") == 0)) {
       infile >> filename >> ws;
       surveyFile.open(filename, ios::out);
-      CheckIfFailure(surveyFile, filename);
+      checkIfFailure(surveyFile, filename);
       RUNID.print(surveyFile);
       surveyFile.flush();
       printSurvey = 1;
     } else if ((strcasecmp(text, "stomachfile") == 0)) {
       infile >> filename >> ws;
       stomachFile.open(filename, ios::out);
-      CheckIfFailure(stomachFile, filename);
+      checkIfFailure(stomachFile, filename);
       RUNID.print(stomachFile);
       stomachFile.flush();
       printStomach = 1;

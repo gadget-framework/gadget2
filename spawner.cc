@@ -23,21 +23,21 @@ Spawner::Spawner(CommentStream& infile, int maxstockage, int numlength,
   ssb.AddRows(maxstockage, numlength, 0.0);
 
   //Read in area aggregation from file
-  ReadWordAndValue(infile, "areaaggfile", datafilename);
+  readWordAndValue(infile, "areaaggfile", datafilename);
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  numarea = ReadAggregation(subdata, areas, areaindex);
+  numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in age aggregation from file
-  ReadWordAndValue(infile, "ageaggfile", datafilename);
+  readWordAndValue(infile, "ageaggfile", datafilename);
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  numage = ReadAggregation(subdata, ages, ageindex);
+  numage = readAggregation(subdata, ages, ageindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -49,9 +49,9 @@ Spawner::Spawner(CommentStream& infile, int maxstockage, int numlength,
         handle.UndefinedArea(areas[i][j]);
 
   //Finally read in spawning data from file
-  ReadWordAndValue(infile, "spawnfile", datafilename);
+  readWordAndValue(infile, "spawnfile", datafilename);
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadSpawnerData(subdata, TimeInfo, numarea, numage);
   handle.Close();
@@ -86,7 +86,7 @@ void Spawner::ReadSpawnerData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 7)
+  if (countColumns(infile) != 7)
     handle.Message("Wrong number of columns in inputfile - should be 7");
 
   //Found the start of the spawning data in the following format

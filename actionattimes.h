@@ -2,10 +2,10 @@
 #define actionattimes_h
 
 #include "commentstream.h"
+#include "areatime.h"
 #include "intvector.h"
 
 class ActionAtTimes;
-class TimeClass;
 
 /**
  * \class ActionAtTimes

@@ -37,8 +37,8 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
 
-  ReadWordAndValue(infile, "datafile", datafilename);
-  ReadWordAndValue(infile, "function", functionname);
+  readWordAndValue(infile, "datafile", datafilename);
+  readWordAndValue(infile, "function", functionname);
 
   functionnumber = 0;
   if (strcasecmp(functionname, "multinomial") == 0)
@@ -57,7 +57,8 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
     handle.Message("Error in catchdistribution - unrecognised function", functionname);
 
   infile >> ws;
-  if (infile.peek() == 'a') {
+  char c = infile.peek();
+  if ((c == 'a') || (c == 'A')) {
     infile >> text >> ws;
     //JMB - changed to check for aggregation_level or aggregationlevel
     if ((strcasecmp(text, "aggregation_level") == 0) || (strcasecmp(text, "aggregationlevel") == 0))
@@ -71,16 +72,17 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
   if (agg_lev != 0 && agg_lev != 1)
     handle.Message("Error in catchdistribution - aggregationlevel must be 0 or 1");
 
-  ReadWordAndVariable(infile, "overconsumption", overconsumption);
+  readWordAndVariable(infile, "overconsumption", overconsumption);
   if (overconsumption != 0 && overconsumption != 1)
     handle.Message("Error in catchdistribution - overconsumption must be 0 or 1");
 
   //JMB - changed to make the reading of minimum probability optional
   infile >> ws;
-  if (infile.peek() == 'm')
-    ReadWordAndVariable(infile, "minimumprobability", epsilon);
-  else if (infile.peek() == 'e')
-    ReadWordAndVariable(infile, "epsilon", epsilon);
+  c = infile.peek();
+  if ((c == 'm') || (c == 'M'))
+    readWordAndVariable(infile, "minimumprobability", epsilon);
+  else if ((c == 'e') || (c == 'E'))
+    readWordAndVariable(infile, "epsilon", epsilon);
   else
     epsilon = 10;
 
@@ -90,31 +92,31 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
   }
 
   //Read in area aggregation from file
-  ReadWordAndValue(infile, "areaaggfile", aggfilename);
+  readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numarea = ReadAggregation(subdata, areas, areaindex);
+  numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in age aggregation from file
-  ReadWordAndValue(infile, "ageaggfile", aggfilename);
+  readWordAndValue(infile, "ageaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numage = ReadAggregation(subdata, ages, ageindex);
+  numage = readAggregation(subdata, ages, ageindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //Read in length aggregation from file
-  ReadWordAndValue(infile, "lenaggfile", aggfilename);
+  readWordAndValue(infile, "lenaggfile", aggfilename);
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numlen = ReadLengthAggregation(subdata, lengths, lenindex);
+  numlen = readLengthAggregation(subdata, lengths, lenindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -156,7 +158,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadDistributionData(subdata, TimeInfo, numarea, numage, numlen);
   handle.Close();
@@ -232,7 +234,7 @@ void CatchDistribution::ReadDistributionData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  if (CountColumns(infile) != 6)
+  if (countColumns(infile) != 6)
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
@@ -589,7 +591,7 @@ double CatchDistribution::LikMultinomial() {
     if (AgeLengthData[timeindex][nareas]->Nrow() == 1) {
       //If there is only one agegroup, we calculate loglikelihood
       //based on the length group division
-      MN.LogLikelihood((*AgeLengthData[timeindex][nareas])[0], (*Dist[nareas])[0]);
+      MN.CalcLogLikelihood((*AgeLengthData[timeindex][nareas])[0], (*Dist[nareas])[0]);
       for (len = 0; len < AgeLengthData[timeindex][nareas]->Ncol(0); len++)
         (*Proportions[timeindex][nareas])[0][len] = (*Dist[nareas])[0][len];
 
@@ -604,7 +606,7 @@ double CatchDistribution::LikMultinomial() {
           dist[a] = (*Dist[nareas])[a][len];
           data[a] = (*AgeLengthData[timeindex][nareas])[a][len];
         }
-        MN.LogLikelihood(data, dist);
+        MN.CalcLogLikelihood(data, dist);
         for (a = 0; a < dist.Size(); a++)
           (*Proportions[timeindex][nareas])[a][len] = dist[a];
       }
@@ -922,11 +924,11 @@ double CatchDistribution::LikSumSquares() {
 
     for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
       for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
-        if ((iszero(totaldata)) && (iszero(totalmodel)))
+        if ((isZero(totaldata)) && (isZero(totalmodel)))
           temp = 0.0;
-        else if (iszero(totaldata))
+        else if (isZero(totaldata))
           temp = (*Proportions[timeindex][nareas])[age][len] / totalmodel;
-        else if (iszero(totalmodel))
+        else if (isZero(totalmodel))
           temp = (*AgeLengthData[timeindex][nareas])[age][len] / totaldata;
         else
           temp = (((*AgeLengthData[timeindex][nareas])[age][len] / totaldata)

@@ -10,7 +10,7 @@ PreyOverAggregator::PreyOverAggregator(const PreyPtrVector& Preys,
 
   int i, j;
   for (i = 0; i < preys.Size(); i++)
-    CheckLengthGroupIsFiner(preys[i]->ReturnLengthGroupDiv(),
+    checkLengthGroupIsFiner(preys[i]->ReturnLengthGroupDiv(),
       preyLgrpDiv, preys[i]->Name(), "prey overconsumption");
 
   for (i = 0; i < preys.Size(); i++) {

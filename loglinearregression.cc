@@ -1,10 +1,6 @@
 #include "loglinearregression.h"
 #include "gadget.h"
 
-LogLinearRegression::LogLinearRegression() {
-  error = 0;
-}
-
 void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
   error = 0;
   DoubleVector Xlog(x);
@@ -74,12 +70,12 @@ void LogLinearRegression::CleanAndTakeLog(const DoubleVector& x,
 
   int i, l = 0;
   for (i = 0; i < x.Size(); i++, l++) {
-    if (iszero(x[i]) && iszero(y[i])) {
+    if (isZero(x[i]) && isZero(y[i])) {
       //omit the point (0,0)
       Xlog.Delete(l);
       Ylog.Delete(l);
       l--;
-    } else if ((x[i] < 0) || (y[i] < 0) || (iszero(x[i])) || (iszero(y[i]))) {
+    } else if ((x[i] < 0) || (y[i] < 0) || (isZero(x[i])) || (isZero(y[i]))) {
       cerr << "Error in LLR - received illegal values of x (" << x[i] << ") and y (" << y[i] << ")\n";
       error = 1;
       return;

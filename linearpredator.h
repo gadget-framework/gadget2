@@ -2,10 +2,10 @@
 #define linearpredator_h
 
 #include "lengthpredator.h"
+#include "conversion.h"
 #include "commentstream.h"
 
 class LinearPredator;
-class LengthGroupDivision;
 class Keeper;
 
 class LinearPredator : public LengthPredator {

@@ -17,7 +17,7 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
   numlengths = LgrpDiv->NoLengthGroups();
 
   for (i = 0; i < stocks.Size(); i++) {
-    CheckLengthGroupIsFiner(stocks[i]->ReturnLengthGroupDiv(),
+    checkLengthGroupIsFiner(stocks[i]->ReturnLengthGroupDiv(),
       LgrpDiv, stocks[i]->Name(), "stock abundance numbers");
     CI.resize(1);
     CI[i] = new ConversionIndex(stocks[i]->ReturnLengthGroupDiv(), LgrpDiv);

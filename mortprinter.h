@@ -1,16 +1,11 @@
 #ifndef mortprinter_h
 #define mortprinter_h
 
-#include "commentstream.h"
 #include "printer.h"
 #include "lenstock.h"
-#include "gadget.h"
 
 class MortPrinter;
-class TimeClass;
-class LengthGroupDivision;
 class StockAggregator;
-class AreaClass;
 
 /*  MortPrinter
  *

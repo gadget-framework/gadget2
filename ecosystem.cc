@@ -18,7 +18,7 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   ifstream infile(filename);
   CommentStream commin(infile);
   handle.Open(filename);
-  CheckIfFailure(infile, filename);
+  checkIfFailure(infile, filename);
   chdir(inputdir);
   //New parameter netrun, to prevent reading of printfiles. 07.04.00 AJ & mnaa
   Readmain(commin, optimize, netrun, calclikelihood, inputdir, workingdir);
@@ -75,7 +75,7 @@ Ecosystem::~Ecosystem() {
 void Ecosystem::PrintStatus(const char* filename) const {
   ofstream outfile;
   outfile.open(filename, ios::out);
-  CheckIfFailure(outfile, filename);
+  checkIfFailure(outfile, filename);
   int i;
   for (i = 0; i < stockvec.Size(); i++)
     stockvec[i]->Print(outfile);
@@ -199,7 +199,7 @@ void Ecosystem::OptSwitches(ParameterVector& sw) const {
 void Ecosystem::PrintLikelihoodInfo(const char* filename) const {
   ofstream outfile;
   outfile.open(filename, ios::app);
-  CheckIfFailure(outfile, filename);
+  checkIfFailure(outfile, filename);
   int i;
   for (i = 0; i < Likely.Size(); i++)
     Likely[i]->LikelihoodPrint(outfile);

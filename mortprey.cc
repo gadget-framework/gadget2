@@ -185,7 +185,7 @@ void MortPrey::calcMeanN(int area) {
   int l;
   for (l = 0; l < LgrpDiv->NoLengthGroups(); l++) {
     prop_surv[inarea][l] = exp(- z[inarea][l]);
-    if (iszero(z[inarea][l]))
+    if (isZero(z[inarea][l]))
       mort_fact[inarea][l] = 1.0;
     else
       mort_fact[inarea][l] = (1.0 - prop_surv[inarea][l]) / z[inarea][l];

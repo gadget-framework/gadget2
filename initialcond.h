@@ -2,14 +2,13 @@
 #define initialcond_h
 
 #include "formulamatrix.h"
+#include "conversion.h"
 #include "commentstream.h"
 #include "agebandmatrix.h"
 #include "agebandmatrixptrvector.h"
 #include "keeper.h"
 
 class Stock;
-class ConversionIndex;
-class LengthGroupDivision;
 
 class InitialCond {
 public:

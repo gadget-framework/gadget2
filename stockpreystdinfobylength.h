@@ -2,10 +2,10 @@
 #define stockpreystdinfobylength_h
 
 #include "abstrpreystdinfobylength.h"
+#include "conversion.h"
 
 class StockPreyStdInfoByLength;
 class StockPrey;
-class LengthGroupDivision;
 
 class StockPreyStdInfoByLength : public AbstrPreyStdInfoByLength {
 public:

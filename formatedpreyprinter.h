@@ -1,15 +1,11 @@
 #ifndef formatedpreyprinter_h
 #define formatedpreyprinter_h
 
-#include "commentstream.h"
 #include "printer.h"
 #include "gadget.h"
 
 class FormatedPreyPrinter;
-class TimeClass;
-class LengthGroupDivision;
 class StockAggregator;
-class AreaClass;
 
 class FormatedPreyPrinter : public Printer {
 public:

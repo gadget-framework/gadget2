@@ -1,15 +1,10 @@
 #ifndef stockpreyfullprinter_h
 #define stockpreyfullprinter_h
 
-#include "commentstream.h"
 #include "printer.h"
-#include "gadget.h"
 
 class StockPreyFullPrinter;
-class TimeClass;
 class StockPreyStdInfo;
-class AreaClass;
-class LengthGroupDivision;
 
 /**
  * \class StockPreyFullPrinter

@@ -1,13 +1,13 @@
 #ifndef lennaturalm_h
 #define lennaturalm_h
 
+#include "areatime.h"
 #include "commentstream.h"
 #include "conversion.h"
 #include "formulavector.h"
 
 class LenNaturalM;
 class Keeper;
-class TimeClass;
 
 class LenNaturalM {
 public:

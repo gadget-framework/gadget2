@@ -14,7 +14,7 @@ SIByLengthOnStep::SIByLengthOnStep(CommentStream& infile, const IntVector& areas
 
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(lengths, "survey indices by length");
+    printLengthGroupError(lengths, "survey indices by length");
 }
 
 SIByLengthOnStep::~SIByLengthOnStep() {

@@ -7,9 +7,6 @@
 #include "intmatrix.h"
 #include "charptrvector.h"
 
-class TimeClass;
-class AreaClass;
-
 class UnderStocking : public Likelihood {
 public:
   UnderStocking(CommentStream&, const AreaClass* const, const TimeClass* const, double likweight);

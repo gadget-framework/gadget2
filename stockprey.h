@@ -13,7 +13,7 @@ public:
   StockPrey(const DoubleVector& lengths, const IntVector& areas,
     int minage, int maxage, const char* givenname);
   virtual ~StockPrey();
-  virtual prey_type preyType() const { return STOCKPREY_TYPE; };
+  virtual PreyType preyType() const { return STOCKPREYTYPE; };
   virtual void Sum(const AgeBandMatrix& Alkeys, int area, int NrofSubstep);
   const AgeBandMatrix& AlkeysPriorToEating(int area) const;
   virtual void Print(ofstream& outfile) const;

@@ -2,6 +2,7 @@
 #define prey_h
 
 #include "popinfovector.h"
+#include "conversion.h"
 #include "commentstream.h"
 #include "charptrvector.h"
 #include "hasname.h"
@@ -10,18 +11,16 @@
 #include "gadget.h"
 
 class Prey;
-class ConversionIndex;
-class LengthGroupDivision;
 class Keeper;
 
-enum prey_type { PREY_TYPE, MORTPREY_TYPE, STOCKPREY_TYPE, LENGTHPREY_TYPE };
+enum PreyType { PREYTYPE, MORTPREYTYPE, STOCKPREYTYPE, LENGTHPREYTYPE };
 
 class Prey : public HasName, public LivesOnAreas {
 public:
   Prey(CommentStream& infile, const IntVector& areas, const char* givenname, Keeper* const keeper);
   Prey(const DoubleVector& lengths, const IntVector& areas, const char* givenname);
   virtual ~Prey() = 0;
-  virtual prey_type preyType() const { return PREY_TYPE; };
+  virtual PreyType preyType() const { return PREYTYPE; };
   virtual void Sum(const AgeBandMatrix& Alkeys, int area, int NrofSubstep) {};
   virtual void Subtract(AgeBandMatrix& Alkeys, int area);
   void AddConsumption(int area, const DoubleIndexVector& predconsumption);

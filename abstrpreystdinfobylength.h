@@ -3,9 +3,9 @@
 
 #include "doublematrix.h"
 #include "livesonareas.h"
+#include "areatime.h"
 
 class AbstrPreyStdInfoByLength;
-class TimeClass;
 class Prey;
 
 class AbstrPreyStdInfoByLength : protected LivesOnAreas {

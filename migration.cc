@@ -26,7 +26,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector&  Are
     while (isdigit(infile.peek())) {
       //Next we want to add a line of length 0 to ages.
       ages.AddRows(1, 0);
-      ReadVectorInLine(infile, ages[i]);
+      readVectorInLine(infile, ages[i]);
       infile >> ws;
     }
   }
@@ -95,7 +95,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector&  Are
   int no, find;
   while (!infile.eof() && !infile.fail()) {
     infile >> no;
-    DoubleMatrix* matptr = ReadMatrix(infile, noareas, noareas);
+    DoubleMatrix* matptr = readMatrix(infile, noareas, noareas);
     //Now we must look if the matrix number no is in MatrixNumbers. If so,
     //we must keep the matrix for future use, else we can discard it.
     find = 0;
@@ -409,7 +409,7 @@ void Migration::AdjustMigListAndCheckIfError(MigrationList& MigList) {
           colsum1 += (*dmptr)[j][k];
         }
 
-        if (iszero(colsum)) {
+        if (isZero(colsum)) {
           cerr << "Error in migration: column " << k + 1 << " in migration matrix "
             << i << " sums up to " << colsum << " instead of 1\n";
           error = 1;

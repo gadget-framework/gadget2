@@ -17,7 +17,7 @@ public:
   MortPrey(const DoubleVector& lengths, const IntVector& areas, int minage, int maxage,
     const char* givenname, const LengthGroupDivision* const stock_lgrp);
   virtual ~MortPrey();
-  virtual prey_type preyType() const { return MORTPREY_TYPE; };
+  virtual PreyType preyType() const { return MORTPREYTYPE; };
   void InitializeObjects();
   virtual void Sum(const AgeBandMatrix& Alkeys, int area, int NrofSubstep);
   const AgeBandMatrix& AlkeysPriorToEating(int area) const;

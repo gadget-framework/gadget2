@@ -187,7 +187,7 @@ int Ecosystem::ReadPrinters(CommentStream& infile) {
     handle.Unexpected("[component]", text);
 
   while (!infile.eof() && !infile.fail()) {
-    ReadWordAndValue(infile, "type", type);
+    readWordAndValue(infile, "type", type);
 
     if (strcasecmp(type, "stockstdprinter") == 0)
       printvec.resize(1, new StockStdPrinter(infile, Area, TimeInfo));
@@ -257,18 +257,18 @@ int Ecosystem::ReadLikelihood(CommentStream& infile) {
     handle.Unexpected("[component]", text);
 
   while (!infile.eof() && !infile.fail()) {
-    ReadWordAndValue(infile, "name", name);
-    ReadWordAndVariable(infile, "weight", weight);
-    ReadWordAndValue(infile, "type", type);
+    readWordAndValue(infile, "name", name);
+    readWordAndVariable(infile, "weight", weight);
+    readWordAndValue(infile, "type", type);
 
     keeper->AddComponent(name);
     Likely.resize(1);
     i = Likely.Size() - 1;
 
     if (strcasecmp(type, "penalty") == 0) {
-      ReadWordAndValue(infile, "datafile", datafilename);
+      readWordAndValue(infile, "datafile", datafilename);
       datafile.open(datafilename);
-      CheckIfFailure(datafile, datafilename);
+      checkIfFailure(datafile, datafilename);
       handle.Open(datafilename);
       Likely[i] = new BoundLikelihood(subdata, Area, TimeInfo, keeper, weight);
       handle.Close();
@@ -350,9 +350,9 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
   CommentStream subcomment(subfile);
 
   //first, read in the time information
-  ReadWordAndValue(infile, "timefile", filename);
+  readWordAndValue(infile, "timefile", filename);
   subfile.open(filename);
-  CheckIfFailure(subfile, filename);
+  checkIfFailure(subfile, filename);
   handle.Open(filename);
   TimeInfo = new TimeClass(subcomment);
   handle.Close();
@@ -360,9 +360,9 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
   subfile.clear();
 
   //second, read in the area information
-  ReadWordAndValue(infile, "areafile", filename);
+  readWordAndValue(infile, "areafile", filename);
   subfile.open(filename);
-  CheckIfFailure(subfile, filename);
+  checkIfFailure(subfile, filename);
   handle.Open(filename);
   Area = new AreaClass(subcomment, TimeInfo);
   handle.Close();
@@ -381,7 +381,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
     //optimizing without the forcePrint option set. 07.04.00 AJ & mnaa.
     if (!netrun  && (printinfo.forcePrint || !optimize)) {
       subfile.open(text);
-      CheckIfFailure(subfile, text);
+      checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
       this->ReadPrinters(subcomment);
@@ -411,7 +411,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
   infile >> text >> ws;
   while (!((strcasecmp(text, "[tagging]") == 0) || infile.eof())) {
     subfile.open(text);
-    CheckIfFailure(subfile, text);
+    checkIfFailure(subfile, text);
     handle.Open(text);
     chdir(workingdir);
     this->ReadStock(subcomment, mort_mod);
@@ -434,7 +434,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
     infile >> text >> ws;
     while (!((strcasecmp(text, "[otherfood]") == 0) || infile.eof())) {
       subfile.open(text);
-      CheckIfFailure(subfile, text);
+      checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
       this->ReadTagging(subcomment);
@@ -458,7 +458,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
     infile >> text >> ws;
     while (!((strcasecmp(text, "[fleet]") == 0) || infile.eof())) {
       subfile.open(text);
-      CheckIfFailure(subfile, text);
+      checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
       this->ReadOtherFood(subcomment);
@@ -482,7 +482,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
     infile >> text >> ws;
     while (!((strcasecmp(text, "[likelihood]") == 0) || infile.eof())) {
       subfile.open(text);
-      CheckIfFailure(subfile, text);
+      checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
       this->ReadFleet(subcomment);
@@ -504,7 +504,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
       infile >> text;
       while (!infile.eof()) {
         subfile.open(text);
-        CheckIfFailure(subfile, text);
+        checkIfFailure(subfile, text);
         handle.Open(text);
         chdir(workingdir);
         this->ReadLikelihood(subcomment);

@@ -23,7 +23,7 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
 
   stockname = new char[MaxStrLength];
   strncpy(stockname, "", MaxStrLength);
-  ReadWordAndValue(infile, "stockname", stockname);
+  readWordAndValue(infile, "stockname", stockname);
 
   //Read in area aggregation from file
   char filename[MaxStrLength];
@@ -33,11 +33,11 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
 
   CharPtrVector areaindex;
   IntMatrix tmpareas;
-  ReadWordAndValue(infile, "areaaggfile", filename);
+  readWordAndValue(infile, "areaaggfile", filename);
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadAggregation(subdata, tmpareas, areaindex);
+  i = readAggregation(subdata, tmpareas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -56,9 +56,9 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
       handle.UndefinedArea(outerareas[i]);
 
   //Open the printfile
-  ReadWordAndValue(infile, "printfile", filename);
+  readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  CheckIfFailure(outfile, filename);
+  checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))

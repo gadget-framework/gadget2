@@ -1,6 +1,7 @@
 #ifndef fleetpreyaggregator_h
 #define fleetpreyaggregator_h
 
+#include "areatime.h"
 #include "conversion.h"
 #include "agebandmatrix.h"
 #include "agebandmatrixptrvector.h"
@@ -12,8 +13,6 @@
 #include "conversionindexptrvector.h"
 
 class FleetPreyAggregator;
-class TimeClass;
-class AreaClass;
 
 class FleetPreyAggregator {
 public:

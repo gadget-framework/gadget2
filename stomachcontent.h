@@ -12,8 +12,6 @@
 #include "charptrmatrix.h"
 
 class PredatorAggregator;
-class TimeClass;
-class AreaClass;
 
 class SC {
 public:
@@ -25,8 +23,7 @@ public:
   virtual void Print(ofstream&) const;
   virtual void SetPredatorsAndPreys(PredatorPtrVector&, PreyPtrVector&);
   virtual void Aggregate(int i);
-  void print(ofstream& stomachfile, const TimeClass& time, const PrintInfo& print);
-  virtual void printHeader(ofstream& stomachfile, const PrintInfo& print);
+  void CommandLinePrint(ofstream& stomachfile, const TimeClass& time, const PrintInfo& print);
   virtual void PrintLikelihoodOnStep(ostream& outfile, int time,
     const TimeClass& t, int print_type);
   virtual void PrintLikelihood(ofstream&, const TimeClass& time) {};
@@ -109,13 +106,10 @@ public:
   virtual void Reset(const Keeper* const keeper)
     { Likelihood::Reset(keeper); StomCont->Reset(); };
   virtual void Print(ofstream&) const;
-  virtual void LikelihoodPrint(ofstream&) const {};
   void SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys)
     { StomCont->SetPredatorsAndPreys(Predators, Preys); };
-  void print(ofstream& stomachfile, const TimeClass& time, const PrintInfo& print)
-    { StomCont->print(stomachfile, time, print); };
-  void printHeader(ofstream& stomachfile, const PrintInfo& print)
-    { StomCont->printHeader(stomachfile, print); };
+  void CommandLinePrint(ofstream& stomachfile, const TimeClass& time, const PrintInfo& print)
+    { StomCont->CommandLinePrint(stomachfile, time, print); };
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time)
     { StomCont->PrintLikelihood(outfile, time); };
   virtual void PrintLikelihoodHeader(ofstream& outfile)

@@ -79,9 +79,9 @@ Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* preyl
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
   CommentStream subdata(datafile);
-  ReadWordAndValue(infile, "canndatafile", filename);
+  readWordAndValue(infile, "canndatafile", filename);
   datafile.open(filename);
-  CheckIfFailure(datafile, filename);
+  checkIfFailure(datafile, filename);
   handle.Open(filename);
 
   //reading cannibalism level
@@ -95,7 +95,7 @@ Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* preyl
   //reading alternative food
   subdata >> text >> ws;
   if (strcasecmp(text, "altfood") == 0) {
-    if (!(ReadIndexVector(subdata, altfood)))
+    if (!(readIndexVector(subdata, altfood)))
       handle.Message("Error in cannibalism - wrong format for altfood");
   } else
     handle.Unexpected("altfood", text);
@@ -251,7 +251,7 @@ double Cannibalism::suitfunc(double predlength, double preylength) {
   else
     q = params[1];
 
-  if (iszero(q))
+  if (isZero(q))
     q = 1.0;   //We do not want to divide with 0, no matter what.
   if (q < 0)
     q = -q;    //To avoid getting a big positive number as an argument for exp

@@ -29,8 +29,8 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
 
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
-  ReadWordAndValue(infile, "datafile", datafilename);
-  ReadWordAndValue(infile, "function", functionname);
+  readWordAndValue(infile, "datafile", datafilename);
+  readWordAndValue(infile, "function", functionname);
 
   debug_print = 0;
   functionnumber = 0;
@@ -43,7 +43,8 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
     handle.Message("Unknown function in catchintons");
 
   infile >> ws;
-  if (infile.peek() == 'a') {
+  char c = infile.peek();
+  if ((c == 'a') || (c == 'A')) {
     infile >> text >> ws;
     if (strcasecmp(text, "aggregationlevel") == 0) {
       infile >> yearly >> ws;
@@ -61,8 +62,9 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
     handle.Message("Error in catchintons - aggregationlevel must be 0 or 1");
 
   //JMB - changed to make the reading of epsilon optional
-  if (infile.peek() == 'e')
-    ReadWordAndVariable(infile, "epsilon", epsilon);
+  c = infile.peek();
+  if ((c == 'e') || (c == 'E'))
+    readWordAndVariable(infile, "epsilon", epsilon);
   else
     epsilon = 10;
 
@@ -72,12 +74,12 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
   }
 
   if (readfile == 0)
-    ReadWordAndValue(infile, "areaaggfile", aggfilename);
+    readWordAndValue(infile, "areaaggfile", aggfilename);
 
   datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
+  checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numarea = ReadAggregation(subdata, areas, areaindex);
+  numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -133,7 +135,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
   datafile.open(datafilename);
-  CheckIfFailure(datafile, datafilename);
+  checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   ReadCatchInTonsData(subdata, timeinfo, numarea);
   handle.Close();
@@ -324,7 +326,7 @@ void CatchInTons::ReadCatchInTonsData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  check = CountColumns(infile);
+  check = countColumns(infile);
   if (!(((yearly == 1) && ((check == 4) || (check == 5))) || ((yearly == 0) && (check == 5))))
     handle.Message("Wrong number of columns in inputfile - should be 4 or 5");
 

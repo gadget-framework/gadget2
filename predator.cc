@@ -157,12 +157,12 @@ int Predator::ReadSuitabilityMatrix(CommentStream& infile,
       DoubleMatrix dm;
       ifstream subfile(text);
       CommentStream subcomment(subfile);
-      CheckIfFailure(subfile, text);
+      checkIfFailure(subfile, text);
       handle.Open(text);
       i = 0;
       while (!subfile.eof()) {
         DoubleVector dv;
-        if (!ReadVectorInLine(subcomment, dv))
+        if (!readVectorInLine(subcomment, dv))
           handle.Message("Error in suitability matrix - failed to read data");
 
         dm.AddRows(1, dv.Size());

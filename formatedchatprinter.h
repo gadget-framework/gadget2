@@ -1,16 +1,11 @@
 #ifndef formatedchatprinter_h
 #define formatedchatprinter_h
 
-#include "commentstream.h"
 #include "printer.h"
 #include "mortpredlength.h"
-#include "gadget.h"
 
 class FormatedCHatPrinter;
-class TimeClass;
-class LengthGroupDivision;
 class StockAggregator;
-class AreaClass;
 
 class FormatedCHatPrinter : public Printer {
 public:

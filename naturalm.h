@@ -1,12 +1,12 @@
 #ifndef naturalm_h
 #define naturalm_h
 
+#include "areatime.h"
 #include "commentstream.h"
 #include "timevariableindexvector.h"
 
 class NaturalM;
 class Keeper;
-class TimeClass;
 
 class NaturalM {
 public:

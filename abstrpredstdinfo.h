@@ -3,9 +3,9 @@
 
 #include "bandmatrix.h"
 #include "livesonareas.h"
+#include "areatime.h"
 
 class AbstrPredStdInfo;
-class TimeClass;
 
 class AbstrPredStdInfo : protected LivesOnAreas {
 public:

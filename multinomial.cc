@@ -2,7 +2,7 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
-double Multinomial::LogLikelihood(const DoubleVector& data, const DoubleVector& dist) {
+void Multinomial::CalcLogLikelihood(const DoubleVector& data, const DoubleVector& dist) {
 
   int i;
   double minp = 1.0 / (dist.Size() * bigvalue);
@@ -14,17 +14,15 @@ double Multinomial::LogLikelihood(const DoubleVector& data, const DoubleVector& 
   for (i = 0; i < data.Size(); i++) {
     sumdist += dist[i];
     sumdata += data[i];
-    sumlog += logfactorial(data[i]);
+    sumlog += logFactorial(data[i]);
   }
 
-  if (iszero(sumdist)) {
-    error = 1;
-    return 0.0;
-  }
+  if (isZero(sumdist))
+    return;
 
   tmpsum = 1 / sumdist;
   for (i = 0; i < data.Size(); i++) {
-    if (iszero(data[i]))
+    if (isZero(data[i]))
       likely += 0.0;
     else if (dist[i] * tmpsum >= minp)
       likely -= data[i] * log(dist[i] * tmpsum);
@@ -32,7 +30,6 @@ double Multinomial::LogLikelihood(const DoubleVector& data, const DoubleVector& 
       likely -= data[i] * log(minp);
   }
 
-  sumlog -= logfactorial(sumdata);
+  sumlog -= logFactorial(sumdata);
   loglikelihood += 2.0 * (likely + sumlog);
-  return likely;
 }

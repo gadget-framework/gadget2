@@ -64,14 +64,3 @@ void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {
     numbers[age] = (*Alptr)[age][0].N;
   this->KeepNumbers(numbers);
 }
-
-void SIByAgeOnStep::LikelihoodPrint(ofstream& outfile) const {
-  int i, j;
-  outfile << " Ages\n";
-  for (i = 0; i < Ages.Nrow(); i++) {
-    for (j = 0; j < Ages.Ncol(i); j++)
-      outfile << Ages[i][j] << sep;
-    outfile << endl;
-  }
-  SIOnStep::LikelihoodPrint(outfile);
-}

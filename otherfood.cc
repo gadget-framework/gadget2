@@ -1,6 +1,5 @@
 #include "otherfood.h"
 #include "readfunc.h"
-#include "readmatrix.h"
 #include "lengthprey.h"
 #include "errorhandler.h"
 #include "intvector.h"
@@ -43,7 +42,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   DoubleVector lengths(2, 0);
   infile >> text;
   if (strcasecmp(text, "lengths") == 0) {
-    if (!ReadVector(infile, lengths))
+    if (!readVector(infile, lengths))
       handle.Message("Failed to read lengths");
   } else
     handle.Unexpected("lengths", text);
@@ -55,10 +54,10 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   if (strcasecmp(text, "amounts") == 0) {
     infile >> text >> ws;
     subfile.open(text);
-    CheckIfFailure(subfile, text);
+    checkIfFailure(subfile, text);
     handle.Open(text);
 
-    if (!ReadAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))
+    if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))
       handle.Message("Failed to read otherfood amounts");
     amount.Inform(keeper);
 

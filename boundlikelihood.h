@@ -8,10 +8,6 @@
 #include "errorhandler.h"
 #include "parameter.h"
 
-class Keeper;
-class TimeClass;
-class AreaClass;
-
 class BoundLikelihood : public Likelihood {
 public:
   BoundLikelihood(CommentStream& infile, const AreaClass* const Area,
@@ -21,7 +17,6 @@ public:
   virtual void AddToLikelihood(const TimeClass* const TimeInfo) {};
   virtual void Print(ofstream&) const {};
   virtual void AddToLikelihoodTimeAndKeeper(const TimeClass* const TimeInfo, Keeper* const keeper);
-  virtual void LikelihoodPrintKeeper(ofstream& outfile, const Keeper* const keeper) const;
 protected:
   IntVector switchnr;
   DoubleVector upperbound;
