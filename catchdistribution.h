@@ -196,7 +196,6 @@ private:
   IntVector maxcol;
   int minrow;
   int maxrow;
-  int stocktype;
   /**
    * \brief This is the LengthGroupDivision used to store length information
    */

@@ -25,7 +25,6 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   : BaseClass(givenname), stray(0), spawner(0), renewal(0), maturity(0), transition(0),
     migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), naturalm(0) {
 
-  type = STOCKTYPE;
   doesgrow = doeseat = iseaten = doesmigrate = 0;
   doesmove = doesrenew = doesmature = doesspawn = doesstray = 0;
   int i, tmpint;

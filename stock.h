@@ -24,8 +24,6 @@ class RenewalData;
 class SpawnData;
 class StrayData;
 
-enum StockType { STOCKTYPE = 1, LENSTOCKTYPE };
-
 /**
  * \class Stock
  * \brief This is the class used to model a stock within the Gadget model
@@ -201,11 +199,6 @@ public:
   void updateMatureStockWithTags(const TimeClass* const TimeInfo);
   void updateTransitionStockWithTags(const TimeClass* const TimeInfo);
   void updateStrayStockWithTags(const TimeClass* const TimeInfo);
-  /**
-   * \brief This will return the type of stock class
-   * \return type
-   */
-  StockType Type() { return type; };
 protected:
   AgeBandMatrixPtrVector Alkeys;
   AgeBandMatrixRatioPtrVector tagAlkeys;
@@ -236,10 +229,6 @@ protected:
   int doesmigrate;
   int doesstray;
   int birthdate;
-  /**
-   * \brief This denotes what type of stock class has been created
-   */
-  StockType type;
 };
 
 #endif

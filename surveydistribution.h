@@ -182,7 +182,6 @@ private:
   IntVector maxcol;
   int minrow;
   int maxrow;
-  int stocktype;
 };
 
 #endif

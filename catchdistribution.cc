@@ -32,7 +32,6 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   timeindex = 0;
   illegal = 0;
-  stocktype = 0;
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
 
@@ -494,11 +493,6 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
       handle.logFailure("Error in catchdistribution - unrecognised stock", stocknames[i]);
   }
 
-  stocktype = stocks[0]->Type();
-  for (i = 0; i < stocks.Size(); i++)
-    if (stocks[i]->Type() != stocktype)
-      handle.logFailure("Error in catchdistribution - trying to mix stock types");
-
   aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
   //Limits (inclusive) for traversing the matrices where required
   mincol = aggregator->getMinCol();
@@ -511,11 +505,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    if (stocktype == STOCKTYPE)
-      aggregator->Sum(TimeInfo);
-    else
-      handle.logFailure("Error in catchdistribution - unrecognised stocktype", stocktype);
-
+    aggregator->Sum(TimeInfo);
     switch(functionnumber) {
       case 1:
         l = calcLikMultinomial();

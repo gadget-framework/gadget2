@@ -28,7 +28,6 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   readWordAndValue(infile, "datafile", datafilename);
 
   index = 0;
-  stocktype = 0;
   fittype = new char[MaxStrLength];
   strncpy(fittype, "", MaxStrLength);
   liketype = new char[MaxStrLength];
@@ -361,11 +360,6 @@ void SurveyDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVect
 
   }
 
-  stocktype = stocks[0]->Type();
-  for (i = 0; i < stocks.Size(); i++)
-    if (stocks[i]->Type() != stocktype)
-      handle.logFailure("Error in surveydistribution - trying to mix stock types");
-
   aggregator = new StockAggregator(stocks, LgrpDiv, areas, ages);
 
   //Limits (inclusive) for traversing the matrices.
@@ -417,12 +411,8 @@ void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   if (!(AAT.AtCurrentTime(TimeInfo)))
     return;
 
-  if (stocktype == STOCKTYPE)
-    aggregator->Sum();
-  else
-    handle.logFailure("Error in surveydistribution - unrecognised stocktype", stocktype);
-
   double l = 0.0;
+  aggregator->Sum();
   handle.logMessage("Calculating likelihood score for surveydistribution component", this->Name());
 
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns only one element.
