@@ -92,7 +92,7 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	surveyindices.o migrationpenalty.o recapture.o stock.o readaggregation.o \
 	migvariables.o multinomial.o totalpredator.o understocking.o recstatistics.o \
 	transition.o otherfood.o selectfunc.o optinfo.o tags.o likelihoodprinter.o \
-	catchintons.o interruptinterface.o interrupthandler.o naturalm.o renewal.o \
+	catchinkilos.o interruptinterface.o interrupthandler.o naturalm.o renewal.o \
 	taggrow.o initialinputfile.o optinfohooke.o optinfobfgs.o optinfosimann.o \
 	popratio.o popinfo.o popinfomemberfunctions.o agebandmatrixratio.o \
 	summaryprinter.o agebandmatrixratiomemberfunctions.o

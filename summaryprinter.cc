@@ -56,7 +56,7 @@ void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
     switch(like[i]->Type()) {
       case CATCHDISTRIBUTIONLIKELIHOOD:
       case CATCHSTATISTICSLIKELIHOOD:
-      case CATCHINTONSLIKELIHOOD:
+      case CATCHINKILOSLIKELIHOOD:
       case SURVEYDISTRIBUTIONLIKELIHOOD:
       case STOCKDISTRIBUTIONLIKELIHOOD:
       case STOMACHCONTENTLIKELIHOOD:

@@ -1,4 +1,4 @@
-#include "catchintons.h"
+#include "catchinkilos.h"
 #include "readfunc.h"
 #include "readword.h"
 #include "readaggregation.h"
@@ -11,9 +11,9 @@
 
 extern ErrorHandler handle;
 
-CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const Area,
+CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, const char* name)
-  : Likelihood(CATCHINTONSLIKELIHOOD, weight, name) {
+  : Likelihood(CATCHINKILOSLIKELIHOOD, weight, name) {
 
   int i, j;
   int numarea = 0;
@@ -118,7 +118,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const Area,
   datafile.open(datafilename, ios::in);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  readCatchInTonsData(subdata, TimeInfo, numarea);
+  readCatchInKilosData(subdata, TimeInfo, numarea);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -127,7 +127,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const Area,
   likelihoodValues.AddRows(obsDistribution.Nrow(), numarea, 0.0);
 }
 
-void CatchInTons::Reset(const Keeper* const keeper) {
+void CatchInKilos::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
   int i, j;
@@ -137,7 +137,7 @@ void CatchInTons::Reset(const Keeper* const keeper) {
   handle.logMessage("Reset catchinkilos component", this->getName());
 }
 
-void CatchInTons::Print(ofstream& outfile) const {
+void CatchInKilos::Print(ofstream& outfile) const {
   int i;
 
   outfile << "\nCatch in Kilos " << this->getName() << " - likelihood value " << likelihood
@@ -152,7 +152,7 @@ void CatchInTons::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-double CatchInTons::calcLikSumSquares(const TimeClass* const TimeInfo) {
+double CatchInKilos::calcLikSumSquares(const TimeClass* const TimeInfo) {
   int a, a2, f, p;
   double totallikelihood = 0.0;
   PopPredator* pred;
@@ -178,7 +178,7 @@ double CatchInTons::calcLikSumSquares(const TimeClass* const TimeInfo) {
   return totallikelihood;
 }
 
-void CatchInTons::addLikelihood(const TimeClass* const TimeInfo) {
+void CatchInKilos::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
@@ -200,7 +200,7 @@ void CatchInTons::addLikelihood(const TimeClass* const TimeInfo) {
   }
 }
 
-CatchInTons::~CatchInTons() {
+CatchInKilos::~CatchInKilos() {
   int i;
   for (i = 0; i < stocknames.Size(); i++)
     delete[] stocknames[i];
@@ -211,7 +211,7 @@ CatchInTons::~CatchInTons() {
   delete[] functionname;
 }
 
-void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
+void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, k, found;
 
   for (i = 0; i < fleetnames.Size(); i++) {
@@ -260,7 +260,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
     handle.logFailure("Error in catchinkilos - failed to match stocks to fleets");
 }
 
-void CatchInTons::readCatchInTonsData(CommentStream& infile,
+void CatchInKilos::readCatchInKilosData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea) {
 
   int i;
@@ -352,7 +352,7 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
   handle.logMessage("Read catchinkilos data file - number of entries", count);
 }
 
-void CatchInTons::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
+void CatchInKilos::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
   if (!AAT.AtCurrentTime(TimeInfo))
     return;
 
@@ -383,7 +383,7 @@ void CatchInTons::LikelihoodPrint(ofstream& outfile, const TimeClass* const Time
   }
 }
 
-void CatchInTons::SummaryPrint(ofstream& outfile) {
+void CatchInKilos::SummaryPrint(ofstream& outfile) {
   int year, area;
 
   for (year = 0; year < likelihoodValues.Nrow(); year++) {

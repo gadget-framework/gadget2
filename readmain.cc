@@ -19,7 +19,7 @@
 #include "stomachcontent.h"
 #include "recapture.h"
 #include "migrationpenalty.h"
-#include "catchintons.h"
+#include "catchinkilos.h"
 #include "boundlikelihood.h"
 #include "surveydistribution.h"
 #include "readword.h"
@@ -263,7 +263,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       likevec[i] = new Recaptures(infile, Area, TimeInfo, weight, tagvec, name);
 
     } else if ((strcasecmp(type, "catchintons") == 0) || (strcasecmp(type, "catchinkilos") == 0)) {
-      likevec[i] = new CatchInTons(infile, Area, TimeInfo, weight, name);
+      likevec[i] = new CatchInKilos(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "migrationpenalty") == 0) {
       likevec[i] = new MigrationPenalty(infile, weight, name);

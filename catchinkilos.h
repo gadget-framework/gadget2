@@ -1,5 +1,5 @@
-#ifndef catchintons_h
-#define catchintons_h
+#ifndef catchinkilos_h
+#define catchinkilos_h
 
 #include "likelihood.h"
 #include "actionattimes.h"
@@ -8,69 +8,67 @@
 #include "intmatrix.h"
 
 /**
- * \class CatchInTons
+ * \class CatchInKilos
  * \brief This is the class used to calculate a likelihood score based on the biomass of stocks caught by fleets
  *
  * This class calculates a likelihood score based on the difference between the biomass caught according to the model and the biomass caught by fleets, according to the landings data.  This should lead to a zero likelihood score for a fleet that has been declared as a TotalPredator, since catch for that fleet should exactly match the landings data.  However, for a fleet that has been declared as a LinearPredator the model will be calculating the catch based on model parameters and so will probably lead to a difference between the modelled landings and actual landed catch.
- *
- * \note This class actually works on the biomass in kilos, and will be renamed at some point
  */
-class CatchInTons : public Likelihood {
+class CatchInKilos : public Likelihood {
 public:
   /**
-   * \brief This is the CatchInTons constructor
-   * \param infile is the CommentStream to read the CatchInTons data from
+   * \brief This is the CatchInKilos constructor
+   * \param infile is the CommentStream to read the CatchInKilos data from
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param weight is the weight for the likelihood component
    * \param name is the name for the likelihood component
    */
-  CatchInTons(CommentStream& infile, const AreaClass* const Area,
+  CatchInKilos(CommentStream& infile, const AreaClass* const Area,
     const TimeClass* const TimeInfo, double weight, const char* name);
   /**
-   * \brief This is the default CatchInTons destructor
+   * \brief This is the default CatchInKilos destructor
    */
-  ~CatchInTons();
+  ~CatchInKilos();
   /**
-   * \brief This function will reset the CatchInTons likelihood information
+   * \brief This function will reset the CatchInKilos likelihood information
    * \param keeper is the Keeper for the current model
    */
   virtual void Reset(const Keeper* const keeper);
   /**
-   * \brief This function will print the summary CatchInTons likelihood information
+   * \brief This function will print the summary CatchInKilos likelihood information
    * \param outfile is the ofstream that all the model information gets sent to
    */
   virtual void Print(ofstream& outfile) const;
   /**
-   * \brief This function will print summary information from each CatchInTons likelihood calculation
+   * \brief This function will print summary information from each CatchInKilos likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
   virtual void SummaryPrint(ofstream& outfile);
   /**
-   * \brief This function will print information from each CatchInTons calculation
+   * \brief This function will print information from each CatchInKilos calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
   /**
-   * \brief This function will calculate the likelihood score for the CatchInTons component
+   * \brief This function will calculate the likelihood score for the CatchInKilos component
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void addLikelihood(const TimeClass* const TimeInfo);
   /**
-   * \brief This will select the fleets and stocks required to calculate the CatchInTons likelihood score
+   * \brief This will select the fleets and stocks required to calculate the CatchInKilos likelihood score
    * \param Fleets is the FleetPtrVector of all the available fleets
    * \param Stocks is the StockPtrVector of all the available stocks
    */
   void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
   /**
-   * \brief This function will read the CatchInTons data from the input file
-   * \param infile is the CommentStream to read the CatchInTons data from
+   * \brief This function will read the CatchInKilos data from the input file
+   * \param infile is the CommentStream to read the CatchInKilos data from
    * \param TimeInfo is the TimeClass for the current model
    * \param numarea is the number of areas that the likelihood data covers
    */
-  void readCatchInTonsData(CommentStream& infile, const TimeClass* TimeInfo, int numarea);
+  void readCatchInKilosData(CommentStream& infile, const TimeClass* TimeInfo, int numarea);
   /**
    * \brief This function will calculate the likelihood score for the current timestep based on a sum of squares function
    * \param TimeInfo is the TimeClass for the current model

@@ -172,7 +172,7 @@ public:
   int checkLogFile() { return uselog; };
   /**
    * \brief This function will log information about the finish of the current model run to std::cout and a log file if one exists
-   * \param opt is a flag to denote whether the current model run was an optimising run or not
+   * \param opt is a flag to denote whether the current model run is an optimising run or not
    */
   void logFinish(int opt);
   /**

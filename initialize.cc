@@ -28,7 +28,7 @@
 #include "stockdistribution.h"
 #include "surveydistribution.h"
 #include "migrationpenalty.h"
-#include "catchintons.h"
+#include "catchinkilos.h"
 
 extern ErrorHandler handle;
 
@@ -135,9 +135,9 @@ void Ecosystem::Initialise() {
         handle.logMessage("Initialising likelihood component", likevec[i]->getName());
         ((MigrationPenalty*)likevec[i])->setStocks(stockvec);
         break;
-      case CATCHINTONSLIKELIHOOD:
+      case CATCHINKILOSLIKELIHOOD:
         handle.logMessage("Initialising likelihood component", likevec[i]->getName());
-        ((CatchInTons*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
+        ((CatchInKilos*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case RECSTATISTICSLIKELIHOOD:
         handle.logMessage("Initialising likelihood component", likevec[i]->getName());

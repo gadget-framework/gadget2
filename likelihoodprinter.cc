@@ -109,7 +109,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
       case CATCHSTATISTICSLIKELIHOOD:
         outfile << "\n; year-step-area-age-number-mean[-stddev]\n";
         break;
-      case CATCHINTONSLIKELIHOOD:
+      case CATCHINKILOSLIKELIHOOD:
         outfile << "\n; year-step-area-fleet-number\n";
         break;
       case SURVEYDISTRIBUTIONLIKELIHOOD:
