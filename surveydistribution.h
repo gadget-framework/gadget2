@@ -48,10 +48,11 @@ public:
    */
   void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
   /**
-   * \brief This function will print information from each SurveyDistribution likelihood calculation
+   * \brief This function will print information from each SurveyDistribution calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
+   * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile);
+  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
   /**
    * \brief This function will print summary information from each SurveyDistribution likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
@@ -170,7 +171,7 @@ private:
   /**
    * \brief This is the index of the timesteps for the likelihood component data
    */
-  int index;
+  int timeindex;
   /**
    * \brief This is the value of epsilon used when calculating the likelihood score
    */

@@ -8,6 +8,8 @@
 #include "stockpreyfullprinter.h"
 #include "predpreystdprinter.h"
 #include "stockfullprinter.h"
+#include "likelihoodprinter.h"
+#include "summaryprinter.h"
 #include "surveyindices.h"
 #include "understocking.h"
 #include "catchdistribution.h"
@@ -185,6 +187,10 @@ void Ecosystem::readPrinters(CommentStream& infile) {
       printvec.resize(1, new PredPreyStdLengthPrinter(infile, Area, TimeInfo));
     else if (strcasecmp(type, "predpreystdageprinter") == 0)
       printvec.resize(1, new PredPreyStdAgePrinter(infile, Area, TimeInfo));
+    else if (strcasecmp(type, "likelihoodprinter") == 0)
+      printvec.resize(1, new LikelihoodPrinter(infile, TimeInfo));
+    else if (strcasecmp(type, "summaryprinter") == 0)
+      printvec.resize(1, new SummaryPrinter(infile));
 
     else if (strcasecmp(type, "formatedstockprinter") == 0)
       handle.Message("The formatedstockprinter printer class is no longer supported");
@@ -196,8 +202,6 @@ void Ecosystem::readPrinters(CommentStream& infile) {
       handle.Message("The mortprinter printer class is no longer supported");
     else if (strcasecmp(type, "biomassprinter") == 0)
       handle.Message("The biomassprinter printer class is no longer supported");
-    else if (strcasecmp(type, "likelihoodprinter") == 0)
-      handle.Message("The likelihoodprinter printer class is no longer supported");
     else if (strcasecmp(type, "formatedcatchprinter") == 0)
       handle.Message("The formatedcatchprinter printer class is no longer supported");
 

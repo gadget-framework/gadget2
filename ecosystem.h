@@ -110,22 +110,6 @@ public:
    */
   void writeParamsInColumns(const char* const filename, int prec) const;
   /**
-   * \brief This function will write information about the likelihood components to file
-   * \param filename is the name of the file to write the model information to
-   */
-  void writeLikelihoodInformation(const char* filename) const;
-  /**
-   * \brief This function will write information about a single likelihood component to file
-   * \param filename is the name of the file to write the model information to
-   * \param id is the identifier of the likelihood component to write to file
-   */
-  void writeLikelihoodInformation(const char* filename, int id) const;
-  /**
-   * \brief This function will write summary information about the likelihood components to file
-   * \param filename is the name of the file to write the model information to
-   */
-  void writeLikeSummaryInformation(const char* filename) const;
-  /**
    * \brief This function will display information about the optimised values of the parameters
    */
   void writeOptValues() const;

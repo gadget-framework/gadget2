@@ -97,9 +97,9 @@ int main(int aNumber, char* const aVector[]) {
     }
   }
 
-  const char* inputdir = getenv("GADGET_DATA_DIR");
+  char* inputdir = getenv("GADGET_DATA_DIR");
   if (inputdir == 0)
-    inputdir = ".";
+    inputdir = workingdir;
 
   if (chdir(inputdir) != 0) {
     cerr << "Failed to change working directory to\n" << inputdir << endl;
@@ -161,15 +161,6 @@ int main(int aNumber, char* const aVector[]) {
   }
 
   handle.logMessage("");  //write blank line to log file
-  if (MainInfo.printLikelihood()) {
-    if (MainInfo.printOneComponent() == -1)
-      EcoSystem->writeLikelihoodInformation(MainInfo.getPrintLikelihoodFile());
-    else
-      EcoSystem->writeLikelihoodInformation(MainInfo.getPrintLikelihoodFile(), MainInfo.printOneComponent());
-  }
-
-  if (MainInfo.printLikeSummary())
-    EcoSystem->writeLikeSummaryInformation(MainInfo.getPrintLikeSummaryFile());
   if (MainInfo.printFinal())
     EcoSystem->writeStatus(MainInfo.getPrintFinalFile());
 

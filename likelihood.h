@@ -57,12 +57,13 @@ public:
    * \brief This function will print the summary likelihood information
    * \param outfile is the ofstream that all the model information gets sent to
    */
-  virtual void Print(ofstream& outfile) const = 0;
+  virtual void Print(ofstream& outfile) {};
   /**
    * \brief This function will print information from each likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
+   * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile) {};
+  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {};
   /**
    * \brief This function will print summary information from each likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to

@@ -167,7 +167,7 @@ double CatchInTons::calcLikSumSquares(const TimeClass* const TimeInfo) {
       }
     }
 
-    if ((!yearly) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
+    if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
       likelihoodValues[timeindex][a] +=
         (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon))
         * (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon));
@@ -352,30 +352,35 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
   handle.logMessage("Read catchintons data file - number of entries", count);
 }
 
-void CatchInTons::LikelihoodPrint(ofstream& outfile) {
-  int y, a, i;
+void CatchInTons::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
+  if (!AAT.AtCurrentTime(TimeInfo))
+    return;
 
-  outfile << "\nCatch in Tons " << this->Name() << "\n\nLikelihood " << likelihood
-    << "\nFunction " << functionname << "\nWeight " << weight << "\nStock names:";
-  for (i = 0; i < stocknames.Size(); i++)
-    outfile << sep << stocknames[i];
-  outfile << "\nFleet names:";
-  for (i = 0; i < fleetnames.Size(); i++)
-    outfile << sep << fleetnames[i];
-  outfile << "\n\nLandings data:\n";
+  if ((yearly == 1) && (TimeInfo->CurrentStep() != TimeInfo->StepsInYear()))
+    return;  //if data is aggregated into years then we need the last timestep
 
-  for (y = 0; y < Years.Size(); y++) {
-    outfile << "\nYear " << Years[y];
-    if (!(yearly))
-      outfile << " and step " << Steps[y];
+  int t, area, age, len;
+  t = timeindex - 1; //timeindex was increased before this is called
 
-    for (a = 0; a < obsDistribution.Ncol(y); a++)
-      outfile << "\nInternal area: " << a << "\nMeasured catch is " << obsDistribution[y][a]
-        << " modelled catch is " << modelDistribution[y][a] << " likelihood value " << likelihoodValues[y][a];
+  if ((t >= Years.Size()) || t < 0)
+    handle.logFailure("Error in catchintons - invalid timestep", t);
 
-    outfile << endl;
+  for (area = 0; area < modelDistribution.Ncol(t); area++) {
+    if (yearly == 0) {
+      outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
+        << Steps[t] << sep << setw(printwidth) << areaindex[area];
+    } else {
+      outfile << setw(lowwidth) << Years[t] << "  all "
+        << setw(printwidth) << areaindex[area];
+    }
+    if (fleetnames.Size() == 1) {
+      outfile << sep << setw(printwidth) << fleetnames[0] << sep;
+    } else {
+      outfile << "  all     ";
+    }
+    outfile << setprecision(largeprecision) << setw(largewidth)
+      << modelDistribution[t][area] << endl;
   }
-  outfile.flush();
 }
 
 void CatchInTons::SummaryPrint(ofstream& outfile) {
@@ -390,15 +395,11 @@ void CatchInTons::SummaryPrint(ofstream& outfile) {
           << sep << setprecision(largeprecision) << setw(largewidth)
           << likelihoodValues[year][area] << endl;
       } else {
-        if (isZero(likelihoodValues[year][area])) {
-          // assume that this isnt the last step for that year and ignore
-        } else {
-          outfile << setw(lowwidth) << Years[year] << "  all "
-            << setw(printwidth) << areaindex[area] << sep
-            << setw(largewidth) << this->Name() << sep << setw(smallwidth) << weight
-            << sep << setprecision(largeprecision) << setw(largewidth)
-            << likelihoodValues[year][area] << endl;
-        }
+        outfile << setw(lowwidth) << Years[year] << "  all "
+          << setw(printwidth) << areaindex[area] << sep
+          << setw(largewidth) << this->Name() << sep << setw(smallwidth) << weight
+          << sep << setprecision(largeprecision) << setw(largewidth)
+          << likelihoodValues[year][area] << endl;
       }
     }
   }

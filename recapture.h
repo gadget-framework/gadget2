@@ -40,16 +40,17 @@ public:
    */
   virtual void Print(ofstream& outfile) const;
   /**
-   * \brief This function will print information from each Recaptures likelihood calculation
-   * \param outfile is the ofstream that all the model likelihood information gets sent to
-   */
-  virtual void LikelihoodPrint(ofstream& outfile);
-  /**
    * \brief This will select the fleets and stocks required to calculate the Recaptures likelihood score
    * \param Fleets is the FleetPtrVector of all the available fleets
    * \param Stocks is the StockPtrVector of all the available stocks
    */
   virtual void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
+  /**
+   * \brief This function will print information from each Recaptures calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   * \param TimeInfo is the TimeClass for the current model
+   */
+  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
 private:
   /**
    * \brief This function will read the Recaptures data from the input file

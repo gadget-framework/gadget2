@@ -380,87 +380,28 @@ void CatchDistribution::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
-  int i, j, year, area;
+void CatchDistribution::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  outfile << "\nCatch Distribution " << this->Name() << "\n\nLikelihood " << likelihood
-    << "\nFunction " << functionname << "\nWeight " << weight << "\nStock names:";
-  for (i = 0; i < stocknames.Size(); i++)
-    outfile << sep << stocknames[i];
-  outfile << "\nInternal areas:";
-  for (i  = 0; i < areas.Nrow(); i++) {
-    outfile << endl;
-    for (j = 0; j < areas.Ncol(i); j++)
-      outfile << areas[i][j] << sep;
-  }
-  outfile << "\nAges:";
-  for (i  = 0; i < ages.Nrow(); i++) {
-    outfile << endl;
-    for (j = 0; j < ages.Ncol(i); j++)
-      outfile << ages[i][j] << sep;
-  }
-  outfile << "\nLengths:";
-  for (i = 0; i < lengths.Size(); i++)
-    outfile << sep << lengths[i];
-  outfile << "\nFleet names:";
-  for (i = 0; i < fleetnames.Size(); i++)
-    outfile << sep << fleetnames[i];
-  outfile << endl;
+  if (!AAT.AtCurrentTime(TimeInfo))
+    return;
 
-  switch(functionnumber) {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 7:
-      break;
-    case 5:
-      outfile << "\tMultivariate normal distribution parameters: sigma " << sigma;
-      for (i = 0; i < lag; i++)
-        outfile << " param" << i + 1 << " " << params[i];
-      outfile << endl;
-      break;
-    case 6:
-      outfile << "\tMultivariate logistic distribution parameter: sigma " << sigma << endl;
-      break;
-    default:
-      handle.logWarning("Warning in catchdistribution - unrecognised function", functionname);
-      break;
-  }
+  int t, area, age, len;
+  t = timeindex - 1; //timeindex was increased before this is called
 
-  //aggregator->Print(outfile);
-  outfile << "\nAge length distribution data:\n";
-  for (year = 0; year < obsDistribution.Nrow(); year++) {
-    outfile << "\nYear " << Years[year] << " and step " << Steps[year];
-    for (area = 0; area < obsDistribution.Ncol(year); area++) {
-      outfile << "\nInternal area: " << area << "\nObserved measurements";
-      for (i = 0; i < obsDistribution[year][area]->Nrow(); i++) {
-        outfile << endl;
-        for (j = 0; j < obsDistribution[year][area]->Ncol(i); j++) {
-          outfile.width(smallwidth);
-          outfile.precision(smallprecision);
-          outfile << sep << (*obsDistribution[year][area])[i][j];
-        }
-      }
-      outfile << "\nModelled measurements";
-      for (i = 0; i < modelDistribution[year][area]->Nrow(); i++) {
-        outfile << endl;
-        for (j = 0; j < modelDistribution[year][area]->Ncol(i); j++) {
-          outfile.width(smallwidth);
-          outfile.precision(smallprecision);
-          outfile << sep << (*modelDistribution[year][area])[i][j];
-        }
+  if ((t >= Years.Size()) || t < 0)
+    handle.logFailure("Error in catchdistribution - invalid timestep", t);
+
+  for (area = 0; area < modelDistribution.Ncol(t); area++) {
+    for (age = 0; age < modelDistribution[t][area]->Nrow(); age++) {
+      for (len = 0; len < modelDistribution[t][area]->Ncol(age); len++) {
+        outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
+          << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
+          << setw(printwidth) << ageindex[age] << sep << setw(printwidth)
+          << lenindex[len] << sep << setprecision(largeprecision) << setw(largewidth)
+          << (*modelDistribution[t][area])[age][len] << endl;
       }
     }
-    outfile << "\nLikelihood values:";
-    for (area = 0; area < obsDistribution.Ncol(year); area++) {
-      outfile.width(smallwidth);
-      outfile.precision(smallprecision);
-      outfile << sep << likelihoodValues[year][area];
-    }
-    outfile << endl;
   }
-  outfile.flush();
 }
 
 void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
@@ -550,46 +491,46 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 }
 
 double CatchDistribution::calcLikMultinomial() {
-  int area, age, len, nareas;
+  int area, age, len;
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   DoubleMatrixPtrVector Dist(alptr->Size());
-  for (nareas = 0; nareas < areas.Nrow(); nareas++) {
-    Dist[nareas] = new DoubleMatrix(aggregator->numAgeGroups(), aggregator->numLengthGroups(), 0.0);
+  for (area = 0; area < areas.Nrow(); area++) {
+    Dist[area] = new DoubleMatrix(aggregator->numAgeGroups(), aggregator->numLengthGroups(), 0.0);
 
-    for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++)
-      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++)
-        (*Dist[nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
+        (*Dist[area])[age][len] = ((*alptr)[area][age][len]).N;
   }
 
   //The object MN does most of the work, accumulating likelihood
   Multinomial MN(epsilon);
-  for (nareas = 0; nareas < Dist.Size(); nareas++) {
-    likelihoodValues[timeindex][nareas] = 0.0;
-    if (obsDistribution[timeindex][nareas]->Nrow() == 1) {
+  for (area = 0; area < Dist.Size(); area++) {
+    likelihoodValues[timeindex][area] = 0.0;
+    if (obsDistribution[timeindex][area]->Nrow() == 1) {
       //If there is only one agegroup, we calculate loglikelihood
       //based on the length group division
-      likelihoodValues[timeindex][nareas] += MN.calcLogLikelihood((*obsDistribution[timeindex][nareas])[0], (*Dist[nareas])[0]);
-      for (len = 0; len < obsDistribution[timeindex][nareas]->Ncol(0); len++)
-        (*modelDistribution[timeindex][nareas])[0][len] = (*Dist[nareas])[0][len];
+      likelihoodValues[timeindex][area] += MN.calcLogLikelihood((*obsDistribution[timeindex][area])[0], (*Dist[area])[0]);
+      for (len = 0; len < obsDistribution[timeindex][area]->Ncol(0); len++)
+        (*modelDistribution[timeindex][area])[0][len] = (*Dist[area])[0][len];
 
     } else {
       //Calculate loglikelihood based on age distribution within each length
       //group. To be able to use the Multinomial class, we must organize the
       //data such that we get vectors with the age group distribution.
-      for (len = 0; len < Dist[nareas]->Ncol(0); len++) {
-        DoubleVector dist(Dist[nareas]->Nrow());
-        DoubleVector data(Dist[nareas]->Nrow());
-        for (area = 0; area < Dist[nareas]->Nrow(); area++) {
-          dist[area] = (*Dist[nareas])[area][len];
-          data[area] = (*obsDistribution[timeindex][nareas])[area][len];
+      for (len = 0; len < Dist[area]->Ncol(0); len++) {
+        DoubleVector dist(Dist[area]->Nrow());
+        DoubleVector data(Dist[area]->Nrow());
+        for (age = 0; age < dist.Size(); age++) {
+          dist[age] = (*Dist[area])[age][len];
+          data[age] = (*obsDistribution[timeindex][area])[age][len];
         }
-        likelihoodValues[timeindex][nareas] += MN.calcLogLikelihood(data, dist);
-        for (area = 0; area < dist.Size(); area++)
-          (*modelDistribution[timeindex][nareas])[area][len] = dist[area];
+        likelihoodValues[timeindex][area] += MN.calcLogLikelihood(data, dist);
+        for (age = 0; age < dist.Size(); age++)
+          (*modelDistribution[timeindex][area])[age][len] = dist[age];
       }
     }
-    delete Dist[nareas];
+    delete Dist[area];
   }
   return MN.returnLogLikelihood();
 }
@@ -604,53 +545,50 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
    * for the stock and the catch data.*/
 
   double totallikelihood = 0.0;
-  int age, length, nareas;
+  int age, length, area;
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
-  for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
-    likelihoodValues[timeindex][nareas] = 0.0;
+  for (area = 0; area < (*alptr).Size(); area++) {
+    likelihoodValues[timeindex][area] = 0.0;
     if (TimeInfo->CurrentStep() == 1) { //start of a new year
-      (*calc_c[nareas]).setElementsTo(0.0);
-      (*obs_c[nareas]).setElementsTo(0.0);
+      (*calc_c[area]).setElementsTo(0.0);
+      (*obs_c[area]).setElementsTo(0.0);
     }
 
     for (age = minrow; age <= maxrow; age++) { //test, mnaa
       for (length = mincol[age]; length <= maxcol[age]; length++) { //test, mnaa
-        (*modelDistribution[timeindex][nareas])[age][length] =
-          (*alptr)[nareas][age][length].N;
-        (*calc_c[nareas])[age][length] +=
-          (*modelDistribution[timeindex][nareas])[age][length];
-        (*obs_c[nareas])[age][length] +=
-          (*obsDistribution[timeindex][nareas])[age][length];
+        (*modelDistribution[timeindex][area])[age][length] = (*alptr)[area][age][length].N;
+        (*calc_c[area])[age][length] += (*modelDistribution[timeindex][area])[age][length];
+        (*obs_c[area])[age][length] += (*obsDistribution[timeindex][area])[age][length];
       }
     }
 
     if (yearly == 0) { //calculate likelihood on all steps
       for (age = minrow; age <= maxrow; age++) { //test, mnaa
         for (length = mincol[age]; length <= maxcol[age]; length++) { //test, mnaa
-          likelihoodValues[timeindex][nareas] +=
-            ((*modelDistribution[timeindex][nareas])[age][length] -
-            (*obsDistribution[timeindex][nareas])[age][length]) *
-            ((*modelDistribution[timeindex][nareas])[age][length] -
-            (*obsDistribution[timeindex][nareas])[age][length]) /
-            absolute(((*modelDistribution[timeindex][nareas])[age][length] + epsilon));
+          likelihoodValues[timeindex][area] +=
+            ((*modelDistribution[timeindex][area])[age][length] -
+            (*obsDistribution[timeindex][area])[age][length]) *
+            ((*modelDistribution[timeindex][area])[age][length] -
+            (*obsDistribution[timeindex][area])[age][length]) /
+            absolute(((*modelDistribution[timeindex][area])[age][length] + epsilon));
         }
       }
-      totallikelihood += likelihoodValues[timeindex][nareas];
+      totallikelihood += likelihoodValues[timeindex][area];
 
     } else { //calculate likelihood on year basis
       if (TimeInfo->CurrentStep() < TimeInfo->StepsInYear())
-        likelihoodValues[timeindex][nareas] = 0.0;
+        likelihoodValues[timeindex][area] = 0.0;
       else { //last step in year, is to calc likelihood contribution
         for (age = minrow; age <= maxrow; age++) { //test, mnaa
           for (length = mincol[age]; length <= maxcol[age]; length++) { //test, mnaa
-            likelihoodValues[timeindex][nareas] +=
-              ((*calc_c[nareas])[age][length] - (*obs_c[nareas])[age][length]) *
-              ((*calc_c[nareas])[age][length] - (*obs_c[nareas])[age][length]) /
-              absolute(((*calc_c[nareas])[age][length] + epsilon));
+            likelihoodValues[timeindex][area] +=
+              ((*calc_c[area])[age][length] - (*obs_c[area])[age][length]) *
+              ((*calc_c[area])[age][length] - (*obs_c[area])[age][length]) /
+              absolute(((*calc_c[area])[age][length] + epsilon));
           }
         }
-        totallikelihood += likelihoodValues[timeindex][nareas];
+        totallikelihood += likelihoodValues[timeindex][area];
       }
     }
   }
@@ -663,50 +601,47 @@ double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
   //This function is scale independent.
 
   double totallikelihood = 0.0;
-  int age, length, nareas;
+  int age, length, area;
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
-  for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
-    likelihoodValues[timeindex][nareas] = 0.0;
+  for (area = 0; area < (*alptr).Size(); area++) {
+    likelihoodValues[timeindex][area] = 0.0;
     if (TimeInfo->CurrentStep() == 1) { //start of a new year
-      (*calc_c[nareas]).setElementsTo(0.0);
-      (*obs_c[nareas]).setElementsTo(0.0);
+      (*calc_c[area]).setElementsTo(0.0);
+      (*obs_c[area]).setElementsTo(0.0);
     }
 
     for (age = minrow; age <= maxrow; age++) {
       for (length = mincol[age]; length <= maxcol[age]; length++) {
-        (*modelDistribution[timeindex][nareas])[age][length] =
-          (*alptr)[nareas][age][length].N;
-        (*calc_c[nareas])[age][length] +=
-          (*modelDistribution[timeindex][nareas])[age][length];
-        (*obs_c[nareas])[age][length] +=
-          (*obsDistribution[timeindex][nareas])[age][length];
+        (*modelDistribution[timeindex][area])[age][length] = (*alptr)[area][age][length].N;
+        (*calc_c[area])[age][length] += (*modelDistribution[timeindex][area])[age][length];
+        (*obs_c[area])[age][length] += (*obsDistribution[timeindex][area])[age][length];
       }
     }
 
     if (yearly == 0) { //calculate likelihood on all steps
       for (age = minrow; age <= maxrow; age++) {
         for (length = mincol[age]; length <= maxcol[age]; length++) {
-          likelihoodValues[timeindex][nareas] +=
-            (*obsDistribution[timeindex][nareas])[age][length] /
-            ((*modelDistribution[timeindex][nareas])[age][length] + epsilon) +
-            log((*modelDistribution[timeindex][nareas])[age][length] + epsilon);
+          likelihoodValues[timeindex][area] +=
+            (*obsDistribution[timeindex][area])[age][length] /
+            ((*modelDistribution[timeindex][area])[age][length] + epsilon) +
+            log((*modelDistribution[timeindex][area])[age][length] + epsilon);
         }
       }
-      totallikelihood += likelihoodValues[timeindex][nareas];
+      totallikelihood += likelihoodValues[timeindex][area];
 
     } else { //calculate likelihood on year basis
       if (TimeInfo->CurrentStep() < TimeInfo->StepsInYear())
-        likelihoodValues[timeindex][nareas] = 0.0;
+        likelihoodValues[timeindex][area] = 0.0;
       else { //last step in year, is to calc likelihood contribution
         for (age = minrow; age <= maxrow; age++) {
           for (length = mincol[age]; length <= maxcol[age]; length++) {
-            likelihoodValues[timeindex][nareas] +=
-              (*obs_c[nareas])[age][length] / ((*calc_c[nareas])[age][length] + epsilon) +
-              log((*calc_c[nareas])[age][length] + epsilon);
+            likelihoodValues[timeindex][area] +=
+              (*obs_c[area])[age][length] / ((*calc_c[area])[age][length] + epsilon) +
+              log((*calc_c[area])[age][length] + epsilon);
           }
         }
-        totallikelihood += likelihoodValues[timeindex][nareas];
+        totallikelihood += likelihoodValues[timeindex][area];
       }
     }
   }
@@ -718,55 +653,52 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
   //modified by kgf 27/11 98 to sum first and then take the logarithm
 
   double totallikelihood = 0.0;
-  int nareas, age, length;
+  int area, age, length;
   double totalmodel, totaldata, ratio;
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
-  for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
-    likelihoodValues[timeindex][nareas] = 0.0;
+  for (area = 0; area < (*alptr).Size(); area++) {
+    likelihoodValues[timeindex][area] = 0.0;
     totalmodel = 0.0;
     totaldata = 0.0;
     if (TimeInfo->CurrentStep() == 1) { //start of a new year
-      (*calc_c[nareas]).setElementsTo(0.0);
-      (*obs_c[nareas]).setElementsTo(0.0);
+      (*calc_c[area]).setElementsTo(0.0);
+      (*obs_c[area]).setElementsTo(0.0);
     }
 
     for (age = minrow; age <= maxrow; age++) {
       for (length = mincol[age]; length <= maxcol[age]; length++) {
-        (*modelDistribution[timeindex][nareas])[age][length] =
-          (*alptr)[nareas][age][length].N;
-        (*calc_c[nareas])[age][length] +=
-          (*modelDistribution[timeindex][nareas])[age][length];
-        (*obs_c[nareas])[age][length] +=
-          (*obsDistribution[timeindex][nareas])[age][length];
+        (*modelDistribution[timeindex][area])[age][length] = (*alptr)[area][age][length].N;
+        (*calc_c[area])[age][length] += (*modelDistribution[timeindex][area])[age][length];
+        (*obs_c[area])[age][length] += (*obsDistribution[timeindex][area])[age][length];
       }
     }
 
     if (yearly == 0) { //calculate likelihood on all steps
       for (age = minrow; age <= maxrow; age++) {
         for (length = mincol[age]; length <= maxcol[age]; length++) {
-          totalmodel += (*modelDistribution[timeindex][nareas])[age][length];
-          totaldata += (*obsDistribution[timeindex][nareas])[age][length];
+          totalmodel += (*modelDistribution[timeindex][area])[age][length];
+          totaldata += (*obsDistribution[timeindex][area])[age][length];
         }
       }
       ratio = log(totaldata / totalmodel);
-      likelihoodValues[timeindex][nareas] += (ratio * ratio);
+      likelihoodValues[timeindex][area] += (ratio * ratio);
 
     } else { //calculate likelihood on year basis
       if (TimeInfo->CurrentStep() < TimeInfo->StepsInYear())
-        likelihoodValues[timeindex][nareas] = 0.0;
+        likelihoodValues[timeindex][area] = 0.0;
       else { //last step in year, is to calculate likelihood contribution
         for (age = minrow; age <= maxrow; age++) {
           for (length = mincol[age]; length <= maxcol[age]; length++) {
-            totalmodel += (*calc_c[nareas])[age][length];
-            totaldata += (*obs_c[nareas])[age][length];
+            totalmodel += (*calc_c[area])[age][length];
+            totaldata += (*obs_c[area])[age][length];
           }
         }
         ratio = log(totaldata / totalmodel);
-        likelihoodValues[timeindex][nareas] += (ratio * ratio);
+        likelihoodValues[timeindex][area] += (ratio * ratio);
       }
     }
-    totallikelihood += likelihoodValues[timeindex][nareas];
+    totallikelihood += likelihoodValues[timeindex][area];
   }
   return totallikelihood;
 }
@@ -775,37 +707,37 @@ double CatchDistribution::calcLikSumSquares() {
 
   double totallikelihood = 0.0, temp = 0.0;
   double totalmodel, totaldata;
-  int age, len, nareas;
+  int age, len, area;
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
-  for (nareas = 0; nareas < areas.Nrow(); nareas++) {
+  for (area = 0; area < areas.Nrow(); area++) {
     totalmodel = 0.0;
     totaldata = 0.0;
-    likelihoodValues[timeindex][nareas] = 0.0;
-    for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
-      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++) {
-        (*modelDistribution[timeindex][nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
-        totalmodel += (*modelDistribution[timeindex][nareas])[age][len];
-        totaldata += (*obsDistribution[timeindex][nareas])[age][len];
+    likelihoodValues[timeindex][area] = 0.0;
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+        (*modelDistribution[timeindex][area])[age][len] = ((*alptr)[area][age][len]).N;
+        totalmodel += (*modelDistribution[timeindex][area])[age][len];
+        totaldata += (*obsDistribution[timeindex][area])[age][len];
       }
     }
 
-    for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
-      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++) {
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
         if ((isZero(totaldata)) && (isZero(totalmodel)))
           temp = 0.0;
         else if (isZero(totaldata))
-          temp = (*modelDistribution[timeindex][nareas])[age][len] / totalmodel;
+          temp = (*modelDistribution[timeindex][area])[age][len] / totalmodel;
         else if (isZero(totalmodel))
-          temp = (*obsDistribution[timeindex][nareas])[age][len] / totaldata;
+          temp = (*obsDistribution[timeindex][area])[age][len] / totaldata;
         else
-          temp = (((*obsDistribution[timeindex][nareas])[age][len] / totaldata)
-            - ((*modelDistribution[timeindex][nareas])[age][len] / totalmodel));
+          temp = (((*obsDistribution[timeindex][area])[age][len] / totaldata)
+            - ((*modelDistribution[timeindex][area])[age][len] / totalmodel));
 
-        likelihoodValues[timeindex][nareas] += (temp * temp);
+        likelihoodValues[timeindex][area] += (temp * temp);
       }
     }
-    totallikelihood += likelihoodValues[timeindex][nareas];
+    totallikelihood += likelihoodValues[timeindex][area];
   }
   return totallikelihood;
 }
@@ -816,7 +748,7 @@ void CatchDistribution::Correlation() {
   DoubleMatrix correlation(p, p, 0.0);
 
   for (i = 0; i < lag; i++)
-    if (abs(params[i] - 1) >= 1)
+    if (abs(params[i] - 1.0) >= 1.0)
       illegal = 1;
 
   if (illegal == 0) {
@@ -824,8 +756,8 @@ void CatchDistribution::Correlation() {
       for (j = 0; j <= i; j++) {
         for (l = 1; l <= lag; l++) {
           if ((i - l) >= 0) {
-            correlation[i][j] += (params[l - 1] - 1) * correlation[i - l][j];
-            correlation[j][i] += (params[l - 1] - 1) * correlation[i - l][j];
+            correlation[i][j] += (params[l - 1] - 1.0) * correlation[i - l][j];
+            correlation[j][i] += (params[l - 1] - 1.0) * correlation[i - l][j];
           }
         }
       }
@@ -840,20 +772,20 @@ double CatchDistribution::calcLikMVNormal() {
 
   double totallikelihood = 0.0;
   double sumdata, sumdist;
-  int age, len, nareas;
+  int age, len, area;
   int i, j, p;
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   DoubleVector diff(aggregator->numLengthGroups(), 0.0);
 
-  for (nareas = 0; nareas < areas.Nrow(); nareas++) {
+  for (area = 0; area < areas.Nrow(); area++) {
     sumdata = 0.0;
     sumdist = 0.0;
-    for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
-      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++) {
-        (*modelDistribution[timeindex][nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
-        sumdata += (*obsDistribution[timeindex][nareas])[age][len];
-        sumdist += (*modelDistribution[timeindex][nareas])[age][len];
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+        (*modelDistribution[timeindex][area])[age][len] = ((*alptr)[area][age][len]).N;
+        sumdata += (*obsDistribution[timeindex][area])[age][len];
+        sumdist += (*modelDistribution[timeindex][area])[age][len];
       }
     }
 
@@ -866,12 +798,13 @@ double CatchDistribution::calcLikMVNormal() {
     else
       sumdist = 1 / sumdist;
 
-    for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
       for (len = 0; len < diff.Size(); len++)
         diff[len] = 0.0;
 
-      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++)
-        diff[len] = ((*obsDistribution[timeindex][nareas])[age][len] * sumdata) - ((*modelDistribution[timeindex][nareas])[age][len] * sumdist);
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
+        diff[len] = ((*obsDistribution[timeindex][area])[age][len] * sumdata)
+                    - ((*modelDistribution[timeindex][area])[age][len] * sumdist);
 
       totallikelihood += diff * LU.Solve(diff);
     }
@@ -890,23 +823,23 @@ double CatchDistribution::calcLikMVLogistic() {
 
   double totallikelihood = 0.0;
   double sumdata = 0.0, sumdist = 0.0, sumnu = 0.0;
-  int age, len, nareas, p;
+  int age, len, area, p;
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   p = aggregator->numLengthGroups();
   DoubleVector nu(p, 0.0);
 
-  for (nareas = 0; nareas < areas.Nrow(); nareas++) {
-    for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
+  for (area = 0; area < areas.Nrow(); area++) {
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
       for (len = 0; len < nu.Size(); len++)
         nu[len] = 0.0;
 
       sumdata = 0.0;
       sumdist = 0.0;
-      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++) {
-        (*modelDistribution[timeindex][nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
-        sumdata += (*obsDistribution[timeindex][nareas])[age][len];
-        sumdist += (*modelDistribution[timeindex][nareas])[age][len];
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+        (*modelDistribution[timeindex][area])[age][len] = ((*alptr)[area][age][len]).N;
+        sumdata += (*obsDistribution[timeindex][area])[age][len];
+        sumdist += (*modelDistribution[timeindex][area])[age][len];
       }
 
       if (isZero(sumdata))
@@ -919,15 +852,15 @@ double CatchDistribution::calcLikMVLogistic() {
         sumdist = 1 / sumdist;
 
       sumnu = 0.0;
-      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++) {
-        nu[len] = log(((*obsDistribution[timeindex][nareas])[age][len] * sumdata) + verysmall)
-                  - log(((*modelDistribution[timeindex][nareas])[age][len] * sumdist) + verysmall);
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+        nu[len] = log(((*obsDistribution[timeindex][area])[age][len] * sumdata) + verysmall)
+                  - log(((*modelDistribution[timeindex][area])[age][len] * sumdist) + verysmall);
 
         sumnu += nu[len];
       }
       sumnu = sumnu / p;
 
-      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++)
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
         totallikelihood += (nu[len] - sumnu) * (nu[len] - sumnu);
     }
   }

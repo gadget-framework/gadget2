@@ -43,11 +43,10 @@ public:
    */
   virtual void addLikelihood(const TimeClass* const TimeInfo) {};
   /**
-   * \brief This function will print the summary likelihood information
-   * \param outfile is the ofstream that all the model information gets sent to
-   * \note This function is not used for this likelihood component
+   * \brief This function will print summary information from the BoundLikelihood likelihood calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
-  virtual void Print(ofstream& outfile) const {};
+  virtual void SummaryPrint(ofstream& outfile);
   /**
    * \brief This function will calculate the likelihood score for the current model after adjusting the parameters
    * \param TimeInfo is the TimeClass for the current model

@@ -150,7 +150,7 @@ private:
 
 /**
  * \class MaturityA
- * \brief This is the class used to calculate the maturity based on 'continuous' maturity function
+ * \brief This is the class used to calculate the maturity based on the 'continuous' maturity function
  */
 class MaturityA : public Maturity {
 public:
@@ -228,7 +228,7 @@ protected:
 
 /**
  * \class MaturityB
- * \brief This is the class used to calculate the maturity based on 'fixedlength' maturity function
+ * \brief This is the class used to calculate the maturity based on the 'fixedlength' maturity function
  */
 class MaturityB : public Maturity {
 public:
@@ -297,7 +297,7 @@ protected:
 
 /**
  * \class MaturityC
- * \brief This is the class used to calculate the maturity based on 'constant' maturity function
+ * \brief This is the class used to calculate the maturity based on the 'constant' maturity function
  */
 class MaturityC : public Maturity {
 public:
@@ -379,7 +379,7 @@ protected:
 
 /**
  * \class MaturityD
- * \brief This is the class used to calculate the maturity based on 'constantweight' maturity function
+ * \brief This is the class used to calculate the maturity based on the 'constantweight' maturity function
  */
 class MaturityD : public MaturityC {
 public:

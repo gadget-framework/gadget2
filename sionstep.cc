@@ -9,12 +9,17 @@
 extern ErrorHandler handle;
 
 SIOnStep::~SIOnStep() {
+  int i;
   delete[] siname;
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
+  for (i = 0; i < colindex.Size(); i++)
+    delete[] colindex[i];
 }
 
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
-  const CharPtrVector& areaindex, const TimeClass* const TimeInfo,
-  const IntMatrix& areas, const CharPtrVector& colindex,
+  const CharPtrVector& aindex, const TimeClass* const TimeInfo,
+  const IntMatrix& areas, const CharPtrVector& charindex,
   const char* name) : Areas(areas) {
 
   char text[MaxStrLength];
@@ -27,6 +32,18 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
 
   siname = new char[strlen(name) + 1];
   strcpy(siname, name);
+
+  int i;
+  for (i = 0; i < aindex.Size(); i++) {
+    areaindex.resize(1);
+    areaindex[i] = new char[strlen(aindex[i]) + 1];
+    strcpy(areaindex[i], aindex[i]);
+  }
+  for (i = 0; i < charindex.Size(); i++) {
+    colindex.resize(1);
+    colindex[i] = new char[strlen(charindex[i]) + 1];
+    strcpy(colindex[i], charindex[i]);
+  }
 
   //read the fittype
   infile >> text;
@@ -81,20 +98,19 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   datafile.open(datafilename, ios::in);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  readSIData(subdata, areaindex, colindex, TimeInfo);
+  readSIData(subdata, TimeInfo);
   handle.Close();
   datafile.close();
   datafile.clear();
 
   //resize to hold the model information
   modelIndex.AddRows(obsIndex.Nrow(), obsIndex.Ncol(), 0.0);
-  slopes.resize(obsIndex.Ncol());
-  intercepts.resize(obsIndex.Ncol());
-  sse.resize(obsIndex.Ncol());
+  slopes.resize(obsIndex.Ncol(), 0.0);
+  intercepts.resize(obsIndex.Ncol(), 0.0);
+  sse.resize(obsIndex.Ncol(), 0.0);
 }
 
-void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
-  const CharPtrVector& colindex, const TimeClass* const TimeInfo) {
+void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo) {
 
   int i;
   int year, step;
@@ -171,21 +187,6 @@ void SIOnStep::Reset(const Keeper* const keeper) {
 
 void SIOnStep::Print(ofstream& outfile) const {
   int i, j;
-  outfile << "\tSurvey indices\n";
-  for (i = 0; i < Years.Size(); i++) {
-    outfile << TAB << Years[i] << sep << Steps[i] << sep;
-    for (j = 0; j < obsIndex.Ncol(i); j++) {
-      outfile.width(smallwidth);
-      outfile.precision(smallprecision);
-      outfile << obsIndex[i][j] << sep;
-    }
-    outfile << endl;
-  }
-  outfile.flush();
-}
-
-void SIOnStep::LikelihoodPrint(ofstream& outfile) {
-  int i, j;
   outfile << "Survey indices\n";
   for (i = 0; i < Years.Size(); i++) {
     outfile << TAB << Years[i] << sep << Steps[i] << sep;
@@ -229,6 +230,27 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile) {
     outfile << sse[j] << sep;
   }
   outfile.flush();
+}
+
+void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
+
+  if (!AAT.AtCurrentTime(TimeInfo))
+    return;
+
+  int t, area, i;
+  t = timeindex - 1; //timeindex was increased before this is called
+
+  if ((t >= Years.Size()) || t < 0)
+    handle.logFailure("Error in catchdistribution - invalid timestep", t);
+
+  //JMB - this is nasty hack since there is only one area
+  area = 0;
+  for (i = 0; i < modelIndex.Ncol(t); i++) {
+    outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
+      << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
+      << setw(printwidth) << colindex[i] << sep << setprecision(largeprecision)
+      << setw(largewidth) << modelIndex[t][i] << endl;
+  }
 }
 
 int SIOnStep::isToSum(const TimeClass* const TimeInfo) const {

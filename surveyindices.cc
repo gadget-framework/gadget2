@@ -23,8 +23,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   int overcons = 0;
   IntMatrix ages;
   DoubleVector lengths;
-  CharPtrVector ageindex;
-  CharPtrVector lenindex;
+  CharPtrVector charindex;
 
   char datafilename[MaxStrLength];
   char aggfilename[MaxStrLength];
@@ -64,7 +63,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     datafile.open(aggfilename, ios::in);
     handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    i = readLengthAggregation(subdata, lengths, lenindex);
+    i = readLengthAggregation(subdata, lengths, charindex);
     handle.Close();
     datafile.close();
     datafile.clear();
@@ -74,7 +73,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     datafile.open(aggfilename, ios::in);
     handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    i = readAggregation(subdata, ages, ageindex);
+    i = readAggregation(subdata, ages, charindex);
     handle.Close();
     datafile.close();
     datafile.clear();
@@ -84,7 +83,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     datafile.open(aggfilename, ios::in);
     handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    i = readLengthAggregation(subdata, lengths, lenindex);
+    i = readLengthAggregation(subdata, lengths, charindex);
     handle.Close();
     datafile.close();
     datafile.clear();
@@ -126,18 +125,21 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   //We have now read in all the data from the main likelihood file
   if (strcasecmp(sitype, "lengths") == 0) {
     SI = new SIByLengthOnStep(infile, areas, lengths, areaindex,
-      lenindex, TimeInfo, datafilename, this->Name());
+      charindex, TimeInfo, datafilename, this->Name());
 
   } else if (strcasecmp(sitype, "ages") == 0) {
     SI = new SIByAgeOnStep(infile, areas, ages, areaindex,
-      ageindex, TimeInfo, datafilename, this->Name());
+      charindex, TimeInfo, datafilename, this->Name());
 
   } else if (strcasecmp(sitype, "fleets") == 0) {
     SI = new SIByFleetOnStep(infile, areas, lengths, areaindex,
-      lenindex, TimeInfo, datafilename, overcons, this->Name());
+      charindex, TimeInfo, datafilename, overcons, this->Name());
 
   } else
     handle.Message("Error in surveyindex - unrecognised type", sitype);
+
+  for (i = 0; i < charindex.Size(); i++)
+    delete[] charindex[i];
 
   //prepare for next likelihood component
   infile >> ws;
@@ -146,12 +148,6 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     if (!(strcasecmp(text, "[component]") == 0))
       handle.Unexpected("[component]", text);
   }
-
-  //index ptrvectors are not required - free up memory
-  for (i = 0; i < ageindex.Size(); i++)
-    delete[] ageindex[i];
-  for (i = 0; i < lenindex.Size(); i++)
-    delete[] lenindex[i];
 }
 
 SurveyIndices::~SurveyIndices() {
@@ -163,21 +159,6 @@ SurveyIndices::~SurveyIndices() {
   for (i = 0; i < areaindex.Size(); i++)
     delete[] areaindex[i];
   delete SI;
-}
-
-void SurveyIndices::LikelihoodPrint(ofstream& outfile) {
-  int i;
-  outfile << "\nSurvey Indices " << this->Name() << "\n\nLikelihood " << likelihood
-    << "\nWeight " << weight << "\nStock names:";
-  for (i = 0; i < stocknames.Size(); i++)
-    outfile << sep << stocknames[i];
-  outfile << "\nAreas:";
-  for (i = 0; i < areaindex.Size(); i++)
-    outfile << sep << areaindex[i];
-  outfile << endl;
-  SI->LikelihoodPrint(outfile);
-  outfile << endl;
-  outfile.flush();
 }
 
 void SurveyIndices::addLikelihood(const TimeClass* const TimeInfo) {

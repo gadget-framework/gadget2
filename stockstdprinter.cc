@@ -17,7 +17,7 @@ extern RunID RUNID;
 extern ErrorHandler handle;
 
 StockStdPrinter::StockStdPrinter(CommentStream& infile,
-  const AreaClass* const Area, const  TimeClass* const TimeInfo)
+  const AreaClass* const Area, const TimeClass* const TimeInfo)
   : Printer(STOCKSTDPRINTER), stockname(0), LgrpDiv(0), aggregator(0), preyinfo(0) {
 
   char text[MaxStrLength];

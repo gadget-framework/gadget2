@@ -50,10 +50,12 @@ public:
    */
   virtual void Print(ofstream& outfile) const;
   /**
-   * \brief This function will print information from each SurveyIndices likelihood calculation
+   * \brief This function will print information from each SurveyIndices calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
+   * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile);
+  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
+    SI->LikelihoodPrint(outfile, TimeInfo); };
   /**
    * \brief This function will print summary information from each SurveyIndices likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
@@ -70,14 +72,14 @@ protected:
   IntMatrix areas;
   /**
    * \brief This is the CharPtrVector of the names of the areas
-  */
+   */
   CharPtrVector areaindex;
   /**
    * \brief This is the CharPtrVector of the names of the stocks that will be used to calculate the likelihood score
    */
   CharPtrVector stocknames;
   /**
-   * \brief This is the CharPtrVector of the names of the fleets that will be used to calculate the likelihood score
+   * \brief This is the CharPtrVector of the names of any fleets that will be used to calculate the likelihood score
    */
   CharPtrVector fleetnames;
 };

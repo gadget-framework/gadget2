@@ -27,15 +27,15 @@ public:
    * \brief This is the SIOnStep constructor
    * \param infile is the CommentStream to read the SIOnStep data from
    * \param datafilename is the name of the file to read the index data from
-   * \param areaindex is the CharPtrVector of the names of the areas for the survey indices
+   * \param aindex is the CharPtrVector of the names of the areas for the survey indices
    * \param TimeInfo is the TimeClass for the current model
    * \param areas is the IntMatrix of the areas that the survey indices are calculated on
-   * \param colindex is the CharPtrVector of the names of the column index for the survey indices
+   * \param charindex is the CharPtrVector of the names of the column index for the survey indices
    * \param name is the name for the SIOnStep component
    */
   SIOnStep(CommentStream& infile, const char* datafilename,
-    const CharPtrVector& areaindex, const TimeClass* const TimeInfo,
-    const IntMatrix& areas, const CharPtrVector& colindex, const char* name);
+    const CharPtrVector& aindex, const TimeClass* const TimeInfo,
+    const IntMatrix& areas, const CharPtrVector& charindex, const char* name);
   /**
    * \brief This is the default SIOnStep destructor
    */
@@ -62,10 +62,11 @@ public:
    */
   virtual void Print(ofstream& outfile) const;
   /**
-   * \brief This function will print likelihood information from each SIOnStep regression calculation
+   * \brief This function will print information from each SIOnStep regression calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
+   * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile);
+  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
   virtual double calcRegression();
 protected:
   /**
@@ -108,12 +109,9 @@ private:
   /**
    * \brief This function will read the SIOnStep data from the input file
    * \param infile is the CommentStream to read the SIOnStep data from
-   * \param areaindex is the CharPtrVector of the names of the areas for the survey indices
-   * \param colindex is the CharPtrVector of the names of the column index for the survey indices
    * \param TimeInfo is the TimeClass for the current model
    */
-  void readSIData(CommentStream& infile, const CharPtrVector& areaindex,
-    const CharPtrVector& colindex, const TimeClass* const TimeInfo);
+  void readSIData(CommentStream& infile, const TimeClass* const TimeInfo);
   double fitRegression(const DoubleVector& stocksize, const DoubleVector& indices, int col);
   /**
    * \brief This is the index of the timesteps for the survey index data
@@ -128,6 +126,14 @@ private:
   DoubleVector slopes;
   DoubleVector intercepts;
   DoubleVector sse;
+  /**
+   * \brief This is the CharPtrVector of the names of the areas
+   */
+  CharPtrVector areaindex;
+  /**
+   * \brief This is the CharPtrVector of the names of the index
+   */
+  CharPtrVector colindex;
   /**
    * \brief This is the name of the SIOnStep object
    */

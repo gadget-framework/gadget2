@@ -40,16 +40,14 @@ void MainInfo::showUsage() {
     << " -log <filename>              print logging information to <filename>\n"
     << " -printinitial <filename>     print initial model information to <filename>\n"
     << " -printfinal <filename>       print final model information to <filename>\n"
-    << " -printlikelihood <filename>  print model likelihood information to <filename>\n"
-    << " -printlikesummary <filename> print model likelihood summary to <filename>\n"
     << "\nFor more information see the Gadget web page at http://www.hafro.is/gadget\n\n";
   exit(EXIT_SUCCESS);
 }
 
 MainInfo::MainInfo()
-  : givenOptInfo(0), givenInitialParam(0), runlikelihood(0), runoptimise(0),
-    runstochastic(0), runnetwork(0), printInitialInfo(0), printFinalInfo(0),
-    printComponent(-1), printLikelihoodInfo(0), printLikeSummaryInfo(0), printWarning(2) {
+  : givenOptInfo(0), givenInitialParam(0), runlikelihood(0),
+    runoptimise(0), runstochastic(0), runnetwork(0),
+    printInitialInfo(0), printFinalInfo(0), printWarning(2) {
 
   char tmpname[10];
   strncpy(tmpname, "", 10);
@@ -59,8 +57,6 @@ MainInfo::MainInfo()
   strInitialParamFile = NULL;
   strPrintInitialFile = NULL;
   strPrintFinalFile = NULL;
-  strPrintLikelihoodFile = NULL;
-  strPrintLikeSummaryFile = NULL;
   strMainGadgetFile = NULL;
   setMainGadgetFile(tmpname);
 }
@@ -82,14 +78,6 @@ MainInfo::~MainInfo() {
     delete[] strPrintFinalFile;
     strPrintFinalFile = NULL;
   }
-  if (strPrintLikelihoodFile != NULL) {
-    delete[] strPrintLikelihoodFile;
-    strPrintLikelihoodFile = NULL;
-  }
-  if (strPrintLikeSummaryFile != NULL) {
-    delete[] strPrintLikeSummaryFile;
-    strPrintLikeSummaryFile = NULL;
-  }
   if (strMainGadgetFile != NULL) {
     delete[] strMainGadgetFile;
     strMainGadgetFile = NULL;
@@ -109,8 +97,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         runnetwork = 1;
 
         #ifndef GADGET_NETWORK
-          handle.logWarning("Error - Gadget cannot currently run in network mode for paramin");
-          handle.logFailure("Gadget must be recompiled to enable the network communication");
+          handle.logFailure("Error - Gadget cannot currently run in network mode for paramin\nGadget must be recompiled to enable the network communication");
         #endif
 
       } else if (strcasecmp(aVector[k], "-s") == 0) {
@@ -183,29 +170,13 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         setOptInfoFile(aVector[k]);
 
       } else if ((strcasecmp(aVector[k], "-printlikelihood") == 0) || (strcasecmp(aVector[k], "-likelihoodprint") == 0)) {
-        if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
-        k++;
-        setPrintLikelihoodFile(aVector[k]);
+        handle.logFailure("The -printlikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
 
       } else if (strcasecmp(aVector[k], "-printlikesummary") == 0) {
-        //JMB - print summary likelihood information in columns
-        if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
-        k++;
-        setPrintLikeSummaryFile(aVector[k]);
+        handle.logFailure("The -printlikesummary switch is no longer supported\nSpecify a summaryprinter class in the model print file instead");
 
       } else if (strcasecmp(aVector[k], "-printonelikelihood") == 0) {
-        if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
-        k++;
-        if (printComponent != -1)
-          handle.logWarning("\nWarning - Gadget can only have one -printonelikelihood switch\n");
-        printComponent = atoi(aVector[k]);
-        if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
-        k++;
-        setPrintLikelihoodFile(aVector[k]);
+        handle.logFailure("The -printonelikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
 
       } else if (strcasecmp(aVector[k], "-print1") == 0) {
         if (k == aNumber - 1)
@@ -316,17 +287,6 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-printfinal") == 0) {
       infile >> text >> ws;
       setPrintFinalFile(text);
-    } else if (strcasecmp(text, "-printlikelihood") == 0) {
-      infile >> text >> ws;
-      setPrintLikelihoodFile(text);
-    } else if (strcasecmp(text, "-printlikesummary") == 0) {
-      infile >> text >> ws;
-      setPrintLikeSummaryFile(text);
-    } else if (strcasecmp(text, "-printonelikelihood") == 0) {
-      if (printComponent != -1)
-        handle.logWarning("\nWarning - Gadget can only have one -printonelikelihood switch\n");
-      infile >> printComponent >> ws >> text >> ws;
-      setPrintLikelihoodFile(text);
     } else if (strcasecmp(text, "-opt") == 0) {
       infile >> text >> ws;
       setOptInfoFile(text);
@@ -346,6 +306,12 @@ void MainInfo::read(CommentStream& infile) {
       handle.setLogFile(text);
     } else if (strcasecmp(text, "-nowarnings") == 0) {
       printWarning = 1;
+    } else if (strcasecmp(text, "-printlikesummary") == 0) {
+      handle.logFailure("The -printlikesummary switch is no longer supported\nSpecify a summaryprinter class in the model print file instead");
+    } else if (strcasecmp(text, "-printlikelihood") == 0) {
+      handle.logFailure("The -printlikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
+    } else if (strcasecmp(text, "-printonelikelihood") == 0) {
+      handle.logFailure("The -printonelikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
     } else
       showCorrectUsage(text);
   }
@@ -369,26 +335,6 @@ void MainInfo::setPrintFinalFile(char* filename) {
   strPrintFinalFile = new char[strlen(filename) + 1];
   strcpy(strPrintFinalFile, filename);
   printFinalInfo = 1;
-}
-
-void MainInfo::setPrintLikelihoodFile(char* filename) {
-  if (strPrintLikelihoodFile != NULL) {
-    delete[] strPrintLikelihoodFile;
-    strPrintLikelihoodFile = NULL;
-  }
-  strPrintLikelihoodFile = new char[strlen(filename) + 1];
-  strcpy(strPrintLikelihoodFile, filename);
-  printLikelihoodInfo = 1;
-}
-
-void MainInfo::setPrintLikeSummaryFile(char* filename) {
-  if (strPrintLikeSummaryFile != NULL) {
-    delete[] strPrintLikeSummaryFile;
-    strPrintLikeSummaryFile = NULL;
-  }
-  strPrintLikeSummaryFile = new char[strlen(filename) + 1];
-  strcpy(strPrintLikeSummaryFile, filename);
-  printLikeSummaryInfo = 1;
 }
 
 void MainInfo::setMainGadgetFile(char* filename) {

@@ -72,7 +72,7 @@ VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.o \
 	abstrpredstdinfo.o abstrpreystdinfo.o catchdistribution.o errorhandler.o \
 	predatorprinter.o abstrpreystdinfobylength.o predatoroveraggregator.o \
-	actionattimes.o predatoroverprinter.o strstack.o ecosystem.o \
+	actionattimes.o predatoroverprinter.o strstack.o ecosystem.o poppredator.o \
 	predpreystdageprinter.o agebandmatrix.o predpreystdlengthprinter.o grow.o \
 	agebandmatrixmemberfunctions.o predpreystdprinter.o area.o predstdinfo.o \
 	bandmatrix.o predstdinfobylength.o prey.o popstatistics.o ludecomposition.o \
@@ -90,12 +90,12 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	stockstdprinter.o maturity.o suitfunc.o suits.o stomachcontent.o runid.o \
 	migration.o variableinfo.o binarytree.o vectorusingkeeper.o recaggregator.o \
 	surveyindices.o migrationpenalty.o recapture.o stock.o readaggregation.o \
-	migvariables.o multinomial.o totalpredator.o understocking.o poppredator.o \
-	transition.o otherfood.o recstatistics.o selectfunc.o optinfo.o naturalm.o \
-	catchintons.o interruptinterface.o interrupthandler.o tags.o renewal.o \
+	migvariables.o multinomial.o totalpredator.o understocking.o recstatistics.o \
+	transition.o otherfood.o selectfunc.o optinfo.o tags.o likelihoodprinter.o \
+	catchintons.o interruptinterface.o interrupthandler.o naturalm.o renewal.o \
 	taggrow.o initialinputfile.o optinfohooke.o optinfobfgs.o optinfosimann.o \
 	popratio.o popinfo.o popinfomemberfunctions.o agebandmatrixratio.o \
-	agebandmatrixratiomemberfunctions.o
+	summaryprinter.o agebandmatrixratiomemberfunctions.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 

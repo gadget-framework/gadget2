@@ -126,7 +126,7 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
   }
 }
 
-void UnderStocking::LikelihoodPrint(ofstream& outfile) {
+void UnderStocking::Print(ofstream& outfile) {
   int i, j, year, area;
 
   outfile << "\nUnderstocking " << this->Name() << "\n\nLikelihood " << likelihood

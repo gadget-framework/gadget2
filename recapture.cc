@@ -372,24 +372,35 @@ void Recaptures::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void Recaptures::LikelihoodPrint(ofstream& outfile) {
-  int t, ti, i, j;
-  outfile << "\nRecaptures Data " << this->Name() << "\n\nLikelihood " << likelihood
-    << "\nWeight " << weight << endl;
-  for (t = 0; t < tagvec.Size(); t++) {
-    outfile << "\tTagging experiment:\t" << tagnames[t];
-    for (ti = 0; ti < Years.Ncol(t); ti++) {
-      outfile << "\n\tyear " << Years[t][ti] << " and step " << Steps[t][ti] << "\n\tobserved recaptures";
-      for (i = 0; i < (*obsDistribution[t][ti]).Nrow(); i++)
-        for (j = 0; j < (*obsDistribution[t][ti]).Ncol(i); j++)
-          outfile << TAB << (*obsDistribution[t][ti])[i][j];
+void Recaptures::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-      outfile << "\n\tmodelled recaptures";
-      for (i = 0; i < (*modelDistribution[t][ti]).Nrow(); i++)
-        for (j = 0; j < (*modelDistribution[t][ti]).Ncol(i); j++)
-          outfile << TAB << (*modelDistribution[t][ti])[i][j];
+  int year = TimeInfo->CurrentYear();
+  int step = TimeInfo->CurrentStep();
+  int t, ti, timeid, area, len;
+
+  for (t = 0; t < tagvec.Size(); t++) {
+    if (tagvec[t]->isWithinPeriod(year, step)) {
+      timeid = -1;
+      for (ti = 0; ti < Years.Ncol(t); ti++)
+        if (Years[t][ti] == year && Steps[t][ti] == step)
+          timeid = ti;
+
+      /*JMB - we need to find a way of increasing the size of modelDistribution
+       * when there are zero returns in the data but not in the model ...
+      if (timeid == -1)
+        handle.logFailure("Error in recaptures - invalid timestep");*/
+
+      if (timeid > -1) {
+        for (area = 0; area < modelDistribution[t][timeid]->Nrow(); area++) {
+          for (len = 0; len < modelDistribution[t][timeid]->Ncol(area); len++) {
+            outfile << setw(printwidth) << tagnames[t] << sep << setw(lowwidth)
+              << Years[t][timeid] << sep << setw(lowwidth) << Steps[t][timeid] << sep
+              << setw(printwidth) << areaindex[area] << sep << setw(printwidth)
+              << lenindex[len] << sep << setprecision(largeprecision) << setw(largewidth)
+              << (*modelDistribution[t][timeid])[area][len] << endl;
+          }
+        }
+      }
     }
-    outfile << endl;
   }
-  outfile.flush();
 }

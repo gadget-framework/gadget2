@@ -38,12 +38,6 @@ public:
    * \param keeper is the Keeper for the current model
    */
   virtual void Reset(const Keeper* const keeper);
-  /**
-   * \brief This function will print the summary MigrationPenalty likelihood information
-   * \param outfile is the ofstream that all the model information gets sent to
-   * \note This function is not used for this likelihood component
-   */
-  virtual void Print(ofstream& outfile) const {};
 private:
   /**
    * \brief This is the name of the stock that will be checked for incorrect migration

@@ -9,12 +9,14 @@
 #include "preyptrvector.h"
 #include "stockptrvector.h"
 #include "fleetptrvector.h"
+#include "likelihoodptrvector.h"
 #include "charptrvector.h"
 #include "intmatrix.h"
 #include "gadget.h"
 
-enum PrinterType { STOCKPRINTER = 1, PREDATORPRINTER, PREDATOROVERPRINTER, PREYOVERPRINTER,
-  STOCKSTDPRINTER, STOCKPREYFULLPRINTER, PREDPREYSTDPRINTER, STOCKFULLPRINTER };
+enum PrinterType { STOCKPRINTER = 1, PREDATORPRINTER, PREDATOROVERPRINTER,
+  PREYOVERPRINTER, STOCKSTDPRINTER, STOCKPREYFULLPRINTER, PREDPREYSTDPRINTER,
+  STOCKFULLPRINTER, LIKELIHOODPRINTER, LIKELIHOODSUMMARYPRINTER };
 
 /**
  * \class Printer
@@ -72,6 +74,11 @@ public:
    * \param predatorvec is the PredatorPtrVector of all the available predators
    */
   virtual void setPredator(PredatorPtrVector& predatorvec) {};
+  /**
+   * \brief This will select the likelihood components required for the printer class to print the requested information
+   * \param likevec is the LikelihoodPtrVector of all the available likelihood components
+   */
+  virtual void setLikelihood(LikelihoodPtrVector& likevec) {};
   /**
    * \brief This will return the type of printer class
    * \return type

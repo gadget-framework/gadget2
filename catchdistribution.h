@@ -47,10 +47,11 @@ public:
    */
   void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
   /**
-   * \brief This function will print information from each CatchDistribution likelihood calculation
+   * \brief This function will print information from each CatchDistribution calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
+   * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile);
+  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
   /**
    * \brief This function will print summary information from each CatchDistribution likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to

@@ -14,6 +14,8 @@
 #include "stockpreyfullprinter.h"
 #include "stockfullprinter.h"
 #include "predpreystdprinter.h"
+#include "likelihoodprinter.h"
+#include "summaryprinter.h"
 #include "surveyindices.h"
 #include "understocking.h"
 #include "catchdistribution.h"
@@ -137,6 +139,12 @@ void Ecosystem::Initialise() {
         break;
       case STOCKFULLPRINTER:
         ((StockFullPrinter*)(printvec[i]))->setStock(stockvec);
+        break;
+      case LIKELIHOODPRINTER:
+        ((LikelihoodPrinter*)(printvec[i]))->setLikelihood(Likely);
+        break;
+      case LIKELIHOODSUMMARYPRINTER:
+        ((SummaryPrinter*)(printvec[i]))->setLikelihood(Likely);
         break;
       default:
         handle.logFailure("Error when initialising model - unrecognised printer type", printvec[i]->Type());

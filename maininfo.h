@@ -39,16 +39,6 @@ public:
    */
   void read(int aNumber, char* const aVector[]);
   /**
-   * \brief This function will store the filename that the likelihood summary information will be written to
-   * \param filename is the name of the file
-   */
-  void setPrintLikeSummaryFile(char* filename);
-  /**
-   * \brief This function will store the filename that the likelihood information will be written to
-   * \param filename is the name of the file
-   */
-  void setPrintLikelihoodFile(char* filename);
-  /**
    * \brief This function will store the filename that the initial model information will be written to
    * \param filename is the name of the file
    */
@@ -119,16 +109,6 @@ public:
    */
   int printFinal() const { return printFinalInfo; };
   /**
-   * \brief This function will return the flag used to determine whether the likelihood summary information should be printed to file
-   * \return flag
-   */
-  int printLikeSummary() const { return printLikeSummaryInfo; };
-  /**
-   * \brief This function will return the flag used to determine whether the likelihood information should be printed to file
-   * \return flag
-   */
-  int printLikelihood() const { return printLikelihoodInfo; };
-  /**
    * \brief This function will return the filename that the initial values for the model parameters will be read from
    * \return filename
    */
@@ -144,16 +124,6 @@ public:
    */
   char* getPrintFinalFile() const { return strPrintFinalFile; };
   /**
-   * \brief This function will return the filename that the likelihood summary information will be written to
-   * \return filename
-   */
-  char* getPrintLikeSummaryFile() const { return strPrintLikeSummaryFile; };
-  /**
-   * \brief This function will return the filename that the likelihood information will be written to
-   * \return filename
-   */
-  char* getPrintLikelihoodFile() const { return strPrintLikelihoodFile; };
-  /**
    * \brief This function will return the filename that the main model information will be read from
    * \return filename
    */
@@ -163,25 +133,12 @@ public:
    * \return filename
    */
   char* getOptInfoFile() const { return strOptInfoFile; };
-  /**
-   * \brief This is the index of a single component to print the likelihood information from
-   * \return printComponent (if this is -1 then print all components)
-   */
-  int printOneComponent() const { return printComponent; };
 private:
   /**
    * \brief This function will read input from a file instead of the command line
    * \param file is the CommentStream to read from
    */
   void read(CommentStream& file);
-  /**
-   * \brief This is the name of the file that likelihood summary information will be written to
-   */
-  char* strPrintLikeSummaryFile;
-  /**
-   * \brief This is the name of the file that likelihood information will be written to
-   */
-  char* strPrintLikelihoodFile;
   /**
    * \brief This is the name of the file that optimisation parameters will be read from
    */
@@ -238,19 +195,6 @@ private:
    * \brief This is the flag used to denote whether the final model information should be printed or not
    */
   int printFinalInfo;
-  /**
-   * \brief This is the index of a single component to print the likelihood information from
-   * \note the default value is -1 which will print likelihood information from all the components
-   */
-  int printComponent;
-  /**
-   * \brief This is the flag used to denote whether the likelihood information should be printed or not
-   */
-  int printLikelihoodInfo;
-  /**
-   * \brief This is the flag used to denote whether the likelihood summary information should be printed or not
-   */
-  int printLikeSummaryInfo;
   /**
    * \brief This is the flag used to denote whether warnings should be printed or not
    */

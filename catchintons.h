@@ -45,10 +45,11 @@ public:
    */
   virtual void SummaryPrint(ofstream& outfile);
   /**
-   * \brief This function will print information from each CatchInTons likelihood calculation
+   * \brief This function will print information from each CatchInTons calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
+   * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile);
+  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the likelihood score for the CatchInTons component
    * \param TimeInfo is the TimeClass for the current model

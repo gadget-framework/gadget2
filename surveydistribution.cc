@@ -27,7 +27,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   CommentStream subdata(datafile);
   readWordAndValue(infile, "datafile", datafilename);
 
-  index = 0;
+  timeindex = 0;
   fittype = new char[MaxStrLength];
   strncpy(fittype, "", MaxStrLength);
   liketype = new char[MaxStrLength];
@@ -274,7 +274,7 @@ SurveyDistribution::~SurveyDistribution() {
 }
 
 void SurveyDistribution::Reset(const Keeper* const keeper) {
-  index = 0;
+  timeindex = 0;
   Likelihood::Reset(keeper);
   handle.logMessage("Reset surveydistribution component", this->Name());
 }
@@ -290,56 +290,28 @@ void SurveyDistribution::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void SurveyDistribution::LikelihoodPrint(ofstream& outfile) {
-  int i, j, year;
+void SurveyDistribution::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  outfile << "\nSurvey Distribution " << this->Name() << "\n\nLikelihood " << likelihood
-    << "\nWeight " << weight << "\nStock names";
-  for (i = 0; i < stocknames.Size(); i++)
-    outfile << sep << stocknames[i];
-  outfile << "\nInternal areas";
-  for (i = 0; i < areas.Nrow(); i++) {
-    outfile << endl;
-    for (j = 0; j < areas.Ncol(i); j++)
-      outfile << areas[i][j] << sep;
-  }
-  outfile << "\nAges:";
-  for (i  = 0; i < ages.Nrow(); i++) {
-    outfile << endl;
-    for (j = 0; j < ages.Ncol(i); j++)
-      outfile << ages[i][j] << sep;
-  }
-  outfile << "\nLengths:";
-  for (i = 0; i < lengths.Size(); i++)
-    outfile << sep << lengths[i];
-  outfile << endl;
+  if (!AAT.AtCurrentTime(TimeInfo))
+    return;
 
-  outfile << "\nSurvey distribution data:\n";
-  for (year = 0; year < Years.Size(); year++) {
-    outfile << "\nYear " << Years[year] << " and step " << Steps[year] << "\nObserved index:";
-    for (i = 0; i < (*obsDistribution[year]).Nrow(); i++) {
-      outfile << endl;
-      for (j = 0; j < (*obsDistribution[year]).Ncol(i); j++) {
-        outfile.width(smallwidth);
-        outfile.precision(smallprecision);
-        outfile << sep << (*obsDistribution[year])[i][j];
-      }
+  int t, area, age, len;
+  t = timeindex - 1; //timeindex was increased before this is called
+
+  if ((t >= Years.Size()) || t < 0)
+    handle.logFailure("Error in surveydistribution - invalid timestep", t);
+
+  //JMB - this is nasty hack since there is only one area
+  area = 0;
+  for (age = 0; age < (*modelDistribution[t]).Nrow(); age++) {
+    for (len = 0; len < (*modelDistribution[t]).Ncol(age); len++) {
+      outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
+        << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
+        << setw(printwidth) << ageindex[age] << sep << setw(printwidth)
+        << lenindex[len] << sep << setprecision(largeprecision) << setw(largewidth)
+        << (*modelDistribution[t])[age][len] << endl;
     }
-    outfile << "\nModelled index:";
-    for (i = 0; i < (*modelDistribution[year]).Nrow(); i++) {
-      outfile << endl;
-      for (j = 0; j < (*modelDistribution[year]).Ncol(i); j++) {
-        outfile.width(smallwidth);
-        outfile.precision(smallprecision);
-        outfile << sep << (*modelDistribution[year])[i][j];
-      }
-    }
-    outfile << "\nLikelihood value: ";
-    outfile.width(smallwidth);
-    outfile.precision(smallprecision);
-    outfile << likelihoodValues[year] << endl;
   }
-  outfile.flush();
 }
 
 void SurveyDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
@@ -375,7 +347,7 @@ void SurveyDistribution::calcIndex(const AgeBandMatrix* alptr, const TimeClass* 
   int i, age, len;
   if (suitfunction != NULL) {
     suitfunction->updateConstants(TimeInfo);
-    if ((index == 0) || (suitfunction->constantsHaveChanged(TimeInfo))) {
+    if ((timeindex == 0) || (suitfunction->constantsHaveChanged(TimeInfo))) {
       if (suitfunction->usesPredLength())
         suitfunction->setPredLength(0.0);
 
@@ -393,12 +365,12 @@ void SurveyDistribution::calcIndex(const AgeBandMatrix* alptr, const TimeClass* 
     case 1:
       for (age = 0; age <= alptr->maxAge(); age++)
         for (len = 0; len < LgrpDiv->numLengthGroups(); len++)
-          (*modelDistribution[index])[age][len] = parameters[0] * q_l[len] * ((*alptr)[age][len].N + parameters[1]);
+          (*modelDistribution[timeindex])[age][len] = parameters[0] * q_l[len] * ((*alptr)[age][len].N + parameters[1]);
       break;
     case 2:
       for (age = 0; age <= alptr->maxAge(); age++)
         for (len = 0; len < LgrpDiv->numLengthGroups(); len++)
-          (*modelDistribution[index])[age][len] = parameters[0] * q_l[len] * pow((*alptr)[age][len].N, parameters[1]);
+          (*modelDistribution[timeindex])[age][len] = parameters[0] * q_l[len] * pow((*alptr)[age][len].N, parameters[1]);
       break;
     default:
       handle.logWarning("Warning in surveydistribution - unrecognised fittype", fittype);
@@ -432,13 +404,13 @@ void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
       l = calcLikLog();
       break;
     default:
-      handle.logWarning("Warning in surveydistribution - unrecognised opttype", liketype);
+      handle.logWarning("Warning in surveydistribution - unrecognised likelihoodtype", liketype);
       break;
   }
 
   handle.logMessage("The likelihood score for this component on this timestep is", l);
   likelihood += l;
-  index++;
+  timeindex++;
 }
 
 double SurveyDistribution::calcLikMultinomial() {
@@ -450,22 +422,22 @@ double SurveyDistribution::calcLikMultinomial() {
 
   for (age = minrow; age <= maxrow; age++) {
     for (length = mincol[age]; length <= maxcol[age]; length++) {
-      if ((*obsDistribution[index])[age][length] > epsilon) { //cell will contribute
-        total -= (*obsDistribution[index])[age][length] *
-                 log(((*modelDistribution[index])[age][length]) + epsilon);
-        obstotal += (*obsDistribution[index])[age][length];
-        modtotal += ((*modelDistribution[index])[age][length] + epsilon);
+      if ((*obsDistribution[timeindex])[age][length] > epsilon) { //cell will contribute
+        total -= (*obsDistribution[timeindex])[age][length] *
+                 log(((*modelDistribution[timeindex])[age][length]) + epsilon);
+        obstotal += (*obsDistribution[timeindex])[age][length];
+        modtotal += ((*modelDistribution[timeindex])[age][length] + epsilon);
       }
     }
   }
 
   if ((modtotal <= 0) && (!(isZero(obstotal)))) {
-    likelihoodValues[index] = 0.0;
+    likelihoodValues[timeindex] = 0.0;
     return 0.0;
   } else {
     total /= obstotal;
     total += log(modtotal);
-    likelihoodValues[index] = total;
+    likelihoodValues[timeindex] = total;
     return total;
   }
 }
@@ -478,14 +450,14 @@ double SurveyDistribution::calcLikPearson() {
 
   for (age = minrow; age <= maxrow; age++) {
     for (length = mincol[age]; length <= maxcol[age]; length++) {
-      diff = ((*modelDistribution[index])[age][length] - (*obsDistribution[index])[age][length]);
+      diff = ((*modelDistribution[timeindex])[age][length] - (*obsDistribution[timeindex])[age][length]);
       diff *= diff;
-      diff /= ((*modelDistribution[index])[age][length] + epsilon);
+      diff /= ((*modelDistribution[timeindex])[age][length] + epsilon);
       total += diff;
     }
   }
 
-  likelihoodValues[index] = total;
+  likelihoodValues[timeindex] = total;
   return total;
 }
 
@@ -500,15 +472,15 @@ double SurveyDistribution::calcLikGamma() {
 
   for (age = minrow; age <= maxrow; age++) {
     for (length = mincol[age]; length <= maxcol[age]; length++) {
-      temp = ((*obsDistribution[index])[age][length] /
-               ((*modelDistribution[index])[age][length] + epsilon)) +
-               log((*modelDistribution[index])[age][length] + epsilon);
+      temp = ((*obsDistribution[timeindex])[age][length] /
+               ((*modelDistribution[timeindex])[age][length] + epsilon)) +
+               log((*modelDistribution[timeindex])[age][length] + epsilon);
 
       total += temp;
     }
   }
 
-  likelihoodValues[index] = total;
+  likelihoodValues[timeindex] = total;
   return total;
 }
 
@@ -519,8 +491,8 @@ double SurveyDistribution::calcLikLog() {
 
   for (age = minrow; age <= maxrow; age++) {
     for (length = mincol[age]; length <= maxcol[age]; length++) {
-      modtotal += (*modelDistribution[index])[age][length];
-      obstotal += (*obsDistribution[index])[age][length];
+      modtotal += (*modelDistribution[timeindex])[age][length];
+      obstotal += (*obsDistribution[timeindex])[age][length];
     }
   }
 
@@ -530,7 +502,7 @@ double SurveyDistribution::calcLikLog() {
   } else
     total = verybig;
 
-  likelihoodValues[index] = total; //kgf 19/1 99
+  likelihoodValues[timeindex] = total; //kgf 19/1 99
   return total;
 }
 

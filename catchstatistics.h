@@ -51,10 +51,11 @@ public:
    */
   void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
   /**
-   * \brief This function will print information from each CatchStatistics likelihood calculation
+   * \brief This function will print information from each CatchStatistics calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
+   * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile);
+  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
   /**
    * \brief This function will print summary information from each CatchStatistics likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
@@ -94,7 +95,7 @@ private:
    * \brief This is the DoubleMatrixPtrVector used to store variance of length/weight information specified in the input file
    * \note the indices for this object are [time][area][age]
    */
-  DoubleMatrixPtrVector variance;
+  DoubleMatrixPtrVector obsVariance;
   /**
    * \brief This is the DoubleMatrix used to store the calculated likelihood information
    * \note the indices for this object are [time][area]

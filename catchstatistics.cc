@@ -139,7 +139,6 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
   switch(functionnumber) {
     case 2:
     case 3:
-    case 6:
       needvar = 1;
   }
 
@@ -190,7 +189,7 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
         obsMean.resize(1, new DoubleMatrix(numarea, numage, 0.0));
         modelMean.resize(1, new DoubleMatrix(numarea, numage, 0.0));
         if (needvar == 1)
-          variance.resize(1, new DoubleMatrix(numarea, numage, 0.0));
+          obsVariance.resize(1, new DoubleMatrix(numarea, numage, 0.0));
         timeid = (Years.Size() - 1);
       }
 
@@ -205,7 +204,7 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
       (*numbers[timeid])[areaid][ageid] = tmpnumber;
       (*obsMean[timeid])[areaid][ageid] = tmpmean;
       if (needvar == 1)
-        (*variance[timeid])[areaid][ageid] = tmpstddev * tmpstddev;
+        (*obsVariance[timeid])[areaid][ageid] = tmpstddev * tmpstddev;
     }
   }
   AAT.addActions(Years, Steps, TimeInfo);
@@ -230,8 +229,8 @@ CatchStatistics::~CatchStatistics() {
     delete obsMean[i];
     delete modelMean[i];
   }
-  for (i = 0; i < variance.Size(); i++)
-    delete variance[i];
+  for (i = 0; i < obsVariance.Size(); i++)
+    delete obsVariance[i];
   delete[] functionname;
   delete LgrpDiv;
 }
@@ -330,11 +329,11 @@ double CatchStatistics::calcLikSumSquares() {
           break;
         case 2:
           (*modelMean[timeindex])[nareas][age] = PopStat.meanLength();
-          simvar = (*variance[timeindex])[nareas][age];
+          simvar = (*obsVariance[timeindex])[nareas][age];
           break;
         case 3:
           (*modelMean[timeindex])[nareas][age] = PopStat.meanWeight();
-          simvar = (*variance[timeindex])[nareas][age];
+          simvar = (*obsVariance[timeindex])[nareas][age];
           break;
         case 4:
           (*modelMean[timeindex])[nareas][age] = PopStat.meanWeight();
@@ -362,73 +361,26 @@ double CatchStatistics::calcLikSumSquares() {
   return totallikelihood;
 }
 
-void CatchStatistics::LikelihoodPrint(ofstream& outfile) {
-  int i, j, year, area;
+void CatchStatistics::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  outfile << "\nCatch Statistics " << this->Name() << "\n\nLikelihood " << likelihood
-    << "\nFunction " << functionname << "\nWeight " << weight << "\nStock names:";
-  for (i = 0; i < stocknames.Size(); i++)
-    outfile << sep << stocknames[i];
-  outfile << "\nInternal areas:";
-  for (i  = 0; i < areas.Nrow(); i++) {
-    outfile << endl;
-    for (j = 0; j < areas.Ncol(i); j++)
-      outfile << areas[i][j] << sep;
-  }
-  outfile << "\nAges:";
-  for (i  = 0; i < ages.Nrow(); i++) {
-    outfile << endl;
-    for (j = 0; j < ages.Ncol(i); j++)
-      outfile << ages[i][j] << sep;
-  }
-  outfile << "\nFleet names:";
-  for (i = 0; i < fleetnames.Size(); i++)
-    outfile << sep << fleetnames[i];
-  outfile << endl;
+  if (!AAT.AtCurrentTime(TimeInfo))
+    return;
 
-  outfile << "\nStatistics data for mean ";
-  switch(functionnumber) {
-    case 1:
-    case 2:
-    case 5:
-      outfile << "length";
-      break;
-    case 3:
-    case 4:
-      outfile << "weight";
-      break;
-    default:
-      handle.logWarning("Warning in catchstatistics - unrecognised function", functionname);
-      break;
-  }
-  outfile << " at age:\n";
+  int t, area, age;
+  t = timeindex - 1; //timeindex was increased before this is called
 
-  for (year = 0; year < obsMean.Size(); year++) {
-    outfile << "\nYear " << Years[year] << " and step " << Steps[year];
-    for (area = 0; area < (*obsMean[year]).Nrow(); area++) {
-      outfile << "\nInternal area: " << area << "\nObserved measurements\n";
-      for (i = 0; i < (*obsMean[year]).Ncol(area); i++) {
-        outfile.width(smallwidth);
-        outfile.precision(smallprecision);
-        outfile << sep << (*obsMean[year])[area][i];
-      }
-      outfile << "\nModelled measurements\n";
-      for (i = 0; i < (*modelMean[year]).Ncol(area); i++) {
-        outfile.width(smallwidth);
-        outfile.precision(smallprecision);
-        outfile << sep << (*modelMean[year])[area][i];
-      }
+  if ((t >= Years.Size()) || t < 0)
+    handle.logFailure("Error in catchstatistcs - invalid timestep", t);
+
+  for (area = 0; area < (*modelMean[t]).Nrow(); area++) {
+    for (age = 0; age < (*modelMean[t]).Ncol(area); age++) {
+      outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
+        << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
+        << setw(printwidth) << ageindex[age] << sep << setw(printwidth)
+        << (*numbers[t])[area][age] << sep << setprecision(largeprecision)
+        << setw(largewidth) << (*modelMean[t])[area][age]  << endl;
     }
-    outfile << "\nLikelihood values:";
-    for (area = 0; area < (*obsMean[year]).Nrow(); area++) {
-      outfile.width(smallwidth);
-      outfile.precision(smallprecision);
-      outfile << sep << likelihoodValues[year][area];
-    }
-    outfile << endl;
   }
-
-  outfile.flush();
 }
 
 void CatchStatistics::SummaryPrint(ofstream& outfile) {
