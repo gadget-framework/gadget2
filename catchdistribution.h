@@ -193,10 +193,6 @@ private:
    * \note the default value is 0, which calculates the likelihood score on each timestep
    */
   int yearly;
-  IntVector mincol;
-  IntVector maxcol;
-  int minrow;
-  int maxrow;
   /**
    * \brief This is the LengthGroupDivision used to store length information
    */

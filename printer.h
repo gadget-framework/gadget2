@@ -109,9 +109,14 @@ protected:
   int printtimeid;
   /**
    * \brief This is precision which can be used to override the default values when printing the information to the output file
-   * \note the default value is 0, which corresponds to using default values specified in the printer class
+   * \note the default value is 0, which corresponds to using values specified in gadget.h
    */
   int precision;
+  /**
+   * \brief This is width used when printing the information to the output file
+   * \note this value is set to precision + 4
+   */
+  int width;
 private:
   /**
    * \brief This denotes what type of printer class has been created

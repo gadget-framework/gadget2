@@ -79,10 +79,14 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "precision") == 0)
+  if (strcasecmp(text, "precision") == 0) {
     infile >> precision >> ws >> text >> ws;
-  else
-    precision = 0;
+    width = precision + 4;
+  } else {
+    // use default values
+    precision = largeprecision;
+    width = largewidth;
+  }
 
   if (precision < 0)
     handle.Message("Error in preyoverprinter - invalid value of precision");
@@ -155,14 +159,6 @@ void PreyOverPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   const DoubleMatrix *dptr = &aggregator->returnSum();
   int a, len, p, w;
 
-  if (precision == 0) {
-    p = largeprecision;
-    w = largewidth;
-  } else {
-    p = precision;
-    w = precision + 4;
-  }
-
   for (a = 0; a < areas.Nrow(); a++) {
     for (len = 0; len < dptr->Ncol(a); len++) {
       outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
@@ -172,9 +168,9 @@ void PreyOverPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
       //JMB crude filter to remove the 'silly' values from the output
       if ((*dptr)[a][len] < rathersmall)
-        outfile << setw(w) << 0 << endl;
+        outfile << setw(width) << 0 << endl;
       else
-        outfile << setprecision(p) << setw(w) << (*dptr)[a][len] << endl;
+        outfile << setprecision(precision) << setw(width) << (*dptr)[a][len] << endl;
     }
   }
   outfile.flush();

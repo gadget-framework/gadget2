@@ -55,10 +55,14 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
   handle.checkIfFailure(outfile, filename);
 
   //infile >> text >> ws;
-  if (strcasecmp(text, "precision") == 0)
+  if (strcasecmp(text, "precision") == 0) {
     infile >> precision >> ws >> text >> ws;
-  else
-    precision = 0;
+    width = precision + 4;
+  } else {
+    // use default values
+    precision = largeprecision;
+    width = largewidth;
+  }
 
   if (precision < 0)
     handle.Message("Error in stockstdprinter - invalid value of precision");
@@ -171,24 +175,15 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
     return;
 
   aggregator->Sum();
-  int a, age, p, w;
+  int a, age;
   double tmpnumber, tmpbiomass;
-
-  if (precision == 0) {
-    p = largeprecision;
-    w = largewidth;
-  } else {
-    p = precision;
-    w = precision + 4;
-  }
-
+  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   for (a = 0; a < areas.Size(); a++) {
     if (preyinfo)
       preyinfo->Sum(TimeInfo, areas[a]);
-    const AgeBandMatrix& alk = aggregator->returnSum()[a];
 
-    for (age = alk.minAge(); age <= alk.maxAge(); age++) {
-      PopStatistics popstat(alk[age], LgrpDiv);
+    for (age = (*alptr)[a].minAge(); age <= (*alptr)[a].maxAge(); age++) {
+      PopStatistics popstat((*alptr)[a][age], LgrpDiv);
       outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
         << setw(lowwidth) << TimeInfo->CurrentStep() << sep
         << setw(lowwidth) << outerareas[a] << sep << setw(lowwidth)
@@ -196,11 +191,12 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
         //JMB crude filters to remove the 'silly' values from the output
         if (popstat.totalNumber() < rathersmall) {
-          outfile << setw(w) << 0 << sep << setw(printwidth) << 0 << sep << setw(printwidth)
-            << 0 << sep << setw(printwidth) << 0 << sep << setw(w) << 0 << sep << setw(w) << 0;
+          outfile << setw(width) << 0 << sep << setw(printwidth) << 0
+            << sep << setw(printwidth) << 0 << sep << setw(printwidth) << 0
+            << sep << setw(width) << 0 << sep << setw(width) << 0;
 
         } else {
-          outfile << setprecision(p) << setw(w) << popstat.totalNumber() / scale << sep
+          outfile << setprecision(precision) << setw(width) << popstat.totalNumber() / scale << sep
             << setprecision(printprecision) << setw(printwidth) << popstat.meanLength() << sep
             << setprecision(printprecision) << setw(printwidth) << popstat.meanWeight() << sep
             << setprecision(printprecision) << setw(printwidth) << popstat.sdevLength() << sep;
@@ -210,13 +206,13 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
             tmpbiomass = preyinfo->BconsumptionByAge(areas[a])[age + minage];
 
             if ((tmpnumber < rathersmall) || (tmpbiomass < rathersmall)) {
-              outfile << setw(w) << 0 << sep << setw(w) << 0;
+              outfile << setw(width) << 0 << sep << setw(width) << 0;
             } else {
-              outfile << setprecision(p) << setw(w) << tmpnumber / scale
-                << sep << setprecision(p) << setw(w) << tmpbiomass;
+              outfile << setprecision(precision) << setw(width) << tmpnumber / scale
+                << sep << setprecision(precision) << setw(width) << tmpbiomass;
             }
           } else
-            outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0;
+            outfile << setw(width) << 0 << sep << setw(width) << 0;
 
         }
       outfile << endl;

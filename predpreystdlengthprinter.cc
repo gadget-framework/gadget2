@@ -44,17 +44,9 @@ void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo, int printt
   if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
-  int a, predl, preyl, p, w;
+  int a, predl, preyl;
   const LengthGroupDivision* predLgrpDiv = predinfo->returnPredLengthGroupDiv();
   const LengthGroupDivision* preyLgrpDiv = predinfo->returnPreyLengthGroupDiv();
-
-  if (precision == 0) {
-    p = printprecision;
-    w = printwidth;
-  } else {
-    p = precision;
-    w = precision + 4;
-  }
 
   for (a = 0; a < areas.Size(); a++) {
     predinfo->Sum(TimeInfo, areas[a]);
@@ -73,12 +65,15 @@ void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo, int printt
            || (predinfo->BconsumptionByLength(areas[a])[predl][preyl] < rathersmall)
            || (predinfo->MortalityByLength(areas[a])[predl][preyl] < verysmall))
 
-          outfile << setw(w) << 0 << sep << setw(w) << 0 << sep << setw(w) << 0 << endl;
+          outfile << setw(width) << 0 << sep << setw(width) << 0 << sep << setw(width) << 0 << endl;
 
         else
-          outfile << setprecision(p) << setw(w) << predinfo->NconsumptionByLength(areas[a])[predl][preyl] << sep
-            << setprecision(p) << setw(w) << predinfo->BconsumptionByLength(areas[a])[predl][preyl] << sep
-            << setprecision(p) << setw(w) << predinfo->MortalityByLength(areas[a])[predl][preyl] << endl;
+          outfile << setprecision(precision) << setw(width)
+            << predinfo->NconsumptionByLength(areas[a])[predl][preyl] << sep
+            << setprecision(precision) << setw(width)
+            << predinfo->BconsumptionByLength(areas[a])[predl][preyl] << sep
+            << setprecision(precision) << setw(width)
+            << predinfo->MortalityByLength(areas[a])[predl][preyl] << endl;
 
       }
     }

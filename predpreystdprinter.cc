@@ -45,10 +45,14 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile, const TimeClass* c
   handle.checkIfFailure(outfile, filename);
 
   //infile >> text >> ws;
-  if (strcasecmp(text, "precision") == 0)
+  if (strcasecmp(text, "precision") == 0) {
     infile >> precision >> ws >> text >> ws;
-  else
-    precision = 0;
+    width = precision + 4;
+  } else {
+    // use default values
+    precision = printprecision;
+    width = printwidth;
+  }
 
   if (precision < 0)
     handle.Message("Error in predpreystdprinter - invalid value of precision");

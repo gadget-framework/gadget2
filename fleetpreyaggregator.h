@@ -72,26 +72,6 @@ public:
    * \return total, the AgeBandMatrixPtrVector of aggregated catch information
    */
   const AgeBandMatrixPtrVector& returnSum() const { return total; };
-  /**
-   * \brief This will return the IntVector of the minimum columns for each row of the AgeBandMatrixPtrVector
-   * \return mincol, the IntVector of minimum columns
-   */
-  const IntVector& getMinCol() const { return mincol; };
-  /**
-   * \brief This will return the IntVector of the maximum columns for each row of the AgeBandMatrixPtrVector
-   * \return maxcol, the IntVector of maximum columns
-   */
-  const IntVector& getMaxCol() const { return maxcol; };
-  /**
-   * \brief This will return the minimum row of the AgeBandMatrixPtrVector
-   * \return minrow
-   */
-  int getMinRow() const { return minrow; };
-  /**
-   * \brief This will return the maximum row of the AgeBandMatrixPtrVector
-   * \return maxrow
-   */
-  int getMaxRow() const { return maxrow; };
 private:
   /**
    * \brief This is the FleetPtrVector of the fleets that will be aggregated
@@ -113,26 +93,6 @@ private:
    * \brief This is the IntMatrix used to store age information
    */
   IntMatrix ages;
-  /**
-   * \brief This is the IntVector used to store the minimum non-empty row for each column in the AgeBandMatrixPtrVector
-   * \note mincol is typically the minimum length for each age of the aggregated stocks
-   */
-  IntVector mincol;
-  /**
-   * \brief This is the IntVector used to store the maximum non-empty row for each column in the AgeBandMatrixPtrVector
-   * \note maxcol is typically the maximum length for each age of the aggregated stocks
-   */
-  IntVector maxcol;
-  /**
-   * \brief This is the minimum non-empty row in the AgeBandMatrixPtrVector
-   * \note minrow is typically the minimum age of the aggregated stocks
-   */
-  int minrow;
-  /**
-   * \brief This is the maximum non-empty row in the AgeBandMatrixPtrVector
-   * \note maxrow is typically the maximum age of the aggregated stocks
-   */
-  int maxrow;
   /**
    * \brief This is the flag used to denote whether to calculate overconsumption of the stocks or not
    */

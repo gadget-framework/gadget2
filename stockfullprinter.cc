@@ -43,10 +43,14 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile, const TimeClass* const
   handle.checkIfFailure(outfile, filename);
 
   //infile >> text >> ws;
-  if (strcasecmp(text, "precision") == 0)
+  if (strcasecmp(text, "precision") == 0) {
     infile >> precision >> ws >> text >> ws;
-  else
-    precision = 0;
+    width = precision + 4;
+  } else {
+    // use default values
+    precision = largeprecision;
+    width = largewidth;
+  }
 
   if (precision < 0)
     handle.Message("Error in stockfullprinter - invalid value of precision");
@@ -151,32 +155,24 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
     return;
 
   aggregator->Sum();
-  int a, age, l, p, w;
+  int a, age, len;
 
-  if (precision == 0) {
-    p = largeprecision;
-    w = largewidth;
-  } else {
-    p = precision;
-    w = precision + 4;
-  }
-
+  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   for (a = 0; a < areas.Size(); a++) {
-    const AgeBandMatrix& alk = aggregator->returnSum()[a];
-    for (age = alk.minAge(); age <= alk.maxAge(); age++) {
-      for (l = alk.minLength(age); l < alk.maxLength(age); l++) {
+    for (age = (*alptr)[a].minAge(); age <= (*alptr)[a].maxAge(); age++) {
+      for (len = (*alptr)[a].minLength(age); len < (*alptr)[a].maxLength(age); len++) {
         outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
           << setw(lowwidth) << TimeInfo->CurrentStep() << sep
           << setw(lowwidth) << outerareas[a] << sep << setw(lowwidth)
           << age + minage << sep << setw(lowwidth)
-          << LgrpDiv->meanLength(l) << sep;
+          << LgrpDiv->meanLength(len) << sep;
 
         //JMB crude filter to remove the 'silly' values from the output
-        if ((alk[age][l].N < rathersmall) || (alk[age][l].W < 0))
-          outfile << setw(w) << 0 << sep << setw(w) << 0 << endl;
+        if (((*alptr)[a][age][len].N < rathersmall) || ((*alptr)[a][age][len].W < 0))
+          outfile << setw(width) << 0 << sep << setw(width) << 0 << endl;
         else
-          outfile << setprecision(p) << setw(w) << alk[age][l].N << sep
-            << setprecision(p) << setw(w) << alk[age][l].W << endl;
+          outfile << setprecision(precision) << setw(width) << (*alptr)[a][age][len].N << sep
+            << setprecision(precision) << setw(width) << (*alptr)[a][age][len].W << endl;
 
       }
     }
