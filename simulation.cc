@@ -3,10 +3,7 @@
 #include "errorhandler.h"
 #include "runid.h"
 #include "gadget.h"
-
-#ifdef INTERRUPT_HANDLER
 #include "interruptinterface.h"
-#endif
 
 extern RunID RUNID;
 extern ErrorHandler handle;

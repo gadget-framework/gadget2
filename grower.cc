@@ -138,25 +138,22 @@ void Grower::Print(ofstream& outfile) const {
 
   outfile << "\nGrower\n\t";
   LgrpDiv->Print(outfile);
-  outfile << "\tLength increase:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tInternal area " << areas[area] << endl << TAB;
+    outfile << "\tLength increase on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < calcLengthGrowth.Ncol(area); i++)
       outfile << sep << calcLengthGrowth[area][i];
     outfile << endl;
   }
 
-  outfile << "\tWeight increase:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tInternal area " << areas[area] << endl << TAB;
+    outfile << "\tWeight increase on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < calcWeightGrowth.Ncol(area); i++)
       outfile << sep << calcWeightGrowth[area][i];
     outfile << endl;
   }
 
-  outfile << "\tDistributed length increase:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tInternal area " << areas[area] << endl;
+    outfile << "\tDistributed length increase on internal area " << areas[area] << ":\n";
     for (i = 0; i < lgrowth[area]->Nrow(); i++) {
       outfile << TAB;
       for (j = 0; j < lgrowth[area]->Ncol(i); j++)
@@ -165,9 +162,8 @@ void Grower::Print(ofstream& outfile) const {
     }
   }
 
-  outfile << "\tDistributed weight increase:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tInternal area " << areas[area] << endl;
+    outfile << "\tDistributed weight increase on internal area " << areas[area] << ":\n";
     for (i = 0; i < wgrowth[area]->Nrow(); i++) {
       outfile << TAB;
       for (j = 0; j < wgrowth[area]->Ncol(i); j++)

@@ -36,7 +36,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
 
   this->calcMaxConsumption(Temperature, area, CurrentSubstep, numsubsteps, LengthOfStep);
 
-  //Now maxconbylength contains the maximum consumption by length.
+  //Now maxconbylength contains the maximum consumption by length
   //Calculating Phi(L) and O(l,L,prey) (stored in consumption)
   for (prey = 0; prey < numPreys(); prey++) {
     if (Preys(prey)->IsInArea(area)) {
@@ -57,7 +57,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
     }
   }
 
-  //Calculating fphi(L) and Totalconsumption of predator in Area)
+  //Calculating fphi(L) and Totalconsumption of predator in area
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     if (isZero(Phi[Iarea][predl] + halfFeedingValue * Areasize))
       fphI[Iarea][predl] = 0.0;
@@ -68,7 +68,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
       maxconbylength[Iarea][predl] * Prednumber[Iarea][predl].N;
   }
 
-  //Distributing the totalconsumption on the Preys().
+  //Distributing the total consumption on the Preys()
   for (prey = 0; prey < numPreys(); prey++)
     if (Preys(prey)->IsInArea(area))
       if (Preys(prey)->Biomass(area) > verysmall)
@@ -81,9 +81,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
               cons[Iarea][prey][predl][preyl] *= tmpcons;
           }
 
-
-  //Add the calculated consumption to the preys in question using
-  //memberfunctions in prey.
+  //Add the calculated consumption to the preys in question
   for (prey = 0; prey < numPreys(); prey++)
     if (Preys(prey)->IsInArea(area))
       if (Preys(prey)->Biomass(area) > verysmall)

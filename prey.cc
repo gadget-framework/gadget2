@@ -111,7 +111,7 @@ void Prey::Print(ofstream& outfile) const {
   outfile << "\nPrey\n\tName " << this->Name() << "\n\t";
   LgrpDiv->Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tNumber of prey on internal area " << areas[area] << ":";
+    outfile << "\tNumber of prey on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
@@ -120,7 +120,7 @@ void Prey::Print(ofstream& outfile) const {
     outfile << endl;
   }
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tWeight of prey on internal area " << areas[area] << ":";
+    outfile << "\tWeight of prey on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
@@ -128,9 +128,8 @@ void Prey::Print(ofstream& outfile) const {
     }
     outfile << endl;
   }
-  outfile << "\tConsumption of prey:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tInternal area " << areas[area] << ":";
+    outfile << "\tConsumption of prey on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
@@ -138,9 +137,8 @@ void Prey::Print(ofstream& outfile) const {
     }
     outfile << endl;
   }
-  outfile << "\tOverconsumption of prey:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tInternal area " << areas[area] << ":";
+    outfile << "\tOverconsumption of prey on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);

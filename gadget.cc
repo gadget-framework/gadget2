@@ -3,10 +3,7 @@
 #include "runid.h"
 #include "gadget.h"
 #include "optinfo.h"
-
-#ifdef INTERRUPT_HANDLER
 #include "interrupthandler.h"
-#endif
 
 //Ecosystem must be global due to the optimization functions.
 RunID RUNID;

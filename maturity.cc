@@ -81,11 +81,8 @@ void Maturity::setStock(StockPtrVector& stockvec) {
 
 void Maturity::Print(ofstream& outfile) const {
   int i;
-  outfile << "\nMaturity\n\tRead names of mature stocks:";
-  for (i = 0; i < matureStockNames.Size(); i++)
-    outfile << sep << (const char*)(matureStockNames[i]);
-  outfile << "\n\tNames of mature stocks (through pointers):";
-  for (i = 0; i < matureStocks.Size(); i++)
+  outfile << "\nMaturity\n\tNames of mature stocks:";
+   for (i = 0; i < matureStocks.Size(); i++)
     outfile << sep << (const char*)(matureStocks[i]->Name());
   outfile << "\n\tStored numbers:\n";
   for (i = 0; i < areas.Size(); i++) {

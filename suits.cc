@@ -161,20 +161,19 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
   #ifdef SUIT_SCALE
   //Scaling of suitabilities, so that in each lengthgroup of each predator, the
   //maximum suitability is exactly 1, if any suitability is different from 0.
-  double maxL;
+  double maxsuitability;
   for (i = 0; i < pred->numLengthGroups(); i++) {
-    maxL = 0;
+    maxsuitability = 0.0;
     for (p = 0; p < FuncPreynames.Size() + MatrixPreynames.Size(); p++)
       if (i >= preCalcSuitability[p].minRow() && i <= preCalcSuitability[p].maxRow())
-        for (j = preCalcSuitability[p].minCol(i);
-            j < preCalcSuitability[p].maxCol(i); j++)
-          maxL = max(preCalcSuitability[p][i][j], maxL);
+        for (j = preCalcSuitability[p].minCol(i); j < preCalcSuitability[p].maxCol(i); j++)
+          maxsuitability = max(preCalcSuitability[p][i][j], maxsuitability);
 
-    if (maxL != 0)
+    if (!(isZero(maxsuitability)))
       for (p = 0; p < FuncPreynames.Size() + MatrixPreynames.Size(); p++)
         if (i >= preCalcSuitability[p].minRow() && i <= preCalcSuitability[p].maxRow())
           for (j = preCalcSuitability[p].minCol(i); j < preCalcSuitability[p].maxCol(i); j++)
-            preCalcSuitability[p][i][j] /= maxL;
+            preCalcSuitability[p][i][j] /= maxsuitability;
   }
   #endif
 }

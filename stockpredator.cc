@@ -56,31 +56,31 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
 
 void StockPredator::Print(ofstream& outfile) const {
   int i, area;
+  outfile << "\nStock predator\n";
   PopPredator::Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tPhi on internal area " << areas[area] << endl << TAB;
+    outfile << "\tPhi on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < Phi.Ncol(area); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
-      outfile << Phi[area][i] << sep;
+      outfile << fphI[area][i] << sep;
     }
     outfile << endl;
   }
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "Alkeys (numbers) on internal area " << areas[area] << endl;
+    outfile << "\tAlkeys (numbers) on internal area " << areas[area] << ":\n";
     Alkeys[area].printNumbers(outfile);
   }
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "Alkeys (mean weights) on internal area " << areas[area] << endl;
+    outfile << "\tAlkeys (mean weights) on internal area " << areas[area] << ":\n";
     Alkeys[area].printWeights(outfile);
   }
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "Age-length proportion on internal area " << areas[area] << endl;
+    outfile << "\tAge-length proportion on internal area " << areas[area] << ":\n";
     Alprop[area].Print(outfile);
   }
-  outfile << "Maximum consumption by length.\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tInternal area " << areas[area] << TAB;
+    outfile << "\tMaximum consumption by length on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < maxconbylength.Ncol(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);

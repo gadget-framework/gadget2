@@ -95,7 +95,7 @@ void OptInfoBfgs::read(CommentStream& infile, char* text) {
     sigma = 0.01;
   }
   if (step < 1) {
-    handle.logWarning("Warning in optinfofile - value of st outside bounds", step);
+    handle.logWarning("Warning in optinfofile - value of step outside bounds", step);
     step = 1.0;
   }
   if (isZero(bfgseps) || (bfgseps < 0)) {

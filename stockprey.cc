@@ -46,7 +46,7 @@ void StockPrey::Print(ofstream& outfile) const {
   outfile << "\nStock prey\n";
   int area;
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tAlkeys on internal area " << areas[area] << endl;
+    outfile << "\tAlkeys on internal area " << areas[area] << ":\n";
     Alkeys[area].printNumbers(outfile);
   }
 }
