@@ -52,21 +52,21 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   prey = new LengthPrey(lengths, areas, this->getName());
 
   infile >> text >> ws;
-  if (strcasecmp(text, "amounts") == 0) {
+  if ((strcasecmp(text, "amount") == 0) || (strcasecmp(text, "amounts") == 0)) {
     infile >> text >> ws;
     subfile.open(text, ios::in);
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
 
     if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))
-      handle.Message("Failed to read otherfood amounts");
+      handle.Message("Error in otherfood - failed to read otherfood amounts");
     amount.Inform(keeper);
 
     handle.Close();
     subfile.close();
     subfile.clear();
   } else
-    handle.Unexpected("amounts", text);
+    handle.Unexpected("amount", text);
 
   keeper->clearLast();
   keeper->clearLast();
