@@ -27,11 +27,11 @@ public:
   /**
    * \brief This will select the stocks, predators and preys required for the printer class to print the requested information
    * \param stockvec is the StockPtrVector of all the available stocks
-   * \param predvec is the PopPredatorPtrVector of all the available predators
+   * \param predvec is the PredatorPtrVector of all the available predators
    * \param preyvec is the PreyPtrVector of all the available preys
    */
   virtual void setStocksAndPredAndPrey(const StockPtrVector& stockvec,
-    const PopPredatorPtrVector& predvec, const PreyPtrVector& preyvec);
+    const PredatorPtrVector& predvec, const PreyPtrVector& preyvec);
 protected:
   /**
    * \brief This will select the predator and prey required for the printer class to print the requested information

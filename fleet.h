@@ -134,12 +134,6 @@ public:
    */
   LengthPredator* returnPredator() const;
   /**
-   * \brief This will return the amount that the fleet has over consumed, for a given area
-   * \param area is an integer to denote the internal area of interest
-   * \return amount of overconsumption
-   */
-  double OverConsumption(int area) const;
-  /**
    * \brief This will return the amount that the fleet has consumed, for a given area and time step
    * \param area is an integer to denote the internal area of interest
    * \param TimeInfo is the TimeClass for the current model

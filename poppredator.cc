@@ -148,3 +148,17 @@ void PopPredator::Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& rati
   //Note! ratio is supposed to have equal dimensions to PopPredator.
   stock_alkeys.Multiply(ratio, *CI);
 }
+
+double PopPredator::getTotalOverConsumption(int area) const {
+  int i;
+  double totaloverconsumption = 0.0;
+  
+  if ((area < 0) || (area >= overconsumption.Nrow()))
+    handle.logWarning("Warning in predator - invalid area identifier", area);
+    
+  for (i = 0; i < overconsumption.Ncol(area); i++)
+    totaloverconsumption += overconsumption[area][i];
+
+  return totaloverconsumption;
+}
+

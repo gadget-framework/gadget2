@@ -6,7 +6,6 @@
 #include "stockprey.h"
 #include "preyptrvector.h"
 #include "predatorptrvector.h"
-#include "poppredatorptrvector.h"
 #include "stockprinter.h"
 #include "stockstdprinter.h"
 #include "predatorprinter.h"
@@ -40,10 +39,8 @@ extern ErrorHandler handle;
 void Ecosystem::Initialise() {
   PreyPtrVector preyvec;
   PredatorPtrVector predvec;
-  PopPredatorPtrVector poppredvec;
   int preyindex = 0;
   int predindex = 0;
-  int poppredindex = 0;
   int i;
 
   for (i = 0; i < stockvec.Size(); i++) {
@@ -53,9 +50,7 @@ void Ecosystem::Initialise() {
     }
     if (stockvec[i]->doesEat()) {
       predvec.resize(1);
-      poppredvec.resize(1);
       predvec[predindex++] = stockvec[i]->returnPredator();
-      poppredvec[poppredindex++] = stockvec[i]->returnPredator();
     }
   }
 
@@ -66,9 +61,7 @@ void Ecosystem::Initialise() {
 
   for (i = 0; i < fleetvec.Size(); i++) {
     predvec.resize(1);
-    poppredvec.resize(1);
     predvec[predindex++] = fleetvec[i]->returnPredator();
-    poppredvec[poppredindex++] = fleetvec[i]->returnPredator();
   }
 
   for (i = 0; i < predvec.Size(); i++)
@@ -146,7 +139,7 @@ void Ecosystem::Initialise() {
         ((StockPreyFullPrinter*)(printvec[i]))->setStock(stockvec);
         break;
       case PREDPREYSTDPRINTER:
-        ((PredPreyStdPrinter*)(printvec[i]))->setStocksAndPredAndPrey(stockvec, poppredvec, preyvec);
+        ((PredPreyStdPrinter*)(printvec[i]))->setStocksAndPredAndPrey(stockvec, predvec, preyvec);
         break;
       case STOCKFULLPRINTER:
         ((StockFullPrinter*)(printvec[i]))->setStock(stockvec);

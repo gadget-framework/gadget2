@@ -94,13 +94,13 @@ Class members, variables and functions should always start with a lower case let
 
 Examples:
 \verbatim
-   class TimeClass {
+   #class# TimeClass {
      // ...
    }
 
    TimeClass* currentTime;
 
-   void incrementTime(TimeClass currentTime) {
+   #void# incrementTime(TimeClass currentTime) {
      // ...
    }
 \endverbatim
@@ -115,15 +115,15 @@ All mathematical and logical operators (=, \<, +, etc.) should be separated from
 
 Examples:
 \verbatim
-   for (i = 0; i < n; i++) {
+   #for# (i = 0; i < n; i++) {
      // ...
    }
 
-   if (isDone()) {
+   #if# (isDone()) {
      // ...
-   } else if (something()) {
+   } #else# #if# (something()) {
      // ...
-   } else {
+   } #else# {
      // ...
    }
 
@@ -136,9 +136,9 @@ Due to the limitations of some compilers, variables defined and initialised in t
 
 Example:
 \verbatim
-   int i;
-   for (i = 0; i < n; i++) {
-     //...
+   #int# i;
+   #for# (i = 0; i < n; i++) {
+     // ...
    }
 \endverbatim
 
@@ -150,13 +150,14 @@ Any non-trivial method should also have a short description in the code, in addi
 
 Example:
 \verbatim
-  \brief This will return the total number of timesteps that have taken place in the
-         simulation from the start of the model simulation until a specifed year and step
-  \param year is the specified year
-  \param step is the specified step
-  \return number of timesteps taken
-
-  int TimeClass::calcSteps(int year, int step);
+  #**
+   * \brief This will return the total number of timesteps that have taken place in the
+      simulation from the start of the model simulation until a specified year and step
+   * \param year is the specified year
+   * \param step is the specified step
+   * \return number of timesteps taken
+   *#
+  #int# TimeClass::calcSteps(#int# year, #int# step);
 \endverbatim
 
 \section cvs Version Control
@@ -167,8 +168,8 @@ To maintain version control of the source files, a CVS repository has been set u
 
 Gadget is a program that has been developed on a Unix computing platform, and is regularly compiled and run on machines running versions of Linux, Solaris and Cygwin (a Unix emulator for Microsoft Windows machines, see http://www.cygwin.com for more information).  By regularly compiling and running Gadget on a variety of computing platforms, it is hoped that the source code is compatible with as many computing platforms as possible.  The list of computing platforms, and C++ compilers, that Gadget is regularly tested on is:
 
-  \li Linux (RedHat 9), compiled using \c g++ versions 2.95.3, 2.96 and 3.2.2
+  \li Linux (RedHat 9), compiled using \c g++ versions 2.95.3, 2.96, 3.2.2 and 3.4.1
   \li Solaris (SunOS 5.8), compiled using  \c g++ version 3.3
-  \li Cygwin (1.5.9-1), compiled using  \c g++ version 3.3.1
+  \li Cygwin (1.5.10-3), compiled using  \c g++ version 3.3.1
 
 */

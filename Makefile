@@ -63,11 +63,11 @@ VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 	popratiomatrix.o popratiovector.o popinfomatrix.o popinfovector.o \
 	doubleindexvector.o predatorptrvector.o preyptrvector.o fleetptrvector.o \
 	doublematrixptrmatrix.o doublematrixptrvector.o timevariableindexvector.o \
-	agebandmatrixptrvector.o poppredatorptrvector.o popratioindexvector.o \
+	agebandmatrixptrvector.o popratioindexvector.o agebandmatrixptrmatrix.o \
 	formulamatrix.o formulavector.o charptrmatrix.o charptrvector.o \
 	timevariablevector.o stockptrvector.o agebandmatrixratioptrvector.o \
 	vectorofcharptr.o suitfuncptrvector.o tagptrvector.o printerptrvector.o \
-	formulamatrixptrvector.o variableinfoptrvector.o agebandmatrixptrmatrix.o
+	formulamatrixptrvector.o variableinfoptrvector.o
 
 GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.o \
 	abstrpredstdinfo.o abstrpreystdinfo.o catchdistribution.o errorhandler.o \

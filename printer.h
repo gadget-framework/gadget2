@@ -5,7 +5,6 @@
 #include "areatime.h"
 #include "lengthgroup.h"
 #include "commentstream.h"
-#include "poppredatorptrvector.h"
 #include "predatorptrvector.h"
 #include "preyptrvector.h"
 #include "stockptrvector.h"
@@ -64,11 +63,11 @@ public:
   /**
    * \brief This will select the stocks, predators and preys required for the printer class to print the requested information
    * \param stockvec is the StockPtrVector of all the available stocks
-   * \param poppredvec is the PopPredatorPtrVector of all the available predators
+   * \param predvec is the PredatorPtrVector of all the available predators
    * \param preyvec is the PreyPtrVector of all the available preys
    */
   virtual void setStocksAndPredAndPrey(const StockPtrVector& stockvec,
-    const PopPredatorPtrVector& poppredvec, const PreyPtrVector& preyvec) {};
+    const PredatorPtrVector& predvec, const PreyPtrVector& preyvec) {};
   /**
    * \brief This will select the predators required for the printer class to print the requested information
    * \param predatorvec is the PredatorPtrVector of all the available predators

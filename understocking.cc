@@ -108,7 +108,8 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
       for (i = 0; i < fleets.Size(); i++)
         for (j = 0; j < areas[k].Size(); j++)
           if (fleets[i]->IsInArea(areas[k][j]))
-            err += fleets[i]->OverConsumption(areas[k][j]);
+            err += fleets[i]->returnPredator()->getTotalOverConsumption(areas[k][j]);
+
       store[k] += pow(err, powercoeff);
       l += store[k];
     }

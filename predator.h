@@ -25,6 +25,7 @@ public:
   virtual const BandMatrix& Consumption(int area, const char* preyname) const = 0;
   virtual const DoubleVector& Consumption(int area) const = 0;
   virtual const DoubleVector& OverConsumption(int area) const = 0;
+  virtual double getTotalOverConsumption(int area) const = 0;
   virtual const PopInfoVector& getNumberPriorToEating(int area, const char* preyname) const = 0;
   virtual const LengthGroupDivision* returnLengthGroupDiv() const = 0;
   virtual int numLengthGroups() const = 0;

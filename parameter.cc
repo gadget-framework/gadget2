@@ -44,8 +44,7 @@ Parameter::Parameter(const Parameter& p) {
   if (p.name == NULL)  {
     name = NULL;
   } else {
-    assert(strlen(p.name) < MaxStrLength);
-    len = (strlen(p.name) + 1);
+    len = strlen(p.name) + 1;
     name = new char[len];
     strncpy(name, p.name, len);
   }
@@ -77,8 +76,7 @@ Parameter& Parameter::operator = (const Parameter& p) {
   if (p.name == NULL) {
     name = NULL;
   } else {
-    assert(strlen(p.name) < MaxStrLength);
-    len = (strlen(p.name) + 1);
+    len = strlen(p.name) + 1;
     name = new char[len];
     strncpy(name, p.name, len);
   }
@@ -152,7 +150,7 @@ CommentStream& operator >> (CommentStream& in, Parameter& p) {
     //did not read any string
     p.name = NULL;
   } else {
-    len = (strlen(tempString) + 1);
+    len = strlen(tempString) + 1;
     p.name = new char[len];
     strncpy(p.name, tempString, len);
   }
@@ -174,15 +172,19 @@ istream& operator >> (istream& in, Parameter& p) {
   }
 
   tempString[i] = '\0';
+  if (strlen(tempString) == MaxStrLength - 1)
+    cerr << "Warning - name of switch has reached maximum allowed length\n";
+
   if (p.name != NULL) {
     delete[] p.name;
     p.name = NULL;
   }
+
   if (i <= 0) {
     //did not read any string
     p.name = NULL;
   } else {
-    len = (strlen(tempString) + 1);
+    len = strlen(tempString) + 1;
     p.name = new char[len];
     strncpy(p.name, tempString, len);
   }

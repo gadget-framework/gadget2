@@ -88,7 +88,7 @@ PredPreyStdPrinter::~PredPreyStdPrinter() {
 }
 
 void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
-  const PopPredatorPtrVector& predvec, const PreyPtrVector& preyvec) {
+  const PredatorPtrVector& predvec, const PreyPtrVector& preyvec) {
 
   //First we try comparing the StockPredators and StockPreys to predname and preyname.
   int stockpred = 0;
@@ -118,17 +118,17 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
     }
   }
 
-  //And now check the PopPredators.
+  //And now check the predators.
   for (i = 0; i < predvec.Size(); i++) {
     if (strcasecmp(predvec[i]->Name(), predname) == 0) {
-      if (predvec[i] != predator && predator)
+      if (((PopPredator*)predvec[i] != predator) && (predator))
         handle.logFailure("Error in predpreystdprinter - repeated predator", predname);
 
-      predator = predvec[i];
+      predator = (PopPredator*)predvec[i];
     }
   }
 
-  //And now check the Preys.
+  //And now check the preys.
   for (i = 0; i < preyvec.Size(); i++) {
     if (strcasecmp(preyvec[i]->Name(), preyname) == 0) {
       if (preyvec[i] != prey && prey)

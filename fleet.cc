@@ -157,10 +157,6 @@ LengthPredator* Fleet::returnPredator() const {
   return predator;
 }
 
-double Fleet::OverConsumption(int area) const {
-  return predator->OverConsumption(area)[0];
-}
-
 double Fleet::Amount(int area, const TimeClass* const TimeInfo) const {
   return amount[TimeInfo->CurrentTime()][AreaNr[area]];
 }

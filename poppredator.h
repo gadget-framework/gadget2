@@ -17,6 +17,7 @@ public:
   virtual const BandMatrix& Consumption(int area, const char* preyname) const;
   virtual const DoubleVector& Consumption(int area) const { return totalconsumption[AreaNr[area]]; };
   virtual const DoubleVector& OverConsumption(int area) const { return overconsumption[AreaNr[area]]; };
+  virtual double getTotalOverConsumption(int area) const;
   virtual const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   virtual int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
   virtual double Length(int i) const { return LgrpDiv->meanLength(i); };
