@@ -115,12 +115,13 @@ int main(int aNumber, char* const aVector[]) {
   //JMB - dont print output if doing a network run
   if (!(MainInfo.runNetwork())) {
     RUNID.print(cout);
-    cout << "Starting Gadget from directory: " << workingdir
-      << "\nusing data from directory: " << inputdir << endl;
+    handle.logInformation("Starting Gadget from directory:", workingdir);
+    handle.logInformation("using data from directory:", inputdir);
   }
-  handle.logMessage("Starting Gadget from directory:", workingdir);
-  handle.logMessage("using data from directory:", inputdir);
-  handle.logMessage("");  //write a blank line to the log file
+  MainInfo.checkUsage();
+  
+  if (aNumber == 1)
+    handle.logWarning("Warning - no command line options specified, using default values");
 
   //Added MainInfo.Net to Ecosystem constructor, to let EcoSystem know if
   //we are doing a net run. 07.04.00 AJ
@@ -175,8 +176,10 @@ int main(int aNumber, char* const aVector[]) {
     EcoSystem->writeStatus(MainInfo.getPrintFinalFile());
 
   //JMB - print final values of parameters
-  if (!(MainInfo.runNetwork()))
+  if (!(MainInfo.runNetwork())) {
     EcoSystem->writeParamsInColumns((MainInfo.getPI()).getParamOutFile(), (MainInfo.getPI()).getPrecision());
+    handle.logInformation("\nGadget simulation finished OK");
+  }
 
   if (check == 1)
     free(workingdir);

@@ -38,8 +38,7 @@ OptInfoBfgs::~OptInfoBfgs() {
 void OptInfoBfgs::MaximizeLikelihood() {
   int i, count;
 
-  cout << "\nStarting BFGS\n";
-  handle.logMessage("\nStarting BFGS\n");
+  handle.logInformation("\nStarting BFGS");
 
   DoubleVector val(numvar);
   double* startpoint = new double[numvar];

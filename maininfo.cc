@@ -130,8 +130,8 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         runnetwork = 1;
 
         #ifndef GADGET_NETWORK
-          cout << "\nWarning - Gadget is trying to run in the network mode for paramin without\n"
-            << "the network support being compiled - no network communication can take place!\n";
+          handle.logWarning("Error - Gadget cannot currently run in network mode for paramin");
+          handle.logFailure("Gadget must be recompiled to enable the network communication");
         #endif
 
       } else if (strcasecmp(aVector[k], "-s") == 0) {
@@ -265,28 +265,29 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
       k++;
     }
   }
+}
 
+void MainInfo::checkUsage() {
   printinfo.checkNumbers();
-  //JMB some error checking to make sure we are doing something sensible
   if ((runstochastic != 1) && (runnetwork == 1)) {
-    cout << "\nWarning - Gadget for the paramin network should be used with -s option\n"
-      << "Gadget will now set the -s switch to perform a stochastic run\n";
+    handle.logWarning("\nWarning - Gadget for the paramin network should be used with -s option");
+    handle.logWarning("Gadget will now set the -s switch to perform a stochastic run");
     runstochastic = 1;
     runlikelihood = 1;
   }
   if ((runstochastic == 1) && (runoptimize == 1)) {
-    cout << "\nWarning - Gadget has been started with both the -s switch and the -l switch\n"
-      << "However, it is not possible to do both a stochastic run and an optimizing run!\n"
-      << "Gadget will perform only the stochastic run (and ignore the -l switch)\n";
+    handle.logWarning("\nWarning - Gadget has been started with both the -s switch and the -l switch");
+    handle.logWarning("However, it is not possible to do both a stochastic run and a likelihood run!");
+    handle.logWarning("Gadget will perform only the stochastic run (and ignore the -l switch)");
     runoptimize = 0;
   }
   if ((handle.checkLogFile()) && (runoptimize == 1)) {
-    cout << "\nWarning - logging information from a Gadget likelihood run is not recommended\n"
-      << "Since this can lead to a very large log file being created!\n";
+    handle.logWarning("\nWarning - logging information from a Gadget likelihood run is not recommended");
   }
   if ((handle.checkLogFile()) && (runnetwork == 1)) {
-    cout << "\nWarning - logging information from a Gadget run using paramin is not recommended\n";
+    handle.logWarning("\nWarning - logging information from a Gadget network run is not recommended");
   }
+  handle.logMessage(""); //write a blank line to the log file
 }
 
 void MainInfo::read(CommentStream& infile) {

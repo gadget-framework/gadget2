@@ -124,12 +124,13 @@ void Ecosystem::Simulate(int Optimize, int print) {
       if (interrupted) {
         InterruptInterface ui(*this);
         if (!ui.menu()) {
-          handle.logMessage("** Gadget interrupted - quitting current simulation **");
+          handle.logMessage("\n** Gadget interrupted - quitting current simulation **");
           //JMB - dump *current* switch values to a file - these wont usually be the *best* values
           char interruptfile[15];
           strncpy(interruptfile, "", 15);
           strcpy(interruptfile, "interrupt.out");
           this->writeParamsInColumns(interruptfile, 0);
+          handle.logMessage("** Gadget interrupted - quitting current simulation **");
           exit(EXIT_SUCCESS);
         }
         interrupted = 0;

@@ -82,6 +82,22 @@ void ErrorHandler::logMessage(const char* msg1, const char* msg2) {
   }
 }
 
+void ErrorHandler::logInformation(const char* msg) {
+  if (uselog) {
+    logfile << msg << endl;
+    logfile.flush();
+  }
+  cout << msg << endl;
+}
+
+void ErrorHandler::logInformation(const char* msg1, const char* msg2) {
+  if (uselog) {
+    logfile << msg1 << sep << msg2 << endl;
+    logfile.flush();
+  }
+  cout << msg1 << sep << msg2 << endl;
+}
+
 void ErrorHandler::logWarning(const char* msg) {
   if (uselog) {
     logfile << msg << endl;

@@ -29,6 +29,10 @@ public:
    */
   void showUsage();
   /**
+   * \brief This function will check the options that have been specified on the commandline
+   */
+  void checkUsage();
+  /**
    * \brief This function will read input from the command line
    * \param aNumber is the number of command line entries
    * \param aVector contains the command line entries

@@ -51,6 +51,17 @@ public:
    */
   void logMessage(const char* msg1, const char* msg2);
   /**
+   * \brief This function will log a message to std::cout and a log file if one exists
+   * \param msg is the message to be logged
+   */
+  void logInformation(const char* msg);
+  /**
+   * \brief This function will log two messages to std::cout and a log file if one exists
+   * \param msg1 is the first message to be logged
+   * \param msg2 is the second message to be logged
+   */
+  void logInformation(const char* msg1, const char* msg2);
+  /**
    * \brief This function will log a warning message to std::cerr and a log file if one exists
    * \param msg is the message to be logged
    */

@@ -62,8 +62,7 @@ void OptInfoHooke::MaximizeLikelihood() {
   int i, nopt, opt;
   double tmp;
 
-  cout << "\nStarting Hooke and Jeeves\n";
-  handle.logMessage("\nStarting Hooke and Jeeves\n");
+  handle.logInformation("\nStarting Hooke and Jeeves");
 
   nopt = EcoSystem->NoOptVariables();
   DoubleVector val(nopt);

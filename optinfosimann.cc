@@ -83,8 +83,7 @@ void OptInfoSimann::Read(CommentStream& infile, char* text) {
 void OptInfoSimann::MaximizeLikelihood() {
   int i, nopt, opt;
 
-  cout << "\nStarting Simulated Annealing\n";
-  handle.logMessage("\nStarting Simulated Annealing\n");
+  handle.logInformation("\nStarting Simulated Annealing");
 
   nopt = EcoSystem->NoOptVariables();
   DoubleVector val(nopt);

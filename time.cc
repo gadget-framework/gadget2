@@ -52,7 +52,7 @@ void TimeClass::IncrementTime() {
 
   handle.logMessage("");  //write a blank line to the log file
   if (currentyear == lastyear && currentstep == laststep) {
-    handle.logMessage("Time has reached the end of the simulation");
+    handle.logMessage("The simulation has reached the last timestep for the current model run\n");
 
   } else if (currentstep == notimesteps) {
     currentstep = 1;
