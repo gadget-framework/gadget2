@@ -5,8 +5,6 @@
 #include "errorhandler.h"
 #include "areatime.h"
 #include "stock.h"
-#include "multinomial.h"
-#include "stockprey.h"
 #include "ecosystem.h"
 #include "gadget.h"
 
@@ -286,37 +284,65 @@ void SurveyDistribution::Reset(const Keeper* const keeper) {
 }
 
 void SurveyDistribution::Print(ofstream& outfile) const {
-  int i, j;
-
+  int i;
   outfile << "\nSurvey Distribution " << sdname << " - likelihood value " << likelihood
-    << "\n\tFunction " << fittype << "\n\tStock names:";
+    << "\n\tFunction " << liketype << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
   outfile << endl;
+  aggregator->Print(outfile);
   outfile.flush();
 }
 
 void SurveyDistribution::LikelihoodPrint(ofstream& outfile) {
-  int i, j;
+  int i, j, year;
+  
   outfile << "\nSurvey Distribution " << sdname << "\n\nLikelihood " << likelihood
-    << "\nWeight " << weight << "\nStock names: ";
+    << "\nWeight " << weight << "\nStock names";
   for (i = 0; i < stocknames.Size(); i++)
-    outfile << stocknames[i] << sep;
+    outfile << sep << stocknames[i];
   outfile << "\nInternal areas";
   for (i = 0; i < areas.Nrow(); i++) {
     outfile << endl;
     for (j = 0; j < areas.Ncol(i); j++)
       outfile << areas[i][j] << sep;
   }
+  outfile << "\nAges:";
+  for (i  = 0; i < ages.Nrow(); i++) {
+    outfile << endl;
+    for (j = 0; j < ages.Ncol(i); j++)
+      outfile << ages[i][j] << sep;
+  }
+  outfile << "\nLengths:";
+  for (i = 0; i < lengths.Size(); i++)
+    outfile << sep << lengths[i];
+  outfile << endl;
 
-  outfile << "\nLikelihood component on step\n";
-  for (i = 0; i < Years.Size(); i++) {
-    outfile << TAB << Years[i] << sep << Steps[i] << sep;
+  outfile << "\nSurvey distribution data:\n";
+  for (year = 0; year < Years.Size(); year++) {
+    outfile << "\nYear " << Years[year] << " and step " << Steps[year] << "\nObserved index:";
+    for (i = 0; i < (*obsDistribution[year]).Nrow(); i++) {
+      outfile << endl;
+      for (j = 0; j < (*obsDistribution[year]).Ncol(i); j++) {
+        outfile.width(smallwidth);
+        outfile.precision(smallprecision);
+        outfile << sep << (*obsDistribution[year])[i][j];
+      }
+    }
+    outfile << "\nModelled index:";
+    for (i = 0; i < (*modelDistribution[year]).Nrow(); i++) {
+      outfile << endl;
+      for (j = 0; j < (*modelDistribution[year]).Ncol(i); j++) {
+        outfile.width(smallwidth);
+        outfile.precision(smallprecision);
+        outfile << sep << (*modelDistribution[year])[i][j];
+      }
+    }
+    outfile << "\nLikelihood value: ";
     outfile.width(smallwidth);
     outfile.precision(smallprecision);
-    outfile << likelihoodValues[i] << endl;
+    outfile << likelihoodValues[year] << endl;
   }
-  outfile << "Total likelihood component " << likelihood << endl;
   outfile.flush();
 }
 
@@ -441,7 +467,7 @@ double SurveyDistribution::calcLikMultinomial() {
     for (length = mincol[age]; length <= maxcol[age]; length++) {
       if ((*obsDistribution[index])[age][length] > epsilon) { //cell will contribute
         total -= (*obsDistribution[index])[age][length] * 
-	           log(((*modelDistribution[index])[age][length]) + epsilon);
+                 log(((*modelDistribution[index])[age][length]) + epsilon);
         obstotal += (*obsDistribution[index])[age][length];
         modtotal += ((*modelDistribution[index])[age][length] + epsilon);
       }
@@ -491,8 +517,8 @@ double SurveyDistribution::calcLikGamma() {
     for (length = mincol[age]; length <= maxcol[age]; length++) {
       temp = ((*obsDistribution[index])[age][length] /
                ((*modelDistribution[index])[age][length] + epsilon)) +
-	       log((*modelDistribution[index])[age][length] + epsilon);
-	       
+               log((*modelDistribution[index])[age][length] + epsilon);
+
       total += temp;
     }
   }
@@ -542,15 +568,14 @@ void SurveyDistribution::PrintLikelihoodHeader(ofstream& surveyfile) {
 //Print Observed and survey indices for further processing by external scripts
 void SurveyDistribution::PrintLikelihood(ofstream& surveyfile, const TimeClass& TimeInfo) {
 
-  if (!AAT.AtCurrentTime(&TimeInfo))
+  if ((!AAT.AtCurrentTime(&TimeInfo)) || (index == 0))
     return;
 
   surveyfile.setf(ios::fixed);
-  int age, length;
+  int age, length, printindex;
 
-  //index was increased before this is called, so we subtract 1.
-  DoubleMatrix& calcI = *modelDistribution[index - 1];
-  DoubleMatrix& obsI = *obsDistribution[index - 1];
+  //index was increased before this is called, so we subtract 1
+  printindex = index - 1;
 
   surveyfile << "\nTime:    Year " << TimeInfo.CurrentYear() << " Step "
     << TimeInfo.CurrentStep() << "\nName:    " << sdname << "\nArea:    "
@@ -565,9 +590,9 @@ void SurveyDistribution::PrintLikelihood(ofstream& surveyfile, const TimeClass& 
     for (length = mincol[age]; length <= maxcol[age]; length++) {
       surveyfile.precision(smallprecision);
       surveyfile.width(smallwidth);
-      surveyfile << obsI[age][length] << sep;
+      surveyfile << (*obsDistribution[printindex])[age][length] << sep;
     }
-    for (length = maxcol[age] + 1; length < obsI.Ncol(); length++) {
+    for (length = maxcol[age] + 1; length < (*obsDistribution[printindex]).Ncol(); length++) {
       surveyfile.precision(smallprecision);
       surveyfile.width(smallwidth);
       surveyfile << 0.0 << sep;
@@ -585,10 +610,10 @@ void SurveyDistribution::PrintLikelihood(ofstream& surveyfile, const TimeClass& 
     for (length = mincol[age]; length <= maxcol[age]; length++) {
       surveyfile.precision(smallprecision);
       surveyfile.width(smallwidth);
-      surveyfile << calcI[age][length] << sep;
+      surveyfile << (*modelDistribution[printindex])[age][length] << sep;
     }
 
-    for (length = maxcol[age] + 1; length < obsI.Ncol(); length++) {
+    for (length = maxcol[age] + 1; length < (*obsDistribution[printindex]).Ncol(); length++) {
       surveyfile.precision(smallprecision);
       surveyfile.width(smallwidth);
       surveyfile << 0.0 << sep;

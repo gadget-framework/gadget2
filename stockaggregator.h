@@ -59,6 +59,11 @@ public:
    * \return maxrow
    */
   int getMaxRow() const { return maxrow; };
+  /**
+   * \brief This will print the aggregator information to the ofstream specified
+   * \param outfile is the ofstream to the file that the aggregator information gets sent to
+   */
+  void Print(ofstream &outfile) const;
 protected:
   /**
    * \brief This is the StockPtrVector of the stocks that will be aggregated

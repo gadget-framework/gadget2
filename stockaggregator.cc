@@ -78,6 +78,23 @@ StockAggregator::~StockAggregator() {
     delete CI[i];
 }
 
+void StockAggregator::Print(ofstream& outfile) const {
+  int i, j, k;
+
+  for (i = 0; i < total.Size(); i++) {
+    outfile << "\tInternal areas " << i << endl;
+    for (j = 0; j < total[i].Nrow(); j++) {
+      outfile << TAB;
+      for (k = 0; k < total[i].maxLength(j); k++) {
+        outfile.width(smallwidth);
+        outfile << total[i][j][k].N << sep;
+      }
+      outfile << endl;
+    }
+  }
+  outfile << flush;
+}
+
 void StockAggregator::Sum() {
   int i, j, k;
   int aggrArea, aggrAge, area, age;

@@ -175,6 +175,12 @@ public:
    * \param printtime is a flag to denote whether to print the runtime or not
    */
   void logFinish(int printtime);
+  /**
+   * \brief This function will set a flag to denote whether gadget is running in network mode for paramin or not
+   * \param runnetwork is a flag to denote whether gadget is running in network mode for paramin or not
+   * \note if gadget is running in network mode for paramin, most of the messages that are written to std::cerr or std::cout will be supressed to avoid having multiple copies of the messages.  Gadget will only display messages that cause a crash - most of these will be caused by incorrect initial input files.
+   */
+  void setNetwork(int runnetwork);
 protected:
   /**
    * \brief This ofstream is the file that all the logging information will get sent to
@@ -184,6 +190,10 @@ protected:
    * \brief This is the flag used to denote whether a logfile exists or not
    */
   int uselog;
+  /**
+   * \brief This is the flag used to denote whether gadget is running in network mode for paramin or not
+   */
+  int network;
   /**
    * \brief This is the StrStack of the names of files that are currently open to read from
    */

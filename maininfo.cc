@@ -268,17 +268,15 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
 }
 
 void MainInfo::checkUsage() {
+  handle.setNetwork(runnetwork);
   printinfo.checkNumbers();
   if ((runstochastic != 1) && (runnetwork == 1)) {
-    handle.logWarning("\nWarning - Gadget for the paramin network should be used with -s option");
-    handle.logWarning("Gadget will now set the -s switch to perform a stochastic run");
+    handle.logWarning("\nWarning - Gadget for the paramin network should be used with -s option\nGadget will now set the -s switch to perform a stochastic run");
     runstochastic = 1;
     runlikelihood = 1;
   }
   if ((runstochastic == 1) && (runoptimize == 1)) {
-    handle.logWarning("\nWarning - Gadget has been started with both the -s switch and the -l switch");
-    handle.logWarning("However, it is not possible to do both a stochastic run and a likelihood run!");
-    handle.logWarning("Gadget will perform only the stochastic run (and ignore the -l switch)");
+    handle.logWarning("\nWarning - Gadget has been started with both the -s switch and the -l switch\nHowever, it is not possible to do both a stochastic run and a likelihood run!\nGadget will perform only the stochastic run (and ignore the -l switch)");
     runoptimize = 0;
   }
   if ((handle.checkLogFile()) && (runoptimize == 1)) {

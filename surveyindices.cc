@@ -177,7 +177,7 @@ void SurveyIndices::LikelihoodPrint(ofstream& outfile) {
     outfile << stocknames[i] << sep;
   outfile << "\nInternal areas";
   for (i = 0; i < areas.Nrow(); i++) {
-    outfile << endl;
+    outfile << endl << TAB;
     for (j = 0; j < areas.Ncol(i); j++)
       outfile << areas[i][j] << sep;
   }

@@ -129,7 +129,9 @@ int main(int aNumber, char* const aVector[]) {
     MainInfo.runNetwork(), MainInfo.runLikelihood(), inputdir, workingdir, MainInfo.getPI());
 
   #ifdef INTERRUPT_HANDLER
-    registerInterrupt(SIGINT, &EcoSystem->interrupted);
+    //JMB - dont register interrupt if doing a network run
+    if (!(MainInfo.runNetwork()))
+      registerInterrupt(SIGINT, &EcoSystem->interrupted);
   #endif
 
   chdir(workingdir);
@@ -176,13 +178,13 @@ int main(int aNumber, char* const aVector[]) {
     EcoSystem->writeStatus(MainInfo.getPrintFinalFile());
 
   //JMB - print final values of parameters
-  if (!(MainInfo.runNetwork())) {
+  if (!(MainInfo.runNetwork()))
     EcoSystem->writeParamsInColumns((MainInfo.getPI()).getParamOutFile(), (MainInfo.getPI()).getPrecision());
-    handle.logFinish(MainInfo.runOptimize());
-  }
 
   if (check == 1)
     free(workingdir);
+
+  handle.logFinish(MainInfo.runOptimize());
 
   delete Optinfo;
   delete EcoSystem;
