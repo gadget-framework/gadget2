@@ -72,7 +72,7 @@ void Stock::adjustEat(int area, const AreaClass* const Area, const TimeClass* co
 }
 
 //-------------------------------------------------------------------
-void Stock::ReducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::reducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   int inarea = AreaNr[area];
 
@@ -156,48 +156,35 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 //-----------------------------------------------------------------------
 //A number of Special functions, Spawning, Renewal, Maturation and
 //Transition to other Stocks, Maturity due to age and increased age.
-void Stock::FirstUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::updateAgePart1(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   int inarea = AreaNr[area];
   if (doesmove)
     if (transition->isTransitionStep(area, TimeInfo))
       transition->keepAgeGroup(area, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
-
-  if (doesstray)
-    if (stray->isStrayStepArea(area, TimeInfo))
-      stray->storeStrayingStock(area, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
 }
 
-void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::updateAgePart2(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+  int inarea = AreaNr[area];
   if (this->Birthday(TimeInfo)) {
-    int inarea = AreaNr[area];
     Alkeys[inarea].IncrementAge();
     if (tagAlkeys.numTagExperiments() > 0)
       tagAlkeys[inarea].IncrementAge(Alkeys[inarea]);
   }
 }
 
-void Stock::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  if (doesmove)
+void Stock::updateAgePart3(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+  if (doesmove) {
     if (transition->isTransitionStep(area, TimeInfo)) {
       updateTransitionStockWithTags(TimeInfo);
       transition->Move(area, TimeInfo);
     }
-
-  if (doesstray)
-    if (stray->isStrayStepArea(area, TimeInfo)) {
-      updateStrayStockWithTags(TimeInfo);
-      stray->addStrayStock(area, TimeInfo);
-    }
-
-  if (doesspawn)
-    if (spawner->isSpawnStepArea(area, TimeInfo))
-      spawner->addSpawnStock(area, TimeInfo);
+  }
 }
 
-void Stock::FirstSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::updatePopulationPart1(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+  int inarea = AreaNr[area];
   if (doesspawn) {
     if (spawner->isSpawnStepArea(area, TimeInfo)) {
-      int inarea = AreaNr[area];
       spawner->Spawn(Alkeys[inarea], area, TimeInfo);
       if (tagAlkeys.numTagExperiments() > 0)
         tagAlkeys[inarea].updateNumbers(Alkeys[inarea]);
@@ -205,14 +192,38 @@ void Stock::FirstSpecialTransactions(int area, const AreaClass* const Area, cons
   }
 }
 
-void Stock::SecondSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  if (doesmature)
+void Stock::updatePopulationPart2(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+  if (doesmature) {
     if (maturity->isMaturationStep(area, TimeInfo)) {
       updateMatureStockWithTags(TimeInfo);
       maturity->Move(area, TimeInfo);
     }
+  }
+}
+
+void Stock::updatePopulationPart3(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doesrenew)
     this->Renewal(area, TimeInfo);
+
+  if (doesspawn)
+    if (spawner->isSpawnStepArea(area, TimeInfo))
+      spawner->addSpawnStock(area, TimeInfo);
+}
+
+void Stock::updatePopulationPart4(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+  int inarea = AreaNr[area];
+  if (doesstray)
+    if (stray->isStrayStepArea(area, TimeInfo))
+      stray->storeStrayingStock(area, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
+}
+
+void Stock::updatePopulationPart5(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+  if (doesstray) {
+    if (stray->isStrayStepArea(area, TimeInfo)) {
+      updateStrayStockWithTags(TimeInfo);
+      stray->addStrayStock(area, TimeInfo);
+    }
+  }
 }
 
 void Stock::updateMatureStockWithTags(const TimeClass* const TimeInfo) {

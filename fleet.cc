@@ -123,7 +123,7 @@ void Fleet::adjustEat(int area,
   predator->adjustConsumption(area, TimeInfo->numSubSteps(), TimeInfo->CurrentSubstep());
 }
 
-void Fleet::SecondSpecialTransactions(int area,
+void Fleet::updatePopulationPart5(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   //Calls calcCHat in mortalityfleet,

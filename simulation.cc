@@ -9,15 +9,11 @@ extern RunID RUNID;
 extern ErrorHandler handle;
 
 void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {
-
-  //Calculate the number of preys and predators in area.
-  //Base includes the classes OtherFood, Fleet and Stock.
   int i;
+  // calculate the number of preys and predators in area.
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
       basevec[i]->calcNumbers(area, Area, TimeInfo);
-
-  //Calculate consumption and Growth;
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
       basevec[i]->calcEat(area, Area, TimeInfo);
@@ -29,37 +25,44 @@ void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {
       basevec[i]->adjustEat(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
-      basevec[i]->ReducePop(area, Area, TimeInfo);
+      basevec[i]->reducePop(area, Area, TimeInfo);
 }
 
-void Ecosystem::GrowthAndSpecialTransactions(int area) {
+void Ecosystem::updatePopulationOneArea(int area) {
   int i;
-
+  // under updates are movements to mature stock, renewal, spawning and straying.
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
       basevec[i]->Grow(area, Area, TimeInfo);
-
-  //Under SpecialTransactions are movements to mature stock, spawning and renewal.
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
-      basevec[i]->FirstSpecialTransactions(area, Area, TimeInfo);
+      basevec[i]->updatePopulationPart1(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
-      basevec[i]->SecondSpecialTransactions(area, Area, TimeInfo);
+      basevec[i]->updatePopulationPart2(area, Area, TimeInfo);
+  for (i = 0; i < basevec.Size(); i++)
+    if (basevec[i]->IsInArea(area))
+      basevec[i]->updatePopulationPart3(area, Area, TimeInfo);
+  for (i = 0; i < basevec.Size(); i++)
+    if (basevec[i]->IsInArea(area))
+      basevec[i]->updatePopulationPart4(area, Area, TimeInfo);
+  for (i = 0; i < basevec.Size(); i++)
+    if (basevec[i]->IsInArea(area))
+      basevec[i]->updatePopulationPart5(area, Area, TimeInfo);
 }
 
-void Ecosystem::updateOneTimestepOneArea(int area) {
-  //Age related update and movements between stocks.
+void Ecosystem::updateAgesOneArea(int area) {
   int i;
+  // age related update and movements between stocks.
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
-      basevec[i]->FirstUpdate(area, Area, TimeInfo);
+      basevec[i]->updateAgePart1(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
-      basevec[i]->SecondUpdate(area, Area, TimeInfo);
+      basevec[i]->updateAgePart2(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
-      basevec[i]->ThirdUpdate(area, Area, TimeInfo);
+      basevec[i]->updateAgePart3(area, Area, TimeInfo);
 }
 
 void Ecosystem::SimulateOneTimestep() {
@@ -73,7 +76,7 @@ void Ecosystem::SimulateOneTimestep() {
   }
 
   for (i = 0; i < Area->numAreas(); i++)
-    GrowthAndSpecialTransactions(i);
+    updatePopulationOneArea(i);
 }
 
 void Ecosystem::Simulate(int Optimise, int print) {
@@ -117,7 +120,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
         printvec[j]->Print(TimeInfo, 1);  //end of timestep, so printtime is 1
 
     for (j = 0; j < Area->numAreas(); j++)
-      updateOneTimestepOneArea(j);
+      updateAgesOneArea(j);
 
     #ifdef INTERRUPT_HANDLER
       if (interrupted) {

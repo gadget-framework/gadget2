@@ -63,7 +63,7 @@ public:
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void ReducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
+  virtual void reducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
   /**
    * \brief This function will calculate the growth of the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
@@ -77,35 +77,56 @@ public:
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void FirstUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
+  virtual void updateAgePart1(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
   /**
    * \brief This function will calculate the age increase of the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void SecondUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
+  virtual void updateAgePart2(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
   /**
    * \brief This function will implement the transiton of the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
+  virtual void updateAgePart3(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
   /**
    * \brief This function will calculate the spawning of the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void FirstSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
+  virtual void updatePopulationPart1(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
   /**
-   * \brief This function will calculate the maturity and recruits of the model population for an area in the model
+   * \brief This function will calculate add the newly matured stock into the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void SecondSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void updatePopulationPart2(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
+  /**
+   * \brief This function will calculate add the new recruits into the model population for an area in the model
+   * \param area is an integer to denote the internal area of interest
+   * \param Area is the AreaClass for the current model
+   * \param TimeInfo is the TimeClass for the current model
+   */
+  virtual void updatePopulationPart3(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
+  /**
+   * \brief This function will calculate calculate the straying of the model population for an area in the model
+   * \param area is an integer to denote the internal area of interest
+   * \param Area is the AreaClass for the current model
+   * \param TimeInfo is the TimeClass for the current model
+   */
+  virtual void updatePopulationPart4(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
+  /**
+   * \brief This function will calculate add the strayed stock into the model population for an area in the model
+   * \param area is an integer to denote the internal area of interest
+   * \param Area is the AreaClass for the current model
+   * \param TimeInfo is the TimeClass for the current model
+   */
+  virtual void updatePopulationPart5(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will update the model population for an area in the model
    * \param area is an integer to denote the internal area of interest

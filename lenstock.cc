@@ -458,7 +458,7 @@ void LenStock::adjustEat(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 }
 
-void LenStock::ReducePop(int area,
+void LenStock::reducePop(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   //written by kgf 31/7 98
@@ -565,14 +565,12 @@ void LenStock::calcForPrinting(int area, const TimeClass& time) {
   calcDone = 1;
 }
 
-void LenStock::SecondSpecialTransactions(int area,
+void LenStock::updatePopulationPart3(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  if (doesmature)
-    if (maturity->isMaturationStep(area, TimeInfo)) {
-      updateMatureStockWithTags(TimeInfo);
-      maturity->Move(area, TimeInfo);
-    }
+  if (doesspawn)
+    if (spawner->isSpawnStepArea(area, TimeInfo))
+      spawner->addSpawnStock(area, TimeInfo);
 }
 
 void LenStock::setStock(StockPtrVector& stockvec) {
