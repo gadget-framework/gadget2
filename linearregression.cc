@@ -1,12 +1,15 @@
 #include "linearregression.h"
 #include "mathfunc.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 LinearRegression::LinearRegression() {
   error = 0;
-  sse = 0;
-  a = 0;
-  b = 0;
+  sse = 0.0;
+  a = 0.0;
+  b = 0.0;
 }
 
 void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
@@ -41,6 +44,13 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
     a = Ymean - b * Xmean;
   }
 
+  //JMB - if there is a negative slope for the regression then things are going wrong ...
+  if (b < 0) {
+    handle.logWarning("Warning in LR - negative slope for regression line", b);
+    error = 1;
+    return;
+  }
+
   //Now we can calculate the sum of squares of errors.
   double tmp;
   sse = 0.0;
@@ -69,6 +79,13 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
   //Now we have calculated the mean and can proceed to calculate the fit.
   b = slope;
   a = Ymean - (b * Xmean);
+
+  //JMB - if there is a negative slope for the regression then things are going wrong ...
+  if (b < 0) {
+    handle.logWarning("Warning in LR - negative slope for regression line", b);
+    error = 1;
+    return;
+  }
 
   //Now we can calculate the sum of squares of errors.
   double tmp;
@@ -103,6 +120,13 @@ void LinearRegression::Fit(double intercept, const DoubleVector& x, const Double
 
   a = intercept;
 
+  //JMB - if there is a negative slope for the regression then things are going wrong ...
+  if (b < 0) {
+    handle.logWarning("Warning in LR - negative slope for regression line", b);
+    error = 1;
+    return;
+  }
+
   //Now we can calculate the sum of squares of errors.
   double tmp;
   sse = 0.0;
@@ -120,6 +144,13 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
   }
   b = slope;
   a = intercept;
+
+  //JMB - if there is a negative slope for the regression then things are going wrong ...
+  if (b < 0) {
+    handle.logWarning("Warning in LR - negative slope for regression line", b);
+    error = 1;
+    return;
+  }
 
   //Now we can calculate the sum of squares of errors.
   int i;

@@ -14,7 +14,7 @@ PIOnStep::PIOnStep(CommentStream& infile, const IntMatrix& areas,
   const TimeClass* const TimeInfo, int biomass, const CharPtrVector& areaindex,
   const CharPtrVector& preylenindex, const CharPtrVector& predlenindex,
   const char* datafilename, const char* name)
-  : SIOnStep(infile, datafilename, areaindex, TimeInfo, predlenindex.Size() * preylenindex.Size(), areas, predlenindex, preylenindex),
+  : SIOnStep(infile, datafilename, areaindex, TimeInfo, predlenindex.Size() * preylenindex.Size(), areas, predlenindex, preylenindex, name),
     Biomass(biomass), aggregator(0) {
 
   predLgrpDiv = new LengthGroupDivision(predatorlengths);
@@ -120,6 +120,7 @@ void PIOnStep::Sum(const TimeClass* const TimeInfo) {
   else
     aggregator->NumberSum();
 
+  handle.logMessage("Calculating index for predator surveyindex component", this->SIName());
   const BandMatrixVector* cons = &(aggregator->returnSum());
   int ncol = (*cons)[0].Nrow() * (*cons)[0].Ncol();
   DoubleVector numbers(ncol);

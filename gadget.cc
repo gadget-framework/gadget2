@@ -21,7 +21,7 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
     print = 0;  //do not print in optimizing
 
     #ifdef GADGET_NETWORK //to help compiling when pvm libraries are unavailable
-      Stochasticdata = new StochasticData(1);
+      Stochasticdata = new StochasticData(MainInfo->runNetwork());
       while (Stochasticdata->getDataFromNet()) {
         EcoSystem->Update(Stochasticdata);
         EcoSystem->Simulate(MainInfo->runLikelihood(), print);
@@ -166,14 +166,14 @@ int main(int aNumber, char* const aVector[]) {
 
     Optinfo->MaximizeLikelihood();
     if ((MainInfo.getPI()).getForcePrint())
-      EcoSystem->Simulate(0, 1);
+      EcoSystem->Simulate(0, 1);  //print and dont optimise
 
     if (MainInfo.getInitialParamGiven())
       delete Stochasticdata;
   }
 
   if (MainInfo.printLikelihood())
-    EcoSystem->PrintLikelihoodInfo(MainInfo.getPrintLikelihoodFile());
+    EcoSystem->writeLikelihoodInformation(MainInfo.getPrintLikelihoodFile());
   if (MainInfo.printFinal())
     EcoSystem->writeStatus(MainInfo.getPrintFinalFile());
 

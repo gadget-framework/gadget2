@@ -219,6 +219,7 @@ Recaptures::~Recaptures() {
 
 void Recaptures::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
+  handle.logMessage("Reset recaptures component", recname);
 }
 
 void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
@@ -289,24 +290,37 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
 
 void Recaptures::addLikelihood(const TimeClass* const TimeInfo) {
 
+  double l = 0.0;
   switch(functionnumber) {
     case 1:
-      likelihood += calcLikPoisson(TimeInfo);
+      l = calcLikPoisson(TimeInfo);
       break;
     default:
       handle.logWarning("Warning in recaptures - unknown function", functionname);
       break;
   }
+
+  if (!(isZero(l))) {
+    likelihood += l;
+    handle.logMessage("The likelihood score for this component has increased to", likelihood);
+  }
 }
 
 double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
   double x, n, lik = 0.0;
-  int t, i, ti, len, timeid;
+  int t, i, ti, len, timeid, check;
   int year = TimeInfo->CurrentYear();
   int step = TimeInfo->CurrentStep();
 
+  check = 0;
   for (t = 0; t < tagvec.Size(); t++) {
     if (tagvec[t]->IsWithinPeriod(year, step)) {
+
+      if (check == 0) {
+        handle.logMessage("Calculating likelihood score for recaptures component", recname);
+        check++;
+      }
+     
       aggregator[t]->Sum(TimeInfo);
       const AgeBandMatrixPtrVector& alptr = aggregator[t]->returnSum();
 

@@ -79,29 +79,24 @@ void Ecosystem::SimulateOneTimestep() {
     GrowthAndSpecialTransactions(i);
 }
 
-//Returns 1 when success, 0 when failure.
-int Ecosystem::Simulate(int Optimize, int print) {
-  likelihood = 0.0;
+void Ecosystem::Simulate(int Optimize, int print) {
   int i, j;
 
-  for (i = 0; i < Likely.Size(); i++)
-    Likely[i]->Reset(keeper);
-
-  if (Optimize)
+  if (Optimize) {
+    for (j = 0; j < Likely.Size(); j++)
+      Likely[j]->Reset(keeper);
     //put here since boundlikelihood is allowed to change values
-    for (i = 0; i < Likely.Size(); i++)
-      Likely[i]->addLikelihoodKeeper(TimeInfo, keeper);
+    for (j = 0; j < Likely.Size(); j++)
+      Likely[j]->addLikelihoodKeeper(TimeInfo, keeper);
+  }
 
   TimeInfo->ResetToBeginning();
-  for (i = 0; i < basevec.Size(); i++)
-    basevec[i]->Reset(TimeInfo);
-  for (i = 0; i < tagvec.Size(); i++)
-    tagvec[i]->Reset(TimeInfo);
-
   for (i = 0; i < TimeInfo->TotalNoSteps(); i++) {
-    if (i > 0) //do not need to call reset again on the first step.
-      for (j = 0; j < basevec.Size(); j++)
-        basevec[j]->Reset(TimeInfo);
+
+    for (j = 0; j < basevec.Size(); j++)
+      basevec[j]->Reset(TimeInfo);
+    for (j = 0; j < tagvec.Size(); j++)
+      tagvec[j]->Reset(TimeInfo);
 
     //Add in any new tagging experiments
     tagvec.updateTags(TimeInfo);
@@ -142,14 +137,15 @@ int Ecosystem::Simulate(int Optimize, int print) {
     #endif
 
     //Remove any expired tagging experiments
-    tagvec.DeleteTags(TimeInfo);
+    tagvec.deleteTags(TimeInfo);
 
-    if (i != TimeInfo->TotalNoSteps() - 1)
-      TimeInfo->IncrementTime();
+    //Increase the time in the simulation
+    TimeInfo->IncrementTime();
   }
 
-  for (i = 0; i < Likely.Size(); i++)
-    likelihood += Likely[i]->returnLikelihood();
-
-  return 1;
+  if (Optimize) {
+    likelihood = 0.0;
+    for (j = 0; j < Likely.Size(); j++)
+      likelihood += Likely[j]->returnLikelihood();
+  }
 }

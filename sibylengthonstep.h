@@ -43,7 +43,11 @@ protected:
    */
   StockAggregator* aggregator;
   /**
-   * \brief This is the LengthGroupDivision of the survey index data
+   * \brief This is the IntMatrix used to store age information
+   */
+  IntMatrix Ages;
+  /**
+   * \brief This is the LengthGroupDivision used to store length information
    */
   LengthGroupDivision* LgrpDiv;
 };

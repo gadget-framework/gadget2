@@ -28,8 +28,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   const IntMatrix& ages, const TimeClass* const TimeInfo, Keeper* const keeper,
   const CharPtrVector& lenindex, const CharPtrVector& ageindex,
   const CharPtrVector& areaindex, const char* datafilename, const char* name)
-  : SIOnStep(infile, datafilename, areaindex, TimeInfo, 1, areas, ageindex, lenindex),  //reads fit type and years/steps
-    aggregator(0), LgrpDiv(0), Ages(ages) {
+  : SIOnStep(infile, datafilename, areaindex, TimeInfo, 1, areas, ageindex, lenindex, name),     Ages(ages) {
 
   keeper->addString("sibylengthandageonstep");
   LgrpDiv = new LengthGroupDivision(lengths);
@@ -262,6 +261,7 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!(this->IsToSum(TimeInfo)))
     return;
 
+  handle.logMessage("Calculating index for surveyindex component", this->SIName());
   aggregator->MeanSum(); //aggregate mean N values in present time step
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns only one element.
   const AgeBandMatrix* alptr = &(aggregator->returnSum()[0]);

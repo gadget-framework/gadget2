@@ -137,20 +137,20 @@ void Maturity::PutInStorage(int area, int age, int length, double number,
     *(TagStorage[AreaNr[area]][age][length][id].N) = (number > 0.0 ? number: 0.0);
 }
 
-void Maturity::Precalc(const TimeClass* const TimeInfo) {
+void Maturity::Reset(const TimeClass* const TimeInfo) {
   int area, age, l, tag;
-  if (TimeInfo->CurrentTime() == 1) {
-    for (area = 0; area < areas.Size(); area++) {
-      for (age = Storage[area].minAge(); age <= Storage[area].maxAge(); age++) {
-        for (l = Storage[area].minLength(age); l < Storage[area].maxLength(age); l++) {
-          Storage[area][age][l].N = 0.0;
-          Storage[area][age][l].W = 0.0;
-          for (tag = 0; tag < TagStorage.numTagExperiments(); tag++)
-            *(TagStorage[area][age][l][tag].N) = 0.0;
-        }
+
+  for (area = 0; area < areas.Size(); area++) {
+    for (age = Storage[area].minAge(); age <= Storage[area].maxAge(); age++) {
+      for (l = Storage[area].minLength(age); l < Storage[area].maxLength(age); l++) {
+        Storage[area][age][l].N = 0.0;
+        Storage[area][age][l].W = 0.0;
+        for (tag = 0; tag < TagStorage.numTagExperiments(); tag++)
+          *(TagStorage[area][age][l][tag].N) = 0.0;
       }
     }
   }
+  handle.logMessage("Reset maturity data");
 }
 
 const StockPtrVector& Maturity::getMatureStocks() {
@@ -227,8 +227,8 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
   keeper->clearLast();
 }
 
-void MaturityA::Precalc(const TimeClass* const TimeInfo) {
-  this->Maturity::Precalc(TimeInfo);
+void MaturityA::Reset(const TimeClass* const TimeInfo) {
+  this->Maturity::Reset(TimeInfo);
   maturityParameters.Update(TimeInfo);
   double my;
   int age, len;
@@ -351,8 +351,8 @@ void MaturityB::setStock(StockPtrVector& stockvec) {
   this->Maturity::setStock(stockvec);
 }
 
-void MaturityB::Precalc(const TimeClass* const TimeInfo) {
-  this->Maturity::Precalc(TimeInfo);
+void MaturityB::Reset(const TimeClass* const TimeInfo) {
+  this->Maturity::Reset(TimeInfo);
   maturitylength.Update(TimeInfo);
 }
 
@@ -448,8 +448,8 @@ void MaturityC::setStock(StockPtrVector& stockvec) {
   minMatureLength = LgrpDiv->NoLengthGroup(minlength);
 }
 
-void MaturityC::Precalc(const TimeClass* const TimeInfo) {
-  this->Maturity::Precalc(TimeInfo);
+void MaturityC::Reset(const TimeClass* const TimeInfo) {
+  this->Maturity::Reset(TimeInfo);
   maturityParameters.Update(TimeInfo);
   double my;
   int age, len;
@@ -550,8 +550,8 @@ void MaturityD::setStock(StockPtrVector& stockvec) {
   minMatureLength = LgrpDiv->NoLengthGroup(minlength);
 }
 
-void MaturityD::Precalc(const TimeClass* const TimeInfo) {
-  this->Maturity::Precalc(TimeInfo);
+void MaturityD::Reset(const TimeClass* const TimeInfo) {
+  this->Maturity::Reset(TimeInfo);
   maturityParameters.Update(TimeInfo);
 }
 

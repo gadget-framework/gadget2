@@ -33,6 +33,11 @@ public:
    */
   void setStocks(StockPtrVector Stocks);
   /**
+   * \brief This function will reset the MigrationPenalty likelihood information
+   * \param keeper is the Keeper for the current model
+   */
+  virtual void Reset(const Keeper* const keeper);
+  /**
    * \brief This function will print the summary MigrationPenalty likelihood information
    * \param outfile is the ofstream that all the model information gets sent to
    * \note This function is not used for this likelihood component

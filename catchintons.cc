@@ -138,6 +138,7 @@ void CatchInTons::Reset(const Keeper* const keeper) {
   for (i = 0; i < modelDistribution.Nrow(); i++)
     for (j = 0; j < modelDistribution.Ncol(i); j++)
       modelDistribution[i][j] = 0.0;
+  handle.logMessage("Reset catchintons component", ctname);
 }
 
 void CatchInTons::Print(ofstream& outfile) const {
@@ -191,6 +192,7 @@ double CatchInTons::calcLikSumSquares(const TimeClass* const TimeInfo) {
 void CatchInTons::addLikelihood(const TimeClass* const TimeInfo) {
 
   if (AAT.AtCurrentTime(TimeInfo)) {
+    handle.logMessage("Calculating likelihood score for catchintons component", ctname);
     switch(functionnumber) {
       case 1:
         likelihood += calcLikSumSquares(TimeInfo);
@@ -199,6 +201,7 @@ void CatchInTons::addLikelihood(const TimeClass* const TimeInfo) {
         handle.logWarning("Warning in catchintons - unknown function", functionname);
         break;
     }
+    handle.logMessage("The likelihood score for this component has increased to", likelihood);
     if ((!yearly) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear()))
       timeindex++;
   }

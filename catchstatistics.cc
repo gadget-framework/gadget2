@@ -248,6 +248,7 @@ CatchStatistics::~CatchStatistics() {
 void CatchStatistics::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
+  handle.logMessage("Reset catchstatistics component", csname);
 }
 
 void CatchStatistics::Print(ofstream& outfile) const {
@@ -309,10 +310,11 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
 void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
 
   if (AAT.AtCurrentTime(TimeInfo)) {
+    handle.logMessage("Calculating likelihood score for catchstatistics component", csname);
     aggregator->Sum(TimeInfo);
-    //JMB - check the following if any new functionnumber values are added
     likelihood += calcLikSumSquares();
     timeindex++;
+    handle.logMessage("The likelihood score for this component has increased to", likelihood);
   }
 }
 

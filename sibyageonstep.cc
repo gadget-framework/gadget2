@@ -3,17 +3,23 @@
 #include "areatime.h"
 #include "loglinearregression.h"
 #include "stockaggregator.h"
+#include "errorhandler.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 SIByAgeOnStep::SIByAgeOnStep(CommentStream& infile, const IntMatrix& areas,
-  const IntMatrix& Ages, const CharPtrVector& areaindex, const CharPtrVector& ageindex,
+  const IntMatrix& ages, const CharPtrVector& areaindex, const CharPtrVector& ageindex,
   const TimeClass* const TimeInfo, const char* datafilename, const char* name)
-  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, ageindex, name),
-    aggregator(0), ages(Ages) {
+  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, ageindex, name), Ages(ages) {
+
 }
 
 SIByAgeOnStep::~SIByAgeOnStep() {
-  delete aggregator;
+  if (aggregator != 0)
+    delete aggregator;
+  if (LgrpDiv != 0)
+    delete LgrpDiv;
 }
 
 void SIByAgeOnStep::setStocks(const StockPtrVector& Stocks) {
@@ -41,13 +47,15 @@ void SIByAgeOnStep::setStocks(const StockPtrVector& Stocks) {
       maxlength = stockmaxlength;
   }
 
-  LengthGroupDivision* LgrpDiv = new LengthGroupDivision(minlength, maxlength, maxlength - minlength);
-  aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, ages);
+  LgrpDiv = new LengthGroupDivision(minlength, maxlength, maxlength - minlength);
+  aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, Ages);
 }
 
 void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!(this->IsToSum(TimeInfo)))
     return;
+
+  handle.logMessage("Calculating index for surveyindex component", this->SIName());
   aggregator->Sum();
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns has only one element.
   //Copy the information from it -- we only want to keep the abundance numbers.

@@ -9,12 +9,12 @@
 extern ErrorHandler handle;
 
 SIOnStep::~SIOnStep() {
+  delete[] siname;
 }
 
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
   const TimeClass* const TimeInfo, int numcols, const IntMatrix& areas,
-  const CharPtrVector& index1, const CharPtrVector& index2)
-  : Areas(areas) {
+  const CharPtrVector& index1, const CharPtrVector& index2, const char* name) : Areas(areas) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -23,6 +23,9 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   NumberOfSums = 0;
   slope = 0.0;
   intercept = 0.0;
+
+  siname = new char[strlen(name) + 1];
+  strcpy(siname, name);
 
   //if numcols is 1 then this is a sibyalengthandageonstep
   //else we have a pionstep - these use different fittypes
@@ -80,6 +83,10 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
     }
   }
 
+  //JMB - check that the slope of the regression line is positive
+  if (slope < 0)
+    handle.Message("Error in surveyindex - slope of the regression line must be positive");
+
   //read the year and step data from the datafile
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -101,8 +108,8 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
 }
 
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
-  const TimeClass* const TimeInfo, const IntMatrix& areas, const CharPtrVector& colindex,
-  const char* name) : Areas(areas) {
+  const TimeClass* const TimeInfo, const IntMatrix& areas,
+  const CharPtrVector& colindex, const char* name) : Areas(areas) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -111,6 +118,9 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   NumberOfSums = 0;
   slope = 0.0;
   intercept = 0.0;
+
+  siname = new char[strlen(name) + 1];
+  strcpy(siname, name);
 
   //read the fittype
   infile >> text;
@@ -155,13 +165,17 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
       break;
   }
 
+  //JMB - check that the slope of the regression line is positive
+  if (slope < 0)
+    handle.Message("Error in surveyindex - slope of the regression line must be positive");
+
   //read the survey indices data from the datafile
   ifstream datafile;
   CommentStream subdata(datafile);
   datafile.open(datafilename, ios::in);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  readSIData(subdata, areaindex, colindex, TimeInfo, name);
+  readSIData(subdata, areaindex, colindex, TimeInfo);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -175,7 +189,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
 }
 
 void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
-  const CharPtrVector& colindex, const TimeClass* const TimeInfo, const char* name) {
+  const CharPtrVector& colindex, const TimeClass* const TimeInfo) {
 
   int i;
   int year, step;
@@ -240,7 +254,7 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
   }
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logWarning("Warning in surveyindex - found no data in the data file for", name);
+    handle.logWarning("Warning in surveyindex - found no data in the data file for", this->SIName());
   handle.logMessage("Read surveyindex data file - number of entries", count);
 }
 
@@ -326,6 +340,7 @@ void SIOnStep::Reset(const Keeper* const keeper) {
   for (i = 0; i < abundance.Nrow(); i++)
     for (j = 0; j < abundance.Ncol(i); j++)
       abundance[i][j] = 0.0;
+  handle.logMessage("Reset surveyindex component", this->SIName());
 }
 
 void SIOnStep::Print(ofstream& outfile) const {
@@ -408,6 +423,9 @@ double SIOnStep::Regression() {
     //Now fit the log of the abundance indices as a function of stock size.
     likelihood += this->Fit(stocksize, indices, col);
   }
+
+  handle.logMessage("Calculating likelihood score for surveyindex component", this->SIName());
+  handle.logMessage("The likelihood score from the regression line for this component is", likelihood);
   return likelihood;
 }
 

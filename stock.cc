@@ -309,7 +309,7 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
     if (iseaten)
       prey->Reset();
     if (doesmature)
-      maturity->Precalc(TimeInfo);
+      maturity->Reset(TimeInfo);
     if (doesrenew)
       renewal->Reset();
     if (doesgrow)
@@ -319,7 +319,9 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
     if (doesmove)
       transition->Reset();
     if (doesspawn)
-      spawner->Precalc(TimeInfo);
+      spawner->Reset(TimeInfo);
+
+    handle.logMessage("Reset stock data for stock", this->Name());
   }
   NatM->Reset(TimeInfo);
   if (doeseat)

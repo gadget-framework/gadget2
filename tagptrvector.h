@@ -81,7 +81,7 @@ public:
    * \brief This function will delete all the elements of the vector that have expired for the current timestep
    * \param TimeInfo is the TimeClass for the current model
    */
-  void DeleteTags(const TimeClass* const TimeInfo);
+  void deleteTags(const TimeClass* const TimeInfo);
   /**
    * \brief This function will delete all the elements of the vector
    */

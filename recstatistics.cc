@@ -229,6 +229,7 @@ void RecStatistics::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   for (i = 0; i < timeindex.Size(); i++)
     timeindex[i] = -1;
+  handle.logMessage("Reset recstatistics component", rsname);
 }
 
 void RecStatistics::Print(ofstream& outfile) const {
@@ -307,17 +308,27 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
 }
 
 void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
-  int t, i;
+  int t, i, check;
+  
+  check = 0;
   for (t = 0; t < tagvec.Size(); t++) {
     timeindex[t] = -1;
     if (tagvec[t]->IsWithinPeriod(TimeInfo->CurrentYear(), TimeInfo->CurrentStep())) {
-      for (i = 0; i < Years.Ncol(t); i++)
-        if (Years[t][i] == TimeInfo->CurrentYear() && Steps[t][i] == TimeInfo->CurrentStep())
+      for (i = 0; i < Years.Ncol(t); i++) {
+        if (Years[t][i] == TimeInfo->CurrentYear() && Steps[t][i] == TimeInfo->CurrentStep()) {
+          handle.logMessage("Calculating likelihood score for recstatistics component", rsname);
           timeindex[t] = i;
           aggregator[t]->Sum(TimeInfo);
+          check++;
+	}
+      }
     }
   }
-  likelihood += calcLikSumSquares();
+
+  if (check > 0) {
+    likelihood += calcLikSumSquares();
+    handle.logMessage("The likelihood score for this component has increased to", likelihood);
+  }
 }
 
 double RecStatistics::calcLikSumSquares() {

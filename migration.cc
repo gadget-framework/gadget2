@@ -551,6 +551,7 @@ void Migration::readCoefficients(CommentStream& infile,
 
 void Migration::Reset() {
   penalty.Reset();
+  handle.logMessage("Reset migration data");
 }
 
 const DoubleVector& Migration::Penalty() const {

@@ -324,6 +324,7 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
   illegal = 0;
+  handle.logMessage("Reset catchdistribution component", cdname);
 }
 
 void CatchDistribution::Print(ofstream& outfile) const {
@@ -489,6 +490,7 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
 void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
   if (AAT.AtCurrentTime(TimeInfo)) {
+    handle.logMessage("Calculating likelihood score for catchdistribution component", cdname);
     switch(functionnumber) {
       case 1:
         aggregator->Sum(TimeInfo);
@@ -535,6 +537,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
         handle.logWarning("Warning in catchdistribution - unknown function", functionname);
         break;
     }
+    handle.logMessage("The likelihood score for this component has increased to", likelihood);
     timeindex++;
   }
 }

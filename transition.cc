@@ -201,6 +201,7 @@ void Transition::Reset() {
     AgeGroup[i].setToZero();
     TagAgeGroup[i].setToZero();
   }
+  handle.logMessage("Reset transition data");
 }
 
 const StockPtrVector& Transition::getTransitionStocks() {

@@ -111,6 +111,7 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
     }
     checkInitialised = 1;
   }
+  handle.logMessage("Reset boundlikelihood component");
 }
 
 void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keeper* const keeper) {
@@ -132,4 +133,5 @@ void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keepe
     } else
       likelihoods[i] = 0.0;
   }
+  handle.logMessage("Calculated likelihood score for boundlikelihood component", likelihood);
 }

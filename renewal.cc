@@ -188,6 +188,7 @@ void RenewalData::Reset() {
       }
     }
   }
+  handle.logMessage("Reset renewal data");
 }
 
 void RenewalData::addRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo) {

@@ -111,13 +111,13 @@ void Ecosystem::Update(const DoubleVector& values) const {
 }
 
 double Ecosystem::SimulateAndUpdate(double* x, int n) {
-  int optimize = 1;
   ::FuncEval++;
   static int PrintCounter1 = printinfo.getPrint1() - 1;
   static int PrintCounter2 = printinfo.getPrint2() - 1;
-
   PrintCounter1++;
   PrintCounter2++;
+
+  likelihood = 0.0;
   int numvar = this->NoVariables();
   DoubleVector val(numvar);
   DoubleVector initialvalues(numvar);
@@ -133,10 +133,9 @@ double Ecosystem::SimulateAndUpdate(double* x, int n) {
       val[i] = x[j] * initialvalues[i];
       j++;
     }
+
   this->Update(val);
-  likelihood = 0.0;
-  if (!Simulate(optimize))
-    likelihood = verybig;
+  this->Simulate(1, 0);  //optimise and dont print
 
   if (PrintCounter1 == printinfo.getPrint1() && printinfo.getPrint()) {
     this->writeValues(printinfo.getOutputFile(), printinfo.getPrecision());
@@ -146,6 +145,7 @@ double Ecosystem::SimulateAndUpdate(double* x, int n) {
     this->writeValuesInColumns(printinfo.getColumnOutputFile(), printinfo.getPrecision());
     PrintCounter2 = 0;
   }
+
   funceval++;
   return likelihood;
 }
@@ -214,7 +214,7 @@ void Ecosystem::OptSwitches(ParameterVector& sw) const {
   keeper->OptSwitches(sw);
 }
 
-void Ecosystem::PrintLikelihoodInfo(const char* filename) const {
+void Ecosystem::writeLikelihoodInformation(const char* filename) const {
   ofstream outfile;
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);

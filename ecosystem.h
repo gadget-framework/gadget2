@@ -10,11 +10,14 @@
 #include "printerptrvector.h"
 #include "printer.h"
 #include "fleet.h"
-#include "printinfo.h" //filenames for printing during optimization
+#include "printinfo.h"
 #include "gadget.h"
 
 class Ecosystem {
 public:
+  /**
+   * \brief This is the default Ecosystem constructor
+   */
   Ecosystem();
   //Changed constructor and readmain, to take a parameter saying if this
   //is a netrun. This is done to prevent EcoSystem from reading the
@@ -22,25 +25,52 @@ public:
   Ecosystem(const char* const filename, int optimize, int netrun,
     int calclikelihood, const char* const inputdir,
     const char* const workingdir, const PrintInfo& pi);
+  /**
+   * \brief This is the default Ecosystem destructor
+   */
+  ~Ecosystem();
   void readMain(CommentStream& infile, int optimize, int netrun,
     int calclikelihood, const char* const inputdir,
     const char* const workingdir);
-  ~Ecosystem();
+  /**
+   * \brief This function will read the likelihood data from the input file
+   * \param infile is the CommentStream to read the likelihood data from
+   */
   void readLikelihood(CommentStream& infile);
+  /**
+   * \brief This function will read the printer data from the input file
+   * \param infile is the CommentStream to read the printer data from
+   */
   void readPrinters(CommentStream& infile);
+  /**
+   * \brief This function will read the fleet data from the input file
+   * \param infile is the CommentStream to read the fleet data from
+   */
   void readFleet(CommentStream& infile);
+  /**
+   * \brief This function will read the tagging data from the input file
+   * \param infile is the CommentStream to read the tagging data from
+   */
   void readTagging(CommentStream& infile);
+  /**
+   * \brief This function will read the otherfood data from the input file
+   * \param infile is the CommentStream to read the otherfood data from
+   */
   void readOtherFood(CommentStream& infile);
-  void readStock(CommentStream& infile, int mortmodel);
+  /**
+   * \brief This function will read the stock data from the input file
+   * \param infile is the CommentStream to read the stock data from
+   */
+  void readStock(CommentStream& infile);
   void writeStatus(const char* filename) const;
   void writeInitialInformation(const char* const filename) const;
   void writeInitialInformationInColumns(const char* const filename) const;
   void writeValues(const char* const filename, int prec) const;
   void writeValuesInColumns(const char* const filename, int prec) const;
   void writeParamsInColumns(const char* const filename, int prec) const;
+  void writeLikelihoodInformation(const char* filename) const;
   void writeOptValues() const;
   void Initialise(int optimize);
-  void PrintLikelihoodInfo(const char* filename) const;
   void Update(const StochasticData* const Stochastic) const;
   void Update(const DoubleVector& values) const;
   void Opt(IntVector& opt) const;
@@ -62,7 +92,7 @@ public:
   int NoVariables() const { return keeper->NoVariables(); };
   int NoOptVariables() const { return keeper->NoOptVariables(); };
   double SimulateAndUpdate(double* x, int n);
-  int Simulate(int optimize, int print = 0);
+  void Simulate(int optimize, int print);
   double getLikelihood() const { return likelihood; };
   int getFuncEval() const { return funceval; };
   int getConverge() const { return converge; };
@@ -72,6 +102,7 @@ protected:
   double likelihood;
   int funceval;
   int converge;
+  int mortmodel;
   BaseClassPtrVector basevec;
   LikelihoodPtrVector Likely;
   PrinterPtrVector printvec;
@@ -89,7 +120,7 @@ protected:
   OtherFoodPtrVector otherfoodvec;
   CharPtrVector fleetnames;
   FleetPtrVector fleetvec;
-  PrintInfo  printinfo;
+  PrintInfo printinfo;
   friend class InterruptInterface;
 };
 

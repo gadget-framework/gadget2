@@ -66,7 +66,7 @@ void Ecosystem::readFleet(CommentStream& infile) {
       fleetvec[i] = new Fleet(infile, fleetnames[i], Area, TimeInfo, keeper, MORTALITYFLEET);
 
     } else
-      handle.Message("Error in main file - unrecognised fleet", text);
+      handle.Message("Error in fleet file - unrecognised fleet", text);
 
     handle.logMessage("Read fleet OK - created fleet", value);
   }
@@ -138,7 +138,7 @@ void Ecosystem::readOtherFood(CommentStream& infile) {
 // A function to read stock information
 // Note: there is only ever one stock in each file
 //
-void Ecosystem::readStock(CommentStream& infile, int mortmodel) {
+void Ecosystem::readStock(CommentStream& infile) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
@@ -219,7 +219,7 @@ void Ecosystem::readPrinters(CommentStream& infile) {
     else if (strcasecmp(type, "likelihoodprinter") == 0)
       likprintvec.resize(1, new LikelihoodPrinter(infile, Area, TimeInfo));
     else
-      handle.Message("Error in main file - unrecognised printer", type);
+      handle.Message("Error in printer file - unrecognised printer", type);
 
     handle.logMessage("Read printer OK - created printer class", type);
   }
@@ -325,7 +325,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       handle.Warning("The aggregated catch distribution likelihood component is no longer supported");
 
     } else {
-      handle.Message("Error in main file - unrecognised likelihood", type);
+      handle.Message("Error in likelihood file - unrecognised likelihood", type);
     }
 
     handle.logMessage("Read likelihood OK - created likelihood component", name);
@@ -333,14 +333,14 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
 }
 
 //
-//The main reading function
+// The main reading function
 //
 void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
   int calclikelihood, const char* const inputdir, const char* const workingdir) {
 
+  mortmodel = 0;
   char text[MaxStrLength];
   char filename[MaxStrLength];
-  int mort_mod = 0;
   strncpy(text, "", MaxStrLength);
   strncpy(filename, "", MaxStrLength);
 
@@ -397,10 +397,10 @@ void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
   infile >> text >> ws;
 
   if (strcasecmp(text, "mortalitymodel") == 0) {
-    mort_mod = 1;
+    mortmodel = 1;
     infile >> text >> ws;
   } else
-    mort_mod = 0;
+    mortmodel = 0;
 
   if (!(strcasecmp(text, "stockfiles") == 0))
     handle.Unexpected("stockfiles", text);
@@ -412,7 +412,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
     chdir(workingdir);
-    this->readStock(subcomment, mort_mod);
+    this->readStock(subcomment);
     chdir(inputdir);
     handle.Close();
     subfile.close();

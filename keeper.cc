@@ -167,10 +167,9 @@ void Keeper::ScaledValues(DoubleVector& val) const {
 
 void Keeper::ScaledOptValues(DoubleVector& val) const {
   int i, k;
-  if (val.Size() != this->NoOptVariables()) {
-    handle.logWarning("Warning in keeper - illegal number of optimising variables");
-    return;
-  }
+  if (val.Size() != this->NoOptVariables())
+    handle.logFailure("Error in keeper - received illegal number of optimising variables");
+
   if (opt.Size() == 0)
     this->ScaledValues(val);
   else {
@@ -185,10 +184,9 @@ void Keeper::ScaledOptValues(DoubleVector& val) const {
 
 void Keeper::OptValues(DoubleVector& val) const {
   int i, k;
-  if (val.Size() != this->NoOptVariables()) {
-    handle.logWarning("Warning in keeper - illegal number of optimising variables");
-    return;
-  }
+  if (val.Size() != this->NoOptVariables())
+    handle.logFailure("Error in keeper - received illegal number of optimising variables");
+
   if (opt.Size() == 0)
     this->ValuesOfVariables(val);
   else {
@@ -203,10 +201,9 @@ void Keeper::OptValues(DoubleVector& val) const {
 
 void Keeper::InitialOptValues(DoubleVector& val) const {
   int i, k;
-  if (val.Size() != this->NoOptVariables()) {
-    handle.logWarning("Warning in keeper - illegal number of optimising variables");
-    return;
-  }
+  if (val.Size() != this->NoOptVariables())
+    handle.logFailure("Error in keeper - received illegal number of optimising variables");
+
   if (opt.Size() == 0)
     this->InitialValues(val);
   else {
@@ -221,10 +218,9 @@ void Keeper::InitialOptValues(DoubleVector& val) const {
 
 void Keeper::OptSwitches(ParameterVector& sw) const {
   int i, k;
-  if (sw.Size() != this->NoOptVariables()) {
-    handle.logWarning("Warning in keeper - illegal number of optimising variables");
-    return;
-  }
+  if (sw.Size() != this->NoOptVariables())
+    handle.logFailure("Error in keeper - received illegal number of optimising variables");
+
   if (opt.Size() == 0)
     this->Switches(sw);
   else {
@@ -253,10 +249,9 @@ void Keeper::ScaleVariables() {
 
 void Keeper::Update(const DoubleVector& val) {
   int i, j;
-  if (val.Size() != values.Size()) {
-    error = 1;
-    return;
-  }
+  if (val.Size() != values.Size())
+    handle.logFailure("Error in keeper - received wrong number of variables to update");
+
   for (i = 0; i < address.Nrow(); i++) {
     for (j = 0; j < address.Ncol(i); j++)
       *address[i][j].addr = val[i];
@@ -273,10 +268,9 @@ void Keeper::Update(const DoubleVector& val) {
 //Memberfunction added so boundlikelihood could change variables
 void Keeper::Update(int pos, double& value) {
   int i;
-  if (pos <= 0 && pos >= address.Nrow()) {
-    error = 1;
-    return;
-  }
+  if (pos <= 0 && pos >= address.Nrow())
+    handle.logFailure("Error in keeper - received illegal variable to update");
+
   for (i = 0; i < address.Ncol(pos); i++)
     *address[pos][i].addr = value;
 
@@ -479,7 +473,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
 
   } else {
     if (this->NoVariables() != Stoch->NoVariables())
-      handle.logFailure("Error in keeper - failed to read values");
+      handle.logFailure("Error in keeper - received wrong number of variables to update");
 
     for (i = 0; i < Stoch->NoVariables(); i++) {
       if (Stoch->OptGiven())
@@ -567,10 +561,9 @@ void Keeper::UpperBds(DoubleVector& ubs) const {
 
 void Keeper::LowerOptBds(DoubleVector& lbs) const {
   int i, j;
-  if (lbs.Size() != this->NoOptVariables()) {
-    handle.logWarning("Warning in keeper - illegal number of optimising variables");
-    return;
-  }
+  if (lbs.Size() != this->NoOptVariables())
+    handle.logFailure("Error in keeper - received illegal number of optimising variables");
+
   if (lbs.Size() == 0)
     this->LowerBds(lbs);
   else {
@@ -585,10 +578,9 @@ void Keeper::LowerOptBds(DoubleVector& lbs) const {
 
 void Keeper::UpperOptBds(DoubleVector& ubs) const {
   int i, j;
-  if (ubs.Size() != this->NoOptVariables()) {
-    handle.logWarning("Warning in keeper - illegal number of optimising variables");
-    return;
-  }
+  if (ubs.Size() != this->NoOptVariables())
+    handle.logFailure("Error in keeper - received illegal number of optimising variables");
+
   if (ubs.Size() == 0)
     this->UpperBds(ubs);
   else {

@@ -33,9 +33,18 @@ protected:
   double calcLikGamma();
   double calcLikExperimental();
   double calcLikLog();
+  /**
+   * \brief This is the StockAggregator used to collect information about the relevant stocks for the survey index data
+   */
   StockAggregator* aggregator;
-  LengthGroupDivision* LgrpDiv;
+  /**
+   * \brief This is the IntMatrix used to store age information
+   */
   IntMatrix Ages;
+  /**
+   * \brief This is the LengthGroupDivision used to store length information
+   */
+  LengthGroupDivision* LgrpDiv;
   DoubleMatrixPtrVector indexMatrix;
   DoubleMatrixPtrVector calc_index;  //for comparing with indexMatrix
   FormulaVector b; //interpreted as power or intersection term according to fit type

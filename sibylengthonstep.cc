@@ -11,8 +11,7 @@ extern ErrorHandler handle;
 SIByLengthOnStep::SIByLengthOnStep(CommentStream& infile, const IntMatrix& areas,
   const DoubleVector& lengths, const CharPtrVector& areaindex, const CharPtrVector& lenindex,
   const TimeClass* const TimeInfo, const char* datafilename, const char* name)
-  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, lenindex, name),
-    aggregator(0), LgrpDiv(0) {
+  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, lenindex, name) {
 
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
@@ -20,8 +19,10 @@ SIByLengthOnStep::SIByLengthOnStep(CommentStream& infile, const IntMatrix& areas
 }
 
 SIByLengthOnStep::~SIByLengthOnStep() {
-  delete aggregator;
-  delete LgrpDiv;
+  if (aggregator != 0)
+    delete aggregator;
+  if (LgrpDiv != 0)
+    delete LgrpDiv;
 }
 
 void SIByLengthOnStep::setStocks(const StockPtrVector& Stocks) {
@@ -45,16 +46,18 @@ void SIByLengthOnStep::setStocks(const StockPtrVector& Stocks) {
       maxage = Stocks[i]->maxAge();
   }
 
-  IntMatrix agematrix(1, maxage - minage + 1);
-  for (i = 0; i < agematrix.Ncol(); i++)
-    agematrix[0][i] = i + minage;
+  Ages.AddRows(1, maxage - minage + 1);
+  for (i = 0; i < Ages.Ncol(); i++)
+    Ages[0][i] = i + minage;
 
-  aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, agematrix);
+  aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, Ages);
 }
 
 void SIByLengthOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!(this->IsToSum(TimeInfo)))
     return;
+
+  handle.logMessage("Calculating index for surveyindex component", this->SIName());
   aggregator->Sum();
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns has only one element.
   //Copy the information from it -- we only want to keep the abundance numbers.

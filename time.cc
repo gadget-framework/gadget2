@@ -49,14 +49,22 @@ TimeClass::TimeClass(CommentStream& infile) {
 }
 
 void TimeClass::IncrementTime() {
-  if (currentyear == lastyear && currentstep == laststep)
-    handle.logFailure("Error in timeclass - cannot increment time past last timestep");
-  if (currentstep == notimesteps) {
+
+  handle.logMessage("");  //write a blank line to the log file
+  if (currentyear == lastyear && currentstep == laststep) {
+    handle.logMessage("Time has reached the end of the simulation");
+
+  } else if (currentstep == notimesteps) {
     currentstep = 1;
     currentyear++;
-  } else
+    currentsubstep = 1;
+    handle.logMessage("Increased time in the simulation to timestep", this->CurrentTime());
+ 
+  } else {
     currentstep++;
-  currentsubstep = 1;
+    currentsubstep = 1;
+    handle.logMessage("Increased time in the simulation to timestep", this->CurrentTime());
+  }
 }
 
 int TimeClass::IsWithinPeriod(int year, int step) const {
@@ -76,4 +84,11 @@ int TimeClass::SizeOfStepDidChange() const {
 
 int TimeClass::NrOfSubsteps() const {
   return ((int)nrofsubsteps[currentstep]);
+}
+
+void TimeClass:: ResetToBeginning() {
+  currentyear = firstyear;
+  currentstep = firststep;
+  currentsubstep = 1;
+  handle.logMessage("Reset time in the simulation to timestep", this->CurrentTime());
 }

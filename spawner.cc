@@ -326,7 +326,7 @@ int Spawner::IsSpawnStepArea(int area, const TimeClass* const TimeInfo) {
   return 0;
 }
 
-void Spawner::Precalc(const TimeClass* const TimeInfo) {
+void Spawner::Reset(const TimeClass* const TimeInfo) {
   int i, j;
   double len;
 
@@ -364,6 +364,7 @@ void Spawner::Precalc(const TimeClass* const TimeInfo) {
   for (i = 0; i < ssb.Nrow(); i++)
     for (j = 0; j < ssb.Ncol(i); j++)
       ssb[i][j] = 0.0;
+  handle.logMessage("Reset spawning data");
 }
 
 double Spawner::ssbFunc(int age, int len, double number, double weight) {

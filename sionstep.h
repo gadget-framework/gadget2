@@ -20,7 +20,7 @@ class SIOnStep {
 public:
   SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
     const TimeClass* const TimeInfo, int numcols, const IntMatrix& areas,
-    const CharPtrVector& index1, const CharPtrVector& index2);
+    const CharPtrVector& index1, const CharPtrVector& index2, const char* name);
   SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
     const TimeClass* const TimeInfo, const IntMatrix& areas,
     const CharPtrVector& colindex, const char* name);
@@ -36,6 +36,11 @@ public:
 protected:
   void setError() { error = 1; };
   int IsToSum(const TimeClass* const TimeInfo) const;
+  /**
+   * \brief This will return a null terminated text string containing the name of the SIOnStep object
+   * \return siname
+   */
+  const char* SIName() const { return siname; };
   void keepNumbers(const DoubleVector& numbers);
   IntMatrix Areas;
   IntVector Years;
@@ -49,7 +54,7 @@ private:
   void readSIData(CommentStream& infile, const CharPtrVector& areaindex,
     const CharPtrVector& index1, const CharPtrVector& index2, const TimeClass* const TimeInfo);
   void readSIData(CommentStream& infile, const CharPtrVector& areaindex,
-    const CharPtrVector& colindex, const TimeClass* const TimeInfo, const char* name);
+    const CharPtrVector& colindex, const TimeClass* const TimeInfo);
   double Fit(const DoubleVector& stocksize, const DoubleVector& indices, int col);
   int NumberOfSums;
   FitType fittype;
@@ -60,6 +65,10 @@ private:
   DoubleVector intercepts;
   DoubleVector sse;
   int error;
+  /**
+   * \brief This is the name of the SIOnStep object
+   */
+  char* siname;
 };
 
 #endif

@@ -23,7 +23,6 @@ public:
   char* sendComponents() const;
   void clearComponents();
   void clearAll();
-  void Clear() { error = 0; };
   void Opt(IntVector& opt) const;
   void ValuesOfVariables(DoubleVector& val) const;
   void Switches(ParameterVector& switches) const;
@@ -69,10 +68,10 @@ public:
   //AJ 08.08.00 end of change to functions.
   void writeOptValues(double FunctionValue, const LikelihoodPtrVector& Likely) const;
   void ScaleVariables();
-  void InitialOptValues(DoubleVector &val) const;
-  void ScaledOptValues(DoubleVector &val) const;
+  void InitialOptValues(DoubleVector& val) const;
+  void ScaledOptValues(DoubleVector& val) const;
   void OptSwitches(ParameterVector& sw) const;
-  void OptValues(DoubleVector &val) const;
+  void OptValues(DoubleVector& val) const;
   void checkBounds() const;
 protected:
   AddressKeeperMatrix address;
@@ -85,7 +84,6 @@ protected:
   ParameterVector switches;
   DoubleVector lowerbds;
   DoubleVector upperbds;
-  int error;
 };
 
 #endif

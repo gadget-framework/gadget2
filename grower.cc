@@ -269,4 +269,5 @@ void Grower::Reset() {
     for (i = maxlengthgroupgrowth - 2; i >= 0; i--)
       part2[i] = part2[i + 1] * (beta + tmpmax - i - 1);
 
+  handle.logMessage("Reset grower data");
 }

@@ -278,6 +278,7 @@ StockDistribution::~StockDistribution() {
 void StockDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
+  handle.logMessage("Reset stockdistribution component", sdname);
 }
 
 void StockDistribution::Print(ofstream& outfile) const {
@@ -332,6 +333,7 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
 void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   int i;
   if (AAT.AtCurrentTime(TimeInfo)) {
+    handle.logMessage("Calculating likelihood score for stockdistribution component", sdname);
     for (i = 0; i < stocknames.Size(); i++)
       aggregator[i]->Sum(TimeInfo);
 
@@ -346,6 +348,7 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
         handle.logWarning("Warning in stockdistribution - unknown function", functionname);
         break;
     }
+    handle.logMessage("The likelihood score for this component has increased to", likelihood);
     timeindex++;
   }
 }

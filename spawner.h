@@ -20,7 +20,7 @@ public:
   void addSpawnStock(int area, const TimeClass* const TimeInfo);
   void Spawn(AgeBandMatrix& Alkeys, int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   int IsSpawnStepArea(int area, const TimeClass* const TimeInfo);
-  void Precalc(const TimeClass* const TimeInfo);
+  void Reset(const TimeClass* const TimeInfo);
   double ssbFunc(int age, int len, double number, double weight);
 protected:
   StockPtrVector SpawnStocks;

@@ -64,7 +64,11 @@ StomachContent::~StomachContent() {
 }
 
 void StomachContent::addLikelihood(const TimeClass* const TimeInfo) {
-  likelihood += StomCont->Likelihood(TimeInfo);
+  double l = StomCont->Likelihood(TimeInfo);
+  if (!(isZero(l))) {
+    likelihood += l;
+    handle.logMessage("The likelihood score for this component has increased to", likelihood);
+  }
 }
 
 void StomachContent::Print(ofstream& outfile) const {
@@ -196,6 +200,7 @@ double SC::Likelihood(const TimeClass* const TimeInfo) {
   if (!AAT.AtCurrentTime(TimeInfo))
     return 0.0;
 
+
   int i, a, k;
   int prey_g = 0, prey_l = 0;
   double length = 0.0, mult = 0.0;
@@ -212,6 +217,7 @@ double SC::Likelihood(const TimeClass* const TimeInfo) {
     consumption[a] = new DoubleMatrix(stomachcontent[timeindex][0]->Nrow(),
       stomachcontent[timeindex][0]->Ncol(), 0.0);
 
+  handle.logMessage("Calculating likelihood score for stomachcontent component", scname);
   //Get the consumption from aggregator, indexed the same way as in stomachcontent
   //While we're at it, get the sum of each row, for later scaling.
   DoubleMatrix sum(areas.Nrow(), pred_size, 0.0);
@@ -918,4 +924,5 @@ void SC::Reset() {
         delete modelConsumption[i][j];
         modelConsumption[i][j] = 0;
       }
+  handle.logMessage("Reset stomachcontent component", scname);
 }
