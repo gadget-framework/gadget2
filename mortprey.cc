@@ -161,9 +161,9 @@ void MortPrey::Reset() {
 
 void MortPrey::calcMeanN(int area) {
   //written by kgf 24/6 98
-  assert(haveCalculatedMeanN[area] == 0);
-  haveCalculatedMeanN[area] = 1;
   int inarea = AreaNr[area];
+  assert(haveCalculatedMeanN[inarea] == 0);
+  haveCalculatedMeanN[inarea] = 1;
   int l;
   for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
     prop_surv[inarea][l] = exp(- z[inarea][l]);
@@ -213,7 +213,15 @@ void MortPrey::addAgeGroupMatrix(DoubleMatrix* const agematrix) {
 }
 
 void MortPrey::setAgeMatrix(int pred_no, int area, const DoubleVector& agegroupno) {
-  (*agegroupmatrix[pred_no])[area] = agegroupno;
+  (*agegroupmatrix[pred_no])[AreaNr[area]] = agegroupno;
+}
+
+DoubleMatrix* MortPrey::getAgeMatrix(int index) {
+  return agegroupmatrix[index];
+}
+
+double MortPrey::getAreaPredTotal(int pred_no, int area, int index) {
+  return (*agegroupmatrix[pred_no])[AreaNr[area]][index];
 }
 
 void MortPrey::setConsumption(int area, int pred_no, const BandMatrix& consum) {

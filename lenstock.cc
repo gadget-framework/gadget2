@@ -322,7 +322,7 @@ LenStock::~LenStock() {
 
   if (iseaten && cannibalism) {
     for (i = 0; i < cann->numPredators(); i++)
-      delete (((MortPrey*)prey)->ageGroupMatrix(i));
+      delete (((MortPrey*)prey)->getAgeMatrix(i));
   }
 
   if (len_natm != 0)
@@ -420,6 +420,7 @@ void LenStock::calcEat(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   int i, numpred;
+  int inarea = AreaNr[area];
 
   if (doeseat)
     predator->Eat(area, TimeInfo->LengthOfCurrent(),
@@ -431,9 +432,8 @@ void LenStock::calcEat(int area,
     cann_vec.setElementsTo(0.0);
     for (i = 0; i < numpred; i++) {
       // add cannibalism mortality on this prey from each predator in turn
-      cann_vec += cann->Mortality(Alkeys[AreaNr[area]],
-        cannPredators[i]->getAgeLengthKeys(area), LgrpDiv,
-        cannPredators[i]->returnLengthGroupDiv(), TimeInfo, i, len_natm->NatMortality());
+      cann_vec += cann->Mortality(Alkeys[inarea], cannPredators[i]->getAgeLengthKeys(area),
+        LgrpDiv, cannPredators[i]->returnLengthGroupDiv(), TimeInfo, i, len_natm->NatMortality());
     }
 
     for (i = 0; i < numpred; i++) {
@@ -482,7 +482,7 @@ void LenStock::calcNumbers(int area,
   int inarea = AreaNr[area];
   PopInfo nullpop;
 
-  int i;
+  int i, row, col;
   for (i = 0; i < NumberInArea[inarea].Size(); i++)
     NumberInArea[inarea][i] = nullpop;
 
@@ -499,15 +499,15 @@ void LenStock::calcNumbers(int area,
     ((MortPredator*)predator)->Sum(NumberInArea[inarea], area);
 
   N.setElementsTo(0.0);
-  int row, col;
-  for (row = Alkeys[area].minAge(); row <= Alkeys[area].maxAge(); row++)
-    for (col = Alkeys[area].minLength(row); col < Alkeys[area].maxLength(row); col++)
-      N[row-Alkeys[area].minAge()] += Alkeys[area][row][col].N;
+
+  for (row = Alkeys[inarea].minAge(); row <= Alkeys[inarea].maxAge(); row++)
+    for (col = Alkeys[inarea].minLength(row); col < Alkeys[inarea].maxLength(row); col++)
+      N[row - Alkeys[inarea].minAge()] += Alkeys[inarea][row][col].N;
 
   if (TimeInfo->CurrentStep() == 1) {
-    for (row = Alkeys[area].minAge(); row <= Alkeys[area].maxAge(); row++)
-      for (col = Alkeys[area].minLength(row); col < Alkeys[area].maxLength(row); col++)
-        (*Nsum[inarea])[row - Alkeys[area].minAge()][year + 1] += Alkeys[area][row][col].N;
+    for (row = Alkeys[inarea].minAge(); row <= Alkeys[inarea].maxAge(); row++)
+      for (col = Alkeys[inarea].minLength(row); col < Alkeys[inarea].maxLength(row); col++)
+        (*Nsum[inarea])[row - Alkeys[inarea].minAge()][year + 1] += Alkeys[inarea][row][col].N;
     calcBiomass(year + 1, area);
   }
 }
@@ -515,10 +515,10 @@ void LenStock::calcNumbers(int area,
 void LenStock::calcBiomass(int yr, int area) {
   int inarea = AreaNr[area];
   int row, col;
-  for (row = Alkeys[area].minAge(); row <= Alkeys[area].maxAge(); row++)
-    for (col = Alkeys[area].minLength(row); col < Alkeys[area].maxLength(row); col++)
-      (*bio[inarea])[row - Alkeys[area].minAge()][yr] +=
-        Alkeys[area][row][col].N * Alkeys[area][row][col].W;
+  for (row = Alkeys[inarea].minAge(); row <= Alkeys[inarea].maxAge(); row++)
+    for (col = Alkeys[inarea].minLength(row); col < Alkeys[inarea].maxLength(row); col++)
+      (*bio[inarea])[row - Alkeys[inarea].minAge()][yr] +=
+        Alkeys[inarea][row][col].N * Alkeys[inarea][row][col].W;
 }
 
 void LenStock::Grow(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {

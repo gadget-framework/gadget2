@@ -222,7 +222,7 @@ void PredatorAggregator::MeanSum() {
                 pred_age = predConv[g1 + h][k - minrow];
                 if (pred_age >= 0) {
                   tot_predators[i][pred_age] +=
-                    (*((MortPrey*)preys[g])->ageGroupMatrix(h))[area][k - minrow];
+                    ((MortPrey*)preys[g])->getAreaPredTotal(h, area, k - minrow);
                   for (l = bptr->minCol(k); l < bptr->maxCol(k); l++) {
                     prey_length = preyConv[g][l];
                     if (prey_length >= 0)

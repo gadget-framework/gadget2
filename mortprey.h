@@ -44,7 +44,8 @@ public:
   void cannIsTrue(int cann_val) { cann_is_true = cann_val; };
   void addAgeGroupMatrix(DoubleMatrix* const agematrix);
   void setAgeMatrix(int pred_no, int area, const DoubleVector& agegroupno);
-  DoubleMatrix* ageGroupMatrix(int index) { return agegroupmatrix[index]; };
+  DoubleMatrix* getAgeMatrix(int index);
+  double getAreaPredTotal(int pred_no, int area, int index);
 protected:
   AgeBandMatrixPtrVector Alkeys;
   AgeBandMatrixPtrVector mean_n;
