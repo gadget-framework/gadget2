@@ -195,7 +195,7 @@ void InitialInputFile::readVectorFromLine() {
   char text[VeryLongString];
   infile.get(text, VeryLongString, '\n');
   if (!infile.eof() && infile.peek() != '\n') {
-    cerr << "Error in initialinput - line to long in file\n";
+    cerr << "Error in initialinput - line too long in file\n";
     exit(EXIT_FAILURE);
   }
 

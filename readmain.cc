@@ -512,5 +512,5 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
     }
   }
 
-  cout << "Finished reading input files\n" << flush;
+  cout << "\nFinished reading input files\n" << flush;
 }

@@ -3,8 +3,8 @@
 #include "gadget.h"
 
 void MainInfo::ShowCorrectUsage() {
-  cerr << " The options must be -l -s -m file -i file -o file -co file "
-   << "-opt file\n -print1 int or -print2 int -likelihoodprint filename\n";
+  cerr << "Options must be from -l -s -n -m file -i file -o file or -co file -opt file\n"
+   << "-print1 int or -print2 int -printinitial filename -printfinal filename\n";
   exit(EXIT_FAILURE);
 }
 
@@ -49,25 +49,16 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
       } else if (strcasecmp(aVector[k], "-n") == 0) {
         Net = 1;
 
-        //Change AJ, 13.03.00
-        #ifndef GADGET_NETWORK
-          cout << "Warning! Trying to run the network version of Gadget\n"
-           << "         without network support compiled in.\n";
+        #ifndef NETWORK
+          cout << "\nWarning: Gadget is trying to run in the network mode for paramin without\n"
+            << "the network support being compiled - no network communication can take place!\n";
         #endif
-
-        if (Stochastic != 1)  {
-          cout << "Warning, netrun should be used with -s option\n";
-          Stochastic = 1;
-          CalcLikelihood = 1;
-        }
-        //InitialCondareGiven = 1;
-        //STOP CHANGE AJ
 
       } else if (strcasecmp(aVector[k], "-s") == 0) {
         Stochastic = 1;
         CalcLikelihood = 1;
 
-      } else if (strcmp(aVector[k], "-M") == 0) {
+      } else if (strcasecmp(aVector[k], "-m") == 0) {
         ifstream infile;
         CommentStream incomment(infile);
         if (k == aNumber - 1)
@@ -79,7 +70,7 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         infile.close();
         infile.clear();
 
-      } else if (strcmp(aVector[k], "-i") == 0) {
+      } else if (strcasecmp(aVector[k], "-i") == 0) {
         len = strlen(aVector[k + 1]);
         InitialCommentFilename = new char[len + 1];
         if (k == aNumber - 1)
@@ -88,62 +79,64 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         k++;
         InitialCondareGiven = 1;
 
-      } else if (strcmp(aVector[k], "-o") == 0) {
+      } else if (strcasecmp(aVector[k], "-o") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage();
         printinfo.SetOutputFile(aVector[k + 1]);
         k++;
 
-      } else if (strcmp(aVector[k], "-print") == 0) {
+      } else if (strcasecmp(aVector[k], "-print") == 0) {
         printinfo.forcePrint = 1;
 
-      } else if (strcmp(aVector[k], "-surveyprint") == 0) {
+      } else if (strcasecmp(aVector[k], "-surveyprint") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage();
         printinfo.surveyprint = atoi(aVector[k + 1]);
         k++;
 
-      } else if (strcmp(aVector[k], "-stomachprint") == 0) {
+      } else if (strcasecmp(aVector[k], "-stomachprint") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage();
         printinfo.stomachprint = atoi(aVector[k + 1]);
         k++;
 
-      } else if (strcmp(aVector[k], "-catchprint") == 0) {
+      } else if (strcasecmp(aVector[k], "-catchprint") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage();
         printinfo.catchprint = atoi(aVector[k + 1]);
         k++;
 
-      } else if (strcmp(aVector[k], "-co") == 0) {
+      } else if (strcasecmp(aVector[k], "-co") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage();
         printinfo.SetColumnOutputFile(aVector[k + 1]);
         k++;
 
-      } else if (strcmp(aVector[k], "-printinitial") == 0) {
+      } else if (strcasecmp(aVector[k], "-printinitial") == 0) {
+        if (k == aNumber - 1)
+          ShowCorrectUsage();
         SetPrintInitialCondFilename(aVector[k + 1]);
         k++;
 
-      } else if (strcmp(aVector[k], "-printfinal") == 0) {
+      } else if (strcasecmp(aVector[k], "-printfinal") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage();
         SetPrintFinalCondFilename(aVector[k + 1]);
         k++;
 
-      } else if (strcmp(aVector[k], "-opt") == 0) {
+      } else if (strcasecmp(aVector[k], "-opt") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage();
         OpenOptinfofile(aVector[k + 1]);
         k++;
 
-      } else if (strcmp(aVector[k], "-likelihoodprint") == 0) {
+      } else if (strcasecmp(aVector[k], "-likelihoodprint") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage();
         SetPrintLikelihoodFilename(aVector[k + 1]);
         k++;
 
-      } else if (strcmp(aVector[k], "-print1") == 0) {
+      } else if (strcasecmp(aVector[k], "-print1") == 0) {
         strstream str;
         if (k == aNumber - 1)
           ShowCorrectUsage();
@@ -153,7 +146,7 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         if (str.fail())  //str.eof() depends on compilers
           ShowCorrectUsage();
 
-      } else if (strcmp(aVector[k], "-print2") == 0) {
+      } else if (strcasecmp(aVector[k], "-print2") == 0) {
         strstream str;
         if (k == aNumber - 1)
           ShowCorrectUsage();
@@ -169,6 +162,21 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
       k++;
     }
   }
+
+  if ((Stochastic != 1) && (Net == 1)) {
+    cout << "\nWarning: Gadget for the paramin network should be used with -s option\n"
+      << "Gadget will now set the -s switch to perform a stochastic run\n";
+    Stochastic = 1;
+    CalcLikelihood = 1;
+  }
+
+  if ((Stochastic == 1) && (Optimize == 1)) {
+    cout << "\nWarning: Gadget has been started with both the -s switch and the -l switch\n"
+      << "However, it is not possible to do both a stochastic run and an optimizing run!\n"
+      << "Gadget will perform only the stochastic run (and ignore the -l switch)\n";
+    Optimize = 0;
+  }
+
 }
 
 void MainInfo::SetPrintLikelihoodFilename(char* filename) {
@@ -188,30 +196,30 @@ void MainInfo::Read(CommentStream& infile) {
   while (!infile.eof())
     infile >> ws >> text;
 
-  if (strcmp(text, "-i") == 0) {
+  if (strcasecmp(text, "-i") == 0) {
     infile >> ws >> text;
     InitialCommentFilename = new char[strlen(text) + 1];
     strcpy(InitialCommentFilename, text);
     InitialCondareGiven = 1;
-  } else if (strcmp(text, "-o") == 0) {
+  } else if (strcasecmp(text, "-o") == 0) {
     infile >> ws >> text;
     printinfo.SetOutputFile(text);
-  } else if (strcmp(text, "-co") == 0) {
-    infile >> text;
+  } else if (strcasecmp(text, "-co") == 0) {
+    infile >> ws >> text;
     printinfo.SetColumnOutputFile(text);
-  } else if (strcmp(text, "-printinitial") == 0) {
+  } else if (strcasecmp(text, "-printinitial") == 0) {
     infile >> ws >> text;
     SetPrintInitialCondFilename(text);
-  } else if (strcmp(text, "-printfinal") == 0) {
+  } else if (strcasecmp(text, "-printfinal") == 0) {
     infile >> ws >> text;
     SetPrintFinalCondFilename(text);
-  } else if (strcmp(text, "-opt") == 0) {
+  } else if (strcasecmp(text, "-opt") == 0) {
     infile >> ws >> text;
     OpenOptinfofile(text);
-  } else if (strcmp(text, "-print1") == 0) {
-    infile >> printinfo.PrintInterVal1;
-  } else if (strcmp(text, "-print2") == 0) {
-    infile >> printinfo.PrintInterVal2;
+  } else if (strcasecmp(text, "-print1") == 0) {
+    infile >> ws >> printinfo.PrintInterVal1;
+  } else if (strcasecmp(text, "-print2") == 0) {
+    infile >> ws >> printinfo.PrintInterVal2;
   } else
     ShowCorrectUsage();
 
@@ -232,4 +240,3 @@ void MainInfo::SetPrintFinalCondFilename(char* filename) {
   strcpy(PrintFinalcondfilename, filename);
   PrintFinalcond = 1;
 }
-
