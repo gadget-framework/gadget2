@@ -277,9 +277,13 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
 
               //If xp is out of bounds, try again until we find a point that is OK
               if ((xp[i] < lb[i]) || (xp[i] > ub[i])) {
-                //JMB - this used to select a random point between the bounds
+                //JMB - this used to just select a random point between the bounds
+                k = 0;
                 while ((xp[i] < lb[i]) || (xp[i] > ub[i])) {
                   xp[i] = x[i] + ((randomNumber() * 2.0) - 1.0) * vm[i];
+                  k++;
+                  if (k > 10)  //we've had 10 tries to find a point neatly, so give up
+                    xp[i] = lb[i] + (ub[i] - lb[i]) * randomNumber();
                 }
               }
 
