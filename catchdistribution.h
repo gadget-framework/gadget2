@@ -28,6 +28,8 @@ private:
   double LikSumSquares();
   double LikMVNormal();
   double LikMVLogistic();
+  double LikTest();
+  double LikTest2();
   DoubleMatrixPtrMatrix AgeLengthData; //[time][area][age][length]
   DoubleMatrixPtrMatrix Proportions; //kgf 17/9 98
   DoubleMatrix Likelihoodvalues; //kgf 17/9 98
