@@ -27,12 +27,18 @@ public:
    * \param area is an integer to denote the internal area of interest
    * \return 1 if the object is defined on the area, 0 otherwise
    */
-  int IsInArea(int area) const;
+  int isInArea(int area) const;
   /**
    * \brief This function will return the internal areas that the object is defined on
    * \return areas
    */
   IntVector& Areas() { return areas; };
+  /**
+   * \brief This function will return the area associated with an internal area
+   * \param area is an integer to denote the internal area of interest
+   * \return the associated area number
+   */
+  int areaNum(int area) const;
 protected:
   /**
    * \brief This function will set the internal areas to be used
@@ -43,10 +49,11 @@ protected:
    * \brief This is the IntVector of internal areas that the object is defined on
    */
   IntVector areas;
+private:
   /**
    * \brief This is the IntVector used to convert to the internal areas
    */
-  IntVector AreaNr;
+  IntVector areaConvert;
 };
 
 #endif

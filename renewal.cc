@@ -53,7 +53,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
       renewalTime.resize(1);
       renewalTime[i] = TimeInfo->calcSteps(year, step);
 
-      if (!this->IsInArea(Area->InnerArea(area)))
+      if (!this->isInArea(Area->InnerArea(area)))
         handle.Message("Error in renewal - stock undefined on area");
 
       renewalArea.resize(1);

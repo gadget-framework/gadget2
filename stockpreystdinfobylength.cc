@@ -14,7 +14,7 @@ StockPreyStdInfoByLength::~StockPreyStdInfoByLength() {
 
 void StockPreyStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
   const AgeBandMatrix& Alk = prey->AlkeysPriorToEating(area);
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   PopInfo nullpop;
 
   PopInfoVector PopBylength(BconbyLength.Ncol(inarea), nullpop);

@@ -37,7 +37,7 @@ public:
    * \param area is the area that the prey consumption is being calculated on
    * \return Alkeys, the population of the prey for the area before consumption
    */
-  const AgeBandMatrix& AlkeysPriorToEating(int area) const { return Alkeys[AreaNr[area]]; };
+  const AgeBandMatrix& AlkeysPriorToEating(int area) const { return Alkeys[this->areaNum(area)]; };
   /**
    * \brief This function will print the prey information
    * \param outfile is the ofstream that all the model information gets sent to

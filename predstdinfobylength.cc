@@ -49,7 +49,7 @@ void PredStdInfoByLength::InitialiseObjects() {
 }
 
 void PredStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   preyinfo->Sum(TimeInfo, area);
   const DoubleVector& NpreyEaten = preyinfo->NconsumptionByLength(area);
   const DoubleVector& BpreyEaten = preyinfo->BconsumptionByLength(area);
@@ -69,13 +69,13 @@ void PredStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
 }
 
 const BandMatrix& PredStdInfoByLength::NconsumptionByLength(int area) const {
-  return NconbyLength[AreaNr[area]];
+  return NconbyLength[this->areaNum(area)];
 }
 
 const BandMatrix& PredStdInfoByLength::BconsumptionByLength(int area) const {
-  return BconbyLength[AreaNr[area]];
+  return BconbyLength[this->areaNum(area)];
 }
 
 const BandMatrix& PredStdInfoByLength::MortalityByLength(int area) const {
-  return MortbyLength[AreaNr[area]];
+  return MortbyLength[this->areaNum(area)];
 }

@@ -4,7 +4,7 @@
 #include "gadget.h"
 
 AbstrPreyStdInfoByLength::AbstrPreyStdInfoByLength(const Prey* prey,
-  const IntVector& Areas) : LivesOnAreas(Areas) {
+  const IntVector& areas) : LivesOnAreas(areas) {
 
   MortbyLength.AddRows(areas.Size(), prey->numLengthGroups(), 0.0);
   NconbyLength.AddRows(areas.Size(), prey->numLengthGroups(), 0.0);
@@ -15,13 +15,13 @@ AbstrPreyStdInfoByLength::~AbstrPreyStdInfoByLength() {
 }
 
 const DoubleVector& AbstrPreyStdInfoByLength::NconsumptionByLength(int area) const {
-  return NconbyLength[AreaNr[area]];
+  return NconbyLength[this->areaNum(area)];
 }
 
 const DoubleVector& AbstrPreyStdInfoByLength::BconsumptionByLength(int area) const {
-  return BconbyLength[AreaNr[area]];
+  return BconbyLength[this->areaNum(area)];
 }
 
 const DoubleVector& AbstrPreyStdInfoByLength::MortalityByLength(int area) const {
-  return MortbyLength[AreaNr[area]];
+  return MortbyLength[this->areaNum(area)];
 }

@@ -30,7 +30,7 @@ void PredatorOverAggregator::Sum() {
     for (i = 0; i < areas.Nrow(); i++) {
       for (j = 0; j < areas.Ncol(i); j++) {
         area = areas[i][j];
-        if (predators[g]->IsInArea(area)) {
+        if (predators[g]->isInArea(area)) {
           const DoubleVector* dptr = &predators[g]->OverConsumption(area);
           for (l = 0; l < predConv.Ncol(g); l++) {
             predlength = predConv[g][l];

@@ -33,7 +33,7 @@ void PredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   //Note that the age group of the predator is fixed to 0.
   preyinfo->Sum(TimeInfo, area);
   predinfo->Sum(TimeInfo, area);
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   const BandMatrix& preyNcons = preyinfo->NconsumptionByAgeAndLength(area);
   const BandMatrix& preyBcons = preyinfo->BconsumptionByAgeAndLength(area);
   const BandMatrix& predBcons = predator->Consumption(area, prey->Name());

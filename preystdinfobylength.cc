@@ -11,7 +11,7 @@ PreyStdInfoByLength::~PreyStdInfoByLength() {
 }
 
 void PreyStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   const DoubleVector& Bconsumption = prey->Bconsumption(area);
 
   int l;

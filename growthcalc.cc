@@ -125,8 +125,7 @@ void GrowthCalcB::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
-  int i;
-  int inarea = AreaNr[area];
+  int i, inarea = this->areaNum(area);
   DoubleVector l((*lgrowth[inarea])[TimeInfo->CurrentTime()].Size());
   DoubleVector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
 
@@ -502,7 +501,7 @@ void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   double stepsize = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
   double factor = yearEffect[TimeInfo->CurrentYear() - TimeInfo->FirstYear()]
-                    * stepEffect[TimeInfo->CurrentStep() - 1] * areaEffect[AreaNr[area]];
+                    * stepEffect[TimeInfo->CurrentStep() - 1] * areaEffect[this->areaNum(area)];
   double ratio = lgrowthPar[0] + lgrowthPar[8] * (lgrowthPar[1] + lgrowthPar[2] * lgrowthPar[8]);
   double tempW = factor * stepsize * wgrowthPar[0] * exp(wgrowthPar[1] * Temperature);
 
@@ -598,11 +597,10 @@ void GrowthCalcF::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
   growthPar.Update(TimeInfo);
-  int inarea = AreaNr[area];
+  int i, inarea = this->areaNum(area);
   double kval = growthPar[1] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-
-  int i;
   DoubleVector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
+
   for (i = 0; i < w.Size(); i++)
     w[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
 
@@ -671,11 +669,10 @@ void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   //Gives linear growth (Growthpar[0] == 0) or
   //growth decreasing with length (Growthpar[0] < 0).
   growthPar.Update(TimeInfo);
-  int inarea = AreaNr[area];
+  int i, inarea = this->areaNum(area);
   double kval = growthPar[1] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-
-  int i;
   DoubleVector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
+
   for (i = 0; i < w.Size(); i++)
     w[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
 

@@ -37,7 +37,7 @@ void Stock::Migrate(const TimeClass* const TimeInfo) {
 //Sum up into Growth+Predator and Prey Lengthgroups.  Storage is a
 //vector of PopInfo that stores the sum over each lengthgroup.
 void Stock::calcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   PopInfo nullpop;
   int i;
   for (i = 0; i < NumberInArea[inarea].Size(); i++)
@@ -74,7 +74,7 @@ void Stock::adjustEat(int area, const AreaClass* const Area, const TimeClass* co
 //-------------------------------------------------------------------
 void Stock::reducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
 
   //Predation
   if (iseaten)
@@ -112,7 +112,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
   else
     grower->GrowthCalc(area, Area, TimeInfo);
 
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   if (grower->getFixedWeights()) {
     //Weights at length are fixed to the value in the input file
     grower->GrowthImplement(area, LgrpDiv);
@@ -157,14 +157,14 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 //A number of Special functions, Spawning, Renewal, Maturation and
 //Transition to other Stocks, Maturity due to age and increased age.
 void Stock::updateAgePart1(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   if (doesmove)
     if (transition->isTransitionStep(area, TimeInfo))
       transition->keepAgeGroup(area, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
 }
 
 void Stock::updateAgePart2(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   if (this->Birthday(TimeInfo)) {
     Alkeys[inarea].IncrementAge();
     if (tagAlkeys.numTagExperiments() > 0)
@@ -182,7 +182,7 @@ void Stock::updateAgePart3(int area, const AreaClass* const Area, const TimeClas
 }
 
 void Stock::updatePopulationPart1(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   if (doesspawn) {
     if (spawner->isSpawnStepArea(area, TimeInfo)) {
       spawner->Spawn(Alkeys[inarea], area, TimeInfo);
@@ -202,7 +202,7 @@ void Stock::updatePopulationPart2(int area, const AreaClass* const Area, const T
 }
 
 void Stock::updatePopulationPart3(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   if (doesrenew) {
     renewal->addRenewal(Alkeys[inarea], area, TimeInfo);
     if (tagAlkeys.numTagExperiments() > 0)
@@ -215,7 +215,7 @@ void Stock::updatePopulationPart3(int area, const AreaClass* const Area, const T
 }
 
 void Stock::updatePopulationPart4(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   if (doesstray)
     if (stray->isStrayStepArea(area, TimeInfo))
       stray->storeStrayingStock(area, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
@@ -254,14 +254,14 @@ void Stock::updateStrayStockWithTags(const TimeClass* const TimeInfo) {
 void Stock::Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
   int area, double ratio, int MinAge, int MaxAge) {
 
-  Alkeys[AreaNr[area]].Add(Addition, *CI, ratio, MinAge, MaxAge);
+  Alkeys[this->areaNum(area)].Add(Addition, *CI, ratio, MinAge, MaxAge);
 }
 
 void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
   int area, double ratio, int MinAge, int MaxAge) {
 
   if ((Addition.numTagExperiments() > 0) && (Addition.numTagExperiments() <= tagAlkeys.numTagExperiments())) {
-    int inarea = AreaNr[area];
+    int inarea = this->areaNum(area);
     AgebandmratioAdd(tagAlkeys, inarea, Addition, AddArea, *CI, ratio, MinAge, MaxAge);
     tagAlkeys[inarea].updateRatio(Alkeys[inarea]);
   }

@@ -107,7 +107,7 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
       err = 0.0;
       for (i = 0; i < predators.Size(); i++)
         for (j = 0; j < areas[k].Size(); j++)
-          if (predators[i]->IsInArea(areas[k][j]))
+          if (predators[i]->isInArea(areas[k][j]))
             err += predators[i]->getTotalOverConsumption(areas[k][j]);
 
       store[k] += pow(err, powercoeff);

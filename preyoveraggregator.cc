@@ -30,7 +30,7 @@ void PreyOverAggregator::Sum() {
     for (i = 0; i < areas.Nrow(); i++) {
       for (j = 0; j < areas.Ncol(i); j++) {
         area = areas[i][j];
-        if (preys[h]->IsInArea(area)) {
+        if (preys[h]->isInArea(area)) {
           const DoubleVector* dptr = &preys[h]->OverConsumption(area);
           for (l = 0; l < preyConv.Ncol(h); l++) {
           preylength = preyConv[h][l];

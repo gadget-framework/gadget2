@@ -117,7 +117,7 @@ void Fleet::calcNumbers(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   PopInfo pop;
-  pop.N = amount[TimeInfo->CurrentTime()][AreaNr[area]];
+  pop.N = amount[TimeInfo->CurrentTime()][this->areaNum(area)];
   pop.W = 1.0;
   PopInfoVector NumberInArea(1, pop);
   predator->Sum(NumberInArea, area);
@@ -137,5 +137,5 @@ LengthPredator* Fleet::returnPredator() const {
 }
 
 double Fleet::Amount(int area, const TimeClass* const TimeInfo) const {
-  return amount[TimeInfo->CurrentTime()][AreaNr[area]];
+  return amount[TimeInfo->CurrentTime()][this->areaNum(area)];
 }

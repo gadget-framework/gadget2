@@ -15,7 +15,7 @@ StockPreyStdInfo::~StockPreyStdInfo() {
 
 void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   SPByLength.Sum(TimeInfo, area);
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   int age, l;
   double timeratio, tmp;
 

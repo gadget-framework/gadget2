@@ -209,7 +209,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
 
   //Make sure that given stocks are defined on tagarea and have same
   //lengthgroup division for the tagging experiment and the stock
-  if (!(taggingstock->IsInArea(tagarea)))
+  if (!(taggingstock->isInArea(tagarea)))
     handle.logFailure("Error in tags - stock isnt defined on tagging area");
 
   const LengthGroupDivision* tempLgrpDiv = taggingstock->returnLengthGroupDiv();

@@ -36,7 +36,7 @@ public:
    * \param area is the area that the prey consumption is being calculated on
    * \return scaler
    */
-  double Scaler(int area) const { return scaler[AreaNr[area]]; };
+  double Scaler(int area) const { return scaler[this->areaNum(area)]; };
 protected:
   /**
    * \brief This is the DoubleVector of scalers used to split the total catch between the areas of the prey

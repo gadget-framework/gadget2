@@ -152,6 +152,7 @@ void Recaptures::readRecaptureData(CommentStream& infile,
           tid = i;
 
       if (tid == -1) {
+        //if this is a new tagging experiment, resize to store the data
         tagName = new char[strlen(tmptagid) + 1];
         strcpy(tagName, tmptagid);
         tagnames.resize(1, tagName);
@@ -169,11 +170,11 @@ void Recaptures::readRecaptureData(CommentStream& infile,
         newDistribution.AddRows(1, 0);
 
       } else {
-        //if this is a new timestep, resize to store the data
         for (i = 0; i < obsYears[tid].Size(); i++)
           if ((obsYears[tid][i] == year) && (obsSteps[tid][i] == step))
             timeid = i;
 
+        //if this is a new timestep, resize to store the data
         if (timeid == -1) {
           obsYears[tid].resize(1, year);
           obsSteps[tid].resize(1, step);
@@ -272,7 +273,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
     for (i = 0; i < areas.Nrow(); i++)
       for (l = 0; l < areas.Ncol(i); l++)
         for (j = 0; j < stocks.Size(); j++)
-          if (!stocks[j]->IsInArea(areas[i][l]))
+          if (!stocks[j]->isInArea(areas[i][l]))
             handle.logFailure("Error in recaptures - stocks arent defined on all areas");
 
     IntMatrix agematrix(1, 0);
@@ -446,7 +447,7 @@ void Recaptures::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeI
             }
           }
         }
-      }    
+      }
     }
   }
 }

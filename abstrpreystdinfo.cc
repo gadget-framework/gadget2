@@ -2,11 +2,11 @@
 #include "abstrpreystdinfo.h"
 #include "areatime.h"
 
-AbstrPreyStdInfo::AbstrPreyStdInfo(const Prey* prey, const IntVector& Areas,
-  int minage, int maxage) : LivesOnAreas(Areas),
-  NconbyAge(minage, maxage - minage + 1, 0, Areas.Size(), 0.0),
-  BconbyAge(minage, maxage - minage + 1, 0, Areas.Size(), 0.0),
-  MortbyAge(minage, maxage - minage + 1, 0, Areas.Size(), 0.0) {
+AbstrPreyStdInfo::AbstrPreyStdInfo(const Prey* prey, const IntVector& areas,
+  int minage, int maxage) : LivesOnAreas(areas),
+  NconbyAge(minage, maxage - minage + 1, 0, areas.Size(), 0.0),
+  BconbyAge(minage, maxage - minage + 1, 0, areas.Size(), 0.0),
+  MortbyAge(minage, maxage - minage + 1, 0, areas.Size(), 0.0) {
 
   BandMatrix bm(0, prey->numLengthGroups(), minage, maxage - minage + 1, 0.0);
   NconbyAgeAndLength.resize(areas.Size(), bm);
@@ -15,25 +15,25 @@ AbstrPreyStdInfo::AbstrPreyStdInfo(const Prey* prey, const IntVector& Areas,
 }
 
 const BandMatrix& AbstrPreyStdInfo::NconsumptionByAgeAndLength(int area) const {
-  return NconbyAgeAndLength[AreaNr[area]];
+  return NconbyAgeAndLength[this->areaNum(area)];
 }
 
 const DoubleIndexVector& AbstrPreyStdInfo::NconsumptionByAge(int area) const {
-  return NconbyAge[AreaNr[area]];
+  return NconbyAge[this->areaNum(area)];
 }
 
 const BandMatrix& AbstrPreyStdInfo::BconsumptionByAgeAndLength(int area) const {
-  return BconbyAgeAndLength[AreaNr[area]];
+  return BconbyAgeAndLength[this->areaNum(area)];
 }
 
 const DoubleIndexVector& AbstrPreyStdInfo::BconsumptionByAge(int area) const {
-  return BconbyAge[AreaNr[area]];
+  return BconbyAge[this->areaNum(area)];
 }
 
 const BandMatrix& AbstrPreyStdInfo::MortalityByAgeAndLength(int area) const {
-  return MortbyAgeAndLength[AreaNr[area]];
+  return MortbyAgeAndLength[this->areaNum(area)];
 }
 
 const DoubleIndexVector& AbstrPreyStdInfo::MortalityByAge(int area) const {
-  return MortbyAge[AreaNr[area]];
+  return MortbyAge[this->areaNum(area)];
 }

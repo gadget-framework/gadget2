@@ -66,7 +66,7 @@ void Maturity::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < matureStocks.Size(); i++) {
     index = 0;
     for (j = 0; j < areas.Size(); j++)
-      if (!matureStocks[i]->IsInArea(areas[j]))
+      if (!matureStocks[i]->isInArea(areas[j]))
         index++;
 
     if (index != 0)
@@ -94,9 +94,9 @@ void Maturity::Print(ofstream& outfile) const {
 void Maturity::Move(int area, const TimeClass* const TimeInfo) {
   if (!(this->isMaturationStep(area, TimeInfo)))
     handle.logFailure("Error in maturity - maturity requested on wrong timestep");
-  int i, inarea = AreaNr[area];
+  int i, inarea = this->areaNum(area);
   for (i = 0; i < matureStocks.Size(); i++) {
-    if (!matureStocks[i]->IsInArea(area))
+    if (!matureStocks[i]->isInArea(area))
       handle.logFailure("Error in maturity - mature stock doesnt live on area", area);
 
     matureStocks[i]->Add(Storage[inarea], CI[i], area, Ratio[i],
@@ -116,7 +116,7 @@ void Maturity::PutInStorage(int area, int age, int length, double number,
 
   if (!(this->isMaturationStep(area, TimeInfo)))
     handle.logFailure("Error in maturity - maturity requested on wrong timestep");
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   if (isZero(number) || isZero(weight)) {
     Storage[inarea][age][length].N = 0.0;
     Storage[inarea][age][length].W = 0.0;
@@ -136,7 +136,7 @@ void Maturity::PutInStorage(int area, int age, int length, double number,
   else if ((id >= TagStorage.numTagExperiments()) || (id < 0))
     handle.logFailure("Error in maturity - invalid tagging experiment");
   else
-    *(TagStorage[AreaNr[area]][age][length][id].N) = (number > 0.0 ? number: 0.0);
+    *(TagStorage[this->areaNum(area)][age][length][id].N) = (number > 0.0 ? number: 0.0);
 }
 
 const StockPtrVector& Maturity::getMatureStocks() {

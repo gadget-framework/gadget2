@@ -87,7 +87,7 @@ void Transition::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < numstocks; i++) {
     index = 0;
     for (j = 0; j < areas.Size(); j++)
-      if (!transitionStocks[i]->IsInArea(areas[j]))
+      if (!transitionStocks[i]->isInArea(areas[j]))
         index++;
 
     if (index != 0)
@@ -118,7 +118,7 @@ void Transition::Print(ofstream& outfile) const {
 void Transition::keepAgeGroup(int area, AgeBandMatrix& Alkeys,
   AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo) {
 
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   int numtags = TagAlkeys.numTagExperiments();
   int i, l, minl, maxl;
   double tagnumber;
@@ -152,9 +152,9 @@ void Transition::keepAgeGroup(int area, AgeBandMatrix& Alkeys,
 //area in the call to this routine is not in the local area numbering of the stock.
 void Transition::Move(int area, const TimeClass* const TimeInfo) {
 
-  int s, inarea = AreaNr[area];
+  int s, inarea = this->areaNum(area);
   for (s = 0; s < transitionStocks.Size(); s++) {
-    if (!transitionStocks[s]->IsInArea(area))
+    if (!transitionStocks[s]->isInArea(area))
       handle.logFailure("Error in transition - transition stock doesnt live on area", area);
 
     if (transitionStocks[s]->Birthday(TimeInfo)) {

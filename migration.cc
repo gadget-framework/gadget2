@@ -479,7 +479,7 @@ void Migration::readCoefficients(CommentStream& infile,
 
   //Now we read the coefficients. The operator >> for VariableInfo does almost
   //all the work. We only need to convert the areas read to inner areas.
-  int i;
+  int i, innerrow, innercol;
   infile >> ws;
 
   char c = infile.peek();
@@ -489,13 +489,13 @@ void Migration::readCoefficients(CommentStream& infile,
     if (var->error)
       handle.Message("Failure in migration - unable to read migration matrix");
 
-    const int innerrow = Area->InnerArea(var->row);
-    const int innercol = Area->InnerArea(var->column);
-    if (!this->IsInArea(innerrow) || !this->IsInArea(innercol))
+    innerrow = Area->InnerArea(var->row);
+    innercol = Area->InnerArea(var->column);
+    if (!this->isInArea(innerrow) || !this->isInArea(innercol))
       handle.Message("Failure in migration - invalid migration areas");
 
-    var->row = AreaNr[innerrow];
-    var->column = AreaNr[innercol];
+    var->row = this->areaNum(innerrow);
+    var->column = this->areaNum(innercol);
     OptInfo.resize(1);
     OptInfo[OptInfo.Size() - 1] = var;
     infile >> ws;

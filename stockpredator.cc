@@ -97,7 +97,7 @@ void StockPredator::resizeObjects() {
 
 void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
   int length;
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   Alkeys[inarea].setToZero();
   Alkeys[inarea].Add(stock, *CI);
   for (length = 0; length < Prednumber.Ncol(inarea); length++)
@@ -147,7 +147,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
   double Areasize, int CurrentSubstep, int numsubsteps) {
 
   int prey, predl, preyl;
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   double tmpcons;
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
@@ -157,7 +157,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
       totalconsumption[inarea][predl] = 0.0;
       overconsumption[inarea][predl] = 0.0;
       for (prey = 0; prey < numPreys(); prey++)
-        if (Preys(prey)->IsInArea(area))
+        if (Preys(prey)->isInArea(area))
           for (preyl = Suitability(prey)[predl].minCol();
               preyl < Suitability(prey)[predl].maxCol(); preyl++)
             consumption[inarea][prey][predl][preyl] = 0.0;
@@ -169,7 +169,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
   //Now maxconbylength contains the maximum consumption by length
   //Calculating Phi(L) and O(l,L,prey) (stored in consumption)
   for (prey = 0; prey < numPreys(); prey++) {
-    if (Preys(prey)->IsInArea(area)) {
+    if (Preys(prey)->isInArea(area)) {
       if (Preys(prey)->Biomass(area) > verysmall) {
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
           for (preyl = Suitability(prey)[predl].minCol();
@@ -200,7 +200,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
 
   //Distributing the total consumption on the Preys()
   for (prey = 0; prey < numPreys(); prey++)
-    if (Preys(prey)->IsInArea(area))
+    if (Preys(prey)->isInArea(area))
       if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
           if (!(isZero(Phi[inarea][predl]))) {
@@ -213,7 +213,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
 
   //Add the calculated consumption to the preys in question
   for (prey = 0; prey < numPreys(); prey++)
-    if (Preys(prey)->IsInArea(area))
+    if (Preys(prey)->isInArea(area))
       if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
           Preys(prey)->addConsumption(area, cons[inarea][prey][predl]);
@@ -223,7 +223,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
 //adjust the consumption according to that.
 void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubstep) {
   double maxRatio = pow(MaxRatioConsumed, numsubsteps);
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   int AnyPreyEatenUp = 0;
   int preyl, predl, prey;
   double ratio, rat1, rat2, tmp;
@@ -232,7 +232,7 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
     overcons[inarea][predl] = 0.0;
 
   for (prey = 0; prey < numPreys(); prey++)
-    if (Preys(prey)->IsInArea(area))
+    if (Preys(prey)->isInArea(area))
       if (Preys(prey)->Biomass(area) > verysmall)
         if (Preys(prey)->TooMuchConsumption(area) == 1) {
           AnyPreyEatenUp = 1;
@@ -268,7 +268,7 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
     fphi[inarea][predl] = (rat2 * fphI[inarea][predl]) + (rat1 * fphi[inarea][predl]);
   }
   for (prey = 0; prey < numPreys(); prey++)
-    if (Preys(prey)->IsInArea(area))
+    if (Preys(prey)->isInArea(area))
       if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
           for (preyl = Suitability(prey)[predl].minCol();
@@ -285,7 +285,7 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
 void StockPredator::calcMaxConsumption(double Temperature, int area,
   int CurrentSubstep, int numsubsteps, double LengthOfStep) {
 
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   int length, age;
   double tmp, timeratio = LengthOfStep / numsubsteps;
 

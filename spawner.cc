@@ -229,7 +229,7 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < spawnStocks.Size(); i++) {
     index = 0;
     for (j = 0; j < spawnArea.Size(); j++)
-      if (!spawnStocks[i]->IsInArea(spawnArea[j]))
+      if (!spawnStocks[i]->isInArea(spawnArea[j]))
         index++;
 
     if (index != 0)
@@ -288,7 +288,7 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
     return;
 
   int s, age, len;
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   double sum = 0.0;
   double tmpsdev, length, N;
 
@@ -324,7 +324,7 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
 
   //add this to the spawned stocks
   for (s = 0; s < spawnStocks.Size(); s++) {
-    if (!spawnStocks[s]->IsInArea(area))
+    if (!spawnStocks[s]->isInArea(area))
       handle.logFailure("Error in spawner - spawned stock doesnt live on area", area);
 
     spawnStocks[s]->Add(Storage[inarea], CI[s], area, Ratio[s], spawnStocks[s]->minAge(), spawnStocks[s]->minAge());

@@ -19,9 +19,9 @@ public:
   virtual const PopInfoVector& getNumberPriorToEating(int area, const char* preyname) const;
   virtual void adjustConsumption(int area, int numsubsteps, int CurrentSubstep);
   virtual void Print(ofstream& outfile) const;
-  const BandMatrix& Alproportion(int area) const { return Alprop[AreaNr[area]]; };
-  const DoubleVector& FPhi(int area) const { return fphi[AreaNr[area]]; };
-  const DoubleVector& maxConByLength(int area) const { return maxconbylength[AreaNr[area]]; };
+  const BandMatrix& Alproportion(int area) const { return Alprop[this->areaNum(area)]; };
+  const DoubleVector& FPhi(int area) const { return fphi[this->areaNum(area)]; };
+  const DoubleVector& maxConByLength(int area) const { return maxconbylength[this->areaNum(area)]; };
   virtual void Reset(const TimeClass* const TimeInfo);
 protected:
   virtual void resizeObjects();

@@ -12,19 +12,19 @@ void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {
   int i;
   // calculate the number of preys and predators in area.
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->calcNumbers(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->calcEat(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->checkEat(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->adjustEat(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->reducePop(area, Area, TimeInfo);
 }
 
@@ -32,22 +32,22 @@ void Ecosystem::updatePopulationOneArea(int area) {
   int i;
   // under updates are movements to mature stock, renewal, spawning and straying.
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->Grow(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->updatePopulationPart1(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->updatePopulationPart2(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->updatePopulationPart3(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->updatePopulationPart4(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->updatePopulationPart5(area, Area, TimeInfo);
 }
 
@@ -55,13 +55,13 @@ void Ecosystem::updateAgesOneArea(int area) {
   int i;
   // age related update and movements between stocks.
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->updateAgePart1(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->updateAgePart2(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
-    if (basevec[i]->IsInArea(area))
+    if (basevec[i]->isInArea(area))
       basevec[i]->updateAgePart3(area, Area, TimeInfo);
 }
 

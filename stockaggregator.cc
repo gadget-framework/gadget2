@@ -113,7 +113,7 @@ void StockAggregator::Sum() {
       for (j = 0; j < areas.Ncol(aggrArea); j++) {
         //All the areas in areas[aggrArea] will be aggregated to the area aggrArea in total.
         area = areas[aggrArea][j];
-        if (stocks[i]->IsInArea(area)) {
+        if (stocks[i]->isInArea(area)) {
           const AgeBandMatrix* alptr = &stocks[i]->getAgeLengthKeys(area);
           for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
             for (k = 0; k < ages.Ncol(aggrAge); k++) {

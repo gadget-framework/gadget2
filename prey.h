@@ -37,18 +37,18 @@ public:
   void addConsumption(int area, const DoubleIndexVector& predconsumption);
   virtual void setCI(const LengthGroupDivision* const GivenLDiv);
   virtual void Print(ofstream& outfile) const;
-  double Biomass(int area, int length) const { return biomass[AreaNr[area]][length]; };
-  double Biomass(int area) const { return total[AreaNr[area]]; };
-  int TooMuchConsumption(int area) const { return tooMuchConsumption[AreaNr[area]]; };
+  double Biomass(int area, int length) const { return biomass[this->areaNum(area)][length]; };
+  double Biomass(int area) const { return total[this->areaNum(area)]; };
+  int TooMuchConsumption(int area) const { return tooMuchConsumption[this->areaNum(area)]; };
   virtual void checkConsumption(int area, int numsubsteps);
-  double Ratio(int area, int length) const { return ratio[AreaNr[area]][length]; };
+  double Ratio(int area, int length) const { return ratio[this->areaNum(area)][length]; };
   double Length(int j) const { return LgrpDiv->meanLength(j); };
   int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
-  const DoubleVector& Bconsumption(int area) const { return consumption[AreaNr[area]]; };
-  const DoubleVector& OverConsumption(int area) const { return overconsumption[AreaNr[area]]; };
+  const DoubleVector& Bconsumption(int area) const { return consumption[this->areaNum(area)]; };
+  const DoubleVector& OverConsumption(int area) const { return overconsumption[this->areaNum(area)]; };
   const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   virtual void Reset();
-  const PopInfoVector& getNumberPriorToEating(int area) const { return numberPriorToEating[AreaNr[area]]; };
+  const PopInfoVector& getNumberPriorToEating(int area) const { return numberPriorToEating[this->areaNum(area)]; };
   /**
    * \brief This will return the type of prey class
    * \return type

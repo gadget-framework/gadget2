@@ -15,8 +15,8 @@ public:
   virtual ~PopPredator();
   virtual void Print(ofstream& outfile) const;
   virtual const BandMatrix& Consumption(int area, const char* preyname) const;
-  virtual const DoubleVector& Consumption(int area) const { return totalconsumption[AreaNr[area]]; };
-  virtual const DoubleVector& OverConsumption(int area) const { return overconsumption[AreaNr[area]]; };
+  virtual const DoubleVector& Consumption(int area) const { return totalconsumption[this->areaNum(area)]; };
+  virtual const DoubleVector& OverConsumption(int area) const { return overconsumption[this->areaNum(area)]; };
   virtual double getTotalOverConsumption(int area) const;
   virtual const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   virtual int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };

@@ -148,7 +148,7 @@ void Prey::Print(ofstream& outfile) const {
 
 //Reduce the population of the stock by the consumption.
 void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   DoubleVector conS(cons[inarea].Size());
   int len;
   for (len = 0; len < conS.Size(); len++)
@@ -159,9 +159,9 @@ void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
 //Calculates the consumption. The function gets the consumption in
 //mass units, later they are converted to numbers.
 void Prey::addConsumption(int area, const DoubleIndexVector& predconsumption) {
-  int i;
+  int i, inarea = this->areaNum(area);
   for (i = predconsumption.minCol(); i < predconsumption.maxCol(); i++)
-    cons[AreaNr[area]][i] += predconsumption[i];
+    cons[inarea][i] += predconsumption[i];
 }
 
 //check if more is consumed of prey than was available.  If this is
@@ -171,7 +171,7 @@ void Prey::addConsumption(int area, const DoubleIndexVector& predconsumption) {
 void Prey::checkConsumption(int area, int numsubsteps) {
   double maxRatio = pow(MaxRatioConsumed, numsubsteps);
   int i, temp = 0;
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   double rat, biom;
 
   for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {

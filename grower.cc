@@ -175,7 +175,7 @@ void Grower::Print(ofstream& outfile) const {
 
 //The following function is just a copy of Prey::Sum
 void Grower::Sum(const PopInfoVector& NumberInArea, int area) {
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   int i;
   for (i = 0; i < numGrow[inarea].Size(); i++)
     numGrow[inarea][i].N = 0.0;
@@ -185,7 +185,7 @@ void Grower::Sum(const PopInfoVector& NumberInArea, int area) {
 void Grower::GrowthCalc(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  DoubleVector dummy(calcLengthGrowth[AreaNr[area]].Size(), 0.0);
+  DoubleVector dummy(calcLengthGrowth[this->areaNum(area)].Size(), 0.0);
   //Let the feeding level and consumption equal 0.
   this->GrowthCalc(area, Area, TimeInfo, dummy, dummy);
 }
@@ -194,7 +194,7 @@ void Grower::GrowthCalc(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
   const DoubleVector& FPhi, const DoubleVector& MaxCon) {
 
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   growthcalc->GrowthCalc(area, calcLengthGrowth[inarea], calcWeightGrowth[inarea],
     numGrow[inarea], Area, TimeInfo, FPhi, MaxCon, LgrpDiv);
 
@@ -203,15 +203,15 @@ void Grower::GrowthCalc(int area,
 }
 
 const DoubleMatrix& Grower::LengthIncrease(int area) const {
-  return *lgrowth[AreaNr[area]];
+  return *lgrowth[this->areaNum(area)];
 }
 
 const DoubleMatrix& Grower::WeightIncrease(int area) const {
-  return *wgrowth[AreaNr[area]];
+  return *wgrowth[this->areaNum(area)];
 }
 
 const DoubleVector& Grower::getWeight(int area) const {
-  return InterpWgrowth[AreaNr[area]];
+  return InterpWgrowth[this->areaNum(area)];
 }
 
 double Grower::getPowerValue() {

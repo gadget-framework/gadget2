@@ -1,7 +1,7 @@
 #include "abstrpredstdinfo.h"
 
-AbstrPredStdInfo::AbstrPredStdInfo(const IntVector& Areas, int predminage,
-  int predmaxage, int preyminage, int preymaxage) : LivesOnAreas(Areas) {
+AbstrPredStdInfo::AbstrPredStdInfo(const IntVector& areas, int predminage,
+  int predmaxage, int preyminage, int preymaxage) : LivesOnAreas(areas) {
 
   IntVector minage(predmaxage - predminage + 1, preyminage);
   IntVector size(predmaxage - predminage + 1, preymaxage - preyminage + 1);
@@ -12,13 +12,13 @@ AbstrPredStdInfo::AbstrPredStdInfo(const IntVector& Areas, int predminage,
 }
 
 const BandMatrix& AbstrPredStdInfo::NconsumptionByAge(int area) const {
-  return NconbyAge[AreaNr[area]];
+  return NconbyAge[this->areaNum(area)];
 }
 
 const BandMatrix& AbstrPredStdInfo::BconsumptionByAge(int area) const {
-  return BconbyAge[AreaNr[area]];
+  return BconbyAge[this->areaNum(area)];
 }
 
 const BandMatrix& AbstrPredStdInfo::MortalityByAge(int area) const {
-  return MortbyAge[AreaNr[area]];
+  return MortbyAge[this->areaNum(area)];
 }

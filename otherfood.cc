@@ -90,7 +90,7 @@ void OtherFood::calcNumbers(int area, const AreaClass* const Area, const TimeCla
   PopInfo pop;
   //Warning: Choose the weight as 1.
   pop.W = 1.0;
-  pop.N = amount[TimeInfo->CurrentTime()][AreaNr[area]] * Area->Size(area);
+  pop.N = amount[TimeInfo->CurrentTime()][this->areaNum(area)] * Area->Size(area);
   PopInfoVector NumberInArea(1, pop);
   prey->SumUsingPopInfo(NumberInArea, area, TimeInfo->CurrentSubstep());
 }

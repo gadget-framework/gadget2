@@ -144,7 +144,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < strayStocks.Size(); i++) {
     index = 0;
     for (j = 0; j < strayArea.Size(); j++)
-      if (!strayStocks[i]->IsInArea(strayArea[j]))
+      if (!strayStocks[i]->isInArea(strayArea[j]))
         index++;
 
     if (index != 0)
@@ -178,7 +178,7 @@ void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
   AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo) {
 
   int age, len, tag;
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   double straynumber, tagnumber;
 
   for (age = Storage[inarea].minAge(); age < Storage[inarea].maxAge(); age++) {
@@ -208,9 +208,9 @@ void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
 
 void StrayData::addStrayStock(int area, const TimeClass* const TimeInfo) {
 
-  int s, inarea = AreaNr[area];
+  int s, inarea = this->areaNum(area);
   for (s = 0; s < strayStocks.Size(); s++) {
-    if (!strayStocks[s]->IsInArea(area))
+    if (!strayStocks[s]->isInArea(area))
       handle.logFailure("Error in straying - stray stock doesnt live on area", area);
 
     if (strayStocks[s]->Birthday(TimeInfo)) {

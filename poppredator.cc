@@ -65,7 +65,7 @@ const BandMatrix& PopPredator::Consumption(int area, const char* preyname) const
   int prey;
   for (prey = 0; prey < numPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)
-      return consumption[AreaNr[area]][prey];
+      return consumption[this->areaNum(area)][prey];
 
   handle.logFailure("Error in poppredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
@@ -161,4 +161,3 @@ double PopPredator::getTotalOverConsumption(int area) const {
 
   return total;
 }
-

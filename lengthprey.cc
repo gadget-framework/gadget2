@@ -11,7 +11,7 @@ LengthPrey::LengthPrey(const DoubleVector& lengths,
  * allowed to be finer than stock length division.
  * Also, initialise variables to 0. */
 void LengthPrey::SumUsingPopInfo(const PopInfoVector& NumberInArea, int area, int CurrentSubstep) {
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   int i;
   tooMuchConsumption[inarea] = 0;
   if (CurrentSubstep == 1) {

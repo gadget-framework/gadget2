@@ -11,7 +11,7 @@ StockPrey::StockPrey(CommentStream& infile, const IntVector& Areas,
 }
 
 void StockPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
-  int i, inarea = AreaNr[area];
+  int i, inarea = this->areaNum(area);
 
   tooMuchConsumption[inarea] = 0;
   for (i = 0; i < cons.Ncol(inarea); i++)

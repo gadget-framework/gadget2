@@ -29,7 +29,7 @@ StockPredStdInfo::~StockPredStdInfo() {
 }
 
 void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
-  int inarea = AreaNr[area];
+  int inarea = this->areaNum(area);
   preyinfo->Sum(TimeInfo, area);
   predinfo->Sum(TimeInfo, area);
 
