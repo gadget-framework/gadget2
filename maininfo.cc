@@ -173,7 +173,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         handle.logFailure("The -printlikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
 
       } else if (strcasecmp(aVector[k], "-printlikesummary") == 0) {
-        handle.logFailure("The -printlikesummary switch is no longer supported\nSpecify a summaryprinter class in the model print file instead");
+        handle.logFailure("The -printlikesummary switch is no longer supported\nSpecify a likelihoodsummaryprinter class in the model print file instead");
 
       } else if (strcasecmp(aVector[k], "-printonelikelihood") == 0) {
         handle.logFailure("The -printonelikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
@@ -307,7 +307,7 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-nowarnings") == 0) {
       printWarning = 1;
     } else if (strcasecmp(text, "-printlikesummary") == 0) {
-      handle.logFailure("The -printlikesummary switch is no longer supported\nSpecify a summaryprinter class in the model print file instead");
+      handle.logFailure("The -printlikesummary switch is no longer supported\nSpecify a likelihoodsummaryprinter class in the model print file instead");
     } else if (strcasecmp(text, "-printlikelihood") == 0) {
       handle.logFailure("The -printlikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
     } else if (strcasecmp(text, "-printonelikelihood") == 0) {

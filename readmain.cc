@@ -189,7 +189,7 @@ void Ecosystem::readPrinters(CommentStream& infile) {
       printvec.resize(1, new PredPreyStdAgePrinter(infile, Area, TimeInfo));
     else if (strcasecmp(type, "likelihoodprinter") == 0)
       printvec.resize(1, new LikelihoodPrinter(infile, TimeInfo));
-    else if (strcasecmp(type, "summaryprinter") == 0)
+    else if (strcasecmp(type, "likelihoodsummaryprinter") == 0)
       printvec.resize(1, new SummaryPrinter(infile));
 
     else if (strcasecmp(type, "formatedstockprinter") == 0)
