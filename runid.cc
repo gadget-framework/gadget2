@@ -25,5 +25,5 @@ void RunID::print(ostream& o) {
 void RunID::printTime(ostream& o) {
   time_t stoptime;
   o << difftime(time(&stoptime), runtime) << " seconds" << endl;
-  o.flush();  
+  o.flush();
 }

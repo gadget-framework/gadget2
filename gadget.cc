@@ -116,7 +116,7 @@ int main(int aNumber, char* const aVector[]) {
     handle.logInformation("using data from directory:", inputdir);
   }
   MainInfo.checkUsage();
-  
+
   if (aNumber == 1)
     handle.logWarning("Warning - no command line options specified, using default values");
 

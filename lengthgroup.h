@@ -66,7 +66,7 @@ public:
   int numLengthGroups() const { return size; };
   /**
    * \brief This function will return the identifier of a length group containing a specified length
-   * \param length is the length to find in the length group 
+   * \param length is the length to find in the length group
    * \return the identifier of the length group
    */
   int numLengthGroup(double length) const;

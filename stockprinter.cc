@@ -145,12 +145,12 @@ void StockPrinter::setStock(StockPtrVector& stockvec) {
       handle.logWarning("Error in stockprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
-  
+
   for (i = 0; i < stocks.Size(); i++)
     for (j = 0; j < stocks.Size(); j++)
       if ((strcasecmp(stocks[i]->Name(), stocks[j]->Name()) == 0) && (i != j))
         handle.logFailure("Error in stockprinter - repeated stock", stocks[i]->Name());
-  
+
   aggregator = new StockAggregator(stocks, LgrpDiv, areas, ages);
 }
 

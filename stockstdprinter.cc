@@ -102,7 +102,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   outfile << "; ";
   RUNID.print(outfile);
   outfile << "; Standard output file for the stock " << stockname;
-      
+
   if (scale != 1.0)
     outfile << "\n; Scaling factor for the number and number consumed is " << scale;
 
@@ -189,7 +189,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
   if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
-    
+
   aggregator->Sum();
   int a, age;
   double tmpnumber, tmpbiomass;

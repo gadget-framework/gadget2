@@ -259,7 +259,7 @@ void MainInfo::checkUsage() {
   else if (runstochastic == 1)
     check = 2;
   else
-    check = printWarning;  
+    check = printWarning;
   handle.setWarningLevel(check);
   printinfo.checkNumbers();
 

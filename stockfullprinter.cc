@@ -85,7 +85,7 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
   outfile << "; ";
   RUNID.print(outfile);
   outfile << "; Full output file for the stock " << stockname;
-  
+
   if (printtimeid == 0)
     outfile << "\n; Printing the following information at the end of each timestep";
   else

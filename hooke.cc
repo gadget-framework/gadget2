@@ -399,7 +399,7 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
       EcoSystem->setFuncEvalHJ(FuncEval - offset);
       EcoSystem->setLikelihoodHJ(newf);
       for (i = 0; i < nvars; i++)
-        endpt[i] *= init[i];      
+        endpt[i] *= init[i];
       EcoSystem->StoreVariables(newf, endpt);
       return 1;
     }

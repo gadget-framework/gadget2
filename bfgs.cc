@@ -48,11 +48,11 @@ double getSmallestEigenValue(double matrix[NUMVARS][NUMVARS], int nvars) {
 
     phi = 0.0;
     norm = 0.0;
-    for(i = 0; i < nvars; i++) {
+    for (i = 0; i < nvars; i++) {
       phi += xo[i];
       norm += xo[i] * xo[i];
     }
-    for(i = 0; i < nvars; i++)
+    for (i = 0; i < nvars; i++)
       xo[i] /= norm;
     eigen = phi / temp;
     temp = phi;
@@ -191,7 +191,7 @@ int bfgs(double (*f)(double*, int), double startpt[], double endpt[], double ini
       newf = (*f)(newx, nvars);
       EcoSystem->setFuncEvalBFGS(FuncEval - offset);
       EcoSystem->setLikelihoodBFGS(newf);
-      for(i = 0; i < nvars; i++)
+      for (i = 0; i < nvars; i++)
         newx[i] *= init[i];
       EcoSystem->StoreVariables(newf, newx);
 
@@ -201,7 +201,7 @@ int bfgs(double (*f)(double*, int), double startpt[], double endpt[], double ini
 
     if (check == 0 || alpha < 0.0) {
       //JMB - dont print warning on the first loop ...
-      if ((FuncEval - offset) > 0) 
+      if ((FuncEval - offset) > 0)
         cout << "\nWarning in BFGS - resetting search algorithm after "
           << (FuncEval - offset) << " function evaluations" << endl;
 

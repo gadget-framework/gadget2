@@ -89,7 +89,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   outfile << "; ";
   RUNID.print(outfile);
   outfile << "; Output file for the prey " << stockname;
-  
+
   if (printtimeid == 0)
     outfile << "\n; Printing the following information at the end of each timestep";
   else

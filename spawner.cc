@@ -412,7 +412,7 @@ double SpawnData::calcSpawnNumber(int age, int len, double number, double weight
 double SpawnData::calcRecruitNumber() {
   int age, len;
   double recruits = 0.0, temp = 0.0;
-  
+
   for (age = 0; age < spawnNumbers.Nrow(); age++)
     for (len = 0; len < spawnNumbers.Ncol(age); len++)
       temp += spawnNumbers[age][len];

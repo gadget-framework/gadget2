@@ -255,7 +255,7 @@ private:
    */
   double sigma;
   /**
-   * \brief This is the initial step size for the Armijo linesearch 
+   * \brief This is the initial step size for the Armijo linesearch
    */
   double step;
   /**
@@ -263,7 +263,7 @@ private:
    */
   double gradacc;
   /**
-   * \brief This is the factor used to adjust the gradient accuracy term 
+   * \brief This is the factor used to adjust the gradient accuracy term
    */
   double gradstep;
   /**
