@@ -67,8 +67,6 @@ public:
    */
   virtual void LikelihoodPrint(ofstream& outfile);
   virtual void Aggregate(int i);
-  virtual void PrintLikelihood(ofstream& outfile, const TimeClass& TimeInfo) {};
-  virtual void PrintLikelihoodHeader(ofstream& outfile) {};
 protected:
   /**
    * \brief This function will calculate the likelihood score from the SC information
@@ -224,8 +222,6 @@ public:
    * \brief This is the default SCAmounts destructor
    */
   virtual ~SCAmounts();
-  virtual void PrintLikelihood(ofstream& outfile, const TimeClass& TimeInfo);
-  virtual void PrintLikelihoodHeader(ofstream& outfile);
 protected:
   /**
    * \brief This function will read the StomachContent amount data from the input file
@@ -385,10 +381,6 @@ public:
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
   virtual void LikelihoodPrint(ofstream& outfile);
-  virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time)
-    { StomCont->PrintLikelihood(outfile, time); };
-  virtual void PrintLikelihoodHeader(ofstream& outfile)
-    { StomCont->PrintLikelihoodHeader(outfile); };
 private:
   /**
    * \brief This is the name of the function to be used to calculate the likelihood component

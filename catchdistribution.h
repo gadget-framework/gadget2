@@ -56,8 +56,6 @@ public:
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
   virtual void SummaryPrint(ofstream& outfile);
-  virtual void PrintLikelihood(ofstream& catchfile, const TimeClass& TimeInfo);
-  virtual void PrintLikelihoodHeader(ofstream& catchfile);
 private:
   /**
    * \brief This function will read the CatchDistribution data from the input file

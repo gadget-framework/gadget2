@@ -57,8 +57,6 @@ public:
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
   virtual void SummaryPrint(ofstream& outfile);
-  virtual void PrintLikelihood(ofstream& catchfile, const TimeClass& TimeInfo);
-  virtual void PrintLikelihoodHeader(ofstream& catchfile);
   void calcIndex(const AgeBandMatrix* alptr, const TimeClass* const TimeInfo);
 private:
   /**

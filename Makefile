@@ -79,11 +79,11 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	preyoveraggregator.o lengthgroup.o preyoverprinter.o catchstatistics.o \
 	preystdinfo.o preystdinfobylength.o timevariable.o boundlikelihood.o stray.o \
 	commentstream.o printinfo.o readfunc.o conversionindex.o readmain.o keeper.o \
-	ecosystem.o readword.o renewal.o mortpredator.o mortprey.o mortprinter.o \
+	ecosystem.o readword.o renewal.o mortpredator.o mortprey.o cannibalism.o \
 	fleet.o sibyageonstep.o fleetpreyaggregator.o sibyfleetonstep.o predator.o \
 	sibylengthonstep.o formula.o grower.o growthcalc.o simulation.o hooke.o \
 	simann.o sionstep.o initialcond.o spawner.o initialize.o stochasticdata.o \
-	lengthpredator.o stockaggregator.o lengthprey.o surveydistribution.o \
+	lengthpredator.o stockaggregator.o lengthprey.o surveydistribution.o bfgs.o \
 	stockdistribution.o linearpredator.o stockfullprinter.o linearregression.o \
 	stockmemberfunctions.o livesonareas.o stockpredator.o stockpredstdinfo.o \
 	loglinearregression.o time.o stockprey.o maininfo.o stockpreyfullprinter.o \
@@ -93,9 +93,7 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	surveyindices.o migrationpenalty.o recapture.o stock.o readaggregation.o \
 	migvariables.o multinomial.o totalpredator.o understocking.o poppredator.o \
 	transition.o otherfood.o recstatistics.o selectfunc.o optinfo.o naturalm.o \
-	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o tags.o \
-	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o bfgs.o \
 	taggrow.o initialinputfile.o optinfohooke.o optinfobfgs.o optinfosimann.o \
 	popratio.o popinfo.o popinfomemberfunctions.o agebandmatrixratio.o \
 	agebandmatrixratiomemberfunctions.o

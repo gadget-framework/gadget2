@@ -8,7 +8,6 @@
 #include "readaggregation.h"
 #include "multinomial.h"
 #include "errorhandler.h"
-#include "formatedprinting.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
@@ -903,96 +902,6 @@ double SCAmounts::calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatri
     }
   }
   return lik;
-}
-
-void SCAmounts::PrintLikelihood(ofstream& outfile, const TimeClass& TimeInfo) {
-  if (!AAT.AtCurrentTime(&TimeInfo))
-    return;
-
-  outfile.setf(ios::fixed);
-  int a, pd, py;
-
-  //timeindex was increased before this is called, so we subtract 1.
-  int time = timeindex - 1;
-
-  outfile << "\nTime:    Year " << TimeInfo.CurrentYear()
-    << " Step " << TimeInfo.CurrentStep() << "\nName:    " << scname << endl;
-  for (a = 0; a < modelConsumption[time].Size(); a++) {
-    outfile << "Internal area  :" << a << "\nObserved:\n";
-    for (pd = 0; pd < obsConsumption[time][a]->Nrow(); pd++) {
-      for (py = 0; py < (*obsConsumption[time][a])[pd].Size(); py++) {
-        outfile.precision(printprecision);
-        outfile.width(printwidth);
-        outfile << (*obsConsumption[time][a])[pd][py] << sep;
-      }
-      outfile << endl;
-    }
-    outfile << "Modelled:\n";
-    for (pd = 0; pd < modelConsumption[time][a]->Nrow(); pd++) {
-      for (py = 0; py < (*modelConsumption[time][a])[pd].Size(); py++) {
-        outfile.precision(printprecision);
-        outfile.width(printwidth);
-        outfile << (*modelConsumption[time][a])[pd][py] << sep;
-      }
-      outfile << endl;
-    }
-    outfile << "Standard deviation:\n";
-    for (pd = 0; pd < modelConsumption[time][a]->Nrow(); pd++) {
-      for (py = 0; py < (*modelConsumption[time][a])[pd].Size(); py++) {
-        outfile.precision(printprecision);
-        outfile.width(printwidth);
-        outfile << (*stddev[time][a])[pd][py] << sep;
-      }
-      outfile << endl;
-    }
-    outfile << "Number of stomachs:\n";
-    for (pd = 0; pd < modelConsumption[time][a]->Nrow(); pd++) {
-      outfile.precision(lowprecision);
-      outfile.width(lowwidth);
-      outfile << (*number[time])[a][pd] << sep;
-    }
-    outfile << endl;
-  }
-  outfile.flush();
-}
-
-void SCAmounts::PrintLikelihoodHeader(ofstream& outfile) {
-  int i, j;
-
-  outfile << "Likelihood:       stomachcontent - " << scname << "\nFunction:         -\n"
-    << "Calculated every: step\nFilter:           default\nPredation by:     ";
-
-  if (usepredages)
-    outfile << "age\n";
-  else
-    outfile << "length\n";
-
-  outfile << "Name:             " << scname << endl;
-  for (i = 0; i < preynames.Nrow(); i++) {
-    outfile << "Preys:           ";
-    for (j = 0; j < preynames[i].Size(); j++)
-      outfile << sep << preynames[i][j];
-    outfile << " lengths:";
-    for (j = 0; j < preylengths[i].Size(); j++)
-      outfile << sep << preylengths[i][j];
-    outfile << endl;
-  }
-
-  outfile << "Predators:       ";
-  for (i = 0; i < predatornames.Size(); i++)
-    outfile << sep << predatornames[i];
-  if (usepredages) {
-    outfile << "\nAges:            ";
-    for (i = 0; i < predatorages.Size(); i++)
-      outfile << sep << predatorages[i];
-    outfile << endl;
-  } else {
-    outfile << "\nLengths:         ";
-    for (i = 0; i < predatorlengths.Size(); i++)
-      outfile << sep << predatorlengths[i];
-    outfile << endl;
-  }
-  outfile.flush();
 }
 
 // ********************************************************

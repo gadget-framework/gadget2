@@ -422,7 +422,6 @@ protected:
    */
   PrintInfo printinfo;
   friend class InterruptInterface;
-  int mortmodel;
 };
 
 #endif

@@ -8,12 +8,6 @@
 #include "stockpreyfullprinter.h"
 #include "predpreystdprinter.h"
 #include "stockfullprinter.h"
-#include "formatedstockprinter.h"
-#include "formatedchatprinter.h"
-#include "formatedpreyprinter.h"
-#include "likelihoodprinter.h"
-#include "mortprinter.h"
-#include "biomassprinter.h"
 #include "surveyindices.h"
 #include "understocking.h"
 #include "catchdistribution.h"
@@ -151,10 +145,7 @@ void Ecosystem::readStock(CommentStream& infile) {
   stocknames[i] = new char[strlen(text) + 1];
   strcpy(stocknames[i], text);
 
-  if (mortmodel == 1)   //fleksibest model, mortalities applied to stock
-    stockvec[i] = new LenStock(infile, stocknames[i], Area, TimeInfo, keeper);
-  else                  //original bormicon stock model used
-    stockvec[i] = new Stock(infile, stocknames[i], Area, TimeInfo, keeper);
+  stockvec[i] = new Stock(infile, stocknames[i], Area, TimeInfo, keeper);
 
   handle.logMessage("Read stock OK - created stock", text);
 }
@@ -195,20 +186,22 @@ void Ecosystem::readPrinters(CommentStream& infile) {
       printvec.resize(1, new PredPreyStdLengthPrinter(infile, Area, TimeInfo));
     else if (strcasecmp(type, "predpreystdageprinter") == 0)
       printvec.resize(1, new PredPreyStdAgePrinter(infile, Area, TimeInfo));
+
     else if (strcasecmp(type, "formatedstockprinter") == 0)
-      printvec.resize(1, new FormatedStockPrinter(infile, Area, TimeInfo));
+      handle.Message("The formatedstockprinter printer class is no longer supported");
     else if (strcasecmp(type, "formatedchatprinter") == 0)
-      printvec.resize(1, new FormatedCHatPrinter(infile, Area, TimeInfo));
+      handle.Message("The formatedchatprinter printer class is no longer supported");
     else if (strcasecmp(type, "formatedpreyprinter") == 0)
-      printvec.resize(1, new FormatedPreyPrinter(infile, Area, TimeInfo));
+      handle.Message("The formatedpreyprinter printer class is no longer supported");
     else if (strcasecmp(type, "mortprinter") == 0)
-      printvec.resize(1, new MortPrinter(infile, Area, TimeInfo));
+      handle.Message("The mortprinter printer class is no longer supported");
     else if (strcasecmp(type, "biomassprinter") == 0)
-      printvec.resize(1, new BiomassPrinter(infile, Area, TimeInfo));
+      handle.Message("The biomassprinter printer class is no longer supported");
     else if (strcasecmp(type, "likelihoodprinter") == 0)
-      printvec.resize(1, new LikelihoodPrinter(infile, Area, TimeInfo));
+      handle.Message("The likelihoodprinter printer class is no longer supported");
     else if (strcasecmp(type, "formatedcatchprinter") == 0)
-      handle.Warning("The formatedcatchprinter printer class is no longer supported");
+      handle.Message("The formatedcatchprinter printer class is no longer supported");
+
     else
       handle.Message("Error in printer file - unrecognised printer", type);
 
@@ -304,16 +297,16 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       Likely[i] = new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name);
 
     } else if (strcasecmp(type, "randomwalk") == 0) {
-      handle.Warning("The randomwalk likelihood component is no longer supported");
+      handle.Message("The randomwalk likelihood component is no longer supported");
 
     } else if (strcasecmp(type, "logcatch") == 0) {
-      handle.Warning("The logcatch likelihood component is no longer supported\nUse the log function from the catchdistribution likelihood component instead");
+      handle.Message("The logcatch likelihood component is no longer supported\nUse the log function from the catchdistribution likelihood component instead");
 
     } else if (strcasecmp(type, "logsurveyindices") == 0) {
-      handle.Warning("The logsurveyindices likelihood component is no longer supported\nUse the log function from the surveyindices likelihood component instead");
+      handle.Message("The logsurveyindices likelihood component is no longer supported\nUse the log function from the surveyindices likelihood component instead");
 
     } else if (strcasecmp(type, "aggregatedcatchdist") == 0) {
-      handle.Warning("The aggregatedcatchdist likelihood component is no longer supported");
+      handle.Message("The aggregatedcatchdist likelihood component is no longer supported");
 
     } else {
       handle.Message("Error in likelihood file - unrecognised likelihood", type);
@@ -329,7 +322,6 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
 void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
   int calclikelihood, const char* const inputdir, const char* const workingdir) {
 
-  mortmodel = 0;
   char text[MaxStrLength];
   char filename[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -387,11 +379,8 @@ void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
     handle.Unexpected("[stock]", text);
   infile >> text >> ws;
 
-  if (strcasecmp(text, "mortalitymodel") == 0) {
-    mortmodel = 1;
-    infile >> text >> ws;
-  } else
-    mortmodel = 0;
+  if (strcasecmp(text, "mortalitymodel") == 0)
+    handle.Message("Fleksibest-style mortality models are no longer supported\nGadget version 2.0.07 was the last version to allow this functionality");
 
   if (!(strcasecmp(text, "stockfiles") == 0))
     handle.Unexpected("stockfiles", text);
