@@ -212,7 +212,7 @@ void Spawner::setStock(StockPtrVector& stockvec) {
         index++;
 
     if (index != 0)
-      handle.logWarning("Warning in spawner - spawn stock isnt defined on all areas");
+      handle.logWarning("Warning in spawner - spawned stock isnt defined on all areas");
 
     if (SpawnStocks[i]->minAge() < spawnage)
       spawnage = SpawnStocks[i]->minAge();
@@ -295,6 +295,9 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
     }
   }
 
+  if (stockParameters[0] > spawnLgrpDiv->maxLength())
+    handle.logWarning("Warning in spawner - invalid mean length for spawned stock");
+
   if (sum > verysmall) {
     for (len = 0; len < spawnLgrpDiv->NoLengthGroups(); len++) {
       length = spawnLgrpDiv->meanLength(len);
@@ -306,7 +309,7 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   //add this to the spawned stocks
   for (s = 0; s < SpawnStocks.Size(); s++) {
     if (!SpawnStocks[s]->IsInArea(area))
-      handle.logFailure("Error in spawner - spawn stock doesnt live on area", area);
+      handle.logFailure("Error in spawner - spawned stock doesnt live on area", area);
 
     SpawnStocks[s]->Add(Storage[area], CI[s], area, Ratio[s], SpawnStocks[s]->minAge(), SpawnStocks[s]->minAge());
   }
