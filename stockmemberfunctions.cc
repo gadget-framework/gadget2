@@ -25,7 +25,8 @@ void Stock::Migrate(const TimeClass* const TimeInfo) {
   //age dependent migrations should also be here.
   if (doesmigrate) {
     Alkeys.Migrate(migration->Migrationmatrix(TimeInfo));
-    tagAlkeys.Migrate(migration->Migrationmatrix(TimeInfo), Alkeys);
+    if (tagAlkeys.NrOfTagExp() > 0)
+      tagAlkeys.Migrate(migration->Migrationmatrix(TimeInfo), Alkeys);
   }
 }
 
@@ -87,7 +88,8 @@ void Stock::ReducePop(int area, const AreaClass* const Area, const TimeClass* co
     (*PropSurviving)[i] = pow((*PropSurviving)[i], timeratio);
 
   Alkeys[inarea].Multiply(*PropSurviving);
-  tagAlkeys[inarea].UpdateNumbers(Alkeys[inarea], tagAlkeys.NrOfTagExp());
+  if (tagAlkeys.NrOfTagExp() > 0)
+    tagAlkeys[inarea].UpdateNumbers(Alkeys[inarea]);
   delete PropSurviving;
 }
 
@@ -114,14 +116,17 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
   if (doesmature) {
     if (maturity->IsMaturationStep(area, TimeInfo)) {
       Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area), maturity, TimeInfo, Area, LgrpDiv, area);
-      tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, LgrpDiv, area, tagAlkeys.NrOfTagExp());
+      if (tagAlkeys.NrOfTagExp() > 0)
+        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, LgrpDiv, area);
     } else {
       Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area));
-      tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], tagAlkeys.NrOfTagExp());
+      if (tagAlkeys.NrOfTagExp() > 0)
+        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
     }
   } else {
     Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area));
-    tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], tagAlkeys.NrOfTagExp());
+    if (tagAlkeys.NrOfTagExp() > 0)
+      tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
   }
 }
 
@@ -137,7 +142,8 @@ void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass*
   if (this->Birthday(TimeInfo)) {
     int inarea = AreaNr[area];
     Alkeys[inarea].IncrementAge();
-    tagAlkeys[inarea].IncrementAge(Alkeys[inarea], tagAlkeys.NrOfTagExp());
+    if (tagAlkeys.NrOfTagExp() > 0)
+      tagAlkeys[inarea].IncrementAge(Alkeys[inarea]);
   }
 }
 
@@ -150,23 +156,34 @@ void Stock::FirstSpecialTransactions(int area, const AreaClass* const Area, cons
   if (doesspawn) {
     int inarea = AreaNr[area];
     spawner->Spawn(Alkeys[inarea], area, Area, TimeInfo);
-    tagAlkeys[inarea].UpdateNumbers(Alkeys[inarea], tagAlkeys.NrOfTagExp());
+    if (tagAlkeys.NrOfTagExp() > 0)
+      tagAlkeys[inarea].UpdateNumbers(Alkeys[inarea]);
   }
 }
 
 void Stock::SecondSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doesmature)
-    if (maturity->IsMaturationStep(area, TimeInfo))
+    if (maturity->IsMaturationStep(area, TimeInfo)) {
+      UpdateMatureStockWithTags(TimeInfo);
       maturity->Move(area, TimeInfo);
+    }
   if (doesrenew)
     this->Renewal(area, TimeInfo);
+}
+
+void Stock::UpdateMatureStockWithTags(const TimeClass* const TimeInfo) {
+  int i;
+  for (i = 0; i < matureTags.Size(); i++)
+    matureTags[i]->UpdateMatureStock(TimeInfo);
+  matureTags.DeleteAll();
 }
 
 void Stock::Renewal(int area, const TimeClass* const TimeInfo, double ratio) {
   if (doesrenew) {
     int inarea = AreaNr[area];
     renewal->AddRenewal(Alkeys[inarea], area, TimeInfo, ratio);
-    tagAlkeys[inarea].UpdateRatio(Alkeys[inarea], tagAlkeys.NrOfTagExp());
+    if (tagAlkeys.NrOfTagExp() > 0)
+      tagAlkeys[inarea].UpdateRatio(Alkeys[inarea]);
   }
 }
 
@@ -178,16 +195,34 @@ void Stock::Add(const Agebandmatrix& Addition, const ConversionIndex* const CI,
   AgebandmAdd(Alkeys[AreaNr[area]], Addition, *CI, ratio, MinAge, MaxAge);
 }
 
+void Stock::Add(const Agebandmatrixratiovector& Addition, int AddArea, const ConversionIndex* const CI,
+  int area, double ratio, int MinAge, int MaxAge) {
+
+  int numtag = Addition.NrOfTagExp();
+  if (numtag > 0 && numtag <= tagAlkeys.NrOfTagExp())
+    AgebandmratioAdd(tagAlkeys, AreaNr[area], Addition, AddArea, *CI, ratio, MinAge, MaxAge);
+}
+
 void Stock::RecalcMigration(const TimeClass* const TimeInfo) {
   if (doesmigrate)
     migration->MigrationRecalc(TimeInfo->CurrentYear());
 }
 
-int Stock::UpdateTags(Agebandmatrixvector* tagbyagelength, const char* tagname) {
-  tagAlkeys.addTag(tagbyagelength, Alkeys, tagname);
+int Stock::UpdateTags(Agebandmatrixvector* tagbyagelength, Tags* newtag) {
+  tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->Name());
+  if (doesmature) {
+    maturity->AddTag(newtag->Name());
+    matureTags.resize(1, newtag);
+  }
   return 0;
 }
 
 void Stock::DeleteTags(const char* tagname) {
   tagAlkeys.deleteTag(tagname);
+  if (doesmature)
+    maturity->DeleteTag(tagname);
+}
+
+const charptrvector Stock::TaggingExperimentIds() {
+  return tagAlkeys.tagids();
 }

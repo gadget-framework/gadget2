@@ -35,10 +35,14 @@ Prey::Prey(CommentStream& infile, const intvector& Areas, const char* givenname,
 
   LgrpDiv = new LengthGroupDivision(preylengths);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(preylengths, keeper);
+    LengthGroupPrintError(preylengths, "length groups for prey");
 
   keeper->ClearLast();
   this->InitializeObjects();
+
+  //preylenindex is not required - free up memory
+  for (i = 0; i < preylenindex.Size(); i++)
+    delete[] preylenindex[i];
 }
 
 Prey::Prey(const doublevector& lengths, const intvector& Areas, const char* givenname)
@@ -173,28 +177,28 @@ void Prey::AddConsumption(int area, const doubleindexvector& predconsumption) {
 void Prey::CheckConsumption(int area, int NrOfSubsteps) {
   double MaxRatioConsumed = pow(MAX_RATIO_CONSUMED, NrOfSubsteps);
   int i, temp = 0;
-  int Iarea = AreaNr[area];
+  int inarea = AreaNr[area];
   double rat, biom;
 
-  for (i = 0; i < LgrpDiv->Size(); i++) {
+  for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
     rat = 0.0;
-    biom = Number[Iarea][i].N * Number[Iarea][i].W;
+    biom = Number[inarea][i].N * Number[inarea][i].W;
     //We must be careful -- it is possible that biomass will equal 0.
     if (!iszero(biom))
-      rat = cons[Iarea][i] / biom;
+      rat = cons[inarea][i] / biom;
 
-    ratio[Iarea][i] = rat;
+    ratio[inarea][i] = rat;
     if (rat > MaxRatioConsumed) {
       temp = 1;
-      overcons[Iarea][i] = (rat - MaxRatioConsumed) * biom;
-      overconsumption[Iarea][i] += overcons[Iarea][i];
-      cons[Iarea][i] = biom * MaxRatioConsumed;
+      overcons[inarea][i] = (rat - MaxRatioConsumed) * biom;
+      overconsumption[inarea][i] += overcons[inarea][i];
+      cons[inarea][i] = biom * MaxRatioConsumed;
     } else
-      overcons[Iarea][i] = 0.0;
+      overcons[inarea][i] = 0.0;
 
-    consumption[Iarea][i] += cons[Iarea][i];
+    consumption[inarea][i] += cons[inarea][i];
   }
-  tooMuchConsumption[Iarea] = temp;
+  tooMuchConsumption[inarea] = temp;
 }
 
 const doublevector& Prey::Bconsumption(int area) const {
@@ -225,7 +229,7 @@ void Prey::Reset() {
 
 //Return the original number of prey in an area.
 const popinfovector& Prey::NumberPriortoEating(int area) const {
-  return(numberPriortoEating[AreaNr[area]]);
+  return numberPriortoEating[AreaNr[area]];
 }
 
 void Prey::Multiply(Agebandmatrix& stock_alkeys, const doublevector& rat) {

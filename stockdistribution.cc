@@ -29,14 +29,24 @@ StockDistribution::StockDistribution(CommentStream& infile,
   CommentStream subdata(datafile);
 
   timeindex = 0;
+  functionname = new char[MaxStrLength];
+  strncpy(functionname, "", MaxStrLength);
   ReadWordAndValue(infile, "datafile", datafilename);
-  ReadWordAndVariable(infile, "functionnumber", functionnumber);
+  ReadWordAndValue(infile, "function", functionname);
   ReadWordAndVariable(infile, "overconsumption", overconsumption);
   ReadWordAndVariable(infile, "minimumprobability", minp);
+
+  if (overconsumption != 0 && overconsumption != 1)
+    handle.Message("Error in stockdistribution - overconsumption must be 0 or 1");
   if (minp <= 0) {
     handle.Warning("Minimumprobability should be a positive integer - set to default value 20");
     minp = 20;
   }
+
+  if (strcasecmp(functionname, "multinomial") == 0)
+    functionnumber = 1;
+  else
+    handle.Message("Error in stockdistribution - unrecognised function", functionname);
 
   //Read in area aggregation from file
   ReadWordAndValue(infile, "areaaggfile", aggfilename);
@@ -141,7 +151,7 @@ void StockDistribution::ReadStockData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 7)))
+  if (CountColumns(infile) != 7)
     handle.Message("Wrong number of columns in inputfile - should be 7");
 
   while (!infile.eof()) {
@@ -223,6 +233,8 @@ StockDistribution::~StockDistribution() {
     delete[] stocknames[i];
     delete aggregator[i];
   }
+  delete[] aggregator;
+  delete[] functionname;
   delete lgrpdiv;
 
   for (i = 0; i < fleetnames.Size(); i++)
@@ -244,10 +256,10 @@ void StockDistribution::Reset(const Keeper* const keeper) {
 }
 
 void StockDistribution::Print(ofstream& outfile) const {
-  int i, j, y, a;
+  int i;
 
   outfile << "\nStock Distribution\nlikelihood " << likelihood
-    << "\nfunction number " << functionnumber << "\n\tStocknames:";
+    << "\nfunction " << functionname << "\n\tStocknames:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
   outfile << "\n\tFleetnames:";
@@ -256,28 +268,13 @@ void StockDistribution::Print(ofstream& outfile) const {
   outfile << endl;
   for (i = 0; i < stocknames.Size(); i++)
     aggregator[i]->Print(outfile);
-
-  outfile << "\tAge-Length Distribution Data:\n";
-  for (y = 0; y < AgeLengthData.Nrow(); y++) {
-    outfile << "\tyear and step " << y << endl;
-    for (a = 0; a < AgeLengthData.Ncol(y); a++) {
-      outfile << "\tareas " << a << endl;
-      for (i = 0; i < AgeLengthData[y][a]->Nrow(); i++) {
-        outfile << TAB;
-        for (j = 0; j < AgeLengthData[y][a]->Ncol(i); j++) {
-          outfile.width(printwidth);
-          outfile.precision(smallprecision);
-          outfile << (*AgeLengthData[y][a])[i][j] << sep;
-        }
-        outfile << endl;
-      }
-    }
-  }
+  outfile.flush();
 }
 
 void StockDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks) {
   int i, j, found, stocknumber;
   Fleetptrvector fleets;
+  aggregator = new FleetPreyAggregator*[stocknames.Size()];
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
@@ -293,7 +290,6 @@ void StockDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvecto
     }
   }
 
-  aggregator = new FleetPreyAggregator*[stocknames.Size()];
   for (i = 0; i < stocknames.Size(); i++) {
     Stockptrvector stocks;
     found = 0;
@@ -310,8 +306,9 @@ void StockDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvecto
       exit(EXIT_FAILURE);
     }
 
-    LengthGroupDivision* AggLgrpDiv = new LengthGroupDivision(lengths);
-    aggregator[i] = new FleetPreyAggregator(fleets, stocks, AggLgrpDiv, areas, ages, overconsumption);
+    //LengthGroupDivision* AggLgrpDiv = new LengthGroupDivision(lengths);
+    //aggregator[i] = new FleetPreyAggregator(fleets, stocks, AggLgrpDiv, areas, ages, overconsumption);
+    aggregator[i] = new FleetPreyAggregator(fleets, stocks, lgrpdiv, areas, ages, overconsumption);
   }
 }
 
@@ -326,7 +323,7 @@ void StockDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
         likelihood += LikMultinomial();
         break;
       default:
-        cerr << "Error in stockdistribution - unknown functionnumber " << functionnumber << endl;
+        cerr << "Error in stockdistribution - unknown function " << functionname << endl;
         break;
     }
     timeindex++;

@@ -9,11 +9,11 @@ public:
   Predatorptrvector(int sz);
   Predatorptrvector(int sz, Predator* initial);
   Predatorptrvector(const Predatorptrvector& initial);
-  ~Predatorptrvector() { delete[] v; };
+  ~Predatorptrvector();
   void resize(int add, Predator* value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   Predator*& operator [] (int pos);
   Predator* const& operator [] (int pos) const;
 protected:
@@ -21,7 +21,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "predatorptrvector.icc"
 #endif
 

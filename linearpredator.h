@@ -19,7 +19,7 @@ public:
     int CurrentSubstep, int NrOfSubsteps);
   virtual void AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep);
   virtual void Print(ofstream& infile) const;
-  virtual const popinfovector& NumberPriortoEating (int area, const char* preyname) const;
+  virtual const popinfovector& NumberPriortoEating(int area, const char* preyname) const;
 };
 
 #endif

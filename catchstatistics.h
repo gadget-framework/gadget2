@@ -14,7 +14,7 @@ class AreaClass;
 class CatchStatistics : public Likelihood {
 public:
   CatchStatistics(CommentStream& infile, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, double likweight);
+    const TimeClass* const TimeInfo, double likweight, const char* name);
   virtual ~CatchStatistics();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
@@ -28,6 +28,7 @@ private:
   doublematrixptrvector mean;
   doublematrixptrvector variance;
   FleetPreyAggregator* aggregator;
+  LengthGroupDivision* lgrpDiv;
   charptrvector fleetnames;
   charptrvector stocknames;
   intmatrix areas;
@@ -38,6 +39,8 @@ private:
   int timeindex;          //index for mean etc.
   int functionnumber;
   ActionAtTimes AAT;
+  char* csname;
+  char* functionname;
 };
 
 #endif

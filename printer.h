@@ -33,10 +33,8 @@ public:
   virtual void Print(const TimeClass* const TimeInfo) = 0;
   virtual void SetStock(Stockptrvector& stockvec) {};
   virtual void SetFleet(Fleetptrvector& fleetvec) {};
-  virtual void Init(const Ecosystem* eco) {};
   virtual void SetPredAndPrey(Predatorptrvector& predatorvec, Preyptrvector& preyvec) {};
   virtual void SetPrey(Preyptrvector& preyvec) {};
-  //virtual void SetPred(Predatorptrvector& predatorvec) {};
   virtual void SetStocksAndPredAndPrey(const Stockptrvector& stockvec,
     const PopPredatorptrvector& poppredvec, const Preyptrvector& preyvec) {};
   virtual void SetPredator(Predatorptrvector& predatorvec) {};

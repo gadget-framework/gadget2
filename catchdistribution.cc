@@ -13,8 +13,8 @@
 
 CatchDistribution::CatchDistribution(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
-  double likweight, const char* cdname)
-  : Likelihood(CATCHDISTRIBUTIONLIKELIHOOD, likweight), name(cdname) {
+  double likweight, const char* name)
+  : Likelihood(CATCHDISTRIBUTIONLIKELIHOOD, likweight) {
 
   ErrorHandler handle;
   int i, j;
@@ -32,8 +32,27 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
   CommentStream subdata(datafile);
 
   timeindex = 0;
+  cdname = new char[strlen(name) + 1];
+  strcpy(cdname, name);
+  functionname = new char[MaxStrLength];
+  strncpy(functionname, "", MaxStrLength);
+
   ReadWordAndValue(infile, "datafile", datafilename);
-  ReadWordAndVariable(infile, "functionnumber", functionnumber);
+  ReadWordAndValue(infile, "function", functionname);
+
+  functionnumber = 0;
+  if (strcasecmp(functionname, "multinomial") == 0)
+    functionnumber = 1;
+  else if (strcasecmp(functionname, "pearson") == 0)
+    functionnumber = 2;
+  else if (strcasecmp(functionname, "modmultinomial") == 0)
+    functionnumber = 3;
+  else if (strcasecmp(functionname, "experimental") == 0)
+    functionnumber = 4;
+  else if (strcasecmp(functionname, "gamma") == 0)
+    functionnumber = 5;
+  else
+    handle.Message("Error in catchdistribution - unrecognised function", functionname);
 
   infile >> ws;
   if (infile.peek() == 'a') {
@@ -47,8 +66,14 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
   } else
     agg_lev = 0; //default value for agg_lev
 
+  if (agg_lev != 0 && agg_lev != 1)
+    handle.Message("Error in catchdistribution - aggregationlevel must be 0 or 1");
+
   ReadWordAndVariable(infile, "overconsumption", overconsumption);
   ReadWordAndVariable(infile, "minimumprobability", minp);
+
+  if (overconsumption != 0 && overconsumption != 1)
+    handle.Message("Error in catchdistribution - overconsumption must be 0 or 1");
   if (minp <= 0) {
     handle.Warning("Minimumprobability should be a positive integer - set to default value 20");
     minp = 20;
@@ -202,7 +227,7 @@ void CatchDistribution::ReadDistributionData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 6)))
+  if (CountColumns(infile) != 6)
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
@@ -273,7 +298,7 @@ void CatchDistribution::aggregateBiomass() {
   int a, t, ar;
   for (ar = 0; ar < areas.Nrow(); ar++)
     for (t = first; t < obs_biomass[ar]->Nrow() + first; t++) {
-      if ((t - 1)%steps == 0) {
+      if ((t - 1) % steps == 0) {
         aggt++;
         for (a = minrow; a <= maxrow; a++) {
           (*agg_obs_biomass[ar])[aggt][a] = 0.0;
@@ -306,7 +331,7 @@ void CatchDistribution::calcBiomass(int t) {
     time = (t + first - 1) / steps;
 
   for (ar = 0; ar < areas.Nrow(); ar++) {
-    if (!agg_lev || (agg_lev && ((t + first - 1)%steps == 0 || t == 0)))
+    if (!agg_lev || (agg_lev && ((t + first - 1) % steps == 0 || t == 0)))
       for (a = minrow; a <= maxrow; a++) {
         (*calc_catch[ar])[time][a] = 0.0;
         (*obs_catch[ar])[time][a] = 0.0;
@@ -333,8 +358,6 @@ CatchDistribution::~CatchDistribution() {
     delete[] ageindex[i];
   for (i = 0; i < lenindex.Size(); i++)
     delete[] lenindex[i];
-  delete aggregator;
-  delete LgrpDiv;
   for (i = 0; i < AgeLengthData.Nrow(); i++)
     for (j = 0; j < AgeLengthData.Ncol(i); j++) {
       delete AgeLengthData[i][j];
@@ -354,6 +377,10 @@ CatchDistribution::~CatchDistribution() {
       delete agg_obs_biomass[i];
     }
   }
+  delete aggregator;
+  delete LgrpDiv;
+  delete[] cdname;
+  delete[] functionname;
 }
 
 void CatchDistribution::Reset(const Keeper* const keeper) {
@@ -362,13 +389,26 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
 }
 
 void CatchDistribution::Print(ofstream& outfile) const {
+  int i;
+
+  outfile << "\nCatch Distribution " << cdname << "\nlikelihood " << likelihood
+    << "\nfunction " << functionname;
+  outfile << "\n\tStocknames:";
+  for (i = 0; i < stocknames.Size(); i++)
+    outfile << sep << stocknames[i];
+  outfile << "\n\tFleetnames:";
+  for (i = 0; i < fleetnames.Size(); i++)
+    outfile << sep << fleetnames[i];
+  outfile << endl;
+  aggregator->Print(outfile);
+  outfile.flush();
 }
 
 void CatchDistribution::LikelihoodPrint(ofstream& outfile) const {
   int i, j, y, a;
 
   outfile << "\nCatch Distribution\n\tlikelihood " << likelihood
-    << "\n\tfunction number " << functionnumber << endl << TAB;
+    << "\n\tfunction " << functionname << endl << TAB;
   Likelihood::LikelihoodPrint(outfile);
   outfile << "\tStocknames:";
   for (i = 0; i < stocknames.Size(); i++)
@@ -429,8 +469,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) const {
 }
 
 void CatchDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks) {
-  int i, j;
-  int found = 0;
+  int i, j, found;
   Fleetptrvector fleets;
   Stockptrvector stocks;
 
@@ -470,71 +509,15 @@ void CatchDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvecto
       exit(EXIT_FAILURE);
     }
   }
+  aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
 
-  LengthGroupDivision* AggLgrpDiv = new LengthGroupDivision(lengths);
-  aggregator = new FleetPreyAggregator(fleets, stocks, AggLgrpDiv, areas, ages, overconsumption);
-
-  //Needed for -catchprint header
-  min_data_age = ages[0][0];
-  max_data_age = ages[ages.Nrow() - 1][ages.Ncol() - 1];
-  MinAge = max(min_stock_age, min_data_age);
-  MaxAge = min(max_stock_age, max_data_age);
-
-  //Limits (inclusive) for traversing the matrices.
-  mincol = aggregator->getMinCol();
-  maxcol = aggregator->getMaxCol();
-  minrow = aggregator->getMinRow();
-  maxrow = aggregator->getMaxRow();
-}
-
-void CatchDistribution::Init(const Ecosystem* eco) {
-  int i;
-  Fleetptrvector fleets;
-  Stockptrvector stocks;
-
-  for (i = 0; i<fleetnames.Size(); i++) {
-    fleets.resize(1);
-    fleets[i] = eco->findFleet(fleetnames[i]);
-    if (fleets[i] == NULL) {
-      cerr << "Error: when searching for names of fleets for Catchdistribution.\n"
-        << "Did not find any name matching " << fleetnames[i] << endl;
-      exit(EXIT_FAILURE);
-    }
+  //Limits (inclusive) for traversing the matrices where required
+  if (functionnumber != 1) {
+    mincol = aggregator->getMinCol();
+    maxcol = aggregator->getMaxCol();
+    minrow = aggregator->getMinRow();
+    maxrow = aggregator->getMaxRow();
   }
-
-  /*JMB code removed from here - see RemovedCode.txt for details*/
-  min_stock_age = 100;
-  max_stock_age = 0;
-  for (i = 0; i < stocknames.Size(); i++) {
-    stocks.resize(1);
-    stocks[i] = eco->findStock(stocknames[i]);
-    if (stocks[i] == NULL || !stocks[i]->IsEaten()) {
-      cerr << "Error: when searching for names of (prey) stocks for Catchdistribution.\n"
-        << "Did not find any name matching " << stocknames[i] << endl;
-      exit(EXIT_FAILURE);
-    } else {
-      if (stocks[stocks.Size() - 1]->Minage() < min_stock_age) //kgf 3/5 99
-        min_stock_age = stocks[stocks.Size() - 1]->Minage();
-      if (stocks[stocks.Size() - 1]->Maxage() > max_stock_age)
-        max_stock_age = stocks[stocks.Size() - 1]->Maxage();
-    }
-  }
-
-  /*JMB code removed from here - see RemovedCode.txt for details*/
-  LengthGroupDivision* AggLgrpDiv = new LengthGroupDivision(lengths);
-  aggregator = new FleetPreyAggregator(fleets, stocks, AggLgrpDiv, areas, ages, overconsumption);
-
-  //Needed for -catchprint header
-  min_data_age = ages[0][0];
-  max_data_age = ages[ages.Nrow() - 1][ages.Ncol() - 1];
-  MinAge = max(min_stock_age, min_data_age);
-  MaxAge = min(max_stock_age, max_data_age);
-
-  //Limits (inclusive) for traversing the matrices.
-  mincol = aggregator->getMinCol();
-  maxcol = aggregator->getMaxCol();
-  minrow = aggregator->getMinRow();
-  maxrow = aggregator->getMaxRow();
 }
 
 void CatchDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
@@ -562,7 +545,7 @@ void CatchDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
         likelihood += GammaLik(TimeInfo);
         break;
       default:
-        cerr << "Error in catchdistribution - unknown functionnumber " << functionnumber << endl;
+        cerr << "Error in catchdistribution - unknown function " << functionname << endl;
         break;
     }
     //JMB if (weights.Nrow() > 0)
@@ -911,7 +894,7 @@ void CatchDistribution::PrintLikelihoodHeader(ofstream& catchfile) {
   int mina = ages[minrow][0];
   int maxa = ages[maxrow][0];
   catchfile << "Likelihood:       CatchDistribution\nFunction:         "
-    << functionnumber << "\nCalculated every: ";
+    << functionname << "\nCalculated every: ";
   if (agg_lev == 0)
     catchfile << "step\n";
   else if (agg_lev == 1)
@@ -926,13 +909,17 @@ void CatchDistribution::PrintLikelihoodHeader(ofstream& catchfile) {
     catchfile << sep << stocknames[i];
   catchfile << "\nAges:             min " << mina << " max " << maxa
     << "\nLengths:          min " << LgrpDiv->Minlength(0) << " max "
-    << LgrpDiv->Maxlength(LgrpDiv->Size() - 1) << " dl " << LgrpDiv->dl() << endl;
+    << LgrpDiv->Maxlength(LgrpDiv->NoLengthGroups() - 1) << " dl " << LgrpDiv->dl() << endl;
 }
 
+//Print Observed and modelled catch for further processing by external scripts
 void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& TimeInfo) {
-  //Print Observed and modelled catch separately for further processing
 
   if (!AAT.AtCurrentTime(&TimeInfo))
+    return;
+
+  //cannot print if functionnumber is 1, since havent got mincol etc
+  if (functionnumber == 1)
     return;
 
   catchfile.setf(ios::fixed);
@@ -940,12 +927,11 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
   int age, length, min_age, max_age, nareas;
   int time = timeindex - 1; //timeindex was increased before this is called.
 
-  catchfile << endl;
   //Get age and length intervals from aggregator->AgeLengthDist()
   const Agebandmatrixvector* alptr = &aggregator->AgeLengthDist();
-  catchfile << "Time:    Year " << TimeInfo.CurrentYear()
+  catchfile << "\nTime:    Year " << TimeInfo.CurrentYear()
     << " Step " << TimeInfo.CurrentStep() << "\nName:   ";
-  for (i = 0; i<fleetnames.Size(); i++)
+  for (i = 0; i < fleetnames.Size(); i++)
     catchfile << sep << fleetnames[i];
   catchfile << endl;
 
@@ -998,8 +984,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
 }
 
 const Agebandmatrixvector& CatchDistribution::getModCatch(const TimeClass* const TimeInfo) {
-  int dummy = 1;
-  aggregator->Sum(TimeInfo, dummy); //mortality model, calculated catch
+  aggregator->Sum(TimeInfo, 1); //mortality model, calculated catch
   return aggregator->AgeLengthDist();
 }
 

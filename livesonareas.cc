@@ -14,7 +14,7 @@ LivesOnAreas::LivesOnAreas(const intvector& Areas) : areas(Areas) {
 
 int LivesOnAreas::IsInArea(int area) const {
   if (0 <= area && area < AreaNr.Size())
-    return(AreaNr[area] >= 0);
+    return (AreaNr[area] >= 0);
   else
     return 0;
 }

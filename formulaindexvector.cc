@@ -2,6 +2,17 @@
 #include "keeper.h"
 #include "gadget.h"
 
+#ifndef GADGET_INLINE
+#include "formulaindexvector.icc"
+#endif
+
+Formulaindexvector::~Formulaindexvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
+}
+
 void Formulaindexvector::resize(int addsize, int lower, Keeper* keeper) {
   int i;
   if (v == 0) {
@@ -18,16 +29,6 @@ void Formulaindexvector::resize(int addsize, int lower, Keeper* keeper) {
     v = vnew;
     minpos = lower;
   }
-}
-
-Formula& Formulaindexvector::operator [] (int pos) {
-  assert(minpos <= pos && pos < minpos + size);
-  return(v[pos - minpos]);
-}
-
-const Formula& Formulaindexvector::operator [] (int pos) const {
-  assert(minpos <= pos && pos < minpos + size);
-  return(v[pos - minpos]);
 }
 
 CommentStream& operator >> (CommentStream& infile, Formulaindexvector& Fvec) {
@@ -48,7 +49,7 @@ CommentStream& operator >> (CommentStream& infile, Formulaindexvector& Fvec) {
 void Formulaindexvector::Inform(Keeper* keeper) {
   int i;
   for (i = 0; i < size; i++) {
-    ostrstream ostr;
+    ostringstream ostr;
     ostr << minpos + i << ends;
     keeper->AddString(ostr.str());
     v[i].Inform(keeper);

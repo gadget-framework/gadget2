@@ -127,12 +127,6 @@ void BoundLikelihood::AddToLikelihoodTimeAndKeeper(
   }
 }
 
-void BoundLikelihood::Print(ofstream& outfile) const {
-}
-
-void BoundLikelihood::LikelihoodPrint(ofstream& outfile) const {
-}
-
 void BoundLikelihood::LikelihoodPrintKeeper(ofstream& outfile, const Keeper* const keeper) const {
   int i;
   Parametervector sw(keeper->NoVariables());

@@ -22,21 +22,21 @@ RenewalData::RenewalData(CommentStream& infile, const intvector& Areas,
   double maxlength;
   double dl;
   infile >> text;
-  if (strcasecmp(text, "Normaldistribution") == 0) {
+  if (strcasecmp(text, "normaldistribution") == 0) {
     ReadOption = 1;
     ReadWordAndVariable(infile, "minlength", minlength);
   } else if (strcasecmp(text, "minlength") == 0) {
     ReadOption = 0;
     infile >> minlength;
   } else
-    handle.Unexpected("Normaldistribution or minlength", text);
+    handle.Unexpected("normaldistribution or minlength", text);
 
   ReadWordAndVariable(infile, "maxlength", maxlength);
   ReadWordAndVariable(infile, "dl", dl);
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(minlength, maxlength, dl, keeper);
+    LengthGroupPrintError(minlength, maxlength, dl, "length groups for renewal data");
 
   //We now expect to find:
   //year, step, area, age and then the renewal data
@@ -116,7 +116,9 @@ RenewalData::RenewalData(CommentStream& infile, const intvector& Areas,
         if (!(infile >> Wcoeff2[i]))
           handle.Message("Wrong format for renewalwcoeff2");
         Wcoeff2[i].Inform(keeper);
-      }
+
+      } else
+        handle.Message("Unknown data format for renewal data ");
 
       //Now we move on and check whether we find a digit or not
       infile >> ws;
@@ -143,7 +145,7 @@ void RenewalData::SetCI(const LengthGroupDivision* const GivenLDiv) {
   CI = new ConversionIndex(LgrpDiv, GivenLDiv);
 }
 
-void RenewalData::Print (ofstream& outfile) const {
+void RenewalData::Print(ofstream& outfile) const {
   outfile << "\nRenewal\n\tDistribution\n";
   int i;
   for (i = 0; i < Distribution.Size(); i++) {

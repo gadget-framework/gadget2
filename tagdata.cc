@@ -92,7 +92,7 @@ void TagData::ReadRecaptureData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 9)))
+  if (CountColumns(infile) != 9)
     handle.Message("Wrong number of columns in inputfile - should be 9");
 
   while (!infile.eof()) {
@@ -161,9 +161,6 @@ TagData::~TagData() {
 void TagData::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   index = 0;
-}
-
-void TagData::Print(ofstream& outfile) const {
 }
 
 void TagData::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks) {

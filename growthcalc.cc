@@ -53,10 +53,8 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const intvector& Areas,
   int i;
   Formula tempF;   //value of tempF is initiated to 0.0
   for (i = 0; i < Areas.Size(); i++) {
-    lgrowth[i] = new Formulamatrix;
-    (*lgrowth[i]).AddRows(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
-    wgrowth[i] = new Formulamatrix;
-    (*wgrowth[i]).AddRows(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
+    lgrowth[i] = new Formulamatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
+    wgrowth[i] = new Formulamatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
   }
 
   keeper->AddString("growthcalcB");
@@ -78,6 +76,11 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const intvector& Areas,
   handle.Close();
   datafile.close();
   datafile.clear();
+
+  for (i = 0; i < Areas.Size(); i++) {
+    (*lgrowth[i]).Inform(keeper);
+    (*wgrowth[i]).Inform(keeper);
+  }
 
   keeper->ClearLast();
 }
@@ -107,20 +110,20 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const intvector& Areas,
 
   keeper->AddString("growthcalcC");
   infile >> text;
-  if (strcasecmp(text, "Wgrowthparameters") == 0) {
+  if (strcasecmp(text, "wgrowthparameters") == 0) {
     if (!(infile >> wgrowthPar))
       handle.Message("Incorrect format of wgrowthPar vector");
     wgrowthPar.Inform(keeper);
   } else
-    handle.Unexpected("Wgrowthparameters", text);
+    handle.Unexpected("wgrowthparameters", text);
 
   infile >> text;
-  if (strcasecmp(text, "Lgrowthparameters") == 0) {
+  if (strcasecmp(text, "lgrowthparameters") == 0) {
     if (!(infile >> lgrowthPar))
       handle.Message("Incorrect format of lgrowthPar vector");
     lgrowthPar.Inform(keeper);
   } else
-    handle.Unexpected("Lgrowthparameters", text);
+    handle.Unexpected("lgrowthparameters", text);
   keeper->ClearLast();
 
   //Read information on reference weights.
@@ -183,22 +186,22 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const intvector& Areas,
 
   keeper->AddString("Wgrowthparam");
   infile >> text;
-  if (strcasecmp(text, "Wgrowthparameters") == 0) {
+  if (strcasecmp(text, "wgrowthparameters") == 0) {
     if (!(infile >> wgrowthPar))
       handle.Message("Incorrect format of Wgrowthpar vector");
     wgrowthPar.Inform(keeper);
   } else
-    handle.Unexpected("Wgrowthparameters", text);
+    handle.Unexpected("wgrowthparameters", text);
   keeper->ClearLast();
 
   keeper->AddString("Lgrowthparam");
   infile >> text;
-  if (strcasecmp(text, "Lgrowthparameters") == 0) {
+  if (strcasecmp(text, "lgrowthparameters") == 0) {
     if (!(infile >> lgrowthPar))
       handle.Message("Incorrect format of Lgrowthpar vector");
     lgrowthPar.Inform(keeper);
   } else
-    handle.Unexpected("Lgrowthparameters", text);
+    handle.Unexpected("lgrowthparameters", text);
   keeper->ClearLast();
 
   //Read information on reference weights.
@@ -266,22 +269,22 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const intvector& Areas,
 
   keeper->AddString("Wgrowthparam");
   infile >> text;
-  if (strcasecmp(text, "Wgrowthparameters") == 0) {
+  if (strcasecmp(text, "wgrowthparameters") == 0) {
     if (!(infile >> wgrowthPar))
       handle.Message("Incorrect format of Wgrowthpar vector");
     wgrowthPar.Inform(keeper);
   } else
-    handle.Unexpected("Wgrowthparameters", text);
+    handle.Unexpected("wgrowthparameters", text);
 
   keeper->ClearLast();
   keeper->AddString("Lgrowthparam");
   infile >> text;
-  if (strcasecmp(text, "Lgrowthparameters") == 0) {
+  if (strcasecmp(text, "lgrowthparameters") == 0) {
     if (!(infile >> lgrowthPar))
       handle.Message("Incorrect format of Lgrowthpar vector");
     lgrowthPar.Inform(keeper);
   } else
-    handle.Unexpected("Lgrowthparameters", text);
+    handle.Unexpected("lgrowthparameters", text);
   keeper->ClearLast();
 
   //Changed back to this form in 2001 so the number of yeareffects can be more
@@ -289,11 +292,11 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const intvector& Areas,
   keeper->AddString("YearEffect");
   infile >> text;
   char c;
-  if (strcasecmp(text, "YearEffect") == 0)
+  if (strcasecmp(text, "yeareffect") == 0)
     for (i = 0; i < yearEffect.Size(); i++)
       infile >> yearEffect[i] >> ws;
   else
-    handle.Unexpected("YearEffect", text);
+    handle.Unexpected("yeareffect", text);
   yearEffect.Inform(keeper);
 
   c = infile.peek();
@@ -306,22 +309,22 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const intvector& Areas,
   keeper->ClearLast();
   keeper->AddString("StepEffect");
   infile >> text;
-  if (strcasecmp(text, "StepEffect") == 0) {
+  if (strcasecmp(text, "stepeffect") == 0) {
     if (!(infile >> stepEffect))
       handle.Message("Incorrect format of StepEffect vector");
     stepEffect.Inform(keeper);
   } else
-    handle.Unexpected("StepEffect", text);
+    handle.Unexpected("stepeffect", text);
   keeper->ClearLast();
 
   keeper->AddString("AreaEffect");
   infile >> text;
-  if (strcasecmp(text, "AreaEffect") == 0) {
+  if (strcasecmp(text, "areaeffect") == 0) {
     if (!(infile >> areaEffect))
       handle.Message("Incorrect format of AreaEffect vector");
     areaEffect.Inform(keeper);
   } else
-    handle.Unexpected("AreaEffect", text);
+    handle.Unexpected("areaeffect", text);
   keeper->ClearLast();
 
   //Read information on reference weights.
@@ -402,10 +405,8 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const intvector& Areas,
 
   int i;
   Formula tempF;   //value of tempF is initiated to 0.0
-  for (i = 0; i < Areas.Size(); i++) {
-    wgrowth[i] = new Formulamatrix;
-    (*wgrowth[i]).AddRows(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
-  }
+  for (i = 0; i < Areas.Size(); i++)
+    wgrowth[i] = new Formulamatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
 
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -417,6 +418,9 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const intvector& Areas,
   handle.Close();
   datafile.close();
   datafile.clear();
+
+  for (i = 0; i < Areas.Size(); i++)
+    (*wgrowth[i]).Inform(keeper);
 
   keeper->ClearLast();
 }
@@ -457,10 +461,8 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const intvector& Areas,
 
   int i;
   Formula tempF;   //value of tempF is initiated to 0.0
-  for (i = 0; i < Areas.Size(); i++) {
-    wgrowth[i] = new Formulamatrix;
-    (*wgrowth[i]).AddRows(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
-  }
+  for (i = 0; i < Areas.Size(); i++)
+    wgrowth[i] = new Formulamatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
 
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -473,6 +475,9 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const intvector& Areas,
   datafile.close();
   datafile.clear();
 
+  for (i = 0; i < Areas.Size(); i++)
+    (*wgrowth[i]).Inform(keeper);
+
   keeper->ClearLast();
 }
 
@@ -480,6 +485,32 @@ GrowthCalcG::~GrowthCalcG() {
   int a;
   for (a = 0; a < wgrowth.Size(); a++)
     delete wgrowth[a];
+}
+
+GrowthCalcH::GrowthCalcH(CommentStream& infile, const intvector& Areas,
+  const LengthGroupDivision* const LgrpDiv, Keeper* const keeper)
+  : GrowthCalcBase(Areas), NumberOfGrowthConstants(4) {
+
+  int i, j, pos;
+  ErrorHandler handle;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  growthPar.resize(NumberOfGrowthConstants, keeper);
+
+  keeper->AddString("growthcalcH");
+  infile >> text;
+  //parameters are linf, k and a and b for the weight
+  if (strcasecmp(text, "growthparameters") == 0) {
+    if (!(infile >> growthPar))
+      handle.Message("Incorrect format of growthPar vector");
+    growthPar.Inform(keeper);
+  } else
+    handle.Unexpected("growthparameters", text);
+
+  keeper->ClearLast();
+}
+
+GrowthCalcH::~GrowthCalcH() {
 }
 
 void GrowthCalcA::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgrowth,
@@ -560,7 +591,7 @@ void GrowthCalcC::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
     cerr << "Warning - length growth parameter is negative\n";
 
   for (i = 0; i < Wgrowth.Size(); i++) {
-    if (GrEatNumber[i].W <= rathersmall) {
+    if (iszero(GrEatNumber[i].W)) {
       Wgrowth[i] = 0.0;
       Lgrowth[i] = 0.0;
     } else {
@@ -612,7 +643,7 @@ void GrowthCalcD::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
     cerr << "Warning - length growth parameter is negative\n";
 
   for (i = 0; i < Wgrowth.Size(); i++) {
-    if (GrEatNumber[i].W <= rathersmall) {
+    if (iszero(GrEatNumber[i].W)) {
       Wgrowth[i] = 0.0;
       Lgrowth[i] = 0.0;
     } else {
@@ -671,7 +702,7 @@ void GrowthCalcE::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
     cerr << "Warning - length growth parameter is negative\n";
 
   for (i = 0; i < Wgrowth.Size(); i++) {
-    if (GrEatNumber[i].W <= rathersmall) {
+    if (iszero(GrEatNumber[i].W)) {
       Wgrowth[i] = 0.0;
       Lgrowth[i] = 0.0;
     } else {
@@ -755,5 +786,28 @@ void GrowthCalcG::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
       Lgrowth[i] = kval * pow(LgrpDiv->Meanlength(i), growthPar[0]);
       Wgrowth[i] = w[i];
     }
+  }
+}
+
+/* Simplified 2 parameter length based Von Bertalanffy growth function
+ * compare with GrowthCalcC for the more complex weight based version */
+void GrowthCalcH::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgrowth,
+  const popinfovector& GrEatNumber, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, const doublevector& Fphi,
+  const doublevector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+
+  const double mult = 1.0 - exp(-growthPar[1] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
+
+  //JMB - first some error checking
+  if (iszero(growthPar[1]) || iszero(growthPar[2]))
+    cerr << "Warning - growth parameter is zero\n";
+  if (LgrpDiv->Maxlength(LgrpDiv->NoLengthGroups() - 1) > growthPar[0])
+    cerr << "Warning - length greater than length infinity\n";
+
+  int i;
+  for (i = 0; i < Wgrowth.Size(); i++) {
+    Lgrowth[i] = (growthPar[0] - LgrpDiv->Meanlength(i)) * mult;
+    Wgrowth[i] = growthPar[2] * (pow(LgrpDiv->Meanlength(i) + Lgrowth[i], growthPar[3])
+      - pow(LgrpDiv->Meanlength(i), growthPar[3]));
   }
 }

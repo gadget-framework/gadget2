@@ -41,7 +41,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   double tmpnumber;
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 4)))
+  if (CountColumns(infile) != 4)
     handle.Message("Wrong number of columns in inputfile - should be 4");
 
   while (!infile.eof()) {

@@ -6,12 +6,12 @@
 class Tags;
 
 class Tagptrvector {
- public:
+public:
   Tagptrvector() { size = 0; v = 0; teljari = 0; index = 0;};
   Tagptrvector(int sz);
   Tagptrvector(int sz, Tags* initial);
   Tagptrvector(const Tagptrvector& initial);
-  ~Tagptrvector() { delete[] v; };
+  ~Tagptrvector();
   void resize(int add, Tags* value);
   void resize(int add);
   void Delete(int pos);
@@ -20,8 +20,9 @@ class Tagptrvector {
   Tags* const& operator [] (int pos) const;
   void UpdateTags(const TimeClass* const TimeInfo);
   void DeleteTags(const TimeClass* const TimeInfo);
+  void DeleteAll();
   void SetTaggedStocks(const charptrvector Names);
- protected:
+protected:
   Tags** v;
   int size;
   int index;
@@ -29,7 +30,7 @@ class Tagptrvector {
   int teljari;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "tagptrvector.icc"
 #endif
 

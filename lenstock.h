@@ -38,7 +38,7 @@ public:
   Prey* ReturnPrey() const;
   Predator* ReturnPredator() const;
   void Print(ofstream& outfile) const;
-  int HasCannibalism () const { return cannibalism; };
+  int HasCannibalism() const { return cannibalism; };
   const doublevector& mortality() const { return len_natm->NatMortality(); };
   void calcForPrinting(int, const TimeClass&);
   const doublematrix& getF(int area) const { return *(F[area]); };

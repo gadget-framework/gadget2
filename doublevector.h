@@ -11,11 +11,11 @@ public:
   doublevector(int sz, double initial);
   doublevector(const doublevector& initial);
   doublevector(double* initial, int sz);
-  ~doublevector() { delete[] v; };
+  ~doublevector();
   void resize(int add, double value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   double& operator [] (int pos);
   const double& operator [] (int pos) const;
   void Reset();
@@ -39,7 +39,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "doublevector.icc"
 #endif
 

@@ -16,10 +16,10 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   Area = 0;
   ErrorHandler handle;
   chdir(workingdir);
-  ifstream infile("main");
+  ifstream infile(filename);
   CommentStream commin(infile);
-  handle.Open("main");
-  CheckIfFailure(infile, "main");
+  handle.Open(filename);
+  CheckIfFailure(infile, filename);
   chdir(inputdir);
   //New parameter netrun, to prevent reading of printfiles. 07.04.00 AJ & mnaa
   Readmain(commin, optimize, netrun, calclikelihood, inputdir, workingdir);
@@ -65,17 +65,16 @@ Ecosystem::~Ecosystem() {
     delete likprintvec[i];
   for (i = 0; i < Likely.Size(); i++)
     delete Likely[i];
-  //for (i = 0; i < tagvec.Size(); i++)
-    //delete tagvec[i];
+  for (i = 0; i < tagvec.Size(); i++)
+    delete tagvec[i];
   for (i = 0; i < basevec.Size(); i++)
     delete basevec[i];
 
   delete Area;
   delete TimeInfo;
-  //delete keeper;
+  delete keeper;
 }
 
-//Print status
 void Ecosystem::PrintStatus(const char* filename) const {
   ofstream outfile;
   outfile.open(filename, ios::out);
@@ -129,11 +128,11 @@ double Ecosystem::SimulateAndUpdate(double *x, int n) {
     likelihood = HUGE_VALUE;
 
   if (PrintCounter1 == printinfo.PrintInterVal1 && printinfo.Print()) {
-    this->PrintValues(printinfo.OutputFile);
+    this->PrintValues(printinfo.OutputFile, printinfo.givenPrecision);
     PrintCounter1 = 0;
   }
   if (PrintCounter2 == printinfo.PrintInterVal2 && printinfo.PrintinColumns()) {
-    this->PrintValuesinColumns(printinfo.ColumnOutputFile);
+    this->PrintValuesinColumns(printinfo.ColumnOutputFile, printinfo.givenPrecision);
     PrintCounter2 = 0;
   }
   funceval++;
@@ -148,16 +147,16 @@ void Ecosystem::PrintInitialInformationinColumns(const char* const filename) con
   keeper->WriteInitialInformationInColumns(filename);
 }
 
-void Ecosystem::PrintValues(const char* const filename) const {
-  keeper->WriteValues(filename, likelihood, Likely);
+void Ecosystem::PrintValues(const char* const filename, int prec) const {
+  keeper->WriteValues(filename, likelihood, Likely, prec);
 }
 
-void Ecosystem::PrintValuesinColumns(const char* const filename) const {
-  keeper->WriteValuesInColumns(filename, likelihood, Likely);
+void Ecosystem::PrintValuesinColumns(const char* const filename, int prec) const {
+  keeper->WriteValuesInColumns(filename, likelihood, Likely, prec);
 }
 
-void Ecosystem::PrintParamsinColumns(const char* const filename) const {
-  keeper->WriteParamsInColumns(filename, likelihood, Likely);
+void Ecosystem::PrintParamsinColumns(const char* const filename, int prec) const {
+  keeper->WriteParamsInColumns(filename, likelihood, Likely, prec);
 }
 
 void Ecosystem::Opt(intvector& opt) const {

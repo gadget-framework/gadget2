@@ -7,18 +7,22 @@ public:
   doubleindexvector(int sz, int minpos);
   doubleindexvector(int sz, int minpos, double initial);
   doubleindexvector(const doubleindexvector& initial);
-  ~doubleindexvector() { delete[] v; };
+  ~doubleindexvector();
   void resize(int addsize, int newminpos, double value);
   double& operator [] (int pos);
   const double& operator [] (int pos) const;
-  int Mincol() const { return(minpos); };
-  int Maxcol() const { return(minpos + size); };
-  int Size() const { return(size); };
+  int Mincol() const { return minpos; };
+  int Maxcol() const { return minpos + size; };
+  int Size() const { return size; };
   void Delete(int pos);
 protected:
   int minpos;
   int size;
   double* v;
 };
+
+#ifdef GADGET_INLINE
+#include "doubleindexvector.icc"
+#endif
 
 #endif

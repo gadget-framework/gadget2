@@ -18,7 +18,6 @@ public:
   void Print(ofstream& outfile);
 protected:
   TimeVariableIndexVector mortality;
-  doublevector lengthofsteps;
   doublevector proportion;
 };
 

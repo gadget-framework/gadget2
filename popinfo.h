@@ -6,33 +6,33 @@ class popinfo {
 public:
   double N;
   double W;
-  #ifdef INLINE_POPINFO_CC
+  #ifdef GADGET_INLINE
   inline
   #endif
   popinfo();
-  #ifdef INLINE_POPINFO_CC
+  #ifdef GADGET_INLINE
   inline
   #endif
   popinfo& operator += (const popinfo& a);
-  #ifdef INLINE_POPINFO_CC
+  #ifdef GADGET_INLINE
   inline
   #endif
   void operator -= (double a);
-  #ifdef INLINE_POPINFO_CC
+  #ifdef GADGET_INLINE
   inline
   #endif
   void operator *= (double a);
-  #ifdef INLINE_POPINFO_CC
+  #ifdef GADGET_INLINE
   inline
   #endif
   popinfo operator * (double b);
-  #ifdef INLINE_POPINFO_CC
+  #ifdef GADGET_INLINE
   inline
   #endif
   popinfo& operator = (const popinfo& a);
 };
 
-#ifdef INLINE_POPINFO_CC
+#ifdef GADGET_INLINE
 #include "popinfo.cc"
 #endif
 

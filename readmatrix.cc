@@ -32,7 +32,7 @@ int ReadAmounts(CommentStream& infile, const intvector& tmpareas,
   }
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 5)))
+  if (CountColumns(infile) != 5)
     handle.Message("Wrong number of columns in inputfile - should be 5");
 
   //Create storage for the data - size of the data is known
@@ -181,7 +181,7 @@ int ReadGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   }
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 5)))
+  if (CountColumns(infile) != 5)
     handle.Message("Wrong number of columns in inputfile - should be 5");
 
   //Create storage for the data - size of the data is known

@@ -1,7 +1,7 @@
 #include "formulamatrixptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "formulamatrixptrvector.icc"
 #endif
 
@@ -33,6 +33,13 @@ Formulamatrixptrvector::Formulamatrixptrvector(const Formulamatrixptrvector& ini
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+Formulamatrixptrvector::~Formulamatrixptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a Formulamatrixptrvector and fills it vith value.

@@ -7,19 +7,20 @@ public:
   intvector(int sz);
   intvector(int sz, int initial);
   intvector(const intvector& initial);
-  ~intvector() { delete[] v; };
+  ~intvector();
   void resize(int add, int value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   int& operator [] (int pos);
   const int& operator [] (int pos) const;
+  intvector& operator = (const intvector& d);
 protected:
   int* v;
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "intvector.icc"
 #endif
 

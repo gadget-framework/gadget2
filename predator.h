@@ -34,7 +34,7 @@ public:
   virtual void Reset(const TimeClass* const TimeInfo);
   const bandmatrix& Suitability(int i) const { return Suitable->Suitable(i); };
   int NoPreys() const { return Suitable->NoPreys(); };
-  Prey* Preys(int i) const { return(Prey*)(preys[i]); };
+  Prey* Preys(int i) const { return (Prey*)(preys[i]); };
   int DidChange(int prey, const TimeClass* const TimeInfo) const {
     return Suitable->DidChange(prey, TimeInfo);
   };

@@ -12,7 +12,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   const LengthGroupDivision* const GivenLgrpDiv, const intvector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper, const char* refWeight,
   const AreaClass* const Area, const charptrvector& lenindex)
-  : LivesOnAreas(Areas), LgrpDiv(0), CI(0), GrIPar(0), growthcalc(0) {
+  : LivesOnAreas(Areas), LgrpDiv(0), CI(0), GrIPar(0), growthcalc(0), growthtype(0) {
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -23,20 +23,40 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
   CI = new ConversionIndex(OtherLgrpDiv, LgrpDiv, 1);
 
-  //Next we read a word to determine which growthfunction to use.
-  //1. The Gadget function.
-  //2. Read growth from file.
-  //3. Von Bertanlanffy growth function.
-  //4. Jones.
-  //5. Von Bertanlanffy growth function with year, step and area effects.
+  //Next we read a number to determine which growthfunction to use
+  //1. The Gadget function (from MULTSPEC)
+  //2. Read growth from file
+  //3. Von Bertanlanffy growth function
+  //4. Jones growth function
+  //5. Von Bertanlanffy growth function with year, step and area effects
   //6. Von Bertanlanffy growth function (length), weight read from file
-  //7. Growth as a function of l^p,
-  //where p = 0 gives linear growth
-  //and p < 0 to have length growth decreasing as a function of l.
+  //7. Growth as a function of l^p, and p < 0 to have length growth decreasing
+  //8. Simplified length Von Bertanlanffy growth function
 
-  int growthfunctionnumber = 0;
-  ReadWordAndVariable(infile, "growthfunctionnumber", growthfunctionnumber);
-  switch(growthfunctionnumber) {
+  functionname = new char[MaxStrLength];
+  strncpy(functionname, "", MaxStrLength);
+  ReadWordAndValue(infile, "growthfunction", functionname);
+
+  if (strcasecmp(functionname, "multspec") == 0)
+    growthtype = 1;
+  else if (strcasecmp(functionname, "fromfile") == 0)
+    growthtype = 2;
+  else if (strcasecmp(functionname, "weightvb") == 0)
+    growthtype = 3;
+  else if (strcasecmp(functionname, "weightjones") == 0)
+    growthtype = 4;
+  else if (strcasecmp(functionname, "weightvbexpanded") == 0)
+    growthtype = 5;
+  else if (strcasecmp(functionname, "lengthvb") == 0)
+    growthtype = 6;
+  else if (strcasecmp(functionname, "lengthpower") == 0)
+    growthtype = 7;
+  else if (strcasecmp(functionname, "lengthvbsimple") == 0)
+    growthtype = 8;
+  else
+    handle.Message("Error in stock file - unrecognised growth function", functionname);
+
+  switch(growthtype) {
     case 1:
       growthcalc = new GrowthCalcA(infile, areas, keeper);
       break;
@@ -58,33 +78,29 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     case 7:
       growthcalc = new GrowthCalcG(infile, areas, TimeInfo, keeper, Area, lenindex);
       break;
+    case 8:
+      growthcalc = new GrowthCalcH(infile, areas, LgrpDiv, keeper);
+      break;
     default:
       handle.Message("Illegal growthfunction number");
       break;
   }
 
-  growth_type = growthfunctionnumber - 1;
   int rows = 0; //Number of rows in wgrowth and lgrowth
   infile >> ws >>  text;
-  if ((strcasecmp(text, "power") == 0)) {
+  if ((strcasecmp(text, "beta") == 0)) {
     //New beta binomial growth distribution code is used
     version = 1;
 
-    infile >> power >> ws;
+    infile >> beta;
+    beta.Inform(keeper);
     ReadWordAndVariable(infile, "maxlengthgroupgrowth", maxlengthgroupgrowth);
 
-    infile >> text >> ws;
-    if (strcasecmp(text, "beta") == 0)
-      infile >> beta;
-    else
-      handle.Unexpected("beta", text);
-    beta.Inform(keeper);
-
     //Finished reading from input files.
-    part1.resize(maxlengthgroupgrowth + 1);
-    part2.resize(maxlengthgroupgrowth + 1);
-    part4.resize(maxlengthgroupgrowth + 1);
     rows = maxlengthgroupgrowth + 1;
+    part1.resize(rows);
+    part2.resize(rows);
+    part4.resize(rows);
 
   } else if ((strcasecmp(text, "meanvarianceparameters") == 0)) {
     //Old growth distribution, with distribution file
@@ -109,7 +125,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     rows = GrIPar->MaxLengthgroupGrowth() - GrIPar->MinLengthgroupGrowth() + 1;
 
   } else
-    handle.Unexpected("power or meanvarianceparameters", text);
+    handle.Unexpected("beta or meanvarianceparameters", text);
 
   //Finished reading from input files.
   const int noareas = areas.Size();
@@ -143,6 +159,7 @@ Grower::~Grower() {
   delete LgrpDiv;
   delete growthcalc;
   delete GrIPar;
+  delete[] functionname;
 }
 
 void Grower::Print(ofstream& outfile) const {
@@ -207,7 +224,7 @@ void Grower::Sum(const popinfovector& NumberInArea, int area) {
   GrEatNumber[inarea].Sum(&NumberInArea, *CI);
 }
 
-void Grower::GrowthCalc (int area,
+void Grower::GrowthCalc(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   doublevector FPhi(CalcLgrowth[AreaNr[area]].Size(), 0.0);
@@ -239,6 +256,14 @@ const doublevector& Grower::getWeight(int area) const {
   return InterpWgrowth[AreaNr[area]];
 }
 
+double Grower::getPowerValue() {
+  return growthcalc->getPower();
+}
+
+double Grower::getMultValue() {
+  return growthcalc->getMult();
+}
+
 void Grower::Reset() {
   int i, j, area;
   double factorialx, tmppart, tmpmax;
@@ -265,8 +290,8 @@ void Grower::Reset() {
   }
 
   if (version == 1) {
-    //GrowthImplement.resize put 24-3-2000
     tmpmax = double(maxlengthgroupgrowth) * 1.0;
+
     part1[0] = 1.0;
     part1[1] = tmpmax;
     factorialx = 1.0;
@@ -275,13 +300,15 @@ void Grower::Reset() {
       for (i = 2; i < maxlengthgroupgrowth + 1; i++) {
         tmppart *= (tmpmax - i + 1);
         factorialx *= double(i);
-        part1[i] = tmppart / factorialx;
+        part1[i] = (tmppart / factorialx);
       }
     }
+
     part2[maxlengthgroupgrowth] = 1.0;
     part2[maxlengthgroupgrowth - 1] = beta;
     if (maxlengthgroupgrowth > 1)
       for (i = maxlengthgroupgrowth - 2; i >= 0; i--)
         part2[i] = part2[i + 1] * (beta + tmpmax - i - 1);
+
   }
 }

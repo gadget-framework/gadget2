@@ -32,7 +32,7 @@ public:
   friend CommentStream& operator >> (CommentStream& in, Parameter& p);
   friend istream& operator >> (istream& in, Parameter& p);
   friend ostream& operator << (ostream& out, const Parameter& p) {
-    return(out << p.name);
+    return (out << p.name);
   };
   Parameter& operator = (const Parameter& p);
   int operator == (const Parameter& p) const;
@@ -56,11 +56,11 @@ public:
   Parametervector(int sz);
   Parametervector(int sz, Parameter& initial);
   Parametervector(const Parametervector& initial);
-  ~Parametervector();
+  ~Parametervector() { delete[] v; };
   void resize(int add, Parameter& value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   int findIndex(Parameter& p);
   Parametervector& operator = (const Parametervector& paramv);
   Parameter& operator [] (int pos);
@@ -71,5 +71,9 @@ protected:
   Parameter* v;
   int size;
 };
+
+#ifdef GADGET_INLINE
+#include "parameter.icc"
+#endif
 
 #endif

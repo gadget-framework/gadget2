@@ -18,7 +18,7 @@ public:
   virtual ~LogCatches();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
-  virtual void Print(ofstream& outfile) const;
+  virtual void Print(ofstream& outfile) const {};
   void SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks);
   virtual void LikelihoodPrint(ofstream& outfile) const;
   void printHeader(ofstream& surveyfile, const PrintInfo& print);
@@ -38,6 +38,7 @@ private:
   doublematrixptrmatrix Proportions;
   doublematrix Likelihoodvalues;
   FleetPreyAggregator* aggregator;
+  LengthGroupDivision* lgrpDiv;
   charptrvector fleetnames;
   charptrvector stocknames;
   intmatrix areas;
@@ -48,6 +49,7 @@ private:
   charptrvector lenindex;
   int overconsumption;    //should we take overconsumption into account
   int functionnumber;
+  char* functionname;
   int timeindex;
   int readWeights;
   ActionAtTimes AAT;

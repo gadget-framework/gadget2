@@ -25,10 +25,6 @@ public:
   virtual void SetStocks(const Stockptrvector& Stocks);
   virtual double Regression() {return likelihood; };
   void calcIndex(const Agebandmatrix* alptr, FitType ftype);
-  double calcLikelihoodOnStep();
-  double calcLikelihoodOnStep(int dummy);
-  double calcGammaLikOnStep();
-  double calcExperimentalOnStep();
   void PrintLikelihoodOnStep(ofstream& o, int print_type);
   virtual void PrintLikelihood(ofstream&, const TimeClass& time, const char*);
   virtual void PrintLikelihoodHeader(ofstream&, const char*);
@@ -39,6 +35,11 @@ public:
   virtual void print(ofstream& o, const TimeClass& time, const PrintInfo&);
 protected:
   void ReadSurveyData(CommentStream&, const char*, const charptrvector&, const charptrvector&, const TimeClass*);
+  double calcLikPearson();
+  double calcLikMultinomial();
+  double calcLikGamma();
+  double calcLikExperimental();
+  double calcLikLog();
   StockAggregator* aggregator;
   LengthGroupDivision* LgrpDiv;
   intvector Areas;
@@ -61,7 +62,7 @@ protected:
   doublevector b_vec;
   intvector l_index; //for print purposes
   intvector a_index; //for print purposes
-  enum OptType { pearson = 0, multinomial, experimental, gamma };
+  enum OptType { pearson = 0, multinomial, experimental, gamma, logfunc };
   OptType opttype;
   charptrvector stocknames;
   intvector mincol;

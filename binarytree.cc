@@ -164,12 +164,12 @@ int BinarySearchTree::IsIn(nodeelem x) const {
   if (root == 0)
     return 0;
   else
-    return((Parent(x) != 0) || (root->value == x));
+    return ((Parent(x) != 0) || (root->value == x));
 }
 
 //IsEmpty: returns 1 if tree is empty, else 0.
 int BinarySearchTree::IsEmpty() const {
-  return(root == 0);
+  return (root == 0);
 }
 
 //DeleteSmallest: DeleteSmallest() removes node containing the

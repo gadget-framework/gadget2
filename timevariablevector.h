@@ -6,13 +6,13 @@
 class TimeVariablevector {
 public:
   TimeVariablevector() : size(0), v(0) {};
-  TimeVariablevector (int sz)
+  TimeVariablevector(int sz)
     : size(sz > 0 ? sz : 0), v(sz > 0 ? new TimeVariable[size] : 0) {};
-  ~TimeVariablevector() { delete[] v; };
+  ~TimeVariablevector();
   void resize(int size);
   void resize(int size, Keeper* const keeper);
   void resize(const TimeVariable& tvar, Keeper* const keeper);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   void Read(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
   TimeVariable& operator [] (int pos);
   const TimeVariable& operator [] (int pos) const;
@@ -23,7 +23,7 @@ protected:
   TimeVariable* v;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "timevariablevector.icc"
 #endif
 

@@ -75,7 +75,7 @@ double MaturityB::MaturationProbability(int age, int length, int Growth,
   int i;
   for (i = 0; i < maturitylength.Size(); i++)
     if (TimeInfo->CurrentStep() == maturitystep[i])
-      return(LgrpDiv->Meanlength(length) >= maturitylength[i]);
+      return (LgrpDiv->Meanlength(length) >= maturitylength[i]);
   return 0.0;
 }
 

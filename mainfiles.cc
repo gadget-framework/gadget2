@@ -3,8 +3,9 @@
 #include "gadget.h"
 
 void MainInfo::ShowCorrectUsage() {
-  cerr << "Options must be from -l -s -n -m file -i file -o file or -co file -opt file\n"
-   << "-print1 int or -print2 int -printinitial filename -printfinal filename\n";
+  cerr << "Error in command line values used when starting Gadget\n"
+    << "Options must be from -l -s -n -i file -o file -co file -p file -opt file\n"
+    << "-m file -print1 int -print2 int -printinitial filename -printfinal filename\n";
   exit(EXIT_FAILURE);
 }
 
@@ -14,15 +15,20 @@ MainInfo::MainInfo()
     Stochastic(0), PrintInitialcond(0), PrintFinalcond(0),
     PrintLikelihoodInfo(0), Net(0) {
 
+  char mainfile[10];
+  strncpy(mainfile, "", 10);
+  strcpy(mainfile, "main");
+
   optinfofilename = NULL;
   InitialCommentFilename = NULL;
   PrintInitialcondfilename = NULL;
   PrintFinalcondfilename = NULL;
   PrintLikelihoodFilename = NULL;
+  MainGadgetFilename = NULL;
+  SetMainGadgetFilename(mainfile);
 }
 
 MainInfo::~MainInfo() {
-
   if (optinfofilename != NULL) {
     delete[] optinfofilename;
     optinfofilename = NULL;
@@ -42,6 +48,10 @@ MainInfo::~MainInfo() {
   if (PrintLikelihoodFilename != NULL) {
     delete[] PrintLikelihoodFilename;
     PrintLikelihoodFilename = NULL;
+  }
+  if (MainGadgetFilename != NULL) {
+    delete[] MainGadgetFilename;
+    MainGadgetFilename = NULL;
   }
 }
 
@@ -106,6 +116,12 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         printinfo.SetOutputFile(aVector[k + 1]);
         k++;
 
+      } else if (strcasecmp(aVector[k], "-p") == 0) {
+        if (k == aNumber - 1)
+          ShowCorrectUsage();
+        printinfo.SetParamOutFile(aVector[k + 1]);
+        k++;
+
       } else if (strcasecmp(aVector[k], "-print") == 0) {
         printinfo.forcePrint = 1;
 
@@ -145,6 +161,12 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         SetPrintFinalCondFilename(aVector[k + 1]);
         k++;
 
+      } else if (strcasecmp(aVector[k], "-main") == 0) {
+        if (k == aNumber - 1)
+          ShowCorrectUsage();
+        SetMainGadgetFilename(aVector[k + 1]);
+        k++;
+
       } else if (strcasecmp(aVector[k], "-opt") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage();
@@ -158,7 +180,7 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         k++;
 
       } else if (strcasecmp(aVector[k], "-print1") == 0) {
-        strstream str;
+        stringstream str;
         if (k == aNumber - 1)
           ShowCorrectUsage();
         str << aVector[k + 1];
@@ -168,7 +190,7 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
           ShowCorrectUsage();
 
       } else if (strcasecmp(aVector[k], "-print2") == 0) {
-        strstream str;
+        stringstream str;
         if (k == aNumber - 1)
           ShowCorrectUsage();
         str << aVector[k + 1];
@@ -177,6 +199,17 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         if (str.fail())  //str.eof() depends on compilers
           ShowCorrectUsage();
 
+      } else if (strcasecmp(aVector[k], "-precision") == 0) {
+        //JMB - experimental setting of printing precision
+        stringstream str;
+        if (k == aNumber - 1)
+          cerr << "Error in specifying precision\n";
+        str << aVector[k + 1];
+        k++;
+        str >> printinfo.givenPrecision;
+        if (str.fail())  //str.eof() depends on compilers
+          cerr << "Error in specifying precision\n";
+
       } else
         ShowCorrectUsage();
 
@@ -184,6 +217,7 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
     }
   }
 
+  printinfo.CheckNumbers();
   if ((Stochastic != 1) && (Net == 1)) {
     cout << "\nWarning: Gadget for the paramin network should be used with -s option\n"
       << "Gadget will now set the -s switch to perform a stochastic run\n";
@@ -217,6 +251,12 @@ void MainInfo::Read(CommentStream& infile) {
   } else if (strcasecmp(text, "-co") == 0) {
     infile >> ws >> text;
     printinfo.SetColumnOutputFile(text);
+  } else if (strcasecmp(text, "-p") == 0) {
+    infile >> ws >> text;
+    printinfo.SetParamOutFile(text);
+  } else if (strcasecmp(text, "-main") == 0) {
+    infile >> ws >> text;
+    SetMainGadgetFilename(text);
   } else if (strcasecmp(text, "-printinitial") == 0) {
     infile >> ws >> text;
     SetPrintInitialCondFilename(text);
@@ -230,11 +270,14 @@ void MainInfo::Read(CommentStream& infile) {
     infile >> ws >> printinfo.PrintInterVal1;
   } else if (strcasecmp(text, "-print2") == 0) {
     infile >> ws >> printinfo.PrintInterVal2;
+  } else if (strcasecmp(text, "-precision") == 0) {
+    infile >> ws >> printinfo.givenPrecision;
   } else
     ShowCorrectUsage();
 
   if (infile.eof() || infile.bad())
     ShowCorrectUsage();
+  printinfo.CheckNumbers();
 }
 
 void MainInfo::SetPrintInitialCondFilename(char* filename) {
@@ -259,4 +302,9 @@ void MainInfo::SetInitialCommentFilename(char* filename) {
   InitialCommentFilename = new char[strlen(filename) + 1];
   strcpy(InitialCommentFilename, filename);
   InitialCondareGiven = 1;
+}
+
+void MainInfo::SetMainGadgetFilename(char* filename) {
+  MainGadgetFilename = new char[strlen(filename) + 1];
+  strcpy(MainGadgetFilename, filename);
 }

@@ -1,15 +1,15 @@
 #include "charptrmatrix.h"
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 charptrvector& charptrmatrix::operator [] (int pos) {
-  return(*v[pos]);
+  return *v[pos];
 }
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 const charptrvector& charptrmatrix::operator [] (int pos) const {
-  return(*v[pos]);
+  return *v[pos];
 }

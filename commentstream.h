@@ -20,20 +20,10 @@ private:
 class CommentStream {
 public:
   friend CommentStream& ws(CommentStream& ins);
-  CommentStream();
-  void SetStream(istream& istr)  { istrptr = &istr; };
+  CommentStream() { istrptr = NULL; };
   CommentStream(istream& istr) { istrptr = &istr; };
+  void SetStream(istream& istr) { istrptr = &istr; };
   CommentStream& operator >> (int& a) {
-    KillComments(istrptr);
-    istrptr->operator >> (a);
-    return *this;
-  };
-  CommentStream& operator >> (char* a) {
-    KillComments(istrptr);
-    istrptr->operator >> (a);
-    return *this;
-  };
-  CommentStream& operator >> (char& a) {
     KillComments(istrptr);
     istrptr->operator >> (a);
     return *this;
@@ -43,16 +33,23 @@ public:
     istrptr->operator >> (a);
     return *this;
   };
+  CommentStream& operator >> (char* a) {
+    KillComments(istrptr);
+    string s;
+    (*istrptr) >> s;
+    s.copy(a, string::npos);
+    a[s.length()] = '\0';
+    return *this;
+  };
   CommentStream& operator >> (__commentmanip func) {
     (*func)(*this);
     return *this;
   };
-  int peek() { return(istrptr->peek() == COMMENTCHAR ? '\n':istrptr->peek()); };
+  int peek() { return (istrptr->peek() == COMMENTCHAR ? '\n':istrptr->peek()); };
   int eof() { return istrptr->eof(); };
   int fail() { return istrptr->fail(); };
   int bad() { return istrptr->bad(); };
   int good() { return istrptr->good(); };
-  //void clear(int state = 0) { istrptr->clear(state); };
   void get(char* text, int length, char sep) { istrptr->get(text, length, sep); };
   CommentStream& seekg(streampos Pos) {
     istrptr->seekg(Pos);

@@ -1,12 +1,23 @@
 #include "migvariableptrvector.h"
 #include "gadget.h"
 
+#ifndef GADGET_INLINE
+#include "migvariableptrvector.icc"
+#endif
+
 MigVariableptrvector::MigVariableptrvector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new MigVariable*[size];
   else
     v = 0;
+}
+
+MigVariableptrvector::~MigVariableptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 void MigVariableptrvector::resize(int addsize) {
@@ -22,14 +33,4 @@ void MigVariableptrvector::resize(int addsize) {
     v = vnew;
     size += addsize;
   }
-}
-
-MigVariable*& MigVariableptrvector::operator [] (int pos) {
-  assert(0 <= pos && pos < size);
-  return(v[pos]);
-}
-
-MigVariable* const& MigVariableptrvector::operator [] (int pos) const {
-  assert(0 <= pos && pos < size);
-  return(v[pos]);
 }

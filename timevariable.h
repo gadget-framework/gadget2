@@ -8,7 +8,6 @@ class TimeVariable {
 public:
   TimeVariable();
   void Read(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
-  void Read(const Formula& number, Keeper* const keeper);
   void ReadFromFile(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
   operator double() const { return value; };
   void Interchange(TimeVariable& Newtvar, Keeper* const keeper) const;

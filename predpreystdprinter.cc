@@ -63,9 +63,9 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("YearsAndSteps", text);
+    handle.Unexpected("yearsandsteps", text);
   if (!aat.ReadFromFile(infile, TimeInfo))
-    handle.Message("Wrong format for yearsandsteps");
+    handle.Message("Error in predpreystdprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
@@ -74,6 +74,10 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
     if (!(strcasecmp(text, "[component]") == 0))
       handle.Unexpected("[component]", text);
   }
+
+  //areaindex is not required - free up memory
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
 }
 
 PredPreyStdPrinter::~PredPreyStdPrinter() {

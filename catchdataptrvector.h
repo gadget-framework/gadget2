@@ -11,11 +11,11 @@ public:
   CatchDataptrvector(int sz);
   CatchDataptrvector(int sz, CatchData* initial);
   CatchDataptrvector(const CatchDataptrvector& initial);
-  ~CatchDataptrvector() { delete[] v; };
+  ~CatchDataptrvector();
   void resize(int add, CatchData* value);
   void resize(int add);
   void Delete(int pos);
-  int Size () const { return(size); };
+  int Size() const { return size; };
   CatchData*& operator [] (int pos);
   CatchData* const& operator [] (int pos) const;
 protected:
@@ -23,7 +23,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "catchdataptrvector.icc"
 #endif
 

@@ -1,6 +1,6 @@
 #include "agebandmatrixptrvector.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "agebandmatrixptrvector.icc"
 #endif
 
@@ -21,6 +21,13 @@ agebandmatrixptrvector::agebandmatrixptrvector(int sz, Agebandmatrixvector* valu
       v[i] = value;
   } else
     v = 0;
+}
+
+agebandmatrixptrvector::~agebandmatrixptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a agebandmatrixptrvector and fills it vith value.

@@ -1,7 +1,7 @@
 #include "doublematrixptrmatrix.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "doublematrixptrmatrix.icc"
 #endif
 
@@ -68,6 +68,7 @@ doublematrixptrmatrix::~doublematrixptrmatrix() {
     for (i = 0; i < nrow; i++)
       delete v[i];
     delete[] v;
+    v = 0;
   }
 }
 

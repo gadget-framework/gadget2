@@ -54,7 +54,7 @@ void TimeClass::IncrementTime() {
 }
 
 int TimeClass::IsWithinPeriod(int year, int step) const {
-  return((firstyear < year || (year == firstyear && firststep <= step))
+  return ((firstyear < year || (year == firstyear && firststep <= step))
     && (year < lastyear || (year == lastyear && step <= laststep))
     && (1 <= step) && (step <= notimesteps));
 }
@@ -63,11 +63,11 @@ int TimeClass::SizeOfStepDidChange() const {
   if (timesteps.Size() == 1)
     return 0;
   else if (currentstep == 1)
-    return timesteps[1] != timesteps[notimesteps];
+    return (timesteps[1] != timesteps[notimesteps]);
   else
-    return timesteps[currentstep] != timesteps[currentstep - 1];
+    return (timesteps[currentstep] != timesteps[currentstep - 1]);
 }
 
 int TimeClass::NrOfSubsteps() const {
-  return (int)nrofsubsteps[currentstep];
+  return ((int)nrofsubsteps[currentstep]);
 }

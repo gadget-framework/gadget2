@@ -2,11 +2,11 @@
 #include "gadget.h"
 
 PrintInfo::PrintInfo() : PrintInterVal1(-2), PrintInterVal2(-2), forcePrint(0),
-  surveyprint(0), catchprint(0), stomachprint(0) {
+  surveyprint(0), catchprint(0), stomachprint(0), oprint(0), coprint(0), givenPrecision(0) {
 
   OutputFile = NULL;
   ColumnOutputFile = NULL;
-  ParamOutFile = NULL; 
+  ParamOutFile = NULL;
   surveyfile = NULL;
   catchfile = NULL;
   stomachfile = NULL;
@@ -15,9 +15,9 @@ PrintInfo::PrintInfo() : PrintInterVal1(-2), PrintInterVal2(-2), forcePrint(0),
   len = strlen("lik.out");
   OutputFile = new char[len + 1];
   strcpy(OutputFile, "lik.out");
-  len = strlen("lik.out.co");
+  len = strlen("column.out");
   ColumnOutputFile = new char[len + 1];
-  strcpy(ColumnOutputFile, "lik.out.co");
+  strcpy(ColumnOutputFile, "column.out");
 
   SetParamOutFile("params.out");
   SetStomachFile("stomach.out");
@@ -54,6 +54,9 @@ PrintInfo::PrintInfo(const PrintInfo& pi) {
   surveyprint = pi.surveyprint;
   catchprint = pi.catchprint;
   stomachprint = pi.stomachprint;
+  oprint = pi.oprint;
+  coprint = pi.coprint;
+  givenPrecision = pi.givenPrecision;
 }
 
 PrintInfo::~PrintInfo() {
@@ -91,11 +94,10 @@ void PrintInfo::SetOutputFile(const char* const filename) {
   if (filename != NULL) {
     OutputFile = new char[strlen(filename) + 1];
     strcpy(OutputFile, filename);
+    oprint = 1;
   } else {
     OutputFile = NULL;
   }
-  if (PrintInterVal1 < 0)
-    PrintInterVal1 = 1;
 }
 
 void PrintInfo::SetSurveyFile(const char* const filename) {
@@ -145,11 +147,10 @@ void PrintInfo::SetColumnOutputFile(const char* const filename) {
   if (filename != NULL) {
     ColumnOutputFile = new char[strlen(filename) + 1];
     strcpy(ColumnOutputFile, filename);
+    coprint = 1;
   } else {
     ColumnOutputFile = NULL;
   }
-  if (PrintInterVal2 < 0)
-    PrintInterVal2 = 5;
 }
 
 void PrintInfo::SetParamOutFile(const char* const filename) {
@@ -163,4 +164,13 @@ void PrintInfo::SetParamOutFile(const char* const filename) {
   } else {
     ParamOutFile = NULL;
   }
+}
+
+void PrintInfo::CheckNumbers() {
+  if (PrintInterVal2 < 0)
+    PrintInterVal2 = 5;
+  if (PrintInterVal1 < 0)
+    PrintInterVal1 = 1;
+  if (givenPrecision < 0)
+    givenPrecision = 0;
 }

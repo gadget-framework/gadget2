@@ -3,7 +3,6 @@
 
 #include "doubleindexvector.h"
 #include "commentstream.h"
-#include "doublematrixptrvector.h"
 #include "bandmatrixptrvector.h"
 #include "agebandm.h"
 #include "formulavector.h"
@@ -30,11 +29,11 @@ public:
   int getMinPredAge(int i) { return minage[i]; };
   int getMaxPredAge(int i) { return maxage[i]; };
   const doublevector& getAgeGroups(int pred_no) { return agegroups[pred_no]; };
-  const bandmatrix& getCons(int pred_no) { return(*consumption[pred_no]); };
+  const bandmatrix& getCons(int pred_no) { return *consumption[pred_no]; };
   double suitfunc(double predlen, double preylen);
 protected:
   doubleindexvector altfood;
-  intmatrix* overlap;    // overlap[predator][substep]
+  intmatrix overlap;    // overlap[predator][substep]
   charptrvector predatornames;
   int nrofpredators;
   Formula delta;
@@ -49,7 +48,3 @@ protected:
 };
 
 #endif
-
-
-
-

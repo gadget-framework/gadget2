@@ -38,7 +38,5 @@ void MigrationPenalty::SetStocks(Stockptrvector Stocks) {
 }
 
 MigrationPenalty::~MigrationPenalty() {
-}
-
-void MigrationPenalty::Print(ofstream&) const {
+  delete[] stockname;
 }

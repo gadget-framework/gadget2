@@ -1,15 +1,17 @@
 #include "timevariablevector.h"
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 TimeVariable& TimeVariableIndexVector::operator [] (int pos) {
-  return(v[pos - minpos]);
+  assert(minpos <= pos && pos < minpos + size);
+  return v[pos - minpos];
 }
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 const TimeVariable& TimeVariableIndexVector::operator [] (int pos) const {
-  return(v[pos - minpos]);
+  assert(minpos <= pos && pos < minpos + size);
+  return v[pos - minpos];
 }

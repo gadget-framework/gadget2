@@ -84,11 +84,10 @@ void Agebandmatrix::IncrementAge() {
   if (nrow <= 1)
     return;  //No ageing takes place where there is only one age.
 
-  //for the highest age group
   i = nrow - 1;
   j1 = max(v[i]->Mincol(), v[i - 1]->Mincol());
   j2 = min(v[i]->Maxcol(), v[i - 1]->Maxcol());
-
+  //For the highest age group
   for (j = j1; j < j2; j++)
     (*v[i])[j] += (*v[i - 1])[j];
   for (j = v[i - 1]->Mincol(); j < v[i - 1]->Maxcol(); j++) {
@@ -97,7 +96,7 @@ void Agebandmatrix::IncrementAge() {
   }
   //Now v[nrow-2] has been added to v[nrow-1] and then set to 0.
 
-  //Other agegroups.
+  //For the other age groups.
   //At the end of each for (i=nrow-2...) loop, the intersection of v[i-1] with
   //v[i] has been copied from v[i-1] to v[i] and v[i-1] has been set to 0.
   for (i = nrow - 2; i > 0; i--) {

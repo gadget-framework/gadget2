@@ -2,7 +2,7 @@
 #include "charptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "popratiovector.icc"
 #endif
 
@@ -34,6 +34,13 @@ popratiovector::popratiovector(const popratiovector& initial) {
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+popratiovector::~popratiovector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a popinfovector and fills it vith value.

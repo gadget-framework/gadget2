@@ -107,9 +107,9 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
   if (infile.eof())
     handle.Eof(text);
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("YearsAndSteps", text);
+    handle.Unexpected("yearsandsteps", text);
   if (!aat.ReadFromFile(infile, TimeInfo))
-    handle.Message("Wrong format for yearsandsteps");
+    handle.Message("Error in formatedpreyprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
@@ -189,4 +189,6 @@ FormatedPreyPrinter::~FormatedPreyPrinter() {
   int i;
   for (i = 0; i < stocknames.Size(); i++)
     delete[] stocknames[i];
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
 }

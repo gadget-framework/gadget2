@@ -38,8 +38,10 @@ public:
   //From GrowthImplementParameters.
   int MaxLengthgroupGrowth() const { return maxlengthgroupgrowth; };
   int MinLengthgroupGrowth() const { return 0; };
-  int getGrowthType() { return growth_type; };
+  int getGrowthType() { return growthtype; };
   int Version() const { return version; };
+  double getPowerValue();
+  double getMultValue();
 protected:
   LengthGroupDivision* LgrpDiv;
   popinfomatrix GrEatNumber;
@@ -53,7 +55,8 @@ protected:
   doublevector Fphi;
   GrowthImplementparameters* GrIPar;
   GrowthCalcBase* growthcalc;
-  int growth_type;
+  int growthtype;
+  char* functionname;
   double power;
   Formulavector MeanVarianceParameters;
   int version;

@@ -27,7 +27,7 @@ int ReadTextInLine(CommentStream& infile, charptrvector& text);
 int ReadVectorInLine(CommentStream& infile, intvector& Vec);
 int ReadVectorInLine(CommentStream& infile, doublevector& Vec);
 int FindContinuousYearAndStepWithNoText(CommentStream& infile, int year, int step);
-int CheckColumns(CommentStream& infile, int count);
+int CountColumns(CommentStream& infile);
 
 #endif
 

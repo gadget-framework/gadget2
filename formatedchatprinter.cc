@@ -76,9 +76,9 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("YearsAndSteps", text);
+    handle.Unexpected("yearsandsteps", text);
   if (!aat.ReadFromFile(infile, TimeInfo))
-    handle.Message("Wrong format for yearsandsteps");
+    handle.Message("Error in formatedchatprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
@@ -120,4 +120,6 @@ FormatedCHatPrinter::~FormatedCHatPrinter() {
   int i = 0;
   for (i = 0; i < fleetnames.Size(); i++)
     delete[] fleetnames[i];
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
 }

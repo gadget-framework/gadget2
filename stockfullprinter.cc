@@ -62,9 +62,9 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("YearsAndSteps", text);
+    handle.Unexpected("yearsandsteps", text);
   if (!aat.ReadFromFile(infile, TimeInfo))
-    handle.Message("Wrong format for yearsandsteps");
+    handle.Message("Error in stockfullprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
@@ -80,6 +80,10 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
   outfile << "; Full output file for the stock " << stockname
     << "\n; year-step-area-age-length-number-mean weight\n";
   outfile.flush();
+
+  //areaindex is not required - free up memory
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
 }
 
 StockFullPrinter::~StockFullPrinter() {
@@ -87,6 +91,7 @@ StockFullPrinter::~StockFullPrinter() {
   outfile.clear();
   delete aggregator;
   delete LgrpDiv;
+  delete[] stockname;
 }
 
 void StockFullPrinter::SetStock(Stockptrvector& stockvec) {

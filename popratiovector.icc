@@ -1,17 +1,15 @@
 #include "popratiovector.h"
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 popratio& popratiovector::operator [] (int pos) {
-  assert(0 <= pos && pos < size);
-  return(v[pos]);
+  return v[pos];
 }
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 const popratio& popratiovector::operator [] (int pos) const {
-  assert(0 <= pos && pos < size);
-  return(v[pos]);
+  return v[pos];
 }

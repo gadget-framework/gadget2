@@ -3,7 +3,7 @@
 #include "commentstream.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "timevariablevector.icc"
 #endif
 
@@ -25,6 +25,13 @@ void TimeVariablevector::resize(int addsize, Keeper* const keeper) {
     delete[] v;
     v = vnew;
     size += addsize;
+  }
+}
+
+TimeVariablevector::~TimeVariablevector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
   }
 }
 

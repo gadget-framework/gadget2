@@ -29,16 +29,9 @@ public:
   void SetLikely(Likelihoodptrvector& likvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
-  const TimeClass* Time;
-  const AreaClass* Area;
-  intvector areas;
-  intvector timevec;
-  charptrvector catchnames;
   ofstream catchFile;
   ofstream surveyFile;
   ofstream stomachFile;
-  CatchDistributionptrvector catches;
-  int ageagg;
   int printCatch;
   int printSurvey;
   int printStomach;

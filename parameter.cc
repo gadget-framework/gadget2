@@ -1,13 +1,17 @@
 #include "parameter.h"
 #include "gadget.h"
 
+#ifndef GADGET_INLINE
+#include "parameter.icc"
+#endif
+
 Parameter::Parameter(char* value) {
   if (isLegalParameter(value)) {
     name = new char[strlen(value) + 1];
     strcpy(name, value);
   } else {
     cerr << "Illegal parameter name - " << value << endl;
-    exit(-1);
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -56,9 +60,9 @@ Parameter::~Parameter() {
 
 int Parameter::operator == (const Parameter& p) const {
   #ifdef PARAMETERS_CASE_SENSITIVE
-    return(strcmp(name, p.name) == 0);
+    return (strcmp(name, p.name) == 0);
   #else
-    return(strcasecmp(name, p.name) == 0);
+    return (strcasecmp(name, p.name) == 0);
   #endif
 }
 
@@ -91,7 +95,7 @@ int Parameter::legalchar(int c) {
   if (isalnum(c))
     return 1;
 
-  switch (c) {
+  switch(c) {
     case '_':
     case '.':
       //Valid characters in addition to numbers and letters
@@ -171,7 +175,7 @@ istream& operator >> (istream& in, Parameter& p) {
 
   char* tempString = new char[MaxStrLength];
   in >> ws;
-  while (p.legalchar(in.peek()) && i<MaxStrLength - 1) {
+  while (p.legalchar(in.peek()) && i < (MaxStrLength - 1)) {
     in.get(c);
     tempString[i] = c;
     i++;
@@ -225,13 +229,6 @@ Parametervector::Parametervector(const Parametervector& initial) {
     v = 0;
 }
 
-Parametervector::~Parametervector() {
-  if (v != 0) {
-    delete[] v;
-    v = 0;
-  }
-}
-
 //The function resize add addsize elements to a Parametervector and fills it vith value.
 void Parametervector::resize(int addsize, Parameter& value) {
   int oldsize = size;
@@ -279,16 +276,6 @@ int Parametervector::findIndex(Parameter& p) {
   return -1;
 }
 
-Parameter& Parametervector::operator [] (int pos) {
-  assert(0 <= pos && pos < size);
-  return(v[pos]);
-}
-
-Parameter const& Parametervector::operator [] (int pos) const {
-  assert(0 <= pos && pos < size);
-  return(v[pos]);
-}
-
 CommentStream& operator >> (CommentStream& infile, Parametervector& paramVec) {
   if (infile.fail()) {
     infile.makebad();
@@ -312,7 +299,7 @@ int Parametervector::ReadVectorInLine(CommentStream& infile) {
   infile.getline(line, MaxStrLength);
   if (infile.fail())
     return 0;
-  istrstream istr(line);
+  istringstream istr(line);
   istr >> ws;
   int i = 0;
   while (!istr.eof()) {
@@ -348,4 +335,3 @@ Parametervector& Parametervector::operator = (const Parametervector& paramv) {
     v = 0;
   return *this;
 }
-

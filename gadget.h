@@ -1,28 +1,19 @@
 #ifndef gadget_h
 #define gadget_h
 
-/* A list of the standard header files that are needed */
+/* A list of the standard header files that are needed for Gadget */
+/* Older compilers need these to be declared in the old format    */
 #include <cassert>
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
-#include <string>
+#include <cstring>
+#include <iostream>
 #include <fstream>
-#include <strstream>
+#include <sstream>
 #include <iomanip>
 #include <cmath>
 #include <ctime>
-/* older compilers need these to be declared in the old format
-#include <assert.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fstream.h>
-#include <strstream.h>
-#include <iomanip.h>
-#include <math.h>
-#include <time.h>*/
 #include <signal.h>
 #include <unistd.h>
 #include <sys/utsname.h>
@@ -63,12 +54,12 @@ const int smallprecision = 4;
 const int printprecision = 6;
 const int largeprecision = 8;
 const int fullprecision = 15;
-const int smallwidth = 4;
+const int smallwidth = 6;
 const int printwidth = 8;
 const int largewidth = 10;
 const int fullwidth = 12;
 
 /* Update the following line each time upgrades are implemented */
-#define gadget_version "2.0.03-BETA"
+#define gadget_version "2.0.03"
 
 #endif

@@ -1,7 +1,7 @@
 #include "variableinfoptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "variableinfoptrvector.icc"
 #endif
 
@@ -33,6 +33,13 @@ VariableInfoptrvector::VariableInfoptrvector(const VariableInfoptrvector& initia
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+VariableInfoptrvector::~VariableInfoptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a VariableInfoptrvector and fills it vith value.

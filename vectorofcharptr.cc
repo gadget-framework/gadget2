@@ -51,6 +51,19 @@ vectorofcharptr::vectorofcharptr(const vectorofcharptr& initial) {
     v = 0;
 }
 
+vectorofcharptr::~vectorofcharptr() {
+  int i;
+  if (v != 0) {
+    for (i = 0; i < size; i++) {
+      if (v[i] != NULL) {
+        delete[] v[i];
+        v[i] = NULL;
+      }
+    }
+    delete[] v;
+  }
+}
+
 void vectorofcharptr::resize(int addsize, char* value) {
   int oldsize = size;
   this->resize(addsize);
@@ -126,5 +139,5 @@ void vectorofcharptr::Delete(int pos) {
 }
 
 char* const& vectorofcharptr::operator [] (int pos) const {
-  return(v[pos]);
+  return v[pos];
 }

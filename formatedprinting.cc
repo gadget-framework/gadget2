@@ -679,7 +679,7 @@ ostream& printW(ostream& o, const Agebandmatrix& a, const intvector* ages, int i
  *      int indent      :number of spaces to indent (default = 0)
  *
  *  Output format:
- *  "<d_0.0> <d_0.1> ... <d_0.n>"
+ *      "<d_0.0> <d_0.1> ... <d_0.n>"
  *      "<d_1.0> <d_1.1> ... <d_1.n>"
  *      " ...     ...         ...   "
  *      "<d_m.0> <d_m.1> ... <d_m.n>"
@@ -716,7 +716,7 @@ ostream& printNorW(ostream& o, const Agebandmatrix& a, int PrintN,
         o << a[i][j].W;
       o << sep;
     }
-    if (a.Maxlength(i)<maxcol) {
+    if (a.Maxlength(i) < maxcol) {
       for (j = a.Maxlength(i); j < maxcol; j++) {
         o.precision(printprecision);
         o.width(largewidth);

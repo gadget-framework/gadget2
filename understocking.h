@@ -16,8 +16,7 @@ public:
   virtual ~UnderStocking();
   virtual void AddToLikelihood(const TimeClass* const);
   virtual void Reset(const Keeper* const keeper);
-  virtual void Print(ofstream&) const;
-  virtual void LikelihoodPrint(ofstream&) const {};
+  virtual void Print(ofstream&) const {};
   void SetFleets(Fleetptrvector&);
 private:
   charptrvector fleetnames;

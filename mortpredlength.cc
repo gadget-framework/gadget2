@@ -47,8 +47,9 @@ MortPredLength::MortPredLength(CommentStream& infile, const char* givenname, con
       q2.resize(1, keeper);
       infile >> q2[i];
       q2[i].Inform(keeper);
-      ReadMatrix(infile, effort); //read effort from file
     }
+    //JMB - taken out of for loop - only read matrix effort once!
+    ReadMatrix(infile, effort); //read effort from file
     calcFlevel();
 
   } else { //f_lev is read from file, q1, q2 and effort not used
@@ -195,6 +196,18 @@ void MortPredLength::calcCHat(int area, const TimeClass* const TimeInfo) {
       } //f_lev
     } //Preys(prey)->IsInArea(area)
   } //prey
+}
+
+const double MortPredLength::consumedBiomass(int prey_nr, int area_nr) const {
+
+  double tons = 0.0;
+  int age, len;
+  const Agebandmatrix& mean = ((MortPrey*)Preys(prey_nr))->getMeanN(area_nr);
+  for (age = mean.Minage(); age <= mean.Maxage(); age++)
+    for (len = mean.Minlength(age); len < mean.Maxlength(age); len++)
+      tons += c_hat[area_nr][prey_nr][age][len] * mean[age][len].W;
+
+  return tons;
 }
 
 void MortPredLength::Print(ofstream& outfile) const {

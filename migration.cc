@@ -39,7 +39,7 @@ CommentStream& operator >> (CommentStream& infile, VariableInfo& varinfo) {
   strncpy(line, "", MaxStrLength);
   infile.getline(line, MaxStrLength);
 
-  istrstream istr(line);
+  istringstream istr(line);
   CommentStream comm(istr);
 
   Formulavector tmp(10);
@@ -223,9 +223,11 @@ Migration::~Migration() {
     delete CalcMigList[i];
   for (i = 0; i < OptInfo.Size(); i++)
     delete OptInfo[i];
+  for (i = 0; i < OptVar.Size(); i++)
+    delete OptVar[i];
 }
 
-const doublematrix& Migration::Migrationmatrix (const TimeClass* const TimeInfo, int age) {
+const doublematrix& Migration::Migrationmatrix(const TimeClass* const TimeInfo, int age) {
   if (AgeDepMigration) {
     if (age >= 0 && age < AgeNr.Size())
       if (AgeNr[age] >= 0)

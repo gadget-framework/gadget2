@@ -1,7 +1,7 @@
 #include "stockptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "stockptrvector.icc"
 #endif
 
@@ -32,6 +32,13 @@ Stockptrvector::Stockptrvector(const Stockptrvector& initial) {
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+Stockptrvector::~Stockptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a Stockptrvector and fills it vith value.
@@ -71,4 +78,27 @@ void Stockptrvector::Delete(int pos) {
   delete[] v;
   v = vnew;
   size--;
+}
+
+Stockptrvector& Stockptrvector::operator = (const Stockptrvector& d) {
+  if (this == &d)
+    return(*this);
+  int i;
+  if (size == d.size) {
+    for (i = 0; i < size; i++)
+      v[i] = d[i];
+    return(*this);
+  }
+  if (v != 0) {
+    delete [] v;
+    v = 0;
+  }
+  size = d.size;
+  if (size > 0) {
+    v = new Stock*[size];
+    for (i = 0; i < size; i++)
+      v[i] = d.v[i];
+  } else
+    v = 0;
+  return *this;
 }

@@ -1,7 +1,7 @@
 #include "addr_keepvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "addr_keepvector.icc"
 #endif
 
@@ -33,6 +33,13 @@ addr_keepvector::addr_keepvector(const addr_keepvector& initial) {
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+addr_keepvector::~addr_keepvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a addr_keepvector and fills it vith value.

@@ -9,6 +9,11 @@ void ErrorHandler::Message(const char* msg) const {
   exit(EXIT_FAILURE);
 }
 
+void ErrorHandler::Message(const char* msg1, const char* msg2) const {
+  cerr << "Error in file " << files.SendTop() << ":\n" << msg1 << sep << msg2 << endl;
+  exit(EXIT_FAILURE);
+}
+
 void ErrorHandler::Unexpected(const char* exp, const char* unexp) const {
   cerr << "Error in file " << files.SendTop() << ":\n"
     << "Expected " << exp << " but found instead " << unexp << endl;
@@ -51,9 +56,14 @@ void ErrorHandler::UndefinedArea(int area) const {
 }
 
 void CheckIfFailure(ios& infile, const char* text) {
+
   if (infile.fail()) {
     ErrorHandler handle;
-    handle.Message("Unable to open datafile");
+    char errormsg[MaxStrLength];
+    strncpy(errormsg, "", MaxStrLength);
+    strcpy(errormsg, "Unable to open datafile ");
+    strcat(errormsg, text);
+    handle.Message(errormsg);
   }
   return;
 }

@@ -13,7 +13,7 @@ void Formula::setValue(double initValue) {
 }
 
 int Formula::isMultipleValue() {
-  return(multipliers.Size() > 0);
+  return (multipliers.Size() > 0);
 }
 
 CommentStream& operator>>(CommentStream& infile, Formula& F) {
@@ -90,14 +90,15 @@ CommentStream& operator>>(CommentStream& infile, Formula& F) {
 void Formula::Inform(Keeper* keeper) {
   //let keeper know of the marked variables
   int i;
+
   if (inattr.Size() > 0)
     keeper->KeepVariable(init, inattr);
   else {
     for (i = 0; i < multipliers.Size(); i++) {
-      ostrstream o;
-      o << "*" << i + 1 << ends;
+      ostringstream ostr;
+      ostr << "*" << i + 1 << ends;
       assert(i < attributes.Size());
-      keeper->AddString(o.str());
+      keeper->AddString(ostr.str());
       keeper->KeepVariable(multipliers[i], attributes[i]);
       keeper->ClearLast();
     }

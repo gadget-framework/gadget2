@@ -9,11 +9,11 @@ public:
   agebandmatrixptrvector(int sz);
   agebandmatrixptrvector(int sz, Agebandmatrixvector* initial);
   agebandmatrixptrvector(const agebandmatrixptrvector& initial);
-  ~agebandmatrixptrvector() { delete[] v; };
+  ~agebandmatrixptrvector();
   void resize(int add, Agebandmatrixvector* value);
   void resize(int add);
   void Delete(int pos);
-  int Size () const { return(size); };
+  int Size() const { return size; };
   Agebandmatrixvector*& operator [] (int pos);
   Agebandmatrixvector* const& operator [] (int pos) const;
 protected:
@@ -21,7 +21,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "agebandmatrixptrvector.icc"
 #endif
 

@@ -2,9 +2,7 @@
 #include "areatime.h"
 #include "predator.h"
 #include "prey.h"
-#include "conversion.h"
 #include "predatoraggregator.h"
-#include "bandmatrixptrvector.h"
 #include "readfunc.h"
 #include "readword.h"
 #include "readaggregation.h"
@@ -15,8 +13,8 @@
 
 StomachContent::StomachContent(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
-  Keeper* const keeper, double likweight, const char* sname)
-  : Likelihood(STOMACHCONTENTLIKELIHOOD, likweight), name(strdup(sname)) {
+  Keeper* const keeper, double likweight, const char* name)
+  : Likelihood(STOMACHCONTENTLIKELIHOOD, likweight) {
 
   ErrorHandler handle;
   char datafilename[MaxStrLength];
@@ -24,23 +22,44 @@ StomachContent::StomachContent(CommentStream& infile,
   strncpy(datafilename, "", MaxStrLength);
   strncpy(numfilename, "", MaxStrLength);
 
-  ReadWordAndVariable(infile, "functionnumber", functionnumber);
+  stomachname = new char[strlen(name) + 1];
+  strcpy(stomachname, name);
+
+  functionname = new char[MaxStrLength];
+  strncpy(functionname, "", MaxStrLength);
+  ReadWordAndValue(infile, "function", functionname);
   ReadWordAndValue(infile, "datafile", datafilename);
+
+  if (strcasecmp(functionname, "scnumbers") == 0)
+    functionnumber = 1;
+  else if (strcasecmp(functionname, "scratios") == 0)
+    functionnumber = 2;
+  else if (strcasecmp(functionname, "scamounts") == 0)
+    functionnumber = 3;
+  else
+    handle.Message("Error in stomachcontent - unrecognised function", functionname);
+
   switch(functionnumber) {
     case 1:
-      StomCont = new SCNumbers(infile, Area, TimeInfo, keeper, name, datafilename, numfilename);
+      StomCont = new SCNumbers(infile, Area, TimeInfo, keeper, datafilename, numfilename, stomachname);
       break;
     case 2:
       ReadWordAndValue(infile, "numberfile", numfilename);
-      StomCont = new SCRatios(infile, Area, TimeInfo, keeper, name, datafilename, numfilename);
+      StomCont = new SCRatios(infile, Area, TimeInfo, keeper, datafilename, numfilename, stomachname);
       break;
     case 3:
       ReadWordAndValue(infile, "numberfile", numfilename);
-      StomCont = new SCAmounts(infile, Area, TimeInfo, keeper, name, datafilename, numfilename);
+      StomCont = new SCAmounts(infile, Area, TimeInfo, keeper, datafilename, numfilename, stomachname);
       break;
     default:
       handle.Message("Unrecognized functionnumber");
   }
+}
+
+StomachContent::~StomachContent() {
+  delete StomCont;
+  delete[] stomachname;
+  delete[] functionname;
 }
 
 void StomachContent::AddToLikelihood(const TimeClass* const TimeInfo) {
@@ -48,14 +67,14 @@ void StomachContent::AddToLikelihood(const TimeClass* const TimeInfo) {
 }
 
 void StomachContent::Print(ofstream& outfile) const {
-  outfile << "\nStomach Content\nlikelihood " << likelihood
-    << "\nfunction number " << functionnumber << endl;
+  outfile << "\nStomach Content " << stomachname << "\nlikelihood " << likelihood
+    << "\nfunction " << functionname << endl;
   StomCont->Print(outfile);
 }
 
 SC::SC(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper,
-  const char* sname, const char* datafilename) : name(strdup(sname)) {
+  const char* datafilename, const char* name) {
 
   ErrorHandler handle;
   int i, j;
@@ -64,6 +83,13 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
   int numarea = 0;
   int numpred = 0;
   int numprey = 0;
+
+  aggregator = 0;
+  preyLgrpDiv = 0;
+  predLgrpDiv = 0;
+
+  scname = new char[strlen(name) + 1];
+  strcpy(scname, name);
 
   char aggfilename[MaxStrLength];
   strncpy(aggfilename, "", MaxStrLength);
@@ -179,7 +205,7 @@ double SC::Likelihood(const TimeClass* const TimeInfo) {
 
   //Get the consumption from aggregator, indexed the same way as in stomachcontent
   //While we're at it, get the sum of each row, for later scaling.
-  doublematrix sum(areas.Nrow(), pred_size, 0);
+  doublematrix sum(areas.Nrow(), pred_size, 0.0);
   for (i = 0; i < preynames.Nrow(); i++) {
     Aggregate(i);
     const bandmatrixvector* cons = &aggregator[i]->ReturnSum();
@@ -211,8 +237,8 @@ double SC::Likelihood(const TimeClass* const TimeInfo) {
 
 SCNumbers::SCNumbers(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper,
-  const char* nam, const char* datafilename, const char* numfilename)
-  : SC(infile, Area, TimeInfo, keeper, nam, datafilename) {
+  const char* datafilename, const char* numfilename, const char* name)
+  : SC(infile, Area, TimeInfo, keeper, datafilename, name) {
 
   ErrorHandler handle;
   ifstream datafile;
@@ -230,8 +256,8 @@ SCNumbers::SCNumbers(CommentStream& infile, const AreaClass* const Area,
 
 SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper,
-  const char* nam, const char* datafilename, const char* numfilename)
-  : SC(infile, Area, TimeInfo, keeper, nam, datafilename) {
+  const char* datafilename, const char* numfilename, const char* name)
+  : SC(infile, Area, TimeInfo, keeper, datafilename, name) {
 
   ErrorHandler handle;
   ifstream datafile;
@@ -290,7 +316,7 @@ void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass*
   }
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 6)))
+  if (CountColumns(infile) != 6)
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
@@ -391,7 +417,7 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
   }
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 7)))
+  if (CountColumns(infile) != 7)
     handle.Message("Wrong number of columns in inputfile - should be 7");
 
   while (!infile.eof()) {
@@ -496,7 +522,7 @@ void SCAmounts::ReadStomachSampleContent(CommentStream& infile, const TimeClass*
   }
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 5)))
+  if (CountColumns(infile) != 5)
     handle.Message("Wrong number of columns in inputfile - should be 5");
 
   while (!infile.eof()) {
@@ -549,8 +575,28 @@ SC::~SC() {
 
   for (i = 0; i < preynames.Nrow(); i++) {
     delete aggregator[i];
+    delete preyLgrpDiv[i];
     for (j = 0; j < preynames[i].Size(); j++)
       delete[] preynames[i][j];
+  }
+  delete[] scname;
+
+  if (aggregator != 0) {
+    delete[] aggregator;
+    aggregator = 0;
+  }
+  if (preyLgrpDiv != 0) {
+    delete[] preyLgrpDiv;
+    preyLgrpDiv = 0;
+  }
+
+  if (age_pred == 0)
+    for (i = 0; i < preynames.Nrow(); i++)
+      delete predLgrpDiv[i];
+
+  if (predLgrpDiv != 0) {
+    delete[] predLgrpDiv;
+    predLgrpDiv = 0;
   }
 
   for (i = 0; i < predatornames.Size(); i++)
@@ -564,10 +610,10 @@ SC::~SC() {
 }
 
 void SC::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys) {
-  int i, j, k;
-  int found = 0;
+  int i, j, k, found;
   Predatorptrvector predators;
   aggregator = new PredatorAggregator*[preynames.Nrow()];
+
   if (age_pred == 0) { //the test is done in aggregator for age structured predators
     for (i = 0; i < predatornames.Size(); i++) {
       found = 0;
@@ -585,6 +631,10 @@ void SC::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys
     }
   }
 
+  preyLgrpDiv = new LengthGroupDivision*[preynames.Nrow()];
+  if (age_pred == 0)
+    predLgrpDiv = new LengthGroupDivision*[preynames.Nrow()];
+
   for (i = 0; i < preynames.Nrow(); i++) {
     Preyptrvector preys;
     for (j = 0; j < preynames[i].Size(); j++) {
@@ -601,14 +651,13 @@ void SC::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys
         exit(EXIT_FAILURE);
       }
     }
-    LengthGroupDivision* preyLgrpDiv = new LengthGroupDivision(preylengths[i]);
+
+    preyLgrpDiv[i] = new LengthGroupDivision(preylengths[i]);
     if (age_pred == 0) { //length structured predator
-      LengthGroupDivision* predLgrpDiv = new LengthGroupDivision(predatorlengths);
-      aggregator[i] =
-        new PredatorAggregator(predators, preys, areas, predLgrpDiv, preyLgrpDiv);
+      predLgrpDiv[i] = new LengthGroupDivision(predatorlengths);
+      aggregator[i] = new PredatorAggregator(predators, preys, areas, predLgrpDiv[i], preyLgrpDiv[i]);
     } else
-      aggregator[i] =
-        new PredatorAggregator(predatornames, preys, areas, predatorages, preyLgrpDiv);
+      aggregator[i] = new PredatorAggregator(predatornames, preys, areas, predatorages, preyLgrpDiv[i]);
   }
 }
 
@@ -642,9 +691,9 @@ void SC::Print(ofstream& outfile) const {
     outfile << endl;
   }
 
-  outfile << "\tStomach Content Data:\n";
+  outfile << "\tStomach Content Data:";
   for (y = 0; y < stomachcontent.Nrow(); y++) {
-    outfile << "\trow " << y;
+    outfile << "\n\trow " << y;
     for (ar = 0; ar < stomachcontent[y].Size(); ar++) {
       outfile << "\n\tareas" << sep << ar << "\n\t\t";
       for (i = 0; i < stomachcontent[y][ar]->Nrow(); i++) {
@@ -653,7 +702,7 @@ void SC::Print(ofstream& outfile) const {
           outfile.precision(smallprecision);
           outfile << (*stomachcontent[y][ar])[i][j] << sep;
         }
-      outfile << "\n\t\t";
+        outfile << "\n\t\t";
       }
     }
   }
@@ -680,7 +729,7 @@ void SC::PrintLikelihoodOnStep(ostream& outfile, int time,
           outfile.precision(lowprecision);
           if ((*modelConsumption[time][a])[pd][py] > 0 &&
               (*stomachcontent[time][a])[pd][py] > 0)
-            outfile << log ((*stomachcontent[time][a])[pd][py] /
+            outfile << log((*stomachcontent[time][a])[pd][py] /
               (*modelConsumption[time][a])[pd][py]);
           else
             outfile << "        -";
@@ -725,7 +774,7 @@ void SC::PrintLikelihoodOnStep(ostream& outfile, int time,
         outfile << endl;
       }
     }
-    outfile << "\nyear "<<TimeInfo.CurrentYear() << " step "
+    outfile << "\nyear " << TimeInfo.CurrentYear() << " step "
       << TimeInfo.CurrentStep() << "\nStomach content, model.\n";
     for (a = 0; a < modelConsumption[time].Size(); a++) {
       for (pd = 0; pd < modelConsumption[time][a]->Nrow(); pd++) {
@@ -754,12 +803,10 @@ SCAmounts::~SCAmounts() {
   }
 }
 
-double SCAmounts::CalculateLikelihood(doublematrixptrvector& consumption,
-  doublematrix& sum) {
-
+double SCAmounts::CalculateLikelihood(doublematrixptrvector& consumption, doublematrix& sum) {
   int a, k, preyl;
-  double lik = 0.0;
-  double tmplik = 0.0;
+  double tmplik, lik = 0.0;
+
   for (a = 0; a < consumption.Size(); a++) {
     for (k = 0; k < consumption[a]->Nrow(); k++) {
       tmplik = 0.0;
@@ -777,7 +824,6 @@ double SCAmounts::CalculateLikelihood(doublematrixptrvector& consumption,
 }
 
 void SCAmounts::PrintLikelihood(ofstream& out, const TimeClass& timeInfo) {
-
   if (!AAT.AtCurrentTime(&timeInfo))
     return;
 
@@ -788,7 +834,7 @@ void SCAmounts::PrintLikelihood(ofstream& out, const TimeClass& timeInfo) {
   int time = timeindex - 1;
 
   out << "\nTime:    Year " << timeInfo.CurrentYear()
-    << " Step " << timeInfo.CurrentStep() << "\nName:    " << name << endl;
+    << " Step " << timeInfo.CurrentStep() << "\nName:    " << scname << endl;
   for (a = 0; a < modelConsumption[time].Size(); a++) {
     out << "Area:    " << a << "\nObserved:\n";
     for (pd = 0; pd < stomachcontent[time][a]->Nrow(); pd++) {
@@ -832,18 +878,19 @@ void SCAmounts::PrintLikelihoodHeader(ofstream& out) {
   int i, j;
 
   out << "Likelihood:       SCAmounts\nFunction:         -\n"
-    << "Calculated every: step\nFilter:           default\nPred by:          ";
+    << "Calculated every: step\nFilter:           default\nPredation by:     ";
 
   if (age_pred)
     out << "age\n";
   else
     out << "length\n";
 
-  out << "Name:             " << name << "\nPreys:           ";
+  out << "Name:             " << scname << endl;
   for (i = 0; i < preynames.Nrow(); i++) {
+    out << "Preys:           ";
     for (j = 0; j < preynames[i].Size(); j++)
-      out<< sep << preynames[i][j];
-    out << "\nLengths:         ";
+      out << sep << preynames[i][j];
+    out << " lengths:";
     for (j = 0; j < preylengths[i].Size(); j++)
       out << sep << preylengths[i][j];
     out << endl;
@@ -874,7 +921,7 @@ void SCRatios::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector&
   for (i = 0; i < stomachcontent.Nrow(); i++)
     for (j = 0; j < stomachcontent.Ncol(i); j++)
       for (k = 0; k < stomachcontent[i][j]->Nrow(); k++) {
-        sum = 0;
+        sum = 0.0;
         for (l = 0; l < stomachcontent[i][j]->Ncol(k); l++)
           sum += (*stomachcontent[i][j])[k][l];
 
@@ -913,14 +960,12 @@ double SCRatios::CalculateLikelihood(doublematrixptrvector& consumption, doublem
 
 //This code will probably be simplified a bit if the Multinomial
 //class is changed to take integers.  (Factorial replaced by the gamma function)
-double SCNumbers::CalculateLikelihood(doublematrixptrvector& consumption,
-  doublematrix& sum) {
-
+double SCNumbers::CalculateLikelihood(doublematrixptrvector& consumption, doublematrix& sum) {
   Multinomial MN(minp);
   int a, predl, preyl;
   for (a = 0; a < consumption.Size(); a++) {
     for (predl = 0; predl < consumption[a]->Nrow(); predl++) {
-      if (sum[a][predl] != 0) {
+      if (!(iszero(sum[a][predl]))) {
         doublevector* numbers = new doublevector(consumption[a]->Ncol(), 0.0);
         for (preyl = 0; preyl < consumption[a]->Ncol(); preyl++)
           (*numbers)[preyl] = (*stomachcontent[timeindex][a])[predl][preyl];
@@ -954,7 +999,7 @@ void SC::printHeader(ofstream& outfile, const PrintInfo& print) {
     else
       outfile << "stomachcontent by prey-length and predator-age\n";
 
-    outfile << "\nname " << name << "\npreys";
+    outfile << "\nname " << scname << "\npreys";
     for (i = 0; i < preynames.Nrow(); i++) {
       outfile << "\t\t";
       for (j = 0; j < preynames[i].Size(); j++)

@@ -10,7 +10,7 @@ public:
     const LengthGroupDivision* const GivenLgrpDiv,
     double Multiplicative);
   virtual ~LengthPredator();
-  virtual void Sum (const popinfovector& NumberInarea, int area);
+  virtual void Sum(const popinfovector& NumberInarea, int area);
   double Scaler(int area) const { return scaler[AreaNr[area]]; };
   virtual double getFlevel(int area, const TimeClass* const TimeInfo)
     { return -1.0; }; //meaningfull only for mortality model

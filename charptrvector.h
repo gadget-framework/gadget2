@@ -7,11 +7,11 @@ public:
   charptrvector(int sz);
   charptrvector(int sz, char* initial);
   charptrvector(const charptrvector& initial);
-  ~charptrvector() { delete[] v; };
+  ~charptrvector();
   void resize(int add, char* value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   char*& operator [] (int pos);
   char* const& operator [] (int pos) const;
 protected:
@@ -19,7 +19,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "charptrvector.icc"
 #endif
 

@@ -18,11 +18,9 @@ public:
     const TimeClass* const TimeInfo, const Keeper* const keeper, double w);
   virtual ~BoundLikelihood();
   void Reset(const Keeper* const keeper);
-  //virtual void Reset(const Keeper* const keeper) {};
   virtual void AddToLikelihood(const TimeClass* const TimeInfo) {};
+  virtual void Print(ofstream&) const {};
   virtual void AddToLikelihoodTimeAndKeeper(const TimeClass* const TimeInfo, Keeper* const keeper);
-  virtual void LikelihoodPrint(ofstream& outfile) const;
-  virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrintKeeper(ofstream& outfile, const Keeper* const keeper) const;
 protected:
   intvector switchnr;

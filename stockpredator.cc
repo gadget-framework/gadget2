@@ -15,7 +15,6 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv),
   MaxconByLength(areas.Size(), GivenLgrpDiv->NoLengthGroups(), 0) {
 
-  //NumberOfMaxConsumptionConstants = 4;
   ErrorHandler handle;
   keeper->AddString("predator");
   char text[MaxStrLength];
@@ -25,19 +24,19 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   if (!(strcasecmp(text, "suitability") == 0))
     handle.Unexpected("suitability", text);
 
-  this->ReadSuitabilityMatrix(infile, "Maxconsumption", TimeInfo, keeper);
+  this->ReadSuitabilityMatrix(infile, "maxconsumption", TimeInfo, keeper);
 
   keeper->AddString("maxconsumption");
   maxConsumption.resize(4, keeper);  //Maxnumber of constants is 4
   if (!(infile >> maxConsumption))
-    handle.Message("Incorrect format of growthPar vector");
+    handle.Message("Incorrect format of maxconsumption vector");
   maxConsumption.Inform(keeper);
 
   infile >> text;
   keeper->ClearLastAddString("halffeedingvalue");
   if (strcasecmp(text, "halffeedingvalue") == 0) {
     if (!(infile >> halfFeedingValue))
-      handle.Message("Could not read HalfFeedingValue in stockpredator");
+      handle.Message("Could not read halffeedingvalue in stockpredator");
     halfFeedingValue.Inform(keeper);
   } else
     handle.Unexpected("halffeedingvalue", text);
@@ -47,12 +46,15 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   //Everything read from infile.
   intvector size(maxage - minage + 1, GivenLgrpDiv->NoLengthGroups());
   intvector minlength(maxage - minage + 1, 0);
-  Alkeys.resize(areas.Size(), minage, minlength, size);
+
+  int numlength = LgrpDiv->NoLengthGroups();
+  int numarea = areas.Size();
+  Alkeys.resize(numarea, minage, minlength, size);
   bandmatrix bm(minlength, size, minage); //default initialization to 0.
-  Alprop.resize(areas.Size(), bm);
-  Phi.AddRows(areas.Size(), LgrpDiv->NoLengthGroups(), 0.0);
-  fphi.AddRows(areas.Size(), LgrpDiv->NoLengthGroups(), 0.0);
-  fphI.AddRows(areas.Size(), LgrpDiv->NoLengthGroups(), 0.0);
+  Alprop.resize(numarea, bm);
+  Phi.AddRows(numarea, numlength, 0.0);
+  fphi.AddRows(numarea, numlength, 0.0);
+  fphI.AddRows(numarea, numlength, 0.0);
   //Predator::SetPrey will call ResizeObjects.
 }
 

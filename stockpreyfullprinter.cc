@@ -65,9 +65,9 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("YearsAndSteps", text);
+    handle.Unexpected("yearsandsteps", text);
   if (!aat.ReadFromFile(infile, TimeInfo))
-    handle.Message("Wrong format for yearsandsteps");
+    handle.Message("Error in stockpreyfullprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
@@ -84,6 +84,10 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
     << "\n; year-step-area-age-length-number consumed-biomass consumed"
     << "-number consumed by length-biomass consumed by length\n";
   outfile.flush();
+
+  //areaindex is not required - free up memory
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
 }
 
 StockPreyFullPrinter::~StockPreyFullPrinter() {

@@ -1,7 +1,7 @@
 #include "charptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "charptrvector.icc"
 #endif
 
@@ -33,6 +33,13 @@ charptrvector::charptrvector(const charptrvector& initial) {
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+charptrvector::~charptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a charptrvector and fills it vith value.

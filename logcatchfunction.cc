@@ -14,6 +14,7 @@ LogCatches::LogCatches(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
   double likweight) : Likelihood(LOGCATCHLIKELIHOOD, likweight) {
 
+  lgrpDiv = NULL;
   ErrorHandler handle;
   int i, j;
   char text[MaxStrLength];
@@ -40,14 +41,26 @@ LogCatches::LogCatches(CommentStream& infile,
     ReadWordAndValue(infile, "weightfile", weightfilename);
   }
 
-  ReadWordAndVariable(infile, "functionnumber", functionnumber);
+  functionname = new char[MaxStrLength];
+  strncpy(functionname, "", MaxStrLength);
+  ReadWordAndValue(infile, "function", functionname);
   ReadWordAndVariable(infile, "overconsumption", overconsumption);
   ReadWordAndVariable(infile, "minimumprobability", minp);
   ReadWordAndVariable(infile, "aggregation_level", agg_lev);
+
+  if (overconsumption != 0 && overconsumption != 1)
+    handle.Message("Error in logcatch - overconsumption must be 0 or 1");
+  if (agg_lev != 0 && agg_lev != 1)
+    handle.Message("Error in logcatch - agg_lev must be 0 or 1");
   if (minp <= 0) {
     handle.Warning("Minimumprobability should be a positive integer - set to default value 1");
     minp = 1;
   }
+
+  if (strcasecmp(functionname, "loglikelihood") == 0)
+    functionnumber = 1;
+  else
+    handle.Message("Error in logcatch - unrecognised function", functionname);
 
   //Read in area aggregation from file
   ReadWordAndValue(infile, "areaaggfile", aggfilename);
@@ -193,7 +206,7 @@ void LogCatches::ReadLogCatchData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 6)))
+  if (CountColumns(infile) != 6)
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
@@ -284,7 +297,7 @@ void LogCatches::ReadLogWeightsData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 4)))
+  if (CountColumns(infile) != 4)
     handle.Message("Wrong number of columns in inputfile - should be 4");
 
   while (!infile.eof()) {
@@ -337,6 +350,11 @@ LogCatches::~LogCatches() {
       delete Proportions[i][j];  //kgf 23/9 98
     }
   delete aggregator;
+  delete[] functionname;
+  if (lgrpDiv != NULL) {
+    delete lgrpDiv;
+    lgrpDiv = NULL;
+  }
 }
 
 void LogCatches::Reset(const Keeper* const keeper) {
@@ -344,14 +362,11 @@ void LogCatches::Reset(const Keeper* const keeper) {
   timeindex = 0;
 }
 
-void LogCatches::Print(ofstream& outfile) const {
-}
-
 void LogCatches::LikelihoodPrint(ofstream& outfile) const {
   int i, j, a, y;
 
   outfile << "\nLogCatch Likelihood\n\tlikelihood " << likelihood
-    << "\n\tfunction number " << functionnumber << endl << TAB;
+    << "\n\tfunction " << functionname << endl << TAB;
   Likelihood::LikelihoodPrint(outfile);
   outfile << "\tStocknames: " << sep;
   for (i = 0; i < stocknames.Size(); i++)
@@ -453,21 +468,20 @@ void LogCatches::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stoc
       exit(EXIT_FAILURE);
     }
   }
-  LengthGroupDivision* LgrpDiv = new LengthGroupDivision(lengths);
-  aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
+  lgrpDiv = new LengthGroupDivision(lengths);
+  aggregator = new FleetPreyAggregator(fleets, stocks, lgrpDiv, areas, ages, overconsumption);
 }
 
 void LogCatches::AddToLikelihood(const TimeClass* const TimeInfo) {
   int dummy = 1;
   if (AAT.AtCurrentTime(TimeInfo)) {
     switch(functionnumber) {
-      case 2:
-      case 3:
+      case 1:
         aggregator->Sum(TimeInfo, dummy); //mortality model, calculated catch
         likelihood += LogLik(TimeInfo);
         break;
       default:
-        cerr << "Function number is not correct, must be 2 or 3\n";
+          cerr << "Error in logcatch - unknown function " << functionname << endl;
         break;
     }
     timeindex++;

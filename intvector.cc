@@ -1,7 +1,7 @@
 #include "intvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "intvector.icc"
 #endif
 
@@ -33,6 +33,13 @@ intvector::intvector(const intvector& initial) {
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+intvector::~intvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a intvector and fills it vith value.
@@ -72,4 +79,27 @@ void intvector::Delete(int pos) {
   delete[] v;
   v = vnew;
   size--;
+}
+
+intvector& intvector::operator = (const intvector& d) {
+  if (this == &d)
+    return(*this);
+  int i;
+  if (size == d.size) {
+    for (i = 0; i < size; i++)
+      v[i] = d[i];
+    return(*this);
+  }
+  if (v != 0) {
+    delete [] v;
+    v = 0;
+  }
+  size = d.size;
+  if (size > 0) {
+    v = new int[size];
+    for (i = 0; i < size; i++)
+      v[i] = d.v[i];
+  } else
+    v = 0;
+  return *this;
 }

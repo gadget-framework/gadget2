@@ -18,7 +18,7 @@ int ReadAggregation(CommentStream& infile, intmatrix& agg, charptrvector& aggind
     i++;
   }
   //return the number of aggregation groups read
-  return(aggindex.Size());
+  return aggindex.Size();
 }
 
 int ReadAggregation(CommentStream& infile, intvector& agg, charptrvector& aggindex) {
@@ -35,7 +35,7 @@ int ReadAggregation(CommentStream& infile, intvector& agg, charptrvector& aggind
     i++;
   }
   //return the number of aggregation groups read
-  return(aggindex.Size());
+  return aggindex.Size();
 }
 
 int ReadLengthAggregation(CommentStream& infile, doublevector& lengths, charptrvector& lenindex) {
@@ -65,7 +65,7 @@ int ReadLengthAggregation(CommentStream& infile, doublevector& lengths, charptrv
   }
 
   //return the number of length groups read
-  return(lenindex.Size());
+  return lenindex.Size();
 }
 
 int ReadPreyAggregation(CommentStream& infile, charptrmatrix& preynames,
@@ -97,8 +97,7 @@ int ReadPreyAggregation(CommentStream& infile, charptrmatrix& preynames,
       handle.Unexpected("lengths", text);
 
     //JMB - changed so that only 2 lengths are read in
-    preylengths.AddRows(1, 0);
-    preylengths[i].resize(2);
+    preylengths.AddRows(1, 2);
     infile >> preylengths[i][0] >> preylengths[i][1] >> text >> ws;
 
     if (!(strcasecmp(text, "digestioncoefficients") == 0))
@@ -113,5 +112,5 @@ int ReadPreyAggregation(CommentStream& infile, charptrmatrix& preynames,
     i++;
   }
   //return the number of prey aggregation groups read
-  return(preyindex.Size());
+  return preyindex.Size();
 }

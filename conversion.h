@@ -6,16 +6,9 @@
 
 class LengthGroupDivision;
 class ConversionIndex;
-class Keeper;
 
-extern void Interp(doublevector& Vf, const doublevector& Vc,
-  const ConversionIndex* CI);
-extern void LengthGroupPrintError(double minl, double maxl,
-  double dl, const char* str);
-extern void LengthGroupPrintError(double minl, double maxl,
-  double dl, const Keeper* const keeper);
-extern void LengthGroupPrintError(const doublevector& breaks,
-  const Keeper* const keeper);
+extern void Interp(doublevector& Vf, const doublevector& Vc, const ConversionIndex* CI);
+extern void LengthGroupPrintError(double minl, double maxl, double dl, const char* str);
 extern void LengthGroupPrintError(const doublevector& breaks, const char* str);
 
 class LengthGroupDivision {
@@ -24,31 +17,20 @@ public:
   LengthGroupDivision(const doublevector& vec);
   LengthGroupDivision(const LengthGroupDivision& lgrpdiv);
   ~LengthGroupDivision();
-  double Meanlength(int i) const { return meanlength[i]; };
-  double Minlength(int i) const {
-    if (iszero(Dl))
-      return minlength[i];
-    else
-      return (meanlength[i] - (0.5 * Dl));
-  };
-  double Maxlength(int i) const {
-    if (iszero(Dl))
-      return minlength[i] + 2 * (meanlength[i] - minlength[i]);
-    else
-      return (meanlength[i] + (0.5 * Dl));
-  };
+  double Meanlength(int i) const;
+  double Minlength(int i) const;
+  double Maxlength(int i) const;
   double dl() const { return Dl; };
-  int Size() const { return size; };
   int NoLengthGroups() const { return size; };
   int NoLengthGroup(double length) const;
   int Combine(const LengthGroupDivision* const addition);
   int Error() const { return error; }
 protected:
-  doublevector meanlength;
+  int error;
   int size;
   double Dl;
+  doublevector meanlength;
   doublevector minlength;
-  int error;
 };
 
 class ConversionIndex {

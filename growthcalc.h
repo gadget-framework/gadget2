@@ -1,7 +1,6 @@
 #ifndef growthcalc_h
 #define growthcalc_h
 
-#include "doublematrixptrvector.h"
 #include "formulamatrixptrvector.h"
 #include "commentstream.h"
 #include "popinfovector.h"
@@ -15,11 +14,13 @@ class Keeper;
 class GrowthCalcBase : protected LivesOnAreas {
 public:
   GrowthCalcBase(const intvector& areas);
-  virtual ~GrowthCalcBase();
+  ~GrowthCalcBase();
   virtual void GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgrowth,
     const popinfovector& GrEatNumber, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const doublevector& Fphi,
     const doublevector& Consumption, const LengthGroupDivision* const LgrpDiv) const = 0;
+  virtual double getPower() { return 0.0; };
+  virtual double getMult() { return 0.0; };
 };
 
 //The Multspecies Growthfunction.
@@ -61,6 +62,8 @@ public:
     const popinfovector& GrEatNumber, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const doublevector& Fphi,
     const doublevector& Consumption, const LengthGroupDivision* const LgrpDiv) const;
+  virtual double getPower() { return lgrowthPar[7]; };
+  virtual double getMult() { return lgrowthPar[6]; };
 protected:
   int NumberOfWGrowthConstants;
   int NumberOfLGrowthConstants;
@@ -79,6 +82,8 @@ public:
     const popinfovector& GrEatNumber, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const doublevector& Fphi,
     const doublevector& Consumption, const LengthGroupDivision* const LgrpDiv) const;
+  virtual double getPower() { return lgrowthPar[7]; };
+  virtual double getMult() { return lgrowthPar[6]; };
 protected:
   int NumberOfWGrowthConstants;
   int NumberOfLGrowthConstants;
@@ -97,6 +102,8 @@ public:
     const popinfovector& GrEatNumber, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const doublevector& Fphi,
     const doublevector& Consumption, const LengthGroupDivision* const LgrpDiv) const;
+  virtual double getPower() { return lgrowthPar[7]; };
+  virtual double getMult() { return lgrowthPar[6]; };
 protected:
   int NumberOfWGrowthConstants;
   int NumberOfLGrowthConstants;
@@ -140,4 +147,20 @@ protected:
   Formulamatrixptrvector wgrowth; //[area][timestep][length group]
 };
 
+//simplified Von Bertanlanfy growth function.
+class GrowthCalcH : public GrowthCalcBase {
+public:
+  GrowthCalcH(CommentStream& infile, const intvector& areas,
+    const LengthGroupDivision* const LgrpDiv, Keeper* const keeper);
+  ~GrowthCalcH();
+  virtual void GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgrowth,
+    const popinfovector& GrEatNumber, const AreaClass* const Area,
+    const TimeClass* const TimeInfo, const doublevector& Fphi,
+    const doublevector& Consumption, const LengthGroupDivision* const LgrpDiv) const;
+  virtual double getPower() { return growthPar[3]; };
+  virtual double getMult() { return growthPar[2]; };
+protected:
+  int NumberOfGrowthConstants;
+  Formulavector growthPar;
+};
 #endif

@@ -6,6 +6,7 @@
 #include "base.h"
 #include "stockptrvector.h"
 #include "catchdataptrvector.h"
+#include "tagptrvector.h"
 #include "commentstream.h"
 #include "naturalm.h"
 
@@ -63,6 +64,8 @@ public:
   void Renewal(int area, const TimeClass* const TimeInfo, double ratio = 0);
   void Add(const Agebandmatrix& Addition, const ConversionIndex* const CI,
     int area, double ratio = 1, int MinAge = 0, int MaxAge = 100);
+  void Add(const Agebandmatrixratiovector& Addition, int AddArea, const ConversionIndex* const CI,
+    int area, double ratio = 1, int MinAge = 0, int MaxAge = 100);
   virtual void Migrate(const TimeClass* const TimeInfo);
   virtual void CalcEat(int area,
     const AreaClass* const Area, const TimeClass* const TimeInfo);
@@ -73,7 +76,6 @@ public:
   virtual void Reset(const TimeClass* const TimeInfo);
   virtual void RecalcMigration(const TimeClass* const TimeInfo);
   virtual void Clear();
-  //StockPrey* ReturnPrey() const;
   Prey* ReturnPrey() const;
   const Migration* ReturnMigration() const { return migration; };
   PopPredator* ReturnPredator() const;
@@ -101,11 +103,14 @@ public:
   const doubleindexvector& mortality() const { return NatM->getMortality(); };
   const void getBiomass(int area) const {};
   const Stockptrvector& GetMatureStocks();
-  int UpdateTags(Agebandmatrixvector* tagbyagelength, const char* tagname);
+  int UpdateTags(Agebandmatrixvector* tagbyagelength, Tags* newtag);
   void DeleteTags(const char* tagname);
+  void UpdateMatureStockWithTags(const TimeClass* const TimeInfo);
+  const charptrvector TaggingExperimentIds();
 protected:
   Agebandmatrixvector Alkeys;
   Agebandmatrixratiovector tagAlkeys;
+  Tagptrvector matureTags;
   Spawner* spawner;
   Catch* catchptr;
   RenewalData* renewal;
@@ -113,8 +118,8 @@ protected:
   Transition* transition;
   int AgeDepMigration;
   Migration* migration;
-  Prey* prey; //kgf 16/7 98
-  PopPredator* predator;  //kgf 3/8 98
+  Prey* prey;
+  PopPredator* predator;
   InitialCond* initial;
   LengthGroupDivision* LgrpDiv;
   Grower* grower;
@@ -125,8 +130,6 @@ protected:
   int doesmove;
   int iseaten;
   int doesspawn;
-  // haslgr is not currently used, but should used for growth
-  // from 0group stock - I think! JMB.
   int haslgr;
   int doesmature;
   int doesrenew;

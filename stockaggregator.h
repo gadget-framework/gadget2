@@ -30,6 +30,7 @@ protected:
   intvector AgeNr;
   Agebandmatrixvector total;
   Agebandmatrixvector meanTotal;
+  int numlengths;
   intvector maxcol;
   intvector mincol;
   int minrow;

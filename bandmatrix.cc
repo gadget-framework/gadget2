@@ -5,7 +5,7 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "bandmatrix.icc"
 #endif
 
@@ -73,6 +73,7 @@ bandmatrix::~bandmatrix() {
     for (i = 0; i < nrow; i++)
       delete v[i];
     delete[] v;
+    v = 0;
   }
 }
 
@@ -111,6 +112,7 @@ bandmatrixvector::~bandmatrixvector() {
     for (i = 0; i < size; i++)
       delete v[i];
     delete[] v;
+    v = 0;
   }
 }
 
@@ -194,6 +196,7 @@ bandmatrixmatrix::~bandmatrixmatrix() {
     for (i = 0; i < nrow; i++)
       delete v[i];
     delete[] v;
+    v = 0;
   }
 }
 

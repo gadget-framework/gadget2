@@ -11,7 +11,7 @@ class TimeClass;
 
 class LenNaturalM {
 public:
-  LenNaturalM(CommentStream& infile, const LengthGroupDivision * lenp, Keeper* const keeper);
+  LenNaturalM(CommentStream& infile, const LengthGroupDivision* lenp, Keeper* const keeper);
   ~LenNaturalM();
   void Print(ofstream& outfile);
   inline const doublevector& NatMortality() { return natmort; };
@@ -21,7 +21,7 @@ protected:
   Formulavector parammort;
   doublevector xparammort;
   doublevector natmort;
-  LengthGroupDivision * lengroup;
+  LengthGroupDivision* lengroup;
 };
 
 #endif

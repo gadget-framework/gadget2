@@ -11,8 +11,8 @@
 #include "gadget.h"
 
 SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, Keeper* const keeper, double likweight, char* name)
-  : Likelihood(SURVEYINDICESLIKELIHOOD, likweight), surveyname(name) {
+  const TimeClass* const TimeInfo, Keeper* const keeper, double likweight, const char* name)
+  : Likelihood(SURVEYINDICESLIKELIHOOD, likweight) {
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -35,6 +35,8 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   ifstream datafile;
   CommentStream subdata(datafile);
 
+  surveyname = new char[strlen(name) + 1];
+  strcpy(surveyname, name);
   ReadWordAndValue(infile, "datafile", datafilename);
   ReadWordAndValue(infile, "sitype", sitype);
 
@@ -100,7 +102,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     datafile.clear();
 
   } else
-    handle.Unexpected("SI lengths or ages", sitype);
+    handle.Unexpected("lengths, ages or ageandlengths", sitype);
 
   //Read in the stocknames
   i = 0;
@@ -129,7 +131,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       keeper, lenindex, ageindex, areaindex[0], datafilename);
 
   } else
-    handle.Unexpected("SI lengths or ages", sitype);
+    handle.Message("Error in surveyindices - unrecognised type", sitype);
 
   //prepare for next likelihood component
   infile >> ws;
@@ -138,6 +140,14 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     if (!(strcasecmp(text, "[component]") == 0))
       handle.Unexpected("[component]", text);
   }
+
+  //index ptrvectors are not required - free up memory
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
+  for (i = 0; i < ageindex.Size(); i++)
+    delete[] ageindex[i];
+  for (i = 0; i < lenindex.Size(); i++)
+    delete[] lenindex[i];
 }
 
 SurveyIndices::~SurveyIndices() {
@@ -145,6 +155,7 @@ SurveyIndices::~SurveyIndices() {
   for (i = 0; i < stocknames.Size(); i++)
     delete[] stocknames[i];
   delete SI;
+  delete[] surveyname;
 }
 
 void SurveyIndices::LikelihoodPrint(ofstream& outfile) const {

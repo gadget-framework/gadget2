@@ -1,6 +1,10 @@
 #include "formulamatrix.h"
 #include "gadget.h"
 
+#ifndef GADGET_INLINE
+#include "formulamatrix.icc"
+#endif
+
 //constructor for a rectangular Formulamatrix.
 Formulamatrix::Formulamatrix(int nr, int nc) {
   assert(nr > 0);
@@ -11,6 +15,18 @@ Formulamatrix::Formulamatrix(int nr, int nc) {
     v[i] = new Formulavector(nc);
 }
 
+//constructor for a rectangular Formulamatrix with initial value.
+Formulamatrix::Formulamatrix(int nr, int nc, Formula value) {
+  nrow = nr;
+  v = new Formulavector*[nr];
+  int i, j;
+  for (i = 0; i < nr; i++)
+    v[i] = new Formulavector(nc);
+  for (i = 0; i < nr; i++) {
+    for (j = 0; j < nc; j++)
+      (*v[i])[j] = value;
+  }
+}
 //constructor for a possibly nonrectangular Formulamatrix
 //the rows need not have the same number of columns.
 Formulamatrix::Formulamatrix(int nr, const intvector& nc) {
@@ -34,7 +50,7 @@ Formulamatrix::~Formulamatrix() {
 Formulamatrix& Formulamatrix::operator=(const Formulamatrix& formulaM) {
   if (this == &formulaM) {
     //same object just return
-    return(*this);
+    return *this;
   }
   int i;
   if (v != 0) {
@@ -42,6 +58,7 @@ Formulamatrix& Formulamatrix::operator=(const Formulamatrix& formulaM) {
     for (i = 0; i < nrow; i++)
       delete v[i];
     delete[] v;
+    v = 0;
   }
   nrow = formulaM.nrow;
   if (nrow >= 0) {
@@ -53,16 +70,6 @@ Formulamatrix& Formulamatrix::operator=(const Formulamatrix& formulaM) {
     nrow = 0;
   }
   return *this;
-}
-
-Formulavector& Formulamatrix::operator [] (int pos) {
-  assert(0 <= pos && pos < nrow);
-  return *v[pos];
-}
-
-const Formulavector& Formulamatrix::operator [] (int pos) const {
-  assert(0 <= pos && pos < nrow);
-  return *v[pos];
 }
 
 //Adds rows to a Formulamatrix.
@@ -95,7 +102,7 @@ void Formulamatrix::AddRows(int add, int length, Formula formula) {
 void Formulamatrix::Inform(Keeper* keeper) {
   int i;
   for (i = 0; i < nrow; i++) {
-    ostrstream ostr;
+    ostringstream ostr;
     ostr << i + 1 << ends;
     keeper->AddString(ostr.str());
     v[i]->Inform(keeper);

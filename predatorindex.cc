@@ -21,8 +21,8 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
   int i;
 
   int numarea = 0;
-  charptrvector areaindex;
   intmatrix tmpareas;
+  charptrvector areaindex;
   doublevector predatorlengths;
   doublevector preylengths;
   charptrvector predlenindex;
@@ -120,6 +120,13 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
     if (!(strcasecmp(text, "[component]") == 0))
       handle.Unexpected("[component]", text);
   }
+
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
+  for (i = 0; i < preylenindex.Size(); i++)
+    delete[] preylenindex[i];
+  for (i = 0; i < predlenindex.Size(); i++)
+    delete[] predlenindex[i];
 }
 
 void PredatorIndices::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys) {
@@ -174,7 +181,7 @@ PIOnStep::PIOnStep(CommentStream& infile, const intvector& areas,
   const doublevector& predatorlengths, const doublevector& preylengths,
   const TimeClass* const TimeInfo, int biomass, const char* arealabel,
   const charptrvector& preylenindex, const charptrvector& predlenindex, const char* datafilename)
-  : SIOnStep(infile, datafilename, arealabel, TimeInfo, predlenindex, preylenindex),
+  : SIOnStep(infile, datafilename, arealabel, TimeInfo, predlenindex.Size() * preylenindex.Size(), predlenindex, preylenindex),
     PredatorLgrpDiv(0), PreyLgrpDiv(0), Biomass(biomass), Areas(areas), aggregator(0) {
 
   PredatorLgrpDiv = new LengthGroupDivision(predatorlengths);
@@ -184,15 +191,10 @@ PIOnStep::PIOnStep(CommentStream& infile, const intvector& areas,
   if (PreyLgrpDiv->Error())
     LengthGroupPrintError(preylengths, "predator index, prey lengths");
 
+  //read the predator indices data from the datafile
   ErrorHandler handle;
-
-  //first resize Indices to store the data
-  Indices.AddRows(Years.Size(), (preylenindex.Size() * predlenindex.Size()));
-
-  //then read the predator indices data from the datafile
   ifstream datafile;
   CommentStream subdata(datafile);
-
   datafile.open(datafilename);
   CheckIfFailure(datafile, datafilename);
   handle.Open(datafilename);
@@ -217,7 +219,7 @@ void PIOnStep::ReadPredatorData(CommentStream& infile, const char* arealabel,
   ErrorHandler handle;
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 6)))
+  if (CountColumns(infile) != 6)
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {

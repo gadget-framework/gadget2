@@ -3,9 +3,16 @@
 #include "commentstream.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "timevariableindexvector.icc"
 #endif
+
+TimeVariableIndexVector::~TimeVariableIndexVector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
+}
 
 void TimeVariableIndexVector::resize(int addsize, int lower, Keeper* const keeper) {
   int i;

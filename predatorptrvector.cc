@@ -1,7 +1,7 @@
 #include "predatorptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "predatorptrvector.icc"
 #endif
 
@@ -33,6 +33,13 @@ Predatorptrvector::Predatorptrvector(const Predatorptrvector& initial) {
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+Predatorptrvector::~Predatorptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a Predatorptrvector and fills it vith value.

@@ -22,23 +22,21 @@ public:
   Agebandmatrixratio(const Agebandmatrixratio& initial);
   Agebandmatrixratio() { minage = 0; nrow = 0; v = 0; };
   ~Agebandmatrixratio();
-  int Minage() const { return(minage); };
-  int Maxage() const { return(minage + nrow - 1); };
+  int Minage() const { return minage; };
+  int Maxage() const { return minage + nrow - 1; };
   int Nrow() const { return nrow; };
-  int Minlength(int age) const { return(v[age-minage]->Mincol()); };
-  int Maxlength(int age) const { return(v[age-minage]->Maxcol()); };
-  void IncrementAge(const Agebandmatrix& Total, const int NrOfTagExp);
-  void Grow(const doublematrix& Lgrowth, const Agebandmatrix& Total, const int NrOfTagExp);
+  int Minlength(int age) const { return v[age-minage]->Mincol(); };
+  int Maxlength(int age) const { return v[age-minage]->Maxcol(); };
+  void IncrementAge(const Agebandmatrix& Total);
+  void Grow(const doublematrix& Lgrowth, const Agebandmatrix& Total);
   void Grow(const doublematrix& Lgrowth, const Agebandmatrix& Total,
     Maturity* const Mat, const TimeClass* const TimeInfo, const AreaClass* const Area,
-    const LengthGroupDivision* const GivenLDiv, int area, const int NrOfTagExp);
+    const LengthGroupDivision* const GivenLDiv, int area);
   popratioindexvector& operator [] (int age);
   const popratioindexvector& operator [] (int age) const;
-  void UpdateRatio(const Agebandmatrix& Total, const int NrOfTagExp);
-  void UpdateNumbers(const Agebandmatrix& Total, const int NrOfTagExp);
-  //friend ostream& printNorW(Agebandmatrixratio& a, ostream& stream, int PrintN, intvector& ages);
-  void AgebandmratioAdd(Agebandmatrixratio& Alkeys, const Agebandmatrixratio& Addition,
-    const ConversionIndex &CI, double ratio, int minage, int maxage, int tagnr1, int tagnr2);
+  void UpdateRatio(const Agebandmatrix& Total);
+  void UpdateNumbers(const Agebandmatrix& Total);
+  int NrOfTagExp() const;
 protected:
   int minage;
   int nrow;
@@ -57,25 +55,33 @@ public:
   void resize(int add, Agebandmatrixvector* initial, const Agebandmatrixvector& Alkeys, const char* id);
   void resize();
   void addTag(Agebandmatrixvector* initial, const Agebandmatrixvector& Alkeys, const char* id);
+  void addTag(const char* name);
   void deleteTag(const char* tagname);
-  int Size() const { return(size); };
-  int numTags() const {return tagid.Size();};
+  void deleteTag(int id);
+  int Size() const { return size; };
+  int numTags() const { return tagid.Size(); };
   int getId(const char* id);
+  const char* getName(int id) const;
   Agebandmatrixratio& operator [] (int pos);
   const Agebandmatrixratio& operator [] (const char* name) const;
   const Agebandmatrixratio& operator [] (int pos) const;
   void Migrate(const doublematrix& Migrationmatrix, const Agebandmatrixvector& Total);
   const int NrOfTagExp() const { return tagid.Size(); };
   void print(char* filename);
+  const charptrvector tagids() const;
+  friend void AgebandmratioAdd(Agebandmatrixratiovector& Alkeys, int AlkeysArea,
+    const Agebandmatrixratiovector& Addition, int AdditionArea, const ConversionIndex &CI,
+    double ratio, int minage, int maxage);
 protected:
   int size;
   Agebandmatrixratio** v;
   charptrvector tagid;
+private:
+  void addTagName(const char* name);
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "agebandmatrixratio.icc"
 #endif
 
 #endif
-

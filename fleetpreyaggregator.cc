@@ -19,11 +19,11 @@ FleetPreyAggregator::FleetPreyAggregator(const Fleetptrvector& Fleets,
     areas(Areas), ages(Ages), overconsumption(overcons) {
 
   int i, j, k, l = 0;
-  maxcol.resize(Ages.Nrow(), 0);
-  mincol.resize(Ages.Nrow(), 99999);
+  maxcol.resize(ages.Nrow(), 0);
+  mincol.resize(ages.Nrow(), 99999);
   maxrow = 0;
-  minrow = Ages.Nrow();
-  numlengths = Lgrpdiv->NoLengthGroups();
+  minrow = ages.Nrow();
+  numlengths = LgrpDiv->NoLengthGroups();
 
   for (i = 0; i < stocks.Size(); i++) {
     CheckLengthGroupIsFiner(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv(),
@@ -36,9 +36,9 @@ FleetPreyAggregator::FleetPreyAggregator(const Fleetptrvector& Fleets,
     const Agebandmatrix* ap = &(stocks[i]->Agelengthkeys(stocks[i]->Areas()[0]));
 
     //Now, loop over all the possible ages in the Ages matrix,
-    for (j = 0; j < Ages.Nrow(); j++) {
-      for (k = 0; k < Ages.Ncol(j); k++) {
-        l = Ages[j][k];
+    for (j = 0; j < ages.Nrow(); j++) {
+      for (k = 0; k < ages.Ncol(j); k++) {
+        l = ages[j][k];
 
         if (l >= ap->Minage() && l <= ap->Maxage()) {
           //l is within the stock age range
@@ -94,21 +94,20 @@ FleetPreyAggregator::~FleetPreyAggregator() {
   int i;
   for (i = 0; i < CI.Size(); i++)
     delete CI[i];
-  delete LgrpDiv;
+  //delete LgrpDiv;
 }
 
 void FleetPreyAggregator::Print(ofstream& outfile) const {
   int a, i, j;
 
-  outfile << "\tTotal catch in numbers:\n";
   for (a = 0; a < areas.Nrow(); a++) {
     outfile << "\tareas " << a << endl;
     for (j = 0; j < ages.Nrow(); j++) {
       outfile << TAB;
       for (i = 0; i < NoLengthGroups(); i++) {
-        outfile << sep;
         outfile.width(printwidth);
         outfile << totalcatch[a][j][i].N;
+        outfile << sep;
       }
       outfile << endl;
     }

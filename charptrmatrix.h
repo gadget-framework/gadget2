@@ -12,8 +12,8 @@ public:
   charptrmatrix(int nrow, const intvector& ncol);
   charptrmatrix(int nrow, const intvector& ncol, char* initial);
   charptrmatrix(const charptrmatrix& initial);
-  ~charptrmatrix ();
-  int Ncol(int i = 0) const { return(v[i]->Size()); };
+  ~charptrmatrix();
+  int Ncol(int i = 0) const { return v[i]->Size(); };
   int Nrow() const { return nrow; };
   charptrvector& operator [] (int pos);
   const charptrvector& operator [] (int pos) const;
@@ -25,7 +25,7 @@ protected:
   charptrvector** v;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "charptrmatrix.icc"
 #endif
 

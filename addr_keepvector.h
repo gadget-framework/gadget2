@@ -5,15 +5,15 @@
 
 class addr_keepvector {
 public:
-  addr_keepvector () { size = 0; v = 0; };
-  addr_keepvector (int sz);
-  addr_keepvector (int sz, addr_keep initial);
-  addr_keepvector (const addr_keepvector& initial);
-  ~addr_keepvector () { delete[] v; };
-  void resize (int add, addr_keep value);
-  void resize (int add);
-  void Delete (int pos);
-  int Size () const { return(size); };
+  addr_keepvector() { size = 0; v = 0; };
+  addr_keepvector(int sz);
+  addr_keepvector(int sz, addr_keep initial);
+  addr_keepvector(const addr_keepvector& initial);
+  ~addr_keepvector();
+  void resize(int add, addr_keep value);
+  void resize(int add);
+  void Delete(int pos);
+  int Size() const { return size; };
   addr_keep& operator [] (int pos);
   const addr_keep& operator [] (int pos) const;
 protected:
@@ -21,7 +21,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "addr_keepvector.icc"
 #endif
 

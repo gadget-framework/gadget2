@@ -19,7 +19,7 @@ public:
   void ClearAll();
   void SetString(const char* str);
   void AddString(const char* str);
-  char* SendString() const;
+  void AddString(const string str);
   void AddComponent(const char* name);
   char* SendComponents() const;
   void ClearComponents();
@@ -63,10 +63,10 @@ public:
    * "value" " " "tab"
    * For all values in likely print to filename showing 4 digits:
    * "unweighted likelihood" " " "tab" funcValue showing 15 digits. */
-  void WriteValues(const char* const filename, double FunctionValue, const Likelihoodptrvector& Likely) const;
+  void WriteValues(const char* const filename, double FunctionValue, const Likelihoodptrvector& Likely, int prec) const;
   void WriteInitialInformationInColumns(const char* const filenam) const;
-  void WriteValuesInColumns(const char* const filename, double functionValue, const Likelihoodptrvector& Likely) const;
-  void WriteParamsInColumns(const char* const filename, double functionValue, const Likelihoodptrvector& Likely) const;
+  void WriteValuesInColumns(const char* const filename, double functionValue, const Likelihoodptrvector& Likely, int prec) const;
+  void WriteParamsInColumns(const char* const filename, double functionValue, const Likelihoodptrvector& Likely, int prec) const;
   //AJ 08.08.00 end of change to functions.
   void WriteOptValues(double FunctionValue, const Likelihoodptrvector& Likely) const;
   void ScaleVariables();

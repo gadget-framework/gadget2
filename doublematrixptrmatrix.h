@@ -15,7 +15,7 @@ public:
   doublematrixptrmatrix(int nrow, const intvector& ncol, doublematrix* initial);
   doublematrixptrmatrix(const doublematrixptrmatrix& initial);
   ~doublematrixptrmatrix();
-  int Ncol(int i = 0) const { return(v[i]->Size()); };
+  int Ncol(int i = 0) const { return v[i]->Size(); };
   int Nrow() const { return nrow; };
   doublematrixptrvector& operator [] (int pos);
   const doublematrixptrvector& operator [] (int pos) const;
@@ -27,7 +27,7 @@ protected:
   doublematrixptrvector** v;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "doublematrixptrmatrix.icc"
 #endif
 

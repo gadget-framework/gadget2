@@ -9,11 +9,11 @@ public:
   Preyptrvector(int sz);
   Preyptrvector(int sz, Prey* initial);
   Preyptrvector(const Preyptrvector& initial);
-  ~Preyptrvector() { delete[] v; };
+  ~Preyptrvector();
   void resize(int add, Prey* value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   Prey*& operator [] (int pos);
   Prey* const& operator [] (int pos) const;
 protected:
@@ -21,7 +21,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "preyptrvector.icc"
 #endif
 

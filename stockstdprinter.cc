@@ -28,7 +28,11 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   stockname = new char[MaxStrLength];
   strncpy(stockname, "", MaxStrLength);
   ReadWordAndValue(infile, "stockname", stockname);
-  ReadWordAndVariable(infile, "scale", Scale);
+  infile >> text >> ws;
+  if (strcasecmp(text, "scale") == 0)
+    infile >> Scale >> ws >> text >> ws;
+  else
+    Scale = 1.0;
 
   if (Scale <= 0)
     handle.Message("Illegal value of scale - must be strictly positive");
@@ -41,7 +45,12 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
 
   charptrvector areaindex;
   intmatrix tmpareas;
-  ReadWordAndValue(infile, "areaaggfile", filename);
+
+  if (strcasecmp(text, "areaaggfile") == 0)
+    infile >> filename >> ws;
+  else
+    handle.Unexpected("areaaggfile", text);
+
   datafile.open(filename);
   CheckIfFailure(datafile, filename);
   handle.Open(filename);
@@ -70,9 +79,9 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("YearsAndSteps", text);
+    handle.Unexpected("yearsandsteps", text);
   if (!aat.ReadFromFile(infile, TimeInfo))
-    handle.Message("Wrong format for yearsandsteps");
+    handle.Message("Error in stockstdprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
@@ -85,11 +94,17 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   //finished initializing. Now print first lines
   outfile << "; ";
   RUNID.print(outfile);
-  outfile << "; Standard output file for the stock " << stockname
-    << "\n; Scaling factor for the number and number consumed is " << Scale
-    << "\n; year-step-area-age-number-mean length-mean weight-"
+  outfile << "; Standard output file for the stock " << stockname;
+  if (Scale != 1.0)
+    outfile << "\n; Scaling factor for the number and number consumed is " << Scale;
+
+  outfile << "\n; year-step-area-age-number-mean length-mean weight-"
     << "stddev length-number consumed-biomass consumed\n";
   outfile.flush();
+
+  //areaindex is not required - free up memory
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
 }
 
 StockStdPrinter::~StockStdPrinter() {
@@ -98,6 +113,7 @@ StockStdPrinter::~StockStdPrinter() {
   delete preyinfo;
   delete aggregator;
   delete LgrpDiv;
+  delete[] stockname;
 }
 
 void StockStdPrinter::SetStock(Stockptrvector& stockvec) {
@@ -168,6 +184,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
   aggregator->Sum();
   int a, age;
   double tmpnumber, tmpbiomass;
+
   for (a = 0; a < areas.Size(); a++) {
     if (preyinfo)
       preyinfo->Sum(TimeInfo, areas[a]);
@@ -178,8 +195,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
       outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep
         << setw(smallwidth) << TimeInfo->CurrentStep() << sep
         << setw(smallwidth) << outerareas[a] << sep << setw(smallwidth)
-        << age + minage << sep ;
-
+        << age + minage << sep;
 
         //JMB crude filters to remove the 'silly' values from the output
         if (popstat.TotalNumber() < rathersmall) {

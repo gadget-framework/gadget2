@@ -1,5 +1,9 @@
 #include "tagptrvector.h"
 
+#ifndef GADGET_INLINE
+#include "tagptrvector.icc"
+#endif
+
 Tagptrvector::Tagptrvector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
@@ -33,6 +37,13 @@ Tagptrvector::Tagptrvector(const Tagptrvector& initial) {
     v = 0;
 
   index = 0;
+}
+
+Tagptrvector::~Tagptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a Tagptrvector and fills it with value.
@@ -85,21 +96,26 @@ void Tagptrvector::Delete(int pos) {
 }
 
 void Tagptrvector::UpdateTags(const TimeClass* const TimeInfo) {
-  //v[0]->printPopInfo("tag.output.update1");
   for (index = 0; index < size; index++) {
     if ((v[index]->getTagYear() == TimeInfo->CurrentYear()) && (v[index]->getTagStep() == TimeInfo->CurrentStep()))
       v[index]->Update();
 
   }
-  //v[0]->printPopInfo("tag.output.update2");
 }
 
 void Tagptrvector::DeleteTags(const TimeClass* const TimeInfo) {
-  //v[0]->printPopInfo("tag.output.delete1");
   for (index = 0; index < size; index++) {
     if ((v[index]->getEndYear() == TimeInfo->CurrentYear()) && (v[index]->getEndStep() == TimeInfo->CurrentStep()))
       v[index]->DeleteFromStock();
 
   }
-  //v[0]->printPopInfo("tag.output.delete2");
+}
+
+void Tagptrvector::DeleteAll() {
+  if (v != 0) {
+    delete [] v;
+    v = 0;
+  }
+  size = 0;
+  index = 0;
 }

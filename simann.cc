@@ -246,6 +246,7 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
   cout << "\nStarting Simulated Annealing\n";
   //funcval is the function value at x
   funcval = (*f)(x, n);
+  nfcnev++;
 
   //If the function is to be minmized, switch the sign of the function
   if (!max)
@@ -260,7 +261,7 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
   double p, pp;
 
   //Start the main loop.  Note that it terminates if
-  //(i) the algorithm succesfully otimizes the function or
+  //(i) the algorithm succesfully optimizes the function or
   //(ii) there are too many function evaluations
   while (1) {
     for (a = 0; a < nt; a++) {
@@ -287,7 +288,7 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
           //Generate xp, the trial value of x
           for (i = 0; i < n; i++) {
             if (i == param[l])
-              xp[i] = x[i] + (Random() * 2. - 1.) * vm[i];
+              xp[i] = x[i] + (Random() * 2.0 - 1.0) * vm[i];
             else
               xp[i] = x[i];
 
@@ -305,16 +306,17 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
 
           nfcnev++;
           //If too many function evaluations occur, terminate the algorithm
-          if (nfcnev > maxevl) {
+          if (nfcnev >= maxevl) {
+            cout << "\nStopping Simulated Annealing\n\nThe optimisation stopped after " << nfcnev
+              << " function evaluations (max " << maxevl << ")\nThe optimisation stopped "
+              << "because the maximum number of function evaluations\nwas reached and "
+              << "NOT because an optimum was found for this run\n";
+
             fp = (*f)(endpoint, n);
             if (!max)
               fopt = -fopt;
 
-            cout << "\nSimulated Annealing optimisation completed after " << nfcnev
-              << " iterations (max " << maxevl << ")\nThe bounds were hit " << nobds
-              << " times\nThe model terminated because the maximum number of "
-              << "iterations was reached\nAn optimum has NOT been found for this run\n";
-            return(nfcnev);
+            return nfcnev;
           }
 
           //Accept the new point if the new function value better
@@ -325,6 +327,7 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
             funcval = fp;
             nacc++;
             nacp[l]++;
+
           } else {
             //Accept according to metropolis condition
             p = ExpRep((fp - funcval) / t);
@@ -345,7 +348,7 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
           if (iszero(fp)) {
             cout << "\nError in Simulated Annealing optimisation after " << nfcnev
               << " function evaluations f(x) = 0\nReturning to calling routine ...\n";
-            return(0);
+            return 0;
           }
 
           //If greater than any other point, record as new optimum
@@ -360,8 +363,6 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
             nnew++;
           }
         }
-        /*cout << "Evaluations: " << nfcnev << " number updates: " << nacc << " number rejected: "
-          << nrej << " number new optimum: " << nnew << endl;*/
       }
 
       //Adjust vm so that approximately half of all evaluations are accepted
@@ -369,15 +370,17 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
         dummy1 = nacp[i];
         dummy2 = ns;
         ratio =  dummy1 / dummy2;
-        if (ratio > 0.8)
-          vm[i] = vm[i] * (1. + c[i] * (ratio - 0.6) * 2.5);
-        else if (ratio < 0.5)
-          vm[i] = vm[i] / (1. + c[i] * (0.4 - ratio) * 2.5);
+        if (ratio > 0.8) {
+          vm[i] = vm[i] * (1.0 + c[i] * (ratio - 0.6) * 2.5);
+        } else if (ratio < 0.5) {
+          vm[i] = vm[i] / (1.0 + c[i] * (0.4 - ratio) * 2.5);
+        }
 
-        if (vm[i] > (ub[i] - lb[i]))
+        if (vm[i] > (ub[i] - lb[i])) {
           vm[i] = ub[i] - lb[i];
-        else if (vm[i] < 1e-6)
+        } else if (vm[i] < 1e-6) {
           vm[i] = stepl[i];
+        }
       }
       for (i = 0; i < n; i++)
         nacp[i] = 0;
@@ -394,14 +397,15 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
 
     //Terminate SA if appropriate
     if (quit) {
+      cout << "\nStopping Simulated Annealing\n\nThe optimisation stopped after " << nfcnev
+        << " function evaluations (max " << maxevl << ")\nThe optimisation stopped "
+        << "because an optimum was found for this run\n";
+
       fp = (*f)(endpoint, n);
       if (!max)
         fopt = -fopt;
 
-      cout << "\nSimulated Annealing optimisation completed after " << nfcnev
-        << " iterations (max " << maxevl << ")\nThe bounds were hit " << nobds
-        << " times\nThe model terminated because it has converged to an optimum\n";
-      return(nfcnev);
+      return nfcnev;
     }
 
     //If termination criteria is not met, prepare for another loop.

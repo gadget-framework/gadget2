@@ -9,11 +9,11 @@ public:
   BaseClassptrvector(int sz);
   BaseClassptrvector(int sz, BaseClass* initial);
   BaseClassptrvector(const BaseClassptrvector& initial);
-  ~BaseClassptrvector() { delete[] v; };
+  ~BaseClassptrvector();
   void resize(int add, BaseClass* value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   BaseClass*& operator [] (int pos);
   BaseClass* const& operator [] (int pos) const;
 protected:
@@ -21,7 +21,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "baseclassptrvector.icc"
 #endif
 

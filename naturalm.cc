@@ -8,8 +8,7 @@
 
 //A simple beginning, only one mortality for each yearclass.
 NaturalM::NaturalM(CommentStream& infile, int minage, int maxage, const TimeClass* const TimeInfo,
-  Keeper* const keeper) : mortality(maxage - minage + 1, minage),
-  lengthofsteps(TimeInfo->StepsInYear(), 0), proportion(maxage - minage + 1, 0) {
+  Keeper* const keeper) : mortality(maxage - minage + 1, minage), proportion(maxage - minage + 1, 0.0) {
 
   ErrorHandler handle;
   keeper->AddString("naturalm");
@@ -40,10 +39,10 @@ const doublevector& NaturalM::ProportionSurviving(const TimeClass* const TimeInf
 
 void NaturalM::Print(ofstream& outfile) {
   int i;
-  outfile << "Natural mortality\n";
+  outfile << "Natural mortality\n\t";
   for (i = mortality.Mincol(); i < mortality.Maxcol(); i++)
-    outfile << sep << mortality[i];
-  outfile << endl;
+    outfile << mortality[i] << sep;
+  outfile << endl << endl;
 }
 
 const doubleindexvector& NaturalM::getMortality() const {

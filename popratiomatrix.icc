@@ -1,17 +1,15 @@
 #include "popratiomatrix.h"
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 popratiovector& popratiomatrix::operator [] (int pos) {
-  assert(0 <= pos && pos < nrow);
   return *v[pos];
 }
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 const popratiovector& popratiomatrix::operator [] (int pos) const {
-  assert(0 <= pos && pos < nrow);
   return *v[pos];
 }

@@ -12,12 +12,12 @@ public:
   popratiovector(int sz);
   popratiovector(int sz, popratio initial);
   popratiovector(const popratiovector& initial);
-  ~popratiovector() { delete[] v; };
+  ~popratiovector();
   void resize(int add, popratio value);
   void resize(int add, double* num, double rat);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   popratio& operator [] (int pos);
   const popratio& operator [] (int pos) const;
   void Sum(const popratiovector* const Number, const ConversionIndex& CI);
@@ -26,7 +26,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "popratiovector.icc"
 #endif
 

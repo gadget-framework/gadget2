@@ -17,9 +17,7 @@ public:
   virtual ~TagData();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
-  virtual void Print(ofstream& outfile) const;
-  virtual void LikelihoodPrint(ofstream& outfile) const {};
-  //AJ 06.06.00 Adding function
+  virtual void Print(ofstream&) const {};
   virtual void SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks);
 private:
   void ReadRecaptureData(CommentStream&, const TimeClass*, charptrvector);

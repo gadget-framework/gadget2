@@ -1,7 +1,7 @@
 #include "catchdataptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "catchdataptrvector.icc"
 #endif
 
@@ -33,6 +33,13 @@ CatchDataptrvector::CatchDataptrvector(const CatchDataptrvector& initial) {
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+CatchDataptrvector::~CatchDataptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a CatchDataptrvector and fills it vith value.

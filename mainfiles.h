@@ -17,6 +17,7 @@ public:
   void SetPrintInitialCondFilename(char* filename);
   void SetPrintFinalCondFilename(char* filename);
   void SetInitialCommentFilename(char* filename);
+  void SetMainGadgetFilename(char* filename);
   CommentStream optinfocommentfile;
   ifstream optinfofile;
   char* PrintLikelihoodFilename;
@@ -24,6 +25,7 @@ public:
   char* InitialCommentFilename;
   char* PrintInitialcondfilename;
   char* PrintFinalcondfilename;
+  char* MainGadgetFilename;
   int OptInfoFileisGiven;
   int InitialCondareGiven;
   int CalcLikelihood;

@@ -35,6 +35,11 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
+  char filename[MaxStrLength];
+  strncpy(filename, "", MaxStrLength);
+  ifstream datafile;
+  CommentStream subdata(datafile);
+
   keeper->SetString(this->Name());
 
   //Read the area data
@@ -77,7 +82,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(minlength, maxlength, dl, keeper);
+    LengthGroupPrintError(minlength, maxlength, dl, "length group for stock");
 
   //JMB need to set the lowerlgrp and size vectors to a default
   //value to allow the whole range of lengths to be calculated
@@ -93,15 +98,11 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //Read the growth length group data
   doublevector grlengths;
   charptrvector grlenindex;
-  char aggfilename[MaxStrLength];
-  strncpy(aggfilename, "", MaxStrLength);
-  ifstream datafile;
-  CommentStream subdata(datafile);
 
-  ReadWordAndValue(infile, "growthandeatlengths", aggfilename);
-  datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
-  handle.Open(aggfilename);
+  ReadWordAndValue(infile, "growthandeatlengths", filename);
+  datafile.open(filename);
+  CheckIfFailure(datafile, filename);
+  handle.Open(filename);
   i = ReadLengthAggregation(subdata, grlengths, grlenindex);
   handle.Close();
   datafile.close();
@@ -109,7 +110,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   LengthGroupDivision* GrowLgrpDiv = new LengthGroupDivision(grlengths);
   if (GrowLgrpDiv->Error())
-    LengthGroupPrintError(grlengths, keeper);
+    LengthGroupPrintError(grlengths, "growthandeatlengths for stock");
 
   CheckLengthGroupIsFiner(LgrpDiv, GrowLgrpDiv, this->Name(), "growth and eat lengths");
 
@@ -163,60 +164,43 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   ReadWordAndVariable(infile, "doesmigrate", doesmigrate);
   if (doesmigrate) {
     ReadWordAndVariable(infile, "agedependentmigration", AgeDepMigration);
-    infile >> text;
-    if (strcasecmp(text, "migrationfile") == 0) {
-      infile >> text;
-      ifstream subfile(text);
-      CommentStream subcomment(subfile);
-      CheckIfFailure(subfile, text);
-      handle.Open(text);
-      migration = new Migration(subcomment, AgeDepMigration, areas, Area, TimeInfo, keeper);
-      handle.Close();
-      subfile.close();
-      subfile.clear();
-    } else
-      handle.Unexpected("migrationfile", text);
+    ReadWordAndValue(infile, "migrationfile", filename);
+    ifstream subfile(filename);
+    CommentStream subcomment(subfile);
+    CheckIfFailure(subfile, filename);
+    handle.Open(filename);
+    migration = new Migration(subcomment, AgeDepMigration, areas, Area, TimeInfo, keeper);
+    handle.Close();
+    subfile.close();
+    subfile.clear();
+
   } else
     migration = 0;
 
   //Read the maturation data
   ReadWordAndVariable(infile, "doesmature", doesmature);
   if (doesmature) {
-    ReadWordAndVariable(infile, "maturitytype", tmpint);
-    infile >> text >> ws;
-    if (strcasecmp(text, "maturityfile") == 0) {
-      infile >> text >> ws;
-      ifstream subfile(text);
-      CommentStream subcomment(subfile);
-      CheckIfFailure(subfile, text);
-      handle.Open(text);
+    ReadWordAndValue(infile, "maturityfunction", text);
+    ReadWordAndValue(infile, "maturityfile", filename);
+    ifstream subfile(filename);
+    CommentStream subcomment(subfile);
+    CheckIfFailure(subfile, filename);
+    handle.Open(filename);
 
-      switch (tmpint) {
-        case 1:
-          maturity = new MaturityA(subcomment, TimeInfo, keeper,
-            minage, lowerlgrp, size, areas, LgrpDiv, 3);
-          break;
-        case 2:
-          maturity = new MaturityB(subcomment, TimeInfo, keeper,
-            minage, lowerlgrp, size, areas, LgrpDiv);
-          break;
-        case 3:
-          maturity = new MaturityC(subcomment, TimeInfo, keeper,
-            minage, lowerlgrp, size, areas, LgrpDiv, 4);
-          break;
-        case 4:
-          maturity = new MaturityD(subcomment, TimeInfo, keeper,
-            minage, lowerlgrp, size, areas, LgrpDiv, 4);
-          break;
-        default:
-          handle.Message("Maturity type is expected to be 1, 2, 3 or 4");
-      }
+    if (strcasecmp(text, "continuous") == 0)
+      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 3);
+    else if (strcasecmp(text, "fixedlength") == 0)
+      maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv);
+    else if (strcasecmp(text, "ageandlength") == 0)
+      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
+    else if (strcasecmp(text, "constant") == 0)
+      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
+    else
+      handle.Message("Error in stock file - unrecognised maturity", text);
 
-      handle.Close();
-      subfile.close();
-      subfile.clear();
-    } else
-      handle.Unexpected("maturityfile", text);
+    handle.Close();
+    subfile.close();
+    subfile.clear();
 
     if (!doesgrow)
       handle.Warning("The stock does not grow, so it is unlikely to mature!");
@@ -228,8 +212,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   ReadWordAndVariable(infile, "doesmove", doesmove);
   if (doesmove) {
     //transition handles the movements of the age group maxage:
-    transition = new Transition(infile, areas, maxage,
-      lowerlgrp[maxage - minage], size[maxage - minage], keeper);
+    transition = new Transition(infile, areas, maxage, lowerlgrp[maxage - minage], size[maxage - minage], keeper);
 
   } else
     transition = 0;
@@ -237,19 +220,15 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //Read the renewal data
   ReadWordAndVariable(infile, "doesrenew", doesrenew);
   if (doesrenew) {
-    infile >> text;
-    if (strcasecmp(text, "renewaldatafile") == 0) {
-      infile >> text;
-      ifstream subfile(text);
-      CommentStream subcomment(subfile);
-      CheckIfFailure(subfile, text);
-      handle.Open(text);
-      renewal = new RenewalData(subcomment, areas, Area, TimeInfo, keeper);
-      handle.Close();
-      subfile.close();
-      subfile.clear();
-    } else
-      handle.Unexpected("renewaldatafile", text);
+    ReadWordAndValue(infile, "renewaldatafile", filename);
+    ifstream subfile(filename);
+    CommentStream subcomment(subfile);
+    CheckIfFailure(subfile, filename);
+    handle.Open(filename);
+    renewal = new RenewalData(subcomment, areas, Area, TimeInfo, keeper);
+    handle.Close();
+    subfile.close();
+    subfile.clear();
 
   } else
     renewal = 0;
@@ -257,19 +236,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //Read the spawning data
   ReadWordAndVariable(infile, "doesspawn", doesspawn);
   if (doesspawn) {
-    infile >> text;
-    if (strcasecmp(text, "spawnfile") == 0) {
-      infile >> text;
-      ifstream subfile(text);
-      CommentStream subcomment(subfile);
-      CheckIfFailure(subfile, text);
-      handle.Open(text);
-      spawner = new Spawner(subcomment, minage, maxage, Area, TimeInfo, keeper);
-      handle.Close();
-      subfile.close();
-      subfile.clear();
-    } else
-      handle.Unexpected("spawnfile", text);
+    spawner = new Spawner(infile, maxage, LgrpDiv->NoLengthGroups(), Area, TimeInfo, keeper);
 
   } else
     spawner = 0;
@@ -280,6 +247,8 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //Finished reading from infile - resize objects and clean up
   NumberInArea.AddRows(areas.Size(), LgrpDiv->NoLengthGroups());
   delete GrowLgrpDiv;
+  for (i = 0; i < grlenindex.Size(); i++)
+    delete[] grlenindex[i];
   keeper->ClearAll();
 }
 
@@ -293,18 +262,30 @@ Stock::Stock(const char* givenname)
 Stock::~Stock() {
   //Of course all the pointers were initialized to 0 in the constructor
   //and some of them set to point to real objects after that.
-  delete migration;
-  delete prey;
-  delete predator;
-  delete initial;
-  delete LgrpDiv;
-  delete grower;
-  delete NatM;
-  delete transition;
-  delete renewal;
-  delete maturity;
-  delete spawner;
-  delete catchptr;
+  if (migration != 0)
+    delete migration;
+  if (prey != 0)
+    delete prey;
+  if (predator != 0)
+    delete predator;
+  if (initial != 0)
+    delete initial;
+  if (LgrpDiv != 0)
+    delete LgrpDiv;
+  if (grower != 0)
+    delete grower;
+  if (NatM != 0)
+    delete NatM;
+  if (transition != 0)
+    delete transition;
+  if (renewal != 0)
+    delete renewal;
+  if (maturity != 0)
+    delete maturity;
+  if (spawner != 0)
+    delete spawner;
+  if (catchptr != 0)
+    delete catchptr;
 }
 
 void Stock::Reset(const TimeClass* const TimeInfo) {
@@ -413,7 +394,7 @@ void Stock::Print(ofstream& outfile) const {
   if (doesmigrate)
     migration->Print(outfile);
 
-  outfile << "\nAgelength keys\n\nCurrent status\n";
+  outfile << "\nAgelength keys\nCurrent status\n";
   for (i = 0; i < areas.Size(); i++) {
     outfile << "Inner Area " << areas[i] << "\nNumbers\n";
     Printagebandm(outfile, Alkeys[i]);
@@ -423,7 +404,7 @@ void Stock::Print(ofstream& outfile) const {
 }
 
 int Stock::Birthday(const TimeClass* const TimeInfo) const {
-  return(TimeInfo->CurrentStep() == birthdate);
+  return (TimeInfo->CurrentStep() == birthdate);
 }
 
 const Agebandmatrix& Stock::Agelengthkeys(int area) const {
@@ -431,12 +412,12 @@ const Agebandmatrix& Stock::Agelengthkeys(int area) const {
 }
 
 Agebandmatrix& Stock::MutableAgelengthkeys(int area) const {
-  return((Agebandmatrix &) Alkeys[AreaNr[area]]);
+  return ((Agebandmatrix &)Alkeys[AreaNr[area]]);
 }
 
 const Agebandmatrix& Stock::getMeanN(int area) const {
   assert(iseaten && prey->preyType() == MORTPREY_TYPE);
-  return(((MortPrey*)prey)->getMeanN(area));
+  return (((MortPrey*)prey)->getMeanN(area));
 }
 
 const Stockptrvector& Stock::GetMatureStocks() {

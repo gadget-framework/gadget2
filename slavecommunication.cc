@@ -32,7 +32,7 @@ void slaveCommunication::printErrorMsg(const char* errorMsg) {
   msg = new char[strlen(errorMsg) + 1];
   strcpy(msg, errorMsg);
   pvm_perror(msg);
-  delete [] msg;
+  delete[] msg;
 }
 
 int slaveCommunication::startNetCommunication() {

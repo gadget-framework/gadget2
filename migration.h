@@ -24,7 +24,7 @@ public:
   void Clear();
   void Print(ofstream& outfile) const;
   void Print(int nr, ofstream& outfile) const;
-  int ErrorNr() { return(errornr); };
+  int ErrorNr() { return errornr; };
   const doublevector& Penalty() const;
 protected:
   void CopyFromReadToCalc();

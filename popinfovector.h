@@ -12,11 +12,11 @@ public:
   popinfovector(int sz);
   popinfovector(int sz, popinfo initial);
   popinfovector(const popinfovector& initial);
-  ~popinfovector() { delete[] v; };
+  ~popinfovector();
   void resize(int add, popinfo value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   popinfo& operator [] (int pos);
   const popinfo& operator [] (int pos) const;
   void Sum(const popinfovector* const Number, const ConversionIndex& CI);
@@ -25,7 +25,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "popinfovector.icc"
 #endif
 

@@ -5,7 +5,6 @@
 #include "charptrvector.h"
 #include "predatorptrvector.h"
 #include "preyptrvector.h"
-#include "doublematrixptrvector.h"
 #include "sionstep.h"
 
 class PIOnStep;

@@ -11,6 +11,7 @@ public:
   static void Open(const char* file) { files.PutInStack(file); };
   static void Close() { files.OutOfStack(); };
   void Message(const char*) const;
+  void Message(const char*, const char*) const;
   void Unexpected(const char*, const char*) const;
   void Eof() const;
   void Eof(const char*) const;

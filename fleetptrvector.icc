@@ -1,15 +1,15 @@
 #include "fleetptrvector.h"
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 Fleet*& Fleetptrvector::operator [] (int pos) {
-  return(v[pos]);
+  return v[pos];
 }
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 Fleet* const& Fleetptrvector::operator [] (int pos) const {
-  return(v[pos]);
+  return v[pos];
 }

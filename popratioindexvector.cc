@@ -1,6 +1,10 @@
 #include "popratioindexvector.h"
 #include "gadget.h"
 
+#ifndef GADGET_INLINE
+#include "popratioindexvector.icc"
+#endif
+
 popratioindexvector::popratioindexvector(int sz, int minp) {
   size = sz;
   int i;
@@ -46,7 +50,8 @@ popratioindexvector::~popratioindexvector() {
   if (v != 0) {
     for (i = 0; i < size; i++)
       delete v[i];
-    delete [] v;
+    delete[] v;
+    v = 0;
   }
 }
 
@@ -70,14 +75,4 @@ void popratioindexvector::resize(int addsize, int lower, const popratiovector& i
   }
   v = vnew;
   minpos = lower;
-}
-
-popratiovector& popratioindexvector::operator [] (int pos) {
-  assert(minpos <= pos && pos < minpos + size);
-  return(*v[pos - minpos]);
-}
-
-const popratiovector& popratioindexvector::operator [] (int pos) const {
-  assert(minpos <= pos && pos < minpos + size);
-  return(*v[pos - minpos]);
 }

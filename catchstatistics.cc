@@ -12,9 +12,10 @@
 #include "gadget.h"
 
 CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double likweight)
+  const TimeClass* const TimeInfo, double likweight, const char* name)
   : Likelihood(CATCHSTATISTICSLIKELIHOOD, likweight) {
 
+  lgrpDiv = NULL;
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -29,9 +30,31 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   CommentStream subdata(datafile);
 
   timeindex = 0;
+  csname = new char[strlen(name) + 1];
+  strcpy(csname, name);
+
+  functionname = new char[MaxStrLength];
+  strncpy(functionname, "", MaxStrLength);
   ReadWordAndValue(infile, "datafile", datafilename);
-  ReadWordAndVariable(infile, "functionnumber", functionnumber);
+  ReadWordAndValue(infile, "function", functionname);
   ReadWordAndVariable(infile, "overconsumption", overconsumption);
+  if (overconsumption != 0 && overconsumption != 1)
+    handle.Message("Error in catchstatistics - overconsumption must be 0 or 1");
+
+  if (strcasecmp(functionname, "lengthcalcvar") == 0)
+    functionnumber = 1;
+  else if (strcasecmp(functionname, "lengthgivenvar") == 0)
+    functionnumber = 2;
+  else if (strcasecmp(functionname, "weightgivenvar") == 0)
+    functionnumber = 3;
+  else if (strcasecmp(functionname, "weightnovar") == 0)
+    functionnumber = 4;
+  else if (strcasecmp(functionname, "lengthnovar") == 0)
+    functionnumber = 5;
+  else if (strcasecmp(functionname, "experimental") == 0)
+    functionnumber = 6;
+  else
+    handle.Message("Error in catchstatistics - unrecognised function", functionname);
 
   //Read in area aggregation from file
   ReadWordAndValue(infile, "areaaggfile", aggfilename);
@@ -123,18 +146,15 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
   switch(functionnumber) {
     case 2:
     case 3:
-    case 5:
+    case 6:
       needvar = 1;
   }
 
   //Check the number of columns in the inputfile
-  if (needvar == 1) {
-    if (!(CheckColumns(infile, 7)))
-      handle.Message("Wrong number of columns in inputfile - should be 7");
-  } else {
-    if (!(CheckColumns(infile, 6)))
-      handle.Message("Wrong number of columns in inputfile - should be 6");
-  }
+  if ((needvar == 1) && (CountColumns(infile) != 7))
+    handle.Message("Wrong number of columns in inputfile - should be 7");
+  else if ((needvar == 0) && (CountColumns(infile) != 6))
+    handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -190,7 +210,6 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
       (*mean[timeid])[areaid][ageid] = tmpmean;
       if (needvar == 1)
         (*variance[timeid])[areaid][ageid] = tmpstddev * tmpstddev;
-
     }
   }
   AAT.AddActions(Years, Steps, TimeInfo);
@@ -213,6 +232,12 @@ CatchStatistics::~CatchStatistics() {
   }
   for (i = 0; i < variance.Size(); i++)
     delete variance[i];
+  delete[] csname;
+  delete[] functionname;
+  if (lgrpDiv != NULL) {
+    delete lgrpDiv;
+    lgrpDiv = NULL;
+  }
 }
 
 void CatchStatistics::Reset(const Keeper* const keeper) {
@@ -221,10 +246,10 @@ void CatchStatistics::Reset(const Keeper* const keeper) {
 }
 
 void CatchStatistics::Print(ofstream& outfile) const {
-  int i, j, y;
+  int i;
 
-  outfile << "\nCatch Statistics\nlikelihood " << likelihood
-    << "\nfunction number " << functionnumber;
+  outfile << "\nCatch Statistics " << csname << "\nlikelihood " << likelihood
+    << "\nfunction " << functionname;
   outfile << "\n\tStocknames:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -232,33 +257,7 @@ void CatchStatistics::Print(ofstream& outfile) const {
   for (i = 0; i < fleetnames.Size(); i++)
     outfile << sep << fleetnames[i];
   outfile << endl;
-
   aggregator->Print(outfile);
-  outfile << "\tStatistics Data:\n";
-  for (y = 0; y < mean.Size(); y++) {
-    outfile << "\tyear and step " << y << "\n\tmean\n";
-    for (i = 0; i < mean[y]->Nrow(); i++) {
-      outfile << TAB;
-      for (j = 0; j < mean[y]->Ncol(i); j++) {
-        outfile.width(printwidth);
-        outfile.precision(smallprecision);
-        outfile << (*mean[y])[i][j] << sep;
-      }
-      outfile << endl;
-    }
-    outfile << "\tvariance\n";
-    if (variance.Size() != 0) {
-      for (i = 0; i < variance[y]->Nrow(); i++) {
-        outfile << TAB;
-        for (j = 0; j < variance[y]->Ncol(i); j++) {
-          outfile.width(printwidth);
-          outfile.precision(smallprecision);
-          outfile << (*variance[y])[i][j] << sep;
-        }
-      }
-      outfile << endl;
-    }
-  }
   outfile.flush();
 }
 
@@ -298,19 +297,18 @@ void CatchStatistics::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector&
     }
   }
 
-  LengthGroupDivision* LgrpDiv =
-    new LengthGroupDivision(*(stocks[0]->ReturnPrey()->ReturnLengthGroupDiv()));
-
+  lgrpDiv = new LengthGroupDivision(*(stocks[0]->ReturnPrey()->ReturnLengthGroupDiv()));
   for (i = 1; i < stocks.Size(); i++)
-    if (!LgrpDiv->Combine(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv())) {
+    if (!lgrpDiv->Combine(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv())) {
       cerr << "Length group divisions for preys in Catchstatistic not compatible\n";
       exit(EXIT_FAILURE);
     }
 
-  aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
+  aggregator = new FleetPreyAggregator(fleets, stocks, lgrpDiv, areas, ages, overconsumption);
 }
 
 void CatchStatistics::AddToLikelihood(const TimeClass* const TimeInfo) {
+
   if (AAT.AtCurrentTime(TimeInfo)) {
     aggregator->Sum(TimeInfo);
     //JMB - check the following if any new functionnumber values are added
@@ -322,37 +320,48 @@ void CatchStatistics::AddToLikelihood(const TimeClass* const TimeInfo) {
 double CatchStatistics::SOSWeightOrLength() {
   double lik = 0.0;
   int nareas, age;
-  double sim_mean, sim_var, sim_number, tmp = 0.0;
+  double simmean, simvar, simnumber, simdiff;
 
+  simmean = simvar = simnumber = simdiff = 0.0;
   const Agebandmatrixvector *alptr = &aggregator->AgeLengthDist();
-  for (nareas = 0; nareas < alptr->Size(); nareas++)
+  for (nareas = 0; nareas < alptr->Size(); nareas++) {
     for (age = 0; age < (*alptr)[nareas].Nrow(); age++) {
       PopStatistics PopStat((*alptr)[nareas][age], aggregator->ReturnLgrpDiv());
-      sim_mean = 0.0;
-      sim_var = 0.0;
-      sim_number = 0.0;
 
       switch(functionnumber) {
         case 1:
-          sim_mean = PopStat.MeanLength();
-          sim_var = PopStat.StdDevOfLength();
-          sim_var *= sim_var;
+          simmean = PopStat.MeanLength();
+          simdiff = simmean - (*mean[timeindex])[nareas][age];
+          simvar = PopStat.StdDevOfLength() * PopStat.StdDevOfLength();
+          simnumber = PopStat.TotalNumber();
           break;
         case 2:
-        case 5:
-          sim_mean = PopStat.MeanLength();
-          sim_var = (*variance[timeindex])[nareas][age];
+        case 6:
+          simmean = PopStat.MeanLength();
+          simdiff = simmean - (*mean[timeindex])[nareas][age];
+          simvar = (*variance[timeindex])[nareas][age];
+          simnumber = PopStat.TotalNumber();
           break;
         case 3:
-          sim_mean = PopStat.MeanWeight();
-          sim_var = (*variance[timeindex])[nareas][age];
+          simmean = PopStat.MeanWeight();
+          simdiff = simmean - (*mean[timeindex])[nareas][age];
+          simvar = (*variance[timeindex])[nareas][age];
+          simnumber = PopStat.TotalNumber();
           break;
         case 4:
-          sim_mean = PopStat.MeanWeight();
-          sim_var = 1.0;
+          simmean = PopStat.MeanWeight();
+          simdiff = simmean - (*mean[timeindex])[nareas][age];
+          simvar = 1.0;
+          simnumber = PopStat.TotalNumber();
+          break;
+        case 5:
+          simmean = PopStat.MeanLength();
+          simdiff = simmean - (*mean[timeindex])[nareas][age];
+          simvar = 1.0;
+          simnumber = PopStat.TotalNumber();
           break;
         default:
-          cerr << "Error in catchstatistics - unknown functionnumber " << functionnumber << endl;
+          cerr << "Error in catchstatistics - unknown function " << functionname << endl;
           break;
       }
       switch(functionnumber) {
@@ -360,33 +369,30 @@ double CatchStatistics::SOSWeightOrLength() {
         case 2:
         case 3:
         case 4:
+        case 5:
           /* THLTH 10.03.01: Changed this to make it diff. and to add a penalty, so that
            * when the model is fishing out all the fish (aka the number in the model goes
            * down to zero and therefore the mean length or weight as well), we get the
            * value l^2 for that timestep, where l is the meanlength/-weight in the sample
            * (that is, we get some fairly high number, instead of zero before).
-           * Further, the reason why the sim_number is multiplied with a 20 is simply to
-           * avoid the penalty to come in to quickly, that is for to large values of
-           * sim_number. */
-          sim_number = 20 * PopStat.TotalNumber();
-          tmp = (*mean[timeindex])[nareas][age] - sim_mean;
-          lik += tmp * tmp * (sim_var > 0 ? 1 / sim_var : 0) * (*numbers[timeindex])[nareas][age] *
-            (1 - 1 / exp(sim_number)) + (*mean[timeindex])[nareas][age] *
-            (*mean[timeindex])[nareas][age] * 1 / exp(sim_number);
+           * Further, the reason why the population is multiplied with a 20 is simply to
+           * avoid the penalty to come in to quickly. */
+          lik += simdiff * simdiff * (simvar > 0 ? 1 / simvar : 0) * (*numbers[timeindex])[nareas][age]
+            * (1 - exp(-20 * simnumber)) + ((*mean[timeindex])[nareas][age]
+            * (*mean[timeindex])[nareas][age] * exp(-20 * simnumber));
           break;
-        case 5:
-          if (iszero(sim_mean))
+        case 6:
+          if (iszero(simmean))
             lik += (*numbers[timeindex])[nareas][age];
-          else if (sim_mean > verysmall && (*mean[timeindex])[nareas][age] > verysmall) {
-            //We don't want to calculate the variance if there is no catch
-            tmp = (*mean[timeindex])[nareas][age] - sim_mean;
-            lik += tmp * tmp * (sim_var > 0 ? 1 / sim_var : 0) * (*numbers[timeindex])[nareas][age];
-          }
+          else if (simmean > verysmall && (*mean[timeindex])[nareas][age] > verysmall)
+            lik += simdiff * simdiff * (simvar > 0 ? 1 / simvar : 0) * (*numbers[timeindex])[nareas][age];
+
           break;
         default:
-          cerr << "Error in catchstatistics - unknown functionnumber " << functionnumber << endl;
+          cerr << "Error in catchstatistics - unknown function " << functionname << endl;
           break;
       }
     }
+  }
   return lik;
 }

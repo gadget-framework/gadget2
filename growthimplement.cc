@@ -40,6 +40,3 @@ GrowthImplementparameters::GrowthImplementparameters(CommentStream& infile) {
     realvariance[i] = tmpmatrix[i][5];
   }
 }
-
-void GrowthImplementparameters::Print(ofstream& outfile) const {
-}

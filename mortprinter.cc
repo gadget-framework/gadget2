@@ -36,6 +36,12 @@ MortPrinter::MortPrinter(CommentStream& infile,
   strncpy(text, "", MaxStrLength);
   int i;
 
+  sumF = 0;
+  sumM1 = 0;
+  sumM2 = 0;
+  sumN = 0;
+  totalNbar = 0;
+
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
@@ -75,9 +81,9 @@ MortPrinter::MortPrinter(CommentStream& infile,
   }
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("YearsAndSteps", text);
+    handle.Unexpected("yearsandsteps", text);
   if (!aat.ReadFromFile(infile, TimeInfo))
-    handle.Message("Wrong format for yearsandsteps");
+    handle.Message("Error in mortprinter - wrong format for yearsandsteps");
 
   //JMB - changed so that firstyear is not read from file
   //but calculated from the yearsandsteps read into aat
@@ -137,40 +143,17 @@ void MortPrinter::SetStock(Stockptrvector& stockvec) {
     if (stocks[i]->Maxage() > maxage)
       maxage = stocks[i]->Maxage();
   }
-  sumF = new doublematrix(maxage - minage + 1, nrofyears, 0.0);
-  sumM1 = new doublematrix(maxage - minage + 1, nrofyears, 0.0);
-  sumM2 = new doublematrix(maxage - minage + 1, nrofyears, 0.0);
-  sumN = new doublematrix(maxage - minage + 1, nrofyears, 0.0);
-  totalNbar = new doublematrix(maxage - minage + 1, nrofyears, 0.0);
-}
 
-void MortPrinter::Init(const Ecosystem* eco) {
-  int i;
-  /*JMB code has been removed from here - see RemovedCode.txt for details*/
-  Stock* tmpstock;
-  for (i = 0; i < stocknames.Size(); i++) {
-    tmpstock = eco->findStock(stocknames[i]);
-    if (tmpstock != NULL)
-      stocks.resize(1, tmpstock);
-  }
-  if (stocks.Size() != stocknames.Size()) {
-    cerr << "Error in printer when searching for stock(s) with name matching:\n";
-    for (i = 0; i < stocknames.Size(); i++)
-      cerr << (const char*)stocknames[i] << sep;
-    cerr << "\nDid only find the stock(s)\n";
-    for (i = 0; i < stocks.Size(); i++)
-      cerr << (const char*)stocks[i]->Name() << sep;
-    cerr << endl;
-    exit(EXIT_FAILURE);
-  }
-  minage = stocks[0]->Minage();
-  maxage = stocks[0]->Maxage();
-  for (i = 0; i < stocks.Size(); i++) {
-    if (stocks[i]->Minage() < minage)
-      minage = stocks[i]->Minage();
-    if (stocks[i]->Maxage() > maxage)
-      maxage = stocks[i]->Maxage();
-  }
+  if (sumF != 0)
+    delete sumF;
+  if (sumM1 != 0)
+    delete sumM1;
+  if (sumM2 != 0)
+    delete sumM2;
+  if (sumN != 0)
+    delete sumN;
+  if (totalNbar != 0)
+    delete totalNbar;
   sumF = new doublematrix(maxage - minage + 1, nrofyears, 0.0);
   sumM1 = new doublematrix(maxage - minage + 1, nrofyears, 0.0);
   sumM2 = new doublematrix(maxage - minage + 1, nrofyears, 0.0);
@@ -257,13 +240,22 @@ void MortPrinter::Print(const TimeClass* const TimeInfo) {
  *  Purpose:  Destructor
  */
 MortPrinter::~MortPrinter() {
-  delete sumF;
-  delete sumM1;
-  delete sumM2;
-  delete totalNbar;
+  if (sumF != 0)
+    delete sumF;
+  if (sumM1 != 0)
+    delete sumM1;
+  if (sumM2 != 0)
+    delete sumM2;
+  if (sumN != 0)
+    delete sumN;
+  if (totalNbar != 0)
+    delete totalNbar;
+
   outfile.close();
   outfile.clear();
   int i;
   for (i = 0; i < stocknames.Size(); i++)
     delete[] stocknames[i];
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
 }

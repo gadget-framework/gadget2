@@ -35,6 +35,9 @@ MigVariable::MigVariable(CommentStream& infile, int firstyear, int lastyear,
   }
 }
 
+MigVariable::~MigVariable() {
+}
+
 MigVariable::MigVariable(Formula* const number, int firstyear, int lastyear,
   Keeper* const keeper) : ValuesReadFromFile(0) {
 
@@ -53,5 +56,5 @@ double MigVariable::ValueOfVariable(int year) {
       result = Coeff[3];
   } else
     result = value;
-  return(result);
+  return result;
 }

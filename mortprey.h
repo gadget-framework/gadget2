@@ -3,7 +3,6 @@
 
 #include "prey.h"
 #include "doublematrixptrvector.h"
-#include "bandmatrixptrvector.h"
 #include "areatime.h"
 #include "gadget.h"
 
@@ -25,7 +24,7 @@ public:
   virtual void Reset();
   void calcZ(int area, const doublevector& nat_m);
   const Agebandmatrix& getMeanN(int area) const;
-  void SetCannibalism(int area, const doublevector& cann);
+  void setCannibalism(int area, const doublevector& cann);
   const doublevector& propSurv(int area) { return prop_surv[AreaNr[area]]; };
   friend ostream& printmean_n(ostream& o, const MortPrey& prey, AreaClass area, int indent);
   friend ostream& printz(ostream& o, const MortPrey& prey, AreaClass area, int indent);
@@ -38,27 +37,19 @@ public:
   void setMaxPredAge(int maxage) { maxpredage = maxage; };
   void setDimensions(int nrow, int ncol) { cann_cons.AddRows(nrow,ncol); };
   const char* cannPredName(int pred_no) { return cannprednames[pred_no]; };
-  void addCannPredName(const char* predname) {
-    char* tempName = new char[strlen(predname) + 1];
-    strcpy(tempName, predname);
-    cannprednames.resize(1, tempName);
-  }; //kgf 3/3 99
+  void addCannPredName(const char* predname); //kgf 3/3 99
   void addConsMatrix(int ncol, const bandmatrix& cons_mat);
   int getNoCannPreds() { return cannprednames.Size(); };
   const bandmatrix& cannConsum(int area, int pred_no) { return cann_cons[AreaNr[area]][pred_no]; };
-  void setConsumption(int area, int pred_no, const bandmatrix& consum) {
-    cann_cons.ChangeElement(AreaNr[area], pred_no, consum);
-  };
+  void setConsumption(int area, int pred_no, const bandmatrix& consum);
   int getPredMinAge(int i) { return cann_cons[0][i].Minage(); };
   int getPredMaxAge(int i) { return cann_cons[0][i].Maxage(); };
   int cannIsTrue() { return cann_is_true; };
   void cannIsTrue(int cann_val) { cann_is_true = cann_val; };
-  void addAgeGroupMatrix(doublematrix* const agematrix) { agegroupmatrix.resize(1, agematrix); };
+  void addAgeGroupMatrix(doublematrix* const agematrix);
   const doublematrix* getAgeGroupMatrix(int pred_no) { return agegroupmatrix[pred_no]; };
-  void setAgeMatrix(int pred_no, int area, const doublevector& agegroupno) {
-    (*agegroupmatrix[pred_no])[area] = agegroupno;
-  };
-
+  void setAgeMatrix(int pred_no, int area, const doublevector& agegroupno);
+  doublematrix* ageGroupMatrix(int index) { return agegroupmatrix[index]; };
 protected:
   Agebandmatrixvector Alkeys;
   Agebandmatrixvector mean_n;

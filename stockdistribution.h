@@ -5,7 +5,6 @@
 #include "commentstream.h"
 #include "fleetpreyaggregator.h"
 #include "doublematrixptrmatrix.h"
-#include "charptrmatrix.h"
 #include "actionattimes.h"
 
 class Keeper;
@@ -38,6 +37,7 @@ private:
   LengthGroupDivision* lgrpdiv;
   int overconsumption; //should we take overconsumption into account
   int functionnumber;
+  char* functionname;
   int timeindex;
   ActionAtTimes AAT;
   int minp;

@@ -42,28 +42,19 @@ void PopPredator::Print(ofstream& outfile) const {
       outfile.width(printwidth);
       outfile << sep << Prednumber[area][i].N;
     }
-    outfile << endl;
-  }
-  for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tWeight of predator on area " << areas[area];
+    outfile << "\n\tWeight of predator on area " << areas[area];
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(printwidth);
       outfile << sep << Prednumber[area][i].W;
     }
-    outfile << endl;
-  }
-  for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tTotal amount eaten on area " << areas[area];
+    outfile << "\n\tTotal amount eaten on area " << areas[area];
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(printwidth);
       outfile << sep << totalconsumption[area][i];
     }
-    outfile << endl;
-  }
-  for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tOverconsumption on area    " << areas[area];
+    outfile << "\n\tOverconsumption on area    " << areas[area];
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(printwidth);
@@ -86,6 +77,18 @@ const bandmatrix& PopPredator::Consumption(int area, const char* preyname) const
   cerr << "Predator " << this->Name() << " was asked for consumption\n"
     << "of prey " << preyname << " which he does not eat\n";
   exit(EXIT_FAILURE);
+}
+
+const double PopPredator::consumedBiomass(int prey_nr, int area_nr) const{
+
+  int age, len;
+  double tons = 0.0;
+  const bandmatrix& bio = consumption[area_nr][prey_nr];
+  for (age = bio.Minage(); age <= bio.Maxage(); age++)
+    for (len = bio.Minlength(age); len < bio.Maxlength(age); len++)
+      tons += bio[age][len];
+
+  return tons;
 }
 
 const doublevector& PopPredator::OverConsumption(int area) const {
@@ -153,13 +156,15 @@ void PopPredator::ResizeObjects() {
 
   popinfo nullpop;
   //Add rows to matrices and initialize.
-  cons.AddRows(areas.Size(), NoPreys());
-  totalcons.AddRows(areas.Size(), LgrpDiv->NoLengthGroups(), 0.0);
-  overcons.AddRows(areas.Size(), LgrpDiv->NoLengthGroups(), 0);
-  consumption.AddRows(areas.Size(), NoPreys());
-  totalconsumption.AddRows(areas.Size(), LgrpDiv->NoLengthGroups(), 0.0);
-  overconsumption.AddRows(areas.Size(), LgrpDiv->NoLengthGroups(), 0);
-  Prednumber.AddRows(areas.Size(), LgrpDiv->NoLengthGroups(), nullpop);
+  int numareas = areas.Size();
+  int numlengths = LgrpDiv->NoLengthGroups();
+  cons.AddRows(numareas, NoPreys());
+  totalcons.AddRows(numareas, numlengths, 0.0);
+  overcons.AddRows(numareas, numlengths, 0);
+  consumption.AddRows(numareas, NoPreys());
+  totalconsumption.AddRows(numareas, numlengths, 0.0);
+  overconsumption.AddRows(numareas, numlengths, 0);
+  Prednumber.AddRows(numareas, numlengths, nullpop);
 }
 
 void PopPredator::Multiply(Agebandmatrix& stock_alkeys, const doublevector& ratio) {

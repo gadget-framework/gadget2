@@ -9,11 +9,11 @@ public:
   PopPredatorptrvector(int sz);
   PopPredatorptrvector(int sz, PopPredator* initial);
   PopPredatorptrvector(const PopPredatorptrvector& initial);
-  ~PopPredatorptrvector() { delete[] v; };
+  ~PopPredatorptrvector();
   void resize(int add, PopPredator* value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   PopPredator*& operator [] (int pos);
   PopPredator* const& operator [] (int pos) const;
 protected:
@@ -21,7 +21,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "poppredatorptrvector.icc"
 #endif
 

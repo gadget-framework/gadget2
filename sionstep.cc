@@ -10,7 +10,8 @@ SIOnStep::~SIOnStep() {
 }
 
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
-  const TimeClass* const TimeInfo, const charptrvector& lenindex, const charptrvector& ageindex) {
+  const TimeClass* const TimeInfo, int numcols,
+  const charptrvector& index1, const charptrvector& index2) {
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -18,31 +19,83 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
 
   error = 0;
   NumberOfSums = 0;
-
-  //read the fittype
-  infile >> text;
-  if (strcasecmp(text, "linearfit") == 0)
-    fittype = LinearFit;
-  else if (strcasecmp(text, "powerfit") == 0)
-    fittype = PowerFit;
-  else
-    handle.Unexpected("Error in surveyindex - unrecognised fittype", text);
-
-  //set the slope and intercept values to a default of 0
   slope = 0.0;
   intercept = 0.0;
+
+  //if numcols is 1 then this is a sibyalengthandageonstep
+  //else we have a pionstep - these use differenct fittypes
+
+  if (numcols == 1) {
+    infile >> text;
+    if (strcasecmp(text, "linearfit") == 0)
+      fittype = LinearFit;
+    else if (strcasecmp(text, "powerfit") == 0)
+      fittype = PowerFit;
+    else
+      handle.Message("Error in surveyindex - unrecognised fittype", text);
+
+  } else {
+    infile >> text;
+    if (strcasecmp(text, "linearfit") == 0)
+      fittype = LinearFit;
+    else if (strcasecmp(text, "loglinearfit") == 0)
+      fittype = LogLinearFit;
+    else if (strcasecmp(text, "fixedslopelinearfit") == 0)
+      fittype = FixedSlopeLinearFit;
+    else if (strcasecmp(text, "fixedslopeloglinearfit") == 0)
+      fittype = FixedSlopeLogLinearFit;
+    else if (strcasecmp(text, "fixedinterceptlinearfit") == 0)
+      fittype = FixedInterceptLinearFit;
+    else if (strcasecmp(text, "fixedinterceptloglinearfit") == 0)
+      fittype = FixedInterceptLogLinearFit;
+    else if (strcasecmp(text, "fixedlinearfit") == 0)
+      fittype = FixedLinearFit;
+    else if (strcasecmp(text, "fixedloglinearfit") == 0)
+      fittype = FixedLogLinearFit;
+    else
+      handle.Message("Error in surveyindex - unrecognised fittype", text);
+
+    switch(fittype) {
+      case LinearFit:
+      case LogLinearFit:
+        break;
+      case FixedSlopeLinearFit:
+      case FixedSlopeLogLinearFit:
+        ReadWordAndVariable(infile, "slope", slope);
+        break;
+      case FixedInterceptLinearFit:
+      case FixedInterceptLogLinearFit:
+        ReadWordAndVariable(infile, "intercept", intercept);
+        break;
+      case FixedLinearFit:
+      case FixedLogLinearFit:
+        ReadWordAndVariable(infile, "slope", slope);
+        ReadWordAndVariable(infile, "intercept", intercept);
+        break;
+      default:
+        handle.Message("Error in surveyindex - unrecognised fittype");
+       break;
+    }
+  }
 
   //read the year and step data from the datafile
   ifstream datafile;
   CommentStream subdata(datafile);
-
   datafile.open(datafilename);
   CheckIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadSIData(subdata, arealabel, lenindex, ageindex, TimeInfo);
+  ReadSIData(subdata, arealabel, index1, index2, TimeInfo);
   handle.Close();
   datafile.close();
   datafile.clear();
+
+  Indices.AddRows(Years.Size(), numcols, 0.0);
+  abundance.AddRows(Years.Size(), numcols, 0.0);
+  if (numcols != 1) {
+    slopes.resize(numcols);
+    intercepts.resize(numcols);
+    sse.resize(numcols);
+  }
 }
 
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
@@ -54,6 +107,8 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
 
   error = 0;
   NumberOfSums = 0;
+  slope = 0.0;
+  intercept = 0.0;
 
   //read the fittype
   infile >> text;
@@ -74,24 +129,19 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
   else if (strcasecmp(text, "fixedloglinearfit") == 0)
     fittype = FixedLogLinearFit;
   else
-    handle.Unexpected("Error in surveyindex - unrecognised fittype", text);
+    handle.Message("Error in surveyindex - unrecognised fittype", text);
 
-  switch (fittype) {
+  switch(fittype) {
     case LinearFit:
     case LogLinearFit:
-      //No reading is necessary. Set the variables although they will not be used:
-      slope = 0.0;
-      intercept = 0.0;
       break;
     case FixedSlopeLinearFit:
     case FixedSlopeLogLinearFit:
       ReadWordAndVariable(infile, "slope", slope);
-      intercept = 0.0;
       break;
     case FixedInterceptLinearFit:
     case FixedInterceptLogLinearFit:
       ReadWordAndVariable(infile, "intercept", intercept);
-      slope = 0.0;
       break;
     case FixedLinearFit:
     case FixedLogLinearFit:
@@ -106,7 +156,6 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
   //read the survey indices data from the datafile
   ifstream datafile;
   CommentStream subdata(datafile);
-
   datafile.open(datafilename);
   CheckIfFailure(datafile, datafilename);
   handle.Open(datafilename);
@@ -115,12 +164,11 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
   datafile.close();
   datafile.clear();
 
-  int ncol = Indices.Ncol();
   if (Indices.Nrow() > 0)
-    abundance.AddRows(Indices.Nrow(), ncol, 0.0);
-  slopes.resize(ncol);
-  intercepts.resize(ncol);
-  sse.resize(ncol);
+    abundance.AddRows(Indices.Nrow(), Indices.Ncol(), 0.0);
+  slopes.resize(Indices.Ncol());
+  intercepts.resize(Indices.Ncol());
+  sse.resize(Indices.Ncol());
 }
 
 void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
@@ -136,7 +184,7 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
   ErrorHandler handle;
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 5)))
+  if (CountColumns(infile) != 5)
     handle.Message("Wrong number of columns in inputfile - should be 5");
 
   while (!infile.eof()) {
@@ -185,26 +233,28 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
 }
 
 void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
-  const charptrvector& lenindex, const charptrvector& ageindex,
+  const charptrvector& index1, const charptrvector& index2,
   const TimeClass* TimeInfo) {
 
   int i;
   int year, step;
   double tmpnumber;
-  char tmparea[MaxStrLength], tmpage[MaxStrLength], tmplen[MaxStrLength];
+  char tmparea[MaxStrLength], tmpstr1[MaxStrLength], tmpstr2[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
-  strncpy(tmpage, "", MaxStrLength);
-  strncpy(tmplen, "", MaxStrLength);
-  int keepdata, timeid, ageid, lenid;
+  strncpy(tmpstr1, "", MaxStrLength);
+  strncpy(tmpstr2, "", MaxStrLength);
+  int keepdata, timeid, id;
   ErrorHandler handle;
 
-  //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 6)))
+  //for sibylengthandageonstep tmpstr1 is age, tmpstr2 is length
+  //for pionstep tmpstr1 is predlength, tmpstr2 is preylength
+  //check the number of columns in the inputfile
+  if (CountColumns(infile) != 6)
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;
-    infile >> year >> step >> tmparea >> tmpage >> tmplen >> tmpnumber >> ws;
+    infile >> year >> step >> tmparea >> tmpstr1 >> tmpstr2 >> tmpnumber >> ws;
 
     //check if the year and step are in the simulation
     timeid = -1;
@@ -221,22 +271,22 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
     if (!(strcasecmp(arealabel, tmparea) == 0))
       keepdata = 1;
 
-    //if tmpage is in ageindex keep data, else dont keep the data
-    ageid = -1;
-    for (i = 0; i < ageindex.Size(); i++)
-      if (strcasecmp(ageindex[i], tmpage) == 0)
-        ageid = i;
+    //if tmpstr1 is in index1 keep data, else dont keep the data
+    id = -1;
+    for (i = 0; i < index1.Size(); i++)
+      if (strcasecmp(index1[i], tmpstr1) == 0)
+        id = i;
 
-    if (ageid == -1)
+    if (id == -1)
       keepdata = 1;
 
-    //if tmplen is in lenindex keep data, else dont keep the data
-    lenid = -1;
-    for (i = 0; i < lenindex.Size(); i++)
-      if (strcasecmp(lenindex[i], tmplen) == 0)
-        lenid = i;
+    //if tmpstr2 is in index2 keep data, else dont keep the data
+    id = -1;
+    for (i = 0; i < index2.Size(); i++)
+      if (strcasecmp(index2[i], tmpstr2) == 0)
+        id = i;
 
-    if (lenid == -1)
+    if (id == -1)
       keepdata = 1;
 
     if (keepdata == 0) {
@@ -252,8 +302,6 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
       YearsInFile.resize(1, year);
   }
   AAT.AddActions(Years, Steps, TimeInfo);
-  Indices.AddRows(Years.Size(),  1, 0.0);
-  abundance.AddRows(Years.Size(), 1, 0.0);
 }
 
 void SIOnStep::Reset(const Keeper* const keeper) {
@@ -362,10 +410,10 @@ double SIOnStep::Regression() {
 
 void SIOnStep::KeepNumbers(const doublevector& numbers) {
   assert(numbers.Size() == abundance.Ncol());
-  NumberOfSums++;
   int i;
   for (i = 0; i < numbers.Size(); i++)
-    abundance[NumberOfSums - 1][i] = numbers[i];
+    abundance[NumberOfSums][i] = numbers[i];
+  NumberOfSums++;
 }
 
 double SIOnStep::Fit(const doublevector& stocksize, const doublevector& indices, int col) {

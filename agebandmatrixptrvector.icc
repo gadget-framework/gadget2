@@ -1,19 +1,17 @@
 #include "agebandmatrixptrvector.h"
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 Agebandmatrixvector*& agebandmatrixptrvector::operator [] (int pos) {
-  assert(0 <= pos && pos < size);
-  return(v[pos]);
+  return v[pos];
 }
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 Agebandmatrixvector* const& agebandmatrixptrvector::operator [] (int pos) const {
-  assert(0 <= pos && pos < size);
-  return(v[pos]);
+  return v[pos];
 }
 
 

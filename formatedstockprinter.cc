@@ -115,9 +115,9 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("YearsAndSteps", text);
+    handle.Unexpected("yearsandsteps", text);
   if (!aat.ReadFromFile(infile, TimeInfo))
-    handle.Message("Wrong format for yearsandsteps");
+    handle.Message("Error in formatedstockprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
@@ -126,6 +126,9 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
     if (!(strcasecmp(text, "[component]") == 0))
       handle.Unexpected("[component]", text);
   }
+
+  for (i = 0; i < lenindex.Size(); i++)
+    delete[] lenindex[i];
 }
 
 /*  SetStock
@@ -224,4 +227,8 @@ FormatedStockPrinter::~FormatedStockPrinter() {
   int i;
   for (i = 0; i < stocknames.Size(); i++)
     delete[] stocknames[i];
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
+  for (i = 0; i < ageindex.Size(); i++)
+    delete[] ageindex[i];
 }

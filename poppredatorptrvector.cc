@@ -1,7 +1,7 @@
 #include "poppredatorptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "poppredatorptrvector.icc"
 #endif
 
@@ -33,6 +33,13 @@ PopPredatorptrvector::PopPredatorptrvector(const PopPredatorptrvector& initial) 
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+PopPredatorptrvector::~PopPredatorptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a PopPredatorptrvector and fills it vith value.

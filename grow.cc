@@ -1,22 +1,14 @@
 #include "maturity.h"
 
-//Upgrade growth.  Input to program are two rectangular matrices
-//Lgrowth describes the ratio of each length group that grows certain
-//number of length groups.  Wgrowth describes the weight gain of
-//Each element in Lgrowth.
+/* Update the agebandmatrix to reflect the calculated growth  */
+/* Lgrowth contains the ratio of each length group that grows */
+/* by a certain number of length groups, and Wgrowth contains */
+/* the weight increase for each entry in Lgrowth              */
 
+/* JMB changed to deal with very small weights a bit better   */
 void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowth) {
   int i, lgrp, grow, maxlgrp;
   double number, wt, upfj;
-
-  //'age' is age,
-  //'lgrp' is number of length group,
-  //'maxlgrp' is the largest possible number of length group for a given age,
-  //'grow' is growth, measured in number of length groups,
-  //'i' is shifted age, i.e. age - minage,
-  //'number' is just number,
-  //'wt' is weight (i.e. mean weight).
-  //And in the loops, 'upfj' is just a dummy variable.
 
   number = 0.0;
   wt = 0.0;
@@ -30,11 +22,9 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
         upfj = Lgrowth[grow][lgrp] * (*v[i])[lgrp].N;
         number += upfj;
         wt += upfj * ((*v[i])[lgrp].W + Wgrowth[grow][lgrp]);
-        /*JMB code removed from here - see RemovedCode.txt for details*/
       }
     }
 
-    /*JMB changed to deal with very small weights a bit better*/
     if ((iszero(number)) || (wt < verysmall)) {
       (*v[i])[maxlgrp].W = 0.0;
       (*v[i])[maxlgrp].N = 0.0;
@@ -53,7 +43,6 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
         wt += upfj * ((*v[i])[lgrp - grow].W + Wgrowth[grow][lgrp - grow]);
       }
 
-      /*JMB changed to deal with very small weights a bit better*/
       if ((iszero(number)) || (wt < verysmall)) {
         (*v[i])[lgrp].W = 0.0;
         (*v[i])[lgrp].N = 0.0;
@@ -73,7 +62,6 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
         wt += upfj * ((*v[i])[lgrp - grow].W + Wgrowth[grow][lgrp - grow]);
       }
 
-      /*JMB changed to deal with very small weights a bit better*/
       if ((iszero(number)) || (wt < verysmall)) {
         (*v[i])[lgrp].W = 0.0;
         (*v[i])[lgrp].N = 0.0;
@@ -93,24 +81,12 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
   int i, lgrp, grow, maxlgrp, age;
   double number, wt, matnum, upfj;
 
-  //'age' is age,
-  //'lgrp' is number of length group,
-  //'maxlgrp' is the largest possible number of length group for a given age,
-  //'grow' is growth, measured in number of length groups,
-  //'i' is shifted age, i.e. age - minage,
-  //'matnum' is the number that becomes mature,
-  //'number' is just number,
-  //'wt' is weight (i.e. mean weight).
-  //And in the loops, 'upfj' is just a dummy variable.
-
   number = 0.0;
   wt = 0.0;
   matnum = 0.0;
   for (i = 0; i < nrow; i++) {
     age = i + minage;
     maxlgrp = v[i]->Maxcol() - 1;
-
-    //The part that grows to or above the highest length group.
     number = 0.0;
     wt = 0.0;
     matnum = 0.0;
@@ -124,7 +100,6 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
       }
     }
 
-    /*JMB changed to deal with very small weights a bit better*/
     if ((iszero(number)) || (number - matnum < verysmall) || (wt < verysmall)) {
       (*v[i])[maxlgrp].W = 0.0;
       (*v[i])[maxlgrp].N = 0.0;
@@ -134,17 +109,6 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
       (*v[i])[maxlgrp].N = number - matnum;
       Mat->PutInStorage(area, age, maxlgrp, matnum, wt / number, TimeInfo);
     }
-
-    /*if (number > 0) {
-      wt /= number;
-      (*v[i])[maxlgrp].W = wt;
-    }
-
-    (*v[i])[maxlgrp].N = number - matnum;
-    if (wt > 0 && matnum > 0)
-      Mat->PutInStorage(area, age, maxlgrp, matnum, wt, TimeInfo);
-    else
-      Mat->PutInStorage(area, age, maxlgrp, 0.0, 0.0, TimeInfo);*/
 
     for (lgrp = v[i]->Maxcol() - 2; lgrp >= v[i]->Mincol() + Lgrowth.Nrow() - 1; lgrp--) {
       number = 0.0;
@@ -158,9 +122,8 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
         wt += upfj * ((*v[i])[lgrp - grow].W + Wgrowth[grow][lgrp - grow]);
       }
 
-      /*JMB changed to deal with very small weights a bit better*/
       if ((iszero(number)) || (number - matnum < verysmall) || (wt < verysmall)) {
-         (*v[i])[lgrp].W = 0.0;
+        (*v[i])[lgrp].W = 0.0;
         (*v[i])[lgrp].N = 0.0;
         Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);
       } else {
@@ -168,16 +131,6 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
         (*v[i])[lgrp].N = number - matnum;
         Mat->PutInStorage(area, age, lgrp, matnum, wt / number, TimeInfo);
       }
-      /*if (number > 0) {
-        wt /= number;
-        (*v[i])[lgrp].W = wt;
-      }
-
-      (*v[i])[lgrp].N = number - matnum;
-      if (wt > 0 && matnum > 0)
-        Mat->PutInStorage(area, age, lgrp, matnum, wt, TimeInfo);
-      else
-        Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);*/
     }
 
     for (lgrp = v[i]->Mincol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->Mincol(); lgrp--) {
@@ -193,9 +146,8 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
         wt += upfj * ((*v[i])[lgrp - grow].W + Wgrowth[grow][lgrp - grow]);
       }
 
-      /*JMB changed to deal with very small weights a bit better*/
       if ((iszero(number)) || (number - matnum < verysmall) || (wt < verysmall)) {
-         (*v[i])[lgrp].W = 0.0;
+        (*v[i])[lgrp].W = 0.0;
         (*v[i])[lgrp].N = 0.0;
         Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);
       } else {
@@ -203,16 +155,6 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
         (*v[i])[lgrp].N = number - matnum;
         Mat->PutInStorage(area, age, lgrp, matnum, wt / number, TimeInfo);
       }
-      /*if (number > 0) {
-        wt /= number;
-        (*v[i])[lgrp].W = wt;
-      }
-
-      (*v[i])[lgrp].N = number - matnum;
-      if (wt > 0 && matnum > 0)
-        Mat->PutInStorage(area, age, lgrp, matnum, wt, TimeInfo);
-      else
-        Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);*/
     }
   }
 }
@@ -222,17 +164,8 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublevector& Weight
   int i, lgrp, grow, maxlgrp;
   double number, upfj;
 
-  //'age' is age,
-  //'lgrp' is number of length group,
-  //'maxlgrp' is the largest possible number of length group for a given age,
-  //'grow' is growth, measured in number of length groups,
-  //'i' is shifted age, i.e. age - minage,
-  //'number' is just number,
-  //And in the loops, 'upfj' is just a dummy variable.
-
   number = 0.0;
   for (i = 0; i < nrow; i++) {
-    //The part that grows to or above the highest length group.
     number = 0.0;
     maxlgrp = v[i]->Maxcol() - 1;
     for (lgrp = maxlgrp; lgrp >= v[i]->Maxcol() - Lgrowth.Nrow(); lgrp--) {
@@ -248,7 +181,6 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublevector& Weight
 
     (*v[i])[maxlgrp].N = number;
 
-    //The center part of the length division
     for (lgrp = v[i]->Maxcol() - 2; lgrp >= v[i]->Mincol() + Lgrowth.Nrow() - 1; lgrp--) {
       number = 0;
       for (grow = 0; grow < Lgrowth.Nrow(); grow++) {
@@ -263,8 +195,7 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublevector& Weight
       (*v[i])[lgrp].N = number;
     }
 
-    //The lowest part of the length division.
-    for (lgrp = v[i]->Mincol()+Lgrowth.Nrow() - 2; lgrp >= v[i]->Mincol(); lgrp--) {
+    for (lgrp = v[i]->Mincol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->Mincol(); lgrp--) {
       number = 0;
       for (grow = 0; grow <= lgrp - v[i]->Mincol(); grow++) {
         upfj = Lgrowth[grow][lgrp - grow] * (*v[i])[lgrp - grow].N;
@@ -289,22 +220,11 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublevector& Weight
   int i, lgrp, grow, maxlgrp, age;
   double number, matnum, upfj;
 
-  //'age' is age,
-  //'lgrp' is number of length group,
-  //'maxlgrp' is the largest possible number of length group for a given age,
-  //'grow' is growth, measured in number of length groups,
-  //'i' is shifted age, i.e. age - minage,
-  //'matnum' is the number that becomes mature,
-  //'number' is just number,
-  //And in the loops, 'upfj' is just a dummy variable.
-
   number = 0.0;
   matnum = 0.0;
   for (i = 0; i < nrow; i++) {
     age = i + minage;
     maxlgrp = v[i]->Maxcol() - 1;
-
-    //The part that grows to or above the highest length group.
     number = 0.0;
     matnum = 0.0;
     for (lgrp = maxlgrp; lgrp >= v[i]->Maxcol() - Lgrowth.Nrow(); lgrp--) {

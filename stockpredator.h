@@ -22,7 +22,7 @@ public:
     double Areasize, int CurrentSubstep, int NrOfSubsteps);
   virtual const popinfovector& NumberPriortoEating(int area, const char* preyname) const;
   virtual void AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep);
-  virtual void Print (ofstream& outfile) const;
+  virtual void Print(ofstream& outfile) const;
   const bandmatrix& Alproportion(int area) const;
   const doublevector& FPhi(int area) const;
   const doublevector& MaxConByLength(int area) const;
@@ -36,9 +36,9 @@ protected:
   doublematrix Phi;  //[area][predLengthgroup]
   doublematrix fphi; //[area][predLengthgroup]
   doublematrix fphI; //[area][predLengthgroup]  fphi per substep
-  bandmatrixvector Alprop; //[area][age][length group]
+  bandmatrixvector Alprop;     //[area][age][length group]
   doublematrix MaxconByLength; //[area][length group]
-  Agebandmatrixvector Alkeys; //[area][age][length group]
+  Agebandmatrixvector Alkeys;  //[area][age][length group]
 };
 
 #endif

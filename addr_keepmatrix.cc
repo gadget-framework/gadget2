@@ -1,6 +1,10 @@
 #include "addr_keepmatrix.h"
 #include "gadget.h"
 
+#ifndef GADGET_INLINE
+#include "addr_keepmatrix.icc"
+#endif
+
 //constructor for a rectangular addr_keepmatrix.
 addr_keepmatrix::addr_keepmatrix(int nr, int nc) {
   nrow = nr;
@@ -64,17 +68,8 @@ addr_keepmatrix::~addr_keepmatrix() {
     for (i = 0; i < nrow; i++)
       delete v[i];
     delete[] v;
+    v = 0;
   }
-}
-
-addr_keepvector& addr_keepmatrix::operator [] (int pos) {
-  assert(0 <= pos && pos < nrow);
-  return *v[pos];
-}
-
-const addr_keepvector& addr_keepmatrix::operator [] (int pos) const {
-  assert(0 <= pos && pos < nrow);
-  return *v[pos];
 }
 
 //Adds rows to a addr_keepmatrix.

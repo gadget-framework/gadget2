@@ -14,7 +14,7 @@ public:
   doublematrix(const doublematrix& initial);
   doublematrix(double* initial, int nr, int nc);
   ~doublematrix();
-  int Ncol(int i = 0) const { return(v[i]->Size()); };
+  int Ncol(int i = 0) const { return v[i]->Size(); };
   int Nrow() const { return nrow; };
   doublevector& operator [] (int pos);
   const doublevector& operator [] (int pos) const;
@@ -44,7 +44,7 @@ protected:
   doublevector** v;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "doublematrix.icc"
 #endif
 

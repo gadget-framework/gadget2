@@ -12,12 +12,12 @@ public:
   vectorofcharptr(int sz);
   vectorofcharptr(int sz, char* initial);
   vectorofcharptr(const vectorofcharptr& initial);
-  ~vectorofcharptr() { delete[] v; };
+  ~vectorofcharptr();
   void set(int id, char* value);
   void resize(int add, char* value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   char* const& operator [] (int pos) const;
 private:
   char** v;        // v[0..size-1], if size = 0 then v = 0.

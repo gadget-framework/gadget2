@@ -53,7 +53,7 @@ void Ecosystem::GrowthAndSpecialTransactions(int area) {
 
 void Ecosystem::UpdateOneTimestepOneArea(int area) {
   //Age related update and movements between stocks.
-  int i;;
+  int i;
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
       basevec[i]->FirstUpdate(area, Area, TimeInfo);
@@ -138,8 +138,14 @@ int Ecosystem::Simulate(int Optimize, int print) {
     #ifdef INTERRUPT_HANDLER
       if (interrupted) {
         InterruptInterface ui(*this);
-        if (!ui.menu())
-          exit(0);
+        if (!ui.menu()) {
+          //JMB - dump *current* switch values to a file - these wont usually be the *best* values
+          char interruptfile[15];
+          strncpy(interruptfile, "", 15);
+          strcpy(interruptfile, "interrupt.out");
+          this->PrintParamsinColumns(interruptfile, 0);
+          exit(EXIT_SUCCESS);
+        }
         interrupted = 0;
       }
     #endif

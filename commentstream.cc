@@ -1,13 +1,9 @@
 #include "commentstream.h"
 #include "gadget.h"
 
-CommentStream::CommentStream() {
-  istrptr = NULL;
-}
-
 istream& operator >> (istream& istr, Whitespace& ws) {
   int ch;
-  while(istr.peek() == ' ' || istr.peek() == '\t' || istr.peek() == '\n')
+  while (istr.peek() == ' ' || istr.peek() == '\t' || istr.peek() == '\r' || istr.peek() == '\n')
     ch = istr.get();
 
   if (!istr.eof())

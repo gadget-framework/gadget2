@@ -36,7 +36,7 @@ protected:
 
 class Catch {
 public:
-  Catch (CatchData* CD);
+  Catch(CatchData* CD);
   ~Catch();
   void Subtract(Agebandmatrix& Alkeys, int area, const TimeClass* const TimeInfo);
   void Subtract(Stock& stock, int area);

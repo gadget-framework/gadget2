@@ -23,7 +23,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   int tmpint;
   double multscaler;
   int readamount = 0; //mortalityfleet need no amounts
-  keeper->AddString("fleet ");
+  keeper->AddString("fleet");
   keeper->AddString(givenname);
 
   infile >> text >> ws;
@@ -59,6 +59,9 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   } else
     multscaler = 1.0;
 
+  if (multscaler < 0)
+    handle.Warning("negative value for multiplicative");
+
   if (!(strcasecmp(text, "suitability") == 0))
     handle.Unexpected("suitability", text);
 
@@ -88,9 +91,11 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   CheckIfFailure(subfile, text);
   handle.Open(text);
 
-  if (readamount != 0)
+  if (readamount != 0) {
     if (!ReadAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))
       handle.Message("Failed to read fleet amounts");
+    amount.Inform(keeper);
+  }
 
   handle.Close();
   subfile.close();

@@ -1,7 +1,7 @@
 #include "doublevector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "doublevector.icc"
 #endif
 
@@ -15,10 +15,13 @@ doublevector::doublevector(int sz) {
 
 doublevector::doublevector(double* initial, int sz) {
   size = sz;
-  v = new double[size];
   int i;
-  for (i = 0; i<size; i++)
-    v[i] = initial[i];
+  if (size > 0) {
+    v = new double[size];
+    for (i = 0; i < size; i++)
+      v[i] = initial[i];
+  } else
+    v = 0;
 }
 
 doublevector::doublevector(int sz, double value) {
@@ -41,6 +44,13 @@ doublevector::doublevector(const doublevector& initial) {
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+doublevector::~doublevector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 void doublevector::resize(int addsize, double value) {
@@ -104,7 +114,7 @@ doublevector& doublevector::operator *= (double d) {
 
 doublevector& doublevector::operator * (double d) const {
   doublevector* result = new doublevector(*this);
-  return((*result) *= d);
+  return ((*result) *= d);
 }
 
 doublevector& doublevector::operator += (double d) {
@@ -116,7 +126,7 @@ doublevector& doublevector::operator += (double d) {
 
 doublevector& doublevector::operator + (double d) const {
   doublevector* result = new doublevector(*this);
-  return((*result) += d);
+  return ((*result) += d);
 }
 
 doublevector& doublevector::operator -= (double d) {
@@ -128,7 +138,7 @@ doublevector& doublevector::operator -= (double d) {
 
 doublevector& doublevector::operator - (double d) const {
   doublevector* result = new doublevector(*this);
-  return((*result) -= d);
+  return ((*result) -= d);
 }
 
 doublevector& doublevector::addVector(const doublevector& d, int sz) {
@@ -179,14 +189,17 @@ double doublevector::operator * (const doublevector& d) const {
 
 doublevector& doublevector::operator = (const doublevector& d) {
   if (this == &d)
-    return(*this);
+    return *this;
   int i;
   if (size == d.size) {
     for (i = 0; i < size; i++)
       v[i] = d[i];
-    return(*this);
+    return *this;
   }
-  delete[] v;
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
   size = d.size;
   if (size > 0) {
     v = new double[size];

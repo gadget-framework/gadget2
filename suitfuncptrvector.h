@@ -11,11 +11,11 @@ public:
   SuitfuncPtrvector(int sz);
   SuitfuncPtrvector(int sz, SuitFunc* initial);
   SuitfuncPtrvector(const SuitfuncPtrvector& initial);
-  ~SuitfuncPtrvector() { delete[] v; };
+  ~SuitfuncPtrvector();
   void resize(int add, SuitFunc* suitf);
   void resize(int add);
   void Delete(int pos, Keeper* const keeper);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   SuitFunc*& operator [] (int pos);
   SuitFunc* const& operator [] (int pos) const;
 protected:
@@ -23,7 +23,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "suitfuncptrvector.icc"
 #endif
 

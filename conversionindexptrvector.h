@@ -9,11 +9,11 @@ public:
   ConversionIndexptrvector(int sz);
   ConversionIndexptrvector(int sz, ConversionIndex* initial);
   ConversionIndexptrvector(const ConversionIndexptrvector& initial);
-  ~ConversionIndexptrvector() { delete[] v; };
+  ~ConversionIndexptrvector();
   void resize(int add, ConversionIndex* value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   ConversionIndex*& operator [] (int pos);
   ConversionIndex* const& operator [] (int pos) const;
 protected:
@@ -21,7 +21,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "conversionindexptrvector.icc"
 #endif
 

@@ -36,6 +36,11 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   int i, tmpint;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
+  char filename[MaxStrLength];
+  strncpy(filename, "", MaxStrLength);
+  ifstream datafile;
+  CommentStream subdata(datafile);
+
   keeper->SetString(this->Name());
 
   //Read the area data
@@ -78,7 +83,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    LengthGroupPrintError(minlength, maxlength, dl, keeper);
+    LengthGroupPrintError(minlength, maxlength, dl, "length group for lenstock");
 
   //JMB need to set the lowerlgrp and size vectors to a default
   //value to allow the whole range of lengths to be calculated
@@ -94,15 +99,11 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   //Read the length group division used in Grower and in Predator
   doublevector grlengths;
   charptrvector grlenindex;
-  char aggfilename[MaxStrLength];
-  strncpy(aggfilename, "", MaxStrLength);
-  ifstream datafile;
-  CommentStream subdata(datafile);
 
-  ReadWordAndValue(infile, "growthandeatlengths", aggfilename);
-  datafile.open(aggfilename);
-  CheckIfFailure(datafile, aggfilename);
-  handle.Open(aggfilename);
+  ReadWordAndValue(infile, "growthandeatlengths", filename);
+  datafile.open(filename);
+  CheckIfFailure(datafile, filename);
+  handle.Open(filename);
   i = ReadLengthAggregation(subdata, grlengths, grlenindex);
   handle.Close();
   datafile.close();
@@ -110,7 +111,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
 
   LengthGroupDivision* GrowLgrpDiv = new LengthGroupDivision(grlengths);
   if (GrowLgrpDiv->Error())
-    LengthGroupPrintError(grlengths, keeper);
+    LengthGroupPrintError(grlengths, "growthandeatlengths for lenstock");
 
   CheckLengthGroupIsFiner(LgrpDiv, GrowLgrpDiv, this->Name(), "growth and eat lengths");
 
@@ -186,18 +187,15 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   ReadWordAndVariable(infile, "doesmigrate", doesmigrate);
   if (doesmigrate) {
     ReadWordAndVariable(infile, "agedependentmigration", AgeDepMigration);
-    infile >> text;
-    if (strcasecmp(text, "migrationfile") == 0) {
-      infile >> text;
-      ifstream subfile(text);
-      CommentStream subcomment(subfile);
-      CheckIfFailure(subfile, text);
-      handle.Open(text);
-      migration = new Migration(subcomment, AgeDepMigration,
-        areas, Area, TimeInfo, keeper);
-      handle.Close();
-    } else
-      handle.Unexpected("migrationfile", text);
+    ReadWordAndValue(infile, "migrationfile", filename);
+    ifstream subfile(filename);
+    CommentStream subcomment(subfile);
+    CheckIfFailure(subfile, filename);
+    handle.Open(filename);
+    migration = new Migration(subcomment, AgeDepMigration, areas, Area, TimeInfo, keeper);
+    handle.Close();
+    subfile.close();
+    subfile.clear();
 
   } else
     migration = 0;
@@ -205,41 +203,27 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   //Read the maturation data
   ReadWordAndVariable(infile, "doesmature", doesmature);
   if (doesmature) {
-    ReadWordAndVariable(infile, "maturitytype", tmpint);
-    infile >> text;
-    if (strcasecmp(text, "maturityfile") == 0) {
-      infile >> text;
-      ifstream subfile(text);
-      CommentStream subcomment(subfile);
-      CheckIfFailure(subfile, text);
-      handle.Open(text);
+    ReadWordAndValue(infile, "maturityfunction", text);
+    ReadWordAndValue(infile, "maturityfile", filename);
+    ifstream subfile(filename);
+    CommentStream subcomment(subfile);
+    CheckIfFailure(subfile, filename);
+    handle.Open(filename);
 
-      switch (tmpint) {
-        case 1:
-          maturity = new MaturityA(subcomment, TimeInfo, keeper,
-            minage, lowerlgrp, size, areas, LgrpDiv, 3);
-          break;
-        case 2:
-          maturity = new MaturityB(subcomment, TimeInfo, keeper,
-            minage, lowerlgrp, size, areas, LgrpDiv);
-          break;
-        case 3:
-          maturity = new MaturityC(subcomment, TimeInfo, keeper,
-            minage, lowerlgrp, size, areas, LgrpDiv, 4);
-          break;
-        case 4:
-          maturity = new MaturityD(subcomment, TimeInfo, keeper,
-            minage, lowerlgrp, size, areas, LgrpDiv, 4);
-          break;
-        default:
-          handle.Message("Maturity type is expected to be 1, 2, 3 or 4");
-      }
+    if (strcasecmp(text, "continuous") == 0)
+      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 3);
+    else if (strcasecmp(text, "fixedlength") == 0)
+      maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv);
+    else if (strcasecmp(text, "ageandlength") == 0)
+      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
+    else if (strcasecmp(text, "constant") == 0)
+      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
+    else
+      handle.Message("Error in stock file - unrecognised maturity", text);
 
-      handle.Close();
-      subfile.close();
-      subfile.clear();
-    } else
-      handle.Unexpected("maturityfile", text);
+    handle.Close();
+    subfile.close();
+    subfile.clear();
 
     if (!doesgrow)
       handle.Warning("The stock does not grow, so it is unlikely to mature!");
@@ -252,8 +236,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   ReadWordAndVariable(infile, "doesmove", doesmove);
   if (doesmove) {
     //transition handles the movements of the age group maxage:
-    transition = new Transition(infile, areas, maxage,
-      lowerlgrp[maxage - minage], size[maxage - minage], keeper);
+    transition = new Transition(infile, areas, maxage, lowerlgrp[maxage - minage], size[maxage - minage], keeper);
 
   } else
     transition = 0;
@@ -261,19 +244,15 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   //Read the renewal data
   ReadWordAndVariable(infile, "doesrenew", doesrenew);
   if (doesrenew) {
-    infile >> text;
-    if (strcasecmp(text, "renewaldatafile") == 0) {
-      infile >> text;
-      ifstream subfile(text);
-      CommentStream subcomment(subfile);
-      CheckIfFailure(subfile, text);
-      handle.Open(text);
-      renewal = new RenewalData(subcomment, areas, Area, TimeInfo, keeper);
-      handle.Close();
-      subfile.close();
-      subfile.clear();
-    } else
-      handle.Unexpected("renewaldatafile", text);
+    ReadWordAndValue(infile, "renewaldatafile", filename);
+    ifstream subfile(filename);
+    CommentStream subcomment(subfile);
+    CheckIfFailure(subfile, filename);
+    handle.Open(filename);
+    renewal = new RenewalData(subcomment, areas, Area, TimeInfo, keeper);
+    handle.Close();
+    subfile.close();
+    subfile.clear();
 
   } else
     renewal = 0;
@@ -281,19 +260,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   //Read the spawning data
   ReadWordAndVariable(infile, "doesspawn", doesspawn);
   if (doesspawn) {
-    infile >> text;
-    if (strcasecmp(text, "spawnfile") == 0) {
-      infile >> text;
-      ifstream subfile(text);
-      CommentStream subcomment(subfile);
-      CheckIfFailure(subfile, text);
-      handle.Open(text);
-      spawner = new Spawner(subcomment, minage, maxage, Area, TimeInfo, keeper);
-      handle.Close();
-      subfile.close();
-      subfile.clear();
-    } else
-      handle.Unexpected("spawnfile", text);
+    spawner = new Spawner(infile, maxage, LgrpDiv->NoLengthGroups(), Area, TimeInfo, keeper);
 
   } else
     spawner = 0;
@@ -323,12 +290,32 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   Z.resize(maxage - minage + 1);
 
   delete GrowLgrpDiv;
+  for (i = 0; i < grlenindex.Size(); i++)
+    delete[] grlenindex[i];
   keeper->ClearAll();
 }
 
 LenStock::~LenStock() {
-  delete len_natm;
-  delete cann;
+  int i;
+  for (i = 0; i < F.Size(); i++) {
+    delete F[i];
+    delete M1[i];
+    delete M2[i];
+    delete Nbar[i];
+    delete Nsum[i];
+    delete bio[i];
+  }
+
+  if (iseaten && cannibalism) {
+    for (i = 0; i < cann->nrOfPredators(); i++)
+      delete (((MortPrey*)prey)->ageGroupMatrix(i));
+  }
+
+  if (len_natm != 0)
+    delete len_natm;
+  if (cann != 0)
+    delete cann;
+
 }
 
 void LenStock::Reset(const TimeClass* const TimeInfo) {
@@ -427,10 +414,10 @@ void LenStock::CalcEat(int area,
 
     for (i = 0; i < nrofpredators; i++) {
       // calculate consumption of this prey by each predator in turn
-      ((MortPrey*)prey)->setConsumption(area, i, cann->getCons(i));
-      ((MortPrey*)prey)->setAgeMatrix(i, area, cann->getAgeGroups(i));
+      prey->setConsumption(area, i, cann->getCons(i));
+      prey->setAgeMatrix(i, area, cann->getAgeGroups(i));
     }
-    prey->SetCannibalism(area, cann_vec);
+    prey->setCannibalism(area, cann_vec);
   }
 }
 
@@ -450,16 +437,18 @@ void LenStock::AdjustEat(int area,
 void LenStock::ReducePop(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  //JMB - do we need to account for tagging in here????
-
   //written by kgf 31/7 98
   //Apply total mortality over present substep
+  int inarea = AreaNr[area];
   if (!iseaten && (predator == 0)) //no mortality applied
     return;
   if (iseaten) //propSurv is meaningsfull only for mortality models
-    prey->Multiply(Alkeys[AreaNr[area]], ((MortPrey*)prey)->propSurv(area));
+    prey->Multiply(Alkeys[inarea], ((MortPrey*)prey)->propSurv(area));
   else //apply only natural mortality on stock
-    predator->Multiply(Alkeys[AreaNr[area]], len_natm->NatMortality());
+    predator->Multiply(Alkeys[inarea], len_natm->NatMortality());
+
+  if (tagAlkeys.NrOfTagExp() > 0)
+    tagAlkeys[inarea].UpdateNumbers(Alkeys[AreaNr[area]]);
 }
 
 void LenStock::CalcNumbers(int area,
@@ -522,20 +511,23 @@ void LenStock::Grow(int area,
   int inarea = AreaNr[area];
   grower->GrowthCalc(area, Area, TimeInfo);
 
-  if (grower->getGrowthType()!=6 && grower->getGrowthType()!=7) {
+  if (grower->getGrowthType() != 6 && grower->getGrowthType() != 7) {
     //New weights at length are calculated
     grower->GrowthImplement(area, NumberInArea[inarea], LgrpDiv);
     if (doesmature) {
       if (maturity->IsMaturationStep(area, TimeInfo)) {
         Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area), maturity, TimeInfo, Area, LgrpDiv, area);
-        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, LgrpDiv, area, tagAlkeys.NrOfTagExp());
+        if (tagAlkeys.NrOfTagExp() > 0)
+          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, LgrpDiv, area);
       } else {
         Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area));
-        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], tagAlkeys.NrOfTagExp());
+        if (tagAlkeys.NrOfTagExp() > 0)
+          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
       }
     } else {
       Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area));
-      tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], tagAlkeys.NrOfTagExp());
+      if (tagAlkeys.NrOfTagExp() > 0)
+        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
     }
 
   } else { //GrowthCalcF || GrowthCalcG
@@ -543,17 +535,22 @@ void LenStock::Grow(int area,
     if (doesmature) {
       if (maturity->IsMaturationStep(area, TimeInfo)) {
         Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->getWeight(area), maturity, TimeInfo, Area, LgrpDiv, area);
-        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, LgrpDiv, area, tagAlkeys.NrOfTagExp());
+        if (tagAlkeys.NrOfTagExp() > 0)
+          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, LgrpDiv, area);
       } else {
         Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->getWeight(area));
-        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], tagAlkeys.NrOfTagExp());
+        if (tagAlkeys.NrOfTagExp() > 0)
+          tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
       }
     } else {
       Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->getWeight(area));
-      tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], tagAlkeys.NrOfTagExp());
+      if (tagAlkeys.NrOfTagExp() > 0)
+        tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
     }
   }
   Alkeys[inarea].FilterN(filter); //mnaa
+  if (tagAlkeys.NrOfTagExp() > 0)
+    tagAlkeys[inarea].UpdateNumbers(Alkeys[AreaNr[area]]);
 }
 
 void LenStock::calcForPrinting(int area, const TimeClass& time) {
@@ -596,8 +593,10 @@ void LenStock::SecondSpecialTransactions(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   if (doesmature)
-    if (maturity->IsMaturationStep(area, TimeInfo))
+    if (maturity->IsMaturationStep(area, TimeInfo)) {
+      UpdateMatureStockWithTags(TimeInfo);
       maturity->Move(area, TimeInfo);
+    }
 }
 
 void LenStock::SetStock(Stockptrvector& stockvec) {

@@ -8,11 +8,12 @@ class Formulamatrix {
 public:
   Formulamatrix() : nrow(0), v(0) {};
   Formulamatrix(int nrow, int ncol);
+  Formulamatrix(int nrow, int ncol, Formula initial);
   Formulamatrix(int nrow, const intvector& ncol);
   ~Formulamatrix();
   //Do I have to let keeper know if delete old formulavector and make a new one ????
   Formulamatrix& operator = (const Formulamatrix& formulaM);
-  int Ncol(int i = 0) const { return(v[i]->Size()); };
+  int Ncol(int i = 0) const { return v[i]->Size(); };
   int Nrow() const { return nrow; };
   Formulavector& operator [] (int pos);
   const Formulavector& operator [] (int pos) const;
@@ -24,5 +25,9 @@ protected:
   int nrow;
   Formulavector** v;
 };
+
+#ifdef GADGET_INLINE
+#include "formulamatrix.icc"
+#endif
 
 #endif

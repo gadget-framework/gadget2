@@ -9,11 +9,11 @@ public:
   CatchDistributionptrvector(int sz);
   CatchDistributionptrvector(int sz, CatchDistribution* initial);
   CatchDistributionptrvector(const CatchDistributionptrvector& initial);
-  ~CatchDistributionptrvector() { delete[] v; };
+  ~CatchDistributionptrvector();
   void resize(int add, CatchDistribution* value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   CatchDistribution*& operator [] (int pos);
   CatchDistribution* const& operator [] (int pos) const;
 protected:
@@ -21,7 +21,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "catchdistributionptrvector.icc"
 #endif
 

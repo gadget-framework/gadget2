@@ -24,9 +24,9 @@
 #include "tagdata.h"
 #include "predatorindex.h"
 #include "migrationpenalty.h"
+#include "catchintons.h"
 #include "lenstock.h"
 #include "boundlikelihood.h"
-#include "logsurveyindices.h"
 #include "logcatchfunction.h"
 #include "readword.h"
 #include "gadget.h"
@@ -56,14 +56,17 @@ int Ecosystem::ReadFleet(CommentStream& infile) {
     if (strcasecmp(text, "totalfleet") == 0) {
       strcpy(fleetnames[i], value);
       fleetvec[i] = new Fleet(infile, fleetnames[i], Area, TimeInfo, keeper, TOTALAMOUNTGIVEN);
+
     } else if (strcasecmp(text, "linearfleet") == 0) {
       strcpy(fleetnames[i], value);
       fleetvec[i] = new Fleet(infile, fleetnames[i], Area, TimeInfo, keeper, LINEARFLEET);
+
     } else if (strcasecmp(text, "mortalityfleet") == 0) {
       strcpy(fleetnames[i], value);
       fleetvec[i] = new Fleet(infile, fleetnames[i], Area, TimeInfo, keeper, MORTALITYFLEET);
+
     } else
-      handle.Unexpected("type of fleet", text);
+      handle.Message("Error in main file - unrecognised fleet", text);
 
   }
   return 1;
@@ -220,7 +223,7 @@ int Ecosystem::ReadPrinters(CommentStream& infile) {
     else if (strcasecmp(type, "likelihoodprinter") == 0)
       likprintvec.resize(1, new LikelihoodPrinter(infile, Area, TimeInfo));
     else
-      handle.Unexpected("Unknown type of printer", type);
+      handle.Message("Error in main file - unrecognised printer", type);
 
   }
   return 1;
@@ -285,28 +288,28 @@ int Ecosystem::ReadLikelihood(CommentStream& infile) {
       Likely[i] = new UnderStocking(infile, Area, TimeInfo, weight);
 
     } else if (strcasecmp(type, "CatchStatistics") == 0) {
-      Likely[i] = new CatchStatistics(infile, Area, TimeInfo, weight);
+      Likely[i] = new CatchStatistics(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "CatchDistribution") == 0) {
-      Likely[i] = new CatchDistribution(infile, Area, TimeInfo, weight, strdup(name));
+      Likely[i] = new CatchDistribution(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "StockDistribution") == 0) {
       Likely[i] = new StockDistribution(infile, Area, TimeInfo, weight);
 
     } else if (strcasecmp(type, "SurveyIndices") == 0) {
-      Likely[i] = new SurveyIndices(infile, Area, TimeInfo, keeper, weight, strdup(name));
-
-    } else if (strcasecmp(type, "LogSurveyIndices") == 0) {
-      Likely[i] = new LogSurveyIndices(infile, Area, TimeInfo, keeper, weight, strdup(name));
+      Likely[i] = new SurveyIndices(infile, Area, TimeInfo, keeper, weight, name);
 
     } else if (strcasecmp(type, "LogCatch") == 0) {
       Likely[i] = new LogCatches(infile, Area, TimeInfo, weight);
 
     } else if (strcasecmp(type, "StomachContent") == 0) {
-      Likely[i] = new StomachContent(infile, Area, TimeInfo, keeper, weight, strdup(name));
+      Likely[i] = new StomachContent(infile, Area, TimeInfo, keeper, weight, name);
 
     } else if (strcasecmp(type, "TagData") == 0) {
       Likely[i] = new TagData(infile, Area, TimeInfo, weight);
+
+    } else if (strcasecmp(type, "CatchInTons") == 0) {
+      Likely[i] = new CatchInTons(infile, Area, TimeInfo, weight);
 
     } else if (strcasecmp(type, "PredatorIndices") == 0) {
       Likely[i] = new PredatorIndices(infile, Area, TimeInfo, weight);
@@ -325,11 +328,15 @@ int Ecosystem::ReadLikelihood(CommentStream& infile) {
     } else if (strcasecmp(type, "RandomWalk") == 0) {
       cout << "The random walk likelihood component is not currently implemented\n";
 
+    } else if (strcasecmp(type, "LogSurveyIndices") == 0) {
+      cout << "The log survey indices likelihood component is no longer supported\n"
+        << "Use a survey indices component with a log function instead\n";
+
     } else if (strcasecmp(type, "AggregatedCatchDist") == 0) {
-      cout << "The aggregated catch distribution likelihood component is not currently implemented\n";
+      cout << "The aggregated catch distribution likelihood component is no longer supported\n";
 
     } else {
-      handle.Unexpected("Unknown type of likelihood component", type);
+      handle.Message("Error in main file - unrecognised likelihood", type);
     }
   }
   return 1;
@@ -427,6 +434,9 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
   }
 
   //Now we read the names of the tagging files
+  if (!(strcasecmp(text, "[tagging]") == 0))
+    handle.Unexpected("[tagging]", text);
+
   infile >> text >> ws;
   if (strcasecmp(text, "tagfiles") == 0) {
     //There might not be any tagging files
@@ -448,6 +458,9 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
   }
 
   //Now we read the names of the otherfood files
+  if (!(strcasecmp(text, "[otherfood]") == 0))
+    handle.Unexpected("[otherfood]", text);
+
   infile >> text >> ws;
   if (strcasecmp(text, "otherfoodfiles") == 0) {
     //There might not be any otherfood files
@@ -469,6 +482,9 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
   }
 
   //Now we read the names of the fleet files
+  if (!(strcasecmp(text, "[fleet]") == 0))
+    handle.Unexpected("[fleet]", text);
+
   infile >> text >> ws;
   if (strcasecmp(text, "fleetfiles") == 0) {
     //There might not be any fleet files

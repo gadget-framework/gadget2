@@ -1,7 +1,7 @@
 #include "catchdistributionptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "catchdistributionptrvector.icc"
 #endif
 
@@ -35,6 +35,13 @@ CatchDistributionptrvector::CatchDistributionptrvector(const CatchDistributionpt
     v = 0;
 }
 
+CatchDistributionptrvector::~CatchDistributionptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
+}
+
 //The function resize add addsize elements to a CatchDistributionptrvector and fills it vith value.
 void CatchDistributionptrvector::resize(int addsize, CatchDistribution* value) {
   int oldsize = size;
@@ -49,7 +56,7 @@ void CatchDistributionptrvector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
-    v = new CatchDistribution* [size];
+    v = new CatchDistribution*[size];
   } else if (addsize > 0) {
     CatchDistribution** vnew = new CatchDistribution*[addsize + size];
     for (i = 0; i < size; i++)

@@ -9,7 +9,6 @@
 #include "stockptrvector.h"
 #include "intmatrix.h"
 #include "conversionindexptrvector.h"
-#include "doublematrixptrvector.h"
 
 class FleetPreyAggregator;
 class TimeClass;

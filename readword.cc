@@ -9,7 +9,7 @@ void ReadWordAndVariable(CommentStream& infile, const char* str, double& number)
   strncpy(text, "", MaxStrLength);
   infile >> text;
   if (strcasecmp(text, str) == 0)
-    infile >> number >> ws;
+    infile >> number;
   else
     handle.Unexpected(str, text);
   if (infile.fail())
@@ -22,7 +22,7 @@ void ReadWordAndVariable(CommentStream& infile, const char* str, int& number) {
   strncpy(text, "", MaxStrLength);
   infile >> text;
   if (strcasecmp(text, str) == 0)
-    infile >> number >> ws;
+    infile >> number;
   else
     handle.Unexpected(str, text);
   if (infile.fail())
@@ -35,7 +35,7 @@ void ReadWordAndValue(CommentStream& infile, const char* str, char* value) {
   strncpy(text, "", MaxStrLength);
   infile >> text;
   if (strcasecmp(text, str) == 0)
-    infile >> value >> ws;
+    infile >> value;
   else
     handle.Unexpected(str, text);
   if (infile.fail())
@@ -48,7 +48,7 @@ void ReadWordAndTwoVariables(CommentStream& infile, const char* str, double& num
   strncpy(text, "", MaxStrLength);
   infile >> text;
   if (strcasecmp(text, str) == 0)
-    infile >> number1 >> number2 >> ws;
+    infile >> number1 >> number2;
   else
     handle.Unexpected(str, text);
   if (infile.fail())
@@ -61,7 +61,7 @@ void ReadWordAndTwoVariables(CommentStream& infile, const char* str, int& number
   strncpy(text, "", MaxStrLength);
   infile >> text;
   if (strcasecmp(text, str) == 0)
-    infile >> number1 >> number2 >> ws;
+    infile >> number1 >> number2;
   else
     handle.Unexpected(str, text);
   if (infile.fail())

@@ -33,7 +33,7 @@ extern RunId RUNID;
  */
 LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile,
   const AreaClass* const AreaInfo, const TimeClass* const TimeInfo)
-  : Printer(LIKELIHOODPRINTER), Area(AreaInfo) {
+  : Printer(LIKELIHOODPRINTER) {
 
   ErrorHandler handle;
   char filename[MaxStrLength];
@@ -41,8 +41,9 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile,
   strncpy(filename, "", MaxStrLength);
   strncpy(text, "", MaxStrLength);
 
-  printCatch = printSurvey = printStomach = 0;
-
+  printCatch = 0;
+  printSurvey = 0;
+  printStomach = 0;
   infile >> text >> ws;
   while (!(strcasecmp(text, "[component]")==0) && !infile.eof()) {
     if ((strcasecmp(text, "catchfile") == 0)) {
@@ -76,19 +77,12 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile,
 void LikelihoodPrinter::SetLikely(Likelihoodptrvector& likevec) {
   int i;
   for (i = 0; i < likevec.Size(); i++) {
-    switch (likevec[i]->Type()) {
-    case CATCHDISTRIBUTIONLIKELIHOOD:
+    if (likevec[i]->Type() == CATCHDISTRIBUTIONLIKELIHOOD)
       catchvec.resize(1, likevec[i]);
-      break;
-    case SURVEYINDICESLIKELIHOOD:
+    else if (likevec[i]->Type() == SURVEYINDICESLIKELIHOOD)
       surveyvec.resize(1, likevec[i]);
-      break;
-    case STOMACHCONTENTLIKELIHOOD:
+    else if (likevec[i]->Type() == STOMACHCONTENTLIKELIHOOD)
       stomachvec.resize(1, likevec[i]);
-      break;
-    default:
-      ; //ignore all other likelihood types
-    }
   }
 
   if (printCatch) {

@@ -13,7 +13,7 @@ public:
   popinfomatrix(int nrow, const intvector& ncol, popinfo initial);
   popinfomatrix(const popinfomatrix& initial);
   ~popinfomatrix();
-  int Ncol(int i = 0) const { return(v[i]->Size()); };
+  int Ncol(int i = 0) const { return v[i]->Size(); };
   int Nrow() const { return nrow; };
   popinfovector& operator [] (int pos);
   const popinfovector& operator [] (int pos) const;
@@ -25,7 +25,7 @@ protected:
   popinfovector** v;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "popinfomatrix.icc"
 #endif
 

@@ -13,17 +13,17 @@ public:
   void resize(int addsize, int newminpos, const popratiovector& initial);
   popratiovector& operator [] (int pos);
   const popratiovector& operator [] (int pos) const;
-  int Mincol() const { return(minpos); };
-  int Maxcol() const { return(minpos + size); };
-  int Size() const { return(size); };
+  int Mincol() const { return minpos; };
+  int Maxcol() const { return minpos + size; };
+  int Size() const { return size; };
 protected:
   int minpos;
   int size;
   popratiovector** v;
 };
 
+#ifdef GADGET_INLINE
+#include "popratioindexvector.icc"
 #endif
 
-
-
-
+#endif

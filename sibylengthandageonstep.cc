@@ -26,7 +26,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   const intmatrix& ages, const TimeClass* const TimeInfo, Keeper* const keeper,
   const charptrvector& lenindex, const charptrvector& ageindex,
   const char* arealabel, const char* datafilename)
-  : SIOnStep(infile, datafilename, arealabel, TimeInfo, lenindex, ageindex),  //reads fit type and years/steps
+  : SIOnStep(infile, datafilename, arealabel, TimeInfo, 1, ageindex, lenindex),  //reads fit type and years/steps
    aggregator(0), LgrpDiv(0), Areas(areas), Ages(ages) {
 
   keeper->AddString("SIByLengthAndAgeOnStep");
@@ -84,10 +84,9 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
         suitfunction->setPredLength(0.0);
 
       for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
-        if (suitfunction->usesPreyLength()) {
-          // AJ march 2002 Using index i not lgrp must check if OK
+        if (suitfunction->usesPreyLength())
           suitfunction->setPreyLength(LgrpDiv->Meanlength(i));
-        }
+
         q_l[i] = suitfunction->calculate();
       }
     }
@@ -98,8 +97,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
       infile >> q_l[i];
 
   } else {
-    cerr << "Error while reading suitabilty - unknown format\n";
-    exit(EXIT_FAILURE);
+    handle.Message("Error in SIByLengthAndAge - unrecognised suitability", text);
   }
 //end of code to read in q_y, b and q_l data
 
@@ -107,12 +105,8 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   ReadWordAndVariable(infile, "mean_fact", mean_fact);
   ReadWordAndVariable(infile, "max_fact", max_fact);
 
-  //read the opttype
-  infile >> text;
-  if (!(strcasecmp(text, "likelihoodtype") == 0))
-    handle.Unexpected("likelihoodtype", text);
-
-  infile >> text >> ws;
+  //read the likelihoodtype
+  ReadWordAndValue(infile, "likelihoodtype", text);
   if (strcasecmp(text, "pearson") == 0)
     opttype = pearson;
   else if (strcasecmp(text, "multinomial") == 0)
@@ -121,8 +115,10 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
     opttype = experimental;
   else if (strcasecmp(text, "gamma") == 0)
     opttype = gamma;
+  else if (strcasecmp(text, "log") == 0)
+    opttype = logfunc;
   else
-    handle.Unexpected("opttype", text);
+    handle.Unexpected("likelihoodtype", text);
 
   //first resize indexMatrix to store the data
   for (i = 0; i < q_y.Size(); i++)
@@ -168,7 +164,7 @@ void SIByLengthAndAgeOnStep::ReadSurveyData(CommentStream& infile, const char* a
   ErrorHandler handle;
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 6)))
+  if (CountColumns(infile) != 6)
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
@@ -214,19 +210,30 @@ void SIByLengthAndAgeOnStep::ReadSurveyData(CommentStream& infile, const char* a
 }
 
 SIByLengthAndAgeOnStep::~SIByLengthAndAgeOnStep() {
+  int i;
   if (suitfunction != NULL) {
     delete suitfunction;
     suitfunction = NULL;
   }
-  delete aggregator;
+  for (i = 0; i < indexMatrix.Size(); i++) {
+    delete indexMatrix[i];
+    delete calc_index[i];
+  }
+  for (i = 0; i < stocknames.Size(); i++)
+    delete[] stocknames[i];
+  if (aggregator != 0)
+    delete aggregator;
+  delete LgrpDiv;
 }
 
 void SIByLengthAndAgeOnStep::SetStocks(const Stockptrvector& Stocks) {
-  intmatrix areas(1, Areas.Size());
   int i, j;
+  intmatrix areas(1, Areas.Size());
   for (i = 0; i < Areas.Size(); i++)
     areas[0][i] = Areas[i];
+
   aggregator = new StockAggregator(Stocks, LgrpDiv, areas, Ages);
+
   for (i = 0; i < Stocks.Size(); i++) {
     stocknames.resize(1);
     j = stocknames.Size() - 1;
@@ -250,20 +257,26 @@ void SIByLengthAndAgeOnStep::Sum(const class TimeClass* const TimeInfo) {
   //Use that the Agebandmatrixvector aggregator->ReturnMeanSum returns only one element.
   const Agebandmatrix* alptr = &(aggregator->ReturnMeanSum()[0]);
   this->calcIndex(alptr, ftype);
-  switch (opttype) {
-    case 0: //Pearson
-      likelihood += calcLikelihoodOnStep();
+  switch(opttype) {
+    case 0:
+      likelihood += calcLikPearson();
       break;
-    case 1: //Multinomial
-      likelihood += calcLikelihoodOnStep(1);
+    case 1:
+      likelihood += calcLikMultinomial();
       break;
     case 2:
-      likelihood += calcExperimentalOnStep();
+      likelihood += calcLikExperimental();
       break;
     case 3:
-      likelihood += calcGammaLikOnStep();
+      likelihood += calcLikGamma();
       break;
-    }
+    case 4:
+      likelihood += calcLikLog();
+      break;
+    default:
+      cerr << "Error in SIByLengthAndAge::Sum - unknown opttype\n";
+      break;
+  }
   index++;
 }
 
@@ -273,7 +286,7 @@ void SIByLengthAndAgeOnStep::calcIndex(const Agebandmatrix* alptr, FitType ftype
   int maxage = alptr->Maxage();
   int maxlen = LgrpDiv->NoLengthGroups();
   double q_year = q_y[index];
-  switch (ftype) {
+  switch(ftype) {
     case LinearFit:
       for (age = 0; age <= maxage; age++)
         for (len = 0; len < maxlen; len++)
@@ -285,12 +298,12 @@ void SIByLengthAndAgeOnStep::calcIndex(const Agebandmatrix* alptr, FitType ftype
           (*calc_index[index])[age][len] = q_year * q_l[len] * pow((*alptr)[age][len].N, b_vec[len]);
       break;
     default:
-      cerr << "Error in SIByAgeAndLength:calcIndex - unknown fittype\n";
+      cerr << "Error in SIByLengthAndAge::calcIndex - unknown fittype\n";
       break;
   }
 }
 
-double SIByLengthAndAgeOnStep::calcLikelihoodOnStep(int dummy) {
+double SIByLengthAndAgeOnStep::calcLikMultinomial() {
   //written by kgf 30/10 98
   //Multinomial formula from H J Skaug
 
@@ -310,7 +323,7 @@ double SIByLengthAndAgeOnStep::calcLikelihoodOnStep(int dummy) {
       if ((*indexMatrix[index])[age][length] > eps_ind) { //cell will contribute
         (*calc_index[index])[age][length] += eps_ind;     //kgf 13/4 00, ref Skaug
         step_val = (*indexMatrix[index])[age][length] * log((*calc_index[index])[age][length]);
-        step_lik -=  step_val;
+        step_lik -= step_val;
         i_sum += (*indexMatrix[index])[age][length];
         i_hat_sum += (*calc_index[index])[age][length];
 
@@ -335,7 +348,7 @@ double SIByLengthAndAgeOnStep::calcLikelihoodOnStep(int dummy) {
   }
 }
 
-double SIByLengthAndAgeOnStep::calcLikelihoodOnStep() {
+double SIByLengthAndAgeOnStep::calcLikPearson() {
   //written by kgf 13/10 98
 
   double step_lik = 0.0;
@@ -354,11 +367,12 @@ double SIByLengthAndAgeOnStep::calcLikelihoodOnStep() {
       step_lik += diff;
     }
   }
+
   lik_val_on_step[index] = step_lik;
   return step_lik;
 }
 
-double SIByLengthAndAgeOnStep::calcExperimentalOnStep() {
+double SIByLengthAndAgeOnStep::calcLikExperimental() {
   //written by kgf 6/3 00
   //The purpose of this function is to try different likelihood formulations
   //At the moment it is (I_obs - I_hat)^2/(I_obs+I_hat)^2
@@ -389,11 +403,12 @@ double SIByLengthAndAgeOnStep::calcExperimentalOnStep() {
       }
     }
   }
+
   lik_val_on_step[index] = step_lik;
   return step_lik;
 }
 
-double SIByLengthAndAgeOnStep::calcGammaLikOnStep() {
+double SIByLengthAndAgeOnStep::calcLikGamma() {
   //written by kgf 24/5 00
   //The gamma likelihood function as described by
   //Hans J Skaug 15/3 00, at present without internal weighting.
@@ -402,7 +417,6 @@ double SIByLengthAndAgeOnStep::calcGammaLikOnStep() {
   double step_lik = 0.0;
   double cell_lik = 0.0;
   max_val_on_step[index] = 0.0;
-  lik_val_on_step[index] = 0.0;
   a_index[index] = 0;
   l_index[index] = 0;
   int age, length;
@@ -414,8 +428,38 @@ double SIByLengthAndAgeOnStep::calcGammaLikOnStep() {
       step_lik += cell_lik;
     }
   }
+
   lik_val_on_step[index] = step_lik;
   return step_lik;
+}
+
+double SIByLengthAndAgeOnStep::calcLikLog() {
+  //corrected by kgf 27/11 98 to sum first and then take the logarithm
+  double step_val = 0.0;
+  double obs_i_sum = 0.0;
+  double calc_i_sum = 0.0;
+  max_val_on_step[index] = 0.0;
+  a_index[index] = 0;
+  l_index[index] = 0;
+  int age, length;
+
+  for (age = minrow; age <= maxrow; age++) {
+    for (length = mincol[age]; length <= maxcol[age]; length++) {
+      calc_i_sum += (*calc_index[index])[age][length];
+      obs_i_sum += (*indexMatrix[index])[age][length];
+
+      if (max_val_on_step[index] < (*calc_index[index])[age][length]) {
+        max_val_on_step[index] = (*calc_index[index])[age][length];
+        a_index[index] = age;
+        l_index[index] = length;
+      }
+    }
+  }
+
+  step_val = log(obs_i_sum / calc_i_sum);
+  step_val *= step_val;
+  lik_val_on_step[index] = step_val; //kgf 19/1 99
+  return step_val;
 }
 
 void SIByLengthAndAgeOnStep::PrintLikelihoodOnStep(ofstream& surveyfile, int print_type) {
@@ -503,9 +547,8 @@ void SIByLengthAndAgeOnStep::PrintLikelihoodOnStep(ofstream& surveyfile, int pri
   surveyfile.flush();
 }
 
+//Print observed and modeled survey indices for further processing by external scripts
 void SIByLengthAndAgeOnStep::PrintLikelihood(ofstream& surveyfile, const TimeClass& TimeInfo, const char* name) {
-  //Print observed and modeled survey indices seperatly for further
-  //processing by external scripts.
 
   if (!AAT.AtCurrentTime(&TimeInfo))
     return;
@@ -513,9 +556,7 @@ void SIByLengthAndAgeOnStep::PrintLikelihood(ofstream& surveyfile, const TimeCla
   surveyfile.setf(ios::fixed);
   int age, length;
 
-  //Get age and length intervals from aggregator->AgeLengthDist()
-  //const Agebandmatrixvector* alptr = &aggregator->AgeLengthDist();
-  //timeindex was increased before this is called, so we subtract 1.
+  //index was increased before this is called, so we subtract 1.
   doublematrix& calcI = *calc_index[index - 1];
   doublematrix& obsI = *indexMatrix[index - 1];
 
@@ -565,20 +606,20 @@ void SIByLengthAndAgeOnStep::PrintLikelihood(ofstream& surveyfile, const TimeCla
   surveyfile.flush();
 }
 
-void SIByLengthAndAgeOnStep::PrintLikelihoodHeader (ofstream& surveyfile, const char* name) {
+void SIByLengthAndAgeOnStep::PrintLikelihoodHeader(ofstream& surveyfile, const char* name) {
   int i;
   surveyfile << "Likelihood:       SurveyIndicesByAgeAndLengthOnStep\n"
     << "Function:         " << opttype << "\nCalculated every: step\n"
     << "Filter:           default\nEps:              " << eps_ind
     << "\nMean fact:        " << mean_fact << "\nMax fact:         "
-    << max_fact << "\nMean indices:    " << "\nName:            "
+    << max_fact << "\nMean indices:    " << "\nName:             "
     << name << "\nStocks:          ";
   for (i = 0; i < stocknames.Size(); i++)
     surveyfile << sep <<stocknames[i];
 
   surveyfile << "\nAges:             min " << Ages[minrow][0] << " max "
-    << Ages[maxrow][0] << "\nLengths:          min " << LgrpDiv->Minlength(0)
-    << " max " << LgrpDiv->Maxlength(LgrpDiv->Size()-1) << " dl " << LgrpDiv->dl()  << endl;
+    << Ages[maxrow][0] << "\nLengths:          min " << LgrpDiv->Minlength(0) << " max "
+    << LgrpDiv->Maxlength(LgrpDiv->NoLengthGroups() - 1) << " dl " << LgrpDiv->dl()  << endl;
 }
 
 void SIByLengthAndAgeOnStep::Reset(const Keeper* const keeper) {
@@ -650,7 +691,7 @@ void SIByLengthAndAgeOnStep::printHeader(ofstream& surveyfile, const PrintInfo& 
 
     surveyfile << "\nminage " << Ages[0][0] << " maxage " << Ages[Ages.Nrow() - 1][0]
       << " minlen " << LgrpDiv->Minlength(0) << " maxlen "
-      << LgrpDiv->Maxlength(LgrpDiv->Size()-1) << " lenstep "
+      << LgrpDiv->Maxlength(LgrpDiv->NoLengthGroups() - 1) << " lenstep "
       << LgrpDiv->dl() << endl;
   }
 }

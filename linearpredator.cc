@@ -160,6 +160,3 @@ const popinfovector& LinearPredator::NumberPriortoEating(int area, const char* p
     << "of prey " << preyname << " which he does not eat\n";
   exit(EXIT_FAILURE);
 }
-
-
-

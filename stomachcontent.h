@@ -2,6 +2,7 @@
 #define stomachcontent_h
 
 #include "commentstream.h"
+#include "conversion.h"
 #include "predatorptrvector.h"
 #include "preyptrvector.h"
 #include "doublematrixptrmatrix.h"
@@ -17,7 +18,7 @@ class AreaClass;
 class SC {
 public:
   SC(CommentStream&, const AreaClass* const, const TimeClass* const,
-    Keeper* const keeper, const char* name, const char* datafilename);
+    Keeper* const keeper, const char* datafilename, const char* name);
   virtual ~SC();
   virtual double Likelihood(const TimeClass* const);
   virtual void Reset();
@@ -48,18 +49,20 @@ protected:
   intmatrix areas;
   int age_pred; //kgf 22/2 99 to switch between age or length predator
   PredatorAggregator** aggregator;
+  LengthGroupDivision** preyLgrpDiv;
+  LengthGroupDivision** predLgrpDiv;
   int timeindex;
   ActionAtTimes AAT;
   Formulamatrix digestioncoeff;
   ofstream printfile;
-  const char* name;
+  char* scname;
 };
 
 class SCNumbers : public SC {
 public:
   SCNumbers(CommentStream& infile, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper,
-    const char* nam, const char* datafilename, const char* numfilename);
+    const char* datafilename, const char* numfilename, const char* name);
   virtual ~SCNumbers() {};
   virtual void Aggregate(int i);
 protected:
@@ -71,7 +74,7 @@ class SCAmounts : public SC {
 public:
   SCAmounts(CommentStream& infile, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper,
-    const char* nam, const char* datafilename, const char* numfilename);
+    const char* datafilename, const char* numfilename, const char* name);
   virtual ~SCAmounts();
   doublematrixptrmatrix& Stddev() { return stddev; };
   doublematrixptrvector& StomachNumbers() { return number; };
@@ -82,15 +85,15 @@ protected:
   void ReadStomachSampleContent(CommentStream&, const TimeClass* const);
   virtual double CalculateLikelihood(doublematrixptrvector&, doublematrix&);
   doublematrixptrmatrix stddev;  //[timeindex][areas][pred_l][prey_l]
-  doublematrixptrvector number;     //[timeindex][areas][pred_l]
+  doublematrixptrvector number;  //[timeindex][areas][pred_l]
 };
 
 class SCRatios : public SCAmounts {
 public:
   SCRatios(CommentStream& infile, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper,
-    const char* nam, const char* datafilename, const char* numfilename)
-    : SCAmounts(infile, Area, TimeInfo, keeper, nam, datafilename, numfilename) {};
+    const char* datafilename, const char* numfilename, const char* name)
+    : SCAmounts(infile, Area, TimeInfo, keeper, datafilename, numfilename, name) {};
   virtual ~SCRatios() {};
   virtual void SetPredatorsAndPreys(Predatorptrvector&, Preyptrvector&);
 protected:
@@ -101,7 +104,7 @@ class StomachContent : public Likelihood {
 public:
   StomachContent(CommentStream&, const AreaClass* const, const TimeClass* const,
     Keeper* const keeper, double likweight, const char* name);
-  virtual ~StomachContent() { delete StomCont; };
+  virtual ~StomachContent();
   virtual void AddToLikelihood(const TimeClass* const);
   virtual void Reset(const Keeper* const keeper)
     { Likelihood::Reset(keeper); StomCont->Reset(); };
@@ -117,9 +120,10 @@ public:
     { StomCont->PrintLikelihood(outfile, time); };
   virtual void PrintLikelihoodHeader(ofstream& outfile)
     { StomCont->PrintLikelihoodHeader(outfile); };
-  const char* name;
+  char* stomachname;
 private:
   int functionnumber;
+  char* functionname;
   SC* StomCont;
 };
 

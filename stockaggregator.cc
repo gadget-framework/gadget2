@@ -14,6 +14,7 @@ StockAggregator::StockAggregator(const Stockptrvector& Stocks,
   mincol.resize(Ages.Nrow(), 99999);
   maxrow = 0;
   minrow = Ages.Nrow();
+  numlengths = LgrpDiv->NoLengthGroups();
 
   for (i = 0; i < stocks.Size(); i++) {
     CheckLengthGroupIsFiner(stocks[i]->ReturnLengthGroupDiv(),
@@ -57,7 +58,7 @@ StockAggregator::StockAggregator(const Stockptrvector& Stocks,
 
           } else {
             //Else the stock maxlength is larger than in CI
-            maxcol[j] = LgrpDiv->NoLengthGroups() - 1;
+            maxcol[j] = numlengths - 1;
           }
         }
       }
@@ -70,7 +71,7 @@ StockAggregator::StockAggregator(const Stockptrvector& Stocks,
   popinfo tmppop;
   tmppop.N = 1.0;
   tmppop.W = 1.0;
-  popinfomatrix popmatrix(ages.Nrow(), LgrpDiv->NoLengthGroups(), tmppop);
+  popinfomatrix popmatrix(ages.Nrow(), numlengths, tmppop);
   total.resize(areas.Nrow(), 0, 0, popmatrix);
   meanTotal.resize(areas.Nrow(), 0, 0, popmatrix);
 }

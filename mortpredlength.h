@@ -27,15 +27,16 @@ public:
   void InitializeCHat(int area, int prey, const Agebandmatrix& mean_n);
   void calcCHat(int area, const TimeClass* const TimeInfo);
   void Multiply(Agebandmatrix& stock_alkeys, const doublevector& ratio);
+  virtual const double consumedBiomass(int prey_nr, int area_nr) const;
   virtual void Reset(const TimeClass* const TimeInfo);
   virtual double getFlevel(int area, const TimeClass* const TimeInfo);
   friend ostream& printc_hat(ostream& o, const MortPredLength& pred,
     AreaClass area, int indent);
   int minPreyAge(int prey, int area) const {
-    return((MortPrey*)Preys(prey))->getMeanN(area).Minage();
+    return ((MortPrey*)Preys(prey))->getMeanN(area).Minage();
   };
   int maxPreyAge(int prey, int area) const {
-    return((MortPrey*)Preys(prey))->getMeanN(area).Maxage();
+    return ((MortPrey*)Preys(prey))->getMeanN(area).Maxage();
   };
 protected:
   int pres_time_step;

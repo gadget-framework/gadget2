@@ -1,5 +1,4 @@
 #include "conversion.h"
-#include "keeper.h"
 #include "checkconversion.h"
 #include "gadget.h"
 
@@ -19,20 +18,8 @@ void LengthGroupPrintError(const doublevector& breaks, const char* explain) {
   exit(EXIT_FAILURE);
 }
 
-void LengthGroupPrintError(double minl, double maxl, double dl, const Keeper* const keeper) {
-  char* explain = keeper->SendString();
-  LengthGroupPrintError(minl, maxl, dl, explain);
-  delete[] explain; //Is never executed.
-}
-
-void LengthGroupPrintError(const doublevector& breaks, const Keeper* const keeper) {
-  char* explain = keeper->SendString();
-  LengthGroupPrintError(breaks, explain);
-  delete[] explain; //Is never executed.
-}
-
 //Constructor for length division with even increments.
-LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : Dl(DL), error(0) {
+LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : error(0), Dl(DL) {
   assert(MinL >= 0 && Dl > 0 && MaxL >= MinL);
   size = int((MaxL - MinL) / Dl);
   double small = rathersmall * size;
@@ -54,7 +41,7 @@ LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : 
 }
 
 //Constructor for length division with uneven increments.
-LengthGroupDivision::LengthGroupDivision(const doublevector& Breaks) : Dl(0), error(0) {
+LengthGroupDivision::LengthGroupDivision(const doublevector& Breaks) : error(0), Dl(0) {
   int i;
   if (Breaks.Size() < 2) {
     error = 1;
@@ -64,19 +51,20 @@ LengthGroupDivision::LengthGroupDivision(const doublevector& Breaks) : Dl(0), er
     error = 1;
     return;
   }
-  minlength.resize(Breaks.Size() - 1);
-  meanlength.resize(Breaks.Size() - 1);
-  for (i = 0; i < Breaks.Size() - 1; i++) {
+
+  size = Breaks.Size() - 1;
+  minlength.resize(size);
+  meanlength.resize(size);
+  for (i = 0; i < size; i++) {
     minlength[i] = Breaks[i];
     meanlength[i] = 0.5 * (Breaks[i] + Breaks[i + 1]);
     if (Breaks[i] >= Breaks[i + 1])
       error = 1;
   }
-  size = meanlength.Size();
 }
 
 LengthGroupDivision::LengthGroupDivision(const LengthGroupDivision& l)
-  : meanlength(l.meanlength), size(l.size), Dl(l.Dl), minlength(l.minlength), error(l.error) {
+  : error(l.error), size(l.size), Dl(l.Dl), meanlength(l.meanlength), minlength(l.minlength) {
 }
 
 LengthGroupDivision::~LengthGroupDivision() {
@@ -98,9 +86,36 @@ int LengthGroupDivision::NoLengthGroup(double length) const {
     return -1;
 }
 
+double LengthGroupDivision::Meanlength(int i) const {
+  if (i >= size)
+    return meanlength[size - 1];
+  else
+    return meanlength[i];
+}
+
+double LengthGroupDivision::Minlength(int i) const {
+  if (i >= size)
+    return minlength[size - 1];
+  else
+    return minlength[i];
+}
+
+double LengthGroupDivision::Maxlength(int i) const {
+  int j;
+  if (i >= size)
+    j = size;
+  else
+    j = i;
+
+  if (iszero(Dl))
+    return minlength[j] + 2 * (meanlength[j] - minlength[j]);
+  else
+    return minlength[j] + Dl;
+}
+
 int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
   if (Minlength(0) > addition->Minlength(addition->NoLengthGroups() - 1)
-      || Minlength(size-1) < addition->Minlength(0))
+      || Minlength(size - 1) < addition->Minlength(0))
     //Empty intersection
     return 0;
 
@@ -182,14 +197,13 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     exit(EXIT_FAILURE);
   }
 
-  int i, j;  //Dummy indices.
-  int Mpos; //Do we need Minpos and Maxpos?
-  int NrOf; //Do we need number in each length group?
+  int i, j;
+  int Mpos, NrOf;
   const LengthGroupDivision* Lf;  //Will be the finer length group division.
   const LengthGroupDivision* Lc;  //Will be the coarser length group division.
 
   //Here after is a check to see which lengthgroupdivision is coarser.
-  //targetisfiner means that L1 is stricktly coarser than L2.
+  //targetisfiner means that L1 is strictly coarser than L2.
   if (L1->dl() != 0 && L2->dl() != 0) {
     if (L1->dl() > L2->dl()) {
       targetisfiner = 1;
@@ -201,7 +215,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       Lf = L1;
     }
   } else {
-    CheckLengthGroupIsFiner(L1, L2, "???a ", "???b");
+    CheckLengthGroupIsFiner(L1, L2, "CI - finer", "CI - coarser");
     targetisfiner = 0;
     Lc = L2;
     Lf = L1;
@@ -220,13 +234,14 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     NrOf = 1;
   else
     NrOf = 0;
+
   if (samedl == 0)
     Mpos = 1;
   else
     Mpos = 0;
 
-  nf = Lf->Size();
-  nc = Lc->Size();
+  nf = Lf->NoLengthGroups();
+  nc = Lc->NoLengthGroups();
 
   //Set minlength and maxlength if coarser LengthGroupDivision does
   //not span all the range of the finer one.
@@ -235,6 +250,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       minlength = i;
       break;
     }
+
   for (i = nf - 1; i >= 0; i--)
     if (Lf->Maxlength(i) <= Lc->Maxlength(nc - 1)) {
       maxlength = i + 1;
@@ -242,10 +258,9 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     }
 
   int k = 0;
-  //Setting pos
-  pos.resize(Lf->Size(), 0); //JMB - default value
+  pos.resize(Lf->NoLengthGroups(), 0); //JMB - default value
   for (i = minlength; i < maxlength; i++)
-    for (j = k; j < Lc->Size(); j++)
+    for (j = k; j < Lc->NoLengthGroups(); j++)
       if (Lf->Meanlength(i) >= Lc->Minlength(j) && Lf->Meanlength(i) <= Lc->Maxlength(j)) {
         pos[i] = j;
         k = j;
@@ -254,46 +269,46 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 
   //If Minpos and Maxpos are needed.
   if (Mpos == 1) {
-    minpos.resize(Lc->Size(), Lf->Size() - 1); //initialized to Lf->Size() - 1.
+    minpos.resize(Lc->NoLengthGroups(), Lf->NoLengthGroups() - 1); //initialized to Lf->Size() - 1.
     for (i = minlength; i < maxlength; i++)
       if (i < minpos[pos[i]])
         minpos[pos[i]] = i;
 
-    for (i = Lc->Size() - 1; i > 0; i--)
+    for (i = Lc->NoLengthGroups() - 1; i > 0; i--)
       if (minpos[i - 1] > minpos[i])
         minpos[i - 1] = minpos[i];
 
-    maxpos.resize(Lc->Size(), 0);
+    maxpos.resize(Lc->NoLengthGroups(), 0);
     for (i = minlength; i < maxlength; i++)
       if (i > maxpos[pos[i]])
         maxpos[pos[i]] = i;
 
-    for (i = 0; i < Lc->Size() - 1;i++)
+    for (i = 0; i < Lc->NoLengthGroups() - 1;i++)
       if (maxpos[i + 1] < maxpos[i])
         maxpos[i + 1] = maxpos[i];
   }
 
   //If number in each length group is needed.
   if (NrOf) {
-    nrof.resize(Lf->Size(), 0);
+    nrof.resize(Lf->NoLengthGroups(), 0);
     for (i = minlength; i < maxlength; i++)
       nrof[i] = maxpos[pos[i]] - minpos[pos[i]] + 1;
   }
 
   //if the conversionindex is to be used for interpolation.
   if (interp) {
-    interpratio.resize(Lf->Size());
-    interppos.resize(Lf->Size(), -1);
+    interpratio.resize(Lf->NoLengthGroups());
+    interppos.resize(Lf->NoLengthGroups(), -1);
     k = 0;
     for (i = minlength; i < maxlength; i++)
-      for (j = k; j < Lc->Size() - 1; j++)
+      for (j = k; j < Lc->NoLengthGroups() - 1; j++)
         if (Lf->Meanlength(i) >= Lc->Meanlength(j) && Lf->Meanlength(i) < Lc->Meanlength(j + 1)) {
           interppos[i] = j;
           k = j;
           break;
         }
 
-    for (i = 0; i < Lf->Size(); i++)
+    for (i = 0; i < Lf->NoLengthGroups(); i++)
       if (interppos[i] != -1)
         interpratio[i] = (Lf->Meanlength(i) - Lc->Meanlength(interppos[i])) /
           (Lc->Meanlength(interppos[i] + 1) - Lc->Meanlength(interppos[i]));
@@ -305,7 +320,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
           interppos[i] = nc - 1;
       }
   }
-} //End of constructor.
+}
 
 ConversionIndex::~ConversionIndex() {
 }

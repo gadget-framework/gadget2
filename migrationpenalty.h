@@ -10,7 +10,7 @@ public:
   virtual~MigrationPenalty();
   virtual void AddToLikelihood(const TimeClass* const);
   void SetStocks(Stockptrvector Stocks);
-  virtual void Print(ofstream&) const;
+  virtual void Print(ofstream&) const {};
   virtual void LikelihoodPrint(ofstream&) const {};
 private:
   char* stockname;

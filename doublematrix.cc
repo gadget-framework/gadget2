@@ -2,7 +2,7 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "doublematrix.icc"
 #endif
 
@@ -80,6 +80,7 @@ doublematrix::~doublematrix() {
     for (i = 0; i < nrow; i++)
       delete v[i];
     delete[] v;
+    v = 0;
   }
 }
 
@@ -225,7 +226,7 @@ doublematrix& doublematrix::operator -= (const doublematrix& d) {
 
 doublematrix& doublematrix::operator = (const doublematrix& d) {
   if (this == &d)
-    return(*this);
+    return *this;
   int i;
   if (v != 0) {
     for (i = 0; i < nrow; i++)
@@ -278,7 +279,7 @@ doublematrix& doublematrix::operator * (double d) const {
 }
 
 doublematrix& doublematrix::operator -= (double d) {
-  return((*this) += (-d));
+  return ((*this) += (-d));
 }
 
 doublematrix& doublematrix::operator - (double d) const {
@@ -315,7 +316,7 @@ doublematrix& doublematrix::operator * (const doublematrix& d) const {
     for (j = 0; j < result->Ncol(); j++)
       for (k = 0; k < d.Nrow(); k++)
         (*result)[i][j] += (*this)[i][k] * d[k][j];
-  return(*result);
+  return *result;
 }
 
 ostream& operator << (ostream& out, const doublematrix& d) {

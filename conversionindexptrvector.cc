@@ -1,7 +1,7 @@
 #include "conversionindexptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "conversionindexptrvector.icc"
 #endif
 
@@ -33,6 +33,13 @@ ConversionIndexptrvector::ConversionIndexptrvector(const ConversionIndexptrvecto
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+ConversionIndexptrvector::~ConversionIndexptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a ConversionIndexptrvector and fills it vith value.

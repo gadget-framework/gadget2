@@ -9,11 +9,11 @@ public:
   VariableInfoptrvector(int sz);
   VariableInfoptrvector(int sz, VariableInfo* initial);
   VariableInfoptrvector(const VariableInfoptrvector& initial);
-  ~VariableInfoptrvector() { delete[] v; };
+  ~VariableInfoptrvector();
   void resize(int add, VariableInfo* value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   VariableInfo*& operator [] (int pos);
   VariableInfo* const& operator [] (int pos) const;
 protected:
@@ -21,7 +21,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "variableinfoptrvector.icc"
 #endif
 

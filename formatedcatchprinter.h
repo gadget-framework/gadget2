@@ -32,7 +32,6 @@ public:
   void SetLikely(Likelihoodptrvector& likvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
-  //doublematrixptrmatrix& timeAgg(doublematrixptrmatrix& m);
   void printCalcBiomassByAgeAndFleet(int yearagg, ostream& outfile, int pr, int wd);
   void printCalcBiomassByFleet(int yearagg, ostream& outfile, int pr, int wd);
   void printObsBiomassByAgeAndFleet(int yearagg, ostream& outfile, int pr, int wd);

@@ -14,8 +14,9 @@ public:
   void SetSurveyFile(const char* const filename);
   void SetCatchFile(const char* const filename);
   void SetStomachFile(const char* const filename);
-  int Print() const { return(PrintInterVal1 > 0 ? 1 : 0); };
-  int PrintinColumns() const { return(PrintInterVal2 > 0 ? 1 : 0); };
+  void CheckNumbers();
+  int Print() const { return oprint; };
+  int PrintinColumns() const { return coprint; };
   int PrintInterVal1;
   int PrintInterVal2;
   char* ParamOutFile;
@@ -28,6 +29,9 @@ public:
   int surveyprint;
   int catchprint;
   int stomachprint;
+  int oprint;
+  int coprint;
+  int givenPrecision;
 };
 
 #endif

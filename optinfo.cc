@@ -125,25 +125,23 @@ void OptInfoHooke::MaximizeLikelihood() {
 
   count = 0;
   for (i = 0; i < nopt; i++) {
-    if (lowerb[i] > val[i]) {
+    if (iszero(val[i])) {
       count++;
-      cerr << "Error: for switch " << optswitches[i] << " lowerbound " << lowerb[i]
-        << " is greater than the starting value " << val[i] << endl;
+      cerr << "Error: for switch " << optswitches[i] << " starting value is zero\n"
+        << "which will give poor convergence for Hooke and Jeeves optimisation\n";
     }
-    if (upperb[i] < val[i]) {
+    if ((lowerb[i] > 1) || (upperb[i] < 1)) {
       count++;
-      cerr << "Error: for switch " << optswitches[i] << " upperbound " << upperb[i]
-        << " is less that the starting value " << val[i] << endl;
+      cerr << "Error: for switch " << optswitches[i] << " the initial value is outside the bounds\n";
     }
     if (upperb[i] < lowerb[i]) {
       count++;
-      cerr << "Error: for switch " << optswitches[i] << " upperbound " << upperb[i]
-        << " is less than the lowerbound " << lowerb[i] << endl;
+      cerr << "Error: for switch " << optswitches[i] << " the upperbound is less than the lowerbound\n";
     }
   }
 
   if (count > 0) {
-    cerr << "Exiting with " << count << " errors in the initial conditions\n";
+    cerr << "Exiting with " << count << " errors in the initial parameter values\n";
     exit(EXIT_FAILURE);
   }
 
@@ -155,10 +153,9 @@ void OptInfoHooke::MaximizeLikelihood() {
   for (i = 0; i < nopt; i++)
     val[i] = initialval[i] * endpoint[i];
 
-  cout << "\nOptimization finished with final value " << EcoSystem->Likelihood()
-    << "\nafter " << EcoSystem->GetFuncEval() << " calls to function at the point\n";
+  cout << "\nOptimization finished with final likelihood score of " << EcoSystem->Likelihood()
+    << "\nafter " << EcoSystem->GetFuncEval() << " function evaluations at the point\n";
   EcoSystem->PrintOptValues();
-  cout << endl;
 
   delete[] endpoint;
   delete[] startpoint;
@@ -179,7 +176,7 @@ void OptInfoSimann::Read(CommentStream& infile) {
   strncpy(text, "", MaxStrLength);
 
   infile >> ws;
-  while(!infile.eof()) {
+  while (!infile.eof()) {
     infile >> text >> ws;
     if (!Read(infile, text))
       cout << "Error in optinfo - unknown option " << text << endl;
@@ -268,7 +265,7 @@ void OptInfoSimann::MaximizeLikelihood() {
   }
 
   if (count > 0) {
-    cerr << "Exiting with " << count << " errors in the initial conditions\n";
+    cerr << "Exiting with " << count << " errors in the initial parameter values\n";
     exit(EXIT_FAILURE);
   }
 
@@ -276,10 +273,9 @@ void OptInfoSimann::MaximizeLikelihood() {
   Finalvalue = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, maxim,
     maxevl, cstep, T, vmstep, rt, ns, nt, eps);
 
-  cout << "\nOptimization finished with final value " << EcoSystem->Likelihood()
-    << "\nafter " << EcoSystem->GetFuncEval() << " calls to function at the point\n";
+  cout << "\nOptimization finished with final likelihood score of " << EcoSystem->Likelihood()
+    << "\nafter " << EcoSystem->GetFuncEval() << " function evaluations at the point\n";
   EcoSystem->PrintOptValues();
-  cout << endl;
 
   delete[] startpoint;
   delete[] endpoint;
@@ -303,7 +299,7 @@ void OptInfoHookeAndSimann::Read(CommentStream& infile) {
   strncpy(text, "", MaxStrLength);
 
   infile >> ws;
-  while(!infile.eof()) {
+  while (!infile.eof()) {
     infile >> text >> ws;
     if (!Read(infile, text))
       cout << "Error in optinfo - unknown option " << text << endl;
@@ -403,7 +399,7 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
   }
 
   if (count > 0) {
-    cerr << "Exiting with " << count << " errors in the initial conditions\n";
+    cerr << "Exiting with " << count << " errors in the initial parameter values\n";
     exit(EXIT_FAILURE);
   }
 
@@ -433,16 +429,28 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
     }
   }
 
+  for (i = 0; i < nopt; i++) {
+    if (iszero(val[i])) {
+      count++;
+      cerr << "Error: for switch " << optswitches[i] << " starting value is zero\n"
+        << "which will give poor convergence for Hooke and Jeeves optimisation\n";
+    }
+  }
+
+  if (count > 0) {
+    cerr << "Exiting with " << count << " errors in the parameter values\n";
+    exit(EXIT_FAILURE);
+  }
+
   Finalvalue += hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
     Rho_begin, lambda, epsmin, HookeMaxIter);
 
   for (i = 0; i < nopt; i++)
     val[i] = initialval[i] * endpoint[i];
 
-  cout << "\nOptimization finished with final value " << EcoSystem->Likelihood()
-    << "\nafter " << EcoSystem->GetFuncEval() << " calls to function at the point\n";
+  cout << "\nOptimization finished with final likelihood score of " << EcoSystem->Likelihood()
+    << "\nafter " << EcoSystem->GetFuncEval() << " function evaluations at the point\n";
   EcoSystem->PrintOptValues();
-  cout << endl;
 
   delete[] startpoint;
   delete[] endpoint;

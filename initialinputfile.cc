@@ -19,7 +19,11 @@ void InitialInputFile::getReadValues(Parametervector& sw,
   val = values;
   low = lowerbound;
   upp = upperbound;
-  opt = optimize;
+
+  int i;
+  opt.resize(optimize.Size());
+  for (i = 0; i < optimize.Size(); i++)
+    opt[i] = optimize[i];
 }
 
 void InitialInputFile::getVectorValue(doublevector& val) {
@@ -41,9 +45,6 @@ InitialInputFile::InitialInputFile(const char* const filename) : header(0) {
 }
 
 InitialInputFile::~InitialInputFile() {
-  int i;
-  for (i = 0; i < header.Size(); i++)
-    delete[] header[i];
   tmpinfile.close();
   tmpinfile.clear();
 }
@@ -102,7 +103,7 @@ void InitialInputFile::readHeader() {
       cerr << "Error in initialinput - line to long in file\n";
       exit(EXIT_FAILURE);
     }
-    istrstream line(textInLine);
+    istringstream line(textInLine);
     line >> text;
     if (line.good())
       line >> ws;
@@ -204,7 +205,7 @@ void InitialInputFile::readVectorFromLine() {
     exit(EXIT_FAILURE);
   }
 
-  istrstream line(text);
+  istringstream line(text);
   while (!line.eof() && !line.fail() && !(line.peek() == ';')) {
     line >> tempX;
     tempValues.resize(1, tempX);

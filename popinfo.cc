@@ -1,10 +1,10 @@
-#ifndef INLINE_POPINFO_CC
+#ifndef GADGET_INLINE
 #include "popinfo.h"
 #endif
 
 #include "mathfunc.h"
 
-#ifdef INLINE_POPINFO_CC
+#ifdef GADGET_INLINE
 inline
 #endif
 popinfo::popinfo() {
@@ -12,7 +12,7 @@ popinfo::popinfo() {
   W = 0;
 }
 
-#ifdef INLINE_POPINFO_CC
+#ifdef GADGET_INLINE
 inline
 #endif
 popinfo& popinfo::operator = (const popinfo& a) {
@@ -21,7 +21,7 @@ popinfo& popinfo::operator = (const popinfo& a) {
   return *this;
 }
 
-#ifdef INLINE_POPINFO_CC
+#ifdef GADGET_INLINE
 inline
 #endif
 popinfo& popinfo::operator += (const popinfo& a) {
@@ -30,21 +30,21 @@ popinfo& popinfo::operator += (const popinfo& a) {
   return *this;
 }
 
-#ifdef INLINE_POPINFO_CC
+#ifdef GADGET_INLINE
 inline
 #endif
 void popinfo::operator -= (double a) {
   N -= a;
 }
 
-#ifdef INLINE_POPINFO_CC
+#ifdef GADGET_INLINE
 inline
 #endif
 void popinfo::operator *= (double a) {
   N *= a;
 }
 
-#ifdef INLINE_POPINFO_CC
+#ifdef GADGET_INLINE
 inline
 #endif
 popinfo popinfo::operator * (double b) {

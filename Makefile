@@ -1,45 +1,44 @@
-################################################################
+##########################################################################
 # Common for all architecture and compiler options
-################################################################
+##########################################################################
 GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat=2 \
-              -Wparentheses -Wpointer-arith -Wcast-qual -Wcast-align \
-              -Wsynth -Woverloaded-virtual -Wparentheses -Wreorder \
-              -Wwrite-strings -Wconversion -Wchar-subscripts \
-              -Wuninitialized -W -pedantic
+              -Wparentheses -Wpointer-arith -Wcast-qual -Wconversion \
+              -Wreorder -Wwrite-strings -Wsynth -Wchar-subscripts \
+              -Wuninitialized -W
 
-DEFINE_FLAGS = -D INLINE_POPINFO_CC -D INLINE_VECTORS \
-               -D NDEBUG -D INTERRUPT_HANDLER -O3
+#DEFINE_FLAGS = -D GADGET_INLINE -D DEBUG -D INTERRUPT_HANDLER -g -O
+DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
 
-################################################################
+##########################################################################
 # Pick the appropriate compiler from the following switches
-################################################################
+##########################################################################
 # 1. Linux without pvm, g++ compiler
 CXX = g++
 LIBDIRS = -L.  -L/usr/local/lib
 LIBRARIES = -lm -lvec
 CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 OBJECTS = $(GADGETOBJECTS)
-################################################################
+##########################################################################
 # 2. Solaris without pvm3, g++ compiler
 #CXX = g++
 #LIBDIRS = -L.  -L/usr/local/lib
 #LIBRARIES = -lm -lvec
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 #OBJECTS = $(GADGETOBJECTS)
-################################################################
+##########################################################################
 # 3. Solaris without pvm3, using CC compiler
 #CXX = CC
 #LIBDIRS = -L.  -L/usr/local/lib
 #LIBRARIES = -lm -lvec
 #CXXFLAGS = $(DEFINE_FLAGS)
 #OBJECTS = $(GADGETOBJECTS)
-################################################################
+##########################################################################
 # 4. HP-UX without pvm3
 #LIBDIRS = -L.  -L/usr/local/lib
 #LIBRARIES = -lm -lvec
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D __cplusplus
 #OBJECTS = $(GADGETOBJECTS)
-################################################################
+##########################################################################
 # 5. Solaris with pvm3, g++ compiler
 #CXX = g++
 #PVMDIR = $(PVM_ROOT)
@@ -49,7 +48,7 @@ OBJECTS = $(GADGETOBJECTS)
 #LIBRARIES = -lm -lvec -lpvm3 -lgpvm3 -lnsl -lsocket
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
 #OBJECTS = $(GADGETOBJECTS) $(SLAVEOBJECTS)
-################################################################
+##########################################################################
 # 6. Linux, with pvm, g++ compiler
 #CXX = g++
 #PVMDIR = $(PVM_ROOT)
@@ -59,27 +58,33 @@ OBJECTS = $(GADGETOBJECTS)
 #LIBRARIES = -lm -lvec -lpvm3 -lgpvm3 -lnsl
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
 #OBJECTS = $(GADGETOBJECTS) $(SLAVEOBJECTS)
-################################################################
-# The following functions are not ansi compatible, and so if the
-# -ansi flag is used, they will either fail or return garbage.
+##########################################################################
+# 7. Solaris without pvm3, g++ compiler running CONDOR
+#CXX = condor_compile g++
+#LIBDIRS = -L.  -L/usr/local/lib
+#LIBRARIES = -lm -lvec
+#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
+#OBJECTS = $(GADGETOBJECTS)
+##########################################################################
+# The following functions are not ansi compatible, and so if the -ansi flag
+# is used, they will either fail or return garbage.  These functions are
 # the lgamma function used in file mathfunc.h, and
 # the strdup and strcasecmp functions might not work correctly.
-################################################################
+##########################################################################
 
-VECTORS = addr_keepmatrix.o addr_keepvector.o intvector.o intmatrix.o \
-	bandmatrixptrmatrix.o likelihoodptrvector.o bandmatrixptrvector.o \
+VECTORS = addr_keepmatrix.o addr_keepvector.o charptrmatrix.o charptrvector.o \
+	bandmatrixptrmatrix.o bandmatrixptrvector.o doublematrix.o doublevector.o \
 	otherfoodptrvector.o baseclassptrvector.o popinfoindexvector.o \
-	catchdataptrvector.o popinfomatrix.o charptrmatrix.o charptrvector.o \
-	popinfovector.o conversionindexptrvector.o poppredatorptrvector.o \
-	doubleindexvector.o predatorptrvector.o doublematrix.o preyptrvector.o \
-	doublematrixptrmatrix.o printerptrvector.o doublematrixptrvector.o \
-	sionstepptrvector.o doublevector.o stockpreyptrvector.o fleetptrvector.o \
+	catchdataptrvector.o migvariableptrvector.o conversionindexptrvector.o \
+	popratiomatrix.o popratiovector.o popinfomatrix.o popinfovector.o \
+	doubleindexvector.o predatorptrvector.o preyptrvector.o fleetptrvector.o \
+	doublematrixptrmatrix.o doublematrixptrvector.o intmatrix.o intvector.o \
+	agebandmatrixptrvector.o tagptrvector.o poppredatorptrvector.o \
 	formulaindexvector.o stockptrvector.o formulamatrix.o formulavector.o \
-	timevariablevector.o timevariablematrix.o timevariableindexvector.o \
+	timevariablematrix.o timevariablevector.o timevariableindexvector.o \
 	variableinfoptrvector.o catchdistributionptrvector.o suitfuncptrvector.o \
 	formulamatrixptrvector.o vectorofcharptr.o agebandmatrixratio.o \
-	popratiomatrix.o popratiovector.o popratioindexvector.o \
-	agebandmatrixptrvector.o tagptrvector.o
+	popratioindexvector.o likelihoodptrvector.o printerptrvector.o
 
 GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregator.o \
 	growthimplement.o predatorindex.o abstrpredstdinfo.o abstrpreystdinfo.o \
@@ -102,15 +107,15 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	stockpreystdinfo.o stockpreystdinfobylength.o stockprinter.o lenstock.o \
 	stockstdprinter.o maturity.o stomachcontent.o maturitya.o strstack.o \
 	maturityb.o maturityc.o suitfunc.o maturityd.o suits.o migration.o keeper.o \
-	surveyindices.o migrationpenalty.o tagdata.o migvariableptrvector.o stock.o \
+	surveyindices.o migrationpenalty.o tagdata.o  stock.o readaggregation.o \
 	migvariables.o time.o multinomial.o totalpredator.o naturalm.o optinfo.o \
 	transition.o otherfood.o mathfunc.o understocking.o poppredator.o tags.o \
 	vectorusingkeeper.o popstatistics.o boundlikelihood.o timevariable.o \
-	biomassprinter.o cannibalism.o readaggregation.o likelihoodprinter.o \
+	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	formatedcatchprinter.o formatedchatprinter.o formatedpreyprinter.o \
-	formatedprinting.o formatedstockprinter.o lennaturalm.o logcatchfunction.o \
-	logsionstep.o logsurveyindices.o interruptinterface.o interrupthandler.o \
-	initialinputfile.o popratio.o taggrow.o agebandmatrixratiomemberfunctions.o
+	formatedstockprinter.o lennaturalm.o logcatchfunction.o catchintons.o \
+	interruptinterface.o interrupthandler.o initialinputfile.o taggrow.o \
+	popratio.o agebandmatrixratiomemberfunctions.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
@@ -128,11 +133,11 @@ libvec.a: $(VECTORS)
 	ar r libvec.a $?
 install: gadget
 	mv gadget ../../bin
-################################################################
+##########################################################################
 # The following line is needed to create the gadget input library
 # for newer versions of paramin.  To create this library, you need
 # to type "make libgadgetinput.a" *before* you compile paramin
-################################################################
+##########################################################################
 libgadgetinput.a: $(GADGETINPUT)
 	ar r libgadgetinput.a $?
 clean:

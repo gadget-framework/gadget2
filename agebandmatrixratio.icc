@@ -1,6 +1,6 @@
 #include "agebandmatrixratio.h"
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 popratioindexvector& Agebandmatrixratio::operator [] (int age) {
@@ -8,7 +8,7 @@ popratioindexvector& Agebandmatrixratio::operator [] (int age) {
   return *(v[age - minage]);
 }
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 const popratioindexvector& Agebandmatrixratio::operator [] (int age) const {
@@ -16,23 +16,21 @@ const popratioindexvector& Agebandmatrixratio::operator [] (int age) const {
   return *(v[age - minage]);
 }
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 Agebandmatrixratio& Agebandmatrixratiovector::operator [] (int pos) {
-  assert(0 <= pos && pos < size);
   return *v[pos];
 }
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 const Agebandmatrixratio& Agebandmatrixratiovector::operator [] (int pos) const {
-  assert(0 <= pos && pos < size);
   return *v[pos];
 }
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 inline
 #endif
 const Agebandmatrixratio& Agebandmatrixratiovector::operator [] (const char* name) const {

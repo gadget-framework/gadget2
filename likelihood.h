@@ -12,27 +12,20 @@ class TimeClass;
 class Keeper;
 
 enum LikelihoodType { SURVEYINDICESLIKELIHOOD = 1, UNDERSTOCKINGLIKELIHOOD,
-  CATCHDISTRIBUTIONLIKELIHOOD, CATCHSTATISTICSLIKELIHOOD,
-  STOMACHCONTENTLIKELIHOOD, TAGLIKELIHOOD,
-  STOCKDISTRIBUTIONLIKELIHOOD, PREDATORINDICESLIKELIHOOD,
-  MIGRATIONPENALTYLIKELIHOOD, RANDOMWALKLIKELIHOOD,
-  BOUNDLIKELIHOOD, LOGCATCHLIKELIHOOD,
-  LOGSURVEYLIKELIHOOD, AGGREGATEDCDLIKELIHOOD };
+  CATCHDISTRIBUTIONLIKELIHOOD, CATCHSTATISTICSLIKELIHOOD, STOMACHCONTENTLIKELIHOOD,
+  TAGLIKELIHOOD, STOCKDISTRIBUTIONLIKELIHOOD, PREDATORINDICESLIKELIHOOD,
+  MIGRATIONPENALTYLIKELIHOOD, RANDOMWALKLIKELIHOOD, BOUNDLIKELIHOOD,
+  LOGCATCHLIKELIHOOD, LOGSURVEYLIKELIHOOD, AGGREGATEDCDLIKELIHOOD, CATCHINTONSLIKELIHOOD };
 
 class Likelihood {
 public:
   Likelihood(LikelihoodType T, double w = 0) : likelihood(0), weight(w), type(T) {};
   virtual ~Likelihood() {};
   virtual void AddToLikelihood(const TimeClass* const TimeInfo) = 0;
-  //AJ 07.06.00 To override virtual functions they must have the same
-  //parameter list, this is confusing so changing names of the following function
-  virtual void Init(const Ecosystem* eco) {};
   virtual void AddToLikelihoodTimeAndKeeper(const TimeClass* const TimeInfo, Keeper* const Keeper) {};
   virtual void Reset(const Keeper* const keeper) { likelihood = 0; };
   virtual void Print(ofstream& outfile) const = 0;
   virtual void LikelihoodPrint(ofstream& outfile) const { outfile << "weight " << weight << endl; };
-  //AJ 07.06.00 To override virtual functions they must have the same
-  //parameter list, this is confusing so changing names of the following function
   virtual void LikelihoodPrintKeeper(ofstream& outfile, const Keeper* const Keeper) const {};
   virtual void printMoreLikInfo(ofstream& outfile) const {};
   double ReturnLikelihood() const { return weight * likelihood; };

@@ -1,6 +1,10 @@
 #include "popinfoindexvector.h"
 #include "gadget.h"
 
+#ifndef GADGET_INLINE
+#include "popinfoindexvector.icc"
+#endif
+
 popinfoindexvector::popinfoindexvector(int sz, int minp) {
   size = sz;
   if (size > 0)
@@ -31,6 +35,13 @@ popinfoindexvector::popinfoindexvector(const popinfoindexvector& initial) {
     v[i] = initial.v[i];
 }
 
+popinfoindexvector::~popinfoindexvector() {
+if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
+}
+
 void popinfoindexvector::resize(int addsize, int lower, popinfo initial) {
   popinfo* vnew = new popinfo[size + addsize];
   int i;
@@ -51,14 +62,4 @@ void popinfoindexvector::resize(int addsize, int lower, popinfo initial) {
   }
   v = vnew;
   minpos = lower;
-}
-
-popinfo& popinfoindexvector::operator [] (int pos) {
-  assert(minpos <= pos && pos < minpos + size);
-  return(v[pos - minpos]);
-}
-
-const popinfo& popinfoindexvector::operator [] (int pos) const {
-  assert(minpos <= pos && pos < minpos + size);
-  return(v[pos - minpos]);
 }

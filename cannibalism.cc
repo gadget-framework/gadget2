@@ -8,8 +8,8 @@
 
 Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* preylen,
   const TimeClass* const TimeInfo, Keeper* const keeper)
-  : altfood(TimeInfo->TotalNoSteps(), TimeInfo->FirstStep(), 0),
-    overlap(), params(3), cann_lev(TimeInfo->TotalNoSteps()), cannibalism(preylen->Size(), 0) {
+  : altfood(TimeInfo->TotalNoSteps(), TimeInfo->FirstStep(), 0), params(3),
+    cann_lev(TimeInfo->TotalNoSteps()), cannibalism(preylen->NoLengthGroups(), 0) {
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -106,14 +106,14 @@ Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* preyl
 
   //read overlap data
   infile >> text >> ws;
-  overlap = new intmatrix(nrofpredators, TimeInfo->StepsInYear(), 0);
+  overlap.AddRows(nrofpredators, TimeInfo->StepsInYear(), 0);
   if (strcasecmp(text, "overlap") == 0) {
-    for (i = 0; i < overlap->Nrow(); i++) {
-      for (j = 0; j < overlap->Ncol(); j++) {
+    for (i = 0; i < overlap.Nrow(); i++) {
+      for (j = 0; j < overlap.Ncol(i); j++) {
         infile >> k >> ws;
         if ((k != 0) && (k != 1))
           handle.Message("Error in cannibalism - wrong format for overlap");
-        (*overlap)[i][j] = k;
+        overlap[i][j] = k;
       }
     }
   } else
@@ -122,16 +122,21 @@ Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* preyl
   //set dimension on the consumption matrices
   consumption.resize(nrofpredators);
   for (i = 0; i < nrofpredators; i++)
-    consumption[i] = new bandmatrix(0, preylgp->Size(), minage[i], maxage[i] - minage[i] + 1, 0.0);
+    consumption[i] = new bandmatrix(0, preylgp->NoLengthGroups(), minage[i], maxage[i] - minage[i] + 1, 0.0);
 
   keeper->ClearLast();
 }
 
 Cannibalism::~Cannibalism() {
+  int i;
+  for (i = 0; i < predatornames.Size(); i++)
+    delete[] predatornames[i];
+  for (i = 0; i < consumption.Size(); i++)
+    delete consumption[i];
   delete preylgp;
 }
 
-const doublevector& Cannibalism::Mortality (const Agebandmatrix& alk_prey,
+const doublevector& Cannibalism::Mortality(const Agebandmatrix& alk_prey,
   const Agebandmatrix& alk_pred, const LengthGroupDivision* len_prey,
   const LengthGroupDivision* len_pred, const TimeClass* const TimeInfo,
   int pred_no, const doublevector& natm) {
@@ -141,7 +146,7 @@ const doublevector& Cannibalism::Mortality (const Agebandmatrix& alk_prey,
   int minage, maxage;
   double biomass, otherbiomass_factor, len, mort_fact, mortality;
 
-  prey_size = len_prey->Size();
+  prey_size = len_prey->NoLengthGroups();
   //assert(alk_pred.Minage() == minage[pred_no]);
   assert(alk_pred.Nrow() == (*consumption[pred_no]).Nrow());
   assert(prey_size == (*consumption[pred_no]).Ncol());
@@ -168,7 +173,7 @@ const doublevector& Cannibalism::Mortality (const Agebandmatrix& alk_prey,
     agegroups[pred_no][i] = 0.0;
 
   //check if the predator is present on the current timestep
-  pred_is_pres = ((*overlap)[pred_no][TimeInfo->CurrentStep() - 1]);
+  pred_is_pres = overlap[pred_no][TimeInfo->CurrentStep() - 1];
   if (!(pred_is_pres))
     return cannibalism;
 
@@ -251,7 +256,7 @@ double Cannibalism::suitfunc(double predlength, double preylength) {
   if (q < 0)
     q = -q;    //To avoid getting a big positive number as an argument for exp
 
-  e = (l - params[0]) * (l - params[0]) ;
+  e = (l - params[0]) * (l - params[0]);
   check = exp(-e / q);
   if ((check < 0.0) || (check > 1.0)) {
     cerr << "Error in cannibalism - function outside bounds " << check << endl;

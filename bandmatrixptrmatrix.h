@@ -15,7 +15,7 @@ public:
   bandmatrixptrmatrix(int nrow, const intvector& ncol, bandmatrix* initial);
   bandmatrixptrmatrix(const bandmatrixptrmatrix& initial);
   ~bandmatrixptrmatrix();
-  int Ncol(int i = 0) const { return(v[i]->Size()); };
+  int Ncol(int i = 0) const { return v[i]->Size(); };
   int Nrow() const { return nrow; };
   bandmatrixptrvector& operator [] (int pos);
   const bandmatrixptrvector& operator [] (int pos) const;
@@ -26,5 +26,9 @@ protected:
   int nrow;
   bandmatrixptrvector** v;
 };
+
+#ifdef GADGET_INLINE
+#include "bandmatrixptrmatrix.icc"
+#endif
 
 #endif

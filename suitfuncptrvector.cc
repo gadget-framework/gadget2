@@ -1,7 +1,7 @@
 #include "suitfuncptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "suitfuncptrvector.icc"
 #endif
 
@@ -33,6 +33,13 @@ SuitfuncPtrvector::SuitfuncPtrvector(const SuitfuncPtrvector& initial) {
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+SuitfuncPtrvector::~SuitfuncPtrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 void SuitfuncPtrvector::resize(int addsize, SuitFunc* value) {

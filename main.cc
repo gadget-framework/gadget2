@@ -25,9 +25,9 @@ void StochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
         EcoSystem->Update(Stochasticdata);
         EcoSystem->Simulate(MainInfo->CalcLikelihood, print);
         if ((MainInfo->printinfo).Print())
-          EcoSystem->PrintValues((MainInfo->printinfo).OutputFile);
+          EcoSystem->PrintValues((MainInfo->printinfo).OutputFile, (MainInfo->printinfo).givenPrecision);
         if ((MainInfo->printinfo).PrintinColumns())
-          EcoSystem->PrintValuesinColumns((MainInfo->printinfo).ColumnOutputFile);
+          EcoSystem->PrintValuesinColumns((MainInfo->printinfo).ColumnOutputFile, (MainInfo->printinfo).givenPrecision);
         Stochasticdata->SendDataToMaster(EcoSystem->Likelihood());
         Stochasticdata->ReadNextLineFromNet();
       }
@@ -39,26 +39,26 @@ void StochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
     EcoSystem->Update(Stochasticdata);
     EcoSystem->Simulate(MainInfo->CalcLikelihood, print);
     if ((MainInfo->printinfo).Print())
-      EcoSystem->PrintValues((MainInfo->printinfo).OutputFile);
+      EcoSystem->PrintValues((MainInfo->printinfo).OutputFile, (MainInfo->printinfo).givenPrecision);
     if ((MainInfo->printinfo).PrintinColumns())
-      EcoSystem->PrintValuesinColumns((MainInfo->printinfo).ColumnOutputFile);
+      EcoSystem->PrintValuesinColumns((MainInfo->printinfo).ColumnOutputFile, (MainInfo->printinfo).givenPrecision);
     while (Stochasticdata->DataIsLeft()) {
       Stochasticdata->ReadDataFromNextLine();
       EcoSystem->Update(Stochasticdata);
       EcoSystem->Simulate(MainInfo->CalcLikelihood, print);
       if ((MainInfo->printinfo).Print())
-        EcoSystem->PrintValues((MainInfo->printinfo).OutputFile);
+        EcoSystem->PrintValues((MainInfo->printinfo).OutputFile, (MainInfo->printinfo).givenPrecision);
       if ((MainInfo->printinfo).PrintinColumns())
-        EcoSystem->PrintValuesinColumns((MainInfo->printinfo).ColumnOutputFile);
+        EcoSystem->PrintValuesinColumns((MainInfo->printinfo).ColumnOutputFile, (MainInfo->printinfo).givenPrecision);
     }
     delete Stochasticdata;
 
   } else {
     EcoSystem->Simulate(MainInfo->CalcLikelihood, print);
     if ((MainInfo->printinfo).Print())
-      EcoSystem->PrintValues((MainInfo->printinfo).OutputFile);
+      EcoSystem->PrintValues((MainInfo->printinfo).OutputFile, (MainInfo->printinfo).givenPrecision);
     if ((MainInfo->printinfo).PrintinColumns())
-      EcoSystem->PrintValuesinColumns((MainInfo->printinfo).ColumnOutputFile);
+      EcoSystem->PrintValuesinColumns((MainInfo->printinfo).ColumnOutputFile, (MainInfo->printinfo).givenPrecision);
   }
 }
 
@@ -108,8 +108,8 @@ int main(int aNumber, char *const aVector[]) {
 
   //Added MainInfo.Net to Ecosystem constructor, to let EcoSystem know if
   //we are doing a net run. 07.04.00 AJ
-  EcoSystem = new Ecosystem("main", MainInfo.Optimize, MainInfo.Net,
-    MainInfo.CalcLikelihood, inputdir, workingdir, MainInfo.printinfo);
+  EcoSystem = new Ecosystem(MainInfo.MainGadgetFilename, MainInfo.Optimize,
+    MainInfo.Net, MainInfo.CalcLikelihood, inputdir, workingdir, MainInfo.printinfo);
 
   #ifdef INTERRUPT_HANDLER
     registerInterrupt(SIGINT, &EcoSystem->interrupted);
@@ -171,9 +171,9 @@ int main(int aNumber, char *const aVector[]) {
 
   //JMB - print final values of parameters
   if (!(MainInfo.Net))
-    EcoSystem->PrintParamsinColumns((MainInfo.printinfo).ParamOutFile);
+    EcoSystem->PrintParamsinColumns((MainInfo.printinfo).ParamOutFile, (MainInfo.printinfo).givenPrecision);
 
+  free(workingdir);
   delete Optinfo;
   delete EcoSystem;
 }
-

@@ -23,16 +23,16 @@ public:
   doubleindexvector& operator [] (int row);
   const doubleindexvector& operator [] (int row) const;
   bandmatrix& operator += (bandmatrix& b);
-  int Ncol(int row) const { return(operator[](row).Size()); };
-  int Ncol() const { return(operator[](minage).Size()); };
+  int Ncol(int row) const { return (operator[](row).Size()); };
+  int Ncol() const { return (operator[](minage).Size()); };
   int Minrow() const { return minage; };
   int Maxrow() const { return minage + nrow - 1; };
-  int Mincol(int row) const { return(operator[](row).Mincol()); };
-  int Maxcol(int row) const { return(operator[](row).Maxcol()); };
-  int Minage() const { return(minage); };
-  int Maxage() const { return(minage + nrow - 1); };
-  int Minlength(int age) const { return(operator[](age).Mincol()); };
-  int Maxlength(int age) const { return(operator[](age).Maxcol()); };
+  int Mincol(int row) const { return (operator[](row).Mincol()); };
+  int Maxcol(int row) const { return (operator[](row).Maxcol()); };
+  int Minage() const { return minage; };
+  int Maxage() const { return minage + nrow - 1; };
+  int Minlength(int age) const { return (operator[](age).Mincol()); };
+  int Maxlength(int age) const { return (operator[](age).Maxcol()); };
   void Colsum(doublevector& Result) const;
   void Print() const;
 protected:
@@ -51,7 +51,7 @@ public:
   const bandmatrix& operator [] (int pos) const;
   void resize(int add, const bandmatrix& initial);
   void resize(int add);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   void Delete(int pos);
 protected:
   int size;
@@ -75,7 +75,7 @@ protected:
   bandmatrixvector** v;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "bandmatrix.icc"
 #endif
 

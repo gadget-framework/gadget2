@@ -4,7 +4,7 @@
 #include "agebandm.h"
 #include "mathfunc.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "agebandm.icc"
 #endif
 
@@ -79,6 +79,7 @@ Agebandmatrix::~Agebandmatrix() {
     for (i = 0; i < nrow; i++)
       delete v[i];
     delete[] v;
+    v = 0;
   }
 }
 
@@ -103,6 +104,7 @@ Agebandmatrixvector::~Agebandmatrixvector() {
     for (i = 0; i < size; i++)
       delete v[i];
     delete[] v;
+    v = 0;
   }
 }
 

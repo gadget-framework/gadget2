@@ -20,22 +20,22 @@ public:
   ~Tags();
   void Update();
   void DeleteFromStock();
-  const int getTagYear () const { return tagyear; };
-  const int getTagStep () const { return tagstep; };
-  const int getEndYear () const { return endyear; };
-  const int getEndStep () const { return endstep; };
-  const int getTagArea () const { return tagarea; };
+  const int getTagYear() const { return tagyear; };
+  const int getTagStep() const { return tagstep; };
+  const int getEndYear() const { return endyear; };
+  const int getEndStep() const { return endstep; };
+  const int getTagArea() const { return tagarea; };
   charptrvector getStocknames() const { return stocknames; };
   void SetStock(Stockptrvector& Stocks);
   const char* TagName() const { return this->Name(); };
+  void UpdateMatureStock(const TimeClass* const TimeInfo);
   void printPopInfo(char* filename);
 private:
-  void ReadNumbers(CommentStream&, const char*, double);
-  //char* tagname;  //name of the tagging experiment
+  void ReadNumbers(CommentStream&, const char*, double, double dl);
   charptrvector stocknames;   //names of the tagged stock read from file
-  //age-length distribution of tags by stocks
+  //area-age-length distribution of tags by stocks
   agebandmatrixptrvector AgeLengthStock;
-  agebandmatrixptrvector matureStock;
+  //AgeLengthStock[0] refers to the stock and AgeLengthStock[...] refers to the mature stock.
   Formula tagloss; //percentage of tags that are lost
   int tagarea;     //area of tagging
   int tagyear;     //year of tagging
@@ -46,6 +46,5 @@ private:
   LengthGroupDivision* LgrpDiv;
   Stockptrvector tagstocks;
   Stockptrvector maturestocks;
-  StockAggregator* aggregator;
 };
 #endif

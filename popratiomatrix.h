@@ -13,7 +13,7 @@ public:
   popratiomatrix(int nrow, const intvector& ncol, popratio initial);
   popratiomatrix(const popratiomatrix& initial);
   ~popratiomatrix();
-  int Ncol(int i = 0) const { return(v[i]->Size()); };
+  int Ncol(int i = 0) const { return v[i]->Size(); };
   int Nrow() const { return nrow; };
   popratiovector& operator [] (int pos);
   const popratiovector& operator [] (int pos) const;
@@ -25,7 +25,7 @@ protected:
   popratiovector** v;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "popratiomatrix.icc"
 #endif
 

@@ -7,10 +7,11 @@
 #include "conversionindexptrvector.h"
 #include "charptrvector.h"
 #include "commentstream.h"
+#include "agebandmatrixratio.h"
 
 class Maturity;
 
-typedef double Maturityfunc (int, int, int, const TimeClass* const, const AreaClass* const,
+typedef double Maturityfunc(int, int, int, const TimeClass* const, const AreaClass* const,
   const LengthGroupDivision* const, int, const doublevector&, const doublevector&, int);
 typedef Maturityfunc* MaturityfuncPtr;
 
@@ -29,8 +30,12 @@ public:
   void PutInStorage(int area, int age, int length, double number,
     double weight, const TimeClass* const TimeInfo);
   void Move(int area, const TimeClass* const TimeInfo);
-  int getNoOfMatureStocks() { return MatureStocks.Size(); };
+  void PutInStorage(int area, int age, int length, double number,
+    const TimeClass* const TimeInfo, int id);
+  int NoOfMatureStocks() { return MatureStocks.Size(); };
   const Stockptrvector& GetMatureStocks();
+  void DeleteTag(const char* tagname);
+  void AddTag(const char* tagname);
 protected:
   Stockptrvector MatureStocks;
   charptrvector NameOfMatureStocks;
@@ -39,6 +44,7 @@ protected:
   LengthGroupDivision* LgrpDiv;
 private:
   Agebandmatrixvector Storage;
+  Agebandmatrixratiovector TagStorage;
 };
 
 #endif

@@ -156,7 +156,7 @@ void BiomassPrinter::SetStock(Stockptrvector& stockvec) {
  *  Pre: SetStock has been called
  */
 
-void BiomassPrinter::Print (const TimeClass* const TimeInfo) {
+void BiomassPrinter::Print(const TimeClass* const TimeInfo) {
 
   int i, a, y, area, minagem, maxagem;
   if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps()) {
@@ -234,5 +234,7 @@ BiomassPrinter::~BiomassPrinter() {
   printfile.clear();
   for (i = 0; i < matnames.Size(); i++)
     delete[] matnames[i];
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
   delete immname;
 }

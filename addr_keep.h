@@ -14,15 +14,18 @@ public:
     { strcpy(name, a.name); };
   void operator = (double* address) { addr = address; };
   void operator = (double& value) { addr = &value; };
-  int operator == (const double& val) { return(addr == &val); };
-  int operator == (const double* add) { return(addr == add); };
+  int operator == (const double& val) { return (addr == &val); };
+  int operator == (const double* add) { return (addr == add); };
   void operator = (const char* str1) {
-    delete[] name;
+    if (name != 0)
+      delete[] name;
     name = new char[strlen(str1) + 1];
     strcpy(name, str1);
+    delete[] str1;  //JMB - free memory from strstack->sendall()
   };
   void operator = (const addr_keep a) {
-    delete[] name;
+    if (name != 0)
+      delete[] name;
     name = new char[strlen(a.name) + 1];
     strcpy(name, a.name);
     addr = a.addr;

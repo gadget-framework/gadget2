@@ -38,10 +38,10 @@ public:
   void PrintLikelihoodInfo(const char* filename) const;
   void PrintInitialInformation(const char* const filename) const;
   void PrintInitialInformationinColumns(const char* const filename) const;
-  void PrintValues(const char* const filename) const;
+  void PrintValues(const char* const filename, int prec) const;
   void PrintOptValues() const;
-  void PrintValuesinColumns(const char* const filename) const;
-  void PrintParamsinColumns(const char* const filename) const;
+  void PrintValuesinColumns(const char* const filename, int prec) const;
+  void PrintParamsinColumns(const char* const filename, int prec) const;
   void Update(const StochasticData* const Stochastic) const;
   void Update(const doublevector& values) const;
   int NoVariables() const { return keeper->NoVariables(); };

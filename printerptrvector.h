@@ -9,11 +9,11 @@ public:
   Printerptrvector(int sz);
   Printerptrvector(int sz, Printer* initial);
   Printerptrvector(const Printerptrvector& initial);
-  ~Printerptrvector() { delete[] v; };
+  ~Printerptrvector();
   void resize(int add, Printer* value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   Printer*& operator [] (int pos);
   Printer* const& operator [] (int pos) const;
 protected:
@@ -21,7 +21,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "printerptrvector.icc"
 #endif
 

@@ -10,7 +10,6 @@ class GrowthImplementparameters {
 public:
   GrowthImplementparameters(CommentStream& infile);
   ~GrowthImplementparameters() {};
-  void Print(ofstream& outfile) const;
   int MinLengthgroupGrowth() const { return minlengthgroupgrowth; };
   int MaxLengthgroupGrowth() const { return maxlengthgroupgrowth; };
   double MeanResolution() const { return meanresolution; };

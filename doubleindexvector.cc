@@ -2,6 +2,10 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
+#ifndef GADGET_INLINE
+#include "doubleindexvector.icc"
+#endif
+
 doubleindexvector::doubleindexvector(int sz, int minp) {
   size = sz;
   minpos = minp;
@@ -26,10 +30,20 @@ doubleindexvector::doubleindexvector(int sz, int minp, double value) {
 doubleindexvector::doubleindexvector(const doubleindexvector& initial) {
   size = initial.size;
   minpos = initial.minpos;
-  v = new double[size];
   int i;
-  for (i = 0; i < size; i++)
-    v[i] = initial.v[i];
+  if (size > 0) {
+    v = new double[size];
+    for (i = 0; i < size; i++)
+      v[i] = initial.v[i];
+  } else
+    v = 0;
+}
+
+doubleindexvector::~doubleindexvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 void doubleindexvector::resize(int addsize, int lower, double initial) {
@@ -52,14 +66,4 @@ void doubleindexvector::resize(int addsize, int lower, double initial) {
   }
   v = vnew;
   minpos = lower;
-}
-
-double& doubleindexvector::operator [] (int pos) {
-  assert(minpos <= pos && pos < minpos + size);
-  return(v[pos - minpos]);
-}
-
-const double& doubleindexvector::operator [] (int pos) const {
-  assert(minpos <= pos && pos < minpos + size);
-  return(v[pos - minpos]);
 }

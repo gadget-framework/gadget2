@@ -15,8 +15,6 @@ extern void CheckLengthGroupIsFiner(const LengthGroupDivision* finer,
 extern int LengthGroupIsFiner(const LengthGroupDivision* finer,
   const LengthGroupDivision* coarser, int& BogusLengthGroup);
 
-extern int LengthGroupIsFiner(const LengthGroupDivision* finer, const LengthGroupDivision* coarser);
-
 extern void ErrorPrintLengthGroupDivision(const LengthGroupDivision* lgrpdiv);
 
 extern void ErrorPrintLengthGroupDivision(const LengthGroupDivision* finer,

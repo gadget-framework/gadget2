@@ -1,7 +1,7 @@
 #include "printerptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "printerptrvector.icc"
 #endif
 
@@ -33,6 +33,13 @@ Printerptrvector::Printerptrvector(const Printerptrvector& initial) {
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+Printerptrvector::~Printerptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a Printerptrvector and fills it vith value.

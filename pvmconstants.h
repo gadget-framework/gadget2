@@ -27,16 +27,16 @@ private:
   // tags for messages send/received using pvm
   int endType;                // indicate halting of netcommunication
   int startType;              // indicate starting of netcommunication
-  int taskDied;               // indicate that process had died.
-  int masterSendNetDataVar;   // indicate sending of netvariables by master.
-  int masterSendString;       // indicate sending of string by master.
-  int masterSendBound;        // indicate sending of bounds vector by master.
-  int masterReceiveNetDataResult; // indicate receive netdataresult from slace
+  int taskDied;               // indicate that process had died
+  int masterSendNetDataVar;   // indicate sending of netvariables by master
+  int masterSendString;       // indicate sending of string by master
+  int masterSendBound;        // indicate sending of bounds vector by master
+  int masterReceiveNetDataResult; // indicate receive netdataresult from slave
   int dataencode;
   //Possibilities for dataencode are: (default value 0)
   //dataencode = 0 then use XDR encoding for receiving/sending data
   //dataencode = 1 then no encoding of data
-  //dataencode = 2 then data is left in palce when sending/reciving
+  //dataencode = 2 then data is left in place when sending/reciving
 };
 
 #endif

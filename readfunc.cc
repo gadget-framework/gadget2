@@ -123,7 +123,7 @@ int ReadVectorInLine(CommentStream& infile, intvector& Vec) {
     cerr << "Error occurred when reading a vector in line.\n";
     return 0;
   }
-  istrstream istr(line);
+  istringstream istr(line);
   istr >> ws;
   int i = 0;
   while (!istr.eof()) {
@@ -150,7 +150,7 @@ int ReadVectorInLine(CommentStream& infile, doublevector& Vec) {
     cerr << "Error occurred when reading a vector in line.\n";
     return 0;
   }
-  istrstream istr(line);
+  istringstream istr(line);
   istr >> ws;
   int i = 0;
   while (!istr.eof()) {
@@ -174,7 +174,7 @@ int Read2ColVector(CommentStream& infile, doublematrix& M) {
   i = 0;
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 2)))
+  if (CountColumns(infile) != 2)
     cerr << "Wrong number of columns in inputfile - should be 2\n";
 
   while (!infile.eof()) {
@@ -204,7 +204,7 @@ int ReadTextInLine(CommentStream& infile, charptrvector& text) {
     cerr << "Error occurred when reading a text in line.\n";
     return 0;
   }
-  istrstream istr(line);
+  istringstream istr(line);
   istr >> ws;
   int i = 0;
   while (!istr.eof()) {
@@ -253,12 +253,12 @@ int FindContinuousYearAndStepWithNoText(CommentStream& infile, int year, int ste
   return 1;  //Success
 }
 
-/* This function checks the number of entries on a row in the input file
+/* This function counts the number of entries on a row in the input file
  * This is done to check the number of columns that are being read.
  * We assume that every row has the same number of entries so we only
  * need to check the file once, but this can be changed */
 
-int CheckColumns(CommentStream& infile, int count) {
+int CountColumns(CommentStream& infile) {
   if (infile.fail())
     return 0;
 
@@ -267,7 +267,6 @@ int CheckColumns(CommentStream& infile, int count) {
   strncpy(line, "", MaxStrLength);
   strncpy(temp, "", MaxStrLength);
   streampos pos;
-  int result = 0;
 
   pos = infile.tellg();
   infile >> ws;
@@ -275,7 +274,7 @@ int CheckColumns(CommentStream& infile, int count) {
   if (infile.fail())
     return 0;
 
-  istrstream istr(line);
+  istringstream istr(line);
   istr >> ws;
   int i = 0;
   while (!istr.eof()) {
@@ -286,8 +285,6 @@ int CheckColumns(CommentStream& infile, int count) {
     i++;
   }
 
-  if (i == count)
-    result = 1;
   infile.seekg(pos);
-  return result;
+  return i;
 }

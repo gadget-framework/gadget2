@@ -10,6 +10,7 @@ class TimeClass;
 class ActionAtTimes {
 public:
   ActionAtTimes();
+  ~ActionAtTimes();
   int ReadFromFile(CommentStream& infile, const TimeClass* const TimeInfo);
   void AddActions(const intvector& years, const intvector& steps, const TimeClass* const TimeInfo);
   void AddActionsAtAllYears(const intvector& steps, const TimeClass* const TimeInfo);

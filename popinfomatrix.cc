@@ -1,7 +1,7 @@
 #include "popinfomatrix.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "popinfomatrix.icc"
 #endif
 
@@ -68,6 +68,7 @@ popinfomatrix::~popinfomatrix() {
     for (i = 0; i < nrow; i++)
       delete v[i];
     delete[] v;
+    v = 0;
   }
 }
 

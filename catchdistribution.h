@@ -17,7 +17,6 @@ public:
   virtual ~CatchDistribution();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
-  virtual void Init(const Ecosystem* eco);
   virtual void Print(ofstream& outfile) const;
   void SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks);
   virtual void LikelihoodPrint(ofstream& outfile) const;
@@ -28,7 +27,7 @@ public:
   const doublematrix& getObsBiomass(int area) const { return *(obs_biomass[area]); };
   const doublematrix& getAggCalcBiomass(int area) const { return *(agg_calc_biomass[area]); };
   const doublematrix& getAggObsBiomass(int area) const { return *(agg_obs_biomass[area]); };
-  const char* Name() const { return name; };
+  const char* Name() const { return cdname; };
   const intmatrix& getAges() const { return ages; };
   int aggLevel() const { return agg_lev; };
   void aggregateBiomass();
@@ -81,7 +80,7 @@ private:
   FleetPreyAggregator* aggregator;
   charptrvector fleetnames;
   charptrvector stocknames;
-  const char* name;
+  char* cdname;
   intmatrix areas;
   intmatrix ages;
   doublevector lengths;
@@ -90,6 +89,7 @@ private:
   charptrvector lenindex;
   int overconsumption;    //should we take overconsumption into account
   int functionnumber;
+  char* functionname;
   int timeindex;
   ActionAtTimes AAT;
   int minp;
@@ -110,15 +110,10 @@ private:
   int agg_lev; //0: calculate likelihood on all time steps, 1: calculate once a year
   int min_stock_age; //kgf 3/5 99
   int max_stock_age; //kgf 3/5 99
-  int MinAge;
-  int MaxAge;
-  int min_data_age;
-  int max_data_age;
   intvector mincol;
   intvector maxcol;
   int minrow;
   int maxrow;
-  //AJ 02.06.00 Changing int dl to double dl
   LengthGroupDivision* LgrpDiv;
 };
 

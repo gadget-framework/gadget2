@@ -52,12 +52,10 @@ void Keeper::KeepVariable(double& value, const Parameter& attr) {
 }
 
 Keeper::~Keeper() {
+  ClearAll();
   delete stack;
+  ClearComponents();
   delete likcompnames;
-  int i, j;
-  for (i = 0; i < address.Nrow(); i++)
-    for (j = 0; j < address.Ncol(i); j++)
-      delete[] address[i][j].name;
 }
 
 void Keeper::DeleteParam(const double& var) {
@@ -105,7 +103,7 @@ void Keeper::ClearLast() {
   stack->OutOfStack();
 }
 
-void Keeper::ClearLastAddString(const char * str) {
+void Keeper::ClearLastAddString(const char* str) {
   stack->OutOfStack();
   stack->PutInStack(str);
 }
@@ -114,20 +112,16 @@ void Keeper::ClearAll() {
   stack->ClearStack();
 }
 
-void Keeper::SetString(const char * str) {
+void Keeper::SetString(const char* str) {
   stack->ClearStack();
   stack->PutInStack(str);
 }
 
-void Keeper::AddString(const char * str) {
+void Keeper::AddString(const char* str) {
   stack->PutInStack(str);
 }
 
-char* Keeper::SendString() const {
-  return stack->SendAll();
-}
-
-void Keeper::AddComponent(const char * name) {
+void Keeper::AddComponent(const char* name) {
   likcompnames->PutInStack("\t");
   likcompnames->PutInStack(name);
 }
@@ -305,7 +299,7 @@ void Keeper::WriteOptValues(double functionValue, const Likelihoodptrvector& Lik
   for (i = 0; i < Likely.Size(); i++)
     cout << Likely[i]->UnweightedLikelihood() << sep;
 
-  cout << "\nOverall likelihood score is " << functionValue << endl;
+  cout << "\n\nThe overall likelihood score is " << functionValue << endl;
 }
 
 void Keeper::WriteInitialInformation(const char* const filename, const Likelihoodptrvector& Likely) {
@@ -326,60 +320,73 @@ void Keeper::WriteInitialInformation(const char* const filename, const Likelihoo
 
   charptrvector tmpLikely;
   tmpLikely.resize(Likely.Size());
-  char* strLikely = new char[1 + Likely.Size() * MaxStrLength];
+
+  char* strLikely = SendComponents();
   char* strTemp = new char[MaxStrLength];
-  strncpy(strLikely, "", 1 + Likely.Size() * MaxStrLength);
   strncpy(strTemp, "", MaxStrLength);
-  strLikely = SendComponents();
-  ClearComponents();
-  int len = strlen(strLikely);
 
   j = k = 0;
-  for (i = 0; i < len; i++) {
-    if (strLikely[i] == '\t') {
-      if (j != 0) {
-        tmpLikely[k] = new char[strlen(strTemp) + 1];
-        strcpy(tmpLikely[k], strTemp);
-        strncpy(strTemp, "", MaxStrLength);
-        k++;
-      }
+  for (i = 1; i < strlen(strLikely); i++) {
+    if (strLikely[i] == TAB) {
+      strTemp[j] = '\0';
+      tmpLikely[k] = new char[strlen(strTemp) + 1];
+      strcpy(tmpLikely[k], strTemp);
+      strncpy(strTemp, "", MaxStrLength);
       j = 0;
+      k++;
     } else {
       strTemp[j] = strLikely[i];
       j++;
     }
   }
+  //copy the last component into tmpLikely
+  strTemp[j] = '\0';
   tmpLikely[k] = new char[strlen(strTemp) + 1];
   strcpy(tmpLikely[k], strTemp);
 
   outfile << ";\n; Listing of the likelihood components used in the current Gadget run\n;\n";
   outfile << "; Component\tType\tWeight\n";
-  for (i = 0; i < Likely.Size(); i++)
+  for (i = 0; i < tmpLikely.Size(); i++)
     outfile << tmpLikely[i] << TAB << Likely[i]->Type() << TAB << Likely[i]->Weight() << endl;
   outfile << ";\n; Listing of the output from the likelihood components for the current Gadget run\n;\n";
   outfile.close();
   outfile.clear();
+
+  //tmpLikely is not required - free up memory
+  for (i = 0; i < tmpLikely.Size(); i++)
+    delete[] tmpLikely[i];
+  delete[] strLikely;
+  delete[] strTemp;
 }
 
 void Keeper::WriteValues(const char* const filename,
-  double functionValue, const Likelihoodptrvector& Likely) const {
+  double functionValue, const Likelihoodptrvector& Likely, int prec) const {
 
-  int i;
+  int i, p, w;
   ofstream outfile;
   outfile.open(filename, ios::app);
   CheckIfFailure(outfile, filename);
 
+  p = prec;
+  if (prec == 0)
+    p = printprecision;
+  w = p + 2;
   for (i = 0; i < values.Size(); i++)
-    outfile << setiosflags(ios::showpoint) << setprecision(printprecision)
-      << values[i] << sep;
+    outfile << setw(w) << setprecision(p) << values[i] << sep;
 
+  if (prec == 0) {
+    p = smallprecision;
+    w = p + 2;
+  }
   outfile << TAB << TAB;
   for (i = 0; i < Likely.Size(); i++)
-    outfile << setiosflags(ios::showpoint) << setprecision(smallprecision)
-      << Likely[i]->UnweightedLikelihood() << sep;
+    outfile << setw(w) << setprecision(p) << Likely[i]->UnweightedLikelihood() << sep;
 
-  outfile << TAB << TAB << setiosflags(ios::showpoint)
-    << setprecision(fullprecision) << functionValue << endl;
+  if (prec == 0) {
+    p = fullprecision;
+    w = p + 2;
+  }
+  outfile << TAB << TAB << setw(w) << setprecision(p) << functionValue << endl;
   outfile.close();
   outfile.clear();
 }
@@ -396,27 +403,34 @@ void Keeper::WriteInitialInformationInColumns(const char* const filename) const 
 }
 
 void Keeper::WriteValuesInColumns(const char* const filename,
-  double functionValue, const Likelihoodptrvector& Likely) const {
+  double functionValue, const Likelihoodptrvector& Likely, int prec) const {
 
-  int i;
+  int i, p, w;
   ofstream outfile;
   outfile.open(filename, ios::app);
   CheckIfFailure(outfile, filename);
 
+  p = prec;
+  if (prec == 0)
+    p = largeprecision;
+  w = p + 2;
+
   outfile << ";\n; the optimisation has run for " << EcoSystem->GetFuncEval()
     << " function evaluations\n; the current likelihood value is "
-    << functionValue << "\nswitch\tvalue\t\tlower\tupper\toptimize\n";
+    << setprecision(p) << functionValue << "\nswitch\tvalue\t\tlower\tupper\toptimize\n";
 
   if (opt.Size() == 0) {
     for (i = 0; i < values.Size(); i++) {
-      outfile << switches[i] << TAB << setw(largewidth) << setprecision(largeprecision) << values[i];
-      outfile << TAB << lowerbds[i] << TAB << upperbds[i] << TAB << "1" << endl;
+      outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i];
+      outfile << TAB << setw(smallwidth) << setprecision(smallprecision)
+        << lowerbds[i] << TAB << upperbds[i] << TAB << "1\n";
     }
 
   } else {
     for (i = 0; i < values.Size(); i++) {
-      outfile << switches[i] << TAB << setw(largewidth) << setprecision(largeprecision) << values[i];
-      outfile << TAB << lowerbds[i] << TAB << upperbds[i] << TAB << opt[i] << endl;
+      outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i];
+      outfile << TAB << setw(smallwidth) << setprecision(smallprecision)
+        << lowerbds[i] << TAB << upperbds[i] << TAB << opt[i] << endl;
     }
   }
   outfile.close();
@@ -477,22 +491,28 @@ void Keeper::Switches(Parametervector& sw) const {
 }
 
 void Keeper::WriteParamsInColumns(const char* const filename,
-  double functionValue, const Likelihoodptrvector& Likely) const {
+  double functionValue, const Likelihoodptrvector& Likely, int prec) const {
 
-  int i;
+  int i, p, w;
   ofstream outfile;
   outfile.open(filename, ios::out);
   CheckIfFailure(outfile, filename);
+
+  p = prec;
+  if (prec == 0)
+    p = largeprecision;
+  w = p + 2;
 
   outfile << "; ";
   RUNID.print(outfile);
   outfile << "; optimisation ran for " << EcoSystem->GetFuncEval()
     << " function evaluations\n; the final likelihood value was "
-    << functionValue << "\nswitch\tvalue\t\tlower\tupper\toptimize\n";
+    << setprecision(p) << functionValue << "\nswitch\tvalue\t\tlower\tupper\toptimize\n";
 
   for (i = 0; i < values.Size(); i++) {
-    outfile << switches[i] << TAB << setw(largewidth) << setprecision(largeprecision) << values[i];
-    outfile << TAB << lowerbds[i] << TAB << upperbds[i] << TAB << opt[i] << endl;
+    outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i];
+    outfile << TAB << setw(smallwidth) << setprecision(smallprecision)
+      << lowerbds[i] << TAB << upperbds[i] << TAB << opt[i] << endl;
   }
   outfile.close();
   outfile.clear();
@@ -544,4 +564,8 @@ void Keeper::UpperOptBds(doublevector& ubs) const {
         j++;
       }
   }
+}
+
+void Keeper::AddString(const string str) {
+  AddString(str.c_str());
 }

@@ -22,7 +22,6 @@
 #include "mortprinter.h"
 #include "biomassprinter.h"
 #include "surveyindices.h"
-#include "logsurveyindices.h"
 #include "understocking.h"
 #include "catchdistribution.h"
 #include "catchstatistics.h"
@@ -34,6 +33,7 @@
 #include "predatorindex.h"
 #include "migrationpenalty.h"
 #include "logcatchfunction.h"
+#include "catchintons.h"
 
 void Ecosystem::Initialize(int optimize) {
   Preyptrvector preyvec;
@@ -83,9 +83,8 @@ void Ecosystem::Initialize(int optimize) {
   /*JMB code removed from here - see RemovedCode.txt for details*/
   //This is a good place to initialize the printer classes.
   for (i = 0; i < printvec.Size(); i++)
-    switch (printvec[i]->Type()) {
+    switch(printvec[i]->Type()) {
       case STOCKSTDPRINTER:
-        //AJ 06.06 00 Taking out typecasting to (StockStdPrinter*)
         printvec[i]->SetStock(stockvec);
         break;
       case STOCKPRINTER:
@@ -119,7 +118,7 @@ void Ecosystem::Initialize(int optimize) {
         printvec[i]->SetStock(stockvec);
         break;
       case MORTPRINTER:
-        printvec[i]->Init(this);
+        printvec[i]->SetStock(stockvec);
         break;
       case BIOMASSPRINTER:
         printvec[i]->SetStock(stockvec);
@@ -140,19 +139,13 @@ void Ecosystem::Initialize(int optimize) {
           ((UnderStocking*)Likely[i])->SetFleets(fleetvec);
           break;
         case CATCHDISTRIBUTIONLIKELIHOOD:
-          //((CatchDistribution*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
-          Likely[i]->Init(this);
+          ((CatchDistribution*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
           break;
         case LOGCATCHLIKELIHOOD:
           ((LogCatches*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
           break;
-        case LOGSURVEYLIKELIHOOD:
-          ((LogSurveyIndices*)Likely[i])->SetStocks(stockvec);
-          break;
         case CATCHSTATISTICSLIKELIHOOD:
           ((CatchStatistics*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
-          break;
-        case AGGREGATEDCDLIKELIHOOD:
           break;
         case STOMACHCONTENTLIKELIHOOD:
           ((StomachContent*)Likely[i])->SetPredatorsAndPreys(predvec, preyvec);
@@ -169,6 +162,13 @@ void Ecosystem::Initialize(int optimize) {
         case MIGRATIONPENALTYLIKELIHOOD:
           ((MigrationPenalty*)Likely[i])->SetStocks(stockvec);
           break;
+        case CATCHINTONSLIKELIHOOD:
+          ((CatchInTons*)Likely[i])->SetFleetsAndStocks(fleetvec, stockvec);
+          break;
+        case AGGREGATEDCDLIKELIHOOD:
+          break;
+        case LOGSURVEYLIKELIHOOD:
+          break;
         case RANDOMWALKLIKELIHOOD:
           break;
         case BOUNDLIKELIHOOD:
@@ -183,7 +183,7 @@ void Ecosystem::Initialize(int optimize) {
   //Moved this to the end, so the likelihood classes is initialized
   //before the printer classes [12.07.00]
   for (i = 0; i < likprintvec.Size(); i++)
-    switch (likprintvec[i]->Type()) {
+    switch(likprintvec[i]->Type()) {
       case FORMATEDCATCHPRINTER:
         ((FormatedCatchPrinter*)(likprintvec[i]))->SetLikely(Likely);
         break;

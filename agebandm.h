@@ -19,13 +19,13 @@ public:
   Agebandmatrix(const Agebandmatrix& initial);
   Agebandmatrix() { minage = 0; nrow = 0; v = 0; };
   ~Agebandmatrix();
-  int Minage() const { return(minage); };
-  int Maxage() const { return(minage + nrow - 1); };
+  int Minage() const { return minage; };
+  int Maxage() const { return minage + nrow - 1; };
   int Nrow() const { return nrow; };
   popinfoindexvector& operator [] (int age);
   const popinfoindexvector& operator [] (int age) const;
-  int Minlength(int age) const { return(v[age - minage]->Mincol()); };
-  int Maxlength(int age) const { return(v[age - minage]->Maxcol()); };
+  int Minlength(int age) const { return v[age - minage]->Mincol(); };
+  int Maxlength(int age) const { return v[age - minage]->Maxcol(); };
   void Colsum(popinfovector& Result) const;
   void Multiply(const doublevector& Ratio, const ConversionIndex& CI);
   void Subtract(const doublevector& Consumption, const ConversionIndex& CI, const popinfovector& Nrof);
@@ -58,7 +58,7 @@ public:
   void resize(int add, Agebandmatrix* matr);
   void resize(int add, int minage, int minl, const popinfomatrix& matr);
   void resize(int add, int minage, const intvector& minl, const intvector& size);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   Agebandmatrix& operator [] (int pos);
   const Agebandmatrix& operator [] (int pos) const;
   void Migrate(const doublematrix& Migrationmatrix);
@@ -73,7 +73,7 @@ extern void AgebandmSubtract(Agebandmatrix& Alkeys, const bandmatrix& Catch,
 extern void AgebandmAdd(Agebandmatrix& Alkeys, const Agebandmatrix& Addition,
   const ConversionIndex& CI, double ratio = 1, int minage = 0, int maxage = 100);
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "agebandm.icc"
 #endif
 

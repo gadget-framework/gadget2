@@ -1,7 +1,7 @@
 #include "otherfoodptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "otherfoodptrvector.icc"
 #endif
 
@@ -33,6 +33,13 @@ OtherFoodptrvector::OtherFoodptrvector(const OtherFoodptrvector& initial) {
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+OtherFoodptrvector::~OtherFoodptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a OtherFoodptrvector and fills it vith value.

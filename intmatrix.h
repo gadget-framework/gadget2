@@ -12,7 +12,7 @@ public:
   intmatrix(int nrow, const intvector& ncol, int initial);
   intmatrix(const intmatrix& initial);
   ~intmatrix();
-  int Ncol(int i = 0) const { return(v[i]->Size()); };
+  int Ncol(int i = 0) const { return v[i]->Size(); };
   int Nrow() const { return nrow; };
   intvector& operator [] (int pos);
   const intvector& operator [] (int pos) const;
@@ -24,7 +24,7 @@ protected:
   intvector** v;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "intmatrix.icc"
 #endif
 

@@ -1,6 +1,10 @@
 #include "bandmatrixptrvector.h"
 #include "gadget.h"
 
+#ifndef GADGET_INLINE
+#include "bandmatrixptrvector.icc"
+#endif
+
 bandmatrixptrvector::bandmatrixptrvector(int sz) {
   size = sz;
   if (size > 0)
@@ -18,6 +22,13 @@ bandmatrixptrvector::bandmatrixptrvector(int sz, bandmatrix* value) {
       v[i] = value;
   } else
     v = 0;
+}
+
+bandmatrixptrvector::~bandmatrixptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a bandmatrixptrvector and fills it vith value.
@@ -57,14 +68,4 @@ void bandmatrixptrvector::Delete(int pos) {
   delete[] v;
   v = vnew;
   size--;
-}
-
-bandmatrix*& bandmatrixptrvector::operator [] (int pos) {
-  assert(0 <= pos && pos < size);
-  return(v[pos]);
-}
-
-bandmatrix* const& bandmatrixptrvector::operator [] (int pos) const {
-  assert(0 <= pos && pos < size);
-  return(v[pos]);
 }

@@ -124,7 +124,7 @@ void SuitFunc::setPreyLength(double length) {
 
 void SuitFunc::setName(const char* suitFuncName) {
   if (name != NULL) {
-    delete name;
+    delete[] name;
     name = NULL;
   }
   int len = strlen(suitFuncName);
@@ -417,7 +417,6 @@ double Expsuitfuncl50::getPreyLength() {
 
 double Expsuitfuncl50::calculate() {
   assert(coeff.Size() == 2);
-  assert(coeff[0] > 0 && coeff[1] > 0);
   double check = 0.0;
 
   /* Parameter [0] and [1] got to be greater then 0 because of the l_50 form.
@@ -610,7 +609,7 @@ double CLogLog::calculate() {
   //Predlength is not taken into account.
   assert(coeff.Size() == 2);
   double arg = exp(coeff[0] + coeff[1] * preyLength);
-  return(1.0 - exp(-arg));
+  return 1.0 - exp(-arg);
 }
 
 Combination::Combination() {
@@ -645,5 +644,5 @@ double Combination::calculate() {
   arg = exp(coeff[2] + coeff[3] * preyLength);
   cloglog = 1.0 - exp(-arg);
   logistic = 1.0 / (1 + exp(-coeff[0] - coeff[1] * preyLength));
-  return(logistic * cloglog);
+  return logistic * cloglog;
 }

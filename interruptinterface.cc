@@ -8,7 +8,7 @@
 #include "gadget.h"
 
 //max length of user input
-const int InterruptInterface::MAX_INPUT_LENGTH=100;
+const int InterruptInterface::MAX_INPUT_LENGTH = 100;
 
 //file names for output
 const char* InterruptInterface::FULL_FILE = "fulldump.ir";
@@ -38,9 +38,9 @@ InterruptInterface::InterruptInterface(const Ecosystem& ecosystem) {
  *  Purpose:    Print menu to standard output.
  */
 void InterruptInterface::printMenu() {
-  cout << "\nInterrupted at " << eco->TimeInfo->CurrentYear() << "."
-    << eco->TimeInfo->CurrentStep() << "   step " << eco->TimeInfo->CurrentTime()
-    << " of " << eco->TimeInfo->TotalNoSteps() << endl
+  cout << "\nInterrupted at year " << eco->TimeInfo->CurrentYear() << ", step "
+    << eco->TimeInfo->CurrentStep() << " (" << eco->TimeInfo->CurrentTime()
+    << " of " << eco->TimeInfo->TotalNoSteps() << ")\n"
     << " q   ->  quit simulation\n"
     << " c   ->  continue simulation\n"
     << " h/? ->  display this menu\n"
@@ -70,7 +70,7 @@ int InterruptInterface::menu() {
     cout << "> ";
     cout.flush();
     while (fgets(s, MAX_INPUT_LENGTH, stdin) == 0);
-      switch (s[0]) {
+      switch(s[0]) {
         case 'q':
           return 0;
         case 'd':
@@ -144,13 +144,12 @@ charptrvector& InterruptInterface::readArgs(char* s) {
 void InterruptInterface::dumpNaturalM(charptrvector& args) {
   ofstream out(NATURALM_FILE);
   int i;
-  out << "natural m\n";
   for (i = 0; i < eco->stockvec.Size(); i++) {
     if (eco->stockvec[i]->stockType() != LENSTOCK_TYPE)
       printNaturalM(out, *eco->stockvec[i]);
     else
       printNaturalM(out, *(const LenStock*)(eco->stockvec[i]));
-    out << endl;
+    out.flush();
   }
 }
 
@@ -234,7 +233,7 @@ void InterruptInterface::dumpcannibalism(charptrvector& args) {
     }
 }
 
-/*  void dumStock(charptrvector& args)
+/*  void dumpStock(charptrvector& args)
  *
  *  Purpose: Dump N & W stock data to file.
  *  In: args:  args[i], i>0 contains names of stocks to print from,
@@ -284,6 +283,8 @@ void InterruptInterface::dumpStock(charptrvector& args) {
       printN(outn, svec[i]->Agelengthkeys(areas[j][0]), 0 /*&agevector*/);
       printW(outw, svec[i]->Agelengthkeys(areas[j][0]), 0 /*&agevector*/);
     }
+    outn.flush();
+    outw.flush();
   }
 }
 

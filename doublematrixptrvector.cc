@@ -1,7 +1,7 @@
 #include "doublematrixptrvector.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "doublematrixptrvector.icc"
 #endif
 
@@ -33,6 +33,13 @@ doublematrixptrvector::doublematrixptrvector(const doublematrixptrvector& initia
       v[i] = initial.v[i];
   } else
     v = 0;
+}
+
+doublematrixptrvector::~doublematrixptrvector() {
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
 }
 
 //The function resize add addsize elements to a doublematrixptrvector and fills it vith value.

@@ -26,17 +26,14 @@ void TimeVariable::Read(CommentStream& infile,
     if (!(infile >> *number))
       handle.Message(text);
     number->Inform(keeper);
-    Read(*number, keeper);
+    number->Interchange(Value, keeper);
+    delete number;
   } else {
     handle.Open(text);
     ReadFromFile(subcomment, TimeInfo, keeper);
     handle.Close();
   }
   keeper->ClearLast();
-}
-
-void TimeVariable::Read(const Formula&  number, Keeper* const keeper) {
-  number.Interchange(Value, keeper);
 }
 
 void TimeVariable::ReadFromFile(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper) {
@@ -54,8 +51,8 @@ void TimeVariable::ReadFromFile(CommentStream& infile, const TimeClass* const Ti
   for (i = 0; i < n; i++)
     description[i] = text[i];
   infile >> text;
-  if (strcasecmp(text, "NrOfcoeff") != 0)
-    handle.Unexpected("NrOfcoeff", text);
+  if (strcasecmp(text, "nrofcoeff") != 0)
+    handle.Unexpected("nrofcoeff", text);
   infile >> nrofcoeff;
   if (nrofcoeff > 0) {
     usemodelmatrix = 1;
@@ -115,7 +112,7 @@ void TimeVariable::ReadFromFile(CommentStream& infile, const TimeClass* const Ti
 
 //Question if the condition TimeInfo->CurrentTime() == 1 is needed
 int TimeVariable::DidChange(const TimeClass* const TimeInfo) {
-  return((lastvalue != value && time == TimeInfo->CurrentTime()) || TimeInfo->CurrentTime() == 1);
+  return ((lastvalue != value && time == TimeInfo->CurrentTime()) || TimeInfo->CurrentTime() == 1);
 }
 
 int TimeVariable::AtCurrentTime(const TimeClass* const TimeInfo) const {

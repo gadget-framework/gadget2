@@ -43,7 +43,9 @@ public:
   void Multiply(Agebandmatrix& stock_alkeys, const doublevector& rat);
   virtual void calcZ(int area, const doublevector& nat_m) {};
   virtual void calcMeanN(int area) {};
-  virtual void SetCannibalism(int area, const doublevector& cann) {};
+  virtual void setCannibalism(int area, const doublevector& cann) {};
+  virtual void setAgeMatrix(int pred_no, int area, const doublevector& agegroupno) {};
+  virtual void setConsumption(int area, int pred_no, const bandmatrix& consum) {};
   const doublevector& getCons(int area) const { return cons[AreaNr[area]]; };
 protected:
   void InitializeObjects();

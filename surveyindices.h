@@ -12,7 +12,7 @@ class AreaClass;
 class SurveyIndices : public Likelihood {
 public:
   SurveyIndices(CommentStream& infile, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, Keeper* const keeper, double w, char* name);
+    const TimeClass* const TimeInfo, Keeper* const keeper, double w, const char* name);
   virtual ~SurveyIndices();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   void SetStocks(Stockptrvector& Stocks);
@@ -33,7 +33,7 @@ protected:
   SIOnStep* SI;
   intvector areas;
   charptrvector stocknames;
-  const char* surveyname;
+  char* surveyname;
 };
 
 #endif

@@ -1,7 +1,7 @@
 #include "timevariablematrix.h"
 #include "gadget.h"
 
-#ifndef INLINE_VECTORS
+#ifndef GADGET_INLINE
 #include "timevariablematrix.icc"
 #endif
 
@@ -52,5 +52,6 @@ TimeVariablematrix::~TimeVariablematrix() {
     for (i = 0; i < nrow; i++)
       delete v[i];
     delete[] v;
+    v = 0;
   }
 }

@@ -30,11 +30,6 @@ void ErrorPrintLengthGroupDivision(const LengthGroupDivision* finer,
   ErrorPrintLengthGroupDivision(coarser);
 }
 
-int LengthGroupIsFiner(const LengthGroupDivision* finer, const LengthGroupDivision* coarser) {
-  int BogusLengthGroup = 0;
-  return LengthGroupIsFiner(finer, coarser, BogusLengthGroup);
-}
-
 /* returns -1 if algorithm fails. Should never happen, but Murphys law ...
  * returns 0 if finer is not finer than coarser and -1 and 2 did not happen.
  * returns 1 if finer is indeed finer than coarser.
@@ -49,7 +44,7 @@ int LengthGroupIsFiner(const LengthGroupDivision* finer,
 
   if (coarser->NoLengthGroups() == 0 || finer->NoLengthGroups() == 0)
     return 2;
-  int c = 0;   //Index for coarser.
+  int c = 0;
   const int cmax = coarser->NoLengthGroups() - 1;
   double allowederror = (coarser->Maxlength(cmax) - coarser->Minlength(0)) *
     rathersmall / coarser->NoLengthGroups();
@@ -59,15 +54,18 @@ int LengthGroupIsFiner(const LengthGroupDivision* finer,
   int fmax = finer->NoLengthGroups() - 1;
   double minlength = max(coarser->Minlength(0), finer->Minlength(0));
   double maxlength = min(coarser->Maxlength(cmax), finer->Maxlength(fmax));
+
+  //check to see if the intersection is empty
   if (minlength - allowederror >= maxlength)
-    //Then the intersection of the length groups is empty.
     return 2;
+
   if (minlength - allowederror > finer->Minlength(0))
     if (absolute(minlength -
        finer->Minlength(finer->NoLengthGroup(minlength))) > allowederror) {
       BogusLengthGroup = finer->NoLengthGroup(minlength);
       return 0;
     }
+
   if (maxlength + allowederror < finer->Maxlength(fmax))
     if (absolute(maxlength -
        finer->Minlength(finer->NoLengthGroup(maxlength))) > allowederror) {
@@ -77,15 +75,14 @@ int LengthGroupIsFiner(const LengthGroupDivision* finer,
 
   fmin = finer->NoLengthGroup(minlength);
   fmax = finer->NoLengthGroup(maxlength);
+
+  //if fmax is finer is not in the intersection of the length groups
   if (absolute(maxlength - finer->Minlength(fmax)) < allowederror)
-    //Then the lengthgroup fmax in finer is not in the intersection
-    //of finer and coarser.
     fmax--;
 
   //fmin is the first length group in finer that is wholly contained
   //in the intersection of finer and coarser.
-  //fmax is the last length group in finer that is wholly contained
-  //in the intersection of finer and coarser.
+  //fmax is the last length group in finer in the intersection
   for (f = fmin; f <= fmax; f++) {
     c = coarser->NoLengthGroup(finer->Minlength(f));
     if (c < 0)
@@ -119,6 +116,7 @@ void CheckLengthGroupIsFiner(const LengthGroupDivision* finer,
     case 1:
       return;
     case 2:
+      cout << "Warning - empty intersection when checking length groups\n";
       return;
     default:
       cerr << "Error when comparing length group divisions.\n"

@@ -9,11 +9,11 @@ public:
   Fleetptrvector(int sz);
   Fleetptrvector(int sz, Fleet* initial);
   Fleetptrvector(const Fleetptrvector& initial);
-  ~Fleetptrvector() { delete[] v; };
+  ~Fleetptrvector();
   void resize(int add, Fleet* value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   Fleet*& operator [] (int pos);
   Fleet* const& operator [] (int pos) const;
 protected:
@@ -21,7 +21,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "fleetptrvector.icc"
 #endif
 

@@ -24,22 +24,22 @@ public:
   int Error() const;
   int DataFromFile();
   void ReadDataFromNextLine();
-  double Values(int i) const { return(values[i]); };
-  double Lower(int i) const { return(lowerbound[i]); };
-  double Upper(int i) const { return(upperbound[i]); };
+  double Values(int i) const { return values[i]; };
+  double Lower(int i) const { return lowerbound[i]; };
+  double Upper(int i) const { return upperbound[i]; };
   int Optimize(int i) const {
     if (NETRUN == 1)
       return 0;
     else
-      return(optimize[i]);
+      return optimize[i];
   };
-  Parameter Switches(int i) const { return(switches[i]); };
-  int SwitchesGiven() const { return(switches.Size() > 0 ? 1 : 0); };
+  Parameter Switches(int i) const { return switches[i]; };
+  int SwitchesGiven() const { return (switches.Size() > 0 ? 1 : 0); };
   int OptGiven() const {
     if (NETRUN == 1)
       return 0;
     else
-      return(optimize.Size() > 0 ? 1 : 0);
+      return (optimize.Size() > 0 ? 1 : 0);
   };
   #ifdef GADGET_NETWORK
     void ReadFromNetwork();

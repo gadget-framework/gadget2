@@ -1,6 +1,10 @@
 #include "bandmatrixptrmatrix.h"
 #include "gadget.h"
 
+#ifndef GADGET_INLINE
+#include "bandmatrixptrmatrix.icc"
+#endif
+
 //constructor for a rectangular bandmatrixptrmatrix.
 bandmatrixptrmatrix::bandmatrixptrmatrix(int nr, int nc) {
   nrow = nr;
@@ -64,17 +68,8 @@ bandmatrixptrmatrix::~bandmatrixptrmatrix() {
     for (i = 0; i < nrow; i++)
       delete v[i];
     delete[] v;
+    v = 0;
   }
-}
-
-bandmatrixptrvector& bandmatrixptrmatrix::operator [] (int pos) {
-  assert(0 <= pos && pos < nrow);
-  return *v[pos];
-}
-
-const bandmatrixptrvector& bandmatrixptrmatrix::operator [] (int pos) const {
-  assert(0 <= pos && pos < nrow);
-  return *v[pos];
 }
 
 //Adds rows to a bandmatrixptrmatrix.

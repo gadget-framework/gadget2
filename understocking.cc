@@ -57,10 +57,8 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
     infile >> text >> ws;
   }
 
-  if (infile.eof())
-    handle.Eof("YearsAndSteps");
   if (!aat.ReadFromFile(infile, TimeInfo))
-    handle.Message("Wrong format for yearsandsteps");
+    handle.Message("Error in understocking - wrong format for yearsandsteps");
 
   //prepare for next likelihood component
   infile >> ws;
@@ -113,18 +111,4 @@ void UnderStocking::AddToLikelihood(const TimeClass* const TimeInfo) {
             err += fleets[i]->OverConsumption(areas[k][j]);
       likelihood += pow(err, powercoeff);
     }
-}
-
-void UnderStocking::Print(ofstream& outfile) const {
-  int i, j;
-  outfile << "\nUnderstocking\nlikelihood " << likelihood << "\nFleetnames: ";
-  for (i = 0; i < fleetnames.Size(); i++)
-    outfile << fleetnames[i] << sep;
-  outfile << "\nAreas:";
-  for (i = 0; i < areas.Nrow(); i++) {
-    for (j = 0; j < areas.Ncol(i); j++)
-      outfile << sep << areas[i][j];
-    outfile << endl;
-  }
-  outfile.flush();
 }

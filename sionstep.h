@@ -14,7 +14,8 @@ class TimeClass;
 class SIOnStep {
 public:
   SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
-    const TimeClass* const TimeInfo, const charptrvector& lenindex, const charptrvector& ageindex);
+    const TimeClass* const TimeInfo, int numcols,
+    const charptrvector& index1, const charptrvector& index2);
   SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
     const TimeClass* const TimeInfo, const charptrvector& colindex);
   virtual ~SIOnStep();

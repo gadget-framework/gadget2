@@ -9,11 +9,11 @@ public:
   Likelihoodptrvector(int sz);
   Likelihoodptrvector(int sz, Likelihood* initial);
   Likelihoodptrvector(const Likelihoodptrvector& initial);
-  ~Likelihoodptrvector() { delete[] v; };
+  ~Likelihoodptrvector();
   void resize(int add, Likelihood* value);
   void resize(int add);
   void Delete(int pos);
-  int Size() const { return(size); };
+  int Size() const { return size; };
   Likelihood*& operator [] (int pos);
   Likelihood* const& operator [] (int pos) const;
 protected:
@@ -21,7 +21,7 @@ protected:
   int size;
 };
 
-#ifdef INLINE_VECTORS
+#ifdef GADGET_INLINE
 #include "likelihoodptrvector.icc"
 #endif
 

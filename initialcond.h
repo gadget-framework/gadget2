@@ -19,35 +19,21 @@ public:
   void Initialize(Agebandmatrixvector& Alkeys);
   void SetCI(const LengthGroupDivision* const GivenLDiv);
   void Print(ofstream& outfile) const;
-  int ReadMeanData(CommentStream& infile, Keeper* const keeper,
-     int noareas, int noagegr, int minage, const AreaClass* const Area);
-  int ReadDistributionData(CommentStream& infile, Keeper* const keeper,
-     int noareas, int noagegr, int minage, const AreaClass* const Area);
-  int ReadBasisData(CommentStream& infile, Keeper* const keeper,
-     int numfunc, int noareas, int noagegr, const AreaClass* const Area);
-  int ReadLengthBasisData(CommentStream& infile, Keeper* const keeper,
-     int numfunc, int noareas, int noagegr, const AreaClass* const Area);
-  int ReadNumberData(CommentStream& infile, Keeper* const keeper,
-     int noareas, int noagegr, int nolengr, int minage, const AreaClass* const Area);
 protected:
-  void Recalc();
+  void ReadMeanData(CommentStream& infile, Keeper* const keeper,
+     int noareas, int noagegr, int minage, const AreaClass* const Area);
+  void ReadNumberData(CommentStream& infile, Keeper* const keeper,
+     int noareas, int noagegr, int nolengr, int minage, const AreaClass* const Area);
   LengthGroupDivision* LgrpDiv;
   ConversionIndex* CI;
   Agebandmatrixvector AreaAgeLength;
-  Formulamatrix Distribution;
+  Formulamatrix AreaDist;
+  Formulamatrix AgeDist;
   Formulamatrix RelCondition;
-  Formulaindexvector agemultiple;
-  intvector areas;
-  Formulamatrix LengthBasisPar;
-  doublematrix LengthBasis;
-  doublematrix MeanBasis;
-  doublematrix SdevBasis;
-  Formulamatrix MeanPar;
-  Formulamatrix SdevPar;
   Formulamatrix Mean;
   Formulamatrix Sdev;
   Formula SdevMult;
-  int use_lengthbasisfunctions;
+  intvector areas;
   int readNumbers;
 };
 

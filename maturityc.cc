@@ -60,9 +60,8 @@ double MaturityC::MaturationProbability(int age, int length, int Growth,
   if (this->IsMaturationStep(area, TimeInfo)) {
     const double ratio =  PrecalcMaturation[age][length] *
       (Coefficient[0] * Growth * LgrpDiv->dl() + Coefficient[2] *
-      TimeInfo->LengthOfCurrent()) / TimeInfo->LengthOfYear();
-    return(min(max(0.0, ratio), 1.0));
-    //return 0 if ratio < 0, 1 if ratio > 1, else ratio.
+      TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
+    return (min(max(0.0, ratio), 1.0));
   }
   return 0.0;
 }

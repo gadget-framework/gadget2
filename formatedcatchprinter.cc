@@ -82,7 +82,7 @@ FormatedCatchPrinter::FormatedCatchPrinter(CommentStream& infile,
   if (!(strcasecmp(text, "catches") == 0))
     handle.Unexpected("catches", text);
   infile >> text >> ws;
-  while (!infile.eof()) {
+  while (!infile.eof() && (strcasecmp(text, "[component]") != 0)) {
     catchnames.resize(1);
     catchnames[i] = new char[strlen(text) + 1];
     strcpy(catchnames[i++], text);
@@ -147,12 +147,11 @@ void FormatedCatchPrinter::Print(const TimeClass* const TimeInfo) {
 
   if (d != catches.Size()) {
     badage = 1;
-    biofile << "(*\n"
-      << "   WARNING! Atempting to print CatchDistribution(s) where\n"
+    biofile << "   WARNING! Atempting to print CatchDistribution(s) where\n"
       << "   ages are agregated. This is not implemented corectly.\n"
       << "   Where age groups are used, the biomass will be repeated\n"
       << "   for each individual age row belonging to that agegroup.\n"
-      << "   The 'total' will be wrong, and should be disregarded.\n" << "*)\n";
+      << "   The 'total' will be wrong, and should be disregarded.\n\n";
   }
   //NOTE - to fix this, we should aggregate biomass to the same age division.
   if (bioprint) {

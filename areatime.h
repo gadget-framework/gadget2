@@ -37,9 +37,9 @@ public:
   double LengthOfYear() const { return lengthofyear; };
   double LengthOfStep(int step) const { return timesteps[step]; };
   int CalcSteps(int year, int step) const {
-    return notimesteps * (year - firstyear) + step - firststep + 1; };
+    return (notimesteps * (year - firstyear) + step - firststep + 1); };
   int TotalNoSteps() const {
-    return notimesteps * (lastyear - firstyear) + laststep - firststep + 1; };
+    return (notimesteps * (lastyear - firstyear) + laststep - firststep + 1); };
   int StepsInYear() const { return notimesteps; };
   void IncrementTime();
   int IsWithinPeriod(int year, int step) const;
