@@ -90,19 +90,22 @@ CommentStream& operator>>(CommentStream& infile, Formula& F) {
 void Formula::Inform(Keeper* keeper) {
   //let keeper know of the marked variables
   int i;
-
-  if (inattr.Size() > 0)
+  ofstream logfile(".gadget.log",ios::app);
+  if (inattr.Size() > 0){
     keeper->KeepVariable(init, inattr);
-  else {
+    logfile << inattr << " added to keeper" << endl;
+  } else {
     for (i = 0; i < multipliers.Size(); i++) {
       ostringstream ostr;
       ostr << "*" << i + 1 << ends;
       assert(i < attributes.Size());
       keeper->AddString(ostr.str());
+      logfile << ostr.str() << " added to keeper" << endl;
       keeper->KeepVariable(multipliers[i], attributes[i]);
       keeper->ClearLast();
     }
   }
+  logfile.close();
 }
 
 void Formula::Interchange(Formula& NewF, Keeper* keeper) const {

@@ -74,6 +74,12 @@ const int printwidth = 10;
 const int largewidth = 12;
 const int fullwidth = 18;
 
+
+/* Logfile information */
+
+   
+
+
 /* Update the following line each time upgrades are implemented */
 #define GADGETVERSION "2.0.05-BETA"
 

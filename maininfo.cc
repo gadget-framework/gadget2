@@ -39,6 +39,7 @@ void MainInfo::showUsage() {
     << " -printinitial <filename>    print initial model information to <filename>\n"
     << " -printfinal <filename>      print final model information to <filename>\n"
     << " -printlikelihood <filename> print model likelihood information to <filename>\n"
+    //    << " -printlog <filename>        print input reading to <filename>\n"      
     << "\nFor more information see the Gadget web page at http://www.hafro.is/gadget\n";
   exit(EXIT_SUCCESS);
 }
@@ -227,6 +228,11 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
       } else if ((strcasecmp(aVector[k], "-h") == 0) || (strcasecmp(aVector[k], "--help") == 0)) {
         showUsage();
 
+	/*      } else if (strcasecmp(aVector[k], "-printlog") == 0)
+	if (k == aNumber - 1)
+          showCorrectUsage(aVector[k]);
+        k++;
+	SetLogFile(*aVector[k]);*/
       } else
         showCorrectUsage(aVector[k]);
 
@@ -296,6 +302,9 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-precision") == 0) {
       infile >> dummy >> ws;
       printinfo.setPrecision(dummy);
+      /*    } else if(strcasecmp(text, "-printlog") == 0) {
+      infile >> dummy >> ws;
+      SetLogFile(dummy);*/
     } else
       showCorrectUsage(text);
   }

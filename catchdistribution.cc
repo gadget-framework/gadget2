@@ -787,6 +787,8 @@ double CatchDistribution::LikMVNormal() {
   DoubleVector diff(p, 0.0);
 
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
+    sumdist = 0.0;
+    sumdata = 0.0;
     for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
       for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
         (*Proportions[timeindex][nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
@@ -794,24 +796,24 @@ double CatchDistribution::LikMVNormal() {
         sumdist += (*alptr)[nareas][age][len].N;
       }
     }
-  }
-  if (isZero(sumdata))
-    sumdata = verybig;
-  else
-    sumdata = 1 / sumdata;
-  if (isZero(sumdist))
-    sumdist = verybig;
-  else
-    sumdist = 1 / sumdist;
+  
+    if (isZero(sumdata))
+      sumdata = verybig;
+    else
+      sumdata = 1 / sumdata;
+    if (isZero(sumdist))
+      sumdist = verybig;
+    else
+      sumdist = 1 / sumdist;
+    
 
-  for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
       for (len = 0; len < diff.Size(); len++)
         diff[len] = 0.0;
-
+      
       for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++)
         diff[len] = ((*AgeLengthData[timeindex][nareas])[age][len] * sumdata) - (((*alptr)[nareas][age][len]).N * sumdist);
-
+      
       totallikelihood += diff * LU.Solve(diff);
     }
   }

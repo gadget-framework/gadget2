@@ -65,12 +65,19 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
 }
 
 int main(int aNumber, char* const aVector[]) {
-
+  
+  ofstream logfile(".gadget.log");
+  logfile << "Gadget started" << endl;
+  logfile.close();
   MainInfo MainInfo;
   OptInfo* Optinfo = 0;
   StochasticData* Stochasticdata = 0;
   ErrorHandler handle;
   int check = 0;
+
+  //  printlog = 0;
+
+
 
   //Test to see if the function double lgamma(double) is returning an integer.
   //lgamma is a non-ansi function and on some platforms when compiled with the
@@ -177,9 +184,11 @@ int main(int aNumber, char* const aVector[]) {
   if (!(MainInfo.Net()))
     EcoSystem->PrintParamsinColumns((MainInfo.getPI()).getParamOutFile(), (MainInfo.getPI()).getPrecision());
 
+
   if (check == 1)
     free(workingdir);
   delete Optinfo;
   delete EcoSystem;
   return EXIT_SUCCESS;
+  //  LogClean();
 }

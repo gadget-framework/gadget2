@@ -8,8 +8,20 @@ class ErrorHandler {
 public:
   ErrorHandler() {};
   ~ErrorHandler() {};
-  static void Open(const char* file) { files.PutInStack(file); };
-  static void Close() { files.OutOfStack(); };
+  void Open(const char* file) { 
+    files.PutInStack(file); 
+    //    WriteOpenToLogFile(*file);
+    logfile.open(".gadget.log",ios::app);
+    logfile << "Opening" << TAB << file << endl;
+    logfile.close();
+  };
+  void Close() { 
+    files.OutOfStack();
+    //    WriteCloseToLogfile();
+    logfile.open(".gadget.log",ios::app);
+    logfile << "closing" << endl;
+    logfile.close();
+  };
   void Message(const char*) const;
   void Message(const char*, const char*) const;
   void Unexpected(const char*, const char*) const;
@@ -21,6 +33,7 @@ public:
   void Warning(const char*) const;
   void Warning() const;
 private:
+  ofstream logfile;
   static StrStack files;
 };
 
