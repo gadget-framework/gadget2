@@ -30,7 +30,6 @@ public:
     strcpy(name, a.name);
     addr = a.addr;
   };
-protected:
 };
 
 #endif

@@ -13,6 +13,15 @@ Formulaindexvector::~Formulaindexvector() {
   }
 }
 
+Formulaindexvector::Formulaindexvector(int sz, int minp) {
+  size = (sz > 0 ? sz : 0);
+  minpos = minp;
+  if (size > 0)
+    v = new Formula[size];
+  else
+    v = 0;
+}
+
 void Formulaindexvector::resize(int addsize, int lower, Keeper* keeper) {
   int i;
   if (v == 0) {

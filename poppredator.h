@@ -14,7 +14,7 @@ class AreaClass;
 class Agebandmatrix;
 
 class PopPredator : public Predator {
- public:
+public:
   PopPredator(const char* givenname, const intvector& areas,
     const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv);
   virtual ~PopPredator();

@@ -14,6 +14,15 @@ TimeVariableIndexVector::~TimeVariableIndexVector() {
   }
 }
 
+TimeVariableIndexVector::TimeVariableIndexVector(int sz, int minp) {
+  size = (sz > 0 ? sz : 0);
+  minpos = minp;
+  if (size > 0)
+    v = new TimeVariable[size];
+  else
+    v = 0;
+}
+
 void TimeVariableIndexVector::resize(int addsize, int lower, Keeper* const keeper) {
   int i;
   if (v == 0) {

@@ -3,7 +3,7 @@
 
 //Class popratio stores number and ratio.
 class popratio {
- public:
+public:
   double* N;
   double R;
   popratio();

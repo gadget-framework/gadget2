@@ -8,23 +8,54 @@
 class AreaClass;
 class TimeClass;
 
+/**
+ * \class AreaClass
+ * \brief This is the class used store information about the areas used for the model
+ */
 class AreaClass {
 public:
+  /**
+   * \brief This is the AreaClass constructor
+   */
   AreaClass(CommentStream& infile, const TimeClass* const TimeInfo);
+  /**
+   * \brief This is the AreaClass destructor
+   */
+  ~AreaClass() {};
   int NoAreas() const { return OuterAreas.Size(); };
   double Size(int area) const { return size[area]; };
   double Temperature(int area, int time) const { return temperature[time][area]; };
   int InnerArea(int area) const;
   int OuterArea(int area) const;
 protected:
+  /**
+   * \brief This is a vector of the areas in the model
+   */
   intvector OuterAreas;
+  /**
+   * \brief This is a vector of the size of the areas in the model
+   */
   doublevector size;
+  /**
+   * \brief This is a matrix of the temperature, for each timestep, of the areas in the model
+   */
   doublematrix temperature;
 };
 
+/**
+ * \class TimeClass
+ * \brief This is the class used store information about the timesteps used for the model
+ */
 class TimeClass {
 public:
+  /**
+   * \brief This is the TimeClass constructor
+   */
   TimeClass(CommentStream& infile);
+  /**
+   * \brief This is the TimeClass destructor
+   */
+  ~TimeClass() {};
   int CurrentSubstep() const { return currentsubstep; };
   int CurrentStep() const { return currentstep; };
   int CurrentYear() const { return currentyear; };

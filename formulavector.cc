@@ -15,6 +15,14 @@ Formulavector::Formulavector(const Formulavector& initial) {
     v = 0;
 }
 
+Formulavector::Formulavector(int sz) {
+  size = (sz > 0 ? sz : 0);
+  if (size > 0)
+    v = new Formula[size];
+  else
+    v = 0;
+}
+
 Formulavector::~Formulavector() {
   if (v != 0) {
     delete[] v;

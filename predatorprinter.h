@@ -17,7 +17,7 @@ public:
   virtual ~PredatorPrinter();
   virtual void SetPredAndPrey(Predatorptrvector& predatorvec, Preyptrvector& preyvec);
   virtual void Print(const TimeClass* const TimeInfo);
- protected:
+protected:
   intmatrix areas;
   charptrvector areaindex;
   charptrvector predlenindex;

@@ -1,6 +1,8 @@
 #include "optinfo.h"
 #include "gadget.h"
 
+/* JMB - removed all the Numerical Recipes BFGS stuff */
+
 extern Ecosystem* EcoSystem;
 
 double f(double* x, int n) {
@@ -44,7 +46,7 @@ int OptInfo::Read(CommentStream &infile, char* text) {
 }
 
 OptInfoHooke::OptInfoHooke()
-  : OptInfo(), MaximumIterations(10), Rho_begin(0.5), lambda(0), epsmin(1e-6) {
+  : OptInfo(), hookeiter(10), rho(0.5), lambda(0), hookeeps(1e-6) {
 }
 
 OptInfoHooke::~OptInfoHooke() {
@@ -68,16 +70,16 @@ int OptInfoHooke::Read(CommentStream& infile, char* text) {
     return 1;
 
   if (strcasecmp(text, "rho") == 0) {
-    infile >> Rho_begin >> ws;
+    infile >> rho >> ws;
     return 1;
   } else if (strcasecmp(text, "lambda") == 0) {
     infile >> lambda >> ws;
     return 1;
   } else if (strcasecmp(text, "hookeeps") == 0) {
-    infile >> epsmin >> ws;
+    infile >> hookeeps >> ws;
     return 1;
   } else if (strcasecmp(text, "hookeiter") == 0) {
-    infile >> MaximumIterations >> ws;
+    infile >> hookeiter >> ws;
     return 1;
   } else
     return 0;
@@ -149,7 +151,7 @@ void OptInfoHooke::MaximizeLikelihood() {
   int FinalValue;
   //JMB - swapped the order of upperb and lowerb to match entries for hooke()
   FinalValue = hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
-    Rho_begin, lambda, epsmin, MaximumIterations);
+    rho, lambda, hookeeps, hookeiter);
 
   for (i = 0; i < nopt; i++)
     val[i] = initialval[i] * endpoint[i];
@@ -165,8 +167,8 @@ void OptInfoHooke::MaximizeLikelihood() {
 }
 
 OptInfoSimann::OptInfoSimann()
-  : OptInfo(), rt(0.85), eps(1e-4), ns(15), nt(10), T(100),
-    cs(2), vm(1), maxim(0), maxevl(2000) {
+  : OptInfo(), rt(0.85), simanneps(1e-4), ns(15), nt(10), T(100),
+    cs(2), vm(1), simanniter(2000) {
 }
 
 OptInfoSimann::~OptInfoSimann() {
@@ -189,7 +191,7 @@ int OptInfoSimann::Read(CommentStream& infile, char* text) {
     return 1;
 
   if (strcasecmp(text, "simanniter") == 0) {
-    infile >> maxevl >> ws;
+    infile >> simanniter >> ws;
     return 1;
   } else if (strcasecmp(text, "T") == 0) {
     infile >> T >> ws;
@@ -198,7 +200,7 @@ int OptInfoSimann::Read(CommentStream& infile, char* text) {
     infile >> rt >> ws;
     return 1;
   } else if (strcasecmp(text, "simanneps") == 0) {
-    infile >> eps >> ws;
+    infile >> simanneps >> ws;
     return 1;
   } else if (strcasecmp(text, "nt") == 0) {
     infile >> nt >> ws;
@@ -271,8 +273,8 @@ void OptInfoSimann::MaximizeLikelihood() {
   }
 
   int Finalvalue;
-  Finalvalue = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, maxim,
-    maxevl, cstep, T, vmstep, rt, ns, nt, eps);
+  Finalvalue = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, 0,
+    simanniter, cstep, T, vmstep, rt, ns, nt, simanneps);
 
   cout << "\nOptimization finished with final likelihood score of " << EcoSystem->Likelihood()
     << "\nafter " << EcoSystem->GetFuncEval() << " function evaluations at the point\n";
@@ -287,9 +289,9 @@ void OptInfoSimann::MaximizeLikelihood() {
 }
 
 OptInfoHookeAndSimann::OptInfoHookeAndSimann()
-  : OptInfo(), HookeMaxIter(10), Rho_begin(0.5), lambda(0), epsmin(1e-6),
-  SimannMaxIter(2000), rt(0.85), eps(1e-4),
-  ns(15), nt(10), T(100), cs(2), vm(1), maxim(0) {
+  : OptInfo(), hookeiter(10), rho(0.5), lambda(0), hookeeps(1e-6),
+  simanniter(2000), rt(0.85), simanneps(1e-4),
+  ns(15), nt(10), T(100), cs(2), vm(1) {
 }
 
 OptInfoHookeAndSimann::~OptInfoHookeAndSimann() {
@@ -312,19 +314,19 @@ int OptInfoHookeAndSimann::Read(CommentStream& infile, char* text) {
     return 1;
 
   if (strcasecmp(text, "rho") == 0) {
-    infile >> Rho_begin >> ws;
+    infile >> rho >> ws;
     return 1;
   } else if (strcasecmp(text, "lambda") == 0) {
     infile >> lambda >> ws;
     return 1;
   } else if (strcasecmp(text, "hookeeps") == 0) {
-    infile >> epsmin >> ws;
+    infile >> hookeeps >> ws;
     return 1;
   } else if (strcasecmp(text, "hookeiter") == 0) {
-    infile >> HookeMaxIter >> ws;
+    infile >> hookeiter >> ws;
     return 1;
   } else if (strcasecmp(text, "simanniter") == 0) {
-    infile >> SimannMaxIter >> ws;
+    infile >> simanniter >> ws;
     return 1;
   } else if (strcasecmp(text, "T") == 0) {
     infile >> T >> ws;
@@ -333,7 +335,7 @@ int OptInfoHookeAndSimann::Read(CommentStream& infile, char* text) {
     infile >> rt >> ws;
     return 1;
   } else if (strcasecmp(text, "simanneps") == 0) {
-    infile >> eps >> ws;
+    infile >> simanneps >> ws;
     return 1;
   } else if (strcasecmp(text, "nt") == 0) {
     infile >> nt >> ws;
@@ -405,8 +407,8 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
   }
 
   int Finalvalue;
-  Finalvalue = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, maxim,
-    SimannMaxIter, cstep, T, vmstep, rt, ns, nt, eps);
+  Finalvalue = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, 0,
+    simanniter, cstep, T, vmstep, rt, ns, nt, simanneps);
 
   for (i = 0; i < nopt; i++)
     val[i] = endpoint[i];
@@ -444,7 +446,7 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
   }
 
   Finalvalue += hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
-    Rho_begin, lambda, epsmin, HookeMaxIter);
+    rho, lambda, hookeeps, hookeiter);
 
   for (i = 0; i < nopt; i++)
     val[i] = initialval[i] * endpoint[i];

@@ -10,7 +10,7 @@ class Keeper;
 
 class Formula {
 public:
-  Formula() : init(0), multipliers(0), attributes(0) {};
+  Formula() { init = 0; multipliers = 0; attributes = 0; };
   //If inform keeper with Formula initiated with this nothing will be done as no switches set ??? OK ????
   Formula(const Formula& form);
   void setValue(double initValue);

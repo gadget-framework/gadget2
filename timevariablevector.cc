@@ -13,6 +13,14 @@ void TimeVariablevector::resize(int addsize) {
   v = new TimeVariable[size];
 }
 
+TimeVariablevector::TimeVariablevector(int sz) {
+  size = (sz > 0 ? sz : 0);
+  if (size > 0)
+    v = new TimeVariable[size];
+  else
+    v = 0;
+}
+
 void TimeVariablevector::resize(int addsize, Keeper* const keeper) {
   int i;
   if (v == 0) {

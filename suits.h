@@ -5,7 +5,6 @@
 #include "suitfuncptrvector.h"
 #include "doublematrixptrvector.h"
 #include "bandmatrix.h"
-#include "timevariablematrix.h"
 
 class Keeper;
 class Predator;

@@ -66,7 +66,7 @@ OBJECTS = $(GADGETOBJECTS)
 ##########################################################################
 
 VECTORS = addr_keepmatrix.o addr_keepvector.o charptrmatrix.o charptrvector.o \
-	bandmatrixptrmatrix.o bandmatrixptrvector.o doublematrix.o doublevector.o \
+	bandmatrixptrvector.o doublematrix.o doublevector.o \
 	otherfoodptrvector.o baseclassptrvector.o popinfoindexvector.o \
 	migvariableptrvector.o conversionindexptrvector.o likelihoodptrvector.o \
 	popratiomatrix.o popratiovector.o popinfomatrix.o popinfovector.o \
@@ -74,7 +74,7 @@ VECTORS = addr_keepmatrix.o addr_keepvector.o charptrmatrix.o charptrvector.o \
 	doublematrixptrmatrix.o doublematrixptrvector.o intmatrix.o intvector.o \
 	agebandmatrixptrvector.o poppredatorptrvector.o popratioindexvector.o \
 	formulaindexvector.o stockptrvector.o formulamatrix.o formulavector.o \
-	timevariablematrix.o timevariablevector.o timevariableindexvector.o \
+	timevariablevector.o timevariableindexvector.o \
 	vectorofcharptr.o suitfuncptrvector.o tagptrvector.o printerptrvector.o \
 	formulamatrixptrvector.o variableinfoptrvector.o agebandmatrixratio.o \
 	agebandmatrixratioptrvector.o agebandmatrixptrmatrix.o
