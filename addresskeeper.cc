@@ -7,3 +7,4 @@ AddressKeeper::~AddressKeeper() {
   }
 }
 
+// CVS $Id: addresskeeper.cc,v 1.2 2004-08-09 14:10:36 james Exp $
