@@ -573,9 +573,13 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec, int inte
     if (lowerbds[i] > bestvalues[i]) {
       check++;
       outfile << switches[i] << TAB << setw(w) << setprecision(p) << lowerbds[i] << TAB;
+      handle.logWarning("Warning in keeper - final value", bestvalues[i]);
+      handle.logWarning("is lower than the corresponding lower bound", lowerbds[i]);
     } else if (upperbds[i] < bestvalues[i]) {
       check++;
       outfile << switches[i] << TAB << setw(w) << setprecision(p) << upperbds[i] << TAB;
+      handle.logWarning("Warning in keeper - final value", bestvalues[i]);
+      handle.logWarning("is higher than the corresponding upper bound", upperbds[i]);
     } else
       outfile << switches[i] << TAB << setw(w) << setprecision(p) << bestvalues[i] << TAB;
     
