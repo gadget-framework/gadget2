@@ -104,10 +104,10 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   datafile.clear();
 
   //resize to hold the model information
-  modelIndex.AddRows(obsIndex.Nrow(), obsIndex.Ncol(), 0.0);
-  slopes.resize(obsIndex.Ncol(), 0.0);
-  intercepts.resize(obsIndex.Ncol(), 0.0);
-  sse.resize(obsIndex.Ncol(), 0.0);
+  modelIndex.AddRows(obsIndex.Nrow(), colindex.Size(), 0.0);
+  slopes.resize(colindex.Size(), 0.0);
+  intercepts.resize(colindex.Size(), 0.0);
+  sse.resize(colindex.Size(), 0.0);
 }
 
 void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -199,7 +199,7 @@ void SIOnStep::Print(ofstream& outfile) const {
   }
   outfile << endl;
 
-  for (i = 0; i < modelIndex.Ncol(t); i++) {
+  for (i = 0; i < colindex.Size(); i++) {
     outfile << TAB;
     outfile.width(smallwidth);
     outfile << modelIndex[t][i];
@@ -219,7 +219,7 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInf
 
     //JMB - this is nasty hack since there is only one area
     area = 0;
-    for (i = 0; i < modelIndex.Ncol(t); i++) {
+    for (i = 0; i < colindex.Size(); i++) {
       outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
         << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
         << setw(printwidth) << colindex[i] << sep << setprecision(largeprecision)
@@ -246,7 +246,7 @@ double SIOnStep::calcRegression() {
 
   double score = 0.0;
   int col, index;
-  for (col = 0; col < obsIndex.Ncol(); col++) {
+  for (col = 0; col < colindex.Size(); col++) {
     //Let LLR figure out what to do in the case of zero stock size.
     DoubleVector indices(timeindex);
     DoubleVector stocksize(timeindex);

@@ -96,31 +96,31 @@ protected:
    */
   AgeBandMatrixPtrVector initialPop;
   /**
-   * \brief This is the area factor used to calculate the initial population
+   * \brief This is the FormulaMatrix of the area factor used to calculate the initial population
    */
   FormulaMatrix areaFactor;
   /**
-   * \brief This is the age factor used to calculate the initial population
+   * \brief This is the FormulaMatrix of the age factor used to calculate the initial population
    */
   FormulaMatrix ageFactor;
   /**
-   * \brief This is the condition factor used to calculate the weight of the initial population
+   * \brief This is the FormulaMatrix of the condition factor used to calculate the weight of the initial population
    */
   FormulaMatrix relCond;
   /**
-   * \brief This is the mean length at age used to calculate the initial population
+   * \brief This is the FormulaMatrix of the mean length at age used to calculate the initial population
    */
   FormulaMatrix meanLength;
   /**
-   * \brief This is the standard deviation of the length at age used to calculate the initial population
+   * \brief This is the FormulaMatrix of the standard deviation of the length at age used to calculate the initial population
    */
   FormulaMatrix sdevLength;
   /**
-   * \brief This is the alpha parameter used when calculating the length weight relationship
+   * \brief This is the FormulaMatrix of the alpha parameter used when calculating the length weight relationship
    */
   FormulaMatrix alpha;
   /**
-   * \brief This is the beta parameter used when calculating the length weight relationship
+   * \brief This is the FormulaMatrix of the beta parameter used when calculating the length weight relationship
    */
   FormulaMatrix beta;
   /**

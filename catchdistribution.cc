@@ -54,14 +54,14 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     readWordAndFormula(infile, "sigma", sigma);
     sigma.Inform(keeper);
 
+    params.resize(lag, keeper);
     for (i = 0; i < lag; i++) {
-      params.resize(1, keeper);
       infile >> text >> ws;
-      if (strcasecmp(text, "param") == 0) {
+      if (strcasecmp(text, "param") == 0)
         infile >> params[i] >> ws;
-        params[i].Inform(keeper);
-      } else
+      else
         handle.Unexpected("param", text);
+      params[i].Inform(keeper);
     }
 
   } else if (strcasecmp(functionname, "mvlogistic") == 0) {

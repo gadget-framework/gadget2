@@ -26,8 +26,6 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
   int i, age, area, ageid, areaid, tmparea, keepdata;
   int count = 0;
   Formula number;
-  char tmpnumber[MaxStrLength];
-  strncpy(tmpnumber, "", MaxStrLength);
 
   //Resize the matrices to hold the data
   areaFactor.AddRows(noareas, noagegr, number);
@@ -78,13 +76,10 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
       infile >> sdevLength[areaid][ageid] >> ws;
       infile >> relCond[areaid][ageid] >> ws;
 
-    } else {
-      //initial data is not required, so read but ignore it
-      infile >> tmpnumber >> ws;
-      infile >> tmpnumber >> ws;
-      infile >> tmpnumber >> ws;
-      infile >> tmpnumber >> ws;
-      infile >> tmpnumber >> ws;
+    } else { //initial data not required - skip rest of line
+      infile.get(c);
+      while (c != '\n' && !infile.eof())
+        infile.get(c);
     }
   }
 
@@ -116,8 +111,6 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
   int i, age, area, ageid, areaid, tmparea, keepdata;
   int count = 0;
   Formula number;
-  char tmpnumber[MaxStrLength];
-  strncpy(tmpnumber, "", MaxStrLength);
 
   //Resize the matrices to hold the data
   areaFactor.AddRows(noareas, noagegr, number);
@@ -170,14 +163,10 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
       infile >> alpha[areaid][ageid] >> ws;
       infile >> beta[areaid][ageid] >> ws;
 
-    } else {
-      //initial data is not required, so read but ignore it
-      infile >> tmpnumber >> ws;
-      infile >> tmpnumber >> ws;
-      infile >> tmpnumber >> ws;
-      infile >> tmpnumber >> ws;
-      infile >> tmpnumber >> ws;
-      infile >> tmpnumber >> ws;
+    } else { //initial data not required - skip rest of line
+      infile.get(c);
+      while (c != '\n' && !infile.eof())
+        infile.get(c);
     }
   }
 
@@ -269,7 +258,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
     if (keepdata == 0) {
       //initial data is required, so store it
       count++;
-      if ((isZero(tmpweight)) && (!(isZero(tmpnumber))))
+      if ((isZero(tmpweight)) && (tmpnumber > 0))
         handle.Warning("Warning in initial conditions - zero mean weight");
       initialPop[areaid][ageid][lengthid].N = tmpnumber;
       initialPop[areaid][ageid][lengthid].W = tmpweight;
@@ -479,7 +468,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
         for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           initialPop[area][age][l].N *= scaler;
           initialPop[area][age][l].W = refWeight[l] * relCond[area][age - minage];
-          if ((isZero(initialPop[area][age][l].W)) && (!(isZero(initialPop[area][age][l].N))))
+          if ((isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0))
             handle.logWarning("Warning in initial conditions - zero mean weight");
         }
       }
@@ -507,7 +496,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
         for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           initialPop[area][age][l].N *= scaler;
           initialPop[area][age][l].W = alpha[area][age - minage] * pow(LgrpDiv->meanLength(l), beta[area][age - minage]);
-          if ((isZero(initialPop[area][age][l].W)) && (!(isZero(initialPop[area][age][l].N))))
+          if ((isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0))
             handle.logWarning("Warning in initial conditions - zero mean weight");
         }
       }
