@@ -12,6 +12,8 @@
  * \brief This is the class used to calculate a likelihood score based on the biomass of stocks caught by fleets
  *
  * This class calculates a likelihood score based on the difference between the biomass caught according to the model and the biomass caught by fleets, according to the landings data.  This should lead to a zero likelihood score for a fleet that has been declared as a TotalPredator, since catch for that fleet should exactly match the landings data.  However, for a fleet that has been declared as a LinearPredator the model will be calculating the catch based on model parameters and so will probably lead to a difference between the modelled landings and actual landed catch.
+ *
+ * \note This class actually works on the biomass in kilos, and will be renamed at some point
  */
 class CatchInTons : public Likelihood {
 public:

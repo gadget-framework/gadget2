@@ -262,7 +262,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
     } else if (strcasecmp(type, "recaptures") == 0) {
       likevec[i] = new Recaptures(infile, Area, TimeInfo, weight, tagvec, name);
 
-    } else if (strcasecmp(type, "catchintons") == 0) {
+    } else if ((strcasecmp(type, "catchintons") == 0) || (strcasecmp(type, "catchinkilos") == 0)) {
       likevec[i] = new CatchInTons(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "migrationpenalty") == 0) {

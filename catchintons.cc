@@ -37,7 +37,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const Area,
   if (strcasecmp(functionname, "sumofsquares") == 0) {
     functionnumber = 1;
   } else
-    handle.Message("Error in catchintons - unrecognised function", functionname);
+    handle.Message("Error in catchinkilos - unrecognised function", functionname);
 
   infile >> ws;
   char c = infile.peek();
@@ -56,7 +56,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const Area,
     yearly = 0;
 
   if (yearly != 0 && yearly != 1)
-    handle.Message("Error in catchintons - aggregationlevel must be 0 or 1");
+    handle.Message("Error in catchinkilos - aggregationlevel must be 0 or 1");
 
   //JMB - changed to make the reading of epsilon optional
   c = infile.peek();
@@ -134,13 +134,13 @@ void CatchInTons::Reset(const Keeper* const keeper) {
   for (i = 0; i < modelDistribution.Nrow(); i++)
     for (j = 0; j < modelDistribution.Ncol(i); j++)
       modelDistribution[i][j] = 0.0;
-  handle.logMessage("Reset catchintons component", this->getName());
+  handle.logMessage("Reset catchinkilos component", this->getName());
 }
 
 void CatchInTons::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch in Tons " << this->getName() << " - likelihood value " << likelihood
+  outfile << "\nCatch in Kilos " << this->getName() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname;
   outfile << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
@@ -187,13 +187,13 @@ void CatchInTons::addLikelihood(const TimeClass* const TimeInfo) {
         l = calcLikSumSquares(TimeInfo);
         break;
       default:
-        handle.logWarning("Warning in catchintons - unrecognised function", functionname);
+        handle.logWarning("Warning in catchinkilos - unrecognised function", functionname);
         break;
     }
 
     if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
       likelihood += l;
-      handle.logMessage("Calculating likelihood score for catchintons component", this->getName());
+      handle.logMessage("Calculating likelihood score for catchinkilos component", this->getName());
       handle.logMessage("The likelihood score for this component on this timestep is", l);
       timeindex++;
     }
@@ -223,7 +223,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
       }
 
     if (found == 0)
-      handle.logFailure("Error in catchintons - unrecognised fleet", fleetnames[i]);
+      handle.logFailure("Error in catchinkilos - unrecognised fleet", fleetnames[i]);
 
   }
 
@@ -237,7 +237,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
         }
     }
     if (found == 0)
-      handle.logFailure("Error in catchintons - unrecognised stock", stocknames[i]);
+      handle.logFailure("Error in catchinkilos - unrecognised stock", stocknames[i]);
 
   }
 
@@ -253,11 +253,11 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
         }
 
     if (found == 0)
-      handle.logWarning("Warning in catchintons - found no stocks for fleet", fleetnames[i]);
+      handle.logWarning("Warning in catchinkilos - found no stocks for fleet", fleetnames[i]);
   }
 
   if (preyindex.Nrow() != fleets.Size())
-    handle.logFailure("Error in catchintons - failed to match stocks to fleets");
+    handle.logFailure("Error in catchinkilos - failed to match stocks to fleets");
 }
 
 void CatchInTons::readCatchInTonsData(CommentStream& infile,
@@ -348,8 +348,8 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
     AAT.addActions(Years, Steps, TimeInfo);
 
   if (count == 0)
-    handle.logWarning("Warning in catchintons - found no data in the data file for", this->getName());
-  handle.logMessage("Read catchintons data file - number of entries", count);
+    handle.logWarning("Warning in catchinkilos - found no data in the data file for", this->getName());
+  handle.logMessage("Read catchinkilos data file - number of entries", count);
 }
 
 void CatchInTons::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
@@ -363,7 +363,7 @@ void CatchInTons::LikelihoodPrint(ofstream& outfile, const TimeClass* const Time
   t = timeindex - 1; //timeindex was increased before this is called
 
   if ((t >= Years.Size()) || t < 0)
-    handle.logFailure("Error in catchintons - invalid timestep", t);
+    handle.logFailure("Error in catchinkilos - invalid timestep", t);
 
   for (area = 0; area < modelDistribution.Ncol(t); area++) {
     if (yearly == 0) {
