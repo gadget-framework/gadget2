@@ -287,7 +287,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 }
 
 Stock::Stock(const char* givenname)
-  : BaseClass(givenname), spawner(0), renewal(0), maturity(0), transition(0),
+  : BaseClass(givenname), stray(0), spawner(0), renewal(0), maturity(0), transition(0),
     migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), NatM(0) {
 
   doesgrow = doeseat = iseaten = doesmigrate = 0;

@@ -91,7 +91,7 @@ public:
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
   /**
    * \brief This function will calculate the spawning of the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
@@ -105,7 +105,7 @@ public:
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void SecondSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {};
+  virtual void SecondSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will update the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
