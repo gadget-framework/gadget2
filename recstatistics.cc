@@ -149,9 +149,9 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
           Steps.AddRows(1, 1, step);
           timeid = 0;
           numbers.resize(1, new DoubleMatrix(1, numarea, 0.0));
-          mean.resize(1, new DoubleMatrix(1, numarea, 0.0));
+          obsMean.resize(1, new DoubleMatrix(1, numarea, 0.0));
           if (needvar == 1)
-            variance.resize(1, new DoubleMatrix(1, numarea, 0.0));
+            obsStdDev.resize(1, new DoubleMatrix(1, numarea, 0.0));
         }
 
       } else {
@@ -164,9 +164,9 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
           Years[tagid].resize(1, year);
           Steps[tagid].resize(1, step);
           (*numbers[tagid]).AddRows(1, numarea, 0.0);
-          (*mean[tagid]).AddRows(1, numarea, 0.0);
+          (*obsMean[tagid]).AddRows(1, numarea, 0.0);
           if (needvar == 1)
-            (*variance[tagid]).AddRows(1, numarea, 0.0);
+            (*obsStdDev[tagid]).AddRows(1, numarea, 0.0);
           timeid = Years.Ncol(tagid) - 1;
         }
       }
@@ -180,9 +180,9 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
       //statistics data is required, so store it
       count++;
       (*numbers[tagid])[timeid][areaid] = tmpnumber;
-      (*mean[tagid])[timeid][areaid] = tmpmean;
+      (*obsMean[tagid])[timeid][areaid] = tmpmean;
       if (needvar == 1)
-        (*variance[tagid])[timeid][areaid] = tmpstddev * tmpstddev;
+        (*obsStdDev[tagid])[timeid][areaid] = tmpstddev;
     }
   }
 
@@ -202,10 +202,10 @@ RecStatistics::~RecStatistics() {
     delete[] areaindex[i];
   for (i = 0; i < numbers.Size(); i++) {
     delete numbers[i];
-    delete mean[i];
+    delete obsMean[i];
   }
-  for (i = 0; i < variance.Size(); i++)
-    delete variance[i];
+  for (i = 0; i < obsStdDev.Size(); i++)
+    delete obsStdDev[i];
   delete[] functionname;
   if (aggregator != 0)  {
     for (i = 0; i < tagvec.Size(); i++)
@@ -328,16 +328,16 @@ void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
 
 double RecStatistics::calcLikSumSquares() {
   double lik = 0.0;
-  int t, nareas;
+  int t, area;
   double simvar, simdiff;
 
   for (t = 0; t < tagvec.Size(); t++) {
     if (timeindex[t] > -1) {
       const AgeBandMatrixPtrVector *alptr = &aggregator[t]->returnSum();
-      for (nareas = 0; nareas < alptr->Size(); nareas++) {
-        PopStatistics PopStat((*alptr)[nareas][0], aggregator[t]->returnLengthGroupDiv(), 1);
+      for (area = 0; area < alptr->Size(); area++) {
+        PopStatistics PopStat((*alptr)[area][0], aggregator[t]->returnLengthGroupDiv(), 1);
 
-        simdiff = PopStat.meanLength() - (*mean[t])[timeindex[t]][nareas];
+        simdiff = PopStat.meanLength() - (*obsMean[t])[timeindex[t]][area];
         simvar = 0.0;
 
         switch(functionnumber) {
@@ -345,7 +345,7 @@ double RecStatistics::calcLikSumSquares() {
             simvar = PopStat.sdevLength() * PopStat.sdevLength();
             break;
           case 2:
-            simvar = (*variance[t])[timeindex[t]][nareas];
+            simvar = (*obsStdDev[t])[timeindex[t]][area] * (*obsStdDev[t])[timeindex[t]][area];
             break;
           case 3:
             simvar = 1.0;
@@ -358,8 +358,7 @@ double RecStatistics::calcLikSumSquares() {
       if (isZero(simvar))
         lik += 0.0;
       else
-        lik += simdiff * simdiff * (*numbers[t])[timeindex[t]][nareas] / simvar;
-
+        lik += simdiff * simdiff * (*numbers[t])[timeindex[t]][area] / simvar;
       }
     }
   }

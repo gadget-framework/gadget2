@@ -93,6 +93,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
       if (strcasecmp(tagnames[j], Tag[i]->Name()) == 0) {
         check++;
         tagvec.resize(1, Tag[i]);
+        //likelihoodValues.AddRows(1, Tag[i]->getNumTagTimeSteps(), 0.0);
       }
     }
     if (check == 0)
@@ -155,24 +156,28 @@ void Recaptures::readRecaptureData(CommentStream& infile,
         strcpy(tagName, tmptagid);
         tagnames.resize(1, tagName);
         tid = tagnames.Size() - 1;
-        Years.AddRows(1, 1, year);
-        Steps.AddRows(1, 1, step);
+        obsYears.AddRows(1, 1, year);
+        obsSteps.AddRows(1, 1, step);
         timeid = 0;
         obsDistribution.AddRows(1, 1);
         obsDistribution[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
         modelDistribution.AddRows(1, 1);
         modelDistribution[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
+        //JMB - add objects to allow for timesteps when no recpatures are found
+        modYears.AddRows(1, 0);
+        modSteps.AddRows(1, 0);
+        newDistribution.AddRows(1, 0);
 
       } else {
         //if this is a new timestep, resize to store the data
-        for (i = 0; i < Years[tid].Size(); i++)
-          if ((Years[tid][i] == year) && (Steps[tid][i] == step))
+        for (i = 0; i < obsYears[tid].Size(); i++)
+          if ((obsYears[tid][i] == year) && (obsSteps[tid][i] == step))
             timeid = i;
 
         if (timeid == -1) {
-          Years[tid].resize(1, year);
-          Steps[tid].resize(1, step);
-          timeid = Years.Ncol(tid) - 1;
+          obsYears[tid].resize(1, year);
+          obsSteps[tid].resize(1, step);
+          timeid = obsYears.Ncol(tid) - 1;
           obsDistribution[tid].resize(1);
           obsDistribution[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
           modelDistribution[tid].resize(1);
@@ -200,11 +205,15 @@ Recaptures::~Recaptures() {
     delete[] lenindex[i];
   for (i = 0; i < tagnames.Size(); i++)
     delete[] tagnames[i];
-  for (i = 0; i < obsDistribution.Nrow(); i++)
+  for (i = 0; i < obsDistribution.Nrow(); i++) {
     for (j = 0; j < obsDistribution.Ncol(i); j++) {
       delete obsDistribution[i][j];
       delete modelDistribution[i][j];
     }
+  }
+  for (i = 0; i < newDistribution.Nrow(); i++)
+    for (j = 0; j < newDistribution.Ncol(i); j++)
+      delete newDistribution[i][j];
   if (aggregator != 0)  {
     for (i = 0; i < tagvec.Size(); i++)
       delete aggregator[i];
@@ -304,36 +313,60 @@ void Recaptures::addLikelihood(const TimeClass* const TimeInfo) {
 }
 
 double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
-  double x, n, lik = 0.0;
-  int t, i, ti, len, timeid, check;
+  double x, n, lik, total;
+  int t, i, ti, len, timeid, checktag, checktime;
   int year = TimeInfo->CurrentYear();
   int step = TimeInfo->CurrentStep();
 
-  check = 0;
+  total = 0.0;
   for (t = 0; t < tagvec.Size(); t++) {
+    checktag = 0;
+    lik = 0.0;
     if (tagvec[t]->isWithinPeriod(year, step)) {
 
-      if (check == 0) {
+      if (checktag == 0) {
         handle.logMessage("Calculating likelihood score for recaptures component", this->Name());
-        check++;
+        checktag++;
       }
 
       aggregator[t]->Sum(TimeInfo);
       const AgeBandMatrixPtrVector& alptr = aggregator[t]->returnSum();
 
+      checktime = 0;
+      timeid = -1;
+      for (ti = 0; ti < obsYears.Ncol(t); ti++)
+        if ((obsYears[t][ti] == year) && (obsSteps[t][ti] == step))
+          timeid = ti;
+
+      if (timeid == -1) {
+        // this is a modelled return that doesnt have a corresponding observed return
+        checktime++;
+        for (ti = 0; ti < modYears.Ncol(t); ti++)
+          if ((modYears[t][ti] == year) && (modSteps[t][ti] == step))
+            timeid = ti;
+
+        // resize objects if needed
+        if (timeid == -1) {
+          modYears[t].resize(1, year);
+          modSteps[t].resize(1, step);
+          timeid = modYears.Ncol(t) - 1;
+          newDistribution[t].resize(1);
+          newDistribution[t][timeid] = new DoubleMatrix(areaindex.Size(), lenindex.Size(), 0.0);
+        }
+      }
+
       for (i = 0; i < alptr.Size(); i++) {
         for (len = 0; len < lengths.Size() - 1; len++) {
-          n = 0;
           x = alptr[i][0][len].N;
 
-          timeid = -1;
-          for (ti = 0; ti < Years.Ncol(t); ti++)
-            if (Years[t][ti] == year && Steps[t][ti] == step)
-              timeid = ti;
-
-          if (timeid > -1) {
+          if (checktime == 0) {
+            // this is a modelled return that has a non-zero observed return
             n = (*obsDistribution[t][timeid])[i][len];
             (*modelDistribution[t][timeid])[i][len] = x;
+          } else {
+            // this is a modelled return that doesnt have a corresponding observed return
+            n = 0.0;
+            (*newDistribution[t][timeid])[i][len] = x;
           }
 
           if (isZero(n))
@@ -346,8 +379,9 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
         }
       }
     }
+    total += lik;
   }
-  return lik;
+  return total;
 }
 
 void Recaptures::Print(ofstream& outfile) const {
@@ -356,8 +390,8 @@ void Recaptures::Print(ofstream& outfile) const {
     << "\n\tFunction " << functionname << endl;
   for (t = 0; t < tagvec.Size(); t++) {
     outfile << "\tTagging experiment:\t" << tagnames[t];
-    for (ti = 0; ti < Years.Ncol(t); ti++) {
-      outfile << "\n\tyear " << Years[t][ti] << " and step " << Steps[t][ti] << "\n\tobserved recaptures";
+    for (ti = 0; ti < obsYears.Ncol(t); ti++) {
+      outfile << "\n\tyear " << obsYears[t][ti] << " and step " << obsSteps[t][ti] << "\n\tobserved recaptures";
       for (i = 0; i < (*obsDistribution[t][ti]).Nrow(); i++)
         for (j = 0; j < (*obsDistribution[t][ti]).Ncol(i); j++)
           outfile << TAB << (*obsDistribution[t][ti])[i][j];
@@ -381,26 +415,38 @@ void Recaptures::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeI
   for (t = 0; t < tagvec.Size(); t++) {
     if (tagvec[t]->isWithinPeriod(year, step)) {
       timeid = -1;
-      for (ti = 0; ti < Years.Ncol(t); ti++)
-        if (Years[t][ti] == year && Steps[t][ti] == step)
+      for (ti = 0; ti < obsYears.Ncol(t); ti++)
+        if (obsYears[t][ti] == year && obsSteps[t][ti] == step)
           timeid = ti;
-
-      /*JMB - we need to find a way of increasing the size of modelDistribution
-       * when there are zero returns in the data but not in the model ...
-      if (timeid == -1)
-        handle.logFailure("Error in recaptures - invalid timestep");*/
 
       if (timeid > -1) {
         for (area = 0; area < modelDistribution[t][timeid]->Nrow(); area++) {
           for (len = 0; len < modelDistribution[t][timeid]->Ncol(area); len++) {
             outfile << setw(printwidth) << tagnames[t] << sep << setw(lowwidth)
-              << Years[t][timeid] << sep << setw(lowwidth) << Steps[t][timeid] << sep
+              << obsYears[t][timeid] << sep << setw(lowwidth) << obsSteps[t][timeid] << sep
               << setw(printwidth) << areaindex[area] << sep << setw(printwidth)
               << lenindex[len] << sep << setprecision(largeprecision) << setw(largewidth)
               << (*modelDistribution[t][timeid])[area][len] << endl;
           }
         }
-      }
+
+      } else {
+        for (ti = 0; ti < modYears.Ncol(t); ti++)
+          if ((modYears[t][ti] == year) && (modSteps[t][ti] == step))
+            timeid = ti;
+
+        if (timeid > -1) {
+          for (area = 0; area < newDistribution[t][timeid]->Nrow(); area++) {
+            for (len = 0; len < newDistribution[t][timeid]->Ncol(area); len++) {
+              outfile << setw(printwidth) << tagnames[t] << sep << setw(lowwidth)
+                << modYears[t][timeid] << sep << setw(lowwidth) << modSteps[t][timeid] << sep
+                << setw(printwidth) << areaindex[area] << sep << setw(printwidth)
+                << lenindex[len] << sep << setprecision(largeprecision) << setw(largewidth)
+                << (*newDistribution[t][timeid])[area][len] << endl;
+            }
+          }
+        }
+      }    
     }
   }
 }

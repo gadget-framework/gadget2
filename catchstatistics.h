@@ -82,20 +82,25 @@ private:
    */
   DoubleMatrixPtrVector numbers;
   /**
-   * \brief This is the DoubleMatrixPtrVector used to store mean length/weight information specified in the input file
+   * \brief This is the DoubleMatrixPtrVector used to store the mean length/weight information specified in the input file
    * \note the indices for this object are [time][area][age]
    */
   DoubleMatrixPtrVector obsMean;
   /**
-   * \brief This is the DoubleMatrixPtrVector used to store mean length/weight information calculated in the model
+   * \brief This is the DoubleMatrixPtrVector used to store the mean length/weight information calculated in the model
    * \note the indices for this object are [time][area][age]
    */
   DoubleMatrixPtrVector modelMean;
   /**
-   * \brief This is the DoubleMatrixPtrVector used to store variance of length/weight information specified in the input file
+   * \brief This is the DoubleMatrixPtrVector used to store the standard deviation of the length/weight information specified in the input file
    * \note the indices for this object are [time][area][age]
    */
-  DoubleMatrixPtrVector obsVariance;
+  DoubleMatrixPtrVector obsStdDev;
+  /**
+   * \brief This is the DoubleMatrixPtrVector used to store the standard deviation of the length/weight information calculated in the model
+   * \note the indices for this object are [time][area][age]
+   */
+  DoubleMatrixPtrVector modelStdDev;
   /**
    * \brief This is the DoubleMatrix used to store the calculated likelihood information
    * \note the indices for this object are [time][area]

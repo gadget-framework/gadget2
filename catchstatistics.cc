@@ -122,7 +122,7 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
   char tmparea[MaxStrLength], tmpage[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpage, "", MaxStrLength);
-  int keepdata, needvar;
+  int keepdata, needvar, readvar;
   int timeid, ageid, areaid;
   int count = 0;
 
@@ -135,22 +135,35 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
       infile.get(c);
   }
 
+  readvar = 0;
   needvar = 0;
   switch(functionnumber) {
+    case 1:
+      readvar = 0;
+      needvar = 1;
+      break;
     case 2:
     case 3:
+      readvar = 1;
       needvar = 1;
+      break;
+    case 4:
+    case 5:
+      break;
+    default:
+      handle.logWarning("Warning in catchstatistics - unrecognised function", functionname);
+      break;
   }
 
   //Check the number of columns in the inputfile
-  if ((needvar == 1) && (countColumns(infile) != 7))
+  if ((readvar == 1) && (countColumns(infile) != 7))
     handle.Message("Wrong number of columns in inputfile - should be 7");
-  else if ((needvar == 0) && (countColumns(infile) != 6))
+  else if ((readvar == 0) && (countColumns(infile) != 6))
     handle.Message("Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;
-    if (needvar == 1)
+    if (readvar == 1)
       infile >> year >> step >> tmparea >> tmpage >> tmpnumber >> tmpmean >> tmpstddev >> ws;
     else
       infile >> year >> step >> tmparea >> tmpage >> tmpnumber >> tmpmean >> ws;
@@ -188,8 +201,10 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
         numbers.resize(1, new DoubleMatrix(numarea, numage, 0.0));
         obsMean.resize(1, new DoubleMatrix(numarea, numage, 0.0));
         modelMean.resize(1, new DoubleMatrix(numarea, numage, 0.0));
+        if (readvar == 1)
+          obsStdDev.resize(1, new DoubleMatrix(numarea, numage, 0.0));
         if (needvar == 1)
-          obsVariance.resize(1, new DoubleMatrix(numarea, numage, 0.0));
+          modelStdDev.resize(1, new DoubleMatrix(numarea, numage, 0.0));
         timeid = (Years.Size() - 1);
       }
 
@@ -203,8 +218,8 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
       count++;
       (*numbers[timeid])[areaid][ageid] = tmpnumber;
       (*obsMean[timeid])[areaid][ageid] = tmpmean;
-      if (needvar == 1)
-        (*obsVariance[timeid])[areaid][ageid] = tmpstddev * tmpstddev;
+      if (readvar == 1)
+        (*obsStdDev[timeid])[areaid][ageid] = tmpstddev;
     }
   }
   AAT.addActions(Years, Steps, TimeInfo);
@@ -229,8 +244,10 @@ CatchStatistics::~CatchStatistics() {
     delete obsMean[i];
     delete modelMean[i];
   }
-  for (i = 0; i < obsVariance.Size(); i++)
-    delete obsVariance[i];
+  for (i = 0; i < obsStdDev.Size(); i++)
+    delete obsStdDev[i];
+  for (i = 0; i < modelStdDev.Size(); i++)
+    delete modelStdDev[i];
   delete[] functionname;
   delete LgrpDiv;
 }
@@ -326,14 +343,15 @@ double CatchStatistics::calcLikSumSquares() {
         case 1:
           (*modelMean[timeindex])[nareas][age] = PopStat.meanLength();
           simvar = PopStat.sdevLength() * PopStat.sdevLength();
+          (*modelStdDev[timeindex])[nareas][age] = PopStat.sdevLength();
           break;
         case 2:
           (*modelMean[timeindex])[nareas][age] = PopStat.meanLength();
-          simvar = (*obsVariance[timeindex])[nareas][age];
+          simvar = (*obsStdDev[timeindex])[nareas][age] * (*obsStdDev[timeindex])[nareas][age];
           break;
         case 3:
           (*modelMean[timeindex])[nareas][age] = PopStat.meanWeight();
-          simvar = (*obsVariance[timeindex])[nareas][age];
+          simvar = (*obsStdDev[timeindex])[nareas][age] * (*obsStdDev[timeindex])[nareas][age];
           break;
         case 4:
           (*modelMean[timeindex])[nareas][age] = PopStat.meanWeight();
@@ -376,9 +394,26 @@ void CatchStatistics::LikelihoodPrint(ofstream& outfile, const TimeClass* const 
     for (age = 0; age < (*modelMean[t]).Ncol(area); age++) {
       outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
         << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(printwidth) << ageindex[age] << sep << setw(printwidth)
-        << (*numbers[t])[area][age] << sep << setprecision(largeprecision)
-        << setw(largewidth) << (*modelMean[t])[area][age]  << endl;
+        << setw(printwidth) << ageindex[age] << sep << setprecision(printprecision)
+        << setw(printwidth) << (*numbers[t])[area][age] << sep
+        << setprecision(largeprecision) << setw(largewidth) << (*modelMean[t])[area][age];
+      switch(functionnumber) {
+        case 1:
+          outfile << sep << setprecision(printprecision) << setw(printwidth)
+            << (*modelStdDev[t])[area][age] << endl;
+          break;
+        case 2:
+        case 3:
+          outfile << sep << setprecision(printprecision) << setw(printwidth)
+            << (*obsStdDev[t])[area][age] << endl;
+          break;
+        case 4:
+        case 5:
+          outfile << endl;
+        default:
+          handle.logWarning("Warning in catchstatistics - unrecognised function", functionname);
+          break;
+      }
     }
   }
 }

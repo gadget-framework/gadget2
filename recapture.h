@@ -96,23 +96,36 @@ private:
    */
   DoubleVector lengths;
   /**
-   * \brief This is the IntMatrix used to store information about the years when the likelihood score should be calculated
+   * \brief This is the IntMatrix used to store information about the years when recapture data is available
    */
-  IntMatrix Years;
+  IntMatrix obsYears;
   /**
-   * \brief This is the IntMatrix used to store information about the steps when the likelihood score should be calculated
+   * \brief This is the IntMatrix used to store information about the steps when recapture data is available
    */
-  IntMatrix Steps;
+  IntMatrix obsSteps;
+  /**
+   * \brief This is the IntMatrix used to store information about the years when recapture data is not available but modelled recaptures occur
+   */
+  IntMatrix modYears;
+  /**
+   * \brief This is the IntMatrix used to store information about the steps when recapture data is not available but modelled recaptures occur
+   */
+  IntMatrix modSteps;
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store length distribution information specified in the input file
    * \note the indices for this object are [tag][time][area][length]
    */
   DoubleMatrixPtrMatrix obsDistribution;
   /**
-   * \brief This is the DoubleMatrixPtrMatrix used to store length distribution information calculated in the model
+   * \brief This is the DoubleMatrixPtrMatrix used to store length distribution information calculated in the model for the timesteps that there were observed recaptures
    * \note the indices for this object are [tag][time][area][length]
    */
   DoubleMatrixPtrMatrix modelDistribution;
+  /**
+   * \brief This is the DoubleMatrixPtrMatrix used to store length distribution information calculated in the model for the timesteps that there were no observed recaptures, but there were still modelled recaptures
+   * \note the indices for this object are [tag][time][area][length]
+   */
+  DoubleMatrixPtrMatrix newDistribution;
   /**
    * \brief This is the TagPtrVector of the relevant tagging experiments
    */

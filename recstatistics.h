@@ -75,12 +75,12 @@ private:
    * \brief This is the DoubleMatrixPtrVector used to store mean length information specified in the input file
    * \note the indices for this object are [tag][time][area]
    */
-  DoubleMatrixPtrVector mean;
+  DoubleMatrixPtrVector obsMean;
   /**
-   * \brief This is the DoubleMatrixPtrVector used to store variance of length information specified in the input file
+   * \brief This is the DoubleMatrixPtrVector used to store the standard deviation of the length information specified in the input file
    * \note the indices for this object are [tag][time][area]
    */
-  DoubleMatrixPtrVector variance;
+  DoubleMatrixPtrVector obsStdDev;
   /**
    * \brief This is the RecAggregator used to collect information about the racptured tagged fish
    */
