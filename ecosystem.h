@@ -184,7 +184,7 @@ public:
   /**
    * \brief This function will check that the values of the parameters are within the specified bounds
    */
-  void checkBounds() const { keeper->checkBounds(Likely); };
+  void checkBounds() const { keeper->checkBounds(likevec); };
   /**
    * \brief This function will return the number of variables to be optimised
    * \return number of variables to be optimised
@@ -352,11 +352,7 @@ protected:
   /**
    * \brief This is the LikelihoodPtrVector of the likelihood components for the current model
    */
-  LikelihoodPtrVector Likely;
-  /**
-   * \brief This is the CharPtrVector of the names of the likelihood components for the current model
-   */
-  CharPtrVector likelihoodnames;
+  LikelihoodPtrVector likevec;
   /**
    * \brief This is the PrinterPtrVector of the printer classes for the current model
    */
@@ -374,33 +370,17 @@ protected:
    */
   Keeper* keeper;
   /**
-   * \brief This is the CharPtrVector of the names of the stocks for the current model
-   */
-  CharPtrVector stocknames;
-  /**
    * \brief This is the StockPtrVector of the stocks for the current model
    */
   StockPtrVector stockvec;
-  /**
-   * \brief This is the CharPtrVector of the names of the tagging experiments for the current model
-   */
-  CharPtrVector tagnames;
   /**
    * \brief This is the TagPtrVector of the tagging experiments for the current model
    */
   TagPtrVector tagvec;
   /**
-   * \brief This is the CharPtrVector of the names of the otherfood for the current model
-   */
-  CharPtrVector otherfoodnames;
-  /**
    * \brief This is the OtherFoodPtrVector of the otherfood for the current model
    */
   OtherFoodPtrVector otherfoodvec;
-  /**
-   * \brief This is the CharPtrVector of the names of the fleets for the current model
-   */
-  CharPtrVector fleetnames;
   /**
    * \brief This is the FleetPtrVector of the fleets for the current model
    */

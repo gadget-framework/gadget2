@@ -114,7 +114,7 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
     }
     checkInitialised = 1;
   }
-  handle.logMessage("Reset boundlikelihood component", this->Name());
+  handle.logMessage("Reset boundlikelihood component", this->getName());
 }
 
 void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keeper* const keeper) {
@@ -144,7 +144,7 @@ void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keepe
 void BoundLikelihood::SummaryPrint(ofstream& outfile) {
   //JMB there is only one likelihood score here ...
   if (!(isZero(likelihood))) {
-    outfile << "all   all        all" << sep << setw(largewidth) << this->Name() << sep
+    outfile << "all   all        all" << sep << setw(largewidth) << this->getName() << sep
       << setprecision(smallprecision) << setw(smallwidth) << weight << sep
       << setprecision(largeprecision) << setw(largewidth) << likelihood << endl;
     outfile.flush();

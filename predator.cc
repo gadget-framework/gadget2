@@ -29,12 +29,12 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   for (i = 0; i < preyvec.Size(); i++) {
     found = 0;
     for (j = 0; j < this->numPreys(); j++) {
-      if (strcasecmp(this->Preyname(j), preyvec[i]->Name()) == 0) {
+      if (strcasecmp(this->Preyname(j), preyvec[i]->getName()) == 0) {
         if (found == 0) {
           preys[j] = preyvec[i];
           found++;
         } else
-          handle.logFailure("Error in predator - repeated suitability values for prey", preyvec[i]->Name());
+          handle.logFailure("Error in predator - repeated suitability values for prey", preyvec[i]->getName());
 
       }
     }
@@ -71,10 +71,10 @@ int Predator::doesEat(const char* preyname) const {
 
 void Predator::Print(ofstream& outfile) const {
   int i;
-  outfile << "\tName" << sep << this->Name()
+  outfile << "\tName" << sep << this->getName()
     << "\n\tNames of preys:";
   for (i = 0; i < preys.Size(); i++)
-    outfile << sep << (const char*)(this->Preys(i)->Name());
+    outfile << sep << this->Preyname(i);
   outfile << endl;
   for (i = 0; i < this->numPreys(); i++) {
     outfile << "\tSuitability for " << this->Preyname(i) << endl;

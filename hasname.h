@@ -30,7 +30,7 @@ public:
    * \brief This will return a null terminated text string containing the name of the object
    * \return name
    */
-  const char* Name() const { return name; };
+  const char* getName() const { return name; };
 private:
   /**
    * \brief This is the null terminated name of the object

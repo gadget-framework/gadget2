@@ -114,7 +114,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < strayStockNames.Size(); j++)
-      if (strcasecmp(stockvec[i]->Name(), strayStockNames[j]) == 0) {
+      if (strcasecmp(stockvec[i]->getName(), strayStockNames[j]) == 0) {
         strayStocks.resize(1);
         tmpratio.resize(1);
         strayStocks[index] = stockvec[i];
@@ -125,7 +125,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
   if (index != strayStockNames.Size()) {
     handle.logWarning("Error in straying data - failed to match straying stocks");
     for (i = 0; i < stockvec.Size(); i++)
-      handle.logWarning("Error in straying data - found stock", stockvec[i]->Name());
+      handle.logWarning("Error in straying data - found stock", stockvec[i]->getName());
     for (i = 0; i < strayStockNames.Size(); i++)
       handle.logWarning("Error in straying data - looking for stock", strayStockNames[i]);
     exit(EXIT_FAILURE);
@@ -266,8 +266,8 @@ void StrayData::Reset(const TimeClass* const TimeInfo) {
 void StrayData::Print(ofstream& outfile) const {
   int i;
   outfile << "\nStraying information\n\tNames of straying stocks:";
-  for (i = 0; i < strayStocks.Size(); i++)
-    outfile << sep << (const char*)(strayStocks[i]->Name());
+  for (i = 0; i < strayStockNames.Size(); i++)
+    outfile << sep << strayStockNames[i];
   outfile << "\n\tRatio moving into each stock:";
   for (i = 0; i < Ratio.Size(); i++)
     outfile << sep << Ratio[i];

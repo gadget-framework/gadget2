@@ -66,10 +66,6 @@ protected:
    */
   StockPreyStdInfo* preyinfo;
   /**
-   * \brief This ofstream is the file that all the model information gets sent to
-   */
-  ofstream outfile;
-  /**
    * \brief This is the scaling factor used to scale the size of the stock
    */
   double scale;

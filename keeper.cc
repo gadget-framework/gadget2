@@ -258,20 +258,20 @@ void Keeper::Update(int pos, double& value) {
     scaledvalues[pos] = value / initialvalues[pos];
 }
 
-void Keeper::writeOptValues(const LikelihoodPtrVector& Likely) const {
+void Keeper::writeOptValues(const LikelihoodPtrVector& likevec) const {
   int i;
   for (i = 0; i < values.Size(); i++)
     if (opt[i] == 1 || opt.Size() == 0)
       cout << values[i] << sep;
 
   cout << "\n\nThe scores from each likelihood component are\n";
-  for (i = 0; i < Likely.Size(); i++)
-    cout << Likely[i]->returnUnweightedLikelihood() << sep;
+  for (i = 0; i < likevec.Size(); i++)
+    cout << likevec[i]->returnUnweightedLikelihood() << sep;
 
   cout << "\n\nThe overall likelihood score is " << EcoSystem->getLikelihood() << endl;
 }
 
-void Keeper::writeInitialInformation(const char* const filename, const LikelihoodPtrVector& Likely) {
+void Keeper::writeInitialInformation(const char* const filename, const LikelihoodPtrVector& likevec) {
   ofstream outfile;
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
@@ -290,8 +290,8 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
 
   outfile << ";\n; Listing of the likelihood components used in the current Gadget run\n;\n";
   outfile << "; Component\tType\tWeight\n";
-  for (i = 0; i < Likely.Size(); i++)
-    outfile << Likely[i]->Name() << TAB << Likely[i]->Type() << TAB << Likely[i]->returnWeight() << endl;
+  for (i = 0; i < likevec.Size(); i++)
+    outfile << likevec[i]->getName() << TAB << likevec[i]->Type() << TAB << likevec[i]->returnWeight() << endl;
   outfile << ";\n; Listing of the output from the likelihood components for the current Gadget run\n;\n";
   handle.Close();
   outfile.close();
@@ -299,7 +299,7 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
 }
 
 void Keeper::writeValues(const char* const filename,
-  const LikelihoodPtrVector& Likely, int prec) const {
+  const LikelihoodPtrVector& likevec, int prec) const {
 
   int i, p, w;
   ofstream outfile;
@@ -324,8 +324,8 @@ void Keeper::writeValues(const char* const filename,
     w = smallwidth;
   }
   outfile << TAB << TAB;
-  for (i = 0; i < Likely.Size(); i++)
-    outfile << setw(w) << setprecision(p) << Likely[i]->returnUnweightedLikelihood() << sep;
+  for (i = 0; i < likevec.Size(); i++)
+    outfile << setw(w) << setprecision(p) << likevec[i]->returnUnweightedLikelihood() << sep;
 
   if (prec == 0) {
     p = fullprecision;
@@ -600,7 +600,7 @@ void Keeper::UpperOptBds(DoubleVector& ubs) const {
   }
 }
 
-void Keeper::checkBounds(const LikelihoodPtrVector& Likely) const {
+void Keeper::checkBounds(const LikelihoodPtrVector& likevec) const {
   if (boundsgiven == 0)
     return;
 
@@ -608,8 +608,8 @@ void Keeper::checkBounds(const LikelihoodPtrVector& Likely) const {
 
   //check that we have a boundlikelihood component
   count = 0;
-  for (i = 0; i < Likely.Size(); i++) {
-    if (Likely[i]->Type() == BOUNDLIKELIHOOD)
+  for (i = 0; i < likevec.Size(); i++) {
+    if (likevec[i]->Type() == BOUNDLIKELIHOOD)
       count++;
   }
   if (count == 0)

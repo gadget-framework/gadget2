@@ -90,7 +90,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   for (j = 0; j < tagnames.Size(); j++) {
     check = 0;
     for (i = 0; i < Tag.Size(); i++) {
-      if (strcasecmp(tagnames[j], Tag[i]->Name()) == 0) {
+      if (strcasecmp(tagnames[j], Tag[i]->getName()) == 0) {
         check++;
         tagvec.resize(1, Tag[i]);
         //likelihoodValues.AddRows(1, Tag[i]->getNumTagTimeSteps(), 0.0);
@@ -192,7 +192,7 @@ void Recaptures::readRecaptureData(CommentStream& infile,
     }
   }
   if (count == 0)
-    handle.logWarning("Warning in recaptures - found no data in the data file for", this->Name());
+    handle.logWarning("Warning in recaptures - found no data in the data file for", this->getName());
   handle.logMessage("Read recaptures data file - number of entries", count);
 }
 
@@ -226,7 +226,7 @@ Recaptures::~Recaptures() {
 
 void Recaptures::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
-  handle.logMessage("Reset recaptures component", this->Name());
+  handle.logMessage("Reset recaptures component", this->getName());
 }
 
 void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
@@ -238,7 +238,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
     for (j = 0; j < Fleets.Size(); j++)
-      if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
+      if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
         fleets.resize(1, Fleets[j]);
       }
@@ -258,14 +258,14 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       found = 0;
       for (j = 0; j < Stocks.Size(); j++) {
         if (Stocks[j]->isEaten()) {
-          if (strcasecmp(stocknames->operator[](i), Stocks[j]->returnPrey()->Name()) == 0) {
+          if (strcasecmp(stocknames->operator[](i), Stocks[j]->returnPrey()->getName()) == 0) {
             found++;
             stocks.resize(1, Stocks[j]);
           }
         }
       }
       if (found == 0)
-        handle.logFailure("Error in recaptures - failed to match stock", stocknames->operator[](j));
+        handle.logFailure("Error in recaptures - failed to match stock", stocknames->operator[](i));
 
     }
 
@@ -326,7 +326,7 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
     if (tagvec[t]->isWithinPeriod(year, step)) {
 
       if (checktag == 0) {
-        handle.logMessage("Calculating likelihood score for recaptures component", this->Name());
+        handle.logMessage("Calculating likelihood score for recaptures component", this->getName());
         checktag++;
       }
 
@@ -387,7 +387,7 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
 
 void Recaptures::Print(ofstream& outfile) const {
   int t, ti, i, j;
-  outfile << "\nRecaptures Data " << this->Name() << " - likelihood value " << likelihood
+  outfile << "\nRecaptures Data " << this->getName() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << endl;
   for (t = 0; t < tagvec.Size(); t++) {
     outfile << "\tTagging experiment:\t" << tagnames[t];

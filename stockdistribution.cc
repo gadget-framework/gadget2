@@ -243,7 +243,7 @@ void StockDistribution::readStockData(CommentStream& infile,
   }
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logWarning("Warning in stockdistribution - found no data in the data file for", this->Name());
+    handle.logWarning("Warning in stockdistribution - found no data in the data file for", this->getName());
   handle.logMessage("Read stockdistribution data file - number of entries", count);
 }
 
@@ -275,12 +275,12 @@ StockDistribution::~StockDistribution() {
 void StockDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
-  handle.logMessage("Reset stockdistribution component", this->Name());
+  handle.logMessage("Reset stockdistribution component", this->getName());
 }
 
 void StockDistribution::Print(ofstream& outfile) const {
   int i;
-  outfile << "\nStock Distribution " << this->Name() << " - likelihood value " << likelihood
+  outfile << "\nStock Distribution " << this->getName() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -301,7 +301,7 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
     for (j = 0; j < Fleets.Size(); j++)
-      if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
+      if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
         fleets.resize(1, Fleets[j]);
       }
@@ -315,7 +315,7 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->isEaten())
-        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->getName()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);
         }
@@ -331,7 +331,7 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   int i;
   double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    handle.logMessage("Calculating likelihood score for stockdistribution component", this->Name());
+    handle.logMessage("Calculating likelihood score for stockdistribution component", this->getName());
     for (i = 0; i < stocknames.Size(); i++) {
       aggregator[i]->Sum(TimeInfo);
       if (aggregator[i]->checkCatchData() == 1)
@@ -476,7 +476,7 @@ void StockDistribution::SummaryPrint(ofstream& outfile) {
     for (area = 0; area < likelihoodValues.Ncol(year); area++)
       outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
         << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(largewidth) << this->Name() << sep << setprecision(smallprecision)
+        << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
         << setw(smallwidth) << weight << sep << setprecision(largeprecision)
         << setw(largewidth) << likelihoodValues[year][area] << endl;
 

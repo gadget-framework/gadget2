@@ -125,15 +125,15 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   //We have now read in all the data from the main likelihood file
   if (strcasecmp(sitype, "lengths") == 0) {
     SI = new SIByLengthOnStep(infile, areas, lengths, areaindex,
-      charindex, TimeInfo, datafilename, this->Name());
+      charindex, TimeInfo, datafilename, this->getName());
 
   } else if (strcasecmp(sitype, "ages") == 0) {
     SI = new SIByAgeOnStep(infile, areas, ages, areaindex,
-      charindex, TimeInfo, datafilename, this->Name());
+      charindex, TimeInfo, datafilename, this->getName());
 
   } else if (strcasecmp(sitype, "fleets") == 0) {
     SI = new SIByFleetOnStep(infile, areas, lengths, areaindex,
-      charindex, TimeInfo, datafilename, overcons, this->Name());
+      charindex, TimeInfo, datafilename, overcons, this->getName());
 
   } else
     handle.Message("Error in surveyindex - unrecognised type", sitype);
@@ -176,7 +176,7 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
   for (i = 0; i < stocknames.Size(); i++) {
     found = 0;
     for (j = 0; j < Stocks.Size(); j++)
-      if (strcasecmp(stocknames[i], Stocks[j]->Name()) == 0) {
+      if (strcasecmp(stocknames[i], Stocks[j]->getName()) == 0) {
         found++;
         s.resize(1, Stocks[j]);
       }
@@ -188,7 +188,7 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
     for (j = 0; j < Fleets.Size(); j++)
-      if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
+      if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
         f.resize(1, Fleets[j]);
       }
@@ -207,7 +207,7 @@ void SurveyIndices::Reset(const Keeper* const keeper) {
 
 void SurveyIndices::Print(ofstream& outfile) const {
   int i;
-  outfile << "\nSurvey Indices " << this->Name() << " - likelihood value " << likelihood << "\n\tStock names: ";
+  outfile << "\nSurvey Indices " << this->getName() << " - likelihood value " << likelihood << "\n\tStock names: ";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << stocknames[i] << sep;
   outfile << endl;
@@ -220,7 +220,7 @@ void SurveyIndices::SummaryPrint(ofstream& outfile) {
   //JMB - this is nasty hack since there is only one area
   for (area = 0; area < areaindex.Size(); area++) {
     outfile << "all   all " << setw(printwidth) << areaindex[area] << sep
-      << setw(largewidth) << this->Name() << sep << setprecision(smallprecision)
+      << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
       << setw(smallwidth) << weight << sep << setprecision(largeprecision)
       << setw(largewidth) << likelihood << endl;
   }

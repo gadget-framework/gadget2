@@ -65,10 +65,6 @@ protected:
    * \brief This is the StockAggregator used to collect information about the stocks
    */
   StockAggregator* aggregator;
-  /**
-   * \brief This ofstream is the file that all the model information gets sent to
-   */
-  ofstream outfile;
 };
 
 #endif

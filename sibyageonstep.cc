@@ -43,7 +43,7 @@ void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!(this->isToSum(TimeInfo)))
     return;
 
-  handle.logMessage("Calculating index for surveyindex component", this->SIName());
+  handle.logMessage("Calculating index for surveyindex component", this->getSIName());
   aggregator->Sum();
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns has only one element.
   //Copy the information from it -- we only want to keep the abundance numbers.

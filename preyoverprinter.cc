@@ -37,7 +37,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
     handle.Message("Error in preyoverprinter - failed to read preys");
 
   //read in area aggregation from file
-  char filename[MaxStrLength];
+  filename = new char[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -130,7 +130,7 @@ void PreyOverPrinter::setPrey(PreyPtrVector& preyvec) {
   int i, j;
   for (i = 0; i < preyvec.Size(); i++)
     for (j = 0; j < preynames.Size(); j++)
-      if (strcasecmp(preyvec[i]->Name(), preynames[j]) == 0) {
+      if (strcasecmp(preyvec[i]->getName(), preynames[j]) == 0) {
         preys.resize(1);
         preys[index++] = preyvec[i];
       }
@@ -138,7 +138,7 @@ void PreyOverPrinter::setPrey(PreyPtrVector& preyvec) {
   if (preys.Size() != preynames.Size()) {
     handle.logWarning("Error in preyoverprinter - failed to match preys");
     for (i = 0; i < preyvec.Size(); i++)
-      handle.logWarning("Error in preyoverprinter - found prey", preyvec[i]->Name());
+      handle.logWarning("Error in preyoverprinter - found prey", preyvec[i]->getName());
     for (i = 0; i < preynames.Size(); i++)
       handle.logWarning("Error in preyoverprinter - looking for prey", preynames[i]);
     exit(EXIT_FAILURE);
@@ -185,6 +185,7 @@ PreyOverPrinter::~PreyOverPrinter() {
   outfile.clear();
   delete preyLgrpDiv;
   delete aggregator;
+  delete[] filename;
   int i;
   for (i = 0; i < preynames.Size(); i++)
     delete[] preynames[i];

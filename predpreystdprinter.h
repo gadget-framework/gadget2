@@ -50,10 +50,6 @@ protected:
    */
   char* preyname;
   /**
-   * \brief This ofstream is the file that all the model information gets sent to
-   */
-  ofstream outfile;
-  /**
    * \brief This is the IntVector used to store aggregated internal area information
    */
   IntVector areas;

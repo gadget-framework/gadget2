@@ -134,13 +134,13 @@ void CatchInTons::Reset(const Keeper* const keeper) {
   for (i = 0; i < modelDistribution.Nrow(); i++)
     for (j = 0; j < modelDistribution.Ncol(i); j++)
       modelDistribution[i][j] = 0.0;
-  handle.logMessage("Reset catchintons component", this->Name());
+  handle.logMessage("Reset catchintons component", this->getName());
 }
 
 void CatchInTons::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch in Tons " << this->Name() << " - likelihood value " << likelihood
+  outfile << "\nCatch in Tons " << this->getName() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname;
   outfile << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
@@ -193,7 +193,7 @@ void CatchInTons::addLikelihood(const TimeClass* const TimeInfo) {
 
     if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
       likelihood += l;
-      handle.logMessage("Calculating likelihood score for catchintons component", this->Name());
+      handle.logMessage("Calculating likelihood score for catchintons component", this->getName());
       handle.logMessage("The likelihood score for this component on this timestep is", l);
       timeindex++;
     }
@@ -217,7 +217,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
     for (j = 0; j < Fleets.Size(); j++)
-      if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
+      if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
         fleets.resize(1, Fleets[j]);
       }
@@ -231,7 +231,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->isEaten())
-        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->getName()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);
         }
@@ -247,7 +247,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
     Predator* pred = fleets[i]->returnPredator();
     for (j = 0; j < pred->numPreys(); j++)
       for (k = 0; k < stocknames.Size(); k++)
-        if (strcasecmp(stocknames[k], pred->Preys(j)->Name()) == 0) {
+        if (strcasecmp(stocknames[k], pred->Preys(j)->getName()) == 0) {
           found++;
           preyindex[i].resize(1, j);
         }
@@ -348,7 +348,7 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
     AAT.addActions(Years, Steps, TimeInfo);
 
   if (count == 0)
-    handle.logWarning("Warning in catchintons - found no data in the data file for", this->Name());
+    handle.logWarning("Warning in catchintons - found no data in the data file for", this->getName());
   handle.logMessage("Read catchintons data file - number of entries", count);
 }
 
@@ -391,13 +391,13 @@ void CatchInTons::SummaryPrint(ofstream& outfile) {
       if (yearly == 0) {
         outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
           << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-          << setw(largewidth) << this->Name() << sep << setprecision(smallprecision)
+          << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
           << setw(smallwidth) << weight << sep << setprecision(largeprecision)
           << setw(largewidth) << likelihoodValues[year][area] << endl;
       } else {
         outfile << setw(lowwidth) << Years[year] << "  all "
           << setw(printwidth) << areaindex[area] << sep
-          << setw(largewidth) << this->Name() << sep << setprecision(smallprecision)
+          << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
           << setw(smallwidth) << weight << sep << setprecision(largeprecision)
           << setw(largewidth) << likelihoodValues[year][area] << endl;
       }

@@ -29,6 +29,7 @@ Ecosystem::Ecosystem(const char* const filename, int optimise, int netrun, int c
   funcevalBFGS = 0;
   likelihoodBFGS = 0.0;
 
+  // read the model specification from the main file
   chdir(workingdir);
   ifstream infile;
   infile.open(filename, ios::in);
@@ -36,15 +37,16 @@ Ecosystem::Ecosystem(const char* const filename, int optimise, int netrun, int c
   handle.checkIfFailure(infile, filename);
   handle.Open(filename);
   chdir(inputdir);
-  //New parameter netrun, to prevent reading of printfiles. 07.04.00 AJ & mnaa
-  readMain(commin, optimise, netrun, calclikelihood, inputdir, workingdir);
+  this->readMain(commin, optimise, netrun, calclikelihood, inputdir, workingdir);
   handle.Close();
   infile.close();
   infile.clear();
 
-  int i;
+  // check and initialise the model
   this->Initialise();
   basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size(), 0);
+
+  int i;
   for (i = 0; i < stockvec.Size(); i++)
     basevec[i] = stockvec[i];
   for (i = 0; i < otherfoodvec.Size(); i++)
@@ -62,20 +64,10 @@ Ecosystem::Ecosystem(const char* const filename, int optimise, int netrun, int c
 Ecosystem::~Ecosystem() {
 
   int i;
-  for (i = 0; i < fleetnames.Size(); i++)
-    delete[] fleetnames[i];
-  for (i = 0; i < stocknames.Size(); i++)
-    delete[] stocknames[i];
-  for (i = 0; i < tagnames.Size(); i++)
-    delete[] tagnames[i];
-  for (i = 0; i < otherfoodnames.Size(); i++)
-    delete[] otherfoodnames[i];
-  for (i = 0; i < likelihoodnames.Size(); i++)
-    delete[] likelihoodnames[i];
   for (i = 0; i < printvec.Size(); i++)
     delete printvec[i];
-  for (i = 0; i < Likely.Size(); i++)
-    delete Likely[i];
+  for (i = 0; i < likevec.Size(); i++)
+    delete likevec[i];
   for (i = 0; i < tagvec.Size(); i++)
     delete tagvec[i];
   for (i = 0; i < basevec.Size(); i++)
@@ -96,14 +88,10 @@ void Ecosystem::writeStatus(const char* filename) const {
     << ", step " << TimeInfo->CurrentStep() << endl;
 
   int i;
-  for (i = 0; i < stockvec.Size(); i++)
-    stockvec[i]->Print(outfile);
-  for (i = 0; i < otherfoodvec.Size(); i++)
-    otherfoodvec[i]->Print(outfile);
-  for (i = 0; i < fleetvec.Size(); i++)
-    fleetvec[i]->Print(outfile);
-  for (i = 0; i < Likely.Size(); i++)
-    Likely[i]->Print(outfile);
+  for (i = 0; i < basevec.Size(); i++)
+    basevec[i]->Print(outfile);
+  for (i = 0; i < likevec.Size(); i++)
+    likevec[i]->Print(outfile);
 
   handle.Close();
   outfile.close();
@@ -165,7 +153,7 @@ double Ecosystem::SimulateAndUpdate(double* x, int n) {
 }
 
 void Ecosystem::writeInitialInformation(const char* const filename) const {
-  keeper->writeInitialInformation(filename, Likely);
+  keeper->writeInitialInformation(filename, likevec);
 }
 
 void Ecosystem::writeInitialInformationInColumns(const char* const filename) const {
@@ -173,7 +161,7 @@ void Ecosystem::writeInitialInformationInColumns(const char* const filename) con
 }
 
 void Ecosystem::writeValues(const char* const filename, int prec) const {
-  keeper->writeValues(filename, Likely, prec);
+  keeper->writeValues(filename, likevec, prec);
 }
 
 void Ecosystem::writeValuesInColumns(const char* const filename, int prec) const {
@@ -227,5 +215,5 @@ void Ecosystem::UpperOptBds(DoubleVector& ubds) const {
 }
 
 void Ecosystem::writeOptValues() const {
-  keeper->writeOptValues(Likely);
+  keeper->writeOptValues(likevec);
 }

@@ -84,11 +84,11 @@ void Ecosystem::Simulate(int Optimise, int print) {
 
   handle.logMessage("");  //write blank line to log file
   if (Optimise) {
-    for (j = 0; j < Likely.Size(); j++)
-      Likely[j]->Reset(keeper);
+    for (j = 0; j < likevec.Size(); j++)
+      likevec[j]->Reset(keeper);
     //put here since boundlikelihood is allowed to change values
-    for (j = 0; j < Likely.Size(); j++)
-      Likely[j]->addLikelihoodKeeper(TimeInfo, keeper);
+    for (j = 0; j < likevec.Size(); j++)
+      likevec[j]->addLikelihoodKeeper(TimeInfo, keeper);
   }
 
   TimeInfo->ResetToBeginning();
@@ -112,8 +112,8 @@ void Ecosystem::Simulate(int Optimise, int print) {
 
     SimulateOneTimestep();
     if (Optimise)
-      for (j = 0; j < Likely.Size(); j++)
-        Likely[j]->addLikelihood(TimeInfo);
+      for (j = 0; j < likevec.Size(); j++)
+        likevec[j]->addLikelihood(TimeInfo);
 
     if (print)
       for (j = 0; j < printvec.Size(); j++)
@@ -147,8 +147,8 @@ void Ecosystem::Simulate(int Optimise, int print) {
 
   if (Optimise) {
     likelihood = 0.0;
-    for (j = 0; j < Likely.Size(); j++)
-      likelihood += Likely[j]->returnLikelihood();
+    for (j = 0; j < likevec.Size(); j++)
+      likelihood += likevec[j]->returnLikelihood();
   }
   handle.logMessage("The current overall likelihood score is", likelihood);
 

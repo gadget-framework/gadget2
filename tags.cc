@@ -44,7 +44,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
 
   int i = 0, found = 0;
   while (found == 0 && i < stockvec.Size()) {
-    if (strcasecmp(stockvec[i]->Name(), stocknames[0]) == 0) {
+    if (strcasecmp(stockvec[i]->getName(), stocknames[0]) == 0) {
       LgrpDiv = new LengthGroupDivision(*(stockvec[i]->returnLengthGroupDiv()));
       found++;
     }
@@ -197,7 +197,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
   j = 0;
   found = 0;
   while (found == 0 && j < Stocks.Size()) {
-    if (strcasecmp(Stocks[j]->Name(), stocknames[0]) == 0) {
+    if (strcasecmp(Stocks[j]->getName(), stocknames[0]) == 0) {
       tagStocks.resize(1, Stocks[j]);
       taggingstock = Stocks[j];
       found++;
@@ -239,7 +239,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
       matureStocks.resize(1, tempMatureStock[i]);
       found = 0;
       for (j = 0; j < transitionStocks.Size(); j++)
-        if (!(strcasecmp(transitionStocks[j]->Name(), tempMatureStock[i]->Name()) == 0))
+        if (!(strcasecmp(transitionStocks[j]->getName(), tempMatureStock[i]->getName()) == 0))
           found++;
 
       if (found == 0) {
@@ -256,11 +256,11 @@ void Tags::setStock(StockPtrVector& Stocks) {
       strayStocks.resize(1, tempStrayStock[i]);
       found = 0;
       for (j = 0; j < transitionStocks.Size(); j++)
-        if (!(strcasecmp(transitionStocks[j]->Name(), tempStrayStock[i]->Name()) == 0))
+        if (!(strcasecmp(transitionStocks[j]->getName(), tempStrayStock[i]->getName()) == 0))
           found++;
 
       for (j = 0; j < matureStocks.Size(); j++)
-        if (!(strcasecmp(matureStocks[j]->Name(), tempStrayStock[i]->Name()) == 0))
+        if (!(strcasecmp(matureStocks[j]->getName(), tempStrayStock[i]->getName()) == 0))
           found++;
 
       if (found == 0) {
@@ -272,8 +272,8 @@ void Tags::setStock(StockPtrVector& Stocks) {
   }
 
   for (i = 1; i < tagStocks.Size(); i++) {
-    stockname = new char[strlen(tagStocks[i]->Name()) + 1];
-    strcpy(stockname, tagStocks[i]->Name());
+    stockname = new char[strlen(tagStocks[i]->getName()) + 1];
+    strcpy(stockname, tagStocks[i]->getName());
     stocknames.resize(1, stockname);
   }
 }
@@ -349,7 +349,7 @@ void Tags::Update(int timeid) {
     CI.resize(1);
     CI[CI.Size() - 1] = new ConversionIndex(LgrpDiv, tmpLgrpDiv);
 
-    stockid = stockIndex(taggingstock->Name());
+    stockid = stockIndex(taggingstock->getName());
     if (stockid < 0 || stockid >= preyindex.Size())
       handle.logFailure("Error in tags - invalid stock identifier");
 
@@ -387,7 +387,7 @@ void Tags::Update(int timeid) {
       CI.resize(1);
       CI[CI.Size() - 1] = new ConversionIndex(LgrpDiv, tmpLgrpDiv);
 
-      stockid = stockIndex(tmpStock->Name());
+      stockid = stockIndex(tmpStock->getName());
       if (stockid < 0 || stockid >= preyindex.Size())
         handle.logFailure("Error in tags - invalid stock identifier");
 
@@ -416,7 +416,7 @@ void Tags::deleteStockTags() {
   int i;
   for (i = 0; i < tagStocks.Size(); i++) {
     if (updated[i] == 1) {
-      tagStocks[i]->deleteTags(this->Name());
+      tagStocks[i]->deleteTags(this->getName());
       updated[i] = 2;
     }
   }
@@ -431,7 +431,7 @@ void Tags::updateMatureStock(const TimeClass* const TimeInfo) {
     handle.logWarning("Warning in tags - tagging experiment has finished");
   else
     for (i = 0; i < matureStocks.Size(); i++) {
-      id = stockIndex(matureStocks[i]->Name());
+      id = stockIndex(matureStocks[i]->getName());
       if (id < 0 || id >= AgeLengthStock.Size())
         handle.logFailure("Error in tags - invalid stock identifier");
 
@@ -451,7 +451,7 @@ void Tags::updateTransitionStock(const TimeClass* const TimeInfo) {
     handle.logWarning("Warning in tags - tagging experiment has finished");
   else
     for (i = 0; i < transitionStocks.Size(); i++) {
-      id = stockIndex(transitionStocks[i]->Name());
+      id = stockIndex(transitionStocks[i]->getName());
       if (id < 0 || id >= AgeLengthStock.Size())
         handle.logFailure("Error in tags - invalid stock identifier");
 
@@ -471,7 +471,7 @@ void Tags::updateStrayStock(const TimeClass* const TimeInfo) {
     handle.logWarning("Warning in tags - tagging experiment has finished");
   else
     for (i = 0; i < strayStocks.Size(); i++) {
-      id = stockIndex(strayStocks[i]->Name());
+      id = stockIndex(strayStocks[i]->getName());
       if (id < 0 || id >= AgeLengthStock.Size())
         handle.logFailure("Error in tags - invalid stock identifier");
 
@@ -486,7 +486,7 @@ int Tags::stockIndex(const char* stockname) {
   int i;
 
   for (i = 0; i < tagStocks.Size(); i++)
-    if (strcasecmp(stockname, tagStocks[i]->Name()) == 0)
+    if (strcasecmp(stockname, tagStocks[i]->getName()) == 0)
       return i;
 
   return -1;
@@ -496,7 +496,7 @@ int Tags::areaIndex(const char* stockname, int area) {
   int i, j;
 
   for (i = 0; i < tagStocks.Size(); i++)
-    if (strcasecmp(stockname, tagStocks[i]->Name()) == 0) {
+    if (strcasecmp(stockname, tagStocks[i]->getName()) == 0) {
       IntVector stockareas = tagStocks[i]->Areas();
       for (j = 0; j < stockareas.Size(); j++)
         if (stockareas[j] == area)

@@ -30,12 +30,15 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
   if (likenames.Size() == 0)
     handle.Message("Error in likelihoodprinter - failed to read component");
 
-  //read the name of the printfile, and then open itthe printfile
+  //read the name of the printfile, and then open the printfile
+  filename = new char[MaxStrLength];
+  strncpy(filename, "", MaxStrLength);
+
   if (!(strcasecmp(text, "printfile") == 0))
     handle.Unexpected("printfile", text);
-  infile >> text >> ws;
-  outfile.open(text, ios::out);
-  handle.checkIfFailure(outfile, text);
+  infile >> filename >> ws;
+  outfile.open(filename, ios::out);
+  handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
   if (strcasecmp(text, "printatstart") == 0)
@@ -67,6 +70,7 @@ LikelihoodPrinter::~LikelihoodPrinter() {
   outfile.close();
   outfile.clear();
   int i;
+  delete[] filename;
   for (i = 0; i < likenames.Size(); i++)
     delete[] likenames[i];
 }
@@ -77,7 +81,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
 
   for (i = 0; i < likevec.Size(); i++) {
     for (j = 0; j < likenames.Size(); j++) {
-      if (strcasecmp(likevec[i]->Name(), likenames[j]) == 0) {
+      if (strcasecmp(likevec[i]->getName(), likenames[j]) == 0) {
         like.resize(1);
         like[index++] = likevec[i];
       }
@@ -87,7 +91,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
   if (like.Size() != likenames.Size()) {
     handle.logWarning("Error in likelihoodprinter - failed to match likelihood components");
     for (i = 0; i < like.Size(); i++)
-      handle.logWarning("Error in likelihoodprinter - found component", like[i]->Name());
+      handle.logWarning("Error in likelihoodprinter - found component", like[i]->getName());
     for (i = 0; i < likenames.Size(); i++)
       handle.logWarning("Error in likelihoodprinter - looking for component", likenames[i]);
     exit(EXIT_FAILURE);
@@ -97,7 +101,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
   RUNID.print(outfile);
 
   for (i = 0; i < like.Size(); i++) {
-    outfile << "; Likelihood output file for the likelihood component " << like[i]->Name();
+    outfile << "; Likelihood output file for the likelihood component " << like[i]->getName();
     switch(like[i]->Type()) {
       case CATCHDISTRIBUTIONLIKELIHOOD:
         outfile << "\n; year-step-area-age-length-number\n";
@@ -124,13 +128,13 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
         outfile << "\n; tagid-year-step-area-length-number\n";
         break;
       case RECSTATISTICSLIKELIHOOD:
-        handle.logWarning("Warning in likelihoodprinter - printing not currently implemented for", like[i]->Name());
+        handle.logWarning("Warning in likelihoodprinter - printing not currently implemented for", like[i]->getName());
         //outfile << "\n; tagid-year-step-area-number-mean\n";
         break;
       case BOUNDLIKELIHOOD:
       case UNDERSTOCKINGLIKELIHOOD:
       case MIGRATIONPENALTYLIKELIHOOD:
-        handle.logWarning("Warning in likelihoodprinter - printing not implemented for", like[i]->Name());
+        handle.logWarning("Warning in likelihoodprinter - printing not implemented for", like[i]->getName());
         break;
       default:
         handle.logFailure("Error in likelihoodprinter - unrecognised likelihood type", like[i]->Type());

@@ -48,7 +48,7 @@ void Stock::calcNumbers(int area, const AreaClass* const Area, const TimeClass* 
   if (iseaten) {
     prey->Sum(Alkeys[inarea], area, TimeInfo->CurrentSubstep());
     for (i = 0; i < allTags.Size(); i++)
-      allTags[i]->storeNumberPriorToEating(area, this->Name());
+      allTags[i]->storeNumberPriorToEating(area, this->getName());
   }
   if (doeseat)
     ((StockPredator*)predator)->Sum(Alkeys[inarea], area);
@@ -274,18 +274,18 @@ void Stock::calcMigration(const TimeClass* const TimeInfo) {
 
 void Stock::updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss) {
 
-  tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->Name(), tagloss);
+  tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->getName(), tagloss);
   allTags.resize(1, newtag);
   if (doesmature) {
-    maturity->addMaturityTag(newtag->Name());
+    maturity->addMaturityTag(newtag->getName());
     matureTags.resize(1, newtag);
   }
   if (doesmove) {
-    transition->addTransitionTag(newtag->Name());
+    transition->addTransitionTag(newtag->getName());
     transitionTags.resize(1, newtag);
   }
   if (doesstray) {
-    stray->addStrayTag(newtag->Name());
+    stray->addStrayTag(newtag->getName());
     strayTags.resize(1, newtag);
   }
 }

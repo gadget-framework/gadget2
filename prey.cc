@@ -106,7 +106,7 @@ void Prey::setCI(const LengthGroupDivision* const GivenLDiv) {
 void Prey::Print(ofstream& outfile) const {
   int i, area;
 
-  outfile << "\nPrey\n\tName " << this->Name() << "\n\t";
+  outfile << "\nPrey\n\tName " << this->getName() << "\n\t";
   LgrpDiv->Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tNumber of prey on internal area " << areas[area] << ":\n\t";
@@ -211,5 +211,5 @@ void Prey::Reset() {
       overconsumption[area][l] = 0.0;
     }
   }
-  handle.logMessage("Reset consumption data for prey", this->Name());
+  handle.logMessage("Reset consumption data for prey", this->getName());
 }

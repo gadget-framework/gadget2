@@ -73,7 +73,7 @@ protected:
    * \brief This will return a null terminated text string containing the name of the SIOnStep object
    * \return siname
    */
-  const char* SIName() const { return siname; };
+  const char* getSIName() const { return siname; };
   int isToSum(const TimeClass* const TimeInfo) const;
   void keepNumbers(const DoubleVector& numbers);
   /**

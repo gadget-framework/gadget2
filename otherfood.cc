@@ -49,7 +49,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
     handle.Unexpected("lengths", text);
 
   LengthGroupDivision LgrpDiv(lengths);
-  prey = new LengthPrey(lengths, areas, Name());
+  prey = new LengthPrey(lengths, areas, this->getName());
 
   infile >> text >> ws;
   if (strcasecmp(text, "amounts") == 0) {
@@ -95,12 +95,12 @@ void OtherFood::calcNumbers(int area, const AreaClass* const Area, const TimeCla
 }
 
 void OtherFood::Print(ofstream& outfile) const {
-  outfile << "\nOtherfood " << Name() << endl;
+  outfile << "\nOtherfood " << this->getName() << endl;
   prey->Print(outfile);
   outfile << endl;
 }
 
 void OtherFood::Reset(const TimeClass* const TimeInfo) {
   prey->Reset();
-  handle.logMessage("Reset otherfood data for", this->Name());
+  handle.logMessage("Reset otherfood data for", this->getName());
 }

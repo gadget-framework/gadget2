@@ -142,16 +142,16 @@ public:
   /**
    * \brief This function will write header information about the model parameters to file
    * \param filename is the name of the file to write the model information to
-   * \param Likely is the LikelihoodPtrVector containing the likelihood components for the current model
+   * \param likevec is the LikelihoodPtrVector containing the likelihood components for the current model
    */
-  void writeInitialInformation(const char* const filename, const LikelihoodPtrVector& Likely);
+  void writeInitialInformation(const char* const filename, const LikelihoodPtrVector& likevec);
   /**
    * \brief This function will write current information about the model parameters to file
    * \param filename is the name of the file to write the model information to
-   * \param Likely is the LikelihoodPtrVector containing the likelihood components for the current model
+   * \param likevec is the LikelihoodPtrVector containing the likelihood components for the current model
    * \param prec is the precision to use in the output file
    */
-  void writeValues(const char* const filename, const LikelihoodPtrVector& Likely, int prec) const;
+  void writeValues(const char* const filename, const LikelihoodPtrVector& likevec, int prec) const;
   /**
    * \brief This function will write header information about the model parameters to file in a column format
    * \param filename is the name of the file to write the model information to
@@ -172,14 +172,14 @@ public:
   void writeParamsInColumns(const char* const filename, int prec, int interrupt) const;
   /**
    * \brief This function will display information about the optimised values of the parameters
-   * \param Likely is the LikelihoodPtrVector containing the likelihood components for the current model
+   * \param likevec is the LikelihoodPtrVector containing the likelihood components for the current model
    */
-  void writeOptValues(const LikelihoodPtrVector& Likely) const;
+  void writeOptValues(const LikelihoodPtrVector& likevec) const;
   /**
    * \brief This function will check that the values of the parameters are within the bounds specified in the input file
-   * \param Likely is the LikelihoodPtrVector containing the likelihood components for the current model
+   * \param likevec is the LikelihoodPtrVector containing the likelihood components for the current model
    */
-  void checkBounds(const LikelihoodPtrVector& Likely) const;
+  void checkBounds(const LikelihoodPtrVector& likevec) const;
   /**
    * \brief This function will return the flag used to denote whether the bounds of the parameters have been specified or not
    */

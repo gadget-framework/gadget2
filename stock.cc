@@ -34,7 +34,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
   CommentStream subdata(datafile);
-  keeper->setString(this->Name());
+  keeper->setString(this->getName());
 
   //read the area data
   infile >> ws;
@@ -107,10 +107,10 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //Check the growth length groups cover the stock length groups
   checkLengthGroupIsFiner(LgrpDiv, GrowLgrpDiv);
   if (!(isZero(LgrpDiv->minLength() - GrowLgrpDiv->minLength())))
-    handle.logWarning("Warning in stock - minimum lengths don't match for growth of", this->Name());
+    handle.logWarning("Warning in stock - minimum lengths don't match for growth of", this->getName());
   if (!(isZero(LgrpDiv->maxLength() - GrowLgrpDiv->maxLength())))
-    handle.logWarning("Warning in stock - maximum lengths don't match for growth of", this->Name());
-  handle.logMessage("Read basic stock data for stock", this->Name());
+    handle.logWarning("Warning in stock - maximum lengths don't match for growth of", this->getName());
+  handle.logMessage("Read basic stock data for stock", this->getName());
 
   //read the growth function data
   readWordAndVariable(infile, "doesgrow", doesgrow);
@@ -118,7 +118,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     grower = new Grower(infile, LgrpDiv, GrowLgrpDiv, areas, TimeInfo, keeper, refweight, Area, grlenindex);
   else
     grower = 0;
-  handle.logMessage("Read growth data for stock", this->Name());
+  handle.logMessage("Read growth data for stock", this->getName());
 
   //read the natural mortality data
   infile >> text;
@@ -126,24 +126,24 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     naturalm = new NaturalM(infile, minage, maxage, TimeInfo, keeper);
   else
     handle.Unexpected("naturalmortality", text);
-  handle.logMessage("Read natural mortality data for stock", this->Name());
+  handle.logMessage("Read natural mortality data for stock", this->getName());
 
   //read the prey data
   readWordAndVariable(infile, "iseaten", iseaten);
   if (iseaten)
-    prey = new StockPrey(infile, areas, this->Name(), minage, maxage, keeper);
+    prey = new StockPrey(infile, areas, this->getName(), minage, maxage, keeper);
   else
     prey = 0;
-  handle.logMessage("Read prey data for stock", this->Name());
+  handle.logMessage("Read prey data for stock", this->getName());
 
   //read the predator data
   readWordAndVariable(infile, "doeseat", doeseat);
   if (doeseat)
-    predator = new StockPredator(infile, this->Name(), areas, LgrpDiv,
+    predator = new StockPredator(infile, this->getName(), areas, LgrpDiv,
       GrowLgrpDiv, minage, maxage, TimeInfo, keeper);
   else
     predator = 0;
-  handle.logMessage("Read predator data for stock", this->Name());
+  handle.logMessage("Read predator data for stock", this->getName());
 
   //read the initial conditions
   infile >> text;
@@ -151,7 +151,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     initial = new InitialCond(infile, areas, keeper, refweight, Area);
   else
     handle.Unexpected("initialconditions", text);
-  handle.logMessage("Read initial conditions data for stock", this->Name());
+  handle.logMessage("Read initial conditions data for stock", this->getName());
 
   //read the migration data
   readWordAndVariable(infile, "doesmigrate", doesmigrate);
@@ -177,7 +177,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     migration = 0;
-  handle.logMessage("Read migration data for stock", this->Name());
+  handle.logMessage("Read migration data for stock", this->getName());
 
   //read the maturation data
   readWordAndVariable(infile, "doesmature", doesmature);
@@ -212,7 +212,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     maturity = 0;
-  handle.logMessage("Read maturity data for stock", this->Name());
+  handle.logMessage("Read maturity data for stock", this->getName());
 
   //read the movement data
   readWordAndVariable(infile, "doesmove", doesmove);
@@ -222,7 +222,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     transition = 0;
-  handle.logMessage("Read transition data for stock", this->Name());
+  handle.logMessage("Read transition data for stock", this->getName());
 
   //read the renewal data
   readWordAndVariable(infile, "doesrenew", doesrenew);
@@ -240,7 +240,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     renewal = 0;
-  handle.logMessage("Read renewal data for stock", this->Name());
+  handle.logMessage("Read renewal data for stock", this->getName());
 
   //read the spawning data
   readWordAndVariable(infile, "doesspawn", doesspawn);
@@ -258,7 +258,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     spawner = 0;
-  handle.logMessage("Read spawning data for stock", this->Name());
+  handle.logMessage("Read spawning data for stock", this->getName());
 
   infile >> ws;
   if (!infile.eof()) {
@@ -278,7 +278,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
     } else
       stray = 0;
-    handle.logMessage("Read straying data for stock", this->Name());
+    handle.logMessage("Read straying data for stock", this->getName());
   }
 
   //set the birthday for the stock
@@ -352,7 +352,7 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
     if (doesmove)
       transition->Reset();
 
-    handle.logMessage("Reset stock data for stock", this->Name());
+    handle.logMessage("Reset stock data for stock", this->getName());
   }
 }
 
@@ -386,7 +386,7 @@ void Stock::setCI() {
 void Stock::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nStock\nName" << sep << this->Name() << "\nLives on internal areas";
+  outfile << "\nStock\nName" << sep << this->getName() << "\nLives on internal areas";
 
   for (i = 0; i < areas.Size(); i++)
     outfile << sep << areas[i];
@@ -439,18 +439,18 @@ const AgeBandMatrix& Stock::getAgeLengthKeys(int area) const {
 
 const StockPtrVector& Stock::getMatureStocks() {
   if (doesmature == 0)
-    handle.logFailure("Error in stock - no mature stocks defined for", this->Name());
+    handle.logFailure("Error in stock - no mature stocks defined for", this->getName());
   return maturity->getMatureStocks();
 }
 
 const StockPtrVector& Stock::getTransitionStocks() {
   if (doesmove == 0)
-    handle.logFailure("Error in stock - no transition stocks defined for", this->Name());
+    handle.logFailure("Error in stock - no transition stocks defined for", this->getName());
   return transition->getTransitionStocks();
 }
 
 const StockPtrVector& Stock::getStrayStocks() {
   if (doesstray == 0)
-    handle.logFailure("Error in stock - no straying stocks defined for", this->Name());
+    handle.logFailure("Error in stock - no straying stocks defined for", this->getName());
   return stray->getStrayStocks();
 }

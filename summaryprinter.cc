@@ -17,7 +17,7 @@ SummaryPrinter::SummaryPrinter(CommentStream& infile)
   printtimeid = 0;
 
   //Open the printfile
-  char filename[MaxStrLength];
+  filename = new char[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
@@ -40,6 +40,7 @@ SummaryPrinter::SummaryPrinter(CommentStream& infile)
 }
 
 SummaryPrinter::~SummaryPrinter() {
+  delete[] filename;
   outfile.close();
   outfile.clear();
 }
@@ -66,7 +67,7 @@ void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
       case TAGLIKELIHOOD:
       case RECSTATISTICSLIKELIHOOD:
       case MIGRATIONPENALTYLIKELIHOOD:
-        handle.logMessage("Warning in summaryprinter - printing not implemented for", like[i]->Name());
+        handle.logMessage("Warning in summaryprinter - printing not implemented for", like[i]->getName());
         break;
       default:
         handle.logFailure("Error in summaryprinter - unrecognised likelihood type", like[i]->Type());

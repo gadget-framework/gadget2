@@ -129,13 +129,13 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
     tagid = -1;
     if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
       for (i = 0; i < tagvec.Size(); i++)
-        if (strcasecmp(tagvec[i]->Name(), tmptag) == 0)
+        if (strcasecmp(tagvec[i]->getName(), tmptag) == 0)
           tagid = i;
 
       if (tagid == -1) {
         tmpindex = -1;
         for (i = 0; i < Tag.Size(); i++)
-          if (strcasecmp(Tag[i]->Name(), tmptag) == 0)
+          if (strcasecmp(Tag[i]->getName(), tmptag) == 0)
             tmpindex = i;
 
         if (tmpindex == -1) {
@@ -188,7 +188,7 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
 
   timeindex.resize(tagvec.Size(), -1);
   if (count == 0)
-    handle.logWarning("Warning in recstatistics - found no data in the data file for", this->Name());
+    handle.logWarning("Warning in recstatistics - found no data in the data file for", this->getName());
   handle.logMessage("Read recstatistics data file - number of entries", count);
 }
 
@@ -221,13 +221,13 @@ void RecStatistics::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   for (i = 0; i < timeindex.Size(); i++)
     timeindex[i] = -1;
-  handle.logMessage("Reset recstatistics component", this->Name());
+  handle.logMessage("Reset recstatistics component", this->getName());
 }
 
 void RecStatistics::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nRecapture Statistics " << this->Name() << " - likelihood value " << likelihood
+  outfile << "\nRecapture Statistics " << this->getName() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname;
   outfile << "\n\tFleet names:";
   for (i = 0; i < fleetnames.Size(); i++)
@@ -250,7 +250,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
     for (j = 0; j < Fleets.Size(); j++)
-      if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
+      if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
         fleets.resize(1, Fleets[j]);
       }
@@ -267,7 +267,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       found = 0;
       for (j = 0; j < Stocks.Size(); j++)
         if (Stocks[j]->isEaten())
-          if (strcasecmp(stocknames->operator[](i), Stocks[j]->returnPrey()->Name()) == 0) {
+          if (strcasecmp(stocknames->operator[](i), Stocks[j]->returnPrey()->getName()) == 0) {
             found++;
             stocks.resize(1, Stocks[j]);
           }
@@ -310,7 +310,7 @@ void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
       for (i = 0; i < Years.Ncol(t); i++) {
         if (Years[t][i] == TimeInfo->CurrentYear() && Steps[t][i] == TimeInfo->CurrentStep()) {
           if (check == 0)
-            handle.logMessage("Calculating likelihood score for recstatistics component", this->Name());
+            handle.logMessage("Calculating likelihood score for recstatistics component", this->getName());
           timeindex[t] = i;
           aggregator[t]->Sum(TimeInfo);
           check++;

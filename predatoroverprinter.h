@@ -58,10 +58,6 @@ protected:
    * \brief This is the PredatorOverAggregator used to collect information about the overconsumption
    */
   PredatorOverAggregator* aggregator;
-  /**
-   * \brief This ofstream is the file that all the model information gets sent to
-   */
-  ofstream outfile;
 };
 
 #endif

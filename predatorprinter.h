@@ -72,10 +72,6 @@ protected:
    */
   PredatorAggregator* aggregator;
   /**
-   * \brief This ofstream is the file that all the model information gets sent to
-   */
-  ofstream outfile;
-  /**
    * \brief This is the flag used to denote whether the biomass consumed or the numbers consumed is printed to the outfile (default is to print biomass)
    */
   int biomass;

@@ -80,6 +80,11 @@ public:
    */
   virtual void setLikelihood(LikelihoodPtrVector& likevec) {};
   /**
+   * \brief This will return the name of the output file
+   * \return name
+   */
+  const char* getFileName() const { return filename; };
+  /**
    * \brief This will return the type of printer class
    * \return type
    */
@@ -89,6 +94,14 @@ protected:
    * \brief This ActionAtTimes stores information about when the printer output is required in the model
    */
   ActionAtTimes AAT;
+  /**
+   * \brief This is the name of the output file that all the model information will get sent to
+   */
+  char* filename;
+  /**
+   * \brief This ofstream is the file that all the model information gets sent to
+   */
+  ofstream outfile;
   /**
    * \brief This is a flag used to denote whether the printing takes place at the start or the end of the timestep
    * \note the default value is 0, which corresponds to printing at the end of the timestep

@@ -91,9 +91,9 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
               fleetscale *= TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
 
             for (i = 0; i < pred->numPreys(); i++) {
-              if (prey->Name() == pred->Preys(i)->Name()) {
+              if (prey->getName() == pred->Preys(i)->getName()) {
                 const DoubleIndexVector* suitptr = &pred->Suitability(i)[0];
-                const AgeBandMatrix* alptr = &taggingExp->getNumberPriorToEating(area, stocks[h]->Name());
+                const AgeBandMatrix* alptr = &taggingExp->getNumberPriorToEating(area, stocks[h]->getName());
                 for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
                   for (k = 0; k < ages.Ncol(aggrAge); k++) {
                     age = ages[aggrAge][k];

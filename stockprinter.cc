@@ -38,7 +38,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
     handle.Message("Error in stockprinter - failed to read stocks");
 
   //read in area aggregation from file
-  char filename[MaxStrLength];
+  filename = new char[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -142,7 +142,7 @@ void StockPrinter::setStock(StockPtrVector& stockvec) {
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < stocknames.Size(); j++)
-      if (strcasecmp(stockvec[i]->Name(), stocknames[j]) == 0) {
+      if (strcasecmp(stockvec[i]->getName(), stocknames[j]) == 0) {
         stocks.resize(1);
         stocks[index++] = stockvec[i];
       }
@@ -150,7 +150,7 @@ void StockPrinter::setStock(StockPtrVector& stockvec) {
   if (stocks.Size() != stocknames.Size()) {
     handle.logWarning("Error in stockprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      handle.logWarning("Error in stockprinter - found stock", stocks[i]->Name());
+      handle.logWarning("Error in stockprinter - found stock", stocks[i]->getName());
     for (i = 0; i < stocknames.Size(); i++)
       handle.logWarning("Error in stockprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
@@ -158,8 +158,8 @@ void StockPrinter::setStock(StockPtrVector& stockvec) {
 
   for (i = 0; i < stocks.Size(); i++)
     for (j = 0; j < stocks.Size(); j++)
-      if ((strcasecmp(stocks[i]->Name(), stocks[j]->Name()) == 0) && (i != j))
-        handle.logFailure("Error in stockprinter - repeated stock", stocks[i]->Name());
+      if ((strcasecmp(stocks[i]->getName(), stocks[j]->getName()) == 0) && (i != j))
+        handle.logFailure("Error in stockprinter - repeated stock", stocks[i]->getName());
 
   aggregator = new StockAggregator(stocks, LgrpDiv, areas, ages);
 }
@@ -207,6 +207,7 @@ StockPrinter::~StockPrinter() {
   outfile.clear();
   delete LgrpDiv;
   delete aggregator;
+  delete[] filename;
   int i;
   for (i = 0; i < stocknames.Size(); i++)
     delete[] stocknames[i];

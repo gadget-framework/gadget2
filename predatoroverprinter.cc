@@ -37,7 +37,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
     handle.Message("Error in predatoroverprinter - failed to read predators");
 
   //read in area aggregation from file
-  char filename[MaxStrLength];
+  filename = new char[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -131,7 +131,7 @@ void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec) {
 
   for (i = 0; i < predatorvec.Size(); i++) {
     for (j = 0; j < predatornames.Size(); j++)
-      if (strcasecmp(predatorvec[i]->Name(), predatornames[j]) == 0) {
+      if (strcasecmp(predatorvec[i]->getName(), predatornames[j]) == 0) {
         predators.resize(1);
         predators[index++] = predatorvec[i];
       }
@@ -140,7 +140,7 @@ void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec) {
   if (predators.Size() != predatornames.Size()) {
     handle.logWarning("Error in predatoroverprinter - failed to match predators");
     for (i = 0; i < predatorvec.Size(); i++)
-      handle.logWarning("Error in predatoroverprinter - found predator", predatorvec[i]->Name());
+      handle.logWarning("Error in predatoroverprinter - found predator", predatorvec[i]->getName());
     for (i = 0; i < predatornames.Size(); i++)
       handle.logWarning("Error in predatoroverprinter - looking for predator", predatornames[i]);
     exit(EXIT_FAILURE);
@@ -185,6 +185,7 @@ void PredatorOverPrinter::Print(const TimeClass* const TimeInfo, int printtime) 
 PredatorOverPrinter::~PredatorOverPrinter() {
   outfile.close();
   outfile.clear();
+  delete[] filename;
   delete predLgrpDiv;
   delete aggregator;
   int i;

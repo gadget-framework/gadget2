@@ -35,31 +35,62 @@ extern ErrorHandler handle;
 void Ecosystem::Initialise() {
   PreyPtrVector preyvec;
   PredatorPtrVector predvec;
-  int preyindex = 0;
-  int predindex = 0;
-  int i;
+  int i, j;
 
+  //first check that the names of the components are unique
+  for (i = 0; i < fleetvec.Size(); i++)
+    for (j = 0; j < fleetvec.Size(); j++)
+      if ((strcasecmp(fleetvec[i]->getName(), fleetvec[j]->getName()) == 0) && (i != j))
+        handle.logFailure("Error in input files - repeated fleet", fleetvec[i]->getName());
+
+  for (i = 0; i < tagvec.Size(); i++)
+    for (j = 0; j < tagvec.Size(); j++)
+      if ((strcasecmp(tagvec[i]->getName(), tagvec[j]->getName()) == 0) && (i != j))
+        handle.logFailure("Error in input files - repeated tagging experiment", tagvec[i]->getName());
+
+  for (i = 0; i < otherfoodvec.Size(); i++)
+    for (j = 0; j < otherfoodvec.Size(); j++)
+      if ((strcasecmp(otherfoodvec[i]->getName(), otherfoodvec[j]->getName()) == 0) && (i != j))
+        handle.logFailure("Error in input files - repeated other food", otherfoodvec[i]->getName());
+
+  for (i = 0; i < stockvec.Size(); i++)
+    for (j = 0; j < stockvec.Size(); j++)
+      if ((strcasecmp(stockvec[i]->getName(), stockvec[j]->getName()) == 0) && (i != j))
+        handle.logFailure("Error in input files - repeated stock", stockvec[i]->getName());
+
+  for (i = 0; i < likevec.Size(); i++)
+    for (j = 0; j < likevec.Size(); j++)
+      if ((strcasecmp(likevec[i]->getName(), likevec[j]->getName()) == 0) && (i != j))
+        handle.logFailure("Error in input files - repeated likelihood component", likevec[i]->getName());
+
+  for (i = 0; i < printvec.Size(); i++)
+    for (j = 0; j < printvec.Size(); j++)
+      if ((strcasecmp(printvec[i]->getFileName(), printvec[j]->getFileName()) == 0) && (i != j))
+        handle.logFailure("Error in input files - repeated print file", printvec[i]->getFileName());
+
+  //OK, next create a list of all the predators and all the preys
   for (i = 0; i < stockvec.Size(); i++) {
     if (stockvec[i]->isEaten()) {
       preyvec.resize(1);
-      preyvec[preyindex++] = stockvec[i]->returnPrey();
+      preyvec[preyvec.Size() - 1] = stockvec[i]->returnPrey();
     }
     if (stockvec[i]->doesEat()) {
       predvec.resize(1);
-      predvec[predindex++] = stockvec[i]->returnPredator();
+      predvec[predvec.Size() - 1] = stockvec[i]->returnPredator();
     }
   }
 
   for (i = 0; i < otherfoodvec.Size(); i++) {
     preyvec.resize(1);
-    preyvec[preyindex++] = otherfoodvec[i]->returnPrey();
+    preyvec[preyvec.Size() - 1] = otherfoodvec[i]->returnPrey();
   }
 
   for (i = 0; i < fleetvec.Size(); i++) {
     predvec.resize(1);
-    predvec[predindex++] = fleetvec[i]->returnPredator();
+    predvec[predvec.Size() - 1] = fleetvec[i]->returnPredator();
   }
 
+  //Now we can start initialising things
   for (i = 0; i < predvec.Size(); i++)
     predvec[i]->setPrey(preyvec, keeper);
   for (i = 0; i < stockvec.Size(); i++)
@@ -70,45 +101,45 @@ void Ecosystem::Initialise() {
     tagvec[i]->setStock(stockvec);
 
   //This is a good place to initialise the likelihood classes.
-  for (i = 0; i < Likely.Size(); i++) {
-    switch(Likely[i]->Type()) {
+  for (i = 0; i < likevec.Size(); i++) {
+    switch(likevec[i]->Type()) {
       case SURVEYINDICESLIKELIHOOD:
-        ((SurveyIndices*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
+        ((SurveyIndices*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case UNDERSTOCKINGLIKELIHOOD:
-        ((UnderStocking*)Likely[i])->setPredators(predvec);
+        ((UnderStocking*)likevec[i])->setPredators(predvec);
         break;
       case CATCHDISTRIBUTIONLIKELIHOOD:
-        ((CatchDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
+        ((CatchDistribution*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case CATCHSTATISTICSLIKELIHOOD:
-        ((CatchStatistics*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
+        ((CatchStatistics*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case STOMACHCONTENTLIKELIHOOD:
-        ((StomachContent*)Likely[i])->setPredatorsAndPreys(predvec, preyvec);
+        ((StomachContent*)likevec[i])->setPredatorsAndPreys(predvec, preyvec);
         break;
       case TAGLIKELIHOOD:
-        ((Recaptures*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
+        ((Recaptures*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case STOCKDISTRIBUTIONLIKELIHOOD:
-        ((StockDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
+        ((StockDistribution*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case MIGRATIONPENALTYLIKELIHOOD:
-        ((MigrationPenalty*)Likely[i])->setStocks(stockvec);
+        ((MigrationPenalty*)likevec[i])->setStocks(stockvec);
         break;
       case CATCHINTONSLIKELIHOOD:
-        ((CatchInTons*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
+        ((CatchInTons*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case RECSTATISTICSLIKELIHOOD:
-        ((RecStatistics*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
+        ((RecStatistics*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case SURVEYDISTRIBUTIONLIKELIHOOD:
-        ((SurveyDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
+        ((SurveyDistribution*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case BOUNDLIKELIHOOD:
         break;
       default:
-        handle.logFailure("Error when initialising model - unrecognised likelihood type", Likely[i]->Type());
+        handle.logFailure("Error when initialising model - unrecognised likelihood type", likevec[i]->Type());
         break;
     }
   }
@@ -141,10 +172,10 @@ void Ecosystem::Initialise() {
         ((StockFullPrinter*)(printvec[i]))->setStock(stockvec);
         break;
       case LIKELIHOODPRINTER:
-        ((LikelihoodPrinter*)(printvec[i]))->setLikelihood(Likely);
+        ((LikelihoodPrinter*)(printvec[i]))->setLikelihood(likevec);
         break;
       case LIKELIHOODSUMMARYPRINTER:
-        ((SummaryPrinter*)(printvec[i]))->setLikelihood(Likely);
+        ((SummaryPrinter*)(printvec[i]))->setLikelihood(likevec);
         break;
       default:
         handle.logFailure("Error when initialising model - unrecognised printer type", printvec[i]->Type());

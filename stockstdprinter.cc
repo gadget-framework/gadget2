@@ -20,8 +20,9 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
   : Printer(STOCKSTDPRINTER), stockname(0), LgrpDiv(0), aggregator(0), preyinfo(0) {
 
   char text[MaxStrLength];
-  char filename[MaxStrLength];
   strncpy(text, "", MaxStrLength);
+
+  filename = new char[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
 
   stockname = new char[MaxStrLength];
@@ -107,6 +108,7 @@ StockStdPrinter::~StockStdPrinter() {
   delete preyinfo;
   delete aggregator;
   delete LgrpDiv;
+  delete[] filename;
   delete[] stockname;
 }
 
@@ -118,7 +120,7 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < stocknames.Size(); j++)
-      if (strcasecmp(stockvec[i]->Name(), stocknames[j]) == 0) {
+      if (strcasecmp(stockvec[i]->getName(), stocknames[j]) == 0) {
         stocks.resize(1);
         stocks[index++] = stockvec[i];
       }
@@ -126,7 +128,7 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
   if (stocks.Size() != stocknames.Size()) {
     handle.logWarning("Error in stockstdprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      handle.logWarning("Error in stockstdprinter - found stock", stocks[i]->Name());
+      handle.logWarning("Error in stockstdprinter - found stock", stocks[i]->getName());
     for (i = 0; i < stocknames.Size(); i++)
       handle.logWarning("Error in stockstdprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);

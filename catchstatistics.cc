@@ -224,7 +224,7 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
   }
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logWarning("Warning in catchstatistics - found no data in the data file for", this->Name());
+    handle.logWarning("Warning in catchstatistics - found no data in the data file for", this->getName());
   handle.logMessage("Read catchstatistics data file - number of entries", count);
 }
 
@@ -255,13 +255,13 @@ CatchStatistics::~CatchStatistics() {
 void CatchStatistics::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
-  handle.logMessage("Reset catchstatistics component", this->Name());
+  handle.logMessage("Reset catchstatistics component", this->getName());
 }
 
 void CatchStatistics::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch Statistics " << this->Name() << " - likelihood value " << likelihood
+  outfile << "\nCatch Statistics " << this->getName() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -281,7 +281,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
     for (j = 0; j < Fleets.Size(); j++)
-      if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
+      if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
         fleets.resize(1, Fleets[j]);
       }
@@ -295,7 +295,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
     found = 0;
     for (j = 0; j < Stocks.Size(); j++)
       if (Stocks[j]->isEaten())
-        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->getName()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);
         }
@@ -317,7 +317,7 @@ void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    handle.logMessage("Calculating likelihood score for catchstatistics component", this->Name());
+    handle.logMessage("Calculating likelihood score for catchstatistics component", this->getName());
     aggregator->Sum(TimeInfo);
     if (aggregator->checkCatchData() == 1)
       handle.logWarning("Warning in catchstatistics - zero catch found");
@@ -428,7 +428,7 @@ void CatchStatistics::SummaryPrint(ofstream& outfile) {
     for (area = 0; area < likelihoodValues.Ncol(year); area++)
       outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
         << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(largewidth) << this->Name() << sep << setprecision(smallprecision)
+        << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
         << setw(smallwidth) << weight << sep << setprecision(largeprecision)
         << setw(largewidth) << likelihoodValues[year][area] << endl;
 

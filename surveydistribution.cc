@@ -242,7 +242,7 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logWarning("Warning in surveydistribution - found no data in the data file for", this->Name());
+    handle.logWarning("Warning in surveydistribution - found no data in the data file for", this->getName());
   handle.logMessage("Read surveydistribution data file - number of entries", count);
 }
 
@@ -276,12 +276,12 @@ SurveyDistribution::~SurveyDistribution() {
 void SurveyDistribution::Reset(const Keeper* const keeper) {
   timeindex = 0;
   Likelihood::Reset(keeper);
-  handle.logMessage("Reset surveydistribution component", this->Name());
+  handle.logMessage("Reset surveydistribution component", this->getName());
 }
 
 void SurveyDistribution::Print(ofstream& outfile) const {
   int i;
-  outfile << "\nSurvey Distribution " << this->Name() << " - likelihood value " << likelihood
+  outfile << "\nSurvey Distribution " << this->getName() << " - likelihood value " << likelihood
     << "\n\tFunction " << liketype << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -323,7 +323,7 @@ void SurveyDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVect
   for (i = 0; i < stocknames.Size(); i++) {
     found = 0;
     for (j = 0; j < Stocks.Size(); j++)
-      if (strcasecmp(stocknames[i], Stocks[j]->Name()) == 0) {
+      if (strcasecmp(stocknames[i], Stocks[j]->getName()) == 0) {
         found++;
         stocks.resize(1, Stocks[j]);
       }
@@ -385,7 +385,7 @@ void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
   aggregator->Sum();
-  handle.logMessage("Calculating likelihood score for surveydistribution component", this->Name());
+  handle.logMessage("Calculating likelihood score for surveydistribution component", this->getName());
 
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns only one element.
   const AgeBandMatrix* alptr = &(aggregator->returnSum()[0]);
@@ -514,7 +514,7 @@ void SurveyDistribution::SummaryPrint(ofstream& outfile) {
     for (area = 0; area < areaindex.Size(); area++) {
       outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
         << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(largewidth) << this->Name() << sep << setprecision(smallprecision)
+        << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
         << setw(smallwidth) << weight << sep << setprecision(largeprecision)
         << setw(largewidth) << likelihoodValues[year] << endl;
     }

@@ -48,7 +48,7 @@ void SIByFleetOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!(this->isToSum(TimeInfo)))
     return;
 
-  handle.logMessage("Calculating index for surveyindex component", this->SIName());
+  handle.logMessage("Calculating index for surveyindex component", this->getSIName());
   aggregator->Sum(TimeInfo);
   if (aggregator->checkCatchData() == 1)
     handle.logWarning("Warning in surveyindex - zero catch found");

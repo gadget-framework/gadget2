@@ -198,7 +198,7 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < spawnStockNames.Size(); j++)
-      if (strcasecmp(stockvec[i]->Name(), spawnStockNames[j]) == 0) {
+      if (strcasecmp(stockvec[i]->getName(), spawnStockNames[j]) == 0) {
         spawnStocks.resize(1);
         tmpratio.resize(1);
         spawnStocks[index] = stockvec[i];
@@ -209,7 +209,7 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
   if (index != spawnStockNames.Size()) {
     handle.logWarning("Error in spawner - failed to match spawning stocks");
     for (i = 0; i < stockvec.Size(); i++)
-      handle.logWarning("Error in spawner - found stock", stockvec[i]->Name());
+      handle.logWarning("Error in spawner - found stock", stockvec[i]->getName());
     for (i = 0; i < spawnStockNames.Size(); i++)
       handle.logWarning("Error in spawner - looking for stock", spawnStockNames[i]);
     exit(EXIT_FAILURE);
@@ -439,8 +439,8 @@ double SpawnData::calcRecruitNumber() {
 void SpawnData::Print(ofstream& outfile) const {
   int i;
   outfile << "\nSpawning data\n\tNames of spawned stocks:";
-  for (i = 0; i < spawnStocks.Size(); i++)
-    outfile << sep << (const char*)(spawnStocks[i]->Name());
+  for (i = 0; i < spawnStockNames.Size(); i++)
+    outfile << sep << spawnStockNames[i];
   outfile << "\n\t";
   spawnLgrpDiv->Print(outfile);
   outfile << "\tStored numbers:\n";

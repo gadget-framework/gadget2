@@ -34,7 +34,7 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
 
   for (i = 0; i < predators.Size(); i++)
     for (j = 0; j < preys.Size(); j++)
-      if (predators[i]->doesEat(preys[j]->Name()))
+      if (predators[i]->doesEat(preys[j]->getName()))
         doeseat[i][j] = 1;
 
   DoubleMatrix dm(predLgrpDiv->numLengthGroups(), preyLgrpDiv->numLengthGroups(), 1.0);
@@ -65,7 +65,7 @@ void PredatorAggregator::Sum() {
           for (j = 0; j < areas.Ncol(l); j++) {
             area = areas[l][j];
             if (predators[g]->isInArea(area) && preys[h]->isInArea(area)) {
-              const BandMatrix* bptr = &predators[g]->Consumption(area, preys[h]->Name());
+              const BandMatrix* bptr = &predators[g]->Consumption(area, preys[h]->getName());
               for (k = bptr->minRow(); k <= bptr->maxRow(); k++) {
                 predLength = predConv[g][k];
                 if (predLength >= 0) {
@@ -98,8 +98,8 @@ void PredatorAggregator::NumberSum() {
           for (j = 0; j < areas.Ncol(l); j++) {
             area = areas[l][j];
             if (predators[g]->isInArea(area) && preys[h]->isInArea(area)) {
-              const BandMatrix* bptr = &predators[g]->Consumption(area, preys[h]->Name());
-              const PopInfoVector* preymeanw = &predators[g]->getNumberPriorToEating(area, preys[h]->Name());
+              const BandMatrix* bptr = &predators[g]->Consumption(area, preys[h]->getName());
+              const PopInfoVector* preymeanw = &predators[g]->getNumberPriorToEating(area, preys[h]->getName());
               for (k = bptr->minRow(); k <= bptr->maxRow(); k++) {
                 predLength = predConv[g][k];
                 if (predLength >= 0) {

@@ -306,7 +306,7 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logWarning("Warning in catchdistribution - found no data in the data file for", this->Name());
+    handle.logWarning("Warning in catchdistribution - found no data in the data file for", this->getName());
   handle.logMessage("Read catchdistribution data file - number of entries", count);
 }
 
@@ -340,13 +340,13 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
   illegal = 0;
-  handle.logMessage("Reset catchdistribution component", this->Name());
+  handle.logMessage("Reset catchdistribution component", this->getName());
 }
 
 void CatchDistribution::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch Distribution " << this->Name() << " - likelihood value " << likelihood
+  outfile << "\nCatch Distribution " << this->getName() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -412,7 +412,7 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
     for (j = 0; j < Fleets.Size(); j++)
-      if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
+      if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found ++;
         fleets.resize(1, Fleets[j]);
       }
@@ -425,7 +425,7 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->isEaten())
-        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->getName()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);
         }
@@ -486,7 +486,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
     }
     if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
       likelihood += l;
-      handle.logMessage("Calculating likelihood score for catchdistribution component", this->Name());
+      handle.logMessage("Calculating likelihood score for catchdistribution component", this->getName());
       handle.logMessage("The likelihood score for this component on this timestep is", l);
     }
     timeindex++;
@@ -875,7 +875,7 @@ void CatchDistribution::SummaryPrint(ofstream& outfile) {
       if (yearly == 0) {
         outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
           << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-          << setw(largewidth) << this->Name() << sep << setw(smallwidth) << weight
+          << setw(largewidth) << this->getName() << sep << setw(smallwidth) << weight
           << sep << setprecision(largeprecision) << setw(largewidth)
           << likelihoodValues[year][area] << endl;
       } else {
@@ -884,7 +884,7 @@ void CatchDistribution::SummaryPrint(ofstream& outfile) {
         } else {
           outfile << setw(lowwidth) << Years[year] << "  all "
             << setw(printwidth) << areaindex[area] << sep
-            << setw(largewidth) << this->Name() << sep << setprecision(smallprecision)
+            << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
             << setw(smallwidth) << weight << sep << setprecision(largeprecision)
             << setw(largewidth) << likelihoodValues[year][area] << endl;
         }

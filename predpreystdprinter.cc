@@ -14,9 +14,7 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile, const TimeClass* c
   : Printer(PREDPREYSTDPRINTER), predname(0), preyname(0) {
 
   char text[MaxStrLength];
-  char filename[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  strncpy(filename, "", MaxStrLength);
 
   predname = new char[MaxStrLength];
   strncpy(predname, "", MaxStrLength);
@@ -35,6 +33,8 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile, const TimeClass* c
   }
 
   //open the printfile
+  filename = new char[MaxStrLength];
+  strncpy(filename, "", MaxStrLength);
   //readWordAndValue(infile, "printfile", filename);
   if (strcasecmp(text, "printfile") == 0)
     infile >> filename >> ws >> text >> ws;
@@ -78,6 +78,7 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile, const TimeClass* c
 PredPreyStdPrinter::~PredPreyStdPrinter() {
   outfile.close();
   outfile.clear();
+  delete[] filename;
   delete[] predname;
   delete[] preyname;
 }
@@ -94,7 +95,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
 
   for (i = 0; i < stockvec.Size(); i++) {
     if (stockvec[i]->doesEat()) {
-      if (strcasecmp(stockvec[i]->returnPredator()->Name(), predname) == 0) {
+      if (strcasecmp(stockvec[i]->returnPredator()->getName(), predname) == 0) {
         if (predator)
           handle.logFailure("Error in predpreystdprinter - repeated predator", predname);
 
@@ -110,7 +111,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
       }
     }
     if (stockvec[i]->isEaten()) {
-      if (strcasecmp(stockvec[i]->returnPrey()->Name(), preyname) == 0) {
+      if (strcasecmp(stockvec[i]->returnPrey()->getName(), preyname) == 0) {
         if (prey)
           handle.logFailure("Error in predpreystdprinter - repeated prey", preyname);
 
@@ -129,7 +130,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
 
   //And now check the predators.
   for (i = 0; i < predvec.Size(); i++) {
-    if (strcasecmp(predvec[i]->Name(), predname) == 0) {
+    if (strcasecmp(predvec[i]->getName(), predname) == 0) {
       if (((PopPredator*)predvec[i] != predator) && (predator))
         handle.logFailure("Error in predpreystdprinter - repeated predator", predname);
 
@@ -139,7 +140,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
 
   //And now check the preys.
   for (i = 0; i < preyvec.Size(); i++) {
-    if (strcasecmp(preyvec[i]->Name(), preyname) == 0) {
+    if (strcasecmp(preyvec[i]->getName(), preyname) == 0) {
       if (preyvec[i] != prey && prey)
         handle.logFailure("Error in predpreystdprinter - repeated prey", preyname);
 

@@ -36,7 +36,7 @@ void Maturity::setStock(StockPtrVector& stockvec) {
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < matureStockNames.Size(); j++)
-      if (strcasecmp(stockvec[i]->Name(), matureStockNames[j]) == 0) {
+      if (strcasecmp(stockvec[i]->getName(), matureStockNames[j]) == 0) {
         matureStocks.resize(1);
         tmpratio.resize(1);
         matureStocks[index] = stockvec[i];
@@ -47,7 +47,7 @@ void Maturity::setStock(StockPtrVector& stockvec) {
   if (index != matureStockNames.Size()) {
     handle.logWarning("Error in maturity - failed to match mature stocks");
     for (i = 0; i < stockvec.Size(); i++)
-      handle.logWarning("Error in maturity - found stock", stockvec[i]->Name());
+      handle.logWarning("Error in maturity - found stock", stockvec[i]->getName());
     for (i = 0; i < matureStockNames.Size(); i++)
       handle.logWarning("Error in maturity - looking for stock", matureStockNames[i]);
     exit(EXIT_FAILURE);
@@ -82,8 +82,8 @@ void Maturity::setStock(StockPtrVector& stockvec) {
 void Maturity::Print(ofstream& outfile) const {
   int i;
   outfile << "\nMaturity\n\tNames of mature stocks:";
-   for (i = 0; i < matureStocks.Size(); i++)
-    outfile << sep << (const char*)(matureStocks[i]->Name());
+   for (i = 0; i < matureStockNames.Size(); i++)
+    outfile << sep << matureStockNames[i];
   outfile << "\n\tStored numbers:\n";
   for (i = 0; i < areas.Size(); i++) {
     outfile << "\tInternal area " << areas[i] << endl;

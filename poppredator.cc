@@ -120,7 +120,7 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
     }
   }
 
-  handle.logMessage("Reset predatation data for predator", this->Name());
+  handle.logMessage("Reset predatation data for predator", this->getName());
 }
 
 void PopPredator::resizeObjects() {

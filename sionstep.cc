@@ -171,7 +171,7 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
   }
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logWarning("Warning in surveyindex - found no data in the data file for", this->SIName());
+    handle.logWarning("Warning in surveyindex - found no data in the data file for", this->getSIName());
   handle.logMessage("Read surveyindex data file - number of entries", count);
 }
 
@@ -182,7 +182,7 @@ void SIOnStep::Reset(const Keeper* const keeper) {
   for (i = 0; i < modelIndex.Nrow(); i++)
     for (j = 0; j < modelIndex.Ncol(i); j++)
       modelIndex[i][j] = 0.0;
-  handle.logMessage("Reset surveyindex component", this->SIName());
+  handle.logMessage("Reset surveyindex component", this->getSIName());
 }
 
 void SIOnStep::Print(ofstream& outfile) const {
@@ -282,7 +282,7 @@ double SIOnStep::calcRegression() {
     score += this->fitRegression(stocksize, indices, col);
   }
 
-  handle.logMessage("Calculating likelihood score for surveyindex component", this->SIName());
+  handle.logMessage("Calculating likelihood score for surveyindex component", this->getSIName());
   handle.logMessage("The likelihood score from the regression line for this component is", score);
   return score;
 }

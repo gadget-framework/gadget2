@@ -36,23 +36,17 @@ void Ecosystem::readFleet(CommentStream& infile) {
   strncpy(text, "", MaxStrLength);
   strncpy(value, "", MaxStrLength);
 
-  int i = 0;
   while (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[fleetcomponent]") == 0))
       handle.Unexpected("[fleetcomponent]", text);
 
     infile >> text >> value;
-    fleetnames.resize(1);
     fleetvec.resize(1);
-    i = fleetnames.Size() - 1;
-    fleetnames[i] = new char[strlen(value) + 1];
-    strcpy(fleetnames[i], value);
-
     if (strcasecmp(text, "totalfleet") == 0)
-      fleetvec[i] = new Fleet(infile, fleetnames[i], Area, TimeInfo, keeper, TOTALFLEET);
+      fleetvec[fleetvec.Size() - 1] = new Fleet(infile, value, Area, TimeInfo, keeper, TOTALFLEET);
     else if (strcasecmp(text, "linearfleet") == 0)
-      fleetvec[i] = new Fleet(infile, fleetnames[i], Area, TimeInfo, keeper, LINEARFLEET);
+      fleetvec[fleetvec.Size() - 1] = new Fleet(infile, value, Area, TimeInfo, keeper, LINEARFLEET);
     else if (strcasecmp(text, "mortalityfleet") == 0)
       handle.Message("The mortalityfleet fleet type is no longer supported");
     else
@@ -71,21 +65,15 @@ void Ecosystem::readTagging(CommentStream& infile) {
   strncpy(text, "", MaxStrLength);
   strncpy(value, "", MaxStrLength);
 
-  int i = 0;
   while (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[tagcomponent]") == 0))
       handle.Unexpected("[tagcomponent]", text);
 
     infile >> text >> value;
-    tagnames.resize(1);
     tagvec.resize(1);
-    i = tagnames.Size() - 1;
-    tagnames[i] = new char[strlen(value) + 1];
-    strcpy(tagnames[i], value);
-
     if (strcasecmp(text, "tagid") == 0)
-      tagvec[i] = new Tags(infile, tagnames[i], Area, TimeInfo, keeper, stockvec);
+      tagvec[tagvec.Size() - 1] = new Tags(infile, value, Area, TimeInfo, keeper, stockvec);
     else
       handle.Unexpected("tagid", text);
 
@@ -102,21 +90,15 @@ void Ecosystem::readOtherFood(CommentStream& infile) {
   strncpy(text, "", MaxStrLength);
   strncpy(value, "", MaxStrLength);
 
-  int i = 0;
   while (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[foodcomponent]") == 0))
       handle.Unexpected("[foodcomponent]", text);
 
     infile >> text >> value;
-    otherfoodnames.resize(1);
     otherfoodvec.resize(1);
-    i = otherfoodnames.Size() - 1;
-    otherfoodnames[i] = new char[strlen(value) + 1];
-    strcpy(otherfoodnames[i], value);
-
     if (strcasecmp(text, "foodname") == 0)
-      otherfoodvec[i] = new OtherFood(infile, otherfoodnames[i], Area, TimeInfo, keeper);
+      otherfoodvec[otherfoodvec.Size() - 1] = new OtherFood(infile, value, Area, TimeInfo, keeper);
     else
       handle.Unexpected("foodname", text);
 
@@ -139,14 +121,8 @@ void Ecosystem::readStock(CommentStream& infile) {
     handle.Unexpected("stockname", text);
 
   infile >> text;
-  stocknames.resize(1);
   stockvec.resize(1);
-  int i = stocknames.Size() - 1;
-
-  stocknames[i] = new char[strlen(text) + 1];
-  strcpy(stocknames[i], text);
-
-  stockvec[i] = new Stock(infile, stocknames[i], Area, TimeInfo, keeper);
+  stockvec[stockvec.Size() - 1] = new Stock(infile, text, Area, TimeInfo, keeper);
 
   handle.logMessage("Read stock OK - created stock", text);
 }
@@ -241,18 +217,15 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
     readWordAndVariable(infile, "weight", weight);
     readWordAndValue(infile, "type", type);
 
-    Likely.resize(1);
-    likelihoodnames.resize(1);
-    i = Likely.Size() - 1;
-    likelihoodnames[i] = new char[strlen(name) + 1];
-    strcpy(likelihoodnames[i], name);
+    likevec.resize(1);
+    i = likevec.Size() - 1;
 
     if (strcasecmp(type, "penalty") == 0) {
       readWordAndValue(infile, "datafile", datafilename);
       datafile.open(datafilename, ios::in);
       handle.checkIfFailure(datafile, datafilename);
       handle.Open(datafilename);
-      Likely[i] = new BoundLikelihood(subdata, Area, TimeInfo, keeper, weight, name);
+      likevec[i] = new BoundLikelihood(subdata, Area, TimeInfo, keeper, weight, name);
       handle.Close();
       datafile.close();
       datafile.clear();
@@ -266,37 +239,37 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       }
 
     } else if (strcasecmp(type, "understocking") == 0) {
-      Likely[i] = new UnderStocking(infile, Area, TimeInfo, weight, name);
+      likevec[i] = new UnderStocking(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "catchstatistics") == 0) {
-      Likely[i] = new CatchStatistics(infile, Area, TimeInfo, weight, name);
+      likevec[i] = new CatchStatistics(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "catchdistribution") == 0) {
-      Likely[i] = new CatchDistribution(infile, Area, TimeInfo, keeper, weight, name);
+      likevec[i] = new CatchDistribution(infile, Area, TimeInfo, keeper, weight, name);
 
     } else if (strcasecmp(type, "stockdistribution") == 0) {
-      Likely[i] = new StockDistribution(infile, Area, TimeInfo, weight, name);
+      likevec[i] = new StockDistribution(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "surveyindices") == 0) {
-      Likely[i] = new SurveyIndices(infile, Area, TimeInfo, weight, name);
+      likevec[i] = new SurveyIndices(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "surveydistribution") == 0) {
-      Likely[i] = new SurveyDistribution(infile, Area, TimeInfo, keeper, weight, name);
+      likevec[i] = new SurveyDistribution(infile, Area, TimeInfo, keeper, weight, name);
 
     } else if (strcasecmp(type, "stomachcontent") == 0) {
-      Likely[i] = new StomachContent(infile, Area, TimeInfo, keeper, weight, name);
+      likevec[i] = new StomachContent(infile, Area, TimeInfo, keeper, weight, name);
 
     } else if (strcasecmp(type, "recaptures") == 0) {
-      Likely[i] = new Recaptures(infile, Area, TimeInfo, weight, tagvec, name);
+      likevec[i] = new Recaptures(infile, Area, TimeInfo, weight, tagvec, name);
 
     } else if (strcasecmp(type, "catchintons") == 0) {
-      Likely[i] = new CatchInTons(infile, Area, TimeInfo, weight, name);
+      likevec[i] = new CatchInTons(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "migrationpenalty") == 0) {
-      Likely[i] = new MigrationPenalty(infile, weight, name);
+      likevec[i] = new MigrationPenalty(infile, weight, name);
 
     } else if (strcasecmp(type, "recstatistics") == 0) {
-      Likely[i] = new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name);
+      likevec[i] = new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name);
 
     } else if (strcasecmp(type, "predatorindices") == 0) {
       handle.Message("The predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");
@@ -492,30 +465,4 @@ void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
       }
     }
   }
-
-  //check that the names of the stocks, fleets and likelihood components are unique
-  for (i = 0; i < fleetnames.Size(); i++)
-    for (j = 0; j < fleetnames.Size(); j++)
-      if ((strcasecmp(fleetnames[i], fleetnames[j]) == 0) && (i != j))
-        handle.logFailure("Error in input files - repeated fleet", fleetnames[i]);
-
-  for (i = 0; i < tagnames.Size(); i++)
-    for (j = 0; j < tagnames.Size(); j++)
-      if ((strcasecmp(tagnames[i], tagnames[j]) == 0) && (i != j))
-        handle.logFailure("Error in input files - repeated tagging experiment", tagnames[i]);
-
-  for (i = 0; i < otherfoodnames.Size(); i++)
-    for (j = 0; j < otherfoodnames.Size(); j++)
-      if ((strcasecmp(otherfoodnames[i], otherfoodnames[j]) == 0) && (i != j))
-        handle.logFailure("Error in input files - repeated other food", otherfoodnames[i]);
-
-  for (i = 0; i < stocknames.Size(); i++)
-    for (j = 0; j < stocknames.Size(); j++)
-      if ((strcasecmp(stocknames[i], stocknames[j]) == 0) && (i != j))
-        handle.logFailure("Error in input files - repeated stock", stocknames[i]);
-
-  for (i = 0; i < likelihoodnames.Size(); i++)
-    for (j = 0; j < likelihoodnames.Size(); j++)
-      if ((strcasecmp(likelihoodnames[i], likelihoodnames[j]) == 0) && (i != j))
-        handle.logFailure("Error in input files - repeated likelihood component", likelihoodnames[i]);
 }

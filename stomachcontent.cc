@@ -44,18 +44,18 @@ StomachContent::StomachContent(CommentStream& infile,
 
   switch(functionnumber) {
     case 1:
-      StomCont = new SCNumbers(infile, Area, TimeInfo, keeper, datafilename, this->Name());
+      StomCont = new SCNumbers(infile, Area, TimeInfo, keeper, datafilename, this->getName());
       break;
     case 2:
       readWordAndValue(infile, "numberfile", numfilename);
-      StomCont = new SCRatios(infile, Area, TimeInfo, keeper, datafilename, numfilename, this->Name());
+      StomCont = new SCRatios(infile, Area, TimeInfo, keeper, datafilename, numfilename, this->getName());
       break;
     case 3:
       readWordAndValue(infile, "numberfile", numfilename);
-      StomCont = new SCAmounts(infile, Area, TimeInfo, keeper, datafilename, numfilename, this->Name());
+      StomCont = new SCAmounts(infile, Area, TimeInfo, keeper, datafilename, numfilename, this->getName());
       break;
     case 4:
-      StomCont = new SCSimple(infile, Area, TimeInfo, keeper, datafilename, this->Name());
+      StomCont = new SCSimple(infile, Area, TimeInfo, keeper, datafilename, this->getName());
       break;
     default:
       handle.Message("Error in stomachcontent - unrecognised function", functionname);
@@ -68,7 +68,7 @@ StomachContent::~StomachContent() {
 }
 
 void StomachContent::Print(ofstream& outfile) const {
-  outfile << "\nStomach Content " << this->Name() << " - likelihood value " << likelihood
+  outfile << "\nStomach Content " << this->getName() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << endl;
   StomCont->Print(outfile);
 }
@@ -351,7 +351,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
   for (i = 0; i < predatornames.Size(); i++) {
     found = 0;
     for (j = 0; j < Predators.Size(); j++)
-      if (strcasecmp(predatornames[i], Predators[j]->Name()) == 0) {
+      if (strcasecmp(predatornames[i], Predators[j]->getName()) == 0) {
         found++;
         predators.resize(1, Predators[j]);
       }
@@ -369,7 +369,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
     for (j = 0; j < preynames[i].Size(); j++) {
       found = 0;
       for (k = 0; k < Preys.Size(); k++)
-        if (strcasecmp(preynames[i][j], Preys[k]->Name()) == 0) {
+        if (strcasecmp(preynames[i][j], Preys[k]->getName()) == 0) {
           found++;
           preys.resize(1, Preys[k]);
         }

@@ -60,10 +60,6 @@ protected:
    * \brief This is the LengthGroupDivision of the stock
    */
   LengthGroupDivision* LgrpDiv;
-  /**
-   * \brief This ofstream is the file that all the model information gets sent to
-   */
-  ofstream outfile;
 };
 
 #endif

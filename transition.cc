@@ -54,7 +54,7 @@ void Transition::setStock(StockPtrVector& stockvec) {
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < transitionStockNames.Size(); j++)
-      if (strcasecmp(stockvec[i]->Name(), transitionStockNames[j]) == 0) {
+      if (strcasecmp(stockvec[i]->getName(), transitionStockNames[j]) == 0) {
         transitionStocks.resize(1);
         tmpratio.resize(1);
         transitionStocks[index] = stockvec[i];
@@ -65,7 +65,7 @@ void Transition::setStock(StockPtrVector& stockvec) {
   if (index != transitionStockNames.Size()) {
     handle.logWarning("Error in transition - failed to match transition stocks");
     for (i = 0; i < stockvec.Size(); i++)
-      handle.logWarning("Error in transition - found stock", stockvec[i]->Name());
+      handle.logWarning("Error in transition - found stock", stockvec[i]->getName());
     for (i = 0; i < transitionStockNames.Size(); i++)
       handle.logWarning("Error in transition - looking for stock", transitionStockNames[i]);
     exit(EXIT_FAILURE);
@@ -107,8 +107,8 @@ void Transition::setStock(StockPtrVector& stockvec) {
 void Transition::Print(ofstream& outfile) const {
   int i;
   outfile << "\nTransition\n\tNames of transition stocks:";
-  for (i = 0; i < transitionStocks.Size(); i++)
-    outfile << sep << (const char*)(transitionStocks[i]->Name());
+  for (i = 0; i < transitionStockNames.Size(); i++)
+    outfile << sep << transitionStockNames[i];
   outfile << "\n\tRatio moving into each stock:";
   for (i = 0; i < Ratio.Size(); i++)
     outfile << sep << Ratio[i];

@@ -51,7 +51,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   }
 
   //read in area aggregation from file
-  char filename[MaxStrLength];
+  filename = new char[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -175,7 +175,7 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
 
   for (i = 0; i < predatorvec.Size(); i++)
     for (j = 0; j < predatornames.Size(); j++)
-      if (strcasecmp(predatorvec[i]->Name(), predatornames[j]) == 0) {
+      if (strcasecmp(predatorvec[i]->getName(), predatornames[j]) == 0) {
         predators.resize(1);
         predators[index++] = predatorvec[i];
       }
@@ -183,7 +183,7 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
   index = 0;
   for (i = 0; i < preyvec.Size(); i++)
     for (j = 0; j < preynames.Size(); j++)
-      if (strcasecmp(preyvec[i]->Name(), preynames[j]) == 0) {
+      if (strcasecmp(preyvec[i]->getName(), preynames[j]) == 0) {
         preys.resize(1);
         preys[index++] = preyvec[i];
       }
@@ -191,7 +191,7 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
   if (predators.Size() != predatornames.Size()) {
     handle.logWarning("Error in predatorprinter - failed to match predators");
     for (i = 0; i < predatorvec.Size(); i++)
-      handle.logWarning("Error in predatorprinter - found predator", predatorvec[i]->Name());
+      handle.logWarning("Error in predatorprinter - found predator", predatorvec[i]->getName());
     for (i = 0; i < predatornames.Size(); i++)
       handle.logWarning("Error in predatorprinter - looking for predator", predatornames[i]);
     exit(EXIT_FAILURE);
@@ -199,7 +199,7 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
   if (preys.Size() != preynames.Size()) {
     handle.logWarning("Error in predatorprinter - failed to match preys");
     for (i = 0; i < preyvec.Size(); i++)
-      handle.logWarning("Error in predatorprinter - found prey", preyvec[i]->Name());
+      handle.logWarning("Error in predatorprinter - found prey", preyvec[i]->getName());
     for (i = 0; i < preynames.Size(); i++)
       handle.logWarning("Error in predatorprinter - looking for prey", preynames[i]);
     exit(EXIT_FAILURE);
@@ -254,6 +254,7 @@ PredatorPrinter::~PredatorPrinter() {
   delete predLgrpDiv;
   delete preyLgrpDiv;
   delete aggregator;
+  delete[] filename;
   int i;
   for (i = 0; i < predatornames.Size(); i++)
     delete[] predatornames[i];
