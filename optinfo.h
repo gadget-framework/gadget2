@@ -209,21 +209,21 @@ protected:
 };
 
 /**
- * \class OptInfoBfgs
+ * \class OptInfoBFGS
  * \brief This is the class used for the BFGS optimisation
  *
  * (To be continued)
  */
-class OptInfoBfgs : public OptSearch  {
+class OptInfoBFGS : public OptSearch  {
 public:
   /**
-   * \brief This is the default OptInfoBfgs constructor
+   * \brief This is the default OptInfoBFGS constructor
    */
-  OptInfoBfgs();
+  OptInfoBFGS();
   /**
-   * \brief This is the default OptInfoBfgs destructor
+   * \brief This is the default OptInfoBFGS destructor
    */
-  ~OptInfoBfgs();
+  ~OptInfoBFGS();
   /**
    * \brief This is the function used to read in the BFGS parameters
    * \param infile is the CommentStream to read the optimisation parameters from

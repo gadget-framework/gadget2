@@ -10,7 +10,7 @@ double func(double* x, int n) {
 }
 
 
-OptInfoBfgs::OptInfoBfgs()
+OptInfoBFGS::OptInfoBFGS()
   : OptSearch(), bfgsiter(10000), bfgseps(0.01), beta(0.3), sigma(0.01),
     step(1.0),gradacc(0.01), gradstep(0.1), difficultgrad(0),
     usescaling(0), xtol(0.000001), maxrounds(10000), maxfunceval(10000) {
@@ -28,7 +28,7 @@ OptInfoBfgs::OptInfoBfgs()
     Bk[i] = new double[numvar];
 }
 
-OptInfoBfgs::~OptInfoBfgs() {
+OptInfoBFGS::~OptInfoBFGS() {
   int i;
   delete[] x;
   delete[] s;
@@ -37,7 +37,7 @@ OptInfoBfgs::~OptInfoBfgs() {
     delete[] Bk[i];
 }
 
-void OptInfoBfgs::OptimiseLikelihood() {
+void OptInfoBFGS::OptimiseLikelihood() {
   int i, opt;
 
   handle.logInformation("\nStarting BFGS optimisation algorithm");
@@ -64,7 +64,7 @@ void OptInfoBfgs::OptimiseLikelihood() {
   delete[] startpoint;
 }
 
-void OptInfoBfgs::read(CommentStream& infile, char* text) {
+void OptInfoBFGS::read(CommentStream& infile, char* text) {
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]")) {
     infile >> ws;
     if (strcasecmp(text,"beta") == 0) {

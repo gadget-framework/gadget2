@@ -10,7 +10,7 @@ extern Ecosystem* EcoSystem;
 /* global variable, defined and initialised in gadget.cc and not modified here */
 extern int FuncEval;
 
-int OptInfoBfgs::iteration(double* x0, double* init) {
+int OptInfoBFGS::iteration(double* x0, double* init) {
   double h[NUMVARS];
   double y[NUMVARS];
   double By[NUMVARS];
@@ -180,7 +180,7 @@ int OptInfoBfgs::iteration(double* x0, double* init) {
   }
 }
 
-void OptInfoBfgs::gradient(double* p, double fp) {
+void OptInfoBFGS::gradient(double* p, double fp) {
   int i, j;
   double tmpacc, f1, f2, mf1, mf2;
   double tmp[NUMVARS];
@@ -247,7 +247,7 @@ void OptInfoBfgs::gradient(double* p, double fp) {
   }
 }
 
-double OptInfoBfgs::Armijo() {
+double OptInfoBFGS::Armijo() {
   int i, cond;
   double bn, fn, sg;
   double tmp[NUMVARS];
@@ -281,7 +281,7 @@ double OptInfoBfgs::Armijo() {
     return 0.0;
 }
 
-double OptInfoBfgs::SmallestEigenValue() {
+double OptInfoBFGS::SmallestEigenValue() {
   double eigen, temp, phi, norm;
   double L[NUMVARS][NUMVARS], xo[NUMVARS];
   int i, j, k;

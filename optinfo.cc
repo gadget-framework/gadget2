@@ -88,7 +88,7 @@ void OptInfo::readOptInfo(CommentStream& infile) {
 
     } else if (strcasecmp(text, "[bfgs]") == 0) {
       handle.logMessage("Reading BFGS parameters");
-      optBFGS = new OptInfoBfgs();
+      optBFGS = new OptInfoBFGS();
       useBFGS = 1;
 
       if (!infile.eof()) {
