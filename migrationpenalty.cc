@@ -62,3 +62,9 @@ void MigrationPenalty::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   handle.logMessage("Reset migrationpenalty component");
 }
+
+void MigrationPenalty::Print(ofstream& outfile) const {
+  outfile << "\nMigration Penalty " << this->getName() << " - likelihood value "
+    << likelihood << endl;
+  outfile.flush();
+}

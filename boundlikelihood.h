@@ -54,6 +54,12 @@ public:
    * \note keeper can adjust the value of the parameters to ensure that they are within the bounds
    */
   virtual void addLikelihoodKeeper(const TimeClass* const TimeInfo, Keeper* const keeper);
+  /**
+   * \brief This function will print the summary MigrationPenalty likelihood information
+   * \param outfile is the ofstream that all the model information gets sent to
+   * \note This function is not used for this likelihood component
+   */
+  virtual void Print(ofstream& outfile) const;
 protected:
   /**
    * \brief This is the IntVector of the index of the parameters

@@ -78,6 +78,7 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
   tmppop.W = 1.0;
   PopInfoMatrix popmatrix(ages.Nrow(), numlengths, tmppop);
   total.resize(areas.Nrow(), 0, 0, popmatrix);
+  this->Reset();
 }
 
 FleetPreyAggregator::~FleetPreyAggregator() {

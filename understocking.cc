@@ -126,23 +126,23 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
   }
 }
 
-void UnderStocking::Print(ofstream& outfile) {
+void UnderStocking::Print(ofstream& outfile) const {
   int i, j, year, area;
 
-  outfile << "\nUnderstocking " << this->getName() << "\n\nLikelihood " << likelihood
-    << "\nWeight " << weight << "\nPredator names:";
+  outfile << "\nUnderstocking " << this->getName() << " - likelihood value "
+    << likelihood << "\n\tPredator names:";
   for (i = 0; i < prednames.Size(); i++)
     outfile << sep << prednames[i];
-  outfile << "\nInternal areas:";
+  outfile << "\n\tInternal areas:";
   for (i  = 0; i < areas.Nrow(); i++) {
-    outfile << endl;
+    outfile << endl << TAB;
     for (j = 0; j < areas.Ncol(i); j++)
       outfile << areas[i][j] << sep;
   }
   outfile << endl;
 
   for (year = 0; year < likelihoodValues.Nrow(); year++) {
-    outfile << "\nYear " << Years[year] << " and step " << Steps[year] << "\nLikelihood values:";
+    outfile << "\n\tYear " << Years[year] << " and step " << Steps[year] << "\n\tLikelihood values:";
     for (area = 0; area < likelihoodValues.Ncol(year); area++) {
       outfile.width(smallwidth);
       outfile.precision(smallprecision);

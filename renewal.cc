@@ -51,7 +51,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   } else
     handle.Message("Error in renewal - unrecognised format for renewal data");
 
-  handle.logMessage("Read recruits data file - number of entries", renewalTime.Size());
+  handle.logMessage("Read renewal data file - number of entries", renewalTime.Size());
   keeper->clearLast();
 }
 

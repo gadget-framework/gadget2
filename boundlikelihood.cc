@@ -150,3 +150,9 @@ void BoundLikelihood::SummaryPrint(ofstream& outfile) {
     outfile.flush();
   }
 }
+
+void BoundLikelihood::Print(ofstream& outfile) const {
+  outfile << "\nBoundlikelihood " << this->getName() << " - likelihood value "
+    << likelihood << endl;
+  outfile.flush();
+}

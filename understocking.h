@@ -49,7 +49,7 @@ public:
    * \brief This function will print the non-zero UnderStocking likelihood information
    * \param outfile is the ofstream that all the model information gets sent to
    */
-  virtual void Print(ofstream& outfile);
+  virtual void Print(ofstream& outfile) const;
   /**
    * \brief This will select the predators required to calculate the UnderStocking likelihood score
    * \param Predators is the PredatorPtrVector of all the available predators

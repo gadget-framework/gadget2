@@ -344,8 +344,8 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
 }
 
 void CatchDistribution::Print(ofstream& outfile) const {
-  int i;
 
+  int i;
   outfile << "\nCatch Distribution " << this->getName() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)

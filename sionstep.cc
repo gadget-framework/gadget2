@@ -186,50 +186,26 @@ void SIOnStep::Reset(const Keeper* const keeper) {
 }
 
 void SIOnStep::Print(ofstream& outfile) const {
-  int i, j;
-  outfile << "Survey indices\n";
-  for (i = 0; i < Years.Size(); i++) {
-    outfile << TAB << Years[i] << sep << Steps[i] << sep;
-    for (j = 0; j < obsIndex.Ncol(i); j++) {
-      outfile.width(smallwidth);
-      outfile.precision(smallprecision);
-      outfile << obsIndex[i][j] << sep;
-    }
-    outfile << endl;
-  }
-  outfile << "Modelled indices\n";
-  for (i = 0; i < Years.Size(); i++) {
-    outfile << TAB << Years[i] << sep << Steps[i] << sep;
-    for (j = 0; j < modelIndex.Ncol(i); j++) {
-      outfile.width(smallwidth);
-      outfile.precision(smallprecision);
-      outfile << modelIndex[i][j] << sep;
-    }
-    outfile << endl;
-  }
+  int i, j, t;
 
-  if (error != 0)
-    outfile << "Error " << error << endl;
+  t = timeindex - 1;
+  if (t < 0)
+    t = 0;
 
-  outfile << "Regression information\nintercept ";
-  for (j = 0; j < intercepts.Size(); j++) {
-    outfile.width(smallwidth);
-    outfile.precision(smallprecision);
-    outfile << intercepts[j] << sep;
+  for (i = 0; i < Areas.Nrow(); i++) {
+    outfile << "\tInternal areas";
+    for (j = 0; j < Areas.Ncol(i); j++)
+      outfile << sep << Areas[i][j];
   }
-  outfile << "\nslope     ";
-  for (j = 0; j < slopes.Size(); j++) {
+  outfile << endl;
+
+  for (i = 0; i < modelIndex.Ncol(t); i++) {
+    outfile << TAB;
     outfile.width(smallwidth);
-    outfile.precision(smallprecision);
-    outfile << slopes[j] << sep;
+    outfile << modelIndex[t][i];
   }
-  outfile << "\nsse       ";
-  for (j = 0; j < sse.Size(); j++) {
-    outfile.width(smallwidth);
-    outfile.precision(smallprecision);
-    outfile << sse[j] << sep;
-  }
-  outfile.flush();
+  outfile << endl;
+  outfile << flush;
 }
 
 void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
