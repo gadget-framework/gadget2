@@ -47,7 +47,7 @@ void OptInfoBfgs::OptimiseLikelihood() {
     startpoint[i] = val[i];
 
   opt = iteration(startpoint);
-  cout << "\nBFGS finished with final likelihood score of " << EcoSystem->getLikelihood()
+  cout << "\nBFGS finished with a final likelihood score of " << EcoSystem->getLikelihood()
     << "\nafter a total of " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
   EcoSystem->writeOptValues();
 
@@ -77,5 +77,19 @@ void OptInfoBfgs::Read(CommentStream& infile, char* text) {
       infile >> text;  //read and ignore the next entry
     }
     infile >> text;
+  }
+
+  //check the values specified in the optinfo file ...
+  if ((beta < 0) || (beta > 0.5)) {  //these are the bounds in paramin
+    handle.logWarning("Warning in optinfofile - value of beta outside bounds", beta);
+    beta = 0.3;
+  }
+  if (isZero(sigma) || (sigma < 0)) {
+    handle.logWarning("Warning in optinfofile - value of sigma outside bounds", sigma);
+    sigma = 0.01;
+  }
+  if (isZero(st) || (st < 0)) {
+    handle.logWarning("Warning in optinfofile - value of st outside bounds", st);
+    st = 1,0;
   }
 }

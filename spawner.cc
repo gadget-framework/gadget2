@@ -20,6 +20,8 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   strncpy(text, "", MaxStrLength);
   ifstream datafile;
   CommentStream subdata(datafile);
+  functionname = new char[MaxStrLength];
+  strncpy(functionname, "", MaxStrLength);
 
   spawnLgrpDiv = 0;
   LgrpDiv = new LengthGroupDivision(*lgrpdiv);
@@ -131,13 +133,13 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
 
   if (onlyParent == 0) {
     infile >> text >> ws;
-    /*if (!(strcasecmp(text, "recruitment") == 0))
-      handle.Unexpected("recruitment", text);*/
-    if (!(strcasecmp(text, "spawnparameters") == 0))
-      handle.Unexpected("spawnparameters", text);
+    if (!(strcasecmp(text, "recruitment") == 0))
+      handle.Unexpected("recruitment", text);
+    /*if (!(strcasecmp(text, "spawnparameters") == 0))
+      handle.Unexpected("spawnparameters", text);*/
 
     //read in the recruitment function details
-    /*functionnumber = 0;
+    functionnumber = 0;
     infile >> functionname >> ws;
     if (strcasecmp(functionname, "simplessb") == 0) {
       functionnumber = 1;
@@ -148,11 +150,11 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     } else if (strcasecmp(functionname, "bevertonholt") == 0) {
       functionnumber = 3;
       spawnParameters.resize(2, keeper);
-    } else if (strcasecmp(functionname, "generic") == 0) {*/
+    } else if (strcasecmp(functionname, "fecundity") == 0) {
       functionnumber = 4;
       spawnParameters.resize(5, keeper);
-    /*} else
-      handle.Message("Error in spawner - unrecognised recruitment function", functionname);*/
+    } else
+      handle.Message("Error in spawner - unrecognised recruitment function", functionname);
 
     spawnParameters.read(infile, TimeInfo, keeper);
 
@@ -185,6 +187,7 @@ SpawnData::~SpawnData() {
   delete fnProportion;
   delete fnMortality;
   delete fnWeightLoss;
+  delete[] functionname;
 }
 
 void SpawnData::setStock(StockPtrVector& stockvec) {

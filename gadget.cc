@@ -60,7 +60,8 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
     delete Stochasticdata;
 
   } else {
-    handle.logWarning("Warning - no parameter input file given, using default values");
+    if (EcoSystem->numOptVariables() != 0)
+      handle.logWarning("Warning - no parameter input file given, using default values");
     EcoSystem->Reset();
     if (MainInfo->printInitial())
       EcoSystem->writeStatus(MainInfo->getPrintInitialFile());
