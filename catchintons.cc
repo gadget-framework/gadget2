@@ -14,7 +14,7 @@ extern ErrorHandler handle;
 
 CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, const char* name)
-  : Likelihood(CATCHINTONSLIKELIHOOD, weight) {
+  : Likelihood(CATCHINTONSLIKELIHOOD, weight, name) {
 
   int i, j;
   int numarea = 0;
@@ -28,9 +28,6 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const Area,
   strncpy(aggfilename, "", MaxStrLength);
   ifstream datafile;
   CommentStream subdata(datafile);
-
-  ctname = new char[strlen(name) + 1];
-  strcpy(ctname, name);
 
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
@@ -138,13 +135,13 @@ void CatchInTons::Reset(const Keeper* const keeper) {
   for (i = 0; i < modelDistribution.Nrow(); i++)
     for (j = 0; j < modelDistribution.Ncol(i); j++)
       modelDistribution[i][j] = 0.0;
-  handle.logMessage("Reset catchintons component", ctname);
+  handle.logMessage("Reset catchintons component", this->Name());
 }
 
 void CatchInTons::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch in Tons " << ctname << " - likelihood value " << likelihood
+  outfile << "\nCatch in Tons " << this->Name() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname;
   outfile << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
@@ -197,7 +194,7 @@ void CatchInTons::addLikelihood(const TimeClass* const TimeInfo) {
 
     if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
       likelihood += l;
-      handle.logMessage("Calculating likelihood score for catchintons component", ctname);
+      handle.logMessage("Calculating likelihood score for catchintons component", this->Name());
       handle.logMessage("The likelihood score for this component on this timestep is", l);
       timeindex++;
     }
@@ -213,7 +210,6 @@ CatchInTons::~CatchInTons() {
   for (i = 0; i < areaindex.Size(); i++)
     delete[] areaindex[i];
   delete[] functionname;
-  delete[] ctname;
 }
 
 void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
@@ -353,14 +349,14 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
     AAT.addActions(Years, Steps, TimeInfo);
 
   if (count == 0)
-    handle.logWarning("Warning in catchintons - found no data in the data file for", ctname);
+    handle.logWarning("Warning in catchintons - found no data in the data file for", this->Name());
   handle.logMessage("Read catchintons data file - number of entries", count);
 }
 
 void CatchInTons::LikelihoodPrint(ofstream& outfile) {
   int y, a, i;
 
-  outfile << "\nCatch in Tons " << ctname << "\n\nLikelihood " << likelihood
+  outfile << "\nCatch in Tons " << this->Name() << "\n\nLikelihood " << likelihood
     << "\nFunction " << functionname << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -391,7 +387,7 @@ void CatchInTons::SummaryPrint(ofstream& outfile) {
       if (yearly == 0) {
         outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
           << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-          << setw(largewidth) << ctname << sep << setw(smallwidth) << weight
+          << setw(largewidth) << this->Name() << sep << setw(smallwidth) << weight
           << sep << setprecision(largeprecision) << setw(largewidth)
           << likelihoodValues[year][area] << endl;
       } else {
@@ -400,7 +396,7 @@ void CatchInTons::SummaryPrint(ofstream& outfile) {
         } else {
           outfile << setw(lowwidth) << Years[year] << "  all "
             << setw(printwidth) << areaindex[area] << sep
-            << setw(largewidth) << ctname << sep << setw(smallwidth) << weight
+            << setw(largewidth) << this->Name() << sep << setw(smallwidth) << weight
             << sep << setprecision(largeprecision) << setw(largewidth)
             << likelihoodValues[year][area] << endl;
         }

@@ -98,10 +98,6 @@ private:
    */
   CharPtrVector stocknames;
   /**
-   * \brief This is the name of the SurveyDistribution likelihood component
-   */
-  char* sdname;
-  /**
    * \brief This is the IntMatrix used to store area information
    */
   IntMatrix areas;

@@ -15,7 +15,7 @@ extern ErrorHandler handle;
 
 RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, TagPtrVector Tag, const char* name)
-  : Likelihood(RECSTATISTICSLIKELIHOOD, weight) {
+  : Likelihood(RECSTATISTICSLIKELIHOOD, weight, name) {
 
   aggregator = 0;
   char text[MaxStrLength];
@@ -28,9 +28,6 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   strncpy(aggfilename, "", MaxStrLength);
   ifstream datafile;
   CommentStream subdata(datafile);
-
-  rsname = new char[strlen(name) + 1];
-  strcpy(rsname, name);
 
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
@@ -191,7 +188,7 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
 
   timeindex.resize(tagvec.Size(), -1);
   if (count == 0)
-    handle.logWarning("Warning in recstatistics - found no data in the data file for", rsname);
+    handle.logWarning("Warning in recstatistics - found no data in the data file for", this->Name());
   handle.logMessage("Read recstatistics data file - number of entries", count);
 }
 
@@ -209,7 +206,6 @@ RecStatistics::~RecStatistics() {
   }
   for (i = 0; i < variance.Size(); i++)
     delete variance[i];
-  delete[] rsname;
   delete[] functionname;
   if (aggregator != 0)  {
     for (i = 0; i < tagvec.Size(); i++)
@@ -225,13 +221,13 @@ void RecStatistics::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   for (i = 0; i < timeindex.Size(); i++)
     timeindex[i] = -1;
-  handle.logMessage("Reset recstatistics component", rsname);
+  handle.logMessage("Reset recstatistics component", this->Name());
 }
 
 void RecStatistics::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nRecapture Statistics " << rsname << " - likelihood value " << likelihood
+  outfile << "\nRecapture Statistics " << this->Name() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname;
   outfile << "\n\tFleet names:";
   for (i = 0; i < fleetnames.Size(); i++)
@@ -314,7 +310,7 @@ void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
       for (i = 0; i < Years.Ncol(t); i++) {
         if (Years[t][i] == TimeInfo->CurrentYear() && Steps[t][i] == TimeInfo->CurrentStep()) {
           if (check == 0)
-            handle.logMessage("Calculating likelihood score for recstatistics component", rsname);
+            handle.logMessage("Calculating likelihood score for recstatistics component", this->Name());
           timeindex[t] = i;
           aggregator[t]->Sum(TimeInfo);
           check++;

@@ -285,7 +285,7 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
   handle.Open(filename);
-  int i, j, k, len;
+  int i, j;
 
   outfile << "; ";
   RUNID.print(outfile);
@@ -297,47 +297,14 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
     outfile << endl;
   }
 
-  CharPtrVector tmpLikely;
-  tmpLikely.resize(Likely.Size());
-
-  char* strLikely = likcompnames->sendAll();
-  char* strTemp = new char[MaxStrLength];
-  strncpy(strTemp, "", MaxStrLength);
-
-  j = k = 0;
-  len = strlen(strLikely);
-  for (i = 1; i < len; i++) {
-    if (strLikely[i] == TAB) {
-      strTemp[j] = '\0';
-      tmpLikely[k] = new char[strlen(strTemp) + 1];
-      strcpy(tmpLikely[k], strTemp);
-      strncpy(strTemp, "", MaxStrLength);
-      j = 0;
-      k++;
-    } else {
-      strTemp[j] = strLikely[i];
-      j++;
-    }
-  }
-  //copy the last component into tmpLikely
-  strTemp[j] = '\0';
-  tmpLikely[k] = new char[strlen(strTemp) + 1];
-  strcpy(tmpLikely[k], strTemp);
-
   outfile << ";\n; Listing of the likelihood components used in the current Gadget run\n;\n";
   outfile << "; Component\tType\tWeight\n";
-  for (i = 0; i < tmpLikely.Size(); i++)
-    outfile << tmpLikely[i] << TAB << Likely[i]->Type() << TAB << Likely[i]->returnWeight() << endl;
+  for (i = 0; i < Likely.Size(); i++)
+    outfile << Likely[i]->Name() << TAB << Likely[i]->Type() << TAB << Likely[i]->returnWeight() << endl;
   outfile << ";\n; Listing of the output from the likelihood components for the current Gadget run\n;\n";
   handle.Close();
   outfile.close();
   outfile.clear();
-
-  //tmpLikely is not required - free up memory
-  for (i = 0; i < tmpLikely.Size(); i++)
-    delete[] tmpLikely[i];
-  delete[] strLikely;
-  delete[] strTemp;
 }
 
 void Keeper::writeValues(const char* const filename,
@@ -441,7 +408,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
       for (j = 0; j < switches.Size(); j++) {
         if (Stoch->Switches(i) == switches[j]) {
           values[j] = Stoch->Values(i);
-          bestvalues[j] = Stoch->Values(i);          
+          bestvalues[j] = Stoch->Values(i);
 
           lowerbds[j] = Stoch->Lower(i);
           upperbds[j] = Stoch->Upper(i);
@@ -582,7 +549,7 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec, int inte
       handle.logWarning("which is higher than the corresponding upper bound", upperbds[i]);
     } else
       outfile << switches[i] << TAB << setw(w) << setprecision(p) << bestvalues[i] << TAB;
-    
+
     outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i]
       << setw(smallwidth) << setprecision(smallprecision) << upperbds[i]
       << setw(smallwidth) << opt[i];
@@ -647,7 +614,7 @@ void Keeper::checkBounds(const LikelihoodPtrVector& Likely) const {
     return;
 
   int i, count;
-  
+
   //check that we have a boundlikelihood component
   count = 0;
   for (i = 0; i < Likely.Size(); i++) {
@@ -656,7 +623,7 @@ void Keeper::checkBounds(const LikelihoodPtrVector& Likely) const {
   }
   if (count == 0)
     handle.logWarning("Warning in keeper - no boundlikelihood component found\nNo penalties will be applied if any of the parameter bounds are exceeded");
-    
+
   //check the values of the switches are within the bounds to start with
   count = 0;
   for (i = 0; i < values.Size(); i++) {

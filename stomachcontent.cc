@@ -18,10 +18,7 @@ extern ErrorHandler handle;
 StomachContent::StomachContent(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
   Keeper* const keeper, double weight, const char* name)
-  : Likelihood(STOMACHCONTENTLIKELIHOOD, weight) {
-
-  stomachname = new char[strlen(name) + 1];
-  strcpy(stomachname, name);
+  : Likelihood(STOMACHCONTENTLIKELIHOOD, weight, name) {
 
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
@@ -47,18 +44,18 @@ StomachContent::StomachContent(CommentStream& infile,
 
   switch(functionnumber) {
     case 1:
-      StomCont = new SCNumbers(infile, Area, TimeInfo, keeper, datafilename, stomachname);
+      StomCont = new SCNumbers(infile, Area, TimeInfo, keeper, datafilename, this->Name());
       break;
     case 2:
       readWordAndValue(infile, "numberfile", numfilename);
-      StomCont = new SCRatios(infile, Area, TimeInfo, keeper, datafilename, numfilename, stomachname);
+      StomCont = new SCRatios(infile, Area, TimeInfo, keeper, datafilename, numfilename, this->Name());
       break;
     case 3:
       readWordAndValue(infile, "numberfile", numfilename);
-      StomCont = new SCAmounts(infile, Area, TimeInfo, keeper, datafilename, numfilename, stomachname);
+      StomCont = new SCAmounts(infile, Area, TimeInfo, keeper, datafilename, numfilename, this->Name());
       break;
     case 4:
-      StomCont = new SCSimple(infile, Area, TimeInfo, keeper, datafilename, stomachname);
+      StomCont = new SCSimple(infile, Area, TimeInfo, keeper, datafilename, this->Name());
       break;
     default:
       handle.Message("Error in stomachcontent - unrecognised function", functionname);
@@ -67,18 +64,17 @@ StomachContent::StomachContent(CommentStream& infile,
 
 StomachContent::~StomachContent() {
   delete StomCont;
-  delete[] stomachname;
   delete[] functionname;
 }
 
 void StomachContent::Print(ofstream& outfile) const {
-  outfile << "\nStomach Content " << stomachname << " - likelihood value " << likelihood
+  outfile << "\nStomach Content " << this->Name() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << endl;
   StomCont->Print(outfile);
 }
 
 void StomachContent::LikelihoodPrint(ofstream& outfile) {
-  outfile << "\nStomach Content " << stomachname << "\n\nLikelihood " << likelihood
+  outfile << "\nStomach Content " << this->Name() << "\n\nLikelihood " << likelihood
     << "\nFunction " << functionname << "\nWeight " << weight << endl;
   StomCont->LikelihoodPrint(outfile);
 }

@@ -13,7 +13,7 @@ extern ErrorHandler handle;
 
 Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, TagPtrVector Tag, const char* name)
-  : Likelihood(TAGLIKELIHOOD, weight) {
+  : Likelihood(TAGLIKELIHOOD, weight, name) {
 
   aggregator = 0;
   char text[MaxStrLength];
@@ -30,8 +30,6 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
 
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
-  recname = new char[strlen(name) + 1];
-  strcpy(recname, name);
 
   readWordAndValue(infile, "datafile", datafilename);
   readWordAndValue(infile, "function", functionname);
@@ -188,7 +186,7 @@ void Recaptures::readRecaptureData(CommentStream& infile,
     }
   }
   if (count == 0)
-    handle.logWarning("Warning in recaptures - found no data in the data file for", recname);
+    handle.logWarning("Warning in recaptures - found no data in the data file for", this->Name());
   handle.logMessage("Read recaptures data file - number of entries", count);
 }
 
@@ -213,13 +211,12 @@ Recaptures::~Recaptures() {
     delete[] aggregator;
     aggregator = 0;
   }
-  delete[] recname;
   delete[] functionname;
 }
 
 void Recaptures::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
-  handle.logMessage("Reset recaptures component", recname);
+  handle.logMessage("Reset recaptures component", this->Name());
 }
 
 void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
@@ -317,7 +314,7 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
     if (tagvec[t]->isWithinPeriod(year, step)) {
 
       if (check == 0) {
-        handle.logMessage("Calculating likelihood score for recaptures component", recname);
+        handle.logMessage("Calculating likelihood score for recaptures component", this->Name());
         check++;
       }
 
@@ -355,7 +352,7 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
 
 void Recaptures::Print(ofstream& outfile) const {
   int t, ti, i, j;
-  outfile << "\nRecaptures Data " << recname << " - likelihood value " << likelihood
+  outfile << "\nRecaptures Data " << this->Name() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << endl;
   for (t = 0; t < tagvec.Size(); t++) {
     outfile << "\tTagging experiment:\t" << tagnames[t];
@@ -377,7 +374,7 @@ void Recaptures::Print(ofstream& outfile) const {
 
 void Recaptures::LikelihoodPrint(ofstream& outfile) {
   int t, ti, i, j;
-  outfile << "\nRecaptures Data " << recname << "\n\nLikelihood " << likelihood
+  outfile << "\nRecaptures Data " << this->Name() << "\n\nLikelihood " << likelihood
     << "\nWeight " << weight << endl;
   for (t = 0; t < tagvec.Size(); t++) {
     outfile << "\tTagging experiment:\t" << tagnames[t];

@@ -14,7 +14,7 @@ extern ErrorHandler handle;
 
 SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, const char* name)
-  : Likelihood(SURVEYINDICESLIKELIHOOD, weight) {
+  : Likelihood(SURVEYINDICESLIKELIHOOD, weight, name) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -36,8 +36,6 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  surveyname = new char[strlen(name) + 1];
-  strcpy(surveyname, name);
   readWordAndValue(infile, "datafile", datafilename);
   readWordAndValue(infile, "sitype", sitype);
 
@@ -128,15 +126,15 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   //We have now read in all the data from the main likelihood file
   if (strcasecmp(sitype, "lengths") == 0) {
     SI = new SIByLengthOnStep(infile, areas, lengths, areaindex,
-      lenindex, TimeInfo, datafilename, surveyname);
+      lenindex, TimeInfo, datafilename, this->Name());
 
   } else if (strcasecmp(sitype, "ages") == 0) {
     SI = new SIByAgeOnStep(infile, areas, ages, areaindex,
-      ageindex, TimeInfo, datafilename, surveyname);
+      ageindex, TimeInfo, datafilename, this->Name());
 
   } else if (strcasecmp(sitype, "fleets") == 0) {
     SI = new SIByFleetOnStep(infile, areas, lengths, areaindex,
-      lenindex, TimeInfo, datafilename, overcons, surveyname);
+      lenindex, TimeInfo, datafilename, overcons, this->Name());
 
   } else
     handle.Message("Error in surveyindex - unrecognised type", sitype);
@@ -165,12 +163,11 @@ SurveyIndices::~SurveyIndices() {
   for (i = 0; i < areaindex.Size(); i++)
     delete[] areaindex[i];
   delete SI;
-  delete[] surveyname;
 }
 
 void SurveyIndices::LikelihoodPrint(ofstream& outfile) {
   int i;
-  outfile << "\nSurvey Indices " << surveyname << "\n\nLikelihood " << likelihood
+  outfile << "\nSurvey Indices " << this->Name() << "\n\nLikelihood " << likelihood
     << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -229,7 +226,7 @@ void SurveyIndices::Reset(const Keeper* const keeper) {
 
 void SurveyIndices::Print(ofstream& outfile) const {
   int i;
-  outfile << "\nSurvey Indices " << surveyname << " - likelihood value " << likelihood << "\n\tStock names: ";
+  outfile << "\nSurvey Indices " << this->Name() << " - likelihood value " << likelihood << "\n\tStock names: ";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << stocknames[i] << sep;
   outfile << endl;
@@ -242,7 +239,7 @@ void SurveyIndices::SummaryPrint(ofstream& outfile) {
   //JMB - this is nasty hack since there is only one area
   for (area = 0; area < areaindex.Size(); area++) {
     outfile << "all   all " << setw(printwidth) << areaindex[area] << sep
-      << setw(largewidth) << surveyname << sep << setw(smallwidth) << weight
+      << setw(largewidth) << this->Name() << sep << setw(smallwidth) << weight
       << sep << setprecision(largeprecision) << setw(largewidth) << likelihood << endl;
   }
   outfile.flush();

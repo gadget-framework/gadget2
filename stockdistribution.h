@@ -151,10 +151,6 @@ private:
    */
   char* functionname;
   /**
-   * \brief This is the name of the StockDistribution likelihood component
-   */
-  char* sdname;
-  /**
    * \brief This is the index of the timesteps for the likelihood component data
    */
   int timeindex;

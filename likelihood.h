@@ -5,6 +5,7 @@
 #include "stockptrvector.h"
 #include "fleetptrvector.h"
 #include "printinfo.h"
+#include "hasname.h"
 #include "gadget.h"
 
 class Keeper;
@@ -19,14 +20,19 @@ enum LikelihoodType { SURVEYINDICESLIKELIHOOD = 1, UNDERSTOCKINGLIKELIHOOD,
  * \brief This is the base class used to calculate the likelihood scores used to compare the modelled data in the input data
  * \note This will always be overridden by the derived classes that actually calculate the likelihood scores
  */
-class Likelihood {
+class Likelihood : public HasName {
 public:
   /**
    * \brief This is the default Likelihood constructor
    * \param T is the LikelihoodType for the likelihood component
    * \param w is the weight for the likelihood component
+   * \param givenname is the name of the likelihood component
    */
-  Likelihood(LikelihoodType T, double w = 0.0) { likelihood = 0.0; weight = w; type = T; };
+  Likelihood(LikelihoodType T, double w, const char* givenname) : HasName(givenname) {
+    likelihood = 0.0;
+    weight = w;
+    type = T;
+  };
   /**
    * \brief This is the default Likelihood destructor
    */

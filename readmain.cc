@@ -240,14 +240,17 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
 
     keeper->addComponent(name);
     Likely.resize(1);
+    likelihoodnames.resize(1);
     i = Likely.Size() - 1;
+    likelihoodnames[i] = new char[strlen(name) + 1];
+    strcpy(likelihoodnames[i], name);
 
     if (strcasecmp(type, "penalty") == 0) {
       readWordAndValue(infile, "datafile", datafilename);
       datafile.open(datafilename, ios::in);
       handle.checkIfFailure(datafile, datafilename);
       handle.Open(datafilename);
-      Likely[i] = new BoundLikelihood(subdata, Area, TimeInfo, keeper, weight);
+      Likely[i] = new BoundLikelihood(subdata, Area, TimeInfo, keeper, weight, name);
       handle.Close();
       datafile.close();
       datafile.clear();
@@ -261,7 +264,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       }
 
     } else if (strcasecmp(type, "understocking") == 0) {
-      Likely[i] = new UnderStocking(infile, Area, TimeInfo, weight);
+      Likely[i] = new UnderStocking(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "catchstatistics") == 0) {
       Likely[i] = new CatchStatistics(infile, Area, TimeInfo, weight, name);
@@ -291,7 +294,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       handle.Warning("The predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");
 
     } else if (strcasecmp(type, "migrationpenalty") == 0) {
-      Likely[i] = new MigrationPenalty(infile, weight);
+      Likely[i] = new MigrationPenalty(infile, weight, name);
 
     } else if (strcasecmp(type, "recstatistics") == 0) {
       Likely[i] = new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name);
@@ -322,6 +325,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
 void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
   int calclikelihood, const char* const inputdir, const char* const workingdir) {
 
+  int i, j;
   char text[MaxStrLength];
   char filename[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -492,4 +496,30 @@ void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
       }
     }
   }
+
+  //check that the names of the stocks, fleets and likelihood components are unique
+  for (i = 0; i < fleetnames.Size(); i++)
+    for (j = 0; j < fleetnames.Size(); j++)
+      if ((strcasecmp(fleetnames[i], fleetnames[j]) == 0) && (i != j))
+        handle.logFailure("Error in input files - repeated fleet", fleetnames[i]);
+
+  for (i = 0; i < tagnames.Size(); i++)
+    for (j = 0; j < tagnames.Size(); j++)
+      if ((strcasecmp(tagnames[i], tagnames[j]) == 0) && (i != j))
+        handle.logFailure("Error in input files - repeated tagging experiment", tagnames[i]);
+
+  for (i = 0; i < otherfoodnames.Size(); i++)
+    for (j = 0; j < otherfoodnames.Size(); j++)
+      if ((strcasecmp(otherfoodnames[i], otherfoodnames[j]) == 0) && (i != j))
+        handle.logFailure("Error in input files - repeated other food", otherfoodnames[i]);
+
+  for (i = 0; i < stocknames.Size(); i++)
+    for (j = 0; j < stocknames.Size(); j++)
+      if ((strcasecmp(stocknames[i], stocknames[j]) == 0) && (i != j))
+        handle.logFailure("Error in input files - repeated stock", stocknames[i]);
+
+  for (i = 0; i < likelihoodnames.Size(); i++)
+    for (j = 0; j < likelihoodnames.Size(); j++)
+      if ((strcasecmp(likelihoodnames[i], likelihoodnames[j]) == 0) && (i != j))
+        handle.logFailure("Error in input files - repeated likelihood component", likelihoodnames[i]);
 }

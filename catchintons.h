@@ -150,10 +150,6 @@ private:
    * \brief This is the name of the function to be used to calculate the likelihood component
    */
   char* functionname;
-  /**
-   * \brief This is the name of the CatchInTons likelihood component
-   */
-  char* ctname;
 };
 
 #endif

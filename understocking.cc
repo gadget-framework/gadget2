@@ -9,8 +9,8 @@
 extern ErrorHandler handle;
 
 UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double weight)
-  : Likelihood(UNDERSTOCKINGLIKELIHOOD, weight), powercoeff(2) {
+  const TimeClass* const TimeInfo, double weight, const char* name)
+  : Likelihood(UNDERSTOCKINGLIKELIHOOD, weight, name), powercoeff(2) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -93,14 +93,14 @@ void UnderStocking::setPredators(PredatorPtrVector& Predators) {
 
 void UnderStocking::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
-  handle.logMessage("Reset understocking component");
+  handle.logMessage("Reset understocking component", this->Name());
 }
 
 void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
   int i, j, k;
   double err, l;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    handle.logMessage("Checking understocking likelihood component");
+    handle.logMessage("Checking understocking likelihood component", this->Name());
     DoubleVector store(areas.Nrow(), 0.0);
     l = 0.0;
     for (k = 0; k < areas.Nrow(); k++) {
@@ -129,7 +129,7 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
 void UnderStocking::LikelihoodPrint(ofstream& outfile) {
   int i, j, year, area;
 
-  outfile << "\nUnderstocking\n\nLikelihood " << likelihood
+  outfile << "\nUnderstocking " << this->Name() << "\n\nLikelihood " << likelihood
     << "\nWeight " << weight << "\nPredator names:";
   for (i = 0; i < prednames.Size(); i++)
     outfile << sep << prednames[i];
@@ -161,7 +161,7 @@ void UnderStocking::SummaryPrint(ofstream& outfile) {
     for (area = 0; area < likelihoodValues.Ncol(year); area++)
       outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
         << Steps[year] << sep << setw(printwidth) << areaindex[area]
-        << " understocking"  << setw(smallwidth) << weight << sep
+        << sep << this->Name() << setw(smallwidth) << weight << sep
         << setprecision(largeprecision) << setw(largewidth)
         << likelihoodValues[year][area] << endl;
 

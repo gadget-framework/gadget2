@@ -117,10 +117,6 @@ private:
    */
   TagPtrVector tagvec;
   /**
-   * \brief This is the name of the Recaptures likelihood component
-   */
-  char* recname;
-  /**
    * \brief This is the identifier of the function to be used to calculate the likelihood component
    */
   int functionnumber;

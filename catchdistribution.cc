@@ -16,7 +16,7 @@ extern ErrorHandler handle;
 
 CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper, double weight, const char* name)
-  : Likelihood(CATCHDISTRIBUTIONLIKELIHOOD, weight) {
+  : Likelihood(CATCHDISTRIBUTIONLIKELIHOOD, weight, name) {
 
   int i, j;
   char text[MaxStrLength];
@@ -33,8 +33,6 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   timeindex = 0;
   illegal = 0;
   stocktype = 0;
-  cdname = new char[strlen(name) + 1];
-  strcpy(cdname, name);
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
 
@@ -309,7 +307,7 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logWarning("Warning in catchdistribution - found no data in the data file for", cdname);
+    handle.logWarning("Warning in catchdistribution - found no data in the data file for", this->Name());
   handle.logMessage("Read catchdistribution data file - number of entries", count);
 }
 
@@ -336,7 +334,6 @@ CatchDistribution::~CatchDistribution() {
   }
   delete aggregator;
   delete LgrpDiv;
-  delete[] cdname;
   delete[] functionname;
 }
 
@@ -344,13 +341,13 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
   illegal = 0;
-  handle.logMessage("Reset catchdistribution component", cdname);
+  handle.logMessage("Reset catchdistribution component", this->Name());
 }
 
 void CatchDistribution::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch Distribution " << cdname << " - likelihood value " << likelihood
+  outfile << "\nCatch Distribution " << this->Name() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -387,7 +384,7 @@ void CatchDistribution::Print(ofstream& outfile) const {
 void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
   int i, j, year, area;
 
-  outfile << "\nCatch Distribution " << cdname << "\n\nLikelihood " << likelihood
+  outfile << "\nCatch Distribution " << this->Name() << "\n\nLikelihood " << likelihood
     << "\nFunction " << functionname << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -557,7 +554,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
     }
     if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
       likelihood += l;
-      handle.logMessage("Calculating likelihood score for catchdistribution component", cdname);
+      handle.logMessage("Calculating likelihood score for catchdistribution component", this->Name());
       handle.logMessage("The likelihood score for this component on this timestep is", l);
     }
     timeindex++;
@@ -964,7 +961,7 @@ void CatchDistribution::SummaryPrint(ofstream& outfile) {
       if (yearly == 0) {
         outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
           << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-          << setw(largewidth) << cdname << sep << setw(smallwidth) << weight
+          << setw(largewidth) << this->Name() << sep << setw(smallwidth) << weight
           << sep << setprecision(largeprecision) << setw(largewidth)
           << likelihoodValues[year][area] << endl;
       } else {
@@ -973,7 +970,7 @@ void CatchDistribution::SummaryPrint(ofstream& outfile) {
         } else {
           outfile << setw(lowwidth) << Years[year] << "  all "
             << setw(printwidth) << areaindex[area] << sep
-            << setw(largewidth) << cdname << sep << setw(smallwidth) << weight
+            << setw(largewidth) << this->Name() << sep << setw(smallwidth) << weight
             << sep << setprecision(largeprecision) << setw(largewidth)
             << likelihoodValues[year][area] << endl;
         }

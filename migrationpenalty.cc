@@ -5,8 +5,8 @@
 
 extern ErrorHandler handle;
 
-MigrationPenalty::MigrationPenalty(CommentStream& infile, double weight)
-  : Likelihood(MIGRATIONPENALTYLIKELIHOOD, weight), powercoeffs(2) {
+MigrationPenalty::MigrationPenalty(CommentStream& infile, double weight, const char* name)
+  : Likelihood(MIGRATIONPENALTYLIKELIHOOD, weight, name), powercoeffs(2) {
 
   char text[MaxStrLength];
   stockname = new char[MaxStrLength];

@@ -23,9 +23,10 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param weight is the weight for the likelihood component
+   * \param name is the name for the likelihood component
    */
   BoundLikelihood(CommentStream& infile, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const Keeper* const keeper, double weight);
+    const TimeClass* const TimeInfo, const Keeper* const keeper, double weight, const char* name);
   /**
    * \brief This is the default BoundLikelihood destructor
    */

@@ -387,10 +387,6 @@ private:
    */
   char* functionname;
   /**
-   * \brief This is the name of the StomachContent likelihood component
-   */
-  char* stomachname;
-  /**
    * \brief This is the SC used to calculate the likelihood score by calulating the consumption from the modelled data and comparing it to the stomach contents data specified in the input file
    */
   SC* StomCont;

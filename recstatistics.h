@@ -122,10 +122,6 @@ private:
    */
   IntMatrix Steps;
   /**
-   * \brief This is the name of the RecStatistics likelihood component
-   */
-  char* rsname;
-  /**
    * \brief This is the name of the function to be used to calculate the likelihood component
    */
   char* functionname;

@@ -134,10 +134,6 @@ private:
    */
   CharPtrVector stocknames;
   /**
-   * \brief This is the name of the CatchDistribution likelihood component
-   */
-  char* cdname;
-  /**
    * \brief This is the IntMatrix used to store area information
    */
   IntMatrix areas;

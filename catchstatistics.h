@@ -157,10 +157,6 @@ private:
    */
   IntVector Steps;
   /**
-   * \brief This is the name of the CatchStatistics likelihood component
-   */
-  char* csname;
-  /**
    * \brief This is the name of the function to be used to calculate the likelihood component
    */
   char* functionname;

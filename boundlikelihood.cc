@@ -8,8 +8,8 @@
 extern ErrorHandler handle;
 
 BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, const Keeper* const keeper, double weight)
-  : Likelihood(BOUNDLIKELIHOOD, weight) {
+  const TimeClass* const TimeInfo, const Keeper* const keeper, double weight, const char* name)
+  : Likelihood(BOUNDLIKELIHOOD, weight, name) {
 
   ParameterVector switches;
   int i, j;
@@ -67,7 +67,7 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
   if (checkInitialised == 0) {
     if (keeper->boundsGiven() == 0)
       handle.logWarning("Warning in boundlikelihood - no bounds have been set in input file");
-      
+
     int i, j, k, numvar, numset;
     numvar = keeper->numVariables();
     numset = switchnr.Size();
@@ -114,7 +114,7 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
     }
     checkInitialised = 1;
   }
-  handle.logMessage("Reset boundlikelihood component");
+  handle.logMessage("Reset boundlikelihood component", this->Name());
 }
 
 void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keeper* const keeper) {

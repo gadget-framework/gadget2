@@ -70,6 +70,8 @@ Ecosystem::~Ecosystem() {
     delete[] tagnames[i];
   for (i = 0; i < otherfoodnames.Size(); i++)
     delete[] otherfoodnames[i];
+  for (i = 0; i < likelihoodnames.Size(); i++)
+    delete[] likelihoodnames[i];
   for (i = 0; i < printvec.Size(); i++)
     delete printvec[i];
   for (i = 0; i < Likely.Size(); i++)

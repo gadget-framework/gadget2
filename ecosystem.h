@@ -370,6 +370,10 @@ protected:
    */
   LikelihoodPtrVector Likely;
   /**
+   * \brief This is the CharPtrVector of the names of the likelihood components for the current model
+   */
+  CharPtrVector likelihoodnames;
+  /**
    * \brief This is the PrinterPtrVector of the printer classes for the current model
    */
   PrinterPtrVector printvec;

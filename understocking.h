@@ -22,9 +22,10 @@ public:
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param weight is the weight for the likelihood component
+   * \param name is the name for the likelihood component
    */
   UnderStocking(CommentStream& infile, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, double weight);
+    const TimeClass* const TimeInfo, double weight, const char* name);
   /**
    * \brief This is the default UnderStocking destructor
    */

@@ -12,7 +12,7 @@ extern ErrorHandler handle;
 
 SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper, double weight, const char* name)
-  : Likelihood(SURVEYDISTRIBUTIONLIKELIHOOD, weight) {
+  : Likelihood(SURVEYDISTRIBUTIONLIKELIHOOD, weight, name) {
 
   int i, j;
   char text[MaxStrLength];
@@ -29,8 +29,6 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
 
   index = 0;
   stocktype = 0;
-  sdname = new char[strlen(name) + 1];
-  strcpy(sdname, name);
   fittype = new char[MaxStrLength];
   strncpy(fittype, "", MaxStrLength);
   liketype = new char[MaxStrLength];
@@ -245,7 +243,7 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logWarning("Warning in surveydistribution - found no data in the data file for", sdname);
+    handle.logWarning("Warning in surveydistribution - found no data in the data file for", this->Name());
   handle.logMessage("Read surveydistribution data file - number of entries", count);
 }
 
@@ -272,7 +270,6 @@ SurveyDistribution::~SurveyDistribution() {
   if (aggregator != 0)
     delete aggregator;
   delete LgrpDiv;
-  delete[] sdname;
   delete[] fittype;
   delete[] liketype;
 }
@@ -280,12 +277,12 @@ SurveyDistribution::~SurveyDistribution() {
 void SurveyDistribution::Reset(const Keeper* const keeper) {
   index = 0;
   Likelihood::Reset(keeper);
-  handle.logMessage("Reset surveydistribution component", sdname);
+  handle.logMessage("Reset surveydistribution component", this->Name());
 }
 
 void SurveyDistribution::Print(ofstream& outfile) const {
   int i;
-  outfile << "\nSurvey Distribution " << sdname << " - likelihood value " << likelihood
+  outfile << "\nSurvey Distribution " << this->Name() << " - likelihood value " << likelihood
     << "\n\tFunction " << liketype << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -296,8 +293,8 @@ void SurveyDistribution::Print(ofstream& outfile) const {
 
 void SurveyDistribution::LikelihoodPrint(ofstream& outfile) {
   int i, j, year;
-  
-  outfile << "\nSurvey Distribution " << sdname << "\n\nLikelihood " << likelihood
+
+  outfile << "\nSurvey Distribution " << this->Name() << "\n\nLikelihood " << likelihood
     << "\nWeight " << weight << "\nStock names";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -428,7 +425,7 @@ void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
     handle.logFailure("Error in surveydistribution - unrecognised stocktype", stocktype);
 
   double l = 0.0;
-  handle.logMessage("Calculating likelihood score for surveydistribution component", sdname);
+  handle.logMessage("Calculating likelihood score for surveydistribution component", this->Name());
 
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns only one element.
   const AgeBandMatrix* alptr = &(aggregator->returnSum()[0]);
@@ -466,7 +463,7 @@ double SurveyDistribution::calcLikMultinomial() {
   for (age = minrow; age <= maxrow; age++) {
     for (length = mincol[age]; length <= maxcol[age]; length++) {
       if ((*obsDistribution[index])[age][length] > epsilon) { //cell will contribute
-        total -= (*obsDistribution[index])[age][length] * 
+        total -= (*obsDistribution[index])[age][length] *
                  log(((*modelDistribution[index])[age][length]) + epsilon);
         obstotal += (*obsDistribution[index])[age][length];
         modtotal += ((*modelDistribution[index])[age][length] + epsilon);
@@ -544,7 +541,7 @@ double SurveyDistribution::calcLikLog() {
     total *= total;
   } else
     total = verybig;
-    
+
   likelihoodValues[index] = total; //kgf 19/1 99
   return total;
 }
@@ -557,7 +554,7 @@ void SurveyDistribution::SummaryPrint(ofstream& outfile) {
     for (area = 0; area < areaindex.Size(); area++) {
       outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
         << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(largewidth) << sdname << sep << setw(smallwidth)
+        << setw(largewidth) << this->Name() << sep << setw(smallwidth)
         << weight << sep << setprecision(largeprecision) << setw(largewidth)
         << likelihoodValues[year] << endl;
     }

@@ -15,7 +15,7 @@ extern ErrorHandler handle;
 
 CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, const char* name)
-  : Likelihood(CATCHSTATISTICSLIKELIHOOD, weight) {
+  : Likelihood(CATCHSTATISTICSLIKELIHOOD, weight, name) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -30,9 +30,6 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   CommentStream subdata(datafile);
 
   timeindex = 0;
-  csname = new char[strlen(name) + 1];
-  strcpy(csname, name);
-
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
   readWordAndValue(infile, "datafile", datafilename);
@@ -213,7 +210,7 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
   }
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logWarning("Warning in catchstatistics - found no data in the data file for", csname);
+    handle.logWarning("Warning in catchstatistics - found no data in the data file for", this->Name());
   handle.logMessage("Read catchstatistics data file - number of entries", count);
 }
 
@@ -235,7 +232,6 @@ CatchStatistics::~CatchStatistics() {
   }
   for (i = 0; i < variance.Size(); i++)
     delete variance[i];
-  delete[] csname;
   delete[] functionname;
   delete LgrpDiv;
 }
@@ -243,13 +239,13 @@ CatchStatistics::~CatchStatistics() {
 void CatchStatistics::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
-  handle.logMessage("Reset catchstatistics component", csname);
+  handle.logMessage("Reset catchstatistics component", this->Name());
 }
 
 void CatchStatistics::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch Statistics " << csname << " - likelihood value " << likelihood
+  outfile << "\nCatch Statistics " << this->Name() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -305,7 +301,7 @@ void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    handle.logMessage("Calculating likelihood score for catchstatistics component", csname);
+    handle.logMessage("Calculating likelihood score for catchstatistics component", this->Name());
     aggregator->Sum(TimeInfo);
     l = calcLikSumSquares();
     likelihood += l;
@@ -369,7 +365,7 @@ double CatchStatistics::calcLikSumSquares() {
 void CatchStatistics::LikelihoodPrint(ofstream& outfile) {
   int i, j, year, area;
 
-  outfile << "\nCatch Statistics " << csname << "\n\nLikelihood " << likelihood
+  outfile << "\nCatch Statistics " << this->Name() << "\n\nLikelihood " << likelihood
     << "\nFunction " << functionname << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -442,7 +438,7 @@ void CatchStatistics::SummaryPrint(ofstream& outfile) {
     for (area = 0; area < likelihoodValues.Ncol(year); area++)
       outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
         << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(largewidth) << csname << sep << setw(smallwidth) << weight << sep
+        << setw(largewidth) << this->Name() << sep << setw(smallwidth) << weight << sep
         << setprecision(largeprecision) << setw(largewidth)
         << likelihoodValues[year][area] << endl;
 

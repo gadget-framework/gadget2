@@ -15,7 +15,7 @@ extern ErrorHandler handle;
 StockDistribution::StockDistribution(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
   double weight, const char* name)
-  : Likelihood(STOCKDISTRIBUTIONLIKELIHOOD, weight) {
+  : Likelihood(STOCKDISTRIBUTIONLIKELIHOOD, weight, name) {
 
   int i, j;
   char text[MaxStrLength];
@@ -30,8 +30,6 @@ StockDistribution::StockDistribution(CommentStream& infile,
   CommentStream subdata(datafile);
 
   timeindex = 0;
-  sdname = new char[strlen(name) + 1];
-  strcpy(sdname, name);
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
   readWordAndValue(infile, "datafile", datafilename);
@@ -245,7 +243,7 @@ void StockDistribution::readStockData(CommentStream& infile,
   }
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logWarning("Warning in stockdistribution - found no data in the data file for", sdname);
+    handle.logWarning("Warning in stockdistribution - found no data in the data file for", this->Name());
   handle.logMessage("Read stockdistribution data file - number of entries", count);
 }
 
@@ -257,7 +255,6 @@ StockDistribution::~StockDistribution() {
   }
   delete[] aggregator;
   delete[] functionname;
-  delete[] sdname;
   delete LgrpDiv;
 
   for (i = 0; i < fleetnames.Size(); i++)
@@ -278,12 +275,12 @@ StockDistribution::~StockDistribution() {
 void StockDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
-  handle.logMessage("Reset stockdistribution component", sdname);
+  handle.logMessage("Reset stockdistribution component", this->Name());
 }
 
 void StockDistribution::Print(ofstream& outfile) const {
   int i;
-  outfile << "\nStock Distribution " << sdname << " - likelihood value " << likelihood
+  outfile << "\nStock Distribution " << this->Name() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -334,7 +331,7 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   int i;
   double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    handle.logMessage("Calculating likelihood score for stockdistribution component", sdname);
+    handle.logMessage("Calculating likelihood score for stockdistribution component", this->Name());
     for (i = 0; i < stocknames.Size(); i++)
       aggregator[i]->Sum(TimeInfo);
 
@@ -444,7 +441,7 @@ double StockDistribution::calcLikSumSquares() {
 void StockDistribution::LikelihoodPrint(ofstream& outfile) {
   int i, j, y, a;
 
-  outfile << "\nStock Distribution " << sdname << "\n\nLikelihood " << likelihood
+  outfile << "\nStock Distribution " << this->Name() << "\n\nLikelihood " << likelihood
     << "\nFunction " << functionname << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -509,7 +506,7 @@ void StockDistribution::SummaryPrint(ofstream& outfile) {
     for (area = 0; area < likelihoodValues.Ncol(year); area++)
       outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
         << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(largewidth) << sdname << sep << setw(smallwidth) << weight << sep
+        << setw(largewidth) << this->Name() << sep << setw(smallwidth) << weight << sep
         << setprecision(largeprecision) << setw(largewidth)
         << likelihoodValues[year][area] << endl;
 
