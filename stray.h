@@ -59,7 +59,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the straying process will take place, 0 otherwise
    */
-  int IsStrayStepArea(int area, const TimeClass* const TimeInfo);
+  int isStrayStepArea(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This will reset the straying information for the current model run
    * \param TimeInfo is the TimeClass for the current model

@@ -1,10 +1,5 @@
 #include "netdata.h"
-
-#ifdef GADGET_NETWORK
 #include "gadget.h"
-#else
-#include "paramin.h"
-#endif
 
 NetDataVariables::NetDataVariables(int numVar) {
   tag = -1;

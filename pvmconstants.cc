@@ -1,10 +1,5 @@
 #include "pvmconstants.h"
-
-#ifdef GADGET_NETWORK
 #include "gadget.h"
-#else
-#include "paramin.h"
-#endif
 
 PVMConstants::PVMConstants() {
   endType = 1;
@@ -29,7 +24,7 @@ const void PVMConstants::setDataEncode(int dc) {
   if (dc == 0 || dc == 1 || dc == 2)
     dataencode = dc;
   else {
-    cerr << "Error in pvmconstants - illegal value for dataencode\n";
+    cerr << "Error in pvmconstants - invalid value for dataencode\n";
     exit(EXIT_FAILURE);
   }
 }

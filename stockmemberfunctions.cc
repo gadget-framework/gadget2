@@ -117,7 +117,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
     //Weights at length are fixed to the value in the input file
     grower->GrowthImplement(area, LgrpDiv);
     if (doesmature) {
-      if (maturity->IsMaturationStep(area, TimeInfo)) {
+      if (maturity->isMaturationStep(area, TimeInfo)) {
         Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->getWeight(area), maturity, TimeInfo, Area, area);
         if (tagAlkeys.numTagExperiments() > 0)
           tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
@@ -136,7 +136,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
     //New weights at length are calculated
     grower->GrowthImplement(area, NumberInArea[inarea], LgrpDiv);
     if (doesmature) {
-      if (maturity->IsMaturationStep(area, TimeInfo)) {
+      if (maturity->isMaturationStep(area, TimeInfo)) {
         Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area), maturity, TimeInfo, Area, area);
         if (tagAlkeys.numTagExperiments() > 0)
           tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
@@ -159,11 +159,11 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 void Stock::FirstUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   int inarea = AreaNr[area];
   if (doesmove)
-    if (transition->IsTransitionStep(area, TimeInfo))
+    if (transition->isTransitionStep(area, TimeInfo))
       transition->keepAgeGroup(area, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
 
   if (doesstray)
-    if (stray->IsStrayStepArea(inarea, TimeInfo))
+    if (stray->isStrayStepArea(inarea, TimeInfo))
       stray->storeStrayingStock(inarea, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
 }
 
@@ -179,13 +179,13 @@ void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass*
 void Stock::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   int inarea = AreaNr[area];
   if (doesmove)
-    if (transition->IsTransitionStep(area, TimeInfo)) {
+    if (transition->isTransitionStep(area, TimeInfo)) {
       updateTransitionStockWithTags(TimeInfo);
       transition->Move(area, TimeInfo);
     }
 
   if (doesstray)
-    if (stray->IsStrayStepArea(inarea, TimeInfo)) {
+    if (stray->isStrayStepArea(inarea, TimeInfo)) {
       updateStrayStockWithTags(TimeInfo);
       stray->addStrayStock(inarea, TimeInfo);
     }
@@ -205,7 +205,7 @@ void Stock::FirstSpecialTransactions(int area, const AreaClass* const Area, cons
 
 void Stock::SecondSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doesmature)
-    if (maturity->IsMaturationStep(area, TimeInfo)) {
+    if (maturity->isMaturationStep(area, TimeInfo)) {
       updateMatureStockWithTags(TimeInfo);
       maturity->Move(area, TimeInfo);
     }

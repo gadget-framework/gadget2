@@ -569,7 +569,7 @@ void LenStock::SecondSpecialTransactions(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   if (doesmature)
-    if (maturity->IsMaturationStep(area, TimeInfo)) {
+    if (maturity->isMaturationStep(area, TimeInfo)) {
       updateMatureStockWithTags(TimeInfo);
       maturity->Move(area, TimeInfo);
     }

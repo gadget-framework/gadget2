@@ -79,7 +79,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the transition process will take place, 0 otherwise
    */
-  virtual int IsTransitionStep(int area, const TimeClass* const TimeInfo);
+  virtual int isTransitionStep(int area, const TimeClass* const TimeInfo);
 protected:
   /**
    * \brief This is the StockPtrVector of the stocks that the young stock will move to
@@ -108,11 +108,11 @@ protected:
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store the calculated old stocks
    */
-  AgeBandMatrixPtrVector AgeGroup;
+  AgeBandMatrixPtrVector Storage;
   /**
    * \brief This is the AgeBandMatrixRatioPtrVector used to store the calculated tagged stocks
    */
-  AgeBandMatrixRatioPtrVector TagAgeGroup;
+  AgeBandMatrixRatioPtrVector TagStorage;
   /**
    * \brief This is the age that the younger stock will move into the older stocks
    */

@@ -229,7 +229,7 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile) {
   outfile.flush();
 }
 
-int SIOnStep::IsToSum(const TimeClass* const TimeInfo) const {
+int SIOnStep::isToSum(const TimeClass* const TimeInfo) const {
   return AAT.AtCurrentTime(TimeInfo);
 }
 

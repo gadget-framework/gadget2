@@ -64,19 +64,19 @@ protected:
   /**
    * \brief This is the IntVector of timesteps that the recruitment will take place on
    */
-  IntVector RenewalTime;
+  IntVector renewalTime;
   /**
    * \brief This is the IntVector of areas that the recruitment will take place on
    */
-  IntVector RenewalArea;
+  IntVector renewalArea;
   /**
    * \brief This is the AgeBandMatrixPtrVector that contains the number and weight of the recruits
    */
-  AgeBandMatrixPtrVector Distribution;
+  AgeBandMatrixPtrVector renewalDistribution;
   /**
    * \brief This is the FormulaVector of the number of recruits used to calculate the recruitment population
    */
-  FormulaVector Number;
+  FormulaVector renewalNumber;
   /**
    * \brief This is the FormulaVector of mean lengths of the recruits used to calculate the recruitment population
    */

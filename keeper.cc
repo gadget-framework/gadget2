@@ -156,7 +156,7 @@ void Keeper::ScaledValues(DoubleVector& val) const {
 void Keeper::ScaledOptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->numOptVariables())
-    handle.logFailure("Error in keeper - received illegal number of optimising variables");
+    handle.logFailure("Error in keeper - received invalid number of optimising variables");
 
   if (opt.Size() == 0)
     this->ScaledValues(val);
@@ -173,7 +173,7 @@ void Keeper::ScaledOptValues(DoubleVector& val) const {
 void Keeper::OptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->numOptVariables())
-    handle.logFailure("Error in keeper - received illegal number of optimising variables");
+    handle.logFailure("Error in keeper - received invalid number of optimising variables");
 
   if (opt.Size() == 0)
     this->ValuesOfVariables(val);
@@ -190,7 +190,7 @@ void Keeper::OptValues(DoubleVector& val) const {
 void Keeper::InitialOptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->numOptVariables())
-    handle.logFailure("Error in keeper - received illegal number of optimising variables");
+    handle.logFailure("Error in keeper - received invalid number of optimising variables");
 
   if (opt.Size() == 0)
     this->InitialValues(val);
@@ -207,7 +207,7 @@ void Keeper::InitialOptValues(DoubleVector& val) const {
 void Keeper::OptSwitches(ParameterVector& sw) const {
   int i, k;
   if (sw.Size() != this->numOptVariables())
-    handle.logFailure("Error in keeper - received illegal number of optimising variables");
+    handle.logFailure("Error in keeper - received invalid number of optimising variables");
 
   if (opt.Size() == 0)
     this->Switches(sw);
@@ -257,7 +257,7 @@ void Keeper::Update(const DoubleVector& val) {
 void Keeper::Update(int pos, double& value) {
   int i;
   if (pos <= 0 && pos >= address.Nrow())
-    handle.logFailure("Error in keeper - received illegal variable to update");
+    handle.logFailure("Error in keeper - received invalid variable to update");
 
   for (i = 0; i < address.Ncol(pos); i++)
     *address[pos][i].addr = value;
@@ -582,7 +582,7 @@ void Keeper::UpperBds(DoubleVector& ubs) const {
 void Keeper::LowerOptBds(DoubleVector& lbs) const {
   int i, j;
   if (lbs.Size() != this->numOptVariables())
-    handle.logFailure("Error in keeper - received illegal number of optimising variables");
+    handle.logFailure("Error in keeper - received invalid number of optimising variables");
 
   if (lbs.Size() == 0)
     this->LowerBds(lbs);
@@ -599,7 +599,7 @@ void Keeper::LowerOptBds(DoubleVector& lbs) const {
 void Keeper::UpperOptBds(DoubleVector& ubs) const {
   int i, j;
   if (ubs.Size() != this->numOptVariables())
-    handle.logFailure("Error in keeper - received illegal number of optimising variables");
+    handle.logFailure("Error in keeper - received invalid number of optimising variables");
 
   if (ubs.Size() == 0)
     this->UpperBds(ubs);

@@ -56,7 +56,7 @@ void SIByFleetOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
 }
 
 void SIByFleetOnStep::Sum(const TimeClass* const TimeInfo) {
-  if (!(this->IsToSum(TimeInfo)))
+  if (!(this->isToSum(TimeInfo)))
     return;
 
   handle.logMessage("Calculating index for surveyindex component", this->SIName());

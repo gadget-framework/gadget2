@@ -47,7 +47,7 @@ void Ecosystem::Initialise(int optimize) {
   int i;
 
   for (i = 0; i < stockvec.Size(); i++) {
-    if (stockvec[i]->IsEaten()) {
+    if (stockvec[i]->isEaten()) {
       preyvec.resize(1);
       preyvec[preyindex++] = stockvec[i]->returnPrey();
     }

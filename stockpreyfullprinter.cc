@@ -126,7 +126,7 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
         handle.logFailure("Error in stockpreyfullprinter - stocks arent defined on all areas");
 
   //Here comes some code that is only useful when handling one stock.
-  if (stocks[0]->IsEaten())
+  if (stocks[0]->isEaten())
     preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->returnPrey(), areas);
   else
     handle.logFailure("Error in stockpreyfullprinter - stock is not a prey");

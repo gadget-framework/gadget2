@@ -1,25 +1,52 @@
 #ifndef netdata_h
 #define netdata_h
 
-/* classes NetDataVariables and NetDataResult keep together
- * relevant data to be sent/received in netcommunication */
-
+/**
+ * \class NetDataVariables
+ * \brief this class is used to keep a vector of relevant data to be sent/received using PVM communication 
+ */
 class NetDataVariables {
 public:
   int tag;
   int x_id;
-  double* x;                     //x[0..n-1], where 0 <= n < numVar
-  NetDataVariables(int numVar);  //numVar is the number of variables (>0)
+  /**
+   * \brief this is the vector used to store the variables to be sent/received
+   */
+  double* x;                     
+  /**
+   * \brief this is the default NetDataVariables constructor
+   * \param numVar is the number of variables to be stored
+   */
+  NetDataVariables(int numVar);  
+  /**
+   * \brief this is the default NetDataVariables destructor
+   */
   ~NetDataVariables();
 };
 
+/**
+ * \class NetDataResult
+ * \brief this class is used to keep relevant data to be sent/received using PVM communication 
+ */
 class NetDataResult {
 public:
   int tag;
   int x_id;
-  double result;                 //result of f(x) where x is identified by tag, x_id.
-  int who;                       //identifies which process is sending result
+  /**
+   * \brief this is the variable to be sent/received
+   */
+  double result;                 
+  /**
+   * \brief is the identifier of the process that is sending the data
+   */
+  int who;                       
+  /**
+   * \brief this is the default NetDataResult constructor
+   */
   NetDataResult();
+  /**
+   * \brief this is the default NetDataResult destructor
+   */
   ~NetDataResult();
 };
 

@@ -317,7 +317,7 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     StockPtrVector stocks;
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
-      if (Stocks[j]->IsEaten())
+      if (Stocks[j]->isEaten())
         if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);

@@ -177,7 +177,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
 void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
   AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo) {
 
-  if (this->IsStrayStepArea(area, TimeInfo) == 0)
+  if (this->isStrayStepArea(area, TimeInfo) == 0)
     return;
 
   int age, len, tag;
@@ -210,7 +210,7 @@ void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
 
 void StrayData::addStrayStock(int area, const TimeClass* const TimeInfo) {
 
-  if (this->IsStrayStepArea(area, TimeInfo) == 0)
+  if (this->isStrayStepArea(area, TimeInfo) == 0)
     return;
 
   int s;
@@ -233,7 +233,7 @@ void StrayData::addStrayStock(int area, const TimeClass* const TimeInfo) {
   }
 }
 
-int StrayData::IsStrayStepArea(int area, const TimeClass* const TimeInfo) {
+int StrayData::isStrayStepArea(int area, const TimeClass* const TimeInfo) {
   int i, j;
 
   for (i = 0; i < straystep.Size(); i++)

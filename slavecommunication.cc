@@ -1,10 +1,5 @@
 #include "slavecommunication.h"
-
-#ifdef GADGET_NETWORK
 #include "gadget.h"
-#else
-#include "paramin.h"
-#endif
 
 SlaveCommunication::SlaveCommunication() {
   #ifdef CONDOR
@@ -100,7 +95,7 @@ int SlaveCommunication::startNetCommunication() {
         return !OK;
       }
       if (myId < 0) {
-        cerr << "Error in slavecommunication - received illegal id of " << myId << endl;
+        cerr << "Error in slavecommunication - received invalid id of " << myId << endl;
         return !OK;
       }
       netDataVar = new NetDataVariables(numberOfVar);
@@ -125,10 +120,10 @@ int SlaveCommunication::sendToMaster(double res) {
   int OK, info;
   assert(netDataVar != NULL);
   if (netDataVar->x_id < 0 || netDataVar->tag < 0) {
-    cerr << "Error in slavecommunication - illegal id received\n";
+    cerr << "Error in slavecommunication - invalid id received\n";
     OK = 0;
   } else if (myId < 0) {
-    cerr << "Error in slavecommunication - illegal id received\n";
+    cerr << "Error in slavecommunication - invalid id received\n";
     OK = 0;
   } else {
     NetDataResult* sendData = new NetDataResult;
@@ -317,7 +312,6 @@ int SlaveCommunication::getReceiveType() {
 
 int SlaveCommunication::receiveString() {
   int OK = 1;
-#ifdef GADGET_NETWORK
   int i, info;
   char* tempString = new char[MaxStrLength + 1];
   strncpy(tempString, "", MaxStrLength);
@@ -339,7 +333,6 @@ int SlaveCommunication::receiveString() {
     netDataStr.resize(1, tempString);
   }
   delete tempString;
-#endif
   return OK;
 }
 
@@ -358,13 +351,9 @@ int SlaveCommunication::receivedBounds() {
 }
 
 char* SlaveCommunication::getString(int num) {
-#ifdef GADGET_NETWORK
   assert(num >= 0);
   assert(netDataStr.Size() == numberOfVar);
   return netDataStr[num];
-#else
-  return NULL;
-#endif
 }
 
 void SlaveCommunication::getBound(double* vec) {

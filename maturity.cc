@@ -95,7 +95,7 @@ void Maturity::Print(ofstream& outfile) const {
 }
 
 void Maturity::Move(int area, const TimeClass* const TimeInfo) {
-  if (!(this->IsMaturationStep(area, TimeInfo)))
+  if (!(this->isMaturationStep(area, TimeInfo)))
     handle.logFailure("Error in maturity - maturity requested on wrong timestep");
   int i, inarea = AreaNr[area];
   for (i = 0; i < matureStocks.Size(); i++) {
@@ -117,7 +117,7 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
 void Maturity::PutInStorage(int area, int age, int length, double number,
   double weight, const TimeClass* const TimeInfo) {
 
-  if (!(this->IsMaturationStep(area, TimeInfo)))
+  if (!(this->isMaturationStep(area, TimeInfo)))
     handle.logFailure("Error in maturity - maturity requested on wrong timestep");
   int inarea = AreaNr[area];
   if (isZero(number) || isZero(weight)) {
@@ -132,12 +132,12 @@ void Maturity::PutInStorage(int area, int age, int length, double number,
 void Maturity::PutInStorage(int area, int age, int length, double number,
   const TimeClass* const TimeInfo, int id) {
 
-  if (!(this->IsMaturationStep(area, TimeInfo)))
+  if (!(this->isMaturationStep(area, TimeInfo)))
     handle.logFailure("Error in maturity - maturity requested on wrong timestep");
   if (TagStorage.numTagExperiments() <= 0)
     handle.logFailure("Error in maturity - no tagging experiment");
   else if ((id >= TagStorage.numTagExperiments()) || (id < 0))
-    handle.logFailure("Error in maturity - illegal tagging experiment");
+    handle.logFailure("Error in maturity - invalid tagging experiment");
   else
     *(TagStorage[AreaNr[area]][age][length][id].N) = (number > 0.0 ? number: 0.0);
 }
@@ -264,7 +264,7 @@ void MaturityA::Print(ofstream& outfile) const {
   PrecalcMaturation.Print(outfile);
 }
 
-int MaturityA::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
+int MaturityA::isMaturationStep(int area, const TimeClass* const TimeInfo) {
   return 1;
 }
 
@@ -356,7 +356,7 @@ double MaturityB::MaturationProbability(int age, int length, int growth,
   return 0.0;
 }
 
-int MaturityB::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
+int MaturityB::isMaturationStep(int area, const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < maturitystep.Size(); i++)
     if (maturitystep[i] == TimeInfo->CurrentStep())
@@ -458,12 +458,12 @@ void MaturityC::Reset(const TimeClass* const TimeInfo) {
 double MaturityC::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, int area, double weight) {
 
-  if (this->IsMaturationStep(area, TimeInfo))
+  if (this->isMaturationStep(area, TimeInfo))
     return (min(max(0.0, PrecalcMaturation[age][length]), 1.0));
   return 0.0;
 }
 
-int MaturityC::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
+int MaturityC::isMaturationStep(int area, const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < maturitystep.Size(); i++)
     if (maturitystep[i] == TimeInfo->CurrentStep())
@@ -545,7 +545,7 @@ void MaturityD::Reset(const TimeClass* const TimeInfo) {
 double MaturityD::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, int area, double weight) {
 
-  if ((this->IsMaturationStep(area, TimeInfo)) && (age >= minMatureAge) && (length >= minMatureLength)) {
+  if ((this->isMaturationStep(area, TimeInfo)) && (age >= minMatureAge) && (length >= minMatureLength)) {
     double tmpweight, my, ratio;
 
     if (length >= refWeight.Size())
@@ -564,7 +564,7 @@ double MaturityD::MaturationProbability(int age, int length, int growth,
   return 0.0;
 }
 
-int MaturityD::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
+int MaturityD::isMaturationStep(int area, const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < maturitystep.Size(); i++)
     if (maturitystep[i] == TimeInfo->CurrentStep())

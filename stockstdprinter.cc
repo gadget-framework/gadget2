@@ -168,7 +168,7 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
   LgrpDiv = new LengthGroupDivision(*stocks[0]->returnLengthGroupDiv());
   aggregator = new StockAggregator(stocks, LgrpDiv, areamatrix, agematrix);
   //Here comes some code that is only useful when handling one stock.
-  if (stocks[0]->IsEaten())
+  if (stocks[0]->isEaten())
     preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->returnPrey(), areas);
 }
 

@@ -60,7 +60,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \return 0 (will be overridden in derived classes)
    */
-  virtual int IsMaturationStep(int area, const TimeClass* const TimeInfo) = 0;
+  virtual int isMaturationStep(int area, const TimeClass* const TimeInfo) = 0;
   /**
    * \brief This will calculate the probability of maturation for a given age and length of the immature stock
    * \param age is the age of the age-length cell that the maturation is being calculated on
@@ -189,7 +189,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the maturation process will take place, 0 otherwise
    */
-  virtual int IsMaturationStep(int area, const TimeClass* const TimeInfo);
+  virtual int isMaturationStep(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This will calculate the probability of maturation for a given age and length of the immature stock
    * \param age is the age of the age-length cell that the maturation is being calculated on
@@ -266,7 +266,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the maturation process will take place, 0 otherwise
    */
-  virtual int IsMaturationStep(int area, const TimeClass* const TimeInfo);
+  virtual int isMaturationStep(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This will calculate the probability of maturation for a given age and length of the immature stock
    * \param age is the age of the age-length cell that the maturation is being calculated on
@@ -336,7 +336,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the maturation process will take place, 0 otherwise
    */
-  virtual int IsMaturationStep(int area, const TimeClass* const TimeInfo);
+  virtual int isMaturationStep(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This will calculate the probability of maturation for a given age and length of the immature stock
    * \param age is the age of the age-length cell that the maturation is being calculated on
@@ -419,7 +419,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the maturation process will take place, 0 otherwise
    */
-  virtual int IsMaturationStep(int area, const TimeClass* const TimeInfo);
+  virtual int isMaturationStep(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This will calculate the probability of maturation for a given age and length of the immature stock
    * \param age is the age of the age-length cell that the maturation is being calculated on

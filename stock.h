@@ -162,7 +162,7 @@ public:
   void Print(ofstream& outfile) const;
   int Birthday(const TimeClass* const TimeInfo) const;
   const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
-  int IsEaten() const { return iseaten; };
+  int isEaten() const { return iseaten; };
   int doesSpawn() const { return doesspawn; };
   int doesStray() const { return doesstray; };
   int doesMove() const { return doesmove; };

@@ -346,7 +346,7 @@ void Tags::Update() {
   taggingstock->updateTags(AgeLengthStock[0], this, exp(-tagloss));
   updated[0] = 1;
 
-  if (taggingstock->IsEaten()) {
+  if (taggingstock->isEaten()) {
     tmpLgrpDiv = taggingstock->returnPrey()->returnLengthGroupDiv();
     IntVector preysize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
     IntVector preyminlength(numberofagegroups, 0);
@@ -384,7 +384,7 @@ void Tags::Update() {
     }
 
     AgeLengthStock.resize(1, new AgeBandMatrixPtrVector(numareas, minage, lowerlengthgroups, sizeoflengthgroups));
-    if (tmpStock->IsEaten()) {
+    if (tmpStock->isEaten()) {
       tmpLgrpDiv = tmpStock->returnPrey()->returnLengthGroupDiv();
       IntVector preysize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
       IntVector preyminlength(numberofagegroups, 0);

@@ -270,7 +270,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     for (i = 0; i < stocknames->Size(); i++) {
       found = 0;
       for (j = 0; j < Stocks.Size(); j++)
-        if (Stocks[j]->IsEaten())
+        if (Stocks[j]->isEaten())
           if (strcasecmp(stocknames->operator[](i), Stocks[j]->returnPrey()->Name()) == 0) {
             found++;
             stocks.resize(1, Stocks[j]);

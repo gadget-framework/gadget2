@@ -38,7 +38,7 @@ public:
   virtual void LikelihoodPrint(ofstream& outfile);
 protected:
   void setError() { error++; };
-  int IsToSum(const TimeClass* const TimeInfo) const;
+  int isToSum(const TimeClass* const TimeInfo) const;
   /**
    * \brief This will return a null terminated text string containing the name of the SIOnStep object
    * \return siname

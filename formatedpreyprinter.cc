@@ -151,7 +151,7 @@ void FormatedPreyPrinter::Print(const TimeClass* const TimeInfo) {
   IntVector ages;
   int i;
   for (i = 0; i<stocks.Size(); i++)
-    if (stocks[i]->IsEaten()) {
+    if (stocks[i]->isEaten()) {
       if (printzp)
         printz(zoutfile, *(MortPrey*)stocks[i]->returnPrey(), *Area);
       if (printnp)

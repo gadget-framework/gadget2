@@ -4,10 +4,7 @@
 #include "pvm3.h"
 #include "netdata.h"
 #include "pvmconstants.h"
-
-#ifdef GADGET_NETWORK
 #include "vectorofcharptr.h"
-#endif
 
 /* AJ, 07.09.99
  * The class SlaveCommunication handles netcommunication for a
@@ -36,9 +33,7 @@ private:
   NetDataVariables* netDataVar;
   double* netDataDouble;
   struct timeval tmout;
-  #ifdef GADGET_NETWORK
-    VectorOfCharPtr netDataStr;
-  #endif
+  VectorOfCharPtr netDataStr;
 
 public:
   SlaveCommunication();
