@@ -419,8 +419,6 @@ void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
   if (stocktype == STOCKTYPE)
     aggregator->Sum();
-  else if (stocktype == LENSTOCKTYPE)
-    aggregator->MeanSum();  //mortality model, aggregate mean N values
   else
     handle.logFailure("Error in surveydistribution - unrecognised stocktype", stocktype);
 

@@ -495,8 +495,9 @@ void LenStock::calcNumbers(int area,
     grower->Sum(NumberInArea[inarea], area);
   if (iseaten)
     prey->Sum(Alkeys[inarea], area, TimeInfo->CurrentSubstep());
+  /* JMB - this has been removed ...
   if (doeseat)
-    ((MortPredator*)predator)->Sum(NumberInArea[inarea], area);
+    ((MortPredator*)predator->Sum(NumberInArea[inarea], area);*/
 
   N.setElementsTo(0.0);
 

@@ -173,7 +173,6 @@ public:
   const Migration* returnMigration() const { return migration; };
   PopPredator* returnPredator() const;
   const AgeBandMatrix& getAgeLengthKeys(int area) const;
-  const AgeBandMatrix& getMeanN(int area) const;
   virtual void setStock(StockPtrVector& stockvec);
   void setCI();
   /**

@@ -513,8 +513,6 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   if (AAT.AtCurrentTime(TimeInfo)) {
     if (stocktype == STOCKTYPE)
       aggregator->Sum(TimeInfo);
-    else if (stocktype == LENSTOCKTYPE)
-      aggregator->MeanSum(TimeInfo);  //mortality model, calculated catch
     else
       handle.logFailure("Error in catchdistribution - unrecognised stocktype", stocktype);
 

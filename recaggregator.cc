@@ -4,7 +4,6 @@
 #include "readfunc.h"
 #include "stock.h"
 #include "stockprey.h"
-#include "mortprey.h"
 #include "lengthpredator.h"
 #include "fleet.h"
 #include "readword.h"

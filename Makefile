@@ -6,8 +6,8 @@ GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat \
               -Wreorder -Wwrite-strings -Wsynth -Wchar-subscripts \
               -Wuninitialized -pedantic -W
 
-#DEFINE_FLAGS = -D GADGET_INLINE -D DEBUG -D INTERRUPT_HANDLER -g -O
-DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3 -s
+#DEFINE_FLAGS = -D DEBUG -D INTERRUPT_HANDLER -g -O
+DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O3 -s
 
 ##########################################################################
 # The name of the final executable (eg gadget-paramin or gadget.exe)
@@ -79,7 +79,7 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	preyoveraggregator.o lengthgroup.o preyoverprinter.o catchstatistics.o \
 	preystdinfo.o preystdinfobylength.o timevariable.o boundlikelihood.o stray.o \
 	commentstream.o printinfo.o readfunc.o conversionindex.o readmain.o keeper.o \
-	ecosystem.o readword.o renewal.o mortpredator.o mortprey.o cannibalism.o \
+	ecosystem.o readword.o renewal.o mortprey.o cannibalism.o \
 	fleet.o sibyageonstep.o fleetpreyaggregator.o sibyfleetonstep.o predator.o \
 	sibylengthonstep.o formula.o grower.o growthcalc.o simulation.o hooke.o \
 	simann.o sionstep.o initialcond.o spawner.o initialize.o stochasticdata.o \

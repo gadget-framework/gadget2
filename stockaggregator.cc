@@ -127,36 +127,3 @@ void StockAggregator::Sum() {
     }
   }
 }
-
-void StockAggregator::MeanSum() {
-  int i, j, k;
-  int aggrArea, aggrAge, area, age;
-  PopInfo nullpop;
-
-  for (i = 0; i < total.Size(); i++)
-    for (j = 0; j < total[i].Nrow(); j++)
-      for (k = 0; k < total[i].maxLength(j); k++)
-        total[i][j][k] = nullpop;
-
-  //Sum over the appropriate stocks, areas, ages and length groups.
-  //The index aggrArea is for the dummy area in total.
-  //The index aggrAge is for the dummy age in total.
-  for (i = 0; i < stocks.Size(); i++) {
-    for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
-      for (j = 0; j < areas.Ncol(aggrArea); j++) {
-        //All the areas in areas[aggrArea] will be aggregated to the area aggrArea in total.
-        area = areas[aggrArea][j];
-        if (stocks[i]->IsInArea(area)) {
-          const AgeBandMatrix* alptr = &stocks[i]->getMeanN(area);
-          for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
-            for (k = 0; k < ages.Ncol(aggrAge); k++) {
-              age = ages[aggrAge][k];
-              if ((alptr->minAge() <= age) && (age <= alptr->maxAge()))
-                total[aggrArea][aggrAge].Add((*alptr)[age], *CI[i]);
-            }
-          }
-        }
-      }
-    }
-  }
-}

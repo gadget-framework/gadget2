@@ -5,7 +5,6 @@
 #include "lennaturalm.h"
 #include "grower.h"
 #include "stockprey.h"
-#include "mortprey.h"
 #include "stockpredator.h"
 #include "initialcond.h"
 #include "migration.h"
@@ -164,7 +163,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
       readWordAndVariable(infile, "agedependentmigration", tmpint);
     else
       tmpint = 0;
-      
+
     readWordAndValue(infile, "migrationfile", filename);
     ifstream subfile;
     subfile.open(filename, ios::in);
@@ -436,11 +435,6 @@ int Stock::Birthday(const TimeClass* const TimeInfo) const {
 
 const AgeBandMatrix& Stock::getAgeLengthKeys(int area) const {
   return Alkeys[AreaNr[area]];
-}
-
-const AgeBandMatrix& Stock::getMeanN(int area) const {
-  assert(iseaten && prey->Type() == MORTPREYTYPE);
-  return (((MortPrey*)prey)->getMeanN(area));
 }
 
 const StockPtrVector& Stock::getMatureStocks() {

@@ -54,11 +54,6 @@ public:
    */
   void Sum(const TimeClass* const TimeInfo);
   /**
-   * \brief This function will aggregate the fleet catch data for a fleksibest-style mortality model
-   * \param TimeInfo is the TimeClass for the current model
-   */
-  void MeanSum(const TimeClass* const TimeInfo);
-  /**
    * \brief This will print the aggregator information to the ofstream specified
    * \param outfile is the ofstream to the file that the aggregator information gets sent to
    */

@@ -6,7 +6,6 @@
 #include "areatime.h"
 #include "fleet.h"
 #include "stock.h"
-#include "mortpredator.h"
 #include "ecosystem.h"
 #include "gadget.h"
 

@@ -4,7 +4,6 @@
 #include "readfunc.h"
 #include "stock.h"
 #include "stockprey.h"
-#include "mortprey.h"
 #include "lengthpredator.h"
 #include "fleet.h"
 #include "readword.h"
@@ -163,65 +162,6 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
   //JMB - check that we actually have a catch on this timestep
   //it would be better to check things in the setFleetsAndStocks() function
   //in the likelihood component (so we only do this once).
-  double check = 0.0;
-  for (i = 0; i < total.Size(); i++)
-    for (j = 0; j < total[i].Nrow(); j++)
-      for (k = 0; k < total[i].maxLength(j); k++)
-        check += total[i][j][k].N;
-  if (isZero(check))
-    handle.logWarning("Warning - zero catch found when aggregating for likelihood component");
-}
-
-void FleetPreyAggregator::MeanSum(const TimeClass* const TimeInfo) {
-  //A new aggregator function to sum up the calculated catches from
-  //the mortality model. The results are to be used in the second likelihood
-  //function in CatchDistribution.
-  //written by kgf 16/9 98
-
-  int i, j, k, f, h;
-  int aggrArea, aggrAge, area, age;
-  PopInfo nullpop;
-
-  for (i = 0; i < total.Size(); i++)
-    for (j = 0; j < total[i].Nrow(); j++)
-      for (k = 0; k < total[i].maxLength(j); k++)
-        total[i][j][k] = nullpop;
-
-  //Sum over the appropriate fleets, stocks, areas, ages and length groups.
-  //The index aggrArea is for the dummy area in total.
-  //The index aggrAge is for the dummy age in total.
-  for (f = 0; f < fleets.Size(); f++) {
-    LengthPredator* pred = fleets[f]->returnPredator();
-    for (h = 0; h < stocks.Size(); h++) {
-      MortPrey* prey = (MortPrey*)stocks[h]->returnPrey();
-      for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
-        for (j = 0; j < areas.Ncol(aggrArea); j++) {
-
-          //All the areas in areas[aggrArea] will be aggregated to the
-          //area aggrArea in total.
-          area = areas[aggrArea][j];
-          if (prey->IsInArea(area) && fleets[f]->IsInArea(area)) {
-            for (i = 0; i < pred->numPreys(); i++) {
-              if (prey->Name() == pred->Preys(i)->Name()) {
-                const DoubleIndexVector* suitptr = &pred->Suitability(i)[0];
-                const AgeBandMatrix* alptr = &prey->getMeanN(area);
-                for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
-                  for (k = 0; k < ages.Ncol(aggrAge); k++) {
-                    age = ages[aggrAge][k];
-                    if ((alptr->minAge() <= age) && (age <= alptr->maxAge())) {
-                      DoubleIndexVector Ratio = *suitptr;
-                      total[aggrArea][aggrAge].Add((*alptr)[age], *CI[h], pred->getFlevel(area, TimeInfo), Ratio);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
   double check = 0.0;
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)

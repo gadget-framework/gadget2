@@ -31,10 +31,6 @@ public:
    */
   void Sum();
   /**
-   * \brief This function will aggregate the stock data for a fleksibest-style mortality model
-   */
-  void MeanSum();
-  /**
    * \brief This will return the AgeBandMatrixPtrVector containing the aggregated stock information
    * \return total, the AgeBandMatrixPtrVector of aggregated stock information
    */

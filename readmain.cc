@@ -18,7 +18,6 @@
 #include "recapture.h"
 #include "migrationpenalty.h"
 #include "catchintons.h"
-#include "lenstock.h"
 #include "boundlikelihood.h"
 #include "surveydistribution.h"
 #include "readword.h"
@@ -53,7 +52,7 @@ void Ecosystem::readFleet(CommentStream& infile) {
     else if (strcasecmp(text, "linearfleet") == 0)
       fleetvec[i] = new Fleet(infile, fleetnames[i], Area, TimeInfo, keeper, LINEARFLEET);
     else if (strcasecmp(text, "mortalityfleet") == 0)
-      fleetvec[i] = new Fleet(infile, fleetnames[i], Area, TimeInfo, keeper, MORTALITYFLEET);
+      handle.Message("The mortalityfleet fleet type is no longer supported");
     else
       handle.Message("Error in fleet file - unrecognised fleet", text);
 
@@ -290,26 +289,20 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
     } else if (strcasecmp(type, "catchintons") == 0) {
       Likely[i] = new CatchInTons(infile, Area, TimeInfo, weight, name);
 
-    } else if (strcasecmp(type, "predatorindices") == 0) {
-      handle.Warning("The predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");
-
     } else if (strcasecmp(type, "migrationpenalty") == 0) {
       Likely[i] = new MigrationPenalty(infile, weight, name);
 
     } else if (strcasecmp(type, "recstatistics") == 0) {
       Likely[i] = new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name);
 
-    } else if (strcasecmp(type, "randomwalk") == 0) {
-      handle.Message("The randomwalk likelihood component is no longer supported");
+    } else if (strcasecmp(type, "predatorindices") == 0) {
+      handle.Warning("The predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");
 
     } else if (strcasecmp(type, "logcatch") == 0) {
       handle.Message("The logcatch likelihood component is no longer supported\nUse the log function from the catchdistribution likelihood component instead");
 
     } else if (strcasecmp(type, "logsurveyindices") == 0) {
       handle.Message("The logsurveyindices likelihood component is no longer supported\nUse the log function from the surveyindices likelihood component instead");
-
-    } else if (strcasecmp(type, "aggregatedcatchdist") == 0) {
-      handle.Message("The aggregatedcatchdist likelihood component is no longer supported");
 
     } else {
       handle.Message("Error in likelihood file - unrecognised likelihood", type);

@@ -3,7 +3,6 @@
 
 #include "stock.h"
 #include "mortprey.h"
-#include "mortpredator.h"
 
 class LenStock;
 class LenNaturalM;

@@ -3,7 +3,6 @@
 #include "keeper.h"
 #include "totalpredator.h"
 #include "linearpredator.h"
-#include "mortpredator.h"
 #include "readfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
@@ -22,7 +21,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   int i = 0;
   int tmpint;
   double multscaler;
-  int readamount = 0; //mortalityfleet need no amounts
+
   keeper->addString("fleet");
   keeper->addString(givenname);
 
@@ -69,17 +68,10 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
     case TOTALFLEET:
       predator = new TotalPredator(infile, givenname, areas, &LgrpDiv,
         &LgrpDiv, TimeInfo, keeper, multscaler);
-      readamount = 1;
       break;
     case LINEARFLEET:
       predator = new LinearPredator(infile, givenname, areas, &LgrpDiv,
         &LgrpDiv, TimeInfo, keeper, multscaler);
-      readamount = 1;
-      break;
-    case MORTALITYFLEET:
-      predator = new MortPredator(infile, givenname, areas, &LgrpDiv,
-        &LgrpDiv, TimeInfo, keeper);
-      readamount = 1; //should be 0
       break;
     default:
       handle.Message("Error in fleet - unrecognised fleet type for", givenname);
@@ -91,11 +83,9 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   handle.checkIfFailure(subfile, text);
   handle.Open(text);
 
-  if (readamount != 0) {
-    if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))
-      handle.Message("Error in fleet - failed to read fleet amounts");
-    amount.Inform(keeper);
-  }
+  if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))
+    handle.Message("Error in fleet - failed to read fleet amounts");
+  amount.Inform(keeper);
 
   handle.Close();
   subfile.close();
@@ -121,17 +111,6 @@ void Fleet::adjustEat(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   predator->adjustConsumption(area, TimeInfo->numSubSteps(), TimeInfo->CurrentSubstep());
-}
-
-void Fleet::updatePopulationPart5(int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
-
-  //Calls calcCHat in mortalityfleet,
-  //to calculate the modelled catches for printing [AJ&MNAA 13.05.01]
-  //This should not be called when optimizing, we should look into adding information
-  //to keeper about what kind of run we are doing [AJ&MNAA 13.05.01]
-  if (type == MORTALITYFLEET)
-    ((MortPredator*)predator)->calcCHat(area, TimeInfo);
 }
 
 void Fleet::calcNumbers(int area,
