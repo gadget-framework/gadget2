@@ -61,6 +61,7 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
 
   } else {
     handle.logWarning("Warning - no parameter input file given, using default values");
+    //EcoSystem->checkBounds(); //JMB we are probably outside the bounds anyway ...
     EcoSystem->Reset();
     if (MainInfo->printInitial())
       EcoSystem->writeStatus(MainInfo->getPrintInitialFile());
