@@ -241,7 +241,6 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
     readWordAndVariable(infile, "weight", weight);
     readWordAndValue(infile, "type", type);
 
-    keeper->addComponent(name);
     Likely.resize(1);
     likelihoodnames.resize(1);
     i = Likely.Size() - 1;

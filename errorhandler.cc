@@ -9,6 +9,7 @@ ErrorHandler::ErrorHandler() {
   files = new StrStack();
   uselog = 0;
   loglevel = 2;
+  numwarn = 0;
 }
 
 ErrorHandler::~ErrorHandler() {
@@ -120,6 +121,7 @@ void ErrorHandler::logInformation(const char* msg1, const char* msg2) {
 }
 
 void ErrorHandler::logWarning(const char* msg) {
+  numwarn++;
   if (uselog) {
     logfile << msg << endl;
     logfile.flush();
@@ -129,6 +131,7 @@ void ErrorHandler::logWarning(const char* msg) {
 }
 
 void ErrorHandler::logWarning(const char* msg, int number) {
+  numwarn++;
   if (uselog) {
     logfile << msg << sep << number << endl;
     logfile.flush();
@@ -138,6 +141,7 @@ void ErrorHandler::logWarning(const char* msg, int number) {
 }
 
 void ErrorHandler::logWarning(const char* msg, double number) {
+  numwarn++;
   if (uselog) {
     logfile << msg << sep << number << endl;
     logfile.flush();
@@ -147,6 +151,7 @@ void ErrorHandler::logWarning(const char* msg, double number) {
 }
 
 void ErrorHandler::logWarning(const char* msg1, const char* msg2) {
+  numwarn++;
   if (uselog) {
     logfile << msg1 << sep << msg2 << endl;
     logfile.flush();
@@ -227,6 +232,7 @@ void ErrorHandler::Unexpected(const char* exp, const char* unexp) {
 }
 
 void ErrorHandler::Warning(const char* msg) {
+  numwarn++;
   char* strFilename = files->sendTop();
   if (uselog) {
     logfile << "Warning in file " << strFilename << ": " << msg << endl;
@@ -291,8 +297,11 @@ void ErrorHandler::checkIfFailure(ios& infile, const char* text) {
   return;
 }
 
-void ErrorHandler::logFinish(int opt) {
+void ErrorHandler::logFinish(int opt) {    
   if (uselog) {
+    if (numwarn > 0)
+      logfile << "\nTotal number of warnings was " << numwarn << endl;
+
     if (opt)
       logfile << "\nGadget optimisation finished OK - runtime was ";
     else
@@ -302,6 +311,9 @@ void ErrorHandler::logFinish(int opt) {
   }
 
   if (loglevel > 0) {
+    if (numwarn > 0)
+      cout << "\nTotal number of warnings was " << numwarn << endl;
+
     if (opt) {
       cout << "\nGadget optimisation finished OK - runtime was ";
       RUNID.printTime(cout);

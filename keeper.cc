@@ -10,7 +10,6 @@ extern ErrorHandler handle;
 
 Keeper::Keeper() {
   stack = new StrStack();
-  likcompnames = new StrStack();
   boundsgiven = 0;
   bestlikelihood = 0.0;
 }
@@ -58,8 +57,6 @@ void Keeper::KeepVariable(double& value, const Parameter& attr) {
 Keeper::~Keeper() {
   stack->clearStack();
   delete stack;
-  likcompnames->clearStack();
-  delete likcompnames;
 }
 
 void Keeper::DeleteParam(const double& var) {
@@ -115,12 +112,6 @@ void Keeper::setString(const char* str) {
 
 void Keeper::addString(const char* str) {
   stack->PutInStack(str);
-}
-
-void Keeper::addComponent(const char* name) {
-  //place a tab character to mark the beginning of the next likelihood component
-  likcompnames->PutInStack("\t");
-  likcompnames->PutInStack(name);
 }
 
 int Keeper::numVariables() const {

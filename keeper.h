@@ -36,11 +36,6 @@ public:
    */
   void addString(const string str);
   /**
-   * \brief This function will store the name of a likelihood component
-   * \param name is the name of the likelihood component to be stored
-   */
-  void addComponent(const char* name);
-  /**
    * \brief This function will remove the last text string from the list used to describe variables
    */
   void clearLast();
@@ -219,10 +214,6 @@ protected:
    * \brief This is the StrStack used to store information about the use of the parameters
    */
   StrStack* stack;
-  /**
-   * \brief This is the StrStack used to store information about the likelihood components
-   */
-  StrStack* likcompnames;
   /**
    * \brief This is the ParameterVector used to store information about the names of the parameters
    */

@@ -195,6 +195,10 @@ protected:
    */
   int loglevel;
   /**
+   * \brief This is the number of warning messages that gadget has displayed
+   */
+  int numwarn;
+  /**
    * \brief This is the StrStack of the names of files that are currently open to read from
    */
   StrStack* files;
