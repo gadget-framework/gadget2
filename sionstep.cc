@@ -255,8 +255,8 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInf
   if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps()) {
     outfile << "; Regression information\n";
     for (i = 0; i < colindex.Size(); i++)
-      outfile << "; " << colindex[i] << " slope " << slopes[i]
-        << " intercept " << intercepts[i] << endl;
+      outfile << "; " << colindex[i] << " intercept " << intercepts[i]
+        << " slope " << slopes[i] << " sse " << sse[i] << endl;
   }
 }
 
