@@ -43,6 +43,7 @@ Ecosystem::Ecosystem(const char* const filename, int optimise, int netrun, int c
   infile.clear();
 
   // check and initialise the model
+  handle.logMessage("");  //write a blank line to the log file
   this->Initialise();
   basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size(), 0);
 

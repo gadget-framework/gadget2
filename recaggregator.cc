@@ -17,11 +17,9 @@ RecAggregator::RecAggregator(const FleetPtrVector& Fleets,
 
   taggingExp = tag;
   int i;
-  for (i = 0; i < stocks.Size(); i++) {
-    checkLengthGroupIsFiner(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);
-    CI.resize(1);
+  CI.resize(stocks.Size());
+  for (i = 0; i < stocks.Size(); i++)
     CI[i] = new ConversionIndex(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);
-  }
 
   //Resize total using dummy variables tmppop and popmatrix.
   PopInfo tmppop;
@@ -29,6 +27,7 @@ RecAggregator::RecAggregator(const FleetPtrVector& Fleets,
   tmppop.W = 1.0;
   PopInfoMatrix popmatrix(ages.Nrow(), LgrpDiv->numLengthGroups(), tmppop);
   total.resize(areas.Nrow(), 0, 0, popmatrix);
+  this->Reset();
 }
 
 RecAggregator::~RecAggregator() {

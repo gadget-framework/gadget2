@@ -24,9 +24,8 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
   minrow = 9999;
   int numlengths = LgrpDiv->numLengthGroups();
 
+  CI.resize(stocks.Size());
   for (i = 0; i < stocks.Size(); i++) {
-    checkLengthGroupIsFiner(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);
-    CI.resize(1);
     CI[i] = new ConversionIndex(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);
 
     //For convinience, use ap as shorthand for &(stocks[i]->getAgeLengthKeys(0))

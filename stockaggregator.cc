@@ -14,9 +14,8 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
   minrow = 9999;
   int numlengths = LgrpDiv->numLengthGroups();
 
+  CI.resize(stocks.Size());
   for (i = 0; i < stocks.Size(); i++) {
-    checkLengthGroupIsFiner(stocks[i]->returnLengthGroupDiv(), LgrpDiv);
-    CI.resize(1);
     CI[i] = new ConversionIndex(stocks[i]->returnLengthGroupDiv(), LgrpDiv);
 
     //For convenience, use ap as shorthand for &(stocks[i]->getAgeLengthKeys(0))
