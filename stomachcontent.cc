@@ -474,13 +474,29 @@ void SC::Print(ofstream& outfile) const {
   //timeindex was increased before this is called, so we subtract 1
   t = timeindex - 1;
 
-  for (r = 0; r < modelConsumption[t].Size(); r++) {
-    outfile << "\n\tInternal areas" << sep << r;
-    for (i = 0; i < modelConsumption[t][r]->Nrow(); i++) {
-      outfile << "\n\t\t";
-      for (j = 0; j < (*modelConsumption[t][r])[i].Size(); j++) {
-        outfile.width(smallwidth);
-        outfile << (*modelConsumption[t][r])[i][j] << sep;
+  if (t < 0) {
+    //this has been called at the very start of the model (ie -printinitial)
+    //so the modelConsumption object hasnt been initialised yet ...
+    for (r = 0; r < obsConsumption[0].Size(); r++) {
+      outfile << "\n\tInternal areas" << sep << r;
+      for (i = 0; i < obsConsumption[0][r]->Nrow(); i++) {
+        outfile << "\n\t\t";
+        for (j = 0; j < (*obsConsumption[0][r])[i].Size(); j++) {
+          outfile.width(smallwidth);
+          outfile << 0 << sep;
+        }
+      }
+    }
+
+  } else {
+    for (r = 0; r < modelConsumption[t].Size(); r++) {
+      outfile << "\n\tInternal areas" << sep << r;
+      for (i = 0; i < modelConsumption[t][r]->Nrow(); i++) {
+        outfile << "\n\t\t";
+        for (j = 0; j < (*modelConsumption[t][r])[i].Size(); j++) {
+          outfile.width(smallwidth);
+          outfile << (*modelConsumption[t][r])[i][j] << sep;
+        }
       }
     }
   }
