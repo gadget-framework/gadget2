@@ -45,6 +45,8 @@ StockDistribution::StockDistribution(CommentStream& infile,
 
   if (strcasecmp(functionname, "multinomial") == 0)
     functionnumber = 1;
+  else if (strcasecmp(functionname, "sumofsquares") == 0)
+    functionnumber = 2;
   else
     handle.Message("Error in stockdistribution - unrecognised function", functionname);
 
@@ -173,8 +175,11 @@ void StockDistribution::ReadStockData(CommentStream& infile,
         timeid = (Years.Size() - 1);
 
         AgeLengthData.AddRows(1, numarea);
-        for (i = 0; i < numarea; i++)
+        Proportions.AddRows(1, numarea);
+        for (i = 0; i < numarea; i++) {
           AgeLengthData[timeid][i] = new doublematrix(numstock, (numage * numlen), 0.0);
+          Proportions[timeid][i] = new doublematrix(numstock, (numage * numlen), 0.0);
+        }
       }
 
     } else {
@@ -250,8 +255,10 @@ StockDistribution::~StockDistribution() {
   for (i = 0; i < lenindex.Size(); i++)
     delete[] lenindex[i];
   for (i = 0; i < AgeLengthData.Nrow(); i++)
-    for (j = 0; j < AgeLengthData.Ncol(i); j++)
+    for (j = 0; j < AgeLengthData.Ncol(i); j++) {
       delete AgeLengthData[i][j];
+      delete Proportions[i][j];
+    }
 }
 
 void StockDistribution::Reset(const Keeper* const keeper) {
@@ -310,8 +317,6 @@ void StockDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvecto
       exit(EXIT_FAILURE);
     }
 
-    //LengthGroupDivision* AggLgrpDiv = new LengthGroupDivision(lengths);
-    //aggregator[i] = new FleetPreyAggregator(fleets, stocks, AggLgrpDiv, areas, ages, overconsumption);
     aggregator[i] = new FleetPreyAggregator(fleets, stocks, lgrpdiv, areas, ages, overconsumption);
   }
 }
@@ -325,6 +330,9 @@ void StockDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
     switch(functionnumber) {
       case 1:
         likelihood += LikMultinomial();
+        break;
+      case 2:
+        likelihood += LikSumSquares();
         break;
       default:
         cerr << "Error in stockdistribution - unknown function " << functionname << endl;
@@ -370,4 +378,47 @@ double StockDistribution::LikMultinomial() {
     delete Dist[nareas];
   }
   return MN.ReturnLogLikelihood();
+}
+
+double StockDistribution::LikSumSquares() {
+
+  double totallikelihood = 0.0, temp = 0.0;
+  double totalmodel, totaldata;
+  int age, len, nareas, sn, i;
+
+  const Agebandmatrixvector* alptr;
+  for (nareas = 0; nareas < areas.Nrow(); nareas++) {
+    for (sn = 0; sn < stocknames.Size(); sn++) {
+      alptr = &aggregator[sn]->AgeLengthDist();
+      totalmodel = 0.0;
+      totaldata = 0.0;
+
+      for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
+        for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+          i = age + (ages.Nrow() * len);
+          (*Proportions[timeindex][nareas])[sn][i] = ((*alptr)[nareas][age][len]).N;
+          totalmodel += (*Proportions[timeindex][nareas])[sn][i];
+          totaldata += (*AgeLengthData[timeindex][nareas])[sn][i];
+        }
+      }
+
+      for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
+        for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+          i = age + (ages.Nrow() * len);
+          if ((iszero(totaldata)) && (iszero(totalmodel)))
+            temp = 0.0;
+          else if (iszero(totaldata))
+            temp = (*Proportions[timeindex][nareas])[sn][i] / totalmodel;
+          else if (iszero(totalmodel))
+            temp = (*AgeLengthData[timeindex][nareas])[sn][i] / totaldata;
+          else
+            temp = (((*AgeLengthData[timeindex][nareas])[sn][i] / totaldata)
+              - ((*Proportions[timeindex][nareas])[sn][i] / totalmodel));
+
+          totallikelihood += (temp * temp);
+        }
+      }
+    }
+  }
+  return totallikelihood;
 }

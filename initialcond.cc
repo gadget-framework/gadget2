@@ -122,6 +122,12 @@ void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
   if (CountColumns(infile) != 4)
     handle.Message("Wrong number of columns in inputfile - should be 4");
 
+  //Set the numbers in the agebandmatrixvector to zero (in case some arent in the inputfile)
+  for (areaid = 0; areaid < noareas; areaid++)
+    for (ageid = minage; ageid < noagegr + minage; ageid++)
+      for (lengthid = 0; lengthid < nolengr; lengthid++)
+        AreaAgeLength[areaid][ageid][lengthid].N = 0.0;
+
   ageid = -1;
   areaid = -1;
   lengthid = -1;
@@ -131,10 +137,10 @@ void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
     infile >> area >> age >> length >> tmpnumber >> ws;
 
     //Crude data check - perhaps there should be a better check?
-    if (age > noagegr)
+    if (age > (noagegr + minage))
       keepdata = 1;
     else
-      ageid = minage + age - 1;  //age is counted from minage, not 0
+      ageid = age;
 
     lengthid = -1;
     for (i = 0; i < nolengr; i++)

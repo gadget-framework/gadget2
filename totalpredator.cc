@@ -33,10 +33,10 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
   int prey, predl, preyl;
 
   if (CurrentSubstep == 1)
-    scaler[inarea] = 0;
+    scaler[inarea] = 0.0;
 
   for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++) {
-    totalcons[inarea][predl] = rathersmall;
+    totalcons[inarea][predl] = 0.0;
     if (CurrentSubstep == 1) {
       totalconsumption[inarea][predl] = 0.0;
       overconsumption[inarea][predl] = 0.0;

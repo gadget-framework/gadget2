@@ -24,7 +24,9 @@ public:
 private:
   void ReadStockData(CommentStream&, const TimeClass*, int, int, int);
   double LikMultinomial();
+  double LikSumSquares();
   doublematrixptrmatrix AgeLengthData;
+  doublematrixptrmatrix Proportions;
   FleetPreyAggregator** aggregator;
   charptrvector fleetnames;
   charptrvector stocknames;

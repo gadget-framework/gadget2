@@ -74,6 +74,7 @@ private:
   double ModifiedMultinomial(const TimeClass* const TimeInfo); //kgf 13/11 98
   double ExperimentalLik(const TimeClass* const TimeInfo); //kgf 6/3 00
   double GammaLik(const TimeClass* const TimeInfo); //kgf 24/5 00
+  double LikSumSquares();
   doublematrixptrmatrix AgeLengthData; //[time][area][age][length]
   doublematrixptrmatrix Proportions; //kgf 17/9 98
   doublematrix Likelihoodvalues; //kgf 17/9 98

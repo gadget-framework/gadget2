@@ -22,7 +22,7 @@ void LengthGroupPrintError(const doublevector& breaks, const char* explain) {
 LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : error(0), Dl(DL) {
   assert(MinL >= 0 && Dl > 0 && MaxL >= MinL);
   size = int((MaxL - MinL) / Dl);
-  double small = rathersmall * size;
+  double small = 0.01 * size;  //JMB - changed multiplier from rathersmall
 
   if (!(-size - small < (MaxL - MinL) / Dl && (MaxL - MinL) / Dl < size + small)) {
     error = 1;

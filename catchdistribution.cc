@@ -51,6 +51,8 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
     functionnumber = 4;
   else if (strcasecmp(functionname, "gamma") == 0)
     functionnumber = 5;
+  else if (strcasecmp(functionname, "sumofsquares") == 0)
+    functionnumber = 6;
   else
     handle.Message("Error in catchdistribution - unrecognised function", functionname);
 
@@ -516,7 +518,7 @@ void CatchDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvecto
   aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
 
   //Limits (inclusive) for traversing the matrices where required
-  if (functionnumber != 1) {
+  if ((functionnumber != 1) && (functionnumber != 6)) {
     mincol = aggregator->getMinCol();
     maxcol = aggregator->getMaxCol();
     minrow = aggregator->getMinRow();
@@ -548,6 +550,10 @@ void CatchDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
         aggregator->Sum(TimeInfo, 1); //mortality model, calculated catch
         likelihood += GammaLik(TimeInfo);
         break;
+      case 6:
+        aggregator->Sum(TimeInfo);
+        likelihood += LikSumSquares();
+        break;
       default:
         cerr << "Error in catchdistribution - unknown function " << functionname << endl;
         break;
@@ -564,7 +570,7 @@ double CatchDistribution::LikMultinomial() {
   //Get numbers from aggregator->AgeLengthDist()
   const Agebandmatrixvector* alptr = &aggregator->AgeLengthDist();
   doublematrixptrvector Dist(alptr->Size(), NULL);
-  for (nareas = 0; nareas < Dist.Size(); nareas++) {
+  for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     Dist[nareas] = new doublematrix(aggregator->NoAgeGroups(), aggregator->NoLengthGroups(), 0.0);
 
     for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++)
@@ -575,7 +581,6 @@ double CatchDistribution::LikMultinomial() {
   //The object MN does most of the work, accumulating likelihood
   Multinomial MN(minp);
   for (nareas = 0; nareas < Dist.Size(); nareas++) {
-    Likelihoodvalues[timeindex][nareas] = 0.0;
     if (AgeLengthData[timeindex][nareas]->Nrow() == 1) {
       //If there is only one agegroup, we calculate loglikelihood
       //based on the length group division
@@ -888,9 +893,45 @@ double CatchDistribution::ModifiedMultinomial(const TimeClass* const TimeInfo) {
       }
     }
     totallik += Likelihoodvalues[timeindex][nareas];
-
-  } //end nareas
+  }
   return totallik;
+}
+
+double CatchDistribution::LikSumSquares() {
+
+  double totallikelihood = 0.0, temp = 0.0;
+  double totalmodel, totaldata;
+  int age, len, nareas;
+
+  const Agebandmatrixvector* alptr = &aggregator->AgeLengthDist();
+  for (nareas = 0; nareas < areas.Nrow(); nareas++) {
+    totalmodel = 0.0;
+    totaldata = 0.0;
+    for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
+      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+        (*Proportions[timeindex][nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
+        totalmodel += (*Proportions[timeindex][nareas])[age][len];
+        totaldata += (*AgeLengthData[timeindex][nareas])[age][len];
+      }
+    }
+
+    for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
+      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+        if ((iszero(totaldata)) && (iszero(totalmodel)))
+          temp = 0.0;
+        else if (iszero(totaldata))
+          temp = (*Proportions[timeindex][nareas])[age][len] / totalmodel;
+        else if (iszero(totalmodel))
+          temp = (*AgeLengthData[timeindex][nareas])[age][len] / totaldata;
+        else
+          temp = (((*AgeLengthData[timeindex][nareas])[age][len] / totaldata)
+            - ((*Proportions[timeindex][nareas])[age][len] / totalmodel));
+
+        totallikelihood += (temp * temp);
+      }
+    }
+  }
+  return totallikelihood;
 }
 
 void CatchDistribution::PrintLikelihoodHeader(ofstream& catchfile) {
@@ -922,8 +963,8 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
   if (!AAT.AtCurrentTime(&TimeInfo))
     return;
 
-  //cannot print if functionnumber is 1, since havent got mincol etc
-  if (functionnumber == 1)
+  //cannot print if functionnumber is 1 or 6, since havent got mincol etc
+  if ((functionnumber == 1) || (functionnumber == 6))
     return;
 
   catchfile.setf(ios::fixed);

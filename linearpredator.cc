@@ -34,13 +34,13 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
 
   for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++) {
     if (CurrentSubstep == 1) {
-      totalconsumption[inarea][predl] = 0;
-      overconsumption[inarea][predl] = 0;
+      totalconsumption[inarea][predl] = 0.0;
+      overconsumption[inarea][predl] = 0.0;
       for (prey = 0; prey < NoPreys(); prey++) {
         if (Preys(prey)->IsInArea(area)) {
           for (preyl = Suitability(prey)[predl].Mincol();
               preyl < Suitability(prey)[predl].Maxcol(); preyl++) {
-            consumption[inarea][prey][predl][preyl] = 0;
+            consumption[inarea][prey][predl][preyl] = 0.0;
           }
         }
       }
@@ -48,7 +48,7 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
   }
 
   for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
-    totalcons[inarea][predl] = 0;
+    totalcons[inarea][predl] = 0.0;
 
   scaler[inarea] = Multiplicative;  //take a look
   tmp = Multiplicative * LengthOfStep / NrOfSubsteps;
@@ -72,7 +72,7 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++) {
           for (preyl = Suitability(prey)[predl].Mincol();
               preyl < Suitability(prey)[predl].Maxcol(); preyl++) {
-            cons[inarea][prey][predl][preyl] = 0;
+            cons[inarea][prey][predl][preyl] = 0.0;
           }
         }
       }
@@ -99,7 +99,7 @@ void LinearPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSu
   const int inarea = AreaNr[area];
 
   for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
-    overcons[inarea][predl] = 0;
+    overcons[inarea][predl] = 0.0;
 
   for (prey = 0; prey < NoPreys(); prey++) {
     if (Preys(prey)->IsInArea(area)) {
