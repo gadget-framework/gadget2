@@ -377,7 +377,7 @@ void Recaptures::Print(ofstream& outfile) const {
 
 void Recaptures::LikelihoodPrint(ofstream& outfile) {
   int t, ti, i, j;
-  outfile << "\nRecaptures Data\n\nLikelihood " << likelihood
+  outfile << "\nRecaptures Data " << recname << "\n\nLikelihood " << likelihood
     << "\nWeight " << weight << endl;
   for (t = 0; t < tagvec.Size(); t++) {
     outfile << "\tTagging experiment:\t" << tagnames[t];

@@ -274,7 +274,7 @@ void PredatorAggregator::NumberSum() {
                 if (predLength >= 0) {
                   for (i = bptr->Mincol(k); i < bptr->Maxcol(k); i++) {
                     preyLength = preyConv[h][i];
-                    if (preyLength >= 0 && (*preymeanw)[i].W > 0)
+                    if (preyLength >= 0 && (!(isZero((*preymeanw)[i].W))))
                       total[l][predLength][preyLength] += (*bptr)[k][i] / (*preymeanw)[i].W;
                   }
                 }

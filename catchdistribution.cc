@@ -88,7 +88,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     if ((strcasecmp(text, "aggregation_level") == 0) || (strcasecmp(text, "aggregationlevel") == 0))
       infile >> yearly >> ws;
     else
-      handle.Unexpected("aggregationlevel", text);
+      handle.Unexpected("overconsumption", text);
 
   } else
     yearly = 0; //default value for yearly
@@ -387,8 +387,8 @@ void CatchDistribution::Print(ofstream& outfile) const {
 void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
   int i, j, year, area;
 
-  outfile << "\nCatch Distribution\n\nLikelihood " << likelihood << "\nFunction "
-    << functionname << "\nWeight " << weight << "\nStock names:";
+  outfile << "\nCatch Distribution " << cdname << "\n\nLikelihood " << likelihood
+    << "\nFunction " << functionname << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
   outfile << "\nInternal areas:";

@@ -369,7 +369,7 @@ double CatchStatistics::calcLikSumSquares() {
 void CatchStatistics::LikelihoodPrint(ofstream& outfile) {
   int i, j, year, area;
 
-  outfile << "\nCatch Statistics\n\nLikelihood " << likelihood
+  outfile << "\nCatch Statistics " << csname << "\n\nLikelihood " << likelihood
     << "\nFunction " << functionname << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];

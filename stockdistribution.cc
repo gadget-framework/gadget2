@@ -444,8 +444,8 @@ double StockDistribution::calcLikSumSquares() {
 void StockDistribution::LikelihoodPrint(ofstream& outfile) {
   int i, j, y, a;
 
-  outfile << "\nStock Distribution\n\nLikelihood " << likelihood << "\nFunction "
-    << functionname << "\nWeight " << weight << "\nStock names:";
+  outfile << "\nStock Distribution " << sdname << "\n\nLikelihood " << likelihood
+    << "\nFunction " << functionname << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
   outfile << "\nInternal areas:";

@@ -360,8 +360,8 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
 void CatchInTons::LikelihoodPrint(ofstream& outfile) {
   int y, a, i;
 
-  outfile << "\nCatch in Tons\n\nLikelihood " << likelihood << "\nFunction "
-    << functionname << "\nWeight " << weight << "\nStock names:";
+  outfile << "\nCatch in Tons " << ctname << "\n\nLikelihood " << likelihood
+    << "\nFunction " << functionname << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
   outfile << "\nFleet names:";

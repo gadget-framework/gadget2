@@ -14,6 +14,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   : HasName(givenname) {
 
   taggingstock = 0;
+  numtagtimesteps = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   ifstream subfile;
@@ -149,6 +150,12 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
 
   if (timeid == -1)
     handle.logFailure("Error in tags - calculated invalid timestep");
+
+  numtagtimesteps = (TimeInfo->StepsInYear() * (endyear - tagyear)) - tagstep + 1;
+  if (endyear == TimeInfo->LastYear())
+    numtagtimesteps += TimeInfo->LastStep();
+  else
+    numtagtimesteps += TimeInfo->StepsInYear();
 
   for (i = 0; i < LgrpDiv->NoLengthGroups(); i++)
     NumberByLength[i] = (*NumberByLengthMulti[timeid])[0][i];

@@ -159,7 +159,7 @@ SurveyIndices::~SurveyIndices() {
 
 void SurveyIndices::LikelihoodPrint(ofstream& outfile) {
   int i, j;
-  outfile << "\nSurvey Indices\n\nLikelihood " << likelihood
+  outfile << "\nSurvey Indices " << surveyname << "\n\nLikelihood " << likelihood
     << "\nWeight " << weight << "\nStock names: ";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << stocknames[i] << sep;

@@ -24,6 +24,7 @@ public:
   void updateTags(int year, int step);
   void DeleteFromStock();
   const int getEndYear() const { return endyear; };
+  int getNumTagTimeSteps() const { return numtagtimesteps; };
   const CharPtrVector* getStockNames() const { return &stocknames; };
   void setStock(StockPtrVector& Stocks);
   const char* TagName() const { return this->Name(); };
@@ -45,6 +46,7 @@ private:
   int tagyear;     //year of tagging
   int tagstep;     //step of tagging
   int endyear;     //year of last recapture
+  int numtagtimesteps;
   DoubleVector NumberByLength;
   DoubleMatrixPtrVector NumberByLengthMulti;
   LengthGroupDivision* LgrpDiv;
