@@ -25,7 +25,7 @@ extern ErrorHandler handle;
 Stock::Stock(CommentStream& infile, const char* givenname,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
   : BaseClass(givenname), stray(0), spawner(0), renewal(0), maturity(0), transition(0),
-    migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), NatM(0) {
+    migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), naturalm(0) {
 
   type = STOCKTYPE;
   doesgrow = doeseat = iseaten = doesmigrate = 0;
@@ -124,7 +124,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //read the natural mortality data
   infile >> text;
   if (strcasecmp(text, "naturalmortality") == 0)
-    NatM = new NaturalM(infile, minage, maxage, TimeInfo, keeper);
+    naturalm = new NaturalM(infile, minage, maxage, TimeInfo, keeper);
   else
     handle.Unexpected("naturalmortality", text);
   handle.logMessage("Read natural mortality data for stock", this->Name());
@@ -288,7 +288,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
 Stock::Stock(const char* givenname)
   : BaseClass(givenname), stray(0), spawner(0), renewal(0), maturity(0), transition(0),
-    migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), NatM(0) {
+    migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), naturalm(0) {
 
   doesgrow = doeseat = iseaten = doesmigrate = 0;
   doesmove = doesrenew = doesmature = doesspawn = doesstray = 0;
@@ -307,8 +307,8 @@ Stock::~Stock() {
     delete LgrpDiv;
   if (grower != 0)
     delete grower;
-  if (NatM != 0)
-    delete NatM;
+  if (naturalm != 0)
+    delete naturalm;
   if (transition != 0)
     delete transition;
   if (renewal != 0)
@@ -323,7 +323,7 @@ Stock::~Stock() {
 
 void Stock::Reset(const TimeClass* const TimeInfo) {
 
-  NatM->Reset(TimeInfo);
+  naturalm->Reset(TimeInfo);
   if (doeseat)
     predator->Reset(TimeInfo);
   if (doesmature)
@@ -394,7 +394,7 @@ void Stock::Print(ofstream& outfile) const {
 
   LgrpDiv->Print(outfile);
   initial->Print(outfile);
-  NatM->Print(outfile);
+  naturalm->Print(outfile);
   if (doesmature)
     maturity->Print(outfile);
   if (iseaten)

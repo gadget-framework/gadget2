@@ -112,13 +112,13 @@ void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIn
 
 //-----------------------------------------------------------------
 //Multiply AgeBandMatrix by a Agedependent vector for example
-//Natural mortality. Investigate if NaturalM should be allowed to be shorter.
-void AgeBandMatrix::Multiply(const DoubleVector& NatM) {
+//Natural mortality. Investigate if Ratio should be allowed to be shorter.
+void AgeBandMatrix::Multiply(const DoubleVector& Ratio) {
   int i, j;
-  int check = min(NatM.Size(), nrow);
+  int check = min(Ratio.Size(), nrow);
   for (i = 0; i < check; i++)
     for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
-      (*v[i])[j] *= NatM[i];
+      (*v[i])[j] *= Ratio[i];
 }
 
 //--------------------------------------------------------------

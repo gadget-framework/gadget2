@@ -204,7 +204,7 @@ protected:
   InitialCond* initial;
   LengthGroupDivision* LgrpDiv;
   Grower* grower;
-  NaturalM* NatM;
+  NaturalM* naturalm;
   PopInfoMatrix NumberInArea;
   int doeseat;
   int doesmove;

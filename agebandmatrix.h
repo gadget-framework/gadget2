@@ -28,7 +28,7 @@ public:
   void Colsum(PopInfoVector& Result) const;
   void Multiply(const DoubleVector& Ratio, const ConversionIndex& CI);
   void Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Nrof);
-  void Multiply(const DoubleVector& NaturalM);
+  void Multiply(const DoubleVector& Ratio);
   void setToZero();
   void FilterN(double minN);
   void IncrementAge();

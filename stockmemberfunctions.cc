@@ -82,7 +82,7 @@ void Stock::ReducePop(int area, const AreaClass* const Area, const TimeClass* co
 
   //Natural Mortality changed with more substeps
   DoubleVector* PropSurviving;
-  PropSurviving = new DoubleVector(NatM->ProportionSurviving(TimeInfo));
+  PropSurviving = new DoubleVector(naturalm->ProportionSurviving(TimeInfo));
   double timeratio = 1.0 / TimeInfo->numSubSteps();
 
   int i;

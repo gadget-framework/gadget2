@@ -122,8 +122,6 @@ int main(int aNumber, char* const aVector[]) {
   if (aNumber == 1)
     handle.logWarning("Warning - no command line options specified, using default values");
 
-  //Added MainInfo.Net to Ecosystem constructor, to let EcoSystem know if
-  //we are doing a net run. 07.04.00 AJ
   EcoSystem = new Ecosystem(MainInfo.getMainGadgetFile(), MainInfo.runOptimize(),
     MainInfo.runNetwork(), MainInfo.runLikelihood(), inputdir, workingdir, MainInfo.getPI());
 

@@ -53,7 +53,7 @@ void Keeper::KeepVariable(double& value, const Parameter& attr) {
 }
 
 Keeper::~Keeper() {
-  clearAll();
+  stack->clearStack();
   delete stack;
   likcompnames->clearStack();
   delete likcompnames;

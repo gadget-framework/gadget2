@@ -160,6 +160,10 @@ public:
   void ScaledValues(DoubleVector& val) const;
   void checkBounds() const;
   void ScaleVariables() const;
+  /**
+   * \brief This function will return the number of variables to be optimised
+   * \return number of variables to be optimised
+   */
   int numOptVariables() const { return keeper->numOptVariables(); };
   void Simulate(int optimize, int print);
   void SimulateOneTimestep();

@@ -188,19 +188,15 @@ ostream& printAgeGroups(ostream& o, const IntVector& ages, int indent) {
  *      " ...     ...         ...   "
  *      "<d_m.0> <d_m.1> ... <d_m.n>"
  */
-ostream& printBandMatrix(ostream& o, const BandMatrix& b, int rowindex, int indent) {
+ostream& printBandMatrix(ostream& o, const BandMatrix& b, int indent) {
   int i, j, maxcol = 0;
   char* ind = makeSpaces(indent);
   for (i = b.minAge(); i <= b.maxAge(); i++)
     if (b.maxLength(i) > maxcol)
       maxcol = b.maxLength(i);
-  if (rowindex)
-    o << indent << "with rowindex in first column\n";
 
   for (i = b.minAge(); i <= b.maxAge(); i++) {
     o << ind;
-    if (rowindex)
-      o << i << "     ";
     if (b.minLength(i) > 0) {
       for (j = 0; j < b.minLength(i); j++) {
         o.precision(smallprecision);
@@ -208,7 +204,7 @@ ostream& printBandMatrix(ostream& o, const BandMatrix& b, int rowindex, int inde
         o << 0.0 << sep;
       }
     }
-    for (j = b.minLength(i); j <b.maxLength(i); j++) {
+    for (j = b.minLength(i); j < b.maxLength(i); j++) {
       o.precision(smallprecision);
       o.width(smallwidth);
       o << double(b[i][j]) << sep;
@@ -240,9 +236,9 @@ ostream& printc_hat(ostream& o, const MortPredator& pred, AreaClass area, int in
         printMatrixHeader(o, pred.minPreyAge(p, ar), pred.maxPreyAge(p, ar),
           *pred.Preys(p)->returnLengthGroupDiv(), "c_hat", 0, indent + 2);
         if (&(pred.c_hat[ar][p]) != 0)
-          printBandMatrix(o, pred.c_hat[ar][p], 0, indent);
+          printBandMatrix(o, pred.c_hat[ar][p], indent);
         else
-         o << ind << "<no matrix!>\n";
+          o << ind << "<no matrix!>\n";
       }
   }
   delete[] ind;
@@ -385,41 +381,6 @@ ostream& printVectorHeader(ostream& o, const LengthGroupDivision& ldiv,
 
 /*  printMatrixHeader
  *
- *  Purpose: Print header for matrix data by length x length
- *
- *  In: ostream& o          :output stream
- *  LengthGroupDivision& rowlengths :length division for data
- *  LengthGroupDivision& collengths :length division for data
- *      char* value                     :name of data values
- *      int indent          :number of spaces to indent (default = 0)
- *
- *  Output format:
- *  "matrix"
- *      "  row"
- *  "    [printLengthGroupDivision]"
- *      "  column"
- *  "    [printLengthGroupDivision]"
- *      "  value"
- *      "    <valname>"
- */
-ostream& printMatrixHeader(ostream& o, const LengthGroupDivision& rowlengths,
-  const LengthGroupDivision& collengths, const char* value, int withrowind, int indent) {
-
-  char* ind = makeSpaces(indent);
-  o << ind << "matrix\n";
-  if (withrowind)
-    o << ind << "with rowindex in first column\n";
-  o << ind << "  row\n";
-  printLengthGroupDivision(o, rowlengths, indent + 4);
-  o << ind << "  column\n";
-  printLengthGroupDivision(o, collengths, indent + 4);
-  o << ind << "  value\n" << ind << "    " << value << endl;
-  delete[] ind;
-  return o.flush();
-}
-
-/*  printMatrixHeader
- *
  *  Purpose: Print header for matrix data by age x length
  *
  *  In: ostream& o          :output stream
@@ -487,59 +448,6 @@ ostream& printMatrixHeader(ostream& o, int minage, int maxage,
   o << ind << "  value\n" << ind << "    " << value << endl;
   o.flush();
   delete[] ind;
-  return o;
-}
-
-/*  printSuitMatrix
- *
- *  Purpose: Print Suitability matrix
- *
- *  In: ostream& o      :output stream
- *  BandMatrix& b       :BandMatrix to print
- *      int indent      :number of spaces to indent (default = 0)
- *
- *  Output format:
- *  "<d_0.0> <d_0.1> ... <d_0.n>"
- *      "<d_1.0> <d_1.1> ... <d_1.n>"
- *      " ...     ...         ...   "
- *      "<d_m.0> <d_m.1> ... <d_m.n>"
- */
-ostream& printSuitMatrix(ostream& o, const BandMatrix& b, int rowindex, int indent) {
-  int i, j, maxcol = 0;
-  char* ind = makeSpaces(indent);
-  for (i = b.minAge(); i <= b.maxAge(); i++)
-    if (b.maxLength(i) > maxcol)
-      maxcol = b.maxLength(i);
-  if (rowindex)
-    o << ind << "with rowindex in first column\n";
-
-  for (i = b.minAge(); i <= b.maxAge(); i++) {
-    o << ind;
-    if (rowindex)
-      o << i << "     ";
-    if (b.minLength(i) > 0) {
-      for (j = 0; j < b.minLength(i); j++) {
-        o.precision(smallprecision);
-        o.width(smallwidth);
-        o << 0.0 << sep;
-      }
-    }
-    for (j = b.minLength(i); j <b.maxLength(i); j++) {
-      o.precision(smallprecision);
-      o.width(smallwidth);
-      o << double(b[i][j]) << sep;
-    }
-    if (b.maxLength(i) < maxcol) {
-      for (j = b.maxLength(i); j < maxcol; j++) {
-        o.precision(smallprecision);
-        o.width(smallwidth);
-        o << 0.0 << sep;
-      }
-    }
-    o << endl;
-  }
-  delete[] ind;
-  o.flush();
   return o;
 }
 

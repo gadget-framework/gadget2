@@ -547,9 +547,9 @@ void LenStock::calcForPrinting(int area, const TimeClass& time) {
   for (row = mean_n.minAge(); row <= mean_n.maxAge(); row++)
     for (col = 0; col < cons.Size(); col++) {
       mcol = col + mean_n.minLength(row);
-      C[row - mean_n.minAge()] += mean_n[row][mcol].N*cons[col];
-      D1[row - mean_n.minAge()] += mean_n[row][mcol].N*len_natm->NatMortality()[col];
-      D2[row - mean_n.minAge()] += mean_n[row][mcol].N*cann_vec[col];
+      C[row - mean_n.minAge()] += mean_n[row][mcol].N * cons[col];
+      D1[row - mean_n.minAge()] += mean_n[row][mcol].N * len_natm->NatMortality()[col];
+      D2[row - mean_n.minAge()] += mean_n[row][mcol].N * cann_vec[col];
       (*Nbar[area])[row - mean_n.minAge()][year] += mean_n[row][mcol].N;
     }
 

@@ -21,9 +21,6 @@ ostream& printN(ostream& o, const AgeBandMatrix& a, const IntVector* ages, int i
 ostream& printW(ostream& o, const AgeBandMatrix& a, const IntVector* ages, int indent = 0);
 ostream& printNorW(ostream& o, const AgeBandMatrix& a, int PrintN,
   const IntVector* ages, int indent = 0);
-ostream& printSuitMatrix(ostream& o, const BandMatrix& b, int rowindex, int indent = 0);
-ostream& printMatrixHeader(ostream& o, const LengthGroupDivision& rowlengths,
-  const LengthGroupDivision& collenghts, const char* value, int withrowind, int indent = 0);
 ostream& printMatrixHeader(ostream& o, int minage, int maxage,
   const LengthGroupDivision& collengths, const char* value, int withrowind,  int indent = 0);
 char* makeSpaces(int nr);
