@@ -8,6 +8,7 @@
 #include "sibylengthonstep.h"
 #include "sibylengthandageonstep.h"
 #include "sibyageonstep.h"
+#include "sibyfleetonstep.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
@@ -20,6 +21,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   strncpy(text, "", MaxStrLength);
   int i, j;
 
+  int overcons = 0;
   IntMatrix ages;
   DoubleVector lengths;
   CharPtrVector areaindex;
@@ -81,6 +83,30 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     datafile.close();
     datafile.clear();
 
+  } else if (strcasecmp(sitype, "fleets") == 0) {
+    readWordAndValue(infile, "lenaggfile", aggfilename);
+    datafile.open(aggfilename, ios::in);
+    handle.checkIfFailure(datafile, aggfilename);
+    handle.Open(aggfilename);
+    i = readLengthAggregation(subdata, lengths, lenindex);
+    handle.Close();
+    datafile.close();
+    datafile.clear();
+
+    //read in the fleetnames
+    i = 0;
+    infile >> text >> ws;
+    if (!(strcasecmp(text, "fleetnames") == 0))
+      handle.Unexpected("fleetnames", text);
+    infile >> text;
+    while (!infile.eof() && !(strcasecmp(text, "overconsumption") == 0)) {
+      fleetnames.resize(1);
+      fleetnames[i] = new char[strlen(text) + 1];
+      strcpy(fleetnames[i++], text);
+      infile >> text >> ws;
+    }
+    infile >> overcons >> ws;
+    
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
     readWordAndValue(infile, "lenaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
@@ -103,12 +129,13 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   } else
     handle.Unexpected("lengths, ages or ageandlengths", sitype);
 
-  //read in the stocknames
-  i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "stocknames") == 0))
     handle.Unexpected("stocknames", text);
+
+  i = 0;
   infile >> text;
+  //read in the stocknames
   while (!infile.eof() && !(strcasecmp(text, "fittype") == 0)) {
     stocknames.resize(1);
     stocknames[i] = new char[strlen(text) + 1];
@@ -124,6 +151,10 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   } else if (strcasecmp(sitype, "ages") == 0) {
     SI = new SIByAgeOnStep(infile, areas, ages, areaindex,
       ageindex, TimeInfo, datafilename, surveyname);
+
+  } else if (strcasecmp(sitype, "fleets") == 0) {
+    SI = new SIByFleetOnStep(infile, areas, lengths, areaindex,
+      lenindex, TimeInfo, datafilename, overcons, surveyname);
 
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
     SI = new SIByLengthAndAgeOnStep(infile, areas, lengths, ages, TimeInfo,
@@ -153,6 +184,8 @@ SurveyIndices::~SurveyIndices() {
   int i;
   for (i = 0; i < stocknames.Size(); i++)
     delete[] stocknames[i];
+  for (i = 0; i < fleetnames.Size(); i++)
+    delete[] fleetnames[i];
   delete SI;
   delete[] surveyname;
 }
@@ -181,10 +214,12 @@ void SurveyIndices::addLikelihood(const TimeClass* const TimeInfo) {
     likelihood += SI->Regression();
 }
 
-void SurveyIndices::setStocks(StockPtrVector& Stocks) {
+void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j;
   int found = 0;
   StockPtrVector s;
+  FleetPtrVector f;
+
   for (i = 0; i < stocknames.Size(); i++) {
     found = 0;
     for (j = 0; j < Stocks.Size(); j++)
@@ -196,7 +231,20 @@ void SurveyIndices::setStocks(StockPtrVector& Stocks) {
       handle.logFailure("Error in surveyindex - failed to match stock", stocknames[i]);
 
   }
-  SI->setStocks(s);
+
+  for (i = 0; i < fleetnames.Size(); i++) {
+    found = 0;
+    for (j = 0; j < Fleets.Size(); j++)
+      if (strcasecmp(fleetnames[i], Fleets[j]->Name()) == 0) {
+        found++;
+        f.resize(1, Fleets[j]);
+      }
+
+    if (found == 0)
+      handle.logFailure("Error in surveyindex - failed to match fleet", fleetnames[i]);
+  }
+
+  SI->setFleetsAndStocks(f, s);
 }
 
 void SurveyIndices::Reset(const Keeper* const keeper) {

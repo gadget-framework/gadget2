@@ -2,6 +2,7 @@
 #define surveyindices_h
 
 #include "likelihood.h"
+#include "fleet.h"
 #include "commentstream.h"
 #include "sionstep.h"
 
@@ -28,10 +29,11 @@ public:
    */
   virtual void addLikelihood(const TimeClass* const TimeInfo);
   /**
-   * \brief This will select the stocks required to calculate the SurveyIndices likelihood score
+   * \brief This will select the fleets and stocks required to calculate the SurveyIndices likelihood score
+   * \param Fleets is the FleetPtrVector of all the available fleets
    * \param Stocks is the StockPtrVector of all the available stocks
    */
-  void setStocks(StockPtrVector& Stocks);
+  void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
   /**
    * \brief This function will reset the SurveyIndices likelihood information
    * \param keeper is the Keeper for the current model
@@ -67,6 +69,10 @@ protected:
    * \brief This is the CharPtrVector of the names of the stocks that will be used to calculate the likelihood score
    */
   CharPtrVector stocknames;
+  /**
+   * \brief This is the CharPtrVector of the names of the fleets that will be used to calculate the likelihood score
+   */
+  CharPtrVector fleetnames;
   /**
    * \brief This is the name of the SurveyIndices likelihood component
    */

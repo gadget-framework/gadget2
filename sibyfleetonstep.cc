@@ -1,4 +1,4 @@
-#include "sibylengthonstep.h"
+#include "sibyfleetonstep.h"
 #include "stock.h"
 #include "areatime.h"
 #include "loglinearregression.h"
@@ -8,25 +8,26 @@
 
 extern ErrorHandler handle;
 
-SIByLengthOnStep::SIByLengthOnStep(CommentStream& infile, const IntMatrix& areas,
+SIByFleetOnStep::SIByFleetOnStep(CommentStream& infile, const IntMatrix& areas,
   const DoubleVector& lengths, const CharPtrVector& areaindex,
   const CharPtrVector& lenindex, const TimeClass* const TimeInfo,
-  const char* datafilename, const char* name)
+  const char* datafilename, int overcons, const char* name)
   : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, lenindex, name) {
 
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
     handle.Message("Error in surveyindex - failed to create length group");
+  overconsumption = overcons;
 }
 
-SIByLengthOnStep::~SIByLengthOnStep() {
+SIByFleetOnStep::~SIByFleetOnStep() {
   if (aggregator != 0)
     delete aggregator;
   if (LgrpDiv != 0)
     delete LgrpDiv;
 }
 
-void SIByLengthOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
+void SIByFleetOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
 
   /* This function initialises aggregator. It should:
    *  merge all the areas in Areas
@@ -51,15 +52,15 @@ void SIByLengthOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector
   for (i = 0; i < Ages.Ncol(); i++)
     Ages[0][i] = i + minage;
 
-  aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, Ages);
+  aggregator = new FleetPreyAggregator(Fleets, Stocks, LgrpDiv, Areas, Ages, overconsumption);
 }
 
-void SIByLengthOnStep::Sum(const TimeClass* const TimeInfo) {
+void SIByFleetOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!(this->IsToSum(TimeInfo)))
     return;
 
   handle.logMessage("Calculating index for surveyindex component", this->SIName());
-  aggregator->Sum();
+  aggregator->Sum(TimeInfo);
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns has only one element.
   //Copy the information from it -- we only want to keep the abundance numbers.
   const AgeBandMatrix* Alptr = &(aggregator->returnSum()[0]);

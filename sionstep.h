@@ -27,7 +27,7 @@ public:
     const IntMatrix& areas, const CharPtrVector& colindex, const char* name);
   virtual ~SIOnStep();
   virtual void Sum(const TimeClass* const TimeInfo) = 0;
-  virtual void setStocks(const StockPtrVector& Stocks) = 0;
+  virtual void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) = 0;
   virtual double Regression();
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;

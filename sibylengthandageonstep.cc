@@ -201,7 +201,7 @@ SIByLengthAndAgeOnStep::~SIByLengthAndAgeOnStep() {
   delete LgrpDiv;
 }
 
-void SIByLengthAndAgeOnStep::setStocks(const StockPtrVector& Stocks) {
+void SIByLengthAndAgeOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j;
 
   aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, Ages);

@@ -1,16 +1,17 @@
-#ifndef sibylengthonstep_h
-#define sibylengthonstep_h
+#ifndef sibyfleetonstep_h
+#define sibyfleetonstep_h
 
 #include "sionstep.h"
+#include "fleetpreyaggregator.h"
 
 /**
- * \class SIByLengthOnStep
- * \brief This is the class used to calculate a likelihood score by fitting the model population to length based survey index data
+ * \class SIByFleetOnStep
+ * \brief This is the class used to calculate a likelihood score by fitting the model population to fleet based survey index data
  */
-class SIByLengthOnStep : public SIOnStep {
+class SIByFleetOnStep : public SIOnStep {
 public:
   /**
-   * \brief This is the SIByLengthOnStep constructor
+   * \brief This is the SIByFleetOnStep constructor
    * \param infile is the CommentStream to read the survey index data from
    * \param areas is the IntMatrix of areas that the survey index can take place on
    * \param lengths is the DoubleVector of lengths from the survey index data
@@ -18,16 +19,17 @@ public:
    * \param lenindex is the CharPtrVector of length identifier text strings
    * \param TimeInfo is the TimeClass for the current model
    * \param datafilename is the name of the file containing the survey index data
+   * \param overcons is a flag to determine whether to calculate overconsumption of the stocks
    * \param name is the name of the SIByLengthOnStep likelihood component
    */
-  SIByLengthOnStep(CommentStream& infile, const IntMatrix& areas,
+  SIByFleetOnStep(CommentStream& infile, const IntMatrix& areas,
     const DoubleVector& lengths, const CharPtrVector& areaindex,
     const CharPtrVector& lenindex, const TimeClass* const TimeInfo,
-    const char* datafilename, const char* name);
+    const char* datafilename, int overcons, const char* name);
   /**
-   * \brief This is the default SIByLengthOnStep destructor
+   * \brief This is the default SIByFleetOnStep destructor
    */
-  virtual ~SIByLengthOnStep();
+  virtual ~SIByFleetOnStep();
   /**
    * \brief This function will sum the survey index by length data
    * \param TimeInfo is the TimeClass for the current model
@@ -41,9 +43,9 @@ public:
   virtual void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 protected:
   /**
-   * \brief This is the StockAggregator used to collect information about the relevant stocks for the survey index data
+   * \brief This is the FleetPreyAggregator used to collect information about the relevant fleets for the survey index data
    */
-  StockAggregator* aggregator;
+  FleetPreyAggregator* aggregator;
   /**
    * \brief This is the IntMatrix used to store age information
    */
@@ -52,6 +54,10 @@ protected:
    * \brief This is the LengthGroupDivision used to store length information
    */
   LengthGroupDivision* LgrpDiv;
+  /**
+   * \brief This is a flag to denote whether the likelihood calculation should take overconsumption into account or not
+   */
+  int overconsumption;
 };
 
 #endif

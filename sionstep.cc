@@ -527,9 +527,8 @@ void SIOnStep::SummaryPrint(ofstream& outfile, double weight) {
   //JMB - this is nasty hack since there is only one area
   for (area = 0; area < areanames.Size(); area++) {
     outfile << "all   all " << setw(printwidth) << areanames[area] << sep
-      << setw(largewidth) << this->SIName() << sep << setw(smallwidth)
-      << weight << sep << setprecision(largeprecision) << setw(largewidth)
-      << score << endl;
+      << setw(largewidth) << this->SIName() << sep << setw(smallwidth) << weight
+      << sep << setprecision(largeprecision) << setw(largewidth) << score << endl;
   }
   outfile.flush();
 }

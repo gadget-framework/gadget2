@@ -23,7 +23,7 @@ SIByAgeOnStep::~SIByAgeOnStep() {
     delete LgrpDiv;
 }
 
-void SIByAgeOnStep::setStocks(const StockPtrVector& Stocks) {
+void SIByAgeOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
 
   /* This function initialises aggregator. It should:
    *  merge all the areas in Areas

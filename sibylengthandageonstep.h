@@ -16,7 +16,7 @@ public:
     const CharPtrVector& areaindex, const char* datafilename, const char* name);
   virtual ~SIByLengthAndAgeOnStep();
   virtual void Sum(const TimeClass* const TimeInfo);
-  virtual void setStocks(const StockPtrVector& Stocks);
+  virtual void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
   virtual double Regression() { return likelihood; };
   void calcIndex(const AgeBandMatrix* alptr, const TimeClass* const TimeInfo);
   virtual void SummaryPrint(ofstream& outfile, double weight);

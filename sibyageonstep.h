@@ -34,10 +34,11 @@ public:
    */
   virtual void Sum(const TimeClass* const TimeInfo);
   /**
-   * \brief This will select the stocks required to calculate the survey index by age likelihood score
+   * \brief This will select the fleets and stocks required to calculate the survey index likelihood score
+   * \param Fleets is the FleetPtrVector of all the available fleets
    * \param Stocks is the StockPtrVector of all the available stocks
    */
-  virtual void setStocks(const StockPtrVector& Stocks);
+  virtual void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 protected:
   /**
    * \brief This is the StockAggregator used to collect information about the relevant stocks for the survey index data

@@ -40,11 +40,12 @@ public:
    */
   virtual void Sum(const TimeClass* const TimeInfo);
   /**
-   * \brief This will select the stocks required to calculate the predator survey index likelihood score
+   * \brief This will select the fleets and stocks required to calculate the predator survey index likelihood score
+   * \param Fleets is the FleetPtrVector of all the available fleets
    * \param Stocks is the StockPtrVector of all the available stocks
    * \note This is a dummy function to ensure compatability with other classes and doesnt do anything
    */
-  virtual void setStocks(const StockPtrVector& Stocks) {};
+  virtual void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {};
   /**
    * \brief This will select the predators and preys required to calculate the predator survey index likelihood score
    * \param predators is the PredatorPtrVector of all the available predators

@@ -131,7 +131,7 @@ void Ecosystem::Initialise(int optimize) {
     for (i = 0; i < Likely.Size(); i++)
       switch(Likely[i]->Type()) {
         case SURVEYINDICESLIKELIHOOD:
-          ((SurveyIndices*)Likely[i])->setStocks(stockvec);
+          ((SurveyIndices*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
         case UNDERSTOCKINGLIKELIHOOD:
           ((UnderStocking*)Likely[i])->setFleets(fleetvec);
