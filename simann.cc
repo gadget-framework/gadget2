@@ -151,8 +151,6 @@
 /*         accepted trial set of variables that optimizes the function.     */
 /*    c - Vector that controls the step length adjustment. The suggested    */
 /*        value for all elements is 2.0. (DP(N))                            */
-
-/*  Input/Output Parameters:                                                */
 /*    t - On input, the initial temperature. See Goffe et al. for advice.   */
 /*        On output, the final temperature. (DP)                            */
 /*    vm - The step length vector. On input it should encompass the         */
@@ -166,13 +164,6 @@
 /*  Output Parameters:                                                      */
 /*    xopt - The variables that optimize the function. (DP(N))              */
 /*    fopt - The optimal value of the function. (DP)                        */
-/*    nacc - The number of accepted function evaluations. (INT)             */
-/*    nfcnev - The total number of function evaluations. In a minor point,  */
-/*             note that the first evaluation is not used in the core of    */
-/*             the algorithm; it simply initialises the algorithm (INT)     */
-/*    nobds - The total number of trial function evaluations that           */
-/*            would have been out of bounds of LB and UB. Note that         */
-/*            a trial point is randomly selected between LB and UB. (INT)   */
 
 #include "gadget.h"    //All the required standard header files are in here
 #include "mathfunc.h"
@@ -203,53 +194,32 @@ double randomNumber() {
   return k / 32767.0;
 }
 
-int simann(int nvar, double point[], double endpoint[], double lb[], double ub[],
-  double (*f)(double*, int), int m, int maxeval, double cstep, double tempt,
-  double vmlen, double rt, int ns, int nt, double eps, double ur, double lr, int check) {
+int simann(int n, double point[], double endpoint[], double lb[], double ub[],
+  double (*f)(double*, int), int m, int maxevl, double cstep, double tempt,
+  double vmlen, double rt, int ns, int nt, double eps, double uratio, double lratio, int check) {
 
-  int n = nvar;         //Number of variables in the function to be optimized
   double x[NUMVARS];    //The starting values for the variables
   int max = m;          //Denotes whether the func. should be maximized or
                         //minimized: 1 = maximization 0 = minimization
-  int maxevl = maxeval; //Maximum number of func. evaluations
-  double t = tempt;     //On input, the initial temperature
-                        //On output, the final temperature
+  double t = tempt;     //The "temperature" of the algorithm
   double vm[NUMVARS];   //The step length vector
   double fstar[NUMVARS];
   double fopt;          //The optimal value of the function
   double funcval, fp;
   double ratio;         //Dummy variable for updating vm
   double cs;            //Dummy variable for updating vm
-  double uratio = ur;   //Value for the upper bound when updating vm
-  double lratio = lr;   //Value for the lower bound when updating vm
   int nacp[NUMVARS];    //Number of accepted tries for each parameter
   int quit = 0;         //Used to check the exit criteria
 
   //set initial values
   int nacc = 0;         //The number of accepted function evaluations
   int nrej = 0;         //The number of rejected function evaluations
-  int naccmet = 0;      //The number of accepted function evaluations according to the metropolis condition
-  int nnew = 0;         //The number of new optima found
-  int nobds = 0;        //Total number of trial functions that were out of bounds
+  int naccmet = 0;      //The number of metropolis accepted function evaluations
+  
   int i, a, j, h, k, change, l, offset;
   double p, pp;
   double xp[NUMVARS];
   int param[NUMVARS];   //Vector containing the order of the parameters at each time
-
-
-  //check the values specified in the optinfo file ...
-  if ((uratio < 0.5) || (uratio > 1)) {
-    cout << "\nError in value of uratio - setting to default value of 0.7\n";
-    uratio = 0.7;
-  }
-  if ((lratio < 0) || (lratio > 0.5)) {
-    cout << "\nError in value of lratio - setting to default value of 0.3\n";
-    lratio = 0.3;
-  }
-  if ((rt < 0) || (rt > 1)) {
-    cout << "\nError in value of rt - setting to default value of 0.85\n";
-    rt = 0.85;
-  }
 
   for (i = 0; i < n; i++) {
     x[i] = point[i];
@@ -261,8 +231,8 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
 
   //funcval is the function value at x
   funcval = (*f)(x, n);
-  nacc++;  //accept the first point no matter what
-  offset = FuncEval;  //number of function evaluations done before loop
+  nacc++;               //accept the first point no matter what
+  offset = FuncEval;    //number of function evaluations done before loop
   cs = cstep / lratio;
 
   //If the function is to be minimised, switch the sign of the function
@@ -309,7 +279,6 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
 
               //If xp is out of bounds, try again until we find a point that is OK
               if ((xp[i] < lb[i]) || (xp[i] > ub[i])) {
-                nobds++;
                 //JMB - this used to select a random point between the bounds
                 while ((xp[i] < lb[i]) || (xp[i] > ub[i])) {
                   xp[i] = x[i] + ((randomNumber() * 2.0) - 1.0) * vm[i];
@@ -383,7 +352,6 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
             }
             cout << endl;
             fopt = fp;
-            nnew++;
           }
         }
       }

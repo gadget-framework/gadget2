@@ -1,10 +1,7 @@
 #ifndef optinfo_h
 #define optinfo_h
 
-#include "ecosystem.h"
-#include "parameter.h"
 #include "maininfo.h"
-#include "errorhandler.h"
 
 /**
  * \class OptSearch
@@ -13,38 +10,37 @@
 class OptSearch {
  public:
   /**
-   * \brief This is the default constructor
+   * \brief This is the default OptSearch constructor
    */
   OptSearch() {};
   /**
-   * \brief This is the default destructor
+   * \brief This is the default OptSearch destructor
    */
-  ~OptSearch(){};
+  ~OptSearch() {};
   /**
-   * \brief This is the file reader that reads parameters for the optimising
+   * \brief This is the file reader that reads parameters for the optimising process
    * \param infile is the CommentStream to read the optimisation parameters from
    * \param text is the latest entry from infile
    */
-  virtual void Read(CommentStream& infile, char* text){};
+  virtual void Read(CommentStream& infile, char* text) {};
   /**
    * \brief This method calls the optimisation function
-   * \param infile is the CommentStream to read the optimisation parameters from
    */
-  virtual void MaximizeLikelihood(){};
+  virtual void MaximizeLikelihood() {};
 };
 
 /**
  * \class OptInfo
- * \brief This is the master class that syncronizes gadget's optimization
+ * \brief This is the master class that controls the optimisation process within gadget
  */
 class OptInfo {
  public:
   /**
-   * \brief This is the default constructor
+   * \brief This is the default OptInfo constructor
    */
   OptInfo(MainInfo* MainInfo);
   /**
-   * \brief This is the default destructor
+   * \brief This is the default OptInfo destructor
    */
   ~OptInfo();
   /**
@@ -58,31 +54,27 @@ class OptInfo {
   void ReadOptInfo(CommentStream& infile);
  private:
   /**
-   * \brief This switch determines whether or Simulated Annealing is use in the optimisation
+   * \brief This is the flag used to denote whether Simulated Annealing is used in the optimisation or not
    */
   int useSimann;
   /**
-   * \brief This switch determines whether or Hooke & Jeeves is use in the optimisation
+   * \brief This is the flag used to denote whether Hooke & Jeeves is used in the optimisation or not
    */
   int useHJ;
   /**
-   * \brief This switch determines whether or BFGS is use in the optimisation
+   * \brief This is the flag used to denote whether BFGS is used in the optimisation or not
    */
   int useBFGS;
   /**
-   * \brief This is the seed for the random number generator
-   */
-  int seed;
-  /**
-   * \brief This is a pointer to the class that handles the Simulated Annealing optimisation
+   * \brief This is the OptSearch that handles the Simulated Annealing optimisation
    */
   OptSearch* optSimann;
   /**
-   * \brief This is a pointer to the class that handles the Hooke & Jeeves optimisation
+   * \brief This is the OptSearch that handles the Hooke & Jeeves optimisation
    */
   OptSearch* optHJ;
   /**
-   * \brief This is a pointer to the class that handles the BFGS optimisation
+   * \brief This is the OptSearch that handles the BFGS optimisation
    */
   OptSearch* optBFGS;
 };
@@ -98,36 +90,30 @@ class OptInfo {
 class OptInfoHooke : public OptSearch {
 public:
   /**
-   * \brief This is the Hooke & Jeeves constructor
+   * \brief This is the default OptInfoHooke constructor
    */
   OptInfoHooke();
   /**
-   * \brief This is the Hooke & Jeeves destructor
+   * \brief This is the default OptInfoHooke destructor
    */
-  virtual ~OptInfoHooke();
-  /**
-   * \brief This is the Hooke & Jeeves file reader
-   * \param infile is the CommentStream to read the optimisation parameters from
-   */
-  virtual void Read(CommentStream& infile, char* text);
+  virtual ~OptInfoHooke() {};
   /**
    * \brief This is the function used to read in the Hooke & Jeeves parameters
    * \param infile is the CommentStream to read the optimisation parameters from
    * \param text is a text string used to compare parameter names
-   * \return 1 for success, 0 for failure
    */
-  //  int read(CommentStream& infile, char* text);
+  virtual void Read(CommentStream& infile, char* text);
   /**
    * \brief This is the function that will calculate the likelihood score using the Hooke & Jeeves optimiser
    */
   virtual void MaximizeLikelihood();
 protected:
   /**
-   * \brief This is the maximum number of iterations
+   * \brief This is the maximum number of iterations for the Hooke & Jeeves optimisation
    */
   int hookeiter;
   /**
-   * \brief This is the reduction factor for each step length
+   * \brief This is the reduction factor for the step length
    */
   double rho;
   /**
@@ -135,7 +121,7 @@ protected:
    */
   double lambda;
   /**
-   * \brief This is the minimum step length
+   * \brief This is the minimum step length, use as the halt criteria for the optimisation process
    */
   double hookeeps;
   /**
@@ -155,16 +141,17 @@ protected:
 class OptInfoSimann : public OptSearch {
 public:
   /**
-   * \brief This is the Simulated Annealing constructor
+   * \brief This is the default OptInfoSimann constructor
    */
   OptInfoSimann();
   /**
-   * \brief This is the Simulated Annealing destructor
+   * \brief This is the default OptInfoSimann destructor
    */
-  virtual ~OptInfoSimann();
+  virtual ~OptInfoSimann() {};
   /**
-   * \brief This is the Simulated Annealing file reader
+   * \brief This is the function used to read in the Simulated Annealing parameters
    * \param infile is the CommentStream to read the optimisation parameters from
+   * \param text is a text string used to compare parameter names
    */
   virtual void Read(CommentStream& infile, char* text);
   /**
@@ -193,7 +180,7 @@ protected:
    */
   double T;
   /**
-   * \brief This is the factor used for to adjust the step length
+   * \brief This is the factor used to adjust the step length
    */
   double cs;
   /**
@@ -201,7 +188,7 @@ protected:
    */
   double vm;
   /**
-   * \brief This is the maximum number of function evaluations
+   * \brief This is the maximum number of function evaluations for the Simulated Annealing optimiation
    */
   int simanniter;
   /**
@@ -217,6 +204,7 @@ protected:
    */
   int check;
 };
+
 /**
  * \class OptInfoBfgs
  * \brief This is the class used for the BFGS optimisation
@@ -224,25 +212,26 @@ protected:
  * (To be continued)
  */
 class OptInfoBfgs : public OptSearch  {
- public:
+public:
   /**
-   * \brief This is the BFGS constructor
+   * \brief This is the default OptInfoBfgs constructor
    */
   OptInfoBfgs();
   /**
-   * \brief This is the BFGS destructor
+   * \brief This is the default OptInfoBfgs destructor
    */
   ~OptInfoBfgs();
-    /**
-   * \brief This is the BFGS file reader
+  /**
+   * \brief This is the function used to read in the BFGS parameters
    * \param infile is the CommentStream to read the optimisation parameters from
+   * \param text is a text string used to compare parameter names
    */
   virtual void Read(CommentStream& infile, char* text);
   /**
    * \brief This is the function that will calculate the likelihood score using the BFGS optimiser
    */
   virtual void MaximizeLikelihood();
- private:
+private:
   /**
    * \brief The actual BFGS iteration
    * \param x0 is the starting point of the optimisation
@@ -294,7 +283,6 @@ class OptInfoBfgs : public OptSearch  {
    * \brief This is the number of varibles
    */
   int numvar;
-
   /**
    * \brief This is the maximum number of BFGS iterations
    */
@@ -308,6 +296,5 @@ class OptInfoBfgs : public OptSearch  {
    */
   double rho;        //linesearch convergence parameters
   double tau;        //---------------------------------
-
 };
 #endif

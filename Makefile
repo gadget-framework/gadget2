@@ -94,10 +94,11 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	transition.o otherfood.o recstatistics.o selectfunc.o optinfo.o naturalm.o \
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o tags.o \
-	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \
+	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o bfgs.o \
 	taggrow.o initialinputfile.o optinfohooke.o optinfobfgs.o optinfosimann.o \
 	popratio.o predator.o popinfo.o popinfomemberfunctions.o sibyfleetonstep.o \
-	agebandmatrixratio.o agebandmatrixratiomemberfunctions.o bfgs.o
+	agebandmatrixratio.o agebandmatrixratiomemberfunctions.o
+	
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
 GADGETINPUT = initialinputfile.o vectorofcharptr.o charptrvector.o \

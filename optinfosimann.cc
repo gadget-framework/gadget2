@@ -1,10 +1,11 @@
 #include "optinfo.h"
+#include "ecosystem.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
 extern Ecosystem* EcoSystem;
 
-double f(double* x, int n) {
+double s(double* x, int n) {
   return EcoSystem->SimulateAndUpdate(x, n);
 }
 
@@ -19,63 +20,80 @@ OptInfoSimann::OptInfoSimann()
   handle.logMessage("Initialising Simulated Annealing");
 }
 
-OptInfoSimann::~OptInfoSimann() {
-}
-
 void OptInfoSimann::Read(CommentStream& infile, char* text) {
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
     if (strcasecmp(text, "simanniter") == 0) {
-      infile >> simanniter >> ws >> text >> ws;
+      infile >> simanniter >> ws;
 
     } else if (strcasecmp(text, "t") == 0) {
-      infile >> T >> ws >> text >> ws;
+      infile >> T >> ws;
 
     } else if (strcasecmp(text, "rt") == 0) {
-      infile >> rt >> ws >> text >> ws;
+      infile >> rt >> ws;
 
     } else if (strcasecmp(text, "simanneps") == 0) {
-      infile >> simanneps >> ws >> text >> ws;
+      infile >> simanneps >> ws;
 
     } else if (strcasecmp(text, "nt") == 0) {
-      infile >> nt >> ws >> text >> ws;
+      infile >> nt >> ws;
 
     } else if (strcasecmp(text, "ns") == 0) {
-      infile >> ns >> ws >> text >> ws;
+      infile >> ns >> ws;
 
     } else if (strcasecmp(text, "vm") == 0) {
-      infile >> vm >> ws >> text >> ws;
+      infile >> vm >> ws;
 
     } else if (strcasecmp(text, "cstep") == 0) {
-      infile >> cs >> ws >> text >> ws;
+      infile >> cs >> ws;
 
     } else if (strcasecmp(text, "check") == 0) {
-      infile >> check >> ws >> text >> ws;
+      infile >> check >> ws;
 
     } else if (strcasecmp(text, "uratio") == 0) {
-      infile >> uratio >> ws >> text >> ws;
+      infile >> uratio >> ws;
 
     } else if (strcasecmp(text, "lratio") == 0) {
-      infile >> lratio >> ws >> text >> ws;
+      infile >> lratio >> ws;
 
     } else {
       handle.logWarning("Warning in optinfofile - unknown option", text);
-      infile >> text >> ws >> text >> ws;
+      infile >> text >> ws;
     }
+    infile >> text >> ws;
+  }
+
+  //check the values specified in the optinfo file ...
+  if ((uratio < 0.5) || (uratio > 1)) {
+    handle.logWarning("Warning in optinfofile - value of uratio outside bounds", uratio);
+    uratio = 0.7;
+  }
+  if ((lratio < 0) || (lratio > 0.5)) {
+    handle.logWarning("Warning in optinfofile - value of lratio outside bounds", lratio);
+    lratio = 0.3;
+  }
+  if ((rt < 0) || (rt > 1)) {
+    handle.logWarning("Warning in optinfofile - value of rt outside bounds", rt);
+    rt = 0.85;
   }
 }
 
 //Considered better to skip scaling of variables here.  Had to change keeper
 //so initialvalues start as 1 but scaled values as the same as values
 void OptInfoSimann::MaximizeLikelihood() {
-  int i, nopt, count;
+  int i, nopt, opt;
+
+  cout << "\nStarting Simulated Annealing\n";
+
   nopt = EcoSystem->NoOptVariables();
   DoubleVector val(nopt);
   DoubleVector lbds(nopt);
   DoubleVector ubds(nopt);
+  ParameterVector optswitches(nopt);
 
   EcoSystem->ScaledOptValues(val);
   EcoSystem->LowerBds(lbds);
   EcoSystem->UpperBds(ubds);
+  EcoSystem->OptSwitches(optswitches);
 
   double* startpoint = new double[nopt];
   double* endpoint = new double[nopt];
@@ -88,10 +106,7 @@ void OptInfoSimann::MaximizeLikelihood() {
     startpoint[i] = val[i];
   }
 
-  ParameterVector optswitches(nopt);
-  EcoSystem->OptSwitches(optswitches);
-
-  count = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, 0,
+  opt = simann(nopt, startpoint, endpoint, lowerb, upperb, &s, 0,
     simanniter, cs, T, vm, rt, ns, nt, simanneps, uratio, lratio, check);
 
   cout << "\nSimulated Annealing finished with a final likelihood score of " << EcoSystem->getLikelihood()

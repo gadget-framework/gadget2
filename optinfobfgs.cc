@@ -1,22 +1,16 @@
 #include "optinfo.h"
-#include "mathfunc.h"
+#include "ecosystem.h"
 #include "gadget.h"
 
-/* global ecosystem used to store whether the model converged */
 extern Ecosystem* EcoSystem;
-
-/* global variable, defined and initialised in gadget.cc and not modified here */
-extern int FuncEval;
-
 extern ErrorHandler handle;
 
 double func(double* x, int n) {
   return EcoSystem->SimulateAndUpdate(x, n);
 }
 
-
-OptInfoBfgs::OptInfoBfgs() 
-  : OptSearch(), maxiter(100000), eps(0.001), rho(0.01), tau(0.5){
+OptInfoBfgs::OptInfoBfgs()
+  : OptSearch(), maxiter(100000), eps(0.001), rho(0.01), tau(0.5) {
   handle.logMessage("Initialising BFGS");
   numvar = EcoSystem->NoOptVariables();
   int i;
@@ -43,6 +37,9 @@ OptInfoBfgs::~OptInfoBfgs() {
 
 void OptInfoBfgs::MaximizeLikelihood() {
   int i, count;
+
+  cout << "\nStarting BFGS\n";
+
   DoubleVector val(numvar);
   double* startpoint = new double[numvar];
   EcoSystem->ScaledOptValues(val);
@@ -76,4 +73,3 @@ void OptInfoBfgs::Read(CommentStream& infile, char* text) {
     }
   }
 }
-

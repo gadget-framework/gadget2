@@ -1,5 +1,7 @@
 #include "optinfo.h"
+#include "errorhandler.h"
 #include "mathfunc.h"
+#include "ecosystem.h"
 #include "gadget.h"
 
 /* global ecosystem used to store whether the model converged */
@@ -8,10 +10,57 @@ extern Ecosystem* EcoSystem;
 /* global variable, defined and initialised in gadget.cc and not modified here */
 extern int FuncEval;
 
-extern ErrorHandler handle;
+double quadmin(double f0, double f1, double f0m, double alpha, double beta) {
+  double S, qa, qb, qt, t, tmin;
+  S = f1 - f0 - f0m;
+  qa = f0 + alpha * (f0m + alpha * S);
+  qb = f0 + beta * (f0m + beta * S);
+  
+  t = 0.0;
+  if (absolute(S) > rathersmall)
+    t = -f0m / (2.0 * S);
+  else
+    t = alpha;
+  t = min(beta, max(alpha, t));
+  qt = f0 + t * (f0m + t * S);
 
-double quadmin(double f0, double f1, double f0m, double alpha, double beta);
-double cubmin(double f0, double f1, double f0m, double f1m, double alpha, double beta);
+  tmin = 0.0;
+  if (qa < min(qt, qb))
+    tmin = alpha;
+  else if (qt < qb)
+    tmin = t;
+  else
+    tmin = beta;
+  return tmin;
+}
+
+double cubmin(double f0, double f1, double f0m, double f1m, double alpha, double beta) {
+  double eta, ksi, ca, cb, ct, D, t, tmin;
+  eta = 3.0 * (f1 - f0) - 2.0 * f0m - f1m;
+  ksi = f0m + f1m - 2.0 * (f1 - f0);
+  ca = f0 + alpha * (f0m + alpha * (eta + alpha * ksi));
+  cb = f0 + beta * (f0m + beta * (eta + beta * ksi));
+  D = eta * eta - 3.0 * ksi * f0m;
+
+  t = 0.0;
+  if (absolute(ksi) < rathersmall)
+    t = -f0m / (2.0 * eta);
+  else if (D > 0)
+    t = (-eta + sqrt(D)) / (3.0 * ksi);
+  else
+    t = alpha;
+  t = min(beta, max(alpha, t));
+  ct = f0 + t * (f0m + t * (eta + t * ksi));
+
+  tmin = 0.0;
+  if (ca < min(ct, cb))
+    tmin = alpha;
+  else if (ct < cb)
+    tmin = t;
+  else
+    tmin = beta;
+  return tmin;
+}
 
 int OptInfoBfgs::gaussian(double mult) {
   int i, j, k, maxrow;
@@ -22,7 +71,7 @@ int OptInfoBfgs::gaussian(double mult) {
 
     Atemp[numvar][i] = mult * gk[i];
   }
-  
+
   for (i = 0; i < numvar; i++) {
     maxrow = i;
     for (j = i + 1; j < numvar; j++)
@@ -34,9 +83,9 @@ int OptInfoBfgs::gaussian(double mult) {
       Atemp[k][i] = Atemp[k][maxrow];
       Atemp[k][maxrow] = tmp;
     }
-    
+
     if (absolute(Atemp[i][i]) < verysmall) {
-      handle.logWarning("Error in BFGS - Singular matrix approximation - Resetting BFGS");
+      cout << "Error in BFGS - Singular matrix approximation - Resetting BFGS" << endl;
       return 0;
     }
 
@@ -46,7 +95,7 @@ int OptInfoBfgs::gaussian(double mult) {
   }
 
   for (j = numvar - 1;  j >= 0; j--) {
-    tmp = 0;
+    tmp = 0.0;
     for (k = j + 1; k < numvar; k++)
       tmp += Atemp[k][j] * s[k];
 
@@ -55,7 +104,7 @@ int OptInfoBfgs::gaussian(double mult) {
 
   return 1;
 }
-    
+
 int OptInfoBfgs::iteration(double* x0) {
   double h[NUMVARS];
   double y[NUMVARS];
@@ -68,9 +117,9 @@ int OptInfoBfgs::iteration(double* x0) {
   for (i = 0; i < numvar; i++)
     g0[i] = gk[i];
 
-  while(k < maxiter) {
+  while (k < maxiter) {
     k++;
-    if (check == 0 || alpha == 0) {
+    if (check == 0 || isZero(alpha)) {
       for (i = 0; i < numvar; i++) { // linesearch the algoritm is restarted
 	for (j = 0; j < numvar; j++)
 	  Bk[i][j] = 0.0;
@@ -82,18 +131,18 @@ int OptInfoBfgs::iteration(double* x0) {
     check = gaussian(-1.0);
     if (check == 0)
       continue;
- 
+
     alpha = linesearch();
-    if (alpha == 0)
+    if (isZero(alpha))
       continue;
-    
+
     normgrad = 0.0;
     hy = 0.0;
     hu = 0.0;
     for (i = 0; i < numvar; i++) {
-      h[i] = alpha*s[i];
+      h[i] = alpha * s[i];
       x[i] += h[i];
-      y[i] = gk[i]-g0[i];
+      y[i] = gk[i] - g0[i];
       g0[i] = gk[i];
       hy += h[i] * y[i];
       normgrad += gk[i] * gk[i];
@@ -102,17 +151,16 @@ int OptInfoBfgs::iteration(double* x0) {
     for (i = 0; i < numvar; i++) {
       u[i] = 0.0;
       for (j = 0; j < numvar; j++)
-	u[i] += Bk[i][j]*h[j];
+	u[i] += Bk[i][j] * h[j];
       hu += h[i] * u[i];
     }
 
-    if (hy != 0 && hu != 0) 
+    if (hy != 0 && hu != 0)
       for (i = 0; i < numvar; i++)
 	for (j = 0; j < numvar; j++)
 	  Bk[i][j] += y[i] * y[j] / hy - u[i] * u[j] / hu;
-    else 
+    else
       check = 0;
-
 
     if (normgrad < eps) {
       EcoSystem->setConvergeBFGS(1);
@@ -121,7 +169,6 @@ int OptInfoBfgs::iteration(double* x0) {
     cout << "\nNew optimum after " << FuncEval << " function evaluations, f(x) = " << fk << " at\n";
     for (i = 0; i < numvar; i++)
       cout << x[i] << sep;
-    
     cout << endl;
   }
 
@@ -138,53 +185,7 @@ void OptInfoBfgs::gradient(double* p, double fp) {
       tmp[j] = p[j];
     tmp[i] += h;
     gk[i] = ((*f)(tmp,numvar) - fp) / h;
-    
   }
-}
-
-double quadmin(double f0, double f1, double f0m, double alpha, double beta) {
-  double S, qa, qb, qt, t, tmin;
-  S = f1 - f0 - f0m;
-  qa = f0 + alpha * (f0m + alpha * S);
-  qb = f0 + beta * (f0m + beta * S);
-  if (absolute(S) > 1e-6)
-    t = -f0m / (2 * S);
-  else
-    t = alpha;
-    
-  t = min(beta, max(alpha,t));
-  qt = f0 + t * (f0m + t * S);
-  if (qa < min(qt,qb))
-    tmin = alpha;
-  else if (qt < qb)
-    tmin = t;
-  else 
-    tmin = beta;
-  return tmin;
-}
-
-double cubmin(double f0, double f1, double f0m, double f1m, double alpha, double beta) { 
-  double eta, ksi, ca, cb, ct, D, t, tmin;
-  eta = 3 * (f1 - f0) - 2 * f0m - f1m;
-  ksi = f0m + f1m - 2 * (f1 - f0);
-  ca = f0 + alpha * (f0m + alpha * (eta + alpha * ksi));
-  cb = f0 + beta * (f0m + beta * (eta + beta * ksi));
-  D = eta * eta - 3 * ksi * f0m;
-  if (absolute(ksi) < 1e-6)
-    t = -f0m / (2 * eta);
-  else if (D > 0)
-    t = (-eta + sqrt(D)) / (3 * ksi);
-  else
-    t = alpha;
-  t = min(beta, max(alpha,t));
-  ct = f0 + t * (f0m + t * (eta + t * ksi));
-  if (ca < min(ct, cb))
-    tmin = alpha;
-  else if (ct < cb)
-    tmin = t;
-  else
-    tmin = beta;
-  return tmin;
 }
 
 double OptInfoBfgs::linesearch() {
@@ -193,55 +194,55 @@ double OptInfoBfgs::linesearch() {
   double tmp[NUMVARS];
   fimin = min(-1000.0, -100 * absolute(fk));
   fa = fk;
-  for(i = 0; i < numvar; i++)
+  for (i = 0; i < numvar; i++)
     fim0 += gk[i] * s[i];
-  if(fim0 >= 0){
+  if (fim0 >= 0) {
     cout << "Error in Linesearch - Search direction not descending - BFGS restarted" << endl;
     return 0.0;
   }
   fi0 = fk;
   mu = (fimin - fk) / (rho * fim0);
-  a = 0;
+  a = 0.0;
   fia = fi0;
   fima = fim0;
-  b = 1;
+  b = 1.0;
   stop = 0;
-  fimb = 0;
+  fimb = 0.0;
   for (;;) {
-    if (a - b == 0) {
+    if (isZero(a - b)) {
       cout << "Error in Linesearch - Empty search interval" << endl;
       return a;
     }
-    for (i = 0; i < numvar; i++) 
+    for (i = 0; i < numvar; i++)
       tmp[i] = x[i] + b * s[i];
-    
-    fib = (*f)(tmp, numvar);  
-   
+
+    fib = (*f)(tmp, numvar);
+
     if (fib != fib)
       fib = verybig;
-    
+
     if (fib < fimin)
       break;
-    
+
     Lb = fi0 + b * rho * fim0;
     if (fib >= Lb || fib > fia) {
       stop = 1;
       break;
     }
-    
+
     gradient(tmp, fib);
     fimb = 0.0;
     for (i = 0; i < numvar; i++)
       fimb += gk[i] * s[i];
-    
+
     if (absolute(fimb) < -tau * fim0)
       break;
-    
+
     if (fimb > 0) {
       stop = 2;
       break;
     }
-    
+
     d = b - a;
     if (mu < b + d)
       bnytt = mu;
@@ -251,9 +252,9 @@ double OptInfoBfgs::linesearch() {
     b = bnytt;
     fia = fib;
     fima = fimb;
-    fimb = 0;
+    fimb = 0.0;
   }
-  
+
   alpha = b;
   fa = fib;
   if (stop == 2) { //switching values of a and b
@@ -269,54 +270,55 @@ double OptInfoBfgs::linesearch() {
     fimb = fima;
     fima = temp;
   }
-  while(stop != 0) {
+  while (stop != 0) {
     d = absolute(b - a);
-    if (a < b)
-      if (fimb == 0)
+    if (a < b) {
+      if (isZero(fimb))
 	alpha = a + d * quadmin(fia, fib, fima * d, 0.1, 0.5);
       else
 	alpha = a + d * cubmin(fia, fib, fima * d, fimb * d, 0.1, 0.5);
-    else
-      if (fimb == 0)
+    } else {
+      if (isZero(fimb))
 	alpha = a - d * quadmin(fia, fib, fima * d, 0.1, 0.5);
       else
 	alpha = a + d * cubmin(fia, fib, fima * d, fimb * d, 0.5, 0.9);
-  
+    }
+
     if (alpha <= min(a, b) || alpha >= max(a, b))
-      alpha = (a + b) / 2;
-  
-    for(i = 0; i < numvar; i++)
+      alpha = (a + b) / 2.0;
+
+    for (i = 0; i < numvar; i++)
       tmp[i] = x[i] + alpha * s[i];
-    
+
     fa = (*f)(tmp, numvar);
-    
-    if (fa != fa) //check for nan 
+
+    if (fa != fa) //check for nan
       fa = verybig;
-    
+
     fialpha = fa;
     if (d < max(absolute(a), absolute(b)) * rathersmall)
       break;
-    
+
     Lalpha = fi0 + alpha * rho * fim0;
-    if(fialpha > Lalpha || fialpha > fia) {
+    if (fialpha > Lalpha || fialpha > fia) {
       b = alpha;
       fib = fialpha;
-      fimb = 0;
+      fimb = 0.0;
     } else {
       gradient(tmp, fialpha);
       fimalpha = 0.0;
       for (i = 0; i < numvar; i++)
 	fimalpha += gk[i] * s[i];
-    
+
       if (absolute(fimalpha) < -tau * fim0)
 	break;
-    
+
       if ((b < a && fimalpha < 0) || (b > a && fimalpha > 0)) {
 	b = a;
 	fib = fia;
 	fimb = fima;
       }
-     
+
       a = alpha;
       fia = fialpha;
       fima = fimalpha;

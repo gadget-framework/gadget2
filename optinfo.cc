@@ -1,10 +1,10 @@
 #include "optinfo.h"
+#include "errorhandler.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
 
 OptInfo::OptInfo(MainInfo* MainInfo) {
-
   useSimann = 0;
   useHJ     = 0;
   useBFGS   = 0;
@@ -36,10 +36,11 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
   char* text = new char[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
-  handle.logMessage("\nReading OptInfofile");
+  handle.logMessage("Reading OptInfofile");
   infile >> text >> ws;
   do {
     if ((strcasecmp(text, "seed")) == 0 && (!infile.eof())) {
+      int seed;
       handle.logMessage("Reading seed from optinfofile");
       infile >> seed >> ws >> text >> ws;
       srand(seed);
@@ -61,7 +62,7 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
 
       if (!infile.eof()) {
         infile >> text >> ws;
-        optHJ->Read(infile,text);
+        optHJ->Read(infile, text);
       } else
         handle.logWarning("Warning - no parameters specified for Hooke & Jeeves, using default values");
       useHJ = 1;
@@ -72,7 +73,7 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
 
       if (!infile.eof()) {
         infile >> text >> ws;
-        optBFGS->Read(infile,text);
+        optBFGS->Read(infile, text);
       } else
         handle.logWarning("Warning - no parameters specified for BFGS, using default values");
       useBFGS = 1;
@@ -82,23 +83,17 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
     }
   } while (!infile.eof());
 
-  if (useSimann == 0 && useHJ == 0 && useBFGS == 0)
-    handle.logFailure("Error in optinfofile - no valid optimisation methods found\n");
   delete[] text;
+  if (useSimann == 0 && useHJ == 0 && useBFGS == 0)
+    handle.logFailure("Error in optinfofile - no valid optimisation methods found");
 }
 
 void OptInfo::Optimize() {
   handle.logMessage("\nStarting optimisation");
-  if (useSimann == 1) {
-    cout << "\nStarting Simulated Annealing\n";
+  if (useSimann)
     optSimann->MaximizeLikelihood();
-  }
-  if (useHJ == 1) {
-    cout << "\nStarting Hooke and Jeeves\n";
+  if (useHJ)
     optHJ->MaximizeLikelihood();
-  }
-  if (useBFGS == 1) {
-    cout << "\nStarting BFGS\n";
+  if (useBFGS)
     optBFGS->MaximizeLikelihood();
-  }
 }

@@ -1,4 +1,5 @@
 #include "optinfo.h"
+#include "ecosystem.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
@@ -8,7 +9,7 @@ double h(double* x, int n) {
   return EcoSystem->SimulateAndUpdate(x, n);
 }
 
-extern int hooke(double (*func)(double*, int), int n, double startingpoint[],
+extern int hooke(double (*func)(double*, int), int n, double startpoint[],
   double endpoint[], double lowerb[], double upperb[], double rho,
   double lambda, double epsilon, int itermax, double init[], double bndcheck);
 
@@ -17,47 +18,64 @@ OptInfoHooke::OptInfoHooke()
   handle.logMessage("Initialising Hooke & Jeeves");
 }
 
-OptInfoHooke::~OptInfoHooke() {
-}
-
 void OptInfoHooke::Read(CommentStream& infile, char* text) {
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[bfgs]")) {
     if (strcasecmp(text, "rho") == 0) {
-      infile >> rho >> ws >> text >> ws;
+      infile >> rho >> ws;
 
     } else if (strcasecmp(text, "lambda") == 0) {
-      infile >> lambda >> ws >> text >> ws;
+      infile >> lambda >> ws;
 
     } else if (strcasecmp(text, "hookeeps") == 0) {
-      infile >> hookeeps >> ws >> text >> ws;
+      infile >> hookeeps >> ws;
 
     } else if (strcasecmp(text, "hookeiter") == 0) {
-      infile >> hookeiter >> ws >> text >> ws;
+      infile >> hookeiter >> ws;
 
     } else if (strcasecmp(text, "bndcheck") == 0) {
-      infile >> bndcheck >> ws >> text >> ws;
+      infile >> bndcheck >> ws;
 
     } else {
       handle.logWarning("Warning in optinfofile - unknown option", text);
-      infile >> text >> ws >> text >> ws;
+      infile >> text >> ws;
     }
+    infile >> text >> ws;
+  }
+
+  //check the values specified in the optinfo file ...
+  if ((rho < 0) || (rho > 1)) {
+    handle.logWarning("Warning in optinfofile - value of rho outside bounds", rho);
+    rho = 0.5;
+  }
+  if ((lambda < 0) || (lambda > 1)) {
+    handle.logWarning("Warning in optinfofile - value of lambda outside bounds", lambda);
+    lambda = rho;
+  }
+  if ((bndcheck < 0.5) || (bndcheck > 1)) {
+    handle.logWarning("Warning in optinfofile - value of bndcheck outside bounds", bndcheck);
+    bndcheck = 0.9999;
   }
 }
 
 void OptInfoHooke::MaximizeLikelihood() {
-  int i, nopt, count;
+  int i, nopt, opt;
   double tmp;
+
+  cout << "\nStarting Hooke and Jeeves\n";
+
   nopt = EcoSystem->NoOptVariables();
   DoubleVector val(nopt);
   DoubleVector lbds(nopt);
   DoubleVector ubds(nopt);
   DoubleVector initialval(nopt);
+  ParameterVector optswitches(nopt);
 
   EcoSystem->ScaleVariables();
   EcoSystem->ScaledOptValues(val);
   EcoSystem->LowerBds(lbds);
   EcoSystem->UpperBds(ubds);
   EcoSystem->InitialOptValues(initialval);
+  EcoSystem->OptSwitches(optswitches);
 
   double* startpoint = new double[nopt];
   double* endpoint = new double[nopt];
@@ -71,9 +89,6 @@ void OptInfoHooke::MaximizeLikelihood() {
     upperb[i] = ubds[i];
     init[i] = initialval[i];
   }
-
-  ParameterVector optswitches(nopt);
-  EcoSystem->OptSwitches(optswitches);
 
   /* Scaling the bounds, because the parameters are scaled. */
   for (i = 0; i < nopt; i++) {
@@ -91,7 +106,7 @@ void OptInfoHooke::MaximizeLikelihood() {
       handle.logWarning("Warning in optinfo - initial value is zero for switch", optswitches[i].getValue());
   }
 
-  count = hooke(&h, nopt, startpoint, endpoint, upperb, lowerb,
+  opt = hooke(&h, nopt, startpoint, endpoint, upperb, lowerb,
     rho, lambda, hookeeps, hookeiter, init, bndcheck);
 
   cout << "\nHooke & Jeeves finished with a final likelihood score of " << EcoSystem->getLikelihood()

@@ -177,28 +177,13 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
   double xbefore[NUMVARS];
   double newx[NUMVARS];
   double oldf, newf, fbefore, steplength, tmp, check;
-  int    i, k, h, keep, change, nobds, iters, offset;
+  int    i, k, h, keep, change, iters, offset;
   int    param[NUMVARS];
 
   int    lbounds[NUMVARS];     //counts how often it has hit the lowerbounds
   int    rbounds[NUMVARS];     //counts how often it has hit the upperbounds
   double initialstep[NUMVARS]; //the stepsize when it hits the bound first
   int    trapped[NUMVARS];     // = 1 if it is trapped at a bound else = 0
-
-
-  //check the values specified in the optinfo file ...
-  if ((rho < 0) || (rho > 1)) {
-    cout << "\nError in value of rho - setting to default value of 0.5\n";
-    rho = 0.5;
-  }
-  if ((lambda < 0) || (lambda > 1)) {
-    cout << "\nError in value of lambda - setting to default value of " << rho << endl;
-    lambda = rho;
-  }
-  if ((bndcheck < 0.5) || (bndcheck > 1)) {
-    cout << "\nError in value of bndcheck - setting to default value of 0.9999\n";
-    bndcheck = 0.9999;
-  }
 
   for (i = 0; i < nvars; i++) {
     lbounds[i] = 0;
@@ -217,7 +202,6 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
   oldf = fbefore;
   check = fbefore;
   steplength = ((lambda < verysmall) ? rho : lambda);
-  nobds = 0;
 
   if (fbefore != fbefore) { //check for NaN
     cout << "\nError starting Hooke and Jeeves optimisation with"
@@ -289,7 +273,6 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
           delta[param[i]] = initialstep[param[i]];
 
         } else if (newx[param[i]] < (lowerb[param[i]] + verysmall)) {
-          nobds++;
           lbounds[param[i]]++;    /* counts how often it hits a lower bound */
           newx[param[i]] = lowerb[param[i]];
           if (trapped[param[i]] == 0) {
@@ -302,7 +285,6 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
           }
 
         } else if (newx[param[i]] > (upperb[param[i]] - verysmall)) {
-          nobds++;
           rbounds[param[i]]++;    /* counts how often it hits a upper bound */
           newx[param[i]] = upperb[param[i]];
           if (trapped[param[i]] == 0) {

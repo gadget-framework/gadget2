@@ -46,8 +46,7 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   //Dont print output line if doing a network run
   if (!netrun)
     cout << "\nFinished reading model input files" << endl;
-  handle.logMessage("Finished reading model input files");
-  handle.logMessage("");  //write a blank line to the log file
+  handle.logMessage("Finished reading model input files\n");
 
   Initialise(calclikelihood);
   basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size(), 0);
