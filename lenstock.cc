@@ -379,10 +379,11 @@ void LenStock::Print(ofstream& outfile) const {
     outfile << sep << areas[i];
   outfile << endl;
 
-  outfile << "\nis eaten" << sep << iseaten << "\ndoes eat" << sep << doeseat
-    << "\ndoes move" << sep << doesmove << "\ndoes spawn" << sep << doesspawn
-    << "\ndoes mature" << sep << doesmature << "\ndoes renew" << sep << doesrenew
-    << "\ndoes grow" << sep << doesgrow << "\ndoes migrate" << sep << doesmigrate << endl;
+  outfile << "\ndoes grow" << sep << doesgrow << "\nis eaten" << sep << iseaten
+    << "\ndoes eat" << sep << doeseat << "\ndoes migrate" << sep << doesmigrate
+    << "\ndoes mature" << sep << doesmature << "\ndoes move" << sep << doesmove
+    << "\ndoes renew" << sep << doesrenew << "\ndoes spawn" << sep << doesspawn
+    << "\ndoes stray" << sep << doesstray << endl << endl;
 
   LgrpDiv->Print(outfile);
   initial->Print(outfile);

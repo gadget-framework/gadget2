@@ -42,13 +42,13 @@ void StockPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
 }
 
 void StockPrey::Print(ofstream& outfile) const {
-  outfile << "\nStock Prey\n";
+  Prey::Print(outfile);
+  outfile << "\nStock prey\n";
   int area;
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tAlkeys on internal area " << areas[area] << endl;
     Alkeys[area].printNumbers(outfile);
   }
-  Prey::Print(outfile);
 }
 
 void StockPrey::Reset() {

@@ -112,7 +112,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   handle.Close();
   datafile.close();
   datafile.clear();
-  
+
   keeper->clearLast();
 }
 
@@ -525,7 +525,7 @@ void SIByLengthAndAgeOnStep::SummaryPrint(ofstream& outfile, double weight) {
       outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
         << Steps[year] << sep << setw(printwidth) << areanames[area] << sep
         << setw(largewidth) << this->SIName() << sep << setw(smallwidth)
-	<< weight << sep << setprecision(largeprecision) << setw(largewidth)
+        << weight << sep << setprecision(largeprecision) << setw(largewidth)
         << lik_val_on_step[year] << endl;
     }
   }

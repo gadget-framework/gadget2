@@ -16,6 +16,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   strncpy(text, "", MaxStrLength);
 
   int i = 0;
+  timeindex = 0;
   int year, step, area, age, ind, no;
   double minlength, maxlength, dl;
 
@@ -146,21 +147,21 @@ void RenewalData::setCI(const LengthGroupDivision* const GivenLDiv) {
 }
 
 void RenewalData::Print(ofstream& outfile) const {
-  outfile << "\nRenewal data\n\tDistribution\n";
-  int i;
-  for (i = 0; i < Distribution.Size(); i++) {
-    outfile << "\tTime " << RenewalTime[i] << " internal area " << RenewalArea[i]
-      << " age " << Distribution[i].minAge() << " number " << Number[i] << "\n\tNumbers\n";
-    Distribution[i].printNumbers(outfile);
-    outfile << "\tMean weights\n";
-    Distribution[i].printWeights(outfile);
-  }
+  outfile << "\nRenewal data\n\t";
+  LgrpDiv->Print(outfile);
+  outfile << "\tInternal area " << RenewalArea[timeindex]
+    << " age " << Distribution[timeindex].minAge()
+    << " number " << Number[timeindex] << "\n\tNumbers\n";
+  Distribution[timeindex].printNumbers(outfile);
+  outfile << "\tMean weights\n";
+  Distribution[timeindex].printWeights(outfile);
 }
 
 void RenewalData::Reset() {
   int i, age, l;
   double sum, length, N, tmpVariance;
 
+  timeindex = 0;
   if (readOption == 1) {
     for (i = 0; i < Distribution.Size(); i++) {
       age = Distribution[i].minAge();
@@ -199,19 +200,19 @@ void RenewalData::addRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* c
   if (RenewalTime.Size() == 0)
     return;
 
-  int i, timeid, renewalid;
+  int i;
   double RenewalNumber = 0.0;
-  timeid = TimeInfo->CurrentTime();
-  renewalid = -1;
+  int renewalid = -1;
 
   for (i = 0; i < RenewalTime.Size(); i++)
-    if ((RenewalTime[i] == timeid) && (RenewalArea[i] == area)) {
+    if ((RenewalTime[i] == TimeInfo->CurrentTime()) && (RenewalArea[i] == area)) {
       renewalid = i;
       break;
     }
 
   //Add renewal to stock
   if (renewalid != -1) {
+    timeindex = renewalid;
     if (isZero(Number[renewalid]))
       RenewalNumber = 0.0;
     else

@@ -861,10 +861,10 @@ void SCRatios::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector&
           sum += (*stomachcontent[i][j])[k][l];
 
         if (!(isZero(sum))) {
-	  tmpdivide = 1 / sum;
+          tmpdivide = 1 / sum;
           for (l = 0; l < stomachcontent[i][j]->Ncol(k); l++)
             (*stomachcontent[i][j])[k][l] *= tmpdivide;
-	}
+        }
       }
 }
 

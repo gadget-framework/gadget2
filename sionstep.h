@@ -32,7 +32,7 @@ public:
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile);
-  virtual void SummaryPrint(ofstream& outfile, double weight) {};
+  virtual void SummaryPrint(ofstream& outfile, double weight);
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time, const char*) {};
   virtual void PrintLikelihoodHeader(ofstream& outfile, const char* name) {};
 protected:
@@ -55,7 +55,7 @@ protected:
 private:
   void readSIData(CommentStream& infile, const CharPtrVector& index1,
     const CharPtrVector& index2, const TimeClass* const TimeInfo);
-  void readSIData(CommentStream& infile, 
+  void readSIData(CommentStream& infile,
     const CharPtrVector& colindex, const TimeClass* const TimeInfo);
   double Fit(const DoubleVector& stocksize,
     const DoubleVector& indices, int col);
@@ -63,6 +63,7 @@ private:
   FitType fittype;
   double slope;
   double intercept;
+  double score;
   //Additions to facilitate printing
   DoubleVector slopes;
   DoubleVector intercepts;

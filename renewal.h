@@ -58,6 +58,10 @@ protected:
    */
   int readOption;
   /**
+   * \brief This is used as the time index for the vectors of renewal data
+   */
+  int timeindex;
+  /**
    * \brief This is the IntVector of timesteps that the recruitment will take place on
    */
   IntVector RenewalTime;

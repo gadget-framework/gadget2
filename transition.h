@@ -121,10 +121,6 @@ protected:
    * \brief This is the minimum length group of the younger stock that exists in the older stock
    */
   int minTransitionLength;
-  /**
-   * \brief This is the mortality that the transition process can induce in the stock
-   */
-  Formula mortality;
 };
 
 #endif

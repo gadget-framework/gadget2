@@ -163,6 +163,7 @@ public:
   const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   int IsEaten() const { return iseaten; };
   int doesSpawn() const { return doesspawn; };
+  int doesStray() const { return doesstray; };
   int doesMove() const { return doesmove; };
   int doesEat() const { return doeseat; };
   int doesMature() const { return doesmature; };
@@ -211,6 +212,7 @@ protected:
   int doesrenew;
   int doesgrow;
   int doesmigrate;
+  int doesstray;
   int birthdate;
   /**
    * \brief This denotes what type of stock class has been created

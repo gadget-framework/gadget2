@@ -352,7 +352,7 @@ double MaturityB::MaturationProbability(int age, int length, int growth,
     if (TimeInfo->CurrentStep() == maturitystep[i])
       if (LgrpDiv->meanLength(length) >= maturitylength[i])
         return 1.0;
-      	
+
   return 0.0;
 }
 

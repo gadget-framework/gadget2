@@ -35,17 +35,6 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
     handle.Failure();
 
   infile >> transitionStep >> ws;
-
-  //read in an optional mortality for the transition process
-  keeper->addString("mortality");
-  char c = infile.peek();
-  if ((c == 't') || (c == 'T'))
-    readWordAndFormula(infile, "transitionmortality", mortality);
-  else
-    mortality.setValue(0.0); //default value for mortality
-  mortality.Inform(keeper);
-  keeper->clearLast();
-
   keeper->clearLast();
 }
 
@@ -123,8 +112,7 @@ void Transition::Print(ofstream& outfile) const {
   outfile << "\n\tNames of transition stocks (through pointers):";
   for (i = 0; i < transitionStocks.Size(); i++)
     outfile << sep << (const char*)(transitionStocks[i]->Name());
-  outfile << "\n\tTransition step " << transitionStep
-    << "\n\tTransition mortality " << mortality << endl;
+  outfile << "\n\tTransition step " << transitionStep << endl;
 }
 
 void Transition::keepAgeGroup(int area, AgeBandMatrix& Alkeys,
@@ -171,8 +159,6 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
     handle.logFailure("Error in transition - transition requested on wrong timestep");
 
   int s, inarea = AreaNr[area];
-  double mort = exp(-mortality);
-
   for (s = 0; s < transitionStocks.Size(); s++) {
     if (!transitionStocks[s]->IsInArea(area))
       handle.logFailure("Error in transition - transition stock doesnt live on area", area);
@@ -183,11 +169,11 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
         TagAgeGroup[inarea].IncrementAge(AgeGroup[inarea]);
     }
 
-    transitionStocks[s]->Add(AgeGroup[inarea], CI[s], area, (Ratio[s] * mort),
+    transitionStocks[s]->Add(AgeGroup[inarea], CI[s], area, Ratio[s],
       AgeGroup[inarea].minAge(), AgeGroup[inarea].maxAge());
 
     if (TagAgeGroup.numTagExperiments() > 0)
-      transitionStocks[s]->Add(TagAgeGroup, inarea, CI[s], area, (Ratio[s] * mort),
+      transitionStocks[s]->Add(TagAgeGroup, inarea, CI[s], area, Ratio[s],
         TagAgeGroup[inarea].minAge(), TagAgeGroup[inarea].maxAge());
   }
 

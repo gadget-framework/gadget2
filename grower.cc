@@ -136,11 +136,9 @@ Grower::~Grower() {
 void Grower::Print(ofstream& outfile) const {
   int i, j, area;
 
-  outfile << "\nGrower\n\tMean lengths of length groups:\n\t";
-  for (i = 0; i < LgrpDiv->NoLengthGroups(); i++)
-    outfile << sep << LgrpDiv->meanLength(i);
-
-  outfile << "\n\tLength increase:\n";
+  outfile << "\nGrower\n\t";
+  LgrpDiv->Print(outfile);
+  outfile << "\tLength increase:\n";
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tInternal area " << areas[area] << endl << TAB;
     for (i = 0; i < calcLengthGrowth.Ncol(area); i++)

@@ -27,6 +27,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   NumberOfSums = 0;
   slope = 0.0;
   intercept = 0.0;
+  score = 0.0;
 
   siname = new char[strlen(name) + 1];
   strcpy(siname, name);
@@ -38,7 +39,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
     areanames[i] = new char[MaxStrLength];
     strncpy(areanames[i], "", MaxStrLength);
     strcpy(areanames[i], areaindex[i]);
-  } 
+  }
 
   //if numcols is 1 then this is a sibyalengthandageonstep
   //else we have a pionstep - these use different fittypes
@@ -132,6 +133,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   NumberOfSums = 0;
   slope = 0.0;
   intercept = 0.0;
+  score = 0.0;
 
   siname = new char[strlen(name) + 1];
   strcpy(siname, name);
@@ -143,7 +145,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
     areanames[i] = new char[MaxStrLength];
     strncpy(areanames[i], "", MaxStrLength);
     strcpy(areanames[i], areaindex[i]);
-  } 
+  }
 
   //read the fittype
   infile >> text;
@@ -211,7 +213,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   }
 }
 
-void SIOnStep::readSIData(CommentStream& infile, 
+void SIOnStep::readSIData(CommentStream& infile,
   const CharPtrVector& colindex, const TimeClass* const TimeInfo) {
 
   int i;
@@ -351,6 +353,7 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& index1,
 void SIOnStep::Reset(const Keeper* const keeper) {
   error = 0;
   NumberOfSums = 0;
+  score = 0.0;
   int i, j;
   for (i = 0; i < abundance.Nrow(); i++)
     for (j = 0; j < abundance.Ncol(i); j++)
@@ -425,7 +428,7 @@ double SIOnStep::Regression() {
   if (NumberOfSums < 2)
     return 0.0;
 
-  double likelihood = 0.0;
+  score = 0.0;
   int col, index;
   for (col = 0; col < Indices.Ncol(); col++) {
     //Let LLR figure out what to do in the case of zero stock size.
@@ -436,12 +439,12 @@ double SIOnStep::Regression() {
       stocksize[index] = abundance[index][col];
     }
     //Now fit the log of the abundance indices as a function of stock size.
-    likelihood += this->Fit(stocksize, indices, col);
+    score += this->Fit(stocksize, indices, col);
   }
 
   handle.logMessage("Calculating likelihood score for surveyindex component", this->SIName());
-  handle.logMessage("The likelihood score from the regression line for this component is", likelihood);
-  return likelihood;
+  handle.logMessage("The likelihood score from the regression line for this component is", score);
+  return score;
 }
 
 void SIOnStep::keepNumbers(const DoubleVector& numbers) {
@@ -516,4 +519,17 @@ double SIOnStep::Fit(const DoubleVector& stocksize, const DoubleVector& indices,
       break;
   }
   return 0.0;
+}
+
+void SIOnStep::SummaryPrint(ofstream& outfile, double weight) {
+  int area;
+
+  //JMB - this is nasty hack since there is only one area
+  for (area = 0; area < areanames.Size(); area++) {
+    outfile << "all   all " << setw(printwidth) << areanames[area] << sep
+      << setw(largewidth) << this->SIName() << sep << setw(smallwidth)
+      << weight << sep << setprecision(largeprecision) << setw(largewidth)
+      << score << endl;
+  }
+  outfile.flush();
 }

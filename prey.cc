@@ -108,11 +108,8 @@ void Prey::setCI(const LengthGroupDivision* const GivenLDiv) {
 void Prey::Print(ofstream& outfile) const {
   int i, area;
 
-  outfile << "\nPrey\n\tName " << this->Name();
-  outfile << "\n\tPrey lengths";
-  for (i = 0; i < LgrpDiv->NoLengthGroups(); i++)
-    outfile << sep << LgrpDiv->minLength(i);
-  outfile << sep << LgrpDiv->maxLength() << endl;
+  outfile << "\nPrey\n\tName " << this->Name() << "\n\t";
+  LgrpDiv->Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tNumber of prey on internal area " << areas[area] << ":";
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {

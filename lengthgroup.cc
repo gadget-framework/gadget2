@@ -173,7 +173,7 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
 
 void LengthGroupDivision::Print(ofstream& outfile) const {
   int i;
-  outfile << "\nLength group division with " << size << " length groups from " << minlen
+  outfile << "Length group division with " << size << " length groups from " << minlen
     << " up to " << maxlen << endl << TAB;
   for (i = 0; i < size; i++)
     outfile << minlength[i] << sep;

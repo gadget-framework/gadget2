@@ -23,7 +23,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   int i, j;
 
   //default value is to print biomass
-  biomass = 0;
+  biomass = 1;
   
   //read in the predator names
   i = 0;
@@ -135,7 +135,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   for (i = 0; i < preynames.Size(); i++)
     outfile << sep << preynames[i];
 
-  if (biomass == 0)
+  if (biomass == 1)
     outfile << "\n; year-step-area-pred length-prey length-biomass consumed\n";
   else
     outfile << "\n; year-step-area-pred length-prey length-number consumed\n";
@@ -187,7 +187,7 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
 void PredatorPrinter::Print(const TimeClass* const TimeInfo) {
   if (!AAT.AtCurrentTime(TimeInfo))
     return;
-  if (biomass == 0)
+  if (biomass == 1)
     aggregator->Sum();
   else
     aggregator->NumberSum();

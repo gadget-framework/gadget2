@@ -1,4 +1,4 @@
-	#include "vectorofcharptr.h"
+#include "vectorofcharptr.h"
 #include "gadget.h"
 
 void VectorOfCharPtr::set(int id, char* value) {

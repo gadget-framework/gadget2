@@ -496,12 +496,12 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     if (found == 0)
       handle.logFailure("Error in catchdistribution - unknown stock", stocknames[i]);
   }
-  
+
   stocktype = stocks[0]->Type();
   for (i = 0; i < stocks.Size(); i++)
     if (stocks[i]->Type() != stocktype)
       handle.logFailure("Error in catchdistribution - trying to mix stock types");
-      
+
   aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
   //Limits (inclusive) for traversing the matrices where required
   mincol = aggregator->getMinCol();
@@ -1074,14 +1074,14 @@ void CatchDistribution::SummaryPrint(ofstream& outfile) {
           << likelihoodValues[year][area] << endl;
       } else {
         if (isZero(likelihoodValues[year][area])) {
-	// assume that this isnt the last step for that year and ignore
-	} else {
+          // assume that this isnt the last step for that year and ignore
+        } else {
           outfile << setw(lowwidth) << Years[year] << "  all "
             << setw(printwidth) << areaindex[area] << sep
             << setw(largewidth) << cdname << sep << setw(smallwidth) << weight
             << sep << setprecision(largeprecision) << setw(largewidth)
             << likelihoodValues[year][area] << endl;
-	}
+        }
       }
     }
   }

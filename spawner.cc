@@ -327,7 +327,7 @@ int Spawner::IsSpawnStepArea(int area, const TimeClass* const TimeInfo) {
 
 void Spawner::Reset(const TimeClass* const TimeInfo) {
   int i;
-  
+
   fnProportion->updateConstants(TimeInfo);
   if (fnProportion->constantsHaveChanged(TimeInfo)) {
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
@@ -377,5 +377,17 @@ double Spawner::ssbFunc(int age, int len, double number, double weight) {
 }
 
 void Spawner::Print(ofstream& outfile) const {
-  outfile << "\tSpawning information:\n";
+  int i;
+  outfile << "\nSpawning data\n\tNames of spawned stocks:";
+  for (i = 0; i < SpawnStocks.Size(); i++)
+    outfile << sep << (const char*)(SpawnStocks[i]->Name());
+  outfile << "\n\t";
+  spawnLgrpDiv->Print(outfile);
+  outfile << "\tStored numbers:\n";
+  for (i = 0; i < areas.Size(); i++) {
+    outfile << "\tInternal area " << areas[i] << "\n\tNumbers\n";
+    Storage[i].printNumbers(outfile);
+    outfile << "\tMean weights\n";
+    Storage[i].printWeights(outfile);
+  }
 }

@@ -381,7 +381,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
         for (l = initialPop[area].minLength(age);
             l < initialPop[area].maxLength(age); l++) {
           dnorm = (LgrpDiv->meanLength(l) - meanLength[area][age - minage])
-	            / (sdevLength[area][age - minage] * sdevMult);
+                  / (sdevLength[area][age - minage] * sdevMult);
 
           initialPop[area][age][l].N = exp(-(dnorm * dnorm) * 0.5);
           scaler += initialPop[area][age][l].N;

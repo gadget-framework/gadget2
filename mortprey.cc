@@ -129,13 +129,13 @@ const AgeBandMatrix& MortPrey::getMeanN(int area) const {
 
 void MortPrey::Print(ofstream& outfile) const {
   //must be modified! kgf 7/7 98
-  outfile << "MortPrey\n";
+  Prey::Print(outfile);
+  outfile << "Mort prey\n";
   int area;
   for (area = 0; area < areas.Size(); area++) {
     outfile << "Alkeys on area " << areas[area] << endl;
     Alkeys[area].printNumbers(outfile);
   }
-  Prey::Print(outfile);
 }
 
 void MortPrey::Reset() {

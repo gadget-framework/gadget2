@@ -97,9 +97,9 @@ Examples:
    class TimeClass {
      // ...
    }
-   
+
    TimeClass* currentTime;
-   
+
    void doSomething(TimeClass time) {
      // ...
    }
@@ -127,7 +127,7 @@ Examples:
      // ...
    }
 
-   doSomething(a, b, c); 
+   doSomething(a, b, c);
 \endverbatim
 
 \section forloop Local Variables in For Loops
@@ -146,21 +146,29 @@ Example:
 
 This documentation has been generated from the source files by Doxygen (see http://www.doxygen.org for more information).  To ensure that Doxygen can document all the classes, functions and variables in Gadget, these have been described with ''doxygen style'' comments that have been placed in the header files for each class.  As a minimum, these comments include the \c \\brief command to give a brief description of the object, the \c \\param command to give a description of the parameters (if any) and the \c \\return command to give a description of the return value (if any).  More complicated objects will require more detailed descriptions.
 
-Any non-trivial method should also have a short description in the code, in addition to any documentation in the header file.  
+Any non-trivial method should also have a short description in the code, in addition to any documentation in the header file.
 
 Example:
 \verbatim
   \brief This will return the total number of timesteps that have taken place in the
          simulation from the start of the model simulation until a specifed year and step
-  \param year is the specified year 
-  \param step is the specified step 
+  \param year is the specified year
+  \param step is the specified step
   \return number of timesteps taken
-  
+
   int TimeClass::calcSteps(int year, int step);
 \endverbatim
 
 \section cvs Version Control
 
-To maintain version control of the source files, a CVS repository has been set up on the Marine Research Institute server in Reykjavik.  Any user with secure shell access to the Marine Research Institute server can access this CVS repository.  Any ''official'' version of the Gadget software will be tagged and released from the source code that is in the CVS repository.  The CVS repository should also contain any user documents and files external to the main source code that are distributed with the source code (for example, shell scripts to help analyse the output from a Gadget simulation).
+To maintain version control of the source files, a CVS repository has been set up on the Marine Research Institute server in Reykjavik.  Any user with secure shell access to the MRI server can access this CVS repository.  Any ''official'' version of the Gadget software will be tagged and released from the source code that is in the CVS repository.  The CVS repository should also contain any user documents and files external to the main source code that are distributed with the source code (for example, shell scripts to help analyse the output from a Gadget simulation).
+
+\section compat Code Compatibility
+
+Gadget is a program that has been developed on a Unix computing platform, and is regularly compiled and run on machines running versions of Linux, Solaris and Cygwin (a Unix emulator for Microsoft Windows machines, see http://www.cygwin.com for more information).  By regularly compiling and running Gadget on a variety of computing platforms, it is hoped that the source code is compatible with as many computing platforms as possible.  The list of computing platforms, and C++ compilers, that Gadget is regularly tested on is:
+
+  \li Linux (RedHat 9), compiled using \c g++ versions 2.95.3, 2.96 and 3.2.2
+  \li Solaris (SunOS 5.8), compiled using  \c g++ version 3.3
+  \li Cygwin (1.5.9-1), compiled using  \c g++ version 3.3.1
 
 */

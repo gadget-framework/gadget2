@@ -328,7 +328,7 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
 
       if (timeid == -1) {
         Years.resize(1, year);
-	if (!(yearly))
+        if (!(yearly))
           Steps.resize(1, step);
         timeid = (Years.Size() - 1);
         obsDistribution.AddRows(1, numarea, 0.0);
@@ -396,14 +396,14 @@ void CatchInTons::SummaryPrint(ofstream& outfile) {
           << likelihoodValues[year][area] << endl;
       } else {
         if (isZero(likelihoodValues[year][area])) {
-	// assume that this isnt the last step for that year and ignore
-	} else {
+          // assume that this isnt the last step for that year and ignore
+        } else {
           outfile << setw(lowwidth) << Years[year] << "  all "
             << setw(printwidth) << areaindex[area] << sep
             << setw(largewidth) << ctname << sep << setw(smallwidth) << weight
             << sep << setprecision(largeprecision) << setw(largewidth)
             << likelihoodValues[year][area] << endl;
-	}
+        }
       }
     }
   }

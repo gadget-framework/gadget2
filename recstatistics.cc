@@ -306,7 +306,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
 void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
   int t, i, check;
   double l = 0.0;
- 
+
   check = 0;
   for (t = 0; t < tagvec.Size(); t++) {
     timeindex[t] = -1;
@@ -318,7 +318,7 @@ void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
           timeindex[t] = i;
           aggregator[t]->Sum(TimeInfo);
           check++;
-	}
+        }
       }
     }
   }

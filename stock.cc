@@ -27,6 +27,8 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), NatM(0) {
 
   type = STOCKTYPE;
+  doesgrow = doeseat = iseaten = doesmigrate = 0;
+  doesmove = doesrenew = doesmature = doesspawn = doesstray = 0;
   int i, tmpint;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -272,6 +274,8 @@ Stock::Stock(const char* givenname)
   : BaseClass(givenname), spawner(0), renewal(0), maturity(0), transition(0),
     migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), NatM(0) {
 
+  doesgrow = doeseat = iseaten = doesmigrate = 0;
+  doesmove = doesrenew = doesmature = doesspawn = doesstray = 0;
 }
 
 Stock::~Stock() {
@@ -359,10 +363,11 @@ void Stock::Print(ofstream& outfile) const {
     outfile << sep << areas[i];
   outfile << endl;
 
-  outfile << "\nis eaten" << sep << iseaten << "\ndoes eat" << sep << doeseat
-    << "\ndoes move" << sep << doesmove << "\ndoes spawn" << sep << doesspawn
-    << "\ndoes mature" << sep << doesmature << "\ndoes renew" << sep << doesrenew
-    << "\ndoes grow" << sep << doesgrow << "\ndoes migrate" << sep << doesmigrate << endl;
+  outfile << "\ndoes grow" << sep << doesgrow << "\nis eaten" << sep << iseaten
+    << "\ndoes eat" << sep << doeseat << "\ndoes migrate" << sep << doesmigrate
+    << "\ndoes mature" << sep << doesmature << "\ndoes move" << sep << doesmove
+    << "\ndoes renew" << sep << doesrenew << "\ndoes spawn" << sep << doesspawn
+    << "\ndoes stray" << sep << doesstray << endl << endl;
 
   LgrpDiv->Print(outfile);
   initial->Print(outfile);

@@ -170,7 +170,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
       for (k = 0; k < total[i].maxLength(j); k++)
         check += total[i][j][k].N;
   if (isZero(check))
-    handle.logWarning("Warning - zero catch found when aggregating for likelihood component");	
+    handle.logWarning("Warning - zero catch found when aggregating for likelihood component");
 }
 
 void FleetPreyAggregator::MeanSum(const TimeClass* const TimeInfo) {
@@ -229,5 +229,5 @@ void FleetPreyAggregator::MeanSum(const TimeClass* const TimeInfo) {
       for (k = 0; k < total[i].maxLength(j); k++)
         check += total[i][j][k].N;
   if (isZero(check))
-    handle.logWarning("Warning - zero catch found when aggregating for likelihood component");	
+    handle.logWarning("Warning - zero catch found when aggregating for likelihood component");
 }
