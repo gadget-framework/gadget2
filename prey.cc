@@ -169,7 +169,7 @@ void Prey::addConsumption(int area, const DoubleIndexVector& predconsumption) {
 //check if more is consumed of prey than was available.  If this is
 //the case a flag is set. Changed 22 - May 1997  so that only 95% of a prey
 //in an area can be eaten in one timestep.  This is to avoid problems
-//with survy indices etc.
+//with survey indices etc.
 void Prey::checkConsumption(int area, int numsubsteps) {
   double maxRatio = pow(MaxRatioConsumed, numsubsteps);
   int i, temp = 0;

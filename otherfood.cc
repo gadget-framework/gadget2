@@ -102,5 +102,4 @@ void OtherFood::Print(ofstream& outfile) const {
 
 void OtherFood::Reset(const TimeClass* const TimeInfo) {
   prey->Reset();
-  handle.logMessage("Reset otherfood data for", this->getName());
 }

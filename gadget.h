@@ -107,7 +107,7 @@ Examples:
 
 \section space Spacing, Indentation and Brackets
 
-Only spaces should be used for indentation, two spaces for each level of indentation.  A block opening curly bracket should be at the end of the line that defines the block.  The matching end bracket is placed on a line of its own, at the same level of indentation as the line that starts the block.  If the if block is followed by an else clause, the next block should be started on the same line as the closing curly bracket of the previous block.
+Only spaces should be used for indentation, two spaces for each level of indentation.  A block opening curly bracket should be at the end of the line that defines the block.  The matching end bracket is placed on a line of its own, at the same level of indentation as the line that starts the block.  If an \c if block is followed by an \c else clause, the next block should be started on the same line as the closing curly bracket of the previous block.
 
 An opening round bracket following a keyword (\c if, \c while, \c for, etc.) should be separated from the keyword with a space.  There should also be a space separating the closing round bracket and the opening curly bracket, if the curly brackets are required.  In function calls, the opening bracket for the function arguments should not be separated from the function name.
 
@@ -168,8 +168,8 @@ To maintain version control of the source files, a CVS repository has been set u
 
 Gadget is a program that has been developed on a Unix computing platform, and is regularly compiled and run on machines running versions of Linux, Solaris and Cygwin (a Unix emulator for Microsoft Windows machines, see http://www.cygwin.com for more information).  By regularly compiling and running Gadget on a variety of computing platforms, it is hoped that the source code is compatible with as many computing platforms as possible.  The list of computing platforms, and C++ compilers, that Gadget is regularly tested on is:
 
-  \li Linux (RedHat 9), compiled using \c g++ versions 2.95.3, 2.96, 3.2.2 and 3.4.3
+  \li Linux (Fedora Core 3), compiled using \c g++ versions 3.3.4, 3.4.2 and 4.0.0 (pre-release)
   \li Solaris (SunOS 5.9), compiled using  \c g++ version 3.4.2
-  \li Cygwin (1.5.12-1), compiled using  \c g++ version 3.3.3-3
+  \li Cygwin (1.5.13-1), compiled using  \c g++ version 3.3.3-3
 
 */
