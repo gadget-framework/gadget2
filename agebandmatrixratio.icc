@@ -15,24 +15,3 @@ const popratioindexvector& Agebandmatrixratio::operator [] (int age) const {
   assert(minage <= age && age < (minage + nrow));
   return *(v[age - minage]);
 }
-
-#ifdef GADGET_INLINE
-inline
-#endif
-Agebandmatrixratio& Agebandmatrixratiovector::operator [] (int pos) {
-  return *v[pos];
-}
-
-#ifdef GADGET_INLINE
-inline
-#endif
-const Agebandmatrixratio& Agebandmatrixratiovector::operator [] (int pos) const {
-  return *v[pos];
-}
-
-#ifdef GADGET_INLINE
-inline
-#endif
-const Agebandmatrixratio& Agebandmatrixratiovector::operator [] (const char* name) const {
-  return *v[0];
-}

@@ -1,4 +1,5 @@
 #include "agebandmatrixratio.h"
+#include "agebandmatrixratioptrvector.h"
 
 void Agebandmatrixratio::UpdateNumbers(const Agebandmatrix& Total) {
 
@@ -95,5 +96,88 @@ void Agebandmatrixratio::IncrementAge(const Agebandmatrix& Total) {
         (*(*v[0])[j][tag].N) = 0;
 
     this->UpdateRatio(Total);
+  }
+}
+
+void AgebandmratioAdd(agebandmatrixratioptrvector& Alkeys, int AlkeysArea,
+  const agebandmatrixratioptrvector& Addition, int AdditionArea,
+  const ConversionIndex &CI, double ratio, int minage, int maxage) {
+
+  minage =  max(Alkeys[AlkeysArea].Minage(), Addition[AdditionArea].Minage(), minage);
+  maxage =  min(Alkeys[AlkeysArea].Maxage(), Addition[AdditionArea].Maxage(), maxage);
+  if (maxage < minage)
+    return;
+
+  int age, minl, maxl, i, l, tagid, numtags, offset;
+  double numfish;
+
+  numtags = Addition.NrOfTagExp();
+
+  if (numtags > Alkeys.NrOfTagExp()) {
+    cerr << "Error when trying to add together two agebandmatrixratiovectors\n";
+    exit(EXIT_FAILURE);
+  }
+
+  if (numtags > 0) {
+    intvector tagconversion(numtags);
+    for (i = 0; i < numtags; i++) {
+      tagconversion[i] = Alkeys.getId(Addition.getName(i));
+      if (tagconversion[i] < 0) {
+        cerr << "Error when searching for a tagging experiment\n"
+          << "Did not find any name matching " << Addition.getName(i) << endl;
+        exit(EXIT_FAILURE);
+      }
+    }
+
+    numfish = 0.0;
+    if (CI.SameDl()) { //Same dl on length distributions
+      offset = CI.Offset();
+      for (age = minage; age <= maxage; age++) {
+        minl = max(Alkeys[AlkeysArea].Minlength(age), Addition[AdditionArea].Minlength(age) + offset);
+        maxl = min(Alkeys[AlkeysArea].Maxlength(age), Addition[AdditionArea].Maxlength(age) + offset);
+        for (l = minl; l < maxl; l++) {
+          for (tagid = 0; tagid < numtags; tagid++) {
+            numfish = *(Addition[AdditionArea][age][l - offset][tagid].N);
+            numfish *= ratio;
+            (*Alkeys[AlkeysArea][age][l][tagconversion[tagid]].N) += numfish;
+          }
+        }
+      }
+
+    } else { //Not same dl.
+      if (CI.TargetIsFiner()) {
+        //Stock that is added to has finer division than the stock that is added to it.
+        for (age = minage; age <= maxage; age++) {
+          minl = max(Alkeys[AlkeysArea].Minlength(age), CI.Minpos(Addition[AdditionArea].Minlength(age)));
+          maxl = min(Alkeys[AlkeysArea].Maxlength(age), CI.Maxpos(Addition[AdditionArea].Maxlength(age) - 1) + 1);
+          for (l = minl; l < maxl; l++) {
+            for (tagid = 0; tagid < numtags; tagid++) {
+              numfish = *(Addition[AdditionArea][age][CI.Pos(l)][tagid].N);
+              numfish *= ratio;
+              numfish /= CI.Nrof(l);
+              *(Alkeys[AlkeysArea][age][l][tagconversion[tagid]].N) += numfish;
+            }
+          }
+        }
+
+      } else {
+        //Stock that is added to has coarser division than the stock that is added to it.
+        for (age = minage; age <= maxage; age++) {
+          minl = max(CI.Minpos(Alkeys[AlkeysArea].Minlength(age)), Addition[AdditionArea].Minlength(age));
+          maxl = min(CI.Maxpos(Alkeys[AlkeysArea].Maxlength(age) - 1) + 1, Addition[AdditionArea].Maxlength(age));
+          if (maxl > minl && CI.Pos(maxl - 1) < Alkeys[AlkeysArea].Maxlength(age)
+            && CI.Pos(minl) >= Alkeys[AlkeysArea].Minlength(age)) {
+
+            for (l = minl; l < maxl; l++) {
+              for (tagid = 0; tagid < numtags; tagid++) {
+                numfish = *(Addition[AdditionArea][age][l][tagid].N);
+                numfish *= ratio;
+                *(Alkeys[AlkeysArea][age][CI.Pos(l)][tagconversion[tagid]].N) += numfish;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
