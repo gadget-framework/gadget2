@@ -2,28 +2,32 @@
 #include "gadget.h"
 
 Parameter::Parameter(char* value) {
-  if (isLegalParameter(value)) {
-    name = new char[strlen(value) + 1];
-    strcpy(name, value);
+  if (value == NULL) {
+    name = NULL;
   } else {
-    cerr << "Illegal parameter name - " << value << endl;
-    exit(EXIT_FAILURE);
+    if (isLegalParameter(value)) {
+      name = new char[strlen(value) + 1];
+      strcpy(name, value);
+    } else {
+      cerr << "Illegal parameter name - " << value << endl;
+      exit(EXIT_FAILURE);
+    }
   }
 }
 
 int Parameter::isLegalParameter(char* param) {
   int strlength = strlen(param);
   int counter = 0;
-  int LEGAL = 1;
+  int legal = 1;
   if (strlength > MaxStrLength)
-    LEGAL = 0;
+    legal = 0;
   else {
-    while ((counter < strlength) && (LEGAL == 1)) {
-      LEGAL = this->legalchar(param[counter]);
+    while ((counter < strlength) && (legal == 1)) {
+      legal = this->legalchar(param[counter]);
       counter++;
     }
   }
-  return LEGAL;
+  return legal;
 }
 
 char* Parameter::getValue() {
@@ -55,11 +59,7 @@ Parameter::~Parameter() {
 }
 
 int Parameter::operator == (const Parameter& p) const {
-  #ifdef PARAMETERS_CASE_SENSITIVE
-    return (strcmp(name, p.name) == 0);
-  #else
-    return (strcasecmp(name, p.name) == 0);
-  #endif
+  return (strcasecmp(name, p.name) == 0);
 }
 
 Parameter& Parameter::operator = (const Parameter& p) {
@@ -120,12 +120,8 @@ CommentStream& operator >> (CommentStream& in, Parameter& p) {
     in.makebad();
     return in;
   }
-  //No checks for not being able to read from in...
+
   in >> ws;
-  if (in.fail() && !in.eof()) {
-    in.makebad();
-    return in;
-  }
   tempString = new char[MaxStrLength];
   while (p.legalchar(in.peek()) && i < (MaxStrLength - 1)) {
     if (in.fail() && !in.eof()) {
@@ -143,7 +139,7 @@ CommentStream& operator >> (CommentStream& in, Parameter& p) {
     i++;
   }
 
-  tempString[i] = 0;
+  tempString[i] = '\0';
   if (strlen(tempString) == MaxStrLength - 1)
     cerr << "Warning - name of switch has reached maximum allowed length\n";
 
@@ -177,7 +173,7 @@ istream& operator >> (istream& in, Parameter& p) {
     i++;
   }
 
-  tempString[i] = 0;
+  tempString[i] = '\0';
   if (p.name != NULL) {
     delete[] p.name;
     p.name = NULL;

@@ -3,6 +3,7 @@
 
 #include "doublematrix.h"
 #include "formulamatrixptrvector.h"
+#include "parametervector.h"
 #include "commentstream.h"
 
 int readMatrix(CommentStream& infile, DoubleMatrix& M);
@@ -10,6 +11,7 @@ int readVector(CommentStream& infile, DoubleVector& Vec);
 int readIndexVector(CommentStream& infile, DoubleIndexVector& Vec);
 int readVectorInLine(CommentStream& infile, IntVector& Vec);
 int readVectorInLine(CommentStream& infile, DoubleVector& Vec);
+int readVectorInLine(CommentStream& infile, ParameterVector& Vec);
 int countColumns(CommentStream& infile);
 int FindContinuousYearAndStepWithNoText(CommentStream& infile, int year, int step);
 

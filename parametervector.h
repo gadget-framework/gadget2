@@ -60,7 +60,6 @@ public:
    * \return the size of the vector
    */
   int Size() const { return size; };
-  int findIndex(Parameter& p);
   ParameterVector& operator = (const ParameterVector& paramv);
   /**
    * \brief This will return the value of an element of the vector
@@ -75,7 +74,7 @@ public:
    */
   Parameter const& operator [] (int pos) const;
   friend CommentStream& operator >> (CommentStream& infile, ParameterVector& paramVec);
-  int readVectorInLine(CommentStream& infile);
+  //int readVectorInLine(CommentStream& infile);
 protected:
   /**
    * \brief This is the vector of Parameter values

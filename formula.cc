@@ -4,6 +4,13 @@
 
 extern ErrorHandler handle;
 
+Formula::Formula() {
+  init = 0.0;
+  inattr = NULL;
+  multipliers = 0;
+  attributes = 0;
+}
+
 Formula::Formula(const Formula& form) {
   init = form.init;
   inattr = form.inattr;
@@ -15,11 +22,7 @@ void Formula::setValue(double initValue) {
   init = initValue;
 }
 
-int Formula::isMultipleValue() {
-  return (multipliers.Size() > 0);
-}
-
-CommentStream& operator>>(CommentStream& infile, Formula& F) {
+CommentStream& operator >> (CommentStream& infile, Formula& F) {
   assert(F.inattr.Size() == 0);
   assert(F.multipliers.Size() == 0);
   assert(F.attributes.Size() == 0);
@@ -93,7 +96,6 @@ CommentStream& operator>>(CommentStream& infile, Formula& F) {
 void Formula::Inform(Keeper* keeper) {
   //let keeper know of the marked variables
   int i;
-
   if (inattr.Size() > 0)
     keeper->KeepVariable(init, inattr);
   else {
@@ -109,21 +111,6 @@ void Formula::Inform(Keeper* keeper) {
 }
 
 void Formula::Interchange(Formula& NewF, Keeper* keeper) const {
-  if (this == &NewF) { //mnaa 20.12.00
-    return;
-  }
-  int i;
-  NewF.init = init;
-  NewF.inattr = inattr;
-  if (inattr.Size() > 0)
-    keeper->ChangeVariable(init, NewF.init);
-  for (i = 0; i < multipliers.Size(); i++)
-    (NewF.multipliers).resize(1, multipliers[i]);
-  for (i = 0; i < multipliers.Size(); i++)
-    keeper->ChangeVariable(multipliers[i], NewF.multipliers[i]);
-}
-
-void Formula::Interchange(Formula& NewF, Keeper* keeper) {
   if (this == &NewF) { //mnaa 20.12.00
     return;
   }

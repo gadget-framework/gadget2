@@ -1,4 +1,5 @@
 #include "initialinputfile.h"
+#include "readfunc.h"
 #include "gadget.h"
 
 int InitialInputFile::repeatedValuesFileFormat() {
@@ -109,7 +110,7 @@ void InitialInputFile::readHeader() {
     if (strcasecmp(text, "switches") == 0 && (line.eof() || line.peek() == ';')) {
       // fileformat with switches and vector value/values.
       infile >> ws;
-      if (!switches.readVectorInLine(infile)) {
+      if (!readVectorInLine(infile, switches)) {
         cerr << "Error in initialinput - failed to read switches\n";
         exit(EXIT_FAILURE);
       }

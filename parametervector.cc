@@ -7,7 +7,6 @@
 
 ParameterVector::ParameterVector(int sz) {
   size = (sz > 0 ? sz : 0);
-
   if (size > 0)
     v = new Parameter[size];
   else
@@ -85,14 +84,6 @@ void ParameterVector::Delete(int pos) {
   }
 }
 
-int ParameterVector::findIndex(Parameter& p) {
-  int i;
-  for (i = 0; i < size; i++)
-    if (v[i] == p)
-      return i;
-  return -1;
-}
-
 CommentStream& operator >> (CommentStream& infile, ParameterVector& paramVec) {
   if (infile.fail()) {
     infile.makebad();
@@ -108,7 +99,7 @@ CommentStream& operator >> (CommentStream& infile, ParameterVector& paramVec) {
   return infile;
 }
 
-int ParameterVector::readVectorInLine(CommentStream& infile) {
+/*int ParameterVector::readVectorInLine(CommentStream& infile) {
   if (infile.fail())
     return 0;
   char line[MaxStrLength];
@@ -131,7 +122,7 @@ int ParameterVector::readVectorInLine(CommentStream& infile) {
     i++;
   }
   return 1;
-}
+}*/
 
 ParameterVector& ParameterVector::operator = (const ParameterVector& paramv) {
   if (this == &paramv)
