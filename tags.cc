@@ -337,10 +337,8 @@ void Tags::Update() {
     for (length = minl; length < maxl; length++) {
       numfishinarea = NumberInArea[length].N;
       numstockinarea = (*stockPopInArea)[age][length].N;
-      if (numfishinarea < verysmall || numstockinarea < verysmall)
-        (*AgeLengthStock[0])[tagareaindex][age][length].N = 0.0;
-      else
-        (*AgeLengthStock[0])[tagareaindex][age][length].N = (NumberByLength[length - minl] * numstockinarea) / numfishinarea;
+      if (numfishinarea > verysmall && numstockinarea > verysmall)
+        (*AgeLengthStock[0])[tagareaindex][age][length].N += (NumberByLength[length - minl] * numstockinarea) / numfishinarea;
     }
   }
   taggingstock->updateTags(AgeLengthStock[0], this, exp(-tagloss));
