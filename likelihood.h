@@ -80,13 +80,6 @@ public:
    */
   double Weight() const { return weight; };
   /**
-   * \brief This function will print the information that is requested from the commandline for the current model
-   * \param outfile is the ofstream that all the model information gets sent to
-   * \param time is the TimeClass for the current model
-   * \param print is the PrintInfo for the current model
-   */
-  virtual void CommandLinePrint(ofstream& outfile, const TimeClass& time, const PrintInfo& print) {};
-  /**
    * \brief This will select the fleets and stocks required for to calculate the likelihood score
    * \param Fleets is the FleetPtrVector listing all the available fleets
    * \param Stocks is the StockPtrVector listing all the available stocks

@@ -11,7 +11,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   const LengthGroupDivision* const GivenLgrpDiv, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper, const char* refWeight,
   const AreaClass* const Area, const CharPtrVector& lenindex)
-  : LivesOnAreas(Areas), LgrpDiv(0), CI(0), GrIPar(0), growthcalc(0), growthtype(0) {
+  : LivesOnAreas(Areas), LgrpDiv(0), CI(0), growthcalc(0), growthtype(0) {
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -75,7 +75,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
       break;
   }
 
-  int rows = 0; //Number of rows in wgrowth and lgrowth
+  int rows = maxlengthgroupgrowth + 1; //Number of rows in wgrowth and lgrowth
   infile >> ws >>  text;
   if ((strcasecmp(text, "beta") == 0)) {
     //Beta binomial growth distribution code is used
@@ -86,39 +86,17 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     readWordAndVariable(infile, "maxlengthgroupgrowth", maxlengthgroupgrowth);
 
     //Finished reading from input files.
-    rows = maxlengthgroupgrowth + 1;
     part1.resize(rows);
     part2.resize(rows);
     part4.resize(rows);
 
   } else if ((strcasecmp(text, "meanvarianceparameters") == 0)) {
     //Old growth distribution, with distribution file
-    version = 2;
-
-    MeanVarianceParameters.resize(2, keeper);
-    infile >> MeanVarianceParameters;
-    MeanVarianceParameters.Inform(keeper);
-
-    readWordAndVariable(infile, "power", power);
-    readWordAndValue(infile, "growthdistributionfile", text);
-
-    ifstream subfile;
-    CommentStream subcomment(subfile);
-    subfile.open(text);
-    checkIfFailure(subfile, text);
-    handle.Open(text);
-    GrIPar = new GrowthImplementParameters(subcomment);
-    handle.Close();
-    subfile.close();
-    subfile.clear();
-    rows = GrIPar->MaxLengthgroupGrowth() - GrIPar->MinLengthgroupGrowth() + 1;
-
-    cout << "\nWarning: the mean variance parameters implementation of the growth will be discontinued soon\n"
-      << "It is recommended that you change your model to use the beta-binomial distribution instead\n"
-      << "Please email gadgethelp@hafro.is if this will cause a problem for your model\n\n";
+    cout << "The mean variance parameters implementation of the growth is no longer supported\n"
+      << "Use the beta-binomial distribution implementation of the growth instead\n";
 
   } else
-    handle.Unexpected("beta or meanvarianceparameters", text);
+    handle.Unexpected("beta", text);
 
   //Finished reading from input files.
   const int noareas = areas.Size();
@@ -151,7 +129,6 @@ Grower::~Grower() {
   delete CI;
   delete LgrpDiv;
   delete growthcalc;
-  delete GrIPar;
   delete[] functionname;
 }
 

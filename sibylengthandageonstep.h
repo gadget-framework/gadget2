@@ -22,12 +22,10 @@ public:
   virtual void SetStocks(const StockPtrVector& Stocks);
   virtual double Regression() {return likelihood; };
   void calcIndex(const AgeBandMatrix* alptr, FitType ftype);
-  void PrintLikelihoodOnStep(ofstream& o, int print_type);
   virtual void PrintLikelihood(ofstream&, const TimeClass& time, const char* name);
   virtual void PrintLikelihoodHeader(ofstream&, const char* name);
   virtual void Reset(const Keeper* const keeper);
   virtual void LikelihoodPrint(ofstream& outfile);
-  virtual void CommandLinePrint(ofstream& outfile, const TimeClass& time, const PrintInfo&);
   OptType getOptType() { return opttype; };
 protected:
   void ReadSurveyData(CommentStream& infile, const CharPtrVector& areaindex,

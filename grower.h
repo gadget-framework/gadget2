@@ -6,7 +6,6 @@
 #include "commentstream.h"
 #include "popinfomatrix.h"
 #include "doublematrixptrvector.h"
-#include "growthimplement.h"
 #include "livesonareas.h"
 #include "formulavector.h"
 
@@ -48,12 +47,10 @@ protected:
   DoubleMatrixPtrVector lgrowth;
   DoubleMatrixPtrVector wgrowth;
   DoubleVector Fphi;
-  GrowthImplementParameters* GrIPar;
   GrowthCalcBase* growthcalc;
   int growthtype;
   char* functionname;
   double power;
-  FormulaVector MeanVarianceParameters;
   int version;
   int maxlengthgroupgrowth;
   Formula beta;

@@ -165,24 +165,6 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
       } else if (strcasecmp(aVector[k], "-print") == 0) {
         printinfo.setForcePrint(1);
 
-      } else if (strcasecmp(aVector[k], "-surveyprint") == 0) {
-        if (k == aNumber - 1)
-          ShowCorrectUsage(aVector[k]);
-        k++;
-        printinfo.setSurveyPrint(atoi(aVector[k]));
-
-      } else if (strcasecmp(aVector[k], "-stomachprint") == 0) {
-        if (k == aNumber - 1)
-          ShowCorrectUsage(aVector[k]);
-        k++;
-        printinfo.setStomachPrint(atoi(aVector[k]));
-
-      } else if (strcasecmp(aVector[k], "-catchprint") == 0) {
-        if (k == aNumber - 1)
-          ShowCorrectUsage(aVector[k]);
-        k++;
-        printinfo.setCatchPrint(atoi(aVector[k]));
-
       } else if (strcasecmp(aVector[k], "-co") == 0) {
         if (k == aNumber - 1)
           ShowCorrectUsage(aVector[k]);

@@ -732,87 +732,6 @@ void SC::Print(ofstream& outfile) const {
   outfile << endl;
 }
 
-void SC::PrintLikelihoodOnStep(ostream& outfile, int time,
-  const TimeClass& TimeInfo, int print_type) {
-
-  outfile.setf(ios::fixed);
-  //The following two lines assume 'this' is an instance of SCAmounts,
-  //needs to be fixed. (mnaa 03.12.99)
-  DoubleMatrixPtrMatrix& std = ((SCAmounts*)this)->Stddev();
-  DoubleMatrixPtrVector& num = ((SCAmounts*)this)->StomachNumbers();
-
-  int a, pd, py;
-  if (print_type == 0) { //Print log(S/S_hat)
-    outfile << "year " << TimeInfo.CurrentYear() << " step "
-      << TimeInfo.CurrentStep() << "\nStomach content, log(S/S_hat).\n";
-    for (a = 0; a < stomachcontent[time].Size(); a++) {
-      for (pd = 0; pd < stomachcontent[time][a]->Nrow(); pd++) {
-        for (py = 0; py < (*stomachcontent[time][a])[pd].Size(); py++) {
-          outfile.width(printwidth);
-          outfile.precision(printprecision);
-          if ((*modelConsumption[time][a])[pd][py] > 0 &&
-              (*stomachcontent[time][a])[pd][py] > 0)
-            outfile << log((*stomachcontent[time][a])[pd][py] /
-              (*modelConsumption[time][a])[pd][py]);
-          else
-            outfile << "           -";
-        }
-        outfile << endl;
-      }
-    }
-    outfile << endl;
-
-  } else if (print_type == 2) { //Print (S_hat-S)^2/Stddev^2*n
-    outfile << "year " << TimeInfo.CurrentYear() << " step "
-      << TimeInfo.CurrentStep() << "\nStomach content, (S_hat-S)^2/Stddev^2*n.\n";
-    for (a = 0; a < stomachcontent[time].Size(); a++) {
-      for (pd = 0; pd < stomachcontent[time][a]->Nrow(); pd++) {
-        for (py = 0; py < (*stomachcontent[time][a])[pd].Size(); py++) {
-          outfile.width(printwidth);
-          outfile.precision(printprecision);
-          if ((*std[time][a])[pd][py] != 0) //mnaa 24.01.00
-            outfile << (((*modelConsumption[time][a])[pd][py] -
-              (*stomachcontent[time][a])[pd][py]) *
-              ((*modelConsumption[time][a])[pd][py] -
-              (*stomachcontent[time][a])[pd][py]) / ((*std[time][a])[pd][py] *
-              (*std[time][a])[pd][py])) * (*num[timeindex])[a][pd];
-          else
-            outfile << "           -";
-        }
-        outfile << endl;
-      }
-    }
-    outfile << endl;
-
-  } else { //Print S and S_hat seperately
-    outfile << "year " << TimeInfo.CurrentYear() << " step "
-      << TimeInfo.CurrentStep() << "\nStomach content, observed.\n";
-    for (a = 0; a < stomachcontent[time].Size(); a++) {
-      for (pd = 0; pd < stomachcontent[time][a]->Nrow(); pd++) {
-        for (py = 0; py < (*stomachcontent[time][a])[pd].Size(); py++) {
-          outfile.width(printwidth);
-          outfile.precision(printprecision);
-          outfile << (*stomachcontent[time][a])[pd][py];
-        }
-        outfile << endl;
-      }
-    }
-    outfile << "\nyear " << TimeInfo.CurrentYear() << " step "
-      << TimeInfo.CurrentStep() << "\nStomach content, model.\n";
-    for (a = 0; a < modelConsumption[time].Size(); a++) {
-      for (pd = 0; pd < modelConsumption[time][a]->Nrow(); pd++) {
-        for (py = 0; py < (*modelConsumption[time][a])[pd].Size(); py++) {
-          outfile.width(printwidth);
-          outfile.precision(printprecision);
-          outfile << (*modelConsumption[time][a])[pd][py];
-        }
-        outfile << endl;
-      }
-    }
-    outfile << endl;
-  }
-}
-
 void SCNumbers::Aggregate(int i) {
   aggregator[i]->NumberSum();
 }
@@ -1011,13 +930,4 @@ void SC::Reset() {
         delete modelConsumption[i][j];
         modelConsumption[i][j] = 0;
       }
-}
-
-void SC::CommandLinePrint(ofstream& stomachfile, const TimeClass& time, const PrintInfo& print) {
-  if (!AAT.AtCurrentTime(&time))
-    return;
-  else if (print.stomachPrint()) {
-    PrintLikelihoodOnStep(stomachfile, timeindex, time, print.stomachPrint() - 1);
-    timeindex++;
-  }
 }

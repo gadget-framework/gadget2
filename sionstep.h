@@ -32,7 +32,6 @@ public:
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile);
-  virtual void CommandLinePrint(ofstream& outfile, const TimeClass& time, const PrintInfo&) {};
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time, const char*) {};
   virtual void PrintLikelihoodHeader(ofstream& outfile, const char* name) {};
 protected:

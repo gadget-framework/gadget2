@@ -6,18 +6,17 @@
 void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
   const LengthGroupDivision* const Lengths) {
 
-  int inarea = AreaNr[area];
-  int type = getGrowthType();
   int lgroup, j;
   double meanw, dw;
+  double growth, alpha, tmppart3, tmpMeanLength;
+
+  int inarea = AreaNr[area];
+  int type = getGrowthType();
+  double tmpMult = getMultValue();
+  double tmpPower = getPowerValue();
+  double tmpDl = 1.0 / Lengths->dl();
 
   if (Version() == 1) {
-    double growth, alpha, tmppart3;
-    double tmpDl, tmpPower, tmpMeanLength, tmpMult;
-
-    tmpMult = getMultValue();
-    tmpPower = getPowerValue();
-    tmpDl = 1.0 / Lengths->dl();
     for (lgroup = 0; lgroup < Lengths->NoLengthGroups(); lgroup++) {
       meanw = 0.0;
       part3 = 1.0;
@@ -61,50 +60,19 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
           (*wgrowth[inarea])[j][lgroup] += dw;
       }
     }
-
-  } else if (Version() == 2) {
-    int n1, n2, n;
-    double variance, tmpVarDl, tmpMeanDl, tmpPower, tmpMeanLength;
-
-    tmpVarDl = 1.0 / (Lengths->dl() * GrIPar->VarResolution());
-    tmpMeanDl = 1.0 / (Lengths->dl() * GrIPar->MeanResolution());
-    tmpPower = power * Lengths->dl();
-    for (lgroup = 0; lgroup < Lengths->NoLengthGroups(); lgroup++) {
-      variance = MeanVarianceParameters[0] + MeanVarianceParameters[1] * InterpLgrowth[inarea][lgroup];
-      if (variance < 0)
-        variance = 0.0;
-
-      n1 = (int) floor((InterpLgrowth[inarea][lgroup] * tmpMeanDl) + 0.5);
-      n2 = (int) floor((variance * tmpVarDl) + 0.5);
-      n1 = min(n1, GrIPar->NMean() - 1);
-      n2 = min(n2, GrIPar->NVar() - 1);
-      n = n1 * GrIPar->NVar() + n2;
-      meanw = 0.0;
-
-      tmpMeanLength = tmpPower / Lengths->Meanlength(lgroup);
-      for (j = 0; j < lgrowth[inarea]->Nrow(); j++) {
-        (*lgrowth[inarea])[j][lgroup] = GrIPar->Distribution()[n][j];
-        (*wgrowth[inarea])[j][lgroup] = NumberInArea[lgroup].W * tmpMeanLength * (j + GrIPar->MinLengthgroupGrowth());
-        meanw += (*wgrowth[inarea])[j][lgroup] * (*lgrowth[inarea])[j][lgroup];
-      }
-      dw = InterpWgrowth[inarea][lgroup] - meanw;
-      for (j = 0; j < lgrowth[inarea]->Nrow(); j++)
-        (*wgrowth[inarea])[j][lgroup] += dw;
-    }
   }
 }
 
 //Uses only the length increase in InterpLGrowth to calculate lgrowth.
 void Grower::GrowthImplement(int area, const LengthGroupDivision* const Lengths) {
 
-  int inarea = AreaNr[area];
   int lgroup, j;
+  double growth, alpha, tmpPart3;
+
+  int inarea = AreaNr[area];
+  double tmpDl = 1.0 / Lengths->dl();
 
   if (Version() == 1) {
-    double growth, alpha;
-    double tmpDl, tmpPart3;
-
-    tmpDl = 1.0 / Lengths->dl();
     for (lgroup = 0; lgroup < Lengths->NoLengthGroups(); lgroup++) {
       part3 = 1.0;
       growth = InterpLgrowth[inarea][lgroup] * tmpDl;
@@ -125,26 +93,6 @@ void Grower::GrowthImplement(int area, const LengthGroupDivision* const Lengths)
       }
       for (j = 0; j <= maxlengthgroupgrowth; j++)
         (*lgrowth[inarea])[j][lgroup] = part1[j] * part2[j] * tmpPart3 * part4[j];
-    }
-
-  } else if (Version() == 2) {
-    int n1, n2, n;
-    double variance, tmpVarDl, tmpMeanDl;
-
-    tmpVarDl = 1.0 / (Lengths->dl() * GrIPar->VarResolution());
-    tmpMeanDl = 1.0 / (Lengths->dl() * GrIPar->MeanResolution());
-    for (lgroup = 0; lgroup < Lengths->NoLengthGroups(); lgroup++) {
-      variance = MeanVarianceParameters[0] + MeanVarianceParameters[1] * InterpLgrowth[inarea][lgroup];
-      if (variance < 0)
-        variance = 0.0;
-
-      n1 = (int) floor((InterpLgrowth[inarea][lgroup] * tmpMeanDl) + 0.5);
-      n2 = (int) floor((variance * tmpVarDl) + 0.5);
-      n1 = min(n1, GrIPar->NMean() - 1);
-      n2 = min(n2, GrIPar->NVar() - 1);
-      n = n1 * GrIPar->NVar() + n2;
-      for (j = 0; j < lgrowth[inarea]->Nrow(); j++)
-        (*lgrowth[inarea])[j][lgroup] = GrIPar->Distribution()[n][j];
     }
   }
 }

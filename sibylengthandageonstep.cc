@@ -139,10 +139,12 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   index = 0;
   for (i = 0; i < indexMatrix.Size(); i++)
     calc_index.resize(1, new DoubleMatrix(Ages.Nrow(), LgrpDiv->NoLengthGroups(), 0.0));
-  lik_val_on_step.resize(Years.Size(), 0.0);
-  max_val_on_step.resize(Years.Size(), 0.0);
-  l_index.resize(Years.Size(), 0);
-  a_index.resize(Years.Size(), 0);
+
+  int numtime = Years.Size();
+  lik_val_on_step.resize(numtime, 0.0);
+  max_val_on_step.resize(numtime, 0.0);
+  l_index.resize(numtime, 0);
+  a_index.resize(numtime, 0);
   b_vec.resize(LgrpDiv->NoLengthGroups());
   for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) //Nakken's method
     b_vec[i] = b[0] * exp(-b[1] * LgrpDiv->Meanlength(i));
@@ -469,91 +471,6 @@ double SIByLengthAndAgeOnStep::calcLikLog() {
   return step_val;
 }
 
-void SIByLengthAndAgeOnStep::PrintLikelihoodOnStep(ofstream& surveyfile, int print_type) {
-  //written by kgf 21/11 98
-  //Print unormed survey indices, eiter residuals or absolute values
-
-  surveyfile.setf(ios::fixed);
-  int age, length;
-  double step_val = 0.0;
-  char pre = 0;
-  double diff = 0.0;
-  DoubleMatrix& calcI = *calc_index[index];
-  DoubleMatrix& obsI = *indexMatrix[index];
-
-  if (print_type == 0) {                       //print log(I/I_hat)
-    surveyfile << "log(I/I_hat) by age and length\n";
-    for (age = minrow; age <= maxrow; age++) {
-      for (length = mincol[age]; length <= maxcol[age]; length++) {
-        if (calcI[age][length] > 0) {
-          diff = (calcI[age][length] - obsI[age][length]);
-          step_val = log(obsI[age][length]) - log(calcI[age][length]);
-          pre = 0;
-          if (absolute(diff) / (calcI[age][length] + eps_ind) >= max_fact)
-            pre = '-'; //pre = '!'; removed mnaa 10.01.00
-        } else
-          pre = '-';
-        surveyfile.precision(smallprecision);
-        surveyfile.width(smallwidth);
-        if (pre == 0)
-          surveyfile << step_val << sep;
-        else if (pre == '-')
-          surveyfile << "      _ ";
-        else
-          surveyfile << step_val << pre;
-      }
-      surveyfile << endl;
-    }
-
-  } else if (print_type == 2) {                //print (I_hat-I)^2/I_hat
-    surveyfile << "(I_hat-I)^2/I_hat by age and length\n";
-    for (age = minrow; age <= maxrow; age++) {
-      for (length = mincol[age]; length <= maxcol[age]; length++) {
-        if (calcI[age][length] > 0 || obsI[age][length] > 0) {
-          diff = (calcI[age][length] - obsI[age][length]);
-          step_val = (diff * diff) / (calcI[age][length] + eps_ind);
-          pre = 0;
-          if (absolute(diff) / (calcI[age][length] + eps_ind) >= max_fact)
-            pre = '-'; //pre = '!'; removed mnaa 10.01.00
-        } else
-          pre = '-';
-        surveyfile.precision(smallprecision);
-        surveyfile.width(smallwidth);
-        if (pre == 0)
-          surveyfile << step_val << sep;
-        else if (pre == '-')
-          surveyfile << "           _ ";
-        else
-          surveyfile << step_val << pre;
-      }
-      surveyfile << endl;
-    }
-
-  } else {                                  //print I and I_hat seperatly
-    surveyfile << "I by age and length\n";
-    for (age = minrow; age <= maxrow; age++) {
-      for (length = mincol[age]; length <= maxcol[age]; length++) {
-        step_val = obsI[age][length];
-        surveyfile.precision(smallprecision);
-        surveyfile.width(smallwidth);
-        surveyfile << step_val << sep;
-      }
-      surveyfile << endl;
-    }
-    surveyfile << "I_hat by age and length\n";
-    for (age = minrow; age <= maxrow; age++) {
-      for (length = mincol[age]; length <= maxcol[age]; length++) {
-        step_val = calcI[age][length];
-        surveyfile.precision(smallprecision);
-        surveyfile.width(smallwidth);
-        surveyfile << step_val << sep;
-      }
-      surveyfile << endl;
-    }
-  }
-  surveyfile.flush();
-}
-
 //Print observed and modeled survey indices for further processing by external scripts
 void SIByLengthAndAgeOnStep::PrintLikelihood(ofstream& surveyfile, const TimeClass& TimeInfo, const char* name) {
 
@@ -674,18 +591,4 @@ void SIByLengthAndAgeOnStep::LikelihoodPrint(ofstream& outfile) {
     outfile << max_val_on_step[i] << sep << a_index[i] << sep << l_index[i] << endl;
     }
   outfile << "Total likelihood component " << likelihood << endl;
-}
-
-void SIByLengthAndAgeOnStep::CommandLinePrint(ofstream& surveyfile,
-  const TimeClass& time, const PrintInfo& print) {
-
-  if (!AAT.AtCurrentTime(&time))
-    return;
-
-  if (print.surveyPrint()) {
-    surveyfile << "year " << time.CurrentYear() << " step "
-      << time.CurrentStep() << endl;
-    PrintLikelihoodOnStep(surveyfile, print.surveyPrint() - 1);
-    index++;
-  }
 }

@@ -99,15 +99,15 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	loglinearregression.o time.o stockprey.o maininfo.o stockpreyfullprinter.o \
 	stockpreystdinfo.o stockpreystdinfobylength.o stockprinter.o lenstock.o \
 	stockstdprinter.o maturity.o suitfunc.o suits.o stomachcontent.o runid.o \
-	migration.o variableinfo.o binarytree.o vectorusingkeeper.o growthimplement.o \
+	migration.o variableinfo.o binarytree.o vectorusingkeeper.o recaggregator.o \
 	surveyindices.o migrationpenalty.o recapture.o stock.o readaggregation.o \
 	migvariables.o multinomial.o totalpredator.o naturalm.o optinfo.o gadget.o \
 	transition.o otherfood.o mathfunc.o understocking.o poppredator.o tags.o \
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o \
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o taggrow.o \
-	initialinputfile.o popratio.o popinfo.o recaggregator.o recstatistics.o \
-	ludecomposition.o popinfomemberfunctions.o agebandmatrixratiomemberfunctions.o
+	initialinputfile.o popratio.o popinfo.o recstatistics.o ludecomposition.o \
+	popinfomemberfunctions.o agebandmatrixratiomemberfunctions.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 

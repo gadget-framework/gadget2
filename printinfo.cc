@@ -2,39 +2,21 @@
 #include "gadget.h"
 
 PrintInfo::PrintInfo() : PrintInterVal1(-2), PrintInterVal2(-2), forceprint(0),
-  surveyprint(0), catchprint(0), stomachprint(0), oprint(0), coprint(0), givenPrecision(0) {
+  oprint(0), coprint(0), givenPrecision(0) {
 
   OutputFile = NULL;
   ColumnOutputFile = NULL;
   ParamOutFile = NULL;
-  surveyfile = NULL;
-  catchfile = NULL;
-  stomachfile = NULL;
 
   char tmpname[12];
   strncpy(tmpname, "", 12);
   strcpy(tmpname, "params.out");
   SetParamOutFile(tmpname);
-  strncpy(tmpname, "", 12);
-  strcpy(tmpname, "stomach.out");
-  SetStomachFile(tmpname);
-  strncpy(tmpname, "", 12);
-  strcpy(tmpname, "survey.out");
-  SetSurveyFile(tmpname);
-  strncpy(tmpname, "", 12);
-  strcpy(tmpname, "catch.out");
-  SetCatchFile(tmpname);
 }
 
 PrintInfo::PrintInfo(const PrintInfo& pi) {
 
-  surveyfile = NULL;
-  catchfile = NULL;
-  stomachfile = NULL;
   ParamOutFile = NULL;
-  SetSurveyFile(pi.surveyfile);
-  SetCatchFile(pi.catchfile);
-  SetStomachFile(pi.stomachfile);
   SetParamOutFile(pi.ParamOutFile);
 
   OutputFile = NULL;
@@ -45,9 +27,6 @@ PrintInfo::PrintInfo(const PrintInfo& pi) {
     SetColumnOutputFile(pi.ColumnOutputFile);
 
   forceprint = pi.forceprint;
-  surveyprint = pi.surveyprint;
-  catchprint = pi.catchprint;
-  stomachprint = pi.stomachprint;
   oprint = pi.oprint;
   coprint = pi.coprint;
   givenPrecision = pi.givenPrecision;
@@ -63,18 +42,6 @@ PrintInfo::~PrintInfo() {
   if (ColumnOutputFile != NULL) {
     delete[] ColumnOutputFile;
     ColumnOutputFile = NULL;
-  }
-  if (surveyfile != NULL) {
-    delete[] surveyfile;
-    surveyfile = NULL;
-  }
-  if (catchfile != NULL) {
-    delete[] catchfile;
-    catchfile = NULL;
-  }
-  if (stomachfile != NULL) {
-    delete[] stomachfile;
-    stomachfile = NULL;
   }
   if (ParamOutFile != NULL) {
     delete[] ParamOutFile;
@@ -93,45 +60,6 @@ void PrintInfo::SetOutputFile(char* filename) {
     oprint = 1;
   } else {
     OutputFile = NULL;
-  }
-}
-
-void PrintInfo::SetSurveyFile(char* filename) {
-  if (surveyfile != NULL) {
-    delete[] surveyfile;
-    surveyfile = NULL;
-  }
-  if (filename != NULL) {
-    surveyfile = new char[strlen(filename) + 1];
-    strcpy(surveyfile, filename);
-  } else {
-    surveyfile = NULL;
-  }
-}
-
-void PrintInfo::SetCatchFile(char* filename) {
-  if (catchfile != NULL) {
-    delete[] catchfile;
-    catchfile = NULL;
-  }
-  if (filename != NULL) {
-    catchfile = new char[strlen(filename) + 1];
-    strcpy(catchfile, filename);
-  } else {
-    catchfile = NULL;
-  }
-}
-
-void PrintInfo::SetStomachFile(char* filename) {
-  if (stomachfile != NULL) {
-    delete[] stomachfile;
-    stomachfile = NULL;
-  }
-  if (filename != NULL) {
-    stomachfile = new char[strlen(filename) + 1];
-    strcpy(stomachfile, filename);
-  } else {
-    stomachfile = NULL;
   }
 }
 

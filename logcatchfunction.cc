@@ -45,17 +45,12 @@ LogCatches::LogCatches(CommentStream& infile,
   strncpy(functionname, "", MaxStrLength);
   readWordAndValue(infile, "function", functionname);
   readWordAndVariable(infile, "overconsumption", overconsumption);
-  readWordAndVariable(infile, "minimumprobability", minp);
   readWordAndVariable(infile, "aggregation_level", agg_lev);
 
   if (overconsumption != 0 && overconsumption != 1)
     handle.Message("Error in logcatch - overconsumption must be 0 or 1");
   if (agg_lev != 0 && agg_lev != 1)
     handle.Message("Error in logcatch - agg_lev must be 0 or 1");
-  if (minp <= 0) {
-    handle.Warning("Minimumprobability should be a positive integer - set to default value 1");
-    minp = 1;
-  }
 
   if (strcasecmp(functionname, "loglikelihood") == 0)
     functionnumber = 1;
@@ -145,16 +140,6 @@ LogCatches::LogCatches(CommentStream& infile,
     datafile.clear();
   }
 
-  //Needed for -catchprint header
-  MinAge = max(min_stock_age, ages[0][0]);
-  MaxAge = min(max_stock_age, ages[ages.Nrow() - 1][0]);
-  dl = lengths[1] - lengths[0];
-  for (i = 2; i < lengths.Size(); i++)
-    if (lengths[i] - lengths[i - 1] != dl) {
-      dl = 0.0;
-      break;
-    }
-
   int numtime = AgeLengthData.Nrow();
   Proportions.AddRows(numtime, numarea);
   Likelihoodvalues.AddRows(numtime, numarea, 0.0);
@@ -164,20 +149,10 @@ LogCatches::LogCatches(CommentStream& infile,
 
   calc_c.resize(numarea);
   obs_c.resize(numarea);
-  obs_biomass.resize(numarea);
-  calc_biomass.resize(numarea);
-  agg_obs_biomass.resize(numarea);
-  agg_calc_biomass.resize(numarea);
   for (i = 0; i < numarea; i++) {
     size = AgeLengthData[0][i]->Nrow();
     calc_c[i] = new DoubleMatrix(size, AgeLengthData[0][i]->Ncol(), 0.0);
     obs_c[i] = new DoubleMatrix(size, AgeLengthData[0][i]->Ncol(), 0.0);
-    obs_biomass[i] = new DoubleMatrix(numtime, size, 0.0);
-    calc_biomass[i] = new DoubleMatrix(numtime, size, 0.0);
-    if (agg_lev) {
-      agg_obs_biomass[i] = new DoubleMatrix(numtime, size, 0.0);
-      agg_calc_biomass[i] = new DoubleMatrix(numtime, size, 0.0);
-    }
   }
 }
 
@@ -532,7 +507,6 @@ double LogCatches::LogLik(const TimeClass* const TimeInfo) {
           obs_c_sum += (*AgeLengthData[timeindex][nareas])[age][length];
         }
       }
-      assert((calc_c_sum > minp) && (obs_c_sum > minp));
       step_val = log(obs_c_sum / calc_c_sum);
       Likelihoodvalues[timeindex][nareas] += (step_val * step_val);
 
@@ -547,7 +521,6 @@ double LogCatches::LogLik(const TimeClass* const TimeInfo) {
             obs_c_sum +=  (*obs_c[nareas])[age][length];
           }
         }
-        assert(calc_c_sum > minp && obs_c_sum > minp);
         step_val = log(obs_c_sum / calc_c_sum);
         Likelihoodvalues[timeindex][nareas] += (step_val * step_val);
       }
@@ -556,190 +529,4 @@ double LogCatches::LogLik(const TimeClass* const TimeInfo) {
 
   }
   return totallikelihood;
-}
-
-void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
-  const TimeClass& TimeInfo, int print_type) {
-
-  //written by kgf 26/11 98 to make it possible to print residuals
-  //on the time steps the likelihood term is calculated. The calculated
-  //values are supposed to be generated before a call to this print function.
-
-  catchfile.setf(ios::fixed);
-  int nareas, age, length;
-  double step_val = 0.0;
-  int min_age = 0;
-  int max_age = 0;
-
-  //Get age and length intervals from aggregator->AgeLengthDist()
-  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
-  for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
-    min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
-    max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
-    if ((TimeInfo.CurrentStep() == 1) && (agg_lev == 1)) { //start of a new year
-      (*calc_c[nareas]).setElementsTo(0.0);
-      (*obs_c[nareas]).setElementsTo(0.0);
-    }
-    for (age = min_age; age < max_age; age++) {
-      for (length = (*alptr)[nareas].Minlength(age);
-          length < (*alptr)[nareas].Maxlength(age); length++) {
-        (*calc_c[nareas])[age][length] +=      //sum up to year
-          (*Proportions[timeindex][nareas])[age][length];
-        (*obs_c[nareas])[age][length] +=       //sum up to year
-          (*AgeLengthData[timeindex][nareas])[age][length];
-      }
-    }
-
-    if (agg_lev == 0) { //calculate likelihood on all steps
-      if (print_type == 0) { //print log(C/C_hat)
-        catchfile << "year " << TimeInfo.CurrentYear() << " step "
-          << TimeInfo.CurrentStep() << "\nlog(C/C_hat) by age and length\n";
-        for (age = min_age; age < max_age; age++) {
-          for (length = (*alptr)[nareas].Minlength(age);
-              length < (*alptr)[nareas].Maxlength(age); length++) {
-            if (((*Proportions[timeindex][nareas])[age][length] > minp)
-                && ((*AgeLengthData[timeindex][nareas])[age][length] > minp))
-              step_val = log((*AgeLengthData[timeindex][nareas])[age][length] /
-                (*Proportions[timeindex][nareas])[age][length]);
-            else
-              step_val = -9999;
-
-            catchfile.precision(smallprecision);
-            catchfile.width(smallwidth);
-            if (step_val != -9999)
-              catchfile << step_val << sep;
-            else
-              catchfile << "     _ ";
-          }
-          catchfile << endl;
-        }
-
-      } else if (print_type == 2) { //print log(Sum(C)/Sum(C_hat))^2
-        obsCSum = 0;
-        calcCSum = 0;
-        catchfile << "year " << TimeInfo.CurrentYear() << " step "
-          << TimeInfo.CurrentStep() << "\nlog(Sum(C)/Sum(C_hat))^2\n";
-        step_val = Likelihoodvalues[timeindex][nareas];
-        catchfile.precision(smallprecision);
-        catchfile.width(smallwidth);
-        if (step_val != -9999)
-          catchfile << step_val << sep;
-        else
-          catchfile << "         _ ";
-        catchfile << endl;
-
-      } else { //write C and C_hat seperately
-        catchfile << "year " << TimeInfo.CurrentYear() << " step "
-          << TimeInfo.CurrentStep() << "\nC by age and length\n";
-        for (age = min_age; age < max_age; age++) {
-          for (length = (*alptr)[nareas].Minlength(age);
-              length < (*alptr)[nareas].Maxlength(age); length++) {
-            step_val = (*AgeLengthData[timeindex][nareas])[age][length];
-            catchfile.precision(smallprecision);
-            catchfile.width(smallwidth);
-            if (step_val != -9999)
-              catchfile << step_val << sep;
-            else
-              catchfile << "      _ ";
-          }
-          catchfile << endl;
-        }
-        catchfile << "year " << TimeInfo.CurrentYear() << " step "
-          << TimeInfo.CurrentStep() << "\nC_hat by age and length\n";
-        for (age = min_age; age < max_age; age++) {
-          for (length = (*alptr)[nareas].Minlength(age);
-              length < (*alptr)[nareas].Maxlength(age); length++) {
-            step_val = (*Proportions[timeindex][nareas])[age][length];
-            catchfile.precision(smallprecision);
-            catchfile.width(smallwidth);
-            if (step_val != -9999)
-              catchfile << step_val << sep;
-            else
-              catchfile << "      _ ";
-          }
-          catchfile << endl;
-        }
-      }
-      catchfile.flush();
-
-    } else { //calculate likelihood on year basis
-      if (TimeInfo.CurrentStep() == TimeInfo.StepsInYear()) {
-        if (print_type == 0) { //print log(C/C_hat)
-          catchfile << "year " << TimeInfo.CurrentYear() << " step "
-            << TimeInfo.CurrentStep() << "\nlog(C/C_hat) by age and length\n";
-          for (age = min_age; age < max_age; age++) {
-            for (length = (*alptr)[nareas].Minlength(age);
-                length < (*alptr)[nareas].Maxlength(age); length++) {
-              if (((*obs_c[nareas])[age][length] > minp)
-                  && ((*calc_c[nareas])[age][length] > minp))
-                step_val = log((*obs_c[nareas])[age][length] /
-                  (*calc_c[nareas])[age][length]);
-              else
-                step_val = -9999;
-              catchfile.precision(smallprecision);
-              catchfile.width(smallwidth);
-              if (step_val != -9999)
-                catchfile << step_val << sep;
-              else
-                catchfile << "     _ ";
-            }
-            catchfile << endl;
-          }
-        } else if (print_type == 2) { //print (C_hat-C)^2/C_hat
-          catchfile << "year " << TimeInfo.CurrentYear() << " step "
-            << TimeInfo.CurrentStep() << "\nlog(Sum(C)/Sum(C_hat))^2\n";
-          step_val = Likelihoodvalues[timeindex][nareas];
-          catchfile.precision(smallprecision);
-          catchfile.width(smallwidth);
-          if (step_val != -9999)
-            catchfile << step_val << sep;
-          else
-            catchfile << "         _ ";
-          catchfile << endl;
-
-        } else { //write C and C_hat seperately
-          catchfile << "year " << TimeInfo.CurrentYear() << " step "
-            << TimeInfo.CurrentStep() << "\nC by age and length\n";
-          for (age = min_age; age < max_age; age++) {
-            for (length = (*alptr)[nareas].Minlength(age);
-                length < (*alptr)[nareas].Maxlength(age); length++) {
-              step_val = (*obs_c[nareas])[age][length];
-              catchfile.precision(smallprecision);
-              catchfile.width(smallwidth);
-              if (step_val != -9999)
-                catchfile << step_val << sep;
-              else
-                catchfile << "      _ ";
-            }
-            catchfile << endl;
-          }
-          catchfile << "year " << TimeInfo.CurrentYear() << " step "
-            << TimeInfo.CurrentStep() << "\nC_hat by age and length\n";
-          for (age = min_age; age < max_age; age++) {
-            for (length = (*alptr)[nareas].Minlength(age);
-                length < (*alptr)[nareas].Maxlength(age); length++) {
-              step_val = (*calc_c[nareas])[age][length];
-              catchfile.precision(smallprecision);
-              catchfile.width(smallwidth);
-              if (step_val != -9999)
-                catchfile << step_val << sep;
-              else
-                catchfile << "      _ ";
-            }
-            catchfile << endl;
-          }
-        }
-      }
-      catchfile.flush();
-    }
-  }
-}
-
-void LogCatches::CommandLinePrint(ofstream& catchfile, const TimeClass& time, const PrintInfo& print) {
-  if (!AAT.AtCurrentTime(&time))
-    return;
-  else if (print.catchPrint()) {
-    PrintLikelihoodOnStep(catchfile, time, (print.catchPrint() - 1));
-    timeindex++;
-  }
 }

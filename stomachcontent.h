@@ -23,9 +23,6 @@ public:
   virtual void Print(ofstream& outfile) const;
   virtual void SetPredatorsAndPreys(PredatorPtrVector&, PreyPtrVector&);
   virtual void Aggregate(int i);
-  void CommandLinePrint(ofstream& outfile, const TimeClass& time, const PrintInfo& print);
-  virtual void PrintLikelihoodOnStep(ostream& outfile, int time,
-    const TimeClass& t, int print_type);
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time) {};
   virtual void PrintLikelihoodHeader(ofstream& outfile) {};
 protected:
@@ -108,8 +105,6 @@ public:
   virtual void Print(ofstream& outfile) const;
   void SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys)
     { StomCont->SetPredatorsAndPreys(Predators, Preys); };
-  void CommandLinePrint(ofstream& outfile, const TimeClass& time, const PrintInfo& print)
-    { StomCont->CommandLinePrint(outfile, time, print); };
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time)
     { StomCont->PrintLikelihood(outfile, time); };
   virtual void PrintLikelihoodHeader(ofstream& outfile)
