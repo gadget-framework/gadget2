@@ -51,8 +51,6 @@ int OptInfoBfgs::iteration(double* x0) {
         << "maximum number of function evaluations\nwas reached and NOT because an "
         << "optimum was found for this run\n";
 
-cout << "\nBFGS search was restarted " << k << " times and gradacc was reduced to " << gradacc << endl;
-
       fk = (*f)(x, numvar);
       EcoSystem->setFuncEvalBFGS(FuncEval - offset);
       EcoSystem->setLikelihoodBFGS(fk);
