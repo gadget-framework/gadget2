@@ -215,8 +215,8 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   int noareas = areas.Size();
   int nolengr = LgrpDiv->numLengthGroups();
 
-  if (countColumns(infile) != 4)
-    handle.Message("Wrong number of columns in inputfile - should be 4");
+  if (countColumns(infile) != 5)
+    handle.Message("Wrong number of columns in inputfile - should be 5");
 
   //set the numbers in the AgeBandMatrixPtrVector to zero (in case some arent in the inputfile)
   for (areaid = 0; areaid < noareas; areaid++)
@@ -232,8 +232,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   keeper->addString("numberdata");
   while (!infile.eof()) {
     keepdata = 0;
-    infile >> area >> age >> length >> tmpnumber >> ws;
-//    infile >> area >> age >> length >> tmpnumber >> tmpweight >> ws;
+    infile >> area >> age >> length >> tmpnumber >> tmpweight >> ws;
 
     //crude age data check - perhaps there should be a better check?
     if ((age < minage) || (age >= (noagegr + minage))) {
@@ -270,10 +269,10 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
     if (keepdata == 0) {
       //initial data is required, so store it
       count++;
-//      if ((isZero(tmpweight)) && (!(isZero(tmpnumber))))
-//        handle.Warning("Warning in initial conditions - zero mean weight");
+      if ((isZero(tmpweight)) && (!(isZero(tmpnumber))))
+        handle.Warning("Warning in initial conditions - zero mean weight");
       initialPop[areaid][ageid][lengthid].N = tmpnumber;
-//      initialPop[areaid][ageid][lengthid].W = tmpweight;
+      initialPop[areaid][ageid][lengthid].W = tmpweight;
     }
   }
   handle.logMessage("Read initial conditions data file - number of entries", count);
@@ -525,17 +524,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
     }
 
   } else if (readoption == 2) {
-    for (area = 0; area < initialPop.Size(); area++) {
-      minage = initialPop[area].minAge();
-      maxage = initialPop[area].maxAge();
-      for (age = minage; age <= maxage; age++) {
-        for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
-          initialPop[area][age][l].W = refWeight[l];
-          if ((isZero(initialPop[area][age][l].W)) && (!(isZero(initialPop[area][age][l].N))))
-            handle.logWarning("Warning in initial conditions - zero mean weight");
-        }
-      }
-    }
+    //nothing to be done here
 
   } else
     handle.logFailure("Error in initial conditions - unrecognised data format");
