@@ -89,7 +89,7 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
             for (i = 0; i < pred->numPreys(); i++) {
               if (prey->Name() == pred->Preys(i)->Name()) {
                 const DoubleIndexVector* suitptr = &pred->Suitability(i)[0];
-                const AgeBandMatrix* alptr = &taggingExp->NumberPriorToEating(area, stocks[h]->Name());
+                const AgeBandMatrix* alptr = &taggingExp->getNumberPriorToEating(area, stocks[h]->Name());
                 for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
                   for (k = 0; k < ages.Ncol(aggrAge); k++) {
                     age = ages[aggrAge][k];

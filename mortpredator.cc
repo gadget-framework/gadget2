@@ -212,11 +212,11 @@ void MortPredator::Print(ofstream& outfile) const {
   PopPredator::Print(outfile);
 }
 
-const PopInfoVector& MortPredator::NumberPriortoEating(int area, const char* preyname) const {
+const PopInfoVector& MortPredator::getNumberPriorToEating(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < numPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)
-      return Preys(prey)->NumberPriortoEating(area);
+      return Preys(prey)->getNumberPriorToEating(area);
 
   handle.logFailure("Error in mortpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);

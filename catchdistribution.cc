@@ -276,7 +276,7 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -537,12 +537,12 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
       case 5:
         if (timeindex == 0) {
           Correlation();
-          if (illegal == 1 || LU.IsIllegal() == 1) {
+          if (illegal == 1 || LU.isIllegal() == 1) {
             handle.logWarning("Warning in catchdistribution - multivariate normal out of bounds");
             l = verybig;
           }
         }
-        if (illegal != 1 && LU.IsIllegal() != 1)
+        if (illegal != 1 && LU.isIllegal() != 1)
           l = calcLikMVNormal();
         break;
       case 6:

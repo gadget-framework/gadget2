@@ -20,7 +20,7 @@ OptInfoSimann::OptInfoSimann()
   handle.logMessage("Initialising Simulated Annealing optimisation algorithm");
 }
 
-void OptInfoSimann::Read(CommentStream& infile, char* text) {
+void OptInfoSimann::read(CommentStream& infile, char* text) {
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
     infile >> ws;
     if (strcasecmp(text, "simanniter") == 0) {

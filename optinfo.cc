@@ -16,7 +16,7 @@ OptInfo::OptInfo(MainInfo* MainInfo) {
   srand(time(NULL));
 
   if (MainInfo->getOptInfoGiven()) {
-    ReadOptInfo(MainInfo->optInfoFile());
+    readOptInfo(MainInfo->optInfoFile());
     MainInfo->closeOptInfoFile();
   } else {
     handle.logWarning("\nWarning - no optimisation file specified, using default values");
@@ -34,7 +34,7 @@ OptInfo::~OptInfo() {
     delete optBFGS;
 }
 
-void OptInfo::ReadOptInfo(CommentStream& infile) {
+void OptInfo::readOptInfo(CommentStream& infile) {
   char* text = new char[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
@@ -58,7 +58,7 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
         if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
           handle.logWarning("Warning - no optimisation parameters specified for Simulated Annealing algorithm");
         else
-          optSimann->Read(infile, text);
+          optSimann->read(infile, text);
 
       } else
         handle.logWarning("Warning - no optimisation parameters specified for Simulated Annealing algorithm");
@@ -73,7 +73,7 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
         if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
           handle.logWarning("Warning - no optimisation parameters specified for Hooke & Jeeves algorithm");
         else
-          optHJ->Read(infile, text);
+          optHJ->read(infile, text);
 
       } else
         handle.logWarning("Warning - no optimisation parameters specified for Hooke & Jeeves algorithm");
@@ -88,7 +88,7 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
         if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
           handle.logWarning("Warning - no optimisation parameters specified for BFGS algorithm");
         else
-          optBFGS->Read(infile, text);
+          optBFGS->read(infile, text);
 
       } else
         handle.logWarning("Warning - no optimisation parameters specified for BFGS algorithm");

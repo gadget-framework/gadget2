@@ -37,7 +37,7 @@ public:
    * \brief This function will return the flag to denote whether the algorithm will fail
    * \return illegal
    */
-  int IsIllegal() { return illegal; };
+  int isIllegal() { return illegal; };
 private:
   /**
    * \brief This is the lower triangular DoubleMatrix

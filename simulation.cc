@@ -18,7 +18,7 @@ void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {
   int i;
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
-      basevec[i]->CalcNumbers(area, Area, TimeInfo);
+      basevec[i]->calcNumbers(area, Area, TimeInfo);
 
   //Calculate consumption and Growth;
   for (i = 0; i < basevec.Size(); i++)
@@ -102,9 +102,9 @@ void Ecosystem::Simulate(int Optimise, int print) {
     //Add in any new tagging experiments
     tagvec.updateTags(TimeInfo);
 
-    if (TimeInfo->CurrentStep() == 1) //Migrations recalculated once per year.
+    if (TimeInfo->CurrentStep() == 1) //Migration calculated once per year.
       for (j = 0; j < basevec.Size(); j++)
-        basevec[j]->RecalcMigration(TimeInfo);
+        basevec[j]->calcMigration(TimeInfo);
 
     SimulateOneTimestep();
     if (Optimise)

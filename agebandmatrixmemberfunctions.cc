@@ -124,7 +124,7 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio) {
 //--------------------------------------------------------------
 //Find the Column sum of a BandMatrix.  In AgeBandMatrix it means
 //summation over all ages for each length.
-void AgeBandMatrix::Colsum(PopInfoVector& Result) const {
+void AgeBandMatrix::sumColumns(PopInfoVector& Result) const {
   int i, j;
   for (i = 0; i < nrow; i++)
     for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)

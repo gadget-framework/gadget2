@@ -265,7 +265,7 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if (TimeInfo->IsWithinPeriod(year, step)) {
+    if (TimeInfo->isWithinPeriod(year, step)) {
       //calculate the timeid index - time is counted from 1
       for (i = 1; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -357,7 +357,7 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if (TimeInfo->IsWithinPeriod(year, step)) {
+    if (TimeInfo->isWithinPeriod(year, step)) {
       //calculate the timeid index - time is counted from 1
       for (i = 1; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))

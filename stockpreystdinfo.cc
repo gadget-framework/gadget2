@@ -28,7 +28,7 @@ void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
 
   PopInfoIndexVector PopByAge(Alk.maxAge() - Alk.minAge() + 1, Alk.minAge(), nullpop);
   PopInfoVector PopByLength(SPByLength.BconsumptionByLength(area).Size(), nullpop);
-  Alk.Colsum(PopByLength);
+  Alk.sumColumns(PopByLength);
 
   timeratio = TimeInfo->LengthOfYear() / TimeInfo->LengthOfCurrent();
   for (age = NconbyAge.minCol(inarea); age < NconbyAge.maxCol(inarea); age++) {

@@ -154,7 +154,7 @@ const DoubleVector& Cannibalism::Mortality(const AgeBandMatrix& alk_prey,
   assert(prey_size == cannibalism.Size());
 
   PopInfoVector pop_prey(prey_size);
-  alk_prey.Colsum(pop_prey); //biomass of prey's length groups
+  alk_prey.sumColumns(pop_prey); //biomass of prey's length groups
   ConversionIndex length_conversion(len_prey, len_pred, 0);
 
   //set cannibalism to zero

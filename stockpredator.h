@@ -16,7 +16,7 @@ public:
   virtual void Sum(const AgeBandMatrix& Alkeys, int area);
   virtual void Eat(int area, double LengthOfStep, double Temperature,
     double Areasize, int CurrentSubstep, int numsubsteps);
-  virtual const PopInfoVector& NumberPriortoEating(int area, const char* preyname) const;
+  virtual const PopInfoVector& getNumberPriorToEating(int area, const char* preyname) const;
   virtual void adjustConsumption(int area, int numsubsteps, int CurrentSubstep);
   virtual void Print(ofstream& outfile) const;
   const BandMatrix& Alproportion(int area) const { return Alprop[AreaNr[area]]; };

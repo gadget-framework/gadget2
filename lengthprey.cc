@@ -21,7 +21,7 @@ void LengthPrey::SumUsingPopInfo(const PopInfoVector& NumberInArea, int area, in
       Number[inarea][i].N = 0.0;
     Number[inarea].Sum(&NumberInArea, *CI);
     for (i = 0; i < Number[inarea].Size(); i++)
-      numberPriortoEating[inarea][i] = Number[inarea][i];
+      numberPriorToEating[inarea][i] = Number[inarea][i];
     PopInfo sum;
     for (i = 0; i < Number.Ncol(inarea); i++) {
       sum += Number[inarea][i];

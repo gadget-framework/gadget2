@@ -173,7 +173,7 @@ public:
    * \param step is the specified step
    * \return 1 if the timestep is within the model period, 0 otherwise
    */
-  int IsWithinPeriod(int year, int step) const;
+  int isWithinPeriod(int year, int step) const;
   /**
    * \brief This is the function that resets the timestep to the beginning of the model simulation
    */

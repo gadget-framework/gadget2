@@ -105,17 +105,17 @@ public:
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void CalcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void calcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will implement the migration of the model population for the model
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void Migrate(const TimeClass* const TimeInfo) {};
   /**
-   * \brief This function will recalculate the migration of the model population for the model
+   * \brief This function will calculate the migration of the model population for the model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void RecalcMigration(const TimeClass* const TimeInfo) {};
+  virtual void calcMigration(const TimeClass* const TimeInfo) {};
   /**
    * \brief This function will reset the model population
    * \param TimeInfo is the TimeClass for the current model

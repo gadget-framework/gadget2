@@ -18,7 +18,7 @@ OptInfoHooke::OptInfoHooke()
   handle.logMessage("Initialising Hooke & Jeeves optimisation algorithm");
 }
 
-void OptInfoHooke::Read(CommentStream& infile, char* text) {
+void OptInfoHooke::read(CommentStream& infile, char* text) {
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[bfgs]")) {
     infile >> ws;
     if (strcasecmp(text, "rho") == 0) {

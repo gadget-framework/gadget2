@@ -66,7 +66,7 @@ void TimeClass::IncrementTime() {
   }
 }
 
-int TimeClass::IsWithinPeriod(int year, int step) const {
+int TimeClass::isWithinPeriod(int year, int step) const {
   return ((firstyear < year || (year == firstyear && firststep <= step))
     && (year < lastyear || (year == lastyear && step <= laststep))
     && (1 <= step) && (step <= numtimesteps));

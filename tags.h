@@ -27,14 +27,13 @@ public:
   int getNumTagTimeSteps() const { return numtagtimesteps; };
   const CharPtrVector* getStockNames() const { return &stocknames; };
   void setStock(StockPtrVector& Stocks);
-  const char* TagName() const { return this->Name(); };
   void updateMatureStock(const TimeClass* const TimeInfo);
   void updateTransitionStock(const TimeClass* const TimeInfo);
   void updateStrayStock(const TimeClass* const TimeInfo);
-  void StoreNumberPriorToEating(int area, const char* stockname);
-  const AgeBandMatrix& NumberPriorToEating(int area, const char* stockname);
+  void storeNumberPriorToEating(int area, const char* stockname);
+  const AgeBandMatrix& getNumberPriorToEating(int area, const char* stockname);
   void Reset(const TimeClass* const TimeInfo);
-  int IsWithinPeriod(int year, int step);
+  int isWithinPeriod(int year, int step);
   int stockIndex(const char* stockname);
 private:
   void readNumbers(CommentStream& infile, const char* tagname, const TimeClass* const TimeInfo);

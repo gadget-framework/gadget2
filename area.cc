@@ -50,7 +50,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if (TimeInfo->IsWithinPeriod(year, step)) {
+    if (TimeInfo->isWithinPeriod(year, step)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         for (j = 0; j < Steps.Size(); j++)

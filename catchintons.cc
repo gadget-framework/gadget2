@@ -320,7 +320,7 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (yearly || (Steps[i] == step)))

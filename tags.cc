@@ -110,7 +110,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
     }
 
     timeid = -1;
-    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
           timeid = i;
@@ -297,7 +297,7 @@ void Tags::Update() {
   const AgeBandMatrix* stockPopInArea;
   const LengthGroupDivision* tmpLgrpDiv;
   stockPopInArea = &(taggingstock->getAgeLengthKeys(tagarea));
-  stockPopInArea->Colsum(NumberInArea);
+  stockPopInArea->sumColumns(NumberInArea);
 
   //Now we have total number of stock per length in tagarea, N(., l) (NumberInArea) and
   //number of stock per age/length, N(a, l) (stockPopInArea) so we must initialise
@@ -494,7 +494,7 @@ int Tags::stockIndex(const char* stockname) {
   return -1;
 }
 
-void Tags::StoreNumberPriorToEating(int area, const char* stockname) {
+void Tags::storeNumberPriorToEating(int area, const char* stockname) {
   int stockid, preyid;
   stockid = stockIndex(stockname);
   if (stockid < 0)
@@ -508,7 +508,7 @@ void Tags::StoreNumberPriorToEating(int area, const char* stockname) {
   (*NumBeforeEating[preyid])[area].Add((*AgeLengthStock[stockid])[area], *CI[preyid]);
 }
 
-const AgeBandMatrix& Tags::NumberPriorToEating(int area, const char* stockname) {
+const AgeBandMatrix& Tags::getNumberPriorToEating(int area, const char* stockname) {
   int stockid, preyid;
   stockid = stockIndex(stockname);
   if (stockid < 0)
@@ -521,7 +521,7 @@ const AgeBandMatrix& Tags::NumberPriorToEating(int area, const char* stockname) 
   return (*NumBeforeEating[preyid])[area];
 }
 
-int Tags::IsWithinPeriod(int year, int step) {
+int Tags::isWithinPeriod(int year, int step) {
   if ((year > tagyear || (year == tagyear && step >= tagstep)) && (year <= endyear))
     return 1;
   else

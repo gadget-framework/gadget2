@@ -14,7 +14,7 @@ public:
   LenStock(CommentStream& infile, const char* givenname, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   virtual ~LenStock();
-  virtual void CalcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void calcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual void ReducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual void calcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual void checkEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);

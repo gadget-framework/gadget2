@@ -21,7 +21,7 @@ void StockPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
 
   Alkeys[inarea].setToZero();
   Alkeys[inarea].Add(stock, *CI);
-  Alkeys[inarea].Colsum(Number[inarea]);
+  Alkeys[inarea].sumColumns(Number[inarea]);
 
   PopInfo sum;
   for (i = 0; i < Number.Ncol(inarea); i++) {
@@ -31,7 +31,7 @@ void StockPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
 
   total[inarea] = sum.N * sum.W;
   for (i = 0; i < Number[inarea].Size(); i++)
-    numberPriortoEating[inarea][i] = Number[inarea][i]; //should be inside if
+    numberPriorToEating[inarea][i] = Number[inarea][i]; //should be inside if
 
   if (CurrentSubstep == 1) {
     for (i = 0; i < consumption.Ncol(inarea); i++) {

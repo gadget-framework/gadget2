@@ -18,7 +18,7 @@ void StockPreyStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
   PopInfo nullpop;
 
   PopInfoVector PopBylength(BconbyLength.Ncol(inarea), nullpop);
-  Alk.Colsum(PopBylength);
+  Alk.sumColumns(PopBylength);
   const DoubleVector& Bconsumption = prey->Bconsumption(area);
   assert(BconbyLength.Ncol() == Bconsumption.Size());
   int l;

@@ -376,7 +376,7 @@ protected:
    */
   AreaClass* Area;
   /**
-   * \brief This is the Keepre for the current model
+   * \brief This is the Keeper for the current model
    */
   Keeper* keeper;
   /**

@@ -48,7 +48,7 @@ public:
   const DoubleVector& OverConsumption(int area) const { return overconsumption[AreaNr[area]]; };
   const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   virtual void Reset();
-  const PopInfoVector& NumberPriortoEating(int area) const { return numberPriortoEating[AreaNr[area]]; };
+  const PopInfoVector& getNumberPriorToEating(int area) const { return numberPriorToEating[AreaNr[area]]; };
   //The following functions are added 3/8 98 by kgf
   void Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& rat);
   virtual void calcZ(int area, const DoubleVector& nat_m) {};
@@ -67,7 +67,7 @@ protected:
   ConversionIndex* CI;
   LengthGroupDivision* LgrpDiv;
   PopInfoMatrix Number;
-  PopInfoMatrix numberPriortoEating;
+  PopInfoMatrix numberPriorToEating;
   DoubleMatrix biomass;
   DoubleMatrix ratio;
   DoubleMatrix consumption;

@@ -46,7 +46,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   datafile.open(aggfilename, ios::in);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  i = readAggregation(subdata, areas, areanames);
+  i = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -127,15 +127,15 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   //We have now read in all the data from the main likelihood file
   if (strcasecmp(sitype, "lengths") == 0) {
-    SI = new SIByLengthOnStep(infile, areas, lengths, areanames,
+    SI = new SIByLengthOnStep(infile, areas, lengths, areaindex,
       lenindex, TimeInfo, datafilename, surveyname);
 
   } else if (strcasecmp(sitype, "ages") == 0) {
-    SI = new SIByAgeOnStep(infile, areas, ages, areanames,
+    SI = new SIByAgeOnStep(infile, areas, ages, areaindex,
       ageindex, TimeInfo, datafilename, surveyname);
 
   } else if (strcasecmp(sitype, "fleets") == 0) {
-    SI = new SIByFleetOnStep(infile, areas, lengths, areanames,
+    SI = new SIByFleetOnStep(infile, areas, lengths, areaindex,
       lenindex, TimeInfo, datafilename, overcons, surveyname);
 
   } else
@@ -162,24 +162,21 @@ SurveyIndices::~SurveyIndices() {
     delete[] stocknames[i];
   for (i = 0; i < fleetnames.Size(); i++)
     delete[] fleetnames[i];
-  for (i = 0; i < areanames.Size(); i++)
-    delete[] areanames[i];
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
   delete SI;
   delete[] surveyname;
 }
 
 void SurveyIndices::LikelihoodPrint(ofstream& outfile) {
-  int i, j;
+  int i;
   outfile << "\nSurvey Indices " << surveyname << "\n\nLikelihood " << likelihood
-    << "\nWeight " << weight << "\nStock names: ";
+    << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
-    outfile << stocknames[i] << sep;
-  outfile << "\nInternal areas";
-  for (i = 0; i < areas.Nrow(); i++) {
-    outfile << endl << TAB;
-    for (j = 0; j < areas.Ncol(i); j++)
-      outfile << areas[i][j] << sep;
-  }
+    outfile << sep << stocknames[i];
+  outfile << "\nAreas:";
+  for (i = 0; i < areaindex.Size(); i++)
+    outfile << sep << areaindex[i];
   outfile << endl;
   SI->LikelihoodPrint(outfile);
   outfile << endl;
@@ -243,8 +240,8 @@ void SurveyIndices::SummaryPrint(ofstream& outfile) {
   int area;
 
   //JMB - this is nasty hack since there is only one area
-  for (area = 0; area < areanames.Size(); area++) {
-    outfile << "all   all " << setw(printwidth) << areanames[area] << sep
+  for (area = 0; area < areaindex.Size(); area++) {
+    outfile << "all   all " << setw(printwidth) << areaindex[area] << sep
       << setw(largewidth) << surveyname << sep << setw(smallwidth) << weight
       << sep << setprecision(largeprecision) << setw(largewidth) << likelihood << endl;
   }

@@ -148,11 +148,11 @@ void LinearPredator::Print(ofstream& outfile) const {
   PopPredator::Print(outfile);
 }
 
-const PopInfoVector& LinearPredator::NumberPriortoEating(int area, const char* preyname) const {
+const PopInfoVector& LinearPredator::getNumberPriorToEating(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < numPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)
-      return Preys(prey)->NumberPriortoEating(area);
+      return Preys(prey)->getNumberPriorToEating(area);
 
   handle.logFailure("Error in linearpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);

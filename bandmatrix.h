@@ -29,7 +29,7 @@ public:
   int maxAge() const { return minage + nrow - 1; };
   int minLength(int age) const { return (operator[](age).minCol()); };
   int maxLength(int age) const { return (operator[](age).maxCol()); };
-  void Colsum(DoubleVector& Result) const;
+  void sumColumns(DoubleVector& Result) const;
   void Print(ofstream& outfile) const;
 protected:
   DoubleIndexVector** v;

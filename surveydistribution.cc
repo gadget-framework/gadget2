@@ -217,7 +217,7 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
           timeid = i;

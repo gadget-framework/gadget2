@@ -86,7 +86,7 @@ void OtherFood::checkEat(int area, const AreaClass* const Area, const TimeClass*
   prey->checkConsumption(area, TimeInfo->numSubSteps());
 }
 
-void OtherFood::CalcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void OtherFood::calcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   PopInfo pop;
   //Warning: Choose the weight as 1.
   pop.W = 1.0;

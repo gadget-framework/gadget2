@@ -130,15 +130,15 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
     //check if the year and step are in the simulation
     timeid = -1;
     tagid = -1;
-    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
       for (i = 0; i < tagvec.Size(); i++)
-        if (strcasecmp(tagvec[i]->TagName(), tmptag) == 0)
+        if (strcasecmp(tagvec[i]->Name(), tmptag) == 0)
           tagid = i;
 
       if (tagid == -1) {
         tmpindex = -1;
         for (i = 0; i < Tag.Size(); i++)
-          if (strcasecmp(Tag[i]->TagName(), tmptag) == 0)
+          if (strcasecmp(Tag[i]->Name(), tmptag) == 0)
             tmpindex = i;
 
         if (tmpindex == -1) {
@@ -310,7 +310,7 @@ void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
   check = 0;
   for (t = 0; t < tagvec.Size(); t++) {
     timeindex[t] = -1;
-    if (tagvec[t]->IsWithinPeriod(TimeInfo->CurrentYear(), TimeInfo->CurrentStep())) {
+    if (tagvec[t]->isWithinPeriod(TimeInfo->CurrentYear(), TimeInfo->CurrentStep())) {
       for (i = 0; i < Years.Ncol(t); i++) {
         if (Years[t][i] == TimeInfo->CurrentYear() && Steps[t][i] == TimeInfo->CurrentStep()) {
           if (check == 0)

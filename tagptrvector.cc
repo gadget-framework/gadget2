@@ -88,7 +88,7 @@ void TagPtrVector::updateTags(const TimeClass* const TimeInfo) {
   int step = TimeInfo->CurrentStep();
   int i;
   for (i = 0; i < size; i++)
-    if (v[i]->IsWithinPeriod(year, step))
+    if (v[i]->isWithinPeriod(year, step))
       v[i]->updateTags(year, step);
 }
 

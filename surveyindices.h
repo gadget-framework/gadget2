@@ -72,7 +72,7 @@ protected:
   /**
    * \brief This is the CharPtrVector of the names of the areas
   */
-  CharPtrVector areanames;
+  CharPtrVector areaindex;
   /**
    * \brief This is the CharPtrVector of the names of the stocks that will be used to calculate the likelihood score
    */

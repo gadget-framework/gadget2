@@ -115,7 +115,7 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if (TimeInfo->IsWithinPeriod(year, step)) {
+    if (TimeInfo->isWithinPeriod(year, step)) {
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
           timeid = i;

@@ -19,7 +19,7 @@ public:
     int CurrentSubstep, int numsubsteps);
   virtual void adjustConsumption(int area, int numsubsteps, int CurrentSubstep) {};
   virtual void Print(ofstream& infile) const;
-  virtual const PopInfoVector& NumberPriortoEating(int area, const char* preyname) const;
+  virtual const PopInfoVector& getNumberPriorToEating(int area, const char* preyname) const;
   void calcFlevel();
   void InitialiseCHat(int area, int prey, const AgeBandMatrix& mean_n);
   void calcCHat(int area, const TimeClass* const TimeInfo);

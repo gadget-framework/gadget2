@@ -509,7 +509,7 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -670,7 +670,7 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -752,7 +752,7 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if (TimeInfo->IsWithinPeriod(year, step))
+    if (TimeInfo->isWithinPeriod(year, step))
       //find the timeid from Years and Steps
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -1053,7 +1053,7 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))

@@ -268,7 +268,7 @@ void PredatorAggregator::NumberSum() {
             area = areas[l][j];
             if (predators[g]->IsInArea(area) && preys[h]->IsInArea(area)) {
               const BandMatrix* bptr = &predators[g]->Consumption(area, preys[h]->Name());
-              const PopInfoVector* preymeanw = &predators[g]->NumberPriortoEating(area, preys[h]->Name());
+              const PopInfoVector* preymeanw = &predators[g]->getNumberPriorToEating(area, preys[h]->Name());
               for (k = bptr->minRow(); k <= bptr->maxRow(); k++) {
                 predLength = predConv[g][k];
                 if (predLength >= 0) {

@@ -25,7 +25,7 @@ public:
   const PopInfoIndexVector& operator [] (int age) const;
   int minLength(int age) const { return v[age - minage]->minCol(); };
   int maxLength(int age) const { return v[age - minage]->maxCol(); };
-  void Colsum(PopInfoVector& Result) const;
+  void sumColumns(PopInfoVector& Result) const;
   void Multiply(const DoubleVector& Ratio, const ConversionIndex& CI);
   void Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Nrof);
   void Multiply(const DoubleVector& Ratio);

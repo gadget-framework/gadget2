@@ -60,8 +60,8 @@ void Prey::InitialiseObjects() {
 
   while (Number.Nrow())
     Number.DeleteRow(0);
-  while (numberPriortoEating.Nrow())
-    numberPriortoEating.DeleteRow(0);
+  while (numberPriorToEating.Nrow())
+    numberPriorToEating.DeleteRow(0);
   while (biomass.Nrow())
     biomass.DeleteRow(0);
   while (cons.Nrow())
@@ -85,7 +85,7 @@ void Prey::InitialiseObjects() {
   PopInfo nullpop;
 
   Number.AddRows(numarea, numlen, nullpop);
-  numberPriortoEating.AddRows(numarea, numlen, nullpop);
+  numberPriorToEating.AddRows(numarea, numlen, nullpop);
   biomass.AddRows(numarea, numlen, 0.0);
   cons.AddRows(numarea, numlen, 0.0);
   consumption.AddRows(numarea, numlen, 0.0);
@@ -207,8 +207,8 @@ void Prey::Reset() {
     for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
       Number[area][l].N = 0.0;
       Number[area][l].W = 0.0;
-      numberPriortoEating[area][l].N = 0.0;
-      numberPriortoEating[area][l].W = 0.0;
+      numberPriorToEating[area][l].N = 0.0;
+      numberPriorToEating[area][l].W = 0.0;
       ratio[area][l] = 0.0;
       consumption[area][l] = 0.0;
       overconsumption[area][l] = 0.0;

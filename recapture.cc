@@ -92,7 +92,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   for (j = 0; j < tagnames.Size(); j++) {
     check = 0;
     for (i = 0; i < Tag.Size(); i++) {
-      if (strcasecmp(tagnames[j], Tag[i]->TagName()) == 0) {
+      if (strcasecmp(tagnames[j], Tag[i]->Name()) == 0) {
         check++;
         tagvec.resize(1, Tag[i]);
       }
@@ -146,7 +146,7 @@ void Recaptures::readRecaptureData(CommentStream& infile,
 
     timeid = -1;
     tid = -1;
-    if ((TimeInfo->IsWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
       //if this is a new tagging exp. then resize
       for (i = 0; i < tagnames.Size(); i++)
         if (strcasecmp(tagnames[i], tmptagid) == 0)
@@ -314,7 +314,7 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
 
   check = 0;
   for (t = 0; t < tagvec.Size(); t++) {
-    if (tagvec[t]->IsWithinPeriod(year, step)) {
+    if (tagvec[t]->isWithinPeriod(year, step)) {
 
       if (check == 0) {
         handle.logMessage("Calculating likelihood score for recaptures component", recname);

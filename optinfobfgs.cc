@@ -54,7 +54,7 @@ void OptInfoBfgs::OptimiseLikelihood() {
   delete[] startpoint;
 }
 
-void OptInfoBfgs::Read(CommentStream& infile, char* text) {
+void OptInfoBfgs::read(CommentStream& infile, char* text) {
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]")) {
     infile >> ws;
     if (strcasecmp(text,"beta") == 0) {

@@ -48,7 +48,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   //year, step, area, age and then the renewal data
   infile >> year >> step >> area >> age >> ws;
   while (isdigit(infile.peek()) && !infile.eof()) {
-    if (TimeInfo->IsWithinPeriod(year, step)) {
+    if (TimeInfo->isWithinPeriod(year, step)) {
 
       renewalTime.resize(1);
       renewalTime[i] = TimeInfo->calcSteps(year, step);

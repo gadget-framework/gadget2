@@ -475,7 +475,7 @@ void LenStock::ReducePop(int area,
     tagAlkeys[inarea].updateNumbers(Alkeys[inarea]);
 }
 
-void LenStock::CalcNumbers(int area,
+void LenStock::calcNumbers(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   calcDone = 0;
@@ -489,7 +489,7 @@ void LenStock::CalcNumbers(int area,
   if (doesrenew)
     this->Renewal(area, TimeInfo);
 
-  Alkeys[inarea].Colsum(NumberInArea[inarea]);
+  Alkeys[inarea].sumColumns(NumberInArea[inarea]);
 
   if (doesgrow)
     grower->Sum(NumberInArea[inarea], area);

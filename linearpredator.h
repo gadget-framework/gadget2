@@ -57,7 +57,7 @@ public:
    * \param preyname is the name of the prey that is being consumed
    * \return the population of the prey for the area before consumption
    */
-  virtual const PopInfoVector& NumberPriortoEating(int area, const char* preyname) const;
+  virtual const PopInfoVector& getNumberPriorToEating(int area, const char* preyname) const;
 };
 
 #endif

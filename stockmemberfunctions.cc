@@ -36,19 +36,19 @@ void Stock::Migrate(const TimeClass* const TimeInfo) {
 //-------------------------------------------------------------------
 //Sum up into Growth+Predator and Prey Lengthgroups.  Storage is a
 //vector of PopInfo that stores the sum over each lengthgroup.
-void Stock::CalcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::calcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   int inarea = AreaNr[area];
   PopInfo nullpop;
   int i;
   for (i = 0; i < NumberInArea[inarea].Size(); i++)
     NumberInArea[inarea][i] = nullpop;
-  Alkeys[inarea].Colsum(NumberInArea[inarea]);
+  Alkeys[inarea].sumColumns(NumberInArea[inarea]);
   if (doesgrow)
     grower->Sum(NumberInArea[inarea], area);
   if (iseaten) {
     prey->Sum(Alkeys[inarea], area, TimeInfo->CurrentSubstep());
     for (i = 0; i < allTags.Size(); i++)
-      allTags[i]->StoreNumberPriorToEating(area, this->Name());
+      allTags[i]->storeNumberPriorToEating(area, this->Name());
   }
   if (doeseat)
     ((StockPredator*)predator)->Sum(Alkeys[inarea], area);
@@ -261,7 +261,7 @@ void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const 
   }
 }
 
-void Stock::RecalcMigration(const TimeClass* const TimeInfo) {
+void Stock::calcMigration(const TimeClass* const TimeInfo) {
   if (doesmigrate)
     migration->MigrationRecalc(TimeInfo->CurrentYear());
 }

@@ -77,7 +77,7 @@ BandMatrix::~BandMatrix() {
   }
 }
 
-void BandMatrix::Colsum(DoubleVector& Result) const {
+void BandMatrix::sumColumns(DoubleVector& Result) const {
   int i, j;
   for (i = 0; i < nrow; i++)
     for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)

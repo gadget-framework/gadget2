@@ -24,7 +24,7 @@ public:
    * \param infile is the CommentStream to read the optimisation parameters from
    * \param text is a text string used to compare parameter names
    */
-  virtual void Read(CommentStream& infile, char* text) {};
+  virtual void read(CommentStream& infile, char* text) {};
   /**
    * \brief This method calls the optimisation function
    */
@@ -54,7 +54,7 @@ public:
    * \brief This is the function used to read in the optimisation function parameters
    * \param infile is the CommentStream to read the optimisation parameters from
    */
-  void ReadOptInfo(CommentStream& infile);
+  void readOptInfo(CommentStream& infile);
 private:
   /**
    * \brief This is the flag used to denote whether Simulated Annealing is used in the optimisation or not
@@ -105,7 +105,7 @@ public:
    * \param infile is the CommentStream to read the optimisation parameters from
    * \param text is a text string used to compare parameter names
    */
-  virtual void Read(CommentStream& infile, char* text);
+  virtual void read(CommentStream& infile, char* text);
   /**
    * \brief This is the function that will calculate the likelihood score using the Hooke & Jeeves optimiser
    */
@@ -156,7 +156,7 @@ public:
    * \param infile is the CommentStream to read the optimisation parameters from
    * \param text is a text string used to compare parameter names
    */
-  virtual void Read(CommentStream& infile, char* text);
+  virtual void read(CommentStream& infile, char* text);
   /**
    * \brief This is the function that will calculate the likelihood score using the Simulated Annealing optimiser
    */
@@ -229,7 +229,7 @@ public:
    * \param infile is the CommentStream to read the optimisation parameters from
    * \param text is a text string used to compare parameter names
    */
-  virtual void Read(CommentStream& infile, char* text);
+  virtual void read(CommentStream& infile, char* text);
   /**
    * \brief This is the function that will calculate the likelihood score using the BFGS optimiser
    */

@@ -134,7 +134,7 @@ void Fleet::SecondSpecialTransactions(int area,
     ((MortPredator*)predator)->calcCHat(area, TimeInfo);
 }
 
-void Fleet::CalcNumbers(int area,
+void Fleet::calcNumbers(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   PopInfo pop;

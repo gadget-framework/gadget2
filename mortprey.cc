@@ -29,8 +29,8 @@ void MortPrey::InitialiseObjects() {
 
   while (Number.Nrow())
     Number.DeleteRow(0);
-  while (numberPriortoEating.Nrow())
-    numberPriortoEating.DeleteRow(0);
+  while (numberPriorToEating.Nrow())
+    numberPriorToEating.DeleteRow(0);
   while (biomass.Nrow())
     biomass.DeleteRow(0);
   while (cons.Nrow())
@@ -64,7 +64,7 @@ void MortPrey::InitialiseObjects() {
   PopInfo nullpop;
 
   Number.AddRows(numarea, numlength, nullpop);
-  numberPriortoEating.AddRows(numarea, numlength, nullpop);
+  numberPriorToEating.AddRows(numarea, numlength, nullpop);
   biomass.AddRows(numarea, numlength, 0.0);
   cons.AddRows(numarea, numlength, 0.0);
   consumption.AddRows(numarea, numlength, 0.0);
@@ -98,7 +98,7 @@ void MortPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
   Alkeys[inarea].setToZero();
   mean_n[inarea].Add(stock, *CI);
   Alkeys[inarea].Add(stock, *CI);
-  Alkeys[inarea].Colsum(Number[inarea]);
+  Alkeys[inarea].sumColumns(Number[inarea]);
   haveCalculatedMeanN[inarea] = 0;
 
   PopInfo sum;
@@ -109,7 +109,7 @@ void MortPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
 
   total[inarea] = sum.N * sum.W;
   for (i = 0; i < Number[inarea].Size(); i++)
-    numberPriortoEating[inarea][i] = Number[inarea][i]; //should be inside if
+    numberPriorToEating[inarea][i] = Number[inarea][i]; //should be inside if
 
   if (CurrentSubstep == 1) {
     for (j = 0; j < consumption.Ncol(inarea); j++) {

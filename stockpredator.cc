@@ -102,7 +102,7 @@ void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
   Alkeys[inarea].Add(stock, *CI);
   for (length = 0; length < Prednumber.Ncol(inarea); length++)
     Prednumber[inarea][length].N = 0.0;
-  Alkeys[inarea].Colsum(Prednumber[inarea]);
+  Alkeys[inarea].sumColumns(Prednumber[inarea]);
 }
 
 void StockPredator::Reset(const TimeClass* const TimeInfo) {
@@ -128,11 +128,11 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
   }
 }
 
-const PopInfoVector& StockPredator::NumberPriortoEating(int area, const char* preyname) const {
+const PopInfoVector& StockPredator::getNumberPriorToEating(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < numPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)
-      return Preys(prey)->NumberPriortoEating(area);
+      return Preys(prey)->getNumberPriorToEating(area);
 
   handle.logFailure("Error in stockpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);

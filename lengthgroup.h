@@ -136,6 +136,6 @@ extern void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
  * \return 1 if the finer LengthGroupDivision is finer than the coarser LengthGroupDivision, 0 if finer is not finer than coarser and 2 if an error has occured
  */
 extern int lengthGroupIsFiner(const LengthGroupDivision* finer,
-  const LengthGroupDivision* coarser, int& BogusLengthGroup);
+  const LengthGroupDivision* coarser, int& bogus);
 
 #endif
