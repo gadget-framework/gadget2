@@ -1,0 +1,135 @@
+#include "otherfood.h"
+#include "readfunc.h"
+#include "readmatrix.h"
+#include "lengthprey.h"
+#include "errorhandler.h"
+#include "intvector.h"
+#include "popinfo.h"
+#include "popinfovector.h"
+#include "gadget.h"
+
+OtherFood::OtherFood(CommentStream& infile, const char* givenname,
+  const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
+  : BaseClass(givenname), prey(0) {
+
+  ErrorHandler handle;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  ifstream subfile;
+  CommentStream subcomment(subfile);
+  int i = 0;
+  int tmpint;
+
+  keeper->AddString("otherfood ");
+  keeper->AddString(givenname);
+
+  infile >> text;
+  intvector tmpareas;
+  if (strcasecmp(text, "livesonareas") == 0) {
+    infile >> ws;
+    char c = infile.peek();
+    while (isdigit(c) && !infile.eof() && (i < Area->NoAreas())) {
+      tmpareas.resize(1);
+      infile >> tmpint >> ws;
+      if ((tmpareas[i] = Area->InnerArea(tmpint)) == -1)
+        handle.UndefinedArea(tmpint);
+      c = infile.peek();
+      i++;
+    }
+    this->LetLiveOnAreas(tmpareas);
+  } else
+    handle.Unexpected("livesonareas", text);
+
+  doublevector lengths(2, 0);
+  infile >> text;
+  if (strcasecmp(text, "lengths") == 0) {
+    if (!ReadVector(infile, lengths))
+      handle.Message("Failed to read lengths");
+  } else
+    handle.Unexpected("lengths", text);
+
+  LengthGroupDivision LgrpDiv(lengths);
+  prey = new LengthPrey(lengths, areas, Name());
+
+  infile >> text;
+  subfile.open(text);
+  CheckIfFailure(subfile, text);
+  handle.Open(text);
+
+  if (!ReadAmounts(subcomment, areas.Size(), TimeInfo, Area, amount, keeper, givenname))
+    handle.Message("Failed to read otherfood amounts");
+
+  handle.Close();
+  subfile.close();
+  subfile.clear();
+
+  keeper->ClearLast();
+  keeper->ClearLast();
+
+  prey->SetCI(&LgrpDiv);
+}
+
+OtherFood::~OtherFood() {
+  delete prey;
+}
+
+LengthPrey* OtherFood::ReturnPrey() const {
+  return prey;
+}
+
+void OtherFood::CalcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+}
+
+void OtherFood::CheckEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+  prey->CheckConsumption(area, TimeInfo->NrOfSubsteps());
+}
+
+void OtherFood::AdjustEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+}
+
+void OtherFood::ReducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+}
+
+void OtherFood::Grow(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+}
+
+void OtherFood::FirstUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+}
+
+void OtherFood::SecondUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+}
+
+void OtherFood::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+}
+
+void OtherFood::FirstSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+}
+
+void OtherFood::SecondSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+}
+
+void OtherFood::CalcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+  popinfo pop;
+  //Warning: Choose the weight as 1.
+  pop.W = 1.0;
+  pop.N = amount[TimeInfo->CurrentTime()][AreaNr[area]] * Area->Size(area);
+  popinfovector NumberInArea(1, pop);
+  prey->SumUsingPopInfo(NumberInArea, area, TimeInfo->CurrentSubstep());
+}
+
+void OtherFood::Migrate(const TimeClass* const TimeInfo) {
+}
+
+void OtherFood::Print(ofstream& outfile) const {
+  outfile << "\nOtherfood " << Name() << endl;
+  prey->Print(outfile);
+  outfile << endl;
+}
+
+void OtherFood::Reset(const TimeClass* const TimeInfo) {
+  if (TimeInfo->CurrentTime() == 1)
+    prey->Reset();
+}
+
+void OtherFood::RecalcMigration(const TimeClass* const TimeInfo) {
+}
