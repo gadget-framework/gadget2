@@ -350,26 +350,26 @@ void SurveyDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVect
 
   int i, j;
   int found = 0;
-  StockPtrVector s;
+  StockPtrVector stocks;
 
   for (i = 0; i < stocknames.Size(); i++) {
     found = 0;
     for (j = 0; j < Stocks.Size(); j++)
       if (strcasecmp(stocknames[i], Stocks[j]->Name()) == 0) {
         found++;
-        s.resize(1, Stocks[j]);
+        stocks.resize(1, Stocks[j]);
       }
     if (found == 0)
       handle.logFailure("Error in surveydistribution - failed to match stock", stocknames[i]);
 
   }
 
-  stocktype = s[0]->Type();
-  for (i = 0; i < s.Size(); i++)
-    if (s[i]->Type() != stocktype)
+  stocktype = stocks[0]->Type();
+  for (i = 0; i < stocks.Size(); i++)
+    if (stocks[i]->Type() != stocktype)
       handle.logFailure("Error in surveydistribution - trying to mix stock types");
 
-  aggregator = new StockAggregator(s, LgrpDiv, areas, ages);
+  aggregator = new StockAggregator(stocks, LgrpDiv, areas, ages);
 
   //Limits (inclusive) for traversing the matrices.
   mincol = aggregator->getMinCol();

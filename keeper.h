@@ -73,6 +73,7 @@ public:
   void OptSwitches(ParameterVector& sw) const;
   void OptValues(DoubleVector& val) const;
   void checkBounds() const;
+  int boundsGiven() const { return boundsgiven; };
 protected:
   AddressKeeperMatrix address;
   DoubleVector initialvalues;
@@ -84,10 +85,7 @@ protected:
   ParameterVector switches;
   DoubleVector lowerbds;
   DoubleVector upperbds;
+  int boundsgiven;
 };
 
 #endif
-
-
-
-

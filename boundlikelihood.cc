@@ -65,6 +65,9 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
 
   if (checkInitialised == 0) {
+    if (keeper->boundsGiven() == 0)
+      handle.logWarning("Warning in boundlikelihood - no bounds have been set in input file");
+      
     int i, j, k, numvar, numset;
     numvar = keeper->NoVariables();
     numset = switchnr.Size();

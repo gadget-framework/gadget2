@@ -11,6 +11,7 @@ extern ErrorHandler handle;
 Keeper::Keeper() {
   stack = new StrStack();
   likcompnames = new StrStack();
+  boundsgiven = 0;
 }
 
 void Keeper::KeepVariable(double& value, const Parameter& attr) {
@@ -448,6 +449,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
 
   int i, j;
   if (Stoch->SwitchesGiven()) {
+    boundsgiven = 1;
     IntVector match(Stoch->NoVariables(), 0);
     IntVector found(switches.Size(), 0);
 
@@ -625,23 +627,29 @@ void Keeper::UpperOptBds(DoubleVector& ubs) const {
 }
 
 void Keeper::checkBounds() const {
-  int i, count = 0;
+  if (boundsgiven == 0)
+    return;
+
+  int i, count = 0; 
   for (i = 0; i < values.Size(); i++) {
     if (lowerbds[i] > values[i]) {
       count++;
-      handle.logWarning("Error in keeper - initial value is lower than lowerbound", lowerbds[i]);
+      handle.logWarning("Error in keeper - initial value", values[i]);
+      handle.logWarning("is lower than the corresponding lower bound", lowerbds[i]);
     }
     if (upperbds[i] < values[i]) {
       count++;
-      handle.logWarning("Error in keeper - initial value is higher than upperbound", upperbds[i]);
+      handle.logWarning("Error in keeper - initial value", values[i]);
+      handle.logWarning("is higher than the corresponding upper bound", upperbds[i]);
     }
     if (upperbds[i] < lowerbds[i]) {
       count++;
-      handle.logWarning("Error in keeper - upperbound is lower than lowerbound");
+      handle.logWarning("Error in keeper - upper bound", upperbds[i]);
+      handle.logWarning("is lower than the corresponding lower bound", lowerbds[i]);
     }
   }
   if (count > 0)
-    handle.logFailure("Error in keeper - failed to read bounds");
+    handle.logFailure("Error in keeper - failed to read parameters and bounds correctly");
 }
 
 void Keeper::addString(const string str) {
