@@ -109,7 +109,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
         handle.logWarning("Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
         break;
       default:
-        handle.logWarning("Warning in catchdistribution - unknown function", functionname);
+        handle.logWarning("Warning in catchdistribution - unrecognised function", functionname);
         break;
     }
   }
@@ -376,7 +376,7 @@ void CatchDistribution::Print(ofstream& outfile) const {
       outfile << "\tMultivariate logistic distribution parameter: sigma " << sigma << endl;
       break;
     default:
-      handle.logWarning("Warning in catchdistribution - unknown function", functionname);
+      handle.logWarning("Warning in catchdistribution - unrecognised function", functionname);
       break;
   }
 
@@ -428,7 +428,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
       outfile << "\tMultivariate logistic distribution parameter: sigma " << sigma << endl;
       break;
     default:
-      handle.logWarning("Warning in catchdistribution - unknown function", functionname);
+      handle.logWarning("Warning in catchdistribution - unrecognised function", functionname);
       break;
   }
 
@@ -481,7 +481,7 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
       }
 
     if (found == 0)
-      handle.logFailure("Error in catchdistribution - unknown fleet", fleetnames[i]);
+      handle.logFailure("Error in catchdistribution - unrecognised fleet", fleetnames[i]);
   }
 
   for (i = 0; i < stocknames.Size(); i++) {
@@ -494,7 +494,7 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
         }
     }
     if (found == 0)
-      handle.logFailure("Error in catchdistribution - unknown stock", stocknames[i]);
+      handle.logFailure("Error in catchdistribution - unrecognised stock", stocknames[i]);
   }
 
   stocktype = stocks[0]->Type();
@@ -519,7 +519,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
     else if (stocktype == LENSTOCKTYPE)
       aggregator->MeanSum(TimeInfo);  //mortality model, calculated catch
     else
-      handle.logFailure("Error in catchdistribution - unknown stocktype", stocktype);
+      handle.logFailure("Error in catchdistribution - unrecognised stocktype", stocktype);
 
     switch(functionnumber) {
       case 1:
@@ -552,7 +552,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
         l = calcLikLog(TimeInfo);
         break;
       default:
-        handle.logWarning("Warning in catchdistribution - unknown function", functionname);
+        handle.logWarning("Warning in catchdistribution - unrecognised function", functionname);
         break;
     }
     if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
@@ -1013,7 +1013,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
       catchfile << "\tMultivariate logistic distribution parameter: sigma " << sigma << endl;
       break;
     default:
-      handle.logWarning("Warning in catchdistribution - unknown function", functionname);
+      handle.logWarning("Warning in catchdistribution - unrecognised function", functionname);
       break;
   }
 

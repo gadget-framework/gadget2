@@ -134,7 +134,7 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
       if (readSuitFunction(suitf, infile, text, TimeInfo, keeper) == 1)
         Suitable->addPrey(preyname, suitf[suitf.Size() - 1]);
       else
-        handle.Message("Error in suitability - unknown suitability function");
+        handle.Message("Error in suitability - unrecognised suitability function");
 
     } else if (strcasecmp(text, "suitfile") == 0) {
       infile >> text;
@@ -171,7 +171,7 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
       Suitable->addPrey(preyname, multiplication, dm, keeper);
 
     } else
-      handle.Message("Error in suitability - unknown format");
+      handle.Message("Error in suitability - unrecognised format", text);
 
     infile >> preyname >> ws;
     keeper->clearLast();

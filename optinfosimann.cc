@@ -57,7 +57,7 @@ void OptInfoSimann::Read(CommentStream& infile, char* text) {
       infile >> lratio;
 
     } else {
-      handle.logWarning("Warning in optinfofile - unknown option", text);
+      handle.logWarning("Warning in optinfofile - unrecognised option", text);
       infile >> text;  //read and ignore the next entry
     }
     infile >> text;
@@ -68,11 +68,11 @@ void OptInfoSimann::Read(CommentStream& infile, char* text) {
     handle.logWarning("Warning in optinfofile - value of uratio outside bounds", uratio);
     uratio = 0.7;
   }
-  if ((lratio < 0) || (lratio > 0.5)) {
+  if ((lratio < 0) || (lratio > 0.5) || isZero(lratio)) {
     handle.logWarning("Warning in optinfofile - value of lratio outside bounds", lratio);
     lratio = 0.3;
   }
-  if ((rt < 0) || (rt > 1)) {
+  if ((rt < 0) || (rt > 1) || isZero(rt)) {
     handle.logWarning("Warning in optinfofile - value of rt outside bounds", rt);
     rt = 0.85;
   }

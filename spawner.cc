@@ -44,7 +44,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
 
   for (i = 0; i < spawnStep.Size(); i++)
     if (spawnStep[i] < 1 || spawnStep[i] > TimeInfo->StepsInYear())
-      handle.Message("Illegal spawn step in spawning function");
+      handle.Message("Error in spawner - invalid spawning step");
 
   infile >> text >> ws;
   if (!((strcasecmp(text, "spawnarea") == 0) || (strcasecmp(text, "spawnareas") == 0)))
@@ -93,7 +93,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     else if (strcasecmp(text, "exponential") == 0)
       fnProportion = new ExpSelectFunc();
     else
-      handle.Message("Unrecognised spawning function", text);
+      handle.Message("Error in spawner - unrecognised proportion function", text);
 
     fnProportion->readConstants(infile, TimeInfo, keeper);
   } else
@@ -109,7 +109,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     else if (strcasecmp(text, "exponential") == 0)
       fnMortality = new ExpSelectFunc();
     else
-      handle.Message("Unrecognised spawning function", text);
+      handle.Message("Error in spawner - unrecognised mortality function", text);
 
     fnMortality->readConstants(infile, TimeInfo, keeper);
   } else
@@ -125,7 +125,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     else if (strcasecmp(text, "exponential") == 0)
       fnWeightLoss = new ExpSelectFunc();
     else
-      handle.Message("Unrecognised spawning function", text);
+      handle.Message("Error in spawner - unrecognised weight loss function", text);
 
     fnWeightLoss->readConstants(infile, TimeInfo, keeper);
   } else
@@ -135,8 +135,6 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     infile >> text >> ws;
     if (!(strcasecmp(text, "recruitment") == 0))
       handle.Unexpected("recruitment", text);
-    /*if (!(strcasecmp(text, "spawnparameters") == 0))
-      handle.Unexpected("spawnparameters", text);*/
 
     //read in the recruitment function details
     functionnumber = 0;

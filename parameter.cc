@@ -9,7 +9,7 @@ Parameter::Parameter(char* value) {
       name = new char[strlen(value) + 1];
       strcpy(name, value);
     } else {
-      cerr << "Illegal parameter name - " << value << endl;
+      cerr << "Invalid parameter name - " << value << endl;
       exit(EXIT_FAILURE);
     }
   }

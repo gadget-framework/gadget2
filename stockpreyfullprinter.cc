@@ -47,7 +47,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
 
   //Check if we read correct input
   if (tmpareas.Nrow() != 1)
-    handle.Message("Error - there should be only one aggregated area for stockpreyfullprinter");
+    handle.Message("Error in stockpreyfullprinter - there should be only one aggregated area");
 
   for (i = 0; i < tmpareas.Ncol(0); i++)
     outerareas.resize(1, tmpareas[0][i]);

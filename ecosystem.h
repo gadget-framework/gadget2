@@ -24,7 +24,7 @@ public:
    * \param filename is the name of the file to read the main model parameters from
    * \param optimise is a flag to denote whether the current run will optimise the model or not
    * \param netrun is a flag to denote whether the current run has been started in network mode or not
-   * \param calclikelihood is a flag to denote whether the current run should calculate the likleihood score or not
+   * \param calclikelihood is a flag to denote whether the current run should calculate the likelihood score or not
    * \param inputdir is the name of the directory containing the input files to the model
    * \param workingdir is the name of the directory used for the output from the model
    * \param pi is the PrintInfo specifying the parameter output from the model run
@@ -222,13 +222,13 @@ public:
    */
   void setConvergeHJ(int set) { convergeHJ = set; };
   /**
-   * \brief This function will set the number of iterations that took place during the Hooke & Jeeves optimisation
-   * \param set is the number of iterations
+   * \brief This function will return the number of iterations that took place during the Hooke & Jeeves optimisation
+   * \return number of iterations
    */
   int getFuncEvalHJ() const { return funcevalHJ; };
   /**
-   * \brief This function will return the number of iterations that took place during the Hooke & Jeeves optimisation
-   * \return number of iterations
+   * \brief This function will set the number of iterations that took place during the Hooke & Jeeves optimisation
+   * \param set is the number of iterations
    */
   void setFuncEvalHJ(int set) { funcevalHJ = set; };
   /**
@@ -320,7 +320,6 @@ protected:
    * \brief This is the value of the best likelihood score from the BFGS optimisation
    */
   double likelihoodBFGS;
-  int mortmodel;
   /**
    * \brief This is the BaseClassPtrVector of the stocks, fleets and otherfood classes for the current model
    */
@@ -387,6 +386,7 @@ protected:
    */
   PrintInfo printinfo;
   friend class InterruptInterface;
+  int mortmodel;
 };
 
 #endif

@@ -21,7 +21,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   strncpy(text, "", MaxStrLength);
 
   error = 0;
-  numSums = 0;
+  timeindex = 0;
   slope = 0.0;
   intercept = 0.0;
 
@@ -86,12 +86,11 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   datafile.close();
   datafile.clear();
 
-  if ((Indices.Nrow() > 0) && (Indices.Ncol() > 0)) {
-    abundance.AddRows(Indices.Nrow(), Indices.Ncol(), 0.0);
-    slopes.resize(Indices.Ncol());
-    intercepts.resize(Indices.Ncol());
-    sse.resize(Indices.Ncol());
-  }
+  //resize to hold the model information
+  modelIndex.AddRows(obsIndex.Nrow(), obsIndex.Ncol(), 0.0);
+  slopes.resize(obsIndex.Ncol());
+  intercepts.resize(obsIndex.Ncol());
+  sse.resize(obsIndex.Ncol());
 }
 
 void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
@@ -149,9 +148,9 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
         Years.resize(1, year);
         Steps.resize(1, step);
         timeid = (Years.Size() - 1);
-        Indices.AddRows(1, colindex.Size(), 0.0);
+        obsIndex.AddRows(1, colindex.Size(), 0.0);
       }
-      Indices[timeid][colid] = tmpnumber;
+      obsIndex[timeid][colid] = tmpnumber;
     }
   }
   AAT.addActions(Years, Steps, TimeInfo);
@@ -162,11 +161,11 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
 
 void SIOnStep::Reset(const Keeper* const keeper) {
   error = 0;
-  numSums = 0;
+  timeindex = 0;
   int i, j;
-  for (i = 0; i < abundance.Nrow(); i++)
-    for (j = 0; j < abundance.Ncol(i); j++)
-      abundance[i][j] = 0.0;
+  for (i = 0; i < modelIndex.Nrow(); i++)
+    for (j = 0; j < modelIndex.Ncol(i); j++)
+      modelIndex[i][j] = 0.0;
   handle.logMessage("Reset surveyindex component", this->SIName());
 }
 
@@ -175,10 +174,10 @@ void SIOnStep::Print(ofstream& outfile) const {
   outfile << "\tSurvey indices\n";
   for (i = 0; i < Years.Size(); i++) {
     outfile << TAB << Years[i] << sep << Steps[i] << sep;
-    for (j = 0; j < Indices.Ncol(i); j++) {
+    for (j = 0; j < obsIndex.Ncol(i); j++) {
       outfile.width(smallwidth);
       outfile.precision(smallprecision);
-      outfile << Indices[i][j] << sep;
+      outfile << obsIndex[i][j] << sep;
     }
     outfile << endl;
   }
@@ -187,26 +186,29 @@ void SIOnStep::Print(ofstream& outfile) const {
 
 void SIOnStep::LikelihoodPrint(ofstream& outfile) {
   int i, j;
-  outfile << "Number of sums " << numSums << "\nError " << error << "\nSurvey indices\n";
+  outfile << "Survey indices\n";
   for (i = 0; i < Years.Size(); i++) {
     outfile << TAB << Years[i] << sep << Steps[i] << sep;
-    for (j = 0; j < Indices.Ncol(i); j++) {
+    for (j = 0; j < obsIndex.Ncol(i); j++) {
       outfile.width(smallwidth);
       outfile.precision(smallprecision);
-      outfile << Indices[i][j] << sep;
+      outfile << obsIndex[i][j] << sep;
     }
     outfile << endl;
   }
-  outfile << "Abundance numbers\n";
+  outfile << "Modelled indices\n";
   for (i = 0; i < Years.Size(); i++) {
     outfile << TAB << Years[i] << sep << Steps[i] << sep;
-    for (j = 0; j < abundance.Ncol(i); j++) {
+    for (j = 0; j < modelIndex.Ncol(i); j++) {
       outfile.width(smallwidth);
       outfile.precision(smallprecision);
-      outfile << abundance[i][j] << sep;
+      outfile << modelIndex[i][j] << sep;
     }
     outfile << endl;
   }
+
+  if (error != 0)
+    outfile << "Error " << error << endl;
 
   outfile << "Regression information\nintercept ";
   for (j = 0; j < intercepts.Size(); j++) {
@@ -214,13 +216,13 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile) {
     outfile.precision(smallprecision);
     outfile << intercepts[j] << sep;
   }
-  outfile << "\nslope ";
+  outfile << "\nslope     ";
   for (j = 0; j < slopes.Size(); j++) {
     outfile.width(smallwidth);
     outfile.precision(smallprecision);
     outfile << slopes[j] << sep;
   }
-  outfile << "\nsse   ";
+  outfile << "\nsse       ";
   for (j = 0; j < sse.Size(); j++) {
     outfile.width(smallwidth);
     outfile.precision(smallprecision);
@@ -233,22 +235,22 @@ int SIOnStep::isToSum(const TimeClass* const TimeInfo) const {
   return AAT.AtCurrentTime(TimeInfo);
 }
 
-double SIOnStep::Regression() {
-  if (numSums < 2)
+double SIOnStep::calcRegression() {
+  if (timeindex < 2)
     return 0.0;
 
   double score = 0.0;
   int col, index;
-  for (col = 0; col < Indices.Ncol(); col++) {
+  for (col = 0; col < obsIndex.Ncol(); col++) {
     //Let LLR figure out what to do in the case of zero stock size.
-    DoubleVector indices(numSums);
-    DoubleVector stocksize(numSums);
-    for (index = 0; index < numSums; index++) {
-      indices[index] = Indices[index][col];
-      stocksize[index] = abundance[index][col];
+    DoubleVector indices(timeindex);
+    DoubleVector stocksize(timeindex);
+    for (index = 0; index < timeindex; index++) {
+      indices[index] = obsIndex[index][col];
+      stocksize[index] = modelIndex[index][col];
     }
     //Now fit the log of the abundance indices as a function of stock size.
-    score += this->Fit(stocksize, indices, col);
+    score += this->fitRegression(stocksize, indices, col);
   }
 
   handle.logMessage("Calculating likelihood score for surveyindex component", this->SIName());
@@ -259,11 +261,11 @@ double SIOnStep::Regression() {
 void SIOnStep::keepNumbers(const DoubleVector& numbers) {
   int i;
   for (i = 0; i < numbers.Size(); i++)
-    abundance[numSums][i] = numbers[i];
-  numSums++;
+    modelIndex[timeindex][i] = numbers[i];
+  timeindex++;
 }
 
-double SIOnStep::Fit(const DoubleVector& stocksize, const DoubleVector& indices, int col) {
+double SIOnStep::fitRegression(const DoubleVector& stocksize, const DoubleVector& indices, int col) {
 
   LogLinearRegression LLR;
   LinearRegression LR;
@@ -295,7 +297,7 @@ double SIOnStep::Fit(const DoubleVector& stocksize, const DoubleVector& indices,
       LR.Fit(stocksize, indices, slope, intercept);
       break;
     default:
-      handle.logWarning("Warning in surveyindex - unknown fittype", fittype);
+      handle.logWarning("Warning in surveyindex - unrecognised fittype", fittype);
       break;
   }
 
@@ -324,7 +326,7 @@ double SIOnStep::Fit(const DoubleVector& stocksize, const DoubleVector& indices,
       return LR.SSE();
       break;
     default:
-      handle.logWarning("Warning in surveyindex - unknown fittype", fittype);
+      handle.logWarning("Warning in surveyindex - unrecognised fittype", fittype);
       break;
   }
   return 0.0;

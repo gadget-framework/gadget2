@@ -35,7 +35,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
     Scale = 1.0;
 
   if (Scale <= 0)
-    handle.Message("Illegal value of scale - must be strictly positive");
+    handle.Message("Error in stockstdprinter - invalid value of scale");
 
   //read in area aggregation from file
   char filename[MaxStrLength];
@@ -61,7 +61,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
 
   //Check if we read correct input
   if (tmpareas.Nrow() != 1)
-    handle.Message("Error - there should be only one aggregated area for stockstdprinter");
+    handle.Message("Error in stockstdprinter - there should be only one aggregated area");
 
   for (i = 0; i < tmpareas.Ncol(0); i++)
     outerareas.resize(1, tmpareas[0][i]);

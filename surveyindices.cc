@@ -53,7 +53,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   //Check if we read correct input
   if (areas.Nrow() != 1)
-    handle.Message("Error - there should be only one area for the survey indices");
+    handle.Message("Error in surveyindex - there should be only one area");
 
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
@@ -189,7 +189,7 @@ void SurveyIndices::LikelihoodPrint(ofstream& outfile) {
 void SurveyIndices::addLikelihood(const TimeClass* const TimeInfo) {
   SI->Sum(TimeInfo);
   if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps())
-    likelihood += SI->Regression();
+    likelihood += SI->calcRegression();
 }
 
 void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {

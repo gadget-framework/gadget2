@@ -296,7 +296,7 @@ void Recaptures::addLikelihood(const TimeClass* const TimeInfo) {
       l = calcLikPoisson(TimeInfo);
       break;
     default:
-      handle.logWarning("Warning in recaptures - unknown function", functionname);
+      handle.logWarning("Warning in recaptures - unrecognised function", functionname);
       break;
   }
 

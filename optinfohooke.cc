@@ -37,14 +37,14 @@ void OptInfoHooke::Read(CommentStream& infile, char* text) {
       infile >> bndcheck;
 
     } else {
-      handle.logWarning("Warning in optinfofile - unknown option", text);
+      handle.logWarning("Warning in optinfofile - unrecognised option", text);
       infile >> text;  //read and ignore the next entry
     }
     infile >> text;
   }
 
   //check the values specified in the optinfo file ...
-  if ((rho < 0) || (rho > 1)) {
+  if ((rho < 0) || (rho > 1) || isZero(rho)) {
     handle.logWarning("Warning in optinfofile - value of rho outside bounds", rho);
     rho = 0.5;
   }

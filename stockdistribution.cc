@@ -309,7 +309,7 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
         fleets.resize(1, Fleets[j]);
       }
     if (found == 0)
-      handle.logFailure("Error in stockdistribution - unknown fleet", fleetnames[i]);
+      handle.logFailure("Error in stockdistribution - unrecognised fleet", fleetnames[i]);
 
   }
 
@@ -324,7 +324,7 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
         }
     }
     if (found == 0)
-      handle.logFailure("Error in stockdistribution - unknown stock", stocknames[i]);
+      handle.logFailure("Error in stockdistribution - unrecognised stock", stocknames[i]);
 
     aggregator[i] = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
   }
@@ -346,7 +346,7 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
         l = calcLikSumSquares();
         break;
       default:
-        handle.logWarning("Warning in stockdistribution - unknown function", functionname);
+        handle.logWarning("Warning in stockdistribution - unrecognised function", functionname);
         break;
     }
     likelihood += l;

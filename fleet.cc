@@ -46,7 +46,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   infile >> text >> ws;
   if (strcasecmp(text, "lengths") == 0) {
     if (!readVector(infile, lengths))
-      handle.Message("Failed to read lengths");
+      handle.Message("Error in fleet - failed to read lengths");
   } else
     handle.Unexpected("lengths", text);
 
@@ -82,7 +82,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
       readamount = 1; //should be 0
       break;
     default:
-      handle.Message("Unrecognized type of fleet");
+      handle.Message("Error in fleet - unrecognised fleet type for", givenname);
     }
 
   //the next entry in the file will be the name of the amounts datafile
@@ -93,7 +93,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
 
   if (readamount != 0) {
     if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))
-      handle.Message("Failed to read fleet amounts");
+      handle.Message("Error in fleet - failed to read fleet amounts");
     amount.Inform(keeper);
   }
 

@@ -96,7 +96,7 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
         if (i < numset)
           done[i] = switchnr[i];
         else
-          handle.Message("Error in setting bounds in boundlikelihood");
+          handle.logFailure("Error in boundlikelihood - received invalid variable to check bounds");
 
       } else {
         for (j = 0; j < numset; j++)

@@ -27,9 +27,9 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   this->readSuitabilityMatrix(infile, "maxconsumption", TimeInfo, keeper);
 
   keeper->addString("maxconsumption");
-  maxconsumption.resize(4, keeper);  //Maxnumber of constants is 4
+  maxconsumption.resize(4, keeper);
   if (!(infile >> maxconsumption))
-    handle.Message("Incorrect format of maxconsumption vector");
+    handle.Message("Error in stock file - incorrect format of maxconsumption vector");
   maxconsumption.Inform(keeper);
 
   keeper->clearLast();

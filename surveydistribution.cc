@@ -48,7 +48,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
 
   //Check if we read correct input
   if (areas.Nrow() != 1)
-    handle.Message("Error - there should be only one area for the surveydistribution");
+    handle.Message("Error in surveydistribution - there should be only one area");
 
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
@@ -410,7 +410,7 @@ void SurveyDistribution::calcIndex(const AgeBandMatrix* alptr, const TimeClass* 
           (*modelDistribution[index])[age][len] = parameters[0] * q_l[len] * pow((*alptr)[age][len].N, parameters[1]);
       break;
     default:
-      handle.logWarning("Warning in surveydistribution - unknown fittype", fittype);
+      handle.logWarning("Warning in surveydistribution - unrecognised fittype", fittype);
       break;
   }
 }
@@ -425,7 +425,7 @@ void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   else if (stocktype == LENSTOCKTYPE)
     aggregator->MeanSum();  //mortality model, aggregate mean N values
   else
-    handle.logFailure("Error in surveydistribution - unknown stocktype", stocktype);
+    handle.logFailure("Error in surveydistribution - unrecognised stocktype", stocktype);
 
   double l = 0.0;
   handle.logMessage("Calculating likelihood score for surveydistribution component", sdname);
@@ -447,7 +447,7 @@ void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
       l = calcLikLog();
       break;
     default:
-      handle.logWarning("Warning in surveydistribution - unknown opttype", liketype);
+      handle.logWarning("Warning in surveydistribution - unrecognised opttype", liketype);
       break;
   }
 

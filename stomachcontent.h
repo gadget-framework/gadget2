@@ -159,7 +159,7 @@ protected:
 };
 
 /**
- * \class SCAmounts
+ * \class SCNumbers
  * \brief This is the class used to calculate the stomach content likelihood score based on a function of the numbers of prey consumed
  */
 class SCNumbers : public SC {

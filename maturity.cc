@@ -312,7 +312,7 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
   }
 
   if (maturitylength.Size() != maturitystep.Size())
-    handle.Message("Number of maturitysteps does not equal number of maturitylengths");
+    handle.Message("Error in maturity - number of maturitysteps does not equal number of maturitylengths");
 
   infile >> ws;
   if (!infile.eof()) {
@@ -410,7 +410,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
 
   for (i = 0; i < maturitystep.Size(); i++)
     if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->StepsInYear())
-      handle.Message("Illegal maturity step in maturation function");
+      handle.Message("Error in maturity - invalid maturity step");
 
   infile >> ws;
   if (!infile.eof()) {

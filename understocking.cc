@@ -86,7 +86,7 @@ void UnderStocking::setFleets(FleetPtrVector& Fleets) {
       }
 
     if (found == 0)
-      handle.logFailure("Error in understocking - unknown fleet", fleetnames[i]);
+      handle.logFailure("Error in understocking - unrecognised fleet", fleetnames[i]);
 
   }
 }

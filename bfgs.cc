@@ -14,9 +14,9 @@ int OptInfoBfgs::iteration(double* x0) {
   double h[NUMVARS];
   double y[NUMVARS];
   double By[NUMVARS];
+  double g0[NUMVARS];  //old gradient
   double hy, yBy, alpha, normgrad, normdeltax, temphy, tempyby;
   int i, j, k, check, offset;
-  gradacc = 0.0001; //will divide by 10 later ...
 
   fk = (*f)(x0, numvar);
   offset = FuncEval;
@@ -68,7 +68,8 @@ int OptInfoBfgs::iteration(double* x0) {
       }
       check = 1;
       k++;
-      gradacc *= 0.1;
+      //JMB - make the step size when calculating the gradient smaller
+      gradacc *= gradstep;
       if (gradacc < rathersmall)
         gradacc = rathersmall;
     }
@@ -98,6 +99,7 @@ int OptInfoBfgs::iteration(double* x0) {
       normdeltax += h[i] * h[i];
     }
     normgrad = sqrt(normgrad);
+    normdeltax = sqrt(normdeltax);
 
     for (i = 0; i < numvar; i++) {
       By[i] = 0.0;
@@ -156,7 +158,7 @@ void OptInfoBfgs::gradient(double* p, double fp) {
 
 double OptInfoBfgs::Armijo() {
   int i, cond;
-  double bn, fn, sg, df;
+  double bn, fn, sg;
   double tmp[NUMVARS];
 
   cond = 0;

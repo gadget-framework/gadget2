@@ -260,7 +260,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       }
 
     if (found == 0)
-      handle.logFailure("Error in recstatistics - unknown fleet", fleetnames[i]);
+      handle.logFailure("Error in recstatistics - unrecognised fleet", fleetnames[i]);
 
   }
 
@@ -277,7 +277,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
           }
 
       if (found == 0)
-        handle.logFailure("Error in recstatistics - unknown stock", stocknames->operator[](i));
+        handle.logFailure("Error in recstatistics - unrecognised stock", stocknames->operator[](i));
 
     }
 
@@ -355,7 +355,7 @@ double RecStatistics::calcLikSumSquares() {
             simvar = 1.0;
             break;
           default:
-            handle.logWarning("Warning in recstatistics - unknown function", functionname);
+            handle.logWarning("Warning in recstatistics - unrecognised function", functionname);
             break;
         }
 

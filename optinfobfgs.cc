@@ -10,14 +10,15 @@ double func(double* x, int n) {
 }
 
 OptInfoBfgs::OptInfoBfgs()
-  : OptSearch(), bfgsiter(100000), bfgseps(0.001), beta(0.3), sigma(0.01), st(1.0) {
+  : OptSearch(), bfgsiter(100000), bfgseps(0.001), beta(0.3), sigma(0.01), st(1.0),
+    gradacc(0.0001), gradstep(0.1) {
+    
   handle.logMessage("Initialising BFGS optimisation algorithm");
   numvar = EcoSystem->numOptVariables();
   int i;
   x = new double[numvar];
   s = new double[numvar];
   gk = new double[numvar];
-  g0 = new double[numvar];
   Bk = new double*[numvar];
   f = &func;
   for (i = 0; i < numvar; i++) {
@@ -30,7 +31,6 @@ OptInfoBfgs::~OptInfoBfgs() {
   delete[] x;
   delete[] s;
   delete[] gk;
-  delete[] g0;
   for (i = 0; i < numvar; i++)
     delete[] Bk[i];
 }
@@ -66,6 +66,12 @@ void OptInfoBfgs::Read(CommentStream& infile, char* text) {
     } else if (strcasecmp(text, "st") == 0) {
       infile >> st;
 
+    } else if (strcasecmp(text, "gradacc") == 0) {
+      infile >> gradacc;
+
+    } else if (strcasecmp(text, "gradstep") == 0) {
+      infile >> gradstep;
+
     } else if ((strcasecmp(text, "maxiterations") == 0) || (strcasecmp(text, "maxiter") == 0) || (strcasecmp(text, "bfgsiter") == 0)) {
       infile >> bfgsiter;
 
@@ -73,7 +79,7 @@ void OptInfoBfgs::Read(CommentStream& infile, char* text) {
       infile >> bfgseps;
 
     } else {
-      handle.logWarning("Warning in optinfofile - unknown option", text);
+      handle.logWarning("Warning in optinfofile - unrecognised option", text);
       infile >> text;  //read and ignore the next entry
     }
     infile >> text;
@@ -90,6 +96,14 @@ void OptInfoBfgs::Read(CommentStream& infile, char* text) {
   }
   if (isZero(st) || (st < 0)) {
     handle.logWarning("Warning in optinfofile - value of st outside bounds", st);
-    st = 1,0;
+    st = 1.0;
+  }
+  if (isZero(gradacc) || (gradacc < 0) || (gradacc > 1)) {
+    handle.logWarning("Warning in optinfofile - value of gradacc outside bounds", gradacc);
+    gradacc = 0.0001;
+  }
+  if (isZero(gradstep) || (gradstep < 0) || (gradstep > 1)) {
+    handle.logWarning("Warning in optinfofile - value of gradstep outside bounds", gradstep);
+    gradstep = 0.1;
   }
 }

@@ -41,7 +41,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const Area,
   if (strcasecmp(functionname, "sumofsquares") == 0) {
     functionnumber = 1;
   } else
-    handle.Message("Unknown function in catchintons");
+    handle.Message("Error in catchintons - unrecognised function", functionname);
 
   infile >> ws;
   char c = infile.peek();
@@ -191,7 +191,7 @@ void CatchInTons::addLikelihood(const TimeClass* const TimeInfo) {
         l = calcLikSumSquares(TimeInfo);
         break;
       default:
-        handle.logWarning("Warning in catchintons - unknown function", functionname);
+        handle.logWarning("Warning in catchintons - unrecognised function", functionname);
         break;
     }
 
@@ -228,7 +228,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
       }
 
     if (found == 0)
-      handle.logFailure("Error in catchintons - unknown fleet", fleetnames[i]);
+      handle.logFailure("Error in catchintons - unrecognised fleet", fleetnames[i]);
 
   }
 
@@ -242,7 +242,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
         }
     }
     if (found == 0)
-      handle.logFailure("Error in catchintons - unknown stock", stocknames[i]);
+      handle.logFailure("Error in catchintons - unrecognised stock", stocknames[i]);
 
   }
 

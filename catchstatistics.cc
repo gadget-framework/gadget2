@@ -275,7 +275,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
       }
 
     if (found == 0)
-      handle.logFailure("Error in catchstatistics - unknown fleet", fleetnames[i]);
+      handle.logFailure("Error in catchstatistics - unrecognised fleet", fleetnames[i]);
 
   }
 
@@ -289,7 +289,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
         }
 
     if (found == 0)
-      handle.logFailure("Error in catchstatistics - unknown stock", stocknames[i]);
+      handle.logFailure("Error in catchstatistics - unrecognised stock", stocknames[i]);
 
   }
 
@@ -349,7 +349,7 @@ double CatchStatistics::calcLikSumSquares() {
           simvar = 1.0;
           break;
         default:
-          handle.logWarning("Warning in catchstatistics - unknown function", functionname);
+          handle.logWarning("Warning in catchstatistics - unrecognised function", functionname);
           break;
       }
 
@@ -402,7 +402,7 @@ void CatchStatistics::LikelihoodPrint(ofstream& outfile) {
       outfile << "weight";
       break;
     default:
-      handle.logWarning("Warning in catchstatistics - unknown function", functionname);
+      handle.logWarning("Warning in catchstatistics - unrecognised function", functionname);
       break;
   }
   outfile << " at age:\n";

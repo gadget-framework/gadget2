@@ -255,10 +255,6 @@ private:
    */
   double* gk;
   /**
-   * \brief This is the previous gradient
-   */
-  double* g0;        //old gradient direction
-  /**
    * \brief This is the search direction (for linesearch)
    */
   double* s;
@@ -297,5 +293,6 @@ private:
   double sigma;
   double st;
   double gradacc;
+  double gradstep;
 };
 #endif
