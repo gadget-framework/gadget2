@@ -26,6 +26,8 @@ protected:
   Agebandmatrixvector Agegroup;
   ConversionIndex* CI;
   int age;
+  double minlen;
+  int lenindex;
 };
 
 #endif

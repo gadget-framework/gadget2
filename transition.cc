@@ -26,6 +26,8 @@ Transition::Transition(CommentStream& infile, const intvector& Areas,
   for (i = 0; i < Agegroup.Size(); i++)
     Agegroup[i].SettoZero();
 
+  minlen = 0.0;
+  lenindex = 0;
   keeper->ClearLast();
 }
 
@@ -50,6 +52,9 @@ void Transition::SetStock(Stockptrvector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
+  //JMB - get minimum length of the transition stock
+  minlen = TransitionStock->ReturnLengthGroupDiv()->Minlength(0);
+
   //Check if TransitionStock is defined on all the areas that we work on.
   found = 0;
   for (i = 0; i < areas.Size(); i++)
@@ -64,6 +69,7 @@ void Transition::SetStock(Stockptrvector& stockvec) {
 
 void Transition::SetCI(const LengthGroupDivision* const GivenLDiv) {
   CI = new ConversionIndex(GivenLDiv, TransitionStock->ReturnLengthGroupDiv());
+  lenindex = GivenLDiv->NoLengthGroup(minlen);
 }
 
 void Transition::Print(ofstream& outfile) const {
@@ -77,6 +83,7 @@ void Transition::KeepAgegroup(int area, Agebandmatrix& Alkeys, const TimeClass* 
     return;
   int inarea = AreaNr[area];
   int length, minl, maxl;
+
   if (TimeInfo->CurrentStep() == TransitionStep) {
     Agegroup[inarea].SettoZero();
     assert(Alkeys.Minage() <= age && age <= Alkeys.Maxage());
@@ -85,7 +92,10 @@ void Transition::KeepAgegroup(int area, Agebandmatrix& Alkeys, const TimeClass* 
     for (length = minl; length < maxl; length++) {
       Agegroup[inarea][age][length].N = Alkeys[age][length].N;
       Agegroup[inarea][age][length].W = Alkeys[age][length].W;
-      Alkeys[age][length].N = 0.0;
+      if (length >= lenindex) {
+        Alkeys[age][length].N = 0.0;
+        Alkeys[age][length].W = 0.0;  //JMB
+      }
     }
   }
 }
