@@ -224,7 +224,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     CommentStream subcomment(subfile);
     handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
-    renewal = new RenewalData(subcomment, areas, Area, TimeInfo, keeper);
+    renewal = new RenewalData(subcomment, areas, Area, TimeInfo, keeper, dl);
     handle.Close();
     subfile.close();
     subfile.clear();

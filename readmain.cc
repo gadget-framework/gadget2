@@ -144,8 +144,6 @@ void Ecosystem::readStock(CommentStream& infile) {
 
   if (!infile.eof())
     infile >> text >> ws;
-  else
-    strcpy(text, "");
 
   if (!(strcasecmp(text, "stockname") == 0))
     handle.Unexpected("stockname", text);
@@ -177,8 +175,6 @@ void Ecosystem::readPrinters(CommentStream& infile) {
 
   if (!infile.eof())
     infile >> text >> ws;
-  else
-    strcpy(text, "");
 
   if (!(strcasecmp(text, "[component]") == 0))
     handle.Unexpected("[component]", text);
@@ -229,25 +225,22 @@ void Ecosystem::readPrinters(CommentStream& infile) {
 // A function to read likelihood information
 //
 void Ecosystem::readLikelihood(CommentStream& infile) {
-  char text[MaxStrLength];
-  strncpy(text, "", MaxStrLength);
-
-  if (!infile.eof())
-    infile >> text >> ws;
-  else
-    strcpy(text, "");
-
   int i = 0;
   double weight = 0.0;
+  char text[MaxStrLength];
   char type[MaxStrLength];
   char name[MaxStrLength];
   char datafilename[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
   strncpy(type, "", MaxStrLength);
   strncpy(name, "", MaxStrLength);
   strncpy(datafilename, "", MaxStrLength);
 
   ifstream datafile;
   CommentStream subdata(datafile);
+
+  if (!infile.eof())
+    infile >> text >> ws;
 
   if (!(strcasecmp(text, "[component]") == 0))
     handle.Unexpected("[component]", text);

@@ -13,7 +13,6 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   const TimeClass* const TimeInfo, Keeper* const keeper, StockPtrVector stockvec)
   : HasName(givenname) {
 
-  LgrpDiv = NULL;
   taggingstock = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);

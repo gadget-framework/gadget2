@@ -22,6 +22,7 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
 
     #ifdef GADGET_NETWORK //to help compiling when pvm libraries are unavailable
       Stochasticdata = new StochasticData(MainInfo->runNetwork());
+      EcoSystem->Reset();
       while (Stochasticdata->getDataFromNet()) {
         EcoSystem->Update(Stochasticdata);
         EcoSystem->Simulate(MainInfo->runLikelihood(), print);
@@ -39,6 +40,10 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
     Stochasticdata = new StochasticData(MainInfo->getInitialParamFile());
     EcoSystem->Update(Stochasticdata);
     EcoSystem->checkBounds();
+    EcoSystem->Reset();
+    if (MainInfo->printInitial())
+      EcoSystem->writeStatus(MainInfo->getPrintInitialFile());
+
     EcoSystem->Simulate(MainInfo->runLikelihood(), print);
     if ((MainInfo->getPI()).getPrint())
       EcoSystem->writeValues((MainInfo->getPI()).getOutputFile(), (MainInfo->getPI()).getPrecision());
@@ -57,6 +62,10 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
 
   } else {
     handle.logWarning("Warning - no parameter input file given, using default values");
+    EcoSystem->Reset();
+    if (MainInfo->printInitial())
+      EcoSystem->writeStatus(MainInfo->getPrintInitialFile());
+
     EcoSystem->Simulate(MainInfo->runLikelihood(), print);
     if ((MainInfo->getPI()).getPrint())
       EcoSystem->writeValues((MainInfo->getPI()).getOutputFile(), (MainInfo->getPI()).getPrecision());
@@ -147,8 +156,6 @@ int main(int aNumber, char* const aVector[]) {
       handle.logWarning("Warning - no optimisation parameters file given, using default values");
   }
 
-  if (MainInfo.printInitial())
-    EcoSystem->writeStatus(MainInfo.getPrintInitialFile());
   if ((MainInfo.getPI()).getPrint())
     EcoSystem->writeInitialInformation((MainInfo.getPI()).getOutputFile());
   if ((MainInfo.getPI()).getPrintColumn())
@@ -163,6 +170,10 @@ int main(int aNumber, char* const aVector[]) {
       EcoSystem->checkBounds();
     } else
       handle.logWarning("Warning - no parameter input file given, using default values");
+
+    EcoSystem->Reset();
+    if (MainInfo.printInitial())
+      EcoSystem->writeStatus(MainInfo.getPrintInitialFile());
 
     Optinfo->MaximizeLikelihood();
     if ((MainInfo.getPI()).getForcePrint())

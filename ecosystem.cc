@@ -18,6 +18,8 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   TimeInfo = 0;
   keeper = new Keeper;
   Area = 0;
+  likelihood = 0.0;
+
   chdir(workingdir);
   ifstream infile;
   infile.open(filename, ios::in);
@@ -48,11 +50,6 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   for (i = 0; i < fleetvec.Size(); i++)
     basevec[i + stockvec.Size() + otherfoodvec.Size()] = fleetvec[i];
 
-  likelihood = 0.0;
-  //The following is done in Simulate, but we want to be able to call
-  //Print before the simulation starts, so we do it ourselves first.
-  for (i = 0; i < basevec.Size(); i++)
-    basevec[i]->Reset(TimeInfo);
 }
 
 Ecosystem::~Ecosystem() {
@@ -100,6 +97,14 @@ void Ecosystem::writeStatus(const char* filename) const {
     Likely[i]->Print(outfile);
   outfile.close();
   outfile.clear();
+}
+
+void Ecosystem::Reset() {
+  int i;
+  for (i = 0; i < basevec.Size(); i++)
+    basevec[i]->Reset(TimeInfo);
+  for (i = 0; i < tagvec.Size(); i++)
+    tagvec[i]->Reset(TimeInfo);
 }
 
 void Ecosystem::Update(const StochasticData* const Stochastic) const {

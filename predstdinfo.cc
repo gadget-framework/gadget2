@@ -39,10 +39,8 @@ void PredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   const BandMatrix& preyBcons = preyinfo->BconsumptionByAgeAndLength(area);
   const BandMatrix& predBcons = predator->Consumption(area, prey->Name());
   int preyage, predl, preyl;
-  double timeratio, B, N, prop;
+  double B, N, prop;
 
-  timeratio = 1.0;  //timeratio has been taken into account in the preystdinfo??
-  //timeratio = TimeInfo->LengthOfYear() / TimeInfo->LengthOfCurrent();
   for (preyage = NconbyAge[inarea].Mincol(predage);
        preyage < NconbyAge[inarea].Maxcol(predage); preyage++) {
     NconbyAge[inarea][predage][preyage] = 0.0;
@@ -64,7 +62,7 @@ void PredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
     if (isZero(preyinfo->BconsumptionByAge(area)[preyage]))
       MortbyAge[inarea][predage][preyage] = 0.0;
     else
-      MortbyAge[inarea][predage][preyage] = timeratio * preyinfo->MortalityByAge(area)[preyage] *
+      MortbyAge[inarea][predage][preyage] = preyinfo->MortalityByAge(area)[preyage] *
          BconbyAge[inarea][predage][preyage] / preyinfo->BconsumptionByAge(area)[preyage];
   }
 }

@@ -22,9 +22,11 @@ public:
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
+   * \param DL is the step length of the length groups of the stock that the recruits will be added to
    */
   RenewalData(CommentStream& infile, const IntVector& areas,
-    const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper);
+    const AreaClass* const Area, const TimeClass* const TimeInfo,
+    Keeper* const keeper, double DL);
   /**
    * \brief This is the default RenewalData destructor
    */

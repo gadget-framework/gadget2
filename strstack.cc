@@ -44,7 +44,10 @@ char* StrStack::sendAll() const {
 }
 
 char* StrStack::sendTop() const {
-  char* rstr = new char[strlen(v[size - 1]) + 1];
-  strcpy(rstr, v[size - 1]);
+  char* rstr = new char[MaxStrLength];
+  strncpy(rstr, "", MaxStrLength);
+  if (size != 0)
+    strcpy(rstr, v[size - 1]);
+
   return rstr;
 }

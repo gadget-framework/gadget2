@@ -89,6 +89,7 @@ public:
   void GrowthAndSpecialTransactions(int area);
   void updateOneTimestepOneArea(int area);
   void SimulateOneTimestep();
+  void Reset();
   int NoVariables() const { return keeper->NoVariables(); };
   int NoOptVariables() const { return keeper->NoOptVariables(); };
   double SimulateAndUpdate(double* x, int n);

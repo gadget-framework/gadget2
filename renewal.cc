@@ -8,16 +8,17 @@
 extern ErrorHandler handle;
 
 RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
-  const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
-  : LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
+  const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper,
+  double DL) : LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
   keeper->addString("renewaldata");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
-  double minlength;
-  double maxlength;
-  double dl;
+  int i = 0;
+  int year, step, area, age, ind, no;
+  double minlength, maxlength, dl;
+
   infile >> text;
   if (strcasecmp(text, "normaldistribution") == 0) {
     readOption = 1;
@@ -29,7 +30,14 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
     handle.Unexpected("normaldistribution or minlength", text);
 
   readWordAndVariable(infile, "maxlength", maxlength);
-  readWordAndVariable(infile, "dl", dl);
+  //JMB - changed to make the reading of dl optional
+  //If it isnt specifed here, it will default to the dl value of the stock
+  infile >> ws;
+  char c = infile.peek();
+  if ((c == 'd') || (c == 'D'))
+    readWordAndVariable(infile, "dl", dl);
+  else
+    dl = DL;
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
@@ -37,11 +45,6 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
 
   //We now expect to find:
   //year, step, area, age and then the renewal data
-
-  char c;
-  int i = 0;
-  int year, step, area, age, ind, no;
-
   infile >> year >> step >> area >> age >> ws;
   while (isdigit(infile.peek()) && !infile.eof()) {
     if (TimeInfo->IsWithinPeriod(year, step)) {

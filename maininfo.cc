@@ -98,11 +98,9 @@ void MainInfo::openOptInfoFile(char* filename) {
   strOptInfoFile = new char[strlen(filename) + 1];
   strcpy(strOptInfoFile, filename);
 
-  handle.Open(filename);
   optInfoStream.open(strOptInfoFile, ios::in);
-  handle.checkIfFailure(optInfoStream, filename);
+  handle.checkIfFailure(optInfoStream, strOptInfoFile);
   givenOptInfo = 1;
-  handle.Close();
 }
 
 void MainInfo::closeOptInfoFile() {
@@ -352,6 +350,13 @@ void MainInfo::setInitialParamFile(char* filename) {
   strInitialParamFile = new char[strlen(filename) + 1];
   strcpy(strInitialParamFile, filename);
   givenInitialParam = 1;
+
+  //JMB check to see if we can actually open the file ...
+  ifstream tmpfile;
+  tmpfile.open(strInitialParamFile);
+  handle.checkIfFailure(tmpfile, strInitialParamFile);
+  tmpfile.close();
+  tmpfile.clear();
 }
 
 void MainInfo::setMainGadgetFile(char* filename) {

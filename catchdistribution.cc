@@ -546,7 +546,7 @@ double CatchDistribution::calcLikMultinomial() {
   int area, age, len, nareas;
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
-  DoubleMatrixPtrVector Dist(alptr->Size(), NULL);
+  DoubleMatrixPtrVector Dist(alptr->Size());
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     Dist[nareas] = new DoubleMatrix(aggregator->numAgeGroups(), aggregator->NoLengthGroups(), 0.0);
 

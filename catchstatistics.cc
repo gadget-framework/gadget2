@@ -17,7 +17,6 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   const TimeClass* const TimeInfo, double weight, const char* name)
   : Likelihood(CATCHSTATISTICSLIKELIHOOD, weight) {
 
-  LgrpDiv = NULL;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j;
@@ -239,10 +238,7 @@ CatchStatistics::~CatchStatistics() {
     delete variance[i];
   delete[] csname;
   delete[] functionname;
-  if (LgrpDiv != NULL) {
-    delete LgrpDiv;
-    LgrpDiv = NULL;
-  }
+  delete LgrpDiv;
 }
 
 void CatchStatistics::Reset(const Keeper* const keeper) {

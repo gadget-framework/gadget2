@@ -28,20 +28,10 @@ public:
   double Values(int i) const { return values[i]; };
   double Lower(int i) const { return lowerbound[i]; };
   double Upper(int i) const { return upperbound[i]; };
-  int Optimize(int i) const {
-    if (netrun == 1)
-      return 0;
-    else
-      return optimize[i];
-  };
+  int Optimize(int i) const;
   Parameter Switches(int i) const { return switches[i]; };
-  int SwitchesGiven() const { return (switches.Size() > 0 ? 1 : 0); };
-  int OptGiven() const {
-    if (netrun == 1)
-      return 0;
-    else
-      return (optimize.Size() > 0 ? 1 : 0);
-  };
+  int SwitchesGiven() const;
+  int OptGiven() const;
   #ifdef GADGET_NETWORK
     void readFromNetwork();
     void SendDataToMaster(double funcValue);

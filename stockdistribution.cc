@@ -357,7 +357,7 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 //is always only one length group with this class.
 double StockDistribution::calcLikMultinomial() {
   const AgeBandMatrixPtrVector* alptr;
-  DoubleMatrixPtrVector Dist(areas.Nrow(), NULL);
+  DoubleMatrixPtrVector Dist(areas.Nrow());
   int nareas, area, age, len, sn;
   int minage, maxage, i;
 

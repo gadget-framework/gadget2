@@ -51,12 +51,8 @@ StochasticData::~StochasticData() {
 
       delete slave;
     #endif
-  }
-
-  if (readInfo != NULL) {
+  } else
     delete readInfo;
-    readInfo = NULL;
-  }
 }
 
 void StochasticData::readDataFromNextLine() {
@@ -79,6 +75,22 @@ int StochasticData::Error() const {
 
 int StochasticData::DataFromFile() {
   return !netrun;
+}
+
+int StochasticData::Optimize(int i) const {
+  if (netrun == 1)
+    return 0;
+  return optimize[i];
+}
+
+int StochasticData::OptGiven() const {
+  if (netrun == 1)
+    return 0;
+  return (optimize.Size() > 0 ? 1 : 0);
+}
+
+int StochasticData::SwitchesGiven() const {
+  return (switches.Size() > 0 ? 1 : 0);
 }
 
 #ifdef GADGET_NETWORK

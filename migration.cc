@@ -59,7 +59,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   //File format: variables
   //and then the file format for readOptVariables
   keeper->clearLastAddString("variables");
-  strcpy(text, " ");
+  //strcpy(text, " ");
   infile >> text;
   if (!(strcasecmp(text, "variables") == 0))
     handle.Unexpected("variables", text);

@@ -256,7 +256,7 @@ DoubleMatrix& DoubleMatrix::operator * (const DoubleMatrix& d) const {
     cerr << "Error - wrong dimensions for matrix multiplication!\n";
     exit(EXIT_FAILURE);
   }
-  DoubleMatrix* result = new DoubleMatrix(Nrow(), d.Ncol(), 0);
+  DoubleMatrix* result = new DoubleMatrix(Nrow(), d.Ncol(), 0.0);
   for (i = 0; i < result->Nrow(); i++)
     for (j = 0; j < result->Ncol(); j++)
       for (k = 0; k < d.Nrow(); k++)

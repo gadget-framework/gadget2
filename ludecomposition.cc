@@ -18,10 +18,10 @@ LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
 
   for (k = 0; k < size; k++) {
     L[k][k] = 1.0;
-    if (U[k][k] > 0.0 & logdet < verybig)
+    if (U[k][k] > 0.0 && logdet < verybig)
       logdet += log(U[k][k]);
 
-    else if (U[k][k] <= 0.0 & logdet < verybig) {
+    else if (U[k][k] <= 0.0 && logdet < verybig) {
       handle.logWarning("Warning in ludecomposition - non positive number on matrix diagonal");
       illegal = 1;
     }

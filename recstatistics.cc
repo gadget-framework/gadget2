@@ -17,7 +17,6 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, TagPtrVector Tag, const char* name)
   : Likelihood(RECSTATISTICSLIKELIHOOD, weight) {
 
-  LgrpDiv = NULL;
   aggregator = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -218,10 +217,7 @@ RecStatistics::~RecStatistics() {
     delete[] aggregator;
     aggregator = 0;
   }
-  if (LgrpDiv != NULL) {
-    delete LgrpDiv;
-    LgrpDiv = NULL;
-  }
+  delete LgrpDiv;
 }
 
 void RecStatistics::Reset(const Keeper* const keeper) {

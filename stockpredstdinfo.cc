@@ -40,7 +40,7 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   const BandMatrix& predBcons = predator->Consumption(area, prey->Name());
 
   int predage, preyage, preyl, predl;
-  double timeratio, B, N, prop;
+  double B, N, prop;
 
   for (predage = NconbyAge[inarea].minAge(); predage <= NconbyAge[inarea].maxAge(); predage++)
     for (preyage = NconbyAge[inarea].Mincol(predage); preyage < NconbyAge[inarea].Maxcol(predage); preyage++) {
@@ -48,8 +48,6 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
       BconbyAge[inarea][predage][preyage] = 0.0;
     }
 
-  timeratio = 1.0;  //timeratio has been taken into account in the preystdinfo??
-  //timeratio = TimeInfo->LengthOfYear() / TimeInfo->LengthOfCurrent();
   for (predage = Alprop.minAge(); predage <= Alprop.maxAge(); predage++) {
     for (preyage = NconbyAge[inarea].Mincol(predage);
          preyage < NconbyAge[inarea].Maxcol(predage); preyage++) {
@@ -68,7 +66,7 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
       if (isZero(preyinfo->BconsumptionByAge(area)[preyage]))
         MortbyAge[inarea][predage][preyage] = 0.0;
       else
-        MortbyAge[inarea][predage][preyage] = timeratio * preyinfo->MortalityByAge(area)[preyage] *
+        MortbyAge[inarea][predage][preyage] = preyinfo->MortalityByAge(area)[preyage] *
          BconbyAge[inarea][predage][preyage] / preyinfo->BconsumptionByAge(area)[preyage];
     }
   }
