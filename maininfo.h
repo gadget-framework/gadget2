@@ -6,7 +6,7 @@
 
 /**
  * \class MainInfo
- * \brief This is the class used store information for the current model given from the command-line
+ * \brief This is the class used to store information for the current model given from the command-line
  */
 class MainInfo {
 public:

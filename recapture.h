@@ -10,7 +10,7 @@
 class Recaptures : public Likelihood {
 public:
   Recaptures(CommentStream& infile, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, double w, TagPtrVector Tag, const char* name);
+    const TimeClass* const TimeInfo, double weight, TagPtrVector Tag, const char* name);
   virtual ~Recaptures();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);

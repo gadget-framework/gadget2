@@ -7,11 +7,12 @@
 #include "popinfovector.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
   : BaseClass(givenname), prey(0) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   ifstream subfile;
@@ -39,7 +40,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   } else
     handle.Unexpected("livesonareas", text);
 
-  DoubleVector lengths(2, 0);
+  DoubleVector lengths(2, 0.0);
   infile >> text;
   if (strcasecmp(text, "lengths") == 0) {
     if (!readVector(infile, lengths))
@@ -54,7 +55,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   if (strcasecmp(text, "amounts") == 0) {
     infile >> text >> ws;
     subfile.open(text, ios::in);
-    checkIfFailure(subfile, text);
+    handle.checkIfFailure(subfile, text);
     handle.Open(text);
 
     if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))

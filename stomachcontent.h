@@ -97,7 +97,7 @@ protected:
 class StomachContent : public Likelihood {
 public:
   StomachContent(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo,
-    Keeper* const keeper, double w, const char* name);
+    Keeper* const keeper, double weight, const char* name);
   virtual ~StomachContent();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper)

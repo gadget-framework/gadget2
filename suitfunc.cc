@@ -1,5 +1,8 @@
 #include "suitfunc.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname) {
   int found = 0;
@@ -36,28 +39,28 @@ int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname) {
     found++;
 
   } else if (strcasecmp(suitname, "improvedexpsuitfunc") == 0) {
-    cout << "The improvedexpsuitfunc suitability function is no longer supported\n";
+    handle.Warning("The improvedexpsuitfunc suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "improvedandextendedexpsuitfunc") == 0) {
-    cout << "The improvedandextendedexpsuitfunc suitability function is no longer supported\n";
+    handle.Warning("The improvedandextendedexpsuitfunc suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "extendedexpsuitfuncl50") == 0) {
-    cout << "The extendedexpsuitfuncl50 suitability function is no longer supported\n";
+    handle.Warning("The extendedexpsuitfuncl50 suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "badexpsuitfuncl50") == 0) {
-    cout << "The badexpsuitfuncl50 suitability function is no longer supported\n";
+    handle.Warning("The badexpsuitfuncl50 suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "surveyselection") == 0) {
-    cout << "The surveyselection suitability function is no longer supported\n";
+    handle.Warning("The surveyselection suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "cloglog") == 0) {
-    cout << "The cloglog suitability function is no longer supported\n";
+    handle.Warning("The cloglog suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "combination") == 0) {
-    cout << "The combination suitability function is no longer supported\n";
+    handle.Warning("The combination suitability function is no longer supported");
 
   } else
-    cout << "Warning - no valid suitability function has been found\n";
+    handle.Message("Error in suitability fucntion - no valid suitability function found");
 
   return found;
 }
@@ -94,13 +97,11 @@ SuitFunc::~SuitFunc() {
 }
 
 void SuitFunc::setPredLength(double length) {
-  cerr << "Error - trying to set predlength for a suitability function "
-    << this->getName() << " but this function does not use predlength\n";
+  handle.LogWarning("Warning in suitability - trying to set predator length for", this->getName());
 }
 
 void SuitFunc::setPreyLength(double length) {
-  cerr << "Error - trying to set preylength for a suitability function "
-    << this->getName() << " but this function does not use preylength\n";
+  handle.LogWarning("Warning in suitability - trying to set prey length for", this->getName());
 }
 
 void SuitFunc::setName(const char* suitFuncName) {
@@ -158,10 +159,10 @@ double ExpSuitFuncA::calculate() {
     check = coeff[3] / (1 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
 
   if (check < 0.0) {
-    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    handle.LogWarning("Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    handle.LogWarning("Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -181,10 +182,10 @@ ConstSuitFunc::~ConstSuitFunc() {
 double ConstSuitFunc::calculate() {
   assert(coeff.Size() == 1);
   if (coeff[0] < 0.0) {
-    cerr << "Warning in suitability - function outside bounds " << coeff[0] << endl;
+    handle.LogWarning("Warning in suitability - function outside bounds", coeff[0]);
     return 0.0;
   } else if (coeff[0] > 1.0) {
-    cerr << "Warning in suitability - function outside bounds " << coeff[0] << endl;
+    handle.LogWarning("Warning in suitability - function outside bounds", coeff[0]);
     return 1.0;
   } else
     return coeff[0];
@@ -216,17 +217,17 @@ double AndersenSuitFunc::calculate() {
     q = coeff[4];
 
   if (isZero(q))
-    q = 1.0;   //We do not want to divide with 0, no matter what.
+    q = 1.0;
   if (q < 0)
-    q = -q;    //To avoid getting a big positive number as an argument for exp
+    q = -q;
 
   e = (l - coeff[1]) * (l - coeff[1]);
   check = coeff[0] + coeff[2] * exp(-e / q);
   if (check < 0.0) {
-    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    handle.LogWarning("Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    handle.LogWarning("Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -246,16 +247,14 @@ ExpSuitFuncL50::~ExpSuitFuncL50() {
 
 double ExpSuitFuncL50::calculate() {
   assert(coeff.Size() == 2);
-  double check = 0.0;
-  /* Parameter [0] and [1] got to be greater then 0 because of the l_50 form.
-   * Modified by kgf 21/8 00 and mna 04.10.00 */
   assert((coeff[0] > 0) && (coeff[1] > 0));
-  check = 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
+
+  double check = 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
   if (check < 0.0) {
-    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    handle.LogWarning("Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    handle.LogWarning("Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -275,15 +274,13 @@ StraightSuitFunc::~StraightSuitFunc() {
 
 double StraightSuitFunc::calculate() {
   assert(coeff.Size() == 2);
-  double check = 0.0;
-  /* Line as a function of preylength only, predlength is dummy
-   * written by kgf 5/3 01 */
-  check = coeff[0] * preyLength + coeff[1];
+
+  double check = coeff[0] * preyLength + coeff[1];
   if (check < 0.0) {
-    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    handle.LogWarning("Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    handle.LogWarning("Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -303,15 +300,14 @@ InverseExpSuitFuncL50::~InverseExpSuitFuncL50() {
 
 double InverseExpSuitFuncL50::calculate() {
   assert(coeff.Size() == 2);
-  double check = 0.0;
-  /* created from the ExpSuitFuncL50 function by JMB after DST2 meeting in Bergen */
   assert((coeff[0] > 0) && (coeff[1] > 0));
-  check = 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
+
+  double check = 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
   if (check < 0.0) {
-    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    handle.LogWarning("Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    cerr << "Warning in suitability - function outside bounds " << check << endl;
+    handle.LogWarning("Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;

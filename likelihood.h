@@ -56,7 +56,7 @@ public:
   virtual void Print(ofstream& outfile) const = 0;
   /**
    * \brief This function will print information from each likelihood calculation
-   * \param outfile is the ofstream that all the model information gets sent to
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
   virtual void LikelihoodPrint(ofstream& outfile) {};
   /**

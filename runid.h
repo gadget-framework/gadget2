@@ -5,7 +5,7 @@
 
 /**
  * \class RunID
- * \brief This is the class used store information about the machione used, and the time of, the model run
+ * \brief This is the class used to store information about the machine used for, and the time of, the model run
  */
 class RunID {
 public:

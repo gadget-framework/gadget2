@@ -3,8 +3,9 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
-int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggindex) {
+extern ErrorHandler handle;
 
+int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggindex) {
   int i = 0;
   infile >> ws;
   while (!infile.eof()) {
@@ -13,16 +14,16 @@ int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggind
     strncpy(aggindex[i], "", MaxStrLength);
     infile >> aggindex[i];
     agg.AddRows(1, 0);
-    readVectorInLine(infile, agg[i]);
+    if (!readVectorInLine(infile, agg[i]))
+      handle.Message("Error in readaggregation - failed to read vector");
     infile >> ws;
     i++;
   }
-  //return the number of aggregation groups read
+  handle.LogMessage("Read aggregation file - number of entries", aggindex.Size());
   return aggindex.Size();
 }
 
 int readAggregation(CommentStream& infile, IntVector& agg, CharPtrVector& aggindex) {
-
   int i = 0;
   int tmp = 0;
   infile >> ws;
@@ -34,13 +35,11 @@ int readAggregation(CommentStream& infile, IntVector& agg, CharPtrVector& aggind
     agg.resize(1, tmp);
     i++;
   }
-  //return the number of aggregation groups read
+  handle.LogMessage("Read aggregation file - number of entries", aggindex.Size());
   return aggindex.Size();
 }
 
 int readLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrVector& lenindex) {
-
-  ErrorHandler handle;
   int i = 0;
   double dblA, dblB;
   infile >> ws;
@@ -51,20 +50,16 @@ int readLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrV
     infile >> lenindex[i] >> dblA >> dblB >> ws;
 
     if (i == 0)
-      //first length entry to be read
-      lengths.resize(1, dblA);
+      lengths.resize(1, dblA); //first length entry to be read
 
     if (isZero(lengths[i] - dblA))
-      //add next length entry
-      lengths.resize(1, dblB);
+      lengths.resize(1, dblB); //add next length entry
     else
-      //lengths are not consecutive - throw error
       handle.Message("Error in length aggregation - lengths not consecutive");
 
     i++;
   }
-
-  //return the number of length groups read
+  handle.LogMessage("Read length aggregation file - number of entries", lenindex.Size());
   return lenindex.Size();
 }
 
@@ -73,7 +68,6 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
   CharPtrVector& preyindex, Keeper* const keeper) {
 
   int i = 0, j = 0;
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> ws;
@@ -111,6 +105,6 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
     infile >> ws;
     i++;
   }
-  //return the number of prey aggregation groups read
+  handle.LogMessage("Read prey aggregation file - number of entries", preyindex.Size());
   return preyindex.Size();
 }

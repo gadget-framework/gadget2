@@ -2,6 +2,8 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 TimeVariable::TimeVariable()
   : ValuesReadFromFile(0), usemodelmatrix(0), timestepnr(1), time(1),
   firsttimestepnr(0), lastvalue(-1.0), value(0), description(0) {
@@ -11,7 +13,6 @@ void TimeVariable::read(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   keeper->AddString("TimeVariable");
-  ErrorHandler handle;
   ifstream subfile;
   CommentStream subcomment(subfile);
   char text[MaxStrLength];
@@ -41,7 +42,6 @@ void TimeVariable::readFromFile(CommentStream& infile, const TimeClass* const Ti
   ValuesReadFromFile = 1;
   int nrofcoeff = 0;
 
-  ErrorHandler handle;
   keeper->AddString("TimeVariable");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);

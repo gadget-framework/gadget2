@@ -12,7 +12,7 @@
 class CatchDistribution : public Likelihood {
 public:
   CatchDistribution(CommentStream& infile, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, Keeper* const keeper, double w, const char* name);
+    const TimeClass* const TimeInfo, Keeper* const keeper, double weight, const char* name);
   virtual ~CatchDistribution();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);

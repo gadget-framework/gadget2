@@ -1,5 +1,8 @@
 #include "poppredator.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 PopPredator::PopPredator(const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv)
@@ -70,8 +73,7 @@ const BandMatrix& PopPredator::Consumption(int area, const char* preyname) const
     if (strcasecmp(Preyname(prey), preyname) == 0)
       return consumption[AreaNr[area]][prey];
 
-  cerr << "Predator " << this->Name() << " was asked for consumption\n"
-    << "of prey " << preyname << " which he does not eat\n";
+  handle.LogWarning("Error in poppredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
 }
 

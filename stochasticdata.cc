@@ -1,9 +1,12 @@
 #include "stochasticdata.h"
 #include "readfunc.h"
+#include "errorhandler.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 StochasticData::StochasticData(const char* const filename) {
-  NETRUN = 0;
+  netrun = 0;
   error = 0;
   readInfo = new InitialInputFile(filename);
   readInfo->readFromFile();
@@ -17,21 +20,20 @@ StochasticData::StochasticData(const char* const filename) {
 
   if (this->SwitchesGiven()) {
     if (switches.Size() != values.Size()) {
-      cerr << "Stochastic data received " << switches.Size() << " switches and "
-        << values.Size() << " values - but these should be the same\n";
+      handle.LogWarning("Error in stochasticdata - failed to read values");
       exit(EXIT_FAILURE);
     }
   }
 }
 
-StochasticData::StochasticData(int netrun) {
-  NETRUN = netrun;
+StochasticData::StochasticData(int net) {
+  netrun = net;
   error = 0;
   readInfo = NULL;
-  if (NETRUN == 1) {
+  if (netrun == 1) {
     #ifdef GADGET_NETWORK
       slave = new SlaveCommunication();
-      GETDATA = 0;
+      getdata = 0;
       dataFromMaster = NULL;
       numberOfParam = 0;
       this->readFromNetwork();
@@ -40,13 +42,13 @@ StochasticData::StochasticData(int netrun) {
 }
 
 StochasticData::~StochasticData() {
-  if (NETRUN == 1) {
+  if (netrun == 1) {
     #ifdef GADGET_NETWORK
       if (dataFromMaster != NULL) {
         delete[] dataFromMaster;
         dataFromMaster = NULL;
       }
-      if (GETDATA == 1)
+      if (getdata == 1)
         slave->stopNetCommunication();
 
       delete slave;
@@ -78,7 +80,7 @@ int StochasticData::Error() const {
 }
 
 int StochasticData::DataFromFile() {
-  return !NETRUN;
+  return !netrun;
 }
 
 #ifdef GADGET_NETWORK
@@ -97,79 +99,75 @@ void StochasticData::readFromNetwork() {
     }
 
     //try to receive switches from master
-    GETDATA = slave->receiveFromMaster();
-    if (GETDATA == 1) {
+    getdata = slave->receiveFromMaster();
+    if (getdata == 1) {
       if (slave->receivedString()) {
         for (i = 0; i < numberOfParam; i++) {
           Parameter sw(slave->getString(i));
           switches.resize(1, sw);
         }
       } else
-        GETDATA = 0;
+        getdata = 0;
     }
 
     //try to receive lowerbounds from master
-    GETDATA = slave->receiveFromMaster();
-    if (GETDATA == 1) {
+    getdata = slave->receiveFromMaster();
+    if (getdata == 1) {
       if (slave->receivedBounds()) {
         slave->getBound(dataFromMaster);
         for (i = 0; i < numberOfParam; i++)
           lowerbound[i] = dataFromMaster[i];
       } else
-        GETDATA = 0;
+        getdata = 0;
     }
 
     //try to receive upperbounds from master
-    GETDATA = slave->receiveFromMaster();
-    if (GETDATA == 1) {
+    getdata = slave->receiveFromMaster();
+    if (getdata == 1) {
       if (slave->receivedBounds()) {
         slave->getBound(dataFromMaster);
         for (i = 0; i < numberOfParam; i++)
           upperbound[i] = dataFromMaster[i];
       } else
-        GETDATA = 0;
+        getdata = 0;
     }
 
     //try to receive vector value from master
-    GETDATA = slave->receiveFromMaster();
-    if (GETDATA == 1) {
+    getdata = slave->receiveFromMaster();
+    if (getdata == 1) {
       if (slave->receivedVector()) {
         slave->getVector(dataFromMaster);
         for (i = 0; i < values.Size(); i++)
           values[i] = dataFromMaster[i];
       } else
-        GETDATA = 0;
+        getdata = 0;
     }
 
   } else
-    GETDATA = 0;
+    getdata = 0;
 
   if (this->SwitchesGiven()) {
     if (switches.Size() != values.Size()) {
-      cerr << "Stochastic data received " << switches.Size() << " switches and "
-        << values.Size() << " values - but these should be the same\n";
+      handle.LogWarning("Error in stochasticdata - failed to read values");
       exit(EXIT_FAILURE);
     }
     check = 0;
     for (i = 0; i < values.Size(); i++) {
       if (lowerbound[i] > upperbound[i]) {
         check++;
-        cerr << "Error - for switch " << i << " the lowerbound " << lowerbound[i]
-          << " is greater than upperbound " << upperbound[i] << endl;
+        handle.LogWarning("Error in stochasticdata - failed to read bounds", lowerbound[i], upperbound[i]);
       }
       if (values[i] > upperbound[i]) {
         check++;
-        cerr << "Error - for switch " << i << " the value " << values[i]
-          << " is greater than upperbound " << upperbound[i] << endl;
+        handle.LogWarning("Error in stochasticdata - failed to read upperbound", values[i], upperbound[i]);
       }
       if (values[i] < lowerbound[i]) {
         check++;
-        cerr << "Error - for switch " << i << " the value " << values[i]
-          << " is lower than lowerbound " << lowerbound[i] << endl;
+        handle.LogWarning("Error in stochasticdata - failed to read lowerbound", lowerbound[i], values[i]);
       }
     }
     if (check > 0) {
-      cerr << "Exiting with " << check << " errors in the stochastic data\n";
+      handle.LogWarning("Error in stochasticdata - failed to read bounds");
       exit(EXIT_FAILURE);
     }
   }
@@ -177,25 +175,25 @@ void StochasticData::readFromNetwork() {
 
 void StochasticData::readNextLineFromNet() {
   int i;
-  GETDATA = slave->receiveFromMaster();
-  if (GETDATA == 1) {
+  getdata = slave->receiveFromMaster();
+  if (getdata == 1) {
     if (slave->receivedVector()) {
       slave->getVector(dataFromMaster);
       for (i = 0; i < values.Size(); i++)
         values[i] = dataFromMaster[i];
     } else
-      GETDATA = 0;
+      getdata = 0;
   }
 }
 
 int StochasticData::getDataFromNet() {
-  return GETDATA;
+  return getdata;
 }
 
 void StochasticData::SendDataToMaster(double funcValue) {
   int info = slave->sendToMaster(funcValue);
   if (info < 0) {
-    cerr << "Could not send data to master, slave is bailing out\n";
+    handle.LogWarning("Error in stochasticdata - failed to send data to PVM master");
     slave->stopNetCommunication();
     exit(EXIT_FAILURE);
   }

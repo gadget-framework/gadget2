@@ -18,7 +18,7 @@
 class StochasticData {
 public:
   StochasticData(const char* const filename);
-  StochasticData(int netrun);
+  StochasticData(int net);
   virtual ~StochasticData();
   int DataIsLeft();
   int NoVariables() const;
@@ -29,7 +29,7 @@ public:
   double Lower(int i) const { return lowerbound[i]; };
   double Upper(int i) const { return upperbound[i]; };
   int Optimize(int i) const {
-    if (NETRUN == 1)
+    if (netrun == 1)
       return 0;
     else
       return optimize[i];
@@ -37,7 +37,7 @@ public:
   Parameter Switches(int i) const { return switches[i]; };
   int SwitchesGiven() const { return (switches.Size() > 0 ? 1 : 0); };
   int OptGiven() const {
-    if (NETRUN == 1)
+    if (netrun == 1)
       return 0;
     else
       return (optimize.Size() > 0 ? 1 : 0);
@@ -56,12 +56,12 @@ protected:
   DoubleVector upperbound;
   ParameterVector switches;
   IntVector optimize;
-  int NETRUN;
+  int netrun;
   #ifdef GADGET_NETWORK
     SlaveCommunication* slave;   //Takes care of netcommunication, sending/receiving data
     int numberOfParam;           //number of parameters in vector from master
     double* dataFromMaster;      //dataFromMaster[0..numberOfParam-1] is received from master
-    int GETDATA;
+    int getdata;
   #endif
 };
 

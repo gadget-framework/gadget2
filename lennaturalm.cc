@@ -5,18 +5,22 @@
 #include "keeper.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 //Example of  format of infile: 0.15#1 0.13#2 0.05#3 45 130
 LenNaturalM::LenNaturalM(CommentStream& infile, const LengthGroupDivision* lenp, Keeper* const keeper)
   : parammort(3), xparammort(2, 0.0), natmort(lenp->NoLengthGroups(), 0.0) {
 
-  ErrorHandler handle;
   keeper->AddString("lennaturalm");
   lengroup = new LengthGroupDivision(*lenp);
   //AJ 25.10.00 Adding error check for reading parammort
   if (!(infile >> parammort))
     handle.Message("Incorrect format of parammort vector when reading lennaturalm");
   parammort.Inform(keeper);
-  readVector(infile, xparammort);
+
+  if (!readVector(infile, xparammort))
+    handle.Message("Incorrect format of xparammort vector when reading lennaturalm");
+
   this->NatCalc();
   keeper->ClearLast();
 }

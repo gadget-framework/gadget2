@@ -7,10 +7,11 @@
 #include "readaggregation.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* const lgrpdiv,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper) {
 
-  ErrorHandler handle;
   keeper->AddString("spawner");
   int i;
 
@@ -76,6 +77,9 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
     infile >> text >> ws;
   } else
     handle.Unexpected("spawnstocksandratios or onlyparent", text);
+
+  if (!infile.good())
+    handle.Failure();
 
   if (strcasecmp(text, "proportionfunction") == 0) {
     infile >> text >> ws;
@@ -150,6 +154,7 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
     infile >> text >> ws;
     handle.Unexpected("<end of file>", text);
   }
+  handle.LogMessage("Read spawning data file");
   keeper->ClearLast();
 }
 
@@ -185,13 +190,11 @@ void Spawner::setStock(StockPtrVector& stockvec) {
       }
 
   if (index != SpawnStockNames.Size()) {
-    cerr << "Error - did not find all the stock(s) matching:\n";
-    for (i = 0; i < SpawnStockNames.Size(); i++)
-      cerr << (const char*)SpawnStockNames[i] << sep;
-    cerr << "\nwhen searching for spawning stock(s) - found only:\n";
+    handle.LogWarning("Error in spawner - failed to match spawning stocks");
     for (i = 0; i < stockvec.Size(); i++)
-      cerr << stockvec[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in spawner - found stock", stockvec[i]->Name());
+    for (i = 0; i < SpawnStockNames.Size(); i++)
+      handle.LogWarning("Error in spawner - looking for stock", SpawnStockNames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -213,8 +216,7 @@ void Spawner::setStock(StockPtrVector& stockvec) {
         index++;
 
     if (index != 0)
-      cerr << "Warning - spawning requested to stock " << (const char*)SpawnStocks[i]->Name()
-        << "\nwhich might not be defined on " << index << " areas\n";
+      handle.LogWarning("Warning in spawner - spawn stock isnt defined on all areas");
 
     if (SpawnStocks[i]->Minage() < spawnage)
       spawnage = SpawnStocks[i]->Minage();
@@ -305,8 +307,7 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   //add this to the spawned stocks
   for (s = 0; s < SpawnStocks.Size(); s++) {
     if (!SpawnStocks[s]->IsInArea(area)) {
-      cerr << "Error - spawning stock " << (const char*)(SpawnStocks[s]->Name())
-        << " cannot happen on area " << area << " since it doesnt live there!\n";
+      handle.LogWarning("Error in spawner - spawn stock doesnt live on area", area);
       exit(EXIT_FAILURE);
     }
     SpawnStocks[s]->Add(Storage[area], CI[s], area, Ratio[s], SpawnStocks[s]->Minage(), SpawnStocks[s]->Minage());
@@ -337,20 +338,20 @@ void Spawner::Precalc(const TimeClass* const TimeInfo) {
     len = LgrpDiv->Meanlength(i);
     spawnProportion[i] = fnProportion->calculate(len);
     if (spawnProportion[i] < 0.0) {
-      cerr << "Warning in spawning - function outside bounds " << spawnProportion[i] << endl;
+      handle.LogWarning("Warning in spawning - function outside bounds", spawnProportion[i]);
       spawnProportion[i] = 0.0;
     }
     if (spawnProportion[i] > 1.0) {
-      cerr << "Warning in spawning - function outside bounds " << spawnProportion[i] << endl;
+      handle.LogWarning("Warning in spawning - function outside bounds", spawnProportion[i]);
       spawnProportion[i] = 1.0;
     }
     spawnWeightLoss[i] = fnWeightLoss->calculate(len);
     if (spawnWeightLoss[i] < 0.0) {
-      cerr << "Warning in spawning - function outside bounds " << spawnWeightLoss[i] << endl;
+      handle.LogWarning("Warning in spawning - function outside bounds", spawnWeightLoss[i]);
       spawnWeightLoss[i] = 0.0;
     }
     if (spawnWeightLoss[i] > 1.0) {
-      cerr << "Warning in spawning - function outside bounds " << spawnWeightLoss[i] << endl;
+      handle.LogWarning("Warning in spawning - function outside bounds", spawnWeightLoss[i]);
       spawnWeightLoss[i] = 1.0;
     }
     spawnMortality[i] = fnMortality->calculate(len);

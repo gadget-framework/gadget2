@@ -2,8 +2,9 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 void readWordAndVariable(CommentStream& infile, const char* str, double& number) {
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
@@ -14,7 +15,6 @@ void readWordAndVariable(CommentStream& infile, const char* str, double& number)
 }
 
 void readWordAndVariable(CommentStream& infile, const char* str, int& number) {
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
@@ -25,7 +25,6 @@ void readWordAndVariable(CommentStream& infile, const char* str, int& number) {
 }
 
 void readWordAndValue(CommentStream& infile, const char* str, char* value) {
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
@@ -36,7 +35,6 @@ void readWordAndValue(CommentStream& infile, const char* str, char* value) {
 }
 
 void readWordAndFormula(CommentStream& infile, const char* str, Formula& formula) {
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
@@ -47,7 +45,6 @@ void readWordAndFormula(CommentStream& infile, const char* str, Formula& formula
 }
 
 void readWordAndTwoVariables(CommentStream& infile, const char* str, double& number1, double& number2) {
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
@@ -58,7 +55,6 @@ void readWordAndTwoVariables(CommentStream& infile, const char* str, double& num
 }
 
 void readWordAndTwoVariables(CommentStream& infile, const char* str, int& number1, int& number2) {
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;

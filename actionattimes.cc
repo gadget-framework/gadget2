@@ -1,6 +1,9 @@
 #include "areatime.h"
 #include "actionattimes.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 ActionAtTimes::ActionAtTimes() : EveryStep(0) {
 }
@@ -78,8 +81,8 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
     }
     column = !column;  //change column from 0 to 1 or from 1 to 0.
   }
-
   infile.seekg(readPos);
+
   //And now the cleanup.
   if (EveryStep) {
     while (TimeSteps.Size())

@@ -6,11 +6,12 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname, Keeper* const keeper)
   : HasName(givenname), LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
   type = PREYTYPE;
-  ErrorHandler handle;
   keeper->AddString("prey");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -26,7 +27,7 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
 
   readWordAndValue(infile, "preylengths", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   i = readLengthAggregation(subdata, preylengths, preylenindex);
   handle.Close();
@@ -35,7 +36,7 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
 
   LgrpDiv = new LengthGroupDivision(preylengths);
   if (LgrpDiv->Error())
-    printLengthGroupError(preylengths, "length groups for prey");
+    handle.Message("Error in prey - failed to create length group");
 
   keeper->ClearLast();
   this->InitialiseObjects();
@@ -51,7 +52,7 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas, const char* give
   type = PREYTYPE;
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    printLengthGroupError(lengths, givenname);
+    handle.Message("Error in prey - failed to create length group");
   this->InitialiseObjects();
 }
 

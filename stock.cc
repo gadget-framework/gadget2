@@ -19,6 +19,8 @@
 #include "readaggregation.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 Stock::Stock(CommentStream& infile, const char* givenname,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
   : BaseClass(givenname), spawner(0), renewal(0), maturity(0), transition(0),
@@ -26,7 +28,6 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   type = STOCKTYPE;
   int i, tmpint;
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   char filename[MaxStrLength];
@@ -73,7 +74,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    printLengthGroupError(minlength, maxlength, dl, "length group for stock");
+    handle.Message("Error in stock - failed to create length group");
 
   //JMB need to set the lowerlgrp and size vectors to a default
   //value to allow the whole range of lengths to be calculated
@@ -91,7 +92,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   readWordAndValue(infile, "growthandeatlengths", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, grlengths, grlenindex);
   handle.Close();
@@ -100,14 +101,15 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   LengthGroupDivision* GrowLgrpDiv = new LengthGroupDivision(grlengths);
   if (GrowLgrpDiv->Error())
-    printLengthGroupError(grlengths, "growthandeatlengths for stock");
+    handle.Message("Error in stock - failed to create growth length group");
 
   //Check the growth length groups cover the stock length groups
-  checkLengthGroupIsFiner(LgrpDiv, GrowLgrpDiv, this->Name(), "growth and eat lengths");
+  checkLengthGroupIsFiner(LgrpDiv, GrowLgrpDiv);
   if (!(isZero(LgrpDiv->minLength() - GrowLgrpDiv->minLength())))
-    cerr << "Warning - minimum lengths don't match for the growth functions of " << this->Name() << endl;
+    handle.LogWarning("Warning in stock - minimum lengths don't match for growth of", this->Name());
   if (!(isZero(LgrpDiv->maxLength() - GrowLgrpDiv->maxLength())))
-    cerr << "Warning - maximum lengths don't match for the growth functions of " << this->Name() << endl;
+    handle.LogWarning("Warning in stock - maximum lengths don't match for growth of", this->Name());
+  handle.LogMessage("Read basic stock data for stock", this->Name());
 
   //read the growth function data
   readWordAndVariable(infile, "doesgrow", doesgrow);
@@ -115,6 +117,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     grower = new Grower(infile, LgrpDiv, GrowLgrpDiv, areas, TimeInfo, keeper, refweight, Area, grlenindex);
   else
     grower = 0;
+  handle.LogMessage("Read growth data for stock", this->Name());
 
   //read the natural mortality data
   infile >> text;
@@ -122,6 +125,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     NatM = new NaturalM(infile, minage, maxage, TimeInfo, keeper);
   else
     handle.Unexpected("naturalmortality", text);
+  handle.LogMessage("Read natural mortality data for stock", this->Name());
 
   //read the prey data
   readWordAndVariable(infile, "iseaten", iseaten);
@@ -129,6 +133,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     prey = new StockPrey(infile, areas, this->Name(), minage, maxage, keeper);
   else
     prey = 0;
+  handle.LogMessage("Read prey data for stock", this->Name());
 
   //read the predator data
   readWordAndVariable(infile, "doeseat", doeseat);
@@ -137,6 +142,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
       GrowLgrpDiv, minage, maxage, TimeInfo, keeper);
   else
     predator = 0;
+  handle.LogMessage("Read predator data for stock", this->Name());
 
   //read the initial conditions
   infile >> text;
@@ -144,6 +150,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     initial = new InitialCond(infile, areas, keeper, refweight, Area);
   else
     handle.Unexpected("initialconditions", text);
+  handle.LogMessage("Read initial conditions data for stock", this->Name());
 
   //read the migration data
   readWordAndVariable(infile, "doesmigrate", doesmigrate);
@@ -153,7 +160,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     ifstream subfile;
     subfile.open(filename, ios::in);
     CommentStream subcomment(subfile);
-    checkIfFailure(subfile, filename);
+    handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
     migration = new Migration(subcomment, AgeDepMigration, areas, Area, TimeInfo, keeper);
     handle.Close();
@@ -162,6 +169,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     migration = 0;
+  handle.LogMessage("Read migration data for stock", this->Name());
 
   //read the maturation data
   readWordAndVariable(infile, "doesmature", doesmature);
@@ -171,7 +179,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     ifstream subfile;
     subfile.open(filename, ios::in);
     CommentStream subcomment(subfile);
-    checkIfFailure(subfile, filename);
+    handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
 
     if (strcasecmp(text, "continuous") == 0)
@@ -196,6 +204,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     maturity = 0;
+  handle.LogMessage("Read maturity data for stock", this->Name());
 
   //read the movement data
   readWordAndVariable(infile, "doesmove", doesmove);
@@ -205,6 +214,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     transition = 0;
+  handle.LogMessage("Read transition data for stock", this->Name());
 
   //read the renewal data
   readWordAndVariable(infile, "doesrenew", doesrenew);
@@ -213,7 +223,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     ifstream subfile;
     subfile.open(filename, ios::in);
     CommentStream subcomment(subfile);
-    checkIfFailure(subfile, filename);
+    handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
     renewal = new RenewalData(subcomment, areas, Area, TimeInfo, keeper);
     handle.Close();
@@ -222,6 +232,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     renewal = 0;
+  handle.LogMessage("Read renewal data for stock", this->Name());
 
   //read the spawning data
   readWordAndVariable(infile, "doesspawn", doesspawn);
@@ -230,7 +241,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     ifstream subfile;
     subfile.open(filename, ios::in);
     CommentStream subcomment(subfile);
-    checkIfFailure(subfile, filename);
+    handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
     spawner = new Spawner(subcomment, maxage, LgrpDiv, Area, TimeInfo, keeper);
     handle.Close();
@@ -239,6 +250,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     spawner = 0;
+  handle.LogMessage("Read spawning data for stock", this->Name());
 
   infile >> ws;
   if (!infile.eof()) {

@@ -13,7 +13,10 @@
 #include "renewal.h"
 #include "transition.h"
 #include "spawner.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 /* In this file most of the member functions for the class stock are
  * defined. Most of them are rather simple, call member functions of
@@ -97,7 +100,7 @@ void Stock::ReducePop(int area, const AreaClass* const Area, const TimeClass* co
 void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   if (!doesgrow && doesmature) {
-    cerr << "Error in " << this->Name() << " - maturation and no growth is not implemented\n";
+    handle.LogWarning("Error in stock - maturation without growth is not implemented");
     exit(EXIT_FAILURE);
   }
 

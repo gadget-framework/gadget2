@@ -1,9 +1,10 @@
 #include "maininfo.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
 #include "runid.h"
+
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 void MainInfo::showCorrectUsage(char* error) {
   RUNID.print(cerr);
@@ -36,10 +37,10 @@ void MainInfo::showUsage() {
     << " -print2 <number>            print -co output every <number> iterations\n"
     << " -precision <number>         set the precision to <number> in output files\n"
     << "\nOptions for debugging Gadget models:\n"
+    << " -log <filename>             print logging information to <filename>\n"
     << " -printinitial <filename>    print initial model information to <filename>\n"
     << " -printfinal <filename>      print final model information to <filename>\n"
     << " -printlikelihood <filename> print model likelihood information to <filename>\n"
-    //    << " -printlog <filename>        print input reading to <filename>\n"      
     << "\nFor more information see the Gadget web page at http://www.hafro.is/gadget\n";
   exit(EXIT_SUCCESS);
 }
@@ -97,10 +98,9 @@ void MainInfo::OpenOptinfofile(char* filename) {
   OptinfoFilename = new char[strlen(filename) + 1];
   strcpy(OptinfoFilename, filename);
 
-  ErrorHandler handle;
   handle.Open(filename);
   OptinfoFile.open(OptinfoFilename, ios::in);
-  checkIfFailure(OptinfoFile, filename);
+  handle.checkIfFailure(OptinfoFile, filename);
   OptInfoFileisGiven = 1;
   handle.Close();
 }
@@ -228,11 +228,13 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
       } else if ((strcasecmp(aVector[k], "-h") == 0) || (strcasecmp(aVector[k], "--help") == 0)) {
         showUsage();
 
-	/*      } else if (strcasecmp(aVector[k], "-printlog") == 0)
-	if (k == aNumber - 1)
+      } else if (strcasecmp(aVector[k], "-log") == 0) {
+        //JMB - experimental logging facility
+        if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
         k++;
-	SetLogFile(*aVector[k]);*/
+        handle.setLogFile(aVector[k]);
+
       } else
         showCorrectUsage(aVector[k]);
 
@@ -241,18 +243,22 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
   }
 
   printinfo.checkNumbers();
+  //JMB some error checking to make sure we are doing something sensible
   if ((stochastic != 1) && (netrun == 1)) {
     cout << "\nWarning - Gadget for the paramin network should be used with -s option\n"
       << "Gadget will now set the -s switch to perform a stochastic run\n";
     stochastic = 1;
     calclikelihood = 1;
   }
-
   if ((stochastic == 1) && (optimize == 1)) {
     cout << "\nWarning - Gadget has been started with both the -s switch and the -l switch\n"
       << "However, it is not possible to do both a stochastic run and an optimizing run!\n"
       << "Gadget will perform only the stochastic run (and ignore the -l switch)\n";
     optimize = 0;
+  }
+  if ((handle.checkLogFile()) && (netrun == 1)) {
+    cout << "\nWarning - logging information from a Gadget run using paramin is not recommended\n"
+      << "Writing logging information from lots of single runs is time consuming\n";
   }
 }
 
@@ -302,9 +308,6 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-precision") == 0) {
       infile >> dummy >> ws;
       printinfo.setPrecision(dummy);
-      /*    } else if(strcasecmp(text, "-printlog") == 0) {
-      infile >> dummy >> ws;
-      SetLogFile(dummy);*/
     } else
       showCorrectUsage(text);
   }

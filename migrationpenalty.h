@@ -13,9 +13,9 @@ public:
   /**
    * \brief This is the default MigrationPenalty constructor
    * \param infile is the CommentStream to read the likelihood parameters from
-   * \param w is the weight for the likelihood component
+   * \param weight is the weight for the likelihood component
    */
-  MigrationPenalty(CommentStream& infile, double w);
+  MigrationPenalty(CommentStream& infile, double weight);
   /**
    * \brief This is the default MigrationPenalty destructor
    */

@@ -11,16 +11,16 @@
 #include "readword.h"
 #include "readaggregation.h"
 #include "gadget.h"
-
 #include "runid.h"
+
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 StockStdPrinter::StockStdPrinter(CommentStream& infile,
   const AreaClass* const Area, const  TimeClass* const TimeInfo)
   : Printer(STOCKSTDPRINTER), stockname(0), LgrpDiv(0),
     minage(0), maxage(0), aggregator(0), preyinfo(0), Scale(1) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
@@ -52,7 +52,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
     handle.Unexpected("areaaggfile", text);
 
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, tmpareas, areaindex);
   handle.Close();
@@ -75,7 +75,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
@@ -132,13 +132,11 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
       }
 
   if (stocks.Size() != stocknames.Size()) {
-    cerr << "Error in printer when searching for stock(s) with name matching:\n";
-    for (i = 0; i < stocknames.Size(); i++)
-      cerr << (const char*)stocknames[i] << sep;
-    cerr << "\nDid only find the stock(s)\n";
+    handle.LogWarning("Error in stockstdprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      cerr << (const char*)stocks[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in stockstdprinter - found stock", stocks[i]->Name());
+    for (i = 0; i < stocknames.Size(); i++)
+      handle.LogWarning("Error in stockstdprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -146,9 +144,7 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < stocks.Size(); i++)
     for (j = 0; j < areas.Size(); j++)
       if (!stocks[i]->IsInArea(areas[j])) {
-        cerr << "Error in standard printout for stocks. The stock "
-          << stocks[i]->Name() << " is not defined on area "
-          << areas[j] << endl;
+        handle.LogWarning("Error in stockstdprinter - stocks arent defined on all areas");
         exit(EXIT_FAILURE);
       }
 

@@ -11,12 +11,13 @@
 #include "readaggregation.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double w, const char* name)
-  : Likelihood(CATCHSTATISTICSLIKELIHOOD, w) {
+  const TimeClass* const TimeInfo, double weight, const char* name)
+  : Likelihood(CATCHSTATISTICSLIKELIHOOD, weight) {
 
   lgrpDiv = NULL;
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j;
@@ -59,7 +60,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -69,7 +70,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numage = readAggregation(subdata, ages, ageindex);
   handle.Close();
@@ -111,7 +112,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readStatisticsData(subdata, TimeInfo, numarea, numage);
   handle.Close();
@@ -132,7 +133,6 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
   int keepdata, needvar;
   int timeid, ageid, areaid;
   int count = 0;
-  ErrorHandler handle;
 
   //Find start of statistics data in datafile
   infile >> ws;
@@ -217,7 +217,8 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
   }
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cerr << "Warning in catchstatistics - found no data in the data file for " << csname << endl;
+    handle.LogWarning("Warning in catchstatistics - found no data in the data file for", csname);
+  handle.LogMessage("Read catchstatistics data file - number of entries", count);
 }
 
 CatchStatistics::~CatchStatistics() {
@@ -280,8 +281,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
       }
 
     if (found == 0) {
-      cerr << "Error when searching for names of fleets for catchstatistics\n"
-        << "Did not find any name matching " << fleetnames[i] << endl;
+      handle.LogWarning("Error in catchstatistics - unknown fleet", fleetnames[i]);
       exit(EXIT_FAILURE);
     }
   }
@@ -296,8 +296,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
         }
 
     if (found == 0) {
-      cerr << "Error when searching for names of stocks for catchstatistics\n"
-        << "Did not find any name matching " << stocknames[i] << endl;
+      handle.LogWarning("Error in catchstatistics - unknown stock", stocknames[i]);
       exit(EXIT_FAILURE);
     }
   }
@@ -305,7 +304,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
   lgrpDiv = new LengthGroupDivision(*(stocks[0]->returnPrey()->returnLengthGroupDiv()));
   for (i = 1; i < stocks.Size(); i++)
     if (!lgrpDiv->Combine(stocks[i]->returnPrey()->returnLengthGroupDiv())) {
-      cerr << "Length group divisions for preys in catchstatistics not compatible\n";
+      handle.LogWarning("Error in catchstatistics - length groups for preys not compatible");
       exit(EXIT_FAILURE);
     }
 
@@ -366,7 +365,7 @@ double CatchStatistics::SOSWeightOrLength() {
           simnumber = PopStat.TotalNumber();
           break;
         default:
-          cerr << "Error in catchstatistics - unknown function " << functionname << endl;
+          handle.LogWarning("Warning in catchstatistics - unknown function", functionname);
           break;
       }
       switch(functionnumber) {
@@ -394,7 +393,7 @@ double CatchStatistics::SOSWeightOrLength() {
 
           break;
         default:
-          cerr << "Error in catchstatistics - unknown function " << functionname << endl;
+          handle.LogWarning("Warning in catchstatistics - unknown function", functionname);
           break;
       }
     }

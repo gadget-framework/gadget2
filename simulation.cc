@@ -1,5 +1,6 @@
 #include "ecosystem.h"
 #include "agebandmatrix.h"
+#include "errorhandler.h"
 #include "runid.h"
 #include "gadget.h"
 
@@ -8,6 +9,7 @@
 #endif
 
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {
 
@@ -128,6 +130,7 @@ int Ecosystem::Simulate(int Optimize, int print) {
       if (interrupted) {
         InterruptInterface ui(*this);
         if (!ui.menu()) {
+          handle.LogMessage("** Gadget interrupted - quitting current simulation **");
           //JMB - dump *current* switch values to a file - these wont usually be the *best* values
           char interruptfile[15];
           strncpy(interruptfile, "", 15);

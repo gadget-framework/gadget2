@@ -10,12 +10,13 @@
 #include "stockprey.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 LogCatches::LogCatches(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
-  double w) : Likelihood(LOGCATCHLIKELIHOOD, w) {
+  double weight) : Likelihood(LOGCATCHLIKELIHOOD, weight) {
 
   lgrpDiv = NULL;
-  ErrorHandler handle;
   int i, j, size;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -60,7 +61,7 @@ LogCatches::LogCatches(CommentStream& infile,
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -70,7 +71,7 @@ LogCatches::LogCatches(CommentStream& infile,
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numage = readAggregation(subdata, ages, ageindex);
   handle.Close();
@@ -80,7 +81,7 @@ LogCatches::LogCatches(CommentStream& infile,
   //read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numlen = readLengthAggregation(subdata, lengths, lenindex);
   handle.Close();
@@ -122,7 +123,7 @@ LogCatches::LogCatches(CommentStream& infile,
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readLogCatchData(subdata, TimeInfo, numarea, numage, numlen);
   handle.Close();
@@ -132,7 +133,7 @@ LogCatches::LogCatches(CommentStream& infile,
   //If readWeights then read in the weight info from file
   if (readWeights == 1) {
     datafile.open(weightfilename, ios::in);
-    checkIfFailure(datafile, weightfilename);
+    handle.checkIfFailure(datafile, weightfilename);
     handle.Open(weightfilename);
     readLogWeightsData(subdata, TimeInfo, numlen);
     handle.Close();
@@ -159,7 +160,6 @@ LogCatches::LogCatches(CommentStream& infile,
 void LogCatches::readLogCatchData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea, int numage, int numlen) {
 
-  ErrorHandler handle;
   int i;
   int year, step;
   double tmpnumber;
@@ -168,6 +168,7 @@ void LogCatches::readLogCatchData(CommentStream& infile,
   strncpy(tmpage, "", MaxStrLength);
   strncpy(tmplen, "", MaxStrLength);
   int keepdata, timeid, ageid, areaid, lenid;
+  int count = 0;
 
   //Find start of distribution data in datafile
   infile >> ws;
@@ -239,16 +240,19 @@ void LogCatches::readLogCatchData(CommentStream& infile,
 
     if (keepdata == 0) {
       //log catch data is required, so store it
+      count++;
       (*AgeLengthData[timeid][areaid])[ageid][lenid] = tmpnumber;
     }
   }
   AAT.AddActions(Years, Steps, TimeInfo);
+  if (count == 0)
+    handle.LogWarning("Warning in logcatch - found no data in the data file");
+  handle.LogMessage("Read logcatch data file - number of entries", count);
 }
 
 void LogCatches::readLogWeightsData(CommentStream& infile,
   const TimeClass* TimeInfo, int numlen) {
 
-  ErrorHandler handle;
   int i;
   int year, step;
   double tmpnumber;
@@ -413,8 +417,7 @@ void LogCatches::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       }
 
     if (found == 0) {
-      cerr << "Error when searching for names of fleets for logcatch.\n"
-        << "Did not find any name matching " << fleetnames[i] << endl;
+      handle.LogWarning("Error in logcatch - unknown fleet", fleetnames[i]);
       exit(EXIT_FAILURE);
     }
   }
@@ -436,8 +439,7 @@ void LogCatches::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       }
     }
     if (found == 0) {
-      cerr << "Error when searching for names of stocks for logcatch.\n"
-        << "Did not find any name matching " << stocknames[i] << endl;
+      handle.LogWarning("Error in logcatch - unknown stock", stocknames[i]);
       exit(EXIT_FAILURE);
     }
   }
@@ -446,15 +448,14 @@ void LogCatches::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
 }
 
 void LogCatches::AddToLikelihood(const TimeClass* const TimeInfo) {
-  int dummy = 1;
   if (AAT.AtCurrentTime(TimeInfo)) {
     switch(functionnumber) {
       case 1:
-        aggregator->Sum(TimeInfo, dummy); //mortality model, calculated catch
+        aggregator->MeanSum(TimeInfo); //mortality model, calculated catch
         likelihood += LogLik(TimeInfo);
         break;
       default:
-          cerr << "Error in logcatch - unknown function " << functionname << endl;
+        handle.LogWarning("Warning in logcatch - unknown function", functionname);
         break;
     }
     timeindex++;

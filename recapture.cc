@@ -9,11 +9,12 @@
 #include "readaggregation.h"
 #include "gadget.h"
 
-Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double w, TagPtrVector Tag, const char* name)
-  : Likelihood(TAGLIKELIHOOD, w) {
+extern ErrorHandler handle;
 
-  ErrorHandler handle;
+Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, double weight, TagPtrVector Tag, const char* name)
+  : Likelihood(TAGLIKELIHOOD, weight) {
+
   aggregator = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -41,7 +42,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -57,7 +58,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   //read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numlen = readLengthAggregation(subdata, lengths, lenindex);
   handle.Close();
@@ -81,7 +82,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   //We have now read in all the data from the main likelihood file
   //But we have to read in the recapture data from datafilename
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readRecaptureData(subdata, TimeInfo);
   handle.Close();
@@ -97,8 +98,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
       }
     }
     if (check == 0) {
-      cerr << "Error - when searching for names of tags for recaptures data\n"
-       << "Did not find any name matching " << tagid[j] << endl;
+      handle.LogWarning("Error in recaptures - failed to match tag", tagid[j]);
       exit(EXIT_FAILURE);
     }
   }
@@ -106,7 +106,6 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
 
 void Recaptures::readRecaptureData(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  ErrorHandler handle;
   int i, j, k;
   int year, step;
   double tmpnumber;
@@ -189,7 +188,8 @@ void Recaptures::readRecaptureData(CommentStream& infile, const TimeClass* const
     }
   }
   if (count == 0)
-    cerr << "Warning in recaptures - found no data in the data file for " << tagname << endl;
+    handle.LogWarning("Warning in recaptures - found no data in the data file for", tagname);
+  handle.LogMessage("Read recaptures data file - number of entries", count);
 }
 
 Recaptures::~Recaptures() {
@@ -237,8 +237,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       }
 
     if (found == 0) {
-      cerr << "Error - when searching for names of fleets for recaptures data\n"
-        << "Did not find any name matching " << fleetnames[i] << endl;
+      handle.LogWarning("Error in recaptures - failed to match fleet", fleetnames[i]);
       exit(EXIT_FAILURE);
     }
   }
@@ -260,8 +259,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
         }
       }
       if (found == 0) {
-        cerr << "Error - when searching for names of stocks for recaptures data\n"
-          << "Did not find any name matching " << stocknames->operator[](j) << endl;
+        handle.LogWarning("Error in recaptures - failed to match stock", stocknames->operator[](j));
         exit(EXIT_FAILURE);
       }
     }
@@ -271,8 +269,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       for (l = 0; l < areas.Ncol(i); l++)
         for (j = 0; j < stocks.Size(); j++)
           if (!stocks[j]->IsInArea(areas[i][l])) {
-            cerr << "Error - when reading recaptures data on the area " << areas[i][l]
-              << "\nfor the stock " << stocks[j]->Name() << " which does not live on that area\n";
+            handle.LogWarning("Error in recaptures - stocks arent defined on all areas");
             exit(EXIT_FAILURE);
           }
 
@@ -302,7 +299,7 @@ void Recaptures::AddToLikelihood(const TimeClass* const TimeInfo) {
       likelihood += LikPoisson(TimeInfo);
       break;
     default:
-      cerr << "Error in recaptures - unknown function " << functionname << endl;
+      handle.LogWarning("Warning in recaptures - unknown function", functionname);
       break;
   }
 }

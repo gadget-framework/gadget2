@@ -5,7 +5,10 @@
 #include "doublevector.h"
 #include "conversionindex.h"
 #include "popinfovector.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
   const ConversionIndex &CI, double ratio, int minaddage, int maxaddage) {
@@ -38,7 +41,7 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
           pop = Addition[age][CI.Pos(l)];
           pop *= ratio;
           if (isZero(CI.Nrof(l)))
-            cerr << "Error - divide by zero in AgeBandMatrix Add\n";
+            handle.LogWarning("Error in agebandmatrix - divide by zero");
           else
             pop.N /= CI.Nrof(l);
           (*v[age - minage])[l] += pop;
@@ -73,7 +76,7 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& C
     if (isZero(UsedRatio[i]))
       UsedRatio[i] = 0.0;
     else if (UsedRatio[i] < 0) {
-      cerr << "Warning in AgeBandMatrix Multiply - negative ratio\n";
+      handle.LogWarning("Error in agebandmatrix - negative ratio");
       UsedRatio[i] = 0.0;
     }
   }

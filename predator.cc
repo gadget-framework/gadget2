@@ -7,6 +7,8 @@
 #include "readfunc.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 Predator::Predator(const char* givenname, const IntVector& Areas)
   : HasName(givenname), LivesOnAreas(Areas), Suitable(0) {
 }
@@ -32,8 +34,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
           preys[j] = preyvec[i];
           found = 1;
         } else {
-          cerr << "Error - the predator " << this->Name() << " has read suitability for "
-            << (const char*)(preyvec[i]->Name()) << " twice\n";
+          handle.LogWarning("Error in predator - repeated suitability values for prey", preyvec[i]->Name());
           exit(EXIT_FAILURE);
         }
       }
@@ -47,8 +48,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     //virtual function DeleteParametersForPrey.
     if (preys[i] == 0) {
       found++;
-      cerr << "Warning - the predator " << this->Name()  << " read suitability for "
-        << this->Preyname(i) << "\nwhich was not found in the input files.\n";
+      handle.LogWarning("Warning in predator - failed to match prey", this->Preyname(i));
       this->DeleteParametersForPrey(i, keeper);
       //This function allows derived classes to delete the information they keep.
       //Since we have deleted element no. i from the vectors, we must take
@@ -105,8 +105,7 @@ void Predator::resizeObjects() {
 
 void Predator::setSuitability(const Suits* const S, Keeper* const keeper) {
   if (Suitable != 0) {
-    cerr << "Error in predator " << this->Name()
-      << "\nTrying to set suitability twice\n";
+    handle.LogWarning("Error in predator - repeated suitability values");
     exit(EXIT_FAILURE);
   }
 
@@ -122,15 +121,11 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
 
   Suitable = new Suits();
   SuitFuncPtrVector suitf;
-  ErrorHandler handle;
   int i, j;
   char preyname[MaxStrLength];
   char text[MaxStrLength];
   strncpy(preyname, "", MaxStrLength);
   strncpy(text, "", MaxStrLength);
-
-  if (!infile.good())
-    handle.Failure("suitability");
 
   keeper->AddString("suitabilityfor");
   //The next line is a cheap trick so we can call ClearLastAddString later.
@@ -155,7 +150,7 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
       ifstream subfile;
       CommentStream subcomment(subfile);
       subfile.open(text, ios::in);
-      checkIfFailure(subfile, text);
+      handle.checkIfFailure(subfile, text);
       handle.Open(text);
       i = 0;
       while (!subfile.eof()) {
@@ -169,6 +164,7 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
         subfile >> ws;
         i++;
       }
+      handle.LogMessage("Read suitability matrix data file - number of entries", i);
       handle.Close();
       subfile.close();
       subfile.clear();
@@ -185,9 +181,11 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
       handle.Message("Error in suitability - unknown format");
 
     infile >> preyname >> ws;
-    if (infile.fail())
-      handle.Failure("suitabilities");
   }
+
+  if (!infile.good())
+    handle.Failure();
+
   keeper->ClearLast();
   keeper->ClearLast();
   return 1;

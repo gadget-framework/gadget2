@@ -5,29 +5,34 @@
 #include "keeper.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, const Keeper* const keeper, double w)
-  : Likelihood(BOUNDLIKELIHOOD, w) {
+  const TimeClass* const TimeInfo, const Keeper* const keeper, double weight)
+  : Likelihood(BOUNDLIKELIHOOD, weight) {
 
   ParameterVector switches;
-  ErrorHandler handle;
   int i, j;
   Parameter tempParam;
   DoubleVector tmpvec;
+  int count = 0;
 
   infile >> ws;
   while (!infile.eof()) {
     infile >> tempParam >> ws;
-    readVectorInLine(infile, tmpvec);
+    if (!readVectorInLine(infile, tmpvec))
+      handle.Message("Error in boundlikelihood - failed to read values");
     if (tmpvec.Size() != 3)  //3 values plus the name ...
       handle.Message("Error in boundlikelihood - should be 4 columns");
 
     if (strcasecmp(tempParam.getValue(), "default") == 0) {
+      count++;
       defPower = tmpvec[0];
       defLW = tmpvec[1];
       defUW = tmpvec[2];
 
     } else {
+      count++;
       switches.resize(1, tempParam);
       powers.resize(1, tmpvec[0]);
       lowerweights.resize(1, tmpvec[1]);
@@ -47,17 +52,17 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
 
     for (i = 0; i < switches.Size(); i++)
       if (switchnr[i] == -1)
-        cerr << "Warning in boundlikelihood - switch " << switches[i] << " does not exist\n";
+        handle.LogWarning("Warning in boundlikelihood - failed to match switch", switches[i].getValue());
   }
 
+  handle.LogMessage("Read penalty file - number of entries", count);
   //set flag to initialise the bounds - called in Reset
   checkInitialised = 0;
 }
 
 void BoundLikelihood::Reset(const Keeper* const keeper) {
-  ErrorHandler handle;
-  int i, j, k, numvar, numset;
 
+  int i, j, k, numvar, numset;
   numvar = keeper->NoVariables();
   numset = switchnr.Size();
 

@@ -8,12 +8,13 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper, FleetType ftype)
   : BaseClass(givenname), predator(0) {
 
   type = ftype;
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   ifstream subfile;
@@ -41,7 +42,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   } else
     handle.Unexpected("livesonareas", text);
 
-  DoubleVector lengths(2, 0);
+  DoubleVector lengths(2, 0.0);
   infile >> text >> ws;
   if (strcasecmp(text, "lengths") == 0) {
     if (!readVector(infile, lengths))
@@ -87,7 +88,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   //the next entry in the file will be the name of the amounts datafile
   infile >> text >> ws;
   subfile.open(text, ios::in);
-  checkIfFailure(subfile, text);
+  handle.checkIfFailure(subfile, text);
   handle.Open(text);
 
   if (readamount != 0) {

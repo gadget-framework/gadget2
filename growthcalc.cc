@@ -6,6 +6,8 @@
 #include "readword.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 // ********************************************************
 // Functions for GrowthCalcBase
 // ********************************************************
@@ -22,7 +24,6 @@ GrowthCalcA::GrowthCalcA(CommentStream& infile,
   const IntVector& Areas, Keeper* const keeper)
   : GrowthCalcBase(Areas), NumberOfGrowthConstants(9) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   growthPar.resize(NumberOfGrowthConstants, keeper);
@@ -76,7 +77,6 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
   const AreaClass* const Area, const CharPtrVector& lenindex)
   : GrowthCalcBase(Areas), lgrowth(Areas.Size()), wgrowth(Areas.Size()) {
 
-  ErrorHandler handle;
   char datafilename[MaxStrLength];
   strncpy(datafilename, "", MaxStrLength);
   ifstream datafile;
@@ -93,7 +93,7 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
 
   readWordAndValue(infile, "lengthgrowthfile", datafilename);
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   i = readGrowthAmounts(subdata, TimeInfo, Area, lgrowth, lenindex, keeper);
   handle.Close();
@@ -102,7 +102,7 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
 
   readWordAndValue(infile, "weightgrowthfile", datafilename);
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, keeper);
   handle.Close();
@@ -143,7 +143,7 @@ void GrowthCalcB::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   for (i = 0; i < Lgrowth.Size(); i++) {
     if ((l[i] < 0.0) || (w[i] < 0.0))
-      cerr << "Warning - negative growth parameter\n";
+      handle.LogWarning("Warning in growth calculation - negative growth parameter");
 
     Lgrowth[i] = l[i];
     Wgrowth[i] = w[i];
@@ -158,7 +158,6 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
   : GrowthCalcBase(Areas), NumberOfWGrowthConstants(6),  NumberOfLGrowthConstants(9) {
 
   int i, j, pos;
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   //If Wgrowthpar is an empty vector then only make size of vector
@@ -191,13 +190,13 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
   //JMB - changed since filename is passed as refWeight
   ifstream subfile;
   subfile.open(refWeight, ios::in);
-  checkIfFailure(subfile, refWeight);
+  handle.checkIfFailure(subfile, refWeight);
   handle.Open(refWeight);
   CommentStream subcomment(subfile);
 
   //read information on length increase.
   DoubleMatrix tmpRefW;
-  if (!read2ColVector(subcomment, tmpRefW))
+  if (!readRefWeights(subcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");
   handle.Close();
   subfile.close();
@@ -248,11 +247,11 @@ void GrowthCalcC::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   //JMB - first some error checking
   if (isZero(wgrowthPar[2]) || isZero(wgrowthPar[3]))
-    cerr << "Warning - weight growth parameter is zero\n";
+    handle.LogWarning("Warning in growth calculation - weight growth parameter is zero");
   if (isZero(lgrowthPar[6]) || isZero(lgrowthPar[7]))
-    cerr << "Warning - length growth parameter is zero\n";
+    handle.LogWarning("Warning in growth calculation - length growth parameter is zero");
   if (lgrowthPar[5] < 0)
-    cerr << "Warning - length growth parameter is negative\n";
+    handle.LogWarning("Warning in growth calculation - length growth parameter is negative");
 
   for (i = 0; i < Wgrowth.Size(); i++) {
     if (GrEatNumber[i].W < verysmall || isZero(tempW)) {
@@ -289,7 +288,6 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
   : GrowthCalcBase(Areas), NumberOfWGrowthConstants(6), NumberOfLGrowthConstants(8) {
 
   int i, j, pos;
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   //If Wgrowthpar is an empty vector then only make size of vector
@@ -322,13 +320,13 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
   //JMB - changed since filename is passed as refWeight
   ifstream subfile;
   subfile.open(refWeight, ios::in);
-  checkIfFailure(subfile, refWeight);
+  handle.checkIfFailure(subfile, refWeight);
   handle.Open(refWeight);
   CommentStream subcomment(subfile);
 
   //read information on length increase.
   DoubleMatrix tmpRefW;
-  if (!read2ColVector(subcomment, tmpRefW))
+  if (!readRefWeights(subcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");
   handle.Close();
   subfile.close();
@@ -378,11 +376,11 @@ void GrowthCalcD::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   //JMB - first some error checking
   if (isZero(wgrowthPar[0]))
-    cerr << "Warning - weight growth parameter is zero\n";
+    handle.LogWarning("Warning in growth calculation - weight growth parameter is zero");
   if (isZero(lgrowthPar[6]) || isZero(lgrowthPar[7]))
-    cerr << "Warning - length growth parameter is zero\n";
+    handle.LogWarning("Warning in growth calculation - length growth parameter is zero");
   if (lgrowthPar[5] < 0)
-    cerr << "Warning - length growth parameter is negative\n";
+    handle.LogWarning("Warning in growth calculation - length growth parameter is negative");
 
   for (i = 0; i < Wgrowth.Size(); i++) {
     if (GrEatNumber[i].W < verysmall || isZero(tempW)) {
@@ -419,7 +417,6 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   Keeper* const keeper, const char* refWeight)
   : GrowthCalcBase(Areas), NumberOfWGrowthConstants(6), NumberOfLGrowthConstants(9) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j, pos;
@@ -480,13 +477,13 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   //JMB - changed since filename is passed as refWeight
   ifstream subfile;
   subfile.open(refWeight, ios::in);
-  checkIfFailure(subfile, refWeight);
+  handle.checkIfFailure(subfile, refWeight);
   handle.Open(refWeight);
   CommentStream subcomment(subfile);
 
   //read information on length increase.
   DoubleMatrix tmpRefW;
-  if (!read2ColVector(subcomment, tmpRefW))
+  if (!readRefWeights(subcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");
   handle.Close();
   subfile.close();
@@ -545,11 +542,11 @@ void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   //JMB - first some error checking
   if (isZero(wgrowthPar[2]) || isZero(wgrowthPar[3]))
-    cerr << "Warning - weight growth parameter is zero\n";
+    handle.LogWarning("Warning in growth calculation - weight growth parameter is zero");
   if (isZero(lgrowthPar[6]) || isZero(lgrowthPar[7]))
-    cerr << "Warning - length growth parameter is zero\n";
+    handle.LogWarning("Warning in growth calculation - length growth parameter is zero");
   if (lgrowthPar[5] < 0)
-    cerr << "Warning - length growth parameter is negative\n";
+    handle.LogWarning("Warning in growth calculation - length growth parameter is negative");
 
   for (i = 0; i < Wgrowth.Size(); i++) {
     if (GrEatNumber[i].W < verysmall || isZero(tempW)) {
@@ -587,7 +584,6 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   const AreaClass* const Area, const CharPtrVector& lenindex)
   : GrowthCalcBase(Areas), NumberOfGrowthConstants(1), wgrowth(Areas.Size()) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   keeper->AddString("growthcalcF");
@@ -619,7 +615,7 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   CommentStream subdata(datafile);
   readWordAndValue(infile, "weightgrowthfile", text);
   datafile.open(text, ios::in);
-  checkIfFailure(datafile, text);
+  handle.checkIfFailure(datafile, text);
   handle.Open(text);
   i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, keeper);
   handle.Close();
@@ -654,7 +650,7 @@ void GrowthCalcF::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   for (i = 0; i < Lgrowth.Size(); i++) {
     if (w[i] < 0.0)
-      cerr << "Warning - negative weight growth parameter\n";
+      handle.LogWarning("Warning in growth calculation - weight growth parameter is negative");
 
     Lgrowth[i] = (growthPar[0] - LgrpDiv->Meanlength(i)) * (1.0 - exp(-kval));
     Wgrowth[i] = w[i];
@@ -669,7 +665,6 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   const AreaClass* const Area, const CharPtrVector& lenindex)
   : GrowthCalcBase(Areas), NumberOfGrowthConstants(1), wgrowth(Areas.Size()) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   keeper->AddString("growthcalcG");
@@ -701,7 +696,7 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   CommentStream subdata(datafile);
   readWordAndValue(infile, "weightgrowthfile", text);
   datafile.open(text, ios::in);
-  checkIfFailure(datafile, text);
+  handle.checkIfFailure(datafile, text);
   handle.Open(text);
   i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, keeper);
   handle.Close();
@@ -738,12 +733,12 @@ void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
     w[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
 
   if (growthPar[0] > 0)
-    cerr << "Warning - growth parameter is positive\n";
+    handle.LogWarning("Warning in growth calculation - growth parameter is positive");
 
   if (isZero(growthPar[0])) {
     for (i = 0; i < Lgrowth.Size(); i++) {
       if (w[i] < 0.0)
-        cerr << "Warning - negative weight growth parameter\n";
+        handle.LogWarning("Warning in growth calculation - weight growth parameter is negative");
 
       Lgrowth[i] = kval;
       Wgrowth[i] = w[i];
@@ -751,7 +746,7 @@ void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   } else {
     for (i = 0; i < Lgrowth.Size(); i++) {
       if (w[i] < 0.0)
-        cerr << "Warning - negative weight growth parameter\n";
+        handle.LogWarning("Warning in growth calculation - weight growth parameter is negative");
 
       Lgrowth[i] = kval * pow(LgrpDiv->Meanlength(i), growthPar[0]);
       Wgrowth[i] = w[i];
@@ -767,7 +762,6 @@ GrowthCalcH::GrowthCalcH(CommentStream& infile, const IntVector& Areas,
   : GrowthCalcBase(Areas), NumberOfGrowthConstants(4) {
 
   int i, j, pos;
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   growthPar.resize(NumberOfGrowthConstants, keeper);
@@ -799,9 +793,9 @@ void GrowthCalcH::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   //JMB - first some error checking
   if (isZero(growthPar[1]) || isZero(growthPar[2]))
-    cerr << "Warning - growth parameter is zero\n";
+    handle.LogWarning("Warning in growth calculation - growth parameter is zero");
   if (LgrpDiv->maxLength() > growthPar[0])
-    cerr << "Warning - length greater than length infinity\n";
+    handle.LogWarning("Warning in growth calculation - length greater than length infinity");
 
   int i;
   for (i = 0; i < Wgrowth.Size(); i++) {

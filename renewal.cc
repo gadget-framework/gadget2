@@ -5,13 +5,14 @@
 #include "readword.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 //It has to be decided how to distinguish between setting the stock numbers and adding to them
 
 RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
   : LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
-  ErrorHandler handle;
   keeper->AddString("renewaldata");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -34,7 +35,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    printLengthGroupError(minlength, maxlength, dl, "length groups for renewal data");
+    handle.Message("Error in renewal - failed to create length group");
 
   //We now expect to find:
   //year, step, area, age and then the renewal data
@@ -69,15 +70,15 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
         //the corresponding mean weights. Both are assumed to be vectors of
         //length no. We read them into the indexvectors numtmpindvec and
         //weighttmpindvec, create poptmp and then keep it in Distribution.
-        DoubleIndexVector* numtmpindvec =
-          readIndexVector(infile, no, LgrpDiv->NoLengthGroup(minlength));
-        DoubleIndexVector* weighttmpindvec =
-          readIndexVector(infile, no, LgrpDiv->NoLengthGroup(minlength));
-        PopInfoIndexVector poptmp(no, LgrpDiv->NoLengthGroup(minlength));
+        ind = LgrpDiv->NoLengthGroup(minlength);
+        DoubleIndexVector* numtmpindvec = new DoubleIndexVector(no, ind);
+        DoubleIndexVector* weighttmpindvec = new DoubleIndexVector(no, ind);
+        PopInfoIndexVector poptmp(no, ind);
 
-        //Check if reading the vectors succeeded
-        if (numtmpindvec == 0 || weighttmpindvec == 0)
-          handle.Message("Wrong format for renewal data");
+        if (!readIndexVector(infile, (*numtmpindvec)))
+          handle.Message("Failure in numbers of recruits");
+        if (!readIndexVector(infile, (*weighttmpindvec)))
+          handle.Message("Failure in weights of recruits");
 
         for (ind = poptmp.Mincol(); ind < poptmp.Maxcol(); ind++) {
           poptmp[ind].N = (*numtmpindvec)[ind];
@@ -86,7 +87,6 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
           if (poptmp[ind].N > 0 && isZero(poptmp[ind].W))
             handle.Message("Zero mean weight for nonzero number in renewal data");
         }
-
         Distribution.resize(1, new AgeBandMatrix(age, poptmp));
         delete numtmpindvec;
         delete weighttmpindvec;
@@ -131,6 +131,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
     if (isdigit(infile.peek()) && !infile.eof())
       infile >> year >> step >> area >> age >> ws;
   }
+  handle.LogMessage("Read recruits data file - number of entries", RenewalTime.Size());
   keeper->ClearLast();
 }
 
@@ -215,7 +216,7 @@ void RenewalData::AddRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* c
       RenewalNumber = Number[renewalid];
 
     if (RenewalNumber < 0) {
-      cerr << "Error in renewal - received illegal number of recruits (" << RenewalNumber << ")\n";
+      handle.LogWarning("Warning in renewal - illegal number of recruits", RenewalNumber);
       RenewalNumber = -RenewalNumber;
     }
 

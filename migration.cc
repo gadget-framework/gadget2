@@ -7,12 +7,13 @@
 #include "variableinfo.h"
 #include "gadget.h"
 
-Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector&  Areas,
+extern ErrorHandler handle;
+
+Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Areas,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
   : LivesOnAreas(Areas), AgeDepMigration(AgeDepMig), error(0) {
 
   int i, j;
-  ErrorHandler handle;
   const int noareas = areas.Size();
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -80,7 +81,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector&  Are
   for (age = 0; age < MatrixNumbers.Nrow(); age++)
     for (time = 1; time < MatrixNumbers.Ncol(age); time++)
       if (MatrixNumbers[age][time] > maxim)
-        maxim  = MatrixNumbers[age][time];
+        maxim = MatrixNumbers[age][time];
 
   //Now we can read the migration matrices.
   //File format: migrationmatrices
@@ -93,9 +94,14 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector&  Are
   if (!(strcasecmp(text, "migrationmatrices") == 0))
     handle.Unexpected("migrationmatrices", text);
   int no, find;
+  maxim = 0;
   while (!infile.eof() && !infile.fail()) {
     infile >> no;
-    DoubleMatrix* matptr = readMatrix(infile, noareas, noareas);
+
+    DoubleMatrix* matptr = new DoubleMatrix(noareas, noareas, 0.0);
+    if (!readMatrix(infile, (*matptr)))
+      handle.Message("Failure in reading migration matrix");
+
     //Now we must look if the matrix number no is in MatrixNumbers. If so,
     //we must keep the matrix for future use, else we can discard it.
     find = 0;
@@ -103,9 +109,10 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector&  Are
       for (time = 1; time < MatrixNumbers.Ncol(age); time++)
         find += (MatrixNumbers[age][time] == no);
 
-    if (find != 0)
+    if (find != 0) {
+      maxim++;
       ReadMigList[no] = matptr;
-    else
+    } else
       delete matptr;
 
     infile >> ws;
@@ -128,6 +135,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector&  Are
   CopyFromReadToCalc();
   keeper->ClearLast();
   keeper->ClearLast();
+  handle.LogMessage("Read migration file - number of migration matrices", maxim);
 }
 
 Migration::~Migration() {
@@ -148,7 +156,7 @@ const DoubleMatrix& Migration::Migrationmatrix(const TimeClass* const TimeInfo, 
       if (AgeNr[age] >= 0)
         return *CalcMigList[MatrixNumbers[AgeNr[age]][TimeInfo->CurrentTime()]];
 
-    cerr << "Received illegal age in migration - age was " << age << endl;
+    handle.LogWarning("Error in migration - failed to match age", age);
     exit(EXIT_FAILURE);
   } else
     return *CalcMigList[MatrixNumbers[0][TimeInfo->CurrentTime()]];
@@ -265,9 +273,8 @@ void Migration::Print(int nr, ofstream& outfile) const {
 }
 
 void Migration::CheckInfoAndDelete(IntVector& novariables, Keeper* const keeper) {
-  ErrorHandler handle;
-  int i, j, age, time;
 
+  int i, j, age, time;
   //Check if all the matrices we need were found.
   for (age = 0; age < MatrixNumbers.Nrow(); age++)
     for (time = 1; time < MatrixNumbers.Ncol(age); time++)
@@ -410,8 +417,7 @@ void Migration::AdjustMigListAndCheckIfError(MigrationList& MigList) {
         }
 
         if (isZero(colsum) || isZero(colsum1)) {
-          cerr << "Error in migration: column " << k + 1 << " in migration matrix "
-            << i << " sums up to " << colsum << " instead of 1\n";
+          handle.LogWarning("Error in migration - column doesnt sum to 1");
           error = 1;
           return;
         }
@@ -434,9 +440,7 @@ void Migration::AdjustMigListAndCheckIfError(MigrationList& MigList) {
 void Migration::readNoMigrationMatrices(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
-  ErrorHandler handle;
   int year, step, time, age;
-
   if (!FindContinuousYearAndStepWithNoText(infile, TimeInfo->FirstYear(), TimeInfo->FirstStep()))
     handle.Message("Failure in migration - unable to find the start of the migration data");
 
@@ -467,7 +471,6 @@ void Migration::readOptVariables(CommentStream& infile, IntVector& novariables,
   //Have to be a bit careful, not to inform keeper of the variables in
   //readDoubleWithSwitches, and then change their addresses using resize.
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
@@ -521,7 +524,6 @@ void Migration::readCoefficients(CommentStream& infile,
 
   //Now we read the coefficients. The operator >> for VariableInfo does almost
   //all the work. We only need to convert the areas read to inner areas.
-  ErrorHandler handle;
   int i;
   infile >> ws;
 

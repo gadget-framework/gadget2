@@ -3,10 +3,11 @@
 #include "readword.h"
 #include "gadget.h"
 
-MigrationPenalty::MigrationPenalty(CommentStream& infile, double w)
-  :Likelihood(MIGRATIONPENALTYLIKELIHOOD, w), powercoeffs(2) {
+extern ErrorHandler handle;
 
-  ErrorHandler handle;
+MigrationPenalty::MigrationPenalty(CommentStream& infile, double weight)
+  : Likelihood(MIGRATIONPENALTYLIKELIHOOD, weight), powercoeffs(2) {
+
   char text[MaxStrLength];
   stockname = new char[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -46,13 +47,12 @@ void MigrationPenalty::setStocks(StockPtrVector Stocks) {
     }
 
   if (found == 0) {
-    cerr << "Error when searching for names of stocks for migrationpenalty."
-      << "\nDid not find any name matching " << stockname << endl;
+    handle.LogWarning("Error in migrationpenalty - failed to match stock", stockname);
     exit(EXIT_FAILURE);
   }
 
   if (!(stock->doesMigrate()))
-    cerr << "Warning in migrationpenalty - " << stockname << " doesnt migrate\n";
+    handle.LogWarning("Warning in migrationpenalty - stock doesnt migrate");
 }
 
 MigrationPenalty::~MigrationPenalty() {

@@ -10,12 +10,13 @@
 #include "stockprey.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 StockDistribution::StockDistribution(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
-  double w, const char* name)
-  : Likelihood(STOCKDISTRIBUTIONLIKELIHOOD, w) {
+  double weight, const char* name)
+  : Likelihood(STOCKDISTRIBUTIONLIKELIHOOD, weight) {
 
-  ErrorHandler handle;
   int i, j;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -64,7 +65,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -74,7 +75,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numage = readAggregation(subdata, ages, ageindex);
   handle.Close();
@@ -84,7 +85,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   //read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numlen = readLengthAggregation(subdata, lengths, lenindex);
   handle.Close();
@@ -129,7 +130,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readStockData(subdata, TimeInfo, numarea, numage, numlen);
   handle.Close();
@@ -140,7 +141,6 @@ StockDistribution::StockDistribution(CommentStream& infile,
 void StockDistribution::readStockData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea, int numage, int numlen) {
 
-  ErrorHandler handle;
   int i, j;
   int year, step;
   double tmpnumber;
@@ -244,7 +244,8 @@ void StockDistribution::readStockData(CommentStream& infile,
   }
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cerr << "Warning in stockdistribution - found no data in the data file for " << sdname << endl;
+    handle.LogWarning("Warning in stockdistribution - found no data in the data file for", sdname);
+  handle.LogMessage("Read stockdistribution data file - number of entries", count);
 }
 
 StockDistribution::~StockDistribution() {
@@ -306,8 +307,7 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
         fleets.resize(1, Fleets[j]);
       }
     if (found == 0) {
-      cerr << "Error when searching for names of fleets for stockdistribution.\n"
-        << "Did not find any name matching " << fleetnames[i] << endl;
+      handle.LogWarning("Error in stockdistribution - unknown fleet", fleetnames[i]);
       exit(EXIT_FAILURE);
     }
   }
@@ -323,8 +323,7 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
         }
     }
     if (found == 0) {
-      cerr << "Error when searching for names of stocks for stockdistribution.\n"
-        << "Did not find any name matching " << stocknames[i] << endl;
+      handle.LogWarning("Error in stockdistribution - unknown stock", stocknames[i]);
       exit(EXIT_FAILURE);
     }
 
@@ -346,7 +345,7 @@ void StockDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
         likelihood += LikSumSquares();
         break;
       default:
-        cerr << "Error in stockdistribution - unknown function " << functionname << endl;
+        handle.LogWarning("Warning in stockdistribution - unknown function", functionname);
         break;
     }
     timeindex++;

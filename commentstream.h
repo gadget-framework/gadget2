@@ -3,7 +3,7 @@
 
 #include "gadget.h"
 
-const char COMMENTCHAR = ';';
+const char chrComment = ';';
 extern void killComments(istream* const istrptr);
 
 class CommentStream;
@@ -47,7 +47,7 @@ public:
     (*func)(*this);
     return *this;
   };
-  int peek() { return (istrptr->peek() == COMMENTCHAR ? '\n':istrptr->peek()); };
+  int peek() { return (istrptr->peek() == chrComment ? '\n':istrptr->peek()); };
   int eof() { return istrptr->eof(); };
   int fail() { return istrptr->fail(); };
   int bad() { return istrptr->bad(); };

@@ -6,6 +6,8 @@
 #include "loglinearregression.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 SIOnStep::~SIOnStep() {
 }
 
@@ -14,7 +16,6 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   const CharPtrVector& index1, const CharPtrVector& index2)
   : Areas(areas) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
@@ -75,7 +76,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
         break;
       default:
         handle.Message("Error in surveyindex - unrecognised fittype");
-       break;
+        break;
     }
   }
 
@@ -83,7 +84,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   ifstream datafile;
   CommentStream subdata(datafile);
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readSIData(subdata, areaindex, index1, index2, TimeInfo);
   handle.Close();
@@ -103,7 +104,6 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   const TimeClass* const TimeInfo, const IntMatrix& areas, const CharPtrVector& colindex,
   const char* name) : Areas(areas) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
@@ -159,7 +159,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   ifstream datafile;
   CommentStream subdata(datafile);
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readSIData(subdata, areaindex, colindex, TimeInfo, name);
   handle.Close();
@@ -185,7 +185,6 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
   strncpy(tmplabel, "", MaxStrLength);
   int keepdata, timeid, colid, areaid;
   int count = 0;
-  ErrorHandler handle;
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 5)
@@ -241,7 +240,8 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
   }
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cerr << "Warning in surveyindex - found no data in the data file for " << name << endl;
+    handle.LogWarning("Warning in surveyindex - found no data in the data file for", name);
+  handle.LogMessage("Read surveyindex data file - number of entries", count);
 }
 
 void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
@@ -255,7 +255,6 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
   strncpy(tmpstr1, "", MaxStrLength);
   strncpy(tmpstr2, "", MaxStrLength);
   int keepdata, timeid, areaid, id;
-  ErrorHandler handle;
 
   //for sibylengthandageonstep tmpstr1 is age, tmpstr2 is length
   //for pionstep tmpstr1 is predlength, tmpstr2 is preylength
@@ -452,8 +451,8 @@ double SIOnStep::Fit(const DoubleVector& stocksize, const DoubleVector& indices,
       LR.Fit(stocksize, indices, slope, intercept);
       break;
     default:
-      cerr << "Error in surveyindex - unrecognised fittype\n";
-      exit(EXIT_FAILURE);
+      handle.LogWarning("Warning in surveyindex - unknown fittype", fittype);
+      break;
   }
 
   //and then store the results
@@ -481,7 +480,8 @@ double SIOnStep::Fit(const DoubleVector& stocksize, const DoubleVector& indices,
       return LR.SSE();
       break;
     default:
-      cerr << "Error in surveyindex - unrecognised fittype\n";
-      exit(EXIT_FAILURE);
+      handle.LogWarning("Warning in surveyindex - unknown fittype", fittype);
+      break;
   }
+  return 0.0;
 }

@@ -4,12 +4,13 @@
 #include "readword.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
   const LengthGroupDivision* const lgrpdiv, Keeper* const keeper)
   : LivesOnAreas(areas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)), age(Age) {
 
   int i;
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   keeper->AddString("transition");
@@ -29,6 +30,9 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
     }
   } else
     handle.Unexpected("transitionstocksandratios", text);
+
+  if (!infile.good())
+    handle.Failure();
 
   infile >> TransitionStep >> ws;
 
@@ -70,13 +74,11 @@ void Transition::setStock(StockPtrVector& stockvec) {
       }
 
   if (index != TransitionStockNames.Size()) {
-    cerr << "Error -did not find all the stock(s) matching:\n";
-    for (i = 0; i < TransitionStockNames.Size(); i++)
-      cerr << (const char*)TransitionStockNames[i] << sep;
-    cerr << "\nwhen searching for transition stock(s) - found only:\n";
+    handle.LogWarning("Error in transition - failed to match transition stocks");
     for (i = 0; i < stockvec.Size(); i++)
-      cerr << stockvec[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in transition - found stock", stockvec[i]->Name());
+    for (i = 0; i < TransitionStockNames.Size(); i++)
+      handle.LogWarning("Error in transition - looking for stock", TransitionStockNames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -100,8 +102,7 @@ void Transition::setStock(StockPtrVector& stockvec) {
         index++;
 
     if (index != 0)
-      cerr << "Warning - transition requested to stock " << (const char*)TransitionStocks[i]->Name()
-        << "\nwhich might not be defined on " << index << " areas\n";
+      handle.LogWarning("Warning in transition - transition stock isnt defined on all areas");
 
     if (TransitionStocks[i]->returnLengthGroupDiv()->minLength() < mlength)
       mlength = TransitionStocks[i]->returnLengthGroupDiv()->minLength();
@@ -170,8 +171,7 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
     double mort = exp(-mortality);
     for (s = 0; s < TransitionStocks.Size(); s++) {
       if (!TransitionStocks[s]->IsInArea(area)) {
-        cerr << "Error - transition to stock " << (const char*)(TransitionStocks[s]->Name())
-          << " cannot take place on area " << area << " since it doesnt live there!\n";
+        handle.LogWarning("Error in transition - transition stock doesnt live on area", area);
         exit(EXIT_FAILURE);
       }
 
@@ -234,8 +234,6 @@ void Transition::deleteTransitionTag(const char* tagname) {
     }
     TagAgeGroup.deleteTag(tagname);
 
-  } else {
-    cerr << "Error in tagging transition - trying to delete tag with name: "
-      << tagname << " in transition but there is not any tag with that name\n";
-  }
+  } else
+    handle.LogWarning("Warning in transition - failed to delete tagging experiment", tagname);
 }

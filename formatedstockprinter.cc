@@ -12,6 +12,7 @@
 #include "gadget.h"
 
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 /*  FormatedStockPrinter
  *
@@ -30,7 +31,6 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
   : Printer(FORMATEDSTOCKPRINTER), LgrpDiv(0), aggregator(0) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j;
@@ -56,7 +56,7 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
 
   infile >> filename >> ws;
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -66,7 +66,7 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, ages, ageindex);
   handle.Close();
@@ -78,7 +78,7 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
   CharPtrVector lenindex;
   readWordAndValue(infile, "lenaggfile", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, lengths, lenindex);
   handle.Close();
@@ -94,19 +94,19 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
   //Finished reading from infile.
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    printLengthGroupError(lengths, "formatedstockprinter");
+    handle.Message("Error in formatedstockprinter - failed to create length group");
 
   infile >> text >> ws;
   if (strcasecmp(text, "printfiles") == 0) {
     infile >> text >> ws;
     noutfile.open(text, ios::out);
-    checkIfFailure(noutfile, text);
+    handle.checkIfFailure(noutfile, text);
     noutfile << "; ";
     RUNID.print(noutfile);
     noutfile.flush();
     infile >> text >> ws;
     woutfile.open(text, ios::out);
-    checkIfFailure(woutfile, text);
+    handle.checkIfFailure(woutfile, text);
     woutfile << "; ";
     RUNID.print(woutfile);
     woutfile.flush();
@@ -157,13 +157,11 @@ void FormatedStockPrinter::setStock(StockPtrVector& stockvec) {
       }
 
   if (stocks.Size() != stocknames.Size()) {
-    cerr << "Error in printer when searching for stock(s) with name matching:\n";
-    for (i = 0; i < stocknames.Size(); i++)
-      cerr << (const char*)stocknames[i] << sep;
-    cerr << "\nDid only find the stock(s)\n";
+    handle.LogWarning("Error in formatedstockprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      cerr << (const char*)stocks[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in formatedstockprinter - found stock", stocks[i]->Name());
+    for (i = 0; i < stocknames.Size(); i++)
+      handle.LogWarning("Error in formatedstockprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
 

@@ -10,6 +10,7 @@
 #include "gadget.h"
 
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 /*  FormatedCHatPrinter
  *
@@ -28,7 +29,6 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
   const AreaClass* const AreaInfo, const TimeClass* const TimeInfo)
   : Printer(FORMATEDCHATPRINTER), Area(AreaInfo) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
@@ -54,7 +54,7 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
 
   infile >> filename >> ws;
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -69,7 +69,7 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
   outfile << "; ";
   RUNID.print(outfile);
   outfile.flush();

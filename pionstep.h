@@ -20,7 +20,7 @@ public:
    * \param predatorlengths is the DoubleVector of predator lengths
    * \param preylengths is the DoubleVector of prey lengths
    * \param TimeInfo is the TimeClass for the current model
-   * \param biomass is a flag to determine the
+   * \param biomass is a flag to determine whether the predator survey index calculation should be based on the biomass of the stock, or the number of the stock
    * \param areaindex is the CharPtrVector of area identifier text strings
    * \param preylenindex is the CharPtrVector of length identifier text strings for the preys
    * \param predlenindex is the CharPtrVector of length identifier text strings for the predators
@@ -74,6 +74,9 @@ protected:
    * \brief This is the LengthGroupDivision of the preys
    */
   LengthGroupDivision* PreyLgrpDiv;
+  /**
+   * \param This is the flag used to denote whether the predator index calculation should be based on the biomass of the stock, or the number of the stock
+   */
   int Biomass;
   /**
    * \brief This is the PredatorAggregator used to collect information about the predation

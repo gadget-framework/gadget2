@@ -3,9 +3,9 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
-AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
+extern ErrorHandler handle;
 
-  ErrorHandler handle;
+AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   int i, j;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -24,9 +24,10 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   int noareas = OuterAreas.Size();
   size.resize(noareas);
   infile >> text;
-  if (strcasecmp(text, "size") == 0)
-    readVector(infile, size);
-  else
+  if (strcasecmp(text, "size") == 0) {
+    if (!readVector(infile, size))
+      handle.Message("Failed to read size of areas");
+  } else
     handle.Unexpected("size", text);
 
   infile >> text >> ws;
@@ -81,6 +82,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
       temperature[timeid][areaid] = tmpnumber;
     }
   }
+  handle.LogMessage("Read area file - number of areas", noareas);
 }
 
 int AreaClass::InnerArea(int area) const {

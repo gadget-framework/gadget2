@@ -31,11 +31,12 @@
 #include "readword.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 //
 // A function to read fleet information
 //
 void Ecosystem::readFleet(CommentStream& infile) {
-  ErrorHandler handle;
   char text[MaxStrLength];
   char value[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -68,6 +69,7 @@ void Ecosystem::readFleet(CommentStream& infile) {
     } else
       handle.Message("Error in main file - unrecognised fleet", text);
 
+    handle.LogMessage("Read fleet OK - created fleet", value);
   }
 }
 
@@ -75,7 +77,6 @@ void Ecosystem::readFleet(CommentStream& infile) {
 // A function to read tagging information
 //
 void Ecosystem::readTagging(CommentStream& infile) {
-  ErrorHandler handle;
   char text[MaxStrLength];
   char value[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -99,6 +100,7 @@ void Ecosystem::readTagging(CommentStream& infile) {
     } else
       handle.Unexpected("tagid", text);
 
+    handle.LogMessage("Read tagging experiment OK - created tag", value);
   }
 }
 
@@ -106,7 +108,6 @@ void Ecosystem::readTagging(CommentStream& infile) {
 // A function to read otherfood information
 //
 void Ecosystem::readOtherFood(CommentStream& infile) {
-  ErrorHandler handle;
   char text[MaxStrLength];
   char value[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -130,6 +131,7 @@ void Ecosystem::readOtherFood(CommentStream& infile) {
     } else
       handle.Unexpected("foodname", text);
 
+    handle.LogMessage("Read otherfood OK - created otherfood", value);
   }
 }
 
@@ -138,7 +140,6 @@ void Ecosystem::readOtherFood(CommentStream& infile) {
 // Note: there is only ever one stock in each file
 //
 void Ecosystem::readStock(CommentStream& infile, int mortmodel) {
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
@@ -163,13 +164,13 @@ void Ecosystem::readStock(CommentStream& infile, int mortmodel) {
   else                  //original bormicon stock model used
     stockvec[i] = new Stock(infile, stocknames[i], Area, TimeInfo, keeper);
 
+  handle.LogMessage("Read stock OK - created stock", text);
 }
 
 //
 // A function to read information on printing
 //
 void Ecosystem::readPrinters(CommentStream& infile) {
-  ErrorHandler handle;
   char text[MaxStrLength];
   char type[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -215,12 +216,13 @@ void Ecosystem::readPrinters(CommentStream& infile) {
     else if (strcasecmp(type, "biomassprinter") == 0)
       printvec.resize(1, new BiomassPrinter(infile, Area, TimeInfo));
     else if (strcasecmp(type, "formatedcatchprinter") == 0)
-      cout << "The formatedcatchprinter printer class is no longer supported\n";
+      handle.Warning("The formatedcatchprinter printer class is no longer supported");
     else if (strcasecmp(type, "likelihoodprinter") == 0)
       likprintvec.resize(1, new LikelihoodPrinter(infile, Area, TimeInfo));
     else
       handle.Message("Error in main file - unrecognised printer", type);
 
+    handle.LogMessage("Read printer OK - created printer class", type);
   }
 }
 
@@ -228,7 +230,6 @@ void Ecosystem::readPrinters(CommentStream& infile) {
 // A function to read likelihood information
 //
 void Ecosystem::readLikelihood(CommentStream& infile) {
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
@@ -264,7 +265,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
     if (strcasecmp(type, "penalty") == 0) {
       readWordAndValue(infile, "datafile", datafilename);
       datafile.open(datafilename, ios::in);
-      checkIfFailure(datafile, datafilename);
+      handle.checkIfFailure(datafile, datafilename);
       handle.Open(datafilename);
       Likely[i] = new BoundLikelihood(subdata, Area, TimeInfo, keeper, weight);
       handle.Close();
@@ -316,18 +317,19 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       Likely[i] = new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name);
 
     } else if (strcasecmp(type, "randomwalk") == 0) {
-      cout << "The random walk likelihood component is no longer supported\n";
+      handle.Warning("The random walk likelihood component is no longer supported");
 
     } else if (strcasecmp(type, "logsurveyindices") == 0) {
-      cout << "The log survey indices likelihood component is no longer supported\n"
-        << "Use a survey indices component with a log function instead\n";
+      handle.Warning("The log survey indices likelihood component is no longer supported");
 
     } else if (strcasecmp(type, "aggregatedcatchdist") == 0) {
-      cout << "The aggregated catch distribution likelihood component is no longer supported\n";
+      handle.Warning("The aggregated catch distribution likelihood component is no longer supported");
 
     } else {
       handle.Message("Error in main file - unrecognised likelihood", type);
     }
+
+    handle.LogMessage("Read likelihood OK - created likelihood component", name);
   }
 }
 
@@ -337,7 +339,6 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
 void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
   int calclikelihood, const char* const inputdir, const char* const workingdir) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   char filename[MaxStrLength];
   int mort_mod = 0;
@@ -350,7 +351,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
   //first, read in the time information
   readWordAndValue(infile, "timefile", filename);
   subfile.open(filename, ios::in);
-  checkIfFailure(subfile, filename);
+  handle.checkIfFailure(subfile, filename);
   handle.Open(filename);
   TimeInfo = new TimeClass(subcomment);
   handle.Close();
@@ -360,7 +361,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
   //second, read in the area information
   readWordAndValue(infile, "areafile", filename);
   subfile.open(filename, ios::in);
-  checkIfFailure(subfile, filename);
+  handle.checkIfFailure(subfile, filename);
   handle.Open(filename);
   Area = new AreaClass(subcomment, TimeInfo);
   handle.Close();
@@ -379,7 +380,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
     //optimizing without the getForcePrint option set. 07.04.00 AJ & mnaa.
     if (!netrun  && (printinfo.getForcePrint() || !optimize)) {
       subfile.open(text, ios::in);
-      checkIfFailure(subfile, text);
+      handle.checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
       this->readPrinters(subcomment);
@@ -409,7 +410,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
   infile >> text >> ws;
   while (!((strcasecmp(text, "[tagging]") == 0) || infile.eof())) {
     subfile.open(text, ios::in);
-    checkIfFailure(subfile, text);
+    handle.checkIfFailure(subfile, text);
     handle.Open(text);
     chdir(workingdir);
     this->readStock(subcomment, mort_mod);
@@ -430,7 +431,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
     infile >> text >> ws;
     while (!((strcasecmp(text, "[otherfood]") == 0) || infile.eof())) {
       subfile.open(text, ios::in);
-      checkIfFailure(subfile, text);
+      handle.checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
       this->readTagging(subcomment);
@@ -452,7 +453,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
     infile >> text >> ws;
     while (!((strcasecmp(text, "[fleet]") == 0) || infile.eof())) {
       subfile.open(text, ios::in);
-      checkIfFailure(subfile, text);
+      handle.checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
       this->readOtherFood(subcomment);
@@ -474,7 +475,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
     infile >> text >> ws;
     while (!((strcasecmp(text, "[likelihood]") == 0) || infile.eof())) {
       subfile.open(text, ios::in);
-      checkIfFailure(subfile, text);
+      handle.checkIfFailure(subfile, text);
       handle.Open(text);
       chdir(workingdir);
       this->readFleet(subcomment);
@@ -497,7 +498,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
       infile >> text;
       while (!infile.eof()) {
         subfile.open(text, ios::in);
-        checkIfFailure(subfile, text);
+        handle.checkIfFailure(subfile, text);
         handle.Open(text);
         chdir(workingdir);
         this->readLikelihood(subcomment);
@@ -512,8 +513,4 @@ void Ecosystem::readMain(CommentStream& infile, int optimize, int netrun,
       }
     }
   }
-
-  //Dont print output line if doing a network run
-  if (!netrun)
-    cout << "\nFinished reading input files\n";
 }

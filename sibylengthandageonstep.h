@@ -21,7 +21,7 @@ public:
   virtual void Sum(const TimeClass* const TimeInfo);
   virtual void setStocks(const StockPtrVector& Stocks);
   virtual double Regression() {return likelihood; };
-  void calcIndex(const AgeBandMatrix* alptr, FitType ftype);
+  void calcIndex(const AgeBandMatrix* alptr);
   virtual void PrintLikelihood(ofstream&, const TimeClass& time, const char* name);
   virtual void PrintLikelihoodHeader(ofstream&, const char* name);
   virtual void Reset(const Keeper* const keeper);

@@ -10,7 +10,7 @@
 class StockDistribution : public Likelihood {
 public:
   StockDistribution(CommentStream& infile, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, double w, const char* name);
+    const TimeClass* const TimeInfo, double weight, const char* name);
   virtual ~StockDistribution();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);

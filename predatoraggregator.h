@@ -9,6 +9,10 @@
 
 class PredatorAggregator;
 
+/**
+ * \class PredatorAggregator
+ * \brief This is the class used to aggregate predation information
+ */
 class PredatorAggregator {
 public:
   /**
@@ -43,9 +47,8 @@ public:
   void Sum();
   /**
    * \brief This function will aggregate the predation biomass data for a fleksibest-style mortality model
-   * \param dummy is a flag to denote that this function is to be used with a fleksibest-style mortality model
    */
-  void Sum(int dummy);
+  void MeanSum();
   /**
    * \brief This function will aggregate the predation number data
    */
@@ -64,8 +67,16 @@ protected:
    * \brief This is the PreyPtrVector of the preys that will be aggregated
    */
   PreyPtrVector preys;
-  IntMatrix predConv;  //[predator][predatorLengthGroup]
-  IntMatrix preyConv;  //[prey][preyLengthGroup]
+  /**
+   * \brief This is the IntMatrix used to convert length group information for predators
+   * \note predConv[i][j] is the index of the length group in BandMatrixVector total to which length group j of predator i belongs.
+   */
+  IntMatrix predConv;
+  /**
+   * \brief This is the IntMatrix used to convert length group information for preys
+   * \note preyConv[i][j] is the index of the length group in BandMatrixVector total to which length group j of prey i belongs.
+   */
+  IntMatrix preyConv;
   /**
    * \brief This is the IntMatrix used to store area information
    */

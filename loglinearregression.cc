@@ -1,5 +1,8 @@
 #include "loglinearregression.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
   error = 0;
@@ -76,7 +79,7 @@ void LogLinearRegression::CleanAndTakeLog(const DoubleVector& x,
       Ylog.Delete(l);
       l--;
     } else if ((x[i] < 0) || (y[i] < 0) || (isZero(x[i])) || (isZero(y[i]))) {
-      cerr << "Error in LLR - received illegal values of x (" << x[i] << ") and y (" << y[i] << ")\n";
+      handle.LogWarning("Warning in LLR - received illegal values", x[i], y[i]);
       error = 1;
       return;
     } else {

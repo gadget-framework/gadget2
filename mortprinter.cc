@@ -13,6 +13,7 @@
 #include "gadget.h"
 
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 /*  MortPrinter
  *
@@ -30,7 +31,6 @@ MortPrinter::MortPrinter(CommentStream& infile,
   const AreaClass* const AreaInfo, const TimeClass* const TimeInfo)
   : Printer(MORTPRINTER), Area(AreaInfo) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
@@ -49,7 +49,7 @@ MortPrinter::MortPrinter(CommentStream& infile,
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   readWordAndVariable(infile, "printf", printf);
   readWordAndVariable(infile, "printm1", printm1);
@@ -59,7 +59,7 @@ MortPrinter::MortPrinter(CommentStream& infile,
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -125,13 +125,11 @@ void MortPrinter::setStock(StockPtrVector& stockvec) {
       }
 
   if (stocks.Size() != stocknames.Size()) {
-    cerr << "Error in printer when searching for stock(s) with name matching:\n";
-    for (i = 0; i < stocknames.Size(); i++)
-      cerr << (const char*)stocknames[i] << sep;
-    cerr << "\nDid only find the stock(s)\n";
+    handle.LogWarning("Error in mortprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      cerr << (const char*)stocks[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in mortprinter - found stock", stocks[i]->Name());
+    for (i = 0; i < stocknames.Size(); i++)
+      handle.LogWarning("Error in mortprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
   minage = stocks[0]->Minage();

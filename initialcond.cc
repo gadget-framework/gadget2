@@ -5,6 +5,8 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 /* JMB - I've removed all the code to deal with the basis functions
  * This code is still available from the tarfile for gadget verion 2.0.02
  * However, it will need some thinking to get it to work again though */
@@ -15,7 +17,6 @@
 void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
-  ErrorHandler handle;
   //Find start of data in datafile
   infile >> ws;
   if (infile.eof()) {
@@ -32,6 +33,7 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
 
   int noareas = areas.Size();
   int i, age, area, ageid, areaid, tmparea, keepdata;
+  int count = 0;
   Formula number;
   char tmpnumber[MaxStrLength];
   strncpy(tmpnumber, "", MaxStrLength);
@@ -78,6 +80,7 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
 
     if (keepdata == 0) {
       //initial data is required, so store it
+      count++;
       infile >> AgeDist[areaid][ageid] >> ws;
       infile >> AreaDist[areaid][ageid] >> ws;
       infile >> Mean[areaid][ageid] >> ws;
@@ -94,6 +97,7 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
     }
   }
 
+  handle.LogMessage("Read initial conditions data file - number of entries", count);
   AreaDist.Inform(keeper);
   AgeDist.Inform(keeper);
   Mean.Inform(keeper);
@@ -108,7 +112,6 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
 void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
-  ErrorHandler handle;
   //Find start of data in datafile
   infile >> ws;
   if (infile.eof()) {
@@ -128,6 +131,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   int i, age, area, tmparea;
   int keepdata, ageid, areaid, lengthid;
   double length, tmpnumber;
+  int count = 0;
   int noareas = areas.Size();
   int nolengr = LgrpDiv->NoLengthGroups();
 
@@ -182,9 +186,11 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
 
     if (keepdata == 0) {
       //initial data is required, so store it
+      count++;
       AreaAgeLength[areaid][ageid][lengthid].N = tmpnumber;
     }
   }
+  handle.LogMessage("Read initial conditions data file - number of entries", count);
   keeper->ClearLast();
 }
 
@@ -195,7 +201,6 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   Keeper* const keeper, const char* refWeightFile, const AreaClass* const Area)
   : LivesOnAreas(Areas), LgrpDiv(0), CI(0) {
 
-  ErrorHandler handle;
   ifstream subfile;
   CommentStream subcomment(subfile);
   char text[MaxStrLength];
@@ -216,7 +221,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    printLengthGroupError(minlength, maxlength, dl, "length groups for initial condition of stock");
+    handle.Message("Error in initialconditions - failed to create length group");
 
   int noagegr = maxage - minage + 1; //Number of age groups
   int nolengr = LgrpDiv->NoLengthGroups(); //Number of length groups
@@ -250,7 +255,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     //read initial data in mean length format
     infile >> text >> ws;
     subfile.open(text, ios::in);
-    checkIfFailure(subfile, text);
+    handle.checkIfFailure(subfile, text);
     handle.Open(text);
     this->readNormalData(subcomment, keeper, noagegr, minage, Area);
     handle.Close();
@@ -262,7 +267,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     //read initial data in number format
     infile >> text >> ws;
     subfile.open(text, ios::in);
-    checkIfFailure(subfile, text);
+    handle.checkIfFailure(subfile, text);
     handle.Open(text);
     this->readNumberData(subcomment, keeper, noagegr, minage, Area);
     handle.Close();
@@ -283,10 +288,10 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   keeper->AddString("referenceweights");
   ifstream subweightfile;
   subweightfile.open(refWeightFile, ios::in);
-  checkIfFailure(subweightfile, refWeightFile);
+  handle.checkIfFailure(subweightfile, refWeightFile);
   handle.Open(refWeightFile);
   CommentStream subweightcomment(subweightfile);
-  if (!read2ColVector(subweightcomment, tmpRefW))
+  if (!readRefWeights(subweightcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");
   handle.Close();
   subweightfile.close();
@@ -327,10 +332,8 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
       for (k = 0; k < nolengr; k++) {
         rWeight = (Wref[k] * rCond);
 
-        if (isZero(rWeight)) {
-          cerr << "Possible error: zero mean weight for the stock for the following\n"
-            << "Area: " << i << " Age group: " << j << " Length group: " << k << endl;
-        }
+        if (isZero(rWeight))
+          handle.LogWarning("Warning in initial conditions - zero mean weight");
 
         //for AreaAgeLength the age is taken from the minimum age
         AreaAgeLength[i][j + minage][k].W = rWeight;

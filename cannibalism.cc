@@ -6,12 +6,13 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* preylen,
   const TimeClass* const TimeInfo, Keeper* const keeper)
   : altfood(TimeInfo->TotalNoSteps(), TimeInfo->FirstStep(), 0), params(3),
     cann_lev(TimeInfo->TotalNoSteps()), cannibalism(preylen->NoLengthGroups(), 0) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j, k, numstocks = 0;
@@ -81,7 +82,7 @@ Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* preyl
   CommentStream subdata(datafile);
   readWordAndValue(infile, "canndatafile", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
 
   //reading cannibalism level
@@ -258,9 +259,12 @@ double Cannibalism::suitfunc(double predlength, double preylength) {
 
   e = (l - params[0]) * (l - params[0]);
   check = exp(-e / q);
-  if ((check < 0.0) || (check > 1.0)) {
-    cerr << "Error in cannibalism - function outside bounds " << check << endl;
-    exit(EXIT_FAILURE);
+  if (check < 0.0) {
+    handle.LogWarning("Warning in cannibalism - function outside bounds", check);
+    return 0.0;
+  } else if (check > 1.0) {
+    handle.LogWarning("Warning in cannibalism - function outside bounds", check);
+    return 1.0;
   } else
     return check;
 }

@@ -1,5 +1,8 @@
 #include "optinfo.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 /* JMB - removed all the Numerical Recipes BFGS stuff */
 
@@ -39,8 +42,7 @@ int OptInfo::read(CommentStream &infile, char* text) {
     return 1;
   } else if (strcasecmp(text, "bounds") == 0) {
     // JMB - removed code to read in bounds here
-    cerr << "Error in optinfofile - bounds are no longer read here\n"
-      << "Specify the bounds with the -i inputfile switch instead\n";
+    handle.LogWarning("Error in optinfo - bounds should not be specified here");
     return 0;
   } else
     return 0;
@@ -62,7 +64,7 @@ void OptInfoHooke::read(CommentStream& infile) {
     infile >> text >> ws;
 
     if (!read(infile, text))
-      cerr << "Warning in optinfo hooke - unknown option " << text << endl;
+      handle.LogWarning("Error in optinfo - unknown option", text);
   }
 }
 
@@ -132,10 +134,8 @@ void OptInfoHooke::MaximizeLikelihood() {
     }
 
     /* Warn if the starting point is zero */
-    if (isZero(val[i])) {
-      cerr << "Warning - for switch " << optswitches[i] << " starting value is zero\n"
-        << "which will give poor convergence for Hooke and Jeeves optimisation\n";
-    }
+    if (isZero(val[i]))
+      handle.LogWarning("Warning in optinfo - initial value is zero for switch", optswitches[i].getValue());
   }
 
   count = hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
@@ -168,7 +168,7 @@ void OptInfoSimann::read(CommentStream& infile) {
   while (!infile.eof()) {
     infile >> text >> ws;
     if (!read(infile, text))
-      cerr << "Warning in optinfo simann - unknown option " << text << endl;
+      handle.LogWarning("Error in optinfo - unknown option", text);
   }
 }
 
@@ -270,7 +270,7 @@ void OptInfoHookeAndSimann::read(CommentStream& infile) {
   while (!infile.eof()) {
     infile >> text >> ws;
     if (!read(infile, text))
-      cerr << "Warning in optinfo simannandhooke - unknown option " << text << endl;
+      handle.LogWarning("Error in optinfo - unknown option", text);
   }
 }
 
@@ -379,10 +379,8 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
     }
 
     /* Warn if the starting point is zero */
-    if (isZero(val[i])) {
-      cerr << "Warning - for switch " << optswitches[i] << " starting value is zero\n"
-        << "which will give poor convergence for Hooke and Jeeves optimisation\n";
-    }
+    if (isZero(val[i]))
+      handle.LogWarning("Warning in optinfo - initial value is zero for switch", optswitches[i].getValue());
   }
 
   /* Reset the converge flag for the hooke optimisation */

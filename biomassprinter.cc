@@ -8,9 +8,10 @@
 #include "lenstock.h"
 #include "formatedprinting.h"
 #include "gadget.h"
-
 #include "runid.h"
+
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 /*  BiomassPrinter
  *
@@ -28,7 +29,6 @@ extern RunID RUNID;
 BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const AreaInfo,
   const TimeClass* const TimeInfo) : Printer(BIOMASSPRINTER), Area(AreaInfo) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
@@ -59,7 +59,7 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
 
   infile >> filename >> ws;
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -73,7 +73,7 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
   printfile.open(filename, ios::out);
-  checkIfFailure(printfile, filename);
+  handle.checkIfFailure(printfile, filename);
   printfile << "; ";
   RUNID.print(printfile);
 
@@ -121,17 +121,15 @@ void BiomassPrinter::setStock(StockPtrVector& stockvec) {
   }
 
   if (immindex == -1) {
-    cerr << "Could not find immature stock in biomassprinter\n";
+    handle.LogWarning("Error in biomassprinter - no immature stock");
     exit(EXIT_FAILURE);
   }
   if (stocks.Size() != matnames.Size() + 1) {
-    cerr << "Error in printer when searching for stock(s) with name matching:\n";
-    for (i = 0; i < matnames.Size(); i++)
-      cerr << (const char*)matnames[i] << sep;
-    cerr << "\nDid only find the stock(s)\n";
+    handle.LogWarning("Error in biomassprinter - failed to match mature stocks");
     for (i = 0; i < stocks.Size(); i++)
-      cerr << (const char*)stocks[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in biomassprinter - found stock", stocks[i]->Name());
+    for (i = 0; i < matnames.Size(); i++)
+      handle.LogWarning("Error in biomassprinter - looking for stock", matnames[i]);
     exit(EXIT_FAILURE);
   }
 

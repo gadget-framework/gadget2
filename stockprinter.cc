@@ -9,15 +9,15 @@
 #include "readword.h"
 #include "readaggregation.h"
 #include "gadget.h"
-
 #include "runid.h"
+
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 StockPrinter::StockPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
   : Printer(STOCKPRINTER), LgrpDiv(0), aggregator(0) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j;
@@ -43,7 +43,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
 
   infile >> filename >> ws;
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -53,7 +53,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, ages, ageindex);
   handle.Close();
@@ -64,7 +64,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
   DoubleVector lengths;
   readWordAndValue(infile, "lenaggfile", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, lengths, lenindex);
   handle.Close();
@@ -80,12 +80,12 @@ StockPrinter::StockPrinter(CommentStream& infile,
   //Finished reading from infile.
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    printLengthGroupError(lengths, "stockprinter");
+    handle.Message("Error in stockprinter - failed to create length group");
 
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
@@ -126,13 +126,11 @@ void StockPrinter::setStock(StockPtrVector& stockvec) {
       }
 
   if (stocks.Size() != stocknames.Size()) {
-    cerr << "Error in printer when searching for stock(s) with name matching:\n";
-    for (i = 0; i < stocknames.Size(); i++)
-      cerr << (const char*)stocknames[i] << sep;
-    cerr << "\nDid only find the stock(s)\n";
+    handle.LogWarning("Error in stockprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      cerr << (const char*)stocks[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in stockprinter - found stock", stocks[i]->Name());
+    for (i = 0; i < stocknames.Size(); i++)
+      handle.LogWarning("Error in stockprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
   aggregator = new StockAggregator(stocks, LgrpDiv, areas, ages);

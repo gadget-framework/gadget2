@@ -2,6 +2,7 @@
 \usepackage{amsmath}
 \usepackage[T1]{fontenc}
 \usepackage{palatino}
+
 \begin{document}
 
 \title{\Huge{Gadget User Guide}\\ \huge{\textit{Draft}}}
@@ -50,7 +51,7 @@ Gadget is distributed via anonymous ftp from the MRI ftp site, and the address o
 ftp://ftp.hafro.is/pub/reiknid/dst2/gadget/
 \end{verbatim}}
 
-The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.0.04, so the file to be downloaded is gadget2.0.04.tar.gz.
+The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.0.05, so the file to be downloaded is gadget2.0.05.tar.gz.
 
 \bigskip
 Gadget is a program that runs on a Unix computing platform, and is regularly tested on machines running versions of Solaris, Linux, Mac OSX and Cygwin (a Unix emulator for Microsoft Windows machines).  It should also run on other versions of Unix, but this may require modifications to the makefile in order to do so.  Gadget is distributed as a set of source code files, which need to be compiled into an executable program before it can be run.  To allow for various different versions, the makefile has a list of supported computing platforms, so the makefile should be checked (and if necessary changed) to ensure that the required options are available before the source code is compiled.  The default options in the makefile will compile Gadget for a Linux machine, using the GNU C++ compiler.  A summary of the commands required to compile Gadget, using the default options for a Linux machine from the downloaded file are:
@@ -71,11 +72,11 @@ A web site has been set up that contains details of the most recent changes to G
 http://http.hafro.is/gadget
 \end{verbatim}}
 
-Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.0.04 on a Linux machine:
+Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.0.05 on a Linux machine:
 
 {\small\begin{verbatim}
-gunzip gadget2.0.04.tar.gz
-tar -xvf gadget2.0.04.tar
+gunzip gadget2.0.05.tar.gz
+tar -xvf gadget2.0.05.tar
 cd source
 make
 \end{verbatim}}
@@ -193,6 +194,11 @@ Starting Gadget with the -print2 switch will specify the frequency with which in
 gadget -precision <number>
 \end{verbatim}}
 Starting Gadget with the -precision switch will specify the number of digits to be used when printing the output from the likelihood calculations to files specified with either the -o switch or -co switch
+
+{\small\begin{verbatim}
+gadget -log <filename>
+\end{verbatim}}
+Starting Gadget with the -log switch will specify a file to which Gadget will write logging information to keep a record of internal Gadget actions.  This file will be large for moderately complicated models, and it is of most use for debugging purposes
 
 {\small\begin{verbatim}
 gadget -printinitial <filename>
@@ -1065,73 +1071,64 @@ maturityfile           <name of maturity data file>
 The $<$maturity function$>$ defines the function that is to be used to calculate how the stock will mature.  Currently there are 4 maturity functions defined, and the valid maturity function names are:
 
 \bigskip
-AgeAndLength\newline
-Constant\newline
 Continuous\newline
+Constant\newline
+ConstantWeight\newline
 FixedLength
 
 \bigskip
 The format for the data in the maturity data file is dependent on the maturity function that is to be used.  All the maturity functions require the name of the mature stocks that the immature stock will mature into, and the ratio of the maturing part of the immature stock that is to mature into each mature stock.  This allows for part of an immature stock to mature into more than one mature stock, so for example, an immature stock could mature either into a male mature stock or a female mature stock.
 
-\subsubsection{AgeAndLength Maturity Function}
-This maturity function calculates the proportion of an age-length group of an immature stock that becomes mature according to the maturity equations~\ref{eq:mat3a} and \ref{eq:mat3b} given below:
-
-\begin{equation}\label{eq:mat3a}
-P(l, a) = {\frac{1}{1 + M}}{\frac{dM}{dt}}
-\end{equation}
-
-\begin{equation}\label{eq:mat3b}
-M(l_{t},a_{t}) = \frac{1}{1 + e^{-\alpha(l_{t} - l_{50}) - \beta(a_{t} - a_{50})}}
-\end{equation}
-
-\bigskip
-The maturity term is a function of $l_{50}$ and $a_{50}$, which are the length and age where 50\% of the stock are mature.  The file format for this maturity function is given below:
-
-{\small\begin{verbatim}
-maturestocksandratios       <stockname i>  <ratio i> ; for each stock i
-coefficients                <alpha>  <l50>  <beta>  <a50>
-minmatureage                <minimum mature age>
-maturitystep                <vector of timesteps>
-\end{verbatim}}
-
-The $<$minimum mature age$>$ is the minimum age for the maturation process, to prevent very young fish from maturing.  The $<$maturitystep$>$ vector is a vector of timesteps that the maturation process will take place on.  It is assumed that maturation is an annual event, taking place on the same timesteps in each year.
-
-\subsubsection{Constant Maturity Function}
-This maturity function is very similar to the AgeAndLength maturity function, with the maturity proportion being calculated according to the maturity equation~\ref{eq:mat4} given below:
-
-\begin{equation}\label{eq:mat4}
-P(l, a) = \frac{1}{ 1 + e^{-4\alpha(l - l_{50}) - \beta(a - a_{50})}}
-\end{equation}
-
-For this maturation function, the proportion of an age-length group that will mature is constant with respect to time.  The file format for this maturity function is the same as for the AgeAndLength maturity function, and is shown below:
-
-{\small\begin{verbatim}
-maturestocksandratios       <stockname i>  <ratio i> ; for each stock i
-coefficients                <alpha>  <l50>  <beta>  <a50>
-minmatureage                <minimum mature age>
-maturitystep                <vector of timesteps>
-\end{verbatim}}
-
 \subsubsection{Continuous Maturity Function}
 This maturity function calculates the proportion of an age-length group of an immature stock that becomes mature according to the maturity equations~\ref{eq:mat1a} and \ref{eq:mat1b} given below:
 
 \begin{equation}\label{eq:mat1a}
-P(l, a) = {\frac{1}{1 + M}}{\frac{dM}{dt}}
+P(l, a) = {\frac{1}{1 - M}}{\frac{dM}{dt}}
 \end{equation}
 
 \begin{equation}\label{eq:mat1b}
-M(l_{t},a_{t}) = \frac{1}{1 + e^{-\alpha - \beta l_{t} - \gamma a_{t}}}
+M(l_{t},a_{t}) = \frac{1}{1 + e^{-\alpha(l_{t} - l_{50}) - \beta(a_{t} - a_{50})}}
 \end{equation}
 
-This is a continuous process, with the maturity proportion being calculated on every timestep.  The file format to specify this maturity function is given below:
+\bigskip
+The maturity term is a function of $l_{50}$ and $a_{50}$, which are the length and age where 50\% of the stock are mature.  This is a continuous process, with the maturity proportion being calculated on every timestep.  The file format for this maturity function is given below:
 
 {\small\begin{verbatim}
 maturestocksandratios       <stockname i>  <ratio i> ; for each stock i
-coefficients                <alpha>  <beta>  <gamma>
-minmatureage                <minimum mature age>
+coefficients                <alpha>  <l50>  <beta>  <a50>
 \end{verbatim}}
 
-Note that since this maturation function acts on all timesteps in the model, the $<$maturitystep$>$ vector is not specified.
+\subsubsection{Constant Maturity Function}
+This maturity function is similar to the Continuous maturity function, with the maturity proportion being calculated according to the maturity equation~\ref{eq:mat3} given below:
+
+\begin{equation}\label{eq:mat3}
+P(l, a) = \frac{1}{ 1 + e^{-4\alpha(l - l_{50}) -4\beta(a - a_{50})}}
+\end{equation}
+
+For this maturation function, it is assumed that maturation is an annual event, taking place on the same timesteps in each year.  The file format for this maturity function is the similar to that for the Continuous maturity function, and is shown below:
+
+{\small\begin{verbatim}
+maturestocksandratios       <stockname i>  <ratio i> ; for each stock i
+coefficients                <alpha>  <l50>  <beta>  <a50>
+maturitystep                <vector of timesteps>
+\end{verbatim}}
+
+The $<$maturitystep$>$ vector is a vector of timesteps that the maturation process will take place on.
+
+\subsubsection{ConstantWeight Maturity Function}
+This maturity function is an extension to the Constant maturity function, with the maturity proportion being calculated according to the maturity equation~\ref{eq:mat4} given below:
+
+\begin{equation}\label{eq:mat4}
+P(l, a) = \frac{1}{ 1 + e^{-4\alpha(l - l_{50}) -4\beta(a - a_{50}) -4\gamma(k - k_{50})}}
+\end{equation}
+
+The maturity function has been extended to include the relative condition of the stock (calculated by dividing the current weight by the reference weight) and $k_50$ which is the relative condition where 50\% of the stock is mature.  The file format for this maturity function is the similar to that for the Constant maturity function, and is shown below:
+
+{\small\begin{verbatim}
+maturestocksandratios       <stockname i>  <ratio i> ; for each stock i
+coefficients                <alpha>  <l50>  <beta>  <a50>  <gamma>  <k50>
+maturitystep                <vector of timesteps>
+\end{verbatim}}
 
 \subsubsection{FixedLength Maturity Function}
 This maturity function takes a different approach, and bases the proportion of the immature stock that matures on the length of the immature stock, as the length varies through the year.  This is approach assumes that the maturation process is the same for each year.  The proportion of the immature stock that matures is given by the equation~\ref{eq:mat2} below:
@@ -1339,7 +1336,15 @@ Each tagging experiment is defined by specifying the name of the tagging experim
 The optional $<$endyear$>$ value is used to define the end of a tagging experiment, and should be set to the year of the last expected recapture from the tagging experiment.  This can be used to reduce the calculation time.  If this is not specified, then it is assumed that the tagging experiment will run until the end of the simulation.
 
 \bigskip
-The $<$tagloss$>$ value is used to specify the proportion of tags that are lost from the tagging experiment, for each time step.  This value should be between 0 and 1.
+For each time step, a number of tags can be lost from the tagging experiment.  The number of tagged fish that remain in the tagging experiment is given by the tag loss equation~\ref{eq:tagloss} below:
+
+\begin{equation}\label{eq:tagloss}
+N = N (e^{-t})
+\end{equation}
+
+where:\newline
+$<$ N $>$ is the number of tagged fish in an age-length group\newline
+$<t>$ is the proportion of tags that are lost specified in the input file
 
 \section{Tagging Numbers}\label{sec:tagnumbers}
 The numbers section of the tag file gives the number of fish tagged for the tagging experiment.  This data is listed in a column format in a separate file, so the main tag file simply gives the name of this tag data file, as shown in the example below:
@@ -1738,38 +1743,39 @@ $<\Sigma>$ is the variance-covariance matrix for the multivariate normal distrib
 $<$ P $>$ is the proportion of the data sample for that time/area/age combination\newline
 $<\pi>$ is the proportion of the model sample for that time/area/age combination
 
-\subsubsection{mvn function}
-For the mvn formulation of the multivariate normal function,
-$<\Sigma>$ is calculated from equations \ref{eq:cdsigma1}  and
-\ref{eq:cdsigma2} below assuming that the number in each lengthgroup
-is autocorrelated with lag n:
+\bigskip
+For the formulation of the multivariate normal function, $<\Sigma>$ is calculated from equations \ref{eq:cdsigma1} and \ref{eq:cdsigma2} below:
 
 \begin{equation}\label{eq:cdsigma1}
 \Sigma = (\sigma_{ij})_{ij}
 \end{equation}
 
 \begin{equation}\label{eq:cdsigma2}
-\text{ if i>j }\sigma_{ij} = \sum^n_{l=1} c_l \sigma_{i-l,j} + \delta_{ij} \sigma^2 
+\sigma_{ij} =
+\begin{cases}
+  \sum^n_{l=1} c_l \sigma_{i-l,j} + \delta_{ij} \sigma^2
+  & \textrm{if $i > j$}\\
+  0
+  & \textrm{otherwise}
+\end{cases}
 \end{equation}
 
-To specify this likelihood function, it is necessary to specify the
-parameter $<\sigma>$ and a list of correlation parameters.  This is done in the likelihood file, as shown below:
+In equation \ref{eq:cdsigma2} it is assumed that the number in each length group is autocorrelated with lag $< n >$.  Note that setting the lag to be zero simplifies the multivariate normal distribution to a univariate one.
+
+\bigskip
+To specify this likelihood function, it is necessary to specify the parameters $<\sigma>$ and $< n >$ and a list of $< n >$ correlation parameters.  This is done in the likelihood file, as shown below:
 
 {\small\begin{verbatim}
 ...
 function             mvn
-lag                  <lag>
+lag                  <n>
 sigma                <sigma>
-param                <coeff>
-param                <coeff>
-.
-.
-.                  
+param                <correlation parameter>
+param                <correlation parameter>
+...                  ; note that <n> correlation parameters are required
 aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
 ...
 \end{verbatim}}
-Note that when setting <lag> to zero the multivariate normal
-distribution simplifies to a univaritate one.
 
 \section{CatchStatistics}\label{sec:catchstat}
 The CatchStatistics likelihood component is used to compare statistical data sampled from the model with statistical data sampled from landings or surveys.  This is typically used to compare biological data, such as the mean length at age or mean weight at age.  The likelihood score that is calculated gives some measure as to how well the data from the model fits to the data from the landings.
@@ -2750,7 +2756,7 @@ lambda     0     ; initial value for the step length (default 0)
 The optimisation algorithms used by Gadget contain a random number generator, used to randomise the order of the parameters (to ensure that the order of the parameters has no effect on the optimum found).  For the Simulated Annealing algorithm, this is also used to generate the initial direction chosen by the algorithm, and affects the Metropolis criteria used to accept any changes in an 'uphill' direction.
 
 \bigskip
-The use of a random number generator means that it is unlikely that 2 optimising runs will produce exactly the same 'optimum', even if they start from the same point (although it is hoped that the optimums would be very similar if a stable starting point was chosen).  This causes a problem with repeatability, since there is no guarantee that an optimising run can be repeated.  However, it is possible to 'seed' the random number generator with an integer to avoid this problem.  To specify a seed for the random number generator, an extra line must be added to the optimisation file, as shown below:
+The use of a random number generator means that it is unlikely that 2 optimising runs will produce exactly the same 'optimum', even if they start from the same point (although it is hoped that the optima would be very similar if a stable starting point was chosen).  This causes a problem with repeatability, since there is no guarantee that an optimising run can be repeated.  However, it is possible to 'seed' the random number generator with an integer to avoid this problem.  To specify a seed for the random number generator, an extra line must be added to the optimisation file, as shown below:
 
 {\small\begin{verbatim}
 seed       <n>   ; seed the random number generator with n

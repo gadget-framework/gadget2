@@ -302,7 +302,7 @@ protected:
  * \class MaturityC
  * \brief This is the class used to calculate the maturity based on 'constant' maturity function
  */
-class MaturityC : public MaturityA {
+class MaturityC : public Maturity {
 public:
   /**
    * \brief This is the MaturityC constructor
@@ -352,7 +352,28 @@ public:
    */
   virtual double MaturationProbability(int age, int length, int growth,
     const TimeClass* const TimeInfo, int area, double weight);
+  /**
+   * \brief This function will print the maturation information
+   * \param outfile is the ofstream that all the model information gets sent to
+   */
+  virtual void Print(ofstream& outfile) const;
 protected:
+  /**
+   * \brief This is the BandMatrix of maturation parameters
+   */
+  BandMatrix PrecalcMaturation;
+  /**
+   * \brief This is the TimeVariableVector of maturation parameters
+   */
+  TimeVariableVector maturityParameters;
+  /**
+   * \brief This is the minimum age when maturation will take place
+   */
+  int minMatureAge;
+  /**
+   * \brief This is the minimum length group division when maturation will take place
+   */
+  int minMatureLength;
   /**
    * \brief This is the IntVector of timesteps when maturation will take place
    */
@@ -363,7 +384,7 @@ protected:
  * \class MaturityD
  * \brief This is the class used to calculate the maturity based on 'constantweight' maturity function
  */
-class MaturityD : public MaturityA {
+class MaturityD : public MaturityC {
 public:
   /**
    * \brief This is the MaturityD constructor
@@ -415,10 +436,6 @@ public:
   virtual double MaturationProbability(int age, int length, int growth,
     const TimeClass* const TimeInfo, int area, double weight);
 protected:
-  /**
-   * \brief This is the IntVector of timesteps when maturation will take place
-   */
-  IntVector maturitystep;
   /**
    * \brief This is the DoubleVector of reference weight information
    */

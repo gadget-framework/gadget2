@@ -11,13 +11,14 @@
 #include "readaggregation.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double w, TagPtrVector Tags, const char* name)
-  : Likelihood(RECSTATISTICSLIKELIHOOD, w) {
+  const TimeClass* const TimeInfo, double weight, TagPtrVector Tags, const char* name)
+  : Likelihood(RECSTATISTICSLIKELIHOOD, weight) {
 
   lgrpDiv = NULL;
   aggregator = 0;
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j, numarea = 0;
@@ -49,7 +50,7 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -79,7 +80,7 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readStatisticsData(subdata, TimeInfo, numarea, Tags);
   handle.Close();
@@ -98,7 +99,6 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
   int keepdata, needvar;
   int i, timeid, tagid, areaid, tmpindex;
   int count = 0;
-  ErrorHandler handle;
 
   if (functionnumber == 2)
     needvar = 1;
@@ -192,7 +192,8 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
 
   timeindex.resize(tagvec.Size(), -1);
   if (count == 0)
-    cerr << "Warning in recstatistics - found no data in the data file for " << rsname << endl;
+    handle.LogWarning("Warning in recstatistics - found no data in the data file for", rsname);
+  handle.LogMessage("Read recstatistics data file - number of entries", count);
 }
 
 RecStatistics::~RecStatistics() {
@@ -261,8 +262,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       }
 
     if (found == 0) {
-      cerr << "Error when searching for names of fleets for recstatistics\n"
-        << "Did not find any name matching " << fleetnames[i] << endl;
+      handle.LogWarning("Error in recstatistics - unknown fleet", fleetnames[i]);
       exit(EXIT_FAILURE);
     }
   }
@@ -280,8 +280,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
           }
 
       if (found == 0) {
-        cerr << "Error when searching for names of stocks for recstatistics\n"
-          << "Did not find any name matching " << stocknames->operator[](i) << endl;
+        handle.LogWarning("Error in recstatistics - unknown stock", stocknames->operator[](i));
         exit(EXIT_FAILURE);
       }
     }
@@ -289,7 +288,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     lgrpDiv = new LengthGroupDivision(*(stocks[0]->returnPrey()->returnLengthGroupDiv()));
     for (i = 1; i < stocks.Size(); i++)
       if (!lgrpDiv->Combine(stocks[i]->returnPrey()->returnLengthGroupDiv())) {
-        cerr << "Length group divisions for preys in recstatistics not compatible\n";
+        handle.LogWarning("Error in recstatistics - length groups not compatible");
         exit(EXIT_FAILURE);
       }
 
@@ -351,7 +350,7 @@ double RecStatistics::SOSWeightOrLength() {
             simvar = 1.0;
             break;
           default:
-            cerr << "Error in recstatistics - unknown function " << functionname << endl;
+            handle.LogWarning("Warning in recstatistics - unknown function", functionname);
             break;
         }
 

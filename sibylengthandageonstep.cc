@@ -11,6 +11,8 @@
 #include "commentstream.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 /*  SIByLengthAndAgeOnStep
  *
  *  Purpose:  Constructor
@@ -32,10 +34,9 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   keeper->AddString("SIByLengthAndAgeOnStep");
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    printLengthGroupError(lengths, "survey indices by length and age");
+    handle.Message("Error in surveyindex - failed to create length group");
 
   int i;
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   suitfunction = NULL;
@@ -129,7 +130,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   CommentStream subdata(datafile);
 
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readSurveyData(subdata, areaindex, lenindex, ageindex, TimeInfo, name);
   handle.Close();
@@ -164,7 +165,6 @@ void SIByLengthAndAgeOnStep::readSurveyData(CommentStream& infile, const CharPtr
   strncpy(tmplen, "", MaxStrLength);
   int keepdata, timeid, areaid, ageid, lenid;
   int count = 0;
-  ErrorHandler handle;
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 6)
@@ -217,7 +217,8 @@ void SIByLengthAndAgeOnStep::readSurveyData(CommentStream& infile, const CharPtr
     }
   }
   if (count == 0)
-    cerr << "Warning in surveyindex - found no data in the data file for " << name << endl;
+    handle.LogWarning("Warning in surveyindex - found no data in the data file for", name);
+  handle.LogMessage("Read surveyindex data file - number of entries", count);
 }
 
 SIByLengthAndAgeOnStep::~SIByLengthAndAgeOnStep() {
@@ -260,13 +261,13 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   //written by kgf 13/10 98
   if (!(this->IsToSum(TimeInfo)))
     return;
-  FitType ftype = this->getFitType();
-  OptType otype = this->getOptType();
+
   aggregator->MeanSum(); //aggregate mean N values in present time step
-  //Use that the AgeBandMatrixPtrVector aggregator->returnMeanSum returns only one element.
-  const AgeBandMatrix* alptr = &(aggregator->returnMeanSum()[0]);
-  this->calcIndex(alptr, ftype);
-  switch(otype) {
+  //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns only one element.
+  const AgeBandMatrix* alptr = &(aggregator->returnSum()[0]);
+  this->calcIndex(alptr);
+
+  switch(opttype) {
     case PEARSONOPTTYPE:
       likelihood += calcLikPearson();
       break;
@@ -283,19 +284,19 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
       likelihood += calcLikLog();
       break;
     default:
-      cerr << "Error in surveyindex - unknown opttype\n";
+      handle.LogWarning("Warning in surveyindex - unknown opttype", opttype);
       break;
   }
   index++;
 }
 
-void SIByLengthAndAgeOnStep::calcIndex(const AgeBandMatrix* alptr, FitType ftype) {
+void SIByLengthAndAgeOnStep::calcIndex(const AgeBandMatrix* alptr) {
   //written by kgf 13/10 98
   int age, len;
   int maxage = alptr->Maxage();
   int maxlen = LgrpDiv->NoLengthGroups();
   double q_year = q_y[index];
-  switch(ftype) {
+  switch(this->getFitType()) {
     case LINEARFIT:
       for (age = 0; age <= maxage; age++)
         for (len = 0; len < maxlen; len++)
@@ -307,7 +308,7 @@ void SIByLengthAndAgeOnStep::calcIndex(const AgeBandMatrix* alptr, FitType ftype
           (*calc_index[index])[age][len] = q_year * q_l[len] * pow((*alptr)[age][len].N, b_vec[len]);
       break;
     default:
-      cerr << "Error in surveyindex - unknown fittype\n";
+      handle.LogWarning("Warning in surveyindex - unknown fittype", this->getFitType());
       break;
   }
 }

@@ -14,6 +14,10 @@
 
 class RecAggregator;
 
+/**
+ * \class RecAggregator
+ * \brief This is the class used to aggregate the recaptured tagged stock information
+ */
 class RecAggregator {
 public:
   /**
@@ -71,6 +75,9 @@ private:
    * \brief This is the StockPtrVector of the stocks that will be aggregated
    */
   StockPtrVector stocks;
+  /**
+   * \brief This is the Tags containing details of the tagging experiment that will be aggregated
+   */
   Tags* taggingExp;
   /**
    * \brief This is the LengthGroupDivision of the aggregated stocks
@@ -84,6 +91,9 @@ private:
    * \brief This is the IntMatrix used to store age information
    */
   IntMatrix ages;
+  /**
+   * \brief This is the ConversionIndexPtrVector used to convert the length groups of the stocks to be aggregated
+   */
   ConversionIndexPtrVector CI;
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store the aggregated recaptures

@@ -9,6 +9,10 @@
 
 class StockAggregator;
 
+/**
+ * \class StockAggregator
+ * \brief This is the class used to aggregate stock information
+ */
 class StockAggregator {
 public:
   /**
@@ -28,22 +32,43 @@ public:
    * \brief This function will aggregate the stock data
    */
   void Sum();
+  /**
+   * \brief This function will aggregate the stock data for a fleksibest-style mortality model
+   */
   void MeanSum();
   /**
    * \brief This will return the AgeBandMatrixPtrVector containing the aggregated stock information
    * \return total, the AgeBandMatrixPtrVector of aggregated stock information
    */
   const AgeBandMatrixPtrVector& returnSum() const { return total; };
-  const AgeBandMatrixPtrVector& returnMeanSum() const { return meanTotal; };
+  /**
+   * \brief This will return the IntVector of the minimum columns for each row of the AgeBandMatrixPtrVector
+   * \return mincol, the IntVector of minimum columns
+   */
   const IntVector& getMinCol() const { return mincol; };
+  /**
+   * \brief This will return the IntVector of the maximum columns for each row of the AgeBandMatrixPtrVector
+   * \return maxcol, the IntVector of maximum columns
+   */
   const IntVector& getMaxCol() const { return maxcol; };
+  /**
+   * \brief This will return the minimum row of the AgeBandMatrixPtrVector
+   * \return minrow
+   */
   int getMinRow() const { return minrow; };
+  /**
+   * \brief This will return the maximum row of the AgeBandMatrixPtrVector
+   * \return maxrow
+   */
   int getMaxRow() const { return maxrow; };
 protected:
   /**
    * \brief This is the StockPtrVector of the stocks that will be aggregated
    */
   StockPtrVector stocks;
+  /**
+   * \brief This is the ConversionIndexPtrVector used to convert the length groups of the stocks to be aggregated
+   */
   ConversionIndexPtrVector CI;
   /**
    * \brief This is the IntMatrix used to store area information
@@ -57,10 +82,25 @@ protected:
    * \brief This is the AgeBandMatrixPtrVector used to store the aggregated stock information
    */
   AgeBandMatrixPtrVector total;
-  AgeBandMatrixPtrVector meanTotal;
-  IntVector maxcol;
+  /**
+   * \brief This is the IntVector used to store the minimum non-empty row for each column in the AgeBandMatrixPtrVector
+   * \note mincol is typically the minimum length for each age of the aggregated stocks
+   */
   IntVector mincol;
+  /**
+   * \brief This is the IntVector used to store the maximum non-empty row for each column in the AgeBandMatrixPtrVector
+   * \note maxcol is typically the maximum length for each age of the aggregated stocks
+   */
+  IntVector maxcol;
+  /**
+   * \brief This is the minimum non-empty row in the AgeBandMatrixPtrVector
+   * \note minrow is typically the minimum age of the aggregated stocks
+   */
   int minrow;
+  /**
+   * \brief This is the maximum non-empty row in the AgeBandMatrixPtrVector
+   * \note maxrow is typically the maximum age of the aggregated stocks
+   */
   int maxrow;
 };
 

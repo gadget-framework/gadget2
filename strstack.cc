@@ -8,31 +8,31 @@ StrStack::~StrStack() {
 }
 
 void StrStack::OutOfStack() {
-  if (sz > 0)
-    sz -= 1;
+  if (size > 0)
+    size--;
 }
 
 void StrStack::PutInStack(const char* str) {
-  if (sz == v.Size()) {
+  if (size == v.Size()) {
     v.resize(1);
-    v[sz] = new char[MaxStrLength];
-    strncpy(v[sz], "", MaxStrLength);
+    v[size] = new char[MaxStrLength];
+    strncpy(v[size], "", MaxStrLength);
   }
   /*JMB code removed from here - see RemovedCode.txt for details*/
-  strcpy(v[sz], str);
-  sz++;
+  strcpy(v[size], str);
+  size++;
 }
 
 void StrStack::ClearStack() {
-  sz = 0;
+  size = 0;
 }
 
 char* StrStack::SendAll() const {
-  int len = sz * MaxStrLength;
+  int len = size * MaxStrLength;
   char* rstr = new char[len];
   strncpy(rstr, "", len);
   int i;
-  for (i = 0; i < sz; i++) {
+  for (i = 0; i < size; i++) {
     if (len - (strlen(rstr) + 1) < strlen(v[i]) + 1) {
       char* str = new char[sizeof(rstr) + strlen(v[i]) + 1];
       strcpy(str, rstr);
@@ -45,7 +45,7 @@ char* StrStack::SendAll() const {
 }
 
 char* StrStack::SendTop() const {
-  char* rstr = new char[strlen(v[sz - 1]) + 1];
-  strcpy(rstr, v[sz - 1]);
+  char* rstr = new char[strlen(v[size - 1]) + 1];
+  strcpy(rstr, v[size - 1]);
   return rstr;
 }

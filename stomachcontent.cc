@@ -11,12 +11,13 @@
 #include "formatedprinting.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 StomachContent::StomachContent(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
-  Keeper* const keeper, double w, const char* name)
-  : Likelihood(STOMACHCONTENTLIKELIHOOD, w) {
+  Keeper* const keeper, double weight, const char* name)
+  : Likelihood(STOMACHCONTENTLIKELIHOOD, weight) {
 
-  ErrorHandler handle;
   char datafilename[MaxStrLength];
   char numfilename[MaxStrLength];
   strncpy(datafilename, "", MaxStrLength);
@@ -76,7 +77,6 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper,
   const char* datafilename, const char* name) {
 
-  ErrorHandler handle;
   int i, j;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -116,7 +116,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -147,7 +147,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
     age_pred = 0; //predator is length structured
     readWordAndValue(infile, "lenaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
-    checkIfFailure(datafile, aggfilename);
+    handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     numpred = readLengthAggregation(subdata, predatorlengths, predindex);
     handle.Close();
@@ -157,19 +157,19 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
     age_pred = 1; //predator is age structured
     readWordAndValue(infile, "ageaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
-    checkIfFailure(datafile, aggfilename);
+    handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     numpred = readAggregation(subdata, predatorages, predindex);
     handle.Close();
     datafile.close();
     datafile.clear();
   } else
-    handle.Eof("predator lengths or ages");
+    handle.Unexpected("predatorlengths or predatorages", text);
 
   //read in the preys
   readWordAndValue(infile, "preyaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numprey = readPreyAggregation(subdata, preynames, preylengths, digestioncoeff, preyindex, keeper);
   handle.Close();
@@ -187,7 +187,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
 
 void SC::Aggregate(int i) {
   if (age_pred)
-    aggregator[i]->Sum(1);
+    aggregator[i]->MeanSum();
   else
     aggregator[i]->Sum();
 }
@@ -249,13 +249,11 @@ SCNumbers::SCNumbers(CommentStream& infile, const AreaClass* const Area,
   const char* datafilename, const char* numfilename, const char* name)
   : SC(infile, Area, TimeInfo, keeper, datafilename, name) {
 
-  ErrorHandler handle;
   ifstream datafile;
   CommentStream subdata(datafile);
-
   //read in stomach content from file
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readStomachNumberContent(subdata, TimeInfo);
   handle.Close();
@@ -268,13 +266,11 @@ SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
   const char* datafilename, const char* numfilename, const char* name)
   : SC(infile, Area, TimeInfo, keeper, datafilename, name) {
 
-  ErrorHandler handle;
   ifstream datafile;
   CommentStream subdata(datafile);
-
   //read in stomach content amounts from file
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readStomachAmountContent(subdata, TimeInfo);
   handle.Close();
@@ -283,7 +279,7 @@ SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
 
   //read in stomach content sample size from file
   datafile.open(numfilename, ios::in);
-  checkIfFailure(datafile, numfilename);
+  handle.checkIfFailure(datafile, numfilename);
   handle.Open(numfilename);
   readStomachSampleContent(subdata, TimeInfo);
   handle.Close();
@@ -293,7 +289,6 @@ SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
 
 void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  ErrorHandler handle;
   int i;
   int year, step;
   double tmpnumber;
@@ -392,14 +387,14 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
 
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cerr << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
+    handle.LogWarning("Warning in stomachcontent - found no data in the data file for", scname);
   else
     modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
+  handle.LogMessage("Read stomachcontent data file - number of entries", count);
 }
 
 void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  ErrorHandler handle;
   int i;
   int year, step;
   double tmpnumber, tmpstddev;
@@ -502,14 +497,14 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
 
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cerr << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
+    handle.LogWarning("Warning in stomachcontent - found no data in the data file for", scname);
   else
     modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
+  handle.LogMessage("Read stomachcontent data file - number of entries", count);
 }
 
 void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  ErrorHandler handle;
   int i;
   int year, step;
   double tmpnumber;
@@ -585,7 +580,8 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
     }
   }
   if (count == 0)
-    cerr << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
+    handle.LogWarning("Warning in stomachcontent - found no data in the data file for", scname);
+  handle.LogMessage("Read stomachcontent data file - number of entries", count);
 }
 
 SC::~SC() {
@@ -647,8 +643,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
         }
 
       if (found == 0) {
-        cerr << "Error when searching for names of predators for stomachcontent\n"
-          << "Did not find any name matching " << predatornames[i] << endl;
+        handle.LogWarning("Error in stomachcontent - failed to match predator", predatornames[i]);
         exit(EXIT_FAILURE);
       }
     }
@@ -669,8 +664,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
         }
 
       if (found == 0) {
-        cerr << "Error when searching for names of preys for stomachcontent\n"
-          << "Did not find any name matching " << preynames[i][j] << endl;
+        handle.LogWarning("Error in stomachcontent - failed to match prey", preynames[i][j]);
         exit(EXIT_FAILURE);
       }
     }

@@ -13,7 +13,6 @@ DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
 # Pick the appropriate compiler from the following switches
 ##########################################################################
 # 1. Linux, or Solaris, without pvm, g++ compiler
-#
 CXX = g++
 LIBDIRS = -L.  -L/usr/local/lib
 LIBRARIES = -lm -lvec

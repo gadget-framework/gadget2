@@ -10,7 +10,7 @@ class TimeClass;
 
 /**
  * \class AreaClass
- * \brief This is the class used store information about the areas used for the current model
+ * \brief This is the class used to store information about the areas used for the current model
  */
 class AreaClass {
 public:
@@ -71,7 +71,7 @@ protected:
 
 /**
  * \class TimeClass
- * \brief This is the class used store information about the timesteps used for the current model
+ * \brief This is the class used to store information about the timesteps used for the current model
  */
 class TimeClass {
 public:

@@ -174,8 +174,9 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
   int maxevl, double init[], double bndcheck) {
 
   double delta[NUM_VARS];
+  double xbefore[NUM_VARS];
+  double newx[NUM_VARS];
   double oldf, newf, fbefore, steplength, tmp, check;
-  double xbefore[NUM_VARS], newx[NUM_VARS];
   int    i, k, h, keep, change, nobds, iters, offset;
   int    param[NUM_VARS];
 
@@ -183,6 +184,21 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
   int    rbounds[NUM_VARS];     //counts how often it has hit the upperbounds
   double initialstep[NUM_VARS]; //the stepsize when it hits the bound first
   int    trapped[NUM_VARS];     // = 1 if it is trapped at a bound else = 0
+
+  cout << "\nStarting Hooke and Jeeves\n";
+  //check the values specified in the optinfo file ...
+  if ((rho < 0) || (rho > 1)) {
+    cout << "\nError in value of rho - setting to default value of 0.5\n";
+    rho = 0.5;
+  }
+  if ((lambda < 0) || (lambda > 1)) {
+    cout << "\nError in value of lambda - setting to default value of " << rho << endl;
+    lambda = rho;
+  }
+  if ((bndcheck < 0.5) || (bndcheck > 1)) {
+    cout << "\nError in value of bndcheck - setting to default value of 0.9999\n";
+    bndcheck = 0.9999;
+  }
 
   for (i = 0; i < nvars; i++) {
     lbounds[i] = 0;
@@ -194,15 +210,14 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
     delta[i] = ((2 * (rand() % 2)) - 1) * rho;  //JMB - randomise the sign
     initialstep[i] = rho;   //JMB - initialise this to something? rho?
   }
-  steplength = ((lambda < verysmall) ? rho : lambda);
-  nobds = 0;
 
-  cout << "\nStarting Hooke and Jeeves\n";
   fbefore = (*f)(newx, nvars);
   offset = FuncEval;  //number of function evaluations done before loop
   newf = fbefore;
   oldf = fbefore;
   check = fbefore;
+  steplength = ((lambda < verysmall) ? rho : lambda);
+  nobds = 0;
 
   if (fbefore != fbefore) { //check for NaN
     cout << "\nError starting Hooke and Jeeves optimisation with"
@@ -386,7 +401,7 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
     }
 
     if (newf >= fbefore) {
-      steplength = steplength * rho;
+      steplength *= rho;
       cout << "\nReducing the steplength to " << steplength << endl;
       for (i = 0; i < nvars; i++)
         delta[i] *= rho;

@@ -10,10 +10,12 @@
 #include "ecosystem.h"
 #include "gadget.h"
 
-CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
-  const TimeClass* const timeinfo, double w) : Likelihood(CATCHINTONSLIKELIHOOD, w) {
+extern ErrorHandler handle;
 
-  ErrorHandler handle;
+CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
+  const TimeClass* const timeinfo, double weight)
+  : Likelihood(CATCHINTONSLIKELIHOOD, weight) {
+
   int i, j;
   int numarea = 0;
   int readfile = 0;
@@ -32,13 +34,9 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
   readWordAndValue(infile, "datafile", datafilename);
   readWordAndValue(infile, "function", functionname);
 
-  debug_print = 0;
   functionnumber = 0;
   if (strcasecmp(functionname, "sumofsquares") == 0) {
     functionnumber = 1;
-  } else if (strcasecmp(functionname, "sumofsquares-debug") == 0) {
-    functionnumber = 1;
-    debug_print = 1;
   } else
     handle.Message("Unknown function in catchintons");
 
@@ -77,22 +75,12 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
     readWordAndValue(infile, "areaaggfile", aggfilename);
 
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
-
-  if (debug_print) {
-    for (i = 0; i < areaindex.Size(); i++)
-      cout << areaindex[i] << endl;
-    for (i = 0; i < areas.Nrow(); i++) {
-      for (j = 0; j < areas.Ncol(i); j++)
-        cout << areas[i][j] << sep;
-      cout << endl;
-    }
-  }
 
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
@@ -126,17 +114,10 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
     infile >> text;
   }
 
-  if (debug_print) {
-    for (i = 0; i < stocknames.Size(); i++)
-      cout << stocknames[i] << endl;
-    for (i = 0; i < fleetnames.Size(); i++)
-      cout << fleetnames[i] << endl;
-  }
-
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readCatchInTonsData(subdata, timeinfo, numarea);
   handle.Close();
@@ -195,15 +176,10 @@ void CatchInTons::AddToLikelihood(const TimeClass* const TimeInfo) {
           t = SumOfSquares(ModelCatch[timeindex][a], DataCatch[timeindex][a]);
           break;
         default:
-          cerr << "Error in catchintons - unknown function " << functionname << endl;
+          handle.LogWarning("Warning in catchintons - unknown function", functionname);
           break;
         }
-
         likelihood += t;
-        if (debug_print) {
-          cout << TimeInfo->CurrentYear() << sep << TimeInfo->CurrentStep() << sep
-            << DataCatch[timeindex][a] << sep << ModelCatch[timeindex][a] << sep << t << endl;
-        }
 
       } else if (TimeInfo->CurrentStep() == TimeInfo->StepsInYear()) {
         switch(functionnumber) {
@@ -211,15 +187,10 @@ void CatchInTons::AddToLikelihood(const TimeClass* const TimeInfo) {
           t = SumOfSquares(ModelCatch[timeindex][a], DataCatch[timeindex][a]);
           break;
         default:
-          cerr << "Error in catchintons - unknown function " << functionname << endl;
+          handle.LogWarning("Warning in catchintons - unknown function", functionname);
           break;
         }
-
         likelihood += t;
-        if (debug_print) {
-          cout << TimeInfo->CurrentYear() << sep << DataCatch[timeindex][a] << sep
-            << ModelCatch[timeindex][a] << sep << t << endl;
-        }
       }
     }
 
@@ -253,8 +224,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
       }
 
     if (found == 0) {
-      cerr << "Error when searching for names of fleets for catchintons.\n"
-        << "Did not find any name matching " << fleetnames[i] << endl;
+      handle.LogWarning("Error in catchintons - unknown fleet", fleetnames[i]);
       exit(EXIT_FAILURE);
     }
   }
@@ -269,8 +239,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
         }
     }
     if (found == 0) {
-      cerr << "Error when searching for names of stocks for catchintons.\n"
-        << "Did not find any name matching " << stocknames[i] << endl;
+      handle.LogWarning("Error in catchintons - unknown stock", stocknames[i]);
       exit(EXIT_FAILURE);
     }
   }
@@ -287,18 +256,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
         }
 
     if (found == 0)
-      cerr << "Warning when searching for names of stocks and fleets for catchintons.\n"
-        << "Fleet " << fleetnames[i] << " is not catching any of the included stocks\n";
-  }
-
-  if (debug_print) {
-    cout << DataCatch.Nrow() << sep << Years.Size() << sep << Steps.Size() << endl;
-    for (i = 0; i < DataCatch.Nrow(); i++) {
-      cout << Years[i] << sep;
-      if (!yearly)
-        cout << Steps[i] << sep;
-      cout << DataCatch[i][0] << endl;
-    }
+      handle.LogWarning("Warning in catchintons - found no stocks for fleet", fleetnames[i]);
   }
 }
 
@@ -314,7 +272,6 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
   strncpy(tmpfleet, "", MaxStrLength);
   int keepdata, timeid, areaid, fleetid, check;
   int count = 0;
-  ErrorHandler handle;
 
   //Find start of distribution data in datafile
   infile >> ws;
@@ -391,7 +348,8 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
     AAT.AddActions(Years, Steps, TimeInfo);
 
   if (count == 0)
-    cerr << "Warning in catchintons - found no data in the data file\n";
+    handle.LogWarning("Warning in catchintons - found no data in the data file");
+  handle.LogMessage("Read catchintons data file - number of entries", count);
 }
 
 void CatchInTons::LikelihoodPrint(ofstream& outfile) {

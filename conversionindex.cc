@@ -1,15 +1,16 @@
 #include "conversionindex.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   const LengthGroupDivision* const L2, int interp) {
 
   if (L1->maxLength() <= L2->minLength() || L2->maxLength() <= L1->minLength()) {
-    cerr << "Error - cannot create a mapping between length groups whose "
-      << "intersection is empty\nThe length group divisions are:\n";
-    printLengthGroupDivisionError(L1);
-    cerr << " and\n";
-    printLengthGroupDivisionError(L2);
+    handle.LogWarning("Error in conversionindex - intersection between length groups is empty");
+    L1->printError();
+    L2->printError();
     exit(EXIT_FAILURE);
   }
 
@@ -32,7 +33,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     }
 
   } else {
-    checkLengthGroupIsFiner(L1, L2, "CI - finer", "CI - coarser");
+    checkLengthGroupIsFiner(L1, L2);
     targetisfiner = 0;
     Lc = L2;
     Lf = L1;

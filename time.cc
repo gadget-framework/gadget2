@@ -4,8 +4,10 @@
 #include "readword.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 TimeClass::TimeClass(CommentStream& infile) {
-  ErrorHandler handle;
+
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
@@ -18,7 +20,8 @@ TimeClass::TimeClass(CommentStream& infile) {
 
   infile >> ws;
   timesteps.resize(notimesteps, 1, 0.0);
-  readIndexVector(infile, timesteps);
+  if (!readIndexVector(infile, timesteps))
+    handle.Message("Failure in reading time steps");
 
   infile >> ws;
   if (infile.eof())
@@ -28,7 +31,8 @@ TimeClass::TimeClass(CommentStream& infile) {
     if (!(strcasecmp(text, "nrofsubsteps") == 0))
       handle.Message("Failure in reading time substeps");
     nrofsubsteps.resize(notimesteps, 1, 0.0);
-    readIndexVector(infile, nrofsubsteps);
+    if (!readIndexVector(infile, nrofsubsteps))
+      handle.Message("Failure in reading time substeps");
   }
 
   lengthofyear = 0.0;
@@ -41,6 +45,7 @@ TimeClass::TimeClass(CommentStream& infile) {
     handle.Warning("Warning - time period is empty");
   currentyear = firstyear;
   currentstep = firststep;
+  handle.LogMessage("Read time file - number of timesteps", this->TotalNoSteps());
 }
 
 void TimeClass::IncrementTime() {

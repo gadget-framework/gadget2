@@ -24,8 +24,7 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
   int numlengths = LgrpDiv->NoLengthGroups();
 
   for (i = 0; i < stocks.Size(); i++) {
-    checkLengthGroupIsFiner(stocks[i]->returnPrey()->returnLengthGroupDiv(),
-      LgrpDiv, stocks[i]->Name(), "fleet consumption");
+    checkLengthGroupIsFiner(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);
     CI.resize(1);
     CI[i] = new ConversionIndex(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);
 
@@ -161,7 +160,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
   }
 }
 
-void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo, int dummy) {
+void FleetPreyAggregator::MeanSum(const TimeClass* const TimeInfo) {
   //A new aggregator function to sum up the calculated catches from
   //the mortality model. The results are to be used in the second likelihood
   //function in CatchDistribution.

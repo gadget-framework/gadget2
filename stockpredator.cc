@@ -8,13 +8,14 @@
 #include "readword.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 StockPredator::StockPredator(CommentStream& infile, const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
   int minage, int maxage, const TimeClass* const TimeInfo, Keeper* const keeper)
   : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv),
     MaxconByLength(areas.Size(), GivenLgrpDiv->NoLengthGroups(), 0.0) {
 
-  ErrorHandler handle;
   keeper->AddString("predator");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -132,7 +133,6 @@ const PopInfoVector& StockPredator::NumberPriortoEating(int area, const char* pr
     if (strcasecmp(Preyname(prey), preyname) == 0)
       return Preys(prey)->NumberPriortoEating(area);
 
-  cerr << "Predator " << this->Name() << " was asked for consumption\n"
-    << "of prey " << preyname << " which he does not eat\n";
+  handle.LogWarning("Error in stockpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
 }

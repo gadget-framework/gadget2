@@ -236,21 +236,8 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
   double xp[NUM_VARS];
   int param[NUM_VARS];  //Vector containing the order of the parameters at each time
 
-  for (i = 0; i < n; i++) {
-    x[i] = point[i];
-    endpoint[i] = point[i];
-    vm[i] = vmlen;
-    nacp[i] = 0;
-    param[i] = i;
-  }
-
   cout << "\nStarting Simulated Annealing\n";
-  //funcval is the function value at x
-  funcval = (*f)(x, n);
-  nacc++;  //accept the first point no matter what
-  offset = FuncEval;  //number of function evaluations done before loop
-
-  //check the values for uratio and lratio
+  //check the values specified in the optinfo file ...
   if ((uratio < 0.5) || (uratio > 1)) {
     cout << "\nError in value of uratio - setting to default value of 0.7\n";
     uratio = 0.7;
@@ -259,6 +246,23 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
     cout << "\nError in value of lratio - setting to default value of 0.3\n";
     lratio = 0.3;
   }
+  if ((rt < 0) || (rt > 1)) {
+    cout << "\nError in value of rt - setting to default value of 0.85\n";
+    rt = 0.85;
+  }
+
+  for (i = 0; i < n; i++) {
+    x[i] = point[i];
+    endpoint[i] = point[i];
+    vm[i] = vmlen;
+    nacp[i] = 0;
+    param[i] = i;
+  }
+
+  //funcval is the function value at x
+  funcval = (*f)(x, n);
+  nacc++;  //accept the first point no matter what
+  offset = FuncEval;  //number of function evaluations done before loop
   cs = cstep / lratio;
 
   //If the function is to be minimised, switch the sign of the function
@@ -327,11 +331,10 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
               << (FuncEval - offset) << " function evaluations (max " << maxevl
               << ")\nThe temperature was reduced to " << t
               << "\nThe optimisation stopped because the maximum number of function "
-              << "evaluations\nwas reached and NOT because an optimum was found for this run\n";
-
-cout << "Number of directly accepted points " << nacc << endl;
-cout << "Number of metropolis accepted points " << naccmet << endl;
-cout << "Number of rejected points " << nrej << endl;
+              << "evaluations\nwas reached and NOT because an optimum was found for this run\n"
+              << "Number of directly accepted points " << nacc
+              << "\nNumber of metropolis accepted points " << naccmet
+              << "\nNumber of rejected points " << nrej << endl;
 
             fp = (*f)(endpoint, n);
             return 0;
@@ -403,7 +406,7 @@ cout << "Number of rejected points " << nrej << endl;
     //Check termination criteria
     for (i = check - 1; i > 0; i--)
       fstar[i] = fstar[i - 1];
-    fstar[0] = funcval;  //JMB should this be fopt or funcval??
+    fstar[0] = funcval;
 
     quit = 0;
     if (absolute(fopt - funcval) < eps) {
@@ -413,21 +416,16 @@ cout << "Number of rejected points " << nrej << endl;
           quit = 0;
     }
 
-cout << "\nChecking convergence criteria after " << (FuncEval - offset) << " function evaluations ...\n";
-/*cout << absolute(fopt - funcval) << sep;
-for (i = 0; i < check - 1; i++)
-  cout << absolute(fstar[i + 1] - fstar[i]) << sep;
-cout << endl;*/
+    cout << "\nChecking convergence criteria after " << (FuncEval - offset) << " function evaluations ...\n";
 
     //Terminate SA if appropriate
     if (quit) {
       cout << "\nStopping Simulated Annealing\n\nThe optimisation stopped after " << (FuncEval - offset)
         << " function evaluations (max " << maxevl << ")\nThe temperature was reduced to " << t
-        << "\nThe optimisation stopped because an optimum was found for this run\n";
-
-cout << "Number of directly accepted points " << nacc << endl;
-cout << "Number of metropolis accepted points " << naccmet << endl;
-cout << "Number of rejected points " << nrej << endl;
+        << "\nThe optimisation stopped because an optimum was found for this run\n"
+        << "Number of directly accepted points " << nacc
+        << "\nNumber of metropolis accepted points " << naccmet
+        << "\nNumber of rejected points " << nrej << endl;
 
       fp = (*f)(endpoint, n);
       EcoSystem->setConverge(1);
@@ -435,11 +433,11 @@ cout << "Number of rejected points " << nrej << endl;
     }
 
     //If termination criteria is not met, prepare for another loop.
-    t = rt * t;
+    t *= rt;
     if (t < rathersmall)
       t = rathersmall;  //JMB make sure temperature doesnt get too small
 
-cout << "Reducing the temperature to " << t << endl;
+    cout << "Reducing the temperature to " << t << endl;
     funcval = fopt;
     for (i = 0; i < n; i++)
       x[i] = endpoint[i];

@@ -10,7 +10,7 @@
 class CatchInTons : public Likelihood {
 public:
   CatchInTons(CommentStream& infile, const AreaClass* const areas,
-    const TimeClass* const timeinfo, double w);
+    const TimeClass* const timeinfo, double weight);
   ~CatchInTons();
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
@@ -36,7 +36,6 @@ private:
   IntVector Steps;
   int timeindex;
   int functionnumber;
-  int debug_print;
   char* functionname;
 };
 

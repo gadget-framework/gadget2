@@ -6,6 +6,7 @@
 
 extern RunID RUNID;
 extern Ecosystem* EcoSystem;
+extern ErrorHandler handle;
 
 Keeper::Keeper() {
   stack = new StrStack();
@@ -13,7 +14,6 @@ Keeper::Keeper() {
 }
 
 void Keeper::KeepVariable(double& value, const Parameter& attr) {
-  ErrorHandler handle;
 
   //Try to find the value attr in the vector switches.
   int i, index = -1;
@@ -92,9 +92,7 @@ void Keeper::ChangeVariable(const double& pre, double& post) {
       }
 
   if (found == 1 && pre != post) {
-    cerr << "Error when trying to put variable with value " << post
-      << " instead of variable " << address[--i][--j].name
-      << " which has the value " << pre << endl;
+    handle.LogWarning("Error in keeper - failed to change variables");
     exit(EXIT_FAILURE);
   }
 }
@@ -172,7 +170,7 @@ void Keeper::ScaledValues(DoubleVector& val) const {
 void Keeper::ScaledOptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->NoOptVariables()) {
-    cerr << "Keeper gets wrong number of optimising variables";
+    handle.LogWarning("Warning in keeper - illegal number of optimising variables");
     return;
   }
   if (opt.Size() == 0)
@@ -190,7 +188,7 @@ void Keeper::ScaledOptValues(DoubleVector& val) const {
 void Keeper::OptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->NoOptVariables()) {
-    cerr << "Keeper gets wrong number of optimising variables";
+    handle.LogWarning("Warning in keeper - illegal number of optimising variables");
     return;
   }
   if (opt.Size() == 0)
@@ -208,7 +206,7 @@ void Keeper::OptValues(DoubleVector& val) const {
 void Keeper::InitialOptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->NoOptVariables()) {
-    cerr << "Keeper gets wrong number of optimising variables";
+    handle.LogWarning("Warning in keeper - illegal number of optimising variables");
     return;
   }
   if (opt.Size() == 0)
@@ -226,7 +224,7 @@ void Keeper::InitialOptValues(DoubleVector& val) const {
 void Keeper::OptSwitches(ParameterVector& sw) const {
   int i, k;
   if (sw.Size() != this->NoOptVariables()) {
-    cerr << "Keeper gets wrong number of optimising variables";
+    handle.LogWarning("Warning in keeper - illegal number of optimising variables");
     return;
   }
   if (opt.Size() == 0)
@@ -245,7 +243,7 @@ void Keeper::ScaleVariables() {
   int i;
   for (i = 0; i < values.Size(); i++) {
     if (isZero(values[i])) {
-      cerr << "Warning - cannot scale switch " << switches[i] << " with initial value zero\n";
+      handle.LogWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getValue());
       initialvalues[i] = 1.0;
       scaledvalues[i] = values[i];
     } else {
@@ -267,7 +265,7 @@ void Keeper::Update(const DoubleVector& val) {
 
     values[i] = val[i];
     if (isZero(initialvalues[i])) {
-      cerr << "Warning - cannot scale switch " << switches[i] << " with initial value zero\n";
+      handle.LogWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getValue());
       scaledvalues[i] = val[i];
     } else
       scaledvalues[i] = val[i] / initialvalues[i];
@@ -286,7 +284,7 @@ void Keeper::Update(int pos, double& value) {
 
   values[pos] = value;
   if (isZero(initialvalues[pos])) {
-    cerr << "Warning - cannot scale switch " << switches[pos] << " with initial value zero\n";
+    handle.LogWarning("Warning in keeper - cannot scale switch with initial value zero", switches[pos].getValue());
     scaledvalues[pos] = value;
   } else
     scaledvalues[pos] = value / initialvalues[pos];
@@ -308,7 +306,7 @@ void Keeper::writeOptValues(double functionValue, const LikelihoodPtrVector& Lik
 void Keeper::writeInitialInformation(const char* const filename, const LikelihoodPtrVector& Likely) {
   ofstream outfile;
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
   int i, j, k;
 
   outfile << "; ";
@@ -368,7 +366,7 @@ void Keeper::writeValues(const char* const filename,
   int i, p, w;
   ofstream outfile;
   outfile.open(filename, ios::app);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   //JMB - print the number of function evaluations at the start of the line
   outfile << EcoSystem->getFuncEval() << TAB;
@@ -402,7 +400,7 @@ void Keeper::writeValues(const char* const filename,
 void Keeper::writeInitialInformationInColumns(const char* const filename) const {
   ofstream outfile;
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   outfile << "; ";
   RUNID.print(outfile);
@@ -416,7 +414,7 @@ void Keeper::writeValuesInColumns(const char* const filename,
   int i, p, w;
   ofstream outfile;
   outfile.open(filename, ios::app);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   p = prec;
   if (prec == 0)
@@ -458,7 +456,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
           values[j] = Stoch->Values(i);
 
           if (isZero(initialvalues[j])) {
-            cerr << "Warning - cannot scale switch " << switches[j] << " with initial value zero\n";
+            handle.LogWarning("Warning in keeper - cannot scale switch with initial value zero", switches[j].getValue());
             scaledvalues[j] = values[j];
           } else
             scaledvalues[j] = values[j] / initialvalues[j];
@@ -475,16 +473,15 @@ void Keeper::Update(const StochasticData* const Stoch) {
 
     for (i = 0; i < Stoch->NoVariables(); i++)
       if (match[i] == 0)
-        cerr << "Warning - unmatched switch " << Stoch->Switches(i) << endl;
+        handle.LogWarning("Warning in keeper - failed to match switch", Stoch->Switches(i).getValue());
 
     for (i = 0; i < switches.Size(); i++)
       if (found[i] == 0)
-        cerr << "Warning - using default values for switch " << switches[i] << endl;
+        handle.LogWarning("Warning in keeper - using default values for switch", switches[i].getValue());
 
   } else {
     if (this->NoVariables() != Stoch->NoVariables()) {
-      cerr << "Number of variables in data files " << this->NoVariables()
-        << "\nNumber of variables in parameter file " << Stoch->NoVariables() << endl;
+      handle.LogWarning("Error in keeper - failed to read values");
       exit(EXIT_FAILURE);
     }
     for (i = 0; i < Stoch->NoVariables(); i++) {
@@ -493,7 +490,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
 
       values[i] = Stoch->Values(i);
       if (isZero(initialvalues[i])) {
-        cerr << "Warning - cannot scale switch " << switches[i] << " with initial value zero\n";
+        handle.LogWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getValue());
         scaledvalues[i] = values[i];
       } else
         scaledvalues[i] = Stoch->Values(i) / initialvalues[i];
@@ -523,7 +520,7 @@ void Keeper::writeParamsInColumns(const char* const filename,
   int i, p, w;
   ofstream outfile;
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   p = prec;
   if (prec == 0)
@@ -574,7 +571,7 @@ void Keeper::UpperBds(DoubleVector& ubs) const {
 void Keeper::LowerOptBds(DoubleVector& lbs) const {
   int i, j;
   if (lbs.Size() != this->NoOptVariables()) {
-    cerr << "Keeper gets wrong number of optimising variables";
+    handle.LogWarning("Warning in keeper - illegal number of optimising variables");
     return;
   }
   if (lbs.Size() == 0)
@@ -592,7 +589,7 @@ void Keeper::LowerOptBds(DoubleVector& lbs) const {
 void Keeper::UpperOptBds(DoubleVector& ubs) const {
   int i, j;
   if (ubs.Size() != this->NoOptVariables()) {
-    cerr << "Keeper gets wrong number of optimising variables";
+    handle.LogWarning("Warning in keeper - illegal number of optimising variables");
     return;
   }
   if (ubs.Size() == 0)
@@ -612,23 +609,20 @@ void Keeper::CheckBounds() const {
   for (i = 0; i < values.Size(); i++) {
     if (lowerbds[i] > values[i]) {
       count++;
-      cerr << "Error - for switch " << switches[i] << " lowerbound " << lowerbds[i]
-        << " is greater than the starting value " << values[i] << endl;
+      handle.LogWarning("Error in keeper - failed to read lowerbound", lowerbds[i], values[i]);
     }
     if (upperbds[i] < values[i]) {
       count++;
-      cerr << "Error - for switch " << switches[i] << " upperbound " << upperbds[i]
-        << " is less than the starting value " << values[i] << endl;
+      handle.LogWarning("Error in keeper - failed to read upperbound", values[i], upperbds[i]);
     }
     if (upperbds[i] < lowerbds[i]) {
       count++;
-      cerr << "Error - for switch " << switches[i] << " upperbound " << upperbds[i]
-        << " is less than the lowerbound " << lowerbds[i] << endl;
+      handle.LogWarning("Error in keeper - failed to read bounds", lowerbds[i], upperbds[i]);
     }
   }
 
   if (count > 0) {
-    cerr << "Exiting with " << count << " errors in the initial parameter values\n";
+    handle.LogWarning("Error in keeper - failed to read bounds");
     exit(EXIT_FAILURE);
   }
 }

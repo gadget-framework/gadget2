@@ -7,16 +7,16 @@
 #include "readword.h"
 #include "readaggregation.h"
 #include "gadget.h"
-
 #include "runid.h"
+
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 StockFullPrinter::StockFullPrinter(CommentStream& infile,
   const AreaClass* const Area,  const TimeClass* const TimeInfo)
   : Printer(STOCKFULLPRINTER), minage(0), maxage(0),
     stockname(0), aggregator(0), LgrpDiv(0) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
@@ -35,7 +35,7 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
   IntMatrix tmpareas;
   readWordAndValue(infile, "areaaggfile", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, tmpareas, areaindex);
   handle.Close();
@@ -58,7 +58,7 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
@@ -109,11 +109,9 @@ void StockFullPrinter::setStock(StockPtrVector& stockvec) {
   }
 
   if (err || stock == 0) {
-    cerr << "Error in printer when searching for stock with name matching: "
-      << stockname << "\nFound instead the following stocks:\n";
+    handle.LogWarning("Error in stockfullprinter - failed to match stock", stockname);
     for (i = 0; i < stockvec.Size(); i++)
-      cerr << stockvec[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in stockfullprinter - found stock", stockvec[i]->Name());
     exit(EXIT_FAILURE);
   }
 

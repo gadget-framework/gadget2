@@ -7,8 +7,7 @@ PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
 
   int i, j;
   for (i = 0; i < predators.Size(); i++)
-    checkLengthGroupIsFiner(preds[i]->returnLengthGroupDiv(),
-      LgrpDiv, preds[i]->Name(), "predator overconsumption");
+    checkLengthGroupIsFiner(preds[i]->returnLengthGroupDiv(), LgrpDiv);
 
   total.AddRows(areas.Nrow(), LgrpDiv->NoLengthGroups(), 0.0);
   for (i = 0; i < predators.Size(); i++) {

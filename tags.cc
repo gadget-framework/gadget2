@@ -7,13 +7,14 @@
 #include "stockprey.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper, StockPtrVector stockvec)
   : HasName(givenname) {
 
   LgrpDiv = NULL;
   taggingstock = 0;
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   ifstream subfile;
@@ -50,8 +51,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
     i++;
   }
   if (found == 0) {
-    cerr << "Error when searching for names of stocks for tags\n"
-      << "Did not find any name matching " << stocknames[0] << endl;
+    handle.LogWarning("Error in tags - failed to match stock", stocknames[0]);
     exit(EXIT_FAILURE);
   }
   NumberByLength.resize(LgrpDiv->NoLengthGroups(), 0.0);
@@ -63,7 +63,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   //read in the numbers format: tagid - length - number
   readWordAndValue(infile, "numbers", text);
   subfile.open(text, ios::in);
-  checkIfFailure(subfile, text);
+  handle.checkIfFailure(subfile, text);
   handle.Open(text);
   readNumbers(subcomment, givenname, TimeInfo);
   handle.Close();
@@ -80,8 +80,8 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
   double tmplength, tmpnumber;
   char tmpname[MaxStrLength];
   strncpy(tmpname, "", MaxStrLength);
-  ErrorHandler handle;
-
+  int count = 0;
+  
   infile >> ws;
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 5)
@@ -106,7 +106,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
 
     //only keep the data if the number is positive
     if (tmpnumber < 0) {
-      cerr << "Warning - found a negative number for the tagging experiment - number set to zero\n";
+      handle.LogWarning("Warning in tags - found negative number of tags", tmpnumber);
       keepdata = 1;
     }
 
@@ -126,9 +126,15 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
     } else
       keepdata = 1;
 
-    if (keepdata == 0)
+    if (keepdata == 0) {
+      count++;
       (*NumberByLengthMulti[timeid])[0][lenid] = tmpnumber;
+    }
   }
+
+  if (count == 0)
+    handle.LogWarning("Warning in tags - found no data in the data file for", tagname);
+  handle.LogMessage("Read tags data file - number of entries", count);
 
   tagyear = 9999;
   tagstep = 9999;
@@ -144,7 +150,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
       timeid = i;
 
   if (timeid == -1) {
-    cerr << "Error in tagging experiment - invalid year " << tagyear << " and step " << tagstep << endl;
+    handle.LogWarning("Error in tags - invalid timestep", tagyear, tagstep);
     exit(EXIT_FAILURE);
   }
 
@@ -201,8 +207,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
     j++;
   }
   if (found == 0) {
-    cerr << "Error when searching for names of stocks for tags\n"
-      << "Did not find any name matching " << stocknames[0] << endl;
+    handle.LogWarning("Error in tags - failed to match stock", stocknames[0]);
     exit(EXIT_FAILURE);
   }
 
@@ -210,22 +215,21 @@ void Tags::setStock(StockPtrVector& Stocks) {
   //lengthgroup division for the tagging experiment and the stock
   i = taggingstock->IsInArea(tagarea);
   if (i == 0) {
-    cerr << "Error in tagging experiment - stock " << tagstocks[0]->Name()
-      << " does not live on area: " << tagarea << endl;
+    handle.LogWarning("Error in tags - stock isnt defined on all areas");
     exit(EXIT_FAILURE);
   }
 
   const LengthGroupDivision* tempLgrpDiv = taggingstock->returnLengthGroupDiv();
   if (LgrpDiv->NoLengthGroups() != tempLgrpDiv->NoLengthGroups()) {
-    cerr << "Error in tagging experiment - invalid length groups\n";
+    handle.LogWarning("Error in tags - invalid length group for tagged stock");
     exit(EXIT_FAILURE);
   }
   if (LgrpDiv->dl() != tempLgrpDiv->dl()) {
-    cerr << "Error in tagging experiment - invalid length groups\n";
+    handle.LogWarning("Error in tags - invalid length group for tagged stock");
     exit(EXIT_FAILURE);
   }
   if (!(isZero(LgrpDiv->minLength() - tempLgrpDiv->minLength()))) {
-    cerr << "Error in tagging experiment - invalid length groups\n";
+    handle.LogWarning("Error in tags - invalid length group for tagged stock");
     exit(EXIT_FAILURE);
   }
 
@@ -297,7 +301,7 @@ void Tags::Update() {
     j++;
   }
   if (tagareaindex == -1) {
-    cerr << "Error - Could not calculate area while updating tagging for " << this->Name() << endl;
+    handle.LogWarning("Error in tags - invalid area for tagged stock");
     exit(EXIT_FAILURE);
   }
 
@@ -341,7 +345,7 @@ void Tags::Update() {
 
     stockid = stockIndex(taggingstock->Name());
     if (stockid < 0 || stockid >= preyindex.Size()) {
-      cerr << "Error in tagging experiment - invalid stock identifier\n";
+      handle.LogWarning("Error in tags - invalid stock identifier");
       exit(EXIT_FAILURE);
     }
     preyindex[stockid] = NumBeforeEating.Size() - 1;
@@ -380,7 +384,7 @@ void Tags::Update() {
 
       stockid = stockIndex(tmpStock->Name());
       if (stockid < 0 || stockid >= preyindex.Size()) {
-        cerr << "Error in tagging experiment - invalid stock identifier\n";
+        handle.LogWarning("Error in tags - invalid stock identifier");
         exit(EXIT_FAILURE);
       }
       preyindex[stockid] = NumBeforeEating.Size() - 1;
@@ -417,12 +421,12 @@ void Tags::updateMatureStock(const TimeClass* const TimeInfo) {
   int currentStep = TimeInfo->CurrentStep();
 
   if (endyear <= currentYear)
-    cerr << "Warning - tagging experiment is not part of the simulation anymore\n";
+    handle.LogWarning("Warning in tags - tagging experiment has finished");
   else
     for (i = 0; i < maturestocks.Size(); i++) {
       id = stockIndex(maturestocks[i]->Name());
       if (id < 0 || id >= AgeLengthStock.Size()) {
-        cerr << "Error in tagging experiment - invalid stock identifier" << endl;
+        handle.LogWarning("Error in tags - invalid stock identifier");
         exit(EXIT_FAILURE);
       }
       if (updated[id] == 0) {
@@ -438,12 +442,12 @@ void Tags::updateTransitionStock(const TimeClass* const TimeInfo) {
   int currentStep = TimeInfo->CurrentStep();
 
   if (endyear <= currentYear)
-    cerr << "Warning - tagging experiment is not part of the simulation anymore\n";
+    handle.LogWarning("Warning in tags - tagging experiment has finished");
   else
     for (i = 0; i < transitionstocks.Size(); i++) {
       id = stockIndex(transitionstocks[i]->Name());
       if (id < 0 || id >= AgeLengthStock.Size()) {
-        cerr << "Error in tagging experiment - invalid stock identifier\n";
+        handle.LogWarning("Error in tags - invalid stock identifier");
         exit(EXIT_FAILURE);
       }
       if (updated[id] == 0) {
@@ -467,12 +471,12 @@ void Tags::StoreNumberPriorToEating(int area, const char* stockname) {
   int stockid, preyid;
   stockid = stockIndex(stockname);
   if (stockid < 0) {
-    cerr << "Error in tagging experiment - invalid stock identifier\n";
+    handle.LogWarning("Error in tags - invalid stock identifier");
     exit(EXIT_FAILURE);
   }
   preyid = preyindex[stockid];
   if (preyid > NumBeforeEating.Size() || preyid < 0) {
-    cerr << "Error in tagging experiment - invalid prey identifier\n";
+    handle.LogWarning("Error in tags - invalid prey identifier");
     exit(EXIT_FAILURE);
   }
   (*NumBeforeEating[preyid])[area].setToZero();
@@ -483,12 +487,12 @@ const AgeBandMatrix& Tags::NumberPriorToEating(int area, const char* stockname) 
   int stockid, preyid;
   stockid = stockIndex(stockname);
   if (stockid < 0) {
-    cerr << "Error in tagging experiment - invalid stock identifier\n";
+    handle.LogWarning("Error in tags - invalid stock identifier");
     exit(EXIT_FAILURE);
   }
   preyid = preyindex[stockid];
   if (preyid > NumBeforeEating.Size() || preyid < 0) {
-    cerr << "Error in tagging experiment - invalid prey identifier\n";
+    handle.LogWarning("Error in tags - invalid prey identifier");
     exit(EXIT_FAILURE);
   }
   return (*NumBeforeEating[preyid])[area];

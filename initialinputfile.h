@@ -52,7 +52,7 @@ public:
   void correctHeaderText(int index, const char* name);
   void readHeader();
   void readVectorFromLine();
-  void checkIfFailure();
+  void checkParameters();
   void readFromFile();
   int NoVariables() const;
   int readSwitches() const;

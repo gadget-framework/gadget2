@@ -3,7 +3,7 @@
 
 /**
  * \class PopInfo
- * \brief This is the class used store information about the number, and mean weight, of a population cell of a stock
+ * \brief This is the class used to store information about the number, and mean weight, of a population cell of a stock
  */
 class PopInfo {
 public:
@@ -16,7 +16,7 @@ public:
    */
   ~PopInfo() {};
   /**
-   * \brief This is the number of the fish in the population cell
+   * \brief This is the number of fish in the population cell
    */
   double N;
   /**

@@ -10,6 +10,7 @@
 //Ecosystem must be global due to the optimization functions.
 RunID RUNID;
 Ecosystem* EcoSystem;
+ErrorHandler handle;
 int FuncEval = 0;
 
 void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
@@ -55,7 +56,7 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
     delete Stochasticdata;
 
   } else {
-    cerr << "Warning - no parameter input file given, using default values" << endl;
+    handle.LogWarning("Warning - no parameter input file given, using default values");
     EcoSystem->Simulate(MainInfo->CalcLikelihood(), print);
     if ((MainInfo->getPI()).Print())
       EcoSystem->PrintValues((MainInfo->getPI()).getOutputFile(), (MainInfo->getPI()).getPrecision());
@@ -65,19 +66,11 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
 }
 
 int main(int aNumber, char* const aVector[]) {
-  
-  ofstream logfile(".gadget.log");
-  logfile << "Gadget started" << endl;
-  logfile.close();
+
   MainInfo MainInfo;
   OptInfo* Optinfo = 0;
   StochasticData* Stochasticdata = 0;
-  ErrorHandler handle;
   int check = 0;
-
-  //  printlog = 0;
-
-
 
   //Test to see if the function double lgamma(double) is returning an integer.
   //lgamma is a non-ansi function and on some platforms when compiled with the
@@ -116,6 +109,9 @@ int main(int aNumber, char* const aVector[]) {
     cout << "Starting Gadget from directory: " << workingdir
       << "\nusing data from directory: " << inputdir << endl;
   }
+  handle.LogMessage("Starting Gadget from directory:", workingdir);
+  handle.LogMessage("using data from directory:", inputdir);
+  handle.LogMessage("");  //write a blank line to the log file
 
   //Added MainInfo.Net to Ecosystem constructor, to let EcoSystem know if
   //we are doing a net run. 07.04.00 AJ
@@ -147,7 +143,8 @@ int main(int aNumber, char* const aVector[]) {
 
   } else {
     Optinfo = new OptInfoHooke();
-    //JMB - no optinfo file specified so only use default values
+    if ((MainInfo.Optimize()) && !(MainInfo.Net()))
+      handle.LogWarning("Warning - no optimisation parameters file given, using default values");
   }
 
   if (MainInfo.printInitial())
@@ -165,7 +162,7 @@ int main(int aNumber, char* const aVector[]) {
       EcoSystem->Update(Stochasticdata);
       EcoSystem->CheckBounds();
     } else
-      cerr << "Warning - no parameter input file given, using default values" << endl;
+      handle.LogWarning("Warning - no parameter input file given, using default values");
 
     Optinfo->MaximizeLikelihood();
     if ((MainInfo.getPI()).getForcePrint())
@@ -184,11 +181,9 @@ int main(int aNumber, char* const aVector[]) {
   if (!(MainInfo.Net()))
     EcoSystem->PrintParamsinColumns((MainInfo.getPI()).getParamOutFile(), (MainInfo.getPI()).getPrecision());
 
-
   if (check == 1)
     free(workingdir);
   delete Optinfo;
   delete EcoSystem;
   return EXIT_SUCCESS;
-  //  LogClean();
 }

@@ -7,13 +7,14 @@
 #include "growthcalc.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrpDiv,
   const LengthGroupDivision* const GivenLgrpDiv, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper, const char* refWeight,
   const AreaClass* const Area, const CharPtrVector& lenindex)
   : LivesOnAreas(Areas), LgrpDiv(0), CI(0), growthcalc(0), growthtype(0) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
@@ -92,9 +93,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     part4.resize(rows, 0.0);
 
   } else if ((strcasecmp(text, "meanvarianceparameters") == 0)) {
-    //Old growth distribution, with distribution file
-    cout << "The mean variance parameters implementation of the growth is no longer supported\n"
-      << "Use the beta-binomial distribution implementation of the growth instead\n";
+    handle.Warning("The mean variance parameters implementation of the growth is no longer supported\nUse the beta-binomial distribution implementation of the growth instead");
 
   } else
     handle.Unexpected("beta", text);

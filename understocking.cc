@@ -6,11 +6,12 @@
 #include "fleet.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight)
   : Likelihood(UNDERSTOCKINGLIKELIHOOD, weight), powercoeff(2) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j;
@@ -24,7 +25,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -84,8 +85,7 @@ void UnderStocking::setFleets(FleetPtrVector& Fleets) {
         fleets.resize(1, Fleets[j]);
       }
     if (found == 0) {
-      cerr << "Error when searching for names of fleets for understocking.\n"
-        << "Did not find any name matching " << fleetnames[i] << endl;
+      handle.LogWarning("Error in understocking - unknown fleet", fleetnames[i]);
       exit(EXIT_FAILURE);
     }
   }

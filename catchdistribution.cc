@@ -12,11 +12,12 @@
 #include "ludecomposition.h"
 #include "gadget.h"
 
-CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, Keeper* const keeper, double w, const char* name)
-  : Likelihood(CATCHDISTRIBUTIONLIKELIHOOD, w) {
+extern ErrorHandler handle;
 
-  ErrorHandler handle;
+CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, Keeper* const keeper, double weight, const char* name)
+  : Likelihood(CATCHDISTRIBUTIONLIKELIHOOD, weight) {
+
   int i, j;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -113,7 +114,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -123,7 +124,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numage = readAggregation(subdata, ages, ageindex);
   handle.Close();
@@ -133,7 +134,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   //read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numlen = readLengthAggregation(subdata, lengths, lenindex);
   handle.Close();
@@ -178,7 +179,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readDistributionData(subdata, TimeInfo, numarea, numage, numlen);
   handle.Close();
@@ -206,7 +207,6 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
   strncpy(tmplen, "", MaxStrLength);
   int keepdata, timeid, ageid, areaid, lenid;
   int count = 0;
-  ErrorHandler handle;
 
   //Find start of distribution data in datafile
   infile >> ws;
@@ -287,7 +287,8 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
   }
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cerr << "Warning in catchdistribution - found no data in the data file for " << cdname << endl;
+    handle.LogWarning("Warning in catchdistribution - found no data in the data file for", cdname);
+  handle.LogMessage("Read catchdistribution data file - number of entries", count);
 }
 
 CatchDistribution::~CatchDistribution() {
@@ -352,7 +353,7 @@ void CatchDistribution::Print(ofstream& outfile) const {
       outfile << "\tMultivariate logistic distribution parameter: tau " << tau << endl;
       break;
     default:
-      cerr << "Error in catchdistribution - unknown function " << functionname << endl;
+      handle.LogWarning("Warning in catchdistribution - unknown function", functionname);
       break;
   }
 
@@ -403,7 +404,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
       outfile << "Multivariate logistic distribution parameter: tau " << tau << endl;
       break;
     default:
-      cerr << "Error in catchdistribution - unknown function " << functionname << endl;
+      handle.LogWarning("Warning in catchdistribution - unknown function", functionname);
       break;
   }
 
@@ -456,8 +457,7 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
       }
 
     if (found == 0) {
-      cerr << "Error: when searching for names of fleets for catchdistribution.\n"
-        << "Did not find any name matching " << fleetnames[i] << endl;
+      handle.LogWarning("Error in catchdistribution - unknown fleet", fleetnames[i]);
       exit(EXIT_FAILURE);
     }
   }
@@ -478,8 +478,7 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
         }
     }
     if (found == 0) {
-      cerr << "Error: when searching for names of stocks for catchdistribution.\n"
-        << "Did not find any name matching " << stocknames[i] << endl;
+      handle.LogWarning("Error in catchdistribution - unknown stock", stocknames[i]);
       exit(EXIT_FAILURE);
     }
   }
@@ -501,11 +500,11 @@ void CatchDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
         likelihood += LikMultinomial();
         break;
       case 2:
-        aggregator->Sum(TimeInfo, 1); //mortality model, calculated catch
+        aggregator->MeanSum(TimeInfo); //mortality model, calculated catch
         likelihood += LikPearson(TimeInfo);
         break;
       case 3:
-        aggregator->Sum(TimeInfo, 1); //mortality model, calculated catch
+        aggregator->MeanSum(TimeInfo); //mortality model, calculated catch
         likelihood += LikGamma(TimeInfo);
         break;
       case 4:
@@ -519,7 +518,7 @@ void CatchDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
           Correlation();
           times++;
           if (illegal == 1 || LU.IsIllegal() == 1) {
-            cerr << "Error catchdistribution - multivariate normal out of bounds\n";
+            handle.LogWarning("Warning in catchdistribution - multivariate normal out of bounds");
             likelihood += verybig;
           }
         }
@@ -535,7 +534,7 @@ void CatchDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
         likelihood += LikMVLogistic();
         break;
       default:
-        cerr << "Error in catchdistribution - unknown function " << functionname << endl;
+        handle.LogWarning("Warning in catchdistribution - unknown function", functionname);
         break;
     }
     timeindex++;
@@ -692,7 +691,7 @@ double CatchDistribution::LikGamma(const TimeClass* const TimeInfo) {
       }
       totallikelihood += Likelihoodvalues[timeindex][nareas];
 
-    } else { //calculate  likelihood on year basis
+    } else { //calculate likelihood on year basis
       if (TimeInfo->CurrentStep() < TimeInfo->StepsInYear())
         Likelihoodvalues[timeindex][nareas] = 0.0;
       else { //last step in year, is to calc likelihood contribution
@@ -778,7 +777,7 @@ void CatchDistribution::Correlation() {
 double CatchDistribution::LikMVNormal() {
 
   double totallikelihood = 0.0;
-  double sumdata = 0.0, sumdist = 0.0;
+  double sumdata, sumdist;
   int age, len, nareas;
   int i, j, p;
 
@@ -787,8 +786,8 @@ double CatchDistribution::LikMVNormal() {
   DoubleVector diff(p, 0.0);
 
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
-    sumdist = 0.0;
     sumdata = 0.0;
+    sumdist = 0.0;
     for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
       for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
         (*Proportions[timeindex][nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
@@ -796,7 +795,7 @@ double CatchDistribution::LikMVNormal() {
         sumdist += (*alptr)[nareas][age][len].N;
       }
     }
-  
+
     if (isZero(sumdata))
       sumdata = verybig;
     else
@@ -805,20 +804,19 @@ double CatchDistribution::LikMVNormal() {
       sumdist = verybig;
     else
       sumdist = 1 / sumdist;
-    
 
     for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
       for (len = 0; len < diff.Size(); len++)
         diff[len] = 0.0;
-      
+
       for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++)
         diff[len] = ((*AgeLengthData[timeindex][nareas])[age][len] * sumdata) - (((*alptr)[nareas][age][len]).N * sumdist);
-      
+
       totallikelihood += diff * LU.Solve(diff);
     }
   }
   if (isZero(sigma)) {
-    cerr << "Error catchdistribution - multivariate normal sigma is zero";
+    handle.LogWarning("Warning in catchdistribution - multivariate normal sigma is zero");
     return verybig;
   }
 
@@ -871,7 +869,7 @@ double CatchDistribution::LikMVLogistic() {
     }
   }
   if (isZero(tau)) {
-    cerr << "Error catchdistribution - multivariate logistic tau is zero";
+    handle.LogWarning("Warning in catchdistribution - multivariate logistic tau is zero");
     return verybig;
   }
   totallikelihood = (totallikelihood / (tau * tau)) + (log(tau) * (p - 1));
@@ -934,7 +932,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
       catchfile << "Multivariate logistic distribution parameter: tau " << tau << endl;
       break;
     default:
-      cerr << "Error in catchdistribution - unknown function " << functionname << endl;
+      handle.LogWarning("Warning in catchdistribution - unknown function", functionname);
       break;
   }
 

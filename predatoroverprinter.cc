@@ -8,15 +8,15 @@
 #include "errorhandler.h"
 #include "predator.h"
 #include "gadget.h"
-
 #include "runid.h"
+
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
   : Printer(PREDATOROVERPRINTER), predLgrpDiv(0), aggregator(0) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j;
@@ -42,7 +42,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
 
   infile >> filename >> ws;
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -53,7 +53,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   DoubleVector lengths;
   readWordAndValue(infile, "lenaggfile", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, lengths, lenindex);
   handle.Close();
@@ -69,12 +69,12 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   //Finished reading from infile.
   predLgrpDiv = new LengthGroupDivision(lengths);
   if (predLgrpDiv->Error())
-    printLengthGroupError(lengths, "predoverprinter");
+    handle.Message("Error in predatoroverprinter - failed to create length group");
 
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
@@ -115,13 +115,11 @@ void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec) {
   }
 
   if (predators.Size() != predatornames.Size()) {
-    cerr << "Error in printer when searching for predator(s) with name matching:\n";
-    for (i = 0; i < predatornames.Size(); i++)
-      cerr << (const char*)predatornames[i] << sep;
-    cerr << "\nDid only find the predator(s):\n";
+    handle.LogWarning("Error in predatoroverprinter - failed to match predators");
     for (i = 0; i < predatorvec.Size(); i++)
-      cerr << (const char*)predatorvec[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in predatoroverprinter - found predator", predatorvec[i]->Name());
+    for (i = 0; i < predatornames.Size(); i++)
+      handle.LogWarning("Error in predatoroverprinter - looking for predator", predatornames[i]);
     exit(EXIT_FAILURE);
   }
   aggregator = new PredatorOverAggregator(predators, areas, predLgrpDiv);

@@ -7,6 +7,8 @@
 #include "stock.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 PIOnStep::PIOnStep(CommentStream& infile, const IntMatrix& areas,
   const DoubleVector& predatorlengths, const DoubleVector& preylengths,
   const TimeClass* const TimeInfo, int biomass, const CharPtrVector& areaindex,
@@ -17,17 +19,16 @@ PIOnStep::PIOnStep(CommentStream& infile, const IntMatrix& areas,
 
   PredatorLgrpDiv = new LengthGroupDivision(predatorlengths);
   if (PredatorLgrpDiv->Error())
-    printLengthGroupError(predatorlengths, "predator index, predator lengths");
+    handle.Message("Error in predatorindex - failed to create predator length group");
   PreyLgrpDiv = new LengthGroupDivision(preylengths);
   if (PreyLgrpDiv->Error())
-    printLengthGroupError(preylengths, "predator index, prey lengths");
+    handle.Message("Error in predatorindex - failed to create prey length group");
 
   //read the predator indices data from the datafile
-  ErrorHandler handle;
   ifstream datafile;
   CommentStream subdata(datafile);
   datafile.open(datafilename, ios::in);
-  checkIfFailure(datafile, datafilename);
+  handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readPredatorData(subdata, areaindex, predlenindex, preylenindex, TimeInfo, name);
   handle.Close();
@@ -49,7 +50,6 @@ void PIOnStep::readPredatorData(CommentStream& infile, const CharPtrVector& area
   int keepdata, timeid, areaid, predid, preyid, colid;
   int numprey = preylenindex.Size();
   int count = 0;
-  ErrorHandler handle;
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 6)
@@ -104,7 +104,8 @@ void PIOnStep::readPredatorData(CommentStream& infile, const CharPtrVector& area
     }
   }
   if (count == 0)
-    cerr << "Warning in predatorindex - found no data in the data file for " << name << endl;
+    handle.LogWarning("Warning in predatorindex - found no data in the data file for", name);
+  handle.LogMessage("Read predatorindex data file - number of entries", count);
 }
 
 void PIOnStep::setPredatorsAndPreys(const PredatorPtrVector& predators, const PreyPtrVector& preys) {

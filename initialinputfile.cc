@@ -197,7 +197,7 @@ void InitialInputFile::readFromFile() {
       if (infile.eof())
         check++;
     }
-    checkIfFailure();
+    checkParameters();
 
   } else {
     readVectorFromLine();
@@ -251,7 +251,7 @@ void InitialInputFile::readVectorFromLine() {
     values[i] = tempValues[i];
 }
 
-void InitialInputFile::checkIfFailure() {
+void InitialInputFile::checkParameters() {
   if (upperbound.Size() != lowerbound.Size()) {
     cerr << "Error in initialinput - failed to read bounds\n";
     exit(EXIT_FAILURE);

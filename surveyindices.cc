@@ -10,11 +10,12 @@
 #include "sibyageonstep.h"
 #include "gadget.h"
 
-SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, Keeper* const keeper, double w, const char* name)
-  : Likelihood(SURVEYINDICESLIKELIHOOD, w) {
+extern ErrorHandler handle;
 
-  ErrorHandler handle;
+SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, Keeper* const keeper, double weight, const char* name)
+  : Likelihood(SURVEYINDICESLIKELIHOOD, weight) {
+
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j;
@@ -43,7 +44,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   i = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -63,7 +64,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   if (strcasecmp(sitype, "lengths") == 0) {
     readWordAndValue(infile, "lenaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
-    checkIfFailure(datafile, aggfilename);
+    handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     i = readLengthAggregation(subdata, lengths, lenindex);
     handle.Close();
@@ -73,7 +74,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   } else if (strcasecmp(sitype, "ages") == 0) {
     readWordAndValue(infile, "ageaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
-    checkIfFailure(datafile, aggfilename);
+    handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     i = readAggregation(subdata, ages, ageindex);
     handle.Close();
@@ -83,7 +84,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
     readWordAndValue(infile, "lenaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
-    checkIfFailure(datafile, aggfilename);
+    handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     i = readLengthAggregation(subdata, lengths, lenindex);
     handle.Close();
@@ -92,7 +93,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
     readWordAndValue(infile, "ageaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
-    checkIfFailure(datafile, aggfilename);
+    handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     i = readAggregation(subdata, ages, ageindex);
     handle.Close();
@@ -192,8 +193,7 @@ void SurveyIndices::setStocks(StockPtrVector& Stocks) {
         s.resize(1, Stocks[j]);
       }
     if (found == 0) {
-      cerr << "Error when searching for names of stocks for surveyindex.\n"
-        << "Did not find any name matching " << stocknames[i] << endl;
+      handle.LogWarning("Error in surveyindex - failed to match stock", stocknames[i]);
       exit(EXIT_FAILURE);
     }
   }

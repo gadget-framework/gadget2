@@ -58,11 +58,11 @@ private:
    */
   FleetPtrVector fleets;
   /**
-   * \brief This is the IntMatrix used to store aggregated area information
+   * \brief This is the IntMatrix used to store area information
    */
   IntMatrix areas;
   /**
-   * \brief This is the CharPtrVector of the names of the aggregated areas
+   * \brief This is the CharPtrVector of the names of the areas
    */
   CharPtrVector areaindex;
   /**

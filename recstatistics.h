@@ -10,7 +10,7 @@
 class RecStatistics : public Likelihood {
 public:
   RecStatistics(CommentStream& infile, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, double w, TagPtrVector Tags, const char* name);
+    const TimeClass* const TimeInfo, double weight, TagPtrVector Tags, const char* name);
   virtual ~RecStatistics();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);

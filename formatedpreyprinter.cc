@@ -11,6 +11,7 @@
 #include "gadget.h"
 
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 /*  FormatedPreyPrinter
  *
@@ -29,7 +30,6 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
   const AreaClass* const AreaInfo, const TimeClass* const TimeInfo)
   : Printer(FORMATEDPREYPRINTER), Area(AreaInfo) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
@@ -55,7 +55,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
 
   infile >> filename >> ws;
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -76,7 +76,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
     if (strcasecmp(text, "zprintfile") == 0) {
       infile >> filename >> ws;
       zoutfile.open(filename, ios::out);
-      checkIfFailure(zoutfile, filename);
+      handle.checkIfFailure(zoutfile, filename);
       printzp = 1;
       i++;
       zoutfile << "; ";
@@ -84,7 +84,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
     } else if (strcasecmp(text, "nprintfile") == 0) {
       infile >> filename >> ws;
       noutfile.open(filename, ios::out);
-      checkIfFailure(noutfile, filename);
+      handle.checkIfFailure(noutfile, filename);
       printnp = 1;
       i++;
       noutfile << "; ";
@@ -92,7 +92,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
     } else if (strcasecmp(text, "cprintfile") == 0) {
       infile >> filename >> ws;
       coutfile.open(filename, ios::out);
-      checkIfFailure(coutfile, filename);
+      handle.checkIfFailure(coutfile, filename);
       printcp = 1;
       i++;
       coutfile << "; ";
@@ -104,8 +104,6 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
   if (i == 0)
     handle.Message("No printfiles read in for formatedpreyprinter");
 
-  if (infile.eof())
-    handle.Eof(text);
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
@@ -130,13 +128,11 @@ void FormatedPreyPrinter::setStock(StockPtrVector& stockvec) {
         stocks[index++] = stockvec[i];
       }
   if (stocks.Size() != stocknames.Size()) {
-    cerr << "Error in printer when searching for stock(s) with name matching:\n";
-    for (i = 0; i < stocknames.Size(); i++)
-      cerr  << (const char*)stocknames[i] << sep;
-    cerr << "\nDid only find the stock(s)\n";
+    handle.LogWarning("Error in formatedpreyprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      cerr  << (const char*)stocks[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in formatedpreyprinter - found stock", stocks[i]->Name());
+    for (i = 0; i < stocknames.Size(); i++)
+      handle.LogWarning("Error in formatedpreyprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
 }

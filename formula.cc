@@ -1,5 +1,8 @@
 #include "formula.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 Formula::Formula(const Formula& form) {
   init = form.init;
@@ -35,7 +38,7 @@ CommentStream& operator>>(CommentStream& infile, Formula& F) {
     infile.get(c);
     infile >> F.inattr;
     if (F.inattr.Size() <= 0)
-      cerr << "Error in formula - not read entry correctly\n";
+      handle.LogWarning("Warning in formula - failed to read data");
     return infile;   //success or not if could not read from infile into F.inattr
   }
 
@@ -59,7 +62,7 @@ CommentStream& operator>>(CommentStream& infile, Formula& F) {
     infile.get(c);
     infile >> F.inattr;
     if (F.inattr.Size() <= 0)
-      cerr << "Error in formula - not read entry correctly\n";
+      handle.LogWarning("Warning in formula - failed to read data");
     return infile;   //success or not if could not read from infile into F.inattr.
   }
 
@@ -90,22 +93,19 @@ CommentStream& operator>>(CommentStream& infile, Formula& F) {
 void Formula::Inform(Keeper* keeper) {
   //let keeper know of the marked variables
   int i;
-  ofstream logfile(".gadget.log",ios::app);
-  if (inattr.Size() > 0){
+
+  if (inattr.Size() > 0)
     keeper->KeepVariable(init, inattr);
-    logfile << inattr << " added to keeper" << endl;
-  } else {
+  else {
     for (i = 0; i < multipliers.Size(); i++) {
       ostringstream ostr;
       ostr << "*" << i + 1 << ends;
       assert(i < attributes.Size());
       keeper->AddString(ostr.str());
-      logfile << ostr.str() << " added to keeper" << endl;
       keeper->KeepVariable(multipliers[i], attributes[i]);
       keeper->ClearLast();
     }
   }
-  logfile.close();
 }
 
 void Formula::Interchange(Formula& NewF, Keeper* keeper) const {

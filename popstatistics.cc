@@ -1,6 +1,9 @@
 #include "popstatistics.h"
 #include "popinfo.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 PopStatistics::PopStatistics(const PopInfoIndexVector& pop,
   const LengthGroupDivision* const lgrpdiv, int calcweight)
@@ -29,10 +32,8 @@ void PopStatistics::CalcStatistics(const PopInfoVector& pop,
   double length;
 
   for (i = 0; i < pop.Size(); i++) {
-    if ((isZero(pop[i].W)) && (!(isZero(pop[i].N))) && (calcweight == 0)) {
-      cerr << "Warning - when calculating statistics on a population, a nonzero\n"
-        << "population (" << pop[i].N << ") had zero mean weight\n";
-    }
+    if ((isZero(pop[i].W)) && (!(isZero(pop[i].N))) && (calcweight == 0))
+      handle.LogWarning("Warning in popstatistics - non-zero population has zero mean weight");
 
     length = lgrpdiv->Meanlength(i);
     sum += pop[i];

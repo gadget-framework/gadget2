@@ -4,7 +4,10 @@
 #include "predator.h"
 #include "mathfunc.h"
 #include "popinfovector.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
   const PreyPtrVector& Preys, const IntMatrix& Areas,
@@ -12,39 +15,29 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
   : predators(Predators), preys(Preys), areas(Areas), doeseat(Predators.Size(), Preys.Size(), 0) {
 
   int i, j, k;
-  //First we check that the length group of every predator is finer
-  //(not necessarily strictly finer) than that of predLgrpDiv;
+
   for (i = 0; i < predators.Size(); i++)
-    checkLengthGroupIsFiner(predators[i]->returnLengthGroupDiv(), predLgrpDiv,
-      predators[i]->Name(), "predator consumption");
-  //Same check for preys.
+    checkLengthGroupIsFiner(predators[i]->returnLengthGroupDiv(), predLgrpDiv);
+
   for (i = 0; i < preys.Size(); i++)
-    checkLengthGroupIsFiner(preys[i]->returnLengthGroupDiv(), preyLgrpDiv,
-      preys[i]->Name(), "predator aggregator");
+    checkLengthGroupIsFiner(preys[i]->returnLengthGroupDiv(), preyLgrpDiv);
 
   for (i = 0; i < predators.Size(); i++) {
     predConv.AddRows(1, predators[i]->NoLengthGroups(), 0);
     for (j = 0; j < predConv.Ncol(i); j++)
       predConv[i][j] = predLgrpDiv->NoLengthGroup(predators[i]->Length(j));
   }
-
   for (i = 0; i < preys.Size(); i++) {
     preyConv.AddRows(1, preys[i]->NoLengthGroups(), 0);
     for (j = 0; j < preyConv.Ncol(i); j++)
       preyConv[i][j] = preyLgrpDiv->NoLengthGroup(preys[i]->Length(j));
   }
 
-  //If predConv[p][l] is >= 0, predConv[p][l] is the number of length group
-  //in total to which length group l of the predator predators[p] belongs.
-  //If predConv[p][l] < 0, length group l of predators[p] falls out of
-  //the range of predLgrpDiv.
-  //The same applies for preyConv and preyLgrpDiv.
   for (i = 0; i < predators.Size(); i++)
     for (j = 0; j < preys.Size(); j++)
       if (predators[i]->doesEat(preys[j]->Name()))
         doeseat[i][j] = 1;
 
-  //Resize total using dummy variable dm
   DoubleMatrix dm(predLgrpDiv->NoLengthGroups(), preyLgrpDiv->NoLengthGroups(), 1.0);
   BandMatrix bm(dm, 0, 0);
   total.resize(areas.Nrow(), bm);
@@ -77,12 +70,13 @@ PredatorAggregator::PredatorAggregator(const CharPtrVector& prednames, PreyPtrVe
       preys.resize(1, Preys[i]);
       found++;
     }
+
   if (found == 0) {
-    cerr << "No preys with cannibalism in predatoraggregator!\n";
+    handle.LogWarning("Warning in predatoraggregator - failed to match preys with cannibalism");
     return;
   }
   if (found < Preys.Size())
-    cerr << "Not all preys read from file have cannibalism!\n";
+    handle.LogWarning("Warning in predatoraggregator - failed to match preys");
 
   for (i = 0; i < preys.Size(); i++)
     doeseat.AddRows(1, ((MortPrey*)preys[i])->getNoCannPreds(), 0);
@@ -98,7 +92,7 @@ PredatorAggregator::PredatorAggregator(const CharPtrVector& prednames, PreyPtrVe
         }
 
     if (found == 0)
-      cerr << "There are no predators with the given names!\n";
+      handle.LogWarning("Warning in predatoraggregator - failed to match predators");
   }
 
   //First we check that the predator ages are consistent with the predator
@@ -113,12 +107,10 @@ PredatorAggregator::PredatorAggregator(const CharPtrVector& prednames, PreyPtrVe
       found = 1;
   }
   if (found == 1)
-    cerr << "The predator ages are not consistent with the given names!\n";
+    handle.LogWarning("Warning in predatoraggregator - failed to match predator ages");
 
-  //Length check for preys.
   for (i = 0; i < preys.Size(); i++)
-    checkLengthGroupIsFiner(preys[i]->returnLengthGroupDiv(), preyLgrpDiv,
-      preys[i]->Name(), "predator aggregator");
+    checkLengthGroupIsFiner(preys[i]->returnLengthGroupDiv(), preyLgrpDiv);
 
   predtot = 0;
   for (i = 0; i < preys.Size(); i++) {
@@ -149,16 +141,10 @@ PredatorAggregator::PredatorAggregator(const CharPtrVector& prednames, PreyPtrVe
     for (j = 0; j < preyConv.Ncol(i); j++)
       preyConv[i][j] = preyLgrpDiv->NoLengthGroup(preys[i]->Length(j));
   }
-  //If preyConv[p][l] is >= 0, preyConv[p][l] is the number of length
-  //group in total to which length group l of the prey prey[p] belongs.
-  //If preyConv[p][l] < 0, length group l of prey[p] falls out of
-  //the range of preyLgrpDiv.
 
-  //Resize total using dummy variable dm
   DoubleMatrix dm(ages.Size(), preyLgrpDiv->NoLengthGroups(), 1.0);
   BandMatrix bm(dm, 0, 0);
   total.resize(areas.Nrow(), bm);
-
   //Now total is initialised to 1, change it to 0.
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)
@@ -202,7 +188,7 @@ void PredatorAggregator::Sum() {
   }
 }
 
-void PredatorAggregator::Sum(int dummy) {
+void PredatorAggregator::MeanSum() {
   //written by kgf 19/2 99
   //Modified by kgf 5/3 99
   //To be used together with the second constructor.
@@ -211,9 +197,7 @@ void PredatorAggregator::Sum(int dummy) {
   int g, h, i, j, k, l, g1;
   int pred_age, prey_length;
   int area, minrow, maxrow;
-
-  DoubleMatrix tot_predators; //kgf 29/3 99 Keep total number of predators
-                              //in an age group in each area
+  DoubleMatrix tot_predators;
 
   for (i = 0; i < total.Size(); i++) {
     tot_predators.AddRows(1, total[i].Nrow(), 0.0);
@@ -261,7 +245,7 @@ void PredatorAggregator::Sum(int dummy) {
           total[i][j][k] /= tot_predators[i][j];
         else
           if (total[i][j][k] > 0 && isZero(tot_predators[i][j]))
-            cerr << "Warning - consumption without predators!\n";
+            handle.LogWarning("Warning in predatoraggregator - consumption without predators");
       }
 }
 

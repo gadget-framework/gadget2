@@ -5,19 +5,11 @@
 
 class LengthGroupDivision;
 
-extern void printLengthGroupError(double minl, double maxl, double dl, const char* str);
-extern void printLengthGroupError(const DoubleVector& breaks, const char* str);
-
 extern void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
-  const LengthGroupDivision* coarser, const char* finername, const char* coarsername);
+  const LengthGroupDivision* coarser);
 
 extern int lengthGroupIsFiner(const LengthGroupDivision* finer,
   const LengthGroupDivision* coarser, int& BogusLengthGroup);
-
-extern void printLengthGroupDivisionError(const LengthGroupDivision* lgrpdiv);
-
-extern void printLengthGroupDivisionError(const LengthGroupDivision* finer,
-  const LengthGroupDivision* coarser, const char* finername, const char* coarsername);
 
 class LengthGroupDivision {
 public:
@@ -35,6 +27,7 @@ public:
   int NoLengthGroup(double length) const;
   int Combine(const LengthGroupDivision* const addition);
   int Error() const { return error; }
+  void printError() const;
 protected:
   int error;
   int size;

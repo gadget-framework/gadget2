@@ -6,15 +6,16 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 //written by kgf 20/5 98 on the basis of linearpredator
 MortPredator::MortPredator(CommentStream& infile, const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
   const TimeClass* const TimeInfo, Keeper* const keeper)
   : LengthPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv, 1.0),
-  effort(Areas.Size(), TimeInfo->TotalNoSteps(), 0.),
-  f_level(Areas.Size(), TimeInfo->TotalNoSteps(), 0.) {
+    effort(Areas.Size(), TimeInfo->TotalNoSteps(), 0.0),
+    f_level(Areas.Size(), TimeInfo->TotalNoSteps(), 0.0) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int areanr = Areas.Size();
@@ -47,7 +48,8 @@ MortPredator::MortPredator(CommentStream& infile, const char* givenname, const I
       q2[i].Inform(keeper);
     }
     //JMB - taken out of for loop - only read matrix effort once!
-    readMatrix(infile, effort); //read effort from file
+    if (!readMatrix(infile, effort))
+      handle.Message("Failure in reading effort");
     calcFlevel();
 
   } else { //f_lev is read from file, q1, q2 and effort not used
@@ -217,8 +219,7 @@ const PopInfoVector& MortPredator::NumberPriortoEating(int area, const char* pre
     if (strcasecmp(Preyname(prey), preyname) == 0)
       return Preys(prey)->NumberPriortoEating(area);
 
-  cerr << "Predator " << this->Name() << " was asked for consumption\n"
-    << "of prey " << preyname << " which he does not eat\n";
+  handle.LogWarning("Error in mortpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
 }
 

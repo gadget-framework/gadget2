@@ -9,15 +9,15 @@
 #include "predator.h"
 #include "prey.h"
 #include "gadget.h"
-
 #include "runid.h"
+
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 PredatorPrinter::PredatorPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
   : Printer(PREDATORPRINTER), predLgrpDiv(0), preyLgrpDiv(0), aggregator(0) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j;
@@ -53,7 +53,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
 
   infile >> filename >> ws;
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -64,7 +64,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   DoubleVector predlengths;
   readWordAndValue(infile, "predlenaggfile", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, predlengths, predlenindex);
   handle.Close();
@@ -75,7 +75,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   DoubleVector preylengths;
   readWordAndValue(infile, "preylenaggfile", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, preylengths, preylenindex);
   handle.Close();
@@ -91,15 +91,15 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   //Finished reading from infile.
   predLgrpDiv = new LengthGroupDivision(predlengths);
   if (predLgrpDiv->Error())
-    printLengthGroupError(predlengths, "predator lengths in predatorprinter");
+    handle.Message("Error in predatorprinter - failed to create predator length group");
   preyLgrpDiv = new LengthGroupDivision(preylengths);
   if (predLgrpDiv->Error())
-    printLengthGroupError(preylengths, "prey lengths in predatorprinter");
+    handle.Message("Error in predatorprinter - failed to create prey length group");
 
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
@@ -153,23 +153,19 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
       }
 
   if (predators.Size() != predatornames.Size()) {
-    cerr << "Error in printer when searching for predator(s) with name matching:\n";
-    for (i = 0; i < predatornames.Size(); i++)
-      cerr << (const char*)predatornames[i] << sep;
-    cerr << "\nDid only find the predator(s):\n";
+    handle.LogWarning("Error in predatorprinter - failed to match predators");
     for (i = 0; i < predatorvec.Size(); i++)
-      cerr << (const char*)predatorvec[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in predatorprinter - found predator", predatorvec[i]->Name());
+    for (i = 0; i < predatornames.Size(); i++)
+      handle.LogWarning("Error in predatorprinter - looking for predator", predatornames[i]);
     exit(EXIT_FAILURE);
   }
   if (preys.Size() != preynames.Size()) {
-    cerr << "Error in printer when searching for prey(s) with name matching:\n";
-    for (i = 0; i < preynames.Size(); i++)
-      cerr << (const char*)preynames[i] << sep;
-    cerr << "\nDid only find the prey(s):\n";
+    handle.LogWarning("Error in predatorprinter - failed to match preys");
     for (i = 0; i < preyvec.Size(); i++)
-      cerr << (const char*)preyvec[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in predatorprinter - found prey", preyvec[i]->Name());
+    for (i = 0; i < preynames.Size(); i++)
+      handle.LogWarning("Error in predatorprinter - looking for prey", preynames[i]);
     exit(EXIT_FAILURE);
   }
   aggregator = new PredatorAggregator(predators, preys, areas, predLgrpDiv, preyLgrpDiv);

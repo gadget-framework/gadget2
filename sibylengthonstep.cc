@@ -3,7 +3,10 @@
 #include "areatime.h"
 #include "loglinearregression.h"
 #include "stockaggregator.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 SIByLengthOnStep::SIByLengthOnStep(CommentStream& infile, const IntMatrix& areas,
   const DoubleVector& lengths, const CharPtrVector& areaindex, const CharPtrVector& lenindex,
@@ -13,7 +16,7 @@ SIByLengthOnStep::SIByLengthOnStep(CommentStream& infile, const IntMatrix& areas
 
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    printLengthGroupError(lengths, "survey indices by length");
+    handle.Message("Error in surveyindex - failed to create length group");
 }
 
 SIByLengthOnStep::~SIByLengthOnStep() {

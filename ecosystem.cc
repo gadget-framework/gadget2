@@ -1,6 +1,8 @@
 #include "ecosystem.h"
 #include "runid.h"
+
 extern RunID RUNID;
+extern ErrorHandler handle;
 extern int FuncEval;
 
 Ecosystem::Ecosystem() {
@@ -16,19 +18,24 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   TimeInfo = 0;
   keeper = new Keeper;
   Area = 0;
-  ErrorHandler handle;
   chdir(workingdir);
   ifstream infile;
   infile.open(filename, ios::in);
   CommentStream commin(infile);
+  handle.checkIfFailure(infile, filename);
   handle.Open(filename);
-  checkIfFailure(infile, filename);
   chdir(inputdir);
   //New parameter netrun, to prevent reading of printfiles. 07.04.00 AJ & mnaa
   readMain(commin, optimize, netrun, calclikelihood, inputdir, workingdir);
   handle.Close();
   infile.close();
   infile.clear();
+
+  //Dont print output line if doing a network run
+  if (!netrun)
+    cout << "\nFinished reading model input files" << endl;
+  handle.LogMessage("Finished reading model input files");
+  handle.LogMessage("");  //write a blank line to the log file
 
   Initialise(calclikelihood);
   basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size(), 0);
@@ -80,7 +87,7 @@ void Ecosystem::PrintStatus(const char* filename) const {
   int i;
   ofstream outfile;
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   RUNID.print(outfile);
   outfile << "The current simulation time is " << TimeInfo->CurrentYear()
@@ -212,7 +219,7 @@ void Ecosystem::OptSwitches(ParameterVector& sw) const {
 void Ecosystem::PrintLikelihoodInfo(const char* filename) const {
   ofstream outfile;
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
   RUNID.print(outfile);
   int i;
   for (i = 0; i < Likely.Size(); i++)

@@ -4,7 +4,10 @@
 #include "conversionindex.h"
 #include "mathfunc.h"
 #include "popinfo.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 //Pre: CI maps from Number to 'this' and Number has finer or even resolution than 'this'.
 void PopInfoVector::Sum(const PopInfoVector* const Number, const ConversionIndex& CI) {
@@ -42,7 +45,7 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
         pop *= ratio;
         v[l] += pop;
         if (isZero(CI.Nrof(l)))
-          cerr << "Error - divide by zero in PopInfoIndexVector Add\n";
+          handle.LogWarning("Error in popinfoindexvector - divide by zero");
         else
           v[l].N /= CI.Nrof(l);
       }
@@ -61,7 +64,7 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
 
 void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
   const ConversionIndex& CI, double ratio, const DoubleIndexVector& Ratio) {
-  
+
   PopInfo pop;
   int l, minl, maxl, offset;
   if (CI.SameDl()) {   //Same dl on length distributions
@@ -83,7 +86,7 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
         pop *= (ratio * Ratio[l]);
         v[l] += pop;
         if (isZero(CI.Nrof(l)))
-          cerr << "Error - divide by zero in PopInfoIndexVector Add\n";
+          handle.LogWarning("Error in popinfoindexvector - divide by zero");
         else
           v[l].N /= CI.Nrof(l);
       }

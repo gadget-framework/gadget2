@@ -1,5 +1,9 @@
 #include "agebandmatrixratio.h"
 #include "agebandmatrixratioptrvector.h"
+#include "errorhandler.h"
+#include "gadget.h"
+
+extern ErrorHandler handle;
 
 void AgeBandMatrixRatio::updateAndTagLoss(const AgeBandMatrix& Total, const DoubleVector& tagloss) {
 
@@ -147,7 +151,7 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
   numtags = Addition.NrOfTagExp();
 
   if (numtags > Alkeys.NrOfTagExp()) {
-    cerr << "Error when trying to add together two agebandmatrixratiovectors\n";
+    handle.LogWarning("Error in agebandmatrixratio - wrong number of tagging experiments");
     exit(EXIT_FAILURE);
   }
 
@@ -156,8 +160,7 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
     for (i = 0; i < numtags; i++) {
       tagconversion[i] = Alkeys.getID(Addition.getName(i));
       if (tagconversion[i] < 0) {
-        cerr << "Error when searching for a tagging experiment\n"
-          << "Did not find any name matching " << Addition.getName(i) << endl;
+        handle.LogWarning("Error in agebandmatrixratio - unknown tagging experiment", Addition.getName(i));
         exit(EXIT_FAILURE);
       }
     }
@@ -188,7 +191,7 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
               numfish = *(Addition[AdditionArea][age][CI.Pos(l)][tagid].N);
               numfish *= ratio;
               if (isZero(CI.Nrof(l)))
-                cerr << "Error - divide by zero in agebandmratioadd\n";
+                handle.LogWarning("Error in agebandmatrixratio - divide by zero");
               else
                 numfish /= CI.Nrof(l);
               *(Alkeys[AlkeysArea][age][l][tagconversion[tagid]].N) += numfish;

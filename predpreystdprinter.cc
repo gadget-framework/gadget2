@@ -8,11 +8,12 @@
 #include "readaggregation.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
   : Printer(PREDPREYSTDPRINTER), predname(0), preyname(0) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
@@ -35,7 +36,7 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
   IntMatrix tmpareas;
   readWordAndValue(infile, "areaaggfile", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, tmpareas, areaindex);
   handle.Close();
@@ -58,7 +59,7 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
@@ -100,7 +101,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
     if (stockvec[i]->doesEat()) {
       if (strcasecmp(stockvec[i]->returnPredator()->Name(), predname) == 0) {
         if (predator) {
-          cerr << "Error - found more than one predator with the name " << predname << endl;
+          handle.LogWarning("Error in predpreystdprinter - repeated predator", predname);
           exit(EXIT_FAILURE);
         }
         stockpred = 1;
@@ -110,7 +111,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
     if (stockvec[i]->IsEaten()) {
       if (strcasecmp(stockvec[i]->returnPrey()->Name(), preyname) == 0) {
         if (prey) {
-          cerr << "Error - found more than one prey with the name " << preyname << endl;
+          handle.LogWarning("Error in predpreystdprinter - repeated prey", preyname);
           exit(EXIT_FAILURE);
         }
         stockprey = 1;
@@ -123,7 +124,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
   for (i = 0; i < predvec.Size(); i++) {
     if (strcasecmp(predvec[i]->Name(), predname) == 0) {
       if (predvec[i] != predator && predator) {
-        cerr << "Error - found more than one predator with the name " << predname << endl;
+        handle.LogWarning("Error in predpreystdprinter - repeated predator", predname);
         exit(EXIT_FAILURE);
       }
       predator = predvec[i];
@@ -134,7 +135,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
   for (i = 0; i < preyvec.Size(); i++) {
     if (strcasecmp(preyvec[i]->Name(), preyname) == 0) {
       if (preyvec[i] != prey && prey) {
-        cerr << "Error - found more than one prey with the name " << preyname << endl;
+        handle.LogWarning("Error in predpreystdprinter - repeated prey", preyname);
         exit(EXIT_FAILURE);
       }
       prey = preyvec[i];
@@ -142,21 +143,21 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
   }
 
   if (prey == 0)
-    cerr << "Error - found no prey with the name " << preyname << endl;
+    handle.LogWarning("Error in predpreystdprinter - failed to match prey", preyname);
   if (predator == 0)
-    cerr << "Error - found no predator with the name " << predname << endl;
+    handle.LogWarning("Error in predpreystdprinter - failed to match predator", predname);
   if (prey == 0 || predator == 0)
     exit(EXIT_FAILURE);
 
   for (i = 0; i < areas.Size(); i++)
     if (!prey->IsInArea(areas[i])) {
-      cerr << "Error - prey " << preyname << " is not defined on area " << i << endl;
+      handle.LogWarning("Error in predpreystdprinter - preys arent defined on all areas");
       exit(EXIT_FAILURE);
     }
 
   for (i = 0; i < areas.Size(); i++)
     if (!predator->IsInArea(areas[i])) {
-      cerr << "Error - predator " << predname << " is not defined on area " << i << endl;
+      handle.LogWarning("Error in predpreystdprinter - predators arent defined on all areas");
       exit(EXIT_FAILURE);
     }
 

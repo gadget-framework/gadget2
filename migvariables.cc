@@ -2,10 +2,11 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 MigVariable::MigVariable(CommentStream& infile, int firstyear, int lastyear,
   Keeper* const keeper) : ValuesReadFromFile(1) {
 
-  ErrorHandler handle;
   int i;
   keeper->AddString("MigVariable");
   char text[MaxStrLength];

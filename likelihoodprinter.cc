@@ -17,6 +17,7 @@
 #include "gadget.h"
 
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 /*  LikelihoodPrinter
  *
@@ -34,7 +35,6 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile,
   const AreaClass* const AreaInfo, const TimeClass* const TimeInfo)
   : Printer(LIKELIHOODPRINTER) {
 
-  ErrorHandler handle;
   char filename[MaxStrLength];
   char text[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
@@ -48,21 +48,21 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile,
     if ((strcasecmp(text, "catchfile") == 0)) {
       infile >> filename >> ws;
       catchFile.open(filename, ios::out);
-      checkIfFailure(catchFile, filename);
+      handle.checkIfFailure(catchFile, filename);
       RUNID.print(catchFile);
       catchFile.flush();
       printCatch = 1;
     } else if ((strcasecmp(text, "surveyfile") == 0)) {
       infile >> filename >> ws;
       surveyFile.open(filename, ios::out);
-      checkIfFailure(surveyFile, filename);
+      handle.checkIfFailure(surveyFile, filename);
       RUNID.print(surveyFile);
       surveyFile.flush();
       printSurvey = 1;
     } else if ((strcasecmp(text, "stomachfile") == 0)) {
       infile >> filename >> ws;
       stomachFile.open(filename, ios::out);
-      checkIfFailure(stomachFile, filename);
+      handle.checkIfFailure(stomachFile, filename);
       RUNID.print(stomachFile);
       stomachFile.flush();
       printStomach = 1;

@@ -8,15 +8,15 @@
 #include "errorhandler.h"
 #include "prey.h"
 #include "gadget.h"
-
 #include "runid.h"
+
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
   : Printer(PREYOVERPRINTER), preyLgrpDiv(0), aggregator(0) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j;
@@ -42,7 +42,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
 
   infile >> filename >> ws;
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -53,7 +53,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   DoubleVector lengths;
   readWordAndValue(infile, "lenaggfile", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, lengths, lenindex);
   handle.Close();
@@ -69,12 +69,12 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   //Finished reading from infile.
   preyLgrpDiv = new LengthGroupDivision(lengths);
   if (preyLgrpDiv->Error())
-    printLengthGroupError(lengths, "preyoverprinter");
+    handle.Message("Error in preyoverprinter - failed to create length group");
 
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
@@ -113,13 +113,11 @@ void PreyOverPrinter::setPrey(PreyPtrVector& preyvec) {
       }
 
   if (preys.Size() != preynames.Size()) {
-    cerr << "Error in printer when searching for prey(s) with name matching:\n";
-    for (i = 0; i < preynames.Size(); i++)
-      cerr << (const char*)preynames[i] << sep;
-    cerr << "\nDid only find the prey(s):\n";
+    handle.LogWarning("Error in preyoverprinter - failed to match preys");
     for (i = 0; i < preyvec.Size(); i++)
-      cerr << (const char*)preyvec[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in preyoverprinter - found prey", preyvec[i]->Name());
+    for (i = 0; i < preynames.Size(); i++)
+      handle.LogWarning("Error in preyoverprinter - looking for prey", preynames[i]);
     exit(EXIT_FAILURE);
   }
   aggregator = new PreyOverAggregator(preys, areas, preyLgrpDiv);

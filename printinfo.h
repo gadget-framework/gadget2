@@ -5,7 +5,7 @@
 
 /**
  * \class PrintInfo
- * \brief This is the class used store information about what format the model parameters should be written to file
+ * \brief This is the class used to store information about what format the model parameters should be written to file
  */
 class PrintInfo {
 public:

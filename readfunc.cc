@@ -3,67 +3,32 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
-DoubleMatrix* readMatrix(CommentStream& infile, int x, int y) {
-  DoubleMatrix* M =  new DoubleMatrix(x, y);
-  if (readMatrix(infile, *M))
-    return M;
-  else {
-    delete M;
-    return 0;
-  }
-}
+extern ErrorHandler handle;
 
 int readMatrix(CommentStream& infile, DoubleMatrix& M) {
-  infile >> ws;
-  int x = M.Nrow();
-  int y = M.Ncol();
+  if (infile.fail())
+    return 0;
+
   char c;
   int i, j;
   double N;
-  for (i = 0; i < x; i++) {
-    for (j = 0; j < y; j++) {
+  for (i = 0; i < M.Nrow(); i++) {
+    for (j = 0; j < M.Ncol(i); j++) {
       infile >> ws;
       c = infile.peek();
       infile >> N;
       if (!infile.fail())
         M[i][j] = N;
       else {
-        cerr << "Warning - could not read data file in readmatrix\n"
-          << "Last character read was " << c << endl;
+        handle.Message("Error in readmatrix - failed to read data");
         return 0;
       }
     }
     c = infile.peek();
     while (c == ' ' || c == '\t')
       infile.get(c);
-    if (c != '\n') {
-      cerr << "Expected to find end of line after " << N << " in line "
-        << i + 1 << " in readmatrix.\nFound instead " << c << endl;
-      return 0;
-    }
-  }
-  return 1;
-}
-
-DoubleVector* readVector(CommentStream& infile, int length) {
-  DoubleVector *Vec = new DoubleVector(length);
-  if (readVector(infile, *Vec))
-    return Vec;
-  else {
-    delete Vec;
-    return 0;
-  }
-}
-
-int readVector(CommentStream& infile, IntVector& Vec) {
-  if (infile.fail())
-    return 0;
-  int i;
-  for (i = 0; i < Vec.Size(); i++) {
-    infile >> Vec[i];
-    if (infile.fail()) {
-      cerr << "Error occurred when read element no " << i + 1
-        << " out of " << Vec.Size() << " in readvector.\n";
+    if ((c != '\n') && (c != '\r')) {
+      handle.Message("Error in readmatrix - expected end of line");
       return 0;
     }
   }
@@ -73,40 +38,33 @@ int readVector(CommentStream& infile, IntVector& Vec) {
 int readVector(CommentStream& infile, DoubleVector& Vec) {
   if (infile.fail())
     return 0;
+
   int i;
+  double N;
   for (i = 0; i < Vec.Size(); i++) {
-    infile >> Vec[i];
-    if (infile.fail()) {
-      cerr << "Error occurred when read element no " << i + 1
-        << " out of " << Vec.Size() << " in readvector.\n";
+    infile >> ws >> N;
+    if (!infile.fail())
+      Vec[i] = N;
+    else {
+      handle.Message("Error in readvector - failed to read data");
       return 0;
     }
   }
   return 1;
 }
 
-DoubleIndexVector* readIndexVector(CommentStream& infile, int length, int minlength) {
-  DoubleIndexVector *iv = new DoubleIndexVector(length, minlength);
-  if (readIndexVector(infile, *iv))
-    return iv;
-  else {
-    delete iv;
-    return 0;
-  }
-}
-
 int readIndexVector(CommentStream& infile, DoubleIndexVector& Vec) {
   if (infile.fail())
     return 0;
 
-  int lower = Vec.Mincol();
-  int upper = Vec.Maxcol();
   int i;
-  for (i = lower; i < upper; i++) {
-    infile >> Vec[i];
-    if (infile.fail()) {
-      cerr << "Error occurred when read element no " << i + 1 - lower
-        << " out of " << upper - lower << " in readindexvector.\n";
+  double N;
+  for (i = Vec.Mincol(); i < Vec.Maxcol(); i++) {
+    infile >> ws >> N;
+    if (!infile.fail())
+      Vec[i] = N;
+    else {
+      handle.Message("Error in readindexvector - failed to read data");
       return 0;
     }
   }
@@ -116,22 +74,25 @@ int readIndexVector(CommentStream& infile, DoubleIndexVector& Vec) {
 int readVectorInLine(CommentStream& infile, IntVector& Vec) {
   if (infile.fail())
     return 0;
+
+  int i;
   char line[MaxStrLength];
   strncpy(line, "", MaxStrLength);
   infile.getline(line, MaxStrLength);
   if (infile.fail()) {
-    cerr << "Error occurred when reading a vector in line.\n";
+    handle.Message("Error in readvectorinline - failed to read data");
     return 0;
   }
+
   istringstream istr(line);
   istr >> ws;
-  int i = 0;
+  i = 0;
   while (!istr.eof()) {
     if (i == Vec.Size())
       Vec.resize(1);
     istr >> Vec[i];
     if (istr.fail() && !istr.eof()) {
-      cerr << "Error occurred when reading a vector in line.\n";
+      handle.Message("Error in readvectorinline - failed to read data");
       return 0;
     }
     istr >> ws;
@@ -143,22 +104,25 @@ int readVectorInLine(CommentStream& infile, IntVector& Vec) {
 int readVectorInLine(CommentStream& infile, DoubleVector& Vec) {
   if (infile.fail())
     return 0;
+
+  int i;
   char line[MaxStrLength];
   strncpy(line, "", MaxStrLength);
   infile.getline(line, MaxStrLength);
   if (infile.fail()) {
-    cerr << "Error occurred when reading a vector in line.\n";
+    handle.Message("Error in readvectorinline - failed to read data");
     return 0;
   }
+
   istringstream istr(line);
   istr >> ws;
-  int i = 0;
+  i = 0;
   while (!istr.eof()) {
     if (i == Vec.Size())
       Vec.resize(1);
     istr >> Vec[i];
     if (istr.fail() && !istr.eof()) {
-      cerr << "Error occurred when reading a vector in line.\n";
+      handle.Message("Error in readvectorinline - failed to read data");
       return 0;
     }
     istr >> ws;
@@ -167,16 +131,18 @@ int readVectorInLine(CommentStream& infile, DoubleVector& Vec) {
   return 1;
 }
 
-int read2ColVector(CommentStream& infile, DoubleMatrix& M) {
+int readRefWeights(CommentStream& infile, DoubleMatrix& M) {
+  if (infile.fail())
+    return 0;
+
   int i, j;
   double N;
-  infile >> ws;
-  i = 0;
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 2)
-    cerr << "Wrong number of columns in inputfile - should be 2\n";
+    handle.Message("Wrong number of columns in inputfile - should be 2");
 
+  i = 0;
   while (!infile.eof()) {
     M.AddRows(1, 2);
     for (j = 0; j < 2; j++) {
@@ -184,13 +150,14 @@ int read2ColVector(CommentStream& infile, DoubleMatrix& M) {
       if (!infile.fail())
         M[i][j] = N;
       else {
-        cerr << "Warning - could not read data file in read2colvector\n";
+        handle.Message("Error in readrefweights - failed to read data");
         return 0;
       }
     }
     infile >> ws;
     i++;
   }
+  handle.LogMessage("Read reference weights OK - number of entries", i);
   return 1;
 }
 
@@ -263,7 +230,6 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
   const TimeClass* const TimeInfo, const AreaClass* const Area,
   FormulaMatrix& amount, Keeper* const keeper, const char* givenname) {
 
-  ErrorHandler handle;
   int i;
   int year, step, area;
   Formula number;  //initialised to 0.0
@@ -350,7 +316,8 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
   }
 
   if (count == 0)
-    cerr << "Warning - found no data in the data file for " << givenname << endl;
+    handle.LogWarning("Warning in readamounts - found no data in the data file for", givenname);
+  handle.LogMessage("Read amounts data file - number of entries", count);
   return 1;
 }
 
@@ -358,7 +325,6 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   const AreaClass* const Area, FormulaMatrixPtrVector& amount,
   const CharPtrVector& lenindex, Keeper* const keeper) {
 
-  ErrorHandler handle;
   int i;
   int year, step, area;
   IntVector Years, Steps;
@@ -441,6 +407,7 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
     }
   }
   if (count == 0)
-    cerr << "Warning for growthamounts - found no data in the data file\n";
+    handle.LogWarning("Warning in growthamounts - found no data in the data file");
+  handle.LogMessage("Read growth data file - number of entries", count);
   return 1;
 }

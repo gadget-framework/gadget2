@@ -8,9 +8,10 @@
 #include "readword.h"
 #include "readaggregation.h"
 #include "gadget.h"
-
 #include "runid.h"
+
 extern RunID RUNID;
+extern ErrorHandler handle;
 
 //This printer prints all the information on the consumption of the prey,
 //at the level of most disaggregation.
@@ -19,7 +20,6 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
   : Printer(STOCKPREYFULLPRINTER), stockname(0), preyinfo(0) {
 
-  ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
@@ -38,7 +38,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   IntMatrix tmpareas;
   readWordAndValue(infile, "areaaggfile", filename);
   datafile.open(filename, ios::in);
-  checkIfFailure(datafile, filename);
+  handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, tmpareas, areaindex);
   handle.Close();
@@ -61,7 +61,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
-  checkIfFailure(outfile, filename);
+  handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "yearsandsteps") == 0))
@@ -111,13 +111,11 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
       }
 
   if (stocks.Size() != stocknames.Size()) {
-    cerr << "Error in printer when searching for stock(s) with name matching:\n";
-    for (i = 0; i < stocknames.Size(); i++)
-      cerr << (const char*)stocknames[i] << sep;
-    cerr << "\nDid only find the stock(s)\n";
+    handle.LogWarning("Error in stockpreyfullprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      cerr << (const char*)stocks[i]->Name() << sep;
-    cerr << endl;
+      handle.LogWarning("Error in stockpreyfullprinter - found stock", stocks[i]->Name());
+    for (i = 0; i < stocknames.Size(); i++)
+      handle.LogWarning("Error in stockpreyfullprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -125,8 +123,7 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < stocks.Size(); i++)
     for (j = 0; j < areas.Size(); j++)
       if (!stocks[i]->IsInArea(areas[j])) {
-        cerr << "Error in full printout for stocks preys. The stock "
-          << stocks[i]->Name() << " is not defined on the area " << areas[j] << endl;
+        handle.LogWarning("Error in stockpreyfullprinter - stocks arent defined on all areas");
         exit(EXIT_FAILURE);
       }
 
@@ -134,8 +131,7 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
   if (stocks[0]->IsEaten())
     preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->returnPrey(), areas);
   else {
-    cerr << "Error in full printout for stock preys. The stock "
-      << stocks[0]->Name() << " is not eaten\n";
+    handle.LogWarning("Error in stockpreyfullprinter - stock is not a prey");
     exit(EXIT_FAILURE);
   }
 }

@@ -15,8 +15,7 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
   int numlengths = LgrpDiv->NoLengthGroups();
 
   for (i = 0; i < stocks.Size(); i++) {
-    checkLengthGroupIsFiner(stocks[i]->returnLengthGroupDiv(),
-      LgrpDiv, stocks[i]->Name(), "stock abundance numbers");
+    checkLengthGroupIsFiner(stocks[i]->returnLengthGroupDiv(), LgrpDiv);
     CI.resize(1);
     CI[i] = new ConversionIndex(stocks[i]->returnLengthGroupDiv(), LgrpDiv);
 
@@ -71,7 +70,6 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
   tmppop.W = 1.0;
   PopInfoMatrix popmatrix(ages.Nrow(), numlengths, tmppop);
   total.resize(areas.Nrow(), 0, 0, popmatrix);
-  meanTotal.resize(areas.Nrow(), 0, 0, popmatrix);
 }
 
 StockAggregator::~StockAggregator() {
@@ -118,18 +116,18 @@ void StockAggregator::MeanSum() {
   int aggrArea, aggrAge, area, age;
   PopInfo nullpop;
 
-  for (i = 0; i < meanTotal.Size(); i++)
-    for (j = 0; j < meanTotal[i].Nrow(); j++)
-      for (k = 0; k < meanTotal[i].Maxlength(j); k++)
-        meanTotal[i][j][k] = nullpop;
+  for (i = 0; i < total.Size(); i++)
+    for (j = 0; j < total[i].Nrow(); j++)
+      for (k = 0; k < total[i].Maxlength(j); k++)
+        total[i][j][k] = nullpop;
 
   //Sum over the appropriate stocks, areas, ages and length groups.
-  //The index aggrArea is for the dummy area in meanTotal.
-  //The index aggrAge is for the dummy age in meanTotal.
+  //The index aggrArea is for the dummy area in total.
+  //The index aggrAge is for the dummy age in total.
   for (i = 0; i < stocks.Size(); i++) {
     for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
       for (j = 0; j < areas.Ncol(aggrArea); j++) {
-        //All the areas in areas[aggrArea] will be aggregated to the area aggrArea in meanTotal.
+        //All the areas in areas[aggrArea] will be aggregated to the area aggrArea in total.
         area = areas[aggrArea][j];
         if (stocks[i]->IsInArea(area)) {
           const AgeBandMatrix* alptr = &stocks[i]->getMeanN(area);
@@ -137,7 +135,7 @@ void StockAggregator::MeanSum() {
             for (k = 0; k < ages.Ncol(aggrAge); k++) {
               age = ages[aggrAge][k];
               if ((alptr->Minage() <= age) && (age <= alptr->Maxage()))
-                meanTotal[aggrArea][aggrAge].Add((*alptr)[age], *CI[i]);
+                total[aggrArea][aggrAge].Add((*alptr)[age], *CI[i]);
             }
           }
         }

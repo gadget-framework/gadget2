@@ -10,11 +10,12 @@
 #include "stock.h"
 #include "gadget.h"
 
-PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double w, const char* name)
-  : Likelihood(PREDATORINDICESLIKELIHOOD, w) {
+extern ErrorHandler handle;
 
-  ErrorHandler handle;
+PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, double weight, const char* name)
+  : Likelihood(PREDATORINDICESLIKELIHOOD, weight) {
+
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j;
@@ -54,7 +55,7 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
     handle.Unexpected("predlenaggfile", text);
   infile >> aggfilename >> ws;
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   i = readLengthAggregation(subdata, predatorlengths, predlenindex);
   handle.Close();
@@ -78,7 +79,7 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
     handle.Unexpected("preylenaggfile", text);
   infile >> aggfilename >> ws;
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   i = readLengthAggregation(subdata, preylengths, preylenindex);
   handle.Close();
@@ -88,7 +89,7 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
-  checkIfFailure(datafile, aggfilename);
+  handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
   handle.Close();
@@ -142,8 +143,7 @@ void PredatorIndices::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtr
         predators.resize(1, Predators[j]);
       }
     if (found == 0) {
-      cerr << "Error when searching for names of predators for predatorindex\n"
-        << "Did not find any name matching " << predatornames[i] << endl;
+      handle.LogWarning("Error in predatorindex - failed to match predator", predatornames[i]);
       exit(EXIT_FAILURE);
     }
   }
@@ -157,8 +157,7 @@ void PredatorIndices::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtr
         preys.resize(1, Preys[j]);
       }
     if (found == 0) {
-      cerr << "Error when searching for names of preys for predatorindex\n"
-        << "Did not find any name matching " << preynames[i] << endl;
+      handle.LogWarning("Error in predatorindex - failed to match prey", preynames[i]);
       exit(EXIT_FAILURE);
     }
   }

@@ -12,7 +12,7 @@ public:
   /**
    * \brief This is the default StrStack constructor
    */
-  StrStack() { sz = 0; };
+  StrStack() { size = 0; };
   /**
    * \brief This is the default StrStack destructor
    */
@@ -44,7 +44,7 @@ private:
   /**
    * \brief This is size of the string stack
    */
-  int sz;
+  int size;
   /**
    * \brief This is the CharPtrVector containing the strings in the stack
    */

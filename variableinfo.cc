@@ -3,11 +3,12 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
+extern ErrorHandler handle;
+
 //File format is:
 //NoMatrix row column c1 x1 ... cm xm (All on the same line).
 CommentStream& operator >> (CommentStream& infile, VariableInfo& varinfo) {
 
-  ErrorHandler handle;
   while (varinfo.indices.Size())
     varinfo.indices.Delete(0);
   while (varinfo.coefficients.Size())

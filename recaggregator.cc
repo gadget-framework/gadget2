@@ -19,8 +19,7 @@ RecAggregator::RecAggregator(const FleetPtrVector& Fleets,
   taggingExp = tag;
   int i;
   for (i = 0; i < stocks.Size(); i++) {
-    checkLengthGroupIsFiner(stocks[i]->returnPrey()->returnLengthGroupDiv(),
-      LgrpDiv, stocks[i]->Name(), "recapture consumption");
+    checkLengthGroupIsFiner(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);
     CI.resize(1);
     CI[i] = new ConversionIndex(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);
   }

@@ -1,4 +1,5 @@
 #include "ecosystem.h"
+#include "errorhandler.h"
 #include "predator.h"
 #include "prey.h"
 #include "lengthprey.h"
@@ -34,6 +35,8 @@
 #include "migrationpenalty.h"
 #include "logcatchfunction.h"
 #include "catchintons.h"
+
+extern ErrorHandler handle;
 
 void Ecosystem::Initialise(int optimize) {
   PreyPtrVector preyvec;
@@ -122,7 +125,7 @@ void Ecosystem::Initialise(int optimize) {
         printvec[i]->setStock(stockvec);
         break;
       default:
-        cerr << "Unrecognized printer type " << printvec[i]->Type() << " when initializing\n";
+        handle.LogWarning("Error when initialising model - unrecognized printer type", printvec[i]->Type());
         exit(EXIT_FAILURE);
         break;
     }
@@ -175,7 +178,7 @@ void Ecosystem::Initialise(int optimize) {
         case BOUNDLIKELIHOOD:
           break;
         default:
-          cerr << "Unrecognized likelihood type " << Likely[i]->Type() << " when initializing\n";
+          handle.LogWarning("Error when initialising model - unrecognized likelihood type", Likely[i]->Type());
           exit(EXIT_FAILURE);
           break;
       }
@@ -191,7 +194,7 @@ void Ecosystem::Initialise(int optimize) {
         ((LikelihoodPrinter*)(likprintvec[i]))->setLikely(Likely);
         break;
       default:
-        cerr << "Unrecognized likelihood printer type " << likprintvec[i]->Type() << " when initializing\n";
+        handle.LogWarning("Error when initialising model - unrecognized printer type", likprintvec[i]->Type());
         exit(EXIT_FAILURE);
         break;
     }

@@ -1,21 +1,8 @@
 #include "lengthgroup.h"
+#include "errorhandler.h"
 #include "gadget.h"
 
-void printLengthGroupError(double minl, double maxl, double dl, const char* explain) {
-  cerr << "Failed to create length group division with\nminimum length " << minl
-    << "\nmaximum length " << maxl << "\nand dl " << dl
-    << "\nKept string for explanations is " << explain << endl;
-  exit(EXIT_FAILURE);
-}
-
-void printLengthGroupError(const DoubleVector& breaks, const char* explain) {
-  cerr << "Failed to create the length group division\n";
-  int i;
-  for (i = 0; i < breaks.Size(); i++)
-    cerr << breaks[i] << sep;
-  cerr << "\nKept string for explanations is " << explain << endl;
-  exit(EXIT_FAILURE);
-}
+extern ErrorHandler handle;
 
 //Constructor for length division with even increments.
 LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : error(0), Dl(DL) {
@@ -184,30 +171,10 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
   return 1;
 }
 
-void printLengthGroupDivisionError(const LengthGroupDivision* lgrpdiv) {
-  int i;
-  if (lgrpdiv->dl() != 0) {
-    cerr << "Length group with minimum length " << lgrpdiv->minLength() << ", maximum length "
-      << lgrpdiv->maxLength() << " and stepsize " << lgrpdiv->dl();
-
-  } else {
-    cerr << "Length group with lengths " << lgrpdiv->minLength() << ", ";
-    for (i = 1; i < lgrpdiv->NoLengthGroups(); i++)
-      cerr << lgrpdiv->Minlength(i) << ", ";
-
-    cerr << lgrpdiv->maxLength();
-  }
-  cerr << endl;
-}
-
-void printLengthGroupDivisionError(const LengthGroupDivision* finer,
-  const LengthGroupDivision* coarser, const char* finername, const char* coarsername) {
-
-  cerr << "Error in length group divisions - " << finername << " is not finer than "
-    << coarsername << "\nThe length group division for " << finername << " is:\n";
-  printLengthGroupDivisionError(finer);
-  cerr << "The length group division for " << coarsername << " is:\n";
-  printLengthGroupDivisionError(coarser);
+void LengthGroupDivision::printError() const {
+  handle.LogWarning("Warning in lengthgroupdivision - failure from length group");
+  handle.LogWarning("Minimum length", this->minLength());
+  handle.LogWarning("Maximum length", this->maxLength());
 }
 
 /* returns -1 if algorithm fails. Should never happen, but Murphys law ...
@@ -276,32 +243,32 @@ int lengthGroupIsFiner(const LengthGroupDivision* finer,
 }
 
 void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
-  const LengthGroupDivision* coarser, const char* finername, const char* coarsername) {
+  const LengthGroupDivision* coarser) {
 
   int BogusLengthGroup = 0;
   int isfiner = lengthGroupIsFiner(finer, coarser, BogusLengthGroup);
   switch(isfiner) {
     case -1:
-      cerr << "Error - the algorithm in lengthgroupisfiner does has failed\n"
-        << "The length group division for " << finername << " is:\n";
-      printLengthGroupDivisionError(finer);
-      cerr << "The length group division for " << coarsername << " is:\n";
-      printLengthGroupDivisionError(coarser);
+      handle.LogWarning("Error in lengthgroup - failed to check lengthgroupisfiner");
+      finer->printError();
+      coarser->printError();
       exit(EXIT_FAILURE);
     case 0:
-      cerr << "Error in length group " << BogusLengthGroup << " for " << finername << endl;
-      printLengthGroupDivisionError(finer, coarser, finername, coarsername);
+      handle.LogWarning("Error in lengthgroup - failed to check length cell", BogusLengthGroup);
+      finer->printError();
+      coarser->printError();
       exit(EXIT_FAILURE);
     case 1:
       return;
     case 2:
-      cerr << "Warning - empty intersection when checking length groups\n";
+      handle.LogWarning("Warning in lengthgroup - intersection between length groups is empty");
+      finer->printError();
+      coarser->printError();
       return;
     default:
-      cerr << "Error when comparing length group divisions.\n"
-        << "Unrecognized return code " << isfiner << " from IsLengthGroupFiner.\n"
-        << "Please find someone to blame for this.\n";
-      printLengthGroupDivisionError(finer, coarser, finername, coarsername);
+      handle.LogWarning("Error in lengthgroup - unrecognised return from lengthgroupisfiner");
+      finer->printError();
+      coarser->printError();
       exit(EXIT_FAILURE);
     }
 }
