@@ -1,6 +1,9 @@
 #include "multinomial.h"
 #include "mathfunc.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 double Multinomial::calcLogLikelihood(const DoubleVector& data, const DoubleVector& dist) {
 
@@ -31,8 +34,10 @@ double Multinomial::calcLogLikelihood(const DoubleVector& data, const DoubleVect
   }
 
   sumlog -= logFactorial(sumdata);
-  //JMB this is a nasty hack to get round a negative loglikelihood score
-  tmpsum = absolute(likely + sumlog);
+  tmpsum = likely + sumlog;
+  if (tmpsum < 0)
+    handle.logWarning("Warning in multinomial - negative total", tmpsum);
+
   loglikelihood += 2.0 * tmpsum;
   return tmpsum;
 }

@@ -471,21 +471,16 @@ void SC::Print(ofstream& outfile) const {
       outfile << preylengths[i][j] << sep;
   }
 
-  if (timeindex < 0)
-    t = 0;
-  else if (timeindex > Years.Size() - 1)
-    t = Years.Size() - 1;
-  else
-    t = timeindex;
+  //timeindex was increased before this is called, so we subtract 1
+  t = timeindex - 1;
 
-  for (r = 0; r < obsConsumption[t].Size(); r++) {
+  for (r = 0; r < modelConsumption[t].Size(); r++) {
     outfile << "\n\tInternal areas" << sep << r;
-    for (i = 0; i < obsConsumption[t][r]->Nrow(); i++) {
+    for (i = 0; i < modelConsumption[t][r]->Nrow(); i++) {
       outfile << "\n\t\t";
-      for (j = 0; j < (*obsConsumption[t][r])[i].Size(); j++) {
+      for (j = 0; j < (*modelConsumption[t][r])[i].Size(); j++) {
         outfile.width(smallwidth);
-        outfile.precision(smallprecision);
-        outfile << (*obsConsumption[t][r])[i][j] << sep;
+        outfile << (*modelConsumption[t][r])[i][j] << sep;
       }
     }
   }

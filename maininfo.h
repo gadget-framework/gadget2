@@ -251,6 +251,10 @@ private:
    * \brief This is the flag used to denote whether the likelihood summary information should be printed or not
    */
   int printLikeSummaryInfo;
+  /**
+   * \brief This is the flag used to denote whether warnings should be printed or not
+   */
+  int printWarning;
 };
 
 #endif

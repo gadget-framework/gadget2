@@ -176,11 +176,11 @@ public:
    */
   void logFinish(int opt);
   /**
-   * \brief This function will set a flag to denote whether gadget is running in network mode for paramin or not
-   * \param runnetwork is a flag to denote whether gadget is running in network mode for paramin or not
-   * \note if gadget is running in network mode for paramin, most of the messages that are written to std::cerr or std::cout will be supressed to avoid having multiple copies of the messages.  The only messages that will be displayed are those that cause a crash - and most of these will be caused by incorrect initial input files, which should be checked before attempting to run a model using the network mode anyway
+   * \brief This function will set the level of warnings that should be displayed to the user
+   * \param print is level of warnings that should be displayed
+   * \note setting the loglevel to 0 will disable all warnings that are written to both std::cerr and std::cout except those that are displayed when gadget will crash - this is done when running gadget in network mode for paramin, setting the loglevel to 1 will disable the warning messages that are written to std::cerr but not to std::cout, and setting the loglevel to 2 will enable all messages - this is the default, and will always be used when gadget is performing a stochastic run
    */
-  void setNetwork(int runnetwork);
+  void setWarningLevel(int print) { loglevel = print; };
 protected:
   /**
    * \brief This ofstream is the file that all the logging information will get sent to
@@ -191,9 +191,9 @@ protected:
    */
   int uselog;
   /**
-   * \brief This is the flag used to denote whether gadget is running in network mode for paramin or not
+   * \brief This is the integer used to denote the level of warnings that should be displayed
    */
-  int network;
+  int loglevel;
   /**
    * \brief This is the StrStack of the names of files that are currently open to read from
    */

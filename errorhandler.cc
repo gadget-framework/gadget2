@@ -8,7 +8,7 @@ extern RunID RUNID;
 ErrorHandler::ErrorHandler() {
   files = new StrStack();
   uselog = 0;
-  network = 0;
+  loglevel = 2;
 }
 
 ErrorHandler::~ErrorHandler() {
@@ -88,7 +88,7 @@ void ErrorHandler::logInformation(const char* msg) {
     logfile << msg << endl;
     logfile.flush();
   }
-  if (network == 0)
+  if (loglevel > 0)
     cout << msg << endl;
 }
 
@@ -97,7 +97,7 @@ void ErrorHandler::logInformation(const char* msg, int number) {
     logfile << msg << sep << number << endl;
     logfile.flush();
   }
-  if (network == 0)
+  if (loglevel > 0)
     cout << msg << sep << number << endl;
 }
 
@@ -106,7 +106,7 @@ void ErrorHandler::logInformation(const char* msg, double number) {
     logfile << msg << sep << number << endl;
     logfile.flush();
   }
-  if (network == 0)
+  if (loglevel > 0)
     cout << msg << sep << number << endl;
 }
 
@@ -115,7 +115,7 @@ void ErrorHandler::logInformation(const char* msg1, const char* msg2) {
     logfile << msg1 << sep << msg2 << endl;
     logfile.flush();
   }
-  if (network == 0)
+  if (loglevel > 0)
     cout << msg1 << sep << msg2 << endl;
 }
 
@@ -124,7 +124,7 @@ void ErrorHandler::logWarning(const char* msg) {
     logfile << msg << endl;
     logfile.flush();
   }
-  if (network == 0)
+  if (loglevel == 2)
     cerr << msg << endl;
 }
 
@@ -133,7 +133,7 @@ void ErrorHandler::logWarning(const char* msg, int number) {
     logfile << msg << sep << number << endl;
     logfile.flush();
   }
-  if (network == 0)
+  if (loglevel == 2)
     cerr << msg << sep << number << endl;
 }
 
@@ -142,7 +142,7 @@ void ErrorHandler::logWarning(const char* msg, double number) {
     logfile << msg << sep << number << endl;
     logfile.flush();
   }
-  if (network == 0)
+  if (loglevel == 2)
     cerr << msg << sep << number << endl;
 }
 
@@ -151,7 +151,7 @@ void ErrorHandler::logWarning(const char* msg1, const char* msg2) {
     logfile << msg1 << sep << msg2 << endl;
     logfile.flush();
   }
-  if (network == 0)
+  if (loglevel == 2)
     cerr << msg1 << sep << msg2 << endl;
 }
 
@@ -301,7 +301,7 @@ void ErrorHandler::logFinish(int opt) {
     logfile.flush();
   }
 
-  if (network == 0) {
+  if (loglevel > 0) {
     if (opt) {
       cout << "\nGadget optimisation finished OK - runtime was ";
       RUNID.printTime(cout);
@@ -309,10 +309,4 @@ void ErrorHandler::logFinish(int opt) {
       cout << "\nGadget simulation finished OK\n";
     cout << endl;
   }
-}
-
-void ErrorHandler::setNetwork(int runnetwork) {
-  network = runnetwork;
-  if (uselog && network)
-    logfile << "\n** Gadget running in network mode for Paramin **\n";
 }
