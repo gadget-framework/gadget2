@@ -163,14 +163,6 @@ void Ecosystem::Initialise(int optimize) {
         case RECSTATISTICSLIKELIHOOD:
           ((RecStatistics*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
-        case AGGREGATEDCDLIKELIHOOD:
-          break;
-        case LOGCATCHLIKELIHOOD:
-          break;
-        case LOGSURVEYLIKELIHOOD:
-          break;
-        case RANDOMWALKLIKELIHOOD:
-          break;
         case BOUNDLIKELIHOOD:
           break;
         default:
@@ -183,8 +175,6 @@ void Ecosystem::Initialise(int optimize) {
   //before the printer classes [12.07.00]
   for (i = 0; i < likprintvec.Size(); i++)
     switch(likprintvec[i]->Type()) {
-      case FORMATEDCATCHPRINTER:
-        break;
       case LIKELIHOODPRINTER:
         ((LikelihoodPrinter*)(likprintvec[i]))->setLikely(Likely);
         break;

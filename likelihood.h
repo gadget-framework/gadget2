@@ -12,8 +12,7 @@ class Keeper;
 enum LikelihoodType { SURVEYINDICESLIKELIHOOD = 1, UNDERSTOCKINGLIKELIHOOD,
   CATCHDISTRIBUTIONLIKELIHOOD, CATCHSTATISTICSLIKELIHOOD, STOMACHCONTENTLIKELIHOOD,
   STOCKDISTRIBUTIONLIKELIHOOD, PREDATORINDICESLIKELIHOOD, CATCHINTONSLIKELIHOOD,
-  BOUNDLIKELIHOOD, TAGLIKELIHOOD, MIGRATIONPENALTYLIKELIHOOD, RECSTATISTICSLIKELIHOOD,
-  LOGCATCHLIKELIHOOD, LOGSURVEYLIKELIHOOD, AGGREGATEDCDLIKELIHOOD, RANDOMWALKLIKELIHOOD };
+  BOUNDLIKELIHOOD, TAGLIKELIHOOD, MIGRATIONPENALTYLIKELIHOOD, RECSTATISTICSLIKELIHOOD };
 
 /**
  * \class Likelihood
@@ -58,6 +57,11 @@ public:
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
   virtual void LikelihoodPrint(ofstream& outfile) {};
+  /**
+   * \brief This function will print summary information from each likelihood calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   */
+  virtual void SummaryPrint(ofstream& outfile) {};
   /**
    * \brief This will return the weighted likelihood score for the likelihood component
    * \return weight*likelihood
