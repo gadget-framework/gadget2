@@ -106,13 +106,11 @@ Gadget is not an interactive program, so once it has started there is no need fo
 \bigskip
 When Gadget starts, it will look for a file called ''main'', which contains a list of all the other data files required.  Gadget will search for this file in the following 2 locations:
 
-\bigskip
-1 - the directory specified by the Unix environment variable called ''GADGET\_WORKING\_DIR'', optionally taking data from the directory specified by the Unix environment variable called ''GADGET\_DATA\_DIR''
+\begin{enumerate}
+\item the directory specified by the Unix environment variable called ''GADGET\_WORKING\_DIR'', optionally taking data from the directory specified by the Unix environment variable called ''GADGET\_DATA\_DIR''
+\item the current directory (ie. from where Gadget was started) if these environment variables have not been set
+\end{enumerate}
 
-\bigskip
-2 - the current directory (ie. from where Gadget was started) if these environment variables have not been set
-
-\bigskip
 When Gadget is reading in the input data files, these files will be checked to ensure that they are in the correct format, and if there is an error in the format Gadget will print an error message and stop.  Note that when Gadget is checking the format of a data file containing a number of columns (eg. the ''area'' file) it will only check the first data line in the file (so, for the case of the ''area'' file it will check that there are 4 entries on the first row and then assume that all the other rows also have 4 entries).  Hopefully, there should be enough information in these error messages to lead the user to the input file that is causing the error.
 
 \bigskip
@@ -245,13 +243,14 @@ Note that it is not possible to do both a stochastic run and a likelihood run at
 All the input files for Gadget are plain ASCII text files, so they can be viewed in any plain-text text editor.  Any whitespace or blank lines in the data files are ignored, so the layout of the files can be adjusted into a easily viewable form to check the content of the files.  The case of any text in an input file is ignored by Gadget, so for example, ''Stock'' and ''stock'' would be interpreted by Gadget as being the same.
 
 \bigskip
-Unless stated otherwise, all the input and output files use the following measurement units:\newline
+Unless stated otherwise, all the input and output files use the following measurement units:
 
-length - all measurements are in centimetres\newline
-weight - all measurements are in kilogrammes\newline
-age - all measurements are in years
+\begin{itemize}
+\item length - all measurements are in centimetres
+\item weight - all measurements are in kilogrammes
+\item age - all measurements are in years
+\end{itemize}
 
-\bigskip
 Gadget is a program that runs on a Unix computing platform, so the input data files must use a Unix style end-of-line character ($<$linefeed$>$) and not a Windows style end-of-line character ($<$carriage return$><$linefeed$>$).  All the lines of the input files containing data should end with an end-of-line character.
 
 \section{Comments in Input Files}\label{sec:comments}
@@ -656,24 +655,19 @@ This growth function is a form of the Von Bertalanffy growth equation, extended 
 %\footnotetext{See L von Bertalanffy, "A Quantitative Theory of Organic Growth", 1938 Human Biology 10, pp181-213}
 
 \begin{equation}\label{eq:growth3w}
-\Delta W_{i} = \Delta t q_{0} e^{q_{1} T}\left(
-\left( \frac{W_{i}}{q_{2}} \right)^{q_{4}} -
-\left( \frac{W_{i}}{q_{3}} \right)^{q_{5}} \right)
+\Delta W_{i} = \Delta t q_{0} e^{q_{1} T} \left( \left( \frac{W_{i}}{q_{2}} \right)^{q_{4}} - \left( \frac{W_{i}}{q_{3}} \right)^{q_{5}} \right)
 \end{equation}
 
 \begin{equation}\label{eq:growth3la}
- r = \frac{W - \left( p_{0} + p_{8} \left( p_{1} + p_{2}p_{8} \right) \right) W_{ref}}{W}
+r = \frac{W - \left( p_{0} + p_{8} \left( p_{1} + p_{2}p_{8} \right) \right) W_{ref}}{W}
 \end{equation}
 
 \begin{equation}\label{eq:growth3lb}
 f(x) =
 \begin{cases}
-  0
-  & \textrm{if $p_{3} + p_{4}x \leq 0$} \\
-  p_{5}
-  & \textrm{if $p_{3} + p_{4}x \geq p_{5}$} \\
-  p_{3} + p_{4}x
-  & \textrm{otherwise}
+0 & \textrm{if $p_{3} + p_{4}x \leq 0$} \\
+p_{5} & \textrm{if $p_{3} + p_{4}x \geq p_{5}$} \\
+p_{3} + p_{4}x & \textrm{otherwise}
 \end{cases}
 \end{equation}
 
@@ -740,9 +734,7 @@ lgrowthparameters      <length parameters vector>
 This growth function is an expanded form of the Von Bertalanffy growth equation, with additional information to allow for differing growth depending on the year, timestep and area.  The increase in the weight of the stock is given by equation~\ref{eq:growth5w} below, and the corresponding increase in the length of the stock is identical to that for WeightVB growth function (see section~\ref{subsec:growth3}) given by equation~\ref{eq:growth3lc}:
 
 \begin{equation}\label{eq:growth5w}
-\Delta W_{i} = \Delta t Y_{y} S_{s} A_{a} q_{0} e^{q_{1}T}\left(
-\left( \frac{W_{i}}{q_{2}} \right)^{q_{4}} -
-\left( \frac{W_{i}}{q_{3}} \right)^{q_{5}} \right)
+\Delta W_{i} = \Delta t Y_{y} S_{s} A_{a} q_{0} e^{q_{1}T} \left( \left( \frac{W_{i}}{q_{2}} \right)^{q_{4}} - \left( \frac{W_{i}}{q_{3}} \right)^{q_{5}} \right)
 \end{equation}
 
 where:\newline
@@ -847,16 +839,16 @@ Note that regardless of the results of the implementation function there is a mi
 This method uses a statistical distribution to govern the implementation of fish growth.  The statistical distribution chosen is the beta-binomial, an extension of the binomial distribution with the flexibility to produce non-symmetrical distributions, which is defined for integers, x = 0, \ldots, n as:
 
 \begin{equation}\label{eq:betabin1}
-{n \choose x}p^x (1-p)^{n-x} = \frac{\Gamma(n+1)}{\Gamma(x+1)\Gamma(n-x+1)}p^x(1-p)^{n-x}
+{n \choose x} p^x (1 - p)^{n - x} = \frac{\Gamma(n + 1)}{\Gamma(x + 1)\Gamma(n - x + 1)} p^x (1 - p)^{n - x}
 \end{equation}
 
 For more flexibility, this can be re-arranged by calculating the parameter $<$p$>$ from a second beta-binomial distribution, leading to equation~\ref{eq:betabin2} shown below, which is defined for 0 $\le$ p $\le$ 1:
 
 \begin{equation}\label{eq:betabin2}
-f(p)=\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}p^{\alpha-1}(1-p)^{\beta-1}
+f(p) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta)}p^{\alpha - 1}(1 - p)^{\beta - 1}
 \end{equation}
 \begin{equation}\label{eq:betabin3}
-\alpha=\frac{\beta\Delta L}{n-\Delta L}
+\alpha = \frac{\beta \Delta L}{n - \Delta L}
 \end{equation}
 
 The distribution is governed by three parameters; the mean length growth computed by the growth function scaled by dividing by the width of the length groups ($<\Delta$L $>$), a fixed limit on the number of length groups ($<$ n $>$), and a value for beta.  This distribution was chosen because it provides a high degree of flexibility resulting from changing a single estimated parameter, beta.  To define the distribution data using a beta-binomial distribution the following data is required in the main stock file:
@@ -1307,17 +1299,17 @@ spawnfile              <name of the spawning data file>
 The spawning data file defines what happens to the stock as it spawns.  The spawning is length-dependent, and the affect that spawning has on each length group of the mature stock is given by the spawning equations~\ref{eq:spawn1} and \ref{eq:spawn2} below:
 
 \begin{equation}\label{eq:spawn1}
-N = N {\left(1 + R {(e^{-m} - 1)}\right)}
+N = N {\left(1 + P {(e^{-m} - 1)}\right)}
 \end{equation}
 
 \begin{equation}\label{eq:spawn2}
-W = W \frac{\left(1 + R {((2 - w)e^{-m} - 1)}\right)}{\left(1 + R {(2e^{-m} - 1)}\right)}
+W = W \frac{\left(1 + P {((2 - w)e^{-m} - 1)}\right)}{\left(1 + P {(2e^{-m} - 1)}\right)}
 \end{equation}
 
 where:\newline
 $<$ N $>$ is the population of the age-length group\newline
 $<$ W $>$ is the mean weight of the population of the age-length group\newline
-$<$ R $>$ is the proportion of the length group that will spawn\newline
+$<$ P $>$ is the proportion of the length group that will spawn\newline
 $<m>$ is the spawning mortality for that length group\newline
 $<w>$ is the spawning weight loss for that length group
 
@@ -1907,7 +1899,7 @@ $<\nu>$ is the model sample size for that time/area/age/length combination
 The log function calculates the likelihood component from equation~\ref{eq:catchdist7} below:
 
 \begin{equation}\label{eq:catchdist7}
-\ell = \sum_{\it time}\sum_{\it areas} \Big(  \log \Big( {\frac{ \displaystyle \sum_{\it ages}\sum_{\it lengths}  \nu_{tral}} { \displaystyle \sum_{\it ages}\sum_{\it lengths} N_{tral}}} \Big) \Big) ^2
+\ell = \sum_{\it time}\sum_{\it areas} \Big( \log \Big( {\frac{ \displaystyle \sum_{\it ages}\sum_{\it lengths} \nu_{tral}} { \displaystyle \sum_{\it ages}\sum_{\it lengths} N_{tral}}} \Big) \Big) ^2
 \end{equation}
 
 where:\newline
