@@ -290,7 +290,7 @@ private:
    */
   int numvar;
   /**
-   * \brief This is the maximum number of BFGS iterations
+   * \brief This is the maximum number of BFGS iterations pr. round
    */
   int bfgsiter;
   /**
@@ -298,16 +298,48 @@ private:
    */
   double bfgseps;
   /**
-   * \brief  linesearch convergence parameters
+   * \brief  Step reduction factor for the armijo linesearch
    */
   double beta;
+  /**
+   * \brief Convergence parameter for the armijo linesearch
+   */
   double sigma;
+  /**
+   * \brief The length of the first step of the armijo linesearch, 1 means that a full step along the search vector is tried at first
+   */
   double step;
+  /**
+   * \brief This is the h in (f(x+h)-f(x))/h for the gradient calculations
+   */
   double gradacc;
+  /**
+   * \brief The reduction parameter for h
+   */
   double gradstep;
+  /**
+   * \brief if the value of bfgsDebug is 1 then gadget will print out the hessian matrix to the file "hessian". Also it will print out the smallest eigenvalue tp the params.out-file
+   */
   int bfgsDebug;
+  /**
+   * \brief Determines how many functionevaluations is needed for the gradient calculations 0 means one pr. coordinate, 1 means two pr. coordinate and 1< means four pr. coordinate
+   */
   int difficultgrad;
+  /**
+   * \brief if the variables are to be scaled
+   */
   int usescaling;
+  /**
+   * \brief if | x_k - x_{k+1} | < xtol then reset
+   */
   double xtol;
+  /**
+   * \brief The maximum number of bfgs-resets
+   */
+  int maxrounds;
+  /**
+   * \brief The maximum number of functionevaluation during the bfgs optimisation
+   */
+  int maxfunceval;
 };
 #endif

@@ -16,16 +16,15 @@ int OptInfoBfgs::iteration(double* x0, double* init) {
   double By[NUMVARS];
   double g0[NUMVARS];  //old gradient
   double tmp[NUMVARS];
-  double hy, yBy, alpha, normgrad, normgrad0=0.0, normdeltax;
+  double hy, yBy, alpha, normgrad, normdeltax;
   double temphy, tempyby, eigen;
-  int i, j, k, check, offset;
+  int i, j, k, check, offset, armijoproblem = 0, rounds = 0;
 
   fk = (*f)(x0, numvar);
   offset = FuncEval;
   gradient(x0, fk);
   for (i = 0; i < numvar; i++) {
     g0[i] = gk[i];
-    normgrad0 += gk[i]*gk[i];
     x[i] = x0[i];
   }
 
@@ -47,13 +46,16 @@ int OptInfoBfgs::iteration(double* x0, double* init) {
     }
 
     //If too many function evaluations occur, terminate the algorithm
-    if ((FuncEval - offset) > bfgsiter) {
+    if (((FuncEval - offset) > maxfunceval) || rounds > maxrounds) {
       cout << "\nStopping BFGS optimisation algorithm\n\n"
 	   << "The optimisation stopped after " << (FuncEval - offset)
-	   << " function evaluations (max " << bfgsiter 
-	   << ")\nThe optimisation stopped because the "
-	   << "maximum number of function evaluations" << endl 
-	   << "was reached and NOT because an "
+	   << " function evaluations (max " << maxfunceval 
+	   << ")\nThe optimisation stopped because the ";
+      if (rounds > maxrounds)
+	cout << "maximum number of bfgs-resets\n";
+      else
+	cout << "maximum number of function evaluations" << endl; 
+      cout << "was reached and NOT because an "
 	   << "optimum was found for this run\n";
       
       fk = (*f)(x, numvar);
@@ -65,7 +67,14 @@ int OptInfoBfgs::iteration(double* x0, double* init) {
       return 0;
     }
 
-    if (check == 0 || alpha < 0.0) {
+    if (check == 0 || alpha < 0.0 || k > bfgsiter) {
+      armijoproblem = 0;
+      if (k > bfgsiter) {
+	k = 0;
+	cout << "\nBFGS search - resetting algorithm after "
+	     << (FuncEval - offset) << " function evaluations" << endl;
+	cout << maxrounds - rounds << " rounds left" << endl; 
+      }
       if (k != 0)
         cerr << "\nWarning in BFGS search - resetting algorithm after "
 	     << (FuncEval - offset) << " function evaluations" << endl;
@@ -76,10 +85,13 @@ int OptInfoBfgs::iteration(double* x0, double* init) {
       }
       check = 1;
       k++;
+      rounds++;
       //JMB - make the step size when calculating the gradient smaller
       gradacc *= gradstep;
-      if (gradacc < rathersmall)
-        gradacc = rathersmall;
+      if (gradacc < 0.000001) {
+        gradacc /= gradstep;
+	difficultgrad++;
+      }
     }
 
     for (i = 0; i < numvar; i++) {
@@ -90,8 +102,11 @@ int OptInfoBfgs::iteration(double* x0, double* init) {
 
     alpha = Armijo();
     if (isZero(alpha)) {
-      difficultgrad = 1;
+      difficultgrad++;
+      armijoproblem++;
       gradient(x,fk);
+      if (armijoproblem == 6)
+	check = 0;
       continue;
     }
     if (alpha < 0.0)
@@ -113,11 +128,6 @@ int OptInfoBfgs::iteration(double* x0, double* init) {
     }
     normgrad = sqrt(normgrad);
     normdeltax = sqrt(normdeltax);
-    if (normdeltax < xtol) {
-      cerr << "BFGS - failed because normdeltax < xtol" << endl;
-      check = 1;
-      continue;
-    }
 
     for (i = 0; i < numvar; i++) {
       By[i] = 0.0;
@@ -152,10 +162,10 @@ int OptInfoBfgs::iteration(double* x0, double* init) {
 
     // If the algorithm has met the convergence criteria, 
     //            terminate the algorithm
-    if (normgrad/(1+fk) < bfgseps) {
+    if (normgrad/(1+abs(fk)) < bfgseps) {
     cout << "\nStopping BFGS optimisation algorithm\n\n"
 	 << "The optimisation stopped after " << (FuncEval - offset)
-	 << " function evaluations (max " << bfgsiter 
+	 << " function evaluations (max " << maxfunceval 
 	 << ")\nThe optimisation stopped because "
 	 << "an optimum was found for this run\n";
 
@@ -172,7 +182,12 @@ int OptInfoBfgs::iteration(double* x0, double* init) {
 	printInverseHessian();
       }
       return 1;
-    }    
+    }
+    if (normdeltax < xtol) {
+      cerr << "BFGS - failed because normdeltax < xtol" << endl;
+      check = 0;
+      continue;
+    }
   }
 }
 
@@ -186,6 +201,16 @@ void OptInfoBfgs::gradient(double* p, double fp) {
   double f1 = 0, f2 = 0, mf1 = 0, mf2 = 0; 
   
   if (difficultgrad == 0) {
+    tmpacc = 1.0 / gradacc;
+    for (i = 0; i < numvar; i++) {
+      for (j = 0; j < numvar; j++)
+	tmp[j] = p[j];
+      tmp[i] += gradacc;
+      f1 = (*f)(tmp, numvar);
+      gk[i] = (f1 - fp)*tmpacc;
+      diaghess[i] = 1.0;
+    }
+  } else if (difficultgrad == 1) {
     tmpacc = 1.0 / (2.0 * gradacc);
     for (i = 0; i < numvar; i++) {
       for (j = 0; j < numvar; j++) {
@@ -197,13 +222,15 @@ void OptInfoBfgs::gradient(double* p, double fp) {
       f1 = (*f)(tmp, numvar);
       mf1 = (*f)(mtmp, numvar);
       gk[i] = (f1 - mf1) * tmpacc;
-      if (abs(mf1 - f1)/fp < verysmall) {
-      	gradacc = min(0.001,10*gradacc);
-      	cerr << "Warning in BFGS - possible roundoff errors in gradient\n";
+      if (abs((mf1 - f1)/fp) < rathersmall) {
+      	gradacc = min(0.01,gradacc/gradstep);
+      	cerr << "Warning in BFGS - possible roundoff errors in gradient\n"; 
       }
+      if ((mf1 > fp) && (f1 > fp))
+	difficultgrad++;
       diaghess[i] = (f1 - 2.0*fk + mf1)/(gradacc*gradacc);
     }
-  } else if (difficultgrad > 0) {
+  } else if (difficultgrad > 1) {
     tmpacc = 1.0 / (12.0 * gradacc);
     for (i = 0; i < numvar; i++) {
       for (j = 0; j < numvar; j++) {
@@ -221,9 +248,9 @@ void OptInfoBfgs::gradient(double* p, double fp) {
       mf1 = (*f)(mtmp, numvar);
       mf2 = (*f)(mtmp1, numvar);
       gk[i] = (8.0*f1 - f2 - 8.0*mf1 + mf2) * tmpacc;
-      if (abs(mf2 - f2)/fp < rathersmall) {
-      	gradacc = min(0.001,10*gradacc);
-      	cerr << "Warning in BFGS - possible roundoff errors in gradient\n";
+      if ((abs(mf2 - f2)/fp) < rathersmall) {
+      	gradacc = min(0.01,gradacc/gradstep);
+	cerr << "Warning in BFGS - possible roundoff errors in gradient\n";
       }
       diaghess[i] = (-f2 + 16.0*f1 - 30.0 * fp + 16.0*mf1 - mf2 )*12.0*tmpacc*tmpacc; 
     }
@@ -301,8 +328,8 @@ double OptInfoBfgs::SmallestEigenValue() {
       phi += xo[i];
       norm += xo[i]*xo[i];
     }
-    //    for(i = 0; i < numvar; i++)
-    //      xo[i] /= norm;
+    for(i = 0; i < numvar; i++)
+      xo[i] /= norm;
     eigen = phi/temp;
     temp = phi;
   }

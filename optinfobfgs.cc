@@ -12,8 +12,8 @@ double func(double* x, int n) {
 
 OptInfoBfgs::OptInfoBfgs()
   : OptSearch(), bfgsiter(10000), bfgseps(0.01), beta(0.3), sigma(0.01), 
-    step(1.0),gradacc(0.0001), gradstep(0.1), bfgsDebug(0), difficultgrad(0),
-    usescaling(0), xtol(0.000001) {
+    step(1.0),gradacc(0.01), gradstep(0.1), bfgsDebug(0), difficultgrad(0),
+    usescaling(0), xtol(0.000001), maxrounds(10000), maxfunceval(10000) {
     
   handle.logMessage("Initialising BFGS optimisation algorithm");
   numvar = EcoSystem->numOptVariables();
@@ -84,22 +84,32 @@ void OptInfoBfgs::read(CommentStream& infile, char* text) {
 
     } else if (strcasecmp(text, "gradstep") == 0) {
       infile >> gradstep;
+    } else if ((strcasecmp(text, "maxrounds") == 0) || (strcasecmp(text, "bfgsrounds") == 0)) {
+      infile >> maxrounds;
 
-    } else if ((strcasecmp(text, "maxiterations") == 0) || (strcasecmp(text, "maxiter") == 0) || (strcasecmp(text, "bfgsiter") == 0)) {
+    } else if ((strcasecmp(text, "maxfunceval") == 0) || (strcasecmp(text, "funceval") == 0)) {
+      infile >> maxfunceval;
+    } else if (((strcasecmp(text, "maxiterations") == 0) || (strcasecmp(text, "maxiter") == 0) || (strcasecmp(text, "bfgsiter") == 0))) {
       infile >> bfgsiter;
 
-    } else if ((strcasecmp(text, "eps") == 0) || (strcasecmp(text, "bfgseps") == 0)) {
+    } else if ((strcasecmp(text, "eps") == 0) || (strcasecmp(text, "bfgseps") == 0) || (strcasecmp(text, "errortol") == 0)) {
       infile >> bfgseps;
 
-    } else if (strcasecmp(text, "bfgsdebug") == 0)
+    } else if (strcasecmp(text, "printing") == 0)
       infile >> bfgsDebug;
-    
-    else if (strcasecmp(text, "scale"))
+    else if (strcasecmp(text, "scale") == 0)
       infile >> usescaling;
-    else if (strcasecmp(text, "xtol"))
+    else if (strcasecmp(text, "xtol") == 0)
       infile >> xtol;
-    
-    else {
+    else if (strcasecmp(text, "difficultgrad") == 0)
+      infile >> difficultgrad;
+    else if (strcasecmp(text, "shannonscaling") == 0) {
+      infile >> ws;
+      handle.logWarning("Warning in optinfofile - shannonscaling is not implemented in gadget");
+    } else if (strcasecmp(text, "bfgspar") == 0) {
+      infile >> ws;
+      handle.logWarning("Warning in optinfofile - parameter bfgspar not used in gadget");
+    } else {
       handle.logWarning("Warning in optinfofile - unrecognised option", text);
       infile >> text;  //read and ignore the next entry
     }
@@ -131,4 +141,9 @@ void OptInfoBfgs::read(CommentStream& infile, char* text) {
     handle.logWarning("Warning in optinfofile - value of gradstep outside bounds", gradstep);
     gradstep = 0.1;
   }
+  if (difficultgrad < 0) {
+    handle.logWarning("Warning in optinfofile - value of difficultgrad less than 0", difficultgrad);
+    difficultgrad = 0;
+  }
+  
 }
