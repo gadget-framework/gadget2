@@ -101,7 +101,7 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	migration.o variableinfo.o binarytree.o vectorusingkeeper.o recaggregator.o \
 	surveyindices.o migrationpenalty.o recapture.o stock.o readaggregation.o \
 	migvariables.o multinomial.o totalpredator.o understocking.o poppredator.o \
-	transition.o otherfood.o mathfunc.o recstatistics.o spawnfunc.o optinfo.o\
+	transition.o otherfood.o mathfunc.o recstatistics.o selectfunc.o optinfo.o \
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o tags.o \
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \

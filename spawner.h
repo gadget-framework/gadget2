@@ -7,7 +7,7 @@
 #include "agebandmatrix.h"
 #include "intmatrix.h"
 #include "livesonareas.h"
-#include "spawnfunc.h"
+#include "selectfunc.h"
 #include "stock.h"
 
 class Stock;
@@ -35,9 +35,9 @@ protected:
   DoubleVector spawnProportion;
   DoubleVector spawnMortality;
   DoubleVector spawnWeightLoss;
-  SpawnFunc* fnProportion;
-  SpawnFunc* fnMortality;
-  SpawnFunc* fnWeightLoss;
+  SelectFunc* fnProportion;
+  SelectFunc* fnMortality;
+  SelectFunc* fnWeightLoss;
   AgeBandMatrixPtrVector Storage;
   ConversionIndexPtrVector CI;
   DoubleMatrix ssb;

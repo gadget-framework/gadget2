@@ -80,11 +80,11 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
   if (strcasecmp(text, "proportionfunction") == 0) {
     infile >> text >> ws;
     if (strcasecmp(text, "constant") == 0)
-      fnProportion = new ConstSpawnFunc();
+      fnProportion = new ConstSelectFunc();
     else if (strcasecmp(text, "straightline") == 0)
-      fnProportion = new StraightSpawnFunc();
+      fnProportion = new StraightSelectFunc();
     else if (strcasecmp(text, "exponential") == 0)
-      fnProportion = new ExpSpawnFunc();
+      fnProportion = new ExpSelectFunc();
     else
       handle.Message("Unrecognised spawning function", text);
 
@@ -96,11 +96,11 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
   if (strcasecmp(text, "mortalityfunction") == 0) {
     infile >> text >> ws;
     if (strcasecmp(text, "constant") == 0)
-      fnMortality = new ConstSpawnFunc();
+      fnMortality = new ConstSelectFunc();
     else if (strcasecmp(text, "straightline") == 0)
-      fnMortality = new StraightSpawnFunc();
+      fnMortality = new StraightSelectFunc();
     else if (strcasecmp(text, "exponential") == 0)
-      fnMortality = new ExpSpawnFunc();
+      fnMortality = new ExpSelectFunc();
     else
       handle.Message("Unrecognised spawning function", text);
 
@@ -112,11 +112,11 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
   if (strcasecmp(text, "weightlossfunction") == 0) {
     infile >> text >> ws;
     if (strcasecmp(text, "constant") == 0)
-      fnWeightLoss = new ConstSpawnFunc();
+      fnWeightLoss = new ConstSelectFunc();
     else if (strcasecmp(text, "straightline") == 0)
-      fnWeightLoss = new StraightSpawnFunc();
+      fnWeightLoss = new StraightSelectFunc();
     else if (strcasecmp(text, "exponential") == 0)
-      fnWeightLoss = new ExpSpawnFunc();
+      fnWeightLoss = new ExpSelectFunc();
     else
       handle.Message("Unrecognised spawning function", text);
 
