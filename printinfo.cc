@@ -102,21 +102,21 @@ void PrintInfo::checkPrintInfo(int network) {
     givenPrecision = 0;
 
   //JMB check to see if we can actually open required files ...
-  ifstream tmpfile;
+  ofstream tmpfile;
   if (network == 0) {
-    tmpfile.open(strParamOutFile);
+    tmpfile.open(strParamOutFile, ios::out);
     handle.checkIfFailure(tmpfile, strParamOutFile);
     tmpfile.close();
     tmpfile.clear();
   }
   if (printoutput == 1) {
-    tmpfile.open(strOutputFile);
+    tmpfile.open(strOutputFile, ios::out);
     handle.checkIfFailure(tmpfile, strOutputFile);
     tmpfile.close();
     tmpfile.clear();
   }
   if (printcolumn == 1) {
-    tmpfile.open(strColumnFile);
+    tmpfile.open(strColumnFile, ios::out);
     handle.checkIfFailure(tmpfile, strColumnFile);
     tmpfile.close();
     tmpfile.clear();

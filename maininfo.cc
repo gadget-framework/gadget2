@@ -234,30 +234,31 @@ void MainInfo::checkUsage() {
   handle.setWarningLevel(check);
 
   //JMB check to see if we can actually open required files ...
-  ifstream tmpfile;
+  ifstream tmpin;
   if (givenInitialParam == 1) {
-    tmpfile.open(strInitialParamFile);
-    handle.checkIfFailure(tmpfile, strInitialParamFile);
-    tmpfile.close();
-    tmpfile.clear();
+    tmpin.open(strInitialParamFile, ios::in);
+    handle.checkIfFailure(tmpin, strInitialParamFile);
+    tmpin.close();
+    tmpin.clear();
   }
   if (givenOptInfo == 1) {
-    tmpfile.open(strOptInfoFile);
-    handle.checkIfFailure(tmpfile, strOptInfoFile);
-    tmpfile.close();
-    tmpfile.clear();
+    tmpin.open(strOptInfoFile, ios::in);
+    handle.checkIfFailure(tmpin, strOptInfoFile);
+    tmpin.close();
+    tmpin.clear();
   }
+  ofstream tmpout;
   if (printInitialInfo == 1) {
-    tmpfile.open(strPrintInitialFile);
-    handle.checkIfFailure(tmpfile, strPrintInitialFile);
-    tmpfile.close();
-    tmpfile.clear();
+    tmpout.open(strPrintInitialFile, ios::out);
+    handle.checkIfFailure(tmpout, strPrintInitialFile);
+    tmpout.close();
+    tmpout.clear();
   }
   if (printFinalInfo == 1) {
-    tmpfile.open(strPrintFinalFile);
-    handle.checkIfFailure(tmpfile, strPrintFinalFile);
-    tmpfile.close();
-    tmpfile.clear();
+    tmpout.open(strPrintFinalFile, ios::out);
+    handle.checkIfFailure(tmpout, strPrintFinalFile);
+    tmpout.close();
+    tmpout.clear();
   }
   printinfo.checkPrintInfo(runnetwork);
 
