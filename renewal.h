@@ -72,13 +72,13 @@ protected:
   void readNumberData(CommentStream& infile, Keeper* const keeper,
      const TimeClass* const TimeInfo, const AreaClass* const Area);
   /**
-   * \brief This is flag to denote which option was used when reading in the recruits data from file
+   * \brief This is the identifier of the function to be used to read the renewal data from file
    */
-  int readOption;
+  int readoption;
   /**
-   * \brief This is used as the time index for the vectors of renewal data
+   * \brief This is used as the index for the vectors of renewal data
    */
-  int timeindex;
+  int index;
   /**
    * \brief This is the IntVector of timesteps that the recruitment will take place on
    */
@@ -104,13 +104,13 @@ protected:
    */
   FormulaVector sdevLength;
   /**
-   * \brief This is the FormulaVector of the multipliers used to calculate the weight-length relationship for the recruits
+   * \brief This is the FormulaVector of the multipliers used to calculate the length-weight relationship for the recruits
    */
-  FormulaVector coeff1;
+  FormulaVector alpha;
   /**
-   * \brief This is the FormulaVector of the powers used to calculate the weight-length relationship for the recruits
+   * \brief This is the FormulaVector of the powers used to calculate the length-weight relationship for the recruits
    */
-  FormulaVector coeff2;
+  FormulaVector beta;
   /**
    * \brief This is the ConversionIndex used to convert from the recruits LengthGroupDivision to the stock LengthGroupDivision
    */

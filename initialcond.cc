@@ -7,15 +7,13 @@
 
 extern ErrorHandler handle;
 
-void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
+void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
   //Find start of data in datafile
   infile >> ws;
-  if (infile.eof()) {
+  if (infile.eof())
     handle.Message("Error in initial conditions - initial stock data file empty");
-    return;
-  }
 
   char c = infile.peek();
   if (!isdigit(c)) {
@@ -50,7 +48,7 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
     keepdata = 0;
     infile >> age >> area >> ws;
 
-    //crude data check - perhaps there should be a better check?
+    //crude age data check - perhaps there should be a better check?
     if ((age < minage) || (age >= (noagegr + minage))) {
       handle.Warning("Ignoring initial conditions data found outside age range");
       keepdata = 1;
@@ -99,15 +97,107 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
   keeper->clearLast();
 }
 
+void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const keeper,
+  int noagegr, int minage, const AreaClass* const Area) {
+
+  //Find start of data in datafile
+  infile >> ws;
+  if (infile.eof())
+    handle.Message("Error in initial conditions - initial stock data file empty");
+
+  char c = infile.peek();
+  if (!isdigit(c)) {
+    infile.get(c);
+    while (c != '\n' && !infile.eof())
+      infile.get(c);
+  }
+
+  int noareas = areas.Size();
+  int i, age, area, ageid, areaid, tmparea, keepdata;
+  int count = 0;
+  Formula number;
+  char tmpnumber[MaxStrLength];
+  strncpy(tmpnumber, "", MaxStrLength);
+
+  //Resize the matrices to hold the data
+  areaFactor.AddRows(noareas, noagegr, number);
+  ageFactor.AddRows(noareas, noagegr, number);
+  meanLength.AddRows(noareas, noagegr, number);
+  sdevLength.AddRows(noareas, noagegr, number);
+  alpha.AddRows(noareas, noagegr, number);
+  beta.AddRows(noareas, noagegr, number);
+
+  //Found the start of the data in the following format
+  //age - area - agedist - areadist - meanlen - standdev - alpha - beta
+  if (countColumns(infile) != 8)
+    handle.Message("Wrong number of columns in inputfile - should be 8");
+
+  ageid = -1;
+  tmparea = -1;
+  keeper->addString("meandata");
+  while (!infile.eof()) {
+    keepdata = 0;
+    infile >> age >> area >> ws;
+
+    //crude age data check - perhaps there should be a better check?
+    if ((age < minage) || (age >= (noagegr + minage))) {
+      handle.Warning("Ignoring initial conditions data found outside age range");
+      keepdata = 1;
+    } else
+      ageid = age - minage;
+
+    //crude area data check
+    areaid = -1;
+    tmparea = Area->InnerArea(area);
+    if (tmparea == -1)
+      handle.UndefinedArea(area);
+    for (i = 0; i < noareas; i++)
+      if (areas[i] == tmparea)
+        areaid = i;
+
+    if (areaid == -1) {
+      handle.Warning("Ignoring initial conditions data found outside area range");
+      keepdata = 1;
+    }
+
+    if (keepdata == 0) {
+      //initial data is required, so store it
+      count++;
+      infile >> ageFactor[areaid][ageid] >> ws;
+      infile >> areaFactor[areaid][ageid] >> ws;
+      infile >> meanLength[areaid][ageid] >> ws;
+      infile >> sdevLength[areaid][ageid] >> ws;
+      infile >> alpha[areaid][ageid] >> ws;
+      infile >> beta[areaid][ageid] >> ws;
+
+    } else {
+      //initial data is not required, so read but ignore it
+      infile >> tmpnumber >> ws;
+      infile >> tmpnumber >> ws;
+      infile >> tmpnumber >> ws;
+      infile >> tmpnumber >> ws;
+      infile >> tmpnumber >> ws;
+      infile >> tmpnumber >> ws;
+    }
+  }
+
+  handle.logMessage("Read initial conditions data file - number of entries", count);
+  areaFactor.Inform(keeper);
+  ageFactor.Inform(keeper);
+  meanLength.Inform(keeper);
+  sdevLength.Inform(keeper);
+  alpha.Inform(keeper);
+  beta.Inform(keeper);
+  keeper->clearLast();
+}
+
 void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
   //Find start of data in datafile
   infile >> ws;
-  if (infile.eof()) {
+  if (infile.eof())
     handle.Message("Error in initial conditions - initial stock data file empty");
-    return;
-  }
 
   char c = infile.peek();
   if (!isdigit(c)) {
@@ -117,10 +207,10 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   }
 
   //Found the start of the data in the following format
-  //area - age - meanlength - number
+  //area - age - meanlength - number - weight
   int i, age, area, tmparea;
   int keepdata, ageid, areaid, lengthid;
-  double length, tmpnumber;
+  double length, tmpnumber, tmpweight;
   int count = 0;
   int noareas = areas.Size();
   int nolengr = LgrpDiv->numLengthGroups();
@@ -131,8 +221,10 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   //set the numbers in the AgeBandMatrixPtrVector to zero (in case some arent in the inputfile)
   for (areaid = 0; areaid < noareas; areaid++)
     for (ageid = minage; ageid < noagegr + minage; ageid++)
-      for (lengthid = 0; lengthid < nolengr; lengthid++)
+      for (lengthid = 0; lengthid < nolengr; lengthid++) {
         initialPop[areaid][ageid][lengthid].N = 0.0;
+        initialPop[areaid][ageid][lengthid].W = 0.0;
+      }
 
   ageid = -1;
   areaid = -1;
@@ -141,8 +233,9 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   while (!infile.eof()) {
     keepdata = 0;
     infile >> area >> age >> length >> tmpnumber >> ws;
+//    infile >> area >> age >> length >> tmpnumber >> tmpweight >> ws;
 
-    //crude data check - perhaps there should be a better check?
+    //crude age data check - perhaps there should be a better check?
     if ((age < minage) || (age >= (noagegr + minage))) {
       handle.Warning("Ignoring initial conditions data found outside age range");
       keepdata = 1;
@@ -177,7 +270,10 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
     if (keepdata == 0) {
       //initial data is required, so store it
       count++;
+//      if ((isZero(tmpweight)) && (!(isZero(tmpnumber))))
+//        handle.Warning("Warning in initial conditions - zero mean weight");
       initialPop[areaid][ageid][lengthid].N = tmpnumber;
+//      initialPop[areaid][ageid][lengthid].W = tmpweight;
     }
   }
   handle.logMessage("Read initial conditions data file - number of entries", count);
@@ -203,7 +299,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   infile >> ws;
   c = infile.peek();
   if ((c == 'n') || (c == 'N'))
-    infile >> text >> ws; //read in 'numbers'
+    infile >> text >> ws; //read in the word 'numbers' if it exists
 
   readWordAndVariable(infile, "minage", minage);
   readWordAndVariable(infile, "maxage", maxage);
@@ -211,7 +307,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   readWordAndVariable(infile, "maxlength", maxlength);
 
   //JMB - changed to make the reading of dl optional
-  //If it isnt specifed here, it will default to the dl value of the stock
+  //if it isnt specifed here, it will default to the dl value of the stock
   infile >> ws;
   c = infile.peek();
   if ((c == 'd') || (c == 'D'))
@@ -222,9 +318,6 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
     handle.Message("Error in initial conditions - failed to create length group");
-
-  int noagegr = maxage - minage + 1; //Number of age groups
-  int nolengr = LgrpDiv->numLengthGroups(); //Number of length groups
 
   //read the standard deviation multiplier - default to 1.0
   keeper->addString("sdevmultiplier");
@@ -238,12 +331,13 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   keeper->clearLast();
 
   //default values
-  readNumbers = 0;
+  readoption = 0;
 
   //create the initialPop object of the correct size
-  PopInfoMatrix tmpPop(noagegr, nolengr);
+  int noagegr = maxage - minage + 1;
+  PopInfoMatrix tmpPop(noagegr, LgrpDiv->numLengthGroups());
   for (i = 0; i < noagegr; i++) {
-    for (j = 0; j < nolengr; j++) {
+    for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
       //these values for tmpPop[i][j] must not be zero - set them to 1
       tmpPop[i][j].N = 1.0;
       tmpPop[i][j].W = 1.0;
@@ -253,20 +347,33 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
 
   keeper->addString("readinitialdata");
   infile >> text >> ws;
-  if ((strcasecmp(text, "initstockfile") == 0)) {
-    //read initial data in mean length format
+  if ((strcasecmp(text, "initstockfile") == 0) || (strcasecmp(text, "normalcondfile") == 0)) {
+    //read initial data in mean length format, using the reference weight file
+    readoption = 0;
     infile >> text >> ws;
     subfile.open(text, ios::in);
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
-    this->readNormalData(subcomment, keeper, noagegr, minage, Area);
+    this->readNormalConditionData(subcomment, keeper, noagegr, minage, Area);
+    handle.Close();
+    subfile.close();
+    subfile.clear();
+
+  } else if ((strcasecmp(text, "normalparamfile") == 0)) {
+    //read initial data in mean length format, using a length weight relationship
+    readoption = 1;
+    infile >> text >> ws;
+    subfile.open(text, ios::in);
+    handle.checkIfFailure(subfile, text);
+    handle.Open(text);
+    this->readNormalParameterData(subcomment, keeper, noagegr, minage, Area);
     handle.Close();
     subfile.close();
     subfile.clear();
 
   } else if ((strcasecmp(text, "numberfile") == 0)) {
-    readNumbers = 1;
     //read initial data in number format
+    readoption = 2;
     infile >> text >> ws;
     subfile.open(text, ios::in);
     handle.checkIfFailure(subfile, text);
@@ -276,66 +383,47 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     subfile.close();
     subfile.clear();
 
-  } else {
-    handle.Unexpected("type of datafile", text);
-  }
+  } else
+    handle.Unexpected("normalcondfile, normalparamfile or numberfile", text);
+
   keeper->clearLast();
 
-  //Now that the initial conditions have been read from file
-  //we have to set the initial weight of the stock
-  double rCond, rWeight;
-  DoubleMatrix tmpRefW;
+  if ((readoption == 0) || (readoption == 2)) {
+    //read information on reference weights.
+    DoubleMatrix tmpRefW;
+    keeper->addString("referenceweights");
+    ifstream subweightfile;
+    subweightfile.open(refWeightFile, ios::in);
+    handle.checkIfFailure(subweightfile, refWeightFile);
+    handle.Open(refWeightFile);
+    CommentStream subweightcomment(subweightfile);
+    if (!readRefWeights(subweightcomment, tmpRefW))
+      handle.Message("Wrong format for reference weights");
+    handle.Close();
+    subweightfile.close();
+    subweightfile.clear();
 
-  //read information on reference weights.
-  keeper->addString("referenceweights");
-  ifstream subweightfile;
-  subweightfile.open(refWeightFile, ios::in);
-  handle.checkIfFailure(subweightfile, refWeightFile);
-  handle.Open(refWeightFile);
-  CommentStream subweightcomment(subweightfile);
-  if (!readRefWeights(subweightcomment, tmpRefW))
-    handle.Message("Wrong format for reference weights");
-  handle.Close();
-  subweightfile.close();
-  subweightfile.clear();
+    //Interpolate the reference weights. First there are some error checks.
+    if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
+        LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
+      handle.Message("Lengths for reference weights must span the range of initial condition lengths");
 
-  //Interpolate the reference weights. First there are some error checks.
-  if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
-      LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-    handle.Message("Lengths for reference weights must span the range of initial condition lengths");
-
-  //Aggregate the reference weight data to be the same format
-  DoubleVector Wref(nolengr);
-  int pos = 0;
-  for (j = 0; j < nolengr; j++) {
-    for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
-      if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] && LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
-        rWeight = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
-        Wref[j] = tmpRefW[i][1] + rWeight * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
-        pos = i;
+    //Aggregate the reference weight data to be the same format
+    double ratio;
+    refWeight.resize(LgrpDiv->numLengthGroups());
+    int pos = 0;
+    for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
+      for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
+        if ((LgrpDiv->meanLength(j) >= tmpRefW[i][0]) &&
+            (LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0])) {
+            
+          ratio = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+          refWeight[j] = tmpRefW[i][1] + ratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
+          pos = i;
+        }
       }
     }
-  }
-  keeper->clearLast();
-
-  //finaly copy the information into initialPop
-  for (i = 0; i < areas.Size(); i++) {
-    for (j = 0; j < noagegr; j++) {
-      if (readNumbers == 1)
-        rCond = 1.0;
-      else
-        rCond = relCond[i][j];
-
-      for (k = 0; k < nolengr; k++) {
-        rWeight = (Wref[k] * rCond);
-
-        if (isZero(rWeight))
-          handle.logWarning("Warning in initial conditions - zero mean weight");
-
-        //for initialPop the age is taken from the minimum age
-        initialPop[i][j + minage][k].W = rWeight;
-      }
-    }
+    keeper->clearLast();
   }
 
   keeper->clearLast();
@@ -380,30 +468,79 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
   int minage, maxage;
   double mult, scaler, dnorm;
 
-  if (readNumbers == 0) {
+  if (readoption == 0) {
+   for (area = 0; area < initialPop.Size(); area++) {
+      minage = initialPop[area].minAge();
+      maxage = initialPop[area].maxAge();
+      for (age = minage; age <= maxage; age++) {
+        scaler = 0.0;
+        
+        if (isZero(sdevLength[area][age - minage] * sdevMult))
+          mult = 0.0;
+        else        
+          mult = 1.0 / (sdevLength[area][age - minage] * sdevMult);
+  
+        for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
+          dnorm = (LgrpDiv->meanLength(l) - meanLength[area][age - minage]) * mult;
+          initialPop[area][age][l].N = exp(-(dnorm * dnorm) * 0.5);
+          scaler += initialPop[area][age][l].N;
+        }
+
+        scaler = (scaler > rathersmall ? 10000.0 / scaler : 0.0);
+        for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
+          initialPop[area][age][l].N *= scaler;
+          initialPop[area][age][l].W = refWeight[l] * relCond[area][age - minage];
+          if ((isZero(initialPop[area][age][l].W)) && (!(isZero(initialPop[area][age][l].N))))
+            handle.logWarning("Warning in initial conditions - zero mean weight");
+        }
+      }
+    }
+
+  } else if (readoption == 1) {
     for (area = 0; area < initialPop.Size(); area++) {
       minage = initialPop[area].minAge();
       maxage = initialPop[area].maxAge();
       for (age = minage; age <= maxage; age++) {
         scaler = 0.0;
-        for (l = initialPop[area].minLength(age);
-            l < initialPop[area].maxLength(age); l++) {
-          dnorm = (LgrpDiv->meanLength(l) - meanLength[area][age - minage])
-                  / (sdevLength[area][age - minage] * sdevMult);
-
+        
+        if (isZero(sdevLength[area][age - minage] * sdevMult))
+          mult = 0.0;
+        else        
+          mult = 1.0 / (sdevLength[area][age - minage] * sdevMult);
+  
+        for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
+          dnorm = (LgrpDiv->meanLength(l) - meanLength[area][age - minage]) * mult;
           initialPop[area][age][l].N = exp(-(dnorm * dnorm) * 0.5);
           scaler += initialPop[area][age][l].N;
         }
 
-        scaler = (scaler > rathersmall ? 10000 / scaler : 0.0);
-        for (l = initialPop[area].minLength(age);
-            l < initialPop[area].maxLength(age); l++) {
+        scaler = (scaler > rathersmall ? 10000.0 / scaler : 0.0);
+        for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           initialPop[area][age][l].N *= scaler;
+          initialPop[area][age][l].W = alpha[area][age - minage] * pow(LgrpDiv->meanLength(l), beta[area][age - minage]);
+          if ((isZero(initialPop[area][age][l].W)) && (!(isZero(initialPop[area][age][l].N))))
+            handle.logWarning("Warning in initial conditions - zero mean weight");
         }
       }
     }
-  }
 
+  } else if (readoption == 2) {
+    for (area = 0; area < initialPop.Size(); area++) {
+      minage = initialPop[area].minAge();
+      maxage = initialPop[area].maxAge();
+      for (age = minage; age <= maxage; age++) {
+        for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
+          initialPop[area][age][l].W = refWeight[l];
+          if ((isZero(initialPop[area][age][l].W)) && (!(isZero(initialPop[area][age][l].N))))
+            handle.logWarning("Warning in initial conditions - zero mean weight");
+        }
+      }
+    }
+
+  } else
+    handle.logFailure("Error in initial conditions - unrecognised data format");
+
+  mult = 1.0;
   for (area = 0; area < areas.Size(); area++) {
     Alkeys[area].setToZero();
     minage = max(Alkeys[area].minAge(), initialPop[area].minAge());
@@ -413,10 +550,8 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       return;
 
     for (age = minage; age <= maxage; age++) {
-      if (readNumbers == 0)
+      if ((readoption == 0) || (readoption == 1))
         mult = areaFactor[area][age - minage] * ageFactor[area][age - minage];
-      else
-        mult = 1.0;
 
       if (mult < 0) {
         handle.logWarning("Warning in initial conditions - negative stock multiplier", mult);

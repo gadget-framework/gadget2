@@ -54,14 +54,24 @@ public:
   void Print(ofstream& outfile) const;
 protected:
   /**
-   * \brief This is the function used to read the normal distribution of the initial condtion data
+   * \brief This is the function used to read the normal distribution and condition factor for the initial condtion data
    * \param infile is the CommentStream to read the initial conditions data from
    * \param keeper is the Keeper for the current model
    * \param noagegr is the number of age groups for the initial population
    * \param minage is the minimum age for the initial population
    * \param Area is the AreaClass for the current model
    */
-  void readNormalData(CommentStream& infile, Keeper* const keeper,
+  void readNormalConditionData(CommentStream& infile, Keeper* const keeper,
+     int noagegr, int minage, const AreaClass* const Area);
+  /**
+   * \brief This is the function used to read the normal distribution for the initial condtion data
+   * \param infile is the CommentStream to read the initial conditions data from
+   * \param keeper is the Keeper for the current model
+   * \param noagegr is the number of age groups for the initial population
+   * \param minage is the minimum age for the initial population
+   * \param Area is the AreaClass for the current model
+   */
+  void readNormalParameterData(CommentStream& infile, Keeper* const keeper,
      int noagegr, int minage, const AreaClass* const Area);
   /**
    * \brief This is the function used to read the numbers of the initial population
@@ -106,13 +116,25 @@ protected:
    */
   FormulaMatrix sdevLength;
   /**
+   * \brief This is the alpha parameter used when calculating the length weight relationship
+   */
+  FormulaMatrix alpha;
+  /**
+   * \brief This is the beta parameter used when calculating the length weight relationship
+   */
+  FormulaMatrix beta;
+  /**
    * \brief This is the optional factor used when calculating the standard deviation of the length
    */
   Formula sdevMult;
   /**
-   * \brief This is a flag used to denote whether the numbers for the initial population has been read in from file
+   * \brief This is the DoubleVector of the reference weight values
    */
-  int readNumbers;
+  DoubleVector refWeight;
+  /**
+   * \brief This is the identifier of the function to be used to read the initial population data from file
+   */
+  int readoption;
 };
 
 #endif

@@ -15,15 +15,15 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
-  timeindex = 0;
+  index = 0;
   double minlength, maxlength, dl;
 
   infile >> text;
   if (strcasecmp(text, "normaldistribution") == 0) {
-    readOption = 1;
+    readoption = 1;
     readWordAndVariable(infile, "minlength", minlength);
   } else if (strcasecmp(text, "minlength") == 0) {
-    readOption = 0;
+    readoption = 0;
     infile >> minlength;
   } else
     handle.Unexpected("normaldistribution or minlength", text);
@@ -42,10 +42,10 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   if (LgrpDiv->Error())
     handle.Message("Error in renewal - failed to create length group");
 
-  if (readOption == 0) {
+  if (readoption == 0) {
     this->readNumberData(infile, keeper, TimeInfo, Area);
 
-  } else if (readOption == 1) {
+  } else if (readoption == 1) {
     this->readNormalData(infile, keeper, TimeInfo, Area);
 
   } else
@@ -95,8 +95,8 @@ void RenewalData::readNormalData(CommentStream& infile, Keeper* const keeper,
       renewalNumber.resize(1, keeper);
       meanLength.resize(1, keeper);
       sdevLength.resize(1, keeper);
-      coeff1.resize(1, keeper);
-      coeff2.resize(1, keeper);
+      alpha.resize(1, keeper);
+      beta.resize(1, keeper);
 
       PopInfoIndexVector poptmp(nolengr, 0);
       renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
@@ -106,16 +106,16 @@ void RenewalData::readNormalData(CommentStream& infile, Keeper* const keeper,
         handle.Message("Error in renewal - wrong format for renewal mean length");
       if (!(infile >> sdevLength[i]))
         handle.Message("Error in renewal - wrong format for renewal standard deviation");
-      if (!(infile >> coeff1[i]))
-        handle.Message("Error in renewal - wrong format for renewal wcoeff1");
-      if (!(infile >> coeff2[i]))
-        handle.Message("Error in renewal - wrong format for renewal wcoeff2");
+      if (!(infile >> alpha[i]))
+        handle.Message("Error in renewal - wrong format for renewal parameter alpha");
+      if (!(infile >> beta[i]))
+        handle.Message("Error in renewal - wrong format for renewal parameter beta");
 
       renewalNumber[i].Inform(keeper);
       meanLength[i].Inform(keeper);
       sdevLength[i].Inform(keeper);
-      coeff1[i].Inform(keeper);
-      coeff2[i].Inform(keeper);
+      alpha[i].Inform(keeper);
+      beta[i].Inform(keeper);
 
     } else { //This year and step is not required - skip rest of line
       infile.get(c);
@@ -215,48 +215,43 @@ void RenewalData::setCI(const LengthGroupDivision* const GivenLDiv) {
 void RenewalData::Print(ofstream& outfile) const {
   outfile << "\nRenewal data\n\t";
   LgrpDiv->Print(outfile);
-  outfile << "\tInternal area " << renewalArea[timeindex]
-    << " age " << renewalDistribution[timeindex].minAge()
-    << " number " << renewalNumber[timeindex] << "\n\tNumbers\n";
-  renewalDistribution[timeindex].printNumbers(outfile);
+  outfile << "\tInternal area " << renewalArea[index]
+    << " age " << renewalDistribution[index].minAge()
+    << " number " << renewalNumber[index] << "\n\tNumbers\n";
+  renewalDistribution[index].printNumbers(outfile);
   outfile << "\tMean weights\n";
-  renewalDistribution[timeindex].printWeights(outfile);
+  renewalDistribution[index].printWeights(outfile);
 }
 
 void RenewalData::Reset() {
   int i, age, l;
-  double sum, length, N, tmpVariance;
+  double sum, mult, dnorm;
 
-  timeindex = 0;
-  if (readOption == 1) {
+  index = 0;
+  if (readoption == 1) {
     for (i = 0; i < renewalDistribution.Size(); i++) {
       age = renewalDistribution[i].minAge();
       sum = 0.0;
-      N = 0.0;
+
       if (isZero(sdevLength[i]))
-        tmpVariance = 0.0;
-      else
-        tmpVariance = 1.0 / (2.0 * sdevLength[i] * sdevLength[i]);
+        mult = 0.0;
+      else        
+        mult = 1.0 / sdevLength[i];
 
       for (l = renewalDistribution[i].minLength(age);
            l < renewalDistribution[i].maxLength(age); l++) {
-        length = LgrpDiv->meanLength(l) - meanLength[i];
-        if (sdevLength[i] > verysmall)
-          N = exp(-(length * length * tmpVariance));
-        else
-          N = 0.0;
-        renewalDistribution[i][age][l].N = N;
-        sum += N;
+
+        dnorm = (LgrpDiv->meanLength(l) - meanLength[i]) * mult;
+        renewalDistribution[i][age][l].N = exp(-(dnorm * dnorm) * 0.5);
+        sum += renewalDistribution[i][age][l].N;
       }
 
+      sum = (sum > rathersmall ? 10000.0 / sum : 0.0);
       for (l = renewalDistribution[i].minLength(age);
            l < renewalDistribution[i].maxLength(age); l++) {
-        length = LgrpDiv->meanLength(l);
-        if (sum > rathersmall)
-          renewalDistribution[i][age][l].N *= 10000.0 / sum;
-        else
-          renewalDistribution[i][age][l].N = 0.0;
-        renewalDistribution[i][age][l].W = coeff1[i] * pow(length, coeff2[i]);
+
+        renewalDistribution[i][age][l].N *= sum;
+        renewalDistribution[i][age][l].W = alpha[i] * pow(LgrpDiv->meanLength(l), beta[i]);
       }
     }
   }
@@ -280,11 +275,11 @@ void RenewalData::addRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* c
 
   //Add renewal to stock
   if (renewalid != -1) {
-    timeindex = renewalid;
-    if (isZero(renewalNumber[renewalid]))
+    index = renewalid;
+    if (isZero(renewalNumber[index]))
       renew = 0.0;
     else
-      renew = renewalNumber[renewalid];
+      renew = renewalNumber[index];
 
     if (renew < 0) {
       handle.logWarning("Warning in renewal - invalid number of recruits", renew);
@@ -292,7 +287,7 @@ void RenewalData::addRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* c
     }
 
     if (renew > verysmall)
-      Alkeys.Add(renewalDistribution[renewalid], *CI, renew);
+      Alkeys.Add(renewalDistribution[index], *CI, renew);
 
   }
 }
