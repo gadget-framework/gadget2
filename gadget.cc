@@ -152,6 +152,7 @@ int main(int aNumber, char* const aVector[]) {
 
     Optinfo = new OptInfo(&MainInfo);
     Optinfo->Optimise();
+    delete Optinfo;
 
     if ((MainInfo.getPI()).getForcePrint())
       EcoSystem->Simulate(0, 1);  //print and dont optimise
@@ -171,10 +172,7 @@ int main(int aNumber, char* const aVector[]) {
   if (check == 1)
     free(workingdir);
 
-  handle.logFinish(MainInfo.runOptimise());
-
-  delete Optinfo;
   delete EcoSystem;
-
+  handle.logFinish(MainInfo.runOptimise());
   return EXIT_SUCCESS;
 }

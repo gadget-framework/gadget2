@@ -22,7 +22,7 @@ OptInfo::OptInfo(MainInfo* MainInfo) {
     CommentStream optfile(infile);
     handle.checkIfFailure(infile, MainInfo->getOptInfoFile());
     handle.Open(MainInfo->getOptInfoFile());
-    readOptInfo(optfile);
+    this->readOptInfo(optfile);
     handle.Close();
     infile.close();
     infile.clear();
