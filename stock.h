@@ -5,7 +5,6 @@
 #include "agebandmatrixratio.h"
 #include "base.h"
 #include "stockptrvector.h"
-#include "catchdataptrvector.h"
 #include "tagptrvector.h"
 #include "commentstream.h"
 #include "naturalm.h"
@@ -21,7 +20,6 @@ class Spawner;
 class Alkeys;
 class Migration;
 class Maturity;
-class CatchData;
 class Transition;
 class StockPredator;
 class Predator;
@@ -83,13 +81,11 @@ public:
   Agebandmatrix& MutableAgelengthkeys(int area) const;
   const Agebandmatrix& getMeanN(int area) const;
   virtual void SetStock(Stockptrvector& stockvec);
-  void SetCatch(CatchDataptrvector& CDvector);
   void SetCI();
   void Print(ofstream& outfile) const;
   int Birthday(const TimeClass* const TimeInfo) const;
   const LengthGroupDivision* ReturnLengthGroupDiv() const { return LgrpDiv; };
   int IsEaten() const { return iseaten; };
-  int IsCaught() const { return iscaught; };
   int DoesSpawn() const { return doesspawn; };
   int DoesMove() const { return doesmove; };
   int DoesEat() const { return doeseat; };
@@ -125,7 +121,6 @@ protected:
   Grower* grower;
   NaturalM* NatM;
   popinfomatrix NumberInArea;
-  int iscaught;
   int doeseat;
   int doesmove;
   int iseaten;

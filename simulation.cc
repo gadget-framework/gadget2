@@ -31,9 +31,6 @@ void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
       basevec[i]->ReducePop(area, Area, TimeInfo); //NaturalM, catch
-
-  for (i = 0; i < catchdata.Size(); i++)
-    catchdata[i]->Recalc(area, TimeInfo);
 }
 
 void Ecosystem::GrowthAndSpecialTransactions(int area) {

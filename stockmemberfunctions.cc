@@ -12,7 +12,6 @@
 #include "maturity.h"
 #include "renewal.h"
 #include "transition.h"
-#include "catch.h"
 #include "spawner.h"
 #include "gadget.h"
 
@@ -75,10 +74,6 @@ void Stock::ReducePop(int area, const AreaClass* const Area, const TimeClass* co
   //Predation
   if (iseaten)
     prey->Subtract(Alkeys[inarea], area);
-
-  //Direct Catch.
-  if (iscaught)
-    catchptr->Subtract(*this, area);
 
   //Natural Mortality changed with more substeps
   doublevector* PropSurviving;

@@ -3,7 +3,6 @@
 
 #include "stock.h"
 #include "baseclassptrvector.h"
-#include "catchdataptrvector.h"
 #include "otherfood.h"
 #include "readfunc.h"
 #include "errorhandler.h"
@@ -82,7 +81,6 @@ protected:
   AreaClass*  Area;
   Keeper* keeper;
   charptrvector catchnames;
-  CatchDataptrvector catchdata;
   charptrvector stocknames;
   Stockptrvector stockvec;
   charptrvector tagnames;

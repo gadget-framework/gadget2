@@ -123,17 +123,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     grower = 0;
 
   //Read the prey data.
-  infile >> text;
-  if (strcasecmp(text, "iscaught") == 0)
-    infile >> iscaught >> ws >> text;
-  else
-    iscaught = 0;
-
-  if (strcasecmp(text, "iseaten") == 0)
-    infile >> iseaten >> ws;
-  else
-    handle.Unexpected("iseaten", text);
-
+  ReadWordAndVariable(infile, "iseaten", iseaten);
   if (iseaten)
     prey = new MortPrey(infile, areas, this->Name(), minage, maxage, keeper, LgrpDiv);
   else

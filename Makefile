@@ -52,7 +52,7 @@ OBJECTS = $(GADGETOBJECTS)
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D __cplusplus
 #OBJECTS = $(GADGETOBJECTS)
 ##########################################################################
-# 6. Solaris, without pvm3, g++ compiler running CONDOR
+# 6. Linux or Solaris, without pvm3, g++ compiler running CONDOR
 #CXX = condor_compile g++
 #LIBDIRS = -L.  -L/usr/local/lib
 #LIBRARIES = -lm -lvec
@@ -68,7 +68,7 @@ OBJECTS = $(GADGETOBJECTS)
 VECTORS = addr_keepmatrix.o addr_keepvector.o charptrmatrix.o charptrvector.o \
 	bandmatrixptrmatrix.o bandmatrixptrvector.o doublematrix.o doublevector.o \
 	otherfoodptrvector.o baseclassptrvector.o popinfoindexvector.o \
-	catchdataptrvector.o migvariableptrvector.o conversionindexptrvector.o \
+	migvariableptrvector.o conversionindexptrvector.o likelihoodptrvector.o \
 	popratiomatrix.o popratiovector.o popinfomatrix.o popinfovector.o \
 	doubleindexvector.o predatorptrvector.o preyptrvector.o fleetptrvector.o \
 	doublematrixptrmatrix.o doublematrixptrvector.o intmatrix.o intvector.o \
@@ -77,7 +77,7 @@ VECTORS = addr_keepmatrix.o addr_keepvector.o charptrmatrix.o charptrvector.o \
 	timevariablematrix.o timevariablevector.o timevariableindexvector.o \
 	variableinfoptrvector.o catchdistributionptrvector.o suitfuncptrvector.o \
 	formulamatrixptrvector.o vectorofcharptr.o agebandmatrixratio.o \
-	popratioindexvector.o likelihoodptrvector.o printerptrvector.o
+	popratioindexvector.o printerptrvector.o
 
 GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregator.o \
 	growthimplement.o predatorindex.o abstrpredstdinfo.o abstrpreystdinfo.o \
@@ -85,7 +85,7 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	actionattimes.o predatoroverprinter.o addr_keep.o predprey.o agebandm.o \
 	predpreystdageprinter.o agebandmatrix.o predpreystdlengthprinter.o grow.o \
 	agebandmatrixmemberfunctions.o predpreystdprinter.o area.o predstdinfo.o \
-	bandmatrix.o predstdinfobylength.o binarytree.o catch.o prey.o catchdata.o \
+	bandmatrix.o predstdinfobylength.o binarytree.o prey.o logcatchfunction.o \
 	preyoveraggregator.o checkconversion.o preyoverprinter.o catchstatistics.o \
 	preystdinfo.o preystdinfobylength.o catchdistribution.o print.o runid.o \
 	commentstream.o printinfo.o readfunc.o conversion.o readmain.o readmatrix.o \
@@ -106,9 +106,9 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	vectorusingkeeper.o popstatistics.o boundlikelihood.o timevariable.o \
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	formatedcatchprinter.o formatedchatprinter.o formatedpreyprinter.o \
-	formatedstockprinter.o lennaturalm.o logcatchfunction.o catchintons.o \
-	interruptinterface.o interrupthandler.o initialinputfile.o taggrow.o \
-	popratio.o agebandmatrixratiomemberfunctions.o
+	formatedstockprinter.o lennaturalm.o catchintons.o initialinputfile.o \
+	interruptinterface.o interrupthandler.o taggrow.o popratio.o \
+	agebandmatrixratiomemberfunctions.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
@@ -134,7 +134,7 @@ install: gadget
 libgadgetinput.a: $(GADGETINPUT)
 	ar r libgadgetinput.a $?
 clean:
-	rm -f $(VECTORS) $(OBJECTS) libvec.a libgadgetinput.a
+	rm -f $(OBJECTS) $(VECTORS) libvec.a libgadgetinput.a
 depend:
 	$(CXX) -M -MM $(CXXFLAGS) *.cc
 

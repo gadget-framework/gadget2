@@ -72,8 +72,6 @@ void Ecosystem::Initialize(int optimize) {
   for (i = 0; i < predvec.Size(); i++)
     predvec[i]->SetPrey(preyvec, keeper);
   for (i = 0; i < stockvec.Size(); i++)
-    stockvec[i]->SetCatch(catchdata);
-  for (i = 0; i < stockvec.Size(); i++)
     stockvec[i]->SetStock(stockvec);
   for (i = 0; i < stockvec.Size(); i++)
     stockvec[i]->SetCI();

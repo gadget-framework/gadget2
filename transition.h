@@ -10,7 +10,7 @@ class ConversionIndex;
 class Keeper;
 
 class Transition : protected LivesOnAreas {
- public:
+public:
   Transition(CommentStream& infile, const intvector& areas, int age, int minl,
     int size, Keeper* const keeper);
   ~Transition();

@@ -17,7 +17,6 @@
 #include "maturityd.h"
 #include "renewal.h"
 #include "transition.h"
-#include "catch.h"
 #include "print.h"
 #include "spawner.h"
 #include "readword.h"
@@ -129,17 +128,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     handle.Unexpected("naturalmortality", text);
 
   //Read the prey data
-  infile >> text;
-  if (strcasecmp(text, "iscaught") == 0)
-    infile >> iscaught >> ws >> text;
-  else
-    iscaught = 0;
-
-  if (strcasecmp(text, "iseaten") == 0)
-    infile >> iseaten >> ws;
-  else
-    handle.Unexpected("iseaten", text);
-
+  ReadWordAndVariable(infile, "iseaten", iseaten);
   if (iseaten)
     prey = new StockPrey(infile, areas, this->Name(), minage, maxage, keeper);
   else
@@ -284,8 +273,8 @@ Stock::~Stock() {
     delete maturity;
   if (spawner != 0)
     delete spawner;
-  if (catchptr != 0)
-    delete catchptr;
+  /*if (catchptr != 0)
+    delete catchptr;*/
 }
 
 void Stock::Reset(const TimeClass* const TimeInfo) {
@@ -332,7 +321,7 @@ void Stock::SetStock(Stockptrvector& stockvec) {
     transition->SetStock(stockvec);
 }
 
-void Stock::SetCatch(CatchDataptrvector& CDvector) {
+/*void Stock::SetCatch(CatchDataptrvector& CDvector) {
   if (!iscaught)
     return;
   int i, found = 0;
@@ -350,12 +339,10 @@ void Stock::SetCatch(CatchDataptrvector& CDvector) {
     exit(EXIT_FAILURE);
   }
   catchptr = new Catch(CD);
-}
+}*/
 
 void Stock::SetCI() {
   initial->SetCI(LgrpDiv);
-  if (iscaught)
-    catchptr->SetCI(LgrpDiv);
   if (iseaten)
     prey->SetCI(LgrpDiv);
   if (doesmove)
