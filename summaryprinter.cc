@@ -50,6 +50,29 @@ void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
     like.resize(1);
     like[index++] = likevec[i];
   }
+
+  for (i = 0; i < like.Size(); i++) {
+    switch(like[i]->Type()) {
+      case CATCHDISTRIBUTIONLIKELIHOOD:
+      case CATCHSTATISTICSLIKELIHOOD:
+      case CATCHINTONSLIKELIHOOD:
+      case SURVEYDISTRIBUTIONLIKELIHOOD:
+      case STOCKDISTRIBUTIONLIKELIHOOD:
+      case STOMACHCONTENTLIKELIHOOD:
+      case SURVEYINDICESLIKELIHOOD:
+      case UNDERSTOCKINGLIKELIHOOD:
+      case BOUNDLIKELIHOOD:
+        break;
+      case TAGLIKELIHOOD:
+      case RECSTATISTICSLIKELIHOOD:
+      case MIGRATIONPENALTYLIKELIHOOD:
+        handle.logMessage("Warning in summaryprinter - printing not implemented for", like[i]->Name());
+        break;
+      default:
+        handle.logFailure("Error in summaryprinter - unrecognised likelihood type", like[i]->Type());
+        break;
+    }
+  }
 }
 
 void SummaryPrinter::Print(const TimeClass* const TimeInfo, int printtime) {

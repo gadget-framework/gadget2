@@ -122,17 +122,13 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
         outfile << "\n; tagid-year-step-area-length-number\n";
         break;
       case RECSTATISTICSLIKELIHOOD:
-        handle.logWarning("Error in likelihoodprinter - recstatistics not currently implemented");
+        handle.logWarning("Warning in likelihoodprinter - printing not currently implemented for", like[i]->Name());
         //outfile << "\n; tagid-year-step-area-number-mean\n";
         break;
-      case UNDERSTOCKINGLIKELIHOOD:
-        handle.logWarning("Error in likelihoodprinter - understocking not currently implemented");
-        break;
-      case MIGRATIONPENALTYLIKELIHOOD:
-        handle.logWarning("Error in likelihoodprinter - migrationpenalty not currently implemented");
-        break;
       case BOUNDLIKELIHOOD:
-        handle.logWarning("Error in likelihoodprinter - boundlikelihood not currently implemented");
+      case UNDERSTOCKINGLIKELIHOOD:
+      case MIGRATIONPENALTYLIKELIHOOD:
+        handle.logWarning("Warning in likelihoodprinter - printing not implemented for", like[i]->Name());
         break;
       default:
         handle.logFailure("Error in likelihoodprinter - unrecognised likelihood type", like[i]->Type());
