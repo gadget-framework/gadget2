@@ -75,9 +75,9 @@ int ActionAtTimes::ReadFromFile(CommentStream& infile, const TimeClass* const Ti
           TimeSteps[TimeSteps.Size() - 1] = TimeInfo->CalcSteps(year, step);
         }
       }
-    } //End of if (OK && column == 1)
+    }
     column = !column;  //change column from 0 to 1 or from 1 to 0.
-  } //End of while.
+  }
 
   infile.seekg(readPos);
   //And now the cleanup.
@@ -89,7 +89,8 @@ int ActionAtTimes::ReadFromFile(CommentStream& infile, const TimeClass* const Ti
     while (Steps.Size())
       Steps.Delete(0);
   }
-  if (infile.fail() || (error == 1) || (column == 1 && error != 2))
+
+  if ((error == 1) || (column == 1 && error != 2))
     return 0;
 
   return 1;
