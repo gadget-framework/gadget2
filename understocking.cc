@@ -101,6 +101,7 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
   double err, l;
   if (AAT.AtCurrentTime(TimeInfo)) {
     handle.logMessage("Checking understocking likelihood component");
+    DoubleVector store(areas.Nrow(), 0.0);
     l = 0.0;
     for (k = 0; k < areas.Nrow(); k++) {
       err = 0.0;
@@ -108,11 +109,60 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
         for (j = 0; j < areas[k].Size(); j++)
           if (fleets[i]->IsInArea(areas[k][j]))
             err += fleets[i]->OverConsumption(areas[k][j]);
-      l += pow(err, powercoeff);
+      store[k] += pow(err, powercoeff);
+      l += store[k];
     }
     if (!(isZero(l))) {
+      Years.resize(1, TimeInfo->CurrentYear());
+      Steps.resize(1, TimeInfo->CurrentStep());
+      likelihoodValues.AddRows(1, areas.Nrow(), 0.0);
+      for (k = 0; k < areas.Nrow(); k++)
+        likelihoodValues[likelihoodValues.Nrow() - 1][k] = store[k];
+        
       handle.logMessage("The likelihood score for this component on this timestep is", l);
       likelihood += l;
     }
   }
+}
+
+void UnderStocking::LikelihoodPrint(ofstream& outfile) {
+  int i, j, year, area;
+
+  outfile << "\nUnderstocking\n\nLikelihood " << likelihood
+    << "\nWeight " << weight << "\nFleet names:";
+  for (i = 0; i < fleetnames.Size(); i++)
+    outfile << sep << fleetnames[i];
+  outfile << "\nInternal areas:";
+  for (i  = 0; i < areas.Nrow(); i++) {
+    outfile << endl;
+    for (j = 0; j < areas.Ncol(i); j++)
+      outfile << areas[i][j] << sep;
+  }
+  outfile << endl;
+
+  for (year = 0; year < likelihoodValues.Nrow(); year++) {
+    outfile << "\nYear " << Years[year] << " and step " << Steps[year] << "\nLikelihood values:";
+    for (area = 0; area < likelihoodValues.Ncol(year); area++) {
+      outfile.width(smallwidth);
+      outfile.precision(smallprecision);
+      outfile << sep << likelihoodValues[year][area];
+    }
+    outfile << endl;
+  }
+
+  outfile.flush();
+}
+
+void UnderStocking::SummaryPrint(ofstream& outfile) {
+  int year, area;
+
+  for (year = 0; year < likelihoodValues.Nrow(); year++)
+    for (area = 0; area < likelihoodValues.Ncol(year); area++)
+      outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
+        << Steps[year] << sep << setw(printwidth) << areaindex[area] 
+        << " understocking"  << setw(smallwidth) << weight << sep 
+        << setprecision(largeprecision) << setw(largewidth)
+        << likelihoodValues[year][area] << endl;
+
+  outfile.flush();
 }

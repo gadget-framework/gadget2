@@ -55,6 +55,11 @@ public:
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
   virtual void LikelihoodPrint(ofstream& outfile);
+  /**
+   * \brief This function will print summary information from each CatchStatistics likelihood calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   */
+  virtual void SummaryPrint(ofstream& outfile);
 private:
   /**
    * \brief This function will read the CatchStatistics data from the input file

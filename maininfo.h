@@ -43,6 +43,11 @@ public:
    */
   void closeOptInfoFile();
   /**
+   * \brief This function will store the filename that the likelihood summary information will be written to
+   * \param filename is the name of the file
+   */
+  void setPrintLikeSummaryFile(char* filename);
+  /**
    * \brief This function will store the filename that the likelihood information will be written to
    * \param filename is the name of the file
    */
@@ -113,6 +118,11 @@ public:
    */
   int printFinal() const { return printFinalInfo; };
   /**
+   * \brief This function will return the flag used to determine whether the likelihood summary information should be printed to file
+   * \return flag
+   */
+  int printLikeSummary() const { return printLikeSummaryInfo; };
+  /**
    * \brief This function will return the flag used to determine whether the likelihood information should be printed to file
    * \return flag
    */
@@ -138,6 +148,11 @@ public:
    */
   char* getPrintFinalFile() const { return strPrintFinalFile; };
   /**
+   * \brief This function will return the filename that the likelihood summary information will be written to
+   * \return filename
+   */
+  char* getPrintLikeSummaryFile() const { return strPrintLikeSummaryFile; };
+  /**
    * \brief This function will return the filename that the likelihood information will be written to
    * \return filename
    */
@@ -161,6 +176,10 @@ private:
    * \brief This ifstream is the file that all the optimisation information gets read from
    */
   ifstream optInfoStream;
+  /**
+   * \brief This is the name of the file that likelihood summary information will be written to
+   */
+  char* strPrintLikeSummaryFile;
   /**
    * \brief This is the name of the file that likelihood information will be written to
    */
@@ -225,6 +244,10 @@ private:
    * \brief This is the flag used to denote whether the likelihood information should be printed or not
    */
   int printLikelihoodInfo;
+  /**
+   * \brief This is the flag used to denote whether the likelihood summary information should be printed or not
+   */
+  int printLikeSummaryInfo;
 };
 
 #endif

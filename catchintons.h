@@ -40,6 +40,11 @@ public:
    */
   virtual void Print(ofstream& outfile) const;
   /**
+   * \brief This function will print summary information from each CatchInTons likelihood calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   */
+  virtual void SummaryPrint(ofstream& outfile);
+  /**
    * \brief This function will print information from each CatchInTons likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */

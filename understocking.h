@@ -39,6 +39,16 @@ public:
    */
   virtual void Reset(const Keeper* const keeper);
   /**
+   * \brief This function will print summary information from each non-zero UnderStocking likelihood calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   */
+  virtual void SummaryPrint(ofstream& outfile);
+  /**
+   * \brief This function will print information from each non-zero UnderStocking likelihood calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   */
+  virtual void LikelihoodPrint(ofstream& outfile);
+  /**
    * \brief This function will print the summary UnderStocking likelihood information
    * \param outfile is the ofstream that all the model information gets sent to
    */
@@ -73,6 +83,19 @@ private:
    * \brief This is the power coefficient used when calculating the likelihood score (default 2)
    */
   double powercoeff;
+  /**
+   * \brief This is the IntVector used to store information about the years when the likelihood score was calculated to be non-zero
+   */
+  IntVector Years;
+  /**
+   * \brief This is the IntVector used to store information about the steps when the likelihood score was calculated to be non-zero
+   */
+  IntVector Steps;
+  /**
+   * \brief This is the DoubleMatrix used to store the calculated non-zero likelihood information
+   * \note the indices for this object are [time][area]
+   */
+  DoubleMatrix likelihoodValues;
 };
 
 #endif

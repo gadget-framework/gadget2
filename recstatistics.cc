@@ -313,7 +313,8 @@ void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
     if (tagvec[t]->IsWithinPeriod(TimeInfo->CurrentYear(), TimeInfo->CurrentStep())) {
       for (i = 0; i < Years.Ncol(t); i++) {
         if (Years[t][i] == TimeInfo->CurrentYear() && Steps[t][i] == TimeInfo->CurrentStep()) {
-          handle.logMessage("Calculating likelihood score for recstatistics component", rsname);
+          if (check == 0)
+            handle.logMessage("Calculating likelihood score for recstatistics component", rsname);
           timeindex[t] = i;
           aggregator[t]->Sum(TimeInfo);
           check++;

@@ -231,6 +231,24 @@ void Ecosystem::writeLikelihoodInformation(const char* filename) const {
   outfile.clear();
 }
 
+void Ecosystem::writeLikeSummaryInformation(const char* filename) const {
+  ofstream outfile;
+  outfile.open(filename, ios::out);
+  handle.checkIfFailure(outfile, filename);
+  outfile << "; ";
+  RUNID.print(outfile);
+  outfile << "; Summary likelihood information from the current run" << endl
+    << "; year-step-area-component-weight-likelihood value" << endl;
+  outfile.flush();
+
+  int i;
+  for (i = 0; i < Likely.Size(); i++)
+    Likely[i]->SummaryPrint(outfile);
+    
+  outfile.close();
+  outfile.clear();
+}
+
 void Ecosystem::OptValues(DoubleVector& val) const {
   keeper->OptValues(val);
 }

@@ -48,7 +48,8 @@ void MainInfo::showUsage() {
 MainInfo::MainInfo()
   : optInfoComment(optInfoStream), givenOptInfo(0), givenInitialParam(0),
     runlikelihood(0), runoptimize(0), runstochastic(0), runnetwork(0),
-    printInitialInfo(0), printFinalInfo(0), printLikelihoodInfo(0) {
+    printInitialInfo(0), printFinalInfo(0),
+    printLikelihoodInfo(0), printLikeSummaryInfo(0) {
 
   char tmpname[10];
   strncpy(tmpname, "", 10);
@@ -59,6 +60,7 @@ MainInfo::MainInfo()
   strPrintInitialFile = NULL;
   strPrintFinalFile = NULL;
   strPrintLikelihoodFile = NULL;
+  strPrintLikeSummaryFile = NULL;
   strMainGadgetFile = NULL;
   setMainGadgetFile(tmpname);
 }
@@ -83,6 +85,10 @@ MainInfo::~MainInfo() {
   if (strPrintLikelihoodFile != NULL) {
     delete[] strPrintLikelihoodFile;
     strPrintLikelihoodFile = NULL;
+  }
+  if (strPrintLikeSummaryFile != NULL) {
+    delete[] strPrintLikeSummaryFile;
+    strPrintLikeSummaryFile = NULL;
   }
   if (strMainGadgetFile != NULL) {
     delete[] strMainGadgetFile;
@@ -198,6 +204,13 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
           showCorrectUsage(aVector[k]);
         k++;
         setPrintLikelihoodFile(aVector[k]);
+
+      } else if (strcasecmp(aVector[k], "-printlikesummary") == 0) {
+        //JMB - print summary likelihood information in columns
+        if (k == aNumber - 1)
+          showCorrectUsage(aVector[k]);
+        k++;
+        setPrintLikeSummaryFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-print1") == 0) {
         if (k == aNumber - 1)
@@ -342,6 +355,16 @@ void MainInfo::setPrintLikelihoodFile(char* filename) {
   strPrintLikelihoodFile = new char[strlen(filename) + 1];
   strcpy(strPrintLikelihoodFile, filename);
   printLikelihoodInfo = 1;
+}
+
+void MainInfo::setPrintLikeSummaryFile(char* filename) {
+  if (strPrintLikeSummaryFile != NULL) {
+    delete[] strPrintLikeSummaryFile;
+    strPrintLikeSummaryFile = NULL;
+  }
+  strPrintLikeSummaryFile = new char[strlen(filename) + 1];
+  strcpy(strPrintLikeSummaryFile, filename);
+  printLikeSummaryInfo = 1;
 }
 
 void MainInfo::setInitialParamFile(char* filename) {

@@ -434,3 +434,17 @@ void CatchStatistics::LikelihoodPrint(ofstream& outfile) {
 
   outfile.flush();
 }
+
+void CatchStatistics::SummaryPrint(ofstream& outfile) {
+  int year, area;
+
+  for (year = 0; year < likelihoodValues.Nrow(); year++)
+    for (area = 0; area < likelihoodValues.Ncol(year); area++)
+      outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
+        << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
+        << setw(largewidth) << csname << sep << setw(smallwidth) << weight << sep 
+        << setprecision(largeprecision) << setw(largewidth)
+        << likelihoodValues[year][area] << endl;
+
+  outfile.flush();
+}

@@ -185,6 +185,8 @@ int main(int aNumber, char* const aVector[]) {
 
   if (MainInfo.printLikelihood())
     EcoSystem->writeLikelihoodInformation(MainInfo.getPrintLikelihoodFile());
+  if (MainInfo.printLikeSummary())
+    EcoSystem->writeLikeSummaryInformation(MainInfo.getPrintLikeSummaryFile());
   if (MainInfo.printFinal())
     EcoSystem->writeStatus(MainInfo.getPrintFinalFile());
 
