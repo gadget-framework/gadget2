@@ -85,14 +85,15 @@ Ecosystem::~Ecosystem() {
 }
 
 void Ecosystem::writeStatus(const char* filename) const {
-  int i;
   ofstream outfile;
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
-
+  handle.Open(filename);
   RUNID.print(outfile);
   outfile << "The current simulation time is " << TimeInfo->CurrentYear()
     << ", step " << TimeInfo->CurrentStep() << endl;
+
+  int i;
   for (i = 0; i < stockvec.Size(); i++)
     stockvec[i]->Print(outfile);
   for (i = 0; i < otherfoodvec.Size(); i++)
@@ -101,6 +102,8 @@ void Ecosystem::writeStatus(const char* filename) const {
     fleetvec[i]->Print(outfile);
   for (i = 0; i < Likely.Size(); i++)
     Likely[i]->Print(outfile);
+
+  handle.Close();
   outfile.close();
   outfile.clear();
 }
