@@ -100,7 +100,7 @@ Examples:
 
    TimeClass* currentTime;
 
-   void doSomething(TimeClass time) {
+   void incrementTime(TimeClass currentTime) {
      // ...
    }
 \endverbatim

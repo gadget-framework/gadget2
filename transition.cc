@@ -106,10 +106,7 @@ void Transition::setStock(StockPtrVector& stockvec) {
 
 void Transition::Print(ofstream& outfile) const {
   int i;
-  outfile << "\nTransition\n\tRead names of transition stocks:";
-  for (i = 0; i < transitionStockNames.Size(); i++)
-    outfile << sep << (const char*)(transitionStockNames[i]);
-  outfile << "\n\tNames of transition stocks (through pointers):";
+  outfile << "\nTransition\n\tNames of transition stocks:";
   for (i = 0; i < transitionStocks.Size(); i++)
     outfile << sep << (const char*)(transitionStocks[i]->Name());
   outfile << "\n\tTransition step " << transitionStep << endl;

@@ -231,7 +231,7 @@ int lengthGroupIsFiner(const LengthGroupDivision* finer,
       return 0;
     }
 
-  //if fmax is finer is not in the intersection of the length groups
+  //if fmax in finer is not in the intersection of the length groups
   while (absolute(maxlength - finer->minLength(fmax)) < allowederror)
     fmax--;
 
@@ -258,24 +258,24 @@ void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
   int isfiner = lengthGroupIsFiner(finer, coarser, BogusLengthGroup);
   switch(isfiner) {
     case -1:
-      handle.logWarning("Error in lengthgroup - failed to check lengthgroupisfiner");
+      handle.logWarning("Error when checking lengthgroupisfiner for the following lengthgroups");
       finer->printError();
       coarser->printError();
       exit(EXIT_FAILURE);
     case 0:
-      handle.logWarning("Error in lengthgroup - failed to check length cell", BogusLengthGroup);
+      handle.logWarning("Error when checking lengthgroupisfiner for length cell", BogusLengthGroup);
       finer->printError();
       coarser->printError();
       exit(EXIT_FAILURE);
     case 1:
       return;
     case 2:
-      handle.logWarning("Warning in lengthgroup - intersection between length groups is empty");
+      handle.logWarning("Error when checking lengthgroupisfiner - empty intersection between");
       finer->printError();
       coarser->printError();
       return;
     default:
-      handle.logWarning("Error in lengthgroup - unrecognised return from lengthgroupisfiner");
+      handle.logWarning("Error when checking lengthgroupisfiner for the following lengthgroups");
       finer->printError();
       coarser->printError();
       exit(EXIT_FAILURE);

@@ -618,15 +618,15 @@ void Keeper::checkBounds() const {
   for (i = 0; i < values.Size(); i++) {
     if (lowerbds[i] > values[i]) {
       count++;
-      handle.logWarning("Error in keeper - failed to correctly read lowerbound", i);
+      handle.logWarning("Error in keeper - initial value is lower than lowerbound", lowerbds[i]);
     }
     if (upperbds[i] < values[i]) {
       count++;
-      handle.logWarning("Error in keeper - failed to correctly read upperbound", i);
+      handle.logWarning("Error in keeper - initial value is higher than upperbound", upperbds[i]);
     }
     if (upperbds[i] < lowerbds[i]) {
       count++;
-      handle.logWarning("Error in keeper - failed to correctly read bounds", i);
+      handle.logWarning("Error in keeper - upperbound is lower than lowerbound");
     }
   }
   if (count > 0)

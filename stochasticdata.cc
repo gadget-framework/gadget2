@@ -164,15 +164,15 @@ void StochasticData::readFromNetwork() {
     for (i = 0; i < values.Size(); i++) {
       if (lowerbound[i] > upperbound[i]) {
         check++;
-        handle.logWarning("Error in stochasticdata - failed to correctly read bounds", i);
+        handle.logWarning("Error in stochasticdata - upperbound is lower than lowerbound");
       }
       if (values[i] > upperbound[i]) {
         check++;
-        handle.logWarning("Error in stochasticdata - failed to correctly read upperbound", i);
+        handle.logWarning("Error in stochasticdata - initial value is higher than upperbound", upperbound[i]);
       }
       if (values[i] < lowerbound[i]) {
         check++;
-        handle.logWarning("Error in stochasticdata - failed to correctly read lowerbound", i);
+        handle.logWarning("Error in stochasticdata - initial value is lower than lowerbound", lowerbound[i]);
       }
     }
     if (check > 0)

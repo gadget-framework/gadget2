@@ -96,8 +96,7 @@ void FleetPreyAggregator::Print(ofstream& outfile) const {
       outfile << TAB;
       for (k = 0; k < total[i].maxLength(j); k++) {
         outfile.width(smallwidth);
-        outfile << total[i][j][k].N;
-        outfile << sep;
+        outfile << total[i][j][k].N << sep;
       }
       outfile << endl;
     }
