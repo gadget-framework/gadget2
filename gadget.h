@@ -77,7 +77,7 @@ const int largewidth = 12;
 const int fullwidth = 18;
 
 /* Update the following line each time upgrades are implemented */
-#define GADGETVERSION "2.0.06"
+#define GADGETVERSION "2.0.07-BETA"
 
 #endif
 

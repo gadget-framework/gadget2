@@ -13,7 +13,7 @@
 extern ErrorHandler handle;
 
 SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, Keeper* const keeper, double weight, const char* name)
+  const TimeClass* const TimeInfo, double weight, const char* name)
   : Likelihood(SURVEYINDICESLIKELIHOOD, weight) {
 
   char text[MaxStrLength];

@@ -280,7 +280,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       Likely[i] = new StockDistribution(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "surveyindices") == 0) {
-      Likely[i] = new SurveyIndices(infile, Area, TimeInfo, keeper, weight, name);
+      Likely[i] = new SurveyIndices(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "surveydistribution") == 0) {
       Likely[i] = new SurveyDistribution(infile, Area, TimeInfo, keeper, weight, name);
