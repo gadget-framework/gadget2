@@ -483,17 +483,32 @@ void Tags::updateStrayStock(const TimeClass* const TimeInfo) {
 }
 
 int Tags::stockIndex(const char* stockname) {
-  int i = 0;
-  while (i < stocknames.Size()) {
-    if (strcasecmp(stocknames[i], stockname) == 0)
+  int i;
+
+  for (i = 0; i < tagStocks.Size(); i++)
+    if (strcasecmp(stockname, tagStocks[i]->Name()) == 0)
       return i;
-    i++;
-  }
+
+  return -1;
+}
+
+int Tags::areaIndex(const char* stockname, int area) {
+  int i, j;
+
+  for (i = 0; i < tagStocks.Size(); i++)
+    if (strcasecmp(stockname, tagStocks[i]->Name()) == 0) {
+      IntVector stockareas = tagStocks[i]->Areas();
+      for (j = 0; j < stockareas.Size(); j++)
+        if (stockareas[j] == area)
+          return j;
+      return -1;
+    }
+
   return -1;
 }
 
 void Tags::storeNumberPriorToEating(int area, const char* stockname) {
-  int stockid, preyid;
+  int stockid, preyid, areaid;
   stockid = stockIndex(stockname);
   if (stockid < 0)
     handle.logFailure("Error in tags - invalid stock identifier");
@@ -502,12 +517,16 @@ void Tags::storeNumberPriorToEating(int area, const char* stockname) {
   if (preyid > NumBeforeEating.Size() || preyid < 0)
     handle.logFailure("Error in tags - invalid prey identifier");
 
-  (*NumBeforeEating[preyid])[area].setToZero();
-  (*NumBeforeEating[preyid])[area].Add((*AgeLengthStock[stockid])[area], *CI[preyid]);
+  areaid = areaIndex(stockname, area);
+  if (areaid < 0)
+    handle.logFailure("Error in tags - invalid area identifier");
+
+  (*NumBeforeEating[preyid])[areaid].setToZero();
+  (*NumBeforeEating[preyid])[areaid].Add((*AgeLengthStock[stockid])[areaid], *CI[preyid]);
 }
 
 const AgeBandMatrix& Tags::getNumberPriorToEating(int area, const char* stockname) {
-  int stockid, preyid;
+  int stockid, preyid, areaid;
   stockid = stockIndex(stockname);
   if (stockid < 0)
     handle.logFailure("Error in tags - invalid stock identifier");
@@ -516,7 +535,11 @@ const AgeBandMatrix& Tags::getNumberPriorToEating(int area, const char* stocknam
   if (preyid > NumBeforeEating.Size() || preyid < 0)
     handle.logFailure("Error in tags - invalid prey identifier");
 
-  return (*NumBeforeEating[preyid])[area];
+  areaid = areaIndex(stockname, area);
+  if (areaid < 0)
+    handle.logFailure("Error in tags - invalid area identifier");
+
+  return (*NumBeforeEating[preyid])[areaid];
 }
 
 int Tags::isWithinPeriod(int year, int step) {

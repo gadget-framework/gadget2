@@ -35,6 +35,7 @@ public:
   void Reset(const TimeClass* const TimeInfo);
   int isWithinPeriod(int year, int step);
   int stockIndex(const char* stockname);
+  int areaIndex(const char* stockname, int area);
   void addToTagStock(int timeid);
 private:
   void readNumbers(CommentStream& infile, const char* tagname, const TimeClass* const TimeInfo);
