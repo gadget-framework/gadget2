@@ -72,13 +72,21 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
     handle.Message("Error in catchdistribution - aggregationlevel must be 0 or 1");
 
   ReadWordAndVariable(infile, "overconsumption", overconsumption);
-  ReadWordAndVariable(infile, "minimumprobability", minp);
-
   if (overconsumption != 0 && overconsumption != 1)
     handle.Message("Error in catchdistribution - overconsumption must be 0 or 1");
-  if (minp <= 0) {
-    handle.Warning("Minimumprobability should be a positive integer - set to default value 20");
-    minp = 20;
+
+  //JMB - changed to make the reading of minimum probability optional
+  infile >> ws;
+  if (infile.peek() == 'm')
+    ReadWordAndVariable(infile, "minimumprobability", epsilon);
+  else if (infile.peek() == 'e')
+    ReadWordAndVariable(infile, "epsilon", epsilon);
+  else
+    epsilon = 10;
+
+  if (epsilon <= 0) {
+    handle.Warning("Epsilon should be a positive integer - set to default value 10");
+    epsilon = 10;
   }
 
   //Read in area aggregation from file
@@ -158,13 +166,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
   int numrow, numcol;
   numrow = AgeLengthData.Nrow();
   numcol = AgeLengthData.Ncol();
-  Proportions.AddRows(numrow, numcol);
   Likelihoodvalues.AddRows(numrow, numcol, 0.0);
-  for (i = 0; i < numrow; i++)
-    for (j = 0; j <  AgeLengthData.Ncol(i); j++)
-      Proportions[i][j] =
-         new doublematrix(AgeLengthData[i][j]->Nrow(), AgeLengthData[i][j]->Ncol(), 0.0);
-
   calc_c.resize(numcol);
   obs_c.resize(numcol);
   for (i = 0; i < numcol; i++) {
@@ -251,8 +253,11 @@ void CatchDistribution::ReadDistributionData(CommentStream& infile,
         timeid = (Years.Size() - 1);
 
         AgeLengthData.AddRows(1, numarea);
-        for (i = 0; i < numarea; i++)
+        Proportions.AddRows(1, numarea);
+        for (i = 0; i < numarea; i++) {
           AgeLengthData[timeid][i] = new doublematrix(numage, numlen, 0.0);
+          Proportions[timeid][i] = new doublematrix(numage, numlen, 0.0);
+        }
       }
 
     } else {
@@ -295,7 +300,7 @@ void CatchDistribution::ReadDistributionData(CommentStream& infile,
   }
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cout << "Warning in CatchDistribution - found no data in the data file for " << cdname << endl;
+    cout << "Warning in catchdistribution - found no data in the data file for " << cdname << endl;
 }
 
 void CatchDistribution::aggregateBiomass() {
@@ -579,7 +584,7 @@ double CatchDistribution::LikMultinomial() {
   }
 
   //The object MN does most of the work, accumulating likelihood
-  Multinomial MN(minp);
+  Multinomial MN(epsilon);
   for (nareas = 0; nareas < Dist.Size(); nareas++) {
     if (AgeLengthData[timeindex][nareas]->Nrow() == 1) {
       //If there is only one agegroup, we calculate loglikelihood
@@ -651,7 +656,7 @@ double CatchDistribution::LikPearson(const TimeClass* const TimeInfo) {
             (*AgeLengthData[timeindex][nareas])[age][length]) *
             ((*Proportions[timeindex][nareas])[age][length] -
             (*AgeLengthData[timeindex][nareas])[age][length]) /
-            absolute(((*Proportions[timeindex][nareas])[age][length] + minp));
+            absolute(((*Proportions[timeindex][nareas])[age][length] + epsilon));
         }
       }
       totallikelihood += Likelihoodvalues[timeindex][nareas];
@@ -665,7 +670,7 @@ double CatchDistribution::LikPearson(const TimeClass* const TimeInfo) {
             Likelihoodvalues[timeindex][nareas] +=
               ((*calc_c[nareas])[age][length] - (*obs_c[nareas])[age][length]) *
               ((*calc_c[nareas])[age][length] - (*obs_c[nareas])[age][length]) /
-              absolute(((*calc_c[nareas])[age][length] + minp));
+              absolute(((*calc_c[nareas])[age][length] + epsilon));
           }
         }
         totallikelihood += Likelihoodvalues[timeindex][nareas];
@@ -710,8 +715,8 @@ double CatchDistribution::GammaLik(const TimeClass* const TimeInfo) {
         for (length = mincol[age]; length <= maxcol[age]; length++) {
           Likelihoodvalues[timeindex][nareas] +=
             (*AgeLengthData[timeindex][nareas])[age][length] /
-            ((*Proportions[timeindex][nareas])[age][length] + minp) +
-            log((*Proportions[timeindex][nareas])[age][length] + minp);
+            ((*Proportions[timeindex][nareas])[age][length] + epsilon) +
+            log((*Proportions[timeindex][nareas])[age][length] + epsilon);
         }
       }
       totallikelihood += Likelihoodvalues[timeindex][nareas];
@@ -723,8 +728,8 @@ double CatchDistribution::GammaLik(const TimeClass* const TimeInfo) {
         for (age = minrow; age <= maxrow; age++) {
           for (length = mincol[age]; length <= maxcol[age]; length++) {
             Likelihoodvalues[timeindex][nareas] +=
-              (*obs_c[nareas])[age][length] / ((*calc_c[nareas])[age][length] + minp) +
-              log((*calc_c[nareas])[age][length] + minp);
+              (*obs_c[nareas])[age][length] / ((*calc_c[nareas])[age][length] + epsilon) +
+              log((*calc_c[nareas])[age][length] + epsilon);
           }
         }
         totallikelihood += Likelihoodvalues[timeindex][nareas];
@@ -772,7 +777,7 @@ double CatchDistribution::ExperimentalLik(const TimeClass* const TimeInfo) {
           num = (*Proportions[timeindex][nareas])[age][length] -
             (*AgeLengthData[timeindex][nareas])[age][length];
           denom = (*Proportions[timeindex][nareas])[age][length] +
-            (*AgeLengthData[timeindex][nareas])[age][length] + minp;
+            (*AgeLengthData[timeindex][nareas])[age][length] + epsilon;
           if (denom > 0.) //kgf 26/6 00
             frac = num / denom;
           else
@@ -789,7 +794,7 @@ double CatchDistribution::ExperimentalLik(const TimeClass* const TimeInfo) {
         for (age = minrow; age <= maxrow; age++) {
           for (length = mincol[age]; length <= maxcol[age]; length++) {
             num = (*calc_c[nareas])[age][length] - (*obs_c[nareas])[age][length];
-            denom = (*calc_c[nareas])[age][length] + (*obs_c[nareas])[age][length] + minp;
+            denom = (*calc_c[nareas])[age][length] + (*obs_c[nareas])[age][length] + epsilon;
             if (denom > 0.0) //kgf 26/6 00
               frac = num / denom;
             else
@@ -847,7 +852,7 @@ double CatchDistribution::ModifiedMultinomial(const TimeClass* const TimeInfo) {
         for (length = (*alptr)[nareas].Minlength(age);
             length < (*alptr)[nareas].Maxlength(age); length++) {
           Likelihoodvalues[timeindex][nareas] -=
-            log((*Proportions[timeindex][nareas])[age][length] + minp) * //kgf 27/4 00
+            log((*Proportions[timeindex][nareas])[age][length] + epsilon) * //kgf 27/4 00
               (*AgeLengthData[timeindex][nareas])[age][length];
           c_hat_sum += (*Proportions[timeindex][nareas])[age][length];
           c_sum += (*AgeLengthData[timeindex][nareas])[age][length];
@@ -873,7 +878,7 @@ double CatchDistribution::ModifiedMultinomial(const TimeClass* const TimeInfo) {
           for (length = (*alptr)[nareas].Minlength(age);
               length < (*alptr)[nareas].Maxlength(age); length++) {
             Likelihoodvalues[timeindex][nareas] -=
-              log((*calc_c[nareas])[age][length]+minp) *  //kgf 27/4 00
+              log((*calc_c[nareas])[age][length] + epsilon) *  //kgf 27/4 00
                 (*obs_c[nareas])[age][length];
             c_hat_sum += (*calc_c[nareas])[age][length];
             c_sum += (*obs_c[nareas])[age][length];
@@ -945,8 +950,8 @@ void CatchDistribution::PrintLikelihoodHeader(ofstream& catchfile) {
   else if (agg_lev == 1)
     catchfile << "year\n";
 
-  catchfile << "Filter:           default\nMinp:             "
-    << minp << "\nName:            ";
+  catchfile << "Filter:           default\nEpsilon:          "
+    << epsilon << "\nName:            ";
   for (i = 0; i < fleetnames.Size(); i++)
     catchfile << sep << fleetnames[i];
   catchfile << "\nStocks:          ";

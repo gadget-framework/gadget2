@@ -93,13 +93,10 @@ private:
   char* functionname;
   int timeindex;
   ActionAtTimes AAT;
-  int minp;
   intvector Years;
   intvector Steps;
   int steps;
   int first;
-  //JMB int readWeights;
-  //JMB doublematrix weights;
   doublematrixptrvector calc_c;           //calc_c[area][age][length]
   doublematrixptrvector obs_c;            //obs_c[area][age][length]
   doublematrixptrvector calc_biomass;     //calc_biomass[area][time][age]
@@ -116,6 +113,7 @@ private:
   int minrow;
   int maxrow;
   LengthGroupDivision* LgrpDiv;
+  double epsilon;
 };
 
 #endif

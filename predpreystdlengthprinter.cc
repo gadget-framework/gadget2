@@ -65,9 +65,9 @@ void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo) {
             << sep << setw(largewidth) << 0 << endl;
 
         else
-          outfile << setw(largewidth) << predinfo->NconsumptionByLength(areas[a])[predl][preyl] << sep
-            << setw(largewidth) << predinfo->BconsumptionByLength(areas[a])[predl][preyl] << sep
-            << setw(largewidth) << predinfo->MortalityByLength(areas[a])[predl][preyl] << sep << endl;
+          outfile << setprecision(printprecision) << setw(largewidth) << predinfo->NconsumptionByLength(areas[a])[predl][preyl] << sep
+            << setprecision(printprecision) << setw(largewidth) << predinfo->BconsumptionByLength(areas[a])[predl][preyl] << sep
+            << setprecision(printprecision) << setw(largewidth) << predinfo->MortalityByLength(areas[a])[predl][preyl] << sep << endl;
 
       }
     }

@@ -169,10 +169,10 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo) {
             << sep << setw(largewidth) << 0 << sep << setw(largewidth) << 0 << endl;
 
         else
-          outfile << setw(largewidth) << preyinfo->NconsumptionByAgeAndLength(areas[a])[age][l] << sep
-            << setw(largewidth) << preyinfo->BconsumptionByAgeAndLength(areas[a])[age][l] << sep
-            << setw(largewidth) << preyinfo->NconsumptionByLength(areas[a])[l] << sep
-            << setw(largewidth) << preyinfo->BconsumptionByLength(areas[a])[l] << sep << endl;
+          outfile << setprecision(printprecision) << setw(largewidth) << preyinfo->NconsumptionByAgeAndLength(areas[a])[age][l] << sep
+            << setprecision(printprecision) << setw(largewidth) << preyinfo->BconsumptionByAgeAndLength(areas[a])[age][l] << sep
+            << setprecision(printprecision) << setw(largewidth) << preyinfo->NconsumptionByLength(areas[a])[l] << sep
+            << setprecision(printprecision) << setw(largewidth) << preyinfo->BconsumptionByLength(areas[a])[l] << sep << endl;
 
       }
   }

@@ -193,9 +193,9 @@ void PredatorPrinter::Print(const TimeClass* const TimeInfo) {
 
         //JMB crude filter to remove the 'silly' values from the output
         if ((*bptr)[j][k] < rathersmall)
-          outfile << setw(printwidth) << 0 << endl;
+          outfile << setw(fullwidth) << 0 << endl;
         else
-          outfile << setw(printwidth) << (*bptr)[j][k] << endl;
+          outfile << setprecision(largeprecision) << setw(fullwidth) << (*bptr)[j][k] << endl;
       }
     }
   }

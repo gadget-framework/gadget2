@@ -33,7 +33,6 @@ public:
   virtual void PrintLikelihoodHeader(ofstream&) {};
 protected:
   virtual double CalculateLikelihood(doublematrixptrvector&, doublematrix&) = 0;
-  int minp; //minimum probability
   doublematrixptrmatrix stomachcontent;   //[timeindex][areas][pred_l][prey_l]
   doublematrixptrmatrix modelConsumption; //[timeindex][areas][pred_l][prey_l]
   charptrvector predatornames;
@@ -55,6 +54,7 @@ protected:
   ActionAtTimes AAT;
   Formulamatrix digestioncoeff;
   ofstream printfile;
+  double epsilon;
   char* scname;
 };
 

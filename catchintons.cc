@@ -16,6 +16,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
   ErrorHandler handle;
   int i, j;
   int numarea = 0;
+  int readfile = 0;
   char text[MaxStrLength];
   char datafilename[MaxStrLength];
   char aggfilename[MaxStrLength];
@@ -44,9 +45,13 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
   infile >> ws;
   if (infile.peek() == 'a') {
     infile >> text >> ws;
-    if (strcasecmp(text, "aggregationlevel") == 0)
+    if (strcasecmp(text, "aggregationlevel") == 0) {
       infile >> yearly >> ws;
-    else
+    } else if (strcasecmp(text, "areaaggfile") == 0) {
+      infile >> aggfilename >> ws;
+      yearly = 0;
+      readfile = 1;
+    } else
       handle.Unexpected("aggregationlevel", text);
 
   } else
@@ -55,13 +60,20 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
   if (yearly != 0 && yearly != 1)
     handle.Message("Error in catchintons - aggregationlevel must be 0 or 1");
 
-  ReadWordAndVariable(infile, "epsilon", epsilon);
+  //JMB - changed to make the reading of epsilon optional
+  if (infile.peek() == 'e')
+    ReadWordAndVariable(infile, "epsilon", epsilon);
+  else
+    epsilon = 10;
+
   if (epsilon <= 0) {
     handle.Warning("Epsilon should be a positive number - set to default value 10");
     epsilon = 10;
   }
 
-  ReadWordAndValue(infile, "areaaggfile", aggfilename);
+  if (readfile == 0)
+    ReadWordAndValue(infile, "areaaggfile", aggfilename);
+
   datafile.open(aggfilename);
   CheckIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
@@ -376,5 +388,5 @@ void CatchInTons::ReadCatchInTonsData(CommentStream& infile,
     AAT.AddActions(Years, Steps, TimeInfo);
 
   if (count == 0)
-    cout << "Warning in CatchInTons - found no data in the data file\n";
+    cout << "Warning in catchintons - found no data in the data file\n";
 }

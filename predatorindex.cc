@@ -284,7 +284,7 @@ void PIOnStep::ReadPredatorData(CommentStream& infile, const char* arealabel,
     }
   }
   if (count == 0)
-    cout << "Warning in PredatorIndices - found no data in the data file\n";
+    cout << "Warning in predatorindex - found no data in the data file\n";
 }
 
 void PIOnStep::Sum(const class TimeClass* const TimeInfo) {

@@ -87,6 +87,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
   aggregator = 0;
   preyLgrpDiv = 0;
   predLgrpDiv = 0;
+  timeindex = 0;
 
   scname = new char[strlen(name) + 1];
   strcpy(scname, name);
@@ -97,11 +98,18 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  timeindex = 0;
-  ReadWordAndVariable(infile, "minimumprobability", minp);
-  if (minp <= 0) {
-    handle.Warning("Minimumprobability should be a positive integer - set to default value 20");
-    minp = 20;
+  //JMB - changed to make the reading of minimum probability optional
+  infile >> ws;
+  if (infile.peek() == 'm')
+    ReadWordAndVariable(infile, "minimumprobability", epsilon);
+  else if (infile.peek() == 'e')
+    ReadWordAndVariable(infile, "epsilon", epsilon);
+  else
+    epsilon = 10;
+
+  if (epsilon <= 0) {
+    handle.Warning("Epsilon should be a positive integer - set to default value 10");
+    epsilon = 10;
   }
 
   //Read in area aggregation from file
@@ -384,7 +392,7 @@ void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass*
   AAT.AddActions(Years, Steps, TimeInfo);
   modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol());
   if (count == 0)
-    cout << "Warning in StomachContent - found no data in the data file for " << scname << endl;
+    cout << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
 }
 
 void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -493,7 +501,7 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
   AAT.AddActions(Years, Steps, TimeInfo);
   modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
   if (count == 0)
-    cout << "Warning in StomachContent - found no data in the data file for " << scname << endl;
+    cout << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
 }
 
 void SCAmounts::ReadStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -574,7 +582,7 @@ void SCAmounts::ReadStomachSampleContent(CommentStream& infile, const TimeClass*
     }
   }
   if (count == 0)
-    cout << "Warning in StomachContent - found no data in the data file for " << scname << endl;
+    cout << "Warning in stomachcontent - found no data in the data file for " << scname << endl;
 }
 
 SC::~SC() {
@@ -973,7 +981,7 @@ double SCRatios::CalculateLikelihood(doublematrixptrvector& consumption, doublem
 //This code will probably be simplified a bit if the Multinomial
 //class is changed to take integers.  (Factorial replaced by the gamma function)
 double SCNumbers::CalculateLikelihood(doublematrixptrvector& consumption, doublematrix& sum) {
-  Multinomial MN(minp);
+  Multinomial MN(epsilon);
   int a, predl, preyl;
   for (a = 0; a < consumption.Size(); a++) {
     for (predl = 0; predl < consumption[a]->Nrow(); predl++) {

@@ -422,15 +422,15 @@ void Keeper::WriteValuesInColumns(const char* const filename,
   if (opt.Size() == 0) {
     for (i = 0; i < values.Size(); i++) {
       outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i];
-      outfile << TAB << setw(smallwidth) << setprecision(smallprecision)
-        << lowerbds[i] << TAB << upperbds[i] << TAB << "1\n";
-    }
+      outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i] << TAB
+        << setw(smallwidth) << setprecision(smallprecision) << upperbds[i] << "\t1\n";
+   }
 
   } else {
     for (i = 0; i < values.Size(); i++) {
       outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i];
-      outfile << TAB << setw(smallwidth) << setprecision(smallprecision)
-        << lowerbds[i] << TAB << upperbds[i] << TAB << opt[i] << endl;
+      outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i] << TAB
+        << setw(smallwidth) << setprecision(smallprecision) << upperbds[i] << TAB << opt[i] << endl;
     }
   }
   outfile.close();
@@ -510,9 +510,9 @@ void Keeper::WriteParamsInColumns(const char* const filename,
     << setprecision(p) << functionValue << "\nswitch\tvalue\t\tlower\tupper\toptimize\n";
 
   for (i = 0; i < values.Size(); i++) {
-    outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i];
-    outfile << TAB << setw(smallwidth) << setprecision(smallprecision)
-      << lowerbds[i] << TAB << upperbds[i] << TAB << opt[i] << endl;
+    outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i] << TAB;
+    outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i] << TAB
+      << setw(smallwidth) << setprecision(smallprecision) << upperbds[i] << TAB << opt[i] << endl;
   }
   outfile.close();
   outfile.clear();

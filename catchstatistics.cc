@@ -216,7 +216,7 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
   }
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cout << "Warning in CatchStatistics - found no data in the data file for " << csname << endl;
+    cout << "Warning in catchstatistics - found no data in the data file for " << csname << endl;
 }
 
 CatchStatistics::~CatchStatistics() {

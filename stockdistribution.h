@@ -42,7 +42,7 @@ private:
   char* functionname;
   int timeindex;
   ActionAtTimes AAT;
-  int minp;
+  double epsilon;
 };
 
 #endif

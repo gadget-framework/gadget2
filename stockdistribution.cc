@@ -33,22 +33,30 @@ StockDistribution::StockDistribution(CommentStream& infile,
   strncpy(functionname, "", MaxStrLength);
   ReadWordAndValue(infile, "datafile", datafilename);
   ReadWordAndValue(infile, "function", functionname);
-  ReadWordAndVariable(infile, "overconsumption", overconsumption);
-  ReadWordAndVariable(infile, "minimumprobability", minp);
-
-  if (overconsumption != 0 && overconsumption != 1)
-    handle.Message("Error in stockdistribution - overconsumption must be 0 or 1");
-  if (minp <= 0) {
-    handle.Warning("Minimumprobability should be a positive integer - set to default value 20");
-    minp = 20;
-  }
-
   if (strcasecmp(functionname, "multinomial") == 0)
     functionnumber = 1;
   else if (strcasecmp(functionname, "sumofsquares") == 0)
     functionnumber = 2;
   else
     handle.Message("Error in stockdistribution - unrecognised function", functionname);
+
+  ReadWordAndVariable(infile, "overconsumption", overconsumption);
+  if (overconsumption != 0 && overconsumption != 1)
+    handle.Message("Error in stockdistribution - overconsumption must be 0 or 1");
+
+  //JMB - changed to make the reading of minimum probability optional
+  infile >> ws;
+  if (infile.peek() == 'm')
+    ReadWordAndVariable(infile, "minimumprobability", epsilon);
+  else if (infile.peek() == 'e')
+    ReadWordAndVariable(infile, "epsilon", epsilon);
+  else
+    epsilon = 10;
+
+  if (epsilon <= 0) {
+    handle.Warning("Epsilon should be a positive integer - set to default value 10");
+    epsilon = 10;
+  }
 
   //Read in area aggregation from file
   ReadWordAndValue(infile, "areaaggfile", aggfilename);
@@ -233,7 +241,7 @@ void StockDistribution::ReadStockData(CommentStream& infile,
   }
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cout << "Warning in StockDistribution - found no data in the data file\n";
+    cout << "Warning in stockdistribution - found no data in the data file\n";
 }
 
 StockDistribution::~StockDistribution() {
@@ -295,7 +303,7 @@ void StockDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvecto
         fleets.resize(1, Fleets[j]);
       }
     if (found == 0) {
-      cerr << "Error: when searching for names of fleets for Stockdistribution.\n"
+      cerr << "Error: when searching for names of fleets for stockdistribution.\n"
         << "Did not find any name matching " << fleetnames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -312,7 +320,7 @@ void StockDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvecto
         }
     }
     if (found == 0) {
-      cerr << "Error: when searching for names of stocks for Stockdistribution.\n"
+      cerr << "Error: when searching for names of stocks for stockdistribution.\n"
         << "Did not find any name matching " << stocknames[i] << endl;
       exit(EXIT_FAILURE);
     }
@@ -366,7 +374,7 @@ double StockDistribution::LikMultinomial() {
   }
 
   //The object MN does most of the work, accumulating likelihood
-  Multinomial MN(minp);
+  Multinomial MN(epsilon);
   doublevector likdata(stocknames.Size());
   for (nareas = 0; nareas < Dist.Size(); nareas++) {
     for (area = 0; area < Dist[nareas]->Nrow(); area++) {

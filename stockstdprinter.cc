@@ -205,11 +205,10 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
 
         } else {
           outfile << setprecision(largeprecision) << setw(fullwidth)
-            << popstat.TotalNumber() / Scale  << sep << setw(largewidth)
-            << setprecision(printprecision) << popstat.MeanLength() << sep
-            << setw(largewidth) << setprecision(printprecision)
-            << popstat.MeanWeight() << sep << setw(largewidth)
-            << setprecision(printprecision) << popstat.StdDevOfLength() << sep;
+            << popstat.TotalNumber() / Scale  << sep << setprecision(printprecision)
+            << setw(largewidth) << popstat.MeanLength() << sep << setprecision(printprecision)
+            << setw(largewidth) << popstat.MeanWeight() << sep << setprecision(printprecision)
+            << setw(largewidth) << popstat.StdDevOfLength() << sep;
 
           if (preyinfo) {
             tmpnumber = preyinfo->NconsumptionByAge(areas[a])[age + minage];
@@ -218,8 +217,8 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
             if ((tmpnumber < rathersmall) || (tmpbiomass < rathersmall)) {
               outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0;
             } else {
-              outfile << setprecision(smallprecision) << setw(largewidth)
-                << tmpnumber / Scale << sep << setw(largewidth) << tmpbiomass;
+              outfile << setprecision(smallprecision) << setw(largewidth) << tmpnumber / Scale
+                << sep << setprecision(smallprecision) << setw(largewidth) << tmpbiomass;
             }
           } else
             outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0;
