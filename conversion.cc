@@ -19,7 +19,7 @@ void LengthGroupPrintError(const doublevector& breaks, const char* explain) {
   exit(EXIT_FAILURE);
 }
 
-void LengthGroupPrintError(double minl, double maxl, double dl, const Keeper* const  keeper) {
+void LengthGroupPrintError(double minl, double maxl, double dl, const Keeper* const keeper) {
   char* explain = keeper->SendString();
   LengthGroupPrintError(minl, maxl, dl, explain);
   delete[] explain; //Is never executed.
@@ -171,7 +171,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 
   if (L1->Maxlength(L1->NoLengthGroups() - 1) <= L2->Minlength(0)
       || L2->Maxlength(L2->NoLengthGroups() - 1) <= L1->Minlength(0)) {
-    cerr << "Will not create a mapping between length groups whose "
+    cerr << "Error: cannot create a mapping between length groups whose "
       << "intersection is empty\nThe length group divisions are:\n";
     ErrorPrintLengthGroupDivision(L1);
     cerr << " and\n";

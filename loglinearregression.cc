@@ -28,6 +28,17 @@ void LogLinearRegression::Fit(const doublevector& x, const doublevector& y, doub
   error = LR.Error();
 }
 
+void LogLinearRegression::Fit(double intercept, const doublevector& x, const doublevector& y) {
+  error = 0;
+  doublevector Xlog(x);
+  doublevector Ylog(y);
+  this->CleanAndTakeLog(x, y, Xlog, Ylog);
+  if (error)
+    return;
+  LR.Fit(intercept, Xlog, Ylog);
+  error = LR.Error();
+}
+
 void LogLinearRegression::Fit(const doublevector& x, const doublevector& y, double slope, double intercept) {
   error = 0;
   doublevector Xlog(x);

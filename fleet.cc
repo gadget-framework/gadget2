@@ -89,7 +89,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   handle.Open(text);
 
   if (readamount != 0)
-    if (!ReadAmounts(subcomment, areas.Size(), TimeInfo, Area, amount, keeper, givenname))
+    if (!ReadAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))
       handle.Message("Failed to read fleet amounts");
 
   handle.Close();

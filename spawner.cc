@@ -91,8 +91,8 @@ Spawner::Spawner(CommentStream& infile, int minage, int maxage,
     if (Spawningratio[i] < 0 || Spawningratio[i] > 1)
       handle.Message("Error in spawning ratio - should be between 0 and 1");
 
-    if (SpawningmortalityPattern[i] < 0)
-      handle.Message("Error in spawning mortality - should be positive value");
+    if (SpawningmortalityPattern[i] < 0 || SpawningmortalityPattern[i] * spawningMortality > 1)
+      handle.Message("Error in spawning mortality - should be between 0 and 1");
 
     if (SpawningweightlossPattern[i] < 0 || SpawningweightlossPattern[i] * spawningWeightLoss > 1)
       handle.Message("Error in spawning weight loss - should be between 0 and 1");

@@ -159,6 +159,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
     return;
   aggregator->Sum();
   int a, age;
+  double tmpnumber, tmpbiomass;
   for (a = 0; a < areas.Size(); a++) {
     if (preyinfo)
       preyinfo->Sum(TimeInfo, areas[a]);
@@ -169,21 +170,37 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
       outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep
         << setw(smallwidth) << TimeInfo->CurrentStep() << sep
         << setw(smallwidth) << outerareas[a] << sep << setw(smallwidth)
-        << age + minage << sep << setprecision(largeprecision)
-        << setw(fullwidth) << popstat.TotalNumber() / Scale
-        << sep << setw(largewidth) << setprecision(printprecision)
-        << popstat.MeanLength() << sep << setw(largewidth)
-        << setprecision(printprecision) << popstat.MeanWeight() << sep
-        << setw(largewidth) << setprecision(printprecision)
-        << popstat.StdDevOfLength() << sep;
+        << age + minage << sep ;
 
-      if (preyinfo) {
-        outfile << setprecision(smallprecision) << setw(largewidth)
-          << preyinfo->NconsumptionByAge(areas[a])[age + minage] / Scale << sep
-          << setw(largewidth) << preyinfo->BconsumptionByAge(areas[a])[age + minage];
-      } else
-        outfile << setw(smallwidth) << 0 << sep << setw(smallwidth) << 0;
 
+        //JMB crude filters to remove the 'silly' values from the output
+        if (popstat.TotalNumber() < rathersmall) {
+          outfile << setw(fullwidth) << 0 << sep << setw(largewidth) << 0
+            << sep << setw(largewidth) << 0 << sep << setw(largewidth) << 0
+            << sep << setw(largewidth) << 0 << sep << setw(largewidth) << 0;
+
+        } else {
+          outfile << setprecision(largeprecision) << setw(fullwidth)
+            << popstat.TotalNumber() / Scale  << sep << setw(largewidth)
+            << setprecision(printprecision) << popstat.MeanLength() << sep
+            << setw(largewidth) << setprecision(printprecision)
+            << popstat.MeanWeight() << sep << setw(largewidth)
+            << setprecision(printprecision) << popstat.StdDevOfLength() << sep;
+
+          if (preyinfo) {
+            tmpnumber = preyinfo->NconsumptionByAge(areas[a])[age + minage];
+            tmpbiomass = preyinfo->BconsumptionByAge(areas[a])[age + minage];
+
+            if ((tmpnumber < rathersmall) || (tmpbiomass < rathersmall)) {
+              outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0;
+            } else {
+              outfile << setprecision(smallprecision) << setw(largewidth)
+                << tmpnumber / Scale << sep << setw(largewidth) << tmpbiomass;
+            }
+          } else
+            outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0;
+
+        }
       outfile << endl;
     }
   }

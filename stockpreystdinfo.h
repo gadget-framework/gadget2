@@ -7,6 +7,7 @@
 class StockPreyStdInfo;
 class StockPrey;
 class TimeClass;
+class LengthGroupDivision;
 
 class StockPreyStdInfo : public AbstrPreyStdInfo {
 public:
@@ -16,6 +17,7 @@ public:
   virtual const doublevector& BconsumptionByLength(int area) const;
   virtual const doublevector& MortalityByLength(int area) const;
   virtual void Sum(const TimeClass* const TimeInfo, int area);
+  const LengthGroupDivision* ReturnPreyLengthGroupDiv() const;
 private:
   StockPreyStdInfoByLength SPByLength;
   const StockPrey* prey;

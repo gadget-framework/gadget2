@@ -370,27 +370,27 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) const {
   outfile << "\nCatch Distribution\n\tlikelihood " << likelihood
     << "\n\tfunction number " << functionnumber << endl << TAB;
   Likelihood::LikelihoodPrint(outfile);
-  outfile << "\tStocknames: " << sep;
+  outfile << "\tStocknames:";
   for (i = 0; i < stocknames.Size(); i++)
-    outfile << stocknames[i] << sep;
-  outfile << "\nAreas : ";
+    outfile << sep << stocknames[i];
+  outfile << "\nAreas:";
   for (i  = 0; i < areas.Nrow(); i++) {
     for (j = 0; j < areas.Ncol(i); j++)
-      outfile << areas[i][j] << sep;
+      outfile << sep << areas[i][j];
     outfile << "\n\t";
   }
-  outfile << "\nAges : ";
+  outfile << "\nAges:";
   for (i  = 0; i < ages.Nrow(); i++) {
     for (j = 0; j < ages.Ncol(i); j++)
-      outfile << ages[i][j] << sep;
+      outfile << sep << ages[i][j];
     outfile << "\n\t";
   }
-  outfile << "\nLengths : ";
+  outfile << "\nLengths:";
   for (i = 0; i < lengths.Size(); i++)
-    outfile << lengths[i] << sep;
-  outfile << "\nFleetnames: " << sep;
+    outfile << sep << lengths[i];
+  outfile << "\nFleetnames:";
   for (i = 0; i < fleetnames.Size(); i++)
-    outfile << fleetnames[i] << sep;
+    outfile << sep << fleetnames[i];
   outfile << endl;
 
   //aggregator->Print(outfile);
@@ -398,12 +398,12 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) const {
   for (y = 0; y < AgeLengthData.Nrow(); y++) {
     outfile << "\nyear and step " << Years[y] << sep << Steps[y] << endl;
     for (a = 0; a < AgeLengthData.Ncol(y); a++) {
-      outfile << "\nArea : " << a << "\n\nmeasurements\n";
+      outfile << "\nArea: " << a << "\n\nmeasurements\n";
       for (i = 0; i < AgeLengthData[y][a]->Nrow(); i++) {
         for (j = 0; j < AgeLengthData[y][a]->Ncol(i); j++) {
           outfile.width(printwidth);
           outfile.precision(lowprecision);
-          outfile << (*AgeLengthData[y][a])[i][j] << sep;
+          outfile << sep << (*AgeLengthData[y][a])[i][j];
         }
         outfile << endl;
       }
@@ -412,16 +412,16 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) const {
         for (j = 0; j < Proportions[y][a]->Ncol(i); j++) {
           outfile.width(printwidth);
           outfile.precision(smallprecision);
-          outfile << (*Proportions[y][a])[i][j] << sep;
+          outfile << sep << (*Proportions[y][a])[i][j];
         }
         outfile << endl;
       }
     }
-    outfile << "\nLikelihood values : ";
+    outfile << "\nLikelihood values:";
     for (a = 0; a < AgeLengthData.Ncol(y); a++) {
        outfile.width(printwidth);
        outfile.precision(smallprecision);
-       outfile << Likelihoodvalues[y][a] << sep;
+       outfile << sep << Likelihoodvalues[y][a];
     }
     outfile << endl;
   }

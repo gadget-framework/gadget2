@@ -10,6 +10,7 @@ public:
   LogLinearRegression();
   void Fit(const doublevector& x, const doublevector& y);
   void Fit(const doublevector& x, const doublevector& y, double slope);
+  void Fit(double intercept, const doublevector& x, const doublevector& y);
   void Fit(const doublevector& x, const doublevector& y, double slope, double intercept);
   int Error();
   double SSE() const;

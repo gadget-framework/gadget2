@@ -30,8 +30,6 @@ protected:
   Formulavector Sdev;
   Formulavector Wcoeff1;
   Formulavector Wcoeff2;
-  int Minr;
-  int Maxr;
   ConversionIndex* CI;
   LengthGroupDivision* LgrpDiv;
 };

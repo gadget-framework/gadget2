@@ -82,7 +82,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
     handle.Unexpected("fleetnames", text);
-  infile >> text;
+  infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
     fleetnames.resize(1);
     fleetnames[i] = new char[strlen(text) + 1];
@@ -94,17 +94,12 @@ StockDistribution::StockDistribution(CommentStream& infile,
   i = 0;
   if (!(strcasecmp(text, "stocknames") == 0))
     handle.Unexpected("stocknames", text);
+  infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
-    stocknames.AddRows(1, 0);
-    i++;
-    infile >> text;
-    j = 0;
-    while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
-      stocknames[i].resize(1);
-      stocknames[i][j] = new char[strlen(text) + 1];
-      strcpy(stocknames[i][j++], text);
-      infile >> text >> ws;
-    }
+    stocknames.resize(1);
+    stocknames[i] = new char[strlen(text) + 1];
+    strcpy(stocknames[i++], text);
+    infile >> text >> ws;
   }
 
   //We have now read in all the data from the main likelihood file
@@ -132,7 +127,7 @@ void StockDistribution::ReadStockData(CommentStream& infile,
   strncpy(tmpage, "", MaxStrLength);
   strncpy(tmplen, "", MaxStrLength);
   int keepdata, timeid, stockid, ageid, areaid, lenid;
-  int numstock = stocknames.Nrow();
+  int numstock = stocknames.Size();
   intvector Years, Steps;
 
   //Find start of distribution data in datafile
@@ -178,10 +173,9 @@ void StockDistribution::ReadStockData(CommentStream& infile,
 
     //if tmpstock is in stocknames find stockid, else dont keep the data
     stockid = -1;
-    for (i = 0; i < stocknames.Nrow(); i++)
-      for (j = 0; j < stocknames.Ncol(i); j++)
-        if (strcasecmp(stocknames[i][j], tmpstock) == 0)
-          stockid = i;
+    for (i = 0; i < stocknames.Size(); i++)
+      if (strcasecmp(stocknames[i], tmpstock) == 0)
+        stockid = i;
 
     if (stockid == -1)
       keepdata = 1;
@@ -225,8 +219,8 @@ void StockDistribution::ReadStockData(CommentStream& infile,
 
 StockDistribution::~StockDistribution() {
   int i, j;
-  for (i = 0; i < stocknames.Nrow(); i++)
-    delete aggregator[i];
+  for (i = 0; i < stocknames.Size(); i++)
+    delete[] stocknames[i];
   for (i = 0; i < fleetnames.Size(); i++)
     delete[] fleetnames[i];
   for (i = 0; i < areaindex.Size(); i++)
@@ -250,17 +244,14 @@ void StockDistribution::Print(ofstream& outfile) const {
   int i, j, y, a;
 
   outfile << "\nStock Distribution\nlikelihood " << likelihood
-    << "\nfunction number " << functionnumber << "\n\tStocknames: " << sep;
-  for (i = 0; i < stocknames.Nrow(); i++) {
-    for (j = 0; j < stocknames.Ncol(i); j++)
-      outfile << stocknames[i][j] << sep;
-    outfile << endl;
-  }
-  outfile << "\tFleetnames: " << sep;
+    << "\nfunction number " << functionnumber << "\n\tStocknames:";
+  for (i = 0; i < stocknames.Size(); i++)
+    outfile << sep << stocknames[i];
+  outfile << "\n\tFleetnames:";
   for (i = 0; i < fleetnames.Size(); i++)
-    outfile << fleetnames[i] << sep;
+    outfile << sep << fleetnames[i];
   outfile << endl;
-  for (i = 0; i < stocknames.Nrow(); i++)
+  for (i = 0; i < stocknames.Size(); i++)
     aggregator[i]->Print(outfile);
 
   outfile << "\tAge-Length Distribution Data:\n";
@@ -299,32 +290,30 @@ void StockDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvecto
     }
   }
 
-  aggregator = new FleetPreyAggregator*[stocknames.Nrow()];
-  for (stocknumber = 0; stocknumber < stocknames.Nrow(); stocknumber++) {
+  aggregator = new FleetPreyAggregator*[stocknames.Size()];
+  for (i = 0; i < stocknames.Size(); i++) {
     Stockptrvector stocks;
-    for (i = 0; i < stocknames.Ncol(stocknumber); i++) {
-      found = 0;
-      for (j = 0; j < Stocks.Size(); j++) {
-        if (Stocks[j]->IsEaten())
-          if (strcasecmp(stocknames[stocknumber][i], Stocks[j]->ReturnPrey()->Name()) == 0) {
-            found = 1;
-            stocks.resize(1, Stocks[j]);
-          }
-      }
-      if (found == 0) {
-        cerr << "Error: when searching for names of stocks for Stockdistribution.\n"
-          << "Did not find any name matching " << stocknames[stocknumber][i] << endl;
-        exit(EXIT_FAILURE);
-      }
+    found = 0;
+    for (j = 0; j < Stocks.Size(); j++) {
+      if (Stocks[j]->IsEaten())
+        if (strcasecmp(stocknames[i], Stocks[j]->ReturnPrey()->Name()) == 0) {
+          found = 1;
+          stocks.resize(1, Stocks[j]);
+        }
     }
-    aggregator[stocknumber] = new FleetPreyAggregator(fleets, stocks, lgrpdiv, areas, ages, overconsumption);
+    if (found == 0) {
+      cerr << "Error: when searching for names of stocks for Stockdistribution.\n"
+        << "Did not find any name matching " << stocknames[i] << endl;
+      exit(EXIT_FAILURE);
+    }
+    aggregator[i] = new FleetPreyAggregator(fleets, stocks, lgrpdiv, areas, ages, overconsumption);
   }
 }
 
 void StockDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
   int i;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    for (i = 0; i < stocknames.Nrow(); i++)
+    for (i = 0; i < stocknames.Size(); i++)
       aggregator[i]->Sum(TimeInfo);
 
     switch(functionnumber) {
@@ -348,8 +337,8 @@ double StockDistribution::LikMultinomial() {
 
   for (area = 0; area < Dist.Size(); area++) {
     Dist[area] = new doublematrix(aggregator[0]->NoAgeGroups() *
-      aggregator[0]->NoLengthGroups(), stocknames.Nrow(), 0);
-    for (sn = 0; sn < stocknames.Nrow(); sn++) {
+      aggregator[0]->NoLengthGroups(), stocknames.Size(), 0);
+    for (sn = 0; sn < stocknames.Size(); sn++) {
       alptr = &aggregator[sn]->AgeLengthDist();
       minage = (*alptr)[area].Minage();
       maxage = (*alptr)[area].Maxage();
@@ -363,10 +352,10 @@ double StockDistribution::LikMultinomial() {
 
   //The object MN does most of the work, accumulating likelihood
   Multinomial MN(minp);
-  doublevector likdata(stocknames.Nrow());
+  doublevector likdata(stocknames.Size());
   for (nareas = 0; nareas < Dist.Size(); nareas++) {
     for (area = 0; area < Dist[nareas]->Nrow(); area++) {
-      for (sn = 0; sn < stocknames.Nrow(); sn++)
+      for (sn = 0; sn < stocknames.Size(); sn++)
         likdata[sn] = (*AgeLengthData[timeindex][nareas])[sn][area];
 
       MN.LogLikelihood(likdata, (*Dist[nareas])[area]);

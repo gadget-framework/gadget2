@@ -146,7 +146,7 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo) {
 
         //JMB crude filter to remove the 'silly' values from the output
         if ((alk[age][l].N < rathersmall) || (alk[age][l].W < 0))
-          outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0 << sep << endl;
+          outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0 << endl;
         else
           outfile << setw(largewidth) << alk[age][l].N << sep << setw(largewidth)
             << alk[age][l].W << endl;

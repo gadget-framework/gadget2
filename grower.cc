@@ -186,7 +186,7 @@ void Grower::Print(ofstream& outfile) const {
     }
   }
 
-  outfile << "Distributed weight increase:\n";
+  outfile << "\tDistributed weight increase:\n";
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tarea " << areas[area] << endl;
     for (i = 0; i < wgrowth[area]->Nrow(); i++) {

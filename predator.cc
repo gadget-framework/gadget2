@@ -139,7 +139,6 @@ int Predator::ReadSuitabilityMatrix(CommentStream& infile,
   //The next line is a cheap trick so we can call ClearLastAddString later.
   keeper->AddString("FakeString");
 
-  i = 0;
   infile >> preyname >> ws;
   while (!(strcasecmp(preyname, FinalString) == 0) && infile.good()) {
     keeper->ClearLastAddString(preyname);
@@ -147,21 +146,20 @@ int Predator::ReadSuitabilityMatrix(CommentStream& infile,
 
     if (strcasecmp(text, "function") == 0) {
       infile >> text;
-      if (readSuitFunction(suitf, infile, text, TimeInfo, keeper) == 1) {
-        i = suitf.Size();
-        Suitable->AddPrey(preyname, suitf[i - 1]);
-
-      } else
-        handle.Message("Error in suitability - unknown functionname");
+      if (readSuitFunction(suitf, infile, text, TimeInfo, keeper) == 1)
+        Suitable->AddPrey(preyname, suitf[suitf.Size() - 1]);
+      else
+        handle.Message("Error in suitability - unknown suitability function");
 
     } else if (strcasecmp(text, "suitfile") == 0) {
       infile >> text;
+
+      doublematrix dm;
       ifstream subfile(text);
       CommentStream subcomment(subfile);
       CheckIfFailure(subfile, text);
       handle.Open(text);
-      doublematrix dm;
-      Formula multiplication;
+      i = 0;
       while (!subfile.eof()) {
         doublevector dv;
         if (!ReadVectorInLine(subcomment, dv))
@@ -176,6 +174,8 @@ int Predator::ReadSuitabilityMatrix(CommentStream& infile,
       handle.Close();
       subfile.close();
       subfile.clear();
+
+      Formula multiplication;
       if (!(infile >> multiplication))
         handle.Message("Incorrect format of suitability multiplication factor");
       multiplication.Inform(keeper);

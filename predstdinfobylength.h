@@ -9,6 +9,7 @@ class AbstrPreyStdInfoByLength;
 class PopPredator;
 class Prey;
 class StockPrey;
+class LengthGroupDivision;
 class TimeClass;
 
 class PredStdInfoByLength : protected LivesOnAreas {
@@ -22,6 +23,8 @@ public:
   const bandmatrix& BconsumptionByLength(int area) const;
   const bandmatrix& MortalityByLength(int area) const;
   virtual void Sum(const TimeClass* const TimeInfo, int area);
+  const LengthGroupDivision* ReturnPredLengthGroupDiv() const { return PredLgrpDiv; };
+  const LengthGroupDivision* ReturnPreyLengthGroupDiv() const { return PreyLgrpDiv; };
 protected:
   void AdjustObjects();
 private:
@@ -31,6 +34,8 @@ private:
   bandmatrixvector MortbyLength; //[area][pred_l][prey_l]
   bandmatrixvector NconbyLength;
   bandmatrixvector BconbyLength;
+  const LengthGroupDivision* PredLgrpDiv;
+  const LengthGroupDivision* PreyLgrpDiv;
 };
 
 #endif

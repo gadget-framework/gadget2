@@ -57,18 +57,22 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
 
   //read the fittype
   infile >> text;
-  if (strcasecmp(text, "loglinearfit") == 0)
+  if (strcasecmp(text, "linearfit") == 0)
+    fittype = LinearFit;
+  else if (strcasecmp(text, "loglinearfit") == 0)
     fittype = LogLinearFit;
-  else if (strcasecmp(text, "fixedslopeloglinearfit") == 0)
-    fittype = FixedSlopeLogLinearFit;
-  else if (strcasecmp(text, "fixedloglinearfit") == 0)
-    fittype = FixedLogLinearFit;
   else if (strcasecmp(text, "fixedslopelinearfit") == 0)
     fittype = FixedSlopeLinearFit;
+  else if (strcasecmp(text, "fixedslopeloglinearfit") == 0)
+    fittype = FixedSlopeLogLinearFit;
+  else if (strcasecmp(text, "fixedinterceptlinearfit") == 0)
+    fittype = FixedInterceptLinearFit;
+  else if (strcasecmp(text, "fixedinterceptloglinearfit") == 0)
+    fittype = FixedInterceptLogLinearFit;
   else if (strcasecmp(text, "fixedlinearfit") == 0)
     fittype = FixedLinearFit;
-  else if (strcasecmp(text, "linearfit") == 0)
-    fittype = LinearFit;
+  else if (strcasecmp(text, "fixedloglinearfit") == 0)
+    fittype = FixedLogLinearFit;
   else
     handle.Unexpected("Error in surveyindex - unrecognised fittype", text);
 
@@ -83,6 +87,11 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
     case FixedSlopeLogLinearFit:
       ReadWordAndVariable(infile, "slope", slope);
       intercept = 0.0;
+      break;
+    case FixedInterceptLinearFit:
+    case FixedInterceptLogLinearFit:
+      ReadWordAndVariable(infile, "intercept", intercept);
+      slope = 0.0;
       break;
     case FixedLinearFit:
     case FixedLogLinearFit:
@@ -372,6 +381,9 @@ double SIOnStep::Fit(const doublevector& stocksize, const doublevector& indices,
     case FixedSlopeLogLinearFit:
       LLR.Fit(stocksize, indices, slope);
       break;
+    case FixedInterceptLogLinearFit:
+      LLR.Fit(intercept, stocksize, indices);
+      break;
     case FixedLogLinearFit:
       LLR.Fit(stocksize, indices, slope, intercept);
       break;
@@ -380,6 +392,9 @@ double SIOnStep::Fit(const doublevector& stocksize, const doublevector& indices,
       break;
     case FixedSlopeLinearFit:
       LR.Fit(stocksize, indices, slope);
+      break;
+    case FixedInterceptLinearFit:
+      LR.Fit(intercept, stocksize, indices);
       break;
     case FixedLinearFit:
       LR.Fit(stocksize, indices, slope, intercept);
@@ -393,6 +408,7 @@ double SIOnStep::Fit(const doublevector& stocksize, const doublevector& indices,
   switch(fittype) {
     case LogLinearFit:
     case FixedSlopeLogLinearFit:
+    case FixedInterceptLogLinearFit:
     case FixedLogLinearFit:
       slopes[col] = LLR.slope();
       intercepts[col] = LLR.intersection();
@@ -403,6 +419,7 @@ double SIOnStep::Fit(const doublevector& stocksize, const doublevector& indices,
       break;
     case LinearFit:
     case FixedSlopeLinearFit:
+    case FixedInterceptLinearFit:
     case FixedLinearFit:
       slopes[col] = LR.slope();
       intercepts[col] = LR.intersection();

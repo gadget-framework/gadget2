@@ -31,9 +31,9 @@ void PopStatistics::CalcStatistics(const popinfovector& pop, const LengthGroupDi
   double length;
 
   for (i = 0; i < pop.Size(); i++) {
-    if (!(iszero(pop[i].N)) && iszero(pop[i].W)) {
+    if ((iszero(pop[i].W)) && (!(iszero(pop[i].N)))) {
       cerr << "Warning: When calculating statistics on a population, a nonzero\n"
-        << "number had zero mean weight. The number of indiv. was " << pop[i].N << endl;
+        << "population (" << pop[i].N << ") had zero mean weight\n";
     }
 
     length = lgrpdiv->Meanlength(i);

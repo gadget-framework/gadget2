@@ -10,12 +10,12 @@ double Multinomial::LogLikelihood(const doublevector& data, const doublevector& 
   double likely = 0.0;
   double tmpsum;
 
+  assert(data.Size() == dist.Size());
   for (i = 0; i < data.Size(); i++) {
     sumdist += dist[i];
     sumdata += data[i];
     sumlog += logfactorial(data[i]);
   }
-  sumlog -= logfactorial(sumdata);
 
   if (iszero(sumdist)) {
     error = 1;
@@ -23,12 +23,16 @@ double Multinomial::LogLikelihood(const doublevector& data, const doublevector& 
   }
 
   tmpsum = 1 / sumdist;
-  for (i = 0; i < data.Size(); i++)
+  for (i = 0; i < data.Size(); i++) {
     if (dist[i] * tmpsum >= minp)
       likely -= data[i] * log(dist[i] * tmpsum);
-    else if (data[i] != 0.0)
+    else if (iszero(data[i]))
+      likely -= 0.0;
+    else
       likely -= data[i] * log(minp);
+  }
 
+  sumlog -= logfactorial(sumdata);
   loglikelihood += 2.0 * (likely + sumlog);
   return likely;
 }

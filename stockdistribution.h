@@ -28,7 +28,7 @@ private:
   doublematrixptrmatrix AgeLengthData;
   FleetPreyAggregator** aggregator;
   charptrvector fleetnames;
-  charptrmatrix stocknames;
+  charptrvector stocknames;
   intmatrix areas;
   intmatrix ages;
   charptrvector areaindex;

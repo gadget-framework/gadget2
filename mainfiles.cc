@@ -49,7 +49,7 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
       } else if (strcasecmp(aVector[k], "-n") == 0) {
         Net = 1;
 
-        #ifndef NETWORK
+        #ifndef GADGET_NETWORK
           cout << "\nWarning: Gadget is trying to run in the network mode for paramin without\n"
             << "the network support being compiled - no network communication can take place!\n";
         #endif
@@ -71,10 +71,9 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         infile.clear();
 
       } else if (strcasecmp(aVector[k], "-i") == 0) {
-        len = strlen(aVector[k + 1]);
-        InitialCommentFilename = new char[len + 1];
         if (k == aNumber - 1)
           ShowCorrectUsage();
+        InitialCommentFilename = new char[strlen(aVector[k + 1]) + 1];
         strcpy(InitialCommentFilename, aVector[k + 1]);
         k++;
         InitialCondareGiven = 1;
@@ -183,8 +182,7 @@ void MainInfo::SetPrintLikelihoodFilename(char* filename) {
   //name of file seems to cause problem.
   ErrorHandler handle;
   handle.Open(filename);
-  int len = strlen(filename);
-  PrintLikelihoodFilename = new char[len + 1];
+  PrintLikelihoodFilename = new char[strlen(filename) + 1];
   strcpy(PrintLikelihoodFilename, filename);
   PrintLikelihoodInfo = 1;
   handle.Close();

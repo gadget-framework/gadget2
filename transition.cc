@@ -12,17 +12,20 @@ Transition::Transition(CommentStream& infile, const intvector& Areas,
   ErrorHandler handle;
   keeper->AddString("transitiondata");
 
-  ReadWordAndVariable(infile, "Transitionstep", TransitionStep);
-  ReadWordAndValue(infile, "Transitionstock", TransitionStockName);
+  TransitionStockName = new char[MaxStrLength];
+  strncpy(TransitionStockName, "", MaxStrLength);
+
+  ReadWordAndVariable(infile, "transitionstep", TransitionStep);
+  ReadWordAndValue(infile, "transitionstock", TransitionStockName);
 
   //Now we are finished reading from infile and can construct some objects.
   //Construct the age-length key Agegroup and initialize to zero.
   intvector minlv(2, minl);
   intvector sizev(2, size);
   Agegroup.resize(areas.Size(), age, minlv, sizev);
-  //Now Agegroup is defined on areas[i], minimum age age, maximum age age + 1.
   for (i = 0; i < Agegroup.Size(); i++)
     Agegroup[i].SettoZero();
+
   keeper->ClearLast();
 }
 
@@ -32,28 +35,30 @@ Transition::~Transition() {
 }
 
 void Transition::SetStock(Stockptrvector& stockvec) {
-  int found = 0;
-  int i;
+  int i, found;
+
+  found = 0;
   for (i = 0; i < stockvec.Size(); i++)
     if (strcasecmp(TransitionStockName, stockvec[i]->Name()) == 0) {
       found++;
       TransitionStock = stockvec[i];
     }
+
   if (found != 1) {
-    cerr << "Error: When pairing together stock and transition stock, "
-      << found << " stocks were found\nBut there should have been exactly 1\n"
-      << "The name of the transition stock was " << TransitionStockName << endl;
+    cerr << "Error: When pairing together stock and transition stock (" << TransitionStockName
+      << "), " << found << " stocks were found\nBut there should have been only 1\n";
     exit(EXIT_FAILURE);
   }
+
   //Check if TransitionStock is defined on all the areas that we work on.
   found = 0;
   for (i = 0; i < areas.Size(); i++)
     if (!TransitionStock->IsInArea(areas[i]))
-      found = 1;
+      found++;
 
-  if (found) {
+  if (found != 0) {
     cerr << "Warning: Transition requested to stock " << (const char*)TransitionStock->Name()
-      << "\nwhich might not be defined on sufficiently many areas\n";
+      << "\nwhich might not be defined on " << found << " areas\n";
   }
 }
 
@@ -90,17 +95,17 @@ void Transition::MoveAgegroupToTransitionStock(int area, const TimeClass* const 
   if (!TransitionStock->IsInArea(area) || TimeInfo->CurrentStep() != TransitionStep)
     return;
   int inarea = AreaNr[area];
+
   if (!HasLgr) {
-    double NumberInArea =
-      Agegroup[inarea][age][Agegroup[inarea].Minlength(age)].N;
+    //JMB - this is never called ...
+    double NumberInArea = Agegroup[inarea][age][Agegroup[inarea].Minlength(age)].N;
     TransitionStock->Renewal(area, TimeInfo, NumberInArea);
+
   } else {
     if (TransitionStock->Birthday(TimeInfo))
       Agegroup[inarea].IncrementAge();
 
-    //Set the multiplicative parameter ratio in Stock::Add to 1.
-    TransitionStock->Add(Agegroup[inarea], CI, area, 1,
-      Agegroup[inarea].Minage(), Agegroup[inarea].Maxage());
+    TransitionStock->Add(Agegroup[inarea], CI, area, 1, Agegroup[inarea].Minage(), Agegroup[inarea].Maxage());
   }
   Agegroup[inarea].SettoZero();
 }

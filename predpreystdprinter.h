@@ -44,6 +44,8 @@ private:
   PredStdInfoByLength* predinfo;
   const PopPredator* predator;
   const Prey* prey;
+  const LengthGroupDivision* PredLgrpDiv;
+  const LengthGroupDivision* PreyLgrpDiv;
 };
 
 class PredPreyStdAgePrinter : public PredPreyStdPrinter {

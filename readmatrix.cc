@@ -6,7 +6,7 @@
 #include "keeper.h"
 #include "gadget.h"
 
-int ReadAmounts(CommentStream& infile, int NumberOfColumns,
+int ReadAmounts(CommentStream& infile, const intvector& tmpareas,
   const TimeClass* const TimeInfo, const AreaClass* const Area,
   Formulamatrix& amount, Keeper* const keeper, const char* givenname) {
 
@@ -19,7 +19,7 @@ int ReadAmounts(CommentStream& infile, int NumberOfColumns,
   char tmpnumber[MaxStrLength];
   strncpy(tmpname, "", MaxStrLength);
   strncpy(tmpnumber, "", MaxStrLength);
-  int keepdata, timeid, areaid;
+  int keepdata, timeid, areaid, tmpareaid;
 
   //Find start of distribution data in datafile
   infile >> ws;
@@ -36,7 +36,7 @@ int ReadAmounts(CommentStream& infile, int NumberOfColumns,
     handle.Message("Wrong number of columns in inputfile - should be 5");
 
   //Create storage for the data - size of the data is known
-  amount.AddRows(TimeInfo->TotalNoSteps() + 1, NumberOfColumns, number);
+  amount.AddRows(TimeInfo->TotalNoSteps() + 1, tmpareas.Size(), number);
   Years.resize(TimeInfo->TotalNoSteps() + 1, 0);
   Steps.resize(TimeInfo->TotalNoSteps() + 1, 0);
   year = TimeInfo->FirstYear();
@@ -65,99 +65,27 @@ int ReadAmounts(CommentStream& infile, int NumberOfColumns,
         if ((Years[i] == year) && (Steps[i] == step))
           timeid = i;
 
-    } else {
-      //dont keep the data
+    } else
       keepdata = 1;
-    }
 
     //only keep the data if tmpname matches givenname
     if (!(strcasecmp(givenname, tmpname) == 0))
       keepdata = 1;
 
-    if (keepdata == 0) {
-      //distribution data is required, so store it
-      areaid = Area->InnerArea(area);
-      if (areaid == -1)
-        handle.UndefinedArea(area);
+    //only keep the data if area is a required area
+    areaid = -1;
+    tmpareaid = Area->InnerArea(area);
+    if (tmpareaid == -1)
+      handle.UndefinedArea(area);
+    for (i = 0; i < tmpareas.Size(); i++)
+      if (tmpareas[i] == tmpareaid)
+        areaid = i;
 
-      infile >> amount[timeid][areaid] >> ws;
-
-    } else {
-      //distribution data is not required, so read but ignore it
-      infile >> tmpnumber >> ws;
-    }
-  }
-  return 1;
-}
-
-int ReadAllAmounts(CommentStream& infile, int NumberOfColumns,
-  const TimeClass* const TimeInfo, const AreaClass* const Area,
-  Formulamatrix& amount, Keeper* const keeper) {
-
-  ErrorHandler handle;
-  int i;
-  int year, step, area;
-  Formula number;  //initialised to 0.0
-  intvector Years, Steps;
-  int keepdata, timeid, areaid;
-  char tmpnumber[MaxStrLength];
-  strncpy(tmpnumber, "", MaxStrLength);
-
-  //Find start of distribution data in datafile
-  infile >> ws;
-  char c;
-  c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
-
-  //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 4)))
-    handle.Message("Wrong number of columns in inputfile - should be 4");
-
-  //Create storage for the data - size of the data is known
-  amount.AddRows(TimeInfo->TotalNoSteps() + 1, NumberOfColumns, number);
-  Years.resize(TimeInfo->TotalNoSteps() + 1, 0);
-  Steps.resize(TimeInfo->TotalNoSteps() + 1, 0);
-  year = TimeInfo->FirstYear();
-  step = TimeInfo->FirstStep();
-  int numsteps = TimeInfo->StepsInYear();
-  for (i = 1; i < Years.Size(); i++) {
-    //time is counted from timestep 1
-    Years[i] = year;
-    Steps[i] = step;
-    step++;
-    if (step > numsteps) {
-      year++;
-      step = 1;
-    }
-  }
-
-  while (!infile.eof()) {
-    keepdata = 0;
-    infile >> year >> step >> area;
-
-    //check if the year and step are in the simulation
-    timeid = -1;
-    if (TimeInfo->IsWithinPeriod(year, step)) {
-      //calculate the timeid index - time is counted from 1
-      for (i = 1; i < Years.Size(); i++)
-        if ((Years[i] == year) && (Steps[i] == step))
-          timeid = i;
-
-    } else {
-      //dont keep the data
+    if (areaid == -1)
       keepdata = 1;
-    }
 
     if (keepdata == 0) {
       //distribution data is required, so store it
-      areaid = Area->InnerArea(area);
-      if (areaid == -1)
-        handle.UndefinedArea(area);
-
       infile >> amount[timeid][areaid] >> ws;
 
     } else {

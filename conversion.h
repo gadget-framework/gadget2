@@ -39,7 +39,7 @@ public:
   };
   double dl() const { return Dl; };
   int Size() const { return size; };
-  int NoLengthGroups () const  { return size; };
+  int NoLengthGroups() const { return size; };
   int NoLengthGroup(double length) const;
   int Combine(const LengthGroupDivision* const addition);
   int Error() const { return error; }

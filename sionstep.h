@@ -42,7 +42,8 @@ protected:
   //JMB - made Indices and abundance protected
   doublematrix Indices;
   doublematrix abundance;
-  enum FitType { LogLinearFit = 0, FixedSlopeLogLinearFit, FixedLogLinearFit, LinearFit, PowerFit, FixedSlopeLinearFit, FixedLinearFit };
+  enum FitType { LogLinearFit = 0, FixedSlopeLogLinearFit, FixedLogLinearFit, LinearFit, PowerFit,
+    FixedSlopeLinearFit, FixedLinearFit, FixedInterceptLinearFit, FixedInterceptLogLinearFit };
   FitType getFitType() { return fittype; };
 private:
   void ReadSIData(CommentStream&, const char*, const charptrvector&, const charptrvector&, const TimeClass*);

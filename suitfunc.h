@@ -6,6 +6,8 @@
 #include "timevariablevector.h"
 #include "suitfuncptrvector.h"
 
+//JMB - should remove some of the suitability functions that are no longer used
+
 class SuitfuncPtrvector;
 
 class SuitFunc {

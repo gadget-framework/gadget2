@@ -11,7 +11,7 @@
 
 RenewalData::RenewalData(CommentStream& infile, const intvector& Areas,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
-  : LivesOnAreas(Areas), Minr(0), Maxr(-1), CI(0), LgrpDiv(0) {
+  : LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
   ErrorHandler handle;
   keeper->AddString("renewaldata");
@@ -54,8 +54,10 @@ RenewalData::RenewalData(CommentStream& infile, const intvector& Areas,
 
       if (!this->IsInArea(Area->InnerArea(area)))
         handle.Message("Stock undefined on area for renewal");
+
       RenewalArea.resize(1);
       RenewalArea[i] = Area->InnerArea(area);
+
       Number.resize(1, keeper);
 
       if (ReadOption == 0) {
@@ -154,8 +156,6 @@ void RenewalData::Print (ofstream& outfile) const {
 }
 
 void RenewalData::Reset() {
-  Maxr = -1;
-  Minr = 0;
   int i, age, l;
   double sum, length, N, tmpSdev;
 
@@ -199,57 +199,33 @@ void RenewalData::AddRenewal(Agebandmatrix& Alkeys, int area,
 
   if (RenewalTime.Size() == 0)
     return;
-  int i;
-  if (Maxr == -1) { //First time
-    if (RenewalTime[0] != TimeInfo->CurrentTime())
-      return;
-    Minr = 0;
-    for (i = 0; i < RenewalTime.Size(); i++) {
-      Maxr = i;
-      if (RenewalTime[i] != TimeInfo->CurrentTime())
-        break;
-    }
-  } else {
-    if (RenewalTime[Maxr] != TimeInfo->CurrentTime()
-       && RenewalTime[Minr] != TimeInfo->CurrentTime())
-      return;
-    if (RenewalTime[Minr] != TimeInfo->CurrentTime()) {
-      //Then we need to recompute Minr and Maxr.
-      Minr = Maxr;
-      for (i = Minr; i < RenewalTime.Size(); i++) {
-        Maxr = i;
-        if (RenewalTime[i] != TimeInfo->CurrentTime())
-          break;
-      }
-    }
-  }
-  if (Maxr == -1)
-    return;
 
-  //Now either RenewalTime[Maxr] > TimeInfo.CurrentTime() or both
-  //RenewalTime[Maxr] == TimeInfo.CurrentTime() and Maxr == RenewalTime.Size() - 1.
-  int maxim = Maxr;
-  if (RenewalTime[Maxr] == TimeInfo->CurrentTime())
-    maxim++;
+  int i, timeid, renewalid;
   double RenewalNumber = 0.0;
+  timeid = TimeInfo->CurrentTime();
+  renewalid = -1;
+
+  for (i = 0; i < RenewalTime.Size(); i++)
+    if ((RenewalTime[i] == timeid) && (RenewalArea[i] == area)) {
+      renewalid = i;
+      break;
+    }
 
   //Add renewal to stock
-  for (i = Minr; i < maxim; i++) {
-    if (area == RenewalArea[i]) {
-      if (iszero(ratio) && Number[i] != 0)
-        RenewalNumber = Number[i];
-      else if (ratio != 0 && iszero(Number[i]))
-        RenewalNumber = ratio;
-      else
-        RenewalNumber = 0.0;
-    }
+  if (renewalid != -1) {
+    if (iszero(ratio))
+      RenewalNumber = Number[renewalid];
+    else if (iszero(Number[renewalid]))
+      RenewalNumber = ratio;
+    else
+      RenewalNumber = 0.0;
 
     if (RenewalNumber < 0)
       RenewalNumber = -RenewalNumber;
 
     if (RenewalNumber > 0) {
-      assert(Alkeys.Minage() <= Distribution[i].Minage());
-      AgebandmAdd(Alkeys, Distribution[i], *CI, RenewalNumber);
+      assert(Alkeys.Minage() <= Distribution[renewalid].Minage());
+      AgebandmAdd(Alkeys, Distribution[renewalid], *CI, RenewalNumber);
     }
   }
 }

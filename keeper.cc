@@ -498,23 +498,49 @@ void Keeper::WriteParamsInColumns(const char* const filename,
 }
 
 void Keeper::LowerBds(doublevector& lbs) const {
-  int i, j;
-  j = 0;
-  for (i = 0; i < lowerbds.Size(); i++) {
-    if (opt[i] == 1) {
-      lbs[j] = lowerbds[i];
-      j++;
-    }
-  }
+  int i;
+  for (i = 0; i < lbs.Size(); i++)
+    lbs[i] = lowerbds[i];
 }
 
 void Keeper::UpperBds(doublevector& ubs) const {
+  int i;
+  for (i = 0; i < ubs.Size(); i++)
+    ubs[i] = upperbds[i];
+}
+
+void Keeper::LowerOptBds(doublevector& lbs) const {
   int i, j;
-  j = 0;
-  for (i = 0; i < upperbds.Size(); i++) {
-    if (opt[i] == 1) {
-      ubs[j] = upperbds[i];
-      j++;
-    }
+  if (lbs.Size() != this->NoOptVariables()) {
+    cerr << "Keeper gets wrong number of optimizing variables";
+    return;
+  }
+  if (lbs.Size() == 0)
+    this->LowerBds(lbs);
+  else {
+    j = 0;
+    for (i = 0; i < lowerbds.Size(); i++)
+      if (opt[i] == 1) {
+        lbs[j] = lowerbds[i];
+        j++;
+      }
+  }
+}
+
+void Keeper::UpperOptBds(doublevector& ubs) const {
+  int i, j;
+  if (ubs.Size() != this->NoOptVariables()) {
+    cerr << "Keeper gets wrong number of optimizing variables";
+    return;
+  }
+  if (ubs.Size() == 0)
+    this->UpperBds(ubs);
+  else {
+    j = 0;
+    for (i = 0; i < upperbds.Size(); i++)
+      if (opt[i] == 1) {
+        ubs[j] = upperbds[i];
+        j++;
+      }
   }
 }

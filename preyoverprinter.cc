@@ -93,11 +93,11 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   //finished initializing. Now print first lines
   outfile << "; ";
   RUNID.print(outfile);
-  outfile << "; Over prey output file for the following preys";
+  outfile << "; Prey overconsumption output file for the following preys";
   for (i = 0; i < preynames.Size(); i++)
     outfile << sep << preynames[i];
 
-  outfile << "\n; year-step-area-length-biomass eaten\n";
+  outfile << "\n; year-step-area-length-overconsumption biomass\n";
   outfile.flush();
 }
 

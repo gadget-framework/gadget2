@@ -24,7 +24,6 @@ StomachContent::StomachContent(CommentStream& infile,
   strncpy(datafilename, "", MaxStrLength);
   strncpy(numfilename, "", MaxStrLength);
 
-
   ReadWordAndVariable(infile, "functionnumber", functionnumber);
   ReadWordAndValue(infile, "datafile", datafilename);
   switch(functionnumber) {

@@ -43,7 +43,6 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   //Print before the simulation starts, so we do it ourselves first.
   for (i = 0; i < basevec.Size(); i++)
     basevec[i]->Reset(TimeInfo);
-
 }
 
 Ecosystem::~Ecosystem() {
@@ -230,9 +229,9 @@ Fleet* Ecosystem::findFleet(const char* fleetname) const {
 }
 
 void Ecosystem::LowerBds(doublevector& lbds) const {
-  keeper->LowerBds(lbds);
+  keeper->LowerOptBds(lbds);
 }
 
 void Ecosystem::UpperBds(doublevector& ubds) const {
-  keeper->UpperBds(ubds);
+  keeper->UpperOptBds(ubds);
 }

@@ -6,6 +6,8 @@
 
 StockPreyStdInfoByLength::StockPreyStdInfoByLength(const StockPrey* p, const intvector& Areas)
   : AbstrPreyStdInfoByLength(p, Areas), prey(p) {
+
+  PreyLgrpDiv = p->ReturnLengthGroupDiv();
 }
 
 StockPreyStdInfoByLength::~StockPreyStdInfoByLength() {

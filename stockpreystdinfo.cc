@@ -82,3 +82,7 @@ const doublevector& StockPreyStdInfo::BconsumptionByLength(int area) const {
 const doublevector& StockPreyStdInfo::MortalityByLength(int area) const {
   return SPByLength.MortalityByLength(area);
 }
+
+const LengthGroupDivision* StockPreyStdInfo::ReturnPreyLengthGroupDiv() const {
+  return SPByLength.ReturnPreyLengthGroupDiv();
+}

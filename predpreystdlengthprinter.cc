@@ -9,17 +9,19 @@ extern RunId RUNID;
 
 PredPreyStdLengthPrinter::PredPreyStdLengthPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
-  : PredPreyStdPrinter(infile, Area, TimeInfo), predinfo(0), predator(0), prey(0) {
+  : PredPreyStdPrinter(infile, Area, TimeInfo), predinfo(0), predator(0), prey(0), PredLgrpDiv(0), PreyLgrpDiv(0) {
 
   //finished initializing. Now print first lines
   outfile << "; ";
   RUNID.print(outfile);
-  outfile << "; Predation file by length - predator " << predname << " - prey " << preyname
+  outfile << "; Predation file by length for predator " << predname << " and prey " << preyname
     << "\n; year-step-area-pred length-prey length-cons number-cons biomass-mortality\n";
   outfile.flush();
 }
 
 PredPreyStdLengthPrinter::~PredPreyStdLengthPrinter() {
+  delete PredLgrpDiv;
+  delete PreyLgrpDiv;
   delete predinfo;
 }
 
@@ -44,16 +46,31 @@ void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo) {
   for (a = 0; a < areas.Size(); a++)
     predinfo->Sum(TimeInfo, areas[a]);
 
+  PredLgrpDiv = predinfo->ReturnPredLengthGroupDiv();
+  PreyLgrpDiv = predinfo->ReturnPreyLengthGroupDiv();
+
   for (a = 0; a < areas.Size(); a++) {
-    for (predl = 0; predl < predinfo->NconsumptionByLength(areas[a]).Nrow(); predl++) {
-      for (preyl = 0; preyl < predinfo->NconsumptionByLength(areas[a]).Ncol(predl); preyl++) {
+    for (predl = 0; predl < PredLgrpDiv->NoLengthGroups(); predl++) {
+      for (preyl = 0; preyl < PreyLgrpDiv->NoLengthGroups(); preyl++) {
         outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep
           << setw(smallwidth) << TimeInfo->CurrentStep() << sep
-          << setw(smallwidth) << areas[a] << sep << setw(smallwidth)
-          << predl + 1 << sep << setw(smallwidth) << preyl + 1 << sep << setprecision(smallprecision)
-          << predinfo->NconsumptionByLength(areas[a])[predl][preyl] << sep
-          << predinfo->BconsumptionByLength(areas[a])[predl][preyl] << sep
-          << predinfo->MortalityByLength(areas[a])[predl][preyl] << sep << endl;
+          << setw(smallwidth) << outerareas[a] << sep << setw(smallwidth)
+          << PredLgrpDiv->Meanlength(predl) << sep << setw(smallwidth)
+          << PreyLgrpDiv->Meanlength(preyl) << sep;
+
+        //JMB crude filter to remove the 'silly' values from the output
+        if ((predinfo->NconsumptionByLength(areas[a])[predl][preyl] < rathersmall)
+           || (predinfo->BconsumptionByLength(areas[a])[predl][preyl] < rathersmall)
+           || (predinfo->MortalityByLength(areas[a])[predl][preyl] < verysmall))
+
+          outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0
+            << sep << setw(largewidth) << 0 << endl;
+
+        else
+          outfile << setw(largewidth) << predinfo->NconsumptionByLength(areas[a])[predl][preyl] << sep
+            << setw(largewidth) << predinfo->BconsumptionByLength(areas[a])[predl][preyl] << sep
+            << setw(largewidth) << predinfo->MortalityByLength(areas[a])[predl][preyl] << sep << endl;
+
       }
     }
   }

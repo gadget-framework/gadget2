@@ -14,7 +14,7 @@ PredPreyStdAgePrinter::PredPreyStdAgePrinter(CommentStream& infile,
   //finished initializing. Now print first lines
   outfile << "; ";
   RUNID.print(outfile);
-  outfile << "; Predation file by age - predator " << predname << " - prey " << preyname
+  outfile << "; Predation file by age for predator " << predname << " and prey " << preyname
     << "\n; year-step-area-pred age-prey age-cons number-cons biomass-mortality\n";
   outfile.flush();
 }
@@ -55,13 +55,25 @@ void PredPreyStdAgePrinter::Print(const TimeClass * const TimeInfo) {
         predage <= predinfo->NconsumptionByAge(areas[a]).Maxage(); predage++) {
       for (preyage = predinfo->NconsumptionByAge(areas[a]).Mincol(predage);
           preyage < predinfo->NconsumptionByAge(areas[a]).Maxcol(predage); preyage++) {
+
         outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep
           << setw(smallwidth) << TimeInfo->CurrentStep() << sep
-          << setw(smallwidth) << areas[a] << sep << setw(smallwidth)
-          << predage << sep << setw(smallwidth) << preyage << sep << setprecision(smallprecision)
-          << predinfo->NconsumptionByAge(areas[a])[predage][preyage] << sep
-          << predinfo->BconsumptionByAge(areas[a])[predage][preyage] << sep
-          << predinfo->MortalityByAge(areas[a])[predage][preyage] << endl;
+          << setw(smallwidth) << outerareas[a] << sep << setw(smallwidth)
+          << predage << sep << setw(smallwidth) << preyage << sep;
+
+        //JMB crude filter to remove the 'silly' values from the output
+        if ((predinfo->NconsumptionByAge(areas[a])[predage][preyage] < rathersmall)
+           || (predinfo->BconsumptionByAge(areas[a])[predage][preyage] < rathersmall)
+           || (predinfo->MortalityByAge(areas[a])[predage][preyage] < verysmall))
+
+          outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0
+            << sep << setw(largewidth) << 0 << endl;
+
+        else
+          outfile << setw(largewidth) << predinfo->NconsumptionByAge(areas[a])[predage][preyage] << sep
+            << setw(largewidth) << predinfo->BconsumptionByAge(areas[a])[predage][preyage] << sep
+            << setw(largewidth) << predinfo->MortalityByAge(areas[a])[predage][preyage] << sep << endl;
+
       }
     }
   }

@@ -1,80 +1,69 @@
 #include "suitfunc.h"
 #include "gadget.h"
 
+//JMB - should remove some of the suitability functions that are no longer used
 int findSuitFunc(SuitfuncPtrvector& suitf, const char* suitname) {
-  int found;
+  int found = 0;
   SuitFunc* tempFunc;
-  int size;
+
   if (strcasecmp(suitname, "ExpsuitfuncA") == 0) {
     tempFunc = new ExpsuitfuncA();
     suitf.resize(1, tempFunc);
-    size = suitf.Size();
     found = 1;
 
   } else if (strcasecmp(suitname, "Constsuitfunc") == 0) {
     tempFunc = new Constsuitfunc();
     suitf.resize(1, tempFunc);
-    size = suitf.Size();
     found = 1;
 
   } else if (strcasecmp(suitname, "Andersensuitfunc") == 0) {
     tempFunc = new Andersensuitfunc();
     suitf.resize(1, tempFunc);
-    size = suitf.Size();
     found = 1;
 
   } else if (strcasecmp(suitname, "ImprovedExpsuitfunc") == 0) {
     tempFunc = new ImprovedExpsuitfunc();
     suitf.resize(1, tempFunc);
-    size = suitf.Size();
     found = 1;
 
   } else if (strcasecmp(suitname, "ImprovedAndExtendedExpsuitfunc") == 0) {
     tempFunc = new ImprovedAndExtendedExpsuitfunc();
     suitf.resize(1, tempFunc);
-    size = suitf.Size();
     found = 1;
 
   } else if (strcasecmp(suitname, "Expsuitfuncl50") == 0) {
     tempFunc = new Expsuitfuncl50();
     suitf.resize(1, tempFunc);
-    size = suitf.Size();
     found = 1;
 
   } else if (strcasecmp(suitname, "ExtendedExpsuitfuncl50") == 0) {
     tempFunc = new ExtendedExpsuitfuncl50();
     suitf.resize(1, tempFunc);
-    size = suitf.Size();
     found = 1;
 
   } else if (strcasecmp(suitname, "BadExpsuitfuncl50") == 0) {
     tempFunc = new BadExpsuitfuncl50();
     suitf.resize(1, tempFunc);
-    size = suitf.Size();
     found = 1;
 
   } else if (strcasecmp(suitname, "SurveySelection") == 0) {
     tempFunc = new SurveySelection();
     suitf.resize(1, tempFunc);
-    size = suitf.Size();
     found = 1;
 
   } else if (strcasecmp(suitname, "StraightLine") == 0) {
     tempFunc = new StraightLine();
     suitf.resize(1, tempFunc);
-    size = suitf.Size();
     found = 1;
 
   } else if (strcasecmp(suitname, "CLogLog") == 0) {
     tempFunc = new CLogLog();
     suitf.resize(1, tempFunc);
-    size = suitf.Size();
     found = 1;
 
   } else if (strcasecmp(suitname, "Combination") == 0) {
     tempFunc = new Combination();
     suitf.resize(1, tempFunc);
-    size = suitf.Size();
     found = 1;
 
   } else
@@ -86,11 +75,8 @@ int findSuitFunc(SuitfuncPtrvector& suitf, const char* suitname) {
 int readSuitFunction(SuitfuncPtrvector& suitf, CommentStream& infile,
   const char* suitname, const TimeClass* const TimeInfo, Keeper* const keeper) {
 
-  int size;
   if (findSuitFunc(suitf, suitname) == 1) {
-    size = suitf.Size();
-    assert(size > 0);
-    suitf[size - 1]->readConstants(infile, TimeInfo, keeper);
+    suitf[suitf.Size() - 1]->readConstants(infile, TimeInfo, keeper);
     return 1;
   } else
     return 0;
@@ -165,7 +151,7 @@ int SuitFunc::noOfConstants() {
 }
 
 ExpsuitfuncA::ExpsuitfuncA() {
-  this->setName("ExpsuitfuncA");
+  this->setName("ExpSuitFuncA");
   coeff.resize(4);
   preyLength = -1.0;
   predLength = -1.0;
@@ -200,22 +186,30 @@ double ExpsuitfuncA::getPreyLength() {
 
 double ExpsuitfuncA::calculate() {
   assert(coeff.Size() == 4);
+  double check = 0.0;
+
   if (coeff[0] < 0 && coeff[1] < 0) {
-    return coeff[3] / (1 + exp(-(coeff[0] - coeff[1] *
+    check = coeff[3] / (1 + exp(-(coeff[0] - coeff[1] *
       preyLength + coeff[2] * predLength)));
 
   } else if (coeff[0] > 0 && coeff[1] > 0) {
-    return coeff[3] / (1 + exp(-(-coeff[0] +  coeff[1] *
+    check = coeff[3] / (1 + exp(-(-coeff[0] +  coeff[1] *
       preyLength + coeff[2] * predLength)));
 
   } else {
-    return coeff[3] / (1 + exp(-(coeff[0] +  coeff[1] *
+    check = coeff[3] / (1 + exp(-(coeff[0] +  coeff[1] *
       preyLength + coeff[2] * predLength)));
   }
+
+  if ((check < 0.0) || (check > 1.0)) {
+    cerr << "Error in suitability - function outside bounds " << check << endl;
+    exit(EXIT_FAILURE);
+  } else
+    return check;
 }
 
 Constsuitfunc::Constsuitfunc() {
-  this->setName("Constsuitfunc");
+  this->setName("ConstSuitFunc");
   coeff.resize(1);
 }
 
@@ -232,11 +226,15 @@ int Constsuitfunc::usesPreyLength() {
 
 double Constsuitfunc::calculate() {
   assert(coeff.Size() == 1);
-  return coeff[0];
+  if ((coeff[0] < 0.0) || (coeff[0] > 1.0)) {
+    cerr << "Error in suitability - function outside bounds " << coeff[0] << endl;
+    exit(EXIT_FAILURE);
+  } else
+    return coeff[0];
 }
 
 Andersensuitfunc::Andersensuitfunc() {
-  this->setName("Andersensuitfunc");
+  this->setName("AndersenSuitFunc");
   coeff.resize(5);
   preyLength = -1.0;
   predLength = -1.0;
@@ -271,9 +269,11 @@ double Andersensuitfunc::getPreyLength() {
 
 double Andersensuitfunc::calculate() {
   double l = log(predLength / preyLength);
-  double e, q = 0.0;
+  double e, q, check;
   assert(coeff.Size() == 5);
 
+  q = 0.0;
+  check = 0.0;
   if (l > coeff[1])
     q = coeff[3];
   else
@@ -285,11 +285,16 @@ double Andersensuitfunc::calculate() {
     q = -q;    //To avoid getting a big positive number as an argument for exp
 
   e = (l - coeff[1]) * (l - coeff[1]);
-  return coeff[0] + coeff[2] * exp(-e / q);
+  check = coeff[0] + coeff[2] * exp(-e / q);
+  if ((check < 0.0) || (check > 1.0)) {
+    cerr << "Error in suitability - function outside bounds " << check << endl;
+    exit(EXIT_FAILURE);
+  } else
+    return check;
 }
 
 ImprovedExpsuitfunc::ImprovedExpsuitfunc() {
-  this->setName("ImprovedExpsuitfunc");
+  this->setName("ImprovedExpSuitFunc");
   coeff.resize(4);
   preyLength = -1.0;
   predLength = -1.0;
@@ -336,7 +341,7 @@ double ImprovedExpsuitfunc::calculate() {
 }
 
 ImprovedAndExtendedExpsuitfunc::ImprovedAndExtendedExpsuitfunc() {
-  this->setName("ImprovedAndExtendedExpsuitfunc");
+  this->setName("ImprovedAndExtendedExpSuitFunc");
   coeff.resize(6);
   preyLength = -1.0;
   predLength = -1.0;
@@ -384,7 +389,7 @@ double ImprovedAndExtendedExpsuitfunc::calculate() {
 }
 
 Expsuitfuncl50::Expsuitfuncl50() {
-  this->setName("Expsuitfuncl50");
+  this->setName("ExpSuitFuncL50");
   coeff.resize(2);
   preyLength = -1.0;
 }
@@ -411,15 +416,21 @@ double Expsuitfuncl50::getPreyLength() {
 double Expsuitfuncl50::calculate() {
   assert(coeff.Size() == 2);
   assert(coeff[0] > 0 && coeff[1] > 0);
+  double check = 0.0;
 
   /* Parameter [0] and [1] got to be greater then 0 because of the l_50 form.
    * Modified by kgf 21/8 00 and mna 04.10.00
    * Predlength is not taken into account. */
-  return 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
+  check = 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
+  if ((check < 0.0) || (check > 1.0)) {
+    cerr << "Error in suitability - function outside bounds " << check << endl;
+    exit(EXIT_FAILURE);
+  } else
+    return check;
 }
 
 ExtendedExpsuitfuncl50::ExtendedExpsuitfuncl50() {
-  this->setName("ExtendedExpsuitfuncl50");
+  this->setName("ExtendedExpSuitFuncL50");
   coeff.resize(3);
   preyLength = -1.0;
 }
@@ -458,7 +469,7 @@ double ExtendedExpsuitfuncl50::calculate() {
 }
 
 BadExpsuitfuncl50::BadExpsuitfuncl50() {
-  this->setName("BadExpsuitfuncl50");
+  this->setName("BadExpSuitFuncL50");
   coeff.resize(2);
   preyLength = -1.0;
 }
@@ -556,9 +567,15 @@ double StraightLine::getPreyLength() {
 
 double StraightLine::calculate() {
   assert(coeff.Size() == 2);
+  double check = 0.0;
   /* Line as a function of preylength only, predlength is dummy
-   * written by kgf 5/3 01 */
-  return(coeff[0] * preyLength + coeff[1]);
+   * written by kgf 5/3 01
+   * JMB - fixed for values less than zero */
+  check = coeff[0] * preyLength + coeff[1];
+  if (check < 0.0)
+    return 0.0;
+  else
+    return check;
 }
 
 CLogLog::CLogLog() {

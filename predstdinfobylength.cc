@@ -42,6 +42,9 @@ void PredStdInfoByLength::AdjustObjects() {
   MortbyLength.resize(areas.Size(), bm);
   NconbyLength.resize(areas.Size(), bm);
   BconbyLength.resize(areas.Size(), bm);
+
+  PredLgrpDiv = predator->ReturnLengthGroupDiv();
+  PreyLgrpDiv = prey->ReturnLengthGroupDiv();
 }
 
 void PredStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {

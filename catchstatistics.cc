@@ -101,7 +101,7 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
   int i;
   intvector Years, Steps;
   int year, step;
-  double tmpnumber, tmpmean, tmpvariance;
+  double tmpnumber, tmpmean, tmpstddev;
   char tmparea[MaxStrLength], tmpage[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpage, "", MaxStrLength);
@@ -139,7 +139,7 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
   while (!infile.eof()) {
     keepdata = 0;
     if (needvar == 1)
-      infile >> year >> step >> tmparea >> tmpage >> tmpnumber >> tmpmean >> tmpvariance >> ws;
+      infile >> year >> step >> tmparea >> tmpage >> tmpnumber >> tmpmean >> tmpstddev >> ws;
     else
       infile >> year >> step >> tmparea >> tmpage >> tmpnumber >> tmpmean >> ws;
 
@@ -189,7 +189,7 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
       (*numbers[timeid])[areaid][ageid] = tmpnumber;
       (*mean[timeid])[areaid][ageid] = tmpmean;
       if (needvar == 1)
-        (*variance[timeid])[areaid][ageid] = tmpvariance;
+        (*variance[timeid])[areaid][ageid] = tmpstddev * tmpstddev;
 
     }
   }
@@ -225,12 +225,12 @@ void CatchStatistics::Print(ofstream& outfile) const {
 
   outfile << "\nCatch Statistics\nlikelihood " << likelihood
     << "\nfunction number " << functionnumber;
-  outfile << "\n\tStocknames: " << sep;
+  outfile << "\n\tStocknames:";
   for (i = 0; i < stocknames.Size(); i++)
-    outfile << stocknames[i] << sep;
-  outfile << "\n\tFleetnames: " << sep;
+    outfile << sep << stocknames[i];
+  outfile << "\n\tFleetnames:";
   for (i = 0; i < fleetnames.Size(); i++)
-    outfile << fleetnames[i] << sep;
+    outfile << sep << fleetnames[i];
   outfile << endl;
 
   aggregator->Print(outfile);

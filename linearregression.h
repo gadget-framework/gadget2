@@ -10,6 +10,7 @@ public:
   LinearRegression();
   virtual void Fit(const doublevector& x, const doublevector& y);
   virtual void Fit(const doublevector& x, const doublevector& y, double slope);
+  virtual void Fit(double intercept, const doublevector& x, const doublevector& y);
   virtual void Fit(const doublevector& x, const doublevector& y, double slope, double intercept);
   virtual double Funcval(double x);
   int Error() const;

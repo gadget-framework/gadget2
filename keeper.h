@@ -30,6 +30,8 @@ public:
   void Switches(Parametervector& switches) const;
   void LowerBds(doublevector& lbs) const;
   void UpperBds(doublevector& ubs) const;
+  void LowerOptBds(doublevector& lbs) const;
+  void UpperOptBds(doublevector& ubs) const;
   void InitialValues(doublevector& val) const;
   void ScaledValues(doublevector& val) const;
   int NoVariables() const;

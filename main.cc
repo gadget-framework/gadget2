@@ -97,11 +97,15 @@ int main(int aNumber, char *const aVector[]) {
     exit(EXIT_FAILURE);
   }
 
-  RUNID.print(cout);
-  cout << "Starting Gadget from directory: " << workingdir
-    << "\nusing data from directory: " << inputdir << endl;
   if (aNumber > 1)
     MainInfo.Read(aNumber, aVector);
+
+  //Dont print output if doing a network run
+  if (!(MainInfo.Net)) {
+    RUNID.print(cout);
+    cout << "Starting Gadget from directory: " << workingdir
+      << "\nusing data from directory: " << inputdir << endl;
+  }
 
   //Added MainInfo.Net to Ecosystem constructor, to let EcoSystem know if
   //we are doing a net run. 07.04.00 AJ

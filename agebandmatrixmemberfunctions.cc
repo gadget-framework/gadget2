@@ -14,16 +14,19 @@ void Agebandmatrix::Multiply(const doublevector& Ratio, const ConversionIndex& C
   doublevector UsedRatio(Ratio);
   int i, j, j1, j2;
 
-  for (i = 0; i < UsedRatio.Size(); i++)
-    if (iszero(UsedRatio[i])) //set value from almost zero to 0
+  for (i = 0; i < UsedRatio.Size(); i++) {
+    if (iszero(UsedRatio[i]))
       UsedRatio[i] = 0.0;
-    else if (UsedRatio[i] < 0)
-      exit(EXIT_FAILURE);
+    else if (UsedRatio[i] < 0) {
+      cerr << "Warning: negative stock population - setting to zero\n";
+      UsedRatio[i] = 0.0;
+    }
+  }
 
   if (CI.SameDl()) {
     for (i = 0; i < nrow; i++) {
-      j1 =  max(v[i]->Mincol(), CI.Minlength());
-      j2 =  min(v[i]->Maxcol(), CI.Maxlength());
+      j1 = max(v[i]->Mincol(), CI.Minlength());
+      j2 = min(v[i]->Maxcol(), CI.Maxlength());
       for (j = j1; j < j2; j++)
         (*v[i])[j].N *= UsedRatio[j - CI.Offset()];
     }
@@ -41,9 +44,14 @@ void Agebandmatrix::Multiply(const doublevector& Ratio, const ConversionIndex& C
 void Agebandmatrix::Subtract(const doublevector& Consumption, const ConversionIndex& CI, const popinfovector& Nrof) {
   doublevector Ratio(CI.Nf(), 1);
   int i;
-  for (i = 0; i < Consumption.Size(); i++)
+  for (i = 0; i < Consumption.Size(); i++) {
     if (Nrof[i].N > 0)
       Ratio[i] = 1 - Consumption[i] / Nrof[i].N;
+
+    if ((Consumption[i] < rathersmall) && (Nrof[i].N < rathersmall))
+      Ratio[i] = 1.0;
+  }
+
   this->Multiply(Ratio, CI);
 }
 

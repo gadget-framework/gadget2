@@ -426,10 +426,10 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
       infile >> text >> ws;
   }
 
-  //Now we read the names of the otherfood files
+  //Now we read the names of the tagging files
   infile >> text >> ws;
   if (strcasecmp(text, "tagfiles") == 0) {
-    //There might not be any otherfood files
+    //There might not be any tagging files
     infile >> text >> ws;
     while (!((strcasecmp(text, "[otherfood]") == 0) || infile.eof())) {
       subfile.open(text);
@@ -512,5 +512,7 @@ void Ecosystem::Readmain(CommentStream& infile, int optimize, int netrun,
     }
   }
 
-  cout << "\nFinished reading input files\n" << flush;
+  //Dont print output line if doing a network run
+  if (!netrun)
+    cout << "\nFinished reading input files\n";
 }

@@ -7,12 +7,9 @@
 class TimeClass;
 class Keeper;
 
-int ReadAmounts(CommentStream& infile, int NumberOfColumns,
+int ReadAmounts(CommentStream& infile, const intvector& tmpareas,
   const TimeClass* const TimeInfo, const AreaClass* const Area,
   Formulamatrix& amount, Keeper* const keeper, const char* givenname);
-int ReadAllAmounts(CommentStream& infile, int NumberOfColumns,
-  const TimeClass* const TimeInfo, const AreaClass* const Area,
-  Formulamatrix& amount, Keeper* const keeper);
 int ReadGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   const AreaClass* const Area, Formulamatrixptrvector& amount,
   const charptrvector& lenindex, Keeper* const keeper);

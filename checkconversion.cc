@@ -6,25 +6,15 @@
 void ErrorPrintLengthGroupDivision(const LengthGroupDivision* lgrpdiv) {
   int i;
   if (lgrpdiv->dl() != 0) {
-    cerr << " Minimum length ";
-    cerr.width(printwidth);
-    cerr.precision(smallprecision);
-    cerr << lgrpdiv->Minlength(0) << " Maximum length ";
-    cerr.width(printwidth);
-    cerr.precision(smallprecision);
-    cerr << lgrpdiv->Maxlength(lgrpdiv->NoLengthGroups() - 1) << " dl ";
-    cerr.width(printwidth);
-    cerr.precision(smallprecision);
-    cerr << lgrpdiv->dl() << endl;
+    cerr << "Length group with minimum length " << lgrpdiv->Minlength(0) << ", maximum length "
+      << lgrpdiv->Maxlength(lgrpdiv->NoLengthGroups() - 1) << " and stepsize " << lgrpdiv->dl();
+
   } else {
-    for (i = 0; i < lgrpdiv->NoLengthGroups(); i++) {
-      cerr.width(printwidth);
-      cerr.precision(smallprecision);
-      cerr << lgrpdiv->Minlength(i);
-    }
-    cerr.width(printwidth);
-    cerr.precision(smallprecision);
-    cerr << lgrpdiv->Maxlength(i - 1);
+    cerr << "Length group with lengths ";
+    for (i = 0; i < lgrpdiv->NoLengthGroups(); i++)
+      cerr << lgrpdiv->Minlength(i) << ", ";
+
+    cerr << lgrpdiv->Maxlength(lgrpdiv->NoLengthGroups() - 1);
   }
   cerr << endl;
 }

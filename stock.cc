@@ -81,10 +81,9 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   //JMB need to set the lowerlgrp and size vectors to a default
   //value to allow the whole range of lengths to be calculated
+  tmpint = int((maxlength - minlength) / dl);
   intvector lowerlgrp(maxage - minage + 1, 0);
-  intvector size(maxage - minage + 1);
-  for (i = 0; i < maxage - minage + 1; i++)
-    size[i] = int((maxlength - minlength) / dl);
+  intvector size(maxage - minage + 1, tmpint);
 
   Alkeys.resize(areas.Size(), minage, lowerlgrp, size);
   tagAlkeys.resize(areas.Size(), minage, lowerlgrp, size);
@@ -177,7 +176,8 @@ Stock::Stock(CommentStream& infile, const char* givenname,
       subfile.clear();
     } else
       handle.Unexpected("migrationfile", text);
-  }
+  } else
+    migration = 0;
 
   //Read the maturation data
   ReadWordAndVariable(infile, "doesmature", doesmature);
@@ -220,14 +220,19 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
     if (!doesgrow)
       handle.Warning("The stock does not grow, so it is unlikely to mature!");
-  }
+
+  } else
+    maturity = 0;
 
   //Read the movement data
   ReadWordAndVariable(infile, "doesmove", doesmove);
-  if (doesmove)
+  if (doesmove) {
     //transition handles the movements of the age group maxage:
     transition = new Transition(infile, areas, maxage,
       lowerlgrp[maxage - minage], size[maxage - minage], keeper);
+
+  } else
+    transition = 0;
 
   //Read the renewal data
   ReadWordAndVariable(infile, "doesrenew", doesrenew);
@@ -245,7 +250,9 @@ Stock::Stock(CommentStream& infile, const char* givenname,
       subfile.clear();
     } else
       handle.Unexpected("renewaldatafile", text);
-  }
+
+  } else
+    renewal = 0;
 
   //Read the spawning data
   ReadWordAndVariable(infile, "doesspawn", doesspawn);
@@ -263,7 +270,9 @@ Stock::Stock(CommentStream& infile, const char* givenname,
       subfile.clear();
     } else
       handle.Unexpected("spawnfile", text);
-  }
+
+  } else
+    spawner = 0;
 
   //Set the birthday for the stock
   birthdate = TimeInfo->StepsInYear();

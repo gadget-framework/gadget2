@@ -45,7 +45,7 @@ LogSurveyIndices::LogSurveyIndices(CommentStream& infile, const AreaClass* const
 
   //Check if we read sufficient input.
   if (numarea != 1)
-    handle.Message("Error - there should be one area for the survey indices");
+    handle.Message("Error - there should be one area for the log survey indices");
 
   //Check area data
   for (i = 0; i < areas.Size(); i++)
