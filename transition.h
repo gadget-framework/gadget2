@@ -25,10 +25,8 @@ protected:
   ConversionIndexptrvector CI;
   LengthGroupDivision* LgrpDiv;
   int TransitionStep;
-  //JMB agebandmatrixptrvector Agegroup;
+  agebandmatrixptrvector Agegroup;
   int age;
-  doublevector minlen;
-  intvector lenindex;
 };
 
 #endif

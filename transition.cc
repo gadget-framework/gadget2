@@ -15,7 +15,7 @@ Transition::Transition(CommentStream& infile, const intvector& Areas, int Age,
   keeper->AddString("transition");
 
   infile >> text;
-  if (strcasecmp(text, "tranistionstocksandratios") == 0) {
+  if (strcasecmp(text, "transitionstocksandratios") == 0) {
     infile >> text;
     i = 0;
     while (strcasecmp(text, "transitionstep") != 0 && infile.good()) {
@@ -30,16 +30,7 @@ Transition::Transition(CommentStream& infile, const intvector& Areas, int Age,
   } else
     handle.Unexpected("transitionstocksandratios", text);
 
-  infile >> TransitionStep;
-
-  //Now we are finished reading from infile and can construct some objects.
-  //Construct the age-length key Agegroup and initialize to zero.
-  /*intvector minlv(2, minl);
-  intvector sizev(2, size);
-  Agegroup.resize(areas.Size(), age, minlv, sizev);
-  for (i = 0; i < Agegroup.Size(); i++)
-    Agegroup[i].SettoZero();*/
-
+  infile >> TransitionStep >> ws;
   keeper->ClearLast();
 }
 
@@ -54,7 +45,7 @@ Transition::~Transition() {
 
 void Transition::SetStock(Stockptrvector& stockvec) {
   int index = 0;
-  int i, j;
+  int i, j, numstocks;
   doublevector tmpratio;
 
   for (i = 0; i < stockvec.Size(); i++)
@@ -84,21 +75,13 @@ void Transition::SetStock(Stockptrvector& stockvec) {
   for (i = 0; i < tmpratio.Size(); i++)
     Ratio[i] = tmpratio[i];
 
-  CI.resize(TransitionStocks.Size(), 0);
-  for (i = 0; i < TransitionStocks.Size(); i++)
+  numstocks = TransitionStocks.Size();
+  CI.resize(numstocks, 0);
+  for (i = 0; i < numstocks; i++)
     CI[i] = new ConversionIndex(LgrpDiv, TransitionStocks[i]->ReturnLengthGroupDiv());
 
-  //JMB - get minimum length of the transition stock
-  minlen.resize(TransitionStocks.Size(), 0);
-  for (i = 0; i < TransitionStocks.Size(); i++)
-    minlen[i] = TransitionStocks[i]->ReturnLengthGroupDiv()->Minlength(0);
-
-  //JMB - and get corresponding length group
-  lenindex.resize(TransitionStocks.Size(), 0);
-  for (i = 0; i < TransitionStocks.Size(); i++)
-    lenindex[i] = LgrpDiv->NoLengthGroup(minlen[i]);
-
-  for (i = 0; i < TransitionStocks.Size(); i++) {
+  //JMB - check that the tranistion stocks are defined on the areas
+  for (i = 0; i < numstocks; i++) {
     index = 0;
     for (j = 0; j < areas.Size(); j++)
       if (!TransitionStocks[i]->IsInArea(areas[j]))
@@ -108,6 +91,10 @@ void Transition::SetStock(Stockptrvector& stockvec) {
       cerr << "Warning: transition requested to stock " << (const char*)TransitionStocks[i]->Name()
         << "\nwhich might not be defined on " << index << " areas\n";
   }
+
+  intvector minlv(2, 0);
+  intvector sizev(2, LgrpDiv->NoLengthGroups());
+  Agegroup.resize(areas.Size(), age, minlv, sizev);
 }
 
 void Transition::Print(ofstream& outfile) const {
@@ -122,43 +109,40 @@ void Transition::Print(ofstream& outfile) const {
 }
 
 void Transition::KeepAgegroup(int area, Agebandmatrix& Alkeys, const TimeClass* const TimeInfo) {
-/*  if (!TransitionStock->IsInArea(area))
-    return;
   int inarea = AreaNr[area];
-  int length, minl, maxl;
+  int l, minl, maxl;
 
   if (TimeInfo->CurrentStep() == TransitionStep) {
     Agegroup[inarea].SettoZero();
     assert(Alkeys.Minage() <= age && age <= Alkeys.Maxage());
     minl = Agegroup[inarea].Minlength(age);
     maxl = Agegroup[inarea].Maxlength(age);
-    for (length = minl; length < maxl; length++) {
-      Agegroup[inarea][age][length].N = Alkeys[age][length].N;
-      Agegroup[inarea][age][length].W = Alkeys[age][length].W;
-      if (length >= lenindex) {
-        Alkeys[age][length].N = 0.0;
-        Alkeys[age][length].W = 0.0;  //JMB
-      }
+    for (l = minl; l < maxl; l++) {
+      Agegroup[inarea][age][l].N = Alkeys[age][l].N;
+      Agegroup[inarea][age][l].W = Alkeys[age][l].W;
+      Alkeys[age][l].N = 0.0;
+      Alkeys[age][l].W = 0.0;
     }
-  }*/
+  }
 }
 
 //area in the call to this routine is not in the local area numbering of the stock.
 void Transition::MoveAgegroupToTransitionStock(int area, const TimeClass* const TimeInfo, int HasLgr) {
-/*  if (!TransitionStock->IsInArea(area) || TimeInfo->CurrentStep() != TransitionStep)
-    return;
-  int inarea = AreaNr[area];
+  int s, inarea = AreaNr[area];
 
-  if (!HasLgr) {
-    //JMB - this is never called ...
-    double NumberInArea = Agegroup[inarea][age][Agegroup[inarea].Minlength(age)].N;
-    TransitionStock->Renewal(area, TimeInfo, NumberInArea);
+  if (TimeInfo->CurrentStep() == TransitionStep) {
+    for (s = 0; s < TransitionStocks.Size(); s++) {
+      if (!TransitionStocks[s]->IsInArea(area)) {
+        cerr << "Error: Transition to stock " << (const char*)(TransitionStocks[s]->Name())
+          << " cannot take place on area " << area << " since it doesnt live there!\n";
+        exit(EXIT_FAILURE);
+      }
 
-  } else {
-    if (TransitionStock->Birthday(TimeInfo))
-      Agegroup[inarea].IncrementAge();
+      if (TransitionStocks[s]->Birthday(TimeInfo))
+        Agegroup[inarea].IncrementAge();
 
-    TransitionStock->Add(Agegroup[inarea], CI, area, 1, Agegroup[inarea].Minage(), Agegroup[inarea].Maxage());
+      TransitionStocks[s]->Add(Agegroup[inarea], CI[s], area, Ratio[s],
+        Agegroup[inarea].Minage(), Agegroup[inarea].Maxage());
+    }
   }
-  Agegroup[inarea].SettoZero();*/
 }
