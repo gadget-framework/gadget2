@@ -244,22 +244,16 @@ private:
    * \brief This method calculates the gradient
    * \param p is the point where the gradinent should be calculated
    * \param fp is the function value at p
-   */ 
-  void gradient(double* p, double fp);
-  /**
-   * \brief This method solves the equation Bk*s=-grad(f)
    */
-  int gaussian(double mult);  
+  void gradient(double* p, double fp);
   /**
    * \brief This method performes a linesearch a long the search direction s
    */
-  double linesearch();
   double Armijo();
-
   /**
    * \brief This is the current gradient
    */
-  double* gk;        
+  double* gk;
   /**
    * \brief This is the previous gradient
    */
@@ -267,19 +261,19 @@ private:
   /**
    * \brief This is the search direction (for linesearch)
    */
-  double* s;         
+  double* s;
   /**
    * \brief This is the BFGS updated hessian approximation
    */
-  double** Bk;       
+  double** Bk;
   /**
    * \brief This is the current approximation
-   */ 
-  double* x;         
+   */
+  double* x;
   /**
    * \brief This is the current function value
-   */ 
-  double fk;    
+   */
+  double fk;
   /**
    * \brief This is the function to optimise
    */
@@ -291,23 +285,17 @@ private:
   /**
    * \brief This is the maximum number of BFGS iterations
    */
-  int maxiter;
-  /**
-   * \brief This is an indicator of the accuracy of gradient calculations
-   */
-  int difficultgrad;
+  int bfgsiter;
   /**
    * \brief This is the convergence parameter (BFGS halts when norm(gk) < eps)
    */
-  double eps;
+  double bfgseps;
   /**
    * \brief  linesearch convergence parameters
    */
-  double rho;        //linesearch convergence parameters
-  double tau;        //---------------------------------
   double beta;
   double sigma;
   double st;
-
+  double gradacc;
 };
 #endif

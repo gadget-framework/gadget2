@@ -55,11 +55,11 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
 
       if (!infile.eof()) {
         infile >> text;
-	if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
+        if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
           handle.logWarning("Warning - no optimisation parameters specified for Simulated Annealing algorithm");
-	else
+        else
           optSimann->Read(infile, text);
-	  
+
       } else
         handle.logWarning("Warning - no optimisation parameters specified for Simulated Annealing algorithm");
 
@@ -70,11 +70,11 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
 
       if (!infile.eof()) {
         infile >> text;
-	if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
+        if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
           handle.logWarning("Warning - no optimisation parameters specified for Hooke and Jeeves algorithm");
         else
           optHJ->Read(infile, text);
-	  
+
       } else
         handle.logWarning("Warning - no optimisation parameters specified for Hooke and Jeeves algorithm");
 
@@ -85,14 +85,13 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
 
       if (!infile.eof()) {
         infile >> text;
-	if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
+        if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
           handle.logWarning("Warning - no optimisation parameters specified for BFGS algorithm");
         else
           optBFGS->Read(infile, text);
-	  
+
       } else
         handle.logWarning("Warning - no optimisation parameters specified for BFGS algorithm");
-
 
     } else {
       handle.Unexpected("[hooke], [simann], [bfgs] or seed", text);
