@@ -55,6 +55,13 @@ inline int iszero(double a) {
 }
 
 //-------------------------------------------------------
+//Calculates the dnorm value, using the mean and std dev
+inline double dnorm(double length, double mean, double sdev) {
+  double t = (length - mean) / sdev;
+  return exp(-(t * t) * 0.5);
+}
+
+//-------------------------------------------------------
 //Non ANSI functions
 double logfactorial(double n);
 

@@ -1,73 +1,58 @@
 #include "suitfunc.h"
 #include "gadget.h"
 
-//JMB - should remove some of the suitability functions that are no longer used
 int findSuitFunc(SuitfuncPtrvector& suitf, const char* suitname) {
   int found = 0;
   SuitFunc* tempFunc;
 
-  if (strcasecmp(suitname, "ExpsuitfuncA") == 0) {
+  if (strcasecmp(suitname, "expsuitfunca") == 0) {
     tempFunc = new ExpsuitfuncA();
     suitf.resize(1, tempFunc);
-    found = 1;
+    found++;
 
-  } else if (strcasecmp(suitname, "Constsuitfunc") == 0) {
+  } else if (strcasecmp(suitname, "constsuitfunc") == 0) {
     tempFunc = new Constsuitfunc();
     suitf.resize(1, tempFunc);
-    found = 1;
+    found++;
 
-  } else if (strcasecmp(suitname, "Andersensuitfunc") == 0) {
-    tempFunc = new Andersensuitfunc();
-    suitf.resize(1, tempFunc);
-    found = 1;
-
-  } else if (strcasecmp(suitname, "ImprovedExpsuitfunc") == 0) {
-    tempFunc = new ImprovedExpsuitfunc();
-    suitf.resize(1, tempFunc);
-    found = 1;
-
-  } else if (strcasecmp(suitname, "ImprovedAndExtendedExpsuitfunc") == 0) {
-    tempFunc = new ImprovedAndExtendedExpsuitfunc();
-    suitf.resize(1, tempFunc);
-    found = 1;
-
-  } else if (strcasecmp(suitname, "Expsuitfuncl50") == 0) {
-    tempFunc = new Expsuitfuncl50();
-    suitf.resize(1, tempFunc);
-    found = 1;
-
-  } else if (strcasecmp(suitname, "ExtendedExpsuitfuncl50") == 0) {
-    tempFunc = new ExtendedExpsuitfuncl50();
-    suitf.resize(1, tempFunc);
-    found = 1;
-
-  } else if (strcasecmp(suitname, "BadExpsuitfuncl50") == 0) {
-    tempFunc = new BadExpsuitfuncl50();
-    suitf.resize(1, tempFunc);
-    found = 1;
-
-  } else if (strcasecmp(suitname, "SurveySelection") == 0) {
-    tempFunc = new SurveySelection();
-    suitf.resize(1, tempFunc);
-    found = 1;
-
-  } else if (strcasecmp(suitname, "StraightLine") == 0) {
+  } else if (strcasecmp(suitname, "straightline") == 0) {
     tempFunc = new StraightLine();
     suitf.resize(1, tempFunc);
-    found = 1;
+    found++;
 
-  } else if (strcasecmp(suitname, "CLogLog") == 0) {
-    tempFunc = new CLogLog();
+  } else if (strcasecmp(suitname, "expsuitfuncl50") == 0) {
+    tempFunc = new Expsuitfuncl50();
     suitf.resize(1, tempFunc);
-    found = 1;
+    found++;
 
-  } else if (strcasecmp(suitname, "Combination") == 0) {
-    tempFunc = new Combination();
+  } else if (strcasecmp(suitname, "andersensuitfunc") == 0) {
+    tempFunc = new Andersensuitfunc();
     suitf.resize(1, tempFunc);
-    found = 1;
+    found++;
+
+  } else if (strcasecmp(suitname, "improvedexpsuitfunc") == 0) {
+    cout << "The improvedexpsuitfunc suitability function is no longer supported\n";
+
+  } else if (strcasecmp(suitname, "improvedandextendedexpsuitfunc") == 0) {
+    cout << "The improvedandextendedexpsuitfunc suitability function is no longer supported\n";
+
+  } else if (strcasecmp(suitname, "extendedexpsuitfuncl50") == 0) {
+    cout << "The extendedexpsuitfuncl50 suitability function is no longer supported\n";
+
+  } else if (strcasecmp(suitname, "badexpsuitfuncl50") == 0) {
+    cout << "The badexpsuitfuncl50 suitability function is no longer supported\n";
+
+  } else if (strcasecmp(suitname, "surveyselection") == 0) {
+    cout << "The surveyselection suitability function is no longer supported\n";
+
+  } else if (strcasecmp(suitname, "cloglog") == 0) {
+    cout << "The cloglog suitability function is no longer supported\n";
+
+  } else if (strcasecmp(suitname, "combination") == 0) {
+    cout << "The combination suitability function is no longer supported\n";
 
   } else
-    found = 0;
+    cout << "Warning - no valid suitability function has been found\n";
 
   return found;
 }
@@ -295,101 +280,6 @@ double Andersensuitfunc::calculate() {
     return check;
 }
 
-ImprovedExpsuitfunc::ImprovedExpsuitfunc() {
-  this->setName("ImprovedExpSuitFunc");
-  coeff.resize(4);
-  preyLength = -1.0;
-  predLength = -1.0;
-}
-
-ImprovedExpsuitfunc::~ImprovedExpsuitfunc() {
-}
-
-int ImprovedExpsuitfunc::usesPredLength() {
-  return 1;
-}
-
-int ImprovedExpsuitfunc::usesPreyLength() {
-  return 1;
-}
-
-void ImprovedExpsuitfunc::setPredLength(double length) {
-  predLength = length;
-}
-
-void ImprovedExpsuitfunc::setPreyLength(double length) {
-  preyLength = length;
-}
-
-double ImprovedExpsuitfunc::getPredLength() {
-  return predLength;
-}
-
-double ImprovedExpsuitfunc::getPreyLength() {
-  return preyLength;
-}
-
-double ImprovedExpsuitfunc::calculate() {
-  assert(coeff.Size() == 4);
-  assert(predLength != 0);
-  int i;
-  double rell = preyLength / predLength;
-  doublevector par(coeff.Size());
-  for (i = 0; i < par.Size(); i++)
-    par[i] = coeff[i];
-  for (i = 0; i < 2; i++)
-    par[i] = absolute(par[i]);
-  return par[3] + par[2] / (1 + exp(-(par[0] * (rell - par[1]))));
-}
-
-ImprovedAndExtendedExpsuitfunc::ImprovedAndExtendedExpsuitfunc() {
-  this->setName("ImprovedAndExtendedExpSuitFunc");
-  coeff.resize(6);
-  preyLength = -1.0;
-  predLength = -1.0;
-}
-
-ImprovedAndExtendedExpsuitfunc::~ImprovedAndExtendedExpsuitfunc() {
-}
-
-int ImprovedAndExtendedExpsuitfunc::usesPredLength() {
-  return 1;
-}
-
-int ImprovedAndExtendedExpsuitfunc::usesPreyLength() {
-  return 1;
-}
-
-void ImprovedAndExtendedExpsuitfunc::setPredLength(double length) {
-  predLength = length;
-}
-
-void ImprovedAndExtendedExpsuitfunc::setPreyLength(double length) {
-  preyLength = length;
-}
-
-double ImprovedAndExtendedExpsuitfunc::getPredLength() {
-  return predLength;
-}
-
-double ImprovedAndExtendedExpsuitfunc::getPreyLength() {
-  return preyLength;
-}
-
-double ImprovedAndExtendedExpsuitfunc::calculate() {
-  assert(predLength != 0);
-  assert(coeff.Size() == 6);
-  int i;
-  double rell = preyLength / predLength;
-  doublevector par(coeff.Size());
-  for (i = 0; i < par.Size(); i++)
-    par[i] = coeff[i];
-  for (i = 0; i < 6; i++)
-    par[i] = absolute(par[i]);
-  return par[5] + par[2] / (1 + exp(-(par[0] * (rell - par[1]) -
-    par[3] * (rell - par[4]))));
-}
-
 Expsuitfuncl50::Expsuitfuncl50() {
   this->setName("ExpSuitFuncL50");
   coeff.resize(2);
@@ -430,117 +320,6 @@ double Expsuitfuncl50::calculate() {
     return check;
 }
 
-ExtendedExpsuitfuncl50::ExtendedExpsuitfuncl50() {
-  this->setName("ExtendedExpSuitFuncL50");
-  coeff.resize(3);
-  preyLength = -1.0;
-}
-
-ExtendedExpsuitfuncl50::~ExtendedExpsuitfuncl50() {
-}
-
-int ExtendedExpsuitfuncl50::usesPredLength() {
-  return 0;
-}
-
-int ExtendedExpsuitfuncl50::usesPreyLength() {
-  return 1;
-}
-
-void ExtendedExpsuitfuncl50::setPreyLength(double length) {
-  preyLength = length;
-}
-
-double ExtendedExpsuitfuncl50::getPreyLength() {
-  return preyLength;
-}
-
-double ExtendedExpsuitfuncl50::calculate() {
-  assert(coeff.Size() == 3);
-  assert(coeff[0] > 0 && coeff[1] > 0 && coeff[2] > 0);
-
-  /* Parameters: alpha1, alpha2, l50
-   * Parameter [0], [1], and [2] got to be greater then 0 because of
-   * the l_50 form.  [mna 04.10.00]
-   * Predlength is not taken into account. */
-  if (preyLength > coeff[2]) //if l>l50
-    return 1.0 / (1 + exp(-4.0 * coeff[1] * (preyLength - coeff[2])));
-  else
-    return 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[2])));
-}
-
-BadExpsuitfuncl50::BadExpsuitfuncl50() {
-  this->setName("BadExpSuitFuncL50");
-  coeff.resize(2);
-  preyLength = -1.0;
-}
-
-BadExpsuitfuncl50::~BadExpsuitfuncl50() {
-}
-
-int BadExpsuitfuncl50::usesPredLength() {
-  return 0;
-}
-
-int BadExpsuitfuncl50::usesPreyLength() {
-  return 1;
-}
-
-void BadExpsuitfuncl50::setPreyLength(double length) {
-  preyLength = length;
-}
-
-double BadExpsuitfuncl50::getPreyLength() {
-  return preyLength;
-}
-
-double BadExpsuitfuncl50::calculate() {
-  assert(coeff.Size() == 2);
-  assert(coeff[0] > 0 && coeff[1] > 0);
-
-  /* This function was entered only to reproduce the result from the
-   * AFWG 2000 (mna 14.11.00)
-   * Parameter [0] and [1] got to be greater then 0 because of the l_50 form.
-   * Modified by kgf 21/8 00 and mna 04.10.00
-   * Predlength is not taken into account. */
-  if (preyLength > coeff[1]) //if l>l50
-    return 1.0 / (1 + exp(-6.0 * coeff[0] * (preyLength - coeff[1])));
-  else
-    return 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
-}
-
-SurveySelection::SurveySelection() {
-  this->setName("SurveySelection");
-  coeff.resize(2);
-  preyLength = -1.0;
-}
-
-SurveySelection::~SurveySelection() {
-}
-
-int SurveySelection::usesPredLength() {
-  return 0;
-}
-
-int SurveySelection::usesPreyLength() {
-  return 1;
-}
-
-void SurveySelection::setPreyLength(double length) {
-  preyLength = length;
-}
-
-double SurveySelection::getPreyLength() {
-  return preyLength;
-}
-
-double SurveySelection::calculate() {
-  assert(coeff.Size() == 2);
-  assert(coeff[0] > 0 && coeff[1] > 0);
-  //Predlength is not taken into account.
-  return coeff[0] * exp(coeff[1] * preyLength);
-}
-
 StraightLine::StraightLine() {
   this->setName("StraightLine");
   coeff.resize(2);
@@ -577,72 +356,4 @@ double StraightLine::calculate() {
     return 0.0;
   else
     return check;
-}
-
-CLogLog::CLogLog() {
-  this->setName("CLogLog");
-  coeff.resize(2);
-  preyLength = -1.0;
-}
-
-CLogLog::~CLogLog() {
-}
-
-int CLogLog::usesPredLength() {
-  return 0;
-}
-
-int CLogLog::usesPreyLength() {
-  return 1;
-}
-
-void CLogLog::setPreyLength(double length) {
-  preyLength = length;
-}
-
-double CLogLog::getPreyLength() {
-  return preyLength;
-}
-
-double CLogLog::calculate() {
-  //Written by kgf 8/3 01
-  //Predlength is not taken into account.
-  assert(coeff.Size() == 2);
-  double arg = exp(coeff[0] + coeff[1] * preyLength);
-  return 1.0 - exp(-arg);
-}
-
-Combination::Combination() {
-  this->setName("Combination");
-  coeff.resize(4);
-  preyLength = -1.0;
-}
-
-Combination::~Combination() {
-}
-
-int Combination::usesPredLength() {
-  return 0;
-}
-
-int Combination::usesPreyLength() {
-  return 1;
-}
-
-void Combination::setPreyLength(double length) {
-  preyLength = length;
-}
-
-double Combination::getPreyLength() {
-  return preyLength;
-}
-
-double Combination::calculate() {
-  //Written by kgf 8/3 01
-  assert(coeff.Size() == 4);
-  double arg, cloglog, logistic;
-  arg = exp(coeff[2] + coeff[3] * preyLength);
-  cloglog = 1.0 - exp(-arg);
-  logistic = 1.0 / (1 + exp(-coeff[0] - coeff[1] * preyLength));
-  return logistic * cloglog;
 }

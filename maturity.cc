@@ -17,8 +17,8 @@ Maturity::Maturity(const intvector& tmpareas, int minage, const intvector& minle
 
 Maturity::~Maturity() {
   int i;
-  for (i = 0; i < NameOfMatureStocks.Size(); i++)
-    delete[] NameOfMatureStocks[i];
+  for (i = 0; i < MatureStockNames.Size(); i++)
+    delete[] MatureStockNames[i];
   for (i = 0; i < CI.Size(); i++)
     delete CI[i];
   delete LgrpDiv;
@@ -30,8 +30,8 @@ void Maturity::SetStock(Stockptrvector& stockvec) {
   doublevector tmpratio;
 
   for (i = 0; i < stockvec.Size(); i++)
-    for (j = 0; j < NameOfMatureStocks.Size(); j++)
-      if (strcasecmp(stockvec[i]->Name(), NameOfMatureStocks[j]) == 0) {
+    for (j = 0; j < MatureStockNames.Size(); j++)
+      if (strcasecmp(stockvec[i]->Name(), MatureStockNames[j]) == 0) {
         MatureStocks.resize(1);
         tmpratio.resize(1);
         MatureStocks[index] = stockvec[i];
@@ -39,10 +39,10 @@ void Maturity::SetStock(Stockptrvector& stockvec) {
         index++;
       }
 
-  if (index != NameOfMatureStocks.Size()) {
+  if (index != MatureStockNames.Size()) {
     cerr << "Error: Did not find the stock(s) matching:\n";
-    for (i = 0; i < NameOfMatureStocks.Size(); i++)
-      cerr << (const char*)NameOfMatureStocks[i] << sep;
+    for (i = 0; i < MatureStockNames.Size(); i++)
+      cerr << (const char*)MatureStockNames[i] << sep;
     cerr << "\nwhen searching for mature stock(s) - found only:\n";
     for (i = 0; i < stockvec.Size(); i++)
       cerr << stockvec[i]->Name() << sep;
@@ -50,23 +50,33 @@ void Maturity::SetStock(Stockptrvector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  //Now we clean Ratio and then copy from tmpratio to Ratio.
   for (i = Ratio.Size(); i > 0; i--)
     Ratio.Delete(0);
   Ratio.resize(tmpratio.Size());
   for (i = 0; i < tmpratio.Size(); i++)
     Ratio[i] = tmpratio[i];
-  //Set the conversion index.
+
   CI.resize(MatureStocks.Size(), 0);
   for (i = 0; i < MatureStocks.Size(); i++)
     CI[i] = new ConversionIndex(LgrpDiv, MatureStocks[i]->ReturnLengthGroupDiv());
+
+  for (i = 0; i < MatureStocks.Size(); i++) {
+    index = 0;
+    for (j = 0; j < areas.Size(); j++)
+      if (!MatureStocks[i]->IsInArea(areas[j]))
+        index++;
+
+    if (index != 0)
+      cerr << "Warning: maturation requested to stock " << (const char*)MatureStocks[i]->Name()
+        << "\nwhich might not be defined on " << index << " areas\n";
+  }
 }
 
 void Maturity::Print(ofstream& outfile) const {
   int i;
   outfile << "\nMaturity\n\tRead names of mature stocks:";
-  for (i = 0; i < NameOfMatureStocks.Size(); i++)
-    outfile << sep << (const char*)(NameOfMatureStocks[i]);
+  for (i = 0; i < MatureStockNames.Size(); i++)
+    outfile << sep << (const char*)(MatureStockNames[i]);
   outfile << "\n\tNames of mature stocks (through pointers):";
   for (i = 0; i < MatureStocks.Size(); i++)
     outfile << sep << (const char*)(MatureStocks[i]->Name());

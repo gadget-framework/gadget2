@@ -97,14 +97,14 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	stockmemberfunctions.o livesonareas.o stockpredator.o stockpredstdinfo.o \
 	loglinearregression.o main.o stockprey.o mainfiles.o stockpreyfullprinter.o \
 	stockpreystdinfo.o stockpreystdinfobylength.o stockprinter.o lenstock.o \
-	stockstdprinter.o maturity.o stomachcontent.o maturitya.o strstack.o \
+	stockstdprinter.o maturity.o stomachcontent.o maturitya.o variableinfo.o \
 	maturityb.o maturityc.o suitfunc.o maturityd.o suits.o migration.o keeper.o \
 	surveyindices.o migrationpenalty.o tagdata.o  stock.o readaggregation.o \
 	migvariables.o time.o multinomial.o totalpredator.o naturalm.o optinfo.o \
 	transition.o otherfood.o mathfunc.o understocking.o poppredator.o tags.o \
 	vectorusingkeeper.o popstatistics.o boundlikelihood.o timevariable.o \
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
-	lennaturalm.o catchintons.o agebandmatrixratiomemberfunctions.o \
+	strstack.o lennaturalm.o catchintons.o agebandmatrixratiomemberfunctions.o \
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o taggrow.o \
 	interruptinterface.o interrupthandler.o initialinputfile.o popratio.o
 

@@ -5,6 +5,7 @@
 #include "readword.h"
 #include "conversion.h"
 #include "extravector.h"
+#include "mathfunc.h"
 #include "gadget.h"
 
 /* JMB - I've removed all the code to deal with the basis functions
@@ -56,10 +57,11 @@ void InitialCond::ReadMeanData(CommentStream& infile, Keeper* const keeper,
     keepdata = 0;
     infile >> age >> area >> ws;
 
-    //Crude data check - perhaps there should be a better check?
-    if (age > (noagegr + minage))
+    //crude data check - perhaps there should be a better check?
+    if ((age < minage) || (age > (noagegr + minage))) {
+      handle.Warning("Ignoring initial conditions data found outside age range");
       keepdata = 1;
-    else
+    } else
       ageid = age - minage;
 
     if (keepdata == 0) {
@@ -136,10 +138,11 @@ void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
     keepdata = 0;
     infile >> area >> age >> length >> tmpnumber >> ws;
 
-    //Crude data check - perhaps there should be a better check?
-    if (age > (noagegr + minage))
+    //crude data check - perhaps there should be a better check?
+    if ((age < minage) || (age > (noagegr + minage))) {
+      handle.Warning("Ignoring initial conditions data found outside age range");
       keepdata = 1;
-    else
+    } else
       ageid = age;
 
     lengthid = -1;
@@ -343,14 +346,6 @@ void InitialCond::Print(ofstream& outfile) const {
   }
   outfile << endl;
   outfile.flush();
-}
-
-#ifdef GADGET_INLINE
-inline
-#endif
-double dnorm(double length, double mean, double sdev) {
-  double t = (length - mean) / sdev;
-  return exp(-(t * t) * 0.5);
 }
 
 void InitialCond::Initialize(Agebandmatrixvector& Alkeys) {

@@ -6,7 +6,8 @@
 #include "timevariablevector.h"
 #include "suitfuncptrvector.h"
 
-//JMB - should remove some of the suitability functions that are no longer used
+//JMB - removed some of the suitability functions that are no longer used
+//To get the removed suitability functions back, you will need gadget 2.0.03
 
 class SuitfuncPtrvector;
 
@@ -78,38 +79,6 @@ public:
   virtual double calculate();
 };
 
-class ImprovedExpsuitfunc : public SuitFunc {
-private:
-  double preyLength;
-  double predLength;
-public:
-  ImprovedExpsuitfunc();
-  virtual ~ImprovedExpsuitfunc();
-  virtual int usesPredLength();
-  virtual int usesPreyLength();
-  virtual void setPredLength(double length);
-  virtual void setPreyLength(double length);
-  virtual double getPredLength();
-  virtual double getPreyLength();
-  virtual double calculate();
-};
-
-class ImprovedAndExtendedExpsuitfunc : public SuitFunc {
-private:
-  double preyLength;
-  double predLength;
-public:
-  ImprovedAndExtendedExpsuitfunc();
-  virtual ~ImprovedAndExtendedExpsuitfunc();
-  virtual int usesPredLength();
-  virtual int usesPreyLength();
-  virtual void setPredLength(double length);
-  virtual void setPreyLength(double length);
-  virtual double getPredLength();
-  virtual double getPreyLength();
-  virtual double calculate();
-};
-
 class Expsuitfuncl50 : public SuitFunc {
 private:
   double preyLength;
@@ -123,77 +92,12 @@ public:
   virtual double calculate();
 };
 
-class ExtendedExpsuitfuncl50 : public SuitFunc {
-private:
-  double preyLength;
-public:
-  ExtendedExpsuitfuncl50();
-  virtual ~ExtendedExpsuitfuncl50();
-  virtual int usesPredLength();
-  virtual int usesPreyLength();
-  virtual void setPreyLength(double length);
-  virtual double getPreyLength();
-  virtual double calculate();
-};
-
-class BadExpsuitfuncl50 : public SuitFunc {
-private:
-  double preyLength;
-public:
-  BadExpsuitfuncl50();
-  virtual ~BadExpsuitfuncl50();
-  virtual int usesPredLength();
-  virtual int usesPreyLength();
-  virtual void setPreyLength(double length);
-  virtual double getPreyLength();
-  virtual double calculate();
-};
-
-class SurveySelection : public SuitFunc {
-private:
-  double preyLength;
-public:
-  SurveySelection();
-  virtual ~SurveySelection();
-  virtual int usesPredLength();
-  virtual int usesPreyLength();
-  virtual void setPreyLength(double length);
-  virtual double getPreyLength();
-  virtual double calculate();
-};
-
 class StraightLine : public SuitFunc {
 private:
   double preyLength;
 public:
   StraightLine();
   virtual ~StraightLine();
-  virtual int usesPredLength();
-  virtual int usesPreyLength();
-  virtual void setPreyLength(double length);
-  virtual double getPreyLength();
-  virtual double calculate();
-};
-
-class  CLogLog: public SuitFunc {
-private:
-  double preyLength;
-public:
-  CLogLog();
-  virtual ~CLogLog();
-  virtual int usesPredLength();
-  virtual int usesPreyLength();
-  virtual void setPreyLength(double length);
-  virtual double getPreyLength();
-  virtual double calculate();
-};
-
-class Combination : public SuitFunc {
-private:
-  double preyLength;
-public:
-  Combination();
-  virtual ~Combination();
   virtual int usesPredLength();
   virtual int usesPreyLength();
   virtual void setPreyLength(double length);

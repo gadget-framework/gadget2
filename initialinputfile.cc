@@ -1,8 +1,6 @@
 #include "initialinputfile.h"
 #include "gadget.h"
 
-const int VeryLongString = 10000;
-
 int InitialInputFile::repeatedValuesFileFormat() {
   return repeatedValues;
 }

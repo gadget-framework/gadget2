@@ -4,82 +4,125 @@
 #include "readword.h"
 #include "gadget.h"
 
-Transition::Transition(CommentStream& infile, const intvector& Areas,
-  int Age, int minl, int size, Keeper* const keeper)
-  : LivesOnAreas(Areas), TransitionStockName(0), TransitionStock(0), CI(0), age(Age) {
+Transition::Transition(CommentStream& infile, const intvector& Areas, int Age,
+  const LengthGroupDivision* const lgrpdiv, Keeper* const keeper)
+  : LivesOnAreas(Areas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)), age(Age) {
 
   int i;
   ErrorHandler handle;
-  keeper->AddString("transitiondata");
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  keeper->AddString("transition");
 
-  TransitionStockName = new char[MaxStrLength];
-  strncpy(TransitionStockName, "", MaxStrLength);
+  infile >> text;
+  if (strcasecmp(text, "tranistionstocksandratios") == 0) {
+    infile >> text;
+    i = 0;
+    while (strcasecmp(text, "transitionstep") != 0 && infile.good()) {
+      TransitionStockNames.resize(1);
+      TransitionStockNames[i] = new char[strlen(text) + 1];
+      strcpy(TransitionStockNames[i], text);
+      Ratio.resize(1);
+      infile >> Ratio[i];
+      i++;
+      infile >> text;
+    }
+  } else
+    handle.Unexpected("transitionstocksandratios", text);
 
-  ReadWordAndVariable(infile, "transitionstep", TransitionStep);
-  ReadWordAndValue(infile, "transitionstock", TransitionStockName);
+  infile >> TransitionStep;
 
   //Now we are finished reading from infile and can construct some objects.
   //Construct the age-length key Agegroup and initialize to zero.
-  intvector minlv(2, minl);
+  /*intvector minlv(2, minl);
   intvector sizev(2, size);
   Agegroup.resize(areas.Size(), age, minlv, sizev);
   for (i = 0; i < Agegroup.Size(); i++)
-    Agegroup[i].SettoZero();
+    Agegroup[i].SettoZero();*/
 
-  minlen = 0.0;
-  lenindex = 0;
   keeper->ClearLast();
 }
 
 Transition::~Transition() {
-  delete[] TransitionStockName;
-  delete CI;
+  int i;
+  for (i = 0; i < TransitionStockNames.Size(); i++)
+    delete[] TransitionStockNames[i];
+  for (i = 0; i < CI.Size(); i++)
+    delete CI[i];
+  delete LgrpDiv;
 }
 
 void Transition::SetStock(Stockptrvector& stockvec) {
-  int i, found;
+  int index = 0;
+  int i, j;
+  doublevector tmpratio;
 
-  found = 0;
   for (i = 0; i < stockvec.Size(); i++)
-    if (strcasecmp(TransitionStockName, stockvec[i]->Name()) == 0) {
-      found++;
-      TransitionStock = stockvec[i];
-    }
+    for (j = 0; j < TransitionStockNames.Size(); j++)
+      if (strcasecmp(stockvec[i]->Name(), TransitionStockNames[j]) == 0) {
+        TransitionStocks.resize(1);
+        tmpratio.resize(1);
+        TransitionStocks[index] = stockvec[i];
+        tmpratio[index] = Ratio[j];
+        index++;
+      }
 
-  if (found != 1) {
-    cerr << "Error: when pairing together stock and transition stock (" << TransitionStockName
-      << "), " << found << " stocks were found\nBut there should have been only 1\n";
+  if (index != TransitionStockNames.Size()) {
+    cerr << "Error: Did not find the stock(s) matching:\n";
+    for (i = 0; i < TransitionStockNames.Size(); i++)
+      cerr << (const char*)TransitionStockNames[i] << sep;
+    cerr << "\nwhen searching for transition stock(s) - found only:\n";
+    for (i = 0; i < stockvec.Size(); i++)
+      cerr << stockvec[i]->Name() << sep;
+    cerr << endl;
     exit(EXIT_FAILURE);
   }
 
+  for (i = Ratio.Size(); i > 0; i--)
+    Ratio.Delete(0);
+  Ratio.resize(tmpratio.Size());
+  for (i = 0; i < tmpratio.Size(); i++)
+    Ratio[i] = tmpratio[i];
+
+  CI.resize(TransitionStocks.Size(), 0);
+  for (i = 0; i < TransitionStocks.Size(); i++)
+    CI[i] = new ConversionIndex(LgrpDiv, TransitionStocks[i]->ReturnLengthGroupDiv());
+
   //JMB - get minimum length of the transition stock
-  minlen = TransitionStock->ReturnLengthGroupDiv()->Minlength(0);
+  minlen.resize(TransitionStocks.Size(), 0);
+  for (i = 0; i < TransitionStocks.Size(); i++)
+    minlen[i] = TransitionStocks[i]->ReturnLengthGroupDiv()->Minlength(0);
 
-  //Check if TransitionStock is defined on all the areas that we work on.
-  found = 0;
-  for (i = 0; i < areas.Size(); i++)
-    if (!TransitionStock->IsInArea(areas[i]))
-      found++;
+  //JMB - and get corresponding length group
+  lenindex.resize(TransitionStocks.Size(), 0);
+  for (i = 0; i < TransitionStocks.Size(); i++)
+    lenindex[i] = LgrpDiv->NoLengthGroup(minlen[i]);
 
-  if (found != 0) {
-    cerr << "Warning: transition requested to stock " << (const char*)TransitionStock->Name()
-      << "\nwhich might not be defined on " << found << " areas\n";
+  for (i = 0; i < TransitionStocks.Size(); i++) {
+    index = 0;
+    for (j = 0; j < areas.Size(); j++)
+      if (!TransitionStocks[i]->IsInArea(areas[j]))
+        index++;
+
+    if (index != 0)
+      cerr << "Warning: transition requested to stock " << (const char*)TransitionStocks[i]->Name()
+        << "\nwhich might not be defined on " << index << " areas\n";
   }
 }
 
-void Transition::SetCI(const LengthGroupDivision* const GivenLDiv) {
-  CI = new ConversionIndex(GivenLDiv, TransitionStock->ReturnLengthGroupDiv());
-  lenindex = GivenLDiv->NoLengthGroup(minlen);
-}
-
 void Transition::Print(ofstream& outfile) const {
-  outfile << "\nTransition\n\tTransition stock name " << TransitionStockName
-    << "\n\tTransition step " << TransitionStep << "\n\tname of transition stock (from pointer) "
-    << TransitionStock->Name() << endl << endl;
+  int i;
+  outfile << "\nTransition\n\tRead names of transition stocks:";
+  for (i = 0; i < TransitionStockNames.Size(); i++)
+    outfile << sep << (const char*)(TransitionStockNames[i]);
+  outfile << "\n\tNames of transition stocks (through pointers):";
+  for (i = 0; i < TransitionStocks.Size(); i++)
+    outfile << sep << (const char*)(TransitionStocks[i]->Name());
+  outfile << "\n\tTransition step " << TransitionStep  << endl;
 }
 
 void Transition::KeepAgegroup(int area, Agebandmatrix& Alkeys, const TimeClass* const TimeInfo) {
-  if (!TransitionStock->IsInArea(area))
+/*  if (!TransitionStock->IsInArea(area))
     return;
   int inarea = AreaNr[area];
   int length, minl, maxl;
@@ -97,12 +140,12 @@ void Transition::KeepAgegroup(int area, Agebandmatrix& Alkeys, const TimeClass* 
         Alkeys[age][length].W = 0.0;  //JMB
       }
     }
-  }
+  }*/
 }
 
 //area in the call to this routine is not in the local area numbering of the stock.
 void Transition::MoveAgegroupToTransitionStock(int area, const TimeClass* const TimeInfo, int HasLgr) {
-  if (!TransitionStock->IsInArea(area) || TimeInfo->CurrentStep() != TransitionStep)
+/*  if (!TransitionStock->IsInArea(area) || TimeInfo->CurrentStep() != TransitionStep)
     return;
   int inarea = AreaNr[area];
 
@@ -117,5 +160,5 @@ void Transition::MoveAgegroupToTransitionStock(int area, const TimeClass* const 
 
     TransitionStock->Add(Agegroup[inarea], CI, area, 1, Agegroup[inarea].Minage(), Agegroup[inarea].Maxage());
   }
-  Agegroup[inarea].SettoZero();
+  Agegroup[inarea].SettoZero();*/
 }

@@ -9,8 +9,7 @@
 
 //Function that calculates Maximum consumption.  Eq(l2) in Bogstad et.al.
 //Maxconsumption stores the parameters used in the equation.
-
-double MaxConsumption(double Length, const Formulavector &Maxconsumption, double Temperature) {
+double StockPredator::MaxConsumption(double Length, const Formulavector &Maxconsumption, double Temperature) {
   return Maxconsumption[0] * exp(Temperature * (Maxconsumption[1] - Temperature *
     Temperature * Maxconsumption[2])) * pow(Length, Maxconsumption[3]);
 }
@@ -158,12 +157,13 @@ void StockPredator::CalcMaximumConsumption(double Temperature, int area,
 
   const int inarea = AreaNr[area];
   int length, age;
-  double timeratio = LengthOfStep / NrOfSubsteps;
+  double tmp, timeratio = LengthOfStep / NrOfSubsteps;
 
   if (CurrentSubstep == 1) {
-    for (length = 0; length < MaxconByLength.Ncol(); length++)
-      MaxconByLength[inarea][length] = timeratio *
-        MaxConsumption(LgrpDiv->Meanlength(length), maxConsumption, Temperature);
+    for (length = 0; length < MaxconByLength.Ncol(); length++) {
+      tmp = MaxConsumption(LgrpDiv->Meanlength(length), maxConsumption, Temperature);
+      MaxconByLength[inarea][length] = timeratio * tmp;
+    }
   }
 
   if (CurrentSubstep == NrOfSubsteps) {

@@ -16,21 +16,20 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
   int i;
   infile >> text;
   keeper->AddString("maturity");
-  if (!(strcasecmp(text, "nameofmaturestocksandratio") == 0))
-    handle.Unexpected("nameofmaturestocksandratio", text);
-  else {
+  if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
     infile >> text;
     i = 0;
     while (!(strcasecmp(text, "maturitysteps") == 0) && infile.good()) {
-      NameOfMatureStocks.resize(1);
-      NameOfMatureStocks[i] = new char[strlen(text) + 1];
-      strcpy(NameOfMatureStocks[i], text);
+      MatureStockNames.resize(1);
+      MatureStockNames[i] = new char[strlen(text) + 1];
+      strcpy(MatureStockNames[i], text);
       Ratio.resize(1);
       infile >> Ratio[i];
       i++;
       infile >> text;
     }
-  }
+  } else
+    handle.Unexpected("maturestocksandratios", text);
 
   if (!infile.good())
     handle.Failure("maturitysteps");
@@ -49,7 +48,6 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
 
   if (maturitylength.Size() != maturitystep.Size())
     handle.Message("Number of maturitysteps does not equal number of maturitylengths");
-  //finished reading - now only need to check whether maturitystep contains replicates.
   keeper->ClearLast();
 }
 

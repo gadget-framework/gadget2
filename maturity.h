@@ -38,7 +38,7 @@ public:
   void AddTag(const char* tagname);
 protected:
   Stockptrvector MatureStocks;
-  charptrvector NameOfMatureStocks;
+  charptrvector MatureStockNames;
   doublevector Ratio;
   ConversionIndexptrvector CI;
   LengthGroupDivision* LgrpDiv;

@@ -226,7 +226,8 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   ReadWordAndVariable(infile, "doesmove", doesmove);
   if (doesmove) {
     //transition handles the movements of the age group maxage:
-    transition = new Transition(infile, areas, maxage, lowerlgrp[maxage - minage], size[maxage - minage], keeper);
+    transition = new Transition(infile, areas, maxage, LgrpDiv, keeper);
+    //transition = new Transition(infile, areas, maxage, lowerlgrp[maxage - minage], size[maxage - minage], keeper);
 
   } else
     transition = 0;

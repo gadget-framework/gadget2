@@ -36,6 +36,7 @@ using namespace std;
 
 /* Also defined are some of the constants used by Gadget */
 const int MaxStrLength = 250;
+const int VeryLongString = 10000;
 const int pathmax = 1025;
 const double rathersmall = 1e-10;
 const double verysmall = 1e-100;

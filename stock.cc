@@ -201,7 +201,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   ReadWordAndVariable(infile, "doesmove", doesmove);
   if (doesmove) {
     //transition handles the movements of the age group maxage:
-    transition = new Transition(infile, areas, maxage, lowerlgrp[maxage - minage], size[maxage - minage], keeper);
+    transition = new Transition(infile, areas, maxage, LgrpDiv, keeper);
 
   } else
     transition = 0;
@@ -321,32 +321,10 @@ void Stock::SetStock(Stockptrvector& stockvec) {
     transition->SetStock(stockvec);
 }
 
-/*void Stock::SetCatch(CatchDataptrvector& CDvector) {
-  if (!iscaught)
-    return;
-  int i, found = 0;
-  CatchData* CD = 0;
-  for (i = 0; i < CDvector.Size(); i++)
-    if (CDvector[i]->FindStock(this)) {
-      found += 1;
-      CD = CDvector[i];
-      CD->AddStock(*this);
-    }
-
-  if (found != 1) {
-    cerr << "Error in the stock " << this->Name()
-      << "\nIt expected to find 1 catch data, but found " << found << endl;
-    exit(EXIT_FAILURE);
-  }
-  catchptr = new Catch(CD);
-}*/
-
 void Stock::SetCI() {
   initial->SetCI(LgrpDiv);
   if (iseaten)
     prey->SetCI(LgrpDiv);
-  if (doesmove)
-    transition->SetCI(LgrpDiv);
   if (doesrenew)
     renewal->SetCI(LgrpDiv);
 }

@@ -29,7 +29,7 @@ GrowthCalcA::GrowthCalcA(CommentStream& infile,
   infile >> text;
   if (strcasecmp(text, "growthparameters") == 0) {
     if (!(infile >> growthPar))
-      handle.Message("Incorrect format of growthPar vector");
+      handle.Message("Incorrect format of growthpar vector");
     growthPar.Inform(keeper);
   } else
     handle.Unexpected("growthparameters", text);
@@ -112,7 +112,7 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const intvector& Areas,
   infile >> text;
   if (strcasecmp(text, "wgrowthparameters") == 0) {
     if (!(infile >> wgrowthPar))
-      handle.Message("Incorrect format of wgrowthPar vector");
+      handle.Message("Incorrect format of wgrowthpar vector");
     wgrowthPar.Inform(keeper);
   } else
     handle.Unexpected("wgrowthparameters", text);
@@ -120,14 +120,14 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const intvector& Areas,
   infile >> text;
   if (strcasecmp(text, "lgrowthparameters") == 0) {
     if (!(infile >> lgrowthPar))
-      handle.Message("Incorrect format of lgrowthPar vector");
+      handle.Message("Incorrect format of lgrowthpar vector");
     lgrowthPar.Inform(keeper);
   } else
     handle.Unexpected("lgrowthparameters", text);
   keeper->ClearLast();
 
   //Read information on reference weights.
-  keeper->AddString("reference_weights");
+  keeper->AddString("referenceweights");
   //JMB - changed since filename is passed as refWeight
   ifstream subfile(refWeight, ios::in);
   CheckIfFailure(subfile, refWeight);
@@ -142,12 +142,11 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const intvector& Areas,
   //Interpolate the reference weights. First there are some error checks.
   for (i = 0; i < tmpRefW.Nrow() - 1; i++)
     if ((tmpRefW[i + 1][0] - tmpRefW[i][0]) <= 0)
-      handle.Message("Lengths must be strictly increasing");
+      handle.Message("Lengths in must be strictly increasing");
 
   if (LgrpDiv->Meanlength(0) < tmpRefW[0][0] ||
-      LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) >
-      tmpRefW[tmpRefW.Nrow() - 1][0])
-    handle.Message("Lengths must span the range of Growthlengths");
+      LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
+    handle.Message("Lengths must span the range of growth lengths");
 
   handle.Close();
   subfile.close();
@@ -184,28 +183,26 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const intvector& Areas,
   lgrowthPar.resize(NumberOfLGrowthConstants, keeper);
   Wref.resize(LgrpDiv->NoLengthGroups());
 
-  keeper->AddString("Wgrowthparam");
+  keeper->AddString("growthcalcD");
   infile >> text;
   if (strcasecmp(text, "wgrowthparameters") == 0) {
     if (!(infile >> wgrowthPar))
-      handle.Message("Incorrect format of Wgrowthpar vector");
+      handle.Message("Incorrect format of wgrowthpar vector");
     wgrowthPar.Inform(keeper);
   } else
     handle.Unexpected("wgrowthparameters", text);
-  keeper->ClearLast();
 
-  keeper->AddString("Lgrowthparam");
   infile >> text;
   if (strcasecmp(text, "lgrowthparameters") == 0) {
     if (!(infile >> lgrowthPar))
-      handle.Message("Incorrect format of Lgrowthpar vector");
+      handle.Message("Incorrect format of lgrowthpar vector");
     lgrowthPar.Inform(keeper);
   } else
     handle.Unexpected("lgrowthparameters", text);
   keeper->ClearLast();
 
   //Read information on reference weights.
-  keeper->AddString("reference_weights");
+  keeper->AddString("referenceweights");
   //JMB - changed since filename is passed as refWeight
   ifstream subfile(refWeight, ios::in);
   CheckIfFailure(subfile, refWeight);
@@ -223,9 +220,8 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const intvector& Areas,
       handle.Message("Lengths must be strictly increasing");
 
   if (LgrpDiv->Meanlength(0) < tmpRefW[0][0] ||
-     LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) >
-     tmpRefW[tmpRefW.Nrow() - 1][0])
-    handle.Message("Lengths must span the range of Growthlengths");
+      LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
+    handle.Message("Lengths must span the range of growth lengths");
 
   handle.Close();
   subfile.close();
@@ -267,29 +263,25 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const intvector& Areas,
   stepEffect.resize(TimeInfo->StepsInYear(), keeper);
   areaEffect.resize(Areas.Size(), keeper);
 
-  keeper->AddString("Wgrowthparam");
+  keeper->AddString("growthcalcE");
   infile >> text;
   if (strcasecmp(text, "wgrowthparameters") == 0) {
     if (!(infile >> wgrowthPar))
-      handle.Message("Incorrect format of Wgrowthpar vector");
+      handle.Message("Incorrect format of wgrowthpar vector");
     wgrowthPar.Inform(keeper);
   } else
     handle.Unexpected("wgrowthparameters", text);
 
-  keeper->ClearLast();
-  keeper->AddString("Lgrowthparam");
   infile >> text;
   if (strcasecmp(text, "lgrowthparameters") == 0) {
     if (!(infile >> lgrowthPar))
-      handle.Message("Incorrect format of Lgrowthpar vector");
+      handle.Message("Incorrect format of lgrowthpar vector");
     lgrowthPar.Inform(keeper);
   } else
     handle.Unexpected("lgrowthparameters", text);
-  keeper->ClearLast();
 
   //Changed back to this form in 2001 so the number of yeareffects can be more
   //than the number of years in the simulations.
-  keeper->AddString("YearEffect");
   infile >> text;
   char c;
   if (strcasecmp(text, "yeareffect") == 0)
@@ -300,35 +292,31 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const intvector& Areas,
   yearEffect.Inform(keeper);
 
   c = infile.peek();
-  while (!infile.eof() && (c != 'S')) {
+  while (!infile.eof() && (c != 's')) {
     infile.get(c);
     c = infile.peek();
   }
   //end of change
 
-  keeper->ClearLast();
-  keeper->AddString("StepEffect");
   infile >> text;
   if (strcasecmp(text, "stepeffect") == 0) {
     if (!(infile >> stepEffect))
-      handle.Message("Incorrect format of StepEffect vector");
+      handle.Message("Incorrect format of stepeffect vector");
     stepEffect.Inform(keeper);
   } else
     handle.Unexpected("stepeffect", text);
-  keeper->ClearLast();
 
-  keeper->AddString("AreaEffect");
   infile >> text;
   if (strcasecmp(text, "areaeffect") == 0) {
     if (!(infile >> areaEffect))
-      handle.Message("Incorrect format of AreaEffect vector");
+      handle.Message("Incorrect format of areaeffect vector");
     areaEffect.Inform(keeper);
   } else
     handle.Unexpected("areaeffect", text);
   keeper->ClearLast();
 
   //Read information on reference weights.
-  keeper->AddString("reference_weights");
+  keeper->AddString("referenceweights");
   //JMB - changed since filename is passed as refWeight
   ifstream subfile(refWeight, ios::in);
   CheckIfFailure(subfile, refWeight);
@@ -346,9 +334,8 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const intvector& Areas,
       handle.Message("Lengths must be strictly increasing");
 
   if (LgrpDiv->Meanlength(0) < tmpRefW[0][0] ||
-      LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) >
-      tmpRefW[tmpRefW.Nrow() - 1][0])
-    handle.Message("Lengths must span the range of Growthlengths");
+      LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
+    handle.Message("Lengths must span the range of growth lengths");
 
   handle.Close();
   subfile.close();
@@ -383,7 +370,7 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const intvector& Areas,
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  keeper->AddString("GrowthCalcF");
+  keeper->AddString("growthcalcF");
 
   infile >> text >> ws;
   growthPar.resize(NumberOfGrowthConstants, keeper);
@@ -439,7 +426,7 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const intvector& Areas,
   ErrorHandler handle;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  keeper->AddString("GrowthCalcG");
+  keeper->AddString("growthcalcG");
 
   infile >> text >> ws;
   growthPar.resize(NumberOfGrowthConstants, keeper);
@@ -502,7 +489,7 @@ GrowthCalcH::GrowthCalcH(CommentStream& infile, const intvector& Areas,
   //parameters are linf, k and a and b for the weight
   if (strcasecmp(text, "growthparameters") == 0) {
     if (!(infile >> growthPar))
-      handle.Message("Incorrect format of growthPar vector");
+      handle.Message("Incorrect format of growthpar vector");
     growthPar.Inform(keeper);
   } else
     handle.Unexpected("growthparameters", text);

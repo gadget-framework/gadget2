@@ -31,6 +31,7 @@ protected:
   virtual void ResizeObjects();
   virtual void CalcMaximumConsumption(double Temperature, int area, int CurrentSubstep,
     int NrOfSubsteps, double LengthOfStep);
+  double MaxConsumption(double Length, const Formulavector &Maxconsumption, double Temperature);
   Formulavector maxConsumption;
   Formula halfFeedingValue;
   doublematrix Phi;  //[area][predLengthgroup]
