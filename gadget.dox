@@ -1,4 +1,4 @@
-# Doxyfile 1.3.7-20040617
+# Doxyfile 1.4.1
 # This is the configuration file used to generate Gadget documentation
 # To use this file you neeed to have the following software installed
 #   1) A recent version of 'doxygen' from www.doxygen.org
@@ -63,6 +63,8 @@ GENERATE_DEPRECATEDLIST= YES
 ENABLED_SECTIONS       = 
 MAX_INITIALIZER_LINES  = 30
 SHOW_USED_FILES        = NO
+SHOW_DIRECTORIES       = NO
+FILE_VERSION_FILTER    = 
 #---------------------------------------------------------------------------
 # configuration options related to warning and progress messages
 #---------------------------------------------------------------------------
@@ -70,6 +72,7 @@ QUIET                  = NO
 WARNINGS               = YES
 WARN_IF_UNDOCUMENTED   = YES
 WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = NO
 WARN_FORMAT            = "$file:$line: $text"
 WARN_LOGFILE           = /home/james/gadget/doxygen/gadget.err
 #---------------------------------------------------------------------------
@@ -86,6 +89,7 @@ EXAMPLE_PATTERNS       =
 EXAMPLE_RECURSIVE      = NO
 IMAGE_PATH             = 
 INPUT_FILTER           = 
+FILTER_PATTERNS        = 
 FILTER_SOURCE_FILES    = NO
 #---------------------------------------------------------------------------
 # configuration options related to source browsing
@@ -173,7 +177,7 @@ PERLMOD_LATEX          = NO
 PERLMOD_PRETTY         = YES
 PERLMOD_MAKEVAR_PREFIX = 
 #---------------------------------------------------------------------------
-# Configuration options related to the preprocessor   
+# configuration options related to the preprocessor   
 #---------------------------------------------------------------------------
 ENABLE_PREPROCESSING   = YES
 MACRO_EXPANSION        = NO
@@ -184,37 +188,38 @@ INCLUDE_FILE_PATTERNS  =
 PREDEFINED             = 
 EXPAND_AS_DEFINED      = 
 SKIP_FUNCTION_MACROS   = YES
-#---------------------------------------------------------------------------
-# Configuration options related to external references   
-#---------------------------------------------------------------------------
 TAGFILES               = 
 GENERATE_TAGFILE       = 
 ALLEXTERNALS           = NO
 EXTERNAL_GROUPS        = NO
 PERL_PATH              = /usr/bin/perl
 #---------------------------------------------------------------------------
-# Configuration options related to the dot tool   
+# configuration options related to the dot tool   
 #---------------------------------------------------------------------------
 CLASS_DIAGRAMS         = NO
 HIDE_UNDOC_RELATIONS   = NO
 HAVE_DOT               = YES
 CLASS_GRAPH            = YES
 COLLABORATION_GRAPH    = YES
+GROUP_GRAPHS           = YES
 UML_LOOK               = NO
 TEMPLATE_RELATIONS     = YES
 INCLUDE_GRAPH          = NO
 INCLUDED_BY_GRAPH      = NO
 CALL_GRAPH             = NO
 GRAPHICAL_HIERARCHY    = NO
+DIRECTORY_GRAPH        = YES
 DOT_IMAGE_FORMAT       = png
 DOT_PATH               = /usr/bin
 DOTFILE_DIRS           = 
 MAX_DOT_GRAPH_WIDTH    = 1024
 MAX_DOT_GRAPH_HEIGHT   = 1024
 MAX_DOT_GRAPH_DEPTH    = 0
+DOT_TRANSPARENT        = NO
+DOT_MULTI_TARGETS      = YES
 GENERATE_LEGEND        = YES
 DOT_CLEANUP            = YES
 #---------------------------------------------------------------------------
-# Configuration options related to the search engine   
+# configuration options related to the search engine   
 #---------------------------------------------------------------------------
 SEARCHENGINE           = NO
