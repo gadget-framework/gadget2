@@ -204,9 +204,11 @@ void Stock::updatePopulationPart2(int area, const AreaClass* const Area, const T
 void Stock::updatePopulationPart3(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   int inarea = this->areaNum(area);
   if (doesrenew) {
-    renewal->addRenewal(Alkeys[inarea], area, TimeInfo);
-    if (tagAlkeys.numTagExperiments() > 0)
-      tagAlkeys[inarea].updateRatio(Alkeys[inarea]);
+    if (renewal->isRenewalStepArea(area, TimeInfo)) {
+      renewal->addRenewal(Alkeys[inarea], area, TimeInfo);
+      if (tagAlkeys.numTagExperiments() > 0)
+        tagAlkeys[inarea].updateRatio(Alkeys[inarea]);
+    }
   }
 
   if (doesspawn)

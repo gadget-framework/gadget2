@@ -227,16 +227,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //read the renewal data
   readWordAndVariable(infile, "doesrenew", doesrenew);
   if (doesrenew) {
-    readWordAndValue(infile, "renewaldatafile", filename);
-    ifstream subfile;
-    subfile.open(filename, ios::in);
-    CommentStream subcomment(subfile);
-    handle.checkIfFailure(subfile, filename);
-    handle.Open(filename);
-    renewal = new RenewalData(subcomment, areas, Area, TimeInfo, keeper, dl);
-    handle.Close();
-    subfile.close();
-    subfile.clear();
+    renewal = new RenewalData(infile, areas, Area, TimeInfo, keeper, refweight, minage, maxage, dl);
 
   } else
     renewal = 0;
