@@ -63,7 +63,7 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
   }
 }
 
-int main(int aNumber, char *const aVector[]) {
+int main(int aNumber, char* const aVector[]) {
 
   MainInfo MainInfo;
   OptInfo* Optinfo = 0;

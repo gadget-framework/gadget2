@@ -156,7 +156,7 @@ void CatchInTons::Reset(const Keeper* const keeper) {
 void CatchInTons::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch In Tons - likelihood value " << likelihood
+  outfile << "\nCatch in Tons - likelihood value " << likelihood
     << "\n\tFunction " << functionname;
   outfile << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
@@ -392,4 +392,29 @@ void CatchInTons::ReadCatchInTonsData(CommentStream& infile,
 
   if (count == 0)
     cerr << "Warning in catchintons - found no data in the data file\n";
+}
+
+void CatchInTons::LikelihoodPrint(ofstream& outfile) {
+  int y, a, i;
+
+  outfile << "\nCatch in Tons\n\nLikelihood " << likelihood << "\nFunction "
+    << functionname << "\nWeight " << weight << "\nStock names:";
+  for (i = 0; i < stocknames.Size(); i++)
+    outfile << sep << stocknames[i];
+  outfile << "\nFleet names:";
+  for (i = 0; i < fleetnames.Size(); i++)
+    outfile << sep << fleetnames[i];
+  outfile << "\nLandings data:";
+
+  for (y = 0; y < Years.Size(); y++) {
+    outfile << "\nYear " << Years[y];
+    if (!(yearly))
+      outfile << " and step " << Steps[y];
+
+    for (a = 0; a < DataCatch.Ncol(y); a++)
+      outfile << "\nInner area: " << a << "\nMeasured catch is " << DataCatch[y][a]
+        << " and modelled catch is " << ModelCatch[y][a];
+    outfile << endl;
+  }
+  outfile.flush();
 }

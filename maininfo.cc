@@ -2,17 +2,50 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
-void MainInfo::ShowCorrectUsage() {
-  cerr << "Error in command line values used when starting Gadget\n"
-    << "Options must be from -l -s -n -i file -o file -co file -p file -opt file\n"
-    << "-m file -print1 int -print2 int -printinitial filename -printfinal filename\n";
+#include "runid.h"
+extern RunID RUNID;
+
+void MainInfo::ShowCorrectUsage(char* error) {
+  RUNID.print(cerr);
+  cerr << "\nError in command line value - unrecognised option " << error << endl
+    << "Common options are -l or -s, -i <filename> -o <filename>\n"
+    << "For more information try running Gadget with the -h switch\n";
   exit(EXIT_FAILURE);
 }
 
+void MainInfo::ShowUsage() {
+  RUNID.print(cout);
+  cout << "\nOptions for running Gadget:\n"
+    << " -l                          perform a likelihood (optimising) model run\n"
+    << " -s                          perform a single (stochastic) model run\n"
+    << " -n                          perform a network run (using paramin)\n"
+    << " -v --version                display version information and exit\n"
+    << " -h --help                   display this help screen and exit\n"
+    << "\nOptions for specifying the input to Gadget models:\n"
+    << " -i <filename>               read model parameters from <filename>\n"
+    << " -opt <filename>             read optimising parameters from <filename>\n"
+    << " -main <filename>            read model information from <filename>\n"
+    << "                             (default filename is 'main')\n"
+    << " -m <filename>               read other commandline parameters from <filename>\n"
+    << "\nOptions for specifying the output from Gadget models:\n"
+    << " -p <filename>               print final model parameters to <filename>\n"
+    << "                             (default filename is 'params.out')\n"
+    << " -o <filename>               print likelihood output to <filename>\n"
+    << " -co <filename>              print likelihood column output to <filename>\n"
+    << " -print1 <number>            print -o output every <number> iterations\n"
+    << " -print2 <number>            print -co output every <number> iterations\n"
+    << " -precision <number>         set the precision to <number> in output files\n"
+    << "\nOptions for debugging Gadget models:\n"
+    << " -printinitial <filename>    print initial model information to <filename>\n"
+    << " -printfinal <filename>      print final model information to <filename>\n"
+    << " -printlikelihood <filename> print model likelihood information to <filename>\n"
+    << "\nFor more information see the Gadget web page at http://www.hafro.is/gadget\n";
+  exit(EXIT_SUCCESS);
+}
+
 MainInfo::MainInfo()
-  : OptinfoCommentFile(OptinfoFile), OptInfoFileisGiven(0),
-    InitialCondareGiven(0),  CalcLikelihood(0), Optimize(0),
-    Stochastic(0), PrintInitialcond(0), PrintFinalcond(0),
+  : OptinfoCommentFile(OptinfoFile), OptInfoFileisGiven(0), InitialCondareGiven(0),
+    CalcLikelihood(0), Optimize(0), Stochastic(0), PrintInitialcond(0), PrintFinalcond(0),
     PrintLikelihoodInfo(0), Net(0) {
 
   char tmpname[10];
@@ -101,122 +134,131 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
         ifstream infile;
         CommentStream incomment(infile);
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        infile.open(aVector[k + 1]);
+          ShowCorrectUsage(aVector[k]);
+
+        k++;
+        infile.open(aVector[k]);
         if (infile.fail())
-          ShowCorrectUsage();
+          ShowCorrectUsage(aVector[k]);
         this->Read(incomment);
         infile.close();
         infile.clear();
 
       } else if (strcasecmp(aVector[k], "-i") == 0) {
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        SetInitialCommentFilename(aVector[k + 1]);
+          ShowCorrectUsage(aVector[k]);
         k++;
+        SetInitialCommentFilename(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-o") == 0) {
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        printinfo.SetOutputFile(aVector[k + 1]);
+          ShowCorrectUsage(aVector[k]);
         k++;
+        printinfo.SetOutputFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-p") == 0) {
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        printinfo.SetParamOutFile(aVector[k + 1]);
+          ShowCorrectUsage(aVector[k]);
         k++;
+        printinfo.SetParamOutFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-print") == 0) {
         printinfo.forcePrint = 1;
 
       } else if (strcasecmp(aVector[k], "-surveyprint") == 0) {
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        printinfo.surveyprint = atoi(aVector[k + 1]);
+          ShowCorrectUsage(aVector[k]);
         k++;
+        printinfo.surveyprint = atoi(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-stomachprint") == 0) {
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        printinfo.stomachprint = atoi(aVector[k + 1]);
+          ShowCorrectUsage(aVector[k]);
         k++;
+        printinfo.stomachprint = atoi(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-catchprint") == 0) {
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        printinfo.catchprint = atoi(aVector[k + 1]);
+          ShowCorrectUsage(aVector[k]);
         k++;
+        printinfo.catchprint = atoi(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-co") == 0) {
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        printinfo.SetColumnOutputFile(aVector[k + 1]);
+          ShowCorrectUsage(aVector[k]);
         k++;
+        printinfo.SetColumnOutputFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-printinitial") == 0) {
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        SetPrintInitialCondFilename(aVector[k + 1]);
+          ShowCorrectUsage(aVector[k]);
         k++;
+        SetPrintInitialCondFilename(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-printfinal") == 0) {
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        SetPrintFinalCondFilename(aVector[k + 1]);
+          ShowCorrectUsage(aVector[k]);
         k++;
+        SetPrintFinalCondFilename(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-main") == 0) {
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        SetMainGadgetFilename(aVector[k + 1]);
+          ShowCorrectUsage(aVector[k]);
         k++;
+        SetMainGadgetFilename(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-opt") == 0) {
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        OpenOptinfofile(aVector[k + 1]);
+          ShowCorrectUsage(aVector[k]);
         k++;
+        OpenOptinfofile(aVector[k]);
 
-      } else if (strcasecmp(aVector[k], "-likelihoodprint") == 0) {
+      } else if ((strcasecmp(aVector[k], "-printlikelihood") == 0) || (strcasecmp(aVector[k], "-likelihoodprint") == 0)) {
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        SetPrintLikelihoodFilename(aVector[k + 1]);
+          ShowCorrectUsage(aVector[k]);
         k++;
+        SetPrintLikelihoodFilename(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-print1") == 0) {
-        stringstream str;
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        str << aVector[k + 1];
+          ShowCorrectUsage(aVector[k]);
         k++;
+        stringstream str;
+        str << aVector[k];
         str >> printinfo.PrintInterVal1;
         if (str.fail())  //str.eof() depends on compilers
-          ShowCorrectUsage();
+          ShowCorrectUsage(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-print2") == 0) {
-        stringstream str;
         if (k == aNumber - 1)
-          ShowCorrectUsage();
-        str << aVector[k + 1];
+          ShowCorrectUsage(aVector[k]);
         k++;
+        stringstream str;
+        str << aVector[k];
         str >> printinfo.PrintInterVal2;
         if (str.fail())  //str.eof() depends on compilers
-          ShowCorrectUsage();
+          ShowCorrectUsage(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-precision") == 0) {
         //JMB - experimental setting of printing precision
-        stringstream str;
         if (k == aNumber - 1)
-          cerr << "Error in specifying precision\n";
-        str << aVector[k + 1];
+          ShowCorrectUsage(aVector[k]);
         k++;
+        stringstream str;
+        str << aVector[k];
         str >> printinfo.givenPrecision;
         if (str.fail())  //str.eof() depends on compilers
-          cerr << "Error in specifying precision\n";
+          ShowCorrectUsage(aVector[k]);
+
+      } else if ((strcasecmp(aVector[k], "-v") == 0) || (strcasecmp(aVector[k], "--version") == 0)) {
+        RUNID.print(cout);
+        exit(EXIT_SUCCESS);
+
+      } else if ((strcasecmp(aVector[k], "-h") == 0) || (strcasecmp(aVector[k], "--help") == 0)) {
+        ShowUsage();
 
       } else
-        ShowCorrectUsage();
+        ShowCorrectUsage(aVector[k]);
 
       k++;
     }
@@ -241,46 +283,48 @@ void MainInfo::Read(int aNumber, char* const aVector[]) {
 void MainInfo::Read(CommentStream& infile) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  while (!infile.eof())
-    infile >> ws >> text;
+  infile >> ws;
+  while (!infile.eof()) {
+    infile >> text >> ws;
 
-  if (strcasecmp(text, "-i") == 0) {
-    infile >> ws >> text;
-    InitialCommentFilename = new char[strlen(text) + 1];
-    strcpy(InitialCommentFilename, text);
-    InitialCondareGiven = 1;
-  } else if (strcasecmp(text, "-o") == 0) {
-    infile >> ws >> text;
-    printinfo.SetOutputFile(text);
-  } else if (strcasecmp(text, "-co") == 0) {
-    infile >> ws >> text;
-    printinfo.SetColumnOutputFile(text);
-  } else if (strcasecmp(text, "-p") == 0) {
-    infile >> ws >> text;
-    printinfo.SetParamOutFile(text);
-  } else if (strcasecmp(text, "-main") == 0) {
-    infile >> ws >> text;
-    SetMainGadgetFilename(text);
-  } else if (strcasecmp(text, "-printinitial") == 0) {
-    infile >> ws >> text;
-    SetPrintInitialCondFilename(text);
-  } else if (strcasecmp(text, "-printfinal") == 0) {
-    infile >> ws >> text;
-    SetPrintFinalCondFilename(text);
-  } else if (strcasecmp(text, "-opt") == 0) {
-    infile >> ws >> text;
-    OpenOptinfofile(text);
-  } else if (strcasecmp(text, "-print1") == 0) {
-    infile >> ws >> printinfo.PrintInterVal1;
-  } else if (strcasecmp(text, "-print2") == 0) {
-    infile >> ws >> printinfo.PrintInterVal2;
-  } else if (strcasecmp(text, "-precision") == 0) {
-    infile >> ws >> printinfo.givenPrecision;
-  } else
-    ShowCorrectUsage();
-
-  if (infile.eof() || infile.bad())
-    ShowCorrectUsage();
+    if (strcasecmp(text, "-i") == 0) {
+      infile >> text >> ws;
+      InitialCommentFilename = new char[strlen(text) + 1];
+      strcpy(InitialCommentFilename, text);
+      InitialCondareGiven = 1;
+    } else if (strcasecmp(text, "-o") == 0) {
+      infile >> text >> ws;
+      printinfo.SetOutputFile(text);
+    } else if (strcasecmp(text, "-co") == 0) {
+      infile >> text >> ws;
+      printinfo.SetColumnOutputFile(text);
+    } else if (strcasecmp(text, "-p") == 0) {
+      infile >> text >> ws;
+      printinfo.SetParamOutFile(text);
+    } else if (strcasecmp(text, "-main") == 0) {
+      infile >> text >> ws;
+      SetMainGadgetFilename(text);
+    } else if (strcasecmp(text, "-printinitial") == 0) {
+      infile >> text >> ws;
+      SetPrintInitialCondFilename(text);
+    } else if (strcasecmp(text, "-printfinal") == 0) {
+      infile >> text >> ws;
+      SetPrintFinalCondFilename(text);
+    } else if (strcasecmp(text, "-printlikelihood") == 0) {
+      infile >> text >> ws;
+      SetPrintLikelihoodFilename(text);
+    } else if (strcasecmp(text, "-opt") == 0) {
+      infile >> text >> ws;
+      OpenOptinfofile(text);
+    } else if (strcasecmp(text, "-print1") == 0) {
+      infile >> printinfo.PrintInterVal1 >> ws;
+    } else if (strcasecmp(text, "-print2") == 0) {
+      infile >> printinfo.PrintInterVal2 >> ws;
+    } else if (strcasecmp(text, "-precision") == 0) {
+      infile >> printinfo.givenPrecision >> ws;
+    } else
+      ShowCorrectUsage(text);
+  }
   printinfo.CheckNumbers();
 }
 

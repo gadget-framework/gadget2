@@ -10,7 +10,8 @@
  */
 class MainInfo {
 public:
-  void ShowCorrectUsage();
+  void ShowCorrectUsage(char* error);
+  void ShowUsage();
   /**
    * \brief This is the default MainInfo constructor
    */
@@ -19,7 +20,7 @@ public:
    * \brief This is the default MainInfo destructor
    */
   ~MainInfo();
-  void Read(int aNumber, char *const aVector[]);
+  void Read(int aNumber, char* const aVector[]);
   void Read(CommentStream& file);
   void OpenOptinfofile(char* filename);
   void CloseOptinfofile();

@@ -11,11 +11,12 @@ class CatchInTons : public Likelihood {
 public:
   CatchInTons(CommentStream& infile, const AreaClass* const areas,
     const TimeClass* const timeinfo, double w);
-  void Reset(const Keeper* const keeper);
-  void Print(ofstream& outfile) const;
-  void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
-  void AddToLikelihood(const TimeClass* const TimeInfo);
   ~CatchInTons();
+  virtual void Reset(const Keeper* const keeper);
+  virtual void Print(ofstream& outfile) const;
+  virtual void LikelihoodPrint(ofstream& outfile);
+  virtual void AddToLikelihood(const TimeClass* const TimeInfo);
+  void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
   void ReadCatchInTonsData(CommentStream&, const TimeClass*, int);
   double SumOfSquares(double obs, double mod);

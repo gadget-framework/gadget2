@@ -18,7 +18,9 @@ void killComments(istream* const istrptr) {
     return;
   char c;
   *istrptr >> Ws;
-  if (istrptr->eof()) return;
+  if (istrptr->eof())
+    return;
+
   while (istrptr->peek() == COMMENTCHAR) {
     while (istrptr->peek() != '\n' && !(istrptr->eof()))
       istrptr->get(c);
@@ -42,7 +44,7 @@ CommentStream& CommentStream::get(char& c) {
 
 CommentStream& CommentStream::getline(char* ptr, int len, char delim) {
   int i = 0;
-  while (i < len - 2 && istrptr->peek() != delim && istrptr->peek() != COMMENTCHAR) {
+  while ((i < len - 2) && (istrptr->peek() != delim) && (istrptr->peek() != COMMENTCHAR)) {
     ptr[i] = istrptr->get();
     i++;
   }

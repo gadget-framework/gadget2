@@ -96,12 +96,12 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	lengthpredator.o stockaggregator.o lengthprey.o sibylengthandageonstep.o \
 	stockdistribution.o linearpredator.o stockfullprinter.o linearregression.o \
 	stockmemberfunctions.o livesonareas.o stockpredator.o stockpredstdinfo.o \
-	loglinearregression.o main.o stockprey.o maininfo.o stockpreyfullprinter.o \
+	loglinearregression.o time.o stockprey.o maininfo.o stockpreyfullprinter.o \
 	stockpreystdinfo.o stockpreystdinfobylength.o stockprinter.o lenstock.o \
 	stockstdprinter.o maturity.o suitfunc.o suits.o stomachcontent.o runid.o \
 	migration.o variableinfo.o binarytree.o vectorusingkeeper.o growthimplement.o \
 	surveyindices.o migrationpenalty.o recapture.o stock.o readaggregation.o \
-	migvariables.o time.o multinomial.o totalpredator.o naturalm.o optinfo.o \
+	migvariables.o multinomial.o totalpredator.o naturalm.o optinfo.o gadget.o \
 	transition.o otherfood.o mathfunc.o understocking.o poppredator.o tags.o \
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o \
