@@ -53,8 +53,6 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   if (found == 0)
     handle.logFailure("Error in tags - failed to match stock", stocknames[0]);
 
-  NumberByLength.resize(LgrpDiv->numLengthGroups(), 0.0);
-
   //Now read in the tagloss information
   readWordAndFormula(infile, "tagloss", tagloss);
   tagloss.Inform(keeper);
@@ -119,7 +117,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
         Years.resize(1, year);
         Steps.resize(1, step);
         timeid = Years.Size() - 1;
-        NumberByLengthMulti.resize(1, new DoubleMatrix(1, LgrpDiv->numLengthGroups(), 0.0));
+        NumberByLength.resize(1, new DoubleMatrix(1, LgrpDiv->numLengthGroups(), 0.0));
       }
 
     } else
@@ -127,7 +125,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
 
     if (keepdata == 0) {
       count++;
-      (*NumberByLengthMulti[timeid])[0][lenid] = tmpnumber;
+      (*NumberByLength[timeid])[0][lenid] = tmpnumber;
     }
   }
 
@@ -156,17 +154,14 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
     numtagtimesteps += TimeInfo->LastStep();
   else
     numtagtimesteps += TimeInfo->StepsInYear();
-
-  for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
-    NumberByLength[i] = (*NumberByLengthMulti[timeid])[0][i];
 }
 
 Tags::~Tags() {
   int i;
   for (i = 0; i < stocknames.Size(); i++)
     delete[] stocknames[i];
-  for (i = 0; i < NumberByLengthMulti.Size(); i++)
-    delete NumberByLengthMulti[i];
+  for (i = 0; i < NumberByLength.Size(); i++)
+    delete NumberByLength[i];
   for (i = 0; i < CI.Size(); i++)
     delete CI[i];
   while (AgeLengthStock.Size() > 0)
@@ -285,7 +280,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
 
 //Must have set stocks according to stocknames using setStock before calling Update()
 //Now we need to distribute the tagged fish to the same age/length groups as the tagged stock.
-void Tags::Update() {
+void Tags::Update(int timeid) {
   PopInfoVector NumberInArea;
   NumberInArea.resize(LgrpDiv->numLengthGroups());
   PopInfo nullpop;
@@ -338,7 +333,9 @@ void Tags::Update() {
       numfishinarea = NumberInArea[length].N;
       numstockinarea = (*stockPopInArea)[age][length].N;
       if (numfishinarea > verysmall && numstockinarea > verysmall)
-        (*AgeLengthStock[0])[tagareaindex][age][length].N += (NumberByLength[length - minl] * numstockinarea) / numfishinarea;
+        (*AgeLengthStock[0])[tagareaindex][age][length].N = (*NumberByLength[timeid])[0][length - minl] * numstockinarea / numfishinarea;
+      else
+        (*AgeLengthStock[0])[tagareaindex][age][length].N = 0.0;
     }
   }
   taggingstock->updateTags(AgeLengthStock[0], this, exp(-tagloss));
@@ -407,16 +404,19 @@ void Tags::updateTags(int year, int step) {
     if (Years[i] == year && Steps[i] == step)
       timeid = i;
 
-  if ((timeid != -1) && (tagyear == year && tagstep == step))
-    this->Update();
-
+  if (timeid != -1) {
+    if (tagyear == year && tagstep == step)
+      this->Update(timeid);
+    else
+      this->addToTagStock(timeid);
+  }
 }
 
-void Tags::DeleteFromStock() {
+void Tags::deleteStockTags() {
   int i;
   for (i = 0; i < tagStocks.Size(); i++) {
     if (updated[i] == 1) {
-      tagStocks[i]->DeleteTags(this->Name());
+      tagStocks[i]->deleteTags(this->Name());
       updated[i] = 2;
     }
   }
@@ -524,4 +524,45 @@ int Tags::isWithinPeriod(int year, int step) {
     return 1;
   else
     return 0;
+}
+
+void Tags::addToTagStock(int timeid) {
+  PopInfoVector NumberInArea;
+  NumberInArea.resize(LgrpDiv->numLengthGroups());
+  PopInfo nullpop;
+
+  int i, tagareaindex;
+  for (i = 0; i < NumberInArea.Size(); i++)
+    NumberInArea[i] = nullpop;
+
+  const AgeBandMatrix* stockPopInArea;
+  stockPopInArea = &(taggingstock->getAgeLengthKeys(tagarea));
+  stockPopInArea->sumColumns(NumberInArea);
+
+  i = 0;
+  tagareaindex = -1;
+  IntVector stockareas = taggingstock->Areas();
+  while (i <= stockareas.Size() && tagareaindex == -1) {
+    if (tagarea == stockareas[i])
+      tagareaindex = i;
+    i++;
+  }
+  if (tagareaindex == -1)
+    handle.logFailure("Error in tags - invalid area for tagged stock");
+
+  int maxage = stockPopInArea->maxAge();
+  int minage = stockPopInArea->minAge();
+  int minl, maxl, age, length;
+  double numfishinarea, numstockinarea;
+
+  for (age = minage; age <= maxage; age++) {
+    minl = stockPopInArea->minLength(age);
+    maxl = stockPopInArea->maxLength(age);
+    for (length = minl; length < maxl; length++) {
+      numfishinarea = NumberInArea[length].N;
+      numstockinarea = (*stockPopInArea)[age][length].N;
+      if (numfishinarea > verysmall && numstockinarea > verysmall)
+        (*AgeLengthStock[0])[tagareaindex][age][length].N += (*NumberByLength[timeid])[0][length - minl] * numstockinarea / numfishinarea;
+    }
+  }
 }

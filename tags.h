@@ -20,9 +20,9 @@ public:
   Tags(CommentStream& infile, const char* givenname, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper, StockPtrVector stockvec);
   ~Tags();
-  void Update();
+  void Update(int timeid);
   void updateTags(int year, int step);
-  void DeleteFromStock();
+  void deleteStockTags();
   const int getEndYear() const { return endyear; };
   int getNumTagTimeSteps() const { return numtagtimesteps; };
   const CharPtrVector* getStockNames() const { return &stocknames; };
@@ -35,6 +35,7 @@ public:
   void Reset(const TimeClass* const TimeInfo);
   int isWithinPeriod(int year, int step);
   int stockIndex(const char* stockname);
+  void addToTagStock(int timeid);
 private:
   void readNumbers(CommentStream& infile, const char* tagname, const TimeClass* const TimeInfo);
   CharPtrVector stocknames;
@@ -47,8 +48,7 @@ private:
   int tagstep;     //step of tagging
   int endyear;     //year of last recapture
   int numtagtimesteps;
-  DoubleVector NumberByLength;
-  DoubleMatrixPtrVector NumberByLengthMulti;
+  DoubleMatrixPtrVector NumberByLength;
   LengthGroupDivision* LgrpDiv;
   StockPtrVector tagStocks;
   StockPtrVector matureStocks;

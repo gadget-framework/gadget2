@@ -89,7 +89,7 @@ public:
   /**
    * \brief This function will delete all the elements of the vector
    */
-  void DeleteAll();
+  void deleteAll();
 protected:
   /**
    * \brief This is the vector of Tags values

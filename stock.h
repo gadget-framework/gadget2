@@ -177,7 +177,7 @@ public:
   const StockPtrVector& getTransitionStocks();
   const StockPtrVector& getStrayStocks();
   void updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss);
-  void DeleteTags(const char* tagname);
+  void deleteTags(const char* tagname);
   void updateMatureStockWithTags(const TimeClass* const TimeInfo);
   void updateTransitionStockWithTags(const TimeClass* const TimeInfo);
   void updateStrayStockWithTags(const TimeClass* const TimeInfo);

@@ -96,7 +96,7 @@ void TagPtrVector::deleteTags(const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < size; i++) {
     if ((v[i]->getEndYear() == TimeInfo->CurrentYear()) && (TimeInfo->CurrentStep() == TimeInfo->LastStep()))
-      v[i]->DeleteFromStock();
+      v[i]->deleteStockTags();
 
   }
 }
@@ -104,10 +104,10 @@ void TagPtrVector::deleteTags(const TimeClass* const TimeInfo) {
 void TagPtrVector::deleteAllTags() {
   int i;
   for (i = 0; i < size; i++)
-    v[i]->DeleteFromStock();
+    v[i]->deleteStockTags();
 }
 
-void TagPtrVector::DeleteAll() {
+void TagPtrVector::deleteAll() {
   if (v != 0) {
     delete[] v;
     v = 0;

@@ -217,21 +217,21 @@ void Stock::updateMatureStockWithTags(const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < matureTags.Size(); i++)
     matureTags[i]->updateMatureStock(TimeInfo);
-  matureTags.DeleteAll();
+  matureTags.deleteAll();
 }
 
 void Stock::updateTransitionStockWithTags(const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < transitionTags.Size(); i++)
     transitionTags[i]->updateTransitionStock(TimeInfo);
-  transitionTags.DeleteAll();
+  transitionTags.deleteAll();
 }
 
 void Stock::updateStrayStockWithTags(const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < strayTags.Size(); i++)
     strayTags[i]->updateStrayStock(TimeInfo);
-  strayTags.DeleteAll();
+  strayTags.deleteAll();
 }
 
 void Stock::Renewal(int area, const TimeClass* const TimeInfo) {
@@ -284,7 +284,7 @@ void Stock::updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, dou
   }
 }
 
-void Stock::DeleteTags(const char* tagname) {
+void Stock::deleteTags(const char* tagname) {
   allTags.Delete(tagAlkeys.getID(tagname));
   tagAlkeys.deleteTag(tagname);
   if (doesmature)
