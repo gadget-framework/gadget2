@@ -107,10 +107,12 @@ void MainInfo::openOptInfoFile(char* filename) {
 
   optInfoStream.open(strOptInfoFile, ios::in);
   handle.checkIfFailure(optInfoStream, strOptInfoFile);
+  handle.Open(strOptInfoFile);
   givenOptInfo = 1;
 }
 
 void MainInfo::closeOptInfoFile() {
+  handle.Close();
   optInfoStream.close();
   optInfoStream.clear();
 }
@@ -143,6 +145,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
           showCorrectUsage(aVector[k]);
         k++;
         infile.open(aVector[k], ios::in);
+        handle.checkIfFailure(infile, aVector[k]);
         if (infile.fail())
           showCorrectUsage(aVector[k]);
         this->read(incomment);
