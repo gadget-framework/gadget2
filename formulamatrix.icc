@@ -1,0 +1,15 @@
+#include "formulamatrix.h"
+
+#ifdef GADGET_INLINE
+inline
+#endif
+Formulavector& Formulamatrix::operator [] (int pos) {
+  return *v[pos];
+}
+
+#ifdef GADGET_INLINE
+inline
+#endif
+const Formulavector& Formulamatrix::operator [] (int pos) const {
+  return *v[pos];
+}

@@ -1,0 +1,15 @@
+#include "bandmatrixptrmatrix.h"
+
+#ifdef GADGET_INLINE
+inline
+#endif
+bandmatrixptrvector& bandmatrixptrmatrix::operator [] (int pos) {
+  return *v[pos];
+}
+
+#ifdef GADGET_INLINE
+inline
+#endif
+const bandmatrixptrvector& bandmatrixptrmatrix::operator [] (int pos) const {
+  return *v[pos];
+}

@@ -1,0 +1,18 @@
+#include "doubleindexvector.h"
+#include "assert.h"
+
+#ifdef GADGET_INLINE
+inline
+#endif
+double& doubleindexvector::operator [] (int pos) {
+  assert(minpos <= pos && pos < minpos + size);
+  return v[pos - minpos];
+}
+
+#ifdef GADGET_INLINE
+inline
+#endif
+const double& doubleindexvector::operator [] (int pos) const {
+  assert(minpos <= pos && pos < minpos + size);
+  return v[pos - minpos];
+}

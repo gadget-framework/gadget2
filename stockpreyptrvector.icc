@@ -1,0 +1,15 @@
+#include "stockpreyptrvector.h"
+
+#ifdef GADGET_INLINE
+inline
+#endif
+StockPrey*& StockPreyptrvector::operator [] (int pos) {
+  return v[pos];
+}
+
+#ifdef GADGET_INLINE
+inline
+#endif
+StockPrey* const& StockPreyptrvector::operator [] (int pos) const {
+  return v[pos];
+}

@@ -1,0 +1,17 @@
+#include "popratioindexvector.h"
+
+#ifdef GADGET_INLINE
+inline
+#endif
+popratiovector& popratioindexvector::operator [] (int pos) {
+  assert(minpos <= pos && pos < minpos + size);
+  return *v[pos - minpos];
+}
+
+#ifdef GADGET_INLINE
+inline
+#endif
+const popratiovector& popratioindexvector::operator [] (int pos) const {
+  assert(minpos <= pos && pos < minpos + size);
+  return *v[pos - minpos];
+}

@@ -1,0 +1,17 @@
+#include "popinfoindexvector.h"
+
+#ifdef GADGET_INLINE
+inline
+#endif
+popinfo& popinfoindexvector::operator [] (int pos) {
+  assert(minpos <= pos && pos < minpos + size);
+  return v[pos - minpos];
+}
+
+#ifdef GADGET_INLINE
+inline
+#endif
+const popinfo& popinfoindexvector::operator [] (int pos) const {
+  assert(minpos <= pos && pos < minpos + size);
+  return v[pos - minpos];
+}

@@ -1,0 +1,15 @@
+#include "parameter.h"
+
+#ifdef GADGET_INLINE
+inline
+#endif
+Parameter& Parametervector::operator [] (int pos) {
+  return v[pos];
+}
+
+#ifdef GADGET_INLINE
+inline
+#endif
+Parameter const& Parametervector::operator [] (int pos) const {
+  return v[pos];
+}

@@ -1,0 +1,15 @@
+#include "migvariableptrvector.h"
+
+#ifdef GADGET_INLINE
+inline
+#endif
+MigVariable*& MigVariableptrvector::operator [] (int pos) {
+  return v[pos];
+}
+
+#ifdef GADGET_INLINE
+inline
+#endif
+MigVariable* const& MigVariableptrvector::operator [] (int pos) const {
+  return v[pos];
+}
