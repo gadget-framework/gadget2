@@ -7,4 +7,6 @@ AddressKeeper::~AddressKeeper() {
   }
 }
 
-// CVS $Id: addresskeeper.cc,v 1.2 2004-08-09 14:10:36 james Exp $
+//some random comment
+
+// CVS $Id: addresskeeper.cc,v 1.3 2004-08-09 14:12:30 james Exp $
