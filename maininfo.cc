@@ -340,6 +340,8 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-log") == 0) {
       infile >> text >> ws;
       handle.setLogFile(text);
+    } else if (strcasecmp(text, "-nowarnings") == 0) {
+      printWarning = 1;
     } else
       showCorrectUsage(text);
   }

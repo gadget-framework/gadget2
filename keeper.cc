@@ -47,10 +47,10 @@ void Keeper::KeepVariable(double& value, const Parameter& attr) {
 
     } else {
       //Everything is ok, just add the address &value to address.
-      int secindex = address[index].Size();
+      i = address[index].Size();
       address[index].resize(1);
-      address[index][secindex] = &value;
-      address[index][secindex] = stack->sendAll();
+      address[index][i] = &value;
+      address[index][i] = stack->sendAll();
     }
   }
 }

@@ -13,7 +13,9 @@ double Multinomial::calcLogLikelihood(const DoubleVector& data, const DoubleVect
   double likely = 0.0;
   double tmpsum;
 
-  assert(data.Size() == dist.Size());
+  if (data.Size() != dist.Size())
+    handle.logFailure("Error in multinomial - vectors not the same size");
+
   for (i = 0; i < data.Size(); i++) {
     sumdist += dist[i];
     sumdata += data[i];

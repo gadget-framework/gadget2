@@ -1,7 +1,7 @@
 #ifndef doubleindexvector_h
 #define doubleindexvector_h
 
-#include "assert.h"
+#include "gadget.h"
 
 /**
  * \class DoubleIndexVector
