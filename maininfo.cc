@@ -48,7 +48,7 @@ void MainInfo::showUsage() {
 MainInfo::MainInfo()
   : optInfoComment(optInfoStream), givenOptInfo(0), givenInitialParam(0),
     runlikelihood(0), runoptimize(0), runstochastic(0), runnetwork(0),
-    printInitialInfo(0), printFinalInfo(0),
+    printInitialInfo(0), printFinalInfo(0), printComponent(-1),
     printLikelihoodInfo(0), printLikeSummaryInfo(0) {
 
   char tmpname[10];
@@ -63,7 +63,6 @@ MainInfo::MainInfo()
   strPrintLikeSummaryFile = NULL;
   strMainGadgetFile = NULL;
   setMainGadgetFile(tmpname);
-  printComponent = -1;
 }
 
 MainInfo::~MainInfo() {
@@ -213,7 +212,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         k++;
         setPrintLikeSummaryFile(aVector[k]);
 
-      } else if (strcasecmp(aVector[k], "-pld") == 0) {
+      } else if (strcasecmp(aVector[k], "-printonelikelihood") == 0) {
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
         k++;
@@ -318,9 +317,17 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-printlikelihood") == 0) {
       infile >> text >> ws;
       setPrintLikelihoodFile(text);
+    } else if (strcasecmp(text, "-printlikesummary") == 0) {
+      infile >> text >> ws;
+      setPrintLikeSummaryFile(text);
+    } else if (strcasecmp(text, "-printonelikelihood") == 0) {
+      infile >> printComponent >> ws >> text >> ws;
+      setPrintLikelihoodFile(text);
     } else if (strcasecmp(text, "-opt") == 0) {
       infile >> text >> ws;
       openOptInfoFile(text);
+    } else if (strcasecmp(text, "-print") == 0) {
+      printinfo.setForcePrint(1);
     } else if (strcasecmp(text, "-print1") == 0) {
       infile >> dummy >> ws;
       printinfo.setPrint1(dummy);

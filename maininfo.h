@@ -162,7 +162,11 @@ public:
    * \return filename
    */
   char* getMainGadgetFile() const { return strMainGadgetFile; };
-  int printComp() const { return printComponent; };
+  /**
+   * \brief This is the index of a single component to print the likelihood information from
+   * \return printComponent (if this is -1 then print all components)
+   */
+  int printOneComponent() const { return printComponent; };
 private:
   /**
    * \brief This function will read input from a file instead of the command line
@@ -242,6 +246,11 @@ private:
    */
   int printFinalInfo;
   /**
+   * \brief This is the index of a single component to print the likelihood information from
+   * \note the default value is -1 which will print likelihood information from all the components
+   */
+  int printComponent;
+  /**
    * \brief This is the flag used to denote whether the likelihood information should be printed or not
    */
   int printLikelihoodInfo;
@@ -249,7 +258,6 @@ private:
    * \brief This is the flag used to denote whether the likelihood summary information should be printed or not
    */
   int printLikeSummaryInfo;
-  int printComponent;
 };
 
 #endif
