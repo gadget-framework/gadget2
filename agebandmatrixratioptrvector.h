@@ -18,7 +18,7 @@ class AgeBandMatrixRatioPtrVector {
 public:
   AgeBandMatrixRatioPtrVector() { size = 0; v = 0; };
   AgeBandMatrixRatioPtrVector(int size);
-  AgeBandMatrixRatioPtrVector(int size1, int Minage, const IntVector& minl, const IntVector& size2);
+  AgeBandMatrixRatioPtrVector(int size1, int MinAge, const IntVector& minl, const IntVector& size2);
   ~AgeBandMatrixRatioPtrVector();
   void ChangeElement(int nr, const AgeBandMatrixRatio& value);
   void resize(int add, AgeBandMatrixRatio* matr);
@@ -34,7 +34,7 @@ public:
   const AgeBandMatrixRatio& operator [] (const char* name) const;
   const AgeBandMatrixRatio& operator [] (int pos) const;
   void Migrate(const DoubleMatrix& Migrationmatrix, const AgeBandMatrixPtrVector& Total);
-  const int NrOfTagExp() const { return tagID.Size(); };
+  const int numTagExperiments() const { return tagID.Size(); };
   const CharPtrVector tagIDs() const { return tagID; };
   const DoubleVector& tagloss() const { return tagLoss; };
   friend void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,

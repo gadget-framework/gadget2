@@ -23,7 +23,7 @@ public:
   virtual const DoubleVector& OverConsumption(int area) const { return overconsumption[AreaNr[area]]; };
   virtual const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   virtual int NoLengthGroups() const { return LgrpDiv->NoLengthGroups(); };
-  virtual double Length(int i) const { return LgrpDiv->Meanlength(i); };
+  virtual double Length(int i) const { return LgrpDiv->meanLength(i); };
   virtual void Reset(const TimeClass* const TimeInfo);
   virtual const double consumedBiomass(int prey_nr, int area_nr) const;
   void Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& ratio); //kgf 3/8 98

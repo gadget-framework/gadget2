@@ -18,12 +18,10 @@ StochasticData::StochasticData(const char* const filename) {
   } else
     readInfo->getValues(switches, values, lowerbound, upperbound, optimize);
 
-  if (this->SwitchesGiven()) {
-    if (switches.Size() != values.Size()) {
-      handle.LogWarning("Error in stochasticdata - failed to read values");
-      exit(EXIT_FAILURE);
-    }
-  }
+  if (this->SwitchesGiven())
+    if (switches.Size() != values.Size())
+      handle.logFailure("Error in stochasticdata - failed to read values");
+
 }
 
 StochasticData::StochasticData(int net) {
@@ -147,29 +145,27 @@ void StochasticData::readFromNetwork() {
     getdata = 0;
 
   if (this->SwitchesGiven()) {
-    if (switches.Size() != values.Size()) {
-      handle.LogWarning("Error in stochasticdata - failed to read values");
-      exit(EXIT_FAILURE);
-    }
+    if (switches.Size() != values.Size())
+      handle.logFailure("Error in stochasticdata - failed to read values");
+
     check = 0;
     for (i = 0; i < values.Size(); i++) {
       if (lowerbound[i] > upperbound[i]) {
         check++;
-        handle.LogWarning("Error in stochasticdata - failed to read bounds", lowerbound[i], upperbound[i]);
+        handle.logWarning("Error in stochasticdata - failed to correctly read bounds", i);
       }
       if (values[i] > upperbound[i]) {
         check++;
-        handle.LogWarning("Error in stochasticdata - failed to read upperbound", values[i], upperbound[i]);
+        handle.logWarning("Error in stochasticdata - failed to correctly read upperbound", i);
       }
       if (values[i] < lowerbound[i]) {
         check++;
-        handle.LogWarning("Error in stochasticdata - failed to read lowerbound", lowerbound[i], values[i]);
+        handle.logWarning("Error in stochasticdata - failed to correctly read lowerbound", i);
       }
     }
-    if (check > 0) {
-      handle.LogWarning("Error in stochasticdata - failed to read bounds");
-      exit(EXIT_FAILURE);
-    }
+    if (check > 0)
+      handle.logFailure("Error in stochasticdata - failed to read bounds");
+
   }
 }
 
@@ -193,9 +189,8 @@ int StochasticData::getDataFromNet() {
 void StochasticData::SendDataToMaster(double funcValue) {
   int info = slave->sendToMaster(funcValue);
   if (info < 0) {
-    handle.LogWarning("Error in stochasticdata - failed to send data to PVM master");
     slave->stopNetCommunication();
-    exit(EXIT_FAILURE);
+    handle.logFailure("Error in stochasticdata - failed to send data to PVM master");
   }
 }
 #endif

@@ -32,7 +32,7 @@ public:
    * \brief This function will calculate the likelihood score for the UnderStocking component
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void AddToLikelihood(const TimeClass* const TimeInfo);
+  virtual void addLikelihood(const TimeClass* const TimeInfo);
   /**
    * \brief This function will reset the UnderStocking likelihood information
    * \param keeper is the Keeper for the current model

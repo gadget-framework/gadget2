@@ -12,7 +12,7 @@ extern ErrorHandler handle;
 Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* const lgrpdiv,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper) {
 
-  keeper->AddString("spawner");
+  keeper->addString("spawner");
   int i;
 
   char text[MaxStrLength];
@@ -154,8 +154,8 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
     infile >> text >> ws;
     handle.Unexpected("<end of file>", text);
   }
-  handle.LogMessage("Read spawning data file");
-  keeper->ClearLast();
+  handle.logMessage("Read spawning data file");
+  keeper->clearLast();
 }
 
 Spawner::~Spawner() {
@@ -190,11 +190,11 @@ void Spawner::setStock(StockPtrVector& stockvec) {
       }
 
   if (index != SpawnStockNames.Size()) {
-    handle.LogWarning("Error in spawner - failed to match spawning stocks");
+    handle.logWarning("Error in spawner - failed to match spawning stocks");
     for (i = 0; i < stockvec.Size(); i++)
-      handle.LogWarning("Error in spawner - found stock", stockvec[i]->Name());
+      handle.logWarning("Error in spawner - found stock", stockvec[i]->Name());
     for (i = 0; i < SpawnStockNames.Size(); i++)
-      handle.LogWarning("Error in spawner - looking for stock", SpawnStockNames[i]);
+      handle.logWarning("Error in spawner - looking for stock", SpawnStockNames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -216,10 +216,10 @@ void Spawner::setStock(StockPtrVector& stockvec) {
         index++;
 
     if (index != 0)
-      handle.LogWarning("Warning in spawner - spawn stock isnt defined on all areas");
+      handle.logWarning("Warning in spawner - spawn stock isnt defined on all areas");
 
-    if (SpawnStocks[i]->Minage() < spawnage)
-      spawnage = SpawnStocks[i]->Minage();
+    if (SpawnStocks[i]->minAge() < spawnage)
+      spawnage = SpawnStocks[i]->minAge();
     if (SpawnStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
       minlength = SpawnStocks[i]->returnLengthGroupDiv()->minLength();
     if (SpawnStocks[i]->returnLengthGroupDiv()->maxLength() > maxlength)
@@ -245,9 +245,9 @@ void Spawner::Spawn(AgeBandMatrix& Alkeys, int area,
 
   int age, len;
   if (this->IsSpawnStepArea(area, TimeInfo) == 1) {
-    for (age = Alkeys.Minage(); age <= Alkeys.Maxage(); age++) {
+    for (age = Alkeys.minAge(); age <= Alkeys.maxAge(); age++) {
       //subtract mortality and reduce the weight of the living ones.
-      for (len = Alkeys.Minlength(age); len < Alkeys.Maxlength(age); len++) {
+      for (len = Alkeys.minLength(age); len < Alkeys.maxLength(age); len++) {
         PopInfo p = Alkeys[age][len] * spawnProportion[len];
 
         //calculate the spawning stock biomss if needed
@@ -289,7 +289,7 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   if (sdev > verysmall) {
     tmpsdev = 1.0 / (2 * sdev * sdev);
     for (len = 0; len < spawnLgrpDiv->NoLengthGroups(); len++) {
-      length = spawnLgrpDiv->Meanlength(len) - meanlength;
+      length = spawnLgrpDiv->meanLength(len) - meanlength;
       N = exp(-(length * length * tmpsdev));
       Storage[area][spawnage][len].N = N;
       sum += N;
@@ -298,7 +298,7 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
 
   if (sum > verysmall) {
     for (len = 0; len < spawnLgrpDiv->NoLengthGroups(); len++) {
-      length = spawnLgrpDiv->Meanlength(len);
+      length = spawnLgrpDiv->meanLength(len);
       Storage[area][spawnage][len].N *= TEP / sum;
       Storage[area][spawnage][len].W = alpha * pow(length, beta);
     }
@@ -306,11 +306,10 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
 
   //add this to the spawned stocks
   for (s = 0; s < SpawnStocks.Size(); s++) {
-    if (!SpawnStocks[s]->IsInArea(area)) {
-      handle.LogWarning("Error in spawner - spawn stock doesnt live on area", area);
-      exit(EXIT_FAILURE);
-    }
-    SpawnStocks[s]->Add(Storage[area], CI[s], area, Ratio[s], SpawnStocks[s]->Minage(), SpawnStocks[s]->Minage());
+    if (!SpawnStocks[s]->IsInArea(area))
+      handle.logFailure("Error in spawner - spawn stock doesnt live on area", area);
+
+    SpawnStocks[s]->Add(Storage[area], CI[s], area, Ratio[s], SpawnStocks[s]->minAge(), SpawnStocks[s]->minAge());
   }
 
   for (age = 0; age < ssb.Nrow(); age++)
@@ -335,23 +334,23 @@ void Spawner::Precalc(const TimeClass* const TimeInfo) {
   fnWeightLoss->updateConstants(TimeInfo);
   fnMortality->updateConstants(TimeInfo);
   for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
-    len = LgrpDiv->Meanlength(i);
+    len = LgrpDiv->meanLength(i);
     spawnProportion[i] = fnProportion->calculate(len);
     if (spawnProportion[i] < 0.0) {
-      handle.LogWarning("Warning in spawning - function outside bounds", spawnProportion[i]);
+      handle.logWarning("Warning in spawning - function outside bounds", spawnProportion[i]);
       spawnProportion[i] = 0.0;
     }
     if (spawnProportion[i] > 1.0) {
-      handle.LogWarning("Warning in spawning - function outside bounds", spawnProportion[i]);
+      handle.logWarning("Warning in spawning - function outside bounds", spawnProportion[i]);
       spawnProportion[i] = 1.0;
     }
     spawnWeightLoss[i] = fnWeightLoss->calculate(len);
     if (spawnWeightLoss[i] < 0.0) {
-      handle.LogWarning("Warning in spawning - function outside bounds", spawnWeightLoss[i]);
+      handle.logWarning("Warning in spawning - function outside bounds", spawnWeightLoss[i]);
       spawnWeightLoss[i] = 0.0;
     }
     if (spawnWeightLoss[i] > 1.0) {
-      handle.LogWarning("Warning in spawning - function outside bounds", spawnWeightLoss[i]);
+      handle.logWarning("Warning in spawning - function outside bounds", spawnWeightLoss[i]);
       spawnWeightLoss[i] = 1.0;
     }
     spawnMortality[i] = fnMortality->calculate(len);
@@ -369,7 +368,7 @@ void Spawner::Precalc(const TimeClass* const TimeInfo) {
 
 double Spawner::ssbFunc(int age, int len, double number, double weight) {
   double temp = 0.0;
-  temp = spawnParameters[0] * pow(LgrpDiv->Meanlength(len), spawnParameters[1])
+  temp = spawnParameters[0] * pow(LgrpDiv->meanLength(len), spawnParameters[1])
            * pow(age, spawnParameters[2]) * pow(number, spawnParameters[3]) * pow(weight, spawnParameters[4]);
 
   return temp;

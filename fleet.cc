@@ -23,8 +23,8 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   int tmpint;
   double multscaler;
   int readamount = 0; //mortalityfleet need no amounts
-  keeper->AddString("fleet");
-  keeper->AddString(givenname);
+  keeper->addString("fleet");
+  keeper->addString(givenname);
 
   infile >> text >> ws;
   IntVector tmpareas;
@@ -101,8 +101,8 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   subfile.close();
   subfile.clear();
 
-  keeper->ClearLast();
-  keeper->ClearLast();
+  keeper->clearLast();
+  keeper->clearLast();
 }
 
 Fleet::~Fleet() {
@@ -117,10 +117,10 @@ void Fleet::calcEat(int area,
     Area->Size(area), TimeInfo->CurrentSubstep(), TimeInfo->NrOfSubsteps());
 }
 
-void Fleet::AdjustEat(int area,
+void Fleet::adjustEat(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  predator->AdjustConsumption(area, TimeInfo->NrOfSubsteps(), TimeInfo->CurrentSubstep());
+  predator->adjustConsumption(area, TimeInfo->NrOfSubsteps(), TimeInfo->CurrentSubstep());
 }
 
 void Fleet::ThirdUpdate(int area,

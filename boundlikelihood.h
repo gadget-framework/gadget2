@@ -38,7 +38,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \note This function is not used for this likelihood component
    */
-  virtual void AddToLikelihood(const TimeClass* const TimeInfo) {};
+  virtual void addLikelihood(const TimeClass* const TimeInfo) {};
   /**
    * \brief This function will print the summary likelihood information
    * \param outfile is the ofstream that all the model information gets sent to
@@ -49,8 +49,9 @@ public:
    * \brief This function will calculate the likelihood score for the current model after adjusting the parameters
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
+   * \note keeper can adjust the value of the parameters to ensure that they are within the bounds
    */
-  virtual void AddToLikelihoodTimeAndKeeper(const TimeClass* const TimeInfo, Keeper* const keeper);
+  virtual void addLikelihoodKeeper(const TimeClass* const TimeInfo, Keeper* const keeper);
 protected:
   /**
    * \brief This is the IntVector of the index of the parameters

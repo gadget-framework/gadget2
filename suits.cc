@@ -38,7 +38,7 @@ Suits::Suits(const Suits& initial, Keeper* const keeper)
     PrecalcSuitability.resize(1, initial.PrecalcSuitability[i]);
 }
 
-void Suits::AddPrey(const char* preyname, SuitFunc* suitf) {
+void Suits::addPrey(const char* preyname, SuitFunc* suitf) {
   int i = FuncPreynames.Size();
   FuncPreynames.resize(1);
   SuitFunction.resize(1, suitf);
@@ -46,7 +46,7 @@ void Suits::AddPrey(const char* preyname, SuitFunc* suitf) {
   strcpy(FuncPreynames[i], preyname);
 }
 
-void Suits::AddPrey(const char* preyname, double multiplication,
+void Suits::addPrey(const char* preyname, double multiplication,
   const DoubleMatrix& suitabilities, Keeper* const keeper) {
 
   int i = MatrixPreynames.Size();
@@ -180,7 +180,6 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
 }
 
 void Suits::DeleteFuncPrey(int prey, Keeper* const keeper) {
-  assert((0 <= prey) && (prey < SuitFunction.Size()));
   SuitFunction.Delete(prey, keeper);
   FuncPreynames.Delete(prey);
 }
@@ -194,11 +193,9 @@ void Suits::DeleteMatrixPrey(int prey, Keeper* const keeper) {
 }
 
 int Suits::DidChange(int prey, const TimeClass* const TimeInfo) const {
-  assert((0 <= prey) && (prey < SuitFunction.Size()));
   return SuitFunction[prey]->constantsHaveChanged(TimeInfo);
 }
 
 SuitFunc* Suits::FuncPrey(int prey) {
-  assert((0 <= prey) && (prey < SuitFunction.Size()));
   return SuitFunction[prey];
 }

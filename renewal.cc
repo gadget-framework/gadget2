@@ -7,13 +7,11 @@
 
 extern ErrorHandler handle;
 
-//It has to be decided how to distinguish between setting the stock numbers and adding to them
-
 RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
   : LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
-  keeper->AddString("renewaldata");
+  keeper->addString("renewaldata");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
@@ -92,28 +90,28 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
         delete weighttmpindvec;
 
       } else if (readOption == 1) { //use meanlengths.
-        Meanlengths.resize(1, keeper);
-        Sdev.resize(1, keeper);
-        Wcoeff1.resize(1, keeper);
-        Wcoeff2.resize(1, keeper);
+        meanLength.resize(1, keeper);
+        sdevLength.resize(1, keeper);
+        coeff1.resize(1, keeper);
+        coeff2.resize(1, keeper);
 
         PopInfoIndexVector poptmp(LgrpDiv->NoLengthGroups(), 0);
         Distribution.resize(1, new AgeBandMatrix(age, poptmp));
         if (!(infile >> Number[i]))
           handle.Message("Wrong format for renewalmultiplier");
         Number[i].Inform(keeper);
-        if (!(infile >> Meanlengths[i]))
+        if (!(infile >> meanLength[i]))
           handle.Message("Wrong format for renewalmeanlength");
-        Meanlengths[i].Inform(keeper);
-        if (!(infile >> Sdev[i]))
+        meanLength[i].Inform(keeper);
+        if (!(infile >> sdevLength[i]))
           handle.Message("Wrong format for renewalsdev");
-        Sdev[i].Inform(keeper);
-        if (!(infile >> Wcoeff1[i]))
+        sdevLength[i].Inform(keeper);
+        if (!(infile >> coeff1[i]))
           handle.Message("Wrong format for renewalwcoeff1");
-        Wcoeff1[i].Inform(keeper);
-        if (!(infile >> Wcoeff2[i]))
+        coeff1[i].Inform(keeper);
+        if (!(infile >> coeff2[i]))
           handle.Message("Wrong format for renewalwcoeff2");
-        Wcoeff2[i].Inform(keeper);
+        coeff2[i].Inform(keeper);
 
       } else
         handle.Message("Unknown data format for renewal data ");
@@ -123,7 +121,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
       i++;
 
     } else { //This year and step is not required - skip rest of line
-      c = infile.peek();
+      infile.get(c);
       while (c != '\n' && !infile.eof())
         infile.get(c);
     }
@@ -131,8 +129,8 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
     if (isdigit(infile.peek()) && !infile.eof())
       infile >> year >> step >> area >> age >> ws;
   }
-  handle.LogMessage("Read recruits data file - number of entries", RenewalTime.Size());
-  keeper->ClearLast();
+  handle.logMessage("Read recruits data file - number of entries", RenewalTime.Size());
+  keeper->clearLast();
 }
 
 RenewalData::~RenewalData() {
@@ -149,50 +147,50 @@ void RenewalData::Print(ofstream& outfile) const {
   int i;
   for (i = 0; i < Distribution.Size(); i++) {
     outfile << "\tTime " << RenewalTime[i] << " internal area " << RenewalArea[i]
-      << " age " << Distribution[i].Minage() << " number " << Number[i] << endl;
-    Distribution[i].PrintNumbers(outfile);
+      << " age " << Distribution[i].minAge() << " number " << Number[i] << endl;
+    Distribution[i].printNumbers(outfile);
     outfile << "\tmean weights\n";
-    Distribution[i].PrintWeights(outfile);
+    Distribution[i].printWeights(outfile);
   }
 }
 
 void RenewalData::Reset() {
   int i, age, l;
-  double sum, length, N, tmpSdev;
+  double sum, length, N, tmpVariance;
 
   if (readOption == 1) {
     for (i = 0; i < Distribution.Size(); i++) {
-      age = Distribution[i].Minage();
+      age = Distribution[i].minAge();
       sum = 0.0;
       N = 0.0;
-      if (isZero(Sdev[i]))
-        tmpSdev = 0.0;
+      if (isZero(sdevLength[i]))
+        tmpVariance = 0.0;
       else
-        tmpSdev = 1.0 / (2.0 * Sdev[i] * Sdev[i]);
+        tmpVariance = 1.0 / (2.0 * sdevLength[i] * sdevLength[i]);
 
-      for (l = Distribution[i].Minlength(age); l < Distribution[i].Maxlength(age); l++) {
-        length = LgrpDiv->Meanlength(l) - Meanlengths[i];
-        if (Sdev[i] > verysmall)
-          N = exp(-(length * length * tmpSdev));
+      for (l = Distribution[i].minLength(age); l < Distribution[i].maxLength(age); l++) {
+        length = LgrpDiv->meanLength(l) - meanLength[i];
+        if (sdevLength[i] > verysmall)
+          N = exp(-(length * length * tmpVariance));
         else
           N = 0.0;
         Distribution[i][age][l].N = N;
         sum += N;
       }
 
-      for (l = Distribution[i].Minlength(age); l < Distribution[i].Maxlength(age); l++) {
-        length = LgrpDiv->Meanlength(l);
+      for (l = Distribution[i].minLength(age); l < Distribution[i].maxLength(age); l++) {
+        length = LgrpDiv->meanLength(l);
         if (sum > rathersmall)
-          Distribution[i][age][l].N *= 10000 / sum;
+          Distribution[i][age][l].N *= 10000.0 / sum;
         else
           Distribution[i][age][l].N = 0.0;
-        Distribution[i][age][l].W = Wcoeff1[i] * pow(length, Wcoeff2[i]);
+        Distribution[i][age][l].W = coeff1[i] * pow(length, coeff2[i]);
       }
     }
   }
 }
 
-void RenewalData::AddRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo) {
+void RenewalData::addRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo) {
 
   if (RenewalTime.Size() == 0)
     return;
@@ -216,13 +214,12 @@ void RenewalData::AddRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* c
       RenewalNumber = Number[renewalid];
 
     if (RenewalNumber < 0) {
-      handle.LogWarning("Warning in renewal - illegal number of recruits", RenewalNumber);
+      handle.logWarning("Warning in renewal - illegal number of recruits", RenewalNumber);
       RenewalNumber = -RenewalNumber;
     }
 
-    if (RenewalNumber > verysmall) {
-      assert(Alkeys.Minage() <= Distribution[renewalid].Minage());
+    if (RenewalNumber > verysmall)
       Alkeys.Add(Distribution[renewalid], *CI, RenewalNumber);
-    }
+
   }
 }

@@ -45,7 +45,7 @@ void RecAggregator::Print(ofstream& outfile) const {
     outfile << "\tInternal areas " << i << endl;
     for (j = 0; j < total[i].Nrow(); j++) {
       outfile << TAB;
-      for (k = 0; k < total[i].Maxlength(j); k++) {
+      for (k = 0; k < total[i].maxLength(j); k++) {
         outfile.width(smallwidth);
         outfile << total[i][j][k].N;
         outfile << sep;
@@ -65,7 +65,7 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
 
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)
-      for (k = 0; k < total[i].Maxlength(j); k++)
+      for (k = 0; k < total[i].maxLength(j); k++)
         total[i][j][k] = nullpop;
 
   //Sum over the appropriate fleets, stocks, areas, ages and length groups.
@@ -93,7 +93,7 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
                 for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
                   for (k = 0; k < ages.Ncol(aggrAge); k++) {
                     age = ages[aggrAge][k];
-                    if ((alptr->Minage() <= age) && (age <= alptr->Maxage())) {
+                    if ((alptr->minAge() <= age) && (age <= alptr->maxAge())) {
                       DoubleIndexVector Ratio = *suitptr;
                       for (z = Ratio.Mincol(); z < Ratio.Maxcol(); z++)
                         Ratio[z] *= (prey->Ratio(area, z) > 1 ? 1.0 / prey->Ratio(area, z) : 1.0);

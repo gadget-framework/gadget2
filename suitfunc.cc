@@ -97,11 +97,11 @@ SuitFunc::~SuitFunc() {
 }
 
 void SuitFunc::setPredLength(double length) {
-  handle.LogWarning("Warning in suitability - trying to set predator length for", this->getName());
+  handle.logWarning("Warning in suitability - trying to set predator length for", this->getName());
 }
 
 void SuitFunc::setPreyLength(double length) {
-  handle.LogWarning("Warning in suitability - trying to set prey length for", this->getName());
+  handle.logWarning("Warning in suitability - trying to set prey length for", this->getName());
 }
 
 void SuitFunc::setName(const char* suitFuncName) {
@@ -130,7 +130,7 @@ int SuitFunc::constantsHaveChanged(const TimeClass* const TimeInfo) {
   return coeff.DidChange(TimeInfo);
 }
 
-int SuitFunc::noOfConstants() {
+int SuitFunc::numConstants() {
   return coeff.Size();
 }
 
@@ -148,7 +148,6 @@ ExpSuitFuncA::~ExpSuitFuncA() {
 }
 
 double ExpSuitFuncA::calculate() {
-  assert(coeff.Size() == 4);
   double check = 0.0;
 
   if (coeff[0] < 0 && coeff[1] < 0)
@@ -159,10 +158,10 @@ double ExpSuitFuncA::calculate() {
     check = coeff[3] / (1 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
 
   if (check < 0.0) {
-    handle.LogWarning("Warning in suitability - function outside bounds", check);
+    handle.logWarning("Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    handle.LogWarning("Warning in suitability - function outside bounds", check);
+    handle.logWarning("Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -180,12 +179,11 @@ ConstSuitFunc::~ConstSuitFunc() {
 }
 
 double ConstSuitFunc::calculate() {
-  assert(coeff.Size() == 1);
   if (coeff[0] < 0.0) {
-    handle.LogWarning("Warning in suitability - function outside bounds", coeff[0]);
+    handle.logWarning("Warning in suitability - function outside bounds", coeff[0]);
     return 0.0;
   } else if (coeff[0] > 1.0) {
-    handle.LogWarning("Warning in suitability - function outside bounds", coeff[0]);
+    handle.logWarning("Warning in suitability - function outside bounds", coeff[0]);
     return 1.0;
   } else
     return coeff[0];
@@ -207,7 +205,6 @@ AndersenSuitFunc::~AndersenSuitFunc() {
 double AndersenSuitFunc::calculate() {
   double l = log(predLength / preyLength);
   double e, q, check;
-  assert(coeff.Size() == 5);
 
   q = 0.0;
   check = 0.0;
@@ -224,10 +221,10 @@ double AndersenSuitFunc::calculate() {
   e = (l - coeff[1]) * (l - coeff[1]);
   check = coeff[0] + coeff[2] * exp(-e / q);
   if (check < 0.0) {
-    handle.LogWarning("Warning in suitability - function outside bounds", check);
+    handle.logWarning("Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    handle.LogWarning("Warning in suitability - function outside bounds", check);
+    handle.logWarning("Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -246,15 +243,12 @@ ExpSuitFuncL50::~ExpSuitFuncL50() {
 }
 
 double ExpSuitFuncL50::calculate() {
-  assert(coeff.Size() == 2);
-  assert((coeff[0] > 0) && (coeff[1] > 0));
-
   double check = 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
   if (check < 0.0) {
-    handle.LogWarning("Warning in suitability - function outside bounds", check);
+    handle.logWarning("Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    handle.LogWarning("Warning in suitability - function outside bounds", check);
+    handle.logWarning("Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -273,14 +267,12 @@ StraightSuitFunc::~StraightSuitFunc() {
 }
 
 double StraightSuitFunc::calculate() {
-  assert(coeff.Size() == 2);
-
   double check = coeff[0] * preyLength + coeff[1];
   if (check < 0.0) {
-    handle.LogWarning("Warning in suitability - function outside bounds", check);
+    handle.logWarning("Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    handle.LogWarning("Warning in suitability - function outside bounds", check);
+    handle.logWarning("Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -299,15 +291,12 @@ InverseExpSuitFuncL50::~InverseExpSuitFuncL50() {
 }
 
 double InverseExpSuitFuncL50::calculate() {
-  assert(coeff.Size() == 2);
-  assert((coeff[0] > 0) && (coeff[1] > 0));
-
   double check = 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
   if (check < 0.0) {
-    handle.LogWarning("Warning in suitability - function outside bounds", check);
+    handle.logWarning("Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    handle.LogWarning("Warning in suitability - function outside bounds", check);
+    handle.logWarning("Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;

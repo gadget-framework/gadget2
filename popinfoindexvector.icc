@@ -1,5 +1,4 @@
 #include "popinfoindexvector.h"
-#include "assert.h"
 
 #ifdef GADGET_INLINE
 inline

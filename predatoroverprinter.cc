@@ -115,11 +115,11 @@ void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec) {
   }
 
   if (predators.Size() != predatornames.Size()) {
-    handle.LogWarning("Error in predatoroverprinter - failed to match predators");
+    handle.logWarning("Error in predatoroverprinter - failed to match predators");
     for (i = 0; i < predatorvec.Size(); i++)
-      handle.LogWarning("Error in predatoroverprinter - found predator", predatorvec[i]->Name());
+      handle.logWarning("Error in predatoroverprinter - found predator", predatorvec[i]->Name());
     for (i = 0; i < predatornames.Size(); i++)
-      handle.LogWarning("Error in predatoroverprinter - looking for predator", predatornames[i]);
+      handle.logWarning("Error in predatoroverprinter - looking for predator", predatornames[i]);
     exit(EXIT_FAILURE);
   }
   aggregator = new PredatorOverAggregator(predators, areas, predLgrpDiv);

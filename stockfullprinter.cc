@@ -95,7 +95,6 @@ StockFullPrinter::~StockFullPrinter() {
 }
 
 void StockFullPrinter::setStock(StockPtrVector& stockvec) {
-  assert(stockvec.Size() > 0);
   Stock* stock = 0;
   int err = 0;
   int i, tmpage;
@@ -109,9 +108,9 @@ void StockFullPrinter::setStock(StockPtrVector& stockvec) {
   }
 
   if (err || stock == 0) {
-    handle.LogWarning("Error in stockfullprinter - failed to match stock", stockname);
+    handle.logWarning("Error in stockfullprinter - failed to match stock", stockname);
     for (i = 0; i < stockvec.Size(); i++)
-      handle.LogWarning("Error in stockfullprinter - found stock", stockvec[i]->Name());
+      handle.logWarning("Error in stockfullprinter - found stock", stockvec[i]->Name());
     exit(EXIT_FAILURE);
   }
 
@@ -122,10 +121,10 @@ void StockFullPrinter::setStock(StockPtrVector& stockvec) {
   minage = 100;
   maxage = 0;
   for (i = 0; i < areas.Size(); i++) {
-    tmpage = stock->Agelengthkeys(areas[i]).Minage();
+    tmpage = stock->Agelengthkeys(areas[i]).minAge();
     if (tmpage < minage)
       minage = tmpage;
-    tmpage = stock->Agelengthkeys(areas[i]).Maxage();
+    tmpage = stock->Agelengthkeys(areas[i]).maxAge();
     if (tmpage > maxage)
       maxage = tmpage;
   }
@@ -147,13 +146,13 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo) {
 
   for (a = 0; a < areas.Size(); a++) {
     const AgeBandMatrix& alk = aggregator->returnSum()[a];
-    for (age = alk.Minage(); age <= alk.Maxage(); age++) {
-      for (l = alk.Minlength(age); l < alk.Maxlength(age); l++) {
+    for (age = alk.minAge(); age <= alk.maxAge(); age++) {
+      for (l = alk.minLength(age); l < alk.maxLength(age); l++) {
         outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
           << setw(lowwidth) << TimeInfo->CurrentStep() << sep
           << setw(lowwidth) << outerareas[a] << sep << setw(lowwidth)
           << age + minage << sep << setw(lowwidth)
-          << LgrpDiv->Meanlength(l) << sep;
+          << LgrpDiv->meanLength(l) << sep;
 
         //JMB crude filter to remove the 'silly' values from the output
         if ((alk[age][l].N < rathersmall) || (alk[age][l].W < 0))

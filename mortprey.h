@@ -40,12 +40,11 @@ public:
   int getNoCannPreds() { return cannprednames.Size(); };
   const BandMatrix& cannConsum(int area, int pred_no) { return cann_cons[AreaNr[area]][pred_no]; };
   void setConsumption(int area, int pred_no, const BandMatrix& consum);
-  int getPredMinAge(int i) { return cann_cons[0][i].Minage(); };
-  int getPredMaxAge(int i) { return cann_cons[0][i].Maxage(); };
+  int getPredMinAge(int i) { return cann_cons[0][i].minAge(); };
+  int getPredMaxAge(int i) { return cann_cons[0][i].maxAge(); };
   int cannIsTrue() { return cann_is_true; };
   void cannIsTrue(int cann_val) { cann_is_true = cann_val; };
   void addAgeGroupMatrix(DoubleMatrix* const agematrix);
-  const DoubleMatrix* getAgeGroupMatrix(int pred_no) { return agegroupmatrix[pred_no]; };
   void setAgeMatrix(int pred_no, int area, const DoubleVector& agegroupno);
   DoubleMatrix* ageGroupMatrix(int index) { return agegroupmatrix[index]; };
 protected:
@@ -55,7 +54,6 @@ protected:
   DoubleMatrix mort_fact;
   DoubleMatrix prop_surv;
   DoubleMatrix cannibalism;
-  LengthGroupDivision* prey_lgrp;
   IntVector haveCalculatedMeanN;
   int minpredage;
   int maxpredage;

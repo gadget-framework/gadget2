@@ -126,14 +126,14 @@ public:
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void CheckEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void checkEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will adjust the modelled consumption for an area in the model
    * \param area is an integer to denote the internal area of interest
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void AdjustEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void adjustEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will reset the model population
    * \param TimeInfo is the TimeClass for the current model
@@ -177,8 +177,8 @@ public:
   int doesRenew() const { return doesrenew; };
   int doesGrow() const { return doesgrow; };
   int doesMigrate() const { return doesmigrate; };
-  int Minage() const { return Alkeys[0].Minage(); };
-  int Maxage() const { return Alkeys[0].Maxage(); };
+  int minAge() const { return Alkeys[0].minAge(); };
+  int maxAge() const { return Alkeys[0].maxAge(); };
   const DoubleIndexVector& mortality() const { return NatM->getMortality(); };
   const StockPtrVector& getMatureStocks();
   const StockPtrVector& getTransitionStocks();

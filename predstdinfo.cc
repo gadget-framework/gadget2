@@ -16,8 +16,8 @@ PredStdInfo::PredStdInfo(const PopPredator* pred, const Prey* pRey, const IntVec
 
 PredStdInfo::PredStdInfo(const PopPredator* pred, const StockPrey* pRey, const IntVector& Areas)
   : AbstrPredStdInfo(Areas, 0, 0, //pred. min and max age equals 0
-  pRey->AlkeysPriorToEating(Areas[0]).Minage(),
-  pRey->AlkeysPriorToEating(Areas[0]).Maxage()),
+  pRey->AlkeysPriorToEating(Areas[0]).minAge(),
+  pRey->AlkeysPriorToEating(Areas[0]).maxAge()),
   preyinfo(new StockPreyStdInfo(pRey, Areas)),
   predinfo(new PredStdInfoByLength(pred, pRey, Areas)),
   predator(pred), prey(pRey) {

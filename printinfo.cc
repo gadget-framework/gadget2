@@ -2,11 +2,11 @@
 #include "gadget.h"
 
 PrintInfo::PrintInfo() : printIter1(-2), printIter2(-2), forceprint(0),
-  oprint(0), coprint(0), givenPrecision(0) {
+  printoutput(0), printcolumn(0), givenPrecision(0) {
 
-  OutputFile = NULL;
-  ColumnOutputFile = NULL;
-  ParamOutFile = NULL;
+  strOutputFile = NULL;
+  strColumnFile = NULL;
+  strParamOutFile = NULL;
 
   char tmpname[12];
   strncpy(tmpname, "", 12);
@@ -16,77 +16,77 @@ PrintInfo::PrintInfo() : printIter1(-2), printIter2(-2), forceprint(0),
 
 PrintInfo::PrintInfo(const PrintInfo& pi) {
 
-  ParamOutFile = NULL;
-  setParamOutFile(pi.ParamOutFile);
+  strParamOutFile = NULL;
+  setParamOutFile(pi.strParamOutFile);
 
-  OutputFile = NULL;
-  ColumnOutputFile = NULL;
-  if (pi.OutputFile != NULL)
-    setOutputFile(pi.OutputFile);
-  if (pi.ColumnOutputFile != NULL)
-    setColumnOutputFile(pi.ColumnOutputFile);
+  strOutputFile = NULL;
+  if (pi.strOutputFile != NULL)
+    setOutputFile(pi.strOutputFile);
+  strColumnFile = NULL;
+  if (pi.strColumnFile != NULL)
+    setColumnOutputFile(pi.strColumnFile);
 
   forceprint = pi.forceprint;
-  oprint = pi.oprint;
-  coprint = pi.coprint;
+  printoutput = pi.printoutput;
+  printcolumn = pi.printcolumn;
   givenPrecision = pi.givenPrecision;
   printIter1 = pi.printIter1;
   printIter2 = pi.printIter2;
 }
 
 PrintInfo::~PrintInfo() {
-  if (OutputFile != NULL) {
-    delete[] OutputFile;
-    OutputFile = NULL;
+  if (strOutputFile != NULL) {
+    delete[] strOutputFile;
+    strOutputFile = NULL;
   }
-  if (ColumnOutputFile != NULL) {
-    delete[] ColumnOutputFile;
-    ColumnOutputFile = NULL;
+  if (strColumnFile != NULL) {
+    delete[] strColumnFile;
+    strColumnFile = NULL;
   }
-  if (ParamOutFile != NULL) {
-    delete[] ParamOutFile;
-    ParamOutFile = NULL;
+  if (strParamOutFile != NULL) {
+    delete[] strParamOutFile;
+    strParamOutFile = NULL;
   }
 }
 
 void PrintInfo::setOutputFile(char* filename) {
-  if (OutputFile != NULL) {
-    delete[] OutputFile;
-    OutputFile = NULL;
+  if (strOutputFile != NULL) {
+    delete[] strOutputFile;
+    strOutputFile = NULL;
   }
   if (filename != NULL) {
-    OutputFile = new char[strlen(filename) + 1];
-    strcpy(OutputFile, filename);
-    oprint = 1;
+    strOutputFile = new char[strlen(filename) + 1];
+    strcpy(strOutputFile, filename);
+    printoutput = 1;
   } else {
-    OutputFile = NULL;
+    strOutputFile = NULL;
   }
 }
 
 void PrintInfo::setColumnOutputFile(char* filename) {
-  if (ColumnOutputFile != NULL) {
-    delete[] ColumnOutputFile;
-    ColumnOutputFile = NULL;
+  if (strColumnFile != NULL) {
+    delete[] strColumnFile;
+    strColumnFile = NULL;
   }
   if (filename != NULL) {
-    ColumnOutputFile = new char[strlen(filename) + 1];
-    strcpy(ColumnOutputFile, filename);
-    coprint = 1;
+    strColumnFile = new char[strlen(filename) + 1];
+    strcpy(strColumnFile, filename);
+    printcolumn = 1;
   } else {
-    ColumnOutputFile = NULL;
+    strColumnFile = NULL;
   }
 }
 
 void PrintInfo::setParamOutFile(char* filename) {
-  if (ParamOutFile != NULL) {
-    delete[] ParamOutFile;
-    ParamOutFile = NULL;
+  if (strParamOutFile != NULL) {
+    delete[] strParamOutFile;
+    strParamOutFile = NULL;
   }
   if (filename != NULL) {
-    ParamOutFile = new char[strlen(filename) + 1];
-    strcpy(ParamOutFile, filename);
+    strParamOutFile = new char[strlen(filename) + 1];
+    strcpy(strParamOutFile, filename);
   } else {
-    ParamOutFile = NULL;
+    strParamOutFile = NULL;
   }
 }
 

@@ -63,7 +63,7 @@ StomachContent::~StomachContent() {
   delete[] functionname;
 }
 
-void StomachContent::AddToLikelihood(const TimeClass* const TimeInfo) {
+void StomachContent::addLikelihood(const TimeClass* const TimeInfo) {
   likelihood += StomCont->Likelihood(TimeInfo);
 }
 
@@ -235,7 +235,6 @@ double SC::Likelihood(const TimeClass* const TimeInfo) {
   for (a = 0; a < consumption.Size(); a++)
     modelConsumption[timeindex][a] = new DoubleMatrix(*consumption[a]);
 
-  /*JMB code removed from here - see RemovedCode for details*/
   //Now, calculate likelihood and cleanup
   double l = CalculateLikelihood(consumption, sum);
   for (a = 0; a < areas.Nrow(); a++)
@@ -312,8 +311,7 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
 
   //Find start of distribution data in datafile
   infile >> ws;
-  char c;
-  c = infile.peek();
+  char c = infile.peek();
   if (!isdigit(c)) {
     infile.get(c);
     while (c != '\n' && !infile.eof())
@@ -385,12 +383,12 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
     }
   }
 
-  AAT.AddActions(Years, Steps, TimeInfo);
+  AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.LogWarning("Warning in stomachcontent - found no data in the data file for", scname);
+    handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
   else
     modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
-  handle.LogMessage("Read stomachcontent data file - number of entries", count);
+  handle.logMessage("Read stomachcontent data file - number of entries", count);
 }
 
 void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -418,8 +416,7 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
 
   //Find start of distribution data in datafile
   infile >> ws;
-  char c;
-  c = infile.peek();
+  char c = infile.peek();
   if (!isdigit(c)) {
     infile.get(c);
     while (c != '\n' && !infile.eof())
@@ -495,12 +492,12 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
     }
   }
 
-  AAT.AddActions(Years, Steps, TimeInfo);
+  AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.LogWarning("Warning in stomachcontent - found no data in the data file for", scname);
+    handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
   else
     modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
-  handle.LogMessage("Read stomachcontent data file - number of entries", count);
+  handle.logMessage("Read stomachcontent data file - number of entries", count);
 }
 
 void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -528,8 +525,7 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
 
   //Find start of distribution data in datafile
   infile >> ws;
-  char c;
-  c = infile.peek();
+  char c = infile.peek();
   if (!isdigit(c)) {
     infile.get(c);
     while (c != '\n' && !infile.eof())
@@ -580,8 +576,8 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
     }
   }
   if (count == 0)
-    handle.LogWarning("Warning in stomachcontent - found no data in the data file for", scname);
-  handle.LogMessage("Read stomachcontent data file - number of entries", count);
+    handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
+  handle.logMessage("Read stomachcontent data file - number of entries", count);
 }
 
 SC::~SC() {
@@ -642,10 +638,9 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
           predators.resize(1, Predators[j]);
         }
 
-      if (found == 0) {
-        handle.LogWarning("Error in stomachcontent - failed to match predator", predatornames[i]);
-        exit(EXIT_FAILURE);
-      }
+      if (found == 0)
+        handle.logFailure("Error in stomachcontent - failed to match predator", predatornames[i]);
+
     }
   }
 
@@ -663,10 +658,9 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
           preys.resize(1, Preys[k]);
         }
 
-      if (found == 0) {
-        handle.LogWarning("Error in stomachcontent - failed to match prey", preynames[i][j]);
-        exit(EXIT_FAILURE);
-      }
+      if (found == 0)
+        handle.logFailure("Error in stomachcontent - failed to match prey", preynames[i][j]);
+
     }
 
     preyLgrpDiv[i] = new LengthGroupDivision(preylengths[i]);

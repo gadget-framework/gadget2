@@ -16,7 +16,7 @@ void PopInfoVector::Sum(const PopInfoVector* const Number, const ConversionIndex
     v[i].N = 0.0;
     v[i].W = 0.0;
   }
-  for (i = CI.Minlength(); i < CI.Maxlength(); i++)
+  for (i = CI.minLength(); i < CI.maxLength(); i++)
     this->operator[](CI.Pos(i)) += (*Number)[i];
 }
 
@@ -45,7 +45,7 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
         pop *= ratio;
         v[l] += pop;
         if (isZero(CI.Nrof(l)))
-          handle.LogWarning("Error in popinfoindexvector - divide by zero");
+          handle.logWarning("Error in popinfoindexvector - divide by zero");
         else
           v[l].N /= CI.Nrof(l);
       }
@@ -86,7 +86,7 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
         pop *= (ratio * Ratio[l]);
         v[l] += pop;
         if (isZero(CI.Nrof(l)))
-          handle.LogWarning("Error in popinfoindexvector - divide by zero");
+          handle.logWarning("Error in popinfoindexvector - divide by zero");
         else
           v[l].N /= CI.Nrof(l);
       }

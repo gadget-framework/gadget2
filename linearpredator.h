@@ -50,7 +50,7 @@ public:
    * \param CurrentSubstep is the substep of the current timestep (so this calculation takes place once per timestep)
    * \param NrOfSubsteps is the number of substeps in the current timestep
    */
-  virtual void AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep);
+  virtual void adjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep);
   /**
    * \brief This function will print the predator information
    * \param outfile is the ofstream that all the model information gets sent to

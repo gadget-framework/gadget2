@@ -107,7 +107,7 @@ ostream& printLengthGroupDivision(ostream& o, const LengthGroupDivision& lgrp, i
   else {
     o << ind << "  meanlengths";
     for (i = 0; i<lgrp.NoLengthGroups(); i++)
-      o << sep << lgrp.Meanlength(i);
+      o << sep << lgrp.meanLength(i);
     o << endl;
   }
   delete[] ind;
@@ -229,30 +229,30 @@ ostream& printAgeGroups(ostream& o, const IntVector& ages, int indent) {
 ostream& printBandMatrix(ostream& o, const BandMatrix& b, int rowindex, int indent) {
   int i, j, maxcol = 0;
   char* ind = makeSpaces(indent);
-  for (i = b.Minage(); i <= b.Maxage(); i++)
-    if (b.Maxlength(i) > maxcol)
-      maxcol = b.Maxlength(i);
+  for (i = b.minAge(); i <= b.maxAge(); i++)
+    if (b.maxLength(i) > maxcol)
+      maxcol = b.maxLength(i);
   if (rowindex)
     o << indent << "with rowindex in first column\n";
 
-  for (i = b.Minage(); i <= b.Maxage(); i++) {
+  for (i = b.minAge(); i <= b.maxAge(); i++) {
     o << ind;
     if (rowindex)
       o << i << "     ";
-    if (b.Minlength(i) > 0) {
-      for (j = 0; j < b.Minlength(i); j++) {
+    if (b.minLength(i) > 0) {
+      for (j = 0; j < b.minLength(i); j++) {
         o.precision(smallprecision);
         o.width(smallwidth);
         o << 0.0 << sep;
       }
     }
-    for (j = b.Minlength(i); j <b.Maxlength(i); j++) {
+    for (j = b.minLength(i); j <b.maxLength(i); j++) {
       o.precision(smallprecision);
       o.width(smallwidth);
       o << double(b[i][j]) << sep;
     }
-    if (b.Maxlength(i) < maxcol) {
-      for (j = b.Maxlength(i); j < maxcol; j++) {
+    if (b.maxLength(i) < maxcol) {
+      for (j = b.maxLength(i); j < maxcol; j++) {
         o.precision(smallprecision);
         o.width(smallwidth);
         o << 0.0 << sep;
@@ -359,7 +359,7 @@ ostream& printmean_n(ostream& o, const MortPrey& prey, AreaClass area, int inden
   int i;
   char* ind = makeSpaces(indent);
   o << ind << "stock\n" << ind << sep << stock.Name() << endl;
-  printVectorHeader(o, stock.Minage(), stock.Maxage(), 1, "mortality", indent);
+  printVectorHeader(o, stock.minAge(), stock.maxAge(), 1, "mortality", indent);
   o << ind;
   for (i = stock.mortality().Mincol(); i < stock.mortality().Maxcol(); i++)
     o << stock.mortality()[i] << sep;
@@ -599,30 +599,30 @@ ostream& printMatrixHeader(ostream& o, int minage, int maxage,
 ostream& printSuitMatrix(ostream& o, const BandMatrix& b, int rowindex, int indent) {
   int i, j, maxcol = 0;
   char* ind = makeSpaces(indent);
-  for (i = b.Minage(); i <= b.Maxage(); i++)
-    if (b.Maxlength(i) > maxcol)
-      maxcol = b.Maxlength(i);
+  for (i = b.minAge(); i <= b.maxAge(); i++)
+    if (b.maxLength(i) > maxcol)
+      maxcol = b.maxLength(i);
   if (rowindex)
     o << ind << "with rowindex in first column\n";
 
-  for (i = b.Minage(); i <= b.Maxage(); i++) {
+  for (i = b.minAge(); i <= b.maxAge(); i++) {
     o << ind;
     if (rowindex)
       o << i << "     ";
-    if (b.Minlength(i) > 0) {
-      for (j = 0; j < b.Minlength(i); j++) {
+    if (b.minLength(i) > 0) {
+      for (j = 0; j < b.minLength(i); j++) {
         o.precision(smallprecision);
         o.width(smallwidth);
         o << 0.0 << sep;
       }
     }
-    for (j = b.Minlength(i); j <b.Maxlength(i); j++) {
+    for (j = b.minLength(i); j <b.maxLength(i); j++) {
       o.precision(smallprecision);
       o.width(smallwidth);
       o << double(b[i][j]) << sep;
     }
-    if (b.Maxlength(i) < maxcol) {
-      for (j = b.Maxlength(i); j < maxcol; j++) {
+    if (b.maxLength(i) < maxcol) {
+      for (j = b.maxLength(i); j < maxcol; j++) {
         o.precision(smallprecision);
         o.width(smallwidth);
         o << 0.0 << sep;
@@ -653,7 +653,7 @@ ostream& printN(ostream& o, const AgeBandMatrix& a, const IntVector* ages, int i
 
 /*  printW
  *
- *  Purpose: PrintW from agebandmatrix
+ *  Purpose: Print W from agebandmatrix
  *
  *  In: ostream& o      :output stream
  *  AgeBandMatrix& a    :AgeBandMatrix to print
@@ -691,22 +691,22 @@ ostream& printNorW(ostream& o, const AgeBandMatrix& a, int PrintN,
   o.setf(ios::fixed);
   char* ind = makeSpaces(indent);
 
-  for (i = a.Minage(); i <= a.Maxage(); i++)
-    if (a.Maxlength(i) > maxcol)
-      maxcol = a.Maxlength(i);
+  for (i = a.minAge(); i <= a.maxAge(); i++)
+    if (a.maxLength(i) > maxcol)
+      maxcol = a.maxLength(i);
   int mincol = maxcol;
-  for (i = a.Minage(); i <= a.Maxage(); i++)
-    if (a.Minlength(i) < mincol)
-      mincol = a.Minlength(i);
-  for (i = a.Minage(); i <= a.Maxage(); i++) {
+  for (i = a.minAge(); i <= a.maxAge(); i++)
+    if (a.minLength(i) < mincol)
+      mincol = a.minLength(i);
+  for (i = a.minAge(); i <= a.maxAge(); i++) {
     if (ages != 0)
-      o << ind << (*ages)[i - a.Minage()] << "     ";
-    for (j = mincol; j < a.Minlength(i); j++) {
+      o << ind << (*ages)[i - a.minAge()] << "     ";
+    for (j = mincol; j < a.minLength(i); j++) {
       o.precision(printprecision);
       o.width(printwidth);
       o << 0.0 << sep;
     }
-    for (j = a.Minlength(i); j < a.Maxlength(i); j++) {
+    for (j = a.minLength(i); j < a.maxLength(i); j++) {
       o.precision(printprecision);
       o.width(printwidth);
       if (PrintN)
@@ -715,8 +715,8 @@ ostream& printNorW(ostream& o, const AgeBandMatrix& a, int PrintN,
         o << a[i][j].W;
       o << sep;
     }
-    if (a.Maxlength(i) < maxcol) {
-      for (j = a.Maxlength(i); j < maxcol; j++) {
+    if (a.maxLength(i) < maxcol) {
+      for (j = a.maxLength(i); j < maxcol; j++) {
         o.precision(printprecision);
         o.width(printwidth);
         o << 0.0 << sep;
@@ -891,7 +891,6 @@ ostream& printM2byAge(ostream& o, const DoubleMatrix& a, int minage, int firstye
     }
     o << endl;
   }
-  /*JMB code removed from here - see RemovedCode.txt for details*/
   o << endl;
   return o.flush();
 }

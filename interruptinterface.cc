@@ -51,5 +51,5 @@ void InterruptInterface::dumpAll() {
   char interruptfile[15];
   strncpy(interruptfile, "", 15);
   strcpy(interruptfile, "modeldump.out");
-  eco->PrintStatus(interruptfile);
+  eco->writeStatus(interruptfile);
 }

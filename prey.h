@@ -36,15 +36,15 @@ public:
   virtual ~Prey() = 0;
   virtual void Sum(const AgeBandMatrix& Alkeys, int area, int NrofSubstep) {};
   virtual void Subtract(AgeBandMatrix& Alkeys, int area);
-  void AddConsumption(int area, const DoubleIndexVector& predconsumption);
+  void addConsumption(int area, const DoubleIndexVector& predconsumption);
   virtual void setCI(const LengthGroupDivision* const GivenLDiv);
   virtual void Print(ofstream& outfile) const;
   double Biomass(int area, int length) const { return biomass[AreaNr[area]][length]; };
   double Biomass(int area) const { return total[AreaNr[area]]; };
   int TooMuchConsumption(int area) const { return tooMuchConsumption[AreaNr[area]]; };
-  virtual void CheckConsumption(int area, int NrOfSubsteps);
+  virtual void checkConsumption(int area, int NrOfSubsteps);
   double Ratio(int area, int length) const { return ratio[AreaNr[area]][length]; };
-  double Length(int j) const { return LgrpDiv->Meanlength(j); };
+  double Length(int j) const { return LgrpDiv->meanLength(j); };
   int NoLengthGroups() const { return LgrpDiv->NoLengthGroups(); };
   const DoubleVector& Bconsumption(int area) const { return consumption[AreaNr[area]]; };
   const DoubleVector& OverConsumption(int area) const { return overconsumption[AreaNr[area]]; };

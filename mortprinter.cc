@@ -125,20 +125,20 @@ void MortPrinter::setStock(StockPtrVector& stockvec) {
       }
 
   if (stocks.Size() != stocknames.Size()) {
-    handle.LogWarning("Error in mortprinter - failed to match stocks");
+    handle.logWarning("Error in mortprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      handle.LogWarning("Error in mortprinter - found stock", stocks[i]->Name());
+      handle.logWarning("Error in mortprinter - found stock", stocks[i]->Name());
     for (i = 0; i < stocknames.Size(); i++)
-      handle.LogWarning("Error in mortprinter - looking for stock", stocknames[i]);
+      handle.logWarning("Error in mortprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
-  minage = stocks[0]->Minage();
-  maxage = stocks[0]->Maxage();
+  minage = stocks[0]->minAge();
+  maxage = stocks[0]->maxAge();
   for (i = 0; i < stocks.Size(); i++) {
-    if (stocks[i]->Minage() < minage)
-      minage = stocks[i]->Minage();
-    if (stocks[i]->Maxage() > maxage)
-      maxage = stocks[i]->Maxage();
+    if (stocks[i]->minAge() < minage)
+      minage = stocks[i]->minAge();
+    if (stocks[i]->maxAge() > maxage)
+      maxage = stocks[i]->maxAge();
   }
 
   if (sumF != 0)
@@ -185,13 +185,13 @@ void MortPrinter::Print(const TimeClass* const TimeInfo) {
       inarea = Area->InnerArea(areas[area]);
       yo = firstyear - TimeInfo->FirstYear();
       for (s = 0; s < stocks.Size(); s++) {
-        for (i = stocks[s]->Minage(); i <= stocks[s]->Maxage(); i++) {
+        for (i = stocks[s]->minAge(); i <= stocks[s]->maxAge(); i++) {
           const DoubleMatrix& F = ((LenStock*)stocks[s])->getF(inarea);
           const DoubleMatrix& M1 = ((LenStock*)stocks[s])->getM1(inarea);
           const DoubleMatrix& M2 = ((LenStock*)stocks[s])->getM2(inarea);
           const DoubleMatrix& Nbar = ((LenStock*)stocks[s])->getNbar(inarea);
           const DoubleMatrix& N = ((LenStock*)stocks[s])->getNsum(inarea);
-          age = i - stocks[s]->Minage();
+          age = i - stocks[s]->minAge();
           for (j = 0; j < nrofyears; j++) {
             (*sumF)[i - minage][j] += F[age][j + yo] * Nbar[age][j + yo];
             (*sumM1)[i - minage][j] += M1[age][j + yo] * Nbar[age][j + yo];

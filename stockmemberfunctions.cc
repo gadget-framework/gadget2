@@ -27,7 +27,7 @@ void Stock::Migrate(const TimeClass* const TimeInfo) {
   //age dependent migrations should also be here.
   if (doesmigrate) {
     Alkeys.Migrate(migration->Migrationmatrix(TimeInfo));
-    if (tagAlkeys.NrOfTagExp() > 0)
+    if (tagAlkeys.numTagExperiments() > 0)
       tagAlkeys.Migrate(migration->Migrationmatrix(TimeInfo), Alkeys);
   }
 }
@@ -60,14 +60,14 @@ void Stock::calcEat(int area, const AreaClass* const Area, const TimeClass* cons
       Area->Size(area), TimeInfo->CurrentSubstep(), TimeInfo->NrOfSubsteps());
 }
 
-void Stock::CheckEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::checkEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (iseaten)
-    prey->CheckConsumption(area, TimeInfo->NrOfSubsteps());
+    prey->checkConsumption(area, TimeInfo->NrOfSubsteps());
 }
 
-void Stock::AdjustEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::adjustEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doeseat)
-    predator->AdjustConsumption(area, TimeInfo->NrOfSubsteps(), TimeInfo->CurrentSubstep());
+    predator->adjustConsumption(area, TimeInfo->NrOfSubsteps(), TimeInfo->CurrentSubstep());
 }
 
 //-------------------------------------------------------------------
@@ -91,7 +91,7 @@ void Stock::ReducePop(int area, const AreaClass* const Area, const TimeClass* co
   Alkeys[inarea].Multiply(*PropSurviving);
   delete PropSurviving;
 
-  if (tagAlkeys.NrOfTagExp() > 0)
+  if (tagAlkeys.numTagExperiments() > 0)
     tagAlkeys[inarea].updateAndTagLoss(Alkeys[inarea], tagAlkeys.tagloss());
 }
 
@@ -99,10 +99,8 @@ void Stock::ReducePop(int area, const AreaClass* const Area, const TimeClass* co
 //Function that updates the length distributions and makes part of the stock Mature.
 void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  if (!doesgrow && doesmature) {
-    handle.LogWarning("Error in stock - maturation without growth is not implemented");
-    exit(EXIT_FAILURE);
-  }
+  if (!doesgrow && doesmature)
+    handle.logFailure("Error in stock - maturation without growth is not implemented");
 
   if (!doesgrow)
     return;
@@ -118,16 +116,16 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
   if (doesmature) {
     if (maturity->IsMaturationStep(area, TimeInfo)) {
       Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area), maturity, TimeInfo, Area, area);
-      if (tagAlkeys.NrOfTagExp() > 0)
+      if (tagAlkeys.numTagExperiments() > 0)
         tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
     } else {
       Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area));
-      if (tagAlkeys.NrOfTagExp() > 0)
+      if (tagAlkeys.numTagExperiments() > 0)
         tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
     }
   } else {
     Alkeys[inarea].Grow(grower->LengthIncrease(area), grower->WeightIncrease(area));
-    if (tagAlkeys.NrOfTagExp() > 0)
+    if (tagAlkeys.numTagExperiments() > 0)
       tagAlkeys[inarea].Grow(grower->LengthIncrease(area), Alkeys[inarea]);
   }
 }
@@ -137,22 +135,25 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 //Transition to other Stocks, Maturity due to age and increased age.
 void Stock::FirstUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doesmove)
-    transition->KeepAgegroup(area, Alkeys[AreaNr[area]], tagAlkeys[AreaNr[area]], TimeInfo);
+    if (transition->IsTransitionStep(area, TimeInfo))
+      transition->keepAgeGroup(area, Alkeys[AreaNr[area]], tagAlkeys[AreaNr[area]], TimeInfo);
 }
 
 void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (this->Birthday(TimeInfo)) {
     int inarea = AreaNr[area];
     Alkeys[inarea].IncrementAge();
-    if (tagAlkeys.NrOfTagExp() > 0)
+    if (tagAlkeys.numTagExperiments() > 0)
       tagAlkeys[inarea].IncrementAge(Alkeys[inarea]);
   }
 }
 
 void Stock::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doesmove) {
-    updateTransitionStockWithTags(TimeInfo);
-    transition->Move(area, TimeInfo);
+    if (transition->IsTransitionStep(area, TimeInfo)) {
+      updateTransitionStockWithTags(TimeInfo);
+      transition->Move(area, TimeInfo);
+    }
   }
   if (doesspawn) {
     spawner->addSpawnStock(area, TimeInfo);
@@ -163,7 +164,7 @@ void Stock::FirstSpecialTransactions(int area, const AreaClass* const Area, cons
   if (doesspawn) {
     int inarea = AreaNr[area];
     spawner->Spawn(Alkeys[inarea], area, Area, TimeInfo);
-    if (tagAlkeys.NrOfTagExp() > 0)
+    if (tagAlkeys.numTagExperiments() > 0)
       tagAlkeys[inarea].updateNumbers(Alkeys[inarea]);
   }
 }
@@ -195,8 +196,8 @@ void Stock::updateTransitionStockWithTags(const TimeClass* const TimeInfo) {
 void Stock::Renewal(int area, const TimeClass* const TimeInfo) {
   if (doesrenew) {
     int inarea = AreaNr[area];
-    renewal->AddRenewal(Alkeys[inarea], area, TimeInfo);
-    if (tagAlkeys.NrOfTagExp() > 0)
+    renewal->addRenewal(Alkeys[inarea], area, TimeInfo);
+    if (tagAlkeys.numTagExperiments() > 0)
       tagAlkeys[inarea].updateRatio(Alkeys[inarea]);
   }
 }
@@ -212,7 +213,7 @@ void Stock::Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
 void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
   int area, double ratio, int MinAge, int MaxAge) {
 
-  if ((Addition.NrOfTagExp() > 0) && (Addition.NrOfTagExp() <= tagAlkeys.NrOfTagExp())) {
+  if ((Addition.numTagExperiments() > 0) && (Addition.numTagExperiments() <= tagAlkeys.numTagExperiments())) {
     int inarea = AreaNr[area];
     AgebandmratioAdd(tagAlkeys, inarea, Addition, AddArea, *CI, ratio, MinAge, MaxAge);
     tagAlkeys[inarea].updateRatio(Alkeys[inarea]);

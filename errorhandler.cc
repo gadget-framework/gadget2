@@ -15,7 +15,7 @@ ErrorHandler::~ErrorHandler() {
     logfile.close();
     logfile.clear();
   }
-  files->ClearStack();
+  files->clearStack();
   delete files;
 }
 
@@ -36,17 +36,17 @@ void ErrorHandler::setLogFile(const char* filename) {
   uselog = 1;
 }
 
-void ErrorHandler::Open(const char* file) {
+void ErrorHandler::Open(const char* filename) {
   if (uselog) {
-    logfile << "Opening file " << file << endl;
+    logfile << "Opening file " << filename << endl;
     logfile.flush();
   }
-  files->PutInStack(file);
+  files->PutInStack(filename);
 }
 
 void ErrorHandler::Close() {
   if (uselog) {
-    char* strFilename = files->SendTop();
+    char* strFilename = files->sendTop();
     logfile << "Closing file " << strFilename << endl;
     logfile.flush();
     delete[] strFilename;
@@ -54,35 +54,35 @@ void ErrorHandler::Close() {
   files->OutOfStack();
 }
 
-void ErrorHandler::LogMessage(const char* msg) {
+void ErrorHandler::logMessage(const char* msg) {
   if (uselog) {
     logfile << msg << endl;
     logfile.flush();
   }
 }
 
-void ErrorHandler::LogMessage(const char* msg, int number) {
+void ErrorHandler::logMessage(const char* msg, int number) {
   if (uselog) {
     logfile << msg << sep << number << endl;
     logfile.flush();
   }
 }
 
-void ErrorHandler::LogMessage(const char* msg, double number) {
+void ErrorHandler::logMessage(const char* msg, double number) {
   if (uselog) {
     logfile << msg << sep << number << endl;
     logfile.flush();
   }
 }
 
-void ErrorHandler::LogMessage(const char* msg1, const char* msg2) {
+void ErrorHandler::logMessage(const char* msg1, const char* msg2) {
   if (uselog) {
     logfile << msg1 << sep << msg2 << endl;
     logfile.flush();
   }
 }
 
-void ErrorHandler::LogWarning(const char* msg) {
+void ErrorHandler::logWarning(const char* msg) {
   if (uselog) {
     logfile << msg << endl;
     logfile.flush();
@@ -90,7 +90,7 @@ void ErrorHandler::LogWarning(const char* msg) {
   cerr << msg << endl;
 }
 
-void ErrorHandler::LogWarning(const char* msg, int number) {
+void ErrorHandler::logWarning(const char* msg, int number) {
   if (uselog) {
     logfile << msg << sep << number << endl;
     logfile.flush();
@@ -98,7 +98,7 @@ void ErrorHandler::LogWarning(const char* msg, int number) {
   cerr << msg << sep << number << endl;
 }
 
-void ErrorHandler::LogWarning(const char* msg, double number) {
+void ErrorHandler::logWarning(const char* msg, double number) {
   if (uselog) {
     logfile << msg << sep << number << endl;
     logfile.flush();
@@ -106,15 +106,7 @@ void ErrorHandler::LogWarning(const char* msg, double number) {
   cerr << msg << sep << number << endl;
 }
 
-void ErrorHandler::LogWarning(const char* msg, double num1, double num2) {
-  if (uselog) {
-    logfile << msg << sep << num1 << sep << num2 << endl;
-    logfile.flush();
-  }
-  cerr << msg << sep << num1 << sep << num2 << endl;
-}
-
-void ErrorHandler::LogWarning(const char* msg1, const char* msg2) {
+void ErrorHandler::logWarning(const char* msg1, const char* msg2) {
   if (uselog) {
     logfile << msg1 << sep << msg2 << endl;
     logfile.flush();
@@ -122,8 +114,44 @@ void ErrorHandler::LogWarning(const char* msg1, const char* msg2) {
   cerr << msg1 << sep << msg2 << endl;
 }
 
+void ErrorHandler::logFailure(const char* msg) {
+  if (uselog) {
+    logfile << msg << endl;
+    logfile.flush();
+  }
+  cerr << msg << endl;
+  exit(EXIT_FAILURE);
+}
+
+void ErrorHandler::logFailure(const char* msg, int number) {
+  if (uselog) {
+    logfile << msg << sep << number << endl;
+    logfile.flush();
+  }
+  cerr << msg << sep << number << endl;
+  exit(EXIT_FAILURE);
+}
+
+void ErrorHandler::logFailure(const char* msg, double number) {
+  if (uselog) {
+    logfile << msg << sep << number << endl;
+    logfile.flush();
+  }
+  cerr << msg << sep << number << endl;
+  exit(EXIT_FAILURE);
+}
+
+void ErrorHandler::logFailure(const char* msg1, const char* msg2) {
+  if (uselog) {
+    logfile << msg1 << sep << msg2 << endl;
+    logfile.flush();
+  }
+  cerr << msg1 << sep << msg2 << endl;
+  exit(EXIT_FAILURE);
+}
+
 void ErrorHandler::Message(const char* msg) {
-  char* strFilename = files->SendTop();
+  char* strFilename = files->sendTop();
   if (uselog) {
     logfile << "Error in file " << strFilename << ":\n" << msg << endl;
     logfile.flush();
@@ -134,7 +162,7 @@ void ErrorHandler::Message(const char* msg) {
 }
 
 void ErrorHandler::Message(const char* msg1, const char* msg2) {
-  char* strFilename = files->SendTop();
+  char* strFilename = files->sendTop();
   if (uselog) {
     logfile << "Error in file " << strFilename << ":\n" << msg1 << sep << msg2 << endl;
     logfile.flush();
@@ -145,7 +173,7 @@ void ErrorHandler::Message(const char* msg1, const char* msg2) {
 }
 
 void ErrorHandler::Unexpected(const char* exp, const char* unexp) {
-  char* strFilename = files->SendTop();
+  char* strFilename = files->sendTop();
   if (uselog) {
     logfile << "Error in file " << strFilename << ":\n"
       << "Expected " << exp << " but found instead " << unexp << endl;
@@ -158,7 +186,7 @@ void ErrorHandler::Unexpected(const char* exp, const char* unexp) {
 }
 
 void ErrorHandler::Warning(const char* msg) {
-  char* strFilename = files->SendTop();
+  char* strFilename = files->sendTop();
   if (uselog) {
     logfile << "Warning in file " << strFilename << ": " << msg << endl;
     logfile.flush();
@@ -168,7 +196,7 @@ void ErrorHandler::Warning(const char* msg) {
 }
 
 void ErrorHandler::Eof() {
-  char* strFilename = files->SendTop();
+  char* strFilename = files->sendTop();
   if (uselog) {
     logfile << "Unexpected end of file " << strFilename << endl;
     logfile.flush();
@@ -179,7 +207,7 @@ void ErrorHandler::Eof() {
 }
 
 void ErrorHandler::Failure() {
-  char* strFilename = files->SendTop();
+  char* strFilename = files->sendTop();
   if (uselog) {
     logfile << "Failure in file " << strFilename << endl;
     logfile.flush();
@@ -190,7 +218,7 @@ void ErrorHandler::Failure() {
 }
 
 void ErrorHandler::UndefinedArea(int area) {
-  char* strFilename = files->SendTop();
+  char* strFilename = files->sendTop();
   if (uselog) {
     logfile << "Error in file " << strFilename << ": Undefined area " << area << endl;
     logfile.flush();
@@ -205,7 +233,7 @@ void ErrorHandler::checkIfFailure(ios& infile, const char* text) {
     logfile << "Checking to see if file " << text << " can be opened ... ";
 
   if (infile.fail()) {
-    char* strFilename = files->SendTop();
+    char* strFilename = files->sendTop();
     if (uselog) {
       logfile << "Failed" << endl;
       logfile.flush();

@@ -8,16 +8,16 @@ MigVariable::MigVariable(CommentStream& infile, int firstyear, int lastyear,
   Keeper* const keeper) : ValuesReadFromFile(1) {
 
   int i;
-  keeper->AddString("MigVariable");
+  keeper->addString("migvariable");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
   if (strcasecmp(text, "coeff") != 0)
     handle.Unexpected("coeff", text);
-  Coeff.resize(4, keeper);
-  infile >> Coeff;
-  Coeff.Inform(keeper);
-  if (Coeff[3] <= Coeff[2])
+  coeff.resize(4, keeper);
+  infile >> coeff;
+  coeff.Inform(keeper);
+  if (coeff[3] <= coeff[2])
     handle.Message("Minvalue > Maxvalue");
   infile >> ws >> text;
   if (strcasecmp(text, "data") != 0)
@@ -50,11 +50,11 @@ double MigVariable::ValueOfVariable(int year) {
   int i;
   if (ValuesReadFromFile) {
     i = year - years[0];
-    result = Coeff[0] * values[i] + Coeff[1] * temperature[i];
-    if (result < Coeff[2])
-      result = Coeff[2];
-    if (result > Coeff[3])
-      result = Coeff[3];
+    result = coeff[0] * values[i] + coeff[1] * temperature[i];
+    if (result < coeff[2])
+      result = coeff[2];
+    if (result > coeff[3])
+      result = coeff[3];
   } else
     result = value;
   return result;

@@ -23,16 +23,16 @@ void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {
   //Calculate consumption and Growth;
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
-      basevec[i]->calcEat(area, Area, TimeInfo);  //Calculate consumption
+      basevec[i]->calcEat(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
-      basevec[i]->CheckEat(area, Area, TimeInfo);   //Check consumption
+      basevec[i]->checkEat(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
-      basevec[i]->AdjustEat(area, Area, TimeInfo);  //Adjust consumption
+      basevec[i]->adjustEat(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
-      basevec[i]->ReducePop(area, Area, TimeInfo); //NaturalM, catch
+      basevec[i]->ReducePop(area, Area, TimeInfo);
 }
 
 void Ecosystem::GrowthAndSpecialTransactions(int area) {
@@ -42,7 +42,7 @@ void Ecosystem::GrowthAndSpecialTransactions(int area) {
     if (basevec[i]->IsInArea(area))
       basevec[i]->Grow(area, Area, TimeInfo);
 
-  //Under SpecialTransactions are movements to mature stock, Spawning and Renewal.
+  //Under SpecialTransactions are movements to mature stock, spawning and renewal.
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->IsInArea(area))
       basevec[i]->FirstSpecialTransactions(area, Area, TimeInfo);
@@ -88,10 +88,9 @@ int Ecosystem::Simulate(int Optimize, int print) {
     Likely[i]->Reset(keeper);
 
   if (Optimize)
-    //Added 24 sept 1998 is the function(AddToLikelihood(TimeInfo, keeper);
     //put here for boundlikelihood is allowed to change values
     for (i = 0; i < Likely.Size(); i++)
-      Likely[i]->AddToLikelihoodTimeAndKeeper(TimeInfo, keeper);
+      Likely[i]->addLikelihoodKeeper(TimeInfo, keeper);
 
   TimeInfo->ResetToBeginning();
   for (i = 0; i < basevec.Size(); i++)
@@ -114,7 +113,7 @@ int Ecosystem::Simulate(int Optimize, int print) {
     SimulateOneTimestep();
     if (Optimize)
       for (j = 0; j < Likely.Size(); j++)
-        Likely[j]->AddToLikelihood(TimeInfo);
+        Likely[j]->addLikelihood(TimeInfo);
 
     if (print) {
       for (j = 0; j < printvec.Size(); j++)
@@ -130,12 +129,12 @@ int Ecosystem::Simulate(int Optimize, int print) {
       if (interrupted) {
         InterruptInterface ui(*this);
         if (!ui.menu()) {
-          handle.LogMessage("** Gadget interrupted - quitting current simulation **");
+          handle.logMessage("** Gadget interrupted - quitting current simulation **");
           //JMB - dump *current* switch values to a file - these wont usually be the *best* values
           char interruptfile[15];
           strncpy(interruptfile, "", 15);
           strcpy(interruptfile, "interrupt.out");
-          this->PrintParamsinColumns(interruptfile, 0);
+          this->writeParamsInColumns(interruptfile, 0);
           exit(EXIT_SUCCESS);
         }
         interrupted = 0;

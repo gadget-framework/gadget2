@@ -26,7 +26,6 @@ PredPreyStdAgePrinter::~PredPreyStdAgePrinter() {
 void PredPreyStdAgePrinter::setPopPredAndPrey(const PopPredator* pred,
   const Prey* pRey, int IsStockPredator, int IsStockPrey) {
 
-  assert(!predinfo);
   predator = pred;
   prey = pRey;
   if (IsStockPredator) {
@@ -42,7 +41,7 @@ void PredPreyStdAgePrinter::setPopPredAndPrey(const PopPredator* pred,
 }
 
 void PredPreyStdAgePrinter::Print(const TimeClass * const TimeInfo) {
-  assert(predinfo);
+
   if (!AAT.AtCurrentTime(TimeInfo))
     return;
   int a, predage, preyage;
@@ -51,8 +50,8 @@ void PredPreyStdAgePrinter::Print(const TimeClass * const TimeInfo) {
     predinfo->Sum(TimeInfo, areas[a]);
 
   for (a = 0; a < areas.Size(); a++) {
-    for (predage = predinfo->NconsumptionByAge(areas[a]).Minage();
-        predage <= predinfo->NconsumptionByAge(areas[a]).Maxage(); predage++) {
+    for (predage = predinfo->NconsumptionByAge(areas[a]).minAge();
+        predage <= predinfo->NconsumptionByAge(areas[a]).maxAge(); predage++) {
       for (preyage = predinfo->NconsumptionByAge(areas[a]).Mincol(predage);
           preyage < predinfo->NconsumptionByAge(areas[a]).Maxcol(predage); preyage++) {
 

@@ -17,7 +17,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   const TimeClass* const TimeInfo, double weight, const char* name)
   : Likelihood(CATCHSTATISTICSLIKELIHOOD, weight) {
 
-  lgrpDiv = NULL;
+  LgrpDiv = NULL;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j;
@@ -136,8 +136,7 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
 
   //Find start of statistics data in datafile
   infile >> ws;
-  char c;
-  c = infile.peek();
+  char c = infile.peek();
   if (!isdigit(c)) {
     infile.get(c);
     while (c != '\n' && !infile.eof())
@@ -215,10 +214,10 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
         (*variance[timeid])[areaid][ageid] = tmpstddev * tmpstddev;
     }
   }
-  AAT.AddActions(Years, Steps, TimeInfo);
+  AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.LogWarning("Warning in catchstatistics - found no data in the data file for", csname);
-  handle.LogMessage("Read catchstatistics data file - number of entries", count);
+    handle.logWarning("Warning in catchstatistics - found no data in the data file for", csname);
+  handle.logMessage("Read catchstatistics data file - number of entries", count);
 }
 
 CatchStatistics::~CatchStatistics() {
@@ -240,9 +239,9 @@ CatchStatistics::~CatchStatistics() {
     delete variance[i];
   delete[] csname;
   delete[] functionname;
-  if (lgrpDiv != NULL) {
-    delete lgrpDiv;
-    lgrpDiv = NULL;
+  if (LgrpDiv != NULL) {
+    delete LgrpDiv;
+    LgrpDiv = NULL;
   }
 }
 
@@ -280,10 +279,9 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
         fleets.resize(1, Fleets[j]);
       }
 
-    if (found == 0) {
-      handle.LogWarning("Error in catchstatistics - unknown fleet", fleetnames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in catchstatistics - unknown fleet", fleetnames[i]);
+
   }
 
   for (i = 0; i < stocknames.Size(); i++) {
@@ -295,33 +293,30 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
           stocks.resize(1, Stocks[j]);
         }
 
-    if (found == 0) {
-      handle.LogWarning("Error in catchstatistics - unknown stock", stocknames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in catchstatistics - unknown stock", stocknames[i]);
+
   }
 
-  lgrpDiv = new LengthGroupDivision(*(stocks[0]->returnPrey()->returnLengthGroupDiv()));
+  LgrpDiv = new LengthGroupDivision(*(stocks[0]->returnPrey()->returnLengthGroupDiv()));
   for (i = 1; i < stocks.Size(); i++)
-    if (!lgrpDiv->Combine(stocks[i]->returnPrey()->returnLengthGroupDiv())) {
-      handle.LogWarning("Error in catchstatistics - length groups for preys not compatible");
-      exit(EXIT_FAILURE);
-    }
+    if (!LgrpDiv->Combine(stocks[i]->returnPrey()->returnLengthGroupDiv()))
+      handle.logFailure("Error in catchstatistics - length groups for preys not compatible");
 
-  aggregator = new FleetPreyAggregator(fleets, stocks, lgrpDiv, areas, ages, overconsumption);
+  aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
 }
 
-void CatchStatistics::AddToLikelihood(const TimeClass* const TimeInfo) {
+void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
 
   if (AAT.AtCurrentTime(TimeInfo)) {
     aggregator->Sum(TimeInfo);
     //JMB - check the following if any new functionnumber values are added
-    likelihood += SOSWeightOrLength();
+    likelihood += calcLikSumSquares();
     timeindex++;
   }
 }
 
-double CatchStatistics::SOSWeightOrLength() {
+double CatchStatistics::calcLikSumSquares() {
   double lik = 0.0;
   int nareas, age;
   double simmean, simvar, simnumber, simdiff;
@@ -334,38 +329,38 @@ double CatchStatistics::SOSWeightOrLength() {
 
       switch(functionnumber) {
         case 1:
-          simmean = PopStat.MeanLength();
+          simmean = PopStat.meanLength();
           simdiff = simmean - (*mean[timeindex])[nareas][age];
-          simvar = PopStat.StdDevOfLength() * PopStat.StdDevOfLength();
-          simnumber = PopStat.TotalNumber();
+          simvar = PopStat.sdevLength() * PopStat.sdevLength();
+          simnumber = PopStat.totalNumber();
           break;
         case 2:
         case 6:
-          simmean = PopStat.MeanLength();
+          simmean = PopStat.meanLength();
           simdiff = simmean - (*mean[timeindex])[nareas][age];
           simvar = (*variance[timeindex])[nareas][age];
-          simnumber = PopStat.TotalNumber();
+          simnumber = PopStat.totalNumber();
           break;
         case 3:
-          simmean = PopStat.MeanWeight();
+          simmean = PopStat.meanWeight();
           simdiff = simmean - (*mean[timeindex])[nareas][age];
           simvar = (*variance[timeindex])[nareas][age];
-          simnumber = PopStat.TotalNumber();
+          simnumber = PopStat.totalNumber();
           break;
         case 4:
-          simmean = PopStat.MeanWeight();
+          simmean = PopStat.meanWeight();
           simdiff = simmean - (*mean[timeindex])[nareas][age];
           simvar = 1.0;
-          simnumber = PopStat.TotalNumber();
+          simnumber = PopStat.totalNumber();
           break;
         case 5:
-          simmean = PopStat.MeanLength();
+          simmean = PopStat.meanLength();
           simdiff = simmean - (*mean[timeindex])[nareas][age];
           simvar = 1.0;
-          simnumber = PopStat.TotalNumber();
+          simnumber = PopStat.totalNumber();
           break;
         default:
-          handle.LogWarning("Warning in catchstatistics - unknown function", functionname);
+          handle.logWarning("Warning in catchstatistics - unknown function", functionname);
           break;
       }
       switch(functionnumber) {
@@ -393,7 +388,7 @@ double CatchStatistics::SOSWeightOrLength() {
 
           break;
         default:
-          handle.LogWarning("Warning in catchstatistics - unknown function", functionname);
+          handle.logWarning("Warning in catchstatistics - unknown function", functionname);
           break;
       }
     }

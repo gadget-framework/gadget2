@@ -4,10 +4,9 @@
 extern ErrorHandler handle;
 
 LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
-  if (A.Ncol() != A.Nrow()) {
-    handle.LogWarning("Error in ludecomposition - matrix not rectangular");
-    exit(EXIT_FAILURE);
-  }
+  if (A.Ncol() != A.Nrow())
+    handle.logFailure("Error in ludecomposition - matrix not rectangular");
+
   illegal = 0;
   int i, k, j;
   double s;
@@ -23,7 +22,7 @@ LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
       logdet += log(U[k][k]);
 
     else if (U[k][k] <= 0.0 & logdet < verybig) {
-      handle.LogWarning("Warning in ludecomposition - non positive number on matrix diagonal");
+      handle.logWarning("Warning in ludecomposition - non positive number on matrix diagonal");
       illegal = 1;
     }
 
@@ -40,10 +39,9 @@ LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
 
 //  calculates the solution of Ax=b using the LU decomposition calculated in the constructor
 DoubleVector LUDecomposition::Solve(const DoubleVector& b) {
-  if (size != b.Size()){
-    handle.LogWarning("Error in ludecomposition - sizes not the same");
-    exit(EXIT_FAILURE);
-  }
+  if (size != b.Size())
+    handle.logFailure("Error in ludecomposition - sizes not the same");
+
   int i, j;
   double s;
   DoubleVector y = DoubleVector(b);

@@ -69,7 +69,7 @@ void Ecosystem::readFleet(CommentStream& infile) {
     } else
       handle.Message("Error in main file - unrecognised fleet", text);
 
-    handle.LogMessage("Read fleet OK - created fleet", value);
+    handle.logMessage("Read fleet OK - created fleet", value);
   }
 }
 
@@ -100,7 +100,7 @@ void Ecosystem::readTagging(CommentStream& infile) {
     } else
       handle.Unexpected("tagid", text);
 
-    handle.LogMessage("Read tagging experiment OK - created tag", value);
+    handle.logMessage("Read tagging experiment OK - created tag", value);
   }
 }
 
@@ -131,7 +131,7 @@ void Ecosystem::readOtherFood(CommentStream& infile) {
     } else
       handle.Unexpected("foodname", text);
 
-    handle.LogMessage("Read otherfood OK - created otherfood", value);
+    handle.logMessage("Read otherfood OK - created otherfood", value);
   }
 }
 
@@ -164,7 +164,7 @@ void Ecosystem::readStock(CommentStream& infile, int mortmodel) {
   else                  //original bormicon stock model used
     stockvec[i] = new Stock(infile, stocknames[i], Area, TimeInfo, keeper);
 
-  handle.LogMessage("Read stock OK - created stock", text);
+  handle.logMessage("Read stock OK - created stock", text);
 }
 
 //
@@ -222,7 +222,7 @@ void Ecosystem::readPrinters(CommentStream& infile) {
     else
       handle.Message("Error in main file - unrecognised printer", type);
 
-    handle.LogMessage("Read printer OK - created printer class", type);
+    handle.logMessage("Read printer OK - created printer class", type);
   }
 }
 
@@ -258,7 +258,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
     readWordAndVariable(infile, "weight", weight);
     readWordAndValue(infile, "type", type);
 
-    keeper->AddComponent(name);
+    keeper->addComponent(name);
     Likely.resize(1);
     i = Likely.Size() - 1;
 
@@ -329,7 +329,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       handle.Message("Error in main file - unrecognised likelihood", type);
     }
 
-    handle.LogMessage("Read likelihood OK - created likelihood component", name);
+    handle.logMessage("Read likelihood OK - created likelihood component", name);
   }
 }
 

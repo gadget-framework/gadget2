@@ -25,7 +25,7 @@ MigrationPenalty::MigrationPenalty(CommentStream& infile, double weight)
   }
 }
 
-void MigrationPenalty::AddToLikelihood(const TimeClass* const TimeInfo) {
+void MigrationPenalty::addLikelihood(const TimeClass* const TimeInfo) {
   likelihood = 0;
   int i;
 
@@ -46,13 +46,10 @@ void MigrationPenalty::setStocks(StockPtrVector Stocks) {
       stock = Stocks[i];
     }
 
-  if (found == 0) {
-    handle.LogWarning("Error in migrationpenalty - failed to match stock", stockname);
-    exit(EXIT_FAILURE);
-  }
-
+  if (found == 0)
+    handle.logFailure("Error in migrationpenalty - failed to match stock", stockname);
   if (!(stock->doesMigrate()))
-    handle.LogWarning("Warning in migrationpenalty - stock doesnt migrate");
+    handle.logWarning("Warning in migrationpenalty - stock doesnt migrate");
 }
 
 MigrationPenalty::~MigrationPenalty() {

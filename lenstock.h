@@ -25,8 +25,8 @@ public:
   virtual void CalcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual void ReducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual void calcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
-  virtual void CheckEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
-  virtual void AdjustEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void checkEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void adjustEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual void Grow(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual void Reset(const TimeClass* const TimeInfo);
   virtual void SecondSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);

@@ -28,7 +28,7 @@ public:
   const DoubleVector& Penalty() const;
 protected:
   void CopyFromReadToCalc();
-  void AdjustMigListAndCheckIfError(MigrationList& MigList);
+  void adjustMigListAndCheckIfError(MigrationList& MigList);
   int AgeDepMigration;
   IntMatrix MatrixNumbers;
   MigrationList ReadMigList;

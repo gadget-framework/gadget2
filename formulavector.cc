@@ -50,9 +50,9 @@ void FormulaVector::Inform(Keeper* keeper) {
   for (i = 0; i < size; i++) {
     ostringstream ostr;
     ostr << i << ends;
-    keeper->AddString(ostr.str());
+    keeper->addString(ostr.str());
     v[i].Inform(keeper);
-    keeper->ClearLast();
+    keeper->clearLast();
   }
 }
 

@@ -37,16 +37,6 @@ public:
    */
   ~RecAggregator();
   /**
-   * \brief This function will return the number of length groups of the aggregator
-   * \return number of length groups
-   */
-  int NoLengthGroups() const { return LgrpDiv->NoLengthGroups(); };
-  /**
-   * \brief This function will return the number of age groups of the aggregator
-   * \return number of age groups
-   */
-  int NoAgeGroups() const { return ages.Nrow(); };
-  /**
    * \brief This function will return the LengthGroupDivision of the aggregator
    * \return LgrpDiv, the LengthGroupDivision of the aggregator
    */

@@ -22,8 +22,8 @@ Maturity::Maturity(const IntVector& tmpareas, int minage, const IntVector& minle
 
 Maturity::~Maturity() {
   int i;
-  for (i = 0; i < MatureStockNames.Size(); i++)
-    delete[] MatureStockNames[i];
+  for (i = 0; i < matureStockNames.Size(); i++)
+    delete[] matureStockNames[i];
   for (i = 0; i < CI.Size(); i++)
     delete CI[i];
   delete LgrpDiv;
@@ -35,21 +35,21 @@ void Maturity::setStock(StockPtrVector& stockvec) {
   DoubleVector tmpratio;
 
   for (i = 0; i < stockvec.Size(); i++)
-    for (j = 0; j < MatureStockNames.Size(); j++)
-      if (strcasecmp(stockvec[i]->Name(), MatureStockNames[j]) == 0) {
-        MatureStocks.resize(1);
+    for (j = 0; j < matureStockNames.Size(); j++)
+      if (strcasecmp(stockvec[i]->Name(), matureStockNames[j]) == 0) {
+        matureStocks.resize(1);
         tmpratio.resize(1);
-        MatureStocks[index] = stockvec[i];
+        matureStocks[index] = stockvec[i];
         tmpratio[index] = Ratio[j];
         index++;
       }
 
-  if (index != MatureStockNames.Size()) {
-    handle.LogWarning("Error in maturity - failed to match mature stocks");
+  if (index != matureStockNames.Size()) {
+    handle.logWarning("Error in maturity - failed to match mature stocks");
     for (i = 0; i < stockvec.Size(); i++)
-      handle.LogWarning("Error in maturity - found stock", stockvec[i]->Name());
-    for (i = 0; i < MatureStockNames.Size(); i++)
-      handle.LogWarning("Error in maturity - looking for stock", MatureStockNames[i]);
+      handle.logWarning("Error in maturity - found stock", stockvec[i]->Name());
+    for (i = 0; i < matureStockNames.Size(); i++)
+      handle.logWarning("Error in maturity - looking for stock", matureStockNames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -59,47 +59,52 @@ void Maturity::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < tmpratio.Size(); i++)
     Ratio[i] = tmpratio[i];
 
-  CI.resize(MatureStocks.Size(), 0);
-  for (i = 0; i < MatureStocks.Size(); i++)
-    CI[i] = new ConversionIndex(LgrpDiv, MatureStocks[i]->returnLengthGroupDiv());
+  CI.resize(matureStocks.Size(), 0);
+  for (i = 0; i < matureStocks.Size(); i++)
+    CI[i] = new ConversionIndex(LgrpDiv, matureStocks[i]->returnLengthGroupDiv());
 
-  for (i = 0; i < MatureStocks.Size(); i++) {
+  for (i = 0; i < matureStocks.Size(); i++) {
     index = 0;
     for (j = 0; j < areas.Size(); j++)
-      if (!MatureStocks[i]->IsInArea(areas[j]))
+      if (!matureStocks[i]->IsInArea(areas[j]))
         index++;
 
     if (index != 0)
-      handle.LogWarning("Warning in maturity - mature stock isnt defined on all areas");
+      handle.logWarning("Warning in maturity - mature stock isnt defined on all areas");
   }
 }
 
 void Maturity::Print(ofstream& outfile) const {
   int i;
   outfile << "\nMaturity\n\tRead names of mature stocks:";
-  for (i = 0; i < MatureStockNames.Size(); i++)
-    outfile << sep << (const char*)(MatureStockNames[i]);
+  for (i = 0; i < matureStockNames.Size(); i++)
+    outfile << sep << (const char*)(matureStockNames[i]);
   outfile << "\n\tNames of mature stocks (through pointers):";
-  for (i = 0; i < MatureStocks.Size(); i++)
-    outfile << sep << (const char*)(MatureStocks[i]->Name());
+  for (i = 0; i < matureStocks.Size(); i++)
+    outfile << sep << (const char*)(matureStocks[i]->Name());
   outfile << "\n\tStored numbers:\n";
   for (i = 0; i < areas.Size(); i++) {
     outfile << "\tInternal area " << areas[i] << endl;
-    Storage[i].PrintNumbers(outfile);
+    Storage[i].printNumbers(outfile);
   }
 }
 
 void Maturity::Move(int area, const TimeClass* const TimeInfo) {
-  assert(this->IsMaturationStep(area, TimeInfo));
+  if (!(this->IsMaturationStep(area, TimeInfo)))
+    handle.logFailure("Error in maturity - maturity requested on wrong timestep");
   int i, inarea = AreaNr[area];
-  for (i = 0; i < MatureStocks.Size(); i++) {
-    MatureStocks[i]->Add(Storage[inarea], CI[i], area, Ratio[i],
-      Storage[inarea].Minage(), Storage[inarea].Maxage());
+  for (i = 0; i < matureStocks.Size(); i++) {
+    if (!matureStocks[i]->IsInArea(area))
+      handle.logFailure("Error in maturity - mature stock doesnt live on area", area);
 
-    if (TagStorage.NrOfTagExp() > 0)
-      MatureStocks[i]->Add(TagStorage, inarea, CI[i], area, Ratio[i],
-        TagStorage[inarea].Minage(), TagStorage[inarea].Maxage());
+    matureStocks[i]->Add(Storage[inarea], CI[i], area, Ratio[i],
+      Storage[inarea].minAge(), Storage[inarea].maxAge());
+
+    if (TagStorage.numTagExperiments() > 0)
+      matureStocks[i]->Add(TagStorage, inarea, CI[i], area, Ratio[i],
+        TagStorage[inarea].minAge(), TagStorage[inarea].maxAge());
   }
+
   Storage[inarea].setToZero();
   TagStorage[inarea].setToZero();
 }
@@ -107,8 +112,9 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
 void Maturity::PutInStorage(int area, int age, int length, double number,
   double weight, const TimeClass* const TimeInfo) {
 
+  if (!(this->IsMaturationStep(area, TimeInfo)))
+    handle.logFailure("Error in maturity - maturity requested on wrong timestep");
   int inarea = AreaNr[area];
-  assert(this->IsMaturationStep(area, TimeInfo));
   if (isZero(number) || isZero(weight)) {
     Storage[inarea][age][length].N = 0.0;
     Storage[inarea][age][length].W = 0.0;
@@ -121,14 +127,13 @@ void Maturity::PutInStorage(int area, int age, int length, double number,
 void Maturity::PutInStorage(int area, int age, int length, double number,
   const TimeClass* const TimeInfo, int id) {
 
-  assert(this->IsMaturationStep(area, TimeInfo));
-  if (TagStorage.NrOfTagExp() <= 0) {
-    handle.LogWarning("Error in maturity - no tagging experiment");
-    exit(EXIT_FAILURE);
-  } else if ((id >= TagStorage.NrOfTagExp()) || (id < 0)) {
-    handle.LogWarning("Error in maturity - illegal tagging experiment");
-    exit(EXIT_FAILURE);
-  } else
+  if (!(this->IsMaturationStep(area, TimeInfo)))
+    handle.logFailure("Error in maturity - maturity requested on wrong timestep");
+  if (TagStorage.numTagExperiments() <= 0)
+    handle.logFailure("Error in maturity - no tagging experiment");
+  else if ((id >= TagStorage.numTagExperiments()) || (id < 0))
+    handle.logFailure("Error in maturity - illegal tagging experiment");
+  else
     *(TagStorage[AreaNr[area]][age][length][id].N) = (number > 0.0 ? number: 0.0);
 }
 
@@ -136,11 +141,11 @@ void Maturity::Precalc(const TimeClass* const TimeInfo) {
   int area, age, l, tag;
   if (TimeInfo->CurrentTime() == 1) {
     for (area = 0; area < areas.Size(); area++) {
-      for (age = Storage[area].Minage(); age <= Storage[area].Maxage(); age++) {
-        for (l = Storage[area].Minlength(age); l < Storage[area].Maxlength(age); l++) {
+      for (age = Storage[area].minAge(); age <= Storage[area].maxAge(); age++) {
+        for (l = Storage[area].minLength(age); l < Storage[area].maxLength(age); l++) {
           Storage[area][age][l].N = 0.0;
           Storage[area][age][l].W = 0.0;
-          for (tag = 0; tag < TagStorage.NrOfTagExp(); tag++)
+          for (tag = 0; tag < TagStorage.numTagExperiments(); tag++)
             *(TagStorage[area][age][l][tag].N) = 0.0;
         }
       }
@@ -149,7 +154,7 @@ void Maturity::Precalc(const TimeClass* const TimeInfo) {
 }
 
 const StockPtrVector& Maturity::getMatureStocks() {
-  return MatureStocks;
+  return matureStocks;
 }
 
 void Maturity::addMaturityTag(const char* tagname) {
@@ -161,13 +166,13 @@ void Maturity::deleteMaturityTag(const char* tagname) {
   int id = TagStorage.getID(tagname);
 
   if (id >= 0) {
-    minage = TagStorage[0].Minage();
-    maxage = TagStorage[0].Maxage();
+    minage = TagStorage[0].minAge();
+    maxage = TagStorage[0].maxAge();
     // Remove allocated memory
     for (i = 0; i < TagStorage.Size(); i++) {
       for (age = minage; age <= maxage; age++) {
-        minlen = TagStorage[i].Minlength(age);
-        maxlen = TagStorage[i].Maxlength(age);
+        minlen = TagStorage[i].minLength(age);
+        maxlen = TagStorage[i].maxLength(age);
         for (length = minlen; length < maxlen; length++) {
           delete[] (TagStorage[i][age][length][id].N);
           (TagStorage[i][age][length][id].N) = NULL;
@@ -177,7 +182,7 @@ void Maturity::deleteMaturityTag(const char* tagname) {
     TagStorage.deleteTag(tagname);
 
   } else
-    handle.LogWarning("Warning in maturity - failed to delete tagging experiment", tagname);
+    handle.logWarning("Warning in maturity - failed to delete tagging experiment", tagname);
 }
 
 // ********************************************************
@@ -185,21 +190,21 @@ void Maturity::deleteMaturityTag(const char* tagname) {
 // ********************************************************
 MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
   Keeper* const keeper, int minage, const IntVector& minabslength, const IntVector& size,
-  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int NoMatconst)
+  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int numMatConst)
   : Maturity(tmpareas, minage, minabslength, size, lgrpdiv), PrecalcMaturation(minabslength, size, minage) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
-  keeper->AddString("maturity");
+  keeper->addString("maturity");
   infile >> text;
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
     infile >> text;
     i = 0;
     while (strcasecmp(text, "coefficients") != 0 && infile.good()) {
-      MatureStockNames.resize(1);
-      MatureStockNames[i] = new char[strlen(text) + 1];
-      strcpy(MatureStockNames[i], text);
+      matureStockNames.resize(1);
+      matureStockNames[i] = new char[strlen(text) + 1];
+      strcpy(matureStockNames[i], text);
       Ratio.resize(1);
       infile >> Ratio[i];
       i++;
@@ -210,7 +215,7 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
 
   if (!infile.good())
     handle.Failure();
-  maturityParameters.resize(NoMatconst, keeper);
+  maturityParameters.resize(numMatConst, keeper);
   maturityParameters.read(infile, TimeInfo, keeper);
 
   infile >> ws;
@@ -218,8 +223,8 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
     infile >> text >> ws;
     handle.Unexpected("<end of file>", text);
   }
-  handle.LogMessage("Read maturity data file");
-  keeper->ClearLast();
+  handle.logMessage("Read maturity data file");
+  keeper->clearLast();
 }
 
 void MaturityA::Precalc(const TimeClass* const TimeInfo) {
@@ -229,14 +234,11 @@ void MaturityA::Precalc(const TimeClass* const TimeInfo) {
   int age, len;
 
   if (maturityParameters.DidChange(TimeInfo)) {
-    for (age = PrecalcMaturation.Minage(); age <= PrecalcMaturation.Maxage(); age++) {
-      for (len = PrecalcMaturation.Minlength(age); len < PrecalcMaturation.Maxlength(age); len++) {
-        if ((age >= minMatureAge) && (len >= minMatureLength)) {
-          my = exp(-maturityParameters[0] * (LgrpDiv->Meanlength(len) - maturityParameters[1])
-                 - maturityParameters[2] * (age - maturityParameters[3]));
-          PrecalcMaturation[age][len] = 1 / (1 + my);
-        } else
-          PrecalcMaturation[age][len] = 0.0;
+    for (age = PrecalcMaturation.minAge(); age <= PrecalcMaturation.maxAge(); age++) {
+      for (len = PrecalcMaturation.minLength(age); len < PrecalcMaturation.maxLength(age); len++) {
+        my = exp(-maturityParameters[0] * (LgrpDiv->meanLength(len) - maturityParameters[1])
+               - maturityParameters[2] * (age - maturityParameters[3]));
+        PrecalcMaturation[age][len] = 1 / (1 + my);
       }
     }
   }
@@ -248,11 +250,11 @@ void MaturityA::setStock(StockPtrVector& stockvec) {
   int i;
   minMatureAge = 9999;
   double minlength = 9999.0;
-  for (i = 0; i < MatureStocks.Size(); i++) {
-    if (MatureStocks[i]->Minage() < minMatureAge)
-      minMatureAge = MatureStocks[i]->Minage();
-    if (MatureStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
-      minlength = MatureStocks[i]->returnLengthGroupDiv()->minLength();
+  for (i = 0; i < matureStocks.Size(); i++) {
+    if (matureStocks[i]->minAge() < minMatureAge)
+      minMatureAge = matureStocks[i]->minAge();
+    if (matureStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
+      minlength = matureStocks[i]->returnLengthGroupDiv()->minLength();
   }
   minMatureLength = LgrpDiv->NoLengthGroup(minlength);
 }
@@ -260,7 +262,7 @@ void MaturityA::setStock(StockPtrVector& stockvec) {
 double MaturityA::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, int area, double weight) {
 
-  if ((age >= minMatureAge) && (length >= minMatureLength)) {
+  if ((age >= minMatureAge) && ((length + growth) >= minMatureLength)) {
     double prob = PrecalcMaturation[age][length] * (maturityParameters[0] * growth * LgrpDiv->dl()
                   + maturityParameters[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
     return (min(max(0.0, prob), 1.0));
@@ -290,14 +292,14 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
   strncpy(text, "", MaxStrLength);
   int i;
   infile >> text;
-  keeper->AddString("maturity");
+  keeper->addString("maturity");
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
     infile >> text;
     i = 0;
     while (!(strcasecmp(text, "maturitysteps") == 0) && infile.good()) {
-      MatureStockNames.resize(1);
-      MatureStockNames[i] = new char[strlen(text) + 1];
-      strcpy(MatureStockNames[i], text);
+      matureStockNames.resize(1);
+      matureStockNames[i] = new char[strlen(text) + 1];
+      strcpy(matureStockNames[i], text);
       Ratio.resize(1);
       infile >> Ratio[i];
       i++;
@@ -329,8 +331,8 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
     infile >> text >> ws;
     handle.Unexpected("<end of file>", text);
   }
-  handle.LogMessage("Read maturity data file");
-  keeper->ClearLast();
+  handle.logMessage("Read maturity data file");
+  keeper->clearLast();
 }
 
 void MaturityB::Print(ofstream& outfile) const {
@@ -360,7 +362,9 @@ double MaturityB::MaturationProbability(int age, int length, int growth,
   int i;
   for (i = 0; i < maturitylength.Size(); i++)
     if (TimeInfo->CurrentStep() == maturitystep[i])
-      return (LgrpDiv->Meanlength(length) >= maturitylength[i]);
+      if (LgrpDiv->meanLength(length) >= maturitylength[i])
+        return 1.0;
+      	
   return 0.0;
 }
 
@@ -377,21 +381,21 @@ int MaturityB::IsMaturationStep(int area, const TimeClass* const TimeInfo) {
 // ********************************************************
 MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
   Keeper* const keeper, int minage, const IntVector& minabslength, const IntVector& size,
-  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int NoMatconst)
+  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int numMatConst)
   : Maturity(tmpareas, minage, minabslength, size, lgrpdiv), PrecalcMaturation(minabslength, size, minage) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i = 0;
-  keeper->AddString("maturity");
+  keeper->addString("maturity");
   infile >> text;
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
     infile >> text;
     i = 0;
     while (strcasecmp(text, "coefficients") != 0 && infile.good()) {
-      MatureStockNames.resize(1);
-      MatureStockNames[i] = new char[strlen(text) + 1];
-      strcpy(MatureStockNames[i], text);
+      matureStockNames.resize(1);
+      matureStockNames[i] = new char[strlen(text) + 1];
+      strcpy(matureStockNames[i], text);
       Ratio.resize(1);
       infile >> Ratio[i];
       i++;
@@ -402,7 +406,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
 
   if (!infile.good())
     handle.Failure();
-  maturityParameters.resize(NoMatconst, keeper);
+  maturityParameters.resize(numMatConst, keeper);
   maturityParameters.read(infile, TimeInfo, keeper);
 
   infile >> text >> ws;
@@ -424,8 +428,8 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
     infile >> text >> ws;
     handle.Unexpected("<end of file>", text);
   }
-  handle.LogMessage("Read maturity data file");
-  keeper->ClearLast();
+  handle.logMessage("Read maturity data file");
+  keeper->clearLast();
 }
 
 void MaturityC::setStock(StockPtrVector& stockvec) {
@@ -434,11 +438,11 @@ void MaturityC::setStock(StockPtrVector& stockvec) {
   int i;
   minMatureAge = 9999;
   double minlength = 9999.0;
-  for (i = 0; i < MatureStocks.Size(); i++) {
-    if (MatureStocks[i]->Minage() < minMatureAge)
-      minMatureAge = MatureStocks[i]->Minage();
-    if (MatureStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
-      minlength = MatureStocks[i]->returnLengthGroupDiv()->minLength();
+  for (i = 0; i < matureStocks.Size(); i++) {
+    if (matureStocks[i]->minAge() < minMatureAge)
+      minMatureAge = matureStocks[i]->minAge();
+    if (matureStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
+      minlength = matureStocks[i]->returnLengthGroupDiv()->minLength();
   }
   minMatureLength = LgrpDiv->NoLengthGroup(minlength);
 }
@@ -450,10 +454,10 @@ void MaturityC::Precalc(const TimeClass* const TimeInfo) {
   int age, len;
 
   if (maturityParameters.DidChange(TimeInfo)) {
-    for (age = PrecalcMaturation.Minage(); age <= PrecalcMaturation.Maxage(); age++) {
-      for (len = PrecalcMaturation.Minlength(age); len < PrecalcMaturation.Maxlength(age); len++) {
+    for (age = PrecalcMaturation.minAge(); age <= PrecalcMaturation.maxAge(); age++) {
+      for (len = PrecalcMaturation.minLength(age); len < PrecalcMaturation.maxLength(age); len++) {
         if ((age >= minMatureAge) && (len >= minMatureLength)) {
-          my = exp(-4.0 * maturityParameters[0] * (LgrpDiv->Meanlength(len) - maturityParameters[1])
+          my = exp(-4.0 * maturityParameters[0] * (LgrpDiv->meanLength(len) - maturityParameters[1])
                  - 4.0 * maturityParameters[2] * (age - maturityParameters[3]));
           PrecalcMaturation[age][len] = 1 / (1 + my);
         } else
@@ -495,8 +499,8 @@ void MaturityC::Print(ofstream& outfile) const {
 // ********************************************************
 MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
   Keeper* const keeper, int minage, const IntVector& minabslength, const IntVector& size,
-  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int NoMatconst, const char* refWeightFile)
-  : MaturityC(infile, TimeInfo, keeper, minage, minabslength, size, tmpareas, lgrpdiv, NoMatconst) {
+  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int numMatConst, const char* refWeightFile)
+  : MaturityC(infile, TimeInfo, keeper, minage, minabslength, size, tmpareas, lgrpdiv, numMatConst) {
 
   //read information on reference weights.
   ifstream subweightfile;
@@ -512,13 +516,17 @@ MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
   subweightfile.clear();
 
   //Aggregate the reference weight data to be the same length groups
+  if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
+      LgrpDiv->meanLength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
+    handle.Message("Lengths for reference weights must span the range of growth lengths");
+
   refWeight.resize(LgrpDiv->NoLengthGroups(), 0.0);
   int i, j, pos = 0;
   double tmp;
   for (j = 0; j < LgrpDiv->NoLengthGroups(); j++) {
     for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
-      if (LgrpDiv->Meanlength(j) >= tmpRefW[i][0] && LgrpDiv->Meanlength(j) <= tmpRefW[i + 1][0]) {
-        tmp = (LgrpDiv->Meanlength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+      if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] && LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
+        tmp = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
         refWeight[j] = tmpRefW[i][1] + tmp * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
         pos = i;
       }
@@ -532,11 +540,11 @@ void MaturityD::setStock(StockPtrVector& stockvec) {
   int i;
   minMatureAge = 9999;
   double minlength = 9999.0;
-  for (i = 0; i < MatureStocks.Size(); i++) {
-    if (MatureStocks[i]->Minage() < minMatureAge)
-      minMatureAge = MatureStocks[i]->Minage();
-    if (MatureStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
-      minlength = MatureStocks[i]->returnLengthGroupDiv()->minLength();
+  for (i = 0; i < matureStocks.Size(); i++) {
+    if (matureStocks[i]->minAge() < minMatureAge)
+      minMatureAge = matureStocks[i]->minAge();
+    if (matureStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
+      minlength = matureStocks[i]->returnLengthGroupDiv()->minLength();
   }
   minMatureLength = LgrpDiv->NoLengthGroup(minlength);
 }
@@ -559,7 +567,7 @@ double MaturityD::MaturationProbability(int age, int length, int growth,
     else
       tmpweight = weight / refWeight[length];
 
-    my = exp(-4.0 * maturityParameters[0] * (LgrpDiv->Meanlength(length) - maturityParameters[1])
+    my = exp(-4.0 * maturityParameters[0] * (LgrpDiv->meanLength(length) - maturityParameters[1])
            - 4.0 * maturityParameters[2] * (age - maturityParameters[3])
            - 4.0 * maturityParameters[4] * (tmpweight - maturityParameters[5]));
     ratio = 1 / (1 + my);

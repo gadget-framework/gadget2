@@ -15,13 +15,13 @@ PIOnStep::PIOnStep(CommentStream& infile, const IntMatrix& areas,
   const CharPtrVector& preylenindex, const CharPtrVector& predlenindex,
   const char* datafilename, const char* name)
   : SIOnStep(infile, datafilename, areaindex, TimeInfo, predlenindex.Size() * preylenindex.Size(), areas, predlenindex, preylenindex),
-    PredatorLgrpDiv(0), PreyLgrpDiv(0), Biomass(biomass), aggregator(0) {
+    Biomass(biomass), aggregator(0) {
 
-  PredatorLgrpDiv = new LengthGroupDivision(predatorlengths);
-  if (PredatorLgrpDiv->Error())
+  predLgrpDiv = new LengthGroupDivision(predatorlengths);
+  if (predLgrpDiv->Error())
     handle.Message("Error in predatorindex - failed to create predator length group");
-  PreyLgrpDiv = new LengthGroupDivision(preylengths);
-  if (PreyLgrpDiv->Error())
+  preyLgrpDiv = new LengthGroupDivision(preylengths);
+  if (preyLgrpDiv->Error())
     handle.Message("Error in predatorindex - failed to create prey length group");
 
   //read the predator indices data from the datafile
@@ -104,12 +104,12 @@ void PIOnStep::readPredatorData(CommentStream& infile, const CharPtrVector& area
     }
   }
   if (count == 0)
-    handle.LogWarning("Warning in predatorindex - found no data in the data file for", name);
-  handle.LogMessage("Read predatorindex data file - number of entries", count);
+    handle.logWarning("Warning in predatorindex - found no data in the data file for", name);
+  handle.logMessage("Read predatorindex data file - number of entries", count);
 }
 
 void PIOnStep::setPredatorsAndPreys(const PredatorPtrVector& predators, const PreyPtrVector& preys) {
-  aggregator = new PredatorAggregator(predators, preys, Areas, PredatorLgrpDiv, PreyLgrpDiv);
+  aggregator = new PredatorAggregator(predators, preys, Areas, predLgrpDiv, preyLgrpDiv);
 }
 
 void PIOnStep::Sum(const TimeClass* const TimeInfo) {
@@ -130,11 +130,11 @@ void PIOnStep::Sum(const TimeClass* const TimeInfo) {
       numbers[k] = (*cons)[0][predlen][preylen];
       k++;
     }
-  this->KeepNumbers(numbers);
+  this->keepNumbers(numbers);
 }
 
 PIOnStep::~PIOnStep() {
   delete aggregator;
-  delete PredatorLgrpDiv;
-  delete PreyLgrpDiv;
+  delete predLgrpDiv;
+  delete preyLgrpDiv;
 }

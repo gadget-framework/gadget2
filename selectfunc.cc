@@ -48,7 +48,7 @@ int SelectFunc::constantsHaveChanged(const TimeClass* const TimeInfo) {
   return coeff.DidChange(TimeInfo);
 }
 
-int SelectFunc::noOfConstants() {
+int SelectFunc::numConstants() {
   return coeff.Size();
 }
 
@@ -64,7 +64,6 @@ ConstSelectFunc::~ConstSelectFunc() {
 }
 
 double ConstSelectFunc::calculate(double len) {
-  assert(coeff.Size() == 1);
   return coeff[0];
 }
 
@@ -80,7 +79,6 @@ ExpSelectFunc::~ExpSelectFunc() {
 }
 
 double ExpSelectFunc::calculate(double len) {
-  assert(coeff.Size() == 2);
   return (1.0 / (1 + exp(coeff[0] * (len - coeff[1]))));
 }
 
@@ -96,6 +94,5 @@ StraightSelectFunc::~StraightSelectFunc() {
 }
 
 double StraightSelectFunc::calculate(double len) {
-  assert(coeff.Size() == 2);
   return (coeff[0] * len + coeff[1]);
 }

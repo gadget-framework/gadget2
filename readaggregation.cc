@@ -19,7 +19,7 @@ int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggind
     infile >> ws;
     i++;
   }
-  handle.LogMessage("Read aggregation file - number of entries", aggindex.Size());
+  handle.logMessage("Read aggregation file - number of entries", aggindex.Size());
   return aggindex.Size();
 }
 
@@ -35,7 +35,7 @@ int readAggregation(CommentStream& infile, IntVector& agg, CharPtrVector& aggind
     agg.resize(1, tmp);
     i++;
   }
-  handle.LogMessage("Read aggregation file - number of entries", aggindex.Size());
+  handle.logMessage("Read aggregation file - number of entries", aggindex.Size());
   return aggindex.Size();
 }
 
@@ -59,7 +59,7 @@ int readLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrV
 
     i++;
   }
-  handle.LogMessage("Read length aggregation file - number of entries", lenindex.Size());
+  handle.logMessage("Read length aggregation file - number of entries", lenindex.Size());
   return lenindex.Size();
 }
 
@@ -105,6 +105,6 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
     infile >> ws;
     i++;
   }
-  handle.LogMessage("Read prey aggregation file - number of entries", preyindex.Size());
+  handle.logMessage("Read prey aggregation file - number of entries", preyindex.Size());
   return preyindex.Size();
 }

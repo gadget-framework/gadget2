@@ -82,7 +82,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
       temperature[timeid][areaid] = tmpnumber;
     }
   }
-  handle.LogMessage("Read area file - number of areas", noareas);
+  handle.logMessage("Read area file - number of areas", noareas);
 }
 
 int AreaClass::InnerArea(int area) const {

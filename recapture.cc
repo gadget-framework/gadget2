@@ -64,7 +64,6 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   handle.Close();
   datafile.close();
   datafile.clear();
-  lgrpdiv = new LengthGroupDivision(lengths);
 
   //read in the fleetnames
   i = 0;
@@ -97,10 +96,9 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
         tagvec.resize(1, Tag[i]);
       }
     }
-    if (check == 0) {
-      handle.LogWarning("Error in recaptures - failed to match tag", tagid[j]);
-      exit(EXIT_FAILURE);
-    }
+    if (check == 0)
+      handle.logFailure("Error in recaptures - failed to match tag", tagid[j]);
+
   }
 }
 
@@ -188,8 +186,8 @@ void Recaptures::readRecaptureData(CommentStream& infile, const TimeClass* const
     }
   }
   if (count == 0)
-    handle.LogWarning("Warning in recaptures - found no data in the data file for", tagname);
-  handle.LogMessage("Read recaptures data file - number of entries", count);
+    handle.logWarning("Warning in recaptures - found no data in the data file for", tagname);
+  handle.logMessage("Read recaptures data file - number of entries", count);
 }
 
 Recaptures::~Recaptures() {
@@ -215,7 +213,6 @@ Recaptures::~Recaptures() {
   }
   delete[] tagname;
   delete[] functionname;
-  delete lgrpdiv;
 }
 
 void Recaptures::Reset(const Keeper* const keeper) {
@@ -236,10 +233,9 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
         fleets.resize(1, Fleets[j]);
       }
 
-    if (found == 0) {
-      handle.LogWarning("Error in recaptures - failed to match fleet", fleetnames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in recaptures - failed to match fleet", fleetnames[i]);
+
   }
 
   double minlen, maxlen;
@@ -247,7 +243,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
 
   aggregator = new RecAggregator*[tagvec.Size()];
   for (k = 0; k < tagvec.Size(); k++) {
-    stocknames = tagvec[k]->getStocknames();
+    stocknames = tagvec[k]->getStockNames();
     for (i = 0; i < stocknames->Size(); i++)  {
       found = 0;
       for (j = 0; j < Stocks.Size(); j++) {
@@ -258,53 +254,50 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
           }
         }
       }
-      if (found == 0) {
-        handle.LogWarning("Error in recaptures - failed to match stock", stocknames->operator[](j));
-        exit(EXIT_FAILURE);
-      }
+      if (found == 0)
+        handle.logFailure("Error in recaptures - failed to match stock", stocknames->operator[](j));
+
     }
 
     //Check if the stock lives on all the areas that were read in
     for (i = 0; i < areas.Nrow(); i++)
       for (l = 0; l < areas.Ncol(i); l++)
         for (j = 0; j < stocks.Size(); j++)
-          if (!stocks[j]->IsInArea(areas[i][l])) {
-            handle.LogWarning("Error in recaptures - stocks arent defined on all areas");
-            exit(EXIT_FAILURE);
-          }
+          if (!stocks[j]->IsInArea(areas[i][l]))
+            handle.logFailure("Error in recaptures - stocks arent defined on all areas");
 
     IntMatrix agematrix(1, 0);
     minage = 999;
     maxage = 0;
     for (i = 0; i < stocks.Size(); i++) {
-      minage = (minage < stocks[i]->Minage() ? minage : stocks[i]->Minage());
-      maxage = (maxage > stocks[0]->Maxage() ? maxage : stocks[i]->Maxage());
+      minage = (minage < stocks[i]->minAge() ? minage : stocks[i]->minAge());
+      maxage = (maxage > stocks[0]->maxAge() ? maxage : stocks[i]->maxAge());
     }
     for (i = 0; i <= maxage - minage; i++)
       agematrix[0].resize(1, minage + i);
 
-    LengthGroupDivision* LgrpDiv = new LengthGroupDivision(lengths);
-    aggregator[k] = new RecAggregator(fleets, stocks, LgrpDiv, areas, agematrix, tagvec[k]);
+    LengthGroupDivision* lgrpdiv = new LengthGroupDivision(lengths);
+    aggregator[k] = new RecAggregator(fleets, stocks, lgrpdiv, areas, agematrix, tagvec[k]);
 
-    delete LgrpDiv;
+    delete lgrpdiv;
     while (stocks.Size() > 0)
       stocks.Delete(0);
   }
 }
 
-void Recaptures::AddToLikelihood(const TimeClass* const TimeInfo) {
+void Recaptures::addLikelihood(const TimeClass* const TimeInfo) {
 
   switch(functionnumber) {
     case 1:
-      likelihood += LikPoisson(TimeInfo);
+      likelihood += calcLikPoisson(TimeInfo);
       break;
     default:
-      handle.LogWarning("Warning in recaptures - unknown function", functionname);
+      handle.logWarning("Warning in recaptures - unknown function", functionname);
       break;
   }
 }
 
-double Recaptures::LikPoisson(const TimeClass* const TimeInfo) {
+double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
   double x, n, lik = 0.0;
   int t, i, ti, len, timeid;
   int year = TimeInfo->CurrentYear();

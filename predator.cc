@@ -21,7 +21,7 @@ Predator::~Predator() {
 }
 
 void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
-  assert(preys.Size() == 0);
+
   int i, j;
   int found = 0;
 
@@ -33,10 +33,9 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
         if (found == 0) {
           preys[j] = preyvec[i];
           found = 1;
-        } else {
-          handle.LogWarning("Error in predator - repeated suitability values for prey", preyvec[i]->Name());
-          exit(EXIT_FAILURE);
-        }
+        } else
+          handle.logFailure("Error in predator - repeated suitability values for prey", preyvec[i]->Name());
+
       }
     }
   }
@@ -48,7 +47,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     //virtual function DeleteParametersForPrey.
     if (preys[i] == 0) {
       found++;
-      handle.LogWarning("Warning in predator - failed to match prey", this->Preyname(i));
+      handle.logWarning("Warning in predator - failed to match prey", this->Preyname(i));
       this->DeleteParametersForPrey(i, keeper);
       //This function allows derived classes to delete the information they keep.
       //Since we have deleted element no. i from the vectors, we must take
@@ -104,11 +103,8 @@ void Predator::resizeObjects() {
 }
 
 void Predator::setSuitability(const Suits* const S, Keeper* const keeper) {
-  if (Suitable != 0) {
-    handle.LogWarning("Error in predator - repeated suitability values");
-    exit(EXIT_FAILURE);
-  }
-
+  if (Suitable != 0)
+    handle.logFailure("Error in predator - repeated suitability values");
   Suitable = new Suits(*S, keeper);
 }
 
@@ -127,19 +123,18 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
   strncpy(preyname, "", MaxStrLength);
   strncpy(text, "", MaxStrLength);
 
-  keeper->AddString("suitabilityfor");
-  //The next line is a cheap trick so we can call ClearLastAddString later.
-  keeper->AddString("FakeString");
+  keeper->addString("suitabilityfor");
+  keeper->addString("fake");  //want to call clearLastAddString() next 
 
   infile >> preyname >> ws;
   while (!(strcasecmp(preyname, FinalString) == 0) && infile.good()) {
-    keeper->ClearLastAddString(preyname);
+    keeper->clearLastAddString(preyname);
     infile >> text >> ws;
 
     if (strcasecmp(text, "function") == 0) {
       infile >> text;
       if (readSuitFunction(suitf, infile, text, TimeInfo, keeper) == 1)
-        Suitable->AddPrey(preyname, suitf[suitf.Size() - 1]);
+        Suitable->addPrey(preyname, suitf[suitf.Size() - 1]);
       else
         handle.Message("Error in suitability - unknown suitability function");
 
@@ -164,7 +159,7 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
         subfile >> ws;
         i++;
       }
-      handle.LogMessage("Read suitability matrix data file - number of entries", i);
+      handle.logMessage("Read suitability matrix data file - number of entries", i);
       handle.Close();
       subfile.close();
       subfile.clear();
@@ -175,7 +170,7 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
       multiplication.Inform(keeper);
       if (multiplication <= 0)
         handle.Message("Incorrect format of suitability multiplication factor");
-      Suitable->AddPrey(preyname, multiplication, dm, keeper);
+      Suitable->addPrey(preyname, multiplication, dm, keeper);
 
     } else
       handle.Message("Error in suitability - unknown format");
@@ -186,7 +181,7 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
   if (!infile.good())
     handle.Failure();
 
-  keeper->ClearLast();
-  keeper->ClearLast();
+  keeper->clearLast();
+  keeper->clearLast();
   return 1;
 }

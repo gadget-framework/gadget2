@@ -72,11 +72,11 @@ PredatorAggregator::PredatorAggregator(const CharPtrVector& prednames, PreyPtrVe
     }
 
   if (found == 0) {
-    handle.LogWarning("Warning in predatoraggregator - failed to match preys with cannibalism");
+    handle.logWarning("Warning in predatoraggregator - failed to match preys with cannibalism");
     return;
   }
   if (found < Preys.Size())
-    handle.LogWarning("Warning in predatoraggregator - failed to match preys");
+    handle.logWarning("Warning in predatoraggregator - failed to match preys");
 
   for (i = 0; i < preys.Size(); i++)
     doeseat.AddRows(1, ((MortPrey*)preys[i])->getNoCannPreds(), 0);
@@ -92,7 +92,7 @@ PredatorAggregator::PredatorAggregator(const CharPtrVector& prednames, PreyPtrVe
         }
 
     if (found == 0)
-      handle.LogWarning("Warning in predatoraggregator - failed to match predators");
+      handle.logWarning("Warning in predatoraggregator - failed to match predators");
   }
 
   //First we check that the predator ages are consistent with the predator
@@ -107,7 +107,7 @@ PredatorAggregator::PredatorAggregator(const CharPtrVector& prednames, PreyPtrVe
       found = 1;
   }
   if (found == 1)
-    handle.LogWarning("Warning in predatoraggregator - failed to match predator ages");
+    handle.logWarning("Warning in predatoraggregator - failed to match predator ages");
 
   for (i = 0; i < preys.Size(); i++)
     checkLengthGroupIsFiner(preys[i]->returnLengthGroupDiv(), preyLgrpDiv);
@@ -222,7 +222,7 @@ void PredatorAggregator::MeanSum() {
                 pred_age = predConv[g1 + h][k - minrow];
                 if (pred_age >= 0) {
                   tot_predators[i][pred_age] +=
-                    (*((MortPrey*)preys[g])->getAgeGroupMatrix(h))[area][k - minrow];
+                    (*((MortPrey*)preys[g])->ageGroupMatrix(h))[area][k - minrow];
                   for (l = bptr->Mincol(k); l < bptr->Maxcol(k); l++) {
                     prey_length = preyConv[g][l];
                     if (prey_length >= 0)
@@ -245,7 +245,7 @@ void PredatorAggregator::MeanSum() {
           total[i][j][k] /= tot_predators[i][j];
         else
           if (total[i][j][k] > 0 && isZero(tot_predators[i][j]))
-            handle.LogWarning("Warning in predatoraggregator - consumption without predators");
+            handle.logWarning("Warning in predatoraggregator - consumption without predators");
       }
 }
 

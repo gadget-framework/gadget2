@@ -69,11 +69,11 @@ protected:
   /**
    * \brief This is the LengthGroupDivision of the predators
    */
-  LengthGroupDivision* PredatorLgrpDiv;
+  LengthGroupDivision* predLgrpDiv;
     /**
    * \brief This is the LengthGroupDivision of the preys
    */
-  LengthGroupDivision* PreyLgrpDiv;
+  LengthGroupDivision* preyLgrpDiv;
   /**
    * \param This is the flag used to denote whether the predator index calculation should be based on the biomass of the stock, or the number of the stock
    */

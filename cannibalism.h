@@ -14,7 +14,7 @@ class Keeper;
 
 class Cannibalism {
 public:
-  Cannibalism(CommentStream& infile, const LengthGroupDivision* lenp,
+  Cannibalism(CommentStream& infile, const LengthGroupDivision* len_prey,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   ~Cannibalism();
   void Print(ofstream& outfile);
@@ -28,8 +28,8 @@ public:
   int getMaxPredAge();
   int getMinPredAge(int i) { return minage[i]; };
   int getMaxPredAge(int i) { return maxage[i]; };
-  const DoubleVector& getAgeGroups(int pred_no) { return agegroups[pred_no]; };
-  const BandMatrix& getCons(int pred_no) { return *consumption[pred_no]; };
+  const DoubleVector& getAgeGroups(int pred) { return agegroups[pred]; };
+  const BandMatrix& getCons(int pred) { return *consumption[pred]; };
   double suitfunc(double predlen, double preylen);
 protected:
   DoubleIndexVector altfood;
@@ -42,8 +42,8 @@ protected:
   DoubleVector cannibalism;
   IntVector minage;
   IntVector maxage;
-  LengthGroupDivision* preylgp;
-  DoubleMatrix agegroups; //[pred_no][ages] kgf 29/3/99
+  LengthGroupDivision* LgrpDiv;
+  DoubleMatrix agegroups; //[pred][ages] kgf 29/3/99
   BandMatrixPtrVector consumption;
 };
 

@@ -38,7 +38,7 @@ CommentStream& operator>>(CommentStream& infile, Formula& F) {
     infile.get(c);
     infile >> F.inattr;
     if (F.inattr.Size() <= 0)
-      handle.LogWarning("Warning in formula - failed to read data");
+      handle.logWarning("Warning in formula - failed to read data");
     return infile;   //success or not if could not read from infile into F.inattr
   }
 
@@ -62,7 +62,7 @@ CommentStream& operator>>(CommentStream& infile, Formula& F) {
     infile.get(c);
     infile >> F.inattr;
     if (F.inattr.Size() <= 0)
-      handle.LogWarning("Warning in formula - failed to read data");
+      handle.logWarning("Warning in formula - failed to read data");
     return infile;   //success or not if could not read from infile into F.inattr.
   }
 
@@ -101,9 +101,9 @@ void Formula::Inform(Keeper* keeper) {
       ostringstream ostr;
       ostr << "*" << i + 1 << ends;
       assert(i < attributes.Size());
-      keeper->AddString(ostr.str());
+      keeper->addString(ostr.str());
       keeper->KeepVariable(multipliers[i], attributes[i]);
-      keeper->ClearLast();
+      keeper->clearLast();
     }
   }
 }

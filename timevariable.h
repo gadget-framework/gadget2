@@ -27,7 +27,7 @@ private:
   IntVector steps;  //Steps when things change
   FormulaVector values;
   DoubleMatrix modelmatrix;
-  FormulaVector Coeff;
+  FormulaVector coeff;
   Formula Value;
   double lastvalue;
   double value;

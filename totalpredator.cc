@@ -13,13 +13,13 @@ TotalPredator::TotalPredator(CommentStream& infile, const char* givenname,
   Keeper* const keeper, double multi)
   : LengthPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv, multi) {
 
-  keeper->AddString("predator");
-  keeper->AddString(givenname);
+  keeper->addString("predator");
+  keeper->addString(givenname);
 
   readSuitabilityMatrix(infile, "amount", TimeInfo, keeper);
 
-  keeper->ClearLast();
-  keeper->ClearLast();
+  keeper->clearLast();
+  keeper->clearLast();
   //Predator::setPrey will call resizeObjects.
 }
 
@@ -74,7 +74,7 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
     }
   }
 
-  //Adjust the consumption by the multiplicative factor.
+  //adjust the consumption by the multiplicative factor.
   tmpsteps = 1.0 / NrOfSubsteps;
   for (prey = 0; prey < NoPreys(); prey++) {
     if (Preys(prey)->IsInArea(area)) {
@@ -102,7 +102,7 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
     if (Preys(prey)->IsInArea(area))
       if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
-          Preys(prey)->AddConsumption(area, cons[inarea][prey][predl]);
+          Preys(prey)->addConsumption(area, cons[inarea][prey][predl]);
 
   //set totalconsumption to the actual total consumption
   for (prey = 0; prey < NoPreys(); prey++)
@@ -113,7 +113,7 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
             Prednumber[inarea][predl].W * tmpsteps;
 }
 
-void TotalPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) {
+void TotalPredator::adjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) {
   double maxRatio = pow(MaxRatioConsumed, NrOfSubsteps);
   int prey, predl, preyl;
   int AnyPreyEatenUp = 0;
@@ -182,6 +182,6 @@ const PopInfoVector& TotalPredator::NumberPriortoEating(int area, const char* pr
     if (strcasecmp(Preyname(prey), preyname) == 0)
       return Preys(prey)->NumberPriortoEating(area);
 
-  handle.LogWarning("Error in totalpredator - failed to match prey", preyname);
+  handle.logFailure("Error in totalpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
 }

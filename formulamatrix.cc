@@ -100,9 +100,9 @@ void FormulaMatrix::Inform(Keeper* keeper) {
   for (i = 0; i < nrow; i++) {
     ostringstream ostr;
     ostr << i + 1 << ends;
-    keeper->AddString(ostr.str());
+    keeper->addString(ostr.str());
     v[i]->Inform(keeper);
-    keeper->ClearLast();
+    keeper->clearLast();
   }
 }
 

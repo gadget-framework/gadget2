@@ -14,8 +14,8 @@ public:
   Suits();
   ~Suits();
   Suits(const Suits& initial, Keeper* const keeper);
-  void AddPrey(const char* preyname, SuitFunc* suitf);
-  void AddPrey(const char* preyname, double multiplication,
+  void addPrey(const char* preyname, SuitFunc* suitf);
+  void addPrey(const char* preyname, double multiplication,
     const DoubleMatrix& suitabilities, Keeper* const keeper);
   void DeletePrey(int prey, Keeper* const keeper);
   const char* Preyname(int prey) const;

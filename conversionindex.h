@@ -14,8 +14,8 @@ public:
   ConversionIndex(const LengthGroupDivision* const LF, const LengthGroupDivision* const LC, int interp = 0);
   ~ConversionIndex() {};
   int Pos(int i) const { return pos[i]; };
-  int Minlength() const { return minlength; };
-  int Maxlength() const { return maxlength; };
+  int minLength() const { return minlength; };
+  int maxLength() const { return maxlength; };
   int Minpos(int i) const { return minpos[i]; };
   int Maxpos(int i) const { return maxpos[i]; };
   int Nrof(int i) const { return nrof[i]; };

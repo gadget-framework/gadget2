@@ -61,7 +61,7 @@ public:
   int operator !() { return istrptr->fail(); };
   void makebad() { istrptr->clear(ios::badbit|istrptr->rdstate()); };
   CommentStream& get(char& c);
-  CommentStream& getline(char* ptr, int len, char delim = '\n');
+  CommentStream& getLine(char* ptr, int len, char delim = '\n');
 protected:
   istream* istrptr;
 };

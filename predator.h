@@ -22,7 +22,7 @@ public:
     int CurrentSubstep, int NrOfSubsteps) = 0;
   void setPrey(PreyPtrVector& preyvec, Keeper* const keeper);
   int doesEat(const char* preyname) const;
-  virtual void AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) = 0;
+  virtual void adjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) = 0;
   virtual void Print(ofstream& outfile) const;
   virtual const BandMatrix& Consumption(int area, const char* preyname) const = 0;
   virtual const DoubleVector& Consumption(int area) const = 0;

@@ -8,7 +8,7 @@
 #endif
 
 AgeBandMatrixRatio::AgeBandMatrixRatio(const AgeBandMatrixRatio& initial)
-  : minage(initial.Minage()), nrow(initial.Nrow()) {
+  : minage(initial.minAge()), nrow(initial.Nrow()) {
 
   int i;
   if (nrow > 0) {
@@ -48,9 +48,9 @@ AgeBandMatrixRatio::~AgeBandMatrixRatio() {
   }
 }
 
-int AgeBandMatrixRatio::NrOfTagExp() const {
+int AgeBandMatrixRatio::numTagExperiments() const {
   if (nrow > 0) {
-    int minlength = this->Minlength(minage);
+    int minlength = this->minLength(minage);
     return (this->operator[](minage))[minlength].Size();
   } else
     return 0;
@@ -60,7 +60,7 @@ void AgeBandMatrixRatio::setToZero() {
   int i, j, k;
   for (i = 0; i < nrow; i++) {
     for (j = v[i]->Mincol(); j < v[i]->Maxcol(); j++) {
-      for (k = 0; k < this->NrOfTagExp(); k++) {
+      for (k = 0; k < this->numTagExperiments(); k++) {
         *(*v[i])[j][k].N = 0.0;
         (*v[i])[j][k].R = 0.0;
       }

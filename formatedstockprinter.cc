@@ -157,22 +157,22 @@ void FormatedStockPrinter::setStock(StockPtrVector& stockvec) {
       }
 
   if (stocks.Size() != stocknames.Size()) {
-    handle.LogWarning("Error in formatedstockprinter - failed to match stocks");
+    handle.logWarning("Error in formatedstockprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      handle.LogWarning("Error in formatedstockprinter - found stock", stocks[i]->Name());
+      handle.logWarning("Error in formatedstockprinter - found stock", stocks[i]->Name());
     for (i = 0; i < stocknames.Size(); i++)
-      handle.LogWarning("Error in formatedstockprinter - looking for stock", stocknames[i]);
+      handle.logWarning("Error in formatedstockprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
 
   if (ages.Nrow() == 0) { //fill in ages with one age per row
     maxa = 0;
-    mina = stocks[0]->Minage();
+    mina = stocks[0]->minAge();
     for (i = 0; i < stocks.Size();i++) {
-      if (stocks[i]->Minage() < mina)
-        mina = stocks[i]->Minage();
-      if (stocks[i]->Maxage() > maxa)
-        maxa = stocks[i]->Maxage();
+      if (stocks[i]->minAge() < mina)
+        mina = stocks[i]->minAge();
+      if (stocks[i]->maxAge() > maxa)
+        maxa = stocks[i]->maxAge();
     }
     for (i = mina; i <= maxa; i++)
       ages.AddRows(1, 1, i);

@@ -4,18 +4,49 @@
 #include "commentstream.h"
 #include "formula.h"
 
-//functions to read a variable name and then the numeric value
+/**
+ * \brief This is the function that will read a text string from file, compare this text to a label and if it matches what is expected will then read and store a number
+ * \param infile is the CommentStream to read from
+ * \param str is the char* that the text label will be compared to
+ * \param number is the integer that will store the value that has been read
+ */
 void readWordAndVariable(CommentStream& infile, const char* str, int& number);
+/**
+ * \brief This is the function that will read a text string from file, compare this text to a label and if it matches what is expected will then read and store a number
+ * \param infile is the CommentStream to read from
+ * \param str is the char* that the text label will be compared to
+ * \param number is the double that will store the value that has been read
+ */
 void readWordAndVariable(CommentStream& infile, const char* str, double& number);
-
-//JMB - added function to read a string value
+/**
+ * \brief This is the function that will read a text string from file, compare this text to a label and if it matches what is expected will then read and store a second string
+ * \param infile is the CommentStream to read from
+ * \param str is the char* that the text label will be compared to
+ * \param value is the char* that will store the value that has been read
+ */
 void readWordAndValue(CommentStream& infile, const char* str, char* value);
-
-//JMB - added function to read a formula value
+/**
+ * \brief This is the function that will read a text string from file, compare this text to a label and if it matches what is expected will then read and store a Formula
+ * \param infile is the CommentStream to read from
+ * \param str is the char* that the text label will be compared to
+ * \param formula is the Formula that will store the value that has been read
+ */
 void readWordAndFormula(CommentStream& infile, const char* str, Formula& formula);
-
-//JMB - also added functions to read 2 numbers
+/**
+ * \brief This is the function that will read a text string from file, compare this text to a label and if it matches what is expected will then read and store 2 number
+ * \param infile is the CommentStream to read from
+ * \param str is the char* that the text label will be compared to
+ * \param number1 is the integer that will store the first value that has been read
+ * \param number2 is the integer that will store the second value that has been read
+ */
 void readWordAndTwoVariables(CommentStream& infile, const char* str, int& number1, int& number2);
+/**
+ * \brief This is the function that will read a text string from file, compare this text to a label and if it matches what is expected will then read and store 2 number
+ * \param infile is the CommentStream to read from
+ * \param str is the char* that the text label will be compared to
+ * \param number1 is the double that will store the first value that has been read
+ * \param number2 is the double that will store the second value that has been read
+ */
 void readWordAndTwoVariables(CommentStream& infile, const char* str, double& number1, double& number2);
 
 #endif

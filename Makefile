@@ -14,55 +14,35 @@ DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
 ##########################################################################
 # 1. Linux, or Solaris, without pvm, g++ compiler
 CXX = g++
-LIBDIRS = -L.  -L/usr/local/lib
+LIBDIRS = -L. -L/usr/local/lib
 LIBRARIES = -lm -lvec
 CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 OBJECTS = $(GADGETOBJECTS)
 ##########################################################################
-# 2. Linux, with pvm3, g++ compiler
+# 2. Linux, or Solaris, with pvm3, g++ compiler
 #CXX = g++
 #PVMDIR = $(PVM_ROOT)
 #PVMINCLUDE = $(PVMDIR)/include
 #PVMLIB = $(PVMDIR)/lib/$(PVM_ARCH)
 #LIBDIRS = -L. -L/usr/local/lib -L$(PVMLIB)
 #LIBRARIES = -lm -lvec -lpvm3 -lgpvm3 -lnsl
+# note that some (older) linux machines also require the -lsocket library
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
 #OBJECTS = $(GADGETOBJECTS) $(SLAVEOBJECTS)
 ##########################################################################
-# 3. Solaris, with pvm3, g++ compiler
-#CXX = g++
-#PVMDIR = $(PVM_ROOT)
-#PVMINCLUDE = $(PVMDIR)/include
-#PVMLIB = $(PVMDIR)/lib/$(PVM_ARCH)
-#LIBDIRS = -L. -L/usr/local/lib -L$(PVMLIB)
-#LIBRARIES = -lm -lvec -lpvm3 -lgpvm3 -lnsl
-#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
-#OBJECTS = $(GADGETOBJECTS) $(SLAVEOBJECTS)
-##########################################################################
-# 4. Solaris, without pvm3, using CC compiler
+# 3. Solaris, without pvm3, using CC compiler
 #CXX = CC
 #LIBDIRS = -L. -L/usr/local/lib
 #LIBRARIES = -lm -lvec
 #CXXFLAGS = $(DEFINE_FLAGS)
 #OBJECTS = $(GADGETOBJECTS)
 ##########################################################################
-# 5. HP-UX, without pvm3
-#LIBDIRS = -L. -L/usr/local/lib
-#LIBRARIES = -lm -lvec
-#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D __cplusplus
-#OBJECTS = $(GADGETOBJECTS)
-##########################################################################
-# 6. Linux or Solaris, without pvm3, g++ compiler running CONDOR
+# 4. Linux or Solaris, without pvm3, g++ compiler running CONDOR
 #CXX = condor_compile g++
 #LIBDIRS = -L. -L/usr/local/lib
 #LIBRARIES = -lm -lvec
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 #OBJECTS = $(GADGETOBJECTS)
-##########################################################################
-# The following functions are not ansi compatible, and so if the -ansi flag
-# is used, they will either fail or return garbage.  These functions are
-# the lgamma function used in file mathfunc.h, and
-# the strdup and strcasecmp functions might not work correctly.
 ##########################################################################
 
 VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \

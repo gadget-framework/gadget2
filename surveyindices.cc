@@ -175,7 +175,7 @@ void SurveyIndices::LikelihoodPrint(ofstream& outfile) {
   outfile.flush();
 }
 
-void SurveyIndices::AddToLikelihood(const TimeClass* const TimeInfo) {
+void SurveyIndices::addLikelihood(const TimeClass* const TimeInfo) {
   SI->Sum(TimeInfo);
   if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps())
     likelihood += SI->Regression();
@@ -192,10 +192,9 @@ void SurveyIndices::setStocks(StockPtrVector& Stocks) {
         found = 1;
         s.resize(1, Stocks[j]);
       }
-    if (found == 0) {
-      handle.LogWarning("Error in surveyindex - failed to match stock", stocknames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in surveyindex - failed to match stock", stocknames[i]);
+
   }
   SI->setStocks(s);
 }

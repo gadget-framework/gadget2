@@ -100,20 +100,18 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
   for (i = 0; i < stockvec.Size(); i++) {
     if (stockvec[i]->doesEat()) {
       if (strcasecmp(stockvec[i]->returnPredator()->Name(), predname) == 0) {
-        if (predator) {
-          handle.LogWarning("Error in predpreystdprinter - repeated predator", predname);
-          exit(EXIT_FAILURE);
-        }
+        if (predator)
+          handle.logFailure("Error in predpreystdprinter - repeated predator", predname);
+
         stockpred = 1;
         predator = stockvec[i]->returnPredator();
       }
     }
     if (stockvec[i]->IsEaten()) {
       if (strcasecmp(stockvec[i]->returnPrey()->Name(), preyname) == 0) {
-        if (prey) {
-          handle.LogWarning("Error in predpreystdprinter - repeated prey", preyname);
-          exit(EXIT_FAILURE);
-        }
+        if (prey)
+          handle.logFailure("Error in predpreystdprinter - repeated prey", preyname);
+
         stockprey = 1;
         prey = stockvec[i]->returnPrey();
       }
@@ -123,10 +121,9 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
   //And now check the PopPredators.
   for (i = 0; i < predvec.Size(); i++) {
     if (strcasecmp(predvec[i]->Name(), predname) == 0) {
-      if (predvec[i] != predator && predator) {
-        handle.LogWarning("Error in predpreystdprinter - repeated predator", predname);
-        exit(EXIT_FAILURE);
-      }
+      if (predvec[i] != predator && predator)
+        handle.logFailure("Error in predpreystdprinter - repeated predator", predname);
+
       predator = predvec[i];
     }
   }
@@ -134,32 +131,25 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
   //And now check the Preys.
   for (i = 0; i < preyvec.Size(); i++) {
     if (strcasecmp(preyvec[i]->Name(), preyname) == 0) {
-      if (preyvec[i] != prey && prey) {
-        handle.LogWarning("Error in predpreystdprinter - repeated prey", preyname);
-        exit(EXIT_FAILURE);
-      }
+      if (preyvec[i] != prey && prey)
+        handle.logFailure("Error in predpreystdprinter - repeated prey", preyname);
+
       prey = preyvec[i];
     }
   }
 
   if (prey == 0)
-    handle.LogWarning("Error in predpreystdprinter - failed to match prey", preyname);
+    handle.logFailure("Error in predpreystdprinter - failed to match prey", preyname);
   if (predator == 0)
-    handle.LogWarning("Error in predpreystdprinter - failed to match predator", predname);
-  if (prey == 0 || predator == 0)
-    exit(EXIT_FAILURE);
+    handle.logFailure("Error in predpreystdprinter - failed to match predator", predname);
 
   for (i = 0; i < areas.Size(); i++)
-    if (!prey->IsInArea(areas[i])) {
-      handle.LogWarning("Error in predpreystdprinter - preys arent defined on all areas");
-      exit(EXIT_FAILURE);
-    }
+    if (!prey->IsInArea(areas[i]))
+      handle.logFailure("Error in predpreystdprinter - preys arent defined on all areas");
 
   for (i = 0; i < areas.Size(); i++)
-    if (!predator->IsInArea(areas[i])) {
-      handle.LogWarning("Error in predpreystdprinter - predators arent defined on all areas");
-      exit(EXIT_FAILURE);
-    }
+    if (!predator->IsInArea(areas[i]))
+      handle.logFailure("Error in predpreystdprinter - predators arent defined on all areas");
 
   //If we get here, we have found exactly one predator and one prey defined on all the areas
   //so we can call the virtual function setPredAndPrey to set the predators and preys

@@ -1,5 +1,4 @@
 #include "bandmatrix.h"
-#include "doubleindexvector.h"
 
 #ifdef GADGET_INLINE
 inline

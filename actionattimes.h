@@ -34,21 +34,21 @@ public:
    * \param years is the IntVector of all the years that have the action taking place
    * \param TimeInfo is the TimeClass for the current model
    */
-  void AddActions(const IntVector& years, const IntVector& steps, const TimeClass* const TimeInfo);
+  void addActions(const IntVector& years, const IntVector& steps, const TimeClass* const TimeInfo);
   /**
    * \brief This is the function used to add the action on all years for a set of steps
    * \param steps is the IntVector of all the steps that have the action taking place
    * \param TimeInfo is the TimeClass for the current model
    */
-  void AddActionsAtAllYears(const IntVector& steps, const TimeClass* const TimeInfo);
+  void addActionsAllYears(const IntVector& steps, const TimeClass* const TimeInfo);
   /**
    * \brief This is the function used to add the action on all steps for a set of years
    * \param years is the IntVector of all the years that have the action taking place
    * \param TimeInfo is the TimeClass for the current model
    */
-  void AddActionsAtAllSteps(const IntVector& years, const TimeClass* const TimeInfo);
+  void addActionsAllSteps(const IntVector& years, const TimeClass* const TimeInfo);
   /**
-   * \brief This is the function used to read check whether an action takes place on the current timestep
+   * \brief This is the function used to check whether an action takes place on the current timestep
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if action takes place, 0 otherwise
    */
@@ -57,7 +57,7 @@ protected:
   /**
    * \brief This is a flag if the action takes place on every timestep
    */
-  int EveryStep;
+  int everyStep;
   /**
    * \brief This is the IntVector of the timesteps on which the action takes place
    */

@@ -46,68 +46,68 @@ void MainInfo::showUsage() {
 }
 
 MainInfo::MainInfo()
-  : OptinfoCommentFile(OptinfoFile), OptInfoFileisGiven(0), InitialCondareGiven(0),
-    calclikelihood(0), optimize(0), stochastic(0), PrintInitialcond(0), PrintFinalcond(0),
-    PrintLikelihoodInfo(0), netrun(0) {
+  : optInfoComment(optInfoStream), givenOptInfo(0), givenInitialParam(0),
+    runlikelihood(0), runoptimize(0), runstochastic(0), runnetwork(0),
+    printInitialInfo(0), printFinalInfo(0), printLikelihoodInfo(0) {
 
   char tmpname[10];
   strncpy(tmpname, "", 10);
   strcpy(tmpname, "main");
 
-  OptinfoFilename = NULL;
-  InitialCommentFilename = NULL;
-  PrintInitialCondFilename = NULL;
-  PrintFinalCondFilename = NULL;
-  PrintLikelihoodFilename = NULL;
-  MainGadgetFilename = NULL;
-  setMainGadgetFilename(tmpname);
+  strOptInfoFile = NULL;
+  strInitialParamFile = NULL;
+  strPrintInitialFile = NULL;
+  strPrintFinalFile = NULL;
+  strPrintLikelihoodFile = NULL;
+  strMainGadgetFile = NULL;
+  setMainGadgetFile(tmpname);
 }
 
 MainInfo::~MainInfo() {
-  if (OptinfoFilename != NULL) {
-    delete[] OptinfoFilename;
-    OptinfoFilename = NULL;
+  if (strOptInfoFile != NULL) {
+    delete[] strOptInfoFile;
+    strOptInfoFile = NULL;
   }
-  if (InitialCommentFilename != NULL) {
-    delete[] InitialCommentFilename;
-    InitialCommentFilename = NULL;
+  if (strInitialParamFile != NULL) {
+    delete[] strInitialParamFile;
+    strInitialParamFile = NULL;
   }
-  if (PrintInitialCondFilename != NULL) {
-    delete[] PrintInitialCondFilename;
-    PrintInitialCondFilename = NULL;
+  if (strPrintInitialFile != NULL) {
+    delete[] strPrintInitialFile;
+    strPrintInitialFile = NULL;
   }
-  if (PrintFinalCondFilename != NULL) {
-    delete[] PrintFinalCondFilename;
-    PrintFinalCondFilename = NULL;
+  if (strPrintFinalFile != NULL) {
+    delete[] strPrintFinalFile;
+    strPrintFinalFile = NULL;
   }
-  if (PrintLikelihoodFilename != NULL) {
-    delete[] PrintLikelihoodFilename;
-    PrintLikelihoodFilename = NULL;
+  if (strPrintLikelihoodFile != NULL) {
+    delete[] strPrintLikelihoodFile;
+    strPrintLikelihoodFile = NULL;
   }
-  if (MainGadgetFilename != NULL) {
-    delete[] MainGadgetFilename;
-    MainGadgetFilename = NULL;
+  if (strMainGadgetFile != NULL) {
+    delete[] strMainGadgetFile;
+    strMainGadgetFile = NULL;
   }
 }
 
-void MainInfo::OpenOptinfofile(char* filename) {
-  if (OptinfoFilename != NULL) {
-    delete[] OptinfoFilename;
-    OptinfoFilename = NULL;
+void MainInfo::openOptInfoFile(char* filename) {
+  if (strOptInfoFile != NULL) {
+    delete[] strOptInfoFile;
+    strOptInfoFile = NULL;
   }
-  OptinfoFilename = new char[strlen(filename) + 1];
-  strcpy(OptinfoFilename, filename);
+  strOptInfoFile = new char[strlen(filename) + 1];
+  strcpy(strOptInfoFile, filename);
 
   handle.Open(filename);
-  OptinfoFile.open(OptinfoFilename, ios::in);
-  handle.checkIfFailure(OptinfoFile, filename);
-  OptInfoFileisGiven = 1;
+  optInfoStream.open(strOptInfoFile, ios::in);
+  handle.checkIfFailure(optInfoStream, filename);
+  givenOptInfo = 1;
   handle.Close();
 }
 
-void MainInfo::CloseOptinfofile() {
-  OptinfoFile.close();
-  OptinfoFile.clear();
+void MainInfo::closeOptInfoFile() {
+  optInfoStream.close();
+  optInfoStream.clear();
 }
 
 void MainInfo::read(int aNumber, char* const aVector[]) {
@@ -116,11 +116,11 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
     k = 1;
     while (k < aNumber) {
       if (strcasecmp(aVector[k], "-l") == 0) {
-        calclikelihood = 1;
-        optimize = 1;
+        runlikelihood = 1;
+        runoptimize = 1;
 
       } else if (strcasecmp(aVector[k], "-n") == 0) {
-        netrun = 1;
+        runnetwork = 1;
 
         #ifndef GADGET_NETWORK
           cout << "\nWarning - Gadget is trying to run in the network mode for paramin without\n"
@@ -128,8 +128,8 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         #endif
 
       } else if (strcasecmp(aVector[k], "-s") == 0) {
-        stochastic = 1;
-        calclikelihood = 1;
+        runstochastic = 1;
+        runlikelihood = 1;
 
       } else if (strcasecmp(aVector[k], "-m") == 0) {
         ifstream infile;
@@ -149,7 +149,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
         k++;
-        setInitialParamFilename(aVector[k]);
+        setInitialParamFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-o") == 0) {
         if (k == aNumber - 1)
@@ -176,31 +176,31 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
         k++;
-        setPrintInitialCondFilename(aVector[k]);
+        setPrintInitialFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-printfinal") == 0) {
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
         k++;
-        setPrintFinalCondFilename(aVector[k]);
+        setPrintFinalFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-main") == 0) {
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
         k++;
-        setMainGadgetFilename(aVector[k]);
+        setMainGadgetFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-opt") == 0) {
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
         k++;
-        OpenOptinfofile(aVector[k]);
+        openOptInfoFile(aVector[k]);
 
       } else if ((strcasecmp(aVector[k], "-printlikelihood") == 0) || (strcasecmp(aVector[k], "-likelihoodprint") == 0)) {
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
         k++;
-        setPrintLikelihoodFilename(aVector[k]);
+        setPrintLikelihoodFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-print1") == 0) {
         if (k == aNumber - 1)
@@ -244,21 +244,24 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
 
   printinfo.checkNumbers();
   //JMB some error checking to make sure we are doing something sensible
-  if ((stochastic != 1) && (netrun == 1)) {
+  if ((runstochastic != 1) && (runnetwork == 1)) {
     cout << "\nWarning - Gadget for the paramin network should be used with -s option\n"
       << "Gadget will now set the -s switch to perform a stochastic run\n";
-    stochastic = 1;
-    calclikelihood = 1;
+    runstochastic = 1;
+    runlikelihood = 1;
   }
-  if ((stochastic == 1) && (optimize == 1)) {
+  if ((runstochastic == 1) && (runoptimize == 1)) {
     cout << "\nWarning - Gadget has been started with both the -s switch and the -l switch\n"
       << "However, it is not possible to do both a stochastic run and an optimizing run!\n"
       << "Gadget will perform only the stochastic run (and ignore the -l switch)\n";
-    optimize = 0;
+    runoptimize = 0;
   }
-  if ((handle.checkLogFile()) && (netrun == 1)) {
-    cout << "\nWarning - logging information from a Gadget run using paramin is not recommended\n"
-      << "Writing logging information from lots of single runs is time consuming\n";
+  if ((handle.checkLogFile()) && (runoptimize == 1)) {
+    cout << "\nWarning - logging information from a Gadget likelihood run is not recommended\n"
+      << "Since this can lead to a very large log file being created!\n";
+  }
+  if ((handle.checkLogFile()) && (runnetwork == 1)) {
+    cout << "\nWarning - logging information from a Gadget run using paramin is not recommended\n";
   }
 }
 
@@ -272,9 +275,7 @@ void MainInfo::read(CommentStream& infile) {
 
     if (strcasecmp(text, "-i") == 0) {
       infile >> text >> ws;
-      InitialCommentFilename = new char[strlen(text) + 1];
-      strcpy(InitialCommentFilename, text);
-      InitialCondareGiven = 1;
+      setInitialParamFile(text);
     } else if (strcasecmp(text, "-o") == 0) {
       infile >> text >> ws;
       printinfo.setOutputFile(text);
@@ -286,19 +287,19 @@ void MainInfo::read(CommentStream& infile) {
       printinfo.setParamOutFile(text);
     } else if (strcasecmp(text, "-main") == 0) {
       infile >> text >> ws;
-      setMainGadgetFilename(text);
+      setMainGadgetFile(text);
     } else if (strcasecmp(text, "-printinitial") == 0) {
       infile >> text >> ws;
-      setPrintInitialCondFilename(text);
+      setPrintInitialFile(text);
     } else if (strcasecmp(text, "-printfinal") == 0) {
       infile >> text >> ws;
-      setPrintFinalCondFilename(text);
+      setPrintFinalFile(text);
     } else if (strcasecmp(text, "-printlikelihood") == 0) {
       infile >> text >> ws;
-      setPrintLikelihoodFilename(text);
+      setPrintLikelihoodFile(text);
     } else if (strcasecmp(text, "-opt") == 0) {
       infile >> text >> ws;
-      OpenOptinfofile(text);
+      openOptInfoFile(text);
     } else if (strcasecmp(text, "-print1") == 0) {
       infile >> dummy >> ws;
       printinfo.setPrint1(dummy);
@@ -311,54 +312,53 @@ void MainInfo::read(CommentStream& infile) {
     } else
       showCorrectUsage(text);
   }
-  printinfo.checkNumbers();
 }
 
-void MainInfo::setPrintInitialCondFilename(char* filename) {
-  if (PrintInitialCondFilename != NULL) {
-    delete[] PrintInitialCondFilename;
-    PrintInitialCondFilename = NULL;
+void MainInfo::setPrintInitialFile(char* filename) {
+  if (strPrintInitialFile != NULL) {
+    delete[] strPrintInitialFile;
+    strPrintInitialFile = NULL;
   }
-  PrintInitialCondFilename = new char[strlen(filename) + 1];
-  strcpy(PrintInitialCondFilename, filename);
-  PrintInitialcond = 1;
+  strPrintInitialFile = new char[strlen(filename) + 1];
+  strcpy(strPrintInitialFile, filename);
+  printInitialInfo = 1;
 }
 
-void MainInfo::setPrintFinalCondFilename(char* filename) {
-  if (PrintFinalCondFilename != NULL) {
-    delete[] PrintFinalCondFilename;
-    PrintFinalCondFilename = NULL;
+void MainInfo::setPrintFinalFile(char* filename) {
+  if (strPrintFinalFile != NULL) {
+    delete[] strPrintFinalFile;
+    strPrintFinalFile = NULL;
   }
-  PrintFinalCondFilename = new char[strlen(filename) + 1];
-  strcpy(PrintFinalCondFilename, filename);
-  PrintFinalcond = 1;
+  strPrintFinalFile = new char[strlen(filename) + 1];
+  strcpy(strPrintFinalFile, filename);
+  printFinalInfo = 1;
 }
 
-void MainInfo::setPrintLikelihoodFilename(char* filename) {
-  if (PrintLikelihoodFilename != NULL) {
-    delete[] PrintLikelihoodFilename;
-    PrintLikelihoodFilename = NULL;
+void MainInfo::setPrintLikelihoodFile(char* filename) {
+  if (strPrintLikelihoodFile != NULL) {
+    delete[] strPrintLikelihoodFile;
+    strPrintLikelihoodFile = NULL;
   }
-  PrintLikelihoodFilename = new char[strlen(filename) + 1];
-  strcpy(PrintLikelihoodFilename, filename);
-  PrintLikelihoodInfo = 1;
+  strPrintLikelihoodFile = new char[strlen(filename) + 1];
+  strcpy(strPrintLikelihoodFile, filename);
+  printLikelihoodInfo = 1;
 }
 
-void MainInfo::setInitialParamFilename(char* filename) {
-  if (InitialCommentFilename != NULL) {
-    delete[] InitialCommentFilename;
-    InitialCommentFilename = NULL;
+void MainInfo::setInitialParamFile(char* filename) {
+  if (strInitialParamFile != NULL) {
+    delete[] strInitialParamFile;
+    strInitialParamFile = NULL;
   }
-  InitialCommentFilename = new char[strlen(filename) + 1];
-  strcpy(InitialCommentFilename, filename);
-  InitialCondareGiven = 1;
+  strInitialParamFile = new char[strlen(filename) + 1];
+  strcpy(strInitialParamFile, filename);
+  givenInitialParam = 1;
 }
 
-void MainInfo::setMainGadgetFilename(char* filename) {
-  if (MainGadgetFilename != NULL) {
-    delete[] MainGadgetFilename;
-    MainGadgetFilename = NULL;
+void MainInfo::setMainGadgetFile(char* filename) {
+  if (strMainGadgetFile != NULL) {
+    delete[] strMainGadgetFile;
+    strMainGadgetFile = NULL;
   }
-  MainGadgetFilename = new char[strlen(filename) + 1];
-  strcpy(MainGadgetFilename, filename);
+  strMainGadgetFile = new char[strlen(filename) + 1];
+  strcpy(strMainGadgetFile, filename);
 }

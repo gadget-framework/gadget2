@@ -123,6 +123,7 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
   handle.Close();
   datafile.close();
   datafile.clear();
+  Likelihoodvalues.AddRows(DataCatch.Nrow(), numarea, 0.0);
 }
 
 void CatchInTons::Reset(const Keeper* const keeper) {
@@ -149,54 +150,51 @@ void CatchInTons::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-double CatchInTons::SumOfSquares(double obs, double mod) {
-  double t = log(obs + epsilon) - log(mod + epsilon);
-  return t * t;
-}
-
-void CatchInTons::AddToLikelihood(const TimeClass* const TimeInfo) {
+double CatchInTons::calcLikSumSquares(const TimeClass* const TimeInfo) {
   int a, a2, f, p;
-  double t = 0.0;
+  double totallikelihood = 0.0;
   PopPredator* pred;
-  assert(preyindex.Nrow() == fleets.Size());
 
-  if (AAT.AtCurrentTime(TimeInfo)) {
-    for (a = 0; a < areas.Nrow(); a++) {
-      for (a2 = 0; a2 < areas.Ncol(a); a2++) {
-        for (f = 0; f < preyindex.Nrow(); f++) {
-          pred = (PopPredator*)fleets[f]->returnPredator();
-          for (p = 0; p < preyindex.Ncol(f); p++)
-            ModelCatch[timeindex][a] += pred->consumedBiomass(preyindex[f][p], a2);
-        }
-      }
-
-      if (!yearly) {
-        switch(functionnumber) {
-          case 1:
-          t = SumOfSquares(ModelCatch[timeindex][a], DataCatch[timeindex][a]);
-          break;
-        default:
-          handle.LogWarning("Warning in catchintons - unknown function", functionname);
-          break;
-        }
-        likelihood += t;
-
-      } else if (TimeInfo->CurrentStep() == TimeInfo->StepsInYear()) {
-        switch(functionnumber) {
-          case 1:
-          t = SumOfSquares(ModelCatch[timeindex][a], DataCatch[timeindex][a]);
-          break;
-        default:
-          handle.LogWarning("Warning in catchintons - unknown function", functionname);
-          break;
-        }
-        likelihood += t;
+  for (a = 0; a < areas.Nrow(); a++) {
+    Likelihoodvalues[timeindex][a] = 0.0;
+    for (a2 = 0; a2 < areas.Ncol(a); a2++) {
+      for (f = 0; f < preyindex.Nrow(); f++) {
+        pred = (PopPredator*)fleets[f]->returnPredator();
+        for (p = 0; p < preyindex.Ncol(f); p++)
+          ModelCatch[timeindex][a] += pred->consumedBiomass(preyindex[f][p], a2);
       }
     }
 
-    if (!yearly)
-      timeindex++;
-    else if (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())
+    if (!yearly) {
+      Likelihoodvalues[timeindex][a] +=
+        (log(ModelCatch[timeindex][a] + epsilon) - log(DataCatch[timeindex][a] + epsilon))
+        * (log(ModelCatch[timeindex][a] + epsilon) - log(DataCatch[timeindex][a] + epsilon));
+
+      totallikelihood += Likelihoodvalues[timeindex][a];
+
+    } else if (TimeInfo->CurrentStep() == TimeInfo->StepsInYear()) {
+      Likelihoodvalues[timeindex][a] +=
+        (log(ModelCatch[timeindex][a] + epsilon) - log(DataCatch[timeindex][a] + epsilon))
+        * (log(ModelCatch[timeindex][a] + epsilon) - log(DataCatch[timeindex][a] + epsilon));
+
+      totallikelihood += Likelihoodvalues[timeindex][a];
+    }
+  }
+  return totallikelihood;
+}
+
+void CatchInTons::addLikelihood(const TimeClass* const TimeInfo) {
+
+  if (AAT.AtCurrentTime(TimeInfo)) {
+    switch(functionnumber) {
+      case 1:
+        likelihood += calcLikSumSquares(TimeInfo);
+        break;
+      default:
+        handle.logWarning("Warning in catchintons - unknown function", functionname);
+        break;
+    }
+    if ((!yearly) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear()))
       timeindex++;
   }
 }
@@ -223,10 +221,9 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
         fleets.resize(1, Fleets[j]);
       }
 
-    if (found == 0) {
-      handle.LogWarning("Error in catchintons - unknown fleet", fleetnames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in catchintons - unknown fleet", fleetnames[i]);
+
   }
 
   for (i = 0; i < stocknames.Size(); i++) {
@@ -238,10 +235,9 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
           stocks.resize(1, Stocks[j]);
         }
     }
-    if (found == 0) {
-      handle.LogWarning("Error in catchintons - unknown stock", stocknames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in catchintons - unknown stock", stocknames[i]);
+
   }
 
   for (i = 0; i < fleets.Size(); i++) {
@@ -256,8 +252,11 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
         }
 
     if (found == 0)
-      handle.LogWarning("Warning in catchintons - found no stocks for fleet", fleetnames[i]);
+      handle.logWarning("Warning in catchintons - found no stocks for fleet", fleetnames[i]);
   }
+
+  if (preyindex.Nrow() != fleets.Size())
+    handle.logFailure("Error in catchintons - failed to match stocks to fleets");
 }
 
 void CatchInTons::readCatchInTonsData(CommentStream& infile,
@@ -275,8 +274,7 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
 
   //Find start of distribution data in datafile
   infile >> ws;
-  char c;
-  c = infile.peek();
+  char c = infile.peek();
   if (!isdigit(c)) {
     infile.get(c);
     while (c != '\n' && !infile.eof())
@@ -343,13 +341,13 @@ void CatchInTons::readCatchInTonsData(CommentStream& infile,
   }
 
   if (yearly)
-    AAT.AddActionsAtAllSteps(Years, TimeInfo);
+    AAT.addActionsAllSteps(Years, TimeInfo);
   else
-    AAT.AddActions(Years, Steps, TimeInfo);
+    AAT.addActions(Years, Steps, TimeInfo);
 
   if (count == 0)
-    handle.LogWarning("Warning in catchintons - found no data in the data file");
-  handle.LogMessage("Read catchintons data file - number of entries", count);
+    handle.logWarning("Warning in catchintons - found no data in the data file");
+  handle.logMessage("Read catchintons data file - number of entries", count);
 }
 
 void CatchInTons::LikelihoodPrint(ofstream& outfile) {
@@ -362,7 +360,7 @@ void CatchInTons::LikelihoodPrint(ofstream& outfile) {
   outfile << "\nFleet names:";
   for (i = 0; i < fleetnames.Size(); i++)
     outfile << sep << fleetnames[i];
-  outfile << "\nLandings data:";
+  outfile << "\n\nLandings data:\n";
 
   for (y = 0; y < Years.Size(); y++) {
     outfile << "\nYear " << Years[y];
@@ -371,7 +369,8 @@ void CatchInTons::LikelihoodPrint(ofstream& outfile) {
 
     for (a = 0; a < DataCatch.Ncol(y); a++)
       outfile << "\nInternal area: " << a << "\nMeasured catch is " << DataCatch[y][a]
-        << " and modelled catch is " << ModelCatch[y][a];
+        << " modelled catch is " << ModelCatch[y][a] << " likelihood value " << Likelihoodvalues[y][a];
+
     outfile << endl;
   }
   outfile.flush();

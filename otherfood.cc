@@ -20,8 +20,8 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   int i = 0;
   int tmpint;
 
-  keeper->AddString("otherfood ");
-  keeper->AddString(givenname);
+  keeper->addString("otherfood ");
+  keeper->addString(givenname);
 
   infile >> text;
   IntVector tmpareas;
@@ -68,8 +68,8 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   } else
     handle.Unexpected("amounts", text);
 
-  keeper->ClearLast();
-  keeper->ClearLast();
+  keeper->clearLast();
+  keeper->clearLast();
 
   prey->setCI(&LgrpDiv);
 }
@@ -82,8 +82,8 @@ LengthPrey* OtherFood::returnPrey() const {
   return prey;
 }
 
-void OtherFood::CheckEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  prey->CheckConsumption(area, TimeInfo->NrOfSubsteps());
+void OtherFood::checkEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+  prey->checkConsumption(area, TimeInfo->NrOfSubsteps());
 }
 
 void OtherFood::CalcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {

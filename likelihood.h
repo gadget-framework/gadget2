@@ -37,13 +37,13 @@ public:
    * \brief This function will calculate the likelihood score for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void AddToLikelihood(const TimeClass* const TimeInfo) = 0;
+  virtual void addLikelihood(const TimeClass* const TimeInfo) = 0;
   /**
    * \brief This function will calculate the likelihood score for the current model after adjusting the parameters
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
-  virtual void AddToLikelihoodTimeAndKeeper(const TimeClass* const TimeInfo, Keeper* const keeper) {};
+  virtual void addLikelihoodKeeper(const TimeClass* const TimeInfo, Keeper* const keeper) {};
   /**
    * \brief This function will reset the likelihood information
    * \param keeper is the Keeper for the current model

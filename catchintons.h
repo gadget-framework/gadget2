@@ -15,11 +15,11 @@ public:
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile);
-  virtual void AddToLikelihood(const TimeClass* const TimeInfo);
+  virtual void addLikelihood(const TimeClass* const TimeInfo);
   void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
-  void readCatchInTonsData(CommentStream&, const TimeClass*, int);
-  double SumOfSquares(double obs, double mod);
+  void readCatchInTonsData(CommentStream& infile, const TimeClass* TimeInfo, int numarea);
+  double calcLikSumSquares(const TimeClass* const TimeInfo);
   CharPtrVector fleetnames;
   CharPtrVector stocknames;
   CharPtrVector areaindex;
@@ -29,6 +29,7 @@ private:
   IntMatrix areas;
   DoubleMatrix DataCatch;
   DoubleMatrix ModelCatch;
+  DoubleMatrix Likelihoodvalues;
   int yearly;
   double epsilon;
   ActionAtTimes AAT;

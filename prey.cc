@@ -12,7 +12,7 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
   : HasName(givenname), LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
   type = PREYTYPE;
-  keeper->AddString("prey");
+  keeper->addString("prey");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
@@ -38,7 +38,7 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
   if (LgrpDiv->Error())
     handle.Message("Error in prey - failed to create length group");
 
-  keeper->ClearLast();
+  keeper->clearLast();
   this->InitialiseObjects();
 
   //preylenindex is not required - free up memory
@@ -111,8 +111,8 @@ void Prey::Print(ofstream& outfile) const {
   outfile << "\nPrey\n\tName " << this->Name();
   outfile << "\n\tPrey lengths";
   for (i = 0; i < LgrpDiv->NoLengthGroups(); i++)
-    outfile << sep << LgrpDiv->Minlength(i);
-  outfile << sep << LgrpDiv->Maxlength(i-1) << endl;
+    outfile << sep << LgrpDiv->minLength(i);
+  outfile << sep << LgrpDiv->maxLength(i-1) << endl;
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tNumber of prey on internal area " << areas[area] << ":";
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
@@ -165,17 +165,17 @@ void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
 
 //Calculates the consumption. The function gets the consumption in
 //mass units, later they are converted to numbers.
-void Prey::AddConsumption(int area, const DoubleIndexVector& predconsumption) {
+void Prey::addConsumption(int area, const DoubleIndexVector& predconsumption) {
   int i;
   for (i = predconsumption.Mincol(); i < predconsumption.Maxcol(); i++)
     cons[AreaNr[area]][i] += predconsumption[i];
 }
 
-//Check if more is consumed of prey than was available.  If this is
+//check if more is consumed of prey than was available.  If this is
 //the case a flag is set. Changed 22 - May 1997  so that only 95% of a prey
 //in an area can be eaten in one timestep.  This is to avoid problems
 //with survy indices etc.  include maxmortailty.h was added.
-void Prey::CheckConsumption(int area, int NrOfSubsteps) {
+void Prey::checkConsumption(int area, int NrOfSubsteps) {
   double maxRatio = pow(MaxRatioConsumed, NrOfSubsteps);
   int i, temp = 0;
   int inarea = AreaNr[area];

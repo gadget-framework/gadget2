@@ -5,7 +5,7 @@
 
 extern ErrorHandler handle;
 
-ActionAtTimes::ActionAtTimes() : EveryStep(0) {
+ActionAtTimes::ActionAtTimes() : everyStep(0) {
 }
 
 int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -59,7 +59,7 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
     //If we have read the second column, we keep the data.
     if ((error == 0) && (column == 1)) {
       if ((readtext[0]) && (readtext[1])) {
-        EveryStep = 1;
+        everyStep = 1;
         error = 2;   //We want to exit this while-loop.
       } else if ((readtext[0]) && !(readtext[1])) {
         if ((TimeInfo->LastYear() != TimeInfo->FirstYear()) ||
@@ -84,7 +84,7 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
   infile.seekg(readPos);
 
   //And now the cleanup.
-  if (EveryStep) {
+  if (everyStep) {
     while (TimeSteps.Size())
       TimeSteps.Delete(0);
     while (Years.Size())
@@ -108,13 +108,14 @@ ActionAtTimes::~ActionAtTimes() {
     Steps.Delete(0);
 }
 
-void ActionAtTimes::AddActions(const IntVector& years,
+void ActionAtTimes::addActions(const IntVector& years,
   const IntVector& steps, const TimeClass* const TimeInfo) {
 
-  assert(years.Size() == steps.Size());
-  int i;
-  if (EveryStep)
+  if (years.Size() != steps.Size())
+    handle.logFailure("Error in actionattimes - different number of years and steps");
+  if (everyStep)
     return;
+  int i;
   for (i = 0; i < years.Size(); i++)
     if (TimeInfo->IsWithinPeriod(years[i], steps[i])) {
       TimeSteps.resize(1);
@@ -122,10 +123,11 @@ void ActionAtTimes::AddActions(const IntVector& years,
     }
 }
 
-void ActionAtTimes::AddActionsAtAllYears(const IntVector& steps, const TimeClass* const TimeInfo) {
-  int i;
-  if (EveryStep)
+void ActionAtTimes::addActionsAllYears(const IntVector& steps, const TimeClass* const TimeInfo) {
+
+  if (everyStep)
     return;
+  int i;
   for (i = 0; i < steps.Size(); i++)
     if ((TimeInfo->LastYear() != TimeInfo->FirstYear()) ||
         (TimeInfo->FirstStep() <= steps[i] && steps[i] <= TimeInfo->LastStep())) {
@@ -134,10 +136,11 @@ void ActionAtTimes::AddActionsAtAllYears(const IntVector& steps, const TimeClass
     }
 }
 
-void ActionAtTimes::AddActionsAtAllSteps(const IntVector& years, const TimeClass* const TimeInfo) {
-  int i;
-  if (EveryStep)
+void ActionAtTimes::addActionsAllSteps(const IntVector& years, const TimeClass* const TimeInfo) {
+
+  if (everyStep)
     return;
+  int i;
   for (i = 0; i < years.Size(); i++)
     if (TimeInfo->FirstYear() <= years[i] && years[i] <= TimeInfo->LastYear()) {
       Years.resize(1);
@@ -152,7 +155,7 @@ void ActionAtTimes::AddActionsAtAllSteps(const IntVector& years, const TimeClass
  * vector, telling us where we quit our search in the last call -- much
  * like done in Renewal::AddRenewal. */
 int ActionAtTimes::AtCurrentTime(const TimeClass* const TimeInfo) const {
-  if (EveryStep)
+  if (everyStep)
     return 1;
   int i;
   for (i = 0; i < Steps.Size(); i++)

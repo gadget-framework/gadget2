@@ -153,19 +153,19 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
       }
 
   if (predators.Size() != predatornames.Size()) {
-    handle.LogWarning("Error in predatorprinter - failed to match predators");
+    handle.logWarning("Error in predatorprinter - failed to match predators");
     for (i = 0; i < predatorvec.Size(); i++)
-      handle.LogWarning("Error in predatorprinter - found predator", predatorvec[i]->Name());
+      handle.logWarning("Error in predatorprinter - found predator", predatorvec[i]->Name());
     for (i = 0; i < predatornames.Size(); i++)
-      handle.LogWarning("Error in predatorprinter - looking for predator", predatornames[i]);
+      handle.logWarning("Error in predatorprinter - looking for predator", predatornames[i]);
     exit(EXIT_FAILURE);
   }
   if (preys.Size() != preynames.Size()) {
-    handle.LogWarning("Error in predatorprinter - failed to match preys");
+    handle.logWarning("Error in predatorprinter - failed to match preys");
     for (i = 0; i < preyvec.Size(); i++)
-      handle.LogWarning("Error in predatorprinter - found prey", preyvec[i]->Name());
+      handle.logWarning("Error in predatorprinter - found prey", preyvec[i]->Name());
     for (i = 0; i < preynames.Size(); i++)
-      handle.LogWarning("Error in predatorprinter - looking for prey", preynames[i]);
+      handle.logWarning("Error in predatorprinter - looking for prey", preynames[i]);
     exit(EXIT_FAILURE);
   }
   aggregator = new PredatorAggregator(predators, preys, areas, predLgrpDiv, preyLgrpDiv);

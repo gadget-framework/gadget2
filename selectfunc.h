@@ -63,7 +63,7 @@ public:
    * \brief This will return the number of constants used to calculate the selection value
    * \return number
    */
-  int noOfConstants();
+  int numConstants();
 protected:
   /**
    * \brief This is the name of the selection function

@@ -26,7 +26,7 @@ public:
    * \brief This function will calculate the likelihood score for the SurveyIndices component
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void AddToLikelihood(const TimeClass* const TimeInfo);
+  virtual void addLikelihood(const TimeClass* const TimeInfo);
   /**
    * \brief This will select the stocks required to calculate the SurveyIndices likelihood score
    * \param Stocks is the StockPtrVector of all the available stocks

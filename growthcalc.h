@@ -31,7 +31,7 @@ public:
    * \param area is the area that the growth is being calculated on
    * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
    * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the PopInfoVector of the current population of the stock
+   * \param numGrow is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param Fphi is the DoubleVector of the feeding level of the stock
@@ -40,7 +40,7 @@ public:
    * \note This will be overridden by the derived classes that actually calculate the growth
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+    const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
     const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const = 0;
   /**
@@ -77,7 +77,7 @@ public:
    * \param area is the area that the growth is being calculated on
    * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
    * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the PopInfoVector of the current population of the stock
+   * \param numGrow is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param Fphi is the DoubleVector of the feeding level of the stock
@@ -85,14 +85,14 @@ public:
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+    const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
     const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
 protected:
   /**
    * \brief This is the number of growth parameters (set to 9)
    */
-  int NumberOfGrowthConstants;
+  int numGrowthConstants;
   /**
    * \brief This is the FormulaVector of growth parameters
    */
@@ -125,7 +125,7 @@ public:
    * \param area is the area that the growth is being calculated on
    * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
    * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the PopInfoVector of the current population of the stock
+   * \param numGrow is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param Fphi is the DoubleVector of the feeding level of the stock
@@ -133,7 +133,7 @@ public:
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+    const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
     const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
 protected:
@@ -159,10 +159,10 @@ public:
    * \param areas is the IntVector of areas that the growth calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision of the stock
    * \param keeper is the Keeper for the current model
-   * \param refWeight is the name of the file containing the reference weight information for the stock
+   * \param refWeightFile is the name of the file containing the reference weight information for the stock
    */
   GrowthCalcC(CommentStream& infile, const IntVector& areas,
-    const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeight);
+    const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeightFile);
   /**
    * \brief This is the default GrowthCalcC destructor
    */
@@ -172,7 +172,7 @@ public:
    * \param area is the area that the growth is being calculated on
    * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
    * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the PopInfoVector of the current population of the stock
+   * \param numGrow is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param Fphi is the DoubleVector of the feeding level of the stock
@@ -180,7 +180,7 @@ public:
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+    const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
     const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
   /**
@@ -197,11 +197,11 @@ protected:
   /**
    * \brief This is the number of weight growth parameters (set to 6)
    */
-  int NumberOfWGrowthConstants;
+  int numWeightGrowthConstants;
   /**
    * \brief This is the number of length growth parameters (set to 9)
    */
-  int NumberOfLGrowthConstants;
+  int numLengthGrowthConstants;
   /**
    * \brief This is the FormulaVector of weight growth parameters
    */
@@ -213,7 +213,7 @@ protected:
   /**
    * \brief This is the DoubleVector of the reference weight values
    */
-  DoubleVector Wref;
+  DoubleVector refWeight;
 };
 
 /**
@@ -228,10 +228,10 @@ public:
    * \param areas is the IntVector of areas that the growth calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision of the stock
    * \param keeper is the Keeper for the current model
-   * \param refWeight is the name of the file containing the reference weight information for the stock
+   * \param refWeightFile is the name of the file containing the reference weight information for the stock
    */
   GrowthCalcD(CommentStream& infile, const IntVector& areas,
-    const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeight);
+    const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeightFile);
   /**
    * \brief This is the default GrowthCalcD destructor
    */
@@ -241,7 +241,7 @@ public:
    * \param area is the area that the growth is being calculated on
    * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
    * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
-   * \param GrEatNumber is PopInfoVector of the the current population of the stock
+   * \param numGrow is PopInfoVector of the the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param Fphi is the DoubleVector of the feeding level of the stock
@@ -249,7 +249,7 @@ public:
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+    const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
     const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
   /**
@@ -266,11 +266,11 @@ protected:
   /**
    * \brief This is the number of weight growth parameters (set to 6)
    */
-  int NumberOfWGrowthConstants;
+  int numWeightGrowthConstants;
   /**
    * \brief This is the number of length growth parameters (set to 9)
    */
-  int NumberOfLGrowthConstants;
+  int numLengthGrowthConstants;
   /**
    * \brief This is the FormulaVector of weight growth parameters
    */
@@ -282,7 +282,7 @@ protected:
   /**
    * \brief This is the DoubleVector of the reference weight values
    */
-  DoubleVector Wref;
+  DoubleVector refWeight;
 };
 
 /**
@@ -298,10 +298,10 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param LgrpDiv is the LengthGroupDivision of the stock
    * \param keeper is the Keeper for the current model
-   * \param refWeight is the name of the file containing the reference weight information for the stock
+   * \param refWeightFile is the name of the file containing the reference weight information for the stock
    */
   GrowthCalcE(CommentStream& infile, const IntVector& areas, const TimeClass* const TimeInfo,
-    const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeight);
+    const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeightFile);
   /**
    * \brief This is the default GrowthCalcE destructor
    */
@@ -311,7 +311,7 @@ public:
    * \param area is the area that the growth is being calculated on
    * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
    * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the PopInfoVector of the current population of the stock
+   * \param numGrow is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param Fphi is the DoubleVector of the feeding level of the stock
@@ -319,7 +319,7 @@ public:
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+    const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
     const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
   /**
@@ -336,11 +336,11 @@ protected:
   /**
    * \brief This is the number of weight growth parameters (set to 6)
    */
-  int NumberOfWGrowthConstants;
+  int numWeightGrowthConstants;
   /**
    * \brief This is the number of length growth parameters (set to 9)
    */
-  int NumberOfLGrowthConstants;
+  int numLengthGrowthConstants;
   /**
    * \brief This is the FormulaVector of weight growth parameters
    */
@@ -352,7 +352,7 @@ protected:
   /**
    * \brief This is the DoubleVector of the reference weight values
    */
-  DoubleVector Wref;
+  DoubleVector refWeight;
   /**
    * \brief This is the FormulaVector of parameters for the year effect
    */
@@ -393,7 +393,7 @@ public:
    * \param area is the area that the growth is being calculated on
    * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
    * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the DPopInfoVector of the current population of the stock
+   * \param numGrow is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param Fphi is the DoubleVector of the feeding level of the stock
@@ -401,14 +401,14 @@ public:
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+    const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
     const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
 protected:
   /**
    * \brief This is the number of growth parameters (set to 1)
    */
-  int NumberOfGrowthConstants;
+  int numGrowthConstants;
   /**
    * \brief This is the FormulaVector of growth parameters
    */
@@ -449,7 +449,7 @@ public:
    * \param area is the area that the growth is being calculated on
    * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
    * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
-   * \param GrEatNumber is PopInfoVector of the the current population of the stock
+   * \param numGrow is PopInfoVector of the the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param Fphi is the DoubleVector of the feeding level of the stock
@@ -457,14 +457,14 @@ public:
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+    const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
     const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
 protected:
   /**
    * \brief This is the number of growth parameters (set to 1)
    */
-  int NumberOfGrowthConstants;
+  int numGrowthConstants;
   /**
    * \brief This is the FormulaVector of growth parameters
    */
@@ -503,7 +503,7 @@ public:
    * \param area is the area that the growth is being calculated on
    * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
    * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
-   * \param GrEatNumber is the PopInfoVector of the current population of the stock
+   * \param numGrow is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param Fphi is the DoubleVector of the feeding level of the stock
@@ -511,7 +511,7 @@ public:
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+    const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
     const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
   /**
@@ -528,7 +528,7 @@ protected:
   /**
    * \brief This is the number of growth parameters (set to 4)
    */
-  int NumberOfGrowthConstants;
+  int numGrowthConstants;
   /**
    * \brief This is the FormulaVector of growth parameters
    */

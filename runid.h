@@ -26,7 +26,7 @@ protected:
   /**
    * \brief This is the name of the host machine that is running the current model
    */
-  const char* hostname;
+  const char* hostName;
   /**
    * \brief This is the time stamp used to denote the time that the current model run started
    */

@@ -79,7 +79,7 @@ void LogLinearRegression::CleanAndTakeLog(const DoubleVector& x,
       Ylog.Delete(l);
       l--;
     } else if ((x[i] < 0) || (y[i] < 0) || (isZero(x[i])) || (isZero(y[i]))) {
-      handle.LogWarning("Warning in LLR - received illegal values", x[i], y[i]);
+      handle.logWarning("Warning in LLR - received illegal values");
       error = 1;
       return;
     } else {

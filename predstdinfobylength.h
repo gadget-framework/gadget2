@@ -64,14 +64,14 @@ public:
   virtual void Sum(const TimeClass* const TimeInfo, int area);
   /**
    * \brief This will return the length group of the predator
-   * \return PredLgrpDiv, a LengthGroupDivision for the predator
+   * \return predLgrpDiv, a LengthGroupDivision for the predator
    */
-  const LengthGroupDivision* returnPredLengthGroupDiv() const { return PredLgrpDiv; };
+  const LengthGroupDivision* returnPredLengthGroupDiv() const { return predLgrpDiv; };
   /**
    * \brief This will return the length group of the prey
-   * \return PreyLgrpDiv, a LengthGroupDivision for the prey
+   * \return preyLgrpDiv, a LengthGroupDivision for the prey
    */
-  const LengthGroupDivision* returnPreyLengthGroupDiv() const { return PreyLgrpDiv; };
+  const LengthGroupDivision* returnPreyLengthGroupDiv() const { return preyLgrpDiv; };
 private:
   /**
    * \brief This function will initialise and resize the objects created by the constructor
@@ -104,11 +104,11 @@ private:
   /**
    * \brief This is the LengthGroupDivision of the predator
    */
-  const LengthGroupDivision* PredLgrpDiv;
+  const LengthGroupDivision* predLgrpDiv;
   /**
    * \brief This is the LengthGroupDivision of the prey
    */
-  const LengthGroupDivision* PreyLgrpDiv;
+  const LengthGroupDivision* preyLgrpDiv;
 };
 
 #endif

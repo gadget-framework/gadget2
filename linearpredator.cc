@@ -13,13 +13,13 @@ LinearPredator::LinearPredator(CommentStream& infile, const char* givenname,
   Keeper* const keeper, double multi)
   : LengthPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv, multi) {
 
-  keeper->AddString("predator");
-  keeper->AddString(givenname);
+  keeper->addString("predator");
+  keeper->addString(givenname);
 
   readSuitabilityMatrix(infile, "amount", TimeInfo, keeper);
 
-  keeper->ClearLast();
-  keeper->ClearLast();
+  keeper->clearLast();
+  keeper->clearLast();
   //Predator::setPrey will call resizeObjects.
 }
 
@@ -82,13 +82,13 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
     if (Preys(prey)->IsInArea(area)) {
       if (Preys(prey)->Biomass(area) > verysmall) {
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
-          Preys(prey)->AddConsumption(area, cons[inarea][prey][predl]);
+          Preys(prey)->addConsumption(area, cons[inarea][prey][predl]);
       }
     }
   }
 }
 
-void LinearPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) {
+void LinearPredator::adjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) {
   double maxRatio = pow(MaxRatioConsumed, NrOfSubsteps);
   int prey, predl, preyl;
   int AnyPreyEatenUp = 0;
@@ -153,6 +153,6 @@ const PopInfoVector& LinearPredator::NumberPriortoEating(int area, const char* p
     if (strcasecmp(Preyname(prey), preyname) == 0)
       return Preys(prey)->NumberPriortoEating(area);
 
-  handle.LogWarning("Error in linearpredator - failed to match prey", preyname);
+  handle.logFailure("Error in linearpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
 }

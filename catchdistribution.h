@@ -14,7 +14,7 @@ public:
   CatchDistribution(CommentStream& infile, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper, double weight, const char* name);
   virtual ~CatchDistribution();
-  virtual void AddToLikelihood(const TimeClass* const TimeInfo);
+  virtual void addLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
@@ -24,12 +24,12 @@ public:
 private:
   void readDistributionData(CommentStream& infile, const TimeClass* TimeInfo,
     int numarea, int numage, int numlen);
-  double LikMultinomial();
-  double LikPearson(const TimeClass* const TimeInfo);
-  double LikGamma(const TimeClass* const TimeInfo); //kgf 24/5 00
-  double LikSumSquares();
-  double LikMVNormal();
-  double LikMVLogistic();
+  double calcLikMultinomial();
+  double calcLikPearson(const TimeClass* const TimeInfo);
+  double calcLikGamma(const TimeClass* const TimeInfo); //kgf 24/5 00
+  double calcLikSumSquares();
+  double calcLikMVNormal();
+  double calcLikMVLogistic();
   void Correlation();
   DoubleMatrixPtrMatrix AgeLengthData; //[time][area][age][length]
   DoubleMatrixPtrMatrix Proportions; //kgf 17/9 98

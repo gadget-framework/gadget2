@@ -12,7 +12,7 @@ TimeVariable::TimeVariable()
 void TimeVariable::read(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
-  keeper->AddString("TimeVariable");
+  keeper->addString("timevariable");
   ifstream subfile;
   CommentStream subcomment(subfile);
   char text[MaxStrLength];
@@ -34,7 +34,7 @@ void TimeVariable::read(CommentStream& infile,
     readFromFile(subcomment, TimeInfo, keeper);
     handle.Close();
   }
-  keeper->ClearLast();
+  keeper->clearLast();
 }
 
 void TimeVariable::readFromFile(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper) {
@@ -42,7 +42,7 @@ void TimeVariable::readFromFile(CommentStream& infile, const TimeClass* const Ti
   ValuesReadFromFile = 1;
   int nrofcoeff = 0;
 
-  keeper->AddString("TimeVariable");
+  keeper->addString("timevariable");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
@@ -56,9 +56,9 @@ void TimeVariable::readFromFile(CommentStream& infile, const TimeClass* const Ti
   infile >> nrofcoeff;
   if (nrofcoeff > 0) {
     usemodelmatrix = 1;
-    Coeff.resize(nrofcoeff, keeper);
-    infile >> Coeff;
-    Coeff.Inform(keeper);
+    coeff.resize(nrofcoeff, keeper);
+    infile >> coeff;
+    coeff.Inform(keeper);
   }
   infile >> ws >> text;
   if (strcasecmp(text, "data") != 0)
@@ -147,7 +147,7 @@ void TimeVariable::Update(const TimeClass* const TimeInfo) {
     value = 0;
     if (modelmatrix.Nrow() > 0)
       for (i = 0; i < modelmatrix.Ncol(); i++)
-        value += Coeff[i] * modelmatrix[timestepnr][i];
+        value += coeff[i] * modelmatrix[timestepnr][i];
 
     value += values[timestepnr];
   }
@@ -175,10 +175,10 @@ void TimeVariable::Interchange(TimeVariable& Newtvar, Keeper* const keeper) cons
     for (i = 0; i < values.Size(); i++)
       values[i].Interchange(Newtvar.values[i], keeper);
 
-    if (Coeff.Size() > 0) {
-      Newtvar.Coeff.resize(Coeff.Size(), keeper);
+    if (coeff.Size() > 0) {
+      Newtvar.coeff.resize(coeff.Size(), keeper);
       for (i = 0; i < values.Size(); i++)
-        Coeff[i].Interchange(Newtvar.Coeff[i], keeper);
+        coeff[i].Interchange(Newtvar.coeff[i], keeper);
       Newtvar.modelmatrix.AddRows(modelmatrix.Nrow(), modelmatrix.Ncol());
       for (i = 0; i < modelmatrix.Nrow(); i++)
         for (j = 0; j < modelmatrix.Ncol(); j++)
@@ -189,8 +189,8 @@ void TimeVariable::Interchange(TimeVariable& Newtvar, Keeper* const keeper) cons
 
 void TimeVariable::Delete(Keeper* const keeper) const {
   int i;
-  for (i = 0; i < Coeff.Size(); i++)
-    Coeff[i].Delete(keeper);
+  for (i = 0; i < coeff.Size(); i++)
+    coeff[i].Delete(keeper);
   for (i = 0; i < values.Size(); i++)
     values[i].Delete(keeper);
   Value.Delete(keeper);

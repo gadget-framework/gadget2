@@ -20,7 +20,7 @@ public:
   virtual ~MortPredator();
   virtual void Eat(int area, double LengthOfStep, double Temperature, double Areasize,
     int CurrentSubstep, int NrOfSubsteps);
-  virtual void AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) {};
+  virtual void adjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) {};
   virtual void Print(ofstream& infile) const;
   virtual const PopInfoVector& NumberPriortoEating(int area, const char* preyname) const;
   void calcFlevel();
@@ -33,10 +33,10 @@ public:
   friend ostream& printc_hat(ostream& o, const MortPredator& pred,
     AreaClass area, int indent);
   int minPreyAge(int prey, int area) const {
-    return ((MortPrey*)Preys(prey))->getMeanN(area).Minage();
+    return ((MortPrey*)Preys(prey))->getMeanN(area).minAge();
   };
   int maxPreyAge(int prey, int area) const {
-    return ((MortPrey*)Preys(prey))->getMeanN(area).Maxage();
+    return ((MortPrey*)Preys(prey))->getMeanN(area).maxAge();
   };
 protected:
   int pres_time_step;

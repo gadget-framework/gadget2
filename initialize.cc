@@ -81,7 +81,6 @@ void Ecosystem::Initialise(int optimize) {
   for (i = 0; i < tagvec.Size(); i++)
     tagvec[i]->setStock(stockvec);
 
-  /*JMB code removed from here - see RemovedCode.txt for details*/
   //This is a good place to initialise the printer classes.
   for (i = 0; i < printvec.Size(); i++)
     switch(printvec[i]->Type()) {
@@ -125,8 +124,7 @@ void Ecosystem::Initialise(int optimize) {
         printvec[i]->setStock(stockvec);
         break;
       default:
-        handle.LogWarning("Error when initialising model - unrecognized printer type", printvec[i]->Type());
-        exit(EXIT_FAILURE);
+        handle.logFailure("Error when initialising model - unrecognized printer type", printvec[i]->Type());
         break;
     }
 
@@ -178,8 +176,7 @@ void Ecosystem::Initialise(int optimize) {
         case BOUNDLIKELIHOOD:
           break;
         default:
-          handle.LogWarning("Error when initialising model - unrecognized likelihood type", Likely[i]->Type());
-          exit(EXIT_FAILURE);
+          handle.logFailure("Error when initialising model - unrecognized likelihood type", Likely[i]->Type());
           break;
       }
 
@@ -194,8 +191,7 @@ void Ecosystem::Initialise(int optimize) {
         ((LikelihoodPrinter*)(likprintvec[i]))->setLikely(Likely);
         break;
       default:
-        handle.LogWarning("Error when initialising model - unrecognized printer type", likprintvec[i]->Type());
-        exit(EXIT_FAILURE);
+        handle.logFailure("Error when initialising model - unrecognized printer type", likprintvec[i]->Type());
         break;
     }
 }

@@ -238,10 +238,10 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
     if (YearsInFile.Size() == 0 || year != YearsInFile[YearsInFile.Size() - 1])
       YearsInFile.resize(1, year);
   }
-  AAT.AddActions(Years, Steps, TimeInfo);
+  AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.LogWarning("Warning in surveyindex - found no data in the data file for", name);
-  handle.LogMessage("Read surveyindex data file - number of entries", count);
+    handle.logWarning("Warning in surveyindex - found no data in the data file for", name);
+  handle.logMessage("Read surveyindex data file - number of entries", count);
 }
 
 void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
@@ -316,7 +316,7 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
     if (YearsInFile.Size() == 0 || year != YearsInFile[YearsInFile.Size() - 1])
       YearsInFile.resize(1, year);
   }
-  AAT.AddActions(Years, Steps, TimeInfo);
+  AAT.addActions(Years, Steps, TimeInfo);
 }
 
 void SIOnStep::Reset(const Keeper* const keeper) {
@@ -411,8 +411,7 @@ double SIOnStep::Regression() {
   return likelihood;
 }
 
-void SIOnStep::KeepNumbers(const DoubleVector& numbers) {
-  assert(numbers.Size() == abundance.Ncol());
+void SIOnStep::keepNumbers(const DoubleVector& numbers) {
   int i;
   for (i = 0; i < numbers.Size(); i++)
     abundance[NumberOfSums][i] = numbers[i];
@@ -451,7 +450,7 @@ double SIOnStep::Fit(const DoubleVector& stocksize, const DoubleVector& indices,
       LR.Fit(stocksize, indices, slope, intercept);
       break;
     default:
-      handle.LogWarning("Warning in surveyindex - unknown fittype", fittype);
+      handle.logWarning("Warning in surveyindex - unknown fittype", fittype);
       break;
   }
 
@@ -480,7 +479,7 @@ double SIOnStep::Fit(const DoubleVector& stocksize, const DoubleVector& indices,
       return LR.SSE();
       break;
     default:
-      handle.LogWarning("Warning in surveyindex - unknown fittype", fittype);
+      handle.logWarning("Warning in surveyindex - unknown fittype", fittype);
       break;
   }
   return 0.0;

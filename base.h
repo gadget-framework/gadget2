@@ -44,14 +44,14 @@ public:
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void CheckEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) = 0;
+  virtual void checkEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) = 0;
   /**
    * \brief This function will adjust the modelled consumption for an area in the model
    * \param area is an integer to denote the internal area of interest
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void AdjustEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) = 0;
+  virtual void adjustEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) = 0;
   /**
    * \brief This function will reduce the model population for an area in the model
    * \param area is an integer to denote the internal area of interest

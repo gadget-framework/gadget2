@@ -14,8 +14,8 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
   const ConversionIndex &CI, double ratio, int minaddage, int maxaddage) {
 
   PopInfo pop;
-  minaddage = max(this->Minage(), Addition.Minage(), minaddage);
-  maxaddage = min(this->Maxage(), Addition.Maxage(), maxaddage);
+  minaddage = max(this->minAge(), Addition.minAge(), minaddage);
+  maxaddage = min(this->maxAge(), Addition.maxAge(), maxaddage);
   int age, l, minl, maxl, offset;
 
   if (maxaddage < minaddage)
@@ -24,8 +24,8 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
   if (CI.SameDl()) {
     offset = CI.Offset();
     for (age = minaddage; age <= maxaddage; age++) {
-      minl = max(this->Minlength(age), Addition.Minlength(age) + offset);
-      maxl = min(this->Maxlength(age), Addition.Maxlength(age) + offset);
+      minl = max(this->minLength(age), Addition.minLength(age) + offset);
+      maxl = min(this->maxLength(age), Addition.maxLength(age) + offset);
       for (l = minl; l < maxl; l++) {
         pop = Addition[age][l - offset];
         pop *= ratio;
@@ -35,13 +35,13 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
   } else {
     if (CI.TargetIsFiner()) {
       for (age = minaddage; age <= maxaddage; age++) {
-        minl = max(this->Minlength(age), CI.Minpos(Addition.Minlength(age)));
-        maxl = min(this->Maxlength(age), CI.Maxpos(Addition.Maxlength(age) - 1) + 1);
+        minl = max(this->minLength(age), CI.Minpos(Addition.minLength(age)));
+        maxl = min(this->maxLength(age), CI.Maxpos(Addition.maxLength(age) - 1) + 1);
         for (l = minl; l < maxl; l++) {
           pop = Addition[age][CI.Pos(l)];
           pop *= ratio;
           if (isZero(CI.Nrof(l)))
-            handle.LogWarning("Error in agebandmatrix - divide by zero");
+            handle.logWarning("Error in agebandmatrix - divide by zero");
           else
             pop.N /= CI.Nrof(l);
           (*v[age - minage])[l] += pop;
@@ -49,10 +49,10 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
       }
     } else {
       for (age = minaddage; age <= maxaddage; age++) {
-        minl = max(CI.Minpos(this->Minlength(age)), Addition.Minlength(age));
-        maxl = min(CI.Maxpos(this->Maxlength(age) - 1) + 1, Addition.Maxlength(age));
-        if (maxl > minl && CI.Pos(maxl - 1) < this->Maxlength(age)
-            && CI.Pos(minl) >= this->Minlength(age)) {
+        minl = max(CI.Minpos(this->minLength(age)), Addition.minLength(age));
+        maxl = min(CI.Maxpos(this->maxLength(age) - 1) + 1, Addition.maxLength(age));
+        if (maxl > minl && CI.Pos(maxl - 1) < this->maxLength(age)
+            && CI.Pos(minl) >= this->minLength(age)) {
           for (l = minl; l < maxl; l++) {
             pop = Addition[age][l];
             pop *= ratio;
@@ -76,22 +76,22 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& C
     if (isZero(UsedRatio[i]))
       UsedRatio[i] = 0.0;
     else if (UsedRatio[i] < 0) {
-      handle.LogWarning("Error in agebandmatrix - negative ratio");
+      handle.logWarning("Error in agebandmatrix - negative ratio");
       UsedRatio[i] = 0.0;
     }
   }
 
   if (CI.SameDl()) {
     for (i = 0; i < nrow; i++) {
-      j1 = max(v[i]->Mincol(), CI.Minlength());
-      j2 = min(v[i]->Maxcol(), CI.Maxlength());
+      j1 = max(v[i]->Mincol(), CI.minLength());
+      j2 = min(v[i]->Maxcol(), CI.maxLength());
       for (j = j1; j < j2; j++)
         (*v[i])[j].N *= UsedRatio[j - CI.Offset()];
     }
   } else {
     for (i = 0; i < nrow; i++) {
-      j1 = max(v[i]->Mincol(), CI.Minlength());
-      j2 = min(v[i]->Maxcol(), CI.Maxlength());
+      j1 = max(v[i]->Mincol(), CI.minLength());
+      j2 = min(v[i]->Maxcol(), CI.maxLength());
       for (j = j1; j < j2; j++)
         (*v[i])[j].N *= UsedRatio[CI.Pos(j)];
     }
@@ -199,21 +199,7 @@ void AgeBandMatrix::FilterN(double minN) {
       }
 }
 
-// Function that copies one AgeBandMatrix to another.
-// The two matrices must have exactly the same dimensions.
-void AgeBandMatrix::CopyNumbers(const AgeBandMatrix& Alkeys) {
-  int i, j;
-  int minlen, maxlen;
-  int maxage = this->Maxage();
-  for (i = minage; i <= maxage; i++) {
-    minlen = this->Minlength(i);
-    maxlen = this->Maxlength(i);
-    for (j = minlen; j < maxlen; j++)
-      this->operator[](i)[j].N = Alkeys[i][j].N;
-  }
-}
-
-void AgeBandMatrix::PrintNumbers(ofstream& outfile) const {
+void AgeBandMatrix::printNumbers(ofstream& outfile) const {
   int i, j;
   int maxcol = 0;
   for (i = minage; i < minage + nrow; i++)
@@ -245,7 +231,7 @@ void AgeBandMatrix::PrintNumbers(ofstream& outfile) const {
   }
 }
 
-void AgeBandMatrix::PrintWeights(ofstream& outfile) const {
+void AgeBandMatrix::printWeights(ofstream& outfile) const {
   int i, j;
   int maxcol = 0;
   for (i = minage; i < minage + nrow; i++)
@@ -282,8 +268,8 @@ void AgeBandMatrixPtrVector::Migrate(const DoubleMatrix& MI) {
   PopInfoVector tmp(size);
   int i, j, age, length;
 
-  for (age = v[0]->Minage(); age <= v[0]->Maxage(); age++) {
-    for (length = v[0]->Minlength(age); length < v[0]->Maxlength(age); length++) {
+  for (age = v[0]->minAge(); age <= v[0]->maxAge(); age++) {
+    for (length = v[0]->minLength(age); length < v[0]->maxLength(age); length++) {
       for (j = 0; j < size; j++) {
         tmp[j].N = 0.0;
         tmp[j].W = 0.0;

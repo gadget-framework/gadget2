@@ -12,19 +12,19 @@ public:
   CatchStatistics(CommentStream& infile, const AreaClass* const Area,
     const TimeClass* const TimeInfo, double weight, const char* name);
   virtual ~CatchStatistics();
-  virtual void AddToLikelihood(const TimeClass* const TimeInfo);
+  virtual void addLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
   void readStatisticsData(CommentStream& infile, const TimeClass* TimeInfo,
     int numarea, int numage);
-  double SOSWeightOrLength();
+  double calcLikSumSquares();
   DoubleMatrixPtrVector numbers;
   DoubleMatrixPtrVector mean;
   DoubleMatrixPtrVector variance;
   FleetPreyAggregator* aggregator;
-  LengthGroupDivision* lgrpDiv;
+  LengthGroupDivision* LgrpDiv;
   CharPtrVector fleetnames;
   CharPtrVector stocknames;
   IntMatrix areas;

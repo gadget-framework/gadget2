@@ -41,9 +41,9 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
   //Resize the matrices to hold the data
   AreaDist.AddRows(noareas, noagegr, number);
   AgeDist.AddRows(noareas, noagegr, number);
-  Mean.AddRows(noareas, noagegr, number);
-  Sdev.AddRows(noareas, noagegr, number);
-  RelCondition.AddRows(noareas, noagegr, number);
+  meanLength.AddRows(noareas, noagegr, number);
+  sdevLength.AddRows(noareas, noagegr, number);
+  relCond.AddRows(noareas, noagegr, number);
 
   //Found the start of the data in the following format
   //age - area - agedist - areadist - meanlen - standdev - relcond
@@ -52,7 +52,7 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
 
   ageid = -1;
   tmparea = -1;
-  keeper->AddString("meandata");
+  keeper->addString("meandata");
   while (!infile.eof()) {
     keepdata = 0;
     infile >> age >> area >> ws;
@@ -83,9 +83,9 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
       count++;
       infile >> AgeDist[areaid][ageid] >> ws;
       infile >> AreaDist[areaid][ageid] >> ws;
-      infile >> Mean[areaid][ageid] >> ws;
-      infile >> Sdev[areaid][ageid] >> ws;
-      infile >> RelCondition[areaid][ageid] >> ws;
+      infile >> meanLength[areaid][ageid] >> ws;
+      infile >> sdevLength[areaid][ageid] >> ws;
+      infile >> relCond[areaid][ageid] >> ws;
 
     } else {
       //initial data is not required, so read but ignore it
@@ -97,13 +97,13 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
     }
   }
 
-  handle.LogMessage("Read initial conditions data file - number of entries", count);
+  handle.logMessage("Read initial conditions data file - number of entries", count);
   AreaDist.Inform(keeper);
   AgeDist.Inform(keeper);
-  Mean.Inform(keeper);
-  Sdev.Inform(keeper);
-  RelCondition.Inform(keeper);
-  keeper->ClearLast();
+  meanLength.Inform(keeper);
+  sdevLength.Inform(keeper);
+  relCond.Inform(keeper);
+  keeper->clearLast();
 }
 
 //
@@ -147,7 +147,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   ageid = -1;
   areaid = -1;
   lengthid = -1;
-  keeper->AddString("numberdata");
+  keeper->addString("numberdata");
   while (!infile.eof()) {
     keepdata = 0;
     infile >> area >> age >> length >> tmpnumber >> ws;
@@ -162,7 +162,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
     //crude length data check
     lengthid = -1;
     for (i = 0; i < nolengr; i++)
-      if (length == LgrpDiv->Minlength(i))
+      if (length == LgrpDiv->minLength(i))
         lengthid = i;
 
     if (lengthid == -1) {
@@ -190,8 +190,8 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
       AreaAgeLength[areaid][ageid][lengthid].N = tmpnumber;
     }
   }
-  handle.LogMessage("Read initial conditions data file - number of entries", count);
-  keeper->ClearLast();
+  handle.logMessage("Read initial conditions data file - number of entries", count);
+  keeper->clearLast();
 }
 
 //
@@ -211,7 +211,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   int minage, maxage;
   double minlength, maxlength, dl;
 
-  keeper->AddString("initialcond");
+  keeper->addString("initialcond");
   infile >> text >> ws;  //read in 'numbers'
   readWordAndVariable(infile, "minage", minage);
   readWordAndVariable(infile, "maxage", maxage);
@@ -227,14 +227,14 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   int nolengr = LgrpDiv->NoLengthGroups(); //Number of length groups
 
   //read the standard deviation multiplier - default to 1.0
-  keeper->AddString("sdevmultiplier");
+  keeper->addString("sdevmultiplier");
   infile >> text >> ws;
   if ((strcasecmp(text, "sdev") == 0))
-    infile >> SdevMult >> ws >> text >> ws;
+    infile >> sdevMult >> ws >> text >> ws;
   else
-    SdevMult.setValue(1.0);
-  SdevMult.Inform(keeper);
-  keeper->ClearLast();
+    sdevMult.setValue(1.0);
+  sdevMult.Inform(keeper);
+  keeper->clearLast();
 
   //default values
   readNumbers = 0;
@@ -250,7 +250,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   }
   AreaAgeLength.resize(noareas, minage, 0, tmpPop);
 
-  keeper->AddString("readinitialdata");
+  keeper->addString("readinitialdata");
   if ((strcasecmp(text, "initstockfile") == 0)) {
     //read initial data in mean length format
     infile >> text >> ws;
@@ -277,7 +277,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   } else {
     handle.Unexpected("type of datafile", text);
   }
-  keeper->ClearLast();
+  keeper->clearLast();
 
   //Now that the initial conditions have been read from file
   //we have to set the initial weight of the stock
@@ -285,7 +285,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   DoubleMatrix tmpRefW;
 
   //read information on reference weights.
-  keeper->AddString("referenceweights");
+  keeper->addString("referenceweights");
   ifstream subweightfile;
   subweightfile.open(refWeightFile, ios::in);
   handle.checkIfFailure(subweightfile, refWeightFile);
@@ -298,12 +298,8 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   subweightfile.clear();
 
   //Interpolate the reference weights. First there are some error checks.
-  for (i = 0; i < tmpRefW.Nrow() - 1; i++)
-    if ((tmpRefW[i + 1][0] - tmpRefW[i][0]) <= 0)
-      handle.Message("Lengths for reference weights must be strictly increasing");
-
-  if (LgrpDiv->Meanlength(0) < tmpRefW[0][0] ||
-      LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
+  if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
+      LgrpDiv->meanLength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
     handle.Message("Lengths for reference weights must span the range of initial condition lengths");
 
   //Aggregate the reference weight data to be the same format
@@ -311,29 +307,29 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   int pos = 0;
   for (j = 0; j < nolengr; j++) {
     for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
-      if (LgrpDiv->Meanlength(j) >= tmpRefW[i][0] && LgrpDiv->Meanlength(j) <= tmpRefW[i + 1][0]) {
-        rWeight = (LgrpDiv->Meanlength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+      if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] && LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
+        rWeight = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
         Wref[j] = tmpRefW[i][1] + rWeight * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
         pos = i;
       }
     }
   }
-  keeper->ClearLast();
+  keeper->clearLast();
 
   //finaly copy the information into AreaAgeLength
-  keeper->AddString("weightdata");
+  keeper->addString("weightdata");
   for (i = 0; i < noareas; i++) {
     for (j = 0; j < noagegr; j++) {
       if (readNumbers == 1)
         rCond = 1.0;
       else
-        rCond = RelCondition[i][j];
+        rCond = relCond[i][j];
 
       for (k = 0; k < nolengr; k++) {
         rWeight = (Wref[k] * rCond);
 
         if (isZero(rWeight))
-          handle.LogWarning("Warning in initial conditions - zero mean weight");
+          handle.logWarning("Warning in initial conditions - zero mean weight");
 
         //for AreaAgeLength the age is taken from the minimum age
         AreaAgeLength[i][j + minage][k].W = rWeight;
@@ -341,8 +337,8 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     }
   }
 
-  keeper->ClearLast();
-  keeper->ClearLast();
+  keeper->clearLast();
+  keeper->clearLast();
 }
 
 InitialCond::~InitialCond() {
@@ -360,18 +356,18 @@ void InitialCond::Print(ofstream& outfile) const {
   outfile << "\nInitial conditions\n";
   for (i = 0; i < areas.Size(); i++) {
     outfile << "\tInternal area " << areas[i] << endl;
-    AreaAgeLength[i].PrintNumbers(outfile);
+    AreaAgeLength[i].printNumbers(outfile);
   }
   outfile << "\tMean lengths\n";
-  for (i = 0; i < Mean.Nrow(); i++) {
-    for (j = 0; j < Mean.Ncol(i); j++)
-      outfile << TAB << Mean[i][j];
+  for (i = 0; i < meanLength.Nrow(); i++) {
+    for (j = 0; j < meanLength.Ncol(i); j++)
+      outfile << TAB << meanLength[i][j];
     outfile << endl;
   }
   outfile << "\tStandard deviation\n";
-  for (i = 0; i < Sdev.Nrow(); i++) {
-    for (j = 0; j < Sdev.Ncol(i); j++)
-      outfile << TAB << Sdev[i][j];
+  for (i = 0; i < sdevLength.Nrow(); i++) {
+    for (j = 0; j < sdevLength.Ncol(i); j++)
+      outfile << TAB << sdevLength[i][j];
     outfile << endl;
   }
   outfile << endl;
@@ -386,20 +382,20 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
 
   if (readNumbers == 0) {
     for (area = 0; area < AreaAgeLength.Size(); area++) {
-      minage = AreaAgeLength[area].Minage();
-      maxage = AreaAgeLength[area].Maxage();
+      minage = AreaAgeLength[area].minAge();
+      maxage = AreaAgeLength[area].maxAge();
       for (age = minage; age <= maxage; age++) {
         scaler = 0.0;
-        for (l = AreaAgeLength[area].Minlength(age);
-            l < AreaAgeLength[area].Maxlength(age); l++) {
+        for (l = AreaAgeLength[area].minLength(age);
+            l < AreaAgeLength[area].maxLength(age); l++) {
           AreaAgeLength[area][age][l].N =
-            dnorm(LgrpDiv->Meanlength(l), Mean[area][age - minage], Sdev[area][age - minage] * SdevMult);
+            dnorm(LgrpDiv->meanLength(l), meanLength[area][age - minage], sdevLength[area][age - minage] * sdevMult);
           scaler += AreaAgeLength[area][age][l].N;
         }
 
         scaler = (scaler > rathersmall ? 10000 / scaler : 0.0);
-        for (l = AreaAgeLength[area].Minlength(age);
-            l < AreaAgeLength[area].Maxlength(age); l++) {
+        for (l = AreaAgeLength[area].minLength(age);
+            l < AreaAgeLength[area].maxLength(age); l++) {
           AreaAgeLength[area][age][l].N *= scaler;
         }
       }
@@ -408,8 +404,8 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
 
   for (area = 0; area < areas.Size(); area++) {
     Alkeys[area].setToZero();
-    minage = max(Alkeys[area].Minage(), AreaAgeLength[area].Minage());
-    maxage = min(Alkeys[area].Maxage(), AreaAgeLength[area].Maxage());
+    minage = max(Alkeys[area].minAge(), AreaAgeLength[area].minAge());
+    maxage = min(Alkeys[area].maxAge(), AreaAgeLength[area].maxAge());
 
     if (maxage < minage)
       return;

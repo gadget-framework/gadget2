@@ -15,7 +15,7 @@ private:
  IntVector years;
  FormulaVector values;
  DoubleVector temperature;
- FormulaVector Coeff;
+ FormulaVector coeff;
  Formula value;
  int ValuesReadFromFile;
 };

@@ -8,17 +8,17 @@
 
 extern ErrorHandler handle;
 
-Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* preylen,
+Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* len_prey,
   const TimeClass* const TimeInfo, Keeper* const keeper)
   : altfood(TimeInfo->TotalNoSteps(), TimeInfo->FirstStep(), 0), params(3),
-    cann_lev(TimeInfo->TotalNoSteps()), cannibalism(preylen->NoLengthGroups(), 0) {
+    cann_lev(TimeInfo->TotalNoSteps()), cannibalism(len_prey->NoLengthGroups(), 0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j, k, numstocks = 0;
 
-  keeper->AddString("cannibalism");
-  preylgp = new LengthGroupDivision(*preylen);
+  keeper->addString("cannibalism");
+  LgrpDiv = new LengthGroupDivision(*len_prey);
 
   //reading predator names
   infile >> text >> ws;
@@ -123,9 +123,9 @@ Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* preyl
   //set dimension on the consumption matrices
   consumption.resize(nrofpredators);
   for (i = 0; i < nrofpredators; i++)
-    consumption[i] = new BandMatrix(0, preylgp->NoLengthGroups(), minage[i], maxage[i] - minage[i] + 1, 0.0);
+    consumption[i] = new BandMatrix(0, LgrpDiv->NoLengthGroups(), minage[i], maxage[i] - minage[i] + 1, 0.0);
 
-  keeper->ClearLast();
+  keeper->clearLast();
 }
 
 Cannibalism::~Cannibalism() {
@@ -134,7 +134,7 @@ Cannibalism::~Cannibalism() {
     delete[] predatornames[i];
   for (i = 0; i < consumption.Size(); i++)
     delete consumption[i];
-  delete preylgp;
+  delete LgrpDiv;
 }
 
 const DoubleVector& Cannibalism::Mortality(const AgeBandMatrix& alk_prey,
@@ -148,7 +148,7 @@ const DoubleVector& Cannibalism::Mortality(const AgeBandMatrix& alk_prey,
   double biomass, otherbiomass_factor, len, mort_fact, mortality;
 
   prey_size = len_prey->NoLengthGroups();
-  //assert(alk_pred.Minage() == minage[pred_no]);
+  //assert(alk_pred.minAge() == minage[pred_no]);
   assert(alk_pred.Nrow() == (*consumption[pred_no]).Nrow());
   assert(prey_size == (*consumption[pred_no]).Ncol());
   assert(prey_size == cannibalism.Size());
@@ -161,8 +161,8 @@ const DoubleVector& Cannibalism::Mortality(const AgeBandMatrix& alk_prey,
   for (i = 0; i < prey_size; i++)
     cannibalism[i] = 0.0;
 
-  minage = alk_pred.Minage();
-  maxage = alk_pred.Maxage();
+  minage = alk_pred.minAge();
+  maxage = alk_pred.maxAge();
   for (i = minage; i <= maxage; i++)
     for (preyl = 0; preyl < prey_size; preyl++)
       (*consumption[pred_no])[i][preyl] = 0.0;
@@ -180,18 +180,18 @@ const DoubleVector& Cannibalism::Mortality(const AgeBandMatrix& alk_prey,
 
   //OK, the predator is present
   for (preyl = 0; preyl < prey_size; preyl++) {
-    len = len_prey->Meanlength(preyl);
+    len = len_prey->meanLength(preyl);
     mort_fact = cann_lev[TimeInfo->CurrentTime() - 1] * otherbiomass_factor;
     for (i = minage; i <= maxage; i++) {
-      maxl = alk_pred.Maxlength(i);
-      if (preyl < length_conversion.Minlength())
-        minl = alk_pred.Minlength(i);
+      maxl = alk_pred.maxLength(i);
+      if (preyl < length_conversion.minLength())
+        minl = alk_pred.minLength(i);
       else
-        minl = max(length_conversion.Pos(preyl) + 1, alk_pred.Minlength(i));
+        minl = max(length_conversion.Pos(preyl) + 1, alk_pred.minLength(i));
 
       for (predl = minl; predl < maxl; predl++) {
         biomass = alk_pred[i][predl].N * alk_pred[i][predl].W;
-        mortality = biomass * mort_fact * suitfunc(len_pred->Meanlength(predl), len);
+        mortality = biomass * mort_fact * suitfunc(len_pred->meanLength(predl), len);
         cannibalism[preyl] += mortality;
         (*consumption[pred_no])[i][preyl] += mortality;
       }
@@ -200,9 +200,9 @@ const DoubleVector& Cannibalism::Mortality(const AgeBandMatrix& alk_prey,
 
   //Calculate predator's consumption of prey
   //Note that zero fishing mortality is assumed for prey
-  for (i = alk_pred.Minage(); i <= alk_pred.Maxage(); i++) {
-    for (predl = alk_pred.Minlength(i); predl < alk_pred.Maxlength(i); predl++)
-      agegroups[pred_no][i - alk_pred.Minage()] += alk_pred[i][predl].N;
+  for (i = alk_pred.minAge(); i <= alk_pred.maxAge(); i++) {
+    for (predl = alk_pred.minLength(i); predl < alk_pred.maxLength(i); predl++)
+      agegroups[pred_no][i - alk_pred.minAge()] += alk_pred[i][predl].N;
 
     for (preyl = 0; preyl < prey_size; preyl++) {
       mortality = (*consumption[pred_no])[i][preyl];
@@ -260,10 +260,10 @@ double Cannibalism::suitfunc(double predlength, double preylength) {
   e = (l - params[0]) * (l - params[0]);
   check = exp(-e / q);
   if (check < 0.0) {
-    handle.LogWarning("Warning in cannibalism - function outside bounds", check);
+    handle.logWarning("Warning in cannibalism - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    handle.LogWarning("Warning in cannibalism - function outside bounds", check);
+    handle.logWarning("Warning in cannibalism - function outside bounds", check);
     return 1.0;
   } else
     return check;

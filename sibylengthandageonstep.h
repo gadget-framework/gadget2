@@ -46,7 +46,6 @@ protected:
   DoubleVector q_l; //length dependent catchability factor
   TimeVariableVector parameters;
   int index;
-  int funcnumber;
   double eps_ind;
   double mean_fact;
   double max_fact;

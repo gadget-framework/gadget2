@@ -37,7 +37,7 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
       for (k = 0; k < ages.Ncol(j); k++) {
         l = ages[j][k];
 
-        if (l >= ap->Minage() && l <= ap->Maxage()) {
+        if (l >= ap->minAge() && l <= ap->maxAge()) {
           //l is within the stock age range
 
           if (j < minrow) //Update minrow if this age is in a lower row of the Ages matrix
@@ -46,10 +46,10 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
             maxrow = j;
 
           //If the stock minlength is not smaller than in the CI
-          if (ap->Minlength(l) >= CI[i]->Minlength()) {
+          if (ap->minLength(l) >= CI[i]->minLength()) {
             //update mincol if the CI minlength is smaller than mincol
-            if (CI[i]->Pos(ap->Minlength(l)) < mincol[j])
-              mincol[j] = CI[i]->Pos(ap->Minlength(l));
+            if (CI[i]->Pos(ap->minLength(l)) < mincol[j])
+              mincol[j] = CI[i]->Pos(ap->minLength(l));
 
           } else {
             //Else the stock minlength is smaller than in CI
@@ -57,10 +57,10 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
           }
 
           //If the stock maxlength is not larger than in the CI
-          if (ap->Maxlength(l) - 1 < CI[i]->Maxlength()) {
+          if (ap->maxLength(l) - 1 < CI[i]->maxLength()) {
             //update maxcol if the CI minlength is larger than mincol
-            if (CI[i]->Pos(ap->Maxlength(l) - 1) > maxcol[j])
-              maxcol[j] = CI[i]->Pos(ap->Maxlength(l) - 1);
+            if (CI[i]->Pos(ap->maxLength(l) - 1) > maxcol[j])
+              maxcol[j] = CI[i]->Pos(ap->maxLength(l) - 1);
 
           } else {
             //Else the stock maxlength is larger than in CI
@@ -92,7 +92,7 @@ void FleetPreyAggregator::Print(ofstream& outfile) const {
     outfile << "\tInternal areas " << i << endl;
     for (j = 0; j < total[i].Nrow(); j++) {
       outfile << TAB;
-      for (k = 0; k < total[i].Maxlength(j); k++) {
+      for (k = 0; k < total[i].maxLength(j); k++) {
         outfile.width(smallwidth);
         outfile << total[i][j][k].N;
         outfile << sep;
@@ -112,7 +112,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
 
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)
-      for (k = 0; k < total[i].Maxlength(j); k++)
+      for (k = 0; k < total[i].maxLength(j); k++)
         total[i][j][k] = nullpop;
 
   //Sum over the appropriate fleets, stocks, areas, ages and length groups.
@@ -140,7 +140,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
                 for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
                   for (k = 0; k < ages.Ncol(aggrAge); k++) {
                     age = ages[aggrAge][k];
-                    if ((alptr->Minage() <= age) && (age <= alptr->Maxage())) {
+                    if ((alptr->minAge() <= age) && (age <= alptr->maxAge())) {
 
                       DoubleIndexVector Ratio = *suitptr;
                       if (overconsumption)
@@ -172,7 +172,7 @@ void FleetPreyAggregator::MeanSum(const TimeClass* const TimeInfo) {
 
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)
-      for (k = 0; k < total[i].Maxlength(j); k++)
+      for (k = 0; k < total[i].maxLength(j); k++)
         total[i][j][k] = nullpop;
 
   //Sum over the appropriate fleets, stocks, areas, ages and length groups.
@@ -196,7 +196,7 @@ void FleetPreyAggregator::MeanSum(const TimeClass* const TimeInfo) {
                 for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
                   for (k = 0; k < ages.Ncol(aggrAge); k++) {
                     age = ages[aggrAge][k];
-                    if ((alptr->Minage() <= age) && (age <= alptr->Maxage())) {
+                    if ((alptr->minAge() <= age) && (age <= alptr->maxAge())) {
                       DoubleIndexVector Ratio = *suitptr;
                       total[aggrArea][aggrAge].Add((*alptr)[age], *CI[h], pred->getFlevel(area, TimeInfo), Ratio);
                     }

@@ -9,15 +9,15 @@
 
 
 StockPredStdInfo::StockPredStdInfo(const StockPredator* pred, const StockPrey* pRey, const IntVector& Areas)
-  : AbstrPredStdInfo(Areas, pred->Alproportion(Areas[0]).Minage(), pred->Alproportion(Areas[0]).Maxage(),
-    pRey->AlkeysPriorToEating(Areas[0]).Minage(), pRey->AlkeysPriorToEating(Areas[0]).Maxage()),
+  : AbstrPredStdInfo(Areas, pred->Alproportion(Areas[0]).minAge(), pred->Alproportion(Areas[0]).maxAge(),
+    pRey->AlkeysPriorToEating(Areas[0]).minAge(), pRey->AlkeysPriorToEating(Areas[0]).maxAge()),
   preyinfo(new StockPreyStdInfo(pRey, Areas)),
   predinfo(new PredStdInfoByLength(pred, pRey, Areas)),
   predator(pred), prey(pRey) {
 }
 
 StockPredStdInfo::StockPredStdInfo(const StockPredator* pred, const Prey* pRey, const IntVector& Areas)
-  : AbstrPredStdInfo(Areas, pred->Alproportion(Areas[0]).Minage(), pred->Alproportion(Areas[0]).Maxage(), 0, 0),
+  : AbstrPredStdInfo(Areas, pred->Alproportion(Areas[0]).minAge(), pred->Alproportion(Areas[0]).maxAge(), 0, 0),
   preyinfo(new PreyStdInfo(pRey, Areas)),
   predinfo(new PredStdInfoByLength(pred, pRey, Areas)),
   predator(pred), prey(pRey) {
@@ -33,13 +33,13 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   preyinfo->Sum(TimeInfo, area);
   predinfo->Sum(TimeInfo, area);
   int predage, preyage;
-  for (predage = NconbyAge[inarea].Minage(); predage <= NconbyAge[inarea].Maxage(); predage++)
+  for (predage = NconbyAge[inarea].minAge(); predage <= NconbyAge[inarea].maxAge(); predage++)
     for (preyage = NconbyAge[inarea].Mincol(predage); preyage < NconbyAge[inarea].Maxcol(predage); preyage++) {
       NconbyAge[inarea][predage][preyage] = 0;
       BconbyAge[inarea][predage][preyage] = 0;
     }
   const BandMatrix& Alprop = predator->Alproportion(area);
-  DoubleVector predBconsbyAge(Alprop.Maxage() - Alprop.Minage() + 1, 0);
+  DoubleVector predBconsbyAge(Alprop.maxAge() - Alprop.minAge() + 1, 0);
   const BandMatrix& preyNcons = preyinfo->NconsumptionByAgeAndLength(area);
   const BandMatrix& preyBcons = preyinfo->BconsumptionByAgeAndLength(area);
   const BandMatrix& predBcons = predator->Consumption(area, prey->Name());
@@ -48,7 +48,7 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   double timeratio;
 
   timeratio = TimeInfo->LengthOfYear() / TimeInfo->LengthOfCurrent();
-  for (predage = Alprop.Minage(); predage <= Alprop.Maxage(); predage++)
+  for (predage = Alprop.minAge(); predage <= Alprop.maxAge(); predage++)
     for (preyage = NconbyAge[inarea].Mincol(predage);
          preyage < NconbyAge[inarea].Maxcol(predage); preyage++) {
       for (preyl = 0; preyl < prey->NoLengthGroups(); preyl++) {

@@ -5,9 +5,9 @@ extern int gethostname(char*, int);
 
 RunID::RunID() {
   if (uname(&host) != -1)
-    hostname = host.nodename;
+    hostName = host.nodename;
   else
-    hostname = "-nohostname-";
+    hostName = "-nohostname-";
 
   time_t runtime;
   if (time(&runtime))
@@ -17,7 +17,7 @@ RunID::RunID() {
 }
 
 void RunID::print(ostream& o) {
-  o << "Gadget version " << GADGETVERSION << " running on " << hostname << sep << timestring;
+  o << "Gadget version " << GADGETVERSION << " running on " << hostName << sep << timestring;
   if (timestring[strlen(timestring) - 1] != '\n')
     o << endl;
   o.flush();

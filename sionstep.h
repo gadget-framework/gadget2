@@ -37,7 +37,7 @@ public:
 protected:
   void setError() { error = 1; };
   int IsToSum(const TimeClass* const TimeInfo) const;
-  void KeepNumbers(const DoubleVector& numbers);
+  void keepNumbers(const DoubleVector& numbers);
   IntMatrix Areas;
   IntVector Years;
   IntVector Steps;

@@ -14,16 +14,15 @@ public:
   void KeepVariable(double& value, const Parameter& attr);
   void DeleteParam(const double& var);
   void ChangeVariable(const double& pre, double& post);
-  void ClearLast();
-  void ClearLastAddString(const char* str);
-  void ClearAll();
+  void clearLast();
+  void clearLastAddString(const char* str);
   void setString(const char* str);
-  void AddString(const char* str);
-  void AddString(const string str);
-  void AddComponent(const char* name);
-  char* SendComponents() const;
-  void ClearComponents();
-  int ErrorInUpdate() const { return error; };
+  void addString(const char* str);
+  void addString(const string str);
+  void addComponent(const char* name);
+  char* sendComponents() const;
+  void clearComponents();
+  void clearAll();
   void Clear() { error = 0; };
   void Opt(IntVector& opt) const;
   void ValuesOfVariables(DoubleVector& val) const;
@@ -74,7 +73,7 @@ public:
   void ScaledOptValues(DoubleVector &val) const;
   void OptSwitches(ParameterVector& sw) const;
   void OptValues(DoubleVector &val) const;
-  void CheckBounds() const;
+  void checkBounds() const;
 protected:
   AddressKeeperMatrix address;
   DoubleVector initialvalues;

@@ -45,11 +45,12 @@ TimeClass::TimeClass(CommentStream& infile) {
     handle.Warning("Warning - time period is empty");
   currentyear = firstyear;
   currentstep = firststep;
-  handle.LogMessage("Read time file - number of timesteps", this->TotalNoSteps());
+  handle.logMessage("Read time file - number of timesteps", this->TotalNoSteps());
 }
 
 void TimeClass::IncrementTime() {
-  assert(!(currentyear == lastyear && currentstep == laststep));
+  if (currentyear == lastyear && currentstep == laststep)
+    handle.logFailure("Error in timeclass - cannot increment time past last timestep");
   if (currentstep == notimesteps) {
     currentstep = 1;
     currentyear++;

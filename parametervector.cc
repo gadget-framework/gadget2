@@ -113,7 +113,7 @@ int ParameterVector::readVectorInLine(CommentStream& infile) {
     return 0;
   char line[MaxStrLength];
   strncpy(line, "", MaxStrLength);
-  infile.getline(line, MaxStrLength);
+  infile.getLine(line, MaxStrLength);
   if (infile.fail())
     return 0;
   istringstream istr(line);

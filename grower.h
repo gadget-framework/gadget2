@@ -32,26 +32,24 @@ public:
   void Sum(const PopInfoVector& NumberInArea, int area);
   void Reset();
   void Print(ofstream& outfile) const;
-  int getGrowthType() { return growthtype; };
-  int Version() const { return version; };
+  int getGrowthType() { return functionnumber; };
   double getPowerValue();
   double getMultValue();
 protected:
   LengthGroupDivision* LgrpDiv;
-  PopInfoMatrix GrEatNumber;
+  PopInfoMatrix numGrow;
   ConversionIndex* CI;
   DoubleMatrix InterpLgrowth;
   DoubleMatrix InterpWgrowth;
-  DoubleMatrix CalcLgrowth;
-  DoubleMatrix CalcWgrowth;
+  DoubleMatrix calcLengthGrowth;
+  DoubleMatrix calcWeightGrowth;
   DoubleMatrixPtrVector lgrowth;
   DoubleMatrixPtrVector wgrowth;
   DoubleVector Fphi;
   GrowthCalcBase* growthcalc;
-  int growthtype;
+  int functionnumber;
   char* functionname;
   double power;
-  int version;
   int maxlengthgroupgrowth;
   Formula beta;
   DoubleVector part1;  //n*(n-1)*....(n-x+1)/x!

@@ -128,11 +128,11 @@ void FormatedPreyPrinter::setStock(StockPtrVector& stockvec) {
         stocks[index++] = stockvec[i];
       }
   if (stocks.Size() != stocknames.Size()) {
-    handle.LogWarning("Error in formatedpreyprinter - failed to match stocks");
+    handle.logWarning("Error in formatedpreyprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      handle.LogWarning("Error in formatedpreyprinter - found stock", stocks[i]->Name());
+      handle.logWarning("Error in formatedpreyprinter - found stock", stocks[i]->Name());
     for (i = 0; i < stocknames.Size(); i++)
-      handle.LogWarning("Error in formatedpreyprinter - looking for stock", stocknames[i]);
+      handle.logWarning("Error in formatedpreyprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
 }

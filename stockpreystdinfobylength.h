@@ -31,9 +31,9 @@ public:
   virtual void Sum(const TimeClass* const TimeInfo, int area);
   /**
    * \brief This will return the length group of the prey
-   * \return PreyLgrpDiv, a LengthGroupDivision for the prey
+   * \return preyLgrpDiv, a LengthGroupDivision for the prey
    */
-  const LengthGroupDivision* returnPreyLengthGroupDiv() const { return PreyLgrpDiv; };
+  const LengthGroupDivision* returnPreyLengthGroupDiv() const { return preyLgrpDiv; };
 private:
   /**
    * \brief This is the StockPrey that the predation is consuming
@@ -42,7 +42,7 @@ private:
   /**
    * \brief This is the LengthGroupDivision of the prey
    */
-  const LengthGroupDivision* PreyLgrpDiv;
+  const LengthGroupDivision* preyLgrpDiv;
 };
 
 #endif

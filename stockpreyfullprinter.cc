@@ -111,29 +111,25 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
       }
 
   if (stocks.Size() != stocknames.Size()) {
-    handle.LogWarning("Error in stockpreyfullprinter - failed to match stocks");
+    handle.logWarning("Error in stockpreyfullprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      handle.LogWarning("Error in stockpreyfullprinter - found stock", stocks[i]->Name());
+      handle.logWarning("Error in stockpreyfullprinter - found stock", stocks[i]->Name());
     for (i = 0; i < stocknames.Size(); i++)
-      handle.LogWarning("Error in stockpreyfullprinter - looking for stock", stocknames[i]);
+      handle.logWarning("Error in stockpreyfullprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
 
   //check that the stock lives in the areas.
   for (i = 0; i < stocks.Size(); i++)
     for (j = 0; j < areas.Size(); j++)
-      if (!stocks[i]->IsInArea(areas[j])) {
-        handle.LogWarning("Error in stockpreyfullprinter - stocks arent defined on all areas");
-        exit(EXIT_FAILURE);
-      }
+      if (!stocks[i]->IsInArea(areas[j]))
+        handle.logFailure("Error in stockpreyfullprinter - stocks arent defined on all areas");
 
   //Here comes some code that is only useful when handling one stock.
   if (stocks[0]->IsEaten())
     preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->returnPrey(), areas);
-  else {
-    handle.LogWarning("Error in stockpreyfullprinter - stock is not a prey");
-    exit(EXIT_FAILURE);
-  }
+  else
+    handle.logFailure("Error in stockpreyfullprinter - stock is not a prey");
 }
 
 void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo) {
@@ -148,12 +144,12 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo) {
 
   for (a = 0; a < areas.Size(); a++) {
     const BandMatrix& Nbyageandl = preyinfo->NconsumptionByAgeAndLength(areas[a]);
-    for (age = Nbyageandl.Minage(); age <= Nbyageandl.Maxage(); age++)
+    for (age = Nbyageandl.minAge(); age <= Nbyageandl.maxAge(); age++)
       for (l = 0; l < LgrpDiv->NoLengthGroups(); l++) {
         outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep << setw(lowwidth)
           << TimeInfo->CurrentStep() << sep << setw(lowwidth) << outerareas[a] << sep
           << setw(lowwidth) << age << sep << setprecision(smallprecision)
-          << setw(smallwidth) << LgrpDiv->Meanlength(l) << sep;
+          << setw(smallwidth) << LgrpDiv->meanLength(l) << sep;
 
         //JMB crude filter to remove the 'silly' values from the output
         if ((preyinfo->NconsumptionByAgeAndLength(areas[a])[age][l] < rathersmall)

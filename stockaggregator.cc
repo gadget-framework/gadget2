@@ -28,7 +28,7 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
       for (k = 0; k < Ages.Ncol(j); k++) {
         l = Ages[j][k];
 
-        if (l >= ap->Minage() && l <= ap->Maxage()) {
+        if (l >= ap->minAge() && l <= ap->maxAge()) {
           //l is within the stock age range
 
           if (j < minrow) //Update minrow if this age is in a lower row of the Ages matrix
@@ -37,10 +37,10 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
             maxrow = j;
 
           //If the stock minlength is not smaller than in the CI
-          if (ap->Minlength(l) >= CI[i]->Minlength()) {
+          if (ap->minLength(l) >= CI[i]->minLength()) {
             //update mincol if the CI minlength is smaller than mincol
-            if (CI[i]->Pos(ap->Minlength(l)) < mincol[j])
-              mincol[j] = CI[i]->Pos(ap->Minlength(l));
+            if (CI[i]->Pos(ap->minLength(l)) < mincol[j])
+              mincol[j] = CI[i]->Pos(ap->minLength(l));
 
           } else {
             //Else the stock minlength is smaller than in CI
@@ -48,10 +48,10 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
           }
 
           //If the stock maxlength is not larger than in the CI
-          if (ap->Maxlength(l) - 1 < CI[i]->Maxlength()) {
+          if (ap->maxLength(l) - 1 < CI[i]->maxLength()) {
             //update maxcol if the CI minlength is larger than mincol
-            if (CI[i]->Pos(ap->Maxlength(l) - 1) > maxcol[j])
-              maxcol[j] = CI[i]->Pos(ap->Maxlength(l) - 1);
+            if (CI[i]->Pos(ap->maxLength(l) - 1) > maxcol[j])
+              maxcol[j] = CI[i]->Pos(ap->maxLength(l) - 1);
 
           } else {
             //Else the stock maxlength is larger than in CI
@@ -85,7 +85,7 @@ void StockAggregator::Sum() {
 
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)
-      for (k = 0; k < total[i].Maxlength(j); k++)
+      for (k = 0; k < total[i].maxLength(j); k++)
         total[i][j][k] = nullpop;
 
   //Sum over the appropriate stocks, areas, ages and length groups.
@@ -101,7 +101,7 @@ void StockAggregator::Sum() {
           for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
             for (k = 0; k < ages.Ncol(aggrAge); k++) {
               age = ages[aggrAge][k];
-              if ((alptr->Minage() <= age) && (age <= alptr->Maxage()))
+              if ((alptr->minAge() <= age) && (age <= alptr->maxAge()))
                 total[aggrArea][aggrAge].Add((*alptr)[age], *CI[i]);
             }
           }
@@ -118,7 +118,7 @@ void StockAggregator::MeanSum() {
 
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i].Nrow(); j++)
-      for (k = 0; k < total[i].Maxlength(j); k++)
+      for (k = 0; k < total[i].maxLength(j); k++)
         total[i][j][k] = nullpop;
 
   //Sum over the appropriate stocks, areas, ages and length groups.
@@ -134,7 +134,7 @@ void StockAggregator::MeanSum() {
           for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
             for (k = 0; k < ages.Ncol(aggrAge); k++) {
               age = ages[aggrAge][k];
-              if ((alptr->Minage() <= age) && (age <= alptr->Maxage()))
+              if ((alptr->minAge() <= age) && (age <= alptr->maxAge()))
                 total[aggrArea][aggrAge].Add((*alptr)[age], *CI[i]);
             }
           }

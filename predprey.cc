@@ -89,12 +89,12 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
     if (Preys(prey)->IsInArea(area))
       if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
-          Preys(prey)->AddConsumption(area, cons[Iarea][prey][predl]);
+          Preys(prey)->addConsumption(area, cons[Iarea][prey][predl]);
 }
 
 //Check if any of the preys of the predator are eaten up.
-//Adjust the consumption according to that.
-void StockPredator::AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) {
+//adjust the consumption according to that.
+void StockPredator::adjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) {
   double maxRatio = pow(MaxRatioConsumed, NrOfSubsteps);
   int Iarea = AreaNr[area];
   int AnyPreyEatenUp = 0;
@@ -164,15 +164,15 @@ void StockPredator::CalcMaximumConsumption(double Temperature, int area,
 
   if (CurrentSubstep == 1) {
     for (length = 0; length < MaxconByLength.Ncol(); length++) {
-      tmp = MaxConsumption(LgrpDiv->Meanlength(length), maxConsumption, Temperature);
+      tmp = MaxConsumption(LgrpDiv->meanLength(length), maxConsumption, Temperature);
       MaxconByLength[inarea][length] = timeratio * tmp;
     }
   }
 
   if (CurrentSubstep == NrOfSubsteps) {
-    for (age = Alprop[inarea].Minage(); age <= Alprop[inarea].Maxage(); age++)
-      for (length = Alprop[inarea].Minlength(age);
-          length < Alprop[inarea].Maxlength(age); length++)
+    for (age = Alprop[inarea].minAge(); age <= Alprop[inarea].maxAge(); age++)
+      for (length = Alprop[inarea].minLength(age);
+          length < Alprop[inarea].maxLength(age); length++)
         if (!(isZero(Prednumber[inarea][length].N)))
           Alprop[inarea][age][length] = Alkeys[inarea][age][length].N /
             Prednumber[inarea][length].N;

@@ -30,7 +30,6 @@ void TimeVariableIndexVector::resize(int addsize, int lower, Keeper* const keepe
     minpos = lower;
     v = new TimeVariable[size];
   } else if (addsize > 0) {
-    assert(lower !=  minpos);  //JMB - hmm ... not really using lower here??
     TimeVariable* vnew = new TimeVariable[addsize + size];
     for (i = 0; i < size; i++)
       v[i].Interchange(vnew[i], keeper);
@@ -49,7 +48,6 @@ void TimeVariableIndexVector::resize(const TimeVariable& tvar, int lower, Keeper
     tvar.Interchange(v[0], keeper);
     minpos = lower;
   } else {
-    assert(lower != minpos);  //JMB - hmm ... not really using lower here??
     TimeVariable* vnew = new TimeVariable[addsize + size];
     for (i = 0; i < size; i++)
       v[i].Interchange(vnew[i], keeper);

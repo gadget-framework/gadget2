@@ -132,30 +132,28 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
       }
 
   if (stocks.Size() != stocknames.Size()) {
-    handle.LogWarning("Error in stockstdprinter - failed to match stocks");
+    handle.logWarning("Error in stockstdprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      handle.LogWarning("Error in stockstdprinter - found stock", stocks[i]->Name());
+      handle.logWarning("Error in stockstdprinter - found stock", stocks[i]->Name());
     for (i = 0; i < stocknames.Size(); i++)
-      handle.LogWarning("Error in stockstdprinter - looking for stock", stocknames[i]);
+      handle.logWarning("Error in stockstdprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
 
   //check that the stock lives in the areas.
   for (i = 0; i < stocks.Size(); i++)
     for (j = 0; j < areas.Size(); j++)
-      if (!stocks[i]->IsInArea(areas[j])) {
-        handle.LogWarning("Error in stockstdprinter - stocks arent defined on all areas");
-        exit(EXIT_FAILURE);
-      }
+      if (!stocks[i]->IsInArea(areas[j]))
+        handle.logFailure("Error in stockstdprinter - stocks arent defined on all areas");
 
   //Prepare for the creation of the aggregator
   minage = 100;
   maxage = 0;
   for (i = 0; i < areas.Size(); i++) {
-    tmpage = stocks[0]->Agelengthkeys(areas[i]).Minage();
+    tmpage = stocks[0]->Agelengthkeys(areas[i]).minAge();
     if (tmpage < minage)
       minage = tmpage;
-    tmpage = stocks[0]->Agelengthkeys(areas[i]).Maxage();
+    tmpage = stocks[0]->Agelengthkeys(areas[i]).maxAge();
     if (tmpage > maxage)
       maxage = tmpage;
   }
@@ -186,7 +184,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
       preyinfo->Sum(TimeInfo, areas[a]);
     const AgeBandMatrix& alk = aggregator->returnSum()[a];
 
-    for (age = alk.Minage(); age <= alk.Maxage(); age++) {
+    for (age = alk.minAge(); age <= alk.maxAge(); age++) {
       PopStatistics popstat(alk[age], LgrpDiv);
       outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
         << setw(lowwidth) << TimeInfo->CurrentStep() << sep
@@ -194,17 +192,17 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
         << age + minage << sep;
 
         //JMB crude filters to remove the 'silly' values from the output
-        if (popstat.TotalNumber() < rathersmall) {
+        if (popstat.totalNumber() < rathersmall) {
           outfile << setw(largewidth) << 0 << sep << setw(printwidth) << 0
             << sep << setw(printwidth) << 0 << sep << setw(printwidth) << 0
             << sep << setw(largewidth) << 0 << sep << setw(largewidth) << 0;
 
         } else {
           outfile << setprecision(largeprecision) << setw(largewidth)
-            << popstat.TotalNumber() / Scale  << sep << setprecision(printprecision)
-            << setw(printwidth) << popstat.MeanLength() << sep << setprecision(printprecision)
-            << setw(printwidth) << popstat.MeanWeight() << sep << setprecision(printprecision)
-            << setw(printwidth) << popstat.StdDevOfLength() << sep;
+            << popstat.totalNumber() / Scale  << sep << setprecision(printprecision)
+            << setw(printwidth) << popstat.meanLength() << sep << setprecision(printprecision)
+            << setw(printwidth) << popstat.meanWeight() << sep << setprecision(printprecision)
+            << setw(printwidth) << popstat.sdevLength() << sep;
 
           if (preyinfo) {
             tmpnumber = preyinfo->NconsumptionByAge(areas[a])[age + minage];

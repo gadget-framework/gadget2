@@ -17,9 +17,9 @@ public:
   LengthGroupDivision(const DoubleVector& vec);
   LengthGroupDivision(const LengthGroupDivision& lgrpdiv);
   ~LengthGroupDivision();
-  double Meanlength(int i) const;
-  double Minlength(int i) const;
-  double Maxlength(int i) const;
+  double meanLength(int i) const;
+  double minLength(int i) const;
+  double maxLength(int i) const;
   double minLength() const { return minlen; };
   double maxLength() const { return maxlen; };
   double dl() const { return Dl; };

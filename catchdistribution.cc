@@ -210,8 +210,7 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
 
   //Find start of distribution data in datafile
   infile >> ws;
-  char c;
-  c = infile.peek();
+  char c = infile.peek();
   if (!isdigit(c)) {
     infile.get(c);
     while (c != '\n' && !infile.eof())
@@ -285,10 +284,10 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
       (*AgeLengthData[timeid][areaid])[ageid][lenid] = tmpnumber;
     }
   }
-  AAT.AddActions(Years, Steps, TimeInfo);
+  AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.LogWarning("Warning in catchdistribution - found no data in the data file for", cdname);
-  handle.LogMessage("Read catchdistribution data file - number of entries", count);
+    handle.logWarning("Warning in catchdistribution - found no data in the data file for", cdname);
+  handle.logMessage("Read catchdistribution data file - number of entries", count);
 }
 
 CatchDistribution::~CatchDistribution() {
@@ -353,7 +352,7 @@ void CatchDistribution::Print(ofstream& outfile) const {
       outfile << "\tMultivariate logistic distribution parameter: tau " << tau << endl;
       break;
     default:
-      handle.LogWarning("Warning in catchdistribution - unknown function", functionname);
+      handle.logWarning("Warning in catchdistribution - unknown function", functionname);
       break;
   }
 
@@ -404,7 +403,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
       outfile << "Multivariate logistic distribution parameter: tau " << tau << endl;
       break;
     default:
-      handle.LogWarning("Warning in catchdistribution - unknown function", functionname);
+      handle.logWarning("Warning in catchdistribution - unknown function", functionname);
       break;
   }
 
@@ -456,10 +455,9 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
         fleets.resize(1, Fleets[j]);
       }
 
-    if (found == 0) {
-      handle.LogWarning("Error in catchdistribution - unknown fleet", fleetnames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in catchdistribution - unknown fleet", fleetnames[i]);
+
   }
 
   min_stock_age = 100;
@@ -471,16 +469,15 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
         if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->Name()) == 0) {
           found = 1;
           stocks.resize(1, Stocks[j]);
-          if (stocks[stocks.Size() - 1]->Minage() < min_stock_age) //kgf 3/5 99
-            min_stock_age = stocks[stocks.Size() - 1]->Minage();
-          if (stocks[stocks.Size() - 1]->Maxage() > max_stock_age)
-            max_stock_age = stocks[stocks.Size() - 1]->Maxage();
+          if (stocks[stocks.Size() - 1]->minAge() < min_stock_age) //kgf 3/5 99
+            min_stock_age = stocks[stocks.Size() - 1]->minAge();
+          if (stocks[stocks.Size() - 1]->maxAge() > max_stock_age)
+            max_stock_age = stocks[stocks.Size() - 1]->maxAge();
         }
     }
-    if (found == 0) {
-      handle.LogWarning("Error in catchdistribution - unknown stock", stocknames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in catchdistribution - unknown stock", stocknames[i]);
+
   }
   aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
 
@@ -491,25 +488,25 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
   maxrow = aggregator->getMaxRow();
 }
 
-void CatchDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
+void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
   if (AAT.AtCurrentTime(TimeInfo)) {
     switch(functionnumber) {
       case 1:
         aggregator->Sum(TimeInfo);
-        likelihood += LikMultinomial();
+        likelihood += calcLikMultinomial();
         break;
       case 2:
         aggregator->MeanSum(TimeInfo); //mortality model, calculated catch
-        likelihood += LikPearson(TimeInfo);
+        likelihood += calcLikPearson(TimeInfo);
         break;
       case 3:
         aggregator->MeanSum(TimeInfo); //mortality model, calculated catch
-        likelihood += LikGamma(TimeInfo);
+        likelihood += calcLikGamma(TimeInfo);
         break;
       case 4:
         aggregator->Sum(TimeInfo);
-        likelihood += LikSumSquares();
+        likelihood += calcLikSumSquares();
         break;
       case 5:
         aggregator->Sum(TimeInfo);
@@ -518,39 +515,39 @@ void CatchDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
           Correlation();
           times++;
           if (illegal == 1 || LU.IsIllegal() == 1) {
-            handle.LogWarning("Warning in catchdistribution - multivariate normal out of bounds");
+            handle.logWarning("Warning in catchdistribution - multivariate normal out of bounds");
             likelihood += verybig;
           }
         }
 
         if (illegal != 1 && LU.IsIllegal() != 1)
-          likelihood += LikMVNormal();
+          likelihood += calcLikMVNormal();
         else
           likelihood += 0.0;
 
         break;
       case 6:
         aggregator->Sum(TimeInfo);
-        likelihood += LikMVLogistic();
+        likelihood += calcLikMVLogistic();
         break;
       default:
-        handle.LogWarning("Warning in catchdistribution - unknown function", functionname);
+        handle.logWarning("Warning in catchdistribution - unknown function", functionname);
         break;
     }
     timeindex++;
   }
 }
 
-double CatchDistribution::LikMultinomial() {
+double CatchDistribution::calcLikMultinomial() {
   int area, age, len, nareas;
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   DoubleMatrixPtrVector Dist(alptr->Size(), NULL);
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
-    Dist[nareas] = new DoubleMatrix(aggregator->NoAgeGroups(), aggregator->NoLengthGroups(), 0.0);
+    Dist[nareas] = new DoubleMatrix(aggregator->numAgeGroups(), aggregator->NoLengthGroups(), 0.0);
 
-    for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++)
-      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++)
+    for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++)
+      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++)
         (*Dist[nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
   }
 
@@ -586,7 +583,7 @@ double CatchDistribution::LikMultinomial() {
   return MN.returnLogLikelihood();
 }
 
-double CatchDistribution::LikPearson(const TimeClass* const TimeInfo) {
+double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
   /* written by Hoskuldur Bjornsson 29/8 98
    * corrected by kgf 16/9 98
    * modified by kgf 11/11 98 to make it possible to sum up catches
@@ -600,8 +597,8 @@ double CatchDistribution::LikPearson(const TimeClass* const TimeInfo) {
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
-    min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
-    max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
+    min_age = max((*alptr)[nareas].minAge(), min_stock_age - 1);
+    max_age = min((*alptr)[nareas].maxAge() + 1, max_stock_age);
     Likelihoodvalues[timeindex][nareas] = 0.0;
     if (TimeInfo->CurrentStep() == 1) { //start of a new year
       (*calc_c[nareas]).setElementsTo(0.0);
@@ -651,7 +648,7 @@ double CatchDistribution::LikPearson(const TimeClass* const TimeInfo) {
   return totallikelihood;
 }
 
-double CatchDistribution::LikGamma(const TimeClass* const TimeInfo) {
+double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
   //written kgf 24/5 00
   //Formula by Hans J Skaug, 15/3 00 No weighting at present.
   //This function is scale independent.
@@ -661,8 +658,8 @@ double CatchDistribution::LikGamma(const TimeClass* const TimeInfo) {
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
-    min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
-    max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
+    min_age = max((*alptr)[nareas].minAge(), min_stock_age - 1);
+    max_age = min((*alptr)[nareas].maxAge() + 1, max_stock_age);
     Likelihoodvalues[timeindex][nareas] = 0.0;
     if (TimeInfo->CurrentStep() == 1) { //start of a new year
       (*calc_c[nareas]).setElementsTo(0.0);
@@ -709,7 +706,7 @@ double CatchDistribution::LikGamma(const TimeClass* const TimeInfo) {
   return totallikelihood;
 }
 
-double CatchDistribution::LikSumSquares() {
+double CatchDistribution::calcLikSumSquares() {
 
   double totallikelihood = 0.0, temp = 0.0;
   double totalmodel, totaldata;
@@ -720,16 +717,16 @@ double CatchDistribution::LikSumSquares() {
     totalmodel = 0.0;
     totaldata = 0.0;
     Likelihoodvalues[timeindex][nareas] = 0.0;
-    for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
-      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+    for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
+      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++) {
         (*Proportions[timeindex][nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
         totalmodel += (*Proportions[timeindex][nareas])[age][len];
         totaldata += (*AgeLengthData[timeindex][nareas])[age][len];
       }
     }
 
-    for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
-      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+    for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
+      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++) {
         if ((isZero(totaldata)) && (isZero(totalmodel)))
           temp = 0.0;
         else if (isZero(totaldata))
@@ -774,7 +771,7 @@ void CatchDistribution::Correlation() {
 }
 
 
-double CatchDistribution::LikMVNormal() {
+double CatchDistribution::calcLikMVNormal() {
 
   double totallikelihood = 0.0;
   double sumdata, sumdist;
@@ -788,8 +785,8 @@ double CatchDistribution::LikMVNormal() {
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     sumdata = 0.0;
     sumdist = 0.0;
-    for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
-      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+    for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
+      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++) {
         (*Proportions[timeindex][nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
         sumdata += (*AgeLengthData[timeindex][nareas])[age][len];
         sumdist += (*alptr)[nareas][age][len].N;
@@ -805,18 +802,18 @@ double CatchDistribution::LikMVNormal() {
     else
       sumdist = 1 / sumdist;
 
-    for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
+    for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
       for (len = 0; len < diff.Size(); len++)
         diff[len] = 0.0;
 
-      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++)
+      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++)
         diff[len] = ((*AgeLengthData[timeindex][nareas])[age][len] * sumdata) - (((*alptr)[nareas][age][len]).N * sumdist);
 
       totallikelihood += diff * LU.Solve(diff);
     }
   }
   if (isZero(sigma)) {
-    handle.LogWarning("Warning in catchdistribution - multivariate normal sigma is zero");
+    handle.logWarning("Warning in catchdistribution - multivariate normal sigma is zero");
     return verybig;
   }
 
@@ -825,7 +822,7 @@ double CatchDistribution::LikMVNormal() {
   return totallikelihood;
 }
 
-double CatchDistribution::LikMVLogistic() {
+double CatchDistribution::calcLikMVLogistic() {
 
   double totallikelihood = 0.0;
   double sumdata = 0.0, sumdist = 0.0, sumnu = 0.0;
@@ -836,13 +833,13 @@ double CatchDistribution::LikMVLogistic() {
   DoubleVector nu(p, 0.0);
 
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
-    for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
+    for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
       for (len = 0; len < nu.Size(); len++)
         nu[len] = 0.0;
 
       sumdata = 0.0;
       sumdist = 0.0;
-      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++) {
         sumdata += (*AgeLengthData[timeindex][nareas])[age][len];
         sumdist += (*alptr)[nareas][age][len].N;
       }
@@ -856,7 +853,7 @@ double CatchDistribution::LikMVLogistic() {
         sumdist = 1 / sumdist;
 
       sumnu = 0.0;
-      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++) {
         nu[len] = log(((*AgeLengthData[timeindex][nareas])[age][len] * sumdata) + verysmall)
                     - log(((*alptr)[nareas][age][len].N * sumdist) + verysmall);
 
@@ -864,12 +861,12 @@ double CatchDistribution::LikMVLogistic() {
       }
       sumnu = sumnu / p;
 
-      for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++)
+      for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++)
         totallikelihood += (nu[len] - sumnu) * (nu[len] - sumnu);
     }
   }
   if (isZero(tau)) {
-    handle.LogWarning("Warning in catchdistribution - multivariate logistic tau is zero");
+    handle.logWarning("Warning in catchdistribution - multivariate logistic tau is zero");
     return verybig;
   }
   totallikelihood = (totallikelihood / (tau * tau)) + (log(tau) * (p - 1));
@@ -932,7 +929,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
       catchfile << "Multivariate logistic distribution parameter: tau " << tau << endl;
       break;
     default:
-      handle.LogWarning("Warning in catchdistribution - unknown function", functionname);
+      handle.logWarning("Warning in catchdistribution - unknown function", functionname);
       break;
   }
 
@@ -949,7 +946,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
         catchfile.width(smallwidth);
         catchfile << (*AgeLengthData[time][nareas])[age][length] << sep;
       }
-      for (length = maxcol[age] + 1; length < (*alptr)[nareas].Maxlength(age); length++) {
+      for (length = maxcol[age] + 1; length < (*alptr)[nareas].maxLength(age); length++) {
         catchfile.precision(smallprecision);
         catchfile.width(smallwidth);
         catchfile << 0.0 << sep;
@@ -969,7 +966,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
         catchfile.width(smallwidth);
         catchfile << (*Proportions[time][nareas])[age][length] << sep;
       }
-      for (length = maxcol[age] + 1; length < (*alptr)[nareas].Maxlength(age); length++) {
+      for (length = maxcol[age] + 1; length < (*alptr)[nareas].maxLength(age); length++) {
         catchfile.precision(smallprecision);
         catchfile.width(smallwidth);
         catchfile << 0.0 << sep;

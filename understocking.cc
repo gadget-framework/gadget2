@@ -84,10 +84,10 @@ void UnderStocking::setFleets(FleetPtrVector& Fleets) {
         found = 1;
         fleets.resize(1, Fleets[j]);
       }
-    if (found == 0) {
-      handle.LogWarning("Error in understocking - unknown fleet", fleetnames[i]);
-      exit(EXIT_FAILURE);
-    }
+
+    if (found == 0)
+      handle.logFailure("Error in understocking - unknown fleet", fleetnames[i]);
+
   }
 }
 
@@ -95,7 +95,7 @@ void UnderStocking::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
 }
 
-void UnderStocking::AddToLikelihood(const TimeClass* const TimeInfo) {
+void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
   int i, j, k;
   double err;
   if (AAT.AtCurrentTime(TimeInfo))

@@ -18,7 +18,7 @@ CommentStream& operator >> (CommentStream& infile, VariableInfo& varinfo) {
   int i, j;
   char line[MaxStrLength];
   strncpy(line, "", MaxStrLength);
-  infile.getline(line, MaxStrLength);
+  infile.getLine(line, MaxStrLength);
 
   istringstream istr(line);
   CommentStream comm(istr);

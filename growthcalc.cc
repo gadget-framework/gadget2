@@ -22,15 +22,15 @@ GrowthCalcBase::~GrowthCalcBase() {
 // ********************************************************
 GrowthCalcA::GrowthCalcA(CommentStream& infile,
   const IntVector& Areas, Keeper* const keeper)
-  : GrowthCalcBase(Areas), NumberOfGrowthConstants(9) {
+  : GrowthCalcBase(Areas), numGrowthConstants(9) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  growthPar.resize(NumberOfGrowthConstants, keeper);
+  growthPar.resize(numGrowthConstants, keeper);
   //If Growthpar is an empty vector then only make size of vector
   //in Growthpar == NumberOfGrowthConstants else ...
   //Maybe should make a new function resize which demands an emtpy vector.
-  keeper->AddString("growthcalcA");
+  keeper->addString("growthcalcA");
   infile >> text;
   if (strcasecmp(text, "growthparameters") == 0) {
     if (!(infile >> growthPar))
@@ -38,14 +38,14 @@ GrowthCalcA::GrowthCalcA(CommentStream& infile,
     growthPar.Inform(keeper);
   } else
     handle.Unexpected("growthparameters", text);
-  keeper->ClearLast();
+  keeper->clearLast();
 }
 
 GrowthCalcA::~GrowthCalcA() {
 }
 
 void GrowthCalcA::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
@@ -58,14 +58,14 @@ void GrowthCalcA::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   tempW = stepsize * growthPar[4] * (growthPar[7] * Temperature + growthPar[8]);
 
   for (i = 0; i < Lgrowth.Size(); i++) {
-    Lgrowth[i] = tempL * pow(LgrpDiv->Meanlength(i), growthPar[1]) * Fphi[i];
+    Lgrowth[i] = tempL * pow(LgrpDiv->meanLength(i), growthPar[1]) * Fphi[i];
     if (Lgrowth[i] < 0)
       Lgrowth[i] = 0;
 
-    if (GrEatNumber[i].W < verysmall)
+    if (numGrow[i].W < verysmall)
       Wgrowth[i] = 0.0;
     else
-      Wgrowth[i] = tempW * pow(GrEatNumber[i].W, growthPar[5]) * (Fphi[i] - growthPar[6]);
+      Wgrowth[i] = tempW * pow(numGrow[i].W, growthPar[5]) * (Fphi[i] - growthPar[6]);
   }
 }
 
@@ -89,7 +89,7 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
     wgrowth[i] = new FormulaMatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
   }
 
-  keeper->AddString("growthcalcB");
+  keeper->addString("growthcalcB");
 
   readWordAndValue(infile, "lengthgrowthfile", datafilename);
   datafile.open(datafilename, ios::in);
@@ -114,7 +114,7 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
     (*wgrowth[i]).Inform(keeper);
   }
 
-  keeper->ClearLast();
+  keeper->clearLast();
 }
 
 GrowthCalcB::~GrowthCalcB() {
@@ -126,7 +126,7 @@ GrowthCalcB::~GrowthCalcB() {
 }
 
 void GrowthCalcB::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
@@ -143,7 +143,7 @@ void GrowthCalcB::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   for (i = 0; i < Lgrowth.Size(); i++) {
     if ((l[i] < 0.0) || (w[i] < 0.0))
-      handle.LogWarning("Warning in growth calculation - negative growth parameter");
+      handle.logWarning("Warning in growth calculation - negative growth parameter");
 
     Lgrowth[i] = l[i];
     Wgrowth[i] = w[i];
@@ -154,8 +154,8 @@ void GrowthCalcB::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 // Functions for GrowthCalcC
 // ********************************************************
 GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
-  const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeight)
-  : GrowthCalcBase(Areas), NumberOfWGrowthConstants(6),  NumberOfLGrowthConstants(9) {
+  const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeightFile)
+  : GrowthCalcBase(Areas), numWeightGrowthConstants(6),  numLengthGrowthConstants(9) {
 
   int i, j, pos;
   char text[MaxStrLength];
@@ -163,11 +163,11 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
   //If Wgrowthpar is an empty vector then only make size of vector
   //in Wgrowthpar == NumberOfGrowthConstants else ...
   //Maybe should make a new function resize wich demands an emtpy vector.
-  wgrowthPar.resize(NumberOfWGrowthConstants, keeper);
-  lgrowthPar.resize(NumberOfLGrowthConstants, keeper);
-  Wref.resize(LgrpDiv->NoLengthGroups());
+  wgrowthPar.resize(numWeightGrowthConstants, keeper);
+  lgrowthPar.resize(numLengthGrowthConstants, keeper);
+  refWeight.resize(LgrpDiv->NoLengthGroups());
 
-  keeper->AddString("growthcalcC");
+  keeper->addString("growthcalcC");
   infile >> text;
   if (strcasecmp(text, "wgrowthparameters") == 0) {
     if (!(infile >> wgrowthPar))
@@ -183,15 +183,15 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
     lgrowthPar.Inform(keeper);
   } else
     handle.Unexpected("lgrowthparameters", text);
-  keeper->ClearLast();
+  keeper->clearLast();
 
   //read information on reference weights.
-  keeper->AddString("referenceweights");
+  keeper->addString("referenceweights");
   //JMB - changed since filename is passed as refWeight
   ifstream subfile;
-  subfile.open(refWeight, ios::in);
-  handle.checkIfFailure(subfile, refWeight);
-  handle.Open(refWeight);
+  subfile.open(refWeightFile, ios::in);
+  handle.checkIfFailure(subfile, refWeightFile);
+  handle.Open(refWeightFile);
   CommentStream subcomment(subfile);
 
   //read information on length increase.
@@ -203,25 +203,21 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
   subfile.clear();
 
   //Interpolate the reference weights. First there are some error checks.
-  for (i = 0; i < tmpRefW.Nrow() - 1; i++)
-    if ((tmpRefW[i + 1][0] - tmpRefW[i][0]) <= 0)
-      handle.Message("Lengths for reference weights must be strictly increasing");
-
-  if (LgrpDiv->Meanlength(0) < tmpRefW[0][0] ||
-      LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
+  if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
+      LgrpDiv->meanLength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
     handle.Message("Lengths for reference weights must span the range of growth lengths");
 
   double ratio;
   pos = 0;
   for (j = pos; j < LgrpDiv->NoLengthGroups(); j++)
     for (i = pos; i < tmpRefW.Nrow() - 1; i++)
-      if (LgrpDiv->Meanlength(j) >= tmpRefW[i][0] && LgrpDiv->Meanlength(j) <= tmpRefW[i + 1][0]) {
-        ratio = (LgrpDiv->Meanlength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
-        Wref[j] = tmpRefW[i][1] + ratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
+      if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] && LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
+        ratio = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+        refWeight[j] = tmpRefW[i][1] + ratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
         pos = i;
       }
 
-  keeper->ClearLast();
+  keeper->clearLast();
 }
 
 GrowthCalcC::~GrowthCalcC() {
@@ -233,7 +229,7 @@ GrowthCalcC::~GrowthCalcC() {
  * dw/dt = a0*exp(a1*T)*((w/a2)^a4 - (w/a3)^a5)
  * For no temperature dependency a1 = 0 */
 void GrowthCalcC::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
@@ -247,19 +243,19 @@ void GrowthCalcC::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   //JMB - first some error checking
   if (isZero(wgrowthPar[2]) || isZero(wgrowthPar[3]))
-    handle.LogWarning("Warning in growth calculation - weight growth parameter is zero");
+    handle.logWarning("Warning in growth calculation - weight growth parameter is zero");
   if (isZero(lgrowthPar[6]) || isZero(lgrowthPar[7]))
-    handle.LogWarning("Warning in growth calculation - length growth parameter is zero");
+    handle.logWarning("Warning in growth calculation - length growth parameter is zero");
   if (lgrowthPar[5] < 0)
-    handle.LogWarning("Warning in growth calculation - length growth parameter is negative");
+    handle.logWarning("Warning in growth calculation - length growth parameter is negative");
 
   for (i = 0; i < Wgrowth.Size(); i++) {
-    if (GrEatNumber[i].W < verysmall || isZero(tempW)) {
+    if (numGrow[i].W < verysmall || isZero(tempW)) {
       Wgrowth[i] = 0.0;
       Lgrowth[i] = 0.0;
     } else {
-      Wgrowth[i] = tempW * (pow(GrEatNumber[i].W / wgrowthPar[2], wgrowthPar[4]) -
-        pow(GrEatNumber[i].W / wgrowthPar[3], wgrowthPar[5]));
+      Wgrowth[i] = tempW * (pow(numGrow[i].W / wgrowthPar[2], wgrowthPar[4]) -
+        pow(numGrow[i].W / wgrowthPar[3], wgrowthPar[5]));
 
       //Here after the code is similar as for GrowthCalcD except an extra
       //parameter Lgrowthpar[8] comes instead of Fphi[i]
@@ -267,14 +263,14 @@ void GrowthCalcC::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
         Wgrowth[i] = 0.0;
         Lgrowth[i] = 0.0;
       } else {
-        x = (GrEatNumber[i].W - ratio * Wref[i]) / GrEatNumber[i].W;
+        x = (numGrow[i].W - ratio * refWeight[i]) / numGrow[i].W;
         fx = lgrowthPar[3] + lgrowthPar[4] * x;
         if (fx < verysmall)
           fx = 0.0;
         if (fx > lgrowthPar[5])
           fx = lgrowthPar[5];
         Lgrowth[i] = fx * Wgrowth[i] / (lgrowthPar[6] * lgrowthPar[7] *
-          pow(LgrpDiv->Meanlength(i), lgrowthPar[7] - 1.0));
+          pow(LgrpDiv->meanLength(i), lgrowthPar[7] - 1.0));
       }
     }
   }
@@ -284,8 +280,8 @@ void GrowthCalcC::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 // Functions for GrowthCalcD
 // ********************************************************
 GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
-  const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeight)
-  : GrowthCalcBase(Areas), NumberOfWGrowthConstants(6), NumberOfLGrowthConstants(8) {
+  const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeightFile)
+  : GrowthCalcBase(Areas), numWeightGrowthConstants(6), numLengthGrowthConstants(8) {
 
   int i, j, pos;
   char text[MaxStrLength];
@@ -293,11 +289,11 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
   //If Wgrowthpar is an empty vector then only make size of vector
   //in Wgrowthpar == NumberOfGrowthConstants else ...
   //Maybe should make a new function resize wich demands an emtpy vector.
-  wgrowthPar.resize(NumberOfWGrowthConstants, keeper);
-  lgrowthPar.resize(NumberOfLGrowthConstants, keeper);
-  Wref.resize(LgrpDiv->NoLengthGroups());
+  wgrowthPar.resize(numWeightGrowthConstants, keeper);
+  lgrowthPar.resize(numLengthGrowthConstants, keeper);
+  refWeight.resize(LgrpDiv->NoLengthGroups());
 
-  keeper->AddString("growthcalcD");
+  keeper->addString("growthcalcD");
   infile >> text;
   if (strcasecmp(text, "wgrowthparameters") == 0) {
     if (!(infile >> wgrowthPar))
@@ -313,15 +309,15 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
     lgrowthPar.Inform(keeper);
   } else
     handle.Unexpected("lgrowthparameters", text);
-  keeper->ClearLast();
+  keeper->clearLast();
 
   //read information on reference weights.
-  keeper->AddString("referenceweights");
+  keeper->addString("referenceweights");
   //JMB - changed since filename is passed as refWeight
   ifstream subfile;
-  subfile.open(refWeight, ios::in);
-  handle.checkIfFailure(subfile, refWeight);
-  handle.Open(refWeight);
+  subfile.open(refWeightFile, ios::in);
+  handle.checkIfFailure(subfile, refWeightFile);
+  handle.Open(refWeightFile);
   CommentStream subcomment(subfile);
 
   //read information on length increase.
@@ -333,25 +329,21 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
   subfile.clear();
 
   //Interpolate the reference weights. First there are some error checks.
-  for (i = 0; i < tmpRefW.Nrow() - 1; i++)
-    if ((tmpRefW[i + 1][0] - tmpRefW[i][0]) <= 0)
-      handle.Message("Lengths for reference weights must be strictly increasing");
-
-  if (LgrpDiv->Meanlength(0) < tmpRefW[0][0] ||
-      LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
+  if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
+      LgrpDiv->meanLength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
     handle.Message("Lengths for reference weights must span the range of growth lengths");
 
   double ratio;
   pos = 0;
   for (j = pos; j < LgrpDiv->NoLengthGroups(); j++)
     for (i = pos; i < tmpRefW.Nrow() - 1; i++)
-      if (LgrpDiv->Meanlength(j) >= tmpRefW[i][0] && LgrpDiv->Meanlength(j) <= tmpRefW[i + 1][0]) {
-        ratio = (LgrpDiv->Meanlength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
-        Wref[j] = tmpRefW[i][1] + ratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
+      if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] && LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
+        ratio = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+        refWeight[j] = tmpRefW[i][1] + ratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
         pos = i;
       }
 
-  keeper->ClearLast();
+  keeper->clearLast();
 }
 
 GrowthCalcD::~GrowthCalcD() {
@@ -363,7 +355,7 @@ GrowthCalcD::~GrowthCalcD() {
  * w = a*l^b. If the weight is below the curve no length increase takes place
  * but instead the weight increases until it reaches the curve. */
 void GrowthCalcD::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
@@ -376,34 +368,34 @@ void GrowthCalcD::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   //JMB - first some error checking
   if (isZero(wgrowthPar[0]))
-    handle.LogWarning("Warning in growth calculation - weight growth parameter is zero");
+    handle.logWarning("Warning in growth calculation - weight growth parameter is zero");
   if (isZero(lgrowthPar[6]) || isZero(lgrowthPar[7]))
-    handle.LogWarning("Warning in growth calculation - length growth parameter is zero");
+    handle.logWarning("Warning in growth calculation - length growth parameter is zero");
   if (lgrowthPar[5] < 0)
-    handle.LogWarning("Warning in growth calculation - length growth parameter is negative");
+    handle.logWarning("Warning in growth calculation - length growth parameter is negative");
 
   for (i = 0; i < Wgrowth.Size(); i++) {
-    if (GrEatNumber[i].W < verysmall || isZero(tempW)) {
+    if (numGrow[i].W < verysmall || isZero(tempW)) {
       Wgrowth[i] = 0.0;
       Lgrowth[i] = 0.0;
     } else {
       Wgrowth[i] = Fphi[i] * MaxCon[i] * tempW /
-        (wgrowthPar[0] * pow(GrEatNumber[i].W, wgrowthPar[1])) -
-        wgrowthPar[2] * pow(GrEatNumber[i].W, wgrowthPar[3]);
+        (wgrowthPar[0] * pow(numGrow[i].W, wgrowthPar[1])) -
+        wgrowthPar[2] * pow(numGrow[i].W, wgrowthPar[3]);
 
       if (Wgrowth[i] < verysmall) {
         Wgrowth[i] = 0.0;
         Lgrowth[i] = 0.0;
       } else {
         ratio = lgrowthPar[0] + Fphi[i] * (lgrowthPar[1] + lgrowthPar[2] * Fphi[i]);
-        x = (GrEatNumber[i].W - ratio * Wref[i]) / GrEatNumber[i].W;
+        x = (numGrow[i].W - ratio * refWeight[i]) / numGrow[i].W;
         fx = lgrowthPar[3] + lgrowthPar[4] * x;
         if (fx < verysmall)
           fx = 0.0;
         if (fx > lgrowthPar[5])
           fx = lgrowthPar[5];
         Lgrowth[i] = fx * Wgrowth[i] / (lgrowthPar[6] * lgrowthPar[7] *
-          pow(LgrpDiv->Meanlength(i), lgrowthPar[7] - 1.0));
+          pow(LgrpDiv->meanLength(i), lgrowthPar[7] - 1.0));
       }
     }
   }
@@ -414,8 +406,8 @@ void GrowthCalcD::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 // ********************************************************
 GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   const TimeClass* const TimeInfo, const LengthGroupDivision* const LgrpDiv,
-  Keeper* const keeper, const char* refWeight)
-  : GrowthCalcBase(Areas), NumberOfWGrowthConstants(6), NumberOfLGrowthConstants(9) {
+  Keeper* const keeper, const char* refWeightFile)
+  : GrowthCalcBase(Areas), numWeightGrowthConstants(6), numLengthGrowthConstants(9) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -423,14 +415,14 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   //If Wgrowthpar is an empty vector then only make size of vector
   //in Wgrowthpar == NumberOfGrowthConstants else ...
   //Maybe should make a new function resize wich demands an emtpy vector.
-  wgrowthPar.resize(NumberOfWGrowthConstants, keeper);
-  lgrowthPar.resize(NumberOfLGrowthConstants, keeper);
-  Wref.resize(LgrpDiv->NoLengthGroups());
+  wgrowthPar.resize(numWeightGrowthConstants, keeper);
+  lgrowthPar.resize(numLengthGrowthConstants, keeper);
+  refWeight.resize(LgrpDiv->NoLengthGroups());
 
   yearEffect.resize(TimeInfo->LastYear() - TimeInfo->FirstYear() + 1, keeper);
   stepEffect.resize(TimeInfo->StepsInYear(), keeper);
   areaEffect.resize(Areas.Size(), keeper);
-  keeper->AddString("growthcalcE");
+  keeper->addString("growthcalcE");
   infile >> text;
   if (strcasecmp(text, "wgrowthparameters") == 0) {
     if (!(infile >> wgrowthPar))
@@ -470,15 +462,15 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
     areaEffect.Inform(keeper);
   } else
     handle.Unexpected("areaeffect", text);
-  keeper->ClearLast();
+  keeper->clearLast();
 
   //read information on reference weights.
-  keeper->AddString("referenceweights");
+  keeper->addString("referenceweights");
   //JMB - changed since filename is passed as refWeight
   ifstream subfile;
-  subfile.open(refWeight, ios::in);
-  handle.checkIfFailure(subfile, refWeight);
-  handle.Open(refWeight);
+  subfile.open(refWeightFile, ios::in);
+  handle.checkIfFailure(subfile, refWeightFile);
+  handle.Open(refWeightFile);
   CommentStream subcomment(subfile);
 
   //read information on length increase.
@@ -489,28 +481,23 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   subfile.close();
   subfile.clear();
 
-  //Some error checks.
-  for (i = 0; i < tmpRefW.Nrow() - 1; i++)
-    if ((tmpRefW[i + 1][0] - tmpRefW[i][0]) <= 0)
-      handle.Message("Lengths for reference weights must be strictly increasing");
-
-  if (LgrpDiv->Meanlength(0) < tmpRefW[0][0] ||
-      LgrpDiv->Meanlength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
+  //Interpolate the reference weights.
+  if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
+      LgrpDiv->meanLength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
     handle.Message("Lengths for reference weights must span the range of growth lengths");
 
-  //Interpolate the reference weights.
   double ratio;
   pos = 0;
   for (j = pos; j < LgrpDiv->NoLengthGroups(); j++)
     for (i = pos; i < tmpRefW.Nrow() - 1; i++)
-      if (LgrpDiv->Meanlength(j) >= tmpRefW[i][0] &&
-          LgrpDiv->Meanlength(j) <= tmpRefW[i + 1][0]) {
-        ratio = (LgrpDiv->Meanlength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
-        Wref[j] = tmpRefW[i][1] + ratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
+      if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] &&
+          LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
+        ratio = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+        refWeight[j] = tmpRefW[i][1] + ratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
         pos = i;
       }
 
-  keeper->ClearLast();
+  keeper->clearLast();
 }
 
 GrowthCalcE::~GrowthCalcE() {
@@ -526,7 +513,7 @@ GrowthCalcE::~GrowthCalcE() {
  *       StepEffect
  * Length increase is upgraded in the same way as earlier. */
 void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
@@ -542,32 +529,32 @@ void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   //JMB - first some error checking
   if (isZero(wgrowthPar[2]) || isZero(wgrowthPar[3]))
-    handle.LogWarning("Warning in growth calculation - weight growth parameter is zero");
+    handle.logWarning("Warning in growth calculation - weight growth parameter is zero");
   if (isZero(lgrowthPar[6]) || isZero(lgrowthPar[7]))
-    handle.LogWarning("Warning in growth calculation - length growth parameter is zero");
+    handle.logWarning("Warning in growth calculation - length growth parameter is zero");
   if (lgrowthPar[5] < 0)
-    handle.LogWarning("Warning in growth calculation - length growth parameter is negative");
+    handle.logWarning("Warning in growth calculation - length growth parameter is negative");
 
   for (i = 0; i < Wgrowth.Size(); i++) {
-    if (GrEatNumber[i].W < verysmall || isZero(tempW)) {
+    if (numGrow[i].W < verysmall || isZero(tempW)) {
       Wgrowth[i] = 0.0;
       Lgrowth[i] = 0.0;
     } else {
-      Wgrowth[i] = tempW * (pow(GrEatNumber[i].W / wgrowthPar[2], wgrowthPar[4]) -
-        pow(GrEatNumber[i].W / wgrowthPar[3], wgrowthPar[5]));
+      Wgrowth[i] = tempW * (pow(numGrow[i].W / wgrowthPar[2], wgrowthPar[4]) -
+        pow(numGrow[i].W / wgrowthPar[3], wgrowthPar[5]));
 
       if (Wgrowth[i] < verysmall) {
         Wgrowth[i] = 0.0;
         Lgrowth[i] = 0.0;
       } else {
-        x = (GrEatNumber[i].W - ratio * Wref[i]) / GrEatNumber[i].W;
+        x = (numGrow[i].W - ratio * refWeight[i]) / numGrow[i].W;
         fx = lgrowthPar[3] + lgrowthPar[4] * x;
         if (fx < verysmall)
           fx = 0.0;
         if (fx > lgrowthPar[5])
           fx = lgrowthPar[5];
         Lgrowth[i] = fx * Wgrowth[i] / (lgrowthPar[6] * lgrowthPar[7] *
-          pow(LgrpDiv->Meanlength(i), lgrowthPar[7] - 1.0));
+          pow(LgrpDiv->meanLength(i), lgrowthPar[7] - 1.0));
       }
     }
   }
@@ -582,14 +569,14 @@ void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper,
   const AreaClass* const Area, const CharPtrVector& lenindex)
-  : GrowthCalcBase(Areas), NumberOfGrowthConstants(1), wgrowth(Areas.Size()) {
+  : GrowthCalcBase(Areas), numGrowthConstants(1), wgrowth(Areas.Size()) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  keeper->AddString("growthcalcF");
+  keeper->addString("growthcalcF");
 
   infile >> text >> ws;
-  growthPar.resize(NumberOfGrowthConstants, keeper);
+  growthPar.resize(numGrowthConstants, keeper);
   if (strcasecmp(text, "growthparameters") == 0) {
     if (!(infile >> growthPar))
       handle.Message("Incorrect format for growth parameter");
@@ -625,7 +612,7 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   for (i = 0; i < Areas.Size(); i++)
     (*wgrowth[i]).Inform(keeper);
 
-  keeper->ClearLast();
+  keeper->clearLast();
 }
 
 GrowthCalcF::~GrowthCalcF() {
@@ -635,7 +622,7 @@ GrowthCalcF::~GrowthCalcF() {
 }
 
 void GrowthCalcF::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
@@ -650,9 +637,9 @@ void GrowthCalcF::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   for (i = 0; i < Lgrowth.Size(); i++) {
     if (w[i] < 0.0)
-      handle.LogWarning("Warning in growth calculation - weight growth parameter is negative");
+      handle.logWarning("Warning in growth calculation - weight growth parameter is negative");
 
-    Lgrowth[i] = (growthPar[0] - LgrpDiv->Meanlength(i)) * (1.0 - exp(-kval));
+    Lgrowth[i] = (growthPar[0] - LgrpDiv->meanLength(i)) * (1.0 - exp(-kval));
     Wgrowth[i] = w[i];
   }
 }
@@ -663,14 +650,14 @@ void GrowthCalcF::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper,
   const AreaClass* const Area, const CharPtrVector& lenindex)
-  : GrowthCalcBase(Areas), NumberOfGrowthConstants(1), wgrowth(Areas.Size()) {
+  : GrowthCalcBase(Areas), numGrowthConstants(1), wgrowth(Areas.Size()) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  keeper->AddString("growthcalcG");
+  keeper->addString("growthcalcG");
 
   infile >> text >> ws;
-  growthPar.resize(NumberOfGrowthConstants, keeper);
+  growthPar.resize(numGrowthConstants, keeper);
   if (strcasecmp(text, "growthparameters") == 0) {
     if (!(infile >> growthPar))
       handle.Message("Incorrect format for growth parameter");
@@ -706,7 +693,7 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   for (i = 0; i < Areas.Size(); i++)
     (*wgrowth[i]).Inform(keeper);
 
-  keeper->ClearLast();
+  keeper->clearLast();
 }
 
 GrowthCalcG::~GrowthCalcG() {
@@ -716,7 +703,7 @@ GrowthCalcG::~GrowthCalcG() {
 }
 
 void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
@@ -733,12 +720,12 @@ void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
     w[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
 
   if (growthPar[0] > 0)
-    handle.LogWarning("Warning in growth calculation - growth parameter is positive");
+    handle.logWarning("Warning in growth calculation - growth parameter is positive");
 
   if (isZero(growthPar[0])) {
     for (i = 0; i < Lgrowth.Size(); i++) {
       if (w[i] < 0.0)
-        handle.LogWarning("Warning in growth calculation - weight growth parameter is negative");
+        handle.logWarning("Warning in growth calculation - weight growth parameter is negative");
 
       Lgrowth[i] = kval;
       Wgrowth[i] = w[i];
@@ -746,9 +733,9 @@ void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   } else {
     for (i = 0; i < Lgrowth.Size(); i++) {
       if (w[i] < 0.0)
-        handle.LogWarning("Warning in growth calculation - weight growth parameter is negative");
+        handle.logWarning("Warning in growth calculation - weight growth parameter is negative");
 
-      Lgrowth[i] = kval * pow(LgrpDiv->Meanlength(i), growthPar[0]);
+      Lgrowth[i] = kval * pow(LgrpDiv->meanLength(i), growthPar[0]);
       Wgrowth[i] = w[i];
     }
   }
@@ -759,14 +746,14 @@ void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 // ********************************************************
 GrowthCalcH::GrowthCalcH(CommentStream& infile, const IntVector& Areas,
   const LengthGroupDivision* const LgrpDiv, Keeper* const keeper)
-  : GrowthCalcBase(Areas), NumberOfGrowthConstants(4) {
+  : GrowthCalcBase(Areas), numGrowthConstants(4) {
 
   int i, j, pos;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  growthPar.resize(NumberOfGrowthConstants, keeper);
+  growthPar.resize(numGrowthConstants, keeper);
 
-  keeper->AddString("growthcalcH");
+  keeper->addString("growthcalcH");
   infile >> text;
   //parameters are linf, k and a and b for the weight
   if (strcasecmp(text, "growthparameters") == 0) {
@@ -776,7 +763,7 @@ GrowthCalcH::GrowthCalcH(CommentStream& infile, const IntVector& Areas,
   } else
     handle.Unexpected("growthparameters", text);
 
-  keeper->ClearLast();
+  keeper->clearLast();
 }
 
 GrowthCalcH::~GrowthCalcH() {
@@ -785,7 +772,7 @@ GrowthCalcH::~GrowthCalcH() {
 /* Simplified 2 parameter length based Von Bertalanffy growth function
  * compare with GrowthCalcC for the more complex weight based version */
 void GrowthCalcH::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
@@ -793,14 +780,14 @@ void GrowthCalcH::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   //JMB - first some error checking
   if (isZero(growthPar[1]) || isZero(growthPar[2]))
-    handle.LogWarning("Warning in growth calculation - growth parameter is zero");
+    handle.logWarning("Warning in growth calculation - growth parameter is zero");
   if (LgrpDiv->maxLength() > growthPar[0])
-    handle.LogWarning("Warning in growth calculation - length greater than length infinity");
+    handle.logWarning("Warning in growth calculation - length greater than length infinity");
 
   int i;
   for (i = 0; i < Wgrowth.Size(); i++) {
-    Lgrowth[i] = (growthPar[0] - LgrpDiv->Meanlength(i)) * mult;
-    Wgrowth[i] = growthPar[2] * (pow(LgrpDiv->Meanlength(i) + Lgrowth[i], growthPar[3])
-      - pow(LgrpDiv->Meanlength(i), growthPar[3]));
+    Lgrowth[i] = (growthPar[0] - LgrpDiv->meanLength(i)) * mult;
+    Wgrowth[i] = growthPar[2] * (pow(LgrpDiv->meanLength(i) + Lgrowth[i], growthPar[3])
+      - pow(LgrpDiv->meanLength(i), growthPar[3]));
   }
 }

@@ -8,7 +8,6 @@ MortPrey::MortPrey(CommentStream& infile, const IntVector& Areas,
   : Prey(infile, Areas, givenname, keeper) {
 
   type = MORTPREYTYPE;
-  prey_lgrp = new LengthGroupDivision(*LgrpDiv);
   delete LgrpDiv; //wrong dimensions set in Prey's constructor
   LgrpDiv = new LengthGroupDivision(*stock_lgrp);
 
@@ -22,7 +21,6 @@ MortPrey::MortPrey(CommentStream& infile, const IntVector& Areas,
 
 MortPrey::~MortPrey() {
   int i;
-  delete prey_lgrp;
   for (i = 0; i < cannprednames.Size(); i++)
     delete[] cannprednames[i];
 }
@@ -135,7 +133,7 @@ void MortPrey::Print(ofstream& outfile) const {
   int area;
   for (area = 0; area < areas.Size(); area++) {
     outfile << "Alkeys on area " << areas[area] << endl;
-    Alkeys[area].PrintNumbers(outfile);
+    Alkeys[area].printNumbers(outfile);
   }
   Prey::Print(outfile);
 }
@@ -145,8 +143,8 @@ void MortPrey::Reset() {
   int area, age, l;
   for (area = 0; area < areas.Size(); area++)   {
     haveCalculatedMeanN[area] = 0;
-    for (age = Alkeys[area].Minage(); age <= Alkeys[area].Maxage(); age++) {
-      for (l = Alkeys[area].Minlength(age); l < Alkeys[area].Maxlength(age); l++) {
+    for (age = Alkeys[area].minAge(); age <= Alkeys[area].maxAge(); age++) {
+      for (l = Alkeys[area].minLength(age); l < Alkeys[area].maxLength(age); l++) {
         Alkeys[area][age][l].N = 0.0;
         Alkeys[area][age][l].W = 0.0;
         mean_n[area][age][l].N = 0.0;

@@ -26,7 +26,6 @@ PredPreyStdLengthPrinter::~PredPreyStdLengthPrinter() {
 void PredPreyStdLengthPrinter::setPopPredAndPrey(const PopPredator* pred,
   const Prey* pRey, int IsStockPredator, int IsStockPrey) {
 
-  assert(!predinfo);
   predator = pred;
   prey = pRey;
   if (IsStockPrey)
@@ -36,7 +35,7 @@ void PredPreyStdLengthPrinter::setPopPredAndPrey(const PopPredator* pred,
 }
 
 void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo) {
-  assert(predinfo);
+
   if (!AAT.AtCurrentTime(TimeInfo))
     return;
   int a, predl, preyl;
@@ -44,18 +43,18 @@ void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo) {
   for (a = 0; a < areas.Size(); a++)
     predinfo->Sum(TimeInfo, areas[a]);
 
-  const LengthGroupDivision* PredLgrpDiv = predinfo->returnPredLengthGroupDiv();
-  const LengthGroupDivision* PreyLgrpDiv = predinfo->returnPreyLengthGroupDiv();
+  const LengthGroupDivision* predLgrpDiv = predinfo->returnPredLengthGroupDiv();
+  const LengthGroupDivision* preyLgrpDiv = predinfo->returnPreyLengthGroupDiv();
 
   for (a = 0; a < areas.Size(); a++) {
-    for (predl = 0; predl < PredLgrpDiv->NoLengthGroups(); predl++) {
-      for (preyl = 0; preyl < PreyLgrpDiv->NoLengthGroups(); preyl++) {
+    for (predl = 0; predl < predLgrpDiv->NoLengthGroups(); predl++) {
+      for (preyl = 0; preyl < preyLgrpDiv->NoLengthGroups(); preyl++) {
 
         outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
           << setw(lowwidth) << TimeInfo->CurrentStep() << sep
           << setw(lowwidth) << outerareas[a] << sep << setw(lowwidth)
-          << PredLgrpDiv->Meanlength(predl) << sep << setw(lowwidth)
-          << PreyLgrpDiv->Meanlength(preyl) << sep;
+          << predLgrpDiv->meanLength(predl) << sep << setw(lowwidth)
+          << preyLgrpDiv->meanLength(preyl) << sep;
 
         //JMB crude filter to remove the 'silly' values from the output
         if ((predinfo->NconsumptionByLength(areas[a])[predl][preyl] < rathersmall)

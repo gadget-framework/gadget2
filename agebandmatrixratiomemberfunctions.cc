@@ -7,14 +7,14 @@ extern ErrorHandler handle;
 
 void AgeBandMatrixRatio::updateAndTagLoss(const AgeBandMatrix& Total, const DoubleVector& tagloss) {
 
-  int NrOfTagExp = this->NrOfTagExp();
+  int numTagExperiments = this->numTagExperiments();
   int minlen, maxlen, age, length, tag;
-  if (NrOfTagExp > 0) {
+  if (numTagExperiments > 0) {
     for (age = minage; age < minage + nrow; age++) {
-      minlen = this->Minlength(age);
-      maxlen = this->Maxlength(age);
+      minlen = this->minLength(age);
+      maxlen = this->maxLength(age);
       for (length = minlen; length < maxlen; length++) {
-        for (tag = 0; tag < NrOfTagExp; tag++) {
+        for (tag = 0; tag < numTagExperiments; tag++) {
           (this->operator[](age))[length][tag].R *= tagloss[tag];
           *((this->operator[](age))[length][tag].N) = (this->operator[](age))[length][tag].R * Total[age][length].N;
         }
@@ -25,16 +25,16 @@ void AgeBandMatrixRatio::updateAndTagLoss(const AgeBandMatrix& Total, const Doub
 
 void AgeBandMatrixRatio::updateNumbers(const AgeBandMatrix& Total) {
 
-  int NrOfTagExp = this->NrOfTagExp();
+  int numTagExperiments = this->numTagExperiments();
   int minlen, maxlen, age, length, tag;
   double number, ratio;
 
-  if (NrOfTagExp > 0) {
+  if (numTagExperiments > 0) {
     for (age = minage; age < minage + nrow; age++) {
-      minlen = this->Minlength(age);
-      maxlen = this->Maxlength(age);
+      minlen = this->minLength(age);
+      maxlen = this->maxLength(age);
       for (length = minlen; length < maxlen; length++) {
-        for (tag = 0; tag < NrOfTagExp; tag++) {
+        for (tag = 0; tag < numTagExperiments; tag++) {
           number = Total[age][length].N;
           ratio = (this->operator[](age))[length][tag].R;
           if (number < verysmall || ratio < verysmall) {
@@ -51,16 +51,16 @@ void AgeBandMatrixRatio::updateNumbers(const AgeBandMatrix& Total) {
 
 void AgeBandMatrixRatio::updateRatio(const AgeBandMatrix& Total) {
 
-  int NrOfTagExp = this->NrOfTagExp();
+  int numTagExperiments = this->numTagExperiments();
   int minlen, maxlen, age, length, tag;
   double tagnum, totalnum;
 
-  if (NrOfTagExp > 0) {
+  if (numTagExperiments > 0) {
     for (age = minage; age < minage + nrow; age++) {
-      minlen = this->Minlength(age);
-      maxlen = this->Maxlength(age);
+      minlen = this->minLength(age);
+      maxlen = this->maxLength(age);
       for (length = minlen; length < maxlen; length++) {
-        for (tag = 0; tag < NrOfTagExp; tag++) {
+        for (tag = 0; tag < numTagExperiments; tag++) {
           tagnum = *((this->operator[](age))[length][tag].N);
           totalnum = Total[age][length].N;
           if (tagnum < verysmall || totalnum < verysmall) {
@@ -77,23 +77,23 @@ void AgeBandMatrixRatio::updateRatio(const AgeBandMatrix& Total) {
 
 void AgeBandMatrixRatio::IncrementAge(const AgeBandMatrix& Total) {
 
-  int NrOfTagExp = this->NrOfTagExp();
+  int numTagExperiments = this->numTagExperiments();
   int i, j, j1, j2, tag;
 
   if (nrow <= 1)
     return;
 
-  if (NrOfTagExp > 0) {
+  if (numTagExperiments > 0) {
     i = nrow - 1;
     j1 = max(v[i]->Mincol(), v[i - 1]->Mincol());
     j2 = min(v[i]->Maxcol(), v[i - 1]->Maxcol());
     //For the highest age group
     for (j = j1; j < j2; j++)
-      for (tag = 0; tag < NrOfTagExp; tag++)
+      for (tag = 0; tag < numTagExperiments; tag++)
         (*(*v[i])[j][tag].N) += (*(*v[i - 1])[j][tag].N);
 
     for (j = v[i - 1]->Mincol(); j < v[i - 1]->Maxcol(); j++)
-      for (tag = 0; tag < NrOfTagExp; tag++) {
+      for (tag = 0; tag < numTagExperiments; tag++) {
         (*(*v[i - 1])[j][tag].N) = 0.0;
         (*v[i - 1])[j][tag].R = 0.0;
       }
@@ -105,14 +105,14 @@ void AgeBandMatrixRatio::IncrementAge(const AgeBandMatrix& Total) {
       j1 = max(v[i]->Mincol(), v[i - 1]->Mincol());
       j2 = min(v[i]->Maxcol(), v[i - 1]->Maxcol());
       for (j = v[i - 1]->Mincol(); j < j1; j++) {
-        for (tag = 0; tag < NrOfTagExp; tag++) {
+        for (tag = 0; tag < numTagExperiments; tag++) {
           (*(*v[i - 1])[j][tag].N) = 0.0;
           (*v[i - 1])[j][tag].R = 0.0;
         }
       }
 
       for (j = j1; j < j2; j++) {
-        for (tag = 0; tag < NrOfTagExp; tag++) {
+        for (tag = 0; tag < numTagExperiments; tag++) {
           (*(*v[i])[j][tag].N) = (*(*v[i - 1])[j][tag].N);
           (*(*v[i - 1])[j][tag].N) = 0.0;
           (*v[i - 1])[j][tag].R = 0.0;
@@ -120,7 +120,7 @@ void AgeBandMatrixRatio::IncrementAge(const AgeBandMatrix& Total) {
       }
 
       for (j = j2; j < v[i - 1]->Maxcol(); j++) {
-        for (tag = 0; tag < NrOfTagExp; tag++) {
+        for (tag = 0; tag < numTagExperiments; tag++) {
           (*(*v[i - 1])[j][tag].N) = 0.0;
           (*v[i - 1])[j][tag].R = 0.0;
         }
@@ -129,7 +129,7 @@ void AgeBandMatrixRatio::IncrementAge(const AgeBandMatrix& Total) {
 
     //set number in age zero to zero.
     for (j = v[0]->Mincol(); j < v[0]->Maxcol(); j++)
-      for (tag = 0; tag < NrOfTagExp; tag++)
+      for (tag = 0; tag < numTagExperiments; tag++)
         (*(*v[0])[j][tag].N) = 0;
 
     this->updateRatio(Total);
@@ -140,37 +140,33 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
   const AgeBandMatrixRatioPtrVector& Addition, int AdditionArea,
   const ConversionIndex &CI, double ratio, int minage, int maxage) {
 
-  minage =  max(Alkeys[AlkeysArea].Minage(), Addition[AdditionArea].Minage(), minage);
-  maxage =  min(Alkeys[AlkeysArea].Maxage(), Addition[AdditionArea].Maxage(), maxage);
+  minage =  max(Alkeys[AlkeysArea].minAge(), Addition[AdditionArea].minAge(), minage);
+  maxage =  min(Alkeys[AlkeysArea].maxAge(), Addition[AdditionArea].maxAge(), maxage);
   if (maxage < minage)
     return;
 
   int age, minl, maxl, i, l, tagid, numtags, offset;
   double numfish;
 
-  numtags = Addition.NrOfTagExp();
-
-  if (numtags > Alkeys.NrOfTagExp()) {
-    handle.LogWarning("Error in agebandmatrixratio - wrong number of tagging experiments");
-    exit(EXIT_FAILURE);
-  }
+  numtags = Addition.numTagExperiments();
+  if (numtags > Alkeys.numTagExperiments())
+    handle.logFailure("Error in agebandmatrixratio - wrong number of tagging experiments");
 
   if (numtags > 0) {
     IntVector tagconversion(numtags);
     for (i = 0; i < numtags; i++) {
       tagconversion[i] = Alkeys.getID(Addition.getName(i));
-      if (tagconversion[i] < 0) {
-        handle.LogWarning("Error in agebandmatrixratio - unknown tagging experiment", Addition.getName(i));
-        exit(EXIT_FAILURE);
-      }
+      if (tagconversion[i] < 0)
+        handle.logFailure("Error in agebandmatrixratio - unknown tagging experiment", Addition.getName(i));
+
     }
 
     numfish = 0.0;
     if (CI.SameDl()) { //Same dl on length distributions
       offset = CI.Offset();
       for (age = minage; age <= maxage; age++) {
-        minl = max(Alkeys[AlkeysArea].Minlength(age), Addition[AdditionArea].Minlength(age) + offset);
-        maxl = min(Alkeys[AlkeysArea].Maxlength(age), Addition[AdditionArea].Maxlength(age) + offset);
+        minl = max(Alkeys[AlkeysArea].minLength(age), Addition[AdditionArea].minLength(age) + offset);
+        maxl = min(Alkeys[AlkeysArea].maxLength(age), Addition[AdditionArea].maxLength(age) + offset);
         for (l = minl; l < maxl; l++) {
           for (tagid = 0; tagid < numtags; tagid++) {
             numfish = *(Addition[AdditionArea][age][l - offset][tagid].N);
@@ -184,14 +180,14 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
       if (CI.TargetIsFiner()) {
         //Stock that is added to has finer division than the stock that is added to it.
         for (age = minage; age <= maxage; age++) {
-          minl = max(Alkeys[AlkeysArea].Minlength(age), CI.Minpos(Addition[AdditionArea].Minlength(age)));
-          maxl = min(Alkeys[AlkeysArea].Maxlength(age), CI.Maxpos(Addition[AdditionArea].Maxlength(age) - 1) + 1);
+          minl = max(Alkeys[AlkeysArea].minLength(age), CI.Minpos(Addition[AdditionArea].minLength(age)));
+          maxl = min(Alkeys[AlkeysArea].maxLength(age), CI.Maxpos(Addition[AdditionArea].maxLength(age) - 1) + 1);
           for (l = minl; l < maxl; l++) {
             for (tagid = 0; tagid < numtags; tagid++) {
               numfish = *(Addition[AdditionArea][age][CI.Pos(l)][tagid].N);
               numfish *= ratio;
               if (isZero(CI.Nrof(l)))
-                handle.LogWarning("Error in agebandmatrixratio - divide by zero");
+                handle.logWarning("Error in agebandmatrixratio - divide by zero");
               else
                 numfish /= CI.Nrof(l);
               *(Alkeys[AlkeysArea][age][l][tagconversion[tagid]].N) += numfish;
@@ -202,10 +198,10 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
       } else {
         //Stock that is added to has coarser division than the stock that is added to it.
         for (age = minage; age <= maxage; age++) {
-          minl = max(CI.Minpos(Alkeys[AlkeysArea].Minlength(age)), Addition[AdditionArea].Minlength(age));
-          maxl = min(CI.Maxpos(Alkeys[AlkeysArea].Maxlength(age) - 1) + 1, Addition[AdditionArea].Maxlength(age));
-          if (maxl > minl && CI.Pos(maxl - 1) < Alkeys[AlkeysArea].Maxlength(age)
-            && CI.Pos(minl) >= Alkeys[AlkeysArea].Minlength(age)) {
+          minl = max(CI.Minpos(Alkeys[AlkeysArea].minLength(age)), Addition[AdditionArea].minLength(age));
+          maxl = min(CI.Maxpos(Alkeys[AlkeysArea].maxLength(age) - 1) + 1, Addition[AdditionArea].maxLength(age));
+          if (maxl > minl && CI.Pos(maxl - 1) < Alkeys[AlkeysArea].maxLength(age)
+            && CI.Pos(minl) >= Alkeys[AlkeysArea].minLength(age)) {
 
             for (l = minl; l < maxl; l++) {
               for (tagid = 0; tagid < numtags; tagid++) {

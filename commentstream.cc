@@ -36,12 +36,16 @@ CommentStream& CommentStream::get(char& c) {
   if (istrptr->peek() == chrComment) {
     killComments(istrptr);
     c = '\n';
+  } else if (istrptr->peek() == '\r') {
+    char tmp;
+    istrptr->get(tmp);  //JMB throw away carriage return ...
+    istrptr->get(c);    //JMB ... to be left with end of line
   } else
     istrptr->get(c);
   return *this;
 }
 
-CommentStream& CommentStream::getline(char* ptr, int len, char delim) {
+CommentStream& CommentStream::getLine(char* ptr, int len, char delim) {
   int i = 0;
   while ((i < len - 2) && (istrptr->peek() != delim) && (istrptr->peek() != chrComment)) {
     ptr[i] = istrptr->get();

@@ -14,9 +14,9 @@ class Stock;
  * \class InitialCond
  * \brief This is the class used to calculate the initial population of a stock
  *
- * This class calculates the initial population for a model run.  There are 2 ways to do this - either by specifying a normal distribution or by specfying the actaul popualtion to be used.
+ * This class calculates the initial population for a model run.  There are 2 ways to do this - either by specifying a normal distribution or by specifying the actual population to be used.
  *
- * For the normal distribution, Gadget will calculate a length distribution for a population of 10,000 fish for ach age group, which will then be multiplied by age and area factors to give the initial population.
+ * For the normal distribution, Gadget will calculate a length distribution for a population of 10,000 fish for each age group, which will then be multiplied by age and area factors to give the initial population.
  *
  * For the numbers, Gadget will read a list of the population in each age-length cell for each area.
  *
@@ -97,19 +97,19 @@ protected:
   /**
    * \brief This is the condition factor used to calculate the weight of the initial population
    */
-  FormulaMatrix RelCondition;
+  FormulaMatrix relCond;
   /**
    * \brief This is the mean length at age used to calculate the initial population
    */
-  FormulaMatrix Mean;
+  FormulaMatrix meanLength;
   /**
    * \brief This is the standard deviation of the length at age used to calculate the initial population
    */
-  FormulaMatrix Sdev;
+  FormulaMatrix sdevLength;
   /**
    * \brief This is the optional factor used when calculating the standard deviation of the length
    */
-  Formula SdevMult;
+  Formula sdevMult;
   /**
    * \brief This is a flag used to denote whether the numbers for the initial population has been read in from file
    */

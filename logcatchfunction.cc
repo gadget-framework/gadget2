@@ -16,7 +16,7 @@ LogCatches::LogCatches(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
   double weight) : Likelihood(LOGCATCHLIKELIHOOD, weight) {
 
-  lgrpDiv = NULL;
+  LgrpDiv = NULL;
   int i, j, size;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -172,8 +172,7 @@ void LogCatches::readLogCatchData(CommentStream& infile,
 
   //Find start of distribution data in datafile
   infile >> ws;
-  char c;
-  c = infile.peek();
+  char c = infile.peek();
   if (!isdigit(c)) {
     infile.get(c);
     while (c != '\n' && !infile.eof())
@@ -244,10 +243,10 @@ void LogCatches::readLogCatchData(CommentStream& infile,
       (*AgeLengthData[timeid][areaid])[ageid][lenid] = tmpnumber;
     }
   }
-  AAT.AddActions(Years, Steps, TimeInfo);
+  AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.LogWarning("Warning in logcatch - found no data in the data file");
-  handle.LogMessage("Read logcatch data file - number of entries", count);
+    handle.logWarning("Warning in logcatch - found no data in the data file");
+  handle.logMessage("Read logcatch data file - number of entries", count);
 }
 
 void LogCatches::readLogWeightsData(CommentStream& infile,
@@ -266,8 +265,7 @@ void LogCatches::readLogWeightsData(CommentStream& infile,
 
   //Find start of distribution data in datafile
   infile >> ws;
-  char c;
-  c = infile.peek();
+  char c = infile.peek();
   if (!isdigit(c)) {
     infile.get(c);
     while (c != '\n' && !infile.eof())
@@ -329,9 +327,9 @@ LogCatches::~LogCatches() {
     }
   delete aggregator;
   delete[] functionname;
-  if (lgrpDiv != NULL) {
-    delete lgrpDiv;
-    lgrpDiv = NULL;
+  if (LgrpDiv != NULL) {
+    delete LgrpDiv;
+    LgrpDiv = NULL;
   }
 }
 
@@ -416,10 +414,9 @@ void LogCatches::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
         fleets.resize(1, Fleets[j]);
       }
 
-    if (found == 0) {
-      handle.LogWarning("Error in logcatch - unknown fleet", fleetnames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in logcatch - unknown fleet", fleetnames[i]);
+
   }
 
   min_stock_age = 100;
@@ -432,37 +429,36 @@ void LogCatches::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
           found = 1;
           stocks.resize(1, Stocks[j]);
         }
-        if (stocks[stocks.Size() - 1]->Minage() < min_stock_age) //kgf 10/5 99
-          min_stock_age = stocks[stocks.Size() - 1]->Minage();
-        if (stocks[stocks.Size() - 1]->Maxage() > max_stock_age)
-          max_stock_age = stocks[stocks.Size() - 1]->Maxage();
+        if (stocks[stocks.Size() - 1]->minAge() < min_stock_age) //kgf 10/5 99
+          min_stock_age = stocks[stocks.Size() - 1]->minAge();
+        if (stocks[stocks.Size() - 1]->maxAge() > max_stock_age)
+          max_stock_age = stocks[stocks.Size() - 1]->maxAge();
       }
     }
-    if (found == 0) {
-      handle.LogWarning("Error in logcatch - unknown stock", stocknames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in logcatch - unknown stock", stocknames[i]);
+
   }
-  lgrpDiv = new LengthGroupDivision(lengths);
-  aggregator = new FleetPreyAggregator(fleets, stocks, lgrpDiv, areas, ages, overconsumption);
+  LgrpDiv = new LengthGroupDivision(lengths);
+  aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
 }
 
-void LogCatches::AddToLikelihood(const TimeClass* const TimeInfo) {
+void LogCatches::addLikelihood(const TimeClass* const TimeInfo) {
   if (AAT.AtCurrentTime(TimeInfo)) {
     switch(functionnumber) {
       case 1:
         aggregator->MeanSum(TimeInfo); //mortality model, calculated catch
-        likelihood += LogLik(TimeInfo);
+        likelihood += calcLikLog(TimeInfo);
         break;
       default:
-        handle.LogWarning("Warning in logcatch - unknown function", functionname);
+        handle.logWarning("Warning in logcatch - unknown function", functionname);
         break;
     }
     timeindex++;
   }
 }
 
-double LogCatches::LogLik(const TimeClass* const TimeInfo) {
+double LogCatches::calcLikLog(const TimeClass* const TimeInfo) {
   //written by kgf 23/11 98 to get a better scaling of the stocks.
   //modified by kgf 27/11 98 to sum first and then take the logarithm
 
@@ -476,8 +472,8 @@ double LogCatches::LogLik(const TimeClass* const TimeInfo) {
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
-    min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
-    max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
+    min_age = max((*alptr)[nareas].minAge(), min_stock_age - 1);
+    max_age = min((*alptr)[nareas].maxAge() + 1, max_stock_age);
     Likelihoodvalues[timeindex][nareas] = 0.0;
     calc_c_sum = 0.0;
     obs_c_sum = 0.0;
@@ -486,10 +482,10 @@ double LogCatches::LogLik(const TimeClass* const TimeInfo) {
       (*obs_c[nareas]).setElementsTo(0.0); //values on year basis
     }
 
-    //for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
+    //for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
     for (age = min_age; age < max_age; age++) { //kgf 10/5 99
-      for (length = (*alptr)[nareas].Minlength(age);
-          length < (*alptr)[nareas].Maxlength(age); length++) {
+      for (length = (*alptr)[nareas].minLength(age);
+          length < (*alptr)[nareas].maxLength(age); length++) {
         (*Proportions[timeindex][nareas])[age][length] =
           (*alptr)[nareas][age][length].N;
         (*calc_c[nareas])[age][length] +=
@@ -501,8 +497,8 @@ double LogCatches::LogLik(const TimeClass* const TimeInfo) {
 
     if (agg_lev == 0) { //calculate likelihood on all steps
       for (age = min_age; age < max_age; age++) {
-        for (length = (*alptr)[nareas].Minlength(age);
-            length < (*alptr)[nareas].Maxlength(age); length++) {
+        for (length = (*alptr)[nareas].minLength(age);
+            length < (*alptr)[nareas].maxLength(age); length++) {
           calc_c_sum += (*Proportions[timeindex][nareas])[age][length];
           obs_c_sum += (*AgeLengthData[timeindex][nareas])[age][length];
         }
@@ -515,8 +511,8 @@ double LogCatches::LogLik(const TimeClass* const TimeInfo) {
         Likelihoodvalues[timeindex][nareas] = 0.0;
       else { //last step in year, is to calculate likelihood contribution
         for (age = min_age; age < max_age; age++) {
-          for (length = (*alptr)[nareas].Minlength(age);
-              length < (*alptr)[nareas].Maxlength(age); length++) {
+          for (length = (*alptr)[nareas].minLength(age);
+              length < (*alptr)[nareas].maxLength(age); length++) {
             calc_c_sum += (*calc_c[nareas])[age][length];
             obs_c_sum +=  (*obs_c[nareas])[age][length];
           }

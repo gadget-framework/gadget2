@@ -15,17 +15,17 @@ class Maturity;
 
 class AgeBandMatrixRatio {
 public:
-  AgeBandMatrixRatio(int Minage, const IntVector& minl, const IntVector& size);
-  AgeBandMatrixRatio(int Minage, const PopRatioMatrix& initial);
-  AgeBandMatrixRatio(int age, const PopRatioIndexVector& initial);
+  AgeBandMatrixRatio(int MinAge, const IntVector& minl, const IntVector& size);
+  AgeBandMatrixRatio(int MinAge, const PopRatioMatrix& initial);
+  AgeBandMatrixRatio(int MinAge, const PopRatioIndexVector& initial);
   AgeBandMatrixRatio(const AgeBandMatrixRatio& initial);
   AgeBandMatrixRatio() { minage = 0; nrow = 0; v = 0; };
   ~AgeBandMatrixRatio();
-  int Minage() const { return minage; };
-  int Maxage() const { return minage + nrow - 1; };
+  int minAge() const { return minage; };
+  int maxAge() const { return minage + nrow - 1; };
   int Nrow() const { return nrow; };
-  int Minlength(int age) const { return v[age - minage]->Mincol(); };
-  int Maxlength(int age) const { return v[age - minage]->Maxcol(); };
+  int minLength(int age) const { return v[age - minage]->Mincol(); };
+  int maxLength(int age) const { return v[age - minage]->Maxcol(); };
   void IncrementAge(const AgeBandMatrix& Total);
   void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total);
   void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total, Maturity* const Mat,
@@ -35,7 +35,7 @@ public:
   void updateRatio(const AgeBandMatrix& Total);
   void updateNumbers(const AgeBandMatrix& Total);
   void updateAndTagLoss(const AgeBandMatrix& Total, const DoubleVector& tagloss);
-  int NrOfTagExp() const;
+  int numTagExperiments() const;
   void setToZero();
 protected:
   int minage;

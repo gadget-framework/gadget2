@@ -1,7 +1,6 @@
 #ifndef bandmatrix_h
 #define bandmatrix_h
 
-#include "intvector.h"
 #include "doublematrix.h"
 #include "doubleindexvector.h"
 
@@ -10,8 +9,8 @@ public:
   BandMatrix(const BandMatrix& initial);
   BandMatrix() { minage = 0; nrow = 0; v = 0; };
   BandMatrix(const IntVector& minl, const IntVector& size,
-    int Minage = 0, double initial = 0.0);
-  BandMatrix(const DoubleMatrix& initial, int Minage = 0, int minl = 0);
+    int MinAge = 0, double initial = 0.0);
+  BandMatrix(const DoubleMatrix& initial, int MinAge = 0, int minl = 0);
   BandMatrix(const DoubleIndexVector& initial, int age);
   BandMatrix(int minl, int lengthsize, int minage,
     int nrow, double initial = 0.0);
@@ -26,10 +25,10 @@ public:
   int Maxrow() const { return minage + nrow - 1; };
   int Mincol(int row) const { return (operator[](row).Mincol()); };
   int Maxcol(int row) const { return (operator[](row).Maxcol()); };
-  int Minage() const { return minage; };
-  int Maxage() const { return minage + nrow - 1; };
-  int Minlength(int age) const { return (operator[](age).Mincol()); };
-  int Maxlength(int age) const { return (operator[](age).Maxcol()); };
+  int minAge() const { return minage; };
+  int maxAge() const { return minage + nrow - 1; };
+  int minLength(int age) const { return (operator[](age).Mincol()); };
+  int maxLength(int age) const { return (operator[](age).Maxcol()); };
   void Colsum(DoubleVector& Result) const;
   void Print(ofstream& outfile) const;
 protected:

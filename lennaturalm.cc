@@ -11,7 +11,7 @@ extern ErrorHandler handle;
 LenNaturalM::LenNaturalM(CommentStream& infile, const LengthGroupDivision* lenp, Keeper* const keeper)
   : parammort(3), xparammort(2, 0.0), natmort(lenp->NoLengthGroups(), 0.0) {
 
-  keeper->AddString("lennaturalm");
+  keeper->addString("lennaturalm");
   lengroup = new LengthGroupDivision(*lenp);
   //AJ 25.10.00 Adding error check for reading parammort
   if (!(infile >> parammort))
@@ -22,7 +22,7 @@ LenNaturalM::LenNaturalM(CommentStream& infile, const LengthGroupDivision* lenp,
     handle.Message("Incorrect format of xparammort vector when reading lennaturalm");
 
   this->NatCalc();
-  keeper->ClearLast();
+  keeper->clearLast();
 }
 
 //calculates natural mortality natmort
@@ -30,14 +30,14 @@ LenNaturalM::LenNaturalM(CommentStream& infile, const LengthGroupDivision* lenp,
 void LenNaturalM::NatCalc() {
   int i;
   for (i = 0; i < lengroup->NoLengthGroups(); i++)
-    if (lengroup->Meanlength(i) < xparammort[0])
+    if (lengroup->meanLength(i) < xparammort[0])
       natmort[i] = Hyperbola(lengroup->minLength(), xparammort[0],
-        parammort[0], parammort[2], lengroup->Meanlength(i));
-    else if (lengroup->Meanlength(i) <= xparammort[1])
+        parammort[0], parammort[2], lengroup->meanLength(i));
+    else if (lengroup->meanLength(i) <= xparammort[1])
       natmort[i] = parammort[2];
     else
       natmort[i] = Hyperbola(xparammort[1], lengroup->maxLength(),
-        parammort[2], parammort[1], lengroup->Meanlength(i));
+        parammort[2], parammort[1], lengroup->meanLength(i));
 }
 
 //hyperbola (or horizontal line returned)

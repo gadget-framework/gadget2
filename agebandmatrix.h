@@ -11,20 +11,20 @@ class Maturity;
 
 class AgeBandMatrix {
 public:
-  AgeBandMatrix(int Minage, const IntVector& minl, const IntVector& size);
-  AgeBandMatrix(int Minage, const PopInfoMatrix& initial);
-  AgeBandMatrix(int Minage, int minl, const PopInfoMatrix& initial);
+  AgeBandMatrix(int MinAge, const IntVector& minl, const IntVector& size);
+  AgeBandMatrix(int MinAge, const PopInfoMatrix& initial);
+  AgeBandMatrix(int MinAge, int minl, const PopInfoMatrix& initial);
   AgeBandMatrix(int age, const PopInfoIndexVector& initial);
   AgeBandMatrix(const AgeBandMatrix& initial);
   AgeBandMatrix() { minage = 0; nrow = 0; v = 0; };
   ~AgeBandMatrix();
-  int Minage() const { return minage; };
-  int Maxage() const { return minage + nrow - 1; };
+  int minAge() const { return minage; };
+  int maxAge() const { return minage + nrow - 1; };
   int Nrow() const { return nrow; };
   PopInfoIndexVector& operator [] (int age);
   const PopInfoIndexVector& operator [] (int age) const;
-  int Minlength(int age) const { return v[age - minage]->Mincol(); };
-  int Maxlength(int age) const { return v[age - minage]->Maxcol(); };
+  int minLength(int age) const { return v[age - minage]->Mincol(); };
+  int maxLength(int age) const { return v[age - minage]->Maxcol(); };
   void Colsum(PopInfoVector& Result) const;
   void Multiply(const DoubleVector& Ratio, const ConversionIndex& CI);
   void Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Nrof);
@@ -32,16 +32,16 @@ public:
   void setToZero();
   void FilterN(double minN);
   void IncrementAge();
-  void CopyNumbers(const AgeBandMatrix& Alkeys);
-  void PrintNumbers(ofstream& outfile) const;
-  void PrintWeights(ofstream& outfile) const;
+  void printNumbers(ofstream& outfile) const;
+  void printWeights(ofstream& outfile) const;
   void Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth);
   void Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth, Maturity* const Mat,
     const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
   void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight);
   void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight, Maturity* const Mat,
     const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
-  void Add(const AgeBandMatrix& Addition, const ConversionIndex& CI, double ratio = 1.0, int minaddage = 0, int maxaddage = 9999);
+  void Add(const AgeBandMatrix& Addition, const ConversionIndex& CI, double ratio = 1.0,
+    int minaddage = 0, int maxaddage = 9999);
 protected:
   int minage;
   int nrow;

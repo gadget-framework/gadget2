@@ -75,7 +75,7 @@ void SuitFuncPtrVector::Delete(int pos, Keeper* const keeper) {
       vnew[i] = v[i];
     for (i = pos; i < size - 1; i++)
       vnew[i] = v[i + 1];
-    for (i = 0; i < v[pos]->noOfConstants(); i++)
+    for (i = 0; i < v[pos]->numConstants(); i++)
       v[pos]->getConstants()[i].Delete(keeper);
     delete[] v;
     v = vnew;

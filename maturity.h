@@ -100,11 +100,6 @@ public:
    */
   void Move(int area, const TimeClass* const TimeInfo);
   /**
-   * \brief This will calculate the number of stock the immature stock can mature into
-   * \return number of mature stocks
-   */
-  int NoOfMatureStocks() { return MatureStocks.Size(); };
-  /**
    * \brief This will calculate the mature stocks the immature stock can mature into
    * \return mature stocks
    */
@@ -123,11 +118,11 @@ protected:
   /**
    * \brief This is the StockPtrVector of the mature stocks
    */
-  StockPtrVector MatureStocks;
+  StockPtrVector matureStocks;
   /**
    * \brief This is the CharPtrVector of the names of the mature stocks
    */
-  CharPtrVector MatureStockNames;
+  CharPtrVector matureStockNames;
   /**
    * \brief This is the DoubleVector of the ratio of the immature stock to mature into each mature stock
    */
@@ -167,11 +162,11 @@ public:
    * \param size is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision for the stock
-   * \param NoMatconst is the number of maturation parameters (4)
+   * \param numMatConst is the number of maturation parameters (4)
    */
   MaturityA(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
     int minage, const IntVector& minabslength, const IntVector& size, const IntVector& areas,
-    const LengthGroupDivision* const LgrpDiv, int NoMatconst);
+    const LengthGroupDivision* const LgrpDiv, int numMatConst);
   /**
    * \brief This is the default MaturityA destructor
    */
@@ -314,11 +309,11 @@ public:
    * \param size is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision for the stock
-   * \param NoMatconst is the number of maturation parameters (4)
+   * \param numMatConst is the number of maturation parameters (4)
    */
   MaturityC(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
     int minage, const IntVector& minabslength, const IntVector& size,
-    const IntVector& areas, const LengthGroupDivision* const LgrpDiv, int NoMatconst);
+    const IntVector& areas, const LengthGroupDivision* const LgrpDiv, int numMatConst);
   /**
    * \brief This is the default MaturityC destructor
    */
@@ -396,12 +391,12 @@ public:
    * \param size is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision for the stock
-   * \param NoMatconst is the number of maturation parameters (6)
+   * \param numMatConst is the number of maturation parameters (6)
    * \param refWeightFile is the name of the file to read the reference weight information from
    */
   MaturityD(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
     int minage, const IntVector& minabslength, const IntVector& size, const IntVector& areas,
-    const LengthGroupDivision* const LgrpDiv, int NoMatconst, const char* refWeightFile);
+    const LengthGroupDivision* const LgrpDiv, int numMatConst, const char* refWeightFile);
   /**
    * \brief This is the default MaturityD destructor
    */

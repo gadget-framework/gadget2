@@ -88,7 +88,7 @@ public:
    * \brief This will return the number of constants used to calculate the suitability value
    * \return number
    */
-  int noOfConstants();
+  int numConstants();
   friend int readSuitFunction(SuitFuncPtrVector& suitf, CommentStream& infile,
     const char*  suitfname, const TimeClass* const TimeInfo, Keeper* const keeper);
   friend int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname);

@@ -44,7 +44,7 @@ public:
    * \brief This function will return the number of age groups of the aggregator
    * \return number of age groups
    */
-  int NoAgeGroups() const { return ages.Nrow(); };
+  int numAgeGroups() const { return ages.Nrow(); };
   /**
    * \brief This function will return the LengthGroupDivision of the aggregator
    * \return LgrpDiv, the LengthGroupDivision of the aggregator

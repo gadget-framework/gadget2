@@ -15,8 +15,8 @@ PopPredator::PopPredator(const char* givenname, const IntVector& Areas,
   else {
     DoubleVector dv(GivenLgrpDiv->NoLengthGroups() + 1);
     for (i = 0; i < dv.Size() - 1; i++)
-      dv[i] = GivenLgrpDiv->Minlength(i);
-    dv[i] = GivenLgrpDiv->Maxlength(i - 1);
+      dv[i] = GivenLgrpDiv->minLength(i);
+    dv[i] = GivenLgrpDiv->maxLength(i - 1);
     LgrpDiv = new LengthGroupDivision(dv);
   }
   CI = new ConversionIndex(OtherLgrpDiv, LgrpDiv);
@@ -35,7 +35,7 @@ void PopPredator::Print(ofstream& outfile) const {
   for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
     outfile.precision(smallprecision);
     outfile.width(smallwidth);
-    outfile << sep << LgrpDiv->Meanlength(i);
+    outfile << sep << LgrpDiv->meanLength(i);
   }
   outfile << endl;
   for (area = 0; area < areas.Size(); area++) {
@@ -73,7 +73,7 @@ const BandMatrix& PopPredator::Consumption(int area, const char* preyname) const
     if (strcasecmp(Preyname(prey), preyname) == 0)
       return consumption[AreaNr[area]][prey];
 
-  handle.LogWarning("Error in poppredator - failed to match prey", preyname);
+  handle.logFailure("Error in poppredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
 }
 
@@ -82,8 +82,8 @@ const double PopPredator::consumedBiomass(int prey_nr, int area_nr) const{
   int age, len;
   double tons = 0.0;
   const BandMatrix& bio = consumption[area_nr][prey_nr];
-  for (age = bio.Minage(); age <= bio.Maxage(); age++)
-    for (len = bio.Minlength(age); len < bio.Maxlength(age); len++)
+  for (age = bio.minAge(); age <= bio.maxAge(); age++)
+    for (len = bio.minLength(age); len < bio.maxLength(age); len++)
       tons += bio[age][len];
 
   return tons;
@@ -101,7 +101,7 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
   for (area = 0; area < areas.Size(); area++) {
     for (prey = 0; prey < NoPreys(); prey++) {
       if (this->DidChange(prey, TimeInfo)) {
-        //Adjust the size of consumption[area][prey].
+        //adjust the size of consumption[area][prey].
         cons.ChangeElement(area, prey, Suitability(prey));
         consumption.ChangeElement(area, prey, Suitability(prey));
         for (i = 0; i < Suitability(prey).Nrow(); i++)

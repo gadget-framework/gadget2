@@ -34,8 +34,8 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   //Dont print output line if doing a network run
   if (!netrun)
     cout << "\nFinished reading model input files" << endl;
-  handle.LogMessage("Finished reading model input files");
-  handle.LogMessage("");  //write a blank line to the log file
+  handle.logMessage("Finished reading model input files");
+  handle.logMessage("");  //write a blank line to the log file
 
   Initialise(calclikelihood);
   basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size(), 0);
@@ -59,8 +59,6 @@ Ecosystem::~Ecosystem() {
   int i;
   for (i = 0; i < fleetnames.Size(); i++)
     delete[] fleetnames[i];
-  for (i = 0; i < catchnames.Size(); i++)
-    delete[] catchnames[i];
   for (i = 0; i < stocknames.Size(); i++)
     delete[] stocknames[i];
   for (i = 0; i < tagnames.Size(); i++)
@@ -83,7 +81,7 @@ Ecosystem::~Ecosystem() {
   delete keeper;
 }
 
-void Ecosystem::PrintStatus(const char* filename) const {
+void Ecosystem::writeStatus(const char* filename) const {
   int i;
   ofstream outfile;
   outfile.open(filename, ios::out);
@@ -140,42 +138,42 @@ double Ecosystem::SimulateAndUpdate(double* x, int n) {
   if (!Simulate(optimize))
     likelihood = verybig;
 
-  if (PrintCounter1 == printinfo.getPrint1() && printinfo.Print()) {
-    this->PrintValues(printinfo.getOutputFile(), printinfo.getPrecision());
+  if (PrintCounter1 == printinfo.getPrint1() && printinfo.getPrint()) {
+    this->writeValues(printinfo.getOutputFile(), printinfo.getPrecision());
     PrintCounter1 = 0;
   }
-  if (PrintCounter2 == printinfo.getPrint2() && printinfo.PrintinColumns()) {
-    this->PrintValuesinColumns(printinfo.getColumnOutputFile(), printinfo.getPrecision());
+  if (PrintCounter2 == printinfo.getPrint2() && printinfo.getPrintColumn()) {
+    this->writeValuesInColumns(printinfo.getColumnOutputFile(), printinfo.getPrecision());
     PrintCounter2 = 0;
   }
   funceval++;
   return likelihood;
 }
 
-void Ecosystem::PrintInitialInformation(const char* const filename) const {
+void Ecosystem::writeInitialInformation(const char* const filename) const {
   keeper->writeInitialInformation(filename, Likely);
 }
 
-void Ecosystem::PrintInitialInformationinColumns(const char* const filename) const {
+void Ecosystem::writeInitialInformationInColumns(const char* const filename) const {
   keeper->writeInitialInformationInColumns(filename);
 }
 
-void Ecosystem::PrintValues(const char* const filename, int prec) const {
+void Ecosystem::writeValues(const char* const filename, int prec) const {
   keeper->writeValues(filename, likelihood, Likely, prec);
 }
 
-void Ecosystem::PrintValuesinColumns(const char* const filename, int prec) const {
+void Ecosystem::writeValuesInColumns(const char* const filename, int prec) const {
   keeper->writeValuesInColumns(filename, likelihood, Likely, prec);
 }
 
-void Ecosystem::PrintParamsinColumns(const char* const filename, int prec) const {
+void Ecosystem::writeParamsInColumns(const char* const filename, int prec) const {
 
   //JMB - print the final values to any output files specified
   //in case they have been missed by the -print1 or -print2 values
-  if (printinfo.Print())
-    this->PrintValues(printinfo.getOutputFile(), printinfo.getPrecision());
-  if (printinfo.PrintinColumns())
-    this->PrintValuesinColumns(printinfo.getColumnOutputFile(), printinfo.getPrecision());
+  if (printinfo.getPrint())
+    this->writeValues(printinfo.getOutputFile(), printinfo.getPrecision());
+  if (printinfo.getPrintColumn())
+    this->writeValuesInColumns(printinfo.getColumnOutputFile(), printinfo.getPrecision());
 
   keeper->writeParamsInColumns(filename, likelihood, Likely, prec);
 }
@@ -196,7 +194,7 @@ void Ecosystem::ScaleVariables() const {
   keeper->ScaleVariables();
 }
 
-void Ecosystem::PrintOptValues() const {
+void Ecosystem::writeOptValues() const {
   keeper->writeOptValues(likelihood, Likely);
 }
 
@@ -240,6 +238,6 @@ void Ecosystem::UpperBds(DoubleVector& ubds) const {
   keeper->UpperOptBds(ubds);
 }
 
-void Ecosystem::CheckBounds() const {
-  keeper->CheckBounds();
+void Ecosystem::checkBounds() const {
+  keeper->checkBounds();
 }

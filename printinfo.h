@@ -65,27 +65,27 @@ public:
    * \brief This function will return the filename that the model parameters will be written to
    * \return filename
    */
-  char* getOutputFile() const { return OutputFile; };
+  char* getOutputFile() const { return strOutputFile; };
   /**
    * \brief This function will return the filename that the model parameters will be written to in a column format
    * \return filename
    */
-  char* getColumnOutputFile() const { return ColumnOutputFile; };
+  char* getColumnOutputFile() const { return strColumnFile; };
   /**
    * \brief This function will return the filename that the final parameter values will be written to
    * \return filename
    */
-  char* getParamOutFile() const { return ParamOutFile; };
+  char* getParamOutFile() const { return strParamOutFile; };
   /**
    * \brief This function will return the flag used to determine whether the model parameters should be printed to file
    * \return flag
    */
-  int Print() const { return oprint; };
+  int getPrint() const { return printoutput; };
   /**
    * \brief This function will return the flag used to determine whether the model parameters should be printed to file in a column format
    * \return flag
    */
-  int PrintinColumns() const { return coprint; };
+  int getPrintColumn() const { return printcolumn; };
   /**
    * \brief This function will return the flag used to force the model to print parameter values to file
    * \return flag
@@ -110,15 +110,15 @@ private:
   /**
    * \brief This is the name of the file that the final parameter values will be written to
    */
-  char* ParamOutFile;
+  char* strParamOutFile;
   /**
    * \brief This is the name of the file that the model parameters values will be written to
    */
-  char* OutputFile;
+  char* strOutputFile;
   /**
    * \brief This is the name of the file that the model parameters values will be written to in a column format
    */
-  char* ColumnOutputFile;
+  char* strColumnFile;
   /**
    * \brief This is the interval between iterations that the model parameters should be written to file
    */
@@ -134,11 +134,11 @@ private:
   /**
    * \brief This is the flag used to denote whether the model parameters should be printed or not
    */
-  int oprint;
+  int printoutput;
   /**
    * \brief This is the flag used to denote whether the model parameters should be printed in a column format or not
    */
-  int coprint;
+  int printcolumn;
   /**
    * \brief This is the precision that should be used when printing the model parameters
    */

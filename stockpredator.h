@@ -21,7 +21,7 @@ public:
   virtual void Eat(int area, double LengthOfStep, double Temperature,
     double Areasize, int CurrentSubstep, int NrOfSubsteps);
   virtual const PopInfoVector& NumberPriortoEating(int area, const char* preyname) const;
-  virtual void AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep);
+  virtual void adjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep);
   virtual void Print(ofstream& outfile) const;
   const BandMatrix& Alproportion(int area) const { return Alprop[AreaNr[area]]; };
   const DoubleVector& FPhi(int area) const { return fphi[AreaNr[area]]; };

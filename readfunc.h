@@ -10,8 +10,8 @@ int readVector(CommentStream& infile, DoubleVector& Vec);
 int readIndexVector(CommentStream& infile, DoubleIndexVector& Vec);
 int readVectorInLine(CommentStream& infile, IntVector& Vec);
 int readVectorInLine(CommentStream& infile, DoubleVector& Vec);
-int FindContinuousYearAndStepWithNoText(CommentStream& infile, int year, int step);
 int countColumns(CommentStream& infile);
+int FindContinuousYearAndStepWithNoText(CommentStream& infile, int year, int step);
 
 int readRefWeights(CommentStream& infile, DoubleMatrix& M);
 int readAmounts(CommentStream& infile, const IntVector& tmpareas,

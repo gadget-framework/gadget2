@@ -12,10 +12,10 @@ extern ErrorHandler handle;
 NaturalM::NaturalM(CommentStream& infile, int minage, int maxage, const TimeClass* const TimeInfo,
   Keeper* const keeper) : mortality(maxage - minage + 1, minage), proportion(maxage - minage + 1, 0.0) {
 
-  keeper->AddString("naturalm");
+  keeper->addString("naturalm");
   mortality.read(infile, TimeInfo, keeper);
   this->Reset(TimeInfo);
-  keeper->ClearLast();
+  keeper->clearLast();
 }
 
 void NaturalM::Reset(const TimeClass* const TimeInfo) {

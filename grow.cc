@@ -109,6 +109,11 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
       (*v[i])[maxlgrp].W = 0.0;
       (*v[i])[maxlgrp].N = 0.0;
       Mat->PutInStorage(area, age, maxlgrp, num, wt / num, TimeInfo);
+    } else if (isZero(matnum)) {
+      //none of the fish that grow to this length cell mature
+      (*v[i])[maxlgrp].W = wt / num;
+      (*v[i])[maxlgrp].N = num;
+      Mat->PutInStorage(area, age, maxlgrp, 0.0, 0.0, TimeInfo);
     } else {
       (*v[i])[maxlgrp].W = wt / num;
       (*v[i])[maxlgrp].N = num - matnum;
@@ -137,6 +142,11 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
         (*v[i])[lgrp].W = 0.0;
         (*v[i])[lgrp].N = 0.0;
         Mat->PutInStorage(area, age, lgrp, num, wt / num, TimeInfo);
+      } else if (isZero(matnum)) {
+        //none of the fish that grow to this length cell mature
+        (*v[i])[lgrp].W = wt / num;
+        (*v[i])[lgrp].N = num;
+        Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);
       } else {
         (*v[i])[lgrp].W = wt / num;
         (*v[i])[lgrp].N = num - matnum;
@@ -166,6 +176,11 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
         (*v[i])[lgrp].W = 0.0;
         (*v[i])[lgrp].N = 0.0;
         Mat->PutInStorage(area, age, lgrp, num, wt / num, TimeInfo);
+      } else if (isZero(matnum)) {
+        //none of the fish that grow to this length cell mature
+        (*v[i])[lgrp].W = wt / num;
+        (*v[i])[lgrp].N = num;
+        Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);
       } else {
         (*v[i])[lgrp].W = wt / num;
         (*v[i])[lgrp].N = num - matnum;

@@ -113,11 +113,11 @@ void PreyOverPrinter::setPrey(PreyPtrVector& preyvec) {
       }
 
   if (preys.Size() != preynames.Size()) {
-    handle.LogWarning("Error in preyoverprinter - failed to match preys");
+    handle.logWarning("Error in preyoverprinter - failed to match preys");
     for (i = 0; i < preyvec.Size(); i++)
-      handle.LogWarning("Error in preyoverprinter - found prey", preyvec[i]->Name());
+      handle.logWarning("Error in preyoverprinter - found prey", preyvec[i]->Name());
     for (i = 0; i < preynames.Size(); i++)
-      handle.LogWarning("Error in preyoverprinter - looking for prey", preynames[i]);
+      handle.logWarning("Error in preyoverprinter - looking for prey", preynames[i]);
     exit(EXIT_FAILURE);
   }
   aggregator = new PreyOverAggregator(preys, areas, preyLgrpDiv);

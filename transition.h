@@ -42,7 +42,7 @@ public:
    * \param TagAlkeys is the AgeBandMatrixRatio of the tagged stock that fish will move from
    * \param TimeInfo is the TimeClass for the current model
    */
-  void KeepAgegroup(int area, AgeBandMatrix& Alkeys, AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo);
+  void keepAgeGroup(int area, AgeBandMatrix& Alkeys, AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo);
   /**
    * \brief This will move the younger stock into the older stock age-length cells
    * \param area is the area that the movement is being calculated on
@@ -54,11 +54,6 @@ public:
    * \param outfile is the ofstream that all the model information gets sent to
    */
   void Print(ofstream& outfile) const;
-  /**
-   * \brief This will calculate the number of stocks the young stock can move into
-   * \return number of transition stocks
-   */
-  int NoOfTransitionStocks() { return TransitionStocks.Size(); };
   /**
    * \brief This will calculate the stocks the young stock can move into
    * \return transition stocks
@@ -78,15 +73,22 @@ public:
    * \brief This function will reset the transition data
    */
   void Reset();
+  /**
+   * \brief This will check if the transition process will take place on the current timestep
+   * \param area is the area that the transition is being calculated on
+   * \param TimeInfo is the TimeClass for the current model
+   * \return 1 if the transition process will take place, 0 otherwise
+   */
+  virtual int IsTransitionStep(int area, const TimeClass* const TimeInfo);
 protected:
   /**
    * \brief This is the StockPtrVector of the stocks that the young stock will move to
    */
-  StockPtrVector TransitionStocks;
+  StockPtrVector transitionStocks;
   /**
    * \brief This is the CharPtrVector of the names of the transition stocks
    */
-  CharPtrVector TransitionStockNames;
+  CharPtrVector transitionStockNames;
   /**
    * \brief This is the DoubleVector of the ratio of the young stock to move into each older stock
    */
@@ -102,7 +104,7 @@ protected:
   /**
    * \brief This is the timestep that the movement between stocks will occur on
    */
-  int TransitionStep;
+  int transitionStep;
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store the calculated old stocks
    */

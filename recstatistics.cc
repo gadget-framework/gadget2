@@ -17,7 +17,7 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, TagPtrVector Tags, const char* name)
   : Likelihood(RECSTATISTICSLIKELIHOOD, weight) {
 
-  lgrpDiv = NULL;
+  LgrpDiv = NULL;
   aggregator = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -192,8 +192,8 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
 
   timeindex.resize(tagvec.Size(), -1);
   if (count == 0)
-    handle.LogWarning("Warning in recstatistics - found no data in the data file for", rsname);
-  handle.LogMessage("Read recstatistics data file - number of entries", count);
+    handle.logWarning("Warning in recstatistics - found no data in the data file for", rsname);
+  handle.logMessage("Read recstatistics data file - number of entries", count);
 }
 
 RecStatistics::~RecStatistics() {
@@ -218,9 +218,9 @@ RecStatistics::~RecStatistics() {
     delete[] aggregator;
     aggregator = 0;
   }
-  if (lgrpDiv != NULL) {
-    delete lgrpDiv;
-    lgrpDiv = NULL;
+  if (LgrpDiv != NULL) {
+    delete LgrpDiv;
+    LgrpDiv = NULL;
   }
 }
 
@@ -252,6 +252,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
   int i, j, t, found, minage, maxage;
   FleetPtrVector fleets;
   StockPtrVector stocks;
+  const CharPtrVector* stocknames;
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
@@ -261,15 +262,14 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
         fleets.resize(1, Fleets[j]);
       }
 
-    if (found == 0) {
-      handle.LogWarning("Error in recstatistics - unknown fleet", fleetnames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in recstatistics - unknown fleet", fleetnames[i]);
+
   }
 
   aggregator = new RecAggregator*[tagvec.Size()];
   for (t = 0; t < tagvec.Size(); t++) {
-    const CharPtrVector* stocknames = tagvec[t]->getStocknames();
+    stocknames = tagvec[t]->getStockNames();
     for (i = 0; i < stocknames->Size(); i++) {
       found = 0;
       for (j = 0; j < Stocks.Size(); j++)
@@ -279,37 +279,34 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
             stocks.resize(1, Stocks[j]);
           }
 
-      if (found == 0) {
-        handle.LogWarning("Error in recstatistics - unknown stock", stocknames->operator[](i));
-        exit(EXIT_FAILURE);
-      }
+      if (found == 0)
+        handle.logFailure("Error in recstatistics - unknown stock", stocknames->operator[](i));
+
     }
 
-    lgrpDiv = new LengthGroupDivision(*(stocks[0]->returnPrey()->returnLengthGroupDiv()));
+    LgrpDiv = new LengthGroupDivision(*(stocks[0]->returnPrey()->returnLengthGroupDiv()));
     for (i = 1; i < stocks.Size(); i++)
-      if (!lgrpDiv->Combine(stocks[i]->returnPrey()->returnLengthGroupDiv())) {
-        handle.LogWarning("Error in recstatistics - length groups not compatible");
-        exit(EXIT_FAILURE);
-      }
+      if (!LgrpDiv->Combine(stocks[i]->returnPrey()->returnLengthGroupDiv()))
+        handle.logFailure("Error in recstatistics - length groups not compatible");
 
     minage = 999;
     maxage = 0;
     for (i = 0; i < stocks.Size(); i++) {
-      minage = (minage < stocks[i]->Minage() ? minage : stocks[i]->Minage());
-      maxage = (maxage > stocks[i]->Maxage() ? maxage : stocks[i]->Maxage());
+      minage = (minage < stocks[i]->minAge() ? minage : stocks[i]->minAge());
+      maxage = (maxage > stocks[i]->maxAge() ? maxage : stocks[i]->maxAge());
     }
 
     IntMatrix ages(1, 0);
     for (i = 0; i <= maxage - minage; i++)
       ages[0].resize(1, minage + i);
-    aggregator[t] = new RecAggregator(fleets, stocks, lgrpDiv, areas, ages, tagvec[t]);
+    aggregator[t] = new RecAggregator(fleets, stocks, LgrpDiv, areas, ages, tagvec[t]);
 
     while (stocks.Size() > 0)
       stocks.Delete(0);
   }
 }
 
-void RecStatistics::AddToLikelihood(const TimeClass* const TimeInfo) {
+void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
   int t, i;
   for (t = 0; t < tagvec.Size(); t++) {
     timeindex[t] = -1;
@@ -320,10 +317,10 @@ void RecStatistics::AddToLikelihood(const TimeClass* const TimeInfo) {
           aggregator[t]->Sum(TimeInfo);
     }
   }
-  likelihood += SOSWeightOrLength();
+  likelihood += calcLikSumSquares();
 }
 
-double RecStatistics::SOSWeightOrLength() {
+double RecStatistics::calcLikSumSquares() {
   double lik = 0.0;
   int t, nareas;
   double simmean, simvar, simnumber, simdiff;
@@ -334,14 +331,14 @@ double RecStatistics::SOSWeightOrLength() {
       for (nareas = 0; nareas < alptr->Size(); nareas++) {
         PopStatistics PopStat((*alptr)[nareas][0], aggregator[t]->returnLengthGroupDiv(), 1);
 
-        simmean = PopStat.MeanLength();
+        simmean = PopStat.meanLength();
         simdiff = simmean - (*mean[t])[timeindex[t]][nareas];
-        simnumber = PopStat.TotalNumber();
+        simnumber = PopStat.totalNumber();
         simvar = 0.0;
 
         switch(functionnumber) {
           case 1:
-            simvar = PopStat.StdDevOfLength() * PopStat.StdDevOfLength();
+            simvar = PopStat.sdevLength() * PopStat.sdevLength();
             break;
           case 2:
             simvar = (*variance[t])[timeindex[t]][nareas];
@@ -350,7 +347,7 @@ double RecStatistics::SOSWeightOrLength() {
             simvar = 1.0;
             break;
           default:
-            handle.LogWarning("Warning in recstatistics - unknown function", functionname);
+            handle.logWarning("Warning in recstatistics - unknown function", functionname);
             break;
         }
 

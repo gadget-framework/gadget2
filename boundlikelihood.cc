@@ -52,10 +52,10 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
 
     for (i = 0; i < switches.Size(); i++)
       if (switchnr[i] == -1)
-        handle.LogWarning("Warning in boundlikelihood - failed to match switch", switches[i].getValue());
+        handle.logWarning("Warning in boundlikelihood - failed to match switch", switches[i].getValue());
   }
 
-  handle.LogMessage("Read penalty file - number of entries", count);
+  handle.logMessage("Read penalty file - number of entries", count);
   //set flag to initialise the bounds - called in Reset
   checkInitialised = 0;
 }
@@ -111,8 +111,7 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
   }
 }
 
-void BoundLikelihood::AddToLikelihoodTimeAndKeeper(
-  const TimeClass* const TimeInfo, Keeper* const keeper) {
+void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   likelihood = 0;
   int i;

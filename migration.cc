@@ -17,7 +17,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   const int noareas = areas.Size();
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  keeper->AddString("migration");
+  keeper->addString("migration");
   if (AgeDepMigration) {                   //File format:
     infile >> text;                        //ages a1 ... am
     if (!(strcasecmp(text, "ages") == 0))  //. . .
@@ -41,7 +41,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   //read the numbers of the migration matrices we are going to use.
   //File format: matrixnumbers
   //and then the file format for readNoMigrationMatrices
-  keeper->AddString("matrixnumbers");
+  keeper->addString("matrixnumbers");
   if (!(strcasecmp(text, "matrixnumbers") == 0))
     handle.Unexpected("matrixnumbers", text);
   else
@@ -58,7 +58,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   //Proceed to read the variables.
   //File format: variables
   //and then the file format for readOptVariables
-  keeper->ClearLastAddString("variables");
+  keeper->clearLastAddString("variables");
   strcpy(text, " ");
   infile >> text;
   if (!(strcasecmp(text, "variables") == 0))
@@ -69,7 +69,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   //read the coefficients for the variables.
   //File format: coefficients
   //and then the file format for readCoefficients
-  keeper->ClearLastAddString("coefficients");
+  keeper->clearLastAddString("coefficients");
   infile >> text;
   if (!(strcasecmp(text, "coefficients") == 0))
     handle.Unexpected("coefficients", text);
@@ -88,7 +88,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   //n1 Matrix # n1
   //...
   //nm Matrix # nm
-  keeper->ClearLastAddString("migrationmatrices");
+  keeper->clearLastAddString("migrationmatrices");
   ReadMigList.resize(maxim + 1, 0);
   infile >> text >> ws;
   if (!(strcasecmp(text, "migrationmatrices") == 0))
@@ -131,11 +131,11 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   //and what information we may delete
   CheckInfoAndDelete(novariables, keeper);
   CalcMigList.resize(ReadMigList.Size(), 0);
-  AdjustMigListAndCheckIfError(ReadMigList);
+  adjustMigListAndCheckIfError(ReadMigList);
   CopyFromReadToCalc();
-  keeper->ClearLast();
-  keeper->ClearLast();
-  handle.LogMessage("Read migration file - number of migration matrices", maxim);
+  keeper->clearLast();
+  keeper->clearLast();
+  handle.logMessage("Read migration file - number of migration matrices", maxim);
 }
 
 Migration::~Migration() {
@@ -156,10 +156,10 @@ const DoubleMatrix& Migration::Migrationmatrix(const TimeClass* const TimeInfo, 
       if (AgeNr[age] >= 0)
         return *CalcMigList[MatrixNumbers[AgeNr[age]][TimeInfo->CurrentTime()]];
 
-    handle.LogWarning("Error in migration - failed to match age", age);
-    exit(EXIT_FAILURE);
-  } else
-    return *CalcMigList[MatrixNumbers[0][TimeInfo->CurrentTime()]];
+    handle.logFailure("Error in migration - failed to match age", age);
+  } 
+
+  return *CalcMigList[MatrixNumbers[0][TimeInfo->CurrentTime()]];
 }
 
 void Migration::MigrationRecalc(int year) {
@@ -182,7 +182,7 @@ void Migration::MigrationRecalc(int year) {
 
     (*CalcMigList[no])[row][col] += add;
   }
-  AdjustMigListAndCheckIfError(CalcMigList);
+  adjustMigListAndCheckIfError(CalcMigList);
 }
 
 int Migration::Error() const {
@@ -388,7 +388,7 @@ void Migration::CopyFromReadToCalc() {
   }
 }
 
-void Migration::AdjustMigListAndCheckIfError(MigrationList& MigList) {
+void Migration::adjustMigListAndCheckIfError(MigrationList& MigList) {
   //(1) Every element in every matrix in MigList has to be >= 0.
   //(2) The sum in every column in every matrix in MigList has to equal 1.
   //If it is not possible to enforce (2), then the error bit is set.
@@ -417,7 +417,7 @@ void Migration::AdjustMigListAndCheckIfError(MigrationList& MigList) {
         }
 
         if (isZero(colsum) || isZero(colsum1)) {
-          handle.LogWarning("Error in migration - column doesnt sum to 1");
+          handle.logWarning("Error in migration - column doesnt sum to 1");
           error = 1;
           return;
         }
@@ -486,7 +486,7 @@ void Migration::readOptVariables(CommentStream& infile, IntVector& novariables,
   int lastyear = TimeInfo->LastYear();
   streampos readPos;
 
-  keeper->AddString("variable");
+  keeper->addString("variable");
   while (!infile.eof() && isdigit(c)) {
     novariables.resize(1);
     infile >> novariables[i];

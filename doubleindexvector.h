@@ -1,6 +1,8 @@
 #ifndef doubleindexvector_h
 #define doubleindexvector_h
 
+#include "assert.h"
+
 /**
  * \class DoubleIndexVector
  * \brief This class implements a dynamic vector of double values, indexed from minpos not 0

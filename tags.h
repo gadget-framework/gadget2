@@ -24,7 +24,7 @@ public:
   void updateTags(int year, int step);
   void DeleteFromStock();
   const int getEndYear() const { return endyear; };
-  const CharPtrVector* getStocknames() const { return &stocknames; };
+  const CharPtrVector* getStockNames() const { return &stocknames; };
   void setStock(StockPtrVector& Stocks);
   const char* TagName() const { return this->Name(); };
   void updateMatureStock(const TimeClass* const TimeInfo);
@@ -48,9 +48,9 @@ private:
   DoubleVector NumberByLength;
   DoubleMatrixPtrVector NumberByLengthMulti;
   LengthGroupDivision* LgrpDiv;
-  StockPtrVector tagstocks;
-  StockPtrVector maturestocks;
-  StockPtrVector transitionstocks;
+  StockPtrVector tagStocks;
+  StockPtrVector matureStocks;
+  StockPtrVector transitionStocks;
   ConversionIndexPtrVector CI;
   Stock* taggingstock;
   IntVector preyindex;

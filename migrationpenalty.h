@@ -24,7 +24,7 @@ public:
    * \brief This function will calculate the likelihood score for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void AddToLikelihood(const TimeClass* const TimeInfo);
+  virtual void addLikelihood(const TimeClass* const TimeInfo);
   /**
    * \brief This will select the stocks required for the likelihood class to calculate the requested information
    * \param Stocks is the StockPtrVector of all the available stocks

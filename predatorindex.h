@@ -35,7 +35,7 @@ public:
    * \brief This function will calculate the likelihood score for the PredatorIndices component
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void AddToLikelihood(const TimeClass* const TimeInfo);
+  virtual void addLikelihood(const TimeClass* const TimeInfo);
   /**
    * \brief This will select the predators and preys required to calculate the PredatorIndices likelihood score
    * \param Predators is the PredatorPtrVector of all the available predators

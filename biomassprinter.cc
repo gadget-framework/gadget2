@@ -103,7 +103,6 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
  */
 
 void BiomassPrinter::setStock(StockPtrVector& stockvec) {
-  assert(stockvec.Size() > 0);
   int index = 0;
   immindex = -1;
   int i, j;
@@ -120,26 +119,25 @@ void BiomassPrinter::setStock(StockPtrVector& stockvec) {
     }
   }
 
-  if (immindex == -1) {
-    handle.LogWarning("Error in biomassprinter - no immature stock");
-    exit(EXIT_FAILURE);
-  }
+  if (immindex == -1)
+    handle.logFailure("Error in biomassprinter - no immature stock");
+
   if (stocks.Size() != matnames.Size() + 1) {
-    handle.LogWarning("Error in biomassprinter - failed to match mature stocks");
+    handle.logWarning("Error in biomassprinter - failed to match mature stocks");
     for (i = 0; i < stocks.Size(); i++)
-      handle.LogWarning("Error in biomassprinter - found stock", stocks[i]->Name());
+      handle.logWarning("Error in biomassprinter - found stock", stocks[i]->Name());
     for (i = 0; i < matnames.Size(); i++)
-      handle.LogWarning("Error in biomassprinter - looking for stock", matnames[i]);
+      handle.logWarning("Error in biomassprinter - looking for stock", matnames[i]);
     exit(EXIT_FAILURE);
   }
 
-  minage = stocks[0]->Minage();
-  maxage = stocks[0]->Maxage();
+  minage = stocks[0]->minAge();
+  maxage = stocks[0]->maxAge();
   for (i = 0; i < stocks.Size(); i++) {
-    if (stocks[i]->Minage() < minage)
-      minage = stocks[i]->Minage();
-    if (stocks[i]->Maxage() > maxage)
-      maxage = stocks[i]->Maxage();
+    if (stocks[i]->minAge() < minage)
+      minage = stocks[i]->minAge();
+    if (stocks[i]->maxAge() > maxage)
+      maxage = stocks[i]->maxAge();
   }
 }
 
@@ -162,17 +160,17 @@ void BiomassPrinter::Print(const TimeClass* const TimeInfo) {
 
     minagem = minage;
     maxagem = maxage;
-    if (stocks[immindex]->Maxage() == maxage) {
+    if (stocks[immindex]->maxAge() == maxage) {
       maxagem = minage;
       for (i = 0; i < stocks.Size(); i++)
-        if (i != immindex && stocks[i]->Maxage() > maxagem)
-          maxagem = stocks[i]->Maxage();
+        if (i != immindex && stocks[i]->maxAge() > maxagem)
+          maxagem = stocks[i]->maxAge();
     }
-    if (stocks[immindex]->Minage() == minage) {
+    if (stocks[immindex]->minAge() == minage) {
       minagem = maxage;
       for (i = 0; i < stocks.Size(); i++)
-        if (i != immindex && stocks[i]->Minage() < minagem)
-          minagem = stocks[i]->Minage();
+        if (i != immindex && stocks[i]->minAge() < minagem)
+          minagem = stocks[i]->minAge();
     }
 
     for (area = 0; area < areas.Size(); area++) {
@@ -183,16 +181,16 @@ void BiomassPrinter::Print(const TimeClass* const TimeInfo) {
       for (i = 0; i < stocks.Size(); i++)
         if (i != immindex)
           for (a = minagem; a <=  maxagem; a++)
-            if (a >= stocks[i]->Minage() && a <= stocks[i]->Maxage())
+            if (a >= stocks[i]->minAge() && a <= stocks[i]->maxAge())
               for (y = 0; y < nrofyears; y++)
-                mat[a - minagem][y] += ((LenStock*)stocks[i])->getBiomass(area)[a - stocks[i]->Minage()][y];
+                mat[a - minagem][y] += ((LenStock*)stocks[i])->getBiomass(area)[a - stocks[i]->minAge()][y];
 
       DoubleMatrix& bio = (DoubleMatrix&)((LenStock*)stocks[immindex])->getBiomass(area);
       for (y = 0; y < nrofyears; y++) {
         for (a = minagem; a <= maxagem; a++)
           tot[a - minage][y] = mat[a - minagem][y];
-        for (a = stocks[immindex]->Minage(); a <= stocks[immindex]->Maxage(); a++)
-          tot[a - minage][y] += bio[a - stocks[immindex]->Minage()][y];
+        for (a = stocks[immindex]->minAge(); a <= stocks[immindex]->maxAge(); a++)
+          tot[a - minage][y] += bio[a - stocks[immindex]->minAge()][y];
       }
       for (y = 0; y < nrofyears; y++) {
         for (a = minagem; a <= maxagem; a++)
@@ -205,7 +203,7 @@ void BiomassPrinter::Print(const TimeClass* const TimeInfo) {
       printfile << "Area " << Area->InnerArea(areas[area]) << endl;
       printfile << "Immature stock biomass at 1/1 in tons\nstock "
         << stocks[immindex]->Name() << endl;
-      printByAgeAndYear(printfile, bio, stocks[immindex]->Minage(), firstyear, 2);
+      printByAgeAndYear(printfile, bio, stocks[immindex]->minAge(), firstyear, 2);
       printfile << "Mature stock biomass at 1/1 in tons\nstocks";
       for (i = 0; i<stocks.Size(); i++)
         if (i != immindex)

@@ -12,19 +12,19 @@ public:
   RecStatistics(CommentStream& infile, const AreaClass* const Area,
     const TimeClass* const TimeInfo, double weight, TagPtrVector Tags, const char* name);
   virtual ~RecStatistics();
-  virtual void AddToLikelihood(const TimeClass* const TimeInfo);
+  virtual void addLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
   void readStatisticsData(CommentStream& infile, const TimeClass* TimeInfo,
     int numarea, TagPtrVector Tags);
-  double SOSWeightOrLength();
+  double calcLikSumSquares();
   DoubleMatrixPtrVector numbers;
   DoubleMatrixPtrVector mean;
   DoubleMatrixPtrVector variance;
   RecAggregator** aggregator;
-  LengthGroupDivision* lgrpDiv;
+  LengthGroupDivision* LgrpDiv;
   CharPtrVector fleetnames;
   CharPtrVector tagnames;
   IntMatrix areas;

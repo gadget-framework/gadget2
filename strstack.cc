@@ -18,16 +18,15 @@ void StrStack::PutInStack(const char* str) {
     v[size] = new char[MaxStrLength];
     strncpy(v[size], "", MaxStrLength);
   }
-  /*JMB code removed from here - see RemovedCode.txt for details*/
   strcpy(v[size], str);
   size++;
 }
 
-void StrStack::ClearStack() {
+void StrStack::clearStack() {
   size = 0;
 }
 
-char* StrStack::SendAll() const {
+char* StrStack::sendAll() const {
   int len = size * MaxStrLength;
   char* rstr = new char[len];
   strncpy(rstr, "", len);
@@ -44,7 +43,7 @@ char* StrStack::SendAll() const {
   return rstr;
 }
 
-char* StrStack::SendTop() const {
+char* StrStack::sendTop() const {
   char* rstr = new char[strlen(v[size - 1]) + 1];
   strcpy(rstr, v[size - 1]);
   return rstr;

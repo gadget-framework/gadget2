@@ -47,7 +47,6 @@ protected:
   int timeindex;
   ActionAtTimes AAT;
   FormulaMatrix digestioncoeff;
-  ofstream printfile;
   double epsilon;
   char* scname;
 };
@@ -70,8 +69,6 @@ public:
     const TimeClass* const TimeInfo, Keeper* const keeper,
     const char* datafilename, const char* numfilename, const char* name);
   virtual ~SCAmounts();
-  DoubleMatrixPtrMatrix& Stddev() { return stddev; };
-  DoubleMatrixPtrVector& StomachNumbers() { return number; };
   virtual void PrintLikelihood(ofstream&, const TimeClass& time);
   virtual void PrintLikelihoodHeader(ofstream&);
 protected:
@@ -99,7 +96,7 @@ public:
   StomachContent(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo,
     Keeper* const keeper, double weight, const char* name);
   virtual ~StomachContent();
-  virtual void AddToLikelihood(const TimeClass* const TimeInfo);
+  virtual void addLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper)
     { Likelihood::Reset(keeper); StomCont->Reset(); };
   virtual void Print(ofstream& outfile) const;

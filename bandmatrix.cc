@@ -10,7 +10,7 @@
 #endif
 
 BandMatrix::BandMatrix(const BandMatrix& initial)
-  : nrow(initial.nrow), minage(initial.Minage()) {
+  : nrow(initial.nrow), minage(initial.minAge()) {
 
   v = new DoubleIndexVector*[nrow];
   int i;
@@ -58,8 +58,8 @@ BandMatrix::BandMatrix(const DoubleIndexVector& initial, int age)
   v[0] = new DoubleIndexVector(initial);
 }
 
-BandMatrix::BandMatrix(int minl, int lengthsize, int Minage, int Nrow,
-  double initial) : nrow(Nrow), minage(Minage) {
+BandMatrix::BandMatrix(int minl, int lengthsize, int minAge, int Nrow,
+  double initial) : nrow(Nrow), minage(minAge) {
 
   v = new DoubleIndexVector*[nrow];
   int i;

@@ -142,10 +142,9 @@ void PredatorIndices::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtr
         found = 1;
         predators.resize(1, Predators[j]);
       }
-    if (found == 0) {
-      handle.LogWarning("Error in predatorindex - failed to match predator", predatornames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in predatorindex - failed to match predator", predatornames[i]);
+
   }
 
   PreyPtrVector preys;
@@ -156,10 +155,9 @@ void PredatorIndices::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtr
         found = 1;
         preys.resize(1, Preys[j]);
       }
-    if (found == 0) {
-      handle.LogWarning("Error in predatorindex - failed to match prey", preynames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in predatorindex - failed to match prey", preynames[i]);
+
   }
   PI->setPredatorsAndPreys(predators, preys);
 }
@@ -197,8 +195,7 @@ PredatorIndices::~PredatorIndices() {
   delete PI;
 }
 
-void PredatorIndices::AddToLikelihood(const TimeClass* const TimeInfo) {
-  likelihood = 0;
+void PredatorIndices::addLikelihood(const TimeClass* const TimeInfo) {
   PI->Sum(TimeInfo);
   if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps())
     likelihood += PI->Regression();

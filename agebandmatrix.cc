@@ -9,7 +9,7 @@
 #endif
 
 AgeBandMatrix::AgeBandMatrix(const AgeBandMatrix& initial)
-  : minage(initial.Minage()), nrow(initial.Nrow()) {
+  : minage(initial.minAge()), nrow(initial.Nrow()) {
 
   v = new PopInfoIndexVector*[nrow];
   int i;

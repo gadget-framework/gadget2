@@ -113,7 +113,6 @@ StockPrinter::StockPrinter(CommentStream& infile,
 }
 
 void StockPrinter::setStock(StockPtrVector& stockvec) {
-  assert(stockvec.Size() > 0);
   StockPtrVector stocks;
   int index = 0;
   int i, j;
@@ -126,11 +125,11 @@ void StockPrinter::setStock(StockPtrVector& stockvec) {
       }
 
   if (stocks.Size() != stocknames.Size()) {
-    handle.LogWarning("Error in stockprinter - failed to match stocks");
+    handle.logWarning("Error in stockprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      handle.LogWarning("Error in stockprinter - found stock", stocks[i]->Name());
+      handle.logWarning("Error in stockprinter - found stock", stocks[i]->Name());
     for (i = 0; i < stocknames.Size(); i++)
-      handle.LogWarning("Error in stockprinter - looking for stock", stocknames[i]);
+      handle.logWarning("Error in stockprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
   aggregator = new StockAggregator(stocks, LgrpDiv, areas, ages);
@@ -144,8 +143,8 @@ void StockPrinter::Print(const TimeClass* const TimeInfo) {
 
   for (a = 0; a < areas.Nrow(); a++) {
     const AgeBandMatrix& alk = aggregator->returnSum()[a];
-    for (age = alk.Minage(); age <= alk.Maxage(); age++) {
-      for (l = alk.Minlength(age); l < alk.Maxlength(age); l++) {
+    for (age = alk.minAge(); age <= alk.maxAge(); age++) {
+      for (l = alk.minLength(age); l < alk.maxLength(age); l++) {
         outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
           << setw(lowwidth) << TimeInfo->CurrentStep() << sep
           << setw(printwidth) << areaindex[a] << sep << setw(printwidth)

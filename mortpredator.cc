@@ -21,14 +21,14 @@ MortPredator::MortPredator(CommentStream& infile, const char* givenname, const I
   int areanr = Areas.Size();
   int i;
 
-  keeper->AddString("predator");
-  keeper->AddString(givenname);
+  keeper->addString("predator");
+  keeper->addString(givenname);
   pres_time_step = TimeInfo->CurrentTime();
   no_of_time_steps = TimeInfo->TotalNoSteps();
 
   this->readSuitabilityMatrix(infile, "calcflev", TimeInfo, keeper);
-  keeper->ClearLast();
-  keeper->ClearLast();
+  keeper->clearLast();
+  keeper->clearLast();
   //Predator::setPrey will call resizeObjects.
 
   infile >> calc_f_lev;
@@ -96,7 +96,7 @@ void MortPredator::Eat(int area, double LengthOfStep, double Temperature, double
       pres_f_lev = f_lev[inarea][pres_time_step - 1] * time_frac;
 
     //calculate consumption
-    //JMB 12/NOV/01 removed the following loop - repeated over predl??
+    //JMB removed the following loop - repeated over predl??
     //for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
     for (prey = 0; prey < NoPreys(); prey++) {
       if (Preys(prey)->IsInArea(area)) {
@@ -121,7 +121,7 @@ void MortPredator::Eat(int area, double LengthOfStep, double Temperature, double
     for (prey = 0; prey < NoPreys(); prey++) {
       if (Preys(prey)->IsInArea(area)) {
         for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
-          Preys(prey)->AddConsumption(area, consumption[inarea][prey][predl]);
+          Preys(prey)->addConsumption(area, consumption[inarea][prey][predl]);
       }
     }
     pres_time_step++;
@@ -163,10 +163,10 @@ void MortPredator::calcCHat(int area, const TimeClass* const TimeInfo) {
   if (TimeInfo->CurrentSubstep() == 1) {
     for (prey = 0; prey < NoPreys(); prey++) {
       if (Preys(prey)->IsInArea(area)) {
-        for (age = ((MortPrey*)Preys(prey))->getMeanN(area).Minage();
-            age <= ((MortPrey*)Preys(prey))->getMeanN(area).Maxage(); age++) {
-          for (preyl = ((MortPrey*)Preys(prey))->getMeanN(area).Minlength(age);
-              preyl < ((MortPrey*)Preys(prey))->getMeanN(area).Maxlength(age); preyl++)
+        for (age = ((MortPrey*)Preys(prey))->getMeanN(area).minAge();
+            age <= ((MortPrey*)Preys(prey))->getMeanN(area).maxAge(); age++) {
+          for (preyl = ((MortPrey*)Preys(prey))->getMeanN(area).minLength(age);
+              preyl < ((MortPrey*)Preys(prey))->getMeanN(area).maxLength(age); preyl++)
             c_hat[inarea][prey][age][preyl] = 0.0;
         }
       }
@@ -176,12 +176,12 @@ void MortPredator::calcCHat(int area, const TimeClass* const TimeInfo) {
   for (prey = 0; prey < NoPreys(); prey++) {
     if (Preys(prey)->IsInArea(area)) {
       if (pres_f_lev > rathersmall) {
-        for (age = ((MortPrey*)Preys(prey))->getMeanN(area).Minage();
-            age <= ((MortPrey*)Preys(prey))->getMeanN(area).Maxage(); age++) {
+        for (age = ((MortPrey*)Preys(prey))->getMeanN(area).minAge();
+            age <= ((MortPrey*)Preys(prey))->getMeanN(area).maxAge(); age++) {
           for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++) {
-            minl = max(((MortPrey*)Preys(prey))->getMeanN(area).Minlength(age),
+            minl = max(((MortPrey*)Preys(prey))->getMeanN(area).minLength(age),
               Suitability(prey)[predl].Mincol());
-            maxl = min(((MortPrey*)Preys(prey))->getMeanN(area).Maxlength(age),
+            maxl = min(((MortPrey*)Preys(prey))->getMeanN(area).maxLength(age),
               Suitability(prey)[predl].Maxcol());
             for (preyl = minl; preyl < maxl; preyl++) {
               c_hat[inarea][prey][age][preyl] +=
@@ -200,8 +200,8 @@ const double MortPredator::consumedBiomass(int prey_nr, int area_nr) const {
   double tons = 0.0;
   int age, len;
   const AgeBandMatrix& mean = ((MortPrey*)Preys(prey_nr))->getMeanN(area_nr);
-  for (age = mean.Minage(); age <= mean.Maxage(); age++)
-    for (len = mean.Minlength(age); len < mean.Maxlength(age); len++)
+  for (age = mean.minAge(); age <= mean.maxAge(); age++)
+    for (len = mean.minLength(age); len < mean.maxLength(age); len++)
       tons += c_hat[area_nr][prey_nr][age][len] * mean[age][len].W;
 
   return tons;
@@ -219,7 +219,7 @@ const PopInfoVector& MortPredator::NumberPriortoEating(int area, const char* pre
     if (strcasecmp(Preyname(prey), preyname) == 0)
       return Preys(prey)->NumberPriortoEating(area);
 
-  handle.LogWarning("Error in mortpredator - failed to match prey", preyname);
+  handle.logFailure("Error in mortpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
 }
 
@@ -253,13 +253,12 @@ void MortPredator::InitialiseCHat(int area, int prey, const AgeBandMatrix& mean_
   int age;
   IntVector size(mean_n.Nrow());
   IntVector minl(mean_n.Nrow());
-  for (age = mean_n.Minage(); age <= mean_n.Maxage(); age++) {
-    size[i] = mean_n.Maxlength(age) - mean_n.Minlength(age) + 1;
-    minl[i] = mean_n.Minlength(age);
+  for (age = mean_n.minAge(); age <= mean_n.maxAge(); age++) {
+    size[i] = mean_n.maxLength(age) - mean_n.minLength(age) + 1;
+    minl[i] = mean_n.minLength(age);
     i++;
   }
-  assert(i == size.Size());
-  BandMatrix tmp(minl, size, mean_n.Minage(), 0.0);
+  BandMatrix tmp(minl, size, mean_n.minAge(), 0.0);
   c_hat.ChangeElement(inarea, prey, tmp);
 }
 

@@ -39,10 +39,10 @@ void SIByLengthOnStep::setStocks(const StockPtrVector& Stocks) {
   int maxage = 0;
   int i;
   for (i = 0; i < Stocks.Size(); i++) {
-    if (Stocks[i]->Minage() < minage)
-      minage = Stocks[i]->Minage();
-    if (maxage < Stocks[i]->Maxage())
-      maxage = Stocks[i]->Maxage();
+    if (Stocks[i]->minAge() < minage)
+      minage = Stocks[i]->minAge();
+    if (maxage < Stocks[i]->maxAge())
+      maxage = Stocks[i]->maxAge();
   }
 
   IntMatrix agematrix(1, maxage - minage + 1);
@@ -59,10 +59,10 @@ void SIByLengthOnStep::Sum(const TimeClass* const TimeInfo) {
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns has only one element.
   //Copy the information from it -- we only want to keep the abundance numbers.
   const AgeBandMatrix* Alptr = &(aggregator->returnSum()[0]);
-  int length = Alptr->Maxlength(0);
+  int length = Alptr->maxLength(0);
   DoubleVector numbers(length);
   int len;
   for (len = 0; len < length; len++)
     numbers[len] = (*Alptr)[0][len].N;
-  this->KeepNumbers(numbers);
+  this->keepNumbers(numbers);
 }

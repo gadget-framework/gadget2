@@ -35,7 +35,7 @@ public:
    * \param area is the internal area identifier for the recruitment is taking place on
    * \param TimeInfo is the TimeClass for the current model
    */
-  void AddRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo);
+  void addRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo);
   /**
    * \brief This will set the ConversionIndex required for to calculate the recruits
    * \param GivenLDiv is the LengthGroupDivision for the stock
@@ -74,19 +74,19 @@ protected:
   /**
    * \brief This is the FormulaVector of mean lengths of the recruits used to calculate the recruitment population
    */
-  FormulaVector Meanlengths;
+  FormulaVector meanLength;
   /**
    * \brief This is the FormulaVector of the standard deviation of the lengths of the recruits used to calculate the recruitment population
    */
-  FormulaVector Sdev;
+  FormulaVector sdevLength;
   /**
    * \brief This is the FormulaVector of the multipliers used to calculate the weight-length relationship for the recruits
    */
-  FormulaVector Wcoeff1;
+  FormulaVector coeff1;
   /**
    * \brief This is the FormulaVector of the powers used to calculate the weight-length relationship for the recruits
    */
-  FormulaVector Wcoeff2;
+  FormulaVector coeff2;
   /**
    * \brief This is the ConversionIndex used to convert from the recruits LengthGroupDivision to the stock LengthGroupDivision
    */

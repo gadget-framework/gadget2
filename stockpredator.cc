@@ -16,7 +16,7 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv),
     MaxconByLength(areas.Size(), GivenLgrpDiv->NoLengthGroups(), 0.0) {
 
-  keeper->AddString("predator");
+  keeper->addString("predator");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
@@ -26,18 +26,18 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
 
   this->readSuitabilityMatrix(infile, "maxconsumption", TimeInfo, keeper);
 
-  keeper->AddString("maxconsumption");
+  keeper->addString("maxconsumption");
   maxConsumption.resize(4, keeper);  //Maxnumber of constants is 4
   if (!(infile >> maxConsumption))
     handle.Message("Incorrect format of maxconsumption vector");
   maxConsumption.Inform(keeper);
 
-  keeper->ClearLastAddString("halffeedingvalue");
+  keeper->clearLastAddString("halffeedingvalue");
   readWordAndFormula(infile, "halffeedingvalue", halfFeedingValue);
   halfFeedingValue.Inform(keeper);
-  keeper->ClearLast();
+  keeper->clearLast();
 
-  keeper->ClearLast();
+  keeper->clearLast();
   //Everything read from infile.
   IntVector size(maxage - minage + 1, GivenLgrpDiv->NoLengthGroups());
   IntVector minlength(maxage - minage + 1, 0);
@@ -67,11 +67,11 @@ void StockPredator::Print(ofstream& outfile) const {
   }
   for (area = 0; area < areas.Size(); area++) {
     outfile << "Alkeys (numbers) on internal area " << areas[area] << endl;
-    Alkeys[area].PrintNumbers(outfile);
+    Alkeys[area].printNumbers(outfile);
   }
   for (area = 0; area < areas.Size(); area++) {
     outfile << "Alkeys (mean weights) on internal area " << areas[area] << endl;
-    Alkeys[area].PrintWeights(outfile);
+    Alkeys[area].printWeights(outfile);
   }
   for (area = 0; area < areas.Size(); area++) {
     outfile << "Age-length proportion on internal area " << areas[area] << endl;
@@ -116,8 +116,8 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
       }
     }
     for (a = 0; a < areas.Size(); a++) {
-      for (age = Alkeys[a].Minage(); age <= Alkeys[a].Maxage(); age++) {
-        for (l = Alkeys[a].Minlength(age); l < Alkeys[a].Maxlength(age); l++) {
+      for (age = Alkeys[a].minAge(); age <= Alkeys[a].maxAge(); age++) {
+        for (l = Alkeys[a].minLength(age); l < Alkeys[a].maxLength(age); l++) {
           Alkeys[a][age][l].N = 0.0;
           Alkeys[a][age][l].W = 0.0;
           Alprop[a][age][l] = 0.0;
@@ -133,6 +133,6 @@ const PopInfoVector& StockPredator::NumberPriortoEating(int area, const char* pr
     if (strcasecmp(Preyname(prey), preyname) == 0)
       return Preys(prey)->NumberPriortoEating(area);
 
-  handle.LogWarning("Error in stockpredator - failed to match prey", preyname);
+  handle.logFailure("Error in stockpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
 }

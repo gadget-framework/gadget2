@@ -26,7 +26,7 @@ public:
    * \brief This function will calculate the likelihood score for the LogCatches component
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void AddToLikelihood(const TimeClass* const TimeInfo);
+  virtual void addLikelihood(const TimeClass* const TimeInfo);
   /**
    * \brief This function will reset the LogCatches likelihood information
    * \param keeper is the Keeper for the current model
@@ -51,12 +51,12 @@ public:
 private:
   void readLogCatchData(CommentStream&, const TimeClass*, int, int, int);
   void readLogWeightsData(CommentStream&, const TimeClass*, int);
-  double LogLik(const TimeClass* const TimeInfo);
+  double calcLikLog(const TimeClass* const TimeInfo);
   DoubleMatrixPtrMatrix AgeLengthData;
   DoubleMatrixPtrMatrix Proportions;
   DoubleMatrix Likelihoodvalues;
   FleetPreyAggregator* aggregator;
-  LengthGroupDivision* lgrpDiv;
+  LengthGroupDivision* LgrpDiv;
   CharPtrVector fleetnames;
   CharPtrVector stocknames;
   IntMatrix areas;

@@ -31,7 +31,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   : SIOnStep(infile, datafilename, areaindex, TimeInfo, 1, areas, ageindex, lenindex),  //reads fit type and years/steps
     aggregator(0), LgrpDiv(0), Ages(ages) {
 
-  keeper->AddString("SIByLengthAndAgeOnStep");
+  keeper->addString("sibylengthandageonstep");
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
     handle.Message("Error in surveyindex - failed to create length group");
@@ -86,7 +86,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
 
       for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
         if (suitfunction->usesPreyLength())
-          suitfunction->setPreyLength(LgrpDiv->Meanlength(i));
+          suitfunction->setPreyLength(LgrpDiv->meanLength(i));
 
         q_l[i] = suitfunction->calculate();
       }
@@ -148,9 +148,9 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   a_index.resize(numtime, 0);
   b_vec.resize(LgrpDiv->NoLengthGroups());
   for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) //Nakken's method
-    b_vec[i] = b[0] * exp(-b[1] * LgrpDiv->Meanlength(i));
+    b_vec[i] = b[0] * exp(-b[1] * LgrpDiv->meanLength(i));
 
-  keeper->ClearLast();
+  keeper->clearLast();
 }
 
 void SIByLengthAndAgeOnStep::readSurveyData(CommentStream& infile, const CharPtrVector& areaindex,
@@ -217,8 +217,8 @@ void SIByLengthAndAgeOnStep::readSurveyData(CommentStream& infile, const CharPtr
     }
   }
   if (count == 0)
-    handle.LogWarning("Warning in surveyindex - found no data in the data file for", name);
-  handle.LogMessage("Read surveyindex data file - number of entries", count);
+    handle.logWarning("Warning in surveyindex - found no data in the data file for", name);
+  handle.logMessage("Read surveyindex data file - number of entries", count);
 }
 
 SIByLengthAndAgeOnStep::~SIByLengthAndAgeOnStep() {
@@ -284,7 +284,7 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
       likelihood += calcLikLog();
       break;
     default:
-      handle.LogWarning("Warning in surveyindex - unknown opttype", opttype);
+      handle.logWarning("Warning in surveyindex - unknown opttype", opttype);
       break;
   }
   index++;
@@ -293,7 +293,7 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
 void SIByLengthAndAgeOnStep::calcIndex(const AgeBandMatrix* alptr) {
   //written by kgf 13/10 98
   int age, len;
-  int maxage = alptr->Maxage();
+  int maxage = alptr->maxAge();
   int maxlen = LgrpDiv->NoLengthGroups();
   double q_year = q_y[index];
   switch(this->getFitType()) {
@@ -308,7 +308,7 @@ void SIByLengthAndAgeOnStep::calcIndex(const AgeBandMatrix* alptr) {
           (*calc_index[index])[age][len] = q_year * q_l[len] * pow((*alptr)[age][len].N, b_vec[len]);
       break;
     default:
-      handle.LogWarning("Warning in surveyindex - unknown fittype", this->getFitType());
+      handle.logWarning("Warning in surveyindex - unknown fittype", this->getFitType());
       break;
   }
 }
@@ -552,7 +552,7 @@ void SIByLengthAndAgeOnStep::Reset(const Keeper* const keeper) {
   likelihood = 0.0;
   index = 0;
   for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) //Nakken's method
-    b_vec[i] = b[0] * exp(-b[1] * LgrpDiv->Meanlength(i));
+    b_vec[i] = b[0] * exp(-b[1] * LgrpDiv->meanLength(i));
 
   if (suitfunction != NULL) {
     //Fix this! Wont work if parameters are read from timevariable file.
@@ -562,7 +562,7 @@ void SIByLengthAndAgeOnStep::Reset(const Keeper* const keeper) {
 
     for (i = 0; i < q_l.Size(); i++) {
       if (suitfunction->usesPreyLength())
-        suitfunction->setPreyLength(LgrpDiv->Meanlength(i));
+        suitfunction->setPreyLength(LgrpDiv->meanLength(i));
 
       q_l[i] = suitfunction->calculate();
     }

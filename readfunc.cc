@@ -14,9 +14,7 @@ int readMatrix(CommentStream& infile, DoubleMatrix& M) {
   double N;
   for (i = 0; i < M.Nrow(); i++) {
     for (j = 0; j < M.Ncol(i); j++) {
-      infile >> ws;
-      c = infile.peek();
-      infile >> N;
+      infile >> ws >> N;
       if (!infile.fail())
         M[i][j] = N;
       else {
@@ -24,10 +22,10 @@ int readMatrix(CommentStream& infile, DoubleMatrix& M) {
         return 0;
       }
     }
-    c = infile.peek();
+    infile.get(c);
     while (c == ' ' || c == '\t')
       infile.get(c);
-    if ((c != '\n') && (c != '\r')) {
+    if (c != '\n') {
       handle.Message("Error in readmatrix - expected end of line");
       return 0;
     }
@@ -78,7 +76,7 @@ int readVectorInLine(CommentStream& infile, IntVector& Vec) {
   int i;
   char line[MaxStrLength];
   strncpy(line, "", MaxStrLength);
-  infile.getline(line, MaxStrLength);
+  infile.getLine(line, MaxStrLength);
   if (infile.fail()) {
     handle.Message("Error in readvectorinline - failed to read data");
     return 0;
@@ -108,7 +106,7 @@ int readVectorInLine(CommentStream& infile, DoubleVector& Vec) {
   int i;
   char line[MaxStrLength];
   strncpy(line, "", MaxStrLength);
-  infile.getline(line, MaxStrLength);
+  infile.getLine(line, MaxStrLength);
   if (infile.fail()) {
     handle.Message("Error in readvectorinline - failed to read data");
     return 0;
@@ -157,7 +155,13 @@ int readRefWeights(CommentStream& infile, DoubleMatrix& M) {
     infile >> ws;
     i++;
   }
-  handle.LogMessage("Read reference weights OK - number of entries", i);
+
+  //Check the data to make sure that it is continuous
+  for (i = 1; i < M.Nrow(); i++)
+    if ((M[i][0] - M[i - 1][0]) <= 0)
+      handle.Message("Lengths for reference weights must be strictly increasing");
+
+  handle.logMessage("Read reference weights OK - number of entries", i);
   return 1;
 }
 
@@ -182,7 +186,7 @@ int FindContinuousYearAndStepWithNoText(CommentStream& infile, int year, int ste
     infile >> ryear >> rstep;
     if (!infile.good())
       return 0; //Wrong format for file -- Failure
-    c = infile.peek();
+    infile.get(c);
     while (c != '\n' && !infile.eof())
       infile.get(c);
   } while ((ryear < year || (ryear == year && rstep < step)));
@@ -207,7 +211,7 @@ int countColumns(CommentStream& infile) {
 
   pos = infile.tellg();
   infile >> ws;
-  infile.getline(line, MaxStrLength);
+  infile.getLine(line, MaxStrLength);
   if (infile.fail())
     return 0;
 
@@ -243,8 +247,7 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
 
   //Find start of distribution data in datafile
   infile >> ws;
-  char c;
-  c = infile.peek();
+  char c = infile.peek();
   if (!isdigit(c)) {
     infile.get(c);
     while (c != '\n' && !infile.eof())
@@ -316,8 +319,8 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
   }
 
   if (count == 0)
-    handle.LogWarning("Warning in readamounts - found no data in the data file for", givenname);
-  handle.LogMessage("Read amounts data file - number of entries", count);
+    handle.logWarning("Warning in readamounts - found no data in the data file for", givenname);
+  handle.logMessage("Read amounts data file - number of entries", count);
   return 1;
 }
 
@@ -337,8 +340,7 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
 
   //Find start of distribution data in datafile
   infile >> ws;
-  char c;
-  c = infile.peek();
+  char c = infile.peek();
   if (!isdigit(c)) {
     infile.get(c);
     while (c != '\n' && !infile.eof())
@@ -407,7 +409,7 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
     }
   }
   if (count == 0)
-    handle.LogWarning("Warning in growthamounts - found no data in the data file");
-  handle.LogMessage("Read growth data file - number of entries", count);
+    handle.logWarning("Warning in growthamounts - found no data in the data file");
+  handle.logMessage("Read growth data file - number of entries", count);
   return 1;
 }

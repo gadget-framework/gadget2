@@ -99,7 +99,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
         handle.UndefinedArea(areas[i][j]);
 
   //Must create the length group division
-  lgrpdiv = new LengthGroupDivision(lengths);
+  LgrpDiv = new LengthGroupDivision(lengths);
 
   //read in the fleetnames
   i = 0;
@@ -156,8 +156,7 @@ void StockDistribution::readStockData(CommentStream& infile,
 
   //Find start of distribution data in datafile
   infile >> ws;
-  char c;
-  c = infile.peek();
+  char c = infile.peek();
   if (!isdigit(c)) {
     infile.get(c);
     while (c != '\n' && !infile.eof())
@@ -242,10 +241,10 @@ void StockDistribution::readStockData(CommentStream& infile,
       (*AgeLengthData[timeid][areaid])[stockid][i] = tmpnumber;
     }
   }
-  AAT.AddActions(Years, Steps, TimeInfo);
+  AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.LogWarning("Warning in stockdistribution - found no data in the data file for", sdname);
-  handle.LogMessage("Read stockdistribution data file - number of entries", count);
+    handle.logWarning("Warning in stockdistribution - found no data in the data file for", sdname);
+  handle.logMessage("Read stockdistribution data file - number of entries", count);
 }
 
 StockDistribution::~StockDistribution() {
@@ -257,7 +256,7 @@ StockDistribution::~StockDistribution() {
   delete[] aggregator;
   delete[] functionname;
   delete[] sdname;
-  delete lgrpdiv;
+  delete LgrpDiv;
 
   for (i = 0; i < fleetnames.Size(); i++)
     delete[] fleetnames[i];
@@ -306,10 +305,9 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
         found = 1;
         fleets.resize(1, Fleets[j]);
       }
-    if (found == 0) {
-      handle.LogWarning("Error in stockdistribution - unknown fleet", fleetnames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in stockdistribution - unknown fleet", fleetnames[i]);
+
   }
 
   for (i = 0; i < stocknames.Size(); i++) {
@@ -322,16 +320,14 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
           stocks.resize(1, Stocks[j]);
         }
     }
-    if (found == 0) {
-      handle.LogWarning("Error in stockdistribution - unknown stock", stocknames[i]);
-      exit(EXIT_FAILURE);
-    }
+    if (found == 0)
+      handle.logFailure("Error in stockdistribution - unknown stock", stocknames[i]);
 
-    aggregator[i] = new FleetPreyAggregator(fleets, stocks, lgrpdiv, areas, ages, overconsumption);
+    aggregator[i] = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
   }
 }
 
-void StockDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
+void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   int i;
   if (AAT.AtCurrentTime(TimeInfo)) {
     for (i = 0; i < stocknames.Size(); i++)
@@ -339,13 +335,13 @@ void StockDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
 
     switch(functionnumber) {
       case 1:
-        likelihood += LikMultinomial();
+        likelihood += calcLikMultinomial();
         break;
       case 2:
-        likelihood += LikSumSquares();
+        likelihood += calcLikSumSquares();
         break;
       default:
-        handle.LogWarning("Warning in stockdistribution - unknown function", functionname);
+        handle.logWarning("Warning in stockdistribution - unknown function", functionname);
         break;
     }
     timeindex++;
@@ -354,7 +350,7 @@ void StockDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
 
 //The code here is probably unnessecarily complicated because
 //is always only one length group with this class.
-double StockDistribution::LikMultinomial() {
+double StockDistribution::calcLikMultinomial() {
   const AgeBandMatrixPtrVector* alptr;
   DoubleMatrixPtrVector Dist(areas.Nrow(), NULL);
   int nareas, area, age, len, sn;
@@ -362,14 +358,14 @@ double StockDistribution::LikMultinomial() {
   double temp;
 
   for (area = 0; area < Dist.Size(); area++) {
-    Dist[area] = new DoubleMatrix(aggregator[0]->NoAgeGroups() *
+    Dist[area] = new DoubleMatrix(aggregator[0]->numAgeGroups() *
       aggregator[0]->NoLengthGroups(), stocknames.Size(), 0.0);
     for (sn = 0; sn < stocknames.Size(); sn++) {
       alptr = &aggregator[sn]->returnSum();
-      minage = (*alptr)[area].Minage();
-      maxage = (*alptr)[area].Maxage();
+      minage = (*alptr)[area].minAge();
+      maxage = (*alptr)[area].maxAge();
       for (age = minage; age <= maxage; age++) {
-        for (len = (*alptr)[area].Minlength(age); len < (*alptr)[area].Maxlength(age); len++) {
+        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
           i = age + (ages.Nrow() * len);
           (*Proportions[timeindex][area])[sn][i] = ((*alptr)[area][age][len]).N;
           (*Dist[area])[i][sn] = ((*alptr)[area][age][len]).N;
@@ -393,7 +389,7 @@ double StockDistribution::LikMultinomial() {
   return MN.returnLogLikelihood();
 }
 
-double StockDistribution::LikSumSquares() {
+double StockDistribution::calcLikSumSquares() {
 
   double totallikelihood = 0.0, temp = 0.0;
   double totalmodel, totaldata;
@@ -406,8 +402,8 @@ double StockDistribution::LikSumSquares() {
       totalmodel = 0.0;
       totaldata = 0.0;
 
-      for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
-        for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+      for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
+        for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++) {
           i = age + (ages.Nrow() * len);
           (*Proportions[timeindex][nareas])[sn][i] = ((*alptr)[nareas][age][len]).N;
           totalmodel += (*Proportions[timeindex][nareas])[sn][i];
@@ -415,8 +411,8 @@ double StockDistribution::LikSumSquares() {
         }
       }
 
-      for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
-        for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
+      for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++) {
+        for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++) {
           i = age + (ages.Nrow() * len);
           if ((isZero(totaldata)) && (isZero(totalmodel)))
             temp = 0.0;

@@ -42,7 +42,7 @@ int OptInfo::read(CommentStream &infile, char* text) {
     return 1;
   } else if (strcasecmp(text, "bounds") == 0) {
     // JMB - removed code to read in bounds here
-    handle.LogWarning("Error in optinfo - bounds should not be specified here");
+    handle.logWarning("Error in optinfo - bounds should not be specified here");
     return 0;
   } else
     return 0;
@@ -64,7 +64,7 @@ void OptInfoHooke::read(CommentStream& infile) {
     infile >> text >> ws;
 
     if (!read(infile, text))
-      handle.LogWarning("Error in optinfo - unknown option", text);
+      handle.logWarning("Error in optinfo - unknown option", text);
   }
 }
 
@@ -135,7 +135,7 @@ void OptInfoHooke::MaximizeLikelihood() {
 
     /* Warn if the starting point is zero */
     if (isZero(val[i]))
-      handle.LogWarning("Warning in optinfo - initial value is zero for switch", optswitches[i].getValue());
+      handle.logWarning("Warning in optinfo - initial value is zero for switch", optswitches[i].getValue());
   }
 
   count = hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
@@ -143,7 +143,7 @@ void OptInfoHooke::MaximizeLikelihood() {
 
   cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
     << "\nafter " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
-  EcoSystem->PrintOptValues();
+  EcoSystem->writeOptValues();
 
   delete[] endpoint;
   delete[] startpoint;
@@ -168,7 +168,7 @@ void OptInfoSimann::read(CommentStream& infile) {
   while (!infile.eof()) {
     infile >> text >> ws;
     if (!read(infile, text))
-      handle.LogWarning("Error in optinfo - unknown option", text);
+      handle.logWarning("Error in optinfo - unknown option", text);
   }
 }
 
@@ -245,7 +245,7 @@ void OptInfoSimann::MaximizeLikelihood() {
 
   cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
     << "\nafter " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
-  EcoSystem->PrintOptValues();
+  EcoSystem->writeOptValues();
 
   delete[] startpoint;
   delete[] endpoint;
@@ -270,7 +270,7 @@ void OptInfoHookeAndSimann::read(CommentStream& infile) {
   while (!infile.eof()) {
     infile >> text >> ws;
     if (!read(infile, text))
-      handle.LogWarning("Error in optinfo - unknown option", text);
+      handle.logWarning("Error in optinfo - unknown option", text);
   }
 }
 
@@ -380,7 +380,7 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
 
     /* Warn if the starting point is zero */
     if (isZero(val[i]))
-      handle.LogWarning("Warning in optinfo - initial value is zero for switch", optswitches[i].getValue());
+      handle.logWarning("Warning in optinfo - initial value is zero for switch", optswitches[i].getValue());
   }
 
   /* Reset the converge flag for the hooke optimisation */
@@ -391,7 +391,7 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
 
   cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
     << "\nafter " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
-  EcoSystem->PrintOptValues();
+  EcoSystem->writeOptValues();
 
   delete[] startpoint;
   delete[] endpoint;
