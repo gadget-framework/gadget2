@@ -47,6 +47,12 @@ public:
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
   virtual void LikelihoodPrint(ofstream& outfile);
+  /**
+   * \brief This function will print summary information from each SurveyIndices likelihood calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   */
+  virtual void SummaryPrint(ofstream& outfile) {
+    SI->SummaryPrint(outfile, weight); };
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time) {
     SI->PrintLikelihood(outfile, time, surveyname); };
   virtual void PrintLikelihoodHeader(ofstream& outfile) {

@@ -18,12 +18,13 @@ enum FitType { LOGLINEARFIT = 1, FIXEDSLOPELOGLINEARFIT, FIXEDLOGLINEARFIT, LINE
 
 class SIOnStep {
 public:
-  SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
-    const TimeClass* const TimeInfo, int numcols, const IntMatrix& areas,
-    const CharPtrVector& index1, const CharPtrVector& index2, const char* name);
-  SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
-    const TimeClass* const TimeInfo, const IntMatrix& areas,
-    const CharPtrVector& colindex, const char* name);
+  SIOnStep(CommentStream& infile, const char* datafilename,
+    const CharPtrVector& areaindex, const TimeClass* const TimeInfo,
+    int numcols, const IntMatrix& areas, const CharPtrVector& index1,
+    const CharPtrVector& index2, const char* name);
+  SIOnStep(CommentStream& infile, const char* datafilename,
+    const CharPtrVector& areaindex, const TimeClass* const TimeInfo,
+    const IntMatrix& areas, const CharPtrVector& colindex, const char* name);
   virtual ~SIOnStep();
   virtual void Sum(const TimeClass* const TimeInfo) = 0;
   virtual void setStocks(const StockPtrVector& Stocks) = 0;
@@ -31,6 +32,7 @@ public:
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile);
+  virtual void SummaryPrint(ofstream& outfile, double weight) {};
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time, const char*) {};
   virtual void PrintLikelihoodHeader(ofstream& outfile, const char* name) {};
 protected:
@@ -45,17 +47,18 @@ protected:
   IntMatrix Areas;
   IntVector Years;
   IntVector Steps;
-  IntVector YearsInFile;
+  CharPtrVector areanames;
   ActionAtTimes AAT;
   DoubleMatrix Indices;
   DoubleMatrix abundance;
   FitType getFitType() { return fittype; };
 private:
-  void readSIData(CommentStream& infile, const CharPtrVector& areaindex,
-    const CharPtrVector& index1, const CharPtrVector& index2, const TimeClass* const TimeInfo);
-  void readSIData(CommentStream& infile, const CharPtrVector& areaindex,
+  void readSIData(CommentStream& infile, const CharPtrVector& index1,
+    const CharPtrVector& index2, const TimeClass* const TimeInfo);
+  void readSIData(CommentStream& infile, 
     const CharPtrVector& colindex, const TimeClass* const TimeInfo);
-  double Fit(const DoubleVector& stocksize, const DoubleVector& indices, int col);
+  double Fit(const DoubleVector& stocksize,
+    const DoubleVector& indices, int col);
   int NumberOfSums;
   FitType fittype;
   double slope;

@@ -21,8 +21,9 @@ public:
    * \param name is the name of the SIByAgeOnStep likelihood component
    */
   SIByAgeOnStep(CommentStream& infile, const IntMatrix& areas,
-    const IntMatrix& ages, const CharPtrVector& areaindex, const CharPtrVector& ageindex,
-    const TimeClass* const TimeInfo, const char* datafilename, const char* name);
+    const IntMatrix& ages, const CharPtrVector& areaindex,
+    const CharPtrVector& ageindex, const TimeClass* const TimeInfo,
+    const char* datafilename, const char* name);
   /**
    * \brief This is the default SIByAgeOnStep destructor
    */

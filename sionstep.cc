@@ -9,12 +9,16 @@
 extern ErrorHandler handle;
 
 SIOnStep::~SIOnStep() {
+  int i;
   delete[] siname;
+  for (i = 0; i < areanames.Size(); i++)
+    delete[] areanames[i];
 }
 
-SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
-  const TimeClass* const TimeInfo, int numcols, const IntMatrix& areas,
-  const CharPtrVector& index1, const CharPtrVector& index2, const char* name) : Areas(areas) {
+SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
+  const CharPtrVector& areaindex, const TimeClass* const TimeInfo,
+  int numcols, const IntMatrix& areas, const CharPtrVector& index1,
+  const CharPtrVector& index2, const char* name) : Areas(areas) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -26,6 +30,15 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
 
   siname = new char[strlen(name) + 1];
   strcpy(siname, name);
+
+  //copy the areaindex so we can access this from sionstep
+  int i;
+  for (i = 0; i < areaindex.Size(); i++) {
+    areanames.resize(1);
+    areanames[i] = new char[MaxStrLength];
+    strncpy(areanames[i], "", MaxStrLength);
+    strcpy(areanames[i], areaindex[i]);
+  } 
 
   //if numcols is 1 then this is a sibyalengthandageonstep
   //else we have a pionstep - these use different fittypes
@@ -93,7 +106,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   datafile.open(datafilename, ios::in);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  readSIData(subdata, areaindex, index1, index2, TimeInfo);
+  readSIData(subdata, index1, index2, TimeInfo);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -107,9 +120,10 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   }
 }
 
-SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
-  const TimeClass* const TimeInfo, const IntMatrix& areas,
-  const CharPtrVector& colindex, const char* name) : Areas(areas) {
+SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
+  const CharPtrVector& areaindex, const TimeClass* const TimeInfo,
+  const IntMatrix& areas, const CharPtrVector& colindex,
+  const char* name) : Areas(areas) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -121,6 +135,15 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
 
   siname = new char[strlen(name) + 1];
   strcpy(siname, name);
+
+  //copy the areaindex so we can access this from sionstep
+  int i;
+  for (i = 0; i < areaindex.Size(); i++) {
+    areanames.resize(1);
+    areanames[i] = new char[MaxStrLength];
+    strncpy(areanames[i], "", MaxStrLength);
+    strcpy(areanames[i], areaindex[i]);
+  } 
 
   //read the fittype
   infile >> text;
@@ -175,7 +198,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   datafile.open(datafilename, ios::in);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  readSIData(subdata, areaindex, colindex, TimeInfo);
+  readSIData(subdata, colindex, TimeInfo);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -188,7 +211,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   }
 }
 
-void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
+void SIOnStep::readSIData(CommentStream& infile, 
   const CharPtrVector& colindex, const TimeClass* const TimeInfo) {
 
   int i;
@@ -218,10 +241,10 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
     } else
       keepdata = 1;
 
-    //if tmparea is in areaindex keep data, else dont keep the data
+    //if tmparea is in areanames keep data, else dont keep the data
     areaid = -1;
-    for (i = 0; i < areaindex.Size(); i++)
-      if (strcasecmp(areaindex[i], tmparea) == 0)
+    for (i = 0; i < areanames.Size(); i++)
+      if (strcasecmp(areanames[i], tmparea) == 0)
         areaid = i;
 
     if (areaid == -1)
@@ -247,10 +270,6 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
       }
       Indices[timeid][colid] = tmpnumber;
     }
-
-    //Keep all years from the input file in a vector [mnaa 25.04.00]
-    if (YearsInFile.Size() == 0 || year != YearsInFile[YearsInFile.Size() - 1])
-      YearsInFile.resize(1, year);
   }
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
@@ -258,8 +277,8 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
   handle.logMessage("Read surveyindex data file - number of entries", count);
 }
 
-void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
-  const CharPtrVector& index1, const CharPtrVector& index2, const TimeClass* const TimeInfo) {
+void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& index1,
+  const CharPtrVector& index2, const TimeClass* const TimeInfo) {
 
   int i;
   int year, step;
@@ -291,10 +310,10 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
     } else
       keepdata = 1;
 
-    //if tmparea is in areaindex keep data, else dont keep the data
+    //if tmparea is in areanames keep data, else dont keep the data
     areaid = -1;
-    for (i = 0; i < areaindex.Size(); i++)
-      if (strcasecmp(areaindex[i], tmparea) == 0)
+    for (i = 0; i < areanames.Size(); i++)
+      if (strcasecmp(areanames[i], tmparea) == 0)
         areaid = i;
 
     if (areaid == -1)
@@ -325,10 +344,6 @@ void SIOnStep::readSIData(CommentStream& infile, const CharPtrVector& areaindex,
         Steps.resize(1, step);
       }
     }
-
-    //Keep all years from the input file in a vector [mnaa 25.04.00]
-    if (YearsInFile.Size() == 0 || year != YearsInFile[YearsInFile.Size() - 1])
-      YearsInFile.resize(1, year);
   }
   AAT.addActions(Years, Steps, TimeInfo);
 }

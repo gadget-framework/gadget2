@@ -96,6 +96,24 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   if (yearly != 0 && yearly != 1)
     handle.Message("Error in catchdistribution - aggregationlevel must be 0 or 1");
 
+  if (yearly == 1) {
+    switch(functionnumber) {
+      case 2:
+      case 3:
+      case 7:
+        break;
+      case 1:
+      case 4:
+      case 5:
+      case 6:
+        handle.logWarning("Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
+        break;
+      default:
+        handle.logWarning("Warning in catchdistribution - unknown function", functionname);
+        break;
+    }
+  }
+
   readWordAndVariable(infile, "overconsumption", overconsumption);
   if (overconsumption != 0 && overconsumption != 1)
     handle.Message("Error in catchdistribution - overconsumption must be 0 or 1");
@@ -496,8 +514,6 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    handle.logMessage("Calculating likelihood score for catchdistribution component", cdname);
-
     if (stocktype == STOCKTYPE)
       aggregator->Sum(TimeInfo);
     else if (stocktype == LENSTOCKTYPE)
@@ -539,8 +555,11 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
         handle.logWarning("Warning in catchdistribution - unknown function", functionname);
         break;
     }
-    likelihood += l;
-    handle.logMessage("The likelihood score for this component on this timestep is", l);
+    if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
+      likelihood += l;
+      handle.logMessage("Calculating likelihood score for catchdistribution component", cdname);
+      handle.logMessage("The likelihood score for this component on this timestep is", l);
+    }
     timeindex++;
   }
 }
@@ -1045,13 +1064,26 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
 void CatchDistribution::SummaryPrint(ofstream& outfile) {
   int year, area;
 
-  for (year = 0; year < likelihoodValues.Nrow(); year++)
-    for (area = 0; area < likelihoodValues.Ncol(year); area++)
-      outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
-        << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(largewidth) << cdname << sep << setw(smallwidth) << weight << sep 
-        << setprecision(largeprecision) << setw(largewidth)
-        << likelihoodValues[year][area] << endl;
-
+  for (year = 0; year < likelihoodValues.Nrow(); year++) {
+    for (area = 0; area < likelihoodValues.Ncol(year); area++) {
+      if (yearly == 0) {
+        outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
+          << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
+          << setw(largewidth) << cdname << sep << setw(smallwidth) << weight
+          << sep << setprecision(largeprecision) << setw(largewidth)
+          << likelihoodValues[year][area] << endl;
+      } else {
+        if (isZero(likelihoodValues[year][area])) {
+	// assume that this isnt the last step for that year and ignore
+	} else {
+          outfile << setw(lowwidth) << Years[year] << "  all "
+            << setw(printwidth) << areaindex[area] << sep
+            << setw(largewidth) << cdname << sep << setw(smallwidth) << weight
+            << sep << setprecision(largeprecision) << setw(largewidth)
+            << likelihoodValues[year][area] << endl;
+	}
+      }
+    }
+  }
   outfile.flush();
 }

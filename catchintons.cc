@@ -195,7 +195,7 @@ void CatchInTons::addLikelihood(const TimeClass* const TimeInfo) {
         break;
     }
 
-    if ((!yearly) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
+    if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
       likelihood += l;
       handle.logMessage("Calculating likelihood score for catchintons component", ctname);
       handle.logMessage("The likelihood score for this component on this timestep is", l);
@@ -386,13 +386,26 @@ void CatchInTons::LikelihoodPrint(ofstream& outfile) {
 void CatchInTons::SummaryPrint(ofstream& outfile) {
   int year, area;
 
-  for (year = 0; year < likelihoodValues.Nrow(); year++)
-    for (area = 0; area < likelihoodValues.Ncol(year); area++)
-      outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
-        << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(largewidth) << ctname << sep << setw(smallwidth) << weight << sep 
-        << setprecision(largeprecision) << setw(largewidth)
-        << likelihoodValues[year][area] << endl;
-
+  for (year = 0; year < likelihoodValues.Nrow(); year++) {
+    for (area = 0; area < likelihoodValues.Ncol(year); area++) {
+      if (yearly == 0) {
+        outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
+          << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
+          << setw(largewidth) << ctname << sep << setw(smallwidth) << weight
+          << sep << setprecision(largeprecision) << setw(largewidth)
+          << likelihoodValues[year][area] << endl;
+      } else {
+        if (isZero(likelihoodValues[year][area])) {
+	// assume that this isnt the last step for that year and ignore
+	} else {
+          outfile << setw(lowwidth) << Years[year] << "  all "
+            << setw(printwidth) << areaindex[area] << sep
+            << setw(largewidth) << ctname << sep << setw(smallwidth) << weight
+            << sep << setprecision(largeprecision) << setw(largewidth)
+            << likelihoodValues[year][area] << endl;
+	}
+      }
+    }
+  }
   outfile.flush();
 }

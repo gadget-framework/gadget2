@@ -28,7 +28,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   const IntMatrix& ages, const TimeClass* const TimeInfo, Keeper* const keeper,
   const CharPtrVector& lenindex, const CharPtrVector& ageindex,
   const CharPtrVector& areaindex, const char* datafilename, const char* name)
-  : SIOnStep(infile, datafilename, areaindex, TimeInfo, 1, areas, ageindex, lenindex, name),     Ages(ages) {
+  : SIOnStep(infile, datafilename, areaindex, TimeInfo, 1, areas, ageindex, lenindex, name), Ages(ages) {
 
   keeper->addString("sibylengthandageonstep");
   LgrpDiv = new LengthGroupDivision(lengths);
@@ -237,28 +237,32 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   else
     handle.logFailure("Error in surveyindex - unknown stocktype", stocktype);
 
-  handle.logMessage("Calculating index for surveyindex component", this->SIName());
+  double l = 0.0;
+  handle.logMessage("Calculating likelihood score for surveyindex component", this->SIName());
+
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns only one element.
   const AgeBandMatrix* alptr = &(aggregator->returnSum()[0]);
   this->calcIndex(alptr, TimeInfo);
-
   switch(opttype) {
     case PEARSONOPTTYPE:
-      likelihood += calcLikPearson();
+      l = calcLikPearson();
       break;
     case MULTINOMIALOPTTYPE:
-      likelihood += calcLikMultinomial();
+      l = calcLikMultinomial();
       break;
     case GAMMAOPTTYPE:
-      likelihood += calcLikGamma();
+      l = calcLikGamma();
       break;
     case LOGFUNCOPTTYPE:
-      likelihood += calcLikLog();
+      l = calcLikLog();
       break;
     default:
       handle.logWarning("Warning in surveyindex - unknown opttype", opttype);
       break;
   }
+
+  handle.logMessage("The likelihood score for this component on this timestep is", l);
+  likelihood += l;
   index++;
 }
 
@@ -510,4 +514,20 @@ void SIByLengthAndAgeOnStep::LikelihoodPrint(ofstream& outfile) {
     outfile << max_val_on_step[i] << sep << a_index[i] << sep << l_index[i] << endl;
     }
   outfile << "Total likelihood component " << likelihood << endl;
+}
+
+void SIByLengthAndAgeOnStep::SummaryPrint(ofstream& outfile, double weight) {
+  int year, area;
+
+  //JMB - this is nasty hack since there is only one area
+  for (year = 0; year < Years.Size(); year++) {
+    for (area = 0; area < areanames.Size(); area++) {
+      outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
+        << Steps[year] << sep << setw(printwidth) << areanames[area] << sep
+        << setw(largewidth) << this->SIName() << sep << setw(smallwidth)
+	<< weight << sep << setprecision(largeprecision) << setw(largewidth)
+        << lik_val_on_step[year] << endl;
+    }
+  }
+  outfile.flush();
 }

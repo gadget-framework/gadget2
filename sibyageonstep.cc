@@ -9,8 +9,9 @@
 extern ErrorHandler handle;
 
 SIByAgeOnStep::SIByAgeOnStep(CommentStream& infile, const IntMatrix& areas,
-  const IntMatrix& ages, const CharPtrVector& areaindex, const CharPtrVector& ageindex,
-  const TimeClass* const TimeInfo, const char* datafilename, const char* name)
+  const IntMatrix& ages, const CharPtrVector& areaindex,
+  const CharPtrVector& ageindex, const TimeClass* const TimeInfo,
+  const char* datafilename, const char* name)
   : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, ageindex, name), Ages(ages) {
 
 }

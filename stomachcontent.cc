@@ -64,10 +64,7 @@ StomachContent::~StomachContent() {
 }
 
 void StomachContent::addLikelihood(const TimeClass* const TimeInfo) {
-  double l = 0.0;
-  l = StomCont->Likelihood(TimeInfo);
-  likelihood += l;
-  handle.logMessage("The likelihood score for this component on this timestep is", l);
+  likelihood += StomCont->Likelihood(TimeInfo);
 }
 
 void StomachContent::Print(ofstream& outfile) const {
@@ -199,7 +196,6 @@ double SC::Likelihood(const TimeClass* const TimeInfo) {
   if (!AAT.AtCurrentTime(TimeInfo))
     return 0.0;
 
-
   int i, a, k;
   int prey_g = 0, prey_l = 0;
   double length = 0.0, mult = 0.0;
@@ -245,6 +241,7 @@ double SC::Likelihood(const TimeClass* const TimeInfo) {
   for (a = 0; a < areas.Nrow(); a++)
     delete consumption[a];
   timeindex++;
+  handle.logMessage("The likelihood score for this component on this timestep is", l);
   return l;
 }
 
@@ -371,7 +368,9 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
         Steps.resize(1, step);
         timeid = Years.Size() - 1;
 
-        stomachcontent.AddRows(1, numarea);
+        stomachcontent.AddRows(1, numarea, 0);
+        modelConsumption.AddRows(1, numarea, 0);
+        likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++)
           stomachcontent[timeid][i] = new DoubleMatrix(pred_size, nopreygroups, 0.0);
       }
@@ -391,8 +390,6 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
-  else
-    modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
   handle.logMessage("Read stomachcontent data file - number of entries", count);
 }
 
@@ -476,8 +473,10 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
         Steps.resize(1, step);
         timeid = Years.Size() - 1;
 
-        stomachcontent.AddRows(1, numarea);
-        stddev.AddRows(1, numarea);
+        stomachcontent.AddRows(1, numarea, 0);
+        modelConsumption.AddRows(1, numarea, 0);
+        stddev.AddRows(1, numarea, 0);
+        likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
           stomachcontent[timeid][i] = new DoubleMatrix(pred_size, nopreygroups, 0.0);
           stddev[timeid][i] = new DoubleMatrix(pred_size, nopreygroups, 0.0);
@@ -500,8 +499,6 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
-  else
-    modelConsumption.AddRows(stomachcontent.Nrow(), stomachcontent.Ncol(), 0);
   handle.logMessage("Read stomachcontent data file - number of entries", count);
 }
 
@@ -743,16 +740,19 @@ double SCAmounts::CalculateLikelihood(DoubleMatrixPtrVector& consumption, Double
   double tmplik, lik = 0.0;
 
   for (a = 0; a < consumption.Size(); a++) {
+    likelihoodValues[timeindex][a] = 0.0;
     for (k = 0; k < consumption[a]->Nrow(); k++) {
       tmplik = 0.0;
       for (preyl = 0; preyl < consumption[a]->Ncol(); preyl++) {
-        if ((*stddev[timeindex][a])[k][preyl] != 0)
+        if (!(isZero((*stddev[timeindex][a])[k][preyl])))
           tmplik += ((*consumption[a])[k][preyl] -
             (*stomachcontent[timeindex][a])[k][preyl]) *
             ((*consumption[a])[k][preyl] - (*stomachcontent[timeindex][a])[k][preyl]) /
             ((*stddev[timeindex][a])[k][preyl] * (*stddev[timeindex][a])[k][preyl]);
       }
-      lik += tmplik * (*number[timeindex])[a][k];
+      tmplik *= (*number[timeindex])[a][k];
+      lik += tmplik;
+      likelihoodValues[timeindex][a] += tmplik;
     }
   }
   return lik;
@@ -850,7 +850,7 @@ void SCAmounts::PrintLikelihoodHeader(ofstream& outfile) {
 
 void SCRatios::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
   int i, j, k, l;
-  double sum = 0.0;
+  double tmpdivide, sum = 0.0;
   SC::setPredatorsAndPreys(Predators, Preys);
   //Scale each row such that it sums up to 1
   for (i = 0; i < stomachcontent.Nrow(); i++)
@@ -860,9 +860,11 @@ void SCRatios::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector&
         for (l = 0; l < stomachcontent[i][j]->Ncol(k); l++)
           sum += (*stomachcontent[i][j])[k][l];
 
-        if (sum > 0)
+        if (!(isZero(sum))) {
+	  tmpdivide = 1 / sum;
           for (l = 0; l < stomachcontent[i][j]->Ncol(k); l++)
-            (*stomachcontent[i][j])[k][l] /= sum;
+            (*stomachcontent[i][j])[k][l] *= tmpdivide;
+	}
       }
 }
 
@@ -872,12 +874,13 @@ double SCRatios::CalculateLikelihood(DoubleMatrixPtrVector& consumption, DoubleM
   double lik = 0.0;
 
   for (a = 0; a < consumption.Size(); a++) {
+    likelihoodValues[timeindex][a] = 0.0;
     for (predl = 0; predl < consumption[a]->Nrow(); predl++) {
-      if (sum[a][predl] != 0) {
+      if (!(isZero(sum[a][predl]))) {
         tmpdivide = 1 / sum[a][predl];
         tmplik = 0.0;
         for (preyl = 0; preyl < consumption[a]->Ncol(); preyl++) {
-          if ((*stddev[timeindex][a])[predl][preyl] != 0)
+          if (!(isZero((*stddev[timeindex][a])[predl][preyl])))
             tmplik += ((*consumption[a])[predl][preyl] * tmpdivide -
               (*stomachcontent[timeindex][a])[predl][preyl]) *
               ((*consumption[a])[predl][preyl] * tmpdivide -
@@ -887,6 +890,7 @@ double SCRatios::CalculateLikelihood(DoubleMatrixPtrVector& consumption, DoubleM
         }
         tmplik *= (*number[timeindex])[a][predl];
         lik += tmplik;
+        likelihoodValues[timeindex][a] += tmplik;
       }
     }
   }
@@ -900,13 +904,15 @@ double SCNumbers::CalculateLikelihood(DoubleMatrixPtrVector& consumption, Double
   int a, predl, preyl;
   double tmp;
   for (a = 0; a < consumption.Size(); a++) {
+    likelihoodValues[timeindex][a] = 0.0;
     for (predl = 0; predl < consumption[a]->Nrow(); predl++) {
       if (!(isZero(sum[a][predl]))) {
         DoubleVector* numbers = new DoubleVector(consumption[a]->Ncol(), 0.0);
         for (preyl = 0; preyl < consumption[a]->Ncol(); preyl++)
           (*numbers)[preyl] = (*stomachcontent[timeindex][a])[predl][preyl];
 
-        tmp = MN.calcLogLikelihood(*numbers, (*consumption[a])[predl]);
+        likelihoodValues[timeindex][a] += MN.calcLogLikelihood(*numbers, (*consumption[a])[predl]);
+
         delete numbers;
       }
     }
@@ -924,4 +930,19 @@ void SC::Reset() {
         modelConsumption[i][j] = 0;
       }
   handle.logMessage("Reset stomachcontent component", scname);
+}
+
+void SC::SummaryPrint(ofstream& outfile, double weight) {
+  int year, area;
+
+  for (year = 0; year < likelihoodValues.Nrow(); year++) {
+    for (area = 0; area < likelihoodValues.Ncol(year); area++) {
+      outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
+        << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
+        << setw(largewidth) << scname << sep << setw(smallwidth) << weight
+        << sep << setprecision(largeprecision) << setw(largewidth)
+        << likelihoodValues[year][area] << endl;
+    }
+  }
+  outfile.flush();
 }

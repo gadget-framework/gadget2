@@ -9,8 +9,9 @@
 extern ErrorHandler handle;
 
 SIByLengthOnStep::SIByLengthOnStep(CommentStream& infile, const IntMatrix& areas,
-  const DoubleVector& lengths, const CharPtrVector& areaindex, const CharPtrVector& lenindex,
-  const TimeClass* const TimeInfo, const char* datafilename, const char* name)
+  const DoubleVector& lengths, const CharPtrVector& areaindex,
+  const CharPtrVector& lenindex, const TimeClass* const TimeInfo,
+  const char* datafilename, const char* name)
   : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, lenindex, name) {
 
   LgrpDiv = new LengthGroupDivision(lengths);

@@ -45,6 +45,12 @@ public:
    * \param Preys is the PreyPtrVector of all the available preys
    */
   virtual void setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys);
+  /**
+   * \brief This function will print summary information from each StomachContent likelihood calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   * \param weight is the weight for the likelihood component
+   */
+  virtual void SummaryPrint(ofstream& outfile, double weight);
   virtual void Aggregate(int i);
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& TimeInfo) {};
   virtual void PrintLikelihoodHeader(ofstream& outfile) {};
@@ -52,6 +58,7 @@ protected:
   virtual double CalculateLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum) = 0;
   DoubleMatrixPtrMatrix stomachcontent;   //[timeindex][areas][pred_l][prey_l]
   DoubleMatrixPtrMatrix modelConsumption; //[timeindex][areas][pred_l][prey_l]
+  DoubleMatrix likelihoodValues;          //[time][area] 
   CharPtrVector predatornames;
   CharPtrMatrix preynames;
   CharPtrVector areaindex;
@@ -213,6 +220,12 @@ public:
    */
   void setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys)
     { StomCont->setPredatorsAndPreys(Predators, Preys); };
+  /**
+   * \brief This function will print summary information from each StomachContent likelihood calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   */
+  virtual void SummaryPrint(ofstream& outfile) {
+    StomCont->SummaryPrint(outfile, weight); };
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time)
     { StomCont->PrintLikelihood(outfile, time); };
   virtual void PrintLikelihoodHeader(ofstream& outfile)

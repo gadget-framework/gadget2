@@ -325,7 +325,7 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
       const AgeBandMatrixPtrVector& alptr = aggregator[t]->returnSum();
 
       for (i = 0; i < alptr.Size(); i++) {
-        for (len = 0; len < lengths.Size(); len++) {
+        for (len = 0; len < lengths.Size() - 1; len++) {
           n = 0;
           x = alptr[i][0][len].N;
 

@@ -21,8 +21,9 @@ public:
    * \param name is the name of the SIByLengthOnStep likelihood component
    */
   SIByLengthOnStep(CommentStream& infile, const IntMatrix& areas,
-    const DoubleVector& lengths, const CharPtrVector& areaindex, const CharPtrVector& lenindex,
-    const TimeClass* const TimeInfo, const char* datafilename, const char* name);
+    const DoubleVector& lengths, const CharPtrVector& areaindex,
+    const CharPtrVector& lenindex, const TimeClass* const TimeInfo,
+    const char* datafilename, const char* name);
   /**
    * \brief This is the default SIByLengthOnStep destructor
    */
