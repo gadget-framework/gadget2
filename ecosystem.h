@@ -229,7 +229,7 @@ public:
   int getConvergeSA() const { return convergeSA; };
   /**
    * \brief This function will set the flag used to denote whether the Simulated Annealing optimisation has converged or not
-   * param set is the value of the flag (0 or 1)
+   * \param set is the value of the flag (0 or 1)
    */
   void setConvergeSA(int set) { convergeSA = set; };
   /**
@@ -259,7 +259,7 @@ public:
   int getConvergeHJ() const { return convergeHJ; };
   /**
    * \brief This function will set the flag used to denote whether the Hooke & Jeeves optimisation has converged or not
-   * param set is the value of the flag (0 or 1)
+   * \param set is the value of the flag (0 or 1)
    */
   void setConvergeHJ(int set) { convergeHJ = set; };
   /**
@@ -289,7 +289,7 @@ public:
   int getConvergeBFGS() const { return convergeBFGS; };
   /**
    * \brief This function will set the flag used to denote whether the BFGS optimisation has converged or not
-   * param set is the value of the flag (0 or 1)
+   * \param set is the value of the flag (0 or 1)
    */
   void setConvergeBFGS(int set) { convergeBFGS = set; };
   /**

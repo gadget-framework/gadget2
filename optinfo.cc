@@ -16,8 +16,16 @@ OptInfo::OptInfo(MainInfo* MainInfo) {
   srand(time(NULL));
 
   if (MainInfo->getOptInfoGiven()) {
-    readOptInfo(MainInfo->optInfoFile());
-    MainInfo->closeOptInfoFile();
+    // Get the name of the optinfo file and open the commentstream
+    ifstream infile;
+    infile.open(MainInfo->getOptInfoFile(), ios::in);
+    CommentStream optfile(infile);
+    handle.checkIfFailure(infile, MainInfo->getOptInfoFile());
+    handle.Open(MainInfo->getOptInfoFile());
+    readOptInfo(optfile);
+    handle.Close();
+    infile.close();
+    infile.clear();
   } else {
     handle.logWarning("\nWarning - no optimisation file specified, using default values");
     optHJ = new OptInfoHooke();

@@ -47,10 +47,9 @@ void MainInfo::showUsage() {
 }
 
 MainInfo::MainInfo()
-  : optInfoComment(optInfoStream), givenOptInfo(0), givenInitialParam(0),
-    runlikelihood(0), runoptimise(0), runstochastic(0), runnetwork(0),
-    printInitialInfo(0), printFinalInfo(0), printComponent(-1),
-    printLikelihoodInfo(0), printLikeSummaryInfo(0) {
+  : givenOptInfo(0), givenInitialParam(0), runlikelihood(0), runoptimise(0),
+    runstochastic(0), runnetwork(0), printInitialInfo(0), printFinalInfo(0),
+    printComponent(-1), printLikelihoodInfo(0), printLikeSummaryInfo(0) {
 
   char tmpname[10];
   strncpy(tmpname, "", 10);
@@ -95,26 +94,6 @@ MainInfo::~MainInfo() {
     delete[] strMainGadgetFile;
     strMainGadgetFile = NULL;
   }
-}
-
-void MainInfo::openOptInfoFile(char* filename) {
-  if (strOptInfoFile != NULL) {
-    delete[] strOptInfoFile;
-    strOptInfoFile = NULL;
-  }
-  strOptInfoFile = new char[strlen(filename) + 1];
-  strcpy(strOptInfoFile, filename);
-
-  optInfoStream.open(strOptInfoFile, ios::in);
-  handle.checkIfFailure(optInfoStream, strOptInfoFile);
-  handle.Open(strOptInfoFile);
-  givenOptInfo = 1;
-}
-
-void MainInfo::closeOptInfoFile() {
-  handle.Close();
-  optInfoStream.close();
-  optInfoStream.clear();
 }
 
 void MainInfo::read(int aNumber, char* const aVector[]) {
@@ -201,7 +180,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
         k++;
-        openOptInfoFile(aVector[k]);
+        setOptInfoFile(aVector[k]);
 
       } else if ((strcasecmp(aVector[k], "-printlikelihood") == 0) || (strcasecmp(aVector[k], "-likelihoodprint") == 0)) {
         if (k == aNumber - 1)
@@ -328,7 +307,7 @@ void MainInfo::read(CommentStream& infile) {
       setPrintLikelihoodFile(text);
     } else if (strcasecmp(text, "-opt") == 0) {
       infile >> text >> ws;
-      openOptInfoFile(text);
+      setOptInfoFile(text);
     } else if (strcasecmp(text, "-print") == 0) {
       printinfo.setForcePrint(1);
     } else if (strcasecmp(text, "-print1") == 0) {
@@ -388,6 +367,16 @@ void MainInfo::setPrintLikeSummaryFile(char* filename) {
   printLikeSummaryInfo = 1;
 }
 
+void MainInfo::setMainGadgetFile(char* filename) {
+  if (strMainGadgetFile != NULL) {
+    delete[] strMainGadgetFile;
+    strMainGadgetFile = NULL;
+  }
+  strMainGadgetFile = new char[strlen(filename) + 1];
+  strcpy(strMainGadgetFile, filename);
+
+}
+
 void MainInfo::setInitialParamFile(char* filename) {
   if (strInitialParamFile != NULL) {
     delete[] strInitialParamFile;
@@ -405,11 +394,19 @@ void MainInfo::setInitialParamFile(char* filename) {
   tmpfile.clear();
 }
 
-void MainInfo::setMainGadgetFile(char* filename) {
-  if (strMainGadgetFile != NULL) {
-    delete[] strMainGadgetFile;
-    strMainGadgetFile = NULL;
+void MainInfo::setOptInfoFile(char* filename) {
+  if (strOptInfoFile != NULL) {
+    delete[] strOptInfoFile;
+    strOptInfoFile = NULL;
   }
-  strMainGadgetFile = new char[strlen(filename) + 1];
-  strcpy(strMainGadgetFile, filename);
+  strOptInfoFile = new char[strlen(filename) + 1];
+  strcpy(strOptInfoFile, filename);
+  givenOptInfo = 1;
+
+  //JMB check to see if we can actually open the file ...
+  ifstream tmpfile;
+  tmpfile.open(strOptInfoFile);
+  handle.checkIfFailure(tmpfile, strOptInfoFile);
+  tmpfile.close();
+  tmpfile.clear();
 }

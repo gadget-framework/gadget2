@@ -108,7 +108,7 @@ public:
   int numOptVariables() const;
   /**
    * \brief This function will update one Keeper variables with a new value
-   * \param pos is the identifier of the varaibles to update
+   * \param pos is the identifier of the variable to update
    * \param value is the new value of the variable
    */
   void Update(int pos, double& value);

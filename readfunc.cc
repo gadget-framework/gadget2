@@ -424,4 +424,3 @@ int FindContinuousYearAndStepWithNoText(CommentStream& infile, int year, int ste
   infile.seekg(pos);
   return 1;
 }
-

@@ -39,15 +39,6 @@ public:
    */
   void read(int aNumber, char* const aVector[]);
   /**
-   * \brief This function will open the file to read optimisation information from
-   * \param filename is the name of the file
-   */
-  void openOptInfoFile(char* filename);
-  /**
-   * \brief This function will close the file after the optimisation information has been read
-   */
-  void closeOptInfoFile();
-  /**
    * \brief This function will store the filename that the likelihood summary information will be written to
    * \param filename is the name of the file
    */
@@ -77,6 +68,11 @@ public:
    * \param filename is the name of the file
    */
   void setMainGadgetFile(char* filename);
+  /**
+   * \brief This function will store the filename that the optimisation information will be read from
+   * \param filename is the name of the file
+   */
+  void setOptInfoFile(char* filename);
   /**
    * \brief This function will return the flag used to determine whether the likelihood score should be optimised
    * \return flag
@@ -133,11 +129,6 @@ public:
    */
   int printLikelihood() const { return printLikelihoodInfo; };
   /**
-   * \brief This function will return the CommentStream that all the optimisation information gets read from
-   * \return optinfofile, the CommentStream to read from
-   */
-  CommentStream& optInfoFile() { return optInfoComment; };
-  /**
    * \brief This function will return the filename that the initial values for the model parameters will be read from
    * \return filename
    */
@@ -168,6 +159,11 @@ public:
    */
   char* getMainGadgetFile() const { return strMainGadgetFile; };
   /**
+   * \brief This function will return the filename that the optimisation information will be read from
+   * \return filename
+   */
+  char* getOptInfoFile() const { return strOptInfoFile; };
+  /**
    * \brief This is the index of a single component to print the likelihood information from
    * \return printComponent (if this is -1 then print all components)
    */
@@ -178,14 +174,6 @@ private:
    * \param file is the CommentStream to read from
    */
   void read(CommentStream& file);
-  /**
-   * \brief This is the CommentStream that all the optimisation information gets read from
-   */
-  CommentStream optInfoComment;
-  /**
-   * \brief This ifstream is the file that all the optimisation information gets read from
-   */
-  ifstream optInfoStream;
   /**
    * \brief This is the name of the file that likelihood summary information will be written to
    */
