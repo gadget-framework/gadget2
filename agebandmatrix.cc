@@ -1,110 +1,84 @@
-#include "agebandm.h"
+#include "intvector.h"
+#include "popinfomatrix.h"
+#include "popinfoindexvector.h"
+#include "agebandmatrix.h"
+#include "mathfunc.h"
 
-//Function that Reduces the number in given Agelengthkeys by age distributed catch.
-//Pre: CI contains the mapping from Addition to Alkeys.
-void AgebandmSubtract(Agebandmatrix& Alkeys, const bandmatrix& Catch,
-  const ConversionIndex& CI, int allowNegativeResults) {
+#ifndef GADGET_INLINE
+#include "agebandmatrix.icc"
+#endif
 
-  const int minage =  max(Alkeys.Minage(), Catch.Minage());
-  const int maxage =  min(Alkeys.Maxage(), Catch.Maxage());
-  int age, l, minl, maxl, offset;
+Agebandmatrix::Agebandmatrix(const Agebandmatrix& initial)
+  : minage(initial.Minage()), nrow(initial.Nrow()) {
 
-  if (maxage < minage)
-    return;
+  v = new popinfoindexvector*[nrow];
+  int i;
+  for (i = 0; i < nrow; i++)
+    v[i] = new popinfoindexvector(initial[i + minage]);
+}
 
-  if (CI.SameDl()) { //Same dl on length distributions
-    offset = CI.Offset();
-    for (age = minage; age <= maxage; age++) {
-      minl = max(Alkeys.Minlength(age), Catch.Minlength(age) + offset);
-      maxl = min(Alkeys.Maxlength(age), Catch.Maxlength(age) + offset);
-      for (l = minl; l < maxl; l++)
-        Alkeys[age][l].N -= Catch[age][l - offset];
-    }
+Agebandmatrix::Agebandmatrix(int MinAge, const intvector& minl,
+  const intvector& size) : minage(MinAge), nrow(size.Size()) {
 
-  } else { //Not same dl on length distributions
-    if (CI.TargetIsFiner()) {
-      doublevector Ratio(CI.Nc());
-      for (age = minage; age <= maxage; age++) {
-        minl = max(Alkeys.Minlength(age), CI.Minpos(Catch.Minlength(age)));
-        maxl = min(Alkeys.Maxlength(age), CI.Maxpos(Catch.Maxlength(age) - 1) + 1);
-        if (maxl <= minl)
-          return;
-        for (l = CI.Pos(minl); l <= CI.Pos(maxl - 1); l++)
-          Ratio[l] = 0.0;
-        for (l = minl; l < maxl; l++)
-          Ratio[CI.Pos(l)] += Alkeys[age][l].N;
-        for (l = CI.Pos(minl); l <= CI.Pos(maxl - 1); l++) {
-          if (Ratio[l] > 0) {
-            if (allowNegativeResults)
-              Ratio[l] = 1 - Catch[age][l] / Ratio[l];
-            else
-              Ratio[l] = max(0.0, 1 - Catch[age][l] / Ratio[l]);
-          } else
-            Ratio[l] = 1.0;
-        }
-        for (l = minl; l < maxl; l++)
-          Alkeys[age][l].N *= Ratio[CI.Pos(l)];
-      }
-    } else {
-      for (age = minage; age <= maxage; age++) {
-        minl = max(CI.Minpos(Alkeys.Minlength(age)), Catch.Minlength(age));
-        maxl = min(CI.Maxpos(Alkeys.Maxlength(age) - 1) + 1, Catch.Maxlength(age));
-        for (l = minl; l < maxl; l++)
-          Alkeys[age][CI.Pos(l)] -= Catch[age][l];
-      }
-    }
+  popinfo nullpop;
+  assert(minl.Size() == size.Size());
+  v = new popinfoindexvector*[nrow];
+  int i;
+  for (i = 0; i < nrow; i++)
+    v[i] = new popinfoindexvector(size[i], minl[i], nullpop);
+}
+
+Agebandmatrix::Agebandmatrix(int MinAge, const popinfomatrix& initial)
+  : minage(MinAge), nrow(initial.Nrow()) {
+
+  v = new popinfoindexvector*[nrow];
+  int i, j;
+  int lower, upper;
+  for (i = 0; i < nrow; i++) {
+    lower = 0;
+    upper = initial.Ncol(i) - 1;
+    while (iszero(initial[i][lower].N) && lower < upper)
+      lower++;
+    while (iszero(initial[i][upper].N) && upper > lower)
+      upper--;
+    v[i] = new popinfoindexvector(upper - lower + 1, lower);
+    for (j = lower; j <= upper; j++)
+      (*v[i])[j] = initial[i][j];
   }
 }
 
-//Function that Adds one Agebandmatrix to another.
-//Pre: At least that CI contains the mapping from Addition to Alkeys.
-void AgebandmAdd(Agebandmatrix& Alkeys, const Agebandmatrix& Addition,
-  const ConversionIndex &CI, double ratio, int minage, int maxage) {
+Agebandmatrix::Agebandmatrix(int MinAge, int minl, const popinfomatrix& initial)
+  : minage(MinAge), nrow(initial.Nrow()) {
 
-  popinfo pop;
-  minage = max(Alkeys.Minage(), Addition.Minage(), minage);
-  maxage = min(Alkeys.Maxage(), Addition.Maxage(), maxage);
-  int age, l, minl, maxl, offset;
+  v = new popinfoindexvector*[nrow];
+  int i, j;
+  int lower, upper;
+  for (i = 0; i < nrow; i++) {
+    lower = 0;
+    upper = initial.Ncol(i) - 1;
+    while (iszero(initial[i][lower].N) && (lower < upper))
+      lower++;
+    while (iszero(initial[i][upper].N) && (upper > lower))
+      upper--;
+    v[i] = new popinfoindexvector(upper - lower + 1, lower + minl);
+    for (j = lower; j <= upper; j++)
+      (*v[i])[j + minl] = initial[i][j];
+  }
+}
 
-  if (maxage < minage)
-    return;
+Agebandmatrix::Agebandmatrix(int MinAge, const popinfoindexvector& initial)
+  : minage(MinAge), nrow(1) {
 
-  if (CI.SameDl()) { //Same dl on length distributions
-    offset = CI.Offset();
-    for (age = minage; age <= maxage; age++) {
-      minl = max(Alkeys.Minlength(age), Addition.Minlength(age) + offset);
-      maxl = min(Alkeys.Maxlength(age), Addition.Maxlength(age) + offset);
-      for (l = minl; l < maxl; l++) {
-        pop = Addition[age][l - offset];
-        pop *= ratio;
-        Alkeys[age][l] += pop;
-      }
-    }
-  } else { //Not same dl on length distributions
-    if (CI.TargetIsFiner()) {
-      for (age = minage; age <= maxage; age++) {
-        minl = max(Alkeys.Minlength(age), CI.Minpos(Addition.Minlength(age)));
-        maxl = min(Alkeys.Maxlength(age), CI.Maxpos(Addition.Maxlength(age) - 1) + 1);
-        for (l = minl; l < maxl; l++) {
-          pop = Addition[age][CI.Pos(l)];
-          pop *= ratio;
-          pop.N /= CI.Nrof(l);
-          Alkeys[age][l] += pop;
-        }
-      }
-    } else {
-      for (age = minage; age <= maxage; age++) {
-        minl = max(CI.Minpos(Alkeys.Minlength(age)), Addition.Minlength(age));
-        maxl = min(CI.Maxpos(Alkeys.Maxlength(age) - 1) + 1, Addition.Maxlength(age));
-        if (maxl > minl && CI.Pos(maxl - 1) < Alkeys.Maxlength(age)
-            && CI.Pos(minl) >= Alkeys.Minlength(age)) {
-          for (l = minl; l < maxl; l++) {
-            pop = Addition[age][l];
-            pop *= ratio;
-            Alkeys[age][CI.Pos(l)] += pop;
-          }
-        }
-      }
-    }
+  v = new popinfoindexvector*[1];
+  v[0] = new popinfoindexvector(initial);
+}
+
+Agebandmatrix::~Agebandmatrix() {
+  int i;
+  if (v != 0) {
+    for (i = 0; i < nrow; i++)
+      delete v[i];
+    delete[] v;
+    v = 0;
   }
 }

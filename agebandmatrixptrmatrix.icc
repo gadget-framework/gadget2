@@ -1,0 +1,17 @@
+#include "agebandmatrixptrmatrix.h"
+
+#ifdef GADGET_INLINE
+inline
+#endif
+agebandmatrixptrvector& agebandmatrixptrmatrix::operator [] (int pos) {
+  return *v[pos];
+}
+
+#ifdef GADGET_INLINE
+inline
+#endif
+const agebandmatrixptrvector& agebandmatrixptrmatrix::operator [] (int pos) const {
+  return *v[pos];
+}
+
+
