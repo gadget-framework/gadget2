@@ -37,13 +37,13 @@ void PopPredator::Print(ofstream& outfile) const {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
-      outfile << sep << Prednumber[area][i].N;
+      outfile << sep << prednumber[area][i].N;
     }
     outfile << "\n\tWeight of predators on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
-      outfile << sep << Prednumber[area][i].W;
+      outfile << sep << prednumber[area][i].W;
     }
     outfile << "\n\tTotal amount eaten on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
@@ -63,7 +63,7 @@ void PopPredator::Print(ofstream& outfile) const {
 
 const BandMatrix& PopPredator::Consumption(int area, const char* preyname) const {
   int prey;
-  for (prey = 0; prey < numPreys(); prey++)
+  for (prey = 0; prey < this->numPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)
       return consumption[this->areaNum(area)][prey];
 
@@ -93,7 +93,7 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
   //We must adjust the size of consumption accordingly.
   int i, j, area, prey;
   for (area = 0; area < areas.Size(); area++) {
-    for (prey = 0; prey < numPreys(); prey++) {
+    for (prey = 0; prey < this->numPreys(); prey++) {
       if (this->DidChange(prey, TimeInfo)) {
         //adjust the size of consumption[area][prey].
         cons.ChangeElement(area, prey, Suitability(prey));
@@ -108,11 +108,11 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
   if (TimeInfo->CurrentSubstep() == 1) {
     for (area = 0; area < areas.Size(); area++) {
       for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-        Prednumber[area][i].N = 0.0;
-        Prednumber[area][i].W = 0.0;
+        prednumber[area][i].N = 0.0;
+        prednumber[area][i].W = 0.0;
         overconsumption[area][i] = 0.0;
         totalconsumption[area][i] = 0.0;
-        for (prey = 0; prey < numPreys(); prey++)
+        for (prey = 0; prey < this->numPreys(); prey++)
           for (j = consumption[area][prey].minCol(i); j < consumption[area][prey].maxCol(i); j++)
             consumption[area][prey][i][j] = 0.0;
 
@@ -133,20 +133,18 @@ void PopPredator::resizeObjects() {
     totalcons.DeleteRow(0);
   while (totalcons.Nrow())
     totalconsumption.DeleteRow(0);
-  while (Prednumber.Nrow())
-    Prednumber.DeleteRow(0);
+  while (prednumber.Nrow())
+    prednumber.DeleteRow(0);
 
   PopInfo nullpop;
   //Add rows to matrices and initialise
-  int numareas = areas.Size();
-  int numlengths = LgrpDiv->numLengthGroups();
-  cons.AddRows(numareas, numPreys());
-  totalcons.AddRows(numareas, numlengths, 0.0);
-  overcons.AddRows(numareas, numlengths, 0.0);
-  consumption.AddRows(numareas, numPreys());
-  totalconsumption.AddRows(numareas, numlengths, 0.0);
-  overconsumption.AddRows(numareas, numlengths, 0.0);
-  Prednumber.AddRows(numareas, numlengths, nullpop);
+  cons.AddRows(areas.Size(), this->numPreys());
+  totalcons.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
+  overcons.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
+  consumption.AddRows(areas.Size(), this->numPreys());
+  totalconsumption.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
+  overconsumption.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
+  prednumber.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), nullpop);
 }
 
 double PopPredator::getTotalOverConsumption(int area) const {

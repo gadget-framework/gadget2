@@ -29,7 +29,7 @@ protected:
   LengthGroupDivision* LgrpDiv;
   ConversionIndex* CI;
   //storage variables for intermediate calculations.
-  PopInfoMatrix Prednumber;     //[area][predlength]
+  PopInfoMatrix prednumber;     //[area][predlength]
   DoubleMatrix overconsumption; //[area][predlength]
   BandMatrixMatrix consumption; //[area][prey][predlength][preylength]
   DoubleMatrix totalconsumption;//[area][predlength]

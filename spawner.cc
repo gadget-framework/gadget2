@@ -276,7 +276,7 @@ void SpawnData::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const Ti
 
       p *= exp(-spawnMortality[len]);
       p.W -= (spawnWeightLoss[len] * p.W);
-      Alkeys[age][len] *= (1 - spawnProportion[len]);
+      Alkeys[age][len] *= (1.0 - spawnProportion[len]);
       Alkeys[age][len] += p;
     }
   }

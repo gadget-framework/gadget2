@@ -44,26 +44,23 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   if (LgrpDiv->Error())
     handle.Message("Error in renewal - failed to create length group");
 
-  //We now expect to find:
-  //year, step, area, age and then the renewal data
-  infile >> year >> step >> area >> age >> ws;
+  infile >> ws;
   while (isdigit(infile.peek()) && !infile.eof()) {
-    if (TimeInfo->isWithinPeriod(year, step)) {
+    if (readOption == 0) {
+      //We now expect to find the renewal data in the following format
+      //year, step, area, age and then the renewal data
+      infile >> year >> step >> area >> age >> minlength >> no >> ws;
 
-      renewalTime.resize(1);
-      renewalTime[i] = TimeInfo->calcSteps(year, step);
+      if (TimeInfo->isWithinPeriod(year, step)) {
+        renewalTime.resize(1);
+        renewalTime[i] = TimeInfo->calcSteps(year, step);
 
-      if (!this->isInArea(Area->InnerArea(area)))
-        handle.Message("Error in renewal - stock undefined on area");
+        if (!this->isInArea(Area->InnerArea(area)))
+          handle.Message("Error in renewal - stock undefined on area");
 
-      renewalArea.resize(1);
-      renewalArea[i] = Area->InnerArea(area);
-
-      renewalNumber.resize(1, keeper);
-
-      if (readOption == 0) {
-        infile >> minlength >> no >> ws;
-
+        renewalArea.resize(1);
+        renewalArea[i] = Area->InnerArea(area);
+        renewalNumber.resize(1, keeper);
         if (!(infile >> renewalNumber[i]))
           handle.Message("Error in renewal - wrong format for renewalmultiplier");
         renewalNumber[i].Inform(keeper);
@@ -93,7 +90,29 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
         delete numtmpindvec;
         delete weighttmpindvec;
 
-      } else if (readOption == 1) { //use meanlengths.
+      } else { //This year and step is not required - skip rest of line
+        infile.get(c);
+        while (c != '\n' && !infile.eof())
+          infile.get(c);
+      }
+
+    } else if (readOption == 1) { //use meanlengths.
+      //We now expect to find the renewal data in the following format
+      //year, step, area, age, number, mean, sdev, alpha, beta
+      if (countColumns(infile) != 9)
+        handle.Message("Wrong number of columns in inputfile - should be 9");
+
+      infile >> year >> step >> area >> age >> ws;
+      if (TimeInfo->isWithinPeriod(year, step)) {
+        renewalTime.resize(1);
+        renewalTime[i] = TimeInfo->calcSteps(year, step);
+
+        if (!this->isInArea(Area->InnerArea(area)))
+          handle.Message("Error in renewal - stock undefined on area");
+
+        renewalArea.resize(1);
+        renewalArea[i] = Area->InnerArea(area);
+        renewalNumber.resize(1, keeper);
         meanLength.resize(1, keeper);
         sdevLength.resize(1, keeper);
         coeff1.resize(1, keeper);
@@ -117,22 +136,20 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
           handle.Message("Error in renewal - wrong format for renewal wcoeff2");
         coeff2[i].Inform(keeper);
 
-      } else
-        handle.Message("Error in renewal - unrecognised format for renewal data ");
-
-      //Now we move on and check whether we find a digit or not
-      infile >> ws;
-      i++;
-
-    } else { //This year and step is not required - skip rest of line
-      infile.get(c);
-      while (c != '\n' && !infile.eof())
+      } else { //This year and step is not required - skip rest of line
         infile.get(c);
-    }
+        while (c != '\n' && !infile.eof())
+          infile.get(c);
+      }
 
-    if (isdigit(infile.peek()) && !infile.eof())
-      infile >> year >> step >> area >> age >> ws;
+    } else
+      handle.Message("Error in renewal - unrecognised format for renewal data ");
+
+    //Now we move on and check whether we find a digit or not
+    infile >> ws;
+    i++;
   }
+
   handle.logMessage("Read recruits data file - number of entries", renewalTime.Size());
   keeper->clearLast();
 }

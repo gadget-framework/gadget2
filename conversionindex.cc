@@ -168,7 +168,7 @@ void ConversionIndex::interpolateLengths(DoubleVector& Vf, const DoubleVector& V
   } else {
     for (i = 0; i < Vf.Size(); i++) {
       if (interpratio[i] != -1)
-        Vf[i] = Vc[interppos[i]] * (1 - interpratio[i]) + Vc[interppos[i] + 1] * interpratio[i];
+        Vf[i] = Vc[interppos[i]] * (1.0 - interpratio[i]) + Vc[interppos[i] + 1] * interpratio[i];
       else
         Vf[i] = Vc[interppos[i]];
     }

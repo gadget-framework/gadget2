@@ -121,7 +121,7 @@ void DoubleMatrix::DeleteRow(int row) {
 int DoubleMatrix::maxRowSize() const {
   int maxrowsize = 0;
   int i;
-  for (i = 0; i<nrow; i++)
+  for (i = 0; i < nrow; i++)
     if (Ncol(i) > maxrowsize)
       maxrowsize = Ncol(i);
   return maxrowsize;
@@ -132,7 +132,7 @@ int DoubleMatrix::minRowSize() const {
     return 0;
   int minrowsize = Ncol(0);
   int i;
-  for (i = 1; i<nrow; i++)
+  for (i = 1; i < nrow; i++)
     if (Ncol(i) < minrowsize)
       minrowsize = Ncol(i);
   return minrowsize;
@@ -145,7 +145,7 @@ int DoubleMatrix::isRectangular() const {
 
 DoubleMatrix& DoubleMatrix::operator += (const DoubleMatrix& d) {
   int i, j, maxcol, maxrow;
-  maxrow = min(Nrow(), d.Nrow());
+  maxrow = min(nrow, d.Nrow());
   for (i = 0; i < maxrow; i++) {
     maxcol = min(Ncol(i), d.Ncol(i));
     for (j = 0; j < maxcol; j++)
@@ -156,7 +156,7 @@ DoubleMatrix& DoubleMatrix::operator += (const DoubleMatrix& d) {
 
 DoubleMatrix& DoubleMatrix::operator -= (const DoubleMatrix& d) {
   int i, j, maxcol, maxrow;
-  maxrow = min(Nrow(), d.Nrow());
+  maxrow = min(nrow, d.Nrow());
   for (i = 0; i < maxrow; i++) {
     maxcol = min(Ncol(i), d.Ncol(i));
     for (j = 0; j < maxcol; j++)
@@ -187,10 +187,10 @@ DoubleMatrix& DoubleMatrix::operator = (const DoubleMatrix& d) {
 }
 
 int DoubleMatrix::operator == (const DoubleMatrix& d) const {
-  if (Nrow() != d.Nrow())
+  if (nrow != d.Nrow())
     return 0;
   int i, j;
-  for (i = 0; i < Nrow(); i++) {
+  for (i = 0; i < nrow; i++) {
     if (Ncol(i) != d.Ncol(i))
       return 0;
     for (j = 0; j < Ncol(i); j++)
@@ -248,21 +248,14 @@ DoubleMatrix& DoubleMatrix::operator * (const DoubleMatrix& d) const {
     cerr << "Error - matrix must be rectangular for multiplication!\n";
     exit(EXIT_FAILURE);
   }
-  if (Ncol() != d.Nrow()) {
+  if (this->Ncol() != d.Nrow()) {
     cerr << "Error - wrong dimensions for matrix multiplication!\n";
     exit(EXIT_FAILURE);
   }
-  DoubleMatrix* result = new DoubleMatrix(Nrow(), d.Ncol(), 0.0);
+  DoubleMatrix* result = new DoubleMatrix(nrow, d.Ncol(), 0.0);
   for (i = 0; i < result->Nrow(); i++)
     for (j = 0; j < result->Ncol(); j++)
       for (k = 0; k < d.Nrow(); k++)
         (*result)[i][j] += (*this)[i][k] * d[k][j];
   return *result;
-}
-
-ostream& operator << (ostream& out, const DoubleMatrix& d) {
-  int i;
-  for (i = 0; i < d.Nrow(); i++)
-    out << d[i] << endl;
-  return out;
 }

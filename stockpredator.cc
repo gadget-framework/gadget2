@@ -100,9 +100,9 @@ void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
   int inarea = this->areaNum(area);
   Alkeys[inarea].setToZero();
   Alkeys[inarea].Add(stock, *CI);
-  for (length = 0; length < Prednumber.Ncol(inarea); length++)
-    Prednumber[inarea][length].N = 0.0;
-  Alkeys[inarea].sumColumns(Prednumber[inarea]);
+  for (length = 0; length < prednumber.Ncol(inarea); length++)
+    prednumber[inarea][length].N = 0.0;
+  Alkeys[inarea].sumColumns(prednumber[inarea]);
 }
 
 void StockPredator::Reset(const TimeClass* const TimeInfo) {
@@ -130,7 +130,7 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
 
 const PopInfoVector& StockPredator::getNumberPriorToEating(int area, const char* preyname) const {
   int prey;
-  for (prey = 0; prey < numPreys(); prey++)
+  for (prey = 0; prey < this->numPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)
       return Preys(prey)->getNumberPriorToEating(area);
 
@@ -160,7 +160,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
 
   //Now maxconbylength contains the maximum consumption by length
   //Calculating Phi(L) and O(l,L,prey) (stored in consumption)
-  for (prey = 0; prey < numPreys(); prey++) {
+  for (prey = 0; prey < this->numPreys(); prey++) {
     if (Preys(prey)->isInArea(area)) {
       if (Preys(prey)->Biomass(area) > verysmall) {
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
@@ -187,11 +187,11 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
       fphI[inarea][predl] = Phi[inarea][predl] / (Phi[inarea][predl] + halfFeedingValue * Areasize);
 
     totalcons[inarea][predl] = fphI[inarea][predl] *
-      maxconbylength[inarea][predl] * Prednumber[inarea][predl].N;
+      maxconbylength[inarea][predl] * prednumber[inarea][predl].N;
   }
 
   //Distributing the total consumption on the Preys()
-  for (prey = 0; prey < numPreys(); prey++)
+  for (prey = 0; prey < this->numPreys(); prey++)
     if (Preys(prey)->isInArea(area))
       if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
@@ -204,7 +204,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
           }
 
   //Add the calculated consumption to the preys in question
-  for (prey = 0; prey < numPreys(); prey++)
+  for (prey = 0; prey < this->numPreys(); prey++)
     if (Preys(prey)->isInArea(area))
       if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
@@ -223,7 +223,7 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     overcons[inarea][predl] = 0.0;
 
-  for (prey = 0; prey < numPreys(); prey++)
+  for (prey = 0; prey < this->numPreys(); prey++)
     if (Preys(prey)->isInArea(area))
       if (Preys(prey)->Biomass(area) > verysmall)
         if (Preys(prey)->TooMuchConsumption(area) == 1) {
@@ -234,7 +234,7 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
               ratio = Preys(prey)->Ratio(area, preyl);
               if (ratio > maxRatio) {
                 tmp = maxRatio / ratio;
-                overcons[inarea][predl] += (1 - tmp) * cons[inarea][prey][predl][preyl];
+                overcons[inarea][predl] += (1.0 - tmp) * cons[inarea][prey][predl][preyl];
                 cons[inarea][prey][predl][preyl] *= tmp;
               }
             }
@@ -259,7 +259,7 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
     overconsumption[inarea][predl] += overcons[inarea][predl];
     fphi[inarea][predl] = (rat2 * fphI[inarea][predl]) + (rat1 * fphi[inarea][predl]);
   }
-  for (prey = 0; prey < numPreys(); prey++)
+  for (prey = 0; prey < this->numPreys(); prey++)
     if (Preys(prey)->isInArea(area))
       if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
@@ -291,9 +291,9 @@ void StockPredator::calcMaxConsumption(double Temperature, int inarea,
     for (age = Alprop[inarea].minAge(); age <= Alprop[inarea].maxAge(); age++)
       for (length = Alprop[inarea].minLength(age);
           length < Alprop[inarea].maxLength(age); length++)
-        if (!(isZero(Prednumber[inarea][length].N)))
+        if (!(isZero(prednumber[inarea][length].N)))
           Alprop[inarea][age][length] = Alkeys[inarea][age][length].N /
-            Prednumber[inarea][length].N;
+            prednumber[inarea][length].N;
         else
           Alprop[inarea][age][length] = 0.0;
   }

@@ -36,7 +36,6 @@ public:
   DoubleMatrix& operator += (double d);
   DoubleMatrix& operator + (double d) const;
   int operator == (const DoubleMatrix& d) const;
-  friend ostream& operator << (ostream& out, const DoubleMatrix& d);
 protected:
   int nrow;
   DoubleVector** v;

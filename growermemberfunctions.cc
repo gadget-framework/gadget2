@@ -17,9 +17,9 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
     handle.logFailure("Error in growth - recieved invalid value for length step");
 
   int inarea = this->areaNum(area);
-  int type = getGrowthType();
-  double tmpMult = getMultValue();
-  double tmpPower = getPowerValue();
+  int type = this->getGrowthType();
+  double tmpMult = this->getMultValue();
+  double tmpPower = this->getPowerValue();
   double tmpDl = 1.0 / Lengths->dl();
 
   for (lgroup = 0; lgroup < Lengths->numLengthGroups(); lgroup++) {
