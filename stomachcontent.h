@@ -61,6 +61,11 @@ public:
    * \param weight is the weight for the likelihood component
    */
   virtual void SummaryPrint(ofstream& outfile, double weight);
+  /**
+   * \brief This function will print likelihood information from each StomachContent likelihood calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   */
+  virtual void LikelihoodPrint(ofstream& outfile);
   virtual void Aggregate(int i);
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& TimeInfo) {};
   virtual void PrintLikelihoodHeader(ofstream& outfile) {};
@@ -74,12 +79,12 @@ protected:
   virtual double calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum) = 0;
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store stomach content (consumption) information specified in the input file
-   * \note the indices for this object are [time][area][predator length][prey length]
+   * \note the indices for this object are [time][area][predator][prey]
    */
   DoubleMatrixPtrMatrix obsConsumption;
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store consumption (stomach content) information calculated in the model
-   * \note the indices for this object are [time][area][predator length][prey length]
+   * \note the indices for this object are [time][area][predator][prey]
    */
   DoubleMatrixPtrMatrix modelConsumption;
   /**
@@ -375,6 +380,11 @@ public:
    */
   virtual void SummaryPrint(ofstream& outfile) {
     StomCont->SummaryPrint(outfile, weight); };
+  /**
+   * \brief This function will print information from each StomachContent likelihood calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   */
+  virtual void LikelihoodPrint(ofstream& outfile);
   virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time)
     { StomCont->PrintLikelihood(outfile, time); };
   virtual void PrintLikelihoodHeader(ofstream& outfile)

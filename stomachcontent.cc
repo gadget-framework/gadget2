@@ -74,8 +74,14 @@ StomachContent::~StomachContent() {
 
 void StomachContent::Print(ofstream& outfile) const {
   outfile << "\nStomach Content " << stomachname << " - likelihood value " << likelihood
-    << "\n\tfunction " << functionname << endl;
+    << "\n\tFunction " << functionname << endl;
   StomCont->Print(outfile);
+}
+
+void StomachContent::LikelihoodPrint(ofstream& outfile) {
+  outfile << "\nStomach Content " << stomachname << "\n\nLikelihood " << likelihood
+    << "\nFunction " << functionname << "\nWeight " << weight << endl;
+  StomCont->LikelihoodPrint(outfile);
 }
 
 // ********************************************************
@@ -280,6 +286,70 @@ void SC::SummaryPrint(ofstream& outfile, double weight) {
   outfile.flush();
 }
 
+void SC::LikelihoodPrint(ofstream& outfile) {
+  int i, j, year, area;
+
+  outfile << "Predators:\n\t";
+  for (i = 0; i < predatornames.Size(); i++)
+    outfile << predatornames[i] << sep;
+
+  if (usepredages) {
+    outfile << "\n\tages: ";
+    for (i = 0; i < predatorages.Size(); i++)
+      outfile << predatorages[i] << sep;
+    outfile << endl;
+  } else {
+    outfile << "\n\tlengths: ";
+    for (i = 0; i < predatorlengths.Size(); i++)
+      outfile << predatorlengths[i] << sep;
+    outfile << endl;
+  }
+
+  outfile << "Preys:";
+  for (i = 0; i < preynames.Nrow(); i++) {
+    outfile << "\n\t";
+    for (j = 0; j < preynames[i].Size(); j++)
+      outfile << preynames[i][j] << sep;
+    outfile << "\n\tlengths: ";
+    for (j = 0; j < preylengths[i].Size(); j++)
+      outfile << preylengths[i][j] << sep;
+  }
+
+  //JMB - note this ignores the standard deviation and number of samples ...
+  outfile << "\n\nStomach content distribution data:\n";
+  for (year = 0; year < obsConsumption.Nrow(); year++) {
+    outfile << "\nYear " << Years[year] << " and step " << Steps[year];
+    for (area = 0; area < obsConsumption.Ncol(year); area++) {
+      outfile << "\nInternal area: " << area << "\nObserved measurements";
+      for (i = 0; i < obsConsumption[year][area]->Nrow(); i++) {
+        outfile << endl;
+        for (j = 0; j < obsConsumption[year][area]->Ncol(i); j++) {
+          outfile.width(smallwidth);
+          outfile.precision(smallprecision);
+          outfile << sep << (*obsConsumption[year][area])[i][j];
+        }
+      }
+      outfile << "\nModelled measurements";
+      for (i = 0; i < modelConsumption[year][area]->Nrow(); i++) {
+        outfile << endl;
+        for (j = 0; j < modelConsumption[year][area]->Ncol(i); j++) {
+          outfile.width(smallwidth);
+          outfile.precision(smallprecision);
+          outfile << sep << (*modelConsumption[year][area])[i][j];
+        }
+      }
+    }
+    outfile << "\nLikelihood values:";
+    for (area = 0; area < obsConsumption.Ncol(year); area++) {
+      outfile.width(smallwidth);
+      outfile.precision(smallprecision);
+      outfile << sep << likelihoodValues[year][area];
+    }
+    outfile << endl;
+  }
+  outfile.flush();
+}
+
 SC::~SC() {
   int i, j;
   for (i = 0; i < obsConsumption.Nrow(); i++)
@@ -373,20 +443,9 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
 }
 
 void SC::Print(ofstream& outfile) const {
-  int i, j, y, ar;
+  int i, j, r, t;
 
-  outfile << "\tPreys:\n";
-  for (i = 0; i < preynames.Nrow(); i++) {
-    outfile << "\t\t";
-    for (j = 0; j < preynames[i].Size(); j++)
-      outfile << preynames[i][j] << sep;
-    outfile << "\n\t\tlengths: ";
-    for (j = 0; j < preylengths[i].Size(); j++)
-      outfile << preylengths[i][j] << sep;
-    outfile << endl;
-  }
-
-  outfile << "\tPredators: ";
+  outfile << "\tPredators:\n\t\t";
   for (i = 0; i < predatornames.Size(); i++)
     outfile << predatornames[i] << sep;
 
@@ -402,18 +461,31 @@ void SC::Print(ofstream& outfile) const {
     outfile << endl;
   }
 
-  outfile << "\tStomach Content Data:";
-  for (y = 0; y < obsConsumption.Nrow(); y++) {
-    outfile << "\n\trow " << y;
-    for (ar = 0; ar < obsConsumption[y].Size(); ar++) {
-      outfile << "\n\tinternal areas" << sep << ar << "\n\t\t";
-      for (i = 0; i < obsConsumption[y][ar]->Nrow(); i++) {
-        for (j = 0; j < (*obsConsumption[y][ar])[i].Size(); j++) {
-          outfile.width(smallwidth);
-          outfile.precision(smallprecision);
-          outfile << (*obsConsumption[y][ar])[i][j] << sep;
-        }
-        outfile << "\n\t\t";
+  outfile << "\tPreys:";
+  for (i = 0; i < preynames.Nrow(); i++) {
+    outfile << "\n\t\t";
+    for (j = 0; j < preynames[i].Size(); j++)
+      outfile << preynames[i][j] << sep;
+    outfile << "\n\t\tlengths: ";
+    for (j = 0; j < preylengths[i].Size(); j++)
+      outfile << preylengths[i][j] << sep;
+  }
+
+  if (timeindex < 0)
+    t = 0;
+  else if (timeindex > Years.Size() - 1)
+    t = Years.Size() - 1;
+  else
+    t = timeindex;
+
+  for (r = 0; r < obsConsumption[t].Size(); r++) {
+    outfile << "\n\tInternal areas" << sep << r;
+    for (i = 0; i < obsConsumption[t][r]->Nrow(); i++) {
+      outfile << "\n\t\t";
+      for (j = 0; j < (*obsConsumption[t][r])[i].Size(); j++) {
+        outfile.width(smallwidth);
+        outfile.precision(smallprecision);
+        outfile << (*obsConsumption[t][r])[i][j] << sep;
       }
     }
   }
