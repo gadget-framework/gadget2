@@ -13,7 +13,7 @@ Formula::Formula() {
 
 Formula::~Formula() {
   unsigned int i;
-  for(i = 0; i < argList.size(); i++)
+  for (i = 0; i < argList.size(); i++)
     delete argList[i];
 }
 
@@ -41,25 +41,37 @@ double Formula::evalFunction() const {
     case NONE:
       handle.logFailure("Error in formula - no function type found");
       break;
+
     case MULT:
       for (i = 0; i < argList.size(); i++)
         v *= *(argList[i]);
       break;
+
     case DIV:
-      //JMB - divide by zero checks??
       if (argList.size() == 1) {
-        v = 1.0 / (*(argList[0]));
+        if (!isZero(*(argList[0]))) {
+          v = 1.0 / (*(argList[0]));
+        } else {
+          handle.logWarning("Warning in formula - divide by zero");
+        }
       } else {
         v = *(argList[0]);
-        for (i = 1; i < argList.size(); i++)
-          v /= *(argList[i]);
+        for (i = 1; i < argList.size(); i++) {
+          if (!isZero(*(argList[0]))) {
+            v = v /= *(argList[i]);
+          } else {
+            handle.logWarning("Warning in formula - divide by zero");
+          }
+        }
       }
       break;
+
     case PLUS:
       v = 0.0;
       for (i = 0; i < argList.size(); i++)
         v += *(argList[i]);
       break;
+
     case MINUS:
       if (argList.size() == 1) {
         v = -(*(argList[0]));
@@ -69,10 +81,12 @@ double Formula::evalFunction() const {
           v -= *(argList[i]);
       }
       break;
+
     case PRINT:
       if (argList.size() == 1)
         v = *(argList[0]);
       break;
+
     default:
       handle.logFailure("Error in formula - unrecognised function type", type);
       break;
@@ -120,10 +134,9 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     return infile;
   }
 
-  /*
-     Read fromula expression. Syntax:
+  /* Read formula expression. Syntax:
        3.14        - Constant                             (CONSTANT)
-       #param      - Single parameter, no initial value.  (PARAMETER)
+       #param      - Single parameter, no initial value   (PARAMETER)
        1.0#param   - Single value, initial value
        (* #p1 #p2) - Function call                        (FUNCTION)
   */
@@ -175,11 +188,11 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     infile.get(c);
     infile >> F.name;
     if (F.name.Size() <= 0)
-      handle.Message("Warning in formula - failed to read parameter name");
+      handle.logWarning("Warning in formula - failed to read parameter name");
     return infile;
   }
 
-  //Read Initial value (Could be CONSTANT or PARAMETER)
+  //Read initial value (Could be CONSTANT or PARAMETER)
   if (!(infile >> F.value)) {
     infile.makebad();
     return infile;
@@ -203,12 +216,12 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     infile.get(c);
     infile >> F.name;
     if (F.name.Size() <= 0)
-      handle.Message("Warning in formula - failed to read parameter name");
+      handle.logWarning("Warning in formula - failed to read parameter name");
     return infile;
   }
 
   infile.makebad();
-  handle.Message("Warning in formula - failed to read parameter data");
+  handle.Message("Error in formula - failed to read parameter data");
   return infile;
 }
 

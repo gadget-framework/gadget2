@@ -41,7 +41,7 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
           pop = Addition[age][CI.Pos(l)];
           pop *= ratio;
           if (isZero(CI.Nrof(l)))
-            handle.logWarning("Error in agebandmatrix - divide by zero");
+            handle.logWarning("Warning in agebandmatrix - divide by zero");
           else
             pop.N /= CI.Nrof(l);
           (*v[age - minage])[l] += pop;

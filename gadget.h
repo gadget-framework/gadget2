@@ -28,6 +28,7 @@ This document is the developers manual for Gadget, and describes the classes, fu
 #include <iomanip>
 #include <cmath>
 #include <ctime>
+#include <vector>
 #include <signal.h>
 #include <unistd.h>
 #include <sys/utsname.h>
