@@ -46,8 +46,10 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     infile >> ws;
     i = 0;
     while (isdigit(infile.peek()) && !infile.eof() && (i < Area->numAreas())) {
+      printAreas.resize(1);
       tmpareas.resize(1);
       infile >> tmpint >> ws;
+      printAreas[i] = tmpint;
       if ((tmpareas[i] = Area->InnerArea(tmpint)) == -1)
         handle.UndefinedArea(tmpint);
       i++;
@@ -432,7 +434,7 @@ int Stock::Birthday(const TimeClass* const TimeInfo) const {
 }
 
 const AgeBandMatrix& Stock::getAgeLengthKeys(int area) const {
-  return Alkeys[AreaNr[area]];
+  return Alkeys[this->areaNum(area)];
 }
 
 const StockPtrVector& Stock::getMatureStocks() {

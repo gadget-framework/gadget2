@@ -216,7 +216,7 @@ void PredatorPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
     aggregator->NumberSum();
 
   int a, predl, preyl, p, w;
-  
+
   if (precision == 0) {
     p = largeprecision;
     w = largewidth;

@@ -16,17 +16,18 @@
 extern RunID RUNID;
 extern ErrorHandler handle;
 
-StockStdPrinter::StockStdPrinter(CommentStream& infile,
-  const AreaClass* const Area, const TimeClass* const TimeInfo)
+StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(STOCKSTDPRINTER), stockname(0), LgrpDiv(0), aggregator(0), preyinfo(0) {
 
   char text[MaxStrLength];
+  char filename[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i;
+  strncpy(filename, "", MaxStrLength);
 
   stockname = new char[MaxStrLength];
   strncpy(stockname, "", MaxStrLength);
   readWordAndValue(infile, "stockname", stockname);
+
   infile >> text >> ws;
   if (strcasecmp(text, "scale") == 0)
     infile >> scale >> ws >> text >> ws;
@@ -36,47 +37,16 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   if (scale <= 0)
     handle.Message("Error in stockstdprinter - invalid value of scale");
 
-  //read in area aggregation from file
-  char filename[MaxStrLength];
-  strncpy(filename, "", MaxStrLength);
-  ifstream datafile;
-  CommentStream subdata(datafile);
-
-  CharPtrVector areaindex;
-  IntMatrix tmpareas;
-
-  if (strcasecmp(text, "areaaggfile") == 0)
-    infile >> filename >> ws;
+  //open the printfile
+  if (strcasecmp(text, "printfile") == 0)
+    infile >> filename >> ws >> text >> ws;
   else
-    handle.Unexpected("areaaggfile", text);
+    handle.Unexpected("printfile", text);
 
-  datafile.open(filename, ios::in);
-  handle.checkIfFailure(datafile, filename);
-  handle.Open(filename);
-  i = readAggregation(subdata, tmpareas, areaindex);
-  handle.Close();
-  datafile.close();
-  datafile.clear();
-
-  //Check if we read correct input
-  if (tmpareas.Nrow() != 1)
-    handle.Message("Error in stockstdprinter - there should be only one aggregated area");
-
-  for (i = 0; i < tmpareas.Ncol(0); i++)
-    outerareas.resize(1, tmpareas[0][i]);
-
-  //Must change from outer areas to inner areas.
-  areas.resize(outerareas.Size());
-  for (i = 0; i < areas.Size(); i++)
-    if ((areas[i] = Area->InnerArea(outerareas[i])) == -1)
-      handle.UndefinedArea(outerareas[i]);
-
-  //Open the printfile
-  readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
 
-  infile >> text >> ws;
+  //infile >> text >> ws;
   if (strcasecmp(text, "precision") == 0)
     infile >> precision >> ws >> text >> ws;
   else
@@ -122,10 +92,6 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   outfile << "\n; year-step-area-age-number-mean length-mean weight-"
     << "stddev length-number consumed-biomass consumed\n";
   outfile.flush();
-
-  //areaindex is not required - free up memory
-  for (i = 0; i < areaindex.Size(); i++)
-    delete[] areaindex[i];
 }
 
 StockStdPrinter::~StockStdPrinter() {
@@ -139,8 +105,6 @@ StockStdPrinter::~StockStdPrinter() {
 
 void StockStdPrinter::setStock(StockPtrVector& stockvec) {
   CharPtrVector stocknames(1, stockname);
-  //by using the vector stocknames, some of the code below can be used
-  //even if the StockStdPrinter is used for aggregation of many stocks.
   StockPtrVector stocks;
   int index = 0;
   int i, j, tmpage;
@@ -161,13 +125,16 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  //check that the stock lives in the areas.
-  for (i = 0; i < stocks.Size(); i++)
-    for (j = 0; j < areas.Size(); j++)
-      if (!stocks[i]->IsInArea(areas[j]))
-        handle.logFailure("Error in stockstdprinter - stocks arent defined on all areas");
+  areas = stocks[0]->Areas();
+  outerareas.resize(areas.Size(), 0);
+  for (i = 0; i < outerareas.Size(); i++)
+    outerareas[i] = stocks[0]->getPrintArea(stocks[0]->areaNum(areas[i]));
 
-  //Prepare for the creation of the aggregator
+  LgrpDiv = new LengthGroupDivision(*stocks[0]->returnLengthGroupDiv());
+  if (stocks[0]->isEaten())
+    preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->returnPrey(), areas);
+
+  //prepare for the creation of the aggregator
   minage = 100;
   maxage = 0;
   for (i = 0; i < areas.Size(); i++) {
@@ -186,11 +153,7 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < areamatrix.Nrow(); i++)
     areamatrix[i][0] = areas[i];
 
-  LgrpDiv = new LengthGroupDivision(*stocks[0]->returnLengthGroupDiv());
   aggregator = new StockAggregator(stocks, LgrpDiv, areamatrix, agematrix);
-  //Here comes some code that is only useful when handling one stock.
-  if (stocks[0]->isEaten())
-    preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->returnPrey(), areas);
 }
 
 void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
@@ -209,7 +172,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
     p = precision;
     w = precision + 4;
   }
-  
+
   for (a = 0; a < areas.Size(); a++) {
     if (preyinfo)
       preyinfo->Sum(TimeInfo, areas[a]);

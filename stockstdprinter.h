@@ -14,10 +14,9 @@ public:
   /**
    * \brief This is the default StockStdPrinter constructor
    * \param infile is the CommentStream to read the printer parameters from
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  StockStdPrinter(CommentStream& infile, const AreaClass* const Area, const  TimeClass* const TimeInfo);
+  StockStdPrinter(CommentStream& infile, const  TimeClass* const TimeInfo);
   /**
    * \brief This is the default StockStdPrinter destructor
    */
@@ -43,11 +42,11 @@ protected:
    */
   LengthGroupDivision* LgrpDiv;
   /**
-   * \brief This is the IntVector used to store aggregated area information
+   * \brief This is the IntVector used to store internal area information
    */
   IntVector areas;
   /**
-   * \brief This is the IntVector used to store aggregated age information
+   * \brief This is the IntVector used to store aggregated area information
    */
   IntVector outerareas;
   /**

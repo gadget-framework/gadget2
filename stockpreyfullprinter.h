@@ -13,10 +13,9 @@ public:
   /**
    * \brief This is the default StockPreyFullPrinter constructor
    * \param infile is the CommentStream to read the printer parameters from
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  StockPreyFullPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  StockPreyFullPrinter(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This is the default StockPreyFullPrinter destructor
    */

@@ -198,6 +198,7 @@ public:
   void updateMatureStockWithTags(const TimeClass* const TimeInfo);
   void updateTransitionStockWithTags(const TimeClass* const TimeInfo);
   void updateStrayStockWithTags(const TimeClass* const TimeInfo);
+  int getPrintArea(int area) { return printAreas[area]; };
 protected:
   AgeBandMatrixPtrVector Alkeys;
   AgeBandMatrixRatioPtrVector tagAlkeys;
@@ -218,6 +219,7 @@ protected:
   Grower* grower;
   NaturalM* naturalm;
   PopInfoMatrix NumberInArea;
+  IntVector printAreas;
   int doeseat;
   int doesmove;
   int iseaten;

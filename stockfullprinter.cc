@@ -12,49 +12,19 @@
 extern RunID RUNID;
 extern ErrorHandler handle;
 
-StockFullPrinter::StockFullPrinter(CommentStream& infile,
-  const AreaClass* const Area,  const TimeClass* const TimeInfo)
+StockFullPrinter::StockFullPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(STOCKFULLPRINTER), stockname(0), aggregator(0), LgrpDiv(0) {
 
   char text[MaxStrLength];
+  char filename[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i;
+  strncpy(filename, "", MaxStrLength);
 
   stockname = new char[MaxStrLength];
   strncpy(stockname, "", MaxStrLength);
   readWordAndValue(infile, "stockname", stockname);
 
-  //read in area aggregation from file
-  char filename[MaxStrLength];
-  strncpy(filename, "", MaxStrLength);
-  ifstream datafile;
-  CommentStream subdata(datafile);
-
-  CharPtrVector areaindex;
-  IntMatrix tmpareas;
-  readWordAndValue(infile, "areaaggfile", filename);
-  datafile.open(filename, ios::in);
-  handle.checkIfFailure(datafile, filename);
-  handle.Open(filename);
-  i = readAggregation(subdata, tmpareas, areaindex);
-  handle.Close();
-  datafile.close();
-  datafile.clear();
-
-  //Check if we read correct input
-  if (tmpareas.Nrow() != 1)
-    handle.Message("Error - there should be only one aggregated area for stockfullprinter");
-
-  for (i = 0; i < tmpareas.Ncol(0); i++)
-    outerareas.resize(1, tmpareas[0][i]);
-
-  //Must change from outer areas to inner areas.
-  areas.resize(outerareas.Size());
-  for (i = 0; i < areas.Size(); i++)
-    if ((areas[i] = Area->InnerArea(outerareas[i])) == -1)
-      handle.UndefinedArea(outerareas[i]);
-
-  //Open the printfile
+  //open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
@@ -101,10 +71,6 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
 
   outfile << "\n; year-step-area-age-length-number-mean weight\n";
   outfile.flush();
-
-  //areaindex is not required - free up memory
-  for (i = 0; i < areaindex.Size(); i++)
-    delete[] areaindex[i];
 }
 
 StockFullPrinter::~StockFullPrinter() {
@@ -116,36 +82,42 @@ StockFullPrinter::~StockFullPrinter() {
 }
 
 void StockFullPrinter::setStock(StockPtrVector& stockvec) {
-  Stock* stock = 0;
-  int err = 0;
-  int i, tmpage;
-  for (i = 0; i < stockvec.Size(); i++) {
-    if (strcasecmp(stockvec[i]->Name(), stockname) == 0) {
-      if (stock == 0)
-        stock = stockvec[i];
-      else
-        err = 1;
-    }
-  }
+  CharPtrVector stocknames(1, stockname);
+  StockPtrVector stocks;
+  int index = 0;
+  int i, j, tmpage;
 
-  if (err || stock == 0) {
-    handle.logWarning("Error in stockfullprinter - failed to match stock", stockname);
-    for (i = 0; i < stockvec.Size(); i++)
-      handle.logWarning("Error in stockfullprinter - found stock", stockvec[i]->Name());
+  for (i = 0; i < stockvec.Size(); i++)
+    for (j = 0; j < stocknames.Size(); j++)
+      if (strcasecmp(stockvec[i]->Name(), stocknames[j]) == 0) {
+        stocks.resize(1);
+        stocks[index++] = stockvec[i];
+      }
+
+  if (stocks.Size() != stocknames.Size()) {
+    handle.logWarning("Error in stockfullprinter - failed to match stocks");
+    for (i = 0; i < stocks.Size(); i++)
+      handle.logWarning("Error in stockfullprinter - found stock", stocks[i]->Name());
+    for (i = 0; i < stocknames.Size(); i++)
+      handle.logWarning("Error in stockfullprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
 
-  StockPtrVector stocks = StockPtrVector(1, stock);
-  LgrpDiv = new LengthGroupDivision(*stock->returnLengthGroupDiv());
+  areas = stocks[0]->Areas();
+  outerareas.resize(areas.Size(), 0);
+  for (i = 0; i < outerareas.Size(); i++)
+    outerareas[i] = stocks[0]->getPrintArea(stocks[0]->areaNum(areas[i]));
 
-  //Prepare for the creation of the aggregator
+  LgrpDiv = new LengthGroupDivision(*stocks[0]->returnLengthGroupDiv());
+
+  //prepare for the creation of the aggregator
   minage = 100;
   maxage = 0;
   for (i = 0; i < areas.Size(); i++) {
-    tmpage = stock->getAgeLengthKeys(areas[i]).minAge();
+    tmpage = stocks[0]->getAgeLengthKeys(areas[i]).minAge();
     if (tmpage < minage)
       minage = tmpage;
-    tmpage = stock->getAgeLengthKeys(areas[i]).maxAge();
+    tmpage = stocks[0]->getAgeLengthKeys(areas[i]).maxAge();
     if (tmpage > maxage)
       maxage = tmpage;
   }

@@ -170,9 +170,9 @@ void Ecosystem::readPrinters(CommentStream& infile) {
     readWordAndValue(infile, "type", type);
 
     if (strcasecmp(type, "stockstdprinter") == 0)
-      printvec.resize(1, new StockStdPrinter(infile, Area, TimeInfo));
+      printvec.resize(1, new StockStdPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "stockfullprinter") == 0)
-      printvec.resize(1, new StockFullPrinter(infile, Area, TimeInfo));
+      printvec.resize(1, new StockFullPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "stockprinter") == 0)
       printvec.resize(1, new StockPrinter(infile, Area, TimeInfo));
     else if (strcasecmp(type, "predatorprinter") == 0)
@@ -182,11 +182,11 @@ void Ecosystem::readPrinters(CommentStream& infile) {
     else if (strcasecmp(type, "preyoverprinter") == 0)
       printvec.resize(1, new PreyOverPrinter(infile, Area, TimeInfo));
     else if (strcasecmp(type, "stockpreyfullprinter") == 0)
-      printvec.resize(1, new StockPreyFullPrinter(infile, Area, TimeInfo));
+      printvec.resize(1, new StockPreyFullPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "predpreystdlengthprinter") == 0)
-      printvec.resize(1, new PredPreyStdLengthPrinter(infile, Area, TimeInfo));
+      printvec.resize(1, new PredPreyStdLengthPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "predpreystdageprinter") == 0)
-      printvec.resize(1, new PredPreyStdAgePrinter(infile, Area, TimeInfo));
+      printvec.resize(1, new PredPreyStdAgePrinter(infile, TimeInfo));
     else if (strcasecmp(type, "likelihoodprinter") == 0)
       printvec.resize(1, new LikelihoodPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "likelihoodsummaryprinter") == 0)

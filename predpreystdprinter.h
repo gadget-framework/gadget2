@@ -16,10 +16,9 @@ public:
   /**
    * \brief This is the default PredPreyStdPrinter constructor
    * \param infile is the CommentStream to read the printer parameters from
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  PredPreyStdPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  PredPreyStdPrinter(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This is the default PredPreyStdPrinter destructor
    */
@@ -73,10 +72,9 @@ public:
   /**
    * \brief This is the default PredPreyStdLengthPrinter constructor
    * \param infile is the CommentStream to read the printer parameters from
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  PredPreyStdLengthPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  PredPreyStdLengthPrinter(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This is the default PredPreyStdLengthPrinter destructor
    */
@@ -121,10 +119,9 @@ public:
   /**
    * \brief This is the default PredPreyStdAgePrinter constructor
    * \param infile is the CommentStream to read the printer parameters from
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  PredPreyStdAgePrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  PredPreyStdAgePrinter(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This is the default PredPreyStdAgePrinter destructor
    */

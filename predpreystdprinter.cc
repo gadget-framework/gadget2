@@ -10,13 +10,13 @@
 
 extern ErrorHandler handle;
 
-PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
-  const AreaClass* const Area, const TimeClass* const TimeInfo)
+PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(PREDPREYSTDPRINTER), predname(0), preyname(0) {
 
   char text[MaxStrLength];
+  char filename[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i;
+  strncpy(filename, "", MaxStrLength);
 
   predname = new char[MaxStrLength];
   strncpy(predname, "", MaxStrLength);
@@ -26,37 +26,7 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
   strncpy(preyname, "", MaxStrLength);
   readWordAndValue(infile, "prey", preyname);
 
-  //read in area aggregation from file
-  char filename[MaxStrLength];
-  strncpy(filename, "", MaxStrLength);
-  ifstream datafile;
-  CommentStream subdata(datafile);
-
-  CharPtrVector areaindex;
-  IntMatrix tmpareas;
-  readWordAndValue(infile, "areaaggfile", filename);
-  datafile.open(filename, ios::in);
-  handle.checkIfFailure(datafile, filename);
-  handle.Open(filename);
-  i = readAggregation(subdata, tmpareas, areaindex);
-  handle.Close();
-  datafile.close();
-  datafile.clear();
-
-  //Check if we read correct input
-  if (tmpareas.Nrow() != 1)
-    handle.Message("Error - there should be only one aggregated area for predpreystdprinter");
-
-  for (i = 0; i < tmpareas.Ncol(0); i++)
-    outerareas.resize(1, tmpareas[0][i]);
-
-  //Must change from outer areas to inner areas.
-  areas.resize(outerareas.Size());
-  for (i = 0; i < areas.Size(); i++)
-    if ((areas[i] = Area->InnerArea(outerareas[i])) == -1)
-      handle.UndefinedArea(outerareas[i]);
-
-  //Open the printfile
+  //open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
@@ -90,10 +60,6 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
     if (!(strcasecmp(text, "[component]") == 0))
       handle.Unexpected("[component]", text);
   }
-
-  //areaindex is not required - free up memory
-  for (i = 0; i < areaindex.Size(); i++)
-    delete[] areaindex[i];
 }
 
 PredPreyStdPrinter::~PredPreyStdPrinter() {
@@ -111,7 +77,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
   int stockprey = 0;
   const PopPredator* predator = 0;
   const Prey* prey = 0;
-  int i;
+  int i, j;
 
   for (i = 0; i < stockvec.Size(); i++) {
     if (stockvec[i]->doesEat()) {
@@ -121,6 +87,13 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
 
         stockpred = 1;
         predator = stockvec[i]->returnPredator();
+        
+        if (areas.Size() == 0) {
+          areas = stockvec[i]->Areas();
+          outerareas.resize(areas.Size(), 0);
+          for (j = 0; j < outerareas.Size(); j++)
+            outerareas[j] = stockvec[i]->getPrintArea(stockvec[j]->areaNum(areas[i]));
+        }
       }
     }
     if (stockvec[i]->isEaten()) {
@@ -130,6 +103,13 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
 
         stockprey = 1;
         prey = stockvec[i]->returnPrey();
+
+        if (areas.Size() == 0) {
+          areas = stockvec[i]->Areas();
+          outerareas.resize(areas.Size(), 0);
+          for (j = 0; j < outerareas.Size(); j++)
+            outerareas[j] = stockvec[i]->getPrintArea(stockvec[j]->areaNum(areas[i]));
+        }
       }
     }
   }
@@ -158,14 +138,16 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
     handle.logFailure("Error in predpreystdprinter - failed to match prey", preyname);
   if (predator == 0)
     handle.logFailure("Error in predpreystdprinter - failed to match predator", predname);
+  if (areas.Size() == 0)
+    handle.logFailure("Error in predpreystdprinter - failed to match areas");
 
   for (i = 0; i < areas.Size(); i++)
-    if (!prey->IsInArea(areas[i]))
-      handle.logFailure("Error in predpreystdprinter - preys arent defined on all areas");
+    if (!prey->isInArea(areas[i]))
+      handle.logFailure("Error in predpreystdprinter - prey isnt defined on all areas");
 
   for (i = 0; i < areas.Size(); i++)
-    if (!predator->IsInArea(areas[i]))
-      handle.logFailure("Error in predpreystdprinter - predators arent defined on all areas");
+    if (!predator->isInArea(areas[i]))
+      handle.logFailure("Error in predpreystdprinter - predator isnt defined on all areas");
 
   //If we get here, we have found exactly one predator and one prey defined on all the areas
   //so we can call the virtual function setPredAndPrey to set the predators and preys

@@ -13,52 +13,19 @@
 extern RunID RUNID;
 extern ErrorHandler handle;
 
-//This printer prints all the information on the consumption of the prey,
-//at the level of most disaggregation.
-
-StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
-  const AreaClass* const Area, const TimeClass* const TimeInfo)
+StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(STOCKPREYFULLPRINTER), stockname(0), preyinfo(0) {
 
   char text[MaxStrLength];
+  char filename[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i;
+  strncpy(filename, "", MaxStrLength);
 
   stockname = new char[MaxStrLength];
   strncpy(stockname, "", MaxStrLength);
   readWordAndValue(infile, "stockname", stockname);
 
-  //read in area aggregation from file
-  char filename[MaxStrLength];
-  strncpy(filename, "", MaxStrLength);
-  ifstream datafile;
-  CommentStream subdata(datafile);
-
-  CharPtrVector areaindex;
-  IntMatrix tmpareas;
-  readWordAndValue(infile, "areaaggfile", filename);
-  datafile.open(filename, ios::in);
-  handle.checkIfFailure(datafile, filename);
-  handle.Open(filename);
-  i = readAggregation(subdata, tmpareas, areaindex);
-  handle.Close();
-  datafile.close();
-  datafile.clear();
-
-  //Check if we read correct input
-  if (tmpareas.Nrow() != 1)
-    handle.Message("Error in stockpreyfullprinter - there should be only one aggregated area");
-
-  for (i = 0; i < tmpareas.Ncol(0); i++)
-    outerareas.resize(1, tmpareas[0][i]);
-
-  //Must change from outer areas to inner areas.
-  areas.resize(outerareas.Size());
-  for (i = 0; i < areas.Size(); i++)
-    if ((areas[i] = Area->InnerArea(outerareas[i])) == -1)
-      handle.UndefinedArea(outerareas[i]);
-
-  //Open the printfile
+  //open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
@@ -106,10 +73,6 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   outfile << "\n; year-step-area-age-length-number consumed-biomass consumed"
     << "-number consumed by length-biomass consumed by length\n";
   outfile.flush();
-
-  //areaindex is not required - free up memory
-  for (i = 0; i < areaindex.Size(); i++)
-    delete[] areaindex[i];
 }
 
 StockPreyFullPrinter::~StockPreyFullPrinter() {
@@ -141,11 +104,10 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  //check that the stock lives in the areas.
-  for (i = 0; i < stocks.Size(); i++)
-    for (j = 0; j < areas.Size(); j++)
-      if (!stocks[i]->IsInArea(areas[j]))
-        handle.logFailure("Error in stockpreyfullprinter - stocks arent defined on all areas");
+  areas = stocks[0]->Areas();
+  outerareas.resize(areas.Size(), 0);
+  for (i = 0; i < outerareas.Size(); i++)
+    outerareas[i] = stocks[0]->getPrintArea(stocks[0]->areaNum(areas[i]));
 
   //Here comes some code that is only useful when handling one stock.
   if (stocks[0]->isEaten())

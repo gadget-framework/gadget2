@@ -7,9 +7,8 @@
 #include "runid.h"
 extern RunID RUNID;
 
-PredPreyStdLengthPrinter::PredPreyStdLengthPrinter(CommentStream& infile,
-  const AreaClass* const Area, const TimeClass* const TimeInfo)
-  : PredPreyStdPrinter(infile, Area, TimeInfo), predinfo(0), predator(0), prey(0) {
+PredPreyStdLengthPrinter::PredPreyStdLengthPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
+  : PredPreyStdPrinter(infile, TimeInfo), predinfo(0), predator(0), prey(0) {
 
   //finished initializing. Now print first lines
   outfile << "; ";
