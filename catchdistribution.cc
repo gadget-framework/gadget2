@@ -70,8 +70,8 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   } else if (strcasecmp(functionname, "mvlogistic") == 0) {
     functionnumber = 6;
 
-    readWordAndFormula(infile, "tau", tau);
-    tau.Inform(keeper);
+    readWordAndFormula(infile, "sigma", sigma);
+    sigma.Inform(keeper);
 
   } else if (strcasecmp(functionname, "log") == 0) {
     //JMB moved the logcatch function to here instead of it being a seperate class
@@ -354,7 +354,7 @@ void CatchDistribution::Print(ofstream& outfile) const {
       outfile << endl;
       break;
     case 6:
-      outfile << "\tMultivariate logistic distribution parameter: tau " << tau << endl;
+      outfile << "\tMultivariate logistic distribution parameter: sigma " << sigma << endl;
       break;
     default:
       handle.logWarning("Warning in catchdistribution - unknown function", functionname);
@@ -406,7 +406,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
       outfile << endl;
       break;
     case 6:
-      outfile << "Multivariate logistic distribution parameter: tau " << tau << endl;
+      outfile << "Multivariate logistic distribution parameter: sigma " << sigma << endl;
       break;
     default:
       handle.logWarning("Warning in catchdistribution - unknown function", functionname);
@@ -931,12 +931,12 @@ double CatchDistribution::calcLikMVLogistic() {
     }
   }
 
-  if (isZero(tau)) {
-    handle.logWarning("Warning in catchdistribution - multivariate logistic tau is zero");
+  if (isZero(sigma)) {
+    handle.logWarning("Warning in catchdistribution - multivariate logistic sigma is zero");
     return verybig;
   }
 
-  totallikelihood = (totallikelihood / (tau * tau)) + (log(tau) * (p - 1));
+  totallikelihood = (totallikelihood / (sigma * sigma)) + (log(sigma) * (p - 1));
   return totallikelihood;
 }
 
@@ -994,7 +994,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
       catchfile << endl;
       break;
     case 6:
-      catchfile << "Multivariate logistic distribution parameter: tau " << tau << endl;
+      catchfile << "Multivariate logistic distribution parameter: sigma " << sigma << endl;
       break;
     default:
       handle.logWarning("Warning in catchdistribution - unknown function", functionname);

@@ -206,7 +206,6 @@ private:
    * \brief This is the value of epsilon used when calculating the likelihood score
    */
   double epsilon;
-  Formula tau;
   Formula sigma;
   FormulaVector params;
   int illegal;
