@@ -157,7 +157,14 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //read the migration data
   readWordAndVariable(infile, "doesmigrate", doesmigrate);
   if (doesmigrate) {
-    readWordAndVariable(infile, "agedependentmigration", tmpint);
+    infile >> ws;
+    //JMB make agedependentmigration optional, since we want to remove it entirely
+    char c = infile.peek();
+    if ((c == 'a') || (c == 'A'))
+      readWordAndVariable(infile, "agedependentmigration", tmpint);
+    else
+      tmpint = 0;
+      
     readWordAndValue(infile, "migrationfile", filename);
     ifstream subfile;
     subfile.open(filename, ios::in);
@@ -258,7 +265,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   if (!infile.eof()) {
     //read the optional straying data
     readWordAndVariable(infile, "doesstray", doesstray);
-      if (doesstray) {
+    if (doesstray) {
       readWordAndValue(infile, "strayfile", filename);
       ifstream subfile;
       subfile.open(filename, ios::in);
