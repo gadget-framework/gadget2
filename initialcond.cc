@@ -80,6 +80,7 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
       infile.get(c);
       while (c != '\n' && !infile.eof())
         infile.get(c);
+      infile >> ws;
     }
   }
 
@@ -167,6 +168,7 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
       infile.get(c);
       while (c != '\n' && !infile.eof())
         infile.get(c);
+      infile >> ws;
     }
   }
 

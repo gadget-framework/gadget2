@@ -245,9 +245,7 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
   Formula number;  //initialised to 0.0
   IntVector Years, Steps;
   char tmpname[MaxStrLength];
-  char tmpnumber[MaxStrLength];
   strncpy(tmpname, "", MaxStrLength);
-  strncpy(tmpnumber, "", MaxStrLength);
   int count = 0;
   int keepdata, timeid, areaid, tmpareaid;
 
@@ -318,9 +316,11 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
       count++;
       infile >> amount[timeid][areaid] >> ws;
 
-    } else {
-      //data is not required, so read but ignore it
-      infile >> tmpnumber >> ws;
+    } else { //data not required - skip rest of line
+      infile.get(c);
+      while (c != '\n' && !infile.eof())
+        infile.get(c);
+      infile >> ws;
     }
   }
 
@@ -338,9 +338,7 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   int year, step, area;
   IntVector Years, Steps;
   char tmplength[MaxStrLength];
-  char tmpnumber[MaxStrLength];
   strncpy(tmplength, "", MaxStrLength);
-  strncpy(tmpnumber, "", MaxStrLength);
   int keepdata, timeid, areaid, lenid, tmpareaid;
   int count = 0;
 
@@ -416,9 +414,11 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
       count++;
       infile >> (*amount[areaid])[timeid][lenid] >> ws;
 
-    } else {
-      //data is not required, so read but ignore it
-      infile >> tmpnumber >> ws;
+    } else { //data not required - skip rest of line
+      infile.get(c);
+      while (c != '\n' && !infile.eof())
+        infile.get(c);
+      infile >> ws;
     }
   }
   if (count == 0)

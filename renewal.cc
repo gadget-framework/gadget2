@@ -191,8 +191,8 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
       infile.get(c);
       while (c != '\n' && !infile.eof())
         infile.get(c);
+      infile >> ws;
     }
-    infile >> ws;
   }
 
   handle.logMessage("Read renewal data file - number of entries", count);
@@ -272,8 +272,8 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
       infile.get(c);
       while (c != '\n' && !infile.eof())
         infile.get(c);
+      infile >> ws;
     }
-    infile >> ws;
   }
 
   handle.logMessage("Read renewal data file - number of entries", count);
