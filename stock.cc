@@ -15,6 +15,7 @@
 #include "renewal.h"
 #include "transition.h"
 #include "spawner.h"
+#include "stray.h"
 #include "readword.h"
 #include "readaggregation.h"
 #include "gadget.h"
@@ -23,7 +24,7 @@ extern ErrorHandler handle;
 
 Stock::Stock(CommentStream& infile, const char* givenname,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
-  : BaseClass(givenname), spawner(0), renewal(0), maturity(0), transition(0),
+  : BaseClass(givenname), stray(0), spawner(0), renewal(0), maturity(0), transition(0),
     migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), NatM(0) {
 
   type = STOCKTYPE;
@@ -244,7 +245,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     CommentStream subcomment(subfile);
     handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
-    spawner = new Spawner(subcomment, maxage, LgrpDiv, Area, TimeInfo, keeper);
+    spawner = new Spawner(subcomment, maxage, LgrpDiv, areas, Area, TimeInfo, keeper);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -255,8 +256,23 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   infile >> ws;
   if (!infile.eof()) {
-    infile >> text >> ws;
-    handle.Unexpected("<end of file>", text);
+    //read the optional straying data
+    readWordAndVariable(infile, "doesstray", doesstray);
+      if (doesstray) {
+      readWordAndValue(infile, "strayfile", filename);
+      ifstream subfile;
+      subfile.open(filename, ios::in);
+      CommentStream subcomment(subfile);
+      handle.checkIfFailure(subfile, filename);
+      handle.Open(filename);
+      stray = new StrayData(subcomment, LgrpDiv, areas, Area, TimeInfo, keeper);
+      handle.Close();
+      subfile.close();
+      subfile.clear();
+
+    } else
+      stray = 0;
+    handle.logMessage("Read straying data for stock", this->Name());
   }
 
   //set the birthday for the stock
@@ -301,6 +317,8 @@ Stock::~Stock() {
     delete maturity;
   if (spawner != 0)
     delete spawner;
+  if (stray != 0)
+    delete stray;
 }
 
 void Stock::Reset(const TimeClass* const TimeInfo) {
@@ -311,6 +329,8 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
     maturity->Reset(TimeInfo);
   if (doesspawn)
     spawner->Reset(TimeInfo);
+  if (doesstray)
+    stray->Reset(TimeInfo);
 
   if (TimeInfo->CurrentTime() == 1) {
     initial->Initialise(Alkeys);
@@ -344,6 +364,8 @@ void Stock::setStock(StockPtrVector& stockvec) {
     transition->setStock(stockvec);
   if (doesspawn)
     spawner->setStock(stockvec);
+  if (doesstray)
+    stray->setStock(stockvec);
 }
 
 void Stock::setCI() {
@@ -388,6 +410,8 @@ void Stock::Print(ofstream& outfile) const {
     migration->Print(outfile);
   if (doesspawn)
     spawner->Print(outfile);
+  if (doesstray)
+    stray->Print(outfile);
 
   outfile << "\nAge length keys\n";
   for (i = 0; i < areas.Size(); i++) {
@@ -421,6 +445,12 @@ const StockPtrVector& Stock::getTransitionStocks() {
   if (doesmove == 0)
     handle.logFailure("Error in stock - no transition stocks defined for", this->Name());
   return transition->getTransitionStocks();
+}
+
+const StockPtrVector& Stock::getStrayStocks() {
+  if (doesstray == 0)
+    handle.logFailure("Error in stock - no straying stocks defined for", this->Name());
+  return stray->getStrayStocks();
 }
 
 const DoubleIndexVector& Stock::mortality() const {

@@ -80,7 +80,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
   char tmpname[MaxStrLength];
   strncpy(tmpname, "", MaxStrLength);
   int count = 0;
-  
+
   infile >> ws;
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 5)
@@ -196,7 +196,7 @@ void Tags::Reset(const TimeClass* const TimeInfo) {
 
 void Tags::setStock(StockPtrVector& Stocks) {
   int i, j, found;
-  StockPtrVector tempMatureStock, tempTransitionStock;
+  StockPtrVector tempMatureStock, tempTransitionStock, tempStrayStock;
   char* stockname;
 
   j = 0;
@@ -251,6 +251,27 @@ void Tags::setStock(StockPtrVector& Stocks) {
         preyindex.resize(1, -1);
         updated.resize(1, 0);
         tagStocks.resize(1, tempMatureStock[i]);
+      }
+    }
+  }
+
+  if (taggingstock->doesStray()) {
+    tempStrayStock = taggingstock->getStrayStocks();
+    for (i = 0; i < tempStrayStock.Size(); i++) {
+      strayStocks.resize(1, tempStrayStock[i]);
+      found = 0;
+      for (j = 0; j < transitionStocks.Size(); j++)
+        if (!(strcasecmp(transitionStocks[j]->Name(), tempStrayStock[i]->Name()) == 0))
+          found++;
+
+      for (j = 0; j < matureStocks.Size(); j++)
+        if (!(strcasecmp(matureStocks[j]->Name(), tempStrayStock[i]->Name()) == 0))
+          found++;
+
+      if (found == 0) {
+        preyindex.resize(1, -1);
+        updated.resize(1, 0);
+        tagStocks.resize(1, tempStrayStock[i]);
       }
     }
   }
@@ -438,6 +459,26 @@ void Tags::updateTransitionStock(const TimeClass* const TimeInfo) {
 
       if (updated[id] == 0) {
         transitionStocks[i]->updateTags(AgeLengthStock[id], this, exp(-tagloss));
+        updated[id] = 1;
+      }
+    }
+}
+
+void Tags::updateStrayStock(const TimeClass* const TimeInfo) {
+  int i, id;
+  int currentYear = TimeInfo->CurrentYear();
+  int currentStep = TimeInfo->CurrentStep();
+
+  if (endyear <= currentYear)
+    handle.logWarning("Warning in tags - tagging experiment has finished");
+  else
+    for (i = 0; i < strayStocks.Size(); i++) {
+      id = stockIndex(strayStocks[i]->Name());
+      if (id < 0 || id >= AgeLengthStock.Size())
+        handle.logFailure("Error in tags - invalid stock identifier");
+
+      if (updated[id] == 0) {
+        strayStocks[i]->updateTags(AgeLengthStock[id], this, exp(-tagloss));
         updated[id] = 1;
       }
     }

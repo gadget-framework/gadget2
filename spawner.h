@@ -13,7 +13,8 @@
 class Spawner : protected LivesOnAreas {
 public:
   Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* const LgrpDiv,
-    const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper);
+    const IntVector& areas, const AreaClass* const Area,
+    const TimeClass* const TimeInfo, Keeper* const keeper);
   ~Spawner();
   void Print(ofstream& outfile) const;
   void setStock(StockPtrVector& stockvec);

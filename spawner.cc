@@ -10,7 +10,8 @@
 extern ErrorHandler handle;
 
 Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* const lgrpdiv,
-  const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper) {
+  const IntVector& areas, const AreaClass* const Area, const TimeClass* const TimeInfo,
+  Keeper* const keeper) : LivesOnAreas(areas) {
 
   keeper->addString("spawner");
   int i;
@@ -240,23 +241,24 @@ void Spawner::setStock(StockPtrVector& stockvec) {
 void Spawner::Spawn(AgeBandMatrix& Alkeys, int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
+  if (this->IsSpawnStepArea(area, TimeInfo) == 0)
+    return;
+
   int age, len;
-  if (this->IsSpawnStepArea(area, TimeInfo) == 1) {
-    spawnParameters.Update(TimeInfo);
-    for (age = Alkeys.minAge(); age <= Alkeys.maxAge(); age++) {
-      //subtract mortality and reduce the weight of the living ones.
-      for (len = Alkeys.minLength(age); len < Alkeys.maxLength(age); len++) {
-        PopInfo p = Alkeys[age][len] * spawnProportion[len];
+  spawnParameters.Update(TimeInfo);
+  for (age = Alkeys.minAge(); age <= Alkeys.maxAge(); age++) {
+    //subtract mortality and reduce the weight of the living ones.
+    for (len = Alkeys.minLength(age); len < Alkeys.maxLength(age); len++) {
+      PopInfo p = Alkeys[age][len] * spawnProportion[len];
 
-        //calculate the spawning stock biomss if needed
-        if (onlyParent == 0)
-          ssb[age][len] = ssbFunc(age, len, p.N, p.W);
+      //calculate the spawning stock biomss if needed
+      if (onlyParent == 0)
+        ssb[age][len] = ssbFunc(age, len, p.N, p.W);
 
-        p *= exp(-spawnMortality[len]);
-        p.W -= (spawnWeightLoss[len] * p.W);
-        Alkeys[age][len] *= (1 - spawnProportion[len]);
-        Alkeys[age][len] += p;
-      }
+      p *= exp(-spawnMortality[len]);
+      p.W -= (spawnWeightLoss[len] * p.W);
+      Alkeys[age][len] *= (1 - spawnProportion[len]);
+      Alkeys[age][len] += p;
     }
   }
 }

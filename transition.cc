@@ -109,6 +109,9 @@ void Transition::Print(ofstream& outfile) const {
   outfile << "\nTransition\n\tNames of transition stocks:";
   for (i = 0; i < transitionStocks.Size(); i++)
     outfile << sep << (const char*)(transitionStocks[i]->Name());
+  outfile << "\n\tRatio moving into each stock:";
+  for (i = 0; i < Ratio.Size(); i++)
+    outfile << sep << Ratio[i];
   outfile << "\n\tTransition step " << transitionStep << endl;
 }
 

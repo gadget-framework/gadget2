@@ -264,7 +264,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     CommentStream subcomment(subfile);
     handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
-    spawner = new Spawner(subcomment, maxage, LgrpDiv, Area, TimeInfo, keeper);
+    spawner = new Spawner(subcomment, maxage, LgrpDiv, areas, Area, TimeInfo, keeper);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -472,7 +472,7 @@ void LenStock::ReducePop(int area,
     predator->Multiply(Alkeys[inarea], len_natm->NatMortality());
 
   if (tagAlkeys.numTagExperiments() > 0)
-    tagAlkeys[inarea].updateNumbers(Alkeys[AreaNr[area]]);
+    tagAlkeys[inarea].updateNumbers(Alkeys[inarea]);
 }
 
 void LenStock::CalcNumbers(int area,

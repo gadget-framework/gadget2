@@ -30,6 +30,7 @@ public:
   const char* TagName() const { return this->Name(); };
   void updateMatureStock(const TimeClass* const TimeInfo);
   void updateTransitionStock(const TimeClass* const TimeInfo);
+  void updateStrayStock(const TimeClass* const TimeInfo);
   void StoreNumberPriorToEating(int area, const char* stockname);
   const AgeBandMatrix& NumberPriorToEating(int area, const char* stockname);
   void Reset(const TimeClass* const TimeInfo);
@@ -53,6 +54,7 @@ private:
   StockPtrVector tagStocks;
   StockPtrVector matureStocks;
   StockPtrVector transitionStocks;
+  StockPtrVector strayStocks;
   ConversionIndexPtrVector CI;
   Stock* taggingstock;
   IntVector preyindex;

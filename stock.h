@@ -22,6 +22,7 @@ class Prey;
 class Maturity;
 class RenewalData;
 class Spawner;
+class StrayData;
 
 enum StockType { STOCKTYPE = 1, LENSTOCKTYPE };
 
@@ -175,10 +176,12 @@ public:
   const DoubleIndexVector& mortality() const;
   const StockPtrVector& getMatureStocks();
   const StockPtrVector& getTransitionStocks();
+  const StockPtrVector& getStrayStocks();
   void updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss);
   void DeleteTags(const char* tagname);
   void updateMatureStockWithTags(const TimeClass* const TimeInfo);
   void updateTransitionStockWithTags(const TimeClass* const TimeInfo);
+  void updateStrayStockWithTags(const TimeClass* const TimeInfo);
   const CharPtrVector TaggingExperimentIDs();
   /**
    * \brief This will return the type of stock class
@@ -191,6 +194,8 @@ protected:
   TagPtrVector allTags;
   TagPtrVector matureTags;
   TagPtrVector transitionTags;
+  TagPtrVector strayTags;
+  StrayData* stray;
   Spawner* spawner;
   RenewalData* renewal;
   Maturity* maturity;

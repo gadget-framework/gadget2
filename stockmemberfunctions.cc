@@ -13,6 +13,7 @@
 #include "renewal.h"
 #include "transition.h"
 #include "spawner.h"
+#include "stray.h"
 #include "errorhandler.h"
 #include "gadget.h"
 
@@ -156,9 +157,14 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 //A number of Special functions, Spawning, Renewal, Maturation and
 //Transition to other Stocks, Maturity due to age and increased age.
 void Stock::FirstUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+  int inarea = AreaNr[area];
   if (doesmove)
     if (transition->IsTransitionStep(area, TimeInfo))
-      transition->keepAgeGroup(area, Alkeys[AreaNr[area]], tagAlkeys[AreaNr[area]], TimeInfo);
+      transition->keepAgeGroup(area, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
+
+  if (doesstray)
+    if (stray->IsStrayStepArea(area, TimeInfo))
+      stray->storeStrayingStock(area, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
 }
 
 void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
@@ -171,15 +177,20 @@ void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass*
 }
 
 void Stock::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  if (doesmove) {
+  if (doesmove)
     if (transition->IsTransitionStep(area, TimeInfo)) {
       updateTransitionStockWithTags(TimeInfo);
       transition->Move(area, TimeInfo);
     }
-  }
-  if (doesspawn) {
+
+  if (doesstray)
+    if (stray->IsStrayStepArea(area, TimeInfo)) {
+      updateStrayStockWithTags(TimeInfo);
+      stray->addStrayStock(area, TimeInfo);
+    }
+
+  if (doesspawn)
     spawner->addSpawnStock(area, TimeInfo);
-  }
 }
 
 void Stock::FirstSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
@@ -213,6 +224,13 @@ void Stock::updateTransitionStockWithTags(const TimeClass* const TimeInfo) {
   for (i = 0; i < transitionTags.Size(); i++)
     transitionTags[i]->updateTransitionStock(TimeInfo);
   transitionTags.DeleteAll();
+}
+
+void Stock::updateStrayStockWithTags(const TimeClass* const TimeInfo) {
+  int i;
+  for (i = 0; i < strayTags.Size(); i++)
+    strayTags[i]->updateStrayStock(TimeInfo);
+  strayTags.DeleteAll();
 }
 
 void Stock::Renewal(int area, const TimeClass* const TimeInfo) {
@@ -259,6 +277,10 @@ void Stock::updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, dou
     transition->addTransitionTag(newtag->Name());
     transitionTags.resize(1, newtag);
   }
+  if (doesstray) {
+    stray->addStrayTag(newtag->Name());
+    strayTags.resize(1, newtag);
+  }
 }
 
 void Stock::DeleteTags(const char* tagname) {
@@ -268,6 +290,8 @@ void Stock::DeleteTags(const char* tagname) {
     maturity->deleteMaturityTag(tagname);
   if (doesmove)
     transition->deleteTransitionTag(tagname);
+  if (doesstray)
+    stray->deleteStrayTag(tagname);
 }
 
 const CharPtrVector Stock::TaggingExperimentIDs() {
