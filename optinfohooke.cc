@@ -14,7 +14,7 @@ extern int hooke(double (*h)(double*, int), int n, double startpoint[],
   double lambda, double epsilon, int itermax, double init[], double bndcheck);
 
 OptInfoHooke::OptInfoHooke()
-  : OptSearch(), hookeiter(1000), rho(0.5), lambda(0), hookeeps(1e-4), bndcheck(0.9999) {
+  : OptSearch(), hookeiter(1000), rho(0.5), lambda(0.0), hookeeps(1e-4), bndcheck(0.9999) {
   handle.logMessage("Initialising Hooke & Jeeves optimisation algorithm");
 }
 
@@ -55,6 +55,10 @@ void OptInfoHooke::read(CommentStream& infile, char* text) {
   if ((bndcheck < 0.5) || (bndcheck > 1)) {
     handle.logWarning("Warning in optinfofile - value of bndcheck outside bounds", bndcheck);
     bndcheck = 0.9999;
+  }
+  if ((isZero(hookeeps)) || (hookeeps < 0)) {
+    handle.logWarning("Warning in optinfofile - value of hookeeps outside bounds", hookeeps);
+    hookeeps = 1e-4;
   }
 }
 

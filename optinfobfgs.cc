@@ -10,7 +10,7 @@ double func(double* x, int n) {
 }
 
 OptInfoBfgs::OptInfoBfgs()
-  : OptSearch(), bfgsiter(100000), bfgseps(0.001), beta(0.3), sigma(0.01), st(1.0),
+  : OptSearch(), bfgsiter(10000), bfgseps(0.01), beta(0.3), sigma(0.01), step(1.0),
     gradacc(0.0001), gradstep(0.1) {
     
   handle.logMessage("Initialising BFGS optimisation algorithm");
@@ -63,8 +63,8 @@ void OptInfoBfgs::read(CommentStream& infile, char* text) {
     } else if (strcasecmp(text, "sigma") == 0) {
       infile >> sigma;
 
-    } else if (strcasecmp(text, "st") == 0) {
-      infile >> st;
+    } else if ((strcasecmp(text, "st") == 0) || (strcasecmp(text, "step") == 0)) {
+      infile >> step;
 
     } else if (strcasecmp(text, "gradacc") == 0) {
       infile >> gradacc;
@@ -86,17 +86,21 @@ void OptInfoBfgs::read(CommentStream& infile, char* text) {
   }
 
   //check the values specified in the optinfo file ...
-  if ((beta < 0) || (beta > 0.5)) {  //these are the bounds in paramin
+  if (isZero(beta) || (beta < 0) || (beta > 0.5)) {  //these are the bounds in paramin
     handle.logWarning("Warning in optinfofile - value of beta outside bounds", beta);
     beta = 0.3;
   }
-  if (isZero(sigma) || (sigma < 0)) {
+  if (isZero(sigma) || (sigma < 0)|| (sigma > 0.5)) {
     handle.logWarning("Warning in optinfofile - value of sigma outside bounds", sigma);
     sigma = 0.01;
   }
-  if (isZero(st) || (st < 0)) {
-    handle.logWarning("Warning in optinfofile - value of st outside bounds", st);
-    st = 1.0;
+  if (step < 1) {
+    handle.logWarning("Warning in optinfofile - value of st outside bounds", step);
+    step = 1.0;
+  }
+  if (isZero(bfgseps) || (bfgseps < 0)) {
+    handle.logWarning("Warning in optinfofile - value of bfgseps outside bounds", bfgseps);
+    bfgseps = 0.01;
   }
   if (isZero(gradacc) || (gradacc < 0) || (gradacc > 1)) {
     handle.logWarning("Warning in optinfofile - value of gradacc outside bounds", gradacc);

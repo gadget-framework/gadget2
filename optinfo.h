@@ -181,7 +181,7 @@ protected:
   /**
    * \brief This is the "temperature" used for the Simulated Annealing algorithm
    */
-  double T;
+  double t;
   /**
    * \brief This is the factor used to adjust the step length
    */
@@ -291,7 +291,7 @@ private:
    */
   double beta;
   double sigma;
-  double st;
+  double step;
   double gradacc;
   double gradstep;
 };

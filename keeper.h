@@ -20,11 +20,33 @@ public:
   void KeepVariable(double& value, const Parameter& attr);
   void DeleteParam(const double& var);
   void ChangeVariable(const double& pre, double& post);
+  /**
+   * \brief This function will set the text string that is used to describe a variable
+   * \param str is the text string to be stored
+   */
   void setString(const char* str);
+  /**
+   * \brief This function will add a text string that is used to describe a variable
+   * \param str is the text string to be stored
+   */
   void addString(const char* str);
+  /**
+   * \brief This function will add a text string that is used to describe a variable
+   * \param str is the text string to be stored
+   */
   void addString(const string str);
+  /**
+   * \brief This function will store the name of a likelihood component
+   * \param name is the name of the likelihood component to be stored
+   */
   void addComponent(const char* name);
+  /**
+   * \brief This function will remove the last text string from the list used to describe variables
+   */
   void clearLast();
+  /**
+   * \brief This function will remove all of the text strings from the list used to describe variables
+   */
   void clearAll();
   /**
    * \brief This function will store the current value of the variables from the optimisation process
