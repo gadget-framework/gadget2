@@ -265,8 +265,7 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
           for (preyl = Suitability(prey)[predl].minCol();
               preyl < Suitability(prey)[predl].maxCol(); preyl++)
-            consumption[inarea][prey][predl][preyl] +=
-              cons[inarea][prey][predl][preyl];
+            consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
 }
 
 /* This function calculates the maximum consumption by length and puts in

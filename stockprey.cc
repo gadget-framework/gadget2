@@ -12,8 +12,8 @@ StockPrey::StockPrey(CommentStream& infile, const IntVector& Areas,
 
 void StockPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
   int i, inarea = this->areaNum(area);
-
   tooMuchConsumption[inarea] = 0;
+
   for (i = 0; i < cons.Ncol(inarea); i++)
     cons[inarea][i] = 0.0;
   for (i = 0; i < Number[inarea].Size(); i++)
@@ -28,16 +28,15 @@ void StockPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
     sum += Number[inarea][i];
     biomass[inarea][i] = Number[inarea][i].N * Number[inarea][i].W;
   }
-
   total[inarea] = sum.N * sum.W;
-  for (i = 0; i < Number[inarea].Size(); i++)
-    numberPriorToEating[inarea][i] = Number[inarea][i]; //should be inside if
 
   if (CurrentSubstep == 1) {
     for (i = 0; i < consumption.Ncol(inarea); i++) {
       consumption[inarea][i] = 0.0;
       overconsumption[inarea][i] = 0.0;
     }
+    for (i = 0; i < Number[inarea].Size(); i++)
+      numberPriorToEating[inarea][i] = Number[inarea][i];
   }
 }
 

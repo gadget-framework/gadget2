@@ -91,7 +91,7 @@ void OtherFood::calcNumbers(int area, const AreaClass* const Area, const TimeCla
   pop.W = 1.0;   //warning - need to choose the weight to be 1
   pop.N = amount[TimeInfo->CurrentTime()][this->areaNum(area)] * Area->Size(area);
   PopInfoVector NumberInArea(1, pop);
-  prey->SumUsingPopInfo(NumberInArea, area, TimeInfo->CurrentSubstep());
+  prey->Sum(NumberInArea, area, TimeInfo->CurrentSubstep());
 }
 
 void OtherFood::Print(ofstream& outfile) const {

@@ -109,10 +109,11 @@ void TotalPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
   int AnyPreyEatenUp = 0;
   int AnyPreyOnArea = 0;
   int inarea = this->areaNum(area);
+  double ratio, tmp;
+
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     overcons[inarea][predl] = 0.0;
 
-  double ratio, tmp;
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (Preys(prey)->isInArea(area)) {
       if (Preys(prey)->Biomass(area) > verysmall) {

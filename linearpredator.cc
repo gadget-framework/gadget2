@@ -67,14 +67,11 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
   }
 
   //Inform the preys of the consumption.
-  for (prey = 0; prey < this->numPreys(); prey++) {
-    if (Preys(prey)->isInArea(area)) {
-      if (Preys(prey)->Biomass(area) > verysmall) {
+  for (prey = 0; prey < this->numPreys(); prey++)
+    if (Preys(prey)->isInArea(area))
+      if (Preys(prey)->Biomass(area) > verysmall)
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
           Preys(prey)->addConsumption(area, cons[inarea][prey][predl]);
-      }
-    }
-  }
 }
 
 void LinearPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubstep) {
@@ -114,22 +111,18 @@ void LinearPredator::adjustConsumption(int area, int numsubsteps, int CurrentSub
       totalcons[inarea][predl] -= overcons[inarea][predl];
 
   //Changes after division of timestep in substeps was possible.
-  for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+  for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     totalconsumption[inarea][predl] += totalcons[inarea][predl];
-
-  for (prey = 0; prey < this->numPreys(); prey++) {
-    if (Preys(prey)->isInArea(area)) {
-      if (Preys(prey)->Biomass(area) > verysmall) {
-        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-          for (preyl = Suitability(prey)[predl].minCol();
-              preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-            consumption[inarea][prey][predl][preyl] +=
-              cons[inarea][prey][predl][preyl];
-          }
-        }
-      }
-    }
+    overconsumption[inarea][predl] += overcons[inarea][predl];
   }
+
+  for (prey = 0; prey < this->numPreys(); prey++)
+    if (Preys(prey)->isInArea(area))
+      if (Preys(prey)->Biomass(area) > verysmall)
+        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+          for (preyl = Suitability(prey)[predl].minCol();
+              preyl < Suitability(prey)[predl].maxCol(); preyl++)
+            consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
 }
 
 void LinearPredator::Print(ofstream& outfile) const {

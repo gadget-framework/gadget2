@@ -73,14 +73,14 @@ const BandMatrix& PopPredator::Consumption(int area, const char* preyname) const
 
 const double PopPredator::getConsumptionBiomass(int prey, int area) const{
   int age, len;
-  double tons = 0.0;
+  double kilos = 0.0;
   //Note area is already the internal area ...
   const BandMatrix& bio = consumption[area][prey];
   for (age = bio.minAge(); age <= bio.maxAge(); age++)
     for (len = bio.minLength(age); len < bio.maxLength(age); len++)
-      tons += bio[age][len];
+      kilos += bio[age][len];
 
-  return tons;
+  return kilos;
 }
 
 void PopPredator::DeleteParametersForPrey(int prey, Keeper* const keeper) {
@@ -151,7 +151,7 @@ double PopPredator::getTotalOverConsumption(int area) const {
   int i, inarea = this->areaNum(area);
   double total;
   total = 0.0;
-  for (i = 0; i < overconsumption.Ncol(inarea); i++)
+  for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
     total += overconsumption[inarea][i];
   return total;
 }
