@@ -254,6 +254,8 @@ private:
    * \brief This method performes a linesearch a long the search direction s
    */
   double linesearch();
+  double Armijo();
+
   /**
    * \brief This is the current gradient
    */
@@ -291,6 +293,10 @@ private:
    */
   int maxiter;
   /**
+   * \brief This is an indicator of the accuracy of gradient calculations
+   */
+  int difficultgrad;
+  /**
    * \brief This is the convergence parameter (BFGS halts when norm(gk) < eps)
    */
   double eps;
@@ -299,5 +305,9 @@ private:
    */
   double rho;        //linesearch convergence parameters
   double tau;        //---------------------------------
+  double beta;
+  double sigma;
+  double st;
+
 };
 #endif

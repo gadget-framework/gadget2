@@ -16,11 +16,13 @@ GADGET = gadget
 # Pick the appropriate compiler from the following switches
 ##########################################################################
 # 1. Linux, or Solaris, without pvm, g++ compiler
+
 CXX = g++
 LIBDIRS = -L. -L/usr/local/lib
 LIBRARIES = -lm -lvec
 CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 OBJECTS = $(GADGETOBJECTS)
+GADGET = gadget
 ##########################################################################
 # 2. Linux, or Solaris, with pvm3, g++ compiler
 #CXX = g++
@@ -28,10 +30,11 @@ OBJECTS = $(GADGETOBJECTS)
 #PVMINCLUDE = $(PVMDIR)/include
 #PVMLIB = $(PVMDIR)/lib/$(PVM_ARCH)
 #LIBDIRS = -L. -L/usr/local/lib -L$(PVMLIB)
-#LIBRARIES = -lm -lvec -lpvm3 -lnsl
-# note that some (older) linux machines also require the -lsocket library
+#LIBRARIES = -lm -lvec -lpvm3 -lgpvm3 -lnsl
+## note that some (older) linux machines also require the -lsocket library
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
 #OBJECTS = $(GADGETOBJECTS) $(SLAVEOBJECTS)
+#GADGET = gadget-paramin
 ##########################################################################
 # 3. Solaris, without pvm3, using CC compiler
 #CXX = CC

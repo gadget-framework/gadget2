@@ -9,8 +9,11 @@ double func(double* x, int n) {
   return EcoSystem->SimulateAndUpdate(x, n);
 }
 
-OptInfoBfgs::OptInfoBfgs()
-  : OptSearch(), maxiter(100000), eps(0.001), rho(0.01), tau(0.5) {
+
+
+
+OptInfoBfgs::OptInfoBfgs() 
+  : OptSearch(), maxiter(100000), difficultgrad(0), eps(0.001), rho(0.01), tau(0.5), beta(0.3), sigma(0.01), st(1.0){
   handle.logMessage("Initialising BFGS optimisation algorithm");
   numvar = EcoSystem->numOptVariables();
   int i;
@@ -57,21 +60,21 @@ void OptInfoBfgs::Read(CommentStream& infile, char* text) {
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]")) {
     infile >> ws;
     if (strcasecmp(text,"rho") == 0) {
-      infile >> rho;
+      infile >> rho >> ws >> text >> ws;
 
     } else if (strcasecmp(text, "tau") == 0) {
-      infile >> tau;
+      infile >> tau >> ws >> text >> ws;
 
-    } else if (strcasecmp(text, "maxiter") == 0) {
-      infile >> maxiter;
+    } else if ((strcasecmp(text, "maxiterations") == 0) || (strcasecmp(text, "maxiter") == 0) || (strcasecmp(text, "bfgsiter")==0)) {
+      infile >> maxiter >> ws >> text >> ws;
 
     } else if (strcasecmp(text, "eps") == 0) {
-      infile >> eps;
+      infile >> eps >> ws >> text >> ws;
 
     } else {
       handle.logWarning("Warning in optinfofile - unknown option", text);
       infile >> text;  //read and ignore the next entry
     }
-    infile >> text;
+    //infile >> text;
   }
 }

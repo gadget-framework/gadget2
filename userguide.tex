@@ -3259,6 +3259,54 @@ This is the number of temperature loops that the Simulated Annealing algorithm w
 
 \section{BFGS}\label{sec:bfgs}
 \subsection{Overview}\label{subsec:bfgsover}
+The Broyden-Fletcher-Shanno-Golberg, or simply BFGS, is a quasi-Newton
+method and as such it accumulates information from successive line
+minimizations so that $N$ such line minimizations lead to the exact
+mininum of a quadratic form in $N$ dimensions. Also the method will be
+quadratically convergent for general smooth functions. \newline
+
+
+The basic idea of the BFGS is to build up, iteratively, a good
+approximation to the inverse Hessian matrix $A^{-1}$, that is to
+construct a sequence of matrices $H_i$ with the property, 
+$$ lim_{i->\infty} H_i = A^{-1} $$
+Even better if the limit is achieved after $N$ iterations instead of
+$\infty$. This approximation is the used as follows: \newline
+The minimum point $x_m$ satisfies $$Ax_m = b$$ At the current point
+$x_i$, whatever it is, we have $$Ax_i = \nabla f (x_i) + b$$
+Subtracting these two equations and multiplying by the inverse matrix
+$A^{-1}$ we have $$x_m - x_i = A^{-1}[-\nabla f(x_i) ]$$ which leads
+to $$x_{i+1} - x_i = A^{-1} (\nabla f_{i+1} - \nabla f_i)$$ where
+$\nabla f_j = \nabla f(x_j)$. We might then imagine that the update
+should be on the form $$H_{i+1} = H_i + \textup{correction}$$ Here the
+update formula is:
+\begin{equation}\label{eq:bfgsup}
+H_{i+1} = H_i + \frac{(x_{i+1} - x_i)(x_{i+1} - x_i)'}{(x_{i+1} -
+  x_i)'(\nabla f_{i+1} - \nabla f_i)} - \frac{[H_i (\nabla f_{i+1} -
+  \nabla f_i)][H_i (\nabla f_{i+1} - \nabla f_i)]'}{(\nabla f_{i+1} -
+  \nabla f_i)'H_i (\nabla f_{i+1} - \nabla f_i)} + [(\nabla f_{i+1} -
+  \nabla f_i) H_i (\nabla f_{i+1} - \nabla f_i)] u u'
+\end{equation}
+where $$u = \frac{(x_{i+1} - x_i)}{(x_{i+1} - x_i)'(\nabla f_{i+1} -
+  \nabla f_i)} - \frac{[H_i (\nabla f_{i+1} - \nabla f_i)]}{(\nabla f_{i+1} -
+  \nabla f_i)'H_i (\nabla f_{i+1} - \nabla f_i)}
+$$
+
+Now to find the next point $x_{i+1}$ after the given point $x_i$ a
+linesearch is conducted along $$s = - H_i \nabla f_i$$ and our new
+value $x_{i+1}$ is the point accepted by the linesearch on the line
+$x_i + \alpha s$. This is then continued until either the maximum
+number of iterations is reached or $||\nabla f_i ||$ falls below a
+certain number. \newline
+
+The linesearch algorithm used in this implementation is the Armijo
+linesearch. We start with the trial stepsize $st$ and continue
+with $\beta st, \beta^2 st, \beta^3 st, ..., $ until the
+first time that $\beta^m st$ falls within the set of stepsizes
+$\alpha$ satisfying the inequality
+\begin{equation}\label{eq:armijo}
+  f(x_i) - f(x_i + \alpha s) \geq - \sigma \alpha \nabla f(x_i) ' s
+\end{equation}
 
 \subsection{File Format}\label{subsec:bfgsfile}
 To specify the BFGS algorithm, the optimisation file should start with the keyword ''[bfgs]'', followed by (up to) 4 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, is shown below:
@@ -3267,8 +3315,9 @@ To specify the BFGS algorithm, the optimisation file should start with the keywo
 [bfgs]
 bfgsiter   10000 ; number of bfgs iterations
 bfgseps    1e-03 ; minimum epsilon, bfgs halt criteria
-rho        0.01  ; linesearch convergence parameter
-tau        0.5   ; linesearch convergence parameter
+beta       0.01  ; linesearch convergence parameter
+sigma      0.5   ; linesearch convergence parameter
+st         1.0   ; linesearch convergence parameter
 \end{verbatim}}
 
 \subsection{Parameters}\label{subsec:bfgspar}
@@ -3276,10 +3325,18 @@ tau        0.5   ; linesearch convergence parameter
 This is the maximum number of Gadget model runs that the BFGS algorithm will use to try to find the best solution.  If this number is exceeded, Gadget will select the best point found so far, and accept this as the 'solution', even though it has not met the convergence criteria.  A warning that Gadget has stopped without finding a solution that meets the convergence criteria will be printed.
 
 \subsubsection{bfgseps}
-This is the criteria for halting the BFGS algorithm at a minimum, and accepting the current point as the 'solution'.  The algorithm has ''converged'' if ...
+This is the criteria for halting the BFGS algorithm at a minimum, and
+accepting the current point as the 'solution'.  The algorithm has
+''converged'' if $||\nabla f_i|| < $ bfgseps.
 
-\subsubsection{rho}
-\subsubsection{tau}
+\subsubsection{sigma}
+This the Armijo convergence factor. This determines the size of the
+acceptance region which is inversly related with size of the sigma
+factor. 
+\subsubsection{beta}
+This is the stepsize reduction factor for the Armijo linesearch
+\subsubsection{st}
+This the starting stepsize for the Armijo linesearch. 
 
 \section{Combining Optimisation Algorithms}\label{sec:combine}
 \subsection{Overview}\label{subsec:combineover}
