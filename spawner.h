@@ -45,10 +45,10 @@ protected:
   FormulaVector spawnParameters;
   int onlyParent;
   int spawnage;
-  double meanlength;
-  double sdev;
-  double alpha;
-  double beta;
+  Formula meanlength;
+  Formula sdev;
+  Formula alpha;
+  Formula beta;
 };
 
 #endif

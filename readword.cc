@@ -1,4 +1,3 @@
-#include "keeper.h"
 #include "readword.h"
 #include "errorhandler.h"
 #include "gadget.h"
@@ -32,6 +31,17 @@ void readWordAndValue(CommentStream& infile, const char* str, char* value) {
   infile >> text;
   if (strcasecmp(text, str) == 0)
     infile >> value >> ws;
+  else
+    handle.Unexpected(str, text);
+}
+
+void readWordAndFormula(CommentStream& infile, const char* str, Formula& formula) {
+  ErrorHandler handle;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  infile >> text;
+  if (strcasecmp(text, str) == 0)
+    infile >> formula >> ws;
   else
     handle.Unexpected(str, text);
 }

@@ -135,10 +135,14 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
       }
     } else
       handle.Unexpected("spawnparameters", text);
-    readWordAndVariable(infile, "meanlength", meanlength);
-    readWordAndVariable(infile, "sdev", sdev);
-    readWordAndVariable(infile, "alpha", alpha);
-    readWordAndVariable(infile, "beta", beta);
+    readWordAndFormula(infile, "meanlength", meanlength);
+    meanlength.Inform(keeper);
+    readWordAndFormula(infile, "sdev", sdev);
+    sdev.Inform(keeper);
+    readWordAndFormula(infile, "alpha", alpha);
+    alpha.Inform(keeper);
+    readWordAndFormula(infile, "beta", beta);
+    beta.Inform(keeper);
   }
 
   if (!infile.eof()) {

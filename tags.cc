@@ -57,11 +57,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   NumberByLength.resize(LgrpDiv->NoLengthGroups(), 0.0);
 
   //Now read in the tagloss information
-  infile >> text >> ws;
-  if (strcasecmp(text, "tagloss") == 0)
-    infile >> tagloss >> ws;
-  else
-    handle.Unexpected("tagloss", text);
+  readWordAndFormula(infile, "tagloss", tagloss);
   tagloss.Inform(keeper);
 
   //Read in the numbers format: tagid - length - number

@@ -49,100 +49,46 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     functionnumber = 4;
   } else if (strcasecmp(functionname, "mvn-rho") == 0) {
     functionnumber = 5;
-    infile >> text >> ws;
-    if (strcasecmp(text, "sigma") == 0)
-      infile >> sigma >> ws;
-    else
-      handle.Unexpected("sigma", text);
-    sigma.Inform(keeper);
 
-    infile >> text >> ws;
-    if (strcasecmp(text, "rho") == 0)
-      infile >> rho >> ws;
-    else
-      handle.Unexpected("rho", text);
+    readWordAndFormula(infile, "sigma", sigma);
+    sigma.Inform(keeper);
+    readWordAndFormula(infile, "rho", rho);
     rho.Inform(keeper);
 
   } else if (strcasecmp(functionname, "mvn-abrho") == 0) {
     functionnumber = 6;
 
-    infile >> text >> ws;
-    if (strcasecmp(text, "sigma") == 0)
-      infile >> sigma >> ws;
-    else
-      handle.Unexpected("sigma", text);
+    readWordAndFormula(infile, "sigma", sigma);
     sigma.Inform(keeper);
-
-    infile >> text >> ws;
-    if (strcasecmp(text, "alpha") == 0)
-      infile >> alpha >> ws;
-    else
-      handle.Unexpected("alpha", text);
+    readWordAndFormula(infile, "alpha", alpha);
     alpha.Inform(keeper);
-
-    infile >> text >> ws;
-    if (strcasecmp(text, "beta") == 0)
-      infile >> beta >> ws;
-    else
-      handle.Unexpected("beta", text);
+    readWordAndFormula(infile, "beta", beta);
     beta.Inform(keeper);
 
   } else if (strcasecmp(functionname, "mvn-abk") == 0) {
     functionnumber = 7;
 
-    infile >> text >> ws;
-    if (strcasecmp(text, "sigma") == 0)
-      infile >> sigma >> ws;
-    else
-      handle.Unexpected("sigma", text);
+    readWordAndFormula(infile, "sigma", sigma);
     sigma.Inform(keeper);
-
-    infile >> text >> ws;
-    if (strcasecmp(text, "alpha") == 0)
-      infile >> alpha >> ws;
-    else
-      handle.Unexpected("alpha", text);
+    readWordAndFormula(infile, "alpha", alpha);
     alpha.Inform(keeper);
-
-    infile >> text >> ws;
-    if (strcasecmp(text, "beta") == 0)
-      infile >> beta >> ws;
-    else
-      handle.Unexpected("beta", text);
+    readWordAndFormula(infile, "beta", beta);
     beta.Inform(keeper);
 
   } else if (strcasecmp(functionname, "mvn-alphabeta") == 0) {
     functionnumber = 8;
 
-    infile >> text >> ws;
-    if (strcasecmp(text, "sigma") == 0)
-      infile >> sigma >> ws;
-    else
-      handle.Unexpected("sigma", text);
+    readWordAndFormula(infile, "sigma", sigma);
     sigma.Inform(keeper);
-
-    infile >> text >> ws;
-    if (strcasecmp(text, "alpha") == 0)
-      infile >> alpha >> ws;
-    else
-      handle.Unexpected("alpha", text);
+    readWordAndFormula(infile, "alpha", alpha);
     alpha.Inform(keeper);
-
-    infile >> text >> ws;
-    if (strcasecmp(text, "beta") == 0)
-      infile >> beta >> ws;
-    else
-      handle.Unexpected("beta", text);
+    readWordAndFormula(infile, "beta", beta);
     beta.Inform(keeper);
 
   } else if (strcasecmp(functionname, "mvlogistic") == 0) {
     functionnumber = 9;
 
-    infile >> text >> ws;
-    if (strcasecmp(text, "tau") == 0)
-      infile >> tau >> ws;
-    else
-      handle.Unexpected("tau", text);
+    readWordAndFormula(infile, "tau", tau);
     tau.Inform(keeper);
 
   } else

@@ -6,13 +6,14 @@
 #include "areatime.h"
 #include "print.h"
 #include "suits.h"
+#include "readword.h"
 #include "gadget.h"
 
 StockPredator::StockPredator(CommentStream& infile, const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
   int minage, int maxage, const TimeClass* const TimeInfo, Keeper* const keeper)
   : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv),
-  MaxconByLength(areas.Size(), GivenLgrpDiv->NoLengthGroups(), 0) {
+    MaxconByLength(areas.Size(), GivenLgrpDiv->NoLengthGroups(), 0.0) {
 
   ErrorHandler handle;
   keeper->AddString("predator");
@@ -31,16 +32,11 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
     handle.Message("Incorrect format of maxconsumption vector");
   maxConsumption.Inform(keeper);
 
-  infile >> text;
   keeper->ClearLastAddString("halffeedingvalue");
-  if (strcasecmp(text, "halffeedingvalue") == 0) {
-    if (!(infile >> halfFeedingValue))
-      handle.Message("Could not read halffeedingvalue in stockpredator");
-    halfFeedingValue.Inform(keeper);
-  } else
-    handle.Unexpected("halffeedingvalue", text);
-
+  readWordAndFormula(infile, "halffeedingvalue", halfFeedingValue);
+  halfFeedingValue.Inform(keeper);
   keeper->ClearLast();
+
   keeper->ClearLast();
   //Everything read from infile.
   IntVector size(maxage - minage + 1, GivenLgrpDiv->NoLengthGroups());
@@ -61,11 +57,11 @@ void StockPredator::Print(ofstream& outfile) const {
   int i, area;
   PopPredator::Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tPhi on internal area " << areas[area] <<  endl << TAB;
+    outfile << "\tPhi on internal area " << areas[area] << endl << TAB;
     for (i = 0; i < Phi.Ncol(area); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
-      outfile << sep << Phi[area][i];
+      outfile << Phi[area][i] << sep;
     }
     outfile << endl;
   }
