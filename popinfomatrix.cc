@@ -5,64 +5,58 @@
 #include "popinfomatrix.icc"
 #endif
 
-//constructor for a rectangular popinfomatrix.
-popinfomatrix::popinfomatrix(int nr, int nc) {
+PopInfoMatrix::PopInfoMatrix(int nr, int nc) {
   nrow = nr;
-  v = new popinfovector*[nr];
+  v = new PopInfoVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new popinfovector(nc);
+    v[i] = new PopInfoVector(nc);
 }
 
-//constructor for a rectangular popinfomatrix with initial value.
-popinfomatrix::popinfomatrix(int nr, int nc, popinfo value) {
+PopInfoMatrix::PopInfoMatrix(int nr, int nc, PopInfo value) {
   nrow = nr;
-  v = new popinfovector*[nr];
+  v = new PopInfoVector*[nr];
   int i, j;
   for (i = 0; i < nr; i++)
-    v[i] = new popinfovector(nc);
+    v[i] = new PopInfoVector(nc);
   for (i = 0; i < nr; i++) {
     for (j = 0; j < nc; j++)
       (*v[i])[j] = value;
   }
 }
 
-//constructor for a possibly nonrectangular popinfomatrix
-//the rows need not have the same number of columns.
-popinfomatrix::popinfomatrix(int nr, const intvector& nc) {
+PopInfoMatrix::PopInfoMatrix(int nr, const IntVector& nc) {
   nrow = nr;
-  v = new popinfovector*[nr];
+  v = new PopInfoVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new popinfovector(nc[i]);
+    v[i] = new PopInfoVector(nc[i]);
 }
 
-//constructor for popinfomatrix when all rows do not need to have same number of
-//columns, with initial value.
-popinfomatrix::popinfomatrix(int nr, const intvector& nc, popinfo value) {
+PopInfoMatrix::PopInfoMatrix(int nr, const IntVector& nc, PopInfo value) {
   nrow = nr;
-  v = new popinfovector*[nr];
+  v = new PopInfoVector*[nr];
   int i, j;
   for (i = 0; i < nr; i++)
-    v[i] = new popinfovector(nc[i]);
+    v[i] = new PopInfoVector(nc[i]);
   for (i = 0; i < nr; i++)
     for (j = 0; j < nc[i]; j++)
       (*v[i])[j] = value;
 }
 
-popinfomatrix::popinfomatrix(const popinfomatrix& initial) : nrow(initial.nrow) {
+PopInfoMatrix::PopInfoMatrix(const PopInfoMatrix& initial) : nrow(initial.nrow) {
   int i;
   if (nrow >= 0) {
-    v = new popinfovector*[nrow];
+    v = new PopInfoVector*[nrow];
     for (i = 0; i < nrow; i++)
-      v[i] = new popinfovector(initial[i]);
+      v[i] = new PopInfoVector(initial[i]);
   } else {
     v = 0;
     nrow = 0;
   }
 }
 
-popinfomatrix::~popinfomatrix() {
+PopInfoMatrix::~PopInfoMatrix() {
   int i;
   if (v != 0) {
     for (i = 0; i < nrow; i++)
@@ -72,21 +66,19 @@ popinfomatrix::~popinfomatrix() {
   }
 }
 
-//Adds rows to a popinfomatrix.
-void popinfomatrix::AddRows(int add, int length) {
-  popinfovector** vnew = new popinfovector*[nrow + add];
+void PopInfoMatrix::AddRows(int add, int length) {
+  PopInfoVector** vnew = new PopInfoVector*[nrow + add];
   int i;
   for (i = 0; i < nrow; i++)
     vnew[i] = v[i];
   delete[] v;
   v = vnew;
   for (i = nrow; i < nrow + add; i++)
-    v[i] = new popinfovector(length);
+    v[i] = new PopInfoVector(length);
   nrow += add;
 }
 
-//Adds rows to a popinfomatrix and initializes them.
-void popinfomatrix::AddRows(int add, int length, popinfo initial) {
+void PopInfoMatrix::AddRows(int add, int length, PopInfo initial) {
   int oldnrow = nrow;
   this->AddRows(add, length);
   int i, j;
@@ -95,12 +87,12 @@ void popinfomatrix::AddRows(int add, int length, popinfo initial) {
       (*v[i])[j] = initial;
 }
 
-void popinfomatrix::DeleteRow(int row) {
+void PopInfoMatrix::DeleteRow(int row) {
   int i;
   assert(nrow > 0);
   assert(0 <= row && row < nrow);
   delete v[row];
-  popinfovector** vnew = new popinfovector*[nrow - 1];
+  PopInfoVector** vnew = new PopInfoVector*[nrow - 1];
   for (i = 0; i < row; i++)
     vnew[i] = v[i];
   for (i = row; i < nrow - 1; i++)

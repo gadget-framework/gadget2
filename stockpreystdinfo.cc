@@ -2,10 +2,9 @@
 #include "intvector.h"
 #include "stockprey.h"
 #include "areatime.h"
-//#include "agebandm.h"
 #include "gadget.h"
 
-StockPreyStdInfo::StockPreyStdInfo(const StockPrey* p, const intvector& Areas)
+StockPreyStdInfo::StockPreyStdInfo(const StockPrey* p, const IntVector& Areas)
   : AbstrPreyStdInfo(p, Areas, p->AlkeysPriorToEating(Areas[0]).Minage(),
     p->AlkeysPriorToEating(Areas[0]).Maxage()),
   SPByLength(p, Areas), prey(p) {
@@ -22,11 +21,11 @@ void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
     NconbyAge[inarea][age] = 0.0;
     BconbyAge[inarea][age] = 0.0;
   }
-  const Agebandmatrix& Alk = prey->AlkeysPriorToEating(area);
-  popinfo nullpop;
+  const AgeBandMatrix& Alk = prey->AlkeysPriorToEating(area);
+  PopInfo nullpop;
 
-  popinfoindexvector PopByAge(Alk.Maxage() - Alk.Minage() + 1, Alk.Minage(), nullpop);
-  popinfovector PopByLength(SPByLength.BconsumptionByLength(area).Size(), nullpop);
+  PopInfoIndexVector PopByAge(Alk.Maxage() - Alk.Minage() + 1, Alk.Minage(), nullpop);
+  PopInfoVector PopByLength(SPByLength.BconsumptionByLength(area).Size(), nullpop);
   Alk.Colsum(PopByLength);
 
   int l = 0;
@@ -71,15 +70,15 @@ void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   }
 }
 
-const doublevector& StockPreyStdInfo::NconsumptionByLength(int area) const {
+const DoubleVector& StockPreyStdInfo::NconsumptionByLength(int area) const {
   return SPByLength.NconsumptionByLength(area);
 }
 
-const doublevector& StockPreyStdInfo::BconsumptionByLength(int area) const {
+const DoubleVector& StockPreyStdInfo::BconsumptionByLength(int area) const {
   return SPByLength.BconsumptionByLength(area);
 }
 
-const doublevector& StockPreyStdInfo::MortalityByLength(int area) const {
+const DoubleVector& StockPreyStdInfo::MortalityByLength(int area) const {
   return SPByLength.MortalityByLength(area);
 }
 

@@ -170,8 +170,8 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
   calc_c.resize(numcol);
   obs_c.resize(numcol);
   for (i = 0; i < numcol; i++) {
-    calc_c[i] = new doublematrix(AgeLengthData[0][i]->Nrow(), AgeLengthData[0][i]->Ncol(), 0.0);
-    obs_c[i] = new doublematrix(AgeLengthData[0][i]->Nrow(), AgeLengthData[0][i]->Ncol(), 0.0);
+    calc_c[i] = new DoubleMatrix(AgeLengthData[0][i]->Nrow(), AgeLengthData[0][i]->Ncol(), 0.0);
+    obs_c[i] = new DoubleMatrix(AgeLengthData[0][i]->Nrow(), AgeLengthData[0][i]->Ncol(), 0.0);
   }
 
   obs_biomass.resize(numcol);
@@ -183,8 +183,8 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
 
   int y, year;
   for (i = 0; i < numcol; i++) {
-    obs_biomass[i] = new doublematrix(numrow, AgeLengthData[0][i]->Nrow(), 0.0);
-    calc_biomass[i] = new doublematrix(numrow, AgeLengthData[0][i]->Nrow(), 0.0);
+    obs_biomass[i] = new DoubleMatrix(numrow, AgeLengthData[0][i]->Nrow(), 0.0);
+    calc_biomass[i] = new DoubleMatrix(numrow, AgeLengthData[0][i]->Nrow(), 0.0);
     if (agg_lev) {
       //Find number of years.
       y = 1;
@@ -195,14 +195,14 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
           year = Years[j];
         }
 
-      agg_obs_biomass[i] = new doublematrix(y, AgeLengthData[0][i]->Nrow(), 0.0);
-      agg_calc_biomass[i] = new doublematrix(y, AgeLengthData[0][i]->Nrow(), 0.0);
-      calc_catch[i] = new doublematrix(y, AgeLengthData[0][i]->Nrow(), 0.0);
-      obs_catch[i] = new doublematrix(y, AgeLengthData[0][i]->Nrow(), 0.0);
+      agg_obs_biomass[i] = new DoubleMatrix(y, AgeLengthData[0][i]->Nrow(), 0.0);
+      agg_calc_biomass[i] = new DoubleMatrix(y, AgeLengthData[0][i]->Nrow(), 0.0);
+      calc_catch[i] = new DoubleMatrix(y, AgeLengthData[0][i]->Nrow(), 0.0);
+      obs_catch[i] = new DoubleMatrix(y, AgeLengthData[0][i]->Nrow(), 0.0);
 
     } else {
-      calc_catch[i] = new doublematrix(numrow, AgeLengthData[0][i]->Nrow(), 0.0);
-      obs_catch[i] = new doublematrix(numrow, AgeLengthData[0][i]->Nrow(), 0.0);
+      calc_catch[i] = new DoubleMatrix(numrow, AgeLengthData[0][i]->Nrow(), 0.0);
+      obs_catch[i] = new DoubleMatrix(numrow, AgeLengthData[0][i]->Nrow(), 0.0);
     }
   }
 }
@@ -255,8 +255,8 @@ void CatchDistribution::ReadDistributionData(CommentStream& infile,
         AgeLengthData.AddRows(1, numarea);
         Proportions.AddRows(1, numarea);
         for (i = 0; i < numarea; i++) {
-          AgeLengthData[timeid][i] = new doublematrix(numage, numlen, 0.0);
-          Proportions[timeid][i] = new doublematrix(numage, numlen, 0.0);
+          AgeLengthData[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
+          Proportions[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
         }
       }
 
@@ -479,10 +479,10 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) const {
   outfile.flush();
 }
 
-void CatchDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks) {
+void CatchDistribution::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, found;
-  Fleetptrvector fleets;
-  Stockptrvector stocks;
+  FleetPtrVector fleets;
+  StockPtrVector stocks;
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
@@ -573,10 +573,10 @@ double CatchDistribution::LikMultinomial() {
   int a, age, len, nareas;
 
   //Get numbers from aggregator->AgeLengthDist()
-  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
-  doublematrixptrvector Dist(alptr->Size(), NULL);
+  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
+  DoubleMatrixPtrVector Dist(alptr->Size(), NULL);
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
-    Dist[nareas] = new doublematrix(aggregator->NoAgeGroups(), aggregator->NoLengthGroups(), 0.0);
+    Dist[nareas] = new DoubleMatrix(aggregator->NoAgeGroups(), aggregator->NoLengthGroups(), 0.0);
 
     for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++)
       for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++)
@@ -598,8 +598,8 @@ double CatchDistribution::LikMultinomial() {
       //group. To be able to use the Multinomial class, we must organize the
       //data such that we get vectors with the age group distribution.
       for (len = 0; len < Dist[nareas]->Ncol(0); len++) {
-        doublevector dist(Dist[nareas]->Nrow());
-        doublevector data(Dist[nareas]->Nrow());
+        DoubleVector dist(Dist[nareas]->Nrow());
+        DoubleVector data(Dist[nareas]->Nrow());
         for (a = 0; a < Dist[nareas]->Nrow(); a++) {
           dist[a] = (*Dist[nareas])[a][len];
           data[a] = (*AgeLengthData[timeindex][nareas])[a][len];
@@ -627,7 +627,7 @@ double CatchDistribution::LikPearson(const TimeClass* const TimeInfo) {
   int age, length, min_age, max_age, nareas;
 
   //Get numbers from aggregator->AgeLengthDist()
-  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
@@ -689,7 +689,7 @@ double CatchDistribution::GammaLik(const TimeClass* const TimeInfo) {
   int age, length, min_age, max_age, nareas;
 
   //Get numbers from aggregator->AgeLengthDist()
-  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
@@ -750,7 +750,7 @@ double CatchDistribution::ExperimentalLik(const TimeClass* const TimeInfo) {
   double frac = 0.0;
 
   //Get numbers from aggregator->AgeLengthDist()
-  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
@@ -823,7 +823,7 @@ double CatchDistribution::ModifiedMultinomial(const TimeClass* const TimeInfo) {
   int age, length, min_age, max_age, nareas;
 
   //Get numbers from aggregator->AgeLengthDist()
-  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     Likelihoodvalues[timeindex][nareas] = 0.0;
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
@@ -908,7 +908,7 @@ double CatchDistribution::LikSumSquares() {
   double totalmodel, totaldata;
   int age, len, nareas;
 
-  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     totalmodel = 0.0;
     totaldata = 0.0;
@@ -986,7 +986,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
   int time = timeindex - 1; //timeindex was increased before this is called.
 
   //Get age and length intervals from aggregator->AgeLengthDist()
-  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
   catchfile << "\nTime:    Year " << TimeInfo.CurrentYear()
     << " Step " << TimeInfo.CurrentStep() << "\nName:   ";
   for (i = 0; i < fleetnames.Size(); i++)
@@ -1041,20 +1041,20 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
   catchfile.flush();
 }
 
-const agebandmatrixptrvector& CatchDistribution::getModCatch(const TimeClass* const TimeInfo) {
+const AgeBandMatrixPtrVector& CatchDistribution::getModCatch(const TimeClass* const TimeInfo) {
   aggregator->Sum(TimeInfo, 1); //mortality model, calculated catch
   return aggregator->AgeLengthDist();
 }
 
-intvector CatchDistribution::getSteps() {
+IntVector CatchDistribution::getSteps() {
   //written by kgf 11/2 99
-  intvector step(Steps);
+  IntVector step(Steps);
   return step;
 }
 
-intvector CatchDistribution::getYears() {
+IntVector CatchDistribution::getYears() {
   //written by kgf 11/2 99
-  intvector years(Years);
+  IntVector years(Years);
   return years;
 }
 

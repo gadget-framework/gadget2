@@ -4,58 +4,58 @@
 #include "intvector.h"
 
 /**
- * \class intmatrix
- * \brief This class implements a dynamic vector of intvector values
+ * \class IntMatrix
+ * \brief This class implements a dynamic vector of IntVector values
  */
-class intmatrix {
+class IntMatrix {
 public:
   /**
-   * \brief This is the default intmatrix constructor
+   * \brief This is the default IntMatrix constructor
    */
-  intmatrix() { nrow = 0; v = 0; };
+  IntMatrix() { nrow = 0; v = 0; };
   /**
-   * \brief This is the intvector constructor for a specified size
+   * \brief This is the IntVector constructor for a specified size
    * \param nrow this is the size of the vector to be created
-   * \param ncol this is the length of each row to be created (ie. the size of the intvector to be created for each row)
+   * \param ncol this is the length of each row to be created (ie. the size of the IntVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  intmatrix(int nrow, int ncol);
+  IntMatrix(int nrow, int ncol);
   /**
-   * \brief This is the intvector constructor for a specified size
+   * \brief This is the IntVector constructor for a specified size
    * \param nrow this is the size of the vector to be created
-   * \param ncol this is the length of each row to be created (ie. the size of the intvector to be created for each row)
+   * \param ncol this is the length of each row to be created (ie. the size of the IntVector to be created for each row)
    * \param initial this is the initial value for all the entries of the vector
    */
-  intmatrix(int nrow, int ncol, int initial);
+  IntMatrix(int nrow, int ncol, int initial);
   /**
-   * \brief This is the intvector constructor for a specified size
+   * \brief This is the IntVector constructor for a specified size
    * \param nrow this is the size of the vector to be created
-   * \param ncol this is the length of the rows to be created (ie. the size of the intvector to be created for each row)
+   * \param ncol this is the length of the rows to be created (ie. the size of the IntVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  intmatrix(int nrow, const intvector& ncol);
+  IntMatrix(int nrow, const IntVector& ncol);
   /**
-   * \brief This is the intvector constructor for a specified size
+   * \brief This is the IntVector constructor for a specified size
    * \param nrow this is the size of the vector to be created
-   * \param ncol this is the length of the rows to be created (ie. the size of the intvector to be created for each row)
+   * \param ncol this is the length of the rows to be created (ie. the size of the IntVector to be created for each row)
    * \param initial this is the initial value for all the entries of the vector
    */
-  intmatrix(int nrow, const intvector& ncol, int initial);
+  IntMatrix(int nrow, const IntVector& ncol, int initial);
   /**
-   * \brief This is the intmatrix constructor that create a copy of an existing intmatrix
-   * \param initial this is the intmatrix to copy
+   * \brief This is the IntMatrix constructor that create a copy of an existing IntMatrix
+   * \param initial this is the IntMatrix to copy
    */
-  intmatrix(const intmatrix& initial);
+  IntMatrix(const IntMatrix& initial);
   /**
-   * \brief This is the intmatrix destructor
+   * \brief This is the IntMatrix destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~intmatrix();
+  ~IntMatrix();
   /**
    * \brief This will return the number of columns in row i of the vector
    * \param i this is the row of the vector to have the number of columns counted
    * \return the number of columns in row i of the vector
-   * \note This is the number of entries in the intvector that is entry i of the intmatrix
+   * \note This is the number of entries in the IntVector that is entry i of the IntMatrix
    */
   int Ncol(int i = 0) const { return v[i]->Size(); };
   /**
@@ -68,25 +68,25 @@ public:
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  intvector& operator [] (int pos);
+  IntVector& operator [] (int pos);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const intvector& operator [] (int pos) const;
+  const IntVector& operator [] (int pos) const;
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
-   * \param length this is the number of entries to the intvector that is created
+   * \param length this is the number of entries to the IntVector that is created
    * \param initial this is the value that will be entered for the new entries
    */
   void AddRows(int add, int length, int initial);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
-   * \param length this is the number of entries to the intvector that is created
+   * \param length this is the number of entries to the IntVector that is created
+   * \note The new elements of the vector will be created, and set to zero
    */
   void AddRows(int add, int length);
   /**
@@ -101,9 +101,9 @@ protected:
    */
   int nrow;
   /**
-   * \brief This is the vector of intvector values
+   * \brief This is the vector of IntVector values
    */
-  intvector** v;
+  IntVector** v;
 };
 
 #ifdef GADGET_INLINE

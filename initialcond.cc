@@ -124,7 +124,7 @@ void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
   if (CountColumns(infile) != 4)
     handle.Message("Wrong number of columns in inputfile - should be 4");
 
-  //Set the numbers in the agebandmatrixptrvector to zero (in case some arent in the inputfile)
+  //Set the numbers in the AgeBandMatrixPtrVector to zero (in case some arent in the inputfile)
   for (areaid = 0; areaid < noareas; areaid++)
     for (ageid = minage; ageid < noagegr + minage; ageid++)
       for (lengthid = 0; lengthid < nolengr; lengthid++)
@@ -168,7 +168,7 @@ void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
 //
 // Constructor for the initial conditions
 //
-InitialCond::InitialCond(CommentStream& infile, const intvector& area,
+InitialCond::InitialCond(CommentStream& infile, const IntVector& area,
   Keeper* const keeper, const char* refWeightFile, const AreaClass* const Area)
   : LgrpDiv(0), CI(0), areas(area) {
 
@@ -218,7 +218,7 @@ InitialCond::InitialCond(CommentStream& infile, const intvector& area,
   readNumbers = 0;
 
   //create the AreaAgeLength object of the correct size
-  popinfomatrix tmpPop(noagegr, nolengr);
+  PopInfoMatrix tmpPop(noagegr, nolengr);
   for (i = 0; i < noagegr; i++) {
     for (j = 0; j < nolengr; j++) {
       //these values for tmpPop[i][j] must not be zero - set them to 1
@@ -260,7 +260,7 @@ InitialCond::InitialCond(CommentStream& infile, const intvector& area,
   //Now that the initial conditions have been read from file
   //we have to set the initial weight of the stock
   double rCond, rWeight;
-  doublematrix tmpRefW;
+  DoubleMatrix tmpRefW;
 
   //Read information on reference weights.
   keeper->AddString("referenceweights");
@@ -275,7 +275,7 @@ InitialCond::InitialCond(CommentStream& infile, const intvector& area,
   subweightfile.clear();
 
   //Aggregate the reference weight data to be the same format
-  doublevector Wref(nolengr);
+  DoubleVector Wref(nolengr);
   int pos = 0;
   for (j = 0; j < nolengr; j++) {
     for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
@@ -348,7 +348,7 @@ void InitialCond::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void InitialCond::Initialize(agebandmatrixptrvector& Alkeys) {
+void InitialCond::Initialize(AgeBandMatrixPtrVector& Alkeys) {
 
   int area, age, l;
   int minage, maxage;

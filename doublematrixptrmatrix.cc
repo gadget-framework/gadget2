@@ -5,64 +5,58 @@
 #include "doublematrixptrmatrix.icc"
 #endif
 
-//constructor for a rectangular doublematrixptrmatrix.
-doublematrixptrmatrix::doublematrixptrmatrix(int nr, int nc) {
+DoubleMatrixPtrMatrix::DoubleMatrixPtrMatrix(int nr, int nc) {
   nrow = nr;
-  v = new doublematrixptrvector*[nr];
+  v = new DoubleMatrixPtrVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new doublematrixptrvector(nc);
+    v[i] = new DoubleMatrixPtrVector(nc);
 }
 
-//constructor for a rectangular doublematrixptrmatrix with initial value.
-doublematrixptrmatrix::doublematrixptrmatrix(int nr, int nc, doublematrix* value) {
+DoubleMatrixPtrMatrix::DoubleMatrixPtrMatrix(int nr, int nc, DoubleMatrix* value) {
   nrow = nr;
-  v = new doublematrixptrvector*[nr];
+  v = new DoubleMatrixPtrVector*[nr];
   int i, j;
   for (i = 0; i < nr; i++)
-    v[i] = new doublematrixptrvector(nc);
+    v[i] = new DoubleMatrixPtrVector(nc);
   for (i = 0; i < nr; i++) {
     for (j = 0; j < nc; j++)
       (*v[i])[j] = value;
   }
 }
 
-//constructor for a possibly nonrectangular doublematrixptrmatrix
-//the rows need not have the same number of columns.
-doublematrixptrmatrix::doublematrixptrmatrix(int nr, const intvector& nc) {
+DoubleMatrixPtrMatrix::DoubleMatrixPtrMatrix(int nr, const IntVector& nc) {
   nrow = nr;
-  v = new doublematrixptrvector*[nr];
+  v = new DoubleMatrixPtrVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new doublematrixptrvector(nc[i]);
+    v[i] = new DoubleMatrixPtrVector(nc[i]);
 }
 
-//constructor for doublematrixptrmatrix when all rows do not need
-//to have same number of columns, with initial value.
-doublematrixptrmatrix::doublematrixptrmatrix(int nr, const intvector& nc, doublematrix* value) {
+DoubleMatrixPtrMatrix::DoubleMatrixPtrMatrix(int nr, const IntVector& nc, DoubleMatrix* value) {
   nrow = nr;
-  v = new doublematrixptrvector*[nr];
+  v = new DoubleMatrixPtrVector*[nr];
   int i, j;
   for (i = 0; i < nr; i++)
-    v[i] = new doublematrixptrvector(nc[i]);
+    v[i] = new DoubleMatrixPtrVector(nc[i]);
   for (i = 0; i < nr; i++)
     for (j = 0; j < nc[i]; j++)
       (*v[i])[j] = value;
 }
 
-doublematrixptrmatrix::doublematrixptrmatrix(const doublematrixptrmatrix& initial) : nrow(initial.nrow) {
+DoubleMatrixPtrMatrix::DoubleMatrixPtrMatrix(const DoubleMatrixPtrMatrix& initial) : nrow(initial.nrow) {
   int i;
   if (nrow >= 0) {
-    v = new doublematrixptrvector*[nrow];
+    v = new DoubleMatrixPtrVector*[nrow];
     for (i = 0; i < nrow; i++)
-      v[i] = new doublematrixptrvector(initial[i]);
+      v[i] = new DoubleMatrixPtrVector(initial[i]);
   } else {
     v = 0;
     nrow = 0;
   }
 }
 
-doublematrixptrmatrix::~doublematrixptrmatrix() {
+DoubleMatrixPtrMatrix::~DoubleMatrixPtrMatrix() {
   int i;
   if (v != 0) {
     for (i = 0; i < nrow; i++)
@@ -72,21 +66,19 @@ doublematrixptrmatrix::~doublematrixptrmatrix() {
   }
 }
 
-//Adds rows to a doublematrixptrmatrix.
-void doublematrixptrmatrix::AddRows(int add, int length) {
-  doublematrixptrvector** vnew = new doublematrixptrvector*[nrow + add];
+void DoubleMatrixPtrMatrix::AddRows(int add, int length) {
+  DoubleMatrixPtrVector** vnew = new DoubleMatrixPtrVector*[nrow + add];
   int i;
   for (i = 0; i < nrow; i++)
     vnew[i] = v[i];
   delete[] v;
   v = vnew;
   for (i = nrow; i < nrow + add; i++)
-    v[i] = new doublematrixptrvector(length);
+    v[i] = new DoubleMatrixPtrVector(length);
   nrow += add;
 }
 
-//Adds rows to a doublematrixptrmatrix and initializes them.
-void doublematrixptrmatrix::AddRows(int add, int length, doublematrix* initial) {
+void DoubleMatrixPtrMatrix::AddRows(int add, int length, DoubleMatrix* initial) {
   int oldnrow = nrow;
   this->AddRows(add, length);
   int i, j;
@@ -95,11 +87,11 @@ void doublematrixptrmatrix::AddRows(int add, int length, doublematrix* initial) 
       (*v[i])[j] = initial;
 }
 
-void doublematrixptrmatrix::DeleteRow(int row) {
+void DoubleMatrixPtrMatrix::DeleteRow(int row) {
   assert(nrow > 0);
   assert(0 <= row && row < nrow);
   delete v[row];
-  doublematrixptrvector** vnew = new doublematrixptrvector*[nrow - 1];
+  DoubleMatrixPtrVector** vnew = new DoubleMatrixPtrVector*[nrow - 1];
   int i;
   for (i = 0; i < row; i++)
     vnew[i] = v[i];

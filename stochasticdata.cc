@@ -30,7 +30,7 @@ StochasticData::StochasticData(int netrun) {
   readInfo = NULL;
   if (NETRUN == 1) {
     #ifdef GADGET_NETWORK
-      slave = new slaveCommunication();
+      slave = new SlaveCommunication();
       GETDATA = 0;
       dataFromMaster = NULL;
       numberOfParam = 0;

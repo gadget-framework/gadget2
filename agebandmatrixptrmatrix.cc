@@ -4,26 +4,26 @@
 #include "agebandmatrixptrmatrix.icc"
 #endif
 
-agebandmatrixptrmatrix::agebandmatrixptrmatrix(int sz) {
+AgeBandMatrixPtrMatrix::AgeBandMatrixPtrMatrix(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
-    v = new agebandmatrixptrvector*[size];
+    v = new AgeBandMatrixPtrVector*[size];
   else
     v = 0;
 }
-agebandmatrixptrmatrix::agebandmatrixptrmatrix(int sz, agebandmatrixptrvector* value) {
+AgeBandMatrixPtrMatrix::AgeBandMatrixPtrMatrix(int sz, AgeBandMatrixPtrVector* value) {
   assert(value != NULL);
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
-    v = new agebandmatrixptrvector*[size];
+    v = new AgeBandMatrixPtrVector*[size];
     for (i = 0; i < size; i++)
       v[i] = value;
   } else
     v = 0;
 }
 
-agebandmatrixptrmatrix::~agebandmatrixptrmatrix() {
+AgeBandMatrixPtrMatrix::~AgeBandMatrixPtrMatrix() {
   int i;
   if (v != 0) {
     for (i = 0; i < size; i++)
@@ -33,8 +33,7 @@ agebandmatrixptrmatrix::~agebandmatrixptrmatrix() {
   }
 }
 
-//The function resize add addsize elements to a agebandmatrixptrmatrix and fills it vith value.
-void agebandmatrixptrmatrix::resize(int addsize, agebandmatrixptrvector* value) {
+void AgeBandMatrixPtrMatrix::resize(int addsize, AgeBandMatrixPtrVector* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -43,13 +42,13 @@ void agebandmatrixptrmatrix::resize(int addsize, agebandmatrixptrvector* value) 
       v[i] = value;
 }
 
-void agebandmatrixptrmatrix::resize(int addsize) {
+void AgeBandMatrixPtrMatrix::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
-    v = new agebandmatrixptrvector*[size];
+    v = new AgeBandMatrixPtrVector*[size];
   } else if (addsize > 0) {
-    agebandmatrixptrvector** vnew = new agebandmatrixptrvector*[addsize + size];
+    AgeBandMatrixPtrVector** vnew = new AgeBandMatrixPtrVector*[addsize + size];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
@@ -58,10 +57,10 @@ void agebandmatrixptrmatrix::resize(int addsize) {
   }
 }
 
-void agebandmatrixptrmatrix::Delete(int pos) {
+void AgeBandMatrixPtrMatrix::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
-  agebandmatrixptrvector** vnew = new agebandmatrixptrvector*[size - 1];
+  AgeBandMatrixPtrVector** vnew = new AgeBandMatrixPtrVector*[size - 1];
   int i;
   for (i = 0; i < pos; i++)
     vnew[i] = v[i];

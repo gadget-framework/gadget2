@@ -2,37 +2,37 @@
 #define intvector_h
 
 /**
- * \class intvector
+ * \class IntVector
  * \brief This class implements a dynamic vector of int values
  */
-class intvector {
+class IntVector {
 public:
   /**
-   * \brief This is the default intvector constructor
+   * \brief This is the default IntVector constructor
    */
-  intvector() { size = 0; v = 0; };
+  IntVector() { size = 0; v = 0; };
   /**
-   * \brief This is the intvector constructor for a specified size
+   * \brief This is the IntVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  intvector(int sz);
+  IntVector(int sz);
   /**
-   * \brief This is the intvector constructor for a specified size with an initial value
+   * \brief This is the IntVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  intvector(int sz, int initial);
+  IntVector(int sz, int initial);
   /**
-   * \brief This is the intvector constructor that create a copy of an existing intvector
-   * \param initial this is the intvector to copy
+   * \brief This is the IntVector constructor that create a copy of an existing IntVector
+   * \param initial this is the IntVector to copy
    */
-  intvector(const intvector& initial);
+  IntVector(const IntVector& initial);
   /**
-   * \brief This is the intvector destructor
+   * \brief This is the IntVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~intvector();
+  ~IntVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
@@ -41,8 +41,8 @@ public:
   void resize(int add, int value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**
@@ -68,7 +68,7 @@ public:
    * \return the value of the specified element
    */
   const int& operator [] (int pos) const;
-  intvector& operator = (const intvector& d);
+  IntVector& operator = (const IntVector& d);
 protected:
   /**
    * \brief This is the vector of int values

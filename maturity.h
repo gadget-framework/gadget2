@@ -12,16 +12,16 @@
 class Maturity;
 
 typedef double Maturityfunc(int, int, int, const TimeClass* const, const AreaClass* const,
-  const LengthGroupDivision* const, int, const doublevector&, const doublevector&, int);
+  const LengthGroupDivision* const, int, const DoubleVector&, const DoubleVector&, int);
 typedef Maturityfunc* MaturityfuncPtr;
 
 class Maturity: protected LivesOnAreas {
 public:
   Maturity();
-  Maturity(const intvector& areas, int minage, const intvector& minabslength,
-    const intvector& size, const LengthGroupDivision* const LgrpDiv);
+  Maturity(const IntVector& areas, int minage, const IntVector& minabslength,
+    const IntVector& size, const LengthGroupDivision* const LgrpDiv);
   virtual ~Maturity();
-  void SetStock(Stockptrvector& stockvec);
+  void SetStock(StockPtrVector& stockvec);
   virtual void Print(ofstream& outfile) const;
   virtual void Precalc(const TimeClass* const TimeInfo);
   virtual int IsMaturationStep(int area, const TimeClass* const TimeInfo) = 0;
@@ -33,18 +33,18 @@ public:
   void PutInStorage(int area, int age, int length, double number,
     const TimeClass* const TimeInfo, int id);
   int NoOfMatureStocks() { return MatureStocks.Size(); };
-  const Stockptrvector& GetMatureStocks();
+  const StockPtrVector& GetMatureStocks();
   void DeleteTag(const char* tagname);
   void AddTag(const char* tagname);
 protected:
-  Stockptrvector MatureStocks;
-  charptrvector MatureStockNames;
-  doublevector Ratio;
-  ConversionIndexptrvector CI;
+  StockPtrVector MatureStocks;
+  CharPtrVector MatureStockNames;
+  DoubleVector Ratio;
+  ConversionIndexPtrVector CI;
   LengthGroupDivision* LgrpDiv;
 private:
-  agebandmatrixptrvector Storage;
-  agebandmatrixratioptrvector TagStorage;
+  AgeBandMatrixPtrVector Storage;
+  AgeBandMatrixRatioPtrVector TagStorage;
 };
 
 #endif

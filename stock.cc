@@ -46,7 +46,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   if (infile.eof())
     handle.Eof();
   infile >> text;
-  intvector tmpareas;
+  IntVector tmpareas;
   if (strcasecmp(text, "livesonareas") == 0) {
     infile >> ws;
     i = 0;
@@ -86,8 +86,8 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //JMB need to set the lowerlgrp and size vectors to a default
   //value to allow the whole range of lengths to be calculated
   tmpint = int((maxlength - minlength) / dl);
-  intvector lowerlgrp(maxage - minage + 1, 0);
-  intvector size(maxage - minage + 1, tmpint);
+  IntVector lowerlgrp(maxage - minage + 1, 0);
+  IntVector size(maxage - minage + 1, tmpint);
 
   Alkeys.resize(areas.Size(), minage, lowerlgrp, size);
   tagAlkeys.resize(areas.Size(), minage, lowerlgrp, size);
@@ -95,8 +95,8 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     Alkeys[i].SettoZero();
 
   //Read the growth length group data
-  doublevector grlengths;
-  charptrvector grlenindex;
+  DoubleVector grlengths;
+  CharPtrVector grlenindex;
 
   ReadWordAndValue(infile, "growthandeatlengths", filename);
   datafile.open(filename);
@@ -244,12 +244,10 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 Stock::Stock(const char* givenname)
   : BaseClass(givenname), spawner(0), renewal(0), maturity(0), transition(0),
     migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), NatM(0) {
-  //dummy constructor for use in derived classes
+
 }
 
 Stock::~Stock() {
-  //Of course all the pointers were initialized to 0 in the constructor
-  //and some of them set to point to real objects after that.
   if (migration != 0)
     delete migration;
   if (prey != 0)
@@ -311,7 +309,7 @@ PopPredator* Stock::ReturnPredator() const {
   return predator;
 }
 
-void Stock::SetStock(Stockptrvector& stockvec) {
+void Stock::SetStock(StockPtrVector& stockvec) {
   if (doesmature)
     maturity->SetStock(stockvec);
   if (doesmove)
@@ -369,20 +367,20 @@ int Stock::Birthday(const TimeClass* const TimeInfo) const {
   return (TimeInfo->CurrentStep() == birthdate);
 }
 
-const Agebandmatrix& Stock::Agelengthkeys(int area) const {
+const AgeBandMatrix& Stock::Agelengthkeys(int area) const {
   return Alkeys[AreaNr[area]];
 }
 
-Agebandmatrix& Stock::MutableAgelengthkeys(int area) const {
-  return ((Agebandmatrix &)Alkeys[AreaNr[area]]);
+AgeBandMatrix& Stock::MutableAgelengthkeys(int area) const {
+  return ((AgeBandMatrix &)Alkeys[AreaNr[area]]);
 }
 
-const Agebandmatrix& Stock::getMeanN(int area) const {
+const AgeBandMatrix& Stock::getMeanN(int area) const {
   assert(iseaten && prey->preyType() == MORTPREY_TYPE);
   return (((MortPrey*)prey)->getMeanN(area));
 }
 
-const Stockptrvector& Stock::GetMatureStocks() {
+const StockPtrVector& Stock::GetMatureStocks() {
   assert(doesmature != 0);
   return maturity->GetMatureStocks();
 }

@@ -4,7 +4,7 @@
 #include "tagptrvector.icc"
 #endif
 
-Tagptrvector::Tagptrvector(int sz) {
+TagPtrVector::TagPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new Tags*[size];
@@ -13,7 +13,7 @@ Tagptrvector::Tagptrvector(int sz) {
   index = 0;
 }
 
-Tagptrvector::Tagptrvector(int sz, Tags* value) {
+TagPtrVector::TagPtrVector(int sz, Tags* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -26,7 +26,7 @@ Tagptrvector::Tagptrvector(int sz, Tags* value) {
   index = 0;
 }
 
-Tagptrvector::Tagptrvector(const Tagptrvector& initial) {
+TagPtrVector::TagPtrVector(const TagPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -39,15 +39,14 @@ Tagptrvector::Tagptrvector(const Tagptrvector& initial) {
   index = 0;
 }
 
-Tagptrvector::~Tagptrvector() {
+TagPtrVector::~TagPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a Tagptrvector and fills it with value.
-void Tagptrvector::resize(int addsize, Tags* value) {
+void TagPtrVector::resize(int addsize, Tags* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -57,7 +56,7 @@ void Tagptrvector::resize(int addsize, Tags* value) {
 }
 
 //Set the names of all tagged stocks
-void Tagptrvector::SetTaggedStocks(const charptrvector Names) {
+void TagPtrVector::SetTaggedStocks(const CharPtrVector Names) {
   int i;
   for (i = 0; i < Names.Size(); i++) {
     tagstocknames.resize(1);
@@ -66,7 +65,7 @@ void Tagptrvector::SetTaggedStocks(const charptrvector Names) {
   }
 }
 
-void Tagptrvector::resize(int addsize) {
+void TagPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -81,7 +80,7 @@ void Tagptrvector::resize(int addsize) {
   }
 }
 
-void Tagptrvector::Delete(int pos) {
+void TagPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   Tags** vnew = new Tags*[size - 1];
@@ -95,7 +94,7 @@ void Tagptrvector::Delete(int pos) {
   size--;
 }
 
-void Tagptrvector::UpdateTags(const TimeClass* const TimeInfo) {
+void TagPtrVector::UpdateTags(const TimeClass* const TimeInfo) {
   for (index = 0; index < size; index++) {
     if ((v[index]->getTagYear() == TimeInfo->CurrentYear()) && (v[index]->getTagStep() == TimeInfo->CurrentStep()))
       v[index]->Update();
@@ -103,7 +102,7 @@ void Tagptrvector::UpdateTags(const TimeClass* const TimeInfo) {
   }
 }
 
-void Tagptrvector::DeleteTags(const TimeClass* const TimeInfo) {
+void TagPtrVector::DeleteTags(const TimeClass* const TimeInfo) {
   for (index = 0; index < size; index++) {
     if ((v[index]->getEndYear() == TimeInfo->CurrentYear()) && (v[index]->getEndStep() == TimeInfo->CurrentStep()))
       v[index]->DeleteFromStock();
@@ -111,7 +110,7 @@ void Tagptrvector::DeleteTags(const TimeClass* const TimeInfo) {
   }
 }
 
-void Tagptrvector::DeleteAll() {
+void TagPtrVector::DeleteAll() {
   if (v != 0) {
     delete [] v;
     v = 0;

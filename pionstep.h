@@ -14,21 +14,21 @@ class AreaClass;
 
 class PIOnStep : public SIOnStep {
 public:
-  PIOnStep(CommentStream& infile,  const intvector& areas,
-    const doublevector& predatorlengths, const doublevector& preylengths,
+  PIOnStep(CommentStream& infile,  const IntVector& areas,
+    const DoubleVector& predatorlengths, const DoubleVector& preylengths,
     const TimeClass* const TimeInfo, int biomass, const char* arealabel,
-    const charptrvector& preylenindex, const charptrvector& predlenindex, const char* datafilename);
+    const CharPtrVector& preylenindex, const CharPtrVector& predlenindex, const char* datafilename);
   ~PIOnStep();
   virtual void Sum(const TimeClass* const TimeInfo);
-  virtual void SetStocks(const Stockptrvector& Stocks) {};
-  virtual void SetPredatorsAndPreys(const Predatorptrvector& predators, const Preyptrvector& preys);
+  virtual void SetStocks(const StockPtrVector& Stocks) {};
+  virtual void SetPredatorsAndPreys(const PredatorPtrVector& predators, const PreyPtrVector& preys);
   //virtual void Print(ofstream& outfile) const;
 protected:
-  void ReadPredatorData(CommentStream&, const char*, const charptrvector&, const charptrvector&, const TimeClass*);
+  void ReadPredatorData(CommentStream&, const char*, const CharPtrVector&, const CharPtrVector&, const TimeClass*);
   LengthGroupDivision* PredatorLgrpDiv;
   LengthGroupDivision* PreyLgrpDiv;
   int Biomass;
-  intvector Areas;
+  IntVector Areas;
   PredatorAggregator* aggregator;
   int index;
 };

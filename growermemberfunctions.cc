@@ -3,7 +3,7 @@
 
 //Uses the length increase in InterpLGrowth and mean weight change in
 //InterpWGrowth to calculate lgrowth and wgrowth.
-void Grower::GrowthImplement(int area, const popinfovector& NumberInArea,
+void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
   const LengthGroupDivision* const Lengths) {
 
   int inarea = AreaNr[area];

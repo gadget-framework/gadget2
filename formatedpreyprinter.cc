@@ -10,7 +10,7 @@
 #include "runid.h"
 #include "gadget.h"
 
-extern RunId RUNID;
+extern RunID RUNID;
 
 /*  FormatedPreyPrinter
  *
@@ -120,7 +120,7 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
   }
 }
 
-void FormatedPreyPrinter::SetStock(Stockptrvector& stockvec) {
+void FormatedPreyPrinter::SetStock(StockPtrVector& stockvec) {
   int i, j;
   int index = 0;
   for (i = 0; i < stockvec.Size(); i++)
@@ -152,7 +152,7 @@ void FormatedPreyPrinter::Print(const TimeClass* const TimeInfo) {
   if (printcp)
     printTime(coutfile, *TimeInfo);
 
-  intvector ages;
+  IntVector ages;
   int i;
   for (i = 0; i<stocks.Size(); i++)
     if (stocks[i]->IsEaten()) {

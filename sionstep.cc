@@ -11,7 +11,7 @@ SIOnStep::~SIOnStep() {
 
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
   const TimeClass* const TimeInfo, int numcols,
-  const charptrvector& index1, const charptrvector& index2) {
+  const CharPtrVector& index1, const CharPtrVector& index2) {
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -99,7 +99,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
 }
 
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
-  const TimeClass* const TimeInfo, const charptrvector& colindex) {
+  const TimeClass* const TimeInfo, const CharPtrVector& colindex) {
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -172,7 +172,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
 }
 
 void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
-  const charptrvector& colindex, const TimeClass* TimeInfo) {
+  const CharPtrVector& colindex, const TimeClass* TimeInfo) {
 
   int i;
   int year, step;
@@ -237,7 +237,7 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
 }
 
 void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
-  const charptrvector& index1, const charptrvector& index2,
+  const CharPtrVector& index1, const CharPtrVector& index2,
   const TimeClass* TimeInfo) {
 
   int i;
@@ -400,8 +400,8 @@ double SIOnStep::Regression() {
   int col, index;
   for (col = 0; col < Indices.Ncol(0); col++) {
     //Let LLR figure out what to do in the case of zero stock size.
-    doublevector indices(NumberOfSums);
-    doublevector stocksize(NumberOfSums);
+    DoubleVector indices(NumberOfSums);
+    DoubleVector stocksize(NumberOfSums);
     for (index = 0; index < NumberOfSums; index++) {
       indices[index] = Indices[index][col];
       stocksize[index] = abundance[index][col];
@@ -412,7 +412,7 @@ double SIOnStep::Regression() {
   return likelihood;
 }
 
-void SIOnStep::KeepNumbers(const doublevector& numbers) {
+void SIOnStep::KeepNumbers(const DoubleVector& numbers) {
   assert(numbers.Size() == abundance.Ncol());
   int i;
   for (i = 0; i < numbers.Size(); i++)
@@ -420,7 +420,7 @@ void SIOnStep::KeepNumbers(const doublevector& numbers) {
   NumberOfSums++;
 }
 
-double SIOnStep::Fit(const doublevector& stocksize, const doublevector& indices, int col) {
+double SIOnStep::Fit(const DoubleVector& stocksize, const DoubleVector& indices, int col) {
 
   LogLinearRegression LLR;
   LinearRegression LR;

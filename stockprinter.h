@@ -15,15 +15,15 @@ class StockPrinter : public Printer {
 public:
   StockPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~StockPrinter();
-  virtual void SetStock(Stockptrvector& stockvec);
+  virtual void SetStock(StockPtrVector& stockvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
-  intmatrix areas;
-  intmatrix ages;
-  charptrvector areaindex;
-  charptrvector ageindex;
-  charptrvector lenindex;
-  charptrvector stocknames;
+  IntMatrix areas;
+  IntMatrix ages;
+  CharPtrVector areaindex;
+  CharPtrVector ageindex;
+  CharPtrVector lenindex;
+  CharPtrVector stocknames;
   LengthGroupDivision* LgrpDiv;
   StockAggregator* aggregator;
   ofstream outfile;

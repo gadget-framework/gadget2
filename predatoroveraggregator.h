@@ -9,15 +9,15 @@ class PredatorOverAggregator;
 
 class PredatorOverAggregator {
 public:
-  PredatorOverAggregator(const Predatorptrvector& predators,
-    const intmatrix& Areas, const LengthGroupDivision* const predLgrpDiv);
+  PredatorOverAggregator(const PredatorPtrVector& predators,
+    const IntMatrix& Areas, const LengthGroupDivision* const predLgrpDiv);
   void Sum();
-  const doublematrix& ReturnSum() const;
+  const DoubleMatrix& ReturnSum() const;
 protected:
-  Predatorptrvector predators;
-  intmatrix predConv;  //[pred][predLengthGroup]
-  intmatrix areas;
-  doublematrix total;
+  PredatorPtrVector predators;
+  IntMatrix predConv;  //[pred][predLengthGroup]
+  IntMatrix areas;
+  DoubleMatrix total;
 };
 
 #endif

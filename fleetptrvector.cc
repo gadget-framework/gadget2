@@ -5,7 +5,7 @@
 #include "fleetptrvector.icc"
 #endif
 
-Fleetptrvector::Fleetptrvector(int sz) {
+FleetPtrVector::FleetPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new Fleet*[size];
@@ -13,7 +13,7 @@ Fleetptrvector::Fleetptrvector(int sz) {
     v = 0;
 }
 
-Fleetptrvector::Fleetptrvector(int sz, Fleet* value) {
+FleetPtrVector::FleetPtrVector(int sz, Fleet* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -24,7 +24,7 @@ Fleetptrvector::Fleetptrvector(int sz, Fleet* value) {
     v = 0;
 }
 
-Fleetptrvector::Fleetptrvector(const Fleetptrvector& initial) {
+FleetPtrVector::FleetPtrVector(const FleetPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -35,15 +35,14 @@ Fleetptrvector::Fleetptrvector(const Fleetptrvector& initial) {
     v = 0;
 }
 
-Fleetptrvector::~Fleetptrvector() {
+FleetPtrVector::~FleetPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a Fleetptrvector and fills it vith value.
-void Fleetptrvector::resize(int addsize, Fleet* value) {
+void FleetPtrVector::resize(int addsize, Fleet* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,7 +51,7 @@ void Fleetptrvector::resize(int addsize, Fleet* value) {
       v[i] = value;
 }
 
-void Fleetptrvector::resize(int addsize) {
+void FleetPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -67,7 +66,7 @@ void Fleetptrvector::resize(int addsize) {
   }
 }
 
-void Fleetptrvector::Delete(int pos) {
+void FleetPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   Fleet** vnew = new Fleet*[size - 1];

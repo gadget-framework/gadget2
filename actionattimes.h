@@ -34,19 +34,19 @@ public:
    * \param years a list of all the years that have the action taking place
    * \param TimeInfo the TimeClass for the current model
    */
-  void AddActions(const intvector& years, const intvector& steps, const TimeClass* const TimeInfo);
+  void AddActions(const IntVector& years, const IntVector& steps, const TimeClass* const TimeInfo);
   /**
    * \brief This is the function used to add the action on all years for a set of steps
    * \param steps a list of all the steps that have the action taking place
    * \param TimeInfo the TimeClass for the current model
    */
-  void AddActionsAtAllYears(const intvector& steps, const TimeClass* const TimeInfo);
+  void AddActionsAtAllYears(const IntVector& steps, const TimeClass* const TimeInfo);
   /**
    * \brief This is the function used to add the action on all steps for a set of years
    * \param years a list of all the years that have the action taking place
    * \param TimeInfo the TimeClass for the current model
    */
-  void AddActionsAtAllSteps(const intvector& years, const TimeClass* const TimeInfo);
+  void AddActionsAtAllSteps(const IntVector& years, const TimeClass* const TimeInfo);
   /**
    * \brief This is the function used to read check whether an action takes place onm the current timestep
    * \param TimeInfo the TimeClass for the current model
@@ -61,15 +61,15 @@ protected:
   /**
    * \brief This is a vector of the timesteps on which the action takes place
    */
-  intvector TimeSteps;
+  IntVector TimeSteps;
   /**
    * \brief This is a vector of the years on which the action takes place
    */
-  intvector Years;
+  IntVector Years;
   /**
    * \brief This is a vector of the steps on which the action takes place
    */
-  intvector Steps;
+  IntVector Steps;
 };
 
 #endif

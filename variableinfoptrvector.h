@@ -4,37 +4,37 @@
 class VariableInfo;
 
 /**
- * \class VariableInfoptrvector
+ * \class VariableInfoPtrVector
  * \brief This class implements a dynamic vector of VariableInfo values
  */
-class VariableInfoptrvector {
+class VariableInfoPtrVector {
 public:
   /**
-   * \brief This is the default VariableInfoptrvector constructor
+   * \brief This is the default VariableInfoPtrVector constructor
    */
-  VariableInfoptrvector() { size = 0; v = 0; };
+  VariableInfoPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the VariableInfoptrvector constructor for a specified size
+   * \brief This is the VariableInfoPtrVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  VariableInfoptrvector(int sz);
+  VariableInfoPtrVector(int sz);
   /**
-   * \brief This is the VariableInfoptrvector constructor for a specified size with an initial value
+   * \brief This is the VariableInfoPtrVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  VariableInfoptrvector(int sz, VariableInfo* initial);
+  VariableInfoPtrVector(int sz, VariableInfo* initial);
   /**
-   * \brief This is the VariableInfoptrvector constructor that create a copy of an existing VariableInfoptrvector
-   * \param initial this is the VariableInfoptrvector to copy
+   * \brief This is the VariableInfoPtrVector constructor that create a copy of an existing VariableInfoPtrVector
+   * \param initial this is the VariableInfoPtrVector to copy
    */
-  VariableInfoptrvector(const VariableInfoptrvector& initial);
+  VariableInfoPtrVector(const VariableInfoPtrVector& initial);
   /**
-   * \brief This is the VariableInfoptrvector destructor
+   * \brief This is the VariableInfoPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~VariableInfoptrvector();
+  ~VariableInfoPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
@@ -43,8 +43,8 @@ public:
   void resize(int add, VariableInfo* value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**

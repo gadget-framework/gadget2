@@ -4,8 +4,8 @@
 #include "conversion.h"
 #include "checkconversion.h"
 
-PreyOverAggregator::PreyOverAggregator(const Preyptrvector& Preys,
-  const intmatrix& Areas, const LengthGroupDivision* const preyLgrpDiv)
+PreyOverAggregator::PreyOverAggregator(const PreyPtrVector& Preys,
+  const IntMatrix& Areas, const LengthGroupDivision* const preyLgrpDiv)
   : preys(Preys), areas(Areas) {
 
   int i, j;
@@ -39,7 +39,7 @@ void PreyOverAggregator::Sum() {
       for (j = 0; j < areas.Ncol(i); j++) {
         area = areas[i][j];
         if (preys[h]->IsInArea(area)) {
-          const doublevector* dptr = &preys[h]->OverConsumption(area);
+          const DoubleVector* dptr = &preys[h]->OverConsumption(area);
           for (l = 0; l < preyConv.Ncol(h); l++) {
           preylength = preyConv[h][l];
           if (preylength >= 0)
@@ -49,6 +49,6 @@ void PreyOverAggregator::Sum() {
       }
 }
 
-const doublematrix& PreyOverAggregator::ReturnSum() const {
+const DoubleMatrix& PreyOverAggregator::ReturnSum() const {
   return total;
 }

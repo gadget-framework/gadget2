@@ -1,7 +1,7 @@
 #include "livesonareas.h"
 #include "gadget.h"
 
-LivesOnAreas::LivesOnAreas(const intvector& Areas) : areas(Areas) {
+LivesOnAreas::LivesOnAreas(const IntVector& Areas) : areas(Areas) {
   int i;
   int maxim = 0;
   for (i = 0; i < areas.Size(); i++)
@@ -19,12 +19,11 @@ int LivesOnAreas::IsInArea(int area) const {
     return 0;
 }
 
-//Function added 25-9 2001 due to problems in fleetpreyaggregator HB
-const intvector& LivesOnAreas::Areas() const {
+const IntVector& LivesOnAreas::Areas() const {
   return areas;
 }
 
-void LivesOnAreas::LetLiveOnAreas(const intvector& Areas) {
+void LivesOnAreas::LetLiveOnAreas(const IntVector& Areas) {
   assert(Areas.Size() > 0);
   while (areas.Size() > 0)
     areas.Delete(0);

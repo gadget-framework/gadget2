@@ -3,13 +3,13 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-OtherFood*& OtherFoodptrvector::operator [] (int pos) {
+OtherFood*& OtherFoodPtrVector::operator [] (int pos) {
   return v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-OtherFood* const& OtherFoodptrvector::operator [] (int pos) const {
+OtherFood* const& OtherFoodPtrVector::operator [] (int pos) const {
   return v[pos];
 }

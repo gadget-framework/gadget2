@@ -45,35 +45,4 @@ private:
   char* name;
 };
 
-/*
- * Class for storing a vector of Parameters
- * (mna 29.09.00)
- */
-
-class Parametervector {
-public:
-  Parametervector() { size = 0; v = 0; };
-  Parametervector(int sz);
-  Parametervector(int sz, Parameter& initial);
-  Parametervector(const Parametervector& initial);
-  ~Parametervector() { delete[] v; };
-  void resize(int add, Parameter& value);
-  void resize(int add);
-  void Delete(int pos);
-  int Size() const { return size; };
-  int findIndex(Parameter& p);
-  Parametervector& operator = (const Parametervector& paramv);
-  Parameter& operator [] (int pos);
-  Parameter const& operator [] (int pos) const;
-  friend CommentStream& operator >> (CommentStream& infile, Parametervector& paramVec);
-  int ReadVectorInLine(CommentStream& infile);
-protected:
-  Parameter* v;
-  int size;
-};
-
-#ifdef GADGET_INLINE
-#include "parameter.icc"
-#endif
-
 #endif

@@ -34,7 +34,7 @@ public:
   double Weight() const { return weight; };
   virtual void printHeader(ofstream&, const PrintInfo&) {};
   virtual void print(ofstream&, const TimeClass& time, const PrintInfo& print) {};
-  virtual void SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks) {};
+  virtual void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {};
 protected:
   double likelihood;
 private:

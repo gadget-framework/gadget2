@@ -25,16 +25,16 @@ public:
   const int getEndYear() const { return endyear; };
   const int getEndStep() const { return endstep; };
   const int getTagArea() const { return tagarea; };
-  charptrvector getStocknames() const { return stocknames; };
-  void SetStock(Stockptrvector& Stocks);
+  CharPtrVector getStocknames() const { return stocknames; };
+  void SetStock(StockPtrVector& Stocks);
   const char* TagName() const { return this->Name(); };
   void UpdateMatureStock(const TimeClass* const TimeInfo);
   void printPopInfo(char* filename);
 private:
   void ReadNumbers(CommentStream&, const char*, double, double dl);
-  charptrvector stocknames;   //names of the tagged stock read from file
+  CharPtrVector stocknames;   //names of the tagged stock read from file
   //area-age-length distribution of tags by stocks
-  agebandmatrixptrmatrix AgeLengthStock;
+  AgeBandMatrixPtrMatrix AgeLengthStock;
   //AgeLengthStock[0] refers to the stock and AgeLengthStock[...] refers to the mature stock.
   Formula tagloss; //percentage of tags that are lost
   int tagarea;     //area of tagging
@@ -42,9 +42,9 @@ private:
   int tagstep;     //step of tagging
   int endyear;     //year of last recapture
   int endstep;     //step of last recapture
-  doublevector NumberByLength;
+  DoubleVector NumberByLength;
   LengthGroupDivision* LgrpDiv;
-  Stockptrvector tagstocks;
-  Stockptrvector maturestocks;
+  StockPtrVector tagstocks;
+  StockPtrVector maturestocks;
 };
 #endif

@@ -3,13 +3,13 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-Prey*& Preyptrvector::operator [] (int pos) {
+Prey*& PreyPtrVector::operator [] (int pos) {
   return v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-Prey* const& Preyptrvector::operator [] (int pos) const {
+Prey* const& PreyPtrVector::operator [] (int pos) const {
   return v[pos];
 }

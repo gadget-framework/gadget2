@@ -2,7 +2,7 @@
 #define initialinputfile_h
 
 #include "vectorofcharptr.h"
-#include "parameter.h"
+#include "parametervector.h"
 #include "doublevector.h"
 #include "intvector.h"
 #include "commentstream.h"
@@ -33,22 +33,22 @@
 
 class InitialInputFile {
 private:
-  vectorofcharptr header;
-  Parametervector switches;
-  doublevector values;
-  doublevector lowerbound;
-  doublevector upperbound;
-  intvector optimize;
+  VectorOfCharPtr header;
+  ParameterVector switches;
+  DoubleVector values;
+  DoubleVector lowerbound;
+  DoubleVector upperbound;
+  IntVector optimize;
   CommentStream infile;
   ifstream tmpinfile;
   int repeatedValues;
 public:
   InitialInputFile(const char* const filename);
   ~InitialInputFile();
-  void getReadValues(Parametervector& sw, doublevector& val,
-    doublevector& low, doublevector& upp, intvector& opt);
-  void getVectorValue(doublevector& val);
-  void getSwitchValue(Parametervector& sw);
+  void getReadValues(ParameterVector& sw, DoubleVector& val,
+    DoubleVector& low, DoubleVector& upp, IntVector& opt);
+  void getVectorValue(DoubleVector& val);
+  void getSwitchValue(ParameterVector& sw);
   void correctHeaderText(int index, const char* name);
   void readHeader();
   void readVectorFromLine();

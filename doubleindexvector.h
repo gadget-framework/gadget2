@@ -2,39 +2,39 @@
 #define doubleindexvector_h
 
 /**
- * \class doubleindexvector
+ * \class DoubleIndexVector
  * \brief This class implements a dynamic vector of double values, indexed from minpos not 0
  */
-class doubleindexvector {
+class DoubleIndexVector {
 public:
   /**
-   * \brief This is the default doubleindexvector constructor
+   * \brief This is the default DoubleIndexVector constructor
    */
-  doubleindexvector() { minpos = 0; size = 0; v = 0; };
+  DoubleIndexVector() { minpos = 0; size = 0; v = 0; };
   /**
-   * \brief This is the doubleindexvector constructor for a specified size
+   * \brief This is the DoubleIndexVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \param minpos this is the index for the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  doubleindexvector(int sz, int minpos);
+  DoubleIndexVector(int sz, int minpos);
   /**
-   * \brief This is the doubleindexvector constructor for a specified size with an initial value
+   * \brief This is the DoubleIndexVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param minpos this is the index for the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  doubleindexvector(int sz, int minpos, double initial);
+  DoubleIndexVector(int sz, int minpos, double initial);
   /**
-   * \brief This is the doubleindexvector constructor that create a copy of an existing doubleindexvector
-   * \param initial this is the doubleindexvector to copy
+   * \brief This is the DoubleIndexVector constructor that create a copy of an existing DoubleIndexVector
+   * \param initial this is the DoubleIndexVector to copy
    */
-  doubleindexvector(const doubleindexvector& initial);
+  DoubleIndexVector(const DoubleIndexVector& initial);
   /**
-   * \brief This is the doubleindexvector destructor
+   * \brief This is the DoubleIndexVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~doubleindexvector();
+  ~DoubleIndexVector();
   /**
    * \brief This will add new entries to the vector
    * \param addsize this is the number of new entries to the vector

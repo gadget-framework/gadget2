@@ -5,21 +5,21 @@
 #include "doublematrix.h"
 #include "doubleindexvector.h"
 
-class bandmatrix {
+class BandMatrix {
 public:
-  bandmatrix(const bandmatrix& initial);
-  bandmatrix() { minage = 0; nrow = 0; v = 0; };
-  bandmatrix(const intvector& minl, const intvector& size,
+  BandMatrix(const BandMatrix& initial);
+  BandMatrix() { minage = 0; nrow = 0; v = 0; };
+  BandMatrix(const IntVector& minl, const IntVector& size,
     int Minage = 0, double initial = 0);
-  bandmatrix(const doublematrix& initial, int Minage = 0, int minl = 0);
-  bandmatrix(const doubleindexvector& initial, int age);
-  bandmatrix(int minl, int lengthsize, int minage,
+  BandMatrix(const DoubleMatrix& initial, int Minage = 0, int minl = 0);
+  BandMatrix(const DoubleIndexVector& initial, int age);
+  BandMatrix(int minl, int lengthsize, int minage,
     int nrow, double initial = 0);
-  ~bandmatrix();
+  ~BandMatrix();
   int Nrow() const { return nrow; };
-  doubleindexvector& operator [] (int row);
-  const doubleindexvector& operator [] (int row) const;
-  bandmatrix& operator += (bandmatrix& b);
+  DoubleIndexVector& operator [] (int row);
+  const DoubleIndexVector& operator [] (int row) const;
+  BandMatrix& operator += (BandMatrix& b);
   int Ncol(int row) const { return (operator[](row).Size()); };
   int Ncol() const { return (operator[](minage).Size()); };
   int Minrow() const { return minage; };
@@ -30,57 +30,57 @@ public:
   int Maxage() const { return minage + nrow - 1; };
   int Minlength(int age) const { return (operator[](age).Mincol()); };
   int Maxlength(int age) const { return (operator[](age).Maxcol()); };
-  void Colsum(doublevector& Result) const;
+  void Colsum(DoubleVector& Result) const;
 protected:
-  doubleindexvector** v;
+  DoubleIndexVector** v;
   int nrow;
   int minage;
 };
 
 /**
- * \class bandmatrixvector
- * \brief This class implements a dynamic vector of bandmatrix values
+ * \class BandMatrixVector
+ * \brief This class implements a dynamic vector of BandMatrix values
  */
-class bandmatrixvector {
+class BandMatrixVector {
 public:
   /**
-   * \brief This is the default bandmatrixvector constructor
+   * \brief This is the default BandMatrixVector constructor
    */
-  bandmatrixvector() { size = 0; v = 0; };
+  BandMatrixVector() { size = 0; v = 0; };
   /**
-   * \brief This is the bandmatrixvector constructor for a specified size
+   * \brief This is the BandMatrixVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  bandmatrixvector(int sz);
+  BandMatrixVector(int sz);
   /**
-   * \brief This is the bandmatrixvector destructor
+   * \brief This is the BandMatrixVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~bandmatrixvector();
-  void ChangeElement(int nr, const bandmatrix& value);
+  ~BandMatrixVector();
+  void ChangeElement(int nr, const BandMatrix& value);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  bandmatrix& operator [] (int pos);
+  BandMatrix& operator [] (int pos);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const bandmatrix& operator [] (int pos) const;
+  const BandMatrix& operator [] (int pos) const;
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
    * \param initial this is the value that will be entered for the new entries
    */
-  void resize(int add, const bandmatrix& initial);
+  void resize(int add, const BandMatrix& initial);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**
@@ -100,51 +100,51 @@ protected:
    */
   int size;
   /**
-   * \brief This is the vector of bandmatrix values
+   * \brief This is the vector of BandMatrix values
    */
-  bandmatrix** v;
+  BandMatrix** v;
 };
 
 /**
- * \class bandmatrixmatrix
- * \brief This class implements a dynamic vector of bandmatrixvector values
+ * \class BandMatrixMatrix
+ * \brief This class implements a dynamic vector of BandMatrixVector values
  */
-class bandmatrixmatrix {
+class BandMatrixMatrix {
 public:
   /**
-   * \brief This is the default bandmatrixmatrix constructor
+   * \brief This is the default BandMatrixMatrix constructor
    */
-  bandmatrixmatrix() { nrow = 0; v = 0; };
+  BandMatrixMatrix() { nrow = 0; v = 0; };
   /**
-   * \brief This is the bandmatrixvector constructor for a specified size
+   * \brief This is the BandMatrixVector constructor for a specified size
    * \param nrow this is the size of the vector to be created
-   * \param ncol this is the length of each row to be created (ie. the size of the bandmatrixvector to be created for each row)
+   * \param ncol this is the length of each row to be created (ie. the size of the BandMatrixVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  bandmatrixmatrix(int nrow, int ncol);
+  BandMatrixMatrix(int nrow, int ncol);
   /**
-   * \brief This is the bandmatrixmatrix destructor
+   * \brief This is the BandMatrixMatrix destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~bandmatrixmatrix();
-  void ChangeElement(int nrow, int ncol, const bandmatrix& value);
+  ~BandMatrixMatrix();
+  void ChangeElement(int nrow, int ncol, const BandMatrix& value);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  bandmatrixvector& operator [] (int pos);
+  BandMatrixVector& operator [] (int pos);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const bandmatrixvector& operator [] (int pos) const;
+  const BandMatrixVector& operator [] (int pos) const;
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param addrow this is the number of new entries to the vector
-   * \param ncol this is the number of entries to the bandmatrixvector that is created
+   * \param ncol this is the number of entries to the BandMatrixVector that is created
+   * \note The new elements of the vector will be created, and set to zero
    */
   void AddRows(int addrow, int ncol);
   /**
@@ -162,7 +162,7 @@ public:
    * \brief This will return the number of columns in row i of the vector
    * \param i this is the row of the vector to have the number of columns counted
    * \return the number of columns in row i of the vector
-   * \note This is the number of entries in the bandmatrixvector that is entry i of the bandmatrixmatrix
+   * \note This is the number of entries in the BandMatrixVector that is entry i of the BandMatrixMatrix
    */
   int Ncol(int i = 0) const { return v[i]->Size(); };
 protected:
@@ -171,9 +171,9 @@ protected:
    */
   int nrow;
   /**
-   * \brief This is the vector of bandmatrixvector values
+   * \brief This is the vector of BandMatrixVector values
    */
-  bandmatrixvector** v;
+  BandMatrixVector** v;
 };
 
 #ifdef GADGET_INLINE

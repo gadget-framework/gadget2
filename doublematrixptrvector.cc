@@ -5,45 +5,44 @@
 #include "doublematrixptrvector.icc"
 #endif
 
-doublematrixptrvector::doublematrixptrvector(int sz) {
+DoubleMatrixPtrVector::DoubleMatrixPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
-    v = new doublematrix*[size];
+    v = new DoubleMatrix*[size];
   else
     v = 0;
 }
 
-doublematrixptrvector::doublematrixptrvector(int sz, doublematrix* value) {
+DoubleMatrixPtrVector::DoubleMatrixPtrVector(int sz, DoubleMatrix* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
-    v = new doublematrix*[size];
+    v = new DoubleMatrix*[size];
     for (i = 0; i < size; i++)
       v[i] = value;
   } else
     v = 0;
 }
 
-doublematrixptrvector::doublematrixptrvector(const doublematrixptrvector& initial) {
+DoubleMatrixPtrVector::DoubleMatrixPtrVector(const DoubleMatrixPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
-    v = new doublematrix*[size];
+    v = new DoubleMatrix*[size];
     for (i = 0; i < size; i++)
       v[i] = initial.v[i];
   } else
     v = 0;
 }
 
-doublematrixptrvector::~doublematrixptrvector() {
+DoubleMatrixPtrVector::~DoubleMatrixPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a doublematrixptrvector and fills it vith value.
-void doublematrixptrvector::resize(int addsize, doublematrix* value) {
+void DoubleMatrixPtrVector::resize(int addsize, DoubleMatrix* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,13 +51,13 @@ void doublematrixptrvector::resize(int addsize, doublematrix* value) {
       v[i] = value;
 }
 
-void doublematrixptrvector::resize(int addsize) {
+void DoubleMatrixPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
-    v = new doublematrix*[size];
+    v = new DoubleMatrix*[size];
   } else if (addsize > 0) {
-    doublematrix** vnew = new doublematrix*[addsize + size];
+    DoubleMatrix** vnew = new DoubleMatrix*[addsize + size];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
@@ -67,10 +66,10 @@ void doublematrixptrvector::resize(int addsize) {
   }
 }
 
-void doublematrixptrvector::Delete(int pos) {
+void DoubleMatrixPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
-  doublematrix** vnew = new doublematrix*[size - 1];
+  DoubleMatrix** vnew = new DoubleMatrix*[size - 1];
   int i;
   for (i = 0; i < pos; i++)
     vnew[i] = v[i];

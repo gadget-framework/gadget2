@@ -7,7 +7,7 @@
 #include "interruptinterface.h"
 #endif
 
-extern RunId RUNID;
+extern RunID RUNID;
 
 void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {
 

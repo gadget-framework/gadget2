@@ -14,8 +14,8 @@ public:
   int NoMatrix;
   int row;
   int column;
-  intvector indices;
-  doublevector coefficients;
+  IntVector indices;
+  DoubleVector coefficients;
   int error;
   int NoAreas;
   friend CommentStream& operator >> (CommentStream& infile, VariableInfo& varinfo);

@@ -3,7 +3,7 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
-int ReadAggregation(CommentStream& infile, intmatrix& agg, charptrvector& aggindex) {
+int ReadAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggindex) {
 
   int i = 0;
   infile >> ws;
@@ -21,7 +21,7 @@ int ReadAggregation(CommentStream& infile, intmatrix& agg, charptrvector& aggind
   return aggindex.Size();
 }
 
-int ReadAggregation(CommentStream& infile, intvector& agg, charptrvector& aggindex) {
+int ReadAggregation(CommentStream& infile, IntVector& agg, CharPtrVector& aggindex) {
 
   int i = 0;
   int tmp = 0;
@@ -38,7 +38,7 @@ int ReadAggregation(CommentStream& infile, intvector& agg, charptrvector& aggind
   return aggindex.Size();
 }
 
-int ReadLengthAggregation(CommentStream& infile, doublevector& lengths, charptrvector& lenindex) {
+int ReadLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrVector& lenindex) {
 
   ErrorHandler handle;
   int i = 0;
@@ -68,9 +68,9 @@ int ReadLengthAggregation(CommentStream& infile, doublevector& lengths, charptrv
   return lenindex.Size();
 }
 
-int ReadPreyAggregation(CommentStream& infile, charptrmatrix& preynames,
-  doublematrix& preylengths, Formulamatrix& digestioncoeff,
-  charptrvector& preyindex, Keeper* const keeper) {
+int ReadPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
+  DoubleMatrix& preylengths, FormulaMatrix& digestioncoeff,
+  CharPtrVector& preyindex, Keeper* const keeper) {
 
   int i = 0, j = 0;
   ErrorHandler handle;

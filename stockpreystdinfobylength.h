@@ -9,7 +9,7 @@ class LengthGroupDivision;
 
 class StockPreyStdInfoByLength : public AbstrPreyStdInfoByLength {
 public:
-  StockPreyStdInfoByLength(const StockPrey* prey, const intvector& areas);
+  StockPreyStdInfoByLength(const StockPrey* prey, const IntVector& areas);
   virtual ~StockPreyStdInfoByLength();
   virtual void Sum(const TimeClass* const TimeInfo, int area);
   const LengthGroupDivision* ReturnPreyLengthGroupDiv() const { return PreyLgrpDiv; };

@@ -12,24 +12,24 @@ class LengthGroupDivision;
 
 class RenewalData : protected LivesOnAreas {
 public:
-  RenewalData(CommentStream& infile, const intvector& areas,
+  RenewalData(CommentStream& infile, const IntVector& areas,
     const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper);
   ~RenewalData();
-  void AddRenewal(Agebandmatrix& Alkeys, int area,
+  void AddRenewal(AgeBandMatrix& Alkeys, int area,
     const TimeClass* const TimeInfo, double ratio = 0.0);
   void SetCI(const LengthGroupDivision* const GivenLDiv);
   void Print(ofstream& outfile) const;
   void Reset();
 protected:
   int ReadOption;  //if meanlengths, a and b are read
-  intvector RenewalTime;
-  intvector RenewalArea;
-  agebandmatrixptrvector Distribution;
-  Formulavector Number;
-  Formulavector Meanlengths;
-  Formulavector Sdev;
-  Formulavector Wcoeff1;
-  Formulavector Wcoeff2;
+  IntVector RenewalTime;
+  IntVector RenewalArea;
+  AgeBandMatrixPtrVector Distribution;
+  FormulaVector Number;
+  FormulaVector Meanlengths;
+  FormulaVector Sdev;
+  FormulaVector Wcoeff1;
+  FormulaVector Wcoeff2;
   ConversionIndex* CI;
   LengthGroupDivision* LgrpDiv;
 };

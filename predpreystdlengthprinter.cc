@@ -5,7 +5,7 @@
 #include "gadget.h"
 
 #include "runid.h"
-extern RunId RUNID;
+extern RunID RUNID;
 
 PredPreyStdLengthPrinter::PredPreyStdLengthPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)

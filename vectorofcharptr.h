@@ -2,39 +2,39 @@
 #define vectorofcharptr_h
 
 /**
- * \class vectorofcharptr
+ * \class VectorOfCharPtr
  * \brief This class implements a dynamic vector of char arrays
  */
-class vectorofcharptr {
+class VectorOfCharPtr {
 public:
   /**
-   * \brief This is the default vectorofcharptr constructor
+   * \brief This is the default VectorOfCharPtr constructor
    */
-  vectorofcharptr() { size = 0; v = 0; };
+  VectorOfCharPtr() { size = 0; v = 0; };
   /**
-   * \brief This is the vectorofcharptr constructor for a specified size
+   * \brief This is the VectorOfCharPtr constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  vectorofcharptr(int sz);
+  VectorOfCharPtr(int sz);
   /**
-   * \brief This is the vectorofcharptr constructor for a specified size with an initial value
+   * \brief This is the VectorOfCharPtr constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  vectorofcharptr(int sz, char* initial);
+  VectorOfCharPtr(int sz, char* initial);
   /**
-   * \brief This is the vectorofcharptr constructor that create a copy of an existing vectorofcharptr
-   * \param initial this is the vectorofcharptr to copy
+   * \brief This is the VectorOfCharPtr constructor that create a copy of an existing VectorOfCharPtr
+   * \param initial this is the VectorOfCharPtr to copy
    */
-  vectorofcharptr(const vectorofcharptr& initial);
+  VectorOfCharPtr(const VectorOfCharPtr& initial);
   /**
-   * \brief This is the vectorofcharptr destructor
+   * \brief This is the VectorOfCharPtr destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~vectorofcharptr();
+  ~VectorOfCharPtr();
   /**
-   * \brief This will set an entry of the vectorofcharptr vector to a specified value
+   * \brief This will set an entry of the VectorOfCharPtr vector to a specified value
    * \param id this is the element of the vector to be set
    * \param value this is the value that will be entered into the vector
    */
@@ -47,8 +47,8 @@ public:
   void resize(int add, char* value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**

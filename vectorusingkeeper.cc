@@ -2,15 +2,15 @@
 #include "doublevector.h"
 #include "gadget.h"
 
-//Pre: var is a nonempty doublevector, keeper != 0, 0 <= index and index < var.Size()
+//Pre: var is a nonempty DoubleVector, keeper != 0, 0 <= index and index < var.Size()
 //Post: The element var[index] has been deleted from var, the size of
 //var thus being 1 shorter than before. keeper has been informed of
 //the possible changed locations of the elements of var.
 
-void DeleteElementUsingKeeper(doublevector& var, Keeper* const keeper, int index) {
+void DeleteElementUsingKeeper(DoubleVector& var, Keeper* const keeper, int index) {
   assert(0 <= index && index < var.Size());
   keeper->DeleteParam(var[index]);
-  doublevector tmp(var.Size() - 1);
+  DoubleVector tmp(var.Size() - 1);
   int i;
   for (i = 0; i < index; i++) {
     tmp[i] = var[i];

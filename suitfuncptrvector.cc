@@ -5,7 +5,7 @@
 #include "suitfuncptrvector.icc"
 #endif
 
-SuitfuncPtrvector::SuitfuncPtrvector(int sz) {
+SuitFuncPtrVector::SuitFuncPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new SuitFunc*[size];
@@ -13,7 +13,7 @@ SuitfuncPtrvector::SuitfuncPtrvector(int sz) {
     v = 0;
 }
 
-SuitfuncPtrvector::SuitfuncPtrvector(int sz, SuitFunc* value) {
+SuitFuncPtrVector::SuitFuncPtrVector(int sz, SuitFunc* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -24,7 +24,7 @@ SuitfuncPtrvector::SuitfuncPtrvector(int sz, SuitFunc* value) {
     v = 0;
 }
 
-SuitfuncPtrvector::SuitfuncPtrvector(const SuitfuncPtrvector& initial) {
+SuitFuncPtrVector::SuitFuncPtrVector(const SuitFuncPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -35,14 +35,14 @@ SuitfuncPtrvector::SuitfuncPtrvector(const SuitfuncPtrvector& initial) {
     v = 0;
 }
 
-SuitfuncPtrvector::~SuitfuncPtrvector() {
+SuitFuncPtrVector::~SuitFuncPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-void SuitfuncPtrvector::resize(int addsize, SuitFunc* value) {
+void SuitFuncPtrVector::resize(int addsize, SuitFunc* value) {
   int oldsize = size;
   this->resize(addsize);
   int i = 0;
@@ -51,7 +51,7 @@ void SuitfuncPtrvector::resize(int addsize, SuitFunc* value) {
       v[i] = value;
 }
 
-void SuitfuncPtrvector::resize(int addsize) {
+void SuitFuncPtrVector::resize(int addsize) {
   if (v == 0) {
     size = addsize;
     v = new SuitFunc*[size];
@@ -67,7 +67,7 @@ void SuitfuncPtrvector::resize(int addsize) {
   }
 }
 
-void SuitfuncPtrvector::Delete(int pos, Keeper* const keeper) {
+void SuitFuncPtrVector::Delete(int pos, Keeper* const keeper) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   SuitFunc** vnew = new SuitFunc*[size - 1];

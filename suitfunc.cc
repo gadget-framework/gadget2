@@ -1,32 +1,32 @@
 #include "suitfunc.h"
 #include "gadget.h"
 
-int findSuitFunc(SuitfuncPtrvector& suitf, const char* suitname) {
+int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname) {
   int found = 0;
   SuitFunc* tempFunc;
 
   if (strcasecmp(suitname, "expsuitfunca") == 0) {
-    tempFunc = new ExpsuitfuncA();
+    tempFunc = new ExpSuitFuncA();
     suitf.resize(1, tempFunc);
     found++;
 
   } else if (strcasecmp(suitname, "constsuitfunc") == 0) {
-    tempFunc = new Constsuitfunc();
+    tempFunc = new ConstSuitFunc();
     suitf.resize(1, tempFunc);
     found++;
 
   } else if (strcasecmp(suitname, "straightline") == 0) {
-    tempFunc = new StraightLine();
+    tempFunc = new StraightSuitFunc();
     suitf.resize(1, tempFunc);
     found++;
 
   } else if (strcasecmp(suitname, "expsuitfuncl50") == 0) {
-    tempFunc = new Expsuitfuncl50();
+    tempFunc = new ExpSuitFuncL50();
     suitf.resize(1, tempFunc);
     found++;
 
   } else if (strcasecmp(suitname, "andersensuitfunc") == 0) {
-    tempFunc = new Andersensuitfunc();
+    tempFunc = new AndersenSuitFunc();
     suitf.resize(1, tempFunc);
     found++;
 
@@ -57,7 +57,7 @@ int findSuitFunc(SuitfuncPtrvector& suitf, const char* suitname) {
   return found;
 }
 
-int readSuitFunction(SuitfuncPtrvector& suitf, CommentStream& infile,
+int readSuitFunction(SuitFuncPtrVector& suitf, CommentStream& infile,
   const char* suitname, const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   if (findSuitFunc(suitf, suitname) == 1) {
@@ -121,7 +121,7 @@ const char* SuitFunc::getName() {
    return name;
 }
 
-const TimeVariablevector& SuitFunc::getConstants() const {
+const TimeVariableVector& SuitFunc::getConstants() const {
   return coeff;
 }
 
@@ -137,41 +137,41 @@ int SuitFunc::noOfConstants() {
   return coeff.Size();
 }
 
-ExpsuitfuncA::ExpsuitfuncA() {
+ExpSuitFuncA::ExpSuitFuncA() {
   this->setName("ExpSuitFuncA");
   coeff.resize(4);
   preyLength = -1.0;
   predLength = -1.0;
 }
 
-ExpsuitfuncA::~ExpsuitfuncA() {
+ExpSuitFuncA::~ExpSuitFuncA() {
 }
 
-int ExpsuitfuncA::usesPredLength() {
+int ExpSuitFuncA::usesPredLength() {
   return 1;
 }
 
-int ExpsuitfuncA::usesPreyLength() {
+int ExpSuitFuncA::usesPreyLength() {
   return 1;
 }
 
-void ExpsuitfuncA::setPredLength(double length) {
+void ExpSuitFuncA::setPredLength(double length) {
   predLength = length;
 }
 
-void ExpsuitfuncA::setPreyLength(double length) {
+void ExpSuitFuncA::setPreyLength(double length) {
   preyLength = length;
 }
 
-double ExpsuitfuncA::getPredLength() {
+double ExpSuitFuncA::getPredLength() {
   return predLength;
 }
 
-double ExpsuitfuncA::getPreyLength() {
+double ExpSuitFuncA::getPreyLength() {
   return preyLength;
 }
 
-double ExpsuitfuncA::calculate() {
+double ExpSuitFuncA::calculate() {
   assert(coeff.Size() == 4);
   double check = 0.0;
 
@@ -195,23 +195,23 @@ double ExpsuitfuncA::calculate() {
     return check;
 }
 
-Constsuitfunc::Constsuitfunc() {
+ConstSuitFunc::ConstSuitFunc() {
   this->setName("ConstSuitFunc");
   coeff.resize(1);
 }
 
-Constsuitfunc::~Constsuitfunc() {
+ConstSuitFunc::~ConstSuitFunc() {
 }
 
-int Constsuitfunc::usesPredLength() {
+int ConstSuitFunc::usesPredLength() {
   return 0;
 }
 
-int Constsuitfunc::usesPreyLength() {
+int ConstSuitFunc::usesPreyLength() {
   return 0;
 }
 
-double Constsuitfunc::calculate() {
+double ConstSuitFunc::calculate() {
   assert(coeff.Size() == 1);
   if ((coeff[0] < 0.0) || (coeff[0] > 1.0)) {
     cerr << "Error in suitability - function outside bounds " << coeff[0] << endl;
@@ -220,41 +220,41 @@ double Constsuitfunc::calculate() {
     return coeff[0];
 }
 
-Andersensuitfunc::Andersensuitfunc() {
+AndersenSuitFunc::AndersenSuitFunc() {
   this->setName("AndersenSuitFunc");
   coeff.resize(5);
   preyLength = -1.0;
   predLength = -1.0;
 }
 
-Andersensuitfunc::~Andersensuitfunc() {
+AndersenSuitFunc::~AndersenSuitFunc() {
 }
 
-int Andersensuitfunc::usesPredLength() {
+int AndersenSuitFunc::usesPredLength() {
   return 1;
 }
 
-int Andersensuitfunc::usesPreyLength() {
+int AndersenSuitFunc::usesPreyLength() {
   return 1;
 }
 
-void Andersensuitfunc::setPredLength(double length) {
+void AndersenSuitFunc::setPredLength(double length) {
   predLength = length;
 }
 
-void Andersensuitfunc::setPreyLength(double length) {
+void AndersenSuitFunc::setPreyLength(double length) {
   preyLength = length;
 }
 
-double Andersensuitfunc::getPredLength() {
+double AndersenSuitFunc::getPredLength() {
   return predLength;
 }
 
-double Andersensuitfunc::getPreyLength() {
+double AndersenSuitFunc::getPreyLength() {
   return preyLength;
 }
 
-double Andersensuitfunc::calculate() {
+double AndersenSuitFunc::calculate() {
   double l = log(predLength / preyLength);
   double e, q, check;
   assert(coeff.Size() == 5);
@@ -280,32 +280,32 @@ double Andersensuitfunc::calculate() {
     return check;
 }
 
-Expsuitfuncl50::Expsuitfuncl50() {
+ExpSuitFuncL50::ExpSuitFuncL50() {
   this->setName("ExpSuitFuncL50");
   coeff.resize(2);
   preyLength = -1.0;
 }
 
-Expsuitfuncl50::~Expsuitfuncl50() {
+ExpSuitFuncL50::~ExpSuitFuncL50() {
 }
 
-int Expsuitfuncl50::usesPredLength() {
+int ExpSuitFuncL50::usesPredLength() {
   return 0;
 }
 
-int Expsuitfuncl50::usesPreyLength() {
+int ExpSuitFuncL50::usesPreyLength() {
   return 1;
 }
 
-void Expsuitfuncl50::setPreyLength(double length) {
+void ExpSuitFuncL50::setPreyLength(double length) {
   preyLength = length;
 }
 
-double Expsuitfuncl50::getPreyLength() {
+double ExpSuitFuncL50::getPreyLength() {
   return preyLength;
 }
 
-double Expsuitfuncl50::calculate() {
+double ExpSuitFuncL50::calculate() {
   assert(coeff.Size() == 2);
   double check = 0.0;
 
@@ -320,32 +320,32 @@ double Expsuitfuncl50::calculate() {
     return check;
 }
 
-StraightLine::StraightLine() {
-  this->setName("StraightLine");
+StraightSuitFunc::StraightSuitFunc() {
+  this->setName("StraightSuitFunc");
   coeff.resize(2);
   preyLength = -1.0;
 }
 
-StraightLine::~StraightLine() {
+StraightSuitFunc::~StraightSuitFunc() {
 }
 
-int StraightLine::usesPredLength() {
+int StraightSuitFunc::usesPredLength() {
   return 0;
 }
 
-int StraightLine::usesPreyLength() {
+int StraightSuitFunc::usesPreyLength() {
   return 1;
 }
 
-void StraightLine::setPreyLength(double length) {
+void StraightSuitFunc::setPreyLength(double length) {
   preyLength = length;
 }
 
-double StraightLine::getPreyLength() {
+double StraightSuitFunc::getPreyLength() {
   return preyLength;
 }
 
-double StraightLine::calculate() {
+double StraightSuitFunc::calculate() {
   assert(coeff.Size() == 2);
   double check = 0.0;
   /* Line as a function of preylength only, predlength is dummy

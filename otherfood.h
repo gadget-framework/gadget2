@@ -40,7 +40,7 @@ public:
   LengthPrey* ReturnPrey() const;
   void Print(ofstream& outfile) const;
 protected:
-  Formulamatrix amount;    //[time][area]
+  FormulaMatrix amount;    //[time][area]
   LengthPrey* prey;
 };
 

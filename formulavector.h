@@ -4,31 +4,31 @@
 #include "formula.h"
 
 /**
- * \class Formulavector
+ * \class FormulaVector
  * \brief This class implements a dynamic vector of Formula values
  */
-class Formulavector {
+class FormulaVector {
 public:
   /**
-   * \brief This is the default Formulavector constructor
+   * \brief This is the default FormulaVector constructor
    */
-  Formulavector() { size = 0; v = 0; };
+  FormulaVector() { size = 0; v = 0; };
   /**
-   * \brief This is the Formulavector constructor for a specified size
+   * \brief This is the FormulaVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  Formulavector(int sz);
+  FormulaVector(int sz);
   /**
-   * \brief This is the Formulavector constructor that create a copy of an existing Formulavector
-   * \param initial this is the Formulavector to copy
+   * \brief This is the FormulaVector constructor that create a copy of an existing FormulaVector
+   * \param initial this is the FormulaVector to copy
    */
-  Formulavector(const Formulavector& initial);
+  FormulaVector(const FormulaVector& initial);
   /**
-   * \brief This is the Formulavector destructor
+   * \brief This is the FormulaVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~Formulavector();
+  ~FormulaVector();
   void resize(int, Keeper*);
   /**
    * \brief This will return the size of the vector
@@ -48,7 +48,7 @@ public:
    */
   const Formula& operator [] (int pos) const;
   void Inform(Keeper*);
-  friend CommentStream& operator >> (CommentStream&, Formulavector&);
+  friend CommentStream& operator >> (CommentStream&, FormulaVector&);
 protected:
   /**
    * \brief This is size of the vector

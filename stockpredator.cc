@@ -9,7 +9,7 @@
 #include "suits.h"
 #include "gadget.h"
 
-StockPredator::StockPredator(CommentStream& infile, const char* givenname, const intvector& Areas,
+StockPredator::StockPredator(CommentStream& infile, const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
   int minage, int maxage, const TimeClass* const TimeInfo, Keeper* const keeper)
   : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv),
@@ -44,13 +44,13 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   keeper->ClearLast();
   keeper->ClearLast();
   //Everything read from infile.
-  intvector size(maxage - minage + 1, GivenLgrpDiv->NoLengthGroups());
-  intvector minlength(maxage - minage + 1, 0);
+  IntVector size(maxage - minage + 1, GivenLgrpDiv->NoLengthGroups());
+  IntVector minlength(maxage - minage + 1, 0);
 
   int numlength = LgrpDiv->NoLengthGroups();
   int numarea = areas.Size();
   Alkeys.resize(numarea, minage, minlength, size);
-  bandmatrix bm(minlength, size, minage); //default initialization to 0.
+  BandMatrix bm(minlength, size, minage); //default initialization to 0.
   Alprop.resize(numarea, bm);
   Phi.AddRows(numarea, numlength, 0.0);
   fphi.AddRows(numarea, numlength, 0.0);
@@ -98,11 +98,11 @@ void StockPredator::Print(ofstream& outfile) const {
   outfile << endl;
 }
 
-const doublevector& StockPredator::FPhi(int area) const {
+const DoubleVector& StockPredator::FPhi(int area) const {
   return fphi[AreaNr[area]];
 }
 
-const doublevector& StockPredator::MaxConByLength(int area) const {
+const DoubleVector& StockPredator::MaxConByLength(int area) const {
   return MaxconByLength[AreaNr[area]];
 }
 
@@ -110,7 +110,7 @@ void StockPredator::ResizeObjects() {
   PopPredator::ResizeObjects();
 }
 
-void StockPredator::Sum(const Agebandmatrix& stock, int area) {
+void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
   const int inarea = AreaNr[area];
   Alkeys[inarea].SettoZero();
   AgebandmAdd(Alkeys[inarea], stock, *CI);
@@ -120,7 +120,7 @@ void StockPredator::Sum(const Agebandmatrix& stock, int area) {
   Alkeys[inarea].Colsum(Prednumber[inarea]);
 }
 
-const bandmatrix& StockPredator::Alproportion(int area) const {
+const BandMatrix& StockPredator::Alproportion(int area) const {
   return Alprop[AreaNr[area]];
 }
 
@@ -147,7 +147,7 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
   }
 }
 
-const popinfovector& StockPredator::NumberPriortoEating(int area, const char* preyname) const {
+const PopInfoVector& StockPredator::NumberPriortoEating(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < NoPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)

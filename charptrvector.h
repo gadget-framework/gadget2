@@ -2,37 +2,37 @@
 #define charptrvector_h
 
 /**
- * \class charptrvector
+ * \class CharPtrVector
  * \brief This class implements a dynamic vector of char values
  */
-class charptrvector {
+class CharPtrVector {
 public:
   /**
-   * \brief This is the default charptrvector constructor
+   * \brief This is the default CharPtrVector constructor
    */
-  charptrvector() { size = 0; v = 0; };
+  CharPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the charptrvector constructor for a specified size
+   * \brief This is the CharPtrVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  charptrvector(int sz);
+  CharPtrVector(int sz);
   /**
-   * \brief This is the charptrvector constructor for a specified size with an initial value
+   * \brief This is the CharPtrVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  charptrvector(int sz, char* initial);
+  CharPtrVector(int sz, char* initial);
   /**
-   * \brief This is the charptrvector constructor that create a copy of an existing charptrvector
-   * \param initial this is the charptrvector to copy
+   * \brief This is the CharPtrVector constructor that create a copy of an existing CharPtrVector
+   * \param initial this is the CharPtrVector to copy
    */
-  charptrvector(const charptrvector& initial);
+  CharPtrVector(const CharPtrVector& initial);
   /**
-   * \brief This is the charptrvector destructor
+   * \brief This is the CharPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~charptrvector();
+  ~CharPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
@@ -41,8 +41,8 @@ public:
   void resize(int add, char* value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**

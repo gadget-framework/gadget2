@@ -5,7 +5,7 @@
 #include "poppredatorptrvector.icc"
 #endif
 
-PopPredatorptrvector::PopPredatorptrvector(int sz) {
+PopPredatorPtrVector::PopPredatorPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new PopPredator*[size];
@@ -13,7 +13,7 @@ PopPredatorptrvector::PopPredatorptrvector(int sz) {
     v = 0;
 }
 
-PopPredatorptrvector::PopPredatorptrvector(int sz, PopPredator* value) {
+PopPredatorPtrVector::PopPredatorPtrVector(int sz, PopPredator* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -24,7 +24,7 @@ PopPredatorptrvector::PopPredatorptrvector(int sz, PopPredator* value) {
     v = 0;
 }
 
-PopPredatorptrvector::PopPredatorptrvector(const PopPredatorptrvector& initial) {
+PopPredatorPtrVector::PopPredatorPtrVector(const PopPredatorPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -35,15 +35,14 @@ PopPredatorptrvector::PopPredatorptrvector(const PopPredatorptrvector& initial) 
     v = 0;
 }
 
-PopPredatorptrvector::~PopPredatorptrvector() {
+PopPredatorPtrVector::~PopPredatorPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a PopPredatorptrvector and fills it vith value.
-void PopPredatorptrvector::resize(int addsize, PopPredator* value) {
+void PopPredatorPtrVector::resize(int addsize, PopPredator* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,7 +51,7 @@ void PopPredatorptrvector::resize(int addsize, PopPredator* value) {
       v[i] = value;
 }
 
-void PopPredatorptrvector::resize(int addsize) {
+void PopPredatorPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -67,7 +66,7 @@ void PopPredatorptrvector::resize(int addsize) {
   }
 }
 
-void PopPredatorptrvector::Delete(int pos) {
+void PopPredatorPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   PopPredator** vnew = new PopPredator*[size - 1];

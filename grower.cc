@@ -9,9 +9,9 @@
 #include "gadget.h"
 
 Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrpDiv,
-  const LengthGroupDivision* const GivenLgrpDiv, const intvector& Areas,
+  const LengthGroupDivision* const GivenLgrpDiv, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper, const char* refWeight,
-  const AreaClass* const Area, const charptrvector& lenindex)
+  const AreaClass* const Area, const CharPtrVector& lenindex)
   : LivesOnAreas(Areas), LgrpDiv(0), CI(0), GrIPar(0), growthcalc(0), growthtype(0) {
 
   ErrorHandler handle;
@@ -118,7 +118,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     subfile.open(text);
     CheckIfFailure(subfile, text);
     handle.Open(text);
-    GrIPar = new GrowthImplementparameters(subcomment);
+    GrIPar = new GrowthImplementParameters(subcomment);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -131,7 +131,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   const int noareas = areas.Size();
   const int len = LgrpDiv->NoLengthGroups();
   const int otherlen = OtherLgrpDiv->NoLengthGroups();
-  popinfo nullpop;
+  PopInfo nullpop;
   GrEatNumber.AddRows(noareas, len, nullpop);
   keeper->ClearLast();
 
@@ -143,8 +143,8 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   lgrowth.resize(noareas);
   wgrowth.resize(noareas);
   for (i = 0; i < noareas; i++) {
-    lgrowth[i] = new doublematrix(rows, otherlen, 0.0);
-    wgrowth[i] = new doublematrix(rows, otherlen, 0.0);
+    lgrowth[i] = new DoubleMatrix(rows, otherlen, 0.0);
+    wgrowth[i] = new DoubleMatrix(rows, otherlen, 0.0);
   }
   Fphi.resize(len, 0.0);
 }
@@ -216,7 +216,7 @@ void Grower::Print(ofstream& outfile) const {
 }
 
 //The following function is just a copy of Prey::Sum
-void Grower::Sum(const popinfovector& NumberInArea, int area) {
+void Grower::Sum(const PopInfoVector& NumberInArea, int area) {
   int inarea = AreaNr[area];
   int i;
   for (i = 0; i < GrEatNumber[inarea].Size(); i++)
@@ -227,14 +227,14 @@ void Grower::Sum(const popinfovector& NumberInArea, int area) {
 void Grower::GrowthCalc(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  doublevector FPhi(CalcLgrowth[AreaNr[area]].Size(), 0.0);
+  DoubleVector FPhi(CalcLgrowth[AreaNr[area]].Size(), 0.0);
   //Let the feeding level and consumption equal 0.
   this->GrowthCalc(area, Area, TimeInfo, FPhi, FPhi);
 }
 
 void Grower::GrowthCalc(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
-  const doublevector& FPhi, const doublevector& MaxCon) {
+  const DoubleVector& FPhi, const DoubleVector& MaxCon) {
 
   int inarea = AreaNr[area];
   growthcalc->GrowthCalc(area, CalcLgrowth[inarea], CalcWgrowth[inarea],
@@ -244,15 +244,15 @@ void Grower::GrowthCalc(int area,
   Interp(InterpWgrowth[inarea], CalcWgrowth[inarea], CI);
 }
 
-const doublematrix& Grower::LengthIncrease(int area) const {
+const DoubleMatrix& Grower::LengthIncrease(int area) const {
   return *lgrowth[AreaNr[area]];
 }
 
-const doublematrix& Grower::WeightIncrease(int area) const {
+const DoubleMatrix& Grower::WeightIncrease(int area) const {
   return *wgrowth[AreaNr[area]];
 }
 
-const doublevector& Grower::getWeight(int area) const {
+const DoubleVector& Grower::getWeight(int area) const {
   return InterpWgrowth[AreaNr[area]];
 }
 

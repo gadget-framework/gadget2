@@ -17,9 +17,9 @@ class AreaClass;
 
 class FleetPreyAggregator {
 public:
-  FleetPreyAggregator(const Fleetptrvector& Fleets, const Stockptrvector& Stocks,
-    LengthGroupDivision* const Lgrpdiv, const intmatrix& Areas,
-    const intmatrix& Ages, const int overconsumtion);
+  FleetPreyAggregator(const FleetPtrVector& Fleets, const StockPtrVector& Stocks,
+    LengthGroupDivision* const Lgrpdiv, const IntMatrix& Areas,
+    const IntMatrix& Ages, const int overconsumtion);
   ~FleetPreyAggregator();
   int NoLengthGroups() const { return numlengths; };
   int NoAgeGroups() const { return ages.Nrow(); };
@@ -28,27 +28,27 @@ public:
   void Sum(const TimeClass* const TimeInfo);
   void Sum(const TimeClass* const TimeInfo, int dummy); //mortality model
   void Print(ofstream &outfile) const;
-  const agebandmatrixptrvector& AgeLengthDist() const { return totalcatch; };
-  const bandmatrixvector& CatchRatios() const { return catchratios; };
-  const intvector& getMinCol() const { return mincol; };
-  const intvector& getMaxCol() const { return maxcol; };
+  const AgeBandMatrixPtrVector& AgeLengthDist() const { return totalcatch; };
+  const BandMatrixVector& CatchRatios() const { return catchratios; };
+  const IntVector& getMinCol() const { return mincol; };
+  const IntVector& getMaxCol() const { return maxcol; };
   int getMinRow() const { return minrow; };
   int getMaxRow() const { return maxrow; };
 private:
-  Fleetptrvector fleets;
-  Stockptrvector stocks;
+  FleetPtrVector fleets;
+  StockPtrVector stocks;
   LengthGroupDivision* LgrpDiv;
   int numlengths;
-  intmatrix areas;
-  intmatrix ages;
-  intvector mincol;  //Min column for traversing aggregated data
-  intvector maxcol;  //Max column for traversing aggregated data
+  IntMatrix areas;
+  IntMatrix ages;
+  IntVector mincol;  //Min column for traversing aggregated data
+  IntVector maxcol;  //Max column for traversing aggregated data
   int minrow;        //Min row for traversing aggregated data
   int maxrow;        //Max row for traversing aggregated data
   int overconsumption;    //should we take overconsumption into account
-  ConversionIndexptrvector CI;
-  agebandmatrixptrvector totalcatch;
-  bandmatrixvector catchratios;  //the ratio caught of the stocks by
+  ConversionIndexPtrVector CI;
+  AgeBandMatrixPtrVector totalcatch;
+  BandMatrixVector catchratios;  //the ratio caught of the stocks by
                                  //the fleets in question, i.e. 1-exp(-F/12)
 };
 

@@ -5,63 +5,57 @@
 #include "charptrmatrix.icc"
 #endif
 
-//constructor for a rectangular charptrmatrix.
-charptrmatrix::charptrmatrix(int nr, int nc) {
+CharPtrMatrix::CharPtrMatrix(int nr, int nc) {
   nrow = nr;
-  v = new charptrvector*[nr];
+  v = new CharPtrVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new charptrvector(nc);
+    v[i] = new CharPtrVector(nc);
 }
 
-//constructor for a rectangular charptrmatrix with initial value.
-charptrmatrix::charptrmatrix(int nr, int nc, char* value) {
+CharPtrMatrix::CharPtrMatrix(int nr, int nc, char* value) {
   nrow = nr;
-  v = new charptrvector*[nr];
+  v = new CharPtrVector*[nr];
   int i, j;
   for (i = 0; i < nr; i++)
-    v[i] = new charptrvector(nc);
+    v[i] = new CharPtrVector(nc);
   for (i = 0; i < nr; i++)
     for (j = 0; j < nc; j++)
       (*v[i])[j] = value;
 }
 
-//constructor for a possibly nonrectangular charptrmatrix
-//the rows need not have the same number of columns.
-charptrmatrix::charptrmatrix(int nr, const intvector& nc) {
+CharPtrMatrix::CharPtrMatrix(int nr, const IntVector& nc) {
   nrow = nr;
-  v = new charptrvector*[nr];
+  v = new CharPtrVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new charptrvector(nc[i]);
+    v[i] = new CharPtrVector(nc[i]);
 }
 
-//constructor for charptrmatrix when all rows do not need to have same number of
-//columns, with initial value.
-charptrmatrix::charptrmatrix(int nr, const intvector& nc, char* value) {
+CharPtrMatrix::CharPtrMatrix(int nr, const IntVector& nc, char* value) {
   nrow = nr;
-  v = new charptrvector*[nr];
+  v = new CharPtrVector*[nr];
   int i, j;
   for (i = 0; i < nr; i++)
-    v[i] = new charptrvector(nc[i]);
+    v[i] = new CharPtrVector(nc[i]);
   for (i = 0; i < nr; i++)
     for (j = 0; j < nc[i]; j++)
       (*v[i])[j] = value;
 }
 
-charptrmatrix::charptrmatrix(const charptrmatrix& initial) : nrow(initial.nrow) {
+CharPtrMatrix::CharPtrMatrix(const CharPtrMatrix& initial) : nrow(initial.nrow) {
   int i;
   if (nrow >= 0) {
-    v = new charptrvector*[nrow];
+    v = new CharPtrVector*[nrow];
     for (i = 0; i < nrow; i++)
-      v[i] = new charptrvector(initial[i]);
+      v[i] = new CharPtrVector(initial[i]);
   } else {
     v = 0;
     nrow = 0;
   }
 }
 
-charptrmatrix::~charptrmatrix() {
+CharPtrMatrix::~CharPtrMatrix() {
   int i;
   if (v != 0) {
     for (i = 0; i < nrow; i++)
@@ -71,21 +65,19 @@ charptrmatrix::~charptrmatrix() {
   }
 }
 
-//Adds rows to a charptrmatrix.
-void charptrmatrix::AddRows(int add, int length) {
-  charptrvector** vnew = new charptrvector*[nrow + add];
+void CharPtrMatrix::AddRows(int add, int length) {
+  CharPtrVector** vnew = new CharPtrVector*[nrow + add];
   int i;
   for (i = 0; i < nrow; i++)
     vnew[i] = v[i];
   delete[] v;
   v = vnew;
   for (i = nrow; i < nrow + add; i++)
-    v[i] = new charptrvector(length);
+    v[i] = new CharPtrVector(length);
   nrow += add;
 }
 
-//Adds rows to a charptrmatrix and initializes them.
-void charptrmatrix::AddRows(int add, int length, char* initial) {
+void CharPtrMatrix::AddRows(int add, int length, char* initial) {
   int oldnrow = nrow;
   this->AddRows(add, length);
   int i, j;
@@ -94,12 +86,12 @@ void charptrmatrix::AddRows(int add, int length, char* initial) {
       (*v[i])[j] = initial;
 }
 
-void charptrmatrix::DeleteRow(int row) {
+void CharPtrMatrix::DeleteRow(int row) {
   assert(nrow > 0);
   int i;
   assert(0 <= row && row < nrow);
   delete v[row];
-  charptrvector** vnew = new charptrvector*[nrow - 1];
+  CharPtrVector** vnew = new CharPtrVector*[nrow - 1];
   for (i = 0; i < row; i++)
     vnew[i] = v[i];
   for (i = row; i < nrow - 1; i++)

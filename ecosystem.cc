@@ -5,7 +5,6 @@ extern int FuncEval;
 Ecosystem::Ecosystem() {
 }
 
-//New parameter netrun, to prevent reading of printfiles. 07.04.00 AJ & mnaa
 Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   int calclikelihood, const char* const inputdir,
   const char* const workingdir, const PrintInfo& pi) : funceval(0), printinfo(pi) {
@@ -94,7 +93,7 @@ void Ecosystem::Update(const StochasticData* const Stochastic) const {
   keeper->Update(Stochastic);
 }
 
-void Ecosystem::Update(const doublevector& values) const {
+void Ecosystem::Update(const DoubleVector& values) const {
   keeper->Update(values);
 }
 
@@ -106,9 +105,9 @@ double Ecosystem::SimulateAndUpdate(double *x, int n) {
 
   PrintCounter1++;
   PrintCounter2++;
-  doublevector val(this->NoVariables());
-  doublevector initialvalues(this->NoVariables());
-  intvector opt(this->NoVariables());
+  DoubleVector val(this->NoVariables());
+  DoubleVector initialvalues(this->NoVariables());
+  IntVector opt(this->NoVariables());
   this->InitialValues(initialvalues);
   this->ValuesOfVariables(val);
   this->Opt(opt);
@@ -157,15 +156,15 @@ void Ecosystem::PrintParamsinColumns(const char* const filename, int prec) const
   keeper->WriteParamsInColumns(filename, likelihood, Likely, prec);
 }
 
-void Ecosystem::Opt(intvector& opt) const {
+void Ecosystem::Opt(IntVector& opt) const {
   keeper->Opt(opt);
 }
 
-void Ecosystem::InitialValues(doublevector& initialval) const {
+void Ecosystem::InitialValues(DoubleVector& initialval) const {
   keeper->InitialValues(initialval);
 }
 
-void Ecosystem::ValuesOfVariables(doublevector& val) const {
+void Ecosystem::ValuesOfVariables(DoubleVector& val) const {
   keeper->ValuesOfVariables(val);
 }
 
@@ -181,19 +180,19 @@ void Ecosystem::PrintOptValues() const {
   keeper->WriteOptValues(likelihood, Likely);
 }
 
-void Ecosystem::ScaledValues(doublevector& val) const {
+void Ecosystem::ScaledValues(DoubleVector& val) const {
   keeper->ScaledValues(val);
 }
 
-void Ecosystem::ScaledOptValues(doublevector& val) const {
+void Ecosystem::ScaledOptValues(DoubleVector& val) const {
   keeper->ScaledOptValues(val);
 }
 
-void Ecosystem::InitialOptValues(doublevector& val) const {
+void Ecosystem::InitialOptValues(DoubleVector& val) const {
   keeper->InitialOptValues(val);
 }
 
-void Ecosystem::OptSwitches(Parametervector& sw) const {
+void Ecosystem::OptSwitches(ParameterVector& sw) const {
   keeper->OptSwitches(sw);
 }
 
@@ -206,7 +205,7 @@ void Ecosystem::PrintLikelihoodInfo(const char* filename) const {
     Likely[i]->LikelihoodPrint(outfile);
 }
 
-void Ecosystem::OptValues(doublevector& val) const {
+void Ecosystem::OptValues(DoubleVector& val) const {
   keeper->OptValues(val);
 }
 
@@ -226,10 +225,10 @@ Fleet* Ecosystem::findFleet(const char* fleetname) const {
   return NULL;
 }
 
-void Ecosystem::LowerBds(doublevector& lbds) const {
+void Ecosystem::LowerBds(DoubleVector& lbds) const {
   keeper->LowerOptBds(lbds);
 }
 
-void Ecosystem::UpperBds(doublevector& ubds) const {
+void Ecosystem::UpperBds(DoubleVector& ubds) const {
   keeper->UpperOptBds(ubds);
 }

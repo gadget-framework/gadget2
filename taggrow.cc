@@ -2,12 +2,12 @@
 #include "agebandmatrixratio.h"
 #include "gadget.h"
 
-void Agebandmatrixratio::Grow(const doublematrix& Lgrowth, const Agebandmatrix& Total) {
+void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total) {
 
   int NrOfTagExp = this->NrOfTagExp();
   int i, lgrp, grow, maxlgrp, tag;
   double upfj;
-  doublevector number(NrOfTagExp, 0.0);
+  DoubleVector number(NrOfTagExp, 0.0);
 
   if (NrOfTagExp > 0) {
     for (i = 0; i < nrow; i++) {
@@ -65,15 +65,15 @@ void Agebandmatrixratio::Grow(const doublematrix& Lgrowth, const Agebandmatrix& 
 }
 
 //Same program with certain number of fish made mature.
-void Agebandmatrixratio::Grow(const doublematrix& Lgrowth, const Agebandmatrix& Total,
+void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total,
   Maturity* const Mat, const TimeClass* const TimeInfo, const AreaClass* const Area,
   const LengthGroupDivision* const GivenLDiv, int area) {
 
   int NrOfTagExp = this->NrOfTagExp();
   int i, lgrp, grow, maxlgrp, age, tag;
   double upfj;
-  doublevector number(NrOfTagExp, 0.0);
-  doublevector matnum(NrOfTagExp, 0.0);
+  DoubleVector number(NrOfTagExp, 0.0);
+  DoubleVector matnum(NrOfTagExp, 0.0);
 
   if (NrOfTagExp > 0) {
     for (i = 0; i < nrow; i++) {

@@ -40,7 +40,6 @@ void TimeVariableIndexVector::resize(int addsize, int lower, Keeper* const keepe
   }
 }
 
-//increase the size of a timevariable vector by 1 and put the timevariable tvar there.
 void TimeVariableIndexVector::resize(const TimeVariable& tvar, int lower, Keeper* const keeper) {
   int addsize = 1;
   int i;

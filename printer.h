@@ -31,13 +31,13 @@ public:
   Printer(PrinterType TYPE) : type(TYPE) {};
   virtual ~Printer() {};
   virtual void Print(const TimeClass* const TimeInfo) = 0;
-  virtual void SetStock(Stockptrvector& stockvec) {};
-  virtual void SetFleet(Fleetptrvector& fleetvec) {};
-  virtual void SetPredAndPrey(Predatorptrvector& predatorvec, Preyptrvector& preyvec) {};
-  virtual void SetPrey(Preyptrvector& preyvec) {};
-  virtual void SetStocksAndPredAndPrey(const Stockptrvector& stockvec,
-    const PopPredatorptrvector& poppredvec, const Preyptrvector& preyvec) {};
-  virtual void SetPredator(Predatorptrvector& predatorvec) {};
+  virtual void SetStock(StockPtrVector& stockvec) {};
+  virtual void SetFleet(FleetPtrVector& fleetvec) {};
+  virtual void SetPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVector& preyvec) {};
+  virtual void SetPrey(PreyPtrVector& preyvec) {};
+  virtual void SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
+    const PopPredatorPtrVector& poppredvec, const PreyPtrVector& preyvec) {};
+  virtual void SetPredator(PredatorPtrVector& predatorvec) {};
   PrinterType Type() const { return type; };
 protected:
   ActionAtTimes aat;

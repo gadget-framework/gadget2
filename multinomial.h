@@ -9,7 +9,7 @@ class Multinomial {
 public:
   Multinomial(double value):error(0), bigvalue(value), loglikelihood(0.0) {};
   ~Multinomial() {};
-  double LogLikelihood(const doublevector& data, const doublevector& dist);
+  double LogLikelihood(const DoubleVector& data, const DoubleVector& dist);
   int Error() { return error; };
   double ReturnLogLikelihood() const { return loglikelihood; };
 protected:

@@ -15,15 +15,15 @@ class PredatorPrinter : public Printer {
 public:
   PredatorPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~PredatorPrinter();
-  virtual void SetPredAndPrey(Predatorptrvector& predatorvec, Preyptrvector& preyvec);
+  virtual void SetPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVector& preyvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
-  intmatrix areas;
-  charptrvector areaindex;
-  charptrvector predlenindex;
-  charptrvector preylenindex;
-  charptrvector predatornames;
-  charptrvector preynames;
+  IntMatrix areas;
+  CharPtrVector areaindex;
+  CharPtrVector predlenindex;
+  CharPtrVector preylenindex;
+  CharPtrVector predatornames;
+  CharPtrVector preynames;
   LengthGroupDivision* predLgrpDiv;
   LengthGroupDivision* preyLgrpDiv;
   PredatorAggregator* aggregator;

@@ -18,17 +18,17 @@ public:
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
-  void SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks);
+  void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
   virtual void LikelihoodPrint(ofstream& outfile) const;
   virtual void PrintLikelihood(ofstream&, const TimeClass& time);
   virtual void PrintLikelihoodHeader(ofstream&);
-  //JMB const doublevector& getWeights(int year, int step, int lengthgroup) const;
-  const doublematrix& getCalcBiomass(int area) const { return *(calc_biomass[area]); };
-  const doublematrix& getObsBiomass(int area) const { return *(obs_biomass[area]); };
-  const doublematrix& getAggCalcBiomass(int area) const { return *(agg_calc_biomass[area]); };
-  const doublematrix& getAggObsBiomass(int area) const { return *(agg_obs_biomass[area]); };
+  //JMB const DoubleVector& getWeights(int year, int step, int lengthgroup) const;
+  const DoubleMatrix& getCalcBiomass(int area) const { return *(calc_biomass[area]); };
+  const DoubleMatrix& getObsBiomass(int area) const { return *(obs_biomass[area]); };
+  const DoubleMatrix& getAggCalcBiomass(int area) const { return *(agg_calc_biomass[area]); };
+  const DoubleMatrix& getAggObsBiomass(int area) const { return *(agg_obs_biomass[area]); };
   const char* Name() const { return cdname; };
-  const intmatrix& getAges() const { return ages; };
+  const IntMatrix& getAges() const { return ages; };
   int aggLevel() const { return agg_lev; };
   void aggregateBiomass();
   int maxAge() const {
@@ -50,16 +50,16 @@ public:
         return 0;
     return col;
   };
-  const agebandmatrixptrvector& getModCatch(const TimeClass* const TimeInfo); //kgf 21/1 99
-  const doublematrixptrmatrix* getObsCatch() const { return &AgeLengthData; };
-  const doublematrixptrmatrix* getCalcCatch() const { return &Proportions; };
-  const doublematrix& calcCatchByTimeAge(int area) const { return *(calc_catch[area]); };
-  const doublematrix& obsCatchByTimeAge(int area) const { return *(obs_catch[area]); };
+  const AgeBandMatrixPtrVector& getModCatch(const TimeClass* const TimeInfo); //kgf 21/1 99
+  const DoubleMatrixPtrMatrix* getObsCatch() const { return &AgeLengthData; };
+  const DoubleMatrixPtrMatrix* getCalcCatch() const { return &Proportions; };
+  const DoubleMatrix& calcCatchByTimeAge(int area) const { return *(calc_catch[area]); };
+  const DoubleMatrix& obsCatchByTimeAge(int area) const { return *(obs_catch[area]); };
   void timeIncrement() { timeindex++; };
   int getTimeSteps();
   int getAreas();
-  intvector getYears();
-  intvector getSteps();
+  IntVector getYears();
+  IntVector getSteps();
   int getMinStockAge() { return min_stock_age; };
   int getMaxStockAge() { return max_stock_age; };
   int minRow() { return minrow; };
@@ -75,41 +75,41 @@ private:
   double ExperimentalLik(const TimeClass* const TimeInfo); //kgf 6/3 00
   double GammaLik(const TimeClass* const TimeInfo); //kgf 24/5 00
   double LikSumSquares();
-  doublematrixptrmatrix AgeLengthData; //[time][area][age][length]
-  doublematrixptrmatrix Proportions; //kgf 17/9 98
-  doublematrix Likelihoodvalues; //kgf 17/9 98
+  DoubleMatrixPtrMatrix AgeLengthData; //[time][area][age][length]
+  DoubleMatrixPtrMatrix Proportions; //kgf 17/9 98
+  DoubleMatrix Likelihoodvalues; //kgf 17/9 98
   FleetPreyAggregator* aggregator;
-  charptrvector fleetnames;
-  charptrvector stocknames;
+  CharPtrVector fleetnames;
+  CharPtrVector stocknames;
   char* cdname;
-  intmatrix areas;
-  intmatrix ages;
-  doublevector lengths;
-  charptrvector areaindex;
-  charptrvector ageindex;
-  charptrvector lenindex;
+  IntMatrix areas;
+  IntMatrix ages;
+  DoubleVector lengths;
+  CharPtrVector areaindex;
+  CharPtrVector ageindex;
+  CharPtrVector lenindex;
   int overconsumption;    //should we take overconsumption into account
   int functionnumber;
   char* functionname;
   int timeindex;
   ActionAtTimes AAT;
-  intvector Years;
-  intvector Steps;
+  IntVector Years;
+  IntVector Steps;
   int steps;
   int first;
-  doublematrixptrvector calc_c;           //calc_c[area][age][length]
-  doublematrixptrvector obs_c;            //obs_c[area][age][length]
-  doublematrixptrvector calc_biomass;     //calc_biomass[area][time][age]
-  doublematrixptrvector obs_biomass;      //obs_biomass[area][time][age]
-  doublematrixptrvector agg_calc_biomass; //calc_biomass[area][time][age]
-  doublematrixptrvector agg_obs_biomass;  //obs_biomass[area][time][age]
-  doublematrixptrvector calc_catch;       //calc_catch[area][time][age]
-  doublematrixptrvector obs_catch;        //obs_catch[area][time][age]
+  DoubleMatrixPtrVector calc_c;           //calc_c[area][age][length]
+  DoubleMatrixPtrVector obs_c;            //obs_c[area][age][length]
+  DoubleMatrixPtrVector calc_biomass;     //calc_biomass[area][time][age]
+  DoubleMatrixPtrVector obs_biomass;      //obs_biomass[area][time][age]
+  DoubleMatrixPtrVector agg_calc_biomass; //calc_biomass[area][time][age]
+  DoubleMatrixPtrVector agg_obs_biomass;  //obs_biomass[area][time][age]
+  DoubleMatrixPtrVector calc_catch;       //calc_catch[area][time][age]
+  DoubleMatrixPtrVector obs_catch;        //obs_catch[area][time][age]
   int agg_lev; //0: calculate likelihood on all time steps, 1: calculate once a year
   int min_stock_age; //kgf 3/5 99
   int max_stock_age; //kgf 3/5 99
-  intvector mincol;
-  intvector maxcol;
+  IntVector mincol;
+  IntVector maxcol;
   int minrow;
   int maxrow;
   LengthGroupDivision* LgrpDiv;

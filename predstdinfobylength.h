@@ -15,13 +15,13 @@ class TimeClass;
 class PredStdInfoByLength : protected LivesOnAreas {
 public:
   PredStdInfoByLength(const PopPredator* predator, const Prey* prey,
-    const intvector& areas);
+    const IntVector& areas);
   PredStdInfoByLength(const PopPredator* predator, const StockPrey* prey,
-    const intvector& areas);
+    const IntVector& areas);
   virtual ~PredStdInfoByLength();
-  const bandmatrix& NconsumptionByLength(int area) const;
-  const bandmatrix& BconsumptionByLength(int area) const;
-  const bandmatrix& MortalityByLength(int area) const;
+  const BandMatrix& NconsumptionByLength(int area) const;
+  const BandMatrix& BconsumptionByLength(int area) const;
+  const BandMatrix& MortalityByLength(int area) const;
   virtual void Sum(const TimeClass* const TimeInfo, int area);
   const LengthGroupDivision* ReturnPredLengthGroupDiv() const { return PredLgrpDiv; };
   const LengthGroupDivision* ReturnPreyLengthGroupDiv() const { return PreyLgrpDiv; };
@@ -31,9 +31,9 @@ private:
   AbstrPreyStdInfoByLength* preyinfo;
   const PopPredator* predator;
   const Prey* prey;
-  bandmatrixvector MortbyLength; //[area][pred_l][prey_l]
-  bandmatrixvector NconbyLength;
-  bandmatrixvector BconbyLength;
+  BandMatrixVector MortbyLength; //[area][pred_l][prey_l]
+  BandMatrixVector NconbyLength;
+  BandMatrixVector BconbyLength;
   const LengthGroupDivision* PredLgrpDiv;
   const LengthGroupDivision* PreyLgrpDiv;
 };

@@ -7,8 +7,8 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
-Maturity::Maturity(const intvector& tmpareas, int minage, const intvector& minlength,
-  const intvector& size, const LengthGroupDivision* const lgrpdiv)
+Maturity::Maturity(const IntVector& tmpareas, int minage, const IntVector& minlength,
+  const IntVector& size, const LengthGroupDivision* const lgrpdiv)
   : LivesOnAreas(tmpareas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)),
     Storage(tmpareas.Size(), minage, minlength, size) {
     TagStorage.resize(tmpareas.Size(), minage, minlength, size);
@@ -24,10 +24,10 @@ Maturity::~Maturity() {
   delete LgrpDiv;
 }
 
-void Maturity::SetStock(Stockptrvector& stockvec) {
+void Maturity::SetStock(StockPtrVector& stockvec) {
   int index = 0;
   int i, j;
-  doublevector tmpratio;
+  DoubleVector tmpratio;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < MatureStockNames.Size(); j++)
@@ -150,7 +150,7 @@ void Maturity::Precalc(const TimeClass* const TimeInfo) {
   }
 }
 
-const Stockptrvector& Maturity::GetMatureStocks() {
+const StockPtrVector& Maturity::GetMatureStocks() {
   return MatureStocks;
 }
 

@@ -1,0 +1,15 @@
+#include "addresskeepermatrix.h"
+
+#ifdef GADGET_INLINE
+inline
+#endif
+AddressKeeperVector& AddressKeeperMatrix::operator [] (int pos) {
+  return *v[pos];
+}
+
+#ifdef GADGET_INLINE
+inline
+#endif
+const AddressKeeperVector& AddressKeeperMatrix::operator [] (int pos) const {
+  return *v[pos];
+}

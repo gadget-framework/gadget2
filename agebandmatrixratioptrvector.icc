@@ -3,20 +3,20 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-Agebandmatrixratio& agebandmatrixratioptrvector::operator [] (int pos) {
+AgeBandMatrixRatio& AgeBandMatrixRatioPtrVector::operator [] (int pos) {
   return *v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-const Agebandmatrixratio& agebandmatrixratioptrvector::operator [] (int pos) const {
+const AgeBandMatrixRatio& AgeBandMatrixRatioPtrVector::operator [] (int pos) const {
   return *v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-const Agebandmatrixratio& agebandmatrixratioptrvector::operator [] (const char* name) const {
+const AgeBandMatrixRatio& AgeBandMatrixRatioPtrVector::operator [] (const char* name) const {
   return *v[0];
 }

@@ -10,17 +10,17 @@ class LengthGroupDivision;
 
 class SIByAgeOnStep : public SIOnStep {
 public:
-  SIByAgeOnStep(CommentStream& infile, const intvector& areas,
-    const intmatrix& ages, const char* arealabel, const charptrvector& ageindex,
+  SIByAgeOnStep(CommentStream& infile, const IntVector& areas,
+    const IntMatrix& ages, const char* arealabel, const CharPtrVector& ageindex,
     const TimeClass* const TimeInfo, const char* datafilename);
   virtual ~SIByAgeOnStep();
   virtual void Sum(const TimeClass* const TimeInfo);
-  virtual void SetStocks(const Stockptrvector& Stocks);
+  virtual void SetStocks(const StockPtrVector& Stocks);
   virtual void LikelihoodPrint(ofstream& outfile) const;
 protected:
   StockAggregator* aggregator;
-  intmatrix Ages;
-  intvector Areas;
+  IntMatrix Ages;
+  IntVector Areas;
 };
 
 #endif

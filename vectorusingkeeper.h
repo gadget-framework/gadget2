@@ -3,7 +3,7 @@
 
 #include "keeper.h"
 
-extern void DeleteElementUsingKeeper(doublevector& var,
+extern void DeleteElementUsingKeeper(DoubleVector& var,
   Keeper* const keeper, int index);
 
 #endif

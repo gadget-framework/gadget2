@@ -9,11 +9,11 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
   const TimeClass* const TimeInfo, const Keeper* const keeper, double w)
   : Likelihood(BOUNDLIKELIHOOD, w) {
 
-  Parametervector switches;
+  ParameterVector switches;
   ErrorHandler handle;
   int i, j;
   Parameter tempParam;
-  doublevector tmpvec;
+  DoubleVector tmpvec;
 
   infile >> ws;
   while (!infile.eof()) {
@@ -38,7 +38,7 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
   }
 
   if (switchnr.Size() != 0) {
-    Parametervector sw(keeper->NoVariables());
+    ParameterVector sw(keeper->NoVariables());
     keeper->Switches(sw);
     for (i = 0; i < switches.Size(); i++)
       for (j = 0; j < sw.Size(); j++)
@@ -62,7 +62,7 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
   numset = switchnr.Size();
 
   if (checkInitialised == 0) {
-    intvector done(numset, 0);
+    IntVector done(numset, 0);
     // resize vectors to store data
     likelihoods.resize(numvar, 0.0);
     lowerbound.resize(numvar, 0.0);
@@ -73,8 +73,8 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
     upperweights.resize(numvar - numset, 0.0);
     switchnr.resize(numvar - numset, -1);
 
-    doublevector lbs(numvar);
-    doublevector ubs(numvar);
+    DoubleVector lbs(numvar);
+    DoubleVector ubs(numvar);
     keeper->LowerBds(lbs);
     keeper->UpperBds(ubs);
 
@@ -111,7 +111,7 @@ void BoundLikelihood::AddToLikelihoodTimeAndKeeper(
 
   likelihood = 0;
   int i;
-  doublevector values(keeper->NoVariables());
+  DoubleVector values(keeper->NoVariables());
   keeper->ValuesOfVariables(values);
   for (i = 0; i < switchnr.Size(); i++) {
     if (values[switchnr[i]] < lowerbound[i]) {
@@ -129,11 +129,11 @@ void BoundLikelihood::AddToLikelihoodTimeAndKeeper(
 
 void BoundLikelihood::LikelihoodPrintKeeper(ofstream& outfile, const Keeper* const keeper) const {
   int i;
-  Parametervector sw(keeper->NoVariables());
+  ParameterVector sw(keeper->NoVariables());
   keeper->Switches(sw);
   outfile << "\nBoundLikelihood\n\tlikelihood " << likelihood << endl;
   Likelihood::LikelihoodPrint(outfile);
-  doublevector values(keeper->NoVariables());
+  DoubleVector values(keeper->NoVariables());
   keeper->ValuesOfVariables(values);
   outfile << "switchnr" << TAB << "lowerbound" << TAB << "upperbound" << TAB <<
     "value" << TAB << "likelihood" << endl;

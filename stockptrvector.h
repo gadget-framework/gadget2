@@ -4,37 +4,37 @@
 class Stock;
 
 /**
- * \class Stockptrvector
+ * \class StockPtrVector
  * \brief This class implements a dynamic vector of Stock values
  */
-class Stockptrvector {
+class StockPtrVector {
 public:
   /**
-   * \brief This is the default Stockptrvector constructor
+   * \brief This is the default StockPtrVector constructor
    */
-  Stockptrvector() { size = 0; v = 0; };
+  StockPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the Stockptrvector constructor for a specified size
+   * \brief This is the StockPtrVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  Stockptrvector(int sz);
+  StockPtrVector(int sz);
   /**
-   * \brief This is the Stockptrvector constructor for a specified size with an initial value
+   * \brief This is the StockPtrVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  Stockptrvector(int sz, Stock* initial);
+  StockPtrVector(int sz, Stock* initial);
   /**
-   * \brief This is the Stockptrvector constructor that create a copy of an existing Stockptrvector
-   * \param initial this is the Stockptrvector to copy
+   * \brief This is the StockPtrVector constructor that create a copy of an existing StockPtrVector
+   * \param initial this is the StockPtrVector to copy
    */
-  Stockptrvector(const Stockptrvector& initial);
+  StockPtrVector(const StockPtrVector& initial);
   /**
-   * \brief This is the Stockptrvector destructor
+   * \brief This is the StockPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~Stockptrvector();
+  ~StockPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
@@ -43,8 +43,8 @@ public:
   void resize(int add, Stock* value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**
@@ -70,7 +70,7 @@ public:
    * \return the value of the specified element
    */
   Stock* const& operator [] (int pos) const;
-  Stockptrvector& operator = (const Stockptrvector& d);
+  StockPtrVector& operator = (const StockPtrVector& d);
 protected:
   /**
    * \brief This is the vector of Stock values

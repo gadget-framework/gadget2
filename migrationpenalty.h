@@ -9,13 +9,13 @@ public:
   MigrationPenalty(CommentStream& infile, double likweight);
   virtual ~MigrationPenalty();
   virtual void AddToLikelihood(const TimeClass* const);
-  void SetStocks(Stockptrvector Stocks);
+  void SetStocks(StockPtrVector Stocks);
   virtual void Print(ofstream&) const {};
   virtual void LikelihoodPrint(ofstream&) const {};
 private:
   char* stockname;
   Stock* stock;
-  doublevector powercoeffs;
+  DoubleVector powercoeffs;
 };
 
 #endif

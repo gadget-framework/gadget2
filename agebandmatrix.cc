@@ -8,30 +8,30 @@
 #include "agebandmatrix.icc"
 #endif
 
-Agebandmatrix::Agebandmatrix(const Agebandmatrix& initial)
+AgeBandMatrix::AgeBandMatrix(const AgeBandMatrix& initial)
   : minage(initial.Minage()), nrow(initial.Nrow()) {
 
-  v = new popinfoindexvector*[nrow];
+  v = new PopInfoIndexVector*[nrow];
   int i;
   for (i = 0; i < nrow; i++)
-    v[i] = new popinfoindexvector(initial[i + minage]);
+    v[i] = new PopInfoIndexVector(initial[i + minage]);
 }
 
-Agebandmatrix::Agebandmatrix(int MinAge, const intvector& minl,
-  const intvector& size) : minage(MinAge), nrow(size.Size()) {
+AgeBandMatrix::AgeBandMatrix(int MinAge, const IntVector& minl,
+  const IntVector& size) : minage(MinAge), nrow(size.Size()) {
 
-  popinfo nullpop;
+  PopInfo nullpop;
   assert(minl.Size() == size.Size());
-  v = new popinfoindexvector*[nrow];
+  v = new PopInfoIndexVector*[nrow];
   int i;
   for (i = 0; i < nrow; i++)
-    v[i] = new popinfoindexvector(size[i], minl[i], nullpop);
+    v[i] = new PopInfoIndexVector(size[i], minl[i], nullpop);
 }
 
-Agebandmatrix::Agebandmatrix(int MinAge, const popinfomatrix& initial)
+AgeBandMatrix::AgeBandMatrix(int MinAge, const PopInfoMatrix& initial)
   : minage(MinAge), nrow(initial.Nrow()) {
 
-  v = new popinfoindexvector*[nrow];
+  v = new PopInfoIndexVector*[nrow];
   int i, j;
   int lower, upper;
   for (i = 0; i < nrow; i++) {
@@ -41,16 +41,16 @@ Agebandmatrix::Agebandmatrix(int MinAge, const popinfomatrix& initial)
       lower++;
     while (iszero(initial[i][upper].N) && upper > lower)
       upper--;
-    v[i] = new popinfoindexvector(upper - lower + 1, lower);
+    v[i] = new PopInfoIndexVector(upper - lower + 1, lower);
     for (j = lower; j <= upper; j++)
       (*v[i])[j] = initial[i][j];
   }
 }
 
-Agebandmatrix::Agebandmatrix(int MinAge, int minl, const popinfomatrix& initial)
+AgeBandMatrix::AgeBandMatrix(int MinAge, int minl, const PopInfoMatrix& initial)
   : minage(MinAge), nrow(initial.Nrow()) {
 
-  v = new popinfoindexvector*[nrow];
+  v = new PopInfoIndexVector*[nrow];
   int i, j;
   int lower, upper;
   for (i = 0; i < nrow; i++) {
@@ -60,20 +60,20 @@ Agebandmatrix::Agebandmatrix(int MinAge, int minl, const popinfomatrix& initial)
       lower++;
     while (iszero(initial[i][upper].N) && (upper > lower))
       upper--;
-    v[i] = new popinfoindexvector(upper - lower + 1, lower + minl);
+    v[i] = new PopInfoIndexVector(upper - lower + 1, lower + minl);
     for (j = lower; j <= upper; j++)
       (*v[i])[j + minl] = initial[i][j];
   }
 }
 
-Agebandmatrix::Agebandmatrix(int MinAge, const popinfoindexvector& initial)
+AgeBandMatrix::AgeBandMatrix(int MinAge, const PopInfoIndexVector& initial)
   : minage(MinAge), nrow(1) {
 
-  v = new popinfoindexvector*[1];
-  v[0] = new popinfoindexvector(initial);
+  v = new PopInfoIndexVector*[1];
+  v[0] = new PopInfoIndexVector(initial);
 }
 
-Agebandmatrix::~Agebandmatrix() {
+AgeBandMatrix::~AgeBandMatrix() {
   int i;
   if (v != 0) {
     for (i = 0; i < nrow; i++)

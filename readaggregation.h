@@ -9,10 +9,10 @@
 #include "charptrmatrix.h"
 #include "formulamatrix.h"
 
-extern int ReadAggregation(CommentStream& infile, intmatrix& agg, charptrvector& aggindex);
-extern int ReadAggregation(CommentStream& infile, intvector& agg, charptrvector& aggindex);
-extern int ReadLengthAggregation(CommentStream& infile, doublevector& lengths, charptrvector& lenindex);
-extern int ReadPreyAggregation(CommentStream& infile, charptrmatrix& preynames,
-  doublematrix& preylengths, Formulamatrix& digestioncoeff, charptrvector& preyindex, Keeper* const keeper);
+extern int ReadAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggindex);
+extern int ReadAggregation(CommentStream& infile, IntVector& agg, CharPtrVector& aggindex);
+extern int ReadLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrVector& lenindex);
+extern int ReadPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
+  DoubleMatrix& preylengths, FormulaMatrix& digestioncoeff, CharPtrVector& preyindex, Keeper* const keeper);
 
 #endif

@@ -3,13 +3,13 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-Parameter& Parametervector::operator [] (int pos) {
+Parameter& ParameterVector::operator [] (int pos) {
   return v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-Parameter const& Parametervector::operator [] (int pos) const {
+Parameter const& ParameterVector::operator [] (int pos) const {
   return v[pos];
 }

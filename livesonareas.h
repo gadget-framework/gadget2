@@ -9,13 +9,13 @@ class LivesOnAreas {
 public:
   LivesOnAreas() {};
   virtual ~LivesOnAreas() {};
-  LivesOnAreas(const intvector& Areas);
+  LivesOnAreas(const IntVector& Areas);
   int IsInArea(int area) const;
-  const intvector& Areas() const;
+  const IntVector& Areas() const;
 protected:
-  void LetLiveOnAreas(const intvector& Areas);
-  intvector areas;
-  intvector AreaNr;
+  void LetLiveOnAreas(const IntVector& Areas);
+  IntVector areas;
+  IntVector AreaNr;
 };
 
 #endif

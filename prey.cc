@@ -7,7 +7,7 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
-Prey::Prey(CommentStream& infile, const intvector& Areas, const char* givenname, Keeper* const keeper)
+Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname, Keeper* const keeper)
   : HasName(givenname), LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
   ErrorHandler handle;
@@ -17,8 +17,8 @@ Prey::Prey(CommentStream& infile, const intvector& Areas, const char* givenname,
   int i;
 
   //Read the prey length group data
-  doublevector preylengths;
-  charptrvector preylenindex;
+  DoubleVector preylengths;
+  CharPtrVector preylenindex;
   char aggfilename[MaxStrLength];
   strncpy(aggfilename, "", MaxStrLength);
   ifstream datafile;
@@ -45,7 +45,7 @@ Prey::Prey(CommentStream& infile, const intvector& Areas, const char* givenname,
     delete[] preylenindex[i];
 }
 
-Prey::Prey(const doublevector& lengths, const intvector& Areas, const char* givenname)
+Prey::Prey(const DoubleVector& lengths, const IntVector& Areas, const char* givenname)
   : HasName(givenname), LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
   LgrpDiv = new LengthGroupDivision(lengths);
@@ -55,7 +55,7 @@ Prey::Prey(const doublevector& lengths, const intvector& Areas, const char* give
 }
 
 void Prey::InitializeObjects() {
-  popinfo nullpop;
+  PopInfo nullpop;
 
   while (Number.Nrow())
     Number.DeleteRow(0);
@@ -153,9 +153,9 @@ void Prey::Print(ofstream& outfile) const {
 }
 
 //Reduce the population of the stock by the consumption.
-void Prey::Subtract(Agebandmatrix& Alkeys, int area) {
+void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
   const int inarea = AreaNr[area];
-  doublevector conS(cons[inarea].Size());
+  DoubleVector conS(cons[inarea].Size());
   int len;
   for (len = 0; len < conS.Size(); len++)
     conS[len] = (Number[inarea][len].W > 0 ? cons[inarea][len] / Number[inarea][len].W : 0);
@@ -164,7 +164,7 @@ void Prey::Subtract(Agebandmatrix& Alkeys, int area) {
 
 //Calculates the consumption. The function gets the consumption in
 //mass units, later they are converted to numbers.
-void Prey::AddConsumption(int area, const doubleindexvector& predconsumption) {
+void Prey::AddConsumption(int area, const DoubleIndexVector& predconsumption) {
   int i;
   for (i = predconsumption.Mincol(); i < predconsumption.Maxcol(); i++)
     cons[AreaNr[area]][i] += predconsumption[i];
@@ -201,12 +201,12 @@ void Prey::CheckConsumption(int area, int NrOfSubsteps) {
   tooMuchConsumption[inarea] = temp;
 }
 
-const doublevector& Prey::Bconsumption(int area) const {
+const DoubleVector& Prey::Bconsumption(int area) const {
   return consumption[AreaNr[area]];
 }
 
 //CheckConsumption has to be called before this one is.
-const doublevector& Prey::OverConsumption(int area) const {
+const DoubleVector& Prey::OverConsumption(int area) const {
   return overconsumption[AreaNr[area]];
 }
 
@@ -228,11 +228,11 @@ void Prey::Reset() {
 }
 
 //Return the original number of prey in an area.
-const popinfovector& Prey::NumberPriortoEating(int area) const {
+const PopInfoVector& Prey::NumberPriortoEating(int area) const {
   return numberPriortoEating[AreaNr[area]];
 }
 
-void Prey::Multiply(Agebandmatrix& stock_alkeys, const doublevector& rat) {
+void Prey::Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& rat) {
   //written by kgf 31/7 98
   //Note! ratio is supposed to have equal dimensions to Prey.
   stock_alkeys.Multiply(rat, *CI);

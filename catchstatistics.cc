@@ -122,7 +122,7 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea, int numage) {
 
   int i;
-  intvector Years, Steps;
+  IntVector Years, Steps;
   int year, step;
   double tmpnumber, tmpmean, tmpstddev;
   char tmparea[MaxStrLength], tmpage[MaxStrLength];
@@ -175,10 +175,10 @@ void CatchStatistics::ReadStatisticsData(CommentStream& infile,
       if (timeid == -1) {
         Years.resize(1, year);
         Steps.resize(1, step);
-        numbers.resize(1, new doublematrix(numarea, numage, 0.0));
-        mean.resize(1, new doublematrix(numarea, numage, 0.0));
+        numbers.resize(1, new DoubleMatrix(numarea, numage, 0.0));
+        mean.resize(1, new DoubleMatrix(numarea, numage, 0.0));
         if (needvar == 1)
-          variance.resize(1, new doublematrix(numarea, numage, 0.0));
+          variance.resize(1, new DoubleMatrix(numarea, numage, 0.0));
         timeid = (Years.Size() - 1);
       }
 
@@ -265,10 +265,10 @@ void CatchStatistics::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void CatchStatistics::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks) {
+void CatchStatistics::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, found;
-  Fleetptrvector fleets;
-  Stockptrvector stocks;
+  FleetPtrVector fleets;
+  StockPtrVector stocks;
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
@@ -327,7 +327,7 @@ double CatchStatistics::SOSWeightOrLength() {
   double simmean, simvar, simnumber, simdiff;
 
   simmean = simvar = simnumber = simdiff = 0.0;
-  const agebandmatrixptrvector *alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector *alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < alptr->Size(); nareas++) {
     for (age = 0; age < (*alptr)[nareas].Nrow(); age++) {
       PopStatistics PopStat((*alptr)[nareas][age], aggregator->ReturnLgrpDiv());

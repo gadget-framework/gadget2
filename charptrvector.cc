@@ -5,7 +5,7 @@
 #include "charptrvector.icc"
 #endif
 
-charptrvector::charptrvector(int sz) {
+CharPtrVector::CharPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new char*[size];
@@ -13,7 +13,7 @@ charptrvector::charptrvector(int sz) {
     v = 0;
 }
 
-charptrvector::charptrvector(int sz, char* value) {
+CharPtrVector::CharPtrVector(int sz, char* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -24,7 +24,7 @@ charptrvector::charptrvector(int sz, char* value) {
     v = 0;
 }
 
-charptrvector::charptrvector(const charptrvector& initial) {
+CharPtrVector::CharPtrVector(const CharPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -35,15 +35,14 @@ charptrvector::charptrvector(const charptrvector& initial) {
     v = 0;
 }
 
-charptrvector::~charptrvector() {
+CharPtrVector::~CharPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a charptrvector and fills it vith value.
-void charptrvector::resize(int addsize, char* value) {
+void CharPtrVector::resize(int addsize, char* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,7 +51,7 @@ void charptrvector::resize(int addsize, char* value) {
       v[i] = value;
 }
 
-void charptrvector::resize(int addsize) {
+void CharPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -67,7 +66,7 @@ void charptrvector::resize(int addsize) {
   }
 }
 
-void charptrvector::Delete(int pos) {
+void CharPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   char** vnew = new char*[size - 1];

@@ -16,15 +16,15 @@
  *  Purpose:  Constructor
  *
  *  In:  CommentStream& infile   :file to read survey indices from
- *       intvector& areas        :areas
- *       doublevector& lengths   :lengths
- *       intmatrix& ages         :ages
+ *       IntVector& areas        :areas
+ *       DoubleVector& lengths   :lengths
+ *       IntMatrix& ages         :ages
  *       TimeClass* TimeInfo     :time defenitions
  */
 SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
-  const intvector& areas, const doublevector& lengths,
-  const intmatrix& ages, const TimeClass* const TimeInfo, Keeper* const keeper,
-  const charptrvector& lenindex, const charptrvector& ageindex,
+  const IntVector& areas, const DoubleVector& lengths,
+  const IntMatrix& ages, const TimeClass* const TimeInfo, Keeper* const keeper,
+  const CharPtrVector& lenindex, const CharPtrVector& ageindex,
   const char* arealabel, const char* datafilename)
   : SIOnStep(infile, datafilename, arealabel, TimeInfo, 1, ageindex, lenindex),  //reads fit type and years/steps
    aggregator(0), LgrpDiv(0), Areas(areas), Ages(ages) {
@@ -77,7 +77,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   infile >> text >> ws;
   if ((strcasecmp(text, "function") == 0)) {
     infile >> text;
-    SuitfuncPtrvector tempsuitfunc;
+    SuitFuncPtrVector tempsuitfunc;
     if (readSuitFunction(tempsuitfunc, infile, text, TimeInfo, keeper)) {
       suitfunction = tempsuitfunc[0];
       if (suitfunction->usesPredLength())
@@ -122,7 +122,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
 
   //first resize indexMatrix to store the data
   for (i = 0; i < q_y.Size(); i++)
-    indexMatrix.resize(1, new doublematrix(Ages.Nrow(), LgrpDiv->NoLengthGroups(), 0.0));
+    indexMatrix.resize(1, new DoubleMatrix(Ages.Nrow(), LgrpDiv->NoLengthGroups(), 0.0));
 
   //then read the survey indices data from the datafile
   ifstream datafile;
@@ -138,7 +138,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
 
   index = 0;
   for (i = 0; i < indexMatrix.Size(); i++)
-    calc_index.resize(1, new doublematrix(Ages.Nrow(), LgrpDiv->NoLengthGroups(), 0.0));
+    calc_index.resize(1, new DoubleMatrix(Ages.Nrow(), LgrpDiv->NoLengthGroups(), 0.0));
   lik_val_on_step.resize(Years.Size(), 0.0);
   max_val_on_step.resize(Years.Size(), 0.0);
   l_index.resize(Years.Size(), 0);
@@ -151,7 +151,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
 }
 
 void SIByLengthAndAgeOnStep::ReadSurveyData(CommentStream& infile, const char* arealabel,
-  const charptrvector& lenindex, const charptrvector& ageindex, const TimeClass* TimeInfo) {
+  const CharPtrVector& lenindex, const CharPtrVector& ageindex, const TimeClass* TimeInfo) {
 
   int i;
   int year, step;
@@ -230,9 +230,9 @@ SIByLengthAndAgeOnStep::~SIByLengthAndAgeOnStep() {
   delete LgrpDiv;
 }
 
-void SIByLengthAndAgeOnStep::SetStocks(const Stockptrvector& Stocks) {
+void SIByLengthAndAgeOnStep::SetStocks(const StockPtrVector& Stocks) {
   int i, j;
-  intmatrix areas(1, Areas.Size());
+  IntMatrix areas(1, Areas.Size());
   for (i = 0; i < Areas.Size(); i++)
     areas[0][i] = Areas[i];
 
@@ -258,8 +258,8 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
     return;
   FitType ftype = this->getFitType();
   aggregator->MeanSum(); //aggregate mean N values in present time step
-  //Use that the agebandmatrixptrvector aggregator->ReturnMeanSum returns only one element.
-  const Agebandmatrix* alptr = &(aggregator->ReturnMeanSum()[0]);
+  //Use that the AgeBandMatrixPtrVector aggregator->ReturnMeanSum returns only one element.
+  const AgeBandMatrix* alptr = &(aggregator->ReturnMeanSum()[0]);
   this->calcIndex(alptr, ftype);
   switch(opttype) {
     case 0:
@@ -284,7 +284,7 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   index++;
 }
 
-void SIByLengthAndAgeOnStep::calcIndex(const Agebandmatrix* alptr, FitType ftype) {
+void SIByLengthAndAgeOnStep::calcIndex(const AgeBandMatrix* alptr, FitType ftype) {
   //written by kgf 13/10 98
   int age, len;
   int maxage = alptr->Maxage();
@@ -475,8 +475,8 @@ void SIByLengthAndAgeOnStep::PrintLikelihoodOnStep(ofstream& surveyfile, int pri
   double step_val = 0.0;
   char pre = 0;
   double diff = 0.0;
-  doublematrix& calcI = *calc_index[index];
-  doublematrix& obsI = *indexMatrix[index];
+  DoubleMatrix& calcI = *calc_index[index];
+  DoubleMatrix& obsI = *indexMatrix[index];
 
   if (print_type == 0) {                       //print log(I/I_hat)
     surveyfile << "log(I/I_hat) by age and length\n";
@@ -561,8 +561,8 @@ void SIByLengthAndAgeOnStep::PrintLikelihood(ofstream& surveyfile, const TimeCla
   int age, length;
 
   //index was increased before this is called, so we subtract 1.
-  doublematrix& calcI = *calc_index[index - 1];
-  doublematrix& obsI = *indexMatrix[index - 1];
+  DoubleMatrix& calcI = *calc_index[index - 1];
+  DoubleMatrix& obsI = *indexMatrix[index - 1];
 
   surveyfile << "\nTime:    Year " << TimeInfo.CurrentYear() << " Step "
     << TimeInfo.CurrentStep() << "\nName:    " << name << "\nArea:    "

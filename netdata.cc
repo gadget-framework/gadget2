@@ -6,7 +6,7 @@
 #include "paramin.h"
 #endif
 
-netDataVariables::netDataVariables(int numVar) {
+NetDataVariables::NetDataVariables(int numVar) {
   tag = -1;
   x_id = -1;
   if (numVar < 1) {
@@ -16,12 +16,12 @@ netDataVariables::netDataVariables(int numVar) {
   x = new double[numVar];
 }
 
-netDataVariables::~netDataVariables() {
+NetDataVariables::~NetDataVariables() {
   delete[] x;
 }
 
-netDataResult::netDataResult() {
+NetDataResult::NetDataResult() {
 }
 
-netDataResult::~netDataResult() {
+NetDataResult::~NetDataResult() {
 }

@@ -1,12 +1,12 @@
 #include "popratio.h"
 #include "gadget.h"
 
-popratio::popratio() {
+PopRatio::PopRatio() {
   N = NULL;
   R = -1.0;
 }
 
-popratio& popratio::operator = (const popratio& a) {
+PopRatio& PopRatio::operator = (const PopRatio& a) {
   if (a.N == NULL) {
     N = NULL;
     R = -1.0;
@@ -22,20 +22,20 @@ popratio& popratio::operator = (const popratio& a) {
   return *this;
 }
 
-popratio& popratio::operator += (const popratio& a) {
+PopRatio& PopRatio::operator += (const PopRatio& a) {
   assert(N != NULL);
   R = -1.0;
   *N = *N + *(a.N);
   return *this;
 }
 
-void popratio::operator -= (double a) {
+void PopRatio::operator -= (double a) {
   assert(N != NULL);
   *N -= a;
   R = -1.0;
 }
 
-void popratio::operator *= (double a) {
+void PopRatio::operator *= (double a) {
   assert(N != NULL);
   *N *= a;
   R = -1.0;

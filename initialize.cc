@@ -35,9 +35,9 @@
 #include "catchintons.h"
 
 void Ecosystem::Initialize(int optimize) {
-  Preyptrvector preyvec;
-  Predatorptrvector predvec;
-  PopPredatorptrvector poppredvec;
+  PreyPtrVector preyvec;
+  PredatorPtrVector predvec;
+  PopPredatorPtrVector poppredvec;
   int preyindex = 0;
   int predindex = 0;
   int poppredindex = 0;

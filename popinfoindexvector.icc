@@ -3,7 +3,7 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-popinfo& popinfoindexvector::operator [] (int pos) {
+PopInfo& PopInfoIndexVector::operator [] (int pos) {
   assert(minpos <= pos && pos < minpos + size);
   return v[pos - minpos];
 }
@@ -11,7 +11,7 @@ popinfo& popinfoindexvector::operator [] (int pos) {
 #ifdef GADGET_INLINE
 inline
 #endif
-const popinfo& popinfoindexvector::operator [] (int pos) const {
+const PopInfo& PopInfoIndexVector::operator [] (int pos) const {
   assert(minpos <= pos && pos < minpos + size);
   return v[pos - minpos];
 }

@@ -9,7 +9,7 @@
 #include "readfunc.h"
 #include "gadget.h"
 
-Predator::Predator(const char* givenname, const intvector& Areas)
+Predator::Predator(const char* givenname, const IntVector& Areas)
   : HasName(givenname), LivesOnAreas(Areas), Suitable(0) {
 }
 
@@ -20,7 +20,7 @@ Predator::~Predator() {
   delete Suitable;
 }
 
-void Predator::SetPrey(Preyptrvector& preyvec, Keeper* const keeper) {
+void Predator::SetPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   assert(preys.Size() == 0);
   //Resize the vector preys and initialize pointers to 0.
   preys.resize(this->NoPreys(), 0);
@@ -124,7 +124,7 @@ int Predator::ReadSuitabilityMatrix(CommentStream& infile,
   // or 2. nameofprey nameoffilecontainingmatrix constant
 
   Suitable = new Suits();
-  SuitfuncPtrvector suitf;
+  SuitFuncPtrVector suitf;
   ErrorHandler handle;
   int i, j;
   char preyname[MaxStrLength];
@@ -154,14 +154,14 @@ int Predator::ReadSuitabilityMatrix(CommentStream& infile,
     } else if (strcasecmp(text, "suitfile") == 0) {
       infile >> text;
 
-      doublematrix dm;
+      DoubleMatrix dm;
       ifstream subfile(text);
       CommentStream subcomment(subfile);
       CheckIfFailure(subfile, text);
       handle.Open(text);
       i = 0;
       while (!subfile.eof()) {
-        doublevector dv;
+        DoubleVector dv;
         if (!ReadVectorInLine(subcomment, dv))
           handle.Message("Error in suitability matrix - failed to read data");
 

@@ -238,7 +238,7 @@ CatchInTons::~CatchInTons() {
   delete[] functionname;
 }
 
-void CatchInTons::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks) {
+void CatchInTons::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, k, found;
 
   for (i = 0; i < fleetnames.Size(); i++) {

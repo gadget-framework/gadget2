@@ -10,7 +10,7 @@
 #include "gadget.h"
 
 #include "runid.h"
-extern RunId RUNID;
+extern RunID RUNID;
 
 PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
@@ -50,7 +50,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   datafile.clear();
 
   //Read in length aggregation from file
-  doublevector lengths;
+  DoubleVector lengths;
   ReadWordAndValue(infile, "lenaggfile", filename);
   datafile.open(filename);
   CheckIfFailure(datafile, filename);
@@ -101,8 +101,8 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   outfile.flush();
 }
 
-void PreyOverPrinter::SetPrey(Preyptrvector& preyvec) {
-  Preyptrvector preys;
+void PreyOverPrinter::SetPrey(PreyPtrVector& preyvec) {
+  PreyPtrVector preys;
   int index = 0;
   int i, j;
   for (i = 0; i < preyvec.Size(); i++)
@@ -129,7 +129,7 @@ void PreyOverPrinter::Print(const TimeClass* const TimeInfo) {
   if (!aat.AtCurrentTime(TimeInfo))
     return;
   aggregator->Sum();
-  const doublematrix *dptr = &aggregator->ReturnSum();
+  const DoubleMatrix *dptr = &aggregator->ReturnSum();
   int i, j;
   for (i = 0; i < areas.Nrow(); i++) {
     for (j = 0; j < dptr->Ncol(i); j++) {

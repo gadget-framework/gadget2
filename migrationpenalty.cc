@@ -28,14 +28,14 @@ void MigrationPenalty::AddToLikelihood(const TimeClass* const TimeInfo) {
   likelihood = 0;
   int i;
   if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps()) {
-    doublevector penalty(stock->ReturnMigration()->Penalty());
+    DoubleVector penalty(stock->ReturnMigration()->Penalty());
     for (i = 0; i < penalty.Size(); i++)
       likelihood += pow(penalty[i], powercoeffs[0]);
     likelihood = pow(likelihood, powercoeffs[1]);
   }
 }
 
-void MigrationPenalty::SetStocks(Stockptrvector Stocks) {
+void MigrationPenalty::SetStocks(StockPtrVector Stocks) {
   int i;
   int found = 0;
   for (i = 0; i < Stocks.Size(); i++)

@@ -9,7 +9,7 @@ class BaseClass : public HasName, public LivesOnAreas {
 public:
   BaseClass() : error(0) {};
   BaseClass(const char* givenname) : HasName(givenname), error(0) {};
-  BaseClass(const char* givenname, const intvector& Areas) : HasName(givenname), LivesOnAreas(Areas), error(0) {};
+  BaseClass(const char* givenname, const IntVector& Areas) : HasName(givenname), LivesOnAreas(Areas), error(0) {};
   virtual ~BaseClass() {};
   virtual void CalcEat(int area, const AreaClass* const Area,
     const TimeClass* const TimeInfo) = 0;

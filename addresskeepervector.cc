@@ -1,49 +1,48 @@
-#include "addr_keepvector.h"
+#include "addresskeepervector.h"
 #include "gadget.h"
 
 #ifndef GADGET_INLINE
-#include "addr_keepvector.icc"
+#include "addresskeepervector.icc"
 #endif
 
-addr_keepvector::addr_keepvector(int sz) {
+AddressKeeperVector::AddressKeeperVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
-    v = new addr_keep[size];
+    v = new AddressKeeper[size];
   else
     v = 0;
 }
 
-addr_keepvector::addr_keepvector(int sz, addr_keep value) {
+AddressKeeperVector::AddressKeeperVector(int sz, AddressKeeper value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
-    v = new addr_keep[size];
+    v = new AddressKeeper[size];
     for (i = 0; i < size; i++)
       v[i] = value;
   } else
     v = 0;
 }
 
-addr_keepvector::addr_keepvector(const addr_keepvector& initial) {
+AddressKeeperVector::AddressKeeperVector(const AddressKeeperVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
-    v = new addr_keep[size];
+    v = new AddressKeeper[size];
     for (i = 0; i < size; i++)
       v[i] = initial.v[i];
   } else
     v = 0;
 }
 
-addr_keepvector::~addr_keepvector() {
+AddressKeeperVector::~AddressKeeperVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a addr_keepvector and fills it vith value.
-void addr_keepvector::resize(int addsize, addr_keep value) {
+void AddressKeeperVector::resize(int addsize, AddressKeeper value) {
   int oldsize = size;
   int i;
   this->resize(addsize);
@@ -52,13 +51,13 @@ void addr_keepvector::resize(int addsize, addr_keep value) {
       v[i] = value;
 }
 
-void addr_keepvector::resize(int addsize) {
+void AddressKeeperVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
-    v = new addr_keep[size];
+    v = new AddressKeeper[size];
   } else if (addsize > 0) {
-    addr_keep* vnew = new addr_keep[addsize + size];
+    AddressKeeper* vnew = new AddressKeeper[addsize + size];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
@@ -67,10 +66,10 @@ void addr_keepvector::resize(int addsize) {
   }
 }
 
-void addr_keepvector::Delete(int pos) {
+void AddressKeeperVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
-  addr_keep* vnew = new addr_keep[size - 1];
+  AddressKeeper* vnew = new AddressKeeper[size - 1];
   int i;
   for (i = 0; i < pos; i++)
     vnew[i] = v[i];

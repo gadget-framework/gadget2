@@ -3,8 +3,8 @@
 #include "errorhandler.h"
 #include "gadget.h"
 
-doublematrix* ReadMatrix(CommentStream& infile, int x, int y) {
-  doublematrix* M =  new doublematrix(x, y);
+DoubleMatrix* ReadMatrix(CommentStream& infile, int x, int y) {
+  DoubleMatrix* M =  new DoubleMatrix(x, y);
   if (ReadMatrix(infile, *M))
     return M;
   else {
@@ -13,7 +13,7 @@ doublematrix* ReadMatrix(CommentStream& infile, int x, int y) {
   }
 }
 
-int ReadMatrix(CommentStream& infile, doublematrix& M) {
+int ReadMatrix(CommentStream& infile, DoubleMatrix& M) {
   infile >> ws;
   int x = M.Nrow();
   int y = M.Ncol();
@@ -45,8 +45,8 @@ int ReadMatrix(CommentStream& infile, doublematrix& M) {
   return 1;
 }
 
-doublevector* ReadVector(CommentStream& infile, int length) {
-  doublevector *Vec = new doublevector(length);
+DoubleVector* ReadVector(CommentStream& infile, int length) {
+  DoubleVector *Vec = new DoubleVector(length);
   if (ReadVector(infile, *Vec))
     return Vec;
   else {
@@ -55,7 +55,7 @@ doublevector* ReadVector(CommentStream& infile, int length) {
   }
 }
 
-int ReadVector(CommentStream& infile, intvector& Vec) {
+int ReadVector(CommentStream& infile, IntVector& Vec) {
   if (infile.fail())
     return 0;
   int i;
@@ -70,7 +70,7 @@ int ReadVector(CommentStream& infile, intvector& Vec) {
   return 1;
 }
 
-int ReadVector(CommentStream& infile, doublevector& Vec) {
+int ReadVector(CommentStream& infile, DoubleVector& Vec) {
   if (infile.fail())
     return 0;
   int i;
@@ -85,8 +85,8 @@ int ReadVector(CommentStream& infile, doublevector& Vec) {
   return 1;
 }
 
-doubleindexvector* ReadIndexVector(CommentStream& infile, int length, int minlength) {
-  doubleindexvector *iv = new doubleindexvector(length, minlength);
+DoubleIndexVector* ReadIndexVector(CommentStream& infile, int length, int minlength) {
+  DoubleIndexVector *iv = new DoubleIndexVector(length, minlength);
   if (ReadIndexVector(infile, *iv))
     return iv;
   else {
@@ -95,7 +95,7 @@ doubleindexvector* ReadIndexVector(CommentStream& infile, int length, int minlen
   }
 }
 
-int ReadIndexVector(CommentStream& infile, doubleindexvector& Vec) {
+int ReadIndexVector(CommentStream& infile, DoubleIndexVector& Vec) {
   if (infile.fail())
     return 0;
 
@@ -113,7 +113,7 @@ int ReadIndexVector(CommentStream& infile, doubleindexvector& Vec) {
   return 1;
 }
 
-int ReadVectorInLine(CommentStream& infile, intvector& Vec) {
+int ReadVectorInLine(CommentStream& infile, IntVector& Vec) {
   if (infile.fail())
     return 0;
   char line[MaxStrLength];
@@ -140,7 +140,7 @@ int ReadVectorInLine(CommentStream& infile, intvector& Vec) {
   return 1;
 }
 
-int ReadVectorInLine(CommentStream& infile, doublevector& Vec) {
+int ReadVectorInLine(CommentStream& infile, DoubleVector& Vec) {
   if (infile.fail())
     return 0;
   char line[MaxStrLength];
@@ -167,7 +167,7 @@ int ReadVectorInLine(CommentStream& infile, doublevector& Vec) {
   return 1;
 }
 
-int Read2ColVector(CommentStream& infile, doublematrix& M) {
+int Read2ColVector(CommentStream& infile, DoubleMatrix& M) {
   int i, j;
   double N;
   infile >> ws;
@@ -194,7 +194,7 @@ int Read2ColVector(CommentStream& infile, doublematrix& M) {
   return 1;
 }
 
-int ReadTextInLine(CommentStream& infile, charptrvector& text) {
+int ReadTextInLine(CommentStream& infile, CharPtrVector& text) {
   if (infile.fail())
     return 0;
   char line[MaxStrLength];

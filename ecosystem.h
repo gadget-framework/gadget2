@@ -3,7 +3,7 @@
 
 #include "stock.h"
 #include "baseclassptrvector.h"
-#include "otherfood.h"
+#include "otherfoodptrvector.h"
 #include "readfunc.h"
 #include "errorhandler.h"
 #include "print.h"
@@ -42,20 +42,20 @@ public:
   void PrintValuesinColumns(const char* const filename, int prec) const;
   void PrintParamsinColumns(const char* const filename, int prec) const;
   void Update(const StochasticData* const Stochastic) const;
-  void Update(const doublevector& values) const;
+  void Update(const DoubleVector& values) const;
   int NoVariables() const { return keeper->NoVariables(); };
-  void Opt(intvector& opt) const;
-  void ValuesOfVariables(doublevector& val) const;
-  void InitialOptValues(doublevector &initialval) const;
-  void ScaledOptValues(doublevector &initialval) const;
-  void OptSwitches(Parametervector& sw) const;
-  void OptValues(doublevector &val) const;
-  void LowerBds(doublevector& lbds) const;
-  void UpperBds(doublevector& ubds) const;
-  void InitialValues(doublevector &initialval) const;
+  void Opt(IntVector& opt) const;
+  void ValuesOfVariables(DoubleVector& val) const;
+  void InitialOptValues(DoubleVector &initialval) const;
+  void ScaledOptValues(DoubleVector &initialval) const;
+  void OptSwitches(ParameterVector& sw) const;
+  void OptValues(DoubleVector &val) const;
+  void LowerBds(DoubleVector& lbds) const;
+  void UpperBds(DoubleVector& ubds) const;
+  void InitialValues(DoubleVector &initialval) const;
   int NoOptVariables() const;
   void ScaleVariables() const;
-  void ScaledValues(doublevector& val) const;
+  void ScaledValues(DoubleVector& val) const;
   void SimulateOneAreaOneTimeSubstep(int area);
   void GrowthAndSpecialTransactions(int area);
   void UpdateOneTimestepOneArea(int area);
@@ -71,24 +71,24 @@ public:
 protected:
   double likelihood;
   int funceval;
-  BaseClassptrvector basevec;
-  Likelihoodptrvector Likely;
-  Printerptrvector printvec;
-  Printerptrvector likprintvec; //Seperate vector for likelihood printers,
+  BaseClassPtrVector basevec;
+  LikelihoodPtrVector Likely;
+  PrinterPtrVector printvec;
+  PrinterPtrVector likprintvec; //Seperate vector for likelihood printers,
                                 //so they can be called at a different time
                                 //than the normal printers. [10.04.00 mnaa]
   TimeClass*  TimeInfo;
   AreaClass*  Area;
   Keeper* keeper;
-  charptrvector catchnames;
-  charptrvector stocknames;
-  Stockptrvector stockvec;
-  charptrvector tagnames;
-  Tagptrvector tagvec;
-  charptrvector otherfoodnames;
-  OtherFoodptrvector otherfoodvec;
-  charptrvector fleetnames;
-  Fleetptrvector fleetvec;
+  CharPtrVector catchnames;
+  CharPtrVector stocknames;
+  StockPtrVector stockvec;
+  CharPtrVector tagnames;
+  TagPtrVector tagvec;
+  CharPtrVector otherfoodnames;
+  OtherFoodPtrVector otherfoodvec;
+  CharPtrVector fleetnames;
+  FleetPtrVector fleetvec;
   PrintInfo  printinfo;
   friend class InterruptInterface;
 };

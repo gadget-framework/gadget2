@@ -12,13 +12,13 @@ class NaturalM {
 public:
   NaturalM(CommentStream& infile, int minage, int maxage,
     const TimeClass* const TimeInfo, Keeper* const keeper);
-  const doublevector& ProportionSurviving(const TimeClass* const TimeInfo) const;
-  const doubleindexvector& getMortality() const;
+  const DoubleVector& ProportionSurviving(const TimeClass* const TimeInfo) const;
+  const DoubleIndexVector& getMortality() const;
   void Reset(const TimeClass* const TimeInfo);
   void Print(ofstream& outfile);
 protected:
   TimeVariableIndexVector mortality;
-  doublevector proportion;
+  DoubleVector proportion;
 };
 
 #endif

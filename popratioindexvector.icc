@@ -3,7 +3,7 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-popratiovector& popratioindexvector::operator [] (int pos) {
+PopRatioVector& PopRatioIndexVector::operator [] (int pos) {
   assert(minpos <= pos && pos < minpos + size);
   return *v[pos - minpos];
 }
@@ -11,7 +11,7 @@ popratiovector& popratioindexvector::operator [] (int pos) {
 #ifdef GADGET_INLINE
 inline
 #endif
-const popratiovector& popratioindexvector::operator [] (int pos) const {
+const PopRatioVector& PopRatioIndexVector::operator [] (int pos) const {
   assert(minpos <= pos && pos < minpos + size);
   return *v[pos - minpos];
 }

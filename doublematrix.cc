@@ -6,75 +6,69 @@
 #include "doublematrix.icc"
 #endif
 
-//constructor for a rectangular doublematrix.
-doublematrix::doublematrix(int nr, int nc) {
+DoubleMatrix::DoubleMatrix(int nr, int nc) {
   assert((nr > 0) && (nc > 0));
   nrow = nr;
-  v = new doublevector*[nr];
+  v = new DoubleVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new doublevector(nc);
+    v[i] = new DoubleVector(nc);
 }
 
-doublematrix::doublematrix(double* initial, int nr, int nc) {
+DoubleMatrix::DoubleMatrix(double* initial, int nr, int nc) {
   assert(initial != NULL);
   assert((nr > 0) && (nc > 0));
   nrow = nr;
-  v = new doublevector*[nr];
+  v = new DoubleVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new doublevector(&initial[i * nc], nc);
+    v[i] = new DoubleVector(&initial[i * nc], nc);
 }
 
-//constructor for a rectangular doublematrix with initial value.
-doublematrix::doublematrix(int nr, int nc, double value) {
+DoubleMatrix::DoubleMatrix(int nr, int nc, double value) {
   nrow = nr;
-  v = new doublevector*[nr];
+  v = new DoubleVector*[nr];
   int i, j;
   for (i = 0; i < nr; i++)
-    v[i] = new doublevector(nc);
+    v[i] = new DoubleVector(nc);
   for (i = 0; i < nr; i++) {
     for (j = 0; j < nc; j++)
       (*v[i])[j] = value;
   }
 }
 
-//constructor for a possibly nonrectangular doublematrix
-//the rows need not have the same number of columns.
-doublematrix::doublematrix(int nr, const intvector& nc) {
+DoubleMatrix::DoubleMatrix(int nr, const IntVector& nc) {
   nrow = nr;
-  v = new doublevector*[nr];
+  v = new DoubleVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new doublevector(nc[i]);
+    v[i] = new DoubleVector(nc[i]);
 }
 
-//constructor for doublematrix when all rows do not need to have
-//the same number of columns, with initial value.
-doublematrix::doublematrix(int nr, const intvector& nc, double value) {
+DoubleMatrix::DoubleMatrix(int nr, const IntVector& nc, double value) {
   nrow = nr;
-  v = new doublevector*[nr];
+  v = new DoubleVector*[nr];
   int i, j;
   for (i = 0; i < nr; i++)
-    v[i] = new doublevector(nc[i]);
+    v[i] = new DoubleVector(nc[i]);
   for (i = 0; i < nr; i++)
     for (j = 0; j < nc[i]; j++)
       (*v[i])[j] = value;
 }
 
-doublematrix::doublematrix(const doublematrix& initial) : nrow(initial.nrow) {
+DoubleMatrix::DoubleMatrix(const DoubleMatrix& initial) : nrow(initial.nrow) {
   int i;
   if (nrow >= 0) {
-    v = new doublevector*[nrow];
+    v = new DoubleVector*[nrow];
     for (i = 0; i < nrow; i++)
-      v[i] = new doublevector(initial[i]);
+      v[i] = new DoubleVector(initial[i]);
   } else {
     v = 0;
     nrow = 0;
   }
 }
 
-doublematrix::~doublematrix() {
+DoubleMatrix::~DoubleMatrix() {
   int i;
   if (v != 0) {
     for (i = 0; i < nrow; i++)
@@ -84,21 +78,21 @@ doublematrix::~doublematrix() {
   }
 }
 
-void doublematrix::AddRows(int add, int length) {
+void DoubleMatrix::AddRows(int add, int length) {
   if (v == 0)
     nrow = 0;
-  doublevector** vnew = new doublevector*[nrow + add];
+  DoubleVector** vnew = new DoubleVector*[nrow + add];
   int i;
   for (i = 0; i < nrow; i++)
     vnew[i] = v[i];
   delete[] v;
   v = vnew;
   for (i = nrow; i < nrow + add; i++)
-    v[i] = new doublevector(length);
+    v[i] = new DoubleVector(length);
   nrow += add;
 }
 
-void doublematrix::AddRows(int add, int length, double initial) {
+void DoubleMatrix::AddRows(int add, int length, double initial) {
   if (v == 0)
     nrow = 0;
   int oldnrow = nrow;
@@ -109,11 +103,11 @@ void doublematrix::AddRows(int add, int length, double initial) {
       (*v[i])[j] = initial;
 }
 
-void doublematrix::DeleteRow(int row) {
+void DoubleMatrix::DeleteRow(int row) {
   assert(nrow > 0);
   assert(0 <= row && row < nrow);
   delete v[row];
-  doublevector** vnew = new doublevector*[nrow - 1];
+  DoubleVector** vnew = new DoubleVector*[nrow - 1];
   int i;
   for (i = 0; i < row; i++)
     vnew[i] = v[i];
@@ -124,7 +118,7 @@ void doublematrix::DeleteRow(int row) {
   nrow--;
 }
 
-int doublematrix::maxRowSize() const {
+int DoubleMatrix::maxRowSize() const {
   int maxrowsize = 0;
   int i;
   for (i = 0; i<nrow; i++)
@@ -133,7 +127,7 @@ int doublematrix::maxRowSize() const {
   return maxrowsize;
 }
 
-int doublematrix::minRowSize() const {
+int DoubleMatrix::minRowSize() const {
   if (nrow == 0)
     return 0;
   int minrowsize = Ncol(0);
@@ -144,7 +138,7 @@ int doublematrix::minRowSize() const {
   return minrowsize;
 }
 
-int doublematrix::isRectangular() const {
+int DoubleMatrix::isRectangular() const {
   return minRowSize() == maxRowSize();
 }
 
@@ -153,12 +147,12 @@ int doublematrix::isRectangular() const {
  *  Purpose:  Return a new matrix that is the sum of this and
  *            the argument matrix
  *
- *  In:   doublematrix& d       :matrix to add to this
+ *  In:   DoubleMatrix& d       :matrix to add to this
  *        int nrow              :number of rows in result
  *        int ncol      :number of columns in result
  */
-doublematrix&  doublematrix::addMatrix(const doublematrix& d, int nr, int ncol) const {
-  doublematrix* result = new doublematrix(nr, ncol, 0);
+DoubleMatrix&  DoubleMatrix::addMatrix(const DoubleMatrix& d, int nr, int ncol) const {
+  DoubleMatrix* result = new DoubleMatrix(nr, ncol, 0);
   int i, j, maxcol, maxrow;
   maxrow = min(nr, d.Nrow());
   for (i = 0; i < maxrow; i++) {
@@ -180,12 +174,12 @@ doublematrix&  doublematrix::addMatrix(const doublematrix& d, int nr, int ncol) 
  *  Purpose:  Return a new matrix that is the difference of this and
  *            the argument matrix
  *
- *  In:  doublematrix& d       :matrix to subtract from this
+ *  In:  DoubleMatrix& d       :matrix to subtract from this
  *       int nrow              :number of rows in result
  *       int ncol              :number of columns in result
  */
-doublematrix& doublematrix::subMatrix(const doublematrix& d, int nr, int ncol) const {
-  doublematrix* result = new doublematrix(nr, ncol, 0);
+DoubleMatrix& DoubleMatrix::subMatrix(const DoubleMatrix& d, int nr, int ncol) const {
+  DoubleMatrix* result = new DoubleMatrix(nr, ncol, 0);
   int i, j, maxcol, maxrow;
   maxrow = min(nr, Nrow());
   for (i = 0; i < maxrow; i++) {
@@ -202,7 +196,7 @@ doublematrix& doublematrix::subMatrix(const doublematrix& d, int nr, int ncol) c
   return *result;
 }
 
-doublematrix& doublematrix::operator += (const doublematrix& d) {
+DoubleMatrix& DoubleMatrix::operator += (const DoubleMatrix& d) {
   int i, j, maxcol, maxrow;
   maxrow = min(Nrow(), d.Nrow());
   for (i = 0; i < maxrow; i++) {
@@ -213,7 +207,7 @@ doublematrix& doublematrix::operator += (const doublematrix& d) {
   return *this;
 }
 
-doublematrix& doublematrix::operator -= (const doublematrix& d) {
+DoubleMatrix& DoubleMatrix::operator -= (const DoubleMatrix& d) {
   int i, j, maxcol, maxrow;
   maxrow = min(Nrow(), d.Nrow());
   for (i = 0; i < maxrow; i++) {
@@ -224,7 +218,7 @@ doublematrix& doublematrix::operator -= (const doublematrix& d) {
   return *this;
 }
 
-doublematrix& doublematrix::operator = (const doublematrix& d) {
+DoubleMatrix& DoubleMatrix::operator = (const DoubleMatrix& d) {
   if (this == &d)
     return *this;
   int i;
@@ -235,9 +229,9 @@ doublematrix& doublematrix::operator = (const doublematrix& d) {
   }
   nrow = d.nrow;
   if (nrow >= 0) {
-    v = new doublevector*[nrow];
+    v = new DoubleVector*[nrow];
     for (i = 0; i < nrow; i++)
-      v[i] = new doublevector(d[i]);
+      v[i] = new DoubleVector(d[i]);
   } else {
     v = 0;
     nrow = 0;
@@ -245,7 +239,7 @@ doublematrix& doublematrix::operator = (const doublematrix& d) {
   return *this;
 }
 
-int doublematrix::operator == (const doublematrix& d) const {
+int DoubleMatrix::operator == (const DoubleMatrix& d) const {
   if (Nrow() != d.Nrow())
     return 0;
   int i, j;
@@ -259,49 +253,49 @@ int doublematrix::operator == (const doublematrix& d) const {
   return 1;
 }
 
-void doublematrix::setElementsTo(double d) {
+void DoubleMatrix::setElementsTo(double d) {
   int i;
   for (i = 0; i < nrow; i++)
     v[i]->setElementsTo(d);
 }
 
-doublematrix& doublematrix::operator *= (double d) {
+DoubleMatrix& DoubleMatrix::operator *= (double d) {
   int i;
   for (i = 0; i < nrow; i++)
     (*v[i])*=d;
   return *this;
 }
 
-doublematrix& doublematrix::operator * (double d) const {
-  doublematrix* result = new doublematrix(*this);
+DoubleMatrix& DoubleMatrix::operator * (double d) const {
+  DoubleMatrix* result = new DoubleMatrix(*this);
   (*result) *= d;
   return *result;
 }
 
-doublematrix& doublematrix::operator -= (double d) {
+DoubleMatrix& DoubleMatrix::operator -= (double d) {
   return ((*this) += (-d));
 }
 
-doublematrix& doublematrix::operator - (double d) const {
-  doublematrix* result = new doublematrix(*this);
+DoubleMatrix& DoubleMatrix::operator - (double d) const {
+  DoubleMatrix* result = new DoubleMatrix(*this);
   (*result) -= d;
   return *result;
 }
 
-doublematrix& doublematrix::operator += (double d) {
+DoubleMatrix& DoubleMatrix::operator += (double d) {
   int i;
   for (i = 0; i < nrow; i++)
     (*v[i]) += d;
   return *this;
 }
 
-doublematrix& doublematrix::operator + (double d) const {
-  doublematrix* result = new doublematrix(*this);
+DoubleMatrix& DoubleMatrix::operator + (double d) const {
+  DoubleMatrix* result = new DoubleMatrix(*this);
   (*result) += d;
   return *result;
 }
 
-doublematrix& doublematrix::operator * (const doublematrix& d) const {
+DoubleMatrix& DoubleMatrix::operator * (const DoubleMatrix& d) const {
   int i, j, k;
   if (!isRectangular() || !d.isRectangular()) {
     cerr << "Error: matrix must be rectangular for multiplication!\n";
@@ -311,7 +305,7 @@ doublematrix& doublematrix::operator * (const doublematrix& d) const {
     cerr << "Error: wrong dimensions for matrix multiplication!\n";
     exit(EXIT_FAILURE);
   }
-  doublematrix* result = new doublematrix(Nrow(), d.Ncol(), 0);
+  DoubleMatrix* result = new DoubleMatrix(Nrow(), d.Ncol(), 0);
   for (i = 0; i < result->Nrow(); i++)
     for (j = 0; j < result->Ncol(); j++)
       for (k = 0; k < d.Nrow(); k++)
@@ -319,7 +313,7 @@ doublematrix& doublematrix::operator * (const doublematrix& d) const {
   return *result;
 }
 
-ostream& operator << (ostream& out, const doublematrix& d) {
+ostream& operator << (ostream& out, const DoubleMatrix& d) {
   int i;
   for (i = 0; i < d.Nrow(); i++)
     out << d[i] << endl;

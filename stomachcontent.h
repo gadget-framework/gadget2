@@ -23,7 +23,7 @@ public:
   virtual double Likelihood(const TimeClass* const);
   virtual void Reset();
   virtual void Print(ofstream&) const;
-  virtual void SetPredatorsAndPreys(Predatorptrvector&, Preyptrvector&);
+  virtual void SetPredatorsAndPreys(PredatorPtrVector&, PreyPtrVector&);
   virtual void Aggregate(int i);
   void print(ofstream& stomachfile, const TimeClass& time, const PrintInfo& print);
   virtual void printHeader(ofstream& stomachfile, const PrintInfo& print);
@@ -32,27 +32,27 @@ public:
   virtual void PrintLikelihood(ofstream&, const TimeClass& time) {};
   virtual void PrintLikelihoodHeader(ofstream&) {};
 protected:
-  virtual double CalculateLikelihood(doublematrixptrvector&, doublematrix&) = 0;
-  doublematrixptrmatrix stomachcontent;   //[timeindex][areas][pred_l][prey_l]
-  doublematrixptrmatrix modelConsumption; //[timeindex][areas][pred_l][prey_l]
-  charptrvector predatornames;
-  charptrmatrix preynames;
-  charptrvector areaindex;
-  charptrvector predindex;
-  charptrvector preyindex;
-  intvector Years;
-  intvector Steps;
-  doublevector predatorlengths;
-  intvector predatorages; //as an alternative to predatorlengths kgf 19/2 99
-  doublematrix preylengths;              //[prey_nr][prey_l]
-  intmatrix areas;
+  virtual double CalculateLikelihood(DoubleMatrixPtrVector&, DoubleMatrix&) = 0;
+  DoubleMatrixPtrMatrix stomachcontent;   //[timeindex][areas][pred_l][prey_l]
+  DoubleMatrixPtrMatrix modelConsumption; //[timeindex][areas][pred_l][prey_l]
+  CharPtrVector predatornames;
+  CharPtrMatrix preynames;
+  CharPtrVector areaindex;
+  CharPtrVector predindex;
+  CharPtrVector preyindex;
+  IntVector Years;
+  IntVector Steps;
+  DoubleVector predatorlengths;
+  IntVector predatorages; //as an alternative to predatorlengths kgf 19/2 99
+  DoubleMatrix preylengths;              //[prey_nr][prey_l]
+  IntMatrix areas;
   int age_pred; //kgf 22/2 99 to switch between age or length predator
   PredatorAggregator** aggregator;
   LengthGroupDivision** preyLgrpDiv;
   LengthGroupDivision** predLgrpDiv;
   int timeindex;
   ActionAtTimes AAT;
-  Formulamatrix digestioncoeff;
+  FormulaMatrix digestioncoeff;
   ofstream printfile;
   double epsilon;
   char* scname;
@@ -67,7 +67,7 @@ public:
   virtual void Aggregate(int i);
 protected:
   void ReadStomachNumberContent(CommentStream&, const TimeClass* const);
-  virtual double CalculateLikelihood(doublematrixptrvector&, doublematrix&);
+  virtual double CalculateLikelihood(DoubleMatrixPtrVector&, DoubleMatrix&);
 };
 
 class SCAmounts : public SC {
@@ -76,16 +76,16 @@ public:
     const TimeClass* const TimeInfo, Keeper* const keeper,
     const char* datafilename, const char* numfilename, const char* name);
   virtual ~SCAmounts();
-  doublematrixptrmatrix& Stddev() { return stddev; };
-  doublematrixptrvector& StomachNumbers() { return number; };
+  DoubleMatrixPtrMatrix& Stddev() { return stddev; };
+  DoubleMatrixPtrVector& StomachNumbers() { return number; };
   virtual void PrintLikelihood(ofstream&, const TimeClass& time);
   virtual void PrintLikelihoodHeader(ofstream&);
 protected:
   void ReadStomachAmountContent(CommentStream&, const TimeClass* const);
   void ReadStomachSampleContent(CommentStream&, const TimeClass* const);
-  virtual double CalculateLikelihood(doublematrixptrvector&, doublematrix&);
-  doublematrixptrmatrix stddev;  //[timeindex][areas][pred_l][prey_l]
-  doublematrixptrvector number;  //[timeindex][areas][pred_l]
+  virtual double CalculateLikelihood(DoubleMatrixPtrVector&, DoubleMatrix&);
+  DoubleMatrixPtrMatrix stddev;  //[timeindex][areas][pred_l][prey_l]
+  DoubleMatrixPtrVector number;  //[timeindex][areas][pred_l]
 };
 
 class SCRatios : public SCAmounts {
@@ -95,9 +95,9 @@ public:
     const char* datafilename, const char* numfilename, const char* name)
     : SCAmounts(infile, Area, TimeInfo, keeper, datafilename, numfilename, name) {};
   virtual ~SCRatios() {};
-  virtual void SetPredatorsAndPreys(Predatorptrvector&, Preyptrvector&);
+  virtual void SetPredatorsAndPreys(PredatorPtrVector&, PreyPtrVector&);
 protected:
-  virtual double CalculateLikelihood(doublematrixptrvector&, doublematrix&);
+  virtual double CalculateLikelihood(DoubleMatrixPtrVector&, DoubleMatrix&);
 };
 
 class StomachContent : public Likelihood {
@@ -110,7 +110,7 @@ public:
     { Likelihood::Reset(keeper); StomCont->Reset(); };
   virtual void Print(ofstream&) const;
   virtual void LikelihoodPrint(ofstream&) const {};
-  void SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys)
+  void SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys)
     { StomCont->SetPredatorsAndPreys(Predators, Preys); };
   void print(ofstream& stomachfile, const TimeClass& time, const PrintInfo& print)
     { StomCont->print(stomachfile, time, print); };

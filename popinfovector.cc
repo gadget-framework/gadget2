@@ -5,45 +5,44 @@
 #include "popinfovector.icc"
 #endif
 
-popinfovector::popinfovector(int sz) {
+PopInfoVector::PopInfoVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
-    v = new popinfo[size];
+    v = new PopInfo[size];
   else
     v = 0;
 }
 
-popinfovector::popinfovector(int sz, popinfo value) {
+PopInfoVector::PopInfoVector(int sz, PopInfo value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
-    v = new popinfo[size];
+    v = new PopInfo[size];
     for (i = 0; i < size; i++)
       v[i] = value;
   } else
     v = 0;
 }
 
-popinfovector::popinfovector(const popinfovector& initial) {
+PopInfoVector::PopInfoVector(const PopInfoVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
-    v = new popinfo[size];
+    v = new PopInfo[size];
     for (i = 0; i < size; i++)
       v[i] = initial.v[i];
   } else
     v = 0;
 }
 
-popinfovector::~popinfovector() {
+PopInfoVector::~PopInfoVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a popinfovector and fills it vith value.
-void popinfovector::resize(int addsize, popinfo value) {
+void PopInfoVector::resize(int addsize, PopInfo value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,13 +51,13 @@ void popinfovector::resize(int addsize, popinfo value) {
       v[i] = value;
 }
 
-void popinfovector::resize(int addsize) {
+void PopInfoVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
-    v = new popinfo[size];
+    v = new PopInfo[size];
   } else if (addsize > 0) {
-    popinfo* vnew = new popinfo[addsize + size];
+    PopInfo* vnew = new PopInfo[addsize + size];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
@@ -67,10 +66,10 @@ void popinfovector::resize(int addsize) {
   }
 }
 
-void popinfovector::Delete(int pos) {
+void PopInfoVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
-  popinfo* vnew = new popinfo[size - 1];
+  PopInfo* vnew = new PopInfo[size - 1];
   int i;
   for (i = 0; i < pos; i++)
     vnew[i] = v[i];

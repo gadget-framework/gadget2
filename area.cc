@@ -36,7 +36,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
 
   //Now the data which is in the following format: year step area temperature.
   temperature.AddRows(TimeInfo->TotalNoSteps() + 1, noareas, 0);
-  intvector Years, Steps;
+  IntVector Years, Steps;
   int timeid, areaid, keepdata, year, step, area;
   double tmpnumber;
 

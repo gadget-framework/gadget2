@@ -7,7 +7,7 @@
 #include "variableinfo.h"
 #include "gadget.h"
 
-Migration::Migration(CommentStream& infile, int AgeDepMig, const intvector&  Areas,
+Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector&  Areas,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
   : LivesOnAreas(Areas), AgeDepMigration(AgeDepMig), error(0) {
 
@@ -62,7 +62,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const intvector&  Are
   infile >> text;
   if (!(strcasecmp(text, "variables") == 0))
     handle.Unexpected("variables", text);
-  intvector novariables;
+  IntVector novariables;
   this->ReadOptVariables(infile, novariables, TimeInfo, keeper);
 
   //Read the coefficients for the variables.
@@ -95,7 +95,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const intvector&  Are
   int no, find;
   while (!infile.eof() && !infile.fail()) {
     infile >> no;
-    doublematrix* matptr = ReadMatrix(infile, noareas, noareas);
+    DoubleMatrix* matptr = ReadMatrix(infile, noareas, noareas);
     //Now we must look if the matrix number no is in MatrixNumbers. If so,
     //we must keep the matrix for future use, else we can discard it.
     find = 0;
@@ -142,7 +142,7 @@ Migration::~Migration() {
     delete OptVar[i];
 }
 
-const doublematrix& Migration::Migrationmatrix(const TimeClass* const TimeInfo, int age) {
+const DoubleMatrix& Migration::Migrationmatrix(const TimeClass* const TimeInfo, int age) {
   if (AgeDepMigration) {
     if (age >= 0 && age < AgeNr.Size())
       if (AgeNr[age] >= 0)
@@ -264,7 +264,7 @@ void Migration::Print(int nr, ofstream& outfile) const {
   }
 }
 
-void Migration::CheckInfoAndDelete(intvector& novariables, Keeper* const keeper) {
+void Migration::CheckInfoAndDelete(IntVector& novariables, Keeper* const keeper) {
   ErrorHandler handle;
   int i, j, age, time;
 
@@ -369,10 +369,10 @@ void Migration::CopyFromReadToCalc() {
   int i, j, k;
 
   for (i = 0; i < ReadMigList.Size(); i++) {
-    doublematrix* const dmptr = ReadMigList[i];
+    DoubleMatrix* const dmptr = ReadMigList[i];
     if (dmptr != 0) {
       if (CalcMigList[i] == 0)
-        CalcMigList[i] = new doublematrix(*dmptr);
+        CalcMigList[i] = new DoubleMatrix(*dmptr);
       else
         for (j = 0; j < dmptr->Nrow(); j++)
           for (k = 0; k < dmptr->Ncol(j); k++)
@@ -394,7 +394,7 @@ void Migration::AdjustMigListAndCheckIfError(MigrationList& MigList) {
   int i, j, k;
   double colsum, colsum1;
   for (i = 0; i < MigList.Size(); i++) {
-    doublematrix* const dmptr = MigList[i];
+    DoubleMatrix* const dmptr = MigList[i];
     if (dmptr != 0) {
       for (k = 0; k < dmptr->Ncol(); k++) {
         colsum = 0.0;
@@ -460,7 +460,7 @@ void Migration::ReadNoMigrationMatrices(CommentStream& infile,
 //.  .
 //nm vm
 //where the ni's are integer numbers and vi's doubles.
-void Migration::ReadOptVariables(CommentStream& infile, intvector& novariables,
+void Migration::ReadOptVariables(CommentStream& infile, IntVector& novariables,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   //They are in two columns, first is number of variable, next is its value.
@@ -552,6 +552,6 @@ void Migration::Reset() {
   penalty.Reset();
 }
 
-const doublevector& Migration::Penalty() const {
+const DoubleVector& Migration::Penalty() const {
   return penalty;
 }

@@ -1,6 +1,6 @@
 #include "print.h"
 
-void Printagebandm(ofstream& outfile, const Agebandmatrix& Alkeys) {
+void Printagebandm(ofstream& outfile, const AgeBandMatrix& Alkeys) {
 
   int i, j;
   int maxcol = 0;
@@ -35,7 +35,7 @@ void Printagebandm(ofstream& outfile, const Agebandmatrix& Alkeys) {
   }
 }
 
-void PrintWeightinagebandm(ofstream& outfile, const Agebandmatrix& Alkeys) {
+void PrintWeightinagebandm(ofstream& outfile, const AgeBandMatrix& Alkeys) {
 
   int i, j;
   int maxcol = 0;
@@ -70,7 +70,7 @@ void PrintWeightinagebandm(ofstream& outfile, const Agebandmatrix& Alkeys) {
   }
 }
 
-void BandmatrixPrint(const bandmatrix& matrix, ofstream& outfile) {
+void BandmatrixPrint(const BandMatrix& matrix, ofstream& outfile) {
 
   int i, j;
   int maxcol = 0;

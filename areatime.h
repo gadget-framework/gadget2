@@ -31,15 +31,15 @@ protected:
   /**
    * \brief This is a vector of the areas in the model
    */
-  intvector OuterAreas;
+  IntVector OuterAreas;
   /**
    * \brief This is a vector of the size of the areas in the model
    */
-  doublevector size;
+  DoubleVector size;
   /**
    * \brief This is a matrix of the temperature, for each timestep, of the areas in the model
    */
-  doublematrix temperature;
+  DoubleMatrix temperature;
 };
 
 /**
@@ -86,8 +86,8 @@ protected:
   int lastyear;
   int firststep;
   int notimesteps;
-  doubleindexvector timesteps;
-  doubleindexvector nrofsubsteps;
+  DoubleIndexVector timesteps;
+  DoubleIndexVector nrofsubsteps;
   double lengthofyear;
   int currentsubstep;
 };

@@ -3,18 +3,18 @@
 #include "popinfo.h"
 #include "gadget.h"
 
-PopStatistics::PopStatistics(const popinfoindexvector& pop, const LengthGroupDivision* const lgrpdiv)
+PopStatistics::PopStatistics(const PopInfoIndexVector& pop, const LengthGroupDivision* const lgrpdiv)
   : meanlength(0.0), meanweight(0.0), totalnumber(0.0), stddevOflength(0.0) {
 
-  popinfo nullpop;
-  popinfovector p(pop.Maxcol(), nullpop);
+  PopInfo nullpop;
+  PopInfoVector p(pop.Maxcol(), nullpop);
   int i;
   for (i = pop.Mincol(); i < pop.Maxcol(); i++)
     p[i] = pop[i];
   this->CalcStatistics(p, lgrpdiv);
 }
 
-PopStatistics::PopStatistics(const popinfovector& pop, const LengthGroupDivision* const lgrpdiv)
+PopStatistics::PopStatistics(const PopInfoVector& pop, const LengthGroupDivision* const lgrpdiv)
   : meanlength(0.0), meanweight(0.0), totalnumber(0.0), stddevOflength(0.0) {
 
   this->CalcStatistics(pop, lgrpdiv);
@@ -23,10 +23,10 @@ PopStatistics::PopStatistics(const popinfovector& pop, const LengthGroupDivision
 PopStatistics::~PopStatistics() {
 }
 
-void PopStatistics::CalcStatistics(const popinfovector& pop, const LengthGroupDivision* const lgrpdiv) {
+void PopStatistics::CalcStatistics(const PopInfoVector& pop, const LengthGroupDivision* const lgrpdiv) {
   assert(pop.Size() == lgrpdiv->NoLengthGroups());
 
-  popinfo sum;
+  PopInfo sum;
   int i;
   double length;
 

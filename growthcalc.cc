@@ -8,14 +8,14 @@
 #include "conversion.h"
 #include "gadget.h"
 
-GrowthCalcBase::GrowthCalcBase(const intvector& Areas) : LivesOnAreas(Areas) {
+GrowthCalcBase::GrowthCalcBase(const IntVector& Areas) : LivesOnAreas(Areas) {
 }
 
 GrowthCalcBase::~GrowthCalcBase() {
 }
 
 GrowthCalcA::GrowthCalcA(CommentStream& infile,
-  const intvector& Areas, Keeper* const keeper)
+  const IntVector& Areas, Keeper* const keeper)
   : GrowthCalcBase(Areas), NumberOfGrowthConstants(9) {
 
   ErrorHandler handle;
@@ -39,9 +39,9 @@ GrowthCalcA::GrowthCalcA(CommentStream& infile,
 GrowthCalcA::~GrowthCalcA() {
 }
 
-GrowthCalcB::GrowthCalcB(CommentStream& infile, const intvector& Areas,
+GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper,
-  const AreaClass* const Area, const charptrvector& lenindex)
+  const AreaClass* const Area, const CharPtrVector& lenindex)
   : GrowthCalcBase(Areas), lgrowth(Areas.Size()), wgrowth(Areas.Size()) {
 
   ErrorHandler handle;
@@ -53,8 +53,8 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const intvector& Areas,
   int i;
   Formula tempF;   //value of tempF is initiated to 0.0
   for (i = 0; i < Areas.Size(); i++) {
-    lgrowth[i] = new Formulamatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
-    wgrowth[i] = new Formulamatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
+    lgrowth[i] = new FormulaMatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
+    wgrowth[i] = new FormulaMatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
   }
 
   keeper->AddString("growthcalcB");
@@ -93,7 +93,7 @@ GrowthCalcB::~GrowthCalcB() {
   }
 }
 
-GrowthCalcC::GrowthCalcC(CommentStream& infile, const intvector& Areas,
+GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
   const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeight)
   : GrowthCalcBase(Areas), NumberOfWGrowthConstants(6),  NumberOfLGrowthConstants(9) {
 
@@ -135,7 +135,7 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const intvector& Areas,
   CommentStream subcomment(subfile);
 
   //Read information on length increase.
-  doublematrix tmpRefW;
+  DoubleMatrix tmpRefW;
   if (!Read2ColVector(subcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");
 
@@ -168,7 +168,7 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const intvector& Areas,
 GrowthCalcC::~GrowthCalcC() {
 }
 
-GrowthCalcD::GrowthCalcD(CommentStream& infile, const intvector& Areas,
+GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
   const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeight)
   : GrowthCalcBase(Areas), NumberOfWGrowthConstants(6), NumberOfLGrowthConstants(8) {
 
@@ -210,7 +210,7 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const intvector& Areas,
   CommentStream subcomment(subfile);
 
   //Read information on length increase.
-  doublematrix tmpRefW;
+  DoubleMatrix tmpRefW;
   if (!Read2ColVector(subcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");
 
@@ -243,7 +243,7 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const intvector& Areas,
 GrowthCalcD::~GrowthCalcD() {
 }
 
-GrowthCalcE::GrowthCalcE(CommentStream& infile, const intvector& Areas,
+GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   const TimeClass* const TimeInfo, const LengthGroupDivision* const LgrpDiv,
   Keeper* const keeper, const char* refWeight)
   : GrowthCalcBase(Areas), NumberOfWGrowthConstants(6), NumberOfLGrowthConstants(9) {
@@ -324,7 +324,7 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const intvector& Areas,
   CommentStream subcomment(subfile);
 
   //Read information on length increase.
-  doublematrix tmpRefW;
+  DoubleMatrix tmpRefW;
   if (!Read2ColVector(subcomment, tmpRefW))
     handle.Message("Wrong format for reference weights");
 
@@ -362,9 +362,9 @@ GrowthCalcE::~GrowthCalcE(){
 /* The Norwegian Growthfunction Equations 6 and 7 on page 7 in
  * Description of a multispecies model for the Barents Sea.
  * parameter # 0 corresponds to C4 in the equation etc. */
-GrowthCalcF::GrowthCalcF(CommentStream& infile, const intvector& Areas,
+GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper,
-  const AreaClass* const Area, const charptrvector& lenindex)
+  const AreaClass* const Area, const CharPtrVector& lenindex)
   : GrowthCalcBase(Areas), NumberOfGrowthConstants(1), wgrowth(Areas.Size()) {
 
   ErrorHandler handle;
@@ -393,7 +393,7 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const intvector& Areas,
   int i;
   Formula tempF;   //value of tempF is initiated to 0.0
   for (i = 0; i < Areas.Size(); i++)
-    wgrowth[i] = new Formulamatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
+    wgrowth[i] = new FormulaMatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
 
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -418,9 +418,9 @@ GrowthCalcF::~GrowthCalcF() {
     delete wgrowth[a];
 }
 
-GrowthCalcG::GrowthCalcG(CommentStream& infile, const intvector& Areas,
+GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper,
-  const AreaClass* const Area, const charptrvector& lenindex)
+  const AreaClass* const Area, const CharPtrVector& lenindex)
   : GrowthCalcBase(Areas), NumberOfGrowthConstants(1), wgrowth(Areas.Size()) {
 
   ErrorHandler handle;
@@ -449,7 +449,7 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const intvector& Areas,
   int i;
   Formula tempF;   //value of tempF is initiated to 0.0
   for (i = 0; i < Areas.Size(); i++)
-    wgrowth[i] = new Formulamatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
+    wgrowth[i] = new FormulaMatrix(TimeInfo->TotalNoSteps() + 1, lenindex.Size(), tempF);
 
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -474,7 +474,7 @@ GrowthCalcG::~GrowthCalcG() {
     delete wgrowth[a];
 }
 
-GrowthCalcH::GrowthCalcH(CommentStream& infile, const intvector& Areas,
+GrowthCalcH::GrowthCalcH(CommentStream& infile, const IntVector& Areas,
   const LengthGroupDivision* const LgrpDiv, Keeper* const keeper)
   : GrowthCalcBase(Areas), NumberOfGrowthConstants(4) {
 
@@ -500,10 +500,10 @@ GrowthCalcH::GrowthCalcH(CommentStream& infile, const intvector& Areas,
 GrowthCalcH::~GrowthCalcH() {
 }
 
-void GrowthCalcA::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgrowth,
-  const popinfovector& GrEatNumber, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, const doublevector& Fphi,
-  const doublevector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+void GrowthCalcA::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
   const double stepsize = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   const double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
@@ -526,15 +526,15 @@ void GrowthCalcA::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
   }
 }
 
-void GrowthCalcB::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgrowth,
-  const popinfovector& GrEatNumber, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, const doublevector& Fphi,
-  const doublevector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+void GrowthCalcB::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
   int i;
   const int inarea = AreaNr[area];
-  doublevector l((*lgrowth[inarea])[TimeInfo->CurrentTime()].Size());
-  doublevector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
+  DoubleVector l((*lgrowth[inarea])[TimeInfo->CurrentTime()].Size());
+  DoubleVector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
 
   //Initialize l and w with values from vector lgrowth[][] and wgrowth[][].
   for (i = 0; i < l.Size(); i++)
@@ -556,10 +556,10 @@ void GrowthCalcB::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
  * final form of the function is
  * dw/dt = a0*exp(a1*T)*((w/a2)^a4 - (w/a3)^a5)
  * For no temperature dependency a1 = 0 */
-void GrowthCalcC::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgrowth,
-  const popinfovector& GrEatNumber, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, const doublevector& Fphi,
-  const doublevector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+void GrowthCalcC::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
   const double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   const double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
@@ -609,10 +609,10 @@ void GrowthCalcC::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
  * part is derived from the weight increase part by assuming a formula
  * w = a*l^b. If the weight is below the curve no length increase takes place
  * but instead the weight increases until it reaches the curve. */
-void GrowthCalcD::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgrowth,
-  const popinfovector& GrEatNumber, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, const doublevector& Fphi,
-  const doublevector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+void GrowthCalcD::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
   const double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   const double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
@@ -665,10 +665,10 @@ void GrowthCalcD::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
  *       AreaEffect
  *       StepEffect
  * Length increase is upgraded in the same way as earlier. */
-void GrowthCalcE::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgrowth,
-  const popinfovector& GrEatNumber, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, const doublevector& Fphi,
-  const doublevector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
   const double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   const double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
@@ -714,17 +714,17 @@ void GrowthCalcE::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
   }
 }
 
-void GrowthCalcF::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgrowth,
-  const popinfovector& GrEatNumber, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, const doublevector& Fphi,
-  const doublevector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+void GrowthCalcF::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
   const double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   const int inarea = AreaNr[area];
   double kval = k_values[TimeInfo->CurrentYear() - TimeInfo->FirstYear()] * stepsize;
 
   int i;
-  doublevector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
+  DoubleVector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
   for (i = 0; i < w.Size(); i++)
     w[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
 
@@ -737,10 +737,10 @@ void GrowthCalcF::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
   }
 }
 
-void GrowthCalcG::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgrowth,
-  const popinfovector& GrEatNumber, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, const doublevector& Fphi,
-  const doublevector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
   //written by kgf 24/10 00
   //Gives linear growth (Growthpar[0] == 0) or
@@ -750,7 +750,7 @@ void GrowthCalcG::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
   double kval = k_values[TimeInfo->CurrentYear() - TimeInfo->FirstYear()] * stepsize;
 
   int i;
-  doublevector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
+  DoubleVector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
   for (i = 0; i < w.Size(); i++)
     w[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
 
@@ -778,10 +778,10 @@ void GrowthCalcG::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
 
 /* Simplified 2 parameter length based Von Bertalanffy growth function
  * compare with GrowthCalcC for the more complex weight based version */
-void GrowthCalcH::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgrowth,
-  const popinfovector& GrEatNumber, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, const doublevector& Fphi,
-  const doublevector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+void GrowthCalcH::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+  const PopInfoVector& GrEatNumber, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
 
   const double mult = 1.0 - exp(-growthPar[1] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
 

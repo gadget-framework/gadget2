@@ -15,13 +15,13 @@ class PreyOverPrinter : public Printer {
 public:
   PreyOverPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~PreyOverPrinter();
-  void SetPrey(Preyptrvector& preyvec);
+  void SetPrey(PreyPtrVector& preyvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
-  intmatrix areas;
-  charptrvector areaindex;
-  charptrvector lenindex;
-  charptrvector preynames;
+  IntMatrix areas;
+  CharPtrVector areaindex;
+  CharPtrVector lenindex;
+  CharPtrVector preynames;
   LengthGroupDivision* preyLgrpDiv;
   PreyOverAggregator* aggregator;
   ofstream outfile;

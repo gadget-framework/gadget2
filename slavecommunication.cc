@@ -6,9 +6,9 @@
 #include "paramin.h"
 #endif
 
-slaveCommunication::slaveCommunication() {
+SlaveCommunication::SlaveCommunication() {
   MAXWAIT = 30;
-  pvmConst = new pvmconstants();
+  pvmConst = new PVMConstants();
   typeReceived = -1;
   parenttid = -1;
   mytid = -1;
@@ -19,7 +19,7 @@ slaveCommunication::slaveCommunication() {
   tmout.tv_usec = 0;
 }
 
-slaveCommunication::~slaveCommunication() {
+SlaveCommunication::~SlaveCommunication() {
   delete pvmConst;
   if (netDataVar != NULL) {
     delete netDataVar;
@@ -27,7 +27,7 @@ slaveCommunication::~slaveCommunication() {
   }
 }
 
-void slaveCommunication::printErrorMsg(const char* errorMsg) {
+void SlaveCommunication::printErrorMsg(const char* errorMsg) {
   char* msg;
   msg = new char[strlen(errorMsg) + 1];
   strcpy(msg, errorMsg);
@@ -35,7 +35,7 @@ void slaveCommunication::printErrorMsg(const char* errorMsg) {
   delete[] msg;
 }
 
-int slaveCommunication::startNetCommunication() {
+int SlaveCommunication::startNetCommunication() {
   int info, bytes, type, source;
   int OK = 1;
   int bufId = 0;
@@ -99,7 +99,7 @@ int slaveCommunication::startNetCommunication() {
         cerr << "Have received illegal id of " << myId << " from master\n";
         return !OK;
       }
-      netDataVar = new netDataVariables(numberOfVar);
+      netDataVar = new NetDataVariables(numberOfVar);
       typeReceived = pvmConst->getStartTag();
       return numberOfVar;
 
@@ -110,14 +110,14 @@ int slaveCommunication::startNetCommunication() {
   }
 }
 
-void slaveCommunication::stopNetCommunication() {
+void SlaveCommunication::stopNetCommunication() {
   int tid;
   tid = pvm_mytid();
   if (tid >= 0)
     pvm_exit();
 }
 
-int slaveCommunication::sendToMaster(double res) {
+int SlaveCommunication::sendToMaster(double res) {
   int OK, info;
   assert(netDataVar != NULL);
   if (netDataVar->x_id < 0 || netDataVar->tag < 0) {
@@ -127,7 +127,7 @@ int slaveCommunication::sendToMaster(double res) {
     cerr << "Error in slavecommunication - illegal id received\n";
     OK = 0;
   } else {
-    netDataResult* sendData = new netDataResult;
+    NetDataResult* sendData = new NetDataResult;
     sendData->who = myId;
     sendData->result = res;
     sendData->x_id = netDataVar->x_id;
@@ -144,7 +144,7 @@ int slaveCommunication::sendToMaster(double res) {
   return OK;
 }
 
-int slaveCommunication::send(netDataResult* sendData) {
+int SlaveCommunication::send(NetDataResult* sendData) {
   int info;
   int OK = 1;
   info = pvm_initsend(pvmConst->getDataEncode());
@@ -186,7 +186,7 @@ int slaveCommunication::send(netDataResult* sendData) {
   return OK;
 }
 
-int slaveCommunication::receiveFromMaster() {
+int SlaveCommunication::receiveFromMaster() {
   int bufId = 0;
   int OK = 1;
   int info, bytes, source, type;
@@ -239,7 +239,7 @@ int slaveCommunication::receiveFromMaster() {
         return !OK;
 
     } else if (type == pvmConst->getMasterSendVarTag()) {
-      //There is an incoming message of data type netDataVariables
+      //There is an incoming message of data type NetDataVariables
       info = receive();
       if (info > 0) {
         typeReceived = pvmConst->getMasterSendVarTag();
@@ -254,7 +254,7 @@ int slaveCommunication::receiveFromMaster() {
   }
 }
 
-int slaveCommunication::receiveBound() {
+int SlaveCommunication::receiveBound() {
   int info;
   int OK = 1;
 
@@ -269,7 +269,7 @@ int slaveCommunication::receiveBound() {
   return OK;
 }
 
-int slaveCommunication::receive() {
+int SlaveCommunication::receive() {
   int OK = 1;
   int info;
 
@@ -295,24 +295,24 @@ int slaveCommunication::receive() {
   return OK;
 }
 
-int slaveCommunication::receivedVector() {
+int SlaveCommunication::receivedVector() {
   if (pvmConst->getMasterSendVarTag() == typeReceived)
     return 1;
   else
     return 0;
 }
 
-void slaveCommunication::getVector(double* vec) {
+void SlaveCommunication::getVector(double* vec) {
   int i;
   for (i = 0; i < numberOfVar; i++)
     vec[i] = netDataVar->x[i];
 }
 
-int slaveCommunication::getReceiveType() {
+int SlaveCommunication::getReceiveType() {
   return typeReceived;
 }
 
-int slaveCommunication::receiveString() {
+int SlaveCommunication::receiveString() {
   int OK = 1;
 #ifdef GADGET_NETWORK
   int i, info;
@@ -321,7 +321,7 @@ int slaveCommunication::receiveString() {
   tempString[MaxStrLength] = '\0';
 
   if (netDataStr.Size() == 0) {
-    vectorofcharptr tempvec;
+    VectorOfCharPtr tempvec;
     netDataStr = tempvec;
   }
 
@@ -340,21 +340,21 @@ int slaveCommunication::receiveString() {
   return OK;
 }
 
-int slaveCommunication::receivedString() {
+int SlaveCommunication::receivedString() {
   if (pvmConst->getMasterSendStringTag() == typeReceived)
     return 1;
   else
     return 0;
 }
 
-int slaveCommunication::receivedBounds() {
+int SlaveCommunication::receivedBounds() {
   if (pvmConst->getMasterSendBoundTag() == typeReceived)
     return 1;
   else
     return 0;
 }
 
-char* slaveCommunication::getString(int num) {
+char* SlaveCommunication::getString(int num) {
 #ifdef GADGET_NETWORK
   assert(num >= 0);
   assert(netDataStr.Size() == numberOfVar);
@@ -364,7 +364,7 @@ char* slaveCommunication::getString(int num) {
 #endif
 }
 
-void slaveCommunication::getBound(double* vec) {
+void SlaveCommunication::getBound(double* vec) {
   int i;
   for (i = 0; i < numberOfVar; i++)
     vec[i] = netDataDouble[i];

@@ -3,8 +3,7 @@
 #include "areatime.h"
 #include "gadget.h"
 
-//A public constructor. Sets maxage and minage to 0.
-PreyStdInfo::PreyStdInfo(const Prey* p, const intvector& Areas)
+PreyStdInfo::PreyStdInfo(const Prey* p, const IntVector& Areas)
   : AbstrPreyStdInfo(p, Areas, 0, 0), //set minage and maxage to 0.
   PSIByLength(p, Areas), prey(p) {
 }
@@ -38,14 +37,14 @@ void PreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
     MortbyAge[inarea][age] = -log(1 - BconbyAge[inarea][age] / prey->Biomass(area)) * timeratio;
 }
 
-const doublevector& PreyStdInfo::NconsumptionByLength(int area) const {
+const DoubleVector& PreyStdInfo::NconsumptionByLength(int area) const {
   return PSIByLength.NconsumptionByLength(area);
 }
 
-const doublevector& PreyStdInfo::BconsumptionByLength(int area) const {
+const DoubleVector& PreyStdInfo::BconsumptionByLength(int area) const {
   return PSIByLength.BconsumptionByLength(area);
 }
 
-const doublevector& PreyStdInfo::MortalityByLength(int area) const {
+const DoubleVector& PreyStdInfo::MortalityByLength(int area) const {
   return PSIByLength.MortalityByLength(area);
 }

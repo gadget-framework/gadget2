@@ -31,10 +31,10 @@ void Stock::Migrate(const TimeClass* const TimeInfo) {
 
 //-------------------------------------------------------------------
 //Sum up into Growth+Predator and Prey Lengthgroups.  Storage is a
-//vector of popinfo that stores the sum over each lengthgroup.
+//vector of PopInfo that stores the sum over each lengthgroup.
 void Stock::CalcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   int inarea = AreaNr[area];
-  popinfo nullpop;
+  PopInfo nullpop;
   int i;
   for (i = 0; i < NumberInArea[inarea].Size(); i++)
     NumberInArea[inarea][i] = nullpop;
@@ -76,8 +76,8 @@ void Stock::ReducePop(int area, const AreaClass* const Area, const TimeClass* co
     prey->Subtract(Alkeys[inarea], area);
 
   //Natural Mortality changed with more substeps
-  doublevector* PropSurviving;
-  PropSurviving = new doublevector(NatM->ProportionSurviving(TimeInfo));
+  DoubleVector* PropSurviving;
+  PropSurviving = new DoubleVector(NatM->ProportionSurviving(TimeInfo));
 
   for (i = 0; i < PropSurviving->Size(); i++)
     (*PropSurviving)[i] = pow((*PropSurviving)[i], timeratio);
@@ -184,13 +184,13 @@ void Stock::Renewal(int area, const TimeClass* const TimeInfo, double ratio) {
 
 //Add to a stock.  A function frequently accessed from other stocks.
 //Used by Transition and Maturity and Renewal.
-void Stock::Add(const Agebandmatrix& Addition, const ConversionIndex* const CI,
+void Stock::Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
   int area, double ratio, int MinAge, int MaxAge) {
 
   AgebandmAdd(Alkeys[AreaNr[area]], Addition, *CI, ratio, MinAge, MaxAge);
 }
 
-void Stock::Add(const agebandmatrixratioptrvector& Addition, int AddArea, const ConversionIndex* const CI,
+void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
   int area, double ratio, int MinAge, int MaxAge) {
 
   int numtag = Addition.NrOfTagExp();
@@ -203,7 +203,7 @@ void Stock::RecalcMigration(const TimeClass* const TimeInfo) {
     migration->MigrationRecalc(TimeInfo->CurrentYear());
 }
 
-int Stock::UpdateTags(agebandmatrixptrvector* tagbyagelength, Tags* newtag) {
+int Stock::UpdateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag) {
   tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->Name());
   if (doesmature) {
     maturity->AddTag(newtag->Name());
@@ -218,6 +218,6 @@ void Stock::DeleteTags(const char* tagname) {
     maturity->DeleteTag(tagname);
 }
 
-const charptrvector Stock::TaggingExperimentIds() {
+const CharPtrVector Stock::TaggingExperimentIds() {
   return tagAlkeys.tagids();
 }

@@ -4,8 +4,8 @@
 #include "agebandmatrix.h"
 #include "gadget.h"
 
-extern void Printagebandm(ofstream& outfile, const Agebandmatrix& Alkeys);
-extern void PrintWeightinagebandm(ofstream& outfile, const Agebandmatrix& Alkeys);
-extern void BandmatrixPrint(const bandmatrix& matrix, ofstream& outfile);
+extern void Printagebandm(ofstream& outfile, const AgeBandMatrix& Alkeys);
+extern void PrintWeightinagebandm(ofstream& outfile, const AgeBandMatrix& Alkeys);
+extern void BandmatrixPrint(const BandMatrix& matrix, ofstream& outfile);
 
 #endif

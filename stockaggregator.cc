@@ -5,8 +5,8 @@
 #include "checkconversion.h"
 #include "extravector.h" //for PopInfoAdd
 
-StockAggregator::StockAggregator(const Stockptrvector& Stocks,
-  const LengthGroupDivision* const LgrpDiv, const intmatrix& Areas, const intmatrix& Ages)
+StockAggregator::StockAggregator(const StockPtrVector& Stocks,
+  const LengthGroupDivision* const LgrpDiv, const IntMatrix& Areas, const IntMatrix& Ages)
   : stocks(Stocks), areas(Areas), ages(Ages) {
 
   int i, j, k, l = 0;
@@ -24,7 +24,7 @@ StockAggregator::StockAggregator(const Stockptrvector& Stocks,
 
     //For convenience, use ap as shorthand for &(stocks[i]->Agelengthkeys(0))
     //Changed 25-9 2001 and the memberfunction Areas added to livesinareas
-    const Agebandmatrix* ap = &(stocks[i]->Agelengthkeys(stocks[i]->Areas()[0]));
+    const AgeBandMatrix* ap = &(stocks[i]->Agelengthkeys(stocks[i]->Areas()[0]));
 
     //Now, loop over all the possible ages in the Ages matrix,
     for (j = 0; j < Ages.Nrow(); j++) {
@@ -68,10 +68,10 @@ StockAggregator::StockAggregator(const Stockptrvector& Stocks,
   //Resize total using dummy variables tmppop and popmatrix.
   //Take care to make total a full matrix
   //i.e. a rectangular matrix, with minage = 0 and minlength = 0.
-  popinfo tmppop;
+  PopInfo tmppop;
   tmppop.N = 1.0;
   tmppop.W = 1.0;
-  popinfomatrix popmatrix(ages.Nrow(), numlengths, tmppop);
+  PopInfoMatrix popmatrix(ages.Nrow(), numlengths, tmppop);
   total.resize(areas.Nrow(), 0, 0, popmatrix);
   meanTotal.resize(areas.Nrow(), 0, 0, popmatrix);
 }
@@ -85,7 +85,7 @@ StockAggregator::~StockAggregator() {
 void StockAggregator::Sum() {
   int i, j, k;
   int aggrArea, aggrAge, area, age;
-  popinfo nullpop;
+  PopInfo nullpop;
 
   //Initialize total to 0.
   for (i = 0; i < total.Size(); i++)
@@ -102,7 +102,7 @@ void StockAggregator::Sum() {
         //All the areas in areas[aggrArea] will be aggregated to the area aggrArea in total.
         area = areas[aggrArea][j];
         if (stocks[i]->IsInArea(area)) {
-          const Agebandmatrix* alptr = &stocks[i]->Agelengthkeys(area);
+          const AgeBandMatrix* alptr = &stocks[i]->Agelengthkeys(area);
           for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
             for (k = 0; k < ages.Ncol(aggrAge); k++) {
               age = ages[aggrAge][k];
@@ -119,7 +119,7 @@ void StockAggregator::Sum() {
 void StockAggregator::MeanSum() {
   int i, j, k;
   int aggrArea, aggrAge, area, age;
-  popinfo nullpop;
+  PopInfo nullpop;
 
   //Initialize meanTotal to 0.
   for (i = 0; i < meanTotal.Size(); i++)
@@ -136,7 +136,7 @@ void StockAggregator::MeanSum() {
         //All the areas in areas[aggrArea] will be aggregated to the area aggrArea in meanTotal.
         area = areas[aggrArea][j];
         if (stocks[i]->IsInArea(area)) {
-          const Agebandmatrix* alptr = &stocks[i]->getMeanN(area);
+          const AgeBandMatrix* alptr = &stocks[i]->getMeanN(area);
           for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
             for (k = 0; k < ages.Ncol(aggrAge); k++) {
               age = ages[aggrAge][k];
@@ -150,10 +150,10 @@ void StockAggregator::MeanSum() {
   }
 }
 
-const agebandmatrixptrvector& StockAggregator::ReturnSum() const {
+const AgeBandMatrixPtrVector& StockAggregator::ReturnSum() const {
   return total;
 }
 
-const agebandmatrixptrvector& StockAggregator::ReturnMeanSum() const {
+const AgeBandMatrixPtrVector& StockAggregator::ReturnMeanSum() const {
   return meanTotal;
 }

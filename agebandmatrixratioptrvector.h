@@ -16,18 +16,18 @@ class AreaClass;
 class TimeClass;
 class Maturity;
 
-class agebandmatrixratioptrvector {
+class AgeBandMatrixRatioPtrVector {
 public:
-  agebandmatrixratioptrvector() { size = 0; v = 0; };
-  agebandmatrixratioptrvector(int size);
-  agebandmatrixratioptrvector(int size1, int Minage, const intvector& minl, const intvector& size2);
-  ~agebandmatrixratioptrvector();
-  void ChangeElement(int nr, const Agebandmatrixratio& value);
-  void resize(int add, Agebandmatrixratio* matr);
-  void resize(int add, int minage, const intvector& minl, const intvector& size);
-  void resize(int add, agebandmatrixptrvector* initial, const agebandmatrixptrvector& Alkeys, const char* id);
+  AgeBandMatrixRatioPtrVector() { size = 0; v = 0; };
+  AgeBandMatrixRatioPtrVector(int size);
+  AgeBandMatrixRatioPtrVector(int size1, int Minage, const IntVector& minl, const IntVector& size2);
+  ~AgeBandMatrixRatioPtrVector();
+  void ChangeElement(int nr, const AgeBandMatrixRatio& value);
+  void resize(int add, AgeBandMatrixRatio* matr);
+  void resize(int add, int minage, const IntVector& minl, const IntVector& size);
+  void resize(int add, AgeBandMatrixPtrVector* initial, const AgeBandMatrixPtrVector& Alkeys, const char* id);
   void resize();
-  void addTag(agebandmatrixptrvector* initial, const agebandmatrixptrvector& Alkeys, const char* id);
+  void addTag(AgeBandMatrixPtrVector* initial, const AgeBandMatrixPtrVector& Alkeys, const char* id);
   void addTag(const char* name);
   void deleteTag(const char* tagname);
   void deleteTag(int id);
@@ -35,20 +35,20 @@ public:
   int numTags() const { return tagid.Size(); };
   int getId(const char* id);
   const char* getName(int id) const;
-  Agebandmatrixratio& operator [] (int pos);
-  const Agebandmatrixratio& operator [] (const char* name) const;
-  const Agebandmatrixratio& operator [] (int pos) const;
-  void Migrate(const doublematrix& Migrationmatrix, const agebandmatrixptrvector& Total);
+  AgeBandMatrixRatio& operator [] (int pos);
+  const AgeBandMatrixRatio& operator [] (const char* name) const;
+  const AgeBandMatrixRatio& operator [] (int pos) const;
+  void Migrate(const DoubleMatrix& Migrationmatrix, const AgeBandMatrixPtrVector& Total);
   const int NrOfTagExp() const { return tagid.Size(); };
   void print(char* filename);
-  const charptrvector tagids() const;
-  friend void AgebandmratioAdd(agebandmatrixratioptrvector& Alkeys, int AlkeysArea,
-    const agebandmatrixratioptrvector& Addition, int AdditionArea, const ConversionIndex &CI,
+  const CharPtrVector tagids() const;
+  friend void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
+    const AgeBandMatrixRatioPtrVector& Addition, int AdditionArea, const ConversionIndex &CI,
     double ratio, int minage, int maxage);
 protected:
   int size;
-  Agebandmatrixratio** v;
-  charptrvector tagid;
+  AgeBandMatrixRatio** v;
+  CharPtrVector tagid;
 private:
   void addTagName(const char* name);
 };

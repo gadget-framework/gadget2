@@ -18,33 +18,33 @@ public:
     const TimeClass* const TimeInfo, Keeper* const keeper);
   ~Cannibalism();
   void Print(ofstream& outfile);
-  const doublevector& Mortality(const Agebandmatrix& alk_prey,
-    const Agebandmatrix& alk_pred, const LengthGroupDivision* len_prey,
+  const DoubleVector& Mortality(const AgeBandMatrix& alk_prey,
+    const AgeBandMatrix& alk_pred, const LengthGroupDivision* len_prey,
     const LengthGroupDivision* len_pred, const TimeClass* const TimeInfo,
-    int pred_no, const doublevector& natm);
+    int pred_no, const DoubleVector& natm);
   int nrOfPredators() { return nrofpredators; };
   const char* predatorName(int pred) { return predatornames[pred]; };
   int getMinPredAge();
   int getMaxPredAge();
   int getMinPredAge(int i) { return minage[i]; };
   int getMaxPredAge(int i) { return maxage[i]; };
-  const doublevector& getAgeGroups(int pred_no) { return agegroups[pred_no]; };
-  const bandmatrix& getCons(int pred_no) { return *consumption[pred_no]; };
+  const DoubleVector& getAgeGroups(int pred_no) { return agegroups[pred_no]; };
+  const BandMatrix& getCons(int pred_no) { return *consumption[pred_no]; };
   double suitfunc(double predlen, double preylen);
 protected:
-  doubleindexvector altfood;
-  intmatrix overlap;    // overlap[predator][substep]
-  charptrvector predatornames;
+  DoubleIndexVector altfood;
+  IntMatrix overlap;    // overlap[predator][substep]
+  CharPtrVector predatornames;
   int nrofpredators;
   Formula delta;
-  Formulavector params;
-  Formulavector cann_lev;
-  doublevector cannibalism;
-  intvector minage;
-  intvector maxage;
+  FormulaVector params;
+  FormulaVector cann_lev;
+  DoubleVector cannibalism;
+  IntVector minage;
+  IntVector maxage;
   LengthGroupDivision* preylgp;
-  doublematrix agegroups; //[pred_no][ages] kgf 29/3/99
-  bandmatrixptrvector consumption;
+  DoubleMatrix agegroups; //[pred_no][ages] kgf 29/3/99
+  BandMatrixPtrVector consumption;
 };
 
 #endif

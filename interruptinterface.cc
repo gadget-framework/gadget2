@@ -108,18 +108,18 @@ int InterruptInterface::menu() {
   return 1;
 }
 
-/*  charptrvector& readArgs(char* s)
+/*  CharPtrVector& readArgs(char* s)
  *
  *  Purpose: Parse a char array into a vector of words.
  *           words are seperated by whitespace in s.
  *  In: s:   char array to be parsed
- *  Out: charptrvector&:    vector of words found in s
+ *  Out: CharPtrVector&:    vector of words found in s
  *  Usage: data_t* d = getDataAtTime(timestep, name)
  *  Pre: s != NULL
  */
-charptrvector& InterruptInterface::readArgs(char* s) {
+CharPtrVector& InterruptInterface::readArgs(char* s) {
   assert(s != NULL);
-  charptrvector* args = new charptrvector;
+  CharPtrVector* args = new CharPtrVector;
   char buf[MAX_INPUT_LENGTH + 1];
   char* b = buf;
   while (*s != 0) {
@@ -135,13 +135,13 @@ charptrvector& InterruptInterface::readArgs(char* s) {
   return *args;
 }
 
-/*  void dumpNaturalM(charptrvector& args)
+/*  void dumpNaturalM(CharPtrVector& args)
  *
  *  Purpose: Dump NaturalM from Stock to file.
  *  In: args:  not used
  *  Usage:  dumpNaturalM(args)
  */
-void InterruptInterface::dumpNaturalM(charptrvector& args) {
+void InterruptInterface::dumpNaturalM(CharPtrVector& args) {
   ofstream out(NATURALM_FILE);
   int i;
   for (i = 0; i < eco->stockvec.Size(); i++) {
@@ -153,13 +153,13 @@ void InterruptInterface::dumpNaturalM(charptrvector& args) {
   }
 }
 
-/*  void dumpSuitability(charptrvector& args)
+/*  void dumpSuitability(CharPtrVector& args)
  *
  *  Purpose: Dump Suitability from Predator in Stock to file.
  *  In: args:  not used
  *  Usage:  dumpSuitability(args)
  */
-void InterruptInterface::dumpSuitability(charptrvector& args) {
+void InterruptInterface::dumpSuitability(CharPtrVector& args) {
   ofstream out(SUITABLE_FILE);
   int i;
   for (i = 0; i < eco->stockvec.Size(); i++)
@@ -169,13 +169,13 @@ void InterruptInterface::dumpSuitability(charptrvector& args) {
     }
 }
 
-/*  void dumpc_hat(charptrvector& args)
+/*  void dumpc_hat(CharPtrVector& args)
  *
  *  Purpose: Dump C_Hat data to file.
  *  In: args:  not used
  *  Usage:  dumpc_hat(args)
  */
-void InterruptInterface::dumpc_hat(charptrvector& args) {
+void InterruptInterface::dumpc_hat(CharPtrVector& args) {
   ofstream out(C_HAT_FILE);
   int i;
   for (i = 0; i < eco->stockvec.Size(); i++)
@@ -185,13 +185,13 @@ void InterruptInterface::dumpc_hat(charptrvector& args) {
     }
 }
 
-/*  void dumpmean_n(charptrvector& args)
+/*  void dumpmean_n(CharPtrVector& args)
  *
  *  Purpose: Dump Mean_N data to file.
  *  In: args:  not used
  *  Usage:  dumpmean_n(args)
  */
-void InterruptInterface::dumpmean_n(charptrvector& args) {
+void InterruptInterface::dumpmean_n(CharPtrVector& args) {
   ofstream out(MEAN_N_FILE);
   int i;
   for (i = 0; i < eco->stockvec.Size(); i++)
@@ -201,13 +201,13 @@ void InterruptInterface::dumpmean_n(charptrvector& args) {
     }
 }
 
-/*  void dumpz(charptrvector& args)
+/*  void dumpz(CharPtrVector& args)
  *
  *  Purpose: Dump z data to file.
  *  In: args:  not used
  *  Usage:  dumpz(args)
  */
-void InterruptInterface::dumpz(charptrvector& args) {
+void InterruptInterface::dumpz(CharPtrVector& args) {
   ofstream out(Z_FILE);
   int i;
   for (i = 0; i < eco->stockvec.Size(); i++)
@@ -217,13 +217,13 @@ void InterruptInterface::dumpz(charptrvector& args) {
     }
 }
 
-/*  void dumpcannibalism(charptrvector& args)
+/*  void dumpcannibalism(CharPtrVector& args)
  *
  *  Purpose: Dump Cannibalism data to file.
  *  In: args:  not used
  *  Usage:  dumpcannibalism(args)
  */
-void InterruptInterface::dumpcannibalism(charptrvector& args) {
+void InterruptInterface::dumpcannibalism(CharPtrVector& args) {
   ofstream out(CANNIBALISM_FILE);
   int i;
   for (i = 0; i < eco->stockvec.Size(); i++)
@@ -233,17 +233,17 @@ void InterruptInterface::dumpcannibalism(charptrvector& args) {
     }
 }
 
-/*  void dumpStock(charptrvector& args)
+/*  void dumpStock(CharPtrVector& args)
  *
  *  Purpose: Dump N & W stock data to file.
  *  In: args:  args[i], i>0 contains names of stocks to print from,
  *             or if args.Size() == 1 print from every stock.
  *  Usage:  dumpstock(args)
  */
-void InterruptInterface::dumpStock(charptrvector& args) {
+void InterruptInterface::dumpStock(CharPtrVector& args) {
   ofstream outn(STOCK_N_FILE);
   ofstream outw(STOCK_W_FILE);
-  Stockptrvector svec(0);
+  StockPtrVector svec(0);
   int i, j;
 
   if (args.Size() == 1)
@@ -257,8 +257,8 @@ void InterruptInterface::dumpStock(charptrvector& args) {
       }
 
   for (i = 0; i < svec.Size(); i++) {
-    intmatrix areas, ages;
-    intvector agevector;
+    IntMatrix areas, ages;
+    IntVector agevector;
     for (j = svec[i]->Minage(); j <= svec[i]->Maxage(); j++) {
       ages.AddRows(1, 1, j);
       agevector.resize(1, j);
@@ -284,12 +284,12 @@ void InterruptInterface::dumpStock(charptrvector& args) {
   }
 }
 
-/*  void dumpAll(charptrvector& args)
+/*  void dumpAll(CharPtrVector& args)
  *
  *  Purpose: Dump all ecosystem data to file.
  *  In: args:  not used
  *  Usage:  dumpall(args)
  */
-void InterruptInterface::dumpAll(charptrvector& args) {
+void InterruptInterface::dumpAll(CharPtrVector& args) {
   eco->PrintStatus(FULL_FILE);
 }

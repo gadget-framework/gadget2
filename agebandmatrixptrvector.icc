@@ -3,13 +3,13 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-Agebandmatrix& agebandmatrixptrvector::operator [] (int pos) {
+AgeBandMatrix& AgeBandMatrixPtrVector::operator [] (int pos) {
   return *v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-const Agebandmatrix& agebandmatrixptrvector::operator [] (int pos) const {
+const AgeBandMatrix& AgeBandMatrixPtrVector::operator [] (int pos) const {
   return *v[pos];
 }

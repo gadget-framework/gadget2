@@ -4,58 +4,58 @@
 #include "popinfo.h"
 
 /**
- * \class popinfoindexvector
- * \brief This class implements a dynamic vector of popinfo values, indexed from minpos not 0
+ * \class PopInfoIndexVector
+ * \brief This class implements a dynamic vector of PopInfo values, indexed from minpos not 0
  */
-class popinfoindexvector {
+class PopInfoIndexVector {
 public:
   /**
-   * \brief This is the default popinfoindexvector constructor
+   * \brief This is the default PopInfoIndexVector constructor
    */
-  popinfoindexvector() { minpos = 0; size = 0; v = 0; };
+  PopInfoIndexVector() { minpos = 0; size = 0; v = 0; };
   /**
-   * \brief This is the popinfoindexvector constructor for a specified size
+   * \brief This is the PopInfoIndexVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \param minpos this is the index for the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  popinfoindexvector(int sz, int minpos);
+  PopInfoIndexVector(int sz, int minpos);
   /**
-   * \brief This is the popinfoindexvector constructor for a specified size with an initial value
+   * \brief This is the PopInfoIndexVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param minpos this is the index for the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  popinfoindexvector(int sz, int minpos, popinfo initial);
+  PopInfoIndexVector(int sz, int minpos, PopInfo initial);
   /**
-   * \brief This is the popinfoindexvector constructor that create a copy of an existing popinfoindexvector
-   * \param initial this is the popinfoindexvector to copy
+   * \brief This is the PopInfoIndexVector constructor that create a copy of an existing PopInfoIndexVector
+   * \param initial this is the PopInfoIndexVector to copy
    */
-  popinfoindexvector(const popinfoindexvector& initial);
+  PopInfoIndexVector(const PopInfoIndexVector& initial);
   /**
-   * \brief This is the popinfoindexvector destructor
+   * \brief This is the PopInfoIndexVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~popinfoindexvector();
+  ~PopInfoIndexVector();
   /**
    * \brief This will add new entries to the vector
    * \param addsize this is the number of new entries to the vector
    * \param newminpos this is the index for the vector to be created
    * \param value this is the value that will be entered for the new entries
    */
-  void resize(int addsize, int newminpos, popinfo value);
+  void resize(int addsize, int newminpos, PopInfo value);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  popinfo& operator [] (int pos);
+  PopInfo& operator [] (int pos);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const popinfo& operator [] (int pos) const;
+  const PopInfo& operator [] (int pos) const;
   /**
    * \brief This will return the index of the vector
    * \return the index of the vector
@@ -87,9 +87,9 @@ protected:
    */
   int size;
   /**
-   * \brief This is the indexed vector of popinfo values
+   * \brief This is the indexed vector of PopInfo values
    */
-  popinfo* v;
+  PopInfo* v;
 };
 
 #ifdef GADGET_INLINE

@@ -27,7 +27,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   keeper->AddString(givenname);
 
   infile >> text >> ws;
-  intvector tmpareas;
+  IntVector tmpareas;
   if (strcasecmp(text, "livesonareas") == 0) {
     char c = infile.peek();
     while (isdigit(c) && !infile.eof() && (i < Area->NoAreas())) {
@@ -42,7 +42,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   } else
     handle.Unexpected("livesonareas", text);
 
-  doublevector lengths(2, 0);
+  DoubleVector lengths(2, 0);
   infile >> text >> ws;
   if (strcasecmp(text, "lengths") == 0) {
     if (!ReadVector(infile, lengths))
@@ -165,10 +165,10 @@ void Fleet::SecondSpecialTransactions(int area,
 void Fleet::CalcNumbers(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  popinfo pop;
+  PopInfo pop;
   pop.N = amount[TimeInfo->CurrentTime()][AreaNr[area]];
   pop.W = 1.0;
-  popinfovector NumberInArea(1, pop);
+  PopInfoVector NumberInArea(1, pop);
   predator->Sum(NumberInArea, area);
 }
 

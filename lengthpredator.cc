@@ -1,6 +1,6 @@
 #include "lengthpredator.h"
 
-LengthPredator::LengthPredator(const char* givenname, const intvector& Areas,
+LengthPredator::LengthPredator(const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv,
   const LengthGroupDivision* const GivenLgrpDiv, double multi)
   : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv) {
@@ -12,7 +12,7 @@ LengthPredator::LengthPredator(const char* givenname, const intvector& Areas,
 LengthPredator::~LengthPredator() {
 }
 
-void LengthPredator::Sum(const popinfovector& NumberInArea, int area) {
+void LengthPredator::Sum(const PopInfoVector& NumberInArea, int area) {
   int inarea = AreaNr[area];
   int i;
   for (i = 0; i < Prednumber[inarea].Size(); i++)

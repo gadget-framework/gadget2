@@ -9,14 +9,14 @@
 #include "doublematrixptrvector.h"
 #include "migvariableptrvector.h"
 
-typedef doublematrixptrvector MigrationList;
+typedef DoubleMatrixPtrVector MigrationList;
 
 class Migration : protected LivesOnAreas {
 public:
-  Migration(CommentStream& infile, int AgeDepMig, const intvector& areas,
+  Migration(CommentStream& infile, int AgeDepMig, const IntVector& areas,
     const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper);
   ~Migration();
-  const doublematrix& Migrationmatrix(const TimeClass* const TimeInfo, int age = 0);
+  const DoubleMatrix& Migrationmatrix(const TimeClass* const TimeInfo, int age = 0);
   void MigrationRecalc(int year);
   void Reset();
   void Reset(const TimeClass* const TimeInfo);
@@ -25,30 +25,30 @@ public:
   void Print(ofstream& outfile) const;
   void Print(int nr, ofstream& outfile) const;
   int ErrorNr() { return errornr; };
-  const doublevector& Penalty() const;
+  const DoubleVector& Penalty() const;
 protected:
   void CopyFromReadToCalc();
   void AdjustMigListAndCheckIfError(MigrationList& MigList);
   int AgeDepMigration;
-  intmatrix MatrixNumbers;
+  IntMatrix MatrixNumbers;
   MigrationList ReadMigList;
   MigrationList CalcMigList;
-  VariableInfoptrvector OptInfo;
-  doublevector OptVariables;
-  MigVariableptrvector OptVar;
+  VariableInfoPtrVector OptInfo;
+  DoubleVector OptVariables;
+  MigVariablePtrVector OptVar;
   int error;
-  intmatrix ages;
-  intvector AgeNr;
+  IntMatrix ages;
+  IntVector AgeNr;
   int errornr;
-  doublevector penalty;  //Addition Oct 1997
+  DoubleVector penalty;  //Addition Oct 1997
 private:
   void ReadNoMigrationMatrices(CommentStream& infile,
     const TimeClass* const TimeInfo, Keeper* const keeper);
-  void ReadOptVariables(CommentStream& infile, intvector& novariables,
+  void ReadOptVariables(CommentStream& infile, IntVector& novariables,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   void ReadCoefficients(CommentStream& infile,
     const AreaClass* const Area, Keeper* const keeper);
-  void CheckInfoAndDelete(intvector& novariables, Keeper* const keeper);
+  void CheckInfoAndDelete(IntVector& novariables, Keeper* const keeper);
 };
 
 #endif

@@ -15,7 +15,7 @@ public:
     const TimeClass* const TimeInfo, Keeper* const keeper, double w, const char* name);
   virtual ~SurveyIndices();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
-  void SetStocks(Stockptrvector& Stocks);
+  void SetStocks(StockPtrVector& Stocks);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile) const;
@@ -31,8 +31,8 @@ public:
     SI->PrintLikelihoodHeader(outfile, surveyname); };
 protected:
   SIOnStep* SI;
-  intvector areas;
-  charptrvector stocknames;
+  IntVector areas;
+  CharPtrVector stocknames;
   char* surveyname;
 };
 

@@ -4,7 +4,7 @@
 #include "ecosystem.h"
 #include "gadget.h"
 
-extern RunId RUNID;
+extern RunID RUNID;
 extern Ecosystem* EcoSystem;
 
 Keeper::Keeper() {
@@ -151,25 +151,25 @@ int Keeper::NoOptVariables() const {
   return nr;
 }
 
-void Keeper::ValuesOfVariables(doublevector& val) const {
+void Keeper::ValuesOfVariables(DoubleVector& val) const {
   int i;
   for (i = 0; i < values.Size(); i++)
     val[i] = values[i];
 }
 
-void Keeper::InitialValues(doublevector& val) const {
+void Keeper::InitialValues(DoubleVector& val) const {
   int i;
   for (i = 0; i < values.Size(); i++)
     val[i] = initialvalues[i];
 }
 
-void Keeper::ScaledValues(doublevector& val) const {
+void Keeper::ScaledValues(DoubleVector& val) const {
   int i;
   for (i = 0; i < values.Size(); i++)
     val[i] = scaledvalues[i];
 }
 
-void Keeper::ScaledOptValues(doublevector& val) const {
+void Keeper::ScaledOptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->NoOptVariables()) {
     cerr << "Keeper gets wrong number of optimizing variables";
@@ -187,7 +187,7 @@ void Keeper::ScaledOptValues(doublevector& val) const {
   }
 }
 
-void Keeper::OptValues(doublevector& val) const {
+void Keeper::OptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->NoOptVariables()) {
     cerr << "Keeper gets wrong number of optimizing variables";
@@ -205,7 +205,7 @@ void Keeper::OptValues(doublevector& val) const {
   }
 }
 
-void Keeper::InitialOptValues(doublevector& val) const {
+void Keeper::InitialOptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->NoOptVariables()) {
     cerr << "Keeper gets wrong number of optimizing variables";
@@ -223,7 +223,7 @@ void Keeper::InitialOptValues(doublevector& val) const {
   }
 }
 
-void Keeper::OptSwitches(Parametervector& sw) const {
+void Keeper::OptSwitches(ParameterVector& sw) const {
   int i, k;
   if (sw.Size() != this->NoOptVariables()) {
     cerr << "Keeper gets wrong number of optimizing variables";
@@ -252,7 +252,7 @@ void Keeper::ScaleVariables() {
   }
 }
 
-void Keeper::Update(const doublevector& val) {
+void Keeper::Update(const DoubleVector& val) {
   int i, j;
   if (val.Size() != values.Size()) {
     error = 1;
@@ -289,7 +289,7 @@ void Keeper::Clear() {
   error = 0;
 }
 
-void Keeper::WriteOptValues(double functionValue, const Likelihoodptrvector& Likely) const {
+void Keeper::WriteOptValues(double functionValue, const LikelihoodPtrVector& Likely) const {
   int i;
   for (i = 0; i < values.Size(); i++)
     if (opt[i] == 1 || opt.Size() == 0)
@@ -302,7 +302,7 @@ void Keeper::WriteOptValues(double functionValue, const Likelihoodptrvector& Lik
   cout << "\n\nThe overall likelihood score is " << functionValue << endl;
 }
 
-void Keeper::WriteInitialInformation(const char* const filename, const Likelihoodptrvector& Likely) {
+void Keeper::WriteInitialInformation(const char* const filename, const LikelihoodPtrVector& Likely) {
   ofstream outfile;
   outfile.open(filename, ios::out);
   CheckIfFailure(outfile, filename);
@@ -318,7 +318,7 @@ void Keeper::WriteInitialInformation(const char* const filename, const Likelihoo
     outfile << endl;
   }
 
-  charptrvector tmpLikely;
+  CharPtrVector tmpLikely;
   tmpLikely.resize(Likely.Size());
 
   char* strLikely = SendComponents();
@@ -360,7 +360,7 @@ void Keeper::WriteInitialInformation(const char* const filename, const Likelihoo
 }
 
 void Keeper::WriteValues(const char* const filename,
-  double functionValue, const Likelihoodptrvector& Likely, int prec) const {
+  double functionValue, const LikelihoodPtrVector& Likely, int prec) const {
 
   int i, p, w;
   ofstream outfile;
@@ -403,7 +403,7 @@ void Keeper::WriteInitialInformationInColumns(const char* const filename) const 
 }
 
 void Keeper::WriteValuesInColumns(const char* const filename,
-  double functionValue, const Likelihoodptrvector& Likely, int prec) const {
+  double functionValue, const LikelihoodPtrVector& Likely, int prec) const {
 
   int i, p, w;
   ofstream outfile;
@@ -441,7 +441,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
   ErrorHandler handle;
   int i, j;
   if (Stoch->SwitchesGiven()) {
-    intvector match(Stoch->NoVariables(), 0);
+    IntVector match(Stoch->NoVariables(), 0);
     for (i = 0; i < Stoch->NoVariables(); i++)
       for (j = 0; j < switches.Size(); j++)
         if (Stoch->Switches(i) == switches[j]) {
@@ -478,20 +478,20 @@ void Keeper::Update(const StochasticData* const Stoch) {
       *address[i][j].addr = values[i];
 }
 
-void Keeper::Opt(intvector& optimize) const {
+void Keeper::Opt(IntVector& optimize) const {
   int i;
   for (i = 0; i < optimize.Size(); i++)
     optimize[i] = opt[i];
 }
 
-void Keeper::Switches(Parametervector& sw) const {
+void Keeper::Switches(ParameterVector& sw) const {
   int i;
   for (i = 0; i < sw.Size(); i++)
     sw[i] = switches[i];
 }
 
 void Keeper::WriteParamsInColumns(const char* const filename,
-  double functionValue, const Likelihoodptrvector& Likely, int prec) const {
+  double functionValue, const LikelihoodPtrVector& Likely, int prec) const {
 
   int i, p, w;
   ofstream outfile;
@@ -518,19 +518,19 @@ void Keeper::WriteParamsInColumns(const char* const filename,
   outfile.clear();
 }
 
-void Keeper::LowerBds(doublevector& lbs) const {
+void Keeper::LowerBds(DoubleVector& lbs) const {
   int i;
   for (i = 0; i < lbs.Size(); i++)
     lbs[i] = lowerbds[i];
 }
 
-void Keeper::UpperBds(doublevector& ubs) const {
+void Keeper::UpperBds(DoubleVector& ubs) const {
   int i;
   for (i = 0; i < ubs.Size(); i++)
     ubs[i] = upperbds[i];
 }
 
-void Keeper::LowerOptBds(doublevector& lbs) const {
+void Keeper::LowerOptBds(DoubleVector& lbs) const {
   int i, j;
   if (lbs.Size() != this->NoOptVariables()) {
     cerr << "Keeper gets wrong number of optimizing variables";
@@ -548,7 +548,7 @@ void Keeper::LowerOptBds(doublevector& lbs) const {
   }
 }
 
-void Keeper::UpperOptBds(doublevector& ubs) const {
+void Keeper::UpperOptBds(DoubleVector& ubs) const {
   int i, j;
   if (ubs.Size() != this->NoOptVariables()) {
     cerr << "Keeper gets wrong number of optimizing variables";

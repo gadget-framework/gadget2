@@ -10,7 +10,7 @@
 #include "gadget.h"
 
 #include "runid.h"
-extern RunId RUNID;
+extern RunID RUNID;
 
 PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
@@ -50,7 +50,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   datafile.clear();
 
   //Read in length aggregation from file
-  doublevector lengths;
+  DoubleVector lengths;
   ReadWordAndValue(infile, "lenaggfile", filename);
   datafile.open(filename);
   CheckIfFailure(datafile, filename);
@@ -101,8 +101,8 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   outfile.flush();
 }
 
-void PredatorOverPrinter::SetPredator(Predatorptrvector& predatorvec) {
-  Predatorptrvector predators;
+void PredatorOverPrinter::SetPredator(PredatorPtrVector& predatorvec) {
+  PredatorPtrVector predators;
   int index = 0;
   int i, j;
 
@@ -131,7 +131,7 @@ void PredatorOverPrinter::Print(const TimeClass* const TimeInfo) {
   if (!aat.AtCurrentTime(TimeInfo))
     return;
   aggregator->Sum();
-  const doublematrix* dptr = &aggregator->ReturnSum();
+  const DoubleMatrix* dptr = &aggregator->ReturnSum();
   int i, j;
   for (i = 0; i < areas.Nrow(); i++) {
     for (j = 0; j < dptr->Ncol(i); j++) {

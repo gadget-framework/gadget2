@@ -6,8 +6,8 @@
 #include "gadget.h"
 
 MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
-  Keeper* const keeper, int minage, const intvector& minabslength,
-  const intvector& size, const intvector& tmpareas, const LengthGroupDivision*const lgrpdiv)
+  Keeper* const keeper, int minage, const IntVector& minabslength,
+  const IntVector& size, const IntVector& tmpareas, const LengthGroupDivision*const lgrpdiv)
   : Maturity(tmpareas, minage, minabslength, size, lgrpdiv) {
 
   ErrorHandler handle;

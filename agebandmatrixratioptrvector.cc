@@ -7,21 +7,21 @@
 #include "agebandmatrixratioptrvector.icc"
 #endif
 
-agebandmatrixratioptrvector::agebandmatrixratioptrvector(int size1, int minage,
-  const intvector& minl, const intvector& size2) {
+AgeBandMatrixRatioPtrVector::AgeBandMatrixRatioPtrVector(int size1, int minage,
+  const IntVector& minl, const IntVector& size2) {
 
   size = size1;
   int i;
   if (size == 0) {
     v = 0;
   } else {
-    v = new Agebandmatrixratio*[size];
+    v = new AgeBandMatrixRatio*[size];
     for (i = 0; i < size; i++)
-      v[i] = new Agebandmatrixratio(minage, minl, size2);
+      v[i] = new AgeBandMatrixRatio(minage, minl, size2);
   }
 }
 
-agebandmatrixratioptrvector::~agebandmatrixratioptrvector() {
+AgeBandMatrixRatioPtrVector::~AgeBandMatrixRatioPtrVector() {
   int i;
   for (i = 0; i < tagid.Size(); i++)
     delete[] tagid[i];
@@ -34,25 +34,25 @@ agebandmatrixratioptrvector::~agebandmatrixratioptrvector() {
   }
 }
 
-void agebandmatrixratioptrvector::ChangeElement(int nr, const Agebandmatrixratio& value) {
+void AgeBandMatrixRatioPtrVector::ChangeElement(int nr, const AgeBandMatrixRatio& value) {
   // value must have same number of tagging experiments as myself
   assert(0 <= nr && nr < size);
   assert(this->NrOfTagExp() == value.NrOfTagExp());
   delete v[nr];
-  v[nr] = new Agebandmatrixratio(value);
+  v[nr] = new AgeBandMatrixRatio(value);
 }
 
-void agebandmatrixratioptrvector::resize(int addsize, Agebandmatrixratio* matr) {
+void AgeBandMatrixRatioPtrVector::resize(int addsize, AgeBandMatrixRatio* matr) {
   assert(addsize > 0);
   int i;
   if (v == 0) {
     size = addsize;
-    v = new Agebandmatrixratio*[size];
+    v = new AgeBandMatrixRatio*[size];
     for (i = 0; i < size; i++)
       v[i] = matr;
 
   } else {
-    Agebandmatrixratio** vnew = new Agebandmatrixratio*[addsize + size];
+    AgeBandMatrixRatio** vnew = new AgeBandMatrixRatio*[addsize + size];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
@@ -63,15 +63,15 @@ void agebandmatrixratioptrvector::resize(int addsize, Agebandmatrixratio* matr) 
   }
 }
 
-void agebandmatrixratioptrvector::resize(int addsize, int minage,
-  const intvector& minl, const intvector& lsize) {
+void AgeBandMatrixRatioPtrVector::resize(int addsize, int minage,
+  const IntVector& minl, const IntVector& lsize) {
 
-  Agebandmatrixratio** vnew = new Agebandmatrixratio*[size + addsize];
+  AgeBandMatrixRatio** vnew = new AgeBandMatrixRatio*[size + addsize];
   int i;
   for (i = 0; i < size; i++)
     vnew[i] = v[i];
   for (i = size; i < size + addsize; i++)
-    vnew[i] = new Agebandmatrixratio(minage, minl, lsize);
+    vnew[i] = new AgeBandMatrixRatio(minage, minl, lsize);
   delete[] v;
   v = vnew;
   size += addsize;
@@ -79,7 +79,7 @@ void agebandmatrixratioptrvector::resize(int addsize, int minage,
 
 // New memory has been allocated for each v[i][age][length][tag].N.
 // All v[i][age][length][tag].N, v[i][age][length][tag].R added equal -1.0.
-void agebandmatrixratioptrvector::addTag(const char* id) {
+void AgeBandMatrixRatioPtrVector::addTag(const char* id) {
 
   double* num;
   int minlength, maxlength, age, length, i;
@@ -103,8 +103,8 @@ void agebandmatrixratioptrvector::addTag(const char* id) {
 
 // No memory has been allocated. v[i][age][length][tag].N points to
 // the same memory location as initial[i][age][length].N.
-void agebandmatrixratioptrvector::addTag(agebandmatrixptrvector* initial,
-  const agebandmatrixptrvector& Alkeys, const char* id) {
+void AgeBandMatrixRatioPtrVector::addTag(AgeBandMatrixPtrVector* initial,
+  const AgeBandMatrixPtrVector& Alkeys, const char* id) {
 
   int minlength, maxlength, i, age, length;
 
@@ -125,11 +125,11 @@ void agebandmatrixratioptrvector::addTag(agebandmatrixptrvector* initial,
   }
 }
 
-void agebandmatrixratioptrvector::resize() {
+void AgeBandMatrixRatioPtrVector::resize() {
   size = 0;
 }
 
-void agebandmatrixratioptrvector::addTagName(const char* name) {
+void AgeBandMatrixRatioPtrVector::addTagName(const char* name) {
   char* tempid;
   tempid = new char[strlen(name) + 1];
   strcpy(tempid, name);
@@ -138,7 +138,7 @@ void agebandmatrixratioptrvector::addTagName(const char* name) {
 
 // Returns -1 if do not contain tag with name == id.
 // Else return the index into the location of the tag with name == id.
-int agebandmatrixratioptrvector::getId(const char* id) {
+int AgeBandMatrixRatioPtrVector::getId(const char* id) {
 
   int i = 0;
   int found = 0;
@@ -155,7 +155,7 @@ int agebandmatrixratioptrvector::getId(const char* id) {
     return i - 1;
 }
 
-void agebandmatrixratioptrvector::deleteTag(const char* tagname) {
+void AgeBandMatrixRatioPtrVector::deleteTag(const char* tagname) {
 
   int minlength, maxlength, i, age, length;
 
@@ -176,16 +176,16 @@ void agebandmatrixratioptrvector::deleteTag(const char* tagname) {
   }
 }
 
-const char* agebandmatrixratioptrvector::getName(int id) const {
+const char* AgeBandMatrixRatioPtrVector::getName(int id) const {
   assert(id >= 0);
   assert(id < this->NrOfTagExp());
   return tagid[id];
 }
 
-void agebandmatrixratioptrvector::Migrate(const doublematrix& MI, const agebandmatrixptrvector& Total) {
+void AgeBandMatrixRatioPtrVector::Migrate(const DoubleMatrix& MI, const AgeBandMatrixPtrVector& Total) {
 
   assert(MI.Nrow() == size);
-  doublevector tmp(size);
+  DoubleVector tmp(size);
   int i, j, age, length, tag;
   int NrOfTagExp = tagid.Size();
   if (NrOfTagExp > 0) {
@@ -210,7 +210,7 @@ void agebandmatrixratioptrvector::Migrate(const doublematrix& MI, const agebandm
   }
 }
 
-void agebandmatrixratioptrvector::print(char* filename) {
+void AgeBandMatrixRatioPtrVector::print(char* filename) {
 
   ofstream outfile;
   outfile.open(filename);
@@ -246,6 +246,6 @@ void agebandmatrixratioptrvector::print(char* filename) {
   }
 }
 
-const charptrvector agebandmatrixratioptrvector::tagids() const {
+const CharPtrVector AgeBandMatrixRatioPtrVector::tagids() const {
   return tagid;
 }

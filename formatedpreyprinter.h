@@ -15,19 +15,19 @@ class FormatedPreyPrinter : public Printer {
 public:
   FormatedPreyPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~FormatedPreyPrinter();
-  void SetStock(Stockptrvector& stockvec);
+  void SetStock(StockPtrVector& stockvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
-  intvector areas;
-  charptrvector areaindex;
-  charptrvector stocknames;
+  IntVector areas;
+  CharPtrVector areaindex;
+  CharPtrVector stocknames;
   ofstream zoutfile;
   ofstream noutfile;
   ofstream coutfile;
   int printzp;
   int printnp;
   int printcp;
-  Stockptrvector stocks;
+  StockPtrVector stocks;
   const AreaClass* Area;
 };
 #endif

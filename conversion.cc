@@ -9,7 +9,7 @@ void LengthGroupPrintError(double minl, double maxl, double dl, const char* expl
   exit(EXIT_FAILURE);
 }
 
-void LengthGroupPrintError(const doublevector& breaks, const char* explain) {
+void LengthGroupPrintError(const DoubleVector& breaks, const char* explain) {
   cerr << "Failed to create the length group division\n";
   int i;
   for (i = 0; i < breaks.Size(); i++)
@@ -41,7 +41,7 @@ LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : 
 }
 
 //Constructor for length division with uneven increments.
-LengthGroupDivision::LengthGroupDivision(const doublevector& Breaks) : error(0), Dl(0) {
+LengthGroupDivision::LengthGroupDivision(const DoubleVector& Breaks) : error(0), Dl(0) {
   int i;
   if (Breaks.Size() < 2) {
     error = 1;
@@ -135,7 +135,7 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
     return 1;
   }
 
-  doublevector lower, middle;  //hold the minlength and meanlength of this
+  DoubleVector lower, middle;  //hold the minlength and meanlength of this
   if (Minlength(0) >= addition->Minlength(0)) {
     for (; Minlength(0) > addition->Minlength(i); i++) {
       lower.resize(1, addition->Minlength(i));
@@ -327,7 +327,7 @@ ConversionIndex::~ConversionIndex() {
 
 //The function Interpolates values calculated on a coarse Length distribution
 //Vc to a finer length distribution Vf using the conversionindex CI.
-void Interp(doublevector& Vf, const doublevector& Vc, const ConversionIndex* CI) {
+void Interp(DoubleVector& Vf, const DoubleVector& Vc, const ConversionIndex* CI) {
   int i, offset;
   if (CI -> SameDl()) {
     offset = CI->Offset();

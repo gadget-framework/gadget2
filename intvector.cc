@@ -5,7 +5,7 @@
 #include "intvector.icc"
 #endif
 
-intvector::intvector(int sz) {
+IntVector::IntVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new int[size];
@@ -13,7 +13,7 @@ intvector::intvector(int sz) {
     v = 0;
 }
 
-intvector::intvector(int sz, int value) {
+IntVector::IntVector(int sz, int value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -24,7 +24,7 @@ intvector::intvector(int sz, int value) {
     v = 0;
 }
 
-intvector::intvector(const intvector& initial) {
+IntVector::IntVector(const IntVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -35,15 +35,14 @@ intvector::intvector(const intvector& initial) {
     v = 0;
 }
 
-intvector::~intvector() {
+IntVector::~IntVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a intvector and fills it vith value.
-void intvector::resize(int addsize, int value) {
+void IntVector::resize(int addsize, int value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,7 +51,7 @@ void intvector::resize(int addsize, int value) {
       v[i] = value;
 }
 
-void intvector::resize(int addsize) {
+void IntVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -67,7 +66,7 @@ void intvector::resize(int addsize) {
   }
 }
 
-void intvector::Delete(int pos) {
+void IntVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   int* vnew = new int[size - 1];
@@ -81,7 +80,7 @@ void intvector::Delete(int pos) {
   size--;
 }
 
-intvector& intvector::operator = (const intvector& d) {
+IntVector& IntVector::operator = (const IntVector& d) {
   if (this == &d)
     return(*this);
   int i;

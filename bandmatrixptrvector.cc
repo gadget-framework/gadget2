@@ -5,34 +5,33 @@
 #include "bandmatrixptrvector.icc"
 #endif
 
-bandmatrixptrvector::bandmatrixptrvector(int sz) {
+BandMatrixPtrVector::BandMatrixPtrVector(int sz) {
   size = sz;
   if (size > 0)
-    v = new bandmatrix*[size];
+    v = new BandMatrix*[size];
   else
     v = 0;
 }
 
-bandmatrixptrvector::bandmatrixptrvector(int sz, bandmatrix* value) {
+BandMatrixPtrVector::BandMatrixPtrVector(int sz, BandMatrix* value) {
   size = sz;
   int i;
   if (size > 0) {
-    v = new bandmatrix*[size];
+    v = new BandMatrix*[size];
     for (i = 0; i < size; i++)
       v[i] = value;
   } else
     v = 0;
 }
 
-bandmatrixptrvector::~bandmatrixptrvector() {
+BandMatrixPtrVector::~BandMatrixPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a bandmatrixptrvector and fills it vith value.
-void bandmatrixptrvector::resize(int addsize, bandmatrix* value) {
+void BandMatrixPtrVector::resize(int addsize, BandMatrix* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -41,13 +40,13 @@ void bandmatrixptrvector::resize(int addsize, bandmatrix* value) {
       v[i] = value;
 }
 
-void bandmatrixptrvector::resize(int addsize) {
+void BandMatrixPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
-    v = new bandmatrix*[size];
+    v = new BandMatrix*[size];
   } else if (addsize > 0) {
-    bandmatrix** vnew = new bandmatrix*[addsize + size];
+    BandMatrix** vnew = new BandMatrix*[addsize + size];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
@@ -56,10 +55,10 @@ void bandmatrixptrvector::resize(int addsize) {
   }
 }
 
-void bandmatrixptrvector::Delete(int pos) {
+void BandMatrixPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
-  bandmatrix** vnew = new bandmatrix*[size - 1];
+  BandMatrix** vnew = new BandMatrix*[size - 1];
   int i;
   for (i = 0; i < pos; i++)
     vnew[i] = v[i];

@@ -3,7 +3,7 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-popratioindexvector& Agebandmatrixratio::operator [] (int age) {
+PopRatioIndexVector& AgeBandMatrixRatio::operator [] (int age) {
   assert(minage <= age && age < (minage + nrow));
   return *(v[age - minage]);
 }
@@ -11,7 +11,7 @@ popratioindexvector& Agebandmatrixratio::operator [] (int age) {
 #ifdef GADGET_INLINE
 inline
 #endif
-const popratioindexvector& Agebandmatrixratio::operator [] (int age) const {
+const PopRatioIndexVector& AgeBandMatrixRatio::operator [] (int age) const {
   assert(minage <= age && age < (minage + nrow));
   return *(v[age - minage]);
 }

@@ -24,7 +24,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   keeper->AddString(givenname);
 
   infile >> text;
-  intvector tmpareas;
+  IntVector tmpareas;
   if (strcasecmp(text, "livesonareas") == 0) {
     infile >> ws;
     char c = infile.peek();
@@ -40,7 +40,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   } else
     handle.Unexpected("livesonareas", text);
 
-  doublevector lengths(2, 0);
+  DoubleVector lengths(2, 0);
   infile >> text;
   if (strcasecmp(text, "lengths") == 0) {
     if (!ReadVector(infile, lengths))
@@ -114,11 +114,11 @@ void OtherFood::SecondSpecialTransactions(int area, const AreaClass* const Area,
 }
 
 void OtherFood::CalcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  popinfo pop;
+  PopInfo pop;
   //Warning: Choose the weight as 1.
   pop.W = 1.0;
   pop.N = amount[TimeInfo->CurrentTime()][AreaNr[area]] * Area->Size(area);
-  popinfovector NumberInArea(1, pop);
+  PopInfoVector NumberInArea(1, pop);
   prey->SumUsingPopInfo(NumberInArea, area, TimeInfo->CurrentSubstep());
 }
 

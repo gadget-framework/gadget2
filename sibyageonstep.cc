@@ -6,8 +6,8 @@
 #include "stockaggregator.h"
 #include "gadget.h"
 
-SIByAgeOnStep::SIByAgeOnStep(CommentStream& infile, const intvector& areas,
-  const intmatrix& ages, const char* arealabel, const charptrvector& ageindex,
+SIByAgeOnStep::SIByAgeOnStep(CommentStream& infile, const IntVector& areas,
+  const IntMatrix& ages, const char* arealabel, const CharPtrVector& ageindex,
   const TimeClass* const TimeInfo, const char* datafilename)
   : SIOnStep(infile, datafilename, arealabel, TimeInfo, ageindex),
     aggregator(0), Ages(ages), Areas(areas) {
@@ -17,7 +17,7 @@ SIByAgeOnStep::~SIByAgeOnStep() {
   delete aggregator;
 }
 
-void SIByAgeOnStep::SetStocks(const Stockptrvector& Stocks) {
+void SIByAgeOnStep::SetStocks(const StockPtrVector& Stocks) {
 
   /* This function initializes aggregator. It should:
    *  merge all the areas in Areas
@@ -25,10 +25,10 @@ void SIByAgeOnStep::SetStocks(const Stockptrvector& Stocks) {
    *  merge all the stocks in Stocks
    *  merge all the age groups in Ages[i]
    * This means that aggregator.ReturnSum will return an
-   * agebandmatrixptrvector with only one element. That element will have
+   * AgeBandMatrixPtrVector with only one element. That element will have
    * Ages.Nrow() lines (i.e. ages) and only 1 column (i.e. 1 length group)*/
 
-  intmatrix areas(1, Areas.Size());
+  IntMatrix areas(1, Areas.Size());
   int i;
   for (i = 0; i < Areas.Size(); i++)
     areas[0][i] = Areas[i];
@@ -54,11 +54,11 @@ void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!(this->IsToSum(TimeInfo)))
     return;
   aggregator->Sum();
-  //Use that the agebandmatrixptrvector aggregator->ReturnSum returns has only one element.
+  //Use that the AgeBandMatrixPtrVector aggregator->ReturnSum returns has only one element.
   //Copy the information from it -- we only want to keep the abundance numbers.
-  const Agebandmatrix* Alptr = &(aggregator->ReturnSum()[0]);
+  const AgeBandMatrix* Alptr = &(aggregator->ReturnSum()[0]);
   int maxage = Alptr->Maxage();
-  doublevector numbers(maxage + 1);
+  DoubleVector numbers(maxage + 1);
   int age;
   for (age = 0; age <= maxage; age++)
     numbers[age] = (*Alptr)[age][0].N;

@@ -23,13 +23,13 @@ public:
   virtual void AddToLikelihoodTimeAndKeeper(const TimeClass* const TimeInfo, Keeper* const keeper);
   virtual void LikelihoodPrintKeeper(ofstream& outfile, const Keeper* const keeper) const;
 protected:
-  intvector switchnr;
-  doublevector upperbound;
-  doublevector lowerbound;
-  doublevector powers;
-  doublevector lowerweights;
-  doublevector upperweights;
-  doublevector likelihoods;
+  IntVector switchnr;
+  DoubleVector upperbound;
+  DoubleVector lowerbound;
+  DoubleVector powers;
+  DoubleVector lowerweights;
+  DoubleVector upperweights;
+  DoubleVector likelihoods;
   double defLW;     // default value for the lower weight
   double defUW;     // default value for the upper weight
   double defPower;  // default value for the power

@@ -5,7 +5,7 @@
 #include "variableinfoptrvector.icc"
 #endif
 
-VariableInfoptrvector::VariableInfoptrvector(int sz) {
+VariableInfoPtrVector::VariableInfoPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new VariableInfo*[size];
@@ -13,7 +13,7 @@ VariableInfoptrvector::VariableInfoptrvector(int sz) {
     v = 0;
 }
 
-VariableInfoptrvector::VariableInfoptrvector(int sz, VariableInfo* value) {
+VariableInfoPtrVector::VariableInfoPtrVector(int sz, VariableInfo* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -24,7 +24,7 @@ VariableInfoptrvector::VariableInfoptrvector(int sz, VariableInfo* value) {
     v = 0;
 }
 
-VariableInfoptrvector::VariableInfoptrvector(const VariableInfoptrvector& initial) {
+VariableInfoPtrVector::VariableInfoPtrVector(const VariableInfoPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -35,15 +35,14 @@ VariableInfoptrvector::VariableInfoptrvector(const VariableInfoptrvector& initia
     v = 0;
 }
 
-VariableInfoptrvector::~VariableInfoptrvector() {
+VariableInfoPtrVector::~VariableInfoPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a VariableInfoptrvector and fills it vith value.
-void VariableInfoptrvector::resize(int addsize, VariableInfo* value) {
+void VariableInfoPtrVector::resize(int addsize, VariableInfo* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,7 +51,7 @@ void VariableInfoptrvector::resize(int addsize, VariableInfo* value) {
       v[i] = value;
 }
 
-void VariableInfoptrvector::resize(int addsize) {
+void VariableInfoPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -67,7 +66,7 @@ void VariableInfoptrvector::resize(int addsize) {
   }
 }
 
-void VariableInfoptrvector::Delete(int pos) {
+void VariableInfoPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   VariableInfo** vnew = new VariableInfo*[size - 1];

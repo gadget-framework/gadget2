@@ -9,7 +9,7 @@
 #include "runid.h"
 #include "gadget.h"
 
-extern RunId RUNID;
+extern RunID RUNID;
 
 /*  FormatedCHatPrinter
  *
@@ -89,7 +89,7 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
   }
 }
 
-void FormatedCHatPrinter::SetFleet(Fleetptrvector& fleetvec) {
+void FormatedCHatPrinter::SetFleet(FleetPtrVector& fleetvec) {
   int i, j;
   int index = 0;
   for (i = 0; i < fleetvec.Size(); i++)

@@ -4,37 +4,37 @@
 class Likelihood;
 
 /**
- * \class Likelihoodptrvector
+ * \class LikelihoodPtrVector
  * \brief This class implements a dynamic vector of Likelihood values
  */
-class Likelihoodptrvector {
+class LikelihoodPtrVector {
 public:
   /**
-   * \brief This is the default Likelihoodptrvector constructor
+   * \brief This is the default LikelihoodPtrVector constructor
    */
-  Likelihoodptrvector() { size = 0; v = 0; };
+  LikelihoodPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the Likelihoodptrvector constructor for a specified size
+   * \brief This is the LikelihoodPtrVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  Likelihoodptrvector(int sz);
+  LikelihoodPtrVector(int sz);
   /**
-   * \brief This is the Likelihoodptrvector constructor for a specified size with an initial value
+   * \brief This is the LikelihoodPtrVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  Likelihoodptrvector(int sz, Likelihood* initial);
+  LikelihoodPtrVector(int sz, Likelihood* initial);
   /**
-   * \brief This is the Likelihoodptrvector constructor that create a copy of an existing Likelihoodptrvector
-   * \param initial this is the Likelihoodptrvector to copy
+   * \brief This is the LikelihoodPtrVector constructor that create a copy of an existing LikelihoodPtrVector
+   * \param initial this is the LikelihoodPtrVector to copy
    */
-  Likelihoodptrvector(const Likelihoodptrvector& initial);
+  LikelihoodPtrVector(const LikelihoodPtrVector& initial);
   /**
-   * \brief This is the Likelihoodptrvector destructor
+   * \brief This is the LikelihoodPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~Likelihoodptrvector();
+  ~LikelihoodPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
@@ -43,8 +43,8 @@ public:
   void resize(int add, Likelihood* value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**

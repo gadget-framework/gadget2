@@ -17,12 +17,12 @@ class SIOnStep {
 public:
   SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
     const TimeClass* const TimeInfo, int numcols,
-    const charptrvector& index1, const charptrvector& index2);
+    const CharPtrVector& index1, const CharPtrVector& index2);
   SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
-    const TimeClass* const TimeInfo, const charptrvector& colindex);
+    const TimeClass* const TimeInfo, const CharPtrVector& colindex);
   virtual ~SIOnStep();
   virtual void Sum(const TimeClass* const TimeInfo) = 0;
-  virtual void SetStocks(const Stockptrvector& Stocks) = 0;
+  virtual void SetStocks(const StockPtrVector& Stocks) = 0;
   int Error() const { return error; };
   void Clear() { error = 0; };
   virtual double Regression();
@@ -37,29 +37,29 @@ public:
 protected:
   void SetError() { error = 1; };
   int IsToSum(const TimeClass* const TimeInfo) const;
-  void KeepNumbers(const doublevector& numbers);
-  intvector Years;
-  intvector Steps;
-  intvector YearsInFile;
+  void KeepNumbers(const DoubleVector& numbers);
+  IntVector Years;
+  IntVector Steps;
+  IntVector YearsInFile;
   ActionAtTimes AAT;
   //JMB - made Indices and abundance protected
-  doublematrix Indices;
-  doublematrix abundance;
+  DoubleMatrix Indices;
+  DoubleMatrix abundance;
   enum FitType { LogLinearFit = 0, FixedSlopeLogLinearFit, FixedLogLinearFit, LinearFit, PowerFit,
     FixedSlopeLinearFit, FixedLinearFit, FixedInterceptLinearFit, FixedInterceptLogLinearFit };
   FitType getFitType() { return fittype; };
 private:
-  void ReadSIData(CommentStream&, const char*, const charptrvector&, const charptrvector&, const TimeClass*);
-  void ReadSIData(CommentStream&, const char*, const charptrvector&, const TimeClass*);
-  double Fit(const doublevector& stocksize, const doublevector& indices, int col);
+  void ReadSIData(CommentStream&, const char*, const CharPtrVector&, const CharPtrVector&, const TimeClass*);
+  void ReadSIData(CommentStream&, const char*, const CharPtrVector&, const TimeClass*);
+  double Fit(const DoubleVector& stocksize, const DoubleVector& indices, int col);
   int NumberOfSums;
   FitType fittype;
   double slope;
   double intercept;
   //Additions to facilitate printing
-  doublevector slopes;
-  doublevector intercepts;
-  doublevector sse;
+  DoubleVector slopes;
+  DoubleVector intercepts;
+  DoubleVector sse;
   int error;
 };
 

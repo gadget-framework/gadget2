@@ -3,13 +3,13 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-doublematrix*& doublematrixptrvector::operator [] (int pos) {
+DoubleMatrix*& DoubleMatrixPtrVector::operator [] (int pos) {
   return v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-doublematrix* const& doublematrixptrvector::operator [] (int pos) const {
+DoubleMatrix* const& DoubleMatrixPtrVector::operator [] (int pos) const {
   return v[pos];
 }

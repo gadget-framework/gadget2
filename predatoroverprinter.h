@@ -15,13 +15,13 @@ class PredatorOverPrinter : public Printer {
 public:
   PredatorOverPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~PredatorOverPrinter();
-  void SetPredator(Predatorptrvector& predatorvec);
+  void SetPredator(PredatorPtrVector& predatorvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
-  intmatrix areas;
-  charptrvector areaindex;
-  charptrvector lenindex;
-  charptrvector predatornames;
+  IntMatrix areas;
+  CharPtrVector areaindex;
+  CharPtrVector lenindex;
+  CharPtrVector predatornames;
   LengthGroupDivision* predLgrpDiv;
   PredatorOverAggregator* aggregator;
   ofstream outfile;

@@ -3,13 +3,13 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-BaseClass*& BaseClassptrvector::operator [] (int pos) {
+BaseClass*& BaseClassPtrVector::operator [] (int pos) {
   return v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-BaseClass* const& BaseClassptrvector::operator [] (int pos) const {
+BaseClass* const& BaseClassPtrVector::operator [] (int pos) const {
   return v[pos];
 }

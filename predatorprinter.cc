@@ -11,7 +11,7 @@
 #include "gadget.h"
 
 #include "runid.h"
-extern RunId RUNID;
+extern RunID RUNID;
 
 PredatorPrinter::PredatorPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
@@ -61,7 +61,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   datafile.clear();
 
   //Read in predator length aggregation from file
-  doublevector predlengths;
+  DoubleVector predlengths;
   ReadWordAndValue(infile, "predlenaggfile", filename);
   datafile.open(filename);
   CheckIfFailure(datafile, filename);
@@ -72,7 +72,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   datafile.clear();
 
   //Read in prey length aggregation from file
-  doublevector preylengths;
+  DoubleVector preylengths;
   ReadWordAndValue(infile, "preylenaggfile", filename);
   datafile.open(filename);
   CheckIfFailure(datafile, filename);
@@ -130,9 +130,9 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   outfile.flush();
 }
 
-void PredatorPrinter::SetPredAndPrey(Predatorptrvector& predatorvec, Preyptrvector& preyvec) {
-  Predatorptrvector predators;
-  Preyptrvector preys;
+void PredatorPrinter::SetPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVector& preyvec) {
+  PredatorPtrVector predators;
+  PreyPtrVector preys;
   int index = 0;
   int i, j;
   delete aggregator;
@@ -182,7 +182,7 @@ void PredatorPrinter::Print(const TimeClass* const TimeInfo) {
   int i, j, k;
 
   for (i = 0; i < areas.Nrow(); i++) {
-    const bandmatrix* bptr = &aggregator->ReturnSum()[i];
+    const BandMatrix* bptr = &aggregator->ReturnSum()[i];
     for (j = 0; j < bptr->Nrow(); j++) {
       for (k = 0; k < bptr->Ncol(j); k++) {
         outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep

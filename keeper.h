@@ -4,7 +4,7 @@
 #include "likelihood.h"
 #include "likelihoodptrvector.h"
 #include "stochasticdata.h"
-#include "addr_keepmatrix.h"
+#include "addresskeepermatrix.h"
 #include "strstack.h"
 
 class Keeper {
@@ -25,19 +25,19 @@ public:
   void ClearComponents();
   int ErrorInUpdate() const;
   void Clear();
-  void Opt(intvector& opt) const;
-  void ValuesOfVariables(doublevector& val) const;
-  void Switches(Parametervector& switches) const;
-  void LowerBds(doublevector& lbs) const;
-  void UpperBds(doublevector& ubs) const;
-  void LowerOptBds(doublevector& lbs) const;
-  void UpperOptBds(doublevector& ubs) const;
-  void InitialValues(doublevector& val) const;
-  void ScaledValues(doublevector& val) const;
+  void Opt(IntVector& opt) const;
+  void ValuesOfVariables(DoubleVector& val) const;
+  void Switches(ParameterVector& switches) const;
+  void LowerBds(DoubleVector& lbs) const;
+  void UpperBds(DoubleVector& ubs) const;
+  void LowerOptBds(DoubleVector& lbs) const;
+  void UpperOptBds(DoubleVector& ubs) const;
+  void InitialValues(DoubleVector& val) const;
+  void ScaledValues(DoubleVector& val) const;
   int NoVariables() const;
   int NoOptVariables() const;
   void Update(int pos, double& value);
-  void Update(const doublevector& val);
+  void Update(const DoubleVector& val);
   void Update(const StochasticData * const Stoch);
   /* AJ 08.08.00 Changes made to the following five functions for printing
    * Use:  keeper.WriteInitialInformation(filename, likely)
@@ -56,35 +56,35 @@ public:
    * For all weights print to filename:
    * "weight" "tab"
    * Print to filename "New line" */
-  void WriteInitialInformation(const char* const filename, const Likelihoodptrvector& Likely);
+  void WriteInitialInformation(const char* const filename, const LikelihoodPtrVector& Likely);
   /* Use: keeper.WriteValues(filename, funcValue, likely)
    * the output has been appended to file with filename = filename in the format:
    * For all values print to filename showing 8 digits:
    * "value" " " "tab"
    * For all values in likely print to filename showing 4 digits:
    * "unweighted likelihood" " " "tab" funcValue showing 15 digits. */
-  void WriteValues(const char* const filename, double FunctionValue, const Likelihoodptrvector& Likely, int prec) const;
+  void WriteValues(const char* const filename, double FunctionValue, const LikelihoodPtrVector& Likely, int prec) const;
   void WriteInitialInformationInColumns(const char* const filenam) const;
-  void WriteValuesInColumns(const char* const filename, double functionValue, const Likelihoodptrvector& Likely, int prec) const;
-  void WriteParamsInColumns(const char* const filename, double functionValue, const Likelihoodptrvector& Likely, int prec) const;
+  void WriteValuesInColumns(const char* const filename, double functionValue, const LikelihoodPtrVector& Likely, int prec) const;
+  void WriteParamsInColumns(const char* const filename, double functionValue, const LikelihoodPtrVector& Likely, int prec) const;
   //AJ 08.08.00 end of change to functions.
-  void WriteOptValues(double FunctionValue, const Likelihoodptrvector& Likely) const;
+  void WriteOptValues(double FunctionValue, const LikelihoodPtrVector& Likely) const;
   void ScaleVariables();
-  void InitialOptValues(doublevector &val) const;
-  void ScaledOptValues(doublevector &val) const;
-  void OptSwitches(Parametervector& sw) const;
-  void OptValues(doublevector &val) const;
+  void InitialOptValues(DoubleVector &val) const;
+  void ScaledOptValues(DoubleVector &val) const;
+  void OptSwitches(ParameterVector& sw) const;
+  void OptValues(DoubleVector &val) const;
 protected:
-  addr_keepmatrix address;
-  doublevector initialvalues;
-  doublevector scaledvalues;
-  doublevector values;
-  intvector opt;
+  AddressKeeperMatrix address;
+  DoubleVector initialvalues;
+  DoubleVector scaledvalues;
+  DoubleVector values;
+  IntVector opt;
   StrStack* stack;
   StrStack* likcompnames;
-  Parametervector switches;
-  doublevector lowerbds;
-  doublevector upperbds;
+  ParameterVector switches;
+  DoubleVector lowerbds;
+  DoubleVector upperbds;
   int error;
 };
 

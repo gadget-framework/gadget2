@@ -6,10 +6,10 @@ double LogLinearRegression::ErrorSSE = 1e10;
 LogLinearRegression::LogLinearRegression() : error(0) {
 }
 
-void LogLinearRegression::Fit(const doublevector& x, const doublevector& y) {
+void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
   error = 0;
-  doublevector Xlog(x);
-  doublevector Ylog(y);
+  DoubleVector Xlog(x);
+  DoubleVector Ylog(y);
   this->CleanAndTakeLog(x, y, Xlog, Ylog);
   if (error)
     return;
@@ -17,10 +17,10 @@ void LogLinearRegression::Fit(const doublevector& x, const doublevector& y) {
   error = LR.Error();
 }
 
-void LogLinearRegression::Fit(const doublevector& x, const doublevector& y, double slope) {
+void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double slope) {
   error = 0;
-  doublevector Xlog(x);
-  doublevector Ylog(y);
+  DoubleVector Xlog(x);
+  DoubleVector Ylog(y);
   this->CleanAndTakeLog(x, y, Xlog, Ylog);
   if (error)
     return;
@@ -28,10 +28,10 @@ void LogLinearRegression::Fit(const doublevector& x, const doublevector& y, doub
   error = LR.Error();
 }
 
-void LogLinearRegression::Fit(double intercept, const doublevector& x, const doublevector& y) {
+void LogLinearRegression::Fit(double intercept, const DoubleVector& x, const DoubleVector& y) {
   error = 0;
-  doublevector Xlog(x);
-  doublevector Ylog(y);
+  DoubleVector Xlog(x);
+  DoubleVector Ylog(y);
   this->CleanAndTakeLog(x, y, Xlog, Ylog);
   if (error)
     return;
@@ -39,10 +39,10 @@ void LogLinearRegression::Fit(double intercept, const doublevector& x, const dou
   error = LR.Error();
 }
 
-void LogLinearRegression::Fit(const doublevector& x, const doublevector& y, double slope, double intercept) {
+void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double slope, double intercept) {
   error = 0;
-  doublevector Xlog(x);
-  doublevector Ylog(y);
+  DoubleVector Xlog(x);
+  DoubleVector Ylog(y);
   this->CleanAndTakeLog(x, y, Xlog, Ylog);
   if (error)
     return;
@@ -57,7 +57,7 @@ double LogLinearRegression::SSE() const {
     return LR.SSE();
 }
 
-double LogLinearRegression::SSE(const doublevector& x, const doublevector& y) {
+double LogLinearRegression::SSE(const DoubleVector& x, const DoubleVector& y) {
   if (x.Size() != y.Size() || error) {
     error = 1;
     return LogLinearRegression::ErrorSSE;
@@ -77,8 +77,8 @@ double LogLinearRegression::SSE(const doublevector& x, const doublevector& y) {
   return sum;
 }
 
-double LogLinearRegression::WeightedSSE(const doublevector& x,
-  const doublevector& y, const doublevector& weights) {
+double LogLinearRegression::WeightedSSE(const DoubleVector& x,
+  const DoubleVector& y, const DoubleVector& weights) {
 
   if (x.Size() != y.Size() || x.Size() != weights.Size() || error) {
     error = 1;
@@ -129,8 +129,8 @@ double LogLinearRegression::slope() const {
   return LR.slope();
 }
 
-void LogLinearRegression::CleanAndTakeLog(const doublevector& x,
-  const doublevector& y, doublevector& Xlog, doublevector& Ylog) {
+void LogLinearRegression::CleanAndTakeLog(const DoubleVector& x,
+  const DoubleVector& y, DoubleVector& Xlog, DoubleVector& Ylog) {
 
   if (x.Size() != y.Size() || Xlog.Size() != x.Size() || Xlog.Size() != Ylog.Size()) {
     error = 1;

@@ -110,9 +110,9 @@ void Spawner::ReadSpawnerData(CommentStream& infile,
         timeid = (Years.Size() - 1);
 
         //Resize the matrices to hold the data
-        spawnRatio.resize(1, new Formulamatrix(numarea, numage, tmpF));
-        spawnMortality.resize(1, new Formulamatrix(numarea, numage, tmpF));
-        spawnWeightLoss.resize(1, new Formulamatrix(numarea, numage, tmpF));
+        spawnRatio.resize(1, new FormulaMatrix(numarea, numage, tmpF));
+        spawnMortality.resize(1, new FormulaMatrix(numarea, numage, tmpF));
+        spawnWeightLoss.resize(1, new FormulaMatrix(numarea, numage, tmpF));
       }
 
     } else {
@@ -166,7 +166,7 @@ Spawner::~Spawner() {
   }
 }
 
-void Spawner::Spawn(Agebandmatrix& Alkeys, int area,
+void Spawner::Spawn(AgeBandMatrix& Alkeys, int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   int i, j, age, len;
@@ -237,7 +237,7 @@ void Spawner::Spawn(Agebandmatrix& Alkeys, int area,
 
     //Subtract mortality and reduce the weight of the living ones.
     for (len = Alkeys.Minlength(age); len < Alkeys.Maxlength(age); len++) {
-      popinfo p = Alkeys[age][len] * ratio;
+      PopInfo p = Alkeys[age][len] * ratio;
       ssb[ageid][len] = p.N * (p.W * weight);
       //cout << "for age " << age << " and length " << len << " ssb is " << ssb[ageid][len] << endl;
 
@@ -248,7 +248,7 @@ void Spawner::Spawn(Agebandmatrix& Alkeys, int area,
     }
   }
 
-  doublevector tmpSpawn;
+  DoubleVector tmpSpawn;
   tmpSpawn.resize(ssb.Ncol(), 0.0);
   for (age = 0; age < ssb.Nrow(); age++)
     for (len = 0; len < ssb.Ncol(age); len++)

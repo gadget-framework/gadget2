@@ -12,9 +12,9 @@
 #include "extravector.h"
 #include "gadget.h"
 
-FleetPreyAggregator::FleetPreyAggregator(const Fleetptrvector& Fleets,
-  const Stockptrvector& Stocks, LengthGroupDivision* const Lgrpdiv,
-  const intmatrix& Areas, const intmatrix& Ages, const int overcons)
+FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
+  const StockPtrVector& Stocks, LengthGroupDivision* const Lgrpdiv,
+  const IntMatrix& Areas, const IntMatrix& Ages, const int overcons)
   : fleets(Fleets), stocks(Stocks), LgrpDiv(Lgrpdiv),
     areas(Areas), ages(Ages), overconsumption(overcons) {
 
@@ -33,7 +33,7 @@ FleetPreyAggregator::FleetPreyAggregator(const Fleetptrvector& Fleets,
 
     //For convinience, use ap as shorthand for &(stocks[i]->Agelengthkeys(0))
     //Changed 25-9 2001 and the memberfunction Areas added to livesinareas
-    const Agebandmatrix* ap = &(stocks[i]->Agelengthkeys(stocks[i]->Areas()[0]));
+    const AgeBandMatrix* ap = &(stocks[i]->Agelengthkeys(stocks[i]->Areas()[0]));
 
     //Now, loop over all the possible ages in the Ages matrix,
     for (j = 0; j < ages.Nrow(); j++) {
@@ -77,16 +77,16 @@ FleetPreyAggregator::FleetPreyAggregator(const Fleetptrvector& Fleets,
   //Resize totalcatch using dummy variables tmppop and popmatrix. Take care
   //to make totalcatch a full matrix, i.e. a rectangular matrix, with
   //minage = 0 and minlength = 0.
-  popinfo tmppop;
+  PopInfo tmppop;
   tmppop.N = 1.0;
   tmppop.W = 1.0;
-  popinfomatrix popmatrix(ages.Nrow(), numlengths, tmppop);
+  PopInfoMatrix popmatrix(ages.Nrow(), numlengths, tmppop);
   totalcatch.resize(areas.Nrow(), 0, 0, popmatrix);
 
   //Resize catchratios using dummy variables tmpband. Take care
   //to make catchratios a full matrix, i.e. a rectangular matrix, with
   //minage = 0 and minlength = 0.
-  const bandmatrix tmpband(0, numlengths, 0, ages.Nrow(), 1);
+  const BandMatrix tmpband(0, numlengths, 0, ages.Nrow(), 1);
   catchratios.resize(areas.Nrow(), tmpband);
 }
 
@@ -94,7 +94,6 @@ FleetPreyAggregator::~FleetPreyAggregator() {
   int i;
   for (i = 0; i < CI.Size(); i++)
     delete CI[i];
-  //delete LgrpDiv;
 }
 
 void FleetPreyAggregator::Print(ofstream& outfile) const {
@@ -116,16 +115,16 @@ void FleetPreyAggregator::Print(ofstream& outfile) const {
 }
 
 void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
-  agebandmatrixptrvector totalpop;
-  popinfo tmppop;
+  AgeBandMatrixPtrVector totalpop;
+  PopInfo tmppop;
   tmppop.N = 1.0;
   tmppop.W = 1.0;
-  popinfomatrix popmatrix(ages.Nrow(), NoLengthGroups(), tmppop);
+  PopInfoMatrix popmatrix(ages.Nrow(), NoLengthGroups(), tmppop);
   totalpop.resize(areas.Nrow(), 0, 0, popmatrix);
 
   int i, j, k, f, h, z;
   int aggrArea, aggrAge, area, age;
-  popinfo nullpop;
+  PopInfo nullpop;
 
   //Initialize totalcatch and totalpop to 0
   for (i = 0; i < totalcatch.Size(); i++)
@@ -152,8 +151,8 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
           if (prey->IsInArea(area) && fleets[f]->IsInArea(area)) {
             for (i = 0; i < pred->NoPreys(); i++) {
               if (prey->Name() == pred->Preys(i)->Name()) {
-                const doubleindexvector* suitptr = &pred->Suitability(i)[0];
-                const Agebandmatrix* alptr = &prey->AlkeysPriorToEating(area);
+                const DoubleIndexVector* suitptr = &pred->Suitability(i)[0];
+                const AgeBandMatrix* alptr = &prey->AlkeysPriorToEating(area);
                 for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
                   for (k = 0; k < ages.Ncol(aggrAge); k++) {
                     age = ages[aggrAge][k];
@@ -162,7 +161,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
                       //to get the real catch obtained by the model, we
                       //have to multiply the vector suits by
                       //(prey->Ratio(area,l) > 1 ? 1/Prey->Ratio(area, l) : 1)
-                      doubleindexvector Ratio = *suitptr;
+                      DoubleIndexVector Ratio = *suitptr;
                       if (overconsumption)
                         for (z = Ratio.Mincol(); z < Ratio.Maxcol(); z++)
                           Ratio[z] *= (prey->Ratio(area, z) > 1 ? 1 / prey->Ratio(area, z) : 1);
@@ -195,16 +194,16 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo, int dummy) {
   //the mortality model. The results are to be used in the second likelihood
   //function in CatchDistribution.
   //written by kgf 16/9 98
-  agebandmatrixptrvector totalpop;
-  popinfo tmppop;
+  AgeBandMatrixPtrVector totalpop;
+  PopInfo tmppop;
   tmppop.N = 1.0;
   tmppop.W = 1.0;
-  popinfomatrix popmatrix(ages.Nrow(), NoLengthGroups(), tmppop);
+  PopInfoMatrix popmatrix(ages.Nrow(), NoLengthGroups(), tmppop);
   totalpop.resize(areas.Nrow(), 0, 0, popmatrix);
 
   int i, j, k, f, h;
   int aggrArea, aggrAge, area, age;
-  popinfo nullpop;
+  PopInfo nullpop;
 
   //Initialize totalcatch and totalpop to 0
   for (i = 0; i < totalcatch.Size(); i++)
@@ -231,13 +230,13 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo, int dummy) {
           if (prey->IsInArea(area) && fleets[f]->IsInArea(area)) {
             for (i = 0; i < pred->NoPreys(); i++) {
               if (prey->Name() == pred->Preys(i)->Name()) {
-                const doubleindexvector* suitptr = &pred->Suitability(i)[0];
-                const Agebandmatrix* alptr = &prey->getMeanN(area);
+                const DoubleIndexVector* suitptr = &pred->Suitability(i)[0];
+                const AgeBandMatrix* alptr = &prey->getMeanN(area);
                 for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
                   for (k = 0; k < ages.Ncol(aggrAge); k++) {
                     age = ages[aggrAge][k];
                     if ((alptr->Minage() <= age) && (age <= alptr->Maxage())) {
-                      doubleindexvector Ratio = *suitptr;
+                      DoubleIndexVector Ratio = *suitptr;
                       PopinfoAdd(totalcatch[aggrArea][aggrAge],
                         (*alptr)[age], *CI[h], pred->getFlevel(area, TimeInfo), Ratio);
                       PopinfoAdd(totalpop[aggrArea][aggrAge],

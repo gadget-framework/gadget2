@@ -1,7 +1,6 @@
 #include "stock.h"
 #include "predpreystdprinter.h"
 #include "errorhandler.h"
-#include "poppredator.h"
 #include "stockpredator.h"
 #include "prey.h"
 #include "stockprey.h"
@@ -32,8 +31,8 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  charptrvector areaindex;
-  intmatrix tmpareas;
+  CharPtrVector areaindex;
+  IntMatrix tmpareas;
   ReadWordAndValue(infile, "areaaggfile", filename);
   datafile.open(filename);
   CheckIfFailure(datafile, filename);
@@ -87,8 +86,8 @@ PredPreyStdPrinter::~PredPreyStdPrinter() {
   delete[] preyname;
 }
 
-void PredPreyStdPrinter::SetStocksAndPredAndPrey(const Stockptrvector& stockvec,
-  const PopPredatorptrvector& predvec, const Preyptrvector& preyvec) {
+void PredPreyStdPrinter::SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
+  const PopPredatorPtrVector& predvec, const PreyPtrVector& preyvec) {
 
   //First we try comparing the StockPredators and StockPreys to predname and preyname.
   int stockpred = 0;

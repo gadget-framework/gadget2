@@ -3,13 +3,13 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-VariableInfo*& VariableInfoptrvector::operator [] (int pos) {
+VariableInfo*& VariableInfoPtrVector::operator [] (int pos) {
   return v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-VariableInfo* const& VariableInfoptrvector::operator [] (int pos) const {
+VariableInfo* const& VariableInfoPtrVector::operator [] (int pos) const {
   return v[pos];
 }

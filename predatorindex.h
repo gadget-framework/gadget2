@@ -20,13 +20,13 @@ public:
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile) const {};
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
-  virtual void SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys);
+  virtual void SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys);
   virtual void Reset(const Keeper* const keeper);
 protected:
-  charptrvector predatornames;
-  charptrvector preynames;
+  CharPtrVector predatornames;
+  CharPtrVector preynames;
   PIOnStep* PI;
-  intvector areas;
+  IntVector areas;
   char* piname;
 };
 

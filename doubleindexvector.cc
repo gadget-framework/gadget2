@@ -6,7 +6,7 @@
 #include "doubleindexvector.icc"
 #endif
 
-doubleindexvector::doubleindexvector(int sz, int minp) {
+DoubleIndexVector::DoubleIndexVector(int sz, int minp) {
   size = sz;
   minpos = minp;
   if (size > 0)
@@ -15,7 +15,7 @@ doubleindexvector::doubleindexvector(int sz, int minp) {
     v = 0;
 }
 
-doubleindexvector::doubleindexvector(int sz, int minp, double value) {
+DoubleIndexVector::DoubleIndexVector(int sz, int minp, double value) {
   size = sz;
   minpos = minp;
   int i;
@@ -27,7 +27,7 @@ doubleindexvector::doubleindexvector(int sz, int minp, double value) {
     v = 0;
 }
 
-doubleindexvector::doubleindexvector(const doubleindexvector& initial) {
+DoubleIndexVector::DoubleIndexVector(const DoubleIndexVector& initial) {
   size = initial.size;
   minpos = initial.minpos;
   int i;
@@ -39,14 +39,14 @@ doubleindexvector::doubleindexvector(const doubleindexvector& initial) {
     v = 0;
 }
 
-doubleindexvector::~doubleindexvector() {
+DoubleIndexVector::~DoubleIndexVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-void doubleindexvector::resize(int addsize, int lower, double initial) {
+void DoubleIndexVector::resize(int addsize, int lower, double initial) {
   double* vnew = new double[size + addsize];
   int i;
   if (v != 0) {

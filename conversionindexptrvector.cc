@@ -5,7 +5,7 @@
 #include "conversionindexptrvector.icc"
 #endif
 
-ConversionIndexptrvector::ConversionIndexptrvector(int sz) {
+ConversionIndexPtrVector::ConversionIndexPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new ConversionIndex*[size];
@@ -13,7 +13,7 @@ ConversionIndexptrvector::ConversionIndexptrvector(int sz) {
     v = 0;
 }
 
-ConversionIndexptrvector::ConversionIndexptrvector(int sz, ConversionIndex* value) {
+ConversionIndexPtrVector::ConversionIndexPtrVector(int sz, ConversionIndex* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -24,7 +24,7 @@ ConversionIndexptrvector::ConversionIndexptrvector(int sz, ConversionIndex* valu
     v = 0;
 }
 
-ConversionIndexptrvector::ConversionIndexptrvector(const ConversionIndexptrvector& initial) {
+ConversionIndexPtrVector::ConversionIndexPtrVector(const ConversionIndexPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -35,15 +35,14 @@ ConversionIndexptrvector::ConversionIndexptrvector(const ConversionIndexptrvecto
     v = 0;
 }
 
-ConversionIndexptrvector::~ConversionIndexptrvector() {
+ConversionIndexPtrVector::~ConversionIndexPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a ConversionIndexptrvector and fills it vith value.
-void ConversionIndexptrvector::resize(int addsize, ConversionIndex* value) {
+void ConversionIndexPtrVector::resize(int addsize, ConversionIndex* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,7 +51,7 @@ void ConversionIndexptrvector::resize(int addsize, ConversionIndex* value) {
       v[i] = value;
 }
 
-void ConversionIndexptrvector::resize(int addsize) {
+void ConversionIndexPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -67,7 +66,7 @@ void ConversionIndexptrvector::resize(int addsize) {
   }
 }
 
-void ConversionIndexptrvector::Delete(int pos) {
+void ConversionIndexPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   ConversionIndex** vnew = new ConversionIndex*[size - 1];

@@ -25,7 +25,7 @@ class LikelihoodPrinter : public Printer {
 public:
   LikelihoodPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~LikelihoodPrinter();
-  void SetLikely(Likelihoodptrvector& likvec);
+  void SetLikely(LikelihoodPtrVector& likvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
   ofstream catchFile;
@@ -34,9 +34,9 @@ protected:
   int printCatch;
   int printSurvey;
   int printStomach;
-  Likelihoodptrvector catchvec;
-  Likelihoodptrvector stomachvec;
-  Likelihoodptrvector surveyvec;
+  LikelihoodPtrVector catchvec;
+  LikelihoodPtrVector stomachvec;
+  LikelihoodPtrVector surveyvec;
 };
 
 #endif

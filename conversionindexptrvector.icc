@@ -3,13 +3,13 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-ConversionIndex*& ConversionIndexptrvector::operator [] (int pos) {
+ConversionIndex*& ConversionIndexPtrVector::operator [] (int pos) {
   return v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-ConversionIndex* const& ConversionIndexptrvector::operator [] (int pos) const {
+ConversionIndex* const& ConversionIndexPtrVector::operator [] (int pos) const {
   return v[pos];
 }

@@ -4,6 +4,7 @@
 #include "doublevector.h"
 #include "intvector.h"
 #include "parameter.h"
+#include "parametervector.h"
 #include "charptrvector.h"
 #include "commentstream.h"
 #include "initialinputfile.h"
@@ -50,14 +51,14 @@ public:
 protected:
   InitialInputFile* readInfo;
   int error;
-  doublevector values;
-  doublevector lowerbound;
-  doublevector upperbound;
-  Parametervector switches;
-  intvector optimize;
+  DoubleVector values;
+  DoubleVector lowerbound;
+  DoubleVector upperbound;
+  ParameterVector switches;
+  IntVector optimize;
   int NETRUN;
   #ifdef GADGET_NETWORK
-    slaveCommunication* slave;   //Takes care of netcommunication, sending/receiving data
+    SlaveCommunication* slave;   //Takes care of netcommunication, sending/receiving data
     int numberOfParam;           //number of parameters in vector from master
     double* dataFromMaster;      //dataFromMaster[0..numberOfParam-1] is received from master
     int GETDATA;

@@ -5,7 +5,7 @@
 #include "gadget.h"
 
 TotalPredator::TotalPredator(CommentStream& infile, const char* givenname,
-  const intvector& Areas, const LengthGroupDivision* const OtherLgrpDiv,
+  const IntVector& Areas, const LengthGroupDivision* const OtherLgrpDiv,
   const LengthGroupDivision* const GivenLgrpDiv, const TimeClass* const TimeInfo,
   Keeper* const keeper, double multi)
   : LengthPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv, multi) {
@@ -176,7 +176,7 @@ void TotalPredator::Print(ofstream& outfile) const {
   PopPredator::Print(outfile);
 }
 
-const popinfovector& TotalPredator::NumberPriortoEating(int area, const char* preyname) const {
+const PopInfoVector& TotalPredator::NumberPriortoEating(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < NoPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)

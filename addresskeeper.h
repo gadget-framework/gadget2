@@ -1,15 +1,15 @@
-#ifndef addr_keep_h
-#define addr_keep_h
+#ifndef addresskeeper_h
+#define addresskeeper_h
 
 #include "gadget.h"
 
-class addr_keep {
+class AddressKeeper {
 public:
   double* addr;
   char* name;
-  addr_keep() { addr = 0; name = 0; };
-  ~addr_keep();
-  addr_keep(const addr_keep& a)
+  AddressKeeper() { addr = 0; name = 0; };
+  ~AddressKeeper();
+  AddressKeeper(const AddressKeeper& a)
     : addr(a.addr), name(new char[strlen(a.name) + 1])
     { strcpy(name, a.name); };
   void operator = (double* address) { addr = address; };
@@ -23,7 +23,7 @@ public:
     strcpy(name, str1);
     delete[] str1;  //JMB - free memory from strstack->sendall()
   };
-  void operator = (const addr_keep a) {
+  void operator = (const AddressKeeper a) {
     if (name != 0)
       delete[] name;
     name = new char[strlen(a.name) + 1];

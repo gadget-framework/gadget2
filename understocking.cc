@@ -77,7 +77,7 @@ UnderStocking::~UnderStocking() {
     delete[] areaindex[i];
 }
 
-void UnderStocking::SetFleets(Fleetptrvector& Fleets) {
+void UnderStocking::SetFleets(FleetPtrVector& Fleets) {
   int i, j;
   int found;
   for (i = 0; i < fleetnames.Size(); i++) {

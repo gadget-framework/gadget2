@@ -28,12 +28,12 @@ ostream& printTime(ostream& o, const TimeClass& t, int indent) {
  *  Purpose:  Print list of area numbers
  *
  *  In: ostream& o        :output stream
- *  intvector& areas  :vector of areas
+ *  IntVector& areas  :vector of areas
  *      int indent    :number of spaces to indent (default = 0)
  *
  *  Output format:        "areas <a_0> <a_1> ... <a_n>"
  */
-ostream& printAreasHeader(ostream& o, const intvector& areas, int indent) {
+ostream& printAreasHeader(ostream& o, const IntVector& areas, int indent) {
   int i;
   char* ind = makeSpaces(indent);
   o <<ind << "areas";
@@ -51,8 +51,8 @@ ostream& printAreasHeader(ostream& o, const intvector& areas, int indent) {
  *
  *  In: ostream& o        :output stream
  *  char* name        :name of the stock
- *  intmatrix& areas      :matrix of areas
- *  intmatrix& ages       :matrix of ages
+ *  IntMatrix& areas      :matrix of areas
+ *  IntMatrix& ages       :matrix of ages
  *  LengthGroupDivision ldiv  :lengthgroup division for the stock
  *      int indent        :number of spaces to indent (default = 0)
  *
@@ -64,8 +64,8 @@ ostream& printAreasHeader(ostream& o, const intvector& areas, int indent) {
  *  "  ...                         "
  *      "  <a_m,1> <a_m,2> ... <a_m,n> "
  */
-ostream& printStockHeader(ostream& o, const char* name, const intmatrix& areas,
-  const intmatrix& ages, const LengthGroupDivision& ldiv, int indent) {
+ostream& printStockHeader(ostream& o, const char* name, const IntMatrix& areas,
+  const IntMatrix& ages, const LengthGroupDivision& ldiv, int indent) {
 
   int i, j;
   char* ind = makeSpaces(indent);
@@ -143,7 +143,7 @@ ostream& printAgeGroups(ostream& o, int minage, int maxage, int agedelta, int in
  *  Purpose:  Print Age groups
  *
  *  In: ostream& o      :output stream
- *  intvector& ages     :ages to print
+ *  IntVector& ages     :ages to print
  *      int indent      :number of spaces to indent (default = 0)
  *
  *  Output format:
@@ -153,7 +153,7 @@ ostream& printAgeGroups(ostream& o, int minage, int maxage, int agedelta, int in
  *      "  ages <a_1> <a_2> ... <a_n>"
  *   or "  agedelta <da>" <-- if  a_2-a_1 == a_3-a_2 == .. a_n-a_(n-1)
  */
-ostream& printAgeGroups(ostream& o, const intvector& ages, int indent) {
+ostream& printAgeGroups(ostream& o, const IntVector& ages, int indent) {
   int i, da;
   if (ages.Size() > 2) {
     da = ages[1] - ages[0];
@@ -217,7 +217,7 @@ ostream& printSuitability(ostream& o, const Predator& pred, int indent) {
  *  Purpose:  Print band matrix
  *
  *  In: ostream& o      :output stream
- *  bandmatrix& b       :bandmatrix to print
+ *  BandMatrix& b       :BandMatrix to print
  *      int indent      :number of spaces to indent (default = 0)
  *
  *  Output format:
@@ -226,7 +226,7 @@ ostream& printSuitability(ostream& o, const Predator& pred, int indent) {
  *      " ...     ...         ...   "
  *      "<d_m.0> <d_m.1> ... <d_m.n>"
  */
-ostream& printBandMatrix(ostream& o, const bandmatrix& b, int rowindex, int indent) {
+ostream& printBandMatrix(ostream& o, const BandMatrix& b, int rowindex, int indent) {
   int i, j, maxcol = 0;
   char* ind = makeSpaces(indent);
   for (i = b.Minage(); i <= b.Maxage(); i++)
@@ -271,7 +271,7 @@ ostream& printc_hat(ostream& o, const MortPredLength& pred, AreaClass area, int 
   o << ind << "c_hat\n" << ind << "  predator\n" << ind << "    "
     << pred.Name() << endl;
   for (a = 0; a < area.NoAreas(); a++) {
-    printAreasHeader(o, intvector(1, a), indent + 2);
+    printAreasHeader(o, IntVector(1, a), indent + 2);
     for (p = 0; p < pred.NoPreys(); p++)
       if (pred.Preys(p)->IsInArea(a)) {
         o << ind << "  prey\n" << ind << "    " << pred.Preys(p)->Name() << endl;
@@ -292,7 +292,7 @@ ostream& printz(ostream& o, const MortPrey& prey, AreaClass area, int indent) {
   o << ind << "z\n" << ind << "  prey\n" << ind << "     " << prey.Name() << endl;
   int ar;
   for (ar = 0; ar < area.NoAreas(); ar++) {
-    printAreasHeader(o, intvector(1, ar), indent + 2);
+    printAreasHeader(o, IntVector(1, ar), indent + 2);
     printVectorHeader(o, *prey.ReturnLengthGroupDiv(), "z", indent + 2);
     printVector(o, prey.z[ar], indent);
   }
@@ -306,7 +306,7 @@ ostream& printcannibalism(ostream& o, const MortPrey& prey, AreaClass area, int 
     << prey.Name() << endl;
   int ar;
   for (ar = 0; ar < area.NoAreas(); ar++) {
-    printAreasHeader(o, intvector(1, ar), indent + 2);
+    printAreasHeader(o, IntVector(1, ar), indent + 2);
     printVectorHeader(o, *prey.ReturnLengthGroupDiv(), "cannibalism", indent + 2);
     printVector(o, prey.cannibalism[ar], indent);
   }
@@ -314,7 +314,7 @@ ostream& printcannibalism(ostream& o, const MortPrey& prey, AreaClass area, int 
   return o.flush();
 }
 
-ostream& printVector(ostream& o, const doublevector& vec, int indent) {
+ostream& printVector(ostream& o, const DoubleVector& vec, int indent) {
   char* ind = makeSpaces(indent);
   o << ind;
   int i;
@@ -333,7 +333,7 @@ ostream& printmean_n(ostream& o, const MortPrey& prey, AreaClass area, int inden
   o << ind << "mean_n\n" << ind << "  prey\n" << ind << "     " << prey.Name() << endl;
   int ar;
   for (ar = 0; ar < area.NoAreas(); ar++) {
-    printAreasHeader(o, intvector(1, ar), indent + 2);
+    printAreasHeader(o, IntVector(1, ar), indent + 2);
     printMatrixHeader(o, 1, 1, *(prey.ReturnLengthGroupDiv()), "mean_n", 0, indent + 2);
     printN(o, prey.Alkeys[ar], 0, indent);
   }
@@ -428,7 +428,7 @@ ostream& printVectorHeader(ostream& o, int min, int max, int agedelta,
  *  Purpose: Print header for vector data by age
  *
  *  In: ostream& o    :output stream
- *  intvector& ages   :ages for data
+ *  IntVector& ages   :ages for data
  *      char* value       :name of data values
  *      int indent    :number of spaces to indent (default = 0)
  *
@@ -438,7 +438,7 @@ ostream& printVectorHeader(ostream& o, int min, int max, int agedelta,
  *      "  value"
  *      "    <valname>"
  */
-ostream& printVectorHeader(ostream& o, const intvector& ages,
+ostream& printVectorHeader(ostream& o, const IntVector& ages,
   const char* value, int indent) {
 
   char* ind = makeSpaces(indent);
@@ -515,7 +515,7 @@ ostream& printMatrixHeader(ostream& o, const LengthGroupDivision& rowlengths,
  *  Purpose: Print header for matrix data by age x length
  *
  *  In: ostream& o          :output stream
- *  intvector& rowages              :age groups for data
+ *  IntVector& rowages              :age groups for data
  *  LengthGroupDivision& collengths :length division for data
  *      char* value                     :name of data values
  *      int indent          :number of spaces to indent (default = 0)
@@ -529,7 +529,7 @@ ostream& printMatrixHeader(ostream& o, const LengthGroupDivision& rowlengths,
  *      "  value"
  *      "    <valname>"
  */
-ostream& printMatrixHeader(ostream& o, const intvector& rowages,
+ostream& printMatrixHeader(ostream& o, const IntVector& rowages,
   const LengthGroupDivision& collengths, const char* value, int withrowind, int indent) {
 
   char* ind = makeSpaces(indent);
@@ -551,7 +551,7 @@ ostream& printMatrixHeader(ostream& o, const intvector& rowages,
  *  Purpose: Print header for matrix data by age x length
  *
  *  In: ostream& o          :output stream
- *  intvector& rowages              :age groups for data
+ *  IntVector& rowages              :age groups for data
  *  LengthGroupDivision& collengths :length division for data
  *      char* value                     :name of data values
  *      int indent          :number of spaces to indent (default = 0)
@@ -587,7 +587,7 @@ ostream& printMatrixHeader(ostream& o, int minage, int maxage,
  *  Purpose: Print Suitability matrix
  *
  *  In: ostream& o      :output stream
- *  bandmatrix& b       :bandmatrix to print
+ *  BandMatrix& b       :BandMatrix to print
  *      int indent      :number of spaces to indent (default = 0)
  *
  *  Output format:
@@ -596,7 +596,7 @@ ostream& printMatrixHeader(ostream& o, int minage, int maxage,
  *      " ...     ...         ...   "
  *      "<d_m.0> <d_m.1> ... <d_m.n>"
  */
-ostream& printSuitMatrix(ostream& o, const bandmatrix& b, int rowindex, int indent) {
+ostream& printSuitMatrix(ostream& o, const BandMatrix& b, int rowindex, int indent) {
   int i, j, maxcol = 0;
   char* ind = makeSpaces(indent);
   for (i = b.Minage(); i <= b.Maxage(); i++)
@@ -640,14 +640,14 @@ ostream& printSuitMatrix(ostream& o, const bandmatrix& b, int rowindex, int inde
  *  Purpose: Print N from agebandmatrix
  *
  *  In: ostream& o      :output stream
- *  Agebandmatrix& a    :Agebandmatrix to print
- *      intvector& ages         :ages to print at start of line
+ *  AgeBandMatrix& a    :AgeBandMatrix to print
+ *      IntVector& ages         :ages to print at start of line
  *      int indent      :number of spaces to indent (default = 0)
  *
  *  Output format:
  *      "[printNorW]"
  */
-ostream& printN(ostream& o, const Agebandmatrix& a, const intvector* ages, int indent) {
+ostream& printN(ostream& o, const AgeBandMatrix& a, const IntVector* ages, int indent) {
   return printNorW(o, a, 1, ages, indent);
 }
 
@@ -656,14 +656,14 @@ ostream& printN(ostream& o, const Agebandmatrix& a, const intvector* ages, int i
  *  Purpose: PrintW from agebandmatrix
  *
  *  In: ostream& o      :output stream
- *  Agebandmatrix& a    :Agebandmatrix to print
- *      intvector& ages         :ages to print at start of line
+ *  AgeBandMatrix& a    :AgeBandMatrix to print
+ *      IntVector& ages         :ages to print at start of line
  *      int indent      :number of spaces to indent (default = 0)
  *
  *  Output format:
  *      "[printNorW]"
  */
-ostream& printW(ostream& o, const Agebandmatrix& a, const intvector* ages, int indent) {
+ostream& printW(ostream& o, const AgeBandMatrix& a, const IntVector* ages, int indent) {
   return printNorW(o, a, 0, ages, indent);
 }
 
@@ -672,9 +672,9 @@ ostream& printW(ostream& o, const Agebandmatrix& a, const intvector* ages, int i
  *  Purpose: Print N or W from agebandmatrix
  *
  *  In: ostream& o          :output stream
- *  Agebandmatrix& a    :Agebandmatrix to print
+ *  AgeBandMatrix& a    :AgeBandMatrix to print
  *      int PrintN      :true -> print N, false -> print W
- *      intvector& ages         :ages to print at start of line
+ *      IntVector& ages         :ages to print at start of line
  *      int indent      :number of spaces to indent (default = 0)
  *
  *  Output format:
@@ -683,8 +683,8 @@ ostream& printW(ostream& o, const Agebandmatrix& a, const intvector* ages, int i
  *      " ...     ...         ...   "
  *      "<d_m.0> <d_m.1> ... <d_m.n>"
  */
-ostream& printNorW(ostream& o, const Agebandmatrix& a, int PrintN,
-  const intvector* ages, int indent) {
+ostream& printNorW(ostream& o, const AgeBandMatrix& a, int PrintN,
+  const IntVector* ages, int indent) {
 
   int maxcol = 0;
   int i, j;
@@ -730,7 +730,7 @@ ostream& printNorW(ostream& o, const Agebandmatrix& a, int PrintN,
   return o;
 }
 
-ostream& printByAgeAndYear(ostream& o, const doublematrix& a, int minage,
+ostream& printByAgeAndYear(ostream& o, const DoubleMatrix& a, int minage,
   int firstyear, int indent) {
 
   int i, j;
@@ -760,7 +760,7 @@ ostream& printByAgeAndYear(ostream& o, const doublematrix& a, int minage,
   return o.flush();
 }
 
-ostream& printFbyAge(ostream& o, const doublematrix& a, int minage,
+ostream& printFbyAge(ostream& o, const DoubleMatrix& a, int minage,
   int firstyear, int indent) {
 
   int i, j;
@@ -803,7 +803,7 @@ ostream& printFbyAge(ostream& o, const doublematrix& a, int minage,
   return o.flush();
 }
 
-ostream& printNbyAge(ostream& o, const doublematrix& a, int minage, int firstyear, int indent) {
+ostream& printNbyAge(ostream& o, const DoubleMatrix& a, int minage, int firstyear, int indent) {
   int i, j;
   double sum;
 
@@ -842,7 +842,7 @@ ostream& printNbyAge(ostream& o, const doublematrix& a, int minage, int firstyea
   return o.flush();
 }
 
-ostream& printM1byAge(ostream& o, const doublematrix& a, int minage, int firstyear, int indent) {
+ostream& printM1byAge(ostream& o, const DoubleMatrix& a, int minage, int firstyear, int indent) {
   int i, j;
   o.setf(ios::fixed);
   o << "year      ";
@@ -870,7 +870,7 @@ ostream& printM1byAge(ostream& o, const doublematrix& a, int minage, int firstye
   return o.flush();
 }
 
-ostream& printM2byAge(ostream& o, const doublematrix& a, int minage, int firstyear, int indent) {
+ostream& printM2byAge(ostream& o, const DoubleMatrix& a, int minage, int firstyear, int indent) {
   int i, j;
   o.setf(ios::fixed);
   o << "year      ";

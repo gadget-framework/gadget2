@@ -1,7 +1,7 @@
 #include "vectorofcharptr.h"
 #include "gadget.h"
 
-void vectorofcharptr::set(int id, char* value) {
+void VectorOfCharPtr::set(int id, char* value) {
   if (v[id] != NULL) {
     delete[] v[id];
     v[id] = NULL;
@@ -13,7 +13,7 @@ void vectorofcharptr::set(int id, char* value) {
     v[id] = NULL;
 }
 
-vectorofcharptr::vectorofcharptr(int sz) {
+VectorOfCharPtr::VectorOfCharPtr(int sz) {
   int i;
   size = (sz > 0 ? sz : 0);
   if (size > 0) {
@@ -25,7 +25,7 @@ vectorofcharptr::vectorofcharptr(int sz) {
     v = 0;
 }
 
-vectorofcharptr::vectorofcharptr(int sz, char* value) {
+VectorOfCharPtr::VectorOfCharPtr(int sz, char* value) {
   int i;
   size = (sz > 0 ? sz : 0);
   if (size > 0) {
@@ -38,7 +38,7 @@ vectorofcharptr::vectorofcharptr(int sz, char* value) {
     v = 0;
 }
 
-vectorofcharptr::vectorofcharptr(const vectorofcharptr& initial) {
+VectorOfCharPtr::VectorOfCharPtr(const VectorOfCharPtr& initial) {
   int i;
   size = initial.size;
   if (size > 0) {
@@ -51,7 +51,7 @@ vectorofcharptr::vectorofcharptr(const vectorofcharptr& initial) {
     v = 0;
 }
 
-vectorofcharptr::~vectorofcharptr() {
+VectorOfCharPtr::~VectorOfCharPtr() {
   int i;
   if (v != 0) {
     for (i = 0; i < size; i++) {
@@ -64,7 +64,7 @@ vectorofcharptr::~vectorofcharptr() {
   }
 }
 
-void vectorofcharptr::resize(int addsize, char* value) {
+void VectorOfCharPtr::resize(int addsize, char* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -74,7 +74,7 @@ void vectorofcharptr::resize(int addsize, char* value) {
 
 }
 
-void vectorofcharptr::resize(int addsize) {
+void VectorOfCharPtr::resize(int addsize) {
   int i;
   if (size == 0) {
     size = addsize;
@@ -102,7 +102,7 @@ void vectorofcharptr::resize(int addsize) {
   }
 }
 
-void vectorofcharptr::Delete(int pos) {
+void VectorOfCharPtr::Delete(int pos) {
   int i;
   if (size == 1) {
     if (v[0] != NULL)
@@ -138,6 +138,6 @@ void vectorofcharptr::Delete(int pos) {
   }
 }
 
-char* const& vectorofcharptr::operator [] (int pos) const {
+char* const& VectorOfCharPtr::operator [] (int pos) const {
   return v[pos];
 }

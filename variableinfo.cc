@@ -22,7 +22,7 @@ CommentStream& operator >> (CommentStream& infile, VariableInfo& varinfo) {
   istringstream istr(line);
   CommentStream comm(istr);
 
-  Formulavector tmp(10);
+  FormulaVector tmp(10);
   i = 0;
   while (!comm.eof() && comm.good()) {
     comm >> ws;
@@ -37,7 +37,7 @@ CommentStream& operator >> (CommentStream& infile, VariableInfo& varinfo) {
     i++;
     comm >> ws;
     if (i == tmp.Size()) {
-      Formulavector change(tmp);
+      FormulaVector change(tmp);
       for (j = 0; j < change.Size(); j++)
         tmp[j].Interchange(change[j], varinfo.keeper);
 

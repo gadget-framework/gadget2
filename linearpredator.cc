@@ -6,7 +6,7 @@
 #include "gadget.h"
 
 LinearPredator::LinearPredator(CommentStream& infile, const char* givenname,
-  const intvector& Areas, const LengthGroupDivision* const OtherLgrpDiv,
+  const IntVector& Areas, const LengthGroupDivision* const OtherLgrpDiv,
   const LengthGroupDivision* const GivenLgrpDiv, const TimeClass* const TimeInfo,
   Keeper* const keeper, double multi)
   : LengthPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv, multi) {
@@ -150,7 +150,7 @@ void LinearPredator::Print(ofstream& outfile) const {
   PopPredator::Print(outfile);
 }
 
-const popinfovector& LinearPredator::NumberPriortoEating(int area, const char* preyname) const {
+const PopInfoVector& LinearPredator::NumberPriortoEating(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < NoPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)

@@ -1,7 +1,6 @@
 #ifndef initialcond_h
 #define initialcond_h
 
-#include "formulaindexvector.h"
 #include "formulamatrix.h"
 #include "commentstream.h"
 #include "agebandmatrix.h"
@@ -14,10 +13,10 @@ class LengthGroupDivision;
 
 class InitialCond {
 public:
-  InitialCond(CommentStream& infile, const intvector& area, Keeper* const keeper,
+  InitialCond(CommentStream& infile, const IntVector& area, Keeper* const keeper,
      const char* refWeightFile, const AreaClass* const Area);
   ~InitialCond();
-  void Initialize(agebandmatrixptrvector& Alkeys);
+  void Initialize(AgeBandMatrixPtrVector& Alkeys);
   void SetCI(const LengthGroupDivision* const GivenLDiv);
   void Print(ofstream& outfile) const;
 protected:
@@ -27,14 +26,14 @@ protected:
      int noareas, int noagegr, int nolengr, int minage, const AreaClass* const Area);
   LengthGroupDivision* LgrpDiv;
   ConversionIndex* CI;
-  agebandmatrixptrvector AreaAgeLength;
-  Formulamatrix AreaDist;
-  Formulamatrix AgeDist;
-  Formulamatrix RelCondition;
-  Formulamatrix Mean;
-  Formulamatrix Sdev;
+  AgeBandMatrixPtrVector AreaAgeLength;
+  FormulaMatrix AreaDist;
+  FormulaMatrix AgeDist;
+  FormulaMatrix RelCondition;
+  FormulaMatrix Mean;
+  FormulaMatrix Sdev;
   Formula SdevMult;
-  intvector areas;
+  IntVector areas;
   int readNumbers;
 };
 

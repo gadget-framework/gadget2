@@ -10,7 +10,7 @@
 #include "gadget.h"
 
 #include "runid.h"
-extern RunId RUNID;
+extern RunID RUNID;
 
 /*  BiomassPrinter
  *
@@ -93,7 +93,7 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
  *
  *  Purpose: Initialise vector of stocks to be printed
  *
- *  In: Stockptrvector& stockvec     :vector of all stocks, the stock
+ *  In: StockPtrVector& stockvec     :vector of all stocks, the stock
  *                                    names from the input files are
  *                                    matched with these.
  *
@@ -102,7 +102,7 @@ BiomassPrinter::BiomassPrinter(CommentStream& infile, const AreaClass* const Are
  *  Pre: stockvec.Size() > 0, all stocks names in input file are in stockvec
  */
 
-void BiomassPrinter::SetStock(Stockptrvector& stockvec) {
+void BiomassPrinter::SetStock(StockPtrVector& stockvec) {
   assert(stockvec.Size() > 0);
   int index = 0;
   immindex = -1;
@@ -178,7 +178,7 @@ void BiomassPrinter::Print(const TimeClass* const TimeInfo) {
     }
 
     for (area = 0; area < areas.Size(); area++) {
-      doublematrix mat, tot, rel;
+      DoubleMatrix mat, tot, rel;
       mat.AddRows(maxagem - minagem + 1, nrofyears, 0.0);
       tot.AddRows(maxage - minage + 1, nrofyears, 0.0);
       rel.AddRows(maxage - minage + 1, nrofyears, 0.0);
@@ -189,7 +189,7 @@ void BiomassPrinter::Print(const TimeClass* const TimeInfo) {
               for (y = 0; y < nrofyears; y++)
                 mat[a - minagem][y] += ((LenStock*)stocks[i])->getBiomass(area)[a - stocks[i]->Minage()][y];
 
-      doublematrix& bio = (doublematrix&)((LenStock*)stocks[immindex])->getBiomass(area);
+      DoubleMatrix& bio = (DoubleMatrix&)((LenStock*)stocks[immindex])->getBiomass(area);
       for (y = 0; y < nrofyears; y++) {
         for (a = minagem; a <= maxagem; a++)
           tot[a - minage][y] = mat[a - minagem][y];

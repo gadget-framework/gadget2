@@ -7,7 +7,7 @@
 #include "gadget.h"
 
 //Pre: CI maps from Number to 'this' and Number has finer or even resolution than 'this'.
-void popinfovector::Sum(const popinfovector* const Number, const ConversionIndex& CI) {
+void PopInfoVector::Sum(const PopInfoVector* const Number, const ConversionIndex& CI) {
   int i;
   for (i = 0; i < size; i++) {
     v[i].N = 0.0;
@@ -17,10 +17,10 @@ void popinfovector::Sum(const popinfovector* const Number, const ConversionIndex
     this->operator[](CI.Pos(i)) += (*Number)[i];
 }
 
-void PopinfoAdd(popinfoindexvector& target, const popinfoindexvector& Addition,
+void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
   const ConversionIndex& CI, double ratio) {
 
-  popinfo pop;
+  PopInfo pop;
   int l, minl, maxl, offset;
 
   if (CI.SameDl()) {   //Same dl on length distributions
@@ -56,10 +56,10 @@ void PopinfoAdd(popinfoindexvector& target, const popinfoindexvector& Addition,
   }
 }
 
-void PopinfoAdd(popinfoindexvector& target, const popinfoindexvector& Addition,
-  const ConversionIndex& CI, double ratio, const doubleindexvector& Ratio) {
+void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
+  const ConversionIndex& CI, double ratio, const DoubleIndexVector& Ratio) {
 
-  popinfo pop;
+  PopInfo pop;
   int l, minl, maxl, offset;
   if (CI.SameDl()) {   //Same dl on length distributions
     offset = CI.Offset();

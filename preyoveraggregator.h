@@ -10,15 +10,15 @@ class LengthGroupDivision;
 
 class PreyOverAggregator {
 public:
-  PreyOverAggregator(const Preyptrvector& preys,
-    const intmatrix& Areas, const LengthGroupDivision* const preyLgrpDiv);
+  PreyOverAggregator(const PreyPtrVector& preys,
+    const IntMatrix& Areas, const LengthGroupDivision* const preyLgrpDiv);
   void Sum();
-  const doublematrix& ReturnSum() const;
+  const DoubleMatrix& ReturnSum() const;
 protected:
-  Preyptrvector preys;
-  intmatrix preyConv;  //[prey][preyLengthGroup]
-  intmatrix areas;
-  doublematrix total;
+  PreyPtrVector preys;
+  IntMatrix preyConv;  //[prey][preyLengthGroup]
+  IntMatrix areas;
+  DoubleMatrix total;
 };
 
 #endif

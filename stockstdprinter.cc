@@ -13,7 +13,7 @@
 #include "gadget.h"
 
 #include "runid.h"
-extern RunId RUNID;
+extern RunID RUNID;
 
 StockStdPrinter::StockStdPrinter(CommentStream& infile,
   const AreaClass* const Area, const  TimeClass* const TimeInfo)
@@ -43,8 +43,8 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  charptrvector areaindex;
-  intmatrix tmpareas;
+  CharPtrVector areaindex;
+  IntMatrix tmpareas;
 
   if (strcasecmp(text, "areaaggfile") == 0)
     infile >> filename >> ws;
@@ -116,11 +116,11 @@ StockStdPrinter::~StockStdPrinter() {
   delete[] stockname;
 }
 
-void StockStdPrinter::SetStock(Stockptrvector& stockvec) {
-  charptrvector stocknames(1, stockname);
+void StockStdPrinter::SetStock(StockPtrVector& stockvec) {
+  CharPtrVector stocknames(1, stockname);
   //by using the vector stocknames, some of the code below can be used
   //even if the StockStdPrinter is used for aggregation of many stocks.
-  Stockptrvector stocks;
+  StockPtrVector stocks;
   int index = 0;
   int i, j, tmpage;
 
@@ -164,10 +164,10 @@ void StockStdPrinter::SetStock(Stockptrvector& stockvec) {
       maxage = tmpage;
   }
 
-  intmatrix agematrix(maxage - minage + 1, 1);
+  IntMatrix agematrix(maxage - minage + 1, 1);
   for (i = 0; i < agematrix.Nrow(); i++)
     agematrix[i][0] = i + minage;
-  intmatrix areamatrix(areas.Size(), 1);
+  IntMatrix areamatrix(areas.Size(), 1);
   for (i = 0; i < areamatrix.Nrow(); i++)
     areamatrix[i][0] = areas[i];
 
@@ -188,7 +188,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
   for (a = 0; a < areas.Size(); a++) {
     if (preyinfo)
       preyinfo->Sum(TimeInfo, areas[a]);
-    const Agebandmatrix& alk = aggregator->ReturnSum()[a];
+    const AgeBandMatrix& alk = aggregator->ReturnSum()[a];
 
     for (age = alk.Minage(); age <= alk.Maxage(); age++) {
       PopStatistics popstat(alk[age], LgrpDiv);

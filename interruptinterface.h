@@ -21,15 +21,15 @@ public:
   int menu();
 private:
   void printMenu();
-  charptrvector& readArgs(char*);
-  void dumpStock(charptrvector& args);
-  void dumpAll(charptrvector& args);
-  void dumpSuitability(charptrvector& args);
-  void dumpNaturalM(charptrvector& args);
-  void dumpc_hat(charptrvector& args);
-  void dumpmean_n(charptrvector& args);
-  void dumpz(charptrvector& args);
-  void dumpcannibalism(charptrvector& args);
+  CharPtrVector& readArgs(char*);
+  void dumpStock(CharPtrVector& args);
+  void dumpAll(CharPtrVector& args);
+  void dumpSuitability(CharPtrVector& args);
+  void dumpNaturalM(CharPtrVector& args);
+  void dumpc_hat(CharPtrVector& args);
+  void dumpmean_n(CharPtrVector& args);
+  void dumpz(CharPtrVector& args);
+  void dumpcannibalism(CharPtrVector& args);
   const Ecosystem* eco;
   static const int MAX_INPUT_LENGTH;
   static const char* FULL_FILE;

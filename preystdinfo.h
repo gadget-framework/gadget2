@@ -10,11 +10,11 @@ class Prey;
 
 class PreyStdInfo : public AbstrPreyStdInfo {
 public:
-  PreyStdInfo(const Prey* prey, const intvector& areas);
+  PreyStdInfo(const Prey* prey, const IntVector& areas);
   virtual ~PreyStdInfo();
-  virtual const doublevector& NconsumptionByLength(int area) const;
-  virtual const doublevector& BconsumptionByLength(int area) const;
-  virtual const doublevector& MortalityByLength(int area) const;
+  virtual const DoubleVector& NconsumptionByLength(int area) const;
+  virtual const DoubleVector& BconsumptionByLength(int area) const;
+  virtual const DoubleVector& MortalityByLength(int area) const;
   virtual void Sum(const TimeClass* const TimeInfo, int area);
 private:
   PreyStdInfoByLength PSIByLength;

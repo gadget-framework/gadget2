@@ -15,11 +15,11 @@ class StockFullPrinter : public Printer {
 public:
   StockFullPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~StockFullPrinter();
-  virtual void SetStock(Stockptrvector& stockvec);
+  virtual void SetStock(StockPtrVector& stockvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
-  intvector areas;
-  intvector outerareas;
+  IntVector areas;
+  IntVector outerareas;
   int minage;
   int maxage;
   char* stockname;

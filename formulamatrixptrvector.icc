@@ -3,13 +3,13 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-Formulamatrix*& Formulamatrixptrvector::operator [] (int pos) {
+FormulaMatrix*& FormulaMatrixPtrVector::operator [] (int pos) {
   return v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-Formulamatrix* const& Formulamatrixptrvector::operator [] (int pos) const {
+FormulaMatrix* const& FormulaMatrixPtrVector::operator [] (int pos) const {
   return v[pos];
 }

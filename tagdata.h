@@ -18,23 +18,23 @@ public:
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream&) const {};
-  virtual void SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks);
+  virtual void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
-  void ReadRecaptureData(CommentStream&, const TimeClass*, charptrvector);
+  void ReadRecaptureData(CommentStream&, const TimeClass*, CharPtrVector);
   double LikBinomial();
   FleetPreyAggregator* aggregator;
-  charptrvector fleetnames;
-  intvector areas;
+  CharPtrVector fleetnames;
+  IntVector areas;
   int index;
-  intvector Years;
-  intvector Steps;
-  intvector recTime;
-  intvector recAreas;
-  intvector recAge;
-  intvector recFleet;
-  intvector recMaturity;
-  doublevector tagLength;
-  doublevector recLength;
+  IntVector Years;
+  IntVector Steps;
+  IntVector recTime;
+  IntVector recAreas;
+  IntVector recAge;
+  IntVector recFleet;
+  IntVector recMaturity;
+  DoubleVector tagLength;
+  DoubleVector recLength;
 };
 
 #endif

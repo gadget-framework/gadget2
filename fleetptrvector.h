@@ -4,37 +4,37 @@
 class Fleet;
 
 /**
- * \class Fleetptrvector
+ * \class FleetPtrVector
  * \brief This class implements a dynamic vector of Fleet values
  */
-class Fleetptrvector {
+class FleetPtrVector {
 public:
   /**
-   * \brief This is the default Fleetptrvector constructor
+   * \brief This is the default FleetPtrVector constructor
    */
-  Fleetptrvector() { size = 0; v = 0; };
+  FleetPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the Fleetptrvector constructor for a specified size
+   * \brief This is the FleetPtrVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  Fleetptrvector(int sz);
+  FleetPtrVector(int sz);
   /**
-   * \brief This is the Fleetptrvector constructor for a specified size with an initial value
+   * \brief This is the FleetPtrVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  Fleetptrvector(int sz, Fleet* initial);
+  FleetPtrVector(int sz, Fleet* initial);
   /**
-   * \brief This is the Fleetptrvector constructor that create a copy of an existing Fleetptrvector
-   * \param initial this is the Fleetptrvector to copy
+   * \brief This is the FleetPtrVector constructor that create a copy of an existing FleetPtrVector
+   * \param initial this is the FleetPtrVector to copy
    */
-  Fleetptrvector(const Fleetptrvector& initial);
+  FleetPtrVector(const FleetPtrVector& initial);
   /**
-   * \brief This is the Fleetptrvector destructor
+   * \brief This is the FleetPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~Fleetptrvector();
+  ~FleetPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
@@ -43,8 +43,8 @@ public:
   void resize(int add, Fleet* value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**

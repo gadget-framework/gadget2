@@ -5,7 +5,7 @@
 #include "stockptrvector.icc"
 #endif
 
-Stockptrvector::Stockptrvector(int sz) {
+StockPtrVector::StockPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new Stock*[size];
@@ -13,7 +13,7 @@ Stockptrvector::Stockptrvector(int sz) {
     v = 0;
 }
 
-Stockptrvector::Stockptrvector(int sz, Stock* value) {
+StockPtrVector::StockPtrVector(int sz, Stock* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -23,7 +23,7 @@ Stockptrvector::Stockptrvector(int sz, Stock* value) {
     v = 0;
 }
 
-Stockptrvector::Stockptrvector(const Stockptrvector& initial) {
+StockPtrVector::StockPtrVector(const StockPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -34,15 +34,14 @@ Stockptrvector::Stockptrvector(const Stockptrvector& initial) {
     v = 0;
 }
 
-Stockptrvector::~Stockptrvector() {
+StockPtrVector::~StockPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a Stockptrvector and fills it vith value.
-void Stockptrvector::resize(int addsize, Stock* value) {
+void StockPtrVector::resize(int addsize, Stock* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -51,7 +50,7 @@ void Stockptrvector::resize(int addsize, Stock* value) {
       v[i] = value;
 }
 
-void Stockptrvector::resize(int addsize) {
+void StockPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -66,7 +65,7 @@ void Stockptrvector::resize(int addsize) {
   }
 }
 
-void Stockptrvector::Delete(int pos) {
+void StockPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   Stock** vnew = new Stock*[size - 1];
@@ -80,7 +79,7 @@ void Stockptrvector::Delete(int pos) {
   size--;
 }
 
-Stockptrvector& Stockptrvector::operator = (const Stockptrvector& d) {
+StockPtrVector& StockPtrVector::operator = (const StockPtrVector& d) {
   if (this == &d)
     return(*this);
   int i;

@@ -24,16 +24,16 @@ class FormatedStockPrinter : public Printer {
 public:
   FormatedStockPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~FormatedStockPrinter();
-  void SetStock(Stockptrvector& stockvec);
+  void SetStock(StockPtrVector& stockvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
-  intmatrix areas;
-  intmatrix ages;
-  charptrvector areaindex;
-  charptrvector ageindex;
-  intvector agevector;
+  IntMatrix areas;
+  IntMatrix ages;
+  CharPtrVector areaindex;
+  CharPtrVector ageindex;
+  IntVector agevector;
   LengthGroupDivision* LgrpDiv;
-  charptrvector stocknames;
+  CharPtrVector stocknames;
   StockAggregator* aggregator;
   ofstream noutfile;
   ofstream woutfile;

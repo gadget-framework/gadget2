@@ -4,7 +4,7 @@
 #include "readword.h"
 #include "gadget.h"
 
-Transition::Transition(CommentStream& infile, const intvector& Areas, int Age,
+Transition::Transition(CommentStream& infile, const IntVector& Areas, int Age,
   const LengthGroupDivision* const lgrpdiv, Keeper* const keeper)
   : LivesOnAreas(Areas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)), age(Age) {
 
@@ -43,10 +43,10 @@ Transition::~Transition() {
   delete LgrpDiv;
 }
 
-void Transition::SetStock(Stockptrvector& stockvec) {
+void Transition::SetStock(StockPtrVector& stockvec) {
   int index = 0;
   int i, j, numstocks;
-  doublevector tmpratio;
+  DoubleVector tmpratio;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < TransitionStockNames.Size(); j++)
@@ -92,8 +92,8 @@ void Transition::SetStock(Stockptrvector& stockvec) {
         << "\nwhich might not be defined on " << index << " areas\n";
   }
 
-  intvector minlv(2, 0);
-  intvector sizev(2, LgrpDiv->NoLengthGroups());
+  IntVector minlv(2, 0);
+  IntVector sizev(2, LgrpDiv->NoLengthGroups());
   Agegroup.resize(areas.Size(), age, minlv, sizev);
 }
 
@@ -108,7 +108,7 @@ void Transition::Print(ofstream& outfile) const {
   outfile << "\n\tTransition step " << TransitionStep  << endl;
 }
 
-void Transition::KeepAgegroup(int area, Agebandmatrix& Alkeys, const TimeClass* const TimeInfo) {
+void Transition::KeepAgegroup(int area, AgeBandMatrix& Alkeys, const TimeClass* const TimeInfo) {
   int inarea = AreaNr[area];
   int l, minl, maxl;
 

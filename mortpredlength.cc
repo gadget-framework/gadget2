@@ -8,8 +8,7 @@
 #include "gadget.h"
 
 //written by kgf 20/5 98 on the basis of linearpredator
-
-MortPredLength::MortPredLength(CommentStream& infile, const char* givenname, const intvector& Areas,
+MortPredLength::MortPredLength(CommentStream& infile, const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
   const TimeClass* const TimeInfo, Keeper* const keeper)
   : LengthPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv, 1.0),
@@ -191,18 +190,18 @@ void MortPredLength::calcCHat(int area, const TimeClass* const TimeInfo) {
                 consumption[inarea][prey][predl][preyl] *
                 ((MortPrey*)Preys(prey))->getMeanN(area)[age][preyl].N; //F*mean_n
             }
-          } //pred_l
-        } //age
-      } //f_lev
-    } //Preys(prey)->IsInArea(area)
-  } //prey
+          }
+        }
+      }
+    }
+  }
 }
 
 const double MortPredLength::consumedBiomass(int prey_nr, int area_nr) const {
 
   double tons = 0.0;
   int age, len;
-  const Agebandmatrix& mean = ((MortPrey*)Preys(prey_nr))->getMeanN(area_nr);
+  const AgeBandMatrix& mean = ((MortPrey*)Preys(prey_nr))->getMeanN(area_nr);
   for (age = mean.Minage(); age <= mean.Maxage(); age++)
     for (len = mean.Minlength(age); len < mean.Maxlength(age); len++)
       tons += c_hat[area_nr][prey_nr][age][len] * mean[age][len].W;
@@ -216,7 +215,7 @@ void MortPredLength::Print(ofstream& outfile) const {
   PopPredator::Print(outfile);
 }
 
-const popinfovector& MortPredLength::NumberPriortoEating(int area, const char* preyname) const {
+const PopInfoVector& MortPredLength::NumberPriortoEating(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < NoPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)
@@ -250,24 +249,24 @@ void MortPredLength::calcFlevel() {
   }
 }
 
-void MortPredLength::InitializeCHat(int area, int prey, const Agebandmatrix& mean_n) {
+void MortPredLength::InitializeCHat(int area, int prey, const AgeBandMatrix& mean_n) {
   //written by kgf 14/7 98
   const int inarea = AreaNr[area];
   int i = 0;
   int age;
-  intvector size(mean_n.Nrow());
-  intvector minl(mean_n.Nrow());
+  IntVector size(mean_n.Nrow());
+  IntVector minl(mean_n.Nrow());
   for (age = mean_n.Minage(); age <= mean_n.Maxage(); age++) {
     size[i] = mean_n.Maxlength(age) - mean_n.Minlength(age) + 1;
     minl[i] = mean_n.Minlength(age);
     i++;
   }
   assert(i == size.Size());
-  bandmatrix tmp(minl, size, mean_n.Minage(), 0.0);
+  BandMatrix tmp(minl, size, mean_n.Minage(), 0.0);
   c_hat.ChangeElement(inarea, prey, tmp);
 }
 
-void MortPredLength::Multiply(Agebandmatrix& stock_alkeys, const doublevector& ratio) {
+void MortPredLength::Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& ratio) {
   //written by kgf 31/7 98
   //Note! ratio is supposed to have equal dimensions to MortPredLength.
   stock_alkeys.Multiply(ratio, *CI);

@@ -122,7 +122,7 @@ Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* preyl
   //set dimension on the consumption matrices
   consumption.resize(nrofpredators);
   for (i = 0; i < nrofpredators; i++)
-    consumption[i] = new bandmatrix(0, preylgp->NoLengthGroups(), minage[i], maxage[i] - minage[i] + 1, 0.0);
+    consumption[i] = new BandMatrix(0, preylgp->NoLengthGroups(), minage[i], maxage[i] - minage[i] + 1, 0.0);
 
   keeper->ClearLast();
 }
@@ -136,10 +136,10 @@ Cannibalism::~Cannibalism() {
   delete preylgp;
 }
 
-const doublevector& Cannibalism::Mortality(const Agebandmatrix& alk_prey,
-  const Agebandmatrix& alk_pred, const LengthGroupDivision* len_prey,
+const DoubleVector& Cannibalism::Mortality(const AgeBandMatrix& alk_prey,
+  const AgeBandMatrix& alk_pred, const LengthGroupDivision* len_prey,
   const LengthGroupDivision* len_pred, const TimeClass* const TimeInfo,
-  int pred_no, const doublevector& natm) {
+  int pred_no, const DoubleVector& natm) {
 
   int prey_size, pred_is_pres;
   int i, preyl, predl, minl, maxl;
@@ -152,7 +152,7 @@ const doublevector& Cannibalism::Mortality(const Agebandmatrix& alk_prey,
   assert(prey_size == (*consumption[pred_no]).Ncol());
   assert(prey_size == cannibalism.Size());
 
-  popinfovector pop_prey(prey_size);
+  PopInfoVector pop_prey(prey_size);
   alk_prey.Colsum(pop_prey); //biomass of prey's length groups
   ConversionIndex length_conversion(len_prey, len_pred, 0);
 

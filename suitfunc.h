@@ -9,18 +9,18 @@
 //JMB - removed some of the suitability functions that are no longer used
 //To get the removed suitability functions back, you will need gadget 2.0.03
 
-class SuitfuncPtrvector;
+class SuitFuncPtrVector;
 
 class SuitFunc {
 protected:
   char* name;
-  TimeVariablevector coeff;
+  TimeVariableVector coeff;
 public:
   SuitFunc();
   virtual ~SuitFunc();
   void setName(const char* suitfuncName);
   const char* getName();
-  const TimeVariablevector& getConstants() const;
+  const TimeVariableVector& getConstants() const;
   void readConstants(CommentStream& infile,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   void updateConstants(const TimeClass* const TimeInfo);
@@ -33,18 +33,18 @@ public:
   virtual void setPreyLength(double length);
   virtual double calculate() = 0;
   int noOfConstants();
-  friend int readSuitFunction(SuitfuncPtrvector& suitf, CommentStream& infile,
+  friend int readSuitFunction(SuitFuncPtrVector& suitf, CommentStream& infile,
     const char*  suitfname, const TimeClass* const TimeInfo, Keeper* const keeper);
-  friend int findSuitFunc(SuitfuncPtrvector& suitf, const char* suitname);
+  friend int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname);
 };
 
-class ExpsuitfuncA : public SuitFunc {
+class ExpSuitFuncA : public SuitFunc {
 private:
   double preyLength;
   double predLength;
 public:
-  ExpsuitfuncA();
-  virtual ~ExpsuitfuncA();
+  ExpSuitFuncA();
+  virtual ~ExpSuitFuncA();
   virtual int usesPredLength();
   virtual int usesPreyLength();
   virtual void setPredLength(double length);
@@ -54,22 +54,22 @@ public:
   virtual double calculate();
 };
 
-class Constsuitfunc : public SuitFunc {
+class ConstSuitFunc : public SuitFunc {
 public:
-  Constsuitfunc();
-  virtual ~Constsuitfunc();
+  ConstSuitFunc();
+  virtual ~ConstSuitFunc();
   virtual int usesPredLength();
   virtual int usesPreyLength();
   virtual double calculate();
 };
 
-class Andersensuitfunc : public SuitFunc {
+class AndersenSuitFunc : public SuitFunc {
 private:
   double preyLength;
   double predLength;
 public:
-  Andersensuitfunc();
-  virtual ~Andersensuitfunc();
+  AndersenSuitFunc();
+  virtual ~AndersenSuitFunc();
   virtual int usesPredLength();
   virtual int usesPreyLength();
   virtual void setPredLength(double length);
@@ -79,12 +79,12 @@ public:
   virtual double calculate();
 };
 
-class Expsuitfuncl50 : public SuitFunc {
+class ExpSuitFuncL50 : public SuitFunc {
 private:
   double preyLength;
 public:
-  Expsuitfuncl50();
-  virtual ~Expsuitfuncl50();
+  ExpSuitFuncL50();
+  virtual ~ExpSuitFuncL50();
   virtual int usesPredLength();
   virtual int usesPreyLength();
   virtual void setPreyLength(double length);
@@ -92,12 +92,12 @@ public:
   virtual double calculate();
 };
 
-class StraightLine : public SuitFunc {
+class StraightSuitFunc : public SuitFunc {
 private:
   double preyLength;
 public:
-  StraightLine();
-  virtual ~StraightLine();
+  StraightSuitFunc();
+  virtual ~StraightSuitFunc();
   virtual int usesPredLength();
   virtual int usesPreyLength();
   virtual void setPreyLength(double length);

@@ -3,13 +3,13 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-MigVariable*& MigVariableptrvector::operator [] (int pos) {
+MigVariable*& MigVariablePtrVector::operator [] (int pos) {
   return v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-MigVariable* const& MigVariableptrvector::operator [] (int pos) const {
+MigVariable* const& MigVariablePtrVector::operator [] (int pos) const {
   return v[pos];
 }

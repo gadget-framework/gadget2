@@ -31,14 +31,14 @@ class MortPrinter : public Printer {
 public:
   MortPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~MortPrinter();
-  virtual void SetStock(Stockptrvector& stockvec);
+  virtual void SetStock(StockPtrVector& stockvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
   const AreaClass* Area;
-  intvector areas;
-  charptrvector areaindex;
-  charptrvector stocknames;
-  Stockptrvector stocks;
+  IntVector areas;
+  CharPtrVector areaindex;
+  CharPtrVector stocknames;
+  StockPtrVector stocks;
   ofstream outfile;
   int printf;
   int printm1;
@@ -48,11 +48,11 @@ protected:
   int nrofyears;
   int minage;
   int maxage;
-  doublematrix* sumF;
-  doublematrix* sumM1;
-  doublematrix* sumM2;
-  doublematrix* sumN;
-  doublematrix* totalNbar;
+  DoubleMatrix* sumF;
+  DoubleMatrix* sumM1;
+  DoubleMatrix* sumM2;
+  DoubleMatrix* sumN;
+  DoubleMatrix* totalNbar;
 };
 
 #endif

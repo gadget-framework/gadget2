@@ -1,40 +1,42 @@
 #ifndef otherfoodptrvector_h
 #define otherfoodptrvector_h
 
+#include "otherfood.h"
+
 class OtherFood;
 
 /**
- * \class OtherFoodptrvector
+ * \class OtherFoodPtrVector
  * \brief This class implements a dynamic vector of OtherFood values
  */
-class OtherFoodptrvector {
+class OtherFoodPtrVector {
 public:
   /**
-   * \brief This is the default OtherFoodptrvector constructor
+   * \brief This is the default OtherFoodPtrVector constructor
    */
-  OtherFoodptrvector() { size = 0; v = 0; };
+  OtherFoodPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the OtherFoodptrvector constructor for a specified size
+   * \brief This is the OtherFoodPtrVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  OtherFoodptrvector(int sz);
+  OtherFoodPtrVector(int sz);
   /**
-   * \brief This is the OtherFoodptrvector constructor for a specified size with an initial value
+   * \brief This is the OtherFoodPtrVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  OtherFoodptrvector(int sz, OtherFood* initial);
+  OtherFoodPtrVector(int sz, OtherFood* initial);
   /**
-   * \brief This is the OtherFoodptrvector constructor that create a copy of an existing OtherFoodptrvector
-   * \param initial this is the OtherFoodptrvector to copy
+   * \brief This is the OtherFoodPtrVector constructor that create a copy of an existing OtherFoodPtrVector
+   * \param initial this is the OtherFoodPtrVector to copy
    */
-  OtherFoodptrvector(const OtherFoodptrvector& initial);
+  OtherFoodPtrVector(const OtherFoodPtrVector& initial);
   /**
-   * \brief This is the OtherFoodptrvector destructor
+   * \brief This is the OtherFoodPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~OtherFoodptrvector();
+  ~OtherFoodPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
@@ -43,8 +45,8 @@ public:
   void resize(int add, OtherFood* value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**

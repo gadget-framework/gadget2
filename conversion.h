@@ -7,14 +7,14 @@
 class LengthGroupDivision;
 class ConversionIndex;
 
-extern void Interp(doublevector& Vf, const doublevector& Vc, const ConversionIndex* CI);
+extern void Interp(DoubleVector& Vf, const DoubleVector& Vc, const ConversionIndex* CI);
 extern void LengthGroupPrintError(double minl, double maxl, double dl, const char* str);
-extern void LengthGroupPrintError(const doublevector& breaks, const char* str);
+extern void LengthGroupPrintError(const DoubleVector& breaks, const char* str);
 
 class LengthGroupDivision {
 public:
   LengthGroupDivision(double minlength, double maxlength, double dl);
-  LengthGroupDivision(const doublevector& vec);
+  LengthGroupDivision(const DoubleVector& vec);
   LengthGroupDivision(const LengthGroupDivision& lgrpdiv);
   ~LengthGroupDivision();
   double Meanlength(int i) const;
@@ -29,8 +29,8 @@ protected:
   int error;
   int size;
   double Dl;
-  doublevector meanlength;
-  doublevector minlength;
+  DoubleVector meanlength;
+  DoubleVector minlength;
 };
 
 class ConversionIndex {
@@ -59,12 +59,12 @@ protected:
   int nc;
   int minlength;
   int maxlength;
-  intvector pos;
-  intvector nrof;
-  intvector minpos;
-  intvector maxpos;
-  doublevector interpratio;
-  intvector interppos;
+  IntVector pos;
+  IntVector nrof;
+  IntVector minpos;
+  IntVector maxpos;
+  DoubleVector interpratio;
+  IntVector interppos;
 };
 
 #endif

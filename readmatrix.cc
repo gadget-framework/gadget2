@@ -6,15 +6,15 @@
 #include "keeper.h"
 #include "gadget.h"
 
-int ReadAmounts(CommentStream& infile, const intvector& tmpareas,
+int ReadAmounts(CommentStream& infile, const IntVector& tmpareas,
   const TimeClass* const TimeInfo, const AreaClass* const Area,
-  Formulamatrix& amount, Keeper* const keeper, const char* givenname) {
+  FormulaMatrix& amount, Keeper* const keeper, const char* givenname) {
 
   ErrorHandler handle;
   int i;
   int year, step, area;
   Formula number;  //initialised to 0.0
-  intvector Years, Steps;
+  IntVector Years, Steps;
   char tmpname[MaxStrLength];
   char tmpnumber[MaxStrLength];
   strncpy(tmpname, "", MaxStrLength);
@@ -102,7 +102,7 @@ int ReadAmounts(CommentStream& infile, const intvector& tmpareas,
 }
 
 int ReadContinuousTimeMatrix(CommentStream& infile, int NumberOfColumns,
-  const TimeClass* const TimeInfo, Formulamatrix& amount, Keeper* const keeper) {
+  const TimeClass* const TimeInfo, FormulaMatrix& amount, Keeper* const keeper) {
 
   //JMB - check reading of whitespace
   ErrorHandler handle;
@@ -162,13 +162,13 @@ int ReadContinuousTimeMatrix(CommentStream& infile, int NumberOfColumns,
 }
 
 int ReadGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
-  const AreaClass* const Area, Formulamatrixptrvector& amount,
-  const charptrvector& lenindex, Keeper* const keeper) {
+  const AreaClass* const Area, FormulaMatrixPtrVector& amount,
+  const CharPtrVector& lenindex, Keeper* const keeper) {
 
   ErrorHandler handle;
   int i;
   int year, step, area;
-  intvector Years, Steps;
+  IntVector Years, Steps;
   char tmplength[MaxStrLength];
   char tmpnumber[MaxStrLength];
   strncpy(tmplength, "", MaxStrLength);

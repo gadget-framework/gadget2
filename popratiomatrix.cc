@@ -5,63 +5,57 @@
 #include "popratiomatrix.icc"
 #endif
 
-//constructor for a rectangular popinfomatrix.
-popratiomatrix::popratiomatrix(int nr, int nc) {
+PopRatioMatrix::PopRatioMatrix(int nr, int nc) {
   nrow = nr;
-  v = new popratiovector*[nr];
+  v = new PopRatioVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new popratiovector(nc);
+    v[i] = new PopRatioVector(nc);
 }
 
-//constructor for a rectangular popinfomatrix with initial value.
-popratiomatrix::popratiomatrix(int nr, int nc, popratio value) {
+PopRatioMatrix::PopRatioMatrix(int nr, int nc, PopRatio value) {
   nrow = nr;
-  v = new popratiovector*[nr];
+  v = new PopRatioVector*[nr];
   int i, j;
   for (i = 0; i < nr; i++)
-    v[i] = new popratiovector(nc);
+    v[i] = new PopRatioVector(nc);
   for (i = 0; i < nr; i++)
     for (j = 0; j < nc; j++)
       (*v[i])[j] = value;
 }
 
-//constructor for a possibly nonrectangular popinfomatrix
-//the rows need not have the same number of columns.
-popratiomatrix::popratiomatrix(int nr, const intvector& nc) {
+PopRatioMatrix::PopRatioMatrix(int nr, const IntVector& nc) {
   nrow = nr;
-  v = new popratiovector*[nr];
+  v = new PopRatioVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new popratiovector(nc[i]);
+    v[i] = new PopRatioVector(nc[i]);
 }
 
-//constructor for popinfomatrix when all rows do not need to have same number of
-//columns, with initial value.
-popratiomatrix::popratiomatrix(int nr, const intvector& nc, popratio value) {
+PopRatioMatrix::PopRatioMatrix(int nr, const IntVector& nc, PopRatio value) {
   nrow = nr;
-  v = new popratiovector*[nr];
+  v = new PopRatioVector*[nr];
   int i, j;
   for (i = 0; i < nr; i++)
-    v[i] = new popratiovector(nc[i]);
+    v[i] = new PopRatioVector(nc[i]);
   for (i = 0; i < nr; i++)
     for (j = 0; j < nc[i]; j++)
       (*v[i])[j] = value;
 }
 
-popratiomatrix::popratiomatrix(const popratiomatrix& initial) : nrow(initial.nrow) {
+PopRatioMatrix::PopRatioMatrix(const PopRatioMatrix& initial) : nrow(initial.nrow) {
   int i;
   if (nrow >= 0) {
-    v = new popratiovector*[nrow];
+    v = new PopRatioVector*[nrow];
     for (i = 0; i < nrow; i++)
-      v[i] = new popratiovector(initial[i]);
+      v[i] = new PopRatioVector(initial[i]);
   } else {
     v = 0;
     nrow = 0;
   }
 }
 
-popratiomatrix::~popratiomatrix() {
+PopRatioMatrix::~PopRatioMatrix() {
   int i;
   if (v != 0) {
     for (i = 0; i < nrow; i++)
@@ -71,21 +65,19 @@ popratiomatrix::~popratiomatrix() {
   }
 }
 
-//Adds rows to a popinfomatrix.
-void popratiomatrix::AddRows(int add, int length) {
-  popratiovector** vnew = new popratiovector*[nrow + add];
+void PopRatioMatrix::AddRows(int add, int length) {
+  PopRatioVector** vnew = new PopRatioVector*[nrow + add];
   int i;
   for (i = 0; i < nrow; i++)
     vnew[i] = v[i];
   delete[] v;
   v = vnew;
   for (i = nrow; i < nrow + add; i++)
-    v[i] = new popratiovector(length);
+    v[i] = new PopRatioVector(length);
   nrow += add;
 }
 
-//Adds rows to a popinfomatrix and initializes them.
-void popratiomatrix::AddRows(int add, int length, popratio initial) {
+void PopRatioMatrix::AddRows(int add, int length, PopRatio initial) {
   int oldnrow = nrow;
   this->AddRows(add, length);
   int i, j;
@@ -94,11 +86,11 @@ void popratiomatrix::AddRows(int add, int length, popratio initial) {
       (*v[i])[j] = initial;
 }
 
-void popratiomatrix::DeleteRow(int row) {
+void PopRatioMatrix::DeleteRow(int row) {
   assert(nrow > 0);
   assert(0 <= row && row < nrow);
   delete v[row];
-  popratiovector** vnew = new popratiovector*[nrow - 1];
+  PopRatioVector** vnew = new PopRatioVector*[nrow - 1];
   int i;
   for (i = 0; i < row; i++)
     vnew[i] = v[i];

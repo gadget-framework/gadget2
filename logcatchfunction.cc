@@ -159,13 +159,13 @@ LogCatches::LogCatches(CommentStream& infile,
   Likelihoodvalues.AddRows(numtime, numarea);
   for (i = 0; i < numtime; i++)
     for (j = 0; j <  AgeLengthData.Ncol(i); j++)
-      Proportions[i][j] = new doublematrix(AgeLengthData[i][j]->Nrow(), AgeLengthData[i][j]->Ncol(), 0.0);
+      Proportions[i][j] = new DoubleMatrix(AgeLengthData[i][j]->Nrow(), AgeLengthData[i][j]->Ncol(), 0.0);
 
   calc_c.resize(numarea);
   obs_c.resize(numarea);
   for (i = 0; i < numarea; i++) {
-    calc_c[i] = new doublematrix(AgeLengthData[0][i]->Nrow(), AgeLengthData[0][i]->Ncol(), 0.0);
-    obs_c[i] = new doublematrix(AgeLengthData[0][i]->Nrow(), AgeLengthData[0][i]->Ncol(), 0.0);
+    calc_c[i] = new DoubleMatrix(AgeLengthData[0][i]->Nrow(), AgeLengthData[0][i]->Ncol(), 0.0);
+    obs_c[i] = new DoubleMatrix(AgeLengthData[0][i]->Nrow(), AgeLengthData[0][i]->Ncol(), 0.0);
   }
 
   obs_biomass.resize(numarea);
@@ -173,11 +173,11 @@ LogCatches::LogCatches(CommentStream& infile,
   agg_obs_biomass.resize(numarea);
   agg_calc_biomass.resize(numarea);
   for (i = 0; i < numarea; i++) {
-    obs_biomass[i] = new doublematrix(numtime, AgeLengthData[0][i]->Nrow(), 0.0);
-    calc_biomass[i] = new doublematrix(numtime, AgeLengthData[0][i]->Nrow(), 0.0);
+    obs_biomass[i] = new DoubleMatrix(numtime, AgeLengthData[0][i]->Nrow(), 0.0);
+    calc_biomass[i] = new DoubleMatrix(numtime, AgeLengthData[0][i]->Nrow(), 0.0);
     if (agg_lev) {
-      agg_obs_biomass[i] = new doublematrix(numtime, AgeLengthData[0][i]->Nrow(), 0.0);
-      agg_calc_biomass[i] = new doublematrix(numtime, AgeLengthData[0][i]->Nrow(), 0.0);
+      agg_obs_biomass[i] = new DoubleMatrix(numtime, AgeLengthData[0][i]->Nrow(), 0.0);
+      agg_calc_biomass[i] = new DoubleMatrix(numtime, AgeLengthData[0][i]->Nrow(), 0.0);
     }
   }
 }
@@ -228,7 +228,7 @@ void LogCatches::ReadLogCatchData(CommentStream& infile,
 
         AgeLengthData.AddRows(1, numarea);
         for (i = 0; i < numarea; i++)
-          AgeLengthData[timeid][i] = new doublematrix(numage, numlen, 0.0);
+          AgeLengthData[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
       }
 
     } else {
@@ -425,11 +425,11 @@ void LogCatches::LikelihoodPrint(ofstream& outfile) const {
   }
 }
 
-void LogCatches::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks) {
+void LogCatches::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j;
   int found = 0;
-  Fleetptrvector fleets;
-  Stockptrvector stocks;
+  FleetPtrVector fleets;
+  StockPtrVector stocks;
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
@@ -501,7 +501,7 @@ double LogCatches::LogLik(const TimeClass* const TimeInfo) {
   int max_age = 0;
 
   //Get numbers from aggregator->AgeLengthDist()
-  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
@@ -574,7 +574,7 @@ void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
   int max_age = 0;
 
   //Get age and length intervals from aggregator->AgeLengthDist()
-  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
+  const AgeBandMatrixPtrVector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
@@ -730,12 +730,11 @@ void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
             }
             catchfile << endl;
           }
-        } //end print_type
+        }
       }
       catchfile.flush();
-    } //end last step in year
-  } //end nareas
-  //timeindex++;
+    }
+  }
 }
 
 void LogCatches::printHeader(ofstream& catchfile, const PrintInfo& print) {

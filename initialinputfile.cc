@@ -10,8 +10,8 @@ int InitialInputFile::reachedEndOfFile() {
   return infile.eof();
 }
 
-void InitialInputFile::getReadValues(Parametervector& sw,
-  doublevector& val, doublevector& low, doublevector& upp, intvector& opt) {
+void InitialInputFile::getReadValues(ParameterVector& sw,
+  DoubleVector& val, DoubleVector& low, DoubleVector& upp, IntVector& opt) {
 
   sw = switches;
   val = values;
@@ -24,11 +24,11 @@ void InitialInputFile::getReadValues(Parametervector& sw,
     opt[i] = optimize[i];
 }
 
-void InitialInputFile::getVectorValue(doublevector& val) {
+void InitialInputFile::getVectorValue(DoubleVector& val) {
   val = values;
 }
 
-void InitialInputFile::getSwitchValue(Parametervector& sw) {
+void InitialInputFile::getSwitchValue(ParameterVector& sw) {
   sw = switches;
 }
 
@@ -187,7 +187,7 @@ void InitialInputFile::readFromFile() {
 void InitialInputFile::readVectorFromLine() {
   int i;
   double tempX;
-  doublevector tempValues;
+  DoubleVector tempValues;
 
   infile >> ws;
   if (infile.eof()) {

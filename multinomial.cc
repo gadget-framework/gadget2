@@ -2,7 +2,7 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
-double Multinomial::LogLikelihood(const doublevector& data, const doublevector& dist) {
+double Multinomial::LogLikelihood(const DoubleVector& data, const DoubleVector& dist) {
 
   int i;
   double minp = 1.0 / (dist.Size() * bigvalue);

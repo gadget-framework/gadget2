@@ -4,7 +4,7 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-double& doubleindexvector::operator [] (int pos) {
+double& DoubleIndexVector::operator [] (int pos) {
   assert(minpos <= pos && pos < minpos + size);
   return v[pos - minpos];
 }
@@ -12,7 +12,7 @@ double& doubleindexvector::operator [] (int pos) {
 #ifdef GADGET_INLINE
 inline
 #endif
-const double& doubleindexvector::operator [] (int pos) const {
+const double& DoubleIndexVector::operator [] (int pos) const {
   assert(minpos <= pos && pos < minpos + size);
   return v[pos - minpos];
 }

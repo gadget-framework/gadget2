@@ -10,16 +10,16 @@ class LengthGroupDivision;
 
 class SIByLengthOnStep : public SIOnStep {
 public:
-  SIByLengthOnStep(CommentStream& infile, const intvector& areas,
-    const doublevector& lengths, const char* arealabel, const charptrvector& lenindex,
+  SIByLengthOnStep(CommentStream& infile, const IntVector& areas,
+    const DoubleVector& lengths, const char* arealabel, const CharPtrVector& lenindex,
     const TimeClass* const TimeInfo, const char* datafilename);
   virtual ~SIByLengthOnStep();
   virtual void Sum(const TimeClass* const TimeInfo);
-  virtual void SetStocks(const Stockptrvector& Stocks);
+  virtual void SetStocks(const StockPtrVector& Stocks);
 protected:
   StockAggregator* aggregator;
   LengthGroupDivision* LgrpDiv;
-  intvector Areas;
+  IntVector Areas;
   int minage;
   int maxage;
 };

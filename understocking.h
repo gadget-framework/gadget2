@@ -17,12 +17,12 @@ public:
   virtual void AddToLikelihood(const TimeClass* const);
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream&) const {};
-  void SetFleets(Fleetptrvector&);
+  void SetFleets(FleetPtrVector&);
 private:
-  charptrvector fleetnames;
-  Fleetptrvector fleets;
-  intmatrix areas;
-  charptrvector areaindex;
+  CharPtrVector fleetnames;
+  FleetPtrVector fleets;
+  IntMatrix areas;
+  CharPtrVector areaindex;
   ActionAtTimes aat;
   double powercoeff;
 };

@@ -7,38 +7,38 @@
 #include "agebandmatrixratio.icc"
 #endif
 
-Agebandmatrixratio::Agebandmatrixratio(const Agebandmatrixratio& initial)
+AgeBandMatrixRatio::AgeBandMatrixRatio(const AgeBandMatrixRatio& initial)
   : minage(initial.Minage()), nrow(initial.Nrow()) {
 
   int i;
   if (nrow > 0) {
-    v = new popratioindexvector*[nrow];
+    v = new PopRatioIndexVector*[nrow];
     for (i = 0; i < nrow; i++)
-      v[i] = new popratioindexvector(initial[i + minage]);
+      v[i] = new PopRatioIndexVector(initial[i + minage]);
   } else
       v = 0;
 }
 
-Agebandmatrixratio::Agebandmatrixratio(int MinAge, const intvector& minl,
-  const intvector& size) : minage(MinAge), nrow(size.Size()) {
+AgeBandMatrixRatio::AgeBandMatrixRatio(int MinAge, const IntVector& minl,
+  const IntVector& size) : minage(MinAge), nrow(size.Size()) {
 
   int i;
   if (nrow > 0) {
-    v = new popratioindexvector*[nrow];
+    v = new PopRatioIndexVector*[nrow];
     for (i = 0; i < nrow; i++)
-      v[i] = new popratioindexvector(size[i], minl[i]);
+      v[i] = new PopRatioIndexVector(size[i], minl[i]);
   } else
       v = 0;
 }
 
-Agebandmatrixratio::Agebandmatrixratio(int MinAge, const popratioindexvector& initial)
+AgeBandMatrixRatio::AgeBandMatrixRatio(int MinAge, const PopRatioIndexVector& initial)
   : minage(MinAge), nrow(1) {
 
-  v = new popratioindexvector*[1];
-  v[0] = new popratioindexvector(initial);
+  v = new PopRatioIndexVector*[1];
+  v[0] = new PopRatioIndexVector(initial);
 }
 
-Agebandmatrixratio::~Agebandmatrixratio() {
+AgeBandMatrixRatio::~AgeBandMatrixRatio() {
   int i;
   if (v != 0) {
     for (i = 0; i < nrow; i++)
@@ -48,7 +48,7 @@ Agebandmatrixratio::~Agebandmatrixratio() {
   }
 }
 
-int Agebandmatrixratio::NrOfTagExp() const {
+int AgeBandMatrixRatio::NrOfTagExp() const {
   int minlength;
   if (nrow > 0) {
     minlength = this->Minlength(minage);

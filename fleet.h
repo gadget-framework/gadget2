@@ -54,7 +54,7 @@ public:
   };
 protected:
   LengthPredator* predator;
-  Formulamatrix amount;
+  FormulaMatrix amount;
   FleetType fleetType;
 };
 

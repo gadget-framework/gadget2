@@ -17,13 +17,13 @@ public:
   StockStdPrinter(CommentStream& infile,
     const AreaClass* const Area, const  TimeClass* const TimeInfo);
   virtual ~StockStdPrinter();
-  virtual void SetStock(Stockptrvector& stockvec);
+  virtual void SetStock(StockPtrVector& stockvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
   char* stockname;
   LengthGroupDivision* LgrpDiv;
-  intvector areas;
-  intvector outerareas;
+  IntVector areas;
+  IntVector outerareas;
   int minage;
   int maxage;
   StockAggregator* aggregator;

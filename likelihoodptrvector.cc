@@ -5,7 +5,7 @@
 #include "likelihoodptrvector.icc"
 #endif
 
-Likelihoodptrvector::Likelihoodptrvector(int sz) {
+LikelihoodPtrVector::LikelihoodPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new Likelihood*[size];
@@ -13,7 +13,7 @@ Likelihoodptrvector::Likelihoodptrvector(int sz) {
     v = 0;
 }
 
-Likelihoodptrvector::Likelihoodptrvector(int sz, Likelihood* value) {
+LikelihoodPtrVector::LikelihoodPtrVector(int sz, Likelihood* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -24,7 +24,7 @@ Likelihoodptrvector::Likelihoodptrvector(int sz, Likelihood* value) {
     v = 0;
 }
 
-Likelihoodptrvector::Likelihoodptrvector(const Likelihoodptrvector& initial) {
+LikelihoodPtrVector::LikelihoodPtrVector(const LikelihoodPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -35,15 +35,14 @@ Likelihoodptrvector::Likelihoodptrvector(const Likelihoodptrvector& initial) {
     v = 0;
 }
 
-Likelihoodptrvector::~Likelihoodptrvector() {
+LikelihoodPtrVector::~LikelihoodPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a Likelihoodptrvector and fills it vith value.
-void Likelihoodptrvector::resize(int addsize, Likelihood* value) {
+void LikelihoodPtrVector::resize(int addsize, Likelihood* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,7 +51,7 @@ void Likelihoodptrvector::resize(int addsize, Likelihood* value) {
       v[i] = value;
 }
 
-void Likelihoodptrvector::resize(int addsize) {
+void LikelihoodPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -67,7 +66,7 @@ void Likelihoodptrvector::resize(int addsize) {
   }
 }
 
-void Likelihoodptrvector::Delete(int pos) {
+void LikelihoodPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   Likelihood** vnew = new Likelihood*[size - 1];

@@ -30,7 +30,7 @@ Suits::Suits(const Suits& initial, Keeper* const keeper)
   for (i = 0; i < MatrixPreynames.Size(); i++) {
     MatrixPreynames[i] = new char[strlen(initial.MatrixPreynames[i]) + 1];
     strcpy(MatrixPreynames[i], initial.MatrixPreynames[i]);
-    MatrixSuit[i] = new doublematrix(*initial.MatrixSuit[i]);
+    MatrixSuit[i] = new DoubleMatrix(*initial.MatrixSuit[i]);
     keeper->ChangeVariable(initial.Multiplication[i], Multiplication[i]);
   }
 
@@ -47,12 +47,12 @@ void Suits::AddPrey(const char* preyname, SuitFunc* suitf) {
 }
 
 void Suits::AddPrey(const char* preyname, double multiplication,
-  const doublematrix& suitabilities, Keeper* const keeper) {
+  const DoubleMatrix& suitabilities, Keeper* const keeper) {
 
   int i = MatrixPreynames.Size();
   MatrixPreynames.resize(1);
   Multiplication.resize(1, multiplication);
-  doublematrix* dm = new doublematrix(suitabilities);
+  DoubleMatrix* dm = new DoubleMatrix(suitabilities);
   MatrixSuit.resize(1, dm);
   MatrixPreynames[i] = new char[strlen(preyname) + 1];
   strcpy(MatrixPreynames[i], preyname);
@@ -74,7 +74,7 @@ int Suits::NoFuncPreys() const {
   return SuitFunction.Size();
 }
 
-const bandmatrix& Suits::Suitable(int prey) const {
+const BandMatrix& Suits::Suitable(int prey) const {
   return PrecalcSuitability[prey];
 }
 
@@ -93,7 +93,7 @@ void Suits::DeletePrey(int prey, Keeper* const keeper) {
     PrecalcSuitability.Delete(prey);
 }
 
-//Calculate suitabilities and set in the bandmatrixvector PrecalcSuitability.
+//Calculate suitabilities and set in the BandMatrixVector PrecalcSuitability.
 void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
   //First time.
   if (PrecalcSuitability.Size() == 0)
@@ -104,15 +104,15 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
    * use const access functions to access the length group division of
    * pred and its preys -- we do not change anything in pred. */
 
-  doublematrix* temp = 0;
-  bandmatrix* suit = 0;
+  DoubleMatrix* temp = 0;
+  BandMatrix* suit = 0;
   double mult;
   int i, j, p;
 
   for (p = 0; p < SuitFunction.Size(); p++) {
     SuitFunction[p]->updateConstants(TimeInfo);
     if (SuitFunction[p]->constantsHaveChanged(TimeInfo)) {
-      temp = new doublematrix(pred->NoLengthGroups(), pred->Preys(p)->NoLengthGroups(), 0.0);
+      temp = new DoubleMatrix(pred->NoLengthGroups(), pred->Preys(p)->NoLengthGroups(), 0.0);
       for (i = 0; i < pred->NoLengthGroups(); i++) {
         for (j = 0; j < pred->Preys(p)->NoLengthGroups(); j++) {
           if (SuitFunction[p]->usesPreyLength())
@@ -126,7 +126,7 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
             (*temp)[i][j] = 0.0;
         }
       }
-      suit = new bandmatrix(*temp);
+      suit = new BandMatrix(*temp);
       PrecalcSuitability.ChangeElement(p, *suit);
       delete suit;
       delete temp;
@@ -136,7 +136,7 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
   int shift = SuitFunction.Size();
   if (TimeInfo->CurrentTime() == 1) {
     for (p = 0; p < MatrixPreynames.Size(); p++) {
-      temp = new doublematrix(*MatrixSuit[p]);
+      temp = new DoubleMatrix(*MatrixSuit[p]);
       mult = Multiplication[p];
       assert(temp->Nrow() == pred->NoLengthGroups());
       for (i = 0; i < pred->NoLengthGroups(); i++) {
@@ -147,7 +147,7 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
           else
             (*temp)[i][j] *= mult;
       }
-      suit = new bandmatrix(*temp);
+      suit = new BandMatrix(*temp);
       PrecalcSuitability.resize(1, *suit);
       delete suit;
       delete temp;

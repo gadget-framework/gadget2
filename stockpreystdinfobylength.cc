@@ -1,10 +1,9 @@
 #include "stockpreystdinfobylength.h"
 #include "stockprey.h"
 #include "areatime.h"
-//#include "agebandm.h"
 #include "gadget.h"
 
-StockPreyStdInfoByLength::StockPreyStdInfoByLength(const StockPrey* p, const intvector& Areas)
+StockPreyStdInfoByLength::StockPreyStdInfoByLength(const StockPrey* p, const IntVector& Areas)
   : AbstrPreyStdInfoByLength(p, Areas), prey(p) {
 
   PreyLgrpDiv = p->ReturnLengthGroupDiv();
@@ -14,13 +13,13 @@ StockPreyStdInfoByLength::~StockPreyStdInfoByLength() {
 }
 
 void StockPreyStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
-  const Agebandmatrix& Alk = prey->AlkeysPriorToEating(area);
+  const AgeBandMatrix& Alk = prey->AlkeysPriorToEating(area);
   const int inarea = AreaNr[area];
-  popinfo nullpop;
+  PopInfo nullpop;
 
-  popinfovector PopBylength(BconbyLength.Ncol(inarea), nullpop);
+  PopInfoVector PopBylength(BconbyLength.Ncol(inarea), nullpop);
   Alk.Colsum(PopBylength);
-  const doublevector& Bconsumption = prey->Bconsumption(area);
+  const DoubleVector& Bconsumption = prey->Bconsumption(area);
   assert(BconbyLength.Ncol() == Bconsumption.Size());
   int l;
   double timeratio;

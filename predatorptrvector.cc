@@ -5,7 +5,7 @@
 #include "predatorptrvector.icc"
 #endif
 
-Predatorptrvector::Predatorptrvector(int sz) {
+PredatorPtrVector::PredatorPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new Predator*[size];
@@ -13,7 +13,7 @@ Predatorptrvector::Predatorptrvector(int sz) {
     v = 0;
 }
 
-Predatorptrvector::Predatorptrvector(int sz, Predator* value) {
+PredatorPtrVector::PredatorPtrVector(int sz, Predator* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -24,7 +24,7 @@ Predatorptrvector::Predatorptrvector(int sz, Predator* value) {
     v = 0;
 }
 
-Predatorptrvector::Predatorptrvector(const Predatorptrvector& initial) {
+PredatorPtrVector::PredatorPtrVector(const PredatorPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -35,15 +35,14 @@ Predatorptrvector::Predatorptrvector(const Predatorptrvector& initial) {
     v = 0;
 }
 
-Predatorptrvector::~Predatorptrvector() {
+PredatorPtrVector::~PredatorPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a Predatorptrvector and fills it vith value.
-void Predatorptrvector::resize(int addsize, Predator* value) {
+void PredatorPtrVector::resize(int addsize, Predator* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,7 +51,7 @@ void Predatorptrvector::resize(int addsize, Predator* value) {
       v[i] = value;
 }
 
-void Predatorptrvector::resize(int addsize) {
+void PredatorPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -67,7 +66,7 @@ void Predatorptrvector::resize(int addsize) {
   }
 }
 
-void Predatorptrvector::Delete(int pos) {
+void PredatorPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   Predator** vnew = new Predator*[size - 1];

@@ -9,7 +9,7 @@
 
 //Function that Reduces the number in given Agelengthkeys by age distributed catch.
 //Pre: CI contains the mapping from Addition to Alkeys.
-void AgebandmSubtract(Agebandmatrix& Alkeys, const bandmatrix& Catch,
+void AgebandmSubtract(AgeBandMatrix& Alkeys, const BandMatrix& Catch,
   const ConversionIndex& CI, int allowNegativeResults) {
 
   const int minage =  max(Alkeys.Minage(), Catch.Minage());
@@ -30,7 +30,7 @@ void AgebandmSubtract(Agebandmatrix& Alkeys, const bandmatrix& Catch,
 
   } else { //Not same dl on length distributions
     if (CI.TargetIsFiner()) {
-      doublevector Ratio(CI.Nc());
+      DoubleVector Ratio(CI.Nc());
       for (age = minage; age <= maxage; age++) {
         minl = max(Alkeys.Minlength(age), CI.Minpos(Catch.Minlength(age)));
         maxl = min(Alkeys.Maxlength(age), CI.Maxpos(Catch.Maxlength(age) - 1) + 1);
@@ -63,12 +63,12 @@ void AgebandmSubtract(Agebandmatrix& Alkeys, const bandmatrix& Catch,
   }
 }
 
-//Function that Adds one Agebandmatrix to another.
+//Function that Adds one AgeBandMatrix to another.
 //Pre: At least that CI contains the mapping from Addition to Alkeys.
-void AgebandmAdd(Agebandmatrix& Alkeys, const Agebandmatrix& Addition,
+void AgebandmAdd(AgeBandMatrix& Alkeys, const AgeBandMatrix& Addition,
   const ConversionIndex &CI, double ratio, int minage, int maxage) {
 
-  popinfo pop;
+  PopInfo pop;
   minage = max(Alkeys.Minage(), Addition.Minage(), minage);
   maxage = min(Alkeys.Maxage(), Addition.Maxage(), maxage);
   int age, l, minl, maxl, offset;
@@ -117,11 +117,11 @@ void AgebandmAdd(Agebandmatrix& Alkeys, const Agebandmatrix& Addition,
 }
 
 //Pre: CI converts from 'this' to Ratio and CI.TargetIsFiner() == 1
-void Agebandmatrix::Multiply(const doublevector& Ratio, const ConversionIndex& CI) {
+void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& CI) {
   assert(!CI.TargetIsFiner());
   //We use the vector UsedRatio instead of Ratio to reduce the chances
   //of numerical errors and negative stock size.
-  doublevector UsedRatio(Ratio);
+  DoubleVector UsedRatio(Ratio);
   int i, j, j1, j2;
 
   for (i = 0; i < UsedRatio.Size(); i++) {
@@ -150,9 +150,9 @@ void Agebandmatrix::Multiply(const doublevector& Ratio, const ConversionIndex& C
   }
 }
 
-//Pre: similar to Agebandmatrix::Multiply
-void Agebandmatrix::Subtract(const doublevector& Consumption, const ConversionIndex& CI, const popinfovector& Nrof) {
-  doublevector Ratio(CI.Nf(), 1);
+//Pre: similar to AgeBandMatrix::Multiply
+void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Nrof) {
+  DoubleVector Ratio(CI.Nf(), 1);
   int i;
   for (i = 0; i < Consumption.Size(); i++) {
     if (Nrof[i].N > 0)
@@ -166,9 +166,9 @@ void Agebandmatrix::Subtract(const doublevector& Consumption, const ConversionIn
 }
 
 //-----------------------------------------------------------------
-//Multiply Agebandmatrix by a Agedependent vector for example
+//Multiply AgeBandMatrix by a Agedependent vector for example
 //Natural mortality. Investigate if NaturalM should be allowed to be shorter.
-void Agebandmatrix::Multiply(const doublevector& NatM) {
+void AgeBandMatrix::Multiply(const DoubleVector& NatM) {
   int i, j;
   for (i = 0; i < NatM.Size() && i < nrow; i++)
     for (j = v[i]->Mincol(); j < v[i]->Maxcol(); j++)
@@ -176,9 +176,9 @@ void Agebandmatrix::Multiply(const doublevector& NatM) {
 }
 
 //--------------------------------------------------------------
-//Find the Column sum of a bandmatrix.  In Agebandmatrix it means
+//Find the Column sum of a BandMatrix.  In AgeBandMatrix it means
 //summation over all ages for each length.
-void Agebandmatrix::Colsum(popinfovector& Result) const {
+void AgeBandMatrix::Colsum(PopInfoVector& Result) const {
   int i, j;
   for (i = 0; i < nrow; i++)
     for (j = v[i]->Mincol(); j < v[i]->Maxcol(); j++)
@@ -188,7 +188,7 @@ void Agebandmatrix::Colsum(popinfovector& Result) const {
 //This function increases the age.  When moving from one age class to
 //another only the intersection of the agegroups of the length
 //classes is moved.  This could possibly be improved later on.
-void Agebandmatrix::IncrementAge() {
+void AgeBandMatrix::IncrementAge() {
   int i, j, j1, j2;
 
   if (nrow <= 1)
@@ -234,7 +234,7 @@ void Agebandmatrix::IncrementAge() {
   }
 }
 
-void Agebandmatrix::SettoZero() {
+void AgeBandMatrix::SettoZero() {
   int i, j;
   for (i = 0; i < nrow; i++)
     for (j = v[i]->Mincol(); j < v[i]->Maxcol(); j++) {
@@ -243,7 +243,7 @@ void Agebandmatrix::SettoZero() {
     }
 }
 
-void Agebandmatrix::FilterN(double minN) {
+void AgeBandMatrix::FilterN(double minN) {
   int i, j;
   for (i = 0; i < nrow; i++)
     for (j = v[i]->Mincol(); j < v[i]->Maxcol(); j++)
@@ -254,9 +254,9 @@ void Agebandmatrix::FilterN(double minN) {
 }
 
 //Function that implements the migration
-void agebandmatrixptrvector::Migrate(const doublematrix& MI) {
+void AgeBandMatrixPtrVector::Migrate(const DoubleMatrix& MI) {
   assert(MI.Nrow() == size);
-  popinfovector tmp(size);
+  PopInfoVector tmp(size);
   int i, j, age, length;
 
   for (age = v[0]->Minage(); age <= v[0]->Maxage(); age++) {

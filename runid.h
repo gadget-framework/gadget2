@@ -3,11 +3,11 @@
 
 #include "gadget.h"
 
-class RunId {
+class RunID {
 public:
-  RunId();
+  RunID();
   void print(ostream& o);
-  ~RunId();
+  ~RunID();
 protected:
   const char* hostname;
   const char* timestring;

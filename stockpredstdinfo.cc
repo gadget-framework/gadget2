@@ -8,7 +8,7 @@
 #include "stockprey.h"
 
 
-StockPredStdInfo::StockPredStdInfo(const StockPredator* pred, const StockPrey* pRey, const intvector& Areas)
+StockPredStdInfo::StockPredStdInfo(const StockPredator* pred, const StockPrey* pRey, const IntVector& Areas)
   : AbstrPredStdInfo(Areas, pred->Alproportion(Areas[0]).Minage(), pred->Alproportion(Areas[0]).Maxage(),
     pRey->AlkeysPriorToEating(Areas[0]).Minage(), pRey->AlkeysPriorToEating(Areas[0]).Maxage()),
   preyinfo(new StockPreyStdInfo(pRey, Areas)),
@@ -16,7 +16,7 @@ StockPredStdInfo::StockPredStdInfo(const StockPredator* pred, const StockPrey* p
   predator(pred), prey(pRey) {
 }
 
-StockPredStdInfo::StockPredStdInfo(const StockPredator* pred, const Prey* pRey, const intvector& Areas)
+StockPredStdInfo::StockPredStdInfo(const StockPredator* pred, const Prey* pRey, const IntVector& Areas)
   : AbstrPredStdInfo(Areas, pred->Alproportion(Areas[0]).Minage(), pred->Alproportion(Areas[0]).Maxage(), 0, 0),
   preyinfo(new PreyStdInfo(pRey, Areas)),
   predinfo(new PredStdInfoByLength(pred, pRey, Areas)),
@@ -38,11 +38,11 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
       NconbyAge[inarea][predage][preyage] = 0;
       BconbyAge[inarea][predage][preyage] = 0;
     }
-  const bandmatrix& Alprop = predator->Alproportion(area);
-  doublevector predBconsbyAge(Alprop.Maxage() - Alprop.Minage() + 1, 0);
-  const bandmatrix& preyNcons = preyinfo->NconsumptionByAgeAndLength(area);
-  const bandmatrix& preyBcons = preyinfo->BconsumptionByAgeAndLength(area);
-  const bandmatrix& predBcons = predator->Consumption(area, prey->Name());
+  const BandMatrix& Alprop = predator->Alproportion(area);
+  DoubleVector predBconsbyAge(Alprop.Maxage() - Alprop.Minage() + 1, 0);
+  const BandMatrix& preyNcons = preyinfo->NconsumptionByAgeAndLength(area);
+  const BandMatrix& preyBcons = preyinfo->BconsumptionByAgeAndLength(area);
+  const BandMatrix& predBcons = predator->Consumption(area, prey->Name());
 
   int preyl, predl;
   double timeratio;
@@ -75,14 +75,14 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
     }
 }
 
-const bandmatrix& StockPredStdInfo::NconsumptionByLength(int area) const {
+const BandMatrix& StockPredStdInfo::NconsumptionByLength(int area) const {
   return predinfo->NconsumptionByLength(area);
 }
 
-const bandmatrix& StockPredStdInfo::BconsumptionByLength(int area) const {
+const BandMatrix& StockPredStdInfo::BconsumptionByLength(int area) const {
   return predinfo->BconsumptionByLength(area);
 }
 
-const bandmatrix& StockPredStdInfo::MortalityByLength(int area) const {
+const BandMatrix& StockPredStdInfo::MortalityByLength(int area) const {
   return predinfo->MortalityByLength(area);
 }

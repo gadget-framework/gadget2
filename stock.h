@@ -59,9 +59,9 @@ public:
   virtual void SecondSpecialTransactions(int area,
     const AreaClass* const Area, const TimeClass* const TimeInfo);
   void Renewal(int area, const TimeClass* const TimeInfo, double ratio = 0);
-  void Add(const Agebandmatrix& Addition, const ConversionIndex* const CI,
+  void Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
     int area, double ratio = 1, int MinAge = 0, int MaxAge = 100);
-  void Add(const agebandmatrixratioptrvector& Addition, int AddArea, const ConversionIndex* const CI,
+  void Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
     int area, double ratio = 1, int MinAge = 0, int MaxAge = 100);
   virtual void Migrate(const TimeClass* const TimeInfo);
   virtual void CalcEat(int area,
@@ -76,10 +76,10 @@ public:
   Prey* ReturnPrey() const;
   const Migration* ReturnMigration() const { return migration; };
   PopPredator* ReturnPredator() const;
-  const Agebandmatrix& Agelengthkeys(int area) const;
-  Agebandmatrix& MutableAgelengthkeys(int area) const;
-  const Agebandmatrix& getMeanN(int area) const;
-  virtual void SetStock(Stockptrvector& stockvec);
+  const AgeBandMatrix& Agelengthkeys(int area) const;
+  AgeBandMatrix& MutableAgelengthkeys(int area) const;
+  const AgeBandMatrix& getMeanN(int area) const;
+  virtual void SetStock(StockPtrVector& stockvec);
   void SetCI();
   void Print(ofstream& outfile) const;
   int Birthday(const TimeClass* const TimeInfo) const;
@@ -95,17 +95,17 @@ public:
   int DoesMigrate() const { return doesmigrate; };
   int Minage() const { return Alkeys[0].Minage(); };
   int Maxage() const { return Alkeys[0].Maxage(); };
-  const doubleindexvector& mortality() const { return NatM->getMortality(); };
+  const DoubleIndexVector& mortality() const { return NatM->getMortality(); };
   const void getBiomass(int area) const {};
-  const Stockptrvector& GetMatureStocks();
-  int UpdateTags(agebandmatrixptrvector* tagbyagelength, Tags* newtag);
+  const StockPtrVector& GetMatureStocks();
+  int UpdateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag);
   void DeleteTags(const char* tagname);
   void UpdateMatureStockWithTags(const TimeClass* const TimeInfo);
-  const charptrvector TaggingExperimentIds();
+  const CharPtrVector TaggingExperimentIds();
 protected:
-  agebandmatrixptrvector Alkeys;
-  agebandmatrixratioptrvector tagAlkeys;
-  Tagptrvector matureTags;
+  AgeBandMatrixPtrVector Alkeys;
+  AgeBandMatrixRatioPtrVector tagAlkeys;
+  TagPtrVector matureTags;
   Spawner* spawner;
   RenewalData* renewal;
   Maturity* maturity;
@@ -118,7 +118,7 @@ protected:
   LengthGroupDivision* LgrpDiv;
   Grower* grower;
   NaturalM* NatM;
-  popinfomatrix NumberInArea;
+  PopInfoMatrix NumberInArea;
   int doeseat;
   int doesmove;
   int iseaten;

@@ -33,7 +33,7 @@ TagData::TagData(CommentStream& infile, const AreaClass* const Area,
   datafile.open(aggfilename);
   CheckIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  charptrvector areaindex;
+  CharPtrVector areaindex;
   numarea = ReadAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
@@ -69,7 +69,7 @@ TagData::TagData(CommentStream& infile, const AreaClass* const Area,
 }
 
 void TagData::ReadRecaptureData(CommentStream& infile,
-  const TimeClass* TimeInfo, charptrvector areaindex) {
+  const TimeClass* TimeInfo, CharPtrVector areaindex) {
 
   ErrorHandler handle;
   int i;
@@ -163,10 +163,10 @@ void TagData::Reset(const Keeper* const keeper) {
   index = 0;
 }
 
-void TagData::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks) {
+void TagData::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, found;
-  Fleetptrvector fleets;
-  Stockptrvector stock;
+  FleetPtrVector fleets;
+  StockPtrVector stock;
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
@@ -223,8 +223,8 @@ void TagData::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks)
 
   double min_l, max_l;
   int min_age, max_age;
-  intmatrix agematrix(1, 0);
-  intmatrix areamatrix(areas.Size(), 1, 0);
+  IntMatrix agematrix(1, 0);
+  IntMatrix areamatrix(areas.Size(), 1, 0);
 
   const LengthGroupDivision *tmpLgrpDiv = stock[0]->ReturnLengthGroupDiv();
   min_l = tmpLgrpDiv->Minlength(0);
@@ -246,8 +246,8 @@ void TagData::AddToLikelihood(const TimeClass* const TimeInfo) {
   lik = 0.0;
   //Calculate "catch" and get information from aggregator
   aggregator->Sum(TimeInfo);
-  const agebandmatrixptrvector& alptr = aggregator->AgeLengthDist();
-  const bandmatrixvector& catchratios = aggregator->CatchRatios();
+  const AgeBandMatrixPtrVector& alptr = aggregator->AgeLengthDist();
+  const BandMatrixVector& catchratios = aggregator->CatchRatios();
 
   for (i = 0; i < areas.Size(); i++) {
     p = catchratios[i][0][0];

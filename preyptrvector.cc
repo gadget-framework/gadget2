@@ -5,7 +5,7 @@
 #include "preyptrvector.icc"
 #endif
 
-Preyptrvector::Preyptrvector(int sz) {
+PreyPtrVector::PreyPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new Prey*[size];
@@ -13,7 +13,7 @@ Preyptrvector::Preyptrvector(int sz) {
     v = 0;
 }
 
-Preyptrvector::Preyptrvector(int sz, Prey* value) {
+PreyPtrVector::PreyPtrVector(int sz, Prey* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -24,7 +24,7 @@ Preyptrvector::Preyptrvector(int sz, Prey* value) {
     v = 0;
 }
 
-Preyptrvector::Preyptrvector(const Preyptrvector& initial) {
+PreyPtrVector::PreyPtrVector(const PreyPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -35,15 +35,14 @@ Preyptrvector::Preyptrvector(const Preyptrvector& initial) {
     v = 0;
 }
 
-Preyptrvector::~Preyptrvector() {
+PreyPtrVector::~PreyPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a Preyptrvector and fills it vith value.
-void Preyptrvector::resize(int addsize, Prey* value) {
+void PreyPtrVector::resize(int addsize, Prey* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,7 +51,7 @@ void Preyptrvector::resize(int addsize, Prey* value) {
       v[i] = value;
 }
 
-void Preyptrvector::resize(int addsize) {
+void PreyPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -67,7 +66,7 @@ void Preyptrvector::resize(int addsize) {
   }
 }
 
-void Preyptrvector::Delete(int pos) {
+void PreyPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   Prey** vnew = new Prey*[size - 1];

@@ -11,7 +11,7 @@
 #include "gadget.h"
 
 #include "runid.h"
-extern RunId RUNID;
+extern RunID RUNID;
 
 StockPrinter::StockPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
@@ -61,7 +61,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
   datafile.clear();
 
   //Read in length aggregation from file
-  doublevector lengths;
+  DoubleVector lengths;
   ReadWordAndValue(infile, "lenaggfile", filename);
   datafile.open(filename);
   CheckIfFailure(datafile, filename);
@@ -112,9 +112,9 @@ StockPrinter::StockPrinter(CommentStream& infile,
   outfile.flush();
 }
 
-void StockPrinter::SetStock(Stockptrvector& stockvec) {
+void StockPrinter::SetStock(StockPtrVector& stockvec) {
   assert(stockvec.Size() > 0);
-  Stockptrvector stocks;
+  StockPtrVector stocks;
   int index = 0;
   int i, j;
 
@@ -145,7 +145,7 @@ void StockPrinter::Print(const TimeClass* const TimeInfo) {
   aggregator->Sum();
 
   for (a = 0; a < areas.Nrow(); a++) {
-    const Agebandmatrix& alk = aggregator->ReturnSum()[a];
+    const AgeBandMatrix& alk = aggregator->ReturnSum()[a];
     for (age = alk.Minage(); age <= alk.Maxage(); age++) {
       for (l = alk.Minlength(age); l < alk.Maxlength(age); l++) {
         outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep

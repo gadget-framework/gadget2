@@ -7,14 +7,14 @@
 #include "stockpreystdinfo.h"
 #include "stockprey.h"
 
-PredStdInfo::PredStdInfo(const PopPredator* pred, const Prey* pRey, const intvector& Areas)
+PredStdInfo::PredStdInfo(const PopPredator* pred, const Prey* pRey, const IntVector& Areas)
   : AbstrPredStdInfo(Areas, 0, 0, 0, 0), //prey and pred. min and max age eq. 0
   preyinfo(new PreyStdInfo(pRey, Areas)),
   predinfo(new PredStdInfoByLength(pred, pRey, Areas)),
   predator(pred), prey(pRey) {
 }
 
-PredStdInfo::PredStdInfo(const PopPredator* pred, const StockPrey* pRey, const intvector& Areas)
+PredStdInfo::PredStdInfo(const PopPredator* pred, const StockPrey* pRey, const IntVector& Areas)
   : AbstrPredStdInfo(Areas, 0, 0, //pred. min and max age equals 0
   pRey->AlkeysPriorToEating(Areas[0]).Minage(),
   pRey->AlkeysPriorToEating(Areas[0]).Maxage()),
@@ -35,9 +35,9 @@ void PredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   predinfo->Sum(TimeInfo, area);
   const int inarea = AreaNr[area];
   const int predage = 0;
-  const bandmatrix& preyNcons = preyinfo->NconsumptionByAgeAndLength(area);
-  const bandmatrix& preyBcons = preyinfo->BconsumptionByAgeAndLength(area);
-  const bandmatrix& predBcons = predator->Consumption(area, prey->Name());
+  const BandMatrix& preyNcons = preyinfo->NconsumptionByAgeAndLength(area);
+  const BandMatrix& preyBcons = preyinfo->BconsumptionByAgeAndLength(area);
+  const BandMatrix& predBcons = predator->Consumption(area, prey->Name());
   int preyage, predl, preyl;
   double timeratio;
 
@@ -71,14 +71,14 @@ void PredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   }
 }
 
-const bandmatrix& PredStdInfo::NconsumptionByLength(int area) const {
+const BandMatrix& PredStdInfo::NconsumptionByLength(int area) const {
   return predinfo->NconsumptionByLength(area);
 }
 
-const bandmatrix& PredStdInfo::BconsumptionByLength(int area) const {
+const BandMatrix& PredStdInfo::BconsumptionByLength(int area) const {
   return predinfo->BconsumptionByLength(area);
 }
 
-const bandmatrix& PredStdInfo::MortalityByLength(int area) const {
+const BandMatrix& PredStdInfo::MortalityByLength(int area) const {
   return predinfo->MortalityByLength(area);
 }

@@ -23,11 +23,11 @@ private:
   int timestepnr;   //last timestep
   int time;
   int firsttimestepnr;
-  intvector years;  //Years when things change
-  intvector steps;  //Steps when things change
-  Formulavector values;
-  doublematrix modelmatrix;
-  Formulavector Coeff;
+  IntVector years;  //Years when things change
+  IntVector steps;  //Steps when things change
+  FormulaVector values;
+  DoubleMatrix modelmatrix;
+  FormulaVector Coeff;
   Formula Value;
   double lastvalue;
   double value;

@@ -16,12 +16,12 @@ public:
   StockPreyFullPrinter(CommentStream& infile,
     const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~StockPreyFullPrinter();
-  virtual void SetStock(Stockptrvector& stockvec);
+  virtual void SetStock(StockPtrVector& stockvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
   char* stockname;
-  intvector areas;
-  intvector outerareas;
+  IntVector areas;
+  IntVector outerareas;
   StockPreyStdInfo* preyinfo;
   ofstream outfile;
 };

@@ -11,21 +11,21 @@ class Keeper;
 
 class Transition : protected LivesOnAreas {
 public:
-  Transition(CommentStream& infile, const intvector& areas, int age,
+  Transition(CommentStream& infile, const IntVector& areas, int age,
     const LengthGroupDivision* const lgrpdiv, Keeper* const keeper);
   ~Transition();
-  void SetStock(Stockptrvector& stockvec);
-  void KeepAgegroup(int area, Agebandmatrix& Alkeys, const TimeClass* const TimeInfo);
+  void SetStock(StockPtrVector& stockvec);
+  void KeepAgegroup(int area, AgeBandMatrix& Alkeys, const TimeClass* const TimeInfo);
   void MoveAgegroupToTransitionStock(int area, const TimeClass* const TimeInfo, int HasLgr);
   void Print(ofstream& outfile) const;
 protected:
-  Stockptrvector TransitionStocks;
-  charptrvector TransitionStockNames;
-  doublevector Ratio;
-  ConversionIndexptrvector CI;
+  StockPtrVector TransitionStocks;
+  CharPtrVector TransitionStockNames;
+  DoubleVector Ratio;
+  ConversionIndexPtrVector CI;
   LengthGroupDivision* LgrpDiv;
   int TransitionStep;
-  agebandmatrixptrvector Agegroup;
+  AgeBandMatrixPtrVector Agegroup;
   int age;
 };
 

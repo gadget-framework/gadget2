@@ -31,15 +31,15 @@ class BiomassPrinter : public Printer {
 public:
   BiomassPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~BiomassPrinter();
-  virtual void SetStock(Stockptrvector& stockvec);
+  virtual void SetStock(StockPtrVector& stockvec);
   virtual void Print(const TimeClass* const TimeInfo);
 protected:
-  intvector areas;
-  charptrvector areaindex;
-  charptrvector matnames;
+  IntVector areas;
+  CharPtrVector areaindex;
+  CharPtrVector matnames;
   char* immname;
   ofstream printfile;
-  Stockptrvector stocks;
+  StockPtrVector stocks;
   int immindex;
   int minage;
   int maxage;

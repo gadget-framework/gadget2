@@ -5,40 +5,37 @@
 #include "formulamatrix.icc"
 #endif
 
-//constructor for a rectangular Formulamatrix.
-Formulamatrix::Formulamatrix(int nr, int nc) {
+FormulaMatrix::FormulaMatrix(int nr, int nc) {
   assert(nr > 0);
   nrow = nr;
-  v = new Formulavector*[nr];
+  v = new FormulaVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new Formulavector(nc);
+    v[i] = new FormulaVector(nc);
 }
 
-//constructor for a rectangular Formulamatrix with initial value.
-Formulamatrix::Formulamatrix(int nr, int nc, Formula value) {
+FormulaMatrix::FormulaMatrix(int nr, int nc, Formula value) {
   nrow = nr;
-  v = new Formulavector*[nr];
+  v = new FormulaVector*[nr];
   int i, j;
   for (i = 0; i < nr; i++)
-    v[i] = new Formulavector(nc);
+    v[i] = new FormulaVector(nc);
   for (i = 0; i < nr; i++) {
     for (j = 0; j < nc; j++)
       (*v[i])[j] = value;
   }
 }
-//constructor for a possibly nonrectangular Formulamatrix
-//the rows need not have the same number of columns.
-Formulamatrix::Formulamatrix(int nr, const intvector& nc) {
+
+FormulaMatrix::FormulaMatrix(int nr, const IntVector& nc) {
   assert(nr > 0);
   nrow = nr;
-  v = new Formulavector*[nr];
+  v = new FormulaVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new Formulavector(nc[i]);
+    v[i] = new FormulaVector(nc[i]);
 }
 
-Formulamatrix::~Formulamatrix() {
+FormulaMatrix::~FormulaMatrix() {
   int i;
   if (v != 0) {
     for (i = 0; i < nrow; i++)
@@ -47,7 +44,7 @@ Formulamatrix::~Formulamatrix() {
   }
 }
 
-Formulamatrix& Formulamatrix::operator=(const Formulamatrix& formulaM) {
+FormulaMatrix& FormulaMatrix::operator=(const FormulaMatrix& formulaM) {
   if (this == &formulaM) {
     //same object just return
     return *this;
@@ -62,9 +59,9 @@ Formulamatrix& Formulamatrix::operator=(const Formulamatrix& formulaM) {
   }
   nrow = formulaM.nrow;
   if (nrow >= 0) {
-    v = new Formulavector*[nrow];
+    v = new FormulaVector*[nrow];
     for (i = 0; i < nrow; i++)
-      v[i] = new Formulavector(formulaM[i]);
+      v[i] = new FormulaVector(formulaM[i]);
   } else {
     v = 0;
     nrow = 0;
@@ -72,21 +69,20 @@ Formulamatrix& Formulamatrix::operator=(const Formulamatrix& formulaM) {
   return *this;
 }
 
-//Adds rows to a Formulamatrix.
-void Formulamatrix::AddRows(int add, int length) {
+void FormulaMatrix::AddRows(int add, int length) {
   assert(nrow >= 0 && add > 0);
-  Formulavector** vnew = new Formulavector*[nrow + add];
+  FormulaVector** vnew = new FormulaVector*[nrow + add];
   int i;
   for (i = 0; i < nrow; i++)
     vnew[i] = v[i];
   delete[] v;
   v = vnew;
   for (i = nrow; i < nrow + add; i++)
-    v[i] = new Formulavector(length);
+    v[i] = new FormulaVector(length);
   nrow += add;
 }
 
-void Formulamatrix::AddRows(int add, int length, Formula formula) {
+void FormulaMatrix::AddRows(int add, int length, Formula formula) {
   if (v == 0)
     nrow = 0;
   int oldnrow = nrow;
@@ -99,7 +95,7 @@ void Formulamatrix::AddRows(int add, int length, Formula formula) {
       (*v[i])[j] = formula;
 }
 
-void Formulamatrix::Inform(Keeper* keeper) {
+void FormulaMatrix::Inform(Keeper* keeper) {
   int i;
   for (i = 0; i < nrow; i++) {
     ostringstream ostr;
@@ -110,7 +106,7 @@ void Formulamatrix::Inform(Keeper* keeper) {
   }
 }
 
-CommentStream& operator >> (CommentStream& infile, Formulamatrix& Fmatrix) {
+CommentStream& operator >> (CommentStream& infile, FormulaMatrix& Fmatrix) {
   if (infile.fail()) {
     infile.makebad();
     return infile;

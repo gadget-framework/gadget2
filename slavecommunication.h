@@ -10,19 +10,19 @@
 #endif
 
 /* AJ, 07.09.99
- * The class slaveCommunication handles netcommunication for a
+ * The class SlaveCommunication handles netcommunication for a
  * slave process communicating with a master process using PVM.
  * It provides functions for starting/stopping communication with
  * master and sending/receiving data to/from master. The class can
- * receive data of the type: netDataVariables and vectorofcharptr and
- * send data of the type: netDataResult.
+ * receive data of the type: NetDataVariables and VectorOfCharPtr and
+ * send data of the type: NetDataResult.
  * To successfully start netcommunication pvmd must be running on
  * host and the process must have been spawned by a master process. */
 
-class slaveCommunication {
+class SlaveCommunication {
 private:
   int MAXWAIT;
-  pvmconstants* pvmConst;
+  PVMConstants* pvmConst;
   int typeReceived;
   //identities for netcommunication
   int parenttid;      //id of my master recognized by pvm.
@@ -33,22 +33,22 @@ private:
                       //initial communication with master,
 
   int numberOfVar;
-  netDataVariables* netDataVar;
+  NetDataVariables* netDataVar;
   double* netDataDouble;
   struct timeval tmout;
   #ifdef GADGET_NETWORK
-    vectorofcharptr netDataStr;
+    VectorOfCharPtr netDataStr;
   #endif
 
 public:
-  slaveCommunication();
-  ~slaveCommunication();
+  SlaveCommunication();
+  ~SlaveCommunication();
   void printErrorMsg(const char* errorMsg);
   int startNetCommunication();
   void stopNetCommunication();
   int receive();
   int receiveFromMaster();
-  int send(netDataResult* sendData);
+  int send(NetDataResult* sendData);
   int sendToMaster(double res);
   int receivedVector();
   void getVector(double* vec);

@@ -27,7 +27,7 @@ int ActionAtTimes::ReadFromFile(CommentStream& infile, const TimeClass* const Ti
   int error = 0;  //error = 0 OK(no error), 1 error occurred or 2 quit
   int year = 0;
   int step = 0;
-  intvector readtext(2, 0);  //Is 1 if text was read in a column.
+  IntVector readtext(2, 0);  //Is 1 if text was read in a column.
   int column = 0;            //What column we are reading, no. 0 or 1.
   while (infile.good() && (error == 0)) {
     infile >> ws;
@@ -104,8 +104,8 @@ ActionAtTimes::~ActionAtTimes() {
     Steps.Delete(0);
 }
 
-void ActionAtTimes::AddActions(const intvector& years,
-  const intvector& steps, const TimeClass* const TimeInfo) {
+void ActionAtTimes::AddActions(const IntVector& years,
+  const IntVector& steps, const TimeClass* const TimeInfo) {
 
   assert(years.Size() == steps.Size());
   int i;
@@ -118,7 +118,7 @@ void ActionAtTimes::AddActions(const intvector& years,
     }
 }
 
-void ActionAtTimes::AddActionsAtAllYears(const intvector& steps, const TimeClass* const TimeInfo) {
+void ActionAtTimes::AddActionsAtAllYears(const IntVector& steps, const TimeClass* const TimeInfo) {
   int i;
   if (EveryStep)
     return;
@@ -130,7 +130,7 @@ void ActionAtTimes::AddActionsAtAllYears(const intvector& steps, const TimeClass
     }
 }
 
-void ActionAtTimes::AddActionsAtAllSteps(const intvector& years, const TimeClass* const TimeInfo){
+void ActionAtTimes::AddActionsAtAllSteps(const IntVector& years, const TimeClass* const TimeInfo){
   int i;
   if (EveryStep)
     return;

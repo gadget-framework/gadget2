@@ -3,13 +3,13 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-Fleet*& Fleetptrvector::operator [] (int pos) {
+Fleet*& FleetPtrVector::operator [] (int pos) {
   return v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-Fleet* const& Fleetptrvector::operator [] (int pos) const {
+Fleet* const& FleetPtrVector::operator [] (int pos) const {
   return v[pos];
 }

@@ -3,7 +3,7 @@
 #include "intvector.h"
 #include "gadget.h"
 
-MortPrey::MortPrey(CommentStream& infile, const intvector& Areas,
+MortPrey::MortPrey(CommentStream& infile, const IntVector& Areas,
   const char* givenname, int minage, int maxage,
   Keeper* const keeper, const LengthGroupDivision* const stock_lgrp)
   : Prey(infile, Areas, givenname, keeper) {
@@ -16,8 +16,8 @@ MortPrey::MortPrey(CommentStream& infile, const intvector& Areas,
 
   int numlength = LgrpDiv->NoLengthGroups();
   int numarea = areas.Size();
-  intvector size(maxage - minage + 1, numlength);
-  intvector minlength(maxage - minage + 1, 0);
+  IntVector size(maxage - minage + 1, numlength);
+  IntVector minlength(maxage - minage + 1, 0);
   Alkeys.resize(numarea, minage, minlength, size);
   mean_n.resize(numarea, minage, minlength, size);
   haveCalculatedMeanN.resize(numarea, 0);
@@ -28,7 +28,7 @@ MortPrey::MortPrey(CommentStream& infile, const intvector& Areas,
   cann_is_true = 0;
 }
 
-MortPrey::MortPrey(const doublevector& lengths, const intvector& Areas, int minage,
+MortPrey::MortPrey(const DoubleVector& lengths, const IntVector& Areas, int minage,
   int maxage, const char* givenname, const LengthGroupDivision* const stock_lgrp)
   : Prey(lengths, Areas, givenname) {
 
@@ -40,8 +40,8 @@ MortPrey::MortPrey(const doublevector& lengths, const intvector& Areas, int mina
 
   int numlength = LgrpDiv->NoLengthGroups();
   int numarea = areas.Size();
-  intvector size(maxage - minage + 1, numlength);
-  intvector minlength(maxage - minage + 1, 0);
+  IntVector size(maxage - minage + 1, numlength);
+  IntVector minlength(maxage - minage + 1, 0);
   Alkeys.resize(numarea, minage, minlength, size);
   mean_n.resize(numarea, minage, minlength, size);
   haveCalculatedMeanN.resize(numarea, 0);
@@ -60,7 +60,7 @@ MortPrey::~MortPrey() {
 }
 
 void MortPrey::InitializeObjects() {
-  popinfo nullpop;
+  PopInfo nullpop;
 
   while (Number.Nrow())
     Number.DeleteRow(0);
@@ -99,7 +99,7 @@ void MortPrey::InitializeObjects() {
   overconsumption.AddRows(numarea, numlength, 0.0);
 }
 
-void MortPrey::Sum(const Agebandmatrix& stock, int area, int CurrentSubstep) {
+void MortPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
   //written by kgf 22/6 98
   int inarea = AreaNr[area];
   int i, j;
@@ -119,7 +119,7 @@ void MortPrey::Sum(const Agebandmatrix& stock, int area, int CurrentSubstep) {
   Alkeys[inarea].Colsum(Number[inarea]);
   haveCalculatedMeanN[inarea] = 0;
 
-  popinfo sum;
+  PopInfo sum;
   for (i = 0; i < Number.Ncol(inarea); i++) {
     sum += Number[inarea][i];
     biomass[inarea][i] = Number[inarea][i].N * Number[inarea][i].W;
@@ -137,11 +137,11 @@ void MortPrey::Sum(const Agebandmatrix& stock, int area, int CurrentSubstep) {
   }
 }
 
-const Agebandmatrix& MortPrey::AlkeysPriorToEating(int area) const {
+const AgeBandMatrix& MortPrey::AlkeysPriorToEating(int area) const {
   return Alkeys[AreaNr[area]];
 }
 
-const Agebandmatrix& MortPrey::getMeanN(int area) const {
+const AgeBandMatrix& MortPrey::getMeanN(int area) const {
   return mean_n[AreaNr[area]];
 }
 
@@ -193,7 +193,7 @@ void MortPrey::calcMeanN(int area) {
   mean_n[inarea].Multiply(mort_fact[inarea], *CI);
 }
 
-void MortPrey::calcZ(int area, const doublevector& natural_m) {
+void MortPrey::calcZ(int area, const DoubleVector& natural_m) {
   //written by kgf 25/6 98
   //cannibalism added by kgf 13/7 98
   int i, upp_lim, inarea = AreaNr[area];
@@ -214,7 +214,7 @@ void MortPrey::calcZ(int area, const doublevector& natural_m) {
   }
 }
 
-void MortPrey::setCannibalism(int area, const doublevector& cann) {
+void MortPrey::setCannibalism(int area, const DoubleVector& cann) {
   //written by kgf 13/7 98
   int i, upp_lim, inarea = AreaNr[area];
 
@@ -226,15 +226,15 @@ void MortPrey::setCannibalism(int area, const doublevector& cann) {
     cannibalism[inarea][i] = cann[i];
 }
 
-void MortPrey::addAgeGroupMatrix(doublematrix* const agematrix) {
+void MortPrey::addAgeGroupMatrix(DoubleMatrix* const agematrix) {
   agegroupmatrix.resize(1, agematrix);
 }
 
-void MortPrey::setAgeMatrix(int pred_no, int area, const doublevector& agegroupno) {
+void MortPrey::setAgeMatrix(int pred_no, int area, const DoubleVector& agegroupno) {
   (*agegroupmatrix[pred_no])[area] = agegroupno;
 }
 
-void MortPrey::setConsumption(int area, int pred_no, const bandmatrix& consum) {
+void MortPrey::setConsumption(int area, int pred_no, const BandMatrix& consum) {
   cann_cons.ChangeElement(AreaNr[area], pred_no, consum);
 }
 
@@ -244,7 +244,7 @@ void MortPrey::addCannPredName(const char* predname) {
   cannprednames.resize(1, tempName);
 }
 
-void MortPrey::addConsMatrix(int pred_no, const bandmatrix& cons_mat) {
+void MortPrey::addConsMatrix(int pred_no, const BandMatrix& cons_mat) {
   //written by kgf 4/3 99
   //Note that the predator number and the dimensions of the band
   //matrices are supposed to be equal for all areas.

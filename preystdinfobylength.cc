@@ -3,7 +3,7 @@
 #include "areatime.h"
 #include "gadget.h"
 
-PreyStdInfoByLength::PreyStdInfoByLength(const Prey* p, const intvector& Areas)
+PreyStdInfoByLength::PreyStdInfoByLength(const Prey* p, const IntVector& Areas)
   : AbstrPreyStdInfoByLength(p, Areas), prey(p) {
 }
 
@@ -12,7 +12,7 @@ PreyStdInfoByLength::~PreyStdInfoByLength() {
 
 void PreyStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
   const int inarea = AreaNr[area];
-  const doublevector& Bconsumption = prey->Bconsumption(area);
+  const DoubleVector& Bconsumption = prey->Bconsumption(area);
   assert(BconbyLength.Ncol() == Bconsumption.Size());
   int l;
   for (l = 0; l < BconbyLength.Ncol(inarea); l++) {

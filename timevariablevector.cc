@@ -7,13 +7,13 @@
 #include "timevariablevector.icc"
 #endif
 
-void TimeVariablevector::resize(int addsize) {
+void TimeVariableVector::resize(int addsize) {
   assert(v == 0);
   size = addsize;
   v = new TimeVariable[size];
 }
 
-TimeVariablevector::TimeVariablevector(int sz) {
+TimeVariableVector::TimeVariableVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new TimeVariable[size];
@@ -21,7 +21,7 @@ TimeVariablevector::TimeVariablevector(int sz) {
     v = 0;
 }
 
-void TimeVariablevector::resize(int addsize, Keeper* const keeper) {
+void TimeVariableVector::resize(int addsize, Keeper* const keeper) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -36,15 +36,14 @@ void TimeVariablevector::resize(int addsize, Keeper* const keeper) {
   }
 }
 
-TimeVariablevector::~TimeVariablevector() {
+TimeVariableVector::~TimeVariableVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//increase the size of a timevariable vector by 1 and put the timevariable tvar there.
-void TimeVariablevector::resize(const TimeVariable& tvar, Keeper* const keeper) {
+void TimeVariableVector::resize(const TimeVariable& tvar, Keeper* const keeper) {
   int addsize = 1;
   int i;
   if (v == 0) {
@@ -62,7 +61,7 @@ void TimeVariablevector::resize(const TimeVariable& tvar, Keeper* const keeper) 
   }
 }
 
-int TimeVariablevector::DidChange(const TimeClass* const TimeInfo) const {
+int TimeVariableVector::DidChange(const TimeClass* const TimeInfo) const {
   int didchange = 0;
   int i;
   for (i = 0; i < size; i++)
@@ -70,13 +69,13 @@ int TimeVariablevector::DidChange(const TimeClass* const TimeInfo) const {
   return didchange;
 }
 
-void TimeVariablevector::Update(const TimeClass* const TimeInfo) {
+void TimeVariableVector::Update(const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < size; i++)
     v[i].Update(TimeInfo);
 }
 
-void TimeVariablevector::Read(CommentStream& infile,
+void TimeVariableVector::Read(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   int i;

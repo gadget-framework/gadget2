@@ -110,7 +110,6 @@ void TimeVariable::ReadFromFile(CommentStream& infile, const TimeClass* const Ti
     handle.Message("TimeVariable. Something must be specified on first year and step in the simulation");
 }
 
-//Question if the condition TimeInfo->CurrentTime() == 1 is needed
 int TimeVariable::DidChange(const TimeClass* const TimeInfo) {
   return ((lastvalue != value && time == TimeInfo->CurrentTime()) || TimeInfo->CurrentTime() == 1);
 }

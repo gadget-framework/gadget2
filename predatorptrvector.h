@@ -4,37 +4,37 @@
 class Predator;
 
 /**
- * \class Predatorptrvector
+ * \class PredatorPtrVector
  * \brief This class implements a dynamic vector of Predator values
  */
-class Predatorptrvector {
+class PredatorPtrVector {
 public:
   /**
-   * \brief This is the default Predatorptrvector constructor
+   * \brief This is the default PredatorPtrVector constructor
    */
-  Predatorptrvector() { size = 0; v = 0; };
+  PredatorPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the Predatorptrvector constructor for a specified size
+   * \brief This is the PredatorPtrVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  Predatorptrvector(int sz);
+  PredatorPtrVector(int sz);
   /**
-   * \brief This is the Predatorptrvector constructor for a specified size with an initial value
+   * \brief This is the PredatorPtrVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  Predatorptrvector(int sz, Predator* initial);
+  PredatorPtrVector(int sz, Predator* initial);
   /**
-   * \brief This is the Predatorptrvector constructor that create a copy of an existing Predatorptrvector
-   * \param initial this is the Predatorptrvector to copy
+   * \brief This is the PredatorPtrVector constructor that create a copy of an existing PredatorPtrVector
+   * \param initial this is the PredatorPtrVector to copy
    */
-  Predatorptrvector(const Predatorptrvector& initial);
+  PredatorPtrVector(const PredatorPtrVector& initial);
   /**
-   * \brief This is the Predatorptrvector destructor
+   * \brief This is the PredatorPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~Predatorptrvector();
+  ~PredatorPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
@@ -43,8 +43,8 @@ public:
   void resize(int add, Predator* value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**

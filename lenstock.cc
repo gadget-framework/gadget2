@@ -48,7 +48,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   if (infile.eof())
     handle.Eof();
   infile >> text;
-  intvector tmpareas;
+  IntVector tmpareas;
   i = 0;
   if (strcasecmp(text, "livesonareas") == 0) {
     infile >> ws;
@@ -88,8 +88,8 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   //JMB need to set the lowerlgrp and size vectors to a default
   //value to allow the whole range of lengths to be calculated
   tmpint = int((maxlength - minlength) / dl);
-  intvector lowerlgrp(maxage - minage + 1, 0);
-  intvector size(maxage - minage + 1, tmpint);
+  IntVector lowerlgrp(maxage - minage + 1, 0);
+  IntVector size(maxage - minage + 1, tmpint);
 
   Alkeys.resize(areas.Size(), minage, lowerlgrp, size);
   tagAlkeys.resize(areas.Size(), minage, lowerlgrp, size);
@@ -97,8 +97,8 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     Alkeys[i].SettoZero();
 
   //Read the length group division used in Grower and in Predator
-  doublevector grlengths;
-  charptrvector grlenindex;
+  DoubleVector grlengths;
+  CharPtrVector grlenindex;
 
   ReadWordAndValue(infile, "growthandeatlengths", filename);
   datafile.open(filename);
@@ -265,12 +265,12 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   NumberInArea.AddRows(areas.Size(), LgrpDiv->NoLengthGroups());
   int nrofyears = TimeInfo->LastYear() - TimeInfo->FirstYear() + 1;
   for (i = 0; i < areas.Size(); i++) {
-    F.resize(1, new doublematrix(maxage - minage + 1, nrofyears, 0));
-    M1.resize(1, new doublematrix(maxage - minage + 1, nrofyears, 0));
-    M2.resize(1, new doublematrix(maxage - minage + 1, nrofyears, 0));
-    Nbar.resize(1, new doublematrix(maxage - minage + 1, nrofyears, 0));
-    Nsum.resize(1, new doublematrix(maxage - minage + 1, nrofyears, 0));
-    bio.resize(1, new doublematrix(maxage - minage + 1, nrofyears, 0));
+    F.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0));
+    M1.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0));
+    M2.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0));
+    Nbar.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0));
+    Nsum.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0));
+    bio.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0));
   }
   C.resize(maxage - minage + 1);
   D1.resize(maxage - minage + 1);
@@ -446,7 +446,7 @@ void LenStock::CalcNumbers(int area,
 
   calcDone = 0;
   int inarea = AreaNr[area];
-  popinfo nullpop;
+  PopInfo nullpop;
 
   int i;
   for (i = 0; i < NumberInArea[inarea].Size(); i++)
@@ -547,8 +547,8 @@ void LenStock::calcForPrinting(int area, const TimeClass& time) {
   if (!iseaten || !stockType() == LENSTOCK_TYPE || calcDone)
     return;
   int row, col, mcol;
-  const Agebandmatrix& mean_n = ((MortPrey*)prey)->getMeanN(area);
-  const doublevector& cons = prey->getCons(area);
+  const AgeBandMatrix& mean_n = ((MortPrey*)prey)->getMeanN(area);
+  const DoubleVector& cons = prey->getCons(area);
 
   if (time.CurrentStep() == 1)
     year = time.CurrentYear() - time.FirstYear();
@@ -589,7 +589,7 @@ void LenStock::SecondSpecialTransactions(int area,
     }
 }
 
-void LenStock::SetStock(Stockptrvector& stockvec) {
+void LenStock::SetStock(StockPtrVector& stockvec) {
   int i, j, found;
   int minage, maxage, tmpsize;
 
@@ -628,8 +628,8 @@ void LenStock::SetStock(Stockptrvector& stockvec) {
       ((MortPrey*)prey)->setMinPredAge(minage);
       ((MortPrey*)prey)->setMaxPredAge(maxage);
 
-      bandmatrix tmp(0, prey->ReturnLengthGroupDiv()->NoLengthGroups(), minage, tmpsize, 0.0);
-      doublematrix* stmp = new doublematrix(areas.Size(), tmpsize, 0.0);
+      BandMatrix tmp(0, prey->ReturnLengthGroupDiv()->NoLengthGroups(), minage, tmpsize, 0.0);
+      DoubleMatrix* stmp = new DoubleMatrix(areas.Size(), tmpsize, 0.0);
       ((MortPrey*)prey)->addConsMatrix(i, tmp);
       ((MortPrey*)prey)->addAgeGroupMatrix(stmp);
     }

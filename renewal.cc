@@ -9,7 +9,7 @@
 
 //It has to be decided how to distinguish between setting the stock numbers and adding to them
 
-RenewalData::RenewalData(CommentStream& infile, const intvector& Areas,
+RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
   : LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
@@ -71,11 +71,11 @@ RenewalData::RenewalData(CommentStream& infile, const intvector& Areas,
         //the corresponding mean weights. Both are assumed to be vectors of
         //length no. We read them into the indexvectors numtmpindvec and
         //weighttmpindvec, create poptmp and then keep it in Distribution.
-        doubleindexvector* numtmpindvec =
+        DoubleIndexVector* numtmpindvec =
           ReadIndexVector(infile, no, LgrpDiv->NoLengthGroup(minlength));
-        doubleindexvector* weighttmpindvec =
+        DoubleIndexVector* weighttmpindvec =
           ReadIndexVector(infile, no, LgrpDiv->NoLengthGroup(minlength));
-        popinfoindexvector poptmp(no, LgrpDiv->NoLengthGroup(minlength));
+        PopInfoIndexVector poptmp(no, LgrpDiv->NoLengthGroup(minlength));
 
         //Check if reading the vectors succeeded
         if (numtmpindvec == 0 || weighttmpindvec == 0)
@@ -89,7 +89,7 @@ RenewalData::RenewalData(CommentStream& infile, const intvector& Areas,
             handle.Message("Zero mean weight for nonzero number in renewal data");
         }
 
-        Distribution.resize(1, new Agebandmatrix(age, poptmp));
+        Distribution.resize(1, new AgeBandMatrix(age, poptmp));
         delete numtmpindvec;
         delete weighttmpindvec;
 
@@ -99,8 +99,8 @@ RenewalData::RenewalData(CommentStream& infile, const intvector& Areas,
         Wcoeff1.resize(1, keeper);
         Wcoeff2.resize(1, keeper);
 
-        popinfoindexvector poptmp(LgrpDiv->NoLengthGroups(), 0);
-        Distribution.resize(1, new Agebandmatrix(age, poptmp));
+        PopInfoIndexVector poptmp(LgrpDiv->NoLengthGroups(), 0);
+        Distribution.resize(1, new AgeBandMatrix(age, poptmp));
         if (!(infile >> Number[i]))
           handle.Message("Wrong format for renewalmultiplier");
         Number[i].Inform(keeper);
@@ -196,7 +196,7 @@ void RenewalData::Reset() {
  * accessing the data. Initial value on the variable Maxr has to be -1.
  * Renewal is only used if derived from another stock that does
  * not have length division. */
-void RenewalData::AddRenewal(Agebandmatrix& Alkeys, int area,
+void RenewalData::AddRenewal(AgeBandMatrix& Alkeys, int area,
   const TimeClass* const TimeInfo, double ratio) {
 
   if (RenewalTime.Size() == 0)

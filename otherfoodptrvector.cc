@@ -5,7 +5,7 @@
 #include "otherfoodptrvector.icc"
 #endif
 
-OtherFoodptrvector::OtherFoodptrvector(int sz) {
+OtherFoodPtrVector::OtherFoodPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new OtherFood*[size];
@@ -13,7 +13,7 @@ OtherFoodptrvector::OtherFoodptrvector(int sz) {
     v = 0;
 }
 
-OtherFoodptrvector::OtherFoodptrvector(int sz, OtherFood* value) {
+OtherFoodPtrVector::OtherFoodPtrVector(int sz, OtherFood* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -24,7 +24,7 @@ OtherFoodptrvector::OtherFoodptrvector(int sz, OtherFood* value) {
     v = 0;
 }
 
-OtherFoodptrvector::OtherFoodptrvector(const OtherFoodptrvector& initial) {
+OtherFoodPtrVector::OtherFoodPtrVector(const OtherFoodPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -35,15 +35,14 @@ OtherFoodptrvector::OtherFoodptrvector(const OtherFoodptrvector& initial) {
     v = 0;
 }
 
-OtherFoodptrvector::~OtherFoodptrvector() {
+OtherFoodPtrVector::~OtherFoodPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a OtherFoodptrvector and fills it vith value.
-void OtherFoodptrvector::resize(int addsize, OtherFood* value) {
+void OtherFoodPtrVector::resize(int addsize, OtherFood* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,7 +51,7 @@ void OtherFoodptrvector::resize(int addsize, OtherFood* value) {
       v[i] = value;
 }
 
-void OtherFoodptrvector::resize(int addsize) {
+void OtherFoodPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -67,7 +66,7 @@ void OtherFoodptrvector::resize(int addsize) {
   }
 }
 
-void OtherFoodptrvector::Delete(int pos) {
+void OtherFoodPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   OtherFood** vnew = new OtherFood*[size - 1];

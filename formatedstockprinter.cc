@@ -11,7 +11,7 @@
 #include "runid.h"
 #include "gadget.h"
 
-extern RunId RUNID;
+extern RunID RUNID;
 
 /*  FormatedStockPrinter
  *
@@ -74,8 +74,8 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
   datafile.clear();
 
   //Read in length aggregation from file
-  doublevector lengths;
-  charptrvector lenindex;
+  DoubleVector lengths;
+  CharPtrVector lenindex;
   ReadWordAndValue(infile, "lenaggfile", filename);
   datafile.open(filename);
   CheckIfFailure(datafile, filename);
@@ -135,7 +135,7 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
  *
  *  Purpose:  Initialize vector of stocks to be printed
  *
- *  In:       Stockptrvector& stockvec    :vector of all stocks, the stock names from the
+ *  In:       StockPtrVector& stockvec    :vector of all stocks, the stock names from the
  *                                         input files are matched with these.
  *
  *  Usage:  SetStock(stockvec)
@@ -143,9 +143,9 @@ FormatedStockPrinter::FormatedStockPrinter(CommentStream& infile,
  *  Pre:  stockvec.Size() > 0, all stocks names in input file are in stockvec
  */
 
-void FormatedStockPrinter::SetStock(Stockptrvector& stockvec) {
+void FormatedStockPrinter::SetStock(StockPtrVector& stockvec) {
   assert(stockvec.Size() > 0);
-  Stockptrvector stocks;
+  StockPtrVector stocks;
   int i, j, index = 0;
   int maxa, mina;
 

@@ -4,37 +4,37 @@
 class BaseClass;
 
 /**
- * \class BaseClassptrvector
+ * \class BaseClassPtrVector
  * \brief This class implements a dynamic vector of BaseClass values
  */
-class BaseClassptrvector {
+class BaseClassPtrVector {
 public:
   /**
-   * \brief This is the default BaseClassptrvector constructor
+   * \brief This is the default BaseClassPtrVector constructor
    */
-  BaseClassptrvector() { size = 0; v = 0; };
+  BaseClassPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the BaseClassptrvector constructor for a specified size
+   * \brief This is the BaseClassPtrVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  BaseClassptrvector(int sz);
+  BaseClassPtrVector(int sz);
   /**
-   * \brief This is the BaseClassptrvector constructor for a specified size with an initial value
+   * \brief This is the BaseClassPtrVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  BaseClassptrvector(int sz, BaseClass* initial);
+  BaseClassPtrVector(int sz, BaseClass* initial);
   /**
-   * \brief This is the BaseClassptrvector constructor that create a copy of an existing agebandmatrixptrvector
-   * \param initial this is the BaseClassptrvector to copy
+   * \brief This is the BaseClassPtrVector constructor that create a copy of an existing AgeBandMatrixPtrVector
+   * \param initial this is the BaseClassPtrVector to copy
    */
-  BaseClassptrvector(const BaseClassptrvector& initial);
+  BaseClassPtrVector(const BaseClassPtrVector& initial);
   /**
-   * \brief This is the BaseClassptrvector destructor
+   * \brief This is the BaseClassPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~BaseClassptrvector();
+  ~BaseClassPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
@@ -43,8 +43,8 @@ public:
   void resize(int add, BaseClass* value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**

@@ -5,7 +5,7 @@
 #include "migvariableptrvector.icc"
 #endif
 
-MigVariableptrvector::MigVariableptrvector(int sz) {
+MigVariablePtrVector::MigVariablePtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new MigVariable*[size];
@@ -13,14 +13,14 @@ MigVariableptrvector::MigVariableptrvector(int sz) {
     v = 0;
 }
 
-MigVariableptrvector::~MigVariableptrvector() {
+MigVariablePtrVector::~MigVariablePtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-void MigVariableptrvector::resize(int addsize) {
+void MigVariablePtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;

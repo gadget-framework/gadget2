@@ -149,7 +149,7 @@ void StockDistribution::ReadStockData(CommentStream& infile,
   int keepdata, timeid, stockid, ageid, areaid, lenid;
   int numstock = stocknames.Size();
   int count = 0;
-  intvector Years, Steps;
+  IntVector Years, Steps;
 
   //Find start of distribution data in datafile
   infile >> ws;
@@ -185,8 +185,8 @@ void StockDistribution::ReadStockData(CommentStream& infile,
         AgeLengthData.AddRows(1, numarea);
         Proportions.AddRows(1, numarea);
         for (i = 0; i < numarea; i++) {
-          AgeLengthData[timeid][i] = new doublematrix(numstock, (numage * numlen), 0.0);
-          Proportions[timeid][i] = new doublematrix(numstock, (numage * numlen), 0.0);
+          AgeLengthData[timeid][i] = new DoubleMatrix(numstock, (numage * numlen), 0.0);
+          Proportions[timeid][i] = new DoubleMatrix(numstock, (numage * numlen), 0.0);
         }
       }
 
@@ -290,9 +290,9 @@ void StockDistribution::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void StockDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks) {
+void StockDistribution::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, found, stocknumber;
-  Fleetptrvector fleets;
+  FleetPtrVector fleets;
   aggregator = new FleetPreyAggregator*[stocknames.Size()];
 
   for (i = 0; i < fleetnames.Size(); i++) {
@@ -310,7 +310,7 @@ void StockDistribution::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvecto
   }
 
   for (i = 0; i < stocknames.Size(); i++) {
-    Stockptrvector stocks;
+    StockPtrVector stocks;
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->IsEaten())
@@ -353,13 +353,13 @@ void StockDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
 //The code here is probably unnessecarily complicated because
 //is always only one length group with this class.
 double StockDistribution::LikMultinomial() {
-  const agebandmatrixptrvector* alptr;
-  doublematrixptrvector Dist(areas.Nrow(), NULL);
+  const AgeBandMatrixPtrVector* alptr;
+  DoubleMatrixPtrVector Dist(areas.Nrow(), NULL);
   int nareas, area, age, length, sn;
   int minage, maxage;
 
   for (area = 0; area < Dist.Size(); area++) {
-    Dist[area] = new doublematrix(aggregator[0]->NoAgeGroups() *
+    Dist[area] = new DoubleMatrix(aggregator[0]->NoAgeGroups() *
       aggregator[0]->NoLengthGroups(), stocknames.Size(), 0);
     for (sn = 0; sn < stocknames.Size(); sn++) {
       alptr = &aggregator[sn]->AgeLengthDist();
@@ -375,7 +375,7 @@ double StockDistribution::LikMultinomial() {
 
   //The object MN does most of the work, accumulating likelihood
   Multinomial MN(epsilon);
-  doublevector likdata(stocknames.Size());
+  DoubleVector likdata(stocknames.Size());
   for (nareas = 0; nareas < Dist.Size(); nareas++) {
     for (area = 0; area < Dist[nareas]->Nrow(); area++) {
       for (sn = 0; sn < stocknames.Size(); sn++)
@@ -394,7 +394,7 @@ double StockDistribution::LikSumSquares() {
   double totalmodel, totaldata;
   int age, len, nareas, sn, i;
 
-  const agebandmatrixptrvector* alptr;
+  const AgeBandMatrixPtrVector* alptr;
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     for (sn = 0; sn < stocknames.Size(); sn++) {
       alptr = &aggregator[sn]->AgeLengthDist();

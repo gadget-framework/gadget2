@@ -18,8 +18,8 @@ public:
   PredPreyStdPrinter(CommentStream& infile, const AreaClass* const Area,
     const TimeClass* const TimeInfo);
   virtual ~PredPreyStdPrinter();
-  virtual void SetStocksAndPredAndPrey(const Stockptrvector& stockvec,
-    const PopPredatorptrvector& predvec, const Preyptrvector& preyvec);
+  virtual void SetStocksAndPredAndPrey(const StockPtrVector& stockvec,
+    const PopPredatorPtrVector& predvec, const PreyPtrVector& preyvec);
 protected:
   //AJ 07.06.00 Changing name of function
   virtual void SetPopPredAndPrey(const PopPredator* predator,
@@ -27,8 +27,8 @@ protected:
   char* predname;
   char* preyname;
   ofstream outfile;
-  intvector areas;
-  intvector outerareas;
+  IntVector areas;
+  IntVector outerareas;
 };
 
 class PredPreyStdLengthPrinter : public PredPreyStdPrinter {

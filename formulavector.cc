@@ -4,7 +4,7 @@
 #include "formulavector.icc"
 #endif
 
-Formulavector::Formulavector(const Formulavector& initial) {
+FormulaVector::FormulaVector(const FormulaVector& initial) {
   int i;
   size = initial.size;
   if (size > 0) {
@@ -15,7 +15,7 @@ Formulavector::Formulavector(const Formulavector& initial) {
     v = 0;
 }
 
-Formulavector::Formulavector(int sz) {
+FormulaVector::FormulaVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new Formula[size];
@@ -23,14 +23,14 @@ Formulavector::Formulavector(int sz) {
     v = 0;
 }
 
-Formulavector::~Formulavector() {
+FormulaVector::~FormulaVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-void Formulavector::resize(int addsize, Keeper* keeper) {
+void FormulaVector::resize(int addsize, Keeper* keeper) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -45,7 +45,7 @@ void Formulavector::resize(int addsize, Keeper* keeper) {
   }
 }
 
-void Formulavector::Inform(Keeper* keeper) {
+void FormulaVector::Inform(Keeper* keeper) {
   int i;
   for (i = 0; i < size; i++) {
     ostringstream ostr;
@@ -56,7 +56,7 @@ void Formulavector::Inform(Keeper* keeper) {
   }
 }
 
-CommentStream& operator >> (CommentStream& infile, Formulavector& Fvec) {
+CommentStream& operator >> (CommentStream& infile, FormulaVector& Fvec) {
   if (infile.fail()) {
     infile.makebad();
     return infile;

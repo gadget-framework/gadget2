@@ -1,7 +1,7 @@
 #include "agebandmatrixratio.h"
 #include "agebandmatrixratioptrvector.h"
 
-void Agebandmatrixratio::UpdateNumbers(const Agebandmatrix& Total) {
+void AgeBandMatrixRatio::UpdateNumbers(const AgeBandMatrix& Total) {
 
   int NrOfTagExp = this->NrOfTagExp();
   int maxage, minlen, maxlen, age, length, tag;
@@ -17,7 +17,7 @@ void Agebandmatrixratio::UpdateNumbers(const Agebandmatrix& Total) {
   }
 }
 
-void Agebandmatrixratio::UpdateRatio(const Agebandmatrix& Total) {
+void AgeBandMatrixRatio::UpdateRatio(const AgeBandMatrix& Total) {
 
   int NrOfTagExp = this->NrOfTagExp();
   int maxage, minlen, maxlen, age, length, tag;
@@ -38,7 +38,7 @@ void Agebandmatrixratio::UpdateRatio(const Agebandmatrix& Total) {
   }
 }
 
-void Agebandmatrixratio::IncrementAge(const Agebandmatrix& Total) {
+void AgeBandMatrixRatio::IncrementAge(const AgeBandMatrix& Total) {
 
   int NrOfTagExp = this->NrOfTagExp();
   int i, j, j1, j2, tag;
@@ -99,8 +99,8 @@ void Agebandmatrixratio::IncrementAge(const Agebandmatrix& Total) {
   }
 }
 
-void AgebandmratioAdd(agebandmatrixratioptrvector& Alkeys, int AlkeysArea,
-  const agebandmatrixratioptrvector& Addition, int AdditionArea,
+void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
+  const AgeBandMatrixRatioPtrVector& Addition, int AdditionArea,
   const ConversionIndex &CI, double ratio, int minage, int maxage) {
 
   minage =  max(Alkeys[AlkeysArea].Minage(), Addition[AdditionArea].Minage(), minage);
@@ -119,7 +119,7 @@ void AgebandmratioAdd(agebandmatrixratioptrvector& Alkeys, int AlkeysArea,
   }
 
   if (numtags > 0) {
-    intvector tagconversion(numtags);
+    IntVector tagconversion(numtags);
     for (i = 0; i < numtags; i++) {
       tagconversion[i] = Alkeys.getId(Addition.getName(i));
       if (tagconversion[i] < 0) {

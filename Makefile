@@ -65,15 +65,15 @@ OBJECTS = $(GADGETOBJECTS)
 # the strdup and strcasecmp functions might not work correctly.
 ##########################################################################
 
-VECTORS = addr_keepmatrix.o addr_keepvector.o charptrmatrix.o charptrvector.o \
-	bandmatrixptrvector.o doublematrix.o doublevector.o \
+VECTORS = addresskeepermatrix.o addresskeepervector.o charptrmatrix.o charptrvector.o \
+	bandmatrixptrvector.o doublematrix.o doublevector.o parametervector.o \
 	otherfoodptrvector.o baseclassptrvector.o popinfoindexvector.o \
 	migvariableptrvector.o conversionindexptrvector.o likelihoodptrvector.o \
 	popratiomatrix.o popratiovector.o popinfomatrix.o popinfovector.o \
 	doubleindexvector.o predatorptrvector.o preyptrvector.o fleetptrvector.o \
 	doublematrixptrmatrix.o doublematrixptrvector.o intmatrix.o intvector.o \
 	agebandmatrixptrvector.o poppredatorptrvector.o popratioindexvector.o \
-	formulaindexvector.o stockptrvector.o formulamatrix.o formulavector.o \
+	stockptrvector.o formulamatrix.o formulavector.o \
 	timevariablevector.o timevariableindexvector.o \
 	vectorofcharptr.o suitfuncptrvector.o tagptrvector.o printerptrvector.o \
 	formulamatrixptrvector.o variableinfoptrvector.o agebandmatrixratio.o \
@@ -82,7 +82,7 @@ VECTORS = addr_keepmatrix.o addr_keepvector.o charptrmatrix.o charptrvector.o \
 GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregator.o \
 	growthimplement.o predatorindex.o abstrpredstdinfo.o abstrpreystdinfo.o \
 	predatorprinter.o abstrpreystdinfobylength.o predatoroveraggregator.o \
-	actionattimes.o predatoroverprinter.o addr_keep.o predprey.o strstack.o \
+	actionattimes.o predatoroverprinter.o addresskeeper.o predprey.o strstack.o \
 	predpreystdageprinter.o agebandmatrix.o predpreystdlengthprinter.o grow.o \
 	agebandmatrixmemberfunctions.o predpreystdprinter.o area.o predstdinfo.o \
 	bandmatrix.o predstdinfobylength.o binarytree.o prey.o logcatchfunction.o \
@@ -112,8 +112,8 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
 GADGETINPUT = initialinputfile.o vectorofcharptr.o charptrvector.o \
-	commentstream.o parameter.o doubleindexvector.o mathfunc.o \
-	intvector.o doublevector.o intmatrix.o doublematrix.o
+	commentstream.o parameter.o parametervector.o doubleindexvector.o \
+	intvector.o doublevector.o intmatrix.o doublematrix.o mathfunc.o
 
 LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
 

@@ -9,7 +9,7 @@
 
 //Function that calculates Maximum consumption.  Eq(l2) in Bogstad et.al.
 //Maxconsumption stores the parameters used in the equation.
-double StockPredator::MaxConsumption(double Length, const Formulavector &Maxconsumption, double Temperature) {
+double StockPredator::MaxConsumption(double Length, const FormulaVector &Maxconsumption, double Temperature) {
   return Maxconsumption[0] * exp(Temperature * (Maxconsumption[1] - Temperature *
     Temperature * Maxconsumption[2])) * pow(Length, Maxconsumption[3]);
 }

@@ -1,45 +1,45 @@
 #ifndef bandmatrixptrvector_h
 #define bandmatrixptrvector_h
 
-class bandmatrix;
+class BandMatrix;
 
 /**
- * \class bandmatrixptrvector
- * \brief This class implements a dynamic vector of bandmatrix values
+ * \class BandMatrixPtrVector
+ * \brief This class implements a dynamic vector of BandMatrix values
  */
-class bandmatrixptrvector {
+class BandMatrixPtrVector {
 public:
   /**
-   * \brief This is the default bandmatrixptrvector constructor
+   * \brief This is the default BandMatrixPtrVector constructor
    */
-  bandmatrixptrvector() { size = 0; v = 0; };
+  BandMatrixPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the bandmatrixptrvector constructor for a specified size
+   * \brief This is the BandMatrixPtrVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  bandmatrixptrvector(int sz);
+  BandMatrixPtrVector(int sz);
   /**
-   * \brief This is the bandmatrixptrvector constructor for a specified size with an initial value
+   * \brief This is the BandMatrixPtrVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  bandmatrixptrvector(int sz, bandmatrix* initial);
+  BandMatrixPtrVector(int sz, BandMatrix* initial);
   /**
-   * \brief This is the bandmatrixptrvector destructor
+   * \brief This is the BandMatrixPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~bandmatrixptrvector();
+  ~BandMatrixPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
    * \param value this is the value that will be entered for the new entries
    */
-  void resize(int add, bandmatrix* value);
+  void resize(int add, BandMatrix* value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**
@@ -58,18 +58,18 @@ public:
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  bandmatrix*& operator [] (int pos);
+  BandMatrix*& operator [] (int pos);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  bandmatrix* const& operator [] (int pos) const;
+  BandMatrix* const& operator [] (int pos) const;
 protected:
   /**
-   * \brief This is the vector of bandmatrix values
+   * \brief This is the vector of BandMatrix values
    */
-  bandmatrix** v;
+  BandMatrix** v;
   /**
    * \brief This is size of the vector
    */

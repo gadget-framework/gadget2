@@ -21,12 +21,12 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
   int i;
 
   int numarea = 0;
-  intmatrix tmpareas;
-  charptrvector areaindex;
-  doublevector predatorlengths;
-  doublevector preylengths;
-  charptrvector predlenindex;
-  charptrvector preylenindex;
+  IntMatrix tmpareas;
+  CharPtrVector areaindex;
+  DoubleVector predatorlengths;
+  DoubleVector preylengths;
+  CharPtrVector predlenindex;
+  CharPtrVector preylenindex;
 
   char datafilename[MaxStrLength];
   char aggfilename[MaxStrLength];
@@ -134,10 +134,10 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
     delete[] predlenindex[i];
 }
 
-void PredatorIndices::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys) {
+void PredatorIndices::SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
   int i, j;
   int found = 0;
-  Predatorptrvector predators;
+  PredatorPtrVector predators;
   for (i = 0; i < predatornames.Size(); i++) {
     found = 0;
     for (j = 0; j < Predators.Size(); j++)
@@ -152,7 +152,7 @@ void PredatorIndices::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptr
     }
   }
 
-  Preyptrvector preys;
+  PreyPtrVector preys;
   for (i = 0; i < preynames.Size(); i++) {
     found = 0;
     for (j = 0; j < Preys.Size(); j++)
@@ -186,18 +186,18 @@ void PredatorIndices::Print(ofstream& outfile) const {
   PI->Print(outfile);
 }
 
-void PIOnStep::SetPredatorsAndPreys(const Predatorptrvector& predators, const Preyptrvector& preys) {
-  intmatrix areas(1, Areas.Size());
+void PIOnStep::SetPredatorsAndPreys(const PredatorPtrVector& predators, const PreyPtrVector& preys) {
+  IntMatrix areas(1, Areas.Size());
   int i;
   for (i = 0; i < Areas.Size(); i++)
     areas[0][i] = Areas[i];
   aggregator = new PredatorAggregator(predators, preys, areas, PredatorLgrpDiv, PreyLgrpDiv);
 }
 
-PIOnStep::PIOnStep(CommentStream& infile, const intvector& areas,
-  const doublevector& predatorlengths, const doublevector& preylengths,
+PIOnStep::PIOnStep(CommentStream& infile, const IntVector& areas,
+  const DoubleVector& predatorlengths, const DoubleVector& preylengths,
   const TimeClass* const TimeInfo, int biomass, const char* arealabel,
-  const charptrvector& preylenindex, const charptrvector& predlenindex, const char* datafilename)
+  const CharPtrVector& preylenindex, const CharPtrVector& predlenindex, const char* datafilename)
   : SIOnStep(infile, datafilename, arealabel, TimeInfo, predlenindex.Size() * preylenindex.Size(), predlenindex, preylenindex),
     PredatorLgrpDiv(0), PreyLgrpDiv(0), Biomass(biomass), Areas(areas), aggregator(0) {
 
@@ -222,7 +222,7 @@ PIOnStep::PIOnStep(CommentStream& infile, const intvector& areas,
 }
 
 void PIOnStep::ReadPredatorData(CommentStream& infile, const char* arealabel,
-  const charptrvector& predlenindex, const charptrvector& preylenindex, const TimeClass* TimeInfo) {
+  const CharPtrVector& predlenindex, const CharPtrVector& preylenindex, const TimeClass* TimeInfo) {
 
   int i;
   int year, step;
@@ -295,9 +295,9 @@ void PIOnStep::Sum(const TimeClass* const TimeInfo) {
   else
     aggregator->NumberSum();
 
-  const bandmatrixvector* cons = &(aggregator->ReturnSum());
+  const BandMatrixVector* cons = &(aggregator->ReturnSum());
   int ncol = (*cons)[0].Nrow() * (*cons)[0].Ncol();
-  doublevector numbers(ncol);
+  DoubleVector numbers(ncol);
   int k = 0;
   int predlen, preylen;
   for (predlen = 0; predlen < (*cons)[0].Nrow(); predlen ++)

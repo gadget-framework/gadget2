@@ -122,9 +122,9 @@ Tags::~Tags() {
     delete LgrpDiv;
 }
 
-void Tags::SetStock(Stockptrvector& Stocks) {
+void Tags::SetStock(StockPtrVector& Stocks) {
   int i, j, found, temparea, numareas, numMatStock;
-  Stockptrvector tempMatureStock;
+  StockPtrVector tempMatureStock;
 
   for (i = 0; i < stocknames.Size(); i++) {
     j = 0;
@@ -151,7 +151,7 @@ void Tags::SetStock(Stockptrvector& Stocks) {
     if (temparea == 0) {
       cerr << "Error in tagging experiment - stock " << tagstocks[i]->Name()
         << " does not live on area: " << tagarea << "\nthe stock lives on areas: ";
-      const intvector* tempareas = &tagstocks[i]->Areas();
+      const IntVector* tempareas = &tagstocks[i]->Areas();
       for (numareas= 0; numareas < tempareas->Size(); numareas++)
         cerr << (*tempareas)[numareas] << sep;
       cerr << endl;
@@ -185,26 +185,26 @@ void Tags::SetStock(Stockptrvector& Stocks) {
 //Must have set stocks according to stocknames using SetStock before calling Update()
 //Now we need to distribute the tagged fish to the same age/length groups as the tagged stock.
 void Tags::Update() {
-  agebandmatrixptrvector* tagpopulation;
+  AgeBandMatrixPtrVector* tagpopulation;
   int i;
-  popinfovector NumberInArea;
+  PopInfoVector NumberInArea;
   NumberInArea.resize(LgrpDiv->NoLengthGroups());
-  popinfo nullpop;
+  PopInfo nullpop;
   for (i = 0; i < NumberInArea.Size(); i++)
     NumberInArea[i] = nullpop;
 
   //This only works if have only one stock...
   //probably best to use aggregator if have more than one stock.
-  const Agebandmatrix* stockPopInArea;
+  const AgeBandMatrix* stockPopInArea;
   stockPopInArea = &(tagstocks[0]->Agelengthkeys(tagarea));
   stockPopInArea->Colsum(NumberInArea);
 
   //Now I have total number of stock per length in tagarea, N(., l) (NumberInArea) and
   //number of stock per age/length, N(a, l) (stockPopInArea) so we must initialize
   //AgeLengthStock so that it can hold all information of number of tagged stock
-  //per area/age/length after endtime. We must make agebandmatrixptrvector same size as
+  //per area/age/length after endtime. We must make AgeBandMatrixPtrVector same size as
   //the one in stock even though have only one area entry at the beginning
-  intvector stockareas = tagstocks[0]->Areas();
+  IntVector stockareas = tagstocks[0]->Areas();
   int j = 0;
   int tagareaindex = -1;
   while (j < stockareas.Size() && tagareaindex == -1) {
@@ -222,8 +222,8 @@ void Tags::Update() {
   int minage = stockPopInArea->Minage();
   int numberofagegroups = maxage - minage + 1;
   int upperlgrp, minl, maxl, age, length;
-  intvector sizeoflengthgroups(numberofagegroups);
-  intvector lowerlengthgroups(numberofagegroups);
+  IntVector sizeoflengthgroups(numberofagegroups);
+  IntVector lowerlengthgroups(numberofagegroups);
 
   for (i = 0; i < numberofagegroups; i++) {
     lowerlengthgroups[i]= stockPopInArea->Minlength(i + minage);
@@ -231,7 +231,7 @@ void Tags::Update() {
     sizeoflengthgroups[i] = upperlgrp - lowerlengthgroups[i];
   }
 
-  tagpopulation= new agebandmatrixptrvector(stockareas.Size(), minage, lowerlengthgroups, sizeoflengthgroups);
+  tagpopulation= new AgeBandMatrixPtrVector(stockareas.Size(), minage, lowerlengthgroups, sizeoflengthgroups);
   AgeLengthStock.resize(1, tagpopulation);
   for (age = stockPopInArea->Minage(); age <= stockPopInArea->Maxage(); age++) {
     minl = stockPopInArea->Minlength(age);
@@ -247,7 +247,7 @@ void Tags::Update() {
   tagstocks[0]->UpdateTags(&AgeLengthStock[0], this);
   //Have not set meanweight in AgeLengthStock. W == 0.
 
-  const Agebandmatrix* matureStockPopInArea;
+  const AgeBandMatrix* matureStockPopInArea;
   for (i = 0; i < maturestocks.Size(); i++) {
     matureStockPopInArea = &maturestocks[i]->Agelengthkeys(tagarea);
     stockareas = maturestocks[i]->Areas();
@@ -266,7 +266,7 @@ void Tags::Update() {
       upperlgrp = matureStockPopInArea->Maxlength(i + minage);
       sizeoflengthgroups[i] = upperlgrp - lowerlengthgroups[i];
     }
-    tagpopulation = new agebandmatrixptrvector(stockareas.Size(), minage, lowerlengthgroups, sizeoflengthgroups);
+    tagpopulation = new AgeBandMatrixPtrVector(stockareas.Size(), minage, lowerlengthgroups, sizeoflengthgroups);
     AgeLengthStock.resize(1, tagpopulation);
   }
 }

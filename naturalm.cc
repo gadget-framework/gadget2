@@ -33,7 +33,7 @@ void NaturalM::Reset(const TimeClass* const TimeInfo) {
   }
 }
 
-const doublevector& NaturalM::ProportionSurviving(const TimeClass* const TimeInfo) const {
+const DoubleVector& NaturalM::ProportionSurviving(const TimeClass* const TimeInfo) const {
   return proportion;
 }
 
@@ -45,8 +45,8 @@ void NaturalM::Print(ofstream& outfile) {
   outfile << endl << endl;
 }
 
-const doubleindexvector& NaturalM::getMortality() const {
-  doubleindexvector* tmpvec  = new doubleindexvector(mortality.Size(), mortality.Mincol());
+const DoubleIndexVector& NaturalM::getMortality() const {
+  DoubleIndexVector* tmpvec  = new DoubleIndexVector(mortality.Size(), mortality.Mincol());
   int i;
   for (i = tmpvec->Mincol(); i < tmpvec->Maxcol(); i++)
     (*tmpvec)[i] = mortality[i];

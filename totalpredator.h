@@ -7,7 +7,7 @@ class TotalPredator;
 
 class TotalPredator : public LengthPredator {
 public:
-  TotalPredator(CommentStream& infile, const char* givenname, const intvector& areas,
+  TotalPredator(CommentStream& infile, const char* givenname, const IntVector& areas,
     const LengthGroupDivision* const OtherLgrpDiv,
     const LengthGroupDivision* const GivenLgrpDiv,
     const TimeClass* const TimeInfo, Keeper* const keeper, double Multiplicative);
@@ -16,7 +16,7 @@ public:
     double Areasize, int CurrentSubstep, int NrOfSubsteps);
   virtual void AdjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep);
   virtual void Print(ofstream& outfile) const;
-  const popinfovector& NumberPriortoEating(int area, const char* preyname) const;
+  const PopInfoVector& NumberPriortoEating(int area, const char* preyname) const;
 };
 
 #endif

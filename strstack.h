@@ -5,7 +5,7 @@
 
 class StrStack {
   int sz;
-  charptrvector v;
+  CharPtrVector v;
 public:
   StrStack();
   ~StrStack();

@@ -1,14 +1,14 @@
 #ifndef popratio_h
 #define popratio_h
 
-//Class popratio stores number and ratio.
-class popratio {
+//Class PopRatio stores number and ratio.
+class PopRatio {
 public:
   double* N;
   double R;
-  popratio();
-  popratio& operator += (const popratio& a);
-  popratio& operator = (const popratio& a);
+  PopRatio();
+  PopRatio& operator += (const PopRatio& a);
+  PopRatio& operator = (const PopRatio& a);
   void operator -= (double a);
   void operator *= (double a);
 };

@@ -9,8 +9,8 @@ class MaturityB;
 class MaturityB : public Maturity {
 public:
   MaturityB(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
-    int minage, const intvector& minabslength, const intvector& size,
-    const intvector& areas, const LengthGroupDivision* const LgrpDiv);
+    int minage, const IntVector& minabslength, const IntVector& size,
+    const IntVector& areas, const LengthGroupDivision* const LgrpDiv);
   virtual ~MaturityB();
   virtual void Precalc(const TimeClass* const TimeInfo);
   virtual int IsMaturationStep(int area, const TimeClass* const TimeInfo);
@@ -18,8 +18,8 @@ public:
     const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
   virtual void Print(ofstream& outfile) const;
 protected:
-  intvector maturitystep;
-  TimeVariablevector maturitylength;
+  IntVector maturitystep;
+  TimeVariableVector maturitylength;
 };
 
 #endif

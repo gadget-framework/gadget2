@@ -4,47 +4,47 @@
 #include "formulamatrix.h"
 
 /**
- * \class Formulamatrixptrvector
- * \brief This class implements a dynamic vector of Formulamatrix values
+ * \class FormulaMatrixPtrVector
+ * \brief This class implements a dynamic vector of FormulaMatrix values
  */
-class Formulamatrixptrvector {
+class FormulaMatrixPtrVector {
 public:
   /**
-   * \brief This is the default Formulamatrixptrvector constructor
+   * \brief This is the default FormulaMatrixPtrVector constructor
    */
-  Formulamatrixptrvector() { size = 0; v = 0; };
+  FormulaMatrixPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the Formulamatrixptrvector constructor for a specified size
+   * \brief This is the FormulaMatrixPtrVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  Formulamatrixptrvector(int sz);
+  FormulaMatrixPtrVector(int sz);
   /**
-   * \brief This is the Formulamatrixptrvector constructor for a specified size with an initial value
+   * \brief This is the FormulaMatrixPtrVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  Formulamatrixptrvector(int sz, Formulamatrix* initial);
+  FormulaMatrixPtrVector(int sz, FormulaMatrix* initial);
   /**
-   * \brief This is the Formulamatrixptrvector constructor that create a copy of an existing Formulamatrixptrvector
-   * \param initial this is the Formulamatrixptrvector to copy
+   * \brief This is the FormulaMatrixPtrVector constructor that create a copy of an existing FormulaMatrixPtrVector
+   * \param initial this is the FormulaMatrixPtrVector to copy
    */
-  Formulamatrixptrvector(const Formulamatrixptrvector& initial);
+  FormulaMatrixPtrVector(const FormulaMatrixPtrVector& initial);
   /**
-   * \brief This is the Formulamatrixptrvector destructor
+   * \brief This is the FormulaMatrixPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~Formulamatrixptrvector();
+  ~FormulaMatrixPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
    * \param value this is the value that will be entered for the new entries
    */
-  void resize(int add, Formulamatrix* value);
+  void resize(int add, FormulaMatrix* value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**
@@ -63,18 +63,18 @@ public:
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  Formulamatrix*& operator [] (int pos);
+  FormulaMatrix*& operator [] (int pos);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  Formulamatrix* const& operator [] (int pos) const;
+  FormulaMatrix* const& operator [] (int pos) const;
 protected:
   /**
-   * \brief This is the vector of Formulamatrix values
+   * \brief This is the vector of FormulaMatrix values
    */
-  Formulamatrix** v;
+  FormulaMatrix** v;
   /**
    * \brief This is size of the vector
    */

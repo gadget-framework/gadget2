@@ -19,11 +19,11 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   strncpy(text, "", MaxStrLength);
   int i;
 
-  intmatrix Ages, tmpareas;
-  doublevector Lengths;
-  charptrvector areaindex;
-  charptrvector ageindex;
-  charptrvector lenindex;
+  IntMatrix Ages, tmpareas;
+  DoubleVector Lengths;
+  CharPtrVector areaindex;
+  CharPtrVector ageindex;
+  CharPtrVector lenindex;
 
   char datafilename[MaxStrLength];
   char aggfilename[MaxStrLength];
@@ -180,10 +180,10 @@ void SurveyIndices::AddToLikelihood(const TimeClass* const TimeInfo) {
     likelihood += SI->Regression();
 }
 
-void SurveyIndices::SetStocks(Stockptrvector& Stocks) {
+void SurveyIndices::SetStocks(StockPtrVector& Stocks) {
   int i, j;
   int found = 0;
-  Stockptrvector s;
+  StockPtrVector s;
   for (i = 0; i < stocknames.Size(); i++) {
     found = 0;
     for (j = 0; j < Stocks.Size(); j++)

@@ -12,10 +12,10 @@ public:
  double ValueOfVariable(int year);
  ~MigVariable();
 private:
- intvector years;
- Formulavector values;
- doublevector temperature;
- Formulavector Coeff;
+ IntVector years;
+ FormulaVector values;
+ DoubleVector temperature;
+ FormulaVector Coeff;
  Formula value;
  int ValuesReadFromFile;
 };

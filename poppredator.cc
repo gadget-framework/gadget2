@@ -1,7 +1,7 @@
 #include "poppredator.h"
 #include "gadget.h"
 
-PopPredator::PopPredator(const char* givenname, const intvector& Areas,
+PopPredator::PopPredator(const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv)
   : Predator(givenname, Areas) {
 
@@ -10,7 +10,7 @@ PopPredator::PopPredator(const char* givenname, const intvector& Areas,
     LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
 
   else {
-    doublevector dv(GivenLgrpDiv->NoLengthGroups() + 1);
+    DoubleVector dv(GivenLgrpDiv->NoLengthGroups() + 1);
     for (i = 0; i < dv.Size() - 1; i++)
       dv[i] = GivenLgrpDiv->Minlength(i);
     dv[i] = GivenLgrpDiv->Maxlength(i - 1);
@@ -64,11 +64,11 @@ void PopPredator::Print(ofstream& outfile) const {
   }
 }
 
-const doublevector& PopPredator::Consumption(int area) const {
+const DoubleVector& PopPredator::Consumption(int area) const {
   return totalconsumption[AreaNr[area]];
 }
 
-const bandmatrix& PopPredator::Consumption(int area, const char* preyname) const {
+const BandMatrix& PopPredator::Consumption(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < NoPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)
@@ -83,7 +83,7 @@ const double PopPredator::consumedBiomass(int prey_nr, int area_nr) const{
 
   int age, len;
   double tons = 0.0;
-  const bandmatrix& bio = consumption[area_nr][prey_nr];
+  const BandMatrix& bio = consumption[area_nr][prey_nr];
   for (age = bio.Minage(); age <= bio.Maxage(); age++)
     for (len = bio.Minlength(age); len < bio.Maxlength(age); len++)
       tons += bio[age][len];
@@ -91,7 +91,7 @@ const double PopPredator::consumedBiomass(int prey_nr, int area_nr) const{
   return tons;
 }
 
-const doublevector& PopPredator::OverConsumption(int area) const {
+const DoubleVector& PopPredator::OverConsumption(int area) const {
   return overconsumption[AreaNr[area]];
 }
 
@@ -154,7 +154,7 @@ void PopPredator::ResizeObjects() {
   while (Prednumber.Nrow())
     Prednumber.DeleteRow(0);
 
-  popinfo nullpop;
+  PopInfo nullpop;
   //Add rows to matrices and initialize.
   int numareas = areas.Size();
   int numlengths = LgrpDiv->NoLengthGroups();
@@ -167,7 +167,7 @@ void PopPredator::ResizeObjects() {
   Prednumber.AddRows(numareas, numlengths, nullpop);
 }
 
-void PopPredator::Multiply(Agebandmatrix& stock_alkeys, const doublevector& ratio) {
+void PopPredator::Multiply(AgeBandMatrix& stock_alkeys, const DoubleVector& ratio) {
   //written by kgf 31/7 98
   //Note! ratio is supposed to have equal dimensions to PopPredator.
   stock_alkeys.Multiply(ratio, *CI);

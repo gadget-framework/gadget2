@@ -9,7 +9,7 @@
 #include "gadget.h"
 
 #include "runid.h"
-extern RunId RUNID;
+extern RunID RUNID;
 
 StockFullPrinter::StockFullPrinter(CommentStream& infile,
   const AreaClass* const Area,  const TimeClass* const TimeInfo)
@@ -31,8 +31,8 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  charptrvector areaindex;
-  intmatrix tmpareas;
+  CharPtrVector areaindex;
+  IntMatrix tmpareas;
   ReadWordAndValue(infile, "areaaggfile", filename);
   datafile.open(filename);
   CheckIfFailure(datafile, filename);
@@ -94,7 +94,7 @@ StockFullPrinter::~StockFullPrinter() {
   delete[] stockname;
 }
 
-void StockFullPrinter::SetStock(Stockptrvector& stockvec) {
+void StockFullPrinter::SetStock(StockPtrVector& stockvec) {
   assert(stockvec.Size() > 0);
   Stock* stock = 0;
   int err = 0;
@@ -117,7 +117,7 @@ void StockFullPrinter::SetStock(Stockptrvector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  Stockptrvector stocks = Stockptrvector(1, stock);
+  StockPtrVector stocks = StockPtrVector(1, stock);
   LgrpDiv = new LengthGroupDivision(*stock->ReturnLengthGroupDiv());
 
   //Prepare for the creation of the aggregator
@@ -132,10 +132,10 @@ void StockFullPrinter::SetStock(Stockptrvector& stockvec) {
       maxage = tmpage;
   }
 
-  intmatrix agematrix(maxage - minage + 1, 1);
+  IntMatrix agematrix(maxage - minage + 1, 1);
   for (i = 0; i < agematrix.Nrow(); i++)
     agematrix[i][0] = i + minage;
-  intmatrix areamatrix(areas.Size(), 1);
+  IntMatrix areamatrix(areas.Size(), 1);
   for (i = 0; i < areamatrix.Nrow(); i++)
     areamatrix[i][0] = areas[i];
   aggregator = new StockAggregator(stocks, LgrpDiv, areamatrix, agematrix);
@@ -148,7 +148,7 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo) {
   int a, age, l;
 
   for (a = 0; a < areas.Size(); a++) {
-    const Agebandmatrix& alk = aggregator->ReturnSum()[a];
+    const AgeBandMatrix& alk = aggregator->ReturnSum()[a];
     for (age = alk.Minage(); age <= alk.Maxage(); age++) {
       for (l = alk.Minlength(age); l < alk.Maxlength(age); l++) {
         outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep

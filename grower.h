@@ -19,20 +19,20 @@ class GrowthCalcBase;
 class Grower : public LivesOnAreas {
 public:
   Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrpDiv,
-    const LengthGroupDivision* const GivenLgrpDiv, const intvector& Areas,
+    const LengthGroupDivision* const GivenLgrpDiv, const IntVector& Areas,
     const TimeClass* const TimeInfo, Keeper* const keeper, const char* refWeight,
-    const AreaClass* const Area, const charptrvector& lenindex);
+    const AreaClass* const Area, const CharPtrVector& lenindex);
   ~Grower();
   void GrowthCalc(int area, const AreaClass* const Area, const TimeClass* const TimeInfo,
-    const doublevector& FeedingLevel, const doublevector& Consumption);
+    const DoubleVector& FeedingLevel, const DoubleVector& Consumption);
   void GrowthCalc(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
-  void GrowthImplement(int area, const popinfovector& NumberInArea,
+  void GrowthImplement(int area, const PopInfoVector& NumberInArea,
     const LengthGroupDivision* const Lengths);
   void GrowthImplement(int area, const LengthGroupDivision* const Lengths);
-  const doublematrix& LengthIncrease(int area) const;
-  const doublematrix& WeightIncrease(int area) const;
-  const doublevector& getWeight(int area) const;
-  void Sum(const popinfovector& NumberInArea, int area);
+  const DoubleMatrix& LengthIncrease(int area) const;
+  const DoubleMatrix& WeightIncrease(int area) const;
+  const DoubleVector& getWeight(int area) const;
+  void Sum(const PopInfoVector& NumberInArea, int area);
   void Reset();
   void Print(ofstream& outfile) const;
   //From GrowthImplementParameters.
@@ -44,28 +44,28 @@ public:
   double getMultValue();
 protected:
   LengthGroupDivision* LgrpDiv;
-  popinfomatrix GrEatNumber;
+  PopInfoMatrix GrEatNumber;
   ConversionIndex* CI;
-  doublematrix InterpLgrowth;
-  doublematrix InterpWgrowth;
-  doublematrix CalcLgrowth;
-  doublematrix CalcWgrowth;
-  doublematrixptrvector lgrowth;
-  doublematrixptrvector wgrowth;
-  doublevector Fphi;
-  GrowthImplementparameters* GrIPar;
+  DoubleMatrix InterpLgrowth;
+  DoubleMatrix InterpWgrowth;
+  DoubleMatrix CalcLgrowth;
+  DoubleMatrix CalcWgrowth;
+  DoubleMatrixPtrVector lgrowth;
+  DoubleMatrixPtrVector wgrowth;
+  DoubleVector Fphi;
+  GrowthImplementParameters* GrIPar;
   GrowthCalcBase* growthcalc;
   int growthtype;
   char* functionname;
   double power;
-  Formulavector MeanVarianceParameters;
+  FormulaVector MeanVarianceParameters;
   int version;
   int maxlengthgroupgrowth;
   Formula beta;
-  doublevector part1;  //n*(n-1)*....(n-x+1)/x!
-  doublevector part2;  //gamma(n-x+beta)/gamma(beta)
+  DoubleVector part1;  //n*(n-1)*....(n-x+1)/x!
+  DoubleVector part2;  //gamma(n-x+beta)/gamma(beta)
   double part3;        //gamma(alpha+beta)/gamma(n+alpha+beta)
-  doublevector part4;  //gamma(x+alpha)/gamma(x)
+  DoubleVector part4;  //gamma(x+alpha)/gamma(x)
 };
 
 #endif

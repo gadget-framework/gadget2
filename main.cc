@@ -8,7 +8,7 @@
 #endif
 
 //Ecosystem must be global due to the optimization functions.
-RunId RUNID;
+RunID RUNID;
 Ecosystem* EcoSystem;
 int FuncEval = 0;
 

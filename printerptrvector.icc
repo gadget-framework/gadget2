@@ -3,13 +3,13 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-Printer*& Printerptrvector::operator [] (int pos) {
+Printer*& PrinterPtrVector::operator [] (int pos) {
   return v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-Printer* const& Printerptrvector::operator [] (int pos) const {
+Printer* const& PrinterPtrVector::operator [] (int pos) const {
   return v[pos];
 }

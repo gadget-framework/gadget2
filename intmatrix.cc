@@ -5,63 +5,57 @@
 #include "intmatrix.icc"
 #endif
 
-//constructor for a rectangular intmatrix.
-intmatrix::intmatrix(int nr, int nc) {
+IntMatrix::IntMatrix(int nr, int nc) {
   nrow = nr;
-  v = new intvector*[nr];
+  v = new IntVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new intvector(nc);
+    v[i] = new IntVector(nc);
 }
 
-//constructor for a rectangular intmatrix with initial value.
-intmatrix::intmatrix(int nr, int nc, int value) {
+IntMatrix::IntMatrix(int nr, int nc, int value) {
   nrow = nr;
-  v = new intvector*[nr];
+  v = new IntVector*[nr];
   int i, j;
   for (i = 0; i < nr; i++)
-    v[i] = new intvector(nc);
+    v[i] = new IntVector(nc);
   for (i = 0; i < nr; i++)
     for (j = 0; j < nc; j++)
       (*v[i])[j] = value;
 }
 
-//constructor for a possibly nonrectangular intmatrix
-//the rows need not have the same number of columns.
-intmatrix::intmatrix(int nr, const intvector& nc) {
+IntMatrix::IntMatrix(int nr, const IntVector& nc) {
   nrow = nr;
-  v = new intvector*[nr];
+  v = new IntVector*[nr];
   int i;
   for (i = 0; i < nr; i++)
-    v[i] = new intvector(nc[i]);
+    v[i] = new IntVector(nc[i]);
 }
 
-//constructor for intmatrix when all rows do not need to have same number of
-//columns, with initial value.
-intmatrix::intmatrix(int nr, const intvector& nc, int value) {
+IntMatrix::IntMatrix(int nr, const IntVector& nc, int value) {
   nrow = nr;
-  v = new intvector*[nr];
+  v = new IntVector*[nr];
   int i, j;
   for (i = 0; i < nr; i++)
-    v[i] = new intvector(nc[i]);
+    v[i] = new IntVector(nc[i]);
   for (i = 0; i < nr; i++)
     for (j = 0; j < nc[i]; j++)
       (*v[i])[j] = value;
 }
 
-intmatrix::intmatrix(const intmatrix& initial) : nrow(initial.nrow) {
+IntMatrix::IntMatrix(const IntMatrix& initial) : nrow(initial.nrow) {
   int i;
   if (nrow >= 0) {
-    v = new intvector*[nrow];
+    v = new IntVector*[nrow];
     for (i = 0; i < nrow; i++)
-      v[i] = new intvector(initial[i]);
+      v[i] = new IntVector(initial[i]);
   } else {
     v = 0;
     nrow = 0;
   }
 }
 
-intmatrix::~intmatrix() {
+IntMatrix::~IntMatrix() {
   int i;
   if (v != 0) {
     for (i = 0; i < nrow; i++)
@@ -71,21 +65,19 @@ intmatrix::~intmatrix() {
   }
 }
 
-//Adds rows to a intmatrix.
-void intmatrix::AddRows(int add, int length) {
-  intvector** vnew = new intvector*[nrow + add];
+void IntMatrix::AddRows(int add, int length) {
+  IntVector** vnew = new IntVector*[nrow + add];
   int i;
   for (i = 0; i < nrow; i++)
     vnew[i] = v[i];
   delete[] v;
   v = vnew;
   for (i = nrow; i < nrow + add; i++)
-    v[i] = new intvector(length);
+    v[i] = new IntVector(length);
   nrow += add;
 }
 
-//Adds rows to a intmatrix and initializes them.
-void intmatrix::AddRows(int add, int length, int initial) {
+void IntMatrix::AddRows(int add, int length, int initial) {
   int oldnrow = nrow;
   this->AddRows(add, length);
   int i, j;
@@ -94,12 +86,12 @@ void intmatrix::AddRows(int add, int length, int initial) {
       (*v[i])[j] = initial;
 }
 
-void intmatrix::DeleteRow(int row) {
+void IntMatrix::DeleteRow(int row) {
   int i;
   assert(nrow > 0);
   assert(0 <= row && row < nrow);
   delete v[row];
-  intvector** vnew = new intvector*[nrow -1];
+  IntVector** vnew = new IntVector*[nrow -1];
   for (i = 0; i < row; i++)
     vnew[i] = v[i];
   for (i = row; i < nrow - 1; i++)

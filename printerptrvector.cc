@@ -5,7 +5,7 @@
 #include "printerptrvector.icc"
 #endif
 
-Printerptrvector::Printerptrvector(int sz) {
+PrinterPtrVector::PrinterPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new Printer*[size];
@@ -13,7 +13,7 @@ Printerptrvector::Printerptrvector(int sz) {
     v = 0;
 }
 
-Printerptrvector::Printerptrvector(int sz, Printer* value) {
+PrinterPtrVector::PrinterPtrVector(int sz, Printer* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -24,7 +24,7 @@ Printerptrvector::Printerptrvector(int sz, Printer* value) {
     v = 0;
 }
 
-Printerptrvector::Printerptrvector(const Printerptrvector& initial) {
+PrinterPtrVector::PrinterPtrVector(const PrinterPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -35,15 +35,14 @@ Printerptrvector::Printerptrvector(const Printerptrvector& initial) {
     v = 0;
 }
 
-Printerptrvector::~Printerptrvector() {
+PrinterPtrVector::~PrinterPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a Printerptrvector and fills it vith value.
-void Printerptrvector::resize(int addsize, Printer* value) {
+void PrinterPtrVector::resize(int addsize, Printer* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,7 +51,7 @@ void Printerptrvector::resize(int addsize, Printer* value) {
       v[i] = value;
 }
 
-void Printerptrvector::resize(int addsize) {
+void PrinterPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -67,7 +66,7 @@ void Printerptrvector::resize(int addsize) {
   }
 }
 
-void Printerptrvector::Delete(int pos) {
+void PrinterPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   Printer** vnew = new Printer*[size - 1];

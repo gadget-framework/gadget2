@@ -206,17 +206,17 @@ double SC::Likelihood(const TimeClass* const TimeInfo) {
     pred_size = predatorlengths.Size() - 1;
 
   //The vector which will keep the consumption, indexed the same way as in stomachcontent
-  doublematrixptrvector consumption(areas.Nrow());
+  DoubleMatrixPtrVector consumption(areas.Nrow());
   for (a = 0; a < areas.Nrow(); a++)
-    consumption[a] = new doublematrix(stomachcontent[timeindex][0]->Nrow(),
+    consumption[a] = new DoubleMatrix(stomachcontent[timeindex][0]->Nrow(),
       stomachcontent[timeindex][0]->Ncol(), 0.0);
 
   //Get the consumption from aggregator, indexed the same way as in stomachcontent
   //While we're at it, get the sum of each row, for later scaling.
-  doublematrix sum(areas.Nrow(), pred_size, 0.0);
+  DoubleMatrix sum(areas.Nrow(), pred_size, 0.0);
   for (i = 0; i < preynames.Nrow(); i++) {
     Aggregate(i);
-    const bandmatrixvector* cons = &aggregator[i]->ReturnSum();
+    const BandMatrixVector* cons = &aggregator[i]->ReturnSum();
     for (a = 0; a < areas.Nrow(); a++) {
       for (k = 0; k < (*cons)[a].Nrow(); k++) {
         for (prey_l = 0; prey_l < (*cons)[a].Ncol(); prey_l++) {
@@ -232,7 +232,7 @@ double SC::Likelihood(const TimeClass* const TimeInfo) {
   }
 
   for (a = 0; a < consumption.Size(); a++)
-    modelConsumption[timeindex][a] = new doublematrix(*consumption[a]);
+    modelConsumption[timeindex][a] = new DoubleMatrix(*consumption[a]);
 
   /*JMB code removed from here - see RemovedCode for details*/
   //Now, calculate likelihood and cleanup
@@ -347,7 +347,7 @@ void SCNumbers::ReadStomachNumberContent(CommentStream& infile, const TimeClass*
 
         stomachcontent.AddRows(1, numarea);
         for (i = 0; i < numarea; i++)
-          stomachcontent[timeid][i] = new doublematrix(pred_size, nopreygroups, 0.0);
+          stomachcontent[timeid][i] = new DoubleMatrix(pred_size, nopreygroups, 0.0);
       }
 
     } else {
@@ -453,8 +453,8 @@ void SCAmounts::ReadStomachAmountContent(CommentStream& infile, const TimeClass*
         stomachcontent.AddRows(1, numarea);
         stddev.AddRows(1, numarea);
         for (i = 0; i < numarea; i++) {
-          stomachcontent[timeid][i] = new doublematrix(pred_size, nopreygroups, 0.0);
-          stddev[timeid][i] = new doublematrix(pred_size, nopreygroups, 0.0);
+          stomachcontent[timeid][i] = new DoubleMatrix(pred_size, nopreygroups, 0.0);
+          stddev[timeid][i] = new DoubleMatrix(pred_size, nopreygroups, 0.0);
         }
       }
 
@@ -526,7 +526,7 @@ void SCAmounts::ReadStomachSampleContent(CommentStream& infile, const TimeClass*
   int numarea = areas.Nrow();
   number.resize(stomachcontent.Nrow());
   for (i = 0; i < stomachcontent.Nrow(); i++)
-    number[i] = new doublematrix(numarea, pred_size, 0.0);
+    number[i] = new DoubleMatrix(numarea, pred_size, 0.0);
 
   //Find start of distribution data in datafile
   infile >> ws;
@@ -629,9 +629,9 @@ SC::~SC() {
     delete[] preyindex[i];
 }
 
-void SC::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys) {
+void SC::SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
   int i, j, k, found;
-  Predatorptrvector predators;
+  PredatorPtrVector predators;
   aggregator = new PredatorAggregator*[preynames.Nrow()];
 
   if (age_pred == 0) { //the test is done in aggregator for age structured predators
@@ -656,7 +656,7 @@ void SC::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys
     predLgrpDiv = new LengthGroupDivision*[preynames.Nrow()];
 
   for (i = 0; i < preynames.Nrow(); i++) {
-    Preyptrvector preys;
+    PreyPtrVector preys;
     for (j = 0; j < preynames[i].Size(); j++) {
       found = 0;
       for (k = 0; k < Preys.Size(); k++)
@@ -735,8 +735,8 @@ void SC::PrintLikelihoodOnStep(ostream& outfile, int time,
   outfile.setf(ios::fixed);
   //The following two lines assume 'this' is an instance of SCAmounts,
   //needs to be fixed. (mnaa 03.12.99)
-  doublematrixptrmatrix& std = ((SCAmounts*)this)->Stddev();
-  doublematrixptrvector& num = ((SCAmounts*)this)->StomachNumbers();
+  DoubleMatrixPtrMatrix& std = ((SCAmounts*)this)->Stddev();
+  DoubleMatrixPtrVector& num = ((SCAmounts*)this)->StomachNumbers();
 
   int a, pd, py;
   if (print_type == 0) { //Print log(S/S_hat)
@@ -823,7 +823,7 @@ SCAmounts::~SCAmounts() {
   }
 }
 
-double SCAmounts::CalculateLikelihood(doublematrixptrvector& consumption, doublematrix& sum) {
+double SCAmounts::CalculateLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum) {
   int a, k, preyl;
   double tmplik, lik = 0.0;
 
@@ -933,7 +933,7 @@ void SCAmounts::PrintLikelihoodHeader(ofstream& out) {
   out.flush();
 }
 
-void SCRatios::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector& Preys) {
+void SCRatios::SetPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
   int i, j, k, l;
   double sum = 0.0;
   SC::SetPredatorsAndPreys(Predators, Preys);
@@ -951,7 +951,7 @@ void SCRatios::SetPredatorsAndPreys(Predatorptrvector& Predators, Preyptrvector&
       }
 }
 
-double SCRatios::CalculateLikelihood(doublematrixptrvector& consumption, doublematrix& sum) {
+double SCRatios::CalculateLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum) {
   int a, predl, preyl;
   double tmplik, tmpdivide;
   double lik = 0.0;
@@ -980,13 +980,13 @@ double SCRatios::CalculateLikelihood(doublematrixptrvector& consumption, doublem
 
 //This code will probably be simplified a bit if the Multinomial
 //class is changed to take integers.  (Factorial replaced by the gamma function)
-double SCNumbers::CalculateLikelihood(doublematrixptrvector& consumption, doublematrix& sum) {
+double SCNumbers::CalculateLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum) {
   Multinomial MN(epsilon);
   int a, predl, preyl;
   for (a = 0; a < consumption.Size(); a++) {
     for (predl = 0; predl < consumption[a]->Nrow(); predl++) {
       if (!(iszero(sum[a][predl]))) {
-        doublevector* numbers = new doublevector(consumption[a]->Ncol(), 0.0);
+        DoubleVector* numbers = new DoubleVector(consumption[a]->Ncol(), 0.0);
         for (preyl = 0; preyl < consumption[a]->Ncol(); preyl++)
           (*numbers)[preyl] = (*stomachcontent[timeindex][a])[predl][preyl];
 

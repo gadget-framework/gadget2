@@ -15,33 +15,33 @@ class AreaClass;
 class TimeClass;
 class Maturity;
 
-class Agebandmatrixratio {
+class AgeBandMatrixRatio {
 public:
-  Agebandmatrixratio(int Minage, const intvector& minl, const intvector& size);
-  Agebandmatrixratio(int Minage, const popratiomatrix& initial);
-  Agebandmatrixratio(int age, const popratioindexvector& initial);
-  Agebandmatrixratio(const Agebandmatrixratio& initial);
-  Agebandmatrixratio() { minage = 0; nrow = 0; v = 0; };
-  ~Agebandmatrixratio();
+  AgeBandMatrixRatio(int Minage, const IntVector& minl, const IntVector& size);
+  AgeBandMatrixRatio(int Minage, const PopRatioMatrix& initial);
+  AgeBandMatrixRatio(int age, const PopRatioIndexVector& initial);
+  AgeBandMatrixRatio(const AgeBandMatrixRatio& initial);
+  AgeBandMatrixRatio() { minage = 0; nrow = 0; v = 0; };
+  ~AgeBandMatrixRatio();
   int Minage() const { return minage; };
   int Maxage() const { return minage + nrow - 1; };
   int Nrow() const { return nrow; };
   int Minlength(int age) const { return v[age - minage]->Mincol(); };
   int Maxlength(int age) const { return v[age - minage]->Maxcol(); };
-  void IncrementAge(const Agebandmatrix& Total);
-  void Grow(const doublematrix& Lgrowth, const Agebandmatrix& Total);
-  void Grow(const doublematrix& Lgrowth, const Agebandmatrix& Total,
+  void IncrementAge(const AgeBandMatrix& Total);
+  void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total);
+  void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total,
     Maturity* const Mat, const TimeClass* const TimeInfo, const AreaClass* const Area,
     const LengthGroupDivision* const GivenLDiv, int area);
-  popratioindexvector& operator [] (int age);
-  const popratioindexvector& operator [] (int age) const;
-  void UpdateRatio(const Agebandmatrix& Total);
-  void UpdateNumbers(const Agebandmatrix& Total);
+  PopRatioIndexVector& operator [] (int age);
+  const PopRatioIndexVector& operator [] (int age) const;
+  void UpdateRatio(const AgeBandMatrix& Total);
+  void UpdateNumbers(const AgeBandMatrix& Total);
   int NrOfTagExp() const;
 protected:
   int minage;
   int nrow;
-  popratioindexvector** v;
+  PopRatioIndexVector** v;
 };
 
 #ifdef GADGET_INLINE

@@ -89,10 +89,10 @@ void OptInfoHooke::MaximizeLikelihood() {
   int i, count;
   double tmp;
   nopt = EcoSystem->NoOptVariables();
-  doublevector val(nopt);
-  doublevector lbds(nopt);
-  doublevector ubds(nopt);
-  doublevector initialval(nopt);
+  DoubleVector val(nopt);
+  DoubleVector lbds(nopt);
+  DoubleVector ubds(nopt);
+  DoubleVector initialval(nopt);
 
   EcoSystem->ScaleVariables();
   EcoSystem->ScaledOptValues(val);
@@ -111,7 +111,7 @@ void OptInfoHooke::MaximizeLikelihood() {
     upperb[i] = ubds[i];
   }
 
-  Parametervector optswitches(nopt);
+  ParameterVector optswitches(nopt);
   EcoSystem->OptSwitches(optswitches);
 
   /* Scaling the bounds, because tha parameters are scaled. */
@@ -223,9 +223,9 @@ int OptInfoSimann::Read(CommentStream& infile, char* text) {
 void OptInfoSimann::MaximizeLikelihood() {
   int i, count;
   nopt = EcoSystem->NoOptVariables();
-  doublevector val(nopt);
-  doublevector lbds(nopt);
-  doublevector ubds(nopt);
+  DoubleVector val(nopt);
+  DoubleVector lbds(nopt);
+  DoubleVector ubds(nopt);
 
   EcoSystem->ScaledOptValues(val);
   EcoSystem->LowerBds(lbds);
@@ -246,7 +246,7 @@ void OptInfoSimann::MaximizeLikelihood() {
     startpoint[i] = val[i];
   }
 
-  Parametervector optswitches(nopt);
+  ParameterVector optswitches(nopt);
   EcoSystem->OptSwitches(optswitches);
   count = 0;
   for (i = 0; i < nopt; i++) {
@@ -356,10 +356,10 @@ int OptInfoHookeAndSimann::Read(CommentStream& infile, char* text) {
 void OptInfoHookeAndSimann::MaximizeLikelihood() {
   int i, count;
   nopt = EcoSystem->NoOptVariables();
-  doublevector val(nopt);
-  doublevector initialval(nopt);
-  doublevector lbds(nopt);
-  doublevector ubds(nopt);
+  DoubleVector val(nopt);
+  DoubleVector initialval(nopt);
+  DoubleVector lbds(nopt);
+  DoubleVector ubds(nopt);
 
   EcoSystem->ScaledOptValues(val);
   EcoSystem->LowerBds(lbds);
@@ -380,7 +380,7 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
     startpoint[i] = val[i];
   }
 
-  Parametervector optswitches(nopt);
+  ParameterVector optswitches(nopt);
   EcoSystem->OptSwitches(optswitches);
   count = 0;
   for (i = 0; i < nopt; i++) {

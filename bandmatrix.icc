@@ -4,7 +4,7 @@
 #ifdef GADGET_INLINE
 inline
 #endif
-doubleindexvector& bandmatrix::operator [] (int row) {
+DoubleIndexVector& BandMatrix::operator [] (int row) {
   assert(minage <= row && row < (minage + nrow));
   return *(v[row - minage]);
 }
@@ -12,7 +12,7 @@ doubleindexvector& bandmatrix::operator [] (int row) {
 #ifdef GADGET_INLINE
 inline
 #endif
-const doubleindexvector& bandmatrix::operator [] (int row) const {
+const DoubleIndexVector& BandMatrix::operator [] (int row) const {
   assert(minage <= row && row < (minage + nrow));
   return *(v[row - minage]);
 }
@@ -20,27 +20,27 @@ const doubleindexvector& bandmatrix::operator [] (int row) const {
 #ifdef GADGET_INLINE
 inline
 #endif
-bandmatrix& bandmatrixvector::operator [] (int pos) {
+BandMatrix& BandMatrixVector::operator [] (int pos) {
   return *v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-const bandmatrix& bandmatrixvector::operator [] (int pos) const {
+const BandMatrix& BandMatrixVector::operator [] (int pos) const {
   return *v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-bandmatrixvector& bandmatrixmatrix::operator [] (int pos) {
+BandMatrixVector& BandMatrixMatrix::operator [] (int pos) {
   return *v[pos];
 }
 
 #ifdef GADGET_INLINE
 inline
 #endif
-const bandmatrixvector& bandmatrixmatrix::operator [] (int pos) const {
+const BandMatrixVector& BandMatrixMatrix::operator [] (int pos) const {
   return *v[pos];
 }

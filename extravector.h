@@ -5,10 +5,10 @@
 #include "doubleindexvector.h"
 #include "conversion.h"
 
-extern void PopinfoAdd(popinfoindexvector& target, const popinfoindexvector& Addition,
-  const ConversionIndex& CI, double ratio, const doubleindexvector& Ratio);
+extern void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
+  const ConversionIndex& CI, double ratio, const DoubleIndexVector& Ratio);
 
-extern void PopinfoAdd(popinfoindexvector& target, const popinfoindexvector& Addition,
+extern void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
   const ConversionIndex& CI, double ratio = 1);
 
 #endif

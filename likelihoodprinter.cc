@@ -6,7 +6,6 @@
 #include "readfunc.h"
 #include "readword.h"
 #include "errorhandler.h"
-#include "stockptrvector.h"
 #include "mortprey.h"
 #include "stock.h"
 #include "lenstock.h"
@@ -17,7 +16,7 @@
 #include "runid.h"
 #include "gadget.h"
 
-extern RunId RUNID;
+extern RunID RUNID;
 
 /*  LikelihoodPrinter
  *
@@ -74,7 +73,7 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile,
   }
 }
 
-void LikelihoodPrinter::SetLikely(Likelihoodptrvector& likevec) {
+void LikelihoodPrinter::SetLikely(LikelihoodPtrVector& likevec) {
   int i;
   for (i = 0; i < likevec.Size(); i++) {
     if (likevec[i]->Type() == CATCHDISTRIBUTIONLIKELIHOOD)

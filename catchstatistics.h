@@ -20,21 +20,21 @@ public:
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile) const {};
-  void SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks);
+  void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
   void ReadStatisticsData(CommentStream&, const TimeClass*, int, int);
   double SOSWeightOrLength();
-  doublematrixptrvector numbers;
-  doublematrixptrvector mean;
-  doublematrixptrvector variance;
+  DoubleMatrixPtrVector numbers;
+  DoubleMatrixPtrVector mean;
+  DoubleMatrixPtrVector variance;
   FleetPreyAggregator* aggregator;
   LengthGroupDivision* lgrpDiv;
-  charptrvector fleetnames;
-  charptrvector stocknames;
-  intmatrix areas;
-  intmatrix ages;
-  charptrvector areaindex;
-  charptrvector ageindex;
+  CharPtrVector fleetnames;
+  CharPtrVector stocknames;
+  IntMatrix areas;
+  IntMatrix ages;
+  CharPtrVector areaindex;
+  CharPtrVector ageindex;
   int overconsumption;    //should we take overconsumption into account
   int timeindex;          //index for mean etc.
   int functionnumber;

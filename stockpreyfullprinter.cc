@@ -10,7 +10,7 @@
 #include "gadget.h"
 
 #include "runid.h"
-extern RunId RUNID;
+extern RunID RUNID;
 
 //This printer prints all the information on the consumption of the prey,
 //at the level of most disaggregation.
@@ -34,8 +34,8 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  charptrvector areaindex;
-  intmatrix tmpareas;
+  CharPtrVector areaindex;
+  IntMatrix tmpareas;
   ReadWordAndValue(infile, "areaaggfile", filename);
   datafile.open(filename);
   CheckIfFailure(datafile, filename);
@@ -97,9 +97,9 @@ StockPreyFullPrinter::~StockPreyFullPrinter() {
   delete[] stockname;
 }
 
-void StockPreyFullPrinter::SetStock(Stockptrvector& stockvec) {
-  charptrvector stocknames(1, stockname);
-  Stockptrvector stocks;
+void StockPreyFullPrinter::SetStock(StockPtrVector& stockvec) {
+  CharPtrVector stocknames(1, stockname);
+  StockPtrVector stocks;
   int index = 0;
   int i, j;
 
@@ -151,7 +151,7 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo) {
   const LengthGroupDivision* LgrpDiv = preyinfo->ReturnPreyLengthGroupDiv();
 
   for (a = 0; a < areas.Size(); a++) {
-    const bandmatrix& Nbyageandl = preyinfo->NconsumptionByAgeAndLength(areas[a]);
+    const BandMatrix& Nbyageandl = preyinfo->NconsumptionByAgeAndLength(areas[a]);
     for (age = Nbyageandl.Minage(); age <= Nbyageandl.Maxage(); age++)
       for (l = 0; l < LgrpDiv->NoLengthGroups(); l++) {
         outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep

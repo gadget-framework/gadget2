@@ -1,20 +1,20 @@
 #ifndef popinfo_h
 #define popinfo_h
 
-//Class popinfo stores Number and Mean weights.
-class popinfo {
+//Class PopInfo stores Number and Mean weights.
+class PopInfo {
 public:
   double N;
   double W;
   #ifdef GADGET_INLINE
   inline
   #endif
-  popinfo();
-  ~popinfo() {};
+  PopInfo();
+  ~PopInfo() {};
   #ifdef GADGET_INLINE
   inline
   #endif
-  popinfo& operator += (const popinfo& a);
+  PopInfo& operator += (const PopInfo& a);
   #ifdef GADGET_INLINE
   inline
   #endif
@@ -26,15 +26,15 @@ public:
   #ifdef GADGET_INLINE
   inline
   #endif
-  popinfo operator * (double b);
+  PopInfo operator * (double b);
   #ifdef GADGET_INLINE
   inline
   #endif
-  popinfo& operator = (const popinfo& a);
+  PopInfo& operator = (const PopInfo& a);
 };
 
 #ifdef GADGET_INLINE
-#include "popinfo.cc"
+#include "PopInfo.cc"
 #endif
 
 #endif

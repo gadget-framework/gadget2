@@ -5,7 +5,7 @@
 #include "baseclassptrvector.icc"
 #endif
 
-BaseClassptrvector::BaseClassptrvector(int sz) {
+BaseClassPtrVector::BaseClassPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new BaseClass*[size];
@@ -13,7 +13,7 @@ BaseClassptrvector::BaseClassptrvector(int sz) {
     v = 0;
 }
 
-BaseClassptrvector::BaseClassptrvector(int sz, BaseClass* value) {
+BaseClassPtrVector::BaseClassPtrVector(int sz, BaseClass* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
@@ -24,7 +24,7 @@ BaseClassptrvector::BaseClassptrvector(int sz, BaseClass* value) {
     v = 0;
 }
 
-BaseClassptrvector::BaseClassptrvector(const BaseClassptrvector& initial) {
+BaseClassPtrVector::BaseClassPtrVector(const BaseClassPtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
@@ -35,15 +35,14 @@ BaseClassptrvector::BaseClassptrvector(const BaseClassptrvector& initial) {
     v = 0;
 }
 
-BaseClassptrvector::~BaseClassptrvector() {
+BaseClassPtrVector::~BaseClassPtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-//The function resize add addsize elements to a BaseClassptrvector and fills it vith value.
-void BaseClassptrvector::resize(int addsize, BaseClass* value) {
+void BaseClassPtrVector::resize(int addsize, BaseClass* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -52,7 +51,7 @@ void BaseClassptrvector::resize(int addsize, BaseClass* value) {
       v[i] = value;
 }
 
-void BaseClassptrvector::resize(int addsize) {
+void BaseClassPtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
@@ -67,7 +66,7 @@ void BaseClassptrvector::resize(int addsize) {
   }
 }
 
-void BaseClassptrvector::Delete(int pos) {
+void BaseClassPtrVector::Delete(int pos) {
   assert(size > 0);
   assert(0 <= pos && pos < size);
   BaseClass** vnew = new BaseClass*[size - 1];

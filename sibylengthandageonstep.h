@@ -12,16 +12,16 @@ class LengthGroupDivision;
 
 class SIByLengthAndAgeOnStep : public SIOnStep {
 public:
-  SIByLengthAndAgeOnStep(CommentStream& infile, const intvector& areas,
-    const doublevector& lengths, const intmatrix& ages,
+  SIByLengthAndAgeOnStep(CommentStream& infile, const IntVector& areas,
+    const DoubleVector& lengths, const IntMatrix& ages,
     const TimeClass* const TimeInfo, Keeper* const keeper,
-    const charptrvector& lenindex, const charptrvector& ageindex,
+    const CharPtrVector& lenindex, const CharPtrVector& ageindex,
     const char* arealabel, const char* datafilename);
   virtual ~SIByLengthAndAgeOnStep();
   virtual void Sum(const TimeClass* const TimeInfo);
-  virtual void SetStocks(const Stockptrvector& Stocks);
+  virtual void SetStocks(const StockPtrVector& Stocks);
   virtual double Regression() {return likelihood; };
-  void calcIndex(const Agebandmatrix* alptr, FitType ftype);
+  void calcIndex(const AgeBandMatrix* alptr, FitType ftype);
   void PrintLikelihoodOnStep(ofstream& o, int print_type);
   virtual void PrintLikelihood(ofstream&, const TimeClass& time, const char*);
   virtual void PrintLikelihoodHeader(ofstream&, const char*);
@@ -31,7 +31,7 @@ public:
   virtual void printHeader(ofstream& o, const PrintInfo& print, const char* name);
   virtual void print(ofstream& o, const TimeClass& time, const PrintInfo&);
 protected:
-  void ReadSurveyData(CommentStream&, const char*, const charptrvector&, const charptrvector&, const TimeClass*);
+  void ReadSurveyData(CommentStream&, const char*, const CharPtrVector&, const CharPtrVector&, const TimeClass*);
   double calcLikPearson();
   double calcLikMultinomial();
   double calcLikGamma();
@@ -39,14 +39,14 @@ protected:
   double calcLikLog();
   StockAggregator* aggregator;
   LengthGroupDivision* LgrpDiv;
-  intvector Areas;
-  intmatrix Ages;
-  doublematrixptrvector indexMatrix;
-  doublematrixptrvector calc_index;  //for comparing with indexMatrix
-  Formulavector b; //interpreted as power or intersection term according to fit type
-  Formulavector q_y; //year dependent catchability factor
-  doublevector q_l; //length dependent catchability factor
-  TimeVariablevector parameters;
+  IntVector Areas;
+  IntMatrix Ages;
+  DoubleMatrixPtrVector indexMatrix;
+  DoubleMatrixPtrVector calc_index;  //for comparing with indexMatrix
+  FormulaVector b; //interpreted as power or intersection term according to fit type
+  FormulaVector q_y; //year dependent catchability factor
+  DoubleVector q_l; //length dependent catchability factor
+  TimeVariableVector parameters;
   int index;
   int funcnumber;
   double eps_ind;
@@ -54,16 +54,16 @@ protected:
   double max_fact;
   double likelihood;
   SuitFunc* suitfunction;
-  doublevector lik_val_on_step; //for print purposes
-  doublevector max_val_on_step; //for print purposes
-  doublevector b_vec;
-  intvector l_index; //for print purposes
-  intvector a_index; //for print purposes
+  DoubleVector lik_val_on_step; //for print purposes
+  DoubleVector max_val_on_step; //for print purposes
+  DoubleVector b_vec;
+  IntVector l_index; //for print purposes
+  IntVector a_index; //for print purposes
   enum OptType { pearson = 0, multinomial, experimental, gamma, logfunc };
   OptType opttype;
-  charptrvector stocknames;
-  intvector mincol;
-  intvector maxcol;
+  CharPtrVector stocknames;
+  IntVector mincol;
+  IntVector maxcol;
   int minrow;
   int maxrow;
 };

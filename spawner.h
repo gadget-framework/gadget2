@@ -19,22 +19,22 @@ public:
     const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper);
   ~Spawner();
   void Print(ofstream& outfile) const {};
-  void Spawn(Agebandmatrix& Alkeys, int area, const AreaClass* const Area,
+  void Spawn(AgeBandMatrix& Alkeys, int area, const AreaClass* const Area,
     const TimeClass* const TimeInfo);
   void Reset() {};
 protected:
   void ReadSpawnerData(CommentStream&, const TimeClass*, int, int);
-  Formulamatrixptrvector spawnRatio;      //[time][area][age]
-  Formulamatrixptrvector spawnMortality;  //[time][area][age]
-  Formulamatrixptrvector spawnWeightLoss; //[time][area][age]
-  intmatrix areas;
-  intmatrix ages;
-  charptrvector areaindex;
-  charptrvector ageindex;
+  FormulaMatrixPtrVector spawnRatio;      //[time][area][age]
+  FormulaMatrixPtrVector spawnMortality;  //[time][area][age]
+  FormulaMatrixPtrVector spawnWeightLoss; //[time][area][age]
+  IntMatrix areas;
+  IntMatrix ages;
+  CharPtrVector areaindex;
+  CharPtrVector ageindex;
   ActionAtTimes AAT;
-  intvector Years;
-  intvector Steps;
-  doublematrix ssb;
+  IntVector Years;
+  IntVector Steps;
+  DoubleMatrix ssb;
 };
 
 #endif

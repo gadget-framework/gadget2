@@ -4,37 +4,37 @@
 class Printer;
 
 /**
- * \class Printerptrvector
+ * \class PrinterPtrVector
  * \brief This class implements a dynamic vector of Printer values
  */
-class Printerptrvector {
+class PrinterPtrVector {
 public:
   /**
-   * \brief This is the default Printerptrvector constructor
+   * \brief This is the default PrinterPtrVector constructor
    */
-  Printerptrvector() { size = 0; v = 0; };
+  PrinterPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the Printerptrvector constructor for a specified size
+   * \brief This is the PrinterPtrVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  Printerptrvector(int sz);
+  PrinterPtrVector(int sz);
   /**
-   * \brief This is the Printerptrvector constructor for a specified size with an initial value
+   * \brief This is the PrinterPtrVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  Printerptrvector(int sz, Printer* initial);
+  PrinterPtrVector(int sz, Printer* initial);
   /**
-   * \brief This is the Printerptrvector constructor that create a copy of an existing Printerptrvector
-   * \param initial this is the Printerptrvector to copy
+   * \brief This is the PrinterPtrVector constructor that create a copy of an existing PrinterPtrVector
+   * \param initial this is the PrinterPtrVector to copy
    */
-  Printerptrvector(const Printerptrvector& initial);
+  PrinterPtrVector(const PrinterPtrVector& initial);
   /**
-   * \brief This is the Printerptrvector destructor
+   * \brief This is the PrinterPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~Printerptrvector();
+  ~PrinterPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
@@ -43,8 +43,8 @@ public:
   void resize(int add, Printer* value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**

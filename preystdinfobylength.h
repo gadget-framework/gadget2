@@ -7,7 +7,7 @@ class PreyStdInfoByLength;
 
 class PreyStdInfoByLength : public AbstrPreyStdInfoByLength {
 public:
-  PreyStdInfoByLength(const Prey* prey, const intvector& areas);
+  PreyStdInfoByLength(const Prey* prey, const IntVector& areas);
   virtual ~PreyStdInfoByLength();
   virtual void Sum(const TimeClass* const TimeInfo, int area);
 private:

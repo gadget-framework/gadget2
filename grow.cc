@@ -6,7 +6,7 @@
 /* the weight increase for each entry in Lgrowth              */
 
 /* JMB changed to deal with very small weights a bit better   */
-void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowth) {
+void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth) {
   int i, lgrp, grow, maxlgrp;
   double number, wt, upfj;
 
@@ -74,7 +74,7 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
 }
 
 //Same program with certain number of fish made mature.
-void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowth,
+void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth,
   Maturity* const Mat, const TimeClass* const TimeInfo, const AreaClass* const Area,
   const LengthGroupDivision* const GivenLDiv, int area) {
 
@@ -160,7 +160,7 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
 }
 
 //fleksibest formulation - weight read in from file (should be positive)
-void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublevector& Weight) {
+void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight) {
   int i, lgrp, grow, maxlgrp;
   double number, upfj;
 
@@ -213,7 +213,7 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublevector& Weight
 
 //fleksibest formulation - weight read in from file (should be positive)
 //Same program with certain number of fish made mature.
-void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublevector& Weight,
+void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight,
   Maturity* const Mat, const TimeClass* const TimeInfo, const AreaClass* const Area,
   const LengthGroupDivision* const GivenLDiv, int area) {
 

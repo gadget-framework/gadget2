@@ -14,13 +14,13 @@ public:
   LenNaturalM(CommentStream& infile, const LengthGroupDivision* lenp, Keeper* const keeper);
   ~LenNaturalM();
   void Print(ofstream& outfile);
-  inline const doublevector& NatMortality() { return natmort; };
+  inline const DoubleVector& NatMortality() { return natmort; };
   void NatCalc();
 protected:
   double Hyperbola(double start, double end, double startm, double endm, double len);
-  Formulavector parammort;
-  doublevector xparammort;
-  doublevector natmort;
+  FormulaVector parammort;
+  DoubleVector xparammort;
+  DoubleVector natmort;
   LengthGroupDivision* lengroup;
 };
 

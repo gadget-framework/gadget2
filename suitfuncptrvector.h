@@ -6,37 +6,37 @@
 class SuitFunc;
 
 /**
- * \class SuitfuncPtrvector
+ * \class SuitFuncPtrVector
  * \brief This class implements a dynamic vector of SuitFunc values
  */
-class SuitfuncPtrvector {
+class SuitFuncPtrVector {
 public:
   /**
-   * \brief This is the default SuitfuncPtrvector constructor
+   * \brief This is the default SuitFuncPtrVector constructor
    */
-  SuitfuncPtrvector() { size = 0; v = 0; };
+  SuitFuncPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the SuitfuncPtrvector constructor for a specified size
+   * \brief This is the SuitFuncPtrVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  SuitfuncPtrvector(int sz);
+  SuitFuncPtrVector(int sz);
   /**
-   * \brief This is the SuitfuncPtrvector constructor for a specified size with an initial value
+   * \brief This is the SuitFuncPtrVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  SuitfuncPtrvector(int sz, SuitFunc* initial);
+  SuitFuncPtrVector(int sz, SuitFunc* initial);
   /**
-   * \brief This is the SuitfuncPtrvector constructor that create a copy of an existing SuitfuncPtrvector
-   * \param initial this is the SuitfuncPtrvector to copy
+   * \brief This is the SuitFuncPtrVector constructor that create a copy of an existing SuitFuncPtrVector
+   * \param initial this is the SuitFuncPtrVector to copy
    */
-  SuitfuncPtrvector(const SuitfuncPtrvector& initial);
+  SuitFuncPtrVector(const SuitFuncPtrVector& initial);
   /**
-   * \brief This is the SuitfuncPtrvector destructor
+   * \brief This is the SuitFuncPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~SuitfuncPtrvector();
+  ~SuitFuncPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
@@ -45,8 +45,8 @@ public:
   void resize(int add, SuitFunc* suitf);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**

@@ -1,50 +1,50 @@
 #ifndef doublematrixptrvector_h
 #define doublematrixptrvector_h
 
-class doublematrix;
+class DoubleMatrix;
 
 /**
- * \class doublematrixptrvector
- * \brief This class implements a dynamic vector of doublematrix values
+ * \class DoubleMatrixPtrVector
+ * \brief This class implements a dynamic vector of DoubleMatrix values
  */
-class doublematrixptrvector {
+class DoubleMatrixPtrVector {
 public:
   /**
-   * \brief This is the default doublematrixptrvector constructor
+   * \brief This is the default DoubleMatrixPtrVector constructor
    */
-  doublematrixptrvector() { size = 0; v = 0; };
+  DoubleMatrixPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the doublematrixptrvector constructor for a specified size
+   * \brief This is the DoubleMatrixPtrVector constructor for a specified size
    * \param sz this is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  doublematrixptrvector(int sz);
+  DoubleMatrixPtrVector(int sz);
   /**
-   * \brief This is the doublematrixptrvector constructor for a specified size with an initial value
+   * \brief This is the DoubleMatrixPtrVector constructor for a specified size with an initial value
    * \param sz this is the size of the vector to be created
    * \param initial this is the initial value for all the entries of the vector
    */
-  doublematrixptrvector(int sz, doublematrix* initial);
+  DoubleMatrixPtrVector(int sz, DoubleMatrix* initial);
   /**
-   * \brief This is the doublematrixptrvector constructor that create a copy of an existing doublematrixptrvector
-   * \param initial this is the doublematrixptrvector to copy
+   * \brief This is the DoubleMatrixPtrVector constructor that create a copy of an existing DoubleMatrixPtrVector
+   * \param initial this is the DoubleMatrixPtrVector to copy
    */
-  doublematrixptrvector(const doublematrixptrvector& initial);
+  DoubleMatrixPtrVector(const DoubleMatrixPtrVector& initial);
   /**
-   * \brief This is the doublematrixptrvector destructor
+   * \brief This is the DoubleMatrixPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~doublematrixptrvector();
+  ~DoubleMatrixPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add this is the number of new entries to the vector
    * \param value this is the value that will be entered for the new entries
    */
-  void resize(int add, doublematrix* value);
+  void resize(int add, DoubleMatrix* value);
   /**
    * \brief This will add new empty entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
    * \param add this is the number of new entries to the vector
+   * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
   /**
@@ -63,18 +63,18 @@ public:
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  doublematrix*& operator [] (int pos);
+  DoubleMatrix*& operator [] (int pos);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos this is the element of the vector to be returned
    * \return the value of the specified element
    */
-  doublematrix* const& operator [] (int pos) const;
+  DoubleMatrix* const& operator [] (int pos) const;
 protected:
   /**
-   * \brief This is the vector of doublematrix values
+   * \brief This is the vector of DoubleMatrix values
    */
-  doublematrix** v;
+  DoubleMatrix** v;
   /**
    * \brief This is size of the vector
    */

@@ -13,7 +13,7 @@
 #include "runid.h"
 #include "gadget.h"
 
-extern RunId RUNID;
+extern RunID RUNID;
 
 /*  MortPrinter
  *
@@ -108,14 +108,14 @@ MortPrinter::MortPrinter(CommentStream& infile,
  *
  *  Purpose:  Initialize vector of stocks to be printed
  *
- *  In:  Stockptrvector& stockvec     :vector of all stocks, the stock names from the
+ *  In:  StockPtrVector& stockvec     :vector of all stocks, the stock names from the
  *                                     input files are matched with these.
  *
  *  Usage:  SetStock(stockvec)
  *
  *  Pre:  stockvec.Size() > 0, all stocks names in input file are in stockvec
  */
-void MortPrinter::SetStock(Stockptrvector& stockvec) {
+void MortPrinter::SetStock(StockPtrVector& stockvec) {
   int index = 0;
   int i, j;
   for (i = 0; i < stockvec.Size(); i++)
@@ -154,11 +154,11 @@ void MortPrinter::SetStock(Stockptrvector& stockvec) {
     delete sumN;
   if (totalNbar != 0)
     delete totalNbar;
-  sumF = new doublematrix(maxage - minage + 1, nrofyears, 0.0);
-  sumM1 = new doublematrix(maxage - minage + 1, nrofyears, 0.0);
-  sumM2 = new doublematrix(maxage - minage + 1, nrofyears, 0.0);
-  sumN = new doublematrix(maxage - minage + 1, nrofyears, 0.0);
-  totalNbar = new doublematrix(maxage - minage + 1, nrofyears, 0.0);
+  sumF = new DoubleMatrix(maxage - minage + 1, nrofyears, 0.0);
+  sumM1 = new DoubleMatrix(maxage - minage + 1, nrofyears, 0.0);
+  sumM2 = new DoubleMatrix(maxage - minage + 1, nrofyears, 0.0);
+  sumN = new DoubleMatrix(maxage - minage + 1, nrofyears, 0.0);
+  totalNbar = new DoubleMatrix(maxage - minage + 1, nrofyears, 0.0);
 }
 
 /*  Print
@@ -189,11 +189,11 @@ void MortPrinter::Print(const TimeClass* const TimeInfo) {
       yo = firstyear - TimeInfo->FirstYear();
       for (s = 0; s < stocks.Size(); s++) {
         for (i = stocks[s]->Minage(); i <= stocks[s]->Maxage(); i++) {
-          const doublematrix& F = ((LenStock*)stocks[s])->getF(inarea);
-          const doublematrix& M1 = ((LenStock*)stocks[s])->getM1(inarea);
-          const doublematrix& M2 = ((LenStock*)stocks[s])->getM2(inarea);
-          const doublematrix& Nbar = ((LenStock*)stocks[s])->getNbar(inarea);
-          const doublematrix& N = ((LenStock*)stocks[s])->getNsum(inarea);
+          const DoubleMatrix& F = ((LenStock*)stocks[s])->getF(inarea);
+          const DoubleMatrix& M1 = ((LenStock*)stocks[s])->getM1(inarea);
+          const DoubleMatrix& M2 = ((LenStock*)stocks[s])->getM2(inarea);
+          const DoubleMatrix& Nbar = ((LenStock*)stocks[s])->getNbar(inarea);
+          const DoubleMatrix& N = ((LenStock*)stocks[s])->getNsum(inarea);
           age = i - stocks[s]->Minage();
           for (j = 0; j < nrofyears; j++) {
             (*sumF)[i - minage][j] += F[age][j + yo] * Nbar[age][j + yo];

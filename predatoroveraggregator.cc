@@ -3,8 +3,8 @@
 #include "mathfunc.h"
 #include "checkconversion.h"
 
-PredatorOverAggregator::PredatorOverAggregator(const Predatorptrvector& preds,
-  const intmatrix& Areas, const LengthGroupDivision* const predLgrpDiv)
+PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
+  const IntMatrix& Areas, const LengthGroupDivision* const predLgrpDiv)
   : predators(preds), areas(Areas) {
 
   int i, j;
@@ -38,7 +38,7 @@ void PredatorOverAggregator::Sum() {
       for (j = 0; j < areas.Ncol(i); j++) {
         area = areas[i][j];
         if (predators[g]->IsInArea(area)) {
-          const doublevector* dptr = &predators[g]->OverConsumption(area);
+          const DoubleVector* dptr = &predators[g]->OverConsumption(area);
           for (l = 0; l < predConv.Ncol(g); l++) {
             predlength = predConv[g][l];
             if (predlength >= 0)
@@ -48,6 +48,6 @@ void PredatorOverAggregator::Sum() {
       }
 }
 
-const doublematrix& PredatorOverAggregator::ReturnSum() const {
+const DoubleMatrix& PredatorOverAggregator::ReturnSum() const {
   return total;
 }

@@ -8,23 +8,23 @@ class LogLinearRegression;
 class LogLinearRegression {
 public:
   LogLinearRegression();
-  void Fit(const doublevector& x, const doublevector& y);
-  void Fit(const doublevector& x, const doublevector& y, double slope);
-  void Fit(double intercept, const doublevector& x, const doublevector& y);
-  void Fit(const doublevector& x, const doublevector& y, double slope, double intercept);
+  void Fit(const DoubleVector& x, const DoubleVector& y);
+  void Fit(const DoubleVector& x, const DoubleVector& y, double slope);
+  void Fit(double intercept, const DoubleVector& x, const DoubleVector& y);
+  void Fit(const DoubleVector& x, const DoubleVector& y, double slope, double intercept);
   int Error();
   double SSE() const;
-  double SSE(const doublevector& x, const doublevector& y);
-  double WeightedSSE(const doublevector& x,
-    const doublevector& y, const doublevector& weights);
+  double SSE(const DoubleVector& x, const DoubleVector& y);
+  double WeightedSSE(const DoubleVector& x,
+    const DoubleVector& y, const DoubleVector& weights);
   double Funcval(double x);
   double LogFuncval(double x);
   double intersection() const;
   double slope() const;
   static double ErrorSSE;
 protected:
-  void CleanAndTakeLog(const doublevector& x, const doublevector& y,
-    doublevector& Xlog, doublevector& Ylog);
+  void CleanAndTakeLog(const DoubleVector& x, const DoubleVector& y,
+    DoubleVector& Xlog, DoubleVector& Ylog);
   LinearRegression LR;
   int error;
 };

@@ -34,8 +34,8 @@ public:
 private:
   double init;
   Parameter inattr;
-  doublevector multipliers;
-  Parametervector attributes;
+  DoubleVector multipliers;
+  ParameterVector attributes;
 };
 
 #endif

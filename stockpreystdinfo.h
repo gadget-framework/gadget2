@@ -11,11 +11,11 @@ class LengthGroupDivision;
 
 class StockPreyStdInfo : public AbstrPreyStdInfo {
 public:
-  StockPreyStdInfo(const StockPrey* p, const intvector& Areas);
+  StockPreyStdInfo(const StockPrey* p, const IntVector& Areas);
   virtual ~StockPreyStdInfo();
-  virtual const doublevector& NconsumptionByLength(int area) const;
-  virtual const doublevector& BconsumptionByLength(int area) const;
-  virtual const doublevector& MortalityByLength(int area) const;
+  virtual const DoubleVector& NconsumptionByLength(int area) const;
+  virtual const DoubleVector& BconsumptionByLength(int area) const;
+  virtual const DoubleVector& MortalityByLength(int area) const;
   virtual void Sum(const TimeClass* const TimeInfo, int area);
   const LengthGroupDivision* ReturnPreyLengthGroupDiv() const;
 private:
