@@ -30,14 +30,6 @@ AgeBandMatrixRatioPtrVector::~AgeBandMatrixRatioPtrVector() {
   }
 }
 
-void AgeBandMatrixRatioPtrVector::ChangeElement(int nr, const AgeBandMatrixRatio& value) {
-  // value must have same number of tagging experiments as myself
-  assert(0 <= nr && nr < size);
-  assert(this->numTagExperiments() == value.numTagExperiments());
-  delete v[nr];
-  v[nr] = new AgeBandMatrixRatio(value);
-}
-
 void AgeBandMatrixRatioPtrVector::resize(int addsize, AgeBandMatrixRatio* matr) {
   assert(addsize > 0);
   int i;

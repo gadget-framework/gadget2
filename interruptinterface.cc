@@ -3,7 +3,6 @@
 #include "gadget.h"
 
 InterruptInterface::InterruptInterface(const Ecosystem& ecosystem) {
-  assert(&ecosystem != NULL);
   eco = &ecosystem;
 }
 

@@ -20,7 +20,6 @@ public:
   AgeBandMatrixRatioPtrVector(int size);
   AgeBandMatrixRatioPtrVector(int size1, int MinAge, const IntVector& minl, const IntVector& size2);
   ~AgeBandMatrixRatioPtrVector();
-  void ChangeElement(int nr, const AgeBandMatrixRatio& value);
   void resize(int add, AgeBandMatrixRatio* matr);
   void resize(int add, int minage, const IntVector& minl, const IntVector& size);
   void addTag(AgeBandMatrixPtrVector* initial, const AgeBandMatrixPtrVector& Alkeys, const char* id, double tagloss);

@@ -1,9 +1,12 @@
 #include "prey.h"
 #include "predator.h"
+#include "errorhandler.h"
 #include "suits.h"
 #include "keeper.h"
 #include "mathfunc.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 Suits::Suits() {
 }
@@ -137,19 +140,20 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
     }
   }
 
-  int shift = SuitFunction.Size();
   if (TimeInfo->CurrentTime() == 1) {
     for (p = 0; p < MatrixPreynames.Size(); p++) {
       temp = new DoubleMatrix(*MatrixSuit[p]);
+      if (temp->Nrow() != pred->numLengthGroups());
+        handle.logFailure("Error in initial conditions - unrecognised data format");
+
       mult = Multiplication[p];
-      assert(temp->Nrow() == pred->numLengthGroups());
-      for (i = 0; i < pred->numLengthGroups(); i++) {
-        assert(temp->Ncol(i) ==  pred->Preys(p + shift)->numLengthGroups());
-        for (j = 0; j < pred->Preys(p + shift)->numLengthGroups(); j++)
+      for (i = 0; i < temp->Nrow(); i++) {
+        for (j = 0; j < temp->Ncol(i); j++) {
           if ((*temp)[i][j] < 0)
             (*temp)[i][j] = 0.0;
           else
             (*temp)[i][j] *= mult;
+        }
       }
       suit = new BandMatrix(*temp);
       preCalcSuitability.resize(1, *suit);
@@ -161,19 +165,18 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
   #ifdef SUIT_SCALE
   //Scaling of suitabilities, so that in each lengthgroup of each predator, the
   //maximum suitability is exactly 1, if any suitability is different from 0.
-  double maxsuitability;
   for (i = 0; i < pred->numLengthGroups(); i++) {
-    maxsuitability = 0.0;
+    mult = 0.0;
     for (p = 0; p < FuncPreynames.Size() + MatrixPreynames.Size(); p++)
       if (i >= preCalcSuitability[p].minRow() && i <= preCalcSuitability[p].maxRow())
         for (j = preCalcSuitability[p].minCol(i); j < preCalcSuitability[p].maxCol(i); j++)
-          maxsuitability = max(preCalcSuitability[p][i][j], maxsuitability);
+          mult = max(preCalcSuitability[p][i][j], mult);
 
-    if (!(isZero(maxsuitability)))
+    if (!(isZero(mult)))
       for (p = 0; p < FuncPreynames.Size() + MatrixPreynames.Size(); p++)
         if (i >= preCalcSuitability[p].minRow() && i <= preCalcSuitability[p].maxRow())
           for (j = preCalcSuitability[p].minCol(i); j < preCalcSuitability[p].maxCol(i); j++)
-            preCalcSuitability[p][i][j] /= maxsuitability;
+            preCalcSuitability[p][i][j] /= mult;
   }
   #endif
 }

@@ -4,9 +4,17 @@
 #include "gadget.h"
 
 void TimeVariableVector::resize(int addsize) {
-  assert(v == 0);
-  size = addsize;
-  v = new TimeVariable[size];
+  int i;
+  if (v == 0) {
+    size = addsize;
+    v = new TimeVariable[size];
+  } else if (addsize > 0) { 
+    //this loses the old values and should never happen ...
+    TimeVariable* vnew = new TimeVariable[addsize + size];
+    delete[] v;
+    v = vnew;
+    size += addsize;
+  }
 }
 
 TimeVariableVector::TimeVariableVector(int sz) {
@@ -40,20 +48,19 @@ TimeVariableVector::~TimeVariableVector() {
 }
 
 void TimeVariableVector::resize(const TimeVariable& tvar, Keeper* const keeper) {
-  int addsize = 1;
   int i;
   if (v == 0) {
-    size = addsize;
+    size = 1;
     v = new TimeVariable[size];
     tvar.Interchange(v[0], keeper);
   } else {
-    TimeVariable* vnew = new TimeVariable[addsize + size];
+    TimeVariable* vnew = new TimeVariable[size + 1];
     for (i = 0; i < size; i++)
       v[i].Interchange(vnew[i], keeper);
     delete[] v;
     v = vnew;
     tvar.Interchange(v[size], keeper);
-    size += addsize;
+    size++;
   }
 }
 
