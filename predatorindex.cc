@@ -106,8 +106,20 @@ PredatorIndices::PredatorIndices(CommentStream& infile, const AreaClass* const A
       if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
         handle.UndefinedArea(areas[i][j]);
 
-  int biomass;
-  readWordAndVariable(infile, "biomass", biomass);
+  infile >> ws;
+  char c = infile.peek();
+  int biomass = 0;  //default value for biomass
+  if ((c == 'b') || (c == 'B')) {
+    infile >> text >> ws;
+    if (strcasecmp(text, "biomass") == 0)
+      infile >> biomass >> ws;
+    else
+      handle.Unexpected("biomass", text);
+  }
+
+  if (biomass != 0 && biomass != 1)
+    handle.Message("Error in predator indices - biomass must be 0 or 1");
+
   infile >> text >> ws;
   if (!(strcasecmp(text, "fittype") == 0))
     handle.Unexpected("fittype", text);

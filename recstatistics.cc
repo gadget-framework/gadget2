@@ -333,7 +333,7 @@ void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
 double RecStatistics::calcLikSumSquares() {
   double lik = 0.0;
   int t, nareas;
-  double simmean, simvar, simnumber, simdiff;
+  double simvar, simdiff;
 
   for (t = 0; t < tagvec.Size(); t++) {
     if (timeindex[t] > -1) {
@@ -341,9 +341,7 @@ double RecStatistics::calcLikSumSquares() {
       for (nareas = 0; nareas < alptr->Size(); nareas++) {
         PopStatistics PopStat((*alptr)[nareas][0], aggregator[t]->returnLengthGroupDiv(), 1);
 
-        simmean = PopStat.meanLength();
-        simdiff = simmean - (*mean[t])[timeindex[t]][nareas];
-        simnumber = PopStat.totalNumber();
+        simdiff = PopStat.meanLength() - (*mean[t])[timeindex[t]][nareas];
         simvar = 0.0;
 
         switch(functionnumber) {
@@ -361,9 +359,11 @@ double RecStatistics::calcLikSumSquares() {
             break;
         }
 
-        lik += simdiff * simdiff * (simvar > 0 ? 1 / simvar : 0.0) * (*numbers[t])[timeindex[t]][nareas]
-          * (1 - exp(-20 * simnumber)) + ((*mean[t])[timeindex[t]][nareas]
-          * (*mean[t])[timeindex[t]][nareas] * exp(-20 * simnumber));
+      if (isZero(simvar))
+        lik += 0.0;
+      else
+        lik += simdiff * simdiff * (*numbers[t])[timeindex[t]][nareas] / simvar;
+
       }
     }
   }

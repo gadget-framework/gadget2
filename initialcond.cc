@@ -199,7 +199,12 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   double minlength, maxlength, dl;
 
   keeper->addString("initialcond");
-  infile >> text >> ws;  //read in 'numbers'
+
+  infile >> ws;
+  char c = infile.peek();
+  if ((c == 'n') || (c == 'N'))
+    infile >> text >> ws; //read in 'numbers'
+
   readWordAndVariable(infile, "minage", minage);
   readWordAndVariable(infile, "maxage", maxage);
   readWordAndVariable(infile, "minlength", minlength);
