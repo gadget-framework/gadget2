@@ -5,62 +5,51 @@
 extern Ecosystem* EcoSystem;
 extern ErrorHandler handle;
 
-double func(double* x, int n) {
+double b(double* x, int n) {
   return EcoSystem->SimulateAndUpdate(x, n);
 }
 
+extern int bfgs(double (*b)(double*, int), double startpoint[], double endpoint[], double init[],
+  int n, int maxiter, double epsilon, double beta, double sigma, double step, double gradacc,
+  double gradstep, double errortol, int diffgrad);
 
 OptInfoBFGS::OptInfoBFGS()
-  : OptSearch(), bfgsiter(10000), bfgseps(0.01), beta(0.3), sigma(0.01),
-    step(1.0),gradacc(0.01), gradstep(0.1), difficultgrad(0),
-    usescaling(0), xtol(0.000001), maxrounds(10000), maxfunceval(10000) {
-
+  : OptSearch(), bfgsiter(10000), bfgseps(0.01), beta(0.3), sigma(0.01), step(1.0),
+    gradacc(0.01), gradstep(0.1), errortol(0.000001), diffgrad(-1), scale(0) {
   handle.logMessage("Initialising BFGS optimisation algorithm");
-  numvar = EcoSystem->numOptVariables();
-  int i;
-  x = new double[numvar];
-  s = new double[numvar];
-  gk = new double[numvar];
-  diaghess = new double[numvar];
-  Bk = new double*[numvar];
-  f = &func;
-  for (i = 0; i < numvar; i++)
-    Bk[i] = new double[numvar];
-}
-
-OptInfoBFGS::~OptInfoBFGS() {
-  int i;
-  delete[] x;
-  delete[] s;
-  delete[] gk;
-  for (i = 0; i < numvar; i++)
-    delete[] Bk[i];
 }
 
 void OptInfoBFGS::OptimiseLikelihood() {
-  int i, opt;
+  int i, opt, nvars;
 
   handle.logInformation("\nStarting BFGS optimisation algorithm");
 
-  DoubleVector val(numvar);
-  DoubleVector initialval(numvar);
-  double* startpoint = new double[numvar];
-  double* init = new double[numvar];
-  if (usescaling == 1)
+  nvars = EcoSystem->numOptVariables();
+  DoubleVector val(nvars);
+  DoubleVector initialval(nvars);
+  double* startpoint = new double[nvars];
+  double* endpoint = new double[nvars];
+  double* init = new double[nvars];
+
+  if (scale == 1)
     EcoSystem->ScaleVariables();
   EcoSystem->ScaledOptValues(val);
   EcoSystem->InitialOptValues(initialval);
 
-  for (i = 0; i < numvar; i++) {
+  for (i = 0; i < nvars; i++) {
     startpoint[i] = val[i];
     init[i] = initialval[i];
   }
 
-  opt = iteration(startpoint,init);
+  opt = bfgs(&b, startpoint, endpoint, init, nvars, bfgsiter, bfgseps,
+    beta, sigma, step, gradacc, gradstep, errortol, diffgrad);
+
   cout << "\nBFGS finished with a final likelihood score of " << EcoSystem->getLikelihood()
     << "\nafter a total of " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
   EcoSystem->writeOptValues();
 
+  delete[] init;
+  delete[] endpoint;
   delete[] startpoint;
 }
 
@@ -73,7 +62,7 @@ void OptInfoBFGS::read(CommentStream& infile, char* text) {
     } else if (strcasecmp(text, "sigma") == 0) {
       infile >> sigma;
 
-    } else if ((strcasecmp(text, "step") == 0) || (strcasecmp(text, "st") == 0)) {
+    } else if (strcasecmp(text, "step") == 0) {
       infile >> step;
 
     } else if (strcasecmp(text, "gradacc") == 0) {
@@ -82,26 +71,20 @@ void OptInfoBFGS::read(CommentStream& infile, char* text) {
     } else if (strcasecmp(text, "gradstep") == 0) {
       infile >> gradstep;
 
-    } else if ((strcasecmp(text, "maxrounds") == 0) || (strcasecmp(text, "bfgsrounds") == 0)) {
-      infile >> maxrounds;
-
-    } else if ((strcasecmp(text, "maxfunceval") == 0) || (strcasecmp(text, "funceval") == 0)) {
-      infile >> maxfunceval;
-
-    } else if (((strcasecmp(text, "maxiterations") == 0) || (strcasecmp(text, "maxiter") == 0) || (strcasecmp(text, "bfgsiter") == 0))) {
+    } else if ((strcasecmp(text, "bfgsiter") == 0) || (strcasecmp(text, "maxiter") == 0)) {
       infile >> bfgsiter;
 
-    } else if ((strcasecmp(text, "eps") == 0) || (strcasecmp(text, "bfgseps") == 0) || (strcasecmp(text, "errortol") == 0)) {
+    } else if (strcasecmp(text, "bfgseps") == 0) {
       infile >> bfgseps;
 
     } else if (strcasecmp(text, "scale") == 0) {
-      infile >> usescaling;
+      infile >> scale;
 
-    } else if (strcasecmp(text, "xtol") == 0) {
-      infile >> xtol;
+    } else if (strcasecmp(text, "errortol") == 0) {
+      infile >> errortol;
 
     } else if (strcasecmp(text, "difficultgrad") == 0) {
-      infile >> difficultgrad;
+      infile >> diffgrad;
 
     } else if (strcasecmp(text, "printing") == 0) {
       handle.logWarning("Warning in optinfofile - bfgsprinting is not implemented in gadget");
@@ -147,9 +130,8 @@ void OptInfoBFGS::read(CommentStream& infile, char* text) {
     handle.logWarning("Warning in optinfofile - value of gradstep outside bounds", gradstep);
     gradstep = 0.1;
   }
-  if (difficultgrad < 0) {
-    handle.logWarning("Warning in optinfofile - value of difficultgrad outside bounds", difficultgrad);
-    difficultgrad = 0;
+  if (isZero(errortol) || (errortol < 0)) {
+    handle.logWarning("Warning in optinfofile - value of errortol outside bounds", errortol);
+    errortol = 0.000001;
   }
-
 }

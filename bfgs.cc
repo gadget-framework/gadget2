@@ -10,126 +10,295 @@ extern Ecosystem* EcoSystem;
 /* global variable, defined and initialised in gadget.cc and not modified here */
 extern int FuncEval;
 
-int OptInfoBFGS::iteration(double* x0, double* init) {
+/* calculate the smallest eigenvalue of a matrix */
+double getSmallestEigenValue(double matrix[NUMVARS][NUMVARS], int nvars) {
+
+  double eigen, temp, phi, norm;
+  double L[NUMVARS][NUMVARS], xo[NUMVARS];
+  int    i, j, k;
+
+  // calculate the Cholesky factor of the matrix
+  for (i = 0; i < nvars; i++)
+    xo[i] = 1;
+  for (k = 0; k < nvars; k++) {
+    L[k][k] = matrix[k][k];
+    for (j = 0; j < k - 1; j++)
+      L[k][k] -= L[k][j] * L[k][j];
+    for (i = k + 1; i < nvars; i++) {
+      L[i][k] = matrix[i][k];
+      for (j = 0; j < k - 1; j++)
+        L[i][k] -= L[i][j] * L[k][j];
+      L[i][k] /= L[k][k];
+    }
+  }
+
+  temp = nvars;
+  eigen = 0.0;
+  for (k = 0; k < nvars; k++) {
+    for (i = 0; i < nvars; i++) {
+      for (j = 0; j < i - 1; j++)
+        xo[i] -= L[i][j] * xo[j];
+      xo[i] /= L[i][i];
+    }
+    for (i = nvars - 1; i >= 0; i--) {
+      for (j = nvars - 1; j > i + 1; j--)
+        xo[i] -= L[j][i] * xo[j];
+      xo[i] /= L[i][i];
+    }
+
+    phi = 0.0;
+    norm = 0.0;
+    for(i = 0; i < nvars; i++) {
+      phi += xo[i];
+      norm += xo[i] * xo[i];
+    }
+    for(i = 0; i < nvars; i++)
+      xo[i] /= norm;
+    eigen = phi / temp;
+    temp = phi;
+  }
+  return 1.0 / eigen;
+}
+
+/* calculate the gradient of a function at a point */
+void gradient(double (*f)(double*, int), double point[], double pointvalue, double diaghess[], double grad[], int nvars, int diffgrad, double gradacc, double gradstep) {
+
+  double tmpacc, f1, f2, mf1, mf2;
+  double tmp[NUMVARS], mtmp[NUMVARS], tmp1[NUMVARS], mtmp1[NUMVARS];
+  int    i, j;
+
+  if (diffgrad < 1) {
+    tmpacc = 1.0 / gradacc;
+    for (i = 0; i < nvars; i++) {
+      for (j = 0; j < nvars; j++)
+        tmp[j] = point[j];
+      tmp[i] += gradacc;
+      f1 = (*f)(tmp, nvars);
+      grad[i] = (f1 - pointvalue) * tmpacc;
+      diaghess[i] = 1.0;
+    }
+
+  } else if (diffgrad == 1) {
+    tmpacc = 1.0 / (2.0 * gradacc);
+    for (i = 0; i < nvars; i++) {
+      for (j = 0; j < nvars; j++) {
+        tmp[j] = point[j];
+        mtmp[j] = point[j];
+      }
+      tmp[i] += gradacc;
+      mtmp[i] -= gradacc;
+      f1 = (*f)(tmp, nvars);
+      mf1 = (*f)(mtmp, nvars);
+      grad[i] = (f1 - mf1) * tmpacc;
+      if (abs((mf1 - f1) / pointvalue) < rathersmall) {
+        gradacc = min(0.01, gradacc / gradstep);
+        cout << "\nWarning in BFGS - possible roundoff errors in gradient\n";
+      }
+      if ((mf1 > pointvalue) && (f1 > pointvalue))
+        diffgrad++;
+      diaghess[i] = (f1 - 2.0 * pointvalue + mf1) / (gradacc * gradacc);
+    }
+
+  } else {
+    tmpacc = 1.0 / (12.0 * gradacc);
+    for (i = 0; i < nvars; i++) {
+      for (j = 0; j < nvars; j++) {
+        tmp[j] = point[j];
+        mtmp[j] = point[j];
+        tmp1[j] = point[j];
+        mtmp1[j] = point[j];
+      }
+      tmp[i] += gradacc;
+      tmp1[i] += 2.0 * gradacc;
+      mtmp[i] -= gradacc;
+      mtmp1[i] -= 2.0 * gradacc;
+      f1 = (*f)(tmp, nvars);
+      f2 = (*f)(tmp1, nvars);
+      mf1 = (*f)(mtmp, nvars);
+      mf2 = (*f)(mtmp1, nvars);
+      grad[i] = (8.0 * f1 - f2 - 8.0 * mf1 + mf2) * tmpacc;
+      if ((abs(mf2 - f2) / pointvalue) < rathersmall) {
+        gradacc = min(0.01, gradacc / gradstep);
+        cout << "\nWarning in BFGS - possible roundoff errors in gradient\n";
+      }
+      diaghess[i] = (-f2 + 16.0 * f1 - 30.0 * pointvalue + 16.0 * mf1 - mf2 ) * 12.0 * tmpacc * tmpacc;
+    }
+  }
+}
+
+int bfgs(double (*f)(double*, int), double startpt[], double endpt[], double init[], int nvars,
+  int maxevl, double epsilon, double beta, double sigma, double step, double gradacc,
+  double gradstep, double errortol, int diffgrad) {
+
   double h[NUMVARS];
   double y[NUMVARS];
   double By[NUMVARS];
-  double g0[NUMVARS];  //old gradient
+  double newx[NUMVARS];                //current estimation for best point
+  double grad[NUMVARS];                //gradient vector
+  double oldgrad[NUMVARS];             //old gradient vector
+  double diaghess[NUMVARS];            //diagonal of the inverse hessian matrix
+  double search[NUMVARS];              //direction for the armijo search
+  double invhess[NUMVARS][NUMVARS];    //inverse hessian matrix
   double tmp[NUMVARS];
-  double hy, yBy, alpha, normgrad, normdeltax, temphy, tempyby;
-  int i, j, k, check, offset, armijoproblem = 0, rounds = 0;
+  double hy, yBy, temphy, tempyby;
+  double normgrad, normdeltax;
+  double alpha, searchgrad, newf, tmpf, betan;
+  int    i, j, check, offset, armijoproblem, armijoquit;
 
-  fk = (*f)(x0, numvar);
-  offset = FuncEval;
-  gradient(x0, fk);
-  for (i = 0; i < numvar; i++) {
-    g0[i] = gk[i];
-    x[i] = x0[i];
+  for (i = 0; i < nvars; i++) {
+    grad[i] = 0.0;
+    diaghess[i] = 0.0;
+    newx[i] = startpt[i];
+    tmp[i] = startpt[i];
   }
 
-  check = 0;
-  k = 0;
+  newf = (*f)(startpt, nvars);
+  gradient(f, startpt, newf, diaghess, grad, nvars, diffgrad, gradacc, gradstep);
+  offset = FuncEval;
+
+  for (i = 0; i < nvars; i++) {
+    oldgrad[i] = grad[i];
+    for (j = 0; j < nvars; j++)
+      invhess[i][j] = 0.0;
+    invhess[i][i] = diaghess[i];
+  }
+
+  check = 1;
+  armijoproblem = 0;
   alpha = 1.0;
 
-  if (fk != fk) { //check for NaN
+  if (newf != newf) { //check for NaN
     cout << "\nError starting BFGS optimisation with"
       << " f(x) = infinity\nReturning to calling routine ...\n";
     return 0;
   }
 
   while (1) {
-    if (isZero(fk)) {
+    if (isZero(newf)) {
       cout << "\nError in BFGS optimisation after " << (FuncEval - offset)
        << " function evaluations f(x) = 0\nReturning to calling routine ...\n";
       return 0;
     }
 
     //If too many function evaluations occur, terminate the algorithm
-    if (((FuncEval - offset) > maxfunceval) || rounds > maxrounds) {
+    if ((FuncEval - offset) > maxevl) {
       cout << "\nStopping BFGS optimisation algorithm\n\n"
         << "The optimisation stopped after " << (FuncEval - offset)
-        << " function evaluations (max " << maxfunceval
-        << ")\nThe optimisation stopped because the maximum number of ";
-      if (rounds > maxrounds)
-        cout << "algorithm resets";
-      else
-        cout << "function evaluations";
-      cout << "\nwas reached and NOT because an optimum was found for this run\n";
+        << " function evaluations (max " << maxevl
+        << ")\nThe optimisation stopped because the maximum number of function evalutions"
+        << "\nwas reached and NOT because an optimum was found for this run\n";
 
-      fk = (*f)(x, numvar);
+      newf = (*f)(newx, nvars);
       EcoSystem->setFuncEvalBFGS(FuncEval - offset);
-      EcoSystem->setLikelihoodBFGS(fk);
-      for(i = 0; i < numvar; i++)
-        x[i] *= init[i];
-      EcoSystem->StoreVariables(fk, x);
+      EcoSystem->setLikelihoodBFGS(newf);
+      for(i = 0; i < nvars; i++)
+        newx[i] *= init[i];
+      EcoSystem->StoreVariables(newf, newx);
 
-      //cout << "The smallest eigenvalue of the inverse Hessian matrix is " << SmallestEigenValue() << endl;
+      cout << "The smallest eigenvalue of the inverse Hessian matrix is " << getSmallestEigenValue(invhess, nvars) << endl;
       return 0;
     }
 
-    if (check == 0 || alpha < 0.0 || k > bfgsiter) {
-      cout << "\nWarning in BFGS - resetting search algorithm after "
-        << (FuncEval - offset) << " function evaluations" << endl;
+    if (check == 0 || alpha < 0.0) {
+      //JMB - dont print warning on the first loop ...
+      if ((FuncEval - offset) > 0) 
+        cout << "\nWarning in BFGS - resetting search algorithm after "
+          << (FuncEval - offset) << " function evaluations" << endl;
 
-      armijoproblem = 0;
-      if (k > bfgsiter)
-        k = 0;
-
-      for (i = 0; i < numvar; i++) {
-        for (j = 0; j < numvar; j++)
-          Bk[i][j] = 0.0;
-        Bk[i][i] = diaghess[i];
+      for (i = 0; i < nvars; i++) {
+        for (j = 0; j < nvars; j++)
+          invhess[i][j] = 0.0;
+        invhess[i][i] = diaghess[i];
       }
-      check = 1;
-      k++;
-      rounds++;
+
+      check++;
+      armijoproblem = 0;
       //JMB - make the step size when calculating the gradient smaller
       gradacc *= gradstep;
-      if (gradacc < 0.000001) {
+      if (gradacc < errortol) {
         gradacc /= gradstep;
-        difficultgrad++;
+        diffgrad++;
       }
     }
 
-    for (i = 0; i < numvar; i++) {
-      s[i] = 0.0;
-      for (j = 0; j < numvar; j++)
-        s[i] -= Bk[i][j] * gk[j];
+    for (i = 0; i < nvars; i++) {
+      search[i] = 0.0;
+      for (j = 0; j < nvars; j++)
+        search[i] -= invhess[i][j] * grad[j];
     }
 
-    alpha = Armijo();
+    // do armijo calculation
+    tmpf = newf;
+    for (i = 0; i < nvars; i++)
+      tmp[i] = newx[i];
+
+    searchgrad = 0.0;
+    alpha = -1.0;
+    for (i = 0; i < nvars; i++)
+      searchgrad += grad[i] * search[i];
+    searchgrad *= sigma;
+
+    if (searchgrad < 0.0) {
+      betan = step;
+      armijoquit = 0;
+      while (!armijoquit && (betan > verysmall)) {
+        for (i = 0; i < nvars; i++)
+          tmp[i] = newx[i] + betan * search[i];
+
+        tmpf = (*f)(tmp, nvars);
+        if (((newf - tmpf) >= (-betan * searchgrad)) && (newf > tmpf))
+          armijoquit = 1;
+        else
+          betan *= beta;
+      }
+
+      if ((armijoquit) && (tmpf == tmpf)) {
+        newf = tmpf;
+        alpha = betan;
+      } else
+        alpha = 0.0;
+    }
+
+    if (alpha < 0.0)
+      continue;
+
+    gradient(f, tmp, tmpf, diaghess, grad, nvars, diffgrad, gradacc, gradstep);
     if (isZero(alpha)) {
-      difficultgrad++;
+      diffgrad++;
+      gradient(f, newx, newf, diaghess, grad, nvars, diffgrad, gradacc, gradstep);
       armijoproblem++;
-      gradient(x, fk);
       if (armijoproblem == 6)
         check = 0;
       continue;
     }
-    if (alpha < 0.0)
-      continue;
 
     normgrad = 0.0;
     normdeltax = 0.0;
     hy = 0.0;
     yBy = 0.0;
 
-    for (i = 0; i < numvar; i++) {
-      h[i] = alpha * s[i];
-      x[i] += h[i];
-      y[i] = gk[i] - g0[i];
-      g0[i] = gk[i];
+    for (i = 0; i < nvars; i++) {
+      h[i] = alpha * search[i];
+      newx[i] += h[i];
+      y[i] = grad[i] - oldgrad[i];
+      oldgrad[i] = grad[i];
       hy += h[i] * y[i];
-      normgrad += gk[i] * gk[i];
+      normgrad += grad[i] * grad[i];
       normdeltax += h[i] * h[i];
     }
     normgrad = sqrt(normgrad);
     normdeltax = sqrt(normdeltax);
 
-    for (i = 0; i < numvar; i++) {
+    if (normdeltax < errortol) {
+      cout << "\nWarning in BFGS - search failed because normed deltax value too small\n";
+      check = 0;
+      continue;
+    }
+
+    for (i = 0; i < nvars; i++) {
       By[i] = 0.0;
-      for (j = 0; j < numvar; j++)
-        By[i] += Bk[i][j] * y[j];
+      for (j = 0; j < nvars; j++)
+        By[i] += invhess[i][j] * y[j];
       yBy += y[i] * By[i];
     }
 
@@ -138,193 +307,36 @@ int OptInfoBFGS::iteration(double* x0, double* init) {
     } else {
       temphy = 1.0 / hy;
       tempyby = 1.0 / yBy;
-      for (i = 0; i < numvar; i++)
-        for (j = 0; j < numvar; j++)
-          Bk[i][j] += (h[i] * h[j] * temphy) - (By[i] * By[j] * tempyby)
+      for (i = 0; i < nvars; i++)
+        for (j = 0; j < nvars; j++)
+          invhess[i][j] += (h[i] * h[j] * temphy) - (By[i] * By[j] * tempyby)
             + yBy * (h[i] * temphy - By[i] * tempyby) * (h[j] * temphy - By[j] * tempyby);
     }
 
+    newf = (*f)(newx, nvars);  //The value of newf shouldn't change, but just to make sure ...
     cout << "\nNew optimum after " << (FuncEval - offset) << " function evaluations, f(x) = "
-      << fk << "\nwith normed gradient value " << normgrad <<  " at\n";
-    for (i = 0; i < numvar; i++) {
-      tmp[i] = x[i] * init[i];
-      cout << tmp[i] << sep;
+      << newf << "\nwith normed gradient value " << normgrad <<  " at\n";
+    for (i = 0; i < nvars; i++) {
+      endpt[i] = newx[i] * init[i];
+      cout << endpt[i] << sep;
     }
     cout << endl;
 
     //store this point in case the algorithm is interrupted
-    EcoSystem->StoreVariables(fk, tmp);
+    EcoSystem->StoreVariables(newf, endpt);
 
     //If the algorithm has met the convergence criteria, terminate the algorithm
-    if (normgrad / (1 + abs(fk)) < bfgseps) {
+    if (normgrad / (1 + abs(newf)) < epsilon) {
     cout << "\nStopping BFGS optimisation algorithm\n\n"
       << "The optimisation stopped after " << (FuncEval - offset)
-      << " function evaluations (max " << maxfunceval
+      << " function evaluations (max " << maxevl
       << ")\nThe optimisation stopped because an optimum was found for this run\n";
 
-      fk = (*f)(x, numvar);
       EcoSystem->setConvergeBFGS(1);
       EcoSystem->setFuncEvalBFGS(FuncEval - offset);
-      EcoSystem->setLikelihoodBFGS(fk);
-      for(i = 0; i < numvar; i++)
-        x[i] *= init[i];
-      EcoSystem->StoreVariables(fk, x);
-      //cout << "The smallest eigenvalue of the inverse Hessian matrix is " << SmallestEigenValue() << endl;
+      EcoSystem->setLikelihoodBFGS(newf);
+      cout << "The smallest eigenvalue of the inverse Hessian matrix is " << getSmallestEigenValue(invhess, nvars) << endl;
       return 1;
     }
-    if (normdeltax < xtol) {
-      cout << "\nWarning in BFGS - search failed because normdeltax < xtol" << endl;
-      check = 0;
-      continue;
-    }
   }
-}
-
-void OptInfoBFGS::gradient(double* p, double fp) {
-  int i, j;
-  double tmpacc, f1, f2, mf1, mf2;
-  double tmp[NUMVARS];
-  double mtmp[NUMVARS];
-  double tmp1[NUMVARS];
-  double mtmp1[NUMVARS];
-
-  if (difficultgrad == 0) {
-    tmpacc = 1.0 / gradacc;
-    for (i = 0; i < numvar; i++) {
-      for (j = 0; j < numvar; j++)
-        tmp[j] = p[j];
-      tmp[i] += gradacc;
-      f1 = (*f)(tmp, numvar);
-      gk[i] = (f1 - fp) * tmpacc;
-      diaghess[i] = 1.0;
-    }
-
-  } else if (difficultgrad == 1) {
-    tmpacc = 1.0 / (2.0 * gradacc);
-    for (i = 0; i < numvar; i++) {
-      for (j = 0; j < numvar; j++) {
-        tmp[j] = p[j];
-        mtmp[j] = p[j];
-      }
-      tmp[i] += gradacc;
-      mtmp[i] -= gradacc;
-      f1 = (*f)(tmp, numvar);
-      mf1 = (*f)(mtmp, numvar);
-      gk[i] = (f1 - mf1) * tmpacc;
-      if (abs((mf1 - f1) / fp) < rathersmall) {
-        gradacc = min(0.01, gradacc / gradstep);
-        cout << "\nWarning in BFGS - possible roundoff errors in gradient\n";
-      }
-      if ((mf1 > fp) && (f1 > fp))
-        difficultgrad++;
-      diaghess[i] = (f1 - 2.0 * fk + mf1) / (gradacc * gradacc);
-    }
-
-  } else {
-    tmpacc = 1.0 / (12.0 * gradacc);
-    for (i = 0; i < numvar; i++) {
-      for (j = 0; j < numvar; j++) {
-        tmp[j] = p[j];
-        mtmp[j] = p[j];
-        tmp1[j] = p[j];
-        mtmp1[j] = p[j];
-      }
-      tmp[i] += gradacc;
-      tmp1[i] += 2.0 * gradacc;
-      mtmp[i] -= gradacc;
-      mtmp1[i] -= 2.0 * gradacc;
-      f1 = (*f)(tmp, numvar);
-      f2 = (*f)(tmp1, numvar);
-      mf1 = (*f)(mtmp, numvar);
-      mf2 = (*f)(mtmp1, numvar);
-      gk[i] = (8.0 * f1 - f2 - 8.0 * mf1 + mf2) * tmpacc;
-      if ((abs(mf2 - f2) / fp) < rathersmall) {
-        gradacc = min(0.01, gradacc / gradstep);
-        cout << "\nWarning in BFGS - possible roundoff errors in gradient\n";
-      }
-      diaghess[i] = (-f2 + 16.0 * f1 - 30.0 * fp + 16.0 * mf1 - mf2 ) * 12.0 * tmpacc * tmpacc;
-    }
-  }
-}
-
-double OptInfoBFGS::Armijo() {
-  int i, cond;
-  double bn, fn, sg;
-  double tmp[NUMVARS];
-
-  cond = 0;
-  bn = step;
-  fn = fk;
-  sg = 0.0;
-  for (i = 0; i < numvar; i++)
-    sg += gk[i] * s[i];
-  if (sg >= 0.0)
-    return -1.0;
-
-  sg *= sigma;
-  while (!cond && (bn > verysmall)) {
-    for (i = 0; i < numvar; i++)
-      tmp[i] = x[i] + bn * s[i];
-
-    fn = (*f)(tmp, numvar);
-    if (((fk - fn) >= (-bn * sg)) && (fk > fn))
-      cond = 1;
-    else
-      bn *= beta;
-  }
-
-  if ((cond) && (fn == fn)) {  //check for NaN
-    fk = fn;
-    gradient(tmp, fk);
-    return bn;
-  } else
-    return 0.0;
-}
-
-double OptInfoBFGS::SmallestEigenValue() {
-  double eigen, temp, phi, norm;
-  double L[NUMVARS][NUMVARS], xo[NUMVARS];
-  int i, j, k;
-
-  //calculate the Cholesky factor of Bk
-  for (i = 0; i < numvar; i++)
-    xo[i] = 1;
-  for (k = 0; k < numvar; k++) {
-    L[k][k] = Bk[k][k];
-    for (j = 0; j < k - 1; j++)
-      L[k][k] -= L[k][j] * L[k][j];
-    for (i = k + 1; i < numvar; i++) {
-      L[i][k] = Bk[i][k];
-      for (j = 0; j < k - 1; j++)
-        L[i][k] -= L[i][j] * L[k][j];
-      L[i][k] /= L[k][k];
-    }
-  }
-
-  temp = numvar;
-  eigen = 0.0;
-  for(k = 0; k < numvar; k++){
-    for (i = 0; i < numvar; i++) {
-      for (j = 0; j < i - 1; j++)
-        xo[i] -= L[i][j] * xo[j];
-      xo[i] /= L[i][i];
-    }
-
-    for (i = numvar - 1; i >= 0; i--) {
-      for (j = numvar - 1; j > i + 1; j--)
-        xo[i] -= L[j][i] * xo[j];
-      xo[i] /= L[i][i];
-    }
-    phi = 0.0;
-    norm = 0.0;
-    for(i = 0; i < numvar; i++) {
-      phi += xo[i];
-      norm += xo[i] * xo[i];
-    }
-    for(i = 0; i < numvar; i++)
-      xo[i] /= norm;
-    eigen = phi / temp;
-    temp = phi;
-  }
-  return 1.0 / eigen;
 }

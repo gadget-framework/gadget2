@@ -88,7 +88,8 @@ private:
  *
  * The Hooke & Jeeves optimisation is the default optimisation, and is a simple and fast optimising method, but somewhat unreliable, which is often described as a "hill climbing" technique.  From the initial starting point the algorithm takes a step in various directions, and conducts a new model run.  If the new likelihood score is better than the old one then the algorithm uses the new point as it's best guess.  If it is worse then the algorithm retains the old point. The search proceeds in series of these steps, each step slightly smaller than the previous one.  When the algorithm finds a point which it cannot improve on with a small step in any direction then it accepts this point as being the "solution", and exits.  It is recommended that you re-run the optimisation, using the final point of one run as the start of the next.
  *
- * The Hooke & Jeeves algorithm used in Gadget is derived from that presented by R. Hooke and T. A. Jeeves, "Direct Search Solution of Numerical and Statistical Problems", Journal of the ACM, Vol. 8, April 1961, pp. 212-229.
+ * The Hooke & Jeeves algorithm used in Gadget is derived from that originally presented by R. Hooke and T. A. Jeeves, ''Direct Search Solution of Numerical and Statistical Problems'' in the April 1961 (Vol. 8, pp. 212-229) issue of the Journal of the ACM, with improvements presented by Arthur F Kaupe Jr., ''Algorithm 178: Direct Search'' in the June 1963 (Vol 6, pp.313-314) issue of the Communications of the ACM.
+
  */
 class OptInfoHooke : public OptSearch {
 public:
@@ -139,7 +140,7 @@ protected:
  *
  * Simulated Annealing is a global optimisation method that distinguishes different local optima.  Starting from an initial point, the algorithm takes a step and the function is evaluated.  When minimizing a function, any downhill step is accepted and the process repeats from this new point.  An uphill step may be accepted (thus, it can escape from local optima).  This uphill decision is made by the Metropolis criteria.  It uses a parameter known as "temperature" and the size of the uphill step in a probabilistic manner, and varying the temperature will affect the number of the uphill moves that are accepted.  As the optimisation process proceeds, the length of the steps decline and the algorithm closes in on the global optimum.
  *
- * The Simulated Annealing algorithm used in Gadget is derived from that presented by Corana et al, "Minimizing Multimodal Functions of Continuous Variables with the 'Simulated Annealing' Algorithm" in the September 1987 (Vol. 13, no. 3, pp. 262-280) issue of the ACM Transactions on Mathematical Software.
+ * The Simulated Annealing algorithm used in Gadget is derived from that presented by Corana et al, ''Minimising Multimodal Functions of Continuous Variables with the 'Simulated Annealing' Algorithm'' in the September 1987 (Vol. 13, pp. 262-280) issue of the ACM Transactions on Mathematical Software and Goffe et al, ''Global Optimisation of Statistical Functions with Simulated Annealing'' in the January/February 1994 (Vol. 60, pp. 65-100) issue of the Journal of Econometrics.
  */
 class OptInfoSimann : public OptSearch {
 public:
@@ -212,7 +213,9 @@ protected:
  * \class OptInfoBFGS
  * \brief This is the class used for the BFGS optimisation
  *
- * (To be continued)
+ * BFGS is a quasi-Newton global optimisation method that uses information about the gradient of the function at the current point to calculate the best direction to look in to find a better point.  Using this information, the BFGS algorithm can iteratively calculate a better approximation to the inverse Hessian matrix, which will lead to a better approximation of the minimum value.  From an initial starting point, the gradient of the function is calculated and then the algorithm uses this information to calculate the best direction to perform a linesearch for a point that is ''sufficiently better''.  The linesearch that is used in Gadget to look for a better point in this direction is the ''Armijo'' linesearch.  The algorithm will then adjust the current estimate of the inverse Hessian matrix, and restart from this new point.  If a better point cannot be found, then the inverse Hessian matrix is reset and the algorithm restarts from the last accepted point.
+ *
+ * The BFGS algorithm used in Gadget is derived from that presented by Dimitri P Bertsekas, ''Nonlinear Programming'' (2nd edition, pp22-61) published by Athena Scientific.
  */
 class OptInfoBFGS : public OptSearch  {
 public:
@@ -223,7 +226,7 @@ public:
   /**
    * \brief This is the default OptInfoBFGS destructor
    */
-  ~OptInfoBFGS();
+  ~OptInfoBFGS() {};
   /**
    * \brief This is the function used to read in the BFGS parameters
    * \param infile is the CommentStream to read the optimisation parameters from
@@ -236,101 +239,44 @@ public:
   virtual void OptimiseLikelihood();
 private:
   /**
-   * \brief The actual BFGS iteration
-   * \param x0 is the (scaled) starting point of the optimisation
-   * \param init is the rescaler
-   */
-  int iteration(double* x0, double* init);
-  /**
-   * \brief This method calculates the gradient
-   * \param p is the point where the gradinent should be calculated
-   * \param fp is the function value at p
-   */
-  void gradient(double* p, double fp);
-  /**
-   * \brief This method performes a linesearch a long the search direction s
-   */
-  double Armijo();
-  double SmallestEigenValue();
-  /**
-   * \brief This is the current gradient
-   */
-  double* gk;
-  /**
-   * \brief This is the current estimation the diagonal of the hessian matrix
-   */
-  double* diaghess;
-  /**
-   * \brief This is the search direction (for linesearch)
-   */
-  double* s;
-  /**
-   * \brief This is the BFGS updated hessian approximation
-   */
-  double** Bk;
-  /**
-   * \brief This is the current approximation
-   */
-  double* x;
-  /**
-   * \brief This is the current function value
-   */
-  double fk;
-  /**
-   * \brief This is the function to optimise
-   */
-  double (*f)(double*, int);
-  /**
-   * \brief This is the number of varibles
-   */
-  int numvar;
-  /**
-   * \brief This is the maximum number of BFGS iterations pr. round
+   * \brief This is the maximum number of function evaluations for the BFGS optimiation
    */
   int bfgsiter;
   /**
-   * \brief This is the convergence parameter (BFGS halts when norm(gk) < eps)
+   * \brief This is the halt criteria for the BFGS algorithm
    */
   double bfgseps;
   /**
-   * \brief  Step reduction factor for the armijo linesearch
+   * \brief This is the adjustment factor in the Armijo linesearch
    */
   double beta;
   /**
-   * \brief Convergence parameter for the armijo linesearch
+   * \brief This is the halt criteria for the Armijo linesearch
    */
   double sigma;
   /**
-   * \brief The length of the first step of the armijo linesearch, 1 means that a full step along the search vector is tried at first
+   * \brief This is the initial step size for the Armijo linesearch 
    */
   double step;
   /**
-   * \brief This is the h in (f(x+h)-f(x))/h for the gradient calculations
+   * \brief This is the accuracy term used when calculating the gradient for BFGS
    */
   double gradacc;
   /**
-   * \brief The reduction parameter for h
+   * \brief This is the factor used to adjust the gradient accuracy term 
    */
   double gradstep;
   /**
-   * \brief Determines how many functionevaluations is needed for the gradient calculations 0 means one pr. coordinate, 1 means two pr. coordinate and 1< means four pr. coordinate
+   * \brief This is the lower limit for error tolerance, used to restart the algorithm when running into possible round-off errors
    */
-  int difficultgrad;
+  double errortol;
   /**
-   * \brief if the variables are to be scaled
+   * \brief This is used to indicate the number of terms required when calculating the gradient of the function
    */
-  int usescaling;
+  int diffgrad;
   /**
-   * \brief if | x_k - x_{k+1} | < xtol then reset
+   * \brief This is a flag to denote whether the parameters should be scaled or not, prior to the BFGS optimisation
    */
-  double xtol;
-  /**
-   * \brief The maximum number of bfgs-resets
-   */
-  int maxrounds;
-  /**
-   * \brief The maximum number of functionevaluation during the bfgs optimisation
-   */
-  int maxfunceval;
+  int scale;
 };
 #endif
