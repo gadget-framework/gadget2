@@ -56,7 +56,7 @@ int SelectFunc::numConstants() {
 // Functions for ConstSelectFunc selection function
 // ********************************************************
 ConstSelectFunc::ConstSelectFunc() {
-  this->setName("ConstSelectFunc");
+  this->setName("ConstantSelectFunc");
   coeff.resize(1);
 }
 
@@ -71,7 +71,7 @@ double ConstSelectFunc::calculate(double len) {
 // Functions for ExpSelectFunc selection function
 // ********************************************************
 ExpSelectFunc::ExpSelectFunc() {
-  this->setName("ExpSelectFunc");
+  this->setName("ExponentialSelectFunc");
   coeff.resize(2);
 }
 
@@ -86,7 +86,7 @@ double ExpSelectFunc::calculate(double len) {
 // Functions for StraightSelectFunc selection function
 // ********************************************************
 StraightSelectFunc::StraightSelectFunc() {
-  this->setName("StraightSelectFunc");
+  this->setName("StraightLineSelectFunc");
   coeff.resize(2);
 }
 

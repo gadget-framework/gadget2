@@ -314,19 +314,19 @@ private:
 };
 
 /**
- * \class InverseExpSuitFuncL50
+ * \class InverseSuitFunc
  * \brief This is the class used to calculate the suitability based on an inverse exponential function of the prey length
  */
-class InverseExpSuitFuncL50 : public SuitFunc {
+class InverseSuitFunc : public SuitFunc {
 public:
   /**
-   * \brief This is the InverseExpSuitFuncL50 constructor
+   * \brief This is the InverseSuitFunc constructor
    */
-  InverseExpSuitFuncL50();
+  InverseSuitFunc();
   /**
-   * \brief This is the default InverseExpSuitFuncL50 destructor
+   * \brief This is the default InverseSuitFunc destructor
    */
-  virtual ~InverseExpSuitFuncL50();
+  virtual ~InverseSuitFunc();
   /**
    * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
    * \return 0

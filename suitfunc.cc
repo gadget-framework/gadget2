@@ -8,12 +8,12 @@ int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname) {
   int found = 0;
   SuitFunc* tempFunc;
 
-  if (strcasecmp(suitname, "expsuitfunca") == 0) {
+  if ((strcasecmp(suitname, "expsuitfunca") == 0) || (strcasecmp(suitname, "exponential") == 0)) {
     tempFunc = new ExpSuitFuncA();
     suitf.resize(1, tempFunc);
     found++;
 
-  } else if (strcasecmp(suitname, "constsuitfunc") == 0) {
+  } else if ((strcasecmp(suitname, "constsuitfunc") == 0) || (strcasecmp(suitname, "constant") == 0)) {
     tempFunc = new ConstSuitFunc();
     suitf.resize(1, tempFunc);
     found++;
@@ -28,20 +28,18 @@ int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname) {
     suitf.resize(1, tempFunc);
     found++;
 
-  } else if (strcasecmp(suitname, "expsuitfuncl50") == 0) {
+  } else if ((strcasecmp(suitname, "expsuitfuncl50") == 0) || (strcasecmp(suitname, "exponentiall50") == 0)) {
     tempFunc = new ExpSuitFuncL50();
     suitf.resize(1, tempFunc);
     found++;
 
-  } else if (strcasecmp(suitname, "andersensuitfunc") == 0) {
+  } else if ((strcasecmp(suitname, "andersensuitfunc") == 0) || (strcasecmp(suitname, "andersen") == 0)) {
     tempFunc = new AndersenSuitFunc();
     suitf.resize(1, tempFunc);
     found++;
 
-  } else if (strcasecmp(suitname, "inverseexpsuitfuncl50") == 0) {
-    tempFunc = new ExpSuitFuncL50();
-    suitf.resize(1, tempFunc);
-    found++;
+  } else if (strcasecmp(suitname, "inverse") == 0) {
+    handle.Warning("The inverse suitability function is not yet implemented");
 
   } else if (strcasecmp(suitname, "improvedexpsuitfunc") == 0) {
     handle.Warning("The improvedexpsuitfunc suitability function is no longer supported");
@@ -143,7 +141,7 @@ int SuitFunc::numConstants() {
 // Functions for ExpSuitFuncA suitability function
 // ********************************************************
 ExpSuitFuncA::ExpSuitFuncA() {
-  this->setName("ExpSuitFuncA");
+  this->setName("ExponentialSuitFunc");
   coeff.resize(4);
   preyLength = -1.0;
   predLength = -1.0;
@@ -176,7 +174,7 @@ double ExpSuitFuncA::calculate() {
 // Functions for ConstSuitFunc suitability function
 // ********************************************************
 ConstSuitFunc::ConstSuitFunc() {
-  this->setName("ConstSuitFunc");
+  this->setName("ConstantSuitFunc");
   coeff.resize(1);
 }
 
@@ -239,7 +237,7 @@ double AndersenSuitFunc::calculate() {
 // Functions for ExpSuitFuncL50 suitability function
 // ********************************************************
 ExpSuitFuncL50::ExpSuitFuncL50() {
-  this->setName("ExpSuitFuncL50");
+  this->setName("ExponentialL50SuitFunc");
   coeff.resize(2);
   preyLength = -1.0;
 }
@@ -263,7 +261,7 @@ double ExpSuitFuncL50::calculate() {
 // Functions for StraightSuitFunc suitability function
 // ********************************************************
 StraightSuitFunc::StraightSuitFunc() {
-  this->setName("StraightSuitFunc");
+  this->setName("StraightLineSuitFunc");
   coeff.resize(2);
   preyLength = -1.0;
 }
@@ -284,18 +282,18 @@ double StraightSuitFunc::calculate() {
 }
 
 // ********************************************************
-// Functions for InverseExpSuitFuncL50 suitability function
+// Functions for InverseSuitFunc suitability function
 // ********************************************************
-InverseExpSuitFuncL50::InverseExpSuitFuncL50() {
-  this->setName("InverseExpSuitFuncL50");
+InverseSuitFunc::InverseSuitFunc() {
+  this->setName("InverseSuitFunc");
   coeff.resize(2);
   preyLength = -1.0;
 }
 
-InverseExpSuitFuncL50::~InverseExpSuitFuncL50() {
+InverseSuitFunc::~InverseSuitFunc() {
 }
 
-double InverseExpSuitFuncL50::calculate() {
+double InverseSuitFunc::calculate() {
   double check = 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
   if (check < 0.0) {
     handle.logWarning("Warning in suitability - function outside bounds", check);
@@ -311,7 +309,7 @@ double InverseExpSuitFuncL50::calculate() {
 // Functions for StraightUnboundedSuitFunc suitability function
 // ********************************************************
 StraightUnboundedSuitFunc::StraightUnboundedSuitFunc() {
-  this->setName("StraightUnboundedSuitFunc");
+  this->setName("StraightLineUnboundedSuitFunc");
   coeff.resize(2);
   preyLength = -1.0;
 }
