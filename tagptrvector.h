@@ -78,10 +78,14 @@ public:
    */
   void updateTags(const TimeClass* const TimeInfo);
   /**
-   * \brief This function will delete all the elements of the vector that have expired for the current timestep
+   * \brief This function will delete all the tagging experiments from the vector that have expired for the current timestep
    * \param TimeInfo is the TimeClass for the current model
    */
   void deleteTags(const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will delete all the tagging experiments from the vector
+   */
+  void deleteAllTags();
   /**
    * \brief This function will delete all the elements of the vector
    */

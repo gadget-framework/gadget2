@@ -144,4 +144,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
       likelihood += Likely[j]->returnLikelihood();
   }
   handle.logMessage("The current overall likelihood score is", likelihood);
+
+  //Remove all the tagging experiments - they must have expired now
+  tagvec.deleteAllTags();
 }

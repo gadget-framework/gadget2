@@ -101,6 +101,12 @@ void TagPtrVector::deleteTags(const TimeClass* const TimeInfo) {
   }
 }
 
+void TagPtrVector::deleteAllTags() {
+  int i;
+  for (i = 0; i < size; i++)
+    v[i]->DeleteFromStock();
+}
+
 void TagPtrVector::DeleteAll() {
   if (v != 0) {
     delete[] v;
