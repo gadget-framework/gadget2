@@ -16,8 +16,14 @@ public:
     int nrow, double initial = 0.0);
   ~BandMatrix();
   int Nrow() const { return nrow; };
-  DoubleIndexVector& operator [] (int row);
-  const DoubleIndexVector& operator [] (int row) const;
+  DoubleIndexVector& operator [] (int row) {
+    assert(minage <= row && row < (minage + nrow));
+    return *(v[row - minage]);
+  };
+  const DoubleIndexVector& operator [] (int row) const {
+    assert(minage <= row && row < (minage + nrow));
+    return *(v[row - minage]);
+  };
   BandMatrix& operator += (BandMatrix& b);
   int Ncol(int row) const { return (operator[](row).Size()); };
   int Ncol() const { return (operator[](minage).Size()); };
@@ -64,13 +70,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  BandMatrix& operator [] (int pos);
+  BandMatrix& operator [] (int pos) { return *v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const BandMatrix& operator [] (int pos) const;
+  const BandMatrix& operator [] (int pos) const { return *v[pos]; };
   /**
    * \brief This will add new entries to the vector
    * \param add is the number of new entries to the vector
@@ -133,13 +139,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  BandMatrixVector& operator [] (int pos);
+  BandMatrixVector& operator [] (int pos) { return *v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const BandMatrixVector& operator [] (int pos) const;
+  const BandMatrixVector& operator [] (int pos) const { return *v[pos]; };
   /**
    * \brief This will add new empty entries to the vector
    * \param addrow is the number of new entries to the vector
@@ -175,9 +181,5 @@ protected:
    */
   BandMatrixVector** v;
 };
-
-#ifdef GADGET_INLINE
-#include "bandmatrix.icc"
-#endif
 
 #endif

@@ -3,10 +3,6 @@
 #include "commentstream.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "agebandmatrixratio.icc"
-#endif
-
 AgeBandMatrixRatio::AgeBandMatrixRatio(const AgeBandMatrixRatio& initial)
   : minage(initial.minAge()), nrow(initial.Nrow()) {
 

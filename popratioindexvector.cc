@@ -1,10 +1,6 @@
 #include "popratioindexvector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "popratioindexvector.icc"
-#endif
-
 PopRatioIndexVector::PopRatioIndexVector(int sz, int minp) {
   size = sz;
   int i;

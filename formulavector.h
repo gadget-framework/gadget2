@@ -46,13 +46,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  Formula& operator [] (int pos);
+  Formula& operator [] (int pos) { return v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const Formula& operator [] (int pos) const;
+  const Formula& operator [] (int pos) const { return v[pos]; };
   /**
    * \brief This function will inform Keeper of the values of the stored Formula
    * \param keeper is the Keeper for the current model
@@ -69,9 +69,5 @@ protected:
    */
   Formula* v;
 };
-
-#ifdef GADGET_INLINE
-#include "formulavector.icc"
-#endif
 
 #endif

@@ -1,10 +1,6 @@
 #include "intmatrix.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "intmatrix.icc"
-#endif
-
 IntMatrix::IntMatrix(int nr, int nc) {
   nrow = nr;
   v = new IntVector*[nr];

@@ -1,10 +1,6 @@
 #include "bandmatrixptrvector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "bandmatrixptrvector.icc"
-#endif
-
 BandMatrixPtrVector::BandMatrixPtrVector(int sz) {
   size = sz;
   if (size > 0)

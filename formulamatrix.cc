@@ -1,10 +1,6 @@
 #include "formulamatrix.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "formulamatrix.icc"
-#endif
-
 FormulaMatrix::FormulaMatrix(int nr, int nc) {
   assert(nr > 0);
   nrow = nr;

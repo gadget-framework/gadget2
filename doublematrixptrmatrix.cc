@@ -1,10 +1,6 @@
 #include "doublematrixptrmatrix.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "doublematrixptrmatrix.icc"
-#endif
-
 DoubleMatrixPtrMatrix::DoubleMatrixPtrMatrix(int nr, int nc) {
   nrow = nr;
   v = new DoubleMatrixPtrVector*[nr];

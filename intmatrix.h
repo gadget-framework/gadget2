@@ -68,13 +68,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  IntVector& operator [] (int pos);
+  IntVector& operator [] (int pos) { return *v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const IntVector& operator [] (int pos) const;
+  const IntVector& operator [] (int pos) const { return *v[pos]; };
   /**
    * \brief This will add new entries to the vector
    * \param add is the number of new entries to the vector
@@ -105,9 +105,5 @@ protected:
    */
   IntVector** v;
 };
-
-#ifdef GADGET_INLINE
-#include "intmatrix.icc"
-#endif
 
 #endif

@@ -63,13 +63,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  VariableInfo*& operator [] (int pos);
+  VariableInfo*& operator [] (int pos) { return v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  VariableInfo* const& operator [] (int pos) const;
+  VariableInfo* const& operator [] (int pos) const { return v[pos]; };
 protected:
   /**
    * \brief This is the vector of VariableInfo values
@@ -80,9 +80,5 @@ protected:
    */
   int size;
 };
-
-#ifdef GADGET_INLINE
-#include "variableinfoptrvector.icc"
-#endif
 
 #endif

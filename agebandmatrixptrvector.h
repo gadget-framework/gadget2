@@ -89,13 +89,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  AgeBandMatrix& operator [] (int pos);
+  AgeBandMatrix& operator [] (int pos) { return *v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const AgeBandMatrix& operator [] (int pos) const;
+  const AgeBandMatrix& operator [] (int pos) const { return *v[pos]; };
   /**
    * \brief This function will implement the migration of entries from one AgeBandMatrix to another within the vector of values
    * \param MI is the DoubleMatrix describing the migration
@@ -111,9 +111,5 @@ protected:
    */
   int size;
 };
-
-#ifdef GADGET_INLINE
-#include "agebandmatrixptrvector.icc"
-#endif
 
 #endif

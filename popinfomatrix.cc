@@ -1,10 +1,6 @@
 #include "popinfomatrix.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "popinfomatrix.icc"
-#endif
-
 PopInfoMatrix::PopInfoMatrix(int nr, int nc) {
   nrow = nr;
   v = new PopInfoVector*[nr];

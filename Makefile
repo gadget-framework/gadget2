@@ -72,7 +72,7 @@ VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.o \
 	abstrpredstdinfo.o abstrpreystdinfo.o catchdistribution.o errorhandler.o \
 	predatorprinter.o abstrpreystdinfobylength.o predatoroveraggregator.o \
-	actionattimes.o predatoroverprinter.o addresskeeper.o predprey.o strstack.o \
+	actionattimes.o predatoroverprinter.o predprey.o strstack.o \
 	predpreystdageprinter.o agebandmatrix.o predpreystdlengthprinter.o grow.o \
 	agebandmatrixmemberfunctions.o predpreystdprinter.o area.o predstdinfo.o \
 	bandmatrix.o predstdinfobylength.o prey.o popstatistics.o ludecomposition.o \

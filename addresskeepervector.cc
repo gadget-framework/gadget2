@@ -1,10 +1,6 @@
 #include "addresskeepervector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "addresskeepervector.icc"
-#endif
-
 AddressKeeperVector::AddressKeeperVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

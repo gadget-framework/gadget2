@@ -1,9 +1,5 @@
 #include "agebandmatrixptrvector.h"
 
-#ifndef GADGET_INLINE
-#include "agebandmatrixptrvector.icc"
-#endif
-
 AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

@@ -1,10 +1,6 @@
 #include "intvector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "intvector.icc"
-#endif
-
 IntVector::IntVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

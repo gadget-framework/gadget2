@@ -1,9 +1,5 @@
 #include "tagptrvector.h"
 
-#ifndef GADGET_INLINE
-#include "tagptrvector.icc"
-#endif
-
 TagPtrVector::TagPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

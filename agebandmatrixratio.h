@@ -30,8 +30,14 @@ public:
   void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total);
   void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total, Maturity* const Mat,
     const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
-  PopRatioIndexVector& operator [] (int age);
-  const PopRatioIndexVector& operator [] (int age) const;
+  PopRatioIndexVector& operator [] (int age) {
+    assert(minage <= age && age < (minage + nrow));
+    return *(v[age - minage]);
+  };
+  const PopRatioIndexVector& operator [] (int age) const {
+    assert(minage <= age && age < (minage + nrow));
+    return *(v[age - minage]);
+  };
   void updateRatio(const AgeBandMatrix& Total);
   void updateNumbers(const AgeBandMatrix& Total);
   void updateAndTagLoss(const AgeBandMatrix& Total, const DoubleVector& tagloss);
@@ -42,9 +48,5 @@ protected:
   int nrow;
   PopRatioIndexVector** v;
 };
-
-#ifdef GADGET_INLINE
-#include "agebandmatrixratio.icc"
-#endif
 
 #endif

@@ -1,10 +1,6 @@
 #include "otherfoodptrvector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "otherfoodptrvector.icc"
-#endif
-
 OtherFoodPtrVector::OtherFoodPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

@@ -1,10 +1,6 @@
 #include "popinfovector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "popinfovector.icc"
-#endif
-
 PopInfoVector::PopInfoVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

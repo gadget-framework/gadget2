@@ -1,10 +1,6 @@
 #include "fleetptrvector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "fleetptrvector.icc"
-#endif
-
 FleetPtrVector::FleetPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

@@ -1,10 +1,6 @@
 #include "variableinfoptrvector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "variableinfoptrvector.icc"
-#endif
-
 VariableInfoPtrVector::VariableInfoPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

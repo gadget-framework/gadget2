@@ -1,10 +1,6 @@
 #include "addresskeepermatrix.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "addresskeepermatrix.icc"
-#endif
-
 AddressKeeperMatrix::AddressKeeperMatrix(int nr, int nc) {
   nrow = nr;
   int i;

@@ -1,10 +1,6 @@
 #include "preyptrvector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "preyptrvector.icc"
-#endif
-
 PreyPtrVector::PreyPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

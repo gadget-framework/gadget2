@@ -8,7 +8,11 @@ public:
   double* addr;
   char* name;
   AddressKeeper() { addr = 0; name = 0; };
-  ~AddressKeeper();
+  ~AddressKeeper() {
+    if (name != 0)
+      delete[] name;
+    name = 0;
+  };
   AddressKeeper(const AddressKeeper& a)
     : addr(a.addr), name(new char[strlen(a.name) + 1])
     { strcpy(name, a.name); };

@@ -3,10 +3,6 @@
 #include "commentstream.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "timevariableindexvector.icc"
-#endif
-
 TimeVariableIndexVector::~TimeVariableIndexVector() {
   if (v != 0) {
     delete[] v;

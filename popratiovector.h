@@ -71,13 +71,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  PopRatio& operator [] (int pos);
+  PopRatio& operator [] (int pos) { return v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const PopRatio& operator [] (int pos) const;
+  const PopRatio& operator [] (int pos) const { return v[pos]; };
   void Sum(const PopRatioVector* const Number, const ConversionIndex& CI);
 protected:
   /**
@@ -89,9 +89,5 @@ protected:
    */
   int size;
 };
-
-#ifdef GADGET_INLINE
-#include "popratiovector.icc"
-#endif
 
 #endif

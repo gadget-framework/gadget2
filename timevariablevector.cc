@@ -3,10 +3,6 @@
 #include "commentstream.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "timevariablevector.icc"
-#endif
-
 void TimeVariableVector::resize(int addsize) {
   assert(v == 0);
   size = addsize;

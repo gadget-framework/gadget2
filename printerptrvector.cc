@@ -1,10 +1,6 @@
 #include "printerptrvector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "printerptrvector.icc"
-#endif
-
 PrinterPtrVector::PrinterPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

@@ -1,10 +1,6 @@
 #include "popratiomatrix.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "popratiomatrix.icc"
-#endif
-
 PopRatioMatrix::PopRatioMatrix(int nr, int nc) {
   nrow = nr;
   v = new PopRatioVector*[nr];

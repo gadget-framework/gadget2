@@ -65,13 +65,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  OtherFood*& operator [] (int pos);
+  OtherFood*& operator [] (int pos) { return v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  OtherFood* const& operator [] (int pos) const;
+  OtherFood* const& operator [] (int pos) const { return v[pos]; };
 protected:
   /**
    * \brief This is the vector of OtherFood values
@@ -82,9 +82,5 @@ protected:
    */
   int size;
 };
-
-#ifdef GADGET_INLINE
-#include "otherfoodptrvector.icc"
-#endif
 
 #endif

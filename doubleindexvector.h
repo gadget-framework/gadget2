@@ -49,13 +49,19 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  double& operator [] (int pos);
+  double& operator [] (int pos) {
+    assert(minpos <= pos && pos < minpos + size);
+    return v[pos - minpos];
+  };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const double& operator [] (int pos) const;
+  const double& operator [] (int pos) const {
+    assert(minpos <= pos && pos < minpos + size);
+    return v[pos - minpos];
+  };
   DoubleIndexVector& operator = (const DoubleIndexVector& d);
   /**
    * \brief This will return the index of the vector
@@ -92,9 +98,5 @@ protected:
    */
   double* v;
 };
-
-#ifdef GADGET_INLINE
-#include "doubleindexvector.icc"
-#endif
 
 #endif

@@ -30,9 +30,8 @@ public:
   int Size() const { return size; };
   int getID(const char* id);
   const char* getName(int id) const;
-  AgeBandMatrixRatio& operator [] (int pos);
-  const AgeBandMatrixRatio& operator [] (const char* name) const;
-  const AgeBandMatrixRatio& operator [] (int pos) const;
+  AgeBandMatrixRatio& operator [] (int pos) { return *v[pos]; };
+  const AgeBandMatrixRatio& operator [] (int pos) const { return *v[pos]; };
   void Migrate(const DoubleMatrix& MI, const AgeBandMatrixPtrVector& Total);
   const int numTagExperiments() const { return tagID.Size(); };
   const CharPtrVector tagIDs() const { return tagID; };
@@ -48,9 +47,5 @@ protected:
 private:
   void addTagName(const char* name);
 };
-
-#ifdef GADGET_INLINE
-#include "agebandmatrixratioptrvector.icc"
-#endif
 
 #endif

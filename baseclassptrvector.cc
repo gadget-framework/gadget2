@@ -1,10 +1,6 @@
 #include "baseclassptrvector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "baseclassptrvector.icc"
-#endif
-
 BaseClassPtrVector::BaseClassPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

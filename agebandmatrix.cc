@@ -4,10 +4,6 @@
 #include "agebandmatrix.h"
 #include "mathfunc.h"
 
-#ifndef GADGET_INLINE
-#include "agebandmatrix.icc"
-#endif
-
 AgeBandMatrix::AgeBandMatrix(const AgeBandMatrix& initial)
   : minage(initial.minAge()), nrow(initial.Nrow()) {
 

@@ -16,8 +16,8 @@ public:
   void resize(int add);
   void Delete(int pos);
   int Size() const { return size; };
-  double& operator [] (int pos);
-  const double& operator [] (int pos) const;
+  double& operator [] (int pos) { return v[pos]; };
+  const double& operator [] (int pos) const { return v[pos]; };
   void Reset();
   void setElementsTo(double d);
   DoubleVector& operator *= (double d);
@@ -36,9 +36,5 @@ protected:
   double* v;
   int size;
 };
-
-#ifdef GADGET_INLINE
-#include "doublevector.icc"
-#endif
 
 #endif

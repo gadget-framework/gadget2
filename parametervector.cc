@@ -1,10 +1,6 @@
 #include "parametervector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "parametervector.icc"
-#endif
-
 ParameterVector::ParameterVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

@@ -65,13 +65,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  Tags*& operator [] (int pos);
+  Tags*& operator [] (int pos) { return v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  Tags* const& operator [] (int pos) const;
+  Tags* const& operator [] (int pos) const { return v[pos]; };
   /**
    * \brief This function will update all the elements of the vector for the current timestep
    * \param TimeInfo is the TimeClass for the current model
@@ -100,9 +100,5 @@ protected:
    */
   int size;
 };
-
-#ifdef GADGET_INLINE
-#include "tagptrvector.icc"
-#endif
 
 #endif

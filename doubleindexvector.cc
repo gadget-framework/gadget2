@@ -2,10 +2,6 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "doubleindexvector.icc"
-#endif
-
 DoubleIndexVector::DoubleIndexVector(int sz, int minp) {
   size = sz;
   minpos = minp;

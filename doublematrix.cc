@@ -2,10 +2,6 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "doublematrix.icc"
-#endif
-
 DoubleMatrix::DoubleMatrix(int nr, int nc) {
   assert((nr > 0) && (nc > 0));
   nrow = nr;

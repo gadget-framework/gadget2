@@ -3,10 +3,6 @@
 #include "commentstream.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "agebandmatrixratioptrvector.icc"
-#endif
-
 AgeBandMatrixRatioPtrVector::AgeBandMatrixRatioPtrVector(int size1, int minage,
   const IntVector& minl, const IntVector& size2) {
 

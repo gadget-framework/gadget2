@@ -60,13 +60,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  TimeVariable& operator [] (int pos);
+  TimeVariable& operator [] (int pos) { return v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const TimeVariable& operator [] (int pos) const;
+  const TimeVariable& operator [] (int pos) const { return v[pos]; };
   /**
    * \brief This function will check to see if the TimeVariable values have changed
    * \param TimeInfo is the TimeClass for the current model
@@ -88,9 +88,5 @@ protected:
    */
   TimeVariable* v;
 };
-
-#ifdef GADGET_INLINE
-#include "timevariablevector.icc"
-#endif
 
 #endif

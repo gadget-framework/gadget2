@@ -5,10 +5,6 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "bandmatrix.icc"
-#endif
-
 BandMatrix::BandMatrix(const BandMatrix& initial)
   : nrow(initial.nrow), minage(initial.minAge()) {
 

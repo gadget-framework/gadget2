@@ -63,13 +63,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  Stock*& operator [] (int pos);
+  Stock*& operator [] (int pos) { return v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  Stock* const& operator [] (int pos) const;
+  Stock* const& operator [] (int pos) const { return v[pos]; };
   StockPtrVector& operator = (const StockPtrVector& d);
 protected:
   /**
@@ -81,9 +81,5 @@ protected:
    */
   int size;
 };
-
-#ifdef GADGET_INLINE
-#include "stockptrvector.icc"
-#endif
 
 #endif

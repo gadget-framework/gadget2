@@ -63,13 +63,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  ConversionIndex*& operator [] (int pos);
+  ConversionIndex*& operator [] (int pos) { return v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  ConversionIndex* const& operator [] (int pos) const;
+  ConversionIndex* const& operator [] (int pos) const { return v[pos]; };
 protected:
   /**
    * \brief This is the vector of ConversionIndex values
@@ -80,9 +80,5 @@ protected:
    */
   int size;
 };
-
-#ifdef GADGET_INLINE
-#include "conversionindexptrvector.icc"
-#endif
 
 #endif

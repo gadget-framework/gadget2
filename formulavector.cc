@@ -1,9 +1,5 @@
 #include "formulavector.h"
 
-#ifndef GADGET_INLINE
-#include "formulavector.icc"
-#endif
-
 FormulaVector::FormulaVector(const FormulaVector& initial) {
   int i;
   size = initial.size;

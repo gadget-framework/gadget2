@@ -1,10 +1,6 @@
 #include "charptrmatrix.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "charptrmatrix.icc"
-#endif
-
 CharPtrMatrix::CharPtrMatrix(int nr, int nc) {
   nrow = nr;
   v = new CharPtrVector*[nr];

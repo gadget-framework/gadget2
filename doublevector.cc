@@ -1,10 +1,6 @@
 #include "doublevector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "doublevector.icc"
-#endif
-
 DoubleVector::DoubleVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

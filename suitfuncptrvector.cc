@@ -1,10 +1,6 @@
 #include "suitfuncptrvector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "suitfuncptrvector.icc"
-#endif
-
 SuitFuncPtrVector::SuitFuncPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

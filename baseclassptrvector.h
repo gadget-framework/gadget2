@@ -63,13 +63,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  BaseClass*& operator [] (int pos);
+  BaseClass*& operator [] (int pos) { return v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  BaseClass* const& operator [] (int pos) const;
+  BaseClass* const& operator [] (int pos) const { return v[pos]; };
 protected:
   /**
    * \brief This is the vector of BaseClass values
@@ -80,9 +80,5 @@ protected:
    */
   int size;
 };
-
-#ifdef GADGET_INLINE
-#include "baseclassptrvector.icc"
-#endif
 
 #endif

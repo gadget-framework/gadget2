@@ -1,10 +1,6 @@
 #include "charptrvector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "charptrvector.icc"
-#endif
-
 CharPtrVector::CharPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)

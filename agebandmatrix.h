@@ -21,8 +21,14 @@ public:
   int minAge() const { return minage; };
   int maxAge() const { return minage + nrow - 1; };
   int Nrow() const { return nrow; };
-  PopInfoIndexVector& operator [] (int age);
-  const PopInfoIndexVector& operator [] (int age) const;
+  PopInfoIndexVector& operator [] (int age) {
+    assert(minage <= age && age < (minage + nrow));
+    return *(v[age - minage]);
+  };
+  const PopInfoIndexVector& operator [] (int age) const {
+    assert(minage <= age && age < (minage + nrow));
+    return *(v[age - minage]);
+  };
   int minLength(int age) const { return v[age - minage]->minCol(); };
   int maxLength(int age) const { return v[age - minage]->maxCol(); };
   void sumColumns(PopInfoVector& Result) const;
@@ -47,9 +53,5 @@ protected:
   int nrow;
   PopInfoIndexVector** v;
 };
-
-#ifdef GADGET_INLINE
-#include "agebandmatrix.icc"
-#endif
 
 #endif

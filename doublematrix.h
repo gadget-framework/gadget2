@@ -16,8 +16,8 @@ public:
   ~DoubleMatrix();
   int Ncol(int i = 0) const { return v[i]->Size(); };
   int Nrow() const { return nrow; };
-  DoubleVector& operator [] (int pos);
-  const DoubleVector& operator [] (int pos) const;
+  DoubleVector& operator [] (int pos) { return *v[pos]; };
+  const DoubleVector& operator [] (int pos) const { return *v[pos]; };
   void AddRows(int add, int length, double initial);
   void AddRows(int add, int length);
   void DeleteRow(int row);
@@ -41,9 +41,5 @@ protected:
   int nrow;
   DoubleVector** v;
 };
-
-#ifdef GADGET_INLINE
-#include "doublematrix.icc"
-#endif
 
 #endif

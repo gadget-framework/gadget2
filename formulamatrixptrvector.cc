@@ -1,10 +1,6 @@
 #include "formulamatrixptrvector.h"
 #include "gadget.h"
 
-#ifndef GADGET_INLINE
-#include "formulamatrixptrvector.icc"
-#endif
-
 FormulaMatrixPtrVector::FormulaMatrixPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
