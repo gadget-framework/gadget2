@@ -49,7 +49,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   i = 0;
   if (!(strcasecmp(text, "fleetnames") == 0))
     handle.Unexpected("fleetnames", text);
-  infile >> text >> ws;
+  infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "yearsandsteps") == 0)) {
     fleetnames.resize(1);
     fleetnames[i] = new char[strlen(text) + 1];

@@ -33,11 +33,11 @@ public:
   const bandmatrix& getCons(int pred_no) { return(*consumption[pred_no]); };
   double suitfunc(double predlen, double preylen);
 protected:
+  doubleindexvector altfood;
   intmatrix* overlap;    // overlap[predator][substep]
   charptrvector predatornames;
   int nrofpredators;
   Formula delta;
-  doubleindexvector altfood;
   Formulavector params;
   Formulavector cann_lev;
   doublevector cannibalism;

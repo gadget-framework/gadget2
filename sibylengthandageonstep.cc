@@ -224,12 +224,16 @@ SIByLengthAndAgeOnStep::~SIByLengthAndAgeOnStep() {
 
 void SIByLengthAndAgeOnStep::SetStocks(const Stockptrvector& Stocks) {
   intmatrix areas(1, Areas.Size());
-  int i;
+  int i, j;
   for (i = 0; i < Areas.Size(); i++)
     areas[0][i] = Areas[i];
   aggregator = new StockAggregator(Stocks, LgrpDiv, areas, Ages);
-  for (i = 0; i < Stocks.Size(); i++)
-    stocknames.resize(1, strdup(Stocks[i]->Name()));
+  for (i = 0; i < Stocks.Size(); i++) {
+    stocknames.resize(1);
+    j = stocknames.Size() - 1;
+    stocknames[j] = new char[strlen(Stocks[i]->Name()) + 1];
+    strcpy(stocknames[j], Stocks[i]->Name());
+  }
 
   //Limits (inclusive) for traversing the matrices.
   mincol = aggregator->getMinCol();

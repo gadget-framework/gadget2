@@ -105,7 +105,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   infile >> text >> ws;
   if (!(strcasecmp(text, "stocknames") == 0))
     handle.Unexpected("stocknames", text);
-  infile >> text >> ws;
+  infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "fittype") == 0)) {
     stocknames.resize(1);
     stocknames[i] = new char[strlen(text) + 1];

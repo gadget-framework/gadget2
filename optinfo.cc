@@ -3,53 +3,9 @@
 
 extern Ecosystem* EcoSystem;
 
-//Functions for the minimizing functions.
 double f(double* x, int n) {
   return EcoSystem->SimulateAndUpdate(x, n);
 }
-
-/* JMB - commented out all the BFGS stuff
-#ifdef N_RECIPES  //Numerical recipes in C
-//JMB these lines will cause the compiler to fail ...
-//JMB also changed the floats to doubles
-extern void frprmn(double* par, int n, double ftol, int* iter, double* fret,
-  double(*func)(double*), void(*dfunc)(double*, double*));
-extern void dfpmin(double* par, int n, double ftol, int* iter, double* fret,
-  double(*func)(double*), void(*dfunc)(double*, double*));
-#endif
-
-//Functions for Numerical Recipes in C
-double bfgsFunc(double* x) {
-  int n = EcoSystem->NoOptVariables();
-  double f = EcoSystem->SimulateAndUpdate(x, n);
-  return f;
-}
-
-void bfgsDfunc(double* x, double* gradient) {
-  int i;
-  int n = EcoSystem->NoOptVariables();
-  doublevector f(3);
-  double* xmed = new double[n];
-  for (i = 0; i < n; i++)
-    xmed[i] = x[i];
-
-  //these calculations of delta should maybe be inside the gradient.
-  doublevector delta(n);
-  for (i = 0; i < n; i++)
-    if (fabs(xmed[i]) > 1e-10)
-      delta[i] = fabs(xmed[i] * 1e-5);
-    else
-      delta[i] = 1e-5;
-
-  f[0] = EcoSystem->SimulateAndUpdate(xmed, n);
-  //JMB 12/NOV/01 the following loop was nested inside previous one
-  for (i = 0; i < n; i++) {
-    xmed[i] = x[i] + delta[i];
-    f[1] = EcoSystem->SimulateAndUpdate(xmed, n);
-    gradient[i] = (f[1] - f[0]) / delta[i];
-    xmed[i] = x[i];
-  }
-} */
 
 extern int hooke(double (*f)(double*, int), int n, double startingpoint[],
   double endpoint[], double lowerb[], double upperb[],
@@ -127,7 +83,7 @@ int OptInfoHooke::Read(CommentStream& infile, char* text) {
 }
 
 void OptInfoHooke::MaximizeLikelihood() {
-  int i;
+  int i, count;
   double tmp;
   nopt = EcoSystem->NoOptVariables();
   doublevector val(nopt);
@@ -167,16 +123,28 @@ void OptInfoHooke::MaximizeLikelihood() {
     }
   }
 
+  count = 0;
   for (i = 0; i < nopt; i++) {
-    if (lowerb[i] > val[i])
-      cerr << "Error switch " << optswitches[i] << " lowerbound " << lowerb[i]
-        << " value " << val[i] << endl;
-    if (upperb[i] < val[i])
-      cerr << "Error switch " << optswitches[i] << " upperbound " << upperb[i]
-        << " value " << val[i] << endl;
-    if (upperb[i] < lowerb[i])
-      cerr << "Error switch " << optswitches[i] << " upperbound " << upperb[i]
-        << " lowerbound " << lowerb[i] << endl;
+    if (lowerb[i] > val[i]) {
+      count++;
+      cerr << "Error: for switch " << optswitches[i] << " lowerbound " << lowerb[i]
+        << " is greater than the starting value " << val[i] << endl;
+    }
+    if (upperb[i] < val[i]) {
+      count++;
+      cerr << "Error: for switch " << optswitches[i] << " upperbound " << upperb[i]
+        << " is less that the starting value " << val[i] << endl;
+    }
+    if (upperb[i] < lowerb[i]) {
+      count++;
+      cerr << "Error: for switch " << optswitches[i] << " upperbound " << upperb[i]
+        << " is less than the lowerbound " << lowerb[i] << endl;
+    }
+  }
+
+  if (count > 0) {
+    cerr << "Exiting with " << count << " errors in the initial conditions\n";
+    exit(EXIT_FAILURE);
   }
 
   int FinalValue;
@@ -253,7 +221,7 @@ int OptInfoSimann::Read(CommentStream& infile, char* text) {
 //Considered better to skip scaling of variables here.  Had to change keeper
 //so initialvalues start as 1 but scaled values as the same as values
 void OptInfoSimann::MaximizeLikelihood() {
-  int i;
+  int i, count;
   nopt = EcoSystem->NoOptVariables();
   doublevector val(nopt);
   doublevector lbds(nopt);
@@ -280,16 +248,28 @@ void OptInfoSimann::MaximizeLikelihood() {
 
   Parametervector optswitches(nopt);
   EcoSystem->OptSwitches(optswitches);
+  count = 0;
   for (i = 0; i < nopt; i++) {
-    if (lowerb[i] > val[i])
-      cerr << "Error switch " << optswitches[i] << " lowerbound " << lowerb[i] <<
-        " value " << val[i] << endl;
-    if (upperb[i] < val[i])
-      cerr << "Error switch " << optswitches[i] << " upperbound " << upperb[i] <<
-        " value " << val[i] << endl;
-    if (upperb[i] < lowerb[i])
-      cerr << "Error switch " << optswitches[i] << " upperbound " << upperb[i] <<
-        " lowerbound " << lowerb[i] << endl;
+    if (lowerb[i] > val[i]) {
+      count++;
+      cerr << "Error: for switch " << optswitches[i] << " lowerbound " << lowerb[i]
+        << " is greater than the starting value " << val[i] << endl;
+    }
+    if (upperb[i] < val[i]) {
+      count++;
+      cerr << "Error: for switch " << optswitches[i] << " upperbound " << upperb[i]
+        << " is less that the starting value " << val[i] << endl;
+    }
+    if (upperb[i] < lowerb[i]) {
+      count++;
+      cerr << "Error: for switch " << optswitches[i] << " upperbound " << upperb[i]
+        << " is less than the lowerbound " << lowerb[i] << endl;
+    }
+  }
+
+  if (count > 0) {
+    cerr << "Exiting with " << count << " errors in the initial conditions\n";
+    exit(EXIT_FAILURE);
   }
 
   int Finalvalue;
@@ -308,73 +288,6 @@ void OptInfoSimann::MaximizeLikelihood() {
   delete[] lowerb;
   delete[] upperb;
 }
-
-/* JMB commented out all the BFGS stuff
-OptInfoNRecipes::OptInfoNRecipes() : OptInfo(), ftol(1e-6), bfgs(1) {
-}
-
-OptInfoNRecipes::~OptInfoNRecipes() {
-}
-
-void OptInfoNRecipes::Read(CommentStream& infile) {
-  char text[MaxStrLength];
-  strncpy(text, "", MaxStrLength);
-
-  infile >> ws;
-  while(!infile.eof()) {
-    infile >> text >> ws;
-    if (!Read(infile, text))
-      cout << "Error in optinfo - unknown option " << text << endl;
-  }
-}
-
-int OptInfoNRecipes::Read(CommentStream& infile, char* text) {
- if (OptInfo::Read(infile, text))
-   return 1;
-
- if (strcasecmp(text, "ftol") == 0) {
-   infile >> ftol >> ws;
-   return 1;
- } else if (strcasecmp(text, "gtol") == 0) {
-   infile >> gtol >> ws;
-   return 1;
- } else if (strcasecmp(text, "bfgs") == 0) {
-   infile >> bfgs >> ws;
-   return 1;
- } else
-   return 0;
-}
-
-void OptInfoNRecipes::MaximizeLikelihood() {
-  int i;
-  nopt = EcoSystem->NoOptVariables();
-  doublevector val(nopt);
-  doublevector initialval(nopt);
-
-  EcoSystem->ScaleVariables();
-  EcoSystem->ScaledOptValues(val);
-  EcoSystem->InitialOptValues(initialval);
-  double* startpt = new double[nopt];
-
-  for (i = 0; i < nopt; i++)
-    startpt[i] = val[i];
-
-  #ifdef N_RECIPES
-    if (!bfgs)
-      frprmn(startpt, nopt, ftol, &iter, &fret, &bfgsFunc, &bfgsDfunc);
-    else
-      dfpmin(startpt, nopt, gtol, &iter, &fret, &bfgsFunc, &bfgsDfunc);
-  #endif
-
-  for (i = 0; i < nopt; i++)
-    val[i] = initialval[i] * startpt[i];
-
-  cout << "\nOptimization finished with final value " << EcoSystem->Likelihood()
-    << "\nafter " << EcoSystem->GetFuncEval() << " calls to function at the point\n";
-  EcoSystem->PrintOptValues();
-  cout << endl;
-  delete[] startpt;
-} */
 
 OptInfoHookeAndSimann::OptInfoHookeAndSimann()
   : OptInfo(), HookeMaxIter(10), Rho_begin(0.5), lambda(0), epsmin(1e-6),
@@ -442,7 +355,7 @@ int OptInfoHookeAndSimann::Read(CommentStream& infile, char* text) {
 }
 
 void OptInfoHookeAndSimann::MaximizeLikelihood() {
-  int i;
+  int i, count;
   nopt = EcoSystem->NoOptVariables();
   doublevector val(nopt);
   doublevector initialval(nopt);
@@ -470,16 +383,28 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
 
   Parametervector optswitches(nopt);
   EcoSystem->OptSwitches(optswitches);
+  count = 0;
   for (i = 0; i < nopt; i++) {
-    if (lowerb[i] > val[i])
-      cerr << "Error switch " << optswitches[i] << " lowerbound " << lowerb[i]
-        << " value " << val[i] << endl;
-    if (upperb[i] < val[i])
-      cerr << "Error switch " << optswitches[i] << " upperbound " << upperb[i]
-        << " value " << val[i] << endl;
-    if (upperb[i] < lowerb[i])
-      cerr << "Error switch " << optswitches[i] << " upperbound " << upperb[i]
-        << " lowerbound " << lowerb[i] << endl;
+    if (lowerb[i] > val[i]) {
+      count++;
+      cerr << "Error: for switch " << optswitches[i] << " lowerbound " << lowerb[i]
+        << " is greater than the starting value " << val[i] << endl;
+    }
+    if (upperb[i] < val[i]) {
+      count++;
+      cerr << "Error: for switch " << optswitches[i] << " upperbound " << upperb[i]
+        << " is less that the starting value " << val[i] << endl;
+    }
+    if (upperb[i] < lowerb[i]) {
+      count++;
+      cerr << "Error: for switch " << optswitches[i] << " upperbound " << upperb[i]
+        << " is less than the lowerbound " << lowerb[i] << endl;
+    }
+  }
+
+  if (count > 0) {
+    cerr << "Exiting with " << count << " errors in the initial conditions\n";
+    exit(EXIT_FAILURE);
   }
 
   int Finalvalue;

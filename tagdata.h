@@ -25,14 +25,17 @@ private:
   double LikBinomial();
   FleetPreyAggregator* aggregator;
   charptrvector fleetnames;
-  char* stockname;
   intvector areas;
   int index;
   intvector Years;
   intvector Steps;
-  intvector Areas;
-  intvector recaptures;
-  double n_gt_x;
+  intvector recTime;
+  intvector recAreas;
+  intvector recAge;
+  intvector recFleet;
+  intvector recMaturity;
+  doublevector tagLength;
+  doublevector recLength;
 };
 
 #endif

@@ -110,12 +110,12 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
   i = 0;
   if (!(strcasecmp(text, "stocknames") == 0))
     handle.Unexpected("stocknames", text);
-  infile >> text >> ws;
+  infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
     stocknames.resize(1);
     stocknames[i] = new char[strlen(text) + 1];
     strcpy(stocknames[i++], text);
-    infile >> text;
+    infile >> text >> ws;
   }
 
   //We have now read in all the data from the main likelihood file

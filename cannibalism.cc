@@ -26,7 +26,10 @@ Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* preyl
 
   infile >> text >> ws;
   while ((strcasecmp(text, "predminages") != 0) && !infile.eof()) {
-    predatornames.resize(1, strdup(text));
+    predatornames.resize(1);
+    i = predatornames.Size() - 1;
+    predatornames[i] = new char[strlen(text) + 1];
+    strcpy(predatornames[i], text);
     infile >> text >> ws;
   }
 

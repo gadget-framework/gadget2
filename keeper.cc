@@ -498,13 +498,23 @@ void Keeper::WriteParamsInColumns(const char* const filename,
 }
 
 void Keeper::LowerBds(doublevector& lbs) const {
-  int i;
-  for (i = 0; i < lbs.Size(); i++)
-    lbs[i] = lowerbds[i];
+  int i, j;
+  j = 0;
+  for (i = 0; i < lowerbds.Size(); i++) {
+    if (opt[i] == 1) {
+      lbs[j] = lowerbds[i];
+      j++;
+    }
+  }
 }
 
 void Keeper::UpperBds(doublevector& ubs) const {
-  int i;
-  for (i = 0; i < ubs.Size(); i++)
-    ubs[i] = upperbds[i];
+  int i, j;
+  j = 0;
+  for (i = 0; i < upperbds.Size(); i++) {
+    if (opt[i] == 1) {
+      ubs[j] = upperbds[i];
+      j++;
+    }
+  }
 }

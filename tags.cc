@@ -34,7 +34,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   ifstream subfile;
   CommentStream subcomment(subfile);
 
-  keeper->AddString("tags ");
+  keeper->AddString("tags");
   keeper->AddString(givenname);
 
   //Currently can only have one stock

@@ -244,16 +244,9 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
     fstar[i] = 1.0e20;
 
   cout << "\nStarting Simulated Annealing\n";
-  //If the initial value is out of bounds return to the calling routine
-  for (i = 0; i < n; i++) {
-    if ((x[i] > ub[i]) || (x[i] < lb[i])) {
-      cout << "Initial point is not within bounds, returning to calling routine\n";
-      return(0);
-    }
-  }
-
   //funcval is the function value at x
   funcval = (*f)(x, n);
+
   //If the function is to be minmized, switch the sign of the function
   if (!max)
     funcval = -funcval;
@@ -346,6 +339,13 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
             } else
               //Reject point
               nrej++;
+          }
+
+          // JMB added check for really silly values
+          if (iszero(fp)) {
+            cout << "\nError in Simulated Annealing optimisation after " << nfcnev
+              << " function evaluations f(x) = 0\nReturning to calling routine ...\n";
+            return(0);
           }
 
           //If greater than any other point, record as new optimum

@@ -207,6 +207,13 @@ int hooke(double (*f)(double* , int), int nvars, double startpt[], double endpt[
     iters++;
     iadj++;
 
+    /* JMB added check for really silly values */
+    if (iszero(fbefore)) {
+      cout << "\nError in Hooke and Jeeves optimisation after " << FuncEval
+       << " function evaluations f(x) = 0\nReturning to calling routine ...\n";
+      return(0);
+    }
+
     cout << "\nNew optimum after " << FuncEval << " function evaluations, f(x) = "
       << fbefore << " at\n";
     for (j = 0; j < nvars; j++)

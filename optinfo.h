@@ -4,6 +4,8 @@
 #include "ecosystem.h"
 #include "parameter.h"
 
+/* JMB - removed all the Numerical Recipes BFGS stuff */
+
 class OptInfo {
 public:
   OptInfo();
@@ -70,19 +72,5 @@ protected:
   double vm;
   long maxim;
 };
-
-/* JMB - commented out the BFGS stuff
-class OptInfoNRecipes : public OptInfo {
-public:
-  OptInfoNRecipes();
-  virtual ~OptInfoNRecipes();
-  virtual void Read(CommentStream& infile);
-  int Read(CommentStream& infile, char* text);
-  virtual void MaximizeLikelihood();
-protected:
-  double ftol;
-  double gtol;
-  int bfgs;
-}; */
 
 #endif

@@ -676,9 +676,6 @@ void GrowthCalcE::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
         pow(GrEatNumber[i].W / wgrowthPar[3], wgrowthPar[5])) *
         yearEffect[YearNr] * stepEffect[TimeInfo->CurrentStep() - 1] * areaEffect[iarea];
 
-      //Here after the code is similar as for GrowthCalcD except an extra
-      //parameter Lgrowthpar[8] comes instead of Fphi[i].  Typical value
-      //of this parameter could be 0.5.
       if (Wgrowth[i] <= 0) {
         Wgrowth[i] = 0.0;
         Lgrowth[i] = 0.0;

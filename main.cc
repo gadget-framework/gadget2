@@ -29,9 +29,7 @@ void StochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
           EcoSystem->PrintValues((MainInfo->printinfo).OutputFile);
         if ((MainInfo->printinfo).PrintinColumns())
           EcoSystem->PrintValuesinColumns((MainInfo->printinfo).ColumnOutputFile);
-        //send function likelihood value to Master
         Stochasticdata->SendDataToMaster(EcoSystem->Likelihood());
-        //get data from master
         Stochasticdata->ReadNextLineFromNet();
       }
       //delete Stochasticdata;
@@ -66,6 +64,7 @@ void StochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
 }
 
 int main(int aNumber, char *const aVector[]) {
+
   MainInfo MainInfo;
   OptInfo* Optinfo = 0;
   StochasticData *Stochasticdata;
@@ -121,15 +120,15 @@ int main(int aNumber, char *const aVector[]) {
     MainInfo.optinfocommentfile >> ws >> type;
     if (strcasecmp(type, "HookeAndSimann") == 0)
       Optinfo = new OptInfoHookeAndSimann();
+    else if (strcasecmp(type, "SimannAndHooke") == 0)
+      Optinfo = new OptInfoHookeAndSimann();
     else if (strcasecmp(type, "Hooke") == 0)
       Optinfo = new OptInfoHooke();
     else if (strcasecmp(type, "Simann") == 0)
       Optinfo = new OptInfoSimann();
-    /* JMB commented out the BFGS stuff
-    else if (strcasecmp(type, "NRecipes") == 0)
-      Optinfo = new OptInfoNRecipes();*/
+    /* JMB removed the NRecipes BFGS stuff */
     else
-      handle.Unexpected("Hooke, Simann, or HookeAndSimann", type);
+      handle.Unexpected("Hooke, Simann, or SimannAndHooke", type);
 
     Optinfo->Read(MainInfo.optinfocommentfile);
 

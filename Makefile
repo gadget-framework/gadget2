@@ -1,9 +1,9 @@
 ################################################################
 # Common for all architecture and compiler options
 ################################################################
-GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat \
+GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat=2 \
               -Wparentheses -Wpointer-arith -Wcast-qual -Wcast-align \
-              -Wsynth -Woverloaded-virtual -Wbad-function-cast \
+              -Wsynth -Woverloaded-virtual -Wparentheses -Wreorder \
               -Wwrite-strings -Wconversion -Wchar-subscripts \
               -Wuninitialized -W -pedantic
 

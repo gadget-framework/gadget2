@@ -476,7 +476,7 @@ InitialCond::InitialCond(CommentStream& infile, const intvector& area,
     subfile.close();
     subfile.clear();
 
-  } else if ((strcasecmp(text, "distributionfile") == 0 )) {
+  } else if ((strcasecmp(text, "distributionfile") == 0)) {
     //read initial distribution data
     infile >> text >> ws;
     subfile.open(text);
@@ -490,7 +490,7 @@ InitialCond::InitialCond(CommentStream& infile, const intvector& area,
     //Now have to read either basis function or lengthmultiple data
     //or the number data directly from a file
     infile >> text >> ws;
-    if ((strcasecmp(text, "basisfunc") == 0 )) {
+    if ((strcasecmp(text, "basisfunc") == 0)) {
       //read initial data in basis function format
       infile >> i >> ws >> text >> ws;
       subfile.open(text);
@@ -501,7 +501,7 @@ InitialCond::InitialCond(CommentStream& infile, const intvector& area,
       subfile.close();
       subfile.clear();
 
-    } else if ((strcasecmp(text, "lengthmultiplebasisfunc") == 0 )) {
+    } else if ((strcasecmp(text, "lengthmultiplebasisfunc") == 0)) {
       //read initial data in length multiple basis function format
       infile >> use_lengthbasisfunctions >> ws;
       infile >> i >> ws >> text >> ws;
@@ -513,7 +513,7 @@ InitialCond::InitialCond(CommentStream& infile, const intvector& area,
       subfile.close();
       subfile.clear();
 
-    } else if ((strcasecmp(text, "numberfile") == 0 )) {
+    } else if ((strcasecmp(text, "numberfile") == 0)) {
       readNumbers = 1;
       //read initial data in number format
       infile >> text >> ws;

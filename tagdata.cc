@@ -25,10 +25,6 @@ TagData::TagData(CommentStream& infile, const AreaClass* const Area,
   ifstream datafile;
   CommentStream subdata(datafile);
 
-  /*stockname = new char[MaxStrLength];
-  strncpy(stockname, "", MaxStrLength);
-  ReadWordAndVariable(infile, "ngreaterthanx", n_gt_x);
-  ReadWordAndValue(infile, "stockname", stockname);*/
   ReadWordAndValue(infile, "datafile", datafilename);
 
   //Read in area aggregation from file
@@ -76,11 +72,12 @@ void TagData::ReadRecaptureData(CommentStream& infile,
 
   ErrorHandler handle;
   int i;
-  int year, step;
-  double tmpnumber;
-  char tmparea[MaxStrLength];
+  int year, step, age, maturity;
+  double reclength, taglength;
+  char tmparea[MaxStrLength], tmpfleet[MaxStrLength], tmptagid[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
-  int keepdata, timeid, areaid;
+  strncpy(tmpfleet, "", MaxStrLength);
+  int keepdata, timeid, areaid, fleetid;
 
   //Find start of recapture data in datafile
   infile >> ws;
@@ -93,12 +90,12 @@ void TagData::ReadRecaptureData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
-  if (!(CheckColumns(infile, 4)))
-    handle.Message("Wrong number of columns in inputfile - should be 4");
+  if (!(CheckColumns(infile, 9)))
+    handle.Message("Wrong number of columns in inputfile - should be 9");
 
   while (!infile.eof()) {
     keepdata = 0;
-    infile >> year >> step >> tmparea >> tmpnumber >> ws;
+    infile >> year >> step >> tmparea >> tmptagid >> tmpfleet >> age >> maturity >> reclength >> taglength >> ws;
 
     //if tmparea is in areaindex find areaid, else dont keep the data
     areaid = -1;
@@ -109,9 +106,26 @@ void TagData::ReadRecaptureData(CommentStream& infile,
     if (areaid == -1)
       keepdata = 1;
 
+    //if tmpfleet is in fleetnames find fleetid, else dont keep the data
+    fleetid = -1;
+    for (i = 0; i < fleetnames.Size(); i++)
+      if (strcasecmp(fleetnames[i], tmpfleet) == 0)
+        fleetid = i;
+
+    if (fleetid == -1)
+      keepdata = 1;
+
+    //if recapture length is less than tagged length then this is an error
+    if ((reclength < taglength) && ((taglength != -1) || (reclength != -1)))
+      handle.Message("Error in recaptures - recapture length is less than tagged length");
+
+    //if maturity is not -1 (missing data), 1, 2, then this is an error - check???
+
+    //what do we want to do about the tagid??
+
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((keepdata == 0 ) && (TimeInfo->IsWithinPeriod(year, step))) {
+    if ((keepdata == 0) && (TimeInfo->IsWithinPeriod(year, step))) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -120,15 +134,22 @@ void TagData::ReadRecaptureData(CommentStream& infile,
       if (timeid == -1) {
         Years.resize(1, year);
         Steps.resize(1, step);
-        Areas.resize(1, areaid);
-        recaptures.resize(1, tmpnumber);
+        timeid = Years.Size();
       }
+
+      //store this new recapture data
+      recTime.resize(1, timeid);
+      recAreas.resize(1, areaid);
+      recAge.resize(1, age);
+      recFleet.resize(1, fleetid);
+      recMaturity.resize(1, maturity);
+      tagLength.resize(1, taglength);
+      recLength.resize(1, reclength);
     }
   }
 }
 
 TagData::~TagData() {
-  delete[] stockname;
   int i;
   for (i = 0; i < fleetnames.Size(); i++)
     delete[] fleetnames[i];
@@ -164,6 +185,7 @@ void TagData::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks)
   }
 
   found = 0;
+  char stockname[MaxStrLength]; //JMB need to get stockname!!!
   for (i = 0; i < Stocks.Size(); j++) {
     if (Stocks[i]->IsEaten())
       if (strcasecmp(stockname, Stocks[i]->ReturnPrey()->Name()) == 0) {
@@ -180,10 +202,10 @@ void TagData::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks)
   }
 
   //Check if the stock lives on all the areas that were read in
-  for (i = 0; i < Areas.Size(); i++)
-    if (!stock[0]->IsInArea(Areas[i])) {
+  for (i = 0; i < recAreas.Size(); i++)
+    if (!stock[0]->IsInArea(recAreas[i])) {
       cerr << "Warning: Read recapture information on the area "
-        << Areas[i] << " but the stock " << stock[0]->Name()
+        << recAreas[i] << " but the stock " << stock[0]->Name()
         << " does not live on that area\n";
       exit(EXIT_FAILURE);
     }
@@ -219,7 +241,7 @@ void TagData::SetFleetsAndStocks(Fleetptrvector& Fleets, Stockptrvector& Stocks)
 }
 
 void TagData::AddToLikelihood(const TimeClass* const TimeInfo) {
-  double lik, p, x;
+/*double lik, p, x;
   int i, n;
 
   lik = 0.0;
@@ -252,5 +274,5 @@ void TagData::AddToLikelihood(const TimeClass* const TimeInfo) {
         lik += HUGE_VALUE;
     }
   }
-  likelihood += lik;
+  likelihood += lik;*/
 }
