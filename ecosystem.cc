@@ -231,6 +231,16 @@ void Ecosystem::writeLikelihoodInformation(const char* filename) const {
   outfile.clear();
 }
 
+void Ecosystem::writeLikelihoodInformation(const char* filename, int i) const {
+  ofstream outfile;
+  outfile.open(filename, ios::out);
+  handle.checkIfFailure(outfile, filename);
+  RUNID.print(outfile);
+  Likely[i]->LikelihoodPrint(outfile);
+  outfile.close();
+  outfile.clear();
+}
+
 void Ecosystem::writeLikeSummaryInformation(const char* filename) const {
   ofstream outfile;
   outfile.open(filename, ios::out);

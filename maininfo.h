@@ -162,6 +162,7 @@ public:
    * \return filename
    */
   char* getMainGadgetFile() const { return strMainGadgetFile; };
+  int printComp() const { return printComponent; };
 private:
   /**
    * \brief This function will read input from a file instead of the command line
@@ -244,6 +245,8 @@ private:
    * \brief This is the flag used to denote whether the likelihood information should be printed or not
    */
   int printLikelihoodInfo;
+
+  int printComponent;
   /**
    * \brief This is the flag used to denote whether the likelihood summary information should be printed or not
    */
