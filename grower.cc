@@ -75,7 +75,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
       break;
   }
 
-  int rows = maxlengthgroupgrowth + 1; //Number of rows in wgrowth and lgrowth
+  int rows = 0; //Number of rows in wgrowth and lgrowth
   infile >> ws >>  text;
   if ((strcasecmp(text, "beta") == 0)) {
     //Beta binomial growth distribution code is used
@@ -86,6 +86,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     readWordAndVariable(infile, "maxlengthgroupgrowth", maxlengthgroupgrowth);
 
     //Finished reading from input files.
+    rows = maxlengthgroupgrowth + 1;
     part1.resize(rows);
     part2.resize(rows);
     part4.resize(rows);
