@@ -228,8 +228,8 @@ void MaturityA::Reset(const TimeClass* const TimeInfo) {
         preCalcMaturation[age][len] = 1.0 / (1.0 + my);
       }
     }
+    handle.logMessage("Reset maturity data");
   }
-  handle.logMessage("Reset maturity data");
 }
 
 void MaturityA::setStock(StockPtrVector& stockvec) {
@@ -341,7 +341,8 @@ void MaturityB::setStock(StockPtrVector& stockvec) {
 
 void MaturityB::Reset(const TimeClass* const TimeInfo) {
   maturitylength.Update(TimeInfo);
-  handle.logMessage("Reset maturity data");
+  if (maturitylength.DidChange(TimeInfo))
+    handle.logMessage("Reset maturity data");
 }
 
 double MaturityB::MaturationProbability(int age, int length, int growth,
@@ -454,8 +455,8 @@ void MaturityC::Reset(const TimeClass* const TimeInfo) {
           preCalcMaturation[age][len] = 0.0;
       }
     }
+    handle.logMessage("Reset maturity data");
   }
-  handle.logMessage("Reset maturity data");
 }
 
 double MaturityC::MaturationProbability(int age, int length, int growth,
@@ -542,9 +543,11 @@ void MaturityD::setStock(StockPtrVector& stockvec) {
 
 void MaturityD::Reset(const TimeClass* const TimeInfo) {
   maturityParameters.Update(TimeInfo);
-  if (maturityParameters[1] > LgrpDiv->maxLength())
-    handle.logWarning("Warning in maturity calculation - l50 greater than maximum length");
-  handle.logMessage("Reset maturity data");
+  if (maturityParameters.DidChange(TimeInfo)) {
+    if (maturityParameters[1] > LgrpDiv->maxLength())
+      handle.logWarning("Warning in maturity calculation - l50 greater than maximum length");
+    handle.logMessage("Reset maturity data");
+  }
 }
 
 double MaturityD::MaturationProbability(int age, int length, int growth,
