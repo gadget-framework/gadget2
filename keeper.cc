@@ -573,13 +573,13 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec, int inte
     if (lowerbds[i] > bestvalues[i]) {
       check++;
       outfile << switches[i] << TAB << setw(w) << setprecision(p) << lowerbds[i] << TAB;
-      handle.logWarning("Warning in keeper - final value", bestvalues[i]);
-      handle.logWarning("is lower than the corresponding lower bound", lowerbds[i]);
+      handle.logWarning("Warning in keeper - parameter has a final value", bestvalues[i]);
+      handle.logWarning("which is lower than the corresponding lower bound", lowerbds[i]);
     } else if (upperbds[i] < bestvalues[i]) {
       check++;
       outfile << switches[i] << TAB << setw(w) << setprecision(p) << upperbds[i] << TAB;
-      handle.logWarning("Warning in keeper - final value", bestvalues[i]);
-      handle.logWarning("is higher than the corresponding upper bound", upperbds[i]);
+      handle.logWarning("Warning in keeper - parameter has a final value", bestvalues[i]);
+      handle.logWarning("which is higher than the corresponding upper bound", upperbds[i]);
     } else
       outfile << switches[i] << TAB << setw(w) << setprecision(p) << bestvalues[i] << TAB;
     
@@ -655,25 +655,25 @@ void Keeper::checkBounds(const LikelihoodPtrVector& Likely) const {
       count++;
   }
   if (count == 0)
-    handle.logWarning("Warning in keeper - no boundlikelihood component found");
-  
+    handle.logWarning("Warning in keeper - no boundlikelihood component found\nNo penalties will be applied if any of the parameter bounds are exceeded");
+    
   //check the values of the switches are within the bounds to start with
   count = 0;
   for (i = 0; i < values.Size(); i++) {
     if (lowerbds[i] > values[i]) {
       count++;
-      handle.logWarning("Error in keeper - initial value", values[i]);
-      handle.logWarning("is lower than the corresponding lower bound", lowerbds[i]);
+      handle.logWarning("Error in keeper - parameter has initial value", values[i]);
+      handle.logWarning("which is lower than the corresponding lower bound", lowerbds[i]);
     }
     if (upperbds[i] < values[i]) {
       count++;
-      handle.logWarning("Error in keeper - initial value", values[i]);
-      handle.logWarning("is higher than the corresponding upper bound", upperbds[i]);
+      handle.logWarning("Error in keeper - parameter has initial value", values[i]);
+      handle.logWarning("which is higher than the corresponding upper bound", upperbds[i]);
     }
     if (upperbds[i] < lowerbds[i]) {
       count++;
-      handle.logWarning("Error in keeper - upper bound", upperbds[i]);
-      handle.logWarning("is lower than the corresponding lower bound", lowerbds[i]);
+      handle.logWarning("Error in keeper - parameter has upper bound", upperbds[i]);
+      handle.logWarning("which is lower than the corresponding lower bound", lowerbds[i]);
     }
   }
   if (count > 0)
