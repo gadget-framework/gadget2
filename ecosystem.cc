@@ -180,12 +180,14 @@ void Ecosystem::writeValuesInColumns(const char* const filename, int prec) const
 
 void Ecosystem::writeParamsInColumns(const char* const filename, int prec) const {
 
-  //JMB - print the final values to any output files specified
-  //in case they have been missed by the -print1 or -print2 values
-  if (printinfo.getPrint())
-    this->writeValues(printinfo.getOutputFile(), printinfo.getPrecision());
-  if (printinfo.getPrintColumn())
-    this->writeValuesInColumns(printinfo.getColumnOutputFile(), printinfo.getPrecision());
+  if (funceval > 0) {
+    //JMB - print the final values to any output files specified
+    //in case they have been missed by the -print1 or -print2 values
+    if (printinfo.getPrint())
+      this->writeValues(printinfo.getOutputFile(), printinfo.getPrecision());
+    if (printinfo.getPrintColumn())
+      this->writeValuesInColumns(printinfo.getColumnOutputFile(), printinfo.getPrecision());
+  }
 
   keeper->writeParamsInColumns(filename, prec);
 }

@@ -18,18 +18,15 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
 
   int print = 1;
   if (MainInfo->runNetwork()) {
-    print = 0;  //do not print in optimizing
+    print = 0;  //no printing during a network run
+    EcoSystem->Reset();
 
     #ifdef GADGET_NETWORK //to help compiling when pvm libraries are unavailable
       Stochasticdata = new StochasticData(MainInfo->runNetwork());
-      EcoSystem->Reset();
       while (Stochasticdata->getDataFromNet()) {
         EcoSystem->Update(Stochasticdata);
         EcoSystem->Simulate(MainInfo->runLikelihood(), print);
-        if ((MainInfo->getPI()).getPrint())
-          EcoSystem->writeValues((MainInfo->getPI()).getOutputFile(), (MainInfo->getPI()).getPrecision());
-        if ((MainInfo->getPI()).getPrintColumn())
-          EcoSystem->writeValuesInColumns((MainInfo->getPI()).getColumnOutputFile(), (MainInfo->getPI()).getPrecision());
+	//JMB - no printing during an network run ...
         Stochasticdata->SendDataToMaster(EcoSystem->getLikelihood());
         Stochasticdata->readNextLineFromNet();
       }
@@ -52,6 +49,7 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
     while (Stochasticdata->DataIsLeft()) {
       Stochasticdata->readDataFromNextLine();
       EcoSystem->Update(Stochasticdata);
+      EcoSystem->checkBounds();
       EcoSystem->Simulate(MainInfo->runLikelihood(), print);
       if ((MainInfo->getPI()).getPrint())
         EcoSystem->writeValues((MainInfo->getPI()).getOutputFile(), (MainInfo->getPI()).getPrecision());

@@ -50,7 +50,7 @@ using namespace std;
 
 /* Also defined are some of the constants used by Gadget */
 const int MaxStrLength = 250;
-const int LongString = 1025;
+const int LongString = 4097;                  /* 4Kb + 1 */
 const double rathersmall = 1e-10;
 const double verysmall = 1e-100;
 const double verybig = 1e+10;

@@ -13,7 +13,7 @@
 class StrayData : protected LivesOnAreas {
 public:
   StrayData(CommentStream& infile, const LengthGroupDivision* const LgrpDiv,
-    const IntVector& areas, const AreaClass* const Area,
+    const IntVector& Areas, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   ~StrayData();
   void Print(ofstream& outfile) const;

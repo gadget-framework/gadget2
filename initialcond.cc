@@ -46,7 +46,7 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
   ageid = -1;
   tmparea = -1;
   keeper->addString("meandata");
-  while (!infile.eof()) {
+  while (!infile.eof() && !infile.fail()) {
     keepdata = 0;
     infile >> age >> area >> ws;
 
@@ -138,7 +138,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   areaid = -1;
   lengthid = -1;
   keeper->addString("numberdata");
-  while (!infile.eof()) {
+  while (!infile.eof() && !infile.fail()) {
     keepdata = 0;
     infile >> area >> age >> length >> tmpnumber >> ws;
 

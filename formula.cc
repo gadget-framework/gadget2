@@ -72,7 +72,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
   //If here, then c == '*'
   Parameter attrb;
   double mult;
-  while ((c = infile.peek()) == '*') {
+  while (c == '*') {
     infile.get(c);
     if (!(infile >> mult)) {
       infile.makebad();
@@ -89,6 +89,12 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     }
     F.multipliers.resize(1, mult);
     F.attributes.resize(1, attrb);
+
+    c = infile.peek();
+    if (infile.fail() || infile.eof()) {
+      infile.makebad();
+      return infile;
+    }
   }
   return infile;   //success.
 }

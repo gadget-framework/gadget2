@@ -208,11 +208,6 @@ int OptInfoSimann::read(CommentStream& infile, char* text) {
   } else if (strcasecmp(text, "lratio") == 0) {
     infile >> lratio >> ws;
     return 1;
-  } else if (strcasecmp(text, "maxim") == 0) {
-    // JMB - paramin compatiblity
-    // read maxim and ignore it since we always minimise things
-    infile >> text >> ws;
-    return 1;
   } else
     return 0;
 }

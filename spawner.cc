@@ -10,8 +10,8 @@
 extern ErrorHandler handle;
 
 Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* const lgrpdiv,
-  const IntVector& areas, const AreaClass* const Area, const TimeClass* const TimeInfo,
-  Keeper* const keeper) : LivesOnAreas(areas) {
+  const IntVector& Areas, const AreaClass* const Area, const TimeClass* const TimeInfo,
+  Keeper* const keeper) : LivesOnAreas(Areas) {
 
   keeper->addString("spawner");
   int i;
@@ -228,7 +228,7 @@ void Spawner::setStock(StockPtrVector& stockvec) {
 
   IntVector minlv(1, 0);
   IntVector sizev(1, spawnLgrpDiv->NoLengthGroups());
-  Storage.resize(spawnarea.Size(), spawnage, minlv, sizev);
+  Storage.resize(areas.Size(), spawnage, minlv, sizev);
   for (i = 0; i < Storage.Size(); i++)
     Storage[i].setToZero();
 
@@ -238,8 +238,7 @@ void Spawner::setStock(StockPtrVector& stockvec) {
 
 }
 
-void Spawner::Spawn(AgeBandMatrix& Alkeys, int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Spawner::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo) {
 
   if (this->IsSpawnStepArea(area, TimeInfo) == 0)
     return;
@@ -263,7 +262,6 @@ void Spawner::Spawn(AgeBandMatrix& Alkeys, int area,
   }
 }
 
-//area in the call to this routine is not in the local area numbering of the stock.
 void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
 
   if (onlyParent == 1)
@@ -320,6 +318,7 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
 
 int Spawner::IsSpawnStepArea(int area, const TimeClass* const TimeInfo) {
   int i, j;
+
   for (i = 0; i < spawnstep.Size(); i++)
     for (j = 0; j < spawnarea.Size(); j++)
       if ((spawnstep[i] == TimeInfo->CurrentStep()) && (spawnarea[j] == area))

@@ -163,8 +163,8 @@ void Stock::FirstUpdate(int area, const AreaClass* const Area, const TimeClass* 
       transition->keepAgeGroup(area, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
 
   if (doesstray)
-    if (stray->IsStrayStepArea(area, TimeInfo))
-      stray->storeStrayingStock(area, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
+    if (stray->IsStrayStepArea(inarea, TimeInfo))
+      stray->storeStrayingStock(inarea, Alkeys[inarea], tagAlkeys[inarea], TimeInfo);
 }
 
 void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
@@ -177,6 +177,7 @@ void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass*
 }
 
 void Stock::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+  int inarea = AreaNr[area];
   if (doesmove)
     if (transition->IsTransitionStep(area, TimeInfo)) {
       updateTransitionStockWithTags(TimeInfo);
@@ -184,19 +185,19 @@ void Stock::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* 
     }
 
   if (doesstray)
-    if (stray->IsStrayStepArea(area, TimeInfo)) {
+    if (stray->IsStrayStepArea(inarea, TimeInfo)) {
       updateStrayStockWithTags(TimeInfo);
-      stray->addStrayStock(area, TimeInfo);
+      stray->addStrayStock(inarea, TimeInfo);
     }
 
   if (doesspawn)
-    spawner->addSpawnStock(area, TimeInfo);
+    spawner->addSpawnStock(inarea, TimeInfo);
 }
 
 void Stock::FirstSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doesspawn) {
     int inarea = AreaNr[area];
-    spawner->Spawn(Alkeys[inarea], area, Area, TimeInfo);
+    spawner->Spawn(Alkeys[inarea], area, TimeInfo);
     if (tagAlkeys.numTagExperiments() > 0)
       tagAlkeys[inarea].updateNumbers(Alkeys[inarea]);
   }
