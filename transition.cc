@@ -111,7 +111,7 @@ void Transition::SetStock(StockPtrVector& stockvec) {
   IntVector sizev(2, LgrpDiv->NoLengthGroups());
   AgeGroup.resize(areas.Size(), age, minlv, sizev);
   TagAgeGroup.resize(areas.Size(), age, minlv, sizev);
-  minLength = LgrpDiv->NoLengthGroup(mlength);
+  minTransitionLength = LgrpDiv->NoLengthGroup(mlength);
 }
 
 void Transition::Print(ofstream& outfile) const {
@@ -141,7 +141,7 @@ void Transition::KeepAgegroup(int area, AgeBandMatrix& Alkeys,
       AgeGroup[inarea][age][l].N = Alkeys[age][l].N;
       AgeGroup[inarea][age][l].W = Alkeys[age][l].W;
 
-      if (l >= minLength) {
+      if (l >= minTransitionLength) {
         Alkeys[age][l].N = 0.0;
         Alkeys[age][l].W = 0.0;
       }
@@ -153,7 +153,7 @@ void Transition::KeepAgegroup(int area, AgeBandMatrix& Alkeys,
         else
           *(TagAgeGroup[inarea][age][l][i].N) = tagnumber;
 
-        if (l >= minLength) {
+        if (l >= minTransitionLength) {
           *(TagAlkeys[age][l][i].N) = 0.0;
           TagAlkeys[age][l][i].R = 0.0;
         }

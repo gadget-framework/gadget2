@@ -60,7 +60,7 @@ public:
   virtual ~SCNumbers() {};
   virtual void Aggregate(int i);
 protected:
-  void ReadStomachNumberContent(CommentStream&, const TimeClass* const);
+  void ReadStomachNumberContent(CommentStream& infile, const TimeClass* const TimeInfo);
   virtual double CalculateLikelihood(DoubleMatrixPtrVector&, DoubleMatrix&);
 };
 
@@ -75,8 +75,8 @@ public:
   virtual void PrintLikelihood(ofstream&, const TimeClass& time);
   virtual void PrintLikelihoodHeader(ofstream&);
 protected:
-  void ReadStomachAmountContent(CommentStream&, const TimeClass* const);
-  void ReadStomachSampleContent(CommentStream&, const TimeClass* const);
+  void ReadStomachAmountContent(CommentStream& infile, const TimeClass* const TimeInfo);
+  void ReadStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo);
   virtual double CalculateLikelihood(DoubleMatrixPtrVector&, DoubleMatrix&);
   DoubleMatrixPtrMatrix stddev;  //[timeindex][areas][pred_l][prey_l]
   DoubleMatrixPtrVector number;  //[timeindex][areas][pred_l]

@@ -104,7 +104,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   }
 }
 
-void Recaptures::ReadRecaptureData(CommentStream& infile, const TimeClass* TimeInfo) {
+void Recaptures::ReadRecaptureData(CommentStream& infile, const TimeClass* const TimeInfo) {
 
   ErrorHandler handle;
   int i, j, k;
