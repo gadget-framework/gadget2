@@ -2528,29 +2528,20 @@ datafile             <name for the datafile>
 epsilon              <epsilon>
 areaaggfile          <area aggregation file specifying areas>
 predatornames        <vector of the names of the predators>
-<predatortype>
-preyaggfile          <prey aggregation file specifying preys>
-\end{verbatim}}
-
-The $<$predatortype$>$ defines how the predator data will be structured for the purposes of the data comparison.  There are currently two options available, to specify a length-structured predator or an age-structured predator.  To specify a predator that is length based, the format of the $<$predatortype$>$ in the likelihood file should be as follows: 
-
-{\small\begin{verbatim}
-...
-predatornames        <vector of the names of the predators>
 predatorlengths
 lenaggfile           <length aggregation file specifying predator lengths>
 preyaggfile          <prey aggregation file specifying preys>
 \end{verbatim}}
 
-Alternatively, to specify apredator that is age based, the format of the $<$predatortype$>$ in the likelihood file should be as follows: 
+%The $<$predatortype$>$ defines how the predator data will be structured for the purposes of the data comparison.  There are currently two options available, to specify a length-structured predator or an age-structured predator.  To specify a predator that is length based, the format of the $<$predatortype$>$ in the likelihood file should be as follows: 
 
-{\small\begin{verbatim}
-...
-predatornames        <vector of the names of the predators>
-predatorages
-ageaggfile           <age aggregation file specifying predator ages>
-preyaggfile          <prey aggregation file specifying preys>
-\end{verbatim}}
+%{\small\begin{verbatim}
+%...
+%predatornames        <vector of the names of the predators>
+%predatorages
+%ageaggfile           <age aggregation file specifying predator ages>
+%preyaggfile          <prey aggregation file specifying preys>
+%\end{verbatim}}
 
 The optional $<$epsilon$>$ value is used whenever the calculated probability is very unlikely, although the exact format of this depends on the function that is to be used when calculating the likelihood score.  This means that the likelihood component is not dominated by one or two stray values, since these will be reset back to less unlikely values.  The default value for $<$epsilon$>$ is 10, which is used whenever it is not defined in the input file.
 
@@ -2573,7 +2564,7 @@ Finally, the file specified by $<$datafile$>$ contains a list of the stomach con
 <year>  <step>  <area>  <predator>  <prey>  <ratio>
 \end{verbatim}}
 
-where $<$ratio$>$ is the ratio of prey $<$prey$>$ in the stomachs of predator $<$predator$>$ for the timestep/area combination, where $<$prey$>$ is defined in the prey aggregation file, and $<$predator$>$ is defined in the predator length or age aggregation file, depending on the format of $<$predatortype$>$.
+where $<$ratio$>$ is the ratio of prey $<$prey$>$ in the stomachs of predator $<$predator$>$ for the timestep/area combination, where $<$prey$>$ is defined in the prey aggregation file, and $<$predator$>$ is defined in the predator length aggregation file.
 
 \subsection{SCSimple Function}
 The scsimple function calculates the likelihood component by comparing the ratio of the consumption of different preys by a predator in the model to the ratio of the preys found in the stomach contents data specified in the input file, as shown in equation~\ref{eq:stomach1} below:
@@ -3481,25 +3472,28 @@ This file is written in the same format as the parameter input file, and it can 
 
 \appendix
 \chapter{Order of Calculations}\label{chap:order}
-
-OK, I've had a bit of a think about this, and I think that the order that things happen should be
+It is important to understand the order that Gadget performs the calculations, since this could have an effect on the way the user might structure the model.  For each timestep of the simulation, the order of the calculations is:
 
 \begin{enumerate}
-\item Printing - optional printing at the begining of the timestep, before any calculations have taken place for this timestep
-\item Migration - move fish around between areas
-\item Consumption and predation- including consumption by fleets, which is what most of the likelihood components use as the source for their model data to use as a comparison
-\item Remove fish from the stock due to natural mortality
-\item Growth - including stashing the fish that will mature somewhere
-\item Spawning - effect on parent, and stash the new fish somewhere
-\item Add any newly matured fish to the stock
-\item Add any new recruits into the stock
-\item Add any newly spawned fish to the stock
-\item Move fish between stocks that are ''straying''
-\item Calculate the likelihood score.  Note that most of the likelihood components use data that is based on the catch by a fleet, which has been calculated as part of the consumption calculations
-\item Printing - default printing takes place at the end of the timestep
-\item Remove any fish from the stock that will ''move'' to a different stock
-\item Increase the age of the stock, if this is the last timestep in the year
-\item Add in any fish that have ''moved'' to this stock
+\item {\bf printing}.  \textit{Optional} printing of the model information at the beginning of the timestep, before any calculations have taken place for this timestep.  Note that the default printing takes places towards the end of the timestep.
+\item {\bf migration}.  Move the stocks around between the areas in the model, using migration matrices as described in section~\ref{sec:stockmigrate}.
+\item {\bf consumption}.  Calculate the predation by, and consumption of, the stocks in the model.  Since a predator can consume more than one prey, and a prey can be consumed by more than one predator, the consumption calculations take place in 4 stages:
+\begin{enumerate}
+\item calculate the amount that each predator wants to consume of each prey, assuming that there is enough prey to meet these demands.
+\item check that each prey is not ''over-consumed''.
+\item adjust the consumption of the predators to avoid overconsumption of the preys.
+\item reduce the population of the preys according to the adjusted amount that the predators consumed.
+\end{enumerate}
+Note that the consumption calculations include the ''consumption'' of the stocks by any fleets in the model.
+\item {\bf natural mortality}.  Reduce the population of the stocks in the model by removing a proportion due to natural mortality.
+\item {\bf growth}.  Calculate any increase in length and weight of the stocks, and move any fish that will become mature (see section~\ref{sec:stockmature}) into temporary storage.
+\item {\bf spawning}.  Calculate the affect that spawning will have on the adult stocks, and place any spawned stock into temporary storage.
+\item {\bf maturation}.  Add the newly matured fish (calculated as part of the growth update) into the model.  Note that this comes after the mature fish have spawned, which means that a fish cannot become mature and spawn in the same timestep.
+\item {\bf recruitment}.  Add any new recruits to the model, including both the recruits specified directly and the recruits specified as part of the spawning process.  Note that this comes after the consumption calculations, so that new recruits cannot be consumed on the same timestep as they have been added into the model.
+\item {\bf straying}.  Move fish between stocks in the model that are straying, as described in section~\ref{sec:stockstray}.
+\item {\bf likelihood comparison}.  Calculate the likelihood score for each of the individual likelihood components.  Note that most of the likelihood components use data that is based on the catch by a fleet, which has been calculated as part of the consumption process.
+\item {\bf printing}.  Default printing of the model information at the end of the timestep, after the calculations have taken place for this timestep.
+\item {\bf ageing}.  If this is the last timestep of the year, increase the age of the fish in the model.  As part of this process, the oldest age group (the plus group) can move to another stock (see section~\ref{sec:stockmove}).
 \end{enumerate}
 
 \end{document}
