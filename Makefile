@@ -10,6 +10,9 @@ GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat \
 DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
 
 ##########################################################################
+# The name of the final executable
+GADGET = gadget
+##########################################################################
 # Pick the appropriate compiler from the following switches
 ##########################################################################
 # 1. Linux, or Solaris, without pvm, g++ compiler
@@ -18,7 +21,6 @@ LIBDIRS = -L. -L/usr/local/lib
 LIBRARIES = -lm -lvec
 CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 OBJECTS = $(GADGETOBJECTS)
-GADGET = gadget
 ##########################################################################
 # 2. Linux, or Solaris, with pvm3, g++ compiler
 #CXX = g++
@@ -26,7 +28,7 @@ GADGET = gadget
 #PVMINCLUDE = $(PVMDIR)/include
 #PVMLIB = $(PVMDIR)/lib/$(PVM_ARCH)
 #LIBDIRS = -L. -L/usr/local/lib -L$(PVMLIB)
-#LIBRARIES = -lm -lvec -lpvm3 -lgpvm3 -lnsl
+#LIBRARIES = -lm -lvec -lpvm3 -lnsl
 # note that some (older) linux machines also require the -lsocket library
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
 #OBJECTS = $(GADGETOBJECTS) $(SLAVEOBJECTS)
@@ -52,7 +54,6 @@ GADGET = gadget
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 #OBJECTS = $(GADGETOBJECTS)
 #CPPFLAGS = -I/usr/local/include #-I/dev/fs/C/x/SDK/opt/gcc.3.3/include/c++/3.3/backward
-#GADGET = gadget-windows
 ##########################################################################
 
 VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \

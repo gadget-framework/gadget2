@@ -90,6 +90,22 @@ void ErrorHandler::logInformation(const char* msg) {
   cout << msg << endl;
 }
 
+void ErrorHandler::logInformation(const char* msg, int number) {
+  if (uselog) {
+    logfile << msg << sep << number << endl;
+    logfile.flush();
+  }
+  cout << msg << sep << number << endl;
+}
+
+void ErrorHandler::logInformation(const char* msg, double number) {
+  if (uselog) {
+    logfile << msg << sep << number << endl;
+    logfile.flush();
+  }
+  cout << msg << sep << number << endl;
+}
+
 void ErrorHandler::logInformation(const char* msg1, const char* msg2) {
   if (uselog) {
     logfile << msg1 << sep << msg2 << endl;
@@ -264,4 +280,19 @@ void ErrorHandler::checkIfFailure(ios& infile, const char* text) {
     logfile.flush();
   }
   return;
+}
+
+void ErrorHandler::logRunTime(int printtime) {
+  if (uselog) {
+    logfile << "\nGadget simulation finished OK - runtime was ";
+    RUNID.printElapsedTime(logfile);
+    logfile.flush();
+  }
+  cout << "\nGadget simulation finished OK";
+  if (printtime) {
+    cout << " - runtime was ";
+    RUNID.printElapsedTime(cout);
+  } else
+    cout << endl;
+  cout.flush();
 }

@@ -56,6 +56,18 @@ public:
    */
   void logInformation(const char* msg);
   /**
+   * \brief This function will log a message and a number to std::cout and a log file if one exists
+   * \param msg is the message to be logged
+   * \param number is the number to be logged
+   */
+  void logInformation(const char* msg, int number);
+  /**
+   * \brief This function will log a message and a number to std::cout and a log file if one exists
+   * \param msg is the message to be logged
+   * \param number is the number to be logged
+   */
+  void logInformation(const char* msg, double number);
+  /**
    * \brief This function will log two messages to std::cout and a log file if one exists
    * \param msg1 is the first message to be logged
    * \param msg2 is the second message to be logged
@@ -158,6 +170,7 @@ public:
    * \return uselog
    */
   int checkLogFile() { return uselog; };
+  void logRunTime(int printtime);
 protected:
   /**
    * \brief This ofstream is the file that all the logging information will get sent to

@@ -9,7 +9,6 @@ RunID::RunID() {
   else
     hostName = "-nohostname-";
 
-  time_t runtime;
   if (time(&runtime))
     timestring = ctime(&runtime);
   else
@@ -21,4 +20,10 @@ void RunID::print(ostream& o) {
   if (timestring[strlen(timestring) - 1] != '\n')
     o << endl;
   o.flush();
+}
+
+void RunID::printElapsedTime(ostream& o) {
+  time_t stoptime;
+  o << difftime(time(&stoptime), runtime) << " seconds" << endl;
+  o.flush();  
 }

@@ -22,6 +22,7 @@ public:
    * \param o is the ofstream that the model run information will be written to
    */
   void print(ostream& o);
+  void printElapsedTime(ostream& o);
 protected:
   /**
    * \brief This is the name of the host machine that is running the current model
@@ -35,6 +36,7 @@ protected:
    * \brief This is the host machine that is running the current model
    */
   struct utsname host;
+  time_t runtime;
 };
 
 #endif
