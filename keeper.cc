@@ -114,6 +114,7 @@ void Keeper::addString(const char* str) {
 }
 
 void Keeper::addComponent(const char* name) {
+  //place a tab character to mark the beginning of the next likelihood component
   likcompnames->PutInStack("\t");
   likcompnames->PutInStack(name);
 }
@@ -135,7 +136,7 @@ int Keeper::numOptVariables() const {
   return nr;
 }
 
-void Keeper::ValuesOfVariables(DoubleVector& val) const {
+void Keeper::CurrentValues(DoubleVector& val) const {
   int i;
   for (i = 0; i < values.Size(); i++)
     val[i] = values[i];
@@ -165,23 +166,6 @@ void Keeper::ScaledOptValues(DoubleVector& val) const {
     for (i = 0; i < scaledvalues.Size(); i++)
       if (opt[i] == 1) {
         val[k] = scaledvalues[i];
-        k++;
-      }
-  }
-}
-
-void Keeper::OptValues(DoubleVector& val) const {
-  int i, k;
-  if (val.Size() != this->numOptVariables())
-    handle.logFailure("Error in keeper - received invalid number of optimising variables");
-
-  if (opt.Size() == 0)
-    this->ValuesOfVariables(val);
-  else {
-    k = 0;
-    for (i = 0; i < values.Size(); i++)
-      if (opt[i] == 1) {
-        val[k] = values[i];
         k++;
       }
   }
@@ -503,7 +487,7 @@ void Keeper::Switches(ParameterVector& sw) const {
     sw[i] = switches[i];
 }
 
-void Keeper::writeParamsInColumns(const char* const filename, int prec) const {
+void Keeper::writeParamsInColumns(const char* const filename, int prec, int interrupt) const {
 
   int i, p, w;
   ofstream outfile;
@@ -519,7 +503,12 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec) const {
   outfile << "; ";
   RUNID.print(outfile);
 
-  if (EcoSystem->getFuncEval() == 0) {
+
+  if (interrupt == 1) {
+    outfile << "; Gadget was interrupted after " << EcoSystem->getFuncEval()
+      << " function evaluations at the following point\n";
+
+  } else if (EcoSystem->getFuncEval() == 0) {
     outfile << "; a stochastic run was performed giving a likelihood value of "
       << setprecision(p) << EcoSystem->getLikelihood() << endl;
 

@@ -52,20 +52,15 @@ void Ecosystem::readFleet(CommentStream& infile) {
     fleetvec.resize(1);
     i = fleetnames.Size() - 1;
     fleetnames[i] = new char[strlen(value) + 1];
+    strcpy(fleetnames[i], value);
 
-    if (strcasecmp(text, "totalfleet") == 0) {
-      strcpy(fleetnames[i], value);
+    if (strcasecmp(text, "totalfleet") == 0)
       fleetvec[i] = new Fleet(infile, fleetnames[i], Area, TimeInfo, keeper, TOTALFLEET);
-
-    } else if (strcasecmp(text, "linearfleet") == 0) {
-      strcpy(fleetnames[i], value);
+    else if (strcasecmp(text, "linearfleet") == 0)
       fleetvec[i] = new Fleet(infile, fleetnames[i], Area, TimeInfo, keeper, LINEARFLEET);
-
-    } else if (strcasecmp(text, "mortalityfleet") == 0) {
-      strcpy(fleetnames[i], value);
+    else if (strcasecmp(text, "mortalityfleet") == 0)
       fleetvec[i] = new Fleet(infile, fleetnames[i], Area, TimeInfo, keeper, MORTALITYFLEET);
-
-    } else
+    else
       handle.Message("Error in fleet file - unrecognised fleet", text);
 
     handle.logMessage("Read fleet OK - created fleet", value);
@@ -92,11 +87,11 @@ void Ecosystem::readTagging(CommentStream& infile) {
     tagvec.resize(1);
     i = tagnames.Size() - 1;
     tagnames[i] = new char[strlen(value) + 1];
+    strcpy(tagnames[i], value);
 
-    if (strcasecmp(text, "tagid") == 0) {
-      strcpy(tagnames[i], value);
+    if (strcasecmp(text, "tagid") == 0)
       tagvec[i] = new Tags(infile, tagnames[i], Area, TimeInfo, keeper, stockvec);
-    } else
+    else
       handle.Unexpected("tagid", text);
 
     handle.logMessage("Read tagging experiment OK - created tag", value);
@@ -123,11 +118,11 @@ void Ecosystem::readOtherFood(CommentStream& infile) {
     otherfoodvec.resize(1);
     i = otherfoodnames.Size() - 1;
     otherfoodnames[i] = new char[strlen(value) + 1];
+    strcpy(otherfoodnames[i], value);
 
-    if (strcasecmp(text, "foodname") == 0) {
-      strcpy(otherfoodnames[i], value);
+    if (strcasecmp(text, "foodname") == 0)
       otherfoodvec[i] = new OtherFood(infile, otherfoodnames[i], Area, TimeInfo, keeper);
-    } else
+    else
       handle.Unexpected("foodname", text);
 
     handle.logMessage("Read otherfood OK - created otherfood", value);
@@ -210,10 +205,10 @@ void Ecosystem::readPrinters(CommentStream& infile) {
       printvec.resize(1, new MortPrinter(infile, Area, TimeInfo));
     else if (strcasecmp(type, "biomassprinter") == 0)
       printvec.resize(1, new BiomassPrinter(infile, Area, TimeInfo));
+    else if (strcasecmp(type, "likelihoodprinter") == 0)
+      printvec.resize(1, new LikelihoodPrinter(infile, Area, TimeInfo));
     else if (strcasecmp(type, "formatedcatchprinter") == 0)
       handle.Warning("The formatedcatchprinter printer class is no longer supported");
-    else if (strcasecmp(type, "likelihoodprinter") == 0)
-      likprintvec.resize(1, new LikelihoodPrinter(infile, Area, TimeInfo));
     else
       handle.Message("Error in printer file - unrecognised printer", type);
 

@@ -211,7 +211,7 @@ protected:
   /**
    * \brief This is the BandMatrix of maturation parameters
    */
-  BandMatrix PrecalcMaturation;
+  BandMatrix preCalcMaturation;
   /**
    * \brief This is the TimeVariableVector of maturation parameters
    */
@@ -358,7 +358,7 @@ protected:
   /**
    * \brief This is the BandMatrix of maturation parameters
    */
-  BandMatrix PrecalcMaturation;
+  BandMatrix preCalcMaturation;
   /**
    * \brief This is the TimeVariableVector of maturation parameters
    */

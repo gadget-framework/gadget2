@@ -33,7 +33,7 @@ protected:
   DoubleVector Multiplication;
   SuitFuncPtrVector SuitFunction;
   DoubleMatrixPtrVector MatrixSuit;
-  BandMatrixVector PrecalcSuitability;
+  BandMatrixVector preCalcSuitability;
 };
 
 #endif

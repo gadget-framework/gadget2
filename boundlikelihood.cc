@@ -121,7 +121,7 @@ void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keepe
 
   int i;
   DoubleVector values(keeper->numVariables());
-  keeper->ValuesOfVariables(values);
+  keeper->CurrentValues(values);
   for (i = 0; i < switchnr.Size(); i++) {
     if (values[switchnr[i]] < lowerbound[i]) {
       likelihoods[i] = lowerweights[i] * pow(absolute(values[switchnr[i]] - lowerbound[i]), powers[i]);

@@ -73,8 +73,8 @@ void OptInfoHooke::OptimiseLikelihood() {
 
   EcoSystem->ScaleVariables();
   EcoSystem->ScaledOptValues(val);
-  EcoSystem->LowerBds(lbds);
-  EcoSystem->UpperBds(ubds);
+  EcoSystem->LowerOptBds(lbds);
+  EcoSystem->UpperOptBds(ubds);
   EcoSystem->InitialOptValues(initialval);
   EcoSystem->OptSwitches(optswitches);
 

@@ -37,7 +37,7 @@
 
 extern ErrorHandler handle;
 
-void Ecosystem::Initialise(int optimise) {
+void Ecosystem::Initialise() {
   PreyPtrVector preyvec;
   PredatorPtrVector predvec;
   PopPredatorPtrVector poppredvec;
@@ -80,106 +80,98 @@ void Ecosystem::Initialise(int optimise) {
   for (i = 0; i < tagvec.Size(); i++)
     tagvec[i]->setStock(stockvec);
 
-  //This is a good place to initialise the printer classes.
-  for (i = 0; i < printvec.Size(); i++)
-    switch(printvec[i]->Type()) {
-      case STOCKSTDPRINTER:
-        printvec[i]->setStock(stockvec);
+  //This is a good place to initialise the likelihood classes.
+  for (i = 0; i < Likely.Size(); i++) {
+    switch(Likely[i]->Type()) {
+      case SURVEYINDICESLIKELIHOOD:
+        ((SurveyIndices*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
-      case STOCKPRINTER:
-        printvec[i]->setStock(stockvec);
+      case UNDERSTOCKINGLIKELIHOOD:
+        ((UnderStocking*)Likely[i])->setFleets(fleetvec);
         break;
-      case PREDATORPRINTER:
-        printvec[i]->setPredAndPrey(predvec, preyvec);
+      case CATCHDISTRIBUTIONLIKELIHOOD:
+        ((CatchDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
-      case PREDATOROVERPRINTER:
-        printvec[i]->setPredator(predvec);
+      case CATCHSTATISTICSLIKELIHOOD:
+        ((CatchStatistics*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
-      case PREYOVERPRINTER:
-        printvec[i]->setPrey(preyvec);
+      case STOMACHCONTENTLIKELIHOOD:
+        ((StomachContent*)Likely[i])->setPredatorsAndPreys(predvec, preyvec);
         break;
-      case STOCKPREYFULLPRINTER:
-        printvec[i]->setStock(stockvec);
+      case TAGLIKELIHOOD:
+        ((Recaptures*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
-      case PREDPREYSTDPRINTER:
-        printvec[i]->setStocksAndPredAndPrey(stockvec, poppredvec, preyvec);
+      case STOCKDISTRIBUTIONLIKELIHOOD:
+        ((StockDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
-      case STOCKFULLPRINTER:
-        printvec[i]->setStock(stockvec);
+      case MIGRATIONPENALTYLIKELIHOOD:
+        ((MigrationPenalty*)Likely[i])->setStocks(stockvec);
         break;
-      case FORMATEDSTOCKPRINTER:
-        printvec[i]->setStock(stockvec);
+      case CATCHINTONSLIKELIHOOD:
+        ((CatchInTons*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
-      case FORMATEDCHATPRINTER:
-        printvec[i]->setFleet(fleetvec);
+      case RECSTATISTICSLIKELIHOOD:
+        ((RecStatistics*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
-      case FORMATEDPREYPRINTER:
-        printvec[i]->setStock(stockvec);
+      case SURVEYDISTRIBUTIONLIKELIHOOD:
+        ((SurveyDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
-      case MORTPRINTER:
-        printvec[i]->setStock(stockvec);
-        break;
-      case BIOMASSPRINTER:
-        printvec[i]->setStock(stockvec);
+      case BOUNDLIKELIHOOD:
         break;
       default:
-        handle.logFailure("Error when initialising model - unrecognized printer type", printvec[i]->Type());
+        handle.logFailure("Error when initialising model - unrecognised likelihood type", Likely[i]->Type());
         break;
     }
+  }
 
-  if (optimise) {
-    for (i = 0; i < Likely.Size(); i++) {
-      switch(Likely[i]->Type()) {
-        case SURVEYINDICESLIKELIHOOD:
-          ((SurveyIndices*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
-          break;
-        case UNDERSTOCKINGLIKELIHOOD:
-          ((UnderStocking*)Likely[i])->setFleets(fleetvec);
-          break;
-        case CATCHDISTRIBUTIONLIKELIHOOD:
-          ((CatchDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
-          break;
-        case CATCHSTATISTICSLIKELIHOOD:
-          ((CatchStatistics*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
-          break;
-        case STOMACHCONTENTLIKELIHOOD:
-          ((StomachContent*)Likely[i])->setPredatorsAndPreys(predvec, preyvec);
-          break;
-        case TAGLIKELIHOOD:
-          ((Recaptures*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
-          break;
-        case STOCKDISTRIBUTIONLIKELIHOOD:
-          ((StockDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
-          break;
-        case MIGRATIONPENALTYLIKELIHOOD:
-          ((MigrationPenalty*)Likely[i])->setStocks(stockvec);
-          break;
-        case CATCHINTONSLIKELIHOOD:
-          ((CatchInTons*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
-          break;
-        case RECSTATISTICSLIKELIHOOD:
-          ((RecStatistics*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
-          break;
-        case SURVEYDISTRIBUTIONLIKELIHOOD:
-          ((SurveyDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
-          break;
-        case BOUNDLIKELIHOOD:
-          break;
-        default:
-          handle.logFailure("Error when initialising model - unrecognized likelihood type", Likely[i]->Type());
-          break;
-      }
-    }
-
-    for (i = 0; i < likprintvec.Size(); i++) {
-      switch(likprintvec[i]->Type()) {
-        case LIKELIHOODPRINTER:
-          ((LikelihoodPrinter*)(likprintvec[i]))->setLikely(Likely);
-          break;
-        default:
-          handle.logFailure("Error when initialising model - unrecognized printer type", likprintvec[i]->Type());
-          break;
-      }
+  //This is a good place to initialise the printer classes.
+  for (i = 0; i < printvec.Size(); i++) {
+    switch(printvec[i]->Type()) {
+      case STOCKSTDPRINTER:
+        ((StockStdPrinter*)(printvec[i]))->setStock(stockvec);
+        break;
+      case STOCKPRINTER:
+        ((StockPrinter*)(printvec[i]))->setStock(stockvec);
+        break;
+      case PREDATORPRINTER:
+        ((PredatorPrinter*)(printvec[i]))->setPredAndPrey(predvec, preyvec);
+        break;
+      case PREDATOROVERPRINTER:
+        ((PredatorOverPrinter*)(printvec[i]))->setPredator(predvec);
+        break;
+      case PREYOVERPRINTER:
+        ((PreyOverPrinter*)(printvec[i]))->setPrey(preyvec);
+        break;
+      case STOCKPREYFULLPRINTER:
+        ((StockPreyFullPrinter*)(printvec[i]))->setStock(stockvec);
+        break;
+      case PREDPREYSTDPRINTER:
+        ((PredPreyStdPrinter*)(printvec[i]))->setStocksAndPredAndPrey(stockvec, poppredvec, preyvec);
+        break;
+      case STOCKFULLPRINTER:
+        ((StockFullPrinter*)(printvec[i]))->setStock(stockvec);
+        break;
+      case FORMATEDSTOCKPRINTER:
+        ((FormatedStockPrinter*)(printvec[i]))->setStock(stockvec);
+        break;
+      case FORMATEDCHATPRINTER:
+        ((FormatedCHatPrinter*)(printvec[i]))->setFleet(fleetvec);
+        break;
+      case FORMATEDPREYPRINTER:
+        ((FormatedPreyPrinter*)(printvec[i]))->setStock(stockvec);
+        break;
+      case MORTPRINTER:
+        ((MortPrinter*)(printvec[i]))->setStock(stockvec);
+        break;
+      case BIOMASSPRINTER:
+        ((BiomassPrinter*)(printvec[i]))->setStock(stockvec);
+        break;
+      case LIKELIHOODPRINTER:
+        ((LikelihoodPrinter*)(printvec[i]))->setLikely(Likely);
+        break;
+      default:
+        handle.logFailure("Error when initialising model - unrecognised printer type", printvec[i]->Type());
+        break;
     }
   }
 }

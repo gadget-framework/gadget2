@@ -43,7 +43,7 @@ Ecosystem::Ecosystem(const char* const filename, int optimise, int netrun, int c
   infile.clear();
 
   int i;
-  Initialise(calclikelihood);
+  this->Initialise();
   basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size(), 0);
   for (i = 0; i < stockvec.Size(); i++)
     basevec[i] = stockvec[i];
@@ -72,8 +72,6 @@ Ecosystem::~Ecosystem() {
     delete[] otherfoodnames[i];
   for (i = 0; i < printvec.Size(); i++)
     delete printvec[i];
-  for (i = 0; i < likprintvec.Size(); i++)
-    delete likprintvec[i];
   for (i = 0; i < Likely.Size(); i++)
     delete Likely[i];
   for (i = 0; i < tagvec.Size(); i++)
@@ -136,7 +134,7 @@ double Ecosystem::SimulateAndUpdate(double* x, int n) {
   DoubleVector initialvalues(numvar);
   IntVector opt(numvar);
   this->InitialValues(initialvalues);
-  this->ValuesOfVariables(val);
+  this->CurrentValues(val);
   this->Opt(opt);
 
   int i, j;
@@ -179,7 +177,7 @@ void Ecosystem::writeValuesInColumns(const char* const filename, int prec) const
 
 void Ecosystem::writeParamsInColumns(const char* const filename, int prec) const {
 
-  if (funceval > 0) {
+  if ((funceval > 0) && (interrupted == 0)) {
     //JMB - print the final values to any output files specified
     //in case they have been missed by the -print1 or -print2 values
     if (printinfo.getPrint())
@@ -188,7 +186,7 @@ void Ecosystem::writeParamsInColumns(const char* const filename, int prec) const
       this->writeValuesInColumns(printinfo.getColumnOutputFile(), printinfo.getPrecision());
   }
 
-  keeper->writeParamsInColumns(filename, prec);
+  keeper->writeParamsInColumns(filename, prec, interrupted);
 }
 
 void Ecosystem::Opt(IntVector& opt) const {
@@ -199,20 +197,8 @@ void Ecosystem::InitialValues(DoubleVector& initialval) const {
   keeper->InitialValues(initialval);
 }
 
-void Ecosystem::ValuesOfVariables(DoubleVector& val) const {
-  keeper->ValuesOfVariables(val);
-}
-
-void Ecosystem::ScaleVariables() const {
-  keeper->ScaleVariables();
-}
-
-void Ecosystem::writeOptValues() const {
-  keeper->writeOptValues(Likely);
-}
-
-void Ecosystem::ScaledValues(DoubleVector& val) const {
-  keeper->ScaledValues(val);
+void Ecosystem::CurrentValues(DoubleVector& val) const {
+  keeper->CurrentValues(val);
 }
 
 void Ecosystem::ScaledOptValues(DoubleVector& val) const {
@@ -225,6 +211,18 @@ void Ecosystem::InitialOptValues(DoubleVector& val) const {
 
 void Ecosystem::OptSwitches(ParameterVector& sw) const {
   keeper->OptSwitches(sw);
+}
+
+void Ecosystem::LowerOptBds(DoubleVector& lbds) const {
+  keeper->LowerOptBds(lbds);
+}
+
+void Ecosystem::UpperOptBds(DoubleVector& ubds) const {
+  keeper->UpperOptBds(ubds);
+}
+
+void Ecosystem::writeOptValues() const {
+  keeper->writeOptValues(Likely);
 }
 
 void Ecosystem::writeLikelihoodInformation(const char* filename) const {
@@ -273,20 +271,4 @@ void Ecosystem::writeLikeSummaryInformation(const char* filename) const {
   handle.Close();
   outfile.close();
   outfile.clear();
-}
-
-void Ecosystem::OptValues(DoubleVector& val) const {
-  keeper->OptValues(val);
-}
-
-void Ecosystem::LowerBds(DoubleVector& lbds) const {
-  keeper->LowerOptBds(lbds);
-}
-
-void Ecosystem::UpperBds(DoubleVector& ubds) const {
-  keeper->UpperOptBds(ubds);
-}
-
-void Ecosystem::checkBounds() const {
-  keeper->checkBounds();
 }

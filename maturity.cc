@@ -180,7 +180,7 @@ void Maturity::deleteMaturityTag(const char* tagname) {
 MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
   Keeper* const keeper, int minage, const IntVector& minabslength, const IntVector& size,
   const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int numMatConst)
-  : Maturity(tmpareas, minage, minabslength, size, lgrpdiv), PrecalcMaturation(minabslength, size, minage) {
+  : Maturity(tmpareas, minage, minabslength, size, lgrpdiv), preCalcMaturation(minabslength, size, minage) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -221,11 +221,14 @@ void MaturityA::Reset(const TimeClass* const TimeInfo) {
   double my;
   int age, len;
   if (maturityParameters.DidChange(TimeInfo)) {
-    for (age = PrecalcMaturation.minAge(); age <= PrecalcMaturation.maxAge(); age++) {
-      for (len = PrecalcMaturation.minLength(age); len < PrecalcMaturation.maxLength(age); len++) {
+    if (maturityParameters[1] > LgrpDiv->maxLength())
+      handle.logWarning("Warning in maturity calculation - l50 greater than maximum length");
+
+    for (age = preCalcMaturation.minAge(); age <= preCalcMaturation.maxAge(); age++) {
+      for (len = preCalcMaturation.minLength(age); len < preCalcMaturation.maxLength(age); len++) {
         my = exp(-maturityParameters[0] * (LgrpDiv->meanLength(len) - maturityParameters[1])
                - maturityParameters[2] * (age - maturityParameters[3]));
-        PrecalcMaturation[age][len] = 1.0 / (1.0 + my);
+        preCalcMaturation[age][len] = 1.0 / (1.0 + my);
       }
     }
   }
@@ -251,7 +254,7 @@ double MaturityA::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, int area, double weight) {
 
   if ((age >= minMatureAge) && ((length + growth) >= minMatureLength)) {
-    double prob = PrecalcMaturation[age][length] * (maturityParameters[0] * growth * LgrpDiv->dl()
+    double prob = preCalcMaturation[age][length] * (maturityParameters[0] * growth * LgrpDiv->dl()
                   + maturityParameters[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
     return (min(max(0.0, prob), 1.0));
   }
@@ -261,7 +264,7 @@ double MaturityA::MaturationProbability(int age, int length, int growth,
 void MaturityA::Print(ofstream& outfile) const {
   Maturity::Print(outfile);
   outfile << "\tPrecalculated maturity:\n";
-  PrecalcMaturation.Print(outfile);
+  preCalcMaturation.Print(outfile);
 }
 
 int MaturityA::isMaturationStep(int area, const TimeClass* const TimeInfo) {
@@ -370,7 +373,7 @@ int MaturityB::isMaturationStep(int area, const TimeClass* const TimeInfo) {
 MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
   Keeper* const keeper, int minage, const IntVector& minabslength, const IntVector& size,
   const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int numMatConst)
-  : Maturity(tmpareas, minage, minabslength, size, lgrpdiv), PrecalcMaturation(minabslength, size, minage) {
+  : Maturity(tmpareas, minage, minabslength, size, lgrpdiv), preCalcMaturation(minabslength, size, minage) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -441,14 +444,17 @@ void MaturityC::Reset(const TimeClass* const TimeInfo) {
   double my;
   int age, len;
   if (maturityParameters.DidChange(TimeInfo)) {
-    for (age = PrecalcMaturation.minAge(); age <= PrecalcMaturation.maxAge(); age++) {
-      for (len = PrecalcMaturation.minLength(age); len < PrecalcMaturation.maxLength(age); len++) {
+    if (maturityParameters[1] > LgrpDiv->maxLength())
+      handle.logWarning("Warning in maturity calculation - l50 greater than maximum length");
+
+    for (age = preCalcMaturation.minAge(); age <= preCalcMaturation.maxAge(); age++) {
+      for (len = preCalcMaturation.minLength(age); len < preCalcMaturation.maxLength(age); len++) {
         if ((age >= minMatureAge) && (len >= minMatureLength)) {
           my = exp(-4.0 * maturityParameters[0] * (LgrpDiv->meanLength(len) - maturityParameters[1])
                  - 4.0 * maturityParameters[2] * (age - maturityParameters[3]));
-          PrecalcMaturation[age][len] = 1.0 / (1.0 + my);
+          preCalcMaturation[age][len] = 1.0 / (1.0 + my);
         } else
-          PrecalcMaturation[age][len] = 0.0;
+          preCalcMaturation[age][len] = 0.0;
       }
     }
   }
@@ -459,7 +465,7 @@ double MaturityC::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, int area, double weight) {
 
   if (this->isMaturationStep(area, TimeInfo))
-    return (min(max(0.0, PrecalcMaturation[age][length]), 1.0));
+    return (min(max(0.0, preCalcMaturation[age][length]), 1.0));
   return 0.0;
 }
 
@@ -475,7 +481,7 @@ void MaturityC::Print(ofstream& outfile) const {
   int i;
   Maturity::Print(outfile);
   outfile << "\tPrecalculated maturity:\n";
-  PrecalcMaturation.Print(outfile);
+  preCalcMaturation.Print(outfile);
   outfile << "\tMaturity timesteps:";
   for (i = 0; i < maturitystep.Size(); i++)
     outfile << sep << maturitystep[i];
@@ -539,6 +545,8 @@ void MaturityD::setStock(StockPtrVector& stockvec) {
 
 void MaturityD::Reset(const TimeClass* const TimeInfo) {
   maturityParameters.Update(TimeInfo);
+  if (maturityParameters[1] > LgrpDiv->maxLength())
+    handle.logWarning("Warning in maturity calculation - l50 greater than maximum length");
   handle.logMessage("Reset maturity data");
 }
 
@@ -548,9 +556,7 @@ double MaturityD::MaturationProbability(int age, int length, int growth,
   if ((this->isMaturationStep(area, TimeInfo)) && (age >= minMatureAge) && (length >= minMatureLength)) {
     double tmpweight, my, ratio;
 
-    if (length >= refWeight.Size())
-      tmpweight = maturityParameters[5];
-    else if (isZero(refWeight[length]))
+    if ((length >= refWeight.Size()) || (isZero(refWeight[length])))
       tmpweight = maturityParameters[5];
     else
       tmpweight = weight / refWeight[length];

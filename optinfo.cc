@@ -64,19 +64,19 @@ void OptInfo::ReadOptInfo(CommentStream& infile) {
         handle.logWarning("Warning - no optimisation parameters specified for Simulated Annealing algorithm");
 
     } else if (strcasecmp(text, "[hooke]") == 0) {
-      handle.logMessage("Reading Hooke and Jeeves parameters");
+      handle.logMessage("Reading Hooke & Jeeves parameters");
       optHJ = new OptInfoHooke();
       useHJ = 1;
 
       if (!infile.eof()) {
         infile >> text;
         if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
-          handle.logWarning("Warning - no optimisation parameters specified for Hooke and Jeeves algorithm");
+          handle.logWarning("Warning - no optimisation parameters specified for Hooke & Jeeves algorithm");
         else
           optHJ->Read(infile, text);
 
       } else
-        handle.logWarning("Warning - no optimisation parameters specified for Hooke and Jeeves algorithm");
+        handle.logWarning("Warning - no optimisation parameters specified for Hooke & Jeeves algorithm");
 
     } else if (strcasecmp(text, "[bfgs]") == 0) {
       handle.logMessage("Reading BFGS parameters");

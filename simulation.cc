@@ -111,12 +111,9 @@ void Ecosystem::Simulate(int Optimise, int print) {
       for (j = 0; j < Likely.Size(); j++)
         Likely[j]->addLikelihood(TimeInfo);
 
-    if (print) {
+    if (print)
       for (j = 0; j < printvec.Size(); j++)
         printvec[j]->Print(TimeInfo);
-      for (j = 0; j < likprintvec.Size(); j++)
-        likprintvec[j]->Print(TimeInfo);
-    }
 
     for (j = 0; j < Area->numAreas(); j++)
       updateOneTimestepOneArea(j);

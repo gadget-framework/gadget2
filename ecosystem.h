@@ -131,9 +131,8 @@ public:
   void writeOptValues() const;
   /**
    * \brief This function will initialise the Ecosystem parameters
-   * \param optimise is a flag to denote whether the current run will optimise the model or not
    */
-  void Initialise(int optimise);
+  void Initialise();
   /**
    * \brief This function will update the Ecosystem parameters with new values from StochasticData
    * \param Stochastic is the StochasticData containing the new values of the parameters
@@ -148,18 +147,54 @@ public:
    * \brief This function will reset the Ecosystem information
    */
   void Reset();
+  /**
+   * \brief This function will scale the variables to be optimised (for the Hooke & Jeeves optimisation algorithm)
+   */
+  void ScaleVariables() { keeper->ScaleVariables(); };
+  /**
+   * \brief This function will return a copy the flags to denote which variables will be optimsised
+   * \param opt is the IntVector that will contain a copy of the flags
+   */
   void Opt(IntVector& opt) const;
-  void ValuesOfVariables(DoubleVector& val) const;
-  void InitialOptValues(DoubleVector& initialval) const;
-  void ScaledOptValues(DoubleVector& initialval) const;
+  /**
+   * \brief This function will return a copy the names of the variables
+   * \param sw is the ParameterVector that will contain a copy of the names
+   */
   void OptSwitches(ParameterVector& sw) const;
-  void OptValues(DoubleVector& val) const;
-  void LowerBds(DoubleVector& lbds) const;
-  void UpperBds(DoubleVector& ubds) const;
-  void InitialValues(DoubleVector& initialval) const;
-  void ScaledValues(DoubleVector& val) const;
-  void checkBounds() const;
-  void ScaleVariables() const;
+  /**
+   * \brief This function will return a copy the initial value of the variables
+   * \param val is the DoubleVector that will contain a copy of the initial values
+   */
+  void InitialValues(DoubleVector& val) const;
+  /**
+   * \brief This function will return a copy the current value of the variables
+   * \param val is the DoubleVector that will contain a copy of the current values
+   */
+  void CurrentValues(DoubleVector& val) const;
+  /**
+   * \brief This function will return a copy the initial value of the variables to be optimised
+   * \param val is the DoubleVector that will contain a copy of the initial values
+   */
+  void InitialOptValues(DoubleVector& val) const;
+  /**
+   * \brief This function will return a copy the scaled value of the variables to be optimised
+   * \param val is the DoubleVector that will contain a copy of the scaled values
+   */
+  void ScaledOptValues(DoubleVector& val) const;
+  /**
+   * \brief This function will return a copy the lower bounds of the variables to be optimised
+   * \param lbs is the DoubleVector that will contain a copy of the lower bounds
+   */
+  void LowerOptBds(DoubleVector& lbs) const;
+  /**
+   * \brief This function will return a copy the upper bounds of the variables to be optimised
+   * \param ubs is the DoubleVector that will contain a copy of the upper bounds
+   */
+  void UpperOptBds(DoubleVector& ubs) const;
+  /**
+   * \brief This function will check that the values of the parameters are within the specified bounds
+   */
+  void checkBounds() const { keeper->checkBounds(); };
   /**
    * \brief This function will return the number of variables to be optimised
    * \return number of variables to be optimised
@@ -332,11 +367,6 @@ protected:
    * \brief This is the PrinterPtrVector of the printer classes for the current model
    */
   PrinterPtrVector printvec;
-  /**
-   * \brief This is the PrinterPtrVector of the likelihood printer class for the current model
-   * \note this is a seperate vector since the likelihood printer needs to be initialised after the likelihood components have been initialised
-   */
-  PrinterPtrVector likprintvec;
   /**
    * \brief This is the TimeClass for the current model
    */

@@ -349,7 +349,8 @@ public:
    * \brief This function will calculate the likelihood score for the StomachContent component
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void addLikelihood(const TimeClass* const TimeInfo);
+  virtual void addLikelihood(const TimeClass* const TimeInfo)
+    { likelihood += StomCont->calcLikelihood(TimeInfo); };
   /**
    * \brief This function will reset the StomachContent likelihood information
    * \param keeper is the Keeper for the current model

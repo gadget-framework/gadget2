@@ -92,8 +92,8 @@ void OptInfoSimann::OptimiseLikelihood() {
   ParameterVector optswitches(nopt);
 
   EcoSystem->ScaledOptValues(val);
-  EcoSystem->LowerBds(lbds);
-  EcoSystem->UpperBds(ubds);
+  EcoSystem->LowerOptBds(lbds);
+  EcoSystem->UpperOptBds(ubds);
   EcoSystem->OptSwitches(optswitches);
 
   double* startpoint = new double[nopt];
