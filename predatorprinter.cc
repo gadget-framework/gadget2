@@ -22,6 +22,9 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   strncpy(text, "", MaxStrLength);
   int i, j;
 
+  //default value is to print biomass
+  biomass = 0;
+  
   //read in the predator names
   i = 0;
   infile >> text >> ws;
@@ -96,6 +99,12 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   if (predLgrpDiv->Error())
     handle.Message("Error in predatorprinter - failed to create prey length group");
 
+  char c = infile.peek();
+  if ((c == 'b') || (c == 'B'))
+    readWordAndVariable(infile, "biomass", biomass);
+  if (biomass != 0 && biomass != 1)
+    handle.Message("Error in predatorprinter - biomass must be 0 or 1");
+
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
@@ -126,7 +135,11 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   for (i = 0; i < preynames.Size(); i++)
     outfile << sep << preynames[i];
 
-  outfile << "\n; year-step-area-pred length-prey length-biomass consumed\n";
+  if (biomass == 0)
+    outfile << "\n; year-step-area-pred length-prey length-biomass consumed\n";
+  else
+    outfile << "\n; year-step-area-pred length-prey length-number consumed\n";
+
   outfile.flush();
 }
 
@@ -174,9 +187,12 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
 void PredatorPrinter::Print(const TimeClass* const TimeInfo) {
   if (!AAT.AtCurrentTime(TimeInfo))
     return;
-  aggregator->Sum();
+  if (biomass == 0)
+    aggregator->Sum();
+  else
+    aggregator->NumberSum();
+    
   int i, j, k;
-
   for (i = 0; i < areas.Nrow(); i++) {
     const BandMatrix* bptr = &aggregator->returnSum()[i];
     for (j = 0; j < bptr->Nrow(); j++) {

@@ -19,9 +19,9 @@ class GrowthCalcBase : protected LivesOnAreas {
 public:
   /**
    * \brief This is the default GrowthCalcBase constructor
-   * \param areas is the IntVector of areas that the growth calculation can take place on
+   * \param Areas is the IntVector of areas that the growth calculation can take place on
    */
-  GrowthCalcBase(const IntVector& areas);
+  GrowthCalcBase(const IntVector& Areas);
   /**
    * \brief This is the default GrowthCalcBase destructor
    */
@@ -64,12 +64,12 @@ public:
   /**
    * \brief This is the default GrowthCalcA constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the IntVector of areas that the growth calculation can take place on
+   * \param Areas is the IntVector of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
-  GrowthCalcA(CommentStream& infile, const IntVector& areas,
-    const TimeClass* TimeInfo, Keeper* const keeper);
+  GrowthCalcA(CommentStream& infile, const IntVector& Areas,
+    const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default GrowthCalcA destructor
    */
@@ -110,13 +110,13 @@ public:
   /**
    * \brief This is the default GrowthCalcB constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the IntVector of areas that the growth calculation can take place on
+   * \param Areas is the IntVector of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param Area is the AreaClass for the current model
    * \param lenindex is the CharPtrVector of the lengths used for the growth of the stock
    */
-  GrowthCalcB(CommentStream& infile, const IntVector& areas, const TimeClass* const TimeInfo,
+  GrowthCalcB(CommentStream& infile, const IntVector& Areas, const TimeClass* const TimeInfo,
     Keeper* const keeper, const AreaClass* const Area, const CharPtrVector& lenindex);
   /**
    * \brief This is the default GrowthCalcB destructor
@@ -158,13 +158,13 @@ public:
   /**
    * \brief This is the default GrowthCalcC constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the IntVector of areas that the growth calculation can take place on
+   * \param Areas is the IntVector of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
    * \param LgrpDiv is the LengthGroupDivision of the stock
    * \param keeper is the Keeper for the current model
    * \param refWeightFile is the name of the file containing the reference weight information for the stock
    */
-  GrowthCalcC(CommentStream& infile, const IntVector& areas, const TimeClass* TimeInfo,
+  GrowthCalcC(CommentStream& infile, const IntVector& Areas, const TimeClass* const TimeInfo,
     const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeightFile);
   /**
    * \brief This is the default GrowthCalcC destructor
@@ -228,13 +228,13 @@ public:
   /**
    * \brief This is the default GrowthCalcD constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the IntVector of areas that the growth calculation can take place on
+   * \param Areas is the IntVector of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
    * \param LgrpDiv is the LengthGroupDivision of the stock
    * \param keeper is the Keeper for the current model
    * \param refWeightFile is the name of the file containing the reference weight information for the stock
    */
-  GrowthCalcD(CommentStream& infile, const IntVector& areas, const TimeClass* TimeInfo,
+  GrowthCalcD(CommentStream& infile, const IntVector& Areas, const TimeClass* const TimeInfo,
     const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeightFile);
   /**
    * \brief This is the default GrowthCalcD destructor
@@ -298,13 +298,13 @@ public:
   /**
    * \brief This is the default GrowthCalcE constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the IntVector of areas that the growth calculation can take place on
+   * \param Areas is the IntVector of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
    * \param LgrpDiv is the LengthGroupDivision of the stock
    * \param keeper is the Keeper for the current model
    * \param refWeightFile is the name of the file containing the reference weight information for the stock
    */
-  GrowthCalcE(CommentStream& infile, const IntVector& areas, const TimeClass* const TimeInfo,
+  GrowthCalcE(CommentStream& infile, const IntVector& Areas, const TimeClass* const TimeInfo,
     const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeightFile);
   /**
    * \brief This is the default GrowthCalcE destructor
@@ -380,13 +380,13 @@ public:
   /**
    * \brief This is the default GrowthCalcF constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the IntVector of areas that the growth calculation can take place on
+   * \param Areas is the IntVector of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param Area is the AreaClass for the current model
    * \param lenindex is the CharPtrVector of the lengths used for the growth of the stock
    */
-  GrowthCalcF(CommentStream& infile, const IntVector& areas, const TimeClass* const TimeInfo,
+  GrowthCalcF(CommentStream& infile, const IntVector& Areas, const TimeClass* const TimeInfo,
     Keeper* const keeper, const AreaClass* const Area, const CharPtrVector& lenindex);
   /**
    * \brief This is the default GrowthCalcF destructor
@@ -432,13 +432,13 @@ public:
   /**
    * \brief This is the default GrowthCalcG constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the IntVector of areas that the growth calculation can take place on
+   * \param Areas is the IntVector of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param Area is the AreaClass for the current model
    * \param lenindex is the CharPtrVector of the lengths used for the growth of the stock
    */
-  GrowthCalcG(CommentStream& infile, const IntVector& areas, const TimeClass* const TimeInfo,
+  GrowthCalcG(CommentStream& infile, const IntVector& Areas, const TimeClass* const TimeInfo,
     Keeper* const keeper, const AreaClass* const Area, const CharPtrVector& lenindex);
   /**
    * \brief This is the default GrowthCalcG destructor
@@ -484,12 +484,12 @@ public:
   /**
    * \brief This is the default GrowthCalcH constructor
    * \param infile is the CommentStream to read the growth parameters from
-   * \param areas is the IntVector of areas that the growth calculation can take place on
+   * \param Areas is the IntVector of areas that the growth calculation can take place on
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
-  GrowthCalcH(CommentStream& infile, const IntVector& areas,
-    const TimeClass* TimeInfo, Keeper* const keeper);
+  GrowthCalcH(CommentStream& infile, const IntVector& Areas,
+    const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default GrowthCalcH destructor
    */
