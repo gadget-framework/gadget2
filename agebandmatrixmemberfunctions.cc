@@ -105,7 +105,7 @@ void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIn
   DoubleVector Ratio(Consumption.Size(), 1.0);
   for (i = 0; i < Consumption.Size(); i++) {
     if (Nrof[i].N > verysmall)
-      Ratio[i] = 1 - (Consumption[i] / Nrof[i].N);
+      Ratio[i] = 1.0 - (Consumption[i] / Nrof[i].N);
   }
 
   this->Multiply(Ratio, CI);

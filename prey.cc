@@ -149,10 +149,12 @@ void Prey::Print(ofstream& outfile) const {
 //Reduce the population of the stock by the consumption.
 void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
   int inarea = this->areaNum(area);
-  DoubleVector conS(cons[inarea].Size());
+  DoubleVector conS(cons[inarea].Size(), 0.0);
   int len;
   for (len = 0; len < conS.Size(); len++)
-    conS[len] = (Number[inarea][len].W > verysmall ? cons[inarea][len] / Number[inarea][len].W : 0.0);
+    if (!(isZero(Number[inarea][len].W)))
+      conS[len] = cons[inarea][len] / Number[inarea][len].W ;
+
   Alkeys.Subtract(conS, *CI, Number[inarea]);
 }
 
@@ -175,9 +177,8 @@ void Prey::checkConsumption(int area, int numsubsteps) {
   double rat, biom;
 
   for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-    rat = 0.0;
+    rat = 1.0;
     biom = Number[inarea][i].N * Number[inarea][i].W;
-    //We must be careful -- it is possible that biomass will equal 0.
     if (biom > verysmall)
       rat = cons[inarea][i] / biom;
 
@@ -199,7 +200,7 @@ void Prey::Reset() {
   int area, l;
   for (area = 0; area < areas.Size(); area++) {
     tooMuchConsumption[area] = 0;
-    total[area] = 0;
+    total[area] = 0.0;
     for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
       Number[area][l].N = 0.0;
       Number[area][l].W = 0.0;
