@@ -17,7 +17,13 @@
 
 \newpage
 *** warning *** warning *** warning *** warning *** warning ***\newline
-***** this document is only a draft and as such is incomplete *****\newline
+\newline
+This is a draft document, which is currently incomplete\newline
+The following sections are blank for this draft\newline
+\newline
+section~\ref{sec:stockmigrate} - stock migration\newline
+section~\ref{sec:stomach} - stomach contents likelhood component\newline
+\newline
 *** warning *** warning *** warning *** warning *** warning ***\newline
 
 \newpage
@@ -39,10 +45,10 @@ Like any large piece of code, Gadget is based on previous ideas by several autho
 The initial BorMiCon code was developed as part of a multi species programme implemented at the Marine Research Institute in Reykjavik, Iceland, starting in 1992 with \'{O}lafur K P\'{a}lsson as project coordinator and Gunnar Stef\'{a}nsson coordinating the modelling work.  Subsequently the code became the basis for Fleksibest at the Institute of Marine Research in Bergen, Norway.  Further development work in 1999-2003 was partly funded by EU grant QLK5-CT1999-01609.
 
 \bigskip
-The Gadget code is derived from the original BorMiCon code of Halld\'{o}r Narfi Stef\'{a}nsson, H\"{o}skuldur Bj\"{o}rnsson and Hersir Sigurgeirsson.  Subsequent contributions include program additions by Morten {\AA}snes and Kristin Fr{\o}ysa to include the Fleksibest model.
+The Gadget code is derived from the original BorMiCon code of Halld\'{o}r Narfi Stef\'{a}nsson, H\"{o}skuldur Bj\"{o}rnsson and Hersir Sigurgeirsson.  Subsequent contributions include program additions by Morten Nygaard {\AA}snes and Kristin Fr{\o}ysa to include the Fleksibest model.  The ability to run in parallel across a network of computers using PVM was implemented primarily by Au{\dh}bj\"{o}rg Jakobsd\'{o}ttir with input from several other people, including J\'{o}n Gu{\dh}mundsson who worked on a variant based on Condor.  Several mathematical additions and changes to allow for parallel minimisation on a network were implemented by {\TH}\'{o}rd\'{i}s Linda {\TH}\'{o}rarinsd\'{o}ttir and Kristjana \'{Y}r J\'{o}nsd\'{o}ttir.
 
 \bigskip
-The ability to run in parallel across a network of computers using PVM was implemented primarily by Au{\dh}bj\"{o}rg Jakobsd\'{o}ttir with input from several other people, including J\'{o}n Gu{\dh}mundsson who has tested and implemented Condor-PVM.  Several mathematical additions, e.g. for parallel minimisation on a network were implemented by {\TH}\'{o}rd\'{i}s Linda {\TH}\'{o}rarinsd\'{o}ttir and Kristjana \'{Y}r J\'{o}nsd\'{o}ttir.  The work to include tagged populations was implemented primarily by Sigur{\dh}ur Hannesson.  Recent additions include major cleanups, modifications of input formats and debugging operations by James Begley who is the current maintainer of the code and coordinator of all programming efforts.
+More recent changes include the work to use information from tagging experiments, which was implemented primarily by Sigur{\dh}ur Hannesson.  The work on multivariate distributions was implemented by Bjarki {\TH}or Elvarsson.  Recent additions including major code cleanups, modifications to the input formats and debugging operations have been led by James Begley, who is the current maintainer of the code and coordinator of all programming efforts.
 
 \section{Getting Gadget}\label{sec:gettinggadget}
 Gadget is distributed via anonymous ftp from the MRI ftp site, and the address of the top level directory of the Gadget distributions is:
@@ -51,7 +57,7 @@ Gadget is distributed via anonymous ftp from the MRI ftp site, and the address o
 ftp://ftp.hafro.is/pub/reiknid/dst2/gadget/
 \end{verbatim}}
 
-The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.0.05, so the file to be downloaded is gadget2.0.05.tar.gz.
+The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.0.06, so the file to be downloaded is gadget2.0.06.tar.gz.
 
 \bigskip
 Gadget is a program that runs on a Unix computing platform, and is regularly tested on machines running versions of Solaris, Linux, Mac OSX and Cygwin (a Unix emulator for Microsoft Windows machines).  It should also run on other versions of Unix, but this may require modifications to the makefile in order to do so.  Gadget is distributed as a set of source code files, which need to be compiled into an executable program before it can be run.  To allow for various different versions, the makefile has a list of supported computing platforms, so the makefile should be checked (and if necessary changed) to ensure that the required options are available before the source code is compiled.  The default options in the makefile will compile Gadget for a Linux machine, using the GNU C++ compiler.  A summary of the commands required to compile Gadget, using the default options for a Linux machine from the downloaded file are:
@@ -72,11 +78,11 @@ A web site has been set up that contains details of the most recent changes to G
 http://www.hafro.is/gadget
 \end{verbatim}}
 
-Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.0.05 on a Linux machine:
+Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.0.06 on a Linux machine:
 
 {\small\begin{verbatim}
-gunzip gadget2.0.05.tar.gz
-tar -xvf gadget2.0.05.tar
+gunzip gadget2.0.06.tar.gz
+tar -xvf gadget2.0.06.tar
 cd source
 make
 \end{verbatim}}
@@ -91,7 +97,7 @@ gadget <options>
 where $<$options$>$ are a combination of the starting switches described in the next section.
 
 \bigskip
-Gadget is not an interactive program, so once it has started there is no need for any further input from the user.  However, if Gadget was started incorrectly (for example, using the wrong input files) then Gadget can be stopped by pressing $<$CTRL$><$C$>$, which will interrupt the calculations, displaying a menu from which it is possible to either store the current calculations to a text file, or to exit (by pressing $<$Q$>$).
+Gadget is not an interactive program, so once it has started there is no need for any further input from the user.  However, if Gadget was started incorrectly (for example, using the wrong input files) then Gadget can be stopped by pressing $<$CTRL$>$$<$C$>$, which will interrupt the calculations, displaying a menu from which it is possible to either store the current calculations to a text file, or to exit (by pressing $<$Q$>$).
 
 \bigskip
 When Gadget starts, it will look for a file called ''main'', which contains a list of all the other data files required.  Gadget will search for this file in the following 2 locations:
@@ -120,44 +126,44 @@ The following is a list of the command line switches that Gadget will recognise,
 {\small\begin{verbatim}
 gadget -l
 \end{verbatim}}
-Starting Gadget with the -l switch will start a optimising run, where the overall likelihood score will be reduced to an optimum, depending on the optimising information given (see the -opt switch)
+Starting Gadget with the -l switch will start a optimising run, where the overall likelihood score will be reduced to an optimum, depending on the optimising information given (see the -opt switch).
 
 {\small\begin{verbatim}
 gadget -s
 \end{verbatim}}
-Starting Gadget with the -s switch will start a stochastic run, where a single run of the model will take place.  This option is useful since it will give the model output (see Print Files, section~\ref{chap:print}), and it is used when running large Gadget models, using the paramin parallel processing optimiser to find the optimum
+Starting Gadget with the -s switch will start a stochastic run, where a single run of the model will take place.  This option is useful since it will give the model output (see Print Files, section~\ref{chap:print}), and it is used when running large Gadget models, using the paramin parallel processing optimiser to find the optimum.
 
 {\small\begin{verbatim}
 gadget -n
 \end{verbatim}}
-Starting Gadget with the -n switch will start a network run, used in conjunction with the paramin optimiser to find an optimal solution for large models
+Starting Gadget with the -n switch will start a network run, used in conjunction with the paramin optimiser to find an optimal solution for large models.
 
 {\small\begin{verbatim}
 gadget -v
 gadget --version
 \end{verbatim}}
-Starting Gadget with the -v (or -\hspace{0pt}-version) switch will display the version of Gadget that is being run
+Starting Gadget with the -v (or -\hspace{0pt}-version) switch will display the version of Gadget that is being run.
 
 {\small\begin{verbatim}
 gadget -h
 gadget --help
 \end{verbatim}}
-Starting Gadget with the -h (or -\hspace{0pt}-help) switch will display a help screen, giving information about the various starting switches that can be used
+Starting Gadget with the -h (or -\hspace{0pt}-help) switch will display a help screen, giving information about the various starting switches that can be used.
 
 {\small\begin{verbatim}
 gadget -i <filename>
 \end{verbatim}}
-Starting Gadget with the -i switch will give Gadget an inputfile file from which the initial values and bounds of any variables can be read (see Parameter Files, section~\ref{chap:param}, for more information on the format of this file)
+Starting Gadget with the -i switch will give Gadget an inputfile file from which the initial values and bounds of any variables can be read (see Parameter Files, section~\ref{chap:param}, for more information on the format of this file).
 
 {\small\begin{verbatim}
 gadget -opt <filename>
 \end{verbatim}}
-Starting Gadget with the -opt switch will give Gadget an optimisation input file, from which the information about the optimisation routines will be read.  This will specify the type of optimisation to perform, and also parameters for that optimisation routine (see Optimisation Files, section~\ref{chap:optim}, for more information on the format of this file)
+Starting Gadget with the -opt switch will give Gadget an optimisation input file, from which the information about the optimisation routines will be read.  This will specify the type of optimisation to perform, and also parameters for that optimisation routine (see Optimisation Files, section~\ref{chap:optim}, for more information on the format of this file).
 
 {\small\begin{verbatim}
 gadget -main <filename>
 \end{verbatim}}
-Starting Gadget with the -main switch will specify a filename for the main Gadget model input file, which contains links to all the other data files that are to be used by Gadget (see Main File, section~\ref{sec:mainfile}, for more information on the format of this file).  If Gadget is started without the -main switch, Gadget will use the default filename ''main'' as the name for the main file
+Starting Gadget with the -main switch will specify a filename for the main Gadget model input file, which contains links to all the other data files that are to be used by Gadget (see Main File, section~\ref{sec:mainfile}, for more information on the format of this file).  If Gadget is started without the -main switch, Gadget will use the default filename ''main'' as the name for the main file.
 
 {\small\begin{verbatim}
 gadget -m <filename>
@@ -167,54 +173,54 @@ Starting Gadget with the -m switch will specify a file from which Gadget can rea
 {\small\begin{verbatim}
 gadget -p <filename>
 \end{verbatim}}
-Starting Gadget with the -p switch specifies the file that Gadget will use to print the final values and bounds of the variables, in the same format as for the inputfile.  This file can then be used as the starting point for a subsequent Gadget run, if required.  This file will always be generated, and if Gadget is started without the -p switch the default filename is ''params.out'' which will be created in the current directory (see Output Files, section~\ref{chap:output}, for more information on the format of this file)
+Starting Gadget with the -p switch specifies the file that Gadget will use to print the final values and bounds of the variables, in the same format as for the inputfile.  This file can then be used as the starting point for a subsequent Gadget run, if required.  This file will always be generated, and if Gadget is started without the -p switch the default filename is ''params.out'' which will be created in the current directory (see Output Files, section~\ref{chap:output}, for more information on the format of this file).
 
 {\small\begin{verbatim}
 gadget -o <filename>
 \end{verbatim}}
-Starting Gadget with the -o switch specifies the file that Gadget will use to print the output from the likelihood calculations.  This file will give details on the parameters that have been used, the likelihood components that have been used, and the values for these parameters and likelihood components.  This can be a large file if Gadget is performing an optimising run (see Output Files, section~\ref{chap:output}, for more information on the format of this file)
+Starting Gadget with the -o switch specifies the file that Gadget will use to print the output from the likelihood calculations.  This file will give details on the parameters that have been used, the likelihood components that have been used, and the values for these parameters and likelihood components.  This can be a large file if Gadget is performing an optimising run (see Output Files, section~\ref{chap:output}, for more information on the format of this file).
 
 \newpage %JMB manual page break inserted
 {\small\begin{verbatim}
 gadget -co <filename>
 \end{verbatim}}
-Starting Gadget with the -co switch specifies the file that Gadget will use to print the output from the likelihood calculations in a column format.  This file will only give details on the parameters that have been used, and will not give information on the likelihood components.  This can be a large file if Gadget is performing an optimising run (see Output Files, section~\ref{chap:output}, for more information on the format of this file)
+Starting Gadget with the -co switch specifies the file that Gadget will use to print the output from the likelihood calculations in a column format.  This file will only give details on the parameters that have been used, and will not give information on the likelihood components.  This can be a large file if Gadget is performing an optimising run (see Output Files, section~\ref{chap:output}, for more information on the format of this file).
 
 {\small\begin{verbatim}
 gadget -print1 <number>
 \end{verbatim}}
-Starting Gadget with the -print1 switch will specify the frequency with which information is written to the likelihood output file (specified with the -o switch).  The default value for this is 1, meaning that the likelihood information is written for every iteration
+Starting Gadget with the -print1 switch will specify the frequency with which information is written to the likelihood output file (specified with the -o switch).  The default value for this is 1, meaning that the likelihood information is written for every iteration,
 
 {\small\begin{verbatim}
 gadget -print2 <number>
 \end{verbatim}}
-Starting Gadget with the -print2 switch will specify the frequency with which information is written to the likelihood column output file (specified with the -co switch).  The default value for this is 5, meaning that the likelihood information is written for every fifth iteration
+Starting Gadget with the -print2 switch will specify the frequency with which information is written to the likelihood column output file (specified with the -co switch).  The default value for this is 5, meaning that the likelihood information is written for every fifth iteration.
 
 {\small\begin{verbatim}
 gadget -precision <number>
 \end{verbatim}}
-Starting Gadget with the -precision switch will specify the number of digits to be used when printing the output from the likelihood calculations to files specified with either the -o switch or -co switch
+Starting Gadget with the -precision switch will specify the number of digits to be used when printing the output from the likelihood calculations to files specified with either the -o switch or -co switch.
 
 {\small\begin{verbatim}
 gadget -log <filename>
 \end{verbatim}}
-Starting Gadget with the -log switch will specify a file to which Gadget will write logging information to keep a record of internal Gadget actions.  This file will be large for moderately complicated models, and it is of most use for debugging purposes
+Starting Gadget with the -log switch will specify a file to which Gadget will write logging information to keep a record of internal Gadget actions.  This file will be large for moderately complicated models, and it is of most use for debugging purposes.
 
 {\small\begin{verbatim}
 gadget -printinitial <filename>
 \end{verbatim}}
-Starting Gadget with the -printinitial switch will specify a file to which Gadget will write all internal information for the model at the start of the run (ie. the stock populations, likelihood calculations and other information from before the first timestep).  This file will be large for moderately complicated models, and it is of most use for debugging purposes
+Starting Gadget with the -printinitial switch will specify a file to which Gadget will write all internal information for the model at the start of the run (ie. the stock populations, likelihood calculations and other information from before the first timestep).  This file will be large for moderately complicated models, and it is of most use for debugging purposes.
 
 {\small\begin{verbatim}
 gadget -printfinal <filename>
 \end{verbatim}}
-Starting Gadget with the -printfinal switch will specify a file to which Gadget will write all internal information for the model at the end of the run (ie. the stock populations, likelihood calculations and other information from after the last timestep).  This file will be large for moderately complicated models, and it is of most use for debugging purposes
+Starting Gadget with the -printfinal switch will specify a file to which Gadget will write all internal information for the model at the end of the run (ie. the stock populations, likelihood calculations and other information from after the last timestep).  This file will be large for moderately complicated models, and it is of most use for debugging purposes.
 
 \newpage %JMB manual page break inserted
 {\small\begin{verbatim}
 gadget -printlikelihood <filename>
 \end{verbatim}}
-Starting Gadget with the -printlikelihood switch will specify a file to which Gadget will write all internal information used to calculate the likelihood scores for the model run.  This file will be very large for moderately complicated models, and it is of most use for debugging purposes
+Starting Gadget with the -printlikelihood switch will specify a file to which Gadget will write all internal information used to calculate the likelihood scores for the model run.  This file will be very large for moderately complicated models, and it is of most use for debugging purposes.
 
 {\small\begin{verbatim}
 gadget -printlikesummary <filename>
@@ -565,7 +571,7 @@ doesstray              <see Straying>
 
 The first seven lines of this file give the basic details of the stock, and are fairly self explanatory.  It should be noted that the oldest age group and the longest length group are interpreted in Gadget as plus groups for the stock.  The remaining lines give more detail about the stock, and are covered in the sub sections below.
 
-\section{Reference Weight}\label{subsec:stockrefweight}
+\section{Reference Weight}\label{sec:stockrefweight}
 The reference weight section lists the weight of the stock for various length groups.  This is the reference weight that can be used in the initial conditions to set up the stock, and can also be used by the growth functions when calculating the increase in length of the stock due to the growth.  In the stock file, the format for the reference weight is given by:
 
 {\small\begin{verbatim}
@@ -580,21 +586,21 @@ The format of the reference weight file is simply a 2 column list of the length 
 
 When this data is read into Gadget it is aggregated so that the weight is calculated for each length group defined in the stock file.
 
-\section{Growth and Eat Lengths}\label{subsec:stockgrowthlength}
+\section{Growth and Eat Lengths}\label{sec:stockgrowthlength}
 The calculations for the growth and consumption parts of the Gadget model can be done on a coarser scale than that defined in the stock file.  The growth and eat lengths section of the stock file gives the name of a length aggregation file that defines this length grouping.  In the stock file, the format for the growth and eat lengths is:
 
 {\small\begin{verbatim}
 growthandeatlengths    <name of the length aggregation file>
 \end{verbatim}}
 
-\section{Growth}\label{subsec:stockgrowth}
+\section{Growth}\label{sec:stockgrowth}
 The growth section of the stock file determines if, and how, the stock will grow in the Gadget model.  The format for the first part of the growth section is given below:
 
 {\small\begin{verbatim}
 doesgrow               <0 or 1> ; 0 for no growth, 1 for growth
 \end{verbatim}}
 
-If there is no growth, then the following sections don't apply, and the next section of the input file is the natural mortality, given in section~\ref{subsec:stocknatmort} below.  If the stock does grow, there are various different functions that determine the mean growth of the stock, so there are a number of different formats that the growth data can take.  Once the mean growth has been calculated, the growth then needs to be statistically distributed to give the overall growth of the stock.  Thus, after the growth function data has been read in, there is then data for the growth implementation.  The full format for the growth of the stock is therefore given by:
+If there is no growth, then the following sections don't apply, and the next section of the input file is the natural mortality, given in section~\ref{sec:stocknatmort} below.  If the stock does grow, there are various different functions that determine the mean growth of the stock, so there are a number of different formats that the growth data can take.  Once the mean growth has been calculated, the growth then needs to be statistically distributed to give the overall growth of the stock.  Thus, after the growth function data has been read in, there is then data for the growth implementation.  The full format for the growth of the stock is therefore given by:
 
 {\small\begin{verbatim}
 doesgrow               1
@@ -629,7 +635,7 @@ This growth function is a simplified ''MULTSPEC'' growth equation\footnotemark, 
 where:\newline
 $<\Delta t>$ is the length of the timestep\newline
 $<$ T $>$ is the temperature\newline
-$<\psi>$ is the feeding level (see section~\ref{subsec:consumption})
+$<\psi>$ is the feeding level (see section~\ref{sec:consumption})
 
 \bigskip
 There are 4 parameters in the length equation, and 5 in the weight equation, giving a total of 9 parameters to be declared to define this growth function.  This is given in the main stock file by declaring a single vector with 9 components, consisting of the 4 length parameters followed by the 5 weight parameters.  This is shown below:
@@ -653,8 +659,8 @@ growthparameters       <growth parameters vector>
 %\end{verbatim}}
 
 \subsection{WeightVB Growth Function}\label{subsec:growth3}
-This growth function is an form of the Von Bertalanffy growth equation\footnotemark, extended to introduce the concept of starvation to the growth function.  The increase in the weight for each length group the stock is given by equation~\ref{eq:growth3w}, and the corresponding increase in the length of the stock is given by equation~\ref{eq:growth3lc} below:
-\footnotetext{See L von Bertalanffy, "A Quantitative Theory of Organic Growth", 1938 Human Biology 10, pp181-213}
+This growth function is a form of the Von Bertalanffy growth equation, extended to introduce the concept of starvation to the growth function.  The increase in the weight for each length group the stock is given by equation~\ref{eq:growth3w}, and the corresponding increase in the length of the stock is given by equation~\ref{eq:growth3lc} below:
+%\footnotetext{See L von Bertalanffy, "A Quantitative Theory of Organic Growth", 1938 Human Biology 10, pp181-213}
 
 \begin{equation}\label{eq:growth3w}
 \Delta W_{i} = \Delta t q_{0} e^{q_{1} T}\left(
@@ -699,7 +705,7 @@ lgrowthparameters      <length parameters vector>
 \end{verbatim}}
 
 \subsection{WeightJones Growth Function}\label{subsec:growth4}
-This growth function is an form of the Jones growth equation\footnotemark, extended to introduce the concept of starvation to the growth function.  The increase in the weight for each length group the stock is given by equation~\ref{eq:growth4w}, and the corresponding increase in the length of the stock is given by equation~\ref{eq:growth4lc} below:
+This growth function is a form of the Jones growth equation\footnotemark, extended to introduce the concept of starvation to the growth function.  The increase in the weight for each length group the stock is given by equation~\ref{eq:growth4w}, and the corresponding increase in the length of the stock is given by equation~\ref{eq:growth4lc} below:
 \footnotetext{See R Jones and C Johnston, "Growth, Reproduction and Mortality of the Gadoid Fish Species", Fisheries Mathematics, 1977 Academic Press 198, pp81.}
 
 \begin{equation}\label{eq:growth4w}
@@ -707,18 +713,15 @@ This growth function is an form of the Jones growth equation\footnotemark, exten
 \end{equation}
 
 \begin{equation}\label{eq:growth4la}
- r = \frac{W - \left( p_{0} + \psi \left( p_{1} + p_{2}\psi \right) \right) W_{ref}}{W}
+r = \frac{W - \left( p_{0} + \psi \left( p_{1} + p_{2}\psi \right) \right) W_{ref}}{W}
 \end{equation}
 
 \begin{equation}\label{eq:growth4lb}
 f(x) =
 \begin{cases}
-  0
-  & \textrm{if $p_{3} + p_{4}x \leq 0$} \\
-  p_{5}
-  & \textrm{if $p_{3} + p_{4}x \geq p_{5}$} \\
-  p_{3} + p_{4}x
-  & \textrm{otherwise}
+0 & \textrm{if $p_{3} + p_{4}x \leq 0$} \\
+p_{5} & \textrm{if $p_{3} + p_{4}x \geq p_{5}$} \\
+p_{3} + p_{4}x & \textrm{otherwise}
 \end{cases}
 \end{equation}
 
@@ -728,9 +731,9 @@ f(x) =
 
 where:\newline
 $<\Delta t>$ is the length of the timestep\newline
-$<$ C $>$ is the consumption (see section~\ref{subsec:consumption})\newline
+$<$ C $>$ is the consumption (see section~\ref{sec:consumption})\newline
 $<$ T $>$ is the temperature\newline
-$<\psi>$ is the feeding level (see section~\ref{subsec:consumption})
+$<\psi>$ is the feeding level (see section~\ref{sec:consumption})
 
 \bigskip
 There are 6 parameters for the equation for increase of the weight, and a further 8 parameters for the increase in length.  These are declared in 2 vectors, as shown below:
@@ -839,7 +842,9 @@ There are a total of 4 parameters for the equation for increase in length and we
 growthparameters       <growth parameters vector>
 \end{verbatim}}
 
-\section{Growth Implementation}\label{subsec:stockgrowthimplement}
+It is important to note that if the value of $q_{0}$ (also termed ''$L_{\infty}$'') is less than the mean length of a length group, then the length increase calculated by equation~\ref{eq:growth8l} would be negative for that length group, which will result in Gadget printing a warning message.  To avoid this, the user should ensure that the value of $q_{0}$ is always greater than the mean length of the largest length group.
+
+\section{Growth Implementation}\label{sec:stockgrowthimplement}
 The growth functions described above calculate the mean growth for the stock within the model. This must then be translated into a statistical distribution of actual growths around that mean.  Currently there is only one statistical distribution implemented with Gadget, the beta-binomial, which is described below.
 
 \bigskip
@@ -868,40 +873,40 @@ beta                   <beta>
 maxlengthgroupgrowth   <max length group growth>
 \end{verbatim}}
 
-The parameter $<$beta$>$ is the parameter that Gadget can estimate in the optimisation routines, in order to tune the distribution to best fit the data.  High values of beta produce a narrow distribution, whilst lower values produce a more dispersed distribution with a larger right-hand tail.
+The parameter $<$beta$>$ is the parameter that Gadget can estimate in the optimisation routines, in order to tune the distribution to best fit the data.  High values of beta produce a narrow distribution, whilst lower values produce a more dispersed distribution with a larger right-hand tail.  Note that very low values of beta (which lead to $\alpha$ < 1 in equation~\ref{eq:betabin3}) can lead to unexpected results and should be avoided.
 
 \bigskip
 The $<$max length group growth$>$ value is the maximum number of length categories a fish is permitted to grow in a single timestep within the model.  This should be set to be several length groups larger than any fish can be reasonably expected to grow in a time step, in order to provide the beta-binomial distribution with sufficient flexibility to produce a distribution around the mean.
 
-\section{Natural Mortality}\label{subsec:stocknatmort}
-The natural mortality is a measure of how much of the stock will be removed from the model due to natural causes.  In Gadget, this is modelled as the percentage of the stock that dies (the residual mortality) and it is age dependant, so that there can be a different mortality rate for each age group.  In the stock file, the natural mortality is given by a vector, with one number per age group.  The format for this is shown below:
+\section{Natural Mortality}\label{sec:stocknatmort}
+The natural mortality is a measure of how much of the stock will be removed from the model due to natural causes.  In Gadget, this is simply modelled as the percentage of the stock that dies (the residual mortality) from each age group.  The natural mortality is specified in the stock file as a vector, with one number per age group, as shown below:
 
 {\small\begin{verbatim}
 naturalmortality       <natural mortality vector>
 \end{verbatim}}
 
-\section{Stock Prey}\label{subsec:stockprey}
-The stock prey section of the stock file determines if the stock will be treated as a prey in the Gadget model.  Note that the fleets are treated as a predator by Gadget, so for the stock to be caught by the fleets, the stock needs to be declared as a prey.  The format for the first part of the prey section is given below:
+\section{Stock Prey}\label{sec:stockprey}
+The stock prey section of the stock file determines if, and how, the stock will be treated as a prey in the Gadget model.  The format for the first part of the prey section of the main stock file is given below:
 
 {\small\begin{verbatim}
 iseaten                <0 or 1> ; 0 for not eaten, 1 for eaten
 \end{verbatim}}
 
-If the stock is not eaten, then the following section doesn't apply, and the next section of the input file is the stock predator, given in section~\ref{subsec:stockpredator} below.  If the stock is eaten, then for Gadget to treat it as a prey the length groups for that prey must be defined.  These length groups need not be to the same scale as for the stock as a whole.  This is done by listing a length aggregation file that is to be used, as shown for the full example below:
+Note that the fleets are treated as a predator by Gadget, so for the stock to be caught by the fleets, the stock needs to be declared as a prey.  If the stock is not eaten, then the following section doesn't apply, and the next section of the input file is the stock predator, given in section~\ref{sec:stockpredator} below.  If the stock is eaten, then for Gadget to treat it as a prey the length groups for that prey must be defined.  These length groups need not be to the same scale as for the stock as a whole.  This is done by listing a length aggregation file that is to be used, as shown for the full example below:
 
 {\small\begin{verbatim}
 iseaten                1
 preylengths            <length aggregation file>
 \end{verbatim}}
 
-\section{Stock Predator}\label{subsec:stockpredator}
+\section{Stock Predator}\label{sec:stockpredator}
 The stock predator section of the stock file determines if, and how, the stock will be treated as a predator in the Gadget model.  The format for the first part of the predator section is given below:
 
 {\small\begin{verbatim}
 doeseat                <0 or 1> ; 0 for not a predator, 1 for predator
 \end{verbatim}}
 
-If the stock is not a predator, then the following sections don't apply, and the next section of the input file is the initial conditions, given in section~\ref{subsec:stockinitial} below.  If the stock is a predator, then it is necessary to specify information about the predation.  This is done by defining a suitability function, and then some consumption and feeding parameters.  The full format for this is shown below:
+If the stock is not a predator, then the following sections don't apply, and the next section of the input file is the initial conditions, given in section~\ref{sec:stockinitial} below.  If the stock is a predator, then it is necessary to specify information about the predation.  This is done by defining a suitability function, and then some consumption and feeding parameters.  The full format for this is shown below:
 
 {\small\begin{verbatim}
 doeseat                1
@@ -910,9 +915,9 @@ maxconsumption         <maximum consumption vector>
 halffeedingvalue       <half feeding value>
 \end{verbatim}}
 
-The $<$suitability$>$ defines the prey that the predator will consume, and is discussed in the Suitability section below (see section~\ref{subsec:suitability}).  The $<$maximum consumption vector$>$ and $<$half feeding value$>$ parameters define how the stock consumes any prey that is eaten, and are described in the following section on Consumption.
+The $<$suitability$>$ defines the prey that the predator will consume, and is discussed in the Suitability section below (see section~\ref{sec:suitability}).  The $<$maximum consumption vector$>$ and $<$half feeding value$>$ parameters define how the stock consumes any prey that is eaten, and are described in the following section.
 
-\section{Consumption}\label{subsec:consumption}
+\section{Consumption}\label{sec:consumption}
 The consumption determines how much of a given prey is consumed by the predator.  This will result in the population of the prey being reduced, and can also affect the growth of the predator, depending on the growth function selected.  The consumption of a prey is dependant on the length of both the predator and the prey, and the amount of the prey available, as a proportion of the total amount of food available.  The consumption of prey $p$ is given by equation~\ref{eq:totalcons} below:
 
 \begin{equation}\label{eq:totalcons}
@@ -935,14 +940,14 @@ where:\newline
 $<$ L $>$ is the length of the predator\newline
 $<$ l $>$ is the length of the prey\newline
 $<$ H $>$ is the half feeding value\newline
-$<$ N $>$ is the number of fish in the length cell\newline
-$<$ W $>$ is the mean weight of fish in the length cell\newline
-$<$ S $>$ is the suitability (see section~\ref{subsec:suitability})\newline
+%$<$ N $>$ is the number of fish in the length cell\newline
+%$<$ W $>$ is the mean weight of fish in the length cell\newline
+$<$ S $>$ is the suitability (see section~\ref{sec:suitability})\newline
 $<$ A $>$ is the size of the area that the feeding takes place on\newline
 $<$ T $>$ is the temperature of the area that the feeding takes place on
 
 \bigskip
-In equation~\ref{eq:totalcons}, the parameter $<$ F $>$ gives the amount of a given prey that is consumed by the predator, given by multiplying the biomass of the prey by the suitability (see section~\ref{subsec:suitability}), as shown in equation~\ref{eq:preycons}.  The summation over preys is over all preys, including non-modelled prey, given as ''otherfood'' in section~\ref{chap:other}.  The value of $<$ C $>$ can also have an effect on the growth of the predator when the growth function has been set to ''WeightJones''.
+In equation~\ref{eq:totalcons}, the parameter $<$ F $>$ gives the amount of a given prey that is consumed by the predator, given by multiplying the biomass of the prey by the suitability (see section~\ref{sec:suitability}), as shown in equation~\ref{eq:preycons}.  The summation over preys is over all preys, including non-modelled prey, given as ''otherfood'' in section~\ref{chap:other}.  The value of $<$ C $>$ can have an affect on the growth of the predator when the growth function has been set to ''WeightJones''.
 
 \bigskip
 In equation~\ref{eq:maxcons}, the parameter $<$ M $>$ gives the maximum possible consumption for the predator.  This is a function of temperature and the length of the predator, using the 4 parameters specified by the $<$maximum consumption$>$ vector in the input file.
@@ -950,7 +955,7 @@ In equation~\ref{eq:maxcons}, the parameter $<$ M $>$ gives the maximum possible
 \bigskip
 In equation~\ref{eq:feedlevel}, the parameter $<\psi>$ gives the ''feeding level'' which denotes the fraction of the available food that the predator is consuming.  This is governed by the total amount of prey available and the $<$half feeding$>$ value which is specified in the input file.  The $<$half feeding$>$ value is the density of prey required to allow the predator to consume prey at half the maximum consumption level.  The value of $<\psi>$ can have an affect on the growth of the predator (ie. when there isn't sufficient food available) when the growth function has been set to ''MULTSPEC'' or ''WeightJones''.
 
-\section{Suitability}\label{subsec:suitability}
+\section{Suitability}\label{sec:suitability}
 The suitability determines how the predators act on the preys.  This selectivity relationship between the predator and the prey is based on the lengths of the predator and prey, and can be defined either by declaring a matrix of suitability values, or by declaring a suitability function and the parameters for that function.  The suitability values can be thought of as the proportion of the prey length group that the predator length group can consume, and as such the suitability values should be between 0 and 1.
 
 \bigskip
@@ -1044,10 +1049,8 @@ This is a more general suitability function that is dependant on the ratio of th
 \begin{equation}\label{eq:andersensuit}
 S(l, L) =
 \begin{cases}
-  p_0 + p_2e^{-\frac{(\ln\frac{L}{l} - p_1)^2}{p_4}}
-  & \textrm{if $\ln\frac{L}{l} \leq p_1$}\\
-  p_0 + p_2e^{-\frac{(\ln\frac{L}{l} - p_1)^2}{p_3}}
-  & \textrm{if $\ln\frac{L}{l} > p_1$}
+p_0 + p_2e^{-\frac{(\ln\frac{L}{l} - p_1)^2}{p_4}} & \textrm{if $\ln\frac{L}{l} \leq p_1$} \\
+p_0 + p_2e^{-\frac{(\ln\frac{L}{l} - p_1)^2}{p_3}} & \textrm{if $\ln\frac{L}{l} > p_1$}
 \end{cases}
 \end{equation}
 
@@ -1055,10 +1058,10 @@ S(l, L) =
 Note that the log of the ratio of the predator/prey lengths is bounded, to ensure that the suitability function is always well defined.  To specify this suitability function, the file format required is:
 
 {\small\begin{verbatim}
-<preyname>    function andersensuitfunc <vector of parameters>
+<preyname>    function andersensuitfunc <vector of 5 parameters>
 \end{verbatim}}
 
-\section{Initial Conditions}\label{subsec:stockinitial}
+\section{Initial Conditions}\label{sec:stockinitial}
 The initial conditions section of stock file specifies the stock population at the start of the simulation (ie. at the beginning of the first timestep specified in the ''time'' file).  This includes setting up the population size, the length distribution and the mean weight for each length group.  This is done by specifying the minimum and maximum age and length for the stock at the timestep, and either specifying parameters to allow Gadget to create a stock distribution based on a Normal distribution, or the numbers that make up the stock distribution required.
 
 \bigskip
@@ -1118,14 +1121,14 @@ The $<$initial stock number file$>$ contains the age-length table for the initia
 
 Note that the $<$length$>$ value refers to the minimum length of the age-length cell that the initial population will be put into.
 
-\section{Migration}\label{subsec:stockmigrate}
+\section{Migration}\label{sec:stockmigrate}
 The migration section of the stock file determines if, and how, the stock will migrate in the Gadget model. The format for the first part of the migration section is given below:
 
 {\small\begin{verbatim}
 doesmigrate            <0 or 1> ; 0 for no migration, 1 for migration
 \end{verbatim}}
 
-If the stock does not migrate, then the following section doesn't apply, and the next section of the input file is the maturation, given in section~\ref{subsec:stockmature} below.  If the stock does migrate, then further information about the migration is required.  The next line contains a flag to show whether the migration of the stock is dependent on the age of the stock, and then the migration data is given in a data file.  Thus the format for the migration data, in the main stock file, is given below:
+If the stock does not migrate, then the following section doesn't apply, and the next section of the input file is the maturation, given in section~\ref{sec:stockmature} below.  If the stock does migrate, then further information about the migration is required.  The next line contains a flag to show whether the migration of the stock is dependent on the age of the stock, and then the migration data is given in a data file.  Thus the format for the migration data, in the main stock file, is given below:
 
 {\small\begin{verbatim}
 doesmigrate            1
@@ -1135,14 +1138,14 @@ migrationfile          <name of migration data file>
 
 [CURRENTLY BLANK - INSERT MIGRATION HERE]
 
-\section{Maturation}\label{subsec:stockmature}
+\section{Maturation}\label{sec:stockmature}
 The maturation section of the stock file determines if, and how, the stock will mature in the Gadget model. The format for the first part of the maturation section is given below:
 
 {\small\begin{verbatim}
 doesmature             <0 or 1> ; 0 for no maturation, 1 for maturation
 \end{verbatim}}
 
-If the stock does not mature, then the following sections don't apply, and the next section of the input file is the movement, given in section~\ref{subsec:stockmove} below.  If the stock does mature, then there are various different functions that describe how the stock can mature.  The type of maturity function is denoted by a name, as shown below, and then the data required for that maturity function is given in a datafile.  Thus the format for the maturity data, in the main stock file, is given below:
+If the stock does not mature, then the following sections don't apply, and the next section of the input file is the movement, given in section~\ref{sec:stockmove} below.  If the stock does mature, then there are various different functions that describe how the stock can mature.  The type of maturity function is denoted by a name, as shown below, and then the data required for that maturity function is given in a datafile.  Thus the format for the maturity data, in the main stock file, is given below:
 
 {\small\begin{verbatim}
 doesmature             1
@@ -1218,7 +1221,7 @@ This maturity function takes a different approach, and bases the proportion of t
 \begin{equation}\label{eq:mat2}
 P(l, a) =
 \begin{cases}
-1 & \textrm{if there is an $i$ such that $s_i$ is the current step and $l > l_i$}\\
+1 & \textrm{if there is an $i$ such that $s_i$ is the current step and $l > l_i$} \\
 0 & \textrm{otherwise}
 \end{cases}
 \end{equation}
@@ -1233,14 +1236,14 @@ maturitylengths             <vector of lengths>
 
 Note that the $<$vector of timesteps$>$ and the $<$vector of lengths$>$ need to be the same size.
 
-\section{Movement (''Transition'')}\label{subsec:stockmove}
+\section{Movement (''Transition'')}\label{sec:stockmove}
 The movement section of the stock file determines if, and how, the stock will move (into a different stock) in the Gadget model.  This allows for a Gadget model to be set up with different stock files for stock that is the same species, but with differing properties (for instance age or maturity status) and for the entries to move between these stocks when required.  For the current version of Gadget, the only movement between stocks that is valid is for the stock in the oldest age-group of one stock to move into a different stock.  The format for the first part of the movement section is given below:
 
 {\small\begin{verbatim}
 doesmove               <0 or 1> ; 0 for no movement, 1 for movement
 \end{verbatim}}
 
-If the stock does not move, then the following section doesn't apply, and the next section of the input file is the renewal, given in section~\ref{subsec:stockrenew} below.  If the stock does move, then the information required to define the movement is the timestep for the movement to occur (since the movement is assumed to be an annual event) and the names of the stocks to move the oldest age-group into, along with the ratio of the oldest age group that will move into that particular stock (in a similar manner to that used for the maturation, given in section~\ref{subsec:stockmature}).  Thus the full format for the movement of the stock is given below:
+If the stock does not move, then the following section doesn't apply, and the next section of the input file is the renewal, given in section~\ref{sec:stockrenew} below.  If the stock does move, then the information required to define the movement is the timestep for the movement to occur (since the movement is assumed to be an annual event) and the names of the stocks to move the oldest age-group into, along with the ratio of the oldest age group that will move into that particular stock (in a similar manner to that used for the maturation, given in section~\ref{sec:stockmature}).  Thus the full format for the movement of the stock is given below:
 
 {\small\begin{verbatim}
 doesmove                    1
@@ -1248,14 +1251,14 @@ transitionstocksandratios   <stockname i>  <ratio i> ; for each stock i
 transitionstep              <timestep for the stock to move>
 \end{verbatim}}
 
-\section{Renewal (''Recruitment'')}\label{subsec:stockrenew}
+\section{Renewal (''Recruitment'')}\label{sec:stockrenew}
 The renewal section of the stock file determines if, and how, the stock will be renewed in the Gadget model. The format for the first part of the renewal section is given below:
 
 {\small\begin{verbatim}
 doesrenew              <0 or 1> ; 0 for no renewal, 1 for renewal
 \end{verbatim}}
 
-If the stock does not renew, then the following sections don't apply, and the next section of the input file is the spawning, given in section~\ref{subsec:stockspawn} below.  If the stock does renew, then further information is required about the renewal data.  This is given in a separate file, so the format for the renewal data, in the main stock file, is given below:
+If the stock does not renew, then the following sections don't apply, and the next section of the input file is the spawning, given in section~\ref{sec:stockspawn} below.  If the stock does renew, then further information is required about the renewal data.  This is given in a separate file, so the format for the renewal data, in the main stock file, is given below:
 
 {\small\begin{verbatim}
 doesrenew              1
@@ -1289,14 +1292,14 @@ The $<$renewal data$>$ is a list of the age, number, mean length, standard devia
 
 In this file, $<$age$>$ is the age of the recruits (which should match the minimum age of the stock that the recruits are to be added to), $<$number$>$ is the number of recruits (in units of 10,000 fish) $<$mean$>$ and $<$stddev$>$ are used to define the Normal distribution for the recruits (within the length groups defined at the top of the file), and $<$alpha$>$ and $<$beta$>$ define the weight-length relationship for these recruits.
 
-\section{Spawning}\label{subsec:stockspawn}
+\section{Spawning}\label{sec:stockspawn}
 The spawning section of the stock file determines if, and how, the stock will spawn in the Gadget model.   This covers the mortality and weight loss from the stock due to the spawning process, and optionally the creation of a new spawned stock.  The format for the first part of the spawning section is given below:
 
 {\small\begin{verbatim}
 doesspawn              <0 or 1> ; 0 for no spawning, 1 for spawning
 \end{verbatim}}
 
-If the stock does not spawn, then the following sections don't apply, and the next section of the input file is the straying information, given in section~\ref{subsec:stockstray} below.  If the stock does spawn, then further information is required about the spawning data.  This is given in a separate file, so the format for the spawning data, in the main stock file, is given below:
+If the stock does not spawn, then the following sections don't apply, and the next section of the input file is the straying information, given in section~\ref{sec:stockstray} below.  If the stock does spawn, then further information is required about the spawning data.  This is given in a separate file, so the format for the spawning data, in the main stock file, is given below:
 
 {\small\begin{verbatim}
 doesspawn              1
@@ -1321,7 +1324,7 @@ $<m>$ is the spawning mortality for that length group\newline
 $<w>$ is the spawning weight loss for that length group
 
 \bigskip
-In equation \ref{eq:spawn1}, the population of the age-length cell of the mature stock is reduced due to the spawning mortality of the fish that spawn.  In equation \ref{eq:spawn2}, the mean weight of the population in the age-length cell is adjusted to take reduction in weight of the fish that spawn and the change in population into account.
+In equation~\ref{eq:spawn1}, the population of the age-length cell of the mature stock is reduced due to the spawning mortality of the fish that spawn.  In equation~\ref{eq:spawn2}, the mean weight of the population in the age-length cell is adjusted to take reduction in weight of the fish that spawn and the change in population into account.
 
 \bigskip
 Spawning is considered to be an annual event, that takes place on the same timestep and the same area in each year.  To model the spawning process as it affects the parent (without the creation of a child stock), it is necessary to specify the timestep and area that the spawning will take place on, and the length selection functions to determine proportion of each length group that will spawn, and the spawning mortality and weight loss of those that spawn.  This is done in the spawning data file, as shown below:
@@ -1335,13 +1338,7 @@ mortalityfunction      <see Length Selection>
 weightlossfunction     <see Length Selection>
 \end{verbatim}}
 
-Alternatively, it is possible to consider the spawning process as part of a through life-cycle model, and so the spawning process can create recruits to be added to one or more stocks (in a similar manner to the renewal data, given in section~\ref{subsec:stockrenew} above).
-
-\begin{equation}\label{eq:spawn3}
-TR = \sum_{\it ages}\sum_{\it lengths}\Big( p_{0} l ^{p_{1}} a ^{p_{2}} N_{al} ^{p_{3}} W_{al} ^{p_{4}} \Big)
-\end{equation}
-
-The total number of recruits given from equation \ref{eq:spawn3} is added to the youngest age group of the spawned stock.  The lengths of the spawned stock are distributed with a Normal distribution about a specified mean length $q_0$ with a standard deviation $q_1$.  The mean weight of the fish in these age length cells is  given from equation \ref{eq:wlen}, with $\alpha$ given by parameter $q_2$ and $\beta$ given by $q_3$.  Hence, the format for the spawning data file for
+Alternatively, it is possible to consider the spawning process as part of a through life-cycle model, and so the spawning process can create recruits to be added to one or more stocks (in a similar manner to the renewal data, given in section~\ref{sec:stockrenew} above).  The total number of recruits given by the spawning process is added to the youngest age group of the spawned stock at the start of the following timestep.  The lengths of the spawned stock are distributed with a Normal distribution about a specified mean length $<$mean$>$ with a standard deviation $<$stddev$>$.  The mean weight of the fish in these age length cells is given from equation~\ref{eq:wlen}, with $\alpha$ and $\beta$ specified in the spawning data file.  Hence, if the spawning process is to calculate a number of recruits to the model, the format for the spawning data file is shown below:
 
 {\small\begin{verbatim}
 spawnsteps             <vector of timesteps>
@@ -1350,20 +1347,82 @@ spawnstocksandratios   <stockname i> <ratio i> ; for each stock i
 proportionfunction     <see Length Selection>
 mortalityfunction      <see Length Selection>
 weightlossfunction     <see Length Selection>
-spawnparameters        <spawning parameters vector>
-stockparameters        <stock parameters vector>
+recruitment            <functionname>  <parameters>
+stockparameters        <mean>  <stddev>  <alpha>  <beta>
 \end{verbatim}}
 
-The $<$spawning parameters vector$>$ is a vector of 5 $p_i$ parameters from equation \ref{eq:spawn3}.  The $<$stock parameters vector$>$ is a vector of the 4 $q_i$ parameters that define the new stock that is created by the spawning process.
+The recruitment $<$functionname$>$ defines which recruitment function to use to calculate the number of recruits to be added to the spawned stock.  Currently there are 4 recruitment functions defined, and the valid recruitment function names are:
 
-\section{Length Selection}\label{subsec:lselection}
-The length selection function determines how the proportion of the length group that will be selected, in a similar way to the suitability functions (see section~\ref{subsec:suitability} above).  To define a length selection function, it is necessary to specify the function, the name of the function ans the parameters for the function, as shown below:
+\bigskip
+fecundity - use the Fecundity recruitment function\newline
+simplessb - use the SimpleSSB recruitment function\newline
+ricker - use the Ricker recruitment function\newline
+bevertonholt - use the BevertonHolt recruitment function
+
+\subsection{Fecundity Recruitment Function}
+This recruitment function calculates the number of recruits to be added to the spawned stock as a function of the length, age, number and weight of the spawning stock, given by the following equation:
+
+\begin{equation}\label{eq:rec1}
+R = p_{0} \sum_{\it ages}\sum_{\it lengths} l ^{p_{1}} a ^{p_{2}} N_{al} ^{p_{3}} W_{al} ^{p_{4}}
+\end{equation}
+
+Hence, to specify this recruitment function, the file format required is:
+
+{\small\begin{verbatim}
+recruitment            fecundity  <vector of 5 parameters>
+\end{verbatim}}
+
+\subsection{SimpleSSB Recruitment Function}
+This recruitment function calculates the number of recruits to be added to the spawned stock as a simple proportion of the spawning stock biomass, given by the following equations:
+
+\begin{equation}\label{eq:ssb}
+S = \sum_{\it ages}\sum_{\it lengths} N_{al} W_{al}
+\end{equation}
+
+\begin{equation}\label{eq:rec2}
+R = \mu S
+\end{equation}
+
+Hence, to specify this recruitment function, the file format required is:
+
+{\small\begin{verbatim}
+recruitment            simplessb  <mu>
+\end{verbatim}}
+
+\subsection{Ricker Recruitment Function}
+This recruitment function calculates the number of recruits to be added to the spawned stock, as a function of the spawning stock biomass (see equation~\ref{eq:ssb}), based on the Ricker recruitment relationship given by the following equation:
+
+\begin{equation}\label{eq:rec3}
+R = \mu S e ^{-\lambda S}
+\end{equation}
+
+Hence, to specify this recruitment function, the file format required is:
+
+{\small\begin{verbatim}
+recruitment            ricker  <mu>  <lambda>
+\end{verbatim}}
+
+\subsection{BevertonHolt Recruitment Function}
+This recruitment function calculates the number of recruits to be added to the spawned stock, as a function of the spawning stock biomass (see equation~\ref{eq:ssb}), based on the Beverton Holt recruitment relationship given by the following equation:
+
+\begin{equation}\label{eq:rec4}
+R = \frac{\mu S}{\lambda + S}
+\end{equation}
+
+Hence, to specify this recruitment function, the file format required is:
+
+{\small\begin{verbatim}
+recruitment            bevertonholt  <mu>  <lambda>
+\end{verbatim}}
+
+\section{Length Selection}\label{sec:lselection}
+The length selection function determines how the proportion of the length group that will be selected, in a similar way to the suitability functions (see section~\ref{sec:suitability} above).  To define a length selection function, it is necessary to specify the function, the name of the function ans the parameters for the function, as shown below:
 
 {\small\begin{verbatim}
 <function>    <functionname> <parameters>
 \end{verbatim}}
 
-The $<$function$>$ defines how the length selection function will be used (for an example, see section~\ref{subsec:stockspawn} above).  The $<$functionname$>$ defines which selection function is to be used to calculate the selection of the stock.  Currently there are 3 selection functions defined, and the valid length selection function names are:
+The $<$function$>$ defines how the length selection function will be used (for an example, see section~\ref{sec:stockspawn} above).  The $<$functionname$>$ defines which selection function is to be used to calculate the selection of the stock.  Currently there are 3 selection functions defined, and the valid length selection function names are:
 
 \bigskip
 constant - use the Constant selection function\newline
@@ -1411,7 +1470,7 @@ Note that the stock length dependence is actually dependant on the difference be
 <function>    exponential  <alpha>  <l50>
 \end{verbatim}}
 
-\section{Straying}\label{subsec:stockstray}
+\section{Straying}\label{sec:stockstray}
 The straying section of the stock file determines if, and how, the stock will stray from one substock to another substock in the Gadget model.  The format for the first part of the straying section of the stock file is given below:
 
 {\small\begin{verbatim}
@@ -1425,7 +1484,7 @@ doesstray              1
 strayfile              <name of the straying data file>
 \end{verbatim}}
 
-The straying data file defines what happens to the stock as it strays from one substock to another.  The straying is length-dependent, so that a proportion of each length group (over all age groups) will move to the corresponding length group in a different substock.  This process can be thought of as an extension to the transition process (see section~\ref{subsec:stockmove}).
+The straying data file defines what happens to the stock as it strays from one substock to another.  The straying is length-dependent, so that a proportion of each length group (over all age groups) will move to the corresponding length group in a different substock.  This process can be thought of as an extension to the transition process (see section~\ref{sec:stockmove}).
 
 \bigskip
 Straying is considered to be an annual event, that takes place on the same timestep and the same area in each year.  To model the straying process in Gadget, it is necessary to specify the timestep and the area that the straying will take place on, the the names of the stocks to move the straying fish into, along with the ratio of the fish that will move into that particular stock (in a similar manner to that used for the transition process) and the length selection function to determine the proportion of the length group that will stray.  This is done in the straying data file, as shown below:
@@ -1436,7 +1495,6 @@ strayareas             <vector of areas>
 straystocksandratios   <stockname i> <ratio i> ; for each stock i
 proportionfunction     <see Length Selection>
 \end{verbatim}}
-
 
 %JMB removed fleksibest stuff from the documentation
 %\section{Stock - Fleksibest Formulation}\label{sec:fleksistock}
@@ -1501,7 +1559,7 @@ proportionfunction     <see Length Selection>
 %[CURRENTLY BLANK - INSERT DESCRIPTION FROM BERGEN]
 
 \chapter{Tag Files}\label{chap:tag}
-The tag files contain the information about the tagging experiments that are to be included in the Gadget model.  Gadget will keep track of the number, and proportion, of fish in an age-length cell that have been tagged for a tagging experiment.  This information can then be compared to the recaptures from that tagging experiment when calculating a likelihood score (see Recaptures, section~\ref{sec:recaptures})
+The tag files contain the information about the tagging experiments that are to be included in the Gadget model.  Gadget will keep track of the number, and proportion, of fish in an age-length cell that have been tagged for a tagging experiment.  This information can then be compared to the recaptures from that tagging experiment when calculating a likelihood score (see Recaptures, section~\ref{sec:recaptures}).
 
 \bigskip
 To define tagged populations in the Gadget model, the ''main'' file must contain a list of the data files that contain the description of the tagging experiments, and the format for this is shown below:
@@ -1511,7 +1569,7 @@ To define tagged populations in the Gadget model, the ''main'' file must contain
 tagfiles               <names of the tag files>
 \end{verbatim}}
 
-The main tag file lists the tagging experiments, along with basic information about the experiments and the name of the datafile that contains information about the number of fish tagged for the tagging experiment.  The format for this file shown below, with each new tagging experiment starting with the keyword [tagcomponent]
+The main tag file lists the tagging experiments, along with basic information about the experiments and the name of the datafile that contains information about the number of fish tagged for the tagging experiment.  The format for this file shown below, with each new tagging experiment starting with the keyword [tagcomponent]:
 
 {\small\begin{verbatim}
 [tagcomponent]
@@ -1519,7 +1577,7 @@ tagid                  <name of the tagging experiment>
 stock                  <name of the tagged stock>
 tagarea                <area that the tagging took place>
 endyear                <year of last recapture>
-tagloss                <proportion of tags that are lost>
+tagloss                <proportion of tagged fish that are lost>
 numbers                <see Tagging Numbers>
 \end{verbatim}}
 
@@ -1529,7 +1587,7 @@ Each tagging experiment is defined by specifying the name of the tagging experim
 The optional $<$endyear$>$ value is used to define the end of a tagging experiment, and should be set to the year of the last expected recapture from the tagging experiment.  This can be used to reduce the calculation time.  If this is not specified, then it is assumed that the tagging experiment will run until the end of the simulation.
 
 \bigskip
-For each time step, a number of tags can be lost from the tagging experiment.  The number of tagged fish that remain in the tagging experiment is given by the tag loss equation~\ref{eq:tagloss} below:
+The $<$tagloss$>$ value is used to remove tagged fish from the model.  For each time step, a number of tags can be lost from the tagging experiment.  The number of tagged fish that remain in the tagging experiment is given by the equation~\ref{eq:tagloss} below:
 
 \begin{equation}\label{eq:tagloss}
 N = N (e^{-t})
@@ -1537,10 +1595,10 @@ N = N (e^{-t})
 
 where:\newline
 $<$ N $>$ is the number of tagged fish in an age-length group\newline
-$<t>$ is the proportion of tags that are lost specified in the input file
+$<t>$ is the proportion of tagged fish that are lost, as specified in the input file
 
 \section{Tagging Numbers}\label{sec:tagnumbers}
-The numbers section of the tag file gives the number of fish tagged for the tagging experiment.  This data is listed in a column format in a separate file, so the main tag file simply gives the name of this tag data file, as shown in the example below:
+The numbers section of the tag file gives the number of fish tagged for the tagging experiment.  This is given in a column format in a separate file, so the main tag file simply gives the name of this tag data file, as shown in the example below:
 
 {\small\begin{verbatim}
 numbers                <name of data file>
@@ -1555,7 +1613,7 @@ For the tag datafile, this is a simple list of tag identifier, timestep, length 
 Note that the $<$length$>$ value refers to the minimum length of the length cell that the tagged fish will be put into.
 
 \chapter{Otherfood Files}\label{chap:other}
-The otherfood files contain the information about non-dynamic prey that is available for the predators to consume.  The otherfood acts as a prey that is always available, and it is used to avoid the situation where the non-availability of a prey stock prevents the predators from growing as expected.  Note that due to the way the consumption is defined (see Consumption, section~\ref{subsec:consumption}) the otherfood is given as the density of the non-modelled prey available.
+The otherfood files contain the information about non-dynamic prey that is available for the predators to consume.  The otherfood acts as a prey that is always available, and it is used to avoid the situation where the non-availability of a prey stock prevents the predators from growing as expected.  Note that due to the way the consumption is defined (see Consumption, section~\ref{sec:consumption}) the otherfood is given as the density of the non-modelled prey available.
 
 \bigskip
 To define otherfood in the Gadget model, the ''main'' file must contain a list of the data files that contain the description of the otherfood, and the format for this is shown below:
@@ -1565,7 +1623,7 @@ To define otherfood in the Gadget model, the ''main'' file must contain a list o
 otherfoodfiles         <names of the otherfood files>
 \end{verbatim}}
 
-The main otherfood file lists the otherfood, along with basic information about the food and the name of the datafile that contains information about the amount of food that is available for the predators to eat.  The format for this file shown below, with each new otherfood starting with the keyword [foodcomponent]
+The main otherfood file lists the otherfood, along with basic information about the food and the name of the datafile that contains information about the amount of food that is available for the predators to eat.  The format for this file shown below, with each new otherfood starting with the keyword [foodcomponent]:
 
 {\small\begin{verbatim}
 [foodcomponent]
@@ -1604,7 +1662,7 @@ To define fleets in the Gadget model, the ''main'' file must contain a list of t
 fleetfiles             <names of the fleet files>
 \end{verbatim}}
 
-There are two types of fleets implemented in Gadget, and the main fleet file lists the fleets and their type, along with information about the fleet and the name of the datafile that contains information about the landings.  The format for this file shown below, with each new fleet starting with the keyword [fleetcomponent]
+There are two types of fleets implemented in Gadget, and the main fleet file lists the fleets and their type, along with information about the fleet and the name of the datafile that contains information about the landings.  The format for this file shown below, with each new fleet starting with the keyword [fleetcomponent]:
 
 {\small\begin{verbatim}
 [fleetcomponent]
@@ -1684,7 +1742,7 @@ The fleet of type LinearFleet acts a simple predator, and can be used for fleets
 %The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The total amount that has been landed by the fleet is also required - this is taken for the landings data, based on timestep and area, and is specified in a separate file.
 
 \section{Fleet Suitability}\label{sec:fleetsuit}
-Since Gadget treats the fleets as predators of the stocks, the format for the suitability functions for the fleets is the same as the format for the suitability functions of the stock when they are acting as a predator.  The format for the suitability functions as discussed in section~\ref{subsec:suitability} above.
+Since Gadget treats the fleets as predators of the stocks, the format for the suitability functions for the fleets is the same as the format for the suitability functions of the stock when they are acting as a predator.  The format for the suitability functions as discussed in section~\ref{sec:suitability} above.
 
 %JMB removed fleksibest stuff from the documentation
 %\section{Fleet Level}\label{sec:fleetlevel}
@@ -1748,7 +1806,7 @@ MigrationPenalty\newline
 CatchInTons
 
 \section{BoundLikelihood (''Penalty'')}\label{sec:boundlike}
-The BoundLikelihood likelihood component is used to give a penalty weight to parameters that have moved beyond the bounds, as specified in the parameter file, in the optimisation process.  This file does not specify the bounds that are to be used, only the penalty that is to be applied when these bounds are exceeded.  Since the Simmulated Annealing (see section~\ref{sec:simann}) algorithm will always choose a value for the parameter that is within the bounds, this likelihood component will return a zero likelihood score during an optimisation using that algorithm.  However, the Hooke and Jeeves (see section~\ref{sec:hooke}) algorithm can choose a parameter outside the specified bounds, and so this likelihood component can then return a positive score.
+The BoundLikelihood likelihood component is used to give a penalty weight to parameters that have moved beyond the bounds, as specified in the parameter file, in the optimisation process.  This file does not specify the bounds that are to be used, only the penalty that is to be applied when these bounds are exceeded.  Since the Simmulated Annealing (see section~\ref{sec:simann}) algorithm will always choose a value for the parameter that is within the bounds, this likelihood component will return a zero likelihood score during an optimisation using that algorithm.  However, both the Hooke \& Jeeves (see section~\ref{sec:hooke}) and the BFGS (see section~\ref{sec:bfgs}) algorithms can choose a parameter outside the specified bounds, and so this likelihood component can then return a positive score.
 
 \bigskip
 To specify a BoundLikelihood likelihood component, the format required in the main likelihood file is as follows:
@@ -1766,12 +1824,9 @@ The datafile defines the penalty that is to be applied to the parameter when it 
 \begin{equation}\label{eq:bound}
 \ell_{i} =
 \begin{cases}
-  lw_{i} (val_{i} - lb_{i})^{p_{i}}
-  & \textrm{if $val_{i} < lb_i$}\\
-  uw_{i} (val_{i} - ub_{i})^{p_{i}}
-  & \textrm{if $val_{i} > ub_i$}\\
-  0
-  & \textrm{otherwise}
+lw_{i} (val_{i} - lb_{i})^{p_{i}} & \textrm{if $val_{i} < lb_i$} \\
+uw_{i} (val_{i} - ub_{i})^{p_{i}} & \textrm{if $val_{i} > ub_i$} \\
+0 & \textrm{otherwise}
 \end{cases}
 \end{equation}
 
@@ -1783,7 +1838,7 @@ $<lb_i>$ is the lower bound\newline
 $<ub_i>$ is the upper bound\newline
 $<p_i>$ is the power coefficient\newline
 
-Note that when the value of the parameter is exactly equal to the bound, this equation will give a zero likelihood score
+Note that when the value of the parameter is exactly equal to the bound, this equation will give a zero likelihood score.
 
 \bigskip
 The datafile lists these weights and the power that is to be used for each parameter.  The format for this file is shown below:
@@ -1968,10 +2023,8 @@ For the formulation of the variance-covariance matrix, $<\Sigma>$ is calculated 
 \begin{equation}\label{eq:cdsigma2}
 \sigma_{ij} =
 \begin{cases}
-  \displaystyle \sum^{lag}_{l=1} c_l \sigma_{i-l,j} + \delta^i_{j} \sigma^2
-  & \textrm{if $i \geq j$}\\
-  \displaystyle \sum^{lag}_{l=1} c_l \sigma_{j,i-l}
-  & \textrm{otherwise}
+\displaystyle \sum^{lag}_{l=1} c_l \sigma_{i-l,j} + \delta^i_{j} \sigma^2 & \textrm{if $i \geq j$} \\
+\displaystyle \sum^{lag}_{l=1} c_l \sigma_{j,i-l} & \textrm{otherwise}
 \end{cases}
 \end{equation}
 
@@ -2450,7 +2503,7 @@ epsilon              <epsilon>
 likelihoodtype       <likelihood type>
 \end{verbatim}}
 
-The $<$stocknames$>$ vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison.  The $<$suitability parameters$>$ define the suitability of the survey fleet that was used to collect the survey index data.  This is the same format as the suitability functions for the stock, as discussed in section~\ref{subsec:suitability} above.  Note that only one set of suitability values is defined, which will be applied to all the stocks for this likelihood component.
+The $<$stocknames$>$ vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison.  The $<$suitability parameters$>$ define the suitability of the survey fleet that was used to collect the survey index data.  This is the same format as the suitability functions for the stock, as discussed in section~\ref{sec:suitability} above.  Note that only one set of suitability values is defined, which will be applied to all the stocks for this likelihood component.
 
 \bigskip
 The $<$fit type$>$ defines what function is to be used to calculate the survey index distribution from the modelled population.  Currently, there are 2 functions defined, and the valid function names are:
@@ -2943,6 +2996,7 @@ yearsandsteps        <ActionAtTime to determine when to print>
 \end{verbatim}}
 
 Note that this printer type can aggregate more than one predators into a combined pseudo predator, and one or more preys into a pseudo prey, for the output file.
+% biomass flag to switch between printing biomass and number of preys consumed
 
 \bigskip
 The output that is generated from this printer type is a file containing the following predation information for all the predators specified on the $<$predators$>$ line, eating all the preys specified on the $<$preys$>$ line:
@@ -3091,7 +3145,7 @@ $<$mortality$>$ is the effective annual mortality induced in the prey by the pre
 The parameter file is used to specify the initial values for the switches that are to be used in the Gadget model (see What Does The \# Mean?, section~\ref{sec:whatdoeshash}).  This file is specified by a ''-i $<$filename$>$'' command line option when Gadget is started, for example, this would take the parameter information from a file called ''inputfile.txt'':
 
 {\small\begin{verbatim}
--i inputfile.txt
+gadget -s -i inputfile.txt
 \end{verbatim}}
 
 This file contains a list of all the switches, their initial value, the lower and upper bounds and a flag to note whether the optimiser should optimise that switch or not.  The first line of this file must contain the column headings, and then subsequent lines should list all switches that are used.  An example of this file format is shown below:
@@ -3105,47 +3159,47 @@ switch  value    lower    upper    optimise
 The optimisation file is used to specify the type of optimisation to be used, along with any parameters that are needed for the optimisation algorithm.  This file is specified by a ''-opt $<$filename$>$'' command line option when Gadget is started, for example, this would take the optimisation information from a file called ''optinfo.txt'':
 
 {\small\begin{verbatim}
--opt optinfo.txt
+gadget -l -opt optinfo.txt
 \end{verbatim}}
 
-There are three types of optimisation algorithms currently implemented in Gadget - these are one based on the Hooke and Jeeves algorithm, one based on the Simulated Annealing algorithm and one based on the Broyden-Fletcher-Goldfarb-Shanno (''BFGS'') algorithm.  These algorithms are described in more detail in the following sections.  Gadget can also combine two or more of these algorithms into a single hybrid algorithm, that should result in a more efficient search for an optimum solution. 
+There are three types of optimisation algorithms currently implemented in Gadget - these are one based on the Hooke \& Jeeves algorithm, one based on the Simulated Annealing algorithm and one based on the Broyden-Fletcher-Goldfarb-Shanno (''BFGS'') algorithm.  These algorithms are described in more detail in the following sections.  Gadget can also combine two or more of these algorithms into a single hybrid algorithm, that should result in a more efficient search for an optimum solution.
 
 \bigskip
 All the optimisation techniques used by Gadget attempt to minimise the likelihood function. That is, they look for the best set of parameters to run the model with, in order to get the best fit according to the likelihood functions you have specified.  Thus, the optimiser is attempting to minimize a single one-dimensional measure of fit between the model output and the data, which can lead to unexpected results.
 
 \bigskip
-The optimisation process will tend to produce realistic values for the most significant parameters (typically growth, recruitment in large year classes and fishing selectivity) before finding realistic values for less significant parameters.  It should be noted that the parameters governing recruitment and growth in the last few years with data in a simulation will be among the last to settle on realistic values.  It is important to ensure that an optimum solution has been reached before accepting the model, especially if the model is to be used to predict the population into the future or to examine the strength of the last few year classes
+The optimisation process will tend to produce realistic values for the most significant parameters (typically growth, recruitment in large year classes and fishing selectivity) before finding realistic values for less significant parameters.  It should be noted that the parameters governing recruitment and growth in the last few years with data in a simulation will be among the last to settle on realistic values.  It is important to ensure that an optimum solution has been reached before accepting the model, especially if the model is to be used to predict the population into the future or to examine the strength of the last few year classes.
 
-\section{Hooke and Jeeves}\label{sec:hooke}
+\section{Hooke \& Jeeves}\label{sec:hooke}
 \subsection{Overview}\label{subsec:hookeover}
-Hooke and Jeeves is a simple and fast optimising method, but somewhat unreliable, and it is often described as a 'hill climbing' technique.  From the initial starting point the algorithm takes a step in various 'directions', and conducts a new model run.  If the new likelihood score is better than the old one then the algorithm uses the new point as it's best guess.  If it is worse then the algorithm retains the old point.  The search proceeds in series of these steps, each step slightly smaller than the previous one.  When the algorithm finds a point which it cannot improve on with a small step in any direction then it accepts this point as being the 'solution', and exits.  It can be seen that this renders the scheme vulnerable to producing local solutions, accepting a local dip as being the solution even if a better solution exists elsewhere, beyond a local 'hill' that the algorithm cannot see past.  In order to combat this tendency it is strongly recommended that you re-run the optimisation, using the final point of one run as the start of the next.  This will effectively re-set the searching step size to large steps, and give Gadget a chance of escaping from local solutions.  Finding the same result twice in a row does not guarantee it is the best possible solution, but finding different results certainly indicates that the larger result is not the solution you are seeking.
+Hooke \& Jeeves is a simple and fast optimising method, but somewhat unreliable, and it is often described as a 'hill climbing' technique.  From the initial starting point the algorithm takes a step in various 'directions', and conducts a new model run.  If the new likelihood score is better than the old one then the algorithm uses the new point as it's best guess.  If it is worse then the algorithm retains the old point.  The search proceeds in series of these steps, each step slightly smaller than the previous one.  When the algorithm finds a point which it cannot improve on with a small step in any direction then it accepts this point as being the 'solution', and exits.  It can be seen that this renders the scheme vulnerable to producing local solutions, accepting a local dip as being the solution even if a better solution exists elsewhere, beyond a local 'hill' that the algorithm cannot see past.  In order to combat this tendency it is strongly recommended that you re-run the optimisation, using the final point of one run as the start of the next.  This will effectively re-set the searching step size to large steps, and give Gadget a chance of escaping from local solutions.  Finding the same result twice in a row does not guarantee it is the best possible solution, but finding different results certainly indicates that the larger result is not the solution you are seeking.
 
 \bigskip
-The Hooke and Jeeves algorithm used in Gadget is derived from that originally presented by R. Hooke and T. A. Jeeves, ''Direct Search Solution of Numerical and Statistical Problems'' in the April 1961 (Vol. 8, pp. 212-229) issue of the Journal of the ACM, with improvements presented by Arthur F Kaupe Jr., ''Algorithm 178: Direct Search'' in the June 1963 (Vol 6, pp.313-314) issue of the Communications of the ACM.
+The Hooke \& Jeeves algorithm used in Gadget is derived from that originally presented by R. Hooke and T. A. Jeeves, ''Direct Search Solution of Numerical and Statistical Problems'' in the April 1961 (Vol. 8, pp. 212-229) issue of the Journal of the ACM, with improvements presented by Arthur F Kaupe Jr., ''Algorithm 178: Direct Search'' in the June 1963 (Vol 6, pp.313-314) issue of the Communications of the ACM.
 
 \bigskip
-Hooke and Jeeves is the default optimisation method used for Gadget, and will be used if no optimisation information file is specified.
+Hooke \& Jeeves is the default optimisation method used for Gadget, and will be used if no optimisation information file is specified.
 
 \subsection{File Format}\label{subsec:hookefile}
-To specify the Hooke and Jeeves algorithm, the optimisation file should start with the keyword ''[hooke]'', followed by (up to) 4 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, is shown below:
+To specify the Hooke \& Jeeves algorithm, the optimisation file should start with the keyword ''[hooke]'', followed by (up to) 4 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, is shown below:
 
 {\small\begin{verbatim}
 [hooke]
-hookeiter  1000  ; number of hooke and jeeves iterations
-hookeeps   1e-04 ; minimum epsilon, hooke halt criteria
+hookeiter  1000  ; number of hooke & jeeves iterations
+hookeeps   1e-04 ; minimum epsilon, hooke & jeeves halt criteria
 rho        0.5   ; value for the resizing multiplier
 lambda     0     ; initial value for the step length
 \end{verbatim}}
 
 \subsection{Parameters}\label{subsec:hookepar}
 \subsubsection{hookeiter}
-This is the maximum number of Gadget model runs that the Hooke and Jeeves algorithm will use to try to find the best solution.  If this number is exceeded, Gadget will select the best point found so far, and accept this as the 'solution', even though it has not met the convergence criteria.  A warning that Gadget has stopped without finding a solution that meets the convergence criteria will be printed.
+This is the maximum number of Gadget model runs that the Hooke \& Jeeves algorithm will use to try to find the best solution.  If this number is exceeded, Gadget will select the best point found so far, and accept this as the 'solution', even though it has not met the convergence criteria.  A warning that Gadget has stopped without finding a solution that meets the convergence criteria will be printed.
 
 \subsubsection{hookeeps}
-This is the criteria for halting the Hooke and Jeeves algorithm at a minimum, and accepting the current point as the 'solution'.  The algorithm has ''converged'' when the size of each step in the search has been reduced to less than this value, and no further improvements can be made.  This means that each parameter in the Gadget model is less than hookeeps from their value at the (local) optimum.  Larger values of hookeeps give a quicker running time, but a less accurate estimate of the minimum.  Conversely, smaller values will give a longer running time, but a more accurate estimate of the minimum.
+This is the criteria for halting the Hooke \& Jeeves algorithm at a minimum, and accepting the current point as the 'solution'.  The algorithm has ''converged'' when the size of each step in the search has been reduced to less than this value, and no further improvements can be made.  This means that each parameter in the Gadget model is less than hookeeps from their value at the (local) optimum.  Larger values of hookeeps give a quicker running time, but a less accurate estimate of the minimum.  Conversely, smaller values will give a longer running time, but a more accurate estimate of the minimum.
 
 \subsubsection{rho}
-This is the resizing multiplier for the step length of the search made by the algorithm.  The Hooke and Jeeves algorithm works by taking ''steps'' from one estimate of a optimum, to another (hopefully better) estimate of the optimum.  Taking big steps gets to the minimum more quickly, at the risk of 'stepping over' an excellent point.  When no improvements to the minimum can be made by taking steps of the current length, the step length is reduced by multiplying it by rho.
+This is the resizing multiplier for the step length of the search made by the algorithm.  The Hooke \& Jeeves algorithm works by taking ''steps'' from one estimate of a optimum, to another (hopefully better) estimate of the optimum.  Taking big steps gets to the minimum more quickly, at the risk of 'stepping over' an excellent point.  When no improvements to the minimum can be made by taking steps of the current length, the step length is reduced by multiplying it by rho.
 
 \bigskip
 Small values of rho correspond to big step length changes, which make the algorithm run more quickly.  However, there is a chance that these big changes will accidentally overlook a promising point, leading to non-convergence.  Larger values of rho correspond to smaller step length changes, which force the algorithm to carefully examine nearby points instead of optimistically forging ahead, which improves the probability of convergence.  The value of rho must be between 0 and 1.
@@ -3154,6 +3208,7 @@ Small values of rho correspond to big step length changes, which make the algori
 This is the initial value for the size of the steps in the search, which will be used for the the first search, before any modification to the step length.  All the parameters in the Gadget model are initially scaled so that their value is 1, and the initial search will then look at the points $1 \pm \lambda$ for the next optimum.  Setting lambda to zero will set the initial value for the step length equal to rho.  The value of lambda must be between 0 and 1.
 
 %\subsubsection{bndcheck}
+
 \section{Simulated Annealing}\label{sec:simann}
 \subsection{Overview}\label{subsec:simannover}
 Simulated Annealing is a global optimisation method that distinguishes between different local minimum.  From the initial starting point the algorithm takes a random step in various directions, and conducts a new model run.  If the new likelihood score is better than the old one then the algorithm uses the new point as it's best guess.  If it is worse then the algorithm may accept this point, based on the probabilistic ''Metropolis Criteria'', and thus the algorithm can escape from a local minimum.  The search proceeds in series of these steps, with the point that gives the overall lowest likelihood score is stored as a ''best point''.  The algorithm exits when a stable point is found which cannot be improved on with a small step in any direction, and the Metropolis Criteria rejects all the steps away from the current best point.  The best point is then accepted as being the 'solution'.
@@ -3163,9 +3218,9 @@ The Metropolis Criteria will accept a move in an uphill direction (ie. a point w
 
 \begin{eqnarray}\label{eq:metropolis}
 M & = & e^{\displaystyle \frac{-\Delta F} {t}} \nonumber \\
-P & = & 
+P & = &
 \begin{cases}
-1 & \textrm{if $M$ > $r$}\\
+1 & \textrm{if $M$ > $r$} \\
 0 & \textrm{otherwise}
 \end{cases}
 \end{eqnarray}
@@ -3176,13 +3231,13 @@ $<$ t $>$ is the ''temperature'' of the algorithm\newline
 $<$ r $>$ is a random number between 0 and 1
 
 \bigskip
-Note that when the ''temperature'' is very high (eg t = $\infty$), the Metropolis Criteria will always accept any 'uphill' move, and the Simulated Annealing algorithm will simplify to a form of a random search algorithm.  Conversely, when the temperature is very low (eg t = 0), the Metropolis Criteria will always reject any 'uphill' move, and the Simulated Annealing algorithm will simplify to a form of a hill-climbing algorithm, similar to Hooke and Jeeves.  By slowly reducing the temperature of the algorithm, the number of uphill moves that are accepted are reduced and the algorithm will find a minimum.
+Note that when the ''temperature'' is very high (eg t = $\infty$), the Metropolis Criteria will always accept any 'uphill' move, and the Simulated Annealing algorithm will simplify to a form of a random search algorithm.  Conversely, when the temperature is very low (eg t = 0), the Metropolis Criteria will always reject any 'uphill' move, and the Simulated Annealing algorithm will simplify to a form of a hill-climbing algorithm, similar to Hooke \& Jeeves.  By slowly reducing the temperature of the algorithm, the number of uphill moves that are accepted are reduced and the algorithm will find a minimum.
 
 \bigskip
 The terminology for the Simulated Annealing algorithm comes from a metaphor with the thermodynamic process of cooling molten metals.  At very high temperatures, the atoms in molten metals move very fast, and slow considerably at lower temperatures.  If the metal is cooled slowly (termed ''annealing''), the atoms have time to line up to form a highly ordered, strong, crystalline structure.  If the metal is cooled too quickly (''quenching'') the resulting solid will have a weaker, less ordered, structure.
 
 \bigskip
-In comparison to the Hooke and Jeeves optimisation algorithm, where Hooke and Jeeves performs a 'local' stepwise search, Simulated Annealing searches much more widely over the surface in order to find the best point.  By doing this it is less likely than Hooke and Jeeves to be fooled by a local minimum, and more likely to home in on the true optimum.  However the price to paid for doing this is that it can take considerably more computer time to reach a solution.
+In comparison to the Hooke \& Jeeves optimisation algorithm, where Hooke \& Jeeves performs a 'local' stepwise search, Simulated Annealing searches much more widely over the surface in order to find the best point.  By doing this it is less likely than Hooke \& Jeeves to be fooled by a local minimum, and more likely to home in on the true optimum.  However the price to paid for doing this is that it can take considerably more computer time to reach a solution.
 
 \bigskip
 The Simulated Annealing algorithm used in Gadget is derived from that presented by Corana et al, ''Minimising Multimodal Functions of Continuous Variables with the 'Simulated Annealing' Algorithm'' in the September 1987 (Vol. 13, pp. 262-280) issue of the ACM Transactions on Mathematical Software and Goffe et al, ''Global Optimisation of Statistical Functions with Simulated Annealing'' in the January/February 1994 (Vol. 60, pp. 65-100) issue of the Journal of Econometrics.
@@ -3231,7 +3286,7 @@ When the algorithm adjusts the maximum step length, the ratio of accepted moves 
 This is the initial maximum step length for the Simulated Annealing algorithm.  The maximum step length will get adjusted during the optimisation process.  Note that each of the steps taken by the Simulated Annealing algorithm are not uniform, and will have a random length of between zero and the maximum step length.
 
 \bigskip
-It is important to note that unlike the Hooke and Jeeves algorithm, the parameters are not scaled during the optimisation process, and so the maximum step length should be selected so that the initial search area will cover the area of interest.  For efficient use of the Simulated Annealing algorithm, it is recommended that the parameters to be estimated are scaled (by the user) so that they are all approximately the same order of magnitude.
+It is important to note that unlike the Hooke \& Jeeves algorithm, the parameters are not scaled during the optimisation process, and so the maximum step length should be selected so that the initial search area will cover the area of interest.  For efficient use of the Simulated Annealing algorithm, it is recommended that the parameters to be estimated are scaled (by the user) so that they are all approximately the same order of magnitude.
 
 \subsubsection{cstep, lratio and uratio}
 These parameters control how the maximum step length for the Simulated Annealing algorithm is adjusted, at the end of each of the ''ns'' step loops.  The algorithm keeps track of the number of moves that are accepted and rejected for each direction, and then adjusts the value of the maximum step length for each direction so that the ratio of accepted to rejected moves is approximately 50:50.  The maximum step length for each direction is adjusted according to equation~\ref{eq:vm} below:
@@ -3239,12 +3294,9 @@ These parameters control how the maximum step length for the Simulated Annealing
 \begin{equation}\label{eq:vm}
 vm_{i} =
 \begin{cases}
-  vm_{i} * (1 + \frac{C (R_{i} - U)}{L})
-  & \textrm{if $R_{i} > U$}\\
-  vm_{i} / (1 + \frac{C (L - R_{i})}{L})
-  & \textrm{if $R_{i} < L$}\\
-  vm_{i}
-  & \textrm{otherwise}
+vm_{i} * (1 + \frac{C (R_{i} - U)}{L}) & \textrm{if $R_{i} > U$} \\
+vm_{i} / (1 + \frac{C (L - R_{i})}{L}) & \textrm{if $R_{i} < L$} \\
+vm_{i} & \textrm{otherwise}
 \end{cases}
 \end{equation}
 
@@ -3259,54 +3311,29 @@ This is the number of temperature loops that the Simulated Annealing algorithm w
 
 \section{BFGS}\label{sec:bfgs}
 \subsection{Overview}\label{subsec:bfgsover}
-The Broyden-Fletcher-Shanno-Golberg, or simply BFGS, is a quasi-Newton
-method and as such it accumulates information from successive line
-minimizations so that $N$ such line minimizations lead to the exact
-mininum of a quadratic form in $N$ dimensions. Also the method will be
-quadratically convergent for general smooth functions. \newline
+BFGS is a quasi-Newton optimisation method that uses information about the gradient of the function at the current point to calculate the best direction to look in to find a better point.  Using this information, the BFGS algorithm can iteratively calculate a better approximation to the inverse Hessian matrix, which will lead to a better approximation of the minimum value.
 
+\bigskip
+From an initial starting point, the gradient of the function is calculated and then the algorithm uses this information to calculate the best direction to perform a linesearch for a point that is ''sufficiently better''.  The linesearch that is used in Gadget to look for a better point in this direction is the ''Armijo'' linesearch.  The algorithm will then adjust the current estimate of the inverse Hessian matrix, and restart from this new point.  If a better point cannot be found, then the inverse Hessian matrix is reset and the algorithm restarts from the last accepted point.
 
-The basic idea of the BFGS is to build up, iteratively, a good
-approximation to the inverse Hessian matrix $A^{-1}$, that is to
-construct a sequence of matrices $H_i$ with the property, 
-$$ lim_{i->\infty} H_i = A^{-1} $$
-Even better if the limit is achieved after $N$ iterations instead of
-$\infty$. This approximation is the used as follows: \newline
-The minimum point $x_m$ satisfies $$Ax_m = b$$ At the current point
-$x_i$, whatever it is, we have $$Ax_i = \nabla f (x_i) + b$$
-Subtracting these two equations and multiplying by the inverse matrix
-$A^{-1}$ we have $$x_m - x_i = A^{-1}[-\nabla f(x_i) ]$$ which leads
-to $$x_{i+1} - x_i = A^{-1} (\nabla f_{i+1} - \nabla f_i)$$ where
-$\nabla f_j = \nabla f(x_j)$. We might then imagine that the update
-should be on the form $$H_{i+1} = H_i + \textup{correction}$$ Here the
-update formula is:
-\begin{equation}\label{eq:bfgsup}
-H_{i+1} = H_i + \frac{(x_{i+1} - x_i)(x_{i+1} - x_i)'}{(x_{i+1} -
-  x_i)'(\nabla f_{i+1} - \nabla f_i)} - \frac{[H_i (\nabla f_{i+1} -
-  \nabla f_i)][H_i (\nabla f_{i+1} - \nabla f_i)]'}{(\nabla f_{i+1} -
-  \nabla f_i)'H_i (\nabla f_{i+1} - \nabla f_i)} + [(\nabla f_{i+1} -
-  \nabla f_i) H_i (\nabla f_{i+1} - \nabla f_i)] u u'
-\end{equation}
-where $$u = \frac{(x_{i+1} - x_i)}{(x_{i+1} - x_i)'(\nabla f_{i+1} -
-  \nabla f_i)} - \frac{[H_i (\nabla f_{i+1} - \nabla f_i)]}{(\nabla f_{i+1} -
-  \nabla f_i)'H_i (\nabla f_{i+1} - \nabla f_i)}
-$$
+\bigskip
+For a point at a stable minimum, the magnitude of the gradient vector will be zero, since there is no direction that the algorithm can move in to find a better local point.  However, finding such a point using an iterative process can take an infinite number of steps, so the algorithm exits when the magnitude of the gradient vector is less than a small number.  The current point is then accepted as being the 'solution'.
 
-Now to find the next point $x_{i+1}$ after the given point $x_i$ a
-linesearch is conducted along $$s = - H_i \nabla f_i$$ and our new
-value $x_{i+1}$ is the point accepted by the linesearch on the line
-$x_i + \alpha s$. This is then continued until either the maximum
-number of iterations is reached or $||\nabla f_i ||$ falls below a
-certain number. \newline
+\bigskip
+The ''Armijo'' linesearch calculates the stepsize that is to be used to move to a point that is ''sufficiently better'', in the direction given by the gradient, to be $\beta^m$, where m is the first integer that satisfies the Armijo rule given by inequality~\ref{eq:armijo} below:
 
-The linesearch algorithm used in this implementation is the Armijo
-linesearch. We start with the trial stepsize $st$ and continue
-with $\beta st, \beta^2 st, \beta^3 st, ..., $ until the
-first time that $\beta^m st$ falls within the set of stepsizes
-$\alpha$ satisfying the inequality
 \begin{equation}\label{eq:armijo}
-  f(x_i) - f(x_i + \alpha s) \geq - \sigma \alpha \nabla f(x_i) ' s
+f(x) - f(x + \beta^{m}) \geq - \sigma \beta^{m} \nabla f(x) ^{T}
 \end{equation}
+
+where:\newline
+$<\nabla f(x)>$ is the gradient of the function at the current point
+
+\bigskip
+In comparison to the other optimising algorithms that are currently implemented in Gadget, BFGS performs a local search, and so it doesn't cover the wide search area that the Simulated Annealing algorithm can use to look for an optimum.  BFGS will usually take more computer time to find an optimum than the Hooke \& Jeeves algorithm, since numerically calculating the gradient of the function is computationally very intensive.  However, the optimum found by the BFGS algorithm will usually be better than that found by the Hooke \& Jeeves algorithm, since a gradient search method is more accurate than a stepwise search method. 
+
+\bigskip
+The BFGS algorithm used in Gadget is derived from that presented by Dimitri P Bertsekas, ''Nonlinear Programming'' ($2^{nd}$ edition, pp22-61) published by Athena Scientific.
 
 \subsection{File Format}\label{subsec:bfgsfile}
 To specify the BFGS algorithm, the optimisation file should start with the keyword ''[bfgs]'', followed by (up to) 4 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, is shown below:
@@ -3314,10 +3341,9 @@ To specify the BFGS algorithm, the optimisation file should start with the keywo
 {\small\begin{verbatim}
 [bfgs]
 bfgsiter   10000 ; number of bfgs iterations
-bfgseps    1e-03 ; minimum epsilon, bfgs halt criteria
-beta       0.01  ; linesearch convergence parameter
-sigma      0.5   ; linesearch convergence parameter
-st         1.0   ; linesearch convergence parameter
+bfgseps    0.01  ; minimum epsilon, bfgs halt criteria
+sigma      0.01  ; armijo convergence criteria
+beta       0.3   ; armijo adjustment factor
 \end{verbatim}}
 
 \subsection{Parameters}\label{subsec:bfgspar}
@@ -3325,25 +3351,24 @@ st         1.0   ; linesearch convergence parameter
 This is the maximum number of Gadget model runs that the BFGS algorithm will use to try to find the best solution.  If this number is exceeded, Gadget will select the best point found so far, and accept this as the 'solution', even though it has not met the convergence criteria.  A warning that Gadget has stopped without finding a solution that meets the convergence criteria will be printed.
 
 \subsubsection{bfgseps}
-This is the criteria for halting the BFGS algorithm at a minimum, and
-accepting the current point as the 'solution'.  The algorithm has
-''converged'' if $||\nabla f_i|| < $ bfgseps.
+This is the criteria for halting the BFGS algorithm at a minimum, and accepting the current point as the 'solution'.  The algorithm has ''converged'' if the magnitude of the gradient vector is less than bfgseps.  Lower values of bfgseps will give a better estimate of the minimum, at the cost of a considerably increased running time.  At the true minimum, the magnitude of the gradient vector will be zero, since there would be no direction for the algorithm to move to, but this point could take an infinite number of iterations to find.
 
 \subsubsection{sigma}
-This the Armijo convergence factor. This determines the size of the
-acceptance region which is inversly related with size of the sigma
-factor. 
+This is the criteria for stopping the Armijo linesearch at a point that is ''sufficiently better'', and recalculating the gradient of the function at this new point.  Lower values of sigma will increase the size of the acceptance region of the Armijo linesearch, which will mean that the linesearch will stop earlier, leading to larger steps by the BFGS algorithm.  Conversely, higher values of sigma will decrease the size of the acceptance region, which will mean that the BFGS algorithm will take smaller steps.  The value of sigma must be between 0 and 1, and should be close to zero.
+
 \subsubsection{beta}
-This is the stepsize reduction factor for the Armijo linesearch
-\subsubsection{st}
-This the starting stepsize for the Armijo linesearch. 
+This is the adjustment factor for the Armijo linesearch, used to calculate the size of the step taken by the linesearch to find the next point.  The value of beta must be between 0 and 1.
+
+%\subsubsection{step}
+%\subsubsection{gradacc}
+%\subsubsection{gradstep}
 
 \section{Combining Optimisation Algorithms}\label{sec:combine}
 \subsection{Overview}\label{subsec:combineover}
-This method attempts to combine the global search of the Simulated Annealing algorithm and the more rapid convergence of the local searches performed by the Hooke and Jeeves algorithm and BFGS algorithm.  It relies on the observation that the likelihood function for many Gadget models consists of a large 'valley' in which the best solution lies, surrounded by much more 'rugged' terrain.
+This method attempts to combine the global search of the Simulated Annealing algorithm and the more rapid convergence of the local searches performed by the Hooke \& Jeeves and BFGS algorithms.  It relies on the observation that the likelihood function for many Gadget models consists of a large 'valley' in which the best solution lies, surrounded by much more 'rugged' terrain.
 
 \bigskip
-A period of Simulated Annealing at the start of the optimisation run serves to move the search into this valley, at which point the Simulated Annealing algorithm becomes inefficient so the Hooke and Jeeves algorithm and/or the BFGS algorithm takes over and homes in on a solution within that valley.  Hopefully the Simulated Annealing algorithm will have moved the current point to the correct side of any 'hills' to avoid the local searches becoming trapped into an unrealistic local minimum.
+A period of Simulated Annealing at the start of the optimisation run serves to move the search into this valley, at which point the Simulated Annealing algorithm becomes inefficient so the Hooke \& Jeeves algorithm and/or the BFGS algorithm takes over and homes in on a solution within that valley.  Hopefully the Simulated Annealing algorithm will have moved the current point to the correct side of any 'hills' to avoid the local searches becoming trapped into an unrealistic local minimum.
 
 \subsection{File Format}\label{subsec:combinefile}
 To specify a combination of optimisation algorithms, the optimisation file should simply list the algorithms that should be used, along with the parameters for each optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  As an example, the format for this file used to specify all three optimisation algorithms, and the default values for the optimisation parameters, is shown below:
@@ -3362,21 +3387,22 @@ lratio     0.3   ; lower limit for ratio when adjusting step length
 uratio     0.7   ; upper limit for ratio when adjusting step length
 check      4     ; number of temperature loops to check
 [hooke]
-hookeiter  1000  ; number of hooke and jeeves iterations
-hookeeps   1e-04 ; minimum epsilon, hooke halt criteria
+hookeiter  1000  ; number of hooke & jeeves iterations
+hookeeps   1e-04 ; minimum epsilon, hooke & jeeves halt criteria
 rho        0.5   ; value for the resizing multiplier
 lambda     0     ; initial value for the step length
 [bfgs]
 bfgsiter   10000 ; number of bfgs iterations
-bfgseps    1e-03 ; minimum epsilon, bfgs halt criteria
-rho        0.01  ; linesearch convergence parameter
-tau        0.5   ; linesearch convergence parameter
+bfgseps    0.01  ; minimum epsilon, bfgs halt criteria
+sigma      0.01  ; armijo convergence criteria
+beta       0.3   ; armijo adjustment factor
 \end{verbatim}}
 
-It should be noted that the optimisation algorithms will always be performed in the following order, irrespective of the order that they are specified in the input file: first Simulated Annealing, second Hooke and Jeeves and finally BFGS.
+\newpage %JMB manual page break inserted
+It should be noted that the optimisation algorithms will always be performed in the following order, irrespective of the order that they are specified in the input file: first Simulated Annealing, second Hooke \& Jeeves and finally BFGS.
 
 \subsection{Parameters}\label{subsec:combinepar}
-The parameters for this combined optimisation algorithm are the same as for the individual algorithms, and are described in sections \ref{subsec:hookepar} (for the Hooke and Jeeves parameters), \ref{subsec:simannpar} (for the Simulated Annealing parameters) and \ref{subsec:bfgspar} (for the BFGS parameters)
+The parameters for this combined optimisation algorithm are the same as for the individual algorithms, and are described in sections \ref{subsec:hookepar} (for the Hooke \& Jeeves parameters), \ref{subsec:simannpar} (for the Simulated Annealing parameters) and \ref{subsec:bfgspar} (for the BFGS parameters).
 
 \section{Repeatability}\label{sec:repeat}
 The optimisation algorithms used by Gadget contain a random number generator, used to randomise the order of the parameters (to ensure that the order of the parameters has no effect on the optimum found) and to generate the initial direction chosen by the algorithm to look for a solution.  For the Simulated Annealing algorithm, this is also affects the Metropolis criteria used to accept any changes in an 'uphill' direction.
@@ -3392,10 +3418,10 @@ seed       n     ; seed the random number generator with n
 The model output files contain information about the optimisation process (and not information about the stocks in the model - see the section on the Print Files, section~\ref{chap:print}, for information on these).  The output files are specified by some of the commandline parameters used to start Gadget.  There are 3 types of output file.
 
 \section{Likelihood Output}\label{sec:likelihoodoutput}
-The likelihood output file is generated when Gadget is started with the ''-o $<$filename$>$'' option, and the output is written to the file specified after that option, so, for example, this would write the output to a file called ''likelihood.out'':
+The likelihood output file is generated when Gadget is started with the ''-o $<$filename$>$'' option, and the output is written to the file specified after that option, so, for example, this would write the output to a file called ''likelihood.txt'':
 
 {\small\begin{verbatim}
--o likelihood.out
+gadget -l -o likelihood.txt
 \end{verbatim}}
 
 The likelihood output file is split into 3 sections, separated by a line containing a brief comment.  The first section lists the names of the switches used in the model, together with some information about where that switch is used.
@@ -3410,16 +3436,16 @@ The final part of the likelihood output file contains the output from the optimi
 For a long optimisation run, this can result in this file being quite large.  The default option is for this line to be written for each iteration, but this can be changed using the ''-print1 $<$number$>$'' option, which will only write out this line every $<$number$>$ iterations, as shown in the example below:
 
 {\small\begin{verbatim}
--print1 10
+gadget -l -o likelihood.txt -print1 10
 \end{verbatim}}
 
-which will set Gadget to write this information every 10th iteration.
+which will set Gadget to write this information, to the file ''likelihood.txt'', after every 10th iteration.
 
 \section{Column Output}\label{sec:columnoutput}
-The column output file is generated when Gadget is started with the ''-co $<$filename$>$'' option, and the output is written to the file specified after that option, so, for example, this would write the output to a file called ''column.out'':
+The column output file is generated when Gadget is started with the ''-co $<$filename$>$'' option, and the output is written to the file specified after that option, so, for example, this would write the output to a file called ''columnoutput.txt'':
 
 {\small\begin{verbatim}
--co column.out
+gadget -l -co columnoutput.txt
 \end{verbatim}}
 
 The column output file only contains information about the progress of the optimisation process.  It contains a large number of sections, with each section giving the overall likelihood score, followed by one line for each switch, giving the value and bounds for each of the switches that are being used for the current Gadget run.
@@ -3428,13 +3454,13 @@ The column output file only contains information about the progress of the optim
 For a long optimisation run, this can result in this file being very large.  The default option is for this line to be written for every fifth iteration, but this can be changed using the ''-print2 $<$number$>$'' option, which will only write out this line every $<$number$>$ iterations, as shown in the example below:
 
 {\small\begin{verbatim}
--print2 100
+gadget -l -co columnoutput.txt -print2 100
 \end{verbatim}}
 
-which will set Gadget to write this information every 100th iteration.
+which will set Gadget to write this information, to the file ''columnoutput.txt'', after every 100th iteration.
 
 \section{Parameter Output}\label{sec:paramoutput}
-The parameter output file is automatically generated by Gadget every time that Gadget is run.  If Gadget is not started with the ''-p $<$filename$>$'' option, this file will be called ''params.out''.  This file contains information about the switches at the end of the Gadget run, in the same format as for the column output file.  In the header of this file there will be information about the Gadget run, followed by the final overall likelihood score and the total number of iterations.  There is then the information about the switches used in the Gadget run - the name, value, lower bound, upper bound and whether the switch is to be optimised.
+The parameter output file is automatically generated by Gadget every time that Gadget is run.  If Gadget is not started with the ''-p $<$filename$>$'' option, this file will be called ''params.out''.  This file contains information about the values of the switches at the end of the Gadget run, in the same format as for the column output file.  In the header of this file there will be information about the Gadget run, followed by the final overall likelihood score and the total number of iterations.  There is then the information about the switches used in the Gadget run - the name, value, lower bound, upper bound and whether the switch is to be optimised.
 
 \bigskip
 This file is written in the same format as the parameter input file, and it can be used as the starting point for a subsequent Gadget run.
