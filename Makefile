@@ -81,11 +81,11 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	migration.o variableinfo.o binarytree.o vectorusingkeeper.o recaggregator.o \
 	surveyindices.o migrationpenalty.o recapture.o stock.o readaggregation.o \
 	migvariables.o multinomial.o totalpredator.o understocking.o poppredator.o \
-	transition.o otherfood.o mathfunc.o recstatistics.o selectfunc.o optinfo.o \
+	transition.o otherfood.o recstatistics.o selectfunc.o optinfo.o naturalm.o \
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o tags.o \
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \
-	taggrow.o initialinputfile.o popratio.o naturalm.o predator.o popinfo.o \
+	taggrow.o initialinputfile.o popratio.o predator.o popinfo.o \
 	agebandmatrixratio.o popinfomemberfunctions.o \
 	agebandmatrixratiomemberfunctions.o
 
@@ -93,7 +93,7 @@ SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
 GADGETINPUT = initialinputfile.o vectorofcharptr.o charptrvector.o \
 	commentstream.o parameter.o parametervector.o doubleindexvector.o \
-	intvector.o doublevector.o intmatrix.o doublematrix.o mathfunc.o
+	intvector.o doublevector.o intmatrix.o doublematrix.o 
 
 LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
 
@@ -103,8 +103,10 @@ gadget	:	$(OBJECTS) libvec.a
 libvec.a:	$(VECTORS)
 	ar rs libvec.a $?
 
+## you need root permission to be able to do this ...
 install	:	gadget
-	cp gadget ../../bin
+	cp gadget /usr/local/bin/
+	cp gadget.1.gz /usr/local/man/man1/
 
 ##########################################################################
 # The following line is needed to create the gadget input library

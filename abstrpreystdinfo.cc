@@ -4,12 +4,12 @@
 
 AbstrPreyStdInfo::AbstrPreyStdInfo(const Prey* prey, const IntVector& Areas,
   int minage, int maxage) : LivesOnAreas(Areas),
-  NconbyAge(minage, maxage - minage + 1, 0, Areas.Size(), 0),
-  BconbyAge(minage, maxage - minage + 1, 0, Areas.Size(), 0),
-  MortbyAge(minage, maxage - minage + 1, 0, Areas.Size(), 0) {
+  NconbyAge(minage, maxage - minage + 1, 0, Areas.Size(), 0.0),
+  BconbyAge(minage, maxage - minage + 1, 0, Areas.Size(), 0.0),
+  MortbyAge(minage, maxage - minage + 1, 0, Areas.Size(), 0.0) {
 
   const int NoAreas = areas.Size();
-  BandMatrix bm(0, prey->NoLengthGroups(), minage, maxage - minage + 1, 0);
+  BandMatrix bm(0, prey->NoLengthGroups(), minage, maxage - minage + 1, 0.0);
   NconbyAgeAndLength.resize(NoAreas, bm);
   BconbyAgeAndLength.resize(NoAreas, bm);
   MortbyAgeAndLength.resize(NoAreas, bm);

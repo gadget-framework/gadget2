@@ -1,11 +1,6 @@
 #include "popinfo.h"
 #include "mathfunc.h"
 
-PopInfo::PopInfo() {
-  N = 0.0;
-  W = 0.0;
-}
-
 PopInfo& PopInfo::operator = (const PopInfo& a) {
   N = a.N;
   W = a.W;
@@ -21,14 +16,6 @@ PopInfo& PopInfo::operator += (const PopInfo& a) {
     N = N + a.N;
   }
   return *this;
-}
-
-void PopInfo::operator -= (double a) {
-  N -= a;
-}
-
-void PopInfo::operator *= (double a) {
-  N *= a;
 }
 
 PopInfo PopInfo::operator * (double b) {

@@ -270,7 +270,7 @@ void Tags::Update() {
 
   const AgeBandMatrix* stockPopInArea;
   const LengthGroupDivision* tmpLgrpDiv;
-  stockPopInArea = &(taggingstock->Agelengthkeys(tagarea));
+  stockPopInArea = &(taggingstock->getAgeLengthKeys(tagarea));
   stockPopInArea->Colsum(NumberInArea);
 
   //Now we have total number of stock per length in tagarea, N(., l) (NumberInArea) and
@@ -338,7 +338,7 @@ void Tags::Update() {
   const AgeBandMatrix* allStockPopInArea;
   for (i = 1; i < tagStocks.Size(); i++) {
     Stock* tmpStock = tagStocks[i];
-    allStockPopInArea = &tagStocks[i]->Agelengthkeys(tagarea);
+    allStockPopInArea = &tagStocks[i]->getAgeLengthKeys(tagarea);
 
     stockareas = tmpStock->Areas();
     numareas = stockareas.Size();

@@ -405,7 +405,7 @@ int Stock::Birthday(const TimeClass* const TimeInfo) const {
   return (TimeInfo->CurrentStep() == birthdate);
 }
 
-const AgeBandMatrix& Stock::Agelengthkeys(int area) const {
+const AgeBandMatrix& Stock::getAgeLengthKeys(int area) const {
   return Alkeys[AreaNr[area]];
 }
 

@@ -433,7 +433,7 @@ void LenStock::calcEat(int area,
     for (i = 0; i < nrofpredators; i++) {
       // add cannibalism mortality on this prey from each predator in turn
       cann_vec += cann->Mortality(Alkeys[AreaNr[area]],
-        cannPredators[i]->Agelengthkeys(area), LgrpDiv,
+        cannPredators[i]->getAgeLengthKeys(area), LgrpDiv,
         cannPredators[i]->returnLengthGroupDiv(), TimeInfo, i, len_natm->NatMortality());
     }
 

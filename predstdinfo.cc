@@ -39,35 +39,33 @@ void PredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   const BandMatrix& preyBcons = preyinfo->BconsumptionByAgeAndLength(area);
   const BandMatrix& predBcons = predator->Consumption(area, prey->Name());
   int preyage, predl, preyl;
-  double timeratio;
+  double timeratio, B, N, prop;
 
-  timeratio = TimeInfo->LengthOfYear() / TimeInfo->LengthOfCurrent();
+  timeratio = 1.0;  //timeratio has been taken into account in the preystdinfo??
+  //timeratio = TimeInfo->LengthOfYear() / TimeInfo->LengthOfCurrent();
   for (preyage = NconbyAge[inarea].Mincol(predage);
        preyage < NconbyAge[inarea].Maxcol(predage); preyage++) {
-    NconbyAge[inarea][predage][preyage] = 0;
-    BconbyAge[inarea][predage][preyage] = 0;
+    NconbyAge[inarea][predage][preyage] = 0.0;
+    BconbyAge[inarea][predage][preyage] = 0.0;
     for (preyl = 0; preyl < prey->NoLengthGroups(); preyl++) {
-      for (predl = 0; predl < predator->NoLengthGroups(); predl++) {
-        if (preyBcons[preyage][preyl] != 0 && predBcons[predl][preyl] != 0) {
-          //B equals the biomass (predage, predl) eats of (preyage, preyl)
-          //N equals the number (predage, predl) eats of (preyage, preyl)
-          //prop equals the proportion of predation on (preyage,
-          //preyl)  (predage, predl) accounts for.
-          const double prop = predBcons[predl][preyl] /
-            preyinfo->BconsumptionByLength(area)[preyl];
-          const double B = prop * preyBcons[preyage][preyl];
-          const double N = prop * preyNcons[preyage][preyl];
-          BconbyAge[inarea][predage][preyage] += B;
-          NconbyAge[inarea][predage][preyage] += N;
+      if (!(isZero(preyinfo->BconsumptionByLength(area)[preyl]))) {
+        for (predl = 0; predl < predator->NoLengthGroups(); predl++) {
+          if (!(isZero(preyBcons[preyage][preyl])) && (!(isZero(predBcons[predl][preyl])))) {
+            prop = predBcons[predl][preyl] / preyinfo->BconsumptionByLength(area)[preyl];
+            B = prop * preyBcons[preyage][preyl];
+            N = prop * preyNcons[preyage][preyl];
+            BconbyAge[inarea][predage][preyage] += B;
+            NconbyAge[inarea][predage][preyage] += N;
+          }
         }
       }
     }
 
-    MortbyAge [inarea][predage][preyage] =
-      (preyinfo->BconsumptionByAge(area)[preyage] == 0 ? 0
-         : (preyinfo->MortalityByAge(area)[preyage] *
-         BconbyAge[inarea][predage][preyage] /
-         preyinfo->BconsumptionByAge(area)[preyage]) * timeratio);
+    if (isZero(preyinfo->BconsumptionByAge(area)[preyage]))
+      MortbyAge[inarea][predage][preyage] = 0.0;
+    else
+      MortbyAge[inarea][predage][preyage] = timeratio * preyinfo->MortalityByAge(area)[preyage] *
+         BconbyAge[inarea][predage][preyage] / preyinfo->BconsumptionByAge(area)[preyage];
   }
 }
 

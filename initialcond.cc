@@ -365,7 +365,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
 
   int area, age, l;
   int minage, maxage;
-  double mult, scaler;
+  double mult, scaler, dnorm;
 
   if (readNumbers == 0) {
     for (area = 0; area < initialPop.Size(); area++) {
@@ -375,8 +375,10 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
         scaler = 0.0;
         for (l = initialPop[area].minLength(age);
             l < initialPop[area].maxLength(age); l++) {
-          initialPop[area][age][l].N =
-            dnorm(LgrpDiv->meanLength(l), meanLength[area][age - minage], sdevLength[area][age - minage] * sdevMult);
+          dnorm = (LgrpDiv->meanLength(l) - meanLength[area][age - minage])
+	            / (sdevLength[area][age - minage] * sdevMult);
+
+          initialPop[area][age][l].N = exp(-(dnorm * dnorm) * 0.5);
           scaler += initialPop[area][age][l].N;
         }
 
@@ -403,8 +405,10 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       else
         mult = 1.0;
 
-      if (mult < 0)
+      if (mult < 0) {
+        handle.logWarning("Warning in initial conditions - negative stock multiplier", mult);
         mult = -mult;
+      }
 
       Alkeys[area][age].Add(initialPop[area][age], *CI, mult);
     }

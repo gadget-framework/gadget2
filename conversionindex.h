@@ -7,7 +7,17 @@
 
 class ConversionIndex {
 public:
-  ConversionIndex(const LengthGroupDivision* const LF, const LengthGroupDivision* const LC, int interp = 0);
+  /**
+   * \brief This is the ConversionIndex constructor
+   * \param L1 is the first LengthGroupDivision
+   * \param L2 is the second LengthGroupDivision
+   * \param interp is a flag to denote whether the ConversionIndex will be used to interpolate between LengthGroupDivisions (default value 0)
+   */
+  ConversionIndex(const LengthGroupDivision* const L1,
+    const LengthGroupDivision* const L2, int interp = 0);
+  /**
+   * \brief This is the default ConversionIndex destructor
+   */
   ~ConversionIndex() {};
   int Pos(int i) const { return pos[i]; };
   int minLength() const { return minlength; };
@@ -22,7 +32,13 @@ public:
   void interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc);
 protected:
   int targetisfiner;
+  /**
+   * \brief This is a flag to denote whether the 2 LengthGroupDivisions have the same step length
+   */
   int samedl;
+  /**
+   * \brief This is a flag to denote whether the ConversionIndex will be used to interpolate between LengthGroupDivisions
+   */
   int interpolate;
   int offset;
   int minlength;

@@ -17,7 +17,7 @@ void PreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   PSIByLength.Sum(TimeInfo, area);
   const int inarea = AreaNr[area];
   const int age = 0;
-  BconbyAge[inarea][age] = 0;
+  BconbyAge[inarea][age] = 0.0;
 
   int l;
   double timeratio;
@@ -31,10 +31,10 @@ void PreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
 
   if (isZero(prey->Biomass(area)))
     MortbyAge[inarea][age] = 0.0;
-  else if (prey->Biomass(area) <= BconbyAge[inarea][age])
+  else if (BconbyAge[inarea][age] >= prey->Biomass(area))
     MortbyAge[inarea][age] = MaxMortality;
   else
-    MortbyAge[inarea][age] = -log(1 - BconbyAge[inarea][age] / prey->Biomass(area)) * timeratio;
+    MortbyAge[inarea][age] = -log(1.0 - BconbyAge[inarea][age] / prey->Biomass(area)) * timeratio;
 }
 
 const DoubleVector& PreyStdInfo::NconsumptionByLength(int area) const {

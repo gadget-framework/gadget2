@@ -1,12 +1,6 @@
 #ifndef mathfunc_h
 #define mathfunc_h
 
-/* This file uses the non-ansi function lgamma, which is not included when compiling
-   with -ansi. To compile with -ansi, and still use the lgamma function, you can for example
-   #define _BSD_SOURCE at the top of this file (or _GNU_SOURCE, or XOPEN_SOURCE)
-   [AJ&MNAA 15.05.01]
-*/
-
 #include "gadget.h"
 
 //-------------------------------------------------------
@@ -54,18 +48,15 @@ inline int isZero(double a) {
 }
 
 //-------------------------------------------------------
-//Calculates the dnorm value, using the mean and std dev
-inline double dnorm(double length, double mean, double sdev) {
-  double t = (length - mean) / sdev;
-  return exp(-(t * t) * 0.5);
-}
-
-//-------------------------------------------------------
 //Non ANSI functions
-double logFactorial(double n);
+//The function lgamma() is not an ansi function and os is
+//not included if gadget is compiled with the -ansi option
+//unless the following is included (at the opt of this file)
+//#define _BSD_SOURCE (or _GNU_SOURCE or XOPEN_SOURCE)
 
-inline double logGamma(double x) {
-  return lgamma(x);
+//Calculate the logarithm of n factorial
+inline double logFactorial(double n) {
+  return lgamma(n + 1);
 }
 
 #endif

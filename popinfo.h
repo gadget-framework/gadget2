@@ -10,7 +10,7 @@ public:
   /**
    * \brief This is the PopInfo constructor
    */
-  PopInfo();
+  PopInfo() { N = 0.0; W = 0.0; };
   /**
    * \brief This is the PopInfo destructor
    */
@@ -24,8 +24,8 @@ public:
    */
   double W;
   PopInfo& operator += (const PopInfo& a);
-  void operator -= (double a);
-  void operator *= (double a);
+  void operator -= (double a) { N -= a; };
+  void operator *= (double a) { N *= a; };
   PopInfo operator * (double b);
   PopInfo& operator = (const PopInfo& a);
 };

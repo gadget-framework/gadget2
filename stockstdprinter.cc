@@ -150,10 +150,10 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
   minage = 100;
   maxage = 0;
   for (i = 0; i < areas.Size(); i++) {
-    tmpage = stocks[0]->Agelengthkeys(areas[i]).minAge();
+    tmpage = stocks[0]->getAgeLengthKeys(areas[i]).minAge();
     if (tmpage < minage)
       minage = tmpage;
-    tmpage = stocks[0]->Agelengthkeys(areas[i]).maxAge();
+    tmpage = stocks[0]->getAgeLengthKeys(areas[i]).maxAge();
     if (tmpage > maxage)
       maxage = tmpage;
   }

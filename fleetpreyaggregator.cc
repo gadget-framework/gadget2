@@ -28,9 +28,9 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
     CI.resize(1);
     CI[i] = new ConversionIndex(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);
 
-    //For convinience, use ap as shorthand for &(stocks[i]->Agelengthkeys(0))
+    //For convinience, use ap as shorthand for &(stocks[i]->getAgeLengthKeys(0))
     //Changed 25-9 2001 and the memberfunction Areas added to livesinareas
-    const AgeBandMatrix* ap = &(stocks[i]->Agelengthkeys(stocks[i]->Areas()[0]));
+    const AgeBandMatrix* ap = &(stocks[i]->getAgeLengthKeys(stocks[i]->Areas()[0]));
 
     //Now, loop over all the possible ages in the Ages matrix,
     for (j = 0; j < ages.Nrow(); j++) {

@@ -13,6 +13,7 @@ LinearRegression::LinearRegression() {
 }
 
 void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
+  sse = 0.0;
   error = 0;  //begin with cleaning up error status.
   if ((x.Size() != y.Size()) || (x.Size() == 0)) {
     error = 1;
@@ -53,7 +54,6 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
 
   //Now we can calculate the sum of squares of errors.
   double tmp;
-  sse = 0.0;
   for (i = 0; i < x.Size(); i++) {
     tmp = y[i] - (a + b * x[i]);
     sse += tmp * tmp;
@@ -61,6 +61,7 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
 }
 
 void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double slope) {
+  sse = 0.0;
   error = 0;  //begin with cleaning up error status.
   if ((x.Size() != y.Size()) || (x.Size() == 0)) {
     error = 1;
@@ -89,7 +90,6 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
 
   //Now we can calculate the sum of squares of errors.
   double tmp;
-  sse = 0.0;
   for (i = 0; i < x.Size(); i++) {
     tmp = y[i] - (a + b * x[i]);
     sse += tmp * tmp;
@@ -97,6 +97,7 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
 }
 
 void LinearRegression::Fit(double intercept, const DoubleVector& x, const DoubleVector& y) {
+  sse = 0.0;
   error = 0;  //begin with cleaning up error status.
   if ((x.Size() != y.Size()) || (x.Size() == 0)) {
     error = 1;
@@ -129,7 +130,6 @@ void LinearRegression::Fit(double intercept, const DoubleVector& x, const Double
 
   //Now we can calculate the sum of squares of errors.
   double tmp;
-  sse = 0.0;
   for (i = 0; i < x.Size(); i++) {
     tmp = y[i] - (a + b * x[i]);
     sse += tmp * tmp;
@@ -137,6 +137,7 @@ void LinearRegression::Fit(double intercept, const DoubleVector& x, const Double
 }
 
 void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double slope, double intercept) {
+  sse = 0.0;
   error = 0;  //begin with cleaning up error status.
   if ((x.Size() != y.Size()) || (x.Size() == 0)) {
     error = 1;
@@ -155,7 +156,6 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
   //Now we can calculate the sum of squares of errors.
   int i;
   double tmp;
-  sse = 0.0;
   for (i = 0; i < x.Size(); i++) {
     tmp = y[i] - (a + b * x[i]);
     sse += tmp * tmp;

@@ -151,7 +151,7 @@ public:
   Prey* returnPrey() const;
   const Migration* returnMigration() const { return migration; };
   PopPredator* returnPredator() const;
-  const AgeBandMatrix& Agelengthkeys(int area) const;
+  const AgeBandMatrix& getAgeLengthKeys(int area) const;
   const AgeBandMatrix& getMeanN(int area) const;
   virtual void setStock(StockPtrVector& stockvec);
   void setCI();

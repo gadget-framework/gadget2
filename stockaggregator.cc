@@ -19,9 +19,9 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
     CI.resize(1);
     CI[i] = new ConversionIndex(stocks[i]->returnLengthGroupDiv(), LgrpDiv);
 
-    //For convenience, use ap as shorthand for &(stocks[i]->Agelengthkeys(0))
+    //For convenience, use ap as shorthand for &(stocks[i]->getAgeLengthKeys(0))
     //Changed 25-9 2001 and the memberfunction Areas added to livesinareas
-    const AgeBandMatrix* ap = &(stocks[i]->Agelengthkeys(stocks[i]->Areas()[0]));
+    const AgeBandMatrix* ap = &(stocks[i]->getAgeLengthKeys(stocks[i]->Areas()[0]));
 
     //Now, loop over all the possible ages in the Ages matrix,
     for (j = 0; j < Ages.Nrow(); j++) {
@@ -97,7 +97,7 @@ void StockAggregator::Sum() {
         //All the areas in areas[aggrArea] will be aggregated to the area aggrArea in total.
         area = areas[aggrArea][j];
         if (stocks[i]->IsInArea(area)) {
-          const AgeBandMatrix* alptr = &stocks[i]->Agelengthkeys(area);
+          const AgeBandMatrix* alptr = &stocks[i]->getAgeLengthKeys(area);
           for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
             for (k = 0; k < ages.Ncol(aggrAge); k++) {
               age = ages[aggrAge][k];

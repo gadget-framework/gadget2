@@ -16,7 +16,9 @@ StockPreyStdInfo::~StockPreyStdInfo() {
 void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   SPByLength.Sum(TimeInfo, area);
   const int inarea = AreaNr[area];
-  int age;
+  int age, l;
+  double timeratio, tmp;
+
   for (age = NconbyAge.Mincol(inarea); age < NconbyAge.Maxcol(inarea); age++) {
     NconbyAge[inarea][age] = 0.0;
     BconbyAge[inarea][age] = 0.0;
@@ -28,14 +30,17 @@ void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   PopInfoVector PopByLength(SPByLength.BconsumptionByLength(area).Size(), nullpop);
   Alk.Colsum(PopByLength);
 
-  int l = 0;
-  double timeratio, tmp;
-
   timeratio = TimeInfo->LengthOfYear() / TimeInfo->LengthOfCurrent();
   for (age = NconbyAge.Mincol(inarea); age < NconbyAge.Maxcol(inarea); age++) {
     for (l = Alk.minLength(age); l < Alk.maxLength(age); l++) {
       PopByAge[age] += Alk[age][l];
-      if (Alk[age][l].N != 0 && SPByLength.BconsumptionByLength(area)[l] != 0) {
+
+      if (isZero(Alk[age][l].N)) {
+        NconbyAgeAndLength[inarea][age][l] = 0.0;
+        BconbyAgeAndLength[inarea][age][l] = 0.0;
+        MortbyAgeAndLength[inarea][age][l] = 0.0;
+
+      } else {
         tmp = Alk[age][l].N * SPByLength.BconsumptionByLength(area)[l] / (PopByLength[l].N * PopByLength[l].W);
 
         BconbyAgeAndLength[inarea][age][l] = tmp * Alk[age][l].W;
@@ -43,30 +48,20 @@ void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
 
         NconbyAge[inarea][age] += NconbyAgeAndLength[inarea][age][l];
         BconbyAge[inarea][age] += BconbyAgeAndLength[inarea][age][l];
-        if (isZero(Alk[age][l].N))
-          MortbyAgeAndLength[inarea][age][l] = 0.0;
-        else {
-          if (NconbyAgeAndLength[inarea][age][l] >= Alk[age][l].N)
-            MortbyAgeAndLength[inarea][age][l] = MaxMortality;
-          else
-            MortbyAgeAndLength[inarea][age][l]
-              = -log(1 - NconbyAgeAndLength[inarea][age][l] / Alk[age][l].N) * timeratio;
-        }
-
-      } else {
-        NconbyAgeAndLength[inarea][age][l] = 0.0;
-        BconbyAgeAndLength[inarea][age][l] = 0.0;
-        MortbyAgeAndLength[inarea][age][l] = 0.0;
+        if (NconbyAgeAndLength[inarea][age][l] >= Alk[age][l].N)
+          MortbyAgeAndLength[inarea][age][l] = MaxMortality;
+        else
+          MortbyAgeAndLength[inarea][age][l]
+            = -log(1.0 - NconbyAgeAndLength[inarea][age][l] / Alk[age][l].N) * timeratio;
       }
     }
-    if (PopByAge[age].N > 0) {
-      if (PopByAge[age].N <= NconbyAge[inarea][age])
-        MortbyAge[inarea][age] = MaxMortality;
-      else
-        MortbyAge[inarea][age]
-          = - log(1 - NconbyAge[inarea][age] / PopByAge[age].N) * timeratio;
-    } else
+
+    if (isZero(PopByAge[age].N))
       MortbyAge[inarea][age] = 0.0;
+    else if (NconbyAge[inarea][age] >= PopByAge[age].N)
+      MortbyAge[inarea][age] = MaxMortality;
+    else
+      MortbyAge[inarea][age] = -log(1.0 - NconbyAge[inarea][age] / PopByAge[age].N) * timeratio;
   }
 }
 
