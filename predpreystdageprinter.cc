@@ -72,7 +72,7 @@ void PredPreyStdAgePrinter::Print(const TimeClass * const TimeInfo) {
         else
           outfile << setprecision(printprecision) << setw(largewidth) << predinfo->NconsumptionByAge(areas[a])[predage][preyage] << sep
             << setprecision(printprecision) << setw(largewidth) << predinfo->BconsumptionByAge(areas[a])[predage][preyage] << sep
-            << setprecision(printprecision) << setw(largewidth) << predinfo->MortalityByAge(areas[a])[predage][preyage] << sep << endl;
+            << setprecision(printprecision) << setw(largewidth) << predinfo->MortalityByAge(areas[a])[predage][preyage] << endl;
 
       }
     }

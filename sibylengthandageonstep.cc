@@ -252,7 +252,7 @@ void SIByLengthAndAgeOnStep::SetStocks(const Stockptrvector& Stocks) {
   maxrow = aggregator->getMaxRow();
 }
 
-void SIByLengthAndAgeOnStep::Sum(const class TimeClass* const TimeInfo) {
+void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   //written by kgf 13/10 98
   if (!(this->IsToSum(TimeInfo)))
     return;

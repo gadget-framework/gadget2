@@ -287,7 +287,7 @@ void PIOnStep::ReadPredatorData(CommentStream& infile, const char* arealabel,
     cerr << "Warning in predatorindex - found no data in the data file\n";
 }
 
-void PIOnStep::Sum(const class TimeClass* const TimeInfo) {
+void PIOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!(this->IsToSum(TimeInfo)))
     return;
   if (Biomass)

@@ -77,16 +77,6 @@ bandmatrix::~bandmatrix() {
   }
 }
 
-/*void bandmatrix::Print() const {
-  int i, j;
-  for (i = 0; i < nrow; i++) {
-    for (j = v[i]->Mincol(); j < v[i]->Maxcol(); j++)
-      cout << (*v[i])[j] << sep;
-    cout << endl;
-  }
-  cout << flush;
-}*/
-
 void bandmatrix::Colsum(doublevector& Result) const {
   int i, j;
   for (i = 0; i < nrow; i++)

@@ -50,7 +50,7 @@ void SIByAgeOnStep::SetStocks(const Stockptrvector& Stocks) {
   aggregator = new StockAggregator(Stocks, LgrpDiv, areas, Ages);
 }
 
-void SIByAgeOnStep::Sum(const class TimeClass* const TimeInfo) {
+void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!(this->IsToSum(TimeInfo)))
     return;
   aggregator->Sum();

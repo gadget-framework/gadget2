@@ -8,6 +8,7 @@
 #include "timevariablematrix.h"
 
 class Keeper;
+class Predator;
 
 class Suits {
 public:
@@ -22,7 +23,7 @@ public:
   int NoFuncPreys() const;
   int NoPreys() const;
   const bandmatrix& Suitable(int prey) const;
-  void Reset(const class Predator* const, const TimeClass* const TimeInfo);
+  void Reset(const Predator* const pred, const TimeClass* const TimeInfo);
   int DidChange(int prey, const TimeClass* const TimeInfo) const;
   SuitFunc* FuncPrey(int prey);
 protected:

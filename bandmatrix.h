@@ -34,7 +34,6 @@ public:
   int Minlength(int age) const { return (operator[](age).Mincol()); };
   int Maxlength(int age) const { return (operator[](age).Maxcol()); };
   void Colsum(doublevector& Result) const;
-  //void Print() const;
 protected:
   doubleindexvector** v;
   int nrow;
