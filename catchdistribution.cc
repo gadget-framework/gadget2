@@ -32,6 +32,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   timeindex = 0;
   illegal = 0;
+  stocktype = 0;
   cdname = new char[strlen(name) + 1];
   strcpy(cdname, name);
   functionname = new char[MaxStrLength];
@@ -478,8 +479,13 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
       handle.logFailure("Error in catchdistribution - unknown stock", stocknames[i]);
 
   }
+  
+  stocktype = stocks[0]->Type();
+  for (i = 0; i < stocks.Size(); i++)
+    if (stocks[i]->Type() != stocktype)
+      handle.logFailure("Error in catchdistribution - trying to mix stock types");
+      
   aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
-
   //Limits (inclusive) for traversing the matrices where required
   mincol = aggregator->getMinCol();
   maxcol = aggregator->getMaxCol();
@@ -491,26 +497,28 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
   if (AAT.AtCurrentTime(TimeInfo)) {
     handle.logMessage("Calculating likelihood score for catchdistribution component", cdname);
+
+    if (stocktype == STOCKTYPE)
+      aggregator->Sum(TimeInfo);
+    else if (stocktype == LENSTOCKTYPE)
+      aggregator->MeanSum(TimeInfo);  //mortality model, calculated catch
+    else
+      handle.logFailure("Error in catchdistribution - unknown stocktype", stocktype);
+
     switch(functionnumber) {
       case 1:
-        aggregator->Sum(TimeInfo);
         likelihood += calcLikMultinomial();
         break;
       case 2:
-        aggregator->MeanSum(TimeInfo); //mortality model, calculated catch
         likelihood += calcLikPearson(TimeInfo);
         break;
       case 3:
-        aggregator->MeanSum(TimeInfo); //mortality model, calculated catch
         likelihood += calcLikGamma(TimeInfo);
         break;
       case 4:
-        aggregator->Sum(TimeInfo);
         likelihood += calcLikSumSquares();
         break;
       case 5:
-        aggregator->Sum(TimeInfo);
-
         if (timeindex == 0) {
           Correlation();
           if (illegal == 1 || LU.IsIllegal() == 1) {
@@ -526,11 +534,9 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
         break;
       case 6:
-        aggregator->Sum(TimeInfo);
         likelihood += calcLikMVLogistic();
         break;
       case 7:
-        aggregator->MeanSum(TimeInfo); //mortality model, calculated catch
         likelihood += calcLikLog(TimeInfo);
         break;
       default:

@@ -534,7 +534,7 @@ void LenStock::Grow(int area,
   int inarea = AreaNr[area];
   grower->GrowthCalc(area, Area, TimeInfo);
 
-  if (grower->getGrowthType() != 6 && grower->getGrowthType() != 7) {
+  if (!(grower->getFixedWeights())) {
     //New weights at length are calculated
     grower->GrowthImplement(area, NumberInArea[inarea], LgrpDiv);
     if (doesmature) {

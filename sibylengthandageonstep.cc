@@ -39,6 +39,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   suitfunction = NULL;
+  stocktype = 0;
 
 //read in q_y, b and q_l data
   infile >> text;
@@ -249,6 +250,11 @@ void SIByLengthAndAgeOnStep::setStocks(const StockPtrVector& Stocks) {
     strcpy(stocknames[j], Stocks[i]->Name());
   }
 
+  stocktype = Stocks[0]->Type();
+  for (i = 0; i < Stocks.Size(); i++)
+    if (Stocks[i]->Type() != stocktype)
+      handle.logFailure("Error in surveyindex - trying to mix stock types");
+
   //Limits (inclusive) for traversing the matrices.
   mincol = aggregator->getMinCol();
   maxcol = aggregator->getMaxCol();
@@ -261,8 +267,14 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!(this->IsToSum(TimeInfo)))
     return;
 
+  if (stocktype == STOCKTYPE)
+    aggregator->Sum();
+  else if (stocktype == LENSTOCKTYPE)
+    aggregator->MeanSum();  //mortality model, aggregate mean N values
+  else
+    handle.logFailure("Error in surveyindex - unknown stocktype", stocktype);
+
   handle.logMessage("Calculating index for surveyindex component", this->SIName());
-  aggregator->MeanSum(); //aggregate mean N values in present time step
   //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns only one element.
   const AgeBandMatrix* alptr = &(aggregator->returnSum()[0]);
   this->calcIndex(alptr);

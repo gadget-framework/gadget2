@@ -20,6 +20,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   int i;
 
   keeper->addString("grower");
+  fixedweights = 0;
   LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
   CI = new ConversionIndex(OtherLgrpDiv, LgrpDiv, 1);
 
@@ -64,9 +65,11 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
       break;
     case 6:
       growthcalc = new GrowthCalcF(infile, areas, TimeInfo, keeper, Area, lenindex);
+      fixedweights = 1;
       break;
     case 7:
       growthcalc = new GrowthCalcG(infile, areas, TimeInfo, keeper, Area, lenindex);
+      fixedweights = 1;
       break;
     case 8:
       growthcalc = new GrowthCalcH(infile, areas, LgrpDiv, keeper);

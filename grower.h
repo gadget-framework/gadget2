@@ -31,6 +31,7 @@ public:
   void Reset();
   void Print(ofstream& outfile) const;
   int getGrowthType() { return functionnumber; };
+  int getFixedWeights() { return fixedweights; };
   double getPowerValue();
   double getMultValue();
 protected:
@@ -54,6 +55,7 @@ protected:
   DoubleVector part2;  //gamma(n-x+beta)/gamma(beta)
   double part3;        //gamma(alpha+beta)/gamma(n+alpha+beta)
   DoubleVector part4;  //gamma(x+alpha)/gamma(x)
+  int fixedweights;
 };
 
 #endif

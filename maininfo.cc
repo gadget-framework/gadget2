@@ -134,7 +134,6 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         CommentStream incomment(infile);
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
-
         k++;
         infile.open(aVector[k], ios::in);
         if (infile.fail())
@@ -307,6 +306,9 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-precision") == 0) {
       infile >> dummy >> ws;
       printinfo.setPrecision(dummy);
+    } else if (strcasecmp(text, "-log") == 0) {
+      infile >> text >> ws;
+      handle.setLogFile(text);
     } else
       showCorrectUsage(text);
   }

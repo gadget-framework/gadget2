@@ -104,7 +104,9 @@ libvec.a:	$(VECTORS)
 	ar rs libvec.a $?
 
 ## you need root permission to be able to do this ...
+## doesnt work for cygwin, since you need the .exe filename extension
 install	:	gadget
+	strip gadget
 	cp gadget /usr/local/bin/
 	cp gadget.1.gz /usr/local/man/man1/
 
