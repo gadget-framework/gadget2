@@ -230,22 +230,22 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
 
   if (!infile.good())
     handle.Failure("coefficients");
-  Coefficient.resize(NoMatconst, keeper);
-  Coefficient.Read(infile, TimeInfo, keeper);
+  maturityParameters.resize(NoMatconst, keeper);
+  maturityParameters.Read(infile, TimeInfo, keeper);
   keeper->ClearLast();
 }
 
 void MaturityA::Precalc(const TimeClass* const TimeInfo) {
   this->Maturity::Precalc(TimeInfo);
-  Coefficient.Update(TimeInfo);
+  maturityParameters.Update(TimeInfo);
   double my;
   int age, len;
 
-  if (Coefficient.DidChange(TimeInfo)) {
+  if (maturityParameters.DidChange(TimeInfo)) {
     for (age = PrecalcMaturation.Minage(); age <= PrecalcMaturation.Maxage(); age++) {
       for (len = PrecalcMaturation.Minlength(age); len < PrecalcMaturation.Maxlength(age); len++) {
         if ((age >= minMatureAge) && (len >= minMatureLength)) {
-          my = exp(-Coefficient[0] - Coefficient[1] * LgrpDiv->Meanlength(len) - Coefficient[2] * age);
+          my = exp(-maturityParameters[0] - maturityParameters[1] * LgrpDiv->Meanlength(len) - maturityParameters[2] * age);
           PrecalcMaturation[age][len] = 1 / (1 + my);
         } else
           PrecalcMaturation[age][len] = 0.0;
@@ -274,8 +274,8 @@ double MaturityA::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight) {
 
   if ((age >= minMatureAge) && (length >= minMatureLength)) {
-    double ratio = PrecalcMaturation[age][length] * (Coefficient[1] * growth * LgrpDiv->dl() +
-                     Coefficient[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
+    double ratio = PrecalcMaturation[age][length] * (maturityParameters[1] * growth * LgrpDiv->dl() +
+                     maturityParameters[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
     return (min(max(0.0, ratio), 1.0));
   }
   return 0.0;
@@ -422,16 +422,16 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
 
 void MaturityC::Precalc(const TimeClass* const TimeInfo) {
   this->Maturity::Precalc(TimeInfo);
-  Coefficient.Update(TimeInfo);
+  maturityParameters.Update(TimeInfo);
   double my;
   int age, len;
 
-  if (Coefficient.DidChange(TimeInfo)) {
+  if (maturityParameters.DidChange(TimeInfo)) {
     for (age = PrecalcMaturation.Minage(); age <= PrecalcMaturation.Maxage(); age++) {
       for (len = PrecalcMaturation.Minlength(age); len < PrecalcMaturation.Maxlength(age); len++) {
         if ((age >= minMatureAge) && (len >= minMatureLength)) {
-          my = exp(-Coefficient[0] * (LgrpDiv->Meanlength(len) - Coefficient[1])
-                 - Coefficient[2] * (age - Coefficient[3]));
+          my = exp(-maturityParameters[0] * (LgrpDiv->Meanlength(len) - maturityParameters[1])
+                 - maturityParameters[2] * (age - maturityParameters[3]));
           PrecalcMaturation[age][len] = 1 / (1 + my);
         } else
           PrecalcMaturation[age][len] = 0.0;
@@ -459,8 +459,8 @@ double MaturityC::MaturationProbability(int age, int length, int growth,
   const TimeClass* const TimeInfo, const AreaClass* const Area, int area, double weight) {
 
   if ((this->IsMaturationStep(area, TimeInfo)) && (age >= minMatureAge) && (length >= minMatureLength)) {
-    double ratio = PrecalcMaturation[age][length] * (Coefficient[0] * growth * LgrpDiv->dl()
-                     + Coefficient[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
+    double ratio = PrecalcMaturation[age][length] * (maturityParameters[0] * growth * LgrpDiv->dl()
+                     + maturityParameters[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
     return (min(max(0.0, ratio), 1.0));
   }
   return 0.0;
@@ -524,16 +524,16 @@ void MaturityD::SetStock(StockPtrVector& stockvec) {
 
 void MaturityD::Precalc(const TimeClass* const TimeInfo) {
   this->Maturity::Precalc(TimeInfo);
-  Coefficient.Update(TimeInfo);
+  maturityParameters.Update(TimeInfo);
   double my;
   int age, len;
 
-  if (Coefficient.DidChange(TimeInfo)) {
+  if (maturityParameters.DidChange(TimeInfo)) {
     for (age = PrecalcMaturation.Minage(); age <= PrecalcMaturation.Maxage(); age++) {
       for (len = PrecalcMaturation.Minlength(age); len < PrecalcMaturation.Maxlength(age); len++) {
         if ((age >= minMatureAge) && (len >= minMatureLength)) {
-          my = exp(-4.0 * Coefficient[0] * (LgrpDiv->Meanlength(len) - Coefficient[1])
-                 - 4.0 * Coefficient[2] * (age - Coefficient[3]));
+          my = exp(-4.0 * maturityParameters[0] * (LgrpDiv->Meanlength(len) - maturityParameters[1])
+                 - 4.0 * maturityParameters[2] * (age - maturityParameters[3]));
           PrecalcMaturation[age][len] = 1 / (1 + my);
         } else
           PrecalcMaturation[age][len] = 0.0;
@@ -635,7 +635,7 @@ void MaturityE::SetStock(StockPtrVector& stockvec) {
 
 void MaturityE::Precalc(const TimeClass* const TimeInfo) {
   this->Maturity::Precalc(TimeInfo);
-  Coefficient.Update(TimeInfo);
+  maturityParameters.Update(TimeInfo);
 }
 
 double MaturityE::MaturationProbability(int age, int length, int growth,
@@ -645,15 +645,15 @@ double MaturityE::MaturationProbability(int age, int length, int growth,
     double tmpweight, my, ratio;
 
     if (length >= refWeight.Size())
-      tmpweight = Coefficient[5];
+      tmpweight = maturityParameters[5];
     else if (isZero(refWeight[length]))
-      tmpweight = Coefficient[5];
+      tmpweight = maturityParameters[5];
     else
       tmpweight = weight / refWeight[length];
 
-    my = exp(-4.0 * Coefficient[0] * (LgrpDiv->Meanlength(length) - Coefficient[1])
-           - 4.0 * Coefficient[2] * (age - Coefficient[3])
-           - 4.0 * Coefficient[4] * (tmpweight - Coefficient[5]));
+    my = exp(-4.0 * maturityParameters[0] * (LgrpDiv->Meanlength(length) - maturityParameters[1])
+           - 4.0 * maturityParameters[2] * (age - maturityParameters[3])
+           - 4.0 * maturityParameters[4] * (tmpweight - maturityParameters[5]));
     ratio = 1 / (1 + my);
     return (min(max(0.0, ratio), 1.0));
   }

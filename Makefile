@@ -14,7 +14,7 @@ DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
 ##########################################################################
 # 1. Linux, or Solaris, without pvm, g++ compiler
 CXX = ccache g++
-LIBDIRS = -L.  -L/usr/local/lib
+LIBDIRS = -L. -L/usr/local/lib
 LIBRARIES = -lm -lvec
 CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 OBJECTS = $(GADGETOBJECTS)

@@ -5,7 +5,7 @@
 
 class LUDecomposition{
 public:
-  LUDecomposition(){};
+  LUDecomposition() {};
   LUDecomposition(const DoubleMatrix&);
   ~LUDecomposition() {};
   DoubleVector Solve(const DoubleVector&);
@@ -16,7 +16,8 @@ private:
   DoubleMatrix L;
   DoubleMatrix U;
   double logdet;
-  int size,illegal;
+  int size;
+  int illegal;
 };
 
 #endif

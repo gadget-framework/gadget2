@@ -30,8 +30,6 @@ private:
   double LikSumSquares();
   double LikMVNormal();
   double LikMVLogistic();
-  double LikTest();
-  double LikTest2();
   void Correlation();
   DoubleMatrixPtrMatrix AgeLengthData; //[time][area][age][length]
   DoubleMatrixPtrMatrix Proportions; //kgf 17/9 98
@@ -66,12 +64,10 @@ private:
   double epsilon;
   Formula tau;
   Formula sigma;
-  Formula rho;
-  Formula alpha;
-  Formula beta;
-  Formula gamma;
   FormulaVector params;
-  int illegal, times, lag;
+  int illegal;
+  int times;
+  int lag;
   LUDecomposition LU;
 };
 

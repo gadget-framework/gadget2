@@ -220,7 +220,7 @@ protected:
   /**
    * \brief This is the TimeVariableVector of maturation parameters
    */
-  TimeVariableVector Coefficient;
+  TimeVariableVector maturityParameters;
   /**
    * \brief This is the minimum age when maturation will take place
    */

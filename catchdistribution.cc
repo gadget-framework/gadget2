@@ -21,7 +21,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int numarea = 0, numage = 0, numlen = 0;
-  
+
   char datafilename[MaxStrLength];
   char aggfilename[MaxStrLength];
   strncpy(datafilename, "", MaxStrLength);
@@ -30,6 +30,8 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   CommentStream subdata(datafile);
 
   timeindex = 0;
+  illegal = 0;
+  times = 0;
   cdname = new char[strlen(name) + 1];
   strcpy(cdname, name);
   functionname = new char[MaxStrLength];
@@ -37,9 +39,6 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   readWordAndValue(infile, "datafile", datafilename);
   readWordAndValue(infile, "function", functionname);
-
-  illegal = 0;
-  times = 0;
 
   functionnumber = 0;
   if (strcasecmp(functionname, "multinomial") == 0) {
@@ -52,33 +51,28 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     functionnumber = 4;
   } else if (strcasecmp(functionname, "mvn") == 0) {
     functionnumber = 5;
-    infile >> text >> ws;
-    if (strcasecmp(text, "lag")==0)
-      infile >> lag >> ws;
-    else
-      handle.Unexpected("lag", text);
+
+    readWordAndVariable(infile, "lag", lag);
     readWordAndFormula(infile, "sigma", sigma);
     sigma.Inform(keeper);
-    for(i=0;i<lag;i++){
-      params.resize(1,keeper);
+
+    for (i = 0; i < lag; i++) {
+      params.resize(1, keeper);
       infile >> text >> ws;
-      if (strcasecmp(text,"param")==0){
-	infile >> params[i] >> ws;
-	params[i].Inform(keeper);
-      } else 
-	handle.Unexpected("param",text);
+      if (strcasecmp(text, "param") == 0) {
+        infile >> params[i] >> ws;
+        params[i].Inform(keeper);
+      } else
+        handle.Unexpected("param", text);
     }
-    //params.Inform(keeper);
- 
-    
+
   } else if (strcasecmp(functionname, "mvlogistic") == 0) {
-    functionnumber = 11;
+    functionnumber = 6;
 
     readWordAndFormula(infile, "tau", tau);
     tau.Inform(keeper);
 
-
- } else
+  } else
     handle.Message("Error in catchdistribution - unrecognised function", functionname);
 
   infile >> ws;
@@ -326,8 +320,8 @@ CatchDistribution::~CatchDistribution() {
 void CatchDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
-  times = 0;
   illegal = 0;
+  times = 0;
 }
 
 void CatchDistribution::Print(ofstream& outfile) const {
@@ -350,11 +344,11 @@ void CatchDistribution::Print(ofstream& outfile) const {
       break;
     case 5:
       outfile << "\tMultivariate normal distribution parameters: sigma " << sigma;
-      for(i = 0;i<lag;i++)
-	outfile << " param" << i+1 << " " << params[i];
+      for (i = 0; i < lag; i++)
+        outfile << " param" << i + 1 << " " << params[i];
       outfile << endl;
       break;
-    case 11:
+    case 6:
       outfile << "\tMultivariate logistic distribution parameter: tau " << tau << endl;
       break;
     default:
@@ -400,13 +394,12 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
     case 4:
       break;
     case 5:
-      outfile << "Multivariate normal distribution parameters: sigma " << sigma;
-      for(i = 0;i<lag;i++)
-	outfile << " param" << i+1 << " " << params[i];
+      outfile << "\tMultivariate normal distribution parameters: sigma " << sigma;
+      for (i = 0; i < lag; i++)
+        outfile << " param" << i + 1 << " " << params[i];
       outfile << endl;
       break;
- 
-    case 11:
+    case 6:
       outfile << "Multivariate logistic distribution parameter: tau " << tau << endl;
       break;
     default:
@@ -520,23 +513,24 @@ void CatchDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
         likelihood += LikSumSquares();
         break;
       case 5:
-	aggregator->Sum(TimeInfo);
-	
-	if (times==0) {
-	  Correlation();
-	  times++;
-	  if (illegal == 1 || LU.IsIllegal() == 1){
-	    cerr << "Error catchdistribution - mvn out of bounds, penalty given\n";
-	    likelihood += verybig;
-	  }
-	}
-	
-	if(illegal != 1 && LU.IsIllegal() != 1)
-       	  likelihood += LikMVNormal();
-	else
-	  likelihood += 0.0;
+        aggregator->Sum(TimeInfo);
+
+        if (times == 0) {
+          Correlation();
+          times++;
+          if (illegal == 1 || LU.IsIllegal() == 1) {
+            cerr << "Error catchdistribution - multivariate normal out of bounds\n";
+            likelihood += verybig;
+          }
+        }
+
+        if (illegal != 1 && LU.IsIllegal() != 1)
+          likelihood += LikMVNormal();
+        else
+          likelihood += 0.0;
+
         break;
-      case 11:
+      case 6:
         aggregator->Sum(TimeInfo);
         likelihood += LikMVLogistic();
         break;
@@ -758,32 +752,35 @@ double CatchDistribution::LikSumSquares() {
   return totallikelihood;
 }
 
-
 void CatchDistribution::Correlation() {
-  int l=0,i=0,j=0,p=aggregator->NoLengthGroups();
+  int i, j, l, p;
+  p = aggregator->NoLengthGroups();
   DoubleMatrix correlation(p, p, 0.0);
- 
-  for(i=0;i<lag;i++)
-    if(abs(params[i]-1)>=1)
-      illegal=1;
- 
-  if(illegal==0){
-    for(i=0;i<p;i++){
-      for(j=0;j<=i;j++)
-	for(l=1;l<=lag;l++)
-	  if((i-l)>=0){
-	    correlation[i][j] += (params[l-1]-1)*correlation[i-l][j];
-	    correlation[j][i] += (params[l-1]-1)*correlation[i-l][j];
-	  }
-      correlation[i][i]+=sigma*sigma;
+
+  for (i = 0; i < lag; i++)
+    if (abs(params[i] - 1) >= 1)
+      illegal = 1;
+
+  if (illegal == 0) {
+    for (i = 0; i < p; i++) {
+      for (j = 0; j <= i; j++) {
+        for (l = 1; l <= lag; l++) {
+          if ((i - l) >= 0) {
+            correlation[i][j] += (params[l - 1] - 1) * correlation[i - l][j];
+            correlation[j][i] += (params[l - 1] - 1) * correlation[i - l][j];
+          }
+        }
+      }
+      correlation[i][i] += sigma * sigma;
     }
     LU = LUDecomposition(correlation);
   }
 }
 
+
 double CatchDistribution::LikMVNormal() {
-  
-  double totallikelihood = 0.0,temp=0;
+
+  double totallikelihood = 0.0;
   double sumdata = 0.0, sumdist = 0.0;
   int age, len, nareas;
   int i, j, p;
@@ -791,17 +788,16 @@ double CatchDistribution::LikMVNormal() {
   const AgeBandMatrixPtrVector* alptr= &aggregator->AgeLengthDist();
   p = aggregator->NoLengthGroups();
   DoubleVector diff(p, 0.0);
-  
+
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
       for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++) {
-	(*Proportions[timeindex][nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
-	sumdata += (*AgeLengthData[timeindex][nareas])[age][len];
-	sumdist += (*alptr)[nareas][age][len].N;
+        (*Proportions[timeindex][nareas])[age][len] = ((*alptr)[nareas][age][len]).N;
+        sumdata += (*AgeLengthData[timeindex][nareas])[age][len];
+        sumdist += (*alptr)[nareas][age][len].N;
       }
     }
   }
-  
   if (isZero(sumdata))
     sumdata = verybig;
   else
@@ -810,25 +806,25 @@ double CatchDistribution::LikMVNormal() {
     sumdist = verybig;
   else
     sumdist = 1 / sumdist;
-  
-  // Likelihood calculation
+
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     for (age = (*alptr)[nareas].Minage(); age <= (*alptr)[nareas].Maxage(); age++) {
       for (len = 0; len < diff.Size(); len++)
-	diff[len] = 0.0;
+        diff[len] = 0.0;
 
       for (len = (*alptr)[nareas].Minlength(age); len < (*alptr)[nareas].Maxlength(age); len++)
-	diff[len] += (*AgeLengthData[timeindex][nareas])[age][len]*sumdata  - ((*alptr)[nareas][age][len]).N*sumdist;
+        diff[len] = ((*AgeLengthData[timeindex][nareas])[age][len] * sumdata) - (((*alptr)[nareas][age][len]).N * sumdist);
+
       totallikelihood += diff * LU.Solve(diff);
     }
   }
-  
-  if (sigma == 0){
-    cerr << "Error in catchdistribution - sigma is optimized to zero";
+  if (isZero(sigma)) {
+    cerr << "Error catchdistribution - multivariate normal sigma is zero";
     return verybig;
   }
 
-  totallikelihood += LU.LogDet()*alptr->Size();
+  //totallikelihood = (totallikelihood / (sigma * sigma)) + ((LU.LogDet() + 2 * log(sigma) * p) * alptr->Size());
+  totallikelihood += LU.LogDet() * alptr->Size();
   return totallikelihood;
 }
 
@@ -875,8 +871,10 @@ double CatchDistribution::LikMVLogistic() {
         totallikelihood += (nu[len] - sumnu) * (nu[len] - sumnu);
     }
   }
-  if (tau == 0)
+  if (isZero(tau)) {
+    cerr << "Error catchdistribution - multivariate logistic tau is zero";
     return verybig;
+  }
   totallikelihood = (totallikelihood / (tau * tau)) + (log(tau) * (p - 1));
   return totallikelihood;
 }
@@ -927,13 +925,14 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
     case 2:
     case 3:
     case 4:
+      break;
     case 5:
-      catchfile << "Multivariate normal distribution parameters: sigma " << sigma;
-      for(i = 0;i<lag;i++)
-	catchfile << " param" << i+1 << " " << params[i];
+      catchfile << "\tMultivariate normal distribution parameters: sigma " << sigma;
+      for (i = 0; i < lag; i++)
+        catchfile << " param" << i + 1 << " " << params[i];
       catchfile << endl;
       break;
-    case 11:
+    case 6:
       catchfile << "Multivariate logistic distribution parameter: tau " << tau << endl;
       break;
     default:
