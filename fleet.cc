@@ -4,6 +4,7 @@
 #include "totalpredator.h"
 #include "linearpredator.h"
 #include "readfunc.h"
+#include "readword.h"
 #include "errorhandler.h"
 #include "gadget.h"
 
@@ -18,9 +19,9 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   strncpy(text, "", MaxStrLength);
   ifstream subfile;
   CommentStream subcomment(subfile);
-  int i = 0;
-  int tmpint;
-  double multscaler;
+  int i, tmpint;
+  Formula multscaler;
+  char c;
 
   keeper->addString("fleet");
   keeper->addString(givenname);
@@ -28,7 +29,8 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   infile >> text >> ws;
   IntVector tmpareas;
   if (strcasecmp(text, "livesonareas") == 0) {
-    char c = infile.peek();
+    i = 0;
+    c = infile.peek();
     while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
       tmpareas.resize(1);
       infile >> tmpint >> ws;
@@ -48,19 +50,19 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
       handle.Message("Error in fleet - failed to read lengths");
   } else
     handle.Unexpected("lengths", text);
-
   LengthGroupDivision LgrpDiv(lengths);
 
+  infile >> ws;
+  c = infile.peek();
+  if ((c == 'm') || (c == 'M'))
+    readWordAndFormula(infile, "multiplicative", multscaler);
+  else
+    multscaler.setValue(1.0);
+
+//  if (multscaler < 0)
+//    handle.Warning("Warning in fleet - negative value for multiplicative");
+
   infile >> text >> ws;
-  if (strcasecmp(text, "multiplicative") == 0) {
-    infile >> multscaler >> ws;
-    infile >> text >> ws;
-  } else
-    multscaler = 1.0;
-
-  if (multscaler < 0)
-    handle.Warning("negative value for multiplicative");
-
   if (!(strcasecmp(text, "suitability") == 0))
     handle.Unexpected("suitability", text);
 

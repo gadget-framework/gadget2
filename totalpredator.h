@@ -18,12 +18,12 @@ public:
    * \param GivenLgrpDiv is the LengthGroupDivision that will be used to calculate the predation
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
-   * \param multi is a multiplicative constant that can be used to scale the biomass consumed (not used)
+   * \param multi is the Formula that can be used to scale the biomass consumed
    * \note There are 2 LengthGroupDivision objects specified - GivenLgrpDiv will be used to calculate the predation, which will then be applied to OtherLgrpDiv.  GivenLgrpDiv must not be finer than OtherLgrpDiv
    */
   TotalPredator(CommentStream& infile, const char* givenname, const IntVector& Areas,
     const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
-    const TimeClass* const TimeInfo, Keeper* const keeper, double multi);
+    const TimeClass* const TimeInfo, Keeper* const keeper, Formula multi);
   /**
    * \brief This is the default TotalPredator destructor
    */

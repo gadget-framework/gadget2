@@ -196,12 +196,13 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   int i, j, k;
   int noareas = areas.Size();
   int minage, maxage;
+  char c;
   double minlength, maxlength, dl;
 
   keeper->addString("initialcond");
 
   infile >> ws;
-  char c = infile.peek();
+  c = infile.peek();
   if ((c == 'n') || (c == 'N'))
     infile >> text >> ws; //read in 'numbers'
 
@@ -220,9 +221,10 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
 
   //read the standard deviation multiplier - default to 1.0
   keeper->addString("sdevmultiplier");
-  infile >> text >> ws;
-  if ((strcasecmp(text, "sdev") == 0))
-    infile >> sdevMult >> ws >> text >> ws;
+  infile >> ws;
+  c = infile.peek();
+  if ((c == 's') || (c == 'S'))
+    readWordAndFormula(infile, "sdev", sdevMult);
   else
     sdevMult.setValue(1.0);
   sdevMult.Inform(keeper);
@@ -243,6 +245,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   initialPop.resize(noareas, minage, 0, tmpPop);
 
   keeper->addString("readinitialdata");
+  infile >> text >> ws;
   if ((strcasecmp(text, "initstockfile") == 0)) {
     //read initial data in mean length format
     infile >> text >> ws;

@@ -15,12 +15,13 @@ public:
    * \param Areas is the IntVector of areas that the predator lives on
    * \param OtherLgrpDiv is the LengthGroupDivision that the predation will be applied to
    * \param GivenLgrpDiv is the LengthGroupDivision that will be used to calculate the predation
-   * \param multi is a multiplicative constant that can be used to scale the biomass consumed
+   * \param keeper is the Keeper for the current model
+   * \param multi is the Formula that can be used to scale the biomass consumed
    * \note There are 2 LengthGroupDivision objects specified - GivenLgrpDiv will be used to calculate the predation, which will then be applied to OtherLgrpDiv.  GivenLgrpDiv must not be finer than OtherLgrpDiv
    */
   LengthPredator(const char* givenname, const IntVector& Areas,
-    const LengthGroupDivision* const OtherLgrpDiv,
-    const LengthGroupDivision* const GivenLgrpDiv, double multi);
+    const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
+    Keeper* const keeper, Formula multi);
   /**
    * \brief This is the default LengthPredator destructor
    */
@@ -45,7 +46,7 @@ protected:
   /**
    * \brief This is the multiplicative constant that can be used to scale the biomass consumed
    */
-  double Multiplicative;
+  Formula Multiplicative;
 };
 
 #endif

@@ -10,8 +10,8 @@ extern ErrorHandler handle;
 TotalPredator::TotalPredator(CommentStream& infile, const char* givenname,
   const IntVector& Areas, const LengthGroupDivision* const OtherLgrpDiv,
   const LengthGroupDivision* const GivenLgrpDiv, const TimeClass* const TimeInfo,
-  Keeper* const keeper, double multi)
-  : LengthPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv, multi) {
+  Keeper* const keeper, Formula multi)
+  : LengthPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv, keeper, multi) {
 
   keeper->addString("predator");
   keeper->addString(givenname);
@@ -73,6 +73,9 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
       }
     }
   }
+
+  if (Multiplicative < 0)
+    handle.logWarning("Warning in totalpredator - negative value for scaler", Multiplicative);
 
   //adjust the consumption by the multiplicative factor.
   tmpsteps = Multiplicative / numsubsteps;  //use the multiplicative factor

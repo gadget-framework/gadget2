@@ -10,8 +10,8 @@ extern ErrorHandler handle;
 LinearPredator::LinearPredator(CommentStream& infile, const char* givenname,
   const IntVector& Areas, const LengthGroupDivision* const OtherLgrpDiv,
   const LengthGroupDivision* const GivenLgrpDiv, const TimeClass* const TimeInfo,
-  Keeper* const keeper, double multi)
-  : LengthPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv, multi) {
+  Keeper* const keeper, Formula multi)
+  : LengthPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv, keeper, multi) {
 
   keeper->addString("predator");
   keeper->addString(givenname);
@@ -48,6 +48,10 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     totalcons[inarea][predl] = 0.0;
+
+  if (Multiplicative < 0)
+    handle.logWarning("Warning in linearpredator - negative value for scaler", Multiplicative);
+
   scaler[inarea] = Multiplicative;
   tmp = Multiplicative * LengthOfStep / numsubsteps;
 
