@@ -170,7 +170,11 @@ public:
    * \return uselog
    */
   int checkLogFile() { return uselog; };
-  void logRunTime(int printtime);
+  /**
+   * \brief This function will log information about the simulation finish to std::cout and a log file if one exists
+   * \param printtime is a flag to denote whether to print the runtime or not
+   */
+  void logFinish(int printtime);
 protected:
   /**
    * \brief This ofstream is the file that all the logging information will get sent to

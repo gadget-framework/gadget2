@@ -282,16 +282,16 @@ void ErrorHandler::checkIfFailure(ios& infile, const char* text) {
   return;
 }
 
-void ErrorHandler::logRunTime(int printtime) {
+void ErrorHandler::logFinish(int printtime) {
   if (uselog) {
     logfile << "\nGadget simulation finished OK - runtime was ";
-    RUNID.printElapsedTime(logfile);
+    RUNID.printTime(logfile);
     logfile.flush();
   }
   cout << "\nGadget simulation finished OK";
   if (printtime) {
     cout << " - runtime was ";
-    RUNID.printElapsedTime(cout);
+    RUNID.printTime(cout);
   } else
     cout << endl;
   cout.flush();

@@ -178,7 +178,7 @@ int main(int aNumber, char* const aVector[]) {
   //JMB - print final values of parameters
   if (!(MainInfo.runNetwork())) {
     EcoSystem->writeParamsInColumns((MainInfo.getPI()).getParamOutFile(), (MainInfo.getPI()).getPrecision());
-    handle.logRunTime(MainInfo.runOptimize());
+    handle.logFinish(MainInfo.runOptimize());
   }
 
   if (check == 1)

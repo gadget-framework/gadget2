@@ -41,7 +41,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
     strcpy(areanames[i], areaindex[i]);
   }
 
-  //if numcols is 1 then this is a sibyalengthandageonstep
+  //if numcols is 1 then this is a sibylengthandageonstep
   //else we have a pionstep - these use different fittypes
 
   if (numcols == 1) {

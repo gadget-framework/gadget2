@@ -10,7 +10,7 @@ GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat \
 DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
 
 ##########################################################################
-# The name of the final executable
+# The name of the final executable (eg gadget-linux)
 GADGET = gadget
 ##########################################################################
 # Pick the appropriate compiler from the following switches
@@ -83,7 +83,7 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	errorhandler.o pionstep.o fleet.o sibyageonstep.o fleetpreyaggregator.o \
 	sibylengthonstep.o formula.o grower.o growthcalc.o simulation.o hooke.o \
 	simann.o sionstep.o initialcond.o spawner.o initialize.o stochasticdata.o \
-	lengthpredator.o stockaggregator.o lengthprey.o sibylengthandageonstep.o \
+	lengthpredator.o stockaggregator.o lengthprey.o surveydistribution.o \
 	stockdistribution.o linearpredator.o stockfullprinter.o linearregression.o \
 	stockmemberfunctions.o livesonareas.o stockpredator.o stockpredstdinfo.o \
 	loglinearregression.o time.o stockprey.o maininfo.o stockpreyfullprinter.o \

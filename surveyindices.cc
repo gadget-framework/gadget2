@@ -6,7 +6,6 @@
 #include "errorhandler.h"
 #include "stock.h"
 #include "sibylengthonstep.h"
-#include "sibylengthandageonstep.h"
 #include "sibyageonstep.h"
 #include "sibyfleetonstep.h"
 #include "gadget.h"
@@ -108,26 +107,10 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     infile >> overcons >> ws;
 
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
-    readWordAndValue(infile, "lenaggfile", aggfilename);
-    datafile.open(aggfilename, ios::in);
-    handle.checkIfFailure(datafile, aggfilename);
-    handle.Open(aggfilename);
-    i = readLengthAggregation(subdata, lengths, lenindex);
-    handle.Close();
-    datafile.close();
-    datafile.clear();
-
-    readWordAndValue(infile, "ageaggfile", aggfilename);
-    datafile.open(aggfilename, ios::in);
-    handle.checkIfFailure(datafile, aggfilename);
-    handle.Open(aggfilename);
-    i = readAggregation(subdata, ages, ageindex);
-    handle.Close();
-    datafile.close();
-    datafile.clear();
+    handle.Warning("The ageandlengths surveyindex likelihood component is no longer supported\nUse the surveydistribution likelihood component instead");
 
   } else
-    handle.Unexpected("lengths, ages or ageandlengths", sitype);
+    handle.Unexpected("lengths, ages or fleets", sitype);
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "stocknames") == 0))
@@ -155,10 +138,6 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   } else if (strcasecmp(sitype, "fleets") == 0) {
     SI = new SIByFleetOnStep(infile, areas, lengths, areaindex,
       lenindex, TimeInfo, datafilename, overcons, surveyname);
-
-  } else if (strcasecmp(sitype, "ageandlengths") == 0) {
-    SI = new SIByLengthAndAgeOnStep(infile, areas, lengths, ages, TimeInfo,
-      keeper, lenindex, ageindex, areaindex, datafilename, surveyname);
 
   } else
     handle.Message("Error in surveyindex - unrecognised type", sitype);

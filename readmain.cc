@@ -27,6 +27,7 @@
 #include "catchintons.h"
 #include "lenstock.h"
 #include "boundlikelihood.h"
+#include "surveydistribution.h"
 #include "readword.h"
 #include "gadget.h"
 
@@ -287,6 +288,9 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
     } else if (strcasecmp(type, "surveyindices") == 0) {
       Likely[i] = new SurveyIndices(infile, Area, TimeInfo, keeper, weight, name);
 
+    } else if (strcasecmp(type, "surveydistribution") == 0) {
+      Likely[i] = new SurveyDistribution(infile, Area, TimeInfo, keeper, weight, name);
+
     } else if (strcasecmp(type, "stomachcontent") == 0) {
       Likely[i] = new StomachContent(infile, Area, TimeInfo, keeper, weight, name);
 
@@ -306,16 +310,16 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       Likely[i] = new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name);
 
     } else if (strcasecmp(type, "randomwalk") == 0) {
-      handle.Warning("The random walk likelihood component is no longer supported");
+      handle.Warning("The randomwalk likelihood component is no longer supported");
 
     } else if (strcasecmp(type, "logcatch") == 0) {
-      handle.Warning("The log catch likelihood component is no longer supported\nUse the log function from the catchdistribution likelihood component instead");
+      handle.Warning("The logcatch likelihood component is no longer supported\nUse the log function from the catchdistribution likelihood component instead");
 
     } else if (strcasecmp(type, "logsurveyindices") == 0) {
-      handle.Warning("The log survey indices likelihood component is no longer supported\nUse the log function from the surveyindices likelihood component instead");
+      handle.Warning("The logsurveyindices likelihood component is no longer supported\nUse the log function from the surveyindices likelihood component instead");
 
     } else if (strcasecmp(type, "aggregatedcatchdist") == 0) {
-      handle.Warning("The aggregated catch distribution likelihood component is no longer supported");
+      handle.Warning("The aggregatedcatchdist likelihood component is no longer supported");
 
     } else {
       handle.Message("Error in likelihood file - unrecognised likelihood", type);

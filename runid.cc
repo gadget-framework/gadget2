@@ -22,7 +22,7 @@ void RunID::print(ostream& o) {
   o.flush();
 }
 
-void RunID::printElapsedTime(ostream& o) {
+void RunID::printTime(ostream& o) {
   time_t stoptime;
   o << difftime(time(&stoptime), runtime) << " seconds" << endl;
   o.flush();  

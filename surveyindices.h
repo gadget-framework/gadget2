@@ -55,10 +55,6 @@ public:
    */
   virtual void SummaryPrint(ofstream& outfile) {
     SI->SummaryPrint(outfile, weight); };
-  virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time) {
-    SI->PrintLikelihood(outfile, time, surveyname); };
-  virtual void PrintLikelihoodHeader(ofstream& outfile) {
-    SI->PrintLikelihoodHeader(outfile, surveyname); };
 protected:
   SIOnStep* SI;
   /**

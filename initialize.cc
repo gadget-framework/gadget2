@@ -31,6 +31,7 @@
 #include "stockpredator.h"
 #include "lengthpredator.h"
 #include "stockdistribution.h"
+#include "surveydistribution.h"
 #include "predatorindex.h"
 #include "migrationpenalty.h"
 #include "catchintons.h"
@@ -162,6 +163,9 @@ void Ecosystem::Initialise(int optimize) {
           break;
         case RECSTATISTICSLIKELIHOOD:
           ((RecStatistics*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
+          break;
+        case SURVEYDISTRIBUTIONLIKELIHOOD:
+          ((SurveyDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
         case BOUNDLIKELIHOOD:
           break;

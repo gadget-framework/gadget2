@@ -10,7 +10,7 @@
 #include "stock.h"
 #include "lenstock.h"
 #include "catchdistribution.h"
-#include "surveyindices.h"
+#include "surveydistribution.h"
 #include "stomachcontent.h"
 #include "formatedprinting.h"
 #include "runid.h"
@@ -78,7 +78,7 @@ void LikelihoodPrinter::setLikely(LikelihoodPtrVector& likevec) {
   for (i = 0; i < likevec.Size(); i++) {
     if (likevec[i]->Type() == CATCHDISTRIBUTIONLIKELIHOOD)
       catchvec.resize(1, likevec[i]);
-    else if (likevec[i]->Type() == SURVEYINDICESLIKELIHOOD)
+    else if (likevec[i]->Type() == SURVEYDISTRIBUTIONLIKELIHOOD)
       surveyvec.resize(1, likevec[i]);
     else if (likevec[i]->Type() == STOMACHCONTENTLIKELIHOOD)
       stomachvec.resize(1, likevec[i]);
@@ -95,7 +95,7 @@ void LikelihoodPrinter::setLikely(LikelihoodPtrVector& likevec) {
   if (printSurvey) {
     surveyFile << "Likelihood printing: Survey\nLikelihood components in this file: " << surveyvec.Size() << "\n\n";
     for (i = 0; i < surveyvec.Size(); i++) {
-      ((SurveyIndices*)surveyvec[i])->PrintLikelihoodHeader(surveyFile);
+      ((SurveyDistribution*)surveyvec[i])->PrintLikelihoodHeader(surveyFile);
       surveyFile << endl;
       surveyFile.flush();
     }
@@ -130,7 +130,7 @@ void LikelihoodPrinter::Print(const TimeClass* const TimeInfo) {
 
   if (printSurvey) {
     for (i = 0; i < surveyvec.Size(); i++)
-      ((SurveyIndices*)surveyvec[i])->PrintLikelihood(surveyFile, *TimeInfo);
+      ((SurveyDistribution*)surveyvec[i])->PrintLikelihood(surveyFile, *TimeInfo);
     surveyFile.flush();
   }
 

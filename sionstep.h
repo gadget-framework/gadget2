@@ -33,8 +33,6 @@ public:
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile);
   virtual void SummaryPrint(ofstream& outfile, double weight);
-  virtual void PrintLikelihood(ofstream& outfile, const TimeClass& time, const char*) {};
-  virtual void PrintLikelihoodHeader(ofstream& outfile, const char* name) {};
 protected:
   void setError() { error = 1; };
   int IsToSum(const TimeClass* const TimeInfo) const;
