@@ -118,7 +118,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
         outfile << "\n; year-step-area-predator-prey-number\n";
         break;
       case SURVEYINDICESLIKELIHOOD:
-        outfile << "\n; year-step-area-label-index\n";
+        outfile << "\n; year-step-area-label-number\n";
         break;
       case TAGLIKELIHOOD:
         outfile << "\n; tagid-year-step-area-length-number\n";
