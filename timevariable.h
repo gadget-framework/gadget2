@@ -12,13 +12,12 @@ public:
   operator double() const { return value; };
   void Interchange(TimeVariable& Newtvar, Keeper* const keeper) const;
   void Update(const TimeClass* const TimeInfo);
-  void Update();
   void Delete(Keeper* const keeper) const;
   int DidChange(const TimeClass* const TimeInfo);
   int AtCurrentTime(const TimeClass* const TimeInfo) const;
   ~TimeVariable();
 private:
-  int ValuesReadFromFile;
+  int fromfile;
   int usemodelmatrix;
   int timestepnr;   //last timestep
   int time;
@@ -31,7 +30,6 @@ private:
   Formula Value;
   double lastvalue;
   double value;
-  char* description;
 };
 
 #endif

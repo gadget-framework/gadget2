@@ -7,6 +7,7 @@
 #include "commentstream.h"
 #include "popinfovector.h"
 #include "livesonareas.h"
+#include "timevariablevector.h"
 #include "keeper.h"
 
 /**
@@ -41,7 +42,7 @@ public:
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
     const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const = 0;
+    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) = 0;
   /**
    * \brief This will return the power term of the length - weight relationship
    * \return 0 (will be overridden in derived classes)
@@ -64,9 +65,11 @@ public:
    * \brief This is the default GrowthCalcA constructor
    * \param infile is the CommentStream to read the growth parameters from
    * \param areas is the IntVector of areas that the growth calculation can take place on
+   * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
-  GrowthCalcA(CommentStream& infile, const IntVector& areas, Keeper* const keeper);
+  GrowthCalcA(CommentStream& infile, const IntVector& areas,
+    const TimeClass* TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default GrowthCalcA destructor
    */
@@ -86,16 +89,16 @@ public:
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
     const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
+    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
 protected:
   /**
    * \brief This is the number of growth parameters (set to 9)
    */
   int numGrowthConstants;
   /**
-   * \brief This is the FormulaVector of growth parameters
+   * \brief This is the TimeVariableVector of growth parameters
    */
-  FormulaVector growthPar;
+  TimeVariableVector growthPar;
 };
 
 /**
@@ -134,7 +137,7 @@ public:
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
     const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
+    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
 protected:
   /**
    * \brief This is the FormulaMatrixPtrVector of increase in length for each length group
@@ -156,11 +159,12 @@ public:
    * \brief This is the default GrowthCalcC constructor
    * \param infile is the CommentStream to read the growth parameters from
    * \param areas is the IntVector of areas that the growth calculation can take place on
+   * \param TimeInfo is the TimeClass for the current model
    * \param LgrpDiv is the LengthGroupDivision of the stock
    * \param keeper is the Keeper for the current model
    * \param refWeightFile is the name of the file containing the reference weight information for the stock
    */
-  GrowthCalcC(CommentStream& infile, const IntVector& areas,
+  GrowthCalcC(CommentStream& infile, const IntVector& areas, const TimeClass* TimeInfo,
     const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeightFile);
   /**
    * \brief This is the default GrowthCalcC destructor
@@ -181,7 +185,7 @@ public:
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
     const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
+    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
   /**
    * \brief This will return the power term of the length - weight relationship
    * \return lgrowthPar[7]
@@ -202,13 +206,13 @@ protected:
    */
   int numLengthGrowthConstants;
   /**
-   * \brief This is the FormulaVector of weight growth parameters
+   * \brief This is the TimeVariableVector of weight growth parameters
    */
-  FormulaVector wgrowthPar;
+  TimeVariableVector wgrowthPar;
   /**
-   * \brief This is the FormulaVector of length growth parameters
+   * \brief This is the TimeVariableVector of length growth parameters
    */
-  FormulaVector lgrowthPar;
+  TimeVariableVector lgrowthPar;
   /**
    * \brief This is the DoubleVector of the reference weight values
    */
@@ -225,11 +229,12 @@ public:
    * \brief This is the default GrowthCalcD constructor
    * \param infile is the CommentStream to read the growth parameters from
    * \param areas is the IntVector of areas that the growth calculation can take place on
+   * \param TimeInfo is the TimeClass for the current model
    * \param LgrpDiv is the LengthGroupDivision of the stock
    * \param keeper is the Keeper for the current model
    * \param refWeightFile is the name of the file containing the reference weight information for the stock
    */
-  GrowthCalcD(CommentStream& infile, const IntVector& areas,
+  GrowthCalcD(CommentStream& infile, const IntVector& areas, const TimeClass* TimeInfo,
     const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeightFile);
   /**
    * \brief This is the default GrowthCalcD destructor
@@ -250,7 +255,7 @@ public:
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
     const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
+    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
   /**
    * \brief This will return the power term of the length - weight relationship
    * \return lgrowthPar[7]
@@ -271,13 +276,13 @@ protected:
    */
   int numLengthGrowthConstants;
   /**
-   * \brief This is the FormulaVector of weight growth parameters
+   * \brief This is the TimeVariableVector of weight growth parameters
    */
-  FormulaVector wgrowthPar;
+  TimeVariableVector wgrowthPar;
   /**
-   * \brief This is the FormulaVector of length growth parameters
+   * \brief This is the TimeVariableVector of length growth parameters
    */
-  FormulaVector lgrowthPar;
+  TimeVariableVector lgrowthPar;
   /**
    * \brief This is the DoubleVector of the reference weight values
    */
@@ -320,7 +325,7 @@ public:
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
     const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
+    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
   /**
    * \brief This will return the power term of the length - weight relationship
    * \return lgrowthPar[7]
@@ -341,13 +346,13 @@ protected:
    */
   int numLengthGrowthConstants;
   /**
-   * \brief This is the FormulaVector of weight growth parameters
+   * \brief This is the TimeVariableVector of weight growth parameters
    */
-  FormulaVector wgrowthPar;
+  TimeVariableVector wgrowthPar;
   /**
-   * \brief This is the FormulaVector of length growth parameters
+   * \brief This is the TimeVariableVector of length growth parameters
    */
-  FormulaVector lgrowthPar;
+  TimeVariableVector lgrowthPar;
   /**
    * \brief This is the DoubleVector of the reference weight values
    */
@@ -402,16 +407,16 @@ public:
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
     const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
+    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
 protected:
   /**
    * \brief This is the number of growth parameters (set to 1)
    */
   int numGrowthConstants;
   /**
-   * \brief This is the FormulaVector of growth parameters
+   * \brief This is the TimeVariableVector of growth parameters
    */
-  FormulaVector growthPar;
+  TimeVariableVector growthPar;
   /**
    * \brief This is the FormulaVector of growth rate parameters
    */
@@ -458,16 +463,16 @@ public:
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
     const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
+    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
 protected:
   /**
    * \brief This is the number of growth parameters (set to 1)
    */
   int numGrowthConstants;
   /**
-   * \brief This is the FormulaVector of growth parameters
+   * \brief This is the TimeVariableVector of growth parameters
    */
-  FormulaVector growthPar;
+  TimeVariableVector growthPar;
   /**
    * \brief This is the FormulaVector of growth rate parameters
    */
@@ -488,11 +493,11 @@ public:
    * \brief This is the default GrowthCalcH constructor
    * \param infile is the CommentStream to read the growth parameters from
    * \param areas is the IntVector of areas that the growth calculation can take place on
-   * \param LgrpDiv is the LengthGroupDivision of the stock
+   * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
   GrowthCalcH(CommentStream& infile, const IntVector& areas,
-    const LengthGroupDivision* const LgrpDiv, Keeper* const keeper);
+    const TimeClass* TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default GrowthCalcH destructor
    */
@@ -512,7 +517,7 @@ public:
   virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
     const PopInfoVector& numGrow, const AreaClass* const Area,
     const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const;
+    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
   /**
    * \brief This will return the power term of the length - weight relationship
    * \return growthPar[3]
@@ -529,9 +534,9 @@ protected:
    */
   int numGrowthConstants;
   /**
-   * \brief This is the FormulaVector of growth parameters
+   * \brief This is the TimeVariableVector of growth parameters
    */
-  FormulaVector growthPar;
+  TimeVariableVector growthPar;
 };
 
 #endif

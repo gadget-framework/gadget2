@@ -20,23 +20,19 @@ GrowthCalcBase::~GrowthCalcBase() {
 // ********************************************************
 // Functions for GrowthCalcA
 // ********************************************************
-GrowthCalcA::GrowthCalcA(CommentStream& infile,
-  const IntVector& Areas, Keeper* const keeper)
+GrowthCalcA::GrowthCalcA(CommentStream& infile, const IntVector& Areas,
+  const TimeClass* const TimeInfo, Keeper* const keeper)
   : GrowthCalcBase(Areas), numGrowthConstants(9) {
+
+  keeper->addString("growthcalcA");
+  growthPar.resize(numGrowthConstants, keeper);
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  growthPar.resize(numGrowthConstants, keeper);
-  //If Growthpar is an empty vector then only make size of vector
-  //in Growthpar == NumberOfGrowthConstants else ...
-  //Maybe should make a new function resize which demands an emtpy vector.
-  keeper->addString("growthcalcA");
-  infile >> text;
-  if (strcasecmp(text, "growthparameters") == 0) {
-    if (!(infile >> growthPar))
-      handle.Message("Incorrect format of growthpar vector");
-    growthPar.Inform(keeper);
-  } else
+  infile >> text >> ws;
+  if (strcasecmp(text, "growthparameters") == 0)
+    growthPar.read(infile, TimeInfo, keeper);
+  else
     handle.Unexpected("growthparameters", text);
   keeper->clearLast();
 }
@@ -47,16 +43,15 @@ GrowthCalcA::~GrowthCalcA() {
 void GrowthCalcA::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
+  growthPar.Update(TimeInfo);
   double stepsize = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
+  double tempL = stepsize * growthPar[0] * (growthPar[2] * Temperature + growthPar[3]);
+  double tempW = stepsize * growthPar[4] * (growthPar[7] * Temperature + growthPar[8]);
 
   int i;
-  double tempL, tempW;
-  tempL = stepsize * growthPar[0] * (growthPar[2] * Temperature + growthPar[3]);
-  tempW = stepsize * growthPar[4] * (growthPar[7] * Temperature + growthPar[8]);
-
   for (i = 0; i < Lgrowth.Size(); i++) {
     Lgrowth[i] = tempL * pow(LgrpDiv->meanLength(i), growthPar[1]) * Fphi[i];
     if (Lgrowth[i] < 0)
@@ -128,7 +123,7 @@ GrowthCalcB::~GrowthCalcB() {
 void GrowthCalcB::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
   int i;
   int inarea = AreaNr[area];
@@ -154,36 +149,29 @@ void GrowthCalcB::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 // Functions for GrowthCalcC
 // ********************************************************
 GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
-  const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeightFile)
+  const TimeClass* const TimeInfo, const LengthGroupDivision* const LgrpDiv,
+  Keeper* const keeper, const char* refWeightFile)
   : GrowthCalcBase(Areas), numWeightGrowthConstants(6),  numLengthGrowthConstants(9) {
 
-  int i, j, pos;
-  char text[MaxStrLength];
-  strncpy(text, "", MaxStrLength);
-  //If Wgrowthpar is an empty vector then only make size of vector
-  //in Wgrowthpar == NumberOfGrowthConstants else ...
-  //Maybe should make a new function resize wich demands an emtpy vector.
+  keeper->addString("growthcalcC");
   wgrowthPar.resize(numWeightGrowthConstants, keeper);
   lgrowthPar.resize(numLengthGrowthConstants, keeper);
   refWeight.resize(LgrpDiv->NoLengthGroups());
 
-  keeper->addString("growthcalcC");
-  infile >> text;
-  if (strcasecmp(text, "wgrowthparameters") == 0) {
-    if (!(infile >> wgrowthPar))
-      handle.Message("Incorrect format of wgrowthpar vector");
-    wgrowthPar.Inform(keeper);
-  } else
+  int i, j;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  infile >> text >> ws;
+  if (strcasecmp(text, "wgrowthparameters") == 0)
+    wgrowthPar.read(infile, TimeInfo, keeper);
+  else
     handle.Unexpected("wgrowthparameters", text);
 
-  infile >> text;
-  if (strcasecmp(text, "lgrowthparameters") == 0) {
-    if (!(infile >> lgrowthPar))
-      handle.Message("Incorrect format of lgrowthpar vector");
-    lgrowthPar.Inform(keeper);
-  } else
+  infile >> text >> ws;
+  if (strcasecmp(text, "lgrowthparameters") == 0)
+    lgrowthPar.read(infile, TimeInfo, keeper);
+  else
     handle.Unexpected("lgrowthparameters", text);
-  keeper->clearLast();
 
   //read information on reference weights.
   keeper->addString("referenceweights");
@@ -208,7 +196,7 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
     handle.Message("Lengths for reference weights must span the range of growth lengths");
 
   double ratio;
-  pos = 0;
+  int pos = 0;
   for (j = pos; j < LgrpDiv->NoLengthGroups(); j++)
     for (i = pos; i < tmpRefW.Nrow() - 1; i++)
       if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] && LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
@@ -217,6 +205,7 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
         pos = i;
       }
 
+  keeper->clearLast();
   keeper->clearLast();
 }
 
@@ -231,9 +220,11 @@ GrowthCalcC::~GrowthCalcC() {
 void GrowthCalcC::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
-  double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
+  wgrowthPar.Update(TimeInfo);
+  lgrowthPar.Update(TimeInfo);
+  double stepsize = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
   double ratio = lgrowthPar[0] + lgrowthPar[8] * (lgrowthPar[1] + lgrowthPar[2] * lgrowthPar[8]);
   double tempW = stepsize * wgrowthPar[0] * exp(wgrowthPar[1] * Temperature);
@@ -280,36 +271,29 @@ void GrowthCalcC::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 // Functions for GrowthCalcD
 // ********************************************************
 GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
-  const LengthGroupDivision* const LgrpDiv, Keeper* const keeper, const char* refWeightFile)
+  const TimeClass* const TimeInfo, const LengthGroupDivision* const LgrpDiv,
+  Keeper* const keeper, const char* refWeightFile)
   : GrowthCalcBase(Areas), numWeightGrowthConstants(6), numLengthGrowthConstants(8) {
 
-  int i, j, pos;
-  char text[MaxStrLength];
-  strncpy(text, "", MaxStrLength);
-  //If Wgrowthpar is an empty vector then only make size of vector
-  //in Wgrowthpar == NumberOfGrowthConstants else ...
-  //Maybe should make a new function resize wich demands an emtpy vector.
+  keeper->addString("growthcalcD");
   wgrowthPar.resize(numWeightGrowthConstants, keeper);
   lgrowthPar.resize(numLengthGrowthConstants, keeper);
   refWeight.resize(LgrpDiv->NoLengthGroups());
 
-  keeper->addString("growthcalcD");
-  infile >> text;
-  if (strcasecmp(text, "wgrowthparameters") == 0) {
-    if (!(infile >> wgrowthPar))
-      handle.Message("Incorrect format of wgrowthpar vector");
-    wgrowthPar.Inform(keeper);
-  } else
+  int i, j;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  infile >> text >> ws;
+  if (strcasecmp(text, "wgrowthparameters") == 0)
+    wgrowthPar.read(infile, TimeInfo, keeper);
+  else
     handle.Unexpected("wgrowthparameters", text);
 
-  infile >> text;
-  if (strcasecmp(text, "lgrowthparameters") == 0) {
-    if (!(infile >> lgrowthPar))
-      handle.Message("Incorrect format of lgrowthpar vector");
-    lgrowthPar.Inform(keeper);
-  } else
+  infile >> text >> ws;
+  if (strcasecmp(text, "lgrowthparameters") == 0)
+    lgrowthPar.read(infile, TimeInfo, keeper);
+  else
     handle.Unexpected("lgrowthparameters", text);
-  keeper->clearLast();
 
   //read information on reference weights.
   keeper->addString("referenceweights");
@@ -334,7 +318,7 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
     handle.Message("Lengths for reference weights must span the range of growth lengths");
 
   double ratio;
-  pos = 0;
+  int pos = 0;
   for (j = pos; j < LgrpDiv->NoLengthGroups(); j++)
     for (i = pos; i < tmpRefW.Nrow() - 1; i++)
       if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] && LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
@@ -343,6 +327,7 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
         pos = i;
       }
 
+  keeper->clearLast();
   keeper->clearLast();
 }
 
@@ -357,9 +342,11 @@ GrowthCalcD::~GrowthCalcD() {
 void GrowthCalcD::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
-  double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
+  wgrowthPar.Update(TimeInfo);
+  lgrowthPar.Update(TimeInfo);
+  double stepsize = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
   double tempW = stepsize * exp(wgrowthPar[4] * Temperature + wgrowthPar[5]) * TimeInfo->NrOfSubsteps();
 
@@ -409,37 +396,30 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   Keeper* const keeper, const char* refWeightFile)
   : GrowthCalcBase(Areas), numWeightGrowthConstants(6), numLengthGrowthConstants(9) {
 
-  char text[MaxStrLength];
-  strncpy(text, "", MaxStrLength);
-  int i, j, pos;
-  //If Wgrowthpar is an empty vector then only make size of vector
-  //in Wgrowthpar == NumberOfGrowthConstants else ...
-  //Maybe should make a new function resize wich demands an emtpy vector.
+  keeper->addString("growthcalcE");
   wgrowthPar.resize(numWeightGrowthConstants, keeper);
   lgrowthPar.resize(numLengthGrowthConstants, keeper);
   refWeight.resize(LgrpDiv->NoLengthGroups());
-
   yearEffect.resize(TimeInfo->LastYear() - TimeInfo->FirstYear() + 1, keeper);
   stepEffect.resize(TimeInfo->StepsInYear(), keeper);
   areaEffect.resize(Areas.Size(), keeper);
-  keeper->addString("growthcalcE");
-  infile >> text;
-  if (strcasecmp(text, "wgrowthparameters") == 0) {
-    if (!(infile >> wgrowthPar))
-      handle.Message("Incorrect format of wgrowthpar vector");
-    wgrowthPar.Inform(keeper);
-  } else
+
+  int i, j;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  infile >> text >> ws;
+  if (strcasecmp(text, "wgrowthparameters") == 0)
+    wgrowthPar.read(infile, TimeInfo, keeper);
+  else
     handle.Unexpected("wgrowthparameters", text);
 
-  infile >> text;
-  if (strcasecmp(text, "lgrowthparameters") == 0) {
-    if (!(infile >> lgrowthPar))
-      handle.Message("Incorrect format of lgrowthpar vector");
-    lgrowthPar.Inform(keeper);
-  } else
+  infile >> text >> ws;
+  if (strcasecmp(text, "lgrowthparameters") == 0)
+    lgrowthPar.read(infile, TimeInfo, keeper);
+  else
     handle.Unexpected("lgrowthparameters", text);
 
-  infile >> text;
+  infile >> text >> ws;
   if (strcasecmp(text, "yeareffect") == 0) {
     if (!(infile >> yearEffect))
       handle.Message("Incorrect format of yeareffect vector");
@@ -447,7 +427,7 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   } else
     handle.Unexpected("yeareffect", text);
 
-  infile >> text;
+  infile >> text >> ws;
   if (strcasecmp(text, "stepeffect") == 0) {
     if (!(infile >> stepEffect))
       handle.Message("Incorrect format of stepeffect vector");
@@ -455,14 +435,13 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   } else
     handle.Unexpected("stepeffect", text);
 
-  infile >> text;
+  infile >> text >> ws;
   if (strcasecmp(text, "areaeffect") == 0) {
     if (!(infile >> areaEffect))
       handle.Message("Incorrect format of areaeffect vector");
     areaEffect.Inform(keeper);
   } else
     handle.Unexpected("areaeffect", text);
-  keeper->clearLast();
 
   //read information on reference weights.
   keeper->addString("referenceweights");
@@ -487,7 +466,7 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
     handle.Message("Lengths for reference weights must span the range of growth lengths");
 
   double ratio;
-  pos = 0;
+  int pos = 0;
   for (j = pos; j < LgrpDiv->NoLengthGroups(); j++)
     for (i = pos; i < tmpRefW.Nrow() - 1; i++)
       if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] &&
@@ -497,6 +476,7 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
         pos = i;
       }
 
+  keeper->clearLast();
   keeper->clearLast();
 }
 
@@ -515,9 +495,11 @@ GrowthCalcE::~GrowthCalcE() {
 void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
-  double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
+  wgrowthPar.Update(TimeInfo);
+  lgrowthPar.Update(TimeInfo);
+  double stepsize = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   double Temperature = Area->Temperature(area, TimeInfo->CurrentTime());
   double factor = yearEffect[TimeInfo->CurrentYear() - TimeInfo->FirstYear()]
                     * stepEffect[TimeInfo->CurrentStep() - 1] * areaEffect[AreaNr[area]];
@@ -571,17 +553,14 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   const AreaClass* const Area, const CharPtrVector& lenindex)
   : GrowthCalcBase(Areas), numGrowthConstants(1), wgrowth(Areas.Size()) {
 
+
+  keeper->addString("growthcalcF");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  keeper->addString("growthcalcF");
-
   infile >> text >> ws;
-  growthPar.resize(numGrowthConstants, keeper);
-  if (strcasecmp(text, "growthparameters") == 0) {
-    if (!(infile >> growthPar))
-      handle.Message("Incorrect format for growth parameter");
-    growthPar.Inform(keeper);
-  } else
+  if (strcasecmp(text, "growthparameters") == 0)
+    growthPar.read(infile, TimeInfo, keeper);
+  else
     handle.Unexpected("growthparameters", text);
 
   infile >> text >> ws;
@@ -624,10 +603,11 @@ GrowthCalcF::~GrowthCalcF() {
 void GrowthCalcF::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
+  growthPar.Update(TimeInfo);
   int inarea = AreaNr[area];
-  double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
+  double stepsize = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   double kval = k_values[TimeInfo->CurrentYear() - TimeInfo->FirstYear()] * stepsize;
 
   int i;
@@ -652,17 +632,14 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   const AreaClass* const Area, const CharPtrVector& lenindex)
   : GrowthCalcBase(Areas), numGrowthConstants(1), wgrowth(Areas.Size()) {
 
+
+  keeper->addString("growthcalcG");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  keeper->addString("growthcalcG");
-
   infile >> text >> ws;
-  growthPar.resize(numGrowthConstants, keeper);
-  if (strcasecmp(text, "growthparameters") == 0) {
-    if (!(infile >> growthPar))
-      handle.Message("Incorrect format for growth parameter");
-    growthPar.Inform(keeper);
-  } else
+  if (strcasecmp(text, "growthparameters") == 0)
+    growthPar.read(infile, TimeInfo, keeper);
+  else
     handle.Unexpected("growthparameters", text);
 
   infile >> text >> ws;
@@ -705,13 +682,14 @@ GrowthCalcG::~GrowthCalcG() {
 void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
   //written by kgf 24/10 00
   //Gives linear growth (Growthpar[0] == 0) or
   //growth decreasing with length (Growthpar[0] < 0).
+  growthPar.Update(TimeInfo);
   int inarea = AreaNr[area];
-  double stepsize =  TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
+  double stepsize = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
   double kval = k_values[TimeInfo->CurrentYear() - TimeInfo->FirstYear()] * stepsize;
 
   int i;
@@ -745,24 +723,19 @@ void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 // Functions for GrowthCalcH
 // ********************************************************
 GrowthCalcH::GrowthCalcH(CommentStream& infile, const IntVector& Areas,
-  const LengthGroupDivision* const LgrpDiv, Keeper* const keeper)
+  const TimeClass* const TimeInfo, Keeper* const keeper)
   : GrowthCalcBase(Areas), numGrowthConstants(4) {
 
-  int i, j, pos;
-  char text[MaxStrLength];
-  strncpy(text, "", MaxStrLength);
+  keeper->addString("growthcalcH");
   growthPar.resize(numGrowthConstants, keeper);
 
-  keeper->addString("growthcalcH");
-  infile >> text;
-  //parameters are linf, k and a and b for the weight
-  if (strcasecmp(text, "growthparameters") == 0) {
-    if (!(infile >> growthPar))
-      handle.Message("Incorrect format of growthpar vector");
-    growthPar.Inform(keeper);
-  } else
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  infile >> text >> ws;
+  if (strcasecmp(text, "growthparameters") == 0)
+    growthPar.read(infile, TimeInfo, keeper);
+  else
     handle.Unexpected("growthparameters", text);
-
   keeper->clearLast();
 }
 
@@ -774,8 +747,9 @@ GrowthCalcH::~GrowthCalcH() {
 void GrowthCalcH::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) const {
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
+  growthPar.Update(TimeInfo);
   double mult = 1.0 - exp(-growthPar[1] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
 
   //JMB - first some error checking

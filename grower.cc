@@ -49,16 +49,16 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
 
   switch(functionnumber) {
     case 1:
-      growthcalc = new GrowthCalcA(infile, areas, keeper);
+      growthcalc = new GrowthCalcA(infile, areas, TimeInfo, keeper);
       break;
     case 2:
       growthcalc = new GrowthCalcB(infile, areas, TimeInfo, keeper, Area, lenindex);
       break;
     case 3:
-      growthcalc = new GrowthCalcC(infile, areas, LgrpDiv, keeper, refWeight);
+      growthcalc = new GrowthCalcC(infile, areas, TimeInfo, LgrpDiv, keeper, refWeight);
       break;
     case 4:
-      growthcalc = new GrowthCalcD(infile, areas, LgrpDiv, keeper, refWeight);
+      growthcalc = new GrowthCalcD(infile, areas, TimeInfo, LgrpDiv, keeper, refWeight);
       break;
     case 5:
       growthcalc = new GrowthCalcE(infile, areas, TimeInfo, LgrpDiv, keeper, refWeight);
@@ -72,10 +72,10 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
       fixedweights = 1;
       break;
     case 8:
-      growthcalc = new GrowthCalcH(infile, areas, LgrpDiv, keeper);
+      growthcalc = new GrowthCalcH(infile, areas, TimeInfo, keeper);
       break;
     default:
-      handle.Message("Illegal growthfunction number");
+      handle.Message("Error in stock file - unrecognised growth function", functionname);
       break;
   }
 

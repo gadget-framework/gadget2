@@ -63,7 +63,7 @@ int TimeVariableIndexVector::DidChange(const TimeClass* const TimeInfo) const {
   int i;
   for (i = 0; i < size; i++)
     didchange = didchange + v[i].DidChange(TimeInfo);
-  return didchange > 0;
+  return (didchange > 0 ? 1 : 0);
 }
 
 void TimeVariableIndexVector::Update(const TimeClass* const TimeInfo) {
