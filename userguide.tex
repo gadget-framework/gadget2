@@ -1673,7 +1673,8 @@ multinomial - use a multinomial function\newline
 pearson - use a Pearson function\newline
 gamma - use a gamma function\newline
 sumofsquares - use a sum of squares function\newline
-mvn - use a multivariate normal function
+mvn - use a multivariate normal function\newline
+mvlogistic - use a multivariate logistic function
 
 \bigskip
 The $<$multivariate parameters$>$ are only required for the multivariate functions, and Gadget will generate an error if they are specified when they are not required.  These parameters are described in the following sections.
@@ -1753,9 +1754,9 @@ For the formulation of the multivariate normal function, $<\Sigma>$ is calculate
 \begin{equation}\label{eq:cdsigma2}
 \sigma_{ij} =
 \begin{cases}
-  \sum^n_{l=1} c_l \sigma_{i-l,j} + \delta_{ij} \sigma^2
-  & \textrm{if $i > j$}\\
-  0
+  \sum^n_{l=1} c_l \sigma_{i-l,j} + \delta^i_{j} \sigma^2
+  & \textrm{if $i \geq j$}\\
+  \sum^n_{l=1} c_l \sigma_{j,i-l}
   & \textrm{otherwise}
 \end{cases}
 \end{equation}
@@ -1776,6 +1777,33 @@ param                <correlation parameter>
 aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
 ...
 \end{verbatim}}
+
+\subsection{Multivariate Logistic function}
+The multivariate logistic function calculates the likelihood component
+from equation \ref{eq:catchdist6} below:
+
+\begin{equation}\label{eq:catchdist6}
+\ell = \frac{1}{2\sigma^2} \sum_{\it time}\sum_{\it areas}\sum_{\it
+  ages}\sum_{\it lengths} log(\sigma)-\nu_{tral}^2 
+\end{equation}
+where: $$\nu_{lt}=log(P_{tral})-log(\pi_{tral}})-\frac{1}{L}\sum_{\it length}
+(log(P_{tral})-log(\pi_{tral}))$$
+$<$ P $>$ is the proportion of the data sample for that time/area/age combination\newline
+$<\pi>$ is the proportion of the model sample for that time/area/age
+  combination
+
+\noindent To specify this likelihood function it is necessary to
+specify the parameter $<$sigma$>$. This is done in the likelihood
+file as shown below:
+{\small\begin{verbatim}
+...
+function             mvlogistic
+sigma                <sigma>   
+aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole
+year
+...
+\end{verbatim}}
+
 
 \section{CatchStatistics}\label{sec:catchstat}
 The CatchStatistics likelihood component is used to compare statistical data sampled from the model with statistical data sampled from landings or surveys.  This is typically used to compare biological data, such as the mean length at age or mean weight at age.  The likelihood score that is calculated gives some measure as to how well the data from the model fits to the data from the landings.
