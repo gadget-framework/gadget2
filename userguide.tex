@@ -22,7 +22,6 @@ This is a draft document, which is currently incomplete\newline
 The following sections are blank for this draft\newline
 \newline
 section~\ref{sec:stockmigrate} - stock migration\newline
-section~\ref{sec:stomach} - stomach contents likelhood component\newline
 \newline
 *** warning *** warning *** warning *** warning *** warning ***\newline
 
@@ -30,13 +29,18 @@ section~\ref{sec:stomach} - stomach contents likelhood component\newline
 \pagenumbering{arabic}
 
 \chapter{Introduction to Gadget}\label{chap:intro}
-Gadget is the {\bf G}lobally applicable {\bf A}rea-{\bf D}isaggregated {\bf G}eneral {\bf E}cosystem {\bf T}oolbox.  Gadget is a flexible and powerful tool for creating ecosystem models.  The program was developed for modelling marine ecosystems in a fisheries management and biology context, however there is nothing in the program that restricts it to fish, and models have been developed to examine marine mammal populations.  Gadget has been used to investigate the population dynamics of many stocks and stock complexes in Icelandic waters, the Barents Sea, the North Sea and the Irish and Celtic Seas.
+Gadget is the {\bf G}lobally applicable {\bf A}rea-{\bf D}isaggregated {\bf G}eneral {\bf E}cosystem {\bf T}oolbox.  Gadget is a flexible and powerful software tool that has been developed to model marine ecosystems, including both the impact of the interactions between species and the impact of fisheries harvesting the species.  Gadget simulates these processes in a biologically realistic manner, and uses a framework to test the development of the modelled ecosystem in a statistically rigorous manner.  Gadget has successfully been used to investigate the population dynamics of stock complexes in Icelandic waters, the Barents Sea, the North Sea and the Irish and Celtic Seas.
 
 \section{What is Gadget?}\label{sec:whatisgadget}
-Gadget can run complicated statistical ecosystem models, which take many features of the ecosystem into account. Gadget works by running an internal model based on many parameters, and then comparing the data from the output of this model to ''real'' data to get a goodness-of-fit likelihood score.  The parameters can then be adjusted, and the model re-run, until an optimum is found, which corresponds to the model with the lowest likelihood score.
+Gadget can run complicated statistical models which take many features of the ecosystem into account. Gadget works by running an internal forward projection model based on many parameters describing the ecosystem, and then comparing the output from this model to observed measurements to get a likelihood score.  The model ecosystem parameters can then be adjusted, and the model re-run, until an optimum is found, which corresponds to the model with the lowest likelihood score.  This iterative, computationally intensive process is handled within Gadget, using a robust minimisation algorithm.  The Gadget software framework consists of three parts:
 
-\bigskip
-Gadget allows you to include a number of features into your model: One or more species, each of which may be split into multiple stocks; multiple areas with migration between areas; predation between and within species; maturation; reproduction and recruitment; multiple commercial and survey fleets taking catches from the populations.
+\begin{itemize}
+\item a parametric model to {\bf simulate} the ecosystem
+\item statistical functions to {\bf compare} the model output to data
+\item search algorithms to {\bf optimise} the model parameters
+\end{itemize}
+
+Gadget allows the user to include a number of features of the ecosystem into the model: One or more species, each of which may be split into multiple components; multiple areas with migration between areas; predation between and within species; growth; maturation; reproduction and recruitment; multiple commercial and survey fleets taking catches from the populations.
 
 \bigskip
 Like any large piece of code, Gadget is based on previous ideas by several authors.  Conceptually the modelling framework extends earlier multi species programming work such as MSVPA and MULTSPEC into a more generic statistical framework.  Alternatively, Gadget is a conceptual extension of the Stock Synthesis statistical assessment single-species framework into a multi species setting.
@@ -57,7 +61,7 @@ Gadget is distributed via anonymous ftp from the MRI ftp site, and the address o
 ftp://ftp.hafro.is/pub/reiknid/dst2/gadget/
 \end{verbatim}}
 
-The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.0.06, so the file to be downloaded is gadget2.0.06.tar.gz.
+The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.0.07, so the file to be downloaded is gadget2.0.07.tar.gz.
 
 \bigskip
 Gadget is a program that runs on a Unix computing platform, and is regularly tested on machines running versions of Solaris, Linux, Mac OSX and Cygwin (a Unix emulator for Microsoft Windows machines).  It should also run on other versions of Unix, but this may require modifications to the makefile in order to do so.  Gadget is distributed as a set of source code files, which need to be compiled into an executable program before it can be run.  To allow for various different versions, the makefile has a list of supported computing platforms, so the makefile should be checked (and if necessary changed) to ensure that the required options are available before the source code is compiled.  The default options in the makefile will compile Gadget for a Linux machine, using the GNU C++ compiler.  A summary of the commands required to compile Gadget, using the default options for a Linux machine from the downloaded file are:
@@ -78,11 +82,11 @@ A web site has been set up that contains details of the most recent changes to G
 http://www.hafro.is/gadget
 \end{verbatim}}
 
-Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.0.06 on a Linux machine:
+Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.0.07 on a Linux machine:
 
 {\small\begin{verbatim}
-gunzip gadget2.0.06.tar.gz
-tar -xvf gadget2.0.06.tar
+gunzip gadget2.0.07.tar.gz
+tar -xvf gadget2.0.07.tar
 cd source
 make
 \end{verbatim}}
@@ -97,7 +101,7 @@ gadget <options>
 where $<$options$>$ are a combination of the starting switches described in the next section.
 
 \bigskip
-Gadget is not an interactive program, so once it has started there is no need for any further input from the user.  However, if Gadget was started incorrectly (for example, using the wrong input files) then Gadget can be stopped by pressing $<$CTRL$>$$<$C$>$, which will interrupt the calculations, displaying a menu from which it is possible to either store the current calculations to a text file, or to exit (by pressing $<$Q$>$).
+Gadget is not an interactive program, so once it has started there is no need for any further input from the user.  However, if Gadget was started incorrectly (for example, using the wrong input files) then Gadget can be stopped by pressing $<$CTRL$><$C$>$, which will interrupt the calculations, displaying a menu from which it is possible to either store the current calculations to a text file, or to exit (by pressing $<$Q$>$).
 
 \bigskip
 When Gadget starts, it will look for a file called ''main'', which contains a list of all the other data files required.  Gadget will search for this file in the following 2 locations:
@@ -180,7 +184,6 @@ gadget -o <filename>
 \end{verbatim}}
 Starting Gadget with the -o switch specifies the file that Gadget will use to print the output from the likelihood calculations.  This file will give details on the parameters that have been used, the likelihood components that have been used, and the values for these parameters and likelihood components.  This can be a large file if Gadget is performing an optimising run (see Output Files, section~\ref{chap:output}, for more information on the format of this file).
 
-\newpage %JMB manual page break inserted
 {\small\begin{verbatim}
 gadget -co <filename>
 \end{verbatim}}
@@ -189,7 +192,7 @@ Starting Gadget with the -co switch specifies the file that Gadget will use to p
 {\small\begin{verbatim}
 gadget -print1 <number>
 \end{verbatim}}
-Starting Gadget with the -print1 switch will specify the frequency with which information is written to the likelihood output file (specified with the -o switch).  The default value for this is 1, meaning that the likelihood information is written for every iteration,
+Starting Gadget with the -print1 switch will specify the frequency with which information is written to the likelihood output file (specified with the -o switch).  The default value for this is 1, meaning that the likelihood information is written for every iteration.
 
 {\small\begin{verbatim}
 gadget -print2 <number>
@@ -216,7 +219,6 @@ gadget -printfinal <filename>
 \end{verbatim}}
 Starting Gadget with the -printfinal switch will specify a file to which Gadget will write all internal information for the model at the end of the run (ie. the stock populations, likelihood calculations and other information from after the last timestep).  This file will be large for moderately complicated models, and it is of most use for debugging purposes.
 
-\newpage %JMB manual page break inserted
 {\small\begin{verbatim}
 gadget -printlikelihood <filename>
 \end{verbatim}}
@@ -317,9 +319,6 @@ fleetfiles          <names of the fleet files>
 likelihoodfiles     <names of the likelihood files>
 \end{verbatim}}
 
-%JMB removed fleksibest stuff from the documentation
-%If the word ''mortalitymodel'' is present, Gadget will run a fishing-mortality based model based on the Fleksibest models developed in Bergen by the Institute of Marine Research, Norway.  Otherwise, Gadget will run a model based on the Bormicon formulation developed in Reykjavik by the Marine Research Institute, Iceland.
-
 The printfile element of the main file is optional, and can be commented out if no model output is required.  It should be noted that the keyword ''printfiles'' must be present, so to comment out the printfile section, a semi colon should be placed before the name of the printfile, as shown in the line below:
 
 {\small\begin{verbatim}
@@ -327,7 +326,7 @@ printfiles ; <filename> commented out so no printing will take place
 \end{verbatim}}
 
 \section{Time File}\label{sec:timefile}
-This specifies the start and end times for the model run, and the number of timesteps per year. Note that the model can run into the future, and that datasets covering only part of the overall run can be used.  At this point we are only specifying the model run, and not saying anything about the data files.  Gadget splits each year up into a number of time steps, but these time steps need not all be the same length.
+This specifies the start and end times for the model run, and the number of timesteps per year. Note that the model can run into the future, and that datasets covering only part of the overall run can be used.  Gadget splits each year up into a number of time steps, but these time steps need not all be the same length.
 
 \bigskip
 The format for this file is a list of the first year and timestep, and the last year and timestep, and how each year is to be divided into timesteps.  This is done by specifying first the number of timesteps in a year, and then the length of each timestep (in months), and Gadget will check that the number of timesteps in a year sums up to 12.  This is shown below:
@@ -340,22 +339,22 @@ laststep        <last step>
 notimesteps     <how the year is split up>
 \end{verbatim}}
 
-Examples for how the year is split up can include:\newline
+Examples for how the year is split up can include:
 
-1 - equal timesteps, splitting the year into 4 quarters
 {\small\begin{verbatim}
 notimesteps     4 3 3 3 3
 \end{verbatim}}
+which will result in 4 equal timesteps, splitting the year into quarters
 
-2 - equal timesteps, splitting the year into 12 months
 {\small\begin{verbatim}
 notimesteps     12 1 1 1 1 1 1 1 1 1 1 1 1
 \end{verbatim}}
+which will result in 12 equal timesteps, splitting the year into months
 
-3 - unequal timesteps, splitting the year into 6 periods, $<$January - February$>$, $<$March$>$, $<$April - June$>$, $<$July - September$>$, $<$October$>$ and $<$November - December$>$
 {\small\begin{verbatim}
 notimesteps     6 2 1 3 3 1 2
 \end{verbatim}}
+which will result in 6 unequal timesteps, splitting the year into the following periods, $<$January - February$>$, $<$March$>$, $<$April - June$>$, $<$July - September$>$, $<$October$>$ and $<$November - December$>$
 
 \section{Area File}\label{sec:areafile}
 This file specifies which areas the model will be run on, and gives a time dependent temperature for each area.  Note that although the temperature data must be provided it need not actually be used, depending on the growth and feeding options chosen for the stock file.
@@ -371,43 +370,7 @@ temperature
 \end{verbatim}}
 
 \section{Other Input Data Files}\label{sec:otherinputfile}
-There are three other types of input that are important since they are used in other data files to denote a grouping of data.  These are ActionAtTime, which is used to denote the timesteps that an action takes place, Aggregation files, which are files used to gather data into convenient groups, and TimeVariable files, which are files used to denote variables that can vary over time.
-
-\subsection{ActionAtTime}
-ActionAtTime is a simple list of timesteps when a specified action (for example printing) will take place.  The format for this is:
-
-{\small\begin{verbatim}
-<year>  <step>
-\end{verbatim}}
-
-where year and step are either a valid timestep or the keyword ''all''.  These can be grouped together to specify a more complex time period.\newline
-
-Some examples of this are:
-{\small\begin{verbatim}
-2002    1
-\end{verbatim}}
-will result in the action taking place on the first timestep of 2002.
-
-{\small\begin{verbatim}
-2000    all
-\end{verbatim}}
-will result in the action taking place on all timesteps of 2000.
-
-{\small\begin{verbatim}
-all     2
-\end{verbatim}}
-will result in the action taking place on the second timestep of each year.
-
-{\small\begin{verbatim}
-all     all
-\end{verbatim}}
-will result in the action taking place on all timesteps of each year.
-
-{\small\begin{verbatim}
-all     1
-all     2
-\end{verbatim}}
-will result in the action taking place on the first and second timesteps of each year.
+There are three other types of input that are important since they are used in other data files to denote a grouping of data.  These are Aggregation files, which are files used to gather data into convenient groups, TimeVariable files, which are files used to denote variables that can vary over time, and ActionAtTime, which is used to define the timesteps that an action takes place within a data file.
 
 \subsection{Aggregation Files}
 Aggregation files are important since they are used to group the data in convenient groups.  They consist of a text label (used to identify the group in the data) followed by a list of the data that the label represents.  This data will then be read in from an associated data file.  There are aggregation files to group areas, ages, lengths or preys together.  Aggregation files can contain comments and blank lines, to make the format easier to view in a text editor.
@@ -502,7 +465,6 @@ digestioncoefficients    1  0  0
 
 This example shows that for the associated data file, the label ''SmallCapelin'' will be interpreted as applying to immature capelin (a stock called immature.capelin) of lengths 5 to 10, the label ''MediumCapelin'' will be interpreted as applying to immature and mature capelin (stocks immature.capelin and mature.capelin) of lengths 10 to 15, and the label ''LargeCapelin'' will be interpreted as applying to mature capelin (a stock called mature.capelin) of lengths 15 to 20.
 
-\newpage %JMB manual page break inserted
 \subsection{TimeVariable Files}
 TimeVariable files are used in place of a single variable in the input files, to define variables in the Gadget model that can vary over time.  They are used by specifying the name of the TimeVariable file in place of the value or parameter in the input file.  TimeVariable files can contain comments and blank lines, to make the format easier to view in a text editor.
 
@@ -531,6 +493,42 @@ data
 
 This example shows that the the parameter ''grow1995'' is to be used for growth in 1995, ''grow1996'' is to be used in 1996 and so on through to ''grow2000'' which is to be used from 2000 through to the end of the simulation.  Note that this example assumes that the first timestep of the simulation is the first timestep in 1995.
 
+\subsection{ActionAtTime}
+ActionAtTime is a simple list of timesteps within a data file that define when a specified action (for example printing) will take place.  The format for this is:
+
+{\small\begin{verbatim}
+<year>  <step>
+\end{verbatim}}
+
+where year and step are either a valid timestep or the keyword ''all''.  These can be grouped together to specify a more complex time period.\newline
+
+Some examples of this are:
+{\small\begin{verbatim}
+2002    1
+\end{verbatim}}
+which will result in the action taking place on the first timestep of 2002.
+
+{\small\begin{verbatim}
+2000    all
+\end{verbatim}}
+which will result in the action taking place on all timesteps of 2000.
+
+{\small\begin{verbatim}
+all     2
+\end{verbatim}}
+which will result in the action taking place on the second timestep of each year.
+
+{\small\begin{verbatim}
+all     all
+\end{verbatim}}
+which will result in the action taking place on all timesteps of each year.
+
+{\small\begin{verbatim}
+all     1
+all     2
+\end{verbatim}}
+which will result in the action taking place on the first and second timesteps of each year.
+
 \chapter{Stock Files}\label{chap:stock}
 The stock files contain all the information that Gadget requires for each stock in the model.  To define the stock files in the Gadget model, the following lines are required in the ''main'' Gadget file:
 
@@ -538,11 +536,6 @@ The stock files contain all the information that Gadget requires for each stock 
 [stock]
 stockfiles             <names of the stock files>
 \end{verbatim}}
-
-%JMB removed fleksibest stuff from the documentation
-%If the word ''mortalitymodel'' is present, Gadget will run a fishing-mortality based model based on the Fleksibest models developed in Bergen by the Institute of Marine Research, Norway.  Otherwise, Gadget will run a model based on the Bormicon formulation developed in Reykjavik by the Marine Research Institute, Iceland.
-
-%The Bormicon formulation is the default method for defining a Gadget model.  For this formulation, the ''main'' file needs to list the files that define the stocks to be used in the model.  Each stock requires a separate stock file.  The section of the ''main'' file required to declare the stock files is repeated below:
 
 The ''main'' file needs to list the files that define the stocks to be used in the model.  Each stock requires a separate stock file.  The information for the stocks are very detailed, and so these stock files are quite large and can be complicated to look at.  The basic format for this file is:
 
@@ -578,7 +571,7 @@ The reference weight section lists the weight of the stock for various length gr
 refweightfile          <name of the reference weight file>
 \end{verbatim}}
 
-The format of the reference weight file is simply a 2 column list of the length and the corresponding weight for the stock.  This file is ordered so that the smallest length group is given first, up to the longest length group which is given last.  The format for this file is shown below:
+The format of the reference weight file is simply a two column list of the length and the corresponding weight for the stock.  This file is ordered so that the smallest length group is given first, up to the longest length group which is given last.  The format for this file is shown below:
 
 {\small\begin{verbatim}
 <length>  <weight>
@@ -1081,7 +1074,7 @@ sdev                   <standard deviation multiplier>
 The optional $<$standard deviation multiplier$>$ value is used to scale the standard deviation of the length of the initial stock.  The standard deviation used in calculating the length distribution will be multiplied by this value.  If it is not specified, then it is assumed to have a value of 1 (ie, no scaling will take place).
 
 \bigskip
-There are 2 formats for the initial stock distribution data, as given below:
+There are two formats for the initial stock distribution data, as given below:
 
 \bigskip
 Normal - use a Normal function to generate the length distribution\newline
@@ -1128,11 +1121,10 @@ The migration section of the stock file determines if, and how, the stock will m
 doesmigrate            <0 or 1> ; 0 for no migration, 1 for migration
 \end{verbatim}}
 
-If the stock does not migrate, then the following section doesn't apply, and the next section of the input file is the maturation, given in section~\ref{sec:stockmature} below.  If the stock does migrate, then further information about the migration is required.  The next line contains a flag to show whether the migration of the stock is dependent on the age of the stock, and then the migration data is given in a data file.  Thus the format for the migration data, in the main stock file, is given below:
+If the stock does not migrate, then the following section doesn't apply, and the next section of the input file is the maturation, given in section~\ref{sec:stockmature} below.  If the stock does migrate, then further information about the migration is required.  This is given in a separate file, so the format for the migration data, in the main stock file, is given below:
 
 {\small\begin{verbatim}
 doesmigrate            1
-agedependentmigration  <0 or 1> ; 1 for age dependent migration
 migrationfile          <name of migration data file>
 \end{verbatim}}
 
@@ -1162,7 +1154,10 @@ constantweight - use the ConstantWeight maturation function\newline
 fixedlength - use the FixedLength maturation function
 
 \bigskip
-The format for the data in the maturity data file is dependent on the maturity function that is to be used.  All the maturity functions require the name of the mature stocks that the immature stock will mature into, and the ratio of the maturing part of the immature stock that is to mature into each mature stock.  This allows for part of an immature stock to mature into more than one mature stock, so for example, an immature stock could mature either into a male mature stock or a female mature stock.
+The format for the data in the maturity data file is dependent on the maturity function that is to be used.  All the maturity functions require the name of the mature stocks that the immature stock will mature into, and the ratio of the maturing part of the immature stock that is to mature into each mature stock.  This allows for part of an immature stock to mature into more than one mature stock, so for example, an immature stock could mature into either a male mature stock or a female mature stock.
+
+\bigskip
+The maturity functions calculate the proportion of the fish in each age-length group that will become mature, and then move these fish from the age-length group for the current stock into the corresponding age-length group for the mature stock.  Note that there is a check to ensure that the corresponding age-length group exists for the mature stock, and if it doesn't then the fish don't become mature and will stay in the immature stock.
 
 \subsection{Continuous Maturity Function}
 This maturity function calculates the proportion of an age-length group of an immature stock that becomes mature according to the maturity equations~\ref{eq:mat1a} and \ref{eq:mat1b} given below:
@@ -1237,19 +1232,21 @@ maturitylengths             <vector of lengths>
 Note that the $<$vector of timesteps$>$ and the $<$vector of lengths$>$ need to be the same size.
 
 \section{Movement (''Transition'')}\label{sec:stockmove}
-The movement section of the stock file determines if, and how, the stock will move (into a different stock) in the Gadget model.  This allows for a Gadget model to be set up with different stock files for stock that is the same species, but with differing properties (for instance age or maturity status) and for the entries to move between these stocks when required.  For the current version of Gadget, the only movement between stocks that is valid is for the stock in the oldest age-group of one stock to move into a different stock.  The format for the first part of the movement section is given below:
+The movement section of the stock file determines if, and how, the stock will move (into a different stock) in the Gadget model.  This allows for a Gadget model to be set up with different stock files for stock that is the same species, but with differing properties (for instance age or maturity status) and for the entries to move between these stocks when required.  For the current version of Gadget, the only movement between stocks that is valid is for the stock in the oldest age group of one stock to move into a different stock.  The format for the first part of the movement section is given below:
 
 {\small\begin{verbatim}
 doesmove               <0 or 1> ; 0 for no movement, 1 for movement
 \end{verbatim}}
 
-If the stock does not move, then the following section doesn't apply, and the next section of the input file is the renewal, given in section~\ref{sec:stockrenew} below.  If the stock does move, then the information required to define the movement is the timestep for the movement to occur (since the movement is assumed to be an annual event) and the names of the stocks to move the oldest age-group into, along with the ratio of the oldest age group that will move into that particular stock (in a similar manner to that used for the maturation, given in section~\ref{sec:stockmature}).  Thus the full format for the movement of the stock is given below:
+If the stock does not move, then the following section doesn't apply, and the next section of the input file is the renewal, given in section~\ref{sec:stockrenew} below.  If the stock does move, then the information required to define the movement is the timestep for the movement to occur (since the movement is assumed to be an annual event) and the names of the stocks to move the oldest age group into, along with the ratio of the oldest age group that will move into that particular stock.  Thus the full format for the movement of the stock is given below:
 
 {\small\begin{verbatim}
 doesmove                    1
 transitionstocksandratios   <stockname i>  <ratio i> ; for each stock i
 transitionstep              <timestep for the stock to move>
 \end{verbatim}}
+
+The movement function simples move the fish from the oldest age-length groups for the current stock into the corresponding age-length group for the stock that the fish will move into (in a similar manner to that used for the maturation, given in section~\ref{sec:stockmature}).  Note that there is a check to ensure that the corresponding age-length group exists, and if it doesn't then the fish don't move and will stay in the oldest age group for current stock, which is modelled as a plus group.
 
 \section{Renewal (''Recruitment'')}\label{sec:stockrenew}
 The renewal section of the stock file determines if, and how, the stock will be renewed in the Gadget model. The format for the first part of the renewal section is given below:
@@ -1281,6 +1278,7 @@ dl                     <step size for the recruits>
 <renewal data>
 \end{verbatim}}
 
+%JMB - what about recruitment specifying the actual number of new fish ...
 The $<$dl$>$ value is optional, and can be used to specify a different step size for the recruits than for the stock that the recruits will be added to.  If this value is not specified here then the recruits will be given the same step length as for the stock they will be added to.
 
 \bigskip
@@ -1306,7 +1304,7 @@ doesspawn              1
 spawnfile              <name of the spawning data file>
 \end{verbatim}}
 
-The spawning data file defines what happens to the stock as it spawns.  The spawning is length-dependent, and the affect that spawning has on each length-group of the mature stock is given by the spawning equations~\ref{eq:spawn1} and \ref{eq:spawn2} below:
+The spawning data file defines what happens to the stock as it spawns.  The spawning is length-dependent, and the affect that spawning has on each length group of the mature stock is given by the spawning equations~\ref{eq:spawn1} and \ref{eq:spawn2} below:
 
 \begin{equation}\label{eq:spawn1}
 N = N {\left(1 + R {(e^{-m} - 1)}\right)}
@@ -1422,7 +1420,7 @@ The length selection function determines how the proportion of the length group 
 <function>    <functionname> <parameters>
 \end{verbatim}}
 
-The $<$function$>$ defines how the length selection function will be used (for an example, see section~\ref{sec:stockspawn} above).  The $<$functionname$>$ defines which selection function is to be used to calculate the selection of the stock.  Currently there are 3 selection functions defined, and the valid length selection function names are:
+The $<$function$>$ defines how the length selection function will be used (for an example, see section~\ref{sec:stockspawn} above).  The $<$functionname$>$ defines which selection function is to be used to calculate the selection of the stock.  Currently there are three selection functions defined, and the valid length selection function names are:
 
 \bigskip
 constant - use the Constant selection function\newline
@@ -1495,68 +1493,6 @@ strayareas             <vector of areas>
 straystocksandratios   <stockname i> <ratio i> ; for each stock i
 proportionfunction     <see Length Selection>
 \end{verbatim}}
-
-%JMB removed fleksibest stuff from the documentation
-%\section{Stock - Fleksibest Formulation}\label{sec:fleksistock}
-%The Fleksibest formulation is an optional method for defining a Gadget model.  For this formulation, the ''main'' file needs to contain the keyword ''mortalitymodel'', followed by a list the files that define the stocks to be used in the model.  Each stock requires a separate stock file.  The section of the ''main'' file required to declare the stock files is repeated below:
-
-%{\small\begin{verbatim}
-%[stock]
-%mortalitymodel
-%stockfiles             <names of the stock files>
-%\end{verbatim}}
-
-%The information for the stocks are very detailed, and so these stock files are quite large and can be complicated to look at.  The basic format for this file is very similar to the format used for a Bormicon model formulation, described above.  The format for the stock file in this case is given below:
-
-%{\small\begin{verbatim}
-%stockname              <name of the stock>
-%livesonareas           <areas that the stock lives on>
-%minage                 <minimum age for the stock>
-%maxage                 <maximum age for the stock>
-%minlength              <minimum length for the stock>
-%maxlength              <maximum length for the stock>
-%dl                     <step size for the length groups>
-%refweightfile          <see Reference Weight>
-%growthandeatlengths    <see Growth and Eat Lengths>
-%doesgrow               <see Growth>
-%iseaten                <see Stock Prey>
-%cannibalism            <see Cannibalism>
-%doeseat                <see Length Stock Predator>
-%lennaturalm            <see Length Natural Mortality>
-%initialconditions      <see Initial Conditions>
-%doesmigrate            <see Migration>
-%doesmature             <see Maturation>
-%doesmove               <see Movement>
-%doesrenew              <see Renewal>
-%doesspawn              <see Spawning>
-%filter                 <filter level>
-%\end{verbatim}}
-
-%The filter level is a simple filter, used to reduce the calculation time.  Any age/length cell that has a population that is less than the value of $<$filter level$>$ is set to zero, and then any growth, consumption, migration, maturation or spawning is not calculated.
-
-%\bigskip
-%Apart from the filter level, the only areas that are different from the stock file for the Bormicon formulation are listed below, for the rest of this file see the descriptions in section~\ref{sec:bormstock}:
-
-%{\small\begin{verbatim}
-%cannibalism            <see Cannibalism>
-%doeseat                <see Length Stock Predator>
-%lennaturalm            <see Length Natural Mortality>
-%\end{verbatim}}
-
-%These are covered in the following sub sections.
-
-%\subsection{Cannibalism}\label{subsec:stockcannibalism}
-%[CURRENTLY BLANK - INSERT DESCRIPTION FROM BERGEN]
-
-%\subsection{Length Stock Predator}
-%For the current version of the Fleksibest formulation of the stock, the only predation that can be defined is covered by the Cannibalism (see section~\ref{subsec:stockcannibalism} above).  There is no dynamic predator - prey relationship in the model.  Hence, the predator entry in the stock file should be set to zero, as shown below:
-
-%{\small\begin{verbatim}
-%doeseat                0
-%\end{verbatim}}
-
-%\subsection{Length Natural Mortality}\label{subsec:lennatmort}
-%[CURRENTLY BLANK - INSERT DESCRIPTION FROM BERGEN]
 
 \chapter{Tag Files}\label{chap:tag}
 The tag files contain the information about the tagging experiments that are to be included in the Gadget model.  Gadget will keep track of the number, and proportion, of fish in an age-length cell that have been tagged for a tagging experiment.  This information can then be compared to the recaptures from that tagging experiment when calculating a likelihood score (see Recaptures, section~\ref{sec:recaptures}).
@@ -1670,7 +1606,7 @@ There are two types of fleets implemented in Gadget, and the main fleet file lis
 <fleet data>
 \end{verbatim}}
 
-The fleet data for each fleet type is covered in the sub sections below.  The $<$type$>$ defines the type of fleet for the $<$fleetname$>$ fleet, and the 2 valid fleet types that can used in Gadget are:
+The fleet data for each fleet type is covered in the sub sections below.  The $<$type$>$ defines the type of fleet for the $<$fleetname$>$ fleet, and the two valid fleet types that can used in Gadget are:
 
 \bigskip
 TotalFleet\newline
@@ -1722,31 +1658,8 @@ The fleets act as a predator, so Gadget also requires a suitability function to 
 \bigskip
 The fleet of type LinearFleet acts a simple predator, and can be used for fleets acting in the future, when the landings data is not available.
 
-%JMB removed fleksibest stuff from the documentation
-%\section{MortalityFleet}\label{sec:mortalityfleet}
-%The fleet type used that creates a predator to be used in a mortality model is called ''MortalityFleet''.  This fleet type only makes sense if rest of the Gadget model is also based on a mortality model - ie. the ''main'' file contains the keyword ''mortalitymodel''.  This fleet type is defined by specifying the fleet name and areas it operates on, minimum and maximum length of fish caught (for compatibility with the printer types).
-
-%\bigskip
-%The file format for the MortalityFleet is given below:
-
-%{\small\begin{verbatim}
-%[fleetcomponent]
-%mortalityfleet         <fleetname>
-%livesonareas           <areas>
-%lengths                <min>  <max>
-%suitability            <see Fleet Suitability>
-%calcflev               <see Fleet Level>
-%amount                 <see Fleet Amounts>
-%\end{verbatim}}
-
-%The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The total amount that has been landed by the fleet is also required - this is taken for the landings data, based on timestep and area, and is specified in a separate file.
-
 \section{Fleet Suitability}\label{sec:fleetsuit}
 The suitability determines how the fleets act on the stocks that are caught.  Since Gadget treats the fleets as predators of the stocks, the format for the suitability functions for the fleets is the same as the format for the suitability functions of the stock when they are acting as a predator.  The format for the suitability functions as discussed in section~\ref{sec:suitability} above.
-
-%JMB removed fleksibest stuff from the documentation
-%\section{Fleet Level}\label{sec:fleetlevel}
-%[CURRENTLY BLANK - INSERT DESCRIPTION FROM BERGEN]
 
 \section{Fleet Amounts}\label{sec:fleetamount}
 The amounts section of the fleet file gives the landings data for the fleets.  This data is listed in a column format in a separate file, so the main fleet file simply gives the name of this fleet data file, as shown in the example below:
@@ -1862,7 +1775,7 @@ would define a default penalty, where the lower and upper weights were 1000, and
 The Understocking likelihood component is used to give a penalty whenever there has been overconsumption by a predator (usually a fleet), and there has been insufficient fish for that predator to consume.  In the case of a fleet, this means that the landings data indicates that more fish have been landed than there are fish in the model, for that timetep and area combination.  The likelihood component that is used is the sum of squares of the overconsumption, given by the equation below:
 
 \begin{equation}\label{eq:understocking}
-\ell = \sum_{\it time}\sum_{\it areas} \Big(\sum_{\it predators} U \Big)^p
+\ell = \sum_{\it time}\sum_{\it areas} \Big(\sum_{\it predators} U_{trp} \Big)^p
 \end{equation}
 
 where:\newline
@@ -2112,7 +2025,7 @@ lengthnostddev - use a unweighted sum of squares of mean length
 This likelihood function calculates the likelihood score based on a weighted sum of squares of the mean length, with the weighting given by calculating the variance of length of the modelled population, as shown in equation~\ref{eq:catchstat1} below:
 
 \begin{equation}\label{eq:catchstat1}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x-\mu)^2} {\sigma^2} N\Big)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x_{tra}-\mu_{tra})^2} {\sigma_{tra}^2} N_{tra}\Big)
 \end{equation}
 
 where:\newline
@@ -2134,7 +2047,7 @@ where $<$number$>$ is the number of samples for the timestep/area/age combinatio
 This likelihood function calculates the likelihood score based on a weighted sum of squares of the mean length, with the weighting given the variance of length of the input population, as shown in  equation~\ref{eq:catchstat2} below:
 
 \begin{equation}\label{eq:catchstat2}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x-\mu)^2} {s^2} N\Big)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x_{tra}-\mu_{tra})^2} {s_{tra}^2} N_{tra}\Big)
 \end{equation}
 
 where:\newline
@@ -2156,7 +2069,7 @@ where $<$number$>$ is the number of samples for the timestep/area/age combinatio
 This likelihood function calculates the likelihood score based on a weighted sum of squares of the mean weight, with the weighting given the variance of weight of the input population, as shown in equation~\ref{eq:catchstat3} below:
 
 \begin{equation}\label{eq:catchstat3}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x-\mu)^2} {s^2} N\Big)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x_{tra}-\mu_{tra})^2} {s_{tra}^2} N_{tra}\Big)
 \end{equation}
 
 where:\newline
@@ -2178,7 +2091,7 @@ where $<$number$>$ is the number of samples for the timestep/area/age combinatio
 This likelihood function calculates the likelihood score based on a unweighted sum of squares of the mean weight, with the variance of the weight of the population assumed to be 1, as shown in equation~\ref{eq:catchstat4} below:
 
 \begin{equation}\label{eq:catchstat4}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big((x-\mu)^2 N\Big)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big((x_{tra}-\mu_{tra})^2 N_{tra}\Big)
 \end{equation}
 
 where:\newline
@@ -2199,7 +2112,7 @@ where $<$number$>$ is the number of samples for the timestep/area/age combinatio
 This likelihood function calculates the likelihood score based on a unweighted sum of squares of the mean length, with the variance of the length of the population assumed to be 1, as shown in equation~\ref{eq:catchstat5} below:
 
 \begin{equation}\label{eq:catchstat5}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big((x-\mu)^2 N\Big)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big((x_{tra}-\mu_{tra})^2 N_{tra}\Big)
 \end{equation}
 
 where:\newline
@@ -2247,7 +2160,7 @@ The optional $<$epsilon$>$ value is used whenever the calculated probability is 
 The $<$fleetnames$>$ vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison.  However, the $<$stocknames$>$ vector contains a list of all the stocks to be compared for the data comparison.  These stocks are not aggregated into a single pseudo stock.
 
 \bigskip
-The $<$function name$>$ defines what likelihood function is to be used to compare the modelled age-length stock distribution to the input age-length stock distribution.  Currently, there are 2 likelihood functions defined, and the  valid functions are:
+The $<$function name$>$ defines what likelihood function is to be used to compare the modelled age-length stock distribution to the input age-length stock distribution.  Currently, there are two likelihood functions defined, and the  valid functions are:
 
 \bigskip
 multinomial - use a multinomial function\newline
@@ -2286,7 +2199,7 @@ $<$ P $>$ is the proportion of the data sample for that time/area/age/length/sto
 $<\pi>$ is the proportion of the model sample for that time/area/age/length/ stock combination
 
 \section{SurveyIndices}\label{sec:surveyindices}
-The SurveyIndices likelihood component is used to compare the development of a stock in the Gadget model to indices calculated from a standardized survey for that stock.  These indices can be aggregated into age groups, length groups or age and length groups.  The likelihood component that is used is the sum of squares of a linear regression fitted to the difference between the modelled data and the specified index, given by equation~\ref{eq:surveyindex} below:
+The SurveyIndices likelihood component is used to compare the development of a stock in the Gadget model to indices calculated from a standardized survey for that stock.  These indices can be aggregated into age groups or length groups.  The likelihood component that is used is the sum of squares of a linear regression fitted to the difference between the modelled data and the specified index, given by equation~\ref{eq:surveyindex} below:
 
 \newpage %JMB manual page break inserted
 \begin{equation}\label{eq:surveyindex}
@@ -2313,7 +2226,7 @@ sitype               <survey index type>
 <survey index data>
 \end{verbatim}}
 
-The format of the survey index data, and the contents of the datafile, depend on the type of survey index that is to be used, which is specified by the value of $<$survey index type$>$.  There are currently 3 valid options, which are:
+The format of the survey index data, and the contents of the datafile, depend on the type of survey index that is to be used, which is specified by the value of $<$survey index type$>$.  There are currently three valid options, which are:
 
 \bigskip
 ages - defining an age group based survey index\newline
@@ -2506,7 +2419,7 @@ likelihoodtype       <likelihood type>
 The $<$stocknames$>$ vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison.  The $<$suitability parameters$>$ define the suitability of the survey fleet that was used to collect the survey index data.  This is the same format as the suitability functions for the stock, as discussed in section~\ref{sec:suitability} above.  Note that only one set of suitability values is defined, which will be applied to all the stocks for this likelihood component.
 
 \bigskip
-The $<$fit type$>$ defines what function is to be used to calculate the survey index distribution from the modelled population.  Currently, there are 2 functions defined, and the valid function names are:
+The $<$fit type$>$ defines what function is to be used to calculate the survey index distribution from the modelled population.  Currently, there are two functions defined, and the valid function names are:
 
 \bigskip
 linearfit - use a linear function\newline
@@ -2600,7 +2513,90 @@ $<$ I $>$ is the data survey index for that time/area/age/length combination\new
 $<\widehat{I}>$ is the model survey index for that time/area/age/length combination
 
 \section{StomachContent}\label{sec:stomach}
-[CURRENTLY BLANK - INSERT STOMACH CONTENT HERE]
+The StomachContent likelihood component is used to compare consumption data sampled from the model with stomach content data obtained by analysing the stomach contents of various predators.  This data can be used to give an indication of the diet composition of the stock.  The likelihood score that is calculated gives some measure as to how well the consumption data from the model fits to the data from the stomach contents.  Care is needed when making this comparison, since the data will give information on the stomach content at the time of capture of the predator, where as the Gadget simulation can only give information about the modelled consumption of the prey by the predator.
+
+\bigskip
+To specify a StomachContent likelihood component, the format required in the main likelihood file is as follows:
+
+{\small\begin{verbatim}
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 stomachcontent
+function             <function name>
+datafile             <name for the datafile>
+epsilon              <epsilon>
+areaaggfile          <area aggregation file specifying areas>
+predatornames        <vector of the names of the predators>
+<predatortype>
+preyaggfile          <prey aggregation file specifying preys>
+\end{verbatim}}
+
+The $<$predatortype$>$ defines how the predator data will be structured for the purposes of the data comparison.  There are currently two options available, to specify a length-structured predator or an age-structured predator.  To specify a predator that is length based, the format of the $<$predatortype$>$ in the likelihood file should be as follows: 
+
+{\small\begin{verbatim}
+...
+predatornames        <vector of the names of the predators>
+predatorlengths
+lenaggfile           <length aggregation file specifying predator lengths>
+preyaggfile          <prey aggregation file specifying preys>
+\end{verbatim}}
+
+Alternatively, to specify apredator that is age based, the format of the $<$predatortype$>$ in the likelihood file should be as follows: 
+
+{\small\begin{verbatim}
+...
+predatornames        <vector of the names of the predators>
+predatorages
+ageaggfile           <age aggregation file specifying predator ages>
+preyaggfile          <prey aggregation file specifying preys>
+\end{verbatim}}
+
+The optional $<$epsilon$>$ value is used whenever the calculated probability is very unlikely, although the exact format of this depends on the function that is to be used when calculating the likelihood score.  This means that the likelihood component is not dominated by one or two stray values, since these will be reset back to less unlikely values.  The default value for $<$epsilon$>$ is 10, which is used whenever it is not defined in the input file.
+
+\bigskip
+The $<$predatornames$>$ vector contains a list of all the predators to be aggregated into a single pseudo predator for the purposes of the data comparison.
+
+\bigskip
+The $<$function name$>$ defines what likelihood function is to be used to compare the modelled consumption data to the input stomach content data.  Currently, there is only one likelihood function defined, so the valid function name is:
+
+\bigskip
+scsimple - use a simple ratio function
+%scnumbers
+%scamounts
+%scratios
+
+\bigskip
+Finally, the file specified by $<$datafile$>$ contains a list of the stomach content data that Gadget is to use to fit the likelihood function to, aggregated according to the aggregation files specified, for the consumption calculated in the model.  The format of this file is given below:
+
+{\small\begin{verbatim}
+<year>  <step>  <area>  <predator>  <prey>  <ratio>
+\end{verbatim}}
+
+where $<$ratio$>$ is the ratio of prey $<$prey$>$ in the stomachs of predator $<$predator$>$ for the timestep/area combination, where $<$prey$>$ is defined in the prey aggregation file, and $<$predator$>$ is defined in the predator length or age aggregation file, depending on the format of $<$predatortype$>$.
+
+\subsection{SCSimple Function}
+The scsimple function calculates the likelihood component by comparing the ratio of the consumption of different preys by a predator in the model to the ratio of the preys found in the stomach contents data specified in the input file, as shown in equation~\ref{eq:stomach1} below:
+
+\begin{equation}\label{eq:stomach1}
+\ell = \sum_{\it time}\sum_{\it area}\sum_{\it predator}\sum_{\it prey} \Big( P_{trpp} - \pi_{trpp} \Big) ^2
+\end{equation}
+
+where:\newline
+$<$ P $>$ is the ratio of the stomach content data for that time/area/predator/prey combination\newline
+$<\pi>$ is the ratio of the modelled consumption for that time/area/predator/prey combination
+
+%\subsection{SCNumbers Function}
+%The scnumbers function calculates the likelihood component by 
+%as shown in equation~\ref{eq:stomach2} below:
+
+%\begin{equation}\label{eq:stomach2}
+%\ell = 2 \sum_{\it time}\sum_{\it areas}\sum_{\it predator} \Bigg( \log N_{trp}! - \sum_{\it prey} \log N_{trpp}! + \sum_{\it prey} \Big( N_{trpp} \log {\frac{\nu_{trpp}}{\sum \nu_{trpp}}} \Big) \Bigg)
+%\end{equation}
+
+%where:\newline
+%$<$ N $>$ is the data sample size for that time/area/predator/prey combination\newline
+%$<\nu>$ is the model sample size for that time/area/predator/prey combination
 
 \section{Recaptures}\label{sec:recaptures}
 The Recaptures likelihood component is used to compare recaptures data from tagging experiments within the model with recaptures data obtained from tagging experiments, aggregated according to length at recapture.  The likelihood score that is calculated gives some measure as to how well the data from the model fits the recaptures data.
@@ -2668,7 +2664,7 @@ fleetnames           <vector of the names of the fleets>
 The $<$fleetnames$>$ vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison.
 
 \bigskip
-The $<$function name$>$ defines what likelihood function is to be used to compare the modelled statistical data to the input statistical data.  Currently, there are 3 likelihood functions defined, and the format of the statistical data given in the file specified by $<$datafile$>$ depends on the likelihood function used.  The valid functions are:
+The $<$function name$>$ defines what likelihood function is to be used to compare the modelled statistical data to the input statistical data.  Currently, there are three likelihood functions defined, and the format of the statistical data given in the file specified by $<$datafile$>$ depends on the likelihood function used.  The valid functions are:
 
 \bigskip
 lengthcalcstddev - use a weighted sum of squares of mean length\newline
@@ -2837,7 +2833,7 @@ The $<$fleetnames$>$ vector contains a list of all the fleets to be aggregated i
 The optional $<$epsilon$>$ value is used in the likelihood function to avoid problems that would arise from taking the logarithm of zero.  Epsilon is added to both the modelled and observed landings data, to ensure that these values are always positive, and thus should be set to a small number.  The default value for $<$epsilon$>$ is 10, which is used whenever it is not defined in the input file.
 
 \bigskip
-The $<$function name$>$ defines what likelihood function is to be used to compare the modelled catch to the input catch.  Currently, there is only 1 likelihood function defined, so the only valid function name is:
+The $<$function name$>$ defines what likelihood function is to be used to compare the modelled catch to the input catch.  Currently, there is only one likelihood function defined, so the only valid function name is:
 
 \bigskip
 sumofsquares - use a log sum of squares function
@@ -2908,10 +2904,14 @@ stockname            <name of the stock>
 scale                <scaling factor>
 areaaggfile          <area aggregation file specifying areas>
 printfile            <name for the output file to be created>
+printatstart         <0 or 1> ; 1 to print at start of timestep
 yearsandsteps        <ActionAtTime to determine when to print>
 \end{verbatim}}
 
 The optional $<$scaling factor$>$ is used to scale the size of the stock, which can be used to display the stock in terms of thousands of fish, for example.  The default value for this parameter is 1, which will ensure that no scaling will take place.
+
+\bigskip
+The optional flag $<$printatstart$>$ is used to specify whether the information about the stock should be printed at the start or the end of the timestep.  If this is set to 1, then the stock information as it is at the start of the timestep is printed, before any other calculation has taken place (see appendix~\ref{chap:order} for more information on the order of the calculations).  The default value for $<$printatstart$>$ is 0, which means that the information at the end of the timestep is printed, and is used whenever the flag is not specified in the input file.
 
 \bigskip
 The output that is generated from this printer type is a file containing the following information for the stock specified on the $<$stockname$>$ line:
@@ -2937,9 +2937,13 @@ type                 stockfullprinter
 stockname            <name of the stock>
 areaaggfile          <area aggregation file specifying areas>
 printfile            <name for the output file to be created>
+printatstart         <0 or 1> ; 1 to print at start of timestep
 yearsandsteps        <ActionAtTime to determine when to print>
 \end{verbatim}}
 
+The optional flag $<$printatstart$>$ is used to specify whether the information about the stock should be printed at the start or the end of the timestep.  If this is set to 1, then the stock information as it is at the start of the timestep is printed, before any other calculation has taken place (see appendix~\ref{chap:order} for more information on the order of the calculations).  The default value for $<$printatstart$>$ is 0, which means that the information at the end of the timestep is printed, and is used whenever the flag is not specified in the input file.
+
+\bigskip
 The output that is generated from this printer type is a file containing the following information for the stock specified on the $<$stockname$>$ line:
 
 {\small\begin{verbatim}
@@ -2961,10 +2965,14 @@ areaaggfile          <area aggregation file specifying areas>
 ageaggfile           <age aggregation file specifying ages>
 lenaggfile           <length aggregation file specifying lengths>
 printfile            <name for the output file to be created>
+printatstart         <0 or 1> ; 1 to print at start of timestep
 yearsandsteps        <ActionAtTime to determine when to print>
 \end{verbatim}}
 
 Note that this printer type can aggregate more than one stock into a combined pseudo stock for the output file.
+
+\bigskip
+The optional flag $<$printatstart$>$ is used to specify whether the information about the stock should be printed at the start or the end of the timestep.  If this is set to 1, then the stock information as it is at the start of the timestep is printed, before any other calculation has taken place (see appendix~\ref{chap:order} for more information on the order of the calculations).  The default value for $<$printatstart$>$ is 0, which means that the information at the end of the timestep is printed, and is used whenever the flag is not specified in the input file.
 
 \bigskip
 The output that is generated from this printer type is a file containing the following information for all the stocks specified on the $<$stocknames$>$ line:
@@ -2991,25 +2999,28 @@ preys                <vector of the names of the preys>
 areaaggfile          <area aggregation file specifying areas>
 predlenaggfile       <length aggregation file specifying predator lengths>
 preylenaggfile       <length aggregation file specifying prey lengths>
+biomass              <0 or 1> ; 1 to print biomass consumed
 printfile            <name for the output file to be created>
 yearsandsteps        <ActionAtTime to determine when to print>
 \end{verbatim}}
 
 Note that this printer type can aggregate more than one predators into a combined pseudo predator, and one or more preys into a pseudo prey, for the output file.
-% biomass flag to switch between printing biomass and number of preys consumed
+
+\bigskip
+The optional flag $<$biomass$>$ is used to specify whether the information about the consumption of the preys by the predators is printed by biomass consumed or by number consumed.  If this is set to 1 then information about the consumption is printed by biomass consumed.  If this is set to 0 then this information is printed by number consumed.  The default value for $<$biomass$>$ is 1, which means that the consumption by biomass will be printed if this flag is not specified in the input file.
 
 \bigskip
 The output that is generated from this printer type is a file containing the following predation information for all the predators specified on the $<$predators$>$ line, eating all the preys specified on the $<$preys$>$ line:
 
 {\small\begin{verbatim}
-year-step-area-pred-prey-biomass
+year-step-area-pred-prey-amount
 \end{verbatim}}
 
 where:\newline
 $<$area$>$ is the label for the area from the area aggregation file\newline
 $<$pred$>$ is the label for the predator length group from the length aggregation file\newline
 $<$prey$>$ is the label for the prey length group from the length aggregation file\newline
-$<$biomass$>$ is the biomass consumed for that timestep/area/predator length/ prey length combination
+$<$amount$>$ is the biomass (or number) consumed for that timestep/area/predator length/prey length combination, depending on the value of the $<$biomass$>$ flag in the input file
 
 \section{PredatorOverPrinter}\label{sec:predatoroverprinter}
 The printer type to output information about predator over consumption (where a predator has failed to eat the required amount of prey since the prey is not available), with the information aggregated into a convenient grouping, is called ''PredatorOverPrinter''.  This printer type is defined by specifying the predator name, areas, length groups and timesteps of interest.  The file format for this component is given below:
@@ -3231,7 +3242,7 @@ $<$ t $>$ is the ''temperature'' of the algorithm\newline
 $<$ r $>$ is a random number between 0 and 1
 
 \bigskip
-Note that when the ''temperature'' is very high (eg t = $\infty$), the Metropolis Criteria will always accept any 'uphill' move, and the Simulated Annealing algorithm will simplify to a form of a random search algorithm.  Conversely, when the temperature is very low (eg t = 0), the Metropolis Criteria will always reject any 'uphill' move, and the Simulated Annealing algorithm will simplify to a form of a hill-climbing algorithm, similar to Hooke \& Jeeves.  By slowly reducing the temperature of the algorithm, the number of uphill moves that are accepted are reduced and the algorithm will find a minimum.
+Note that when the ''temperature'' is very high (t $\rightarrow \infty$), the Metropolis Criteria will always accept any 'uphill' move, and the Simulated Annealing algorithm will simplify to a form of a random search algorithm.  Conversely, when the temperature is very low (t $\rightarrow$ 0), the Metropolis Criteria will always reject any 'uphill' move, and the Simulated Annealing algorithm will simplify to a form of a hill-climbing algorithm, similar to Hooke \& Jeeves.  By slowly reducing the temperature of the algorithm, the number of uphill moves that are accepted are reduced and the algorithm will find a minimum.
 
 \bigskip
 The terminology for the Simulated Annealing algorithm comes from a metaphor with the thermodynamic process of cooling molten metals.  At very high temperatures, the atoms in molten metals move very fast, and slow considerably at lower temperatures.  If the metal is cooled slowly (termed ''annealing''), the atoms have time to line up to form a highly ordered, strong, crystalline structure.  If the metal is cooled too quickly (''quenching'') the resulting solid will have a weaker, less ordered, structure.
@@ -3320,10 +3331,10 @@ From an initial starting point, the gradient of the function is calculated and t
 For a point at a stable minimum, the magnitude of the gradient vector will be zero, since there is no direction that the algorithm can move in to find a better local point.  However, finding such a point using an iterative process can take an infinite number of steps, so the algorithm exits when the magnitude of the gradient vector is less than a small number.  The current point is then accepted as being the 'solution'.
 
 \bigskip
-The ''Armijo'' linesearch calculates the stepsize that is to be used to move to a point that is ''sufficiently better'', in the direction given by the gradient, to be $\beta^m$, where m is the first integer that satisfies the Armijo rule given by inequality~\ref{eq:armijo} below:
+The ''Armijo'' linesearch calculates the stepsize that is to be used to move to a point that is ''sufficiently better'', in the direction given by the gradient, to be $\beta^n$, where n is the first integer that satisfies the Armijo rule given by inequality~\ref{eq:armijo} below:
 
 \begin{equation}\label{eq:armijo}
-f(x) - f(x + \beta^{m}) \geq - \sigma \beta^{m} \nabla f(x) ^{T}
+f(x) - f(x + \beta^{n}) \geq - \sigma \beta^{n} \nabla f(x) ^{T}
 \end{equation}
 
 where:\newline
@@ -3362,6 +3373,9 @@ This is the adjustment factor for the Armijo linesearch, used to calculate the s
 %\subsubsection{step}
 %\subsubsection{gradacc}
 %\subsubsection{gradstep}
+%\subsubsection{errortol}
+%\subsubsection{diffgrad}
+%\subsubsection{scale}
 
 \section{Combining Optimisation Algorithms}\label{sec:combine}
 \subsection{Overview}\label{subsec:combineover}
@@ -3408,14 +3422,14 @@ The parameters for this combined optimisation algorithm are the same as for the 
 The optimisation algorithms used by Gadget contain a random number generator, used to randomise the order of the parameters (to ensure that the order of the parameters has no effect on the optimum found) and to generate the initial direction chosen by the algorithm to look for a solution.  For the Simulated Annealing algorithm, this is also affects the Metropolis criteria used to accept any changes in an 'uphill' direction.
 
 \bigskip
-The use of a random number generator means that it is unlikely that 2 optimising runs will produce exactly the same 'optimum', even if they start from the same point (although it is hoped that the optima would be very similar if a stable starting point was chosen).  This causes a problem with repeatability, since there is no guarantee that an optimising run can be repeated.  However, it is possible to 'seed' the random number generator with an integer to avoid this problem.  To specify a seed for the random number generator, an extra line must be added to the optimisation file, as shown below:
+The use of a random number generator means that it is unlikely that two optimising runs will produce exactly the same 'optimum', even if they start from the same point (although it is hoped that the optima would be very similar if a stable starting point was chosen).  This causes a problem with repeatability, since there is no guarantee that an optimising run can be repeated.  However, it is possible to 'seed' the random number generator with an integer to avoid this problem.  To specify a seed for the random number generator, an extra line must be added to the optimisation file, as shown below:
 
 {\small\begin{verbatim}
 seed       n     ; seed the random number generator with n
 \end{verbatim}}
 
 \chapter{Output Files}\label{chap:output}
-The model output files contain information about the optimisation process (and not information about the stocks in the model - see the section on the Print Files, section~\ref{chap:print}, for information on these).  The output files are specified by some of the commandline parameters used to start Gadget.  There are 3 types of output file.
+The model output files contain information about the optimisation process (and not information about the stocks in the model - see the section on the Print Files, section~\ref{chap:print}, for information on these).  The output files are specified by some of the commandline parameters used to start Gadget.  There are three types of output file.
 
 \section{Likelihood Output}\label{sec:likelihoodoutput}
 The likelihood output file is generated when Gadget is started with the ''-o $<$filename$>$'' option, and the output is written to the file specified after that option, so, for example, this would write the output to a file called ''likelihood.txt'':
@@ -3424,7 +3438,7 @@ The likelihood output file is generated when Gadget is started with the ''-o $<$
 gadget -l -o likelihood.txt
 \end{verbatim}}
 
-The likelihood output file is split into 3 sections, separated by a line containing a brief comment.  The first section lists the names of the switches used in the model, together with some information about where that switch is used.
+The likelihood output file is split into three sections, separated by a line containing a brief comment.  The first section lists the names of the switches used in the model, together with some information about where that switch is used.
 
 \bigskip
 The second part of the likelihood output file contains information about the likelihood components used in the optimisation of the model.  The names of the components are listed, along with an identifier to the type and the weight assigned to the component.
@@ -3464,5 +3478,28 @@ The parameter output file is automatically generated by Gadget every time that G
 
 \bigskip
 This file is written in the same format as the parameter input file, and it can be used as the starting point for a subsequent Gadget run.
+
+\appendix
+\chapter{Order of Calculations}\label{chap:order}
+
+OK, I've had a bit of a think about this, and I think that the order that things happen should be
+
+\begin{enumerate}
+\item Printing - optional printing at the begining of the timestep, before any calculations have taken place for this timestep
+\item Migration - move fish around between areas
+\item Consumption and predation- including consumption by fleets, which is what most of the likelihood components use as the source for their model data to use as a comparison
+\item Remove fish from the stock due to natural mortality
+\item Growth - including stashing the fish that will mature somewhere
+\item Spawning - effect on parent, and stash the new fish somewhere
+\item Add any newly matured fish to the stock
+\item Add any new recruits into the stock
+\item Add any newly spawned fish to the stock
+\item Move fish between stocks that are ''straying''
+\item Calculate the likelihood score.  Note that most of the likelihood components use data that is based on the catch by a fleet, which has been calculated as part of the consumption calculations
+\item Printing - default printing takes place at the end of the timestep
+\item Remove any fish from the stock that will ''move'' to a different stock
+\item Increase the age of the stock, if this is the last timestep in the year
+\item Add in any fish that have ''moved'' to this stock
+\end{enumerate}
 
 \end{document}
