@@ -329,9 +329,6 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   sdevMult.Inform(keeper);
   keeper->clearLast();
 
-  //default values
-  readoption = 0;
-
   //create the initialPop object of the correct size
   int noagegr = maxage - minage + 1;
   PopInfoMatrix tmpPop(noagegr, LgrpDiv->numLengthGroups());
@@ -344,7 +341,6 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   }
   initialPop.resize(areas.Size(), minage, 0, tmpPop);
 
-  keeper->addString("readinitialdata");
   infile >> text >> ws;
   if ((strcasecmp(text, "initstockfile") == 0) || (strcasecmp(text, "normalcondfile") == 0)) {
     //read initial data in mean length format, using the reference weight file
@@ -357,6 +353,40 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     handle.Close();
     subfile.close();
     subfile.clear();
+
+    //read information on reference weights.
+    DoubleMatrix tmpRefW;
+    keeper->addString("referenceweights");
+    subfile.open(refWeightFile, ios::in);
+    handle.checkIfFailure(subfile, refWeightFile);
+    handle.Open(refWeightFile);
+    if (!readRefWeights(subcomment, tmpRefW))
+      handle.Message("Wrong format for reference weights");
+    handle.Close();
+    subfile.close();
+    subfile.clear();
+
+    //Interpolate the reference weights. First there are some error checks.
+    if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
+        LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
+      handle.Message("Lengths for reference weights must span the range of initial condition lengths");
+
+    //Aggregate the reference weight data to be the same format
+    double ratio;
+    refWeight.resize(LgrpDiv->numLengthGroups());
+    int pos = 0;
+    for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
+      for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
+        if ((LgrpDiv->meanLength(j) >= tmpRefW[i][0]) &&
+            (LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0])) {
+
+          ratio = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+          refWeight[j] = tmpRefW[i][1] + ratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
+          pos = i;
+        }
+      }
+    }
+    keeper->clearLast();
 
   } else if ((strcasecmp(text, "normalparamfile") == 0)) {
     //read initial data in mean length format, using a length weight relationship
@@ -384,46 +414,6 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
 
   } else
     handle.Message("Error in initial conditions - unrecognised data format", text);
-
-  keeper->clearLast();
-
-  if (readoption == 0) {
-    //read information on reference weights.
-    DoubleMatrix tmpRefW;
-    keeper->addString("referenceweights");
-    ifstream subweightfile;
-    subweightfile.open(refWeightFile, ios::in);
-    handle.checkIfFailure(subweightfile, refWeightFile);
-    handle.Open(refWeightFile);
-    CommentStream subweightcomment(subweightfile);
-    if (!readRefWeights(subweightcomment, tmpRefW))
-      handle.Message("Wrong format for reference weights");
-    handle.Close();
-    subweightfile.close();
-    subweightfile.clear();
-
-    //Interpolate the reference weights. First there are some error checks.
-    if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
-        LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-      handle.Message("Lengths for reference weights must span the range of initial condition lengths");
-
-    //Aggregate the reference weight data to be the same format
-    double ratio;
-    refWeight.resize(LgrpDiv->numLengthGroups());
-    int pos = 0;
-    for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
-      for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
-        if ((LgrpDiv->meanLength(j) >= tmpRefW[i][0]) &&
-            (LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0])) {
-            
-          ratio = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
-          refWeight[j] = tmpRefW[i][1] + ratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
-          pos = i;
-        }
-      }
-    }
-    keeper->clearLast();
-  }
 
   keeper->clearLast();
 }
@@ -473,12 +463,12 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       maxage = initialPop[area].maxAge();
       for (age = minage; age <= maxage; age++) {
         scaler = 0.0;
-        
+
         if (isZero(sdevLength[area][age - minage] * sdevMult))
           mult = 0.0;
-        else        
+        else
           mult = 1.0 / (sdevLength[area][age - minage] * sdevMult);
-  
+
         for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           dnorm = (LgrpDiv->meanLength(l) - meanLength[area][age - minage]) * mult;
           initialPop[area][age][l].N = exp(-(dnorm * dnorm) * 0.5);
@@ -501,12 +491,12 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       maxage = initialPop[area].maxAge();
       for (age = minage; age <= maxage; age++) {
         scaler = 0.0;
-        
+
         if (isZero(sdevLength[area][age - minage] * sdevMult))
           mult = 0.0;
-        else        
+        else
           mult = 1.0 / (sdevLength[area][age - minage] * sdevMult);
-  
+
         for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           dnorm = (LgrpDiv->meanLength(l) - meanLength[area][age - minage]) * mult;
           initialPop[area][age][l].N = exp(-(dnorm * dnorm) * 0.5);

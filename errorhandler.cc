@@ -297,7 +297,7 @@ void ErrorHandler::checkIfFailure(ios& infile, const char* text) {
   return;
 }
 
-void ErrorHandler::logFinish(int opt) {    
+void ErrorHandler::logFinish(int opt) {
   if (uselog) {
     if (numwarn > 0)
       logfile << "\nTotal number of warnings was " << numwarn << endl;

@@ -8,7 +8,7 @@ void TimeVariableVector::resize(int addsize) {
   if (v == 0) {
     size = addsize;
     v = new TimeVariable[size];
-  } else if (addsize > 0) { 
+  } else if (addsize > 0) {
     //this loses the old values and should never happen ...
     TimeVariable* vnew = new TimeVariable[addsize + size];
     delete[] v;
