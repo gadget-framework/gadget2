@@ -24,7 +24,7 @@ protected:
   int ReadOption;  //if meanlengths, a and b are read
   intvector RenewalTime;
   intvector RenewalArea;
-  Agebandmatrixvector Distribution;
+  agebandmatrixptrvector Distribution;
   Formulavector Number;
   Formulavector Meanlengths;
   Formulavector Sdev;

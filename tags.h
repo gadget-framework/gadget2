@@ -7,9 +7,9 @@
 #include "areatime.h"
 #include "charptrvector.h"
 #include "stockptrvector.h"
-#include "agebandm.h"
+#include "agebandmatrix.h"
 #include "stockaggregator.h"
-#include "agebandmatrixptrvector.h"
+#include "agebandmatrixptrmatrix.h"
 #include "livesonareas.h"
 #include "formula.h"
 
@@ -34,7 +34,7 @@ private:
   void ReadNumbers(CommentStream&, const char*, double, double dl);
   charptrvector stocknames;   //names of the tagged stock read from file
   //area-age-length distribution of tags by stocks
-  agebandmatrixptrvector AgeLengthStock;
+  agebandmatrixptrmatrix AgeLengthStock;
   //AgeLengthStock[0] refers to the stock and AgeLengthStock[...] refers to the mature stock.
   Formula tagloss; //percentage of tags that are lost
   int tagarea;     //area of tagging

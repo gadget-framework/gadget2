@@ -1,7 +1,8 @@
 #ifndef stockaggregator_h
 #define stockaggregator_h
 
-#include "agebandm.h"
+#include "agebandmatrix.h"
+#include "agebandmatrixptrvector.h"
 #include "stockptrvector.h"
 #include "conversionindexptrvector.h"
 #include "intmatrix.h"
@@ -15,8 +16,8 @@ public:
   ~StockAggregator();
   void Sum();
   void MeanSum();
-  const Agebandmatrixvector& ReturnSum() const;
-  const Agebandmatrixvector& ReturnMeanSum() const;
+  const agebandmatrixptrvector& ReturnSum() const;
+  const agebandmatrixptrvector& ReturnMeanSum() const;
   const intvector& getMinCol() const { return mincol; };
   const intvector& getMaxCol() const { return maxcol; };
   int getMinRow() const { return minrow; };
@@ -28,8 +29,8 @@ protected:
   intmatrix ages;
   intvector AreaNr;
   intvector AgeNr;
-  Agebandmatrixvector total;
-  Agebandmatrixvector meanTotal;
+  agebandmatrixptrvector total;
+  agebandmatrixptrvector meanTotal;
   int numlengths;
   intvector maxcol;
   intvector mincol;

@@ -1,9 +1,6 @@
 #ifndef sibylengthandageonstep_h
 #define sibylengthandageonstep_h
 
-#include "agebandm.h"
-#include "commentstream.h"
-#include "intmatrix.h"
 #include "doublematrixptrvector.h"
 #include "sionstep.h"
 #include "suitfunc.h"

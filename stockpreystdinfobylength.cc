@@ -1,7 +1,7 @@
 #include "stockpreystdinfobylength.h"
 #include "stockprey.h"
 #include "areatime.h"
-#include "agebandm.h"
+//#include "agebandm.h"
 #include "gadget.h"
 
 StockPreyStdInfoByLength::StockPreyStdInfoByLength(const StockPrey* p, const intvector& Areas)

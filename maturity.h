@@ -2,12 +2,12 @@
 #define maturity_h
 
 #include "keeper.h"
-#include "agebandm.h"
+#include "agebandmatrix.h"
 #include "livesonareas.h"
 #include "conversionindexptrvector.h"
 #include "charptrvector.h"
 #include "commentstream.h"
-#include "agebandmatrixratio.h"
+#include "agebandmatrixratioptrvector.h"
 
 class Maturity;
 
@@ -43,8 +43,8 @@ protected:
   ConversionIndexptrvector CI;
   LengthGroupDivision* LgrpDiv;
 private:
-  Agebandmatrixvector Storage;
-  Agebandmatrixratiovector TagStorage;
+  agebandmatrixptrvector Storage;
+  agebandmatrixratioptrvector TagStorage;
 };
 
 #endif

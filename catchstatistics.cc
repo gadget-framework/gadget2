@@ -327,7 +327,7 @@ double CatchStatistics::SOSWeightOrLength() {
   double simmean, simvar, simnumber, simdiff;
 
   simmean = simvar = simnumber = simdiff = 0.0;
-  const Agebandmatrixvector *alptr = &aggregator->AgeLengthDist();
+  const agebandmatrixptrvector *alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < alptr->Size(); nareas++) {
     for (age = 0; age < (*alptr)[nareas].Nrow(); age++) {
       PopStatistics PopStat((*alptr)[nareas][age], aggregator->ReturnLgrpDiv());

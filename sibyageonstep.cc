@@ -25,7 +25,7 @@ void SIByAgeOnStep::SetStocks(const Stockptrvector& Stocks) {
    *  merge all the stocks in Stocks
    *  merge all the age groups in Ages[i]
    * This means that aggregator.ReturnSum will return an
-   * Agebandmatrixvector with only one element. That element will have
+   * agebandmatrixptrvector with only one element. That element will have
    * Ages.Nrow() lines (i.e. ages) and only 1 column (i.e. 1 length group)*/
 
   intmatrix areas(1, Areas.Size());
@@ -54,7 +54,7 @@ void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!(this->IsToSum(TimeInfo)))
     return;
   aggregator->Sum();
-  //Use that the Agebandmatrixvector aggregator->ReturnSum returns has only one element.
+  //Use that the agebandmatrixptrvector aggregator->ReturnSum returns has only one element.
   //Copy the information from it -- we only want to keep the abundance numbers.
   const Agebandmatrix* Alptr = &(aggregator->ReturnSum()[0]);
   int maxage = Alptr->Maxage();

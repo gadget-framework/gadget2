@@ -246,7 +246,7 @@ void TagData::AddToLikelihood(const TimeClass* const TimeInfo) {
   lik = 0.0;
   //Calculate "catch" and get information from aggregator
   aggregator->Sum(TimeInfo);
-  const Agebandmatrixvector& alptr = aggregator->AgeLengthDist();
+  const agebandmatrixptrvector& alptr = aggregator->AgeLengthDist();
   const bandmatrixvector& catchratios = aggregator->CatchRatios();
 
   for (i = 0; i < areas.Size(); i++) {

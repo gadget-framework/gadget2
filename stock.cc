@@ -273,8 +273,6 @@ Stock::~Stock() {
     delete maturity;
   if (spawner != 0)
     delete spawner;
-  /*if (catchptr != 0)
-    delete catchptr;*/
 }
 
 void Stock::Reset(const TimeClass* const TimeInfo) {

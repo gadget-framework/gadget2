@@ -1,7 +1,7 @@
 #ifndef print_h
 #define print_h
 
-#include "agebandm.h"
+#include "agebandmatrix.h"
 #include "gadget.h"
 
 extern void Printagebandm(ofstream& outfile, const Agebandmatrix& Alkeys);

@@ -2,7 +2,7 @@
 #define formatedprinting_h
 
 #include "intmatrix.h"
-#include "agebandm.h"
+#include "agebandmatrix.h"
 #include "predator.h"
 #include "printer.h"
 #include "gadget.h"

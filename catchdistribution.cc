@@ -573,7 +573,7 @@ double CatchDistribution::LikMultinomial() {
   int a, age, len, nareas;
 
   //Get numbers from aggregator->AgeLengthDist()
-  const Agebandmatrixvector* alptr = &aggregator->AgeLengthDist();
+  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
   doublematrixptrvector Dist(alptr->Size(), NULL);
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     Dist[nareas] = new doublematrix(aggregator->NoAgeGroups(), aggregator->NoLengthGroups(), 0.0);
@@ -627,7 +627,7 @@ double CatchDistribution::LikPearson(const TimeClass* const TimeInfo) {
   int age, length, min_age, max_age, nareas;
 
   //Get numbers from aggregator->AgeLengthDist()
-  const Agebandmatrixvector* alptr = &aggregator->AgeLengthDist();
+  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
@@ -689,7 +689,7 @@ double CatchDistribution::GammaLik(const TimeClass* const TimeInfo) {
   int age, length, min_age, max_age, nareas;
 
   //Get numbers from aggregator->AgeLengthDist()
-  const Agebandmatrixvector* alptr = &aggregator->AgeLengthDist();
+  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
@@ -750,7 +750,7 @@ double CatchDistribution::ExperimentalLik(const TimeClass* const TimeInfo) {
   double frac = 0.0;
 
   //Get numbers from aggregator->AgeLengthDist()
-  const Agebandmatrixvector* alptr = &aggregator->AgeLengthDist();
+  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
@@ -823,7 +823,7 @@ double CatchDistribution::ModifiedMultinomial(const TimeClass* const TimeInfo) {
   int age, length, min_age, max_age, nareas;
 
   //Get numbers from aggregator->AgeLengthDist()
-  const Agebandmatrixvector* alptr = &aggregator->AgeLengthDist();
+  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     Likelihoodvalues[timeindex][nareas] = 0.0;
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
@@ -908,7 +908,7 @@ double CatchDistribution::LikSumSquares() {
   double totalmodel, totaldata;
   int age, len, nareas;
 
-  const Agebandmatrixvector* alptr = &aggregator->AgeLengthDist();
+  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     totalmodel = 0.0;
     totaldata = 0.0;
@@ -986,7 +986,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
   int time = timeindex - 1; //timeindex was increased before this is called.
 
   //Get age and length intervals from aggregator->AgeLengthDist()
-  const Agebandmatrixvector* alptr = &aggregator->AgeLengthDist();
+  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
   catchfile << "\nTime:    Year " << TimeInfo.CurrentYear()
     << " Step " << TimeInfo.CurrentStep() << "\nName:   ";
   for (i = 0; i < fleetnames.Size(); i++)
@@ -1041,7 +1041,7 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
   catchfile.flush();
 }
 
-const Agebandmatrixvector& CatchDistribution::getModCatch(const TimeClass* const TimeInfo) {
+const agebandmatrixptrvector& CatchDistribution::getModCatch(const TimeClass* const TimeInfo) {
   aggregator->Sum(TimeInfo, 1); //mortality model, calculated catch
   return aggregator->AgeLengthDist();
 }

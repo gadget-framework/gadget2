@@ -353,7 +353,7 @@ void StockDistribution::AddToLikelihood(const TimeClass* const TimeInfo) {
 //The code here is probably unnessecarily complicated because
 //is always only one length group with this class.
 double StockDistribution::LikMultinomial() {
-  const Agebandmatrixvector* alptr;
+  const agebandmatrixptrvector* alptr;
   doublematrixptrvector Dist(areas.Nrow(), NULL);
   int nareas, area, age, length, sn;
   int minage, maxage;
@@ -394,7 +394,7 @@ double StockDistribution::LikSumSquares() {
   double totalmodel, totaldata;
   int age, len, nareas, sn, i;
 
-  const Agebandmatrixvector* alptr;
+  const agebandmatrixptrvector* alptr;
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     for (sn = 0; sn < stocknames.Size(); sn++) {
       alptr = &aggregator[sn]->AgeLengthDist();

@@ -2,7 +2,8 @@
 #define fleetpreyaggregator_h
 
 #include "conversion.h"
-#include "agebandm.h"
+#include "agebandmatrix.h"
+#include "agebandmatrixptrvector.h"
 #include "commentstream.h"
 #include "charptrvector.h"
 #include "fleetptrvector.h"
@@ -27,7 +28,7 @@ public:
   void Sum(const TimeClass* const TimeInfo);
   void Sum(const TimeClass* const TimeInfo, int dummy); //mortality model
   void Print(ofstream &outfile) const;
-  const Agebandmatrixvector& AgeLengthDist() const { return totalcatch; };
+  const agebandmatrixptrvector& AgeLengthDist() const { return totalcatch; };
   const bandmatrixvector& CatchRatios() const { return catchratios; };
   const intvector& getMinCol() const { return mincol; };
   const intvector& getMaxCol() const { return maxcol; };
@@ -46,7 +47,7 @@ private:
   int maxrow;        //Max row for traversing aggregated data
   int overconsumption;    //should we take overconsumption into account
   ConversionIndexptrvector CI;
-  Agebandmatrixvector totalcatch;
+  agebandmatrixptrvector totalcatch;
   bandmatrixvector catchratios;  //the ratio caught of the stocks by
                                  //the fleets in question, i.e. 1-exp(-F/12)
 };

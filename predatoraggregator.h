@@ -1,7 +1,7 @@
 #ifndef predatoraggregator_h
 #define predatoraggregator_h
 
-#include "agebandm.h"
+#include "agebandmatrix.h"
 #include "intmatrix.h"
 #include "predatorptrvector.h"
 #include "preyptrvector.h"

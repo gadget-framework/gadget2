@@ -7,7 +7,8 @@
 #include "hasname.h"
 #include "livesonareas.h"
 #include "predatorptrvector.h"
-#include "agebandm.h"
+#include "agebandmatrix.h"
+#include "gadget.h"
 
 class Prey;
 class ConversionIndex;

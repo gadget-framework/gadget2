@@ -501,7 +501,7 @@ double LogCatches::LogLik(const TimeClass* const TimeInfo) {
   int max_age = 0;
 
   //Get numbers from aggregator->AgeLengthDist()
-  const Agebandmatrixvector* alptr = &aggregator->AgeLengthDist();
+  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
@@ -574,7 +574,7 @@ void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
   int max_age = 0;
 
   //Get age and length intervals from aggregator->AgeLengthDist()
-  const Agebandmatrixvector* alptr = &aggregator->AgeLengthDist();
+  const agebandmatrixptrvector* alptr = &aggregator->AgeLengthDist();
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);

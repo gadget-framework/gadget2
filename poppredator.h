@@ -2,7 +2,7 @@
 #define poppredator_h
 
 #include "commentstream.h"
-#include "agebandm.h"
+#include "agebandmatrix.h"
 #include "predator.h"
 
 class PopPredator;

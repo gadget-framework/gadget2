@@ -3,7 +3,7 @@
 
 #include "formulamatrixptrvector.h"
 #include "commentstream.h"
-#include "agebandm.h"
+#include "agebandmatrix.h"
 #include "intmatrix.h"
 #include "livesonareas.h"
 #include "actionattimes.h"

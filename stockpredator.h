@@ -2,6 +2,7 @@
 #define stockpredator_h
 
 #include "commentstream.h"
+#include "agebandmatrixptrvector.h"
 #include "poppredator.h"
 
 class StockPredator;
@@ -39,7 +40,7 @@ protected:
   doublematrix fphI; //[area][predLengthgroup]  fphi per substep
   bandmatrixvector Alprop;     //[area][age][length group]
   doublematrix MaxconByLength; //[area][length group]
-  Agebandmatrixvector Alkeys;  //[area][age][length group]
+  agebandmatrixptrvector Alkeys;  //[area][age][length group]
 };
 
 #endif

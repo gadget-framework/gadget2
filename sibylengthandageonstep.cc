@@ -258,7 +258,7 @@ void SIByLengthAndAgeOnStep::Sum(const TimeClass* const TimeInfo) {
     return;
   FitType ftype = this->getFitType();
   aggregator->MeanSum(); //aggregate mean N values in present time step
-  //Use that the Agebandmatrixvector aggregator->ReturnMeanSum returns only one element.
+  //Use that the agebandmatrixptrvector aggregator->ReturnMeanSum returns only one element.
   const Agebandmatrix* alptr = &(aggregator->ReturnMeanSum()[0]);
   this->calcIndex(alptr, ftype);
   switch(opttype) {

@@ -2,6 +2,7 @@
 #define stockprey_h
 
 #include "prey.h"
+#include "agebandmatrixptrvector.h"
 
 class StockPrey;
 
@@ -18,7 +19,7 @@ public:
   virtual void Print(ofstream& outfile) const;
   virtual void Reset();
 protected:
-  Agebandmatrixvector Alkeys;
+  agebandmatrixptrvector Alkeys;
 };
 
 #endif

@@ -50,7 +50,7 @@ public:
         return 0;
     return col;
   };
-  const Agebandmatrixvector& getModCatch(const TimeClass* const TimeInfo); //kgf 21/1 99
+  const agebandmatrixptrvector& getModCatch(const TimeClass* const TimeInfo); //kgf 21/1 99
   const doublematrixptrmatrix* getObsCatch() const { return &AgeLengthData; };
   const doublematrixptrmatrix* getCalcCatch() const { return &Proportions; };
   const doublematrix& calcCatchByTimeAge(int area) const { return *(calc_catch[area]); };

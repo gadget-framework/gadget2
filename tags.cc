@@ -117,11 +117,9 @@ void Tags::ReadNumbers(CommentStream& infile, const char* tagname, double minlen
 Tags::~Tags() {
   int i;
   for (i = 0; i < stocknames.Size(); i++)
-    delete [] stocknames[i];
+    delete[] stocknames[i];
   if (LgrpDiv != NULL)
     delete LgrpDiv;
-  for (i = 0; i < AgeLengthStock.Size(); i++)
-    delete AgeLengthStock[i];
 }
 
 void Tags::SetStock(Stockptrvector& Stocks) {
@@ -187,7 +185,7 @@ void Tags::SetStock(Stockptrvector& Stocks) {
 //Must have set stocks according to stocknames using SetStock before calling Update()
 //Now we need to distribute the tagged fish to the same age/length groups as the tagged stock.
 void Tags::Update() {
-  Agebandmatrixvector* tagpopulation;
+  agebandmatrixptrvector* tagpopulation;
   int i;
   popinfovector NumberInArea;
   NumberInArea.resize(LgrpDiv->NoLengthGroups());
@@ -204,7 +202,7 @@ void Tags::Update() {
   //Now I have total number of stock per length in tagarea, N(., l) (NumberInArea) and
   //number of stock per age/length, N(a, l) (stockPopInArea) so we must initialize
   //AgeLengthStock so that it can hold all information of number of tagged stock
-  //per area/age/length after endtime. We must make agebandmatrixvector same size as
+  //per area/age/length after endtime. We must make agebandmatrixptrvector same size as
   //the one in stock even though have only one area entry at the beginning
   intvector stockareas = tagstocks[0]->Areas();
   int j = 0;
@@ -233,20 +231,20 @@ void Tags::Update() {
     sizeoflengthgroups[i] = upperlgrp - lowerlengthgroups[i];
   }
 
-  tagpopulation= new Agebandmatrixvector(stockareas.Size(), minage, lowerlengthgroups, sizeoflengthgroups);
+  tagpopulation= new agebandmatrixptrvector(stockareas.Size(), minage, lowerlengthgroups, sizeoflengthgroups);
   AgeLengthStock.resize(1, tagpopulation);
   for (age = stockPopInArea->Minage(); age <= stockPopInArea->Maxage(); age++) {
     minl = stockPopInArea->Minlength(age);
     maxl = stockPopInArea->Maxlength(age);
     for (length = minl; length < maxl; length++) {
       if (!(NumberInArea[length].N > 0))
-        (*AgeLengthStock[0])[tagareaindex][age][length].N = 0.0;
+        AgeLengthStock[0][tagareaindex][age][length].N = 0.0;
        else
-        (*AgeLengthStock[0])[tagareaindex][age][length].N =
+        AgeLengthStock[0][tagareaindex][age][length].N =
           (NumberByLength[length - minl] * (*stockPopInArea)[age][length].N) / (NumberInArea[length].N);
     }
   }
-  tagstocks[0]->UpdateTags(AgeLengthStock[0], this);
+  tagstocks[0]->UpdateTags(&AgeLengthStock[0], this);
   //Have not set meanweight in AgeLengthStock. W == 0.
 
   const Agebandmatrix* matureStockPopInArea;
@@ -268,7 +266,7 @@ void Tags::Update() {
       upperlgrp = matureStockPopInArea->Maxlength(i + minage);
       sizeoflengthgroups[i] = upperlgrp - lowerlengthgroups[i];
     }
-    tagpopulation = new Agebandmatrixvector(stockareas.Size(), minage, lowerlengthgroups, sizeoflengthgroups);
+    tagpopulation = new agebandmatrixptrvector(stockareas.Size(), minage, lowerlengthgroups, sizeoflengthgroups);
     AgeLengthStock.resize(1, tagpopulation);
   }
 }
@@ -297,18 +295,18 @@ void Tags::printPopInfo(char* filename) {
     minage = -1;
     maxage = -1;
   } else {
-    numareas = AgeLengthStock[0]->Size();
-    minage = (*AgeLengthStock[0])[0].Minage();
-    maxage = (*AgeLengthStock[0])[0].Maxage();
+    numareas = AgeLengthStock[0].Size();
+    minage = AgeLengthStock[0][0].Minage();
+    maxage = AgeLengthStock[0][0].Maxage();
   }
 
   outfile << "Tagging numbers\n";
   for (areas = 0; areas < numareas; areas++) {
     for (age = minage; age <= maxage; age++) {
-      minlength = (*AgeLengthStock[0])[areas].Minlength(age);
-      maxlength = (*AgeLengthStock[0])[areas].Maxlength(age);
+      minlength = AgeLengthStock[0][areas].Minlength(age);
+      maxlength = AgeLengthStock[0][areas].Maxlength(age);
       for (length = minlength; length < maxlength; length++)
-        outfile << (*AgeLengthStock[0])[areas][age][length].N << sep;
+        outfile << AgeLengthStock[0][areas][age][length].N << sep;
       outfile << endl;
     }
   }
@@ -324,5 +322,5 @@ void Tags::UpdateMatureStock(const TimeClass* const TimeInfo) {
     cerr << "Warning - tagging experiment is not part of the simulation anymore\n";
   else
     for (i = 0; i < maturestocks.Size(); i++)
-      maturestocks[i]->UpdateTags(AgeLengthStock[i + 1], this);
+      maturestocks[i]->UpdateTags(&AgeLengthStock[i + 1], this);
 }

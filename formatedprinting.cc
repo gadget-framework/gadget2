@@ -1,5 +1,4 @@
 #include "formatedprinting.h"
-#include "agebandm.h"
 #include "predator.h"
 #include "prey.h"
 #include "stock.h"

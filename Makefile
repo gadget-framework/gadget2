@@ -76,12 +76,13 @@ VECTORS = addr_keepmatrix.o addr_keepvector.o charptrmatrix.o charptrvector.o \
 	formulaindexvector.o stockptrvector.o formulamatrix.o formulavector.o \
 	timevariablematrix.o timevariablevector.o timevariableindexvector.o \
 	vectorofcharptr.o suitfuncptrvector.o tagptrvector.o printerptrvector.o \
-	formulamatrixptrvector.o variableinfoptrvector.o agebandmatrixratio.o
+	formulamatrixptrvector.o variableinfoptrvector.o agebandmatrixratio.o \
+	agebandmatrixratioptrvector.o agebandmatrixptrmatrix.o
 
 GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregator.o \
 	growthimplement.o predatorindex.o abstrpredstdinfo.o abstrpreystdinfo.o \
 	predatorprinter.o abstrpreystdinfobylength.o predatoroveraggregator.o \
-	actionattimes.o predatoroverprinter.o addr_keep.o predprey.o agebandm.o \
+	actionattimes.o predatoroverprinter.o addr_keep.o predprey.o strstack.o \
 	predpreystdageprinter.o agebandmatrix.o predpreystdlengthprinter.o grow.o \
 	agebandmatrixmemberfunctions.o predpreystdprinter.o area.o predstdinfo.o \
 	bandmatrix.o predstdinfobylength.o binarytree.o prey.o logcatchfunction.o \
@@ -104,8 +105,8 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	transition.o otherfood.o mathfunc.o understocking.o poppredator.o tags.o \
 	vectorusingkeeper.o popstatistics.o boundlikelihood.o timevariable.o \
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
-	strstack.o lennaturalm.o catchintons.o agebandmatrixratiomemberfunctions.o \
-	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o taggrow.o \
+	lennaturalm.o catchintons.o agebandmatrixratiomemberfunctions.o taggrow.o \
+	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \
 	interruptinterface.o interrupthandler.o initialinputfile.o popratio.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o

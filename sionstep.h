@@ -7,6 +7,8 @@
 #include "commentstream.h"
 #include "actionattimes.h"
 #include "keeper.h"
+#include "agebandmatrix.h"
+#include "gadget.h"
 
 class SIOnStep;
 class TimeClass;

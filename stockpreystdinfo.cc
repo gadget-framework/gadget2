@@ -2,7 +2,7 @@
 #include "intvector.h"
 #include "stockprey.h"
 #include "areatime.h"
-#include "agebandm.h"
+//#include "agebandm.h"
 #include "gadget.h"
 
 StockPreyStdInfo::StockPreyStdInfo(const StockPrey* p, const intvector& Areas)

@@ -4,7 +4,8 @@
 #include "formulaindexvector.h"
 #include "formulamatrix.h"
 #include "commentstream.h"
-#include "agebandm.h"
+#include "agebandmatrix.h"
+#include "agebandmatrixptrvector.h"
 #include "keeper.h"
 
 class Stock;
@@ -16,7 +17,7 @@ public:
   InitialCond(CommentStream& infile, const intvector& area, Keeper* const keeper,
      const char* refWeightFile, const AreaClass* const Area);
   ~InitialCond();
-  void Initialize(Agebandmatrixvector& Alkeys);
+  void Initialize(agebandmatrixptrvector& Alkeys);
   void SetCI(const LengthGroupDivision* const GivenLDiv);
   void Print(ofstream& outfile) const;
 protected:
@@ -26,7 +27,7 @@ protected:
      int noareas, int noagegr, int nolengr, int minage, const AreaClass* const Area);
   LengthGroupDivision* LgrpDiv;
   ConversionIndex* CI;
-  Agebandmatrixvector AreaAgeLength;
+  agebandmatrixptrvector AreaAgeLength;
   Formulamatrix AreaDist;
   Formulamatrix AgeDist;
   Formulamatrix RelCondition;

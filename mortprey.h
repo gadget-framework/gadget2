@@ -4,6 +4,7 @@
 #include "prey.h"
 #include "doublematrixptrvector.h"
 #include "areatime.h"
+#include "agebandmatrixptrvector.h"
 #include "gadget.h"
 
 class MortPrey;
@@ -51,8 +52,8 @@ public:
   void setAgeMatrix(int pred_no, int area, const doublevector& agegroupno);
   doublematrix* ageGroupMatrix(int index) { return agegroupmatrix[index]; };
 protected:
-  Agebandmatrixvector Alkeys;
-  Agebandmatrixvector mean_n;
+  agebandmatrixptrvector Alkeys;
+  agebandmatrixptrvector mean_n;
   doublematrix z;
   doublematrix mort_fact;
   doublematrix prop_surv;

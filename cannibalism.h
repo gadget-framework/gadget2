@@ -4,7 +4,7 @@
 #include "doubleindexvector.h"
 #include "commentstream.h"
 #include "bandmatrixptrvector.h"
-#include "agebandm.h"
+#include "agebandmatrix.h"
 #include "formulavector.h"
 #include "intmatrix.h"
 

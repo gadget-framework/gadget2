@@ -150,10 +150,10 @@ void StockAggregator::MeanSum() {
   }
 }
 
-const Agebandmatrixvector& StockAggregator::ReturnSum() const {
+const agebandmatrixptrvector& StockAggregator::ReturnSum() const {
   return total;
 }
 
-const Agebandmatrixvector& StockAggregator::ReturnMeanSum() const {
+const agebandmatrixptrvector& StockAggregator::ReturnMeanSum() const {
   return meanTotal;
 }

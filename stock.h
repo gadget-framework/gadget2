@@ -1,8 +1,8 @@
 #ifndef stock_h
 #define stock_h
 
-#include "agebandm.h"
-#include "agebandmatrixratio.h"
+#include "agebandmatrix.h"
+#include "agebandmatrixratioptrvector.h"
 #include "base.h"
 #include "stockptrvector.h"
 #include "tagptrvector.h"
@@ -62,7 +62,7 @@ public:
   void Renewal(int area, const TimeClass* const TimeInfo, double ratio = 0);
   void Add(const Agebandmatrix& Addition, const ConversionIndex* const CI,
     int area, double ratio = 1, int MinAge = 0, int MaxAge = 100);
-  void Add(const Agebandmatrixratiovector& Addition, int AddArea, const ConversionIndex* const CI,
+  void Add(const agebandmatrixratioptrvector& Addition, int AddArea, const ConversionIndex* const CI,
     int area, double ratio = 1, int MinAge = 0, int MaxAge = 100);
   virtual void Migrate(const TimeClass* const TimeInfo);
   virtual void CalcEat(int area,
@@ -99,13 +99,13 @@ public:
   const doubleindexvector& mortality() const { return NatM->getMortality(); };
   const void getBiomass(int area) const {};
   const Stockptrvector& GetMatureStocks();
-  int UpdateTags(Agebandmatrixvector* tagbyagelength, Tags* newtag);
+  int UpdateTags(agebandmatrixptrvector* tagbyagelength, Tags* newtag);
   void DeleteTags(const char* tagname);
   void UpdateMatureStockWithTags(const TimeClass* const TimeInfo);
   const charptrvector TaggingExperimentIds();
 protected:
-  Agebandmatrixvector Alkeys;
-  Agebandmatrixratiovector tagAlkeys;
+  agebandmatrixptrvector Alkeys;
+  agebandmatrixratioptrvector tagAlkeys;
   Tagptrvector matureTags;
   Spawner* spawner;
   Catch* catchptr;

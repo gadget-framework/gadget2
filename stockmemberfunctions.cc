@@ -190,7 +190,7 @@ void Stock::Add(const Agebandmatrix& Addition, const ConversionIndex* const CI,
   AgebandmAdd(Alkeys[AreaNr[area]], Addition, *CI, ratio, MinAge, MaxAge);
 }
 
-void Stock::Add(const Agebandmatrixratiovector& Addition, int AddArea, const ConversionIndex* const CI,
+void Stock::Add(const agebandmatrixratioptrvector& Addition, int AddArea, const ConversionIndex* const CI,
   int area, double ratio, int MinAge, int MaxAge) {
 
   int numtag = Addition.NrOfTagExp();
@@ -203,7 +203,7 @@ void Stock::RecalcMigration(const TimeClass* const TimeInfo) {
     migration->MigrationRecalc(TimeInfo->CurrentYear());
 }
 
-int Stock::UpdateTags(Agebandmatrixvector* tagbyagelength, Tags* newtag) {
+int Stock::UpdateTags(agebandmatrixptrvector* tagbyagelength, Tags* newtag) {
   tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->Name());
   if (doesmature) {
     maturity->AddTag(newtag->Name());

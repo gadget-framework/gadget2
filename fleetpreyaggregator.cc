@@ -116,7 +116,7 @@ void FleetPreyAggregator::Print(ofstream& outfile) const {
 }
 
 void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
-  Agebandmatrixvector totalpop;
+  agebandmatrixptrvector totalpop;
   popinfo tmppop;
   tmppop.N = 1.0;
   tmppop.W = 1.0;
@@ -195,7 +195,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo, int dummy) {
   //the mortality model. The results are to be used in the second likelihood
   //function in CatchDistribution.
   //written by kgf 16/9 98
-  Agebandmatrixvector totalpop;
+  agebandmatrixptrvector totalpop;
   popinfo tmppop;
   tmppop.N = 1.0;
   tmppop.W = 1.0;

@@ -124,7 +124,7 @@ void InitialCond::ReadNumberData(CommentStream& infile, Keeper* const keeper,
   if (CountColumns(infile) != 4)
     handle.Message("Wrong number of columns in inputfile - should be 4");
 
-  //Set the numbers in the agebandmatrixvector to zero (in case some arent in the inputfile)
+  //Set the numbers in the agebandmatrixptrvector to zero (in case some arent in the inputfile)
   for (areaid = 0; areaid < noareas; areaid++)
     for (ageid = minage; ageid < noagegr + minage; ageid++)
       for (lengthid = 0; lengthid < nolengr; lengthid++)
@@ -348,7 +348,7 @@ void InitialCond::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void InitialCond::Initialize(Agebandmatrixvector& Alkeys) {
+void InitialCond::Initialize(agebandmatrixptrvector& Alkeys) {
 
   int area, age, l;
   int minage, maxage;
