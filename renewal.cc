@@ -15,9 +15,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
-  int i = 0;
   timeindex = 0;
-  int year, step, area, age, ind, no;
   double minlength, maxlength, dl;
 
   infile >> text;
@@ -44,114 +42,165 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   if (LgrpDiv->Error())
     handle.Message("Error in renewal - failed to create length group");
 
-  infile >> ws;
-  while (isdigit(infile.peek()) && !infile.eof()) {
-    if (readOption == 0) {
-      //We now expect to find the renewal data in the following format
-      //year, step, area, age and then the renewal data
-      infile >> year >> step >> area >> age >> minlength >> no >> ws;
+  if (readOption == 0) {
+    this->readNumberData(infile, keeper, TimeInfo, Area);
 
-      if (TimeInfo->isWithinPeriod(year, step)) {
-        renewalTime.resize(1);
-        renewalTime[i] = TimeInfo->calcSteps(year, step);
+  } else if (readOption == 1) {
+    this->readNormalData(infile, keeper, TimeInfo, Area);
 
-        if (!this->isInArea(Area->InnerArea(area)))
-          handle.Message("Error in renewal - stock undefined on area");
-
-        renewalArea.resize(1);
-        renewalArea[i] = Area->InnerArea(area);
-        renewalNumber.resize(1, keeper);
-        if (!(infile >> renewalNumber[i]))
-          handle.Message("Error in renewal - wrong format for renewalmultiplier");
-        renewalNumber[i].Inform(keeper);
-
-        //Now we read first the length distribution pattern and then
-        //the corresponding mean weights. Both are assumed to be vectors of
-        //length no. We read them into the indexvectors numtmpindvec and
-        //weighttmpindvec, create poptmp and then keep it in Distribution.
-        ind = LgrpDiv->numLengthGroup(minlength);
-        DoubleIndexVector* numtmpindvec = new DoubleIndexVector(no, ind);
-        DoubleIndexVector* weighttmpindvec = new DoubleIndexVector(no, ind);
-        PopInfoIndexVector poptmp(no, ind);
-
-        if (!readIndexVector(infile, (*numtmpindvec)))
-          handle.Message("Error in renewal - failure in numbers of recruits");
-        if (!readIndexVector(infile, (*weighttmpindvec)))
-          handle.Message("Error in renewal - failure in weights of recruits");
-
-        for (ind = poptmp.minCol(); ind < poptmp.maxCol(); ind++) {
-          poptmp[ind].N = (*numtmpindvec)[ind];
-          poptmp[ind].W = (*weighttmpindvec)[ind];
-          //Check if any (i.e. nonzero) part of the population has zero mean weight.
-          if (poptmp[ind].N > 0 && isZero(poptmp[ind].W))
-            handle.Message("Error in renewal - zero mean weight for nonzero number of recruits");
-        }
-        renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
-        delete numtmpindvec;
-        delete weighttmpindvec;
-
-      } else { //This year and step is not required - skip rest of line
-        infile.get(c);
-        while (c != '\n' && !infile.eof())
-          infile.get(c);
-      }
-
-    } else if (readOption == 1) { //use meanlengths.
-      //We now expect to find the renewal data in the following format
-      //year, step, area, age, number, mean, sdev, alpha, beta
-      if (countColumns(infile) != 9)
-        handle.Message("Wrong number of columns in inputfile - should be 9");
-
-      infile >> year >> step >> area >> age >> ws;
-      if (TimeInfo->isWithinPeriod(year, step)) {
-        renewalTime.resize(1);
-        renewalTime[i] = TimeInfo->calcSteps(year, step);
-
-        if (!this->isInArea(Area->InnerArea(area)))
-          handle.Message("Error in renewal - stock undefined on area");
-
-        renewalArea.resize(1);
-        renewalArea[i] = Area->InnerArea(area);
-        renewalNumber.resize(1, keeper);
-        meanLength.resize(1, keeper);
-        sdevLength.resize(1, keeper);
-        coeff1.resize(1, keeper);
-        coeff2.resize(1, keeper);
-
-        PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
-        renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
-        if (!(infile >> renewalNumber[i]))
-          handle.Message("Error in renewal - wrong format for renewal multiplier");
-        renewalNumber[i].Inform(keeper);
-        if (!(infile >> meanLength[i]))
-          handle.Message("Error in renewal - wrong format for renewal mean length");
-        meanLength[i].Inform(keeper);
-        if (!(infile >> sdevLength[i]))
-          handle.Message("Error in renewal - wrong format for renewal standard deviation");
-        sdevLength[i].Inform(keeper);
-        if (!(infile >> coeff1[i]))
-          handle.Message("Error in renewal - wrong format for renewal wcoeff1");
-        coeff1[i].Inform(keeper);
-        if (!(infile >> coeff2[i]))
-          handle.Message("Error in renewal - wrong format for renewal wcoeff2");
-        coeff2[i].Inform(keeper);
-
-      } else { //This year and step is not required - skip rest of line
-        infile.get(c);
-        while (c != '\n' && !infile.eof())
-          infile.get(c);
-      }
-
-    } else
-      handle.Message("Error in renewal - unrecognised format for renewal data ");
-
-    //Now we move on and check whether we find a digit or not
-    infile >> ws;
-    i++;
-  }
+  } else
+    handle.Message("Error in renewal - unrecognised format for renewal data");
 
   handle.logMessage("Read recruits data file - number of entries", renewalTime.Size());
   keeper->clearLast();
+}
+
+void RenewalData::readNormalData(CommentStream& infile, Keeper* const keeper,
+  const TimeClass* const TimeInfo, const AreaClass* const Area) {
+
+  int i = 0;
+  int year, step, area, age;
+  int nolengr = LgrpDiv->numLengthGroups();
+
+  //Find start of data in datafile
+  infile >> ws;
+  if (infile.eof()) {
+    handle.Message("Error in renewal - renewal data file empty");
+    return;
+  }
+
+  char c = infile.peek();
+  if (!isdigit(c)) {
+    infile.get(c);
+    while (c != '\n' && !infile.eof())
+      infile.get(c);
+  }
+
+  if (countColumns(infile) != 9)
+    handle.Message("Wrong number of columns in inputfile - should be 9");
+
+  while (!infile.eof()) {
+    //We now expect to find the renewal data in the following format
+    //year, step, area, age, number, mean, sdev, alpha, beta
+    infile >> year >> step >> area >> age >> ws;
+    if (TimeInfo->isWithinPeriod(year, step)) {
+      renewalTime.resize(1);
+      renewalTime[i] = TimeInfo->calcSteps(year, step);
+
+      if (!this->isInArea(Area->InnerArea(area)))
+        handle.Message("Error in renewal - stock undefined on area");
+
+      renewalArea.resize(1);
+      renewalArea[i] = Area->InnerArea(area);
+      renewalNumber.resize(1, keeper);
+      meanLength.resize(1, keeper);
+      sdevLength.resize(1, keeper);
+      coeff1.resize(1, keeper);
+      coeff2.resize(1, keeper);
+
+      PopInfoIndexVector poptmp(nolengr, 0);
+      renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
+      if (!(infile >> renewalNumber[i]))
+        handle.Message("Error in renewal - wrong format for renewal multiplier");
+      if (!(infile >> meanLength[i]))
+        handle.Message("Error in renewal - wrong format for renewal mean length");
+      if (!(infile >> sdevLength[i]))
+        handle.Message("Error in renewal - wrong format for renewal standard deviation");
+      if (!(infile >> coeff1[i]))
+        handle.Message("Error in renewal - wrong format for renewal wcoeff1");
+      if (!(infile >> coeff2[i]))
+        handle.Message("Error in renewal - wrong format for renewal wcoeff2");
+
+      renewalNumber[i].Inform(keeper);
+      meanLength[i].Inform(keeper);
+      sdevLength[i].Inform(keeper);
+      coeff1[i].Inform(keeper);
+      coeff2[i].Inform(keeper);
+
+    } else { //This year and step is not required - skip rest of line
+      infile.get(c);
+      while (c != '\n' && !infile.eof())
+        infile.get(c);
+    }
+
+    infile >> ws;
+    i++;
+  }
+}
+
+void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
+  const TimeClass* const TimeInfo, const AreaClass* const Area) {
+
+  int i = 0;
+  int year, step, area, age, minlength, no, ind;
+
+  //Find start of data in datafile
+  infile >> ws;
+  if (infile.eof()) {
+    handle.Message("Error in renewal - renewal data file empty");
+    return;
+  }
+
+  char c = infile.peek();
+  if (!isdigit(c)) {
+    infile.get(c);
+    while (c != '\n' && !infile.eof())
+      infile.get(c);
+  }
+
+  while (!infile.eof()) {
+    //We now expect to find the renewal data in the following format
+    //year, step, area, age and then the renewal data
+    infile >> year >> step >> area >> age >> minlength >> no >> ws;
+
+    if (TimeInfo->isWithinPeriod(year, step)) {
+      renewalTime.resize(1);
+      renewalTime[i] = TimeInfo->calcSteps(year, step);
+
+      if (!this->isInArea(Area->InnerArea(area)))
+        handle.Message("Error in renewal - stock undefined on area");
+
+      renewalArea.resize(1);
+      renewalArea[i] = Area->InnerArea(area);
+      renewalNumber.resize(1, keeper);
+      if (!(infile >> renewalNumber[i]))
+        handle.Message("Error in renewal - wrong format for renewalmultiplier");
+      renewalNumber[i].Inform(keeper);
+
+      //Now we read first the length distribution pattern and then
+      //the corresponding mean weights. Both are assumed to be vectors of
+      //length no. We read them into the indexvectors numtmpindvec and
+      //weighttmpindvec, create poptmp and then keep it in Distribution.
+      ind = LgrpDiv->numLengthGroup(minlength);
+      DoubleIndexVector* numtmpindvec = new DoubleIndexVector(no, ind);
+      DoubleIndexVector* weighttmpindvec = new DoubleIndexVector(no, ind);
+      PopInfoIndexVector poptmp(no, ind);
+
+      if (!readIndexVector(infile, (*numtmpindvec)))
+        handle.Message("Error in renewal - failure in numbers of recruits");
+      if (!readIndexVector(infile, (*weighttmpindvec)))
+        handle.Message("Error in renewal - failure in weights of recruits");
+
+      for (ind = poptmp.minCol(); ind < poptmp.maxCol(); ind++) {
+        poptmp[ind].N = (*numtmpindvec)[ind];
+        poptmp[ind].W = (*weighttmpindvec)[ind];
+        //Check if any (i.e. nonzero) part of the population has zero mean weight.
+        if (poptmp[ind].N > 0 && isZero(poptmp[ind].W))
+          handle.Message("Error in renewal - zero mean weight for nonzero number of recruits");
+      }
+      renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
+      delete numtmpindvec;
+      delete weighttmpindvec;
+
+    } else { //This year and step is not required - skip rest of line
+      infile.get(c);
+      while (c != '\n' && !infile.eof())
+        infile.get(c);
+    }
+
+    infile >> ws;
+    i++;
+  }
 }
 
 RenewalData::~RenewalData() {

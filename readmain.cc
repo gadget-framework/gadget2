@@ -142,7 +142,7 @@ void Ecosystem::readPrinters(CommentStream& infile) {
   if (!(strcasecmp(text, "[component]") == 0))
     handle.Unexpected("[component]", text);
 
-  while (!infile.eof() && !infile.fail()) {
+  while (!infile.eof()) {
     readWordAndValue(infile, "type", type);
 
     if (strcasecmp(type, "stockstdprinter") == 0)
@@ -212,7 +212,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
   if (!(strcasecmp(text, "[component]") == 0))
     handle.Unexpected("[component]", text);
 
-  while (!infile.eof() && !infile.fail()) {
+  while (!infile.eof()) {
     readWordAndValue(infile, "name", name);
     readWordAndVariable(infile, "weight", weight);
     readWordAndValue(infile, "type", type);

@@ -54,6 +54,24 @@ public:
   void Reset();
 protected:
   /**
+   * \brief This is the function used to read the recruitment data given as a normal distribution
+   * \param infile is the CommentStream to read the initial conditions data from
+   * \param keeper is the Keeper for the current model
+   * \param TimeInfo is the TimeClass for the current model
+   * \param Area is the AreaClass for the current model
+   */
+  void readNormalData(CommentStream& infile, Keeper* const keeper,
+     const TimeClass* const TimeInfo, const AreaClass* const Area);
+  /**
+   * \brief This is the function used to read the recruitment data given as numbers
+   * \param infile is the CommentStream to read the initial conditions data from
+   * \param keeper is the Keeper for the current model
+   * \param TimeInfo is the TimeClass for the current model
+   * \param Area is the AreaClass for the current model
+   */
+  void readNumberData(CommentStream& infile, Keeper* const keeper,
+     const TimeClass* const TimeInfo, const AreaClass* const Area);
+  /**
    * \brief This is flag to denote which option was used when reading in the recruits data from file
    */
   int readOption;

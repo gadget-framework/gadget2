@@ -105,10 +105,10 @@ void Formula::Inform(Keeper* keeper) {
   if (inattr.Size() > 0)
     keeper->KeepVariable(init, inattr);
   else {
+    assert(multipliers.Size() == attributes.Size());
     for (i = 0; i < multipliers.Size(); i++) {
       ostringstream ostr;
       ostr << "*" << i + 1 << ends;
-      assert(i < attributes.Size());
       keeper->addString(ostr.str());
       keeper->KeepVariable(multipliers[i], attributes[i]);
       keeper->clearLast();

@@ -148,7 +148,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //read the initial conditions
   infile >> text;
   if (strcasecmp(text, "initialconditions") == 0)
-    initial = new InitialCond(infile, areas, keeper, refweight, Area);
+    initial = new InitialCond(infile, areas, keeper, refweight, Area, dl);
   else
     handle.Unexpected("initialconditions", text);
   handle.logMessage("Read initial conditions data for stock", this->getName());

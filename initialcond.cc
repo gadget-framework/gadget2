@@ -13,7 +13,7 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
   //Find start of data in datafile
   infile >> ws;
   if (infile.eof()) {
-    handle.Message("Initial stock data file empty");
+    handle.Message("Error in initial conditions - initial stock data file empty");
     return;
   }
 
@@ -46,7 +46,7 @@ void InitialCond::readNormalData(CommentStream& infile, Keeper* const keeper,
   ageid = -1;
   tmparea = -1;
   keeper->addString("meandata");
-  while (!infile.eof() && !infile.fail()) {
+  while (!infile.eof()) {
     keepdata = 0;
     infile >> age >> area >> ws;
 
@@ -105,7 +105,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   //Find start of data in datafile
   infile >> ws;
   if (infile.eof()) {
-    handle.Message("Initial stock number data file empty");
+    handle.Message("Error in initial conditions - initial stock data file empty");
     return;
   }
 
@@ -138,7 +138,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   areaid = -1;
   lengthid = -1;
   keeper->addString("numberdata");
-  while (!infile.eof() && !infile.fail()) {
+  while (!infile.eof()) {
     keepdata = 0;
     infile >> area >> age >> length >> tmpnumber >> ws;
 
@@ -185,7 +185,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
 }
 
 InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
-  Keeper* const keeper, const char* refWeightFile, const AreaClass* const Area)
+  Keeper* const keeper, const char* refWeightFile, const AreaClass* const Area, double DL)
   : LivesOnAreas(Areas), LgrpDiv(0), CI(0) {
 
   ifstream subfile;
@@ -194,7 +194,6 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   strncpy(text, "", MaxStrLength);
 
   int i, j, k;
-  int noareas = areas.Size();
   int minage, maxage;
   char c;
   double minlength, maxlength, dl;
@@ -210,11 +209,19 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   readWordAndVariable(infile, "maxage", maxage);
   readWordAndVariable(infile, "minlength", minlength);
   readWordAndVariable(infile, "maxlength", maxlength);
-  readWordAndVariable(infile, "dl", dl);
+
+  //JMB - changed to make the reading of dl optional
+  //If it isnt specifed here, it will default to the dl value of the stock
+  infile >> ws;
+  c = infile.peek();
+  if ((c == 'd') || (c == 'D'))
+    readWordAndVariable(infile, "dl", dl);
+  else
+    dl = DL;
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    handle.Message("Error in initialconditions - failed to create length group");
+    handle.Message("Error in initial conditions - failed to create length group");
 
   int noagegr = maxage - minage + 1; //Number of age groups
   int nolengr = LgrpDiv->numLengthGroups(); //Number of length groups
@@ -242,7 +249,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
       tmpPop[i][j].W = 1.0;
     }
   }
-  initialPop.resize(noareas, minage, 0, tmpPop);
+  initialPop.resize(areas.Size(), minage, 0, tmpPop);
 
   keeper->addString("readinitialdata");
   infile >> text >> ws;
@@ -312,8 +319,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   keeper->clearLast();
 
   //finaly copy the information into initialPop
-  keeper->addString("weightdata");
-  for (i = 0; i < noareas; i++) {
+  for (i = 0; i < areas.Size(); i++) {
     for (j = 0; j < noagegr; j++) {
       if (readNumbers == 1)
         rCond = 1.0;
@@ -332,7 +338,6 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     }
   }
 
-  keeper->clearLast();
   keeper->clearLast();
 }
 

@@ -29,9 +29,10 @@ public:
    * \param keeper is the Keeper for the current model
    * \param refWeightFile is the name of the reference weight file
    * \param Area is the AreaClass for the current model
+   * \param DL is the step length of the length groups of the stock
    */
   InitialCond(CommentStream& infile, const IntVector& areas, Keeper* const keeper,
-     const char* refWeightFile, const AreaClass* const Area);
+     const char* refWeightFile, const AreaClass* const Area, double DL);
   /**
    * \brief This is the default InitialCond destructor
    */
