@@ -1,8 +1,11 @@
 #include "ludecomposition.h"
 
 LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
-  assert(A.Ncol() == A.Nrow());
-
+  if(A.Ncol() != A.Nrow()){
+    cerr << "Error in LU decomposition - matrix not hip\n";
+    exit(EXIT_FAILURE);
+  }
+  illegal = 0;
   int i, k, j;
   double s;
 
@@ -13,21 +16,31 @@ LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
 
   for (k = 0; k < size; k++) {
     L[k][k] = 1.0;
-    logdet += log(U[k][k]);
+    if (U[k][k]>0.0 & logdet < verybig)
+      logdet += log(U[k][k]);
+    
+    else if (U[k][k] <= 0.0 & logdet < verybig){
+      cerr << "Error in LUDecomposition - non positive number on matrix diagonal penalty given\n";
+      illegal = 1;
+	}
+    
     for (i = k + 1; i < size; i++) {
       s = U[i][k] / U[k][k];
       L[i][k] = s;
       U[i][k] = 0.0;
+    
       for (j = k + 1; j < size; j++)
         U[i][j] -= s * U[k][j];
     }
   }
 }
 
-//calculates the solution of Ax=b using the LU decomposition calculated in the constructor
+//  calculates the solution of Ax=b using the LU decomposition calculated in the constructor
 DoubleVector LUDecomposition::Solve(const DoubleVector& b) {
-  assert(size == b.Size());
-
+  if(size != b.Size()){
+    cerr << "lu error, size = " << size << ", b.Size() = " << b.Size() << "\n";
+    exit(EXIT_FAILURE);
+  }
   int i, j;
   double s;
   DoubleVector y = DoubleVector(b);

@@ -6,6 +6,8 @@
 #include "doublematrixptrmatrix.h"
 #include "actionattimes.h"
 #include "formula.h"
+#include "ludecomposition.h"
+#include "formulavector.h"
 
 class CatchDistribution : public Likelihood {
 public:
@@ -30,6 +32,7 @@ private:
   double LikMVLogistic();
   double LikTest();
   double LikTest2();
+  void Correlation();
   DoubleMatrixPtrMatrix AgeLengthData; //[time][area][age][length]
   DoubleMatrixPtrMatrix Proportions; //kgf 17/9 98
   DoubleMatrix Likelihoodvalues; //kgf 17/9 98
@@ -66,6 +69,10 @@ private:
   Formula rho;
   Formula alpha;
   Formula beta;
+  Formula gamma;
+  FormulaVector params;
+  int illegal, times, lag;
+  LUDecomposition LU;
 };
 
 #endif

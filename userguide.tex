@@ -1,7 +1,7 @@
 \documentclass [a4paper, 10pt]{book}
 \usepackage{amsmath}
 \usepackage[T1]{fontenc}
-
+\usepackage{palatino}
 \begin{document}
 
 \title{\Huge{Gadget User Guide}\\ \huge{\textit{Draft}}}
@@ -1668,7 +1668,7 @@ multinomial - use a multinomial function\newline
 pearson - use a Pearson function\newline
 gamma - use a gamma function\newline
 sumofsquares - use a sum of squares function\newline
-mvn-rho or mvn-alphabeta - use a multivariate normal function
+mvn - use a multivariate normal function
 
 \bigskip
 The $<$multivariate parameters$>$ are only required for the multivariate functions, and Gadget will generate an error if they are specified when they are not required.  These parameters are described in the following sections.
@@ -1738,46 +1738,38 @@ $<\Sigma>$ is the variance-covariance matrix for the multivariate normal distrib
 $<$ P $>$ is the proportion of the data sample for that time/area/age combination\newline
 $<\pi>$ is the proportion of the model sample for that time/area/age combination
 
-\subsubsection{mvn-rho function}
-For the mvn-rho formulation of the multivariate normal function, $<\Sigma>$ is calculated from equations \ref{eq:cdsigma1}  and \ref{eq:cdsigma2} below:
+\subsubsection{mvn function}
+For the mvn formulation of the multivariate normal function,
+$<\Sigma>$ is calculated from equations \ref{eq:cdsigma1}  and
+\ref{eq:cdsigma2} below assuming that the number in each lengthgroup
+is autocorrelated with lag n:
 
 \begin{equation}\label{eq:cdsigma1}
-\Sigma = \sigma^2(\rho_{ij})_{ij}
+\Sigma = (\sigma_{ij})_{ij}
 \end{equation}
 
 \begin{equation}\label{eq:cdsigma2}
-\rho_{ij} = \rho^{|i-j|}
+\text{ if i>j }\sigma_{ij} = \sum^n_{l=1} c_l \sigma_{i-l,j} + \delta_{ij} \sigma^2 
 \end{equation}
 
-To specify this likelihood function, it is necessary to specify the parameters $<\sigma>$ and $<\rho>$.  This is done in the likelihood file, as shown below:
+To specify this likelihood function, it is necessary to specify the
+parameter $<\sigma>$ and a list of correlation parameters.  This is done in the likelihood file, as shown below:
 
 {\small\begin{verbatim}
 ...
-function             mvn-rho
+function             mvn
+lag                  <lag>
 sigma                <sigma>
-rho                  <rho>
+param                <coeff>
+param                <coeff>
+.
+.
+.                  
 aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
 ...
 \end{verbatim}}
-
-\subsubsection{mvn-alphabeta function}
-For the mvn-alpabeta formulation of the multivariate normal function, $<\Sigma>$ is calculated from equations \ref{eq:cdsigma1} above and \ref{eq:cdsigma3} below:
-
-\begin{equation}\label{eq:cdsigma3}
-\rho_{ij} = \alpha \rho_{|i-j|-1} + \beta \rho_{|i-j|-2}
-\end{equation}
-
-To specify this likelihood function, it is necessary to specify the parameters $<\sigma>$, $<\alpha>$ and $<\beta>$.  This is done in the likelihood file, as shown below:
-
-{\small\begin{verbatim}
-...
-function             mvn-alphabeta
-sigma                <sigma>
-alpha                <alpha>
-beta                 <beta>
-aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
-...
-\end{verbatim}}
+Note that when setting <lag> to zero the multivariate normal
+distribution simplifies to a univaritate one.
 
 \section{CatchStatistics}\label{sec:catchstat}
 The CatchStatistics likelihood component is used to compare statistical data sampled from the model with statistical data sampled from landings or surveys.  This is typically used to compare biological data, such as the mean length at age or mean weight at age.  The likelihood score that is calculated gives some measure as to how well the data from the model fits to the data from the landings.

@@ -71,6 +71,7 @@ int main(int aNumber, char* const aVector[]) {
   StochasticData* Stochasticdata = 0;
   ErrorHandler handle;
   int check = 0;
+  printlog = 0;
 
   //Test to see if the function double lgamma(double) is returning an integer.
   //lgamma is a non-ansi function and on some platforms when compiled with the

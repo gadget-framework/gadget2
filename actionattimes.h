@@ -48,7 +48,7 @@ public:
    */
   void AddActionsAtAllSteps(const IntVector& years, const TimeClass* const TimeInfo);
   /**
-   * \brief This is the function used to read check whether an action takes place onm the current timestep
+   * \brief This is the function used to read check whether an action takes place on the current timestep
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if action takes place, 0 otherwise
    */
