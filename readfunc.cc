@@ -200,13 +200,36 @@ int countColumns(CommentStream& infile) {
 
   istringstream istr(line);
   istr >> ws;
+
+  char c;
   int i = 0;
+  int p = 0;
   while (!istr.eof()) {
-    istr >> temp;
-    if (istr.fail() && !istr.eof())
-      return 0;
-    istr >> ws;
-    i++;
+    // with the new formula syntax a column can contain whitespace,
+    // so this code was changed to keep track of opening and closing
+    // parens when counting columns. [mnaa]
+    c = istr.peek();
+    if (c=='(') {
+      istr.get(c);
+      p++;
+      while (p > 0) {
+        if (istr.eof())
+          return 0;
+        istr.get(c);
+        if (c=='(')
+          p++;
+        if (c==')')
+          p--;
+      }
+      istr >> ws;
+      i++;
+    } else {
+      istr >> temp;
+      if (istr.fail() && !istr.eof())
+        return 0;
+      istr >> ws;
+      i++;
+    }
   }
 
   infile.seekg(pos);

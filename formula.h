@@ -6,38 +6,35 @@
 #include "parameter.h"
 #include "parametervector.h"
 #include "gadget.h"
+#include <vector>
 
 class Keeper;
+
+enum FormulaType { CONSTANT, PARAMETER, FUNCTION };
+enum FunctionType { NONE, MULT, DIV, PLUS, MINUS, PRINT };
 
 class Formula {
 public:
   Formula();
   Formula(const Formula& form);
-  ~Formula() {};
+  ~Formula();
   void setValue(double initValue);
   friend CommentStream& operator >> (CommentStream&, Formula&);
   /**
    * \brief This operator will return the value of the formula
    * \return the value of the formula
    */
-  operator double() const {
-    double value = init;
-    int i;
-    for (i = 0; i < multipliers.Size(); i++)
-      value *= multipliers[i];
-    return value;
-  };
-  //Updated keeper with new address of value in NewF instead
-  //of addresses used in this if any attributes have been set in this
-  //If there are no values in NewF are equal to values in this...
+  operator double() const;
+  double evalFunction() const;
   void Interchange(Formula& NewF, Keeper* keeper) const;
   void Inform(Keeper* keeper);
   void Delete(Keeper* keeper) const;
 private:
-  double init;
-  Parameter inattr;
-  DoubleVector multipliers;
-  ParameterVector attributes;
+  FormulaType type;
+  FunctionType functiontype;
+  double value;
+  Parameter name;
+  vector<Formula*> argList;
 };
 
 #endif
