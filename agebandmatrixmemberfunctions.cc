@@ -64,14 +64,12 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
   }
 }
 
-//Pre: CI converts from 'this' to Ratio and CI.TargetIsFiner() == 1
 void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& CI) {
-  assert(!CI.TargetIsFiner());
-  //We use the vector UsedRatio instead of Ratio to reduce the chances
-  //of numerical errors and negative stock size.
-  DoubleVector UsedRatio(Ratio);
-  int i, j, j1, j2;
+  if (CI.TargetIsFiner() == 1)
+    handle.logWarning("Warning in agebandmatrix - target is finer for multiply");
 
+  int i, j, j1, j2;
+  DoubleVector UsedRatio(Ratio);
   for (i = 0; i < UsedRatio.Size(); i++) {
     if (isZero(UsedRatio[i]))
       UsedRatio[i] = 0.0;
@@ -98,10 +96,13 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& C
   }
 }
 
-//Pre: similar to AgeBandMatrix::Multiply
 void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Nrof) {
-  DoubleVector Ratio(CI.Size(), 1.0);
+
+  if (Consumption.Size() != Nrof.Size())
+    handle.logWarning("Warning in agebandmatrix - different sizes in subtract");
+
   int i;
+  DoubleVector Ratio(Consumption.Size(), 1.0);
   for (i = 0; i < Consumption.Size(); i++) {
     if (Nrof[i].N > verysmall)
       Ratio[i] = 1 - (Consumption[i] / Nrof[i].N);
@@ -111,12 +112,14 @@ void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIn
 }
 
 //-----------------------------------------------------------------
-//Multiply AgeBandMatrix by a Agedependent vector for example
-//Natural mortality. Investigate if Ratio should be allowed to be shorter.
+//Multiply AgeBandMatrix by a age dependent vector for example
+//natural mortality. Investigate if Ratio should be allowed to be shorter.
 void AgeBandMatrix::Multiply(const DoubleVector& Ratio) {
+  if (Ratio.Size() != nrow)
+    handle.logWarning("Warning in agebandmatrix - different sizes in multiply");
+
   int i, j;
-  int check = min(Ratio.Size(), nrow);
-  for (i = 0; i < check; i++)
+  for (i = 0; i < nrow; i++)
     for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
       (*v[i])[j] *= Ratio[i];
 }

@@ -233,7 +233,7 @@ void MaturityA::Reset(const TimeClass* const TimeInfo) {
 }
 
 void MaturityA::setStock(StockPtrVector& stockvec) {
-  this->Maturity::setStock(stockvec);
+  Maturity::setStock(stockvec);
 
   int i;
   minMatureAge = 9999;
@@ -336,7 +336,7 @@ void MaturityB::Print(ofstream& outfile) const {
 }
 
 void MaturityB::setStock(StockPtrVector& stockvec) {
-  this->Maturity::setStock(stockvec);
+  Maturity::setStock(stockvec);
 }
 
 void MaturityB::Reset(const TimeClass* const TimeInfo) {
@@ -422,7 +422,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
 }
 
 void MaturityC::setStock(StockPtrVector& stockvec) {
-  this->Maturity::setStock(stockvec);
+  Maturity::setStock(stockvec);
 
   int i;
   minMatureAge = 9999;
@@ -526,7 +526,7 @@ MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
 }
 
 void MaturityD::setStock(StockPtrVector& stockvec) {
-  this->Maturity::setStock(stockvec);
+  Maturity::setStock(stockvec);
 
   int i;
   minMatureAge = 9999;

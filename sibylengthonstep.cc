@@ -2,7 +2,6 @@
 #include "stock.h"
 #include "areatime.h"
 #include "loglinearregression.h"
-#include "stockaggregator.h"
 #include "errorhandler.h"
 #include "gadget.h"
 

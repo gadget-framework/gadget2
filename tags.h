@@ -8,7 +8,6 @@
 #include "charptrvector.h"
 #include "stockptrvector.h"
 #include "agebandmatrix.h"
-#include "stockaggregator.h"
 #include "agebandmatrixptrmatrix.h"
 #include "livesonareas.h"
 #include "doublematrixptrvector.h"
