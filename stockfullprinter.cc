@@ -151,18 +151,18 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo) {
     const AgeBandMatrix& alk = aggregator->ReturnSum()[a];
     for (age = alk.Minage(); age <= alk.Maxage(); age++) {
       for (l = alk.Minlength(age); l < alk.Maxlength(age); l++) {
-        outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep
-          << setw(smallwidth) << TimeInfo->CurrentStep() << sep
-          << setw(smallwidth) << outerareas[a] << sep << setw(smallwidth)
-          << age + minage << sep << setw(smallwidth)
+        outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
+          << setw(lowwidth) << TimeInfo->CurrentStep() << sep
+          << setw(lowwidth) << outerareas[a] << sep << setw(lowwidth)
+          << age + minage << sep << setw(lowwidth)
           << LgrpDiv->Meanlength(l) << sep;
 
         //JMB crude filter to remove the 'silly' values from the output
         if ((alk[age][l].N < rathersmall) || (alk[age][l].W < 0))
-          outfile << setw(fullwidth) << 0 << sep << setw(fullwidth) << 0 << endl;
+          outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0 << endl;
         else
-          outfile << setprecision(largeprecision) << setw(fullwidth) << alk[age][l].N << sep
-            << setprecision(largeprecision) << setw(fullwidth) << alk[age][l].W << endl;
+          outfile << setprecision(largeprecision) << setw(largewidth) << alk[age][l].N << sep
+            << setprecision(largeprecision) << setw(largewidth) << alk[age][l].W << endl;
 
       }
     }

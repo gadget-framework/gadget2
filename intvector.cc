@@ -67,17 +67,21 @@ void IntVector::resize(int addsize) {
 }
 
 void IntVector::Delete(int pos) {
-  assert(size > 0);
-  assert(0 <= pos && pos < size);
-  int* vnew = new int[size - 1];
   int i;
-  for (i = 0; i < pos; i++)
-    vnew[i] = v[i];
-  for (i = pos; i < size - 1; i++)
-    vnew[i] = v[i + 1];
-  delete[] v;
-  v = vnew;
-  size--;
+  if (size > 1) {
+    int* vnew = new int[size - 1];
+    for (i = 0; i < pos; i++)
+      vnew[i] = v[i];
+    for (i = pos; i < size - 1; i++)
+      vnew[i] = v[i + 1];
+    delete[] v;
+    v = vnew;
+    size--;
+  } else {
+    delete[] v;
+    v = 0;
+    size = 0;
+  }
 }
 
 IntVector& IntVector::operator = (const IntVector& d) {

@@ -50,10 +50,11 @@ void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo) {
   for (a = 0; a < areas.Size(); a++) {
     for (predl = 0; predl < PredLgrpDiv->NoLengthGroups(); predl++) {
       for (preyl = 0; preyl < PreyLgrpDiv->NoLengthGroups(); preyl++) {
-        outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep
-          << setw(smallwidth) << TimeInfo->CurrentStep() << sep
-          << setw(smallwidth) << outerareas[a] << sep << setw(smallwidth)
-          << PredLgrpDiv->Meanlength(predl) << sep << setw(smallwidth)
+
+        outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
+          << setw(lowwidth) << TimeInfo->CurrentStep() << sep
+          << setw(lowwidth) << outerareas[a] << sep << setw(lowwidth)
+          << PredLgrpDiv->Meanlength(predl) << sep << setw(lowwidth)
           << PreyLgrpDiv->Meanlength(preyl) << sep;
 
         //JMB crude filter to remove the 'silly' values from the output
@@ -61,13 +62,13 @@ void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo) {
            || (predinfo->BconsumptionByLength(areas[a])[predl][preyl] < rathersmall)
            || (predinfo->MortalityByLength(areas[a])[predl][preyl] < verysmall))
 
-          outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0
-            << sep << setw(largewidth) << 0 << endl;
+          outfile << setw(printwidth) << 0 << sep << setw(printwidth) << 0
+            << sep << setw(printwidth) << 0 << endl;
 
         else
-          outfile << setprecision(printprecision) << setw(largewidth) << predinfo->NconsumptionByLength(areas[a])[predl][preyl] << sep
-            << setprecision(printprecision) << setw(largewidth) << predinfo->BconsumptionByLength(areas[a])[predl][preyl] << sep
-            << setprecision(printprecision) << setw(largewidth) << predinfo->MortalityByLength(areas[a])[predl][preyl] << endl;
+          outfile << setprecision(printprecision) << setw(printwidth) << predinfo->NconsumptionByLength(areas[a])[predl][preyl] << sep
+            << setprecision(printprecision) << setw(printwidth) << predinfo->BconsumptionByLength(areas[a])[predl][preyl] << sep
+            << setprecision(printprecision) << setw(printwidth) << predinfo->MortalityByLength(areas[a])[predl][preyl] << endl;
 
       }
     }

@@ -155,7 +155,7 @@ void OptInfoHooke::MaximizeLikelihood() {
   for (i = 0; i < nopt; i++)
     val[i] = initialval[i] * endpoint[i];
 
-  cout << "\nOptimization finished with final likelihood score of " << EcoSystem->Likelihood()
+  cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
     << "\nafter " << EcoSystem->GetFuncEval() << " function evaluations at the point\n";
   EcoSystem->PrintOptValues();
 
@@ -274,7 +274,7 @@ void OptInfoSimann::MaximizeLikelihood() {
   count = simann(nopt, startpoint, endpoint, lowerb, upperb, &f, 0,
     simanniter, cstep, T, vmstep, rt, ns, nt, simanneps);
 
-  cout << "\nOptimization finished with final likelihood score of " << EcoSystem->Likelihood()
+  cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
     << "\nafter " << EcoSystem->GetFuncEval() << " function evaluations at the point\n";
   EcoSystem->PrintOptValues();
 
@@ -449,7 +449,7 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
   for (i = 0; i < nopt; i++)
     val[i] = initialval[i] * endpoint[i];
 
-  cout << "\nOptimization finished with final likelihood score of " << EcoSystem->Likelihood()
+  cout << "\nOptimisation finished with final likelihood score of " << EcoSystem->Likelihood()
     << "\nafter " << EcoSystem->GetFuncEval() << " function evaluations at the point\n";
   EcoSystem->PrintOptValues();
 

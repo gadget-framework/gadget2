@@ -67,15 +67,19 @@ void AddressKeeperVector::resize(int addsize) {
 }
 
 void AddressKeeperVector::Delete(int pos) {
-  assert(size > 0);
-  assert(0 <= pos && pos < size);
-  AddressKeeper* vnew = new AddressKeeper[size - 1];
   int i;
-  for (i = 0; i < pos; i++)
-    vnew[i] = v[i];
-  for (i = pos; i < size - 1; i++)
-    vnew[i] = v[i + 1];
-  delete[] v;
-  v = vnew;
-  size--;
+  if (size > 1) {
+    AddressKeeper* vnew = new AddressKeeper[size - 1];
+    for (i = 0; i < pos; i++)
+      vnew[i] = v[i];
+    for (i = pos; i < size - 1; i++)
+      vnew[i] = v[i + 1];
+    delete[] v;
+    v = vnew;
+    size--;
+  } else {
+    delete[] v;
+    v = 0;
+    size = 0;
+  }
 }

@@ -104,18 +104,22 @@ void DoubleMatrix::AddRows(int add, int length, double initial) {
 }
 
 void DoubleMatrix::DeleteRow(int row) {
-  assert(nrow > 0);
-  assert(0 <= row && row < nrow);
   delete v[row];
-  DoubleVector** vnew = new DoubleVector*[nrow - 1];
   int i;
-  for (i = 0; i < row; i++)
-    vnew[i] = v[i];
-  for (i = row; i < nrow - 1; i++)
-    vnew[i] = v[i + 1];
-  delete[] v;
-  v = vnew;
-  nrow--;
+  if (nrow > 1) {
+    DoubleVector** vnew = new DoubleVector*[nrow - 1];
+    for (i = 0; i < row; i++)
+      vnew[i] = v[i];
+    for (i = row; i < nrow - 1; i++)
+      vnew[i] = v[i + 1];
+    delete[] v;
+    v = vnew;
+    nrow--;
+  } else {
+    delete[] v;
+    v = 0;
+    nrow = 0;
+  }
 }
 
 int DoubleMatrix::maxRowSize() const {

@@ -107,7 +107,7 @@ void Prey::SetCI(const LengthGroupDivision* const GivenLDiv) {
 void Prey::Print(ofstream& outfile) const {
   int i, area;
 
-  outfile << "\nPrey\n\tname " << this->Name();
+  outfile << "\nPrey\n\tName " << this->Name();
   outfile << "\n\tPrey lengths";
   for (i = 0; i < LgrpDiv->NoLengthGroups(); i++)
     outfile << sep << LgrpDiv->Minlength(i);
@@ -116,7 +116,7 @@ void Prey::Print(ofstream& outfile) const {
     outfile << "\tNumber of prey on area " << areas[area];
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << sep << Number[area][i].N;
     }
     outfile << endl;
@@ -125,7 +125,7 @@ void Prey::Print(ofstream& outfile) const {
     outfile << "\tWeight of prey on area " << areas[area];
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << sep << Number[area][i].W;
     }
     outfile << endl;
@@ -135,7 +135,7 @@ void Prey::Print(ofstream& outfile) const {
     outfile << "\tArea " << areas[area];
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << sep << consumption[area][i];
     }
     outfile << endl;
@@ -145,7 +145,7 @@ void Prey::Print(ofstream& outfile) const {
     outfile << "\tArea " << areas[area];
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << sep << overconsumption[area][i];
     }
     outfile << endl;

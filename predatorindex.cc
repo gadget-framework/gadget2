@@ -176,7 +176,7 @@ void PredatorIndices::Reset(const Keeper* const keeper) {
 
 void PredatorIndices::Print(ofstream& outfile) const {
   int i;
-  outfile << "\nPredator Indices " << piname << "\nlikelihood " << likelihood << "\n\tPredator names: ";
+  outfile << "\nPredator Indices " << piname << " - likelihood value " << likelihood << "\n\tPredator names: ";
   for (i = 0; i < predatornames.Size(); i++)
     outfile << predatornames[i] << sep;
   outfile << "\n\tPrey names: ";

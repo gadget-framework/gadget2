@@ -94,7 +94,8 @@ void Transition::SetStock(StockPtrVector& stockvec) {
 
   IntVector minlv(2, 0);
   IntVector sizev(2, LgrpDiv->NoLengthGroups());
-  Agegroup.resize(areas.Size(), age, minlv, sizev);
+  AgeGroup.resize(areas.Size(), age, minlv, sizev);
+  TagAgeGroup.resize(areas.Size(), age, minlv, sizev);
 }
 
 void Transition::Print(ofstream& outfile) const {
@@ -108,20 +109,28 @@ void Transition::Print(ofstream& outfile) const {
   outfile << "\n\tTransition step " << TransitionStep  << endl;
 }
 
-void Transition::KeepAgegroup(int area, AgeBandMatrix& Alkeys, const TimeClass* const TimeInfo) {
+void Transition::KeepAgegroup(int area, AgeBandMatrix& Alkeys,
+  AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo) {
+
   int inarea = AreaNr[area];
-  int l, minl, maxl;
+  int numtags = TagAlkeys.NrOfTagExp();
+  int i, l, minl, maxl;
 
   if (TimeInfo->CurrentStep() == TransitionStep) {
-    Agegroup[inarea].SettoZero();
-    assert(Alkeys.Minage() <= age && age <= Alkeys.Maxage());
-    minl = Agegroup[inarea].Minlength(age);
-    maxl = Agegroup[inarea].Maxlength(age);
+    AgeGroup[inarea].SettoZero();
+    //TagAgeGroup[inarea].SettoZero();
+    minl = AgeGroup[inarea].Minlength(age);
+    maxl = AgeGroup[inarea].Maxlength(age);
     for (l = minl; l < maxl; l++) {
-      Agegroup[inarea][age][l].N = Alkeys[age][l].N;
-      Agegroup[inarea][age][l].W = Alkeys[age][l].W;
+      AgeGroup[inarea][age][l].N = Alkeys[age][l].N;
+      AgeGroup[inarea][age][l].W = Alkeys[age][l].W;
       Alkeys[age][l].N = 0.0;
       Alkeys[age][l].W = 0.0;
+      for (i = 0; i < numtags; i++) {
+        *(TagAgeGroup[inarea][age][l][i].N) = *(TagAlkeys[age][l][i].N);
+        *(TagAlkeys[age][l][i].N) = 0.0;
+        TagAlkeys[age][l][i].R = 0.0;
+      }
     }
   }
 }
@@ -138,11 +147,60 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
         exit(EXIT_FAILURE);
       }
 
-      if (TransitionStocks[s]->Birthday(TimeInfo))
-        Agegroup[inarea].IncrementAge();
+      if (TransitionStocks[s]->Birthday(TimeInfo)) {
+        AgeGroup[inarea].IncrementAge();
+        if (TagAgeGroup.NrOfTagExp() > 0)
+          TagAgeGroup[inarea].IncrementAge(AgeGroup[inarea]);
+      }
 
-      TransitionStocks[s]->Add(Agegroup[inarea], CI[s], area, Ratio[s],
-        Agegroup[inarea].Minage(), Agegroup[inarea].Maxage());
+      TransitionStocks[s]->Add(AgeGroup[inarea], CI[s], area, Ratio[s],
+        AgeGroup[inarea].Minage(), AgeGroup[inarea].Maxage());
+
+      if (TagAgeGroup.NrOfTagExp() > 0)
+        TransitionStocks[s]->Add(TagAgeGroup, inarea, CI[s], area, Ratio[s],
+          TagAgeGroup[inarea].Minage(), TagAgeGroup[inarea].Maxage());
+
     }
+  }
+}
+
+const StockPtrVector& Transition::GetTransitionStocks() {
+  return TransitionStocks;
+}
+
+// Add a new tagging experiment with name = tagname to tagStorage.
+// This tagging experiment has id = number of tagging experiment before adding the new tag.
+// For all areas, ages and lengths in TagAgeGroup have added a new tag with number of fish = -1.0 and ratio = -1.0, or
+// TagAgeGroup[area][age][length][id].N = -1.0,
+// TagAgeGroup[area][age][length][id].R = -1.0
+// New memory has been allocated for the double TagAgeGroup[area][age][length].N.
+void Transition::AddTag(const char* tagname) {
+  TagAgeGroup.addTag(tagname);
+}
+
+void Transition::DeleteTag(const char* tagname) {
+  int minage, maxage, minlen, maxlen, age, length, i;
+  int id = TagAgeGroup.getId(tagname);
+
+  if (id >= 0) {
+    minage = TagAgeGroup[0].Minage();
+    maxage = TagAgeGroup[0].Maxage();
+
+    // Remove allocated memory
+    for (i = 0; i < TagAgeGroup.Size(); i++) {
+      for (age = minage; age <= maxage; age++) {
+        minlen = TagAgeGroup[i].Minlength(age);
+        maxlen = TagAgeGroup[i].Maxlength(age);
+        for (length = minlen; length < maxlen; length++) {
+          delete[] (TagAgeGroup[i][age][length][id].N);
+          (TagAgeGroup[i][age][length][id].N) = NULL;
+        }
+      }
+    }
+    TagAgeGroup.deleteTag(tagname);
+
+  } else {
+    cerr << "Error in tagging transition - trying to delete tag with name: "
+      << tagname << " in transition but there is not any tag with that name\n";
   }
 }

@@ -55,9 +55,9 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& preds, const Pre
         total[i][j][k] = 0;
 }
 
-PredatorAggregator::PredatorAggregator(const CharPtrVector& pred_names, PreyPtrVector& Preys,
+PredatorAggregator::PredatorAggregator(const CharPtrVector& prednames, PreyPtrVector& Preys,
   const IntMatrix& Areas, const IntVector& ages, const LengthGroupDivision* const preyLgrpDiv)
-  : prednames(pred_names), areas(Areas) {
+  : areas(Areas) {
 
   //written by kgf 19/2 99
   //modified by kgf 4/3 99

@@ -215,7 +215,7 @@ void Migration::Print(ofstream& outfile) const {
       outfile << "Migration matrix number " << i << endl;
       for (j = 0; j < CalcMigList[i]->Nrow(); j++) {
         for (k = 0; k < CalcMigList[i]->Ncol(j); k++) {
-          outfile.width(printwidth);
+          outfile.width(smallwidth);
           outfile.precision(smallprecision);
           outfile << (*CalcMigList[i])[j][k] << sep;
         }
@@ -231,14 +231,14 @@ void Migration::Print(int nr, ofstream& outfile) const {
     outfile << "Ages\n";
     for (i = 0; i < ages.Nrow(); i++) {
       for (j = 0; j < ages.Ncol(i); j++)
-        outfile  << ages[i][j] << sep;
+        outfile << ages[i][j] << sep;
       outfile << endl;
     }
   }
   outfile << "Numbers of migration matrices:\n";
   for (i = 0; i < MatrixNumbers.Nrow(); i++) {
     for (j = 1; j < MatrixNumbers.Ncol(i); j++)
-      outfile  << MatrixNumbers[i][j] << sep;
+      outfile << MatrixNumbers[i][j] << sep;
     outfile << endl;
   }
 
@@ -255,7 +255,7 @@ void Migration::Print(int nr, ofstream& outfile) const {
     outfile << "Migration matrix number " << nr << endl;
     for (j = 0; j < CalcMigList[nr]->Nrow(); j++) {
       for (k = 0; k < CalcMigList[nr]->Ncol(j); k++) {
-        outfile.width(printwidth);
+        outfile.width(smallwidth);
         outfile.precision(smallprecision);
         outfile << (*CalcMigList[nr])[j][k] << sep;
       }

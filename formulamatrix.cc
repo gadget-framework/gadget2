@@ -44,7 +44,7 @@ FormulaMatrix::~FormulaMatrix() {
   }
 }
 
-FormulaMatrix& FormulaMatrix::operator=(const FormulaMatrix& formulaM) {
+FormulaMatrix& FormulaMatrix::operator = (const FormulaMatrix& formulaM) {
   if (this == &formulaM) {
     //same object just return
     return *this;

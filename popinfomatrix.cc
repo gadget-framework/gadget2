@@ -88,16 +88,20 @@ void PopInfoMatrix::AddRows(int add, int length, PopInfo initial) {
 }
 
 void PopInfoMatrix::DeleteRow(int row) {
-  int i;
-  assert(nrow > 0);
-  assert(0 <= row && row < nrow);
   delete v[row];
-  PopInfoVector** vnew = new PopInfoVector*[nrow - 1];
-  for (i = 0; i < row; i++)
-    vnew[i] = v[i];
-  for (i = row; i < nrow - 1; i++)
-    vnew[i] = v[i + 1];
-  delete[] v;
-  v = vnew;
-  nrow--;
+  int i;
+  if (nrow > 1) {
+    PopInfoVector** vnew = new PopInfoVector*[nrow - 1];
+    for (i = 0; i < row; i++)
+      vnew[i] = v[i];
+    for (i = row; i < nrow - 1; i++)
+      vnew[i] = v[i + 1];
+    delete[] v;
+    v = vnew;
+    nrow--;
+  } else {
+    delete[] v;
+    v = 0;
+    nrow = 0;
+  }
 }

@@ -164,16 +164,16 @@ Grower::~Grower() {
 void Grower::Print(ofstream& outfile) const {
   int i, j, area;
 
-  outfile << "\nGrower\n\tMeanlengths of length groups.\n\t";
+  outfile << "\nGrower\n\tMean lengths of length groups.\n\t";
   for (i = 0; i < LgrpDiv->NoLengthGroups(); i++)
     outfile << sep << LgrpDiv->Meanlength(i);
 
   outfile << "\n\tLength increase:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tarea " << areas[area];
+    outfile << "\tInner area " << areas[area];
     for (i = 0; i < CalcLgrowth.Ncol(area); i++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << sep << CalcLgrowth[area][i];
     }
     outfile << endl;
@@ -181,10 +181,10 @@ void Grower::Print(ofstream& outfile) const {
 
   outfile << "\tWeight increase:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tarea " << areas[area];
+    outfile << "\tInner area " << areas[area];
     for (i = 0; i < CalcWgrowth.Ncol(area); i++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << sep << CalcWgrowth[area][i];
     }
     outfile << endl;
@@ -192,7 +192,7 @@ void Grower::Print(ofstream& outfile) const {
 
   outfile << "\tDistributed length increase:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tarea " << areas[area] << endl;
+    outfile << "\tInner area " << areas[area] << endl;
     for (i = 0; i < lgrowth[area]->Nrow(); i++) {
       outfile << TAB;
       for (j = 0; j < lgrowth[area]->Ncol(i); j++)
@@ -203,7 +203,7 @@ void Grower::Print(ofstream& outfile) const {
 
   outfile << "\tDistributed weight increase:\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tarea " << areas[area] << endl;
+    outfile << "\tInner area " << areas[area] << endl;
     for (i = 0; i < wgrowth[area]->Nrow(); i++) {
       outfile << TAB;
       for (j = 0; j < wgrowth[area]->Ncol(i); j++)

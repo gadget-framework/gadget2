@@ -349,16 +349,16 @@ void InitialCond::Print(ofstream& outfile) const {
 
   outfile << "\nInitial conditions\n";
   for (i = 0; i < areas.Size(); i++) {
-    outfile << "Inner Area " << areas[i] << endl;
+    outfile << "\tInner area " << areas[i] << endl;
     Printagebandm(outfile, AreaAgeLength[i]);
   }
-  outfile << "Meanlengths\n";
+  outfile << "\tMean lengths\n";
   for (i = 0; i < Mean.Nrow(); i++) {
     for (j = 0; j < Mean.Ncol(i); j++)
       outfile << TAB << Mean[i][j];
     outfile << endl;
   }
-  outfile << "Sdev\n";
+  outfile << "\tStandard deviation\n";
   for (i = 0; i < Sdev.Nrow(); i++) {
     for (j = 0; j < Sdev.Ncol(i); j++)
       outfile << TAB << Sdev[i][j];

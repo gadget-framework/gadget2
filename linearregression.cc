@@ -7,7 +7,7 @@ LinearRegression::LinearRegression() {
   sse = 0;
   a = 0;
   b = 0;
-  SSEerror = 1e+10;
+  SSEerror = HUGE_VALUE;
 }
 
 void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {

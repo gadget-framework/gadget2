@@ -54,7 +54,7 @@ const double rathersmall = 1e-10;
 const double verysmall = 1e-100;
 const int MAX_MORTALITY = 1000;
 const double MAX_RATIO_CONSUMED = 0.95;
-const double HUGE_VALUE = 1e+30;
+const double HUGE_VALUE = 1e+10;
 const char sep = ' ';
 
 #ifndef TAB
@@ -67,10 +67,11 @@ const int smallprecision = 4;
 const int printprecision = 6;
 const int largeprecision = 8;
 const int fullprecision = 15;
-const int smallwidth = 6;
-const int printwidth = 8;
-const int largewidth = 10;
-const int fullwidth = 12;
+const int lowwidth = 4;
+const int smallwidth = 8;
+const int printwidth = 10;
+const int largewidth = 12;
+const int fullwidth = 18;
 
 /* Update the following line each time upgrades are implemented */
 #define gadgetversion "2.0.04-BETA"

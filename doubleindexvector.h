@@ -54,6 +54,7 @@ public:
    * \return the value of the specified element
    */
   const double& operator [] (int pos) const;
+  DoubleIndexVector& operator = (const DoubleIndexVector& d);
   /**
    * \brief This will return the index of the vector
    * \return the index of the vector

@@ -32,8 +32,8 @@ void SIByLengthOnStep::SetStocks(const StockPtrVector& Stocks) {
    * AgeBandMatrixPtrVector with only one element. That element will have
    * 1 line (i.e. 1 age) and LgrpDiv.NoLengthGroups() columns. */
 
-  minage = 100;
-  maxage = 0;
+  int minage = 100;
+  int maxage = 0;
   int i;
   for (i = 0; i < Stocks.Size(); i++) {
     if (Stocks[i]->Minage() < minage)

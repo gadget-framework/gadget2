@@ -101,6 +101,8 @@ int Ecosystem::Simulate(int Optimize, int print) {
   TimeInfo->ResetToBeginning();
   for (i = 0; i < basevec.Size(); i++)
     basevec[i]->Reset(TimeInfo);
+  for (i = 0; i < tagvec.Size(); i++)
+    tagvec[i]->Reset(TimeInfo);
 
   for (i = 0; i < TimeInfo->TotalNoSteps(); i++) {
     if (i > 0) //do not need to call reset again on the first step.

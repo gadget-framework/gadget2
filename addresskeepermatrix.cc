@@ -67,7 +67,7 @@ AddressKeeperMatrix::~AddressKeeperMatrix() {
 }
 
 void AddressKeeperMatrix::AddRows(int add, int length) {
-  AddressKeeperVector** vnew = new AddressKeeperVector* [nrow + add];
+  AddressKeeperVector** vnew = new AddressKeeperVector*[nrow + add];
   int i;
   for (i = 0; i < nrow; i++)
     vnew[i] = v[i];
@@ -88,16 +88,20 @@ void AddressKeeperMatrix::AddRows(int add, int length, AddressKeeper initial) {
 }
 
 void AddressKeeperMatrix::DeleteRow(int row) {
-  int i;
-  assert(nrow > 0);
-  assert(0 <= row && row < nrow);
   delete v[row];
-  AddressKeeperVector** vnew = new AddressKeeperVector*[nrow - 1];
-  for (i = 0; i < row; i++)
-    vnew[i] = v[i];
-  for (i = row; i < nrow - 1; i++)
-    vnew[i] = v[i + 1];
-  delete[] v;
-  v = vnew;
-  nrow--;
+  int i;
+  if (nrow > 1) {
+    AddressKeeperVector** vnew = new AddressKeeperVector*[nrow - 1];
+    for (i = 0; i < row; i++)
+      vnew[i] = v[i];
+    for (i = row; i < nrow - 1; i++)
+      vnew[i] = v[i + 1];
+    delete[] v;
+    v = vnew;
+    nrow--;
+  } else {
+    delete[] v;
+    v = 0;
+    nrow = 0;
+  }
 }

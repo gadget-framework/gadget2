@@ -153,18 +153,22 @@ void BandMatrixVector::resize(int addsize, const BandMatrix& initial) {
 }
 
 void BandMatrixVector::Delete(int pos) {
-  assert(size > 0);
-  assert(0 <= pos && pos < size);
   delete v[pos];
-  BandMatrix** vnew = new BandMatrix*[size - 1];
   int i;
-  for (i = 0; i < pos; i++)
-    vnew[i] = v[i];
-  for (i = pos; i < size - 1; i++)
-    vnew[i] = v[i + 1];
-  delete[] v;
-  v = vnew;
-  size--;
+  if (size > 1) {
+    BandMatrix** vnew = new BandMatrix*[size - 1];
+    for (i = 0; i < pos; i++)
+      vnew[i] = v[i];
+    for (i = pos; i < size - 1; i++)
+      vnew[i] = v[i + 1];
+    delete[] v;
+    v = vnew;
+    size--;
+  } else {
+    delete[] v;
+    v = 0;
+    size = 0;
+  }
 }
 
 BandMatrixMatrix::BandMatrixMatrix(int NroW, int ncol) : nrow(NroW) {
@@ -216,18 +220,22 @@ void BandMatrixMatrix::AddRows(int addrow, int ncol) {
 }
 
 void BandMatrixMatrix::DeleteRow(int row) {
-  assert(nrow > 0);
-  assert(0 <= row && row < nrow);
   delete v[row];
-  BandMatrixVector** vnew = new BandMatrixVector*[nrow - 1];
   int i;
-  for (i = 0; i < row; i++)
-    vnew[i] = v[i];
-  for (i = row; i < nrow - 1; i++)
-    vnew[i] = v[i + 1];
-  delete[] v;
-  v = vnew;
-  nrow--;
+  if (nrow > 1) {
+    BandMatrixVector** vnew = new BandMatrixVector*[nrow - 1];
+    for (i = 0; i < row; i++)
+      vnew[i] = v[i];
+    for (i = row; i < nrow - 1; i++)
+      vnew[i] = v[i + 1];
+    delete[] v;
+    v = vnew;
+    nrow--;
+  } else {
+    delete[] v;
+    v = 0;
+    nrow = 0;
+  }
 }
 
 BandMatrix& BandMatrix::operator += (BandMatrix& b) {

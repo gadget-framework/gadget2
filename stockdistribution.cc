@@ -115,12 +115,13 @@ StockDistribution::StockDistribution(CommentStream& infile,
   i = 0;
   if (!(strcasecmp(text, "stocknames") == 0))
     handle.Unexpected("stocknames", text);
-  infile >> text >> ws;
+  infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
+    infile >> ws;
     stocknames.resize(1);
     stocknames[i] = new char[strlen(text) + 1];
     strcpy(stocknames[i++], text);
-    infile >> text >> ws;
+    infile >> text;
   }
 
   //We have now read in all the data from the main likelihood file
@@ -278,11 +279,11 @@ void StockDistribution::Reset(const Keeper* const keeper) {
 void StockDistribution::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nStock distribution\nlikelihood " << likelihood
-    << "\nfunction " << functionname << "\n\tStocknames:";
+  outfile << "\nStock Distribution - likelihood value " << likelihood
+    << "\n\tFunction " << functionname << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
-  outfile << "\n\tFleetnames:";
+  outfile << "\n\tFleet names:";
   for (i = 0; i < fleetnames.Size(); i++)
     outfile << sep << fleetnames[i];
   outfile << endl;
@@ -358,6 +359,7 @@ double StockDistribution::LikMultinomial() {
   DoubleMatrixPtrVector Dist(areas.Nrow(), NULL);
   int nareas, area, age, length, sn;
   int minage, maxage;
+  double tmp;
 
   for (area = 0; area < Dist.Size(); area++) {
     Dist[area] = new DoubleMatrix(aggregator[0]->NoAgeGroups() *
@@ -382,7 +384,7 @@ double StockDistribution::LikMultinomial() {
       for (sn = 0; sn < stocknames.Size(); sn++)
         likdata[sn] = (*AgeLengthData[timeindex][nareas])[sn][area];
 
-      MN.CalcLogLikelihood(likdata, (*Dist[nareas])[area]);
+      tmp = MN.CalcLogLikelihood(likdata, (*Dist[nareas])[area]);
     }
     delete Dist[nareas];
   }

@@ -20,8 +20,7 @@ class SIOnStep;
 class SIOnStep {
 public:
   SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
-    const TimeClass* const TimeInfo, int numcols,
-    const CharPtrVector& index1, const CharPtrVector& index2);
+    const TimeClass* const TimeInfo, int numcols, const CharPtrVector& index1, const CharPtrVector& index2);
   SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
     const TimeClass* const TimeInfo, const CharPtrVector& colindex);
   virtual ~SIOnStep();
@@ -46,8 +45,10 @@ protected:
   DoubleMatrix abundance;
   FitType getFitType() { return fittype; };
 private:
-  void ReadSIData(CommentStream&, const char*, const CharPtrVector&, const CharPtrVector&, const TimeClass*);
-  void ReadSIData(CommentStream&, const char*, const CharPtrVector&, const TimeClass*);
+  void ReadSIData(CommentStream& infile, const char* arealabel,
+    const CharPtrVector& index1, const CharPtrVector& index2, const TimeClass* const TimeInfo);
+  void ReadSIData(CommentStream& infile, const char* arealabel,
+    const CharPtrVector& colindex, const TimeClass* const TimeInfo);
   double Fit(const DoubleVector& stocksize, const DoubleVector& indices, int col);
   int NumberOfSums;
   FitType fittype;

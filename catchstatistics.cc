@@ -101,10 +101,11 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     handle.Unexpected("stocknames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
+    infile >> ws;
     stocknames.resize(1);
     stocknames[i] = new char[strlen(text) + 1];
     strcpy(stocknames[i++], text);
-    infile >> text >> ws;
+    infile >> text;
   }
 
   //We have now read in all the data from the main likelihood file
@@ -252,8 +253,8 @@ void CatchStatistics::Reset(const Keeper* const keeper) {
 void CatchStatistics::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch statistics " << csname << "\nlikelihood " << likelihood
-    << "\nfunction " << functionname;
+  outfile << "\nCatch Statistics " << csname << " - likelihood value " << likelihood
+    << "\n\tFunction " << functionname;
   outfile << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];

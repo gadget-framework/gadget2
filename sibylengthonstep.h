@@ -18,8 +18,6 @@ protected:
   StockAggregator* aggregator;
   LengthGroupDivision* LgrpDiv;
   IntVector Areas;
-  int minage;
-  int maxage;
 };
 
 #endif

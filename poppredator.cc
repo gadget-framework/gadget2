@@ -28,10 +28,10 @@ void PopPredator::Print(ofstream& outfile) const {
   Predator::Print(outfile);
   int i, area;
 
-  outfile << "\tMeanlengths of length groups ";
+  outfile << "\tMean lengths of length groups ";
   for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
     outfile.precision(smallprecision);
-    outfile.width(printwidth);
+    outfile.width(smallwidth);
     outfile << sep << LgrpDiv->Meanlength(i);
   }
   outfile << endl;
@@ -39,25 +39,25 @@ void PopPredator::Print(ofstream& outfile) const {
     outfile << "\tNumber of predator on area " << areas[area];
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << sep << Prednumber[area][i].N;
     }
     outfile << "\n\tWeight of predator on area " << areas[area];
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << sep << Prednumber[area][i].W;
     }
     outfile << "\n\tTotal amount eaten on area " << areas[area];
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << sep << totalconsumption[area][i];
     }
     outfile << "\n\tOverconsumption on area    " << areas[area];
     for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << sep << overconsumption[area][i];
     }
     outfile << endl;

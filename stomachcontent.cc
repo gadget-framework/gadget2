@@ -67,8 +67,8 @@ void StomachContent::AddToLikelihood(const TimeClass* const TimeInfo) {
 }
 
 void StomachContent::Print(ofstream& outfile) const {
-  outfile << "\nStomach content " << stomachname << "\nlikelihood " << likelihood
-    << "\nfunction " << functionname << endl;
+  outfile << "\nStomach Content " << stomachname << " - likelihood value " << likelihood
+    << "\n\tfunction " << functionname << endl;
   StomCont->Print(outfile);
 }
 
@@ -716,10 +716,10 @@ void SC::Print(ofstream& outfile) const {
   for (y = 0; y < stomachcontent.Nrow(); y++) {
     outfile << "\n\trow " << y;
     for (ar = 0; ar < stomachcontent[y].Size(); ar++) {
-      outfile << "\n\tareas" << sep << ar << "\n\t\t";
+      outfile << "\n\tinner areas" << sep << ar << "\n\t\t";
       for (i = 0; i < stomachcontent[y][ar]->Nrow(); i++) {
         for (j = 0; j < (*stomachcontent[y][ar])[i].Size(); j++) {
-          outfile.width(printwidth);
+          outfile.width(smallwidth);
           outfile.precision(smallprecision);
           outfile << (*stomachcontent[y][ar])[i][j] << sep;
         }
@@ -747,13 +747,13 @@ void SC::PrintLikelihoodOnStep(ostream& outfile, int time,
       for (pd = 0; pd < stomachcontent[time][a]->Nrow(); pd++) {
         for (py = 0; py < (*stomachcontent[time][a])[pd].Size(); py++) {
           outfile.width(printwidth);
-          outfile.precision(lowprecision);
+          outfile.precision(printprecision);
           if ((*modelConsumption[time][a])[pd][py] > 0 &&
               (*stomachcontent[time][a])[pd][py] > 0)
             outfile << log((*stomachcontent[time][a])[pd][py] /
               (*modelConsumption[time][a])[pd][py]);
           else
-            outfile << "        -";
+            outfile << "           -";
         }
         outfile << endl;
       }
@@ -766,7 +766,7 @@ void SC::PrintLikelihoodOnStep(ostream& outfile, int time,
     for (a = 0; a < stomachcontent[time].Size(); a++) {
       for (pd = 0; pd < stomachcontent[time][a]->Nrow(); pd++) {
         for (py = 0; py < (*stomachcontent[time][a])[pd].Size(); py++) {
-          outfile.width(largewidth);
+          outfile.width(printwidth);
           outfile.precision(printprecision);
           if ((*std[time][a])[pd][py] != 0) //mnaa 24.01.00
             outfile << (((*modelConsumption[time][a])[pd][py] -
@@ -857,7 +857,7 @@ void SCAmounts::PrintLikelihood(ofstream& out, const TimeClass& timeInfo) {
   out << "\nTime:    Year " << timeInfo.CurrentYear()
     << " Step " << timeInfo.CurrentStep() << "\nName:    " << scname << endl;
   for (a = 0; a < modelConsumption[time].Size(); a++) {
-    out << "Area:    " << a << "\nObserved:\n";
+    out << "Inner area  :" << a << "\nObserved:\n";
     for (pd = 0; pd < stomachcontent[time][a]->Nrow(); pd++) {
       for (py = 0; py < (*stomachcontent[time][a])[pd].Size(); py++) {
         out.precision(printprecision);
@@ -887,7 +887,7 @@ void SCAmounts::PrintLikelihood(ofstream& out, const TimeClass& timeInfo) {
     out << "Number of stomachs:\n";
     for (pd = 0; pd < modelConsumption[time][a]->Nrow(); pd++) {
       out.precision(lowprecision);
-      out.width(smallwidth);
+      out.width(lowwidth);
       out << (*number[time])[a][pd] << sep;
     }
     out << endl;
@@ -984,6 +984,7 @@ double SCRatios::CalculateLikelihood(DoubleMatrixPtrVector& consumption, DoubleM
 double SCNumbers::CalculateLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum) {
   Multinomial MN(epsilon);
   int a, predl, preyl;
+  double tmp;
   for (a = 0; a < consumption.Size(); a++) {
     for (predl = 0; predl < consumption[a]->Nrow(); predl++) {
       if (!(isZero(sum[a][predl]))) {
@@ -991,7 +992,7 @@ double SCNumbers::CalculateLikelihood(DoubleMatrixPtrVector& consumption, Double
         for (preyl = 0; preyl < consumption[a]->Ncol(); preyl++)
           (*numbers)[preyl] = (*stomachcontent[timeindex][a])[predl][preyl];
 
-        MN.CalcLogLikelihood(*numbers, (*consumption[a])[predl]);
+        tmp = MN.CalcLogLikelihood(*numbers, (*consumption[a])[predl]);
         delete numbers;
       }
     }

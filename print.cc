@@ -15,19 +15,19 @@ void Printagebandm(ofstream& outfile, const AgeBandMatrix& Alkeys) {
     if (Alkeys.Minlength(i) > 0) {
       for (j = 0; j < Alkeys.Minlength(i); j++) {
         outfile.precision(smallprecision);
-        outfile.width(printwidth);
+        outfile.width(smallwidth);
         outfile << zero << sep;
       }
     }
     for (j = Alkeys.Minlength(i); j <Alkeys.Maxlength(i); j++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << double(Alkeys[i][j].N) << sep;
     }
     if (Alkeys.Maxlength(i) < maxcol) {
       for (j = Alkeys.Maxlength(i); j < maxcol; j++) {
         outfile.precision(smallprecision);
-        outfile.width(printwidth);
+        outfile.width(smallwidth);
         outfile << zero << sep;
       }
     }
@@ -50,19 +50,19 @@ void PrintWeightinagebandm(ofstream& outfile, const AgeBandMatrix& Alkeys) {
     if (Alkeys.Minlength(i) > 0) {
       for (j = 0; j < Alkeys.Minlength(i); j++) {
         outfile.precision(smallprecision);
-        outfile.width(printwidth);
+        outfile.width(smallwidth);
         outfile << zero << sep;
       }
     }
     for (j = Alkeys.Minlength(i); j < Alkeys.Maxlength(i); j++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << double(Alkeys[i][j].W) << sep;
     }
     if (Alkeys.Maxlength(i) < maxcol) {
       for (j = Alkeys.Maxlength(i); j < maxcol; j++) {
         outfile.precision(smallprecision);
-        outfile.width(printwidth);
+        outfile.width(smallwidth);
         outfile << zero << sep;
       }
     }
@@ -83,19 +83,19 @@ void BandmatrixPrint(const BandMatrix& matrix, ofstream& outfile) {
     if (matrix.Minlength(i) > 0) {
       for (j = 0; j < matrix.Minlength(i); j++) {
         outfile.precision(smallprecision);
-        outfile.width(printwidth);
+        outfile.width(smallwidth);
         outfile << zero << sep;
       }
     }
     for (j = matrix.Minlength(i); j <matrix.Maxlength(i); j++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << double(matrix[i][j]) << sep;
     }
     if (matrix.Maxlength(i) < maxcol) {
       for (j = matrix.Maxlength(i); j < maxcol; j++) {
         outfile.precision(smallprecision);
-        outfile.width(printwidth);
+        outfile.width(smallwidth);
         outfile << zero << sep;
       }
     }

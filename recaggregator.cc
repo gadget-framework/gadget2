@@ -1,4 +1,4 @@
-#include "fleetpreyaggregator.h"
+#include "recaggregator.h"
 #include "areatime.h"
 #include "errorhandler.h"
 #include "readfunc.h"
@@ -11,22 +11,23 @@
 #include "extravector.h"
 #include "gadget.h"
 
-FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
+RecAggregator::RecAggregator(const FleetPtrVector& Fleets,
   const StockPtrVector& Stocks, LengthGroupDivision* const Lgrpdiv,
-  const IntMatrix& Areas, const IntMatrix& Ages, const int overcons)
+  const IntMatrix& Areas, const IntMatrix& Ages, Tags* tag)
   : fleets(Fleets), stocks(Stocks), LgrpDiv(Lgrpdiv),
-    areas(Areas), ages(Ages), overconsumption(overcons) {
+    areas(Areas), ages(Ages) {
 
+  taggingExp = tag;
   int i, j, k, l = 0;
   maxcol.resize(ages.Nrow(), 0);
   mincol.resize(ages.Nrow(), 99999);
   maxrow = 0;
   minrow = ages.Nrow();
-  numlengths = LgrpDiv->NoLengthGroups();
+  int numlengths = LgrpDiv->NoLengthGroups();
 
   for (i = 0; i < stocks.Size(); i++) {
     checkLengthGroupIsFiner(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv(),
-      LgrpDiv, stocks[i]->Name(), "fleet consumption");
+      LgrpDiv, stocks[i]->Name(), "recapture consumption");
     CI.resize(1);
     CI[i] = new ConversionIndex(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv(), LgrpDiv);
 
@@ -81,29 +82,22 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
   tmppop.W = 1.0;
   PopInfoMatrix popmatrix(ages.Nrow(), numlengths, tmppop);
   totalcatch.resize(areas.Nrow(), 0, 0, popmatrix);
-  totalpop.resize(areas.Nrow(), 0, 0, popmatrix);
-
-  //Resize catchratios using dummy variables tmpband. Take care
-  //to make catchratios a full matrix, i.e. a rectangular matrix, with
-  //minage = 0 and minlength = 0.
-  const BandMatrix tmpband(0, numlengths, 0, ages.Nrow(), 1);
-  catchratios.resize(areas.Nrow(), tmpband);
 }
 
-FleetPreyAggregator::~FleetPreyAggregator() {
+RecAggregator::~RecAggregator() {
   int i;
   for (i = 0; i < CI.Size(); i++)
     delete CI[i];
 }
 
-void FleetPreyAggregator::Print(ofstream& outfile) const {
+void RecAggregator::Print(ofstream& outfile) const {
   int a, i, j;
 
   for (a = 0; a < areas.Nrow(); a++) {
     outfile << "\tInner areas " << a << endl;
     for (j = 0; j < ages.Nrow(); j++) {
       outfile << TAB;
-      for (i = 0; i < numlengths; i++) {
+      for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
         outfile.width(smallwidth);
         outfile << totalcatch[a][j][i].N;
         outfile << sep;
@@ -114,21 +108,18 @@ void FleetPreyAggregator::Print(ofstream& outfile) const {
   outfile << flush;
 }
 
-void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
+void RecAggregator::Sum(const TimeClass* const TimeInfo) {
 
   int i, j, k, f, h, z;
   int aggrArea, aggrAge, area, age;
   double fleetscale;
   PopInfo nullpop;
 
-  //Initialize totalcatch and totalpop to 0
+  //Initialize totalcatch to 0
   for (i = 0; i < totalcatch.Size(); i++)
     for (j = 0; j < totalcatch[i].Nrow(); j++)
-      for (k = 0; k < totalcatch[i].Maxlength(j); k++) {
+      for (k = 0; k < totalcatch[i].Maxlength(j); k++)
         totalcatch[i][j][k] = nullpop;
-        totalpop[i][j][k] = nullpop;
-        catchratios[i][j][k] = 0.0;
-      }
 
   //Sum over the appropriate fleets, stocks, areas, ages and length groups.
   //The index aggrArea is for the dummy area in totalcatch.
@@ -144,23 +135,21 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
           //area aggrArea in totalcatch.
           area = areas[aggrArea][j];
           if (prey->IsInArea(area) && fleets[f]->IsInArea(area)) {
-            fleetscale = fleets[f]->Amount(area, TimeInfo) * pred->Scaler(area);
+            fleetscale = fleets[f]->Amount(area, TimeInfo) * pred->Scaler(area) * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
             for (i = 0; i < pred->NoPreys(); i++) {
               if (prey->Name() == pred->Preys(i)->Name()) {
                 const DoubleIndexVector* suitptr = &pred->Suitability(i)[0];
-                const AgeBandMatrix* alptr = &prey->AlkeysPriorToEating(area);
+                const AgeBandMatrix* alptr = &taggingExp->NumberPriorToEating(area, stocks[h]->Name());
                 for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
                   for (k = 0; k < ages.Ncol(aggrAge); k++) {
                     age = ages[aggrAge][k];
                     if ((alptr->Minage() <= age) && (age <= alptr->Maxage())) {
 
                       DoubleIndexVector Ratio = *suitptr;
-                      if (overconsumption)
-                        for (z = Ratio.Mincol(); z < Ratio.Maxcol(); z++)
-                          Ratio[z] *= (prey->Ratio(area, z) > 1 ? 1 / prey->Ratio(area, z) : 1);
+                      for (z = Ratio.Mincol(); z < Ratio.Maxcol(); z++)
+                        Ratio[z] *= (prey->Ratio(area, z) > 1 ? 1 / prey->Ratio(area, z) : 1);
 
                       PopinfoAdd(totalcatch[aggrArea][aggrAge], (*alptr)[age], *CI[h], fleetscale, Ratio);
-                      PopinfoAdd(totalpop[aggrArea][aggrAge], (*alptr)[age], *CI[h]);
                     }
                   }
                 }
@@ -171,76 +160,4 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
       }
     }
   }
-
-  //Set the "fishing mortalities"
-  for (i = 0; i < totalcatch.Size(); i++)
-    for (j = 0; j < totalcatch[i].Nrow(); j++)
-      for (k = 0; k < totalcatch[i].Maxlength(j); k++)
-        if (totalpop[i][j][k].N > 0)
-          catchratios[i][j][k] = totalcatch[i][j][k].N / totalpop[i][j][k].N;
-}
-
-void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo, int dummy) {
-  //A new aggregator function to sum up the calculated catches from
-  //the mortality model. The results are to be used in the second likelihood
-  //function in CatchDistribution.
-  //written by kgf 16/9 98
-
-  int i, j, k, f, h;
-  int aggrArea, aggrAge, area, age;
-  PopInfo nullpop;
-
-  //Initialize totalcatch and totalpop to 0
-  for (i = 0; i < totalcatch.Size(); i++)
-    for (j = 0; j < totalcatch[i].Nrow(); j++)
-      for (k = 0; k < totalcatch[i].Maxlength(j); k++) {
-        totalcatch[i][j][k] = nullpop;
-        totalpop[i][j][k] = nullpop;
-        catchratios[i][j][k] = 0.0;
-      }
-
-  //Sum over the appropriate fleets, stocks, areas, ages and length groups.
-  //The index aggrArea is for the dummy area in totalcatch.
-  //The index aggrAge is for the dummy age in totalcatch.
-  for (f = 0; f < fleets.Size(); f++) {
-    LengthPredator* pred = fleets[f]->ReturnPredator();
-    for (h = 0; h < stocks.Size(); h++) {
-      MortPrey* prey = (MortPrey*)stocks[h]->ReturnPrey();
-      for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
-        for (j = 0; j < areas.Ncol(aggrArea); j++) {
-
-          //All the areas in areas[aggrArea] will be aggregated to the
-          //area aggrArea in totalcatch.
-          area = areas[aggrArea][j];
-          if (prey->IsInArea(area) && fleets[f]->IsInArea(area)) {
-            for (i = 0; i < pred->NoPreys(); i++) {
-              if (prey->Name() == pred->Preys(i)->Name()) {
-                const DoubleIndexVector* suitptr = &pred->Suitability(i)[0];
-                const AgeBandMatrix* alptr = &prey->getMeanN(area);
-                for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
-                  for (k = 0; k < ages.Ncol(aggrAge); k++) {
-                    age = ages[aggrAge][k];
-                    if ((alptr->Minage() <= age) && (age <= alptr->Maxage())) {
-                      DoubleIndexVector Ratio = *suitptr;
-                      PopinfoAdd(totalcatch[aggrArea][aggrAge],
-                        (*alptr)[age], *CI[h], pred->getFlevel(area, TimeInfo), Ratio);
-                      PopinfoAdd(totalpop[aggrArea][aggrAge],
-                        (*alptr)[age], *CI[h]);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  //Set the "fishing percentage"
-  for (i = 0; i < totalcatch.Size(); i++)
-    for (j = 0; j < totalcatch[i].Nrow(); j++)
-      for (k = 0; k < totalcatch[i].Maxlength(j); k++)
-        if (totalpop[i][j][k].N > 0)
-          catchratios[i][j][k] = totalcatch[i][j][k].N / totalpop[i][j][k].N;
 }

@@ -66,17 +66,21 @@ void StockPtrVector::resize(int addsize) {
 }
 
 void StockPtrVector::Delete(int pos) {
-  assert(size > 0);
-  assert(0 <= pos && pos < size);
-  Stock** vnew = new Stock*[size - 1];
   int i;
-  for (i = 0; i < pos; i++)
-    vnew[i] = v[i];
-  for (i = pos; i < size - 1; i++)
-    vnew[i] = v[i + 1];
-  delete[] v;
-  v = vnew;
-  size--;
+  if (size > 1) {
+    Stock** vnew = new Stock*[size - 1];
+    for (i = 0; i < pos; i++)
+      vnew[i] = v[i];
+    for (i = pos; i < size - 1; i++)
+      vnew[i] = v[i + 1];
+    delete[] v;
+    v = vnew;
+    size--;
+  } else {
+    delete[] v;
+    v = 0;
+    size = 0;
+  }
 }
 
 StockPtrVector& StockPtrVector::operator = (const StockPtrVector& d) {

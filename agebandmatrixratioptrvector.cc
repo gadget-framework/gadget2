@@ -23,8 +23,8 @@ AgeBandMatrixRatioPtrVector::AgeBandMatrixRatioPtrVector(int size1, int minage,
 
 AgeBandMatrixRatioPtrVector::~AgeBandMatrixRatioPtrVector() {
   int i;
-  for (i = 0; i < tagid.Size(); i++)
-    delete[] tagid[i];
+  for (i = 0; i < tagID.Size(); i++)
+    delete[] tagID[i];
 
   if (v != 0) {
     for (i = 0; i < size; i++)
@@ -104,11 +104,12 @@ void AgeBandMatrixRatioPtrVector::addTag(const char* id) {
 // No memory has been allocated. v[i][age][length][tag].N points to
 // the same memory location as initial[i][age][length].N.
 void AgeBandMatrixRatioPtrVector::addTag(AgeBandMatrixPtrVector* initial,
-  const AgeBandMatrixPtrVector& Alkeys, const char* id) {
+  const AgeBandMatrixPtrVector& Alkeys, const char* id, double tagloss) {
 
   int minlength, maxlength, i, age, length;
 
   this->addTagName(id);
+  tagLoss.resize(1, tagloss);
   int minage = v[0]->Minage();
   int maxage = v[0]->Maxage();
   for (i = 0; i < size; i++) {
@@ -133,7 +134,7 @@ void AgeBandMatrixRatioPtrVector::addTagName(const char* name) {
   char* tempid;
   tempid = new char[strlen(name) + 1];
   strcpy(tempid, name);
-  tagid.resize(1, tempid);
+  tagID.resize(1, tempid);
 }
 
 // Returns -1 if do not contain tag with name == id.
@@ -142,14 +143,12 @@ int AgeBandMatrixRatioPtrVector::getId(const char* id) {
 
   int i = 0;
   int found = 0;
-
-  while (i < tagid.Size() && found == 0) {
-    if (strcasecmp(tagid[i], id) == 0)
+  while (i < tagID.Size() && found == 0) {
+    if (strcasecmp(tagID[i], id) == 0)
       found = 1;
     i++;
   }
-
-  if (i == tagid.Size() && found == 0)
+  if (i == tagID.Size() && found == 0)
     return -1;
   else
     return i - 1;
@@ -158,13 +157,13 @@ int AgeBandMatrixRatioPtrVector::getId(const char* id) {
 void AgeBandMatrixRatioPtrVector::deleteTag(const char* tagname) {
 
   int minlength, maxlength, i, age, length;
-
   int index = getId(tagname);
   int minage = v[0]->Minage();
   int maxage = v[0]->Maxage();
   if (index >= 0)  {
-    delete [] tagid[index];
-    tagid.Delete(index);
+    delete[] tagID[index];
+    tagID.Delete(index);
+    tagLoss.Delete(index);
     for (i = 0; i < size; i++) {
       for (age = minage; age <= maxage; age++) {
         minlength = v[i]->Minlength(age);
@@ -179,7 +178,7 @@ void AgeBandMatrixRatioPtrVector::deleteTag(const char* tagname) {
 const char* AgeBandMatrixRatioPtrVector::getName(int id) const {
   assert(id >= 0);
   assert(id < this->NrOfTagExp());
-  return tagid[id];
+  return tagID[id];
 }
 
 void AgeBandMatrixRatioPtrVector::Migrate(const DoubleMatrix& MI, const AgeBandMatrixPtrVector& Total) {
@@ -187,7 +186,7 @@ void AgeBandMatrixRatioPtrVector::Migrate(const DoubleMatrix& MI, const AgeBandM
   assert(MI.Nrow() == size);
   DoubleVector tmp(size);
   int i, j, age, length, tag;
-  int NrOfTagExp = tagid.Size();
+  int NrOfTagExp = tagID.Size();
   if (NrOfTagExp > 0) {
     for (age = v[0]->Minage(); age <= v[0]->Maxage(); age++) {
       for (length = v[0]->Minlength(age); length < v[0]->Maxlength(age); length++) {
@@ -198,54 +197,13 @@ void AgeBandMatrixRatioPtrVector::Migrate(const DoubleMatrix& MI, const AgeBandM
           for (j = 0; j < size; j++)
             for (i = 0; i < size; i++)
               tmp[j] += (*(*v[i])[age][length][tag].N) * MI[j][i];
-        }
 
-        for (j = 0; j < size; j++)
-          for (tag = 0; tag < NrOfTagExp; tag++)
+          for (j = 0; j < size; j++)
             (*(*v[j])[age][length][tag].N) = tmp[j];
+        }
       }
     }
     for (i = 0; i < size; i++)
       v[i]->UpdateRatio(Total[i]);
   }
-}
-
-void AgeBandMatrixRatioPtrVector::print(char* filename) {
-
-  ofstream outfile;
-  outfile.open(filename);
-  if (!outfile) {
-    cerr << "Error - Can't open outputfile for printing tagging information\n";
-    exit(EXIT_FAILURE);
-  }
-
-  int areas, age, length, minlength, maxlength;
-  int minage = v[0]->Minage();
-  int maxage = v[0]->Maxage();
-
-  outfile << "Tagging numbers\n\n";
-  for (areas = 0; areas < size; areas++) {
-    for (age = minage; age <= maxage; age++) {
-      minlength = v[areas]->Minlength(age);
-      maxlength = v[areas]->Maxlength(age);
-      for (length = minlength; length < maxlength; length++)
-        outfile << (*(*v[areas])[age][length][0].N) << sep;
-      outfile << endl;
-    }
-  }
-
-  outfile << "Tagging ratios\n\n";
-  for (areas = 0; areas < size; areas++) {
-    for (age = minage; age <= maxage; age++) {
-      minlength = v[areas]->Minlength(age);
-      maxlength = v[areas]->Maxlength(age);
-      for (length = minlength; length < maxlength; length++)
-        outfile << (*v[areas])[age][length][0].R << sep;
-      outfile << endl;
-    }
-  }
-}
-
-const CharPtrVector AgeBandMatrixRatioPtrVector::tagids() const {
-  return tagid;
 }

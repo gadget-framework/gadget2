@@ -242,19 +242,19 @@ ostream& printBandMatrix(ostream& o, const BandMatrix& b, int rowindex, int inde
     if (b.Minlength(i) > 0) {
       for (j = 0; j < b.Minlength(i); j++) {
         o.precision(smallprecision);
-        o.width(printwidth);
+        o.width(smallwidth);
         o << 0.0 << sep;
       }
     }
     for (j = b.Minlength(i); j <b.Maxlength(i); j++) {
       o.precision(smallprecision);
-      o.width(printwidth);
+      o.width(smallwidth);
       o << double(b[i][j]) << sep;
     }
     if (b.Maxlength(i) < maxcol) {
       for (j = b.Maxlength(i); j < maxcol; j++) {
         o.precision(smallprecision);
-        o.width(printwidth);
+        o.width(smallwidth);
         o << 0.0 << sep;
       }
     }
@@ -320,7 +320,7 @@ ostream& printVector(ostream& o, const DoubleVector& vec, int indent) {
   int i;
   for (i = 0; i < vec.Size(); i++) {
     o.precision(printprecision);
-    o.width(largewidth);
+    o.width(printwidth);
     o << vec[i] << sep;
   }
   o << endl;
@@ -612,19 +612,19 @@ ostream& printSuitMatrix(ostream& o, const BandMatrix& b, int rowindex, int inde
     if (b.Minlength(i) > 0) {
       for (j = 0; j < b.Minlength(i); j++) {
         o.precision(smallprecision);
-        o.width(printwidth);
+        o.width(smallwidth);
         o << 0.0 << sep;
       }
     }
     for (j = b.Minlength(i); j <b.Maxlength(i); j++) {
       o.precision(smallprecision);
-      o.width(printwidth);
+      o.width(smallwidth);
       o << double(b[i][j]) << sep;
     }
     if (b.Maxlength(i) < maxcol) {
       for (j = b.Maxlength(i); j < maxcol; j++) {
         o.precision(smallprecision);
-        o.width(printwidth);
+        o.width(smallwidth);
         o << 0.0 << sep;
       }
     }
@@ -703,12 +703,12 @@ ostream& printNorW(ostream& o, const AgeBandMatrix& a, int PrintN,
       o << ind << (*ages)[i - a.Minage()] << "     ";
     for (j = mincol; j < a.Minlength(i); j++) {
       o.precision(printprecision);
-      o.width(largewidth);
+      o.width(printwidth);
       o << 0.0 << sep;
     }
     for (j = a.Minlength(i); j < a.Maxlength(i); j++) {
       o.precision(printprecision);
-      o.width(largewidth);
+      o.width(printwidth);
       if (PrintN)
         o << a[i][j].N;
       else
@@ -718,7 +718,7 @@ ostream& printNorW(ostream& o, const AgeBandMatrix& a, int PrintN,
     if (a.Maxlength(i) < maxcol) {
       for (j = a.Maxlength(i); j < maxcol; j++) {
         o.precision(printprecision);
-        o.width(largewidth);
+        o.width(printwidth);
         o << 0.0 << sep;
       }
     }
@@ -738,7 +738,7 @@ ostream& printByAgeAndYear(ostream& o, const DoubleMatrix& a, int minage,
   o << "year      ";
   for (i = 0; i < a.Ncol(0); i++) {
     o.precision(lowprecision);
-    o.width(printwidth);
+    o.width(lowwidth);
     o << firstyear + i << sep;
   }
   o << "\nage\n";
@@ -751,7 +751,7 @@ ostream& printByAgeAndYear(ostream& o, const DoubleMatrix& a, int minage,
       o << minage + i << "       ";
     for (j = 0; j < a.Ncol(i); j++) {
       o.precision(lowprecision);
-      o.width(printwidth);
+      o.width(lowwidth);
       o << a[i][j] << sep;
     }
     o << endl;
@@ -811,20 +811,20 @@ ostream& printNbyAge(ostream& o, const DoubleMatrix& a, int minage, int firstyea
   o << "year      ";
   for (i = 0; i < a.Ncol(0); i++) {
     o.precision(lowprecision);
-    o.width(printwidth);
+    o.width(lowwidth);
     o << firstyear + i << sep;
   }
   o << "\nage\n";
   for (i = 0; i < a.Nrow(); i++) {
     o.precision(lowprecision);
-    o.width(smallwidth);
+    o.width(lowwidth);
     if (i == a.Nrow() - 1)
       o << minage + i << "+      ";
     else
       o << minage + i << "       ";
     for (j = 0; j<a.Ncol(i); j++){
       o.precision(lowprecision);
-      o.width(printwidth);
+      o.width(lowwidth);
       o << a[i][j] << sep;
     }
     o << endl;
@@ -835,7 +835,7 @@ ostream& printNbyAge(ostream& o, const DoubleMatrix& a, int minage, int firstyea
     for (j = 0; j < a.Nrow(); j++)
       sum += a[j][i];
     o.precision(lowprecision);
-    o.width(printwidth);
+    o.width(lowwidth);
     o << sum << sep;
   }
   o << endl << endl;
@@ -848,7 +848,7 @@ ostream& printM1byAge(ostream& o, const DoubleMatrix& a, int minage, int firstye
   o << "year      ";
   for (i = 0; i < a.Ncol(0); i++) {
     o.precision(smallprecision);
-    o.width(printwidth);
+    o.width(smallwidth);
     o << firstyear + i << sep;
   }
   o << "\nage\n";
@@ -861,7 +861,7 @@ ostream& printM1byAge(ostream& o, const DoubleMatrix& a, int minage, int firstye
       o << minage + i << "       ";
     for (j = 0; j < a.Ncol(i); j++) {
       o.precision(smallprecision);
-      o.width(printwidth);
+      o.width(smallwidth);
       o << a[i][j] << sep;
     }
     o << endl;
@@ -876,7 +876,7 @@ ostream& printM2byAge(ostream& o, const DoubleMatrix& a, int minage, int firstye
   o << "year      ";
   for (i = 0; i < a.Ncol(0); i++) {
     o.precision(smallprecision);
-    o.width(printwidth);
+    o.width(smallwidth);
     o << firstyear + i << sep;
   }
   o << "\nage\n";
@@ -886,7 +886,7 @@ ostream& printM2byAge(ostream& o, const DoubleMatrix& a, int minage, int firstye
     o << minage + i << "       ";
     for (j = 0; j < a.Ncol(i); j++) {
       o.precision(smallprecision);
-      o.width(printwidth);
+      o.width(smallwidth);
       o << a[i][j] << sep;
     }
     o << endl;

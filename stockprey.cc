@@ -46,7 +46,7 @@ void StockPrey::Print(ofstream& outfile) const {
   outfile << "Stock Prey\n";
   int area;
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "Alkeys on area " << areas[area] << endl;
+    outfile << "\tAlkeys on area " << areas[area] << endl;
     Printagebandm(outfile, Alkeys[area]);
   }
   Prey::Print(outfile);

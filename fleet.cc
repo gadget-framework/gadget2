@@ -148,7 +148,7 @@ void Fleet::Reset(const TimeClass* const TimeInfo) {
 }
 
 void Fleet::Print(ofstream& outfile) const {
-  outfile << "\nFleet " << this->Name() << endl;
+  outfile << "\nFleet - type ";
   predator->Print(outfile);
   outfile << endl;
 }

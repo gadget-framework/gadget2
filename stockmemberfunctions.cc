@@ -41,8 +41,11 @@ void Stock::CalcNumbers(int area, const AreaClass* const Area, const TimeClass* 
   Alkeys[inarea].Colsum(NumberInArea[inarea]);
   if (doesgrow)
     grower->Sum(NumberInArea[inarea], area);
-  if (iseaten)
+  if (iseaten) {
     prey->Sum(Alkeys[inarea], area, TimeInfo->CurrentSubstep());
+    for (i = 0; i < allTags.Size(); i++)
+      allTags[i]->StoreNumberPriorToEating(area, this->Name());
+  }
   if (doeseat)
     ((StockPredator*)predator)->Sum(Alkeys[inarea], area);
 }
@@ -84,7 +87,7 @@ void Stock::ReducePop(int area, const AreaClass* const Area, const TimeClass* co
 
   Alkeys[inarea].Multiply(*PropSurviving);
   if (tagAlkeys.NrOfTagExp() > 0)
-    tagAlkeys[inarea].UpdateNumbers(Alkeys[inarea]);
+    tagAlkeys[inarea].UpdateAndTagLoss(Alkeys[inarea], tagAlkeys.tagloss());
   delete PropSurviving;
 }
 
@@ -130,7 +133,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 //Transition to other Stocks, Maturity due to age and increased age.
 void Stock::FirstUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doesmove)
-    transition->KeepAgegroup(area, Alkeys[AreaNr[area]], TimeInfo);
+    transition->KeepAgegroup(area, Alkeys[AreaNr[area]], tagAlkeys[AreaNr[area]], TimeInfo);
 }
 
 void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
@@ -143,8 +146,10 @@ void Stock::SecondUpdate(int area, const AreaClass* const Area, const TimeClass*
 }
 
 void Stock::ThirdUpdate(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  if (doesmove)
+  if (doesmove) {
+    UpdateTransitionStockWithTags(TimeInfo);
     transition->Move(area, TimeInfo);
+  }
 }
 
 void Stock::FirstSpecialTransactions(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
@@ -171,6 +176,13 @@ void Stock::UpdateMatureStockWithTags(const TimeClass* const TimeInfo) {
   for (i = 0; i < matureTags.Size(); i++)
     matureTags[i]->UpdateMatureStock(TimeInfo);
   matureTags.DeleteAll();
+}
+
+void Stock::UpdateTransitionStockWithTags(const TimeClass* const TimeInfo) {
+  int i;
+  for (i = 0; i < transitionTags.Size(); i++)
+    transitionTags[i]->UpdateTransitionStock(TimeInfo);
+  transitionTags.DeleteAll();
 }
 
 void Stock::Renewal(int area, const TimeClass* const TimeInfo) {
@@ -203,19 +215,47 @@ void Stock::RecalcMigration(const TimeClass* const TimeInfo) {
     migration->MigrationRecalc(TimeInfo->CurrentYear());
 }
 
-int Stock::UpdateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag) {
-  tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->Name());
+void Stock::UpdateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss) {
+//cout << "UT - 1\n";
+
+/*  int minlength, maxlength, minage, maxage,  i, age, length;
+  for (i = 0; i < Alkeys.Size(); i++)
+    for (age = Alkeys[i].Minage(); age <= Alkeys[i].Maxage(); age++)
+      for (length = Alkeys[i].Minlength(age); length < Alkeys[i].Maxlength(age); length++)
+cout << "UT i " << i << " age " << age << " length " << length << " ALK " << Alkeys[i][age][length].N << endl;*/
+
+/*  for (i = 0; i < tagbyagelength.Size(); i++)
+    for (age = tagbyagelength[i].Minage(); age <= tagbyagelength[i].Maxage(); age++)
+      for (length = tagbyagelength[i].Minlength(age); length < tagbyagelength[i].Maxlength(age); length++)
+cout << "UT i " << i << " age " << age << " length " << length << " ALK " << tagbyagelength[i][age][length].N << endl;
+*/
+
+
+  tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->Name(), tagloss);
+//cout << "UT - 2\n";
+  allTags.resize(1, newtag);
+//cout << "UT - 3\n";
   if (doesmature) {
+//cout << "UT - mature\n";
     maturity->AddTag(newtag->Name());
     matureTags.resize(1, newtag);
   }
-  return 0;
+//cout << "UT - 4\n";
+  if (doesmove) {
+//cout << "UT - move\n";
+    transition->AddTag(newtag->Name());
+    transitionTags.resize(1, newtag);
+  }
+//cout << "UT - 5\n";
 }
 
 void Stock::DeleteTags(const char* tagname) {
+  allTags.Delete(tagAlkeys.getId(tagname));
   tagAlkeys.deleteTag(tagname);
   if (doesmature)
     maturity->DeleteTag(tagname);
+  if (doesmove)
+    transition->DeleteTag(tagname);
 }
 
 const CharPtrVector Stock::TaggingExperimentIds() {

@@ -9,12 +9,12 @@
 #include "readaggregation.h"
 #include "gadget.h"
 
-//JMB - this is incomplete
 TagData::TagData(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double w)
-  :Likelihood(TAGLIKELIHOOD, w) {
+  const TimeClass* const TimeInfo, double w, TagPtrVector Tag)
+  : Likelihood(TAGLIKELIHOOD, w) {
 
   ErrorHandler handle;
+  aggregator = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, numarea = 0;
@@ -66,38 +66,79 @@ TagData::TagData(CommentStream& infile, const AreaClass* const Area,
   handle.Close();
   datafile.close();
   datafile.clear();
+
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
+
+  int j, k, check = 0;
+  for (i = 0; i < tagid.Size(); i++) {
+    j = 0;
+    p.AddRows(1, 1, 0);
+    for (k = 0; k < recTime[i].Size(); k++) {
+      check = 1;
+      while (check) {
+        if (recTime[i][k] == recTime[i][p[i][j]] && recAreas[i][k] == recAreas[i][p[i][j]]) {
+          recaptures[i][j]++;
+          k++;
+          if (k >= recTime[i].Size()) {
+            check = 0;
+          }
+        } else {
+          check = 0;
+        }
+      }
+      j++;
+      if (k < recTime[i].Size()) {
+        p[i].resize(1, k);
+        recaptures[i].resize(1, 1);
+      }
+    }
+  }
+
+  for (j = 0; j < tagid.Size(); j++) {
+    check = 0;
+    for (i = 0; i < Tag.Size(); i++) {
+      if (strcasecmp(tagid[j], Tag[i]->TagName()) == 0) {
+        check = 1;
+        tagvec.resize(1, Tag[i]);
+      }
+    }
+    if (check == 0) {
+      cerr << "Error: when searching for names of tags for tagdata.\n"
+       << "Did not find any name matching " << tagid[j] << endl;
+      exit(EXIT_FAILURE);
+    }
+  }
+  index.resize(tagvec.Size(), 0);
 }
 
 void TagData::ReadRecaptureData(CommentStream& infile,
   const TimeClass* TimeInfo, CharPtrVector areaindex) {
 
   ErrorHandler handle;
-  int i;
+  int i, j, k;
   int year, step, age, maturity;
   double reclength, taglength;
   char tmparea[MaxStrLength], tmpfleet[MaxStrLength], tmptagid[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpfleet, "", MaxStrLength);
   strncpy(tmptagid, "", MaxStrLength);
-  int keepdata, timeid, areaid, fleetid;
+  int keepdata, timeid, areaid, fleetid, tid;
+  int FirstYear = TimeInfo->FirstYear();
+  int StepsInYear = TimeInfo->StepsInYear();
+  char* tagName;
 
-  //Find start of recapture data in datafile
   infile >> ws;
-  char c;
-  c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
-
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 9)
-    handle.Message("Wrong number of columns in inputfile - should be 9");
+      handle.Message("Wrong number of columns in inputfile - should be 9");
 
   while (!infile.eof()) {
     keepdata = 0;
-    infile >> year >> step >> tmparea >> tmptagid >> tmpfleet >> age >> maturity >> reclength >> taglength >> ws;
+    infile >> tmptagid >> year >> step >> tmparea >> reclength >> tmpfleet >> age >> maturity >> taglength >> ws;
+
+    if (year == -1 || step == -1)
+      keepdata = 1;
 
     //if tmparea is in areaindex find areaid, else dont keep the data
     areaid = -1;
@@ -117,36 +158,51 @@ void TagData::ReadRecaptureData(CommentStream& infile,
     if (fleetid == -1)
       keepdata = 1;
 
-    //if recapture length is less than tagged length then this is an error
-    if ((reclength < taglength) && ((taglength != -1) || (reclength != -1)))
-      handle.Message("Error in recaptures - recapture length is less than tagged length");
-
-    //if maturity is not -1 (missing data), 1, 2, then this is an error - check???
-
-    //what do we want to do about the tagid??
-
-    //check if the year and step are in the simulation
     timeid = -1;
+    tid = -1;
     if ((keepdata == 0) && (TimeInfo->IsWithinPeriod(year, step))) {
-      //if this is a new timestep, resize to store the data
-      for (i = 0; i < Years.Size(); i++)
-        if ((Years[i] == year) && (Steps[i] == step))
-          timeid = i;
+      //if this is a new tagging exp. then resize
+      for (i = 0; i < tagid.Size(); i++)
+        if (strcasecmp(tagid[i], tmptagid) == 0)
+          tid = i;
 
-      if (timeid == -1) {
-        Years.resize(1, year);
-        Steps.resize(1, step);
-        timeid = Years.Size();
+      if (tid == -1) {
+        tagName = new char[strlen(tmptagid) + 1];
+        strcpy(tagName, tmptagid);
+        tagid.resize(1, tagName);
+        Years.AddRows(1, 1, year);
+        Steps.AddRows(1, 1, step);
+        timeid = ((year - FirstYear) * StepsInYear) + step;
+        recTime.AddRows(1, 1, timeid);
+        recAreas.AddRows(1, 1, areaid);
+        recAge.AddRows(1, 1, age);
+        recFleet.AddRows(1, 1, fleetid);
+        recMaturity.AddRows(1, 1, maturity);
+        tagLength.AddRows(1, 1, taglength);
+        recLength.AddRows(1, 1, reclength);
+        recaptures.AddRows(1, 1, 0);
+
+      } else {
+        //if this is a new timestep, resize to store the data
+        for (i = 0; i < Years[tid].Size(); i++)
+          if ((Years[tid][i] == year) && (Steps[tid][i] == step))
+            timeid = ((year - FirstYear) * StepsInYear) + step;
+
+        if (timeid == -1) {
+          Years[tid].resize(1, year);
+          Steps[tid].resize(1, step);
+          timeid = ((year - FirstYear) * StepsInYear) + step;
+        }
+
+        //store this new recapture data
+        recTime[tid].resize(1, timeid);
+        recAreas[tid].resize(1, areaid);
+        recAge[tid].resize(1, age);
+        recFleet[tid].resize(1, fleetid);
+        recMaturity[tid].resize(1, maturity);
+        tagLength[tid].resize(1, taglength);
+        recLength[tid].resize(1, reclength);
       }
-
-      //store this new recapture data
-      recTime.resize(1, timeid);
-      recAreas.resize(1, areaid);
-      recAge.resize(1, age);
-      recFleet.resize(1, fleetid);
-      recMaturity.resize(1, maturity);
-      tagLength.resize(1, taglength);
-      recLength.resize(1, reclength);
     }
   }
 }
@@ -155,18 +211,30 @@ TagData::~TagData() {
   int i;
   for (i = 0; i < fleetnames.Size(); i++)
     delete[] fleetnames[i];
-  delete aggregator;
+  for (i = 0; i < stocknames.Size(); i++)
+    delete[] stocknames[i];
+  for (i = 0; i < tagid.Size(); i++)
+    delete[] tagid[i];
+  if (aggregator != 0)  {
+    for (i = 0; i < tagvec.Size(); i++)
+      delete aggregator[i];
+    delete[] aggregator;
+    aggregator = 0;
+  }
 }
 
 void TagData::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
-  index = 0;
+  int i;
+  for (i = 0; i < index.Size(); i++)
+    index[i] = 0;
 }
 
 void TagData::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
-  int i, j, found;
+  int i, j, k, found;
   FleetPtrVector fleets;
-  StockPtrVector stock;
+  StockPtrVector stocks;
+  const CharPtrVector* stocknames;
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
@@ -183,95 +251,109 @@ void TagData::SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks)
     }
   }
 
-  found = 0;
-  char stockname[MaxStrLength]; //JMB need to get stockname!!!
-  for (i = 0; i < Stocks.Size(); j++) {
-    if (Stocks[i]->IsEaten())
-      if (strcasecmp(stockname, Stocks[i]->ReturnPrey()->Name()) == 0) {
-        found = 1;
-        stock.resize(1, Stocks[i]);
+  double minlen, maxlen;
+  int minage, maxage, size;
+
+  aggregator = new RecAggregator*[tagvec.Size()];
+  for (k = 0; k < tagvec.Size(); k++) {
+    stocknames = tagvec[k]->getStocknames();
+    for (i = 0; i < stocknames->Size(); i++)  {
+      found = 0;
+      for (j = 0; j < Stocks.Size(); j++) {
+        if (Stocks[j]->IsEaten()) {
+          if (strcasecmp(stocknames->operator[](i), Stocks[j]->ReturnPrey()->Name()) == 0) {
+            found = 1;
+            stocks.resize(1, Stocks[j]);
+          }
+        }
       }
-  }
-
-  //only possible if two stocks have the same name
-  if (found == 0) {
-    cerr << "Error: when searching for names of stocks for tagdata.\n"
-      << "Did not find any name matching " << stockname << endl;
-    exit(EXIT_FAILURE);
-  }
-
-  //Check if the stock lives on all the areas that were read in
-  for (i = 0; i < recAreas.Size(); i++)
-    if (!stock[0]->IsInArea(recAreas[i])) {
-      cerr << "Warning: Read recapture information on the area "
-        << recAreas[i] << " but the stock " << stock[0]->Name()
-        << " does not live on that area\n";
-      exit(EXIT_FAILURE);
+      if (found == 0) {
+        cerr << "Error: when searching for names of stocks for tagdata.\n"
+          << "Did not find any name matching " << stocknames->operator[](j) << endl;
+        exit(EXIT_FAILURE);
+      }
     }
 
-  /* JMB code removed from here - see RemovedCode.txt for details*/
+    //Check if the stock lives on all the areas that were read in
+    for (i = 0; i < recAreas.Nrow(); i++)
+      for (j = 0; j < stocks.Size(); j++)
+        if (!stocks[j]->IsInArea(recAreas[k][i])) {
+          cerr << "Error: when reading recapture information on the area "
+            << recAreas[k][i] << "\nfor the stock " << stocks[j]->Name()
+            << " which does not live on that area\n";
+          exit(EXIT_FAILURE);
+        }
 
-  /* Now, pass the information on to the FleetPreyAggregator
-   * aggregator which does most of the work.
-   * We have to prepare the data in the following manner
-   * 1. Get the maximum and minimum length of the stock and create a
-   * length group division with one length group
-   * 2. Get the maximum and minimum age and create a (one row) matrix
-   * with all the ages from min to max (inclusive)
-   * 3. Put the areas in a matrix with one column, since fleetpreyagg.
-   * aggregates over the lines in the areamatrix. */
+    /* Now, pass the information on to the RecAggregator
+     * aggregator which does most of the work.
+     * We have to prepare the data in the following manner
+     * 1. Get the maximum and minimum length of the stock and create a
+     * length group division with one length group
+     * 2. Get the maximum and minimum age and create a (one row) matrix
+     * with all the ages from min to max (inclusive)
+     * 3. Put the areas in a matrix with one column, since recaggregator
+     * aggregates over the lines in the areamatrix. */
 
-  double min_l, max_l;
-  int min_age, max_age;
-  IntMatrix agematrix(1, 0);
-  IntMatrix areamatrix(areas.Size(), 1, 0);
+    IntMatrix agematrix(1, 0);
+    IntMatrix areamatrix(areas.Size(), 1, 0);
 
-  const LengthGroupDivision *tmpLgrpDiv = stock[0]->ReturnLengthGroupDiv();
-  min_l = tmpLgrpDiv->Minlength(0);
-  max_l = tmpLgrpDiv->Maxlength(tmpLgrpDiv->NoLengthGroups() - 1);
-  LengthGroupDivision* LgrpDiv = new LengthGroupDivision(min_l, max_l, max_l - min_l);
-  min_age = stock[0]->Minage();
-  max_age = stock[0]->Maxage();
-  for (i = 0; i <= max_age - min_age; i++)
-    agematrix[0].resize(1, min_age + i);
-  for (i = 0; i < areas.Size(); i++)
-    areamatrix[i][0] = areas[i];
-  aggregator = new FleetPreyAggregator(fleets, stock, LgrpDiv, areamatrix, agematrix, 1);
+    const LengthGroupDivision *tmpLgrpDiv;
+    minlen = 9999.9;
+    maxlen = 0.0;
+    minage = 999;
+    maxage = 0;
+
+    for (i = 0; i < stocks.Size(); i++) {
+      tmpLgrpDiv = stocks[i]->ReturnLengthGroupDiv();
+      size = tmpLgrpDiv->NoLengthGroups() - 1;
+      minlen = (minlen < tmpLgrpDiv->Minlength(0) ? minlen : tmpLgrpDiv->Minlength(0));
+      maxlen = (maxlen > tmpLgrpDiv->Maxlength(size) ? maxlen : tmpLgrpDiv->Maxlength(size));
+      minage = (minage < stocks[i]->Minage() ? minage : stocks[i]->Minage());
+      maxage = (maxage > stocks[0]->Maxage() ? maxage : stocks[i]->Maxage());
+    }
+
+    LengthGroupDivision* LgrpDiv = new LengthGroupDivision(minlen, maxlen, maxlen - minlen);
+    for (i = 0; i <= maxage - minage; i++)
+      agematrix[0].resize(1, minage + i);
+    for (i = 0; i < areas.Size(); i++)
+      areamatrix[i][0] = areas[i];
+    aggregator[k] = new RecAggregator(fleets, stocks, LgrpDiv, areamatrix, agematrix, tagvec[k]);
+
+    delete LgrpDiv;
+    while (stocks.Size() > 0)
+      stocks.Delete(0);
+  }
 }
 
+//Poisson likelihood
 void TagData::AddToLikelihood(const TimeClass* const TimeInfo) {
-/*double lik, p, x;
-  int i, n;
+  double lik, x;
+  int n, t, i;
 
   lik = 0.0;
-  //Calculate "catch" and get information from aggregator
-  aggregator->Sum(TimeInfo);
-  const AgeBandMatrixPtrVector& alptr = aggregator->AgeLengthDist();
-  const BandMatrixVector& catchratios = aggregator->CatchRatios();
+  for (t = 0; t < tagvec.Size(); t++) {
+    if (((tagvec[t]->getTagYear() < TimeInfo->CurrentYear()) || ((tagvec[t]->getTagYear() == TimeInfo->CurrentYear())
+        && (tagvec[t]->getTagStep() <= TimeInfo->CurrentStep()))) && ((tagvec[t]->getEndYear() > TimeInfo->CurrentYear())
+        || ((tagvec[t]->getEndYear() == TimeInfo->CurrentYear()) && (tagvec[t]->getEndStep() >= TimeInfo->CurrentStep())))) {
 
-  for (i = 0; i < areas.Size(); i++) {
-    p = catchratios[i][0][0];
-    x = alptr[i][0][0].N;
-    if (index < Years.Size() && Years[index] == TimeInfo->CurrentYear() &&
-        Steps[index] == TimeInfo->CurrentStep() && Areas[index] == areas[i]) {
-      n = recaptures[index];
-      if (n > x)
-        lik += (n - x) * n_gt_x;
-      else if (p != 0.0 && p != 1.0) {
-        lik -= logGamma(x + 1.0) - logGamma(x - (double)n + 1.0) - logFactorial(n) + n * log(p) + (x - (double)n) * log(1 - p);
-      } else if (p == 1.0 && n == (int)x); //no addition to the likelihood value
-      else if (isZero(p) && n == 0);
-      else
-        lik += HUGE_VALUE;
+      aggregator[t]->Sum(TimeInfo);
+      const AgeBandMatrixPtrVector& alptr = aggregator[t]->AgeLengthDist();
+      for (i = 0; i < areas.Size(); i++) {
+        x = alptr[i][0][0].N;
 
-      index++;
+        if (index[t] < p.Ncol(t) && recTime[t][p[t][index[t]]] == TimeInfo->CurrentTime()
+            && recAreas[t][p[t][index[t]]] == areas[i]) {
 
-    } else {
-      if (p != 1)
-        lik -= x * log(1 - p);
-      else
-        lik += HUGE_VALUE;
+          n = recaptures[t][index[t]];
+          if (x < 0 || isZero(x))
+            lik += HUGE_VALUE;
+          else
+            lik -= -x + (n * log(x)) - logFactorial(n);
+          index[t]++;
+        } else
+          lik += x;
+      }
     }
   }
-  likelihood += lik;*/
+  likelihood += lik;
 }

@@ -492,7 +492,7 @@ void SIByLengthAndAgeOnStep::PrintLikelihoodOnStep(ofstream& surveyfile, int pri
         } else
           pre = '-';
         surveyfile.precision(smallprecision);
-        surveyfile.width(printwidth);
+        surveyfile.width(smallwidth);
         if (pre == 0)
           surveyfile << step_val << sep;
         else if (pre == '-')
@@ -515,8 +515,8 @@ void SIByLengthAndAgeOnStep::PrintLikelihoodOnStep(ofstream& surveyfile, int pri
             pre = '-'; //pre = '!'; removed mnaa 10.01.00
         } else
           pre = '-';
-        surveyfile.precision(lowprecision);
-        surveyfile.width(largewidth);
+        surveyfile.precision(smallprecision);
+        surveyfile.width(smallwidth);
         if (pre == 0)
           surveyfile << step_val << sep;
         else if (pre == '-')
@@ -532,8 +532,8 @@ void SIByLengthAndAgeOnStep::PrintLikelihoodOnStep(ofstream& surveyfile, int pri
     for (age = minrow; age <= maxrow; age++) {
       for (length = mincol[age]; length <= maxcol[age]; length++) {
         step_val = obsI[age][length];
-        surveyfile.precision(lowprecision);
-        surveyfile.width(largewidth);
+        surveyfile.precision(smallprecision);
+        surveyfile.width(smallwidth);
         surveyfile << step_val << sep;
       }
       surveyfile << endl;
@@ -542,8 +542,8 @@ void SIByLengthAndAgeOnStep::PrintLikelihoodOnStep(ofstream& surveyfile, int pri
     for (age = minrow; age <= maxrow; age++) {
       for (length = mincol[age]; length <= maxcol[age]; length++) {
         step_val = calcI[age][length];
-        surveyfile.precision(lowprecision);
-        surveyfile.width(largewidth);
+        surveyfile.precision(smallprecision);
+        surveyfile.width(smallwidth);
         surveyfile << step_val << sep;
       }
       surveyfile << endl;
@@ -571,18 +571,18 @@ void SIByLengthAndAgeOnStep::PrintLikelihood(ofstream& surveyfile, const TimeCla
 
   for (age = minrow; age <= maxrow; age++) {
     for (length = 0; length < mincol[age]; length++) {
-      surveyfile.precision(lowprecision);
-      surveyfile.width(largewidth);
+      surveyfile.precision(smallprecision);
+      surveyfile.width(smallwidth);
       surveyfile << 0.0 << sep;
     }
     for (length = mincol[age]; length <= maxcol[age]; length++) {
       surveyfile.precision(smallprecision);
-      surveyfile.width(largewidth);
+      surveyfile.width(smallwidth);
       surveyfile << obsI[age][length] << sep;
     }
     for (length = maxcol[age] + 1; length < obsI.Ncol(); length++) {
-      surveyfile.precision(lowprecision);
-      surveyfile.width(largewidth);
+      surveyfile.precision(smallprecision);
+      surveyfile.width(smallwidth);
       surveyfile << 0.0 << sep;
     }
     surveyfile << endl;
@@ -591,19 +591,19 @@ void SIByLengthAndAgeOnStep::PrintLikelihood(ofstream& surveyfile, const TimeCla
   surveyfile << "Modelled:\n";
   for (age = minrow; age <= maxrow; age++) {
     for (length = 0; length < mincol[age]; length++) {
-      surveyfile.precision(lowprecision);
-      surveyfile.width(largewidth);
+      surveyfile.precision(smallprecision);
+      surveyfile.width(smallwidth);
       surveyfile << 0.0 << sep;
     }
     for (length = mincol[age]; length <= maxcol[age]; length++) {
       surveyfile.precision(smallprecision);
-      surveyfile.width(largewidth);
+      surveyfile.width(smallwidth);
       surveyfile << calcI[age][length] << sep;
     }
 
     for (length = maxcol[age] + 1; length < obsI.Ncol(); length++) {
-      surveyfile.precision(lowprecision);
-      surveyfile.width(largewidth);
+      surveyfile.precision(smallprecision);
+      surveyfile.width(smallwidth);
       surveyfile << 0.0 << sep;
     }
     surveyfile << endl;
@@ -660,14 +660,14 @@ void SIByLengthAndAgeOnStep::LikelihoodPrint(ofstream& outfile) {
   outfile << "Likelihood component on step\n";
   for (i = 0; i < Years.Size(); i++) {
     outfile << TAB << Years[i] << sep << Steps[i] << sep;
-    outfile.width(printwidth);
+    outfile.width(smallwidth);
     outfile.precision(smallprecision);
     outfile << lik_val_on_step[i] << endl;
   }
   outfile << "Maximum contribution on step, age and length\n";
   for (i = 0; i < Years.Size(); i++) {
     outfile << TAB << Years[i] << sep << Steps[i] << sep;
-    outfile.width(printwidth);
+    outfile.width(smallwidth);
     outfile.precision(smallprecision);
     outfile << max_val_on_step[i] << sep << a_index[i] << sep << l_index[i] << endl;
     }

@@ -133,16 +133,16 @@ void PreyOverPrinter::Print(const TimeClass* const TimeInfo) {
   int i, j;
   for (i = 0; i < areas.Nrow(); i++) {
     for (j = 0; j < dptr->Ncol(i); j++) {
-      outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep
-        << setw(smallwidth) << TimeInfo->CurrentStep() << sep
+      outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
+        << setw(lowwidth) << TimeInfo->CurrentStep() << sep
         << setw(printwidth) << areaindex[i] << sep
         << setw(printwidth) << lenindex[j] << sep;
 
       //JMB crude filter to remove the 'silly' values from the output
       if ((*dptr)[i][j] < rathersmall)
-        outfile << setw(fullwidth) << 0 << endl;
+        outfile << setw(largewidth) << 0 << endl;
       else
-        outfile << setprecision(largeprecision) << setw(fullwidth) << (*dptr)[i][j] << endl;
+        outfile << setprecision(largeprecision) << setw(largewidth) << (*dptr)[i][j] << endl;
     }
   }
   outfile.flush();

@@ -172,7 +172,7 @@ void Keeper::ScaledValues(DoubleVector& val) const {
 void Keeper::ScaledOptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->NoOptVariables()) {
-    cerr << "Keeper gets wrong number of optimizing variables";
+    cerr << "Keeper gets wrong number of optimising variables";
     return;
   }
   if (opt.Size() == 0)
@@ -190,7 +190,7 @@ void Keeper::ScaledOptValues(DoubleVector& val) const {
 void Keeper::OptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->NoOptVariables()) {
-    cerr << "Keeper gets wrong number of optimizing variables";
+    cerr << "Keeper gets wrong number of optimising variables";
     return;
   }
   if (opt.Size() == 0)
@@ -208,7 +208,7 @@ void Keeper::OptValues(DoubleVector& val) const {
 void Keeper::InitialOptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->NoOptVariables()) {
-    cerr << "Keeper gets wrong number of optimizing variables";
+    cerr << "Keeper gets wrong number of optimising variables";
     return;
   }
   if (opt.Size() == 0)
@@ -226,7 +226,7 @@ void Keeper::InitialOptValues(DoubleVector& val) const {
 void Keeper::OptSwitches(ParameterVector& sw) const {
   int i, k;
   if (sw.Size() != this->NoOptVariables()) {
-    cerr << "Keeper gets wrong number of optimizing variables";
+    cerr << "Keeper gets wrong number of optimising variables";
     return;
   }
   if (opt.Size() == 0)
@@ -368,7 +368,7 @@ void Keeper::WriteValues(const char* const filename,
 
   if (prec == 0) {
     p = smallprecision;
-    w = p + 2;
+    w = smallwidth;
   }
   outfile << TAB << TAB;
   for (i = 0; i < Likely.Size(); i++)
@@ -376,7 +376,7 @@ void Keeper::WriteValues(const char* const filename,
 
   if (prec == 0) {
     p = fullprecision;
-    w = p + 2;
+    w = fullwidth;
   }
   outfile << TAB << TAB << setw(w) << setprecision(p) << functionValue << endl;
   outfile.close();
@@ -499,12 +499,13 @@ void Keeper::WriteParamsInColumns(const char* const filename,
   RUNID.print(outfile);
   outfile << "; optimisation ran for " << EcoSystem->GetFuncEval()
     << " function evaluations\n; the final likelihood value was "
-    << setprecision(p) << functionValue << "\nswitch\tvalue\t\tlower\tupper\toptimize\n";
+    << setprecision(p) << functionValue << "\nswitch\tvalue\t\tlower\tupper\toptimise\n";
 
   for (i = 0; i < values.Size(); i++) {
     outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i] << TAB;
-    outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i] << TAB
-      << setw(smallwidth) << setprecision(smallprecision) << upperbds[i] << TAB << opt[i] << endl;
+    outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i]
+      << setw(smallwidth) << setprecision(smallprecision) << upperbds[i]
+      << setw(smallwidth) << opt[i] << endl;
   }
   outfile.close();
   outfile.clear();
@@ -525,7 +526,7 @@ void Keeper::UpperBds(DoubleVector& ubs) const {
 void Keeper::LowerOptBds(DoubleVector& lbs) const {
   int i, j;
   if (lbs.Size() != this->NoOptVariables()) {
-    cerr << "Keeper gets wrong number of optimizing variables";
+    cerr << "Keeper gets wrong number of optimising variables";
     return;
   }
   if (lbs.Size() == 0)
@@ -543,7 +544,7 @@ void Keeper::LowerOptBds(DoubleVector& lbs) const {
 void Keeper::UpperOptBds(DoubleVector& ubs) const {
   int i, j;
   if (ubs.Size() != this->NoOptVariables()) {
-    cerr << "Keeper gets wrong number of optimizing variables";
+    cerr << "Keeper gets wrong number of optimising variables";
     return;
   }
   if (ubs.Size() == 0)

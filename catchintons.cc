@@ -119,10 +119,11 @@ CatchInTons::CatchInTons(CommentStream& infile, const AreaClass* const areainfo,
     handle.Unexpected("stocknames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
+    infile >> ws;
     stocknames.resize(1);
     stocknames[i] = new char[strlen(text) + 1];
     strcpy(stocknames[i++], text);
-    infile >> text >> ws;
+    infile >> text;
   }
 
   if (debug_print) {
@@ -155,12 +156,12 @@ void CatchInTons::Reset(const Keeper* const keeper) {
 void CatchInTons::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch in tons\nlikelihood " << likelihood
-    << "\nfunction " << functionname;
-  outfile << "\n\tStocknames:";
+  outfile << "\nCatch In Tons - likelihood value " << likelihood
+    << "\n\tFunction " << functionname;
+  outfile << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
-  outfile << "\n\tFleetnames:";
+  outfile << "\n\tFleet names:";
   for (i = 0; i < fleetnames.Size(); i++)
     outfile << sep << fleetnames[i];
   outfile << endl;

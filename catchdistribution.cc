@@ -149,10 +149,11 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
     handle.Unexpected("stocknames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
+    infile >> ws;
     stocknames.resize(1);
     stocknames[i] = new char[strlen(text) + 1];
     strcpy(stocknames[i++], text);
-    infile >> text >> ws;
+    infile >> text;
   }
 
   //We have now read in all the data from the main likelihood file
@@ -404,8 +405,8 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
 void CatchDistribution::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nCatch distribution " << cdname << "\nlikelihood " << likelihood
-    << "\nfunction " << functionname;
+  outfile << "\nCatch Distribution " << cdname << " - likelihood value " << likelihood
+    << "\n\tFunction " << functionname;
   outfile << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -424,7 +425,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
     << functionname << "\nWeight " << weight << "\nStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
-  outfile << "\nAreas:";
+  outfile << "\nInner areas:";
   for (i  = 0; i < areas.Nrow(); i++) {
     outfile << endl;
     for (j = 0; j < areas.Ncol(i); j++)
@@ -445,16 +446,16 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
   outfile << endl;
 
   //aggregator->Print(outfile);
-  outfile << "Age-Length distribution data:";
+  outfile << "\nAge length distribution data:\n";
   for (y = 0; y < AgeLengthData.Nrow(); y++) {
     outfile << "\nYear " << Years[y] << " and step " << Steps[y];
     for (a = 0; a < AgeLengthData.Ncol(y); a++) {
-      outfile << "\nArea: " << a << "\nMeasurements";
+      outfile << "\nInner area: " << a << "\nMeasurements";
       for (i = 0; i < AgeLengthData[y][a]->Nrow(); i++) {
         outfile << endl;
         for (j = 0; j < AgeLengthData[y][a]->Ncol(i); j++) {
-          outfile.width(printwidth);
-          outfile.precision(lowprecision);
+          outfile.width(smallwidth);
+          outfile.precision(smallprecision);
           outfile << sep << (*AgeLengthData[y][a])[i][j];
         }
       }
@@ -462,7 +463,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
       for (i = 0; i < Proportions[y][a]->Nrow(); i++) {
         outfile << endl;
         for (j = 0; j < Proportions[y][a]->Ncol(i); j++) {
-          outfile.width(printwidth);
+          outfile.width(smallwidth);
           outfile.precision(smallprecision);
           outfile << sep << (*Proportions[y][a])[i][j];
         }
@@ -470,7 +471,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile) {
     }
     outfile << "\nLikelihood values:";
     for (a = 0; a < AgeLengthData.Ncol(y); a++) {
-       outfile.width(printwidth);
+       outfile.width(smallwidth);
        outfile.precision(smallprecision);
        outfile << sep << Likelihoodvalues[y][a];
     }
@@ -586,10 +587,11 @@ double CatchDistribution::LikMultinomial() {
   //The object MN does most of the work, accumulating likelihood
   Multinomial MN(epsilon);
   for (nareas = 0; nareas < Dist.Size(); nareas++) {
+    Likelihoodvalues[timeindex][nareas] = 0.0;
     if (AgeLengthData[timeindex][nareas]->Nrow() == 1) {
       //If there is only one agegroup, we calculate loglikelihood
       //based on the length group division
-      MN.CalcLogLikelihood((*AgeLengthData[timeindex][nareas])[0], (*Dist[nareas])[0]);
+      Likelihoodvalues[timeindex][nareas] += MN.CalcLogLikelihood((*AgeLengthData[timeindex][nareas])[0], (*Dist[nareas])[0]);
       for (len = 0; len < AgeLengthData[timeindex][nareas]->Ncol(0); len++)
         (*Proportions[timeindex][nareas])[0][len] = (*Dist[nareas])[0][len];
 
@@ -604,7 +606,7 @@ double CatchDistribution::LikMultinomial() {
           dist[a] = (*Dist[nareas])[a][len];
           data[a] = (*AgeLengthData[timeindex][nareas])[a][len];
         }
-        MN.CalcLogLikelihood(data, dist);
+        Likelihoodvalues[timeindex][nareas] += MN.CalcLogLikelihood(data, dist);
         for (a = 0; a < dist.Size(); a++)
           (*Proportions[timeindex][nareas])[a][len] = dist[a];
       }
@@ -994,25 +996,25 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
   catchfile << endl;
 
   for (nareas = 0; nareas < (*alptr).Size(); nareas++) {
-    catchfile << "Area:    " << nareas << endl;
+    catchfile << "Inner area:   " << nareas << endl;
     min_age = max((*alptr)[nareas].Minage(), min_stock_age - 1);
     max_age = min((*alptr)[nareas].Maxage() + 1, max_stock_age);
 
     catchfile << "Observed:\n";
     for (age = minrow; age <= maxrow; age++) {
       for (length = 0; length < mincol[age]; length++) {
-        catchfile.precision(lowprecision);
-        catchfile.width(largewidth);
+        catchfile.precision(smallprecision);
+        catchfile.width(smallwidth);
         catchfile << 0.0 << sep;
       }
       for (length = mincol[age]; length <= maxcol[age]; length++) {
         catchfile.precision(smallprecision);
-        catchfile.width(largewidth);
+        catchfile.width(smallwidth);
         catchfile << (*AgeLengthData[time][nareas])[age][length] << sep;
       }
       for (length = maxcol[age] + 1; length < (*alptr)[nareas].Maxlength(age); length++) {
-        catchfile.precision(lowprecision);
-        catchfile.width(largewidth);
+        catchfile.precision(smallprecision);
+        catchfile.width(smallwidth);
         catchfile << 0.0 << sep;
       }
       catchfile << endl;
@@ -1021,18 +1023,18 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
     catchfile << "Modelled:\n";
     for (age = minrow; age <= maxrow; age++) {
       for (length = 0; length < mincol[age]; length++) {
-        catchfile.precision(lowprecision);
-        catchfile.width(largewidth);
+        catchfile.precision(smallprecision);
+        catchfile.width(smallwidth);
         catchfile << 0.0 << sep;
       }
       for (length = mincol[age]; length <= maxcol[age]; length++) {
         catchfile.precision(smallprecision);
-        catchfile.width(largewidth);
+        catchfile.width(smallwidth);
         catchfile << (*Proportions[time][nareas])[age][length] << sep;
       }
       for (length = maxcol[age] + 1; length < (*alptr)[nareas].Maxlength(age); length++) {
-        catchfile.precision(lowprecision);
-        catchfile.width(largewidth);
+        catchfile.precision(smallprecision);
+        catchfile.width(smallwidth);
         catchfile << 0.0 << sep;
       }
       catchfile << endl;

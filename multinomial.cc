@@ -2,7 +2,7 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
-void Multinomial::CalcLogLikelihood(const DoubleVector& data, const DoubleVector& dist) {
+double Multinomial::CalcLogLikelihood(const DoubleVector& data, const DoubleVector& dist) {
 
   int i;
   double minp = 1.0 / (dist.Size() * bigvalue);
@@ -18,7 +18,7 @@ void Multinomial::CalcLogLikelihood(const DoubleVector& data, const DoubleVector
   }
 
   if (isZero(sumdist))
-    return;
+    return 0.0;
 
   tmpsum = 1 / sumdist;
   for (i = 0; i < data.Size(); i++) {
@@ -31,5 +31,8 @@ void Multinomial::CalcLogLikelihood(const DoubleVector& data, const DoubleVector
   }
 
   sumlog -= logFactorial(sumdata);
-  loglikelihood += 2.0 * (likely + sumlog);
+  //JMB this is a nasty hack to get round a negative loglikelihood score :)
+  tmpsum = absolute(likely + sumlog);
+  loglikelihood += 2.0 * tmpsum;
+  return tmpsum;
 }

@@ -319,15 +319,16 @@ void Stock::SetCI() {
 void Stock::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nStock\nName" << sep << this->Name() << "\niseaten" << sep
-    << iseaten << "\ndoeseat" << sep << doeseat << "\ndoesmove" << sep
-    << doesmove << "\ndoesspawn" << sep << doesspawn << "\ndoesmature" << sep
-    << doesmature << "\ndoesrenew" << sep << doesrenew << "\ndoesgrow" << sep
-    << doesgrow << "\ndoesmigrate" << sep << doesmigrate << "\nInner areas";
+  outfile << "\nStock\nName" << sep << this->Name() << "\nLives on inner areas";
 
   for (i = 0; i < areas.Size(); i++)
     outfile << sep << areas[i];
   outfile << endl;
+
+  outfile << "\nis eaten" << sep << iseaten << "\ndoes eat" << sep << doeseat
+    << "\ndoes move" << sep << doesmove << "\ndoes spawn" << sep << doesspawn
+    << "\ndoes mature" << sep << doesmature << "\ndoes renew" << sep << doesrenew
+    << "\ndoes grow" << sep << doesgrow << "\ndoes migrate" << sep << doesmigrate << endl;
 
   initial->Print(outfile);
   NatM->Print(outfile);
@@ -348,11 +349,11 @@ void Stock::Print(ofstream& outfile) const {
   if (doesspawn)
     spawner->Print(outfile);
 
-  outfile << "\nAgelength keys\nCurrent status\n";
+  outfile << "\nAge length keys\n";
   for (i = 0; i < areas.Size(); i++) {
-    outfile << "Inner Area " << areas[i] << "\nNumbers\n";
+    outfile << "\tInner area " << areas[i] << "\n\tNumbers\n";
     Printagebandm(outfile, Alkeys[i]);
-    outfile << "Mean weights\n";
+    outfile << "\tMean weights\n";
     PrintWeightinagebandm(outfile, Alkeys[i]);
   }
 }
@@ -373,4 +374,9 @@ const AgeBandMatrix& Stock::getMeanN(int area) const {
 const StockPtrVector& Stock::GetMatureStocks() {
   assert(doesmature != 0);
   return maturity->GetMatureStocks();
+}
+
+const StockPtrVector& Stock::GetTransitionStocks() {
+  assert(doesmove != 0);
+  return transition->GetTransitionStocks();
 }

@@ -182,9 +182,11 @@ public:
   const DoubleIndexVector& mortality() const { return NatM->getMortality(); };
   //const void getBiomass(int area) const {};
   const StockPtrVector& GetMatureStocks();
-  int UpdateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag);
+  const StockPtrVector& GetTransitionStocks();
+  void UpdateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss);
   void DeleteTags(const char* tagname);
   void UpdateMatureStockWithTags(const TimeClass* const TimeInfo);
+  void UpdateTransitionStockWithTags(const TimeClass* const TimeInfo);
   const CharPtrVector TaggingExperimentIds();
   /**
    * \brief This will return the type of stock class
@@ -194,7 +196,9 @@ public:
 protected:
   AgeBandMatrixPtrVector Alkeys;
   AgeBandMatrixRatioPtrVector tagAlkeys;
+  TagPtrVector allTags;
   TagPtrVector matureTags;
+  TagPtrVector transitionTags;
   Spawner* spawner;
   RenewalData* renewal;
   Maturity* maturity;

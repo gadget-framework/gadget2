@@ -64,7 +64,7 @@ void StockPredator::Print(ofstream& outfile) const {
     outfile << "\tPhi on area " << areas[area] <<  endl << TAB;
     for (i = 0; i < Phi.Ncol(area); i++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << sep << Phi[area][i];
     }
     outfile << endl;
@@ -86,7 +86,7 @@ void StockPredator::Print(ofstream& outfile) const {
     outfile << "\tArea " << areas[area] << TAB;
     for (i = 0; i < MaxconByLength.Ncol(); i++) {
       outfile.precision(smallprecision);
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile << sep << MaxconByLength[area][i];
     }
     outfile << endl;

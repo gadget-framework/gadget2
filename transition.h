@@ -4,6 +4,8 @@
 #include "areatime.h"
 #include "conversionindex.h"
 #include "commentstream.h"
+#include "agebandmatrixptrvector.h"
+#include "agebandmatrixratioptrvector.h"
 #include "stock.h"
 
 class Keeper;
@@ -37,9 +39,10 @@ public:
    * \brief This will store the part of the younger stock that will move into the older stocks
    * \param area is the area that the maturation is being calculated on
    * \param Alkeys is the AgeBandMatrix of the stock that fish will move from
+   * \param TagAlkeys is the AgeBandMatrixRatio of the tagged stock that fish will move from
    * \param TimeInfo is the TimeClass for the current model
    */
-  void KeepAgegroup(int area, AgeBandMatrix& Alkeys, const TimeClass* const TimeInfo);
+  void KeepAgegroup(int area, AgeBandMatrix& Alkeys, AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo);
   /**
    * \brief This will move the younger stock into the older stock age-length cells
    * \param area is the area that the movement is being calculated on
@@ -51,6 +54,26 @@ public:
    * \param outfile is the ofstream that all the model information gets sent to
    */
   void Print(ofstream& outfile) const;
+  /**
+   * \brief This will calculate the number of stocks the young stock can move into
+   * \return number of transition stocks
+   */
+  int NoOfTransitionStocks() { return TransitionStocks.Size(); };
+  /**
+   * \brief This will calculate the stocks the young stock can move into
+   * \return transition stocks
+   */
+  const StockPtrVector& GetTransitionStocks();
+  /**
+   * \brief This will add a tagging experiment to the transition calculations
+   * \param tagname is the name of the tagging experiment
+   */
+  void AddTag(const char* tagname);
+  /**
+   * \brief This will remove a tagging experiment from the transition calculations
+   * \param tagname is the name of the tagging experiment
+   */
+  void DeleteTag(const char* tagname);
 protected:
   /**
    * \brief This is the StockPtrVector of the stocks that the young stock will move to
@@ -79,7 +102,11 @@ protected:
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store the calculated old stocks
    */
-  AgeBandMatrixPtrVector Agegroup;
+  AgeBandMatrixPtrVector AgeGroup;
+  /**
+   * \brief This is the AgeBandMatrixRatioPtrVector used to store the calculated tagged stocks
+   */
+  AgeBandMatrixRatioPtrVector TagAgeGroup;
   /**
    * \brief This is the age that the younger stock will move into the older stocks
    */

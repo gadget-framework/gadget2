@@ -185,17 +185,17 @@ void PredatorPrinter::Print(const TimeClass* const TimeInfo) {
     const BandMatrix* bptr = &aggregator->ReturnSum()[i];
     for (j = 0; j < bptr->Nrow(); j++) {
       for (k = 0; k < bptr->Ncol(j); k++) {
-        outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep
-          << setw(smallwidth) << TimeInfo->CurrentStep() << sep
+        outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
+          << setw(lowwidth) << TimeInfo->CurrentStep() << sep
           << setw(printwidth) << areaindex[i] << sep
           << setw(printwidth) << predlenindex[j] << sep
           << setw(printwidth) << preylenindex[k] << sep;
 
         //JMB crude filter to remove the 'silly' values from the output
         if ((*bptr)[j][k] < rathersmall)
-          outfile << setw(fullwidth) << 0 << endl;
+          outfile << setw(largewidth) << 0 << endl;
         else
-          outfile << setprecision(largeprecision) << setw(fullwidth) << (*bptr)[j][k] << endl;
+          outfile << setprecision(largeprecision) << setw(largewidth) << (*bptr)[j][k] << endl;
       }
     }
   }

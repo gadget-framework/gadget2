@@ -67,3 +67,27 @@ void DoubleIndexVector::resize(int addsize, int lower, double initial) {
   v = vnew;
   minpos = lower;
 }
+
+DoubleIndexVector& DoubleIndexVector::operator = (const DoubleIndexVector& d) {
+  if (this == &d)
+    return *this;
+  int i;
+  minpos = d.minpos;
+  if (size == d.size) {
+    for (i = 0; i < size; i++)
+      v[i] = d[i];
+    return *this;
+  }
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
+  size = d.size;
+  if (size > 0) {
+    v = new double[size];
+    for (i = 0; i < size; i++)
+      v[i] = d.v[i];
+  } else
+    v = 0;
+  return *this;
+}

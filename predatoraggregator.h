@@ -16,8 +16,8 @@ public:
   PredatorAggregator(const PredatorPtrVector& predators, const PreyPtrVector& preys,
     const IntMatrix& Areas, const LengthGroupDivision* const predLgrpDiv,
     const LengthGroupDivision* const preyLgrpDiv);
-  PredatorAggregator(const CharPtrVector& pred_names, PreyPtrVector& Preys,
-    const IntMatrix& Areas, const IntVector&  ages,
+  PredatorAggregator(const CharPtrVector& prednames, PreyPtrVector& Preys,
+    const IntMatrix& Areas, const IntVector& ages,
     const LengthGroupDivision* const preyLgrpDiv);
   ~PredatorAggregator() {};
   void Sum();
@@ -27,7 +27,6 @@ public:
 protected:
   PredatorPtrVector predators;
   PreyPtrVector preys;
-  CharPtrVector prednames;
   IntMatrix predConv;  //[predator][predatorLengthGroup]
   IntMatrix preyConv;  //[prey][preyLengthGroup]
   IntMatrix areas;

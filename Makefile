@@ -106,7 +106,7 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o \
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \
-	initialinputfile.o popratio.o popinfo.o taggrow.o \
+	initialinputfile.o popratio.o popinfo.o taggrow.o recaggregator.o \
 	agebandmatrixratiomemberfunctions.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o

@@ -7,7 +7,7 @@
 #include "popinfovector.h"
 #include "gadget.h"
 
-//Function that Adds one AgeBandMatrix to another.
+//Function that adds one AgeBandMatrix to another.
 //Pre: At least that CI contains the mapping from Addition to Alkeys.
 void AgebandmAdd(AgeBandMatrix& Alkeys, const AgeBandMatrix& Addition,
   const ConversionIndex &CI, double ratio, int minage, int maxage) {
@@ -197,7 +197,21 @@ void AgeBandMatrix::FilterN(double minN) {
       }
 }
 
-//Function that implements the migration
+// Function that copies one AgeBandMatrix to another.
+// The two matrices must have exactly the same dimensions.
+void AgeBandMatrix::CopyNumbers(const AgeBandMatrix& Alkeys) {
+  int i, j;
+  int minlen, maxlen;
+  int maxage = this->Maxage();
+  for (i = minage; i <= maxage; i++) {
+    minlen = this->Minlength(i);
+    maxlen = this->Maxlength(i);
+    for (j = minlen; j < maxlen; j++)
+      this->operator[](i)[j].N = Alkeys[i][j].N;
+  }
+}
+
+// Function that implements the migration
 void AgeBandMatrixPtrVector::Migrate(const DoubleMatrix& MI) {
   assert(MI.Nrow() == size);
   PopInfoVector tmp(size);

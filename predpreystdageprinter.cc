@@ -56,23 +56,23 @@ void PredPreyStdAgePrinter::Print(const TimeClass * const TimeInfo) {
       for (preyage = predinfo->NconsumptionByAge(areas[a]).Mincol(predage);
           preyage < predinfo->NconsumptionByAge(areas[a]).Maxcol(predage); preyage++) {
 
-        outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep
-          << setw(smallwidth) << TimeInfo->CurrentStep() << sep
-          << setw(smallwidth) << outerareas[a] << sep << setw(smallwidth)
-          << predage << sep << setw(smallwidth) << preyage << sep;
+        outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
+          << setw(lowwidth) << TimeInfo->CurrentStep() << sep
+          << setw(lowwidth) << outerareas[a] << sep << setw(lowwidth)
+          << predage << sep << setw(lowwidth) << preyage << sep;
 
         //JMB crude filter to remove the 'silly' values from the output
         if ((predinfo->NconsumptionByAge(areas[a])[predage][preyage] < rathersmall)
            || (predinfo->BconsumptionByAge(areas[a])[predage][preyage] < rathersmall)
            || (predinfo->MortalityByAge(areas[a])[predage][preyage] < verysmall))
 
-          outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0
-            << sep << setw(largewidth) << 0 << endl;
+          outfile << setw(printwidth) << 0 << sep << setw(printwidth) << 0
+            << sep << setw(printwidth) << 0 << endl;
 
         else
-          outfile << setprecision(printprecision) << setw(largewidth) << predinfo->NconsumptionByAge(areas[a])[predage][preyage] << sep
-            << setprecision(printprecision) << setw(largewidth) << predinfo->BconsumptionByAge(areas[a])[predage][preyage] << sep
-            << setprecision(printprecision) << setw(largewidth) << predinfo->MortalityByAge(areas[a])[predage][preyage] << endl;
+          outfile << setprecision(printprecision) << setw(printwidth) << predinfo->NconsumptionByAge(areas[a])[predage][preyage] << sep
+            << setprecision(printprecision) << setw(printwidth) << predinfo->BconsumptionByAge(areas[a])[predage][preyage] << sep
+            << setprecision(printprecision) << setw(printwidth) << predinfo->MortalityByAge(areas[a])[predage][preyage] << endl;
 
       }
     }

@@ -23,8 +23,9 @@ public:
    * \brief This is the function that calculates a log likelihood score by comparing 2 vectors based on a multinomial distribution
    * \param data is the DoubleVector containing the input data
    * \param dist is the DoubleVector containing the modelled data
+   * \return likelihood
    */
-  void CalcLogLikelihood(const DoubleVector& data, const DoubleVector& dist);
+  double CalcLogLikelihood(const DoubleVector& data, const DoubleVector& dist);
   /**
    * \brief This will return the log likelihood score
    * \return loglikelihood

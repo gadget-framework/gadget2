@@ -1,12 +1,31 @@
 #include "agebandmatrixratio.h"
 #include "agebandmatrixratioptrvector.h"
 
+void AgeBandMatrixRatio::UpdateAndTagLoss(const AgeBandMatrix& Total, DoubleVector tagloss) {
+
+  int NrOfTagExp = this->NrOfTagExp();
+  int maxage, minlen, maxlen, age, length, tag;
+  if (NrOfTagExp > 0) {
+    maxage = this->Maxage();
+    for (age = minage; age <= maxage; age++) {
+      minlen = this->Minlength(age);
+      maxlen = this->Maxlength(age);
+      for (length = minlen; length < maxlen; length++) {
+        for (tag = 0; tag < NrOfTagExp; tag++) {
+          (this->operator[](age))[length][tag].R *= tagloss[tag];
+          *((this->operator[](age))[length][tag].N) = (this->operator[](age))[length][tag].R * Total[age][length].N;
+        }
+      }
+    }
+  }
+}
+
 void AgeBandMatrixRatio::UpdateNumbers(const AgeBandMatrix& Total) {
 
   int NrOfTagExp = this->NrOfTagExp();
   int maxage, minlen, maxlen, age, length, tag;
-  maxage = this->Maxage();
   if (NrOfTagExp > 0) {
+    maxage = this->Maxage();
     for (age = minage; age <= maxage; age++) {
       minlen = this->Minlength(age);
       maxlen = this->Maxlength(age);
@@ -21,8 +40,8 @@ void AgeBandMatrixRatio::UpdateRatio(const AgeBandMatrix& Total) {
 
   int NrOfTagExp = this->NrOfTagExp();
   int maxage, minlen, maxlen, age, length, tag;
-  maxage = this->Maxage();
   if (NrOfTagExp > 0) {
+    maxage = this->Maxage();
     for (age = minage; age <= maxage; age++) {
       minlen = this->Minlength(age);
       maxlen = this->Maxlength(age);

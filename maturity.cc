@@ -182,7 +182,7 @@ void Maturity::DeleteTag(const char* tagname) {
         minlen = TagStorage[i].Minlength(age);
         maxlen = TagStorage[i].Maxlength(age);
         for (length = minlen; length < maxlen; length++) {
-          delete [] (TagStorage[i][age][length][id].N);
+          delete[] (TagStorage[i][age][length][id].N);
           (TagStorage[i][age][length][id].N) = NULL;
         }
       }

@@ -11,12 +11,13 @@
 #include "stockaggregator.h"
 #include "agebandmatrixptrmatrix.h"
 #include "livesonareas.h"
+#include "conversionindexptrvector.h"
 #include "formula.h"
 
 class Tags : public HasName {
 public:
   Tags(CommentStream& infile, const char* givenname, const AreaClass* const Area,
-       const TimeClass* const TimeInfo, Keeper* const keeper);
+    const TimeClass* const TimeInfo, Keeper* const keeper);
   ~Tags();
   void Update();
   void DeleteFromStock();
@@ -25,17 +26,21 @@ public:
   const int getEndYear() const { return endyear; };
   const int getEndStep() const { return endstep; };
   const int getTagArea() const { return tagarea; };
-  CharPtrVector getStocknames() const { return stocknames; };
+  const CharPtrVector* getStocknames() const { return &stocknames; };
   void SetStock(StockPtrVector& Stocks);
   const char* TagName() const { return this->Name(); };
   void UpdateMatureStock(const TimeClass* const TimeInfo);
-  void printPopInfo(char* filename);
+  void UpdateTransitionStock(const TimeClass* const TimeInfo);
+  void StoreNumberPriorToEating(int area, const char* stockname);
+  const AgeBandMatrix& NumberPriorToEating(int area, const char* stockname);
+  void Reset(const TimeClass* const TimeInfo) {};
+  int stockIndex(const char* stockname);
 private:
-  void ReadNumbers(CommentStream&, const char*, double, double dl);
-  CharPtrVector stocknames;   //names of the tagged stock read from file
+  void ReadNumbers(CommentStream& infile, const char* tagname, double minlength, double dl);
+  CharPtrVector stocknames;
   //area-age-length distribution of tags by stocks
   AgeBandMatrixPtrMatrix AgeLengthStock;
-  //AgeLengthStock[0] refers to the stock and AgeLengthStock[...] refers to the mature stock.
+  AgeBandMatrixPtrMatrix NumBeforeEating;
   Formula tagloss; //percentage of tags that are lost
   int tagarea;     //area of tagging
   int tagyear;     //year of tagging
@@ -46,5 +51,10 @@ private:
   LengthGroupDivision* LgrpDiv;
   StockPtrVector tagstocks;
   StockPtrVector maturestocks;
+  StockPtrVector transitionstocks;
+  ConversionIndexPtrVector CI;
+  Stock* taggingstock;
+  IntVector preyindex;
+  IntVector updated;
 };
 #endif

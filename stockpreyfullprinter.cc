@@ -154,10 +154,10 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo) {
     const BandMatrix& Nbyageandl = preyinfo->NconsumptionByAgeAndLength(areas[a]);
     for (age = Nbyageandl.Minage(); age <= Nbyageandl.Maxage(); age++)
       for (l = 0; l < LgrpDiv->NoLengthGroups(); l++) {
-        outfile << setw(smallwidth) << TimeInfo->CurrentYear() << sep
-          << setw(smallwidth) << TimeInfo->CurrentStep() << sep
-          << setw(smallwidth) << outerareas[a] << sep << setw(smallwidth) << age
-          << sep << setprecision(smallprecision) << LgrpDiv->Meanlength(l) << sep;
+        outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep << setw(lowwidth)
+          << TimeInfo->CurrentStep() << sep << setw(lowwidth) << outerareas[a] << sep
+          << setw(lowwidth) << age << sep << setprecision(smallprecision)
+          << setw(smallwidth) << LgrpDiv->Meanlength(l) << sep;
 
         //JMB crude filter to remove the 'silly' values from the output
         if ((preyinfo->NconsumptionByAgeAndLength(areas[a])[age][l] < rathersmall)
@@ -165,14 +165,14 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo) {
            || (preyinfo->NconsumptionByLength(areas[a])[l] < rathersmall)
            || (preyinfo->BconsumptionByLength(areas[a])[l] < rathersmall))
 
-          outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0
-            << sep << setw(largewidth) << 0 << sep << setw(largewidth) << 0 << endl;
+          outfile << setw(printwidth) << 0 << sep << setw(printwidth) << 0
+            << sep << setw(printwidth) << 0 << sep << setw(printwidth) << 0 << endl;
 
         else
-          outfile << setprecision(printprecision) << setw(largewidth) << preyinfo->NconsumptionByAgeAndLength(areas[a])[age][l] << sep
-            << setprecision(printprecision) << setw(largewidth) << preyinfo->BconsumptionByAgeAndLength(areas[a])[age][l] << sep
-            << setprecision(printprecision) << setw(largewidth) << preyinfo->NconsumptionByLength(areas[a])[l] << sep
-            << setprecision(printprecision) << setw(largewidth) << preyinfo->BconsumptionByLength(areas[a])[l] << endl;
+          outfile << setprecision(printprecision) << setw(printwidth) << preyinfo->NconsumptionByAgeAndLength(areas[a])[age][l] << sep
+            << setprecision(printprecision) << setw(printwidth) << preyinfo->BconsumptionByAgeAndLength(areas[a])[age][l] << sep
+            << setprecision(printprecision) << setw(printwidth) << preyinfo->NconsumptionByLength(areas[a])[l] << sep
+            << setprecision(printprecision) << setw(printwidth) << preyinfo->BconsumptionByLength(areas[a])[l] << endl;
 
       }
   }

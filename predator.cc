@@ -71,11 +71,8 @@ int Predator::DoesEat(const char* preyname) const {
 
 void Predator::Print(ofstream& outfile) const {
   int i = 0;
-  outfile << "Predator\n\tname" << sep << this->Name()
-    << "\n\tRead names of preys:";
-  for (i = 0; i < this->NoPreys(); i++)
-    outfile << sep << this->Preyname(i);
-  outfile << "\n\tNames of preys (through pointers):";
+  outfile << "\tName" << sep << this->Name()
+    << "\n\tNames of preys:";
   for (i = 0; i < preys.Size(); i++)
     outfile << sep << (const char*)(this->Preys(i)->Name());
   outfile << endl;

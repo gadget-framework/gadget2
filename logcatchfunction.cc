@@ -117,10 +117,11 @@ LogCatches::LogCatches(CommentStream& infile,
     handle.Unexpected("stocknames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
+    infile >> ws;
     stocknames.resize(1);
     stocknames[i] = new char[strlen(text) + 1];
     strcpy(stocknames[i++], text);
-    infile >> text >> ws;
+    infile >> text;
   }
 
   //We have now read in all the data from the main likelihood file
@@ -398,8 +399,8 @@ void LogCatches::LikelihoodPrint(ofstream& outfile) {
       for (i = 0; i < AgeLengthData[y][a]->Nrow(); i++) {
         outfile << endl;
         for (j = 0; j < AgeLengthData[y][a]->Ncol(i); j++) {
-          outfile.width(printwidth);
-          outfile.precision(lowprecision);
+          outfile.width(smallwidth);
+          outfile.precision(smallprecision);
           outfile << sep << (*AgeLengthData[y][a])[i][j];
         }
       }
@@ -407,7 +408,7 @@ void LogCatches::LikelihoodPrint(ofstream& outfile) {
       for (i = 0; i < Proportions[y][a]->Nrow(); i++) {
         outfile << endl;
         for (j = 0; j < Proportions[y][a]->Ncol(i); j++) {
-          outfile.width(printwidth);
+          outfile.width(smallwidth);
           outfile.precision(smallprecision);
           outfile << sep << (*Proportions[y][a])[i][j];
         }
@@ -415,7 +416,7 @@ void LogCatches::LikelihoodPrint(ofstream& outfile) {
     }
     outfile << "\nLikelihood values:";
     for (a = 0; a < AgeLengthData.Ncol(y); a++) {
-       outfile.width(printwidth);
+       outfile.width(smallwidth);
        outfile.precision(smallprecision);
        outfile << sep << Likelihoodvalues[y][a];
     }
@@ -606,7 +607,7 @@ void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
               step_val = -9999;
 
             catchfile.precision(smallprecision);
-            catchfile.width(printwidth);
+            catchfile.width(smallwidth);
             if (step_val != -9999)
               catchfile << step_val << sep;
             else
@@ -621,8 +622,8 @@ void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
         catchfile << "year " << TimeInfo.CurrentYear() << " step "
           << TimeInfo.CurrentStep() << "\nlog(Sum(C)/Sum(C_hat))^2\n";
         step_val = Likelihoodvalues[timeindex][nareas];
-        catchfile.precision(lowprecision);
-        catchfile.width(largewidth);
+        catchfile.precision(smallprecision);
+        catchfile.width(smallwidth);
         if (step_val != -9999)
           catchfile << step_val << sep;
         else
@@ -636,8 +637,8 @@ void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
           for (length = (*alptr)[nareas].Minlength(age);
               length < (*alptr)[nareas].Maxlength(age); length++) {
             step_val = (*AgeLengthData[timeindex][nareas])[age][length];
-            catchfile.precision(lowprecision);
-            catchfile.width(printwidth);
+            catchfile.precision(smallprecision);
+            catchfile.width(smallwidth);
             if (step_val != -9999)
               catchfile << step_val << sep;
             else
@@ -651,8 +652,8 @@ void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
           for (length = (*alptr)[nareas].Minlength(age);
               length < (*alptr)[nareas].Maxlength(age); length++) {
             step_val = (*Proportions[timeindex][nareas])[age][length];
-            catchfile.precision(lowprecision);
-            catchfile.width(printwidth);
+            catchfile.precision(smallprecision);
+            catchfile.width(smallwidth);
             if (step_val != -9999)
               catchfile << step_val << sep;
             else
@@ -678,7 +679,7 @@ void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
               else
                 step_val = -9999;
               catchfile.precision(smallprecision);
-              catchfile.width(printwidth);
+              catchfile.width(smallwidth);
               if (step_val != -9999)
                 catchfile << step_val << sep;
               else
@@ -690,8 +691,8 @@ void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
           catchfile << "year " << TimeInfo.CurrentYear() << " step "
             << TimeInfo.CurrentStep() << "\nlog(Sum(C)/Sum(C_hat))^2\n";
           step_val = Likelihoodvalues[timeindex][nareas];
-          catchfile.precision(lowprecision);
-          catchfile.width(largewidth);
+          catchfile.precision(smallprecision);
+          catchfile.width(smallwidth);
           if (step_val != -9999)
             catchfile << step_val << sep;
           else
@@ -705,8 +706,8 @@ void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
             for (length = (*alptr)[nareas].Minlength(age);
                 length < (*alptr)[nareas].Maxlength(age); length++) {
               step_val = (*obs_c[nareas])[age][length];
-              catchfile.precision(lowprecision);
-              catchfile.width(printwidth);
+              catchfile.precision(smallprecision);
+              catchfile.width(smallwidth);
               if (step_val != -9999)
                 catchfile << step_val << sep;
               else
@@ -720,8 +721,8 @@ void LogCatches::PrintLikelihoodOnStep(ofstream& catchfile,
             for (length = (*alptr)[nareas].Minlength(age);
                 length < (*alptr)[nareas].Maxlength(age); length++) {
               step_val = (*calc_c[nareas])[age][length];
-              catchfile.precision(lowprecision);
-              catchfile.width(printwidth);
+              catchfile.precision(smallprecision);
+              catchfile.width(smallwidth);
               if (step_val != -9999)
                 catchfile << step_val << sep;
               else

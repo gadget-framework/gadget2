@@ -305,7 +305,7 @@ int Ecosystem::ReadLikelihood(CommentStream& infile) {
       Likely[i] = new StomachContent(infile, Area, TimeInfo, keeper, weight, name);
 
     } else if (strcasecmp(type, "tagdata") == 0) {
-      Likely[i] = new TagData(infile, Area, TimeInfo, weight);
+      Likely[i] = new TagData(infile, Area, TimeInfo, weight, tagvec);
 
     } else if (strcasecmp(type, "catchintons") == 0) {
       Likely[i] = new CatchInTons(infile, Area, TimeInfo, weight);

@@ -10,8 +10,7 @@ SIOnStep::~SIOnStep() {
 }
 
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
-  const TimeClass* const TimeInfo, int numcols,
-  const CharPtrVector& index1, const CharPtrVector& index2) {
+  const TimeClass* const TimeInfo, int numcols, const CharPtrVector& index1, const CharPtrVector& index2) {
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -172,7 +171,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
 }
 
 void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
-  const CharPtrVector& colindex, const TimeClass* TimeInfo) {
+  const CharPtrVector& colindex, const TimeClass* const TimeInfo) {
 
   int i;
   int year, step;
@@ -237,8 +236,7 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
 }
 
 void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
-  const CharPtrVector& index1, const CharPtrVector& index2,
-  const TimeClass* TimeInfo) {
+  const CharPtrVector& index1, const CharPtrVector& index2, const TimeClass* const TimeInfo) {
 
   int i;
   int year, step;
@@ -319,21 +317,21 @@ void SIOnStep::Reset(const Keeper* const keeper) {
 
 void SIOnStep::Print(ofstream& outfile) const {
   int i, j;
-  outfile << "\tSurvey Indices\n";
+  outfile << "\tNumber of sums " << NumberOfSums << "\n\tSurvey indices\n";
   for (i = 0; i < Years.Size(); i++) {
     outfile << TAB << Years[i] << sep << Steps[i] << sep;
     for (j = 0; j < Indices.Ncol(i); j++) {
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile.precision(smallprecision);
       outfile << Indices[i][j] << sep;
     }
     outfile << endl;
   }
-  outfile << "\tNumber of sums " << NumberOfSums << "\n\tAbundance numbers\n";
+  outfile << "\n\tAbundance numbers\n";
   for (i = 0; i < Years.Size(); i++) {
     outfile << TAB << Years[i] << sep << Steps[i] << sep;
-    for (j = 0; j < Indices.Ncol(i); j++) {
-      outfile.width(printwidth);
+    for (j = 0; j < abundance.Ncol(i); j++) {
+      outfile.width(smallwidth);
       outfile.precision(smallprecision);
       outfile << abundance[i][j] << sep;
     }
@@ -344,43 +342,42 @@ void SIOnStep::Print(ofstream& outfile) const {
 
 void SIOnStep::LikelihoodPrint(ofstream& outfile) {
   int i, j;
-  outfile << "Abundance indices\n";
+  outfile << "Number of sums " << NumberOfSums << "\nError " << error << "\nSurvey indices\n";
   for (i = 0; i < Years.Size(); i++) {
     outfile << TAB << Years[i] << sep << Steps[i] << sep;
     for (j = 0; j < Indices.Ncol(i); j++) {
-      outfile.width(printwidth);
+      outfile.width(smallwidth);
       outfile.precision(smallprecision);
       outfile << Indices[i][j] << sep;
     }
     outfile << endl;
   }
-  outfile << "Calculated number in stock\n";
+  outfile << "Abundance numbers\n";
   for (i = 0; i < Years.Size(); i++) {
     outfile << TAB << Years[i] << sep << Steps[i] << sep;
-    for (j = 0; j < Indices.Ncol(i); j++) {
-      outfile.width(printwidth);
+    for (j = 0; j < abundance.Ncol(i); j++) {
+      outfile.width(smallwidth);
       outfile.precision(smallprecision);
       outfile << abundance[i][j] << sep;
     }
     outfile << endl;
   }
 
-  outfile << "Number of sums " << NumberOfSums << "\nError " << error
-    << "\nRegression information\nintercept ";
-  for (j = 0; j < Indices.Ncol(0); j++) {
-    outfile.width(printwidth);
+  outfile << "Regression information\nintercept ";
+  for (j = 0; j < intercepts.Size(); j++) {
+    outfile.width(smallwidth);
     outfile.precision(smallprecision);
     outfile << intercepts[j] << sep;
   }
   outfile << "\nslope ";
-  for (j = 0; j < Indices.Ncol(0); j++) {
-    outfile.width(printwidth);
+  for (j = 0; j < slopes.Size(); j++) {
+    outfile.width(smallwidth);
     outfile.precision(smallprecision);
     outfile << slopes[j] << sep;
   }
   outfile << "\nsse   ";
-  for (j = 0; j < Indices.Ncol(0); j++) {
-    outfile.width(printwidth);
+  for (j = 0; j < sse.Size(); j++) {
+    outfile.width(smallwidth);
     outfile.precision(smallprecision);
     outfile << sse[j] << sep;
   }

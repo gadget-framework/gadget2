@@ -87,16 +87,20 @@ void CharPtrMatrix::AddRows(int add, int length, char* initial) {
 }
 
 void CharPtrMatrix::DeleteRow(int row) {
-  assert(nrow > 0);
-  int i;
-  assert(0 <= row && row < nrow);
   delete v[row];
-  CharPtrVector** vnew = new CharPtrVector*[nrow - 1];
-  for (i = 0; i < row; i++)
-    vnew[i] = v[i];
-  for (i = row; i < nrow - 1; i++)
-    vnew[i] = v[i + 1];
-  delete[] v;
-  v = vnew;
-  nrow--;
+  int i;
+  if (nrow > 1) {
+    CharPtrVector** vnew = new CharPtrVector*[nrow - 1];
+    for (i = 0; i < row; i++)
+      vnew[i] = v[i];
+    for (i = row; i < nrow - 1; i++)
+      vnew[i] = v[i + 1];
+    delete[] v;
+    v = vnew;
+    nrow--;
+  } else {
+    delete[] v;
+    v = 0;
+    nrow = 0;
+  }
 }

@@ -336,15 +336,16 @@ Predator* LenStock::ReturnPredator() const {
 void LenStock::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nLenStock\nName" << sep << this->Name() << "\niseaten" << sep
-    << iseaten << "\ndoeseat" << sep << doeseat << "\ndoesmove" << sep
-    << doesmove << "\ndoesspawn" << sep << doesspawn << "\ndoesmature" << sep
-    << doesmature << "\ndoesrenew" << sep << doesrenew << "\ndoesgrow" << sep
-    << doesgrow << "\ndoesmigrate" << sep << doesmigrate << "\nInner areas";
+  outfile << "\nStock\nName" << sep << this->Name() << "\nLives on inner areas";
 
   for (i = 0; i < areas.Size(); i++)
     outfile << sep << areas[i];
   outfile << endl;
+
+  outfile << "\nis eaten" << sep << iseaten << "\ndoes eat" << sep << doeseat
+    << "\ndoes move" << sep << doesmove << "\ndoes spawn" << sep << doesspawn
+    << "\ndoes mature" << sep << doesmature << "\ndoes renew" << sep << doesrenew
+    << "\ndoes grow" << sep << doesgrow << "\ndoes migrate" << sep << doesmigrate << endl;
 
   initial->Print(outfile);
   len_natm->Print(outfile);
@@ -367,11 +368,11 @@ void LenStock::Print(ofstream& outfile) const {
   if (doesspawn)
     spawner->Print(outfile);
 
-  outfile <<"\nAgelength keys\n\nCurrent status\n";
-  for (i = 0; i < areas.Size(); i++){
-    outfile << "Inner Area " << areas[i] << "\nNumbers\n";
+  outfile << "\nAge length keys\n";
+  for (i = 0; i < areas.Size(); i++) {
+    outfile << "\tInner area " << areas[i] << "\n\tNumbers\n";
     Printagebandm(outfile, Alkeys[i]);
-    outfile << "Mean weights\n";
+    outfile << "\tMean weights\n";
     PrintWeightinagebandm(outfile, Alkeys[i]);
   }
 }
