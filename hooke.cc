@@ -266,14 +266,12 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
         /* we assume that we are out of the trap, reset the counters */
         /* and go back to the stepsize we had when we got trapped    */
         if ((trapped[param[i]] == 1) && (newf < oldf * bndcheck)) {
-cout << "Resetting bounds for parameter " << param[i] << endl;
           trapped[param[i]] = 0;
           lbounds[param[i]] = 0;
           rbounds[param[i]] = 0;
           delta[param[i]] = initialstep[param[i]];
 
         } else if (newx[param[i]] < (lowerb[param[i]] + verysmall)) {
-cout << "Parameter " << param[i] << " hit lower bound at " << lowerb[param[i]] << " value " << newx[param[i]] << endl;
           nobds++;
           lbounds[param[i]]++;    /* counts how often it hits a lower bound */
           newx[param[i]] = lowerb[param[i]];
@@ -284,11 +282,9 @@ cout << "Parameter " << param[i] << " hit lower bound at " << lowerb[param[i]] <
           /* if it has hit the bounds 2 times then increase the stepsize */
           if (lbounds[param[i]] >= 2) {
             delta[param[i]] /= rho;
-cout << "Delta increased to " << delta[param[i]] << endl;
           }
 
         } else if (newx[param[i]] > (upperb[param[i]] - verysmall)) {
-cout << "Parameter " << param[i] << " hit upper bound at " << upperb[param[i]] << " value " << newx[param[i]] << endl;
           nobds++;
           rbounds[param[i]]++;    /* counts how often it hits a upper bound */
           newx[param[i]] = upperb[param[i]];
@@ -299,7 +295,6 @@ cout << "Parameter " << param[i] << " hit upper bound at " << upperb[param[i]] <
           /* if it has hit the bounds 2 times then increase the stepsize */
           if (rbounds[param[i]] >= 2) {
             delta[param[i]] /= rho;
-cout << "Delta increased to " << delta[param[i]] << endl;
           }
         }
       }
