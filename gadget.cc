@@ -183,10 +183,11 @@ int main(int aNumber, char* const aVector[]) {
       delete Stochasticdata;
   }
 
-  if (MainInfo.printLikelihood() && MainInfo.printComp()<0)
+  if (MainInfo.printLikelihood() && MainInfo.printComp() == -1)
     EcoSystem->writeLikelihoodInformation(MainInfo.getPrintLikelihoodFile());
-  else if (MainInfo.printComp()>0 && MainInfo.printLikelihood())
-    EcoSystem->writeLikelihoodInformation(MainInfo.getPrintLikelihoodFile(),MainInfo.printComp());
+  else if (MainInfo.printLikelihood() && MainInfo.printComp() > -1)
+    EcoSystem->writeLikelihoodInformation(MainInfo.getPrintLikelihoodFile(), MainInfo.printComp());
+
   if (MainInfo.printLikeSummary())
     EcoSystem->writeLikeSummaryInformation(MainInfo.getPrintLikeSummaryFile());
   if (MainInfo.printFinal())

@@ -13,12 +13,19 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   const char* const workingdir, const PrintInfo& pi) : printinfo(pi) {
 
   funceval = 0;
-  converge = 0;
   interrupted = 0;
   TimeInfo = 0;
   keeper = new Keeper;
   Area = 0;
   likelihood = 0.0;
+
+  // initialise details used when printing the params.out file
+  convergeSA = 0;
+  funcevalSA = 0;
+  likelihoodSA = 0.0;
+  convergeHJ = 0;
+  funcevalHJ = 0;
+  likelihoodHJ = 0.0;
 
   chdir(workingdir);
   ifstream infile;
@@ -164,11 +171,11 @@ void Ecosystem::writeInitialInformationInColumns(const char* const filename) con
 }
 
 void Ecosystem::writeValues(const char* const filename, int prec) const {
-  keeper->writeValues(filename, likelihood, Likely, prec);
+  keeper->writeValues(filename, Likely, prec);
 }
 
 void Ecosystem::writeValuesInColumns(const char* const filename, int prec) const {
-  keeper->writeValuesInColumns(filename, likelihood, Likely, prec);
+  keeper->writeValuesInColumns(filename, prec);
 }
 
 void Ecosystem::writeParamsInColumns(const char* const filename, int prec) const {
@@ -180,7 +187,7 @@ void Ecosystem::writeParamsInColumns(const char* const filename, int prec) const
   if (printinfo.getPrintColumn())
     this->writeValuesInColumns(printinfo.getColumnOutputFile(), printinfo.getPrecision());
 
-  keeper->writeParamsInColumns(filename, likelihood, Likely, prec);
+  keeper->writeParamsInColumns(filename, prec);
 }
 
 void Ecosystem::Opt(IntVector& opt) const {

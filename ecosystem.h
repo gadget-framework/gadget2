@@ -69,7 +69,7 @@ public:
   void writeValuesInColumns(const char* const filename, int prec) const;
   void writeParamsInColumns(const char* const filename, int prec) const;
   void writeLikelihoodInformation(const char* filename) const;
-  void writeLikelihoodInformation(const char* filename,int i) const;
+  void writeLikelihoodInformation(const char* filename, int i) const;
   void writeLikeSummaryInformation(const char* filename) const;
   void writeOptValues() const;
   void Initialise(int optimize);
@@ -98,13 +98,30 @@ public:
   void Simulate(int optimize, int print);
   double getLikelihood() const { return likelihood; };
   int getFuncEval() const { return funceval; };
-  int getConverge() const { return converge; };
-  void setConverge(int setConverge) { converge = setConverge; };
+  int getConvergeSA() const { return convergeSA; };
+  void setConvergeSA(int set) { convergeSA = set; };
+  int getFuncEvalSA() const { return funcevalSA; };
+  void setFuncEvalSA(int set) { funcevalSA = set; };
+  double getLikelihoodSA() const { return likelihoodSA; };
+  void setLikelihoodSA(double set) { likelihoodSA = set; };
+  int getConvergeHJ() const { return convergeHJ; };
+  void setConvergeHJ(int set) { convergeHJ = set; };
+  int getFuncEvalHJ() const { return funcevalHJ; };
+  void setFuncEvalHJ(int set) { funcevalHJ = set; };
+  double getLikelihoodHJ() const { return likelihoodHJ; };
+  void setLikelihoodHJ(double set) { likelihoodHJ = set; };
   volatile int interrupted;
 protected:
   double likelihood;
   int funceval;
-  int converge;
+  // details from the simulated annealing optimisation
+  int convergeSA;
+  int funcevalSA;
+  double likelihoodSA;
+  // details from the hooke and jeeves optimisation
+  int convergeHJ;
+  int funcevalHJ;
+  double likelihoodHJ;
   int mortmodel;
   BaseClassPtrVector basevec;
   LikelihoodPtrVector Likely;

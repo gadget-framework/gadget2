@@ -353,7 +353,7 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
 }
 
 void Keeper::writeValues(const char* const filename,
-  double functionValue, const LikelihoodPtrVector& Likely, int prec) const {
+  const LikelihoodPtrVector& Likely, int prec) const {
 
   int i, p, w;
   ofstream outfile;
@@ -384,7 +384,7 @@ void Keeper::writeValues(const char* const filename,
     p = fullprecision;
     w = fullwidth;
   }
-  outfile << TAB << TAB << setw(w) << setprecision(p) << functionValue << endl;
+  outfile << TAB << TAB << setw(w) << setprecision(p) << EcoSystem->getLikelihood() << endl;
   outfile.close();
   outfile.clear();
 }
@@ -400,8 +400,7 @@ void Keeper::writeInitialInformationInColumns(const char* const filename) const 
   outfile.clear();
 }
 
-void Keeper::writeValuesInColumns(const char* const filename,
-  double functionValue, const LikelihoodPtrVector& Likely, int prec) const {
+void Keeper::writeValuesInColumns(const char* const filename, int prec) const {
 
   int i, p, w;
   ofstream outfile;
@@ -415,7 +414,8 @@ void Keeper::writeValuesInColumns(const char* const filename,
 
   outfile << ";\n; the optimisation has run for " << EcoSystem->getFuncEval()
     << " function evaluations\n; the current likelihood value is "
-    << setprecision(p) << functionValue << "\nswitch\tvalue\t\tlower\tupper\toptimize\n";
+    << setprecision(p) << EcoSystem->getLikelihood()
+    << "\nswitch\tvalue\t\tlower\tupper\toptimize\n";
 
   if (opt.Size() == 0) {
     for (i = 0; i < values.Size(); i++) {
@@ -505,8 +505,7 @@ void Keeper::Switches(ParameterVector& sw) const {
     sw[i] = switches[i];
 }
 
-void Keeper::writeParamsInColumns(const char* const filename,
-  double functionValue, const LikelihoodPtrVector& Likely, int prec) const {
+void Keeper::writeParamsInColumns(const char* const filename, int prec) const {
 
   int i, p, w;
   ofstream outfile;
@@ -523,20 +522,31 @@ void Keeper::writeParamsInColumns(const char* const filename,
 
   if (EcoSystem->getFuncEval() == 0) {
     outfile << "; a stochastic run was performed giving a likelihood value of "
-      << setprecision(p) << functionValue;
+      << setprecision(p) << EcoSystem->getLikelihood() << endl;
 
   } else {
-    outfile << "; the optimisation ran for " << EcoSystem->getFuncEval()
-      << " function evaluations\n; the final likelihood value was "
-      << setprecision(p) << functionValue;
-
-    if (EcoSystem->getConverge() == 1)
-      outfile << "\n; the optimisation stopped because the convergence criteria were met";
-    else
-      outfile << "\n; the optimisation stopped because the maximum number of iterations was reached";
+    if (EcoSystem->getFuncEvalSA() != 0) {
+      outfile << "; the Simulated Annealing algorithm ran for " << EcoSystem->getFuncEvalSA()
+        << " function evaluations\n; and stopped when the likelihood value was "
+        << setprecision(p) << EcoSystem->getLikelihoodSA();
+      if (EcoSystem->getConvergeSA() == 1)
+        outfile << "\n; because the convergence criteria was met\n";
+      else
+        outfile << "\n; because the maximum number of function evaluations was reached\n";
+    }
+      
+    if (EcoSystem->getFuncEvalHJ() != 0) {
+      outfile << "; the Hooke & Jeeves algorithm ran for " << EcoSystem->getFuncEvalHJ()
+        << " function evaluations\n; and stopped when the likelihood value was "
+        << setprecision(p) << EcoSystem->getLikelihoodHJ();
+      if (EcoSystem->getConvergeHJ() == 1)
+        outfile << "\n; because the convergence criteria was met\n";
+      else
+        outfile << "\n; because the maximum number of function evaluations was reached\n";
+    }
   }
 
-  outfile << "\nswitch\tvalue\t\tlower\tupper\toptimise\n";
+  outfile << "switch\tvalue\t\tlower\tupper\toptimise\n";
   for (i = 0; i < values.Size(); i++) {
     outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i] << TAB;
     outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i]

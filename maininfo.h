@@ -245,12 +245,11 @@ private:
    * \brief This is the flag used to denote whether the likelihood information should be printed or not
    */
   int printLikelihoodInfo;
-
-  int printComponent;
   /**
    * \brief This is the flag used to denote whether the likelihood summary information should be printed or not
    */
   int printLikeSummaryInfo;
+  int printComponent;
 };
 
 #endif

@@ -387,9 +387,6 @@ void OptInfoHookeAndSimann::MaximizeLikelihood() {
       handle.logWarning("Warning in optinfo - initial value is zero for switch", optswitches[i].getValue());
   }
 
-  /* Reset the converge flag for the hooke optimisation */
-  EcoSystem->setConverge(0);
-
   count = hooke(&f, nopt, startpoint, endpoint, upperb, lowerb,
     rho, lambda, hookeeps, hookeiter, init, bndcheck);
 

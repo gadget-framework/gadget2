@@ -63,7 +63,7 @@ MainInfo::MainInfo()
   strPrintLikeSummaryFile = NULL;
   strMainGadgetFile = NULL;
   setMainGadgetFile(tmpname);
-  printComponent=-1;
+  printComponent = -1;
 }
 
 MainInfo::~MainInfo() {
@@ -217,58 +217,57 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
         k++;
-	printComponent=atoi(aVector[k]);
-      	if (k == aNumber - 1)
+        printComponent = atoi(aVector[k]);
+        if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
-	k++;
+        k++;
         setPrintLikelihoodFile(aVector[k]);
-	
-	
+
       } else if (strcasecmp(aVector[k], "-print1") == 0) {
-	if (k == aNumber - 1)
-	  showCorrectUsage(aVector[k]);
-	k++;
-	printinfo.setPrint1(atoi(aVector[k]));
-	
+        if (k == aNumber - 1)
+          showCorrectUsage(aVector[k]);
+        k++;
+        printinfo.setPrint1(atoi(aVector[k]));
+
       } else if (strcasecmp(aVector[k], "-print2") == 0) {
-	if (k == aNumber - 1)
-	  showCorrectUsage(aVector[k]);
-	k++;
-	printinfo.setPrint2(atoi(aVector[k]));
-	
+        if (k == aNumber - 1)
+          showCorrectUsage(aVector[k]);
+        k++;
+        printinfo.setPrint2(atoi(aVector[k]));
+
       } else if (strcasecmp(aVector[k], "-precision") == 0) {
-	//JMB - experimental setting of printing precision
-	if (k == aNumber - 1)
-	  showCorrectUsage(aVector[k]);
-	k++;
-	printinfo.setPrecision(atoi(aVector[k]));
-	
+        //JMB - experimental setting of printing precision
+        if (k == aNumber - 1)
+          showCorrectUsage(aVector[k]);
+        k++;
+        printinfo.setPrecision(atoi(aVector[k]));
+
       } else if ((strcasecmp(aVector[k], "-v") == 0) || (strcasecmp(aVector[k], "--version") == 0)) {
-	RUNID.print(cout);
-	exit(EXIT_SUCCESS);
-	
+        RUNID.print(cout);
+        exit(EXIT_SUCCESS);
+
       } else if ((strcasecmp(aVector[k], "-h") == 0) || (strcasecmp(aVector[k], "--help") == 0)) {
-	showUsage();
-	
+        showUsage();
+
       } else if (strcasecmp(aVector[k], "-log") == 0) {
-	//JMB - experimental logging facility
-	if (k == aNumber - 1)
-	  showCorrectUsage(aVector[k]);
-	k++;
+        //JMB - experimental logging facility
+        if (k == aNumber - 1)
+          showCorrectUsage(aVector[k]);
+        k++;
         handle.setLogFile(aVector[k]);
-	
+
       } else
-	showCorrectUsage(aVector[k]);
-      
+        showCorrectUsage(aVector[k]);
+
       k++;
     }
   }
-  
+
   printinfo.checkNumbers();
   //JMB some error checking to make sure we are doing something sensible
   if ((runstochastic != 1) && (runnetwork == 1)) {
     cout << "\nWarning - Gadget for the paramin network should be used with -s option\n"
-	 << "Gadget will now set the -s switch to perform a stochastic run\n";
+      << "Gadget will now set the -s switch to perform a stochastic run\n";
     runstochastic = 1;
     runlikelihood = 1;
   }

@@ -268,8 +268,10 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
         for (i = 0; i < nvars; i++)
           endpt[param[i]] = xbefore[param[i]];
       }
-
       newf = (*f)(endpt, nvars);
+
+      EcoSystem->setFuncEvalHJ(FuncEval - offset);
+      EcoSystem->setLikelihoodHJ(newf);
       return 0;
     }
 
@@ -355,8 +357,10 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
           for (i = 0; i < nvars; i++)
             endpt[param[i]] = xbefore[param[i]];
         }
-
         newf = (*f)(endpt, nvars);
+
+        EcoSystem->setFuncEvalHJ(FuncEval - offset);
+        EcoSystem->setLikelihoodHJ(newf);
         return 0;
       }
 
@@ -392,11 +396,14 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
         << (FuncEval - offset) << " function evaluations (max " << maxevl
         << ")\nThe steplength was reduced to " << steplength << " (min " << epsilon
         << ")\nThe optimisation stopped because an optimum was found for this run\n";
-      EcoSystem->setConverge(1);
 
       for (i = 0; i < nvars; i++)
         endpt[i] = xbefore[i];
       newf = (*f)(endpt, nvars);
+
+      EcoSystem->setConvergeHJ(1);
+      EcoSystem->setFuncEvalHJ(FuncEval - offset);
+      EcoSystem->setLikelihoodHJ(newf);
       return 1;
     }
 

@@ -337,6 +337,8 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
               << "\nNumber of rejected points " << nrej << endl;
 
             fp = (*f)(endpoint, n);
+            EcoSystem->setFuncEvalSA(FuncEval - offset);
+            EcoSystem->setLikelihoodSA(fp);
             return 0;
           }
 
@@ -428,7 +430,9 @@ int simann(int nvar, double point[], double endpoint[], double lb[], double ub[]
         << "\nNumber of rejected points " << nrej << endl;
 
       fp = (*f)(endpoint, n);
-      EcoSystem->setConverge(1);
+      EcoSystem->setConvergeSA(1);
+      EcoSystem->setFuncEvalSA(FuncEval - offset);
+      EcoSystem->setLikelihoodSA(fp);
       return 1;
     }
 
