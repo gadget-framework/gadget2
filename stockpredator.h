@@ -15,26 +15,26 @@ public:
   virtual ~StockPredator() {};
   virtual void Sum(const AgeBandMatrix& Alkeys, int area);
   virtual void Eat(int area, double LengthOfStep, double Temperature,
-    double Areasize, int CurrentSubstep, int NrOfSubsteps);
+    double Areasize, int CurrentSubstep, int numsubsteps);
   virtual const PopInfoVector& NumberPriortoEating(int area, const char* preyname) const;
-  virtual void adjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep);
+  virtual void adjustConsumption(int area, int numsubsteps, int CurrentSubstep);
   virtual void Print(ofstream& outfile) const;
   const BandMatrix& Alproportion(int area) const { return Alprop[AreaNr[area]]; };
   const DoubleVector& FPhi(int area) const { return fphi[AreaNr[area]]; };
-  const DoubleVector& MaxConByLength(int area) const { return MaxconByLength[AreaNr[area]]; };
+  const DoubleVector& maxConByLength(int area) const { return maxconbylength[AreaNr[area]]; };
   virtual void Reset(const TimeClass* const TimeInfo);
 protected:
   virtual void resizeObjects();
-  virtual void CalcMaximumConsumption(double Temperature, int area, int CurrentSubstep,
-    int NrOfSubsteps, double LengthOfStep);
-  double MaxConsumption(double Length, const FormulaVector &Maxconsumption, double Temperature);
-  FormulaVector maxConsumption;
+  virtual void calcMaxConsumption(double Temperature, int area, int CurrentSubstep,
+    int numsubsteps, double LengthOfStep);
+  double maxConsumption(double Length, const FormulaVector &maxcon, double Temperature);
+  FormulaVector maxconsumption;
   Formula halfFeedingValue;
   DoubleMatrix Phi;  //[area][predLengthgroup]
   DoubleMatrix fphi; //[area][predLengthgroup]
   DoubleMatrix fphI; //[area][predLengthgroup]  fphi per substep
   BandMatrixVector Alprop;     //[area][age][length group]
-  DoubleMatrix MaxconByLength; //[area][length group]
+  DoubleMatrix maxconbylength; //[area][length group]
   AgeBandMatrixPtrVector Alkeys;  //[area][age][length group]
 };
 

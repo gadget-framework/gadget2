@@ -365,7 +365,7 @@ double StockDistribution::calcLikMultinomial() {
 
   for (area = 0; area < Dist.Size(); area++) {
     Dist[area] = new DoubleMatrix(aggregator[0]->numAgeGroups() *
-      aggregator[0]->NoLengthGroups(), stocknames.Size(), 0.0);
+      aggregator[0]->numLengthGroups(), stocknames.Size(), 0.0);
     for (sn = 0; sn < stocknames.Size(); sn++) {
       alptr = &aggregator[sn]->returnSum();
       minage = (*alptr)[area].minAge();

@@ -19,7 +19,7 @@ void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   int age, l;
   double timeratio, tmp;
 
-  for (age = NconbyAge.Mincol(inarea); age < NconbyAge.Maxcol(inarea); age++) {
+  for (age = NconbyAge.minCol(inarea); age < NconbyAge.maxCol(inarea); age++) {
     NconbyAge[inarea][age] = 0.0;
     BconbyAge[inarea][age] = 0.0;
   }
@@ -31,7 +31,7 @@ void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   Alk.Colsum(PopByLength);
 
   timeratio = TimeInfo->LengthOfYear() / TimeInfo->LengthOfCurrent();
-  for (age = NconbyAge.Mincol(inarea); age < NconbyAge.Maxcol(inarea); age++) {
+  for (age = NconbyAge.minCol(inarea); age < NconbyAge.maxCol(inarea); age++) {
     for (l = Alk.minLength(age); l < Alk.maxLength(age); l++) {
       PopByAge[age] += Alk[age][l];
 

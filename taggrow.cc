@@ -12,12 +12,12 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
   if (numTagExperiments > 0) {
     for (i = 0; i < nrow; i++) {
       //The part that grows to or above the highest length group.
-      maxlgrp = v[i]->Maxcol() -1;
+      maxlgrp = v[i]->maxCol() - 1;
       for (tag = 0; tag < numTagExperiments; tag++)
         number[tag] = 0.0;
 
-      for (lgrp = maxlgrp; lgrp >= v[i]->Maxcol() - Lgrowth.Nrow(); lgrp--) {
-        for (grow = v[i]->Maxcol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
+      for (lgrp = maxlgrp; lgrp >= v[i]->maxCol() - Lgrowth.Nrow(); lgrp--) {
+        for (grow = v[i]->maxCol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
           for (tag = 0; tag < numTagExperiments; tag++) {
             upfj = Lgrowth[grow][lgrp] * (*(*v[i])[lgrp][tag].N);
             number[tag] += upfj;
@@ -29,7 +29,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
         (*(*v[i])[maxlgrp][tag].N) = number[tag];
 
       //The center part of the length division
-      for (lgrp = v[i]->Maxcol() - 2; lgrp >= v[i]->Mincol() + Lgrowth.Nrow() - 1; lgrp--) {
+      for (lgrp = v[i]->maxCol() - 2; lgrp >= v[i]->minCol() + Lgrowth.Nrow() - 1; lgrp--) {
         for (tag = 0; tag < numTagExperiments; tag++)
           number[tag] = 0.0;
 
@@ -45,11 +45,11 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
       }
 
       //The lowest part of the length division.
-      for (lgrp = v[i]->Mincol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->Mincol(); lgrp--) {
+      for (lgrp = v[i]->minCol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->minCol(); lgrp--) {
         for (tag = 0; tag < numTagExperiments; tag++)
           number[tag] = 0.0;
 
-        for (grow = 0; grow <= lgrp - v[i]->Mincol(); grow++) {
+        for (grow = 0; grow <= lgrp - v[i]->minCol(); grow++) {
           for (tag = 0; tag < numTagExperiments; tag++) {
             upfj = Lgrowth[grow][lgrp - grow] * (*(*v[i])[lgrp - grow][tag].N);
             number[tag] += upfj;
@@ -77,15 +77,15 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
   if (numTagExperiments > 0) {
     for (i = 0; i < nrow; i++) {
       age = i + minage;
-      maxlgrp = v[i]->Maxcol() - 1;
+      maxlgrp = v[i]->maxCol() - 1;
       for (tag = 0; tag < numTagExperiments; tag++) {
         number[tag] = 0.0;
         matnum[tag] = 0.0;
       }
 
       //The part that grows to or above the highest length group.
-      for (lgrp = maxlgrp; lgrp >= v[i]->Maxcol() - Lgrowth.Nrow(); lgrp--) {
-        for (grow = v[i]->Maxcol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
+      for (lgrp = maxlgrp; lgrp >= v[i]->maxCol() - Lgrowth.Nrow(); lgrp--) {
+        for (grow = v[i]->maxCol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
           ratio =  Mat->MaturationProbability(age, lgrp, grow, TimeInfo, area, Total[i + minage][lgrp].W);
           for (tag = 0; tag < numTagExperiments; tag++) {
             upfj = Lgrowth[grow][lgrp] * (*(*v[i])[lgrp][tag].N);
@@ -104,7 +104,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
       }
 
       //The center part of the length division
-      for (lgrp = v[i]->Maxcol() - 2; lgrp >= v[i]->Mincol() + Lgrowth.Nrow() - 1; lgrp--) {
+      for (lgrp = v[i]->maxCol() - 2; lgrp >= v[i]->minCol() + Lgrowth.Nrow() - 1; lgrp--) {
         for (tag = 0; tag < numTagExperiments; tag++) {
           number[tag] = 0.0;
           matnum[tag] = 0.0;
@@ -129,13 +129,13 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
       }
 
       //The lowest part of the length division.
-      for (lgrp = v[i]->Mincol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->Mincol(); lgrp--) {
+      for (lgrp = v[i]->minCol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->minCol(); lgrp--) {
         for (tag = 0; tag < numTagExperiments; tag++) {
           number[tag] = 0.0;
           matnum[tag] = 0.0;
         }
 
-        for (grow = 0; grow <= lgrp - v[i]->Mincol(); grow++) {
+        for (grow = 0; grow <= lgrp - v[i]->minCol(); grow++) {
           ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, area, Total[i + minage][lgrp - grow].W);
           for (tag = 0; tag < numTagExperiments; tag++) {
             upfj = Lgrowth[grow][lgrp - grow] * (*(*v[i])[lgrp - grow][tag].N);

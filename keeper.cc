@@ -55,7 +55,7 @@ void Keeper::KeepVariable(double& value, const Parameter& attr) {
 Keeper::~Keeper() {
   clearAll();
   delete stack;
-  clearComponents();
+  likcompnames->clearStack();
   delete likcompnames;
 }
 
@@ -100,11 +100,6 @@ void Keeper::clearLast() {
   stack->OutOfStack();
 }
 
-void Keeper::clearLastAddString(const char* str) {
-  stack->OutOfStack();
-  stack->PutInStack(str);
-}
-
 void Keeper::clearAll() {
   stack->clearStack();
 }
@@ -123,19 +118,11 @@ void Keeper::addComponent(const char* name) {
   likcompnames->PutInStack(name);
 }
 
-char* Keeper::sendComponents() const {
-  return likcompnames->sendAll();
-}
-
-void Keeper::clearComponents() {
-  likcompnames->clearStack();
-}
-
-int Keeper::NoVariables() const {
+int Keeper::numVariables() const {
   return switches.Size();
 }
 
-int Keeper::NoOptVariables() const {
+int Keeper::numOptVariables() const {
   int i, nr;
   nr = 0;
   if (opt.Size() == 0)
@@ -168,7 +155,7 @@ void Keeper::ScaledValues(DoubleVector& val) const {
 
 void Keeper::ScaledOptValues(DoubleVector& val) const {
   int i, k;
-  if (val.Size() != this->NoOptVariables())
+  if (val.Size() != this->numOptVariables())
     handle.logFailure("Error in keeper - received illegal number of optimising variables");
 
   if (opt.Size() == 0)
@@ -185,7 +172,7 @@ void Keeper::ScaledOptValues(DoubleVector& val) const {
 
 void Keeper::OptValues(DoubleVector& val) const {
   int i, k;
-  if (val.Size() != this->NoOptVariables())
+  if (val.Size() != this->numOptVariables())
     handle.logFailure("Error in keeper - received illegal number of optimising variables");
 
   if (opt.Size() == 0)
@@ -202,7 +189,7 @@ void Keeper::OptValues(DoubleVector& val) const {
 
 void Keeper::InitialOptValues(DoubleVector& val) const {
   int i, k;
-  if (val.Size() != this->NoOptVariables())
+  if (val.Size() != this->numOptVariables())
     handle.logFailure("Error in keeper - received illegal number of optimising variables");
 
   if (opt.Size() == 0)
@@ -219,7 +206,7 @@ void Keeper::InitialOptValues(DoubleVector& val) const {
 
 void Keeper::OptSwitches(ParameterVector& sw) const {
   int i, k;
-  if (sw.Size() != this->NoOptVariables())
+  if (sw.Size() != this->numOptVariables())
     handle.logFailure("Error in keeper - received illegal number of optimising variables");
 
   if (opt.Size() == 0)
@@ -283,7 +270,7 @@ void Keeper::Update(int pos, double& value) {
     scaledvalues[pos] = value / initialvalues[pos];
 }
 
-void Keeper::writeOptValues(double functionValue, const LikelihoodPtrVector& Likely) const {
+void Keeper::writeOptValues(const LikelihoodPtrVector& Likely) const {
   int i;
   for (i = 0; i < values.Size(); i++)
     if (opt[i] == 1 || opt.Size() == 0)
@@ -293,7 +280,7 @@ void Keeper::writeOptValues(double functionValue, const LikelihoodPtrVector& Lik
   for (i = 0; i < Likely.Size(); i++)
     cout << Likely[i]->returnUnweightedLikelihood() << sep;
 
-  cout << "\n\nThe overall likelihood score is " << functionValue << endl;
+  cout << "\n\nThe overall likelihood score is " << EcoSystem->getLikelihood() << endl;
 }
 
 void Keeper::writeInitialInformation(const char* const filename, const LikelihoodPtrVector& Likely) {
@@ -316,7 +303,7 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
   CharPtrVector tmpLikely;
   tmpLikely.resize(Likely.Size());
 
-  char* strLikely = this->sendComponents();
+  char* strLikely = likcompnames->sendAll();
   char* strTemp = new char[MaxStrLength];
   strncpy(strTemp, "", MaxStrLength);
 
@@ -450,10 +437,10 @@ void Keeper::Update(const StochasticData* const Stoch) {
   int i, j;
   if (Stoch->SwitchesGiven()) {
     boundsgiven = 1;
-    IntVector match(Stoch->NoVariables(), 0);
+    IntVector match(Stoch->numVariables(), 0);
     IntVector found(switches.Size(), 0);
 
-    for (i = 0; i < Stoch->NoVariables(); i++)
+    for (i = 0; i < Stoch->numVariables(); i++)
       for (j = 0; j < switches.Size(); j++) {
         if (Stoch->Switches(i) == switches[j]) {
           values[j] = Stoch->Values(i);
@@ -474,7 +461,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
         }
       }
 
-    for (i = 0; i < Stoch->NoVariables(); i++)
+    for (i = 0; i < Stoch->numVariables(); i++)
       if (match[i] == 0)
         handle.logWarning("Warning in keeper - failed to match switch", Stoch->Switches(i).getValue());
 
@@ -483,10 +470,10 @@ void Keeper::Update(const StochasticData* const Stoch) {
         handle.logWarning("Warning in keeper - using default values for switch", switches[i].getValue());
 
   } else {
-    if (this->NoVariables() != Stoch->NoVariables())
+    if (this->numVariables() != Stoch->numVariables())
       handle.logFailure("Error in keeper - received wrong number of variables to update");
 
-    for (i = 0; i < Stoch->NoVariables(); i++) {
+    for (i = 0; i < Stoch->numVariables(); i++) {
       if (Stoch->OptGiven())
         opt[i] = Stoch->Optimize(i);
 
@@ -594,7 +581,7 @@ void Keeper::UpperBds(DoubleVector& ubs) const {
 
 void Keeper::LowerOptBds(DoubleVector& lbs) const {
   int i, j;
-  if (lbs.Size() != this->NoOptVariables())
+  if (lbs.Size() != this->numOptVariables())
     handle.logFailure("Error in keeper - received illegal number of optimising variables");
 
   if (lbs.Size() == 0)
@@ -611,7 +598,7 @@ void Keeper::LowerOptBds(DoubleVector& lbs) const {
 
 void Keeper::UpperOptBds(DoubleVector& ubs) const {
   int i, j;
-  if (ubs.Size() != this->NoOptVariables())
+  if (ubs.Size() != this->numOptVariables())
     handle.logFailure("Error in keeper - received illegal number of optimising variables");
 
   if (ubs.Size() == 0)

@@ -10,12 +10,12 @@
 #include "selectfunc.h"
 #include "stock.h"
 
-class Spawner : protected LivesOnAreas {
+class SpawnData : protected LivesOnAreas {
 public:
-  Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* const LgrpDiv,
+  SpawnData(CommentStream& infile, int maxage, const LengthGroupDivision* const LgrpDiv,
     const IntVector& Areas, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper);
-  ~Spawner();
+  ~SpawnData();
   void Print(ofstream& outfile) const;
   void setStock(StockPtrVector& stockvec);
   void addSpawnStock(int area, const TimeClass* const TimeInfo);

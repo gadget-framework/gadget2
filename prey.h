@@ -40,10 +40,10 @@ public:
   double Biomass(int area, int length) const { return biomass[AreaNr[area]][length]; };
   double Biomass(int area) const { return total[AreaNr[area]]; };
   int TooMuchConsumption(int area) const { return tooMuchConsumption[AreaNr[area]]; };
-  virtual void checkConsumption(int area, int NrOfSubsteps);
+  virtual void checkConsumption(int area, int numsubsteps);
   double Ratio(int area, int length) const { return ratio[AreaNr[area]][length]; };
   double Length(int j) const { return LgrpDiv->meanLength(j); };
-  int NoLengthGroups() const { return LgrpDiv->NoLengthGroups(); };
+  int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
   const DoubleVector& Bconsumption(int area) const { return consumption[AreaNr[area]]; };
   const DoubleVector& OverConsumption(int area) const { return overconsumption[AreaNr[area]]; };
   const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };

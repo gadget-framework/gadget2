@@ -30,7 +30,7 @@ public:
    * \brief This will return the number of areas for the current model
    * \return number
    */
-  int NoAreas() const { return OuterAreas.Size(); };
+  int numAreas() const { return OuterAreas.Size(); };
   /**
    * \brief This will return the size of an area
    * \param area is the identifier for the required area
@@ -107,7 +107,7 @@ public:
    * \brief This will return the total number of timesteps that have taken place in the simulation from the start of the model simulation until the current timestep
    * \return number of timesteps taken from the start of the simulation
    */
-  int CurrentTime() const { return this->CalcSteps(currentyear, currentstep); };
+  int CurrentTime() const { return this->calcSteps(currentyear, currentstep); };
   /**
    * \brief This will return the first step of the model simulation
    * \return firststep
@@ -150,19 +150,19 @@ public:
    * \param step is the specified step
    * \return number of timesteps taken
    */
-  int CalcSteps(int year, int step) const {
-    return (notimesteps * (year - firstyear) + step - firststep + 1); };
+  int calcSteps(int year, int step) const {
+    return (numtimesteps * (year - firstyear) + step - firststep + 1); };
   /**
    * \brief This will return the total number of timesteps in the model simulation
    * \return total number of timesteps
    */
   int TotalNoSteps() const {
-    return (notimesteps * (lastyear - firstyear) + laststep - firststep + 1); };
+    return (numtimesteps * (lastyear - firstyear) + laststep - firststep + 1); };
   /**
    * \brief This will return the number of steps in each year of the model simulation
-   * \return notimesteps
+   * \return numtimesteps
    */
-  int StepsInYear() const { return notimesteps; };
+  int StepsInYear() const { return numtimesteps; };
   /**
    * \brief This is the function that increases the timestep for the model simulation
    */
@@ -180,9 +180,9 @@ public:
   void ResetToBeginning();
   /**
    * \brief This will return the number of substeps in the current timestep of the model simulation
-   * \return notimesteps
+   * \return number of substeps
    */
-  int NrOfSubsteps() const;
+  int numSubSteps() const { return numsubsteps[currentstep - 1]; };
   /**
    * \brief This is the function that increases the substep within the current timestep
    */
@@ -220,7 +220,7 @@ protected:
   /**
    * \brief This is the number of steps in a year in the model simulation
    */
-  int notimesteps;
+  int numtimesteps;
   /**
    * \brief This is the length of a year in the model simulation (should be 12)
    */
@@ -230,9 +230,9 @@ protected:
    */
   DoubleIndexVector timesteps;
   /**
-   * \brief This is the DoubleIndexVector of substeps in each step
+   * \brief This is the IntVector of substeps in each step
    */
-  DoubleIndexVector nrofsubsteps;
+  IntVector numsubsteps;
   /**
    * \brief This is the current substep of the model simulation
    */

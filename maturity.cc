@@ -244,7 +244,7 @@ void MaturityA::setStock(StockPtrVector& stockvec) {
     if (matureStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
       minlength = matureStocks[i]->returnLengthGroupDiv()->minLength();
   }
-  minMatureLength = LgrpDiv->NoLengthGroup(minlength);
+  minMatureLength = LgrpDiv->numLengthGroup(minlength);
 }
 
 double MaturityA::MaturationProbability(int age, int length, int growth,
@@ -433,7 +433,7 @@ void MaturityC::setStock(StockPtrVector& stockvec) {
     if (matureStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
       minlength = matureStocks[i]->returnLengthGroupDiv()->minLength();
   }
-  minMatureLength = LgrpDiv->NoLengthGroup(minlength);
+  minMatureLength = LgrpDiv->numLengthGroup(minlength);
 }
 
 void MaturityC::Reset(const TimeClass* const TimeInfo) {
@@ -505,13 +505,13 @@ MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
 
   //Aggregate the reference weight data to be the same length groups
   if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
-      LgrpDiv->meanLength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
+      LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
     handle.Message("Lengths for reference weights must span the range of growth lengths");
 
-  refWeight.resize(LgrpDiv->NoLengthGroups(), 0.0);
+  refWeight.resize(LgrpDiv->numLengthGroups(), 0.0);
   int i, j, pos = 0;
   double tmp;
-  for (j = 0; j < LgrpDiv->NoLengthGroups(); j++) {
+  for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
     for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
       if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] && LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
         tmp = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
@@ -534,7 +534,7 @@ void MaturityD::setStock(StockPtrVector& stockvec) {
     if (matureStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
       minlength = matureStocks[i]->returnLengthGroupDiv()->minLength();
   }
-  minMatureLength = LgrpDiv->NoLengthGroup(minlength);
+  minMatureLength = LgrpDiv->numLengthGroup(minlength);
 }
 
 void MaturityD::Reset(const TimeClass* const TimeInfo) {

@@ -75,7 +75,7 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
       } else {
         if (TimeInfo->IsWithinPeriod(year, step)) {
           TimeSteps.resize(1);
-          TimeSteps[TimeSteps.Size() - 1] = TimeInfo->CalcSteps(year, step);
+          TimeSteps[TimeSteps.Size() - 1] = TimeInfo->calcSteps(year, step);
         }
       }
     }
@@ -119,7 +119,7 @@ void ActionAtTimes::addActions(const IntVector& years,
   for (i = 0; i < years.Size(); i++)
     if (TimeInfo->IsWithinPeriod(years[i], steps[i])) {
       TimeSteps.resize(1);
-      TimeSteps[TimeSteps.Size() - 1] = TimeInfo->CalcSteps(years[i], steps[i]);
+      TimeSteps[TimeSteps.Size() - 1] = TimeInfo->calcSteps(years[i], steps[i]);
     }
 }
 

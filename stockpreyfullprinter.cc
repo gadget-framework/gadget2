@@ -145,7 +145,7 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo) {
   for (a = 0; a < areas.Size(); a++) {
     const BandMatrix& Nbyageandl = preyinfo->NconsumptionByAgeAndLength(areas[a]);
     for (age = Nbyageandl.minAge(); age <= Nbyageandl.maxAge(); age++)
-      for (l = 0; l < LgrpDiv->NoLengthGroups(); l++) {
+      for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
         outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep << setw(lowwidth)
           << TimeInfo->CurrentStep() << sep << setw(lowwidth) << outerareas[a] << sep
           << setw(lowwidth) << age << sep << setprecision(smallprecision)

@@ -14,7 +14,7 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
   int minage, int maxage, const TimeClass* const TimeInfo, Keeper* const keeper)
   : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv),
-    MaxconByLength(areas.Size(), GivenLgrpDiv->NoLengthGroups(), 0.0) {
+    maxconbylength(areas.Size(), GivenLgrpDiv->numLengthGroups(), 0.0) {
 
   keeper->addString("predator");
   char text[MaxStrLength];
@@ -27,22 +27,23 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   this->readSuitabilityMatrix(infile, "maxconsumption", TimeInfo, keeper);
 
   keeper->addString("maxconsumption");
-  maxConsumption.resize(4, keeper);  //Maxnumber of constants is 4
-  if (!(infile >> maxConsumption))
+  maxconsumption.resize(4, keeper);  //Maxnumber of constants is 4
+  if (!(infile >> maxconsumption))
     handle.Message("Incorrect format of maxconsumption vector");
-  maxConsumption.Inform(keeper);
+  maxconsumption.Inform(keeper);
 
-  keeper->clearLastAddString("halffeedingvalue");
+  keeper->clearLast();
+  keeper->addString("halffeedingvalue");
   readWordAndFormula(infile, "halffeedingvalue", halfFeedingValue);
   halfFeedingValue.Inform(keeper);
   keeper->clearLast();
-
   keeper->clearLast();
+
   //Everything read from infile.
-  IntVector size(maxage - minage + 1, GivenLgrpDiv->NoLengthGroups());
+  IntVector size(maxage - minage + 1, GivenLgrpDiv->numLengthGroups());
   IntVector minlength(maxage - minage + 1, 0);
 
-  int numlength = LgrpDiv->NoLengthGroups();
+  int numlength = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
   Alkeys.resize(numarea, minage, minlength, size);
   BandMatrix bm(minlength, size, minage); //default initialization to 0.
@@ -80,10 +81,10 @@ void StockPredator::Print(ofstream& outfile) const {
   outfile << "Maximum consumption by length.\n";
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tInternal area " << areas[area] << TAB;
-    for (i = 0; i < MaxconByLength.Ncol(); i++) {
+    for (i = 0; i < maxconbylength.Ncol(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
-      outfile << sep << MaxconByLength[area][i];
+      outfile << sep << maxconbylength[area][i];
     }
     outfile << endl;
   }
@@ -109,10 +110,10 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
   int a, l, age;
   if (TimeInfo->CurrentTime() == 1) {
     for (a = 0; a < areas.Size(); a++) {
-      for (l = 0; l < LgrpDiv->NoLengthGroups(); l++) {
+      for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
         Phi[a][l] = 0.0;
         fphi[a][l] = 0.0;
-        MaxconByLength[a][l] = 0.0;
+        maxconbylength[a][l] = 0.0;
       }
     }
     for (a = 0; a < areas.Size(); a++) {
@@ -129,7 +130,7 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
 
 const PopInfoVector& StockPredator::NumberPriortoEating(int area, const char* preyname) const {
   int prey;
-  for (prey = 0; prey < NoPreys(); prey++)
+  for (prey = 0; prey < numPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)
       return Preys(prey)->NumberPriortoEating(area);
 

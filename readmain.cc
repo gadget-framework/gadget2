@@ -22,7 +22,6 @@
 #include "recstatistics.h"
 #include "stomachcontent.h"
 #include "recapture.h"
-#include "predatorindex.h"
 #include "migrationpenalty.h"
 #include "catchintons.h"
 #include "lenstock.h"
@@ -301,7 +300,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       Likely[i] = new CatchInTons(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "predatorindices") == 0) {
-      Likely[i] = new PredatorIndices(infile, Area, TimeInfo, weight, name);
+      handle.Warning("The predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");
 
     } else if (strcasecmp(type, "migrationpenalty") == 0) {
       Likely[i] = new MigrationPenalty(infile, weight);

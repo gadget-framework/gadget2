@@ -7,7 +7,6 @@ extern ErrorHandler handle;
 
 StochasticData::StochasticData(const char* const filename) {
   netrun = 0;
-  error = 0;
   readInfo = new InitialInputFile(filename);
   readInfo->readFromFile();
   if (readInfo->repeatedValuesFileFormat() == 1) {
@@ -24,16 +23,15 @@ StochasticData::StochasticData(const char* const filename) {
 
 }
 
-StochasticData::StochasticData(int net) {
-  netrun = net;
-  error = 0;
+StochasticData::StochasticData() {
+  netrun = 1;
   readInfo = NULL;
   if (netrun == 1) {
     #ifdef GADGET_NETWORK
       slave = new SlaveCommunication();
       getdata = 0;
       dataFromMaster = NULL;
-      numberOfParam = 0;
+      numParam = 0;
       this->readFromNetwork();
     #endif
   }
@@ -56,21 +54,19 @@ StochasticData::~StochasticData() {
 }
 
 void StochasticData::readDataFromNextLine() {
+  if (netrun == 1)
+    return;
   readInfo->readVectorFromLine();
   values.Reset();
   readInfo->getVectorValue(values);
 }
 
-int StochasticData::NoVariables() const {
+int StochasticData::numVariables() const {
   return values.Size();
 }
 
 int StochasticData::DataIsLeft() {
   return !(readInfo->reachedEndOfFile());
-}
-
-int StochasticData::Error() const {
-  return error;
 }
 
 int StochasticData::DataFromFile() {
@@ -98,21 +94,21 @@ void StochasticData::readFromNetwork() {
   int i, check;
 
   //Receive first data from master
-  numberOfParam = slave->startNetCommunication();
-  if (numberOfParam > 0) {
+  numParam = slave->startNetCommunication();
+  if (numParam > 0) {
     //successfully started netcommunication
-    dataFromMaster = new double[numberOfParam];
+    dataFromMaster = new double[numParam];
     if (values.Size() == 0) {
-      values.resize(numberOfParam);
-      lowerbound.resize(numberOfParam);
-      upperbound.resize(numberOfParam);
+      values.resize(numParam);
+      lowerbound.resize(numParam);
+      upperbound.resize(numParam);
     }
 
     //try to receive switches from master
     getdata = slave->receiveFromMaster();
     if (getdata == 1) {
       if (slave->receivedString()) {
-        for (i = 0; i < numberOfParam; i++) {
+        for (i = 0; i < numParam; i++) {
           Parameter sw(slave->getString(i));
           switches.resize(1, sw);
         }
@@ -125,7 +121,7 @@ void StochasticData::readFromNetwork() {
     if (getdata == 1) {
       if (slave->receivedBounds()) {
         slave->getBound(dataFromMaster);
-        for (i = 0; i < numberOfParam; i++)
+        for (i = 0; i < numParam; i++)
           lowerbound[i] = dataFromMaster[i];
       } else
         getdata = 0;
@@ -136,7 +132,7 @@ void StochasticData::readFromNetwork() {
     if (getdata == 1) {
       if (slave->receivedBounds()) {
         slave->getBound(dataFromMaster);
-        for (i = 0; i < numberOfParam; i++)
+        for (i = 0; i < numParam; i++)
           upperbound[i] = dataFromMaster[i];
       } else
         getdata = 0;
@@ -197,11 +193,7 @@ void StochasticData::readNextLineFromNet() {
   }
 }
 
-int StochasticData::getDataFromNet() {
-  return getdata;
-}
-
-void StochasticData::SendDataToMaster(double funcValue) {
+void StochasticData::sendDataToMaster(double funcValue) {
   int info = slave->sendToMaster(funcValue);
   if (info < 0) {
     slave->stopNetCommunication();

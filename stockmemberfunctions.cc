@@ -27,9 +27,9 @@ extern ErrorHandler handle;
 void Stock::Migrate(const TimeClass* const TimeInfo) {
   //age dependent migrations should also be here.
   if (doesmigrate) {
-    Alkeys.Migrate(migration->Migrationmatrix(TimeInfo));
+    Alkeys.Migrate(migration->MigrationMatrix(TimeInfo));
     if (tagAlkeys.numTagExperiments() > 0)
-      tagAlkeys.Migrate(migration->Migrationmatrix(TimeInfo), Alkeys);
+      tagAlkeys.Migrate(migration->MigrationMatrix(TimeInfo), Alkeys);
   }
 }
 
@@ -58,17 +58,17 @@ void Stock::CalcNumbers(int area, const AreaClass* const Area, const TimeClass* 
 void Stock::calcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doeseat)
     predator->Eat(area, TimeInfo->LengthOfCurrent(), Area->Temperature(area, TimeInfo->CurrentTime()),
-      Area->Size(area), TimeInfo->CurrentSubstep(), TimeInfo->NrOfSubsteps());
+      Area->Size(area), TimeInfo->CurrentSubstep(), TimeInfo->numSubSteps());
 }
 
 void Stock::checkEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (iseaten)
-    prey->checkConsumption(area, TimeInfo->NrOfSubsteps());
+    prey->checkConsumption(area, TimeInfo->numSubSteps());
 }
 
 void Stock::adjustEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doeseat)
-    predator->adjustConsumption(area, TimeInfo->NrOfSubsteps(), TimeInfo->CurrentSubstep());
+    predator->adjustConsumption(area, TimeInfo->numSubSteps(), TimeInfo->CurrentSubstep());
 }
 
 //-------------------------------------------------------------------
@@ -83,7 +83,7 @@ void Stock::ReducePop(int area, const AreaClass* const Area, const TimeClass* co
   //Natural Mortality changed with more substeps
   DoubleVector* PropSurviving;
   PropSurviving = new DoubleVector(NatM->ProportionSurviving(TimeInfo));
-  double timeratio = 1.0 / TimeInfo->NrOfSubsteps();
+  double timeratio = 1.0 / TimeInfo->numSubSteps();
 
   int i;
   for (i = 0; i < PropSurviving->Size(); i++)
@@ -108,7 +108,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 
   if (doeseat)
     grower->GrowthCalc(area, Area, TimeInfo, ((StockPredator*)predator)->FPhi(area),
-      ((StockPredator*)predator)->MaxConByLength(area));
+      ((StockPredator*)predator)->maxConByLength(area));
   else
     grower->GrowthCalc(area, Area, TimeInfo);
 
@@ -293,8 +293,4 @@ void Stock::DeleteTags(const char* tagname) {
     transition->deleteTransitionTag(tagname);
   if (doesstray)
     stray->deleteStrayTag(tagname);
-}
-
-const CharPtrVector Stock::TaggingExperimentIDs() {
-  return tagAlkeys.tagIDs();
 }

@@ -24,8 +24,8 @@ public:
   int minAge() const { return minage; };
   int maxAge() const { return minage + nrow - 1; };
   int Nrow() const { return nrow; };
-  int minLength(int age) const { return v[age - minage]->Mincol(); };
-  int maxLength(int age) const { return v[age - minage]->Maxcol(); };
+  int minLength(int age) const { return v[age - minage]->minCol(); };
+  int maxLength(int age) const { return v[age - minage]->maxCol(); };
   void IncrementAge(const AgeBandMatrix& Total);
   void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total);
   void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total, Maturity* const Mat,

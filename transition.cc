@@ -98,10 +98,10 @@ void Transition::setStock(StockPtrVector& stockvec) {
   }
 
   IntVector minlv(2, 0);
-  IntVector sizev(2, LgrpDiv->NoLengthGroups());
+  IntVector sizev(2, LgrpDiv->numLengthGroups());
   AgeGroup.resize(areas.Size(), age, minlv, sizev);
   TagAgeGroup.resize(areas.Size(), age, minlv, sizev);
-  minTransitionLength = LgrpDiv->NoLengthGroup(mlength);
+  minTransitionLength = LgrpDiv->numLengthGroup(mlength);
 }
 
 void Transition::Print(ofstream& outfile) const {

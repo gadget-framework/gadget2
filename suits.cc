@@ -23,7 +23,7 @@ Suits::Suits(const Suits& initial, Keeper* const keeper)
     Multiplication(initial.Multiplication), MatrixSuit(initial.MatrixSuit) {
 
   int i;
-  for (i = 0; i < initial.NoFuncPreys(); i++)
+  for (i = 0; i < initial.numFuncPreys(); i++)
     SuitFunction.resize(1, initial.SuitFunction[i]);
 
   //Inform keeper of MatrixPreys.
@@ -66,11 +66,11 @@ const char* Suits::Preyname(int prey) const {
     return MatrixPreynames[prey - SuitFunction.Size()];
 }
 
-int Suits::NoPreys() const {
+int Suits::numPreys() const {
   return SuitFunction.Size() + MatrixPreynames.Size();
 }
 
-int Suits::NoFuncPreys() const {
+int Suits::numFuncPreys() const {
   return SuitFunction.Size();
 }
 
@@ -116,9 +116,9 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
   for (p = 0; p < SuitFunction.Size(); p++) {
     SuitFunction[p]->updateConstants(TimeInfo);
     if (SuitFunction[p]->constantsHaveChanged(TimeInfo)) {
-      temp = new DoubleMatrix(pred->NoLengthGroups(), pred->Preys(p)->NoLengthGroups(), 0.0);
-      for (i = 0; i < pred->NoLengthGroups(); i++) {
-        for (j = 0; j < pred->Preys(p)->NoLengthGroups(); j++) {
+      temp = new DoubleMatrix(pred->numLengthGroups(), pred->Preys(p)->numLengthGroups(), 0.0);
+      for (i = 0; i < pred->numLengthGroups(); i++) {
+        for (j = 0; j < pred->Preys(p)->numLengthGroups(); j++) {
           if (SuitFunction[p]->usesPreyLength())
             SuitFunction[p]->setPreyLength(pred->Preys(p)->Length(j));
 
@@ -142,10 +142,10 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
     for (p = 0; p < MatrixPreynames.Size(); p++) {
       temp = new DoubleMatrix(*MatrixSuit[p]);
       mult = Multiplication[p];
-      assert(temp->Nrow() == pred->NoLengthGroups());
-      for (i = 0; i < pred->NoLengthGroups(); i++) {
-        assert(temp->Ncol(i) ==  pred->Preys(p + shift)->NoLengthGroups());
-        for (j = 0; j < pred->Preys(p + shift)->NoLengthGroups(); j++)
+      assert(temp->Nrow() == pred->numLengthGroups());
+      for (i = 0; i < pred->numLengthGroups(); i++) {
+        assert(temp->Ncol(i) ==  pred->Preys(p + shift)->numLengthGroups());
+        for (j = 0; j < pred->Preys(p + shift)->numLengthGroups(); j++)
           if ((*temp)[i][j] < 0)
             (*temp)[i][j] = 0.0;
           else
@@ -162,18 +162,18 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
   //Scaling of suitabilities, so that in each lengthgroup of each predator, the
   //maximum suitability is exactly 1, if any suitability is different from 0.
   double maxL;
-  for (i = 0; i < pred->NoLengthGroups(); i++) {
+  for (i = 0; i < pred->numLengthGroups(); i++) {
     maxL = 0;
     for (p = 0; p < FuncPreynames.Size() + MatrixPreynames.Size(); p++)
-      if (i >= PrecalcSuitability[p].Minrow() && i <= PrecalcSuitability[p].Maxrow())
-        for (j = PrecalcSuitability[p].Mincol(i);
-            j < PrecalcSuitability[p].Maxcol(i); j++)
+      if (i >= PrecalcSuitability[p].minRow() && i <= PrecalcSuitability[p].maxRow())
+        for (j = PrecalcSuitability[p].minCol(i);
+            j < PrecalcSuitability[p].maxCol(i); j++)
           maxL = max(PrecalcSuitability[p][i][j], maxL);
 
     if (maxL != 0)
       for (p = 0; p < FuncPreynames.Size() + MatrixPreynames.Size(); p++)
-        if (i >= PrecalcSuitability[p].Minrow() && i <= PrecalcSuitability[p].Maxrow())
-          for (j = PrecalcSuitability[p].Mincol(i); j < PrecalcSuitability[p].Maxcol(i); j++)
+        if (i >= PrecalcSuitability[p].minRow() && i <= PrecalcSuitability[p].maxRow())
+          for (j = PrecalcSuitability[p].minCol(i); j < PrecalcSuitability[p].maxCol(i); j++)
             PrecalcSuitability[p][i][j] /= maxL;
   }
   #endif

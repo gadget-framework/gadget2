@@ -47,8 +47,8 @@ void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo) {
   const LengthGroupDivision* preyLgrpDiv = predinfo->returnPreyLengthGroupDiv();
 
   for (a = 0; a < areas.Size(); a++) {
-    for (predl = 0; predl < predLgrpDiv->NoLengthGroups(); predl++) {
-      for (preyl = 0; preyl < preyLgrpDiv->NoLengthGroups(); preyl++) {
+    for (predl = 0; predl < predLgrpDiv->numLengthGroups(); predl++) {
+      for (preyl = 0; preyl < preyLgrpDiv->numLengthGroups(); preyl++) {
 
         outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
           << setw(lowwidth) << TimeInfo->CurrentStep() << sep

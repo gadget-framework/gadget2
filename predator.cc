@@ -15,7 +15,7 @@ Predator::Predator(const char* givenname, const IntVector& Areas)
 
 Predator::~Predator() {
   int i;
-  for (i = 0; i < Suitable->NoFuncPreys(); i++)
+  for (i = 0; i < Suitable->numFuncPreys(); i++)
     delete Suitable->FuncPrey(i);
   delete Suitable;
 }
@@ -25,10 +25,10 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   int i, j;
   int found = 0;
 
-  preys.resize(this->NoPreys(), 0);
+  preys.resize(this->numPreys(), 0);
   for (i = 0; i < preyvec.Size(); i++) {
     found = 0;
-    for (j = 0; j < this->NoPreys(); j++) {
+    for (j = 0; j < this->numPreys(); j++) {
       if (strcasecmp(this->Preyname(j), preyvec[i]->Name()) == 0) {
         if (found == 0) {
           preys[j] = preyvec[i];
@@ -56,14 +56,14 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
         i--;
     }
   }
-  //Now we can resize objects according to the size of this->NoPreys().
+  //Now we can resize objects according to the size of this->numPreys().
   this->resizeObjects();
 }
 
 int Predator::doesEat(const char* preyname) const {
   int found = 0;
   int i;
-  for (i = 0; i < this->NoPreys(); i++)
+  for (i = 0; i < this->numPreys(); i++)
     if (strcasecmp(this->Preyname(i), preyname) == 0)
       found = 1;
   return found;
@@ -76,7 +76,7 @@ void Predator::Print(ofstream& outfile) const {
   for (i = 0; i < preys.Size(); i++)
     outfile << sep << (const char*)(this->Preys(i)->Name());
   outfile << endl;
-  for (i = 0; i < this->NoPreys(); i++) {
+  for (i = 0; i < this->numPreys(); i++) {
     outfile << "\tSuitability for " << this->Preyname(i) << endl;
     this->Suitability(i).Print(outfile);
   }
@@ -122,13 +122,11 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
   char text[MaxStrLength];
   strncpy(preyname, "", MaxStrLength);
   strncpy(text, "", MaxStrLength);
-
   keeper->addString("suitabilityfor");
-  keeper->addString("fake");  //want to call clearLastAddString() next
 
   infile >> preyname >> ws;
   while (!(strcasecmp(preyname, FinalString) == 0) && infile.good()) {
-    keeper->clearLastAddString(preyname);
+    keeper->addString(preyname);
     infile >> text >> ws;
 
     if (strcasecmp(text, "function") == 0) {
@@ -176,12 +174,12 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
       handle.Message("Error in suitability - unknown format");
 
     infile >> preyname >> ws;
+    keeper->clearLast();
   }
 
   if (!infile.good())
     handle.Failure();
 
-  keeper->clearLast();
   keeper->clearLast();
   return 1;
 }

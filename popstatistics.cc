@@ -10,9 +10,9 @@ PopStatistics::PopStatistics(const PopInfoIndexVector& pop,
   : meanlength(0.0), meanweight(0.0), totalnumber(0.0), sdevlength(0.0) {
 
   PopInfo nullpop;
-  PopInfoVector p(pop.Maxcol(), nullpop);
+  PopInfoVector p(pop.maxCol(), nullpop);
   int i;
-  for (i = pop.Mincol(); i < pop.Maxcol(); i++)
+  for (i = pop.minCol(); i < pop.maxCol(); i++)
     p[i] = pop[i];
   this->calcStatistics(p, lgrpdiv, calcweight);
 }
@@ -31,7 +31,7 @@ void PopStatistics::calcStatistics(const PopInfoVector& pop,
   int i;
   double length;
 
-  if (pop.Size() != lgrpdiv->NoLengthGroups())
+  if (pop.Size() != lgrpdiv->numLengthGroups())
     handle.logFailure("Error in popstatistics - length groups dont match population");
 
   for (i = 0; i < pop.Size(); i++) {

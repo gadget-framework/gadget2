@@ -85,14 +85,14 @@ void AgeBandMatrixRatio::IncrementAge(const AgeBandMatrix& Total) {
 
   if (numTagExperiments > 0) {
     i = nrow - 1;
-    j1 = max(v[i]->Mincol(), v[i - 1]->Mincol());
-    j2 = min(v[i]->Maxcol(), v[i - 1]->Maxcol());
+    j1 = max(v[i]->minCol(), v[i - 1]->minCol());
+    j2 = min(v[i]->maxCol(), v[i - 1]->maxCol());
     //For the highest age group
     for (j = j1; j < j2; j++)
       for (tag = 0; tag < numTagExperiments; tag++)
         (*(*v[i])[j][tag].N) += (*(*v[i - 1])[j][tag].N);
 
-    for (j = v[i - 1]->Mincol(); j < v[i - 1]->Maxcol(); j++)
+    for (j = v[i - 1]->minCol(); j < v[i - 1]->maxCol(); j++)
       for (tag = 0; tag < numTagExperiments; tag++) {
         (*(*v[i - 1])[j][tag].N) = 0.0;
         (*v[i - 1])[j][tag].R = 0.0;
@@ -102,9 +102,9 @@ void AgeBandMatrixRatio::IncrementAge(const AgeBandMatrix& Total) {
     //At the end of each for (i=nrow-2...) loop, the intersection of v[i-1] with
     //v[i] has been copied from v[i-1] to v[i] and v[i-1] has been set to 0.
     for (i = nrow - 2; i > 0; i--) {
-      j1 = max(v[i]->Mincol(), v[i - 1]->Mincol());
-      j2 = min(v[i]->Maxcol(), v[i - 1]->Maxcol());
-      for (j = v[i - 1]->Mincol(); j < j1; j++) {
+      j1 = max(v[i]->minCol(), v[i - 1]->minCol());
+      j2 = min(v[i]->maxCol(), v[i - 1]->maxCol());
+      for (j = v[i - 1]->minCol(); j < j1; j++) {
         for (tag = 0; tag < numTagExperiments; tag++) {
           (*(*v[i - 1])[j][tag].N) = 0.0;
           (*v[i - 1])[j][tag].R = 0.0;
@@ -119,7 +119,7 @@ void AgeBandMatrixRatio::IncrementAge(const AgeBandMatrix& Total) {
         }
       }
 
-      for (j = j2; j < v[i - 1]->Maxcol(); j++) {
+      for (j = j2; j < v[i - 1]->maxCol(); j++) {
         for (tag = 0; tag < numTagExperiments; tag++) {
           (*(*v[i - 1])[j][tag].N) = 0.0;
           (*v[i - 1])[j][tag].R = 0.0;
@@ -128,7 +128,7 @@ void AgeBandMatrixRatio::IncrementAge(const AgeBandMatrix& Total) {
     }
 
     //set number in age zero to zero.
-    for (j = v[0]->Mincol(); j < v[0]->Maxcol(); j++)
+    for (j = v[0]->minCol(); j < v[0]->maxCol(); j++)
       for (tag = 0; tag < numTagExperiments; tag++)
         (*(*v[0])[j][tag].N) = 0;
 
@@ -180,8 +180,8 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
       if (CI.TargetIsFiner()) {
         //Stock that is added to has finer division than the stock that is added to it.
         for (age = minage; age <= maxage; age++) {
-          minl = max(Alkeys[AlkeysArea].minLength(age), CI.Minpos(Addition[AdditionArea].minLength(age)));
-          maxl = min(Alkeys[AlkeysArea].maxLength(age), CI.Maxpos(Addition[AdditionArea].maxLength(age) - 1) + 1);
+          minl = max(Alkeys[AlkeysArea].minLength(age), CI.minPos(Addition[AdditionArea].minLength(age)));
+          maxl = min(Alkeys[AlkeysArea].maxLength(age), CI.maxPos(Addition[AdditionArea].maxLength(age) - 1) + 1);
           for (l = minl; l < maxl; l++) {
             for (tagid = 0; tagid < numtags; tagid++) {
               numfish = *(Addition[AdditionArea][age][CI.Pos(l)][tagid].N);
@@ -198,8 +198,8 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
       } else {
         //Stock that is added to has coarser division than the stock that is added to it.
         for (age = minage; age <= maxage; age++) {
-          minl = max(CI.Minpos(Alkeys[AlkeysArea].minLength(age)), Addition[AdditionArea].minLength(age));
-          maxl = min(CI.Maxpos(Alkeys[AlkeysArea].maxLength(age) - 1) + 1, Addition[AdditionArea].maxLength(age));
+          minl = max(CI.minPos(Alkeys[AlkeysArea].minLength(age)), Addition[AdditionArea].minLength(age));
+          maxl = min(CI.maxPos(Alkeys[AlkeysArea].maxLength(age) - 1) + 1, Addition[AdditionArea].maxLength(age));
           if (maxl > minl && CI.Pos(maxl - 1) < Alkeys[AlkeysArea].maxLength(age)
             && CI.Pos(minl) >= Alkeys[AlkeysArea].minLength(age)) {
 

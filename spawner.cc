@@ -9,7 +9,7 @@
 
 extern ErrorHandler handle;
 
-Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* const lgrpdiv,
+SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivision* const lgrpdiv,
   const IntVector& Areas, const AreaClass* const Area, const TimeClass* const TimeInfo,
   Keeper* const keeper) : LivesOnAreas(Areas) {
 
@@ -23,7 +23,7 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
 
   spawnLgrpDiv = 0;
   LgrpDiv = new LengthGroupDivision(*lgrpdiv);
-  int numlength = LgrpDiv->NoLengthGroups();
+  int numlength = LgrpDiv->numLengthGroups();
   ssb.AddRows(maxage + 1, numlength, 0.0);
   spawnProportion.resize(numlength, 0.0);
   spawnMortality.resize(numlength, 0.0);
@@ -154,7 +154,7 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
   keeper->clearLast();
 }
 
-Spawner::~Spawner() {
+SpawnData::~SpawnData() {
   int i;
   for (i = 0; i < SpawnStockNames.Size(); i++)
     delete[] SpawnStockNames[i];
@@ -167,7 +167,7 @@ Spawner::~Spawner() {
   delete fnWeightLoss;
 }
 
-void Spawner::setStock(StockPtrVector& stockvec) {
+void SpawnData::setStock(StockPtrVector& stockvec) {
   int index = 0;
   int i, j;
   DoubleVector tmpratio;
@@ -227,7 +227,7 @@ void Spawner::setStock(StockPtrVector& stockvec) {
   spawnLgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
 
   IntVector minlv(1, 0);
-  IntVector sizev(1, spawnLgrpDiv->NoLengthGroups());
+  IntVector sizev(1, spawnLgrpDiv->numLengthGroups());
   Storage.resize(areas.Size(), spawnage, minlv, sizev);
   for (i = 0; i < Storage.Size(); i++)
     Storage[i].setToZero();
@@ -238,7 +238,7 @@ void Spawner::setStock(StockPtrVector& stockvec) {
 
 }
 
-void Spawner::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo) {
+void SpawnData::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo) {
 
   if (this->IsSpawnStepArea(area, TimeInfo) == 0)
     return;
@@ -262,7 +262,7 @@ void Spawner::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const Time
   }
 }
 
-void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
+void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
 
   if (onlyParent == 1)
     return;
@@ -287,7 +287,7 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   stockParameters.Update(TimeInfo);
   if (stockParameters[1] > verysmall) {
     tmpsdev = 1.0 / (2 * stockParameters[1] * stockParameters[1]);
-    for (len = 0; len < spawnLgrpDiv->NoLengthGroups(); len++) {
+    for (len = 0; len < spawnLgrpDiv->numLengthGroups(); len++) {
       length = spawnLgrpDiv->meanLength(len) - stockParameters[0];
       N = exp(-(length * length * tmpsdev));
       Storage[area][spawnage][len].N = N;
@@ -299,7 +299,7 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
     handle.logWarning("Warning in spawner - invalid mean length for spawned stock");
 
   if (sum > verysmall) {
-    for (len = 0; len < spawnLgrpDiv->NoLengthGroups(); len++) {
+    for (len = 0; len < spawnLgrpDiv->numLengthGroups(); len++) {
       length = spawnLgrpDiv->meanLength(len);
       Storage[area][spawnage][len].N *= TEP / sum;
       Storage[area][spawnage][len].W = stockParameters[2] * pow(length, stockParameters[3]);
@@ -319,7 +319,7 @@ void Spawner::addSpawnStock(int area, const TimeClass* const TimeInfo) {
       ssb[age][len] = 0.0;
 }
 
-int Spawner::IsSpawnStepArea(int area, const TimeClass* const TimeInfo) {
+int SpawnData::IsSpawnStepArea(int area, const TimeClass* const TimeInfo) {
   int i, j;
 
   for (i = 0; i < spawnstep.Size(); i++)
@@ -329,12 +329,12 @@ int Spawner::IsSpawnStepArea(int area, const TimeClass* const TimeInfo) {
   return 0;
 }
 
-void Spawner::Reset(const TimeClass* const TimeInfo) {
+void SpawnData::Reset(const TimeClass* const TimeInfo) {
   int i;
 
   fnProportion->updateConstants(TimeInfo);
   if (fnProportion->constantsHaveChanged(TimeInfo)) {
-    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       spawnProportion[i] = fnProportion->calculate(LgrpDiv->meanLength(i));
       if (spawnProportion[i] < 0.0) {
         handle.logWarning("Warning in spawning - function outside bounds", spawnProportion[i]);
@@ -349,7 +349,7 @@ void Spawner::Reset(const TimeClass* const TimeInfo) {
 
   fnWeightLoss->updateConstants(TimeInfo);
   if (fnWeightLoss->constantsHaveChanged(TimeInfo)) {
-    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       spawnWeightLoss[i] = fnWeightLoss->calculate(LgrpDiv->meanLength(i));
       if (spawnWeightLoss[i] < 0.0) {
         handle.logWarning("Warning in spawning - function outside bounds", spawnWeightLoss[i]);
@@ -364,7 +364,7 @@ void Spawner::Reset(const TimeClass* const TimeInfo) {
 
   fnMortality->updateConstants(TimeInfo);
   if (fnMortality->constantsHaveChanged(TimeInfo)) {
-    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       spawnMortality[i] = fnMortality->calculate(LgrpDiv->meanLength(i));
     }
   }
@@ -372,7 +372,7 @@ void Spawner::Reset(const TimeClass* const TimeInfo) {
   handle.logMessage("Reset spawning data");
 }
 
-double Spawner::ssbFunc(int age, int len, double number, double weight) {
+double SpawnData::ssbFunc(int age, int len, double number, double weight) {
   double temp = 0.0;
   temp = spawnParameters[0] * pow(LgrpDiv->meanLength(len), spawnParameters[1])
            * pow(age, spawnParameters[2]) * pow(number, spawnParameters[3]) * pow(weight, spawnParameters[4]);
@@ -380,7 +380,7 @@ double Spawner::ssbFunc(int age, int len, double number, double weight) {
   return temp;
 }
 
-void Spawner::Print(ofstream& outfile) const {
+void SpawnData::Print(ofstream& outfile) const {
   int i;
   outfile << "\nSpawning data\n\tNames of spawned stocks:";
   for (i = 0; i < SpawnStocks.Size(); i++)

@@ -570,7 +570,7 @@ double CatchDistribution::calcLikMultinomial() {
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   DoubleMatrixPtrVector Dist(alptr->Size());
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
-    Dist[nareas] = new DoubleMatrix(aggregator->numAgeGroups(), aggregator->NoLengthGroups(), 0.0);
+    Dist[nareas] = new DoubleMatrix(aggregator->numAgeGroups(), aggregator->numLengthGroups(), 0.0);
 
     for (age = (*alptr)[nareas].minAge(); age <= (*alptr)[nareas].maxAge(); age++)
       for (len = (*alptr)[nareas].minLength(age); len < (*alptr)[nareas].maxLength(age); len++)
@@ -827,7 +827,7 @@ double CatchDistribution::calcLikSumSquares() {
 
 void CatchDistribution::Correlation() {
   int i, j, l, p;
-  p = aggregator->NoLengthGroups();
+  p = aggregator->numLengthGroups();
   DoubleMatrix correlation(p, p, 0.0);
 
   for (i = 0; i < lag; i++)
@@ -859,7 +859,7 @@ double CatchDistribution::calcLikMVNormal() {
   int i, j, p;
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
-  DoubleVector diff(aggregator->NoLengthGroups(), 0.0);
+  DoubleVector diff(aggregator->numLengthGroups(), 0.0);
 
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {
     sumdata = 0.0;
@@ -908,7 +908,7 @@ double CatchDistribution::calcLikMVLogistic() {
   int age, len, nareas, p;
 
   const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
-  p = aggregator->NoLengthGroups();
+  p = aggregator->numLengthGroups();
   DoubleVector nu(p, 0.0);
 
   for (nareas = 0; nareas < areas.Nrow(); nareas++) {

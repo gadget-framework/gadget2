@@ -12,7 +12,7 @@ double func(double* x, int n) {
 OptInfoBfgs::OptInfoBfgs()
   : OptSearch(), maxiter(100000), eps(0.001), rho(0.01), tau(0.5) {
   handle.logMessage("Initialising BFGS");
-  numvar = EcoSystem->NoOptVariables();
+  numvar = EcoSystem->numOptVariables();
   int i;
   x = new double[numvar];
   s = new double[numvar];

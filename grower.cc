@@ -101,8 +101,8 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
 
   //Finished reading from input files.
   const int noareas = areas.Size();
-  const int len = LgrpDiv->NoLengthGroups();
-  const int otherlen = OtherLgrpDiv->NoLengthGroups();
+  const int len = LgrpDiv->numLengthGroups();
+  const int otherlen = OtherLgrpDiv->numLengthGroups();
   PopInfo nullpop;
   numGrow.AddRows(noareas, len, nullpop);
   keeper->clearLast();
@@ -231,7 +231,7 @@ void Grower::Reset() {
   double factorialx, tmppart, tmpmax;
 
   for (area = 0; area < areas.Size(); area++) {
-    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       calcLengthGrowth[area][i] = 0.0;
       calcWeightGrowth[area][i] = 0.0;
       numGrow[area][i].N = 0.0;

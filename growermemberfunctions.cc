@@ -22,7 +22,7 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
   double tmpPower = getPowerValue();
   double tmpDl = 1.0 / Lengths->dl();
 
-  for (lgroup = 0; lgroup < Lengths->NoLengthGroups(); lgroup++) {
+  for (lgroup = 0; lgroup < Lengths->numLengthGroups(); lgroup++) {
     meanw = 0.0;
     part3 = 1.0;
     tmpMeanLength = (tmpPower * Lengths->dl()) / Lengths->meanLength(lgroup);
@@ -74,7 +74,7 @@ void Grower::GrowthImplement(int area, const LengthGroupDivision* const Lengths)
   int inarea = AreaNr[area];
   double tmpDl = 1.0 / Lengths->dl();
 
-  for (lgroup = 0; lgroup < Lengths->NoLengthGroups(); lgroup++) {
+  for (lgroup = 0; lgroup < Lengths->numLengthGroups(); lgroup++) {
     part3 = 1.0;
     growth = InterpLgrowth[inarea][lgroup] * tmpDl;
     if (growth >= maxlengthgroupgrowth)

@@ -59,7 +59,7 @@ int AgeBandMatrixRatio::numTagExperiments() const {
 void AgeBandMatrixRatio::setToZero() {
   int i, j, k;
   for (i = 0; i < nrow; i++) {
-    for (j = v[i]->Mincol(); j < v[i]->Maxcol(); j++) {
+    for (j = v[i]->minCol(); j < v[i]->maxCol(); j++) {
       for (k = 0; k < this->numTagExperiments(); k++) {
         *(*v[i])[j][k].N = 0.0;
         (*v[i])[j][k].R = 0.0;

@@ -106,7 +106,7 @@ ostream& printLengthGroupDivision(ostream& o, const LengthGroupDivision& lgrp, i
     o << ind << "  dl " << lgrp.dl() << endl;
   else {
     o << ind << "  meanlengths";
-    for (i = 0; i<lgrp.NoLengthGroups(); i++)
+    for (i = 0; i<lgrp.numLengthGroups(); i++)
       o << sep << lgrp.meanLength(i);
     o << endl;
   }
@@ -174,44 +174,6 @@ ostream& printAgeGroups(ostream& o, const IntVector& ages, int indent) {
   return o.flush();
 }
 
-/*  printSuitability
- *
- *  Purpose:  Print suitability for predator
- *
- *  In: ostream& o     :output stream
- *  Predator& pred     :predator
- *      int indent     :number of spaces to indent (default = 0)
- *
- *  Output format:
- *  "suitability"
- *      "  predator"
- *      "    <pred>"
- *      "  prey"
- *      "    <prey_1>"
- *  "  [printMatrixHeader]"
- *  "  [printSuitMatrix]"
- *      ...
- *      "  prey"
- *      "    <prey_n>"
- *  "  [printMatrixHeader]"
- *  "  [printSuitMatrix]"
- */
-/*ostream& printSuitability(ostream& o, const Predator& pred, int indent) {
-  int i;
-  char* ind = makeSpaces(indent);
-  o << ind << "suitability\n" << ind << "  predator\n" << ind << "    "
-    << pred.Name() << endl;
-  for (i = 0; i < pred.NoPreys(); i++) {
-    o << ind << "  prey\n" << ind << "    " << pred.Preys(i)->Name() << endl;
-    printMatrixHeader(o, *pred.Preys(i)->returnLengthGroupDiv(),
-      *pred.returnLengthGroupDiv(), "suitability", 0, indent + 2);
-    printSuitMatrix(o, pred.Suitability(i), 0);
-  }
-  delete[] ind;
-  o.flush();
-  return o;
-}*/
-
 /*  printBandMatrix
  *
  *  Purpose:  Print band matrix
@@ -266,19 +228,19 @@ ostream& printBandMatrix(ostream& o, const BandMatrix& b, int rowindex, int inde
 }
 
 ostream& printc_hat(ostream& o, const MortPredator& pred, AreaClass area, int indent) {
-  int a, p;
+  int ar, p;
   char* ind = makeSpaces(indent);
   o << ind << "c_hat\n" << ind << "  predator\n" << ind << "    "
     << pred.Name() << endl;
-  for (a = 0; a < area.NoAreas(); a++) {
-    printAreasHeader(o, IntVector(1, a), indent + 2);
-    for (p = 0; p < pred.NoPreys(); p++)
-      if (pred.Preys(p)->IsInArea(a)) {
+  for (ar = 0; ar < area.numAreas(); ar++) {
+    printAreasHeader(o, IntVector(1, ar), indent + 2);
+    for (p = 0; p < pred.numPreys(); p++)
+      if (pred.Preys(p)->IsInArea(ar)) {
         o << ind << "  prey\n" << ind << "    " << pred.Preys(p)->Name() << endl;
-        printMatrixHeader(o, pred.minPreyAge(p, a), pred.maxPreyAge(p, a),
+        printMatrixHeader(o, pred.minPreyAge(p, ar), pred.maxPreyAge(p, ar),
           *pred.Preys(p)->returnLengthGroupDiv(), "c_hat", 0, indent + 2);
-        if (&(pred.c_hat[a][p]) != 0)
-          printBandMatrix(o, pred.c_hat[a][p], 0, indent);
+        if (&(pred.c_hat[ar][p]) != 0)
+          printBandMatrix(o, pred.c_hat[ar][p], 0, indent);
         else
          o << ind << "<no matrix!>\n";
       }
@@ -291,7 +253,7 @@ ostream& printz(ostream& o, const MortPrey& prey, AreaClass area, int indent) {
   char* ind = makeSpaces(indent);
   o << ind << "z\n" << ind << "  prey\n" << ind << "     " << prey.Name() << endl;
   int ar;
-  for (ar = 0; ar < area.NoAreas(); ar++) {
+  for (ar = 0; ar < area.numAreas(); ar++) {
     printAreasHeader(o, IntVector(1, ar), indent + 2);
     printVectorHeader(o, *prey.returnLengthGroupDiv(), "z", indent + 2);
     printVector(o, prey.z[ar], indent);
@@ -305,7 +267,7 @@ ostream& printcannibalism(ostream& o, const MortPrey& prey, AreaClass area, int 
   o << ind << "cannibalism\n" << ind << "  prey\n" << ind << "     "
     << prey.Name() << endl;
   int ar;
-  for (ar = 0; ar < area.NoAreas(); ar++) {
+  for (ar = 0; ar < area.numAreas(); ar++) {
     printAreasHeader(o, IntVector(1, ar), indent + 2);
     printVectorHeader(o, *prey.returnLengthGroupDiv(), "cannibalism", indent + 2);
     printVector(o, prey.cannibalism[ar], indent);
@@ -332,7 +294,7 @@ ostream& printmean_n(ostream& o, const MortPrey& prey, AreaClass area, int inden
   char* ind = makeSpaces(indent);
   o << ind << "mean_n\n" << ind << "  prey\n" << ind << "     " << prey.Name() << endl;
   int ar;
-  for (ar = 0; ar < area.NoAreas(); ar++) {
+  for (ar = 0; ar < area.numAreas(); ar++) {
     printAreasHeader(o, IntVector(1, ar), indent + 2);
     printMatrixHeader(o, 1, 1, *(prey.returnLengthGroupDiv()), "mean_n", 0, indent + 2);
     printN(o, prey.Alkeys[ar], 0, indent);
@@ -340,60 +302,6 @@ ostream& printmean_n(ostream& o, const MortPrey& prey, AreaClass area, int inden
   delete[] ind;
   return o.flush();
 }
-
-/*  printNaturalM
- *
- *  Purpose: Print natural mortality
- *
- *  In: ostream& o  :output stream
- *  Stock& stock    :age groups for data
- *      int indent  :number of spaces to indent (default = 0)
- *
- *  Output format:
- *  "stock"
- *  "  <stockname>"
- *      "[printVectorHeader]"
- *      "M_1 M_2 ... M_n
- */
-/*ostream& printNaturalM(ostream& o, const Stock& stock, int indent) {
-  int i;
-  char* ind = makeSpaces(indent);
-  o << ind << "stock\n" << ind << sep << stock.Name() << endl;
-  printVectorHeader(o, stock.minAge(), stock.maxAge(), 1, "mortality", indent);
-  o << ind;
-  for (i = stock.mortality().Mincol(); i < stock.mortality().Maxcol(); i++)
-    o << stock.mortality()[i] << sep;
-  o << endl;
-  delete[] ind;
-  return o;
-}*/
-
-/*  printNaturalM
- *
- *  Purpose: Print natural mortality
- *
- *  In: ostream& o    :output stream
- *  Stock& stock      :age groups for data
- *      int indent    :number of spaces to indent (default = 0)
- *
- *  Output format:
- *  "stock"
- *  "  <stockname>"
- *      "[printVectorHeader]"
- *      "M_1 M_2 ... M_n
- */
-/*ostream& printNaturalM(ostream& o, const LenStock& stock, int indent) {
-  int i;
-  char* ind = makeSpaces(indent);
-  o << ind << "stock\n" << ind << sep << stock.Name() << endl;
-  printVectorHeader(o, *stock.returnLengthGroupDiv(), "mortality", indent);
-  o << ind;
-  for (i = 0; i < stock.mortality().Size(); i++)
-    o << stock.mortality()[i] << sep;
-  o << endl;
-  delete[] ind;
-  return o;
-}*/
 
 /*  printVectorHeader
  *
@@ -912,22 +820,4 @@ char* makeSpaces(int nr) {
     ind[i] = ' ';
   ind[i] = 0;
   return ind;
-}
-
-/*  strcon
- *
- *  Purpose:  concatenate two strings into a new string
- *
- *  In:  char* a          :first string
- *       char* b      :second string
- *
- *  Out: char*            :concatenation of a & b
- *
- *  Usage:  char* s = strcon("aa", "bb"); ...; delete[] s;
- */
-char* strcon(const char* a, const char* b) {
-  char* c = new char[strlen(a) + strlen(b) + 1];
-  strcpy(c, a);
-  strcpy(&c[strlen(c)], b);
-  return c;
 }

@@ -33,7 +33,7 @@ public:
   AgeBandMatrixRatio& operator [] (int pos);
   const AgeBandMatrixRatio& operator [] (const char* name) const;
   const AgeBandMatrixRatio& operator [] (int pos) const;
-  void Migrate(const DoubleMatrix& Migrationmatrix, const AgeBandMatrixPtrVector& Total);
+  void Migrate(const DoubleMatrix& MI, const AgeBandMatrixPtrVector& Total);
   const int numTagExperiments() const { return tagID.Size(); };
   const CharPtrVector tagIDs() const { return tagID; };
   const DoubleVector& tagloss() const { return tagLoss; };

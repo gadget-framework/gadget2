@@ -48,7 +48,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   if (strcasecmp(text, "livesonareas") == 0) {
     infile >> ws;
     i = 0;
-    while (isdigit(infile.peek()) && !infile.eof() && (i < Area->NoAreas())) {
+    while (isdigit(infile.peek()) && !infile.eof() && (i < Area->numAreas())) {
       tmpareas.resize(1);
       infile >> tmpint >> ws;
       if ((tmpareas[i] = Area->InnerArea(tmpint)) == -1)
@@ -81,7 +81,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //JMB need to set the lowerlgrp and size vectors to a default
   //value to allow the whole range of lengths to be calculated
   IntVector lowerlgrp(maxage - minage + 1, 0);
-  IntVector size(maxage - minage + 1, LgrpDiv->NoLengthGroups());
+  IntVector size(maxage - minage + 1, LgrpDiv->numLengthGroups());
 
   Alkeys.resize(areas.Size(), minage, lowerlgrp, size);
   tagAlkeys.resize(areas.Size(), minage, lowerlgrp, size);
@@ -157,14 +157,14 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //read the migration data
   readWordAndVariable(infile, "doesmigrate", doesmigrate);
   if (doesmigrate) {
-    readWordAndVariable(infile, "agedependentmigration", AgeDepMigration);
+    readWordAndVariable(infile, "agedependentmigration", tmpint);
     readWordAndValue(infile, "migrationfile", filename);
     ifstream subfile;
     subfile.open(filename, ios::in);
     CommentStream subcomment(subfile);
     handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
-    migration = new Migration(subcomment, AgeDepMigration, areas, Area, TimeInfo, keeper);
+    migration = new Migration(subcomment, tmpint, areas, Area, TimeInfo, keeper);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -245,7 +245,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     CommentStream subcomment(subfile);
     handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
-    spawner = new Spawner(subcomment, maxage, LgrpDiv, areas, Area, TimeInfo, keeper);
+    spawner = new SpawnData(subcomment, maxage, LgrpDiv, areas, Area, TimeInfo, keeper);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -279,7 +279,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   birthdate = TimeInfo->StepsInYear();
 
   //Finished reading from infile - resize objects and clean up
-  NumberInArea.AddRows(areas.Size(), LgrpDiv->NoLengthGroups());
+  NumberInArea.AddRows(areas.Size(), LgrpDiv->numLengthGroups());
   delete GrowLgrpDiv;
   for (i = 0; i < grlenindex.Size(); i++)
     delete[] grlenindex[i];
@@ -452,8 +452,4 @@ const StockPtrVector& Stock::getStrayStocks() {
   if (doesstray == 0)
     handle.logFailure("Error in stock - no straying stocks defined for", this->Name());
   return stray->getStrayStocks();
-}
-
-const DoubleIndexVector& Stock::mortality() const {
-  return NatM->getMortality();
 }

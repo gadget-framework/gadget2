@@ -9,11 +9,11 @@ PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
   for (i = 0; i < predators.Size(); i++)
     checkLengthGroupIsFiner(preds[i]->returnLengthGroupDiv(), LgrpDiv);
 
-  total.AddRows(areas.Nrow(), LgrpDiv->NoLengthGroups(), 0.0);
+  total.AddRows(areas.Nrow(), LgrpDiv->numLengthGroups(), 0.0);
   for (i = 0; i < predators.Size(); i++) {
-    predConv.AddRows(1, predators[i]->NoLengthGroups(), 0);
+    predConv.AddRows(1, predators[i]->numLengthGroups(), 0);
     for (j = 0; j < predConv.Ncol(i); j++)
-      predConv[i][j] = LgrpDiv->NoLengthGroup(predators[i]->Length(j));
+      predConv[i][j] = LgrpDiv->numLengthGroup(predators[i]->Length(j));
   }
 }
 

@@ -28,8 +28,8 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
 
   if (CI.SameDl()) {   //Same dl on length distributions
     offset = CI.Offset();
-    minl = max(this->Mincol(), Addition.Mincol() + offset);
-    maxl = min(this->Maxcol(), Addition.Maxcol() + offset);
+    minl = max(this->minCol(), Addition.minCol() + offset);
+    maxl = min(this->maxCol(), Addition.maxCol() + offset);
     for (l = minl; l < maxl; l++) {
       pop = Addition[l - offset];
       pop *= ratio;
@@ -38,8 +38,8 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
   } else {             //Not same dl on length distributions
     if (CI.TargetIsFiner()) {
       //Stock that is added to has finer division than the stock that is added to it.
-      minl = max(this->Mincol(), CI.Minpos(Addition.Mincol()));
-      maxl = min(this->Maxcol(), CI.Maxpos(Addition.Maxcol() - 1) + 1);
+      minl = max(this->minCol(), CI.minPos(Addition.minCol()));
+      maxl = min(this->maxCol(), CI.maxPos(Addition.maxCol() - 1) + 1);
       for (l = minl; l < maxl; l++) {
         pop = Addition[CI.Pos(l)];
         pop *= ratio;
@@ -51,8 +51,8 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
       }
     } else {
       //Stock that is added to has coarser division than the stock that is added to it.
-      minl = max(CI.Minpos(this->Mincol()), Addition.Mincol());
-      maxl = min(CI.Maxpos(this->Maxcol() - 1) + 1, Addition.Maxcol());
+      minl = max(CI.minPos(this->minCol()), Addition.minCol());
+      maxl = min(CI.maxPos(this->maxCol() - 1) + 1, Addition.maxCol());
       for (l = minl; l < maxl; l++) {
         pop = Addition[l];
         pop *= ratio;
@@ -69,8 +69,8 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
   int l, minl, maxl, offset;
   if (CI.SameDl()) {   //Same dl on length distributions
     offset = CI.Offset();
-    minl = max(this->Mincol(), Addition.Mincol() + offset, Ratio.Mincol());
-    maxl = min(this->Maxcol(), Addition.Maxcol() + offset, Ratio.Maxcol());
+    minl = max(this->minCol(), Addition.minCol() + offset, Ratio.minCol());
+    maxl = min(this->maxCol(), Addition.maxCol() + offset, Ratio.maxCol());
     for (l = minl; l < maxl; l++) {
       pop = Addition[l - offset];
       pop *= (ratio * Ratio[l]);
@@ -79,8 +79,8 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
   } else {             //Not same dl on length distributions
     if (CI.TargetIsFiner()) {
       //Stock that is added to has finer division than the stock that is added to it.
-      minl = max(this->Mincol(), CI.Minpos(Addition.Mincol()), Ratio.Mincol());
-      maxl = min(this->Maxcol(), CI.Maxpos(Addition.Maxcol() - 1) + 1, Ratio.Mincol());
+      minl = max(this->minCol(), CI.minPos(Addition.minCol()), Ratio.minCol());
+      maxl = min(this->maxCol(), CI.maxPos(Addition.maxCol() - 1) + 1, Ratio.minCol());
       for (l = minl; l < maxl; l++) {
         pop = Addition[CI.Pos(l)];
         pop *= (ratio * Ratio[l]);
@@ -92,8 +92,8 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
       }
     } else {
       //Stock that is added to has coarser division than the stock that is added to it.
-      minl = max(CI.Minpos(this->Mincol()), Addition.Mincol(), Ratio.Mincol());
-      maxl = min(CI.Maxpos(this->Maxcol() - 1) + 1, Addition.Maxcol(), Ratio.Maxcol());
+      minl = max(CI.minPos(this->minCol()), Addition.minCol(), Ratio.minCol());
+      maxl = min(CI.maxPos(this->maxCol() - 1) + 1, Addition.maxCol(), Ratio.maxCol());
       for (l = minl; l < maxl; l++) {
         pop = Addition[l];
         pop *= (ratio * Ratio[l]);

@@ -70,7 +70,7 @@ VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 	formulamatrixptrvector.o variableinfoptrvector.o agebandmatrixptrmatrix.o
 
 GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.o \
-	predatorindex.o abstrpredstdinfo.o abstrpreystdinfo.o catchdistribution.o \
+	abstrpredstdinfo.o abstrpreystdinfo.o catchdistribution.o errorhandler.o \
 	predatorprinter.o abstrpreystdinfobylength.o predatoroveraggregator.o \
 	actionattimes.o predatoroverprinter.o addresskeeper.o predprey.o strstack.o \
 	predpreystdageprinter.o agebandmatrix.o predpreystdlengthprinter.o grow.o \
@@ -80,7 +80,7 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	preystdinfo.o preystdinfobylength.o timevariable.o boundlikelihood.o stray.o \
 	commentstream.o printinfo.o readfunc.o conversionindex.o readmain.o keeper.o \
 	ecosystem.o readword.o renewal.o mortpredator.o mortprey.o mortprinter.o \
-	errorhandler.o pionstep.o fleet.o sibyageonstep.o fleetpreyaggregator.o \
+	fleet.o sibyageonstep.o fleetpreyaggregator.o sibyfleetonstep.o predator.o \
 	sibylengthonstep.o formula.o grower.o growthcalc.o simulation.o hooke.o \
 	simann.o sionstep.o initialcond.o spawner.o initialize.o stochasticdata.o \
 	lengthpredator.o stockaggregator.o lengthprey.o surveydistribution.o \
@@ -97,8 +97,8 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o tags.o \
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o bfgs.o \
 	taggrow.o initialinputfile.o optinfohooke.o optinfobfgs.o optinfosimann.o \
-	popratio.o predator.o popinfo.o popinfomemberfunctions.o sibyfleetonstep.o \
-	agebandmatrixratio.o agebandmatrixratiomemberfunctions.o
+	popratio.o popinfo.o popinfomemberfunctions.o agebandmatrixratio.o \
+	agebandmatrixratiomemberfunctions.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 

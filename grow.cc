@@ -16,9 +16,9 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
     //The part that grows to or above the highest length group.
     num = 0.0;
     wt = 0.0;
-    maxlgrp = v[i]->Maxcol() - 1;
-    for (lgrp = maxlgrp; lgrp >= v[i]->Maxcol() - Lgrowth.Nrow(); lgrp--) {
-      for (grow = v[i]->Maxcol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
+    maxlgrp = v[i]->maxCol() - 1;
+    for (lgrp = maxlgrp; lgrp >= v[i]->maxCol() - Lgrowth.Nrow(); lgrp--) {
+      for (grow = v[i]->maxCol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
         tmp = Lgrowth[grow][lgrp] * (*v[i])[lgrp].N;
         num += tmp;
         wt += tmp * ((*v[i])[lgrp].W + Wgrowth[grow][lgrp]);
@@ -34,7 +34,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
     }
 
     //The center part of the length division
-    for (lgrp = v[i]->Maxcol() - 2; lgrp >= v[i]->Mincol() + Lgrowth.Nrow() - 1; lgrp--) {
+    for (lgrp = v[i]->maxCol() - 2; lgrp >= v[i]->minCol() + Lgrowth.Nrow() - 1; lgrp--) {
       num = 0.0;
       wt = 0.0;
       for (grow = 0; grow < Lgrowth.Nrow(); grow++) {
@@ -53,10 +53,10 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
     }
 
     //The lowest part of the length division.
-    for (lgrp = v[i]->Mincol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->Mincol(); lgrp--) {
+    for (lgrp = v[i]->minCol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->minCol(); lgrp--) {
       num = 0.0;
       wt = 0.0;
-      for (grow = 0; grow <= lgrp - v[i]->Mincol(); grow++) {
+      for (grow = 0; grow <= lgrp - v[i]->minCol(); grow++) {
         tmp = Lgrowth[grow][lgrp - grow] * (*v[i])[lgrp - grow].N;
         num += tmp;
         wt += tmp * ((*v[i])[lgrp - grow].W + Wgrowth[grow][lgrp - grow]);
@@ -85,12 +85,12 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
   matnum = 0.0;
   for (i = 0; i < nrow; i++) {
     age = i + minage;
-    maxlgrp = v[i]->Maxcol() - 1;
+    maxlgrp = v[i]->maxCol() - 1;
     num = 0.0;
     wt = 0.0;
     matnum = 0.0;
-    for (lgrp = maxlgrp; lgrp >= v[i]->Maxcol() - Lgrowth.Nrow(); lgrp--) {
-      for (grow = v[i]->Maxcol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
+    for (lgrp = maxlgrp; lgrp >= v[i]->maxCol() - Lgrowth.Nrow(); lgrp--) {
+      for (grow = v[i]->maxCol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
         tmp = Lgrowth[grow][lgrp] * (*v[i])[lgrp].N;
         ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, area, (*v[i])[lgrp].W);
         matnum += (tmp * ratio);
@@ -120,7 +120,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
       Mat->PutInStorage(area, age, maxlgrp, matnum, wt / num, TimeInfo);
     }
 
-    for (lgrp = v[i]->Maxcol() - 2; lgrp >= v[i]->Mincol() + Lgrowth.Nrow() - 1; lgrp--) {
+    for (lgrp = v[i]->maxCol() - 2; lgrp >= v[i]->minCol() + Lgrowth.Nrow() - 1; lgrp--) {
       num = 0.0;
       wt = 0.0;
       matnum = 0.0;
@@ -154,11 +154,11 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
       }
     }
 
-    for (lgrp = v[i]->Mincol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->Mincol(); lgrp--) {
+    for (lgrp = v[i]->minCol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->minCol(); lgrp--) {
       num = 0.0;
       wt = 0.0;
       matnum = 0.0;
-      for (grow = 0; grow <= lgrp - v[i]->Mincol(); grow++) {
+      for (grow = 0; grow <= lgrp - v[i]->minCol(); grow++) {
         tmp = Lgrowth[grow][lgrp - grow] * (*v[i])[lgrp - grow].N;
         ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, area, (*v[i])[lgrp - grow].W);
         matnum += (tmp * ratio);
@@ -198,9 +198,9 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight
   num = 0.0;
   for (i = 0; i < nrow; i++) {
     num = 0.0;
-    maxlgrp = v[i]->Maxcol() - 1;
-    for (lgrp = maxlgrp; lgrp >= v[i]->Maxcol() - Lgrowth.Nrow(); lgrp--) {
-      for (grow = v[i]->Maxcol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
+    maxlgrp = v[i]->maxCol() - 1;
+    for (lgrp = maxlgrp; lgrp >= v[i]->maxCol() - Lgrowth.Nrow(); lgrp--) {
+      for (grow = v[i]->maxCol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
         tmp = Lgrowth[grow][lgrp] * (*v[i])[lgrp].N;
         num += tmp;
       }
@@ -212,7 +212,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight
 
     (*v[i])[maxlgrp].N = num;
 
-    for (lgrp = v[i]->Maxcol() - 2; lgrp >= v[i]->Mincol() + Lgrowth.Nrow() - 1; lgrp--) {
+    for (lgrp = v[i]->maxCol() - 2; lgrp >= v[i]->minCol() + Lgrowth.Nrow() - 1; lgrp--) {
       num = 0;
       for (grow = 0; grow < Lgrowth.Nrow(); grow++) {
         tmp = Lgrowth[grow][lgrp - grow] * (*v[i])[lgrp - grow].N;
@@ -226,9 +226,9 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight
       (*v[i])[lgrp].N = num;
     }
 
-    for (lgrp = v[i]->Mincol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->Mincol(); lgrp--) {
+    for (lgrp = v[i]->minCol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->minCol(); lgrp--) {
       num = 0;
-      for (grow = 0; grow <= lgrp - v[i]->Mincol(); grow++) {
+      for (grow = 0; grow <= lgrp - v[i]->minCol(); grow++) {
         tmp = Lgrowth[grow][lgrp - grow] * (*v[i])[lgrp - grow].N;
         num += tmp;
       }
@@ -254,11 +254,11 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight
   matnum = 0.0;
   for (i = 0; i < nrow; i++) {
     age = i + minage;
-    maxlgrp = v[i]->Maxcol() - 1;
+    maxlgrp = v[i]->maxCol() - 1;
     num = 0.0;
     matnum = 0.0;
-    for (lgrp = maxlgrp; lgrp >= v[i]->Maxcol() - Lgrowth.Nrow(); lgrp--) {
-      for (grow = v[i]->Maxcol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
+    for (lgrp = maxlgrp; lgrp >= v[i]->maxCol() - Lgrowth.Nrow(); lgrp--) {
+      for (grow = v[i]->maxCol() - lgrp - 1; grow < Lgrowth.Nrow(); grow++) {
         tmp = Lgrowth[grow][lgrp] * (*v[i])[lgrp].N;
         ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, area, (*v[i])[lgrp].W);
         matnum += tmp * ratio;
@@ -275,7 +275,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight
     else
       Mat->PutInStorage(area, age, maxlgrp, 0.0, 0.0, TimeInfo);
 
-    for (lgrp = v[i]->Maxcol() - 2; lgrp >= v[i]->Mincol() + Lgrowth.Nrow() - 1; lgrp--) {
+    for (lgrp = v[i]->maxCol() - 2; lgrp >= v[i]->minCol() + Lgrowth.Nrow() - 1; lgrp--) {
       num = 0.0;
       matnum = 0.0;
       for (grow = 0; grow < Lgrowth.Nrow(); grow++) {
@@ -295,10 +295,10 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight
         Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);
     }
 
-    for (lgrp = v[i]->Mincol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->Mincol(); lgrp--) {
+    for (lgrp = v[i]->minCol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->minCol(); lgrp--) {
       num = 0.0;
       matnum = 0.0;
-      for (grow = 0; grow <= lgrp - v[i]->Mincol(); grow++) {
+      for (grow = 0; grow <= lgrp - v[i]->minCol(); grow++) {
         tmp = Lgrowth[grow][lgrp - grow] * (*v[i])[lgrp - grow].N;
         ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, area, (*v[i])[lgrp - grow].W);
         matnum += tmp * ratio;

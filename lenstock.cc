@@ -46,7 +46,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   i = 0;
   if (strcasecmp(text, "livesonareas") == 0) {
     infile >> ws;
-    while (isdigit(infile.peek()) && !infile.eof() && (i < Area->NoAreas())) {
+    while (isdigit(infile.peek()) && !infile.eof() && (i < Area->numAreas())) {
       tmpareas.resize(1);
       infile >> tmpint >> ws;
       if ((tmpareas[i] = Area->InnerArea(tmpint)) == -1)
@@ -79,7 +79,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   //JMB need to set the lowerlgrp and size vectors to a default
   //value to allow the whole range of lengths to be calculated
   IntVector lowerlgrp(maxage - minage + 1, 0);
-  IntVector size(maxage - minage + 1, LgrpDiv->NoLengthGroups());
+  IntVector size(maxage - minage + 1, LgrpDiv->numLengthGroups());
 
   Alkeys.resize(areas.Size(), minage, lowerlgrp, size);
   tagAlkeys.resize(areas.Size(), minage, lowerlgrp, size);
@@ -134,7 +134,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
                      //subject to cannibalism, ie immature stocks.
   if (cannibalism) {
     cann = new Cannibalism(infile, prey->returnLengthGroupDiv(), TimeInfo, keeper);
-    cann_vec.resize(prey->returnLengthGroupDiv()->NoLengthGroups());
+    cann_vec.resize(prey->returnLengthGroupDiv()->numLengthGroups());
   } else
     cann = 0;
   handle.logMessage("Read cannibalism data for stock", this->Name());
@@ -148,7 +148,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     predator = 0;
 
   if (iseaten && cann_vec.Size() == 0)
-    cann_vec.resize(prey->returnLengthGroupDiv()->NoLengthGroups(), 0);
+    cann_vec.resize(prey->returnLengthGroupDiv()->numLengthGroups(), 0);
 
   //read the length dependant natural mortality data
   infile >> text;
@@ -176,14 +176,14 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   //read the migration data
   readWordAndVariable(infile, "doesmigrate", doesmigrate);
   if (doesmigrate) {
-    readWordAndVariable(infile, "agedependentmigration", AgeDepMigration);
+    readWordAndVariable(infile, "agedependentmigration", tmpint);
     readWordAndValue(infile, "migrationfile", filename);
     ifstream subfile;
     subfile.open(filename, ios::in);
     CommentStream subcomment(subfile);
     handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
-    migration = new Migration(subcomment, AgeDepMigration, areas, Area, TimeInfo, keeper);
+    migration = new Migration(subcomment, tmpint, areas, Area, TimeInfo, keeper);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -264,7 +264,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
     CommentStream subcomment(subfile);
     handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
-    spawner = new Spawner(subcomment, maxage, LgrpDiv, areas, Area, TimeInfo, keeper);
+    spawner = new SpawnData(subcomment, maxage, LgrpDiv, areas, Area, TimeInfo, keeper);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -286,7 +286,7 @@ LenStock::LenStock(CommentStream& infile, const char* givenname,
   birthdate = TimeInfo->StepsInYear();
 
   //Finished reading from infile - resize objects and clean up
-  NumberInArea.AddRows(areas.Size(), LgrpDiv->NoLengthGroups());
+  NumberInArea.AddRows(areas.Size(), LgrpDiv->numLengthGroups());
   int nrofyears = TimeInfo->LastYear() - TimeInfo->FirstYear() + 1;
   for (i = 0; i < areas.Size(); i++) {
     F.resize(1, new DoubleMatrix(maxage - minage + 1, nrofyears, 0.0));
@@ -321,7 +321,7 @@ LenStock::~LenStock() {
   }
 
   if (iseaten && cannibalism) {
-    for (i = 0; i < cann->nrOfPredators(); i++)
+    for (i = 0; i < cann->numPredators(); i++)
       delete (((MortPrey*)prey)->ageGroupMatrix(i));
   }
 
@@ -419,24 +419,24 @@ void LenStock::Print(ofstream& outfile) const {
 void LenStock::calcEat(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  int i, nrofpredators;
+  int i, numpred;
 
   if (doeseat)
     predator->Eat(area, TimeInfo->LengthOfCurrent(),
       Area->Temperature(area, TimeInfo->CurrentTime()), Area->Size(area),
-      TimeInfo->CurrentSubstep(), TimeInfo->NrOfSubsteps());
+      TimeInfo->CurrentSubstep(), TimeInfo->numSubSteps());
 
   if (cannibalism) {
-    nrofpredators = cann->nrOfPredators();
+    numpred = cann->numPredators();
     cann_vec.setElementsTo(0.0);
-    for (i = 0; i < nrofpredators; i++) {
+    for (i = 0; i < numpred; i++) {
       // add cannibalism mortality on this prey from each predator in turn
       cann_vec += cann->Mortality(Alkeys[AreaNr[area]],
         cannPredators[i]->getAgeLengthKeys(area), LgrpDiv,
         cannPredators[i]->returnLengthGroupDiv(), TimeInfo, i, len_natm->NatMortality());
     }
 
-    for (i = 0; i < nrofpredators; i++) {
+    for (i = 0; i < numpred; i++) {
       // calculate consumption of this prey by each predator in turn
       prey->setConsumption(area, i, cann->getCons(i));
       prey->setAgeMatrix(i, area, cann->getAgeGroups(i));
@@ -586,9 +586,9 @@ void LenStock::setStock(StockPtrVector& stockvec) {
 
   if (iseaten && cannibalism) {
     ((MortPrey*)prey)->cannIsTrue(1);
-    ((MortPrey*)prey)->setDimensions(areas.Size(), cann->nrOfPredators());
+    ((MortPrey*)prey)->setDimensions(areas.Size(), cann->numPredators());
 
-    for (i = 0; i < cann->nrOfPredators(); i++) {
+    for (i = 0; i < cann->numPredators(); i++) {
       found = 0;
       for (j = 0; j < stockvec.Size(); j++)
         if (strcasecmp(stockvec[j]->Name(), cann->predatorName(i)) == 0) {
@@ -610,7 +610,7 @@ void LenStock::setStock(StockPtrVector& stockvec) {
       ((MortPrey*)prey)->setMinPredAge(minage);
       ((MortPrey*)prey)->setMaxPredAge(maxage);
 
-      BandMatrix tmp(0, prey->returnLengthGroupDiv()->NoLengthGroups(), minage, tmpsize, 0.0);
+      BandMatrix tmp(0, prey->returnLengthGroupDiv()->numLengthGroups(), minage, tmpsize, 0.0);
       DoubleMatrix* stmp = new DoubleMatrix(areas.Size(), tmpsize, 0.0);
       ((MortPrey*)prey)->addConsMatrix(i, tmp);
       ((MortPrey*)prey)->addAgeGroupMatrix(stmp);
@@ -619,8 +619,4 @@ void LenStock::setStock(StockPtrVector& stockvec) {
 
   if (doesspawn)
     spawner->setStock(stockvec);
-}
-
-const DoubleVector& LenStock::mortality() const {
-  return len_natm->NatMortality();
 }

@@ -79,12 +79,12 @@ public:
    * \brief This will return the index of the vector
    * \return the index of the vector
    */
-  int Mincol() const { return minpos; };
+  int minCol() const { return minpos; };
   /**
    * \brief This will return the length of the vector
    * \return the length of the vector
    */
-  int Maxcol() const { return minpos + size; };
+  int maxCol() const { return minpos + size; };
 protected:
   /**
    * \brief This is the index for the vector

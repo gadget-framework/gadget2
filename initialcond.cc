@@ -123,7 +123,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   double length, tmpnumber;
   int count = 0;
   int noareas = areas.Size();
-  int nolengr = LgrpDiv->NoLengthGroups();
+  int nolengr = LgrpDiv->numLengthGroups();
 
   if (countColumns(infile) != 4)
     handle.Message("Wrong number of columns in inputfile - should be 4");
@@ -216,7 +216,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     handle.Message("Error in initialconditions - failed to create length group");
 
   int noagegr = maxage - minage + 1; //Number of age groups
-  int nolengr = LgrpDiv->NoLengthGroups(); //Number of length groups
+  int nolengr = LgrpDiv->numLengthGroups(); //Number of length groups
 
   //read the standard deviation multiplier - default to 1.0
   keeper->addString("sdevmultiplier");
@@ -291,7 +291,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
 
   //Interpolate the reference weights. First there are some error checks.
   if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
-      LgrpDiv->meanLength(LgrpDiv->NoLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
+      LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
     handle.Message("Lengths for reference weights must span the range of initial condition lengths");
 
   //Aggregate the reference weight data to be the same format

@@ -53,7 +53,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   if (found == 0)
     handle.logFailure("Error in tags - failed to match stock", stocknames[0]);
 
-  NumberByLength.resize(LgrpDiv->NoLengthGroups(), 0.0);
+  NumberByLength.resize(LgrpDiv->numLengthGroups(), 0.0);
 
   //Now read in the tagloss information
   readWordAndFormula(infile, "tagloss", tagloss);
@@ -96,7 +96,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
 
     //only keep the data if the length is valid
     lenid = -1;
-    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++)
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
       if (tmplength == LgrpDiv->minLength(i))
         lenid = i;
 
@@ -119,7 +119,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
         Years.resize(1, year);
         Steps.resize(1, step);
         timeid = Years.Size() - 1;
-        NumberByLengthMulti.resize(1, new DoubleMatrix(1, LgrpDiv->NoLengthGroups(), 0.0));
+        NumberByLengthMulti.resize(1, new DoubleMatrix(1, LgrpDiv->numLengthGroups(), 0.0));
       }
 
     } else
@@ -157,7 +157,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
   else
     numtagtimesteps += TimeInfo->StepsInYear();
 
-  for (i = 0; i < LgrpDiv->NoLengthGroups(); i++)
+  for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
     NumberByLength[i] = (*NumberByLengthMulti[timeid])[0][i];
 }
 
@@ -218,7 +218,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
     handle.logFailure("Error in tags - stock isnt defined on tagging area");
 
   const LengthGroupDivision* tempLgrpDiv = taggingstock->returnLengthGroupDiv();
-  if (LgrpDiv->NoLengthGroups() != tempLgrpDiv->NoLengthGroups())
+  if (LgrpDiv->numLengthGroups() != tempLgrpDiv->numLengthGroups())
     handle.logFailure("Error in tags - invalid length group for tagged stock");
   if (LgrpDiv->dl() != tempLgrpDiv->dl())
     handle.logFailure("Error in tags - invalid length group for tagged stock");
@@ -287,7 +287,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
 //Now we need to distribute the tagged fish to the same age/length groups as the tagged stock.
 void Tags::Update() {
   PopInfoVector NumberInArea;
-  NumberInArea.resize(LgrpDiv->NoLengthGroups());
+  NumberInArea.resize(LgrpDiv->numLengthGroups());
   PopInfo nullpop;
 
   int i, j;
@@ -348,7 +348,7 @@ void Tags::Update() {
 
   if (taggingstock->IsEaten()) {
     tmpLgrpDiv = taggingstock->returnPrey()->returnLengthGroupDiv();
-    IntVector preysize(numberofagegroups, tmpLgrpDiv->NoLengthGroups());
+    IntVector preysize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
     IntVector preyminlength(numberofagegroups, 0);
     NumBeforeEating.resize(1, new AgeBandMatrixPtrVector(numareas, minage, preyminlength, preysize));
     CI.resize(1);
@@ -386,7 +386,7 @@ void Tags::Update() {
     AgeLengthStock.resize(1, new AgeBandMatrixPtrVector(numareas, minage, lowerlengthgroups, sizeoflengthgroups));
     if (tmpStock->IsEaten()) {
       tmpLgrpDiv = tmpStock->returnPrey()->returnLengthGroupDiv();
-      IntVector preysize(numberofagegroups, tmpLgrpDiv->NoLengthGroups());
+      IntVector preysize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
       IntVector preyminlength(numberofagegroups, 0);
       NumBeforeEating.resize(1, new AgeBandMatrixPtrVector(numareas, minage, preyminlength, preysize));
       CI.resize(1);

@@ -16,14 +16,11 @@ public:
   Migration(CommentStream& infile, int AgeDepMig, const IntVector& areas,
     const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper);
   ~Migration();
-  const DoubleMatrix& Migrationmatrix(const TimeClass* const TimeInfo, int age = 0);
+  const DoubleMatrix& MigrationMatrix(const TimeClass* const TimeInfo, int age = 0);
   void MigrationRecalc(int year);
   void Reset();
-  void Reset(const TimeClass* const TimeInfo);
-  int Error() const;
+  int Error() const { return error; };
   void Print(ofstream& outfile) const;
-  void Print(int nr, ofstream& outfile) const;
-  int ErrorNr() { return errornr; };
   const DoubleVector& Penalty() const;
 protected:
   void CopyFromReadToCalc();
@@ -38,7 +35,6 @@ protected:
   int error;
   IntMatrix ages;
   IntVector AgeNr;
-  int errornr;
   DoubleVector penalty;  //Addition Oct 1997
 private:
   void readNoMigrationMatrices(CommentStream& infile,

@@ -11,7 +11,7 @@ public:
    * \brief This is the ConversionIndex constructor
    * \param L1 is the first LengthGroupDivision
    * \param L2 is the second LengthGroupDivision
-   * \param interp is a flag to denote whether the ConversionIndex will be used to interpolate between LengthGroupDivisions (default value 0)
+   * \param interp is a flag to denote whether the ConversionIndex will be used to interpolate between the 2 LengthGroupDivision objects (default value 0)
    */
   ConversionIndex(const LengthGroupDivision* const L1,
     const LengthGroupDivision* const L2, int interp = 0);
@@ -22,8 +22,8 @@ public:
   int Pos(int i) const { return pos[i]; };
   int minLength() const { return minlength; };
   int maxLength() const { return maxlength; };
-  int Minpos(int i) const { return minpos[i]; };
-  int Maxpos(int i) const { return maxpos[i]; };
+  int minPos(int i) const { return minpos[i]; };
+  int maxPos(int i) const { return maxpos[i]; };
   int Nrof(int i) const { return nrof[i]; };
   int Offset() const { return offset; };
   int SameDl() const { return samedl; };
@@ -33,15 +33,21 @@ public:
 protected:
   int targetisfiner;
   /**
-   * \brief This is a flag to denote whether the 2 LengthGroupDivisions have the same step length
+   * \brief This is a flag to denote whether the 2 LengthGroupDivision objects have the same step length
    */
   int samedl;
   /**
-   * \brief This is a flag to denote whether the ConversionIndex will be used to interpolate between LengthGroupDivisions
+   * \brief This is a flag to denote whether the ConversionIndex will be used to interpolate between the 2 LengthGroupDivision objects
    */
   int interpolate;
   int offset;
+  /**
+   * \brief This is minimum length group that is contained in both LengthGroupDivision objects
+   */
   int minlength;
+  /**
+   * \brief This is maximum length group that is contained in both LengthGroupDivision objects
+   */
   int maxlength;
   IntVector pos;
   IntVector nrof;

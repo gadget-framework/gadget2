@@ -9,11 +9,11 @@ PreyOverAggregator::PreyOverAggregator(const PreyPtrVector& Preys,
   for (i = 0; i < preys.Size(); i++)
     checkLengthGroupIsFiner(preys[i]->returnLengthGroupDiv(), LgrpDiv);
 
-  total.AddRows(areas.Nrow(), LgrpDiv->NoLengthGroups(), 0.0);
+  total.AddRows(areas.Nrow(), LgrpDiv->numLengthGroups(), 0.0);
   for (i = 0; i < preys.Size(); i++) {
-    preyConv.AddRows(1, preys[i]->NoLengthGroups(), 0);
+    preyConv.AddRows(1, preys[i]->numLengthGroups(), 0);
     for (j = 0; j < preyConv.Ncol(i); j++)
-      preyConv[i][j] = LgrpDiv->NoLengthGroup(preys[i]->Length(j));
+      preyConv[i][j] = LgrpDiv->numLengthGroup(preys[i]->Length(j));
   }
 }
 

@@ -250,7 +250,7 @@ void CatchInTons::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Sto
     found = 0;
     preyindex.AddRows(1, 0);
     Predator* pred = fleets[i]->returnPredator();
-    for (j = 0; j < pred->NoPreys(); j++)
+    for (j = 0; j < pred->numPreys(); j++)
       for (k = 0; k < stocknames.Size(); k++)
         if (strcasecmp(stocknames[k], pred->Preys(j)->Name()) == 0) {
           found++;

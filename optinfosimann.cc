@@ -85,7 +85,7 @@ void OptInfoSimann::MaximizeLikelihood() {
 
   handle.logInformation("\nStarting Simulated Annealing");
 
-  nopt = EcoSystem->NoOptVariables();
+  nopt = EcoSystem->numOptVariables();
   DoubleVector val(nopt);
   DoubleVector lbds(nopt);
   DoubleVector ubds(nopt);

@@ -9,7 +9,7 @@ extern ErrorHandler handle;
 
 //Example of  format of infile: 0.15#1 0.13#2 0.05#3 45 130
 LenNaturalM::LenNaturalM(CommentStream& infile, const LengthGroupDivision* lenp, Keeper* const keeper)
-  : parammort(3), xparammort(2, 0.0), natmort(lenp->NoLengthGroups(), 0.0) {
+  : parammort(3), xparammort(2, 0.0), natmort(lenp->numLengthGroups(), 0.0) {
 
   keeper->addString("lennaturalm");
   lengroup = new LengthGroupDivision(*lenp);
@@ -29,7 +29,7 @@ LenNaturalM::LenNaturalM(CommentStream& infile, const LengthGroupDivision* lenp,
 //(based on a combination of  a/(b + len) and constant mort.)
 void LenNaturalM::NatCalc() {
   int i;
-  for (i = 0; i < lengroup->NoLengthGroups(); i++)
+  for (i = 0; i < lengroup->numLengthGroups(); i++)
     if (lengroup->meanLength(i) < xparammort[0])
       natmort[i] = Hyperbola(lengroup->minLength(), xparammort[0],
         parammort[0], parammort[2], lengroup->meanLength(i));

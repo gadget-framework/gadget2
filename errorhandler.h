@@ -178,7 +178,7 @@ public:
   /**
    * \brief This function will set a flag to denote whether gadget is running in network mode for paramin or not
    * \param runnetwork is a flag to denote whether gadget is running in network mode for paramin or not
-   * \note if gadget is running in network mode for paramin, most of the messages that are written to std::cerr or std::cout will be supressed to avoid having multiple copies of the messages.  Gadget will only display messages that cause a crash - most of these will be caused by incorrect initial input files.
+   * \note if gadget is running in network mode for paramin, most of the messages that are written to std::cerr or std::cout will be supressed to avoid having multiple copies of the messages.  The only messages that will be displayed are those that cause a crash - and most of these will be caused by incorrect initial input files, which should be checked before attempting to run a model using the network mode anyway
    */
   void setNetwork(int runnetwork);
 protected:

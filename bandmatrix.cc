@@ -19,7 +19,7 @@ BandMatrix::BandMatrix(const BandMatrix& initial)
 }
 
 BandMatrix::BandMatrix(const IntVector& minl, const IntVector& size,
-  int MinAge, double initial) : nrow(size.Size()), minage(MinAge) {
+  int minAge, double initial) : nrow(size.Size()), minage(minAge) {
 
   assert(size.Size() == minl.Size());
   v = new DoubleIndexVector*[nrow];
@@ -28,8 +28,8 @@ BandMatrix::BandMatrix(const IntVector& minl, const IntVector& size,
     v[i] = new DoubleIndexVector(size[i], minl[i], initial);
 }
 
-BandMatrix::BandMatrix(const DoubleMatrix& initial, int MinAge, int minl)
-  : nrow(initial.Nrow()), minage(MinAge) {
+BandMatrix::BandMatrix(const DoubleMatrix& initial, int minAge, int minl)
+  : nrow(initial.Nrow()), minage(minAge) {
 
   v = new DoubleIndexVector*[nrow];
   int i, j;
@@ -80,7 +80,7 @@ BandMatrix::~BandMatrix() {
 void BandMatrix::Colsum(DoubleVector& Result) const {
   int i, j;
   for (i = 0; i < nrow; i++)
-    for (j = v[i]->Mincol(); j < v[i]->Maxcol(); j++)
+    for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
       Result[j] += (*v[i])[j];
 }
 
@@ -89,25 +89,25 @@ void BandMatrix::Print(ofstream& outfile) const {
   int maxcol = 0;
 
   for (i = minage; i < minage + nrow; i++)
-    if (v[i - minage]->Maxcol() > maxcol)
-      maxcol = v[i - minage]->Maxcol();
+    if (v[i - minage]->maxCol() > maxcol)
+      maxcol = v[i - minage]->maxCol();
 
   for (i = minage; i < minage + nrow; i++) {
     outfile << TAB;
-    if (v[i - minage]->Mincol() > 0) {
-      for (j = 0; j < v[i - minage]->Mincol(); j++) {
+    if (v[i - minage]->minCol() > 0) {
+      for (j = 0; j < v[i - minage]->minCol(); j++) {
         outfile.precision(smallprecision);
         outfile.width(smallwidth);
         outfile << 0.0 << sep;
       }
     }
-    for (j = v[i- minage]->Mincol(); j < v[i - minage]->Maxcol(); j++) {
+    for (j = v[i- minage]->minCol(); j < v[i - minage]->maxCol(); j++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
       outfile << (*v[i - minage])[j] << sep;
     }
-    if (v[i - minage]->Maxcol() < maxcol) {
-      for (j = v[i - minage]->Maxcol(); j < maxcol; j++) {
+    if (v[i - minage]->maxCol() < maxcol) {
+      for (j = v[i - minage]->maxCol(); j < maxcol; j++) {
         outfile.precision(smallprecision);
         outfile.width(smallwidth);
         outfile << 0.0 << sep;
@@ -273,8 +273,8 @@ void BandMatrixMatrix::DeleteRow(int row) {
 
 BandMatrix& BandMatrix::operator += (BandMatrix& b) {
   int i, j;
-  for (i = max(Minrow(), b.Minrow()); i<min(Maxrow(), b.Maxrow()); i++)
-    for (j = max(Mincol(i), b.Mincol(i)); j<min(Maxcol(i), b.Maxcol(i)); j++)
+  for (i = max(minRow(), b.minRow()); i < min(maxRow(), b.maxRow()); i++)
+    for (j = max(minCol(i), b.minCol(i)); j < min(maxCol(i), b.maxCol(i)); j++)
       (*this)[i][j] += b[i][j];
   return *this;
 }

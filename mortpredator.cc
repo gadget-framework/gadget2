@@ -61,7 +61,7 @@ MortPredator::MortPredator(CommentStream& infile, const char* givenname, const I
       f_lev[i].Inform(keeper);
     }
   }
-  c_hat.AddRows(areanr, NoPreys());
+  c_hat.AddRows(areanr, numPreys());
 
   //prepare far reading the amounts
   infile >> text >> ws;
@@ -75,7 +75,7 @@ MortPredator::~MortPredator() {
 }
 
 void MortPredator::Eat(int area, double LengthOfStep, double Temperature, double Areasize,
-  int CurrentSubstep, int NrOfSubsteps) {
+  int CurrentSubstep, int numsubsteps) {
 
   //Written by kgf 20/5 98
   //The parameters LengthOfStep, Temperature and Areasize will not be used.
@@ -85,8 +85,8 @@ void MortPredator::Eat(int area, double LengthOfStep, double Temperature, double
 
   if (CurrentSubstep == 1) { //Fishing mortality constant in a time step
 
-    if (NrOfSubsteps > 1)
-      time_frac = double(1.0 / NrOfSubsteps);
+    if (numsubsteps > 1)
+      time_frac = double(1.0 / numsubsteps);
     else
       time_frac = 1.0;
 
@@ -97,30 +97,30 @@ void MortPredator::Eat(int area, double LengthOfStep, double Temperature, double
 
     //calculate consumption
     //JMB removed the following loop - repeated over predl??
-    //for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
-    for (prey = 0; prey < NoPreys(); prey++) {
+    //for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+    for (prey = 0; prey < numPreys(); prey++) {
       if (Preys(prey)->IsInArea(area)) {
-        for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++) {
-          for (preyl = Suitability(prey)[predl].Mincol();
-              preyl < Suitability(prey)[predl].Maxcol(); preyl++) {
+        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+          for (preyl = Suitability(prey)[predl].minCol();
+              preyl < Suitability(prey)[predl].maxCol(); preyl++) {
             consumption[inarea][prey][predl][preyl] =
               pres_f_lev * Suitability(prey)[predl][preyl];
           }
         }
 
       } else {
-        for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++) {
-          for (preyl = Suitability(prey)[predl].Mincol();
-              preyl < Suitability(prey)[predl].Maxcol(); preyl++)
+        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+          for (preyl = Suitability(prey)[predl].minCol();
+              preyl < Suitability(prey)[predl].maxCol(); preyl++)
             consumption[inarea][prey][predl][preyl] = 0;
         }
       }
     }
 
     //Inform the preys of the fleet's fishing mortality.
-    for (prey = 0; prey < NoPreys(); prey++) {
+    for (prey = 0; prey < numPreys(); prey++) {
       if (Preys(prey)->IsInArea(area)) {
-        for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++)
+        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
           Preys(prey)->addConsumption(area, consumption[inarea][prey][predl]);
       }
     }
@@ -141,8 +141,8 @@ void MortPredator::calcCHat(int area, const TimeClass* const TimeInfo) {
   int inarea = AreaNr[area];
   double time_frac, pres_f_lev;
 
-  if (TimeInfo->NrOfSubsteps() > 1)
-    time_frac = double(1.0 / (TimeInfo->NrOfSubsteps()));
+  if (TimeInfo->numSubSteps() > 1)
+    time_frac = double(1.0 / (TimeInfo->numSubSteps()));
   else
     time_frac = 1.0;
   if (calc_f_lev == 1)
@@ -151,7 +151,7 @@ void MortPredator::calcCHat(int area, const TimeClass* const TimeInfo) {
     pres_f_lev = f_lev[inarea][timestep] * time_frac;
 
   if (!initialisedCHat) {
-    for (prey = 0; prey < NoPreys(); prey++) {
+    for (prey = 0; prey < numPreys(); prey++) {
       if (Preys(prey)->IsInArea(area)) {
         //set correct dimensions in c_hat
         this->InitialiseCHat(area, prey, ((MortPrey*)Preys(prey))->getMeanN(area));
@@ -161,7 +161,7 @@ void MortPredator::calcCHat(int area, const TimeClass* const TimeInfo) {
   }
 
   if (TimeInfo->CurrentSubstep() == 1) {
-    for (prey = 0; prey < NoPreys(); prey++) {
+    for (prey = 0; prey < numPreys(); prey++) {
       if (Preys(prey)->IsInArea(area)) {
         for (age = ((MortPrey*)Preys(prey))->getMeanN(area).minAge();
             age <= ((MortPrey*)Preys(prey))->getMeanN(area).maxAge(); age++) {
@@ -173,16 +173,16 @@ void MortPredator::calcCHat(int area, const TimeClass* const TimeInfo) {
     }
   }
 
-  for (prey = 0; prey < NoPreys(); prey++) {
+  for (prey = 0; prey < numPreys(); prey++) {
     if (Preys(prey)->IsInArea(area)) {
       if (pres_f_lev > rathersmall) {
         for (age = ((MortPrey*)Preys(prey))->getMeanN(area).minAge();
             age <= ((MortPrey*)Preys(prey))->getMeanN(area).maxAge(); age++) {
-          for (predl = 0; predl < LgrpDiv->NoLengthGroups(); predl++) {
+          for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
             minl = max(((MortPrey*)Preys(prey))->getMeanN(area).minLength(age),
-              Suitability(prey)[predl].Mincol());
+              Suitability(prey)[predl].minCol());
             maxl = min(((MortPrey*)Preys(prey))->getMeanN(area).maxLength(age),
-              Suitability(prey)[predl].Maxcol());
+              Suitability(prey)[predl].maxCol());
             for (preyl = minl; preyl < maxl; preyl++) {
               c_hat[inarea][prey][age][preyl] +=
                 consumption[inarea][prey][predl][preyl] *
@@ -214,7 +214,7 @@ void MortPredator::Print(ofstream& outfile) const {
 
 const PopInfoVector& MortPredator::NumberPriortoEating(int area, const char* preyname) const {
   int prey;
-  for (prey = 0; prey < NoPreys(); prey++)
+  for (prey = 0; prey < numPreys(); prey++)
     if (strcasecmp(Preyname(prey), preyname) == 0)
       return Preys(prey)->NumberPriortoEating(area);
 

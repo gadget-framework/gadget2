@@ -51,13 +51,30 @@ int readVector(CommentStream& infile, DoubleVector& Vec) {
   return 1;
 }
 
+int readVector(CommentStream& infile, IntVector& Vec) {
+  if (infile.fail())
+    return 0;
+
+  int i, N;
+  for (i = 0; i < Vec.Size(); i++) {
+    infile >> ws >> N;
+    if (!infile.fail())
+      Vec[i] = N;
+    else {
+      handle.Message("Error in readvector - failed to read data");
+      return 0;
+    }
+  }
+  return 1;
+}
+
 int readIndexVector(CommentStream& infile, DoubleIndexVector& Vec) {
   if (infile.fail())
     return 0;
 
   int i;
   double N;
-  for (i = Vec.Mincol(); i < Vec.Maxcol(); i++) {
+  for (i = Vec.minCol(); i < Vec.maxCol(); i++) {
     infile >> ws >> N;
     if (!infile.fail())
       Vec[i] = N;
@@ -164,40 +181,6 @@ int readRefWeights(CommentStream& infile, DoubleMatrix& M) {
   handle.logMessage("Read reference weights OK - number of entries", i);
   return 1;
 }
-
-/* This function expects infile to contain rows of data with columns
- * containing years and steps first.  It manipulates infile such that
- * if some year and step is greater than year and step, then infile is
- * positioned at the first occurence of such row and the function
- * returns 1.  If there is no row with year and step greater than the
- * arguments year and step, or if there is a failure in infile, the
- * function returns 0.  */
-
-int FindContinuousYearAndStepWithNoText(CommentStream& infile, int year, int step) {
-  if (infile.fail())
-    return 0; //Failure -- wrong format
-  int ryear, rstep;
-  streampos pos;
-  char c;
-  do {
-    if (infile.eof())
-      return 0;  //No data later than or equal to year and step -- Failure
-    pos = infile.tellg();
-    infile >> ryear >> rstep;
-    if (!infile.good())
-      return 0; //Wrong format for file -- Failure
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  } while ((ryear < year || (ryear == year && rstep < step)));
-  infile.seekg(pos);
-  return 1;  //Success
-}
-
-/* This function counts the number of entries on a row in the input file
- * This is done to check the number of columns that are being read.
- * We assume that every row has the same number of entries so we only
- * need to check the file once, but this can be changed */
 
 int countColumns(CommentStream& infile) {
   if (infile.fail())
@@ -413,3 +396,32 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   handle.logMessage("Read growth data file - number of entries", count);
   return 1;
 }
+
+/* This function expects infile to contain rows of data with columns
+ * containing years and steps first.  It manipulates infile such that
+ * if some year and step is greater than year and step, then infile is
+ * positioned at the first occurence of such row and the function
+ * returns 1.  If there is no row with year and step greater than the
+ * arguments year and step, or if there is a failure in infile, the
+ * function returns 0.  */
+int FindContinuousYearAndStepWithNoText(CommentStream& infile, int year, int step) {
+  if (infile.fail())
+    return 0;
+  int ryear, rstep;
+  streampos pos;
+  char c;
+  do {
+    if (infile.eof())
+      return 0;  //No data later than or equal to year and step -- Failure
+    pos = infile.tellg();
+    infile >> ryear >> rstep;
+    if (!infile.good())
+      return 0; //Wrong format for file -- Failure
+    infile.get(c);
+    while (c != '\n' && !infile.eof())
+      infile.get(c);
+  } while ((ryear < year || (ryear == year && rstep < step)));
+  infile.seekg(pos);
+  return 1;
+}
+

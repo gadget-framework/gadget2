@@ -97,7 +97,7 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
     if (!(strcasecmp(text, "digestioncoefficients") == 0))
       handle.Unexpected("digestioncoefficients", text);
 
-    //JMB - changed so that only 3 elements are read in - check this
+    //JMB - changed so that only 3 elements are read in
     digestioncoeff.AddRows(1, 3);
     infile >> digestioncoeff[i];
     digestioncoeff[i].Inform(keeper);

@@ -6,6 +6,12 @@
 #include "commentstream.h"
 #include "sionstep.h"
 
+/**
+ * \class SurveyIndices
+ * \brief This is the class used to calculate a likelihood score by fitting a linear regression line to calculated and modelled survey indices
+ *
+ * This class calculates a likelihood score by fitting a liner regression line to the difference between survey indices calculated within the model and survey indices calculated directly from standardized survey data.  This is used to compare the relative abundance levels of the stock.  The model will calculate an index for the population, and then fit a linear regression line between these calculated indices and those input from data files.  The precise format of the linear regression line depends on a number of options specified by the user.
+ */
 class SurveyIndices : public Likelihood {
 public:
   /**
@@ -53,14 +59,20 @@ public:
    * \brief This function will print summary information from each SurveyIndices likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
-  virtual void SummaryPrint(ofstream& outfile) {
-    SI->SummaryPrint(outfile, weight); };
+  virtual void SummaryPrint(ofstream& outfile);
 protected:
+  /**
+   * \brief This is the SIOnStep used to calculate the likelihood score by fitting a linear regression line to the difference between the calculated indices and the input indices
+   */
   SIOnStep* SI;
   /**
    * \brief This is the IntMatrix used to store area information
    */
   IntMatrix areas;
+  /**
+   * \brief This is the CharPtrVector of the names of the areas
+  */
+  CharPtrVector areanames;
   /**
    * \brief This is the CharPtrVector of the names of the stocks that will be used to calculate the likelihood score
    */

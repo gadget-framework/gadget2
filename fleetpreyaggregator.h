@@ -37,7 +37,7 @@ public:
    * \brief This function will return the number of length groups of the aggregator
    * \return number of length groups
    */
-  int NoLengthGroups() const { return LgrpDiv->NoLengthGroups(); };
+  int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
   /**
    * \brief This function will return the number of age groups of the aggregator
    * \return number of age groups

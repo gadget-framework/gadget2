@@ -43,7 +43,7 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
   }
 
   if (switchnr.Size() != 0) {
-    ParameterVector sw(keeper->NoVariables());
+    ParameterVector sw(keeper->numVariables());
     keeper->Switches(sw);
     for (i = 0; i < switches.Size(); i++)
       for (j = 0; j < sw.Size(); j++)
@@ -69,7 +69,7 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
       handle.logWarning("Warning in boundlikelihood - no bounds have been set in input file");
       
     int i, j, k, numvar, numset;
-    numvar = keeper->NoVariables();
+    numvar = keeper->numVariables();
     numset = switchnr.Size();
 
     IntVector done(numset, 0);
@@ -120,7 +120,7 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
 void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   int i;
-  DoubleVector values(keeper->NoVariables());
+  DoubleVector values(keeper->numVariables());
   keeper->ValuesOfVariables(values);
   for (i = 0; i < switchnr.Size(); i++) {
     if (values[switchnr[i]] < lowerbound[i]) {

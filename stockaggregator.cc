@@ -12,7 +12,7 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
   mincol.resize(Ages.Nrow(), 9999);
   maxrow = 0;
   minrow = 9999;
-  int numlengths = LgrpDiv->NoLengthGroups();
+  int numlengths = LgrpDiv->numLengthGroups();
 
   for (i = 0; i < stocks.Size(); i++) {
     checkLengthGroupIsFiner(stocks[i]->returnLengthGroupDiv(), LgrpDiv);

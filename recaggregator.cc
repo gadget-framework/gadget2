@@ -28,7 +28,7 @@ RecAggregator::RecAggregator(const FleetPtrVector& Fleets,
   PopInfo tmppop;
   tmppop.N = 1.0;
   tmppop.W = 1.0;
-  PopInfoMatrix popmatrix(ages.Nrow(), LgrpDiv->NoLengthGroups(), tmppop);
+  PopInfoMatrix popmatrix(ages.Nrow(), LgrpDiv->numLengthGroups(), tmppop);
   total.resize(areas.Nrow(), 0, 0, popmatrix);
 }
 
@@ -86,7 +86,7 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
             if (fleets[f]->Type() == LINEARFLEET)
               fleetscale *= TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
 
-            for (i = 0; i < pred->NoPreys(); i++) {
+            for (i = 0; i < pred->numPreys(); i++) {
               if (prey->Name() == pred->Preys(i)->Name()) {
                 const DoubleIndexVector* suitptr = &pred->Suitability(i)[0];
                 const AgeBandMatrix* alptr = &taggingExp->NumberPriorToEating(area, stocks[h]->Name());
@@ -95,7 +95,7 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
                     age = ages[aggrAge][k];
                     if ((alptr->minAge() <= age) && (age <= alptr->maxAge())) {
                       DoubleIndexVector Ratio = *suitptr;
-                      for (z = Ratio.Mincol(); z < Ratio.Maxcol(); z++)
+                      for (z = Ratio.minCol(); z < Ratio.maxCol(); z++)
                         Ratio[z] *= (prey->Ratio(area, z) > 1 ? 1.0 / prey->Ratio(area, z) : 1.0);
 
                       total[aggrArea][aggrAge].Add((*alptr)[age], *CI[h], fleetscale, Ratio);

@@ -58,7 +58,8 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   //Proceed to read the variables.
   //File format: variables
   //and then the file format for readOptVariables
-  keeper->clearLastAddString("variables");
+  keeper->clearLast();
+  keeper->addString("variables");
   //strcpy(text, " ");
   infile >> text;
   if (!(strcasecmp(text, "variables") == 0))
@@ -69,7 +70,8 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   //read the coefficients for the variables.
   //File format: coefficients
   //and then the file format for readCoefficients
-  keeper->clearLastAddString("coefficients");
+  keeper->clearLast();
+  keeper->addString("coefficients");
   infile >> text;
   if (!(strcasecmp(text, "coefficients") == 0))
     handle.Unexpected("coefficients", text);
@@ -88,7 +90,8 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   //n1 Matrix # n1
   //...
   //nm Matrix # nm
-  keeper->clearLastAddString("migrationmatrices");
+  keeper->clearLast();
+  keeper->addString("migrationmatrices");
   ReadMigList.resize(maxim + 1, 0);
   infile >> text >> ws;
   if (!(strcasecmp(text, "migrationmatrices") == 0))
@@ -150,7 +153,7 @@ Migration::~Migration() {
     delete OptVar[i];
 }
 
-const DoubleMatrix& Migration::Migrationmatrix(const TimeClass* const TimeInfo, int age) {
+const DoubleMatrix& Migration::MigrationMatrix(const TimeClass* const TimeInfo, int age) {
   if (AgeDepMigration) {
     if (age >= 0 && age < AgeNr.Size())
       if (AgeNr[age] >= 0)
@@ -175,7 +178,7 @@ void Migration::MigrationRecalc(int year) {
   for (i = 0; i < OptInfo.Size(); i++) {
     const int col = OptInfo[i]->column;
     const int row = OptInfo[i]->row;
-    const int no = OptInfo[i]->NoMatrix;
+    const int no = OptInfo[i]->nummatrix;
     add = 0.0;
     for (j = 0; j < OptInfo[i]->indices.Size(); j++)
       add += OptInfo[i]->coefficients[j] * OptVariables[OptInfo[i]->indices[j]];
@@ -183,10 +186,6 @@ void Migration::MigrationRecalc(int year) {
     (*CalcMigList[no])[row][col] += add;
   }
   adjustMigListAndCheckIfError(CalcMigList);
-}
-
-int Migration::Error() const {
-  return error;
 }
 
 void Migration::Print(ofstream& outfile) const {
@@ -228,46 +227,6 @@ void Migration::Print(ofstream& outfile) const {
     }
 }
 
-void Migration::Print(int nr, ofstream& outfile) const {
-  int i, j, k;
-  outfile << "Migration.\nAge dependent migration " << AgeDepMigration << endl;
-  if (AgeDepMigration) {
-    outfile << "Ages\n";
-    for (i = 0; i < ages.Nrow(); i++) {
-      for (j = 0; j < ages.Ncol(i); j++)
-        outfile << ages[i][j] << sep;
-      outfile << endl;
-    }
-  }
-  outfile << "Numbers of migration matrices:\n";
-  for (i = 0; i < MatrixNumbers.Nrow(); i++) {
-    for (j = 1; j < MatrixNumbers.Ncol(i); j++)
-      outfile << MatrixNumbers[i][j] << sep;
-    outfile << endl;
-  }
-
-  outfile << "Values of migration variables:\n";
-  for (i = 0; i < OptVariables.Size(); i++)
-    outfile << "Variable " << i << sep << OptVariables[i] << endl;
-  outfile << "Optimization:\n";
-  for (i = 0; i < OptInfo.Size(); i++)
-    if (OptInfo[i]->NoMatrix == nr)
-      outfile << *OptInfo[i];
-
-  outfile << "\nMigration matrices\n";
-  if (CalcMigList[nr] != 0) {
-    outfile << "Migration matrix number " << nr << endl;
-    for (j = 0; j < CalcMigList[nr]->Nrow(); j++) {
-      for (k = 0; k < CalcMigList[nr]->Ncol(j); k++) {
-        outfile.width(smallwidth);
-        outfile.precision(smallprecision);
-        outfile << (*CalcMigList[nr])[j][k] << sep;
-      }
-      outfile << endl;
-    }
-  }
-}
-
 void Migration::CheckInfoAndDelete(IntVector& novariables, Keeper* const keeper) {
 
   int i, j, age, time;
@@ -279,12 +238,12 @@ void Migration::CheckInfoAndDelete(IntVector& novariables, Keeper* const keeper)
 
   //Delete information for the matrices not used in the simulation.
   for (i = 0; i < OptInfo.Size(); i++)
-    if (!(OptInfo[i]->NoMatrix < ReadMigList.Size())) {
+    if (!(OptInfo[i]->nummatrix < ReadMigList.Size())) {
       delete OptInfo[i];
       OptInfo.Delete(i);
       i--;
     } else {
-      if (ReadMigList[OptInfo[i]->NoMatrix] == 0) {
+      if (ReadMigList[OptInfo[i]->nummatrix] == 0) {
         delete OptInfo[i];
         OptInfo.Delete(i);
         i--;
@@ -444,7 +403,7 @@ void Migration::readNoMigrationMatrices(CommentStream& infile,
     infile >> year >> step;
     if (infile.eof())
       handle.Eof();
-    if (time != TimeInfo->CalcSteps(year, step))
+    if (time != TimeInfo->calcSteps(year, step))
       handle.Message("Failure in migration - failed to read migration data");
 
     if (AgeDepMigration)
@@ -524,9 +483,8 @@ void Migration::readCoefficients(CommentStream& infile,
   infile >> ws;
 
   char c = infile.peek();
-  const int totalnoareas = Area->NoAreas();
   while (!infile.eof() && isdigit(c)) {
-    VariableInfo* var = new VariableInfo(keeper, totalnoareas);
+    VariableInfo* var = new VariableInfo(keeper, Area->numAreas());
     infile >> *var;
     if (var->error)
       handle.Message("Failure in migration - unable to read migration matrix");

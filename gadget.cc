@@ -23,12 +23,12 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
     EcoSystem->Reset();
 
     #ifdef GADGET_NETWORK //to help compiling when pvm libraries are unavailable
-      Stochasticdata = new StochasticData(MainInfo->runNetwork());
+      Stochasticdata = new StochasticData();
       while (Stochasticdata->getDataFromNet()) {
         EcoSystem->Update(Stochasticdata);
         EcoSystem->Simulate(MainInfo->runLikelihood(), print);
         //JMB - no printing during a network run ...
-        Stochasticdata->SendDataToMaster(EcoSystem->getLikelihood());
+        Stochasticdata->sendDataToMaster(EcoSystem->getLikelihood());
         Stochasticdata->readNextLineFromNet();
       }
       delete Stochasticdata;

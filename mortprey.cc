@@ -13,7 +13,7 @@ MortPrey::MortPrey(CommentStream& infile, const IntVector& Areas,
 
   this->InitialiseObjects();
 
-  IntVector size(maxage - minage + 1, LgrpDiv->NoLengthGroups());
+  IntVector size(maxage - minage + 1, LgrpDiv->numLengthGroups());
   IntVector minlength(maxage - minage + 1, 0);
   Alkeys.resize(areas.Size(), minage, minlength, size);
   mean_n.resize(areas.Size(), minage, minlength, size);
@@ -59,7 +59,7 @@ void MortPrey::InitialiseObjects() {
     cannibalism.DeleteRow(0);
 
   //Now we can resize the objects.
-  int numlength = LgrpDiv->NoLengthGroups();
+  int numlength = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
   PopInfo nullpop;
 
@@ -165,7 +165,7 @@ void MortPrey::calcMeanN(int area) {
   haveCalculatedMeanN[area] = 1;
   int inarea = AreaNr[area];
   int l;
-  for (l = 0; l < LgrpDiv->NoLengthGroups(); l++) {
+  for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
     prop_surv[inarea][l] = exp(- z[inarea][l]);
     if (isZero(z[inarea][l]))
       mort_fact[inarea][l] = 1.0;

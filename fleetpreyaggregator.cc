@@ -23,7 +23,7 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
   mincol.resize(ages.Nrow(), 9999);
   maxrow = 0;
   minrow = 9999;
-  int numlengths = LgrpDiv->NoLengthGroups();
+  int numlengths = LgrpDiv->numLengthGroups();
 
   for (i = 0; i < stocks.Size(); i++) {
     checkLengthGroupIsFiner(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);
@@ -134,7 +134,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
             if (fleets[f]->Type() == LINEARFLEET)
               fleetscale *= TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
 
-            for (i = 0; i < pred->NoPreys(); i++) {
+            for (i = 0; i < pred->numPreys(); i++) {
               if (prey->Name() == pred->Preys(i)->Name()) {
                 const DoubleIndexVector* suitptr = &pred->Suitability(i)[0];
                 const AgeBandMatrix* alptr = &prey->AlkeysPriorToEating(area);
@@ -145,7 +145,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
 
                       DoubleIndexVector Ratio = *suitptr;
                       if (overconsumption)
-                        for (z = Ratio.Mincol(); z < Ratio.Maxcol(); z++)
+                        for (z = Ratio.minCol(); z < Ratio.maxCol(); z++)
                           Ratio[z] *= (prey->Ratio(area, z) > 1 ? 1.0 / prey->Ratio(area, z) : 1.0);
 
                       total[aggrArea][aggrAge].Add((*alptr)[age], *CI[h], fleetscale, Ratio);
@@ -201,7 +201,7 @@ void FleetPreyAggregator::MeanSum(const TimeClass* const TimeInfo) {
           //area aggrArea in total.
           area = areas[aggrArea][j];
           if (prey->IsInArea(area) && fleets[f]->IsInArea(area)) {
-            for (i = 0; i < pred->NoPreys(); i++) {
+            for (i = 0; i < pred->numPreys(); i++) {
               if (prey->Name() == pred->Preys(i)->Name()) {
                 const DoubleIndexVector* suitptr = &pred->Suitability(i)[0];
                 const AgeBandMatrix* alptr = &prey->getMeanN(area);

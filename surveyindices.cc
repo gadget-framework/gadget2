@@ -23,7 +23,6 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   int overcons = 0;
   IntMatrix ages;
   DoubleVector lengths;
-  CharPtrVector areaindex;
   CharPtrVector ageindex;
   CharPtrVector lenindex;
 
@@ -47,7 +46,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   datafile.open(aggfilename, ios::in);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  i = readAggregation(subdata, areas, areaindex);
+  i = readAggregation(subdata, areas, areanames);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -128,15 +127,15 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   //We have now read in all the data from the main likelihood file
   if (strcasecmp(sitype, "lengths") == 0) {
-    SI = new SIByLengthOnStep(infile, areas, lengths, areaindex,
+    SI = new SIByLengthOnStep(infile, areas, lengths, areanames,
       lenindex, TimeInfo, datafilename, surveyname);
 
   } else if (strcasecmp(sitype, "ages") == 0) {
-    SI = new SIByAgeOnStep(infile, areas, ages, areaindex,
+    SI = new SIByAgeOnStep(infile, areas, ages, areanames,
       ageindex, TimeInfo, datafilename, surveyname);
 
   } else if (strcasecmp(sitype, "fleets") == 0) {
-    SI = new SIByFleetOnStep(infile, areas, lengths, areaindex,
+    SI = new SIByFleetOnStep(infile, areas, lengths, areanames,
       lenindex, TimeInfo, datafilename, overcons, surveyname);
 
   } else
@@ -151,8 +150,6 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   }
 
   //index ptrvectors are not required - free up memory
-  for (i = 0; i < areaindex.Size(); i++)
-    delete[] areaindex[i];
   for (i = 0; i < ageindex.Size(); i++)
     delete[] ageindex[i];
   for (i = 0; i < lenindex.Size(); i++)
@@ -165,6 +162,8 @@ SurveyIndices::~SurveyIndices() {
     delete[] stocknames[i];
   for (i = 0; i < fleetnames.Size(); i++)
     delete[] fleetnames[i];
+  for (i = 0; i < areanames.Size(); i++)
+    delete[] areanames[i];
   delete SI;
   delete[] surveyname;
 }
@@ -238,4 +237,16 @@ void SurveyIndices::Print(ofstream& outfile) const {
     outfile << stocknames[i] << sep;
   outfile << endl;
   SI->Print(outfile);
+}
+
+void SurveyIndices::SummaryPrint(ofstream& outfile) {
+  int area;
+
+  //JMB - this is nasty hack since there is only one area
+  for (area = 0; area < areanames.Size(); area++) {
+    outfile << "all   all " << setw(printwidth) << areanames[area] << sep
+      << setw(largewidth) << surveyname << sep << setw(smallwidth) << weight
+      << sep << setprecision(largeprecision) << setw(largewidth) << likelihood << endl;
+  }
+  outfile.flush();
 }

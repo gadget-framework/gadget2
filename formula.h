@@ -16,6 +16,10 @@ public:
   ~Formula() {};
   void setValue(double initValue);
   friend CommentStream& operator >> (CommentStream&, Formula&);
+  /**
+   * \brief This operator will return the value of the formula
+   * \return the value of the formula
+   */
   operator double() const {
     double value = init;
     int i;

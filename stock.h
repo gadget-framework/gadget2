@@ -21,7 +21,7 @@ class PopPredator;
 class Prey;
 class Maturity;
 class RenewalData;
-class Spawner;
+class SpawnData;
 class StrayData;
 
 enum StockType { STOCKTYPE = 1, LENSTOCKTYPE };
@@ -173,7 +173,6 @@ public:
   int doesMigrate() const { return doesmigrate; };
   int minAge() const { return Alkeys[0].minAge(); };
   int maxAge() const { return Alkeys[0].maxAge(); };
-  const DoubleIndexVector& mortality() const;
   const StockPtrVector& getMatureStocks();
   const StockPtrVector& getTransitionStocks();
   const StockPtrVector& getStrayStocks();
@@ -182,7 +181,6 @@ public:
   void updateMatureStockWithTags(const TimeClass* const TimeInfo);
   void updateTransitionStockWithTags(const TimeClass* const TimeInfo);
   void updateStrayStockWithTags(const TimeClass* const TimeInfo);
-  const CharPtrVector TaggingExperimentIDs();
   /**
    * \brief This will return the type of stock class
    * \return type
@@ -196,11 +194,10 @@ protected:
   TagPtrVector transitionTags;
   TagPtrVector strayTags;
   StrayData* stray;
-  Spawner* spawner;
+  SpawnData* spawner;
   RenewalData* renewal;
   Maturity* maturity;
   Transition* transition;
-  int AgeDepMigration;
   Migration* migration;
   Prey* prey;
   PopPredator* predator;

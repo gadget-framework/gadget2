@@ -80,7 +80,7 @@ void Prey::InitialiseObjects() {
     overconsumption.DeleteRow(0);
 
   //Now we can resize the objects.
-  int numlen = LgrpDiv->NoLengthGroups();
+  int numlen = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
   PopInfo nullpop;
 
@@ -112,7 +112,7 @@ void Prey::Print(ofstream& outfile) const {
   LgrpDiv->Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tNumber of prey on internal area " << areas[area] << ":";
-    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
       outfile << sep << Number[area][i].N;
@@ -121,7 +121,7 @@ void Prey::Print(ofstream& outfile) const {
   }
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tWeight of prey on internal area " << areas[area] << ":";
-    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
       outfile << sep << Number[area][i].W;
@@ -131,7 +131,7 @@ void Prey::Print(ofstream& outfile) const {
   outfile << "\tConsumption of prey:\n";
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tInternal area " << areas[area] << ":";
-    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
       outfile << sep << consumption[area][i];
@@ -141,7 +141,7 @@ void Prey::Print(ofstream& outfile) const {
   outfile << "\tOverconsumption of prey:\n";
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tInternal area " << areas[area] << ":";
-    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       outfile.precision(smallprecision);
       outfile.width(smallwidth);
       outfile << sep << overconsumption[area][i];
@@ -164,7 +164,7 @@ void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
 //mass units, later they are converted to numbers.
 void Prey::addConsumption(int area, const DoubleIndexVector& predconsumption) {
   int i;
-  for (i = predconsumption.Mincol(); i < predconsumption.Maxcol(); i++)
+  for (i = predconsumption.minCol(); i < predconsumption.maxCol(); i++)
     cons[AreaNr[area]][i] += predconsumption[i];
 }
 
@@ -172,13 +172,13 @@ void Prey::addConsumption(int area, const DoubleIndexVector& predconsumption) {
 //the case a flag is set. Changed 22 - May 1997  so that only 95% of a prey
 //in an area can be eaten in one timestep.  This is to avoid problems
 //with survy indices etc.  include maxmortailty.h was added.
-void Prey::checkConsumption(int area, int NrOfSubsteps) {
-  double maxRatio = pow(MaxRatioConsumed, NrOfSubsteps);
+void Prey::checkConsumption(int area, int numsubsteps) {
+  double maxRatio = pow(MaxRatioConsumed, numsubsteps);
   int i, temp = 0;
   int inarea = AreaNr[area];
   double rat, biom;
 
-  for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+  for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
     rat = 0.0;
     biom = Number[inarea][i].N * Number[inarea][i].W;
     //We must be careful -- it is possible that biomass will equal 0.
@@ -204,7 +204,7 @@ void Prey::Reset() {
   for (area = 0; area < areas.Size(); area++) {
     tooMuchConsumption[area] = 0;
     total[area] = 0;
-    for (l = 0; l < LgrpDiv->NoLengthGroups(); l++) {
+    for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
       Number[area][l].N = 0.0;
       Number[area][l].W = 0.0;
       numberPriortoEating[area][l].N = 0.0;

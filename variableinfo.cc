@@ -6,14 +6,14 @@
 extern ErrorHandler handle;
 
 //File format is:
-//NoMatrix row column c1 x1 ... cm xm (All on the same line).
+//nummatrix row column c1 x1 ... cm xm (All on the same line).
 CommentStream& operator >> (CommentStream& infile, VariableInfo& varinfo) {
 
   while (varinfo.indices.Size())
     varinfo.indices.Delete(0);
   while (varinfo.coefficients.Size())
     varinfo.coefficients.Delete(0);
-  infile >> varinfo.NoMatrix >> varinfo.row >> varinfo.column;
+  infile >> varinfo.nummatrix >> varinfo.row >> varinfo.column;
 
   int i, j;
   char line[MaxStrLength];
@@ -54,8 +54,8 @@ CommentStream& operator >> (CommentStream& infile, VariableInfo& varinfo) {
     varinfo.keeper->ChangeVariable(tmp[j], varinfo.coefficients[j]);
   }
 
-  if (infile.fail() || varinfo.NoMatrix < 0 || varinfo.row < 0 || varinfo.column < 0
-     || varinfo.row > varinfo.NoAreas || varinfo.column > varinfo.NoAreas)
+  if (infile.fail() || varinfo.nummatrix < 0 || varinfo.row < 0 || varinfo.column < 0
+     || varinfo.row > varinfo.numareas || varinfo.column > varinfo.numareas)
     varinfo.error = 1;
   else
     varinfo.error = 0;
@@ -65,7 +65,7 @@ CommentStream& operator >> (CommentStream& infile, VariableInfo& varinfo) {
 
 ostream& operator << (ostream& out, VariableInfo& var) {
   int i;
-  out << "Matrix number " << var.NoMatrix << ", row " << var.row
+  out << "Matrix number " << var.nummatrix << ", row " << var.row
     << ", column " << var.column << "\nvariable\tcoefficient\n";
   for (i = 0; i < var.indices.Size(); i++)
     out << TAB << var.indices[i] << TAB << var.coefficients[i] << endl;

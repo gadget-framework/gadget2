@@ -16,8 +16,8 @@ public:
     const TimeClass* const TimeInfo, Keeper* const keeper);
   virtual ~MortPredator();
   virtual void Eat(int area, double LengthOfStep, double Temperature, double Areasize,
-    int CurrentSubstep, int NrOfSubsteps);
-  virtual void adjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep) {};
+    int CurrentSubstep, int numsubsteps);
+  virtual void adjustConsumption(int area, int numsubsteps, int CurrentSubstep) {};
   virtual void Print(ofstream& infile) const;
   virtual const PopInfoVector& NumberPriortoEating(int area, const char* preyname) const;
   void calcFlevel();

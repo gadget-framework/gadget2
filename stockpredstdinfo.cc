@@ -43,16 +43,16 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   double B, N, prop;
 
   for (predage = NconbyAge[inarea].minAge(); predage <= NconbyAge[inarea].maxAge(); predage++)
-    for (preyage = NconbyAge[inarea].Mincol(predage); preyage < NconbyAge[inarea].Maxcol(predage); preyage++) {
+    for (preyage = NconbyAge[inarea].minCol(predage); preyage < NconbyAge[inarea].maxCol(predage); preyage++) {
       NconbyAge[inarea][predage][preyage] = 0.0;
       BconbyAge[inarea][predage][preyage] = 0.0;
     }
 
   for (predage = Alprop.minAge(); predage <= Alprop.maxAge(); predage++) {
-    for (preyage = NconbyAge[inarea].Mincol(predage);
-         preyage < NconbyAge[inarea].Maxcol(predage); preyage++) {
-      for (preyl = 0; preyl < prey->NoLengthGroups(); preyl++) {
-        for (predl = 0; predl < predator->NoLengthGroups(); predl++) {
+    for (preyage = NconbyAge[inarea].minCol(predage);
+         preyage < NconbyAge[inarea].maxCol(predage); preyage++) {
+      for (preyl = 0; preyl < prey->numLengthGroups(); preyl++) {
+        for (predl = 0; predl < predator->numLengthGroups(); predl++) {
           if (!(isZero(preyBcons[preyage][preyl])) && (!(isZero(predBcons[predl][preyl])))) {
             prop = predBcons[predl][preyl] * Alprop[predage][predl] / preyinfo->BconsumptionByLength(area)[preyl];
             B = prop * preyBcons[preyage][preyl];

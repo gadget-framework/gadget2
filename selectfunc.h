@@ -7,7 +7,7 @@
 
 /**
  * \class SelectFunc
- * \brief This is the base class used to calculate the selection level
+ * \brief This is the base class used to calculate the selection level as a function of length
  * \note This will always be overridden by the derived classes that actually calculate the selection level
  */
 class SelectFunc {

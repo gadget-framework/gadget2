@@ -28,7 +28,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   if (strcasecmp(text, "livesonareas") == 0) {
     infile >> ws;
     char c = infile.peek();
-    while (isdigit(c) && !infile.eof() && (i < Area->NoAreas())) {
+    while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
       tmpareas.resize(1);
       infile >> tmpint >> ws;
       if ((tmpareas[i] = Area->InnerArea(tmpint)) == -1)
@@ -83,7 +83,7 @@ LengthPrey* OtherFood::returnPrey() const {
 }
 
 void OtherFood::checkEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  prey->checkConsumption(area, TimeInfo->NrOfSubsteps());
+  prey->checkConsumption(area, TimeInfo->numSubSteps());
 }
 
 void OtherFood::CalcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {

@@ -108,7 +108,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   else
     handle.Unexpected("parameters", text);
 
-  q_l.resize(LgrpDiv->NoLengthGroups(), 0.0);
+  q_l.resize(LgrpDiv->numLengthGroups(), 0.0);
   infile >> text >> ws;
   if ((strcasecmp(text, "function") == 0)) {
     infile >> text;
@@ -118,7 +118,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
       if (suitfunction->usesPredLength())
         suitfunction->setPredLength(0.0);
 
-      for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+      for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
         if (suitfunction->usesPreyLength())
           suitfunction->setPreyLength(LgrpDiv->meanLength(i));
 
@@ -128,7 +128,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
 
   } else if (strcasecmp(text, "suitfile") == 0) {
     //read values from file
-    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++)
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
       infile >> q_l[i];
 
   } else {
@@ -401,12 +401,12 @@ void SurveyDistribution::calcIndex(const AgeBandMatrix* alptr, const TimeClass* 
   switch(fitnumber) {
     case 1:
       for (age = 0; age <= alptr->maxAge(); age++)
-        for (len = 0; len < LgrpDiv->NoLengthGroups(); len++)
+        for (len = 0; len < LgrpDiv->numLengthGroups(); len++)
           (*modelDistribution[index])[age][len] = parameters[0] * q_l[len] * ((*alptr)[age][len].N + parameters[1]);
       break;
     case 2:
       for (age = 0; age <= alptr->maxAge(); age++)
-        for (len = 0; len < LgrpDiv->NoLengthGroups(); len++)
+        for (len = 0; len < LgrpDiv->numLengthGroups(); len++)
           (*modelDistribution[index])[age][len] = parameters[0] * q_l[len] * pow((*alptr)[age][len].N, parameters[1]);
       break;
     default:

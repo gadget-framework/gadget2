@@ -7,6 +7,7 @@
 class TimeVariable {
 public:
   TimeVariable();
+  ~TimeVariable();
   void read(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
   void readFromFile(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
   operator double() const { return value; };
@@ -14,7 +15,6 @@ public:
   void Update(const TimeClass* const TimeInfo);
   void Delete(Keeper* const keeper) const;
   int DidChange(const TimeClass* const TimeInfo);
-  ~TimeVariable();
 private:
   int fromfile;
   int usemodelmatrix;

@@ -32,7 +32,6 @@
 #include "lengthpredator.h"
 #include "stockdistribution.h"
 #include "surveydistribution.h"
-#include "predatorindex.h"
 #include "migrationpenalty.h"
 #include "catchintons.h"
 
@@ -128,8 +127,8 @@ void Ecosystem::Initialise(int optimize) {
         break;
     }
 
-  if (optimize)
-    for (i = 0; i < Likely.Size(); i++)
+  if (optimize) {
+    for (i = 0; i < Likely.Size(); i++) {
       switch(Likely[i]->Type()) {
         case SURVEYINDICESLIKELIHOOD:
           ((SurveyIndices*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
@@ -152,9 +151,6 @@ void Ecosystem::Initialise(int optimize) {
         case STOCKDISTRIBUTIONLIKELIHOOD:
           ((StockDistribution*)Likely[i])->setFleetsAndStocks(fleetvec, stockvec);
           break;
-        case PREDATORINDICESLIKELIHOOD:
-          ((PredatorIndices*)Likely[i])->setPredatorsAndPreys(predvec, preyvec);
-          break;
         case MIGRATIONPENALTYLIKELIHOOD:
           ((MigrationPenalty*)Likely[i])->setStocks(stockvec);
           break;
@@ -173,17 +169,17 @@ void Ecosystem::Initialise(int optimize) {
           handle.logFailure("Error when initialising model - unrecognized likelihood type", Likely[i]->Type());
           break;
       }
-
-  //Initialise likelihood printers in likprintvec [10.04.00 MNAA]
-  //Moved this to the end, so the likelihood classes are initialised
-  //before the printer classes [12.07.00]
-  for (i = 0; i < likprintvec.Size(); i++)
-    switch(likprintvec[i]->Type()) {
-      case LIKELIHOODPRINTER:
-        ((LikelihoodPrinter*)(likprintvec[i]))->setLikely(Likely);
-        break;
-      default:
-        handle.logFailure("Error when initialising model - unrecognized printer type", likprintvec[i]->Type());
-        break;
     }
+
+    for (i = 0; i < likprintvec.Size(); i++) {
+      switch(likprintvec[i]->Type()) {
+        case LIKELIHOODPRINTER:
+          ((LikelihoodPrinter*)(likprintvec[i]))->setLikely(Likely);
+          break;
+        default:
+          handle.logFailure("Error when initialising model - unrecognized printer type", likprintvec[i]->Type());
+          break;
+      }
+    }
+  }
 }

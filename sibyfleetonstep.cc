@@ -36,7 +36,7 @@ void SIByFleetOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
    * let the length group division be according to LgrpDiv.
    * This means that aggregator.returnSum will return an
    * AgeBandMatrixPtrVector with only one element. That element will have
-   * 1 line (i.e. 1 age) and LgrpDiv.NoLengthGroups() columns. */
+   * 1 line (i.e. 1 age) and LgrpDiv.numLengthGroups() columns. */
 
   int minage = 100;
   int maxage = 0;

@@ -8,9 +8,8 @@ extern int FuncEval;
 Ecosystem::Ecosystem() {
 }
 
-Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
-  int calclikelihood, const char* const inputdir,
-  const char* const workingdir, const PrintInfo& pi) : printinfo(pi) {
+Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun, int calclikelihood,
+  const char* const inputdir, const char* const workingdir, const PrintInfo& pi) : printinfo(pi) {
 
   funceval = 0;
   interrupted = 0;
@@ -43,16 +42,9 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   infile.close();
   infile.clear();
 
-  //Dont print output line if doing a network run
-  if (!netrun) {
-    handle.logInformation("\nFinished reading input files, starting to run simulation");
-    handle.logMessage(""); //write a blank line to the log file
-  }
-
+  int i;
   Initialise(calclikelihood);
   basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size(), 0);
-
-  int i;
   for (i = 0; i < stockvec.Size(); i++)
     basevec[i] = stockvec[i];
   for (i = 0; i < otherfoodvec.Size(); i++)
@@ -60,6 +52,8 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   for (i = 0; i < fleetvec.Size(); i++)
     basevec[i + stockvec.Size() + otherfoodvec.Size()] = fleetvec[i];
 
+  handle.logInformation("\nFinished reading input files, starting to run simulation");
+  handle.logMessage("");  //write a blank line to the log file
 }
 
 Ecosystem::~Ecosystem() {
@@ -134,7 +128,7 @@ double Ecosystem::SimulateAndUpdate(double* x, int n) {
   PrintCounter2++;
 
   likelihood = 0.0;
-  int numvar = this->NoVariables();
+  int numvar = keeper->numVariables();
   DoubleVector val(numvar);
   DoubleVector initialvalues(numvar);
   IntVector opt(numvar);
@@ -211,7 +205,7 @@ void Ecosystem::ScaleVariables() const {
 }
 
 void Ecosystem::writeOptValues() const {
-  keeper->writeOptValues(likelihood, Likely);
+  keeper->writeOptValues(Likely);
 }
 
 void Ecosystem::ScaledValues(DoubleVector& val) const {

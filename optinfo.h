@@ -5,10 +5,12 @@
 
 /**
  * \class OptSearch
- * \brief This is the base class for the optimization, methods declared here are implemented in the derived classes
+ * \brief This is the base class used to perform the optimisation calculation for the model
+ *
+ * \note This will always be overridden by the derived classes that actually perform the optimisation calculation
 */
 class OptSearch {
- public:
+public:
   /**
    * \brief This is the default OptSearch constructor
    */
@@ -18,9 +20,9 @@ class OptSearch {
    */
   ~OptSearch() {};
   /**
-   * \brief This is the file reader that reads parameters for the optimising process
+   * \brief This is the function used to read in the optimisation parameters
    * \param infile is the CommentStream to read the optimisation parameters from
-   * \param text is the latest entry from infile
+   * \param text is a text string used to compare parameter names
    */
   virtual void Read(CommentStream& infile, char* text) {};
   /**
@@ -31,12 +33,13 @@ class OptSearch {
 
 /**
  * \class OptInfo
- * \brief This is the master class that controls the optimisation process within gadget
+ * \brief This is the master class used to control the optimisation process within gadget
  */
 class OptInfo {
- public:
+public:
   /**
    * \brief This is the default OptInfo constructor
+   * \param MainInfo is the MainInfo to read commandline options from
    */
   OptInfo(MainInfo* MainInfo);
   /**
@@ -48,11 +51,11 @@ class OptInfo {
    */
   void Optimize();
   /**
-   * \brief This is the file reader that determines what optimization methods are to used during optimization.
+   * \brief This is the function used to read in the optimisation function parameters
    * \param infile is the CommentStream to read the optimisation parameters from
    */
   void ReadOptInfo(CommentStream& infile);
- private:
+private:
   /**
    * \brief This is the flag used to denote whether Simulated Annealing is used in the optimisation or not
    */
@@ -66,15 +69,15 @@ class OptInfo {
    */
   int useBFGS;
   /**
-   * \brief This is the OptSearch that handles the Simulated Annealing optimisation
+   * \brief This is the OptSearch that performs the Simulated Annealing optimisation
    */
   OptSearch* optSimann;
   /**
-   * \brief This is the OptSearch that handles the Hooke & Jeeves optimisation
+   * \brief This is the OptSearch that performs the Hooke & Jeeves optimisation
    */
   OptSearch* optHJ;
   /**
-   * \brief This is the OptSearch that handles the BFGS optimisation
+   * \brief This is the OptSearch that performs the BFGS optimisation
    */
   OptSearch* optBFGS;
 };

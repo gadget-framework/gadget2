@@ -41,13 +41,13 @@ void PredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   int preyage, predl, preyl;
   double B, N, prop;
 
-  for (preyage = NconbyAge[inarea].Mincol(predage);
-       preyage < NconbyAge[inarea].Maxcol(predage); preyage++) {
+  for (preyage = NconbyAge[inarea].minCol(predage);
+       preyage < NconbyAge[inarea].maxCol(predage); preyage++) {
     NconbyAge[inarea][predage][preyage] = 0.0;
     BconbyAge[inarea][predage][preyage] = 0.0;
-    for (preyl = 0; preyl < prey->NoLengthGroups(); preyl++) {
+    for (preyl = 0; preyl < prey->numLengthGroups(); preyl++) {
       if (!(isZero(preyinfo->BconsumptionByLength(area)[preyl]))) {
-        for (predl = 0; predl < predator->NoLengthGroups(); predl++) {
+        for (predl = 0; predl < predator->numLengthGroups(); predl++) {
           if (!(isZero(preyBcons[preyage][preyl])) && (!(isZero(predBcons[predl][preyl])))) {
             prop = predBcons[predl][preyl] / preyinfo->BconsumptionByLength(area)[preyl];
             B = prop * preyBcons[preyage][preyl];

@@ -25,7 +25,7 @@ public:
    * \brief This is the function used to read in the action at times parameters
    * \param infile is the CommentStream to read the actionattimes parameters from
    * \param TimeInfo is the TimeClass for the current model
-   * \return 1 for success, 0 for failure
+   * \return 1 if the read from file was successful, 0 otherwise
    */
   int readFromFile(CommentStream& infile, const TimeClass* const TimeInfo);
   /**

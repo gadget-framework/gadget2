@@ -32,18 +32,15 @@
  * where n > 0. */
 
 class InitialInputFile {
-private:
-  VectorOfCharPtr header;
-  ParameterVector switches;
-  DoubleVector values;
-  DoubleVector lowerbound;
-  DoubleVector upperbound;
-  IntVector optimize;
-  CommentStream infile;
-  ifstream tmpinfile;
-  int repeatedValues;
 public:
+  /**
+   * \brief This is the default InitialInputFile constructor
+   * \param filename is the name of the file to read the initial parameter values from
+   */
   InitialInputFile(const char* const filename);
+  /**
+   * \brief This is the default InitialInputFile destructor
+   */
   ~InitialInputFile();
   void getValues(ParameterVector& sw, DoubleVector& val,
     DoubleVector& low, DoubleVector& upp, IntVector& opt);
@@ -52,17 +49,41 @@ public:
   void correctHeaderText(int index, const char* name);
   void readHeader();
   void readVectorFromLine();
-  void checkParameters();
   void readFromFile();
-  int NoVariables() const;
   int readSwitches() const;
+  int reachedEndOfFile();
+  int repeatedValuesFileFormat() { return repeatedValues; };
   int Optimize(int i) const;
   double Values(int i) const;
   double Lower(int i) const;
   double Upper(int i) const;
   Parameter Switches(int i) const;
-  int reachedEndOfFile();
-  int repeatedValuesFileFormat();
+  int numVariables();
+private:
+  CommentStream infile;
+  ifstream tmpinfile;
+  VectorOfCharPtr header;
+  /**
+   * \brief This is the ParameterVector used to store the parameters read from file
+   */
+  ParameterVector switches;
+  /**
+   * \brief This is the DoubleVector used to store the values of the parameters read from file
+   */
+  DoubleVector values;
+  /**
+   * \brief This is the DoubleVector used to store the lower bounds of the parameters read from file
+   */
+  DoubleVector lowerbound;
+  /**
+   * \brief This is the DoubleVector used to store the upper bounds of the parameters read from file
+   */
+  DoubleVector upperbound;
+  /**
+   * \brief This is the IntVector used to store the flag to denote whether to optimise the parameters read from file
+   */
+  IntVector optimize;
+  int repeatedValues;
 };
 
 #endif

@@ -16,15 +16,19 @@
 enum FitType { LOGLINEARFIT = 1, FIXEDSLOPELOGLINEARFIT, FIXEDLOGLINEARFIT, LINEARFIT, POWERFIT,
     FIXEDSLOPELINEARFIT, FIXEDLINEARFIT, FIXEDINTERCEPTLINEARFIT, FIXEDINTERCEPTLOGLINEARFIT };
 
+/**
+ * \class SIOnStep
+ * \brief This is the base class used to calculate a likelihood score by fitting the model population to survey index data
+  * \note This will always be overridden by the derived classes that actually calculate the survey indices and the likelihood score from the regression line
+ */
 class SIOnStep {
 public:
   SIOnStep(CommentStream& infile, const char* datafilename,
     const CharPtrVector& areaindex, const TimeClass* const TimeInfo,
-    int numcols, const IntMatrix& areas, const CharPtrVector& index1,
-    const CharPtrVector& index2, const char* name);
-  SIOnStep(CommentStream& infile, const char* datafilename,
-    const CharPtrVector& areaindex, const TimeClass* const TimeInfo,
     const IntMatrix& areas, const CharPtrVector& colindex, const char* name);
+  /**
+   * \brief This is the default SIOnStep destructor
+   */
   virtual ~SIOnStep();
   virtual void Sum(const TimeClass* const TimeInfo) = 0;
   virtual void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) = 0;
@@ -32,9 +36,8 @@ public:
   virtual void Reset(const Keeper* const keeper);
   virtual void Print(ofstream& outfile) const;
   virtual void LikelihoodPrint(ofstream& outfile);
-  virtual void SummaryPrint(ofstream& outfile, double weight);
 protected:
-  void setError() { error = 1; };
+  void setError() { error++; };
   int IsToSum(const TimeClass* const TimeInfo) const;
   /**
    * \brief This will return a null terminated text string containing the name of the SIOnStep object
@@ -45,24 +48,18 @@ protected:
   IntMatrix Areas;
   IntVector Years;
   IntVector Steps;
-  CharPtrVector areanames;
   ActionAtTimes AAT;
   DoubleMatrix Indices;
   DoubleMatrix abundance;
   FitType getFitType() { return fittype; };
 private:
-  void readSIData(CommentStream& infile, const CharPtrVector& index1,
-    const CharPtrVector& index2, const TimeClass* const TimeInfo);
-  void readSIData(CommentStream& infile,
+  void readSIData(CommentStream& infile, const CharPtrVector& areaindex,
     const CharPtrVector& colindex, const TimeClass* const TimeInfo);
-  double Fit(const DoubleVector& stocksize,
-    const DoubleVector& indices, int col);
-  int NumberOfSums;
+  double Fit(const DoubleVector& stocksize, const DoubleVector& indices, int col);
+  int numSums;
   FitType fittype;
   double slope;
   double intercept;
-  double score;
-  //Additions to facilitate printing
   DoubleVector slopes;
   DoubleVector intercepts;
   DoubleVector sse;

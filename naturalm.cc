@@ -20,9 +20,9 @@ void NaturalM::Reset(const TimeClass* const TimeInfo) {
   int age, shift;
 
   if (mortality.DidChange(TimeInfo) || TimeInfo->SizeOfStepDidChange()) {
-    shift = mortality.Mincol();
+    shift = mortality.minCol();
     timeratio = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-    for (age = mortality.Mincol(); age < mortality.Maxcol(); age++)
+    for (age = mortality.minCol(); age < mortality.maxCol(); age++)
       if (mortality[age] > verysmall)
         proportion[age - shift] = exp(-mortality[age] * timeratio);
       else
@@ -37,15 +37,7 @@ const DoubleVector& NaturalM::ProportionSurviving(const TimeClass* const TimeInf
 void NaturalM::Print(ofstream& outfile) {
   int i;
   outfile << "Natural mortality\n\t";
-  for (i = mortality.Mincol(); i < mortality.Maxcol(); i++)
+  for (i = mortality.minCol(); i < mortality.maxCol(); i++)
     outfile << mortality[i] << sep;
   outfile << endl;
-}
-
-const DoubleIndexVector& NaturalM::getMortality() const {
-  DoubleIndexVector* tmpvec = new DoubleIndexVector(mortality.Size(), mortality.Mincol());
-  int i;
-  for (i = tmpvec->Mincol(); i < tmpvec->Maxcol(); i++)
-    (*tmpvec)[i] = mortality[i];
-  return *tmpvec;
 }

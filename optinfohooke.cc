@@ -64,7 +64,7 @@ void OptInfoHooke::MaximizeLikelihood() {
 
   handle.logInformation("\nStarting Hooke and Jeeves");
 
-  nopt = EcoSystem->NoOptVariables();
+  nopt = EcoSystem->numOptVariables();
   DoubleVector val(nopt);
   DoubleVector lbds(nopt);
   DoubleVector ubds(nopt);

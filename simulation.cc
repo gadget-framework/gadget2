@@ -67,15 +67,15 @@ void Ecosystem::updateOneTimestepOneArea(int area) {
 
 void Ecosystem::SimulateOneTimestep() {
   int i;
-  while (TimeInfo->CurrentSubstep() <=  TimeInfo->NrOfSubsteps()) {
+  while (TimeInfo->CurrentSubstep() <=  TimeInfo->numSubSteps()) {
     for (i = 0; i < basevec.Size(); i++)
       basevec[i]->Migrate(TimeInfo);
-    for (i = 0; i < Area->NoAreas(); i++)
+    for (i = 0; i < Area->numAreas(); i++)
       SimulateOneAreaOneTimeSubstep(i);
     TimeInfo->IncrementSubstep();
   }
 
-  for (i = 0; i < Area->NoAreas(); i++)
+  for (i = 0; i < Area->numAreas(); i++)
     GrowthAndSpecialTransactions(i);
 }
 
@@ -117,7 +117,7 @@ void Ecosystem::Simulate(int Optimize, int print) {
         likprintvec[j]->Print(TimeInfo);
     }
 
-    for (j = 0; j < Area->NoAreas(); j++)
+    for (j = 0; j < Area->numAreas(); j++)
       updateOneTimestepOneArea(j);
 
     #ifdef INTERRUPT_HANDLER

@@ -51,7 +51,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
     if (TimeInfo->IsWithinPeriod(year, step)) {
 
       RenewalTime.resize(1);
-      RenewalTime[i] = TimeInfo->CalcSteps(year, step);
+      RenewalTime[i] = TimeInfo->calcSteps(year, step);
 
       if (!this->IsInArea(Area->InnerArea(area)))
         handle.Message("Stock undefined on area for renewal");
@@ -72,7 +72,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
         //the corresponding mean weights. Both are assumed to be vectors of
         //length no. We read them into the indexvectors numtmpindvec and
         //weighttmpindvec, create poptmp and then keep it in Distribution.
-        ind = LgrpDiv->NoLengthGroup(minlength);
+        ind = LgrpDiv->numLengthGroup(minlength);
         DoubleIndexVector* numtmpindvec = new DoubleIndexVector(no, ind);
         DoubleIndexVector* weighttmpindvec = new DoubleIndexVector(no, ind);
         PopInfoIndexVector poptmp(no, ind);
@@ -82,7 +82,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
         if (!readIndexVector(infile, (*weighttmpindvec)))
           handle.Message("Failure in weights of recruits");
 
-        for (ind = poptmp.Mincol(); ind < poptmp.Maxcol(); ind++) {
+        for (ind = poptmp.minCol(); ind < poptmp.maxCol(); ind++) {
           poptmp[ind].N = (*numtmpindvec)[ind];
           poptmp[ind].W = (*weighttmpindvec)[ind];
           //Check if any (i.e. nonzero) part of the population has zero mean weight.
@@ -99,7 +99,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
         coeff1.resize(1, keeper);
         coeff2.resize(1, keeper);
 
-        PopInfoIndexVector poptmp(LgrpDiv->NoLengthGroups(), 0);
+        PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
         Distribution.resize(1, new AgeBandMatrix(age, poptmp));
         if (!(infile >> Number[i]))
           handle.Message("Wrong format for renewalmultiplier");

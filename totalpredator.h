@@ -35,17 +35,17 @@ public:
    * \param Temperature is the temperature of the area (not used in this calculation)
    * \param Areasize is the size of the area (not used in this calculation)
    * \param CurrentSubstep is the substep of the current timestep (so this calculation takes place once per timestep)
-   * \param NrOfSubsteps is the number of substeps in the current timestep
+   * \param numsubsteps is the number of substeps in the current timestep
    */
   virtual void Eat(int area, double LengthOfStep, double Temperature,
-    double Areasize, int CurrentSubstep, int NrOfSubsteps);
+    double Areasize, int CurrentSubstep, int numsubsteps);
   /**
    * \brief This will adjust the amount the predator consumes for a given area and timestep, to take oversconsumption into consideration
    * \param area is the area that the prey consumption is being calculated on
    * \param CurrentSubstep is the substep of the current timestep (so this calculation takes place once per timestep)
-   * \param NrOfSubsteps is the number of substeps in the current timestep
+   * \param numsubsteps is the number of substeps in the current timestep
    */
-  virtual void adjustConsumption(int area, int NrOfSubsteps, int CurrentSubstep);
+  virtual void adjustConsumption(int area, int numsubsteps, int CurrentSubstep);
   /**
    * \brief This function will print the predator information
    * \param outfile is the ofstream that all the model information gets sent to

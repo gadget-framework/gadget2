@@ -37,7 +37,7 @@ public:
   void setStock(StockPtrVector& stockvec);
   /**
    * \brief This will store the part of the younger stock that will move into the older stocks
-   * \param area is the area that the maturation is being calculated on
+   * \param area is the area that the transition is being calculated on
    * \param Alkeys is the AgeBandMatrix of the stock that fish will move from
    * \param TagAlkeys is the AgeBandMatrixRatio of the tagged stock that fish will move from
    * \param TimeInfo is the TimeClass for the current model

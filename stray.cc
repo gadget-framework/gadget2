@@ -10,8 +10,8 @@
 extern ErrorHandler handle;
 
 StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgrpdiv,
-  const IntVector& Areas, const AreaClass* const Area, const TimeClass* const TimeInfo,
-  Keeper* const keeper) : LivesOnAreas(Areas) {
+  const IntVector& areas, const AreaClass* const Area, const TimeClass* const TimeInfo,
+  Keeper* const keeper) : LivesOnAreas(areas) {
 
   keeper->addString("stray");
   int i;
@@ -22,7 +22,7 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
   CommentStream subdata(datafile);
 
   LgrpDiv = new LengthGroupDivision(*lgrpdiv);
-  strayProportion.resize(LgrpDiv->NoLengthGroups(), 0.0);
+  strayProportion.resize(LgrpDiv->numLengthGroups(), 0.0);
 
   infile >> text >> ws;
   if (!((strcasecmp(text, "straystep") == 0) || (strcasecmp(text, "straysteps") == 0)))
@@ -158,9 +158,9 @@ void StrayData::setStock(StockPtrVector& stockvec) {
       minlength = strayStocks[i]->returnLengthGroupDiv()->minLength();
   }
 
-  minStrayLength = LgrpDiv->NoLengthGroup(minlength);
+  minStrayLength = LgrpDiv->numLengthGroup(minlength);
   IntVector minlv(maxStrayAge - minStrayAge + 1, 0);
-  IntVector sizev(maxStrayAge - minStrayAge + 1, LgrpDiv->NoLengthGroups());
+  IntVector sizev(maxStrayAge - minStrayAge + 1, LgrpDiv->numLengthGroups());
   Storage.resize(areas.Size(), minStrayAge, minlv, sizev);
   TagStorage.resize(areas.Size(), minStrayAge, minlv, sizev);
   for (i = 0; i < Storage.Size(); i++) {
@@ -248,7 +248,7 @@ void StrayData::Reset(const TimeClass* const TimeInfo) {
 
   fnProportion->updateConstants(TimeInfo);
   if (fnProportion->constantsHaveChanged(TimeInfo)) {
-    for (i = 0; i < LgrpDiv->NoLengthGroups(); i++) {
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       strayProportion[i] = fnProportion->calculate(LgrpDiv->meanLength(i));
       if (strayProportion[i] < 0.0) {
         handle.logWarning("Warning in straying - function outside bounds", strayProportion[i]);

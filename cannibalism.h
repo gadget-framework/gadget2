@@ -20,7 +20,7 @@ public:
     const AgeBandMatrix& alk_pred, const LengthGroupDivision* len_prey,
     const LengthGroupDivision* len_pred, const TimeClass* const TimeInfo,
     int pred_no, const DoubleVector& natm);
-  int nrOfPredators() { return nrofpredators; };
+  int numPredators() { return numpred; };
   const char* predatorName(int pred) { return predatornames[pred]; };
   int getMinPredAge();
   int getMaxPredAge();
@@ -33,7 +33,7 @@ protected:
   DoubleIndexVector altfood;
   IntMatrix overlap;    // overlap[predator][substep]
   CharPtrVector predatornames;
-  int nrofpredators;
+  int numpred;
   Formula delta;
   FormulaVector params;
   FormulaVector cann_lev;

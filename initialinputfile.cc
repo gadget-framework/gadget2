@@ -1,10 +1,5 @@
 #include "initialinputfile.h"
-#include "readfunc.h"
 #include "gadget.h"
-
-int InitialInputFile::repeatedValuesFileFormat() {
-  return repeatedValues;
-}
 
 int InitialInputFile::reachedEndOfFile() {
   infile >> ws;
@@ -198,7 +193,28 @@ void InitialInputFile::readFromFile() {
       if (infile.eof())
         check++;
     }
-    checkParameters();
+
+    // check that the parameters have been read correctly
+    if (upperbound.Size() != lowerbound.Size()) {
+      cerr << "Error in initialinput - failed to read bounds\n";
+      exit(EXIT_FAILURE);
+
+    } else if (upperbound.Size() == 0) {
+      cerr << "Error in initialinput - failed to read bounds\n";
+      exit(EXIT_FAILURE);
+
+    } else if (values.Size() != switches.Size()) {
+      cerr << "Error in initialinput - failed to read switches\n";
+      exit(EXIT_FAILURE);
+
+    } else if (values.Size() != lowerbound.Size()) {
+      cerr << "Error in initialinput - failed to read bounds\n";
+      exit(EXIT_FAILURE);
+
+    } else if (optimize.Size() != values.Size()) {
+      cerr << "Error in initialinput - failed to read optimise\n";
+      exit(EXIT_FAILURE);
+    }
 
   } else {
     readVectorFromLine();
@@ -252,58 +268,31 @@ void InitialInputFile::readVectorFromLine() {
     values[i] = tempValues[i];
 }
 
-void InitialInputFile::checkParameters() {
-  if (upperbound.Size() != lowerbound.Size()) {
-    cerr << "Error in initialinput - failed to read bounds\n";
-    exit(EXIT_FAILURE);
-
-  } else if (upperbound.Size() == 0) {
-    cerr << "Error in initialinput - failed to read bounds\n";
-    exit(EXIT_FAILURE);
-
-  } else if (values.Size() != switches.Size()) {
-    cerr << "Error in initialinput - failed to read switches\n";
-    exit(EXIT_FAILURE);
-
-  } else if (values.Size() != lowerbound.Size()) {
-    cerr << "Error in initialinput - failed to read bounds\n";
-    exit(EXIT_FAILURE);
-
-  } else if (optimize.Size() != values.Size()) {
-    cerr << "Error in initialinput - failed to read optimise\n";
-    exit(EXIT_FAILURE);
-  }
-}
-
-int InitialInputFile::NoVariables() const {
-  return values.Size();
-}
-
 int InitialInputFile::readSwitches() const {
   return (switches.Size() > 0);
 }
 
+// functions from here are only required when running in gadget from paramin
+int InitialInputFile::numVariables() {
+  return values.Size();
+}
+
 int InitialInputFile::Optimize(int i) const {
-  assert((i < optimize.Size()) && (i >= 0));
   return optimize[i];
 }
 
 double InitialInputFile::Values(int i) const {
-  assert((i < values.Size()) && (i >= 0));
   return values[i];
 }
 
 double InitialInputFile::Lower(int i) const {
-  assert((i < lowerbound.Size()) && (i >= 0));
   return lowerbound[i];
 }
 
 double InitialInputFile::Upper(int i) const {
-  assert((i < upperbound.Size()) && (i >= 0));
   return upperbound[i];
 }
 
 Parameter InitialInputFile::Switches(int i) const {
-  assert((i < switches.Size()) && (i >= 0));
   return switches[i];
 }

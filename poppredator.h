@@ -18,7 +18,7 @@ public:
   virtual const DoubleVector& Consumption(int area) const { return totalconsumption[AreaNr[area]]; };
   virtual const DoubleVector& OverConsumption(int area) const { return overconsumption[AreaNr[area]]; };
   virtual const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
-  virtual int NoLengthGroups() const { return LgrpDiv->NoLengthGroups(); };
+  virtual int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
   virtual double Length(int i) const { return LgrpDiv->meanLength(i); };
   virtual void Reset(const TimeClass* const TimeInfo);
   virtual const double consumedBiomass(int prey_nr, int area_nr) const;

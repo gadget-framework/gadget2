@@ -33,7 +33,7 @@ void PredStdInfoByLength::InitialiseObjects() {
     BconbyLength.Delete(0);
   }
   //Create a BandMatrix bm, filled with 0.
-  DoubleMatrix dm(predator->NoLengthGroups(), prey->NoLengthGroups(), 1);
+  DoubleMatrix dm(predator->numLengthGroups(), prey->numLengthGroups(), 1);
   BandMatrix bm(dm);
   int i, j;
   for (i = 0; i < bm.Nrow(); i++)

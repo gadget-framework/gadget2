@@ -11,7 +11,7 @@ extern ErrorHandler handle;
 Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* len_prey,
   const TimeClass* const TimeInfo, Keeper* const keeper)
   : altfood(TimeInfo->TotalNoSteps(), TimeInfo->FirstStep(), 0), params(3),
-    cann_lev(TimeInfo->TotalNoSteps()), cannibalism(len_prey->NoLengthGroups(), 0) {
+    cann_lev(TimeInfo->TotalNoSteps()), cannibalism(len_prey->numLengthGroups(), 0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -34,14 +34,14 @@ Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* len_p
     infile >> text >> ws;
   }
 
-  nrofpredators = predatornames.Size();
-  if (nrofpredators == 0)
+  numpred = predatornames.Size();
+  if (numpred == 0)
     handle.Message("Error in cannibalism - no predators");
 
   //reading predator ages
   if (strcasecmp(text, "predminages") == 0) {
-    minage.resize(nrofpredators);
-    for (i = 0; i < nrofpredators; i++)
+    minage.resize(numpred);
+    for (i = 0; i < numpred; i++)
       infile >> minage[i];
     infile >> ws;
   } else
@@ -49,14 +49,14 @@ Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* len_p
 
   infile >> text >> ws;
   if (strcasecmp(text, "predmaxages") == 0) {
-    maxage.resize(nrofpredators);
-    for (i = 0; i < nrofpredators; i++)
+    maxage.resize(numpred);
+    for (i = 0; i < numpred; i++)
       infile >> maxage[i];
     infile >> ws;
   } else
     handle.Unexpected("predmaxages", text);
 
-  for (i = 0; i < nrofpredators; i++)
+  for (i = 0; i < numpred; i++)
     agegroups.AddRows(1, maxage[i] - minage[i] + 1, 0);
 
   //reading delta
@@ -107,7 +107,7 @@ Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* len_p
 
   //read overlap data
   infile >> text >> ws;
-  overlap.AddRows(nrofpredators, TimeInfo->StepsInYear(), 0);
+  overlap.AddRows(numpred, TimeInfo->StepsInYear(), 0);
   if (strcasecmp(text, "overlap") == 0) {
     for (i = 0; i < overlap.Nrow(); i++) {
       for (j = 0; j < overlap.Ncol(i); j++) {
@@ -121,9 +121,9 @@ Cannibalism::Cannibalism(CommentStream& infile, const LengthGroupDivision* len_p
     handle.Unexpected("overlap", text);
 
   //set dimension on the consumption matrices
-  consumption.resize(nrofpredators);
-  for (i = 0; i < nrofpredators; i++)
-    consumption[i] = new BandMatrix(0, LgrpDiv->NoLengthGroups(), minage[i], maxage[i] - minage[i] + 1, 0.0);
+  consumption.resize(numpred);
+  for (i = 0; i < numpred; i++)
+    consumption[i] = new BandMatrix(0, LgrpDiv->numLengthGroups(), minage[i], maxage[i] - minage[i] + 1, 0.0);
 
   keeper->clearLast();
 }
@@ -147,7 +147,7 @@ const DoubleVector& Cannibalism::Mortality(const AgeBandMatrix& alk_prey,
   int minage, maxage;
   double biomass, otherbiomass_factor, len, mort_fact, mortality;
 
-  prey_size = len_prey->NoLengthGroups();
+  prey_size = len_prey->numLengthGroups();
   //assert(alk_pred.minAge() == minage[pred_no]);
   assert(alk_pred.Nrow() == (*consumption[pred_no]).Nrow());
   assert(prey_size == (*consumption[pred_no]).Ncol());
@@ -275,7 +275,7 @@ void Cannibalism::Print(ofstream& outfile) {
   for (i = 0; i < params.Size(); i++)
     outfile << params[i] << sep;
   outfile << "\nAltfood\n";
-  for (i = altfood.Mincol(); i < altfood.Maxcol(); i++)
+  for (i = altfood.minCol(); i < altfood.maxCol(); i++)
     outfile << altfood[i] << sep;
   outfile << "\nMortality\n";
   for (i = 0; i < cannibalism.Size(); i++)
