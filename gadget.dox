@@ -76,7 +76,7 @@ WARN_LOGFILE           = /home/james/gadget/doxygen/gadget.err
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = /home/james/gadget/source/
-FILE_PATTERNS          = *.h *.cc *.icc
+FILE_PATTERNS          = *.h
 RECURSIVE              = NO
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = YES
