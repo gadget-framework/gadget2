@@ -491,46 +491,23 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 }
 
 double CatchDistribution::calcLikMultinomial() {
-  int area, age, len;
-
-  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
-  DoubleMatrixPtrVector Dist(alptr->Size());
-  for (area = 0; area < areas.Nrow(); area++) {
-    Dist[area] = new DoubleMatrix(aggregator->numAgeGroups(), aggregator->numLengthGroups(), 0.0);
-
-    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
-      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
-        (*Dist[area])[age][len] = ((*alptr)[area][age][len]).N;
-  }
 
   //The object MN does most of the work, accumulating likelihood
   Multinomial MN(epsilon);
-  for (area = 0; area < Dist.Size(); area++) {
-    likelihoodValues[timeindex][area] = 0.0;
-    if (obsDistribution[timeindex][area]->Nrow() == 1) {
-      //If there is only one agegroup, we calculate loglikelihood
-      //based on the length group division
-      likelihoodValues[timeindex][area] += MN.calcLogLikelihood((*obsDistribution[timeindex][area])[0], (*Dist[area])[0]);
-      for (len = 0; len < obsDistribution[timeindex][area]->Ncol(0); len++)
-        (*modelDistribution[timeindex][area])[0][len] = (*Dist[area])[0][len];
+  int area, age, len;
+  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
 
-    } else {
-      //Calculate loglikelihood based on age distribution within each length
-      //group. To be able to use the Multinomial class, we must organize the
-      //data such that we get vectors with the age group distribution.
-      for (len = 0; len < Dist[area]->Ncol(0); len++) {
-        DoubleVector dist(Dist[area]->Nrow());
-        DoubleVector data(Dist[area]->Nrow());
-        for (age = 0; age < dist.Size(); age++) {
-          dist[age] = (*Dist[area])[age][len];
-          data[age] = (*obsDistribution[timeindex][area])[age][len];
-        }
-        likelihoodValues[timeindex][area] += MN.calcLogLikelihood(data, dist);
-        for (age = 0; age < dist.Size(); age++)
-          (*modelDistribution[timeindex][area])[age][len] = dist[age];
-      }
-    }
-    delete Dist[area];
+  for (area = 0; area < areas.Nrow(); area++) {
+    likelihoodValues[timeindex][area] = 0.0;
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
+        (*modelDistribution[timeindex][area])[age][len] = ((*alptr)[area][age][len]).N;
+
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+      likelihoodValues[timeindex][area] +=
+        MN.calcLogLikelihood((*obsDistribution[timeindex][area])[age],
+          (*modelDistribution[timeindex][area])[age]);
+
   }
   return MN.returnLogLikelihood();
 }

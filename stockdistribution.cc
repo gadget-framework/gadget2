@@ -355,13 +355,19 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 //The code here is probably unnessecarily complicated because
 //is always only one length group with this class.
 double StockDistribution::calcLikMultinomial() {
+
+  //The object MN does most of the work, accumulating likelihood
+  Multinomial MN(epsilon);
+  int age, len, area, sn, i, minage, maxage, num;
   const AgeBandMatrixPtrVector* alptr;
   DoubleMatrixPtrVector Dist(areas.Nrow());
-  int age, len, area, sn, i, minage, maxage;
+  DoubleVector likdata(stocknames.Size(), 0.0);
 
+  num = aggregator[0]->numAgeGroups() * aggregator[0]->numLengthGroups();
   for (area = 0; area < Dist.Size(); area++) {
-    Dist[area] = new DoubleMatrix(aggregator[0]->numAgeGroups() *
-      aggregator[0]->numLengthGroups(), stocknames.Size(), 0.0);
+    likelihoodValues[timeindex][area] = 0.0;
+    Dist[area] = new DoubleMatrix(num, stocknames.Size(), 0.0);
+
     for (sn = 0; sn < stocknames.Size(); sn++) {
       alptr = &aggregator[sn]->returnSum();
       minage = (*alptr)[area].minAge();
@@ -374,13 +380,7 @@ double StockDistribution::calcLikMultinomial() {
         }
       }
     }
-  }
 
-  //The object MN does most of the work, accumulating likelihood
-  Multinomial MN(epsilon);
-  DoubleVector likdata(stocknames.Size());
-  for (area = 0; area < Dist.Size(); area++) {
-    likelihoodValues[timeindex][area] = 0.0;
     for (i = 0; i < Dist[area]->Nrow(); i++) {
       for (sn = 0; sn < stocknames.Size(); sn++)
         likdata[sn] = (*obsDistribution[timeindex][area])[sn][i];

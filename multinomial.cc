@@ -25,7 +25,7 @@ double Multinomial::calcLogLikelihood(const DoubleVector& data, const DoubleVect
   if (isZero(sumdist))
     return 0.0;
 
-  tmpsum = 1 / sumdist;
+  tmpsum = 1.0 / sumdist;
   for (i = 0; i < data.Size(); i++) {
     if (isZero(data[i]))
       likely += 0.0;
@@ -36,10 +36,10 @@ double Multinomial::calcLogLikelihood(const DoubleVector& data, const DoubleVect
   }
 
   sumlog -= logFactorial(sumdata);
-  tmpsum = likely + sumlog;
+  tmpsum = 2.0 * (likely + sumlog);
   if (tmpsum < 0)
     handle.logWarning("Warning in multinomial - negative total", tmpsum);
 
-  loglikelihood += 2.0 * tmpsum;
+  loglikelihood += tmpsum;
   return tmpsum;
 }
