@@ -22,7 +22,7 @@ public:
   virtual int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
   virtual double Length(int i) const { return LgrpDiv->meanLength(i); };
   virtual void Reset(const TimeClass* const TimeInfo);
-  virtual const double consumedBiomass(int prey_nr, int area_nr) const;
+  virtual const double getConsumptionBiomass(int prey, int area) const;
 protected:
   virtual void DeleteParametersForPrey(int prey, Keeper* const keeper);
   virtual void resizeObjects();

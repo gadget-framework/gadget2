@@ -45,6 +45,7 @@ TimeClass::TimeClass(CommentStream& infile) {
     handle.Warning("Warning - time period is empty");
   currentyear = firstyear;
   currentstep = firststep;
+  currentsubstep = 1;
   handle.logMessage("Read time file - number of timesteps", this->TotalNoSteps());
 }
 

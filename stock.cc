@@ -338,11 +338,11 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
     spawner->Reset(TimeInfo);
   if (doesstray)
     stray->Reset(TimeInfo);
+  if (iseaten)
+    prey->Reset();
 
   if (TimeInfo->CurrentTime() == 1) {
     initial->Initialise(Alkeys);
-    if (iseaten)
-      prey->Reset();
     if (doesrenew)
       renewal->Reset();
     if (doesgrow)

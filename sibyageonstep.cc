@@ -22,17 +22,6 @@ SIByAgeOnStep::~SIByAgeOnStep() {
 }
 
 void SIByAgeOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
-
-  /* This function initialises aggregator. It should:
-   *  merge all the areas in Areas
-   *  merge all length groups of the stocks
-   *  merge all the stocks in Stocks
-   *  merge all the age groups in ages[i]
-   * This means that aggregator.returnSum will return an
-   * AgeBandMatrixPtrVector with only one element. That element will have
-   * ages.Nrow() lines (i.e. ages) and only 1 column (i.e. 1 length group)*/
-
-  //create a LengthGroupDivision for aggregator to use.
   int i;
   double minlength = Stocks[0]->returnLengthGroupDiv()->minLength();
   double maxlength = minlength;

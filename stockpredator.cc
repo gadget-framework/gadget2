@@ -106,7 +106,7 @@ void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
 }
 
 void StockPredator::Reset(const TimeClass* const TimeInfo) {
-  this->PopPredator::Reset(TimeInfo);
+  PopPredator::Reset(TimeInfo);
   int a, l, age;
   if (TimeInfo->CurrentTime() == 1) {
     for (a = 0; a < areas.Size(); a++) {
@@ -152,19 +152,11 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     Phi[inarea][predl] = 0.0;
-    if (CurrentSubstep == 1) {
+    if (CurrentSubstep == 1)
       fphi[inarea][predl] = 0.0;
-      totalconsumption[inarea][predl] = 0.0;
-      overconsumption[inarea][predl] = 0.0;
-      for (prey = 0; prey < numPreys(); prey++)
-        if (Preys(prey)->isInArea(area))
-          for (preyl = Suitability(prey)[predl].minCol();
-              preyl < Suitability(prey)[predl].maxCol(); preyl++)
-            consumption[inarea][prey][predl][preyl] = 0.0;
-    }
   }
 
-  this->calcMaxConsumption(Temperature, area, CurrentSubstep, numsubsteps, LengthOfStep);
+  this->calcMaxConsumption(Temperature, inarea, CurrentSubstep, numsubsteps, LengthOfStep);
 
   //Now maxconbylength contains the maximum consumption by length
   //Calculating Phi(L) and O(l,L,prey) (stored in consumption)
@@ -282,10 +274,9 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
  * one substep Alprop is only set on the last step.  This should possibly be
  * changed in later versions but that change would mean storage of Alkeys as
  * well as Alprop.  This change should though not have to be made.*/
-void StockPredator::calcMaxConsumption(double Temperature, int area,
+void StockPredator::calcMaxConsumption(double Temperature, int inarea,
   int CurrentSubstep, int numsubsteps, double LengthOfStep) {
 
-  int inarea = this->areaNum(area);
   int length, age;
   double tmp, timeratio = LengthOfStep / numsubsteps;
 

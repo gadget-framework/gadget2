@@ -52,7 +52,7 @@ void StockPrey::Print(ofstream& outfile) const {
 }
 
 void StockPrey::Reset() {
-  this->Prey::Reset();
+  Prey::Reset();
   int area, age, l;
   for (area = 0; area < areas.Size(); area++) {
     for (age = Alkeys[area].minAge(); age <= Alkeys[area].maxAge(); age++) {

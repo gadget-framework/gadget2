@@ -31,21 +31,6 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
   int prey, predl, preyl;
   double tmp;
 
-  for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-    if (CurrentSubstep == 1) {
-      totalconsumption[inarea][predl] = 0.0;
-      overconsumption[inarea][predl] = 0.0;
-      for (prey = 0; prey < numPreys(); prey++) {
-        if (Preys(prey)->isInArea(area)) {
-          for (preyl = Suitability(prey)[predl].minCol();
-              preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-            consumption[inarea][prey][predl][preyl] = 0.0;
-          }
-        }
-      }
-    }
-  }
-
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     totalcons[inarea][predl] = 0.0;
 

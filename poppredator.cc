@@ -71,9 +71,10 @@ const BandMatrix& PopPredator::Consumption(int area, const char* preyname) const
   exit(EXIT_FAILURE);
 }
 
-const double PopPredator::consumedBiomass(int prey, int area) const{
+const double PopPredator::getConsumptionBiomass(int prey, int area) const{
   int age, len;
   double tons = 0.0;
+  //Note area is already the internal area ...
   const BandMatrix& bio = consumption[area][prey];
   for (age = bio.minAge(); age <= bio.maxAge(); age++)
     for (len = bio.minLength(age); len < bio.maxLength(age); len++)
@@ -87,7 +88,7 @@ void PopPredator::DeleteParametersForPrey(int prey, Keeper* const keeper) {
 }
 
 void PopPredator::Reset(const TimeClass* const TimeInfo) {
-  this->Predator::Reset(TimeInfo);
+  Predator::Reset(TimeInfo);
   //Now the matrices Suitability(prey) are of the correct size.
   //We must adjust the size of consumption accordingly.
   int i, j, area, prey;
@@ -98,22 +99,27 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
         cons.ChangeElement(area, prey, Suitability(prey));
         consumption.ChangeElement(area, prey, Suitability(prey));
         for (i = 0; i < Suitability(prey).Nrow(); i++)
-          for (j = consumption[area][prey].minCol(i);
-              j < consumption[area][prey].maxCol(i); j++)
+          for (j = consumption[area][prey].minCol(i); j < consumption[area][prey].maxCol(i); j++)
             consumption[area][prey][i][j] = 0.0;
       }
     }
   }
-  if (TimeInfo->CurrentTime() == 1) {
+
+  if (TimeInfo->CurrentSubstep() == 1) {
     for (area = 0; area < areas.Size(); area++) {
       for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
         Prednumber[area][i].N = 0.0;
         Prednumber[area][i].W = 0.0;
         overconsumption[area][i] = 0.0;
         totalconsumption[area][i] = 0.0;
+        for (prey = 0; prey < numPreys(); prey++)
+          for (j = consumption[area][prey].minCol(i); j < consumption[area][prey].maxCol(i); j++)
+            consumption[area][prey][i][j] = 0.0;
+
       }
     }
   }
+
   handle.logMessage("Reset predatation data for predator", this->Name());
 }
 
@@ -144,20 +150,10 @@ void PopPredator::resizeObjects() {
 }
 
 double PopPredator::getTotalOverConsumption(int area) const {
-  int i, areaid;
+  int i, inarea = this->areaNum(area);
   double total;
-
-  areaid = -1;
-  for (i = 0; i < areas.Size(); i++)
-    if (area == areas[i])
-      areaid = i;
-
-  if ((areaid < 0) || (areaid >= overconsumption.Nrow()))
-    handle.logWarning("Warning in predator - invalid area identifier", area);
-
   total = 0.0;
-  for (i = 0; i < overconsumption.Ncol(areaid); i++)
-    total += overconsumption[areaid][i];
-
+  for (i = 0; i < overconsumption.Ncol(inarea); i++)
+    total += overconsumption[inarea][i];
   return total;
 }

@@ -163,7 +163,7 @@ double CatchInTons::calcLikSumSquares(const TimeClass* const TimeInfo) {
       for (f = 0; f < preyindex.Nrow(); f++) {
         pred = (PopPredator*)fleets[f]->returnPredator();
         for (p = 0; p < preyindex.Ncol(f); p++)
-          modelDistribution[timeindex][a] += pred->consumedBiomass(preyindex[f][p], a2);
+          modelDistribution[timeindex][a] += pred->getConsumptionBiomass(preyindex[f][p], a2);
       }
     }
 

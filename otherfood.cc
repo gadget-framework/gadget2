@@ -88,8 +88,7 @@ void OtherFood::checkEat(int area, const AreaClass* const Area, const TimeClass*
 
 void OtherFood::calcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   PopInfo pop;
-  //Warning: Choose the weight as 1.
-  pop.W = 1.0;
+  pop.W = 1.0;   //warning - need to choose the weight to be 1
   pop.N = amount[TimeInfo->CurrentTime()][this->areaNum(area)] * Area->Size(area);
   PopInfoVector NumberInArea(1, pop);
   prey->SumUsingPopInfo(NumberInArea, area, TimeInfo->CurrentSubstep());
@@ -102,8 +101,6 @@ void OtherFood::Print(ofstream& outfile) const {
 }
 
 void OtherFood::Reset(const TimeClass* const TimeInfo) {
-  if (TimeInfo->CurrentTime() == 1) {
-    prey->Reset();
-    handle.logMessage("Reset otherfood data for", this->Name());
-  }
+  prey->Reset();
+  handle.logMessage("Reset otherfood data for", this->Name());
 }

@@ -25,7 +25,7 @@ public:
   virtual void Reset(const TimeClass* const TimeInfo);
 protected:
   virtual void resizeObjects();
-  virtual void calcMaxConsumption(double Temperature, int area, int CurrentSubstep,
+  virtual void calcMaxConsumption(double Temperature, int inarea, int CurrentSubstep,
     int numsubsteps, double LengthOfStep);
   double maxConsumption(double Length, const FormulaVector &maxcon, double Temperature);
   FormulaVector maxconsumption;
