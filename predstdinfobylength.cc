@@ -58,14 +58,21 @@ void PredStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
   int predl, preyl;
   double proportion;
 
-  for (predl = 0; predl < NconbyLength[inarea].Nrow(); predl++)
+  for (predl = 0; predl < NconbyLength[inarea].Nrow(); predl++) {
     for (preyl = 0; preyl < NconbyLength[inarea].Ncol(); preyl++) {
+      if (isZero(BpreyEaten[preyl])) {
+      NconbyLength[inarea][predl][preyl] = 0.0;
+      BconbyLength[inarea][predl][preyl] = 0.0;
+      MortbyLength[inarea][predl][preyl] = 0.0;
+      } else {
       //proportion equals the proportion of the predation on preyl that predl acounts for.
-      proportion = (isZero(BpreyEaten[preyl]) ? 0 : BpredEaten[predl][preyl] / BpreyEaten[preyl]);
+      proportion = BpredEaten[predl][preyl] / BpreyEaten[preyl];
       NconbyLength[inarea][predl][preyl] = proportion * NpreyEaten[preyl];
       BconbyLength[inarea][predl][preyl] = proportion * BpreyEaten[preyl];
       MortbyLength[inarea][predl][preyl] = proportion * TotpreyMort[preyl];
+      }
     }
+  }
 }
 
 const BandMatrix& PredStdInfoByLength::NconsumptionByLength(int area) const {

@@ -280,9 +280,12 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
     minage = 999;
     maxage = 0;
     for (i = 0; i < stocks.Size(); i++) {
-      minage = (minage < stocks[i]->minAge() ? minage : stocks[i]->minAge());
-      maxage = (maxage > stocks[0]->maxAge() ? maxage : stocks[i]->maxAge());
+      if (stocks[i]->minAge() < minage)
+        minage = stocks[i]->minAge();
+      if (maxage < stocks[i]->maxAge())
+        maxage = stocks[i]->maxAge();
     }
+
     for (i = 0; i <= maxage - minage; i++)
       agematrix[0].resize(1, minage + i);
 

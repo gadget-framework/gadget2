@@ -285,8 +285,10 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     minage = 999;
     maxage = 0;
     for (i = 0; i < stocks.Size(); i++) {
-      minage = (minage < stocks[i]->minAge() ? minage : stocks[i]->minAge());
-      maxage = (maxage > stocks[i]->maxAge() ? maxage : stocks[i]->maxAge());
+      if (stocks[i]->minAge() < minage)
+        minage = stocks[i]->minAge();
+      if (maxage < stocks[i]->maxAge())
+        maxage = stocks[i]->maxAge();
     }
 
     IntMatrix ages(1, 0);

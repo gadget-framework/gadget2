@@ -25,14 +25,12 @@ void SIByAgeOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
   int i;
   double minlength = Stocks[0]->returnLengthGroupDiv()->minLength();
   double maxlength = minlength;
-  double stockminlength, stockmaxlength;
+
   for (i = 0; i < Stocks.Size(); i++) {
-    stockminlength = Stocks[i]->returnLengthGroupDiv()->minLength();
-    stockmaxlength = Stocks[i]->returnLengthGroupDiv()->maxLength();
-    if (stockminlength < minlength)
-      minlength = stockminlength;
-    if (maxlength < stockmaxlength)
-      maxlength = stockmaxlength;
+    if (Stocks[i]->returnLengthGroupDiv()->minLength() < minlength)
+      minlength = Stocks[i]->returnLengthGroupDiv()->minLength();
+    if (maxlength < Stocks[i]->returnLengthGroupDiv()->maxLength())
+      maxlength = Stocks[i]->returnLengthGroupDiv()->maxLength();
   }
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, maxlength - minlength);
