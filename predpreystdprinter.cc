@@ -62,13 +62,21 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
+  if (strcasecmp(text, "precision") == 0)
+    infile >> precision >> ws >> text >> ws;
+  else
+    precision = 0;
+
+  if (precision < 0)
+    handle.Message("Error in predpreystdprinter - invalid value of precision");
+
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
   else
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in predpreystdprinter - invalid value of printatend");
+    handle.Message("Error in predpreystdprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);

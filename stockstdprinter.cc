@@ -77,13 +77,21 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
+  if (strcasecmp(text, "precision") == 0)
+    infile >> precision >> ws >> text >> ws;
+  else
+    precision = 0;
+
+  if (precision < 0)
+    handle.Message("Error in stockstdprinter - invalid value of precision");
+
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
   else
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in stockstdprinter - invalid value of printatend");
+    handle.Message("Error in stockstdprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
@@ -191,9 +199,17 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
     return;
 
   aggregator->Sum();
-  int a, age;
+  int a, age, p, w;
   double tmpnumber, tmpbiomass;
 
+  if (precision == 0) {
+    p = largeprecision;
+    w = largewidth;
+  } else {
+    p = precision;
+    w = precision + 4;
+  }
+  
   for (a = 0; a < areas.Size(); a++) {
     if (preyinfo)
       preyinfo->Sum(TimeInfo, areas[a]);
@@ -208,26 +224,24 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
         //JMB crude filters to remove the 'silly' values from the output
         if (popstat.totalNumber() < rathersmall) {
-          outfile << setw(largewidth) << 0 << sep << setw(printwidth) << 0
-            << sep << setw(printwidth) << 0 << sep << setw(printwidth) << 0
-            << sep << setw(largewidth) << 0 << sep << setw(largewidth) << 0;
+          outfile << setw(w) << 0 << sep << setw(printwidth) << 0 << sep << setw(printwidth)
+            << 0 << sep << setw(printwidth) << 0 << sep << setw(w) << 0 << sep << setw(w) << 0;
 
         } else {
-          outfile << setprecision(largeprecision) << setw(largewidth)
-            << popstat.totalNumber() / scale  << sep << setprecision(printprecision)
-            << setw(printwidth) << popstat.meanLength() << sep << setprecision(printprecision)
-            << setw(printwidth) << popstat.meanWeight() << sep << setprecision(printprecision)
-            << setw(printwidth) << popstat.sdevLength() << sep;
+          outfile << setprecision(p) << setw(w) << popstat.totalNumber() / scale << sep
+            << setprecision(printprecision) << setw(printwidth) << popstat.meanLength() << sep
+            << setprecision(printprecision) << setw(printwidth) << popstat.meanWeight() << sep
+            << setprecision(printprecision) << setw(printwidth) << popstat.sdevLength() << sep;
 
           if (preyinfo) {
             tmpnumber = preyinfo->NconsumptionByAge(areas[a])[age + minage];
             tmpbiomass = preyinfo->BconsumptionByAge(areas[a])[age + minage];
 
             if ((tmpnumber < rathersmall) || (tmpbiomass < rathersmall)) {
-              outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0;
+              outfile << setw(w) << 0 << sep << setw(w) << 0;
             } else {
-              outfile << setprecision(largeprecision) << setw(largewidth) << tmpnumber / scale
-                << sep << setprecision(largeprecision) << setw(largewidth) << tmpbiomass;
+              outfile << setprecision(p) << setw(w) << tmpnumber / scale
+                << sep << setprecision(p) << setw(w) << tmpbiomass;
             }
           } else
             outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0;

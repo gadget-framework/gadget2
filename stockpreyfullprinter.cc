@@ -64,13 +64,21 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
+  if (strcasecmp(text, "precision") == 0)
+    infile >> precision >> ws >> text >> ws;
+  else
+    precision = 0;
+
+  if (precision < 0)
+    handle.Message("Error in stockpreyfullprinter - invalid value of precision");
+
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
   else
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in stockpreyfullprinter - invalid value of printatend");
+    handle.Message("Error in stockpreyfullprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
@@ -151,8 +159,16 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo, int printtime)
   if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
-  int a, age, l;
+  int a, age, l, p, w;
   const LengthGroupDivision* LgrpDiv = preyinfo->returnPreyLengthGroupDiv();
+
+  if (precision == 0) {
+    p = printprecision;
+    w = printwidth;
+  } else {
+    p = precision;
+    w = precision + 4;
+  }
 
   for (a = 0; a < areas.Size(); a++) {
     preyinfo->Sum(TimeInfo, areas[a]);
@@ -171,14 +187,14 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo, int printtime)
            || (preyinfo->NconsumptionByLength(areas[a])[l] < rathersmall)
            || (preyinfo->BconsumptionByLength(areas[a])[l] < rathersmall))
 
-          outfile << setw(printwidth) << 0 << sep << setw(printwidth) << 0
-            << sep << setw(printwidth) << 0 << sep << setw(printwidth) << 0 << endl;
+          outfile << setw(w) << 0 << sep << setw(w) << 0
+            << sep << setw(w) << 0 << sep << setw(w) << 0 << endl;
 
         else
-          outfile << setprecision(printprecision) << setw(printwidth) << preyinfo->NconsumptionByAgeAndLength(areas[a])[age][l] << sep
-            << setprecision(printprecision) << setw(printwidth) << preyinfo->BconsumptionByAgeAndLength(areas[a])[age][l] << sep
-            << setprecision(printprecision) << setw(printwidth) << preyinfo->NconsumptionByLength(areas[a])[l] << sep
-            << setprecision(printprecision) << setw(printwidth) << preyinfo->BconsumptionByLength(areas[a])[l] << endl;
+          outfile << setprecision(p) << setw(w) << preyinfo->NconsumptionByAgeAndLength(areas[a])[age][l] << sep
+            << setprecision(p) << setw(w) << preyinfo->BconsumptionByAgeAndLength(areas[a])[age][l] << sep
+            << setprecision(p) << setw(w) << preyinfo->NconsumptionByLength(areas[a])[l] << sep
+            << setprecision(p) << setw(w) << preyinfo->BconsumptionByLength(areas[a])[l] << endl;
 
       }
   }

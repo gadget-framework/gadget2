@@ -42,7 +42,7 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in likelihoodprinter - invalid value of printatend");
+    handle.Message("Error in likelihoodprinter - invalid value of printatstart");
 
   if (printtimeid == 1)
     handle.Message("Error in likelihoodprinter - cannot print likelihood informtion at the start of the timestep");

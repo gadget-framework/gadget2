@@ -94,6 +94,11 @@ protected:
    * \note the default value is 0, which corresponds to printing at the end of the timestep
    */
   int printtimeid;
+  /**
+   * \brief This is precision which can be used to override the default values when printing the information to the output file
+   * \note the default value is 0, which corresponds to using default values specified in the printer class
+   */
+  int precision;
 private:
   /**
    * \brief This denotes what type of printer class has been created

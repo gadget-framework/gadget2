@@ -111,13 +111,21 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
+  if (strcasecmp(text, "precision") == 0)
+    infile >> precision >> ws >> text >> ws;
+  else
+    precision = 0;
+
+  if (precision < 0)
+    handle.Message("Error in predatorprinter - invalid value of precision");
+
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
   else
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in predatorprinter - invalid value of printatend");
+    handle.Message("Error in predatorprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
@@ -207,22 +215,31 @@ void PredatorPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   else
     aggregator->NumberSum();
 
-  int i, j, k;
-  for (i = 0; i < areas.Nrow(); i++) {
-    const BandMatrix* bptr = &aggregator->returnSum()[i];
-    for (j = 0; j < bptr->Nrow(); j++) {
-      for (k = 0; k < bptr->Ncol(j); k++) {
+  int a, predl, preyl, p, w;
+  
+  if (precision == 0) {
+    p = largeprecision;
+    w = largewidth;
+  } else {
+    p = precision;
+    w = precision + 4;
+  }
+
+  for (a = 0; a < areas.Nrow(); a++) {
+    const BandMatrix* bptr = &aggregator->returnSum()[a];
+    for (predl = 0; predl < bptr->Nrow(); predl++) {
+      for (preyl = 0; preyl < bptr->Ncol(predl); preyl++) {
         outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
           << setw(lowwidth) << TimeInfo->CurrentStep() << sep
-          << setw(printwidth) << areaindex[i] << sep
-          << setw(printwidth) << predlenindex[j] << sep
-          << setw(printwidth) << preylenindex[k] << sep;
+          << setw(printwidth) << areaindex[a] << sep
+          << setw(printwidth) << predlenindex[predl] << sep
+          << setw(printwidth) << preylenindex[preyl] << sep;
 
         //JMB crude filter to remove the 'silly' values from the output
-        if ((*bptr)[j][k] < rathersmall)
-          outfile << setw(largewidth) << 0 << endl;
+        if ((*bptr)[predl][preyl] < rathersmall)
+          outfile << setw(w) << 0 << endl;
         else
-          outfile << setprecision(largeprecision) << setw(largewidth) << (*bptr)[j][k] << endl;
+          outfile << setprecision(p) << setw(w) << (*bptr)[predl][preyl] << endl;
       }
     }
   }

@@ -51,7 +51,15 @@ void PredPreyStdAgePrinter::Print(const TimeClass * const TimeInfo, int printtim
   if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
-  int a, predage, preyage;
+  int a, predage, preyage, p, w;
+
+  if (precision == 0) {
+    p = printprecision;
+    w = printwidth;
+  } else {
+    p = precision;
+    w = precision + 4;
+  }
 
   for (a = 0; a < areas.Size(); a++) {
     predinfo->Sum(TimeInfo, areas[a]);
@@ -70,13 +78,12 @@ void PredPreyStdAgePrinter::Print(const TimeClass * const TimeInfo, int printtim
            || (predinfo->BconsumptionByAge(areas[a])[predage][preyage] < rathersmall)
            || (predinfo->MortalityByAge(areas[a])[predage][preyage] < verysmall))
 
-          outfile << setw(printwidth) << 0 << sep << setw(printwidth) << 0
-            << sep << setw(printwidth) << 0 << endl;
+          outfile << setw(w) << 0 << sep << setw(w) << 0 << sep << setw(w) << 0 << endl;
 
         else
-          outfile << setprecision(printprecision) << setw(printwidth) << predinfo->NconsumptionByAge(areas[a])[predage][preyage] << sep
-            << setprecision(printprecision) << setw(printwidth) << predinfo->BconsumptionByAge(areas[a])[predage][preyage] << sep
-            << setprecision(printprecision) << setw(printwidth) << predinfo->MortalityByAge(areas[a])[predage][preyage] << endl;
+          outfile << setprecision(p) << setw(w) << predinfo->NconsumptionByAge(areas[a])[predage][preyage] << sep
+            << setprecision(p) << setw(w) << predinfo->BconsumptionByAge(areas[a])[predage][preyage] << sep
+            << setprecision(p) << setw(w) << predinfo->MortalityByAge(areas[a])[predage][preyage] << endl;
 
       }
     }

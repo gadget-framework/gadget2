@@ -88,13 +88,21 @@ StockPrinter::StockPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
+  if (strcasecmp(text, "precision") == 0)
+    infile >> precision >> ws >> text >> ws;
+  else
+    precision = 0;
+
+  if (precision < 0)
+    handle.Message("Error in stockprinter - invalid value of precision");
+
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
   else
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in stockprinter - invalid value of printatend");
+    handle.Message("Error in stockprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
@@ -160,7 +168,15 @@ void StockPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
     return;
 
   aggregator->Sum();
-  int a, age, l;
+  int a, age, l, p, w;
+
+  if (precision == 0) {
+    p = largeprecision;
+    w = largewidth;
+  } else {
+    p = precision;
+    w = precision + 4;
+  }
 
   for (a = 0; a < areas.Nrow(); a++) {
     const AgeBandMatrix& alk = aggregator->returnSum()[a];
@@ -173,10 +189,10 @@ void StockPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
         //JMB crude filter to remove the 'silly' values from the output
         if ((alk[age][l].N < rathersmall) || (alk[age][l].W < 0))
-          outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0 << endl;
+          outfile << setw(w) << 0 << sep << setw(w) << 0 << endl;
         else
-          outfile << setprecision(largeprecision) << setw(largewidth) << alk[age][l].N << sep
-            << setprecision(largeprecision) << setw(largewidth) << alk[age][l].W << endl;
+          outfile << setprecision(p) << setw(w) << alk[age][l].N << sep
+            << setprecision(p) << setw(w) << alk[age][l].W << endl;
 
       }
     }

@@ -77,13 +77,21 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
+  if (strcasecmp(text, "precision") == 0)
+    infile >> precision >> ws >> text >> ws;
+  else
+    precision = 0;
+
+  if (precision < 0)
+    handle.Message("Error in predatoroverprinter - invalid value of precision");
+
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
   else
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in predatoroverprinter - invalid value of printatend");
+    handle.Message("Error in predatoroverprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
@@ -145,19 +153,28 @@ void PredatorOverPrinter::Print(const TimeClass* const TimeInfo, int printtime) 
 
   aggregator->Sum();
   const DoubleMatrix* dptr = &aggregator->returnSum();
-  int i, j;
-  for (i = 0; i < areas.Nrow(); i++) {
-    for (j = 0; j < dptr->Ncol(i); j++) {
+  int a, len, p, w;
+
+  if (precision == 0) {
+    p = largeprecision;
+    w = largewidth;
+  } else {
+    p = precision;
+    w = precision + 4;
+  }
+
+  for (a = 0; a < areas.Nrow(); a++) {
+    for (len = 0; len < dptr->Ncol(a); len++) {
       outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
         << setw(lowwidth) << TimeInfo->CurrentStep() << sep
-        << setw(printwidth) << areaindex[i] << sep
-        << setw(printwidth) << lenindex[j] << sep;
+        << setw(printwidth) << areaindex[a] << sep
+        << setw(printwidth) << lenindex[len] << sep;
 
       //JMB crude filter to remove the 'silly' values from the output
-      if ((*dptr)[i][j] < rathersmall)
-        outfile << setw(largewidth) << 0 << endl;
+      if ((*dptr)[a][len] < rathersmall)
+        outfile << setw(w) << 0 << endl;
       else
-        outfile << setprecision(largeprecision) << setw(largewidth) << (*dptr)[i][i] << endl;
+        outfile << setprecision(p) << setw(w) << (*dptr)[a][len] << endl;
     }
   }
   outfile.flush();
