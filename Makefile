@@ -6,60 +6,53 @@ GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat=2 \
               -Wreorder -Wwrite-strings -Wsynth -Wchar-subscripts \
               -Wuninitialized -W
 
-DEFINE_FLAGS = -D GADGET_INLINE -D DEBUG -D INTERRUPT_HANDLER -g -O
-#DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
+#DEFINE_FLAGS = -D GADGET_INLINE -D DEBUG -D INTERRUPT_HANDLER -g -O
+DEFINE_FLAGS = -D GADGET_INLINE -D NDEBUG -D INTERRUPT_HANDLER -O3
 
 ##########################################################################
 # Pick the appropriate compiler from the following switches
 ##########################################################################
-# 1. Linux without pvm, g++ compiler
+# 1. Linux or Solaris, without pvm, g++ compiler
 CXX = g++
 LIBDIRS = -L.  -L/usr/local/lib
 LIBRARIES = -lm -lvec
 CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 OBJECTS = $(GADGETOBJECTS)
 ##########################################################################
-# 2. Solaris without pvm3, g++ compiler
+# 2. Linux, with pvm3, g++ compiler
 #CXX = g++
-#LIBDIRS = -L.  -L/usr/local/lib
-#LIBRARIES = -lm -lvec
-#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
-#OBJECTS = $(GADGETOBJECTS)
+#PVMDIR = $(PVM_ROOT)
+#PVMINCLUDE = $(PVMDIR)/include
+#PVMLIB = $(PVMDIR)/lib/$(PVM_ARCH)
+#LIBDIRS = -L.  -L/usr/local/lib  -L$(PVMLIB)
+#LIBRARIES = -lm -lvec -lsocket -lpvm3 -lgpvm3 -lnsl
+#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
+#OBJECTS = $(GADGETOBJECTS) $(SLAVEOBJECTS)
 ##########################################################################
-# 3. Solaris without pvm3, using CC compiler
+# 3. Solaris, with pvm3, g++ compiler
+#CXX = g++
+#PVMDIR = $(PVM_ROOT)
+#PVMINCLUDE = $(PVMDIR)/include
+#PVMLIB = $(PVMDIR)/lib/$(PVM_ARCH)
+#LIBDIRS = -L.  -L/usr/local/lib  -L$(PVMLIB)
+#LIBRARIES = -lm -lvec -lpvm3 -lgpvm3 -lnsl
+#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
+#OBJECTS = $(GADGETOBJECTS) $(SLAVEOBJECTS)
+##########################################################################
+# 4. Solaris, without pvm3, using CC compiler
 #CXX = CC
 #LIBDIRS = -L.  -L/usr/local/lib
 #LIBRARIES = -lm -lvec
 #CXXFLAGS = $(DEFINE_FLAGS)
 #OBJECTS = $(GADGETOBJECTS)
 ##########################################################################
-# 4. HP-UX without pvm3
+# 5. HP-UX, without pvm3
 #LIBDIRS = -L.  -L/usr/local/lib
 #LIBRARIES = -lm -lvec
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D __cplusplus
 #OBJECTS = $(GADGETOBJECTS)
 ##########################################################################
-# 5. Solaris with pvm3, g++ compiler
-#CXX = g++
-#PVMDIR = $(PVM_ROOT)
-#PVMINCLUDE = $(PVMDIR)/include
-#PVMLIB = $(PVMDIR)/lib/SUN4SOL2
-#LIBDIRS = -L.  -L/usr/local/lib  -L$(PVMLIB)
-#LIBRARIES = -lm -lvec -lpvm3 -lgpvm3 -lnsl
-#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
-#OBJECTS = $(GADGETOBJECTS) $(SLAVEOBJECTS)
-##########################################################################
-# 6. Linux, with pvm, g++ compiler
-#CXX = g++
-#PVMDIR = $(PVM_ROOT)
-#PVMINCLUDE = $(PVMDIR)/include
-#PVMLIB = $(PVMDIR)/lib/LINUX
-#LIBDIRS = -L.  -L/usr/local/lib -L$(PVMLIB)
-#LIBRARIES = -lm -lvec -lpvm3 -lgpvm3 -lnsl
-#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
-#OBJECTS = $(GADGETOBJECTS) $(SLAVEOBJECTS)
-##########################################################################
-# 7. Solaris without pvm3, g++ compiler running CONDOR
+# 6. Solaris, without pvm3, g++ compiler running CONDOR
 #CXX = condor_compile g++
 #LIBDIRS = -L.  -L/usr/local/lib
 #LIBRARIES = -lm -lvec
