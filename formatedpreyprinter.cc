@@ -104,6 +104,14 @@ FormatedPreyPrinter::FormatedPreyPrinter(CommentStream& infile,
   if (i == 0)
     handle.Message("No printfiles read in for formatedpreyprinter");
 
+  if (strcasecmp(text, "printatend") == 0)
+    infile >> printtimeid >> ws >> text >> ws;
+  else
+    printtimeid = 1;
+
+  if (printtimeid != 0 && printtimeid != 1)
+    handle.Message("Error in formatedpreyprinter - invalid value of printatend");
+
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
@@ -137,8 +145,8 @@ void FormatedPreyPrinter::setStock(StockPtrVector& stockvec) {
   }
 }
 
-void FormatedPreyPrinter::Print(const TimeClass* const TimeInfo) {
-  if (!AAT.AtCurrentTime(TimeInfo))
+void FormatedPreyPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
+  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
   if (printzp)

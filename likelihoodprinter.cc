@@ -43,6 +43,7 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile,
   printCatch = 0;
   printSurvey = 0;
   printStomach = 0;
+  printtimeid = 1; //not used
   infile >> text >> ws;
   while (!(strcasecmp(text, "[component]")==0) && !infile.eof()) {
     if ((strcasecmp(text, "catchfile") == 0)) {
@@ -120,7 +121,7 @@ void LikelihoodPrinter::setLikely(LikelihoodPtrVector& likevec) {
  *
  *  Pre:  setStock has been called
  */
-void LikelihoodPrinter::Print(const TimeClass* const TimeInfo) {
+void LikelihoodPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   int i;
   if (printCatch) {
     for (i = 0; i < catchvec.Size(); i++)

@@ -19,7 +19,7 @@ public:
   FormatedStockPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~FormatedStockPrinter();
   void setStock(StockPtrVector& stockvec);
-  virtual void Print(const TimeClass* const TimeInfo);
+  virtual void Print(const TimeClass* const TimeInfo, int printtime);
 protected:
   IntMatrix areas;
   IntMatrix ages;

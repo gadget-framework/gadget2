@@ -40,6 +40,7 @@ MortPrinter::MortPrinter(CommentStream& infile,
   sumM2 = 0;
   sumN = 0;
   totalNbar = 0;
+  printtimeid = 1; //not used
 
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
@@ -168,7 +169,7 @@ void MortPrinter::setStock(StockPtrVector& stockvec) {
  *
  *  Pre:  setStock has been called
  */
-void MortPrinter::Print(const TimeClass* const TimeInfo) {
+void MortPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   int s, i, j, area, inarea, age, yo;
   for (area = 0; area < areas.Size(); area++)
     for (i = 0; i < stocks.Size(); i++)

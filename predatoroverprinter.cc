@@ -77,6 +77,14 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
+  if (strcasecmp(text, "printatend") == 0)
+    infile >> printtimeid >> ws >> text >> ws;
+  else
+    printtimeid = 1;
+
+  if (printtimeid != 0 && printtimeid != 1)
+    handle.Message("Error in predatoroverprinter - invalid value of printatend");
+
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
@@ -96,6 +104,11 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   outfile << "; Predator overconsumption output file for the following predators";
   for (i = 0; i < predatornames.Size(); i++)
     outfile << sep << predatornames[i];
+
+  if (printtimeid == 1)
+    outfile << "\n; Printing the following information at the end of each timestep";
+  else
+    outfile << "\n; Printing the following information at the start of each timestep";
 
   outfile << "\n; year-step-area-length-overconsumption biomass\n";
   outfile.flush();
@@ -125,9 +138,11 @@ void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec) {
   aggregator = new PredatorOverAggregator(predators, areas, predLgrpDiv);
 }
 
-void PredatorOverPrinter::Print(const TimeClass* const TimeInfo) {
-  if (!AAT.AtCurrentTime(TimeInfo))
+void PredatorOverPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
+
+  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
+
   aggregator->Sum();
   const DoubleMatrix* dptr = &aggregator->returnSum();
   int i, j;

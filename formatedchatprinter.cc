@@ -75,6 +75,14 @@ FormatedCHatPrinter::FormatedCHatPrinter(CommentStream& infile,
   outfile.flush();
 
   infile >> text >> ws;
+  if (strcasecmp(text, "printatend") == 0)
+    infile >> printtimeid >> ws >> text >> ws;
+  else
+    printtimeid = 1;
+
+  if (printtimeid != 0 && printtimeid != 1)
+    handle.Message("Error in formatedchatprinter - invalid value of printatend");
+
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
@@ -101,8 +109,8 @@ void FormatedCHatPrinter::setFleet(FleetPtrVector& fleetvec) {
       }
 }
 
-void FormatedCHatPrinter::Print(const TimeClass* const TimeInfo) {
-  if (!AAT.AtCurrentTime(TimeInfo))
+void FormatedCHatPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
+  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
   int i, j;
   printTime(outfile, *TimeInfo);

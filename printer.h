@@ -37,8 +37,9 @@ public:
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model
+   * \param printtime is a flag to denote when the printing is taking place
    */
-  virtual void Print(const TimeClass* const TimeInfo) = 0;
+  virtual void Print(const TimeClass* const TimeInfo, int printtime) = 0;
   /**
    * \brief This will select the stocks required for the printer class to print the requested information
    * \param stockvec is the StockPtrVector of all the available stocks
@@ -83,6 +84,11 @@ protected:
    * \brief This ActionAtTimes stores information about when the printer output is required in the model
    */
   ActionAtTimes AAT;
+  /**
+   * \brief This is a flag used to denote whether the printing takes place at the start or the end of the timestep
+   * \note the default value is 1, which corresponds to printing at the end of the timestep
+   */
+  int printtimeid;
 private:
   /**
    * \brief This denotes what type of printer class has been created

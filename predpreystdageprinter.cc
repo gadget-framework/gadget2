@@ -14,8 +14,14 @@ PredPreyStdAgePrinter::PredPreyStdAgePrinter(CommentStream& infile,
   //finished initializing. Now print first lines
   outfile << "; ";
   RUNID.print(outfile);
-  outfile << "; Predation file by age for predator " << predname << " and prey " << preyname
-    << "\n; year-step-area-pred age-prey age-cons number-cons biomass-mortality\n";
+  outfile << "; Predation file by age for predator " << predname << " and prey " << preyname;
+
+  if (printtimeid == 1)
+    outfile << "\n; Printing the following information at the end of each timestep";
+  else
+    outfile << "\n; Printing the following information at the start of each timestep";
+
+  outfile << "\n; year-step-area-pred age-prey age-cons number-cons biomass-mortality\n";
   outfile.flush();
 }
 
@@ -40,16 +46,15 @@ void PredPreyStdAgePrinter::setPopPredAndPrey(const PopPredator* pred,
       predinfo = new PredStdInfo(predator, prey, areas);
 }
 
-void PredPreyStdAgePrinter::Print(const TimeClass * const TimeInfo) {
+void PredPreyStdAgePrinter::Print(const TimeClass * const TimeInfo, int printtime) {
 
-  if (!AAT.AtCurrentTime(TimeInfo))
+  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
+
   int a, predage, preyage;
 
-  for (a = 0; a < areas.Size(); a++)
-    predinfo->Sum(TimeInfo, areas[a]);
-
   for (a = 0; a < areas.Size(); a++) {
+    predinfo->Sum(TimeInfo, areas[a]);
     for (predage = predinfo->NconsumptionByAge(areas[a]).minAge();
         predage <= predinfo->NconsumptionByAge(areas[a]).maxAge(); predage++) {
       for (preyage = predinfo->NconsumptionByAge(areas[a]).minCol(predage);

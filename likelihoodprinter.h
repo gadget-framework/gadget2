@@ -9,7 +9,7 @@ public:
   LikelihoodPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~LikelihoodPrinter();
   void setLikely(LikelihoodPtrVector& likvec);
-  virtual void Print(const TimeClass* const TimeInfo);
+  virtual void Print(const TimeClass* const TimeInfo, int printtime);
 protected:
   ofstream catchFile;
   ofstream surveyFile;

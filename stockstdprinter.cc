@@ -18,8 +18,7 @@ extern ErrorHandler handle;
 
 StockStdPrinter::StockStdPrinter(CommentStream& infile,
   const AreaClass* const Area, const  TimeClass* const TimeInfo)
-  : Printer(STOCKSTDPRINTER), stockname(0), LgrpDiv(0),
-    minage(0), maxage(0), aggregator(0), preyinfo(0), Scale(1) {
+  : Printer(STOCKSTDPRINTER), stockname(0), LgrpDiv(0), aggregator(0), preyinfo(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -30,11 +29,11 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   readWordAndValue(infile, "stockname", stockname);
   infile >> text >> ws;
   if (strcasecmp(text, "scale") == 0)
-    infile >> Scale >> ws >> text >> ws;
+    infile >> scale >> ws >> text >> ws;
   else
-    Scale = 1.0;
+    scale = 1.0;
 
-  if (Scale <= 0)
+  if (scale <= 0)
     handle.Message("Error in stockstdprinter - invalid value of scale");
 
   //read in area aggregation from file
@@ -78,6 +77,14 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
+  if (strcasecmp(text, "printatend") == 0)
+    infile >> printtimeid >> ws >> text >> ws;
+  else
+    printtimeid = 1;
+
+  if (printtimeid != 0 && printtimeid != 1)
+    handle.Message("Error in stockstdprinter - invalid value of printatend");
+
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
@@ -95,8 +102,14 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile,
   outfile << "; ";
   RUNID.print(outfile);
   outfile << "; Standard output file for the stock " << stockname;
-  if (Scale != 1.0)
-    outfile << "\n; Scaling factor for the number and number consumed is " << Scale;
+      
+  if (scale != 1.0)
+    outfile << "\n; Scaling factor for the number and number consumed is " << scale;
+
+  if (printtimeid == 1)
+    outfile << "\n; Printing the following information at the end of each timestep";
+  else
+    outfile << "\n; Printing the following information at the start of each timestep";
 
   outfile << "\n; year-step-area-age-number-mean length-mean weight-"
     << "stddev length-number consumed-biomass consumed\n";
@@ -172,9 +185,11 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
     preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->returnPrey(), areas);
 }
 
-void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
-  if (!AAT.AtCurrentTime(TimeInfo))
+void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
+
+  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
+    
   aggregator->Sum();
   int a, age;
   double tmpnumber, tmpbiomass;
@@ -199,7 +214,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
 
         } else {
           outfile << setprecision(largeprecision) << setw(largewidth)
-            << popstat.totalNumber() / Scale  << sep << setprecision(printprecision)
+            << popstat.totalNumber() / scale  << sep << setprecision(printprecision)
             << setw(printwidth) << popstat.meanLength() << sep << setprecision(printprecision)
             << setw(printwidth) << popstat.meanWeight() << sep << setprecision(printprecision)
             << setw(printwidth) << popstat.sdevLength() << sep;
@@ -211,7 +226,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo) {
             if ((tmpnumber < rathersmall) || (tmpbiomass < rathersmall)) {
               outfile << setw(largewidth) << 0 << sep << setw(largewidth) << 0;
             } else {
-              outfile << setprecision(largeprecision) << setw(largewidth) << tmpnumber / Scale
+              outfile << setprecision(largeprecision) << setw(largewidth) << tmpnumber / scale
                 << sep << setprecision(largeprecision) << setw(largewidth) << tmpbiomass;
             }
           } else

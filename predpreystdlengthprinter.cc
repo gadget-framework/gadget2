@@ -14,8 +14,14 @@ PredPreyStdLengthPrinter::PredPreyStdLengthPrinter(CommentStream& infile,
   //finished initializing. Now print first lines
   outfile << "; ";
   RUNID.print(outfile);
-  outfile << "; Predation file by length for predator " << predname << " and prey " << preyname
-    << "\n; year-step-area-pred length-prey length-cons number-cons biomass-mortality\n";
+  outfile << "; Predation file by length for predator " << predname << " and prey " << preyname;
+
+  if (printtimeid == 1)
+    outfile << "\n; Printing the following information at the end of each timestep";
+  else
+    outfile << "\n; Printing the following information at the start of each timestep";
+
+  outfile << "\n; year-step-area-pred length-prey length-cons number-cons biomass-mortality\n";
   outfile.flush();
 }
 
@@ -34,19 +40,18 @@ void PredPreyStdLengthPrinter::setPopPredAndPrey(const PopPredator* pred,
     predinfo = new PredStdInfoByLength(predator, prey, areas);
 }
 
-void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo) {
+void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
-  if (!AAT.AtCurrentTime(TimeInfo))
+  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
+
   int a, predl, preyl;
-
-  for (a = 0; a < areas.Size(); a++)
-    predinfo->Sum(TimeInfo, areas[a]);
-
   const LengthGroupDivision* predLgrpDiv = predinfo->returnPredLengthGroupDiv();
   const LengthGroupDivision* preyLgrpDiv = predinfo->returnPreyLengthGroupDiv();
 
   for (a = 0; a < areas.Size(); a++) {
+    predinfo->Sum(TimeInfo, areas[a]);
+
     for (predl = 0; predl < predLgrpDiv->numLengthGroups(); predl++) {
       for (preyl = 0; preyl < preyLgrpDiv->numLengthGroups(); preyl++) {
 

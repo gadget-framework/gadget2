@@ -25,7 +25,7 @@ public:
   BiomassPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~BiomassPrinter();
   virtual void setStock(StockPtrVector& stockvec);
-  virtual void Print(const TimeClass* const TimeInfo);
+  virtual void Print(const TimeClass* const TimeInfo, int printtime);
 protected:
   IntVector areas;
   CharPtrVector areaindex;

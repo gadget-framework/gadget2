@@ -64,6 +64,14 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
+  if (strcasecmp(text, "printatend") == 0)
+    infile >> printtimeid >> ws >> text >> ws;
+  else
+    printtimeid = 1;
+
+  if (printtimeid != 0 && printtimeid != 1)
+    handle.Message("Error in stockpreyfullprinter - invalid value of printatend");
+
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
@@ -80,8 +88,14 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile,
   //finished initializing. Now print first line.
   outfile << "; ";
   RUNID.print(outfile);
-  outfile << "; Output file for the prey " << stockname
-    << "\n; year-step-area-age-length-number consumed-biomass consumed"
+  outfile << "; Output file for the prey " << stockname;
+  
+  if (printtimeid == 1)
+    outfile << "\n; Printing the following information at the end of each timestep";
+  else
+    outfile << "\n; Printing the following information at the start of each timestep";
+
+  outfile << "\n; year-step-area-age-length-number consumed-biomass consumed"
     << "-number consumed by length-biomass consumed by length\n";
   outfile.flush();
 
@@ -132,18 +146,18 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
     handle.logFailure("Error in stockpreyfullprinter - stock is not a prey");
 }
 
-void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo) {
-  if (!AAT.AtCurrentTime(TimeInfo))
+void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
+
+  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
+
   int a, age, l;
-
-  for (a = 0; a < areas.Size(); a++)
-    preyinfo->Sum(TimeInfo, areas[a]);
-
   const LengthGroupDivision* LgrpDiv = preyinfo->returnPreyLengthGroupDiv();
 
   for (a = 0; a < areas.Size(); a++) {
+    preyinfo->Sum(TimeInfo, areas[a]);
     const BandMatrix& Nbyageandl = preyinfo->NconsumptionByAgeAndLength(areas[a]);
+
     for (age = Nbyageandl.minAge(); age <= Nbyageandl.maxAge(); age++)
       for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
         outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep << setw(lowwidth)

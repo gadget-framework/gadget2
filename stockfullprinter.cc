@@ -14,8 +14,7 @@ extern ErrorHandler handle;
 
 StockFullPrinter::StockFullPrinter(CommentStream& infile,
   const AreaClass* const Area,  const TimeClass* const TimeInfo)
-  : Printer(STOCKFULLPRINTER), minage(0), maxage(0),
-    stockname(0), aggregator(0), LgrpDiv(0) {
+  : Printer(STOCKFULLPRINTER), stockname(0), aggregator(0), LgrpDiv(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -61,6 +60,14 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
+  if (strcasecmp(text, "printatend") == 0)
+    infile >> printtimeid >> ws >> text >> ws;
+  else
+    printtimeid = 1;
+
+  if (printtimeid != 0 && printtimeid != 1)
+    handle.Message("Error in stockfullprinter - invalid value of printatend");
+
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
@@ -77,8 +84,14 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile,
   //finished initializing. Now print first lines
   outfile << "; ";
   RUNID.print(outfile);
-  outfile << "; Full output file for the stock " << stockname
-    << "\n; year-step-area-age-length-number-mean weight\n";
+  outfile << "; Full output file for the stock " << stockname;
+  
+  if (printtimeid == 1)
+    outfile << "\n; Printing the following information at the end of each timestep";
+  else
+    outfile << "\n; Printing the following information at the start of each timestep";
+
+  outfile << "\n; year-step-area-age-length-number-mean weight\n";
   outfile.flush();
 
   //areaindex is not required - free up memory
@@ -138,9 +151,11 @@ void StockFullPrinter::setStock(StockPtrVector& stockvec) {
   aggregator = new StockAggregator(stocks, LgrpDiv, areamatrix, agematrix);
 }
 
-void StockFullPrinter::Print(const TimeClass* const TimeInfo) {
-  if (!AAT.AtCurrentTime(TimeInfo))
+void StockFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
+
+  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
+
   aggregator->Sum();
   int a, age, l;
 

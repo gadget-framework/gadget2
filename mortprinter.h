@@ -25,7 +25,7 @@ public:
   MortPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~MortPrinter();
   virtual void setStock(StockPtrVector& stockvec);
-  virtual void Print(const TimeClass* const TimeInfo);
+  virtual void Print(const TimeClass* const TimeInfo, int printtime);
 protected:
   const AreaClass* Area;
   IntVector areas;

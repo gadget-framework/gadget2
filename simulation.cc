@@ -99,6 +99,10 @@ void Ecosystem::Simulate(int Optimise, int print) {
     //Add in any new tagging experiments
     tagvec.updateTags(TimeInfo);
 
+    if (print)
+      for (j = 0; j < printvec.Size(); j++)
+        printvec[j]->Print(TimeInfo, 0);  //start of timestep, so printtime is 0
+
     if (TimeInfo->CurrentStep() == 1) //Migration calculated once per year.
       for (j = 0; j < basevec.Size(); j++)
         basevec[j]->calcMigration(TimeInfo);
@@ -110,7 +114,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
 
     if (print)
       for (j = 0; j < printvec.Size(); j++)
-        printvec[j]->Print(TimeInfo);
+        printvec[j]->Print(TimeInfo, 1);  //end of timestep, so printtime is 1
 
     for (j = 0; j < Area->numAreas(); j++)
       updateOneTimestepOneArea(j);

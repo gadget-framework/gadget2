@@ -9,7 +9,7 @@ public:
   FormatedCHatPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
   virtual ~FormatedCHatPrinter();
   void setFleet(FleetPtrVector& fleetvec);
-  virtual void Print(const TimeClass* const TimeInfo);
+  virtual void Print(const TimeClass* const TimeInfo, int printtime);
 protected:
   IntVector areas;
   CharPtrVector areaindex;

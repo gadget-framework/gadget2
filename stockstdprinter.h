@@ -30,8 +30,9 @@ public:
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model
+   * \param printtime is a flag to denote when the printing is taking place
    */
-  virtual void Print(const TimeClass* const TimeInfo);
+  virtual void Print(const TimeClass* const TimeInfo, int printtime);
 protected:
   /**
    * \brief This is the name of the stock
@@ -72,7 +73,7 @@ protected:
   /**
    * \brief This is the scaling factor used to scale the size of the stock
    */
-  double Scale;
+  double scale;
 };
 
 #endif

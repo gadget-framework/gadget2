@@ -88,6 +88,14 @@ StockPrinter::StockPrinter(CommentStream& infile,
   handle.checkIfFailure(outfile, filename);
 
   infile >> text >> ws;
+  if (strcasecmp(text, "printatend") == 0)
+    infile >> printtimeid >> ws >> text >> ws;
+  else
+    printtimeid = 1;
+
+  if (printtimeid != 0 && printtimeid != 1)
+    handle.Message("Error in stockprinter - invalid value of printatend");
+
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.Unexpected("yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
@@ -107,6 +115,11 @@ StockPrinter::StockPrinter(CommentStream& infile,
   outfile << "; Output file for the following stocks";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
+
+  if (printtimeid == 1)
+    outfile << "\n; Printing the following information at the end of each timestep";
+  else
+    outfile << "\n; Printing the following information at the start of each timestep";
 
   outfile << "\n; year-step-area-age-length-number-weight\n";
   outfile.flush();
@@ -141,11 +154,13 @@ void StockPrinter::setStock(StockPtrVector& stockvec) {
   aggregator = new StockAggregator(stocks, LgrpDiv, areas, ages);
 }
 
-void StockPrinter::Print(const TimeClass* const TimeInfo) {
-  int a, age, l;
-  if (!AAT.AtCurrentTime(TimeInfo))
+void StockPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
+
+  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
+
   aggregator->Sum();
+  int a, age, l;
 
   for (a = 0; a < areas.Nrow(); a++) {
     const AgeBandMatrix& alk = aggregator->returnSum()[a];
