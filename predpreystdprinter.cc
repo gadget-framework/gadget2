@@ -33,14 +33,22 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile,
   CommentStream subdata(datafile);
 
   charptrvector areaindex;
+  intmatrix tmpareas;
   ReadWordAndValue(infile, "areaaggfile", filename);
   datafile.open(filename);
   CheckIfFailure(datafile, filename);
   handle.Open(filename);
-  i = ReadAggregation(subdata, outerareas, areaindex);
+  i = ReadAggregation(subdata, tmpareas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
+
+  //Check if we read correct input
+  if (tmpareas.Nrow() != 1)
+    handle.Message("Error - there should be only one aggregated area for predpreystdprinter");
+
+  for (i = 0; i < tmpareas.Ncol(0); i++)
+    outerareas.resize(1, tmpareas[0][i]);
 
   //Must change from outer areas to inner areas.
   areas.resize(outerareas.Size());

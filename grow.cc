@@ -33,10 +33,15 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
         /*JMB code removed from here - see RemovedCode.txt for details*/
       }
     }
-    if (number > 0)
-      (*v[i])[maxlgrp].W = wt / number;
 
-    (*v[i])[maxlgrp].N = number;
+    /*JMB changed to deal with very small weights a bit better*/
+    if ((iszero(number)) || (wt < verysmall)) {
+      (*v[i])[maxlgrp].W = 0.0;
+      (*v[i])[maxlgrp].N = 0.0;
+    } else {
+      (*v[i])[maxlgrp].W = wt / number;
+      (*v[i])[maxlgrp].N = number;
+    }
 
     //The center part of the length division
     for (lgrp = v[i]->Maxcol() - 2; lgrp >= v[i]->Mincol() + Lgrowth.Nrow() - 1; lgrp--) {
@@ -47,10 +52,15 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
         number += upfj;
         wt += upfj * ((*v[i])[lgrp - grow].W + Wgrowth[grow][lgrp - grow]);
       }
-      if (number > 0)
+
+      /*JMB changed to deal with very small weights a bit better*/
+      if ((iszero(number)) || (wt < verysmall)) {
+        (*v[i])[lgrp].W = 0.0;
+        (*v[i])[lgrp].N = 0.0;
+      } else {
         (*v[i])[lgrp].W = wt / number;
-  
-      (*v[i])[lgrp].N = number;
+        (*v[i])[lgrp].N = number;
+      }
     }
 
     //The lowest part of the length division.
@@ -62,10 +72,15 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
         number += upfj;
         wt += upfj * ((*v[i])[lgrp - grow].W + Wgrowth[grow][lgrp - grow]);
       }
-      if (number > 0)
-        (*v[i])[lgrp].W = wt / number;
 
-      (*v[i])[lgrp].N = number;
+      /*JMB changed to deal with very small weights a bit better*/
+      if ((iszero(number)) || (wt < verysmall)) {
+        (*v[i])[lgrp].W = 0.0;
+        (*v[i])[lgrp].N = 0.0;
+      } else {
+        (*v[i])[lgrp].W = wt / number;
+        (*v[i])[lgrp].N = number;
+      }
     }
   }
 }
@@ -108,7 +123,19 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
         wt += upfj * ((*v[i])[lgrp].W + Wgrowth[grow][lgrp]);
       }
     }
-    if (number > 0) {
+
+    /*JMB changed to deal with very small weights a bit better*/
+    if ((iszero(number)) || (number - matnum < verysmall) || (wt < verysmall)) {
+      (*v[i])[maxlgrp].W = 0.0;
+      (*v[i])[maxlgrp].N = 0.0;
+      Mat->PutInStorage(area, age, maxlgrp, 0.0, 0.0, TimeInfo);
+    } else {
+      (*v[i])[maxlgrp].W = wt / number;
+      (*v[i])[maxlgrp].N = number - matnum;
+      Mat->PutInStorage(area, age, maxlgrp, matnum, wt / number, TimeInfo);
+    }
+
+    /*if (number > 0) {
       wt /= number;
       (*v[i])[maxlgrp].W = wt;
     }
@@ -117,7 +144,7 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
     if (wt > 0 && matnum > 0)
       Mat->PutInStorage(area, age, maxlgrp, matnum, wt, TimeInfo);
     else
-      Mat->PutInStorage(area, age, maxlgrp, 0.0, 0.0, TimeInfo);
+      Mat->PutInStorage(area, age, maxlgrp, 0.0, 0.0, TimeInfo);*/
 
     for (lgrp = v[i]->Maxcol() - 2; lgrp >= v[i]->Mincol() + Lgrowth.Nrow() - 1; lgrp--) {
       number = 0.0;
@@ -130,7 +157,18 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
         number += upfj;
         wt += upfj * ((*v[i])[lgrp - grow].W + Wgrowth[grow][lgrp - grow]);
       }
-      if (number > 0) {
+
+      /*JMB changed to deal with very small weights a bit better*/
+      if ((iszero(number)) || (number - matnum < verysmall) || (wt < verysmall)) {
+         (*v[i])[lgrp].W = 0.0;
+        (*v[i])[lgrp].N = 0.0;
+        Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);
+      } else {
+        (*v[i])[lgrp].W = wt / number;
+        (*v[i])[lgrp].N = number - matnum;
+        Mat->PutInStorage(area, age, lgrp, matnum, wt / number, TimeInfo);
+      }
+      /*if (number > 0) {
         wt /= number;
         (*v[i])[lgrp].W = wt;
       }
@@ -139,7 +177,7 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
       if (wt > 0 && matnum > 0)
         Mat->PutInStorage(area, age, lgrp, matnum, wt, TimeInfo);
       else
-        Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);
+        Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);*/
     }
 
     for (lgrp = v[i]->Mincol() + Lgrowth.Nrow() - 2; lgrp >= v[i]->Mincol(); lgrp--) {
@@ -154,7 +192,18 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
         number += upfj;
         wt += upfj * ((*v[i])[lgrp - grow].W + Wgrowth[grow][lgrp - grow]);
       }
-      if (number > 0) {
+
+      /*JMB changed to deal with very small weights a bit better*/
+      if ((iszero(number)) || (number - matnum < verysmall) || (wt < verysmall)) {
+         (*v[i])[lgrp].W = 0.0;
+        (*v[i])[lgrp].N = 0.0;
+        Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);
+      } else {
+        (*v[i])[lgrp].W = wt / number;
+        (*v[i])[lgrp].N = number - matnum;
+        Mat->PutInStorage(area, age, lgrp, matnum, wt / number, TimeInfo);
+      }
+      /*if (number > 0) {
         wt /= number;
         (*v[i])[lgrp].W = wt;
       }
@@ -163,11 +212,12 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublematrix& Wgrowt
       if (wt > 0 && matnum > 0)
         Mat->PutInStorage(area, age, lgrp, matnum, wt, TimeInfo);
       else
-        Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);
+        Mat->PutInStorage(area, age, lgrp, 0.0, 0.0, TimeInfo);*/
     }
   }
 }
 
+//fleksibest formulation - weight read in from file (should be positive)
 void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublevector& Weight) {
   int i, lgrp, grow, maxlgrp;
   double number, upfj;
@@ -230,6 +280,7 @@ void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublevector& Weight
   }
 }
 
+//fleksibest formulation - weight read in from file (should be positive)
 //Same program with certain number of fish made mature.
 void Agebandmatrix::Grow(const doublematrix& Lgrowth, const doublevector& Weight,
   Maturity* const Mat, const TimeClass* const TimeInfo, const AreaClass* const Area,

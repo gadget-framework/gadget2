@@ -2,17 +2,15 @@
 #include "gadget.h"
 
 void vectorofcharptr::set(int id, char* value) {
-  int strlength;
   if (v[id] != NULL) {
     delete v[id];
     v[id] = NULL;
   }
   if (value != NULL) {
-    strlength = strlen(value);
-    v[id] = new char[strlength + 1];
+    v[id] = new char[strlen(value) + 1];
     strcpy(v[id], value);
   } else
-    v[id] = value;
+    v[id] = NULL;
 }
 
 vectorofcharptr::vectorofcharptr(int sz) {
@@ -20,9 +18,9 @@ vectorofcharptr::vectorofcharptr(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0) {
     v = new char*[size];
-    for (i = 0; i < size; i++) {
+    for (i = 0; i < size; i++)
       v[i] = NULL;
-    }
+  
   } else
     v = 0;
 }
@@ -75,7 +73,7 @@ void vectorofcharptr::resize(int addsize, char* value) {
 }
 
 void vectorofcharptr::resize(int addsize) {
-  int i, strlength;
+  int i;
   if (size == 0) {
     size = addsize;
     v = new char*[size];
@@ -88,8 +86,7 @@ void vectorofcharptr::resize(int addsize) {
       if (v[i] == NULL) {
         vnew[i] = NULL;
       } else {
-        strlength = strlen(v[i]) + 1;
-        vnew[i] = new char[strlength];
+        vnew[i] = new char[strlen(v[i]) + 1];
         strcpy(vnew[i], v[i]);
         delete v[i];
       }
@@ -104,7 +101,7 @@ void vectorofcharptr::resize(int addsize) {
 }
 
 void vectorofcharptr::Delete(int pos) {
-  int i, strlength;
+  int i;
   if (size == 1) {
     if (v[0] != NULL)
       delete v[0];
@@ -119,8 +116,7 @@ void vectorofcharptr::Delete(int pos) {
       if (v[i] == NULL) {
         vnew[i] = NULL;
       } else {
-        strlength = strlen(v[i]) + 1;
-        vnew[i] = new char[strlength];
+        vnew[i] = new char[strlen(v[i]) + 1];
         strcpy(vnew[i], v[i]);
         delete v[i];
       }
@@ -129,8 +125,7 @@ void vectorofcharptr::Delete(int pos) {
       if (v[i] == NULL) {
         vnew[i] = NULL;
       } else {
-        strlength = strlen(v[i + 1]) + 1;
-        vnew[i] = new char[strlength];
+        vnew[i] = new char[strlen(v[i + 1]) + 1];
         strcpy(vnew[i], v[i + 1]);
         delete v[i + 1];
       }

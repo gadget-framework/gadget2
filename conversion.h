@@ -68,6 +68,7 @@ public:
   int InterpPos(int i) const { return interppos[i]; };
   int Nf() const { return nf; };
   int Nc() const { return nc; };
+  int Size() const { return pos.Size(); };
 protected:
   int targetisfiner;
   int samedl;

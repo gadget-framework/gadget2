@@ -20,6 +20,7 @@ LogSurveyIndices::LogSurveyIndices(CommentStream& infile, const AreaClass* const
   intmatrix Ages;
   doublevector Lengths;
   int numarea = 0;
+  intmatrix tmpareas;
   charptrvector areaindex;
   charptrvector ageindex;
   charptrvector lenindex;
@@ -43,9 +44,12 @@ LogSurveyIndices::LogSurveyIndices(CommentStream& infile, const AreaClass* const
   datafile.close();
   datafile.clear();
 
-  //Check if we read sufficient input.
-  if (numarea != 1)
-    handle.Message("Error - there should be one area for the log survey indices");
+  //Check if we read correct input
+  if (tmpareas.Nrow() != 1)
+    handle.Message("Error - there should be only one area for the log survey indices");
+
+  for (i = 0; i < tmpareas.Ncol(0); i++)
+    areas.resize(1, tmpareas[0][i]);
 
   //Check area data
   for (i = 0; i < areas.Size(); i++)

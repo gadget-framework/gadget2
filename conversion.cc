@@ -240,7 +240,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 
   int k = 0;
   //Setting pos
-  pos.resize(Lf->Size());
+  pos.resize(Lf->Size(), 0); //JMB - default value
   for (i = minlength; i < maxlength; i++)
     for (j = k; j < Lc->Size(); j++)
       if (Lf->Meanlength(i) >= Lc->Minlength(j) && Lf->Meanlength(i) <= Lc->Maxlength(j)) {

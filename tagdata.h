@@ -9,6 +9,7 @@
 class TimeClass;
 class AreaClass;
 
+//JMB - this is incomplete
 class TagData : public Likelihood {
 public:
   TagData(CommentStream& infile, const AreaClass* const Area,

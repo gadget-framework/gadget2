@@ -138,10 +138,11 @@ const doublevector& Cannibalism::Mortality (const Agebandmatrix& alk_prey,
 
   int prey_size, pred_is_pres;
   int i, preyl, predl, minl, maxl;
+  int minage, maxage;
   double biomass, otherbiomass_factor, len, mort_fact, mortality;
 
   prey_size = len_prey->Size();
-  assert(alk_pred.Minage() == minage[pred_no]);
+  //assert(alk_pred.Minage() == minage[pred_no]);
   assert(alk_pred.Nrow() == (*consumption[pred_no]).Nrow());
   assert(prey_size == (*consumption[pred_no]).Ncol());
   assert(prey_size == cannibalism.Size());
@@ -154,7 +155,9 @@ const doublevector& Cannibalism::Mortality (const Agebandmatrix& alk_prey,
   for (i = 0; i < prey_size; i++)
     cannibalism[i] = 0.0;
 
-  for (i = alk_pred.Minage(); i <= alk_pred.Maxage(); i++)
+  minage = alk_pred.Minage();
+  maxage = alk_pred.Maxage();
+  for (i = minage; i <= maxage; i++)
     for (preyl = 0; preyl < prey_size; preyl++)
       (*consumption[pred_no])[i][preyl] = 0.0;
 
@@ -173,9 +176,13 @@ const doublevector& Cannibalism::Mortality (const Agebandmatrix& alk_prey,
   for (preyl = 0; preyl < prey_size; preyl++) {
     len = len_prey->Meanlength(preyl);
     mort_fact = cann_lev[TimeInfo->CurrentTime() - 1] * otherbiomass_factor;
-    for (i = alk_pred.Minage(); i <= alk_pred.Maxage(); i++) {
-      minl = max(length_conversion.Pos(preyl) + 1, alk_pred.Minlength(i));
+    for (i = minage; i <= maxage; i++) {
       maxl = alk_pred.Maxlength(i);
+      if (preyl < length_conversion.Minlength())
+        minl = alk_pred.Minlength(i);
+      else
+        minl = max(length_conversion.Pos(preyl) + 1, alk_pred.Minlength(i));
+
       for (predl = minl; predl < maxl; predl++) {
         biomass = alk_pred[i][predl].N * alk_pred[i][predl].W;
         mortality = biomass * mort_fact * suitfunc(len_pred->Meanlength(predl), len);
@@ -232,6 +239,7 @@ double Cannibalism::suitfunc(double predlength, double preylength) {
 
   double l = log(predlength / preylength);
   double e, q = 0.0;
+  double check = 0.0;
 
   if (l > params[0])
     q = params[2];
@@ -244,7 +252,12 @@ double Cannibalism::suitfunc(double predlength, double preylength) {
     q = -q;    //To avoid getting a big positive number as an argument for exp
 
   e = (l - params[0]) * (l - params[0]) ;
-  return exp(-e / q);
+  check = exp(-e / q);
+  if ((check < 0.0) || (check > 1.0)) {
+    cerr << "Error in cannibalism - function outside bounds " << check << endl;
+    exit(EXIT_FAILURE);
+  } else
+    return check;
 }
 
 void Cannibalism::Print(ofstream& outfile) {

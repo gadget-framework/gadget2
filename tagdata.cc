@@ -9,6 +9,7 @@
 #include "readaggregation.h"
 #include "gadget.h"
 
+//JMB - this is incomplete
 TagData::TagData(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double likweight)
   :Likelihood(TAGLIKELIHOOD, likweight) {

@@ -32,7 +32,7 @@ void StochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
         Stochasticdata->SendDataToMaster(EcoSystem->Likelihood());
         Stochasticdata->ReadNextLineFromNet();
       }
-      //delete Stochasticdata;
+      delete Stochasticdata;
     #endif
 
   } else if (MainInfo->InitialCondareGiven) {
@@ -52,7 +52,7 @@ void StochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
       if ((MainInfo->printinfo).PrintinColumns())
         EcoSystem->PrintValuesinColumns((MainInfo->printinfo).ColumnOutputFile);
     }
-    //delete Stochasticdata;
+    delete Stochasticdata;
 
   } else {
     EcoSystem->Simulate(MainInfo->CalcLikelihood, print);

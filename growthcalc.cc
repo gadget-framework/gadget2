@@ -525,6 +525,9 @@ void GrowthCalcB::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
     w[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
 
   for (i = 0; i < Lgrowth.Size(); i++) {
+    if ((l[i] < 0.0) || (w[i] < 0.0))
+      cerr << "Warning - negative growth parameter\n";
+
     Lgrowth[i] = l[i];
     Wgrowth[i] = w[i];
   }
@@ -708,6 +711,9 @@ void GrowthCalcF::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
     w[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
 
   for (i = 0; i < Lgrowth.Size(); i++) {
+    if (w[i] < 0.0)
+      cerr << "Warning - negative weight growth parameter\n";
+
     Lgrowth[i] = (growthPar[0] - LgrpDiv->Meanlength(i)) * (1.0 - exp(-kval));
     Wgrowth[i] = w[i];
   }
@@ -735,11 +741,17 @@ void GrowthCalcG::GrowthCalc(int area, doublevector& Lgrowth, doublevector& Wgro
 
   if (iszero(growthPar[0])) {
     for (i = 0; i < Lgrowth.Size(); i++) {
+      if (w[i] < 0.0)
+        cerr << "Warning - negative weight growth parameter\n";
+
       Lgrowth[i] = kval;
       Wgrowth[i] = w[i];
     }
   } else {
     for (i = 0; i < Lgrowth.Size(); i++) {
+      if (w[i] < 0.0)
+        cerr << "Warning - negative weight growth parameter\n";
+
       Lgrowth[i] = kval * pow(LgrpDiv->Meanlength(i), growthPar[0]);
       Wgrowth[i] = w[i];
     }

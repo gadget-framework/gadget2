@@ -30,7 +30,9 @@ void InitialInputFile::getSwitchValue(Parametervector& sw) {
   sw = switches;
 }
 
-InitialInputFile::InitialInputFile(const char* const filename) {
+InitialInputFile::InitialInputFile(const char* const filename)
+  : header(0), switches(0), values(0), lowerbound(0), upperbound(0), optimize(0) {
+
   tmpinfile.open(filename);
   infile.SetStream(tmpinfile);
   if (infile.fail()) {
@@ -277,5 +279,5 @@ double InitialInputFile::Upper(int i) const {
 
 Parameter InitialInputFile::Switches(int i) const {
   assert((i < switches.Size()) && (i >= 0));
-  return(switches[i]);
+  return switches[i];
 }

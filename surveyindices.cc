@@ -19,9 +19,8 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   strncpy(text, "", MaxStrLength);
   int i;
 
-  intmatrix Ages;
+  intmatrix Ages, tmpareas;
   doublevector Lengths;
-  int numarea = 0;
   charptrvector areaindex;
   charptrvector ageindex;
   charptrvector lenindex;
@@ -44,14 +43,17 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   datafile.open(aggfilename);
   CheckIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numarea = ReadAggregation(subdata, areas, areaindex);
+  i = ReadAggregation(subdata, tmpareas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
 
-  //Check if we read sufficient input.
-  if (numarea != 1)
+  //Check if we read correct input
+  if (tmpareas.Nrow() != 1)
     handle.Message("Error - there should be only one area for the survey indices");
+
+  for (i = 0; i < tmpareas.Ncol(0); i++)
+    areas.resize(1, tmpareas[0][i]);
 
   //Check area data
   for (i = 0; i < areas.Size(); i++)
