@@ -10,7 +10,6 @@
 #include "stockfullprinter.h"
 #include "formatedstockprinter.h"
 #include "formatedchatprinter.h"
-#include "formatedcatchprinter.h"
 #include "formatedpreyprinter.h"
 #include "likelihoodprinter.h"
 #include "mortprinter.h"
@@ -219,7 +218,7 @@ int Ecosystem::ReadPrinters(CommentStream& infile) {
     else if (strcasecmp(type, "biomassprinter") == 0)
       printvec.resize(1, new BiomassPrinter(infile, Area, TimeInfo));
     else if (strcasecmp(type, "formatedcatchprinter") == 0)
-      likprintvec.resize(1, new FormatedCatchPrinter(infile, Area, TimeInfo));
+      cout << "The formatedcatchprinter printer class is no longer supported\n";
     else if (strcasecmp(type, "likelihoodprinter") == 0)
       likprintvec.resize(1, new LikelihoodPrinter(infile, Area, TimeInfo));
     else
@@ -266,7 +265,7 @@ int Ecosystem::ReadLikelihood(CommentStream& infile) {
     Likely.resize(1);
     i = Likely.Size() - 1;
 
-    if (strcasecmp(type, "Penalty") == 0) {
+    if (strcasecmp(type, "penalty") == 0) {
       ReadWordAndValue(infile, "datafile", datafilename);
       datafile.open(datafilename);
       CheckIfFailure(datafile, datafilename);
@@ -284,47 +283,47 @@ int Ecosystem::ReadLikelihood(CommentStream& infile) {
           handle.Unexpected("[component]", text);
       }
 
-    } else if (strcasecmp(type, "Understocking") == 0) {
+    } else if (strcasecmp(type, "understocking") == 0) {
       Likely[i] = new UnderStocking(infile, Area, TimeInfo, weight);
 
-    } else if (strcasecmp(type, "CatchStatistics") == 0) {
+    } else if (strcasecmp(type, "catchstatistics") == 0) {
       Likely[i] = new CatchStatistics(infile, Area, TimeInfo, weight, name);
 
-    } else if (strcasecmp(type, "CatchDistribution") == 0) {
+    } else if (strcasecmp(type, "catchdistribution") == 0) {
       Likely[i] = new CatchDistribution(infile, Area, TimeInfo, weight, name);
 
-    } else if (strcasecmp(type, "StockDistribution") == 0) {
+    } else if (strcasecmp(type, "stockdistribution") == 0) {
       Likely[i] = new StockDistribution(infile, Area, TimeInfo, weight);
 
-    } else if (strcasecmp(type, "SurveyIndices") == 0) {
+    } else if (strcasecmp(type, "surveyindices") == 0) {
       Likely[i] = new SurveyIndices(infile, Area, TimeInfo, keeper, weight, name);
 
-    } else if (strcasecmp(type, "LogCatch") == 0) {
+    } else if (strcasecmp(type, "logcatch") == 0) {
       Likely[i] = new LogCatches(infile, Area, TimeInfo, weight);
 
-    } else if (strcasecmp(type, "StomachContent") == 0) {
+    } else if (strcasecmp(type, "stomachcontent") == 0) {
       Likely[i] = new StomachContent(infile, Area, TimeInfo, keeper, weight, name);
 
-    } else if (strcasecmp(type, "TagData") == 0) {
+    } else if (strcasecmp(type, "tagdata") == 0) {
       Likely[i] = new TagData(infile, Area, TimeInfo, weight);
 
-    } else if (strcasecmp(type, "CatchInTons") == 0) {
+    } else if (strcasecmp(type, "catchintons") == 0) {
       Likely[i] = new CatchInTons(infile, Area, TimeInfo, weight);
 
-    } else if (strcasecmp(type, "PredatorIndices") == 0) {
+    } else if (strcasecmp(type, "predatorindices") == 0) {
       Likely[i] = new PredatorIndices(infile, Area, TimeInfo, weight, name);
 
-    } else if (strcasecmp(type, "MigrationPenalty") == 0) {
+    } else if (strcasecmp(type, "migrationpenalty") == 0) {
       Likely[i] = new MigrationPenalty(infile, weight);
 
-    } else if (strcasecmp(type, "RandomWalk") == 0) {
+    } else if (strcasecmp(type, "randomwalk") == 0) {
       cout << "The random walk likelihood component is no longer supported\n";
 
-    } else if (strcasecmp(type, "LogSurveyIndices") == 0) {
+    } else if (strcasecmp(type, "logsurveyindices") == 0) {
       cout << "The log survey indices likelihood component is no longer supported\n"
         << "Use a survey indices component with a log function instead\n";
 
-    } else if (strcasecmp(type, "AggregatedCatchDist") == 0) {
+    } else if (strcasecmp(type, "aggregatedcatchdist") == 0) {
       cout << "The aggregated catch distribution likelihood component is no longer supported\n";
 
     } else {

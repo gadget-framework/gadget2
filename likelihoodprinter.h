@@ -2,7 +2,6 @@
 #define likelihoodprinter_h
 
 #include "commentstream.h"
-#include "catchdistributionptrvector.h"
 #include "printer.h"
 #include "readword.h"
 #include "gadget.h"

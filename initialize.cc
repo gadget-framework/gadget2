@@ -16,7 +16,6 @@
 #include "formatedstockprinter.h"
 #include "formatedchatprinter.h"
 #include "formatedpreyprinter.h"
-#include "formatedcatchprinter.h"
 #include "likelihoodprinter.h"
 #include "predpreystdprinter.h"
 #include "mortprinter.h"
@@ -183,7 +182,6 @@ void Ecosystem::Initialize(int optimize) {
   for (i = 0; i < likprintvec.Size(); i++)
     switch(likprintvec[i]->Type()) {
       case FORMATEDCATCHPRINTER:
-        ((FormatedCatchPrinter*)(likprintvec[i]))->SetLikely(Likely);
         break;
       case LIKELIHOODPRINTER:
         ((LikelihoodPrinter*)(likprintvec[i]))->SetLikely(Likely);

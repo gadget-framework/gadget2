@@ -121,17 +121,15 @@ int main(int aNumber, char *const aVector[]) {
     strncpy(type, "", MaxStrLength);
 
     MainInfo.optinfocommentfile >> ws >> type;
-    if (strcasecmp(type, "HookeAndSimann") == 0)
+    if ((strcasecmp(type, "hookeandsimann") == 0) || (strcasecmp(type, "simannandhooke") == 0))
       Optinfo = new OptInfoHookeAndSimann();
-    else if (strcasecmp(type, "SimannAndHooke") == 0)
-      Optinfo = new OptInfoHookeAndSimann();
-    else if (strcasecmp(type, "Hooke") == 0)
+    else if (strcasecmp(type, "hooke") == 0)
       Optinfo = new OptInfoHooke();
-    else if (strcasecmp(type, "Simann") == 0)
+    else if (strcasecmp(type, "simann") == 0)
       Optinfo = new OptInfoSimann();
     //JMB - removed the BFGS stuff
     else
-      handle.Unexpected("Hooke, Simann, or SimannAndHooke", type);
+      handle.Unexpected("hooke, simann, or simannandhooke", type);
 
     Optinfo->Read(MainInfo.optinfocommentfile);
     MainInfo.CloseOptinfofile();

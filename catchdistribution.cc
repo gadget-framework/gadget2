@@ -940,10 +940,18 @@ double CatchDistribution::LikSumSquares() {
 }
 
 void CatchDistribution::PrintLikelihoodHeader(ofstream& catchfile) {
+
+  //cannot print if functionnumber is 1 or 6, since havent got mincol etc
+  if ((functionnumber == 1) || (functionnumber == 6)) {
+    catchfile << "Likelihood:       catchdistribution - " << cdname << endl
+      << "Cannot print likelihood information for function " << functionname << endl;
+    return;
+  }
+
   int i;
   int mina = ages[minrow][0];
   int maxa = ages[maxrow][0];
-  catchfile << "Likelihood:       catchdistribution\nFunction:         "
+  catchfile << "Likelihood:       catchdistribution - " << cdname << "\nFunction:         "
     << functionname << "\nCalculated every: ";
   if (agg_lev == 0)
     catchfile << "step\n";
@@ -951,7 +959,7 @@ void CatchDistribution::PrintLikelihoodHeader(ofstream& catchfile) {
     catchfile << "year\n";
 
   catchfile << "Filter:           default\nEpsilon:          "
-    << epsilon << "\nName:            ";
+    << epsilon << "\nFleets:          ";
   for (i = 0; i < fleetnames.Size(); i++)
     catchfile << sep << fleetnames[i];
   catchfile << "\nStocks:          ";

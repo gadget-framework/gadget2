@@ -897,7 +897,7 @@ void SCAmounts::PrintLikelihood(ofstream& out, const TimeClass& timeInfo) {
 void SCAmounts::PrintLikelihoodHeader(ofstream& out) {
   int i, j;
 
-  out << "Likelihood:       SCAmounts\nFunction:         -\n"
+  out << "Likelihood:       stomachcontent - " << scname << "\nFunction:         -\n"
     << "Calculated every: step\nFilter:           default\nPredation by:     ";
 
   if (age_pred)
