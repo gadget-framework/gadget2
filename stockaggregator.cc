@@ -2,7 +2,6 @@
 #include "conversionindex.h"
 #include "stock.h"
 #include "mathfunc.h"
-#include "extravector.h" //for PopInfoAdd
 
 StockAggregator::StockAggregator(const StockPtrVector& Stocks,
   const LengthGroupDivision* const LgrpDiv, const IntMatrix& Areas, const IntMatrix& Ages)

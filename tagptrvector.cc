@@ -116,7 +116,7 @@ void TagPtrVector::DeleteTags(const TimeClass* const TimeInfo) {
 
 void TagPtrVector::DeleteAll() {
   if (v != 0) {
-    delete [] v;
+    delete[] v;
     v = 0;
   }
   size = 0;

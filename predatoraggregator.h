@@ -30,7 +30,6 @@ protected:
   IntMatrix predConv;  //[predator][predatorLengthGroup]
   IntMatrix preyConv;  //[prey][preyLengthGroup]
   IntMatrix areas;
-  IntVector AreaNr;
   IntMatrix doeseat;  //[predator][prey] -- does predator eat prey?
   BandMatrixVector total;
 };

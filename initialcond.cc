@@ -3,7 +3,6 @@
 #include "readfunc.h"
 #include "print.h"
 #include "readword.h"
-#include "extravector.h"
 #include "mathfunc.h"
 #include "gadget.h"
 

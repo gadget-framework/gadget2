@@ -9,8 +9,10 @@
 SIOnStep::~SIOnStep() {
 }
 
-SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
-  const TimeClass* const TimeInfo, int numcols, const CharPtrVector& index1, const CharPtrVector& index2) {
+SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
+  const TimeClass* const TimeInfo, int numcols, const IntVector& areas,
+  const CharPtrVector& index1, const CharPtrVector& index2)
+  : Areas(areas) {
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -83,7 +85,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
   datafile.open(datafilename);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadSIData(subdata, arealabel, index1, index2, TimeInfo);
+  ReadSIData(subdata, areaindex, index1, index2, TimeInfo);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -97,8 +99,9 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
   }
 }
 
-SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
-  const TimeClass* const TimeInfo, const CharPtrVector& colindex) {
+SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
+  const TimeClass* const TimeInfo, const IntVector& areas, const CharPtrVector& colindex,
+  const char* name) : Areas(areas) {
 
   ErrorHandler handle;
   char text[MaxStrLength];
@@ -158,7 +161,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
   datafile.open(datafilename);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadSIData(subdata, arealabel, colindex, TimeInfo);
+  ReadSIData(subdata, areaindex, colindex, TimeInfo, name);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -170,8 +173,8 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const char* 
   sse.resize(Indices.Ncol());
 }
 
-void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
-  const CharPtrVector& colindex, const TimeClass* const TimeInfo) {
+void SIOnStep::ReadSIData(CommentStream& infile, const CharPtrVector& areaindex,
+  const CharPtrVector& colindex, const TimeClass* const TimeInfo, const char* name) {
 
   int i;
   int year, step;
@@ -179,7 +182,7 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
   char tmparea[MaxStrLength], tmplabel[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmplabel, "", MaxStrLength);
-  int keepdata, timeid, colid;
+  int keepdata, timeid, colid, areaid;
   int count = 0;
   ErrorHandler handle;
 
@@ -201,8 +204,13 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
     } else
       keepdata = 1;
 
-    //if tmparea matches strlabel keep data, else dont keep the data
-    if (!(strcasecmp(arealabel, tmparea) == 0))
+    //if tmparea is in areaindex keep data, else dont keep the data
+    areaid = -1;
+    for (i = 0; i < areaindex.Size(); i++)
+      if (strcasecmp(areaindex[i], tmparea) == 0)
+        areaid = i;
+
+    if (areaid == -1)
       keepdata = 1;
 
     //if tmplabel is in colindex find colid, else dont keep the data
@@ -232,10 +240,10 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
   }
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cerr << "Warning in surveyindex - found no data in the data file\n";
+    cerr << "Warning in surveyindex - found no data in the data file for " << name << endl;
 }
 
-void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
+void SIOnStep::ReadSIData(CommentStream& infile, const CharPtrVector& areaindex,
   const CharPtrVector& index1, const CharPtrVector& index2, const TimeClass* const TimeInfo) {
 
   int i;
@@ -245,7 +253,7 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpstr1, "", MaxStrLength);
   strncpy(tmpstr2, "", MaxStrLength);
-  int keepdata, timeid, id;
+  int keepdata, timeid, areaid, id;
   ErrorHandler handle;
 
   //for sibylengthandageonstep tmpstr1 is age, tmpstr2 is length
@@ -269,8 +277,13 @@ void SIOnStep::ReadSIData(CommentStream& infile, const char* arealabel,
     } else
       keepdata = 1;
 
-    //if tmparea matches strlabel keep data, else dont keep the data
-    if (!(strcasecmp(arealabel, tmparea) == 0))
+    //if tmparea is in areaindex keep data, else dont keep the data
+    areaid = -1;
+    for (i = 0; i < areaindex.Size(); i++)
+      if (strcasecmp(areaindex[i], tmparea) == 0)
+        areaid = i;
+
+    if (areaid == -1)
       keepdata = 1;
 
     //if tmpstr1 is in index1 keep data, else dont keep the data

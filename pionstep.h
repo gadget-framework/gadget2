@@ -15,18 +15,20 @@ class PIOnStep : public SIOnStep {
 public:
   PIOnStep(CommentStream& infile,  const IntVector& areas,
     const DoubleVector& predatorlengths, const DoubleVector& preylengths,
-    const TimeClass* const TimeInfo, int biomass, const char* arealabel,
-    const CharPtrVector& preylenindex, const CharPtrVector& predlenindex, const char* datafilename);
+    const TimeClass* const TimeInfo, int biomass, const CharPtrVector& areaindex,
+    const CharPtrVector& preylenindex, const CharPtrVector& predlenindex,
+    const char* datafilename, const char* name);
   ~PIOnStep();
   virtual void Sum(const TimeClass* const TimeInfo);
   virtual void SetStocks(const StockPtrVector& Stocks) {};
   virtual void SetPredatorsAndPreys(const PredatorPtrVector& predators, const PreyPtrVector& preys);
 protected:
-  void ReadPredatorData(CommentStream&, const char*, const CharPtrVector&, const CharPtrVector&, const TimeClass*);
+  void ReadPredatorData(CommentStream& infile, const CharPtrVector& areaindex,
+    const CharPtrVector& predlenindex, const CharPtrVector& preylenindex,
+    const TimeClass* TimeInfo, const char* name);
   LengthGroupDivision* PredatorLgrpDiv;
   LengthGroupDivision* PreyLgrpDiv;
   int Biomass;
-  IntVector Areas;
   PredatorAggregator* aggregator;
   int index;
 };

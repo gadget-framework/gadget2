@@ -16,7 +16,7 @@ LogCatches::LogCatches(CommentStream& infile,
 
   lgrpDiv = NULL;
   ErrorHandler handle;
-  int i, j;
+  int i, j, size;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int numarea = 0, numage = 0, numlen = 0;
@@ -164,21 +164,19 @@ LogCatches::LogCatches(CommentStream& infile,
 
   calc_c.resize(numarea);
   obs_c.resize(numarea);
-  for (i = 0; i < numarea; i++) {
-    calc_c[i] = new DoubleMatrix(AgeLengthData[0][i]->Nrow(), AgeLengthData[0][i]->Ncol(), 0.0);
-    obs_c[i] = new DoubleMatrix(AgeLengthData[0][i]->Nrow(), AgeLengthData[0][i]->Ncol(), 0.0);
-  }
-
   obs_biomass.resize(numarea);
   calc_biomass.resize(numarea);
   agg_obs_biomass.resize(numarea);
   agg_calc_biomass.resize(numarea);
   for (i = 0; i < numarea; i++) {
-    obs_biomass[i] = new DoubleMatrix(numtime, AgeLengthData[0][i]->Nrow(), 0.0);
-    calc_biomass[i] = new DoubleMatrix(numtime, AgeLengthData[0][i]->Nrow(), 0.0);
+    size = AgeLengthData[0][i]->Nrow();
+    calc_c[i] = new DoubleMatrix(size, AgeLengthData[0][i]->Ncol(), 0.0);
+    obs_c[i] = new DoubleMatrix(size, AgeLengthData[0][i]->Ncol(), 0.0);
+    obs_biomass[i] = new DoubleMatrix(numtime, size, 0.0);
+    calc_biomass[i] = new DoubleMatrix(numtime, size, 0.0);
     if (agg_lev) {
-      agg_obs_biomass[i] = new DoubleMatrix(numtime, AgeLengthData[0][i]->Nrow(), 0.0);
-      agg_calc_biomass[i] = new DoubleMatrix(numtime, AgeLengthData[0][i]->Nrow(), 0.0);
+      agg_obs_biomass[i] = new DoubleMatrix(numtime, size, 0.0);
+      agg_calc_biomass[i] = new DoubleMatrix(numtime, size, 0.0);
     }
   }
 }

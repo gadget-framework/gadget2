@@ -17,7 +17,8 @@ public:
   virtual void Print(ofstream& outfile) const;
   void SetFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
 private:
-  void ReadStatisticsData(CommentStream&, const TimeClass*, int, int);
+  void ReadStatisticsData(CommentStream& infile, const TimeClass* TimeInfo,
+    int numarea, int numage);
   double SOSWeightOrLength();
   DoubleMatrixPtrVector numbers;
   DoubleMatrixPtrVector mean;

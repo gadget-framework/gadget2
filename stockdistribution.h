@@ -10,7 +10,7 @@
 class StockDistribution : public Likelihood {
 public:
   StockDistribution(CommentStream& infile, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, double w);
+    const TimeClass* const TimeInfo, double w, const char* name);
   virtual ~StockDistribution();
   virtual void AddToLikelihood(const TimeClass* const TimeInfo);
   virtual void Reset(const Keeper* const keeper);
@@ -35,6 +35,7 @@ private:
   int overconsumption; //should we take overconsumption into account
   int functionnumber;
   char* functionname;
+  char* sdname;
   int timeindex;
   ActionAtTimes AAT;
   double epsilon;

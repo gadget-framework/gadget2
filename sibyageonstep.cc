@@ -6,10 +6,10 @@
 #include "gadget.h"
 
 SIByAgeOnStep::SIByAgeOnStep(CommentStream& infile, const IntVector& areas,
-  const IntMatrix& ages, const char* arealabel, const CharPtrVector& ageindex,
-  const TimeClass* const TimeInfo, const char* datafilename)
-  : SIOnStep(infile, datafilename, arealabel, TimeInfo, ageindex),
-    aggregator(0), Ages(ages), Areas(areas) {
+  const IntMatrix& ages, const CharPtrVector& areaindex, const CharPtrVector& ageindex,
+  const TimeClass* const TimeInfo, const char* datafilename, const char* name)
+  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, ageindex, name),
+    aggregator(0), Ages(ages) {
 }
 
 SIByAgeOnStep::~SIByAgeOnStep() {

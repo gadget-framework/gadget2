@@ -11,7 +11,8 @@
 #include "gadget.h"
 
 StockDistribution::StockDistribution(CommentStream& infile,
-  const AreaClass* const Area, const TimeClass* const TimeInfo, double w)
+  const AreaClass* const Area, const TimeClass* const TimeInfo,
+  double w, const char* name)
   : Likelihood(STOCKDISTRIBUTIONLIKELIHOOD, w) {
 
 
@@ -29,6 +30,8 @@ StockDistribution::StockDistribution(CommentStream& infile,
   CommentStream subdata(datafile);
 
   timeindex = 0;
+  sdname = new char[strlen(name) + 1];
+  strcpy(sdname, name);
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
   readWordAndValue(infile, "datafile", datafilename);
@@ -243,7 +246,7 @@ void StockDistribution::ReadStockData(CommentStream& infile,
   }
   AAT.AddActions(Years, Steps, TimeInfo);
   if (count == 0)
-    cerr << "Warning in stockdistribution - found no data in the data file\n";
+    cerr << "Warning in stockdistribution - found no data in the data file for " << sdname << endl;
 }
 
 StockDistribution::~StockDistribution() {
@@ -254,6 +257,7 @@ StockDistribution::~StockDistribution() {
   }
   delete[] aggregator;
   delete[] functionname;
+  delete[] sdname;
   delete lgrpdiv;
 
   for (i = 0; i < fleetnames.Size(); i++)
@@ -279,7 +283,7 @@ void StockDistribution::Reset(const Keeper* const keeper) {
 void StockDistribution::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nStock Distribution - likelihood value " << likelihood
+  outfile << "\nStock Distribution " << sdname << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
@@ -359,11 +363,11 @@ double StockDistribution::LikMultinomial() {
   DoubleMatrixPtrVector Dist(areas.Nrow(), NULL);
   int nareas, area, age, length, sn;
   int minage, maxage;
-  double tmp;
+  double temp;
 
   for (area = 0; area < Dist.Size(); area++) {
     Dist[area] = new DoubleMatrix(aggregator[0]->NoAgeGroups() *
-      aggregator[0]->NoLengthGroups(), stocknames.Size(), 0);
+      aggregator[0]->NoLengthGroups(), stocknames.Size(), 0.0);
     for (sn = 0; sn < stocknames.Size(); sn++) {
       alptr = &aggregator[sn]->AgeLengthDist();
       minage = (*alptr)[area].Minage();
@@ -384,7 +388,7 @@ double StockDistribution::LikMultinomial() {
       for (sn = 0; sn < stocknames.Size(); sn++)
         likdata[sn] = (*AgeLengthData[timeindex][nareas])[sn][area];
 
-      tmp = MN.CalcLogLikelihood(likdata, (*Dist[nareas])[area]);
+      temp = MN.CalcLogLikelihood(likdata, (*Dist[nareas])[area]);
     }
     delete Dist[nareas];
   }

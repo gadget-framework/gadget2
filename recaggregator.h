@@ -27,10 +27,6 @@ public:
   void Sum(const TimeClass* const TimeInfo);
   void Print(ofstream &outfile) const;
   const AgeBandMatrixPtrVector& AgeLengthDist() const { return totalcatch; };
-  const IntVector& getMinCol() const { return mincol; };
-  const IntVector& getMaxCol() const { return maxcol; };
-  int getMinRow() const { return minrow; };
-  int getMaxRow() const { return maxrow; };
 private:
   FleetPtrVector fleets;
   StockPtrVector stocks;
@@ -38,10 +34,6 @@ private:
   LengthGroupDivision* LgrpDiv;
   IntMatrix areas;
   IntMatrix ages;
-  IntVector mincol;  //Min column for traversing aggregated data
-  IntVector maxcol;  //Max column for traversing aggregated data
-  int minrow;        //Min row for traversing aggregated data
-  int maxrow;        //Max row for traversing aggregated data
   ConversionIndexPtrVector CI;
   AgeBandMatrixPtrVector totalcatch;
 };

@@ -94,7 +94,7 @@ IntVector& IntVector::operator = (const IntVector& d) {
     return(*this);
   }
   if (v != 0) {
-    delete [] v;
+    delete[] v;
     v = 0;
   }
   size = d.size;

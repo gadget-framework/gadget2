@@ -8,7 +8,6 @@
 #include "lengthpredator.h"
 #include "fleet.h"
 #include "readword.h"
-#include "extravector.h"
 #include "gadget.h"
 
 FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
@@ -145,6 +144,9 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
           area = areas[aggrArea][j];
           if (prey->IsInArea(area) && fleets[f]->IsInArea(area)) {
             fleetscale = fleets[f]->Amount(area, TimeInfo) * pred->Scaler(area);
+            if (fleets[f]->Type() == LINEARFLEET)
+              fleetscale *= TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
+
             for (i = 0; i < pred->NoPreys(); i++) {
               if (prey->Name() == pred->Preys(i)->Name()) {
                 const DoubleIndexVector* suitptr = &pred->Suitability(i)[0];

@@ -8,7 +8,6 @@
 #include "lengthpredator.h"
 #include "fleet.h"
 #include "readword.h"
-#include "extravector.h"
 #include "gadget.h"
 
 RecAggregator::RecAggregator(const FleetPtrVector& Fleets,
@@ -18,69 +17,19 @@ RecAggregator::RecAggregator(const FleetPtrVector& Fleets,
     areas(Areas), ages(Ages) {
 
   taggingExp = tag;
-  int i, j, k, l = 0;
-  maxcol.resize(ages.Nrow(), 0);
-  mincol.resize(ages.Nrow(), 99999);
-  maxrow = 0;
-  minrow = ages.Nrow();
-  int numlengths = LgrpDiv->NoLengthGroups();
-
+  int i;
   for (i = 0; i < stocks.Size(); i++) {
     checkLengthGroupIsFiner(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv(),
       LgrpDiv, stocks[i]->Name(), "recapture consumption");
     CI.resize(1);
     CI[i] = new ConversionIndex(stocks[i]->ReturnPrey()->ReturnLengthGroupDiv(), LgrpDiv);
-
-    //For convinience, use ap as shorthand for &(stocks[i]->Agelengthkeys(0))
-    //Changed 25-9 2001 and the memberfunction Areas added to livesinareas
-    const AgeBandMatrix* ap = &(stocks[i]->Agelengthkeys(stocks[i]->Areas()[0]));
-
-    //Now, loop over all the possible ages in the Ages matrix,
-    for (j = 0; j < ages.Nrow(); j++) {
-      for (k = 0; k < ages.Ncol(j); k++) {
-        l = ages[j][k];
-
-        if (l >= ap->Minage() && l <= ap->Maxage()) {
-          //l is within the stock age range
-
-          if (j < minrow) //Update minrow if this age is in a lower row of the Ages matrix
-            minrow = j;
-          if (j > maxrow) //Update maxrow if this age is in a higher row of the Ages matrix
-            maxrow = j;
-
-          //If the stock minlength is not smaller than in the CI
-          if (ap->Minlength(l) >= CI[i]->Minlength()) {
-            //update mincol if the CI minlength is smaller than mincol
-            if (CI[i]->Pos(ap->Minlength(l)) < mincol[j])
-              mincol[j] = CI[i]->Pos(ap->Minlength(l));
-
-          } else {
-            //Else the stock minlength is smaller than in CI
-            mincol[j] = 0;
-          }
-
-          //If the stock maxlength is not larger than in the CI
-          if (ap->Maxlength(l) - 1 < CI[i]->Maxlength()) {
-            //update maxcol if the CI minlength is larger than mincol
-            if (CI[i]->Pos(ap->Maxlength(l) - 1) > maxcol[j])
-              maxcol[j] = CI[i]->Pos(ap->Maxlength(l) - 1);
-
-          } else {
-            //Else the stock maxlength is larger than in CI
-            maxcol[j] = numlengths - 1;
-          }
-        }
-      }
-    }
   }
 
-  //Resize totalcatch using dummy variables tmppop and popmatrix. Take care
-  //to make totalcatch a full matrix, i.e. a rectangular matrix, with
-  //minage = 0 and minlength = 0.
+  //Resize totalcatch using dummy variables tmppop and popmatrix.
   PopInfo tmppop;
   tmppop.N = 1.0;
   tmppop.W = 1.0;
-  PopInfoMatrix popmatrix(ages.Nrow(), numlengths, tmppop);
+  PopInfoMatrix popmatrix(ages.Nrow(), LgrpDiv->NoLengthGroups(), tmppop);
   totalcatch.resize(areas.Nrow(), 0, 0, popmatrix);
 }
 
@@ -135,7 +84,10 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
           //area aggrArea in totalcatch.
           area = areas[aggrArea][j];
           if (prey->IsInArea(area) && fleets[f]->IsInArea(area)) {
-            fleetscale = fleets[f]->Amount(area, TimeInfo) * pred->Scaler(area) * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
+            fleetscale = fleets[f]->Amount(area, TimeInfo) * pred->Scaler(area);
+            if (fleets[f]->Type() == LINEARFLEET)
+              fleetscale *= TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
+
             for (i = 0; i < pred->NoPreys(); i++) {
               if (prey->Name() == pred->Preys(i)->Name()) {
                 const DoubleIndexVector* suitptr = &pred->Suitability(i)[0];

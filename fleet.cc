@@ -65,7 +65,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
     handle.Unexpected("suitability", text);
 
   switch(type) {
-    case TOTALAMOUNTGIVEN:
+    case TOTALFLEET:
       predator = new TotalPredator(infile, givenname, areas, &LgrpDiv,
         &LgrpDiv, TimeInfo, keeper, multscaler);
       readamount = 1;

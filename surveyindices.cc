@@ -19,8 +19,8 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   strncpy(text, "", MaxStrLength);
   int i;
 
-  IntMatrix Ages, tmpareas;
-  DoubleVector Lengths;
+  IntMatrix ages, tmpareas;
+  DoubleVector lengths;
   CharPtrVector areaindex;
   CharPtrVector ageindex;
   CharPtrVector lenindex;
@@ -67,7 +67,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     datafile.open(aggfilename);
     checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    i = readLengthAggregation(subdata, Lengths, lenindex);
+    i = readLengthAggregation(subdata, lengths, lenindex);
     handle.Close();
     datafile.close();
     datafile.clear();
@@ -77,7 +77,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     datafile.open(aggfilename);
     checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    i = readAggregation(subdata, Ages, ageindex);
+    i = readAggregation(subdata, ages, ageindex);
     handle.Close();
     datafile.close();
     datafile.clear();
@@ -87,7 +87,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     datafile.open(aggfilename);
     checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    i = readLengthAggregation(subdata, Lengths, lenindex);
+    i = readLengthAggregation(subdata, lengths, lenindex);
     handle.Close();
     datafile.close();
     datafile.clear();
@@ -96,7 +96,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     datafile.open(aggfilename);
     checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    i = readAggregation(subdata, Ages, ageindex);
+    i = readAggregation(subdata, ages, ageindex);
     handle.Close();
     datafile.close();
     datafile.clear();
@@ -119,16 +119,16 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   //We have now read in all the data from the main likelihood file
   if (strcasecmp(sitype, "lengths") == 0) {
-    SI = new SIByLengthOnStep(infile, areas, Lengths, areaindex[0],
-      lenindex, TimeInfo, datafilename);
+    SI = new SIByLengthOnStep(infile, areas, lengths, areaindex,
+      lenindex, TimeInfo, datafilename, surveyname);
 
   } else if (strcasecmp(sitype, "ages") == 0) {
-    SI = new SIByAgeOnStep(infile, areas, Ages, areaindex[0],
-      ageindex, TimeInfo, datafilename);
+    SI = new SIByAgeOnStep(infile, areas, ages, areaindex,
+      ageindex, TimeInfo, datafilename, surveyname);
 
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
-    SI = new SIByLengthAndAgeOnStep(infile, areas, Lengths, Ages, TimeInfo,
-      keeper, lenindex, ageindex, areaindex[0], datafilename);
+    SI = new SIByLengthAndAgeOnStep(infile, areas, lengths, ages, TimeInfo,
+      keeper, lenindex, ageindex, areaindex, datafilename, surveyname);
 
   } else
     handle.Message("Error in surveyindex - unrecognised type", sitype);

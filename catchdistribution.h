@@ -18,52 +18,13 @@ public:
   virtual void LikelihoodPrint(ofstream& outfile);
   virtual void PrintLikelihood(ofstream&, const TimeClass& time);
   virtual void PrintLikelihoodHeader(ofstream&);
-  const DoubleMatrix& getCalcBiomass(int area) const { return *(calc_biomass[area]); };
-  const DoubleMatrix& getObsBiomass(int area) const { return *(obs_biomass[area]); };
-  const DoubleMatrix& getAggCalcBiomass(int area) const { return *(agg_calc_biomass[area]); };
-  const DoubleMatrix& getAggObsBiomass(int area) const { return *(agg_obs_biomass[area]); };
   const char* Name() const { return cdname; };
-  const IntMatrix& getAges() const { return ages; };
-  int aggLevel() const { return agg_lev; };
   void aggregateBiomass();
-  int maxAge() const {
-    int max = 0;
-    int i, j;
-    for (i = 0; i < ages.Nrow(); i++)
-      for (j = 0; j < ages[i].Size(); j++)
-        if (ages[i][j] > max)
-          max = ages[i][j];
-    return max;
-  };
-  int ageCols() const {
-    if (ages.Nrow() < 1)
-      return 0;
-    int col = ages[0].Size();
-    int i;
-    for (i = 1; i < ages.Nrow(); i++)
-      if (ages[i].Size() != col)
-        return 0;
-    return col;
-  };
-  const AgeBandMatrixPtrVector& getModCatch(const TimeClass* const TimeInfo); //kgf 21/1 99
-  const DoubleMatrixPtrMatrix* getObsCatch() const { return &AgeLengthData; };
-  const DoubleMatrixPtrMatrix* getCalcCatch() const { return &Proportions; };
-  const DoubleMatrix& calcCatchByTimeAge(int area) const { return *(calc_catch[area]); };
-  const DoubleMatrix& obsCatchByTimeAge(int area) const { return *(obs_catch[area]); };
   void timeIncrement() { timeindex++; };
-  int getTimeSteps();
-  int getAreas();
-  IntVector getYears();
-  IntVector getSteps();
-  int getMinStockAge() { return min_stock_age; };
-  int getMaxStockAge() { return max_stock_age; };
-  int minRow() { return minrow; };
-  int maxRow() { return maxrow; };
-  int minCol(int row) { return mincol[row]; };
-  int maxCol(int row) { return maxcol[row]; };
   void calcBiomass(int timeindex);
 private:
-  void ReadDistributionData(CommentStream&, const TimeClass*, int, int, int);
+  void ReadDistributionData(CommentStream& infile, const TimeClass* TimeInfo,
+    int numarea, int numage, int numlen);
   double LikMultinomial();
   double LikPearson(const TimeClass* const TimeInfo);
   double ModifiedMultinomial(const TimeClass* const TimeInfo); //kgf 13/11 98

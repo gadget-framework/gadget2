@@ -2,6 +2,8 @@
 #define popinfoindexvector_h
 
 #include "popinfo.h"
+#include "doubleindexvector.h"
+#include "conversionindex.h"
 
 /**
  * \class PopInfoIndexVector
@@ -91,6 +93,12 @@ protected:
    */
   PopInfo* v;
 };
+
+extern void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
+  const ConversionIndex& CI, double ratio, const DoubleIndexVector& Ratio);
+
+extern void PopinfoAdd(PopInfoIndexVector& target, const PopInfoIndexVector& Addition,
+  const ConversionIndex& CI, double ratio = 1);
 
 #ifdef GADGET_INLINE
 #include "popinfoindexvector.icc"

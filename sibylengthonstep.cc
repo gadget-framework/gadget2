@@ -6,10 +6,10 @@
 #include "gadget.h"
 
 SIByLengthOnStep::SIByLengthOnStep(CommentStream& infile, const IntVector& areas,
-  const DoubleVector& lengths, const char* arealabel, const CharPtrVector& lenindex,
-  const TimeClass* const TimeInfo, const char* datafilename)
-  : SIOnStep(infile, datafilename, arealabel, TimeInfo, lenindex),
-    aggregator(0), LgrpDiv(0), Areas(areas) {
+  const DoubleVector& lengths, const CharPtrVector& areaindex, const CharPtrVector& lenindex,
+  const TimeClass* const TimeInfo, const char* datafilename, const char* name)
+  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, lenindex, name),
+    aggregator(0), LgrpDiv(0) {
 
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())

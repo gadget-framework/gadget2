@@ -25,6 +25,8 @@ class Likelihood {
 public:
   /**
    * \brief This is the default Likelihood constructor
+   * \param T is the LikelihoodType for the likelihood component
+   * \param w is the weight for the likelihood component
    */
   Likelihood(LikelihoodType T, double w = 0) { likelihood = 0; weight = w; type = T; };
   /**

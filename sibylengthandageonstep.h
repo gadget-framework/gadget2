@@ -16,7 +16,7 @@ public:
     const DoubleVector& lengths, const IntMatrix& ages,
     const TimeClass* const TimeInfo, Keeper* const keeper,
     const CharPtrVector& lenindex, const CharPtrVector& ageindex,
-    const char* arealabel, const char* datafilename);
+    const CharPtrVector& areaindex, const char* datafilename, const char* name);
   virtual ~SIByLengthAndAgeOnStep();
   virtual void Sum(const TimeClass* const TimeInfo);
   virtual void SetStocks(const StockPtrVector& Stocks);
@@ -30,7 +30,9 @@ public:
   virtual void CommandLinePrint(ofstream& outfile, const TimeClass& time, const PrintInfo&);
   OptType getOptType() { return opttype; };
 protected:
-  void ReadSurveyData(CommentStream&, const char*, const CharPtrVector&, const CharPtrVector&, const TimeClass*);
+  void ReadSurveyData(CommentStream& infile, const CharPtrVector& areaindex,
+    const CharPtrVector& lenindex, const CharPtrVector& ageindex,
+    const TimeClass* TimeInfo, const char* name);
   double calcLikPearson();
   double calcLikMultinomial();
   double calcLikGamma();
@@ -38,7 +40,6 @@ protected:
   double calcLikLog();
   StockAggregator* aggregator;
   LengthGroupDivision* LgrpDiv;
-  IntVector Areas;
   IntMatrix Ages;
   DoubleMatrixPtrVector indexMatrix;
   DoubleMatrixPtrVector calc_index;  //for comparing with indexMatrix

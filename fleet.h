@@ -8,7 +8,7 @@ class LengthPredator;
 class PopPredator;
 class Keeper;
 
-enum FleetType { TOTALAMOUNTGIVEN = 1, LINEARFLEET, MORTALITYFLEET };
+enum FleetType { TOTALFLEET = 1, LINEARFLEET, MORTALITYFLEET };
 
 /**
  * \class Fleet

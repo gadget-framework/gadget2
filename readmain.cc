@@ -54,7 +54,7 @@ int Ecosystem::ReadFleet(CommentStream& infile) {
 
     if (strcasecmp(text, "totalfleet") == 0) {
       strcpy(fleetnames[i], value);
-      fleetvec[i] = new Fleet(infile, fleetnames[i], Area, TimeInfo, keeper, TOTALAMOUNTGIVEN);
+      fleetvec[i] = new Fleet(infile, fleetnames[i], Area, TimeInfo, keeper, TOTALFLEET);
 
     } else if (strcasecmp(text, "linearfleet") == 0) {
       strcpy(fleetnames[i], value);
@@ -293,7 +293,7 @@ int Ecosystem::ReadLikelihood(CommentStream& infile) {
       Likely[i] = new CatchDistribution(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "stockdistribution") == 0) {
-      Likely[i] = new StockDistribution(infile, Area, TimeInfo, weight);
+      Likely[i] = new StockDistribution(infile, Area, TimeInfo, weight, name);
 
     } else if (strcasecmp(type, "surveyindices") == 0) {
       Likely[i] = new SurveyIndices(infile, Area, TimeInfo, keeper, weight, name);

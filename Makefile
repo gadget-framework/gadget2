@@ -90,7 +90,7 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	preystdinfo.o preystdinfobylength.o print.o timevariable.o boundlikelihood.o \
 	commentstream.o printinfo.o readfunc.o conversionindex.o readmain.o keeper.o \
 	ecosystem.o readword.o renewal.o mortpredator.o mortprey.o mortprinter.o \
-	errorhandler.o extravector.o fleet.o sibyageonstep.o fleetpreyaggregator.o \
+	errorhandler.o pionstep.o fleet.o sibyageonstep.o fleetpreyaggregator.o \
 	sibylengthonstep.o formula.o grower.o growthcalc.o simulation.o hooke.o \
 	simann.o sionstep.o initialcond.o spawner.o initialize.o stochasticdata.o \
 	lengthpredator.o stockaggregator.o lengthprey.o sibylengthandageonstep.o \
@@ -107,7 +107,7 @@ GADGETOBJECTS = parameter.o predator.o growermemberfunctions.o predatoraggregato
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o \
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \
 	initialinputfile.o popratio.o popinfo.o taggrow.o recaggregator.o \
-	agebandmatrixratiomemberfunctions.o
+	popinfomemberfunctions.o agebandmatrixratiomemberfunctions.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 

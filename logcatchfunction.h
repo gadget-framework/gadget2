@@ -19,12 +19,6 @@ public:
   virtual void LikelihoodPrint(ofstream& outfile);
   virtual void CommandLinePrint(ofstream& outfile, const TimeClass& time, const PrintInfo& print);
   void PrintLikelihoodOnStep(ofstream&, const TimeClass& time, int print_type);
-  const DoubleMatrix& getCalcBiomass(int area) const { return *(calc_biomass[area]); };
-  const DoubleMatrix& getObsBiomass(int area) const { return *(obs_biomass[area]); };
-  const DoubleMatrix& getAggCalcBiomass(int area) const { return *(agg_calc_biomass[area]); };
-  const DoubleMatrix& getAggObsBiomass(int area) const { return *(agg_obs_biomass[area]); };
-  int getMinStockAge() { return min_stock_age; };
-  int getMaxStockAge() { return max_stock_age; };
 private:
   void ReadLogCatchData(CommentStream&, const TimeClass*, int, int, int);
   void ReadLogWeightsData(CommentStream&, const TimeClass*, int);
@@ -62,7 +56,8 @@ private:
                //1: calculate likelihood once a year
   int min_stock_age; //kgf 10/5 99
   int max_stock_age;//kgf 10/5 99
-  int MinAge, MaxAge;
+  int MinAge;
+  int MaxAge;
   double dl;
   int calcCSum; //For PrintLikelihoodOnStep
   int obsCSum;  //to collect C & C-hat

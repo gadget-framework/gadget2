@@ -172,11 +172,6 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
   Likelihoodvalues.AddRows(numrow, numcol, 0.0);
   calc_c.resize(numcol);
   obs_c.resize(numcol);
-  for (i = 0; i < numcol; i++) {
-    calc_c[i] = new DoubleMatrix(AgeLengthData[0][i]->Nrow(), AgeLengthData[0][i]->Ncol(), 0.0);
-    obs_c[i] = new DoubleMatrix(AgeLengthData[0][i]->Nrow(), AgeLengthData[0][i]->Ncol(), 0.0);
-  }
-
   obs_biomass.resize(numcol);
   calc_biomass.resize(numcol);
   agg_obs_biomass.resize(numcol);
@@ -184,10 +179,13 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
   calc_catch.resize(numcol);
   obs_catch.resize(numcol);
 
-  int y, year;
+  int y, year, size;
   for (i = 0; i < numcol; i++) {
-    obs_biomass[i] = new DoubleMatrix(numrow, AgeLengthData[0][i]->Nrow(), 0.0);
-    calc_biomass[i] = new DoubleMatrix(numrow, AgeLengthData[0][i]->Nrow(), 0.0);
+    size = AgeLengthData[0][i]->Nrow();
+    calc_c[i] = new DoubleMatrix(size, AgeLengthData[0][i]->Ncol(), 0.0);
+    obs_c[i] = new DoubleMatrix(size, AgeLengthData[0][i]->Ncol(), 0.0);
+    obs_biomass[i] = new DoubleMatrix(numrow, size, 0.0);
+    calc_biomass[i] = new DoubleMatrix(numrow, size, 0.0);
     if (agg_lev) {
       //Find number of years.
       y = 1;
@@ -198,14 +196,14 @@ CatchDistribution::CatchDistribution(CommentStream& infile,
           year = Years[j];
         }
 
-      agg_obs_biomass[i] = new DoubleMatrix(y, AgeLengthData[0][i]->Nrow(), 0.0);
-      agg_calc_biomass[i] = new DoubleMatrix(y, AgeLengthData[0][i]->Nrow(), 0.0);
-      calc_catch[i] = new DoubleMatrix(y, AgeLengthData[0][i]->Nrow(), 0.0);
-      obs_catch[i] = new DoubleMatrix(y, AgeLengthData[0][i]->Nrow(), 0.0);
+      agg_obs_biomass[i] = new DoubleMatrix(y, size, 0.0);
+      agg_calc_biomass[i] = new DoubleMatrix(y, size, 0.0);
+      calc_catch[i] = new DoubleMatrix(y, size, 0.0);
+      obs_catch[i] = new DoubleMatrix(y, size, 0.0);
 
     } else {
-      calc_catch[i] = new DoubleMatrix(numrow, AgeLengthData[0][i]->Nrow(), 0.0);
-      obs_catch[i] = new DoubleMatrix(numrow, AgeLengthData[0][i]->Nrow(), 0.0);
+      calc_catch[i] = new DoubleMatrix(numrow, size, 0.0);
+      obs_catch[i] = new DoubleMatrix(numrow, size, 0.0);
     }
   }
 }
@@ -406,8 +404,7 @@ void CatchDistribution::Print(ofstream& outfile) const {
   int i;
 
   outfile << "\nCatch Distribution " << cdname << " - likelihood value " << likelihood
-    << "\n\tFunction " << functionname;
-  outfile << "\n\tStock names:";
+    << "\n\tFunction " << functionname << "\n\tStock names:";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];
   outfile << "\n\tFleet names:";
@@ -1041,29 +1038,4 @@ void CatchDistribution::PrintLikelihood(ofstream& catchfile, const TimeClass& Ti
     }
   }
   catchfile.flush();
-}
-
-const AgeBandMatrixPtrVector& CatchDistribution::getModCatch(const TimeClass* const TimeInfo) {
-  aggregator->Sum(TimeInfo, 1); //mortality model, calculated catch
-  return aggregator->AgeLengthDist();
-}
-
-IntVector CatchDistribution::getSteps() {
-  //written by kgf 11/2 99
-  IntVector step(Steps);
-  return step;
-}
-
-IntVector CatchDistribution::getYears() {
-  //written by kgf 11/2 99
-  IntVector years(Years);
-  return years;
-}
-
-int CatchDistribution::getAreas() {
-  return areas.Nrow();
-}
-
-int CatchDistribution::getTimeSteps() {
-  return AgeLengthData.Nrow();
 }

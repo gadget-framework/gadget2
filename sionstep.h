@@ -19,10 +19,12 @@ class SIOnStep;
 
 class SIOnStep {
 public:
-  SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
-    const TimeClass* const TimeInfo, int numcols, const CharPtrVector& index1, const CharPtrVector& index2);
-  SIOnStep(CommentStream& infile, const char* datafilename, const char* arealabel,
-    const TimeClass* const TimeInfo, const CharPtrVector& colindex);
+  SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
+    const TimeClass* const TimeInfo, int numcols, const IntVector& areas,
+    const CharPtrVector& index1, const CharPtrVector& index2);
+  SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& areaindex,
+    const TimeClass* const TimeInfo, const IntVector& areas,
+    const CharPtrVector& colindex, const char* name);
   virtual ~SIOnStep();
   virtual void Sum(const TimeClass* const TimeInfo) = 0;
   virtual void SetStocks(const StockPtrVector& Stocks) = 0;
@@ -37,6 +39,7 @@ protected:
   void SetError() { error = 1; };
   int IsToSum(const TimeClass* const TimeInfo) const;
   void KeepNumbers(const DoubleVector& numbers);
+  IntVector Areas;
   IntVector Years;
   IntVector Steps;
   IntVector YearsInFile;
@@ -45,10 +48,10 @@ protected:
   DoubleMatrix abundance;
   FitType getFitType() { return fittype; };
 private:
-  void ReadSIData(CommentStream& infile, const char* arealabel,
+  void ReadSIData(CommentStream& infile, const CharPtrVector& areaindex,
     const CharPtrVector& index1, const CharPtrVector& index2, const TimeClass* const TimeInfo);
-  void ReadSIData(CommentStream& infile, const char* arealabel,
-    const CharPtrVector& colindex, const TimeClass* const TimeInfo);
+  void ReadSIData(CommentStream& infile, const CharPtrVector& areaindex,
+    const CharPtrVector& colindex, const TimeClass* const TimeInfo, const char* name);
   double Fit(const DoubleVector& stocksize, const DoubleVector& indices, int col);
   int NumberOfSums;
   FitType fittype;

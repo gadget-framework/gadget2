@@ -25,9 +25,9 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   const IntVector& areas, const DoubleVector& lengths,
   const IntMatrix& ages, const TimeClass* const TimeInfo, Keeper* const keeper,
   const CharPtrVector& lenindex, const CharPtrVector& ageindex,
-  const char* arealabel, const char* datafilename)
-  : SIOnStep(infile, datafilename, arealabel, TimeInfo, 1, ageindex, lenindex),  //reads fit type and years/steps
-   aggregator(0), LgrpDiv(0), Areas(areas), Ages(ages) {
+  const CharPtrVector& areaindex, const char* datafilename, const char* name)
+  : SIOnStep(infile, datafilename, areaindex, TimeInfo, 1, areas, ageindex, lenindex),  //reads fit type and years/steps
+    aggregator(0), LgrpDiv(0), Ages(ages) {
 
   keeper->AddString("SIByLengthAndAgeOnStep");
   LgrpDiv = new LengthGroupDivision(lengths);
@@ -131,7 +131,7 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   datafile.open(datafilename);
   checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  ReadSurveyData(subdata, arealabel, lenindex, ageindex, TimeInfo);
+  ReadSurveyData(subdata, areaindex, lenindex, ageindex, TimeInfo, name);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -150,8 +150,8 @@ SIByLengthAndAgeOnStep::SIByLengthAndAgeOnStep(CommentStream& infile,
   keeper->ClearLast();
 }
 
-void SIByLengthAndAgeOnStep::ReadSurveyData(CommentStream& infile, const char* arealabel,
-  const CharPtrVector& lenindex, const CharPtrVector& ageindex, const TimeClass* TimeInfo) {
+void SIByLengthAndAgeOnStep::ReadSurveyData(CommentStream& infile, const CharPtrVector& areaindex,
+  const CharPtrVector& lenindex, const CharPtrVector& ageindex, const TimeClass* TimeInfo, const char* name) {
 
   int i;
   int year, step;
@@ -160,7 +160,7 @@ void SIByLengthAndAgeOnStep::ReadSurveyData(CommentStream& infile, const char* a
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpage, "", MaxStrLength);
   strncpy(tmplen, "", MaxStrLength);
-  int keepdata, timeid, ageid, lenid;
+  int keepdata, timeid, areaid, ageid, lenid;
   int count = 0;
   ErrorHandler handle;
 
@@ -181,8 +181,13 @@ void SIByLengthAndAgeOnStep::ReadSurveyData(CommentStream& infile, const char* a
     } else
       keepdata = 1;
 
-    //if tmparea matches strlabel keep data, else dont keep the data
-    if (!(strcasecmp(arealabel, tmparea) == 0))
+    //if tmparea is in areaindex keep data, else dont keep the data
+    areaid = -1;
+    for (i = 0; i < areaindex.Size(); i++)
+      if (strcasecmp(areaindex[i], tmparea) == 0)
+        areaid = i;
+
+    if (areaid == -1)
       keepdata = 1;
 
     //if tmpage is in ageindex keep data, else dont keep the data
@@ -210,7 +215,7 @@ void SIByLengthAndAgeOnStep::ReadSurveyData(CommentStream& infile, const char* a
     }
   }
   if (count == 0)
-    cerr << "Warning in surveyindex - found no data in the data file\n";
+    cerr << "Warning in surveyindex - found no data in the data file for " << name << endl;
 }
 
 SIByLengthAndAgeOnStep::~SIByLengthAndAgeOnStep() {
