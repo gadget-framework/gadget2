@@ -197,11 +197,11 @@ void OptInfoBfgs::gradient(double* p, double fp) {
       f1 = (*f)(tmp, numvar);
       mf1 = (*f)(mtmp, numvar);
       gk[i] = (f1 - mf1) * tmpacc;
-      if ((mf1 - f1)/fp < rathersmall) {
+      if (abs(mf1 - f1)/fp < verysmall) {
       	gradacc = min(0.001,10*gradacc);
       	cerr << "Warning in BFGS - possible roundoff errors in gradient\n";
       }
-      diaghess[i] = 1.0;//4.0/((f1 - 2.0*fk + mf1)*tmpacc*tmpacc);
+      diaghess[i] = (f1 - 2.0*fk + mf1)/(gradacc*gradacc);
     }
   } else if (difficultgrad > 0) {
     tmpacc = 1.0 / (12.0 * gradacc);
@@ -221,7 +221,7 @@ void OptInfoBfgs::gradient(double* p, double fp) {
       mf1 = (*f)(mtmp, numvar);
       mf2 = (*f)(mtmp1, numvar);
       gk[i] = (8.0*f1 - f2 - 8.0*mf1 + mf2) * tmpacc;
-      if ((mf2 - f2)/fp < rathersmall) {
+      if (abs(mf2 - f2)/fp < rathersmall) {
       	gradacc = min(0.001,10*gradacc);
       	cerr << "Warning in BFGS - possible roundoff errors in gradient\n";
       }
