@@ -6,6 +6,7 @@ PrintInfo::PrintInfo() : PrintInterVal1(-2), PrintInterVal2(-2), forcePrint(0),
 
   OutputFile = NULL;
   ColumnOutputFile = NULL;
+  ParamOutFile = NULL; 
   surveyfile = NULL;
   catchfile = NULL;
   stomachfile = NULL;
