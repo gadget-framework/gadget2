@@ -211,4 +211,5 @@ void Prey::Reset() {
       overconsumption[area][l] = 0.0;
     }
   }
+  handle.logMessage("Reset consumption data for prey", this->Name());
 }

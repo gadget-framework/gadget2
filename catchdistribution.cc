@@ -506,11 +506,24 @@ double CatchDistribution::calcLikMultinomial() {
       for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
         (*modelDistribution[timeindex][area])[age][len] = ((*alptr)[area][age][len]).N;
 
-    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+    if (obsDistribution[timeindex][area]->Nrow() == 1) {
+      //Only one age-group, so calculate multinomial based on length distribution
       likelihoodValues[timeindex][area] +=
-        MN.calcLogLikelihood((*obsDistribution[timeindex][area])[age],
-          (*modelDistribution[timeindex][area])[age]);
+        MN.calcLogLikelihood((*obsDistribution[timeindex][area])[0],
+          (*modelDistribution[timeindex][area])[0]);
 
+    } else {
+      //Many age-groups, so calculate multinomial based on age distribution per length group
+      DoubleVector dist(obsDistribution[timeindex][area]->Nrow(), 0.0);
+      DoubleVector data(obsDistribution[timeindex][area]->Nrow(), 0.0);
+      for (len = 0; len < obsDistribution[timeindex][area]->Ncol(0); len++) {
+        for (age = 0; age < obsDistribution[timeindex][area]->Nrow(); age++) {
+          dist[age] = (*modelDistribution[timeindex][area])[age][len];
+          data[age] = (*obsDistribution[timeindex][area])[age][len];
+        }
+        likelihoodValues[timeindex][area] += MN.calcLogLikelihood(data, dist);
+      }
+    }
   }
   return MN.returnLogLikelihood();
 }
