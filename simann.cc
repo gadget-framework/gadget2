@@ -306,6 +306,7 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
             fp = (*f)(endpoint, n);
             EcoSystem->setFuncEvalSA(FuncEval - offset);
             EcoSystem->setLikelihoodSA(fp);
+            EcoSystem->StoreVariables(fp, endpoint);
             return 0;
           }
 
@@ -350,6 +351,7 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
             }
             cout << endl;
             fopt = fp;
+            EcoSystem->StoreVariables(-fp, endpoint);  //store this point in case the algorithm is interrupted
           }
         }
       }
@@ -400,6 +402,7 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
       EcoSystem->setConvergeSA(1);
       EcoSystem->setFuncEvalSA(FuncEval - offset);
       EcoSystem->setLikelihoodSA(fp);
+      EcoSystem->StoreVariables(fp, endpoint);
       return 1;
     }
 

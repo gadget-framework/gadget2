@@ -26,7 +26,7 @@ public:
    */
   virtual void read(CommentStream& infile, char* text) {};
   /**
-   * \brief This method calls the optimisation function
+   * \brief This is the function used to call the optimisation algorithms
    */
   virtual void OptimiseLikelihood() {};
 };

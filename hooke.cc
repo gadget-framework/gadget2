@@ -257,6 +257,9 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
 
       EcoSystem->setFuncEvalHJ(FuncEval - offset);
       EcoSystem->setLikelihoodHJ(newf);
+      for (i = 0; i < nvars; i++)
+        endpt[param[i]] *= init[param[i]];
+      EcoSystem->StoreVariables(newf, endpt);
       return 0;
     }
 
@@ -345,6 +348,9 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
 
         EcoSystem->setFuncEvalHJ(FuncEval - offset);
         EcoSystem->setLikelihoodHJ(newf);
+        for (i = 0; i < nvars; i++)
+          endpt[param[i]] *= init[param[i]];
+        EcoSystem->StoreVariables(newf, endpt);
         return 0;
       }
 
@@ -368,9 +374,12 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
     if (fbefore < check) {
       cout << "\nNew optimum after " << (FuncEval - offset) << " function evaluations, f(x) = "
         << fbefore << " at\n";
-      for (i = 0; i < nvars; i++)
-        cout << xbefore[i] * init[i] << sep;
+      for (i = 0; i < nvars; i++) {
+        endpt[i] = xbefore[i] * init[i];
+        cout << endpt[i] << sep;
+      }
       check = fbefore;
+      EcoSystem->StoreVariables(fbefore, endpt);  //store this point in case the algorithm is interrupted
     } else
       cout << "\nChecking convergence criteria after " << (FuncEval - offset) << " function evaluations ...";
 
@@ -389,6 +398,9 @@ int hooke(double (*f)(double*, int), int nvars, double startpt[], double endpt[]
       EcoSystem->setConvergeHJ(1);
       EcoSystem->setFuncEvalHJ(FuncEval - offset);
       EcoSystem->setLikelihoodHJ(newf);
+      for (i = 0; i < nvars; i++)
+        endpt[i] *= init[i];      
+      EcoSystem->StoreVariables(newf, endpt);
       return 1;
     }
 

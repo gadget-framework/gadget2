@@ -28,7 +28,7 @@ int InterruptInterface::menu() {
     switch(s[0]) {
       case 'q':
       case 'Q':
-        cout << "\nQuitting current simulation ...\nCurrent parameter values will be written to file (called interrupt.out)\n";
+        cout << "\nQuitting current simulation ...\nThe best parameter values will be written to file (called interrupt.out)\n";
         return 0;
       case 'f':
       case 'F':

@@ -54,6 +54,7 @@ int OptInfoBfgs::iteration(double* x0) {
       fk = (*f)(x, numvar);
       EcoSystem->setFuncEvalBFGS(FuncEval - offset);
       EcoSystem->setLikelihoodBFGS(fk);
+      EcoSystem->StoreVariables(fk, x);
       return 0;
     }
 
@@ -123,6 +124,7 @@ int OptInfoBfgs::iteration(double* x0) {
     for (i = 0; i < numvar; i++)
       cout << x[i] << sep;
     cout << endl;
+    EcoSystem->StoreVariables(fk, x);  //store this point in case the algorithm is interrupted
 
     //If the algorithm has met the convergence criteria, terminate the algorithm
     if ((normgrad / (1.0 + absolute(fk)) < bfgseps) && (normdeltax < bfgseps)) {
@@ -135,6 +137,7 @@ int OptInfoBfgs::iteration(double* x0) {
       EcoSystem->setConvergeBFGS(1);
       EcoSystem->setFuncEvalBFGS(FuncEval - offset);
       EcoSystem->setLikelihoodBFGS(fk);
+      EcoSystem->StoreVariables(fk, x);
       return 1;
     }
   }

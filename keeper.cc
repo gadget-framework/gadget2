@@ -12,6 +12,7 @@ Keeper::Keeper() {
   stack = new StrStack();
   likcompnames = new StrStack();
   boundsgiven = 0;
+  bestlikelihood = 0.0;
 }
 
 void Keeper::KeepVariable(double& value, const Parameter& attr) {
@@ -27,6 +28,7 @@ void Keeper::KeepVariable(double& value, const Parameter& attr) {
     index = switches.Size();
     switches.resize(1);
     values.resize(1);
+    bestvalues.resize(1);
     lowerbds.resize(1, -9999);  // default lower bound
     upperbds.resize(1, 9999);   // default upper bound
     opt.resize(1, 1);
@@ -35,6 +37,7 @@ void Keeper::KeepVariable(double& value, const Parameter& attr) {
     address.AddRows(1, 1);
     switches[index] = attr;
     values[index] = value;
+    bestvalues[index] = value;
     address[index][0] = &value;
     address[index][0] = stack->sendAll();
 
@@ -72,6 +75,7 @@ void Keeper::DeleteParam(const double& var) {
           address.DeleteRow(i);
           switches.Delete(i);
           values.Delete(i);
+          bestvalues.Delete(i);
           opt.Delete(i);
           lowerbds.Delete(i);
           upperbds.Delete(i);
@@ -209,7 +213,10 @@ void Keeper::ScaleVariables() {
   int i;
   for (i = 0; i < values.Size(); i++) {
     if (isZero(values[i])) {
-      handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getValue());
+      if ((opt.Size() == 0) || (opt[i] == 1)) {
+        //JMB - only print a warning if we are optimising this variable ...
+        handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getValue());
+      }
       initialvalues[i] = 1.0;
       scaledvalues[i] = values[i];
     } else {
@@ -230,7 +237,10 @@ void Keeper::Update(const DoubleVector& val) {
 
     values[i] = val[i];
     if (isZero(initialvalues[i])) {
-      handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getValue());
+      if ((opt.Size() == 0) || (opt[i] == 1)) {
+        //JMB - only print a warning if we are optimising this variable ...
+        handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getValue());
+      }
       scaledvalues[i] = val[i];
     } else
       scaledvalues[i] = val[i] / initialvalues[i];
@@ -248,7 +258,10 @@ void Keeper::Update(int pos, double& value) {
 
   values[pos] = value;
   if (isZero(initialvalues[pos])) {
-    handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[pos].getValue());
+    if ((opt.Size() == 0) || (opt[pos] == 1)) {
+      //JMB - only print a warning if we are optimising this variable ...
+      handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[pos].getValue());
+    }
     scaledvalues[pos] = value;
   } else
     scaledvalues[pos] = value / initialvalues[pos];
@@ -428,17 +441,21 @@ void Keeper::Update(const StochasticData* const Stoch) {
       for (j = 0; j < switches.Size(); j++) {
         if (Stoch->Switches(i) == switches[j]) {
           values[j] = Stoch->Values(i);
-
-          if (isZero(initialvalues[j])) {
-            handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[j].getValue());
-            scaledvalues[j] = values[j];
-          } else
-            scaledvalues[j] = values[j] / initialvalues[j];
+          bestvalues[j] = Stoch->Values(i);          
 
           lowerbds[j] = Stoch->Lower(i);
           upperbds[j] = Stoch->Upper(i);
           if (Stoch->OptGiven())
             opt[j] = Stoch->Optimise(i);
+
+          if (isZero(initialvalues[j])) {
+            if ((opt.Size() == 0) || (opt[j] == 1)) {
+              //JMB - only print a warning if we are optimising this variable ...
+              handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[j].getValue());
+            }
+            scaledvalues[j] = values[j];
+          } else
+            scaledvalues[j] = values[j] / initialvalues[j];
 
           match[i]++;
           found[j]++;
@@ -462,8 +479,12 @@ void Keeper::Update(const StochasticData* const Stoch) {
         opt[i] = Stoch->Optimise(i);
 
       values[i] = Stoch->Values(i);
+      bestvalues[i] = Stoch->Values(i);
       if (isZero(initialvalues[i])) {
-        handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getValue());
+        if ((opt.Size() == 0) || (opt[i] == 1)) {
+          //JMB - only print a warning if we are optimising this variable ...
+          handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getValue());
+        }
         scaledvalues[i] = values[i];
       } else
         scaledvalues[i] = Stoch->Values(i) / initialvalues[i];
@@ -503,10 +524,10 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec, int inte
   outfile << "; ";
   RUNID.print(outfile);
 
-
   if (interrupt == 1) {
     outfile << "; Gadget was interrupted after " << EcoSystem->getFuncEval()
-      << " function evaluations at the following point\n";
+      << " function evaluations\n; the best likelihood value found so far is "
+      << setprecision(p) << bestlikelihood << endl;
 
   } else if (EcoSystem->getFuncEval() == 0) {
     outfile << "; a stochastic run was performed giving a likelihood value of "
@@ -545,8 +566,8 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec, int inte
   }
 
   outfile << "switch\tvalue\t\tlower\tupper\toptimise\n";
-  for (i = 0; i < values.Size(); i++) {
-    outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i] << TAB;
+  for (i = 0; i < bestvalues.Size(); i++) {
+    outfile << switches[i] << TAB << setw(w) << setprecision(p) << bestvalues[i] << TAB;
     outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i]
       << setw(smallwidth) << setprecision(smallprecision) << upperbds[i]
       << setw(smallwidth) << opt[i] << endl;
@@ -630,4 +651,17 @@ void Keeper::checkBounds() const {
 
 void Keeper::addString(const string str) {
   addString(str.c_str());
+}
+
+void Keeper::StoreVariables(double likvalue, double* point) {
+  int i, j;
+
+  j = 0;
+  bestlikelihood = likvalue;
+  for (i = 0; i < bestvalues.Size(); i++) {
+    if ((opt.Size() == 0) || (opt[i] == 1)) {
+      bestvalues[i] = point[j];
+      j++;
+    }
+  }
 }

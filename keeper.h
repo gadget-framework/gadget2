@@ -27,6 +27,12 @@ public:
   void clearLast();
   void clearAll();
   /**
+   * \brief This function will store the current value of the variables from the optimisation process
+   * \param likvalue is the current likelihood value
+   * \param point is the vector of the current parameter values
+   */
+  void StoreVariables(double likvalue, double* point);
+  /**
    * \brief This function will scale the variables to be optimised (for the Hooke & Jeeves optimisation algorithm)
    */
   void ScaleVariables();
@@ -178,6 +184,10 @@ protected:
    */
   DoubleVector values;
   /**
+   * \brief This is the DoubleVector used to store the best values of the parameters that the optimisation process has found so far
+   */
+  DoubleVector bestvalues;
+  /**
    * \brief This is the IntVector used to store information about whether the parameters are to be optimised
    * \note if opt[i] is 1 then parameter i is to be optimised, else if opt[i] is 0 then parameter i is not to be optimised and its value is fixed throughout the optimisation process
    */
@@ -206,6 +216,10 @@ protected:
    * \brief This is a flag used to denote whether the bounds of the parameters have been specified or not
    */
   int boundsgiven;
+  /**
+   * \brief This is the best likelihood score found so far by the optimisation process
+   */
+  double bestlikelihood;
 };
 
 #endif

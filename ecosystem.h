@@ -148,6 +148,12 @@ public:
    */
   void Reset();
   /**
+   * \brief This function will store the current value of the variables from the optimisation process
+   * \param likvalue is the current likelihood value
+   * \param point is the vector of the current parameter values
+   */
+  void StoreVariables(double likvalue, double* point) { keeper->StoreVariables(likvalue, point); };
+  /**
    * \brief This function will scale the variables to be optimised (for the Hooke & Jeeves optimisation algorithm)
    */
   void ScaleVariables() { keeper->ScaleVariables(); };
