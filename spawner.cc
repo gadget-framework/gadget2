@@ -30,8 +30,8 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
   spawnWeightLoss.resize(numlength, 0.0);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "spawnstep") != 0)
-    handle.Unexpected("spawnstep", text);
+  if (!((strcasecmp(text, "spawnstep") == 0) || (strcasecmp(text, "spawnsteps") == 0)))
+    handle.Unexpected("spawnsteps", text);
 
   i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
@@ -45,8 +45,8 @@ Spawner::Spawner(CommentStream& infile, int maxage, const LengthGroupDivision* c
       handle.Message("Illegal spawn step in spawning function");
 
   infile >> text >> ws;
-  if (strcasecmp(text, "spawnarea") != 0)
-    handle.Unexpected("spawnarea", text);
+  if (!((strcasecmp(text, "spawnarea") == 0) || (strcasecmp(text, "spawnareas") == 0)))
+    handle.Unexpected("spawnareas", text);
 
   i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {

@@ -27,7 +27,7 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
       while (Stochasticdata->getDataFromNet()) {
         EcoSystem->Update(Stochasticdata);
         EcoSystem->Simulate(MainInfo->runLikelihood(), print);
-	//JMB - no printing during an network run ...
+        //JMB - no printing during a network run ...
         Stochasticdata->SendDataToMaster(EcoSystem->getLikelihood());
         Stochasticdata->readNextLineFromNet();
       }
@@ -109,7 +109,7 @@ int main(int aNumber, char* const aVector[]) {
   }
 
   if (aNumber > 1)
-    MainInfo.read(aNumber, aVector);    
+    MainInfo.read(aNumber, aVector);
 
   //JMB - dont print output if doing a network run
   if (!(MainInfo.runNetwork())) {
@@ -123,49 +123,40 @@ int main(int aNumber, char* const aVector[]) {
 
   //Added MainInfo.Net to Ecosystem constructor, to let EcoSystem know if
   //we are doing a net run. 07.04.00 AJ
-
   EcoSystem = new Ecosystem(MainInfo.getMainGadgetFile(), MainInfo.runOptimize(),
     MainInfo.runNetwork(), MainInfo.runLikelihood(), inputdir, workingdir, MainInfo.getPI());
- 
+
   #ifdef INTERRUPT_HANDLER
     registerInterrupt(SIGINT, &EcoSystem->interrupted);
   #endif
 
   chdir(workingdir);
-  
-  
-  
   if ((MainInfo.getPI()).getPrint())
     EcoSystem->writeInitialInformation((MainInfo.getPI()).getOutputFile());
- ;
   if ((MainInfo.getPI()).getPrintColumn())
     EcoSystem->writeInitialInformationInColumns((MainInfo.getPI()).getColumnOutputFile());
- 
+
   if (MainInfo.runStochastic())
     stochasticRun(EcoSystem, &MainInfo);
- 
+
   if (MainInfo.runOptimize()) {
- 
     if (MainInfo.getInitialParamGiven()) {
-      Stochasticdata = new StochasticData(MainInfo.getInitialParamFile());     
-      EcoSystem->Update(Stochasticdata);      
+      Stochasticdata = new StochasticData(MainInfo.getInitialParamFile());
+      EcoSystem->Update(Stochasticdata);
       EcoSystem->checkBounds();
     } else
       handle.logWarning("Warning - no parameter input file given, using default values");
- 
+
     EcoSystem->Reset();
- 
     if (MainInfo.printInitial())
       EcoSystem->writeStatus(MainInfo.getPrintInitialFile());
- 
-    Optinfo = new OptInfo(&MainInfo);;
-    
+
+    Optinfo = new OptInfo(&MainInfo);
     Optinfo->Optimize();
 
     if ((MainInfo.getPI()).getForcePrint())
       EcoSystem->Simulate(0, 1);  //print and dont optimise
 
- 
     if (MainInfo.getInitialParamGiven())
       delete Stochasticdata;
   }
@@ -190,7 +181,6 @@ int main(int aNumber, char* const aVector[]) {
     free(workingdir);
 
   delete Optinfo;
-
   delete EcoSystem;
 
   return EXIT_SUCCESS;

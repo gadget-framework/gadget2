@@ -300,7 +300,7 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
   handle.Open(filename);
-  int i, j, k;
+  int i, j, k, len;
 
   outfile << "; ";
   RUNID.print(outfile);
@@ -320,7 +320,8 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
   strncpy(strTemp, "", MaxStrLength);
 
   j = k = 0;
-  for (i = 1; i < strlen(strLikely); i++) {
+  len = strlen(strLikely);
+  for (i = 1; i < len; i++) {
     if (strLikely[i] == TAB) {
       strTemp[j] = '\0';
       tmpLikely[k] = new char[strlen(strTemp) + 1];
@@ -553,7 +554,7 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec) const {
       else
         outfile << "\n; because the maximum number of function evaluations was reached\n";
     }
-    
+
     if (EcoSystem->getFuncEvalBFGS() != 0) {
       outfile << "; the BFGS algorithm ran for " << EcoSystem->getFuncEvalBFGS()
         << " function evaluations\n; and stopped when the likelihood value was "
@@ -561,9 +562,8 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec) const {
       if (EcoSystem->getConvergeBFGS() == 1)
         outfile << "\n; because the convergence criteria were met\n";
       else
-        outfile << "\n; because the maximum number of iterations was reached\n";
+        outfile << "\n; because the maximum number of function evaluations was reached\n";
     }
-    
   }
 
   outfile << "switch\tvalue\t\tlower\tupper\toptimise\n";

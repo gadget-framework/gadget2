@@ -2,7 +2,6 @@
 #include "gadget.h"
 
 extern ErrorHandler handle;
-
 extern Ecosystem* EcoSystem;
 
 double h(double* x, int n) {
@@ -12,7 +11,6 @@ double h(double* x, int n) {
 extern int hooke(double (*func)(double*, int), int n, double startingpoint[],
   double endpoint[], double lowerb[], double upperb[], double rho,
   double lambda, double epsilon, int itermax, double init[], double bndcheck);
-
 
 OptInfoHooke::OptInfoHooke()
   : OptSearch(), hookeiter(1000), rho(0.5), lambda(0), hookeeps(1e-4), bndcheck(0.9999) {
@@ -26,22 +24,22 @@ void OptInfoHooke::Read(CommentStream& infile, char* text) {
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[bfgs]")) {
     if (strcasecmp(text, "rho") == 0) {
       infile >> rho >> ws >> text >> ws;
-      
+
     } else if (strcasecmp(text, "lambda") == 0) {
       infile >> lambda >> ws >> text >> ws;
-      
+
     } else if (strcasecmp(text, "hookeeps") == 0) {
       infile >> hookeeps >> ws >> text >> ws;
-      
+
     } else if (strcasecmp(text, "hookeiter") == 0) {
       infile >> hookeiter >> ws >> text >> ws;
-      
+
     } else if (strcasecmp(text, "bndcheck") == 0) {
       infile >> bndcheck >> ws >> text >> ws;
-      
+
     } else {
-      handle.logWarning("Warning in OptInfo - unknown option", text);
-      infile >> ws >> ws >> text >> ws;
+      handle.logWarning("Warning in optinfofile - unknown option", text);
+      infile >> text >> ws >> text >> ws;
     } 
   }
 }
@@ -96,7 +94,7 @@ void OptInfoHooke::MaximizeLikelihood() {
   count = hooke(&h, nopt, startpoint, endpoint, upperb, lowerb,
     rho, lambda, hookeeps, hookeiter, init, bndcheck);
 
-  cout << "\nHooke & Jeeves finished with final likelihood score of " << EcoSystem->getLikelihood()
+  cout << "\nHooke & Jeeves finished with a final likelihood score of " << EcoSystem->getLikelihood()
     << "\nafter " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
   EcoSystem->writeOptValues();
 

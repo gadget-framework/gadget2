@@ -30,7 +30,6 @@ Ecosystem::Ecosystem(const char* const filename, int optimize, int netrun,
   funcevalBFGS = 0;
   likelihoodBFGS = 0.0;
 
-
   chdir(workingdir);
   ifstream infile;
   infile.open(filename, ios::in);

@@ -48,10 +48,10 @@ GADGET = gadget
 # 5. Windows using services for unix
 #CXX = g++
 #LIBDIRS = -L. -L/usr/local/lib
-#LIBRARIES=-lm -lvec
+#LIBRARIES = -lm -lvec
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 #OBJECTS = $(GADGETOBJECTS)
-#CPPFLAGS=-I/usr/local/include#-I/dev/fs/C/x/SDK/opt/gcc.3.3/include/c++/3.3/backward
+#CPPFLAGS = -I/usr/local/include #-I/dev/fs/C/x/SDK/opt/gcc.3.3/include/c++/3.3/backward
 #GADGET = gadget-windows
 ##########################################################################
 
@@ -95,10 +95,9 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	biomassprinter.o cannibalism.o likelihoodprinter.o formatedprinting.o \
 	lennaturalm.o catchintons.o interruptinterface.o interrupthandler.o tags.o \
 	formatedstockprinter.o formatedpreyprinter.o formatedchatprinter.o \
-	taggrow.o initialinputfile.o popratio.o predator.o popinfo.o \
-	agebandmatrixratio.o popinfomemberfunctions.o sibyfleetonstep.o \
-	agebandmatrixratiomemberfunctions.o optinfobfgs.o optinfosimann.o \
-	optinfohooke.o 
+	taggrow.o initialinputfile.o optinfohooke.o optinfobfgs.o optinfosimann.o \
+	popratio.o predator.o popinfo.o popinfomemberfunctions.o sibyfleetonstep.o \
+	agebandmatrixratio.o agebandmatrixratiomemberfunctions.o 
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
@@ -106,7 +105,7 @@ GADGETINPUT = initialinputfile.o vectorofcharptr.o charptrvector.o \
 	commentstream.o parameter.o parametervector.o doubleindexvector.o \
 	intvector.o doublevector.o intmatrix.o doublematrix.o
 
-LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES) $(CPPFLAG)
+LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
 
 gadget	:	$(OBJECTS) libvec.a
 	$(CXX) -o $(GADGET) $(OBJECTS) $(LDFLAGS)
@@ -116,9 +115,9 @@ libvec.a:	$(VECTORS)
 
 ## you need root permission to be able to do this ...
 ## doesnt work for cygwin, since you need the .exe filename extension
-install	:	gadget
-	strip gadget
-	cp gadget /usr/local/bin/
+install	:	$(GADGET)
+	strip $(GADGET)
+	cp $(GADGET) /usr/local/bin/
 	cp gadget.1 /usr/local/man/man1/
 
 ##########################################################################

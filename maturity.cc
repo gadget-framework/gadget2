@@ -398,8 +398,8 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
   maturityParameters.read(infile, TimeInfo, keeper);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "maturitystep") != 0)
-    handle.Unexpected("maturitystep", text);
+  if (!((strcasecmp(text, "maturitystep") == 0) || (strcasecmp(text, "maturitysteps") == 0)))
+    handle.Unexpected("maturitysteps", text);
 
   i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {

@@ -25,8 +25,8 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
   strayProportion.resize(LgrpDiv->NoLengthGroups(), 0.0);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "straystep") != 0)
-    handle.Unexpected("straystep", text);
+  if (!((strcasecmp(text, "straystep") == 0) || (strcasecmp(text, "straysteps") == 0)))
+    handle.Unexpected("straysteps", text);
 
   i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
@@ -40,8 +40,8 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
       handle.Message("Illegal stray step in straying function");
 
   infile >> text >> ws;
-  if (strcasecmp(text, "strayarea") != 0)
-    handle.Unexpected("strayarea", text);
+  if (!((strcasecmp(text, "strayarea") == 0) || (strcasecmp(text, "strayareas") == 0)))
+    handle.Unexpected("strayareas", text);
 
   i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {

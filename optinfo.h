@@ -8,7 +8,7 @@
 
 /**
  * \class OptSearch
- * \brief This is the base class for the optimization, methods declared here are implemented in the children classes.
+ * \brief This is the base class for the optimization, methods declared here are implemented in the derived classes
 */
 class OptSearch {
  public: 
@@ -20,13 +20,9 @@ class OptSearch {
    * \brief This is the default destructor
    */
   ~OptSearch(){};
-  
   virtual void Read(CommentStream& infile, char* text){};
-
   virtual void MaximizeLikelihood(){};
-
 };
-
 
 /**
  * \class OptInfo
@@ -51,7 +47,6 @@ class OptInfo {
    * \param infile is the CommentStream to read the optimisation parameters from
    */
   void ReadOptInfo(CommentStream& infile);
-
  private:
   int useSimann;
   int useHJ;
@@ -216,7 +211,7 @@ class OptInfoBfgs : public OptSearch  {
   double* s;         //search direction (for linesearch)
   double** Bk;       //BFGS updated hessian approximation
   double* x;         //current approximation
-  double fk;                //current function value
+  double fk;         //current function value
   double (*f)(double*, int);
   int numvar;
   int maxiter;
