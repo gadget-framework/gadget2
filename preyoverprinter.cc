@@ -130,8 +130,10 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
 
 void PreyOverPrinter::setPrey(PreyPtrVector& preyvec) {
   PreyPtrVector preys;
-  int index = 0;
-  int i, j;
+  delete aggregator;
+  int i, j, k, index;
+
+  index = 0;
   for (i = 0; i < preyvec.Size(); i++)
     for (j = 0; j < preynames.Size(); j++)
       if (strcasecmp(preyvec[i]->getName(), preynames[j]) == 0) {
@@ -147,6 +149,32 @@ void PreyOverPrinter::setPrey(PreyPtrVector& preyvec) {
       handle.logWarning("Error in preyoverprinter - looking for prey", preynames[i]);
     exit(EXIT_FAILURE);
   }
+
+  //check prey areas and lengths
+  for (j = 0; j < areas.Nrow(); j++) {
+    index = 0;
+    for (i = 0; i < preys.Size(); i++)
+      for (k = 0; k < areas.Ncol(j); k++)
+        if (preys[i]->isInArea(areas[j][k]))
+          index++;
+    if (index == 0)
+      handle.logWarning("Warning in preyoverprinter - prey not defined on all areas");
+  }
+
+  index = 0;
+  for (i = 0; i < preys.Size(); i++)
+    if (preyLgrpDiv->maxLength(0) > preys[i]->returnLengthGroupDiv()->minLength())
+      index++;
+  if (index == 0)
+    handle.logWarning("Warning in preyoverprinter - minimum length group less than prey length");
+
+  index = 0;
+  for (i = 0; i < preys.Size(); i++)
+    if (preyLgrpDiv->minLength(preyLgrpDiv->numLengthGroups()) < preys[i]->returnLengthGroupDiv()->maxLength())
+      index++;
+  if (index == 0)
+    handle.logWarning("Warning in preyoverprinter - maximum length group greater than prey length");
+
   aggregator = new PreyOverAggregator(preys, areas, preyLgrpDiv);
 }
 

@@ -173,24 +173,78 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
 void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVector& preyvec) {
   PredatorPtrVector predators;
   PreyPtrVector preys;
-  int index = 0;
-  int i, j;
+  int i, j, k, index;
   delete aggregator;
 
-  for (i = 0; i < predatorvec.Size(); i++)
-    for (j = 0; j < predatornames.Size(); j++)
+  index = 0;
+  for (i = 0; i < predatorvec.Size(); i++) {
+    for (j = 0; j < predatornames.Size(); j++) {
       if (strcasecmp(predatorvec[i]->getName(), predatornames[j]) == 0) {
         predators.resize(1);
         predators[index++] = predatorvec[i];
       }
+    }
+  }
+
+  //check predator areas and length groups
+  for (j = 0; j < areas.Nrow(); j++) {
+    index = 0;
+    for (i = 0; i < predators.Size(); i++)
+      for (k = 0; k < areas.Ncol(j); k++)
+        if (predators[i]->isInArea(areas[j][k]))
+          index++;
+    if (index == 0)
+      handle.logWarning("Warning in predatorprinter - predators not defined on all areas");
+  }
 
   index = 0;
-  for (i = 0; i < preyvec.Size(); i++)
-    for (j = 0; j < preynames.Size(); j++)
+  for (i = 0; i < predators.Size(); i++)
+    if (predLgrpDiv->maxLength(0) > predators[i]->returnLengthGroupDiv()->minLength())
+      index++;
+  if (index == 0)
+    handle.logWarning("Warning in predatorprinter - minimum length group less than predator length");
+
+  index = 0;
+  for (i = 0; i < predators.Size(); i++)
+    if (predLgrpDiv->minLength(predLgrpDiv->numLengthGroups()) < predators[i]->returnLengthGroupDiv()->maxLength())
+      index++;
+  if (index == 0)
+    handle.logWarning("Warning in predatorprinter - maximum length group greater than predator length");
+
+  index = 0;
+  for (i = 0; i < preyvec.Size(); i++) {
+    for (j = 0; j < preynames.Size(); j++) {
       if (strcasecmp(preyvec[i]->getName(), preynames[j]) == 0) {
         preys.resize(1);
         preys[index++] = preyvec[i];
       }
+    }
+  }
+
+  //check prey areas and length groups
+  for (j = 0; j < areas.Nrow(); j++) {
+    index = 0;
+    for (i = 0; i < preys.Size(); i++)
+      for (k = 0; k < areas.Ncol(j); k++)
+        if (preys[i]->isInArea(areas[j][k]))
+          index++;
+    if (index == 0)
+      handle.logWarning("Warning in predatorprinter - preys not defined on all areas");
+  }
+
+  index = 0;
+  for (i = 0; i < preys.Size(); i++)
+    if (preyLgrpDiv->maxLength(0) > preys[i]->returnLengthGroupDiv()->minLength())
+      index++;
+  if (index == 0)
+    handle.logWarning("Warning in predatorprinter - minimum length group less than prey length");
+
+  index = 0;
+  for (i = 0; i < preys.Size(); i++)
+    if (preyLgrpDiv->minLength(preyLgrpDiv->numLengthGroups()) < preys[i]->returnLengthGroupDiv()->maxLength())
+      index++;
+  if (index == 0)
+    handle.logWarning("Warning in predatorprinter - maximum length group greater than prey length");
 
   if (predators.Size() != predatornames.Size()) {
     handle.logWarning("Error in predatorprinter - failed to match predators");
@@ -208,6 +262,7 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
       handle.logWarning("Error in predatorprinter - looking for prey", preynames[i]);
     exit(EXIT_FAILURE);
   }
+
   aggregator = new PredatorAggregator(predators, preys, areas, predLgrpDiv, preyLgrpDiv);
 }
 

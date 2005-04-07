@@ -141,15 +141,18 @@ StockPrinter::StockPrinter(CommentStream& infile,
 
 void StockPrinter::setStock(StockPtrVector& stockvec) {
   StockPtrVector stocks;
-  int index = 0;
-  int i, j;
+  delete aggregator;
+  int i, j, k, index, minage, maxage;
 
-  for (i = 0; i < stockvec.Size(); i++)
-    for (j = 0; j < stocknames.Size(); j++)
+  index = 0;
+  for (i = 0; i < stockvec.Size(); i++) {
+    for (j = 0; j < stocknames.Size(); j++) {
       if (strcasecmp(stockvec[i]->getName(), stocknames[j]) == 0) {
         stocks.resize(1);
         stocks[index++] = stockvec[i];
       }
+    }
+  }
 
   if (stocks.Size() != stocknames.Size()) {
     handle.logWarning("Error in stockprinter - failed to match stocks");
@@ -164,6 +167,56 @@ void StockPrinter::setStock(StockPtrVector& stockvec) {
     for (j = 0; j < stocks.Size(); j++)
       if ((strcasecmp(stocks[i]->getName(), stocks[j]->getName()) == 0) && (i != j))
         handle.logFailure("Error in stockprinter - repeated stock", stocks[i]->getName());
+
+  //check stock areas, ages and lengths
+  for (j = 0; j < areas.Nrow(); j++) {
+    index = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      for (k = 0; k < areas.Ncol(j); k++)
+        if (stocks[i]->isInArea(areas[j][k]))
+          index++;
+    if (index == 0)
+      handle.logWarning("Warning in stockprinter - stock not defined on all areas");
+  }
+
+  minage = 9999;
+  maxage = -1;
+  for (i = 0; i < ages.Nrow(); i++) {
+    for (j = 0; j < ages.Ncol(i); j++) {
+      if (ages[i][j] < minage)
+        minage = ages[i][j];
+      if (maxage < ages[i][j])
+        maxage = ages[i][j];
+    }
+  }
+
+  index = 0;
+  for (i = 0; i < stocks.Size(); i++)
+    if (minage >= stocks[i]->minAge())
+      index++;
+  if (index == 0)
+    handle.logWarning("Warning in stockprinter - minimum age less than stock age");
+
+  index = 0;
+  for (i = 0; i < stocks.Size(); i++)
+    if (maxage <= stocks[i]->maxAge())
+      index++;
+  if (index == 0)
+    handle.logWarning("Warning in stockprinter - maximum age greater than stock age");
+
+  index = 0;
+  for (i = 0; i < stocks.Size(); i++)
+    if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+      index++;
+  if (index == 0)
+    handle.logWarning("Warning in stockprinter - minimum length group less than stock length");
+
+  index = 0;
+  for (i = 0; i < stocks.Size(); i++)
+    if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+      index++;
+  if (index == 0)
+    handle.logWarning("Warning in stockprinter - maximum length group greater than stock length");
 
   aggregator = new StockAggregator(stocks, LgrpDiv, areas, ages);
 }

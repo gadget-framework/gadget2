@@ -102,6 +102,8 @@ StockFullPrinter::~StockFullPrinter() {
 void StockFullPrinter::setStock(StockPtrVector& stockvec) {
   CharPtrVector stocknames(1, stockname);
   StockPtrVector stocks;
+  delete aggregator;
+
   int index = 0;
   int i, j, tmpage;
 
@@ -146,6 +148,7 @@ void StockFullPrinter::setStock(StockPtrVector& stockvec) {
   IntMatrix areamatrix(areas.Size(), 1);
   for (i = 0; i < areamatrix.Nrow(); i++)
     areamatrix[i][0] = areas[i];
+
   aggregator = new StockAggregator(stocks, LgrpDiv, areamatrix, agematrix);
 }
 

@@ -121,6 +121,8 @@ StockStdPrinter::~StockStdPrinter() {
 void StockStdPrinter::setStock(StockPtrVector& stockvec) {
   CharPtrVector stocknames(1, stockname);
   StockPtrVector stocks;
+  delete aggregator;
+
   int index = 0;
   int i, j, tmpage;
 

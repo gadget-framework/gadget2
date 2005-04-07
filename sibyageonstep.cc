@@ -58,7 +58,7 @@ void SIByAgeOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     if (maxage <= Stocks[i]->maxAge())
       found++;
   if (found == 0)
-    handle.logWarning("Warning in surveyindex - maximum age less than stock age");
+    handle.logWarning("Warning in surveyindex - maximum age greater than stock age");
 
   aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, Ages);
 }

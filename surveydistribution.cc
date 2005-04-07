@@ -379,7 +379,7 @@ void SurveyDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVect
     if (maxage <= stocks[i]->maxAge())
       found++;
   if (found == 0)
-    handle.logWarning("Warning in surveydistribution - maximum age less than stock age");
+    handle.logWarning("Warning in surveydistribution - maximum age greater than stock age");
 
   found = 0;
   for (i = 0; i < stocks.Size(); i++)
