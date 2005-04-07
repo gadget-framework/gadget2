@@ -109,11 +109,11 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
   else if ((c == 'e') || (c == 'E'))
     readWordAndVariable(infile, "epsilon", epsilon);
   else
-    epsilon = 10;
+    epsilon = 10.0;
 
   if (epsilon <= 0) {
     handle.Warning("Epsilon should be a positive integer - set to default value 10");
-    epsilon = 10;
+    epsilon = 10.0;
   }
 
   //read in area aggregation from file

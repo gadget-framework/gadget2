@@ -274,41 +274,101 @@ void CatchStatistics::Print(ofstream& outfile) const {
 }
 
 void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
-  int i, j, found;
+  int i, j, k, found, minage, maxage;
   FleetPtrVector fleets;
   StockPtrVector stocks;
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
-    for (j = 0; j < Fleets.Size(); j++)
+    for (j = 0; j < Fleets.Size(); j++) {
       if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
         fleets.resize(1, Fleets[j]);
       }
-
+    }
     if (found == 0)
       handle.logFailure("Error in catchstatistics - unrecognised fleet", fleetnames[i]);
+  }
 
+  //check fleet areas
+  for (j = 0; j < areas.Nrow(); j++) {
+    found = 0;
+    for (i = 0; i < fleets.Size(); i++)
+      for (k = 0; k < areas.Ncol(j); k++)
+        if (fleets[i]->isInArea(areas[j][k]))
+          found++;
+    if (found == 0)
+      handle.logWarning("Warning in catchstatistics - fleet not defined on all areas");
   }
 
   for (i = 0; i < stocknames.Size(); i++) {
     found = 0;
-    for (j = 0; j < Stocks.Size(); j++)
-      if (Stocks[j]->isEaten())
+    for (j = 0; j < Stocks.Size(); j++) {
+      if (Stocks[j]->isEaten()) {
         if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->getName()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);
         }
-
+      }
+    }
     if (found == 0)
       handle.logFailure("Error in catchstatistics - unrecognised stock", stocknames[i]);
-
   }
 
   LgrpDiv = new LengthGroupDivision(*(stocks[0]->returnPrey()->returnLengthGroupDiv()));
   for (i = 1; i < stocks.Size(); i++)
     if (!LgrpDiv->Combine(stocks[i]->returnPrey()->returnLengthGroupDiv()))
       handle.logFailure("Error in catchstatistics - length groups for preys not compatible");
+
+  //check areas, ages and lengths
+  for (j = 0; j < areas.Nrow(); j++) {
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      for (k = 0; k < areas.Ncol(j); k++)
+        if (stocks[i]->isInArea(areas[j][k]))
+          found++;
+    if (found == 0)
+      handle.logWarning("Warning in catchstatistics - stock not defined on all areas");
+  }
+
+  minage = 9999;
+  maxage = -1;
+  for (i = 0; i < ages.Nrow(); i++) {
+    for (j = 0; j < ages.Ncol(i); j++) {
+      if (ages[i][j] < minage)
+        minage = ages[i][j];
+      if (maxage < ages[i][j])
+        maxage = ages[i][j];
+    }
+  }
+
+  found = 0;
+  for (i = 0; i < stocks.Size(); i++)
+    if (minage >= stocks[i]->minAge())
+      found++;
+  if (found == 0)
+    handle.logWarning("Warning in catchstatistics - minimum age less than stock age");
+
+  found = 0;
+  for (i = 0; i < stocks.Size(); i++)
+    if (maxage <= stocks[i]->maxAge())
+      found++;
+  if (found == 0)
+    handle.logWarning("Warning in catchstatistics - maximum age less than stock age");
+
+  found = 0;
+  for (i = 0; i < stocks.Size(); i++)
+    if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+      found++;
+  if (found == 0)
+    handle.logWarning("Warning in catchstatistics - minimum length group less than stock length");
+
+  found = 0;
+  for (i = 0; i < stocks.Size(); i++)
+    if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+      found++;
+  if (found == 0)
+    handle.logWarning("Warning in catchstatistics - maximum length group greater than stock length");
 
   aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
 }

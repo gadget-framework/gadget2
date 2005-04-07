@@ -59,9 +59,6 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   else
     multscaler.setValue(1.0);
 
-//  if (multscaler < 0)
-//    handle.Warning("Warning in fleet - negative value for multiplicative");
-
   infile >> text >> ws;
   if (!(strcasecmp(text, "suitability") == 0))
     handle.Unexpected("suitability", text);

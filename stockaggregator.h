@@ -40,26 +40,6 @@ public:
    */
   const AgeBandMatrixPtrVector& returnSum() const { return total; };
   /**
-   * \brief This will return the IntVector of the minimum columns for each row of the AgeBandMatrixPtrVector
-   * \return mincol, the IntVector of minimum columns
-   */
-  const IntVector& getMinCol() const { return mincol; };
-  /**
-   * \brief This will return the IntVector of the maximum columns for each row of the AgeBandMatrixPtrVector
-   * \return maxcol, the IntVector of maximum columns
-   */
-  const IntVector& getMaxCol() const { return maxcol; };
-  /**
-   * \brief This will return the minimum row of the AgeBandMatrixPtrVector
-   * \return minrow
-   */
-  int getMinRow() const { return minrow; };
-  /**
-   * \brief This will return the maximum row of the AgeBandMatrixPtrVector
-   * \return maxrow
-   */
-  int getMaxRow() const { return maxrow; };
-  /**
    * \brief This will print the aggregator information to the ofstream specified
    * \param outfile is the ofstream to the file that the aggregator information gets sent to
    */
@@ -85,26 +65,6 @@ protected:
    * \brief This is the AgeBandMatrixPtrVector used to store the aggregated stock information
    */
   AgeBandMatrixPtrVector total;
-  /**
-   * \brief This is the IntVector used to store the minimum non-empty row for each column in the AgeBandMatrixPtrVector
-   * \note mincol is typically the minimum length for each age of the aggregated stocks
-   */
-  IntVector mincol;
-  /**
-   * \brief This is the IntVector used to store the maximum non-empty row for each column in the AgeBandMatrixPtrVector
-   * \note maxcol is typically the maximum length for each age of the aggregated stocks
-   */
-  IntVector maxcol;
-  /**
-   * \brief This is the minimum non-empty row in the AgeBandMatrixPtrVector
-   * \note minrow is typically the minimum age of the aggregated stocks
-   */
-  int minrow;
-  /**
-   * \brief This is the maximum non-empty row in the AgeBandMatrixPtrVector
-   * \note maxrow is typically the maximum age of the aggregated stocks
-   */
-  int maxrow;
 };
 
 #endif

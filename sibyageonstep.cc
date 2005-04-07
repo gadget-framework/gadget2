@@ -22,7 +22,7 @@ SIByAgeOnStep::~SIByAgeOnStep() {
 }
 
 void SIByAgeOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
-  int i;
+  int i, j, found, minage, maxage;
   double minlength = Stocks[0]->returnLengthGroupDiv()->minLength();
   double maxlength = minlength;
 
@@ -32,8 +32,34 @@ void SIByAgeOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     if (maxlength < Stocks[i]->returnLengthGroupDiv()->maxLength())
       maxlength = Stocks[i]->returnLengthGroupDiv()->maxLength();
   }
-
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, maxlength - minlength);
+
+  //check stock ages
+  minage = 9999;
+  maxage = -1;
+  for (i = 0; i < Ages.Nrow(); i++) {
+    for (j = 0; j < Ages.Ncol(i); j++) {
+      if (Ages[i][j] < minage)
+        minage = Ages[i][j];
+      if (maxage < Ages[i][j])
+        maxage = Ages[i][j];
+    }
+  }
+
+  found = 0;
+  for (i = 0; i < Stocks.Size(); i++)
+    if (minage >= Stocks[i]->minAge())
+      found++;
+  if (found == 0)
+    handle.logWarning("Warning in surveyindex - minimum age less than stock age");
+
+  found = 0;
+  for (i = 0; i < Stocks.Size(); i++)
+    if (maxage <= Stocks[i]->maxAge())
+      found++;
+  if (found == 0)
+    handle.logWarning("Warning in surveyindex - maximum age less than stock age");
+
   aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, Ages);
 }
 

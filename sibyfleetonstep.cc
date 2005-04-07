@@ -27,7 +27,7 @@ SIByFleetOnStep::~SIByFleetOnStep() {
 }
 
 void SIByFleetOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
-  int i;
+  int i, found;
   int minage = 100;
   int maxage = 0;
   for (i = 0; i < Stocks.Size(); i++) {
@@ -40,6 +40,21 @@ void SIByFleetOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
   Ages.AddRows(1, maxage - minage + 1);
   for (i = 0; i < Ages.Ncol(); i++)
     Ages[0][i] = i + minage;
+
+  //check stock lengths
+  found = 0;
+  for (i = 0; i < Stocks.Size(); i++)
+    if (LgrpDiv->maxLength(0) > Stocks[i]->returnLengthGroupDiv()->minLength())
+      found++;
+  if (found == 0)
+    handle.logWarning("Warning in surveyindex - minimum length group less than stock length");
+
+  found = 0;
+  for (i = 0; i < Stocks.Size(); i++)
+    if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < Stocks[i]->returnLengthGroupDiv()->maxLength())
+      found++;
+  if (found == 0)
+    handle.logWarning("Warning in surveyindex - maximum length group greater than stock length");
 
   aggregator = new FleetPreyAggregator(Fleets, Stocks, LgrpDiv, Areas, Ages, overconsumption);
 }

@@ -63,11 +63,11 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   if ((c == 'e') || (c == 'E'))
     readWordAndVariable(infile, "epsilon", epsilon);
   else
-    epsilon = 10;
+    epsilon = 10.0;
 
   if (epsilon <= 0) {
     handle.Warning("Epsilon should be a positive number - set to default value 10");
-    epsilon = 10;
+    epsilon = 10.0;
   }
 
   if (readfile == 0)
@@ -216,29 +216,50 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
-    for (j = 0; j < Fleets.Size(); j++)
+    for (j = 0; j < Fleets.Size(); j++) {
       if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
         fleets.resize(1, Fleets[j]);
       }
-
+    }
     if (found == 0)
       handle.logFailure("Error in catchinkilos - unrecognised fleet", fleetnames[i]);
+  }
 
+  //check fleet areas
+  for (j = 0; j < areas.Nrow(); j++) {
+    found = 0;
+    for (i = 0; i < fleets.Size(); i++)
+      for (k = 0; k < areas.Ncol(j); k++)
+        if (fleets[i]->isInArea(areas[j][k]))
+          found++;
+    if (found == 0)
+      handle.logWarning("Warning in catchinkilos - fleet not defined on all areas");
   }
 
   for (i = 0; i < stocknames.Size(); i++) {
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
-      if (Stocks[j]->isEaten())
+      if (Stocks[j]->isEaten()) {
         if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->getName()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);
         }
+      }
     }
     if (found == 0)
       handle.logFailure("Error in catchinkilos - unrecognised stock", stocknames[i]);
+  }
 
+  //check stock areas
+  for (j = 0; j < areas.Nrow(); j++) {
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      for (k = 0; k < areas.Ncol(j); k++)
+        if (stocks[i]->isInArea(areas[j][k]))
+          found++;
+    if (found == 0)
+      handle.logWarning("Warning in catchinkilos - stock not defined on all areas");
   }
 
   for (i = 0; i < fleets.Size(); i++) {

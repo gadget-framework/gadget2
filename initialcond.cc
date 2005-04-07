@@ -415,6 +415,11 @@ InitialCond::~InitialCond() {
 }
 
 void InitialCond::setCI(const LengthGroupDivision* const GivenLDiv) {
+  //check minimum and maximum lengths
+  if (LgrpDiv->minLength() < GivenLDiv->minLength())
+    handle.logWarning("Warning in initial conditions - minimum length less than stock length");
+  if (LgrpDiv->maxLength() > GivenLDiv->maxLength())
+    handle.logWarning("Warning in initial conditions - maximum length greater than stock length");
   CI = new ConversionIndex(LgrpDiv, GivenLDiv);
 }
 
@@ -513,11 +518,16 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
   mult = 1.0;
   for (area = 0; area < areas.Size(); area++) {
     Alkeys[area].setToZero();
+    //check minimum and maximum ages
+    if (initialPop[area].minAge() < Alkeys[area].minAge())
+      handle.logWarning("Warning in initial conditions - minimum age less than stock age");
+    if (initialPop[area].maxAge() > Alkeys[area].maxAge())
+      handle.logWarning("Warning in initial conditions - maximum age greater than stock age");
+
     minage = max(Alkeys[area].minAge(), initialPop[area].minAge());
     maxage = min(Alkeys[area].maxAge(), initialPop[area].maxAge());
-
     if (maxage < minage)
-      return;
+      handle.logFailure("Error in initial conditions - maximum age less than minimum age");
 
     for (age = minage; age <= maxage; age++) {
       if ((readoption == 0) || (readoption == 1))

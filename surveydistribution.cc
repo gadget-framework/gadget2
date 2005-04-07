@@ -43,10 +43,6 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   datafile.close();
   datafile.clear();
 
-  //Check if we read correct input
-  if (areas.Nrow() != 1)
-    handle.Message("Error in surveydistribution - there should be only one area");
-
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
@@ -132,7 +128,19 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
     handle.Message("Error in surveydistribution - unrecognised suitability", text);
   }
 
-  readWordAndVariable(infile, "epsilon", epsilon);
+  //JMB - changed to make the reading of epsilon optional
+  infile >> ws;
+  char c = infile.peek();
+  if ((c == 'e') || (c == 'E'))
+    readWordAndVariable(infile, "epsilon", epsilon);
+  else
+    epsilon = 1.0;
+
+  if (epsilon <= 0) {
+    handle.Warning("Epsilon should be a positive integer - set to default value 1");
+    epsilon = 1.0;
+  }
+
   readWordAndValue(infile, "likelihoodtype", liketype);
   likenumber = 0;
   if (strcasecmp(liketype, "pearson") == 0)
@@ -209,7 +217,7 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
       if (strcasecmp(lenindex[i], tmplen) == 0)
         lenid = i;
 
-    if (ageid == -1)
+    if (lenid == -1)
       keepdata = 1;
 
     //check if the year and step are in the simulation
@@ -224,9 +232,13 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
         Steps.resize(1, step);
         timeid = (Years.Size() - 1);
 
-        obsDistribution.resize(1, new DoubleMatrix(numage, numlen, 0.0));
-        modelDistribution.resize(1, new DoubleMatrix(numage, numlen, 0.0));
-        likelihoodValues.resize(1, 0.0);
+        obsDistribution.AddRows(1, numarea);
+        modelDistribution.AddRows(1, numarea);
+        likelihoodValues.AddRows(1, numarea, 0.0);
+        for (i = 0; i < numarea; i++) {
+          obsDistribution[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
+          modelDistribution[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
+        }
       }
 
     } else
@@ -236,7 +248,7 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
     if (keepdata == 0) {
       //survey distribution data is required, so store it
       count++;
-      (*obsDistribution[timeid])[ageid][lenid] = tmpnumber;
+      (*obsDistribution[timeid][areaid])[ageid][lenid] = tmpnumber;
     }
   }
 
@@ -247,7 +259,7 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
 }
 
 SurveyDistribution::~SurveyDistribution() {
-  int i;
+  int i, j;
   for (i = 0; i < stocknames.Size(); i++)
     delete[] stocknames[i];
   for (i = 0; i < areaindex.Size(); i++)
@@ -261,9 +273,11 @@ SurveyDistribution::~SurveyDistribution() {
     delete suitfunction;
     suitfunction = NULL;
   }
-  for (i = 0; i < obsDistribution.Size(); i++) {
-    delete obsDistribution[i];
-    delete modelDistribution[i];
+  for (i = 0; i < obsDistribution.Nrow(); i++) {
+    for (j = 0; j < obsDistribution.Ncol(i); j++) {
+      delete obsDistribution[i][j];
+      delete modelDistribution[i][j];
+    }
   }
 
   if (aggregator != 0)
@@ -301,57 +315,100 @@ void SurveyDistribution::LikelihoodPrint(ofstream& outfile, const TimeClass* con
   if ((t >= Years.Size()) || t < 0)
     handle.logFailure("Error in surveydistribution - invalid timestep", t);
 
-  //JMB - this is nasty hack since there is only one area
-  area = 0;
-  for (age = 0; age < (*modelDistribution[t]).Nrow(); age++) {
-    for (len = 0; len < (*modelDistribution[t]).Ncol(age); len++) {
-      outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
-        << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(printwidth) << ageindex[age] << sep << setw(printwidth)
-        << lenindex[len] << sep << setprecision(largeprecision) << setw(largewidth)
-        << (*modelDistribution[t])[age][len] << endl;
+  for (area = 0; area < modelDistribution.Ncol(t); area++) {
+    for (age = 0; age < modelDistribution[t][area]->Nrow(); age++) {
+      for (len = 0; len < modelDistribution[t][area]->Ncol(age); len++) {
+        outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
+          << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
+          << setw(printwidth) << ageindex[age] << sep << setw(printwidth)
+          << lenindex[len] << sep << setprecision(largeprecision) << setw(largewidth)
+          << (*modelDistribution[t][area])[age][len] << endl;
+      }
     }
   }
 }
 
 void SurveyDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
 
-  int i, j;
-  int found = 0;
+  int i, j, k, found, minage, maxage;
   StockPtrVector stocks;
 
   for (i = 0; i < stocknames.Size(); i++) {
     found = 0;
-    for (j = 0; j < Stocks.Size(); j++)
+    for (j = 0; j < Stocks.Size(); j++) {
       if (strcasecmp(stocknames[i], Stocks[j]->getName()) == 0) {
         found++;
         stocks.resize(1, Stocks[j]);
       }
+    }
     if (found == 0)
       handle.logFailure("Error in surveydistribution - failed to match stock", stocknames[i]);
-
   }
 
-  aggregator = new StockAggregator(stocks, LgrpDiv, areas, ages);
+  //check areas, ages and lengths
+  for (j = 0; j < areas.Nrow(); j++) {
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      for (k = 0; k < areas.Ncol(j); k++)
+        if (stocks[i]->isInArea(areas[j][k]))
+          found++;
+    if (found == 0)
+      handle.logWarning("Warning in surveydistribution - stock not defined on all areas");
+  }
 
-  //Limits (inclusive) for traversing the matrices.
-  mincol = aggregator->getMinCol();
-  maxcol = aggregator->getMaxCol();
-  minrow = aggregator->getMinRow();
-  maxrow = aggregator->getMaxRow();
+  minage = 9999;
+  maxage = -1;
+  for (i = 0; i < ages.Nrow(); i++) {
+    for (j = 0; j < ages.Ncol(i); j++) {
+      if (ages[i][j] < minage)
+        minage = ages[i][j];
+      if (maxage < ages[i][j])
+        maxage = ages[i][j];
+    }
+  }
+
+  found = 0;
+  for (i = 0; i < stocks.Size(); i++)
+    if (minage >= stocks[i]->minAge())
+      found++;
+  if (found == 0)
+    handle.logWarning("Warning in surveydistribution - minimum age less than stock age");
+
+  found = 0;
+  for (i = 0; i < stocks.Size(); i++)
+    if (maxage <= stocks[i]->maxAge())
+      found++;
+  if (found == 0)
+    handle.logWarning("Warning in surveydistribution - maximum age less than stock age");
+
+  found = 0;
+  for (i = 0; i < stocks.Size(); i++)
+    if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+      found++;
+  if (found == 0)
+    handle.logWarning("Warning in surveydistribution - minimum length group less than stock length");
+
+  found = 0;
+  for (i = 0; i < stocks.Size(); i++)
+    if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+      found++;
+  if (found == 0)
+    handle.logWarning("Warning in surveydistribution - maximum length group greater than stock length");
+
+  aggregator = new StockAggregator(stocks, LgrpDiv, areas, ages);
 }
 
-void SurveyDistribution::calcIndex(const AgeBandMatrix* alptr, const TimeClass* const TimeInfo) {
+void SurveyDistribution::calcIndex(const AgeBandMatrixPtrVector* alptr, const TimeClass* const TimeInfo) {
   //written by kgf 13/10 98
 
-  int i, age, len;
+  int i, age, len, area;
   if (suitfunction != NULL) {
     suitfunction->updateConstants(TimeInfo);
     if ((timeindex == 0) || (suitfunction->constantsHaveChanged(TimeInfo))) {
       if (suitfunction->usesPredLength())
         suitfunction->setPredLength(0.0);
 
-      for (i = 0; i < q_l.Size(); i++) {
+      for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
         if (suitfunction->usesPreyLength())
           suitfunction->setPreyLength(LgrpDiv->meanLength(i));
 
@@ -363,14 +420,16 @@ void SurveyDistribution::calcIndex(const AgeBandMatrix* alptr, const TimeClass* 
   parameters.Update(TimeInfo);
   switch(fitnumber) {
     case 1:
-      for (age = 0; age <= alptr->maxAge(); age++)
-        for (len = 0; len < LgrpDiv->numLengthGroups(); len++)
-          (*modelDistribution[timeindex])[age][len] = parameters[0] * q_l[len] * ((*alptr)[age][len].N + parameters[1]);
+      for (area = 0; area < areas.Nrow(); area++)
+        for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+          for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
+            (*modelDistribution[timeindex][area])[age][len] = parameters[0] * q_l[len] * (((*alptr)[area][age][len]).N + parameters[1]);
       break;
     case 2:
-      for (age = 0; age <= alptr->maxAge(); age++)
-        for (len = 0; len < LgrpDiv->numLengthGroups(); len++)
-          (*modelDistribution[timeindex])[age][len] = parameters[0] * q_l[len] * pow((*alptr)[age][len].N, parameters[1]);
+      for (area = 0; area < areas.Nrow(); area++)
+        for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+          for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
+            (*modelDistribution[timeindex][area])[age][len] = parameters[0] * q_l[len] * pow(((*alptr)[area][age][len]).N, parameters[1]);
       break;
     default:
       handle.logWarning("Warning in surveydistribution - unrecognised fittype", fittype);
@@ -387,8 +446,7 @@ void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   aggregator->Sum();
   handle.logMessage("Calculating likelihood score for surveydistribution component", this->getName());
 
-  //Use that the AgeBandMatrixPtrVector aggregator->returnSum returns only one element.
-  const AgeBandMatrix* alptr = &(aggregator->returnSum()[0]);
+  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
   this->calcIndex(alptr, TimeInfo);
   switch(likenumber) {
     case 1:
@@ -417,47 +475,55 @@ double SurveyDistribution::calcLikMultinomial() {
   //written by kgf 30/10 98
   //Multinomial formula from H J Skaug
 
-  double total = 0.0, obstotal = 0.0, modtotal = 0.0;
-  int age, length;
+  double temp, total, obstotal, modtotal;
+  int area, age, len;
 
-  for (age = minrow; age <= maxrow; age++) {
-    for (length = mincol[age]; length <= maxcol[age]; length++) {
-      if ((*obsDistribution[timeindex])[age][length] > epsilon) { //cell will contribute
-        total -= (*obsDistribution[timeindex])[age][length] *
-                 log(((*modelDistribution[timeindex])[age][length]) + epsilon);
-        obstotal += (*obsDistribution[timeindex])[age][length];
-        modtotal += ((*modelDistribution[timeindex])[age][length] + epsilon);
+  total = 0.0;
+  for (area = 0; area < areas.Nrow(); area++) {
+    temp = 0.0;
+    obstotal = 0.0;
+    modtotal = 0.0;
+    for (age = 0; age < (*obsDistribution[timeindex][area]).Nrow(); age++) {
+      for (len = 0; len < (*obsDistribution[timeindex][area]).Ncol(age); len++) {
+        temp -= (*obsDistribution[timeindex][area])[age][len] *
+                 log(((*modelDistribution[timeindex][area])[age][len]) + epsilon);
+        obstotal += (*obsDistribution[timeindex][area])[age][len];
+        modtotal += ((*modelDistribution[timeindex][area])[age][len] + epsilon);
       }
     }
-  }
 
-  if ((modtotal <= 0) && (!(isZero(obstotal)))) {
-    likelihoodValues[timeindex] = 0.0;
-    return 0.0;
-  } else {
-    total /= obstotal;
-    total += log(modtotal);
-    likelihoodValues[timeindex] = total;
-    return total;
+    if ((modtotal <= 0) && (!(isZero(obstotal)))) {
+      likelihoodValues[timeindex][area] = 0.0;
+    } else {
+      temp /= obstotal;
+      temp += log(modtotal);
+      likelihoodValues[timeindex][area] = temp;
+    }
+    total += likelihoodValues[timeindex][area];
   }
+  return total;
 }
 
 double SurveyDistribution::calcLikPearson() {
   //written by kgf 13/10 98
 
-  double total = 0.0, diff = 0.0;
-  int age, length;
+  double temp, total, diff;
+  int area, age, len;
 
-  for (age = minrow; age <= maxrow; age++) {
-    for (length = mincol[age]; length <= maxcol[age]; length++) {
-      diff = ((*modelDistribution[timeindex])[age][length] - (*obsDistribution[timeindex])[age][length]);
-      diff *= diff;
-      diff /= ((*modelDistribution[timeindex])[age][length] + epsilon);
-      total += diff;
+  total = 0.0;
+  for (area = 0; area < areas.Nrow(); area++) {
+    temp = 0.0;
+    for (age = 0; age < (*obsDistribution[timeindex][area]).Nrow(); age++) {
+      for (len = 0; len < (*obsDistribution[timeindex][area]).Ncol(age); len++) {
+        diff = ((*modelDistribution[timeindex][area])[age][len] - (*obsDistribution[timeindex][area])[age][len]);
+        diff *= diff;
+        diff /= ((*modelDistribution[timeindex][area])[age][len] + epsilon);
+        temp += diff;
+      }
     }
+    likelihoodValues[timeindex][area] = temp;
+    total += likelihoodValues[timeindex][area];
   }
-
-  likelihoodValues[timeindex] = total;
   return total;
 }
 
@@ -467,56 +533,60 @@ double SurveyDistribution::calcLikGamma() {
   //Hans J Skaug 15/3 00, at present without internal weighting.
   //-w_i (-x_obs/x_mod - log(x_mod))
 
-  double total = 0.0, temp = 0.0;
-  int age, length;
+  double total, temp;
+  int area, age, len;
 
-  for (age = minrow; age <= maxrow; age++) {
-    for (length = mincol[age]; length <= maxcol[age]; length++) {
-      temp = ((*obsDistribution[timeindex])[age][length] /
-               ((*modelDistribution[timeindex])[age][length] + epsilon)) +
-               log((*modelDistribution[timeindex])[age][length] + epsilon);
+  total = 0.0;
+  for (area = 0; area < areas.Nrow(); area++) {
+    temp = 0.0;
+    for (age = 0; age < (*obsDistribution[timeindex][area]).Nrow(); age++)
+      for (len = 0; len < (*obsDistribution[timeindex][area]).Ncol(age); len++)
+        temp += (((*obsDistribution[timeindex][area])[age][len] /
+                 ((*modelDistribution[timeindex][area])[age][len] + epsilon)) +
+                 log((*modelDistribution[timeindex][area])[age][len] + epsilon));
 
-      total += temp;
-    }
+    likelihoodValues[timeindex][area] = temp;
+    total += likelihoodValues[timeindex][area];
   }
-
-  likelihoodValues[timeindex] = total;
   return total;
 }
 
 double SurveyDistribution::calcLikLog() {
   //corrected by kgf 27/11 98 to sum first and then take the logarithm
-  double total = 0.0, obstotal = 0.0, modtotal = 0.0;
-  int age, length;
+  double total, obstotal, modtotal;
+  int area, age, len;
 
-  for (age = minrow; age <= maxrow; age++) {
-    for (length = mincol[age]; length <= maxcol[age]; length++) {
-      modtotal += (*modelDistribution[timeindex])[age][length];
-      obstotal += (*obsDistribution[timeindex])[age][length];
+  total = 0.0;
+  for (area = 0; area < areas.Nrow(); area++) {
+    obstotal = 0.0;
+    modtotal = 0.0;
+    for (age = 0; age < (*obsDistribution[timeindex][area]).Nrow(); age++) {
+      for (len = 0; len < (*obsDistribution[timeindex][area]).Ncol(age); len++) {
+        modtotal += (*modelDistribution[timeindex][area])[age][len];
+        obstotal += (*obsDistribution[timeindex][area])[age][len];
+      }
     }
+
+    if (!(isZero(modtotal)))
+      likelihoodValues[timeindex][area] = (log(obstotal / modtotal) * log(obstotal / modtotal));
+    else
+      likelihoodValues[timeindex][area] = verybig;
+
+    total += likelihoodValues[timeindex][area];
   }
-
-  if (!(isZero(modtotal))) {
-    total = log(obstotal / modtotal);
-    total *= total;
-  } else
-    total = verybig;
-
-  likelihoodValues[timeindex] = total; //kgf 19/1 99
   return total;
 }
 
 void SurveyDistribution::SummaryPrint(ofstream& outfile) {
   int year, area;
 
-  //JMB - this is nasty hack since there is only one area
-  for (year = 0; year < Years.Size(); year++) {
-    for (area = 0; area < areaindex.Size(); area++) {
+  for (year = 0; year < likelihoodValues.Nrow(); year++) {
+    for (area = 0; area < likelihoodValues.Ncol(year); area++) {
       outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
         << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
         << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
         << setw(smallwidth) << weight << sep << setprecision(largeprecision)
-        << setw(largewidth) << likelihoodValues[year] << endl;
+        << setw(largewidth) << likelihoodValues[year][area] << endl;
     }
   }
   outfile.flush();

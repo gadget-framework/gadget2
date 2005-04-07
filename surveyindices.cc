@@ -168,33 +168,56 @@ void SurveyIndices::addLikelihood(const TimeClass* const TimeInfo) {
 }
 
 void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
-  int i, j;
-  int found = 0;
-  StockPtrVector s;
+  int i, j, k, found;
   FleetPtrVector f;
-
-  for (i = 0; i < stocknames.Size(); i++) {
-    found = 0;
-    for (j = 0; j < Stocks.Size(); j++)
-      if (strcasecmp(stocknames[i], Stocks[j]->getName()) == 0) {
-        found++;
-        s.resize(1, Stocks[j]);
-      }
-    if (found == 0)
-      handle.logFailure("Error in surveyindex - failed to match stock", stocknames[i]);
-
-  }
+  StockPtrVector s;
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
-    for (j = 0; j < Fleets.Size(); j++)
+    for (j = 0; j < Fleets.Size(); j++) {
       if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
         f.resize(1, Fleets[j]);
       }
-
+    }
     if (found == 0)
       handle.logFailure("Error in surveyindex - failed to match fleet", fleetnames[i]);
+  }
+
+  //check fleet areas
+  if (fleetnames.Size() > 0) {
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < f.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (f[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logWarning("Warning in surveyindex - fleet not defined on all areas");
+    }
+  }
+
+  for (i = 0; i < stocknames.Size(); i++) {
+    found = 0;
+    for (j = 0; j < Stocks.Size(); j++) {
+      if (strcasecmp(stocknames[i], Stocks[j]->getName()) == 0) {
+        found++;
+        s.resize(1, Stocks[j]);
+      }
+    }
+    if (found == 0)
+      handle.logFailure("Error in surveyindex - failed to match stock", stocknames[i]);
+  }
+
+  //check stock areas
+  for (j = 0; j < areas.Nrow(); j++) {
+    found = 0;
+    for (i = 0; i < s.Size(); i++)
+      for (k = 0; k < areas.Ncol(j); k++)
+        if (s[i]->isInArea(areas[j][k]))
+          found++;
+    if (found == 0)
+      handle.logWarning("Warning in surveyindex - stock not defined on all areas");
   }
 
   SI->setFleetsAndStocks(f, s);

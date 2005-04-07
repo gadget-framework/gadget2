@@ -58,7 +58,6 @@ public:
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
   virtual void SummaryPrint(ofstream& outfile);
-  void calcIndex(const AgeBandMatrix* alptr, const TimeClass* const TimeInfo);
 private:
   /**
    * \brief This function will read the SurveyDistribution data from the input file
@@ -70,6 +69,7 @@ private:
    */
   void readDistributionData(CommentStream& infile, const TimeClass* TimeInfo,
     int numarea, int numage, int numlen);
+  void calcIndex(const AgeBandMatrixPtrVector* alptr, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the likelihood score for the current timestep based on a multinomial function
    * \return likelihood score
@@ -155,19 +155,19 @@ private:
    */
   IntVector Steps;
   /**
-   * \brief This is the DoubleMatrixPtrVector used to store survey distribution information specified in the input file
-   * \note the indices for this object are [time][age][length]
+   * \brief This is the DoubleMatrixPtrMatrix used to store survey distribution information specified in the input file
+   * \note the indices for this object are [time][area][age][length]
    */
-  DoubleMatrixPtrVector obsDistribution;
+  DoubleMatrixPtrMatrix obsDistribution;
   /**
-   * \brief This is the DoubleMatrixPtrVector used to store survey distribution information calculated in the model
-   * \note the indices for this object are [time][age][length]
+   * \brief This is the DoubleMatrixPtrMatrix used to store survey distribution information calculated in the model
+   * \note the indices for this object are [time][area][age][length]
    */
-  DoubleMatrixPtrVector modelDistribution;
+  DoubleMatrixPtrMatrix modelDistribution;
   /**
-   * \brief This is the DoubleVector used to store the calculated likelihood information
+   * \brief This is the DoubleMatrix used to store the calculated likelihood information
    */
-  DoubleVector likelihoodValues;
+  DoubleMatrix likelihoodValues;
   /**
    * \brief This is the index of the timesteps for the likelihood component data
    */
@@ -179,10 +179,6 @@ private:
   SuitFunc* suitfunction;
   DoubleVector q_l; //length dependent catchability factor
   TimeVariableVector parameters;
-  IntVector mincol;
-  IntVector maxcol;
-  int minrow;
-  int maxrow;
 };
 
 #endif

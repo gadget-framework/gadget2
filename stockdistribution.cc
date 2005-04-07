@@ -53,11 +53,11 @@ StockDistribution::StockDistribution(CommentStream& infile,
   else if ((c == 'e') || (c == 'E'))
     readWordAndVariable(infile, "epsilon", epsilon);
   else
-    epsilon = 10;
+    epsilon = 10.0;
 
   if (epsilon <= 0) {
     handle.Warning("Epsilon should be a positive integer - set to default value 10");
-    epsilon = 10;
+    epsilon = 10.0;
   }
 
   //read in area aggregation from file
@@ -294,36 +294,98 @@ void StockDistribution::Print(ofstream& outfile) const {
 }
 
 void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
-  int i, j, found, stocknumber;
+  int s, i, j, k, found, minage, maxage;
   FleetPtrVector fleets;
   aggregator = new FleetPreyAggregator*[stocknames.Size()];
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
-    for (j = 0; j < Fleets.Size(); j++)
+    for (j = 0; j < Fleets.Size(); j++) {
       if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
         fleets.resize(1, Fleets[j]);
       }
+    }
     if (found == 0)
       handle.logFailure("Error in stockdistribution - unrecognised fleet", fleetnames[i]);
-
   }
 
-  for (i = 0; i < stocknames.Size(); i++) {
+  //check fleet areas
+  for (j = 0; j < areas.Nrow(); j++) {
+    found = 0;
+    for (i = 0; i < fleets.Size(); i++)
+      for (k = 0; k < areas.Ncol(j); k++)
+        if (fleets[i]->isInArea(areas[j][k]))
+          found++;
+    if (found == 0)
+      handle.logWarning("Warning in stockdistribution - fleet not defined on all areas");
+  }
+
+  for (s = 0; s < stocknames.Size(); s++) {
     StockPtrVector stocks;
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
-      if (Stocks[j]->isEaten())
-        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->getName()) == 0) {
+      if (Stocks[j]->isEaten()) {
+        if (strcasecmp(stocknames[s], Stocks[j]->returnPrey()->getName()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);
         }
+      }
     }
     if (found == 0)
       handle.logFailure("Error in stockdistribution - unrecognised stock", stocknames[i]);
 
-    aggregator[i] = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
+    //check areas, ages and lengths
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < stocks.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (stocks[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logWarning("Warning in stockdistribution - stock not defined on all areas");
+    }
+
+    minage = 9999;
+    maxage = -1;
+    for (i = 0; i < ages.Nrow(); i++) {
+      for (j = 0; j < ages.Ncol(i); j++) {
+        if (ages[i][j] < minage)
+          minage = ages[i][j];
+        if (maxage < ages[i][j])
+          maxage = ages[i][j];
+      }
+    }
+
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (minage >= stocks[i]->minAge())
+        found++;
+    if (found == 0)
+      handle.logWarning("Warning in stockdistribution - minimum age less than stock age");
+
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (maxage <= stocks[i]->maxAge())
+        found++;
+    if (found == 0)
+      handle.logWarning("Warning in stockdistribution - maximum age less than stock age");
+
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+        found++;
+    if (found == 0)
+      handle.logWarning("Warning in stockdistribution - minimum length group less than stock length");
+
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+        found++;
+    if (found == 0)
+      handle.logWarning("Warning in stockdistribution - maximum length group greater than stock length");
+
+    aggregator[s] = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
   }
 }
 

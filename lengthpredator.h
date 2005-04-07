@@ -38,6 +38,11 @@ public:
    * \return scaler
    */
   double Scaler(int area) const { return scaler[this->areaNum(area)]; };
+  /**
+   * \brief This function will reset the predation information
+   * \param TimeInfo is the KeeTimeClasser for the current model
+   */
+  virtual void Reset(const TimeClass* const TimeInfo);
 protected:
   /**
    * \brief This is the DoubleVector of scalers used to split the total catch between the areas of the prey

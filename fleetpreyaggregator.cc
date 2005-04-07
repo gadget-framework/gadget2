@@ -17,8 +17,7 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
   : fleets(Fleets), stocks(Stocks), LgrpDiv(Lgrpdiv),
     areas(Areas), ages(Ages), overconsumption(overcons) {
 
-  int i, j, k, l = 0;
-
+  int i;
   CI.resize(stocks.Size());
   for (i = 0; i < stocks.Size(); i++)
     CI[i] = new ConversionIndex(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);

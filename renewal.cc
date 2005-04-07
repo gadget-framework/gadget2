@@ -374,6 +374,11 @@ RenewalData::~RenewalData() {
 }
 
 void RenewalData::setCI(const LengthGroupDivision* const GivenLDiv) {
+  //check minimum and maximum lengths
+  if (LgrpDiv->minLength() < GivenLDiv->minLength())
+    handle.logWarning("Warning in renewal - minimum length less than stock length");
+  if (LgrpDiv->maxLength() > GivenLDiv->maxLength())
+    handle.logWarning("Warning in renewal - maximum length greater than stock length");
   CI = new ConversionIndex(LgrpDiv, GivenLDiv);
 }
 
