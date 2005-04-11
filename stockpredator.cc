@@ -91,12 +91,9 @@ void StockPredator::Print(ofstream& outfile) const {
 }
 
 void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
-  int length;
   int inarea = this->areaNum(area);
   Alkeys[inarea].setToZero();
   Alkeys[inarea].Add(stock, *CI);
-  for (length = 0; length < prednumber.Ncol(inarea); length++)
-    prednumber[inarea][length].N = 0.0;
   Alkeys[inarea].sumColumns(prednumber[inarea]);
 }
 
@@ -156,20 +153,24 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
   //Now maxconbylength contains the maximum consumption by length
   //Calculating Phi(L) and O(l,L,prey) (stored in consumption)
   for (prey = 0; prey < this->numPreys(); prey++) {
-    if (Preys(prey)->isInArea(area)) {
-      if (Preys(prey)->Biomass(area) > verysmall) {
-        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-          for (preyl = Suitability(prey)[predl].minCol();
-              preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-            cons[inarea][prey][predl][preyl]
-              = Suitability(prey)[predl][preyl] * Preys(prey)->Biomass(area, preyl);
-            Phi[inarea][predl] += cons[inarea][prey][predl][preyl];
-          }
-      } else {
-        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-          for (preyl = Suitability(prey)[predl].minCol();
-              preyl < Suitability(prey)[predl].maxCol(); preyl++)
-            cons[inarea][prey][predl][preyl] = 0.0;
+    if (Preys(prey)->isPreyArea(area)) {
+      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+        for (preyl = Suitability(prey)[predl].minCol();
+            preyl < Suitability(prey)[predl].maxCol(); preyl++) {
+
+          cons[inarea][prey][predl][preyl]
+            = Suitability(prey)[predl][preyl] * Preys(prey)->getBiomass(area, preyl);
+          Phi[inarea][predl] += cons[inarea][prey][predl][preyl];
+        }
+      }
+
+    } else {
+      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+        for (preyl = Suitability(prey)[predl].minCol();
+            preyl < Suitability(prey)[predl].maxCol(); preyl++) {
+
+          cons[inarea][prey][predl][preyl] = 0.0;
+        }
       }
     }
   }
@@ -186,24 +187,26 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
   }
 
   //Distributing the total consumption on the Preys()
-  for (prey = 0; prey < this->numPreys(); prey++)
-    if (Preys(prey)->isInArea(area))
-      if (Preys(prey)->Biomass(area) > verysmall)
-        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-          if (!(isZero(Phi[inarea][predl]))) {
-            tmpcons = totalcons[inarea][predl] / Phi[inarea][predl];
-            for (preyl = Suitability(prey)[predl].minCol();
-                preyl < Suitability(prey)[predl].maxCol(); preyl++)
+  for (prey = 0; prey < this->numPreys(); prey++) {
+    if (Preys(prey)->isPreyArea(area)) {
+      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+        if (!(isZero(Phi[inarea][predl]))) {
+          tmpcons = totalcons[inarea][predl] / Phi[inarea][predl];
+          for (preyl = Suitability(prey)[predl].minCol();
+              preyl < Suitability(prey)[predl].maxCol(); preyl++) {
 
               cons[inarea][prey][predl][preyl] *= tmpcons;
           }
+        }
+      }
+    }
+  }
 
   //Add the calculated consumption to the preys in question
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (Preys(prey)->isInArea(area))
-      if (Preys(prey)->Biomass(area) > verysmall)
-        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-          Preys(prey)->addConsumption(area, cons[inarea][prey][predl]);
+    if (Preys(prey)->isPreyArea(area))
+      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+        Preys(prey)->addBiomassConsumption(area, cons[inarea][prey][predl]);
 }
 
 //Check if any of the preys of the predator are eaten up.
@@ -218,22 +221,25 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     overcons[inarea][predl] = 0.0;
 
-  for (prey = 0; prey < this->numPreys(); prey++)
-    if (Preys(prey)->isInArea(area))
-      if (Preys(prey)->Biomass(area) > verysmall)
-        if (Preys(prey)->TooMuchConsumption(area) == 1) {
-          AnyPreyEatenUp = 1;
-          for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-            for (preyl = Suitability(prey)[predl].minCol();
-                preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-              ratio = Preys(prey)->Ratio(area, preyl);
-              if (ratio > maxRatio) {
-                tmp = maxRatio / ratio;
-                overcons[inarea][predl] += (1.0 - tmp) * cons[inarea][prey][predl][preyl];
-                cons[inarea][prey][predl][preyl] *= tmp;
-              }
+  for (prey = 0; prey < this->numPreys(); prey++) {
+    if (Preys(prey)->isPreyArea(area)) {
+      if (Preys(prey)->TooMuchConsumption(area) == 1) {
+        AnyPreyEatenUp = 1;
+        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+          for (preyl = Suitability(prey)[predl].minCol();
+              preyl < Suitability(prey)[predl].maxCol(); preyl++) {
+
+            ratio = Preys(prey)->Ratio(area, preyl);
+            if (ratio > maxRatio) {
+              tmp = maxRatio / ratio;
+              overcons[inarea][predl] += (1.0 - tmp) * cons[inarea][prey][predl][preyl];
+              cons[inarea][prey][predl][preyl] *= tmp;
             }
+          }
         }
+      }
+    }
+  }
 
   if (AnyPreyEatenUp == 1) {
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
@@ -255,12 +261,11 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
     fphi[inarea][predl] = (rat2 * fphI[inarea][predl]) + (rat1 * fphi[inarea][predl]);
   }
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (Preys(prey)->isInArea(area))
-      if (Preys(prey)->Biomass(area) > verysmall)
-        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-          for (preyl = Suitability(prey)[predl].minCol();
-              preyl < Suitability(prey)[predl].maxCol(); preyl++)
-            consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
+    if (Preys(prey)->isPreyArea(area))
+      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+        for (preyl = Suitability(prey)[predl].minCol();
+            preyl < Suitability(prey)[predl].maxCol(); preyl++)
+          consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
 }
 
 /* This function calculates the maximum consumption by length and puts in

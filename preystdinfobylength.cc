@@ -22,11 +22,11 @@ void PreyStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
     BconbyLength[inarea][l] = Bconsumption[l];
     //NconbyLength[inarea][l] = 0.0;  //initialised to zero
 
-    if (isZero(prey->Biomass(area, l)))
+    if (isZero(prey->getBiomass(area, l)))
       MortbyLength[inarea][l] = 0.0;
-    else if (BconbyLength[inarea][l] >= prey->Biomass(area, l))
+    else if (BconbyLength[inarea][l] >= prey->getBiomass(area, l))
       MortbyLength[inarea][l] = MaxMortality;
     else
-      MortbyLength[inarea][l] = -log(1.0 - BconbyLength[inarea][l] / prey->Biomass(area, l)) * timeratio;
+      MortbyLength[inarea][l] = -log(1.0 - BconbyLength[inarea][l] / prey->getBiomass(area, l)) * timeratio;
   }
 }

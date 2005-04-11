@@ -3,6 +3,7 @@
 #include "keeper.h"
 #include "totalpredator.h"
 #include "linearpredator.h"
+#include "numberpredator.h"
 #include "readfunc.h"
 #include "readword.h"
 #include "errorhandler.h"
@@ -70,6 +71,10 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
       break;
     case LINEARFLEET:
       predator = new LinearPredator(infile, givenname, areas, &LgrpDiv,
+        &LgrpDiv, TimeInfo, keeper, multscaler);
+      break;
+    case NUMBERFLEET:
+      predator = new NumberPredator(infile, givenname, areas, &LgrpDiv,
         &LgrpDiv, TimeInfo, keeper, multscaler);
       break;
     default:

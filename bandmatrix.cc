@@ -73,13 +73,6 @@ BandMatrix::~BandMatrix() {
   }
 }
 
-void BandMatrix::sumColumns(DoubleVector& Result) const {
-  int i, j;
-  for (i = 0; i < nrow; i++)
-    for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
-      Result[j] += (*v[i])[j];
-}
-
 void BandMatrix::Print(ofstream& outfile) const {
   int i, j;
   int maxcol = 0;

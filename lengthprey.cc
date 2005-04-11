@@ -17,6 +17,7 @@ void LengthPrey::Sum(const PopInfoVector& NumberInArea, int area, int CurrentSub
     cons[inarea][i] = 0.0;
   for (i = 0; i < Number[inarea].Size(); i++)
     Number[inarea][i].N = 0.0;
+
   Number[inarea].Sum(&NumberInArea, *CI);
 
   PopInfo sum;

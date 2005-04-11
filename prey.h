@@ -34,10 +34,12 @@ public:
   virtual ~Prey() = 0;
   virtual void Sum(const AgeBandMatrix& Alkeys, int area, int NrofSubstep) {};
   virtual void Subtract(AgeBandMatrix& Alkeys, int area);
-  void addConsumption(int area, const DoubleIndexVector& predconsumption);
+  void addBiomassConsumption(int area, const DoubleIndexVector& predconsumption);
+  void addNumbersConsumption(int area, const DoubleIndexVector& predconsumption);
   virtual void setCI(const LengthGroupDivision* const GivenLDiv);
   virtual void Print(ofstream& outfile) const;
-  double Biomass(int area, int length) const { return biomass[this->areaNum(area)][length]; };
+  double getBiomass(int area, int length) const { return biomass[this->areaNum(area)][length]; };
+  double getNumber(int area, int length) const { return Number[this->areaNum(area)][length].N; };
   double Biomass(int area) const { return total[this->areaNum(area)]; };
   int TooMuchConsumption(int area) const { return tooMuchConsumption[this->areaNum(area)]; };
   virtual void checkConsumption(int area, int numsubsteps);
@@ -49,6 +51,12 @@ public:
   const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   virtual void Reset();
   const PopInfoVector& getNumberPriorToEating(int area) const { return numberPriorToEating[this->areaNum(area)]; };
+  /**
+   * \brief This will check if there is any prey to consume on a given area
+   * \param area is the area that the prey will be consumed on
+   * \return 1 if there is prey to consume, 0 otherwise
+   */
+  int isPreyArea(int area);
   /**
    * \brief This will return the type of prey class
    * \return type

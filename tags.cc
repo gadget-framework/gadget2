@@ -281,16 +281,13 @@ void Tags::setStock(StockPtrVector& Stocks) {
 //Must have set stocks according to stocknames using setStock before calling Update()
 //Now we need to distribute the tagged fish to the same age/length groups as the tagged stock.
 void Tags::Update(int timeid) {
+  int i, j;
   PopInfoVector NumberInArea;
   NumberInArea.resize(LgrpDiv->numLengthGroups());
-  PopInfo nullpop;
-
-  int i, j;
-  for (i = 0; i < NumberInArea.Size(); i++)
-    NumberInArea[i] = nullpop;
 
   const AgeBandMatrix* stockPopInArea;
   const LengthGroupDivision* tmpLgrpDiv;
+
   stockPopInArea = &(taggingstock->getAgeLengthKeys(tagarea));
   stockPopInArea->sumColumns(NumberInArea);
 
@@ -550,14 +547,9 @@ int Tags::isWithinPeriod(int year, int step) {
 }
 
 void Tags::addToTagStock(int timeid) {
+  int i, tagareaindex;
   PopInfoVector NumberInArea;
   NumberInArea.resize(LgrpDiv->numLengthGroups());
-  PopInfo nullpop;
-
-  int i, tagareaindex;
-  for (i = 0; i < NumberInArea.Size(); i++)
-    NumberInArea[i] = nullpop;
-
   const AgeBandMatrix* stockPopInArea;
   stockPopInArea = &(taggingstock->getAgeLengthKeys(tagarea));
   stockPopInArea->sumColumns(NumberInArea);

@@ -37,11 +37,7 @@ void Stock::Migrate(const TimeClass* const TimeInfo) {
 //Sum up into Growth+Predator and Prey Lengthgroups.  Storage is a
 //vector of PopInfo that stores the sum over each lengthgroup.
 void Stock::calcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  int inarea = this->areaNum(area);
-  PopInfo nullpop;
-  int i;
-  for (i = 0; i < NumberInArea[inarea].Size(); i++)
-    NumberInArea[inarea][i] = nullpop;
+  int i, inarea = this->areaNum(area);
   Alkeys[inarea].sumColumns(NumberInArea[inarea]);
   if (doesgrow)
     grower->Sum(NumberInArea[inarea], area);

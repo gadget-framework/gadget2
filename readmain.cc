@@ -47,6 +47,8 @@ void Ecosystem::readFleet(CommentStream& infile) {
       fleetvec[fleetvec.Size() - 1] = new Fleet(infile, value, Area, TimeInfo, keeper, TOTALFLEET);
     else if (strcasecmp(text, "linearfleet") == 0)
       fleetvec[fleetvec.Size() - 1] = new Fleet(infile, value, Area, TimeInfo, keeper, LINEARFLEET);
+    else if (strcasecmp(text, "numberfleet") == 0)
+      fleetvec[fleetvec.Size() - 1] = new Fleet(infile, value, Area, TimeInfo, keeper, NUMBERFLEET);
     else if (strcasecmp(text, "mortalityfleet") == 0)
       handle.Message("The mortalityfleet fleet type is no longer supported");
     else

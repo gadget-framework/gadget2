@@ -135,12 +135,22 @@ void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
   Alkeys.Subtract(conS, *CI, Number[inarea]);
 }
 
-//Calculates the consumption. The function gets the consumption in
-//mass units, later they are converted to numbers.
-void Prey::addConsumption(int area, const DoubleIndexVector& predconsumption) {
+//adds the consumption by biomass
+void Prey::addBiomassConsumption(int area, const DoubleIndexVector& predconsumption) {
   int i, inarea = this->areaNum(area);
+  if ((predconsumption.minCol() < 0) || (predconsumption.maxCol() > cons[inarea].Size()))
+    handle.logFailure("Error in prey - invalid length group when adding consumption");
   for (i = predconsumption.minCol(); i < predconsumption.maxCol(); i++)
     cons[inarea][i] += predconsumption[i];
+}
+
+//adds the consumption by numbers
+void Prey::addNumbersConsumption(int area, const DoubleIndexVector& predconsumption) {
+  int i, inarea = this->areaNum(area);
+  if ((predconsumption.minCol() < 0) || (predconsumption.maxCol() > cons[inarea].Size()))
+    handle.logFailure("Error in prey - invalid length group when adding consumption");
+  for (i = predconsumption.minCol(); i < predconsumption.maxCol(); i++)
+    cons[inarea][i] += (predconsumption[i] * Number[inarea][i].W);
 }
 
 //check if more is consumed of prey than was available.  If this is
@@ -190,4 +200,12 @@ void Prey::Reset() {
     }
   }
   handle.logMessage("Reset consumption data for prey", this->getName());
+}
+
+int Prey::isPreyArea(int area) {
+  if (total[this->areaNum(area)] < 0)
+    handle.logWarning("Warning in prey - negative amount consumed");
+  if (isZero(total[this->areaNum(area)]))
+    return 0;
+  return 1;
 }

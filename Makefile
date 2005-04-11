@@ -95,7 +95,7 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	catchinkilos.o interruptinterface.o interrupthandler.o naturalm.o renewal.o \
 	taggrow.o initialinputfile.o optinfohooke.o optinfobfgs.o optinfosimann.o \
 	popratio.o popinfo.o popinfomemberfunctions.o agebandmatrixratio.o \
-	summaryprinter.o agebandmatrixratiomemberfunctions.o
+	numberpredator.o summaryprinter.o agebandmatrixratiomemberfunctions.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 

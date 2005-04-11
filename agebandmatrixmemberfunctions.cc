@@ -115,10 +115,9 @@ void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIn
 //Multiply AgeBandMatrix by a age dependent vector for example
 //natural mortality. Investigate if Ratio should be allowed to be shorter.
 void AgeBandMatrix::Multiply(const DoubleVector& Ratio) {
+  int i, j;
   if (Ratio.Size() != nrow)
     handle.logWarning("Warning in agebandmatrix - different sizes in multiply");
-
-  int i, j;
   for (i = 0; i < nrow; i++)
     for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
       (*v[i])[j] *= Ratio[i];
@@ -129,6 +128,9 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio) {
 //summation over all ages for each length.
 void AgeBandMatrix::sumColumns(PopInfoVector& Result) const {
   int i, j;
+  PopInfo nullpop;
+  for (i = 0; i < Result.Size(); i++)
+    Result[i] = nullpop;
   for (i = 0; i < nrow; i++)
     for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
       Result[j] += (*v[i])[j];

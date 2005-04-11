@@ -37,26 +37,24 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
   tmp = Multiplicative * LengthOfStep / numsubsteps;
 
   for (prey = 0; prey < this->numPreys(); prey++) {
-    if (Preys(prey)->isInArea(area)) {
-      if (Preys(prey)->Biomass(area) > verysmall) {
-        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-          for (preyl = Suitability(prey)[predl].minCol();
-              preyl < Suitability(prey)[predl].maxCol(); preyl++) {
+    if (Preys(prey)->isPreyArea(area)) {
+      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+        for (preyl = Suitability(prey)[predl].minCol();
+            preyl < Suitability(prey)[predl].maxCol(); preyl++) {
 
-            cons[inarea][prey][predl][preyl] = tmp *
-              Suitability(prey)[predl][preyl] * Preys(prey)->Biomass(area, preyl) *
-              prednumber[inarea][predl].N * prednumber[inarea][predl].W;
+          cons[inarea][prey][predl][preyl] = tmp * prednumber[inarea][predl].N *
+            Suitability(prey)[predl][preyl] * Preys(prey)->getBiomass(area, preyl);
 
-            totalcons[inarea][predl] += cons[inarea][prey][predl][preyl];
-          }
+          totalcons[inarea][predl] += cons[inarea][prey][predl][preyl];
         }
+      }
 
-      } else {
-        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-          for (preyl = Suitability(prey)[predl].minCol();
-              preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-            cons[inarea][prey][predl][preyl] = 0.0;
-          }
+    } else {
+      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+        for (preyl = Suitability(prey)[predl].minCol();
+            preyl < Suitability(prey)[predl].maxCol(); preyl++) {
+
+          cons[inarea][prey][predl][preyl] = 0.0;
         }
       }
     }
@@ -64,10 +62,9 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
 
   //Inform the preys of the consumption.
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (Preys(prey)->isInArea(area))
-      if (Preys(prey)->Biomass(area) > verysmall)
-        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-          Preys(prey)->addConsumption(area, cons[inarea][prey][predl]);
+    if (Preys(prey)->isPreyArea(area))
+      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+        Preys(prey)->addBiomassConsumption(area, cons[inarea][prey][predl]);
 }
 
 void LinearPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubstep) {
@@ -81,19 +78,17 @@ void LinearPredator::adjustConsumption(int area, int numsubsteps, int CurrentSub
     overcons[inarea][predl] = 0.0;
 
   for (prey = 0; prey < this->numPreys(); prey++) {
-    if (Preys(prey)->isInArea(area)) {
-      if (Preys(prey)->Biomass(area) > verysmall) {
-        if (Preys(prey)->TooMuchConsumption(area) == 1) {
-          AnyPreyEatenUp = 1;
-          for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-            for (preyl = Suitability(prey)[predl].minCol();
-                preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-              ratio = Preys(prey)->Ratio(area, preyl);
-              if (ratio > maxRatio) {
-                tmp = maxRatio / ratio;
-                overcons[inarea][predl] += (1.0 - tmp) * cons[inarea][prey][predl][preyl];
-                cons[inarea][prey][predl][preyl] *= tmp;
-              }
+    if (Preys(prey)->isPreyArea(area)) {
+      if (Preys(prey)->TooMuchConsumption(area) == 1) {
+        AnyPreyEatenUp = 1;
+        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+          for (preyl = Suitability(prey)[predl].minCol();
+              preyl < Suitability(prey)[predl].maxCol(); preyl++) {
+            ratio = Preys(prey)->Ratio(area, preyl);
+            if (ratio > maxRatio) {
+              tmp = maxRatio / ratio;
+              overcons[inarea][predl] += (1.0 - tmp) * cons[inarea][prey][predl][preyl];
+              cons[inarea][prey][predl][preyl] *= tmp;
             }
           }
         }
@@ -113,12 +108,11 @@ void LinearPredator::adjustConsumption(int area, int numsubsteps, int CurrentSub
   }
 
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (Preys(prey)->isInArea(area))
-      if (Preys(prey)->Biomass(area) > verysmall)
-        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-          for (preyl = Suitability(prey)[predl].minCol();
-              preyl < Suitability(prey)[predl].maxCol(); preyl++)
-            consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
+    if (Preys(prey)->isPreyArea(area))
+      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+        for (preyl = Suitability(prey)[predl].minCol();
+            preyl < Suitability(prey)[predl].maxCol(); preyl++)
+          consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
 }
 
 void LinearPredator::Print(ofstream& outfile) const {
