@@ -968,20 +968,21 @@ In equation~\ref{eq:maxcons}, the parameter $<$ M $>$ gives the maximum possible
 In equation~\ref{eq:feedlevel}, the parameter $<\psi>$ gives the ''feeding level'' which denotes the fraction of the available food that the predator is consuming.  This is governed by the total amount of prey available and the $<$half feeding$>$ value which is specified in the input file.  The $<$half feeding$>$ value is the density of prey required to allow the predator to consume prey at half the maximum consumption level.  The value of $<\psi>$ can have an affect on the growth of the predator (ie. when there isn't sufficient food available) when the growth function has been set to ''MULTSPEC'' or ''WeightJones''.
 
 \section{Suitability}\label{sec:suitability}
-The suitability determines how the predators act on the preys.  This selectivity relationship between the predator and the prey is based on the lengths of the predator and prey, and can be defined either by declaring a matrix of suitability values, or by declaring a suitability function and the parameters for that function.  The suitability values can be thought of as the proportion of the prey length group that the predator length group can consume, and as such the suitability values should be between 0 and 1.
+The suitability determines how the predators act on the preys.  This selectivity relationship between the predator and the prey is based on the lengths of the predator and prey, and are defined  by declaring a suitability function and the parameters for that function.  The suitability values can be thought of as the proportion of the prey length group that the predator length group can consume, and as such the suitability values should be between 0 and 1.
+
+%JMB removed this from the model
+%\bigskip
+%To define a suitability relationship based on a suitability matrix, the stock file (for the predator) needs to contain the following data:
+
+%{\small\begin{verbatim}
+%suitability
+%<preyname>    suitfile <filename>     <multi>      ; for each prey
+%\end{verbatim}}
+
+%This would result in Gadget opening a file of name $<$filename$>$ to read in a suitability matrix, which would then be multiplied by $<$multi$>$ for that prey.  The suitability matrix should have L rows and l columns, where L is the number of length groups for the predator, and l is the number of length groups for the prey.
 
 \bigskip
-To define a suitability relationship based on a suitability matrix, the stock file (for the predator) needs to contain the following data:
-
-{\small\begin{verbatim}
-suitability
-<preyname>    suitfile <filename>     <multi>      ; for each prey
-\end{verbatim}}
-
-This would result in Gadget opening a file of name $<$filename$>$ to read in a suitability matrix, which would then be multiplied by $<$multi$>$ for that prey.  The suitability matrix should have L rows and l columns, where L is the number of length groups for the predator, and l is the number of length groups for the prey.
-
-\bigskip
-Alternatively, to define a suitability relationship based on a suitability function, the stock file (for the predator) needs to contain the following data:
+To define a suitability relationship based on a suitability function, the stock file (for the predator) needs to contain the following data:
 
 {\small\begin{verbatim}
 suitability

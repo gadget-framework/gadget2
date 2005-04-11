@@ -17,17 +17,18 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   strncpy(text, "", MaxStrLength);
   ifstream subfile;
   CommentStream subcomment(subfile);
-  int i = 0;
-  int tmpint;
+  char c;
+  int i, tmpint;
 
-  keeper->addString("otherfood ");
+  keeper->addString("otherfood");
   keeper->addString(givenname);
 
   infile >> text;
   IntVector tmpareas;
   if (strcasecmp(text, "livesonareas") == 0) {
     infile >> ws;
-    char c = infile.peek();
+    i = 0;
+    c = infile.peek();
     while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
       tmpareas.resize(1);
       infile >> tmpint >> ws;
@@ -82,16 +83,31 @@ LengthPrey* OtherFood::returnPrey() const {
   return prey;
 }
 
-void OtherFood::checkEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  prey->checkConsumption(area, TimeInfo->numSubSteps());
+void OtherFood::checkEat(int area,
+  const AreaClass* const Area, const TimeClass* const TimeInfo) {
+
+  if (this->isOtherFoodStepArea(area, TimeInfo))
+    prey->checkConsumption(area, TimeInfo->numSubSteps());
 }
 
-void OtherFood::calcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
-  PopInfo pop;
-  pop.W = 1.0;   //warning - need to choose the weight to be 1
-  pop.N = amount[TimeInfo->CurrentTime()][this->areaNum(area)] * Area->Size(area);
-  PopInfoVector NumberInArea(1, pop);
-  prey->Sum(NumberInArea, area, TimeInfo->CurrentSubstep());
+void OtherFood::calcNumbers(int area,
+  const AreaClass* const Area, const TimeClass* const TimeInfo) {
+
+  if (this->isOtherFoodStepArea(area, TimeInfo)) {
+    PopInfo pop;
+    pop.W = 1.0;   //warning - need to choose the weight to be 1
+    pop.N = amount[TimeInfo->CurrentTime()][this->areaNum(area)] * Area->Size(area);
+    PopInfoVector NumberInArea(1, pop);
+    prey->Sum(NumberInArea, area, TimeInfo->CurrentSubstep());
+  }
+}
+
+int OtherFood::isOtherFoodStepArea(int area, const TimeClass* const TimeInfo) {
+  if (amount[TimeInfo->CurrentTime()][this->areaNum(area)] < 0)
+    handle.logWarning("Warning in otherfood - negative amount to be consumed");
+  if (isZero(amount[TimeInfo->CurrentTime()][this->areaNum(area)]))
+    return 0;
+  return 1;
 }
 
 void OtherFood::Print(ofstream& outfile) const {

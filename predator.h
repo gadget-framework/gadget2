@@ -39,10 +39,8 @@ public:
   };
 protected:
   virtual void DeleteParametersForPrey(int prey, Keeper* const keeper);
-  virtual void resizeObjects();
-  void setSuitability(const Suits* const S, Keeper* const keeper);
   const char* Preyname(int i) const { return Suitable->Preyname(i); };
-  int readSuitabilityMatrix(CommentStream& infile, const char* FinalString,
+  void readSuitability(CommentStream& infile, const char* FinalString,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   friend class Suits;
 private:

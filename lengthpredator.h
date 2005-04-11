@@ -39,6 +39,11 @@ public:
    */
   double Scaler(int area) const { return scaler[this->areaNum(area)]; };
   /**
+   * \brief This will return the multiplicative value used scale the catch
+   * \return Multiplicative
+   */
+  double multScaler() const { return Multiplicative; };
+  /**
    * \brief This function will reset the predation information
    * \param TimeInfo is the KeeTimeClasser for the current model
    */

@@ -24,7 +24,6 @@ public:
   const DoubleVector& maxConByLength(int area) const { return maxconbylength[this->areaNum(area)]; };
   virtual void Reset(const TimeClass* const TimeInfo);
 protected:
-  virtual void resizeObjects();
   virtual void calcMaxConsumption(double Temperature, int inarea, int CurrentSubstep,
     int numsubsteps, double LengthOfStep);
   double maxConsumption(double Length, const FormulaVector &maxcon, double Temperature);

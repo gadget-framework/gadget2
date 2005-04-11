@@ -84,7 +84,7 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
           //All the areas in areas[aggrArea] will be aggregated to the
           //area aggrArea in total.
           area = areas[aggrArea][j];
-          if (prey->isInArea(area) && fleets[f]->isInArea(area)) {
+          if (prey->isInArea(area) && fleets[f]->isFleetStepArea(area, TimeInfo)) {
             fleetscale = fleets[f]->Amount(area, TimeInfo) * pred->Scaler(area);
             if (fleets[f]->Type() == LINEARFLEET)
               fleetscale *= TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();

@@ -6,7 +6,7 @@
 #include "lengthpredator.h"
 #include "keeper.h"
 
-enum FleetType { TOTALFLEET = 1, LINEARFLEET };
+enum FleetType { TOTALFLEET = 1, LINEARFLEET, NUMBERFLEET };
 
 /**
  * \class Fleet
@@ -161,6 +161,13 @@ public:
    * \return amount
    */
   double Amount(int area, const TimeClass* const TimeInfo) const;
+  /**
+   * \brief This will check if the fleet will operate on the current timestep
+   * \param area is the area that the fleet will operate on
+   * \param TimeInfo is the TimeClass for the current model
+   * \return 1 if the fleet will operate, 0 otherwise
+   */
+  int isFleetStepArea(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This will return the type of fleet class
    * \return type

@@ -101,25 +101,29 @@ Fleet::~Fleet() {
 void Fleet::calcEat(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  predator->Eat(area, TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear(),
-    Area->Temperature(area, TimeInfo->CurrentTime()),
-    Area->Size(area), TimeInfo->CurrentSubstep(), TimeInfo->numSubSteps());
+  if (this->isFleetStepArea(area, TimeInfo))
+    predator->Eat(area, TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear(),
+      Area->Temperature(area, TimeInfo->CurrentTime()),
+      Area->Size(area), TimeInfo->CurrentSubstep(), TimeInfo->numSubSteps());
 }
 
 void Fleet::adjustEat(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  predator->adjustConsumption(area, TimeInfo->numSubSteps(), TimeInfo->CurrentSubstep());
+  if (this->isFleetStepArea(area, TimeInfo))
+    predator->adjustConsumption(area, TimeInfo->numSubSteps(), TimeInfo->CurrentSubstep());
 }
 
 void Fleet::calcNumbers(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  PopInfo pop;
-  pop.N = amount[TimeInfo->CurrentTime()][this->areaNum(area)];
-  pop.W = 1.0;
-  PopInfoVector NumberInArea(1, pop);
-  predator->Sum(NumberInArea, area);
+  if (this->isFleetStepArea(area, TimeInfo)) {
+    PopInfo pop;
+    pop.N = amount[TimeInfo->CurrentTime()][this->areaNum(area)];
+    pop.W = 1.0;
+    PopInfoVector NumberInArea(1, pop);
+    predator->Sum(NumberInArea, area);
+  }
 }
 
 void Fleet::Reset(const TimeClass* const TimeInfo) {
@@ -133,6 +137,16 @@ void Fleet::Print(ofstream& outfile) const {
 
 LengthPredator* Fleet::returnPredator() const {
   return predator;
+}
+
+int Fleet::isFleetStepArea(int area, const TimeClass* const TimeInfo) {
+  if (isZero(predator->multScaler()))
+    return 0;
+  if (amount[TimeInfo->CurrentTime()][this->areaNum(area)] < 0)
+    handle.logWarning("Warning in fleet - negative amount consumed");
+  if (isZero(amount[TimeInfo->CurrentTime()][this->areaNum(area)]))
+    return 0;
+  return 1;
 }
 
 double Fleet::Amount(int area, const TimeClass* const TimeInfo) const {

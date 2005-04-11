@@ -143,6 +143,13 @@ public:
    */
   virtual void Reset(const TimeClass* const TimeInfo);
   /**
+   * \brief This will check if there is otherfood available on the current timestep
+   * \param area is the area that the otherfood will be consumed on
+   * \param TimeInfo is the TimeClass for the current model
+   * \return 1 if there is otherfood available, 0 otherwise
+   */
+  int isOtherFoodStepArea(int area, const TimeClass* const TimeInfo);
+  /**
    * \brief This will return the otherfood, as a prey type, for use in other functions
    * \return prey
    */

@@ -16,11 +16,10 @@ TotalPredator::TotalPredator(CommentStream& infile, const char* givenname,
   keeper->addString("predator");
   keeper->addString(givenname);
 
-  readSuitabilityMatrix(infile, "amount", TimeInfo, keeper);
+  this->readSuitability(infile, "amount", TimeInfo, keeper);
 
   keeper->clearLast();
   keeper->clearLast();
-  //Predator::setPrey will call resizeObjects.
 }
 
 void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
@@ -60,9 +59,6 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
       }
     }
   }
-
-  if (Multiplicative < 0)
-    handle.logWarning("Warning in totalpredator - negative value for scaler", Multiplicative);
 
   //adjust the consumption by the multiplicative factor.
   tmpsteps = Multiplicative / numsubsteps;  //use the multiplicative factor

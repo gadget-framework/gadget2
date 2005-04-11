@@ -37,8 +37,8 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
   if (LgrpDiv->Error())
     handle.Message("Error in prey - failed to create length group");
 
-  keeper->clearLast();
   this->InitialiseObjects();
+  keeper->clearLast();
 
   //preylenindex is not required - free up memory
   for (i = 0; i < preylenindex.Size(); i++)
@@ -55,29 +55,6 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas, const char* give
 }
 
 void Prey::InitialiseObjects() {
-
-  while (Number.Nrow())
-    Number.DeleteRow(0);
-  while (numberPriorToEating.Nrow())
-    numberPriorToEating.DeleteRow(0);
-  while (biomass.Nrow())
-    biomass.DeleteRow(0);
-  while (cons.Nrow())
-    cons.DeleteRow(0);
-  while (consumption.Nrow())
-    consumption.DeleteRow(0);
-  while (tooMuchConsumption.Size())
-    tooMuchConsumption.Delete(0);
-  while (total.Size())
-    total.Delete(0);
-  while (ratio.Nrow())
-    ratio.DeleteRow(0);
-  while (overcons.Nrow())
-    overcons.DeleteRow(0);
-  while (overconsumption.Nrow())
-    overconsumption.DeleteRow(0);
-
-  //Now we can resize the objects.
   int numlen = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
   PopInfo nullpop;
@@ -207,6 +184,7 @@ void Prey::Reset() {
       numberPriorToEating[area][l].N = 0.0;
       numberPriorToEating[area][l].W = 0.0;
       ratio[area][l] = 0.0;
+      biomass[area][l] = 0.0;
       consumption[area][l] = 0.0;
       overconsumption[area][l] = 0.0;
     }

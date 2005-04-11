@@ -23,9 +23,8 @@ public:
   virtual double Length(int i) const { return LgrpDiv->meanLength(i); };
   virtual void Reset(const TimeClass* const TimeInfo);
   virtual const double getConsumptionBiomass(int prey, int area) const;
+  void setPrey(PreyPtrVector& preyvec, Keeper* const keeper);
 protected:
-  virtual void DeleteParametersForPrey(int prey, Keeper* const keeper);
-  virtual void resizeObjects();
   LengthGroupDivision* LgrpDiv;
   ConversionIndex* CI;
   //storage variables for intermediate calculations.

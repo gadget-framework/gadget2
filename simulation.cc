@@ -1,11 +1,9 @@
 #include "ecosystem.h"
 #include "agebandmatrix.h"
 #include "errorhandler.h"
-#include "runid.h"
 #include "gadget.h"
 #include "interruptinterface.h"
 
-extern RunID RUNID;
 extern ErrorHandler handle;
 
 void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {

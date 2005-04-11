@@ -83,10 +83,6 @@ const double PopPredator::getConsumptionBiomass(int prey, int area) const{
   return kilos;
 }
 
-void PopPredator::DeleteParametersForPrey(int prey, Keeper* const keeper) {
-  Predator::DeleteParametersForPrey(prey, keeper);
-}
-
 void PopPredator::Reset(const TimeClass* const TimeInfo) {
   Predator::Reset(TimeInfo);
   //Now the matrices Suitability(prey) are of the correct size.
@@ -123,18 +119,8 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
   handle.logMessage("Reset predatation data for predator", this->getName());
 }
 
-void PopPredator::resizeObjects() {
-  Predator::resizeObjects();
-  while (consumption.Nrow())
-    consumption.DeleteRow(0);
-  while (cons.Nrow())
-    cons.DeleteRow(0);
-  while (totalconsumption.Nrow())
-    totalcons.DeleteRow(0);
-  while (totalcons.Nrow())
-    totalconsumption.DeleteRow(0);
-  while (prednumber.Nrow())
-    prednumber.DeleteRow(0);
+void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
+  Predator::setPrey(preyvec, keeper);
 
   PopInfo nullpop;
   //Add rows to matrices and initialise

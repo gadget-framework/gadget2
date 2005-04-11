@@ -15,7 +15,7 @@ Predator::Predator(const char* givenname, const IntVector& Areas)
 
 Predator::~Predator() {
   int i;
-  for (i = 0; i < Suitable->numFuncPreys(); i++)
+  for (i = 0; i < Suitable->numPreys(); i++)
     delete Suitable->FuncPrey(i);
   delete Suitable;
 }
@@ -43,8 +43,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   found = 0;
   for (i = 0; i < preys.Size(); i++) {
     //If we find a prey that we have read the suitability for, but not
-    //received a pointer to, we issue a warning and delete it through the
-    //virtual function DeleteParametersForPrey.
+    //received a pointer to, we issue a warning and delete it
     if (preys[i] == 0) {
       found++;
       handle.logWarning("Warning in predator - failed to match prey", this->Preyname(i));
@@ -56,17 +55,14 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
         i--;
     }
   }
-  //Now we can resize objects according to the size of this->numPreys().
-  this->resizeObjects();
 }
 
 int Predator::doesEat(const char* preyname) const {
-  int found = 0;
   int i;
   for (i = 0; i < this->numPreys(); i++)
     if (strcasecmp(this->Preyname(i), preyname) == 0)
-      found = 1;
-  return found;
+      return 1;
+  return 0;
 }
 
 void Predator::Print(ofstream& outfile) const {
@@ -99,21 +95,8 @@ void Predator::DeleteParametersForPrey(int p, Keeper* const keeper) {
   Suitable->DeletePrey(p, keeper);
 }
 
-void Predator::resizeObjects() {
-}
-
-void Predator::setSuitability(const Suits* const S, Keeper* const keeper) {
-  if (Suitable != 0)
-    handle.logFailure("Error in predator - repeated suitability values");
-  Suitable = new Suits(*S, keeper);
-}
-
-int Predator::readSuitabilityMatrix(CommentStream& infile,
+void Predator::readSuitability(CommentStream& infile,
   const char* FinalString, const TimeClass* const TimeInfo, Keeper* const keeper) {
-
-  // the suitability matrix has each line either
-  //    1. nameofprey nameoffunction vectorofdouble
-  // or 2. nameofprey nameoffilecontainingmatrix constant
 
   Suitable = new Suits();
   SuitFuncPtrVector suitf;
@@ -125,50 +108,19 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
   keeper->addString("suitabilityfor");
 
   infile >> preyname >> ws;
-  while (!(strcasecmp(preyname, FinalString) == 0) && infile.good()) {
+  while (!(strcasecmp(preyname, FinalString) == 0) && (!infile.eof())) {
     keeper->addString(preyname);
-    infile >> text >> ws;
 
+    infile >> text >> ws;
     if (strcasecmp(text, "function") == 0) {
-      infile >> text;
+      infile >> text >> ws;
       if (readSuitFunction(suitf, infile, text, TimeInfo, keeper) == 1)
         Suitable->addPrey(preyname, suitf[suitf.Size() - 1]);
       else
         handle.Message("Error in suitability - unrecognised suitability function");
 
     } else if (strcasecmp(text, "suitfile") == 0) {
-      infile >> text;
-
-      DoubleMatrix dm;
-      ifstream subfile;
-      CommentStream subcomment(subfile);
-      subfile.open(text, ios::in);
-      handle.checkIfFailure(subfile, text);
-      handle.Open(text);
-      i = 0;
-      while (!subfile.eof()) {
-        DoubleVector dv;
-        if (!readVectorInLine(subcomment, dv))
-          handle.Message("Error in suitability matrix - failed to read data");
-
-        dm.AddRows(1, dv.Size());
-        for (j = 0; j < dv.Size(); j++)
-          dm[i][j] = dv[j];
-        subfile >> ws;
-        i++;
-      }
-      handle.logMessage("Read suitability matrix data file - number of entries", i);
-      handle.Close();
-      subfile.close();
-      subfile.clear();
-
-      Formula multiplication;
-      if (!(infile >> multiplication))
-        handle.Message("Incorrect format of suitability multiplication factor");
-      multiplication.Inform(keeper);
-      if (multiplication <= 0)
-        handle.Message("Incorrect format of suitability multiplication factor");
-      Suitable->addPrey(preyname, multiplication, dm, keeper);
+      handle.Message("Reading suitability values directly from file is no longer supported\nGadget version 2.0.07 was the last version to allow this functionality");
 
     } else
       handle.Message("Error in suitability - unrecognised format", text);
@@ -181,5 +133,4 @@ int Predator::readSuitabilityMatrix(CommentStream& infile,
     handle.Failure();
 
   keeper->clearLast();
-  return 1;
 }

@@ -16,11 +16,10 @@ LinearPredator::LinearPredator(CommentStream& infile, const char* givenname,
   keeper->addString("predator");
   keeper->addString(givenname);
 
-  readSuitabilityMatrix(infile, "amount", TimeInfo, keeper);
+  this->readSuitability(infile, "amount", TimeInfo, keeper);
 
   keeper->clearLast();
   keeper->clearLast();
-  //Predator::setPrey will call resizeObjects.
 }
 
 void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
@@ -33,9 +32,6 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     totalcons[inarea][predl] = 0.0;
-
-  if (Multiplicative < 0)
-    handle.logWarning("Warning in linearpredator - negative value for scaler", Multiplicative);
 
   scaler[inarea] = Multiplicative;
   tmp = Multiplicative * LengthOfStep / numsubsteps;

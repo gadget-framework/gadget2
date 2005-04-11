@@ -92,7 +92,7 @@ void Ecosystem::Initialise() {
 
   //Now we can start initialising things
   for (i = 0; i < predvec.Size(); i++)
-    predvec[i]->setPrey(preyvec, keeper);
+    ((PopPredator*)predvec[i])->setPrey(preyvec, keeper);
   for (i = 0; i < stockvec.Size(); i++)
     stockvec[i]->setStock(stockvec);
   for (i = 0; i < stockvec.Size(); i++)
@@ -102,53 +102,42 @@ void Ecosystem::Initialise() {
 
   //This is a good place to initialise the likelihood classes.
   for (i = 0; i < likevec.Size(); i++) {
+    handle.logMessage("Initialising likelihood component", likevec[i]->getName());
     switch(likevec[i]->Type()) {
       case SURVEYINDICESLIKELIHOOD:
-        handle.logMessage("Initialising likelihood component", likevec[i]->getName());
         ((SurveyIndices*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case UNDERSTOCKINGLIKELIHOOD:
-        handle.logMessage("Initialising likelihood component", likevec[i]->getName());
         ((UnderStocking*)likevec[i])->setPredators(predvec);
         break;
       case CATCHDISTRIBUTIONLIKELIHOOD:
-        handle.logMessage("Initialising likelihood component", likevec[i]->getName());
         ((CatchDistribution*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case CATCHSTATISTICSLIKELIHOOD:
-        handle.logMessage("Initialising likelihood component", likevec[i]->getName());
         ((CatchStatistics*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case STOMACHCONTENTLIKELIHOOD:
-        handle.logMessage("Initialising likelihood component", likevec[i]->getName());
         ((StomachContent*)likevec[i])->setPredatorsAndPreys(predvec, preyvec);
         break;
       case TAGLIKELIHOOD:
-        handle.logMessage("Initialising likelihood component", likevec[i]->getName());
         ((Recaptures*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case STOCKDISTRIBUTIONLIKELIHOOD:
-        handle.logMessage("Initialising likelihood component", likevec[i]->getName());
         ((StockDistribution*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case MIGRATIONPENALTYLIKELIHOOD:
-        handle.logMessage("Initialising likelihood component", likevec[i]->getName());
         ((MigrationPenalty*)likevec[i])->setStocks(stockvec);
         break;
       case CATCHINKILOSLIKELIHOOD:
-        handle.logMessage("Initialising likelihood component", likevec[i]->getName());
         ((CatchInKilos*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case RECSTATISTICSLIKELIHOOD:
-        handle.logMessage("Initialising likelihood component", likevec[i]->getName());
         ((RecStatistics*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case SURVEYDISTRIBUTIONLIKELIHOOD:
-        handle.logMessage("Initialising likelihood component", likevec[i]->getName());
         ((SurveyDistribution*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case BOUNDLIKELIHOOD:
-        handle.logMessage("Initialising likelihood component", likevec[i]->getName());
         break;
       default:
         handle.logFailure("Error when initialising model - unrecognised likelihood type", likevec[i]->Type());
@@ -158,45 +147,36 @@ void Ecosystem::Initialise() {
 
   //This is a good place to initialise the printer classes.
   for (i = 0; i < printvec.Size(); i++) {
+    handle.logMessage("Initialising printer for output file", printvec[i]->getFileName());
     switch(printvec[i]->Type()) {
       case STOCKSTDPRINTER:
-        handle.logMessage("Initialising printer for output file", printvec[i]->getFileName());
         ((StockStdPrinter*)(printvec[i]))->setStock(stockvec);
         break;
       case STOCKPRINTER:
-        handle.logMessage("Initialising printer for output file", printvec[i]->getFileName());
         ((StockPrinter*)(printvec[i]))->setStock(stockvec);
         break;
       case PREDATORPRINTER:
-        handle.logMessage("Initialising printer for output file", printvec[i]->getFileName());
         ((PredatorPrinter*)(printvec[i]))->setPredAndPrey(predvec, preyvec);
         break;
       case PREDATOROVERPRINTER:
-        handle.logMessage("Initialising printer for output file", printvec[i]->getFileName());
         ((PredatorOverPrinter*)(printvec[i]))->setPredator(predvec);
         break;
       case PREYOVERPRINTER:
-        handle.logMessage("Initialising printer for output file", printvec[i]->getFileName());
         ((PreyOverPrinter*)(printvec[i]))->setPrey(preyvec);
         break;
       case STOCKPREYFULLPRINTER:
-        handle.logMessage("Initialising printer for output file", printvec[i]->getFileName());
         ((StockPreyFullPrinter*)(printvec[i]))->setStock(stockvec);
         break;
       case PREDPREYSTDPRINTER:
-        handle.logMessage("Initialising printer for output file", printvec[i]->getFileName());
         ((PredPreyStdPrinter*)(printvec[i]))->setStocksAndPredAndPrey(stockvec, predvec, preyvec);
         break;
       case STOCKFULLPRINTER:
-        handle.logMessage("Initialising printer for output file", printvec[i]->getFileName());
         ((StockFullPrinter*)(printvec[i]))->setStock(stockvec);
         break;
       case LIKELIHOODPRINTER:
-        handle.logMessage("Initialising printer for output file", printvec[i]->getFileName());
         ((LikelihoodPrinter*)(printvec[i]))->setLikelihood(likevec);
         break;
       case LIKELIHOODSUMMARYPRINTER:
-        handle.logMessage("Initialising printer for output file", printvec[i]->getFileName());
         ((SummaryPrinter*)(printvec[i]))->setLikelihood(likevec);
         break;
       default:

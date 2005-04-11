@@ -24,7 +24,7 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   if (!(strcasecmp(text, "suitability") == 0))
     handle.Unexpected("suitability", text);
 
-  this->readSuitabilityMatrix(infile, "maxconsumption", TimeInfo, keeper);
+  this->readSuitability(infile, "maxconsumption", TimeInfo, keeper);
 
   keeper->addString("maxconsumption");
   maxconsumption.resize(4, keeper);
@@ -51,7 +51,6 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   Phi.AddRows(numarea, numlength, 0.0);
   fphi.AddRows(numarea, numlength, 0.0);
   fphI.AddRows(numarea, numlength, 0.0);
-  //Predator::setPrey will call resizeObjects.
 }
 
 void StockPredator::Print(ofstream& outfile) const {
@@ -89,10 +88,6 @@ void StockPredator::Print(ofstream& outfile) const {
     outfile << endl;
   }
   outfile << endl;
-}
-
-void StockPredator::resizeObjects() {
-  PopPredator::resizeObjects();
 }
 
 void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
