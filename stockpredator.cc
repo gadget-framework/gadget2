@@ -214,17 +214,17 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
 void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubstep) {
   double maxRatio = pow(MaxRatioConsumed, numsubsteps);
   int inarea = this->areaNum(area);
-  int AnyPreyEatenUp = 0;
-  int preyl, predl, prey;
+  int over, preyl, predl, prey;
   double ratio, rat1, rat2, tmp;
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     overcons[inarea][predl] = 0.0;
 
+  over = 0;
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (Preys(prey)->isPreyArea(area)) {
-      if (Preys(prey)->TooMuchConsumption(area) == 1) {
-        AnyPreyEatenUp = 1;
+      if (Preys(prey)->checkOverConsumption(area)) {
+        over = 1;
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
           for (preyl = Suitability(prey)[predl].minCol();
               preyl < Suitability(prey)[predl].maxCol(); preyl++) {
@@ -241,7 +241,7 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
     }
   }
 
-  if (AnyPreyEatenUp == 1) {
+  if (over == 1) {
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
       if (totalcons[inarea][predl] > verysmall) {
         ratio = 1.0 - overcons[inarea][predl] / totalcons[inarea][predl];
@@ -251,8 +251,6 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
     }
   }
 
-  //Add to consumption by predator change made after it was possible
-  //to divide each timestep in number of parts.
   rat2 = 1.0 / CurrentSubstep;
   rat1 = 1.0 - rat2;
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
@@ -260,6 +258,7 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
     overconsumption[inarea][predl] += overcons[inarea][predl];
     fphi[inarea][predl] = (rat2 * fphI[inarea][predl]) + (rat1 * fphi[inarea][predl]);
   }
+
   for (prey = 0; prey < this->numPreys(); prey++)
     if (Preys(prey)->isPreyArea(area))
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)

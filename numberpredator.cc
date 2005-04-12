@@ -86,7 +86,7 @@ void NumberPredator::Eat(int area, double LengthOfStep, double Temperature,
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
         Preys(prey)->addNumbersConsumption(area, cons[inarea][prey][predl]);
 
-  //set totalconsumption to the actual total consumption
+  //set totalconsumption to the actual number consumed
   for (prey = 0; prey < this->numPreys(); prey++)
     if (Preys(prey)->isPreyArea(area))
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
@@ -95,18 +95,20 @@ void NumberPredator::Eat(int area, double LengthOfStep, double Temperature,
 
 void NumberPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubstep) {
   double maxRatio = pow(MaxRatioConsumed, numsubsteps);
-  int prey, predl, preyl;
-  int AnyPreyEatenUp = 0;
+  int check, over, prey, predl, preyl;
   double ratio, tmp;
   int inarea = this->areaNum(area);
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     overcons[inarea][predl] = 0.0;
 
+  over = 0;
+  check = 0;
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (Preys(prey)->isPreyArea(area)) {
-      if (Preys(prey)->TooMuchConsumption(area) == 1) {
-        AnyPreyEatenUp = 1;
+      check = 1;
+      if (Preys(prey)->checkOverConsumption(area)) {
+        over = 1;
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
           for (preyl = Suitability(prey)[predl].minCol();
               preyl < Suitability(prey)[predl].maxCol(); preyl++) {
@@ -122,12 +124,17 @@ void NumberPredator::adjustConsumption(int area, int numsubsteps, int CurrentSub
     }
   }
 
-  if (AnyPreyEatenUp == 1)
+  if (over == 1)
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
       totalcons[inarea][predl] -= overcons[inarea][predl];
 
-  //Add to consumption by predator change made after it was possible
-  //to divide each timestep in number of parts.
+  if (check == 0) {
+    //no prey found to consume so overcons set to actual consumption
+    tmp = Multiplicative / numsubsteps;
+    for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+      overcons[inarea][predl] = tmp * prednumber[inarea][predl].N;
+  }
+
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     totalconsumption[inarea][predl] += totalcons[inarea][predl];
     overconsumption[inarea][predl] += overcons[inarea][predl];

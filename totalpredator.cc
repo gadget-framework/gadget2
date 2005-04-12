@@ -25,7 +25,6 @@ TotalPredator::TotalPredator(CommentStream& infile, const char* givenname,
 void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
   double Areasize, int CurrentSubstep, int numsubsteps) {
 
-  //The parameters LengthOfStep, Temperature and Areasize will not be used.
   int inarea = this->areaNum(area);
   double tmp, wanttoeat;
   int prey, predl, preyl;
@@ -96,20 +95,20 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
 
 void TotalPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubstep) {
   double maxRatio = pow(MaxRatioConsumed, numsubsteps);
-  int prey, predl, preyl;
-  int AnyPreyEatenUp = 0;
-  int AnyPreyOnArea = 0;
+  int check, over, prey, predl, preyl;
   int inarea = this->areaNum(area);
   double ratio, tmp;
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     overcons[inarea][predl] = 0.0;
 
+  over = 0;
+  check = 0;
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (Preys(prey)->isPreyArea(area)) {
-      AnyPreyOnArea = 1;
-      if (Preys(prey)->TooMuchConsumption(area) == 1) {
-        AnyPreyEatenUp = 1;
+      check = 1;
+      if (Preys(prey)->checkOverConsumption(area)) {
+        over = 1;
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
           for (preyl = Suitability(prey)[predl].minCol();
               preyl < Suitability(prey)[predl].maxCol(); preyl++) {
@@ -126,17 +125,17 @@ void TotalPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
     }
   }
 
-  tmp = Multiplicative / numsubsteps;
-  if (AnyPreyEatenUp == 1)
+  if (over == 1)
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
       totalcons[inarea][predl] -= overcons[inarea][predl];
 
-  if (AnyPreyOnArea == 0)
+  if (check == 0) {
+    //no prey found to consume so overcons set to actual consumption
+    tmp = Multiplicative / numsubsteps;
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
       overcons[inarea][predl] = tmp * prednumber[inarea][predl].N;
+  }
 
-  //Add to consumption by predator change made after it was possible
-  //to divide each timestep in number of parts.
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     totalconsumption[inarea][predl] += totalcons[inarea][predl];
     overconsumption[inarea][predl] += overcons[inarea][predl];

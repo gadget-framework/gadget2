@@ -25,7 +25,6 @@ LinearPredator::LinearPredator(CommentStream& infile, const char* givenname,
 void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
   double Areasize, int CurrentSubstep, int numsubsteps) {
 
-  //The parameters Temperature and Areasize will not be used.
   int inarea = this->areaNum(area);
   int prey, predl, preyl;
   double tmp;
@@ -69,18 +68,18 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
 
 void LinearPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubstep) {
   double maxRatio = pow(MaxRatioConsumed, numsubsteps);
-  int prey, predl, preyl;
-  int AnyPreyEatenUp = 0;
+  int over, prey, predl, preyl;
   double ratio, tmp;
   int inarea = this->areaNum(area);
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     overcons[inarea][predl] = 0.0;
 
+  over = 0;
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (Preys(prey)->isPreyArea(area)) {
-      if (Preys(prey)->TooMuchConsumption(area) == 1) {
-        AnyPreyEatenUp = 1;
+      if (Preys(prey)->checkOverConsumption(area)) {
+        over = 1;
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
           for (preyl = Suitability(prey)[predl].minCol();
               preyl < Suitability(prey)[predl].maxCol(); preyl++) {
@@ -96,12 +95,10 @@ void LinearPredator::adjustConsumption(int area, int numsubsteps, int CurrentSub
     }
   }
 
-  //JMB - this was inside the for loop ...
-  if (AnyPreyEatenUp == 1)
+  if (over == 1)
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
       totalcons[inarea][predl] -= overcons[inarea][predl];
 
-  //Changes after division of timestep in substeps was possible.
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     totalconsumption[inarea][predl] += totalcons[inarea][predl];
     overconsumption[inarea][predl] += overcons[inarea][predl];
