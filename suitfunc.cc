@@ -38,6 +38,11 @@ int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname) {
     suitf.resize(1, tempFunc);
     found++;
 
+  } else if (strcasecmp(suitname, "richards") == 0) {
+    tempFunc = new RichardsSuitFunc();
+    suitf.resize(1, tempFunc);
+    found++;
+
   } else if (strcasecmp(suitname, "inverse") == 0) {
     handle.Warning("The inverse suitability function is not yet implemented");
 
@@ -154,11 +159,11 @@ double ExpSuitFuncA::calculate() {
   double check = 0.0;
 
   if (coeff[0] < 0 && coeff[1] < 0)
-    check = coeff[3] / (1 + exp(-(coeff[0] - coeff[1] * preyLength + coeff[2] * predLength)));
+    check = coeff[3] / (1.0 + exp(-(coeff[0] - coeff[1] * preyLength + coeff[2] * predLength)));
   else if (coeff[0] > 0 && coeff[1] > 0)
-    check = coeff[3] / (1 + exp(-(-coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
+    check = coeff[3] / (1.0 + exp(-(-coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
   else
-    check = coeff[3] / (1 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
+    check = coeff[3] / (1.0 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
 
   if (check < 0.0) {
     handle.logWarning("Warning in suitability - function outside bounds", check);
@@ -246,7 +251,7 @@ ExpSuitFuncL50::~ExpSuitFuncL50() {
 }
 
 double ExpSuitFuncL50::calculate() {
-  double check = 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
+  double check = 1.0 / (1.0 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
   if (check < 0.0) {
     handle.logWarning("Warning in suitability - function outside bounds", check);
     return 0.0;
@@ -294,7 +299,7 @@ InverseSuitFunc::~InverseSuitFunc() {
 }
 
 double InverseSuitFunc::calculate() {
-  double check = 1.0 / (1 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
+  double check = 1.0 / (1.0 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
   if (check < 0.0) {
     handle.logWarning("Warning in suitability - function outside bounds", check);
     return 0.0;
@@ -326,6 +331,40 @@ double StraightUnboundedSuitFunc::calculate() {
   } else if (check > 1.0) {
     handle.logWarning("Warning in suitability - function outside bounds", check);
     return 1.0; */
+  } else
+    return check;
+}
+
+// ********************************************************
+// Functions for Richards suitability function
+// ********************************************************
+RichardsSuitFunc::RichardsSuitFunc() {
+  this->setName("RichardsSuitFunc");
+  coeff.resize(5);
+  preyLength = -1.0;
+  predLength = -1.0;
+}
+
+RichardsSuitFunc::~RichardsSuitFunc() {
+}
+
+double RichardsSuitFunc::calculate() {
+  double check = 0.0;
+
+  if (coeff[0] < 0 && coeff[1] < 0)
+    check = coeff[3] / (1.0 + exp(-(coeff[0] - coeff[1] * preyLength + coeff[2] * predLength)));
+  else if (coeff[0] > 0 && coeff[1] > 0)
+    check = coeff[3] / (1.0 + exp(-(-coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
+  else
+    check = coeff[3] / (1.0 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
+
+  check = pow(check, (1.0 / coeff[4]));
+  if (check < 0.0) {
+    handle.logWarning("Warning in suitability - function outside bounds", check);
+    return 0.0;
+  } else if (check > 1.0) {
+    handle.logWarning("Warning in suitability - function outside bounds", check);
+    return 1.0;
   } else
     return check;
 }
