@@ -445,4 +445,45 @@ private:
   double predLength;
 };
 
+/**
+ * \class GammaSuitFunc
+ * \brief This is the class used to calculate the suitability based on a Gamma function, usually used when calculating suitability curves for gillnet fleets
+ */
+class GammaSuitFunc : public SuitFunc {
+public:
+  /**
+   * \brief This is the GammaSuitFunc constructor
+   */
+  GammaSuitFunc();
+  /**
+   * \brief This is the default GammaSuitFunc destructor
+   */
+  virtual ~GammaSuitFunc();
+  /**
+   * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
+   * \return 0
+   */
+  virtual int usesPredLength() { return 0; };
+  /**
+   * \brief This will return 1 if the suitability function is based on the prey length, 0 otherwise
+   * \return 1
+   */
+  virtual int usesPreyLength() { return 1; };
+  /**
+   * \brief This will set the prey length
+   * \param length is the prey length
+   */
+  virtual void setPreyLength(double length) { preyLength = length; };
+  /**
+   * \brief This will return the suitability value that has been calculated
+   * \return value
+   */
+  virtual double calculate();
+private:
+  /**
+   * \brief This is the length of the prey
+   */
+  double preyLength;
+};
+
 #endif

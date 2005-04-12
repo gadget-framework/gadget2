@@ -43,6 +43,11 @@ int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname) {
     suitf.resize(1, tempFunc);
     found++;
 
+  } else if (strcasecmp(suitname, "gamma") == 0) {
+    tempFunc = new GammaSuitFunc();
+    suitf.resize(1, tempFunc);
+    found++;
+
   } else if (strcasecmp(suitname, "inverse") == 0) {
     handle.Warning("The inverse suitability function is not yet implemented");
 
@@ -352,13 +357,39 @@ double RichardsSuitFunc::calculate() {
   double check = 0.0;
 
   if (coeff[0] < 0 && coeff[1] < 0)
-    check = coeff[3] / (1.0 + exp(-(coeff[0] - coeff[1] * preyLength + coeff[2] * predLength)));
+    check = pow(coeff[3] / (1.0 + exp(-(coeff[0] - coeff[1] * preyLength + coeff[2] * predLength))), (1.0 / coeff[4]));
   else if (coeff[0] > 0 && coeff[1] > 0)
-    check = coeff[3] / (1.0 + exp(-(-coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
+    check = pow(coeff[3] / (1.0 + exp(-(-coeff[0] + coeff[1] * preyLength + coeff[2] * predLength))), (1.0 / coeff[4]));
   else
-    check = coeff[3] / (1.0 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
+    check = pow(coeff[3] / (1.0 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength))), (1.0 / coeff[4]));
 
-  check = pow(check, (1.0 / coeff[4]));
+  if (check < 0.0) {
+    handle.logWarning("Warning in suitability - function outside bounds", check);
+    return 0.0;
+  } else if (check > 1.0) {
+    handle.logWarning("Warning in suitability - function outside bounds", check);
+    return 1.0;
+  } else
+    return check;
+}
+
+// ********************************************************
+// Functions for GammaSuitFunc suitability function
+// ********************************************************
+GammaSuitFunc::GammaSuitFunc() {
+  this->setName("GammaSuitFunc");
+  coeff.resize(3);
+  preyLength = -1.0;
+}
+
+GammaSuitFunc::~GammaSuitFunc() {
+}
+
+double GammaSuitFunc::calculate() {
+  double check;
+  
+  check = exp(coeff[0] - 1.0 - (preyLength / coeff[1] * coeff[2]));
+  check *= pow(preyLength / ((coeff[0] - 1.0) * coeff[1] * coeff[2]), (coeff[0] - 1.0));
   if (check < 0.0) {
     handle.logWarning("Warning in suitability - function outside bounds", check);
     return 0.0;
