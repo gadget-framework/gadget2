@@ -34,7 +34,14 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   strncpy(functionname, "", MaxStrLength);
   readWordAndValue(infile, "datafile", datafilename);
   readWordAndValue(infile, "function", functionname);
-  readWordAndVariable(infile, "overconsumption", overconsumption);
+  //JMB - changed to make the reading of overconsumption optional
+  infile >> ws;
+  char c = infile.peek();
+  if ((c == 'o') || (c == 'O'))
+    readWordAndVariable(infile, "overconsumption", overconsumption);
+  else
+    overconsumption = 0;
+
   if (overconsumption != 0 && overconsumption != 1)
     handle.Message("Error in catchstatistics - overconsumption must be 0 or 1");
 

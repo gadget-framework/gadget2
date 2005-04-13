@@ -32,6 +32,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   timeindex = 0;
   illegal = 0;
+  yearly = 0;
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
 
@@ -75,44 +76,54 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   infile >> ws;
   char c = infile.peek();
   if ((c == 'a') || (c == 'A')) {
+    //we have found either aggregationlevel or areaaggfile ...
+    streampos pos = infile.tellg();
+
     infile >> text >> ws;
-    //JMB - changed to check for aggregation_level or aggregationlevel
     if ((strcasecmp(text, "aggregation_level") == 0) || (strcasecmp(text, "aggregationlevel") == 0))
       infile >> yearly >> ws;
+    else if (strcasecmp(text, "areaaggfile") == 0)
+      infile.seekg(pos);
     else
-      handle.Unexpected("overconsumption", text);
+      handle.Unexpected("areaaggfile", text);
 
-  } else
-    yearly = 0; //default value for yearly
+    //JMB - peek at the next char
+    c = infile.peek();
 
-  if (yearly != 0 && yearly != 1)
-    handle.Message("Error in catchdistribution - aggregationlevel must be 0 or 1");
+    if (yearly != 0 && yearly != 1)
+      handle.Message("Error in catchdistribution - aggregationlevel must be 0 or 1");
 
-  if (yearly == 1) {
-    switch(functionnumber) {
-      case 2:
-      case 3:
-      case 7:
-        break;
-      case 1:
-      case 4:
-      case 5:
-      case 6:
-        handle.logWarning("Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
-        break;
-      default:
-        handle.logWarning("Warning in catchdistribution - unrecognised function", functionname);
-        break;
+    if (yearly == 1) {
+      switch(functionnumber) {
+        case 2:
+        case 3:
+        case 7:
+          break;
+        case 1:
+        case 4:
+        case 5:
+        case 6:
+          handle.logWarning("Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
+          break;
+        default:
+          handle.logWarning("Warning in catchdistribution - unrecognised function", functionname);
+          break;
+      }
     }
   }
 
-  readWordAndVariable(infile, "overconsumption", overconsumption);
+  //JMB - changed to make the reading of overconsumption optional
+  if ((c == 'o') || (c == 'O')) {
+    readWordAndVariable(infile, "overconsumption", overconsumption);
+    infile >> ws;
+    c = infile.peek();
+  } else
+    overconsumption = 0;
+
   if (overconsumption != 0 && overconsumption != 1)
     handle.Message("Error in catchdistribution - overconsumption must be 0 or 1");
 
   //JMB - changed to make the reading of minimum probability optional
-  infile >> ws;
-  c = infile.peek();
   if ((c == 'm') || (c == 'M'))
     readWordAndVariable(infile, "minimumprobability", epsilon);
   else if ((c == 'e') || (c == 'E'))

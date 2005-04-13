@@ -12,6 +12,7 @@ class PopPredator : public Predator {
 public:
   PopPredator(const char* givenname, const IntVector& areas,
     const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv);
+  PopPredator(const char* givenname, const IntVector& areas);
   virtual ~PopPredator();
   virtual void Print(ofstream& outfile) const;
   virtual const BandMatrix& Consumption(int area, const char* preyname) const;

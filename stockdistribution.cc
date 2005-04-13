@@ -41,13 +41,20 @@ StockDistribution::StockDistribution(CommentStream& infile,
   else
     handle.Message("Error in stockdistribution - unrecognised function", functionname);
 
-  readWordAndVariable(infile, "overconsumption", overconsumption);
+  //JMB - changed to make the reading of overconsumption optional
+  infile >> ws;
+  char c = infile.peek();
+  if ((c == 'o') || (c == 'O')) {
+    readWordAndVariable(infile, "overconsumption", overconsumption);
+    infile >> ws;
+    c = infile.peek();
+  } else
+    overconsumption = 0;
+
   if (overconsumption != 0 && overconsumption != 1)
     handle.Message("Error in stockdistribution - overconsumption must be 0 or 1");
 
   //JMB - changed to make the reading of minimum probability optional
-  infile >> ws;
-  char c = infile.peek();
   if ((c == 'm') || (c == 'M'))
     readWordAndVariable(infile, "minimumprobability", epsilon);
   else if ((c == 'e') || (c == 'E'))

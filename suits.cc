@@ -1,12 +1,9 @@
 #include "prey.h"
 #include "predator.h"
-#include "errorhandler.h"
 #include "suits.h"
 #include "keeper.h"
 #include "mathfunc.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
 
 Suits::Suits() {
 }

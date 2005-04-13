@@ -14,15 +14,11 @@ public:
    * \param infile is the CommentStream to read the predation parameters from
    * \param givenname is the name of the predator
    * \param Areas is the IntVector of areas that the predator lives on
-   * \param OtherLgrpDiv is the LengthGroupDivision that the predation will be applied to
-   * \param GivenLgrpDiv is the LengthGroupDivision that will be used to calculate the predation
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param multi is the Formula that can be used to scale the biomass consumed
-   * \note There are 2 LengthGroupDivision objects specified - GivenLgrpDiv will be used to calculate the predation, which will then be applied to OtherLgrpDiv.  GivenLgrpDiv must not be finer than OtherLgrpDiv
    */
   NumberPredator(CommentStream& infile, const char* givenname, const IntVector& Areas,
-    const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
     const TimeClass* const TimeInfo, Keeper* const keeper, Formula multi);
   /**
    * \brief This is the default NumberPredator destructor

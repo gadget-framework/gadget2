@@ -19,13 +19,12 @@ public:
    * \param lenindex is the CharPtrVector of length identifier text strings
    * \param TimeInfo is the TimeClass for the current model
    * \param datafilename is the name of the file containing the survey index data
-   * \param overcons is a flag to determine whether to calculate overconsumption of the stocks
    * \param name is the name of the SIByFleetOnStep likelihood component
    */
   SIByFleetOnStep(CommentStream& infile, const IntMatrix& areas,
     const DoubleVector& lengths, const CharPtrVector& areaindex,
     const CharPtrVector& lenindex, const TimeClass* const TimeInfo,
-    const char* datafilename, int overcons, const char* name);
+    const char* datafilename, const char* name);
   /**
    * \brief This is the default SIByFleetOnStep destructor
    */
@@ -54,10 +53,6 @@ protected:
    * \brief This is the LengthGroupDivision used to store length information
    */
   LengthGroupDivision* LgrpDiv;
-  /**
-   * \brief This is a flag to denote whether the likelihood calculation should take overconsumption into account or not
-   */
-  int overconsumption;
 };
 
 #endif

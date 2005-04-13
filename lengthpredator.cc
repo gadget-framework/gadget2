@@ -5,8 +5,7 @@
 extern ErrorHandler handle;
 
 LengthPredator::LengthPredator(const char* givenname, const IntVector& Areas,
-  const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
-  Keeper* const keeper, Formula multi) : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv) {
+  Keeper* const keeper, Formula multi) : PopPredator(givenname, Areas) {
 
   scaler.resize(Areas.Size(), 0.0);
   Multiplicative = multi;

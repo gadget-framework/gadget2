@@ -33,46 +33,46 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   readWordAndValue(infile, "datafile", datafilename);
   readWordAndValue(infile, "function", functionname);
 
+  yearly = 0;
+  epsilon = 10.0;
   functionnumber = 0;
-  if (strcasecmp(functionname, "sumofsquares") == 0) {
+  if (strcasecmp(functionname, "sumofsquares") == 0)
     functionnumber = 1;
-  } else
+  else
     handle.Message("Error in catchinkilos - unrecognised function", functionname);
 
   infile >> ws;
   char c = infile.peek();
   if ((c == 'a') || (c == 'A')) {
+    //we have found either aggregationlevel or areaaggfile ...
+    streampos pos = infile.tellg();
+
     infile >> text >> ws;
-    if (strcasecmp(text, "aggregationlevel") == 0) {
+    if ((strcasecmp(text, "aggregationlevel") == 0))
       infile >> yearly >> ws;
-    } else if (strcasecmp(text, "areaaggfile") == 0) {
-      infile >> aggfilename >> ws;
-      yearly = 0;
-      readfile = 1;
-    } else
-      handle.Unexpected("aggregationlevel", text);
+    else if (strcasecmp(text, "areaaggfile") == 0)
+      infile.seekg(pos);
+    else
+      handle.Unexpected("areaaggfile", text);
 
-  } else
-    yearly = 0;
+    //JMB - peek at the next char
+    c = infile.peek();
 
-  if (yearly != 0 && yearly != 1)
-    handle.Message("Error in catchinkilos - aggregationlevel must be 0 or 1");
+    if (yearly != 0 && yearly != 1)
+      handle.Message("Error in catchinkilos - aggregationlevel must be 0 or 1");
+  }
 
   //JMB - changed to make the reading of epsilon optional
   c = infile.peek();
-  if ((c == 'e') || (c == 'E'))
+  if ((c == 'e') || (c == 'E')) {
     readWordAndVariable(infile, "epsilon", epsilon);
-  else
-    epsilon = 10.0;
-
-  if (epsilon <= 0) {
-    handle.Warning("Epsilon should be a positive number - set to default value 10");
-    epsilon = 10.0;
+    if (epsilon <= 0) {
+      handle.Warning("Epsilon should be a positive number - set to default value 10");
+      epsilon = 10.0;
+    }
   }
 
-  if (readfile == 0)
-    readWordAndValue(infile, "areaaggfile", aggfilename);
-
+  readWordAndValue(infile, "areaaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);

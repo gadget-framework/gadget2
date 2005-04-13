@@ -8,10 +8,8 @@
 extern ErrorHandler handle;
 
 TotalPredator::TotalPredator(CommentStream& infile, const char* givenname,
-  const IntVector& Areas, const LengthGroupDivision* const OtherLgrpDiv,
-  const LengthGroupDivision* const GivenLgrpDiv, const TimeClass* const TimeInfo,
-  Keeper* const keeper, Formula multi)
-  : LengthPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv, keeper, multi) {
+  const IntVector& Areas, const TimeClass* const TimeInfo, Keeper* const keeper, Formula multi)
+  : LengthPredator(givenname, Areas, keeper, multi) {
 
   keeper->addString("predator");
   keeper->addString(givenname);

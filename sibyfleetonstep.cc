@@ -10,13 +10,12 @@ extern ErrorHandler handle;
 SIByFleetOnStep::SIByFleetOnStep(CommentStream& infile, const IntMatrix& areas,
   const DoubleVector& lengths, const CharPtrVector& areaindex,
   const CharPtrVector& lenindex, const TimeClass* const TimeInfo,
-  const char* datafilename, int overcons, const char* name)
+  const char* datafilename, const char* name)
   : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, lenindex, name) {
 
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
     handle.Message("Error in surveyindex - failed to create length group");
-  overconsumption = overcons;
 }
 
 SIByFleetOnStep::~SIByFleetOnStep() {
@@ -56,7 +55,7 @@ void SIByFleetOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
   if (found == 0)
     handle.logWarning("Warning in surveyindex - maximum length group greater than stock length");
 
-  aggregator = new FleetPreyAggregator(Fleets, Stocks, LgrpDiv, Areas, Ages, overconsumption);
+  aggregator = new FleetPreyAggregator(Fleets, Stocks, LgrpDiv, Areas, Ages, 0);
 }
 
 void SIByFleetOnStep::Sum(const TimeClass* const TimeInfo) {

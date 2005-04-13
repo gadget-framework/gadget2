@@ -22,13 +22,13 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   CommentStream subcomment(subfile);
   int i, tmpint;
   Formula multscaler;
+  IntVector tmpareas;
   char c;
 
   keeper->addString("fleet");
   keeper->addString(givenname);
 
   infile >> text >> ws;
-  IntVector tmpareas;
   if (strcasecmp(text, "livesonareas") == 0) {
     i = 0;
     c = infile.peek();
@@ -44,17 +44,18 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   } else
     handle.Unexpected("livesonareas", text);
 
-  DoubleVector lengths(2, 0.0);
-  infile >> text >> ws;
-  if (strcasecmp(text, "lengths") == 0) {
-    if (!readVector(infile, lengths))
-      handle.Message("Error in fleet - failed to read lengths");
-  } else
-    handle.Unexpected("lengths", text);
-  LengthGroupDivision LgrpDiv(lengths);
-
   infile >> ws;
   c = infile.peek();
+  //JMB - removed the need to read in the fleet lengths
+  if ((c == 'l') || (c == 'L')) {
+    handle.Warning("Warning in fleet - length data ignored");
+    infile.get(c);
+    while (c != '\n' && !infile.eof())
+      infile.get(c);
+    infile >> ws;
+    c = infile.peek();
+  }
+
   if ((c == 'm') || (c == 'M'))
     readWordAndFormula(infile, "multiplicative", multscaler);
   else
@@ -66,16 +67,13 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
 
   switch(type) {
     case TOTALFLEET:
-      predator = new TotalPredator(infile, givenname, areas, &LgrpDiv,
-        &LgrpDiv, TimeInfo, keeper, multscaler);
+      predator = new TotalPredator(infile, this->getName(), areas, TimeInfo, keeper, multscaler);
       break;
     case LINEARFLEET:
-      predator = new LinearPredator(infile, givenname, areas, &LgrpDiv,
-        &LgrpDiv, TimeInfo, keeper, multscaler);
+      predator = new LinearPredator(infile, this->getName(), areas, TimeInfo, keeper, multscaler);
       break;
     case NUMBERFLEET:
-      predator = new NumberPredator(infile, givenname, areas, &LgrpDiv,
-        &LgrpDiv, TimeInfo, keeper, multscaler);
+      predator = new NumberPredator(infile, this->getName(), areas, TimeInfo, keeper, multscaler);
       break;
     default:
       handle.Message("Error in fleet - unrecognised fleet type for", givenname);

@@ -20,7 +20,6 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   strncpy(text, "", MaxStrLength);
   int i, j;
 
-  int overcons = 0;
   IntMatrix ages;
   DoubleVector lengths;
   CharPtrVector charindex;
@@ -67,6 +66,8 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     handle.Close();
     datafile.close();
     datafile.clear();
+    //read the word 'stocknames'
+    infile >> text >> ws;
 
   } else if (strcasecmp(sitype, "ages") == 0) {
     readWordAndValue(infile, "ageaggfile", aggfilename);
@@ -77,6 +78,8 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     handle.Close();
     datafile.close();
     datafile.clear();
+    //read the word 'stocknames'
+    infile >> text >> ws;
 
   } else if (strcasecmp(sitype, "fleets") == 0) {
     readWordAndValue(infile, "lenaggfile", aggfilename);
@@ -94,13 +97,12 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     if (!(strcasecmp(text, "fleetnames") == 0))
       handle.Unexpected("fleetnames", text);
     infile >> text;
-    while (!infile.eof() && !(strcasecmp(text, "overconsumption") == 0)) {
+    while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
       fleetnames.resize(1);
       fleetnames[i] = new char[strlen(text) + 1];
       strcpy(fleetnames[i++], text);
       infile >> text >> ws;
     }
-    infile >> overcons >> ws;
 
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
     handle.Warning("The ageandlengths surveyindex likelihood component is no longer supported\nUse the surveydistribution likelihood component instead");
@@ -108,7 +110,6 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   } else
     handle.Unexpected("lengths, ages or fleets", sitype);
 
-  infile >> text >> ws;
   if (!(strcasecmp(text, "stocknames") == 0))
     handle.Unexpected("stocknames", text);
 
@@ -133,7 +134,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   } else if (strcasecmp(sitype, "fleets") == 0) {
     SI = new SIByFleetOnStep(infile, areas, lengths, areaindex,
-      charindex, TimeInfo, datafilename, overcons, this->getName());
+      charindex, TimeInfo, datafilename, this->getName());
 
   } else
     handle.Message("Error in surveyindex - unrecognised type", sitype);

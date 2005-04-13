@@ -21,6 +21,10 @@ PopPredator::PopPredator(const char* givenname, const IntVector& Areas,
   CI = new ConversionIndex(OtherLgrpDiv, LgrpDiv);
 }
 
+PopPredator::PopPredator(const char* givenname, const IntVector& Areas)
+  : Predator(givenname, Areas), LgrpDiv(0), CI(0) {
+}
+
 PopPredator::~PopPredator() {
   delete LgrpDiv;
   delete CI;
@@ -122,8 +126,24 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
 void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   Predator::setPrey(preyvec, keeper);
 
+  if (LgrpDiv == 0) {
+    //need to construct length group based on the min/max lengths of the preys
+    int i;
+    double minl, maxl;
+    minl = 9999.0;
+    maxl = 0.0;
+    for (i = 0; i < this->numPreys(); i++) {
+      if (Preys(i)->returnLengthGroupDiv()->minLength() < minl)
+        minl = Preys(i)->returnLengthGroupDiv()->minLength();
+      if (Preys(i)->returnLengthGroupDiv()->maxLength() > maxl)
+        maxl = Preys(i)->returnLengthGroupDiv()->maxLength();
+    }    
+    LgrpDiv = new LengthGroupDivision(minl, maxl, maxl - minl);
+    CI = new ConversionIndex(LgrpDiv, LgrpDiv);
+  }
+
   PopInfo nullpop;
-  //Add rows to matrices and initialise
+  //add rows to matrices and initialise
   cons.AddRows(areas.Size(), this->numPreys());
   totalcons.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
   overcons.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
