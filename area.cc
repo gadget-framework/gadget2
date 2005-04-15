@@ -37,13 +37,14 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   //Now the data which is in the following format: year step area temperature.
   temperature.AddRows(TimeInfo->TotalNoSteps() + 1, noareas, 0.0);
   IntVector Years, Steps;
-  int timeid, areaid, keepdata, year, step, area;
+  int timeid, areaid, keepdata, year, step, area, count;
   double tmpnumber;
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 4)
     handle.Message("Wrong number of columns in inputfile - should be 4");
 
+  count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> tmpnumber >> ws;
@@ -51,16 +52,14 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
     //check if the year and step are in the simulation
     timeid = -1;
     if (TimeInfo->isWithinPeriod(year, step)) {
-      //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
-        for (j = 0; j < Steps.Size(); j++)
-          if ((Years[i] == year) && (Steps[j] == step))
-            timeid = i;
+        if ((Years[i] == year) && (Steps[i] == step))
+          timeid = i;
 
       if (timeid == -1) {
         Years.resize(1, year);
         Steps.resize(1, step);
-        timeid = (Years.Size() - 1);
+        timeid = Years.Size();  //time=0 isnt in the simulation
       }
 
     } else {
@@ -80,8 +79,14 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
     if (keepdata == 0) {
       //temperature data is required, so store it
       temperature[timeid][areaid] = tmpnumber;
+      count++;
     }
   }
+  if (count == 0)
+    handle.logWarning("Warning in area - found no temperature data");
+  if (count != (temperature.Nrow() - 1) * noareas)
+    handle.logWarning("Warning in area - temperature data doesnt span time range");
+  handle.logMessage("Read temperature data - number of entries", count);
   handle.logMessage("Read area file - number of areas", noareas);
 }
 

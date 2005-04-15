@@ -37,6 +37,9 @@ void LivesOnAreas::LetLiveOnAreas(const IntVector& Areas) {
   while (areaConvert.Size() > 0)
     areaConvert.Delete(0);
 
+  if (Areas.Size() == 0)
+    handle.logWarning("Warning in livesonareas - found no areas");
+
   int i, maxim = 0;
   areas.resize(Areas.Size());
   for (i = 0; i < areas.Size(); i++) {
