@@ -347,7 +347,7 @@ SC::~SC() {
 }
 
 void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
-  int i, j, k, found;
+  int i, j, k, l, found;
   PredatorPtrVector predators;
   aggregator = new PredatorAggregator*[preynames.Nrow()];
 
@@ -396,9 +396,9 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
     //check prey areas
     for (j = 0; j < areas.Nrow(); j++) {
       found = 0;
-      for (i = 0; i < preys.Size(); i++)
-        for (k = 0; k < areas.Ncol(j); k++)
-          if (preys[i]->isInArea(areas[j][k]))
+      for (k = 0; k < preys.Size(); k++)
+        for (l = 0; l < areas.Ncol(j); l++)
+          if (preys[k]->isInArea(areas[j][l]))
             found++;
       if (found == 0)
         handle.logWarning("Warning in stomachcontent - prey not defined on all areas");
@@ -532,6 +532,8 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
   int nopreygroups = 0;
   for (i = 0; i < preylengths.Nrow(); i++)
     nopreygroups += preylengths[i].Size() - 1;
+  if (nopreygroups == 0)
+    handle.logWarning("Warning in stomachcontents - no prey found for", scname);
 
   //Find start of distribution data in datafile
   infile >> ws;
@@ -612,6 +614,8 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
+  if (count != (nopreygroups * Years.Size()))
+    handle.logWarning("Warning in stomachcontent - possible missing data for", scname);
   handle.logMessage("Read stomachcontent data file - number of entries", count);
 }
 
@@ -693,6 +697,8 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
   int nopreygroups = 0;
   for (i = 0; i < preylengths.Nrow(); i++)
     nopreygroups += preylengths[i].Size() - 1;
+  if (nopreygroups == 0)
+    handle.logWarning("Warning in stomachcontents - no prey found for", scname);
 
   //Find start of distribution data in datafile
   infile >> ws;
@@ -777,6 +783,8 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
+  if (count != (nopreygroups * Years.Size()))
+    handle.logWarning("Warning in stomachcontent - possible missing data for", scname);
   handle.logMessage("Read stomachcontent data file - number of entries", count);
 }
 
@@ -988,6 +996,8 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
   int nopreygroups = 0;
   for (i = 0; i < preylengths.Nrow(); i++)
     nopreygroups += preylengths[i].Size() - 1;
+  if (nopreygroups == 0)
+    handle.logWarning("Warning in stomachcontents - no prey found for", scname);
 
   //Find start of distribution data in datafile
   infile >> ws;
@@ -1068,6 +1078,8 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
+  if (count != (nopreygroups * Years.Size()))
+    handle.logWarning("Warning in stomachcontent - possible missing data for", scname);
   handle.logMessage("Read stomachcontent data file - number of entries", count);
 }
 
