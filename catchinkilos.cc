@@ -99,6 +99,9 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
   }
+  if (fleetnames.Size() == 0)
+    handle.Message("Error in catchinkilos - failed to read fleets");
+  handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
   i = 0;
@@ -112,6 +115,9 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
     strcpy(stocknames[i++], text);
     infile >> text;
   }
+  if (stocknames.Size() == 0)
+    handle.Message("Error in catchinkilos - failed to read stocks");
+  handle.logMessage("Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
@@ -122,9 +128,6 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   handle.Close();
   datafile.close();
   datafile.clear();
-
-  modelDistribution.AddRows(obsDistribution.Nrow(), numarea, 0.0);
-  likelihoodValues.AddRows(obsDistribution.Nrow(), numarea, 0.0);
 }
 
 void CatchInKilos::Reset(const Keeper* const keeper) {
@@ -348,6 +351,8 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
           Steps.resize(1, step);
         timeid = (Years.Size() - 1);
         obsDistribution.AddRows(1, numarea, 0.0);
+        modelDistribution.AddRows(1, numarea, 0.0);
+        likelihoodValues.AddRows(1, numarea, 0.0);
       }
 
     } else {

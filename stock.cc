@@ -28,36 +28,35 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   doesgrow = doeseat = iseaten = doesmigrate = 0;
   doesmove = doesrenew = doesmature = doesspawn = doesstray = 0;
   int i, tmpint;
+  char c;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
+
   ifstream datafile;
   CommentStream subdata(datafile);
   keeper->setString(this->getName());
 
   //read the area data
-  infile >> ws;
-  if (infile.eof())
-    handle.Eof();
-  infile >> text;
+  infile >> text >> ws;
   IntVector tmpareas;
   if (strcasecmp(text, "livesonareas") == 0) {
-    infile >> ws;
     i = 0;
-    while (isdigit(infile.peek()) && !infile.eof() && (i < Area->numAreas())) {
+    c = infile.peek();
+    while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
       printAreas.resize(1);
       tmpareas.resize(1);
       infile >> tmpint >> ws;
       printAreas[i] = tmpint;
       if ((tmpareas[i] = Area->InnerArea(tmpint)) == -1)
         handle.UndefinedArea(tmpint);
+      c = infile.peek();
       i++;
     }
+    this->LetLiveOnAreas(tmpareas);
   } else
     handle.Unexpected("livesonareas", text);
-
-  this->LetLiveOnAreas(tmpareas);
 
   //read the stock age and length data
   int minage, maxage;
@@ -158,7 +157,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   if (doesmigrate) {
     infile >> ws;
     //JMB make agedependentmigration optional, since we want to remove it entirely
-    char c = infile.peek();
+    c = infile.peek();
     if ((c == 'a') || (c == 'A'))
       readWordAndVariable(infile, "agedependentmigration", tmpint);
     else

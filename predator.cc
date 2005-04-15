@@ -134,4 +134,5 @@ void Predator::readSuitability(CommentStream& infile,
   keeper->clearLast();
   if (!infile.good())
     handle.Failure();
+  handle.logMessage("Read predation data - number of preys", this->numPreys());
 }

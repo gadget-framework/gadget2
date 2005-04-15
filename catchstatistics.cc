@@ -96,6 +96,9 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
   }
+  if (fleetnames.Size() == 0)
+    handle.Message("Error in catchstatistics - failed to read fleets");
+  handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
   i = 0;
@@ -109,6 +112,9 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     strcpy(stocknames[i++], text);
     infile >> text;
   }
+  if (stocknames.Size() == 0)
+    handle.Message("Error in catchstatistics - failed to read stocks");
+  handle.logMessage("Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename

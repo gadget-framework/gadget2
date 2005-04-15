@@ -35,6 +35,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   }
   if (preynames.Size() == 0)
     handle.Message("Error in preyoverprinter - failed to read preys");
+  handle.logMessage("Read prey data - number of preys", preynames.Size());
 
   //read in area aggregation from file
   filename = new char[MaxStrLength];

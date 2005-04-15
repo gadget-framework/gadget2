@@ -76,6 +76,9 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
   }
+  if (fleetnames.Size() == 0)
+    handle.Message("Error in recaptures - failed to read fleets");
+  handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the recapture data from datafilename

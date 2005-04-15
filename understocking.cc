@@ -53,6 +53,9 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
     strcpy(prednames[i++], text);
     infile >> text >> ws;
   }
+  if (prednames.Size() == 0)
+    handle.Message("Error in understocking - failed to read predators");
+  handle.logMessage("Read predator data - number of predators", prednames.Size());
 
   if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in understocking - wrong format for yearsandsteps");

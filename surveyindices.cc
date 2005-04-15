@@ -103,6 +103,9 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       strcpy(fleetnames[i++], text);
       infile >> text >> ws;
     }
+    if (fleetnames.Size() == 0)
+      handle.Message("Error in surveyindex - failed to read fleets");
+    handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
 
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
     handle.Warning("The ageandlengths surveyindex likelihood component is no longer supported\nUse the surveydistribution likelihood component instead");
@@ -122,6 +125,9 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     strcpy(stocknames[i++], text);
     infile >> text >> ws;
   }
+  if (stocknames.Size() == 0)
+    handle.Message("Error in surveyindex - failed to read stocks");
+  handle.logMessage("Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
   if (strcasecmp(sitype, "lengths") == 0) {

@@ -116,13 +116,7 @@ void Ecosystem::readStock(CommentStream& infile) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
-  if (!infile.eof())
-    infile >> text >> ws;
-
-  if (!(strcasecmp(text, "stockname") == 0))
-    handle.Unexpected("stockname", text);
-
-  infile >> text;
+  readWordAndValue(infile, "stockname", text);
   stockvec.resize(1);
   stockvec[stockvec.Size() - 1] = new Stock(infile, text, Area, TimeInfo, keeper);
 

@@ -72,6 +72,9 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
     strcpy(fleetnames[i++], text);
     infile >> text;
   }
+  if (fleetnames.Size() == 0)
+    handle.Message("Error in recstatistics - failed to read fleets");
+  handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename

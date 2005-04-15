@@ -83,6 +83,9 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
     strcpy(stocknames[i++], text);
     infile >> text;
   }
+  if (stocknames.Size() == 0)
+    handle.Message("Error in surveydistribution - failed to read stocks");
+  handle.logMessage("Read stock data - number of stocks", stocknames.Size());
 
   infile >> fittype >> ws;
   fitnumber = 0;
@@ -401,18 +404,18 @@ void SurveyDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVect
 void SurveyDistribution::calcIndex(const AgeBandMatrixPtrVector* alptr, const TimeClass* const TimeInfo) {
   //written by kgf 13/10 98
 
-  int i, age, len, area;
+  int area, age, len;
   if (suitfunction != NULL) {
     suitfunction->updateConstants(TimeInfo);
     if ((timeindex == 0) || (suitfunction->constantsHaveChanged(TimeInfo))) {
       if (suitfunction->usesPredLength())
         suitfunction->setPredLength(0.0);
 
-      for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
+      for (len = 0; len < LgrpDiv->numLengthGroups(); len++) {
         if (suitfunction->usesPreyLength())
-          suitfunction->setPreyLength(LgrpDiv->meanLength(i));
+          suitfunction->setPreyLength(LgrpDiv->meanLength(len));
 
-        q_l[i] = suitfunction->calculate();
+        q_l[len] = suitfunction->calculate();
       }
     }
   }

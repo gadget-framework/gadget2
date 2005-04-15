@@ -145,6 +145,9 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
     strcpy(predatornames[i++], text);
     infile >> text >> ws;
   }
+  if (predatornames.Size() == 0)
+    handle.Message("Error in stomachcontent - failed to read predators");
+  handle.logMessage("Read predator data - number of predators", predatornames.Size());
 
   if (strcasecmp(text, "predatorlengths") == 0) { //read predator lengths
     usepredages = 0; //predator is length structured
@@ -168,7 +171,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area,
     datafile.close();
     datafile.clear();
   } else
-    handle.Unexpected("predatorlengths or predatorages", text);
+    handle.Unexpected("predatorlengths", text);
 
   //read in the preys
   readWordAndValue(infile, "preyaggfile", aggfilename);
@@ -360,6 +363,17 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
       handle.logFailure("Error in stomachcontent - failed to match predator", predatornames[i]);
   }
 
+  //check predator areas
+  for (j = 0; j < areas.Nrow(); j++) {
+    found = 0;
+    for (i = 0; i < predators.Size(); i++)
+      for (k = 0; k < areas.Ncol(j); k++)
+        if (predators[i]->isInArea(areas[j][k]))
+          found++;
+    if (found == 0)
+      handle.logWarning("Warning in stomachcontent - predator not defined on all areas");
+  }
+
   preyLgrpDiv = new LengthGroupDivision*[preynames.Nrow()];
   if (usepredages == 0)
     predLgrpDiv = new LengthGroupDivision*[preynames.Nrow()];
@@ -379,9 +393,36 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
 
     }
 
+    //check prey areas
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < preys.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (preys[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logWarning("Warning in stomachcontent - prey not defined on all areas");
+    }
+
     preyLgrpDiv[i] = new LengthGroupDivision(preylengths[i]);
     if (usepredages == 0) { //length structured predator
       predLgrpDiv[i] = new LengthGroupDivision(predatorlengths);
+
+      //check predator lengths
+      found = 0;
+      for (j = 0; j < predators.Size(); j++)
+        if (predLgrpDiv[i]->maxLength(0) > predators[j]->returnLengthGroupDiv()->minLength())
+          found++;
+      if (found == 0)
+        handle.logWarning("Warning in stomachcontent - minimum length group less than predator length");
+
+      found = 0;
+      for (j = 0; j < predators.Size(); j++)
+        if (predLgrpDiv[i]->minLength(predLgrpDiv[i]->numLengthGroups()) < predators[j]->returnLengthGroupDiv()->maxLength())
+          found++;
+      if (found == 0)
+        handle.logWarning("Warning in stomachcontent - maximum length group greater than predator length");
+
       aggregator[i] = new PredatorAggregator(predators, preys, areas, predLgrpDiv[i], preyLgrpDiv[i]);
     } else
       handle.logMessage("Stomach contents data for age-based predators is currently not supported");
@@ -859,8 +900,8 @@ void SCRatios::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector&
   double tmpdivide, sum = 0.0;
   SC::setPredatorsAndPreys(Predators, Preys);
   //Scale each row such that it sums up to 1
-  for (i = 0; i < obsConsumption.Nrow(); i++)
-    for (j = 0; j < obsConsumption.Ncol(i); j++)
+  for (i = 0; i < obsConsumption.Nrow(); i++) {
+    for (j = 0; j < obsConsumption.Ncol(i); j++) {
       for (k = 0; k < obsConsumption[i][j]->Nrow(); k++) {
         sum = 0.0;
         for (l = 0; l < obsConsumption[i][j]->Ncol(k); l++)
@@ -872,6 +913,8 @@ void SCRatios::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector&
             (*obsConsumption[i][j])[k][l] *= tmpdivide;
         }
       }
+    }
+  }
 }
 
 double SCRatios::calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum) {
@@ -1033,8 +1076,8 @@ void SCSimple::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector&
   double tmpdivide, sum = 0.0;
   SC::setPredatorsAndPreys(Predators, Preys);
   //Scale each row such that it sums up to 1
-  for (i = 0; i < obsConsumption.Nrow(); i++)
-    for (j = 0; j < obsConsumption.Ncol(i); j++)
+  for (i = 0; i < obsConsumption.Nrow(); i++) {
+    for (j = 0; j < obsConsumption.Ncol(i); j++) {
       for (k = 0; k < obsConsumption[i][j]->Nrow(); k++) {
         sum = 0.0;
         for (l = 0; l < obsConsumption[i][j]->Ncol(k); l++)
@@ -1046,6 +1089,8 @@ void SCSimple::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector&
             (*obsConsumption[i][j])[k][l] *= tmpdivide;
         }
       }
+    }
+  }
 }
 
 double SCSimple::calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum) {

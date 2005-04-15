@@ -26,7 +26,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   char c;
 
   keeper->addString("fleet");
-  keeper->addString(givenname);
+  keeper->addString(this->getName());
 
   infile >> text >> ws;
   if (strcasecmp(text, "livesonareas") == 0) {
@@ -76,7 +76,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
       predator = new NumberPredator(infile, this->getName(), areas, TimeInfo, keeper, multscaler);
       break;
     default:
-      handle.Message("Error in fleet - unrecognised fleet type for", givenname);
+      handle.Message("Error in fleet - unrecognised fleet type for", this->getName());
     }
 
   //the next entry in the file will be the name of the amounts datafile
@@ -85,7 +85,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   handle.checkIfFailure(subfile, text);
   handle.Open(text);
 
-  if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))
+  if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, this->getName()))
     handle.Message("Error in fleet - failed to read fleet amounts");
   amount.Inform(keeper);
 

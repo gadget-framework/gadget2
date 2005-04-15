@@ -118,6 +118,9 @@ StockDistribution::StockDistribution(CommentStream& infile,
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
   }
+  if (fleetnames.Size() == 0)
+    handle.Message("Error in stockdistribution - failed to read fleets");
+  handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
   i = 0;
@@ -131,6 +134,9 @@ StockDistribution::StockDistribution(CommentStream& infile,
     strcpy(stocknames[i++], text);
     infile >> text;
   }
+  if (stocknames.Size() == 0)
+    handle.Message("Error in stockdistribution - failed to read stocks");
+  handle.logMessage("Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
@@ -141,8 +147,6 @@ StockDistribution::StockDistribution(CommentStream& infile,
   handle.Close();
   datafile.close();
   datafile.clear();
-
-  likelihoodValues.AddRows(obsDistribution.Nrow(), numarea, 0.0);
 }
 
 void StockDistribution::readStockData(CommentStream& infile,
@@ -229,6 +233,7 @@ void StockDistribution::readStockData(CommentStream& infile,
 
         obsDistribution.AddRows(1, numarea);
         modelDistribution.AddRows(1, numarea);
+        likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
           obsDistribution[timeid][i] = new DoubleMatrix(numstock, (numage * numlen), 0.0);
           modelDistribution[timeid][i] = new DoubleMatrix(numstock, (numage * numlen), 0.0);

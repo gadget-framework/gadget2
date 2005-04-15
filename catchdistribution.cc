@@ -187,6 +187,9 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
   }
+  if (fleetnames.Size() == 0)
+    handle.Message("Error in catchdistribution - failed to read fleets");
+  handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
   i = 0;
@@ -200,6 +203,9 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     strcpy(stocknames[i++], text);
     infile >> text;
   }
+  if (stocknames.Size() == 0)
+    handle.Message("Error in catchdistribution - failed to read stocks");
+  handle.logMessage("Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
@@ -211,7 +217,6 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   datafile.close();
   datafile.clear();
 
-  likelihoodValues.AddRows(obsDistribution.Nrow(), numarea, 0.0);
   calc_c.resize(numarea);
   obs_c.resize(numarea);
   for (i = 0; i < numarea; i++) {
@@ -292,6 +297,7 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
 
         obsDistribution.AddRows(1, numarea);
         modelDistribution.AddRows(1, numarea);
+        likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
           obsDistribution[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
           modelDistribution[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
