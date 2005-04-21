@@ -614,8 +614,6 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
-  if (count != (pred_size * nopreygroups * Years.Size()))
-    handle.logWarning("Warning in stomachcontent - possible missing data for", scname);
   handle.logMessage("Read stomachcontent data file - number of entries", count);
 }
 
@@ -783,8 +781,6 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
-  if (count != (pred_size * nopreygroups * Years.Size()))
-    handle.logWarning("Warning in stomachcontent - possible missing data for", scname);
   handle.logMessage("Read stomachcontent data file - number of entries", count);
 }
 
@@ -1078,8 +1074,6 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
-  if (count != (pred_size * nopreygroups * Years.Size()))
-    handle.logWarning("Warning in stomachcontent - possible missing data for", scname);
   handle.logMessage("Read stomachcontent data file - number of entries", count);
 }
 

@@ -38,7 +38,6 @@ public:
     return Suitable->DidChange(prey, TimeInfo);
   };
 protected:
-  virtual void DeleteParametersForPrey(int prey, Keeper* const keeper);
   const char* Preyname(int i) const { return Suitable->Preyname(i); };
   void readSuitability(CommentStream& infile, const char* FinalString,
     const TimeClass* const TimeInfo, Keeper* const keeper);

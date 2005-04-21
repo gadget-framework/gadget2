@@ -33,6 +33,10 @@ private:
    */
   void dumpAll();
   /**
+   * \brief This is the function used to dump the current model parameters to a file
+   */
+  void dumpParams();
+  /**
    * \brief This is the Ecosystem that the model is currently simulating
    */
   const Ecosystem* eco;

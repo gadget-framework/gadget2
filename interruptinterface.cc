@@ -12,6 +12,7 @@ void InterruptInterface::printMenu() {
     << " of " << eco->TimeInfo->TotalNoSteps() << " timesteps)\n"
     << " q   ->  quit simulation\n"
     << " c   ->  continue simulation\n"
+    << " p   ->  write current parameters to file\n"
     << " f   ->  dump current model to file\n";
   cout.flush();
 }
@@ -19,6 +20,7 @@ void InterruptInterface::printMenu() {
 int InterruptInterface::menu() {
   printMenu();
   char s[MaxStrLength];
+  strncpy(s, "", MaxStrLength);
   s[0] = 0;
   while ((s[0] != 'c') && (s[0] != 'C')) {
     cout << "> ";
@@ -28,11 +30,17 @@ int InterruptInterface::menu() {
       case 'q':
       case 'Q':
         cout << "\nQuitting current simulation ...\nThe best parameter values will be written to file (called interrupt.out)\n";
+        cout.flush();
         return 0;
       case 'f':
       case 'F':
         cout << "\nWriting current model to file (called modeldump.out) ...\n";
         dumpAll();
+        break;
+      case 'p':
+      case 'P':
+        cout << "\nWriting current parameters to file (called current.out) ...\n";
+        dumpParams();
         break;
       case 'h':
       case 'H':
@@ -51,4 +59,11 @@ void InterruptInterface::dumpAll() {
   strncpy(interruptfile, "", 15);
   strcpy(interruptfile, "modeldump.out");
   eco->writeStatus(interruptfile);
+}
+
+void InterruptInterface::dumpParams() {
+  char interruptfile[15];
+  strncpy(interruptfile, "", 15);
+  strcpy(interruptfile, "current.out");
+  eco->writeParamsInColumns(interruptfile, 0);
 }

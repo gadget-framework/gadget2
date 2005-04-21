@@ -1,4 +1,3 @@
-#include "mathfunc.h"
 #include "keeper.h"
 #include "prey.h"
 #include "suits.h"
@@ -14,10 +13,8 @@ Predator::Predator(const char* givenname, const IntVector& Areas)
 }
 
 Predator::~Predator() {
-  int i;
-  for (i = 0; i < Suitable->numPreys(); i++)
-    delete Suitable->FuncPrey(i);
-  delete Suitable;
+  if (Suitable != 0)
+    delete Suitable;
 }
 
 void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
@@ -46,10 +43,8 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     if (preys[i] == 0) {
       found++;
       handle.logWarning("Warning in predator - failed to match prey", this->Preyname(i));
-      this->DeleteParametersForPrey(i, keeper);
-      //This function allows derived classes to delete the information they keep.
-      //Since we have deleted element no. i from the vectors, we must take
-      //care not to miss the element that is now no. i
+      preys.Delete(i);
+      Suitable->deletePrey(i, keeper);
       if (found != preys.Size())
         i--;
     }
@@ -81,20 +76,6 @@ void Predator::Print(ofstream& outfile) const {
 
 void Predator::Reset(const TimeClass* const TimeInfo) {
   Suitable->Reset(this, TimeInfo);
-}
-
-void Predator::DeleteParametersForPrey(int p, Keeper* const keeper) {
-  /* This class has set a data invariant for the protected variables
-   * that derived classes are to keep.
-   * This function bases its action on that data invariant.
-   * Derived classes that need to delete information when a prey is
-   * deleted should do so in this function.
-   * Explanation of parameters: int p is the number of the element
-   * of this->Preyname() that keeps the name of the prey that is to be deleted.*/
-  if ((p < 0) || (p > preys.Size()))
-    handle.logFailure("Error in predator - invalid prey to delete from predator", this->getName());
-  preys.Delete(p);
-  Suitable->DeletePrey(p, keeper);
 }
 
 void Predator::readSuitability(CommentStream& infile,
