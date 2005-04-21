@@ -5,11 +5,11 @@
 extern Ecosystem* EcoSystem;
 extern ErrorHandler handle;
 
-double b(double* x, int n) {
-  return EcoSystem->SimulateAndUpdate(x, n);
+double fbfgs(double* x) {
+  return EcoSystem->SimulateAndUpdate(x);
 }
 
-extern int bfgs(double (*b)(double*, int), double startpoint[], double endpoint[], double init[],
+extern int bfgs(double (*fbfgs)(double*), double startpoint[], double endpoint[], double init[],
   int n, int maxiter, double epsilon, double beta, double sigma, double step, double gradacc,
   double gradstep, double errortol, int diffgrad);
 
@@ -41,7 +41,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
     init[i] = initialval[i];
   }
 
-  opt = bfgs(&b, startpoint, endpoint, init, nvars, bfgsiter, bfgseps,
+  opt = bfgs(&fbfgs, startpoint, endpoint, init, nvars, bfgsiter, bfgseps,
     beta, sigma, step, gradacc, gradstep, errortol, diffgrad);
 
   cout << "\nBFGS finished with a final likelihood score of " << EcoSystem->getLikelihood()

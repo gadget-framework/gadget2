@@ -115,7 +115,7 @@ void Ecosystem::Update(const DoubleVector& values) const {
   keeper->Update(values);
 }
 
-double Ecosystem::SimulateAndUpdate(double* x, int n) {
+double Ecosystem::SimulateAndUpdate(double* x) {
   ::FuncEval++;
   static int PrintCounter1 = printinfo.getPrint1() - 1;
   static int PrintCounter2 = printinfo.getPrint2() - 1;

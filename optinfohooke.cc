@@ -5,11 +5,11 @@
 extern ErrorHandler handle;
 extern Ecosystem* EcoSystem;
 
-double h(double* x, int n) {
-  return EcoSystem->SimulateAndUpdate(x, n);
+double fhj(double* x) {
+  return EcoSystem->SimulateAndUpdate(x);
 }
 
-extern int hooke(double (*h)(double*, int), int n, double startpoint[],
+extern int hooke(double (*fhj)(double*), int n, double startpoint[],
   double endpoint[], double lowerb[], double upperb[], double rho,
   double lambda, double epsilon, int itermax, double init[], double bndcheck);
 
@@ -111,7 +111,7 @@ void OptInfoHooke::OptimiseLikelihood() {
       handle.logWarning("Warning in optinfo - initial value is zero for switch", optswitches[i].getName());
   }
 
-  opt = hooke(&h, nopt, startpoint, endpoint, upperb, lowerb,
+  opt = hooke(&fhj, nopt, startpoint, endpoint, upperb, lowerb,
     rho, lambda, hookeeps, hookeiter, init, bndcheck);
 
   cout << "\nHooke & Jeeves finished with a final likelihood score of " << EcoSystem->getLikelihood()

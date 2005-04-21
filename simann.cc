@@ -195,8 +195,8 @@ double randomNumber() {
 }
 
 int simann(int n, double point[], double endpoint[], double lb[], double ub[],
-  double (*f)(double*, int), int max, int maxevl, double cstep, double tempt,
-  double vmlen, double rt, int ns, int nt, double eps, double uratio, double lratio, int check) {
+  double (*f)(double*), int max, int maxevl, double cstep, double tempt, double vmlen,
+  double rt, int ns, int nt, double eps, double uratio, double lratio, int check) {
 
   double x[NUMVARS];    //The starting values for the variables
   double t = tempt;     //The "temperature" of the algorithm
@@ -228,7 +228,7 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
   }
 
   //funcval is the function value at x
-  funcval = (*f)(x, n);
+  funcval = (*f)(x);
   nacc++;               //accept the first point no matter what
   offset = FuncEval;    //number of function evaluations done before loop
   cs = cstep / lratio;
@@ -292,7 +292,7 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
           }
 
           //Evaluate the function with the trial point xp and return as fp
-          fp = (*f)(xp, n);
+          fp = (*f)(xp);
           if (!max)
             fp = -fp;
 
@@ -307,7 +307,7 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
               << "\nNumber of metropolis accepted points " << naccmet
               << "\nNumber of rejected points " << nrej << endl;
 
-            fp = (*f)(endpoint, n);
+            fp = (*f)(endpoint);
             EcoSystem->setFuncEvalSA(FuncEval - offset);
             EcoSystem->setLikelihoodSA(fp);
             EcoSystem->StoreVariables(fp, endpoint);
@@ -402,7 +402,7 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
         << "\nNumber of metropolis accepted points " << naccmet
         << "\nNumber of rejected points " << nrej << endl;
 
-      fp = (*f)(endpoint, n);
+      fp = (*f)(endpoint);
       EcoSystem->setConvergeSA(1);
       EcoSystem->setFuncEvalSA(FuncEval - offset);
       EcoSystem->setLikelihoodSA(fp);

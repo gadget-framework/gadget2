@@ -5,12 +5,12 @@
 extern ErrorHandler handle;
 extern Ecosystem* EcoSystem;
 
-double s(double* x, int n) {
-  return EcoSystem->SimulateAndUpdate(x, n);
+double fsa(double* x) {
+  return EcoSystem->SimulateAndUpdate(x);
 }
 
 extern int simann(int nvar, double point[], double endpoint[], double lb[],
-  double ub[], double (*s)(double*, int), int m, int maxeval, double cstep,
+  double ub[], double (*fsa)(double*), int m, int maxeval, double cstep,
   double tempt, double vmlen, double rt, int ns, int nt, double eps,
   double uratio, double lratio, int check);
 
@@ -129,7 +129,7 @@ void OptInfoSimann::OptimiseLikelihood() {
     startpoint[i] = val[i];
   }
 
-  opt = simann(nopt, startpoint, endpoint, lowerb, upperb, &s, 0,
+  opt = simann(nopt, startpoint, endpoint, lowerb, upperb, &fsa, 0,
     simanniter, cs, t, vm, rt, ns, nt, simanneps, uratio, lratio, check);
 
   cout << "\nSimulated Annealing finished with a final likelihood score of " << EcoSystem->getLikelihood()

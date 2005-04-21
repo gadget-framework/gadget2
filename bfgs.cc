@@ -61,7 +61,7 @@ double getSmallestEigenValue(double matrix[NUMVARS][NUMVARS], int nvars) {
 }
 
 /* calculate the gradient of a function at a point */
-void gradient(double (*f)(double*, int), double point[], double pointvalue, double diaghess[], double grad[], int nvars, int diffgrad, double gradacc, double gradstep) {
+void gradient(double (*f)(double*), double point[], double pointvalue, double diaghess[], double grad[], int nvars, int diffgrad, double gradacc, double gradstep) {
 
   double tmpacc, f1, f2, mf1, mf2;
   double tmp[NUMVARS], mtmp[NUMVARS], tmp1[NUMVARS], mtmp1[NUMVARS];
@@ -73,7 +73,7 @@ void gradient(double (*f)(double*, int), double point[], double pointvalue, doub
       for (j = 0; j < nvars; j++)
         tmp[j] = point[j];
       tmp[i] += gradacc;
-      f1 = (*f)(tmp, nvars);
+      f1 = (*f)(tmp);
       grad[i] = (f1 - pointvalue) * tmpacc;
       diaghess[i] = 1.0;
     }
@@ -87,8 +87,8 @@ void gradient(double (*f)(double*, int), double point[], double pointvalue, doub
       }
       tmp[i] += gradacc;
       mtmp[i] -= gradacc;
-      f1 = (*f)(tmp, nvars);
-      mf1 = (*f)(mtmp, nvars);
+      f1 = (*f)(tmp);
+      mf1 = (*f)(mtmp);
       grad[i] = (f1 - mf1) * tmpacc;
       if (abs((mf1 - f1) / pointvalue) < rathersmall) {
         gradacc = min(0.01, gradacc / gradstep);
@@ -112,10 +112,10 @@ void gradient(double (*f)(double*, int), double point[], double pointvalue, doub
       tmp1[i] += 2.0 * gradacc;
       mtmp[i] -= gradacc;
       mtmp1[i] -= 2.0 * gradacc;
-      f1 = (*f)(tmp, nvars);
-      f2 = (*f)(tmp1, nvars);
-      mf1 = (*f)(mtmp, nvars);
-      mf2 = (*f)(mtmp1, nvars);
+      f1 = (*f)(tmp);
+      f2 = (*f)(tmp1);
+      mf1 = (*f)(mtmp);
+      mf2 = (*f)(mtmp1);
       grad[i] = (8.0 * f1 - f2 - 8.0 * mf1 + mf2) * tmpacc;
       if ((abs(mf2 - f2) / pointvalue) < rathersmall) {
         gradacc = min(0.01, gradacc / gradstep);
@@ -126,7 +126,7 @@ void gradient(double (*f)(double*, int), double point[], double pointvalue, doub
   }
 }
 
-int bfgs(double (*f)(double*, int), double startpt[], double endpt[], double init[], int nvars,
+int bfgs(double (*f)(double*), double startpt[], double endpt[], double init[], int nvars,
   int maxevl, double epsilon, double beta, double sigma, double step, double gradacc,
   double gradstep, double errortol, int diffgrad) {
 
@@ -152,7 +152,7 @@ int bfgs(double (*f)(double*, int), double startpt[], double endpt[], double ini
     tmp[i] = startpt[i];
   }
 
-  newf = (*f)(startpt, nvars);
+  newf = (*f)(startpt);
   gradient(f, startpt, newf, diaghess, grad, nvars, diffgrad, gradacc, gradstep);
   offset = FuncEval;
 
@@ -188,7 +188,7 @@ int bfgs(double (*f)(double*, int), double startpt[], double endpt[], double ini
         << ")\nThe optimisation stopped because the maximum number of function evalutions"
         << "\nwas reached and NOT because an optimum was found for this run\n";
 
-      newf = (*f)(newx, nvars);
+      newf = (*f)(newx);
       EcoSystem->setFuncEvalBFGS(FuncEval - offset);
       EcoSystem->setLikelihoodBFGS(newf);
       for (i = 0; i < nvars; i++)
@@ -245,7 +245,7 @@ int bfgs(double (*f)(double*, int), double startpt[], double endpt[], double ini
         for (i = 0; i < nvars; i++)
           tmp[i] = newx[i] + betan * search[i];
 
-        tmpf = (*f)(tmp, nvars);
+        tmpf = (*f)(tmp);
         if (((newf - tmpf) >= (-betan * searchgrad)) && (newf > tmpf))
           armijoquit = 1;
         else
@@ -313,7 +313,7 @@ int bfgs(double (*f)(double*, int), double startpt[], double endpt[], double ini
             + yBy * (h[i] * temphy - By[i] * tempyby) * (h[j] * temphy - By[j] * tempyby);
     }
 
-    newf = (*f)(newx, nvars);  //The value of newf shouldn't change, but just to make sure ...
+    newf = (*f)(newx);  //The value of newf shouldn't change, but just to make sure ...
     cout << "\nNew optimum after " << (FuncEval - offset) << " function evaluations, f(x) = "
       << newf << "\nwith normed gradient value " << normgrad <<  " at\n";
     for (i = 0; i < nvars; i++) {

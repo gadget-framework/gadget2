@@ -195,7 +195,7 @@ public:
   void SimulateOneAreaOneTimeSubstep(int area);
   void updatePopulationOneArea(int area);
   void updateAgesOneArea(int area);
-  double SimulateAndUpdate(double* x, int n);
+  double SimulateAndUpdate(double* x);
   /**
    * \brief This function will return the likelihood score from the current simulation
    * \return likelihood score
