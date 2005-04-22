@@ -112,6 +112,11 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
         k++;
       }
     }
+
+    for (i = 0; i < powers.Size(); i++)
+      if (powers[i] < verysmall)
+        handle.logFailure("Error in boundlikelihood - invalid value for power", powers[i]);
+
     checkInitialised = 1;
   }
   handle.logMessage("Reset boundlikelihood component", this->getName());
