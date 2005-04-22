@@ -120,16 +120,25 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
 void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   int i;
+  double temp;
   DoubleVector values(keeper->numVariables());
   keeper->CurrentValues(values);
   for (i = 0; i < switchnr.Size(); i++) {
     if (values[switchnr[i]] < lowerbound[i]) {
-      likelihoods[i] = lowerweights[i] * pow(absolute(values[switchnr[i]] - lowerbound[i]), powers[i]);
+      temp = absolute(values[switchnr[i]] - lowerbound[i]);
+      if (temp < 1)
+        likelihoods[i] = lowerweights[i] * pow(temp, (1.0 / powers[i]));
+      else
+        likelihoods[i] = lowerweights[i] * pow(temp, powers[i]);
       likelihood += likelihoods[i];
       keeper->Update(switchnr[i], lowerbound[i]);
 
     } else if (values[switchnr[i]] > upperbound[i]) {
-      likelihoods[i] = upperweights[i] * pow(absolute(values[switchnr[i]] - upperbound[i]), powers[i]);
+      temp = absolute(values[switchnr[i]] - upperbound[i]);
+      if (temp < 1)
+        likelihoods[i] = upperweights[i] * pow(temp, (1.0 / powers[i]));
+      else
+        likelihoods[i] = upperweights[i] * pow(temp, powers[i]);
       likelihood += likelihoods[i];
       keeper->Update(switchnr[i], upperbound[i]);
 
