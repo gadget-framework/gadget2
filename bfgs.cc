@@ -203,7 +203,7 @@ int bfgs(double (*f)(double*), double startpt[], double endpt[], double init[], 
       //JMB - dont print warning on the first loop ...
       if ((FuncEval - offset) > 0)
         cout << "\nWarning in BFGS - resetting search algorithm after "
-          << (FuncEval - offset) << " function evaluations" << endl;
+          << (FuncEval - offset) << " function evaluations\n";
 
       for (i = 0; i < nvars; i++) {
         for (j = 0; j < nvars; j++)
@@ -241,7 +241,7 @@ int bfgs(double (*f)(double*), double startpt[], double endpt[], double init[], 
     if (searchgrad < 0.0) {
       betan = step;
       armijoquit = 0;
-      while (!armijoquit && (betan > verysmall)) {
+      while ((armijoquit == 0) && (betan > verysmall)) {
         for (i = 0; i < nvars; i++)
           tmp[i] = newx[i] + betan * search[i];
 
@@ -254,16 +254,13 @@ int bfgs(double (*f)(double*), double startpt[], double endpt[], double init[], 
 
       if ((armijoquit) && (tmpf == tmpf)) {
         newf = tmpf;
+        gradient(f, tmp, tmpf, diaghess, grad, nvars, diffgrad, gradacc, gradstep);
         alpha = betan;
       } else
         alpha = 0.0;
     }
 
-    if (alpha < 0.0)
-      continue;
-
-    gradient(f, tmp, tmpf, diaghess, grad, nvars, diffgrad, gradacc, gradstep);
-    if (isZero(alpha)) {
+    if ((isZero(alpha)) || (searchgrad > 0.0) || (isZero(searchgrad))) {
       diffgrad++;
       gradient(f, newx, newf, diaghess, grad, nvars, diffgrad, gradacc, gradstep);
       armijoproblem++;
@@ -271,6 +268,9 @@ int bfgs(double (*f)(double*), double startpt[], double endpt[], double init[], 
         check = 0;
       continue;
     }
+
+    if (alpha < 0.0)
+      continue;
 
     normgrad = 0.0;
     normdeltax = 0.0;
