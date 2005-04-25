@@ -3,7 +3,7 @@
 
 #include "charptrvector.h"
 #include "suitfuncptrvector.h"
-#include "bandmatrix.h"
+#include "bandmatrixptrvector.h"
 #include "keeper.h"
 
 class Predator;
@@ -22,7 +22,7 @@ public:
 protected:
   CharPtrVector preynames;
   SuitFuncPtrVector suitFunction;
-  BandMatrixVector preCalcSuitability;
+  BandMatrixPtrVector preCalcSuitability;
 };
 
 #endif

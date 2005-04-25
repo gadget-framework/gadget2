@@ -32,7 +32,7 @@ protected:
   DoubleMatrix Phi;  //[area][predLengthgroup]
   DoubleMatrix fphi; //[area][predLengthgroup]
   DoubleMatrix fphI; //[area][predLengthgroup]  fphi per substep
-  BandMatrixVector Alprop;     //[area][age][length group]
+  BandMatrixPtrVector Alprop;     //[area][age][length group]
   DoubleMatrix maxconbylength; //[area][length group]
   AgeBandMatrixPtrVector Alkeys;  //[area][age][length group]
 };

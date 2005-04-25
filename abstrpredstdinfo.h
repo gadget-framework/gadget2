@@ -1,7 +1,7 @@
 #ifndef abstrpredstdinfo_h
 #define abstrpredstdinfo_h
 
-#include "bandmatrix.h"
+#include "bandmatrixptrvector.h"
 #include "livesonareas.h"
 #include "areatime.h"
 
@@ -71,17 +71,17 @@ public:
   virtual void Sum(const TimeClass* const TimeInfo, int area) = 0;
 protected:
   /**
-   * \brief This is the BandMatrixVector of the number consumed by age group
+   * \brief This is the BandMatrixPtrVector of the number consumed by age group
    */
-  BandMatrixVector NconbyAge;
+  BandMatrixPtrVector NconbyAge;
   /**
-   * \brief This is the BandMatrixVector of the biomass consumed by age group
+   * \brief This is the BandMatrixPtrVector of the biomass consumed by age group
    */
-  BandMatrixVector BconbyAge;
+  BandMatrixPtrVector BconbyAge;
   /**
-   * \brief This is the BandMatrixVector of the mortality caused by the predation by age group
+   * \brief This is the BandMatrixPtrVector of the mortality caused by the predation by age group
    */
-  BandMatrixVector MortbyAge;
+  BandMatrixPtrVector MortbyAge;
 };
 
 #endif

@@ -222,7 +222,7 @@ double SC::calcLikelihood(const TimeClass* const TimeInfo) {
   DoubleMatrix sum(areas.Nrow(), pred_size, 0.0);
   for (i = 0; i < preynames.Nrow(); i++) {
     Aggregate(i);
-    const BandMatrixVector* cons = &aggregator[i]->returnSum();
+    const BandMatrixPtrVector* cons = &aggregator[i]->returnSum();
     for (a = 0; a < areas.Nrow(); a++) {
       for (k = 0; k < (*cons)[a].Nrow(); k++) {
         for (prey_l = 0; prey_l < (*cons)[a].Ncol(); prey_l++) {

@@ -3,7 +3,7 @@
 
 #include "areatime.h"
 #include "lengthgroup.h"
-#include "bandmatrix.h"
+#include "bandmatrixptrvector.h"
 #include "abstrpredstdinfo.h"
 #include "abstrpreystdinfobylength.h"
 #include "poppredator.h"
@@ -88,17 +88,17 @@ private:
    */
   const Prey* prey;
   /**
-   * \brief This is the BandMatrixVector of the mortality caused by the predation by length group
+   * \brief This is the BandMatrixPtrVector of the mortality caused by the predation by length group
    */
-  BandMatrixVector MortbyLength;
+  BandMatrixPtrVector MortbyLength;
   /**
-   * \brief This is the BandMatrixVector of the number consumed by length group
+   * \brief This is the BandMatrixPtrVector of the number consumed by length group
    */
-  BandMatrixVector NconbyLength;
+  BandMatrixPtrVector NconbyLength;
   /**
-   * \brief This is the BandMatrixVector of the biomass consumed by length group
+   * \brief This is the BandMatrixPtrVector of the biomass consumed by length group
    */
-  BandMatrixVector BconbyLength;
+  BandMatrixPtrVector BconbyLength;
   /**
    * \brief This is the LengthGroupDivision of the predator
    */

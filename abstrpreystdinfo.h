@@ -1,7 +1,7 @@
 #ifndef abstrpreystdinfo_h
 #define abstrpreystdinfo_h
 
-#include "bandmatrix.h"
+#include "bandmatrixptrvector.h"
 #include "livesonareas.h"
 #include "areatime.h"
 #include "prey.h"
@@ -101,17 +101,17 @@ protected:
    */
   BandMatrix MortbyAge;
   /**
-   * \brief This is the BandMatrixVector of the number consumed by age group and length group
+   * \brief This is the BandMatrixPtrVector of the number consumed by age group and length group
    */
-  BandMatrixVector NconbyAgeAndLength;
+  BandMatrixPtrVector NconbyAgeAndLength;
   /**
-   * \brief This is the BandMatrixVector of the biomass consumed by age group and length group
+   * \brief This is the BandMatrixPtrVector of the biomass consumed by age group and length group
    */
-  BandMatrixVector BconbyAgeAndLength;
+  BandMatrixPtrVector BconbyAgeAndLength;
   /**
-   * \brief This is the BandMatrixVector of the mortality caused by the predation by age group and length group
+   * \brief This is the BandMatrixPtrVector of the mortality caused by the predation by age group and length group
    */
-  BandMatrixVector MortbyAgeAndLength;
+  BandMatrixPtrVector MortbyAgeAndLength;
 };
 
 #endif

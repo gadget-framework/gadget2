@@ -5,6 +5,7 @@
 #include "conversionindex.h"
 #include "commentstream.h"
 #include "agebandmatrix.h"
+#include "bandmatrixptrmatrix.h"
 #include "predator.h"
 #include "keeper.h"
 
@@ -44,10 +45,10 @@ protected:
    */
   DoubleMatrix overconsumption;
   /**
-   * \brief This is the BandMatrixMatrix used to store information on the consumption by the predators on the current timestep
+   * \brief This is the BandMatrixPtrMatrix used to store information on the consumption by the predators on the current timestep
    * \note the indices for this object are [area][prey][predator length][prey length]
    */
-  BandMatrixMatrix consumption;
+  BandMatrixPtrMatrix consumption;
   /**
    * \brief This is the DoubleMatrix used to store information on the total consumption by the predators on the current timestep
    * \note the indices for this object are [area][predator length]
@@ -59,10 +60,10 @@ protected:
    */
   DoubleMatrix overcons;
   /**
-   * \brief This is the BandMatrixMatrix used to store information on the consumption by the predators on the current substep of the current timestep
+   * \brief This is the BandMatrixPtrMatrix used to store information on the consumption by the predators on the current substep of the current timestep
    * \note the indices for this object are [area][prey][predator length][prey length]
    */
-  BandMatrixMatrix cons;
+  BandMatrixPtrMatrix cons;
   /**
    * \brief This is the DoubleMatrix used to store information on the total consumption by the predators on the current substep of the current timestep
    * \note the indices for this object are [area][predator length]

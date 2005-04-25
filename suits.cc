@@ -36,7 +36,7 @@ void Suits::deletePrey(int prey, Keeper* const keeper) {
     preCalcSuitability.Delete(prey);
 }
 
-//Calculate suitabilities and set in the BandMatrixVector preCalcSuitability.
+//Calculate suitabilities and set in the BandMatrixPtrVector preCalcSuitability.
 void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
   //First time.
   if (preCalcSuitability.Size() == 0)
