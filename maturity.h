@@ -145,7 +145,7 @@ private:
   /**
    * \brief This is the AgeBandMatrixRatioPtrVector used to store the calculated mature tagged stocks
    */
-  AgeBandMatrixRatioPtrVector TagStorage;
+  AgeBandMatrixRatioPtrVector tagStorage;
 };
 
 /**

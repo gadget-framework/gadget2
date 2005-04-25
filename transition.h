@@ -112,7 +112,7 @@ protected:
   /**
    * \brief This is the AgeBandMatrixRatioPtrVector used to store the calculated tagged stocks
    */
-  AgeBandMatrixRatioPtrVector TagStorage;
+  AgeBandMatrixRatioPtrVector tagStorage;
   /**
    * \brief This is the age that the younger stock will move into the older stocks
    */

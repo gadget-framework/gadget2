@@ -31,7 +31,9 @@ AgeBandMatrixRatioPtrVector::~AgeBandMatrixRatioPtrVector() {
 }
 
 void AgeBandMatrixRatioPtrVector::resize(int addsize, AgeBandMatrixRatio* matr) {
-  assert(addsize > 0);
+  if (addsize <= 0)
+    return;
+
   int i;
   if (v == 0) {
     size = addsize;
@@ -162,8 +164,7 @@ void AgeBandMatrixRatioPtrVector::deleteTag(const char* tagname) {
 }
 
 const char* AgeBandMatrixRatioPtrVector::getName(int id) const {
-  assert(id >= 0);
-  assert(id < this->numTagExperiments());
+  assert(0 <= id && id < this->numTagExperiments());
   return tagID[id];
 }
 

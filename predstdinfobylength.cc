@@ -54,7 +54,7 @@ void PredStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
   const DoubleVector& NpreyEaten = preyinfo->NconsumptionByLength(area);
   const DoubleVector& BpreyEaten = preyinfo->BconsumptionByLength(area);
   const DoubleVector& TotpreyMort = preyinfo->MortalityByLength(area);
-  const BandMatrix& BpredEaten = predator->Consumption(area, prey->getName());
+  const BandMatrix& BpredEaten = predator->getConsumption(area, prey->getName());
   int predl, preyl;
   double proportion;
 

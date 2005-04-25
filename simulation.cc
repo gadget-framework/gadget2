@@ -89,7 +89,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
       likevec[j]->addLikelihoodKeeper(TimeInfo, keeper);
   }
 
-  TimeInfo->ResetToBeginning();
+  TimeInfo->Reset();
   for (i = 0; i < TimeInfo->TotalNoSteps(); i++) {
 
     for (j = 0; j < basevec.Size(); j++)

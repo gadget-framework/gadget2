@@ -7,6 +7,7 @@
 #include "fleet.h"
 #include "stock.h"
 #include "stockprey.h"
+#include "mathfunc.h"
 #include "popstatistics.h"
 #include "readaggregation.h"
 #include "gadget.h"
@@ -288,10 +289,8 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     minage = 999;
     maxage = 0;
     for (i = 0; i < stocks.Size(); i++) {
-      if (stocks[i]->minAge() < minage)
-        minage = stocks[i]->minAge();
-      if (maxage < stocks[i]->maxAge())
-        maxage = stocks[i]->maxAge();
+      minage = min(stocks[i]->minAge(), minage);
+      maxage = max(stocks[i]->maxAge(), maxage);
     }
 
     IntMatrix ages(1, 0);

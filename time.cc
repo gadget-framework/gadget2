@@ -82,7 +82,7 @@ int TimeClass::SizeOfStepDidChange() const {
     return (timesteps[currentstep] != timesteps[currentstep - 1]);
 }
 
-void TimeClass:: ResetToBeginning() {
+void TimeClass:: Reset() {
   currentyear = firstyear;
   currentstep = firststep;
   currentsubstep = 1;

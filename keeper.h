@@ -17,9 +17,9 @@ public:
    * \brief This is the default Keeper destructor
    */
   ~Keeper();
-  void KeepVariable(double& value, const Parameter& attr);
-  void DeleteParam(const double& var);
-  void ChangeVariable(const double& pre, double& post);
+  void keepVariable(double& value, const Parameter& attr);
+  void deleteParameter(const double& var);
+  void changeVariable(const double& pre, double& post);
   /**
    * \brief This function will set the text string that is used to describe a variable
    * \param str is the text string to be stored

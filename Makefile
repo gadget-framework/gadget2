@@ -57,7 +57,7 @@ OBJECTS = $(GADGETOBJECTS)
 ##########################################################################
 
 VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
-	bandmatrixptrvector.o doublematrix.o doublevector.o parametervector.o \
+	formulamatrixptrvector.o doublematrix.o doublevector.o parametervector.o \
 	otherfoodptrvector.o baseclassptrvector.o popinfoindexvector.o \
 	migvariableptrvector.o conversionindexptrvector.o likelihoodptrvector.o \
 	popratiomatrix.o popratiovector.o popinfomatrix.o popinfovector.o \
@@ -67,7 +67,7 @@ VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 	formulamatrix.o formulavector.o charptrmatrix.o charptrvector.o \
 	timevariablevector.o stockptrvector.o agebandmatrixratioptrvector.o \
 	vectorofcharptr.o suitfuncptrvector.o tagptrvector.o printerptrvector.o \
-	formulamatrixptrvector.o variableinfoptrvector.o
+	variableinfoptrvector.o
 
 GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.o \
 	abstrpredstdinfo.o abstrpreystdinfo.o catchdistribution.o errorhandler.o \

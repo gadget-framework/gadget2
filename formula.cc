@@ -288,7 +288,7 @@ void Formula::Inform(Keeper* keeper) {
       break;
     case PARAMETER:
       // only one parameter
-      keeper->KeepVariable(value, name);
+      keeper->keepVariable(value, name);
       break;
     case FUNCTION:
       // function with multiple parameters
@@ -319,7 +319,7 @@ void Formula::Interchange(Formula& NewF, Keeper* keeper) const {
     case PARAMETER:
       NewF.value = value;
       NewF.name = name;
-      keeper->ChangeVariable(value, NewF.value);
+      keeper->changeVariable(value, NewF.value);
       break;
 
     case FUNCTION:
@@ -345,7 +345,7 @@ void Formula::Delete(Keeper* keeper) const {
     case CONSTANT:
       break;
     case PARAMETER:
-      keeper->DeleteParam(value);
+      keeper->deleteParameter(value);
       break;
     case FUNCTION:
       unsigned int i;

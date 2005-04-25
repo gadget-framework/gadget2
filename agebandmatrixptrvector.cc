@@ -7,6 +7,7 @@ AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(int sz) {
   else
     v = 0;
 }
+
 AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(int sz, AgeBandMatrix* value) {
   assert(value != NULL);
   size = (sz > 0 ? sz : 0);
@@ -71,7 +72,9 @@ void AgeBandMatrixPtrVector::resize(int addsize) {
 void AgeBandMatrixPtrVector::resize(int addsize, int minage,
   const IntVector& minl, const IntVector& lsize) {
 
-  assert(addsize > 0);
+  if (addsize <= 0)
+    return;
+
   AgeBandMatrix** vnew = new AgeBandMatrix*[size + addsize];
   int i;
   for (i = 0; i < size; i++)
@@ -86,7 +89,9 @@ void AgeBandMatrixPtrVector::resize(int addsize, int minage,
 void AgeBandMatrixPtrVector::resize(int addsize, int minage,
   int minl, const PopInfoMatrix& matr) {
 
-  assert(addsize > 0);
+  if (addsize <= 0)
+    return;
+    
   int i;
   if (v == 0) {
     size = addsize;

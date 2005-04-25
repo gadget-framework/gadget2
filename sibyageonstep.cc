@@ -2,6 +2,7 @@
 #include "stock.h"
 #include "areatime.h"
 #include "loglinearregression.h"
+#include "mathfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
 
@@ -27,22 +28,18 @@ void SIByAgeOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
   double maxlength = minlength;
 
   for (i = 0; i < Stocks.Size(); i++) {
-    if (Stocks[i]->returnLengthGroupDiv()->minLength() < minlength)
-      minlength = Stocks[i]->returnLengthGroupDiv()->minLength();
-    if (maxlength < Stocks[i]->returnLengthGroupDiv()->maxLength())
-      maxlength = Stocks[i]->returnLengthGroupDiv()->maxLength();
+    minlength = min(Stocks[i]->returnLengthGroupDiv()->minLength(), minlength);
+    maxlength = max(Stocks[i]->returnLengthGroupDiv()->maxLength(), maxlength);
   }
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, maxlength - minlength);
 
   //check stock ages
   minage = 9999;
-  maxage = -1;
+  maxage = 0;
   for (i = 0; i < Ages.Nrow(); i++) {
     for (j = 0; j < Ages.Ncol(i); j++) {
-      if (Ages[i][j] < minage)
-        minage = Ages[i][j];
-      if (maxage < Ages[i][j])
-        maxage = Ages[i][j];
+      minage = min(Ages[i][j], minage);
+      maxage = max(Ages[i][j], maxage);
     }
   }
 

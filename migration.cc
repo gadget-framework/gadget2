@@ -217,11 +217,8 @@ void Migration::Print(ofstream& outfile) const {
     if (CalcMigList[i] != 0) {
       outfile << "Migration matrix number " << i << endl;
       for (j = 0; j < CalcMigList[i]->Nrow(); j++) {
-        for (k = 0; k < CalcMigList[i]->Ncol(j); k++) {
-          outfile.width(smallwidth);
-          outfile.precision(smallprecision);
-          outfile << (*CalcMigList[i])[j][k] << sep;
-        }
+        for (k = 0; k < CalcMigList[i]->Ncol(j); k++)
+          outfile << setw(smallwidth) << setprecision(smallprecision) << (*CalcMigList[i])[j][k] << sep;
         outfile << endl;
       }
     }

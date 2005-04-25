@@ -155,7 +155,7 @@ void TotalPredator::Print(ofstream& outfile) const {
 const PopInfoVector& TotalPredator::getNumberPriorToEating(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (strcasecmp(Preyname(prey), preyname) == 0)
+    if (strcasecmp(getPreyName(prey), preyname) == 0)
       return Preys(prey)->getNumberPriorToEating(area);
 
   handle.logFailure("Error in totalpredator - failed to match prey", preyname);

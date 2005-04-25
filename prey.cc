@@ -87,38 +87,17 @@ void Prey::Print(ofstream& outfile) const {
   LgrpDiv->Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tNumber of prey on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-      outfile.precision(smallprecision);
-      outfile.width(smallwidth);
-      outfile << sep << Number[area][i].N;
-    }
-    outfile << endl;
-  }
-  for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tWeight of prey on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-      outfile.precision(smallprecision);
-      outfile.width(smallwidth);
-      outfile << sep << Number[area][i].W;
-    }
-    outfile << endl;
-  }
-  for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tConsumption of prey on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-      outfile.precision(smallprecision);
-      outfile.width(smallwidth);
-      outfile << sep << consumption[area][i];
-    }
-    outfile << endl;
-  }
-  for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tOverconsumption of prey on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-      outfile.precision(smallprecision);
-      outfile.width(smallwidth);
-      outfile << sep << overconsumption[area][i];
-    }
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << Number[area][i].N << sep;
+    outfile << "\n\tWeight of prey on internal area " << areas[area] << ":\n\t";
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << Number[area][i].W << sep;
+    outfile << "\n\tConsumption of prey on internal area " << areas[area] << ":\n\t";
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << consumption[area][i] << sep;
+    outfile << "\n\tOverconsumption of prey on internal area " << areas[area] << ":\n\t";
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << overconsumption[area][i] << sep;
     outfile << endl;
   }
 }

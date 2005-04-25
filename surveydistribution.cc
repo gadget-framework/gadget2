@@ -3,6 +3,7 @@
 #include "readword.h"
 #include "readaggregation.h"
 #include "errorhandler.h"
+#include "mathfunc.h"
 #include "areatime.h"
 #include "stock.h"
 #include "ecosystem.h"
@@ -360,13 +361,11 @@ void SurveyDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVect
   }
 
   minage = 9999;
-  maxage = -1;
+  maxage = 0;
   for (i = 0; i < ages.Nrow(); i++) {
     for (j = 0; j < ages.Ncol(i); j++) {
-      if (ages[i][j] < minage)
-        minage = ages[i][j];
-      if (maxage < ages[i][j])
-        maxage = ages[i][j];
+      minage = min(ages[i][j], minage);
+      maxage = max(ages[i][j], maxage);
     }
   }
 

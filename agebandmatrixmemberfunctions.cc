@@ -194,16 +194,6 @@ void AgeBandMatrix::setToZero() {
     }
 }
 
-void AgeBandMatrix::FilterN(double minN) {
-  int i, j;
-  for (i = 0; i < nrow; i++)
-    for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
-      if ((*v[i])[j].N < minN) {
-        (*v[i])[j].N = 0.0;
-        (*v[i])[j].W = 0.0;
-      }
-}
-
 void AgeBandMatrix::printNumbers(ofstream& outfile) const {
   int i, j;
   int maxcol = 0;
@@ -213,25 +203,17 @@ void AgeBandMatrix::printNumbers(ofstream& outfile) const {
 
   for (i = minage; i < minage + nrow; i++) {
     outfile << TAB;
-    if (v[i - minage]->minCol() > 0) {
-      for (j = 0; j < v[i - minage]->minCol(); j++) {
-        outfile.precision(smallprecision);
-        outfile.width(smallwidth);
-        outfile << 0.0 << sep;
-      }
-    }
-    for (j = v[i - minage]->minCol(); j < v[i - minage]->maxCol(); j++) {
-      outfile.precision(smallprecision);
-      outfile.width(smallwidth);
-      outfile << (*v[i - minage])[j].N << sep;
-    }
-    if (v[i - minage]->maxCol() < maxcol) {
-      for (j = v[i - minage]->maxCol(); j < maxcol; j++) {
-        outfile.precision(smallprecision);
-        outfile.width(smallwidth);
-        outfile << 0.0 << sep;
-      }
-    }
+    if (v[i - minage]->minCol() > 0)
+      for (j = 0; j < v[i - minage]->minCol(); j++)
+        outfile << setw(smallwidth) << setprecision(smallprecision) << 0.0 << sep;
+
+    for (j = v[i - minage]->minCol(); j < v[i - minage]->maxCol(); j++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << (*v[i - minage])[j].N << sep;
+
+    if (v[i - minage]->maxCol() < maxcol)
+      for (j = v[i - minage]->maxCol(); j < maxcol; j++)
+        outfile << setw(smallwidth) << setprecision(smallprecision) << 0.0 << sep;
+
     outfile << endl;
   }
 }
@@ -245,25 +227,17 @@ void AgeBandMatrix::printWeights(ofstream& outfile) const {
 
   for (i = minage; i < minage + nrow; i++) {
     outfile << TAB;
-    if (v[i - minage]->minCol() > 0) {
-      for (j = 0; j < v[i - minage]->minCol(); j++) {
-        outfile.precision(smallprecision);
-        outfile.width(smallwidth);
-        outfile << 0.0 << sep;
-      }
-    }
-    for (j = v[i - minage]->minCol(); j < v[i - minage]->maxCol(); j++) {
-      outfile.precision(smallprecision);
-      outfile.width(smallwidth);
-      outfile << (*v[i - minage])[j].W << sep;
-    }
-    if (v[i - minage]->maxCol() < maxcol) {
-      for (j = v[i - minage]->maxCol(); j < maxcol; j++) {
-        outfile.precision(smallprecision);
-        outfile.width(smallwidth);
-        outfile << 0.0 << sep;
-      }
-    }
+    if (v[i - minage]->minCol() > 0)
+      for (j = 0; j < v[i - minage]->minCol(); j++)
+        outfile << setw(smallwidth) << setprecision(smallprecision) << 0.0 << sep;
+
+    for (j = v[i - minage]->minCol(); j < v[i - minage]->maxCol(); j++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << (*v[i - minage])[j].W << sep;
+
+    if (v[i - minage]->maxCol() < maxcol)
+      for (j = v[i - minage]->maxCol(); j < maxcol; j++)
+        outfile << setw(smallwidth) << setprecision(smallprecision) << 0.0 << sep;
+
     outfile << endl;
   }
 }

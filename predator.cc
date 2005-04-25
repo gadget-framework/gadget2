@@ -25,7 +25,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   for (i = 0; i < preyvec.Size(); i++) {
     found = 0;
     for (j = 0; j < this->numPreys(); j++) {
-      if (strcasecmp(this->Preyname(j), preyvec[i]->getName()) == 0) {
+      if (strcasecmp(this->getPreyName(j), preyvec[i]->getName()) == 0) {
         if (found == 0) {
           preys[j] = preyvec[i];
           found++;
@@ -42,7 +42,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     //received a pointer to, we issue a warning and delete it
     if (preys[i] == 0) {
       found++;
-      handle.logWarning("Warning in predator - failed to match prey", this->Preyname(i));
+      handle.logWarning("Warning in predator - failed to match prey", this->getPreyName(i));
       preys.Delete(i);
       Suitable->deletePrey(i, keeper);
       if (found != preys.Size())
@@ -56,7 +56,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
 int Predator::doesEat(const char* preyname) const {
   int i;
   for (i = 0; i < this->numPreys(); i++)
-    if (strcasecmp(this->Preyname(i), preyname) == 0)
+    if (strcasecmp(this->getPreyName(i), preyname) == 0)
       return 1;
   return 0;
 }
@@ -66,10 +66,10 @@ void Predator::Print(ofstream& outfile) const {
   outfile << "\tName" << sep << this->getName()
     << "\n\tNames of preys:";
   for (i = 0; i < this->numPreys(); i++)
-    outfile << sep << this->Preyname(i);
+    outfile << sep << this->getPreyName(i);
   outfile << endl;
   for (i = 0; i < this->numPreys(); i++) {
-    outfile << "\tSuitability for " << this->Preyname(i) << endl;
+    outfile << "\tSuitability for " << this->getPreyName(i) << endl;
     this->Suitability(i).Print(outfile);
   }
 }

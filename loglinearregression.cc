@@ -8,7 +8,7 @@ void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
   error = 0;
   DoubleVector Xlog(x);
   DoubleVector Ylog(y);
-  this->CleanAndTakeLog(x, y, Xlog, Ylog);
+  this->calcLog(x, y, Xlog, Ylog);
   if (error)
     return;
   LR.Fit(Xlog, Ylog);
@@ -19,7 +19,7 @@ void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, doub
   error = 0;
   DoubleVector Xlog(x);
   DoubleVector Ylog(y);
-  this->CleanAndTakeLog(x, y, Xlog, Ylog);
+  this->calcLog(x, y, Xlog, Ylog);
   if (error)
     return;
   LR.Fit(Xlog, Ylog, slope);
@@ -30,7 +30,7 @@ void LogLinearRegression::Fit(double intercept, const DoubleVector& x, const Dou
   error = 0;
   DoubleVector Xlog(x);
   DoubleVector Ylog(y);
-  this->CleanAndTakeLog(x, y, Xlog, Ylog);
+  this->calcLog(x, y, Xlog, Ylog);
   if (error)
     return;
   LR.Fit(intercept, Xlog, Ylog);
@@ -41,7 +41,7 @@ void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, doub
   error = 0;
   DoubleVector Xlog(x);
   DoubleVector Ylog(y);
-  this->CleanAndTakeLog(x, y, Xlog, Ylog);
+  this->calcLog(x, y, Xlog, Ylog);
   if (error)
     return;
   LR.Fit(Xlog, Ylog, slope, intercept);
@@ -63,7 +63,7 @@ double LogLinearRegression::slope() {
   return LR.slope();
 }
 
-void LogLinearRegression::CleanAndTakeLog(const DoubleVector& x,
+void LogLinearRegression::calcLog(const DoubleVector& x,
   const DoubleVector& y, DoubleVector& Xlog, DoubleVector& Ylog) {
 
   if ((x.Size() != y.Size()) || (Xlog.Size() != x.Size()) || (Xlog.Size() != Ylog.Size())) {

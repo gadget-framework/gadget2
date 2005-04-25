@@ -4,6 +4,7 @@
 #include "stock.h"
 #include "stockprey.h"
 #include "errorhandler.h"
+#include "mathfunc.h"
 #include "readfunc.h"
 #include "readword.h"
 #include "readaggregation.h"
@@ -283,10 +284,8 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
     minage = 999;
     maxage = 0;
     for (i = 0; i < stocks.Size(); i++) {
-      if (stocks[i]->minAge() < minage)
-        minage = stocks[i]->minAge();
-      if (maxage < stocks[i]->maxAge())
-        maxage = stocks[i]->maxAge();
+      minage = min(stocks[i]->minAge(), minage);
+      maxage = max(stocks[i]->maxAge(), maxage);
     }
 
     for (i = 0; i <= maxage - minage; i++)

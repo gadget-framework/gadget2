@@ -3,6 +3,7 @@
 #include "areatime.h"
 #include "loglinearregression.h"
 #include "errorhandler.h"
+#include "mathfunc.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
@@ -30,10 +31,8 @@ void SIByLengthOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector
   int minage = 100;
   int maxage = 0;
   for (i = 0; i < Stocks.Size(); i++) {
-    if (Stocks[i]->minAge() < minage)
-      minage = Stocks[i]->minAge();
-    if (maxage < Stocks[i]->maxAge())
-      maxage = Stocks[i]->maxAge();
+    minage = min(Stocks[i]->minAge(), minage);
+    maxage = max(Stocks[i]->maxAge(), maxage);
   }
 
   Ages.AddRows(1, maxage - minage + 1);

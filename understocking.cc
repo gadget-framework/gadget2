@@ -145,12 +145,9 @@ void UnderStocking::Print(ofstream& outfile) const {
   outfile << endl;
 
   for (year = 0; year < likelihoodValues.Nrow(); year++) {
-    outfile << "\n\tYear " << Years[year] << " and step " << Steps[year] << "\n\tLikelihood values:";
-    for (area = 0; area < likelihoodValues.Ncol(year); area++) {
-      outfile.width(smallwidth);
-      outfile.precision(smallprecision);
-      outfile << sep << likelihoodValues[year][area];
-    }
+    outfile << "\n\tYear " << Years[year] << " and step " << Steps[year] << "\n\tLikelihood values: ";
+    for (area = 0; area < likelihoodValues.Ncol(year); area++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << likelihoodValues[year][area] << sep;
     outfile << endl;
   }
 

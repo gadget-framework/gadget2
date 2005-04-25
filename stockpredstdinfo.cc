@@ -37,7 +37,7 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   DoubleVector predBconsbyAge(Alprop.maxAge() - Alprop.minAge() + 1, 0.0);
   const BandMatrix& preyNcons = preyinfo->NconsumptionByAgeAndLength(area);
   const BandMatrix& preyBcons = preyinfo->BconsumptionByAgeAndLength(area);
-  const BandMatrix& predBcons = predator->Consumption(area, prey->getName());
+  const BandMatrix& predBcons = predator->getConsumption(area, prey->getName());
 
   int predage, preyage, preyl, predl;
   double B, N, prop;

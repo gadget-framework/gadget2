@@ -13,7 +13,7 @@ PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
   for (i = 0; i < predators.Size(); i++) {
     predConv.AddRows(1, predators[i]->numLengthGroups(), 0);
     for (j = 0; j < predConv.Ncol(i); j++)
-      predConv[i][j] = LgrpDiv->numLengthGroup(predators[i]->Length(j));
+      predConv[i][j] = LgrpDiv->numLengthGroup(predators[i]->meanLength(j));
   }
 }
 
@@ -35,7 +35,7 @@ void PredatorOverAggregator::Sum() {
       for (j = 0; j < areas.Ncol(i); j++) {
         area = areas[i][j];
         if (predators[g]->isInArea(area)) {
-          const DoubleVector* dptr = &predators[g]->OverConsumption(area);
+          const DoubleVector* dptr = &predators[g]->getOverConsumption(area);
           for (l = 0; l < predConv.Ncol(g); l++) {
             predlength = predConv[g][l];
             if (predlength >= 0)

@@ -14,7 +14,7 @@ Keeper::Keeper() {
   bestlikelihood = 0.0;
 }
 
-void Keeper::KeepVariable(double& value, const Parameter& attr) {
+void Keeper::keepVariable(double& value, const Parameter& attr) {
 
   //Try to find the value attr in the vector switches.
   int i, index = -1;
@@ -59,7 +59,7 @@ Keeper::~Keeper() {
   delete stack;
 }
 
-void Keeper::DeleteParam(const double& var) {
+void Keeper::deleteParameter(const double& var) {
   int found = 0;
   int i, j;
   for (i = 0; i < address.Nrow() && !found; i++) {
@@ -83,7 +83,7 @@ void Keeper::DeleteParam(const double& var) {
   }
 }
 
-void Keeper::ChangeVariable(const double& pre, double& post) {
+void Keeper::changeVariable(const double& pre, double& post) {
   int found = 0;
   int i, j = 0;
   for (i = 0; i < address.Nrow() && !found; i++)

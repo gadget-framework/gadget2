@@ -9,25 +9,36 @@ LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
 
   illegal = 0;
   int i, k, j;
-  double s;
+  double s, tmp;
 
   size = A.Ncol();
   L = DoubleMatrix(size, size, 0.0);
   U = DoubleMatrix(A);
   logdet = 0.0;
+  tmp = 0.0;
 
   for (k = 0; k < size; k++) {
     L[k][k] = 1.0;
-    if (U[k][k] > 0.0 && logdet < verybig)
-      logdet += log(U[k][k]);
-
-    else if (U[k][k] <= 0.0 && logdet < verybig) {
-      handle.logWarning("Warning in ludecomposition - non positive number on matrix diagonal");
+    
+    if (isZero(U[k][k])) {
+      handle.logWarning("Warning in ludecomposition - zero on matrix diagonal");
       illegal = 1;
+      logdet = verybig;
+      tmp = 0.0;
+      
+    } else if (U[k][k] > 0.0) {
+      logdet += log(U[k][k]);
+      tmp = 1.0 / U[k][k];
+
+    } else if (U[k][k] < 0.0 ) {
+      handle.logWarning("Warning in ludecomposition - negative number on matrix diagonal");
+      illegal = 1;
+      logdet = verybig;
+      tmp = 0.0;
     }
 
     for (i = k + 1; i < size; i++) {
-      s = U[i][k] / U[k][k];
+      s = U[i][k] * tmp;
       L[i][k] = s;
       U[i][k] = 0.0;
 
@@ -37,7 +48,7 @@ LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
   }
 }
 
-//  calculates the solution of Ax=b using the LU decomposition calculated in the constructor
+// calculates the solution of Ax=b using the LU decomposition calculated in the constructor
 DoubleVector LUDecomposition::Solve(const DoubleVector& b) {
   if (size != b.Size())
     handle.logFailure("Error in ludecomposition - sizes not the same");
@@ -61,7 +72,10 @@ DoubleVector LUDecomposition::Solve(const DoubleVector& b) {
       s += U[i][j] * x[j];
 
     x[i] -= s;
-    x[i] /= U[i][i];
+    if (isZero(U[i][i]))
+      handle.logWarning("Warning in ludecomposition - divide by zero");
+    else
+      x[i] /= U[i][i];
   }
   return x;
 }

@@ -120,7 +120,7 @@ protected:
   /**
    * \brief This is the AgeBandMatrixRatioPtrVector used to store the calculated straying tagged stocks
    */
-  AgeBandMatrixRatioPtrVector TagStorage;
+  AgeBandMatrixRatioPtrVector tagStorage;
   /**
    * \brief This is the ConversionIndexPtrVector used to convert from the current stock lengths to the straying stock lengths
    */

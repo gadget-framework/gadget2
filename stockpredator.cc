@@ -59,32 +59,17 @@ void StockPredator::Print(ofstream& outfile) const {
   PopPredator::Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tPhi on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < Phi.Ncol(area); i++) {
-      outfile.precision(smallprecision);
-      outfile.width(smallwidth);
-      outfile << fphI[area][i] << sep;
-    }
-    outfile << endl;
-  }
-  for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tAlkeys (numbers) on internal area " << areas[area] << ":\n";
+    for (i = 0; i < Phi.Ncol(area); i++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << fphI[area][i] << sep;
+    outfile << "\n\tAlkeys (numbers) on internal area " << areas[area] << ":\n";
     Alkeys[area].printNumbers(outfile);
-  }
-  for (area = 0; area < areas.Size(); area++) {
     outfile << "\tAlkeys (mean weights) on internal area " << areas[area] << ":\n";
     Alkeys[area].printWeights(outfile);
-  }
-  for (area = 0; area < areas.Size(); area++) {
     outfile << "\tAge-length proportion on internal area " << areas[area] << ":\n";
     Alprop[area].Print(outfile);
-  }
-  for (area = 0; area < areas.Size(); area++) {
     outfile << "\tMaximum consumption by length on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < maxconbylength.Ncol(); i++) {
-      outfile.precision(smallprecision);
-      outfile.width(smallwidth);
-      outfile << sep << maxconbylength[area][i];
-    }
+    for (i = 0; i < maxconbylength.Ncol(); i++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << maxconbylength[area][i] << sep;
     outfile << endl;
   }
   outfile << endl;
@@ -123,7 +108,7 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
 const PopInfoVector& StockPredator::getNumberPriorToEating(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (strcasecmp(Preyname(prey), preyname) == 0)
+    if (strcasecmp(getPreyName(prey), preyname) == 0)
       return Preys(prey)->getNumberPriorToEating(area);
 
   handle.logFailure("Error in stockpredator - failed to match prey", preyname);

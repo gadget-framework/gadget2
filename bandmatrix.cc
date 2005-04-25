@@ -83,25 +83,17 @@ void BandMatrix::Print(ofstream& outfile) const {
 
   for (i = minage; i < minage + nrow; i++) {
     outfile << TAB;
-    if (v[i - minage]->minCol() > 0) {
-      for (j = 0; j < v[i - minage]->minCol(); j++) {
-        outfile.precision(smallprecision);
-        outfile.width(smallwidth);
-        outfile << 0.0 << sep;
-      }
-    }
-    for (j = v[i- minage]->minCol(); j < v[i - minage]->maxCol(); j++) {
-      outfile.precision(smallprecision);
-      outfile.width(smallwidth);
-      outfile << (*v[i - minage])[j] << sep;
-    }
-    if (v[i - minage]->maxCol() < maxcol) {
-      for (j = v[i - minage]->maxCol(); j < maxcol; j++) {
-        outfile.precision(smallprecision);
-        outfile.width(smallwidth);
-        outfile << 0.0 << sep;
-      }
-    }
+    if (v[i - minage]->minCol() > 0)
+      for (j = 0; j < v[i - minage]->minCol(); j++)
+        outfile << setw(smallwidth) << setprecision(smallprecision) << 0.0 << sep;
+
+    for (j = v[i - minage]->minCol(); j < v[i - minage]->maxCol(); j++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << (*v[i - minage])[j] << sep;
+
+    if (v[i - minage]->maxCol() < maxcol)
+      for (j = v[i - minage]->maxCol(); j < maxcol; j++)
+        outfile << setw(smallwidth) << setprecision(smallprecision) << 0.0 << sep;
+
     outfile << endl;
   }
 }
@@ -128,15 +120,16 @@ BandMatrixVector::~BandMatrixVector() {
   }
 }
 
-void BandMatrixVector::ChangeElement(int nr, const BandMatrix& value) {
+void BandMatrixVector::changeElement(int nr, const BandMatrix& value) {
   if (v[nr] != 0)
     delete v[nr];
   v[nr] = new BandMatrix(value);
 }
 
 void BandMatrixVector::resize(int addsize) {
-  assert(addsize > 0);
   int i;
+  if (addsize <= 0)
+    return;
   if (v == 0) {
     size = addsize;
     v = new BandMatrix*[size];
@@ -155,8 +148,9 @@ void BandMatrixVector::resize(int addsize) {
 }
 
 void BandMatrixVector::resize(int addsize, const BandMatrix& initial) {
-  assert(addsize > 0);
   int i;
+  if (addsize <= 0)
+    return;
   if (v == 0) {
     size = addsize;
     v = new BandMatrix*[size];
@@ -193,9 +187,7 @@ void BandMatrixVector::Delete(int pos) {
   }
 }
 
-BandMatrixMatrix::BandMatrixMatrix(int NroW, int ncol) : nrow(NroW) {
-  assert(nrow >= 0);
-  assert(ncol >= 0);
+BandMatrixMatrix::BandMatrixMatrix(int Nrow, int ncol) : nrow(Nrow) {
   int i;
   if (nrow == 0) {
     v = 0;
@@ -216,14 +208,15 @@ BandMatrixMatrix::~BandMatrixMatrix() {
   }
 }
 
-void BandMatrixMatrix::ChangeElement(int row, int col, const BandMatrix& value) {
+void BandMatrixMatrix::changeElement(int row, int col, const BandMatrix& value) {
   assert(0 <= row && row < nrow);
-  v[row]->ChangeElement(col, value);
+  v[row]->changeElement(col, value);
 }
 
 void BandMatrixMatrix::AddRows(int addrow, int ncol) {
-  assert(addrow > 0);
   int i;
+  if (addrow <= 0)
+    return;
   if (v == 0) {
     nrow = addrow;
     v = new BandMatrixVector*[nrow];

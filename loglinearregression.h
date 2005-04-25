@@ -73,7 +73,7 @@ protected:
    * \param Xlog is the DoubleVector that will contain the log of x
    * \param Ylog is the DoubleVector that will contain the log of y
    */
-  void CleanAndTakeLog(const DoubleVector& x, const DoubleVector& y,
+  void calcLog(const DoubleVector& x, const DoubleVector& y,
     DoubleVector& Xlog, DoubleVector& Ylog);
   /**
    * \brief This is a LinearRegression that stores the linear regression line

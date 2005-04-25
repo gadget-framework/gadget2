@@ -199,13 +199,10 @@ void SIOnStep::Print(ofstream& outfile) const {
   }
   outfile << endl;
 
-  for (i = 0; i < colindex.Size(); i++) {
-    outfile << TAB;
-    outfile.width(smallwidth);
-    outfile << modelIndex[t][i];
-  }
+  for (i = 0; i < colindex.Size(); i++)
+    outfile << TAB << setw(smallwidth) << modelIndex[t][i];
   outfile << endl;
-  outfile << flush;
+  outfile.flush();
 }
 
 void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {

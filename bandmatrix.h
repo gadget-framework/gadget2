@@ -63,7 +63,7 @@ public:
    * \note This will free all the memory allocated to all the elements of the vector
    */
   ~BandMatrixVector();
-  void ChangeElement(int nr, const BandMatrix& value);
+  void changeElement(int nr, const BandMatrix& value);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
@@ -132,7 +132,7 @@ public:
    * \note This will free all the memory allocated to all the elements of the vector
    */
   ~BandMatrixMatrix();
-  void ChangeElement(int nrow, int ncol, const BandMatrix& value);
+  void changeElement(int nrow, int ncol, const BandMatrix& value);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned

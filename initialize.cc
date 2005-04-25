@@ -91,14 +91,20 @@ void Ecosystem::Initialise() {
   }
 
   //Now we can start initialising things
-  for (i = 0; i < predvec.Size(); i++)
+  for (i = 0; i < predvec.Size(); i++) {
+    handle.logMessage("Initialising predator", predvec[i]->getName());
     ((PopPredator*)predvec[i])->setPrey(preyvec, keeper);
-  for (i = 0; i < stockvec.Size(); i++)
+  }
+  for (i = 0; i < stockvec.Size(); i++) {
+    handle.logMessage("Initialising stock", stockvec[i]->getName());
     stockvec[i]->setStock(stockvec);
+  }
   for (i = 0; i < stockvec.Size(); i++)
     stockvec[i]->setCI();
-  for (i = 0; i < tagvec.Size(); i++)
+  for (i = 0; i < tagvec.Size(); i++) {
+    handle.logMessage("Initialising tagging experiment", tagvec[i]->getName());
     tagvec[i]->setStock(stockvec);
+  }
 
   //This is a good place to initialise the likelihood classes.
   for (i = 0; i < likevec.Size(); i++) {

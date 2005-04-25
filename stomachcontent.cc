@@ -468,10 +468,8 @@ void SC::Print(ofstream& outfile) const {
       outfile << "\n\tInternal areas" << sep << r;
       for (i = 0; i < obsConsumption[0][r]->Nrow(); i++) {
         outfile << "\n\t\t";
-        for (j = 0; j < (*obsConsumption[0][r])[i].Size(); j++) {
-          outfile.width(smallwidth);
-          outfile << 0 << sep;
-        }
+        for (j = 0; j < (*obsConsumption[0][r])[i].Size(); j++)
+          outfile << setw(smallwidth) << setprecision(smallprecision) << 0.0 << sep;
       }
     }
 
@@ -480,10 +478,8 @@ void SC::Print(ofstream& outfile) const {
       outfile << "\n\tInternal areas" << sep << r;
       for (i = 0; i < modelConsumption[t][r]->Nrow(); i++) {
         outfile << "\n\t\t";
-        for (j = 0; j < (*modelConsumption[t][r])[i].Size(); j++) {
-          outfile.width(smallwidth);
-          outfile << (*modelConsumption[t][r])[i][j] << sep;
-        }
+        for (j = 0; j < (*modelConsumption[t][r])[i].Size(); j++)
+          outfile << setw(smallwidth) << setprecision(smallprecision) << (*modelConsumption[t][r])[i][j] << sep;
       }
     }
   }

@@ -15,27 +15,59 @@ public:
   PopPredator(const char* givenname, const IntVector& areas);
   virtual ~PopPredator();
   virtual void Print(ofstream& outfile) const;
-  virtual const BandMatrix& Consumption(int area, const char* preyname) const;
-  virtual const DoubleVector& Consumption(int area) const { return totalconsumption[this->areaNum(area)]; };
-  virtual const DoubleVector& OverConsumption(int area) const { return overconsumption[this->areaNum(area)]; };
+  virtual const BandMatrix& getConsumption(int area, const char* preyname) const;
+  virtual const DoubleVector& getOverConsumption(int area) const { return overconsumption[this->areaNum(area)]; };
   virtual double getTotalOverConsumption(int area) const;
   virtual const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   virtual int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
-  virtual double Length(int i) const { return LgrpDiv->meanLength(i); };
+  virtual double meanLength(int i) const { return LgrpDiv->meanLength(i); };
   virtual void Reset(const TimeClass* const TimeInfo);
   virtual const double getConsumptionBiomass(int prey, int area) const;
   void setPrey(PreyPtrVector& preyvec, Keeper* const keeper);
 protected:
+  /**
+   * \brief This is the LengthGroupDivision used to store length information
+   */
   LengthGroupDivision* LgrpDiv;
+  /**
+   * \brief This is the ConversionIndexPtrVector used to convert to the lengths groups for the length-based predator
+   */
   ConversionIndex* CI;
-  //storage variables for intermediate calculations.
-  PopInfoMatrix prednumber;     //[area][predlength]
-  DoubleMatrix overconsumption; //[area][predlength]
-  BandMatrixMatrix consumption; //[area][prey][predlength][preylength]
-  DoubleMatrix totalconsumption;//[area][predlength]
-  DoubleMatrix overcons; //[area][predlength] per substep
-  BandMatrixMatrix cons; //[area][prey][predlength][preylength] per substep
-  DoubleMatrix totalcons;//[area][predlength] per substep
+  /**
+   * \brief This is the PopInfoMatrix used to store information on the number of predators for the current timestep
+   * \note the indices for this object are [area][predator length]
+   */
+  PopInfoMatrix prednumber;
+  /**
+   * \brief This is the DoubleMatrix used to store information on the overconsumption by the predators on the current timestep
+   * \note the indices for this object are [area][predator length]
+   */
+  DoubleMatrix overconsumption;
+  /**
+   * \brief This is the BandMatrixMatrix used to store information on the consumption by the predators on the current timestep
+   * \note the indices for this object are [area][prey][predator length][prey length]
+   */
+  BandMatrixMatrix consumption;
+  /**
+   * \brief This is the DoubleMatrix used to store information on the total consumption by the predators on the current timestep
+   * \note the indices for this object are [area][predator length]
+   */
+  DoubleMatrix totalconsumption;
+  /**
+   * \brief This is the DoubleMatrix used to store information on the overconsumption by the predators on the current substep of the current timestep
+   * \note the indices for this object are [area][predator length]
+   */
+  DoubleMatrix overcons;
+  /**
+   * \brief This is the BandMatrixMatrix used to store information on the consumption by the predators on the current substep of the current timestep
+   * \note the indices for this object are [area][prey][predator length][prey length]
+   */
+  BandMatrixMatrix cons;
+  /**
+   * \brief This is the DoubleMatrix used to store information on the total consumption by the predators on the current substep of the current timestep
+   * \note the indices for this object are [area][predator length]
+   */
+  DoubleMatrix totalcons;
 };
 
 #endif

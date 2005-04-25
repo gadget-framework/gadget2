@@ -6,6 +6,7 @@
 #include "areatime.h"
 #include "fleet.h"
 #include "stock.h"
+#include "mathfunc.h"
 #include "multinomial.h"
 #include "stockprey.h"
 #include "gadget.h"
@@ -359,13 +360,11 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     }
 
     minage = 9999;
-    maxage = -1;
+    maxage = 0;
     for (i = 0; i < ages.Nrow(); i++) {
       for (j = 0; j < ages.Ncol(i); j++) {
-        if (ages[i][j] < minage)
-          minage = ages[i][j];
-        if (maxage < ages[i][j])
-          maxage = ages[i][j];
+        minage = min(ages[i][j], minage);
+        maxage = max(ages[i][j], maxage);
       }
     }
 

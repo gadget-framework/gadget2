@@ -44,10 +44,10 @@ public:
   int checkOverConsumption(int area) const { return tooMuchConsumption[this->areaNum(area)]; };
   virtual void checkConsumption(int area, int numsubsteps);
   double Ratio(int area, int length) const { return ratio[this->areaNum(area)][length]; };
-  double Length(int j) const { return LgrpDiv->meanLength(j); };
+  double meanLength(int i) const { return LgrpDiv->meanLength(i); };
   int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
-  const DoubleVector& Bconsumption(int area) const { return consumption[this->areaNum(area)]; };
-  const DoubleVector& OverConsumption(int area) const { return overconsumption[this->areaNum(area)]; };
+  const DoubleVector& getConsumption(int area) const { return consumption[this->areaNum(area)]; };
+  const DoubleVector& getOverConsumption(int area) const { return overconsumption[this->areaNum(area)]; };
   const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
   virtual void Reset();
   const PopInfoVector& getNumberPriorToEating(int area) const { return numberPriorToEating[this->areaNum(area)]; };

@@ -3,6 +3,7 @@
 #include "keeper.h"
 #include "areatime.h"
 #include "readfunc.h"
+#include "mathfunc.h"
 #include "readword.h"
 #include "readaggregation.h"
 #include "gadget.h"
@@ -235,14 +236,10 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
     if (index != 0)
       handle.logWarning("Warning in spawner - spawned stock isnt defined on all areas");
 
-    if (spawnStocks[i]->minAge() < spawnAge)
-      spawnAge = spawnStocks[i]->minAge();
-    if (spawnStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
-      minlength = spawnStocks[i]->returnLengthGroupDiv()->minLength();
-    if (spawnStocks[i]->returnLengthGroupDiv()->maxLength() > maxlength)
-      maxlength = spawnStocks[i]->returnLengthGroupDiv()->maxLength();
-    if (spawnStocks[i]->returnLengthGroupDiv()->dl() < dl)
-      dl = spawnStocks[i]->returnLengthGroupDiv()->dl();
+    spawnAge = min(spawnStocks[i]->minAge(), spawnAge);
+    minlength = min(spawnStocks[i]->returnLengthGroupDiv()->minLength(), minlength);
+    maxlength = max(spawnStocks[i]->returnLengthGroupDiv()->maxLength(), maxlength);
+    dl = min(spawnStocks[i]->returnLengthGroupDiv()->dl(), dl);
   }
 
   spawnLgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);

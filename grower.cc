@@ -110,8 +110,8 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   //setting storage spaces for Growth.
   calcLengthGrowth.AddRows(noareas, len, 0.0);
   calcWeightGrowth.AddRows(noareas, len, 0.0);
-  InterpLgrowth.AddRows(noareas, otherlen, 0.0);
-  InterpWgrowth.AddRows(noareas, otherlen, 0.0);
+  interpLengthGrowth.AddRows(noareas, otherlen, 0.0);
+  interpWeightGrowth.AddRows(noareas, otherlen, 0.0);
   lgrowth.resize(noareas);
   wgrowth.resize(noareas);
   for (i = 0; i < noareas; i++) {
@@ -198,20 +198,20 @@ void Grower::GrowthCalc(int area,
   growthcalc->GrowthCalc(area, calcLengthGrowth[inarea], calcWeightGrowth[inarea],
     numGrow[inarea], Area, TimeInfo, FPhi, MaxCon, LgrpDiv);
 
-  CI->interpolateLengths(InterpLgrowth[inarea], calcLengthGrowth[inarea]);
-  CI->interpolateLengths(InterpWgrowth[inarea], calcWeightGrowth[inarea]);
+  CI->interpolateLengths(interpLengthGrowth[inarea], calcLengthGrowth[inarea]);
+  CI->interpolateLengths(interpWeightGrowth[inarea], calcWeightGrowth[inarea]);
 }
 
-const DoubleMatrix& Grower::LengthIncrease(int area) const {
+const DoubleMatrix& Grower::increaseLength(int area) const {
   return *lgrowth[this->areaNum(area)];
 }
 
-const DoubleMatrix& Grower::WeightIncrease(int area) const {
+const DoubleMatrix& Grower::increaseWeight(int area) const {
   return *wgrowth[this->areaNum(area)];
 }
 
 const DoubleVector& Grower::getWeight(int area) const {
-  return InterpWgrowth[this->areaNum(area)];
+  return interpWeightGrowth[this->areaNum(area)];
 }
 
 double Grower::getPowerValue() {
@@ -241,9 +241,9 @@ void Grower::Reset() {
       }
     }
 
-    for (i = 0; i < InterpLgrowth.Ncol(); i++) {
-      InterpLgrowth[area][i] = 0.0;
-      InterpWgrowth[area][i] = 0.0;
+    for (i = 0; i < interpLengthGrowth.Ncol(); i++) {
+      interpLengthGrowth[area][i] = 0.0;
+      interpWeightGrowth[area][i] = 0.0;
     }
   }
 

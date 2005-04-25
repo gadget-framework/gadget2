@@ -1,4 +1,5 @@
 #include "poppredator.h"
+#include "mathfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
 
@@ -38,37 +39,25 @@ void PopPredator::Print(ofstream& outfile) const {
   LgrpDiv->Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tNumber of predators on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-      outfile.precision(smallprecision);
-      outfile.width(smallwidth);
-      outfile << sep << prednumber[area][i].N;
-    }
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << prednumber[area][i].N << sep;
     outfile << "\n\tWeight of predators on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-      outfile.precision(smallprecision);
-      outfile.width(smallwidth);
-      outfile << sep << prednumber[area][i].W;
-    }
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << prednumber[area][i].W << sep;
     outfile << "\n\tTotal amount eaten on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-      outfile.precision(smallprecision);
-      outfile.width(smallwidth);
-      outfile << sep << totalconsumption[area][i];
-    }
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << totalconsumption[area][i] << sep;
     outfile << "\n\tOverconsumption on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-      outfile.precision(smallprecision);
-      outfile.width(smallwidth);
-      outfile << sep << overconsumption[area][i];
-    }
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << overconsumption[area][i] << sep;
     outfile << endl;
   }
 }
 
-const BandMatrix& PopPredator::Consumption(int area, const char* preyname) const {
+const BandMatrix& PopPredator::getConsumption(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (strcasecmp(Preyname(prey), preyname) == 0)
+    if (strcasecmp(getPreyName(prey), preyname) == 0)
       return consumption[this->areaNum(area)][prey];
 
   handle.logFailure("Error in poppredator - failed to match prey", preyname);
@@ -96,8 +85,8 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
     for (prey = 0; prey < this->numPreys(); prey++) {
       if (this->DidChange(prey, TimeInfo)) {
         //adjust the size of consumption[area][prey].
-        cons.ChangeElement(area, prey, Suitability(prey));
-        consumption.ChangeElement(area, prey, Suitability(prey));
+        cons.changeElement(area, prey, Suitability(prey));
+        consumption.changeElement(area, prey, Suitability(prey));
         for (i = 0; i < Suitability(prey).Nrow(); i++)
           for (j = consumption[area][prey].minCol(i); j < consumption[area][prey].maxCol(i); j++)
             consumption[area][prey][i][j] = 0.0;
@@ -133,12 +122,12 @@ void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     minl = 9999.0;
     maxl = 0.0;
     for (i = 0; i < this->numPreys(); i++) {
-      if (Preys(i)->returnLengthGroupDiv()->minLength() < minl)
-        minl = Preys(i)->returnLengthGroupDiv()->minLength();
-      if (Preys(i)->returnLengthGroupDiv()->maxLength() > maxl)
-        maxl = Preys(i)->returnLengthGroupDiv()->maxLength();
+      minl = min(Preys(i)->returnLengthGroupDiv()->minLength(), minl);
+      maxl = max(Preys(i)->returnLengthGroupDiv()->maxLength(), maxl);
     }    
     LgrpDiv = new LengthGroupDivision(minl, maxl, maxl - minl);
+    if (LgrpDiv->Error())
+      handle.Message("Error in poppredator - failed to create length group");
     CI = new ConversionIndex(LgrpDiv, LgrpDiv);
   }
 

@@ -51,7 +51,7 @@ CommentStream& operator >> (CommentStream& infile, VariableInfo& varinfo) {
   varinfo.coefficients.resize(varinfo.indices.Size());
   for (j = 0; j < varinfo.coefficients.Size(); j++) {
     varinfo.coefficients[j] = tmp[j];
-    varinfo.keeper->ChangeVariable(tmp[j], varinfo.coefficients[j]);
+    varinfo.keeper->changeVariable(tmp[j], varinfo.coefficients[j]);
   }
 
   if (infile.fail() || varinfo.nummatrix < 0 || varinfo.row < 0 || varinfo.column < 0

@@ -9,18 +9,18 @@
 
 void DeleteElementUsingKeeper(DoubleVector& var, Keeper* const keeper, int index) {
   assert(0 <= index && index < var.Size());
-  keeper->DeleteParam(var[index]);
+  keeper->deleteParameter(var[index]);
   DoubleVector tmp(var.Size() - 1);
   int i;
   for (i = 0; i < index; i++) {
     tmp[i] = var[i];
-    keeper->ChangeVariable(var[i], tmp[i]);
+    keeper->changeVariable(var[i], tmp[i]);
   }
   for (i = index; i < tmp.Size(); i++) {
     tmp[i] = var[i + 1];
-    keeper->ChangeVariable(var[i + 1], tmp[i]);
+    keeper->changeVariable(var[i + 1], tmp[i]);
   }
   var.Delete(index);
   for (i = 0; i < var.Size(); i++)
-    keeper->ChangeVariable(tmp[i], var[i]);
+    keeper->changeVariable(tmp[i], var[i]);
 }

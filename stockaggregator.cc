@@ -34,14 +34,12 @@ void StockAggregator::Print(ofstream& outfile) const {
     outfile << "\tInternal areas " << i << endl;
     for (j = 0; j < total[i].Nrow(); j++) {
       outfile << TAB;
-      for (k = 0; k < total[i].maxLength(j); k++) {
-        outfile.width(smallwidth);
-        outfile << total[i][j][k].N << sep;
-      }
+      for (k = 0; k < total[i].maxLength(j); k++)
+        outfile << setw(smallwidth) << total[i][j][k].N << sep;
       outfile << endl;
     }
   }
-  outfile << flush;
+  outfile.flush();
 }
 
 void StockAggregator::Reset() {

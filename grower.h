@@ -24,8 +24,8 @@ public:
   void GrowthImplement(int area, const PopInfoVector& NumberInArea,
     const LengthGroupDivision* const Lengths);
   void GrowthImplement(int area, const LengthGroupDivision* const Lengths);
-  const DoubleMatrix& LengthIncrease(int area) const;
-  const DoubleMatrix& WeightIncrease(int area) const;
+  const DoubleMatrix& increaseLength(int area) const;
+  const DoubleMatrix& increaseWeight(int area) const;
   const DoubleVector& getWeight(int area) const;
   void Sum(const PopInfoVector& NumberInArea, int area);
   void Reset();
@@ -38,8 +38,8 @@ protected:
   LengthGroupDivision* LgrpDiv;
   PopInfoMatrix numGrow;
   ConversionIndex* CI;
-  DoubleMatrix InterpLgrowth;
-  DoubleMatrix InterpWgrowth;
+  DoubleMatrix interpLengthGrowth;
+  DoubleMatrix interpWeightGrowth;
   DoubleMatrix calcLengthGrowth;
   DoubleMatrix calcWeightGrowth;
   DoubleMatrixPtrVector lgrowth;

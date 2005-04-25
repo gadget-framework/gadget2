@@ -4,8 +4,8 @@
 
 extern ErrorHandler handle;
 
-//Uses the length increase in InterpLGrowth and mean weight change in
-//InterpWGrowth to calculate lgrowth and wgrowth.
+//Uses the length increase in interpLengthGrowth and mean weight change in
+//interpWeightGrowth to calculate lgrowth and wgrowth.
 void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
   const LengthGroupDivision* const Lengths) {
 
@@ -26,7 +26,7 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
     meanw = 0.0;
     part3 = 1.0;
     tmpMeanLength = (tmpPower * Lengths->dl()) / Lengths->meanLength(lgroup);
-    growth = InterpLgrowth[inarea][lgroup] * tmpDl;
+    growth = interpLengthGrowth[inarea][lgroup] * tmpDl;
     if (growth >= maxlengthgroupgrowth)
       growth = double(maxlengthgroupgrowth) - 0.1;
 
@@ -58,14 +58,14 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
         meanw += (*wgrowth[inarea])[j][lgroup] * (*lgrowth[inarea])[j][lgroup];
       }
 
-      dw = InterpWgrowth[inarea][lgroup] - meanw;
+      dw = interpWeightGrowth[inarea][lgroup] - meanw;
       for (j = 0; j < lgrowth[inarea]->Nrow(); j++)
         (*wgrowth[inarea])[j][lgroup] += dw;
     }
   }
 }
 
-//Uses only the length increase in InterpLGrowth to calculate lgrowth.
+//Uses only the length increase in interpLengthGrowth to calculate lgrowth.
 void Grower::GrowthImplement(int area, const LengthGroupDivision* const Lengths) {
 
   int lgroup, j;
@@ -76,7 +76,7 @@ void Grower::GrowthImplement(int area, const LengthGroupDivision* const Lengths)
 
   for (lgroup = 0; lgroup < Lengths->numLengthGroups(); lgroup++) {
     part3 = 1.0;
-    growth = InterpLgrowth[inarea][lgroup] * tmpDl;
+    growth = interpLengthGrowth[inarea][lgroup] * tmpDl;
     if (growth >= maxlengthgroupgrowth)
       growth = double(maxlengthgroupgrowth) - 0.1;
     if (growth < verysmall)

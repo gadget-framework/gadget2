@@ -5,7 +5,7 @@
 
 /**
  * \class NumberPredator
- * \brief This is the class used to model the predation of stocks by a fleet that will catch a specified number of preys, calcualting the catch by numbers, and not by biomass, of the prey available
+ * \brief This is the class used to model the predation of stocks by a fleet that will catch a specified number of preys, calculating the catch by numbers, and not by biomass, of the prey available
  */
 class NumberPredator : public LengthPredator {
 public:

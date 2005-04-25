@@ -2,6 +2,7 @@
 #include "errorhandler.h"
 #include "keeper.h"
 #include "areatime.h"
+#include "mathfunc.h"
 #include "readfunc.h"
 #include "readword.h"
 #include "readaggregation.h"
@@ -150,22 +151,19 @@ void StrayData::setStock(StockPtrVector& stockvec) {
     if (index != 0)
       handle.logWarning("Warning in straying data - straying stock isnt defined on all areas");
 
-    if (strayStocks[i]->minAge() < minStrayAge)
-      minStrayAge = strayStocks[i]->minAge();
-    if (strayStocks[i]->maxAge() > maxStrayAge)
-      maxStrayAge = strayStocks[i]->maxAge();
-    if (strayStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
-      minlength = strayStocks[i]->returnLengthGroupDiv()->minLength();
+    minStrayAge = min(strayStocks[i]->minAge(), minStrayAge);
+    maxStrayAge = max(strayStocks[i]->maxAge(), maxStrayAge);
+    minlength = min(strayStocks[i]->returnLengthGroupDiv()->minLength(), minlength);
   }
 
   minStrayLength = LgrpDiv->numLengthGroup(minlength);
   IntVector minlv(maxStrayAge - minStrayAge + 1, 0);
   IntVector sizev(maxStrayAge - minStrayAge + 1, LgrpDiv->numLengthGroups());
   Storage.resize(areas.Size(), minStrayAge, minlv, sizev);
-  TagStorage.resize(areas.Size(), minStrayAge, minlv, sizev);
+  tagStorage.resize(areas.Size(), minStrayAge, minlv, sizev);
   for (i = 0; i < Storage.Size(); i++) {
     Storage[i].setToZero();
-    TagStorage[i].setToZero();
+    tagStorage[i].setToZero();
   }
 
   CI.resize(strayStocks.Size(), 0);
@@ -193,9 +191,9 @@ void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
       for (tag = 0; tag < TagAlkeys.numTagExperiments(); tag++) {
         tagnumber = *(TagAlkeys[age][len][tag].N) * strayProportion[len];
         if (tagnumber < verysmall)
-          *(TagStorage[inarea][age][len][tag].N) = 0.0;
+          *(tagStorage[inarea][age][len][tag].N) = 0.0;
         else
-          *(TagStorage[inarea][age][len][tag].N) = tagnumber;
+          *(tagStorage[inarea][age][len][tag].N) = tagnumber;
 
         if (len >= minStrayLength)
           *(TagAlkeys[age][len][tag].N) -= tagnumber;
@@ -215,16 +213,16 @@ void StrayData::addStrayStock(int area, const TimeClass* const TimeInfo) {
 
     if (strayStocks[s]->Birthday(TimeInfo)) {
       Storage[inarea].IncrementAge();
-      if (TagStorage.numTagExperiments() > 0)
-        TagStorage[inarea].IncrementAge(Storage[inarea]);
+      if (tagStorage.numTagExperiments() > 0)
+        tagStorage[inarea].IncrementAge(Storage[inarea]);
     }
 
     strayStocks[s]->Add(Storage[inarea], CI[s], area, Ratio[s],
       Storage[inarea].minAge(), Storage[inarea].maxAge());
 
-    if (TagStorage.numTagExperiments() > 0)
-      strayStocks[s]->Add(TagStorage, inarea, CI[s], area, Ratio[s],
-        TagStorage[inarea].minAge(), TagStorage[inarea].maxAge());
+    if (tagStorage.numTagExperiments() > 0)
+      strayStocks[s]->Add(tagStorage, inarea, CI[s], area, Ratio[s],
+        tagStorage[inarea].minAge(), tagStorage[inarea].maxAge());
   }
 }
 
@@ -258,7 +256,7 @@ void StrayData::Reset(const TimeClass* const TimeInfo) {
 
   for (i = 0; i < Storage.Size(); i++) {
     Storage[i].setToZero();
-    TagStorage[i].setToZero();
+    tagStorage[i].setToZero();
   }
   handle.logMessage("Reset straying data");
 }
@@ -282,29 +280,29 @@ const StockPtrVector& StrayData::getStrayStocks() {
 }
 
 void StrayData::addStrayTag(const char* tagname) {
-  TagStorage.addTag(tagname);
+  tagStorage.addTag(tagname);
 }
 
 void StrayData::deleteStrayTag(const char* tagname) {
   int minage, maxage, minlen, maxlen, a, length, i;
-  int id = TagStorage.getID(tagname);
+  int id = tagStorage.getID(tagname);
 
   if (id >= 0) {
-    minage = TagStorage[0].minAge();
-    maxage = TagStorage[0].maxAge();
+    minage = tagStorage[0].minAge();
+    maxage = tagStorage[0].maxAge();
 
     // Remove allocated memory
-    for (i = 0; i < TagStorage.Size(); i++) {
+    for (i = 0; i < tagStorage.Size(); i++) {
       for (a = minage; a <= maxage; a++) {
-        minlen = TagStorage[i].minLength(a);
-        maxlen = TagStorage[i].maxLength(a);
+        minlen = tagStorage[i].minLength(a);
+        maxlen = tagStorage[i].maxLength(a);
         for (length = minlen; length < maxlen; length++) {
-          delete[] (TagStorage[i][a][length][id].N);
-          (TagStorage[i][a][length][id].N) = NULL;
+          delete[] (tagStorage[i][a][length][id].N);
+          (tagStorage[i][a][length][id].N) = NULL;
         }
       }
     }
-    TagStorage.deleteTag(tagname);
+    tagStorage.deleteTag(tagname);
 
   } else
     handle.logWarning("Warning in stray - failed to delete tagging experiment", tagname);

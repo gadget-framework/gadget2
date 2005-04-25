@@ -177,7 +177,7 @@ public:
   /**
    * \brief This is the function that resets the timestep to the beginning of the model simulation
    */
-  void ResetToBeginning();
+  void Reset();
   /**
    * \brief This will return the number of substeps in the current timestep of the model simulation
    * \return number of substeps

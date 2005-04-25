@@ -16,7 +16,7 @@ Maturity::Maturity(const IntVector& tmpareas, int minage, const IntVector& minle
   const IntVector& size, const LengthGroupDivision* const lgrpdiv)
   : LivesOnAreas(tmpareas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)),
     Storage(tmpareas.Size(), minage, minlength, size),
-    TagStorage(tmpareas.Size(), minage, minlength, size) {
+    tagStorage(tmpareas.Size(), minage, minlength, size) {
 
 }
 
@@ -75,7 +75,7 @@ void Maturity::setStock(StockPtrVector& stockvec) {
 
   for (i = 0; i < areas.Size(); i++) {
     Storage[i].setToZero();
-    TagStorage[i].setToZero();
+    tagStorage[i].setToZero();
   }
 }
 
@@ -102,13 +102,13 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
     matureStocks[i]->Add(Storage[inarea], CI[i], area, Ratio[i],
       Storage[inarea].minAge(), Storage[inarea].maxAge());
 
-    if (TagStorage.numTagExperiments() > 0)
-      matureStocks[i]->Add(TagStorage, inarea, CI[i], area, Ratio[i],
-        TagStorage[inarea].minAge(), TagStorage[inarea].maxAge());
+    if (tagStorage.numTagExperiments() > 0)
+      matureStocks[i]->Add(tagStorage, inarea, CI[i], area, Ratio[i],
+        tagStorage[inarea].minAge(), tagStorage[inarea].maxAge());
   }
 
   Storage[inarea].setToZero();
-  TagStorage[inarea].setToZero();
+  tagStorage[inarea].setToZero();
 }
 
 void Maturity::PutInStorage(int area, int age, int length, double number,
@@ -131,12 +131,12 @@ void Maturity::PutInStorage(int area, int age, int length, double number,
 
   if (!(this->isMaturationStep(area, TimeInfo)))
     handle.logFailure("Error in maturity - maturity requested on wrong timestep");
-  if (TagStorage.numTagExperiments() <= 0)
+  if (tagStorage.numTagExperiments() <= 0)
     handle.logFailure("Error in maturity - no tagging experiment");
-  else if ((id >= TagStorage.numTagExperiments()) || (id < 0))
+  else if ((id >= tagStorage.numTagExperiments()) || (id < 0))
     handle.logFailure("Error in maturity - invalid tagging experiment");
   else
-    *(TagStorage[this->areaNum(area)][age][length][id].N) = (number > 0.0 ? number: 0.0);
+    *(tagStorage[this->areaNum(area)][age][length][id].N) = (number > 0.0 ? number: 0.0);
 }
 
 const StockPtrVector& Maturity::getMatureStocks() {
@@ -144,28 +144,28 @@ const StockPtrVector& Maturity::getMatureStocks() {
 }
 
 void Maturity::addMaturityTag(const char* tagname) {
-  TagStorage.addTag(tagname);
+  tagStorage.addTag(tagname);
 }
 
 void Maturity::deleteMaturityTag(const char* tagname) {
   int minage, maxage, minlen, maxlen, age, length, i;
-  int id = TagStorage.getID(tagname);
+  int id = tagStorage.getID(tagname);
 
   if (id >= 0) {
-    minage = TagStorage[0].minAge();
-    maxage = TagStorage[0].maxAge();
+    minage = tagStorage[0].minAge();
+    maxage = tagStorage[0].maxAge();
     // Remove allocated memory
-    for (i = 0; i < TagStorage.Size(); i++) {
+    for (i = 0; i < tagStorage.Size(); i++) {
       for (age = minage; age <= maxage; age++) {
-        minlen = TagStorage[i].minLength(age);
-        maxlen = TagStorage[i].maxLength(age);
+        minlen = tagStorage[i].minLength(age);
+        maxlen = tagStorage[i].maxLength(age);
         for (length = minlen; length < maxlen; length++) {
-          delete[] (TagStorage[i][age][length][id].N);
-          (TagStorage[i][age][length][id].N) = NULL;
+          delete[] (tagStorage[i][age][length][id].N);
+          (tagStorage[i][age][length][id].N) = NULL;
         }
       }
     }
-    TagStorage.deleteTag(tagname);
+    tagStorage.deleteTag(tagname);
 
   } else
     handle.logWarning("Warning in maturity - failed to delete tagging experiment", tagname);
@@ -239,10 +239,8 @@ void MaturityA::setStock(StockPtrVector& stockvec) {
   minMatureAge = 9999;
   double minlength = 9999.0;
   for (i = 0; i < matureStocks.Size(); i++) {
-    if (matureStocks[i]->minAge() < minMatureAge)
-      minMatureAge = matureStocks[i]->minAge();
-    if (matureStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
-      minlength = matureStocks[i]->returnLengthGroupDiv()->minLength();
+    minMatureAge = min(matureStocks[i]->minAge(), minMatureAge);
+    minlength = min(matureStocks[i]->returnLengthGroupDiv()->minLength(), minlength);
   }
   minMatureLength = LgrpDiv->numLengthGroup(minlength);
 }
@@ -429,10 +427,8 @@ void MaturityC::setStock(StockPtrVector& stockvec) {
   minMatureAge = 9999;
   double minlength = 9999.0;
   for (i = 0; i < matureStocks.Size(); i++) {
-    if (matureStocks[i]->minAge() < minMatureAge)
-      minMatureAge = matureStocks[i]->minAge();
-    if (matureStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
-      minlength = matureStocks[i]->returnLengthGroupDiv()->minLength();
+    minMatureAge = min(matureStocks[i]->minAge(), minMatureAge);
+    minlength = min(matureStocks[i]->returnLengthGroupDiv()->minLength(), minlength);
   }
   minMatureLength = LgrpDiv->numLengthGroup(minlength);
 }
@@ -533,10 +529,8 @@ void MaturityD::setStock(StockPtrVector& stockvec) {
   minMatureAge = 9999;
   double minlength = 9999.0;
   for (i = 0; i < matureStocks.Size(); i++) {
-    if (matureStocks[i]->minAge() < minMatureAge)
-      minMatureAge = matureStocks[i]->minAge();
-    if (matureStocks[i]->returnLengthGroupDiv()->minLength() < minlength)
-      minlength = matureStocks[i]->returnLengthGroupDiv()->minLength();
+    minMatureAge = min(matureStocks[i]->minAge(), minMatureAge);
+    minlength = min(matureStocks[i]->returnLengthGroupDiv()->minLength(), minlength);
   }
   minMatureLength = LgrpDiv->numLengthGroup(minlength);
 }
