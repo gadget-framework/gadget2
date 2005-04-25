@@ -36,6 +36,9 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (Preys(prey)->isPreyArea(area)) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+        if (tmp * prednumber[inarea][predl].N > 10.0)
+          handle.logWarning("Warning in linearpredator - excessive consumption required");
+
         for (preyl = Suitability(prey)[predl].minCol();
             preyl < Suitability(prey)[predl].maxCol(); preyl++) {
 
