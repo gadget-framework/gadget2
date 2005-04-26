@@ -7,7 +7,7 @@
 
 /**
  * \class PreyStdInfo
- * \brief This is the class used to calculate information about the non-dynamic prey (eg otherfood) from the predation by a predator of the prey
+ * \brief This is the class used to calculate information about the prey consumed from the predation by a predator of the prey
  */
 class PreyStdInfo : public AbstrPreyStdInfo {
 public:

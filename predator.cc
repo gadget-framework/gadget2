@@ -21,6 +21,9 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   int i, j;
   int found = 0;
 
+  if (Suitable == 0)
+    handle.logFailure("Error in predator - found no suitability values");
+
   preys.resize(this->numPreys(), 0);
   for (i = 0; i < preyvec.Size(); i++) {
     found = 0;
@@ -79,7 +82,7 @@ void Predator::Reset(const TimeClass* const TimeInfo) {
 }
 
 void Predator::readSuitability(CommentStream& infile,
-  const char* FinalString, const TimeClass* const TimeInfo, Keeper* const keeper) {
+  const char* strFinal, const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   int i, j;
   char preyname[MaxStrLength];
@@ -91,7 +94,7 @@ void Predator::readSuitability(CommentStream& infile,
   keeper->addString("suitabilityfor");
 
   infile >> preyname >> ws;
-  while (!(strcasecmp(preyname, FinalString) == 0) && (!infile.eof())) {
+  while (!(strcasecmp(preyname, strFinal) == 0) && (!infile.eof())) {
     keeper->addString(preyname);
 
     infile >> text >> ws;

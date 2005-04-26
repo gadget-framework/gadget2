@@ -16,40 +16,29 @@ Suits::~Suits() {
 }
 
 void Suits::addPrey(const char* preyname, SuitFunc* suitf) {
-  int i = this->numPreys();
-  preynames.resize(1);
+  preCalcSuitability.resize(1);
   suitFunction.resize(1, suitf);
-  preynames[i] = new char[strlen(preyname) + 1];
-  strcpy(preynames[i], preyname);
+  preynames.resize(1);
+  preynames[preynames.Size() - 1] = new char[strlen(preyname) + 1];
+  strcpy(preynames[preynames.Size() - 1], preyname);
 }
 
-int Suits::DidChange(int prey, const TimeClass* const TimeInfo) const {
-  return suitFunction[prey]->constantsHaveChanged(TimeInfo);
+int Suits::DidChange(int i, const TimeClass* const TimeInfo) const {
+  return suitFunction[i]->constantsHaveChanged(TimeInfo);
 }
 
-void Suits::deletePrey(int prey, Keeper* const keeper) {
+void Suits::deletePrey(int i, Keeper* const keeper) {
   if (this->numPreys() == 0)
     return;
-  suitFunction.Delete(prey, keeper);
-  preynames.Delete(prey);
-  if (preCalcSuitability.Size() != 0)
-    preCalcSuitability.Delete(prey);
+  suitFunction.Delete(i, keeper);
+  preynames.Delete(i);
+  preCalcSuitability.Delete(i);
 }
 
-//Calculate suitabilities and set in the BandMatrixPtrVector preCalcSuitability.
 void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
-  //First time.
-  if (preCalcSuitability.Size() == 0)
-    preCalcSuitability.resize(this->numPreys());
-
-  /* remember that Suits is a friend of Predator.
-   * Therefore we access pred through protected functions, but we only
-   * use const access functions to access the length group division of
-   * pred and its preys -- we do not change anything in pred. */
-
+  int i, j, p;
   DoubleMatrix* temp = 0;
   BandMatrix* suit = 0;
-  int i, j, p;
 
   for (p = 0; p < this->numPreys(); p++) {
     suitFunction[p]->updateConstants(TimeInfo);

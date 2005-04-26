@@ -1,5 +1,6 @@
 #include "otherfood.h"
 #include "readfunc.h"
+#include "readword.h"
 #include "lengthprey.h"
 #include "errorhandler.h"
 #include "intvector.h"
@@ -41,6 +42,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   } else
     handle.Unexpected("livesonareas", text);
 
+  //read the length information
   DoubleVector lengths(2, 0.0);
   infile >> text;
   if (strcasecmp(text, "lengths") == 0) {
@@ -49,9 +51,12 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   } else
     handle.Unexpected("lengths", text);
 
-  LengthGroupDivision LgrpDiv(lengths);
-  prey = new LengthPrey(lengths, areas, this->getName());
+  //read the energy content of this prey
+  double energy;
+  readWordAndVariable(infile, "energycontent", energy);
 
+  prey = new LengthPrey(lengths, areas, energy, this->getName());
+  
   infile >> text >> ws;
   if ((strcasecmp(text, "amount") == 0) || (strcasecmp(text, "amounts") == 0)) {
     infile >> text >> ws;
@@ -71,8 +76,6 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
 
   keeper->clearLast();
   keeper->clearLast();
-
-  prey->setCI(&LgrpDiv);
 }
 
 OtherFood::~OtherFood() {

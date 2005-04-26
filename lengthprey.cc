@@ -1,8 +1,7 @@
 #include "lengthprey.h"
 
-LengthPrey::LengthPrey(const DoubleVector& lengths,
-  const IntVector& Areas, const char* givenname)
-  : Prey(lengths, Areas, givenname) {
+LengthPrey::LengthPrey(const DoubleVector& lengths, const IntVector& Areas,
+  double Energy, const char* givenname) : Prey(lengths, Areas, Energy, givenname) {
 
   type = LENGTHPREYTYPE;
 }

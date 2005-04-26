@@ -14,9 +14,10 @@ public:
    * \brief This is the LengthPrey constructor
    * \param lengths is the DoubleVector of length groups of the prey (only one length group)
    * \param areas is the IntVector of areas that the prey lives on
+   * \param Energy is the energy content of the prey
    * \param givenname is the name of the prey
    */
-  LengthPrey(const DoubleVector& lengths, const IntVector& areas, const char* givenname);
+  LengthPrey(const DoubleVector& lengths, const IntVector& areas, double Energy, const char* givenname);
   /**
    * \brief This is the default LengthPrey destructor
    */

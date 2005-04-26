@@ -25,9 +25,10 @@ public:
    * \brief This is the Prey constructor for a prey with a given length group
    * \param lengths is the DoubleVector of length groups of the prey
    * \param areas is the IntVector of areas that the prey lives on
+   * \param Energy is the energy content of the prey
    * \param givenname is the name of the prey
    */
-  Prey(const DoubleVector& lengths, const IntVector& areas, const char* givenname);
+  Prey(const DoubleVector& lengths, const IntVector& areas, double Energy, const char* givenname);
   /**
    * \brief This is the default Prey destructor
    */
@@ -40,6 +41,7 @@ public:
   virtual void Print(ofstream& outfile) const;
   double getBiomass(int area, int length) const { return biomass[this->areaNum(area)][length]; };
   double getNumber(int area, int length) const { return Number[this->areaNum(area)][length].N; };
+  double getEnergy() const { return energy; };
   double Biomass(int area) const { return total[this->areaNum(area)]; };
   int checkOverConsumption(int area) const { return tooMuchConsumption[this->areaNum(area)]; };
   virtual void checkConsumption(int area, int numsubsteps);
@@ -68,6 +70,7 @@ protected:
   LengthGroupDivision* LgrpDiv;
   PopInfoMatrix Number;
   PopInfoMatrix numberPriorToEating;
+  double energy;
   DoubleMatrix biomass;
   DoubleMatrix ratio;
   DoubleMatrix consumption;

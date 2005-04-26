@@ -8,8 +8,8 @@
 
 extern ErrorHandler handle;
 
-Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname, Keeper* const keeper)
-  : HasName(givenname), LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
+Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
+  Keeper* const keeper) : HasName(givenname), LivesOnAreas(Areas), CI(0) {
 
   keeper->addString("prey");
   char text[MaxStrLength];
@@ -37,6 +37,9 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
   if (LgrpDiv->Error())
     handle.Message("Error in prey - failed to create length group");
 
+  //read the energy content of this prey
+  readWordAndVariable(infile, "energycontent", energy);
+ 
   this->InitialiseObjects();
   keeper->clearLast();
 
@@ -45,13 +48,15 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
     delete[] preylenindex[i];
 }
 
-Prey::Prey(const DoubleVector& lengths, const IntVector& Areas, const char* givenname)
-  : HasName(givenname), LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
+Prey::Prey(const DoubleVector& lengths, const IntVector& Areas,
+  double Energy, const char* givenname)
+  : HasName(givenname), LivesOnAreas(Areas), energy(Energy) {
 
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
     handle.Message("Error in prey - failed to create length group");
   this->InitialiseObjects();
+  CI = new ConversionIndex(LgrpDiv, LgrpDiv);
 }
 
 void Prey::InitialiseObjects() {
@@ -83,7 +88,7 @@ void Prey::setCI(const LengthGroupDivision* const GivenLDiv) {
 void Prey::Print(ofstream& outfile) const {
   int i, area;
 
-  outfile << "\nPrey\n\tName " << this->getName() << "\n\t";
+  outfile << "\nPrey\n\tName " << this->getName() << "\n\tEnergy content " << energy << "\n\t";
   LgrpDiv->Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tNumber of prey on internal area " << areas[area] << ":\n\t";
@@ -105,13 +110,13 @@ void Prey::Print(ofstream& outfile) const {
 //Reduce the population of the stock by the consumption.
 void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
   int inarea = this->areaNum(area);
-  DoubleVector conS(cons[inarea].Size(), 0.0);
+  DoubleVector subConsume(cons[inarea].Size(), 0.0);
   int len;
-  for (len = 0; len < conS.Size(); len++)
+  for (len = 0; len < subConsume.Size(); len++)
     if (!(isZero(Number[inarea][len].W)))
-      conS[len] = cons[inarea][len] / Number[inarea][len].W ;
+      subConsume[len] = cons[inarea][len] / Number[inarea][len].W ;
 
-  Alkeys.Subtract(conS, *CI, Number[inarea]);
+  Alkeys.Subtract(subConsume, *CI, Number[inarea]);
 }
 
 //adds the consumption by biomass

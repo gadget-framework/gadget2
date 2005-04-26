@@ -119,23 +119,21 @@ void DoubleMatrix::DeleteRow(int row) {
 }
 
 int DoubleMatrix::maxRowSize() const {
-  int maxrowsize = 0;
-  int i;
+  if (nrow == 0)
+    return 0;
+  int i, check = 0;
   for (i = 0; i < nrow; i++)
-    if (Ncol(i) > maxrowsize)
-      maxrowsize = Ncol(i);
-  return maxrowsize;
+    check = max(check, Ncol(i));
+  return check;
 }
 
 int DoubleMatrix::minRowSize() const {
   if (nrow == 0)
     return 0;
-  int minrowsize = Ncol(0);
-  int i;
-  for (i = 1; i < nrow; i++)
-    if (Ncol(i) < minrowsize)
-      minrowsize = Ncol(i);
-  return minrowsize;
+  int i, check = 9999;
+  for (i = 0; i < nrow; i++)
+    check = min(check, Ncol(i));
+  return check;
 }
 
 int DoubleMatrix::isRectangular() const {
@@ -209,7 +207,7 @@ void DoubleMatrix::setElementsTo(double d) {
 DoubleMatrix& DoubleMatrix::operator *= (double d) {
   int i;
   for (i = 0; i < nrow; i++)
-    (*v[i])*=d;
+    (*v[i]) *= d;
   return *this;
 }
 

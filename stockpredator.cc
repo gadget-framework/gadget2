@@ -143,8 +143,8 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
         for (preyl = Suitability(prey)[predl].minCol();
             preyl < Suitability(prey)[predl].maxCol(); preyl++) {
 
-          cons[inarea][prey][predl][preyl]
-            = Suitability(prey)[predl][preyl] * Preys(prey)->getBiomass(area, preyl);
+          cons[inarea][prey][predl][preyl] = Suitability(prey)[predl][preyl] *
+            Preys(prey)->getBiomass(area, preyl) * Preys(prey)->getEnergy();
           Phi[inarea][predl] += cons[inarea][prey][predl][preyl];
         }
       }
@@ -160,7 +160,7 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
     }
   }
 
-  //Calculating fphi(L) and Totalconsumption of predator in area
+  //Calculating fphi(L) and totalcons of predator in area
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     if (isZero(Phi[inarea][predl] + halfFeedingValue * Areasize))
       fphI[inarea][predl] = 0.0;

@@ -7,7 +7,6 @@
 #include "preyptrvector.h"
 #include "hasname.h"
 #include "livesonareas.h"
-#include "popinfovector.h"
 #include "suits.h"
 #include "keeper.h"
 #include "prey.h"
@@ -30,17 +29,14 @@ public:
   virtual int numLengthGroups() const = 0;
   virtual double meanLength(int i) const = 0;
   virtual void Reset(const TimeClass* const TimeInfo);
+  const char* getPreyName(int i) const { return Suitable->getPreyName(i); };
   const BandMatrix& Suitability(int i) const { return Suitable->Suitable(i); };
   int numPreys() const { return Suitable->numPreys(); };
-  Prey* Preys(int i) const { return (Prey*)(preys[i]); };
-  int DidChange(int prey, const TimeClass* const TimeInfo) const {
-    return Suitable->DidChange(prey, TimeInfo);
-  };
+  Prey* Preys(int i) const { return preys[i]; };
+  int DidChange(int i, const TimeClass* const TimeInfo) const { return Suitable->DidChange(i, TimeInfo); };
 protected:
-  const char* getPreyName(int i) const { return Suitable->getPreyName(i); };
-  void readSuitability(CommentStream& infile, const char* FinalString,
+  void readSuitability(CommentStream& infile, const char* strFinal,
     const TimeClass* const TimeInfo, Keeper* const keeper);
-  friend class Suits;
 private:
   PreyPtrVector preys;
   Suits* Suitable;
