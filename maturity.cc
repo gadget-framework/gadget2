@@ -108,7 +108,8 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
   }
 
   Storage[inarea].setToZero();
-  tagStorage[inarea].setToZero();
+  if (tagStorage.numTagExperiments() > 0)
+    tagStorage[inarea].setToZero();
 }
 
 void Maturity::PutInStorage(int area, int age, int length, double number,
@@ -133,10 +134,13 @@ void Maturity::PutInStorage(int area, int age, int length, double number,
     handle.logFailure("Error in maturity - maturity requested on wrong timestep");
   if (tagStorage.numTagExperiments() <= 0)
     handle.logFailure("Error in maturity - no tagging experiment");
-  else if ((id >= tagStorage.numTagExperiments()) || (id < 0))
+  if ((id >= tagStorage.numTagExperiments()) || (id < 0))
     handle.logFailure("Error in maturity - invalid tagging experiment");
+
+  if (isZero(number)) 
+    *(tagStorage[this->areaNum(area)][age][length][id].N) = 0.0;
   else
-    *(tagStorage[this->areaNum(area)][age][length][id].N) = (number > 0.0 ? number: 0.0);
+    *(tagStorage[this->areaNum(area)][age][length][id].N) = number;
 }
 
 const StockPtrVector& Maturity::getMatureStocks() {
@@ -149,7 +153,7 @@ void Maturity::addMaturityTag(const char* tagname) {
 
 void Maturity::deleteMaturityTag(const char* tagname) {
   int minage, maxage, minlen, maxlen, age, length, i;
-  int id = tagStorage.getID(tagname);
+  int id = tagStorage.getTagID(tagname);
 
   if (id >= 0) {
     minage = tagStorage[0].minAge();
@@ -185,16 +189,15 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
   keeper->addString("maturity");
   infile >> text;
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
-    infile >> text;
     i = 0;
+    infile >> text >> ws;
     while (strcasecmp(text, "coefficients") != 0 && infile.good()) {
       matureStockNames.resize(1);
       matureStockNames[i] = new char[strlen(text) + 1];
       strcpy(matureStockNames[i], text);
       Ratio.resize(1);
-      infile >> Ratio[i];
+      infile >> Ratio[i] >> text >> ws;
       i++;
-      infile >> text;
     }
   } else
     handle.Unexpected("maturestocksandratios", text);
@@ -280,16 +283,15 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
   infile >> text;
   keeper->addString("maturity");
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
-    infile >> text;
     i = 0;
+    infile >> text >> ws;
     while (!(strcasecmp(text, "maturitysteps") == 0) && infile.good()) {
       matureStockNames.resize(1);
       matureStockNames[i] = new char[strlen(text) + 1];
       strcpy(matureStockNames[i], text);
       Ratio.resize(1);
-      infile >> Ratio[i];
+      infile >> Ratio[i] >> text >> ws;
       i++;
-      infile >> text;
     }
   } else
     handle.Unexpected("maturestocksandratios", text);
@@ -377,16 +379,15 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
   keeper->addString("maturity");
   infile >> text;
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
-    infile >> text;
     i = 0;
+    infile >> text >> ws;
     while (strcasecmp(text, "coefficients") != 0 && infile.good()) {
       matureStockNames.resize(1);
       matureStockNames[i] = new char[strlen(text) + 1];
       strcpy(matureStockNames[i], text);
       Ratio.resize(1);
-      infile >> Ratio[i];
+      infile >> Ratio[i] >> text >> ws;
       i++;
-      infile >> text;
     }
   } else
     handle.Unexpected("maturestocksandratios", text);

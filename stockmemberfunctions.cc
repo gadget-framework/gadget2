@@ -89,7 +89,7 @@ void Stock::reducePop(int area, const AreaClass* const Area, const TimeClass* co
   delete PropSurviving;
 
   if (tagAlkeys.numTagExperiments() > 0)
-    tagAlkeys[inarea].updateAndTagLoss(Alkeys[inarea], tagAlkeys.tagloss());
+    tagAlkeys[inarea].updateAndTagLoss(Alkeys[inarea], tagAlkeys.getTagLoss());
 }
 
 //-----------------------------------------------------------------------
@@ -289,7 +289,7 @@ void Stock::updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, dou
 }
 
 void Stock::deleteTags(const char* tagname) {
-  allTags.Delete(tagAlkeys.getID(tagname));
+  allTags.Delete(tagAlkeys.getTagID(tagname));
   tagAlkeys.deleteTag(tagname);
   if (doesmature)
     maturity->deleteMaturityTag(tagname);

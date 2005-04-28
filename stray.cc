@@ -57,16 +57,15 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
 
   infile >> text;
   if (strcasecmp(text, "straystocksandratios") == 0) {
-    infile >> text >> ws;
     i = 0;
+    infile >> text >> ws;
     while (strcasecmp(text, "proportionfunction") != 0 && infile.good()) {
       strayStockNames.resize(1);
       strayStockNames[i] = new char[strlen(text) + 1];
       strcpy(strayStockNames[i], text);
       Ratio.resize(1);
-      infile >> Ratio[i];
+      infile >> Ratio[i] >> text >> ws;
       i++;
-      infile >> text >> ws;
     }
   } else
     handle.Unexpected("straystocksandratios", text);
@@ -285,7 +284,7 @@ void StrayData::addStrayTag(const char* tagname) {
 
 void StrayData::deleteStrayTag(const char* tagname) {
   int minage, maxage, minlen, maxlen, a, length, i;
-  int id = tagStorage.getID(tagname);
+  int id = tagStorage.getTagID(tagname);
 
   if (id >= 0) {
     minage = tagStorage[0].minAge();

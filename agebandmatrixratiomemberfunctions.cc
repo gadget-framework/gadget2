@@ -155,9 +155,9 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
   if (numtags > 0) {
     IntVector tagconversion(numtags);
     for (i = 0; i < numtags; i++) {
-      tagconversion[i] = Alkeys.getID(Addition.getName(i));
+      tagconversion[i] = Alkeys.getTagID(Addition.getTagName(i));
       if (tagconversion[i] < 0)
-        handle.logFailure("Error in agebandmatrixratio - unrecognised tagging experiment", Addition.getName(i));
+        handle.logFailure("Error in agebandmatrixratio - unrecognised tagging experiment", Addition.getTagName(i));
 
     }
 

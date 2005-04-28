@@ -93,13 +93,9 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
                 for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
                   for (k = 0; k < ages.Ncol(aggrAge); k++) {
                     age = ages[aggrAge][k];
-                    if ((alptr->minAge() <= age) && (age <= alptr->maxAge())) {
-                      DoubleIndexVector Ratio = *suitptr;
-                      for (z = Ratio.minCol(); z < Ratio.maxCol(); z++)
-                        Ratio[z] *= (prey->Ratio(area, z) > 1 ? 1.0 / prey->Ratio(area, z) : 1.0);
-
-                      total[aggrArea][aggrAge].Add((*alptr)[age], *CI[h], fleetscale, Ratio);
-                    }
+                    //JMB removed the overconsumption stuff
+                    if ((alptr->minAge() <= age) && (age <= alptr->maxAge()))
+                      total[aggrArea][aggrAge].Add((*alptr)[age], *CI[h], fleetscale, *suitptr);
                   }
                 }
               }

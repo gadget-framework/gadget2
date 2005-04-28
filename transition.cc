@@ -17,16 +17,15 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
 
   infile >> text;
   if (strcasecmp(text, "transitionstocksandratios") == 0) {
-    infile >> text;
     i = 0;
+    infile >> text >> ws;
     while (strcasecmp(text, "transitionstep") != 0 && infile.good()) {
       transitionStockNames.resize(1);
       transitionStockNames[i] = new char[strlen(text) + 1];
       strcpy(transitionStockNames[i], text);
       Ratio.resize(1);
-      infile >> Ratio[i];
+      infile >> Ratio[i] >> text >> ws;
       i++;
-      infile >> text;
     }
   } else
     handle.Unexpected("transitionstocksandratios", text);
@@ -172,7 +171,8 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
   }
 
   Storage[inarea].setToZero();
-  tagStorage[inarea].setToZero();
+  if (tagStorage.numTagExperiments() > 0)
+    tagStorage[inarea].setToZero();
 }
 
 void Transition::Reset() {
@@ -194,7 +194,7 @@ void Transition::addTransitionTag(const char* tagname) {
 
 void Transition::deleteTransitionTag(const char* tagname) {
   int minage, maxage, minlen, maxlen, a, length, i;
-  int id = tagStorage.getID(tagname);
+  int id = tagStorage.getTagID(tagname);
 
   if (id >= 0) {
     minage = tagStorage[0].minAge();

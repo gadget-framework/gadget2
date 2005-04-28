@@ -20,6 +20,14 @@ enum PreyType { STOCKPREYTYPE = 1, LENGTHPREYTYPE };
  */
 class Prey : public HasName, public LivesOnAreas {
 public:
+  /**
+   * \brief This is the Prey constructor to create a prey by reading data from a file
+   * \param infile is the CommentStream to read the Prey data from
+   * \param areas is the IntVector of areas that the prey lives on
+   * \param givenname is the name of the prey
+   * \param keeper is the Keeper for the current model
+   * \note this constructor is used when creating dynamic prey (ie. StockPrey class)
+   */
   Prey(CommentStream& infile, const IntVector& areas, const char* givenname, Keeper* const keeper);
   /**
    * \brief This is the Prey constructor for a prey with a given length group
@@ -27,6 +35,7 @@ public:
    * \param areas is the IntVector of areas that the prey lives on
    * \param Energy is the energy content of the prey
    * \param givenname is the name of the prey
+   * \note this constructor is used when creating non-dynamic prey (ie. OtherFood class)
    */
   Prey(const DoubleVector& lengths, const IntVector& areas, double Energy, const char* givenname);
   /**
@@ -42,7 +51,7 @@ public:
   double getBiomass(int area, int length) const { return biomass[this->areaNum(area)][length]; };
   double getNumber(int area, int length) const { return Number[this->areaNum(area)][length].N; };
   double getEnergy() const { return energy; };
-  double Biomass(int area) const { return total[this->areaNum(area)]; };
+  double getTotalBiomass(int area) const { return total[this->areaNum(area)]; };
   int checkOverConsumption(int area) const { return tooMuchConsumption[this->areaNum(area)]; };
   virtual void checkConsumption(int area, int numsubsteps);
   double Ratio(int area, int length) const { return ratio[this->areaNum(area)][length]; };
