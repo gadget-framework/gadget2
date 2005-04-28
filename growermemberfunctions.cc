@@ -14,7 +14,7 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
   double growth, alpha, tmppart3, tmpMeanLength;
 
   if (isZero(Lengths->dl()))
-    handle.logFailure("Error in growth - recieved invalid value for length step");
+    handle.logFailure("Error in growth - received invalid value for length step");
 
   int inarea = this->areaNum(area);
   int type = this->getGrowthType();
@@ -29,14 +29,11 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
     growth = interpLengthGrowth[inarea][lgroup] * tmpDl;
     if (growth >= maxlengthgroupgrowth)
       growth = double(maxlengthgroupgrowth) - 0.1;
-
-    //JMB - check for negative growth
     if (growth < verysmall)
       growth = 0.0;
-
     alpha = beta * growth / (maxlengthgroupgrowth - growth);
     for (j = 0; j < maxlengthgroupgrowth; j++)
-      part3 = part3 * (alpha + beta + double(j));
+      part3 *= (alpha + beta + double(j));
 
     tmppart3 = 1 / part3;
     part4[0] = 1.0;
@@ -59,7 +56,7 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
       }
 
       dw = interpWeightGrowth[inarea][lgroup] - meanw;
-      for (j = 0; j < lgrowth[inarea]->Nrow(); j++)
+      for (j = 0; j <= maxlengthgroupgrowth; j++)
         (*wgrowth[inarea])[j][lgroup] += dw;
     }
   }
@@ -69,9 +66,11 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
 void Grower::GrowthImplement(int area, const LengthGroupDivision* const Lengths) {
 
   int lgroup, j;
-  double growth, alpha, tmpPart3;
+  double growth, alpha, tmppart3;
 
   int inarea = this->areaNum(area);
+  if (isZero(Lengths->dl()))
+    handle.logFailure("Error in growth - received invalid value for length step");
   double tmpDl = 1.0 / Lengths->dl();
 
   for (lgroup = 0; lgroup < Lengths->numLengthGroups(); lgroup++) {
@@ -83,16 +82,16 @@ void Grower::GrowthImplement(int area, const LengthGroupDivision* const Lengths)
       growth = 0.0;
     alpha = beta * growth / (maxlengthgroupgrowth - growth);
     for (j = 0; j < maxlengthgroupgrowth; j++)
-      part3 = part3 * (alpha + beta + double(j));
+      part3 *= (alpha + beta + double(j));
 
-    tmpPart3 = 1 / part3;
+    tmppart3 = 1 / part3;
     part4[0] = 1.0;
     part4[1] = alpha;
-    if (maxlengthgroupgrowth > 1) {
+    if (maxlengthgroupgrowth > 1)
       for (j = 2; j <= maxlengthgroupgrowth; j++)
         part4[j] = part4[j - 1] * (j - 1 + alpha);
-    }
+
     for (j = 0; j <= maxlengthgroupgrowth; j++)
-      (*lgrowth[inarea])[j][lgroup] = part1[j] * part2[j] * tmpPart3 * part4[j];
+      (*lgrowth[inarea])[j][lgroup] = part1[j] * part2[j] * tmppart3 * part4[j];
   }
 }

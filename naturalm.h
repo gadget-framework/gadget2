@@ -24,10 +24,9 @@ public:
   ~NaturalM() {};
   /**
    * \brief This function will return the DoubleVector of the proportion of each length group that will survive on the current timestep
-   * \param TimeInfo is the TimeClass for the current model
    * \return proportion surviving from each length group
    */
-  const DoubleVector& ProportionSurviving(const TimeClass* const TimeInfo) const;
+  const DoubleVector& getProportion() const { return proportion; };
   /**
    * \brief This function will reset the NaturalM information
    * \param TimeInfo is the TimeClass for the current model

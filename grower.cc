@@ -17,6 +17,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
+  int rows = 0; //Number of rows in wgrowth and lgrowth
   int i;
 
   keeper->addString("grower");
@@ -24,90 +25,64 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
   CI = new ConversionIndex(OtherLgrpDiv, LgrpDiv, 1);
 
-  functionname = new char[MaxStrLength];
-  strncpy(functionname, "", MaxStrLength);
-  readWordAndValue(infile, "growthfunction", functionname);
-
-  if (strcasecmp(functionname, "multspec") == 0)
+  readWordAndValue(infile, "growthfunction", text);
+  if (strcasecmp(text, "multspec") == 0) {
     functionnumber = 1;
-  else if (strcasecmp(functionname, "fromfile") == 0)
+    growthcalc = new GrowthCalcA(infile, areas, TimeInfo, keeper);
+  } else if (strcasecmp(text, "fromfile") == 0) {
     functionnumber = 2;
-  else if (strcasecmp(functionname, "weightvb") == 0)
+    growthcalc = new GrowthCalcB(infile, areas, TimeInfo, keeper, Area, lenindex);
+  } else if (strcasecmp(text, "weightvb") == 0) {
     functionnumber = 3;
-  else if (strcasecmp(functionname, "weightjones") == 0)
+    growthcalc = new GrowthCalcC(infile, areas, TimeInfo, LgrpDiv, keeper, refWeight);
+  } else if (strcasecmp(text, "weightjones") == 0) {
     functionnumber = 4;
-  else if (strcasecmp(functionname, "weightvbexpanded") == 0)
-    functionnumber = 5;
-  else if (strcasecmp(functionname, "lengthvb") == 0)
+    growthcalc = new GrowthCalcD(infile, areas, TimeInfo, LgrpDiv, keeper, refWeight);
+  } else if (strcasecmp(text, "weightvbexpanded") == 0) {
+    functionnumber = 5; 
+    growthcalc = new GrowthCalcE(infile, areas, TimeInfo, LgrpDiv, keeper, refWeight);
+  } else if (strcasecmp(text, "lengthvb") == 0) {
     functionnumber = 6;
-  else if (strcasecmp(functionname, "lengthpower") == 0)
+    fixedweights = 1;
+    growthcalc = new GrowthCalcF(infile, areas, TimeInfo, keeper, Area, lenindex);
+  } else if (strcasecmp(text, "lengthpower") == 0) {
     functionnumber = 7;
-  else if (strcasecmp(functionname, "lengthvbsimple") == 0)
+    fixedweights = 1;
+    growthcalc = new GrowthCalcG(infile, areas, TimeInfo, keeper, Area, lenindex);
+  } else if (strcasecmp(text, "lengthvbsimple") == 0) {
     functionnumber = 8;
-  else
-    handle.Message("Error in stock file - unrecognised growth function", functionname);
-
-  switch(functionnumber) {
-    case 1:
-      growthcalc = new GrowthCalcA(infile, areas, TimeInfo, keeper);
-      break;
-    case 2:
-      growthcalc = new GrowthCalcB(infile, areas, TimeInfo, keeper, Area, lenindex);
-      break;
-    case 3:
-      growthcalc = new GrowthCalcC(infile, areas, TimeInfo, LgrpDiv, keeper, refWeight);
-      break;
-    case 4:
-      growthcalc = new GrowthCalcD(infile, areas, TimeInfo, LgrpDiv, keeper, refWeight);
-      break;
-    case 5:
-      growthcalc = new GrowthCalcE(infile, areas, TimeInfo, LgrpDiv, keeper, refWeight);
-      break;
-    case 6:
-      growthcalc = new GrowthCalcF(infile, areas, TimeInfo, keeper, Area, lenindex);
-      fixedweights = 1;
-      break;
-    case 7:
-      growthcalc = new GrowthCalcG(infile, areas, TimeInfo, keeper, Area, lenindex);
-      fixedweights = 1;
-      break;
-    case 8:
-      growthcalc = new GrowthCalcH(infile, areas, TimeInfo, keeper);
-      break;
-    default:
-      handle.Message("Error in stock file - unrecognised growth function", functionname);
-      break;
+    growthcalc = new GrowthCalcH(infile, areas, TimeInfo, keeper);
+  } else {
+    handle.Message("Error in stock file - unrecognised growth function", text);
   }
 
-  int rows = 0; //Number of rows in wgrowth and lgrowth
   infile >> ws >>  text;
-  if ((strcasecmp(text, "beta") == 0)) {
+  if (strcasecmp(text, "beta") == 0) {
     //Beta binomial growth distribution code is used
     infile >> beta;
     beta.Inform(keeper);
     readWordAndVariable(infile, "maxlengthgroupgrowth", maxlengthgroupgrowth);
 
-    //Finished reading from input files.
     rows = maxlengthgroupgrowth + 1;
     part1.resize(rows, 0.0);
     part2.resize(rows, 0.0);
     part4.resize(rows, 0.0);
 
-  } else if ((strcasecmp(text, "meanvarianceparameters") == 0)) {
+  } else if (strcasecmp(text, "meanvarianceparameters") == 0) {
     handle.Warning("The mean variance parameters implementation of the growth is no longer supported\nUse the beta-binomial distribution implementation of the growth instead");
 
   } else
     handle.Unexpected("beta", text);
 
   //Finished reading from input files.
+  keeper->clearLast();
   int noareas = areas.Size();
   int len = LgrpDiv->numLengthGroups();
   int otherlen = OtherLgrpDiv->numLengthGroups();
   PopInfo nullpop;
   numGrow.AddRows(noareas, len, nullpop);
-  keeper->clearLast();
 
-  //setting storage spaces for Growth.
+  //setting storage spaces for growth
   calcLengthGrowth.AddRows(noareas, len, 0.0);
   calcWeightGrowth.AddRows(noareas, len, 0.0);
   interpLengthGrowth.AddRows(noareas, otherlen, 0.0);
@@ -118,7 +93,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     lgrowth[i] = new DoubleMatrix(rows, otherlen, 0.0);
     wgrowth[i] = new DoubleMatrix(rows, otherlen, 0.0);
   }
-  Fphi.resize(len, 0.0);
+  dummy.resize(len, 0.0);
 }
 
 Grower::~Grower() {
@@ -130,7 +105,6 @@ Grower::~Grower() {
   delete CI;
   delete LgrpDiv;
   delete growthcalc;
-  delete[] functionname;
 }
 
 void Grower::Print(ofstream& outfile) const {
@@ -142,27 +116,16 @@ void Grower::Print(ofstream& outfile) const {
     outfile << "\tLength increase on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < calcLengthGrowth.Ncol(area); i++)
       outfile << sep << calcLengthGrowth[area][i];
-    outfile << endl;
-  }
-
-  for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tWeight increase on internal area " << areas[area] << ":\n\t";
+    outfile << "\n\tWeight increase on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < calcWeightGrowth.Ncol(area); i++)
       outfile << sep << calcWeightGrowth[area][i];
-    outfile << endl;
-  }
-
-  for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tDistributed length increase on internal area " << areas[area] << ":\n";
+    outfile << "\n\tDistributed length increase on internal area " << areas[area] << ":\n";
     for (i = 0; i < lgrowth[area]->Nrow(); i++) {
       outfile << TAB;
       for (j = 0; j < lgrowth[area]->Ncol(i); j++)
         outfile << sep << (*lgrowth[area])[i][j];
       outfile << endl;
     }
-  }
-
-  for (area = 0; area < areas.Size(); area++) {
     outfile << "\tDistributed weight increase on internal area " << areas[area] << ":\n";
     for (i = 0; i < wgrowth[area]->Nrow(); i++) {
       outfile << TAB;
@@ -175,8 +138,7 @@ void Grower::Print(ofstream& outfile) const {
 
 //The following function is just a copy of Prey::Sum
 void Grower::Sum(const PopInfoVector& NumberInArea, int area) {
-  int inarea = this->areaNum(area);
-  int i;
+  int i, inarea = this->areaNum(area);
   for (i = 0; i < numGrow[inarea].Size(); i++)
     numGrow[inarea][i].N = 0.0;
   numGrow[inarea].Sum(&NumberInArea, *CI);
@@ -185,8 +147,6 @@ void Grower::Sum(const PopInfoVector& NumberInArea, int area) {
 void Grower::GrowthCalc(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  DoubleVector dummy(calcLengthGrowth[this->areaNum(area)].Size(), 0.0);
-  //Let the feeding level and consumption equal 0.
   this->GrowthCalc(area, Area, TimeInfo, dummy, dummy);
 }
 

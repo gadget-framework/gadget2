@@ -75,7 +75,7 @@ protected:
    */
   const char* getSIName() const { return siname; };
   int isToSum(const TimeClass* const TimeInfo) const;
-  void keepNumbers(const DoubleVector& numbers);
+  int numIndex() const { return colindex.Size(); };
   /**
    * \brief This is the IntMatrix used to store information about the areas that the survey index should be calculated on
    */
@@ -101,6 +101,10 @@ protected:
    */
   DoubleMatrix modelIndex;
   FitType getFitType() { return fittype; };
+  /**
+   * \brief This is the index of the timesteps for the survey index data
+   */
+  int timeindex;
 private:
   /**
    * \brief This function will increase the internal error count by 1
@@ -113,10 +117,6 @@ private:
    */
   void readSIData(CommentStream& infile, const TimeClass* const TimeInfo);
   double fitRegression(const DoubleVector& stocksize, const DoubleVector& indices, int col);
-  /**
-   * \brief This is the index of the timesteps for the survey index data
-   */
-  int timeindex;
   /**
    * \brief This is the number of errors that occured when fitting the regression line (usually caused by comparing a non-zero number of zero)
    */

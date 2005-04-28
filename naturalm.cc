@@ -30,10 +30,6 @@ void NaturalM::Reset(const TimeClass* const TimeInfo) {
   }
 }
 
-const DoubleVector& NaturalM::ProportionSurviving(const TimeClass* const TimeInfo) const {
-  return proportion;
-}
-
 void NaturalM::Print(ofstream& outfile) {
   int i;
   outfile << "Natural mortality\n\t";

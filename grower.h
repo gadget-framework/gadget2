@@ -44,11 +44,9 @@ protected:
   DoubleMatrix calcWeightGrowth;
   DoubleMatrixPtrVector lgrowth;
   DoubleMatrixPtrVector wgrowth;
-  DoubleVector Fphi;
+  DoubleVector dummy;
   GrowthCalcBase* growthcalc;
   int functionnumber;
-  char* functionname;
-  double power;
   int maxlengthgroupgrowth;
   Formula beta;
   DoubleVector part1;  //n*(n-1)*....(n-x+1)/x!

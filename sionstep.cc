@@ -104,10 +104,10 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   datafile.clear();
 
   //resize to hold the model information
-  modelIndex.AddRows(obsIndex.Nrow(), colindex.Size(), 0.0);
-  slopes.resize(colindex.Size(), 0.0);
-  intercepts.resize(colindex.Size(), 0.0);
-  sse.resize(colindex.Size(), 0.0);
+  modelIndex.AddRows(obsIndex.Nrow(), this->numIndex(), 0.0);
+  slopes.resize(this->numIndex(), 0.0);
+  intercepts.resize(this->numIndex(), 0.0);
+  sse.resize(this->numIndex(), 0.0);
 }
 
 void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -164,7 +164,7 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
         Years.resize(1, year);
         Steps.resize(1, step);
         timeid = (Years.Size() - 1);
-        obsIndex.AddRows(1, colindex.Size(), 0.0);
+        obsIndex.AddRows(1, this->numIndex(), 0.0);
       }
       obsIndex[timeid][colid] = tmpnumber;
     }
@@ -199,7 +199,7 @@ void SIOnStep::Print(ofstream& outfile) const {
   }
   outfile << endl;
 
-  for (i = 0; i < colindex.Size(); i++)
+  for (i = 0; i < this->numIndex(); i++)
     outfile << TAB << setw(smallwidth) << modelIndex[t][i];
   outfile << endl;
   outfile.flush();
@@ -216,7 +216,7 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInf
 
     //JMB - this is nasty hack since there is only one area
     area = 0;
-    for (i = 0; i < colindex.Size(); i++) {
+    for (i = 0; i < this->numIndex(); i++) {
       outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
         << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
         << setw(printwidth) << colindex[i] << sep << setprecision(largeprecision)
@@ -227,7 +227,7 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInf
   //JMB - this is nasty hack to output the regression information
   if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps()) {
     outfile << "; Regression information\n";
-    for (i = 0; i < colindex.Size(); i++)
+    for (i = 0; i < this->numIndex(); i++)
       outfile << "; " << colindex[i] << " intercept " << intercepts[i]
         << " slope " << slopes[i] << " sse " << sse[i] << endl;
   }
@@ -243,7 +243,7 @@ double SIOnStep::calcRegression() {
 
   double score = 0.0;
   int col, index;
-  for (col = 0; col < colindex.Size(); col++) {
+  for (col = 0; col < this->numIndex(); col++) {
     //Let LLR figure out what to do in the case of zero stock size.
     DoubleVector indices(timeindex);
     DoubleVector stocksize(timeindex);
@@ -258,13 +258,6 @@ double SIOnStep::calcRegression() {
   handle.logMessage("Calculating likelihood score for surveyindex component", this->getSIName());
   handle.logMessage("The likelihood score from the regression line for this component is", score);
   return score;
-}
-
-void SIOnStep::keepNumbers(const DoubleVector& numbers) {
-  int i;
-  for (i = 0; i < numbers.Size(); i++)
-    modelIndex[timeindex][i] = numbers[i];
-  timeindex++;
 }
 
 double SIOnStep::fitRegression(const DoubleVector& stocksize, const DoubleVector& indices, int col) {
