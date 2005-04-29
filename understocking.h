@@ -93,6 +93,10 @@ private:
    * \note the indices for this object are [time][area]
    */
   DoubleMatrix likelihoodValues;
+  /**
+   * \brief This is the DoubleVector used to temporarily store any overconsumption
+   */
+  DoubleVector store;
 };
 
 #endif

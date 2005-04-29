@@ -16,7 +16,7 @@ extern ErrorHandler handle;
 
 CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, const char* name)
-  : Likelihood(CATCHSTATISTICSLIKELIHOOD, weight, name) {
+  : Likelihood(CATCHSTATISTICSLIKELIHOOD, weight, name), alptr(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -411,7 +411,6 @@ double CatchStatistics::calcLikSumSquares() {
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-//    for (age = 0; age < (*alptr)[area].Nrow(); age++) {
       PopStatistics PopStat((*alptr)[area][age], aggregator->returnLengthGroupDiv());
 
       switch(functionnumber) {

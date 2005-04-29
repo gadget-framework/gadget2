@@ -100,6 +100,10 @@ protected:
    * \brief This is the DoubleMatrix used to store the survey indices calculated in the model
    */
   DoubleMatrix modelIndex;
+  /**
+   * \brief This is the AgeBandMatrix used to temporarily store the information returned from aggregatation function
+   */
+  const AgeBandMatrix* alptr;
   FitType getFitType() { return fittype; };
   /**
    * \brief This is the index of the timesteps for the survey index data

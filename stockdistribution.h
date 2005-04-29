@@ -164,7 +164,14 @@ private:
    * \brief This is the value of epsilon used when calculating the likelihood score
    */
   double epsilon;
+  /**
+   * \brief This is the Multinomial that can be used when calculating the likelihood score, if the multinomial function has been selected
+   * \note This is set to zero, and not used, if the multinomial function is not used
+   */
   Multinomial MN;
+  /**
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   */
   const AgeBandMatrixPtrVector* alptr;
 };
 

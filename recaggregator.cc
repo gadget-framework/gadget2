@@ -13,7 +13,7 @@ RecAggregator::RecAggregator(const FleetPtrVector& Fleets,
   const StockPtrVector& Stocks, LengthGroupDivision* const Lgrpdiv,
   const IntMatrix& Areas, const IntMatrix& Ages, Tags* tag)
   : fleets(Fleets), stocks(Stocks), LgrpDiv(Lgrpdiv),
-    areas(Areas), ages(Ages) {
+    areas(Areas), ages(Ages), suitptr(0), alptr(0) {
 
   taggingExp = tag;
   int i;
@@ -68,28 +68,23 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
   double fleetscale;
 
   this->Reset();
-  //Sum over the appropriate fleets, stocks, areas, ages and length groups.
-  //The index aggrArea is for the dummy area in total.
-  //The index aggrAge is for the dummy age in total.
   for (f = 0; f < fleets.Size(); f++) {
-    LengthPredator* pred = fleets[f]->returnPredator();
     for (h = 0; h < stocks.Size(); h++) {
-      //AJ 06.06.00 Typecast Prey which is returned from returnPrey to (StockPrey*)
-      StockPrey* prey = (StockPrey*)stocks[h]->returnPrey();
       for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
         for (j = 0; j < areas.Ncol(aggrArea); j++) {
-          //All the areas in areas[aggrArea] will be aggregated to the
-          //area aggrArea in total.
           area = areas[aggrArea][j];
-          if (prey->isPreyArea(area) && fleets[f]->isFleetStepArea(area, TimeInfo)) {
-            fleetscale = fleets[f]->Amount(area, TimeInfo) * pred->Scaler(area);
+          if ((stocks[h]->returnPrey()->isPreyArea(area)) &&
+              (fleets[f]->isFleetStepArea(area, TimeInfo))) {
+
+            fleetscale = fleets[f]->Amount(area, TimeInfo) *
+                           fleets[f]->returnPredator()->Scaler(area);
             if (fleets[f]->Type() == LINEARFLEET)
               fleetscale *= TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
 
-            for (i = 0; i < pred->numPreys(); i++) {
-              if (prey->getName() == pred->Preys(i)->getName()) {
-                const DoubleIndexVector* suitptr = &pred->Suitability(i)[0];
-                const AgeBandMatrix* alptr = &taggingExp->getNumberPriorToEating(area, stocks[h]->getName());
+            for (i = 0; i < fleets[f]->returnPredator()->numPreys(); i++) {
+              if (strcasecmp(stocks[h]->returnPrey()->getName(), fleets[f]->returnPredator()->Preys(i)->getName()) == 0) {
+                suitptr = &fleets[f]->returnPredator()->Suitability(i)[0];
+                alptr = &taggingExp->getNumberPriorToEating(area, stocks[h]->getName());
                 for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
                   for (k = 0; k < ages.Ncol(aggrAge); k++) {
                     age = ages[aggrAge][k];

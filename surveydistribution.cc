@@ -13,7 +13,7 @@ extern ErrorHandler handle;
 
 SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper, double weight, const char* name)
-  : Likelihood(SURVEYDISTRIBUTIONLIKELIHOOD, weight, name) {
+  : Likelihood(SURVEYDISTRIBUTIONLIKELIHOOD, weight, name), alptr(0) {
 
   int i, j;
   char text[MaxStrLength];
@@ -400,7 +400,7 @@ void SurveyDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVect
   aggregator = new StockAggregator(stocks, LgrpDiv, areas, ages);
 }
 
-void SurveyDistribution::calcIndex(const AgeBandMatrixPtrVector* alptr, const TimeClass* const TimeInfo) {
+void SurveyDistribution::calcIndex(const TimeClass* const TimeInfo) {
   //written by kgf 13/10 98
 
   int area, age, len;
@@ -448,8 +448,8 @@ void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   aggregator->Sum();
   handle.logMessage("Calculating likelihood score for surveydistribution component", this->getName());
 
-  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
-  this->calcIndex(alptr, TimeInfo);
+  alptr = &aggregator->returnSum();
+  this->calcIndex(TimeInfo);
   switch(likenumber) {
     case 1:
       l = calcLikPearson();

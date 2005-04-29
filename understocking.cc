@@ -15,8 +15,6 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j;
-  int numarea = 0;
-
   char aggfilename[MaxStrLength];
   strncpy(aggfilename, "", MaxStrLength);
   ifstream datafile;
@@ -27,7 +25,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   datafile.open(aggfilename, ios::in);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numarea = readAggregation(subdata, areas, areaindex);
+  i = readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -60,6 +58,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   if (!AAT.readFromFile(infile, TimeInfo))
     handle.Message("Error in understocking - wrong format for yearsandsteps");
 
+  store.resize(areas.Nrow(), 0.0);
   //prepare for next likelihood component
   infile >> ws;
   if (!infile.eof()) {
@@ -104,8 +103,10 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
   double err, l;
   if (AAT.AtCurrentTime(TimeInfo)) {
     handle.logMessage("Checking understocking likelihood component", this->getName());
-    DoubleVector store(areas.Nrow(), 0.0);
     l = 0.0;
+    for (k = 0; k < areas.Nrow(); k++)
+      store[k] = 0.0;
+
     for (k = 0; k < areas.Nrow(); k++) {
       err = 0.0;
       for (i = 0; i < predators.Size(); i++)

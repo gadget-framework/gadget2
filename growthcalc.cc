@@ -126,21 +126,11 @@ void GrowthCalcB::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
   int i, inarea = this->areaNum(area);
-  DoubleVector l((*lgrowth[inarea])[TimeInfo->CurrentTime()].Size());
-  DoubleVector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
-
-  //Initialise l and w with values from vector lgrowth[][] and wgrowth[][].
-  for (i = 0; i < l.Size(); i++)
-    l[i] = (*lgrowth[inarea])[TimeInfo->CurrentTime()][i];
-  for (i = 0; i < w.Size(); i++)
-    w[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
-
   for (i = 0; i < Lgrowth.Size(); i++) {
-    if ((l[i] < 0.0) || (w[i] < 0.0))
+    Lgrowth[i] = (*lgrowth[inarea])[TimeInfo->CurrentTime()][i];
+    Wgrowth[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
+    if ((Lgrowth[i] < 0.0) || (Wgrowth[i] < 0.0))
       handle.logWarning("Warning in growth calculation - negative growth parameter");
-
-    Lgrowth[i] = l[i];
-    Wgrowth[i] = w[i];
   }
 }
 
@@ -599,17 +589,12 @@ void GrowthCalcF::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   growthPar.Update(TimeInfo);
   int i, inarea = this->areaNum(area);
   double kval = growthPar[1] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-  DoubleVector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
-
-  for (i = 0; i < w.Size(); i++)
-    w[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
 
   for (i = 0; i < Lgrowth.Size(); i++) {
-    if (w[i] < 0.0)
-      handle.logWarning("Warning in growth calculation - weight growth parameter is negative");
-
     Lgrowth[i] = (growthPar[0] - LgrpDiv->meanLength(i)) * (1.0 - exp(-kval));
-    Wgrowth[i] = w[i];
+    Wgrowth[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
+    if (Wgrowth[i] < 0.0)
+      handle.logWarning("Warning in growth calculation - weight growth parameter is negative");
   }
 }
 
@@ -671,29 +656,23 @@ void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   growthPar.Update(TimeInfo);
   int i, inarea = this->areaNum(area);
   double kval = growthPar[1] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-  DoubleVector w((*wgrowth[inarea])[TimeInfo->CurrentTime()].Size());
-
-  for (i = 0; i < w.Size(); i++)
-    w[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
 
   if (growthPar[0] > 0)
     handle.logWarning("Warning in growth calculation - growth parameter is positive");
 
   if (isZero(growthPar[0])) {
     for (i = 0; i < Lgrowth.Size(); i++) {
-      if (w[i] < 0.0)
-        handle.logWarning("Warning in growth calculation - weight growth parameter is negative");
-
       Lgrowth[i] = kval;
-      Wgrowth[i] = w[i];
+      Wgrowth[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
+      if (Wgrowth[i] < 0.0)
+        handle.logWarning("Warning in growth calculation - weight growth parameter is negative");
     }
   } else {
     for (i = 0; i < Lgrowth.Size(); i++) {
-      if (w[i] < 0.0)
-        handle.logWarning("Warning in growth calculation - weight growth parameter is negative");
-
       Lgrowth[i] = kval * pow(LgrpDiv->meanLength(i), growthPar[0]);
-      Wgrowth[i] = w[i];
+      Wgrowth[i] = (*wgrowth[inarea])[TimeInfo->CurrentTime()][i];
+      if (Wgrowth[i] < 0.0)
+        handle.logWarning("Warning in growth calculation - weight growth parameter is negative");
     }
   }
 }

@@ -78,6 +78,10 @@ protected:
    * \brief This is the BandMatrixPtrVector used to store the aggregated predation information
    */
   BandMatrixPtrVector total;
+  /**
+   * \brief This is the BandMatrix used to temporarily store information when aggregating the predation
+   */
+  const BandMatrix* bptr; 
 };
 
 #endif

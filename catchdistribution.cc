@@ -17,7 +17,7 @@ extern ErrorHandler handle;
 
 CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper, double weight, const char* name)
-  : Likelihood(CATCHDISTRIBUTIONLIKELIHOOD, weight, name) {
+  : Likelihood(CATCHDISTRIBUTIONLIKELIHOOD, weight, name), alptr(0) {
 
   int i, j;
   char text[MaxStrLength];

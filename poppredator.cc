@@ -68,10 +68,9 @@ const double PopPredator::getConsumptionBiomass(int prey, int area) const{
   int age, len;
   double kilos = 0.0;
   //Note area is already the internal area ...
-  const BandMatrix& bio = consumption[area][prey];
-  for (age = bio.minAge(); age <= bio.maxAge(); age++)
-    for (len = bio.minLength(age); len < bio.maxLength(age); len++)
-      kilos += bio[age][len];
+  for (age = consumption[area][prey].minAge(); age <= consumption[area][prey].maxAge(); age++)
+    for (len = consumption[area][prey].minLength(age); len < consumption[area][prey].maxLength(age); len++)
+      kilos += (consumption[area][prey])[age][len];
 
   return kilos;
 }

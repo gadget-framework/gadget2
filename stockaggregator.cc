@@ -5,7 +5,7 @@
 
 StockAggregator::StockAggregator(const StockPtrVector& Stocks,
   const LengthGroupDivision* const LgrpDiv, const IntMatrix& Areas, const IntMatrix& Ages)
-  : stocks(Stocks), areas(Areas), ages(Ages) {
+  : stocks(Stocks), areas(Areas), ages(Ages), alptr(0) {
 
   int i;
   CI.resize(stocks.Size());
@@ -63,7 +63,7 @@ void StockAggregator::Sum() {
       for (j = 0; j < areas.Ncol(aggrArea); j++) {
         area = areas[aggrArea][j];
         if (stocks[i]->isInArea(area)) {
-          const AgeBandMatrix* alptr = &stocks[i]->getAgeLengthKeys(area);
+          alptr = &stocks[i]->getAgeLengthKeys(area);
           for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
             for (k = 0; k < ages.Ncol(aggrAge); k++) {
               age = ages[aggrAge][k];

@@ -63,9 +63,9 @@ void SIByLengthOnStep::Sum(const TimeClass* const TimeInfo) {
 
   handle.logMessage("Calculating index for surveyindex component", this->getSIName());
   aggregator->Sum();
-  const AgeBandMatrix* Alptr = &(aggregator->returnSum()[0]);
+  alptr = &(aggregator->returnSum()[0]);
   int i;
   for (i = 0; i < this->numIndex(); i++)
-    modelIndex[timeindex][i] = (*Alptr)[0][i].N;
+    modelIndex[timeindex][i] = (*alptr)[0][i].N;
   timeindex++;
 }

@@ -26,23 +26,15 @@ void PreyOverAggregator::Reset() {
 
 void PreyOverAggregator::Sum() {
   int i, j, h, l;
-  int area, preylength;
 
   this->Reset();
   //Sum over the appropriate preys, areas, and lengths.
-  for (h = 0; h < preys.Size(); h++) {
-    for (i = 0; i < areas.Nrow(); i++) {
-      for (j = 0; j < areas.Ncol(i); j++) {
-        area = areas[i][j];
-        if (preys[h]->isInArea(area)) {
-          const DoubleVector* dptr = &preys[h]->getOverConsumption(area);
-          for (l = 0; l < preyConv.Ncol(h); l++) {
-            preylength = preyConv[h][l];
-            if (preylength >= 0)
-              total[i][preylength] += (*dptr)[l];
-          }
-        }
-      }
-    }
-  }
+  for (h = 0; h < preys.Size(); h++)
+    for (i = 0; i < areas.Nrow(); i++)
+      for (j = 0; j < areas.Ncol(i); j++)
+        if (preys[h]->isInArea(areas[i][j]))
+          for (l = 0; l < preyConv.Ncol(h); l++)
+            if (preyConv[h][l] >= 0)
+              total[i][preyConv[h][l]] += (preys[h]->getOverConsumption(areas[i][j]))[l];
+
 }

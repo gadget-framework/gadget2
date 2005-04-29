@@ -199,6 +199,9 @@ protected:
    * \return likelihood score
    */
   virtual double calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum);
+  /**
+   * \brief This is the Multinomial that is used when calculating the likelihood score
+   */
   Multinomial MN;
 };
 
@@ -245,8 +248,16 @@ protected:
    * \return likelihood score
    */
   virtual double calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum);
-  DoubleMatrixPtrMatrix stddev;  //[timeindex][areas][pred_l][prey_l]
-  DoubleMatrixPtrVector number;  //[timeindex][areas][pred_l]
+  /**
+   * \brief This is the DoubleMatrixPtrMatrix used to store the standard deviation values for the consumption information specified in the input file
+   * \note the indices for this object are [time][area][predator][prey]
+   */
+  DoubleMatrixPtrMatrix stddev;
+  /**
+   * \brief This is the DoubleMatrixPtrVector used to store the number of stomach samples specified in the input file
+   * \note the indices for this object are [time][area][predator]
+   */
+  DoubleMatrixPtrVector number;
 };
 
 /**

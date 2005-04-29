@@ -91,6 +91,8 @@ private:
    * \brief This is the AgeBandMatrixPtrVector used to store the aggregated recaptures
    */
   AgeBandMatrixPtrVector total;
+  const DoubleIndexVector* suitptr;
+  const AgeBandMatrix* alptr; 
 };
 
 #endif

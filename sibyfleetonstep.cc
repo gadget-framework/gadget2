@@ -65,9 +65,9 @@ void SIByFleetOnStep::Sum(const TimeClass* const TimeInfo) {
   aggregator->Sum(TimeInfo);
   if (aggregator->checkCatchData() == 1)
     handle.logWarning("Warning in surveyindex - zero catch found");
-  const AgeBandMatrix* Alptr = &(aggregator->returnSum()[0]);
+  alptr = &(aggregator->returnSum()[0]);
   int i;
   for (i = 0; i < this->numIndex(); i++)
-    modelIndex[timeindex][i] = (*Alptr)[0][i].N;
+    modelIndex[timeindex][i] = (*alptr)[0][i].N;
   timeindex++;
 }

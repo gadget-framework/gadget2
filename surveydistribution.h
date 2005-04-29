@@ -69,7 +69,7 @@ private:
    */
   void readDistributionData(CommentStream& infile, const TimeClass* TimeInfo,
     int numarea, int numage, int numlen);
-  void calcIndex(const AgeBandMatrixPtrVector* alptr, const TimeClass* const TimeInfo);
+  void calcIndex(const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the likelihood score for the current timestep based on a multinomial function
    * \return likelihood score
@@ -179,6 +179,10 @@ private:
   SuitFunc* suitfunction;
   DoubleVector q_l; //length dependent catchability factor
   TimeVariableVector parameters;
+  /**
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   */
+  const AgeBandMatrixPtrVector* alptr;
 };
 
 #endif

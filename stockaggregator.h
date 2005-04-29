@@ -65,6 +65,10 @@ protected:
    * \brief This is the AgeBandMatrixPtrVector used to store the aggregated stock information
    */
   AgeBandMatrixPtrVector total;
+  /**
+   * \brief This is the AgeBandMatrix used to temporarily store information when aggregating the stocks
+   */
+  const AgeBandMatrix* alptr; 
 };
 
 #endif

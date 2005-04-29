@@ -16,7 +16,7 @@ extern ErrorHandler handle;
 StockDistribution::StockDistribution(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
   double weight, const char* name)
-  : Likelihood(STOCKDISTRIBUTIONLIKELIHOOD, weight, name) {
+  : Likelihood(STOCKDISTRIBUTIONLIKELIHOOD, weight, name), alptr(0) {
 
   int i, j;
   char text[MaxStrLength];
