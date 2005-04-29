@@ -35,11 +35,12 @@ StockDistribution::StockDistribution(CommentStream& infile,
   strncpy(functionname, "", MaxStrLength);
   readWordAndValue(infile, "datafile", datafilename);
   readWordAndValue(infile, "function", functionname);
-  if (strcasecmp(functionname, "multinomial") == 0)
+  if (strcasecmp(functionname, "multinomial") == 0) {
+    MN = Multinomial();
     functionnumber = 1;
-  else if (strcasecmp(functionname, "sumofsquares") == 0)
+  } else if (strcasecmp(functionname, "sumofsquares") == 0) {
     functionnumber = 2;
-  else
+  } else
     handle.Message("Error in stockdistribution - unrecognised function", functionname);
 
   //JMB - changed to make the reading of overconsumption optional
@@ -288,6 +289,16 @@ StockDistribution::~StockDistribution() {
 void StockDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
+  switch(functionnumber) {
+    case 1:
+      MN.setValue(epsilon);
+      break;
+    case 2:
+      break;
+    default:
+      handle.logWarning("Warning in stockdistribution - unrecognised function", functionname);
+      break;
+  }
   handle.logMessage("Reset stockdistribution component", this->getName());
 }
 
@@ -431,14 +442,12 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 //The code here is probably unnessecarily complicated because
 //is always only one length group with this class.
 double StockDistribution::calcLikMultinomial() {
-
-  //The object MN does most of the work, accumulating likelihood
-  Multinomial MN(epsilon);
   int age, len, area, sn, i, minage, maxage, num;
-  const AgeBandMatrixPtrVector* alptr;
   DoubleMatrixPtrVector Dist(areas.Nrow());
   DoubleVector likdata(stocknames.Size(), 0.0);
 
+  MN.Reset();
+  //the object MN does most of the work, accumulating likelihood
   num = aggregator[0]->numAgeGroups() * aggregator[0]->numLengthGroups();
   for (area = 0; area < Dist.Size(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
@@ -474,7 +483,6 @@ double StockDistribution::calcLikSumSquares() {
   double totalmodel, totaldata;
   int age, len, area, sn, i;
 
-  const AgeBandMatrixPtrVector* alptr;
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     for (sn = 0; sn < stocknames.Size(); sn++) {

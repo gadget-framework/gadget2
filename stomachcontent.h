@@ -11,6 +11,7 @@
 #include "actionattimes.h"
 #include "charptrmatrix.h"
 #include "predatoraggregator.h"
+#include "multinomial.h"
 
 /**
  * \class SC
@@ -198,6 +199,7 @@ protected:
    * \return likelihood score
    */
   virtual double calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum);
+  Multinomial MN;
 };
 
 /**

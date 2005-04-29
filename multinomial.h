@@ -12,11 +12,20 @@ public:
   /**
    * \brief This is the default Multinomial constructor
    */
-  Multinomial(double value) { bigvalue = value; loglikelihood = 0.0; };
+  Multinomial() { bigvalue = 0.0; loglikelihood = 0.0; };
   /**
    * \brief This is the default Multinomial destructor
    */
   ~Multinomial() {};
+  /**
+   * \brief This function will set the minimum probability value
+   * \param value is the bigvalue used to calculate the minimum probabilty
+   */
+  void setValue(double value) { bigvalue = value; };
+  /**
+   * \brief This function will reset the log likelihood  score
+   */
+  void Reset() { loglikelihood = 0.0; };
   /**
    * \brief This is the function that calculates a log likelihood score by comparing 2 vectors based on a multinomial distribution
    * \param data is the DoubleVector containing the input data

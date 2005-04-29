@@ -32,7 +32,6 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   CommentStream subdata(datafile);
 
   timeindex = 0;
-  illegal = 0;
   yearly = 0;
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
@@ -42,6 +41,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   functionnumber = 0;
   if (strcasecmp(functionname, "multinomial") == 0) {
+    MN = Multinomial();
     functionnumber = 1;
   } else if (strcasecmp(functionname, "pearson") == 0) {
     functionnumber = 2;
@@ -352,7 +352,28 @@ CatchDistribution::~CatchDistribution() {
 void CatchDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
-  illegal = 0;
+
+  switch(functionnumber) {
+    case 2:
+    case 3:
+    case 4:
+    case 6:
+    case 7:
+      break;
+    case 1:
+      MN.setValue(epsilon);
+      break;
+    case 5:
+      illegal = 0;
+      this->calcCorrelation();
+      if (illegal == 1 || LU.isIllegal() == 1)
+        handle.logWarning("Warning in catchdistribution - multivariate normal out of bounds");
+      break;
+    default:
+      handle.logWarning("Warning in catchdistribution - unrecognised function", functionname);
+      break;
+  }
+
   handle.logMessage("Reset catchdistribution component", this->getName());
 }
 
@@ -534,15 +555,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
       l = calcLikSumSquares();
       break;
     case 5:
-      if (timeindex == 0) {
-        this->calcCorrelation();
-        if (illegal == 1 || LU.isIllegal() == 1) {
-          handle.logWarning("Warning in catchdistribution - multivariate normal out of bounds");
-          l = verybig;
-        }
-      }
-      if (illegal != 1 && LU.isIllegal() != 1)
-        l = calcLikMVNormal();
+      l = calcLikMVNormal();
       break;
     case 6:
       l = calcLikMVLogistic();
@@ -564,12 +577,11 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 }
 
 double CatchDistribution::calcLikMultinomial() {
-
-  //The object MN does most of the work, accumulating likelihood
-  Multinomial MN(epsilon);
   int area, age, len;
-  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
-
+  
+  MN.Reset();
+  alptr = &aggregator->returnSum();
+  //the object MN does most of the work, accumulating likelihood
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
@@ -610,7 +622,7 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
   double totallikelihood = 0.0;
   int age, len, area;
 
-  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
+  alptr = &aggregator->returnSum();
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     if (TimeInfo->CurrentStep() == 1) { //start of a new year
@@ -667,7 +679,7 @@ double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
   double totallikelihood = 0.0;
   int age, len, area;
 
-  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
+  alptr = &aggregator->returnSum();
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     if (TimeInfo->CurrentStep() == 1) { //start of a new year
@@ -721,7 +733,7 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
   int area, age, len;
   double totalmodel, totaldata, ratio;
 
-  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
+  alptr = &aggregator->returnSum();
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     totalmodel = 0.0;
@@ -775,7 +787,7 @@ double CatchDistribution::calcLikSumSquares() {
   double totalmodel, totaldata;
   int age, len, area;
 
-  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
+  alptr = &aggregator->returnSum();
   for (area = 0; area < areas.Nrow(); area++) {
     totalmodel = 0.0;
     totaldata = 0.0;
@@ -841,9 +853,11 @@ double CatchDistribution::calcLikMVNormal() {
   int age, len, area;
   int i, j, p;
 
-  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
-  DoubleVector diff(aggregator->numLengthGroups(), 0.0);
+  if (illegal == 1 || LU.isIllegal() == 1)
+    return verybig;
 
+  alptr = &aggregator->returnSum();
+  DoubleVector diff(aggregator->numLengthGroups(), 0.0);
   for (area = 0; area < areas.Nrow(); area++) {
     sumdata = 0.0;
     sumdist = 0.0;
@@ -893,7 +907,7 @@ double CatchDistribution::calcLikMVLogistic() {
   double sumdata = 0.0, sumdist = 0.0, sumnu = 0.0;
   int age, len, area, p;
 
-  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
+  alptr = &aggregator->returnSum();
   p = aggregator->numLengthGroups();
   DoubleVector nu(p, 0.0);
 

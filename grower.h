@@ -44,7 +44,7 @@ protected:
   DoubleMatrix calcWeightGrowth;
   DoubleMatrixPtrVector lgrowth;
   DoubleMatrixPtrVector wgrowth;
-  DoubleVector dummy;
+  DoubleVector dummyfphi;
   GrowthCalcBase* growthcalc;
   int functionnumber;
   int maxlengthgroupgrowth;

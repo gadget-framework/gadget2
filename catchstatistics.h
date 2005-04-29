@@ -166,6 +166,7 @@ private:
    * \brief This is the name of the function to be used to calculate the likelihood component
    */
   char* functionname;
+  const AgeBandMatrixPtrVector* alptr;
 };
 
 #endif

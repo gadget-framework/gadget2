@@ -93,7 +93,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     lgrowth[i] = new DoubleMatrix(rows, otherlen, 0.0);
     wgrowth[i] = new DoubleMatrix(rows, otherlen, 0.0);
   }
-  dummy.resize(len, 0.0);
+  dummyfphi.resize(len, 0.0);
 }
 
 Grower::~Grower() {
@@ -147,7 +147,7 @@ void Grower::Sum(const PopInfoVector& NumberInArea, int area) {
 void Grower::GrowthCalc(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  this->GrowthCalc(area, Area, TimeInfo, dummy, dummy);
+  this->GrowthCalc(area, Area, TimeInfo, dummyfphi, dummyfphi);
 }
 
 void Grower::GrowthCalc(int area,

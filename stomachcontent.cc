@@ -504,6 +504,9 @@ SCNumbers::SCNumbers(CommentStream& infile, const AreaClass* const Area,
   handle.Close();
   datafile.close();
   datafile.clear();
+
+  MN = Multinomial();
+  MN.setValue(epsilon);  
 }
 
 void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -616,9 +619,9 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
 //This code will probably be simplified a bit if the Multinomial
 //class is changed to take integers.  (Factorial replaced by the gamma function)
 double SCNumbers::calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum) {
-  Multinomial MN(epsilon);
   int a, predl, preyl;
   double tmp;
+  MN.Reset();
   for (a = 0; a < consumption.Size(); a++) {
     likelihoodValues[timeindex][a] = 0.0;
     for (predl = 0; predl < consumption[a]->Nrow(); predl++) {

@@ -5,6 +5,7 @@
 #include "commentstream.h"
 #include "fleetpreyaggregator.h"
 #include "doublematrixptrmatrix.h"
+#include "multinomial.h"
 #include "actionattimes.h"
 
 class StockDistribution : public Likelihood {
@@ -163,6 +164,8 @@ private:
    * \brief This is the value of epsilon used when calculating the likelihood score
    */
   double epsilon;
+  Multinomial MN;
+  const AgeBandMatrixPtrVector* alptr;
 };
 
 #endif

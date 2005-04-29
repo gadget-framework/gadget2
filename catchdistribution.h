@@ -6,6 +6,7 @@
 #include "doublematrixptrmatrix.h"
 #include "actionattimes.h"
 #include "ludecomposition.h"
+#include "multinomial.h"
 #include "formulavector.h"
 
 class CatchDistribution : public Likelihood {
@@ -206,6 +207,8 @@ private:
   int illegal;
   int lag;
   LUDecomposition LU;
+  Multinomial MN;
+  const AgeBandMatrixPtrVector* alptr;
 };
 
 #endif
