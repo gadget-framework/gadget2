@@ -180,7 +180,7 @@ void Maturity::deleteMaturityTag(const char* tagname) {
 // ********************************************************
 MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
   Keeper* const keeper, int minage, const IntVector& minabslength, const IntVector& size,
-  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int numMatConst)
+  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv)
   : Maturity(tmpareas, minage, minabslength, size, lgrpdiv), preCalcMaturation(minabslength, size, minage) {
 
   char text[MaxStrLength];
@@ -204,7 +204,7 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
 
   if (!infile.good())
     handle.Failure();
-  maturityParameters.resize(numMatConst, keeper);
+  maturityParameters.resize(4, keeper);
   maturityParameters.read(infile, TimeInfo, keeper);
 
   infile >> ws;

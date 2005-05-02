@@ -68,15 +68,13 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
-  virtual void Aggregate(int i);
+  virtual void aggregate(int i);
 protected:
   /**
    * \brief This function will calculate the likelihood score from the SC information
-   * \param consumption is the DoubleMatrixPtrVector of the consumption calculated from the current model
-   * \param sum is the DoubleMatrix of the stomach contents specified from the input file
    * \return 0 (will be overridden in derived classes)
    */
-  virtual double calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum) = 0;
+  virtual double calcLikelihood() = 0;
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store stomach content (consumption) information specified in the input file
    * \note the indices for this object are [time][area][predator][prey]
@@ -161,6 +159,10 @@ protected:
    * \brief This is the name of the SC likelihood component
    */
   char* scname;
+  /**
+   * \brief This is the BandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   */
+  const BandMatrixPtrVector* bptr;
 };
 
 /**
@@ -184,7 +186,7 @@ public:
    * \brief This is the default SCNumbers destructor
    */
   virtual ~SCNumbers() {};
-  virtual void Aggregate(int i);
+  virtual void aggregate(int i);
 protected:
   /**
    * \brief This function will read the StomachContent numbers data from the input file
@@ -194,11 +196,9 @@ protected:
   void readStomachNumberContent(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the likelihood score from the SCNumbers information
-   * \param consumption is the DoubleMatrixPtrVector of the consumption calculated from the current model
-   * \param sum is the DoubleMatrix of the stomach contents specified from the input file
    * \return likelihood score
    */
-  virtual double calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum);
+  virtual double calcLikelihood();
   /**
    * \brief This is the Multinomial that is used when calculating the likelihood score
    */
@@ -243,11 +243,9 @@ protected:
   void readStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the likelihood score from the SCAmounts information
-   * \param consumption is the DoubleMatrixPtrVector of the consumption calculated from the current model
-   * \param sum is the DoubleMatrix of the stomach contents specified from the input file
    * \return likelihood score
    */
-  virtual double calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum);
+  virtual double calcLikelihood();
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store the standard deviation values for the consumption information specified in the input file
    * \note the indices for this object are [time][area][predator][prey]
@@ -293,11 +291,9 @@ public:
 protected:
   /**
    * \brief This function will calculate the likelihood score from the SCRatios information
-   * \param consumption is the DoubleMatrixPtrVector of the consumption calculated from the current model
-   * \param sum is the DoubleMatrix of the stomach contents specified from the input file
    * \return likelihood score
    */
-  virtual double calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum);
+  virtual double calcLikelihood();
 };
 
 /**
@@ -336,11 +332,9 @@ protected:
   void readStomachSimpleContent(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the likelihood score from the SCSimple information
-   * \param consumption is the DoubleMatrixPtrVector of the consumption calculated from the current model
-   * \param sum is the DoubleMatrix of the stomach contents specified from the input file
    * \return likelihood score
    */
-  virtual double calcLikelihood(DoubleMatrixPtrVector& consumption, DoubleMatrix& sum);
+  virtual double calcLikelihood();
 };
 
 class StomachContent : public Likelihood {

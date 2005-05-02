@@ -164,11 +164,10 @@ public:
    * \param size is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision for the stock
-   * \param numMatConst is the number of maturation parameters (4)
    */
   MaturityA(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
     int minage, const IntVector& minabslength, const IntVector& size, const IntVector& areas,
-    const LengthGroupDivision* const LgrpDiv, int numMatConst);
+    const LengthGroupDivision* const LgrpDiv);
   /**
    * \brief This is the default MaturityA destructor
    */

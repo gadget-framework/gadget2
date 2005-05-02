@@ -450,6 +450,9 @@ void Keeper::Update(const StochasticData* const Stoch) {
     }
   }
 
+  if (this->numOptVariables() >= NUMVARS)
+    handle.logFailure("Error in keeper - too many parameters to optimise", this->numOptVariables());
+
   for (i = 0; i < address.Nrow(); i++)
     for (j = 0; j < address.Ncol(i); j++)
       *address[i][j].addr = values[i];

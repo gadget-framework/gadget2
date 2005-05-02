@@ -61,20 +61,21 @@ double getSmallestEigenValue(double matrix[NUMVARS][NUMVARS], int nvars) {
 }
 
 /* calculate the gradient of a function at a point */
-void gradient(double (*f)(double*), double point[], double pointvalue, double diaghess[], double grad[], int nvars, int diffgrad, double gradacc, double gradstep) {
+void gradient(double (*f)(double*), double point[], double pointvalue, double diaghess[],
+  double grad[], int nvars, int diffgrad, double gradacc, double gradstep,
+  double gtmpp1[], double gtmpm1[], double gtmpp2[], double gtmpm2[] ) {
 
-  double tmpacc, f1, f2, mf1, mf2;
-  double tmp[NUMVARS], mtmp[NUMVARS], tmp1[NUMVARS], mtmp1[NUMVARS];
+  double tmpacc, fp1, fp2, fm1, fm2;
   int    i, j;
 
   if (diffgrad < 1) {
     tmpacc = 1.0 / gradacc;
     for (i = 0; i < nvars; i++) {
       for (j = 0; j < nvars; j++)
-        tmp[j] = point[j];
-      tmp[i] += gradacc;
-      f1 = (*f)(tmp);
-      grad[i] = (f1 - pointvalue) * tmpacc;
+        gtmpp1[j] = point[j];
+      gtmpp1[i] += gradacc;
+      fp1 = (*f)(gtmpp1);
+      grad[i] = (fp1 - pointvalue) * tmpacc;
       diaghess[i] = 1.0;
     }
 
@@ -82,46 +83,46 @@ void gradient(double (*f)(double*), double point[], double pointvalue, double di
     tmpacc = 1.0 / (2.0 * gradacc);
     for (i = 0; i < nvars; i++) {
       for (j = 0; j < nvars; j++) {
-        tmp[j] = point[j];
-        mtmp[j] = point[j];
+        gtmpp1[j] = point[j];
+        gtmpm1[j] = point[j];
       }
-      tmp[i] += gradacc;
-      mtmp[i] -= gradacc;
-      f1 = (*f)(tmp);
-      mf1 = (*f)(mtmp);
-      grad[i] = (f1 - mf1) * tmpacc;
-      if (abs((mf1 - f1) / pointvalue) < rathersmall) {
+      gtmpp1[i] += gradacc;
+      gtmpm1[i] -= gradacc;
+      fp1 = (*f)(gtmpp1);
+      fm1 = (*f)(gtmpm1);
+      grad[i] = (fp1 - fm1) * tmpacc;
+      if (abs((fm1 - fp1) / pointvalue) < rathersmall) {
         gradacc = min(0.01, gradacc / gradstep);
         cout << "\nWarning in BFGS - possible roundoff errors in gradient\n";
       }
-      if ((mf1 > pointvalue) && (f1 > pointvalue))
+      if ((fm1 > pointvalue) && (fp1 > pointvalue))
         diffgrad++;
-      diaghess[i] = (f1 - 2.0 * pointvalue + mf1) / (gradacc * gradacc);
+      diaghess[i] = (fp1 - 2.0 * pointvalue + fm1) / (gradacc * gradacc);
     }
 
   } else {
     tmpacc = 1.0 / (12.0 * gradacc);
     for (i = 0; i < nvars; i++) {
       for (j = 0; j < nvars; j++) {
-        tmp[j] = point[j];
-        mtmp[j] = point[j];
-        tmp1[j] = point[j];
-        mtmp1[j] = point[j];
+        gtmpp1[j] = point[j];
+        gtmpp2[j] = point[j];
+        gtmpm1[j] = point[j];
+        gtmpm2[j] = point[j];
       }
-      tmp[i] += gradacc;
-      tmp1[i] += 2.0 * gradacc;
-      mtmp[i] -= gradacc;
-      mtmp1[i] -= 2.0 * gradacc;
-      f1 = (*f)(tmp);
-      f2 = (*f)(tmp1);
-      mf1 = (*f)(mtmp);
-      mf2 = (*f)(mtmp1);
-      grad[i] = (8.0 * f1 - f2 - 8.0 * mf1 + mf2) * tmpacc;
-      if ((abs(mf2 - f2) / pointvalue) < rathersmall) {
+      gtmpp1[i] += gradacc;
+      gtmpp2[i] += 2.0 * gradacc;
+      gtmpm1[i] -= gradacc;
+      gtmpm2[i] -= 2.0 * gradacc;
+      fp1 = (*f)(gtmpp1);
+      fp2 = (*f)(gtmpp2);
+      fm1 = (*f)(gtmpm1);
+      fm2 = (*f)(gtmpm2);
+      grad[i] = (8.0 * fp1 - fp2 - 8.0 * fm1 + fm2) * tmpacc;
+      if ((abs(fm2 - fp2) / pointvalue) < rathersmall) {
         gradacc = min(0.01, gradacc / gradstep);
         cout << "\nWarning in BFGS - possible roundoff errors in gradient\n";
       }
-      diaghess[i] = (-f2 + 16.0 * f1 - 30.0 * pointvalue + 16.0 * mf1 - mf2 ) * 12.0 * tmpacc * tmpacc;
+      diaghess[i] = (-fp2 + 16.0 * fp1 - 30.0 * pointvalue + 16.0 * fm1 - fm2 ) * 12.0 * tmpacc * tmpacc;
     }
   }
 }
@@ -140,6 +141,7 @@ int bfgs(double (*f)(double*), double startpt[], double endpt[], double init[], 
   double search[NUMVARS];              //direction for the armijo search
   double invhess[NUMVARS][NUMVARS];    //inverse hessian matrix
   double tmp[NUMVARS];
+  double gtmpp1[NUMVARS], gtmpp2[NUMVARS], gtmpm1[NUMVARS], gtmpm2[NUMVARS];
   double hy, yBy, temphy, tempyby;
   double normgrad, normdeltax;
   double alpha, searchgrad, newf, tmpf, betan;
@@ -153,7 +155,7 @@ int bfgs(double (*f)(double*), double startpt[], double endpt[], double init[], 
   }
 
   newf = (*f)(startpt);
-  gradient(f, startpt, newf, diaghess, grad, nvars, diffgrad, gradacc, gradstep);
+  gradient(f, startpt, newf, diaghess, grad, nvars, diffgrad, gradacc, gradstep, gtmpp1, gtmpm1, gtmpp2, gtmpm2);
   offset = FuncEval;
 
   for (i = 0; i < nvars; i++) {
@@ -254,7 +256,7 @@ int bfgs(double (*f)(double*), double startpt[], double endpt[], double init[], 
 
       if ((armijoquit) && (tmpf == tmpf)) {
         newf = tmpf;
-        gradient(f, tmp, tmpf, diaghess, grad, nvars, diffgrad, gradacc, gradstep);
+        gradient(f, tmp, tmpf, diaghess, grad, nvars, diffgrad, gradacc, gradstep, gtmpp1, gtmpm1, gtmpp2, gtmpm2);
         alpha = betan;
       } else
         alpha = 0.0;
@@ -262,7 +264,7 @@ int bfgs(double (*f)(double*), double startpt[], double endpt[], double init[], 
 
     if ((isZero(alpha)) || (searchgrad > 0.0) || (isZero(searchgrad))) {
       diffgrad++;
-      gradient(f, newx, newf, diaghess, grad, nvars, diffgrad, gradacc, gradstep);
+      gradient(f, newx, newf, diaghess, grad, nvars, diffgrad, gradacc, gradstep, gtmpp1, gtmpm1, gtmpp2, gtmpm2);
       armijoproblem++;
       if (armijoproblem == 6)
         check = 0;

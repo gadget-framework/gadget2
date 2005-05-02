@@ -138,9 +138,8 @@ extern Ecosystem* EcoSystem;
 
 /* given a point, look for a better one nearby, one coord at a time */
 double bestNearby(double (*f)(double*), double delta[], double point[],
-  double prevbest, int nvars, int param[]) {
+  double z[], double prevbest, int nvars, int param[]) {
 
-  double z[NUMVARS];
   double minf, ftmp;
   int    i;
 
@@ -176,6 +175,7 @@ int hooke(double (*f)(double*), int nvars, double startpt[], double endpt[],
   double delta[NUMVARS];
   double xbefore[NUMVARS];
   double newx[NUMVARS];
+  double z[NUMVARS];
   double oldf, newf, fbefore, steplength, tmp, check;
   int    i, k, h, change, iters, offset;
   int    param[NUMVARS];
@@ -194,6 +194,7 @@ int hooke(double (*f)(double*), int nvars, double startpt[], double endpt[],
     xbefore[i] = startpt[i];
     delta[i] = ((2 * (rand() % 2)) - 1) * rho;  //JMB - randomise the sign
     initialstep[i] = rho;
+    z[i] = 0.0;
   }
 
   fbefore = (*f)(newx);
@@ -233,7 +234,7 @@ int hooke(double (*f)(double*), int nvars, double startpt[], double endpt[],
     /* find best new point, one coord at a time */
     for (i = 0; i < nvars; i++)
       newx[i] = xbefore[i];
-    newf = bestNearby(f, delta, newx, fbefore, nvars, param);
+    newf = bestNearby(f, delta, newx, z, fbefore, nvars, param);
 
     /* if too many function evaluations occur, terminate the algorithm */
     if ((FuncEval - offset) > maxevl) {
@@ -323,7 +324,7 @@ int hooke(double (*f)(double*), int nvars, double startpt[], double endpt[],
       fbefore = newf;
       for (i = 0; i < nvars; i++)
         xbefore[param[i]] = newx[param[i]];
-      newf = bestNearby(f, delta, newx, fbefore, nvars, param);
+      newf = bestNearby(f, delta, newx, z, fbefore, nvars, param);
 
       /* if too many function evaluations occur, terminate the algorithm */
       if ((FuncEval - offset) > maxevl) {

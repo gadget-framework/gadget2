@@ -190,7 +190,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     handle.Open(filename);
 
     if (strcasecmp(text, "continuous") == 0)
-      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
+      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv);
     else if (strcasecmp(text, "fixedlength") == 0)
       maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv);
     else if (strcasecmp(text, "constant") == 0)
