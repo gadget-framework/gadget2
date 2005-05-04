@@ -11,7 +11,7 @@ void readWordAndVariable(CommentStream& infile, const char* str, double& number)
   if (strcasecmp(text, str) == 0)
     infile >> number >> ws;
   else
-    handle.Unexpected(str, text);
+    handle.logFileUnexpected(LOGFAIL, str, text);
 }
 
 void readWordAndVariable(CommentStream& infile, const char* str, int& number) {
@@ -21,7 +21,7 @@ void readWordAndVariable(CommentStream& infile, const char* str, int& number) {
   if (strcasecmp(text, str) == 0)
     infile >> number >> ws;
   else
-    handle.Unexpected(str, text);
+    handle.logFileUnexpected(LOGFAIL, str, text);
 }
 
 void readWordAndValue(CommentStream& infile, const char* str, char* value) {
@@ -31,7 +31,7 @@ void readWordAndValue(CommentStream& infile, const char* str, char* value) {
   if (strcasecmp(text, str) == 0)
     infile >> value >> ws;
   else
-    handle.Unexpected(str, text);
+    handle.logFileUnexpected(LOGFAIL, str, text);
 }
 
 void readWordAndFormula(CommentStream& infile, const char* str, Formula& formula) {
@@ -41,7 +41,7 @@ void readWordAndFormula(CommentStream& infile, const char* str, Formula& formula
   if (strcasecmp(text, str) == 0)
     infile >> formula >> ws;
   else
-    handle.Unexpected(str, text);
+    handle.logFileUnexpected(LOGFAIL, str, text);
 }
 
 void readWordAndTwoVariables(CommentStream& infile, const char* str, double& number1, double& number2) {
@@ -51,7 +51,7 @@ void readWordAndTwoVariables(CommentStream& infile, const char* str, double& num
   if (strcasecmp(text, str) == 0)
     infile >> number1 >> number2 >> ws;
   else
-    handle.Unexpected(str, text);
+    handle.logFileUnexpected(LOGFAIL, str, text);
 }
 
 void readWordAndTwoVariables(CommentStream& infile, const char* str, int& number1, int& number2) {
@@ -61,5 +61,5 @@ void readWordAndTwoVariables(CommentStream& infile, const char* str, int& number
   if (strcasecmp(text, str) == 0)
     infile >> number1 >> number2 >> ws;
   else
-    handle.Unexpected(str, text);
+    handle.logFileUnexpected(LOGFAIL, str, text);
 }

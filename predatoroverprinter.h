@@ -58,6 +58,10 @@ protected:
    * \brief This is the PredatorOverAggregator used to collect information about the overconsumption
    */
   PredatorOverAggregator* aggregator;
+  /**
+   * \brief This is the DoubleMatrix used to temporarily store the information returned from aggregatation function
+   */
+  const DoubleMatrix* dptr;
 };
 
 #endif

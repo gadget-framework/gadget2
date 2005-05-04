@@ -84,7 +84,7 @@ void PredatorAggregator::Sum() {
 void PredatorAggregator::NumberSum() {
   int area, i, j, k, g, h, l;
   const PopInfoVector* preymeanw;
-  
+
   this->Reset();
   //Sum over the appropriate preys, predators, areas, and lengths.
   for (g = 0; g < predators.Size(); g++) {

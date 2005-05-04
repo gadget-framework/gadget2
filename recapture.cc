@@ -37,7 +37,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   if (strcasecmp(functionname, "poisson") == 0)
     functionnumber = 1;
   else
-    handle.Message("Error in recaptures - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "Error in recaptures - unrecognised function", functionname);
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
@@ -52,8 +52,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
@@ -69,7 +68,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
-    handle.Unexpected("fleetnames", text);
+    handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
     fleetnames.resize(1);
@@ -78,8 +77,9 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
     infile >> text >> ws;
   }
   if (fleetnames.Size() == 0)
-    handle.Message("Error in recaptures - failed to read fleets");
-  handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in recaptures - failed to read fleets");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the recapture data from datafilename
@@ -101,7 +101,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
       }
     }
     if (check == 0)
-      handle.logFailure("Error in recaptures - failed to match tag", tagnames[j]);
+      handle.logMessage(LOGFAIL, "Error in recaptures - failed to match tag", tagnames[j]);
 
   }
 }
@@ -123,7 +123,7 @@ void Recaptures::readRecaptureData(CommentStream& infile,
   infile >> ws;
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 6)
-      handle.Message("Wrong number of columns in inputfile - should be 6");
+      handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -195,9 +195,10 @@ void Recaptures::readRecaptureData(CommentStream& infile,
       (*obsDistribution[tid][timeid])[areaid][lenid] = tmpnumber;
     }
   }
-  if (count == 0)
-    handle.logWarning("Warning in recaptures - found no data in the data file for", this->getName());
-  handle.logMessage("Read recaptures data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in recaptures - found no data in the data file for", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read recaptures data file - number of entries", count);
 }
 
 Recaptures::~Recaptures() {
@@ -230,7 +231,8 @@ Recaptures::~Recaptures() {
 
 void Recaptures::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
-  handle.logMessage("Reset recaptures component", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset recaptures component", this->getName());
 }
 
 void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
@@ -248,7 +250,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       }
 
     if (found == 0)
-      handle.logFailure("Error in recaptures - failed to match fleet", fleetnames[i]);
+      handle.logMessage(LOGFAIL, "Error in recaptures - failed to match fleet", fleetnames[i]);
 
   }
 
@@ -269,7 +271,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
         }
       }
       if (found == 0)
-        handle.logFailure("Error in recaptures - failed to match stock", stocknames->operator[](i));
+        handle.logMessage(LOGFAIL, "Error in recaptures - failed to match stock", stocknames->operator[](i));
 
     }
 
@@ -278,7 +280,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       for (l = 0; l < areas.Ncol(i); l++)
         for (j = 0; j < stocks.Size(); j++)
           if (!stocks[j]->isInArea(areas[i][l]))
-            handle.logFailure("Error in recaptures - stocks arent defined on all areas");
+            handle.logMessage(LOGFAIL, "Error in recaptures - stocks arent defined on all areas");
 
     IntMatrix agematrix(1, 0);
     minage = 999;
@@ -303,18 +305,19 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
 void Recaptures::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
-  switch(functionnumber) {
+  switch (functionnumber) {
     case 1:
       l = calcLikPoisson(TimeInfo);
       break;
     default:
-      handle.logWarning("Warning in recaptures - unrecognised function", functionname);
+      handle.logMessage(LOGWARN, "Warning in recaptures - unrecognised function", functionname);
       break;
   }
 
   if (!(isZero(l))) {
     likelihood += l;
-    handle.logMessage("The likelihood score for this component on this timestep is", l);
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
  }
 }
 
@@ -331,7 +334,8 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
     if (tagvec[t]->isWithinPeriod(year, step)) {
 
       if (checktag == 0) {
-        handle.logMessage("Calculating likelihood score for recaptures component", this->getName());
+        if (handle.getLogLevel() >= LOGMESSAGE)
+          handle.logMessage(LOGMESSAGE, "Calculating likelihood score for recaptures component", this->getName());
         checktag++;
       }
 

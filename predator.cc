@@ -22,7 +22,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   int found = 0;
 
   if (Suitable == 0)
-    handle.logFailure("Error in predator - found no suitability values");
+    handle.logMessage(LOGFAIL, "Error in predator - found no suitability values");
 
   preys.resize(this->numPreys(), 0);
   for (i = 0; i < preyvec.Size(); i++) {
@@ -33,7 +33,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
           preys[j] = preyvec[i];
           found++;
         } else
-          handle.logFailure("Error in predator - repeated suitability values for prey", preyvec[i]->getName());
+          handle.logMessage(LOGFAIL, "Error in predator - repeated suitability values for prey", preyvec[i]->getName());
 
       }
     }
@@ -45,7 +45,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     //received a pointer to, we issue a warning and delete it
     if (preys[i] == 0) {
       found++;
-      handle.logWarning("Warning in predator - failed to match prey", this->getPreyName(i));
+      handle.logMessage(LOGWARN, "Warning in predator - failed to match prey", this->getPreyName(i));
       preys.Delete(i);
       Suitable->deletePrey(i, keeper);
       if (found != preys.Size())
@@ -53,7 +53,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     }
   }
   if (this->numPreys() == 0)
-    handle.logFailure("Error in predator - no preys for predator", this->getName());
+    handle.logMessage(LOGFAIL, "Error in predator - no preys for predator", this->getName());
 }
 
 int Predator::doesEat(const char* preyname) const {
@@ -103,20 +103,19 @@ void Predator::readSuitability(CommentStream& infile,
       if (readSuitFunction(suitf, infile, text, TimeInfo, keeper) == 1)
         Suitable->addPrey(preyname, suitf[suitf.Size() - 1]);
       else
-        handle.Message("Error in suitability - unrecognised suitability function");
+        handle.logFileMessage(LOGFAIL, "Error in suitability - unrecognised suitability function");
 
     } else if (strcasecmp(text, "suitfile") == 0) {
-      handle.Message("Reading suitability values directly from file is no longer supported\nGadget version 2.0.07 was the last version to allow this functionality");
+      handle.logFileMessage(LOGFAIL, "Reading suitability values directly from file is no longer supported\nGadget version 2.0.07 was the last version to allow this functionality");
 
     } else
-      handle.Message("Error in suitability - unrecognised format", text);
+      handle.logFileMessage(LOGFAIL, "Error in suitability - unrecognised format", text);
 
     infile >> preyname >> ws;
     keeper->clearLast();
   }
 
   keeper->clearLast();
-  if (!infile.good())
-    handle.Failure();
-  handle.logMessage("Read predation data - number of preys", this->numPreys());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read predation data - number of preys", this->numPreys());
 }

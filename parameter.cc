@@ -85,7 +85,7 @@ int Parameter::legalchar(int c) {
   if (isalnum(c))
     return 1;
 
-  switch(c) {
+  switch (c) {
     case '_':
     case '.':
       //Valid characters in addition to numbers and letters

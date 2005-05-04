@@ -13,7 +13,7 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
   //Find start of data in datafile
   infile >> ws;
   if (infile.eof())
-    handle.Message("Error in initial conditions - initial stock data file empty");
+    handle.logFileMessage(LOGFAIL, "Error in initial conditions - initial stock data file empty");
 
   char c = infile.peek();
   if (!isdigit(c)) {
@@ -37,7 +37,7 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
   //Found the start of the data in the following format
   //age - area - agedist - areadist - meanlen - standdev - relcond
   if (countColumns(infile) != 7)
-    handle.Message("Wrong number of columns in inputfile - should be 7");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 7");
 
   ageid = -1;
   tmparea = -1;
@@ -48,7 +48,7 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
 
     //crude age data check - perhaps there should be a better check?
     if ((age < minage) || (age >= (noagegr + minage))) {
-      handle.Warning("Ignoring initial conditions data found outside age range");
+      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside age range");
       keepdata = 1;
     } else
       ageid = age - minage;
@@ -56,14 +56,12 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
     //crude area data check
     areaid = -1;
     tmparea = Area->InnerArea(area);
-    if (tmparea == -1)
-      handle.UndefinedArea(area);
     for (i = 0; i < noareas; i++)
       if (areas[i] == tmparea)
         areaid = i;
 
     if (areaid == -1) {
-      handle.Warning("Ignoring initial conditions data found outside area range");
+      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside area range");
       keepdata = 1;
     }
 
@@ -84,7 +82,8 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
     }
   }
 
-  handle.logMessage("Read initial conditions data file - number of entries", count);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   areaFactor.Inform(keeper);
   ageFactor.Inform(keeper);
   meanLength.Inform(keeper);
@@ -99,7 +98,7 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
   //Find start of data in datafile
   infile >> ws;
   if (infile.eof())
-    handle.Message("Error in initial conditions - initial stock data file empty");
+    handle.logFileMessage(LOGFAIL, "Error in initial conditions - initial stock data file empty");
 
   char c = infile.peek();
   if (!isdigit(c)) {
@@ -124,7 +123,7 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
   //Found the start of the data in the following format
   //age - area - agedist - areadist - meanlen - standdev - alpha - beta
   if (countColumns(infile) != 8)
-    handle.Message("Wrong number of columns in inputfile - should be 8");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 8");
 
   ageid = -1;
   tmparea = -1;
@@ -135,7 +134,7 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
 
     //crude age data check - perhaps there should be a better check?
     if ((age < minage) || (age >= (noagegr + minage))) {
-      handle.Warning("Ignoring initial conditions data found outside age range");
+      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside age range");
       keepdata = 1;
     } else
       ageid = age - minage;
@@ -143,14 +142,12 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
     //crude area data check
     areaid = -1;
     tmparea = Area->InnerArea(area);
-    if (tmparea == -1)
-      handle.UndefinedArea(area);
     for (i = 0; i < noareas; i++)
       if (areas[i] == tmparea)
         areaid = i;
 
     if (areaid == -1) {
-      handle.Warning("Ignoring initial conditions data found outside area range");
+      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside area range");
       keepdata = 1;
     }
 
@@ -172,7 +169,8 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
     }
   }
 
-  handle.logMessage("Read initial conditions data file - number of entries", count);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   areaFactor.Inform(keeper);
   ageFactor.Inform(keeper);
   meanLength.Inform(keeper);
@@ -188,7 +186,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   //Find start of data in datafile
   infile >> ws;
   if (infile.eof())
-    handle.Message("Error in initial conditions - initial stock data file empty");
+    handle.logFileMessage(LOGFAIL, "Error in initial conditions - initial stock data file empty");
 
   char c = infile.peek();
   if (!isdigit(c)) {
@@ -207,7 +205,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   int nolengr = LgrpDiv->numLengthGroups();
 
   if (countColumns(infile) != 5)
-    handle.Message("Wrong number of columns in inputfile - should be 5");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 5");
 
   //set the numbers in the AgeBandMatrixPtrVector to zero (in case some arent in the inputfile)
   for (areaid = 0; areaid < noareas; areaid++)
@@ -227,7 +225,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
 
     //crude age data check - perhaps there should be a better check?
     if ((age < minage) || (age >= (noagegr + minage))) {
-      handle.Warning("Ignoring initial conditions data found outside age range");
+      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside age range");
       keepdata = 1;
     } else
       ageid = age;
@@ -239,21 +237,19 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
         lengthid = i;
 
     if (lengthid == -1) {
-      handle.Warning("Ignoring initial conditions data found outside length range");
+      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside length range");
       keepdata = 1;
     }
 
     //crude area data check
     areaid = -1;
     tmparea = Area->InnerArea(area);
-    if (tmparea == -1)
-      handle.UndefinedArea(area);
     for (i = 0; i < noareas; i++)
       if (areas[i] == tmparea)
         areaid = i;
 
     if (areaid == -1) {
-      handle.Warning("Ignoring initial conditions data found outside area range");
+      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside area range");
       keepdata = 1;
     }
 
@@ -261,12 +257,13 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
       //initial data is required, so store it
       count++;
       if ((isZero(tmpweight)) && (tmpnumber > 0))
-        handle.Warning("Warning in initial conditions - zero mean weight");
+        handle.logFileMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
       initialPop[areaid][ageid][lengthid].N = tmpnumber;
       initialPop[areaid][ageid][lengthid].W = tmpweight;
     }
   }
-  handle.logMessage("Read initial conditions data file - number of entries", count);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   keeper->clearLast();
 }
 
@@ -307,7 +304,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    handle.Message("Error in initial conditions - failed to create length group");
+    handle.logMessage(LOGFAIL, "Error in initial conditions - failed to create length group");
 
   //read the standard deviation multiplier - default to 1.0
   keeper->addString("sdevmultiplier");
@@ -352,7 +349,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     handle.checkIfFailure(subfile, refWeightFile);
     handle.Open(refWeightFile);
     if (!readRefWeights(subcomment, tmpRefW))
-      handle.Message("Wrong format for reference weights");
+      handle.logFileMessage(LOGFAIL, "Wrong format for reference weights");
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -360,7 +357,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     //Interpolate the reference weights. First there are some error checks.
     if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
         LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-      handle.Message("Lengths for reference weights must span the range of initial condition lengths");
+      handle.logFileMessage(LOGFAIL, "Lengths for reference weights must span the range of initial condition lengths");
 
     //Aggregate the reference weight data to be the same format
     double ratio;
@@ -404,7 +401,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     subfile.clear();
 
   } else
-    handle.Message("Error in initial conditions - unrecognised data format", text);
+    handle.logFileMessage(LOGFAIL, "Error in initial conditions - unrecognised data format", text);
 
   keeper->clearLast();
 }
@@ -416,10 +413,12 @@ InitialCond::~InitialCond() {
 
 void InitialCond::setCI(const LengthGroupDivision* const GivenLDiv) {
   //check minimum and maximum lengths
-  if (LgrpDiv->minLength() < GivenLDiv->minLength())
-    handle.logWarning("Warning in initial conditions - minimum length less than stock length");
-  if (LgrpDiv->maxLength() > GivenLDiv->maxLength())
-    handle.logWarning("Warning in initial conditions - maximum length greater than stock length");
+  if (handle.getLogLevel() >= LOGWARN) {
+    if (LgrpDiv->minLength() < GivenLDiv->minLength())
+      handle.logMessage(LOGWARN, "Warning in initial conditions - minimum length less than stock length");
+    if (LgrpDiv->maxLength() > GivenLDiv->maxLength())
+      handle.logMessage(LOGWARN, "Warning in initial conditions - maximum length greater than stock length");
+  }
   CI = new ConversionIndex(LgrpDiv, GivenLDiv);
 }
 
@@ -475,8 +474,8 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
         for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           initialPop[area][age][l].N *= scaler;
           initialPop[area][age][l].W = refWeight[l] * relCond[area][age - minage];
-          if ((isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0))
-            handle.logWarning("Warning in initial conditions - zero mean weight");
+          if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0))
+            handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
         }
       }
     }
@@ -503,8 +502,8 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
         for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           initialPop[area][age][l].N *= scaler;
           initialPop[area][age][l].W = alpha[area][age - minage] * pow(LgrpDiv->meanLength(l), beta[area][age - minage]);
-          if ((isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0))
-            handle.logWarning("Warning in initial conditions - zero mean weight");
+          if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0))
+            handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
         }
       }
     }
@@ -513,28 +512,31 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
     //nothing to be done here
 
   } else
-    handle.logFailure("Error in initial conditions - unrecognised data format");
+    handle.logMessage(LOGFAIL, "Error in initial conditions - unrecognised data format");
 
   mult = 1.0;
   for (area = 0; area < areas.Size(); area++) {
     Alkeys[area].setToZero();
     //check minimum and maximum ages
-    if (initialPop[area].minAge() < Alkeys[area].minAge())
-      handle.logWarning("Warning in initial conditions - minimum age less than stock age");
-    if (initialPop[area].maxAge() > Alkeys[area].maxAge())
-      handle.logWarning("Warning in initial conditions - maximum age greater than stock age");
+    if (handle.getLogLevel() >= LOGWARN) {
+      if (initialPop[area].minAge() < Alkeys[area].minAge())
+        handle.logMessage(LOGWARN, "Warning in initial conditions - minimum age less than stock age");
+      if (initialPop[area].maxAge() > Alkeys[area].maxAge())
+        handle.logMessage(LOGWARN, "Warning in initial conditions - maximum age greater than stock age");
+    }
 
     minage = max(Alkeys[area].minAge(), initialPop[area].minAge());
     maxage = min(Alkeys[area].maxAge(), initialPop[area].maxAge());
     if (maxage < minage)
-      handle.logFailure("Error in initial conditions - maximum age less than minimum age");
+      handle.logMessage(LOGFAIL, "Error in initial conditions - maximum age less than minimum age");
 
     for (age = minage; age <= maxage; age++) {
       if ((readoption == 0) || (readoption == 1))
         mult = areaFactor[area][age - minage] * ageFactor[area][age - minage];
 
       if (mult < 0) {
-        handle.logWarning("Warning in initial conditions - negative stock multiplier", mult);
+        if (handle.getLogLevel() >= LOGWARN)
+          handle.logMessage(LOGWARN, "Warning in initial conditions - negative stock multiplier", mult);
         mult = -mult;
       }
 

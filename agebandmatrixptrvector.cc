@@ -91,7 +91,7 @@ void AgeBandMatrixPtrVector::resize(int addsize, int minage,
 
   if (addsize <= 0)
     return;
-    
+
   int i;
   if (v == 0) {
     size = addsize;

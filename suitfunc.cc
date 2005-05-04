@@ -49,31 +49,31 @@ int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname) {
     found++;
 
   } else if (strcasecmp(suitname, "inverse") == 0) {
-    handle.Warning("The inverse suitability function is not yet implemented");
+    handle.logFileMessage(LOGWARN, "The inverse suitability function is not yet implemented");
 
   } else if (strcasecmp(suitname, "improvedexpsuitfunc") == 0) {
-    handle.Warning("The improvedexpsuitfunc suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "The improvedexpsuitfunc suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "improvedandextendedexpsuitfunc") == 0) {
-    handle.Warning("The improvedandextendedexpsuitfunc suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "The improvedandextendedexpsuitfunc suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "extendedexpsuitfuncl50") == 0) {
-    handle.Warning("The extendedexpsuitfuncl50 suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "The extendedexpsuitfuncl50 suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "badexpsuitfuncl50") == 0) {
-    handle.Warning("The badexpsuitfuncl50 suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "The badexpsuitfuncl50 suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "surveyselection") == 0) {
-    handle.Warning("The surveyselection suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "The surveyselection suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "cloglog") == 0) {
-    handle.Warning("The cloglog suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "The cloglog suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "combination") == 0) {
-    handle.Warning("The combination suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "The combination suitability function is no longer supported");
 
   } else
-    handle.Message("Error in suitability function - no valid suitability function found");
+    handle.logFileMessage(LOGFAIL, "Error in suitability function - no valid suitability function found");
 
   return found;
 }
@@ -110,11 +110,11 @@ SuitFunc::~SuitFunc() {
 }
 
 void SuitFunc::setPredLength(double length) {
-  handle.logWarning("Warning in suitability - trying to set predator length for", this->getName());
+  handle.logMessage(LOGWARN, "Warning in suitability - trying to set predator length for", this->getName());
 }
 
 void SuitFunc::setPreyLength(double length) {
-  handle.logWarning("Warning in suitability - trying to set prey length for", this->getName());
+  handle.logMessage(LOGWARN, "Warning in suitability - trying to set prey length for", this->getName());
 }
 
 void SuitFunc::setName(const char* suitFuncName) {
@@ -171,10 +171,12 @@ double ExpSuitFuncA::calculate() {
     check = coeff[3] / (1.0 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
 
   if (check < 0.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -193,10 +195,12 @@ ConstSuitFunc::~ConstSuitFunc() {
 
 double ConstSuitFunc::calculate() {
   if (coeff[0] < 0.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", coeff[0]);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", coeff[0]);
     return 0.0;
   } else if (coeff[0] > 1.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", coeff[0]);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", coeff[0]);
     return 1.0;
   } else
     return coeff[0];
@@ -234,10 +238,12 @@ double AndersenSuitFunc::calculate() {
   e = (l - coeff[1]) * (l - coeff[1]);
   check = coeff[0] + coeff[2] * exp(-e / q);
   if (check < 0.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -258,10 +264,12 @@ ExpSuitFuncL50::~ExpSuitFuncL50() {
 double ExpSuitFuncL50::calculate() {
   double check = 1.0 / (1.0 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
   if (check < 0.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -282,10 +290,12 @@ StraightSuitFunc::~StraightSuitFunc() {
 double StraightSuitFunc::calculate() {
   double check = coeff[0] * preyLength + coeff[1];
   if (check < 0.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -306,10 +316,12 @@ InverseSuitFunc::~InverseSuitFunc() {
 double InverseSuitFunc::calculate() {
   double check = 1.0 / (1.0 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
   if (check < 0.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -330,12 +342,9 @@ StraightUnboundedSuitFunc::~StraightUnboundedSuitFunc() {
 double StraightUnboundedSuitFunc::calculate() {
   double check = coeff[0] * preyLength + coeff[1];
   if (check < 0.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 0.0;
-  /*JMB this has been removed to create the 'unbounded' part of the suitability function
-  } else if (check > 1.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
-    return 1.0; */
   } else
     return check;
 }
@@ -364,10 +373,12 @@ double RichardsSuitFunc::calculate() {
     check = pow(coeff[3] / (1.0 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength))), (1.0 / coeff[4]));
 
   if (check < 0.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;
@@ -387,14 +398,16 @@ GammaSuitFunc::~GammaSuitFunc() {
 
 double GammaSuitFunc::calculate() {
   double check;
-  
+
   check = exp(coeff[0] - 1.0 - (preyLength / coeff[1] * coeff[2]));
   check *= pow(preyLength / ((coeff[0] - 1.0) * coeff[1] * coeff[2]), (coeff[0] - 1.0));
   if (check < 0.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 0.0;
   } else if (check > 1.0) {
-    handle.logWarning("Warning in suitability - function outside bounds", check);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 1.0;
   } else
     return check;

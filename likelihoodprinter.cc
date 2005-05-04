@@ -19,7 +19,7 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
   //read in the names of the likelihood components
   infile >> text >> ws;
   if (!(strcasecmp(text, "likelihood") == 0))
-    handle.Unexpected("likelihood", text);
+    handle.logFileUnexpected(LOGFAIL, "likelihood", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "printfile") == 0)) {
     likenames.resize(1);
@@ -28,14 +28,14 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
     infile >> text >> ws;
   }
   if (likenames.Size() == 0)
-    handle.Message("Error in likelihoodprinter - failed to read component");
+    handle.logFileMessage(LOGFAIL, "Error in likelihoodprinter - failed to read component");
 
   //read the name of the printfile, and then open the printfile
   filename = new char[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
 
   if (!(strcasecmp(text, "printfile") == 0))
-    handle.Unexpected("printfile", text);
+    handle.logFileUnexpected(LOGFAIL, "printfile", text);
   infile >> filename >> ws;
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
@@ -47,22 +47,22 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in likelihoodprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "Error in likelihoodprinter - invalid value of printatstart");
 
   if (printtimeid == 1)
-    handle.Message("Error in likelihoodprinter - cannot print likelihood informtion at the start of the timestep");
+    handle.logFileMessage(LOGFAIL, "Error in likelihoodprinter - cannot print likelihood informtion at the start of the timestep");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("yearsandsteps", text);
+    handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.Message("Error in likelihoodprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "Error in likelihoodprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 }
 
@@ -89,11 +89,11 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
   }
 
   if (like.Size() != likenames.Size()) {
-    handle.logWarning("Error in likelihoodprinter - failed to match likelihood components");
+    handle.logMessage(LOGWARN, "Error in likelihoodprinter - failed to match likelihood components");
     for (i = 0; i < like.Size(); i++)
-      handle.logWarning("Error in likelihoodprinter - found component", like[i]->getName());
+      handle.logMessage(LOGWARN, "Error in likelihoodprinter - found component", like[i]->getName());
     for (i = 0; i < likenames.Size(); i++)
-      handle.logWarning("Error in likelihoodprinter - looking for component", likenames[i]);
+      handle.logMessage(LOGWARN, "Error in likelihoodprinter - looking for component", likenames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -102,7 +102,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
 
   for (i = 0; i < like.Size(); i++) {
     outfile << "; Likelihood output file for the likelihood component " << like[i]->getName();
-    switch(like[i]->Type()) {
+    switch (like[i]->Type()) {
       case CATCHDISTRIBUTIONLIKELIHOOD:
         outfile << "\n; year-step-area-age-length-number\n";
         break;
@@ -128,16 +128,16 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
         outfile << "\n; tagid-year-step-area-length-number\n";
         break;
       case RECSTATISTICSLIKELIHOOD:
-        handle.logWarning("Warning in likelihoodprinter - printing not currently implemented for", like[i]->getName());
+        handle.logMessage(LOGWARN, "Warning in likelihoodprinter - printing not currently implemented for", like[i]->getName());
         //outfile << "\n; tagid-year-step-area-number-mean\n";
         break;
       case BOUNDLIKELIHOOD:
       case UNDERSTOCKINGLIKELIHOOD:
       case MIGRATIONPENALTYLIKELIHOOD:
-        handle.logWarning("Warning in likelihoodprinter - printing not implemented for", like[i]->getName());
+        handle.logMessage(LOGWARN, "Warning in likelihoodprinter - printing not implemented for", like[i]->getName());
         break;
       default:
-        handle.logFailure("Error in likelihoodprinter - unrecognised likelihood type", like[i]->Type());
+        handle.logMessage(LOGFAIL, "Error in likelihoodprinter - unrecognised likelihood type", like[i]->Type());
         break;
     }
   }

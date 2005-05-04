@@ -5,7 +5,7 @@ extern ErrorHandler handle;
 
 LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
   if (A.Ncol() != A.Nrow())
-    handle.logFailure("Error in ludecomposition - matrix not rectangular");
+    handle.logMessage(LOGFAIL, "Error in ludecomposition - matrix not rectangular");
 
   illegal = 0;
   int i, k, j;
@@ -19,19 +19,19 @@ LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
 
   for (k = 0; k < size; k++) {
     L[k][k] = 1.0;
-    
+
     if (isZero(U[k][k])) {
-      handle.logWarning("Warning in ludecomposition - zero on matrix diagonal");
+      handle.logMessage(LOGWARN, "Warning in ludecomposition - zero on matrix diagonal");
       illegal = 1;
       logdet = verybig;
       tmp = 0.0;
-      
+
     } else if (U[k][k] > 0.0) {
       logdet += log(U[k][k]);
       tmp = 1.0 / U[k][k];
 
     } else if (U[k][k] < 0.0 ) {
-      handle.logWarning("Warning in ludecomposition - negative number on matrix diagonal");
+      handle.logMessage(LOGWARN, "Warning in ludecomposition - negative number on matrix diagonal");
       illegal = 1;
       logdet = verybig;
       tmp = 0.0;
@@ -51,7 +51,7 @@ LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
 // calculates the solution of Ax=b using the LU decomposition calculated in the constructor
 DoubleVector LUDecomposition::Solve(const DoubleVector& b) {
   if (size != b.Size())
-    handle.logFailure("Error in ludecomposition - sizes not the same");
+    handle.logMessage(LOGFAIL, "Error in ludecomposition - sizes not the same");
 
   int i, j;
   double s;
@@ -72,9 +72,10 @@ DoubleVector LUDecomposition::Solve(const DoubleVector& b) {
       s += U[i][j] * x[j];
 
     x[i] -= s;
-    if (isZero(U[i][i]))
-      handle.logWarning("Warning in ludecomposition - divide by zero");
-    else
+    if (isZero(U[i][i])) {
+      if (handle.getLogLevel() >= LOGWARN)
+        handle.logMessage(LOGWARN, "Warning in ludecomposition - divide by zero");
+    } else
       x[i] /= U[i][i];
   }
   return x;

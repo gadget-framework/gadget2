@@ -80,7 +80,8 @@ void Ecosystem::SimulateOneTimestep() {
 void Ecosystem::Simulate(int Optimise, int print) {
   int i, j;
 
-  handle.logMessage("");  //write blank line to log file
+  if (handle.getLogLevel() >= LOGMESSAGE)
+  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
   if (Optimise) {
     for (j = 0; j < likevec.Size(); j++)
       likevec[j]->Reset(keeper);
@@ -124,12 +125,12 @@ void Ecosystem::Simulate(int Optimise, int print) {
       if (interrupted) {
         InterruptInterface ui(*this);
         if (!ui.menu()) {
-          handle.logMessage("\n** Gadget interrupted - quitting current simulation **");
+          handle.logMessage(LOGMESSAGE, "\n** Gadget interrupted - quitting current simulation **");
           char interruptfile[15];
           strncpy(interruptfile, "", 15);
           strcpy(interruptfile, "interrupt.out");
           this->writeParamsInColumns(interruptfile, 0);
-          handle.logMessage("** Gadget interrupted - quitting current simulation **");
+          handle.logMessage(LOGMESSAGE, "** Gadget interrupted - quitting current simulation **");
           exit(EXIT_SUCCESS);
         }
         interrupted = 0;
@@ -148,7 +149,8 @@ void Ecosystem::Simulate(int Optimise, int print) {
     for (j = 0; j < likevec.Size(); j++)
       likelihood += likevec[j]->returnLikelihood();
   }
-  handle.logMessage("The current overall likelihood score is", likelihood);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "The current overall likelihood score is", likelihood);
 
   //Remove all the tagging experiments - they must have expired now
   tagvec.deleteAllTags();

@@ -65,6 +65,10 @@ protected:
    * \brief This is the StockAggregator used to collect information about the stocks
    */
   StockAggregator* aggregator;
+  /**
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   */
+  const AgeBandMatrixPtrVector* alptr;
 };
 
 #endif

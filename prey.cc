@@ -35,11 +35,11 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
 
   LgrpDiv = new LengthGroupDivision(preylengths);
   if (LgrpDiv->Error())
-    handle.Message("Error in prey - failed to create length group");
+    handle.logMessage(LOGFAIL, "Error in prey - failed to create length group");
 
   //read the energy content of this prey
   readWordAndVariable(infile, "energycontent", energy);
- 
+
   this->InitialiseObjects();
   keeper->clearLast();
 
@@ -54,7 +54,7 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas,
 
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    handle.Message("Error in prey - failed to create length group");
+    handle.logMessage(LOGFAIL, "Error in prey - failed to create length group");
   this->InitialiseObjects();
   CI = new ConversionIndex(LgrpDiv, LgrpDiv);
 }
@@ -123,7 +123,7 @@ void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
 void Prey::addBiomassConsumption(int area, const DoubleIndexVector& predconsumption) {
   int i, inarea = this->areaNum(area);
   if ((predconsumption.minCol() < 0) || (predconsumption.maxCol() > cons[inarea].Size()))
-    handle.logFailure("Error in prey - invalid length group when adding consumption");
+    handle.logMessage(LOGFAIL, "Error in prey - invalid length group when adding consumption");
   for (i = predconsumption.minCol(); i < predconsumption.maxCol(); i++)
     cons[inarea][i] += predconsumption[i];
 }
@@ -132,7 +132,7 @@ void Prey::addBiomassConsumption(int area, const DoubleIndexVector& predconsumpt
 void Prey::addNumbersConsumption(int area, const DoubleIndexVector& predconsumption) {
   int i, inarea = this->areaNum(area);
   if ((predconsumption.minCol() < 0) || (predconsumption.maxCol() > cons[inarea].Size()))
-    handle.logFailure("Error in prey - invalid length group when adding consumption");
+    handle.logMessage(LOGFAIL, "Error in prey - invalid length group when adding consumption");
   for (i = predconsumption.minCol(); i < predconsumption.maxCol(); i++)
     cons[inarea][i] += (predconsumption[i] * Number[inarea][i].W);
 }
@@ -183,12 +183,13 @@ void Prey::Reset() {
       overconsumption[area][l] = 0.0;
     }
   }
-  handle.logMessage("Reset consumption data for prey", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset consumption data for prey", this->getName());
 }
 
 int Prey::isPreyArea(int area) {
-  if (total[this->areaNum(area)] < 0)
-    handle.logWarning("Warning in prey - negative amount consumed");
+  if ((handle.getLogLevel() >= LOGWARN) && (total[this->areaNum(area)] < 0))
+    handle.logMessage(LOGWARN, "Warning in prey - negative amount consumed");
   if (isZero(total[this->areaNum(area)]))
     return 0;
   return 1;

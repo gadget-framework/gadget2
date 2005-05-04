@@ -3,6 +3,7 @@
 #include "readword.h"
 #include "areatime.h"
 #include "keeper.h"
+#include "errorhandler.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
@@ -21,9 +22,9 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
   while (!infile.eof()) {
     infile >> tempParam >> ws;
     if (!readVectorInLine(infile, tmpvec))
-      handle.Message("Error in boundlikelihood - failed to read values");
+      handle.logFileMessage(LOGFAIL, "Error in boundlikelihood - failed to read values");
     if (tmpvec.Size() != 3)  //3 values plus the name ...
-      handle.Message("Error in boundlikelihood - should be 4 columns");
+      handle.logFileMessage(LOGFAIL, "Error in boundlikelihood - should be 4 columns");
 
     if (strcasecmp(tempParam.getName(), "default") == 0) {
       count++;
@@ -51,11 +52,12 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
           switchnr[i] = j;
 
     for (i = 0; i < switches.Size(); i++)
-      if (switchnr[i] == -1)
-        handle.logWarning("Warning in boundlikelihood - failed to match switch", switches[i].getName());
+      if ((handle.getLogLevel() >= LOGWARN) && (switchnr[i] == -1))
+        handle.logMessage(LOGWARN, "Warning in boundlikelihood - failed to match switch", switches[i].getName());
   }
 
-  handle.logMessage("Read penalty file - number of entries", count);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read penalty file - number of entries", count);
   //set flag to initialise the bounds - called in Reset
   checkInitialised = 0;
 }
@@ -65,8 +67,8 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
 
   if (checkInitialised == 0) {
-    if (keeper->boundsGiven() == 0)
-      handle.logWarning("Warning in boundlikelihood - no bounds have been set in input file");
+    if ((handle.getLogLevel() >= LOGWARN) && (keeper->boundsGiven() == 0))
+      handle.logMessage(LOGWARN, "Warning in boundlikelihood - no bounds have been set in input file");
 
     int i, j, k, numvar, numset;
     numvar = keeper->numVariables();
@@ -96,7 +98,7 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
         if (i < numset)
           done[i] = switchnr[i];
         else
-          handle.logFailure("Error in boundlikelihood - received invalid variable to check bounds");
+          handle.logMessage(LOGFAIL, "Error in boundlikelihood - received invalid variable to check bounds");
 
       } else {
         for (j = 0; j < numset; j++)
@@ -115,11 +117,12 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
 
     for (i = 0; i < powers.Size(); i++)
       if (powers[i] < verysmall)
-        handle.logFailure("Error in boundlikelihood - invalid value for power", powers[i]);
+        handle.logMessage(LOGFAIL, "Error in boundlikelihood - invalid value for power", powers[i]);
 
     checkInitialised = 1;
   }
-  handle.logMessage("Reset boundlikelihood component", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset boundlikelihood component", this->getName());
 }
 
 void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keeper* const keeper) {
@@ -150,9 +153,11 @@ void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keepe
     } else
       likelihoods[i] = 0.0;
   }
-  handle.logMessage("Calculated likelihood score for boundlikelihood component to be", likelihood);
-  if (isZero(likelihood))
-    handle.logMessage("For this model simulation, no parameters are outside the bounds");
+  if (handle.getLogLevel() >= LOGMESSAGE) {
+    handle.logMessage(LOGMESSAGE, "Calculated likelihood score for boundlikelihood component to be", likelihood);
+    if (isZero(likelihood))
+      handle.logMessage(LOGMESSAGE, "For this model simulation, no parameters are outside the bounds");
+  }
 }
 
 void BoundLikelihood::SummaryPrint(ofstream& outfile) {

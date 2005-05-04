@@ -34,7 +34,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
 
   infile >> text >> ws;
   if (!((strcasecmp(text, "spawnstep") == 0) || (strcasecmp(text, "spawnsteps") == 0)))
-    handle.Unexpected("spawnsteps", text);
+    handle.logFileUnexpected(LOGFAIL, "spawnsteps", text);
 
   i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
@@ -45,11 +45,11 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
 
   for (i = 0; i < spawnStep.Size(); i++)
     if (spawnStep[i] < 1 || spawnStep[i] > TimeInfo->StepsInYear())
-      handle.Message("Error in spawner - invalid spawning step");
+      handle.logFileMessage(LOGFAIL, "Error in spawner - invalid spawning step");
 
   infile >> text >> ws;
   if (!((strcasecmp(text, "spawnarea") == 0) || (strcasecmp(text, "spawnareas") == 0)))
-    handle.Unexpected("spawnareas", text);
+    handle.logFileUnexpected(LOGFAIL, "spawnareas", text);
 
   i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
@@ -59,15 +59,14 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   }
 
   for (i = 0; i < spawnArea.Size(); i++)
-    if ((spawnArea[i] = Area->InnerArea(spawnArea[i])) == -1)
-      handle.UndefinedArea(spawnArea[i]);
+    spawnArea[i] = Area->InnerArea(spawnArea[i]);
 
   infile >> text;
   if (strcasecmp(text, "spawnstocksandratios") == 0) {
     onlyParent = 0;
     infile >> text >> ws;
     i = 0;
-    while (strcasecmp(text, "proportionfunction") != 0 && infile.good()) {
+    while (strcasecmp(text, "proportionfunction") != 0 && !infile.eof()) {
       spawnStockNames.resize(1);
       spawnStockNames[i] = new char[strlen(text) + 1];
       strcpy(spawnStockNames[i], text);
@@ -80,10 +79,10 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     onlyParent = 1;
     infile >> text >> ws;
   } else
-    handle.Unexpected("spawnstocksandratios or onlyparent", text);
+    handle.logFileUnexpected(LOGFAIL, "spawnstocksandratios or onlyparent", text);
 
-  if (!infile.good())
-    handle.Failure();
+  if (infile.eof())
+    handle.logFileEOFMessage(LOGFAIL);
 
   if (strcasecmp(text, "proportionfunction") == 0) {
     infile >> text >> ws;
@@ -94,11 +93,11 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     else if (strcasecmp(text, "exponential") == 0)
       fnProportion = new ExpSelectFunc();
     else
-      handle.Message("Error in spawner - unrecognised proportion function", text);
+      handle.logFileMessage(LOGFAIL, "Error in spawner - unrecognised proportion function", text);
 
     fnProportion->readConstants(infile, TimeInfo, keeper);
   } else
-    handle.Unexpected("proportionfunction", text);
+    handle.logFileUnexpected(LOGFAIL, "proportionfunction", text);
 
   infile >> text;
   if (strcasecmp(text, "mortalityfunction") == 0) {
@@ -110,11 +109,11 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     else if (strcasecmp(text, "exponential") == 0)
       fnMortality = new ExpSelectFunc();
     else
-      handle.Message("Error in spawner - unrecognised mortality function", text);
+      handle.logFileMessage(LOGFAIL, "Error in spawner - unrecognised mortality function", text);
 
     fnMortality->readConstants(infile, TimeInfo, keeper);
   } else
-    handle.Unexpected("mortalityfunction", text);
+    handle.logFileUnexpected(LOGFAIL, "mortalityfunction", text);
 
   infile >> text;
   if (strcasecmp(text, "weightlossfunction") == 0) {
@@ -126,16 +125,16 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     else if (strcasecmp(text, "exponential") == 0)
       fnWeightLoss = new ExpSelectFunc();
     else
-      handle.Message("Error in spawner - unrecognised weight loss function", text);
+      handle.logFileMessage(LOGFAIL, "Error in spawner - unrecognised weight loss function", text);
 
     fnWeightLoss->readConstants(infile, TimeInfo, keeper);
   } else
-    handle.Unexpected("weightlossfunction", text);
+    handle.logFileUnexpected(LOGFAIL, "weightlossfunction", text);
 
   if (onlyParent == 0) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "recruitment") == 0))
-      handle.Unexpected("recruitment", text);
+      handle.logFileUnexpected(LOGFAIL, "recruitment", text);
 
     //read in the recruitment function details
     functionnumber = 0;
@@ -153,7 +152,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
       functionnumber = 4;
       spawnParameters.resize(5, keeper);
     } else
-      handle.Message("Error in spawner - unrecognised recruitment function", functionname);
+      handle.logFileMessage(LOGFAIL, "Error in spawner - unrecognised recruitment function", functionname);
 
     spawnParameters.read(infile, TimeInfo, keeper);
 
@@ -163,15 +162,16 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     if (strcasecmp(text, "stockparameters") == 0)
       stockParameters.read(infile, TimeInfo, keeper);
     else
-      handle.Unexpected("stockparameters", text);
+      handle.logFileUnexpected(LOGFAIL, "stockparameters", text);
   }
 
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    handle.Unexpected("<end of file>", text);
+    handle.logFileUnexpected(LOGFAIL, "<end of file>", text);
   }
-  handle.logMessage("Read spawning data file");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read spawning data file");
   keeper->clearLast();
 }
 
@@ -208,11 +208,11 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
       }
 
   if (index != spawnStockNames.Size()) {
-    handle.logWarning("Error in spawner - failed to match spawning stocks");
+    handle.logMessage(LOGWARN, "Error in spawner - failed to match spawning stocks");
     for (i = 0; i < stockvec.Size(); i++)
-      handle.logWarning("Error in spawner - found stock", stockvec[i]->getName());
+      handle.logMessage(LOGWARN, "Error in spawner - found stock", stockvec[i]->getName());
     for (i = 0; i < spawnStockNames.Size(); i++)
-      handle.logWarning("Error in spawner - looking for stock", spawnStockNames[i]);
+      handle.logMessage(LOGWARN, "Error in spawner - looking for stock", spawnStockNames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -233,8 +233,8 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
       if (!spawnStocks[i]->isInArea(spawnArea[j]))
         index++;
 
-    if (index != 0)
-      handle.logWarning("Warning in spawner - spawned stock isnt defined on all areas");
+    if ((handle.getLogLevel() >= LOGWARN) && (index != 0))
+      handle.logMessage(LOGWARN, "Warning in spawner - spawned stock isnt defined on all areas");
 
     spawnAge = min(spawnStocks[i]->minAge(), spawnAge);
     minlength = min(spawnStocks[i]->returnLengthGroupDiv()->minLength(), minlength);
@@ -294,10 +294,12 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
 
   //create a length distribution and mean weight for the new stock
   stockParameters.Update(TimeInfo);
-  if (stockParameters[0] > spawnLgrpDiv->maxLength())
-    handle.logWarning("Warning in spawner - invalid mean length for spawned stock");
-  if (isZero(stockParameters[0]))
-    handle.logWarning("Warning in spawner - invalid standard deviation for spawned stock");
+  if (handle.getLogLevel() >= LOGWARN) {
+    if (stockParameters[0] > spawnLgrpDiv->maxLength())
+      handle.logMessage(LOGWARN, "Warning in spawner - invalid mean length for spawned stock");
+    if (isZero(stockParameters[0]))
+      handle.logMessage(LOGWARN, "Warning in spawner - invalid standard deviation for spawned stock");
+  }
 
   if (stockParameters[1] > verysmall) {
     tmpsdev = 1.0 / (2 * stockParameters[1] * stockParameters[1]);
@@ -322,7 +324,7 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   //add this to the spawned stocks
   for (s = 0; s < spawnStocks.Size(); s++) {
     if (!spawnStocks[s]->isInArea(area))
-      handle.logFailure("Error in spawner - spawned stock doesnt live on area", area);
+      handle.logMessage(LOGFAIL, "Error in spawner - spawned stock doesnt live on area", area);
 
     spawnStocks[s]->Add(Storage[inarea], CI[s], area, Ratio[s], spawnStocks[s]->minAge(), spawnStocks[s]->minAge());
   }
@@ -350,11 +352,13 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       spawnProportion[i] = fnProportion->calculate(LgrpDiv->meanLength(i));
       if (spawnProportion[i] < 0.0) {
-        handle.logWarning("Warning in spawning - function outside bounds", spawnProportion[i]);
+        if (handle.getLogLevel() >= LOGWARN)
+          handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnProportion[i]);
         spawnProportion[i] = 0.0;
       }
       if (spawnProportion[i] > 1.0) {
-        handle.logWarning("Warning in spawning - function outside bounds", spawnProportion[i]);
+        if (handle.getLogLevel() >= LOGWARN)
+          handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnProportion[i]);
         spawnProportion[i] = 1.0;
       }
     }
@@ -365,11 +369,13 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       spawnWeightLoss[i] = fnWeightLoss->calculate(LgrpDiv->meanLength(i));
       if (spawnWeightLoss[i] < 0.0) {
-        handle.logWarning("Warning in spawning - function outside bounds", spawnWeightLoss[i]);
+        if (handle.getLogLevel() >= LOGWARN)
+          handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnWeightLoss[i]);
         spawnWeightLoss[i] = 0.0;
       }
       if (spawnWeightLoss[i] > 1.0) {
-        handle.logWarning("Warning in spawning - function outside bounds", spawnWeightLoss[i]);
+        if (handle.getLogLevel() >= LOGWARN)
+          handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnWeightLoss[i]);
         spawnWeightLoss[i] = 1.0;
       }
     }
@@ -382,13 +388,14 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
     }
   }
 
-  handle.logMessage("Reset spawning data");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset spawning data");
 }
 
 double SpawnData::calcSpawnNumber(int age, int len, double number, double weight) {
   double temp = 0.0;
 
-  switch(functionnumber) {
+  switch (functionnumber) {
     case 1:
     case 2:
     case 3:
@@ -399,7 +406,7 @@ double SpawnData::calcSpawnNumber(int age, int len, double number, double weight
              * pow(number, spawnParameters[3]) * pow(weight, spawnParameters[4]);
       break;
     default:
-      handle.logWarning("Warning in spawner - unrecognised recruitment function", functionname);
+      handle.logMessage(LOGWARN, "Warning in spawner - unrecognised recruitment function", functionname);
       break;
   }
 
@@ -414,7 +421,7 @@ double SpawnData::calcRecruitNumber() {
     for (len = 0; len < spawnNumbers.Ncol(age); len++)
       temp += spawnNumbers[age][len];
 
-  switch(functionnumber) {
+  switch (functionnumber) {
     case 1:
     case 4:
       recruits = temp * spawnParameters[0];
@@ -426,7 +433,7 @@ double SpawnData::calcRecruitNumber() {
       recruits = temp * spawnParameters[0] / (spawnParameters[1] + temp);
       break;
     default:
-      handle.logWarning("Warning in spawner - unrecognised recruitment function", functionname);
+      handle.logMessage(LOGWARN, "Warning in spawner - unrecognised recruitment function", functionname);
       break;
   }
 

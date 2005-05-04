@@ -47,8 +47,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
@@ -75,7 +74,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "stocknames") == 0))
-    handle.Unexpected("stocknames", text);
+    handle.logFileUnexpected(LOGFAIL, "stocknames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "fittype") == 0)) {
     infile >> ws;
@@ -85,8 +84,9 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
     infile >> text;
   }
   if (stocknames.Size() == 0)
-    handle.Message("Error in surveydistribution - failed to read stocks");
-  handle.logMessage("Read stock data - number of stocks", stocknames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in surveydistribution - failed to read stocks");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   infile >> fittype >> ws;
   fitnumber = 0;
@@ -94,16 +94,15 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
     fitnumber = 1;
   } else if (strcasecmp(fittype, "powerfit") == 0) {
     fitnumber = 2;
-
   } else
-    handle.Message("Error in surveydistribution - unrecognised fittype", fittype);
+    handle.logFileMessage(LOGFAIL, "Error in surveydistribution - unrecognised fittype", fittype);
 
   parameters.resize(2, keeper);
   infile >> text >> ws;
   if (strcasecmp(text, "parameters") == 0)
     parameters.read(infile, TimeInfo, keeper);
   else
-    handle.Unexpected("parameters", text);
+    handle.logFileUnexpected(LOGFAIL, "parameters", text);
 
   q_l.resize(LgrpDiv->numLengthGroups(), 0.0);
   infile >> text >> ws;
@@ -129,7 +128,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
       infile >> q_l[i];
 
   } else {
-    handle.Message("Error in surveydistribution - unrecognised suitability", text);
+    handle.logFileMessage(LOGFAIL, "Error in surveydistribution - unrecognised suitability", text);
   }
 
   //JMB - changed to make the reading of epsilon optional
@@ -141,7 +140,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
     epsilon = 1.0;
 
   if (epsilon <= 0) {
-    handle.Warning("Epsilon should be a positive integer - set to default value 1");
+    handle.logFileMessage(LOGWARN, "Epsilon should be a positive integer - set to default value 1");
     epsilon = 1.0;
   }
 
@@ -156,7 +155,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   else if (strcasecmp(liketype, "log") == 0)
     likenumber = 4;
   else
-    handle.Unexpected("likelihoodtype", liketype);
+    handle.logFileMessage(LOGFAIL, "Error in surveydistribution - unrecognised likelihoodtype", liketype);
 
   //read the survey distribution data from the datafile
   datafile.open(datafilename, ios::in);
@@ -172,7 +171,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 }
 
@@ -191,7 +190,7 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 6)
-    handle.Message("Wrong number of columns in inputfile - should be 6");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -257,9 +256,10 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
-  if (count == 0)
-    handle.logWarning("Warning in surveydistribution - found no data in the data file for", this->getName());
-  handle.logMessage("Read surveydistribution data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in surveydistribution - found no data in the data file for", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read surveydistribution data file - number of entries", count);
 }
 
 SurveyDistribution::~SurveyDistribution() {
@@ -294,7 +294,8 @@ SurveyDistribution::~SurveyDistribution() {
 void SurveyDistribution::Reset(const Keeper* const keeper) {
   timeindex = 0;
   Likelihood::Reset(keeper);
-  handle.logMessage("Reset surveydistribution component", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset surveydistribution component", this->getName());
 }
 
 void SurveyDistribution::Print(ofstream& outfile) const {
@@ -317,7 +318,7 @@ void SurveyDistribution::LikelihoodPrint(ofstream& outfile, const TimeClass* con
   t = timeindex - 1; //timeindex was increased before this is called
 
   if ((t >= Years.Size()) || t < 0)
-    handle.logFailure("Error in surveydistribution - invalid timestep", t);
+    handle.logMessage(LOGFAIL, "Error in surveydistribution - invalid timestep", t);
 
   for (area = 0; area < modelDistribution.Ncol(t); area++) {
     for (age = 0; age < modelDistribution[t][area]->Nrow(); age++) {
@@ -346,56 +347,58 @@ void SurveyDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVect
       }
     }
     if (found == 0)
-      handle.logFailure("Error in surveydistribution - failed to match stock", stocknames[i]);
+      handle.logMessage(LOGFAIL, "Error in surveydistribution - failed to match stock", stocknames[i]);
   }
 
   //check areas, ages and lengths
-  for (j = 0; j < areas.Nrow(); j++) {
+  if (handle.getLogLevel() >= LOGWARN) {
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < stocks.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (stocks[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in surveydistribution - stock not defined on all areas");
+    }
+
+    minage = 9999;
+    maxage = 0;
+    for (i = 0; i < ages.Nrow(); i++) {
+      for (j = 0; j < ages.Ncol(i); j++) {
+        minage = min(ages[i][j], minage);
+        maxage = max(ages[i][j], maxage);
+      }
+    }
+
     found = 0;
     for (i = 0; i < stocks.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (stocks[i]->isInArea(areas[j][k]))
-          found++;
+      if (minage >= stocks[i]->minAge())
+        found++;
     if (found == 0)
-      handle.logWarning("Warning in surveydistribution - stock not defined on all areas");
+      handle.logMessage(LOGWARN, "Warning in surveydistribution - minimum age less than stock age");
+
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (maxage <= stocks[i]->maxAge())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in surveydistribution - maximum age greater than stock age");
+
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in surveydistribution - minimum length group less than stock length");
+
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in surveydistribution - maximum length group greater than stock length");
   }
-
-  minage = 9999;
-  maxage = 0;
-  for (i = 0; i < ages.Nrow(); i++) {
-    for (j = 0; j < ages.Ncol(i); j++) {
-      minage = min(ages[i][j], minage);
-      maxage = max(ages[i][j], maxage);
-    }
-  }
-
-  found = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (minage >= stocks[i]->minAge())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in surveydistribution - minimum age less than stock age");
-
-  found = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (maxage <= stocks[i]->maxAge())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in surveydistribution - maximum age greater than stock age");
-
-  found = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in surveydistribution - minimum length group less than stock length");
-
-  found = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in surveydistribution - maximum length group greater than stock length");
 
   aggregator = new StockAggregator(stocks, LgrpDiv, areas, ages);
 }
@@ -420,7 +423,7 @@ void SurveyDistribution::calcIndex(const TimeClass* const TimeInfo) {
   }
 
   parameters.Update(TimeInfo);
-  switch(fitnumber) {
+  switch (fitnumber) {
     case 1:
       for (area = 0; area < areas.Nrow(); area++)
         for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
@@ -434,7 +437,7 @@ void SurveyDistribution::calcIndex(const TimeClass* const TimeInfo) {
             (*modelDistribution[timeindex][area])[age][len] = parameters[0] * q_l[len] * pow(((*alptr)[area][age][len]).N, parameters[1]);
       break;
     default:
-      handle.logWarning("Warning in surveydistribution - unrecognised fittype", fittype);
+      handle.logMessage(LOGWARN, "Warning in surveydistribution - unrecognised fittype", fittype);
       break;
   }
 }
@@ -446,11 +449,12 @@ void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
   aggregator->Sum();
-  handle.logMessage("Calculating likelihood score for surveydistribution component", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for surveydistribution component", this->getName());
 
   alptr = &aggregator->returnSum();
   this->calcIndex(TimeInfo);
-  switch(likenumber) {
+  switch (likenumber) {
     case 1:
       l = calcLikPearson();
       break;
@@ -464,11 +468,12 @@ void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
       l = calcLikLog();
       break;
     default:
-      handle.logWarning("Warning in surveydistribution - unrecognised likelihoodtype", liketype);
+      handle.logMessage(LOGWARN, "Warning in surveydistribution - unrecognised likelihoodtype", liketype);
       break;
   }
 
-  handle.logMessage("The likelihood score for this component on this timestep is", l);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
   likelihood += l;
   timeindex++;
 }

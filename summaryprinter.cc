@@ -35,7 +35,7 @@ SummaryPrinter::SummaryPrinter(CommentStream& infile)
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 }
 
@@ -53,7 +53,7 @@ void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
   }
 
   for (i = 0; i < like.Size(); i++) {
-    switch(like[i]->Type()) {
+    switch (like[i]->Type()) {
       case CATCHDISTRIBUTIONLIKELIHOOD:
       case CATCHSTATISTICSLIKELIHOOD:
       case CATCHINKILOSLIKELIHOOD:
@@ -67,10 +67,10 @@ void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
       case TAGLIKELIHOOD:
       case RECSTATISTICSLIKELIHOOD:
       case MIGRATIONPENALTYLIKELIHOOD:
-        handle.logMessage("Warning in summaryprinter - printing not implemented for", like[i]->getName());
+        handle.logMessage(LOGWARN, "Warning in summaryprinter - printing not implemented for", like[i]->getName());
         break;
       default:
-        handle.logFailure("Error in summaryprinter - unrecognised likelihood type", like[i]->Type());
+        handle.logMessage(LOGFAIL, "Error in summaryprinter - unrecognised likelihood type", like[i]->Type());
         break;
     }
   }

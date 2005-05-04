@@ -15,7 +15,7 @@ extern ErrorHandler handle;
 
 PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
-  : Printer(PREDATOROVERPRINTER), predLgrpDiv(0), aggregator(0) {
+  : Printer(PREDATOROVERPRINTER), predLgrpDiv(0), aggregator(0), dptr(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -25,7 +25,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "predators") == 0))
-    handle.Unexpected("predators", text);
+    handle.logFileUnexpected(LOGFAIL, "predators", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "areaaggfile") == 0)) {
     predatornames.resize(1);
@@ -34,8 +34,9 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
     infile >> text >> ws;
   }
   if (predatornames.Size() == 0)
-    handle.Message("Error in predatoroverprinter - failed to read predators");
-  handle.logMessage("Read predator data - number of predators", predatornames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in predatoroverprinter - failed to read predators");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", predatornames.Size());
 
   //read in area aggregation from file
   filename = new char[MaxStrLength];
@@ -66,13 +67,12 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //Finished reading from infile.
   predLgrpDiv = new LengthGroupDivision(lengths);
   if (predLgrpDiv->Error())
-    handle.Message("Error in predatoroverprinter - failed to create length group");
+    handle.logFileMessage(LOGFAIL, "Error in predatoroverprinter - failed to create length group");
 
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
@@ -90,7 +90,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
   }
 
   if (precision < 0)
-    handle.Message("Error in predatoroverprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "Error in predatoroverprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -98,19 +98,19 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile,
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in predatoroverprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "Error in predatoroverprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("yearsandsteps", text);
+    handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.Message("Error in predatoroverprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "Error in predatoroverprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 
   //finished initializing. Now print first lines
@@ -144,38 +144,40 @@ void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec) {
   }
 
   if (predators.Size() != predatornames.Size()) {
-    handle.logWarning("Error in predatoroverprinter - failed to match predators");
+    handle.logMessage(LOGWARN, "Error in predatoroverprinter - failed to match predators");
     for (i = 0; i < predatorvec.Size(); i++)
-      handle.logWarning("Error in predatoroverprinter - found predator", predatorvec[i]->getName());
+      handle.logMessage(LOGWARN, "Error in predatoroverprinter - found predator", predatorvec[i]->getName());
     for (i = 0; i < predatornames.Size(); i++)
-      handle.logWarning("Error in predatoroverprinter - looking for predator", predatornames[i]);
+      handle.logMessage(LOGWARN, "Error in predatoroverprinter - looking for predator", predatornames[i]);
     exit(EXIT_FAILURE);
   }
 
   //check predator areas and lengths
-  for (j = 0; j < areas.Nrow(); j++) {
+  if (handle.getLogLevel() >= LOGWARN) {
+    for (j = 0; j < areas.Nrow(); j++) {
+      index = 0;
+      for (i = 0; i < predators.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (predators[i]->isInArea(areas[j][k]))
+            index++;
+      if (index == 0)
+        handle.logMessage(LOGWARN, "Warning in predatoroverprinter - predator not defined on all areas");
+    }
+
     index = 0;
     for (i = 0; i < predators.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (predators[i]->isInArea(areas[j][k]))
-          index++;
+      if (predLgrpDiv->maxLength(0) > predators[i]->returnLengthGroupDiv()->minLength())
+        index++;
     if (index == 0)
-      handle.logWarning("Warning in predatoroverprinter - predator not defined on all areas");
+      handle.logMessage(LOGWARN, "Warning in predatoroverprinter - minimum length group less than predator length");
+
+    index = 0;
+    for (i = 0; i < predators.Size(); i++)
+      if (predLgrpDiv->minLength(predLgrpDiv->numLengthGroups()) < predators[i]->returnLengthGroupDiv()->maxLength())
+        index++;
+    if (index == 0)
+      handle.logMessage(LOGWARN, "Warning in predatoroverprinter - maximum length group greater than predator length");
   }
-
-  index = 0;
-  for (i = 0; i < predators.Size(); i++)
-    if (predLgrpDiv->maxLength(0) > predators[i]->returnLengthGroupDiv()->minLength())
-      index++;
-  if (index == 0)
-    handle.logWarning("Warning in predatoroverprinter - minimum length group less than predator length");
-
-  index = 0;
-  for (i = 0; i < predators.Size(); i++)
-    if (predLgrpDiv->minLength(predLgrpDiv->numLengthGroups()) < predators[i]->returnLengthGroupDiv()->maxLength())
-      index++;
-  if (index == 0)
-    handle.logWarning("Warning in predatoroverprinter - maximum length group greater than predator length");
 
   aggregator = new PredatorOverAggregator(predators, areas, predLgrpDiv);
 }
@@ -186,7 +188,7 @@ void PredatorOverPrinter::Print(const TimeClass* const TimeInfo, int printtime) 
     return;
 
   aggregator->Sum();
-  const DoubleMatrix* dptr = &aggregator->returnSum();
+  dptr = &aggregator->returnSum();
   int a, len;
 
   for (a = 0; a < areas.Nrow(); a++) {

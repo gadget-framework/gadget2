@@ -13,7 +13,7 @@ extern RunID RUNID;
 extern ErrorHandler handle;
 
 StockFullPrinter::StockFullPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
-  : Printer(STOCKFULLPRINTER), stockname(0), aggregator(0), LgrpDiv(0) {
+  : Printer(STOCKFULLPRINTER), stockname(0), aggregator(0), LgrpDiv(0), alptr(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -26,7 +26,7 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile, const TimeClass* const
   infile >> text >> ws;
   if (strcasecmp(text, "areaaggfile") == 0) {
     infile >> text >> ws;
-    handle.Warning("Warning in stockfullprinter - area aggreagtion file ignored");
+    handle.logFileMessage(LOGWARN, "Warning in stockfullprinter - area aggreagtion file ignored");
     infile >> text >> ws;
   }
 
@@ -37,7 +37,7 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile, const TimeClass* const
   if (strcasecmp(text, "printfile") == 0)
     infile >> filename >> ws >> text >> ws;
   else
-    handle.Unexpected("printfile", text);
+    handle.logFileUnexpected(LOGFAIL, "printfile", text);
 
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
@@ -53,7 +53,7 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile, const TimeClass* const
   }
 
   if (precision < 0)
-    handle.Message("Error in stockfullprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "Error in stockfullprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -61,19 +61,19 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile, const TimeClass* const
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in stockfullprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "Error in stockfullprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("yearsandsteps", text);
+    handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.Message("Error in stockfullprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "Error in stockfullprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 
   //finished initializing. Now print first lines
@@ -115,11 +115,11 @@ void StockFullPrinter::setStock(StockPtrVector& stockvec) {
       }
 
   if (stocks.Size() != stocknames.Size()) {
-    handle.logWarning("Error in stockfullprinter - failed to match stocks");
+    handle.logMessage(LOGWARN, "Error in stockfullprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      handle.logWarning("Error in stockfullprinter - found stock", stocks[i]->getName());
+      handle.logMessage(LOGWARN, "Error in stockfullprinter - found stock", stocks[i]->getName());
     for (i = 0; i < stocknames.Size(); i++)
-      handle.logWarning("Error in stockfullprinter - looking for stock", stocknames[i]);
+      handle.logMessage(LOGWARN, "Error in stockfullprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -160,7 +160,7 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   aggregator->Sum();
   int a, age, len;
 
-  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
+  alptr = &aggregator->returnSum();
   for (a = 0; a < areas.Size(); a++) {
     for (age = (*alptr)[a].minAge(); age <= (*alptr)[a].maxAge(); age++) {
       for (len = (*alptr)[a].minLength(age); len < (*alptr)[a].maxLength(age); len++) {

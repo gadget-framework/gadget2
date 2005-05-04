@@ -33,8 +33,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   infile >> text >> ws;
   if (strcasecmp(text, "powercoeff") == 0)
@@ -43,7 +42,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   //read in the predator names
   i = 0;
   if (!((strcasecmp(text, "predatornames") == 0) || (strcasecmp(text, "fleetnames") == 0)))
-    handle.Unexpected("predatornames", text);
+    handle.logFileUnexpected(LOGFAIL, "predatornames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "yearsandsteps") == 0)) {
     prednames.resize(1);
@@ -52,11 +51,12 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
     infile >> text >> ws;
   }
   if (prednames.Size() == 0)
-    handle.Message("Error in understocking - failed to read predators");
-  handle.logMessage("Read predator data - number of predators", prednames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in understocking - failed to read predators");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", prednames.Size());
 
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.Message("Error in understocking - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "Error in understocking - wrong format for yearsandsteps");
 
   store.resize(areas.Nrow(), 0.0);
   //prepare for next likelihood component
@@ -64,7 +64,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 }
 
@@ -88,21 +88,23 @@ void UnderStocking::setPredators(PredatorPtrVector& Predators) {
       }
 
     if (found == 0)
-      handle.logFailure("Error in understocking - unrecognised predator", prednames[i]);
+      handle.logMessage(LOGFAIL, "Error in understocking - unrecognised predator", prednames[i]);
 
   }
 }
 
 void UnderStocking::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
-  handle.logMessage("Reset understocking component", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset understocking component", this->getName());
 }
 
 void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
   int i, j, k;
   double err, l;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    handle.logMessage("Checking understocking likelihood component", this->getName());
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Checking understocking likelihood component", this->getName());
     l = 0.0;
     for (k = 0; k < areas.Nrow(); k++)
       store[k] = 0.0;
@@ -124,7 +126,8 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
       for (k = 0; k < areas.Nrow(); k++)
         likelihoodValues[likelihoodValues.Nrow() - 1][k] = store[k];
 
-      handle.logMessage("The likelihood score for this component on this timestep is", l);
+      if (handle.getLogLevel() >= LOGMESSAGE)
+        handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
       likelihood += l;
     }
   }

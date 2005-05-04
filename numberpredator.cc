@@ -158,6 +158,6 @@ const PopInfoVector& NumberPredator::getNumberPriorToEating(int area, const char
     if (strcasecmp(getPreyName(prey), preyname) == 0)
       return Preys(prey)->getNumberPriorToEating(area);
 
-  handle.logFailure("Error in linearpredator - failed to match prey", preyname);
+  handle.logMessage(LOGFAIL, "Error in linearpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
 }

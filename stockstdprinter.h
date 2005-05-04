@@ -69,6 +69,10 @@ protected:
    * \brief This is the scaling factor used to scale the size of the stock
    */
   double scale;
+  /**
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   */
+  const AgeBandMatrixPtrVector* alptr;
 };
 
 #endif

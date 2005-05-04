@@ -35,20 +35,19 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
     while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
       tmpareas.resize(1);
       infile >> tmpint >> ws;
-      if ((tmpareas[i] = Area->InnerArea(tmpint)) == -1)
-        handle.UndefinedArea(tmpint);
+      tmpareas[i] = Area->InnerArea(tmpint);
       c = infile.peek();
       i++;
     }
     this->LetLiveOnAreas(tmpareas);
   } else
-    handle.Unexpected("livesonareas", text);
+    handle.logFileUnexpected(LOGFAIL, "livesonareas", text);
 
   infile >> ws;
   c = infile.peek();
   //JMB - removed the need to read in the fleet lengths
   if ((c == 'l') || (c == 'L')) {
-    handle.Warning("Warning in fleet - length data ignored");
+    handle.logFileMessage(LOGWARN, "Warning in fleet - length data ignored");
     infile.get(c);
     while (c != '\n' && !infile.eof())
       infile.get(c);
@@ -63,9 +62,9 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "suitability") == 0))
-    handle.Unexpected("suitability", text);
+    handle.logFileUnexpected(LOGFAIL, "suitability", text);
 
-  switch(type) {
+  switch (type) {
     case TOTALFLEET:
       predator = new TotalPredator(infile, this->getName(), areas, TimeInfo, keeper, multscaler);
       break;
@@ -76,7 +75,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
       predator = new NumberPredator(infile, this->getName(), areas, TimeInfo, keeper, multscaler);
       break;
     default:
-      handle.Message("Error in fleet - unrecognised fleet type for", this->getName());
+      handle.logFileMessage(LOGFAIL, "Error in fleet - unrecognised fleet type for", this->getName());
     }
 
   //the next entry in the file will be the name of the amounts datafile
@@ -86,7 +85,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   handle.Open(text);
 
   if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, this->getName()))
-    handle.Message("Error in fleet - failed to read fleet amounts");
+    handle.logFileMessage(LOGFAIL, "Error in fleet - failed to read fleet amounts");
   amount.Inform(keeper);
 
   handle.Close();
@@ -145,8 +144,8 @@ LengthPredator* Fleet::returnPredator() const {
 int Fleet::isFleetStepArea(int area, const TimeClass* const TimeInfo) {
   if (isZero(predator->multScaler()))
     return 0;
-  if (amount[TimeInfo->CurrentTime()][this->areaNum(area)] < 0)
-    handle.logWarning("Warning in fleet - negative amount consumed");
+  if ((handle.getLogLevel() >= LOGWARN) && (amount[TimeInfo->CurrentTime()][this->areaNum(area)] < 0))
+    handle.logMessage(LOGWARN, "Warning in fleet - negative amount consumed");
   if (isZero(amount[TimeInfo->CurrentTime()][this->areaNum(area)]))
     return 0;
   return 1;

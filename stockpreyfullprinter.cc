@@ -14,7 +14,7 @@ extern RunID RUNID;
 extern ErrorHandler handle;
 
 StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
-  : Printer(STOCKPREYFULLPRINTER), stockname(0), preyinfo(0) {
+  : Printer(STOCKPREYFULLPRINTER), stockname(0), preyinfo(0), LgrpDiv(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -27,7 +27,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
   infile >> text >> ws;
   if (strcasecmp(text, "areaaggfile") == 0) {
     infile >> text >> ws;
-    handle.Warning("Warning in stockpreyfullprinter - area aggreagtion file ignored");
+    handle.logFileMessage(LOGWARN, "Warning in stockpreyfullprinter - area aggreagtion file ignored");
     infile >> text >> ws;
   }
 
@@ -38,7 +38,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
   if (strcasecmp(text, "printfile") == 0)
     infile >> filename >> ws >> text >> ws;
   else
-    handle.Unexpected("printfile", text);
+    handle.logFileUnexpected(LOGFAIL, "printfile", text);
 
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
@@ -54,7 +54,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
   }
 
   if (precision < 0)
-    handle.Message("Error in stockpreyfullprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "Error in stockpreyfullprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -62,19 +62,19 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in stockpreyfullprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "Error in stockpreyfullprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("yearsandsteps", text);
+    handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.Message("Error in stockpreyfullprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "Error in stockpreyfullprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 
   //finished initializing. Now print first line.
@@ -97,6 +97,7 @@ StockPreyFullPrinter::~StockPreyFullPrinter() {
   outfile.clear();
   delete[] filename;
   delete preyinfo;
+  delete LgrpDiv;
   delete[] stockname;
 }
 
@@ -114,11 +115,11 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
       }
 
   if (stocks.Size() != stocknames.Size()) {
-    handle.logWarning("Error in stockpreyfullprinter - failed to match stocks");
+    handle.logMessage(LOGWARN, "Error in stockpreyfullprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      handle.logWarning("Error in stockpreyfullprinter - found stock", stocks[i]->getName());
+      handle.logMessage(LOGWARN, "Error in stockpreyfullprinter - found stock", stocks[i]->getName());
     for (i = 0; i < stocknames.Size(); i++)
-      handle.logWarning("Error in stockpreyfullprinter - looking for stock", stocknames[i]);
+      handle.logMessage(LOGWARN, "Error in stockpreyfullprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -131,7 +132,9 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
   if (stocks[0]->isEaten())
     preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->returnPrey(), areas);
   else
-    handle.logFailure("Error in stockpreyfullprinter - stock is not a prey");
+    handle.logMessage(LOGFAIL, "Error in stockpreyfullprinter - stock is not a prey");
+
+  LgrpDiv = new LengthGroupDivision(*stocks[0]->returnLengthGroupDiv());
 }
 
 void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
@@ -140,8 +143,6 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo, int printtime)
     return;
 
   int a, age, len;
-  const LengthGroupDivision* LgrpDiv = preyinfo->returnPreyLengthGroupDiv();
-
   for (a = 0; a < areas.Size(); a++) {
     preyinfo->Sum(TimeInfo, areas[a]);
     const BandMatrix& Nbyageandl = preyinfo->NconsumptionByAgeAndLength(areas[a]);

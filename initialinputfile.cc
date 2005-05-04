@@ -46,7 +46,7 @@ InitialInputFile::~InitialInputFile() {
 void InitialInputFile::correctHeaderText(int index, const char* name) {
   int i, correct;
 
-  switch(index) {
+  switch (index) {
     case 0:
       correct = strcasecmp(name, "switch");
       break;

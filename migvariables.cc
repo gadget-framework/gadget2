@@ -13,15 +13,15 @@ MigVariable::MigVariable(CommentStream& infile, int firstyear, int lastyear,
   strncpy(text, "", MaxStrLength);
   infile >> text;
   if (strcasecmp(text, "coeff") != 0)
-    handle.Unexpected("coeff", text);
+    handle.logFileUnexpected(LOGFAIL, "coeff", text);
   coeff.resize(4, keeper);
   infile >> coeff;
   coeff.Inform(keeper);
   if (coeff[3] <= coeff[2])
-    handle.Message("Minvalue > Maxvalue");
+    handle.logFileMessage(LOGFAIL, "Minvalue > Maxvalue");
   infile >> ws >> text;
   if (strcasecmp(text, "data") != 0)
-    handle.Unexpected("data", text);
+    handle.logFileUnexpected(LOGFAIL, "data", text);
   int NumberOfYears = lastyear - firstyear + 1;
   years.resize(NumberOfYears);
   temperature.resize(NumberOfYears);
@@ -29,10 +29,10 @@ MigVariable::MigVariable(CommentStream& infile, int firstyear, int lastyear,
   for (i = 0; i < NumberOfYears; i++) {
     infile >> years[i] >> temperature[i] >> values[i];
     if (infile.fail() || infile.eof())
-      handle.Message("End of file or error in file");
+      handle.logFileMessage(LOGFAIL, "End of file or error in file");
     values[i].Inform(keeper);
     if ((i > 0) && (years[i] - years[i - 1] != 1))
-      handle.Message("Difference between adjacent years not one");
+      handle.logFileMessage(LOGFAIL, "Difference between adjacent years not one");
   }
 }
 

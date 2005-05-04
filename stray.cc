@@ -27,7 +27,7 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
 
   infile >> text >> ws;
   if (!((strcasecmp(text, "straystep") == 0) || (strcasecmp(text, "straysteps") == 0)))
-    handle.Unexpected("straysteps", text);
+    handle.logFileUnexpected(LOGFAIL, "straysteps", text);
 
   i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
@@ -38,11 +38,11 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
 
   for (i = 0; i < strayStep.Size(); i++)
     if (strayStep[i] < 1 || strayStep[i] > TimeInfo->StepsInYear())
-      handle.Message("Error in straying data - invalid straying step");
+      handle.logFileMessage(LOGFAIL, "Error in straying data - invalid straying step");
 
   infile >> text >> ws;
   if (!((strcasecmp(text, "strayarea") == 0) || (strcasecmp(text, "strayareas") == 0)))
-    handle.Unexpected("strayareas", text);
+    handle.logFileUnexpected(LOGFAIL, "strayareas", text);
 
   i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
@@ -52,14 +52,13 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
   }
 
   for (i = 0; i < strayArea.Size(); i++)
-    if ((strayArea[i] = Area->InnerArea(strayArea[i])) == -1)
-      handle.UndefinedArea(strayArea[i]);
+    strayArea[i] = Area->InnerArea(strayArea[i]);
 
   infile >> text;
   if (strcasecmp(text, "straystocksandratios") == 0) {
     i = 0;
     infile >> text >> ws;
-    while (strcasecmp(text, "proportionfunction") != 0 && infile.good()) {
+    while (strcasecmp(text, "proportionfunction") != 0 && !infile.eof()) {
       strayStockNames.resize(1);
       strayStockNames[i] = new char[strlen(text) + 1];
       strcpy(strayStockNames[i], text);
@@ -68,10 +67,10 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
       i++;
     }
   } else
-    handle.Unexpected("straystocksandratios", text);
+    handle.logFileUnexpected(LOGFAIL, "straystocksandratios", text);
 
-  if (!infile.good())
-    handle.Failure();
+  if (infile.eof())
+    handle.logFileEOFMessage(LOGFAIL);
 
   if (strcasecmp(text, "proportionfunction") == 0) {
     infile >> text >> ws;
@@ -82,18 +81,19 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
     else if (strcasecmp(text, "exponential") == 0)
       fnProportion = new ExpSelectFunc();
     else
-      handle.Message("Error in straying data - unrecognised proportion function", text);
+      handle.logFileMessage(LOGFAIL, "Error in straying data - unrecognised proportion function", text);
 
     fnProportion->readConstants(infile, TimeInfo, keeper);
   } else
-    handle.Unexpected("proportionfunction", text);
+    handle.logFileUnexpected(LOGFAIL, "proportionfunction", text);
 
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    handle.Unexpected("<end of file>", text);
+    handle.logFileUnexpected(LOGFAIL, "<end of file>", text);
   }
-  handle.logMessage("Read straying data file");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read straying data file");
   keeper->clearLast();
 }
 
@@ -123,11 +123,11 @@ void StrayData::setStock(StockPtrVector& stockvec) {
       }
 
   if (index != strayStockNames.Size()) {
-    handle.logWarning("Error in straying data - failed to match straying stocks");
+    handle.logMessage(LOGWARN, "Error in straying data - failed to match straying stocks");
     for (i = 0; i < stockvec.Size(); i++)
-      handle.logWarning("Error in straying data - found stock", stockvec[i]->getName());
+      handle.logMessage(LOGWARN, "Error in straying data - found stock", stockvec[i]->getName());
     for (i = 0; i < strayStockNames.Size(); i++)
-      handle.logWarning("Error in straying data - looking for stock", strayStockNames[i]);
+      handle.logMessage(LOGWARN, "Error in straying data - looking for stock", strayStockNames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -147,8 +147,8 @@ void StrayData::setStock(StockPtrVector& stockvec) {
       if (!strayStocks[i]->isInArea(strayArea[j]))
         index++;
 
-    if (index != 0)
-      handle.logWarning("Warning in straying data - straying stock isnt defined on all areas");
+    if ((handle.getLogLevel() >= LOGWARN) && (index != 0))
+      handle.logMessage(LOGWARN, "Warning in straying data - straying stock isnt defined on all areas");
 
     minStrayAge = min(strayStocks[i]->minAge(), minStrayAge);
     maxStrayAge = max(strayStocks[i]->maxAge(), maxStrayAge);
@@ -208,7 +208,7 @@ void StrayData::addStrayStock(int area, const TimeClass* const TimeInfo) {
   int s, inarea = this->areaNum(area);
   for (s = 0; s < strayStocks.Size(); s++) {
     if (!strayStocks[s]->isInArea(area))
-      handle.logFailure("Error in straying - stray stock doesnt live on area", area);
+      handle.logMessage(LOGFAIL, "Error in straying - stray stock doesnt live on area", area);
 
     if (strayStocks[s]->Birthday(TimeInfo)) {
       Storage[inarea].IncrementAge();
@@ -243,11 +243,13 @@ void StrayData::Reset(const TimeClass* const TimeInfo) {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       strayProportion[i] = fnProportion->calculate(LgrpDiv->meanLength(i));
       if (strayProportion[i] < 0.0) {
-        handle.logWarning("Warning in straying - function outside bounds", strayProportion[i]);
+        if (handle.getLogLevel() >= LOGWARN)
+          handle.logMessage(LOGWARN, "Warning in straying - function outside bounds", strayProportion[i]);
         strayProportion[i] = 0.0;
       }
       if (strayProportion[i] > 1.0) {
-        handle.logWarning("Warning in straying - function outside bounds", strayProportion[i]);
+        if (handle.getLogLevel() >= LOGWARN)
+          handle.logMessage(LOGWARN, "Warning in straying - function outside bounds", strayProportion[i]);
         strayProportion[i] = 1.0;
       }
     }
@@ -257,7 +259,8 @@ void StrayData::Reset(const TimeClass* const TimeInfo) {
     Storage[i].setToZero();
     tagStorage[i].setToZero();
   }
-  handle.logMessage("Reset straying data");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset straying data");
 }
 
 void StrayData::Print(ofstream& outfile) const {
@@ -304,5 +307,5 @@ void StrayData::deleteStrayTag(const char* tagname) {
     tagStorage.deleteTag(tagname);
 
   } else
-    handle.logWarning("Warning in stray - failed to delete tagging experiment", tagname);
+    handle.logMessage(LOGWARN, "Warning in stray - failed to delete tagging experiment", tagname);
 }

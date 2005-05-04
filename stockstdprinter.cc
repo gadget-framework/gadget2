@@ -17,7 +17,7 @@ extern RunID RUNID;
 extern ErrorHandler handle;
 
 StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
-  : Printer(STOCKSTDPRINTER), stockname(0), LgrpDiv(0), aggregator(0), preyinfo(0) {
+  : Printer(STOCKSTDPRINTER), stockname(0), LgrpDiv(0), aggregator(0), preyinfo(0), alptr(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -36,14 +36,14 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
     scale = 1.0;
 
   if (scale <= 0) {
-    handle.Warning("Scale should be a positive integer - set to default value 1");
+    handle.logFileMessage(LOGWARN, "Scale should be a positive integer - set to default value 1");
     scale = 1.0;
   }
 
   //JMB - removed the need to read in the area aggregation file
   if (strcasecmp(text, "areaaggfile") == 0) {
     infile >> text >> ws;
-    handle.Warning("Warning in stockstdprinter - area aggreagtion file ignored");
+    handle.logFileMessage(LOGWARN, "Warning in stockstdprinter - area aggreagtion file ignored");
     infile >> text >> ws;
   }
 
@@ -51,7 +51,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
   if (strcasecmp(text, "printfile") == 0)
     infile >> filename >> ws >> text >> ws;
   else
-    handle.Unexpected("printfile", text);
+    handle.logFileUnexpected(LOGFAIL, "printfile", text);
 
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
@@ -67,7 +67,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
   }
 
   if (precision < 0)
-    handle.Message("Error in stockstdprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "Error in stockstdprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -75,19 +75,19 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in stockstdprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "Error in stockstdprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("yearsandsteps", text);
+    handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.Message("Error in stockstdprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "Error in stockstdprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 
   //finished initializing. Now print first lines
@@ -134,11 +134,11 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
       }
 
   if (stocks.Size() != stocknames.Size()) {
-    handle.logWarning("Error in stockstdprinter - failed to match stocks");
+    handle.logMessage(LOGWARN, "Error in stockstdprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      handle.logWarning("Error in stockstdprinter - found stock", stocks[i]->getName());
+      handle.logMessage(LOGWARN, "Error in stockstdprinter - found stock", stocks[i]->getName());
     for (i = 0; i < stocknames.Size(); i++)
-      handle.logWarning("Error in stockstdprinter - looking for stock", stocknames[i]);
+      handle.logMessage(LOGWARN, "Error in stockstdprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -181,7 +181,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   aggregator->Sum();
   int a, age;
   double tmpnumber, tmpbiomass;
-  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
+  alptr = &aggregator->returnSum();
   for (a = 0; a < areas.Size(); a++) {
     if (preyinfo)
       preyinfo->Sum(TimeInfo, areas[a]);

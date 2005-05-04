@@ -48,6 +48,10 @@ protected:
    * \brief This is the StockPreyStdInfo used to collect information about the consumption of the stock
    */
   StockPreyStdInfo* preyinfo;
+  /**
+   * \brief This is the LengthGroupDivision used to store aggregated area information
+   */
+  LengthGroupDivision* LgrpDiv;
 };
 
 #endif

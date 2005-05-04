@@ -75,6 +75,10 @@ protected:
    * \brief This is the flag used to denote whether the biomass consumed or the numbers consumed is printed to the outfile (default is to print biomass)
    */
   int biomass;
+  /**
+   * \brief This is the BandMatrix used to temporarily store the information returned from aggregatation function
+   */
+  const BandMatrix* bptr;
 };
 
 #endif

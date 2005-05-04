@@ -26,7 +26,7 @@ int InterruptInterface::menu() {
     cout << "> ";
     cout.flush();
     while (fgets(s, MaxStrLength, stdin) == 0);
-    switch(s[0]) {
+    switch (s[0]) {
       case 'q':
       case 'Q':
         cout << "\nQuitting current simulation ...\nThe best parameter values will be written to file (called interrupt.out)\n";

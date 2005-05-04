@@ -19,7 +19,7 @@ Formula::~Formula() {
 
 Formula::operator double() const {
   double v = 0.0;
-  switch(type) {
+  switch (type) {
     case CONSTANT:
     case PARAMETER:
       v = value;
@@ -28,7 +28,7 @@ Formula::operator double() const {
       v = this->evalFunction();
       break;
     default:
-      handle.logFailure("Error in formula - unrecognised type", type);
+      handle.logMessage(LOGFAIL, "Error in formula - unrecognised type", type);
       break;
   }
   return v;
@@ -37,9 +37,9 @@ Formula::operator double() const {
 double Formula::evalFunction() const {
   double v = 0.0;
   unsigned int i;
-  switch(functiontype) {
+  switch (functiontype) {
     case NONE:
-      handle.logFailure("Error in formula - no function type found");
+      handle.logMessage(LOGFAIL, "Error in formula - no function type found");
       break;
 
     case MULT:
@@ -53,7 +53,8 @@ double Formula::evalFunction() const {
         if (!isZero(*(argList[0]))) {
           v = 1.0 / (*(argList[0]));
         } else {
-          handle.logWarning("Warning in formula - divide by zero");
+          if (handle.getLogLevel() >= LOGWARN)
+            handle.logMessage(LOGWARN, "Warning in formula - divide by zero");
         }
       } else {
         v = *(argList[0]);
@@ -61,7 +62,8 @@ double Formula::evalFunction() const {
           if (!isZero(*(argList[0]))) {
             v = v /= *(argList[i]);
           } else {
-            handle.logWarning("Warning in formula - divide by zero");
+            if (handle.getLogLevel() >= LOGWARN)
+              handle.logMessage(LOGWARN, "Warning in formula - divide by zero");
           }
         }
       }
@@ -87,7 +89,7 @@ double Formula::evalFunction() const {
       if (argList.size() == 1)
         v = *(argList[0]);
       else
-        handle.logFailure("Error in formula - invalid number of parameters for print");
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for print");
       break;
 
     case SIN:
@@ -95,7 +97,7 @@ double Formula::evalFunction() const {
       if (argList.size() == 1)
         v = sin(*(argList[0]));
       else
-        handle.logFailure("Error in formula - invalid number of parameters for sin");
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for sin");
       break;
 
     case COS:
@@ -103,32 +105,32 @@ double Formula::evalFunction() const {
       if (argList.size() == 1)
         v = cos(*(argList[0]));
       else
-        handle.logFailure("Error in formula - invalid number of parameters for cos");
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for cos");
       break;
 
     case LOG:
       if (argList.size() == 1)
         v = log(*(argList[0]));
       else
-        handle.logFailure("Error in formula - invalid number of parameters for log");
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for log");
       break;
 
     case EXP:
       if (argList.size() == 1)
         v = exp(*(argList[0]));
       else
-        handle.logFailure("Error in formula - invalid number of parameters for exp");
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for exp");
       break;
 
     case SQRT:
       if (argList.size() == 1)
         v = sqrt(*(argList[0]));
       else
-        handle.logFailure("Error in formula - invalid number of parameters for sqrt");
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for sqrt");
       break;
 
     default:
-      handle.logFailure("Error in formula - unrecognised function type", type);
+      handle.logMessage(LOGFAIL, "Error in formula - unrecognised function type", type);
       break;
   }
   return v;
@@ -137,7 +139,7 @@ double Formula::evalFunction() const {
 Formula::Formula(const Formula& form) {
   type = form.type;
   functiontype = form.functiontype;
-  switch(type) {
+  switch (type) {
     case CONSTANT:
       value = form.value;
       break;
@@ -153,14 +155,14 @@ Formula::Formula(const Formula& form) {
       }
       break;
     default:
-      handle.logFailure("Error in formula - unrecognised type", type);
+      handle.logMessage(LOGFAIL, "Error in formula - unrecognised type", type);
       break;
   }
 }
 
 void Formula::setValue(double initValue) {
   if (type == FUNCTION)
-    handle.logFailure("Error in formula - cannot set value for function");
+    handle.logMessage(LOGFAIL, "Error in formula - cannot set value for function");
   value = initValue;
 }
 
@@ -213,8 +215,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     else if (strcasecmp(text,"sqrt") == 0)
       F.functiontype = SQRT;
     else {
-      infile.makebad();
-      handle.Message("Error in formula - unrecognised function name", text);
+      handle.logFileMessage(LOGFAIL, "Error in formula - unrecognised function name", text);
       return infile;
     }
 
@@ -226,8 +227,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
       infile >> ws;
       if (infile.eof()) {
         // Something has gone wrong, no closing bracket
-        infile.makebad();
-        handle.Message("Error in formula - failed to read parameter data");
+        handle.logFileMessage(LOGFAIL, "Error in formula - failed to read parameter data");
         return infile;
       }
       c = infile.peek();
@@ -244,7 +244,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     infile.get(c);
     infile >> F.name;
     if (F.name.Size() <= 0)
-      handle.logWarning("Warning in formula - failed to read parameter name");
+      handle.logMessage(LOGFAIL, "Error in formula - failed to read parameter name");
     return infile;
   }
 
@@ -272,18 +272,17 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     infile.get(c);
     infile >> F.name;
     if (F.name.Size() <= 0)
-      handle.logWarning("Warning in formula - failed to read parameter name");
+      handle.logMessage(LOGFAIL, "Error in formula - failed to read parameter name");
     return infile;
   }
 
-  infile.makebad();
-  handle.Message("Error in formula - failed to read parameter data");
+  handle.logFileMessage(LOGFAIL, "Error in formula - failed to read parameter data");
   return infile;
 }
 
 void Formula::Inform(Keeper* keeper) {
   // let keeper know of the marked variables
-  switch(type) {
+  switch (type) {
     case CONSTANT:
       break;
     case PARAMETER:
@@ -297,7 +296,7 @@ void Formula::Inform(Keeper* keeper) {
         (*argList[i]).Inform(keeper);
       break;
     default:
-      handle.logFailure("Error in formula - unrecognised type", type);
+      handle.logMessage(LOGFAIL, "Error in formula - unrecognised type", type);
       break;
   }
 }
@@ -311,7 +310,7 @@ void Formula::Interchange(Formula& NewF, Keeper* keeper) const {
 
   assert(NewF.argList.size() == 0);
   NewF.type = type;
-  switch(type) {
+  switch (type) {
     case CONSTANT:
       NewF.value = value;
       break;
@@ -334,14 +333,14 @@ void Formula::Interchange(Formula& NewF, Keeper* keeper) const {
       break;
 
     default:
-      handle.logFailure("Error in formula - unrecognised type", type);
+      handle.logMessage(LOGFAIL, "Error in formula - unrecognised type", type);
       break;
   }
   assert(NewF.argList.size() == argList.size());
 }
 
 void Formula::Delete(Keeper* keeper) const {
-  switch(type) {
+  switch (type) {
     case CONSTANT:
       break;
     case PARAMETER:
@@ -353,7 +352,7 @@ void Formula::Delete(Keeper* keeper) const {
         (*argList[i]).Delete(keeper);
       break;
     default:
-      handle.logFailure("Error in formula - unrecognised type", type);
+      handle.logMessage(LOGFAIL, "Error in formula - unrecognised type", type);
       break;
   }
 }

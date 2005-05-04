@@ -4,6 +4,8 @@
 #include "strstack.h"
 #include "gadget.h"
 
+enum LogLevel { LOGNONE = 0, LOGFAIL, LOGINFO, LOGWARN, LOGMESSAGE, LOGDETAIL, LOGDEBUG };
+
 /**
  * \class ErrorHandler
  * \brief This is the class used to handle errors in the model, by displaying error messages to the user and logging information to a log file
@@ -28,133 +30,6 @@ public:
    */
   void Close();
   /**
-   * \brief This function will log a message to a log file if one exists
-   * \param msg is the message to be logged
-   */
-  void logMessage(const char* msg);
-  /**
-   * \brief This function will log a message and a number to a log file if one exists
-   * \param msg is the message to be logged
-   * \param number is the number to be logged
-   */
-  void logMessage(const char* msg, int number);
-  /**
-   * \brief This function will log a message and a number to a log file if one exists
-   * \param msg is the message to be logged
-   * \param number is the number to be logged
-   */
-  void logMessage(const char* msg, double number);
-  /**
-   * \brief This function will log two messages to a log file if one exists
-   * \param msg1 is the first message to be logged
-   * \param msg2 is the second message to be logged
-   */
-  void logMessage(const char* msg1, const char* msg2);
-  /**
-   * \brief This function will log a message to std::cout and a log file if one exists
-   * \param msg is the message to be logged
-   */
-  void logInformation(const char* msg);
-  /**
-   * \brief This function will log a message and a number to std::cout and a log file if one exists
-   * \param msg is the message to be logged
-   * \param number is the number to be logged
-   */
-  void logInformation(const char* msg, int number);
-  /**
-   * \brief This function will log a message and a number to std::cout and a log file if one exists
-   * \param msg is the message to be logged
-   * \param number is the number to be logged
-   */
-  void logInformation(const char* msg, double number);
-  /**
-   * \brief This function will log two messages to std::cout and a log file if one exists
-   * \param msg1 is the first message to be logged
-   * \param msg2 is the second message to be logged
-   */
-  void logInformation(const char* msg1, const char* msg2);
-  /**
-   * \brief This function will log a warning message to std::cerr and a log file if one exists
-   * \param msg is the message to be logged
-   */
-  void logWarning(const char* msg);
-  /**
-   * \brief This function will log a warning message and a number to std::cerr and a log file if one exists
-   * \param msg is the message to be logged
-   * \param number is the number to be logged
-   */
-  void logWarning(const char* msg, int number);
-  /**
-   * \brief This function will log a warning message and a number to std::cerr and a log file if one exists
-   * \param msg is the message to be logged
-   * \param number is the number to be logged
-   */
-  void logWarning(const char* msg, double number);
-  /**
-   * \brief This function will log two warning messages to std::cerr and a log file if one exists
-   * \param msg1 is the first message to be logged
-   * \param msg2 is the second message to be logged
-   */
-  void logWarning(const char* msg1, const char* msg2);
-  /**
-   * \brief This function will log an error message to std::cerr and a log file if one exists, and then exit Gadget with exit(EXIT_FAILURE)
-   * \param msg is the message to be logged
-   */
-  void logFailure(const char* msg);
-  /**
-   * \brief This function will log an error message and a number to std::cerr and a log file if one exists, and then exit Gadget with exit(EXIT_FAILURE)
-   * \param msg is the message to be logged
-   * \param number is the number to be logged
-   */
-  void logFailure(const char* msg, int number);
-  /**
-   * \brief This function will log an error message and a number to std::cerr and a log file if one exists, and then exit Gadget with exit(EXIT_FAILURE)
-   * \param msg is the message to be logged
-   * \param number is the number to be logged
-   */
-  void logFailure(const char* msg, double number);
-  /**
-   * \brief This function will log two errors message to std::cerr and a log file if one exists, and then exit Gadget with exit(EXIT_FAILURE)
-   * \param msg1 is the first message to be logged
-   * \param msg2 is the second message to be logged
-   */
-  void logFailure(const char* msg1, const char* msg2);
-  /**
-   * \brief This function will log an "error in file" message to std::cerr and a log file if one exists, and then exit Gadget with exit(EXIT_FAILURE)
-   * \param msg is the message to be logged
-   */
-  void Message(const char* msg);
-  /**
-   * \brief This function will log two "error in file" messages to std::cerr and a log file if one exists, and then exit Gadget with exit(EXIT_FAILURE)
-   * \param msg1 is the first message to be logged
-   * \param msg2 is the second message to be logged
-   */
-  void Message(const char* msg1, const char* msg2);
-  /**
-   * \brief This function will log an "unexpected text" error message to std::cerr and a log file if one exists, and then exit Gadget with exit(EXIT_FAILURE)
-   * \param exp is the text that was expected
-   * \param unexp is the text that was found
-   */
-  void Unexpected(const char* exp, const char* unexp);
-  /**
-   * \brief This function will log an "end of file" error message to std::cerr and a log file if one exists, and then exit Gadget with exit(EXIT_FAILURE)
-   */
-  void Eof();
-  /**
-   * \brief This function will log an "undefined area" message to std::cerr and a log file if one exists, and then exit Gadget with exit(EXIT_FAILURE)
-   * \param area is the undefined area
-   */
-  void UndefinedArea(int area);
-  /**
-   * \brief This function will log a "file failed" error message to std::cerr and a log file if one exists, and then exit Gadget with exit(EXIT_FAILURE)
-   */
-  void Failure();
-  /**
-   * \brief This function will log a "file warning" message to std::cerr and a log file if one exists
-   * \param msg is the message to be logged
-   */
-  void Warning(const char* msg);
-  /**
    * \brief This function will check to see if an iostream can be opened, and exit Gadget with exit(EXIT_FAILURE) if this check fails
    * \param infile is the iostream to be checked
    * \param text is the name of the iostream to be checked
@@ -176,32 +51,88 @@ public:
    */
   void logFinish(int opt);
   /**
-   * \brief This function will set the level of warnings that should be displayed to the user
-   * \param print is level of warnings that should be displayed
-   * \note setting the loglevel to 0 will disable all warnings that are written to both std::cerr and std::cout except those that are displayed when gadget will crash - this is done when running gadget in network mode for paramin, setting the loglevel to 1 will disable the warning messages that are written to std::cerr but not to std::cout, and setting the loglevel to 2 will enable all messages - this is the default, and will always be used when gadget is performing a stochastic run
+   * \brief This function will log a warning message
+   * \param mlevel is the logging level of the message to be logged
+   * \param msg is the message to be logged
    */
-  void setWarningLevel(int print) { loglevel = print; };
+  void logMessage(LogLevel mlevel, const char* msg);
+  /**
+   * \brief This function will log 2 warning messages
+   * \param mlevel is the logging level of the message to be logged
+   * \param msg1 is the first message to be logged
+   * \param msg2 is the second message to be logged
+   */
+  void logMessage(LogLevel mlevel, const char* msg1, const char* msg2);
+  /**
+   * \brief This function will log a warning message and a number
+   * \param mlevel is the logging level of the message to be logged
+   * \param msg is the message to be logged
+   * \param number is the number to be logged
+   */
+  void logMessage(LogLevel mlevel, const char* msg, int number);
+  /**
+   * \brief This function will log a warning message and a number
+   * \param mlevel is the logging level of the message to be logged
+   * \param msg is the message to be logged
+   * \param number is the number to be logged
+   */
+  void logMessage(LogLevel mlevel, const char* msg, double number);
+  /**
+   * \brief This function will log a warning message generated when reading information from file
+   * \param mlevel is the logging level of the message to be logged
+   * \param msg is the message to be logged
+   */
+  void logFileMessage(LogLevel mlevel, const char* msg);
+  /**
+   * \brief This function will log 2 warning messages generated when reading information from file
+   * \param mlevel is the logging level of the message to be logged
+   * \param msg1 is the first message to be logged
+   * \param msg2 is the second message to be logged
+   */
+  void logFileMessage(LogLevel mlevel, const char* msg1, const char* msg2);
+  /**
+   * \brief This function will log an EOF warning message generated when reading information from file
+   * \param mlevel is the logging level of the message to be logged
+   */
+  void logFileEOFMessage(LogLevel mlevel);
+  /**
+   * \brief This function will log an 'unexpected' warning message generated when reading information from file
+   * \param mlevel is the logging level of the message to be logged
+   * \param msg1 is the first (expected) message to be logged
+   * \param msg2 is the second (unexpected) message to be logged
+   */
+  void logFileUnexpected(LogLevel mlevel, const char* msg1, const char* msg2);
+  /**
+   * \brief This function will set the level of logging information used for the current model run
+   * \param level is the logging level to be set
+   */
+  void setLogLevel(int level);
+  /**
+   * \brief This function will return the level of logging information used for the current model run
+   */
+  LogLevel getLogLevel() const { return loglevel; };
 protected:
   /**
    * \brief This ofstream is the file that all the logging information will get sent to
    */
   ofstream logfile;
   /**
+   * \brief This is the StrStack of the names of files that are currently open to read from
+   */
+  StrStack* files;
+private:
+  /**
    * \brief This is the flag used to denote whether a logfile exists or not
    */
   int uselog;
-  /**
-   * \brief This is the integer used to denote the level of warnings that should be displayed
-   */
-  int loglevel;
   /**
    * \brief This is the number of warning messages that gadget has displayed
    */
   int numwarn;
   /**
-   * \brief This is the StrStack of the names of files that are currently open to read from
+   * \brief This denotes what level of logging information is used for the current model run
    */
-  StrStack* files;
+  LogLevel loglevel;
 };
 
 #endif

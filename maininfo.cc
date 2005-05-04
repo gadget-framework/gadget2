@@ -47,7 +47,7 @@ void MainInfo::showUsage() {
 MainInfo::MainInfo()
   : givenOptInfo(0), givenInitialParam(0), runlikelihood(0),
     runoptimise(0), runstochastic(0), runnetwork(0),
-    printInitialInfo(0), printFinalInfo(0), printWarning(2) {
+    printInitialInfo(0), printFinalInfo(0), printLogLevel(2) {
 
   char tmpname[10];
   strncpy(tmpname, "", 10);
@@ -97,7 +97,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         runnetwork = 1;
 
         #ifndef GADGET_NETWORK
-          handle.logFailure("Error - Gadget cannot currently run in network mode for paramin\nGadget must be recompiled to enable the network communication");
+          handle.logMessage(LOGFAIL, "Error - Gadget cannot currently run in network mode for paramin\nGadget must be recompiled to enable the network communication");
         #endif
 
       } else if (strcasecmp(aVector[k], "-s") == 0) {
@@ -170,13 +170,13 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         setOptInfoFile(aVector[k]);
 
       } else if ((strcasecmp(aVector[k], "-printlikelihood") == 0) || (strcasecmp(aVector[k], "-likelihoodprint") == 0)) {
-        handle.logFailure("The -printlikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
+        handle.logMessage(LOGFAIL, "The -printlikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
 
       } else if (strcasecmp(aVector[k], "-printlikesummary") == 0) {
-        handle.logFailure("The -printlikesummary switch is no longer supported\nSpecify a likelihoodsummaryprinter class in the model print file instead");
+        handle.logMessage(LOGFAIL, "The -printlikesummary switch is no longer supported\nSpecify a likelihoodsummaryprinter class in the model print file instead");
 
       } else if (strcasecmp(aVector[k], "-printonelikelihood") == 0) {
-        handle.logFailure("The -printonelikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
+        handle.logMessage(LOGFAIL, "The -printonelikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
 
       } else if (strcasecmp(aVector[k], "-print1") == 0) {
         if (k == aNumber - 1)
@@ -205,15 +205,22 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         showUsage();
 
       } else if (strcasecmp(aVector[k], "-log") == 0) {
-        //JMB - experimental logging facility
         if (k == aNumber - 1)
           showCorrectUsage(aVector[k]);
         k++;
         handle.setLogFile(aVector[k]);
+        printLogLevel = 4;
 
       } else if (strcasecmp(aVector[k], "-nowarnings") == 0) {
-        //JMB - experimental disabling of the warnings during an optimising run
-        printWarning = 1;
+        //handle.logMessage(LOGWARN, "The -nowarnings switch is no longer supported\nSpecify a logging level using the -loglevel <number> instead");
+        printLogLevel = 1;
+
+      } else if (strcasecmp(aVector[k], "-loglevel") == 0) {
+        //JMB - experimental logging facility
+        if (k == aNumber - 1)
+          showCorrectUsage(aVector[k]);
+        k++;
+        printLogLevel = atoi(aVector[k]);
 
       } else
         showCorrectUsage(aVector[k]);
@@ -223,15 +230,19 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
   }
 }
 
-void MainInfo::checkUsage() {
-  int check;
+void MainInfo::checkUsage(const char* const inputdir, const char* const workingdir) {
+  int check = 0;
   if (runnetwork == 1)
     check = 0;
   else if (runstochastic == 1)
-    check = 2;
+    check = max(3, printLogLevel);
   else
-    check = printWarning;
-  handle.setWarningLevel(check);
+    check = max(2, printLogLevel);
+  handle.setLogLevel(check);
+
+  handle.logMessage(LOGINFO, "Starting Gadget from directory:", workingdir);
+  handle.logMessage(LOGINFO, "using data from directory:", inputdir);
+  handle.logMessage(LOGMESSAGE, ""); //write a blank line to the log file
 
   //JMB check to see if we can actually open required files ...
   ifstream tmpin;
@@ -263,29 +274,27 @@ void MainInfo::checkUsage() {
   printinfo.checkPrintInfo(runnetwork);
 
   if (runnetwork == 1)
-    handle.logMessage("\n** Gadget running in network mode for Paramin **\n");
+    handle.logMessage(LOGINFO, "\n** Gadget running in network mode for Paramin **\n");
 
   if ((runstochastic != 1) && (runnetwork == 1)) {
-    handle.logWarning("\nWarning - Gadget for the paramin network should be used with -s option\nGadget will now set the -s switch to perform a stochastic run");
+    handle.logMessage(LOGWARN, "\nWarning - Gadget for the paramin network should be used with -s option\nGadget will now set the -s switch to perform a stochastic run");
     runstochastic = 1;
     runlikelihood = 1;
   }
 
   if ((runstochastic == 1) && (runoptimise == 1)) {
-    handle.logWarning("\nWarning - Gadget has been started with both the -s switch and the -l switch\nHowever, it is not possible to do both a stochastic run and a likelihood run!\nGadget will perform only the stochastic run (and ignore the -l switch)");
+    handle.logMessage(LOGWARN, "\nWarning - Gadget has been started with both the -s switch and the -l switch\nHowever, it is not possible to do both a stochastic run and a likelihood run!\nGadget will perform only the stochastic run (and ignore the -l switch)");
     runoptimise = 0;
   }
 
-  if ((printWarning == 1) && (runoptimise == 0))
-    handle.logWarning("\n** Gadget cannot disable warnings for a stochastic run **\n");
+  if ((printLogLevel == 1) && (runoptimise == 0))
+    handle.logMessage(LOGWARN, "\n** Gadget cannot disable warnings for a stochastic run **\n");
 
   if ((handle.checkLogFile()) && (runoptimise == 1))
-    handle.logWarning("\n** logging model information from a Gadget optimisation is not recommended **\n");
+    handle.logMessage(LOGWARN, "\n** logging model information from a Gadget optimisation is not recommended **\n");
 
   if ((handle.checkLogFile()) && (runnetwork == 1))
-    handle.logWarning("\n** logging model information from a Gadget network run is not recommended **\n");
-
-//  handle.logMessage(""); //write a blank line to the log file
+    handle.logMessage(LOGWARN, "\n** logging model information from a Gadget network run is not recommended **\n");
 }
 
 void MainInfo::read(CommentStream& infile) {
@@ -335,13 +344,16 @@ void MainInfo::read(CommentStream& infile) {
       infile >> text >> ws;
       handle.setLogFile(text);
     } else if (strcasecmp(text, "-nowarnings") == 0) {
-      printWarning = 1;
+      printLogLevel = 1;
+    } else if (strcasecmp(text, "-loglevel") == 0) {
+      infile >> dummy >> ws;
+      printLogLevel = dummy;
     } else if (strcasecmp(text, "-printlikesummary") == 0) {
-      handle.logFailure("The -printlikesummary switch is no longer supported\nSpecify a likelihoodsummaryprinter class in the model print file instead");
+      handle.logMessage(LOGWARN, "The -printlikesummary switch is no longer supported\nSpecify a likelihoodsummaryprinter class in the model print file instead");
     } else if (strcasecmp(text, "-printlikelihood") == 0) {
-      handle.logFailure("The -printlikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
+      handle.logMessage(LOGWARN, "The -printlikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
     } else if (strcasecmp(text, "-printonelikelihood") == 0) {
-      handle.logFailure("The -printonelikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
+      handle.logMessage(LOGWARN, "The -printonelikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
     } else
       showCorrectUsage(text);
   }

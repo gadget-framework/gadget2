@@ -8,7 +8,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   const LengthGroupDivision* const L2, int interp) {
 
   if (L1->maxLength() <= L2->minLength() || L2->maxLength() <= L1->minLength()) {
-    handle.logWarning("Error in conversionindex - intersection between length groups is empty");
+    handle.logMessage(LOGWARN, "Error in conversionindex - intersection between length groups is empty");
     L1->printError();
     L2->printError();
     exit(EXIT_FAILURE);
@@ -150,7 +150,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 void ConversionIndex::interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc) {
 
   if (!(interpolate))
-    handle.logFailure("Error in conversionindex - cannot interpolate between lengthgroups");
+    handle.logMessage(LOGFAIL, "Error in conversionindex - cannot interpolate between lengthgroups");
 
   int i;
   if (samedl) {

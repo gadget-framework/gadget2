@@ -21,7 +21,7 @@ TimeClass::TimeClass(CommentStream& infile) {
   infile >> ws;
   timesteps.resize(numtimesteps, 1, 0.0);
   if (!readIndexVector(infile, timesteps))
-    handle.Message("Failure in reading time steps");
+    handle.logFileMessage(LOGFAIL, "Failure in reading time steps");
 
   infile >> ws;
   if (infile.eof())
@@ -29,10 +29,10 @@ TimeClass::TimeClass(CommentStream& infile) {
   else {
     infile >> text >> ws;
     if (!(strcasecmp(text, "nrofsubsteps") == 0))
-      handle.Message("Failure in reading time substeps");
+      handle.logFileMessage(LOGFAIL, "Failure in reading time substeps");
     numsubsteps.resize(numtimesteps, 0);
     if (!readVector(infile, numsubsteps))
-      handle.Message("Failure in reading time substeps");
+      handle.logFileMessage(LOGFAIL, "Failure in reading time substeps");
   }
 
   lengthofyear = 0.0;
@@ -40,30 +40,35 @@ TimeClass::TimeClass(CommentStream& infile) {
     lengthofyear += timesteps[i];
 
   if (!(isZero(lengthofyear - 12)))
-    handle.Warning("Warning - length of year does not equal 12");
+    handle.logFileMessage(LOGWARN, "Warning - length of year does not equal 12");
   if (firstyear > lastyear || (firstyear == lastyear && firststep > laststep))
-    handle.Warning("Warning - time period is empty");
+    handle.logFileMessage(LOGWARN, "Warning - time period is empty");
   currentyear = firstyear;
   currentstep = firststep;
   currentsubstep = 1;
-  handle.logMessage("Read time file - number of timesteps", this->TotalNoSteps());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read time file - number of timesteps", this->TotalNoSteps());
 }
 
 void TimeClass::IncrementTime() {
-  handle.logMessage("");  //write a blank line to the log file
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "");  //write a blank line to the log file
   if (currentyear == lastyear && currentstep == laststep) {
-    handle.logMessage("The simulation has reached the last timestep for the current model run");
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "The simulation has reached the last timestep for the current model run");
 
   } else if (currentstep == numtimesteps) {
     currentstep = 1;
     currentyear++;
     currentsubstep = 1;
-    handle.logMessage("Increased time in the simulation to timestep", this->CurrentTime());
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Increased time in the simulation to timestep", this->CurrentTime());
 
   } else {
     currentstep++;
     currentsubstep = 1;
-    handle.logMessage("Increased time in the simulation to timestep", this->CurrentTime());
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Increased time in the simulation to timestep", this->CurrentTime());
   }
 }
 
@@ -86,6 +91,6 @@ void TimeClass:: Reset() {
   currentyear = firstyear;
   currentstep = firststep;
   currentsubstep = 1;
-  handle.logMessage("");  //write a blank line to the log file
-  handle.logMessage("Reset time in the simulation to timestep", this->CurrentTime());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "\nReset time in the simulation to timestep", this->CurrentTime());
 }

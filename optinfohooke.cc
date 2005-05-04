@@ -15,7 +15,7 @@ extern int hooke(double (*fhj)(double*), int n, double startpoint[],
 
 OptInfoHooke::OptInfoHooke()
   : OptSearch(), hookeiter(1000), rho(0.5), lambda(0.0), hookeeps(1e-4), bndcheck(0.9999) {
-  handle.logMessage("Initialising Hooke & Jeeves optimisation algorithm");
+  handle.logMessage(LOGMESSAGE, "Initialising Hooke & Jeeves optimisation algorithm");
 }
 
 void OptInfoHooke::read(CommentStream& infile, char* text) {
@@ -37,7 +37,7 @@ void OptInfoHooke::read(CommentStream& infile, char* text) {
       infile >> bndcheck;
 
     } else {
-      handle.logWarning("Warning in optinfofile - unrecognised option", text);
+      handle.logMessage(LOGWARN, "Warning in optinfofile - unrecognised option", text);
       infile >> text;  //read and ignore the next entry
     }
     infile >> text;
@@ -45,19 +45,19 @@ void OptInfoHooke::read(CommentStream& infile, char* text) {
 
   //check the values specified in the optinfo file ...
   if ((rho < 0) || (rho > 1) || isZero(rho)) {
-    handle.logWarning("Warning in optinfofile - value of rho outside bounds", rho);
+    handle.logMessage(LOGWARN, "Warning in optinfofile - value of rho outside bounds", rho);
     rho = 0.5;
   }
   if ((lambda < 0) || (lambda > 1)) {
-    handle.logWarning("Warning in optinfofile - value of lambda outside bounds", lambda);
+    handle.logMessage(LOGWARN, "Warning in optinfofile - value of lambda outside bounds", lambda);
     lambda = rho;
   }
   if ((bndcheck < 0.5) || (bndcheck > 1)) {
-    handle.logWarning("Warning in optinfofile - value of bndcheck outside bounds", bndcheck);
+    handle.logMessage(LOGWARN, "Warning in optinfofile - value of bndcheck outside bounds", bndcheck);
     bndcheck = 0.9999;
   }
   if ((isZero(hookeeps)) || (hookeeps < 0)) {
-    handle.logWarning("Warning in optinfofile - value of hookeeps outside bounds", hookeeps);
+    handle.logMessage(LOGWARN, "Warning in optinfofile - value of hookeeps outside bounds", hookeeps);
     hookeeps = 1e-4;
   }
 }
@@ -66,7 +66,7 @@ void OptInfoHooke::OptimiseLikelihood() {
   int i, nopt, opt;
   double tmp;
 
-  handle.logInformation("\nStarting Hooke & Jeeves optimisation algorithm");
+  handle.logMessage(LOGINFO, "\nStarting Hooke & Jeeves optimisation algorithm");
 
   nopt = EcoSystem->numOptVariables();
   DoubleVector val(nopt);
@@ -107,8 +107,8 @@ void OptInfoHooke::OptimiseLikelihood() {
     }
 
     /* Warn if the starting point is zero */
-    if (isZero(val[i]))
-      handle.logWarning("Warning in optinfo - initial value is zero for switch", optswitches[i].getName());
+    if ((handle.getLogLevel() >= LOGWARN) && (isZero(val[i])))
+      handle.logMessage(LOGWARN, "Warning in optinfo - initial value is zero for switch", optswitches[i].getName());
   }
 
   opt = hooke(&fhj, nopt, startpoint, endpoint, upperb, lowerb,

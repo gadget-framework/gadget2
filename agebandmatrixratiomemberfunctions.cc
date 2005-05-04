@@ -150,14 +150,14 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
 
   numtags = Addition.numTagExperiments();
   if (numtags > Alkeys.numTagExperiments())
-    handle.logFailure("Error in agebandmatrixratio - wrong number of tagging experiments");
+    handle.logMessage(LOGFAIL, "Error in agebandmatrixratio - wrong number of tagging experiments");
 
   if (numtags > 0) {
     IntVector tagconversion(numtags);
     for (i = 0; i < numtags; i++) {
       tagconversion[i] = Alkeys.getTagID(Addition.getTagName(i));
       if (tagconversion[i] < 0)
-        handle.logFailure("Error in agebandmatrixratio - unrecognised tagging experiment", Addition.getTagName(i));
+        handle.logMessage(LOGFAIL, "Error in agebandmatrixratio - unrecognised tagging experiment", Addition.getTagName(i));
 
     }
 
@@ -186,9 +186,10 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
             for (tagid = 0; tagid < numtags; tagid++) {
               numfish = *(Addition[AdditionArea][age][CI.Pos(l)][tagid].N);
               numfish *= ratio;
-              if (isZero(CI.Nrof(l)))
-                handle.logWarning("Warning in agebandmatrixratio - divide by zero");
-              else
+              if (isZero(CI.Nrof(l))) {
+                if (handle.getLogLevel() >= LOGWARN)
+                  handle.logMessage(LOGWARN, "Warning in agebandmatrixratio - divide by zero");
+              } else
                 numfish /= CI.Nrof(l);
               *(Alkeys[AlkeysArea][age][l][tagconversion[tagid]].N) += numfish;
             }

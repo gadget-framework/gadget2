@@ -64,9 +64,9 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   else if (strcasecmp(text, "fixedloglinearfit") == 0)
     fittype = FIXEDLOGLINEARFIT;
   else
-    handle.Message("Error in surveyindex - unrecognised fittype", text);
+    handle.logFileMessage(LOGFAIL, "Error in surveyindex - unrecognised fittype", text);
 
-  switch(fittype) {
+  switch (fittype) {
     case LINEARFIT:
     case LOGLINEARFIT:
       break;
@@ -84,13 +84,13 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
       readWordAndVariable(infile, "intercept", intercept);
       break;
     default:
-      handle.Message("Error in surveyindex - unrecognised fittype");
+      handle.logFileMessage(LOGFAIL, "Error in surveyindex - unrecognised fittype");
       break;
   }
 
   //JMB - check that the slope of the regression line is positive
   if (slope < 0)
-    handle.Message("Error in surveyindex - slope of the regression line must be positive");
+    handle.logFileMessage(LOGFAIL, "Error in surveyindex - slope of the regression line must be positive");
 
   //read the survey indices data from the datafile
   ifstream datafile;
@@ -123,7 +123,7 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 5)
-    handle.Message("Wrong number of columns in inputfile - should be 5");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 5");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -170,9 +170,10 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
     }
   }
   AAT.addActions(Years, Steps, TimeInfo);
-  if (count == 0)
-    handle.logWarning("Warning in surveyindex - found no data in the data file for", this->getSIName());
-  handle.logMessage("Read surveyindex data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGMESSAGE) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in surveyindex - found no data in the data file for", this->getSIName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read surveyindex data file - number of entries", count);
 }
 
 void SIOnStep::Reset(const Keeper* const keeper) {
@@ -182,7 +183,8 @@ void SIOnStep::Reset(const Keeper* const keeper) {
   for (i = 0; i < modelIndex.Nrow(); i++)
     for (j = 0; j < modelIndex.Ncol(i); j++)
       modelIndex[i][j] = 0.0;
-  handle.logMessage("Reset surveyindex component", this->getSIName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset surveyindex component", this->getSIName());
 }
 
 void SIOnStep::Print(ofstream& outfile) const {
@@ -212,7 +214,7 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInf
   if (AAT.AtCurrentTime(TimeInfo)) {
     t = timeindex - 1; //timeindex was increased before this is called
     if ((t >= Years.Size()) || t < 0)
-      handle.logFailure("Error in surveyindex - invalid timestep", t);
+      handle.logMessage(LOGFAIL, "Error in surveyindex - invalid timestep", t);
 
     //JMB - this is nasty hack since there is only one area
     area = 0;
@@ -255,8 +257,11 @@ double SIOnStep::calcRegression() {
     score += this->fitRegression(stocksize, indices, col);
   }
 
-  handle.logMessage("Calculating likelihood score for surveyindex component", this->getSIName());
-  handle.logMessage("The likelihood score from the regression line for this component is", score);
+  if (handle.getLogLevel() >= LOGMESSAGE) {
+    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for surveyindex component", this->getSIName());
+    handle.logMessage(LOGMESSAGE, "The likelihood score from the regression line for this component is", score);
+  }
+
   return score;
 }
 
@@ -266,7 +271,7 @@ double SIOnStep::fitRegression(const DoubleVector& stocksize, const DoubleVector
   LinearRegression LR;
 
   //fit the data to the (log) linear regression curve
-  switch(fittype) {
+  switch (fittype) {
     case LOGLINEARFIT:
       LLR.Fit(stocksize, indices);
       break;
@@ -292,12 +297,12 @@ double SIOnStep::fitRegression(const DoubleVector& stocksize, const DoubleVector
       LR.Fit(stocksize, indices, slope, intercept);
       break;
     default:
-      handle.logWarning("Warning in surveyindex - unrecognised fittype", fittype);
+      handle.logMessage(LOGWARN, "Warning in surveyindex - unrecognised fittype", fittype);
       break;
   }
 
   //and then store the results
-  switch(fittype) {
+  switch (fittype) {
     case LOGLINEARFIT:
     case FIXEDSLOPELOGLINEARFIT:
     case FIXEDINTERCEPTLOGLINEARFIT:
@@ -321,7 +326,7 @@ double SIOnStep::fitRegression(const DoubleVector& stocksize, const DoubleVector
       return LR.SSE();
       break;
     default:
-      handle.logWarning("Warning in surveyindex - unrecognised fittype", fittype);
+      handle.logMessage(LOGWARN, "Warning in surveyindex - unrecognised fittype", fittype);
       break;
   }
   return 0.0;

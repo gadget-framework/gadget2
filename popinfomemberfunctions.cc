@@ -44,9 +44,10 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
         pop = Addition[CI.Pos(l)];
         pop *= ratio;
         v[l] += pop;
-        if (isZero(CI.Nrof(l)))
-          handle.logWarning("Warning in popinfoindexvector - divide by zero");
-        else
+        if (isZero(CI.Nrof(l))) {
+          if (handle.getLogLevel() >= LOGWARN)
+            handle.logMessage(LOGWARN, "Warning in popinfoindexvector - divide by zero");
+        } else
           v[l].N /= CI.Nrof(l);
       }
     } else {
@@ -85,9 +86,10 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
         pop = Addition[CI.Pos(l)];
         pop *= (ratio * Ratio[l]);
         v[l] += pop;
-        if (isZero(CI.Nrof(l)))
-          handle.logWarning("Warning in popinfoindexvector - divide by zero");
-        else
+        if (isZero(CI.Nrof(l))) {
+          if (handle.getLogLevel() >= LOGWARN)
+            handle.logMessage(LOGWARN, "Warning in popinfoindexvector - divide by zero");
+        } else
           v[l].N /= CI.Nrof(l);
       }
     } else {

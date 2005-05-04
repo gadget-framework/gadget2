@@ -19,7 +19,7 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
   if (strcasecmp(text, "transitionstocksandratios") == 0) {
     i = 0;
     infile >> text >> ws;
-    while (strcasecmp(text, "transitionstep") != 0 && infile.good()) {
+    while (strcasecmp(text, "transitionstep") != 0 && !infile.eof()) {
       transitionStockNames.resize(1);
       transitionStockNames[i] = new char[strlen(text) + 1];
       strcpy(transitionStockNames[i], text);
@@ -28,11 +28,10 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
       i++;
     }
   } else
-    handle.Unexpected("transitionstocksandratios", text);
+    handle.logFileUnexpected(LOGFAIL, "transitionstocksandratios", text);
 
-  if (!infile.good())
-    handle.Failure();
-
+  if (infile.eof())
+    handle.logFileEOFMessage(LOGFAIL);
   infile >> transitionStep >> ws;
   keeper->clearLast();
 }
@@ -62,11 +61,11 @@ void Transition::setStock(StockPtrVector& stockvec) {
       }
 
   if (index != transitionStockNames.Size()) {
-    handle.logWarning("Error in transition - failed to match transition stocks");
+    handle.logMessage(LOGWARN, "Error in transition - failed to match transition stocks");
     for (i = 0; i < stockvec.Size(); i++)
-      handle.logWarning("Error in transition - found stock", stockvec[i]->getName());
+      handle.logMessage(LOGWARN, "Error in transition - found stock", stockvec[i]->getName());
     for (i = 0; i < transitionStockNames.Size(); i++)
-      handle.logWarning("Error in transition - looking for stock", transitionStockNames[i]);
+      handle.logMessage(LOGWARN, "Error in transition - looking for stock", transitionStockNames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -89,8 +88,8 @@ void Transition::setStock(StockPtrVector& stockvec) {
       if (!transitionStocks[i]->isInArea(areas[j]))
         index++;
 
-    if (index != 0)
-      handle.logWarning("Warning in transition - transition stock isnt defined on all areas");
+    if ((handle.getLogLevel() >= LOGWARN) && (index != 0))
+      handle.logMessage(LOGWARN, "Warning in transition - transition stock isnt defined on all areas");
 
     if (transitionStocks[i]->returnLengthGroupDiv()->minLength() < mlength)
       mlength = transitionStocks[i]->returnLengthGroupDiv()->minLength();
@@ -154,7 +153,7 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
   int s, inarea = this->areaNum(area);
   for (s = 0; s < transitionStocks.Size(); s++) {
     if (!transitionStocks[s]->isInArea(area))
-      handle.logFailure("Error in transition - transition stock doesnt live on area", area);
+      handle.logMessage(LOGFAIL, "Error in transition - transition stock doesnt live on area", area);
 
     if (transitionStocks[s]->Birthday(TimeInfo)) {
       Storage[inarea].IncrementAge();
@@ -181,7 +180,8 @@ void Transition::Reset() {
     Storage[i].setToZero();
     tagStorage[i].setToZero();
   }
-  handle.logMessage("Reset transition data");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset transition data");
 }
 
 const StockPtrVector& Transition::getTransitionStocks() {
@@ -214,7 +214,7 @@ void Transition::deleteTransitionTag(const char* tagname) {
     tagStorage.deleteTag(tagname);
 
   } else
-    handle.logWarning("Warning in transition - failed to delete tagging experiment", tagname);
+    handle.logMessage(LOGWARN, "Warning in transition - failed to delete tagging experiment", tagname);
 }
 
 int Transition::isTransitionStep(int area, const TimeClass* const TimeInfo) {

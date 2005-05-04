@@ -57,8 +57,8 @@ void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
     delete Stochasticdata;
 
   } else {
-    if (EcoSystem->numOptVariables() != 0)
-      handle.logWarning("Warning - no parameter input file given, using default values");
+    if ((handle.getLogLevel() >= LOGWARN) && (EcoSystem->numOptVariables() != 0))
+      handle.logMessage(LOGWARN, "Warning - no parameter input file given, using default values");
     EcoSystem->Reset();
     if (MainInfo->printInitial())
       EcoSystem->writeStatus(MainInfo->getPrintInitialFile());
@@ -110,16 +110,12 @@ int main(int aNumber, char* const aVector[]) {
     MainInfo.read(aNumber, aVector);
 
   //JMB - dont print output if doing a network run
-  if (!(MainInfo.runNetwork())) {
+  if (!(MainInfo.runNetwork()))
     RUNID.print(cout);
-    handle.logInformation("Starting Gadget from directory:", workingdir);
-    handle.logInformation("using data from directory:", inputdir);
-    handle.logMessage(""); //write a blank line to the log file
-  }
-  MainInfo.checkUsage();
+  MainInfo.checkUsage(inputdir, workingdir);
 
   if (aNumber == 1)
-    handle.logWarning("Warning - no command line options specified, using default values");
+    handle.logMessage(LOGWARN, "Warning - no command line options specified, using default values");
 
   EcoSystem = new Ecosystem(MainInfo.getMainGadgetFile(), MainInfo.runOptimise(),
     MainInfo.runNetwork(), MainInfo.runLikelihood(), inputdir, workingdir, MainInfo.getPI());
@@ -145,7 +141,7 @@ int main(int aNumber, char* const aVector[]) {
       EcoSystem->Update(Stochasticdata);
       EcoSystem->checkBounds();
     } else
-      handle.logWarning("Warning - no parameter input file given, using default values");
+      handle.logMessage(LOGWARN, "Warning - no parameter input file given, using default values");
 
     EcoSystem->Reset();
     if (MainInfo.printInitial())
@@ -162,7 +158,7 @@ int main(int aNumber, char* const aVector[]) {
       delete Stochasticdata;
   }
 
-  handle.logMessage("");  //write blank line to log file
+  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
   if (MainInfo.printFinal())
     EcoSystem->writeStatus(MainInfo.getPrintFinalFile());
 

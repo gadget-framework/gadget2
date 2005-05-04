@@ -45,11 +45,11 @@ void Maturity::setStock(StockPtrVector& stockvec) {
       }
 
   if (index != matureStockNames.Size()) {
-    handle.logWarning("Error in maturity - failed to match mature stocks");
+    handle.logMessage(LOGWARN, "Error in maturity - failed to match mature stocks");
     for (i = 0; i < stockvec.Size(); i++)
-      handle.logWarning("Error in maturity - found stock", stockvec[i]->getName());
+      handle.logMessage(LOGWARN, "Error in maturity - found stock", stockvec[i]->getName());
     for (i = 0; i < matureStockNames.Size(); i++)
-      handle.logWarning("Error in maturity - looking for stock", matureStockNames[i]);
+      handle.logMessage(LOGWARN, "Error in maturity - looking for stock", matureStockNames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -69,8 +69,8 @@ void Maturity::setStock(StockPtrVector& stockvec) {
       if (!matureStocks[i]->isInArea(areas[j]))
         index++;
 
-    if (index != 0)
-      handle.logWarning("Warning in maturity - mature stock isnt defined on all areas");
+    if ((handle.getLogLevel() >= LOGWARN) && (index != 0))
+      handle.logMessage(LOGWARN, "Warning in maturity - mature stock isnt defined on all areas");
   }
 
   for (i = 0; i < areas.Size(); i++) {
@@ -93,11 +93,11 @@ void Maturity::Print(ofstream& outfile) const {
 
 void Maturity::Move(int area, const TimeClass* const TimeInfo) {
   if (!(this->isMaturationStep(area, TimeInfo)))
-    handle.logFailure("Error in maturity - maturity requested on wrong timestep");
+    handle.logMessage(LOGFAIL, "Error in maturity - maturity requested on wrong timestep");
   int i, inarea = this->areaNum(area);
   for (i = 0; i < matureStocks.Size(); i++) {
     if (!matureStocks[i]->isInArea(area))
-      handle.logFailure("Error in maturity - mature stock doesnt live on area", area);
+      handle.logMessage(LOGFAIL, "Error in maturity - mature stock doesnt live on area", area);
 
     matureStocks[i]->Add(Storage[inarea], CI[i], area, Ratio[i],
       Storage[inarea].minAge(), Storage[inarea].maxAge());
@@ -116,7 +116,7 @@ void Maturity::PutInStorage(int area, int age, int length, double number,
   double weight, const TimeClass* const TimeInfo) {
 
   if (!(this->isMaturationStep(area, TimeInfo)))
-    handle.logFailure("Error in maturity - maturity requested on wrong timestep");
+    handle.logMessage(LOGFAIL, "Error in maturity - maturity requested on wrong timestep");
   int inarea = this->areaNum(area);
   if (isZero(number) || isZero(weight)) {
     Storage[inarea][age][length].N = 0.0;
@@ -131,13 +131,13 @@ void Maturity::PutInStorage(int area, int age, int length, double number,
   const TimeClass* const TimeInfo, int id) {
 
   if (!(this->isMaturationStep(area, TimeInfo)))
-    handle.logFailure("Error in maturity - maturity requested on wrong timestep");
+    handle.logMessage(LOGFAIL, "Error in maturity - maturity requested on wrong timestep");
   if (tagStorage.numTagExperiments() <= 0)
-    handle.logFailure("Error in maturity - no tagging experiment");
+    handle.logMessage(LOGFAIL, "Error in maturity - no tagging experiment");
   if ((id >= tagStorage.numTagExperiments()) || (id < 0))
-    handle.logFailure("Error in maturity - invalid tagging experiment");
+    handle.logMessage(LOGFAIL, "Error in maturity - invalid tagging experiment");
 
-  if (isZero(number)) 
+  if (isZero(number))
     *(tagStorage[this->areaNum(area)][age][length][id].N) = 0.0;
   else
     *(tagStorage[this->areaNum(area)][age][length][id].N) = number;
@@ -172,7 +172,7 @@ void Maturity::deleteMaturityTag(const char* tagname) {
     tagStorage.deleteTag(tagname);
 
   } else
-    handle.logWarning("Warning in maturity - failed to delete tagging experiment", tagname);
+    handle.logMessage(LOGWARN, "Warning in maturity - failed to delete tagging experiment", tagname);
 }
 
 // ********************************************************
@@ -191,7 +191,7 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
     i = 0;
     infile >> text >> ws;
-    while (strcasecmp(text, "coefficients") != 0 && infile.good()) {
+    while (strcasecmp(text, "coefficients") != 0 && !infile.eof()) {
       matureStockNames.resize(1);
       matureStockNames[i] = new char[strlen(text) + 1];
       strcpy(matureStockNames[i], text);
@@ -200,19 +200,20 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
       i++;
     }
   } else
-    handle.Unexpected("maturestocksandratios", text);
+    handle.logFileUnexpected(LOGFAIL, "maturestocksandratios", text);
 
-  if (!infile.good())
-    handle.Failure();
+  if (infile.eof())
+    handle.logFileEOFMessage(LOGFAIL);
   maturityParameters.resize(4, keeper);
   maturityParameters.read(infile, TimeInfo, keeper);
 
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    handle.Unexpected("<end of file>", text);
+    handle.logFileUnexpected(LOGFAIL, "<end of file>", text);
   }
-  handle.logMessage("Read maturity data file");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read maturity data file");
   keeper->clearLast();
 }
 
@@ -221,8 +222,8 @@ void MaturityA::Reset(const TimeClass* const TimeInfo) {
   double my;
   int age, len;
   if (maturityParameters.DidChange(TimeInfo)) {
-    if (maturityParameters[1] > LgrpDiv->maxLength())
-      handle.logWarning("Warning in maturity calculation - l50 greater than maximum length");
+    if ((handle.getLogLevel() >= LOGWARN) && (maturityParameters[1] > LgrpDiv->maxLength()))
+      handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
 
     for (age = preCalcMaturation.minAge(); age <= preCalcMaturation.maxAge(); age++) {
       for (len = preCalcMaturation.minLength(age); len < preCalcMaturation.maxLength(age); len++) {
@@ -231,7 +232,8 @@ void MaturityA::Reset(const TimeClass* const TimeInfo) {
         preCalcMaturation[age][len] = 1.0 / (1.0 + my);
       }
     }
-    handle.logMessage("Reset maturity data");
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Reset maturity data");
   }
 }
 
@@ -285,7 +287,7 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
     i = 0;
     infile >> text >> ws;
-    while (!(strcasecmp(text, "maturitysteps") == 0) && infile.good()) {
+    while (!(strcasecmp(text, "maturitysteps") == 0) && !infile.eof()) {
       matureStockNames.resize(1);
       matureStockNames[i] = new char[strlen(text) + 1];
       strcpy(matureStockNames[i], text);
@@ -294,32 +296,37 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
       i++;
     }
   } else
-    handle.Unexpected("maturestocksandratios", text);
+    handle.logFileUnexpected(LOGFAIL, "maturestocksandratios", text);
 
-  if (!infile.good())
-    handle.Failure();
+  if (infile.eof())
+    handle.logFileEOFMessage(LOGFAIL);
+
   infile >> ws;
   while (isdigit(infile.peek()) && !infile.eof()) {
     maturitystep.resize(1);
     infile >> maturitystep[maturitystep.Size() - 1] >> ws;
   }
+  if (infile.eof())
+    handle.logFileEOFMessage(LOGFAIL);
+
   infile >> text;
   if (!(strcasecmp(text, "maturitylengths") == 0))
-    handle.Unexpected("maturitylengths", text);
+    handle.logFileUnexpected(LOGFAIL, "maturitylengths", text);
   while (maturitylength.Size() < maturitystep.Size() && !infile.eof()) {
     maturitylength.resize(1, keeper);
     maturitylength[maturitylength.Size() - 1].read(infile, TimeInfo, keeper);
   }
 
   if (maturitylength.Size() != maturitystep.Size())
-    handle.Message("Error in maturity - number of maturitysteps does not equal number of maturitylengths");
+    handle.logFileMessage(LOGFAIL, "Error in maturity - number of maturitysteps does not equal number of maturitylengths");
 
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    handle.Unexpected("<end of file>", text);
+    handle.logFileUnexpected(LOGFAIL, "<end of file>", text);
   }
-  handle.logMessage("Read maturity data file");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read maturity data file");
   keeper->clearLast();
 }
 
@@ -342,7 +349,8 @@ void MaturityB::setStock(StockPtrVector& stockvec) {
 void MaturityB::Reset(const TimeClass* const TimeInfo) {
   maturitylength.Update(TimeInfo);
   if (maturitylength.DidChange(TimeInfo))
-    handle.logMessage("Reset maturity data");
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Reset maturity data");
 }
 
 double MaturityB::MaturationProbability(int age, int length, int growth,
@@ -381,7 +389,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
     i = 0;
     infile >> text >> ws;
-    while (strcasecmp(text, "coefficients") != 0 && infile.good()) {
+    while (strcasecmp(text, "coefficients") != 0 && !infile.eof()) {
       matureStockNames.resize(1);
       matureStockNames[i] = new char[strlen(text) + 1];
       strcpy(matureStockNames[i], text);
@@ -390,16 +398,16 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
       i++;
     }
   } else
-    handle.Unexpected("maturestocksandratios", text);
+    handle.logFileUnexpected(LOGFAIL, "maturestocksandratios", text);
 
-  if (!infile.good())
-    handle.Failure();
+  if (infile.eof())
+    handle.logFileEOFMessage(LOGFAIL);
   maturityParameters.resize(numMatConst, keeper);
   maturityParameters.read(infile, TimeInfo, keeper);
 
   infile >> text >> ws;
   if (!((strcasecmp(text, "maturitystep") == 0) || (strcasecmp(text, "maturitysteps") == 0)))
-    handle.Unexpected("maturitysteps", text);
+    handle.logFileUnexpected(LOGFAIL, "maturitysteps", text);
 
   i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
@@ -410,14 +418,15 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
 
   for (i = 0; i < maturitystep.Size(); i++)
     if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->StepsInYear())
-      handle.Message("Error in maturity - invalid maturity step");
+      handle.logFileMessage(LOGFAIL, "Error in maturity - invalid maturity step");
 
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    handle.Unexpected("<end of file>", text);
+    handle.logFileUnexpected(LOGFAIL, "<end of file>", text);
   }
-  handle.logMessage("Read maturity data file");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read maturity data file");
   keeper->clearLast();
 }
 
@@ -439,8 +448,8 @@ void MaturityC::Reset(const TimeClass* const TimeInfo) {
   double my;
   int age, len;
   if (maturityParameters.DidChange(TimeInfo)) {
-    if (maturityParameters[1] > LgrpDiv->maxLength())
-      handle.logWarning("Warning in maturity calculation - l50 greater than maximum length");
+    if ((handle.getLogLevel() >= LOGWARN) && (maturityParameters[1] > LgrpDiv->maxLength()))
+      handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
 
     for (age = preCalcMaturation.minAge(); age <= preCalcMaturation.maxAge(); age++) {
       for (len = preCalcMaturation.minLength(age); len < preCalcMaturation.maxLength(age); len++) {
@@ -452,7 +461,8 @@ void MaturityC::Reset(const TimeClass* const TimeInfo) {
           preCalcMaturation[age][len] = 0.0;
       }
     }
-    handle.logMessage("Reset maturity data");
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Reset maturity data");
   }
 }
 
@@ -499,7 +509,7 @@ MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
   CommentStream subweightcomment(subweightfile);
   DoubleMatrix tmpRefW;
   if (!readRefWeights(subweightcomment, tmpRefW))
-    handle.Message("Wrong format for reference weights");
+    handle.logFileMessage(LOGFAIL, "Wrong format for reference weights");
   handle.Close();
   subweightfile.close();
   subweightfile.clear();
@@ -507,7 +517,7 @@ MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
   //Aggregate the reference weight data to be the same length groups
   if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
       LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-    handle.Message("Lengths for reference weights must span the range of growth lengths");
+    handle.logFileMessage(LOGFAIL, "Lengths for reference weights must span the range of growth lengths");
 
   refWeight.resize(LgrpDiv->numLengthGroups(), 0.0);
   int i, j, pos = 0;
@@ -539,9 +549,10 @@ void MaturityD::setStock(StockPtrVector& stockvec) {
 void MaturityD::Reset(const TimeClass* const TimeInfo) {
   maturityParameters.Update(TimeInfo);
   if (maturityParameters.DidChange(TimeInfo)) {
-    if (maturityParameters[1] > LgrpDiv->maxLength())
-      handle.logWarning("Warning in maturity calculation - l50 greater than maximum length");
-    handle.logMessage("Reset maturity data");
+    if ((handle.getLogLevel() >= LOGWARN) && (maturityParameters[1] > LgrpDiv->maxLength()))
+      handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Reset maturity data");
   }
 }
 

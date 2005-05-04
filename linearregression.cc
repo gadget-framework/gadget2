@@ -47,7 +47,8 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
 
   //JMB - if there is a negative slope for the regression then things are going wrong ...
   if (b < 0) {
-    handle.logWarning("Warning in LR - negative slope for regression line", b);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in LR - negative slope for regression line", b);
     error = 1;
     return;
   }
@@ -83,7 +84,8 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
 
   //JMB - if there is a negative slope for the regression then things are going wrong ...
   if (b < 0) {
-    handle.logWarning("Warning in LR - negative slope for regression line", b);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in LR - negative slope for regression line", b);
     error = 1;
     return;
   }
@@ -123,7 +125,8 @@ void LinearRegression::Fit(double intercept, const DoubleVector& x, const Double
 
   //JMB - if there is a negative slope for the regression then things are going wrong ...
   if (b < 0) {
-    handle.logWarning("Warning in LR - negative slope for regression line", b);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in LR - negative slope for regression line", b);
     error = 1;
     return;
   }
@@ -148,7 +151,8 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
 
   //JMB - if there is a negative slope for the regression then things are going wrong ...
   if (b < 0) {
-    handle.logWarning("Warning in LR - negative slope for regression line", b);
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in LR - negative slope for regression line", b);
     error = 1;
     return;
   }

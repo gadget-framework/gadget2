@@ -60,7 +60,7 @@ const BandMatrix& PopPredator::getConsumption(int area, const char* preyname) co
     if (strcasecmp(getPreyName(prey), preyname) == 0)
       return consumption[this->areaNum(area)][prey];
 
-  handle.logFailure("Error in poppredator - failed to match prey", preyname);
+  handle.logMessage(LOGFAIL, "Error in poppredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
 }
 
@@ -108,7 +108,8 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
     }
   }
 
-  handle.logMessage("Reset predatation data for predator", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset predatation data for predator", this->getName());
 }
 
 void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
@@ -123,10 +124,10 @@ void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     for (i = 0; i < this->numPreys(); i++) {
       minl = min(Preys(i)->returnLengthGroupDiv()->minLength(), minl);
       maxl = max(Preys(i)->returnLengthGroupDiv()->maxLength(), maxl);
-    }    
+    }
     LgrpDiv = new LengthGroupDivision(minl, maxl, maxl - minl);
     if (LgrpDiv->Error())
-      handle.Message("Error in poppredator - failed to create length group");
+      handle.logMessage(LOGFAIL, "Error in poppredator - failed to create length group");
     CI = new ConversionIndex(LgrpDiv, LgrpDiv);
   }
 

@@ -32,8 +32,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   int tmparea;
   //Currently can only have one area per tagging experiment
   readWordAndVariable(infile, "tagarea", tmparea);
-  if ((tagarea = Area->InnerArea(tmparea)) == -1)
-    handle.UndefinedArea(tmparea);
+  tagarea = Area->InnerArea(tmparea);
 
   infile >> ws;
   char c = infile.peek();
@@ -51,7 +50,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
     i++;
   }
   if (found == 0)
-    handle.logFailure("Error in tags - failed to match stock", stocknames[0]);
+    handle.logMessage(LOGFAIL, "Error in tags - failed to match stock", stocknames[0]);
 
   //Now read in the tagloss information
   readWordAndFormula(infile, "tagloss", tagloss);
@@ -82,7 +81,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
   infile >> ws;
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 5)
-    handle.Message("Wrong number of columns in inputfile - should be 5");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 5");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -103,7 +102,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
 
     //only keep the data if the number is positive
     if (tmpnumber < 0) {
-      handle.logWarning("Warning in tags - found negative number of tags", tmpnumber);
+      handle.logMessage(LOGWARN, "Warning in tags - found negative number of tags", tmpnumber);
       keepdata = 1;
     }
 
@@ -129,9 +128,10 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
     }
   }
 
-  if (count == 0)
-    handle.logWarning("Warning in tags - found no data in the data file for", tagname);
-  handle.logMessage("Read tags data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in tags - found no data in the data file for", tagname);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read tags data file - number of entries", count);
 
   tagyear = 9999;
   tagstep = 9999;
@@ -147,7 +147,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
       timeid = i;
 
   if (timeid == -1)
-    handle.logFailure("Error in tags - calculated invalid timestep");
+    handle.logMessage(LOGFAIL, "Error in tags - calculated invalid timestep");
 
   numtagtimesteps = (TimeInfo->StepsInYear() * (endyear - tagyear)) - tagstep + 1;
   if (endyear == TimeInfo->LastYear())
@@ -205,20 +205,20 @@ void Tags::setStock(StockPtrVector& Stocks) {
     j++;
   }
   if (found == 0)
-    handle.logFailure("Error in tags - failed to match stock", stocknames[0]);
+    handle.logMessage(LOGFAIL, "Error in tags - failed to match stock", stocknames[0]);
 
   //Make sure that given stocks are defined on tagarea and have same
   //lengthgroup division for the tagging experiment and the stock
   if (!(taggingstock->isInArea(tagarea)))
-    handle.logFailure("Error in tags - stock isnt defined on tagging area");
+    handle.logMessage(LOGFAIL, "Error in tags - stock isnt defined on tagging area");
 
   const LengthGroupDivision* tempLgrpDiv = taggingstock->returnLengthGroupDiv();
   if (LgrpDiv->numLengthGroups() != tempLgrpDiv->numLengthGroups())
-    handle.logFailure("Error in tags - invalid length group for tagged stock");
+    handle.logMessage(LOGFAIL, "Error in tags - invalid length group for tagged stock");
   if (LgrpDiv->dl() != tempLgrpDiv->dl())
-    handle.logFailure("Error in tags - invalid length group for tagged stock");
+    handle.logMessage(LOGFAIL, "Error in tags - invalid length group for tagged stock");
   if (!(isZero(LgrpDiv->minLength() - tempLgrpDiv->minLength())))
-    handle.logFailure("Error in tags - invalid length group for tagged stock");
+    handle.logMessage(LOGFAIL, "Error in tags - invalid length group for tagged stock");
 
   preyindex.resize(1, -1);
   updated.resize(1, 0);
@@ -306,7 +306,7 @@ void Tags::Update(int timeid) {
     j++;
   }
   if (tagareaindex == -1)
-    handle.logFailure("Error in tags - invalid area for tagged stock");
+    handle.logMessage(LOGFAIL, "Error in tags - invalid area for tagged stock");
 
   int maxage = stockPopInArea->maxAge();
   int minage = stockPopInArea->minAge();
@@ -348,7 +348,7 @@ void Tags::Update(int timeid) {
 
     stockid = stockIndex(taggingstock->getName());
     if (stockid < 0 || stockid >= preyindex.Size())
-      handle.logFailure("Error in tags - invalid stock identifier");
+      handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
     preyindex[stockid] = NumBeforeEating.Size() - 1;
   }
@@ -386,7 +386,7 @@ void Tags::Update(int timeid) {
 
       stockid = stockIndex(tmpStock->getName());
       if (stockid < 0 || stockid >= preyindex.Size())
-        handle.logFailure("Error in tags - invalid stock identifier");
+        handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
       preyindex[stockid] = NumBeforeEating.Size() - 1;
     }
@@ -425,12 +425,12 @@ void Tags::updateMatureStock(const TimeClass* const TimeInfo) {
   int currentStep = TimeInfo->CurrentStep();
 
   if (endyear <= currentYear)
-    handle.logWarning("Warning in tags - tagging experiment has finished");
+    handle.logMessage(LOGWARN, "Warning in tags - tagging experiment has finished");
   else
     for (i = 0; i < matureStocks.Size(); i++) {
       id = stockIndex(matureStocks[i]->getName());
       if (id < 0 || id >= AgeLengthStock.Size())
-        handle.logFailure("Error in tags - invalid stock identifier");
+        handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
       if (updated[id] == 0) {
         matureStocks[i]->updateTags(AgeLengthStock[id], this, exp(-tagloss));
@@ -445,12 +445,12 @@ void Tags::updateTransitionStock(const TimeClass* const TimeInfo) {
   int currentStep = TimeInfo->CurrentStep();
 
   if (endyear <= currentYear)
-    handle.logWarning("Warning in tags - tagging experiment has finished");
+    handle.logMessage(LOGWARN, "Warning in tags - tagging experiment has finished");
   else
     for (i = 0; i < transitionStocks.Size(); i++) {
       id = stockIndex(transitionStocks[i]->getName());
       if (id < 0 || id >= AgeLengthStock.Size())
-        handle.logFailure("Error in tags - invalid stock identifier");
+        handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
       if (updated[id] == 0) {
         transitionStocks[i]->updateTags(AgeLengthStock[id], this, exp(-tagloss));
@@ -465,12 +465,12 @@ void Tags::updateStrayStock(const TimeClass* const TimeInfo) {
   int currentStep = TimeInfo->CurrentStep();
 
   if (endyear <= currentYear)
-    handle.logWarning("Warning in tags - tagging experiment has finished");
+    handle.logMessage(LOGWARN, "Warning in tags - tagging experiment has finished");
   else
     for (i = 0; i < strayStocks.Size(); i++) {
       id = stockIndex(strayStocks[i]->getName());
       if (id < 0 || id >= AgeLengthStock.Size())
-        handle.logFailure("Error in tags - invalid stock identifier");
+        handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
       if (updated[id] == 0) {
         strayStocks[i]->updateTags(AgeLengthStock[id], this, exp(-tagloss));
@@ -508,15 +508,15 @@ void Tags::storeNumberPriorToEating(int area, const char* stockname) {
   int stockid, preyid, areaid;
   stockid = stockIndex(stockname);
   if (stockid < 0)
-    handle.logFailure("Error in tags - invalid stock identifier");
+    handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
   preyid = preyindex[stockid];
   if (preyid > NumBeforeEating.Size() || preyid < 0)
-    handle.logFailure("Error in tags - invalid prey identifier");
+    handle.logMessage(LOGFAIL, "Error in tags - invalid prey identifier");
 
   areaid = areaIndex(stockname, area);
   if (areaid < 0)
-    handle.logFailure("Error in tags - invalid area identifier");
+    handle.logMessage(LOGFAIL, "Error in tags - invalid area identifier");
 
   (*NumBeforeEating[preyid])[areaid].setToZero();
   (*NumBeforeEating[preyid])[areaid].Add((*AgeLengthStock[stockid])[areaid], *CI[preyid]);
@@ -526,15 +526,15 @@ const AgeBandMatrix& Tags::getNumberPriorToEating(int area, const char* stocknam
   int stockid, preyid, areaid;
   stockid = stockIndex(stockname);
   if (stockid < 0)
-    handle.logFailure("Error in tags - invalid stock identifier");
+    handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
   preyid = preyindex[stockid];
   if (preyid > NumBeforeEating.Size() || preyid < 0)
-    handle.logFailure("Error in tags - invalid prey identifier");
+    handle.logMessage(LOGFAIL, "Error in tags - invalid prey identifier");
 
   areaid = areaIndex(stockname, area);
   if (areaid < 0)
-    handle.logFailure("Error in tags - invalid area identifier");
+    handle.logMessage(LOGFAIL, "Error in tags - invalid area identifier");
 
   return (*NumBeforeEating[preyid])[areaid];
 }
@@ -563,7 +563,7 @@ void Tags::addToTagStock(int timeid) {
     i++;
   }
   if (tagareaindex == -1)
-    handle.logFailure("Error in tags - invalid area for tagged stock");
+    handle.logMessage(LOGFAIL, "Error in tags - invalid area for tagged stock");
 
   int maxage = stockPopInArea->maxAge();
   int minage = stockPopInArea->minAge();

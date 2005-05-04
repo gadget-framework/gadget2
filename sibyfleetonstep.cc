@@ -16,7 +16,7 @@ SIByFleetOnStep::SIByFleetOnStep(CommentStream& infile, const IntMatrix& areas,
 
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    handle.Message("Error in surveyindex - failed to create length group");
+    handle.logMessage(LOGFAIL, "Error in surveyindex - failed to create length group");
 }
 
 SIByFleetOnStep::~SIByFleetOnStep() {
@@ -40,19 +40,21 @@ void SIByFleetOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
     Ages[0][i] = i + minage;
 
   //check stock lengths
-  found = 0;
-  for (i = 0; i < Stocks.Size(); i++)
-    if (LgrpDiv->maxLength(0) > Stocks[i]->returnLengthGroupDiv()->minLength())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in surveyindex - minimum length group less than stock length");
+  if (handle.getLogLevel() >= LOGWARN) {
+    found = 0;
+    for (i = 0; i < Stocks.Size(); i++)
+      if (LgrpDiv->maxLength(0) > Stocks[i]->returnLengthGroupDiv()->minLength())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in surveyindex - minimum length group less than stock length");
 
-  found = 0;
-  for (i = 0; i < Stocks.Size(); i++)
-    if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < Stocks[i]->returnLengthGroupDiv()->maxLength())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in surveyindex - maximum length group greater than stock length");
+    found = 0;
+    for (i = 0; i < Stocks.Size(); i++)
+      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < Stocks[i]->returnLengthGroupDiv()->maxLength())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in surveyindex - maximum length group greater than stock length");
+  }
 
   aggregator = new FleetPreyAggregator(Fleets, Stocks, LgrpDiv, Areas, Ages, 0);
 }
@@ -61,10 +63,11 @@ void SIByFleetOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!(this->isToSum(TimeInfo)))
     return;
 
-  handle.logMessage("Calculating index for surveyindex component", this->getSIName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Calculating index for surveyindex component", this->getSIName());
   aggregator->Sum(TimeInfo);
-  if (aggregator->checkCatchData() == 1)
-    handle.logWarning("Warning in surveyindex - zero catch found");
+  if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData() == 1))
+    handle.logMessage(LOGWARN, "Warning in surveyindex - zero catch found");
   alptr = &(aggregator->returnSum()[0]);
   int i;
   for (i = 0; i < this->numIndex(); i++)

@@ -36,8 +36,8 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (Preys(prey)->isPreyArea(area)) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-        if (tmp * prednumber[inarea][predl].N > 10.0)
-          handle.logWarning("Warning in linearpredator - excessive consumption required");
+        if ((handle.getLogLevel() >= LOGWARN) && (tmp * prednumber[inarea][predl].N > 10.0))
+          handle.logMessage(LOGWARN, "Warning in linearpredator - excessive consumption required");
 
         for (preyl = Suitability(prey)[predl].minCol();
             preyl < Suitability(prey)[predl].maxCol(); preyl++) {
@@ -124,6 +124,6 @@ const PopInfoVector& LinearPredator::getNumberPriorToEating(int area, const char
     if (strcasecmp(getPreyName(prey), preyname) == 0)
       return Preys(prey)->getNumberPriorToEating(area);
 
-  handle.logFailure("Error in linearpredator - failed to match prey", preyname);
+  handle.logMessage(LOGFAIL, "Error in linearpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
 }

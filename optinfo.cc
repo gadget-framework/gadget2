@@ -27,7 +27,7 @@ OptInfo::OptInfo(MainInfo* MainInfo) {
     infile.close();
     infile.clear();
   } else {
-    handle.logWarning("\nWarning - no optimisation file specified, using default values");
+    handle.logMessage(LOGWARN, "\nWarning - no optimisation file specified, using default values");
     optHJ = new OptInfoHooke();
     useHJ = 1;
   }
@@ -46,69 +46,69 @@ void OptInfo::readOptInfo(CommentStream& infile) {
   char* text = new char[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
-  handle.logMessage("\nReading optimisation information");
+  handle.logMessage(LOGMESSAGE, "\nReading optimisation information");
   infile >> text;
   while (!infile.eof()) {
     infile >> ws;  //trim whitespace from infile
     if ((strcasecmp(text, "seed")) == 0 && (!infile.eof())) {
       int seed;
       infile >> seed >> ws >> text;
-      handle.logMessage("Initialising random number generator with", seed);
+      handle.logMessage(LOGMESSAGE, "Initialising random number generator with", seed);
       srand(seed);
 
     } else if (strcasecmp(text, "[simann]") == 0) {
-      handle.logMessage("Reading Simulated Annealing parameters");
+      handle.logMessage(LOGMESSAGE, "Reading Simulated Annealing parameters");
       optSimann = new OptInfoSimann();
       useSimann = 1;
 
       if (!infile.eof()) {
         infile >> text;
         if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
-          handle.logWarning("Warning - no optimisation parameters specified for Simulated Annealing algorithm");
+          handle.logMessage(LOGWARN, "Warning - no optimisation parameters specified for Simulated Annealing algorithm");
         else
           optSimann->read(infile, text);
 
       } else
-        handle.logWarning("Warning - no optimisation parameters specified for Simulated Annealing algorithm");
+        handle.logMessage(LOGWARN, "Warning - no optimisation parameters specified for Simulated Annealing algorithm");
 
     } else if (strcasecmp(text, "[hooke]") == 0) {
-      handle.logMessage("Reading Hooke & Jeeves parameters");
+      handle.logMessage(LOGMESSAGE, "Reading Hooke & Jeeves parameters");
       optHJ = new OptInfoHooke();
       useHJ = 1;
 
       if (!infile.eof()) {
         infile >> text;
         if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
-          handle.logWarning("Warning - no optimisation parameters specified for Hooke & Jeeves algorithm");
+          handle.logMessage(LOGWARN, "Warning - no optimisation parameters specified for Hooke & Jeeves algorithm");
         else
           optHJ->read(infile, text);
 
       } else
-        handle.logWarning("Warning - no optimisation parameters specified for Hooke & Jeeves algorithm");
+        handle.logMessage(LOGWARN, "Warning - no optimisation parameters specified for Hooke & Jeeves algorithm");
 
     } else if (strcasecmp(text, "[bfgs]") == 0) {
-      handle.logMessage("Reading BFGS parameters");
+      handle.logMessage(LOGMESSAGE, "Reading BFGS parameters");
       optBFGS = new OptInfoBFGS();
       useBFGS = 1;
 
       if (!infile.eof()) {
         infile >> text;
         if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
-          handle.logWarning("Warning - no optimisation parameters specified for BFGS algorithm");
+          handle.logMessage(LOGWARN, "Warning - no optimisation parameters specified for BFGS algorithm");
         else
           optBFGS->read(infile, text);
 
       } else
-        handle.logWarning("Warning - no optimisation parameters specified for BFGS algorithm");
+        handle.logMessage(LOGWARN, "Warning - no optimisation parameters specified for BFGS algorithm");
 
     } else {
-      handle.Unexpected("[hooke], [simann], [bfgs] or seed", text);
+      handle.logFileUnexpected(LOGFAIL, "[hooke], [simann], [bfgs] or seed", text);
     }
   }
 
   delete[] text;
   if (useSimann == 0 && useHJ == 0 && useBFGS == 0)
-    handle.logFailure("Error in optinfofile - no valid optimisation methods found");
+    handle.logFileMessage(LOGFAIL, "Error in optinfofile - no valid optimisation methods found");
 }
 
 void OptInfo::Optimise() {

@@ -30,8 +30,10 @@ public:
   void showUsage();
   /**
    * \brief This function will check the options that have been specified on the commandline
+   * \param inputdir is the name of the directory containing the input files to the model
+   * \param workingdir is the name of the directory used for the output from the model
    */
-  void checkUsage();
+  void checkUsage(const char* const inputdir, const char* const workingdir);
   /**
    * \brief This function will read input from the command line
    * \param aNumber is the number of command line entries
@@ -196,9 +198,9 @@ private:
    */
   int printFinalInfo;
   /**
-   * \brief This is the flag used to denote whether warnings should be printed or not
+   * \brief This is the value used to decide on the level of warnings displayed during the model run
    */
-  int printWarning;
+  int printLogLevel;
 };
 
 #endif

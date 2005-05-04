@@ -17,7 +17,7 @@ extern int simann(int nvar, double point[], double endpoint[], double lb[],
 OptInfoSimann::OptInfoSimann()
   : OptSearch(), rt(0.85), simanneps(1e-4), ns(5), nt(2), t(100.0),
     cs(2.0), vm(1.0), simanniter(2000), uratio(0.7), lratio(0.3), check(4) {
-  handle.logMessage("Initialising Simulated Annealing optimisation algorithm");
+  handle.logMessage(LOGMESSAGE, "Initialising Simulated Annealing optimisation algorithm");
 }
 
 void OptInfoSimann::read(CommentStream& infile, char* text) {
@@ -57,7 +57,7 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
       infile >> lratio;
 
     } else {
-      handle.logWarning("Warning in optinfofile - unrecognised option", text);
+      handle.logMessage(LOGWARN, "Warning in optinfofile - unrecognised option", text);
       infile >> text;  //read and ignore the next entry
     }
     infile >> text;
@@ -65,39 +65,39 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
 
   //check the values specified in the optinfo file ...
   if ((uratio < 0.5) || (uratio > 1)) {
-    handle.logWarning("Warning in optinfofile - value of uratio outside bounds", uratio);
+    handle.logMessage(LOGWARN, "Warning in optinfofile - value of uratio outside bounds", uratio);
     uratio = 0.7;
   }
   if ((lratio < 0) || (lratio > 0.5) || isZero(lratio)) {
-    handle.logWarning("Warning in optinfofile - value of lratio outside bounds", lratio);
+    handle.logMessage(LOGWARN, "Warning in optinfofile - value of lratio outside bounds", lratio);
     lratio = 0.3;
   }
   if ((rt < 0) || (rt > 1) || isZero(rt)) {
-    handle.logWarning("Warning in optinfofile - value of rt outside bounds", rt);
+    handle.logMessage(LOGWARN, "Warning in optinfofile - value of rt outside bounds", rt);
     rt = 0.85;
   }
   if ((t < 0) || isZero(t)) {
-    handle.logWarning("Warning in optinfofile - value of t outside bounds", t);
+    handle.logMessage(LOGWARN, "Warning in optinfofile - value of t outside bounds", t);
     t = 100.0;
   }
   if (nt < 1) {
-    handle.logWarning("Warning in optinfofile - value of nt outside bounds", nt);
+    handle.logMessage(LOGWARN, "Warning in optinfofile - value of nt outside bounds", nt);
     nt = 2;
   }
   if (ns < 1) {
-    handle.logWarning("Warning in optinfofile - value of ns outside bounds", ns);
+    handle.logMessage(LOGWARN, "Warning in optinfofile - value of ns outside bounds", ns);
     ns = 5;
   }
   if ((isZero(vm)) || (vm < 0)) {
-    handle.logWarning("Warning in optinfofile - value of vm outside bounds", vm);
+    handle.logMessage(LOGWARN, "Warning in optinfofile - value of vm outside bounds", vm);
     vm = 1.0;
   }
   if ((isZero(cs)) || (cs < 0)) {
-    handle.logWarning("Warning in optinfofile - value of cstep outside bounds", cs);
+    handle.logMessage(LOGWARN, "Warning in optinfofile - value of cstep outside bounds", cs);
     cs = 2.0;
   }
   if ((isZero(simanneps)) || (simanneps < 0)) {
-    handle.logWarning("Warning in optinfofile - value of simanneps outside bounds", simanneps);
+    handle.logMessage(LOGWARN, "Warning in optinfofile - value of simanneps outside bounds", simanneps);
     simanneps = 1e-4;
   }
 }
@@ -107,7 +107,7 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
 void OptInfoSimann::OptimiseLikelihood() {
   int i, nopt, opt;
 
-  handle.logInformation("\nStarting Simulated Annealing optimisation algorithm");
+  handle.logMessage(LOGINFO, "\nStarting Simulated Annealing optimisation algorithm");
 
   nopt = EcoSystem->numOptVariables();
   DoubleVector val(nopt);

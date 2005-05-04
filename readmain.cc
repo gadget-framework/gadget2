@@ -39,7 +39,7 @@ void Ecosystem::readFleet(CommentStream& infile) {
   while (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[fleetcomponent]") == 0))
-      handle.Unexpected("[fleetcomponent]", text);
+      handle.logFileUnexpected(LOGFAIL, "[fleetcomponent]", text);
 
     infile >> text >> value;
     fleetvec.resize(1);
@@ -50,11 +50,12 @@ void Ecosystem::readFleet(CommentStream& infile) {
     else if (strcasecmp(text, "numberfleet") == 0)
       fleetvec[fleetvec.Size() - 1] = new Fleet(infile, value, Area, TimeInfo, keeper, NUMBERFLEET);
     else if (strcasecmp(text, "mortalityfleet") == 0)
-      handle.Message("The mortalityfleet fleet type is no longer supported");
+      handle.logFileMessage(LOGFAIL, "The mortalityfleet fleet type is no longer supported");
     else
-      handle.Message("Error in fleet file - unrecognised fleet", text);
+      handle.logFileMessage(LOGFAIL, "Error in fleet file - unrecognised fleet", text);
 
-    handle.logMessage("Read fleet OK - created fleet", value);
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Read fleet OK - created fleet", value);
   }
 }
 
@@ -70,16 +71,17 @@ void Ecosystem::readTagging(CommentStream& infile) {
   while (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[tagcomponent]") == 0))
-      handle.Unexpected("[tagcomponent]", text);
+      handle.logFileUnexpected(LOGFAIL, "[tagcomponent]", text);
 
     infile >> text >> value;
     tagvec.resize(1);
     if (strcasecmp(text, "tagid") == 0)
       tagvec[tagvec.Size() - 1] = new Tags(infile, value, Area, TimeInfo, keeper, stockvec);
     else
-      handle.Unexpected("tagid", text);
+      handle.logFileUnexpected(LOGFAIL, "tagid", text);
 
-    handle.logMessage("Read tagging experiment OK - created tag", value);
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Read tagging experiment OK - created tag", value);
   }
 }
 
@@ -95,16 +97,17 @@ void Ecosystem::readOtherFood(CommentStream& infile) {
   while (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[foodcomponent]") == 0))
-      handle.Unexpected("[foodcomponent]", text);
+      handle.logFileUnexpected(LOGFAIL, "[foodcomponent]", text);
 
     infile >> text >> value;
     otherfoodvec.resize(1);
     if (strcasecmp(text, "foodname") == 0)
       otherfoodvec[otherfoodvec.Size() - 1] = new OtherFood(infile, value, Area, TimeInfo, keeper);
     else
-      handle.Unexpected("foodname", text);
+      handle.logFileUnexpected(LOGFAIL, "foodname", text);
 
-    handle.logMessage("Read otherfood OK - created otherfood", value);
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Read otherfood OK - created otherfood", value);
   }
 }
 
@@ -120,7 +123,8 @@ void Ecosystem::readStock(CommentStream& infile) {
   stockvec.resize(1);
   stockvec[stockvec.Size() - 1] = new Stock(infile, text, Area, TimeInfo, keeper);
 
-  handle.logMessage("Read stock OK - created stock", text);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read stock OK - created stock", text);
 }
 
 //
@@ -136,7 +140,7 @@ void Ecosystem::readPrinters(CommentStream& infile) {
     infile >> text >> ws;
 
   if (!(strcasecmp(text, "[component]") == 0))
-    handle.Unexpected("[component]", text);
+    handle.logFileUnexpected(LOGFAIL, "[component]", text);
 
   while (!infile.eof()) {
     readWordAndValue(infile, "type", type);
@@ -165,22 +169,23 @@ void Ecosystem::readPrinters(CommentStream& infile) {
       printvec.resize(1, new SummaryPrinter(infile));
 
     else if (strcasecmp(type, "formatedstockprinter") == 0)
-      handle.Message("The formatedstockprinter printer class is no longer supported");
+      handle.logFileMessage(LOGFAIL, "The formatedstockprinter printer class is no longer supported");
     else if (strcasecmp(type, "formatedchatprinter") == 0)
-      handle.Message("The formatedchatprinter printer class is no longer supported");
+      handle.logFileMessage(LOGFAIL, "The formatedchatprinter printer class is no longer supported");
     else if (strcasecmp(type, "formatedpreyprinter") == 0)
-      handle.Message("The formatedpreyprinter printer class is no longer supported");
+      handle.logFileMessage(LOGFAIL, "The formatedpreyprinter printer class is no longer supported");
     else if (strcasecmp(type, "mortprinter") == 0)
-      handle.Message("The mortprinter printer class is no longer supported");
+      handle.logFileMessage(LOGFAIL, "The mortprinter printer class is no longer supported");
     else if (strcasecmp(type, "biomassprinter") == 0)
-      handle.Message("The biomassprinter printer class is no longer supported");
+      handle.logFileMessage(LOGFAIL, "The biomassprinter printer class is no longer supported");
     else if (strcasecmp(type, "formatedcatchprinter") == 0)
-      handle.Message("The formatedcatchprinter printer class is no longer supported");
+      handle.logFileMessage(LOGFAIL, "The formatedcatchprinter printer class is no longer supported");
 
     else
-      handle.Message("Error in printer file - unrecognised printer", type);
+      handle.logFileMessage(LOGFAIL, "Error in printer file - unrecognised printer", type);
 
-    handle.logMessage("Read printer OK - created printer class", type);
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Read printer OK - created printer class", type);
   }
 }
 
@@ -206,7 +211,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
     infile >> text >> ws;
 
   if (!(strcasecmp(text, "[component]") == 0))
-    handle.Unexpected("[component]", text);
+    handle.logFileUnexpected(LOGFAIL, "[component]", text);
 
   while (!infile.eof()) {
     readWordAndValue(infile, "name", name);
@@ -231,7 +236,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       if (!infile.eof()) {
         infile >> text >> ws;
         if (!(strcasecmp(text, "[component]") == 0))
-          handle.Unexpected("[component]", text);
+          handle.logFileUnexpected(LOGFAIL, "[component]", text);
       }
 
     } else if (strcasecmp(type, "understocking") == 0) {
@@ -268,19 +273,20 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       likevec[i] = new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name);
 
     } else if (strcasecmp(type, "predatorindices") == 0) {
-      handle.Message("The predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");
+      handle.logFileMessage(LOGFAIL, "The predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");
 
     } else if (strcasecmp(type, "logcatch") == 0) {
-      handle.Message("The logcatch likelihood component is no longer supported\nUse the log function from the catchdistribution likelihood component instead");
+      handle.logFileMessage(LOGFAIL, "The logcatch likelihood component is no longer supported\nUse the log function from the catchdistribution likelihood component instead");
 
     } else if (strcasecmp(type, "logsurveyindices") == 0) {
-      handle.Message("The logsurveyindices likelihood component is no longer supported\nUse the log function from the surveyindices likelihood component instead");
+      handle.logFileMessage(LOGFAIL, "The logsurveyindices likelihood component is no longer supported\nUse the log function from the surveyindices likelihood component instead");
 
     } else {
-      handle.Message("Error in likelihood file - unrecognised likelihood", type);
+      handle.logFileMessage(LOGFAIL, "Error in likelihood file - unrecognised likelihood", type);
     }
 
-    handle.logMessage("Read likelihood OK - created likelihood component", name);
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Read likelihood OK - created likelihood component", name);
   }
 }
 
@@ -322,7 +328,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
   //next, read in the printing information
   infile >> text >> ws;
   if (!((strcasecmp(text, "printfile") == 0) || (strcasecmp(text, "printfiles") == 0)))
-    handle.Unexpected("printfiles", text);
+    handle.logFileUnexpected(LOGFAIL, "printfiles", text);
 
   //Now we have found the string "printfiles" we can create printer clases
   infile >> text >> ws;
@@ -345,14 +351,14 @@ void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
 
   //then read in the stock information
   if (!(strcasecmp(text, "[stock]") == 0))
-    handle.Unexpected("[stock]", text);
+    handle.logFileUnexpected(LOGFAIL, "[stock]", text);
   infile >> text >> ws;
 
   if (strcasecmp(text, "mortalitymodel") == 0)
-    handle.Message("Fleksibest-style mortality models are no longer supported\nGadget version 2.0.07 was the last version to allow this functionality");
+    handle.logFileMessage(LOGFAIL, "Fleksibest-style mortality models are no longer supported\nGadget version 2.0.07 was the last version to allow this functionality");
 
   if (!(strcasecmp(text, "stockfiles") == 0))
-    handle.Unexpected("stockfiles", text);
+    handle.logFileUnexpected(LOGFAIL, "stockfiles", text);
 
   //Now we have found the string "stockfiles" we can create stock
   infile >> text >> ws;
@@ -371,7 +377,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
 
   //Now we read the names of the tagging files
   if (!(strcasecmp(text, "[tagging]") == 0))
-    handle.Unexpected("[tagging]", text);
+    handle.logFileUnexpected(LOGFAIL, "[tagging]", text);
 
   infile >> text >> ws;
   if (strcasecmp(text, "tagfiles") == 0) {
@@ -393,7 +399,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
 
   //Now we read the names of the otherfood files
   if (!(strcasecmp(text, "[otherfood]") == 0))
-    handle.Unexpected("[otherfood]", text);
+    handle.logFileUnexpected(LOGFAIL, "[otherfood]", text);
 
   infile >> text >> ws;
   if (strcasecmp(text, "otherfoodfiles") == 0) {
@@ -415,7 +421,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
 
   //Now we read the names of the fleet files
   if (!(strcasecmp(text, "[fleet]") == 0))
-    handle.Unexpected("[fleet]", text);
+    handle.logFileUnexpected(LOGFAIL, "[fleet]", text);
 
   infile >> text >> ws;
   if (strcasecmp(text, "fleetfiles") == 0) {
@@ -436,7 +442,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
   }
 
   if (!(strcasecmp(text, "[likelihood]") == 0))
-    handle.Unexpected("[likelihood]", text);
+    handle.logFileUnexpected(LOGFAIL, "[likelihood]", text);
 
   //Now we have either read the word likelihood or reached end of file.
   if (!infile.eof() && calclikelihood) {

@@ -40,9 +40,9 @@ StomachContent::StomachContent(CommentStream& infile,
   else if (strcasecmp(functionname, "scsimple") == 0)
     functionnumber = 4;
   else
-    handle.Message("Error in stomachcontent - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "Error in stomachcontent - unrecognised function", functionname);
 
-  switch(functionnumber) {
+  switch (functionnumber) {
     case 1:
       StomCont = new SCNumbers(infile, Area, TimeInfo, keeper, datafilename, this->getName());
       break;
@@ -58,7 +58,7 @@ StomachContent::StomachContent(CommentStream& infile,
       StomCont = new SCSimple(infile, Area, TimeInfo, keeper, datafilename, this->getName());
       break;
     default:
-      handle.Message("Error in stomachcontent - unrecognised function", functionname);
+      handle.logMessage(LOGWARN, "Warning in stomachcontent - unrecognised function", functionname);
   }
 }
 
@@ -107,7 +107,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
     epsilon = 10.0;
 
   if (epsilon <= 0) {
-    handle.Warning("Epsilon should be a positive integer - set to default value 10");
+    handle.logFileMessage(LOGWARN, "Epsilon should be a positive integer - set to default value 10");
     epsilon = 10.0;
   }
 
@@ -124,14 +124,13 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //read in the predators
   i = 0;
   infile >> text >> ws;
   if (!((strcasecmp(text, "predators") == 0) || (strcasecmp(text, "predatornames") == 0)))
-    handle.Unexpected("predatornames", text);
+    handle.logFileUnexpected(LOGFAIL, "predatornames", text);
   infile >> text >> ws;
   while (!infile.eof() && ((strcasecmp(text, "predatorlengths") != 0)
       && (strcasecmp(text, "predatorages") != 0))) {
@@ -141,8 +140,9 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
     infile >> text >> ws;
   }
   if (predatornames.Size() == 0)
-    handle.Message("Error in stomachcontent - failed to read predators");
-  handle.logMessage("Read predator data - number of predators", predatornames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in stomachcontent - failed to read predators");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", predatornames.Size());
 
   if (strcasecmp(text, "predatorlengths") == 0) { //read predator lengths
     usepredages = 0; //predator is length structured
@@ -155,7 +155,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
     datafile.close();
     datafile.clear();
   } else if (strcasecmp(text, "predatorages") == 0) { //read predator ages
-    handle.Message("Stomach content data for age-based predators is currently not suppported");
+    handle.logFileMessage(LOGFAIL, "Stomach content data for age-based predators is currently not suppported");
     usepredages = 1; //predator is age structured
     readWordAndValue(infile, "ageaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
@@ -166,7 +166,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
     datafile.close();
     datafile.clear();
   } else
-    handle.Unexpected("predatorlengths", text);
+    handle.logFileUnexpected(LOGFAIL, "predatorlengths", text);
 
   //read in the preys
   readWordAndValue(infile, "preyaggfile", aggfilename);
@@ -183,7 +183,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 }
 
@@ -196,42 +196,35 @@ double SC::calcLikelihood(const TimeClass* const TimeInfo) {
     return 0.0;
 
   int i, a, k, p;
-  double length, mult;
-
-  int numprey = 0;
-  int numpred = 0;
-  if (usepredages) //age structured predator
-    numpred = predatorages.Size();
-  else
-    numpred = predatorlengths.Size() - 1;
-
-  handle.logMessage("Calculating likelihood score for stomachcontent component", scname);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for stomachcontent component", scname);
   //Get the consumption from aggregator, indexed the same way as in obsConsumption
+  int numprey = 0;
   for (i = 0; i < preyindex.Size(); i++) {
     this->aggregate(i);
     bptr = &aggregator[i]->returnSum();
-    for (a = 0; a < areas.Nrow(); a++) {
-      for (k = 0; k < (*bptr)[a].Nrow(); k++) {
-        for (p = 0; p < (*bptr)[a].Ncol(k); p++) {
-          length = (preylengths[i][p] + preylengths[i][p + 1]) * 0.5;
-          mult = digestioncoeff[i][0] + digestioncoeff[i][1] * pow(length, digestioncoeff[i][2]);
-          (*modelConsumption[timeindex][a])[k][numprey + p] = (*bptr)[a][k][p] * mult;
-        }
-      }
-    }
-    numprey += (preylengths[i].Size() - 1);
+    for (a = 0; a < areas.Nrow(); a++)
+      for (k = 0; k < (*bptr)[a].Nrow(); k++)
+        for (p = 0; p < (*bptr)[a].Ncol(k); p++)
+          (*modelConsumption[timeindex][a])[k][numprey + p] = (*bptr)[a][k][p] *
+               (digestioncoeff[i][0] + digestioncoeff[i][1] *
+                pow(preyLgrpDiv[i]->meanLength(p), digestioncoeff[i][2]));
+
+    numprey += preylengths[i].Size() - 1;
   }
 
-  //Now, calculate likelihood and cleanup
+  //Now calculate likelihood score
   double l = calcLikelihood();
   timeindex++;
-  handle.logMessage("The likelihood score for this component on this timestep is", l);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
   return l;
 }
 
 void SC::Reset() {
   timeindex = 0;
-  handle.logMessage("Reset stomachcontent component", scname);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset stomachcontent component", scname);
 }
 
 void SC::SummaryPrint(ofstream& outfile, double weight) {
@@ -259,7 +252,7 @@ void SC::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
   t = timeindex - 1; //timeindex was increased before this is called
 
   if ((t >= Years.Size()) || t < 0)
-    handle.logFailure("Error in stomachcontents - invalid timestep", t);
+    handle.logMessage(LOGFAIL, "Error in stomachcontents - invalid timestep", t);
 
   for (area = 0; area < modelConsumption.Ncol(t); area++) {
     for (pred = 0; pred < modelConsumption[t][area]->Nrow(); pred++) {
@@ -282,13 +275,12 @@ SC::~SC() {
       delete modelConsumption[i][j];
     }
 
-  for (i = 0; i < preynames.Nrow(); i++) {
+  for (i = 0; i < preyindex.Size(); i++) {
     delete aggregator[i];
     delete preyLgrpDiv[i];
     for (j = 0; j < preynames[i].Size(); j++)
       delete[] preynames[i][j];
   }
-  delete[] scname;
 
   if (aggregator != 0) {
     delete[] aggregator;
@@ -308,6 +300,7 @@ SC::~SC() {
     predLgrpDiv = 0;
   }
 
+  delete[] scname;
   for (i = 0; i < predatornames.Size(); i++)
     delete[] predatornames[i];
   for (i = 0; i < areaindex.Size(); i++)
@@ -332,18 +325,20 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
       }
 
     if (found == 0)
-      handle.logFailure("Error in stomachcontent - failed to match predator", predatornames[i]);
+      handle.logMessage(LOGFAIL, "Error in stomachcontent - failed to match predator", predatornames[i]);
   }
 
   //check predator areas
-  for (j = 0; j < areas.Nrow(); j++) {
-    found = 0;
-    for (i = 0; i < predators.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (predators[i]->isInArea(areas[j][k]))
-          found++;
-    if (found == 0)
-      handle.logWarning("Warning in stomachcontent - predator not defined on all areas");
+  if (handle.getLogLevel() >= LOGWARN) {
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < predators.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (predators[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in stomachcontent - predator not defined on all areas");
+    }
   }
 
   preyLgrpDiv = new LengthGroupDivision*[preyindex.Size()];
@@ -361,19 +356,21 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
         }
 
       if (found == 0)
-        handle.logFailure("Error in stomachcontent - failed to match prey", preynames[i][j]);
+        handle.logMessage(LOGFAIL, "Error in stomachcontent - failed to match prey", preynames[i][j]);
 
     }
 
     //check prey areas
-    for (j = 0; j < areas.Nrow(); j++) {
-      found = 0;
-      for (k = 0; k < preys.Size(); k++)
-        for (l = 0; l < areas.Ncol(j); l++)
-          if (preys[k]->isInArea(areas[j][l]))
-            found++;
-      if (found == 0)
-        handle.logWarning("Warning in stomachcontent - prey not defined on all areas");
+    if (handle.getLogLevel() >= LOGWARN) {
+      for (j = 0; j < areas.Nrow(); j++) {
+        found = 0;
+        for (k = 0; k < preys.Size(); k++)
+          for (l = 0; l < areas.Ncol(j); l++)
+            if (preys[k]->isInArea(areas[j][l]))
+              found++;
+        if (found == 0)
+          handle.logMessage(LOGWARN, "Warning in stomachcontent - prey not defined on all areas");
+      }
     }
 
     preyLgrpDiv[i] = new LengthGroupDivision(preylengths[i]);
@@ -381,23 +378,25 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
       predLgrpDiv[i] = new LengthGroupDivision(predatorlengths);
 
       //check predator lengths
-      found = 0;
-      for (j = 0; j < predators.Size(); j++)
-        if (predLgrpDiv[i]->maxLength(0) > predators[j]->returnLengthGroupDiv()->minLength())
-          found++;
-      if (found == 0)
-        handle.logWarning("Warning in stomachcontent - minimum length group less than predator length");
+      if (handle.getLogLevel() >= LOGWARN) {
+        found = 0;
+        for (j = 0; j < predators.Size(); j++)
+          if (predLgrpDiv[i]->maxLength(0) > predators[j]->returnLengthGroupDiv()->minLength())
+            found++;
+        if (found == 0)
+          handle.logMessage(LOGWARN, "Warning in stomachcontent - minimum length group less than predator length");
 
-      found = 0;
-      for (j = 0; j < predators.Size(); j++)
-        if (predLgrpDiv[i]->minLength(predLgrpDiv[i]->numLengthGroups()) < predators[j]->returnLengthGroupDiv()->maxLength())
-          found++;
-      if (found == 0)
-        handle.logWarning("Warning in stomachcontent - maximum length group greater than predator length");
+        found = 0;
+        for (j = 0; j < predators.Size(); j++)
+          if (predLgrpDiv[i]->minLength(predLgrpDiv[i]->numLengthGroups()) < predators[j]->returnLengthGroupDiv()->maxLength())
+            found++;
+        if (found == 0)
+          handle.logMessage(LOGWARN, "Warning in stomachcontent - maximum length group greater than predator length");
+      }
 
       aggregator[i] = new PredatorAggregator(predators, preys, areas, predLgrpDiv[i], preyLgrpDiv[i]);
     } else
-      handle.logMessage("Stomach contents data for age-based predators is currently not supported");
+      handle.logMessage(LOGFAIL, "Stomach contents data for age-based predators is currently not supported");
   }
 }
 
@@ -486,11 +485,11 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
     numpred = predatorlengths.Size() - 1;
 
   int numarea = areas.Nrow();
-  int nopreygroups = 0;
+  int numprey = 0;
   for (i = 0; i < preylengths.Nrow(); i++)
-    nopreygroups += preylengths[i].Size() - 1;
-  if (nopreygroups == 0)
-    handle.logWarning("Warning in stomachcontents - no prey found for", scname);
+    numprey += preylengths[i].Size() - 1;
+  if (numprey == 0)
+    handle.logMessage(LOGWARN, "Warning in stomachcontents - no prey found for", scname);
 
   //Find start of distribution data in datafile
   infile >> ws;
@@ -503,7 +502,7 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 6)
-    handle.Message("Wrong number of columns in inputfile - should be 6");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -553,8 +552,8 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
         modelConsumption.AddRows(1, numarea, 0);
         likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
-          obsConsumption[timeid][i] = new DoubleMatrix(numpred, nopreygroups, 0.0);
-          modelConsumption[timeid][i] = new DoubleMatrix(numpred, nopreygroups, 0.0);
+          obsConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
+          modelConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
         }
       }
 
@@ -571,9 +570,10 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
-  if (count == 0)
-    handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
-  handle.logMessage("Read stomachcontent data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
 }
 
 double SCNumbers::calcLikelihood() {
@@ -647,11 +647,11 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
     numpred = predatorlengths.Size() - 1;
 
   int numarea = areas.Nrow();
-  int nopreygroups = 0;
+  int numprey = 0;
   for (i = 0; i < preylengths.Nrow(); i++)
-    nopreygroups += preylengths[i].Size() - 1;
-  if (nopreygroups == 0)
-    handle.logWarning("Warning in stomachcontents - no prey found for", scname);
+    numprey += preylengths[i].Size() - 1;
+  if (numprey == 0)
+    handle.logMessage(LOGWARN, "Warning in stomachcontents - no prey found for", scname);
 
   //Find start of distribution data in datafile
   infile >> ws;
@@ -664,7 +664,7 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 7)
-    handle.Message("Wrong number of columns in inputfile - should be 7");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 7");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -715,9 +715,9 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
         stddev.AddRows(1, numarea, 0);
         likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
-          obsConsumption[timeid][i] = new DoubleMatrix(numpred, nopreygroups, 0.0);
-          modelConsumption[timeid][i] = new DoubleMatrix(numpred, nopreygroups, 0.0);
-          stddev[timeid][i] = new DoubleMatrix(numpred, nopreygroups, 0.0);
+          obsConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
+          modelConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
+          stddev[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
         }
       }
 
@@ -735,9 +735,10 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
-  if (count == 0)
-    handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
-  handle.logMessage("Read stomachcontent data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
 }
 
 void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -774,7 +775,7 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 5)
-    handle.Message("Wrong number of columns in inputfile - should be 5");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 5");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -815,9 +816,10 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
       (*number[timeid])[areaid][predid] = tmpnumber;
     }
   }
-  if (count == 0)
-    handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
-  handle.logMessage("Read stomachcontent data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
 }
 
 SCAmounts::~SCAmounts() {
@@ -856,7 +858,7 @@ double SCAmounts::calcLikelihood() {
 // ********************************************************
 void SCRatios::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
   int i, j, k, l;
-  double tmpdivide, scale = 0.0;
+  double tmpdivide, scale;
   SC::setPredatorsAndPreys(Predators, Preys);
   //Scale each row such that it sums up to 1
   for (i = 0; i < obsConsumption.Nrow(); i++) {
@@ -947,11 +949,11 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
     numpred = predatorlengths.Size() - 1;
 
   int numarea = areas.Nrow();
-  int nopreygroups = 0;
+  int numprey = 0;
   for (i = 0; i < preylengths.Nrow(); i++)
-    nopreygroups += preylengths[i].Size() - 1;
-  if (nopreygroups == 0)
-    handle.logWarning("Warning in stomachcontents - no prey found for", scname);
+    numprey += preylengths[i].Size() - 1;
+  if (numprey == 0)
+    handle.logMessage(LOGWARN, "Warning in stomachcontents - no prey found for", scname);
 
   //Find start of distribution data in datafile
   infile >> ws;
@@ -964,7 +966,7 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 6)
-    handle.Message("Wrong number of columns in inputfile - should be 6");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -1014,8 +1016,8 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
         modelConsumption.AddRows(1, numarea, 0);
         likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
-          obsConsumption[timeid][i] = new DoubleMatrix(numpred, nopreygroups, 0.0);
-          modelConsumption[timeid][i] = new DoubleMatrix(numpred, nopreygroups, 0.0);
+          obsConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
+          modelConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
         }
       }
 
@@ -1032,14 +1034,15 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
-  if (count == 0)
-    handle.logWarning("Warning in stomachcontent - found no data in the data file for", scname);
-  handle.logMessage("Read stomachcontent data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
 }
 
 void SCSimple::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
   int i, j, k, l;
-  double tmpdivide, scale = 0.0;
+  double tmpdivide, scale;
   SC::setPredatorsAndPreys(Predators, Preys);
   //Scale each row such that it sums up to 1
   for (i = 0; i < obsConsumption.Nrow(); i++) {

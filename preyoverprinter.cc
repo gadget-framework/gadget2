@@ -15,7 +15,7 @@ extern ErrorHandler handle;
 
 PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
-  : Printer(PREYOVERPRINTER), preyLgrpDiv(0), aggregator(0) {
+  : Printer(PREYOVERPRINTER), preyLgrpDiv(0), aggregator(0), dptr(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -25,7 +25,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "preys") == 0))
-    handle.Unexpected("preys", text);
+    handle.logFileUnexpected(LOGFAIL, "preys", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "areaaggfile") == 0)) {
     preynames.resize(1);
@@ -34,8 +34,9 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
     infile >> text >> ws;
   }
   if (preynames.Size() == 0)
-    handle.Message("Error in preyoverprinter - failed to read preys");
-  handle.logMessage("Read prey data - number of preys", preynames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in preyoverprinter - failed to read preys");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read prey data - number of preys", preynames.Size());
 
   //read in area aggregation from file
   filename = new char[MaxStrLength];
@@ -66,13 +67,12 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //Finished reading from infile.
   preyLgrpDiv = new LengthGroupDivision(lengths);
   if (preyLgrpDiv->Error())
-    handle.Message("Error in preyoverprinter - failed to create length group");
+    handle.logFileMessage(LOGFAIL, "Error in preyoverprinter - failed to create length group");
 
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
@@ -90,7 +90,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   }
 
   if (precision < 0)
-    handle.Message("Error in preyoverprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "Error in preyoverprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -98,19 +98,19 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in preyoverprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "Error in preyoverprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("yearsandsteps", text);
+    handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.Message("Error in preyoverprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "Error in preyoverprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 
   //finished initializing. Now print first lines
@@ -143,38 +143,40 @@ void PreyOverPrinter::setPrey(PreyPtrVector& preyvec) {
       }
 
   if (preys.Size() != preynames.Size()) {
-    handle.logWarning("Error in preyoverprinter - failed to match preys");
+    handle.logMessage(LOGWARN, "Error in preyoverprinter - failed to match preys");
     for (i = 0; i < preyvec.Size(); i++)
-      handle.logWarning("Error in preyoverprinter - found prey", preyvec[i]->getName());
+      handle.logMessage(LOGWARN, "Error in preyoverprinter - found prey", preyvec[i]->getName());
     for (i = 0; i < preynames.Size(); i++)
-      handle.logWarning("Error in preyoverprinter - looking for prey", preynames[i]);
+      handle.logMessage(LOGWARN, "Error in preyoverprinter - looking for prey", preynames[i]);
     exit(EXIT_FAILURE);
   }
 
   //check prey areas and lengths
-  for (j = 0; j < areas.Nrow(); j++) {
+  if (handle.getLogLevel() >= LOGWARN) {
+    for (j = 0; j < areas.Nrow(); j++) {
+      index = 0;
+      for (i = 0; i < preys.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (preys[i]->isInArea(areas[j][k]))
+            index++;
+      if (index == 0)
+        handle.logMessage(LOGWARN, "Warning in preyoverprinter - prey not defined on all areas");
+    }
+
     index = 0;
     for (i = 0; i < preys.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (preys[i]->isInArea(areas[j][k]))
-          index++;
+      if (preyLgrpDiv->maxLength(0) > preys[i]->returnLengthGroupDiv()->minLength())
+        index++;
     if (index == 0)
-      handle.logWarning("Warning in preyoverprinter - prey not defined on all areas");
+      handle.logMessage(LOGWARN, "Warning in preyoverprinter - minimum length group less than prey length");
+
+    index = 0;
+    for (i = 0; i < preys.Size(); i++)
+      if (preyLgrpDiv->minLength(preyLgrpDiv->numLengthGroups()) < preys[i]->returnLengthGroupDiv()->maxLength())
+        index++;
+    if (index == 0)
+      handle.logMessage(LOGWARN, "Warning in preyoverprinter - maximum length group greater than prey length");
   }
-
-  index = 0;
-  for (i = 0; i < preys.Size(); i++)
-    if (preyLgrpDiv->maxLength(0) > preys[i]->returnLengthGroupDiv()->minLength())
-      index++;
-  if (index == 0)
-    handle.logWarning("Warning in preyoverprinter - minimum length group less than prey length");
-
-  index = 0;
-  for (i = 0; i < preys.Size(); i++)
-    if (preyLgrpDiv->minLength(preyLgrpDiv->numLengthGroups()) < preys[i]->returnLengthGroupDiv()->maxLength())
-      index++;
-  if (index == 0)
-    handle.logWarning("Warning in preyoverprinter - maximum length group greater than prey length");
 
   aggregator = new PreyOverAggregator(preys, areas, preyLgrpDiv);
 }
@@ -185,7 +187,7 @@ void PreyOverPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
     return;
 
   aggregator->Sum();
-  const DoubleMatrix *dptr = &aggregator->returnSum();
+  dptr = &aggregator->returnSum();
   int a, len, p, w;
 
   for (a = 0; a < areas.Nrow(); a++) {

@@ -35,7 +35,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    handle.Message("Error in renewal - failed to create length group");
+    handle.logMessage(LOGFAIL, "Error in renewal - failed to create length group");
 
   infile >> text >> ws;
   if ((strcasecmp(text, "normalcondfile") == 0)) {
@@ -57,7 +57,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
     handle.checkIfFailure(subfile, refWeightFile);
     handle.Open(refWeightFile);
     if (!readRefWeights(subcomment, tmpRefW))
-      handle.Message("Wrong format for reference weights");
+      handle.logFileMessage(LOGFAIL, "Wrong format for reference weights");
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -65,7 +65,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
     //Interpolate the reference weights. First there are some error checks.
     if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
         LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-      handle.Message("Lengths for reference weights must span the range of initial condition lengths");
+      handle.logFileMessage(LOGFAIL, "Lengths for reference weights must span the range of initial condition lengths");
 
     //Aggregate the reference weight data to be the same format
     double ratio;
@@ -109,7 +109,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
     subfile.clear();
 
   } else
-    handle.Message("Error in renewal - unrecognised data format", text);
+    handle.logFileMessage(LOGFAIL, "Error in renewal - unrecognised data format", text);
 
   keeper->clearLast();
 }
@@ -124,7 +124,7 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
   //Find start of data in datafile
   infile >> ws;
   if (infile.eof()) {
-    handle.Message("Error in renewal - renewal data file empty");
+    handle.logFileMessage(LOGFAIL, "Error in renewal - renewal data file empty");
     return;
   }
 
@@ -138,24 +138,24 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
   //We now expect to find the renewal data in the following format
   //year, step, area, age, number, mean, sdev, alpha, beta
   if (countColumns(infile) != 9)
-    handle.Message("Wrong number of columns in inputfile - should be 9");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 9");
 
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> age >> ws;
 
     if (!(TimeInfo->isWithinPeriod(year, step))) {
-      handle.Warning("Warning in renewal - ignoring data found outside time range");
+      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside time range");
       keepdata = 1;
     }
 
     if (!(this->isInArea(Area->InnerArea(area)))) {
-      handle.Warning("Warning in renewal - ignoring data found outside area range");
+      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside area range");
       keepdata = 1;
     }
 
     if ((age < minage) || (age > maxage)) {
-      handle.Warning("Warning in renewal - ignoring data found outside age range");
+      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside age range");
       keepdata = 1;
     }
 
@@ -195,7 +195,8 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
     }
   }
 
-  handle.logMessage("Read renewal data file - number of entries", count);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
 }
 
 void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const keeper,
@@ -208,7 +209,7 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
   //Find start of data in datafile
   infile >> ws;
   if (infile.eof()) {
-    handle.Message("Error in renewal - renewal data file empty");
+    handle.logFileMessage(LOGFAIL, "Error in renewal - renewal data file empty");
     return;
   }
 
@@ -222,24 +223,24 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
   //We now expect to find the renewal data in the following format
   //year, step, area, age, number, mean, sdev, cond
   if (countColumns(infile) != 8)
-    handle.Message("Wrong number of columns in inputfile - should be 8");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 8");
 
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> age >> ws;
 
     if (!(TimeInfo->isWithinPeriod(year, step))) {
-      handle.Warning("Warning in renewal - ignoring data found outside time range");
+      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside time range");
       keepdata = 1;
     }
 
     if (!(this->isInArea(Area->InnerArea(area)))) {
-      handle.Warning("Warning in renewal - ignoring data found outside area range");
+      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside area range");
       keepdata = 1;
     }
 
     if ((age < minage) || (age > maxage)) {
-      handle.Warning("Warning in renewal - ignoring data found outside age range");
+      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside age range");
       keepdata = 1;
     }
 
@@ -276,7 +277,8 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
     }
   }
 
-  handle.logMessage("Read renewal data file - number of entries", count);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
 }
 
 void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
@@ -290,7 +292,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
   //Find start of data in datafile
   infile >> ws;
   if (infile.eof()) {
-    handle.Message("Error in renewal - renewal data file empty");
+    handle.logFileMessage(LOGFAIL, "Error in renewal - renewal data file empty");
     return;
   }
 
@@ -304,24 +306,24 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
   //We now expect to find the renewal data in the following format
   //year, step, area, age, length, number, mean weight
   if (countColumns(infile) != 7)
-    handle.Message("Wrong number of columns in inputfile - should be 7");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 7");
 
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> age >> length >> tmpnumber >> tmpweight >> ws;
 
     if (!(TimeInfo->isWithinPeriod(year, step))) {
-      handle.Warning("Warning in renewal - ignoring data found outside time range");
+      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside time range");
       keepdata = 1;
     }
 
     if (!(this->isInArea(Area->InnerArea(area)))) {
-      handle.Warning("Warning in renewal - ignoring data found outside area range");
+      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside area range");
       keepdata = 1;
     }
 
     if ((age < minage) || (age > maxage)) {
-      handle.Warning("Warning in renewal - ignoring data found outside age range");
+      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside age range");
       keepdata = 1;
     }
 
@@ -331,7 +333,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
         lengthid = i;
 
     if (lengthid == -1) {
-      handle.Warning("Warning in renewal - ignoring data found outside length range");
+      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside length range");
       keepdata = 1;
     }
 
@@ -356,7 +358,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
       }
 
       if ((isZero(tmpweight)) && (tmpnumber > 0))
-        handle.Warning("Warning in renewal - zero mean weight");
+        handle.logFileMessage(LOGWARN, "Warning in renewal - zero mean weight");
 
       renewalDistribution[id][age][lengthid].N = tmpnumber;
       renewalDistribution[id][age][lengthid].W = tmpweight;
@@ -365,7 +367,8 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
     infile >> ws;
   }
 
-  handle.logMessage("Read renewal data file - number of entries", count);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
 }
 
 RenewalData::~RenewalData() {
@@ -375,10 +378,12 @@ RenewalData::~RenewalData() {
 
 void RenewalData::setCI(const LengthGroupDivision* const GivenLDiv) {
   //check minimum and maximum lengths
-  if (LgrpDiv->minLength() < GivenLDiv->minLength())
-    handle.logWarning("Warning in renewal - minimum length less than stock length");
-  if (LgrpDiv->maxLength() > GivenLDiv->maxLength())
-    handle.logWarning("Warning in renewal - maximum length greater than stock length");
+  if (handle.getLogLevel() >= LOGWARN) {
+    if (LgrpDiv->minLength() < GivenLDiv->minLength())
+      handle.logMessage(LOGWARN, "Warning in renewal - minimum length less than stock length");
+    if (LgrpDiv->maxLength() > GivenLDiv->maxLength())
+      handle.logMessage(LOGWARN, "Warning in renewal - maximum length greater than stock length");
+  }
   CI = new ConversionIndex(LgrpDiv, GivenLDiv);
 }
 
@@ -434,8 +439,8 @@ void RenewalData::Reset() {
 
         renewalDistribution[i][age][l].N *= sum;
         renewalDistribution[i][age][l].W = refWeight[l] * relCond[i];
-        if ((isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0))
-          handle.logWarning("Warning in renewal - zero mean weight");
+        if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0))
+          handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
       }
     }
 
@@ -463,8 +468,8 @@ void RenewalData::Reset() {
 
         renewalDistribution[i][age][l].N *= sum;
         renewalDistribution[i][age][l].W = alpha[i] * pow(LgrpDiv->meanLength(l), beta[i]);
-        if ((isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0))
-          handle.logWarning("Warning in renewal - zero mean weight");
+        if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0))
+          handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
       }
     }
 
@@ -472,9 +477,10 @@ void RenewalData::Reset() {
     //nothing to be done here
 
   } else
-    handle.logFailure("Error in renewal - unrecognised data format");
+    handle.logMessage(LOGFAIL, "Error in renewal - unrecognised data format");
 
-  handle.logMessage("Reset renewal data");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset renewal data");
 }
 
 int RenewalData::isRenewalStepArea(int area, const TimeClass* const TimeInfo) {

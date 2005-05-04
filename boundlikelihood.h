@@ -5,7 +5,6 @@
 #include "commentstream.h"
 #include "intvector.h"
 #include "doublevector.h"
-#include "errorhandler.h"
 #include "parameter.h"
 
 /**

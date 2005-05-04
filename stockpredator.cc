@@ -22,14 +22,14 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
 
   infile >> text >> ws;
   if (!(strcasecmp(text, "suitability") == 0))
-    handle.Unexpected("suitability", text);
+    handle.logFileUnexpected(LOGFAIL, "suitability", text);
 
   this->readSuitability(infile, "maxconsumption", TimeInfo, keeper);
 
   keeper->addString("maxconsumption");
   maxconsumption.resize(4, keeper);
   if (!(infile >> maxconsumption))
-    handle.Message("Error in stock file - incorrect format of maxconsumption vector");
+    handle.logFileMessage(LOGFAIL, "Error in stock file - incorrect format of maxconsumption vector");
   maxconsumption.Inform(keeper);
 
   keeper->clearLast();
@@ -111,7 +111,7 @@ const PopInfoVector& StockPredator::getNumberPriorToEating(int area, const char*
     if (strcasecmp(getPreyName(prey), preyname) == 0)
       return Preys(prey)->getNumberPriorToEating(area);
 
-  handle.logFailure("Error in stockpredator - failed to match prey", preyname);
+  handle.logMessage(LOGFAIL, "Error in stockpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
 }
 

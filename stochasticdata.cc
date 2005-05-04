@@ -19,7 +19,7 @@ StochasticData::StochasticData(const char* const filename) {
 
   if (this->SwitchesGiven())
     if (switches.Size() != values.Size())
-      handle.logFailure("Error in stochasticdata - failed to read values");
+      handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to read values");
 
 }
 
@@ -154,28 +154,28 @@ void StochasticData::readFromNetwork() {
 
   if (this->SwitchesGiven()) {
     if (switches.Size() != values.Size())
-      handle.logFailure("Error in stochasticdata - failed to read values");
+      handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to read values");
 
     check = 0;
     for (i = 0; i < values.Size(); i++) {
       if (lowerbound[i] > upperbound[i]) {
         check++;
-        handle.logWarning("Error in stochasticdata - parameter has upper bound", upperbound[i]);
-        handle.logWarning("which is lower than the corresponding lower bound", lowerbound[i]);
+        handle.logMessage(LOGWARN, "Error in stochasticdata - parameter has upper bound", upperbound[i]);
+        handle.logMessage(LOGWARN, "which is lower than the corresponding lower bound", lowerbound[i]);
       }
       if (values[i] > upperbound[i]) {
         check++;
-        handle.logWarning("Error in stochasticdata - parameter has initial value", values[i]);
-        handle.logWarning("which is higher than the corresponding upper bound", upperbound[i]);
+        handle.logMessage(LOGWARN, "Error in stochasticdata - parameter has initial value", values[i]);
+        handle.logMessage(LOGWARN, "which is higher than the corresponding upper bound", upperbound[i]);
       }
       if (values[i] < lowerbound[i]) {
         check++;
-        handle.logWarning("Error in stochasticdata - parameter has initial value", values[i]);
-        handle.logWarning("which is lower than the corresponding lower bound", lowerbound[i]);
+        handle.logMessage(LOGWARN, "Error in stochasticdata - parameter has initial value", values[i]);
+        handle.logMessage(LOGWARN, "which is lower than the corresponding lower bound", lowerbound[i]);
       }
     }
     if (check > 0)
-      handle.logFailure("Error in stochasticdata - failed to read parameters and bounds correctly");
+      handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to read parameters and bounds correctly");
 
   }
 }
@@ -197,7 +197,7 @@ void StochasticData::sendDataToMaster(double funcValue) {
   int info = slave->sendToMaster(funcValue);
   if (info < 0) {
     slave->stopNetCommunication();
-    handle.logFailure("Error in stochasticdata - failed to send data to PVM master");
+    handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to send data to PVM master");
   }
 }
 #endif

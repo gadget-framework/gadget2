@@ -44,7 +44,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     overconsumption = 0;
 
   if (overconsumption != 0 && overconsumption != 1)
-    handle.Message("Error in catchstatistics - overconsumption must be 0 or 1");
+    handle.logFileMessage(LOGFAIL, "Error in catchstatistics - overconsumption must be 0 or 1");
 
   if ((strcasecmp(functionname, "lengthcalcvar") == 0) || (strcasecmp(functionname, "lengthcalcstddev") == 0))
     functionnumber = 1;
@@ -57,7 +57,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   else if ((strcasecmp(functionname, "lengthnovar") == 0) || (strcasecmp(functionname, "lengthnostddev") == 0))
     functionnumber = 5;
   else
-    handle.Message("Error in catchstatistics - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "Error in catchstatistics - unrecognised function", functionname);
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
@@ -82,14 +82,13 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //read in the fleetnames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
-    handle.Unexpected("fleetnames", text);
+    handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
     fleetnames.resize(1);
@@ -98,13 +97,14 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     infile >> text >> ws;
   }
   if (fleetnames.Size() == 0)
-    handle.Message("Error in catchstatistics - failed to read fleets");
-  handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in catchstatistics - failed to read fleets");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
   i = 0;
   if (!(strcasecmp(text, "stocknames") == 0))
-    handle.Unexpected("stocknames", text);
+    handle.logFileUnexpected(LOGFAIL, "stocknames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
     infile >> ws;
@@ -114,8 +114,9 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     infile >> text;
   }
   if (stocknames.Size() == 0)
-    handle.Message("Error in catchstatistics - failed to read stocks");
-  handle.logMessage("Read stock data - number of stocks", stocknames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in catchstatistics - failed to read stocks");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
@@ -151,7 +152,7 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
 
   readvar = 0;
   needvar = 0;
-  switch(functionnumber) {
+  switch (functionnumber) {
     case 1:
       readvar = 0;
       needvar = 1;
@@ -165,15 +166,15 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
     case 5:
       break;
     default:
-      handle.logWarning("Warning in catchstatistics - unrecognised function", functionname);
+      handle.logMessage(LOGWARN, "Warning in catchstatistics - unrecognised function", functionname);
       break;
   }
 
   //Check the number of columns in the inputfile
   if ((readvar == 1) && (countColumns(infile) != 7))
-    handle.Message("Wrong number of columns in inputfile - should be 7");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 7");
   else if ((readvar == 0) && (countColumns(infile) != 6))
-    handle.Message("Wrong number of columns in inputfile - should be 6");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -237,9 +238,10 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
     }
   }
   AAT.addActions(Years, Steps, TimeInfo);
-  if (count == 0)
-    handle.logWarning("Warning in catchstatistics - found no data in the data file for", this->getName());
-  handle.logMessage("Read catchstatistics data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in catchstatistics - found no data in the data file for", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read catchstatistics data file - number of entries", count);
 }
 
 CatchStatistics::~CatchStatistics() {
@@ -269,7 +271,8 @@ CatchStatistics::~CatchStatistics() {
 void CatchStatistics::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
-  handle.logMessage("Reset catchstatistics component", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset catchstatistics component", this->getName());
 }
 
 void CatchStatistics::Print(ofstream& outfile) const {
@@ -301,18 +304,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
       }
     }
     if (found == 0)
-      handle.logFailure("Error in catchstatistics - unrecognised fleet", fleetnames[i]);
-  }
-
-  //check fleet areas
-  for (j = 0; j < areas.Nrow(); j++) {
-    found = 0;
-    for (i = 0; i < fleets.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (fleets[i]->isInArea(areas[j][k]))
-          found++;
-    if (found == 0)
-      handle.logWarning("Warning in catchstatistics - fleet not defined on all areas");
+      handle.logMessage(LOGFAIL, "Error in catchstatistics - unrecognised fleet", fleetnames[i]);
   }
 
   for (i = 0; i < stocknames.Size(); i++) {
@@ -326,61 +318,73 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
       }
     }
     if (found == 0)
-      handle.logFailure("Error in catchstatistics - unrecognised stock", stocknames[i]);
+      handle.logMessage(LOGFAIL, "Error in catchstatistics - unrecognised stock", stocknames[i]);
   }
 
   LgrpDiv = new LengthGroupDivision(*(stocks[0]->returnPrey()->returnLengthGroupDiv()));
   for (i = 1; i < stocks.Size(); i++)
     if (!LgrpDiv->Combine(stocks[i]->returnPrey()->returnLengthGroupDiv()))
-      handle.logFailure("Error in catchstatistics - length groups for preys not compatible");
+      handle.logMessage(LOGFAIL, "Error in catchstatistics - length groups for preys not compatible");
 
-  //check areas, ages and lengths
-  for (j = 0; j < areas.Nrow(); j++) {
+  //check fleet areas and stock areas, ages and lengths
+  if (handle.getLogLevel() >= LOGWARN) {
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < fleets.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (fleets[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in catchstatistics - fleet not defined on all areas");
+    }
+
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < stocks.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (stocks[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in catchstatistics - stock not defined on all areas");
+    }
+
+    minage = 9999;
+    maxage = 0;
+    for (i = 0; i < ages.Nrow(); i++) {
+      for (j = 0; j < ages.Ncol(i); j++) {
+        minage = min(ages[i][j], minage);
+        maxage = max(ages[i][j], maxage);
+      }
+    }
+
     found = 0;
     for (i = 0; i < stocks.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (stocks[i]->isInArea(areas[j][k]))
-          found++;
+      if (minage >= stocks[i]->minAge())
+        found++;
     if (found == 0)
-      handle.logWarning("Warning in catchstatistics - stock not defined on all areas");
+      handle.logMessage(LOGWARN, "Warning in catchstatistics - minimum age less than stock age");
+
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (maxage <= stocks[i]->maxAge())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in catchstatistics - maximum age greater than stock age");
+
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in catchstatistics - minimum length group less than stock length");
+
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in catchstatistics - maximum length group greater than stock length");
   }
-
-  minage = 9999;
-  maxage = 0;
-  for (i = 0; i < ages.Nrow(); i++) {
-    for (j = 0; j < ages.Ncol(i); j++) {
-      minage = min(ages[i][j], minage);
-      maxage = max(ages[i][j], maxage);
-    }
-  }
-
-  found = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (minage >= stocks[i]->minAge())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in catchstatistics - minimum age less than stock age");
-
-  found = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (maxage <= stocks[i]->maxAge())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in catchstatistics - maximum age greater than stock age");
-
-  found = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in catchstatistics - minimum length group less than stock length");
-
-  found = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in catchstatistics - maximum length group greater than stock length");
 
   aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
 }
@@ -389,15 +393,17 @@ void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    handle.logMessage("Calculating likelihood score for catchstatistics component", this->getName());
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchstatistics component", this->getName());
     aggregator->Sum(TimeInfo);
-    if (aggregator->checkCatchData() == 1)
-      handle.logWarning("Warning in catchstatistics - zero catch found");
+    if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData() == 1))
+      handle.logMessage(LOGWARN, "Warning in catchstatistics - zero catch found");
 
     l = calcLikSumSquares();
     likelihood += l;
     timeindex++;
-    handle.logMessage("The likelihood score for this component on this timestep is", l);
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
   }
 }
 
@@ -413,7 +419,7 @@ double CatchStatistics::calcLikSumSquares() {
     for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
       PopStatistics PopStat((*alptr)[area][age], aggregator->returnLengthGroupDiv());
 
-      switch(functionnumber) {
+      switch (functionnumber) {
         case 1:
           (*modelMean[timeindex])[area][age] = PopStat.meanLength();
           simvar = PopStat.sdevLength() * PopStat.sdevLength();
@@ -436,7 +442,7 @@ double CatchStatistics::calcLikSumSquares() {
           simvar = 1.0;
           break;
         default:
-          handle.logWarning("Warning in catchstatistics - unrecognised function", functionname);
+          handle.logMessage(LOGWARN, "Warning in catchstatistics - unrecognised function", functionname);
           break;
       }
 
@@ -462,7 +468,7 @@ void CatchStatistics::LikelihoodPrint(ofstream& outfile, const TimeClass* const 
   t = timeindex - 1; //timeindex was increased before this is called
 
   if ((t >= Years.Size()) || t < 0)
-    handle.logFailure("Error in catchstatistcs - invalid timestep", t);
+    handle.logMessage(LOGFAIL, "Error in catchstatistcs - invalid timestep", t);
 
   for (area = 0; area < (*modelMean[t]).Nrow(); area++) {
     for (age = 0; age < (*modelMean[t]).Ncol(area); age++) {
@@ -471,7 +477,7 @@ void CatchStatistics::LikelihoodPrint(ofstream& outfile, const TimeClass* const 
         << setw(printwidth) << ageindex[age] << sep << setprecision(printprecision)
         << setw(printwidth) << (*numbers[t])[area][age] << sep
         << setprecision(largeprecision) << setw(largewidth) << (*modelMean[t])[area][age];
-      switch(functionnumber) {
+      switch (functionnumber) {
         case 1:
           outfile << sep << setprecision(printprecision) << setw(printwidth)
             << (*modelStdDev[t])[area][age] << endl;
@@ -485,7 +491,7 @@ void CatchStatistics::LikelihoodPrint(ofstream& outfile, const TimeClass* const 
         case 5:
           outfile << endl;
         default:
-          handle.logWarning("Warning in catchstatistics - unrecognised function", functionname);
+          handle.logMessage(LOGWARN, "Warning in catchstatistics - unrecognised function", functionname);
           break;
       }
     }

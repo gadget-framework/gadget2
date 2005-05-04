@@ -39,7 +39,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   if (strcasecmp(functionname, "sumofsquares") == 0)
     functionnumber = 1;
   else
-    handle.Message("Error in catchinkilos - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "Error in catchinkilos - unrecognised function", functionname);
 
   infile >> ws;
   char c = infile.peek();
@@ -53,13 +53,13 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
     else if (strcasecmp(text, "areaaggfile") == 0)
       infile.seekg(pos);
     else
-      handle.Unexpected("areaaggfile", text);
+      handle.logFileUnexpected(LOGFAIL, "areaaggfile", text);
 
     //JMB - peek at the next char
     c = infile.peek();
 
     if (yearly != 0 && yearly != 1)
-      handle.Message("Error in catchinkilos - aggregationlevel must be 0 or 1");
+      handle.logFileMessage(LOGFAIL, "Error in catchinkilos - aggregationlevel must be 0 or 1");
   }
 
   //JMB - changed to make the reading of epsilon optional
@@ -67,7 +67,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   if ((c == 'e') || (c == 'E')) {
     readWordAndVariable(infile, "epsilon", epsilon);
     if (epsilon <= 0) {
-      handle.Warning("Epsilon should be a positive number - set to default value 10");
+      handle.logFileMessage(LOGWARN, "Epsilon should be a positive number - set to default value 10");
       epsilon = 10.0;
     }
   }
@@ -84,14 +84,13 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //read in the fleetnames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
-    handle.Unexpected("fleetnames", text);
+    handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
     fleetnames.resize(1);
@@ -100,13 +99,14 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
     infile >> text >> ws;
   }
   if (fleetnames.Size() == 0)
-    handle.Message("Error in catchinkilos - failed to read fleets");
-  handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in catchinkilos - failed to read fleets");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
   i = 0;
   if (!(strcasecmp(text, "stocknames") == 0))
-    handle.Unexpected("stocknames", text);
+    handle.logFileUnexpected(LOGFAIL, "stocknames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
     infile >> ws;
@@ -116,8 +116,9 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
     infile >> text;
   }
   if (stocknames.Size() == 0)
-    handle.Message("Error in catchinkilos - failed to read stocks");
-  handle.logMessage("Read stock data - number of stocks", stocknames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in catchinkilos - failed to read stocks");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
@@ -137,7 +138,8 @@ void CatchInKilos::Reset(const Keeper* const keeper) {
   for (i = 0; i < modelDistribution.Nrow(); i++)
     for (j = 0; j < modelDistribution.Ncol(i); j++)
       modelDistribution[i][j] = 0.0;
-  handle.logMessage("Reset catchinkilos component", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset catchinkilos component", this->getName());
 }
 
 void CatchInKilos::Print(ofstream& outfile) const {
@@ -181,19 +183,21 @@ void CatchInKilos::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    switch(functionnumber) {
+    switch (functionnumber) {
       case 1:
         l = calcLikSumSquares(TimeInfo);
         break;
       default:
-        handle.logWarning("Warning in catchinkilos - unrecognised function", functionname);
+        handle.logMessage(LOGWARN, "Warning in catchinkilos - unrecognised function", functionname);
         break;
     }
 
     if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
       likelihood += l;
-      handle.logMessage("Calculating likelihood score for catchinkilos component", this->getName());
-      handle.logMessage("The likelihood score for this component on this timestep is", l);
+      if (handle.getLogLevel() >= LOGMESSAGE) {
+        handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchinkilos component", this->getName());
+        handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
+      }
       timeindex++;
     }
   }
@@ -222,18 +226,7 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
       }
     }
     if (found == 0)
-      handle.logFailure("Error in catchinkilos - unrecognised fleet", fleetnames[i]);
-  }
-
-  //check fleet areas
-  for (j = 0; j < areas.Nrow(); j++) {
-    found = 0;
-    for (i = 0; i < fleets.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (fleets[i]->isInArea(areas[j][k]))
-          found++;
-    if (found == 0)
-      handle.logWarning("Warning in catchinkilos - fleet not defined on all areas");
+      handle.logMessage(LOGFAIL, "Error in catchinkilos - unrecognised fleet", fleetnames[i]);
   }
 
   for (i = 0; i < stocknames.Size(); i++) {
@@ -247,18 +240,30 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
       }
     }
     if (found == 0)
-      handle.logFailure("Error in catchinkilos - unrecognised stock", stocknames[i]);
+      handle.logMessage(LOGFAIL, "Error in catchinkilos - unrecognised stock", stocknames[i]);
   }
 
-  //check stock areas
-  for (j = 0; j < areas.Nrow(); j++) {
-    found = 0;
-    for (i = 0; i < stocks.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (stocks[i]->isInArea(areas[j][k]))
-          found++;
-    if (found == 0)
-      handle.logWarning("Warning in catchinkilos - stock not defined on all areas");
+  //check fleet and stock areas
+  if (handle.getLogLevel() >= LOGWARN) {
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < fleets.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (fleets[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in catchinkilos - fleet not defined on all areas");
+    }
+
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < stocks.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (stocks[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in catchinkilos - stock not defined on all areas");
+    }
   }
 
   for (i = 0; i < fleets.Size(); i++) {
@@ -271,12 +276,12 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
           preyindex[i].resize(1, j);
         }
 
-    if (found == 0)
-      handle.logWarning("Warning in catchinkilos - found no stocks for fleet", fleetnames[i]);
+    if ((handle.getLogLevel() >= LOGWARN) && (found == 0))
+      handle.logMessage(LOGWARN, "Warning in catchinkilos - found no stocks for fleet", fleetnames[i]);
   }
 
   if (preyindex.Nrow() != fleets.Size())
-    handle.logFailure("Error in catchinkilos - failed to match stocks to fleets");
+    handle.logMessage(LOGFAIL, "Error in catchinkilos - failed to match stocks to fleets");
 }
 
 void CatchInKilos::readCatchInKilosData(CommentStream& infile,
@@ -304,7 +309,7 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
   //Check the number of columns in the inputfile
   check = countColumns(infile);
   if (!(((yearly == 1) && ((check == 4) || (check == 5))) || ((yearly == 0) && (check == 5))))
-    handle.Message("Wrong number of columns in inputfile - should be 4 or 5");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 4 or 5");
 
   step = 1; //default value in case there are only 4 columns in the datafile
   while (!infile.eof()) {
@@ -368,9 +373,10 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
   else
     AAT.addActions(Years, Steps, TimeInfo);
 
-  if (count == 0)
-    handle.logWarning("Warning in catchinkilos - found no data in the data file for", this->getName());
-  handle.logMessage("Read catchinkilos data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGMESSAGE) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in catchinkilos - found no data in the data file for", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read catchinkilos data file - number of entries", count);
 }
 
 void CatchInKilos::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
@@ -384,7 +390,7 @@ void CatchInKilos::LikelihoodPrint(ofstream& outfile, const TimeClass* const Tim
   t = timeindex - 1; //timeindex was increased before this is called
 
   if ((t >= Years.Size()) || t < 0)
-    handle.logFailure("Error in catchinkilos - invalid timestep", t);
+    handle.logMessage(LOGFAIL, "Error in catchinkilos - invalid timestep", t);
 
   for (area = 0; area < modelDistribution.Ncol(t); area++) {
     if (yearly == 0) {

@@ -21,7 +21,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   if (AgeDepMigration) {                   //File format:
     infile >> text;                        //ages a1 ... am
     if (!(strcasecmp(text, "ages") == 0))  //. . .
-      handle.Unexpected("ages", text);     //k1 ... kn
+      handle.logFileUnexpected(LOGFAIL, "ages", text);     //k1 ... kn
     i = 0;                                 //the line with a1, ..., am is in
     infile >> ws;                          //ages[0] etc.
     while (isdigit(infile.peek())) {
@@ -43,7 +43,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   //and then the file format for readNoMigrationMatrices
   keeper->addString("matrixnumbers");
   if (!(strcasecmp(text, "matrixnumbers") == 0))
-    handle.Unexpected("matrixnumbers", text);
+    handle.logFileUnexpected(LOGFAIL, "matrixnumbers", text);
   else
     this->readNoMigrationMatrices(infile, TimeInfo, keeper);
 
@@ -63,7 +63,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   //strcpy(text, " ");
   infile >> text;
   if (!(strcasecmp(text, "variables") == 0))
-    handle.Unexpected("variables", text);
+    handle.logFileUnexpected(LOGFAIL, "variables", text);
   IntVector novariables;
   this->readOptVariables(infile, novariables, TimeInfo, keeper);
 
@@ -74,7 +74,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   keeper->addString("coefficients");
   infile >> text;
   if (!(strcasecmp(text, "coefficients") == 0))
-    handle.Unexpected("coefficients", text);
+    handle.logFileUnexpected(LOGFAIL, "coefficients", text);
   this->readCoefficients(infile, Area, keeper);
 
   int maxim = 0;
@@ -95,7 +95,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   ReadMigList.resize(maxim + 1, 0);
   infile >> text >> ws;
   if (!(strcasecmp(text, "migrationmatrices") == 0))
-    handle.Unexpected("migrationmatrices", text);
+    handle.logFileUnexpected(LOGFAIL, "migrationmatrices", text);
   int no, find;
   maxim = 0;
   while (!infile.eof() && !infile.fail()) {
@@ -103,7 +103,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
 
     DoubleMatrix* matptr = new DoubleMatrix(noareas, noareas, 0.0);
     if (!readMatrix(infile, (*matptr)))
-      handle.Message("Failure in reading migration matrix");
+      handle.logFileMessage(LOGFAIL, "Failure in reading migration matrix");
 
     //Now we must look if the matrix number no is in MatrixNumbers. If so,
     //we must keep the matrix for future use, else we can discard it.
@@ -138,7 +138,8 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   CopyFromReadToCalc();
   keeper->clearLast();
   keeper->clearLast();
-  handle.logMessage("Read migration file - number of migration matrices", maxim);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read migration file - number of migration matrices", maxim);
 }
 
 Migration::~Migration() {
@@ -159,7 +160,7 @@ const DoubleMatrix& Migration::MigrationMatrix(const TimeClass* const TimeInfo, 
       if (AgeNr[age] >= 0)
         return *CalcMigList[MatrixNumbers[AgeNr[age]][TimeInfo->CurrentTime()]];
 
-    handle.logFailure("Error in migration - failed to match age", age);
+    handle.logMessage(LOGFAIL, "Error in migration - failed to match age", age);
   }
 
   return *CalcMigList[MatrixNumbers[0][TimeInfo->CurrentTime()]];
@@ -231,7 +232,7 @@ void Migration::CheckInfoAndDelete(IntVector& novariables, Keeper* const keeper)
   for (age = 0; age < MatrixNumbers.Nrow(); age++)
     for (time = 1; time < MatrixNumbers.Ncol(age); time++)
       if (ReadMigList[MatrixNumbers[age][time]] == 0)
-        handle.Message("Failure in migration - unable to read specified migration matrix");
+        handle.logFileMessage(LOGFAIL, "Failure in migration - unable to read specified migration matrix");
 
   //Delete information for the matrices not used in the simulation.
   for (i = 0; i < OptInfo.Size(); i++)
@@ -258,7 +259,7 @@ void Migration::CheckInfoAndDelete(IntVector& novariables, Keeper* const keeper)
       tree.Insert(novariables[i]);
 
   if (!duplicates.IsEmpty()) {
-    handle.Message("Failure in migration - read migration variables twice");
+    handle.logFileMessage(LOGFAIL, "Failure in migration - read migration variables twice");
     while (!duplicates.IsEmpty())
       duplicates.DeleteSmallest();
   }
@@ -278,7 +279,7 @@ void Migration::CheckInfoAndDelete(IntVector& novariables, Keeper* const keeper)
     tree.Delete(novariables[i]);
 
   if (!tree.IsEmpty()) {
-    handle.Message("Failure in migration - unable to read specified migration variables");
+    handle.logFileMessage(LOGFAIL, "Failure in migration - unable to read specified migration variables");
     while (!tree.IsEmpty())
       tree.DeleteSmallest();
   }
@@ -294,7 +295,7 @@ void Migration::CheckInfoAndDelete(IntVector& novariables, Keeper* const keeper)
   int unused;
   if (!tree.IsEmpty()) {
     //Print warning messages and delete unused variables at the same time
-    handle.Message("Failure in migration - read unused migration variables");
+    handle.logFileMessage(LOGFAIL, "Failure in migration - read unused migration variables");
     while (!tree.IsEmpty()) {
       unused = tree.DeleteSmallest();
       for (i = 0; i < novariables.Size(); i++)
@@ -369,7 +370,7 @@ void Migration::adjustMigListAndCheckIfError(MigrationList& MigList) {
         }
 
         if (isZero(colsum) || isZero(colsum1)) {
-          handle.logWarning("Error in migration - column doesnt sum to 1");
+          handle.logMessage(LOGWARN, "Warning in migration - column doesnt sum to 1");
           error = 1;
           return;
         }
@@ -394,14 +395,14 @@ void Migration::readNoMigrationMatrices(CommentStream& infile,
 
   int year, step, time, age;
   if (!FindContinuousYearAndStepWithNoText(infile, TimeInfo->FirstYear(), TimeInfo->FirstStep()))
-    handle.Message("Failure in migration - unable to find the start of the migration data");
+    handle.logFileMessage(LOGFAIL, "Failure in migration - unable to find the start of the migration data");
 
   for (time = 1; time <= TimeInfo->TotalNoSteps(); time++) {
     infile >> year >> step;
     if (infile.eof())
-      handle.Eof();
+      handle.logFileEOFMessage(LOGFAIL);
     if (time != TimeInfo->calcSteps(year, step))
-      handle.Message("Failure in migration - failed to read migration data");
+      handle.logFileMessage(LOGFAIL, "Failure in migration - failed to read migration data");
 
     if (AgeDepMigration)
       for (age = 0; age < ages.Nrow(); age++)
@@ -449,7 +450,7 @@ void Migration::readOptVariables(CommentStream& infile, IntVector& novariables,
       Formula* number = new Formula;
       infile.seekg(readPos);
       if (!(infile >> *number))
-        handle.Message(text);
+        handle.logFileMessage(LOGFAIL, text);
       number->Inform(keeper);
       OptVar.resize(1);
       OptVariables.resize(1);
@@ -484,12 +485,12 @@ void Migration::readCoefficients(CommentStream& infile,
     VariableInfo* var = new VariableInfo(keeper, Area->numAreas());
     infile >> *var;
     if (var->error)
-      handle.Message("Failure in migration - unable to read migration matrix");
+      handle.logFileMessage(LOGFAIL, "Failure in migration - unable to read migration matrix");
 
     innerrow = Area->InnerArea(var->row);
     innercol = Area->InnerArea(var->column);
     if (!this->isInArea(innerrow) || !this->isInArea(innercol))
-      handle.Message("Failure in migration - invalid migration areas");
+      handle.logFileMessage(LOGFAIL, "Failure in migration - invalid migration areas");
 
     var->row = this->areaNum(innerrow);
     var->column = this->areaNum(innercol);
@@ -503,7 +504,8 @@ void Migration::readCoefficients(CommentStream& infile,
 void Migration::Reset() {
   error = 0;
   penalty.Reset();
-  handle.logMessage("Reset migration data");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset migration data");
 }
 
 const DoubleVector& Migration::Penalty() const {

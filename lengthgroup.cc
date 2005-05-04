@@ -181,9 +181,9 @@ void LengthGroupDivision::Print(ofstream& outfile) const {
 }
 
 void LengthGroupDivision::printError() const {
-  handle.logWarning("Warning in lengthgroupdivision - failure from length group");
-  handle.logWarning("Minimum length", this->minLength());
-  handle.logWarning("Maximum length", this->maxLength());
+  handle.logMessage(LOGWARN, "Warning in lengthgroupdivision - failure from length group");
+  handle.logMessage(LOGWARN, "Minimum length", this->minLength());
+  handle.logMessage(LOGWARN, "Maximum length", this->maxLength());
 }
 
 /* returns -1 if algorithm fails. Should never happen, but Murphys law ...
@@ -255,26 +255,26 @@ void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
 
   int bogus = 0;
   int isfiner = lengthGroupIsFiner(finer, coarser, bogus);
-  switch(isfiner) {
+  switch (isfiner) {
     case -1:
-      handle.logWarning("Error when checking lengthgroupisfiner for the following lengthgroups");
+      handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner for the following lengthgroups");
       finer->printError();
       coarser->printError();
       exit(EXIT_FAILURE);
     case 0:
-      handle.logWarning("Error when checking lengthgroupisfiner for length cell", bogus);
+      handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner for length cell", bogus);
       finer->printError();
       coarser->printError();
       exit(EXIT_FAILURE);
     case 1:
       return;
     case 2:
-      handle.logWarning("Error when checking lengthgroupisfiner - empty intersection between");
+      handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner - empty intersection between");
       finer->printError();
       coarser->printError();
       exit(EXIT_FAILURE);
     default:
-      handle.logWarning("Error when checking lengthgroupisfiner for the following lengthgroups");
+      handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner for the following lengthgroups");
       finer->printError();
       coarser->printError();
       exit(EXIT_FAILURE);

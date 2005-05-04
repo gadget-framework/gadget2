@@ -14,7 +14,7 @@ double Multinomial::calcLogLikelihood(const DoubleVector& data, const DoubleVect
   double tmpsum;
 
   if (data.Size() != dist.Size())
-    handle.logFailure("Error in multinomial - vectors not the same size");
+    handle.logMessage(LOGFAIL, "Error in multinomial - vectors not the same size");
 
   for (i = 0; i < data.Size(); i++) {
     sumdist += dist[i];
@@ -37,8 +37,8 @@ double Multinomial::calcLogLikelihood(const DoubleVector& data, const DoubleVect
 
   sumlog -= logFactorial(sumdata);
   tmpsum = 2.0 * (likely + sumlog);
-  if (tmpsum < 0)
-    handle.logWarning("Warning in multinomial - negative total", tmpsum);
+  if ((handle.getLogLevel() >= LOGWARN) && (tmpsum < 0))
+    handle.logMessage(LOGWARN, "Warning in multinomial - negative total", tmpsum);
 
   loglikelihood += tmpsum;
   return tmpsum;

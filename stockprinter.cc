@@ -17,7 +17,7 @@ extern ErrorHandler handle;
 
 StockPrinter::StockPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
-  : Printer(STOCKPRINTER), LgrpDiv(0), aggregator(0) {
+  : Printer(STOCKPRINTER), LgrpDiv(0), aggregator(0), alptr(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -27,7 +27,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "stocknames") == 0))
-    handle.Unexpected("stocknames", text);
+    handle.logFileUnexpected(LOGFAIL, "stocknames", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "areaaggfile") == 0)) {
     stocknames.resize(1);
@@ -36,8 +36,9 @@ StockPrinter::StockPrinter(CommentStream& infile,
     infile >> text >> ws;
   }
   if (stocknames.Size() == 0)
-    handle.Message("Error in stockprinter - failed to read stocks");
-  handle.logMessage("Read stock data - number of stocks", stocknames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in stockprinter - failed to read stocks");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //read in area aggregation from file
   filename = new char[MaxStrLength];
@@ -78,13 +79,12 @@ StockPrinter::StockPrinter(CommentStream& infile,
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //Finished reading from infile.
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    handle.Message("Error in stockprinter - failed to create length group");
+    handle.logFileMessage(LOGFAIL, "Error in stockprinter - failed to create length group");
 
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
@@ -102,7 +102,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
   }
 
   if (precision < 0)
-    handle.Message("Error in stockprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "Error in stockprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -110,19 +110,19 @@ StockPrinter::StockPrinter(CommentStream& infile,
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in stockprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "Error in stockprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("yearsandsteps", text);
+    handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.Message("Error in stockprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "Error in stockprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 
   //finished initializing. Now print first lines
@@ -157,66 +157,68 @@ void StockPrinter::setStock(StockPtrVector& stockvec) {
   }
 
   if (stocks.Size() != stocknames.Size()) {
-    handle.logWarning("Error in stockprinter - failed to match stocks");
+    handle.logMessage(LOGWARN, "Error in stockprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
-      handle.logWarning("Error in stockprinter - found stock", stocks[i]->getName());
+      handle.logMessage(LOGWARN, "Error in stockprinter - found stock", stocks[i]->getName());
     for (i = 0; i < stocknames.Size(); i++)
-      handle.logWarning("Error in stockprinter - looking for stock", stocknames[i]);
+      handle.logMessage(LOGWARN, "Error in stockprinter - looking for stock", stocknames[i]);
     exit(EXIT_FAILURE);
   }
 
   for (i = 0; i < stocks.Size(); i++)
     for (j = 0; j < stocks.Size(); j++)
       if ((strcasecmp(stocks[i]->getName(), stocks[j]->getName()) == 0) && (i != j))
-        handle.logFailure("Error in stockprinter - repeated stock", stocks[i]->getName());
+        handle.logMessage(LOGFAIL, "Error in stockprinter - repeated stock", stocks[i]->getName());
 
   //check stock areas, ages and lengths
-  for (j = 0; j < areas.Nrow(); j++) {
+  if (handle.getLogLevel() >= LOGWARN) {
+    for (j = 0; j < areas.Nrow(); j++) {
+      index = 0;
+      for (i = 0; i < stocks.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (stocks[i]->isInArea(areas[j][k]))
+            index++;
+      if (index == 0)
+        handle.logMessage(LOGWARN, "Warning in stockprinter - stock not defined on all areas");
+    }
+
+    minage = 9999;
+    maxage = -1;
+    for (i = 0; i < ages.Nrow(); i++) {
+      for (j = 0; j < ages.Ncol(i); j++) {
+        minage = min(ages[i][j], minage);
+        maxage = max(ages[i][j], maxage);
+      }
+    }
+
     index = 0;
     for (i = 0; i < stocks.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (stocks[i]->isInArea(areas[j][k]))
-          index++;
+      if (minage >= stocks[i]->minAge())
+        index++;
     if (index == 0)
-      handle.logWarning("Warning in stockprinter - stock not defined on all areas");
+      handle.logMessage(LOGWARN, "Warning in stockprinter - minimum age less than stock age");
+
+    index = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (maxage <= stocks[i]->maxAge())
+        index++;
+    if (index == 0)
+      handle.logMessage(LOGWARN, "Warning in stockprinter - maximum age greater than stock age");
+
+    index = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+        index++;
+    if (index == 0)
+      handle.logMessage(LOGWARN, "Warning in stockprinter - minimum length group less than stock length");
+
+    index = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+        index++;
+    if (index == 0)
+      handle.logMessage(LOGWARN, "Warning in stockprinter - maximum length group greater than stock length");
   }
-
-  minage = 9999;
-  maxage = -1;
-  for (i = 0; i < ages.Nrow(); i++) {
-    for (j = 0; j < ages.Ncol(i); j++) {
-      minage = min(ages[i][j], minage);
-      maxage = max(ages[i][j], maxage);
-    }
-  }
-
-  index = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (minage >= stocks[i]->minAge())
-      index++;
-  if (index == 0)
-    handle.logWarning("Warning in stockprinter - minimum age less than stock age");
-
-  index = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (maxage <= stocks[i]->maxAge())
-      index++;
-  if (index == 0)
-    handle.logWarning("Warning in stockprinter - maximum age greater than stock age");
-
-  index = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
-      index++;
-  if (index == 0)
-    handle.logWarning("Warning in stockprinter - minimum length group less than stock length");
-
-  index = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
-      index++;
-  if (index == 0)
-    handle.logWarning("Warning in stockprinter - maximum length group greater than stock length");
 
   aggregator = new StockAggregator(stocks, LgrpDiv, areas, ages);
 }
@@ -229,7 +231,7 @@ void StockPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   aggregator->Sum();
   int a, age, len;
 
-  const AgeBandMatrixPtrVector* alptr = &aggregator->returnSum();
+  alptr = &aggregator->returnSum();
   for (a = 0; a < areas.Nrow(); a++) {
     for (age = (*alptr)[a].minAge(); age <= (*alptr)[a].maxAge(); age++) {
       for (len = (*alptr)[a].minLength(age); len < (*alptr)[a].maxLength(age); len++) {

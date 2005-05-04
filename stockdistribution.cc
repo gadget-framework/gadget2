@@ -41,7 +41,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   } else if (strcasecmp(functionname, "sumofsquares") == 0) {
     functionnumber = 2;
   } else
-    handle.Message("Error in stockdistribution - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "Error in stockdistribution - unrecognised function", functionname);
 
   //JMB - changed to make the reading of overconsumption optional
   infile >> ws;
@@ -54,7 +54,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
     overconsumption = 0;
 
   if (overconsumption != 0 && overconsumption != 1)
-    handle.Message("Error in stockdistribution - overconsumption must be 0 or 1");
+    handle.logFileMessage(LOGFAIL, "Error in stockdistribution - overconsumption must be 0 or 1");
 
   //JMB - changed to make the reading of minimum probability optional
   if ((c == 'm') || (c == 'M'))
@@ -65,7 +65,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
     epsilon = 10.0;
 
   if (epsilon <= 0) {
-    handle.Warning("Epsilon should be a positive integer - set to default value 10");
+    handle.logFileMessage(LOGWARN, "Epsilon should be a positive integer - set to default value 10");
     epsilon = 10.0;
   }
 
@@ -102,8 +102,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //Must create the length group division
   LgrpDiv = new LengthGroupDivision(lengths);
@@ -112,7 +111,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
-    handle.Unexpected("fleetnames", text);
+    handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
     fleetnames.resize(1);
@@ -121,13 +120,14 @@ StockDistribution::StockDistribution(CommentStream& infile,
     infile >> text >> ws;
   }
   if (fleetnames.Size() == 0)
-    handle.Message("Error in stockdistribution - failed to read fleets");
-  handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in stockdistribution - failed to read fleets");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
   i = 0;
   if (!(strcasecmp(text, "stocknames") == 0))
-    handle.Unexpected("stocknames", text);
+    handle.logFileUnexpected(LOGFAIL, "stocknames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
     infile >> ws;
@@ -137,8 +137,9 @@ StockDistribution::StockDistribution(CommentStream& infile,
     infile >> text;
   }
   if (stocknames.Size() == 0)
-    handle.Message("Error in stockdistribution - failed to read stocks");
-  handle.logMessage("Read stock data - number of stocks", stocknames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in stockdistribution - failed to read stocks");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
@@ -178,7 +179,7 @@ void StockDistribution::readStockData(CommentStream& infile,
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 7)
-    handle.Message("Wrong number of columns in inputfile - should be 7");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 7");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -256,9 +257,10 @@ void StockDistribution::readStockData(CommentStream& infile,
     }
   }
   AAT.addActions(Years, Steps, TimeInfo);
-  if (count == 0)
-    handle.logWarning("Warning in stockdistribution - found no data in the data file for", this->getName());
-  handle.logMessage("Read stockdistribution data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in stockdistribution - found no data in the data file for", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read stockdistribution data file - number of entries", count);
 }
 
 StockDistribution::~StockDistribution() {
@@ -289,17 +291,18 @@ StockDistribution::~StockDistribution() {
 void StockDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
-  switch(functionnumber) {
+  switch (functionnumber) {
     case 1:
       MN.setValue(epsilon);
       break;
     case 2:
       break;
     default:
-      handle.logWarning("Warning in stockdistribution - unrecognised function", functionname);
+      handle.logMessage(LOGWARN, "Warning in stockdistribution - unrecognised function", functionname);
       break;
   }
-  handle.logMessage("Reset stockdistribution component", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset stockdistribution component", this->getName());
 }
 
 void StockDistribution::Print(ofstream& outfile) const {
@@ -331,18 +334,20 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
       }
     }
     if (found == 0)
-      handle.logFailure("Error in stockdistribution - unrecognised fleet", fleetnames[i]);
+      handle.logMessage(LOGFAIL, "Error in stockdistribution - unrecognised fleet", fleetnames[i]);
   }
 
   //check fleet areas
-  for (j = 0; j < areas.Nrow(); j++) {
-    found = 0;
-    for (i = 0; i < fleets.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (fleets[i]->isInArea(areas[j][k]))
-          found++;
-    if (found == 0)
-      handle.logWarning("Warning in stockdistribution - fleet not defined on all areas");
+  if (handle.getLogLevel() >= LOGWARN) {
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < fleets.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (fleets[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in stockdistribution - fleet not defined on all areas");
+    }
   }
 
   for (s = 0; s < stocknames.Size(); s++) {
@@ -357,55 +362,57 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
       }
     }
     if (found == 0)
-      handle.logFailure("Error in stockdistribution - unrecognised stock", stocknames[i]);
+      handle.logMessage(LOGFAIL, "Error in stockdistribution - unrecognised stock", stocknames[i]);
 
     //check areas, ages and lengths
-    for (j = 0; j < areas.Nrow(); j++) {
+    if (handle.getLogLevel() >= LOGWARN) {
+      for (j = 0; j < areas.Nrow(); j++) {
+        found = 0;
+        for (i = 0; i < stocks.Size(); i++)
+          for (k = 0; k < areas.Ncol(j); k++)
+            if (stocks[i]->isInArea(areas[j][k]))
+              found++;
+        if (found == 0)
+          handle.logMessage(LOGWARN, "Warning in stockdistribution - stock not defined on all areas");
+      }
+
+      minage = 9999;
+      maxage = 0;
+      for (i = 0; i < ages.Nrow(); i++) {
+        for (j = 0; j < ages.Ncol(i); j++) {
+          minage = min(ages[i][j], minage);
+          maxage = max(ages[i][j], maxage);
+        }
+      }
+
       found = 0;
       for (i = 0; i < stocks.Size(); i++)
-        for (k = 0; k < areas.Ncol(j); k++)
-          if (stocks[i]->isInArea(areas[j][k]))
-            found++;
+        if (minage >= stocks[i]->minAge())
+          found++;
       if (found == 0)
-        handle.logWarning("Warning in stockdistribution - stock not defined on all areas");
+        handle.logMessage(LOGWARN, "Warning in stockdistribution - minimum age less than stock age");
+
+      found = 0;
+      for (i = 0; i < stocks.Size(); i++)
+        if (maxage <= stocks[i]->maxAge())
+          found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in stockdistribution - maximum age greater than stock age");
+
+      found = 0;
+      for (i = 0; i < stocks.Size(); i++)
+        if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+          found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in stockdistribution - minimum length group less than stock length");
+
+      found = 0;
+      for (i = 0; i < stocks.Size(); i++)
+        if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+          found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in stockdistribution - maximum length group greater than stock length");
     }
-
-    minage = 9999;
-    maxage = 0;
-    for (i = 0; i < ages.Nrow(); i++) {
-      for (j = 0; j < ages.Ncol(i); j++) {
-        minage = min(ages[i][j], minage);
-        maxage = max(ages[i][j], maxage);
-      }
-    }
-
-    found = 0;
-    for (i = 0; i < stocks.Size(); i++)
-      if (minage >= stocks[i]->minAge())
-        found++;
-    if (found == 0)
-      handle.logWarning("Warning in stockdistribution - minimum age less than stock age");
-
-    found = 0;
-    for (i = 0; i < stocks.Size(); i++)
-      if (maxage <= stocks[i]->maxAge())
-        found++;
-    if (found == 0)
-      handle.logWarning("Warning in stockdistribution - maximum age greater than stock age");
-
-    found = 0;
-    for (i = 0; i < stocks.Size(); i++)
-      if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
-        found++;
-    if (found == 0)
-      handle.logWarning("Warning in stockdistribution - minimum length group less than stock length");
-
-    found = 0;
-    for (i = 0; i < stocks.Size(); i++)
-      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
-        found++;
-    if (found == 0)
-      handle.logWarning("Warning in stockdistribution - maximum length group greater than stock length");
 
     aggregator[s] = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
   }
@@ -415,14 +422,15 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   int i;
   double l = 0.0;
   if (AAT.AtCurrentTime(TimeInfo)) {
-    handle.logMessage("Calculating likelihood score for stockdistribution component", this->getName());
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Calculating likelihood score for stockdistribution component", this->getName());
     for (i = 0; i < stocknames.Size(); i++) {
       aggregator[i]->Sum(TimeInfo);
-      if (aggregator[i]->checkCatchData() == 1)
-        handle.logWarning("Warning in stockdistribution - zero catch found");
+      if ((handle.getLogLevel() >= LOGWARN) && (aggregator[i]->checkCatchData() == 1))
+        handle.logMessage(LOGWARN, "Warning in stockdistribution - zero catch found");
     }
 
-    switch(functionnumber) {
+    switch (functionnumber) {
       case 1:
         l = calcLikMultinomial();
         break;
@@ -430,11 +438,12 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
         l = calcLikSumSquares();
         break;
       default:
-        handle.logWarning("Warning in stockdistribution - unrecognised function", functionname);
+        handle.logMessage(LOGWARN, "Warning in stockdistribution - unrecognised function", functionname);
         break;
     }
     likelihood += l;
-    handle.logMessage("The likelihood score for this component on this timestep is", l);
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
     timeindex++;
   }
 }
@@ -530,7 +539,7 @@ void StockDistribution::LikelihoodPrint(ofstream& outfile, const TimeClass* cons
   t = timeindex - 1; //timeindex was increased before this is called
 
   if ((t >= Years.Size()) || t < 0)
-    handle.logFailure("Error in stockdistribution - invalid timestep", t);
+    handle.logMessage(LOGFAIL, "Error in stockdistribution - invalid timestep", t);
 
   for (area = 0; area < modelDistribution.Ncol(t); area++) {
     for (s = 0; s < modelDistribution[t][area]->Nrow(); s++) {

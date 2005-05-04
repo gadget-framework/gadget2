@@ -60,6 +60,10 @@ protected:
    * \brief This is the LengthGroupDivision of the stock
    */
   LengthGroupDivision* LgrpDiv;
+  /**
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   */
+  const AgeBandMatrixPtrVector* alptr;
 };
 
 #endif

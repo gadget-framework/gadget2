@@ -42,7 +42,7 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   else if ((strcasecmp(functionname, "lengthnovar") == 0) || (strcasecmp(functionname, "lengthnostddev") == 0))
     functionnumber = 3;
   else
-    handle.Message("Error in recstatistics - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "Error in recstatistics - unrecognised function", functionname);
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
@@ -57,14 +57,13 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //read in the fleetnames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
-    handle.Unexpected("fleetnames", text);
+    handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
     infile >> ws;
@@ -74,8 +73,9 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
     infile >> text;
   }
   if (fleetnames.Size() == 0)
-    handle.Message("Error in recstatistics - failed to read fleets");
-  handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in recstatistics - failed to read fleets");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
@@ -108,9 +108,9 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
   //Check the number of columns in the inputfile
   infile >> ws;
   if ((needvar == 1) && (countColumns(infile) != 7))
-    handle.Message("Wrong number of columns in inputfile - should be 7");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 7");
   else if ((needvar == 0) && (countColumns(infile) != 6))
-    handle.Message("Wrong number of columns in inputfile - should be 6");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -191,9 +191,10 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
   }
 
   timeindex.resize(tagvec.Size(), -1);
-  if (count == 0)
-    handle.logWarning("Warning in recstatistics - found no data in the data file for", this->getName());
-  handle.logMessage("Read recstatistics data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in recstatistics - found no data in the data file for", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read recstatistics data file - number of entries", count);
 }
 
 RecStatistics::~RecStatistics() {
@@ -225,7 +226,8 @@ void RecStatistics::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   for (i = 0; i < timeindex.Size(); i++)
     timeindex[i] = -1;
-  handle.logMessage("Reset recstatistics component", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset recstatistics component", this->getName());
 }
 
 void RecStatistics::Print(ofstream& outfile) const {
@@ -260,7 +262,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       }
 
     if (found == 0)
-      handle.logFailure("Error in recstatistics - unrecognised fleet", fleetnames[i]);
+      handle.logMessage(LOGFAIL, "Error in recstatistics - unrecognised fleet", fleetnames[i]);
 
   }
 
@@ -277,14 +279,14 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
           }
 
       if (found == 0)
-        handle.logFailure("Error in recstatistics - unrecognised stock", stocknames->operator[](i));
+        handle.logMessage(LOGFAIL, "Error in recstatistics - unrecognised stock", stocknames->operator[](i));
 
     }
 
     LgrpDiv = new LengthGroupDivision(*(stocks[0]->returnPrey()->returnLengthGroupDiv()));
     for (i = 1; i < stocks.Size(); i++)
       if (!LgrpDiv->Combine(stocks[i]->returnPrey()->returnLengthGroupDiv()))
-        handle.logFailure("Error in recstatistics - length groups not compatible");
+        handle.logMessage(LOGFAIL, "Error in recstatistics - length groups not compatible");
 
     minage = 999;
     maxage = 0;
@@ -314,7 +316,8 @@ void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
       for (i = 0; i < Years.Ncol(t); i++) {
         if (Years[t][i] == TimeInfo->CurrentYear() && Steps[t][i] == TimeInfo->CurrentStep()) {
           if (check == 0)
-            handle.logMessage("Calculating likelihood score for recstatistics component", this->getName());
+            if (handle.getLogLevel() >= LOGMESSAGE)
+              handle.logMessage(LOGMESSAGE, "Calculating likelihood score for recstatistics component", this->getName());
           timeindex[t] = i;
           aggregator[t]->Sum(TimeInfo);
           check++;
@@ -326,7 +329,8 @@ void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
   if (check > 0) {
     l = calcLikSumSquares();
     likelihood += l;
-    handle.logMessage("The likelihood score for this component on this timestep is", l);
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
   }
 }
 
@@ -344,7 +348,7 @@ double RecStatistics::calcLikSumSquares() {
         simdiff = PopStat.meanLength() - (*obsMean[t])[timeindex[t]][area];
         simvar = 0.0;
 
-        switch(functionnumber) {
+        switch (functionnumber) {
           case 1:
             simvar = PopStat.sdevLength() * PopStat.sdevLength();
             break;
@@ -355,7 +359,7 @@ double RecStatistics::calcLikSumSquares() {
             simvar = 1.0;
             break;
           default:
-            handle.logWarning("Warning in recstatistics - unrecognised function", functionname);
+            handle.logMessage(LOGWARN, "Warning in recstatistics - unrecognised function", functionname);
             break;
         }
 

@@ -68,7 +68,7 @@ protected:
   /**
    * \brief This is the AgeBandMatrix used to temporarily store information when aggregating the stocks
    */
-  const AgeBandMatrix* alptr; 
+  const AgeBandMatrix* alptr;
 };
 
 #endif

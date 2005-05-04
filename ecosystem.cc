@@ -43,7 +43,7 @@ Ecosystem::Ecosystem(const char* const filename, int optimise, int netrun, int c
   infile.clear();
 
   // check and initialise the model
-  handle.logMessage("");  //write a blank line to the log file
+  handle.logMessage(LOGMESSAGE, "");  //write a blank line to the log file
   this->Initialise();
   basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size(), 0);
 
@@ -56,10 +56,10 @@ Ecosystem::Ecosystem(const char* const filename, int optimise, int netrun, int c
     basevec[i + stockvec.Size() + otherfoodvec.Size()] = fleetvec[i];
 
   if (optimise)
-    handle.logInformation("\nFinished reading input files, starting to run optimisation");
+    handle.logMessage(LOGINFO, "\nFinished reading input files, starting to run optimisation");
   else
-    handle.logInformation("\nFinished reading input files, starting to run simulation");
-  handle.logMessage("");  //write a blank line to the log file
+    handle.logMessage(LOGINFO, "\nFinished reading input files, starting to run simulation");
+  handle.logMessage(LOGMESSAGE, "");  //write a blank line to the log file
 }
 
 Ecosystem::~Ecosystem() {

@@ -39,7 +39,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     functionnumber = 4;
     growthcalc = new GrowthCalcD(infile, areas, TimeInfo, LgrpDiv, keeper, refWeight);
   } else if (strcasecmp(text, "weightvbexpanded") == 0) {
-    functionnumber = 5; 
+    functionnumber = 5;
     growthcalc = new GrowthCalcE(infile, areas, TimeInfo, LgrpDiv, keeper, refWeight);
   } else if (strcasecmp(text, "lengthvb") == 0) {
     functionnumber = 6;
@@ -53,7 +53,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     functionnumber = 8;
     growthcalc = new GrowthCalcH(infile, areas, TimeInfo, keeper);
   } else {
-    handle.Message("Error in stock file - unrecognised growth function", text);
+    handle.logFileMessage(LOGFAIL, "Error in stock file - unrecognised growth function", text);
   }
 
   infile >> ws >>  text;
@@ -69,10 +69,10 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     part4.resize(rows, 0.0);
 
   } else if (strcasecmp(text, "meanvarianceparameters") == 0) {
-    handle.Warning("The mean variance parameters implementation of the growth is no longer supported\nUse the beta-binomial distribution implementation of the growth instead");
+    handle.logFileMessage(LOGFAIL, "The mean variance parameters implementation of the growth is no longer supported\nUse the beta-binomial distribution implementation of the growth instead");
 
   } else
-    handle.Unexpected("beta", text);
+    handle.logFileUnexpected(LOGFAIL, "beta", text);
 
   //Finished reading from input files.
   keeper->clearLast();
@@ -226,5 +226,6 @@ void Grower::Reset() {
     for (i = maxlengthgroupgrowth - 2; i >= 0; i--)
       part2[i] = part2[i + 1] * (beta + tmpmax - i - 1);
 
-  handle.logMessage("Reset grower data");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset grower data");
 }

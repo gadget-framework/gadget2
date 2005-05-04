@@ -33,30 +33,29 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
     while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
       tmpareas.resize(1);
       infile >> tmpint >> ws;
-      if ((tmpareas[i] = Area->InnerArea(tmpint)) == -1)
-        handle.UndefinedArea(tmpint);
+      tmpareas[i] = Area->InnerArea(tmpint);
       c = infile.peek();
       i++;
     }
     this->LetLiveOnAreas(tmpareas);
   } else
-    handle.Unexpected("livesonareas", text);
+    handle.logFileUnexpected(LOGFAIL, "livesonareas", text);
 
   //read the length information
   DoubleVector lengths(2, 0.0);
   infile >> text;
   if (strcasecmp(text, "lengths") == 0) {
     if (!readVector(infile, lengths))
-      handle.Message("Failed to read lengths");
+      handle.logFileMessage(LOGFAIL, "Failed to read lengths");
   } else
-    handle.Unexpected("lengths", text);
+    handle.logFileUnexpected(LOGFAIL, "lengths", text);
 
   //read the energy content of this prey
   double energy;
   readWordAndVariable(infile, "energycontent", energy);
 
   prey = new LengthPrey(lengths, areas, energy, this->getName());
-  
+
   infile >> text >> ws;
   if ((strcasecmp(text, "amount") == 0) || (strcasecmp(text, "amounts") == 0)) {
     infile >> text >> ws;
@@ -65,14 +64,14 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
     handle.Open(text);
 
     if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))
-      handle.Message("Error in otherfood - failed to read otherfood amounts");
+      handle.logFileMessage(LOGFAIL, "Error in otherfood - failed to read otherfood amounts");
     amount.Inform(keeper);
 
     handle.Close();
     subfile.close();
     subfile.clear();
   } else
-    handle.Unexpected("amount", text);
+    handle.logFileUnexpected(LOGFAIL, "amount", text);
 
   keeper->clearLast();
   keeper->clearLast();
@@ -106,8 +105,8 @@ void OtherFood::calcNumbers(int area,
 }
 
 int OtherFood::isOtherFoodStepArea(int area, const TimeClass* const TimeInfo) {
-  if (amount[TimeInfo->CurrentTime()][this->areaNum(area)] < 0)
-    handle.logWarning("Warning in otherfood - negative amount to be consumed");
+  if ((handle.getLogLevel() >= LOGWARN) && (amount[TimeInfo->CurrentTime()][this->areaNum(area)] < 0))
+    handle.logMessage(LOGWARN, "Warning in otherfood - negative amount to be consumed");
   if (isZero(amount[TimeInfo->CurrentTime()][this->areaNum(area)]))
     return 0;
   return 1;

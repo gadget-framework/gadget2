@@ -100,9 +100,6 @@ void Stock::reducePop(int area, const AreaClass* const Area, const TimeClass* co
 //Function that updates the length distributions and makes part of the stock Mature.
 void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  if (!doesgrow && doesmature)
-    handle.logFailure("Error in stock - maturation without growth is not implemented");
-
   if (!doesgrow)
     return;
 

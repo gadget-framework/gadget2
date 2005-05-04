@@ -29,7 +29,7 @@ void TimeVariable::read(CommentStream& infile,
     Formula* number = new Formula;
     infile.seekg(readPos);
     if (!(infile >> *number))
-      handle.Message("Possible error in size of vector - didnt expect to find", text);
+      handle.logFileMessage(LOGFAIL, "Possible error in size of vector - didnt expect to find", text);
     number->Inform(keeper);
     number->Interchange(Value, keeper);
     delete number;
@@ -67,7 +67,7 @@ void TimeVariable::readFromFile(CommentStream& infile,
   }
   infile >> ws >> text;
   if (strcasecmp(text, "data") != 0)
-    handle.Unexpected("data", text);
+    handle.logFileUnexpected(LOGFAIL, "data", text);
 
   i = 0;
   while (!infile.eof()) {
@@ -77,13 +77,13 @@ void TimeVariable::readFromFile(CommentStream& infile,
 
     infile >> ws >> years[i];
     if (infile.fail())
-      handle.Message("Error in timevariable - failed to read year");
+      handle.logFileMessage(LOGFAIL, "Error in timevariable - failed to read year");
     infile >> ws >> steps[i];
     if (infile.fail())
-      handle.Message("Error in timevariable - failed to read step");
+      handle.logFileMessage(LOGFAIL, "Error in timevariable - failed to read step");
     infile >> ws >> values[i];
     if (infile.fail())
-      handle.Message("Error in timevariable - failed to read value");
+      handle.logFileMessage(LOGFAIL, "Error in timevariable - failed to read value");
     values[i].Inform(keeper);
 
     if (usemodelmatrix) {
@@ -91,7 +91,7 @@ void TimeVariable::readFromFile(CommentStream& infile,
       for (j = 0; j < nrofcoeff; j++) {
         infile >> modelmatrix[i][j];
         if (infile.fail())
-          handle.Message("Error in timevariable - failed to read matrix");
+          handle.logFileMessage(LOGFAIL, "Error in timevariable - failed to read matrix");
       }
     }
     infile >> ws;
@@ -103,7 +103,7 @@ void TimeVariable::readFromFile(CommentStream& infile,
   for (i = 0; i < years.Size() - 1; i++) {
     if ((years[i + 1] < years[i]) ||
        (years[i + 1] == years[i] && steps[i + 1] <= steps[i]))
-      handle.Message("Error in timevariable - years and steps are not increasing");
+      handle.logFileMessage(LOGFAIL, "Error in timevariable - years and steps are not increasing");
   }
 
   firsttimestepnr = -1;
@@ -114,7 +114,7 @@ void TimeVariable::readFromFile(CommentStream& infile,
     }
   }
   if (firsttimestepnr == -1)
-    handle.Message("Error in timevariable - nothing specified for first timestep of the simulation");
+    handle.logFileMessage(LOGFAIL, "Error in timevariable - nothing specified for first timestep of the simulation");
 }
 
 int TimeVariable::DidChange(const TimeClass* const TimeInfo) {

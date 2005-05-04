@@ -92,7 +92,7 @@ private:
    */
   AgeBandMatrixPtrVector total;
   const DoubleIndexVector* suitptr;
-  const AgeBandMatrix* alptr; 
+  const AgeBandMatrix* alptr;
 };
 
 #endif

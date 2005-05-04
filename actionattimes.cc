@@ -32,7 +32,7 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
   int step = 0;
   IntVector readtext(2, 0);  //Is 1 if text was read in a column.
   int column = 0;            //What column we are reading, no. 0 or 1.
-  while (infile.good() && (error == 0)) {
+  while (!infile.eof() && (error == 0)) {
     infile >> ws;
     readPos = infile.tellg();
 
@@ -112,7 +112,7 @@ void ActionAtTimes::addActions(const IntVector& years,
   const IntVector& steps, const TimeClass* const TimeInfo) {
 
   if (years.Size() != steps.Size())
-    handle.logFailure("Error in actionattimes - different number of years and steps");
+    handle.logMessage(LOGFAIL, "Error in actionattimes - different number of years and steps");
   if (everyStep)
     return;
   int i;

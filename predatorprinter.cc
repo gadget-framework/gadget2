@@ -16,7 +16,7 @@ extern ErrorHandler handle;
 
 PredatorPrinter::PredatorPrinter(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo)
-  : Printer(PREDATORPRINTER), predLgrpDiv(0), preyLgrpDiv(0), aggregator(0) {
+  : Printer(PREDATORPRINTER), predLgrpDiv(0), preyLgrpDiv(0), aggregator(0), bptr(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -29,7 +29,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "predators") == 0))
-    handle.Unexpected("predators", text);
+    handle.logFileUnexpected(LOGFAIL, "predators", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "preys") == 0)) {
     predatornames.resize(1);
@@ -38,8 +38,9 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
     infile >> text >> ws;
   }
   if (predatornames.Size() == 0)
-    handle.Message("Error in predatorprinter - failed to read predators");
-  handle.logMessage("Read predator data - number of predators", predatornames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - failed to read predators");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", predatornames.Size());
 
   //read in the prey names
   i = 0;
@@ -51,8 +52,9 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
     infile >> text >> ws;
   }
   if (preynames.Size() == 0)
-    handle.Message("Error in predatorprinter - failed to read preys");
-  handle.logMessage("Read prey data - number of preys", preynames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - failed to read preys");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read prey data - number of preys", preynames.Size());
 
   //read in area aggregation from file
   filename = new char[MaxStrLength];
@@ -94,22 +96,21 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //Finished reading from infile.
   predLgrpDiv = new LengthGroupDivision(predlengths);
   if (predLgrpDiv->Error())
-    handle.Message("Error in predatorprinter - failed to create predator length group");
+    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - failed to create predator length group");
   preyLgrpDiv = new LengthGroupDivision(preylengths);
   if (predLgrpDiv->Error())
-    handle.Message("Error in predatorprinter - failed to create prey length group");
+    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - failed to create prey length group");
 
   char c = infile.peek();
   if ((c == 'b') || (c == 'B'))
     readWordAndVariable(infile, "biomass", biomass);
   if (biomass != 0 && biomass != 1)
-    handle.Message("Error in predatorprinter - biomass must be 0 or 1");
+    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - biomass must be 0 or 1");
 
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
@@ -127,7 +128,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   }
 
   if (precision < 0)
-    handle.Message("Error in predatorprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -135,19 +136,19 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.Message("Error in predatorprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
-    handle.Unexpected("yearsandsteps", text);
+    handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.Message("Error in predatorprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 
   //finished initializing. Now print first lines
@@ -189,32 +190,6 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
       }
     }
   }
-
-  //check predator areas and length groups
-  for (j = 0; j < areas.Nrow(); j++) {
-    index = 0;
-    for (i = 0; i < predators.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (predators[i]->isInArea(areas[j][k]))
-          index++;
-    if (index == 0)
-      handle.logWarning("Warning in predatorprinter - predators not defined on all areas");
-  }
-
-  index = 0;
-  for (i = 0; i < predators.Size(); i++)
-    if (predLgrpDiv->maxLength(0) > predators[i]->returnLengthGroupDiv()->minLength())
-      index++;
-  if (index == 0)
-    handle.logWarning("Warning in predatorprinter - minimum length group less than predator length");
-
-  index = 0;
-  for (i = 0; i < predators.Size(); i++)
-    if (predLgrpDiv->minLength(predLgrpDiv->numLengthGroups()) < predators[i]->returnLengthGroupDiv()->maxLength())
-      index++;
-  if (index == 0)
-    handle.logWarning("Warning in predatorprinter - maximum length group greater than predator length");
-
   index = 0;
   for (i = 0; i < preyvec.Size(); i++) {
     for (j = 0; j < preynames.Size(); j++) {
@@ -225,45 +200,71 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
     }
   }
 
-  //check prey areas and length groups
-  for (j = 0; j < areas.Nrow(); j++) {
+  //check predator and prey areas and length groups
+  if (handle.getLogLevel() >= LOGWARN) {
+    for (j = 0; j < areas.Nrow(); j++) {
+      index = 0;
+      for (i = 0; i < predators.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (predators[i]->isInArea(areas[j][k]))
+            index++;
+      if (index == 0)
+        handle.logMessage(LOGWARN, "Warning in predatorprinter - predators not defined on all areas");
+    }
+
+    index = 0;
+    for (i = 0; i < predators.Size(); i++)
+      if (predLgrpDiv->maxLength(0) > predators[i]->returnLengthGroupDiv()->minLength())
+        index++;
+    if (index == 0)
+      handle.logMessage(LOGWARN, "Warning in predatorprinter - minimum length group less than predator length");
+
+    index = 0;
+    for (i = 0; i < predators.Size(); i++)
+      if (predLgrpDiv->minLength(predLgrpDiv->numLengthGroups()) < predators[i]->returnLengthGroupDiv()->maxLength())
+        index++;
+    if (index == 0)
+      handle.logMessage(LOGWARN, "Warning in predatorprinter - maximum length group greater than predator length");
+
+    for (j = 0; j < areas.Nrow(); j++) {
+      index = 0;
+      for (i = 0; i < preys.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (preys[i]->isInArea(areas[j][k]))
+            index++;
+      if (index == 0)
+        handle.logMessage(LOGWARN, "Warning in predatorprinter - preys not defined on all areas");
+    }
+
     index = 0;
     for (i = 0; i < preys.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (preys[i]->isInArea(areas[j][k]))
-          index++;
+      if (preyLgrpDiv->maxLength(0) > preys[i]->returnLengthGroupDiv()->minLength())
+        index++;
     if (index == 0)
-      handle.logWarning("Warning in predatorprinter - preys not defined on all areas");
+      handle.logMessage(LOGWARN, "Warning in predatorprinter - minimum length group less than prey length");
+
+    index = 0;
+    for (i = 0; i < preys.Size(); i++)
+      if (preyLgrpDiv->minLength(preyLgrpDiv->numLengthGroups()) < preys[i]->returnLengthGroupDiv()->maxLength())
+        index++;
+    if (index == 0)
+      handle.logMessage(LOGWARN, "Warning in predatorprinter - maximum length group greater than prey length");
   }
 
-  index = 0;
-  for (i = 0; i < preys.Size(); i++)
-    if (preyLgrpDiv->maxLength(0) > preys[i]->returnLengthGroupDiv()->minLength())
-      index++;
-  if (index == 0)
-    handle.logWarning("Warning in predatorprinter - minimum length group less than prey length");
-
-  index = 0;
-  for (i = 0; i < preys.Size(); i++)
-    if (preyLgrpDiv->minLength(preyLgrpDiv->numLengthGroups()) < preys[i]->returnLengthGroupDiv()->maxLength())
-      index++;
-  if (index == 0)
-    handle.logWarning("Warning in predatorprinter - maximum length group greater than prey length");
-
   if (predators.Size() != predatornames.Size()) {
-    handle.logWarning("Error in predatorprinter - failed to match predators");
+    handle.logMessage(LOGWARN, "Error in predatorprinter - failed to match predators");
     for (i = 0; i < predatorvec.Size(); i++)
-      handle.logWarning("Error in predatorprinter - found predator", predatorvec[i]->getName());
+      handle.logMessage(LOGWARN, "Error in predatorprinter - found predator", predatorvec[i]->getName());
     for (i = 0; i < predatornames.Size(); i++)
-      handle.logWarning("Error in predatorprinter - looking for predator", predatornames[i]);
+      handle.logMessage(LOGWARN, "Error in predatorprinter - looking for predator", predatornames[i]);
     exit(EXIT_FAILURE);
   }
   if (preys.Size() != preynames.Size()) {
-    handle.logWarning("Error in predatorprinter - failed to match preys");
+    handle.logMessage(LOGWARN, "Error in predatorprinter - failed to match preys");
     for (i = 0; i < preyvec.Size(); i++)
-      handle.logWarning("Error in predatorprinter - found prey", preyvec[i]->getName());
+      handle.logMessage(LOGWARN, "Error in predatorprinter - found prey", preyvec[i]->getName());
     for (i = 0; i < preynames.Size(); i++)
-      handle.logWarning("Error in predatorprinter - looking for prey", preynames[i]);
+      handle.logMessage(LOGWARN, "Error in predatorprinter - looking for prey", preynames[i]);
     exit(EXIT_FAILURE);
   }
 
@@ -282,7 +283,7 @@ void PredatorPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
   int a, predl, preyl;
   for (a = 0; a < areas.Nrow(); a++) {
-    const BandMatrix* bptr = &aggregator->returnSum()[a];
+    bptr = &aggregator->returnSum()[a];
     for (predl = 0; predl < bptr->Nrow(); predl++) {
       for (preyl = 0; preyl < bptr->Ncol(predl); preyl++) {
         outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep

@@ -19,20 +19,20 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
       i++;
     }
   } else
-    handle.Unexpected("areas", text);
+    handle.logFileUnexpected(LOGFAIL, "areas", text);
 
   int noareas = OuterAreas.Size();
   size.resize(noareas);
   infile >> text;
   if (strcasecmp(text, "size") == 0) {
     if (!readVector(infile, size))
-      handle.Message("Failed to read size of areas");
+      handle.logFileMessage(LOGFAIL, "Failed to read size of areas");
   } else
-    handle.Unexpected("size", text);
+    handle.logFileUnexpected(LOGFAIL, "size", text);
 
   infile >> text >> ws;
   if (strcasecmp(text, "temperature") != 0)
-    handle.Unexpected("temperature", text);
+    handle.logFileUnexpected(LOGFAIL, "temperature", text);
 
   //Now the data which is in the following format: year step area temperature.
   temperature.AddRows(TimeInfo->TotalNoSteps() + 1, noareas, 0.0);
@@ -42,7 +42,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 4)
-    handle.Message("Wrong number of columns in inputfile - should be 4");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 4");
 
   count = 0;
   while (!infile.eof()) {
@@ -82,12 +82,14 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
       count++;
     }
   }
-  if (count == 0)
-    handle.logWarning("Warning in area - found no temperature data");
-  if (count != (temperature.Nrow() - 1) * noareas)
-    handle.logWarning("Warning in area - temperature data doesnt span time range");
-  handle.logMessage("Read temperature data - number of entries", count);
-  handle.logMessage("Read area file - number of areas", noareas);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in area - found no temperature data");
+  if ((handle.getLogLevel() >= LOGWARN) && (count != (temperature.Nrow() - 1) * noareas))
+    handle.logMessage(LOGWARN, "Warning in area - temperature data doesnt span time range");
+  if (handle.getLogLevel() >= LOGMESSAGE) {
+    handle.logMessage(LOGMESSAGE, "Read temperature data - number of entries", count);
+    handle.logMessage(LOGMESSAGE, "Read area file - number of areas", noareas);
+  }
 }
 
 int AreaClass::InnerArea(int area) const {
@@ -96,5 +98,8 @@ int AreaClass::InnerArea(int area) const {
   for (i = 0; i < OuterAreas.Size(); i++)
     if (area == OuterAreas[i])
       innerarea = i;
+
+  if ((handle.getLogLevel() >= LOGWARN) && (innerarea == -1))
+    handle.logMessage(LOGWARN, "Warning in area - failed to match area", area);
   return innerarea;
 }

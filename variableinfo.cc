@@ -33,7 +33,7 @@ CommentStream& operator >> (CommentStream& infile, VariableInfo& varinfo) {
       varinfo.error = 1;
 
     if (!(comm >> tmp[i]))
-      handle.Message("Incorrect format while reading additions to the migration matrices");
+      handle.logFileMessage(LOGFAIL, "Incorrect format while reading additions to the migration matrices");
     tmp[i].Inform(varinfo.keeper);
     i++;
     comm >> ws;

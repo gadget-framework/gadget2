@@ -49,13 +49,12 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   //Check if we read correct input
   if (areas.Nrow() != 1)
-    handle.Message("Error in surveyindex - there should be only one area");
+    handle.logFileMessage(LOGFAIL, "Error in surveyindex - there should be only one area");
 
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   if (strcasecmp(sitype, "lengths") == 0) {
     readWordAndValue(infile, "lenaggfile", aggfilename);
@@ -95,7 +94,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     i = 0;
     infile >> text >> ws;
     if (!(strcasecmp(text, "fleetnames") == 0))
-      handle.Unexpected("fleetnames", text);
+      handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
     infile >> text;
     while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
       fleetnames.resize(1);
@@ -104,17 +103,18 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       infile >> text >> ws;
     }
     if (fleetnames.Size() == 0)
-      handle.Message("Error in surveyindex - failed to read fleets");
-    handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
+      handle.logFileMessage(LOGFAIL, "Error in surveyindex - failed to read fleets");
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
-    handle.Warning("The ageandlengths surveyindex likelihood component is no longer supported\nUse the surveydistribution likelihood component instead");
+    handle.logFileMessage(LOGFAIL, "The ageandlengths surveyindex likelihood component is no longer supported\nUse the surveydistribution likelihood component instead");
 
   } else
-    handle.Unexpected("lengths, ages or fleets", sitype);
+    handle.logFileUnexpected(LOGFAIL, "lengths, ages or fleets", sitype);
 
   if (!(strcasecmp(text, "stocknames") == 0))
-    handle.Unexpected("stocknames", text);
+    handle.logFileUnexpected(LOGFAIL, "stocknames", text);
 
   i = 0;
   infile >> text;
@@ -126,8 +126,9 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     infile >> text >> ws;
   }
   if (stocknames.Size() == 0)
-    handle.Message("Error in surveyindex - failed to read stocks");
-  handle.logMessage("Read stock data - number of stocks", stocknames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in surveyindex - failed to read stocks");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
   if (strcasecmp(sitype, "lengths") == 0) {
@@ -143,7 +144,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       charindex, TimeInfo, datafilename, this->getName());
 
   } else
-    handle.Message("Error in surveyindex - unrecognised type", sitype);
+    handle.logFileMessage(LOGFAIL, "Error in surveyindex - unrecognised type", sitype);
 
   for (i = 0; i < charindex.Size(); i++)
     delete[] charindex[i];
@@ -153,7 +154,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 }
 
@@ -188,11 +189,11 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       }
     }
     if (found == 0)
-      handle.logFailure("Error in surveyindex - failed to match fleet", fleetnames[i]);
+      handle.logMessage(LOGFAIL, "Error in surveyindex - failed to match fleet", fleetnames[i]);
   }
 
   //check fleet areas
-  if (fleetnames.Size() > 0) {
+  if ((handle.getLogLevel() >= LOGWARN) && (fleetnames.Size() > 0)) {
     for (j = 0; j < areas.Nrow(); j++) {
       found = 0;
       for (i = 0; i < f.Size(); i++)
@@ -200,7 +201,7 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
           if (f[i]->isInArea(areas[j][k]))
             found++;
       if (found == 0)
-        handle.logWarning("Warning in surveyindex - fleet not defined on all areas");
+        handle.logMessage(LOGWARN, "Warning in surveyindex - fleet not defined on all areas");
     }
   }
 
@@ -213,18 +214,20 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       }
     }
     if (found == 0)
-      handle.logFailure("Error in surveyindex - failed to match stock", stocknames[i]);
+      handle.logMessage(LOGFAIL, "Error in surveyindex - failed to match stock", stocknames[i]);
   }
 
   //check stock areas
-  for (j = 0; j < areas.Nrow(); j++) {
-    found = 0;
-    for (i = 0; i < s.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (s[i]->isInArea(areas[j][k]))
-          found++;
-    if (found == 0)
-      handle.logWarning("Warning in surveyindex - stock not defined on all areas");
+  if (handle.getLogLevel() >= LOGWARN) {
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < s.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (s[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in surveyindex - stock not defined on all areas");
+    }
   }
 
   SI->setFleetsAndStocks(f, s);

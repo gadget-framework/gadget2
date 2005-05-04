@@ -21,7 +21,7 @@ MigrationPenalty::MigrationPenalty(CommentStream& infile, double weight, const c
   if (!infile.eof()) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "[component]") == 0))
-      handle.Unexpected("[component]", text);
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 }
 
@@ -29,13 +29,15 @@ void MigrationPenalty::addLikelihood(const TimeClass* const TimeInfo) {
   int i;
   double l = 0.0;
   if ((stock->doesMigrate()) && (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps())) {
-    handle.logMessage("Calculating likelihood score for migrationpenalty component");
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Calculating likelihood score for migrationpenalty component");
     DoubleVector penalty(stock->returnMigration()->Penalty());
     for (i = 0; i < penalty.Size(); i++)
       l += pow(penalty[i], powercoeffs[0]);
     l = pow(l, powercoeffs[1]);
     likelihood += l;
-    handle.logMessage("The likelihood score for this component on this timestep is", l);
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
  }
 }
 
@@ -49,9 +51,9 @@ void MigrationPenalty::setStocks(StockPtrVector Stocks) {
     }
 
   if (found == 0)
-    handle.logFailure("Error in migrationpenalty - failed to match stock", stockname);
-  if (!(stock->doesMigrate()))
-    handle.logWarning("Warning in migrationpenalty - stock doesnt migrate");
+    handle.logMessage(LOGFAIL, "Error in migrationpenalty - failed to match stock", stockname);
+  if ((handle.getLogLevel() >= LOGWARN) && (!(stock->doesMigrate())))
+    handle.logMessage(LOGWARN, "Warning in migrationpenalty - stock doesnt migrate");
 }
 
 MigrationPenalty::~MigrationPenalty() {
@@ -60,7 +62,8 @@ MigrationPenalty::~MigrationPenalty() {
 
 void MigrationPenalty::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
-  handle.logMessage("Reset migrationpenalty component");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset migrationpenalty component");
 }
 
 void MigrationPenalty::Print(ofstream& outfile) const {

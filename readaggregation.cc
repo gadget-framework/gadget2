@@ -16,7 +16,7 @@ int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggind
     infile >> aggindex[i];
     agg.AddRows(1, 0);
     if (!readVectorInLine(infile, agg[i]))
-      handle.Message("Error in readaggregation - failed to read vector");
+      handle.logFileMessage(LOGFAIL, "Error in readaggregation - failed to read vector");
     infile >> ws;
     i++;
   }
@@ -25,9 +25,10 @@ int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggind
   for (i = 0; i < aggindex.Size(); i++)
     for (j = 0; j < aggindex.Size(); j++)
       if ((strcasecmp(aggindex[i], aggindex[j]) == 0) && (i != j))
-        handle.logFailure("Error in aggregation file - repeated label", aggindex[i]);
+        handle.logMessage(LOGFAIL, "Error in aggregation file - repeated label", aggindex[i]);
 
-  handle.logMessage("Read aggregation file - number of entries", aggindex.Size());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+  handle.logMessage(LOGMESSAGE, "Read aggregation file - number of entries", aggindex.Size());
   return aggindex.Size();
 }
 
@@ -48,9 +49,10 @@ int readAggregation(CommentStream& infile, IntVector& agg, CharPtrVector& aggind
   for (i = 0; i < aggindex.Size(); i++)
     for (j = 0; j < aggindex.Size(); j++)
       if ((strcasecmp(aggindex[i], aggindex[j]) == 0) && (i != j))
-        handle.logFailure("Error in aggregation file - repeated label", aggindex[i]);
+        handle.logMessage(LOGFAIL, "Error in aggregation file - repeated label", aggindex[i]);
 
-  handle.logMessage("Read aggregation file - number of entries", aggindex.Size());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read aggregation file - number of entries", aggindex.Size());
   return aggindex.Size();
 }
 
@@ -71,7 +73,7 @@ int readLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrV
     if (isZero(lengths[i] - dblA))
       lengths.resize(1, dblB); //add next length entry
     else
-      handle.Message("Error in length aggregation - lengths not consecutive");
+      handle.logFileMessage(LOGFAIL, "Error in length aggregation - lengths not consecutive");
 
     i++;
   }
@@ -80,9 +82,10 @@ int readLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrV
   for (i = 0; i < lenindex.Size(); i++)
     for (j = 0; j < lenindex.Size(); j++)
       if ((strcasecmp(lenindex[i], lenindex[j]) == 0) && (i != j))
-        handle.logFailure("Error in length aggregation file - repeated label", lenindex[i]);
+        handle.logMessage(LOGFAIL, "Error in length aggregation file - repeated label", lenindex[i]);
 
-  handle.logMessage("Read length aggregation file - number of entries", lenindex.Size());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read length aggregation file - number of entries", lenindex.Size());
   return lenindex.Size();
 }
 
@@ -112,14 +115,14 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
     }
 
     if (!(strcasecmp(text, "lengths") == 0))
-      handle.Unexpected("lengths", text);
+      handle.logFileUnexpected(LOGFAIL, "lengths", text);
 
     //JMB - changed so that only 2 lengths are read in
     preylengths.AddRows(1, 2);
     infile >> preylengths[i][0] >> preylengths[i][1] >> text >> ws;
 
     if (!(strcasecmp(text, "digestioncoefficients") == 0))
-      handle.Unexpected("digestioncoefficients", text);
+      handle.logFileUnexpected(LOGFAIL, "digestioncoefficients", text);
 
     //JMB - changed so that only 3 elements are read in
     digestioncoeff.AddRows(1, 3);
@@ -134,8 +137,9 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
   for (i = 0; i < preyindex.Size(); i++)
     for (j = 0; j < preyindex.Size(); j++)
       if ((strcasecmp(preyindex[i], preyindex[j]) == 0) && (i != j))
-        handle.logFailure("Error in prey aggregation file - repeated label", preyindex[i]);
+        handle.logMessage(LOGFAIL, "Error in prey aggregation file - repeated label", preyindex[i]);
 
-  handle.logMessage("Read prey aggregation file - number of entries", preyindex.Size());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read prey aggregation file - number of entries", preyindex.Size());
   return preyindex.Size();
 }

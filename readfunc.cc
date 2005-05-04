@@ -18,7 +18,7 @@ int readMatrix(CommentStream& infile, DoubleMatrix& M) {
       if (!infile.fail())
         M[i][j] = N;
       else {
-        handle.Message("Error in readmatrix - failed to read data");
+        handle.logFileMessage(LOGFAIL, "Error in readmatrix - failed to read data");
         return 0;
       }
     }
@@ -26,7 +26,7 @@ int readMatrix(CommentStream& infile, DoubleMatrix& M) {
     while (c == ' ' || c == '\t')
       infile.get(c);
     if (c != '\n') {
-      handle.Message("Error in readmatrix - expected end of line");
+      handle.logFileMessage(LOGFAIL, "Error in readmatrix - expected end of line");
       return 0;
     }
   }
@@ -44,7 +44,7 @@ int readVector(CommentStream& infile, DoubleVector& Vec) {
     if (!infile.fail())
       Vec[i] = N;
     else {
-      handle.Message("Error in readvector - failed to read data");
+      handle.logFileMessage(LOGFAIL, "Error in readvector - failed to read data");
       return 0;
     }
   }
@@ -61,7 +61,7 @@ int readVector(CommentStream& infile, IntVector& Vec) {
     if (!infile.fail())
       Vec[i] = N;
     else {
-      handle.Message("Error in readvector - failed to read data");
+      handle.logFileMessage(LOGFAIL, "Error in readvector - failed to read data");
       return 0;
     }
   }
@@ -79,7 +79,7 @@ int readIndexVector(CommentStream& infile, DoubleIndexVector& Vec) {
     if (!infile.fail())
       Vec[i] = N;
     else {
-      handle.Message("Error in readindexvector - failed to read data");
+      handle.logFileMessage(LOGFAIL, "Error in readindexvector - failed to read data");
       return 0;
     }
   }
@@ -95,7 +95,7 @@ int readVectorInLine(CommentStream& infile, IntVector& Vec) {
   strncpy(line, "", MaxStrLength);
   infile.getLine(line, MaxStrLength);
   if (infile.fail()) {
-    handle.Message("Error in readvectorinline - failed to read data");
+    handle.logFileMessage(LOGFAIL, "Error in readvectorinline - failed to read data");
     return 0;
   }
 
@@ -107,7 +107,7 @@ int readVectorInLine(CommentStream& infile, IntVector& Vec) {
       Vec.resize(1);
     istr >> Vec[i];
     if (istr.fail() && !istr.eof()) {
-      handle.Message("Error in readvectorinline - failed to read data");
+      handle.logFileMessage(LOGFAIL, "Error in readvectorinline - failed to read data");
       return 0;
     }
     istr >> ws;
@@ -125,7 +125,7 @@ int readVectorInLine(CommentStream& infile, DoubleVector& Vec) {
   strncpy(line, "", MaxStrLength);
   infile.getLine(line, MaxStrLength);
   if (infile.fail()) {
-    handle.Message("Error in readvectorinline - failed to read data");
+    handle.logFileMessage(LOGFAIL, "Error in readvectorinline - failed to read data");
     return 0;
   }
 
@@ -137,7 +137,7 @@ int readVectorInLine(CommentStream& infile, DoubleVector& Vec) {
       Vec.resize(1);
     istr >> Vec[i];
     if (istr.fail() && !istr.eof()) {
-      handle.Message("Error in readvectorinline - failed to read data");
+      handle.logFileMessage(LOGFAIL, "Error in readvectorinline - failed to read data");
       return 0;
     }
     istr >> ws;
@@ -155,7 +155,7 @@ int readRefWeights(CommentStream& infile, DoubleMatrix& M) {
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 2)
-    handle.Message("Wrong number of columns in inputfile - should be 2");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 2");
 
   i = 0;
   while (!infile.eof()) {
@@ -165,7 +165,7 @@ int readRefWeights(CommentStream& infile, DoubleMatrix& M) {
       if (!infile.fail())
         M[i][j] = N;
       else {
-        handle.Message("Error in readrefweights - failed to read data");
+        handle.logFileMessage(LOGFAIL, "Error in reference weights - failed to read data");
         return 0;
       }
     }
@@ -176,9 +176,10 @@ int readRefWeights(CommentStream& infile, DoubleMatrix& M) {
   //Check the data to make sure that it is continuous
   for (i = 1; i < M.Nrow(); i++)
     if ((M[i][0] - M[i - 1][0]) <= 0)
-      handle.Message("Lengths for reference weights must be strictly increasing");
+      handle.logFileMessage(LOGFAIL, "Lengths for reference weights must be strictly increasing");
 
-  handle.logMessage("Read reference weights OK - number of entries", i);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read reference weights OK - number of entries", i);
   return 1;
 }
 
@@ -260,7 +261,7 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 5)
-    handle.Message("Wrong number of columns in inputfile - should be 5");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 5");
 
   //Create storage for the data - size of the data is known
   amount.AddRows(TimeInfo->TotalNoSteps() + 1, tmpareas.Size(), number);
@@ -302,8 +303,6 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
     //only keep the data if area is a required area
     areaid = -1;
     tmpareaid = Area->InnerArea(area);
-    if (tmpareaid == -1)
-      handle.UndefinedArea(area);
     for (i = 0; i < tmpareas.Size(); i++)
       if (tmpareas[i] == tmpareaid)
         areaid = i;
@@ -324,9 +323,10 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
     }
   }
 
-  if (count == 0)
-    handle.logWarning("Warning in readamounts - found no data in the data file for", givenname);
-  handle.logMessage("Read amounts data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in readamounts - found no data in the data file for", givenname);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read amounts data file - number of entries", count);
   return 1;
 }
 
@@ -353,7 +353,7 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 5)
-    handle.Message("Wrong number of columns in inputfile - should be 5");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 5");
 
   //Create storage for the data - size of the data is known
   Years.resize(TimeInfo->TotalNoSteps() + 1, 0);
@@ -401,8 +401,6 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
     //only keep the data if area is a required area
     areaid = -1;
     tmpareaid = Area->InnerArea(area);
-    if (tmpareaid == -1)
-      handle.UndefinedArea(area);
     for (i = 0; i < tmpareas.Size(); i++)
       if (tmpareas[i] == tmpareaid)
         areaid = i;
@@ -421,9 +419,10 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
       infile >> ws;
     }
   }
-  if (count == 0)
-    handle.logWarning("Warning in growthamounts - found no data in the data file");
-  handle.logMessage("Read growth data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in growthamounts - found no data in the data file");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read growth data file - number of entries", count);
   return 1;
 }
 

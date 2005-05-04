@@ -72,7 +72,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     functionnumber = 7;
 
   } else
-    handle.Message("Error in catchdistribution - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "Error in catchdistribution - unrecognised function", functionname);
 
   infile >> ws;
   char c = infile.peek();
@@ -86,16 +86,16 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     else if (strcasecmp(text, "areaaggfile") == 0)
       infile.seekg(pos);
     else
-      handle.Unexpected("areaaggfile", text);
+      handle.logFileUnexpected(LOGFAIL, "areaaggfile", text);
 
     //JMB - peek at the next char
     c = infile.peek();
 
     if (yearly != 0 && yearly != 1)
-      handle.Message("Error in catchdistribution - aggregationlevel must be 0 or 1");
+      handle.logFileMessage(LOGFAIL, "Error in catchdistribution - aggregationlevel must be 0 or 1");
 
     if (yearly == 1) {
-      switch(functionnumber) {
+      switch (functionnumber) {
         case 2:
         case 3:
         case 7:
@@ -104,10 +104,10 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
         case 4:
         case 5:
         case 6:
-          handle.logWarning("Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
+          handle.logFileMessage(LOGWARN, "Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
           break;
         default:
-          handle.logWarning("Warning in catchdistribution - unrecognised function", functionname);
+          handle.logMessage(LOGWARN, "Warning in catchdistribution - unrecognised function", functionname);
           break;
       }
     }
@@ -122,7 +122,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     overconsumption = 0;
 
   if (overconsumption != 0 && overconsumption != 1)
-    handle.Message("Error in catchdistribution - overconsumption must be 0 or 1");
+    handle.logFileMessage(LOGFAIL, "Error in catchdistribution - overconsumption must be 0 or 1");
 
   //JMB - changed to make the reading of minimum probability optional
   if ((c == 'm') || (c == 'M'))
@@ -133,7 +133,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     epsilon = 10.0;
 
   if (epsilon <= 0) {
-    handle.Warning("Epsilon should be a positive integer - set to default value 10");
+    handle.logFileMessage(LOGWARN, "Epsilon should be a positive integer - set to default value 10");
     epsilon = 10.0;
   }
 
@@ -172,15 +172,13 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      if ((areas[i][j] = Area->InnerArea(areas[i][j])) == -1)
-        handle.UndefinedArea(areas[i][j]);
-
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //read in the fleetnames
   i = 0;
   infile >> text >> ws;
   if (!(strcasecmp(text, "fleetnames") == 0))
-    handle.Unexpected("fleetnames", text);
+    handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
     fleetnames.resize(1);
@@ -189,13 +187,14 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     infile >> text >> ws;
   }
   if (fleetnames.Size() == 0)
-    handle.Message("Error in catchdistribution - failed to read fleets");
-  handle.logMessage("Read fleet data - number of fleets", fleetnames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in catchdistribution - failed to read fleets");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
   i = 0;
   if (!(strcasecmp(text, "stocknames") == 0))
-    handle.Unexpected("stocknames", text);
+    handle.logFileUnexpected(LOGFAIL, "stocknames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
     infile >> ws;
@@ -205,8 +204,9 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     infile >> text;
   }
   if (stocknames.Size() == 0)
-    handle.Message("Error in catchdistribution - failed to read stocks");
-  handle.logMessage("Read stock data - number of stocks", stocknames.Size());
+    handle.logFileMessage(LOGFAIL, "Error in catchdistribution - failed to read stocks");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
@@ -250,7 +250,7 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 6)
-    handle.Message("Wrong number of columns in inputfile - should be 6");
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -318,9 +318,10 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
-  if (count == 0)
-    handle.logWarning("Warning in catchdistribution - found no data in the data file for", this->getName());
-  handle.logMessage("Read catchdistribution data file - number of entries", count);
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in catchdistribution - found no data in the data file for", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Read catchdistribution data file - number of entries", count);
 }
 
 CatchDistribution::~CatchDistribution() {
@@ -353,7 +354,7 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   timeindex = 0;
 
-  switch(functionnumber) {
+  switch (functionnumber) {
     case 2:
     case 3:
     case 4:
@@ -367,14 +368,15 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
       illegal = 0;
       this->calcCorrelation();
       if (illegal == 1 || LU.isIllegal() == 1)
-        handle.logWarning("Warning in catchdistribution - multivariate normal out of bounds");
+        handle.logMessage(LOGWARN, "Warning in catchdistribution - multivariate normal out of bounds");
       break;
     default:
-      handle.logWarning("Warning in catchdistribution - unrecognised function", functionname);
+      handle.logMessage(LOGWARN, "Warning in catchdistribution - unrecognised function", functionname);
       break;
   }
 
-  handle.logMessage("Reset catchdistribution component", this->getName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset catchdistribution component", this->getName());
 }
 
 void CatchDistribution::Print(ofstream& outfile) const {
@@ -389,7 +391,7 @@ void CatchDistribution::Print(ofstream& outfile) const {
     outfile << sep << fleetnames[i];
   outfile << endl;
 
-  switch(functionnumber) {
+  switch (functionnumber) {
     case 1:
     case 2:
     case 3:
@@ -406,7 +408,7 @@ void CatchDistribution::Print(ofstream& outfile) const {
       outfile << "\tMultivariate logistic distribution parameter: sigma " << sigma << endl;
       break;
     default:
-      handle.logWarning("Warning in catchdistribution - unrecognised function", functionname);
+      handle.logMessage(LOGWARN, "Warning in catchdistribution - unrecognised function", functionname);
       break;
   }
 
@@ -423,7 +425,7 @@ void CatchDistribution::LikelihoodPrint(ofstream& outfile, const TimeClass* cons
   t = timeindex - 1; //timeindex was increased before this is called
 
   if ((t >= Years.Size()) || t < 0)
-    handle.logFailure("Error in catchdistribution - invalid timestep", t);
+    handle.logMessage(LOGFAIL, "Error in catchdistribution - invalid timestep", t);
 
   for (area = 0; area < modelDistribution.Ncol(t); area++) {
     for (age = 0; age < modelDistribution[t][area]->Nrow(); age++) {
@@ -452,18 +454,7 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
       }
     }
     if (found == 0)
-      handle.logFailure("Error in catchdistribution - unrecognised fleet", fleetnames[i]);
-  }
-
-  //check fleet areas
-  for (j = 0; j < areas.Nrow(); j++) {
-    found = 0;
-    for (i = 0; i < fleets.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (fleets[i]->isInArea(areas[j][k]))
-          found++;
-    if (found == 0)
-      handle.logWarning("Warning in catchdistribution - fleet not defined on all areas");
+      handle.logMessage(LOGFAIL, "Error in catchdistribution - unrecognised fleet", fleetnames[i]);
   }
 
   for (i = 0; i < stocknames.Size(); i++) {
@@ -477,56 +468,68 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
       }
     }
     if (found == 0)
-      handle.logFailure("Error in catchdistribution - unrecognised stock", stocknames[i]);
+      handle.logMessage(LOGFAIL, "Error in catchdistribution - unrecognised stock", stocknames[i]);
   }
 
-  //check areas, ages and lengths
-  for (j = 0; j < areas.Nrow(); j++) {
+  //check fleet areas and stock areas, ages and lengths
+  if (handle.getLogLevel() >= LOGWARN) {
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < fleets.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (fleets[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in catchdistribution - fleet not defined on all areas");
+    }
+
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < stocks.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (stocks[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in catchdistribution - stock not defined on all areas");
+    }
+
+    minage = 9999;
+    maxage = 0;
+    for (i = 0; i < ages.Nrow(); i++) {
+      for (j = 0; j < ages.Ncol(i); j++) {
+        minage = min(ages[i][j], minage);
+        maxage = max(ages[i][j], maxage);
+      }
+    }
+
     found = 0;
     for (i = 0; i < stocks.Size(); i++)
-      for (k = 0; k < areas.Ncol(j); k++)
-        if (stocks[i]->isInArea(areas[j][k]))
-          found++;
+      if (minage >= stocks[i]->minAge())
+        found++;
     if (found == 0)
-      handle.logWarning("Warning in catchdistribution - stock not defined on all areas");
+      handle.logMessage(LOGWARN, "Warning in catchdistribution - minimum age less than stock age");
+
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (maxage <= stocks[i]->maxAge())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in catchdistribution - maximum age greater than stock age");
+
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in catchdistribution - minimum length group less than stock length");
+
+    found = 0;
+    for (i = 0; i < stocks.Size(); i++)
+      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in catchdistribution - maximum length group greater than stock length");
   }
-
-  minage = 9999;
-  maxage = 0;
-  for (i = 0; i < ages.Nrow(); i++) {
-    for (j = 0; j < ages.Ncol(i); j++) {
-      minage = min(ages[i][j], minage);
-      maxage = max(ages[i][j], maxage);
-    }
-  }
-
-  found = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (minage >= stocks[i]->minAge())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in catchdistribution - minimum age less than stock age");
-
-  found = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (maxage <= stocks[i]->maxAge())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in catchdistribution - maximum age greater than stock age");
-
-  found = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in catchdistribution - minimum length group less than stock length");
-
-  found = 0;
-  for (i = 0; i < stocks.Size(); i++)
-    if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
-      found++;
-  if (found == 0)
-    handle.logWarning("Warning in catchdistribution - maximum length group greater than stock length");
 
   aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
 }
@@ -538,10 +541,11 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
   aggregator->Sum(TimeInfo);
-  if (aggregator->checkCatchData() == 1)
-    handle.logWarning("Warning in catchdistribution - zero catch found");
+  if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData() == 1))
+    handle.logMessage(LOGWARN, "Warning in catchdistribution - zero catch found");
+  alptr = &aggregator->returnSum();
 
-  switch(functionnumber) {
+  switch (functionnumber) {
     case 1:
       l = calcLikMultinomial();
       break;
@@ -564,23 +568,24 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
       l = calcLikLog(TimeInfo);
       break;
     default:
-      handle.logWarning("Warning in catchdistribution - unrecognised function", functionname);
+      handle.logMessage(LOGWARN, "Warning in catchdistribution - unrecognised function", functionname);
       break;
   }
 
   if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
     likelihood += l;
-    handle.logMessage("Calculating likelihood score for catchdistribution component", this->getName());
-    handle.logMessage("The likelihood score for this component on this timestep is", l);
+    if (handle.getLogLevel() >= LOGMESSAGE) {
+      handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchdistribution component", this->getName());
+      handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
+    }
   }
   timeindex++;
 }
 
 double CatchDistribution::calcLikMultinomial() {
   int area, age, len;
-  
+
   MN.Reset();
-  alptr = &aggregator->returnSum();
   //the object MN does most of the work, accumulating likelihood
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
@@ -622,7 +627,6 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
   double totallikelihood = 0.0;
   int age, len, area;
 
-  alptr = &aggregator->returnSum();
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     if (TimeInfo->CurrentStep() == 1) { //start of a new year
@@ -679,7 +683,6 @@ double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
   double totallikelihood = 0.0;
   int age, len, area;
 
-  alptr = &aggregator->returnSum();
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     if (TimeInfo->CurrentStep() == 1) { //start of a new year
@@ -733,7 +736,6 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
   int area, age, len;
   double totalmodel, totaldata, ratio;
 
-  alptr = &aggregator->returnSum();
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     totalmodel = 0.0;
@@ -787,7 +789,6 @@ double CatchDistribution::calcLikSumSquares() {
   double totalmodel, totaldata;
   int age, len, area;
 
-  alptr = &aggregator->returnSum();
   for (area = 0; area < areas.Nrow(); area++) {
     totalmodel = 0.0;
     totaldata = 0.0;
@@ -856,7 +857,6 @@ double CatchDistribution::calcLikMVNormal() {
   if (illegal == 1 || LU.isIllegal() == 1)
     return verybig;
 
-  alptr = &aggregator->returnSum();
   DoubleVector diff(aggregator->numLengthGroups(), 0.0);
   for (area = 0; area < areas.Nrow(); area++) {
     sumdata = 0.0;
@@ -893,7 +893,8 @@ double CatchDistribution::calcLikMVNormal() {
   }
 
   if (isZero(sigma)) {
-    handle.logWarning("Warning in catchdistribution - multivariate normal sigma is zero");
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in catchdistribution - multivariate normal sigma is zero");
     return verybig;
   }
 
@@ -907,7 +908,6 @@ double CatchDistribution::calcLikMVLogistic() {
   double sumdata = 0.0, sumdist = 0.0, sumnu = 0.0;
   int age, len, area, p;
 
-  alptr = &aggregator->returnSum();
   p = aggregator->numLengthGroups();
   DoubleVector nu(p, 0.0);
 
@@ -950,7 +950,8 @@ double CatchDistribution::calcLikMVLogistic() {
   }
 
   if (isZero(sigma)) {
-    handle.logWarning("Warning in catchdistribution - multivariate logistic sigma is zero");
+    if (handle.getLogLevel() >= LOGWARN)
+      handle.logMessage(LOGWARN, "Warning in catchdistribution - multivariate logistic sigma is zero");
     return verybig;
   }
 

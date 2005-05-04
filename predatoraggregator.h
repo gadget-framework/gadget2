@@ -81,7 +81,7 @@ protected:
   /**
    * \brief This is the BandMatrix used to temporarily store information when aggregating the predation
    */
-  const BandMatrix* bptr; 
+  const BandMatrix* bptr;
 };
 
 #endif

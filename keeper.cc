@@ -42,7 +42,7 @@ void Keeper::keepVariable(double& value, const Parameter& attr) {
 
   } else {
     if (value != values[index]) {
-      handle.Message("Error in keeper - received a switch with a repeated name but different value");
+      handle.logFileMessage(LOGFAIL, "Error in keeper - received a switch with a repeated name but different value");
 
     } else {
       //Everything is ok, just add the address &value to address.
@@ -94,7 +94,7 @@ void Keeper::changeVariable(const double& pre, double& post) {
       }
 
   if (found == 1 && pre != post)
-    handle.logFailure("Error in keeper - failed to change variables");
+    handle.logMessage(LOGFAIL, "Error in keeper - failed to change variables");
 }
 
 void Keeper::clearLast() {
@@ -152,7 +152,7 @@ void Keeper::ScaledValues(DoubleVector& val) const {
 void Keeper::ScaledOptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->numOptVariables())
-    handle.logFailure("Error in keeper - received invalid number of optimising variables");
+    handle.logMessage(LOGFAIL, "Error in keeper - received invalid number of optimising variables");
 
   if (opt.Size() == 0)
     this->ScaledValues(val);
@@ -169,7 +169,7 @@ void Keeper::ScaledOptValues(DoubleVector& val) const {
 void Keeper::InitialOptValues(DoubleVector& val) const {
   int i, k;
   if (val.Size() != this->numOptVariables())
-    handle.logFailure("Error in keeper - received invalid number of optimising variables");
+    handle.logMessage(LOGFAIL, "Error in keeper - received invalid number of optimising variables");
 
   if (opt.Size() == 0)
     this->InitialValues(val);
@@ -186,7 +186,7 @@ void Keeper::InitialOptValues(DoubleVector& val) const {
 void Keeper::OptSwitches(ParameterVector& sw) const {
   int i, k;
   if (sw.Size() != this->numOptVariables())
-    handle.logFailure("Error in keeper - received invalid number of optimising variables");
+    handle.logMessage(LOGFAIL, "Error in keeper - received invalid number of optimising variables");
 
   if (opt.Size() == 0)
     this->Switches(sw);
@@ -204,10 +204,9 @@ void Keeper::ScaleVariables() {
   int i;
   for (i = 0; i < values.Size(); i++) {
     if (isZero(values[i])) {
-      if ((opt.Size() == 0) || (opt[i] == 1)) {
-        //JMB - only print a warning if we are optimising this variable ...
-        handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
-      }
+      if ((handle.getLogLevel() >= LOGWARN) && ((opt.Size() == 0) || (opt[i] == 1)))
+        handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
+
       initialvalues[i] = 1.0;
       scaledvalues[i] = values[i];
     } else {
@@ -220,7 +219,7 @@ void Keeper::ScaleVariables() {
 void Keeper::Update(const DoubleVector& val) {
   int i, j;
   if (val.Size() != values.Size())
-    handle.logFailure("Error in keeper - received wrong number of variables to update");
+    handle.logMessage(LOGFAIL, "Error in keeper - received wrong number of variables to update");
 
   for (i = 0; i < address.Nrow(); i++) {
     for (j = 0; j < address.Ncol(i); j++)
@@ -228,10 +227,9 @@ void Keeper::Update(const DoubleVector& val) {
 
     values[i] = val[i];
     if (isZero(initialvalues[i])) {
-      if ((opt.Size() == 0) || (opt[i] == 1)) {
-        //JMB - only print a warning if we are optimising this variable ...
-        handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
-      }
+      if ((handle.getLogLevel() >= LOGWARN) && ((opt.Size() == 0) || (opt[i] == 1)))
+        handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
+
       scaledvalues[i] = val[i];
     } else
       scaledvalues[i] = val[i] / initialvalues[i];
@@ -242,17 +240,16 @@ void Keeper::Update(const DoubleVector& val) {
 void Keeper::Update(int pos, double& value) {
   int i;
   if (pos <= 0 && pos >= address.Nrow())
-    handle.logFailure("Error in keeper - received invalid variable to update");
+    handle.logMessage(LOGFAIL, "Error in keeper - received invalid variable to update");
 
   for (i = 0; i < address.Ncol(pos); i++)
     *address[pos][i].addr = value;
 
   values[pos] = value;
   if (isZero(initialvalues[pos])) {
-    if ((opt.Size() == 0) || (opt[pos] == 1)) {
-      //JMB - only print a warning if we are optimising this variable ...
-      handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[pos].getName());
-    }
+    if ((handle.getLogLevel() >= LOGWARN) && ((opt.Size() == 0) || (opt[pos] == 1)))
+      handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[pos].getName());
+
     scaledvalues[pos] = value;
   } else
     scaledvalues[pos] = value / initialvalues[pos];
@@ -407,10 +404,9 @@ void Keeper::Update(const StochasticData* const Stoch) {
             opt[j] = Stoch->Optimise(i);
 
           if (isZero(initialvalues[j])) {
-            if ((opt.Size() == 0) || (opt[j] == 1)) {
-              //JMB - only print a warning if we are optimising this variable ...
-              handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[j].getName());
-            }
+            if ((handle.getLogLevel() >= LOGWARN) && ((opt.Size() == 0) || (opt[j] == 1)))
+              handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[j].getName());
+
             scaledvalues[j] = values[j];
           } else
             scaledvalues[j] = values[j] / initialvalues[j];
@@ -421,17 +417,19 @@ void Keeper::Update(const StochasticData* const Stoch) {
       }
     }
 
-    for (i = 0; i < Stoch->numVariables(); i++)
-      if (match[i] == 0)
-        handle.logWarning("Warning in keeper - failed to match switch", Stoch->Switches(i).getName());
+    if (handle.getLogLevel() >= LOGWARN) {
+      for (i = 0; i < Stoch->numVariables(); i++)
+        if (match[i] == 0)
+          handle.logMessage(LOGWARN, "Warning in keeper - failed to match switch", Stoch->Switches(i).getName());
 
-    for (i = 0; i < switches.Size(); i++)
-      if (found[i] == 0)
-        handle.logWarning("Warning in keeper - using default values for switch", switches[i].getName());
+      for (i = 0; i < switches.Size(); i++)
+        if (found[i] == 0)
+          handle.logMessage(LOGWARN, "Warning in keeper - using default values for switch", switches[i].getName());
+    }
 
   } else {
     if (this->numVariables() != Stoch->numVariables())
-      handle.logFailure("Error in keeper - received wrong number of variables to update");
+      handle.logMessage(LOGFAIL, "Error in keeper - received wrong number of variables to update");
 
     for (i = 0; i < Stoch->numVariables(); i++) {
       if (Stoch->OptGiven())
@@ -440,10 +438,9 @@ void Keeper::Update(const StochasticData* const Stoch) {
       values[i] = Stoch->Values(i);
       bestvalues[i] = Stoch->Values(i);
       if (isZero(initialvalues[i])) {
-        if ((opt.Size() == 0) || (opt[i] == 1)) {
-          //JMB - only print a warning if we are optimising this variable ...
-          handle.logWarning("Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
-        }
+        if ((handle.getLogLevel() >= LOGWARN) && ((opt.Size() == 0) || (opt[i] == 1)))
+          handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
+
         scaledvalues[i] = values[i];
       } else
         scaledvalues[i] = Stoch->Values(i) / initialvalues[i];
@@ -451,7 +448,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
   }
 
   if (this->numOptVariables() >= NUMVARS)
-    handle.logFailure("Error in keeper - too many parameters to optimise", this->numOptVariables());
+    handle.logMessage(LOGFAIL, "Error in keeper - too many parameters to optimise", this->numOptVariables());
 
   for (i = 0; i < address.Nrow(); i++)
     for (j = 0; j < address.Ncol(i); j++)
@@ -535,13 +532,13 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec, int inte
     if (lowerbds[i] > bestvalues[i]) {
       check++;
       outfile << switches[i] << TAB << setw(w) << setprecision(p) << lowerbds[i] << TAB;
-      handle.logWarning("Warning in keeper - parameter has a final value", bestvalues[i]);
-      handle.logWarning("which is lower than the corresponding lower bound", lowerbds[i]);
+      handle.logMessage(LOGWARN, "Warning in keeper - parameter has a final value", bestvalues[i]);
+      handle.logMessage(LOGWARN, "which is lower than the corresponding lower bound", lowerbds[i]);
     } else if (upperbds[i] < bestvalues[i]) {
       check++;
       outfile << switches[i] << TAB << setw(w) << setprecision(p) << upperbds[i] << TAB;
-      handle.logWarning("Warning in keeper - parameter has a final value", bestvalues[i]);
-      handle.logWarning("which is higher than the corresponding upper bound", upperbds[i]);
+      handle.logMessage(LOGWARN, "Warning in keeper - parameter has a final value", bestvalues[i]);
+      handle.logMessage(LOGWARN, "which is higher than the corresponding upper bound", upperbds[i]);
     } else
       outfile << switches[i] << TAB << setw(w) << setprecision(p) << bestvalues[i] << TAB;
 
@@ -573,7 +570,7 @@ void Keeper::UpperBds(DoubleVector& ubs) const {
 void Keeper::LowerOptBds(DoubleVector& lbs) const {
   int i, j;
   if (lbs.Size() != this->numOptVariables())
-    handle.logFailure("Error in keeper - received invalid number of optimising variables");
+    handle.logMessage(LOGFAIL, "Error in keeper - received invalid number of optimising variables");
 
   if (lbs.Size() == 0)
     this->LowerBds(lbs);
@@ -590,7 +587,7 @@ void Keeper::LowerOptBds(DoubleVector& lbs) const {
 void Keeper::UpperOptBds(DoubleVector& ubs) const {
   int i, j;
   if (ubs.Size() != this->numOptVariables())
-    handle.logFailure("Error in keeper - received invalid number of optimising variables");
+    handle.logMessage(LOGFAIL, "Error in keeper - received invalid number of optimising variables");
 
   if (ubs.Size() == 0)
     this->UpperBds(ubs);
@@ -617,29 +614,31 @@ void Keeper::checkBounds(const LikelihoodPtrVector& likevec) const {
       count++;
   }
   if (count == 0)
-    handle.logWarning("Warning in keeper - no boundlikelihood component found\nNo penalties will be applied if any of the parameter bounds are exceeded");
+    handle.logMessage(LOGWARN, "Warning in keeper - no boundlikelihood component found\nNo penalties will be applied if any of the parameter bounds are exceeded");
+  if (count > 1)
+    handle.logMessage(LOGWARN, "Warning in keeper - repeated boundlikelihood components found");
 
   //check the values of the switches are within the bounds to start with
   count = 0;
   for (i = 0; i < values.Size(); i++) {
     if (lowerbds[i] > values[i]) {
       count++;
-      handle.logWarning("Error in keeper - parameter has initial value", values[i]);
-      handle.logWarning("which is lower than the corresponding lower bound", lowerbds[i]);
+      handle.logMessage(LOGWARN, "Error in keeper - parameter has initial value", values[i]);
+      handle.logMessage(LOGWARN, "which is lower than the corresponding lower bound", lowerbds[i]);
     }
     if (upperbds[i] < values[i]) {
       count++;
-      handle.logWarning("Error in keeper - parameter has initial value", values[i]);
-      handle.logWarning("which is higher than the corresponding upper bound", upperbds[i]);
+      handle.logMessage(LOGWARN, "Error in keeper - parameter has initial value", values[i]);
+      handle.logMessage(LOGWARN, "which is higher than the corresponding upper bound", upperbds[i]);
     }
     if (upperbds[i] < lowerbds[i]) {
       count++;
-      handle.logWarning("Error in keeper - parameter has upper bound", upperbds[i]);
-      handle.logWarning("which is lower than the corresponding lower bound", lowerbds[i]);
+      handle.logMessage(LOGWARN, "Error in keeper - parameter has upper bound", upperbds[i]);
+      handle.logMessage(LOGWARN, "which is lower than the corresponding lower bound", lowerbds[i]);
     }
   }
   if (count > 0)
-    handle.logFailure("Error in keeper - failed to read parameters and bounds correctly");
+    handle.logMessage(LOGFAIL, "Error in keeper - failed to read parameters and bounds correctly");
 }
 
 void Keeper::addString(const string str) {

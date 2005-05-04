@@ -40,9 +40,10 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
         for (l = minl; l < maxl; l++) {
           pop = Addition[age][CI.Pos(l)];
           pop *= ratio;
-          if (isZero(CI.Nrof(l)))
-            handle.logWarning("Warning in agebandmatrix - divide by zero");
-          else
+          if (isZero(CI.Nrof(l))) {
+            if (handle.getLogLevel() >= LOGWARN)
+              handle.logMessage(LOGWARN, "Warning in agebandmatrix - divide by zero");
+          } else
             pop.N /= CI.Nrof(l);
           (*v[age - minage])[l] += pop;
         }
@@ -65,8 +66,8 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
 }
 
 void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& CI) {
-  if (CI.TargetIsFiner() == 1)
-    handle.logWarning("Warning in agebandmatrix - target is finer for multiply");
+  if ((handle.getLogLevel() >= LOGWARN) && (CI.TargetIsFiner() == 1))
+    handle.logMessage(LOGWARN, "Warning in agebandmatrix - target is finer for multiply");
 
   int i, j, j1, j2;
   DoubleVector UsedRatio(Ratio);
@@ -74,7 +75,8 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& C
     if (isZero(UsedRatio[i]))
       UsedRatio[i] = 0.0;
     else if (UsedRatio[i] < 0) {
-      handle.logWarning("Error in agebandmatrix - negative ratio");
+      if (handle.getLogLevel() >= LOGWARN)
+        handle.logMessage(LOGWARN, "Error in agebandmatrix - negative ratio");
       UsedRatio[i] = 0.0;
     }
   }
@@ -98,8 +100,8 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& C
 
 void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Nrof) {
 
-  if (Consumption.Size() != Nrof.Size())
-    handle.logWarning("Warning in agebandmatrix - different sizes in subtract");
+  if ((handle.getLogLevel() >= LOGWARN) && (Consumption.Size() != Nrof.Size()))
+    handle.logMessage(LOGWARN, "Warning in agebandmatrix - different sizes in subtract");
 
   int i;
   DoubleVector Ratio(Consumption.Size(), 1.0);
@@ -116,8 +118,8 @@ void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIn
 //natural mortality. Investigate if Ratio should be allowed to be shorter.
 void AgeBandMatrix::Multiply(const DoubleVector& Ratio) {
   int i, j;
-  if (Ratio.Size() != nrow)
-    handle.logWarning("Warning in agebandmatrix - different sizes in multiply");
+  if ((handle.getLogLevel() >= LOGWARN) && (Ratio.Size() != nrow))
+    handle.logMessage(LOGWARN, "Warning in agebandmatrix - different sizes in multiply");
   for (i = 0; i < nrow; i++)
     for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
       (*v[i])[j] *= Ratio[i];

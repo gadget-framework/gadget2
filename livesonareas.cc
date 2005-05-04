@@ -25,7 +25,7 @@ int LivesOnAreas::areaNum(int area) const {
   if (0 <= area && area < areaConvert.Size())
     return areaConvert[area];
   else {
-    handle.logWarning("Warning in livesonareas - failed to match area", area);
+    handle.logMessage(LOGFAIL, "Error in livesonareas - failed to match area", area);
     return -1;
   }
 }
@@ -38,7 +38,7 @@ void LivesOnAreas::LetLiveOnAreas(const IntVector& Areas) {
     areaConvert.Delete(0);
 
   if (Areas.Size() == 0)
-    handle.logWarning("Warning in livesonareas - found no areas");
+    handle.logMessage(LOGFAIL, "Error in livesonareas - found no areas");
 
   int i, maxim = 0;
   areas.resize(Areas.Size());

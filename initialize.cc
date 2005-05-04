@@ -41,32 +41,32 @@ void Ecosystem::Initialise() {
   for (i = 0; i < fleetvec.Size(); i++)
     for (j = 0; j < fleetvec.Size(); j++)
       if ((strcasecmp(fleetvec[i]->getName(), fleetvec[j]->getName()) == 0) && (i != j))
-        handle.logFailure("Error in input files - repeated fleet", fleetvec[i]->getName());
+        handle.logMessage(LOGFAIL, "Error in input files - repeated fleet", fleetvec[i]->getName());
 
   for (i = 0; i < tagvec.Size(); i++)
     for (j = 0; j < tagvec.Size(); j++)
       if ((strcasecmp(tagvec[i]->getName(), tagvec[j]->getName()) == 0) && (i != j))
-        handle.logFailure("Error in input files - repeated tagging experiment", tagvec[i]->getName());
+        handle.logMessage(LOGFAIL, "Error in input files - repeated tagging experiment", tagvec[i]->getName());
 
   for (i = 0; i < otherfoodvec.Size(); i++)
     for (j = 0; j < otherfoodvec.Size(); j++)
       if ((strcasecmp(otherfoodvec[i]->getName(), otherfoodvec[j]->getName()) == 0) && (i != j))
-        handle.logFailure("Error in input files - repeated other food", otherfoodvec[i]->getName());
+        handle.logMessage(LOGFAIL, "Error in input files - repeated other food", otherfoodvec[i]->getName());
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < stockvec.Size(); j++)
       if ((strcasecmp(stockvec[i]->getName(), stockvec[j]->getName()) == 0) && (i != j))
-        handle.logFailure("Error in input files - repeated stock", stockvec[i]->getName());
+        handle.logMessage(LOGFAIL, "Error in input files - repeated stock", stockvec[i]->getName());
 
   for (i = 0; i < likevec.Size(); i++)
     for (j = 0; j < likevec.Size(); j++)
       if ((strcasecmp(likevec[i]->getName(), likevec[j]->getName()) == 0) && (i != j))
-        handle.logFailure("Error in input files - repeated likelihood component", likevec[i]->getName());
+        handle.logMessage(LOGFAIL, "Error in input files - repeated likelihood component", likevec[i]->getName());
 
   for (i = 0; i < printvec.Size(); i++)
     for (j = 0; j < printvec.Size(); j++)
       if ((strcasecmp(printvec[i]->getFileName(), printvec[j]->getFileName()) == 0) && (i != j))
-        handle.logFailure("Error in input files - repeated print file", printvec[i]->getFileName());
+        handle.logMessage(LOGFAIL, "Error in input files - repeated print file", printvec[i]->getFileName());
 
   //OK, next create a list of all the predators and all the preys
   for (i = 0; i < stockvec.Size(); i++) {
@@ -92,24 +92,28 @@ void Ecosystem::Initialise() {
 
   //Now we can start initialising things
   for (i = 0; i < predvec.Size(); i++) {
-    handle.logMessage("Initialising predator", predvec[i]->getName());
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Initialising predator", predvec[i]->getName());
     ((PopPredator*)predvec[i])->setPrey(preyvec, keeper);
   }
   for (i = 0; i < stockvec.Size(); i++) {
-    handle.logMessage("Initialising stock", stockvec[i]->getName());
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Initialising stock", stockvec[i]->getName());
     stockvec[i]->setStock(stockvec);
   }
   for (i = 0; i < stockvec.Size(); i++)
     stockvec[i]->setCI();
   for (i = 0; i < tagvec.Size(); i++) {
-    handle.logMessage("Initialising tagging experiment", tagvec[i]->getName());
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Initialising tagging experiment", tagvec[i]->getName());
     tagvec[i]->setStock(stockvec);
   }
 
   //This is a good place to initialise the likelihood classes.
   for (i = 0; i < likevec.Size(); i++) {
-    handle.logMessage("Initialising likelihood component", likevec[i]->getName());
-    switch(likevec[i]->Type()) {
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Initialising likelihood component", likevec[i]->getName());
+    switch (likevec[i]->Type()) {
       case SURVEYINDICESLIKELIHOOD:
         ((SurveyIndices*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
@@ -146,15 +150,16 @@ void Ecosystem::Initialise() {
       case BOUNDLIKELIHOOD:
         break;
       default:
-        handle.logFailure("Error when initialising model - unrecognised likelihood type", likevec[i]->Type());
+        handle.logMessage(LOGFAIL, "Error when initialising model - unrecognised likelihood type", likevec[i]->Type());
         break;
     }
   }
 
   //This is a good place to initialise the printer classes.
   for (i = 0; i < printvec.Size(); i++) {
-    handle.logMessage("Initialising printer for output file", printvec[i]->getFileName());
-    switch(printvec[i]->Type()) {
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Initialising printer for output file", printvec[i]->getFileName());
+    switch (printvec[i]->Type()) {
       case STOCKSTDPRINTER:
         ((StockStdPrinter*)(printvec[i]))->setStock(stockvec);
         break;
@@ -186,7 +191,7 @@ void Ecosystem::Initialise() {
         ((SummaryPrinter*)(printvec[i]))->setLikelihood(likevec);
         break;
       default:
-        handle.logFailure("Error when initialising model - unrecognised printer type", printvec[i]->Type());
+        handle.logMessage(LOGFAIL, "Error when initialising model - unrecognised printer type", printvec[i]->Type());
         break;
     }
   }
