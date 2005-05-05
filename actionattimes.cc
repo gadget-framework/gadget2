@@ -81,31 +81,14 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
     }
     column = !column;  //change column from 0 to 1 or from 1 to 0.
   }
+
   infile.seekg(readPos);
-
-  //And now the cleanup.
-  if (everyStep) {
-    while (TimeSteps.Size())
-      TimeSteps.Delete(0);
-    while (Years.Size())
-      Years.Delete(0);
-    while (Steps.Size())
-      Steps.Delete(0);
-  }
-
   if ((error == 1) || (column == 1 && error != 2))
     return 0;
-
   return 1;
 }
 
 ActionAtTimes::~ActionAtTimes() {
-  while (TimeSteps.Size())
-    TimeSteps.Delete(0);
-  while (Years.Size())
-    Years.Delete(0);
-  while (Steps.Size())
-    Steps.Delete(0);
 }
 
 void ActionAtTimes::addActions(const IntVector& years,
