@@ -13,9 +13,7 @@ LinearPredator::LinearPredator(CommentStream& infile, const char* givenname,
 
   keeper->addString("predator");
   keeper->addString(givenname);
-
   this->readSuitability(infile, "amount", TimeInfo, keeper);
-
   keeper->clearLast();
   keeper->clearLast();
 }
@@ -24,38 +22,31 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
   double Areasize, int CurrentSubstep, int numsubsteps) {
 
   int inarea = this->areaNum(area);
-  int prey, predl, preyl;
+  int prey, preyl;
   double tmp;
-
-  for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-    totalcons[inarea][predl] = 0.0;
+  
+  int predl = 0;  //JMB there is only ever one length group ...
+  totalcons[inarea][predl] = 0.0;
 
   scaler[inarea] = Multiplicative;
-  tmp = Multiplicative * LengthOfStep / numsubsteps;
+  tmp = prednumber[inarea][predl].N * Multiplicative * LengthOfStep / numsubsteps;
 
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (Preys(prey)->isPreyArea(area)) {
-      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-        if ((handle.getLogLevel() >= LOGWARN) && (tmp * prednumber[inarea][predl].N > 10.0))
-          handle.logMessage(LOGWARN, "Warning in linearpredator - excessive consumption required");
+      if ((handle.getLogLevel() >= LOGWARN) && (tmp > 10.0))
+        handle.logMessage(LOGWARN, "Warning in linearpredator - excessive consumption required");
 
-        for (preyl = Suitability(prey)[predl].minCol();
-            preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-
-          cons[inarea][prey][predl][preyl] = tmp * prednumber[inarea][predl].N *
-            Suitability(prey)[predl][preyl] * Preys(prey)->getBiomass(area, preyl);
-
-          totalcons[inarea][predl] += cons[inarea][prey][predl][preyl];
-        }
+      for (preyl = Suitability(prey)[predl].minCol();
+          preyl < Suitability(prey)[predl].maxCol(); preyl++) {
+        cons[inarea][prey][predl][preyl] = tmp * 
+          Suitability(prey)[predl][preyl] * Preys(prey)->getBiomass(area, preyl);
+        totalcons[inarea][predl] += cons[inarea][prey][predl][preyl];
       }
 
     } else {
-      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-        for (preyl = Suitability(prey)[predl].minCol();
-            preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-
-          cons[inarea][prey][predl][preyl] = 0.0;
-        }
+      for (preyl = Suitability(prey)[predl].minCol();
+          preyl < Suitability(prey)[predl].maxCol(); preyl++) {
+        cons[inarea][prey][predl][preyl] = 0.0;
       }
     }
   }
@@ -63,33 +54,30 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
   //Inform the preys of the consumption.
   for (prey = 0; prey < this->numPreys(); prey++)
     if (Preys(prey)->isPreyArea(area))
-      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-        Preys(prey)->addBiomassConsumption(area, cons[inarea][prey][predl]);
+      Preys(prey)->addBiomassConsumption(area, cons[inarea][prey][predl]);
 }
 
 void LinearPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubstep) {
   double maxRatio = pow(MaxRatioConsumed, numsubsteps);
-  int over, prey, predl, preyl;
+  int over, prey, preyl;
   double ratio, tmp;
   int inarea = this->areaNum(area);
 
-  for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-    overcons[inarea][predl] = 0.0;
+  int predl = 0;  //JMB there is only ever one length group ...
+  overcons[inarea][predl] = 0.0;
 
   over = 0;
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (Preys(prey)->isPreyArea(area)) {
       if (Preys(prey)->checkOverConsumption(area)) {
         over = 1;
-        for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-          for (preyl = Suitability(prey)[predl].minCol();
-              preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-            ratio = Preys(prey)->Ratio(area, preyl);
-            if (ratio > maxRatio) {
-              tmp = maxRatio / ratio;
-              overcons[inarea][predl] += (1.0 - tmp) * cons[inarea][prey][predl][preyl];
-              cons[inarea][prey][predl][preyl] *= tmp;
-            }
+        for (preyl = Suitability(prey)[predl].minCol();
+            preyl < Suitability(prey)[predl].maxCol(); preyl++) {
+          ratio = Preys(prey)->Ratio(area, preyl);
+          if (ratio > maxRatio) {
+            tmp = maxRatio / ratio;
+            overcons[inarea][predl] += (1.0 - tmp) * cons[inarea][prey][predl][preyl];
+            cons[inarea][prey][predl][preyl] *= tmp;
           }
         }
       }
@@ -97,20 +85,16 @@ void LinearPredator::adjustConsumption(int area, int numsubsteps, int CurrentSub
   }
 
   if (over == 1)
-    for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-      totalcons[inarea][predl] -= overcons[inarea][predl];
+    totalcons[inarea][predl] -= overcons[inarea][predl];
 
-  for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-    totalconsumption[inarea][predl] += totalcons[inarea][predl];
-    overconsumption[inarea][predl] += overcons[inarea][predl];
-  }
+  totalconsumption[inarea][predl] += totalcons[inarea][predl];
+  overconsumption[inarea][predl] += overcons[inarea][predl];
 
   for (prey = 0; prey < this->numPreys(); prey++)
     if (Preys(prey)->isPreyArea(area))
-      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-        for (preyl = Suitability(prey)[predl].minCol();
-            preyl < Suitability(prey)[predl].maxCol(); preyl++)
-          consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
+      for (preyl = Suitability(prey)[predl].minCol();
+          preyl < Suitability(prey)[predl].maxCol(); preyl++)
+        consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
 }
 
 void LinearPredator::Print(ofstream& outfile) const {

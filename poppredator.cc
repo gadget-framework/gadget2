@@ -83,12 +83,8 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
   for (area = 0; area < areas.Size(); area++) {
     for (prey = 0; prey < this->numPreys(); prey++) {
       if (this->DidChange(prey, TimeInfo)) {
-        //adjust the size of consumption[area][prey].
         cons.changeElement(area, prey, Suitability(prey));
         consumption.changeElement(area, prey, Suitability(prey));
-        for (i = 0; i < Suitability(prey).Nrow(); i++)
-          for (j = consumption[area][prey].minCol(i); j < consumption[area][prey].maxCol(i); j++)
-            consumption[area][prey][i][j] = 0.0;
       }
     }
   }
@@ -103,7 +99,6 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
         for (prey = 0; prey < this->numPreys(); prey++)
           for (j = consumption[area][prey].minCol(i); j < consumption[area][prey].maxCol(i); j++)
             consumption[area][prey][i][j] = 0.0;
-
       }
     }
   }

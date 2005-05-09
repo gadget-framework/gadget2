@@ -17,17 +17,14 @@ LivesOnAreas::LivesOnAreas(const IntVector& Areas) : areas(Areas) {
 int LivesOnAreas::isInArea(int area) const {
   if (0 <= area && area < areaConvert.Size())
     return (areaConvert[area] >= 0);
-  else
-    return 0;
+  return 0;
 }
 
 int LivesOnAreas::areaNum(int area) const {
   if (0 <= area && area < areaConvert.Size())
     return areaConvert[area];
-  else {
-    handle.logMessage(LOGFAIL, "Error in livesonareas - failed to match area", area);
-    return -1;
-  }
+  handle.logMessage(LOGFAIL, "Error in livesonareas - failed to match area", area);
+  return -1;
 }
 
 void LivesOnAreas::LetLiveOnAreas(const IntVector& Areas) {

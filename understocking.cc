@@ -89,12 +89,19 @@ void UnderStocking::setPredators(PredatorPtrVector& Predators) {
 
     if (found == 0)
       handle.logMessage(LOGFAIL, "Error in understocking - unrecognised predator", prednames[i]);
-
   }
 }
 
 void UnderStocking::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
+  if (Years.Size() != 0) {
+    while (Years.Size() > 0)
+      Years.Delete(0);
+    while (Steps.Size() > 0)
+      Steps.Delete(0);
+    while (likelihoodValues.Nrow() > 0)
+      likelihoodValues.DeleteRow(0);
+  }
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset understocking component", this->getName());
 }
@@ -116,15 +123,18 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
           if (predators[i]->isInArea(areas[k][j]))
             err += predators[i]->getTotalOverConsumption(areas[k][j]);
 
-      store[k] += pow(err, powercoeff);
-      l += store[k];
+      if (!(isZero(err))) {
+        store[k] += pow(err, powercoeff);
+        l += store[k];
+      }
     }
+
     if (!(isZero(l))) {
-      Years.resize(1, TimeInfo->CurrentYear());
-      Steps.resize(1, TimeInfo->CurrentStep());
       likelihoodValues.AddRows(1, areas.Nrow(), 0.0);
       for (k = 0; k < areas.Nrow(); k++)
-        likelihoodValues[likelihoodValues.Nrow() - 1][k] = store[k];
+        likelihoodValues[Years.Size()][k] = store[k];
+      Years.resize(1, TimeInfo->CurrentYear());
+      Steps.resize(1, TimeInfo->CurrentStep());
 
       if (handle.getLogLevel() >= LOGMESSAGE)
         handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
@@ -134,7 +144,7 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
 }
 
 void UnderStocking::Print(ofstream& outfile) const {
-  int i, j, year, area;
+  int i, j;
 
   outfile << "\nUnderstocking " << this->getName() << " - likelihood value "
     << likelihood << "\n\tPredator names:";
@@ -147,14 +157,12 @@ void UnderStocking::Print(ofstream& outfile) const {
       outfile << areas[i][j] << sep;
   }
   outfile << endl;
-
-  for (year = 0; year < likelihoodValues.Nrow(); year++) {
-    outfile << "\n\tYear " << Years[year] << " and step " << Steps[year] << "\n\tLikelihood values: ";
-    for (area = 0; area < likelihoodValues.Ncol(year); area++)
-      outfile << setw(smallwidth) << setprecision(smallprecision) << likelihoodValues[year][area] << sep;
+  for (i = 0; i < likelihoodValues.Nrow(); i++) {
+    outfile << "\n\tYear " << Years[i] << " and step " << Steps[i] << "\n\tLikelihood values: ";
+    for (j = 0; j < likelihoodValues.Ncol(i); j++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << likelihoodValues[i][j] << sep;
     outfile << endl;
   }
-
   outfile.flush();
 }
 

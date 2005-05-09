@@ -78,7 +78,7 @@ inline double absolute(double a) {
 
 /**
  * \brief This function will check to see if a number is very close to zero
- * \param a is the number
+ * \param a is the number that is being checked
  * \return 1 if the number is very close to zero, 0 otherwise
  * \note this function replaces 'a == 0' to take account of numerical inaccuracies when calculating the exact value of a double
  */
@@ -88,12 +88,12 @@ inline int isZero(double a) {
 
 /**
  * \brief This function will calculate the value of the logarithm of n factorial
- * \param n is the number
- * \return the value of log n!
+ * \param n is the number that the log factorial will be calculated for
+ * \return the value of log (n!)
  * \note this function is not an ANSI function and so will not compile correctly if gadget is compiled with the -ansi flag, unless we include #define _GNU_SOURCE in this file
  */
 inline double logFactorial(double n) {
-  return lgamma(n + 1);
+  return lgamma(n + 1.0);
 }
 
 #endif

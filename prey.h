@@ -54,8 +54,7 @@ public:
   double getTotalBiomass(int area) const { return total[this->areaNum(area)]; };
   int checkOverConsumption(int area) const { return tooMuchConsumption[this->areaNum(area)]; };
   virtual void checkConsumption(int area, int numsubsteps);
-  double Ratio(int area, int length) const { return ratio[this->areaNum(area)][length]; };
-  double meanLength(int i) const { return LgrpDiv->meanLength(i); };
+  double Ratio(int area, int length) const { return ratio[this->areaNum(area)][length]; };  double meanLength(int i) const { return LgrpDiv->meanLength(i); };
   int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
   const DoubleVector& getConsumption(int area) const { return consumption[this->areaNum(area)]; };
   const DoubleVector& getOverConsumption(int area) const { return overconsumption[this->areaNum(area)]; };

@@ -52,7 +52,12 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
 
   //read the energy content of this prey
   double energy;
-  readWordAndVariable(infile, "energycontent", energy);
+  infile >> ws;
+  c = infile.peek();
+  if ((c == 'e') || (c == 'E'))
+    readWordAndVariable(infile, "energycontent", energy);
+  else
+    energy = 1.0;
 
   prey = new LengthPrey(lengths, areas, energy, this->getName());
 

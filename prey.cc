@@ -38,7 +38,12 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
     handle.logMessage(LOGFAIL, "Error in prey - failed to create length group");
 
   //read the energy content of this prey
-  readWordAndVariable(infile, "energycontent", energy);
+  infile >> ws;
+  char c = infile.peek();
+  if ((c == 'e') || (c == 'E'))
+    readWordAndVariable(infile, "energycontent", energy);
+  else
+    energy = 1.0;
 
   this->InitialiseObjects();
   keeper->clearLast();
@@ -107,14 +112,13 @@ void Prey::Print(ofstream& outfile) const {
   }
 }
 
-//Reduce the population of the stock by the consumption.
+//reduce the population of the stock by the consumption
 void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
-  int inarea = this->areaNum(area);
+  int i, inarea = this->areaNum(area);
   DoubleVector subConsume(cons[inarea].Size(), 0.0);
-  int len;
-  for (len = 0; len < subConsume.Size(); len++)
-    if (!(isZero(Number[inarea][len].W)))
-      subConsume[len] = cons[inarea][len] / Number[inarea][len].W ;
+  for (i = 0; i < subConsume.Size(); i++)
+    if (!(isZero(Number[inarea][i].W)))
+      subConsume[i] = cons[inarea][i] / Number[inarea][i].W ;
 
   Alkeys.Subtract(subConsume, *CI, Number[inarea]);
 }
@@ -122,8 +126,6 @@ void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
 //adds the consumption by biomass
 void Prey::addBiomassConsumption(int area, const DoubleIndexVector& predconsumption) {
   int i, inarea = this->areaNum(area);
-  if ((predconsumption.minCol() < 0) || (predconsumption.maxCol() > cons[inarea].Size()))
-    handle.logMessage(LOGFAIL, "Error in prey - invalid length group when adding consumption");
   for (i = predconsumption.minCol(); i < predconsumption.maxCol(); i++)
     cons[inarea][i] += predconsumption[i];
 }
@@ -131,8 +133,6 @@ void Prey::addBiomassConsumption(int area, const DoubleIndexVector& predconsumpt
 //adds the consumption by numbers
 void Prey::addNumbersConsumption(int area, const DoubleIndexVector& predconsumption) {
   int i, inarea = this->areaNum(area);
-  if ((predconsumption.minCol() < 0) || (predconsumption.maxCol() > cons[inarea].Size()))
-    handle.logMessage(LOGFAIL, "Error in prey - invalid length group when adding consumption");
   for (i = predconsumption.minCol(); i < predconsumption.maxCol(); i++)
     cons[inarea][i] += (predconsumption[i] * Number[inarea][i].W);
 }

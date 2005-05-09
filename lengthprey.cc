@@ -10,7 +10,7 @@ LengthPrey::LengthPrey(const DoubleVector& lengths, const IntVector& Areas,
  * allowed to be finer than stock length division. */
 void LengthPrey::Sum(const PopInfoVector& NumberInArea, int area, int CurrentSubstep) {
   int i, inarea = this->areaNum(area);
-  tooMuchConsumption[area] = 0;
+  tooMuchConsumption[inarea] = 0;
 
   for (i = 0; i < cons.Ncol(inarea); i++)
     cons[inarea][i] = 0.0;
