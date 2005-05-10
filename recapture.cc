@@ -102,7 +102,6 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
     }
     if (check == 0)
       handle.logMessage(LOGFAIL, "Error in recaptures - failed to match tag", tagnames[j]);
-
   }
 }
 
@@ -230,7 +229,11 @@ Recaptures::~Recaptures() {
 }
 
 void Recaptures::Reset(const Keeper* const keeper) {
+  int i, j;
   Likelihood::Reset(keeper);
+  for (i = 0; i < newDistribution.Nrow(); i++)
+    for (j = 0; j < newDistribution.Ncol(i); j++)
+      delete newDistribution[i][j];
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset recaptures component", this->getName());
 }
@@ -251,7 +254,6 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
 
     if (found == 0)
       handle.logMessage(LOGFAIL, "Error in recaptures - failed to match fleet", fleetnames[i]);
-
   }
 
   double minlen, maxlen;
@@ -272,7 +274,6 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       }
       if (found == 0)
         handle.logMessage(LOGFAIL, "Error in recaptures - failed to match stock", stocknames->operator[](i));
-
     }
 
     //Check if the stock lives on all the areas that were read in
