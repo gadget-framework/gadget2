@@ -139,7 +139,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   else
     epsilon = 1.0;
 
-  if (epsilon <= 0) {
+  if (epsilon < verysmall) {
     handle.logFileMessage(LOGWARN, "Epsilon should be a positive integer - set to default value 1");
     epsilon = 1.0;
   }
@@ -499,7 +499,7 @@ double SurveyDistribution::calcLikMultinomial() {
       }
     }
 
-    if ((modtotal <= 0) && (!(isZero(obstotal)))) {
+    if ((modtotal < verysmall) && (!(isZero(obstotal)))) {
       likelihoodValues[timeindex][area] = 0.0;
     } else {
       temp /= obstotal;

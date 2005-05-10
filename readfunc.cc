@@ -175,7 +175,7 @@ int readRefWeights(CommentStream& infile, DoubleMatrix& M) {
 
   //Check the data to make sure that it is continuous
   for (i = 1; i < M.Nrow(); i++)
-    if ((M[i][0] - M[i - 1][0]) <= 0)
+    if ((M[i][0] - M[i - 1][0]) < verysmall)
       handle.logFileMessage(LOGFAIL, "Lengths for reference weights must be strictly increasing");
 
   if (handle.getLogLevel() >= LOGMESSAGE)

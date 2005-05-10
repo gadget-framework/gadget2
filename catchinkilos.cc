@@ -66,7 +66,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   c = infile.peek();
   if ((c == 'e') || (c == 'E')) {
     readWordAndVariable(infile, "epsilon", epsilon);
-    if (epsilon <= 0) {
+    if (epsilon < verysmall) {
       handle.logFileMessage(LOGWARN, "Epsilon should be a positive number - set to default value 10");
       epsilon = 10.0;
     }

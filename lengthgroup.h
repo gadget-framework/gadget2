@@ -81,7 +81,7 @@ public:
    */
   int Error() const { return error; }
   /**
-   * \brief This function will print an error message about the LengthGroupDivision to std::cerr
+   * \brief This function will print an error message about the LengthGroupDivision
    */
   void printError() const;
   /**

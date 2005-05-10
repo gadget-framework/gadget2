@@ -35,7 +35,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
   else
     scale = 1.0;
 
-  if (scale <= 0) {
+  if (scale < verysmall) {
     handle.logFileMessage(LOGWARN, "Scale should be a positive integer - set to default value 1");
     scale = 1.0;
   }

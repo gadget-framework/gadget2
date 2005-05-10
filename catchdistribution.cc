@@ -132,7 +132,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   else
     epsilon = 10.0;
 
-  if (epsilon <= 0) {
+  if (epsilon < verysmall) {
     handle.logFileMessage(LOGWARN, "Epsilon should be a positive integer - set to default value 10");
     epsilon = 10.0;
   }
