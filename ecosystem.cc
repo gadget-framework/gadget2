@@ -63,7 +63,6 @@ Ecosystem::Ecosystem(const char* const filename, int optimise, int netrun, int c
 }
 
 Ecosystem::~Ecosystem() {
-
   int i;
   for (i = 0; i < printvec.Size(); i++)
     delete printvec[i];
@@ -115,7 +114,7 @@ void Ecosystem::Update(const DoubleVector& values) const {
   keeper->Update(values);
 }
 
-double Ecosystem::SimulateAndUpdate(double* x) {
+double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {
   ::FuncEval++;
   static int PrintCounter1 = printinfo.getPrint1() - 1;
   static int PrintCounter2 = printinfo.getPrint2() - 1;
@@ -127,19 +126,22 @@ double Ecosystem::SimulateAndUpdate(double* x) {
   DoubleVector val(numvar);
   DoubleVector initialvalues(numvar);
   IntVector opt(numvar);
-  this->InitialValues(initialvalues);
-  this->CurrentValues(val);
-  this->Opt(opt);
+  keeper->InitialValues(initialvalues);
+  keeper->CurrentValues(val);
+  keeper->Opt(opt);
 
   int i, j;
   j = 0;
-  for (i = 0; i < numvar; i++)
+  for (i = 0; i < numvar; i++) {
     if (opt[i] == 1) {
       val[i] = x[j] * initialvalues[i];
       j++;
     }
-  this->Update(val);
+  }
+
+  keeper->Update(val);
   this->Simulate(1, 0);  //optimise and dont print
+
   if (PrintCounter1 == printinfo.getPrint1() && printinfo.getPrint()) {
     this->writeValues(printinfo.getOutputFile(), printinfo.getPrecision());
     PrintCounter1 = 0;
@@ -181,40 +183,4 @@ void Ecosystem::writeParamsInColumns(const char* const filename, int prec) const
   }
 
   keeper->writeParamsInColumns(filename, prec, interrupted);
-}
-
-void Ecosystem::Opt(IntVector& opt) const {
-  keeper->Opt(opt);
-}
-
-void Ecosystem::InitialValues(DoubleVector& initialval) const {
-  keeper->InitialValues(initialval);
-}
-
-void Ecosystem::CurrentValues(DoubleVector& val) const {
-  keeper->CurrentValues(val);
-}
-
-void Ecosystem::ScaledOptValues(DoubleVector& val) const {
-  keeper->ScaledOptValues(val);
-}
-
-void Ecosystem::InitialOptValues(DoubleVector& val) const {
-  keeper->InitialOptValues(val);
-}
-
-void Ecosystem::OptSwitches(ParameterVector& sw) const {
-  keeper->OptSwitches(sw);
-}
-
-void Ecosystem::LowerOptBds(DoubleVector& lbds) const {
-  keeper->LowerOptBds(lbds);
-}
-
-void Ecosystem::UpperOptBds(DoubleVector& ubds) const {
-  keeper->UpperOptBds(ubds);
-}
-
-void Ecosystem::writeOptValues() const {
-  keeper->writeOptValues(likevec);
 }

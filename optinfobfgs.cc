@@ -5,52 +5,13 @@
 extern Ecosystem* EcoSystem;
 extern ErrorHandler handle;
 
-double fbfgs(double* x) {
-  return EcoSystem->SimulateAndUpdate(x);
-}
-
-extern int bfgs(double (*fbfgs)(double*), double startpoint[], double endpoint[], double init[],
-  int n, int maxiter, double epsilon, double beta, double sigma, double step, double gradacc,
-  double gradstep, double errortol, int diffgrad);
+extern int bfgs(int maxiter, double epsilon, double beta, double sigma, double step,
+  double gradacc, double gradstep, double errortol, int diffgrad, int scale);
 
 OptInfoBFGS::OptInfoBFGS()
   : OptSearch(), bfgsiter(10000), bfgseps(0.01), beta(0.3), sigma(0.01), step(1.0),
-    gradacc(0.01), gradstep(0.1), errortol(0.000001), diffgrad(-1), scale(0) {
-  handle.logMessage(LOGMESSAGE, "Initialising BFGS optimisation algorithm");
-}
-
-void OptInfoBFGS::OptimiseLikelihood() {
-  int i, opt, nvars;
-
-  handle.logMessage(LOGINFO, "\nStarting BFGS optimisation algorithm");
-
-  nvars = EcoSystem->numOptVariables();
-  DoubleVector val(nvars);
-  DoubleVector initialval(nvars);
-  double* startpoint = new double[nvars];
-  double* endpoint = new double[nvars];
-  double* init = new double[nvars];
-
-  if (scale == 1)
-    EcoSystem->ScaleVariables();
-  EcoSystem->ScaledOptValues(val);
-  EcoSystem->InitialOptValues(initialval);
-
-  for (i = 0; i < nvars; i++) {
-    startpoint[i] = val[i];
-    init[i] = initialval[i];
-  }
-
-  opt = bfgs(&fbfgs, startpoint, endpoint, init, nvars, bfgsiter, bfgseps,
-    beta, sigma, step, gradacc, gradstep, errortol, diffgrad);
-
-  cout << "\nBFGS finished with a final likelihood score of " << EcoSystem->getLikelihood()
-    << "\nafter a total of " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
-  EcoSystem->writeOptValues();
-
-  delete[] init;
-  delete[] endpoint;
-  delete[] startpoint;
+    gradacc(0.01), gradstep(0.1), errortol(1e-6), diffgrad(-1), scale(0) {
+  handle.logMessage(LOGMESSAGE, "\nInitialising BFGS optimisation algorithm");
 }
 
 void OptInfoBFGS::read(CommentStream& infile, char* text) {
@@ -87,51 +48,63 @@ void OptInfoBFGS::read(CommentStream& infile, char* text) {
       infile >> diffgrad;
 
     } else if (strcasecmp(text, "printing") == 0) {
-      handle.logMessage(LOGWARN, "Warning in optinfofile - bfgsprinting is not implemented in gadget");
+      handle.logMessage(LOGINFO, "Warning in optinfofile - bfgsprinting is not implemented in gadget");
       infile >> text;  //read and ignore the next entry
 
     } else if (strcasecmp(text, "shannonscaling") == 0) {
-      handle.logMessage(LOGWARN, "Warning in optinfofile - shannonscaling is not implemented in gadget");
+      handle.logMessage(LOGINFO, "Warning in optinfofile - shannonscaling is not implemented in gadget");
       infile >> text;  //read and ignore the next entry
 
     } else if (strcasecmp(text, "bfgspar") == 0) {
-      handle.logMessage(LOGWARN, "Warning in optinfofile - bfgspar is not implemented gadget");
+      handle.logMessage(LOGINFO, "Warning in optinfofile - bfgspar is not implemented gadget");
       infile >> text;  //read and ignore the next entry
 
     } else {
-      handle.logMessage(LOGWARN, "Warning in optinfofile - unrecognised option", text);
+      handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);
       infile >> text;  //read and ignore the next entry
     }
     infile >> text;
   }
 
   //check the values specified in the optinfo file ...
-  if (isZero(beta) || (beta < 0) || (beta > 1)) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of beta outside bounds", beta);
+  if ((beta < rathersmall) || (beta > 1)) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of beta outside bounds", beta);
     beta = 0.3;
   }
-  if (isZero(sigma) || (sigma < 0)|| (sigma > 1)) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of sigma outside bounds", sigma);
+  if ((sigma < rathersmall)|| (sigma > 1)) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of sigma outside bounds", sigma);
     sigma = 0.01;
   }
   if (step < 1) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of step outside bounds", step);
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of step outside bounds", step);
     step = 1.0;
   }
-  if (isZero(bfgseps) || (bfgseps < 0)) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of bfgseps outside bounds", bfgseps);
+  if (bfgseps < rathersmall) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of bfgseps outside bounds", bfgseps);
     bfgseps = 0.01;
   }
-  if (isZero(gradacc) || (gradacc < 0) || (gradacc > 1)) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of gradacc outside bounds", gradacc);
+  if ((gradacc < rathersmall) || (gradacc > 1)) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of gradacc outside bounds", gradacc);
     gradacc = 0.0001;
   }
-  if (isZero(gradstep) || (gradstep < 0) || (gradstep > 1)) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of gradstep outside bounds", gradstep);
+  if ((gradstep < rathersmall) || (gradstep > 1)) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of gradstep outside bounds", gradstep);
     gradstep = 0.1;
   }
-  if (isZero(errortol) || (errortol < 0)) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of errortol outside bounds", errortol);
-    errortol = 0.000001;
+  if (errortol < rathersmall) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of errortol outside bounds", errortol);
+    errortol = 1e-6;
   }
+  if (scale != 0 && scale != 1) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of scale outside bounds", scale);
+    scale = 0;
+  }
+}
+
+void OptInfoBFGS::OptimiseLikelihood() {
+  handle.logMessage(LOGINFO, "\nStarting BFGS optimisation algorithm\n");
+  int opt = bfgs(bfgsiter, bfgseps, beta, sigma, step, gradacc, gradstep, errortol, diffgrad, scale);
+  handle.logMessage(LOGINFO, "\nBFGS finished with a final likelihood score of", EcoSystem->getLikelihood());
+  handle.logMessage(LOGINFO, "after a total of", EcoSystem->getFuncEval(), "function evaluations at the point");
+  EcoSystem->writeOptValues();
 }

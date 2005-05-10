@@ -46,9 +46,9 @@ public:
   /**
    * \brief This function will store the current value of the variables from the optimisation process
    * \param likvalue is the current likelihood value
-   * \param point is the vector of the current parameter values
+   * \param point is the DoubleVector of the current parameter values
    */
-  void StoreVariables(double likvalue, double* point);
+  void StoreVariables(double likvalue, const DoubleVector& point);
   /**
    * \brief This function will scale the variables to be optimised (for the Hooke & Jeeves optimisation algorithm)
    */
@@ -170,6 +170,10 @@ public:
    * \param interrupt is a flag to denote whether the current run was interrupted by the user or not
    */
   void writeParamsInColumns(const char* const filename, int prec, int interrupt) const;
+  /**
+   * \brief This function will display information about the best values of the parameters found so far during an optimisation run
+   */
+  void writeBestValues() const;
   /**
    * \brief This function will display information about the optimised values of the parameters
    * \param likevec is the LikelihoodPtrVector containing the likelihood components for the current model

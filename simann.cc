@@ -165,12 +165,22 @@
 /*    xopt - The variables that optimize the function. (DP(N))              */
 /*    fopt - The optimal value of the function. (DP)                        */
 
+/* JMB this has been modified to work with the gadget object structure      */
+/* This means that the function has been replaced by a call to ecosystem    */
+/* object, and we can use the vector objects that have been defined         */
+
 #include "gadget.h"    //All the required standard header files are in here
 #include "mathfunc.h"
+#include "doublevector.h"
+#include "intvector.h"
+#include "errorhandler.h"
 #include "ecosystem.h"
 
 /* global ecosystem used to store whether the model converged */
 extern Ecosystem* EcoSystem;
+
+/* global errorhandler used to log messages */
+extern ErrorHandler handle;
 
 /* global variable, defined and initialised in gadget.cc and not modified here */
 extern int FuncEval;
@@ -194,54 +204,56 @@ double randomNumber() {
   return k / 32767.0;
 }
 
-int simann(int n, double point[], double endpoint[], double lb[], double ub[],
-  double (*f)(double*), int max, int maxevl, double cstep, double tempt, double vmlen,
-  double rt, int ns, int nt, double eps, double uratio, double lratio, int check) {
+int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
+  int ns, int nt, double eps, double uratio, double lratio, int check) {
 
-  double x[NUMVARS];    //The starting values for the variables
   double t = tempt;     //The "temperature" of the algorithm
-  double vm[NUMVARS];   //The step length vector
-  double fstar[NUMVARS];
   double fopt;          //The optimal value of the function
-  double funcval, fp;
-  double ratio;         //Dummy variable for updating vm
-  double cs;            //Dummy variable for updating vm
-  int nacp[NUMVARS];    //Number of accepted tries for each parameter
-  int quit = 0;         //Used to check the exit criteria
+  double funcval, trialf;
 
   //set initial values
   int nacc = 0;         //The number of accepted function evaluations
   int nrej = 0;         //The number of rejected function evaluations
   int naccmet = 0;      //The number of metropolis accepted function evaluations
+  int quit = 0;         //Used to check the exit criteria
+  int max = 0;          //Used to denote that the function should be minimised
 
-  int i, a, j, h, k, change, l, offset;
-  double p, pp;
-  double xp[NUMVARS];
-  int param[NUMVARS];   //Vector containing the order of the parameters at each time
+  double p, pp, cs, ratio, nsdiv;
+  int    i, a, j, h, k, change, l, offset;
 
-  for (i = 0; i < n; i++) {
-    x[i] = point[i];
-    endpoint[i] = point[i];
-    vm[i] = vmlen;
-    nacp[i] = 0;
+  int nvars = EcoSystem->numOptVariables();
+  DoubleVector x(nvars);
+  DoubleVector trialx(nvars, 0.0);
+  DoubleVector bestx(nvars);
+  DoubleVector lowerb(nvars);
+  DoubleVector upperb(nvars);
+  DoubleVector fstar(check);
+  DoubleVector vm(nvars, vmlen);
+  IntVector param(nvars);
+  IntVector nacp(nvars, 0);
+
+  EcoSystem->ScaledOptValues(x);
+  EcoSystem->LowerOptBds(lowerb);
+  EcoSystem->UpperOptBds(upperb);
+
+  for (i = 0; i < nvars; i++) {
+    bestx[i] = x[i];
     param[i] = i;
   }
 
   //funcval is the function value at x
-  funcval = (*f)(x);
+  funcval = EcoSystem->SimulateAndUpdate(x);
   nacc++;               //accept the first point no matter what
   offset = FuncEval;    //number of function evaluations done before loop
   cs = cstep / lratio;
+  nsdiv = 1.0 / ns;
 
   //If the function is to be minimised, switch the sign of the function
   if (!max)
     funcval = -funcval;
 
-  if (funcval != funcval) { //check for NaN
-    cout << "\nError starting Simulated Annealing optimisation with"
-      << " f(x) = infinity\nReturning to calling routine ...\n";
-    return 0;
-  }
+  if (funcval != funcval) //check for NaN
+    handle.logMessage(LOGFAIL, "Error starting Simulated Annealing optimisation with f(x) = infinity");
 
   fopt = funcval;
   for (i = 0; i < check; i++)
@@ -255,8 +267,8 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
       //Randomize the order of the parameters once in a while, to avoid
       //the order having an influence on which changes are accepted
       change = 0;
-      while (change < n) {
-        h = rand() % n;
+      while (change < nvars) {
+        h = rand() % nvars;
         k = 1;
         for (i = 0; i < change; i++)
           if (param[i] == h)
@@ -269,68 +281,68 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
       }
 
       for (j = 0; j < ns; j++) {
-        for (l = 0; l < n; l++) {
-          //Generate xp, the trial value of x
-          for (i = 0; i < n; i++) {
+        for (l = 0; l < nvars; l++) {
+          //Generate trialx, the trial value of x
+          for (i = 0; i < nvars; i++) {
             if (i == param[l]) {
-              xp[i] = x[i] + ((randomNumber() * 2.0) - 1.0) * vm[i];
+              trialx[i] = x[i] + ((randomNumber() * 2.0) - 1.0) * vm[i];
 
-              //If xp is out of bounds, try again until we find a point that is OK
-              if ((xp[i] < lb[i]) || (xp[i] > ub[i])) {
+              //If trialx is out of bounds, try again until we find a point that is OK
+              if ((trialx[i] < lowerb[i]) || (trialx[i] > upperb[i])) {
                 //JMB - this used to just select a random point between the bounds
                 k = 0;
-                while ((xp[i] < lb[i]) || (xp[i] > ub[i])) {
-                  xp[i] = x[i] + ((randomNumber() * 2.0) - 1.0) * vm[i];
+                while ((trialx[i] < lowerb[i]) || (trialx[i] > upperb[i])) {
+                  trialx[i] = x[i] + ((randomNumber() * 2.0) - 1.0) * vm[i];
                   k++;
                   if (k > 10)  //we've had 10 tries to find a point neatly, so give up
-                    xp[i] = lb[i] + (ub[i] - lb[i]) * randomNumber();
+                    trialx[i] = lowerb[i] + (upperb[i] - lowerb[i]) * randomNumber();
                 }
               }
 
             } else
-              xp[i] = x[i];
+              trialx[i] = x[i];
           }
 
-          //Evaluate the function with the trial point xp and return as fp
-          fp = (*f)(xp);
+          //Evaluate the function with the trial point trialx and return as trialf
+          trialf = EcoSystem->SimulateAndUpdate(trialx);
           if (!max)
-            fp = -fp;
+            trialf = -trialf;
 
           //If too many function evaluations occur, terminate the algorithm
           if ((FuncEval - offset) > maxevl) {
-            cout << "\nStopping Simulated Annealing optimisation algorithm\n\n"
-              << "The optimisation stopped after " << (FuncEval - offset)
-              << " function evaluations (max " << maxevl << ")\nThe temperature was reduced to "
-              << t << "\nThe optimisation stopped because the maximum number of function "
-              << "evaluations\nwas reached and NOT because an optimum was found for this run\n"
-              << "Number of directly accepted points " << nacc
-              << "\nNumber of metropolis accepted points " << naccmet
-              << "\nNumber of rejected points " << nrej << endl;
+            handle.logMessage(LOGINFO, "\nStopping Simulated Annealing optimisation algorithm\n");
+            handle.logMessage(LOGINFO, "The optimisation stopped after", (FuncEval - offset), "function evaluations");
+            handle.logMessage(LOGINFO, "The temperature was reduced to", t);
+            handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of function evaluations");
+            handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
+            handle.logMessage(LOGINFO, "Number of directly accepted points", nacc);
+            handle.logMessage(LOGINFO, "Number of metropolis accepted points", naccmet);
+            handle.logMessage(LOGINFO, "Number of rejected points", nrej);
 
-            fp = (*f)(endpoint);
+            trialf = EcoSystem->SimulateAndUpdate(bestx);
             EcoSystem->setFuncEvalSA(FuncEval - offset);
-            EcoSystem->setLikelihoodSA(fp);
-            EcoSystem->StoreVariables(fp, endpoint);
+            EcoSystem->setLikelihoodSA(trialf);
+            EcoSystem->StoreVariables(trialf, bestx);
             return 0;
           }
 
           //Accept the new point if the new function value better
-          if (fp >= funcval) {
-            for (i = 0; i < n; i++)
-              x[i] = xp[i];
-            funcval = fp;
+          if ((trialf - funcval) > verysmall) {
+            for (i = 0; i < nvars; i++)
+              x[i] = trialx[i];
+            funcval = trialf;
             nacc++;
             nacp[param[l]]++;  //JMB - not sure about this ...
 
           } else {
             //Accept according to metropolis condition
-            p = expRep((fp - funcval) / t);
+            p = expRep((trialf - funcval) / t);
             pp = randomNumber();
             if (pp < p) {
               //Accept point
-              for (i = 0; i < n; i++)
-                x[i] = xp[i];
-              funcval = fp;
+              for (i = 0; i < nvars; i++)
+                x[i] = trialx[i];
+              funcval = trialf;
               naccmet++;
               nacp[param[l]]++;
             } else {
@@ -340,29 +352,27 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
           }
 
           // JMB added check for really silly values
-          if (isZero(fp)) {
-            cout << "\nError in Simulated Annealing optimisation after " << (FuncEval - offset)
-              << " function evaluations f(x) = 0\nReturning to calling routine ...\n";
+          if (isZero(trialf)) {
+            handle.logMessage(LOGINFO, "Error in Simulated Annealing optimisation after", (FuncEval - offset), "function evaluations, f(x) = 0");
             return 0;
           }
 
           //If greater than any other point, record as new optimum
-          if ((fp > fopt) && (fp == fp)) {
-            cout << "\nNew optimum after " << FuncEval << " function evaluations, f(x) = " << -fp << " at\n";
-            for (i = 0; i < n; i++) {
-              endpoint[i] = xp[i];
-              cout << endpoint[i] << sep;
-            }
-            cout << endl;
-            fopt = fp;
-            EcoSystem->StoreVariables(-fp, endpoint);  //store this point in case the algorithm is interrupted
+          if ((trialf > fopt) && (trialf == trialf)) {
+            for (i = 0; i < nvars; i++)
+              bestx[i] = trialx[i];
+            fopt = trialf;
+            handle.logMessage(LOGINFO, "\nNew optimum found after", (FuncEval - offset), "function evaluations");
+            handle.logMessage(LOGINFO, "The likelihood score is", -trialf, "at the point");
+            EcoSystem->StoreVariables(-trialf, bestx);
+            EcoSystem->writeBestValues();
           }
         }
       }
 
       //Adjust vm so that approximately half of all evaluations are accepted
-      for (i = 0; i < n; i++) {
-        ratio = (double) nacp[i] / ns;
+      for (i = 0; i < nvars; i++) {
+        ratio = (double) nacp[i] * nsdiv;
         nacp[i] = 0;
         if (ratio > uratio) {
           vm[i] = vm[i] * (1.0 + cs * (ratio - uratio));
@@ -372,8 +382,8 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
 
         if (vm[i] < rathersmall)
           vm[i] = rathersmall;
-        if (vm[i] > (ub[i] - lb[i]))
-          vm[i] = ub[i] - lb[i];
+        if (vm[i] > (upperb[i] - lowerb[i]))
+          vm[i] = upperb[i] - lowerb[i];
       }
     }
 
@@ -390,23 +400,23 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
           quit = 0;
     }
 
-    cout << "\nChecking convergence criteria after " << (FuncEval - offset) << " function evaluations ...\n";
+    handle.logMessage(LOGINFO, "Checking convergence criteria after", (FuncEval - offset), "function evaluations ...");
 
     //Terminate SA if appropriate
     if (quit) {
-      cout << "\nStopping Simulated Annealing optimisation algorithm\n\n"
-        << "The optimisation stopped after " << (FuncEval - offset)
-        << " function evaluations (max " << maxevl << ")\nThe temperature was reduced to "
-        << t << "\nThe optimisation stopped because an optimum was found for this run\n"
-        << "Number of directly accepted points " << nacc
-        << "\nNumber of metropolis accepted points " << naccmet
-        << "\nNumber of rejected points " << nrej << endl;
+      handle.logMessage(LOGINFO, "\nStopping Simulated Annealing optimisation algorithm\n");
+      handle.logMessage(LOGINFO, "The optimisation stopped after", (FuncEval - offset), "function evaluations");
+      handle.logMessage(LOGINFO, "The temperature was reduced to", t);
+      handle.logMessage(LOGINFO, "The optimisation stopped because an optimum was found for this run");
+      handle.logMessage(LOGINFO, "Number of directly accepted points", nacc);
+      handle.logMessage(LOGINFO, "Number of metropolis accepted points", naccmet);
+      handle.logMessage(LOGINFO, "Number of rejected points", nrej);
 
-      fp = (*f)(endpoint);
+      trialf = EcoSystem->SimulateAndUpdate(bestx);
       EcoSystem->setConvergeSA(1);
       EcoSystem->setFuncEvalSA(FuncEval - offset);
-      EcoSystem->setLikelihoodSA(fp);
-      EcoSystem->StoreVariables(fp, endpoint);
+      EcoSystem->setLikelihoodSA(trialf);
+      EcoSystem->StoreVariables(trialf, bestx);
       return 1;
     }
 
@@ -415,10 +425,9 @@ int simann(int n, double point[], double endpoint[], double lb[], double ub[],
     if (t < rathersmall)
       t = rathersmall;  //JMB make sure temperature doesnt get too small
 
-    cout << "Reducing the temperature to " << t << endl;
+    handle.logMessage(LOGINFO, "Reducing the temperature to", t);
     funcval = fopt;
-    for (i = 0; i < n; i++)
-      x[i] = endpoint[i];
-
+    for (i = 0; i < nvars; i++)
+      x[i] = bestx[i];
   }
 }

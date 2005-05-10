@@ -5,19 +5,13 @@
 extern ErrorHandler handle;
 extern Ecosystem* EcoSystem;
 
-double fsa(double* x) {
-  return EcoSystem->SimulateAndUpdate(x);
-}
-
-extern int simann(int nvar, double point[], double endpoint[], double lb[],
-  double ub[], double (*fsa)(double*), int m, int maxeval, double cstep,
-  double tempt, double vmlen, double rt, int ns, int nt, double eps,
-  double uratio, double lratio, int check);
+extern int simann(int maxeval, double cstep, double tempt, double vmlen, double rt,
+  int ns, int nt, double eps, double uratio, double lratio, int check);
 
 OptInfoSimann::OptInfoSimann()
   : OptSearch(), rt(0.85), simanneps(1e-4), ns(5), nt(2), t(100.0),
     cs(2.0), vm(1.0), simanniter(2000), uratio(0.7), lratio(0.3), check(4) {
-  handle.logMessage(LOGMESSAGE, "Initialising Simulated Annealing optimisation algorithm");
+  handle.logMessage(LOGMESSAGE, "\nInitialising Simulated Annealing optimisation algorithm");
 }
 
 void OptInfoSimann::read(CommentStream& infile, char* text) {
@@ -57,7 +51,7 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
       infile >> lratio;
 
     } else {
-      handle.logMessage(LOGWARN, "Warning in optinfofile - unrecognised option", text);
+      handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);
       infile >> text;  //read and ignore the next entry
     }
     infile >> text;
@@ -65,79 +59,47 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
 
   //check the values specified in the optinfo file ...
   if ((uratio < 0.5) || (uratio > 1)) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of uratio outside bounds", uratio);
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of uratio outside bounds", uratio);
     uratio = 0.7;
   }
-  if ((lratio < 0) || (lratio > 0.5) || isZero(lratio)) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of lratio outside bounds", lratio);
+  if ((lratio < rathersmall) || (lratio > 0.5)) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of lratio outside bounds", lratio);
     lratio = 0.3;
   }
-  if ((rt < 0) || (rt > 1) || isZero(rt)) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of rt outside bounds", rt);
+  if ((rt < rathersmall) || (rt > 1)) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of rt outside bounds", rt);
     rt = 0.85;
   }
-  if ((t < 0) || isZero(t)) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of t outside bounds", t);
+  if (t < rathersmall) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of t outside bounds", t);
     t = 100.0;
   }
   if (nt < 1) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of nt outside bounds", nt);
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of nt outside bounds", nt);
     nt = 2;
   }
   if (ns < 1) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of ns outside bounds", ns);
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of ns outside bounds", ns);
     ns = 5;
   }
-  if ((isZero(vm)) || (vm < 0)) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of vm outside bounds", vm);
+  if (vm < rathersmall) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of vm outside bounds", vm);
     vm = 1.0;
   }
-  if ((isZero(cs)) || (cs < 0)) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of cstep outside bounds", cs);
+  if (cs < rathersmall) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of cstep outside bounds", cs);
     cs = 2.0;
   }
-  if ((isZero(simanneps)) || (simanneps < 0)) {
-    handle.logMessage(LOGWARN, "Warning in optinfofile - value of simanneps outside bounds", simanneps);
+  if (simanneps < rathersmall) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of simanneps outside bounds", simanneps);
     simanneps = 1e-4;
   }
 }
 
-//Considered better to skip scaling of variables here.  Had to change keeper
-//so initialvalues start as 1 but scaled values as the same as values
 void OptInfoSimann::OptimiseLikelihood() {
-  int i, nopt, opt;
-
-  handle.logMessage(LOGINFO, "\nStarting Simulated Annealing optimisation algorithm");
-
-  nopt = EcoSystem->numOptVariables();
-  DoubleVector val(nopt);
-  DoubleVector lbds(nopt);
-  DoubleVector ubds(nopt);
-
-  EcoSystem->ScaledOptValues(val);
-  EcoSystem->LowerOptBds(lbds);
-  EcoSystem->UpperOptBds(ubds);
-
-  double* startpoint = new double[nopt];
-  double* endpoint = new double[nopt];
-  double* lowerb = new double[nopt];
-  double* upperb = new double[nopt];
-
-  for (i = 0; i < nopt; i++) {
-    lowerb[i] = lbds[i];
-    upperb[i] = ubds[i];
-    startpoint[i] = val[i];
-  }
-
-  opt = simann(nopt, startpoint, endpoint, lowerb, upperb, &fsa, 0,
-    simanniter, cs, t, vm, rt, ns, nt, simanneps, uratio, lratio, check);
-
-  cout << "\nSimulated Annealing finished with a final likelihood score of " << EcoSystem->getLikelihood()
-    << "\nafter a total of " << EcoSystem->getFuncEval() << " function evaluations at the point\n";
+  handle.logMessage(LOGINFO, "\nStarting Simulated Annealing optimisation algorithm\n");
+  int opt = simann(simanniter, cs, t, vm, rt, ns, nt, simanneps, uratio, lratio, check);
+  handle.logMessage(LOGINFO, "\nSimulated Annealing finished with a final likelihood score of", EcoSystem->getLikelihood());
+  handle.logMessage(LOGINFO, "after a total of", EcoSystem->getFuncEval(), "function evaluations at the point");
   EcoSystem->writeOptValues();
-
-  delete[] startpoint;
-  delete[] endpoint;
-  delete[] lowerb;
-  delete[] upperb;
 }

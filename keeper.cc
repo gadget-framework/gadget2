@@ -28,8 +28,8 @@ void Keeper::keepVariable(double& value, const Parameter& attr) {
     switches.resize(1);
     values.resize(1);
     bestvalues.resize(1);
-    lowerbds.resize(1, -9999);  // default lower bound
-    upperbds.resize(1, 9999);   // default upper bound
+    lowerbds.resize(1, -9999.0);  // default lower bound
+    upperbds.resize(1, 9999.0);   // default upper bound
     opt.resize(1, 1);
     scaledvalues.resize(1, 1.0);
     initialvalues.resize(1, 1.0);
@@ -114,6 +114,10 @@ void Keeper::addString(const char* str) {
   stack->PutInStack(str);
 }
 
+void Keeper::addString(const string str) {
+  this->addString(str.c_str());
+}
+
 int Keeper::numVariables() const {
   return switches.Size();
 }
@@ -127,7 +131,6 @@ int Keeper::numOptVariables() const {
     for (i = 0; i < opt.Size(); i++)
       if (opt[i] == 1)
         nr++;
-
   return nr;
 }
 
@@ -236,7 +239,6 @@ void Keeper::Update(const DoubleVector& val) {
   }
 }
 
-//Memberfunction added so boundlikelihood could change variables
 void Keeper::Update(int pos, double& value) {
   int i;
   if (pos <= 0 && pos >= address.Nrow())
@@ -253,6 +255,14 @@ void Keeper::Update(int pos, double& value) {
     scaledvalues[pos] = value;
   } else
     scaledvalues[pos] = value / initialvalues[pos];
+}
+
+void Keeper::writeBestValues() const {
+  int i;
+  for (i = 0; i < values.Size(); i++)
+    if (opt[i] == 1 || opt.Size() == 0)
+      cout << values[i] << sep;
+  cout << endl;
 }
 
 void Keeper::writeOptValues(const LikelihoodPtrVector& likevec) const {
@@ -447,9 +457,6 @@ void Keeper::Update(const StochasticData* const Stoch) {
     }
   }
 
-  if (this->numOptVariables() >= NUMVARS)
-    handle.logMessage(LOGFAIL, "Error in keeper - too many parameters to optimise", this->numOptVariables());
-
   for (i = 0; i < address.Nrow(); i++)
     for (j = 0; j < address.Ncol(i); j++)
       *address[i][j].addr = values[i];
@@ -572,7 +579,7 @@ void Keeper::LowerOptBds(DoubleVector& lbs) const {
   if (lbs.Size() != this->numOptVariables())
     handle.logMessage(LOGFAIL, "Error in keeper - received invalid number of optimising variables");
 
-  if (lbs.Size() == 0)
+  if (opt.Size() == 0)
     this->LowerBds(lbs);
   else {
     j = 0;
@@ -589,7 +596,7 @@ void Keeper::UpperOptBds(DoubleVector& ubs) const {
   if (ubs.Size() != this->numOptVariables())
     handle.logMessage(LOGFAIL, "Error in keeper - received invalid number of optimising variables");
 
-  if (ubs.Size() == 0)
+  if (opt.Size() == 0)
     this->UpperBds(ubs);
   else {
     j = 0;
@@ -606,13 +613,12 @@ void Keeper::checkBounds(const LikelihoodPtrVector& likevec) const {
     return;
 
   int i, count;
-
   //check that we have a boundlikelihood component
   count = 0;
-  for (i = 0; i < likevec.Size(); i++) {
+  for (i = 0; i < likevec.Size(); i++)
     if (likevec[i]->Type() == BOUNDLIKELIHOOD)
       count++;
-  }
+
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in keeper - no boundlikelihood component found\nNo penalties will be applied if any of the parameter bounds are exceeded");
   if (count > 1)
@@ -641,13 +647,8 @@ void Keeper::checkBounds(const LikelihoodPtrVector& likevec) const {
     handle.logMessage(LOGFAIL, "Error in keeper - failed to read parameters and bounds correctly");
 }
 
-void Keeper::addString(const string str) {
-  addString(str.c_str());
-}
-
-void Keeper::StoreVariables(double likvalue, double* point) {
+void Keeper::StoreVariables(double likvalue, const DoubleVector& point) {
   int i, j;
-
   j = 0;
   bestlikelihood = likvalue;
   for (i = 0; i < bestvalues.Size(); i++) {

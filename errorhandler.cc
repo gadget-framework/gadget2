@@ -1,6 +1,5 @@
 #include "errorhandler.h"
 #include "runid.h"
-#include "keeper.h"
 #include "gadget.h"
 
 extern RunID RUNID;
@@ -260,6 +259,94 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, double number) {
     case LOGDEBUG:
       if (uselog) {
         logfile << msg << sep << number << endl;
+        logfile.flush();
+      }
+      break;
+    default:
+      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      break;
+  }
+}
+
+void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, int number, const char* msg2) {
+  if (mlevel > loglevel)
+    return;
+
+  switch (mlevel) {
+    case LOGNONE:
+      break;
+    case LOGFAIL:
+      if (uselog) {
+        logfile << msg1 << sep << number << sep << msg2 << endl;
+        logfile.flush();
+      }
+      cerr << msg1 << sep << number << sep << msg2 << endl;
+      exit(EXIT_FAILURE);
+      break;
+    case LOGINFO:
+      if (uselog) {
+        logfile << msg1 << sep << number << sep << msg2 << endl;
+        logfile.flush();
+      }
+      cout << msg1 << sep << number << sep << msg2 << endl;
+      break;
+    case LOGWARN:
+      numwarn++;
+      if (uselog) {
+        logfile << msg1 << sep << number << sep << msg2 << endl;
+        logfile.flush();
+      }
+      cerr << msg1 << sep << number << sep << msg2 << endl;
+      break;
+    case LOGMESSAGE:
+    case LOGDETAIL:
+    case LOGDEBUG:
+      if (uselog) {
+        logfile << msg1 << sep << number << sep << msg2 << endl;
+        logfile.flush();
+      }
+      break;
+    default:
+      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      break;
+  }
+}
+
+void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, double number, const char* msg2) {
+  if (mlevel > loglevel)
+    return;
+
+  switch (mlevel) {
+    case LOGNONE:
+      break;
+    case LOGFAIL:
+      if (uselog) {
+        logfile << msg1 << sep << number << sep << msg2 << endl;
+        logfile.flush();
+      }
+      cerr << msg1 << sep << number << sep << msg2 << endl;
+      exit(EXIT_FAILURE);
+      break;
+    case LOGINFO:
+      if (uselog) {
+        logfile << msg1 << sep << number << sep << msg2 << endl;
+        logfile.flush();
+      }
+      cout << msg1 << sep << number << sep << msg2 << endl;
+      break;
+    case LOGWARN:
+      numwarn++;
+      if (uselog) {
+        logfile << msg1 << sep << number << sep << msg2 << endl;
+        logfile.flush();
+      }
+      cerr << msg1 << sep << number << sep << msg2 << endl;
+      break;
+    case LOGMESSAGE:
+    case LOGDETAIL:
+    case LOGDEBUG:
+      if (uselog) {
+        logfile << msg1 << sep << number << sep << msg2 << endl;
         logfile.flush();
       }
       break;

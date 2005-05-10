@@ -126,19 +126,30 @@
 /*  KIND CONCERNING THE MERCHANTABILITY OF THIS SOFTWARE OR ITS    */
 /*  FITNESS FOR ANY PARTICULAR PURPOSE.                            */
 
+/* JMB this has been modified to work with the gadget object structure   */
+/* This means that the function has been replaced by a call to ecosystem */
+/* object, and we can use the vector objects that have been defined      */
+
 #include "gadget.h"    //All the required standard header files are in here
 #include "mathfunc.h"
+#include "doublevector.h"
+#include "intvector.h"
+#include "parametervector.h"
+#include "errorhandler.h"
 #include "ecosystem.h"
 
 /* global variable, defined and initialised in gadget.cc and not modified here */
 extern int FuncEval;
 
+/* global errorhandler used to log messages */
+extern ErrorHandler handle;
+
 /* global ecosystem used to store whether the model converged */
 extern Ecosystem* EcoSystem;
 
 /* given a point, look for a better one nearby, one coord at a time */
-double bestNearby(double (*f)(double*), double delta[], double point[],
-  double z[], double prevbest, int nvars, int param[]) {
+double bestNearby(DoubleVector& delta, DoubleVector& point,
+  DoubleVector& z, double prevbest, int nvars, IntVector& param) {
 
   double minf, ftmp;
   int    i;
@@ -149,13 +160,13 @@ double bestNearby(double (*f)(double*), double delta[], double point[],
 
   for (i = 0; i < nvars; i++) {
     z[param[i]] = point[param[i]] + delta[param[i]];
-    ftmp = (*f)(z);
+    ftmp = EcoSystem->SimulateAndUpdate(z);
     if ((ftmp < minf) && (ftmp == ftmp)) //JMB added check for NaN
       minf = ftmp;
     else {
       delta[param[i]] = 0.0 - delta[param[i]];
       z[param[i]] = point[param[i]] + delta[param[i]];
-      ftmp = (*f)(z);
+      ftmp = EcoSystem->SimulateAndUpdate(z);
       if ((ftmp < minf) && (ftmp == ftmp)) //JMB added check for NaN
         minf = ftmp;
       else
@@ -168,52 +179,68 @@ double bestNearby(double (*f)(double*), double delta[], double point[],
   return minf;
 }
 
-int hooke(double (*f)(double*), int nvars, double startpt[], double endpt[],
-  double upperb[], double lowerb[], double rho, double lambda, double epsilon,
-  int maxevl, double init[], double bndcheck) {
+int hooke(double rho, double lambda, double epsilon, int maxevl, double bndcheck) {
 
-  double delta[NUMVARS];
-  double xbefore[NUMVARS];
-  double newx[NUMVARS];
-  double z[NUMVARS];
   double oldf, newf, fbefore, steplength, tmp, check;
   int    i, k, h, change, iters, offset;
-  int    param[NUMVARS];
 
-  int    lbounds[NUMVARS];     //counts how often it has hit the lowerbounds
-  int    rbounds[NUMVARS];     //counts how often it has hit the upperbounds
-  double initialstep[NUMVARS]; //the stepsize when it hits the bound first
-  int    trapped[NUMVARS];     // = 1 if it is trapped at a bound else = 0
+  int nvars = EcoSystem->numOptVariables();
+  DoubleVector x(nvars);
+  DoubleVector trialx(nvars);
+  DoubleVector bestx(nvars);
+  DoubleVector lowerb(nvars);
+  DoubleVector upperb(nvars);
+  DoubleVector init(nvars);
+  DoubleVector initialstep(nvars, rho);
+  DoubleVector delta(nvars);
+  DoubleVector z(nvars, 0.0);
+  IntVector param(nvars);
+  IntVector nacp(nvars, 0);
+  IntVector lbound(nvars, 0);
+  IntVector rbounds(nvars, 0);
+  IntVector trapped(nvars, 0);
+  ParameterVector optswitches(nvars);
+
+  EcoSystem->ScaleVariables();
+  EcoSystem->ScaledOptValues(x);
+  EcoSystem->LowerOptBds(lowerb);
+  EcoSystem->UpperOptBds(upperb);
+  EcoSystem->InitialOptValues(init);
+  EcoSystem->OptSwitches(optswitches);
 
   for (i = 0; i < nvars; i++) {
-    lbounds[i] = 0;
-    rbounds[i] = 0;
-    trapped[i] = 0;
+    // Scaling the bounds, because the parameters are scaled
+    lowerb[i] = lowerb[i] / init[i];
+    upperb[i] = upperb[i] / init[i];
+    if (lowerb[i] > upperb[i]) {
+      tmp = lowerb[i];
+      lowerb[i] = upperb[i];
+      upperb[i] = tmp;
+    }
+
+    /* Warn if the starting point is zero */
+    if (isZero(x[i]))
+      handle.logMessage(LOGINFO, "Warning in optinfo - initial value is zero for switch", optswitches[i].getName());
+
+    bestx[i] = x[i];
+    trialx[i] = x[i];
     param[i] = i;
-    newx[i] = startpt[i];
-    xbefore[i] = startpt[i];
     delta[i] = ((2 * (rand() % 2)) - 1) * rho;  //JMB - randomise the sign
-    initialstep[i] = rho;
-    z[i] = 0.0;
   }
 
-  fbefore = (*f)(newx);
+  fbefore = EcoSystem->SimulateAndUpdate(trialx);
   offset = FuncEval;  //number of function evaluations done before loop
   newf = fbefore;
   oldf = fbefore;
   check = fbefore;
   steplength = ((lambda < verysmall) ? rho : lambda);
 
-  if (fbefore != fbefore) { //JMB added check for NaN
-    cout << "\nError starting Hooke & Jeeves optimisation with"
-      << " f(x) = infinity\nReturning to calling routine ...\n";
-    return 0;
-  }
+  if (fbefore != fbefore) //JMB added check for NaN
+    handle.logMessage(LOGFAIL, "Error starting Hooke & Jeeves optimisation with f(x) = infinity");
 
   while (1) {
     if (isZero(fbefore)) {
-      cout << "\nError in Hooke & Jeeves optimisation after " << (FuncEval - offset)
-       << " function evaluations f(x) = 0\nReturning to calling routine ...\n";
+      handle.logMessage(LOGINFO, "Error in Hooke & Jeeves optimisation after", (FuncEval - offset), "function evaluations, f(x) = 0");
       return 0;
     }
 
@@ -233,32 +260,30 @@ int hooke(double (*f)(double*), int nvars, double startpt[], double endpt[],
 
     /* find best new point, one coord at a time */
     for (i = 0; i < nvars; i++)
-      newx[i] = xbefore[i];
-    newf = bestNearby(f, delta, newx, z, fbefore, nvars, param);
+      trialx[i] = x[i];
+    newf = bestNearby(delta, trialx, z, fbefore, nvars, param);
 
     /* if too many function evaluations occur, terminate the algorithm */
     if ((FuncEval - offset) > maxevl) {
-      cout << "\nStopping Hooke & Jeeves optimisation algorithm\n\n"
-        << "The optimisation stopped after " << (FuncEval - offset)
-        << " function evaluations (max " << maxevl << ")\nThe steplength was reduced to "
-        << steplength << " (min " << epsilon << ")\nThe optimisation stopped because the "
-        << "maximum number of function evaluations\nwas reached and NOT because an "
-        << "optimum was found for this run\n";
+      handle.logMessage(LOGINFO, "\nStopping Hooke & Jeeves optimisation algorithm\n");
+      handle.logMessage(LOGINFO, "The optimisation stopped after", (FuncEval - offset), "function evaluations");
+      handle.logMessage(LOGINFO, "The steplength was reduced to", steplength);
+      handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of function evaluations");
+      handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
 
-      if (newf < fbefore) {
+      if (newf < fbefore)
         for (i = 0; i < nvars; i++)
-          endpt[param[i]] = newx[param[i]];
-      } else {
+          bestx[i] = trialx[i];
+      else
         for (i = 0; i < nvars; i++)
-          endpt[param[i]] = xbefore[param[i]];
-      }
-      newf = (*f)(endpt);
+          bestx[i] = x[i];
 
+      newf = EcoSystem->SimulateAndUpdate(bestx);
       EcoSystem->setFuncEvalHJ(FuncEval - offset);
       EcoSystem->setLikelihoodHJ(newf);
       for (i = 0; i < nvars; i++)
-        endpt[param[i]] *= init[param[i]];
-      EcoSystem->StoreVariables(newf, endpt);
+        bestx[i] *= init[i];
+      EcoSystem->StoreVariables(newf, bestx);
       return 0;
     }
 
@@ -268,34 +293,34 @@ int hooke(double (*f)(double*), int nvars, double startpt[], double endpt[],
         /* if it has been trapped but f has now gotten better (bndcheck) */
         /* we assume that we are out of the trap, reset the counters     */
         /* and go back to the stepsize we had when we got trapped        */
-        if ((trapped[param[i]] == 1) && (newf < oldf * bndcheck)) {
-          trapped[param[i]] = 0;
-          lbounds[param[i]] = 0;
-          rbounds[param[i]] = 0;
-          delta[param[i]] = initialstep[param[i]];
+        if ((trapped[i] == 1) && (newf < oldf * bndcheck)) {
+          trapped[i] = 0;
+          lbound[i] = 0;
+          rbounds[i] = 0;
+          delta[i] = initialstep[i];
 
-        } else if (newx[param[i]] < (lowerb[param[i]] + verysmall)) {
-          lbounds[param[i]]++;
-          newx[param[i]] = lowerb[param[i]];
-          if (trapped[param[i]] == 0) {
-            initialstep[param[i]] = delta[param[i]];
-            trapped[param[i]] = 1;
+        } else if (trialx[i] < (lowerb[i] + verysmall)) {
+          lbound[i]++;
+          trialx[i] = lowerb[i];
+          if (trapped[i] == 0) {
+            initialstep[i] = delta[i];
+            trapped[i] = 1;
           }
           /* if it has hit the bounds 2 times then increase the stepsize */
-          if (lbounds[param[i]] >= 2) {
-            delta[param[i]] /= rho;
+          if (lbound[i] >= 2) {
+            delta[i] /= rho;
           }
 
-        } else if (newx[param[i]] > (upperb[param[i]] - verysmall)) {
-          rbounds[param[i]]++;
-          newx[param[i]] = upperb[param[i]];
-          if (trapped[param[i]] == 0) {
-            initialstep[param[i]] = delta[param[i]];
-            trapped[param[i]] = 1;
+        } else if (trialx[i] > (upperb[i] - verysmall)) {
+          rbounds[i]++;
+          trialx[i] = upperb[i];
+          if (trapped[i] == 0) {
+            initialstep[i] = delta[i];
+            trapped[i] = 1;
           }
           /* if it has hit the bounds 2 times then increase the stepsize */
-          if (rbounds[param[i]] >= 2) {
-            delta[param[i]] /= rho;
+          if (rbounds[i] >= 2) {
+            delta[i] /= rho;
           }
         }
       }
@@ -303,92 +328,88 @@ int hooke(double (*f)(double*), int nvars, double startpt[], double endpt[],
       oldf = newf;
       for (i = 0; i < nvars; i++) {
         /* firstly, arrange the sign of delta[] */
-        if (newx[param[i]] <= xbefore[param[i]])
-          delta[param[i]] = 0.0 - absolute(delta[param[i]]);
+        if (trialx[i] < x[i])
+          delta[i] = 0.0 - absolute(delta[i]);
         else
-          delta[param[i]] = absolute(delta[param[i]]);
+          delta[i] = absolute(delta[i]);
 
         /* now, move further in this direction  */
-        tmp = xbefore[param[i]];
-        xbefore[param[i]] = newx[param[i]];
-        newx[param[i]] = newx[param[i]] + newx[param[i]] - tmp;
+        tmp = x[i];
+        x[i] = trialx[i];
+        trialx[i] = trialx[i] + trialx[i] - tmp;
       }
 
       /* only move forward if this is really an improvement    */
       fbefore = newf;
-      newf = (*f)(newx);
+      newf = EcoSystem->SimulateAndUpdate(trialx);
       if (newf >= fbefore)
         break;
 
       /* OK, it's better, so update variables and look around  */
       fbefore = newf;
       for (i = 0; i < nvars; i++)
-        xbefore[param[i]] = newx[param[i]];
-      newf = bestNearby(f, delta, newx, z, fbefore, nvars, param);
+        x[i] = trialx[i];
+      newf = bestNearby(delta, trialx, z, fbefore, nvars, param);
 
       /* if too many function evaluations occur, terminate the algorithm */
       if ((FuncEval - offset) > maxevl) {
-        cout << "\nStopping Hooke & Jeeves optimisation algorithm\n\n"
-          << "The optimisation stopped after " << (FuncEval - offset)
-          << " function evaluations (max " << maxevl << ")\nThe steplength was reduced to "
-          << steplength << " (min " << epsilon << ")\nThe optimisation stopped because the "
-          << "maximum number of function evaluations\nwas reached and NOT because an "
-          << "optimum was found for this run\n";
+        handle.logMessage(LOGINFO, "\nStopping Hooke & Jeeves optimisation algorithm\n");
+        handle.logMessage(LOGINFO, "The optimisation stopped after", (FuncEval - offset), "function evaluations");
+        handle.logMessage(LOGINFO, "The steplength was reduced to", steplength);
+        handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of function evaluations");
+        handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
 
-        if (newf < fbefore) {
+        if (newf < fbefore)
           for (i = 0; i < nvars; i++)
-            endpt[param[i]] = newx[param[i]];
-        } else {
+            bestx[i] = trialx[i];
+        else
           for (i = 0; i < nvars; i++)
-            endpt[param[i]] = xbefore[param[i]];
-        }
-        newf = (*f)(endpt);
+            bestx[i] = x[i];
 
+        newf = EcoSystem->SimulateAndUpdate(bestx);
         EcoSystem->setFuncEvalHJ(FuncEval - offset);
         EcoSystem->setLikelihoodHJ(newf);
         for (i = 0; i < nvars; i++)
-          endpt[param[i]] *= init[param[i]];
-        EcoSystem->StoreVariables(newf, endpt);
+          bestx[i] *= init[i];
+        EcoSystem->StoreVariables(newf, bestx);
         return 0;
       }
     }
 
     if (fbefore < check) {
-      cout << "\nNew optimum after " << (FuncEval - offset) << " function evaluations, f(x) = "
-        << fbefore << " at\n";
-      for (i = 0; i < nvars; i++) {
-        endpt[i] = xbefore[i] * init[i];
-        cout << endpt[i] << sep;
-      }
+      for (i = 0; i < nvars; i++)
+        bestx[i] = x[i] * init[i];
       check = fbefore;
-      EcoSystem->StoreVariables(fbefore, endpt);
+      handle.logMessage(LOGINFO, "\nNew optimum found after", (FuncEval - offset), "function evaluations");
+      handle.logMessage(LOGINFO, "The likelihood score is", fbefore, "at the point");
+      EcoSystem->StoreVariables(fbefore, bestx);
+      EcoSystem->writeBestValues();
+
     } else
-      cout << "\nChecking convergence criteria after " << (FuncEval - offset) << " function evaluations ...";
+      handle.logMessage(LOGINFO, "Checking convergence criteria after", (FuncEval - offset), "function evaluations ...");
 
     /* if the step length is less than epsilon, terminate the algorithm */
     if (steplength < epsilon) {
-      cout << "\nStopping Hooke & Jeeves optimisation algorithm\n\n"
-        << "The optimisation stopped after " << (FuncEval - offset)
-        << " function evaluations (max " << maxevl << ")\nThe steplength was reduced to "
-        << steplength << " (min " << epsilon << ")\nThe optimisation stopped because "
-        << "an optimum was found for this run\n";
+      handle.logMessage(LOGINFO, "\nStopping Hooke & Jeeves optimisation algorithm\n");
+      handle.logMessage(LOGINFO, "The optimisation stopped after", (FuncEval - offset), "function evaluations");
+      handle.logMessage(LOGINFO, "The steplength was reduced to", steplength);
+      handle.logMessage(LOGINFO, "The optimisation stopped because an optimum was found for this run");
 
       for (i = 0; i < nvars; i++)
-        endpt[i] = xbefore[i];
-      newf = (*f)(endpt);
-
+        bestx[i] = x[i];
+      newf = EcoSystem->SimulateAndUpdate(bestx);
       EcoSystem->setConvergeHJ(1);
       EcoSystem->setFuncEvalHJ(FuncEval - offset);
       EcoSystem->setLikelihoodHJ(newf);
       for (i = 0; i < nvars; i++)
-        endpt[i] *= init[i];
-      EcoSystem->StoreVariables(newf, endpt);
+        bestx[i] *= init[i];
+      EcoSystem->StoreVariables(newf, bestx);
       return 1;
     }
 
     if (newf >= fbefore) {
       steplength *= rho;
-      cout << "\nReducing the steplength to " << steplength << endl;
+      handle.logMessage(LOGINFO, "Reducing the steplength to", steplength);
       for (i = 0; i < nvars; i++)
         delta[i] *= rho;
     }

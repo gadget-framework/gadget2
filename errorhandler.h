@@ -78,6 +78,22 @@ public:
    */
   void logMessage(LogLevel mlevel, const char* msg, double number);
   /**
+   * \brief This function will log a warning message, a number and a second message
+   * \param mlevel is the logging level of the message to be logged
+   * \param msg1 is the first message to be logged
+   * \param number is the number to be logged
+   * \param msg2 is the second message to be logged
+   */
+  void logMessage(LogLevel mlevel, const char* msg1, int number, const char* msg2);
+  /**
+   * \brief This function will log a warning message, a number and a second message
+   * \param mlevel is the logging level of the message to be logged
+   * \param msg1 is the first message to be logged
+   * \param number is the number to be logged
+   * \param msg2 is the second message to be logged
+   */
+  void logMessage(LogLevel mlevel, const char* msg1, double number, const char* msg2);
+  /**
    * \brief This function will log a warning message generated when reading information from file
    * \param mlevel is the logging level of the message to be logged
    * \param msg is the message to be logged
