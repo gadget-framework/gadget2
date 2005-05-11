@@ -37,7 +37,7 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
   }
 
   for (i = 0; i < strayStep.Size(); i++)
-    if (strayStep[i] < 1 || strayStep[i] > TimeInfo->StepsInYear())
+    if (strayStep[i] < 1 || strayStep[i] > TimeInfo->numSteps())
       handle.logFileMessage(LOGFAIL, "Error in straying data - invalid straying step");
 
   infile >> text >> ws;
@@ -230,7 +230,7 @@ int StrayData::isStrayStepArea(int area, const TimeClass* const TimeInfo) {
 
   for (i = 0; i < strayStep.Size(); i++)
     for (j = 0; j < strayArea.Size(); j++)
-      if ((strayStep[i] == TimeInfo->CurrentStep()) && (strayArea[j] == area))
+      if ((strayStep[i] == TimeInfo->getStep()) && (strayArea[j] == area))
         return 1;
   return 0;
 }
@@ -239,7 +239,7 @@ void StrayData::Reset(const TimeClass* const TimeInfo) {
   int i;
 
   fnProportion->updateConstants(TimeInfo);
-  if (fnProportion->constantsHaveChanged(TimeInfo)) {
+  if (fnProportion->didChange(TimeInfo)) {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       strayProportion[i] = fnProportion->calculate(LgrpDiv->meanLength(i));
       if (strayProportion[i] < 0.0) {

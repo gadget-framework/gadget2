@@ -27,11 +27,6 @@ public:
    * \param area is the area that the predation is being calculated on
    */
   virtual void Sum(const TimeClass* const TimeInfo, int area);
-  /**
-   * \brief This will return the length group of the prey
-   * \return preyLgrpDiv, a LengthGroupDivision for the prey
-   */
-  const LengthGroupDivision* returnPreyLengthGroupDiv() const { return preyLgrpDiv; };
 private:
   /**
    * \brief This is the StockPrey that the predation is consuming

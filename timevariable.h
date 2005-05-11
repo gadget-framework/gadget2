@@ -14,7 +14,7 @@ public:
   void Interchange(TimeVariable& Newtvar, Keeper* const keeper) const;
   void Update(const TimeClass* const TimeInfo);
   void Delete(Keeper* const keeper) const;
-  int DidChange(const TimeClass* const TimeInfo);
+  int didChange(const TimeClass* const TimeInfo);
 private:
   int fromfile;
   int usemodelmatrix;

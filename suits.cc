@@ -23,8 +23,8 @@ void Suits::addPrey(const char* preyname, SuitFunc* suitf) {
   strcpy(preynames[preynames.Size() - 1], preyname);
 }
 
-int Suits::DidChange(int i, const TimeClass* const TimeInfo) const {
-  return suitFunction[i]->constantsHaveChanged(TimeInfo);
+int Suits::didChange(int i, const TimeClass* const TimeInfo) const {
+  return suitFunction[i]->didChange(TimeInfo);
 }
 
 void Suits::deletePrey(int i, Keeper* const keeper) {
@@ -42,7 +42,7 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
 
   for (p = 0; p < this->numPreys(); p++) {
     suitFunction[p]->updateConstants(TimeInfo);
-    if (suitFunction[p]->constantsHaveChanged(TimeInfo)) {
+    if (suitFunction[p]->didChange(TimeInfo)) {
       temp = new DoubleMatrix(pred->numLengthGroups(), pred->Preys(p)->numLengthGroups(), 0.0);
       for (i = 0; i < pred->numLengthGroups(); i++) {
         for (j = 0; j < pred->Preys(p)->numLengthGroups(); j++) {

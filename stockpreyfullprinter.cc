@@ -139,7 +139,7 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
 
 void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
-  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
+  if ((!AAT.atCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
   int a, age, len;
@@ -149,8 +149,8 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo, int printtime)
 
     for (age = Nbyageandl.minAge(); age <= Nbyageandl.maxAge(); age++)
       for (len = 0; len < LgrpDiv->numLengthGroups(); len++) {
-        outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep << setw(lowwidth)
-          << TimeInfo->CurrentStep() << sep << setw(lowwidth) << outerareas[a] << sep
+        outfile << setw(lowwidth) << TimeInfo->getYear() << sep << setw(lowwidth)
+          << TimeInfo->getStep() << sep << setw(lowwidth) << outerareas[a] << sep
           << setw(lowwidth) << age << sep << setprecision(smallprecision)
           << setw(smallwidth) << LgrpDiv->meanLength(len) << sep;
 

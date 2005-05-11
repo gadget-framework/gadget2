@@ -47,7 +47,7 @@ void PredPreyStdAgePrinter::setPopPredAndPrey(const PopPredator* pred,
 
 void PredPreyStdAgePrinter::Print(const TimeClass * const TimeInfo, int printtime) {
 
-  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
+  if ((!AAT.atCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
   int a, predage, preyage;
@@ -59,8 +59,8 @@ void PredPreyStdAgePrinter::Print(const TimeClass * const TimeInfo, int printtim
       for (preyage = predinfo->NconsumptionByAge(areas[a]).minCol(predage);
           preyage < predinfo->NconsumptionByAge(areas[a]).maxCol(predage); preyage++) {
 
-        outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
-          << setw(lowwidth) << TimeInfo->CurrentStep() << sep
+        outfile << setw(lowwidth) << TimeInfo->getYear() << sep
+          << setw(lowwidth) << TimeInfo->getStep() << sep
           << setw(lowwidth) << outerareas[a] << sep << setw(lowwidth)
           << predage << sep << setw(lowwidth) << preyage << sep;
 

@@ -52,7 +52,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the parameters have changed, 0 otherwise
    */
-  int constantsHaveChanged(const TimeClass* const TimeInfo);
+  int didChange(const TimeClass* const TimeInfo);
   /**
    * \brief This will return the selection level that has been calculated
    * \param len is the length of the length class that is selected

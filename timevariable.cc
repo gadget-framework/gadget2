@@ -108,7 +108,7 @@ void TimeVariable::readFromFile(CommentStream& infile,
 
   firsttimestepnr = -1;
   for (i = 0; i < years.Size(); i++) {
-    if (years[i] == TimeInfo->FirstYear() && steps[i] == TimeInfo->FirstStep()) {
+    if (years[i] == TimeInfo->getFirstYear() && steps[i] == TimeInfo->getFirstStep()) {
       firsttimestepnr = i;
       break;
     }
@@ -117,13 +117,13 @@ void TimeVariable::readFromFile(CommentStream& infile,
     handle.logFileMessage(LOGFAIL, "Error in timevariable - nothing specified for first timestep of the simulation");
 }
 
-int TimeVariable::DidChange(const TimeClass* const TimeInfo) {
-  if (TimeInfo->CurrentTime() == 1)
+int TimeVariable::didChange(const TimeClass* const TimeInfo) {
+  if (TimeInfo->getTime() == 1)
     return 1;  //return true for the first timestep
   if (!fromfile)
     return 0;  //return false if the values were not read from file
 
-  return ((!(isZero(lastvalue - value))) && (time == TimeInfo->CurrentTime()));
+  return ((!(isZero(lastvalue - value))) && (time == TimeInfo->getTime()));
 }
 
 void TimeVariable::Update(const TimeClass* const TimeInfo) {
@@ -131,12 +131,12 @@ void TimeVariable::Update(const TimeClass* const TimeInfo) {
   if (!fromfile)
     value = Value;
   else {
-    if (TimeInfo->CurrentTime() == 1)
+    if (TimeInfo->getTime() == 1)
       timestepnr = firsttimestepnr;
     for (i = timestepnr; i < steps.Size(); i++) {
-      if (steps[i] == TimeInfo->CurrentStep() && years[i] == TimeInfo->CurrentYear()) {
+      if (steps[i] == TimeInfo->getStep() && years[i] == TimeInfo->getYear()) {
         timestepnr = i;
-        time = TimeInfo->CurrentTime();
+        time = TimeInfo->getTime();
         break;
       }
     }

@@ -225,7 +225,7 @@ void StockPrinter::setStock(StockPtrVector& stockvec) {
 
 void StockPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
-  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
+  if ((!AAT.atCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
   aggregator->Sum();
@@ -235,8 +235,8 @@ void StockPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   for (a = 0; a < areas.Nrow(); a++) {
     for (age = (*alptr)[a].minAge(); age <= (*alptr)[a].maxAge(); age++) {
       for (len = (*alptr)[a].minLength(age); len < (*alptr)[a].maxLength(age); len++) {
-        outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
-          << setw(lowwidth) << TimeInfo->CurrentStep() << sep
+        outfile << setw(lowwidth) << TimeInfo->getYear() << sep
+          << setw(lowwidth) << TimeInfo->getStep() << sep
           << setw(printwidth) << areaindex[a] << sep << setw(printwidth)
           << ageindex[age] << sep << setw(printwidth) << lenindex[len] << sep;
 

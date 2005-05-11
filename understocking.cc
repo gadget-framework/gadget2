@@ -109,7 +109,7 @@ void UnderStocking::Reset(const Keeper* const keeper) {
 void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
   int i, j, k;
   double err, l;
-  if (AAT.AtCurrentTime(TimeInfo)) {
+  if (AAT.atCurrentTime(TimeInfo)) {
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "Checking understocking likelihood component", this->getName());
     l = 0.0;
@@ -133,8 +133,8 @@ void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
       likelihoodValues.AddRows(1, areas.Nrow(), 0.0);
       for (k = 0; k < areas.Nrow(); k++)
         likelihoodValues[Years.Size()][k] = store[k];
-      Years.resize(1, TimeInfo->CurrentYear());
-      Steps.resize(1, TimeInfo->CurrentStep());
+      Years.resize(1, TimeInfo->getYear());
+      Steps.resize(1, TimeInfo->getStep());
 
       if (handle.getLogLevel() >= LOGMESSAGE)
         handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);

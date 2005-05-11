@@ -80,8 +80,8 @@ void TagPtrVector::Delete(int pos) {
 }
 
 void TagPtrVector::updateTags(const TimeClass* const TimeInfo) {
-  int year = TimeInfo->CurrentYear();
-  int step = TimeInfo->CurrentStep();
+  int year = TimeInfo->getYear();
+  int step = TimeInfo->getStep();
   int i;
   for (i = 0; i < size; i++)
     if (v[i]->isWithinPeriod(year, step))
@@ -91,7 +91,7 @@ void TagPtrVector::updateTags(const TimeClass* const TimeInfo) {
 void TagPtrVector::deleteTags(const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < size; i++) {
-    if ((v[i]->getEndYear() == TimeInfo->CurrentYear()) && (TimeInfo->CurrentStep() == TimeInfo->LastStep()))
+    if ((v[i]->getEndYear() == TimeInfo->getYear()) && (TimeInfo->getStep() == TimeInfo->getLastStep()))
       v[i]->deleteStockTags();
 
   }

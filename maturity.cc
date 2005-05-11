@@ -221,7 +221,7 @@ void MaturityA::Reset(const TimeClass* const TimeInfo) {
   maturityParameters.Update(TimeInfo);
   double my;
   int age, len;
-  if (maturityParameters.DidChange(TimeInfo)) {
+  if (maturityParameters.didChange(TimeInfo)) {
     if ((handle.getLogLevel() >= LOGWARN) && (maturityParameters[1] > LgrpDiv->maxLength()))
       handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
 
@@ -255,7 +255,7 @@ double MaturityA::MaturationProbability(int age, int length, int growth,
 
   if ((age >= minMatureAge) && ((length + growth) >= minMatureLength)) {
     double prob = preCalcMaturation[age][length] * (maturityParameters[0] * growth * LgrpDiv->dl()
-                  + maturityParameters[2] * TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear());
+                  + maturityParameters[2] * TimeInfo->getTimeStepSize());
     return (min(max(0.0, prob), 1.0));
   }
   return 0.0;
@@ -348,7 +348,7 @@ void MaturityB::setStock(StockPtrVector& stockvec) {
 
 void MaturityB::Reset(const TimeClass* const TimeInfo) {
   maturitylength.Update(TimeInfo);
-  if (maturitylength.DidChange(TimeInfo))
+  if (maturitylength.didChange(TimeInfo))
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "Reset maturity data");
 }
@@ -358,7 +358,7 @@ double MaturityB::MaturationProbability(int age, int length, int growth,
 
   int i;
   for (i = 0; i < maturitylength.Size(); i++)
-    if (TimeInfo->CurrentStep() == maturitystep[i])
+    if (TimeInfo->getStep() == maturitystep[i])
       if (LgrpDiv->meanLength(length) >= maturitylength[i])
         return 1.0;
 
@@ -368,7 +368,7 @@ double MaturityB::MaturationProbability(int age, int length, int growth,
 int MaturityB::isMaturationStep(int area, const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < maturitystep.Size(); i++)
-    if (maturitystep[i] == TimeInfo->CurrentStep())
+    if (maturitystep[i] == TimeInfo->getStep())
       return 1;
   return 0;
 }
@@ -417,7 +417,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
   }
 
   for (i = 0; i < maturitystep.Size(); i++)
-    if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->StepsInYear())
+    if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->numSteps())
       handle.logFileMessage(LOGFAIL, "Error in maturity - invalid maturity step");
 
   infile >> ws;
@@ -447,7 +447,7 @@ void MaturityC::Reset(const TimeClass* const TimeInfo) {
   maturityParameters.Update(TimeInfo);
   double my;
   int age, len;
-  if (maturityParameters.DidChange(TimeInfo)) {
+  if (maturityParameters.didChange(TimeInfo)) {
     if ((handle.getLogLevel() >= LOGWARN) && (maturityParameters[1] > LgrpDiv->maxLength()))
       handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
 
@@ -477,7 +477,7 @@ double MaturityC::MaturationProbability(int age, int length, int growth,
 int MaturityC::isMaturationStep(int area, const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < maturitystep.Size(); i++)
-    if (maturitystep[i] == TimeInfo->CurrentStep())
+    if (maturitystep[i] == TimeInfo->getStep())
       return 1;
   return 0;
 }
@@ -548,7 +548,7 @@ void MaturityD::setStock(StockPtrVector& stockvec) {
 
 void MaturityD::Reset(const TimeClass* const TimeInfo) {
   maturityParameters.Update(TimeInfo);
-  if (maturityParameters.DidChange(TimeInfo)) {
+  if (maturityParameters.didChange(TimeInfo)) {
     if ((handle.getLogLevel() >= LOGWARN) && (maturityParameters[1] > LgrpDiv->maxLength()))
       handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
     if (handle.getLogLevel() >= LOGMESSAGE)
@@ -579,7 +579,7 @@ double MaturityD::MaturationProbability(int age, int length, int growth,
 int MaturityD::isMaturationStep(int area, const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < maturitystep.Size(); i++)
-    if (maturitystep[i] == TimeInfo->CurrentStep())
+    if (maturitystep[i] == TimeInfo->getStep())
       return 1;
   return 0;
 }

@@ -264,12 +264,12 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
     handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 5");
 
   //Create storage for the data - size of the data is known
-  amount.AddRows(TimeInfo->TotalNoSteps() + 1, tmpareas.Size(), number);
-  Years.resize(TimeInfo->TotalNoSteps() + 1, 0);
-  Steps.resize(TimeInfo->TotalNoSteps() + 1, 0);
-  year = TimeInfo->FirstYear();
-  step = TimeInfo->FirstStep();
-  int numsteps = TimeInfo->StepsInYear();
+  amount.AddRows(TimeInfo->numTotalSteps() + 1, tmpareas.Size(), number);
+  Years.resize(TimeInfo->numTotalSteps() + 1, 0);
+  Steps.resize(TimeInfo->numTotalSteps() + 1, 0);
+  year = TimeInfo->getFirstYear();
+  step = TimeInfo->getFirstStep();
+  int numsteps = TimeInfo->numSteps();
   for (i = 1; i < Years.Size(); i++) {
     //time is counted from timestep 1
     Years[i] = year;
@@ -356,11 +356,11 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
     handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 5");
 
   //Create storage for the data - size of the data is known
-  Years.resize(TimeInfo->TotalNoSteps() + 1, 0);
-  Steps.resize(TimeInfo->TotalNoSteps() + 1, 0);
-  year = TimeInfo->FirstYear();
-  step = TimeInfo->FirstStep();
-  int numsteps = TimeInfo->StepsInYear();
+  Years.resize(TimeInfo->numTotalSteps() + 1, 0);
+  Steps.resize(TimeInfo->numTotalSteps() + 1, 0);
+  year = TimeInfo->getFirstYear();
+  step = TimeInfo->getFirstStep();
+  int numsteps = TimeInfo->numSteps();
   for (i = 1; i < Years.Size(); i++) {
     //time is counted from timestep 1
     Years[i] = year;

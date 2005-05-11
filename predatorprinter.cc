@@ -273,7 +273,7 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
 
 void PredatorPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
-  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
+  if ((!AAT.atCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
   if (biomass == 1)
@@ -286,8 +286,8 @@ void PredatorPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
     bptr = &aggregator->returnSum()[a];
     for (predl = 0; predl < bptr->Nrow(); predl++) {
       for (preyl = 0; preyl < bptr->Ncol(predl); preyl++) {
-        outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
-          << setw(lowwidth) << TimeInfo->CurrentStep() << sep
+        outfile << setw(lowwidth) << TimeInfo->getYear() << sep
+          << setw(lowwidth) << TimeInfo->getStep() << sep
           << setw(printwidth) << areaindex[a] << sep
           << setw(printwidth) << predlenindex[predl] << sep
           << setw(printwidth) << preylenindex[preyl] << sep;

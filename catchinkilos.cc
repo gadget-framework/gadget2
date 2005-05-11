@@ -168,7 +168,7 @@ double CatchInKilos::calcLikSumSquares(const TimeClass* const TimeInfo) {
         for (p = 0; p < preyindex.Ncol(f); p++)
           modelDistribution[timeindex][a] += fleets[f]->returnPredator()->getConsumptionBiomass(preyindex[f][p], a2);
 
-    if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
+    if ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
       likelihoodValues[timeindex][a] +=
         (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon))
         * (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon));
@@ -182,7 +182,7 @@ double CatchInKilos::calcLikSumSquares(const TimeClass* const TimeInfo) {
 void CatchInKilos::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
-  if (AAT.AtCurrentTime(TimeInfo)) {
+  if (AAT.atCurrentTime(TimeInfo)) {
     switch (functionnumber) {
       case 1:
         l = calcLikSumSquares(TimeInfo);
@@ -192,7 +192,7 @@ void CatchInKilos::addLikelihood(const TimeClass* const TimeInfo) {
         break;
     }
 
-    if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
+    if ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
       likelihood += l;
       if (handle.getLogLevel() >= LOGMESSAGE) {
         handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchinkilos component", this->getName());
@@ -380,10 +380,10 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
 }
 
 void CatchInKilos::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
-  if (!AAT.AtCurrentTime(TimeInfo))
+  if (!AAT.atCurrentTime(TimeInfo))
     return;
 
-  if ((yearly == 1) && (TimeInfo->CurrentStep() != TimeInfo->StepsInYear()))
+  if ((yearly == 1) && (TimeInfo->getStep() != TimeInfo->numSteps()))
     return;  //if data is aggregated into years then we need the last timestep
 
   int t, area, age, len;

@@ -64,11 +64,11 @@ void TimeVariableVector::resize(const TimeVariable& tvar, Keeper* const keeper) 
   }
 }
 
-int TimeVariableVector::DidChange(const TimeClass* const TimeInfo) const {
+int TimeVariableVector::didChange(const TimeClass* const TimeInfo) const {
   int didchange = 0;
   int i;
   for (i = 0; i < size; i++)
-    didchange += v[i].DidChange(TimeInfo);
+    didchange += v[i].didChange(TimeInfo);
   return (didchange > 0 ? 1 : 0);
 }
 

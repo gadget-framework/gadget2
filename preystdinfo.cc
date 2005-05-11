@@ -21,7 +21,7 @@ void PreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
 
   age = 0;
   BconbyAge[inarea][age] = 0.0;
-  timeratio = TimeInfo->LengthOfYear() / TimeInfo->LengthOfCurrent();
+  timeratio = 1.0 / TimeInfo->getTimeStepSize();
   for (l = 0; l < prey->numLengthGroups(); l++) {
     BconbyAgeAndLength[inarea][age][l] = PSIByLength.BconsumptionByLength(area)[l];
     BconbyAge[inarea][age] += BconbyAgeAndLength[inarea][age][l];

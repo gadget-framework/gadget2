@@ -85,7 +85,7 @@ void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
 void StockPredator::Reset(const TimeClass* const TimeInfo) {
   PopPredator::Reset(TimeInfo);
   int a, l, age;
-  if (TimeInfo->CurrentTime() == 1) {
+  if (TimeInfo->getTime() == 1) {
     for (a = 0; a < areas.Size(); a++) {
       for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
         Phi[a][l] = 0.0;
@@ -120,20 +120,19 @@ double StockPredator::maxConsumption(double Length, const FormulaVector &maxcons
     Temperature * maxcons[2])) * pow(Length, maxcons[3]);
 }
 
-void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
-  double Areasize, int CurrentSubstep, int numsubsteps) {
+void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   int prey, predl, preyl;
   int inarea = this->areaNum(area);
-  double tmpcons;
+  double tmp;
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     Phi[inarea][predl] = 0.0;
-    if (CurrentSubstep == 1)
+    if (TimeInfo->getSubStep() == 1)
       fphi[inarea][predl] = 0.0;
   }
 
-  this->calcMaxConsumption(Temperature, inarea, CurrentSubstep, numsubsteps, LengthOfStep);
+  this->calcMaxConsumption(Area->getTemperature(area, TimeInfo->getTime()), inarea, TimeInfo);
 
   //Now maxconbylength contains the maximum consumption by length
   //Calculating Phi(L) and O(l,L,prey) (stored in consumption)
@@ -161,11 +160,12 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
   }
 
   //Calculating fphi(L) and totalcons of predator in area
+  tmp = Area->getSize(area) * halfFeedingValue;
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-    if (isZero(Phi[inarea][predl] + halfFeedingValue * Areasize))
+    if (isZero(Phi[inarea][predl] + tmp))
       fphI[inarea][predl] = 0.0;
     else
-      fphI[inarea][predl] = Phi[inarea][predl] / (Phi[inarea][predl] + halfFeedingValue * Areasize);
+      fphI[inarea][predl] = Phi[inarea][predl] / (Phi[inarea][predl] + tmp);
 
     totalcons[inarea][predl] = fphI[inarea][predl] *
       maxconbylength[inarea][predl] * prednumber[inarea][predl].N;
@@ -176,11 +176,11 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
     if (Preys(prey)->isPreyArea(area)) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         if (!(isZero(Phi[inarea][predl]))) {
-          tmpcons = totalcons[inarea][predl] / Phi[inarea][predl];
+          tmp = totalcons[inarea][predl] / Phi[inarea][predl];
           for (preyl = Suitability(prey)[predl].minCol();
               preyl < Suitability(prey)[predl].maxCol(); preyl++) {
 
-              cons[inarea][prey][predl][preyl] *= tmpcons;
+              cons[inarea][prey][predl][preyl] *= tmp;
           }
         }
       }
@@ -196,8 +196,8 @@ void StockPredator::Eat(int area, double LengthOfStep, double Temperature,
 
 //Check if any of the preys of the predator are eaten up.
 //adjust the consumption according to that.
-void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubstep) {
-  double maxRatio = pow(MaxRatioConsumed, numsubsteps);
+void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
+  double maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
   int inarea = this->areaNum(area);
   int over, preyl, predl, prey;
   double ratio, rat1, rat2, tmp;
@@ -236,7 +236,7 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
     }
   }
 
-  rat2 = 1.0 / CurrentSubstep;
+  rat2 = 1.0 / TimeInfo->getSubStep();
   rat1 = 1.0 - rat2;
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     totalconsumption[inarea][predl] += totalcons[inarea][predl];
@@ -257,20 +257,22 @@ void StockPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
  * one substep Alprop is only set on the last step.  This should possibly be
  * changed in later versions but that change would mean storage of Alkeys as
  * well as Alprop.  This change should though not have to be made.*/
-void StockPredator::calcMaxConsumption(double Temperature, int inarea,
-  int CurrentSubstep, int numsubsteps, double LengthOfStep) {
+void StockPredator::calcMaxConsumption(double Temperature,
+  int inarea, const TimeClass* const TimeInfo) {
 
   int length, age;
-  double tmp, timeratio = LengthOfStep / numsubsteps;
+  double tmp, timeratio;
+//  timeratio = TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
+  timeratio = TimeInfo->LengthOfCurrent() / TimeInfo->numSubSteps();
 
-  if (CurrentSubstep == 1) {
+  if (TimeInfo->getSubStep() == 1) {
     for (length = 0; length < maxconbylength.Ncol(); length++) {
       tmp = maxConsumption(LgrpDiv->meanLength(length), maxconsumption, Temperature);
       maxconbylength[inarea][length] = timeratio * tmp;
     }
   }
 
-  if (CurrentSubstep == numsubsteps) {
+  if (TimeInfo->getSubStep() == TimeInfo->numSubSteps()) {
     for (age = Alprop[inarea].minAge(); age <= Alprop[inarea].maxAge(); age++)
       for (length = Alprop[inarea].minLength(age);
           length < Alprop[inarea].maxLength(age); length++)

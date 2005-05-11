@@ -72,7 +72,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the values have changed, 0 otherwise
    */
-  int DidChange(const TimeClass* const TimeInfo) const;
+  int didChange(const TimeClass* const TimeInfo) const;
   /**
    * \brief This function will update the TimeVariable values
    * \param TimeInfo is the TimeClass for the current model

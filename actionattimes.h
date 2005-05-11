@@ -52,7 +52,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if action takes place, 0 otherwise
    */
-  int AtCurrentTime(const TimeClass* const TimeInfo) const;
+  int atCurrentTime(const TimeClass* const TimeInfo) const;
 protected:
   /**
    * \brief This is a flag if the action takes place on every timestep

@@ -184,7 +184,7 @@ void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec) {
 
 void PredatorOverPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
-  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
+  if ((!AAT.atCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
   aggregator->Sum();
@@ -193,8 +193,8 @@ void PredatorOverPrinter::Print(const TimeClass* const TimeInfo, int printtime) 
 
   for (a = 0; a < areas.Nrow(); a++) {
     for (len = 0; len < dptr->Ncol(a); len++) {
-      outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
-        << setw(lowwidth) << TimeInfo->CurrentStep() << sep
+      outfile << setw(lowwidth) << TimeInfo->getYear() << sep
+        << setw(lowwidth) << TimeInfo->getStep() << sep
         << setw(printwidth) << areaindex[a] << sep
         << setw(printwidth) << lenindex[len] << sep;
 

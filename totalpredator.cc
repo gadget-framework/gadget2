@@ -18,14 +18,13 @@ TotalPredator::TotalPredator(CommentStream& infile, const char* givenname,
   keeper->clearLast();
 }
 
-void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
-  double Areasize, int CurrentSubstep, int numsubsteps) {
+void TotalPredator::Eat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   int inarea = this->areaNum(area);
   double tmp, wanttoeat;
   int prey, preyl;
 
-  if (CurrentSubstep == 1)
+  if (TimeInfo->getSubStep() == 1)
     scaler[inarea] = 0.0;
 
   int predl = 0;  //JMB there is only ever one length group ...
@@ -50,7 +49,7 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
   }
 
   //adjust the consumption by the multiplicative factor.
-  tmp = Multiplicative / numsubsteps;  //use the multiplicative factor
+  tmp = Multiplicative / TimeInfo->numSubSteps();  //use the multiplicative factor
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (Preys(prey)->isPreyArea(area)) {
       wanttoeat = tmp * prednumber[inarea][predl].N;
@@ -63,9 +62,8 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
 
   //set the multiplicative constant
   scaler[inarea] += totalcons[inarea][predl];
-  if (CurrentSubstep == numsubsteps)
-    if (scaler[inarea] > verysmall)
-      scaler[inarea] = 1.0 / scaler[inarea];
+  if ((TimeInfo->getSubStep() == TimeInfo->numSubSteps()) && (!(isZero(scaler[inarea]))))
+    scaler[inarea] = 1.0 / scaler[inarea];
 
   //Inform the preys of the consumption.
   for (prey = 0; prey < this->numPreys(); prey++)
@@ -78,8 +76,8 @@ void TotalPredator::Eat(int area, double LengthOfStep, double Temperature,
       totalcons[inarea][predl] = tmp * prednumber[inarea][predl].N;
 }
 
-void TotalPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubstep) {
-  double maxRatio = pow(MaxRatioConsumed, numsubsteps);
+void TotalPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
+  double maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
   int check, over, prey, preyl;
   int inarea = this->areaNum(area);
   double ratio, tmp;
@@ -112,7 +110,8 @@ void TotalPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubs
 
   //if no prey found to consume then overcons set to actual consumption
   if (check == 0)
-    overcons[inarea][predl] = Multiplicative * prednumber[inarea][predl].N / numsubsteps ;
+    overcons[inarea][predl] = prednumber[inarea][predl].N *
+        Multiplicative / TimeInfo->numSubSteps();
 
   totalconsumption[inarea][predl] += totalcons[inarea][predl];
   overconsumption[inarea][predl] += overcons[inarea][predl];

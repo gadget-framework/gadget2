@@ -325,8 +325,8 @@ void Recaptures::addLikelihood(const TimeClass* const TimeInfo) {
 double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
   double x, n, lik, total;
   int t, i, ti, len, timeid, checktag, checktime;
-  int year = TimeInfo->CurrentYear();
-  int step = TimeInfo->CurrentStep();
+  int year = TimeInfo->getYear();
+  int step = TimeInfo->getStep();
 
   total = 0.0;
   for (t = 0; t < tagvec.Size(); t++) {
@@ -419,8 +419,8 @@ void Recaptures::Print(ofstream& outfile) const {
 
 void Recaptures::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  int year = TimeInfo->CurrentYear();
-  int step = TimeInfo->CurrentStep();
+  int year = TimeInfo->getYear();
+  int step = TimeInfo->getStep();
   int t, ti, timeid, area, len;
 
   for (t = 0; t < tagvec.Size(); t++) {

@@ -59,10 +59,9 @@ public:
   /**
    * \brief This function will reduce the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void reducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void reducePop(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the growth of the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
@@ -73,59 +72,51 @@ public:
   /**
    * \brief This function will calculate any transition of the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void updateAgePart1(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void updateAgePart1(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the age increase of the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void updateAgePart2(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void updateAgePart2(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will implement the transiton of the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void updateAgePart3(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void updateAgePart3(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the spawning of the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void updatePopulationPart1(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void updatePopulationPart1(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate add the newly matured stock into the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void updatePopulationPart2(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void updatePopulationPart2(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate add the new recruits into the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void updatePopulationPart3(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void updatePopulationPart3(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate calculate the straying of the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void updatePopulationPart4(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void updatePopulationPart4(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate add the strayed stock into the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void updatePopulationPart5(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void updatePopulationPart5(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the modelled consumption for an area in the model
    * \param area is an integer to denote the internal area of interest
@@ -136,17 +127,15 @@ public:
   /**
    * \brief This function will check the modelled consumption for an area in the model
    * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void checkEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void checkEat(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will adjust the modelled consumption for an area in the model
    * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void adjustEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void adjustEat(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will reset the model population
    * \param TimeInfo is the TimeClass for the current model
@@ -167,7 +156,7 @@ public:
   void Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
     int area, double ratio = 1.0, int MinAge = 0, int MaxAge = 100);
   Prey* returnPrey() const;
-  const Migration* returnMigration() const { return migration; };
+  const Migration* getMigration() const { return migration; };
   PopPredator* returnPredator() const;
   const AgeBandMatrix& getAgeLengthKeys(int area) const;
   virtual void setStock(StockPtrVector& stockvec);

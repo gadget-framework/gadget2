@@ -171,7 +171,7 @@ SurveyIndices::~SurveyIndices() {
 
 void SurveyIndices::addLikelihood(const TimeClass* const TimeInfo) {
   SI->Sum(TimeInfo);
-  if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps())
+  if (TimeInfo->getTime() == TimeInfo->numTotalSteps())
     likelihood += SI->calcRegression();
 }
 

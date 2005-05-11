@@ -418,7 +418,7 @@ void CatchDistribution::Print(ofstream& outfile) const {
 
 void CatchDistribution::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  if (!AAT.AtCurrentTime(TimeInfo))
+  if (!AAT.atCurrentTime(TimeInfo))
     return;
 
   int t, area, age, len;
@@ -536,7 +536,7 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
 
 void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
-  if (!(AAT.AtCurrentTime(TimeInfo)))
+  if (!(AAT.atCurrentTime(TimeInfo)))
     return;
 
   double l = 0.0;
@@ -572,7 +572,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
       break;
   }
 
-  if ((yearly == 0) || (TimeInfo->CurrentStep() == TimeInfo->StepsInYear())) {
+  if ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
     likelihood += l;
     if (handle.getLogLevel() >= LOGMESSAGE) {
       handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchdistribution component", this->getName());
@@ -612,7 +612,7 @@ double CatchDistribution::calcLikMultinomial() {
       }
     }
   }
-  return MN.returnLogLikelihood();
+  return MN.getLogLikelihood();
 }
 
 double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
@@ -629,7 +629,7 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
 
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
-    if (TimeInfo->CurrentStep() == 1) { //start of a new year
+    if (TimeInfo->getStep() == 1) { //start of a new year
       (*calc_c[area]).setElementsTo(0.0);
       (*obs_c[area]).setElementsTo(0.0);
     }
@@ -657,7 +657,7 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
       totallikelihood += likelihoodValues[timeindex][area];
 
     } else { //calculate likelihood on year basis
-      if (TimeInfo->CurrentStep() < TimeInfo->StepsInYear())
+      if (TimeInfo->getStep() < TimeInfo->numSteps())
         likelihoodValues[timeindex][area] = 0.0;
       else { //last step in year, is to calc likelihood contribution
         for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
@@ -685,7 +685,7 @@ double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
 
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
-    if (TimeInfo->CurrentStep() == 1) { //start of a new year
+    if (TimeInfo->getStep() == 1) { //start of a new year
       (*calc_c[area]).setElementsTo(0.0);
       (*obs_c[area]).setElementsTo(0.0);
     }
@@ -711,7 +711,7 @@ double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
       totallikelihood += likelihoodValues[timeindex][area];
 
     } else { //calculate likelihood on year basis
-      if (TimeInfo->CurrentStep() < TimeInfo->StepsInYear())
+      if (TimeInfo->getStep() < TimeInfo->numSteps())
         likelihoodValues[timeindex][area] = 0.0;
       else { //last step in year, is to calc likelihood contribution
         for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
@@ -740,7 +740,7 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
     likelihoodValues[timeindex][area] = 0.0;
     totalmodel = 0.0;
     totaldata = 0.0;
-    if (TimeInfo->CurrentStep() == 1) { //start of a new year
+    if (TimeInfo->getStep() == 1) { //start of a new year
       (*calc_c[area]).setElementsTo(0.0);
       (*obs_c[area]).setElementsTo(0.0);
     }
@@ -765,7 +765,7 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
       likelihoodValues[timeindex][area] += (ratio * ratio);
 
     } else { //calculate likelihood on year basis
-      if (TimeInfo->CurrentStep() < TimeInfo->StepsInYear())
+      if (TimeInfo->getStep() < TimeInfo->numSteps())
         likelihoodValues[timeindex][area] = 0.0;
       else { //last step in year, is to calculate likelihood contribution
         for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {

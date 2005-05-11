@@ -39,7 +39,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   if ((c == 'e') || (c == 'E'))
     readWordAndVariable(infile, "endyear", endyear);
   else
-    endyear = TimeInfo->LastYear();
+    endyear = TimeInfo->getLastYear();
 
   int i = 0, found = 0;
   while (found == 0 && i < stockvec.Size()) {
@@ -149,11 +149,11 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
   if (timeid == -1)
     handle.logMessage(LOGFAIL, "Error in tags - calculated invalid timestep");
 
-  numtagtimesteps = (TimeInfo->StepsInYear() * (endyear - tagyear)) - tagstep + 1;
-  if (endyear == TimeInfo->LastYear())
-    numtagtimesteps += TimeInfo->LastStep();
+  numtagtimesteps = (TimeInfo->numSteps() * (endyear - tagyear)) - tagstep + 1;
+  if (endyear == TimeInfo->getLastYear())
+    numtagtimesteps += TimeInfo->getLastStep();
   else
-    numtagtimesteps += TimeInfo->StepsInYear();
+    numtagtimesteps += TimeInfo->numSteps();
 }
 
 Tags::~Tags() {
@@ -173,7 +173,7 @@ Tags::~Tags() {
 
 void Tags::Reset(const TimeClass* const TimeInfo) {
   int i;
-  if (TimeInfo->CurrentTime() == 1) {
+  if (TimeInfo->getTime() == 1) {
     while (AgeLengthStock.Size() > 0)
       AgeLengthStock.Delete(0);
     while (NumBeforeEating.Size() > 0)
@@ -421,8 +421,8 @@ void Tags::deleteStockTags() {
 
 void Tags::updateMatureStock(const TimeClass* const TimeInfo) {
   int i, id;
-  int currentYear = TimeInfo->CurrentYear();
-  int currentStep = TimeInfo->CurrentStep();
+  int currentYear = TimeInfo->getYear();
+  int currentStep = TimeInfo->getStep();
 
   if (endyear <= currentYear)
     handle.logMessage(LOGWARN, "Warning in tags - tagging experiment has finished");
@@ -441,8 +441,8 @@ void Tags::updateMatureStock(const TimeClass* const TimeInfo) {
 
 void Tags::updateTransitionStock(const TimeClass* const TimeInfo) {
   int i, id;
-  int currentYear = TimeInfo->CurrentYear();
-  int currentStep = TimeInfo->CurrentStep();
+  int currentYear = TimeInfo->getYear();
+  int currentStep = TimeInfo->getStep();
 
   if (endyear <= currentYear)
     handle.logMessage(LOGWARN, "Warning in tags - tagging experiment has finished");
@@ -461,8 +461,8 @@ void Tags::updateTransitionStock(const TimeClass* const TimeInfo) {
 
 void Tags::updateStrayStock(const TimeClass* const TimeInfo) {
   int i, id;
-  int currentYear = TimeInfo->CurrentYear();
-  int currentStep = TimeInfo->CurrentStep();
+  int currentYear = TimeInfo->getYear();
+  int currentStep = TimeInfo->getStep();
 
   if (endyear <= currentYear)
     handle.logMessage(LOGWARN, "Warning in tags - tagging experiment has finished");

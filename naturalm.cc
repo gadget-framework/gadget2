@@ -19,9 +19,9 @@ void NaturalM::Reset(const TimeClass* const TimeInfo) {
   double timeratio;
   int age, shift;
 
-  if (mortality.DidChange(TimeInfo) || TimeInfo->SizeOfStepDidChange()) {
+  if (mortality.didChange(TimeInfo) || TimeInfo->didStepSizeChange()) {
     shift = mortality.minCol();
-    timeratio = TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
+    timeratio = TimeInfo->getTimeStepSize();
     for (age = mortality.minCol(); age < mortality.maxCol(); age++)
       if (mortality[age] > verysmall)
         proportion[age - shift] = exp(-mortality[age] * timeratio);

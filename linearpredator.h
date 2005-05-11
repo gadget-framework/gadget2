@@ -25,23 +25,18 @@ public:
    */
   virtual ~LinearPredator() {};
   /**
-   * \brief This will calculate the amount the predator consumes for a given area and timestep
+   * \brief This will calculate the amount the predator consumes on a given area
    * \param area is the area that the prey consumption is being calculated on
-   * \param LengthOfStep is the length of the timestep
-   * \param Temperature is the temperature of the area (not used in this calculation)
-   * \param Areasize is the size of the area (not used in this calculation)
-   * \param CurrentSubstep is the substep of the current timestep (so this calculation takes place once per timestep)
-   * \param numsubsteps is the number of substeps in the current timestep
+   * \param Area is the AreaClass for the current model
+   * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void Eat(int area, double LengthOfStep, double Temperature, double Areasize,
-    int CurrentSubstep, int numsubsteps);
+  virtual void Eat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   /**
-   * \brief This will adjust the amount the predator consumes for a given area and timestep, to take oversconsumption into consideration
+   * \brief This will adjust the amount the predator consumes on a given area, to take oversconsumption into consideration
    * \param area is the area that the prey consumption is being calculated on
-   * \param CurrentSubstep is the substep of the current timestep (so this calculation takes place once per timestep)
-   * \param numsubsteps is the number of substeps in the current timestep
+   * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void adjustConsumption(int area, int numsubsteps, int CurrentSubstep);
+  virtual void adjustConsumption(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will print the predator information
    * \param outfile is the ofstream that all the model information gets sent to

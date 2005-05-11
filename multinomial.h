@@ -37,7 +37,7 @@ public:
    * \brief This will return the log likelihood score
    * \return loglikelihood
    */
-  double returnLogLikelihood() const { return loglikelihood; };
+  double getLogLikelihood() const { return loglikelihood; };
 protected:
   /**
    * \brief This is used to calculate the default minimum probability for unlikely values

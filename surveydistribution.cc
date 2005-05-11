@@ -311,7 +311,7 @@ void SurveyDistribution::Print(ofstream& outfile) const {
 
 void SurveyDistribution::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  if (!AAT.AtCurrentTime(TimeInfo))
+  if (!AAT.atCurrentTime(TimeInfo))
     return;
 
   int t, area, age, len;
@@ -409,7 +409,7 @@ void SurveyDistribution::calcIndex(const TimeClass* const TimeInfo) {
   int area, age, len;
   if (suitfunction != NULL) {
     suitfunction->updateConstants(TimeInfo);
-    if ((timeindex == 0) || (suitfunction->constantsHaveChanged(TimeInfo))) {
+    if ((timeindex == 0) || (suitfunction->didChange(TimeInfo))) {
       if (suitfunction->usesPredLength())
         suitfunction->setPredLength(0.0);
 
@@ -444,7 +444,7 @@ void SurveyDistribution::calcIndex(const TimeClass* const TimeInfo) {
 
 void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
-  if (!(AAT.AtCurrentTime(TimeInfo)))
+  if (!(AAT.atCurrentTime(TimeInfo)))
     return;
 
   double l = 0.0;

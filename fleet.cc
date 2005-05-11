@@ -104,16 +104,13 @@ void Fleet::calcEat(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   if (this->isFleetStepArea(area, TimeInfo))
-    predator->Eat(area, TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear(),
-      Area->Temperature(area, TimeInfo->CurrentTime()),
-      Area->Size(area), TimeInfo->CurrentSubstep(), TimeInfo->numSubSteps());
+    predator->Eat(area, Area, TimeInfo);
 }
 
-void Fleet::adjustEat(int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Fleet::adjustEat(int area, const TimeClass* const TimeInfo) {
 
   if (this->isFleetStepArea(area, TimeInfo))
-    predator->adjustConsumption(area, TimeInfo->numSubSteps(), TimeInfo->CurrentSubstep());
+    predator->adjustConsumption(area, TimeInfo);
 }
 
 void Fleet::calcNumbers(int area,
@@ -121,7 +118,7 @@ void Fleet::calcNumbers(int area,
 
   if (this->isFleetStepArea(area, TimeInfo)) {
     PopInfo pop;
-    pop.N = amount[TimeInfo->CurrentTime()][this->areaNum(area)];
+    pop.N = amount[TimeInfo->getTime()][this->areaNum(area)];
     pop.W = 1.0;
     PopInfoVector NumberInArea(1, pop);
     predator->Sum(NumberInArea, area);
@@ -144,13 +141,13 @@ LengthPredator* Fleet::returnPredator() const {
 int Fleet::isFleetStepArea(int area, const TimeClass* const TimeInfo) {
   if (isZero(predator->multScaler()))
     return 0;
-  if ((handle.getLogLevel() >= LOGWARN) && (amount[TimeInfo->CurrentTime()][this->areaNum(area)] < 0))
+  if ((handle.getLogLevel() >= LOGWARN) && (amount[TimeInfo->getTime()][this->areaNum(area)] < 0))
     handle.logMessage(LOGWARN, "Warning in fleet - negative amount consumed");
-  if (isZero(amount[TimeInfo->CurrentTime()][this->areaNum(area)]))
+  if (isZero(amount[TimeInfo->getTime()][this->areaNum(area)]))
     return 0;
   return 1;
 }
 
 double Fleet::Amount(int area, const TimeClass* const TimeInfo) const {
-  return amount[TimeInfo->CurrentTime()][this->areaNum(area)];
+  return amount[TimeInfo->getTime()][this->areaNum(area)];
 }

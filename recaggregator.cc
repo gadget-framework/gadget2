@@ -78,9 +78,6 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
 
             fleetscale = fleets[f]->Amount(area, TimeInfo) *
                            fleets[f]->returnPredator()->Scaler(area);
-            if (fleets[f]->Type() == LINEARFLEET)
-              fleetscale *= TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-
             for (i = 0; i < fleets[f]->returnPredator()->numPreys(); i++) {
               if (strcasecmp(stocks[h]->returnPrey()->getName(), fleets[f]->returnPredator()->Preys(i)->getName()) == 0) {
                 suitptr = &fleets[f]->returnPredator()->Suitability(i)[0];

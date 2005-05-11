@@ -82,14 +82,14 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
   int i, j, area, prey;
   for (area = 0; area < areas.Size(); area++) {
     for (prey = 0; prey < this->numPreys(); prey++) {
-      if (this->DidChange(prey, TimeInfo)) {
+      if (this->didChange(prey, TimeInfo)) {
         cons.changeElement(area, prey, Suitability(prey));
         consumption.changeElement(area, prey, Suitability(prey));
       }
     }
   }
 
-  if (TimeInfo->CurrentSubstep() == 1) {
+  if (TimeInfo->getSubStep() == 1) {
     for (area = 0; area < areas.Size(); area++) {
       for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
         prednumber[area][i].N = 0.0;

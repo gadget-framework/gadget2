@@ -55,7 +55,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the parameters have changed, 0 otherwise
    */
-  int constantsHaveChanged(const TimeClass* const TimeInfo);
+  int didChange(const TimeClass* const TimeInfo);
   /**
    * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
    * \return 0 (will be overridden in derived classes)

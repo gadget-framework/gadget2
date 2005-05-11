@@ -43,11 +43,16 @@ TimeClass::TimeClass(CommentStream& infile) {
     handle.logFileMessage(LOGWARN, "Warning - length of year does not equal 12");
   if (firstyear > lastyear || (firstyear == lastyear && firststep > laststep))
     handle.logFileMessage(LOGWARN, "Warning - time period is empty");
+
+  //JMB store lengthofyear as 1/lengthofyear to save processing time
+  if (isZero(lengthofyear))
+    handle.logFileMessage(LOGFAIL, "Error in time - length of year is zero");
+  lengthofyear = 1.0 / lengthofyear;
   currentyear = firstyear;
   currentstep = firststep;
   currentsubstep = 1;
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read time file - number of timesteps", this->TotalNoSteps());
+    handle.logMessage(LOGMESSAGE, "Read time file - number of timesteps", this->numTotalSteps());
 }
 
 void TimeClass::IncrementTime() {
@@ -62,13 +67,13 @@ void TimeClass::IncrementTime() {
     currentyear++;
     currentsubstep = 1;
     if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Increased time in the simulation to timestep", this->CurrentTime());
+      handle.logMessage(LOGMESSAGE, "Increased time in the simulation to timestep", this->getTime());
 
   } else {
     currentstep++;
     currentsubstep = 1;
     if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Increased time in the simulation to timestep", this->CurrentTime());
+      handle.logMessage(LOGMESSAGE, "Increased time in the simulation to timestep", this->getTime());
   }
 }
 
@@ -78,7 +83,7 @@ int TimeClass::isWithinPeriod(int year, int step) const {
     && (1 <= step) && (step <= numtimesteps));
 }
 
-int TimeClass::SizeOfStepDidChange() const {
+int TimeClass::didStepSizeChange() const {
   if (timesteps.Size() == 1)
     return 0;
   else if (currentstep == 1)
@@ -92,5 +97,5 @@ void TimeClass:: Reset() {
   currentstep = firststep;
   currentsubstep = 1;
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "\nReset time in the simulation to timestep", this->CurrentTime());
+    handle.logMessage(LOGMESSAGE, "\nReset time in the simulation to timestep", this->getTime());
 }

@@ -35,7 +35,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
     handle.logFileUnexpected(LOGFAIL, "temperature", text);
 
   //Now the data which is in the following format: year step area temperature.
-  temperature.AddRows(TimeInfo->TotalNoSteps() + 1, noareas, 0.0);
+  temperature.AddRows(TimeInfo->numTotalSteps() + 1, noareas, 0.0);
   IntVector Years, Steps;
   int timeid, areaid, keepdata, year, step, area, count;
   double tmpnumber;

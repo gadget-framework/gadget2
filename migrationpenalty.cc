@@ -28,10 +28,10 @@ MigrationPenalty::MigrationPenalty(CommentStream& infile, double weight, const c
 void MigrationPenalty::addLikelihood(const TimeClass* const TimeInfo) {
   int i;
   double l = 0.0;
-  if ((stock->doesMigrate()) && (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps())) {
+  if ((stock->doesMigrate()) && (TimeInfo->getTime() == TimeInfo->numTotalSteps())) {
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "Calculating likelihood score for migrationpenalty component");
-    DoubleVector penalty(stock->returnMigration()->Penalty());
+    DoubleVector penalty(stock->getMigration()->Penalty());
     for (i = 0; i < penalty.Size(); i++)
       l += pow(penalty[i], powercoeffs[0]);
     l = pow(l, powercoeffs[1]);

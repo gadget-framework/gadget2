@@ -29,7 +29,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    */
   void Reset(const Predator* const pred, const TimeClass* const TimeInfo);
-  int DidChange(int i, const TimeClass* const TimeInfo) const;
+  int didChange(int i, const TimeClass* const TimeInfo) const;
 protected:
   /**
    * \brief This is the CharPtrVector of prey names

@@ -84,8 +84,8 @@ void Ecosystem::writeStatus(const char* filename) const {
   handle.checkIfFailure(outfile, filename);
   handle.Open(filename);
   RUNID.print(outfile);
-  outfile << "The current simulation time is " << TimeInfo->CurrentYear()
-    << ", step " << TimeInfo->CurrentStep() << endl;
+  outfile << "The current simulation time is " << TimeInfo->getYear()
+    << ", step " << TimeInfo->getStep() << endl;
 
   int i;
   for (i = 0; i < basevec.Size(); i++)

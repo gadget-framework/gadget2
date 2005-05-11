@@ -90,8 +90,7 @@ LengthPrey* OtherFood::returnPrey() const {
   return prey;
 }
 
-void OtherFood::checkEat(int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void OtherFood::checkEat(int area, const TimeClass* const TimeInfo) {
 
   if (this->isOtherFoodStepArea(area, TimeInfo))
     prey->checkConsumption(area, TimeInfo->numSubSteps());
@@ -103,16 +102,16 @@ void OtherFood::calcNumbers(int area,
   if (this->isOtherFoodStepArea(area, TimeInfo)) {
     PopInfo pop;
     pop.W = 1.0;   //warning - need to choose the weight to be 1
-    pop.N = amount[TimeInfo->CurrentTime()][this->areaNum(area)] * Area->Size(area);
+    pop.N = amount[TimeInfo->getTime()][this->areaNum(area)] * Area->getSize(area);
     PopInfoVector NumberInArea(1, pop);
-    prey->Sum(NumberInArea, area, TimeInfo->CurrentSubstep());
+    prey->Sum(NumberInArea, area, TimeInfo->getSubStep());
   }
 }
 
 int OtherFood::isOtherFoodStepArea(int area, const TimeClass* const TimeInfo) {
-  if ((handle.getLogLevel() >= LOGWARN) && (amount[TimeInfo->CurrentTime()][this->areaNum(area)] < 0))
+  if ((handle.getLogLevel() >= LOGWARN) && (amount[TimeInfo->getTime()][this->areaNum(area)] < 0))
     handle.logMessage(LOGWARN, "Warning in otherfood - negative amount to be consumed");
-  if (isZero(amount[TimeInfo->CurrentTime()][this->areaNum(area)]))
+  if (isZero(amount[TimeInfo->getTime()][this->areaNum(area)]))
     return 0;
   return 1;
 }

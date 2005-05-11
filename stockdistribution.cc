@@ -421,7 +421,7 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
 void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   int i;
   double l = 0.0;
-  if (AAT.AtCurrentTime(TimeInfo)) {
+  if (AAT.atCurrentTime(TimeInfo)) {
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "Calculating likelihood score for stockdistribution component", this->getName());
     for (i = 0; i < stocknames.Size(); i++) {
@@ -483,7 +483,7 @@ double StockDistribution::calcLikMultinomial() {
     }
     delete Dist[area];
   }
-  return MN.returnLogLikelihood();
+  return MN.getLogLikelihood();
 }
 
 double StockDistribution::calcLikSumSquares() {
@@ -532,7 +532,7 @@ double StockDistribution::calcLikSumSquares() {
 
 void StockDistribution::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  if (!AAT.AtCurrentTime(TimeInfo))
+  if (!AAT.atCurrentTime(TimeInfo))
     return;
 
   int t, area, s, i, age, len;

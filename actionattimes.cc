@@ -62,13 +62,13 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
         everyStep = 1;
         error = 2;   //We want to exit this while-loop.
       } else if ((readtext[0]) && !(readtext[1])) {
-        if ((TimeInfo->LastYear() != TimeInfo->FirstYear()) ||
-            (TimeInfo->FirstStep() <= step && step <= TimeInfo->LastStep())) {
+        if ((TimeInfo->getLastYear() != TimeInfo->getFirstYear()) ||
+            (TimeInfo->getFirstStep() <= step && step <= TimeInfo->getLastStep())) {
           Steps.resize(1);
           Steps[Steps.Size() - 1] = step;
         }
       } else if (!(readtext[0]) && (readtext[1])) {
-        if (TimeInfo->FirstYear() <= year && year <=  TimeInfo->LastYear()) {
+        if (TimeInfo->getFirstYear() <= year && year <=  TimeInfo->getLastYear()) {
           Years.resize(1);
           Years[Years.Size() - 1] = year;
         }
@@ -112,8 +112,8 @@ void ActionAtTimes::addActionsAllYears(const IntVector& steps, const TimeClass* 
     return;
   int i;
   for (i = 0; i < steps.Size(); i++)
-    if ((TimeInfo->LastYear() != TimeInfo->FirstYear()) ||
-        (TimeInfo->FirstStep() <= steps[i] && steps[i] <= TimeInfo->LastStep())) {
+    if ((TimeInfo->getLastYear() != TimeInfo->getFirstYear()) ||
+        (TimeInfo->getFirstStep() <= steps[i] && steps[i] <= TimeInfo->getLastStep())) {
       Steps.resize(1);
       Steps[Steps.Size() - 1] = steps[i];
     }
@@ -125,7 +125,7 @@ void ActionAtTimes::addActionsAllSteps(const IntVector& years, const TimeClass* 
     return;
   int i;
   for (i = 0; i < years.Size(); i++)
-    if (TimeInfo->FirstYear() <= years[i] && years[i] <= TimeInfo->LastYear()) {
+    if (TimeInfo->getFirstYear() <= years[i] && years[i] <= TimeInfo->getLastYear()) {
       Years.resize(1);
       Years[Years.Size() - 1] = years[i];
     }
@@ -137,18 +137,18 @@ void ActionAtTimes::addActionsAllSteps(const IntVector& years, const TimeClass* 
  * between calls, so that we can keep three indices, one for each
  * vector, telling us where we quit our search in the last call -- much
  * like done in Renewal::AddRenewal. */
-int ActionAtTimes::AtCurrentTime(const TimeClass* const TimeInfo) const {
+int ActionAtTimes::atCurrentTime(const TimeClass* const TimeInfo) const {
   if (everyStep)
     return 1;
   int i;
   for (i = 0; i < Steps.Size(); i++)
-    if (Steps[i] == TimeInfo->CurrentStep())
+    if (Steps[i] == TimeInfo->getStep())
       return 1;
   for (i = 0; i < Years.Size(); i++)
-    if (Years[i] == TimeInfo->CurrentYear())
+    if (Years[i] == TimeInfo->getYear())
       return 1;
   for (i = 0; i < TimeSteps.Size(); i++)
-    if (TimeSteps[i] == TimeInfo->CurrentTime())
+    if (TimeSteps[i] == TimeInfo->getTime())
       return 1;
   return 0;
 }

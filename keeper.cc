@@ -273,7 +273,7 @@ void Keeper::writeOptValues(const LikelihoodPtrVector& likevec) const {
 
   cout << "\n\nThe scores from each likelihood component are\n";
   for (i = 0; i < likevec.Size(); i++)
-    cout << likevec[i]->returnUnweightedLikelihood() << sep;
+    cout << likevec[i]->getUnweightedLikelihood() << sep;
 
   cout << "\n\nThe overall likelihood score is " << EcoSystem->getLikelihood() << endl;
 }
@@ -298,7 +298,7 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
   outfile << ";\n; Listing of the likelihood components used in the current Gadget run\n;\n";
   outfile << "; Component\tType\tWeight\n";
   for (i = 0; i < likevec.Size(); i++)
-    outfile << likevec[i]->getName() << TAB << likevec[i]->Type() << TAB << likevec[i]->returnWeight() << endl;
+    outfile << likevec[i]->getName() << TAB << likevec[i]->Type() << TAB << likevec[i]->getWeight() << endl;
   outfile << ";\n; Listing of the output from the likelihood components for the current Gadget run\n;\n";
   handle.Close();
   outfile.close();
@@ -332,7 +332,7 @@ void Keeper::writeValues(const char* const filename,
   }
   outfile << TAB << TAB;
   for (i = 0; i < likevec.Size(); i++)
-    outfile << setw(w) << setprecision(p) << likevec[i]->returnUnweightedLikelihood() << sep;
+    outfile << setw(w) << setprecision(p) << likevec[i]->getUnweightedLikelihood() << sep;
 
   if (prec == 0) {
     p = fullprecision;

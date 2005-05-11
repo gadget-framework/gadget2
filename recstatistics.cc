@@ -312,9 +312,9 @@ void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
   check = 0;
   for (t = 0; t < tagvec.Size(); t++) {
     timeindex[t] = -1;
-    if (tagvec[t]->isWithinPeriod(TimeInfo->CurrentYear(), TimeInfo->CurrentStep())) {
+    if (tagvec[t]->isWithinPeriod(TimeInfo->getYear(), TimeInfo->getStep())) {
       for (i = 0; i < Years.Ncol(t); i++) {
-        if (Years[t][i] == TimeInfo->CurrentYear() && Steps[t][i] == TimeInfo->CurrentStep()) {
+        if (Years[t][i] == TimeInfo->getYear() && Steps[t][i] == TimeInfo->getStep()) {
           if (check == 0)
             if (handle.getLogLevel() >= LOGMESSAGE)
               handle.logMessage(LOGMESSAGE, "Calculating likelihood score for recstatistics component", this->getName());

@@ -7,9 +7,9 @@ InterruptInterface::InterruptInterface(const Ecosystem& ecosystem) {
 }
 
 void InterruptInterface::printMenu() {
-  cout << "\nInterrupted at year " << eco->TimeInfo->CurrentYear() << ", step "
-    << eco->TimeInfo->CurrentStep() << " (" << eco->TimeInfo->CurrentTime()
-    << " of " << eco->TimeInfo->TotalNoSteps() << " timesteps)\n"
+  cout << "\nInterrupted at year " << eco->TimeInfo->getYear() << ", step "
+    << eco->TimeInfo->getStep() << " (" << eco->TimeInfo->getTime()
+    << " of " << eco->TimeInfo->numTotalSteps() << " timesteps)\n"
     << " q   ->  quit simulation\n"
     << " c   ->  continue simulation\n"
     << " p   ->  write current parameters to file\n"

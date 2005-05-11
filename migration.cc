@@ -33,9 +33,9 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   }
 
   if (AgeDepMigration)
-    MatrixNumbers.AddRows(ages.Nrow(), TimeInfo->TotalNoSteps() + 1, 0);
+    MatrixNumbers.AddRows(ages.Nrow(), TimeInfo->numTotalSteps() + 1, 0);
   else
-    MatrixNumbers.AddRows(1, TimeInfo->TotalNoSteps() + 1, 0);
+    MatrixNumbers.AddRows(1, TimeInfo->numTotalSteps() + 1, 0);
   infile >> text;
 
   //read the numbers of the migration matrices we are going to use.
@@ -158,12 +158,12 @@ const DoubleMatrix& Migration::MigrationMatrix(const TimeClass* const TimeInfo, 
   if (AgeDepMigration) {
     if (age >= 0 && age < AgeNr.Size())
       if (AgeNr[age] >= 0)
-        return *CalcMigList[MatrixNumbers[AgeNr[age]][TimeInfo->CurrentTime()]];
+        return *CalcMigList[MatrixNumbers[AgeNr[age]][TimeInfo->getTime()]];
 
     handle.logMessage(LOGFAIL, "Error in migration - failed to match age", age);
   }
 
-  return *CalcMigList[MatrixNumbers[0][TimeInfo->CurrentTime()]];
+  return *CalcMigList[MatrixNumbers[0][TimeInfo->getTime()]];
 }
 
 void Migration::MigrationRecalc(int year) {
@@ -394,10 +394,10 @@ void Migration::readNoMigrationMatrices(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   int year, step, time, age;
-  if (!FindContinuousYearAndStepWithNoText(infile, TimeInfo->FirstYear(), TimeInfo->FirstStep()))
+  if (!FindContinuousYearAndStepWithNoText(infile, TimeInfo->getFirstYear(), TimeInfo->getFirstStep()))
     handle.logFileMessage(LOGFAIL, "Failure in migration - unable to find the start of the migration data");
 
-  for (time = 1; time <= TimeInfo->TotalNoSteps(); time++) {
+  for (time = 1; time <= TimeInfo->numTotalSteps(); time++) {
     infile >> year >> step;
     if (infile.eof())
       handle.logFileEOFMessage(LOGFAIL);
@@ -435,8 +435,8 @@ void Migration::readOptVariables(CommentStream& infile, IntVector& novariables,
   int i = 0;
   ifstream subfile;
   CommentStream subcomment(subfile);
-  int firstyear = TimeInfo->FirstYear();
-  int lastyear = TimeInfo->LastYear();
+  int firstyear = TimeInfo->getFirstYear();
+  int lastyear = TimeInfo->getLastYear();
   streampos readPos;
 
   keeper->addString("variable");

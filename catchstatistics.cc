@@ -392,7 +392,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
 void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
-  if (AAT.AtCurrentTime(TimeInfo)) {
+  if (AAT.atCurrentTime(TimeInfo)) {
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchstatistics component", this->getName());
     aggregator->Sum(TimeInfo);
@@ -461,7 +461,7 @@ double CatchStatistics::calcLikSumSquares() {
 
 void CatchStatistics::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  if (!AAT.AtCurrentTime(TimeInfo))
+  if (!AAT.atCurrentTime(TimeInfo))
     return;
 
   int t, area, age;

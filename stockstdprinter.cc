@@ -175,7 +175,7 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
 
 void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
-  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
+  if ((!AAT.atCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
   aggregator->Sum();
@@ -188,8 +188,8 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
     for (age = (*alptr)[a].minAge(); age <= (*alptr)[a].maxAge(); age++) {
       PopStatistics popstat((*alptr)[a][age], LgrpDiv);
-      outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
-        << setw(lowwidth) << TimeInfo->CurrentStep() << sep
+      outfile << setw(lowwidth) << TimeInfo->getYear() << sep
+        << setw(lowwidth) << TimeInfo->getStep() << sep
         << setw(lowwidth) << outerareas[a] << sep << setw(lowwidth)
         << age + minage << sep;
 

@@ -41,7 +41,7 @@ void PredPreyStdLengthPrinter::setPopPredAndPrey(const PopPredator* pred,
 
 void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
-  if ((!AAT.AtCurrentTime(TimeInfo)) || (printtime != printtimeid))
+  if ((!AAT.atCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
   int a, predl, preyl;
@@ -54,8 +54,8 @@ void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo, int printt
     for (predl = 0; predl < predLgrpDiv->numLengthGroups(); predl++) {
       for (preyl = 0; preyl < preyLgrpDiv->numLengthGroups(); preyl++) {
 
-        outfile << setw(lowwidth) << TimeInfo->CurrentYear() << sep
-          << setw(lowwidth) << TimeInfo->CurrentStep() << sep
+        outfile << setw(lowwidth) << TimeInfo->getYear() << sep
+          << setw(lowwidth) << TimeInfo->getStep() << sep
           << setw(lowwidth) << outerareas[a] << sep << setw(lowwidth)
           << predLgrpDiv->meanLength(predl) << sep << setw(lowwidth)
           << preyLgrpDiv->meanLength(preyl) << sep;

@@ -42,7 +42,7 @@ void Stock::calcNumbers(int area, const AreaClass* const Area, const TimeClass* 
   if (doesgrow)
     grower->Sum(NumberInArea[inarea], area);
   if (iseaten) {
-    prey->Sum(Alkeys[inarea], area, TimeInfo->CurrentSubstep());
+    prey->Sum(Alkeys[inarea], area, TimeInfo->getSubStep());
     for (i = 0; i < allTags.Size(); i++)
       allTags[i]->storeNumberPriorToEating(area, this->getName());
   }
@@ -53,22 +53,21 @@ void Stock::calcNumbers(int area, const AreaClass* const Area, const TimeClass* 
 //-------------------------------------------------------------------
 void Stock::calcEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
   if (doeseat)
-    predator->Eat(area, TimeInfo->LengthOfCurrent(), Area->Temperature(area, TimeInfo->CurrentTime()),
-      Area->Size(area), TimeInfo->CurrentSubstep(), TimeInfo->numSubSteps());
+    predator->Eat(area, Area, TimeInfo);
 }
 
-void Stock::checkEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::checkEat(int area, const TimeClass* const TimeInfo) {
   if (iseaten)
     prey->checkConsumption(area, TimeInfo->numSubSteps());
 }
 
-void Stock::adjustEat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::adjustEat(int area, const TimeClass* const TimeInfo) {
   if (doeseat)
-    predator->adjustConsumption(area, TimeInfo->numSubSteps(), TimeInfo->CurrentSubstep());
+    predator->adjustConsumption(area, TimeInfo);
 }
 
 //-------------------------------------------------------------------
-void Stock::reducePop(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::reducePop(int area, const TimeClass* const TimeInfo) {
 
   //Predation
   if (iseaten)
@@ -153,13 +152,13 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 //-----------------------------------------------------------------------
 //A number of Special functions, Spawning, Renewal, Maturation and
 //Transition to other Stocks, Maturity due to age and increased age.
-void Stock::updateAgePart1(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::updateAgePart1(int area, const TimeClass* const TimeInfo) {
   if (doesmove)
     if (transition->isTransitionStep(area, TimeInfo))
       transition->keepAgeGroup(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
 }
 
-void Stock::updateAgePart2(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::updateAgePart2(int area, const TimeClass* const TimeInfo) {
   if (this->Birthday(TimeInfo)) {
     Alkeys[this->areaNum(area)].IncrementAge();
     if (tagAlkeys.numTagExperiments() > 0)
@@ -167,7 +166,7 @@ void Stock::updateAgePart2(int area, const AreaClass* const Area, const TimeClas
   }
 }
 
-void Stock::updateAgePart3(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::updateAgePart3(int area, const TimeClass* const TimeInfo) {
   if (doesmove) {
     if (transition->isTransitionStep(area, TimeInfo)) {
       updateTransitionStockWithTags(TimeInfo);
@@ -176,7 +175,7 @@ void Stock::updateAgePart3(int area, const AreaClass* const Area, const TimeClas
   }
 }
 
-void Stock::updatePopulationPart1(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::updatePopulationPart1(int area, const TimeClass* const TimeInfo) {
   if (doesspawn) {
     if (spawner->isSpawnStepArea(area, TimeInfo)) {
       spawner->Spawn(Alkeys[this->areaNum(area)], area, TimeInfo);
@@ -186,7 +185,7 @@ void Stock::updatePopulationPart1(int area, const AreaClass* const Area, const T
   }
 }
 
-void Stock::updatePopulationPart2(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::updatePopulationPart2(int area, const TimeClass* const TimeInfo) {
   if (doesmature) {
     if (maturity->isMaturationStep(area, TimeInfo)) {
       updateMatureStockWithTags(TimeInfo);
@@ -195,7 +194,7 @@ void Stock::updatePopulationPart2(int area, const AreaClass* const Area, const T
   }
 }
 
-void Stock::updatePopulationPart3(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::updatePopulationPart3(int area, const TimeClass* const TimeInfo) {
   if (doesrenew) {
     if (renewal->isRenewalStepArea(area, TimeInfo)) {
       renewal->addRenewal(Alkeys[this->areaNum(area)], area, TimeInfo);
@@ -209,13 +208,13 @@ void Stock::updatePopulationPart3(int area, const AreaClass* const Area, const T
       spawner->addSpawnStock(area, TimeInfo);
 }
 
-void Stock::updatePopulationPart4(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::updatePopulationPart4(int area, const TimeClass* const TimeInfo) {
   if (doesstray)
     if (stray->isStrayStepArea(area, TimeInfo))
       stray->storeStrayingStock(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
 }
 
-void Stock::updatePopulationPart5(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::updatePopulationPart5(int area, const TimeClass* const TimeInfo) {
   if (doesstray) {
     if (stray->isStrayStepArea(area, TimeInfo)) {
       updateStrayStockWithTags(TimeInfo);
@@ -262,7 +261,7 @@ void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const 
 
 void Stock::calcMigration(const TimeClass* const TimeInfo) {
   if (doesmigrate)
-    migration->MigrationRecalc(TimeInfo->CurrentYear());
+    migration->MigrationRecalc(TimeInfo->getYear());
 }
 
 void Stock::updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss) {

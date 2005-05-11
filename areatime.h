@@ -36,14 +36,14 @@ public:
    * \param area is the identifier for the required area
    * \return size
    */
-  double Size(int area) const { return size[area]; };
+  double getSize(int area) const { return size[area]; };
   /**
    * \brief This will return the temperature of an area on a timestep
    * \param area is the identifier for the required area
    * \param time is the identifier for the required timestep
    * \return size
    */
-  double Temperature(int area, int time) const { return temperature[time][area]; };
+  double getTemperature(int area, int time) const { return temperature[time][area]; };
   /**
    * \brief This will return the internal identifier of an area
    * \param area is the identifier for the required area
@@ -92,58 +92,52 @@ public:
    * \brief This will return the current substep of the model simulation
    * \return currentsubstep
    */
-  int CurrentSubstep() const { return currentsubstep; };
+  int getSubStep() const { return currentsubstep; };
   /**
    * \brief This will return the current step of the model simulation
    * \return currentstep
    */
-  int CurrentStep() const { return currentstep; };
+  int getStep() const { return currentstep; };
   /**
    * \brief This will return the current year of the model simulation
    * \return currentyear
    */
-  int CurrentYear() const { return currentyear; };
+  int getYear() const { return currentyear; };
   /**
    * \brief This will return the total number of timesteps that have taken place in the simulation from the start of the model simulation until the current timestep
    * \return number of timesteps taken from the start of the simulation
    */
-  int CurrentTime() const { return this->calcSteps(currentyear, currentstep); };
+  int getTime() const { return this->calcSteps(currentyear, currentstep); };
   /**
    * \brief This will return the first step of the model simulation
    * \return firststep
    */
-  int FirstStep() const { return firststep; };
+  int getFirstStep() const { return firststep; };
   /**
    * \brief This will return the first year of the model simulation
    * \return firstyear
    */
-  int FirstYear() const { return firstyear; };
+  int getFirstYear() const { return firstyear; };
   /**
    * \brief This will return the last step of the model simulation
    * \return laststep
    */
-  int LastStep() const { return laststep; };
+  int getLastStep() const { return laststep; };
   /**
    * \brief This will return the last year of the model simulation
    * \return lastyear
    */
-  int LastYear() const { return lastyear; };
+  int getLastYear() const { return lastyear; };
+  /**
+   * \brief This will return the length of the current step of the model simulation as a proportion of the whole year
+   * \return proportion of year
+   */
+  double getTimeStepSize() const { return (timesteps[currentstep] * lengthofyear); };
   /**
    * \brief This will return the length of the current step of the model simulation
    * \return length of step
    */
   double LengthOfCurrent() const { return timesteps[currentstep]; };
-  /**
-   * \brief This will return the length of each year of the model simulation
-   * \return lengthofyear
-   */
-  double LengthOfYear() const { return lengthofyear; };
-  /**
-   * \brief This will return the length of the specified step of the model simulation
-   * \param step is the specified timestep
-   * \return length of step
-   */
-  double LengthOfStep(int step) const { return timesteps[step]; };
   /**
    * \brief This will return the total number of timesteps that have taken place in the simulation from the start of the model simulation until a specifed year and step
    * \param year is the specified year
@@ -156,13 +150,13 @@ public:
    * \brief This will return the total number of timesteps in the model simulation
    * \return total number of timesteps
    */
-  int TotalNoSteps() const {
+  int numTotalSteps() const {
     return (numtimesteps * (lastyear - firstyear) + laststep - firststep + 1); };
   /**
    * \brief This will return the number of steps in each year of the model simulation
    * \return numtimesteps
    */
-  int StepsInYear() const { return numtimesteps; };
+  int numSteps() const { return numtimesteps; };
   /**
    * \brief This is the function that increases the timestep for the model simulation
    */
@@ -191,7 +185,7 @@ public:
    * \brief This is the function that will check to see if the length of the current timestep has changed from the previous timestep
    * \return 1 if the length of the timestep has changed, 0 otherwise
    */
-  int SizeOfStepDidChange() const;
+  int didStepSizeChange() const;
 protected:
   /**
    * \brief This is the current step of the model simulation
@@ -223,6 +217,7 @@ protected:
   int numtimesteps;
   /**
    * \brief This is the length of a year in the model simulation (should be 12)
+   * \note this is stored as 1/length of year to save processing time
    */
   double lengthofyear;
   /**

@@ -18,18 +18,17 @@ LinearPredator::LinearPredator(CommentStream& infile, const char* givenname,
   keeper->clearLast();
 }
 
-void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
-  double Areasize, int CurrentSubstep, int numsubsteps) {
+void LinearPredator::Eat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   int inarea = this->areaNum(area);
   int prey, preyl;
   double tmp;
-  
+
   int predl = 0;  //JMB there is only ever one length group ...
   totalcons[inarea][predl] = 0.0;
 
-  scaler[inarea] = Multiplicative;
-  tmp = prednumber[inarea][predl].N * Multiplicative * LengthOfStep / numsubsteps;
+  scaler[inarea] = Multiplicative * TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
+  tmp = scaler[inarea] * prednumber[inarea][predl].N;
 
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (Preys(prey)->isPreyArea(area)) {
@@ -38,7 +37,7 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
 
       for (preyl = Suitability(prey)[predl].minCol();
           preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-        cons[inarea][prey][predl][preyl] = tmp * 
+        cons[inarea][prey][predl][preyl] = tmp *
           Suitability(prey)[predl][preyl] * Preys(prey)->getBiomass(area, preyl);
         totalcons[inarea][predl] += cons[inarea][prey][predl][preyl];
       }
@@ -57,8 +56,8 @@ void LinearPredator::Eat(int area, double LengthOfStep, double Temperature,
       Preys(prey)->addBiomassConsumption(area, cons[inarea][prey][predl]);
 }
 
-void LinearPredator::adjustConsumption(int area, int numsubsteps, int CurrentSubstep) {
-  double maxRatio = pow(MaxRatioConsumed, numsubsteps);
+void LinearPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
+  double maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
   int over, prey, preyl;
   double ratio, tmp;
   int inarea = this->areaNum(area);

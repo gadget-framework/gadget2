@@ -192,7 +192,7 @@ void SC::aggregate(int i) {
 }
 
 double SC::calcLikelihood(const TimeClass* const TimeInfo) {
-  if (!AAT.AtCurrentTime(TimeInfo))
+  if (!AAT.atCurrentTime(TimeInfo))
     return 0.0;
 
   int i, a, k, p;
@@ -245,7 +245,7 @@ void SC::SummaryPrint(ofstream& outfile, double weight) {
 //JMB - note this ignores the standard deviation and number of samples ...
 void SC::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  if (!AAT.AtCurrentTime(TimeInfo))
+  if (!AAT.atCurrentTime(TimeInfo))
     return;
 
   int t, area, pred, prey;
@@ -592,7 +592,7 @@ double SCNumbers::calcLikelihood() {
       likelihoodValues[timeindex][a] += MN.calcLogLikelihood(data, dist);
     }
   }
-  return MN.returnLogLikelihood();
+  return MN.getLogLikelihood();
 }
 
 void SCNumbers::aggregate(int i) {

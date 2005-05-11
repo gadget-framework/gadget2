@@ -17,7 +17,7 @@ void PreyStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
   int l;
   double timeratio;
 
-  timeratio = TimeInfo->LengthOfYear() / TimeInfo->LengthOfCurrent();
+  timeratio = 1.0 / TimeInfo->getTimeStepSize();
   for (l = 0; l < BconbyLength.Ncol(inarea); l++) {
     BconbyLength[inarea][l] = Bconsumption[l];
     //NconbyLength[inarea][l] = 0.0;  //initialised to zero

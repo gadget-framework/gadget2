@@ -44,7 +44,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   }
 
   for (i = 0; i < spawnStep.Size(); i++)
-    if (spawnStep[i] < 1 || spawnStep[i] > TimeInfo->StepsInYear())
+    if (spawnStep[i] < 1 || spawnStep[i] > TimeInfo->numSteps())
       handle.logFileMessage(LOGFAIL, "Error in spawner - invalid spawning step");
 
   infile >> text >> ws;
@@ -339,7 +339,7 @@ int SpawnData::isSpawnStepArea(int area, const TimeClass* const TimeInfo) {
 
   for (i = 0; i < spawnStep.Size(); i++)
     for (j = 0; j < spawnArea.Size(); j++)
-      if ((spawnStep[i] == TimeInfo->CurrentStep()) && (spawnArea[j] == area))
+      if ((spawnStep[i] == TimeInfo->getStep()) && (spawnArea[j] == area))
         return 1;
   return 0;
 }
@@ -348,7 +348,7 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
   int i;
 
   fnProportion->updateConstants(TimeInfo);
-  if (fnProportion->constantsHaveChanged(TimeInfo)) {
+  if (fnProportion->didChange(TimeInfo)) {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       spawnProportion[i] = fnProportion->calculate(LgrpDiv->meanLength(i));
       if (spawnProportion[i] < 0.0) {
@@ -365,7 +365,7 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
   }
 
   fnWeightLoss->updateConstants(TimeInfo);
-  if (fnWeightLoss->constantsHaveChanged(TimeInfo)) {
+  if (fnWeightLoss->didChange(TimeInfo)) {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       spawnWeightLoss[i] = fnWeightLoss->calculate(LgrpDiv->meanLength(i));
       if (spawnWeightLoss[i] < 0.0) {
@@ -382,7 +382,7 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
   }
 
   fnMortality->updateConstants(TimeInfo);
-  if (fnMortality->constantsHaveChanged(TimeInfo)) {
+  if (fnMortality->didChange(TimeInfo)) {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       spawnMortality[i] = fnMortality->calculate(LgrpDiv->meanLength(i));
     }

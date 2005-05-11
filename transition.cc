@@ -218,7 +218,7 @@ void Transition::deleteTransitionTag(const char* tagname) {
 }
 
 int Transition::isTransitionStep(int area, const TimeClass* const TimeInfo) {
-  if (TimeInfo->CurrentStep() == transitionStep)
+  if (TimeInfo->getStep() == transitionStep)
     return 1;
   return 0;
 }

@@ -17,13 +17,13 @@ void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {
       basevec[i]->calcEat(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->isInArea(area))
-      basevec[i]->checkEat(area, Area, TimeInfo);
+      basevec[i]->checkEat(area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->isInArea(area))
-      basevec[i]->adjustEat(area, Area, TimeInfo);
+      basevec[i]->adjustEat(area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->isInArea(area))
-      basevec[i]->reducePop(area, Area, TimeInfo);
+      basevec[i]->reducePop(area, TimeInfo);
 }
 
 void Ecosystem::updatePopulationOneArea(int area) {
@@ -34,19 +34,19 @@ void Ecosystem::updatePopulationOneArea(int area) {
       basevec[i]->Grow(area, Area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->isInArea(area))
-      basevec[i]->updatePopulationPart1(area, Area, TimeInfo);
+      basevec[i]->updatePopulationPart1(area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->isInArea(area))
-      basevec[i]->updatePopulationPart2(area, Area, TimeInfo);
+      basevec[i]->updatePopulationPart2(area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->isInArea(area))
-      basevec[i]->updatePopulationPart3(area, Area, TimeInfo);
+      basevec[i]->updatePopulationPart3(area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->isInArea(area))
-      basevec[i]->updatePopulationPart4(area, Area, TimeInfo);
+      basevec[i]->updatePopulationPart4(area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->isInArea(area))
-      basevec[i]->updatePopulationPart5(area, Area, TimeInfo);
+      basevec[i]->updatePopulationPart5(area, TimeInfo);
 }
 
 void Ecosystem::updateAgesOneArea(int area) {
@@ -54,18 +54,18 @@ void Ecosystem::updateAgesOneArea(int area) {
   // age related update and movements between stocks.
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->isInArea(area))
-      basevec[i]->updateAgePart1(area, Area, TimeInfo);
+      basevec[i]->updateAgePart1(area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->isInArea(area))
-      basevec[i]->updateAgePart2(area, Area, TimeInfo);
+      basevec[i]->updateAgePart2(area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->isInArea(area))
-      basevec[i]->updateAgePart3(area, Area, TimeInfo);
+      basevec[i]->updateAgePart3(area, TimeInfo);
 }
 
 void Ecosystem::SimulateOneTimestep() {
   int i;
-  while (TimeInfo->CurrentSubstep() <=  TimeInfo->numSubSteps()) {
+  while (TimeInfo->getSubStep() <=  TimeInfo->numSubSteps()) {
     for (i = 0; i < basevec.Size(); i++)
       basevec[i]->Migrate(TimeInfo);
     for (i = 0; i < Area->numAreas(); i++)
@@ -91,7 +91,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
   }
 
   TimeInfo->Reset();
-  for (i = 0; i < TimeInfo->TotalNoSteps(); i++) {
+  for (i = 0; i < TimeInfo->numTotalSteps(); i++) {
 
     for (j = 0; j < basevec.Size(); j++)
       basevec[j]->Reset(TimeInfo);
@@ -105,7 +105,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
       for (j = 0; j < printvec.Size(); j++)
         printvec[j]->Print(TimeInfo, 1);  //start of timestep, so printtime is 1
 
-    if (TimeInfo->CurrentStep() == 1) //Migration calculated once per year.
+    if (TimeInfo->getStep() == 1) //Migration calculated once per year.
       for (j = 0; j < basevec.Size(); j++)
         basevec[j]->calcMigration(TimeInfo);
 
@@ -147,7 +147,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
   if (Optimise) {
     likelihood = 0.0;
     for (j = 0; j < likevec.Size(); j++)
-      likelihood += likevec[j]->returnLikelihood();
+      likelihood += likevec[j]->getLikelihood();
   }
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "The current overall likelihood score is", likelihood);

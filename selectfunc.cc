@@ -44,8 +44,8 @@ void SelectFunc::updateConstants(const TimeClass* const TimeInfo) {
   coeff.Update(TimeInfo);
 }
 
-int SelectFunc::constantsHaveChanged(const TimeClass* const TimeInfo) {
-  return coeff.DidChange(TimeInfo);
+int SelectFunc::didChange(const TimeClass* const TimeInfo) {
+  return coeff.didChange(TimeInfo);
 }
 
 int SelectFunc::numConstants() {

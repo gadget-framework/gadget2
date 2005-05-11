@@ -92,11 +92,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
         for (j = 0; j < areas.Ncol(aggrArea); j++) {
           area = areas[aggrArea][j];
           if ((prey->isPreyArea(area)) && (fleets[f]->isFleetStepArea(area, TimeInfo))) {
-
             fleetscale = fleets[f]->Amount(area, TimeInfo) * pred->Scaler(area);
-            if (fleets[f]->Type() == LINEARFLEET)
-              fleetscale *= TimeInfo->LengthOfCurrent() / TimeInfo->LengthOfYear();
-
             for (i = 0; i < pred->numPreys(); i++) {
               if (strcasecmp(prey->getName(), pred->Preys(i)->getName()) == 0) {
                 suitptr = &pred->Suitability(i)[0];

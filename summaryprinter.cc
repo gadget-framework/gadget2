@@ -78,7 +78,7 @@ void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
 
 void SummaryPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
-  if ((TimeInfo->CurrentTime() != TimeInfo->TotalNoSteps()) || (printtime != printtimeid))
+  if ((TimeInfo->getTime() != TimeInfo->numTotalSteps()) || (printtime != printtimeid))
     return;
 
   int i;

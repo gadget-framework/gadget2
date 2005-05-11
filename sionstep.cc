@@ -211,7 +211,7 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInf
 
   int t, area, i;
 
-  if (AAT.AtCurrentTime(TimeInfo)) {
+  if (AAT.atCurrentTime(TimeInfo)) {
     t = timeindex - 1; //timeindex was increased before this is called
     if ((t >= Years.Size()) || t < 0)
       handle.logMessage(LOGFAIL, "Error in surveyindex - invalid timestep", t);
@@ -227,7 +227,7 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInf
   }
 
   //JMB - this is nasty hack to output the regression information
-  if (TimeInfo->CurrentTime() == TimeInfo->TotalNoSteps()) {
+  if (TimeInfo->getTime() == TimeInfo->numTotalSteps()) {
     outfile << "; Regression information\n";
     for (i = 0; i < this->numIndex(); i++)
       outfile << "; " << colindex[i] << " intercept " << intercepts[i]
@@ -236,7 +236,7 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInf
 }
 
 int SIOnStep::isToSum(const TimeClass* const TimeInfo) const {
-  return AAT.AtCurrentTime(TimeInfo);
+  return AAT.atCurrentTime(TimeInfo);
 }
 
 double SIOnStep::calcRegression() {

@@ -486,7 +486,7 @@ void RenewalData::Reset() {
 int RenewalData::isRenewalStepArea(int area, const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < renewalTime.Size(); i++)
-    if ((renewalTime[i] == TimeInfo->CurrentTime()) && (renewalArea[i] == area))
+    if ((renewalTime[i] == TimeInfo->getTime()) && (renewalArea[i] == area))
       return 1;
   return 0;
 }
@@ -494,7 +494,7 @@ int RenewalData::isRenewalStepArea(int area, const TimeClass* const TimeInfo) {
 void RenewalData::addRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < renewalTime.Size(); i++) {
-    if ((renewalTime[i] == TimeInfo->CurrentTime()) && (renewalArea[i] == area)) {
+    if ((renewalTime[i] == TimeInfo->getTime()) && (renewalArea[i] == area)) {
       index = i;
       if (readoption == 2)
         Alkeys.Add(renewalDistribution[i], *CI);

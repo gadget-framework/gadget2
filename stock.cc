@@ -285,7 +285,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   }
 
   //set the birthday for the stock
-  birthdate = TimeInfo->StepsInYear();
+  birthdate = TimeInfo->numSteps();
 
   //Finished reading from infile - resize objects and clean up
   NumberInArea.AddRows(areas.Size(), LgrpDiv->numLengthGroups());
@@ -344,7 +344,7 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
   if (iseaten)
     prey->Reset();
 
-  if (TimeInfo->CurrentTime() == 1) {
+  if (TimeInfo->getTime() == 1) {
     initial->Initialise(Alkeys);
     if (doesrenew)
       renewal->Reset();
@@ -434,7 +434,7 @@ void Stock::Print(ofstream& outfile) const {
 }
 
 int Stock::Birthday(const TimeClass* const TimeInfo) const {
-  return (TimeInfo->CurrentStep() == birthdate);
+  return (TimeInfo->getStep() == birthdate);
 }
 
 const AgeBandMatrix& Stock::getAgeLengthKeys(int area) const {

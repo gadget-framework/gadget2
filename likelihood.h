@@ -73,7 +73,7 @@ public:
    * \brief This will return the weighted likelihood score for the likelihood component
    * \return weight*likelihood
    */
-  double returnLikelihood() const { return weight * likelihood; };
+  double getLikelihood() const { return weight * likelihood; };
   /**
    * \brief This will return the type of likelihood class
    * \return type
@@ -83,12 +83,12 @@ public:
    * \brief This will return the unweighted likelihood score for the likelihood component
    * \return likelihood
    */
-  double returnUnweightedLikelihood() const { return likelihood; };
+  double getUnweightedLikelihood() const { return likelihood; };
   /**
    * \brief This will return the weight applied to the likelihood component
    * \return weight
    */
-  double returnWeight() const { return weight; };
+  double getWeight() const { return weight; };
   /**
    * \brief This will select the fleets and stocks required to calculate the likelihood score
    * \param Fleets is the FleetPtrVector of all the available fleets

@@ -139,8 +139,8 @@ void SuitFunc::updateConstants(const TimeClass* const TimeInfo) {
   coeff.Update(TimeInfo);
 }
 
-int SuitFunc::constantsHaveChanged(const TimeClass* const TimeInfo) {
-  return coeff.DidChange(TimeInfo);
+int SuitFunc::didChange(const TimeClass* const TimeInfo) {
+  return coeff.didChange(TimeInfo);
 }
 
 int SuitFunc::numConstants() {
