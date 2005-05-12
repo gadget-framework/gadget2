@@ -318,7 +318,7 @@ int SlaveCommunication::receiveString() {
   tempString[MaxStrLength] = '\0';
 
   if (netDataStr.Size() == 0) {
-    VectorOfCharPtr tempvec;
+    CharPtrVector tempvec;
     netDataStr = tempvec;
   }
 

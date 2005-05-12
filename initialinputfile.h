@@ -1,7 +1,7 @@
 #ifndef initialinputfile_h
 #define initialinputfile_h
 
-#include "vectorofcharptr.h"
+#include "charptrvector.h"
 #include "parametervector.h"
 #include "doublevector.h"
 #include "intvector.h"
@@ -62,7 +62,7 @@ public:
 private:
   CommentStream infile;
   ifstream tmpinfile;
-  VectorOfCharPtr header;
+  CharPtrVector header;
   /**
    * \brief This is the ParameterVector used to store the parameters read from file
    */

@@ -66,7 +66,7 @@ VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 	agebandmatrixptrvector.o popratioindexvector.o agebandmatrixptrmatrix.o \
 	formulamatrix.o formulavector.o charptrmatrix.o charptrvector.o \
 	timevariablevector.o stockptrvector.o agebandmatrixratioptrvector.o \
-	vectorofcharptr.o suitfuncptrvector.o tagptrvector.o printerptrvector.o \
+	suitfuncptrvector.o tagptrvector.o printerptrvector.o \
 	bandmatrixptrvector.o bandmatrixptrmatrix.o variableinfoptrvector.o
 
 GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.o \
@@ -99,9 +99,8 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
-GADGETINPUT = initialinputfile.o vectorofcharptr.o charptrvector.o \
-	commentstream.o parameter.o parametervector.o doubleindexvector.o \
-	intvector.o doublevector.o intmatrix.o doublematrix.o
+GADGETINPUT = doubleindexvector.o intvector.o doublevector.o intmatrix.o doublematrix.o \
+        initialinputfile.o charptrvector.o commentstream.o parameter.o parametervector.o 
 
 LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
 

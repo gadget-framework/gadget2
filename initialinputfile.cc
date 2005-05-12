@@ -94,7 +94,7 @@ void InitialInputFile::readHeader() {
     strncpy(textInLine, "", LongString);
     infile.get(textInLine, LongString, '\n');
     if (!infile.eof() && infile.peek() != '\n') {
-      cerr << "Error in initial input file - line to long in file\n";
+      cerr << "Error in initial input file - line too long in file\n";
       exit(EXIT_FAILURE);
     }
     istringstream line(textInLine);
