@@ -65,7 +65,7 @@ private:
   /**
    * \brief This is the StockPredator of the predator - prey pair
    */
-  const StockPredator* predator;
+  const StockPredator* pred;
   /**
    * \brief This is the Prey of the predator - prey pair
    */

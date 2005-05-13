@@ -6,7 +6,6 @@ extern ErrorHandler handle;
 
 Formula::Formula() {
   value = 0.0;
-  name = NULL;
   type = CONSTANT;
   functiontype = NONE;
 }
@@ -150,7 +149,7 @@ Formula::Formula(const Formula& form) {
     case FUNCTION:
       unsigned int i;
       for (i = 0; i < form.argList.size(); i++) {
-        Formula *f = new Formula(*form.argList[i]);
+        Formula* f = new Formula(*form.argList[i]);
         argList.push_back(f);
       }
       break;
@@ -167,9 +166,8 @@ void Formula::setValue(double initValue) {
 }
 
 CommentStream& operator >> (CommentStream& infile, Formula& F) {
-  assert(F.argList.size() == 0);
-  assert(F.type == CONSTANT);
-  assert(F.name == NULL);
+  if (F.type != CONSTANT)
+    handle.logMessage(LOGFAIL, "Error in formula - failed to read formula");
 
   if (infile.fail()) {
     infile.makebad();
@@ -308,7 +306,6 @@ void Formula::Interchange(Formula& NewF, Keeper* keeper) const {
   while (NewF.argList.size() > 0)
     NewF.argList.pop_back();
 
-  assert(NewF.argList.size() == 0);
   NewF.type = type;
   switch (type) {
     case CONSTANT:
@@ -325,7 +322,7 @@ void Formula::Interchange(Formula& NewF, Keeper* keeper) const {
       NewF.functiontype = functiontype;
       unsigned int i;
       for (i = 0; i < argList.size(); i++) {
-        Formula *f = new Formula(*argList[i]);
+        Formula* f = new Formula(*argList[i]);
         NewF.argList.push_back(f);
       }
       for (i = 0; i < argList.size(); i++)
@@ -336,7 +333,6 @@ void Formula::Interchange(Formula& NewF, Keeper* keeper) const {
       handle.logMessage(LOGFAIL, "Error in formula - unrecognised type", type);
       break;
   }
-  assert(NewF.argList.size() == argList.size());
 }
 
 void Formula::Delete(Keeper* keeper) const {

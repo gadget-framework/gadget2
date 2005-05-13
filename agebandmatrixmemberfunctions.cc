@@ -245,7 +245,6 @@ void AgeBandMatrix::printWeights(ofstream& outfile) const {
 }
 
 void AgeBandMatrixPtrVector::Migrate(const DoubleMatrix& MI) {
-  assert(MI.Nrow() == size);
   PopInfoVector tmp(size);
   int i, j, age, length;
 

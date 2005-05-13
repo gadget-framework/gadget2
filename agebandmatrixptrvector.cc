@@ -9,9 +9,8 @@ AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(int sz) {
 }
 
 AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(int sz, AgeBandMatrix* value) {
-  assert(value != NULL);
-  size = (sz > 0 ? sz : 0);
   int i;
+  size = (sz > 0 ? sz : 0);
   if (size > 0) {
     v = new AgeBandMatrix*[size];
     for (i = 0; i < size; i++)
@@ -20,18 +19,17 @@ AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(int sz, AgeBandMatrix* value) {
     v = 0;
 }
 
-AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(int size1, int minage,
-  const IntVector& minl, const IntVector& size2) {
+AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(int sz, int minage,
+  const IntVector& minl, const IntVector& lsize) {
 
-  assert(size1 >= 0);
-  size = size1;
   int i;
+  size = (sz > 0 ? sz : 0);
   if (size == 0) {
     v = 0;
   } else {
     v = new AgeBandMatrix*[size];
     for (i = 0; i < size; i++)
-      v[i] = new AgeBandMatrix(minage, minl, size2);
+      v[i] = new AgeBandMatrix(minage, minl, lsize);
   }
 }
 

@@ -12,7 +12,6 @@ public:
   DoubleMatrix(int nrow, const IntVector& ncol);
   DoubleMatrix(int nrow, const IntVector& ncol, double initial);
   DoubleMatrix(const DoubleMatrix& initial);
-  DoubleMatrix(double* initial, int nr, int nc);
   ~DoubleMatrix();
   int Ncol(int i = 0) const { return v[i]->Size(); };
   int Nrow() const { return nrow; };

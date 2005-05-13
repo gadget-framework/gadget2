@@ -9,17 +9,6 @@ DoubleVector::DoubleVector(int sz) {
     v = 0;
 }
 
-DoubleVector::DoubleVector(double* initial, int sz) {
-  size = sz;
-  int i;
-  if (size > 0) {
-    v = new double[size];
-    for (i = 0; i < size; i++)
-      v[i] = initial[i];
-  } else
-    v = 0;
-}
-
 DoubleVector::DoubleVector(int sz, double value) {
   size = (sz > 0 ? sz : 0);
   int i;

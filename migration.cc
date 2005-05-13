@@ -447,7 +447,7 @@ void Migration::readOptVariables(CommentStream& infile, IntVector& novariables,
     infile >> text;
     subfile.open(text, ios::in);
     if (subfile.fail()) {
-      Formula* number = new Formula;
+      Formula* number = new Formula();
       infile.seekg(readPos);
       if (!(infile >> *number))
         handle.logFileMessage(LOGFAIL, text);

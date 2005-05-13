@@ -1,16 +1,15 @@
 #include "bandmatrixptrvector.h"
 #include "gadget.h"
 
-BandMatrixPtrVector::BandMatrixPtrVector(int sz) : size(sz) {
-  assert(size >= 0);
+BandMatrixPtrVector::BandMatrixPtrVector(int sz) {
+  size = (sz > 0 ? sz : 0);
   int i;
-  if (size == 0) {
+  if (size > 0) {
+    v = new BandMatrix*[size];
+    for (i = 0; i < size; i++)
+      v[i] = 0;
+  } else
     v = 0;
-    return;
-  }
-  v = new BandMatrix*[size];
-  for (i = 0; i < size; i++)
-    v[i] = 0;
 }
 
 BandMatrixPtrVector::~BandMatrixPtrVector() {

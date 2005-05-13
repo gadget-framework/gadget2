@@ -7,8 +7,8 @@ AgeBandMatrixPtrMatrix::AgeBandMatrixPtrMatrix(int sz) {
   else
     v = 0;
 }
+
 AgeBandMatrixPtrMatrix::AgeBandMatrixPtrMatrix(int sz, AgeBandMatrixPtrVector* value) {
-  assert(value != NULL);
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {

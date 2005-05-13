@@ -3,22 +3,14 @@
 #include "gadget.h"
 
 DoubleMatrix::DoubleMatrix(int nr, int nc) {
-  assert((nr > 0) && (nc > 0));
-  nrow = nr;
-  v = new DoubleVector*[nr];
+  nrow = (nr > 0 ? nr : 0);
   int i;
-  for (i = 0; i < nr; i++)
-    v[i] = new DoubleVector(nc);
-}
-
-DoubleMatrix::DoubleMatrix(double* initial, int nr, int nc) {
-  assert(initial != NULL);
-  assert((nr > 0) && (nc > 0));
-  nrow = nr;
-  v = new DoubleVector*[nr];
-  int i;
-  for (i = 0; i < nr; i++)
-    v[i] = new DoubleVector(&initial[i * nc], nc);
+  if (nrow > 0) {
+    v = new DoubleVector*[nrow];
+    for (i = 0; i < nrow; i++)
+      v[i] = new DoubleVector(nc);
+  } else
+    v = 0;
 }
 
 DoubleMatrix::DoubleMatrix(int nr, int nc, double value) {

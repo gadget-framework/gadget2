@@ -217,3 +217,29 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
     }
   }
 }
+
+void AgeBandMatrixRatioPtrVector::Migrate(const DoubleMatrix& MI, const AgeBandMatrixPtrVector& Total) {
+
+  DoubleVector tmp(size);
+  int i, j, age, length, tag;
+  int numTagExperiments = tagID.Size();
+  if (numTagExperiments > 0) {
+    for (age = v[0]->minAge(); age <= v[0]->maxAge(); age++) {
+      for (length = v[0]->minLength(age); length < v[0]->maxLength(age); length++) {
+        for (tag = 0; tag < numTagExperiments; tag++) {
+          for (j = 0; j < size; j++)
+            tmp[j] = 0;
+
+          for (j = 0; j < size; j++)
+            for (i = 0; i < size; i++)
+              tmp[j] += *((*v[i])[age][length][tag].N) * MI[j][i];
+
+          for (j = 0; j < size; j++)
+            *((*v[j])[age][length][tag].N) = tmp[j];
+        }
+      }
+    }
+    for (i = 0; i < size; i++)
+      v[i]->updateRatio(Total[i]);
+  }
+}

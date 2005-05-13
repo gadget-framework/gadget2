@@ -260,26 +260,26 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
 void StockPredator::calcMaxConsumption(double Temperature,
   int inarea, const TimeClass* const TimeInfo) {
 
-  int length, age;
+  int len, age;
   double tmp, timeratio;
 //  timeratio = TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
   timeratio = TimeInfo->LengthOfCurrent() / TimeInfo->numSubSteps();
 
   if (TimeInfo->getSubStep() == 1) {
-    for (length = 0; length < maxconbylength.Ncol(); length++) {
-      tmp = maxConsumption(LgrpDiv->meanLength(length), maxconsumption, Temperature);
-      maxconbylength[inarea][length] = timeratio * tmp;
+    for (len = 0; len < maxconbylength.Ncol(); len++) {
+      tmp = maxConsumption(LgrpDiv->meanLength(len), maxconsumption, Temperature);
+      maxconbylength[inarea][len] = timeratio * tmp;
     }
   }
 
   if (TimeInfo->getSubStep() == TimeInfo->numSubSteps()) {
-    for (age = Alprop[inarea].minAge(); age <= Alprop[inarea].maxAge(); age++)
-      for (length = Alprop[inarea].minLength(age);
-          length < Alprop[inarea].maxLength(age); length++)
-        if (!(isZero(prednumber[inarea][length].N)))
-          Alprop[inarea][age][length] = Alkeys[inarea][age][length].N /
-            prednumber[inarea][length].N;
+    for (age = Alprop[inarea].minRow(); age <= Alprop[inarea].maxRow(); age++) {
+      for (len = Alprop[inarea].minCol(age); len < Alprop[inarea].maxCol(age); len++) {
+        if (!(isZero(prednumber[inarea][len].N)))
+          Alprop[inarea][age][len] = Alkeys[inarea][age][len].N / prednumber[inarea][len].N;
         else
-          Alprop[inarea][age][length] = 0.0;
+          Alprop[inarea][age][len] = 0.0;
+      }
+    }
   }
 }

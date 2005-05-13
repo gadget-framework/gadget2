@@ -11,9 +11,9 @@ class Maturity;
 
 class AgeBandMatrix {
 public:
-  AgeBandMatrix(int MinAge, const IntVector& minl, const IntVector& size);
-  AgeBandMatrix(int MinAge, const PopInfoMatrix& initial);
-  AgeBandMatrix(int MinAge, int minl, const PopInfoMatrix& initial);
+  AgeBandMatrix(int age, const IntVector& minl, const IntVector& size);
+  AgeBandMatrix(int age, const PopInfoMatrix& initial);
+  AgeBandMatrix(int age, int minl, const PopInfoMatrix& initial);
   AgeBandMatrix(int age, const PopInfoIndexVector& initial);
   AgeBandMatrix(const AgeBandMatrix& initial);
   AgeBandMatrix() { minage = 0; nrow = 0; v = 0; };

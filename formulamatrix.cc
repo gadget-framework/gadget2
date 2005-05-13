@@ -2,12 +2,14 @@
 #include "gadget.h"
 
 FormulaMatrix::FormulaMatrix(int nr, int nc) {
-  assert(nr > 0);
-  nrow = nr;
-  v = new FormulaVector*[nr];
+  nrow = (nr > 0 ? nr : 0);
   int i;
-  for (i = 0; i < nr; i++)
-    v[i] = new FormulaVector(nc);
+  if (nrow > 0) {
+    v = new FormulaVector*[nrow];
+    for (i = 0; i < nrow; i++)
+      v[i] = new FormulaVector(nc);
+  } else
+    v = 0;
 }
 
 FormulaMatrix::FormulaMatrix(int nr, int nc, Formula value) {
@@ -23,12 +25,14 @@ FormulaMatrix::FormulaMatrix(int nr, int nc, Formula value) {
 }
 
 FormulaMatrix::FormulaMatrix(int nr, const IntVector& nc) {
-  assert(nr > 0);
-  nrow = nr;
-  v = new FormulaVector*[nr];
+  nrow = (nr > 0 ? nr : 0);
   int i;
-  for (i = 0; i < nr; i++)
-    v[i] = new FormulaVector(nc[i]);
+  if (nrow > 0) {
+    v = new FormulaVector*[nrow];
+    for (i = 0; i < nrow; i++)
+      v[i] = new FormulaVector(nc[i]);
+  } else
+    v = 0;
 }
 
 FormulaMatrix::~FormulaMatrix() {
@@ -66,16 +70,24 @@ FormulaMatrix& FormulaMatrix::operator = (const FormulaMatrix& formulaM) {
 }
 
 void FormulaMatrix::AddRows(int add, int length) {
-  assert(nrow >= 0 && add > 0);
-  FormulaVector** vnew = new FormulaVector*[nrow + add];
   int i;
-  for (i = 0; i < nrow; i++)
-    vnew[i] = v[i];
-  delete[] v;
-  v = vnew;
-  for (i = nrow; i < nrow + add; i++)
-    v[i] = new FormulaVector(length);
-  nrow += add;
+  if (add <= 0)
+    return;
+  if (v == 0) {
+    nrow = add;
+    v = new FormulaVector*[nrow];
+    for (i = 0; i < nrow; i++)
+      v[i] = new FormulaVector(length);
+  } else {
+    FormulaVector** vnew = new FormulaVector*[add + nrow];
+    for (i = 0; i < nrow; i++)
+      vnew[i] = v[i];
+    for (i = nrow; i < nrow + add; i++)
+      vnew[i] = new FormulaVector(length);
+    delete[] v;
+    v = vnew;
+    nrow += add;
+  }
 }
 
 void FormulaMatrix::AddRows(int add, int length, Formula formula) {

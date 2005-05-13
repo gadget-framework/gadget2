@@ -1,7 +1,7 @@
 #ifndef doublevector_h
 #define doublevector_h
 
-#include "mathfunc.h"    //for min
+#include "mathfunc.h"
 #include "gadget.h"
 
 class DoubleVector {
@@ -10,7 +10,6 @@ public:
   DoubleVector(int sz);
   DoubleVector(int sz, double initial);
   DoubleVector(const DoubleVector& initial);
-  DoubleVector(double* initial, int sz);
   ~DoubleVector();
   void resize(int add, double value);
   void resize(int add);

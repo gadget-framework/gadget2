@@ -54,8 +54,8 @@ void PredPreyStdAgePrinter::Print(const TimeClass * const TimeInfo, int printtim
 
   for (a = 0; a < areas.Size(); a++) {
     predinfo->Sum(TimeInfo, areas[a]);
-    for (predage = predinfo->NconsumptionByAge(areas[a]).minAge();
-        predage <= predinfo->NconsumptionByAge(areas[a]).maxAge(); predage++) {
+    for (predage = predinfo->NconsumptionByAge(areas[a]).minRow();
+        predage <= predinfo->NconsumptionByAge(areas[a]).maxRow(); predage++) {
       for (preyage = predinfo->NconsumptionByAge(areas[a]).minCol(predage);
           preyage < predinfo->NconsumptionByAge(areas[a]).maxCol(predage); preyage++) {
 

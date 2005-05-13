@@ -1,15 +1,15 @@
 #include "bandmatrixptrmatrix.h"
 #include "gadget.h"
 
-BandMatrixPtrMatrix::BandMatrixPtrMatrix(int Nrow, int ncol) : nrow(Nrow) {
+BandMatrixPtrMatrix::BandMatrixPtrMatrix(int nr, int nc) {
+  nrow = (nr > 0 ? nr : 0);
   int i;
-  if (nrow == 0) {
+  if (nrow > 0) {
+    v = new BandMatrixPtrVector*[nrow];
+    for (i = 0; i < nrow; i++)
+      v[i] = new BandMatrixPtrVector(nc);
+  } else
     v = 0;
-    return;
-  }
-  v = new BandMatrixPtrVector*[nrow];
-  for (i = 0; i < nrow; i++)
-    v[i] = new BandMatrixPtrVector(ncol);
 }
 
 BandMatrixPtrMatrix::~BandMatrixPtrMatrix() {
@@ -23,7 +23,6 @@ BandMatrixPtrMatrix::~BandMatrixPtrMatrix() {
 }
 
 void BandMatrixPtrMatrix::changeElement(int row, int col, const BandMatrix& value) {
-  assert(0 <= row && row < nrow);
   v[row]->changeElement(col, value);
 }
 

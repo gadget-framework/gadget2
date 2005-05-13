@@ -225,8 +225,8 @@ void MaturityA::Reset(const TimeClass* const TimeInfo) {
     if ((handle.getLogLevel() >= LOGWARN) && (maturityParameters[1] > LgrpDiv->maxLength()))
       handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
 
-    for (age = preCalcMaturation.minAge(); age <= preCalcMaturation.maxAge(); age++) {
-      for (len = preCalcMaturation.minLength(age); len < preCalcMaturation.maxLength(age); len++) {
+    for (age = preCalcMaturation.minRow(); age <= preCalcMaturation.maxRow(); age++) {
+      for (len = preCalcMaturation.minCol(age); len < preCalcMaturation.maxCol(age); len++) {
         my = exp(-maturityParameters[0] * (LgrpDiv->meanLength(len) - maturityParameters[1])
                - maturityParameters[2] * (age - maturityParameters[3]));
         preCalcMaturation[age][len] = 1.0 / (1.0 + my);
@@ -451,8 +451,8 @@ void MaturityC::Reset(const TimeClass* const TimeInfo) {
     if ((handle.getLogLevel() >= LOGWARN) && (maturityParameters[1] > LgrpDiv->maxLength()))
       handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
 
-    for (age = preCalcMaturation.minAge(); age <= preCalcMaturation.maxAge(); age++) {
-      for (len = preCalcMaturation.minLength(age); len < preCalcMaturation.maxLength(age); len++) {
+    for (age = preCalcMaturation.minRow(); age <= preCalcMaturation.maxRow(); age++) {
+      for (len = preCalcMaturation.minCol(age); len < preCalcMaturation.maxCol(age); len++) {
         if ((age >= minMatureAge) && (len >= minMatureLength)) {
           my = exp(-4.0 * maturityParameters[0] * (LgrpDiv->meanLength(len) - maturityParameters[1])
                  - 4.0 * maturityParameters[2] * (age - maturityParameters[3]));

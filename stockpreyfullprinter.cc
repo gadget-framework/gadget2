@@ -147,7 +147,7 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo, int printtime)
     preyinfo->Sum(TimeInfo, areas[a]);
     const BandMatrix& Nbyageandl = preyinfo->NconsumptionByAgeAndLength(areas[a]);
 
-    for (age = Nbyageandl.minAge(); age <= Nbyageandl.maxAge(); age++)
+    for (age = Nbyageandl.minRow(); age <= Nbyageandl.maxRow(); age++)
       for (len = 0; len < LgrpDiv->numLengthGroups(); len++) {
         outfile << setw(lowwidth) << TimeInfo->getYear() << sep << setw(lowwidth)
           << TimeInfo->getStep() << sep << setw(lowwidth) << outerareas[a] << sep

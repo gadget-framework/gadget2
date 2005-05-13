@@ -8,19 +8,26 @@
 #include "stockprey.h"
 
 
-StockPredStdInfo::StockPredStdInfo(const StockPredator* pred, const StockPrey* pRey, const IntVector& Areas)
-  : AbstrPredStdInfo(Areas, pred->Alproportion(Areas[0]).minAge(), pred->Alproportion(Areas[0]).maxAge(),
-    pRey->AlkeysPriorToEating(Areas[0]).minAge(), pRey->AlkeysPriorToEating(Areas[0]).maxAge()),
-  preyinfo(new StockPreyStdInfo(pRey, Areas)),
-  predinfo(new PredStdInfoByLength(pred, pRey, Areas)),
-  predator(pred), prey(pRey) {
+StockPredStdInfo::StockPredStdInfo(const StockPredator* predator,
+  const StockPrey* conprey, const IntVector& Areas)
+  : AbstrPredStdInfo(Areas, predator->Alproportion(Areas[0]).minRow(),
+    predator->Alproportion(Areas[0]).maxRow(),
+    conprey->AlkeysPriorToEating(Areas[0]).minAge(),
+    conprey->AlkeysPriorToEating(Areas[0]).maxAge()),
+    pred(predator), prey(conprey) {
+
+  preyinfo = new StockPreyStdInfo(conprey, Areas);
+  predinfo = new PredStdInfoByLength(pred, prey, Areas);
 }
 
-StockPredStdInfo::StockPredStdInfo(const StockPredator* pred, const Prey* pRey, const IntVector& Areas)
-  : AbstrPredStdInfo(Areas, pred->Alproportion(Areas[0]).minAge(), pred->Alproportion(Areas[0]).maxAge(), 0, 0),
-  preyinfo(new PreyStdInfo(pRey, Areas)),
-  predinfo(new PredStdInfoByLength(pred, pRey, Areas)),
-  predator(pred), prey(pRey) {
+StockPredStdInfo::StockPredStdInfo(const StockPredator* predator,
+  const Prey* conprey, const IntVector& Areas)
+  : AbstrPredStdInfo(Areas, predator->Alproportion(Areas[0]).minRow(),
+    predator->Alproportion(Areas[0]).maxRow(), 0, 0),
+    pred(predator), prey(conprey) {
+
+  preyinfo = new PreyStdInfo(prey, Areas);
+  predinfo = new PredStdInfoByLength(pred, prey, Areas);
 }
 
 StockPredStdInfo::~StockPredStdInfo() {
@@ -33,26 +40,26 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   preyinfo->Sum(TimeInfo, area);
   predinfo->Sum(TimeInfo, area);
 
-  const BandMatrix& Alprop = predator->Alproportion(area);
-  DoubleVector predBconsbyAge(Alprop.maxAge() - Alprop.minAge() + 1, 0.0);
+  const BandMatrix& Alprop = pred->Alproportion(area);
+  DoubleVector predBconsbyAge(Alprop.maxRow() - Alprop.minRow() + 1, 0.0);
   const BandMatrix& preyNcons = preyinfo->NconsumptionByAgeAndLength(area);
   const BandMatrix& preyBcons = preyinfo->BconsumptionByAgeAndLength(area);
-  const BandMatrix& predBcons = predator->getConsumption(area, prey->getName());
+  const BandMatrix& predBcons = pred->getConsumption(area, prey->getName());
 
   int predage, preyage, preyl, predl;
   double B, N, prop;
 
-  for (predage = NconbyAge[inarea].minAge(); predage <= NconbyAge[inarea].maxAge(); predage++)
+  for (predage = NconbyAge[inarea].minRow(); predage <= NconbyAge[inarea].maxRow(); predage++)
     for (preyage = NconbyAge[inarea].minCol(predage); preyage < NconbyAge[inarea].maxCol(predage); preyage++) {
       NconbyAge[inarea][predage][preyage] = 0.0;
       BconbyAge[inarea][predage][preyage] = 0.0;
     }
 
-  for (predage = Alprop.minAge(); predage <= Alprop.maxAge(); predage++) {
+  for (predage = Alprop.minRow(); predage <= Alprop.maxRow(); predage++) {
     for (preyage = NconbyAge[inarea].minCol(predage);
          preyage < NconbyAge[inarea].maxCol(predage); preyage++) {
       for (preyl = 0; preyl < prey->numLengthGroups(); preyl++) {
-        for (predl = 0; predl < predator->numLengthGroups(); predl++) {
+        for (predl = 0; predl < pred->numLengthGroups(); predl++) {
           if (!(isZero(preyBcons[preyage][preyl])) && (!(isZero(predBcons[predl][preyl])))) {
             prop = predBcons[predl][preyl] * Alprop[predage][predl] / preyinfo->BconsumptionByLength(area)[preyl];
             B = prop * preyBcons[preyage][preyl];
@@ -67,7 +74,7 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
         MortbyAge[inarea][predage][preyage] = 0.0;
       else
         MortbyAge[inarea][predage][preyage] = preyinfo->MortalityByAge(area)[preyage] *
-         BconbyAge[inarea][predage][preyage] / preyinfo->BconsumptionByAge(area)[preyage];
+          BconbyAge[inarea][predage][preyage] / preyinfo->BconsumptionByAge(area)[preyage];
     }
   }
 }

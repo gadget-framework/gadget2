@@ -6,7 +6,7 @@
 #include "gadget.h"
 
 BandMatrix::BandMatrix(const BandMatrix& initial)
-  : nrow(initial.nrow), minage(initial.minAge()) {
+  : nrow(initial.nrow), minage(initial.minage) {
 
   v = new DoubleIndexVector*[nrow];
   int i;
@@ -15,17 +15,16 @@ BandMatrix::BandMatrix(const BandMatrix& initial)
 }
 
 BandMatrix::BandMatrix(const IntVector& minl, const IntVector& size,
-  int minAge, double initial) : nrow(size.Size()), minage(minAge) {
+  int age, double initial) : nrow(size.Size()), minage(age) {
 
-  assert(size.Size() == minl.Size());
   v = new DoubleIndexVector*[nrow];
   int i;
   for (i = 0; i < nrow; i++)
     v[i] = new DoubleIndexVector(size[i], minl[i], initial);
 }
 
-BandMatrix::BandMatrix(const DoubleMatrix& initial, int minAge, int minl)
-  : nrow(initial.Nrow()), minage(minAge) {
+BandMatrix::BandMatrix(const DoubleMatrix& initial, int age, int minl)
+  : nrow(initial.Nrow()), minage(age) {
 
   v = new DoubleIndexVector*[nrow];
   int i, j;
@@ -54,13 +53,13 @@ BandMatrix::BandMatrix(const DoubleIndexVector& initial, int age)
   v[0] = new DoubleIndexVector(initial);
 }
 
-BandMatrix::BandMatrix(int minl, int lengthsize, int minAge, int Nrow,
-  double initial) : nrow(Nrow), minage(minAge) {
+BandMatrix::BandMatrix(int minl, int size, int age, int nr, double initial)
+  : nrow(nr), minage(age) {
 
   v = new DoubleIndexVector*[nrow];
   int i;
   for (i = 0; i < nrow; i++)
-    v[i] = new DoubleIndexVector(lengthsize, minl, initial);
+    v[i] = new DoubleIndexVector(size, minl, initial);
 }
 
 BandMatrix::~BandMatrix() {
@@ -96,12 +95,4 @@ void BandMatrix::Print(ofstream& outfile) const {
 
     outfile << endl;
   }
-}
-
-BandMatrix& BandMatrix::operator += (BandMatrix& b) {
-  int i, j;
-  for (i = max(minRow(), b.minRow()); i < min(maxRow(), b.maxRow()); i++)
-    for (j = max(minCol(i), b.minCol(i)); j < min(maxCol(i), b.maxCol(i)); j++)
-      (*this)[i][j] += b[i][j];
-  return *this;
 }

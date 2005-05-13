@@ -3,17 +3,17 @@
 #include "commentstream.h"
 #include "gadget.h"
 
-AgeBandMatrixRatioPtrVector::AgeBandMatrixRatioPtrVector(int size1, int minage,
-  const IntVector& minl, const IntVector& size2) {
+AgeBandMatrixRatioPtrVector::AgeBandMatrixRatioPtrVector(int sz, int minage,
+  const IntVector& minl, const IntVector& lsize) {
 
-  size = size1;
   int i;
+  size = (sz > 0 ? sz : 0);
   if (size == 0) {
     v = 0;
   } else {
     v = new AgeBandMatrixRatio*[size];
     for (i = 0; i < size; i++)
-      v[i] = new AgeBandMatrixRatio(minage, minl, size2);
+      v[i] = new AgeBandMatrixRatio(minage, minl, lsize);
   }
 }
 
@@ -165,31 +165,4 @@ void AgeBandMatrixRatioPtrVector::deleteTag(const char* tagname) {
 const char* AgeBandMatrixRatioPtrVector::getTagName(int id) const {
   assert(0 <= id && id < this->numTagExperiments());
   return tagID[id];
-}
-
-void AgeBandMatrixRatioPtrVector::Migrate(const DoubleMatrix& MI, const AgeBandMatrixPtrVector& Total) {
-
-  assert(MI.Nrow() == size);
-  DoubleVector tmp(size);
-  int i, j, age, length, tag;
-  int numTagExperiments = tagID.Size();
-  if (numTagExperiments > 0) {
-    for (age = v[0]->minAge(); age <= v[0]->maxAge(); age++) {
-      for (length = v[0]->minLength(age); length < v[0]->maxLength(age); length++) {
-        for (tag = 0; tag < numTagExperiments; tag++) {
-          for (j = 0; j < size; j++)
-            tmp[j] = 0;
-
-          for (j = 0; j < size; j++)
-            for (i = 0; i < size; i++)
-              tmp[j] += *((*v[i])[age][length][tag].N) * MI[j][i];
-
-          for (j = 0; j < size; j++)
-            *((*v[j])[age][length][tag].N) = tmp[j];
-        }
-      }
-    }
-    for (i = 0; i < size; i++)
-      v[i]->updateRatio(Total[i]);
-  }
 }
