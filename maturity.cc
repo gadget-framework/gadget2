@@ -40,7 +40,7 @@ void Maturity::setStock(StockPtrVector& stockvec) {
         matureStocks.resize(1);
         tmpratio.resize(1);
         matureStocks[index] = stockvec[i];
-        tmpratio[index] = Ratio[j];
+        tmpratio[index] = matureRatio[j];
         index++;
       }
 
@@ -53,15 +53,15 @@ void Maturity::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  for (i = Ratio.Size(); i > 0; i--)
-    Ratio.Delete(0);
-  Ratio.resize(tmpratio.Size());
+  for (i = matureRatio.Size(); i > 0; i--)
+    matureRatio.Delete(0);
+  matureRatio.resize(tmpratio.Size());
   for (i = 0; i < tmpratio.Size(); i++)
-    Ratio[i] = tmpratio[i];
+    matureRatio[i] = tmpratio[i];
 
   CI.resize(matureStocks.Size(), 0);
   for (i = 0; i < matureStocks.Size(); i++)
-    CI[i] = new ConversionIndex(LgrpDiv, matureStocks[i]->returnLengthGroupDiv());
+    CI[i] = new ConversionIndex(LgrpDiv, matureStocks[i]->getLengthGroupDiv());
 
   for (i = 0; i < matureStocks.Size(); i++) {
     index = 0;
@@ -84,6 +84,9 @@ void Maturity::Print(ofstream& outfile) const {
   outfile << "\nMaturity\n\tNames of mature stocks:";
    for (i = 0; i < matureStockNames.Size(); i++)
     outfile << sep << matureStockNames[i];
+  outfile << "\n\tRatio maturing into each stock:";
+  for (i = 0; i < matureRatio.Size(); i++)
+    outfile << sep << matureRatio[i];
   outfile << "\n\tStored numbers:\n";
   for (i = 0; i < areas.Size(); i++) {
     outfile << "\tInternal area " << areas[i] << endl;
@@ -99,11 +102,11 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
     if (!matureStocks[i]->isInArea(area))
       handle.logMessage(LOGFAIL, "Error in maturity - mature stock doesnt live on area", area);
 
-    matureStocks[i]->Add(Storage[inarea], CI[i], area, Ratio[i],
+    matureStocks[i]->Add(Storage[inarea], CI[i], area, matureRatio[i],
       Storage[inarea].minAge(), Storage[inarea].maxAge());
 
     if (tagStorage.numTagExperiments() > 0)
-      matureStocks[i]->Add(tagStorage, inarea, CI[i], area, Ratio[i],
+      matureStocks[i]->Add(tagStorage, inarea, CI[i], area, matureRatio[i],
         tagStorage[inarea].minAge(), tagStorage[inarea].maxAge());
   }
 
@@ -195,8 +198,8 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
       matureStockNames.resize(1);
       matureStockNames[i] = new char[strlen(text) + 1];
       strcpy(matureStockNames[i], text);
-      Ratio.resize(1);
-      infile >> Ratio[i] >> text >> ws;
+      matureRatio.resize(1);
+      infile >> matureRatio[i] >> text >> ws;
       i++;
     }
   } else
@@ -245,7 +248,7 @@ void MaturityA::setStock(StockPtrVector& stockvec) {
   double minlength = 9999.0;
   for (i = 0; i < matureStocks.Size(); i++) {
     minMatureAge = min(matureStocks[i]->minAge(), minMatureAge);
-    minlength = min(matureStocks[i]->returnLengthGroupDiv()->minLength(), minlength);
+    minlength = min(matureStocks[i]->getLengthGroupDiv()->minLength(), minlength);
   }
   minMatureLength = LgrpDiv->numLengthGroup(minlength);
 }
@@ -291,8 +294,8 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
       matureStockNames.resize(1);
       matureStockNames[i] = new char[strlen(text) + 1];
       strcpy(matureStockNames[i], text);
-      Ratio.resize(1);
-      infile >> Ratio[i] >> text >> ws;
+      matureRatio.resize(1);
+      infile >> matureRatio[i] >> text >> ws;
       i++;
     }
   } else
@@ -393,8 +396,8 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
       matureStockNames.resize(1);
       matureStockNames[i] = new char[strlen(text) + 1];
       strcpy(matureStockNames[i], text);
-      Ratio.resize(1);
-      infile >> Ratio[i] >> text >> ws;
+      matureRatio.resize(1);
+      infile >> matureRatio[i] >> text >> ws;
       i++;
     }
   } else
@@ -438,7 +441,7 @@ void MaturityC::setStock(StockPtrVector& stockvec) {
   double minlength = 9999.0;
   for (i = 0; i < matureStocks.Size(); i++) {
     minMatureAge = min(matureStocks[i]->minAge(), minMatureAge);
-    minlength = min(matureStocks[i]->returnLengthGroupDiv()->minLength(), minlength);
+    minlength = min(matureStocks[i]->getLengthGroupDiv()->minLength(), minlength);
   }
   minMatureLength = LgrpDiv->numLengthGroup(minlength);
 }
@@ -541,7 +544,7 @@ void MaturityD::setStock(StockPtrVector& stockvec) {
   double minlength = 9999.0;
   for (i = 0; i < matureStocks.Size(); i++) {
     minMatureAge = min(matureStocks[i]->minAge(), minMatureAge);
-    minlength = min(matureStocks[i]->returnLengthGroupDiv()->minLength(), minlength);
+    minlength = min(matureStocks[i]->getLengthGroupDiv()->minLength(), minlength);
   }
   minMatureLength = LgrpDiv->numLengthGroup(minlength);
 }

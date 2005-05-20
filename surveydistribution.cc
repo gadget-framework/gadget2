@@ -387,14 +387,14 @@ void SurveyDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVect
 
     found = 0;
     for (i = 0; i < stocks.Size(); i++)
-      if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+      if (LgrpDiv->maxLength(0) > stocks[i]->getLengthGroupDiv()->minLength())
         found++;
     if (found == 0)
       handle.logMessage(LOGWARN, "Warning in surveydistribution - minimum length group less than stock length");
 
     found = 0;
     for (i = 0; i < stocks.Size(); i++)
-      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->getLengthGroupDiv()->maxLength())
         found++;
     if (found == 0)
       handle.logMessage(LOGWARN, "Warning in surveydistribution - maximum length group greater than stock length");
@@ -452,7 +452,7 @@ void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Calculating likelihood score for surveydistribution component", this->getName());
 
-  alptr = &aggregator->returnSum();
+  alptr = &aggregator->getSum();
   this->calcIndex(TimeInfo);
   switch (likenumber) {
     case 1:

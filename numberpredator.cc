@@ -1,15 +1,14 @@
 #include "numberpredator.h"
 #include "keeper.h"
 #include "prey.h"
-#include "mathfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
 
 NumberPredator::NumberPredator(CommentStream& infile, const char* givenname,
-  const IntVector& Areas, const TimeClass* const TimeInfo, Keeper* const keeper, Formula multi)
-  : LengthPredator(givenname, Areas, keeper, multi) {
+  const IntVector& Areas, const TimeClass* const TimeInfo, Keeper* const keeper, Formula multscaler)
+  : LengthPredator(givenname, Areas, keeper, multscaler) {
 
   keeper->addString("predator");
   keeper->addString(givenname);
@@ -30,12 +29,13 @@ void NumberPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
   if (TimeInfo->getSubStep() == 1)
     scaler[inarea] = 0.0;
 
+  //Calculate number consumed up to a multiplicative constant.
   for (prey = 0; prey < this->numPreys(); prey++) {
-    if (Preys(prey)->isPreyArea(area)) {
+    if (this->getPrey(prey)->isPreyArea(area)) {
       for (preyl = Suitability(prey)[predl].minCol();
           preyl < Suitability(prey)[predl].maxCol(); preyl++) {
         cons[inarea][prey][predl][preyl] =
-          Suitability(prey)[predl][preyl] * Preys(prey)->getNumber(area, preyl);
+          Suitability(prey)[predl][preyl] * this->getPrey(prey)->getNumber(area, preyl);
         totalcons[inarea][predl] += cons[inarea][prey][predl][preyl];
       }
 
@@ -48,9 +48,9 @@ void NumberPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
   }
 
   //adjust the consumption
-  tmp = Multiplicative / TimeInfo->numSubSteps();
+  tmp = multi / TimeInfo->numSubSteps();
   for (prey = 0; prey < this->numPreys(); prey++) {
-    if (Preys(prey)->isPreyArea(area)) {
+    if (this->getPrey(prey)->isPreyArea(area)) {
       wanttoeat = tmp * prednumber[inarea][predl].N;
       for (preyl = Suitability(prey)[predl].minCol();
           preyl < Suitability(prey)[predl].maxCol(); preyl++) {
@@ -66,12 +66,12 @@ void NumberPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
 
   //Inform the preys of the consumption.
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (Preys(prey)->isPreyArea(area))
-      Preys(prey)->addNumbersConsumption(area, cons[inarea][prey][predl]);
+    if (this->getPrey(prey)->isPreyArea(area))
+      this->getPrey(prey)->addNumbersConsumption(area, cons[inarea][prey][predl]);
 
   //set totalconsumption to the actual number consumed
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (Preys(prey)->isPreyArea(area))
+    if (this->getPrey(prey)->isPreyArea(area))
       totalcons[inarea][predl] = tmp * prednumber[inarea][predl].N;
 }
 
@@ -87,13 +87,13 @@ void NumberPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
   over = 0;
   check = 0;
   for (prey = 0; prey < this->numPreys(); prey++) {
-    if (Preys(prey)->isPreyArea(area)) {
+    if (this->getPrey(prey)->isPreyArea(area)) {
       check = 1;
-      if (Preys(prey)->checkOverConsumption(area)) {
+      if (this->getPrey(prey)->checkOverConsumption(area)) {
         over = 1;
         for (preyl = Suitability(prey)[predl].minCol();
             preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-          ratio = Preys(prey)->Ratio(area, preyl);
+          ratio = this->getPrey(prey)->getRatio(area, preyl);
           if (ratio > maxRatio) {
             tmp = maxRatio / ratio;
             overcons[inarea][predl] += (1.0 - tmp) * cons[inarea][prey][predl][preyl];
@@ -109,18 +109,17 @@ void NumberPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
 
   //if no prey found to consume then overcons set to actual consumption
   if (check == 0)
-    overcons[inarea][predl] = prednumber[inarea][predl].N *
-        Multiplicative / TimeInfo->numSubSteps();
+    overcons[inarea][predl] = prednumber[inarea][predl].N * multi / TimeInfo->numSubSteps();
 
   totalconsumption[inarea][predl] += totalcons[inarea][predl];
   overconsumption[inarea][predl] += overcons[inarea][predl];
 
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (Preys(prey)->isPreyArea(area))
+    if (this->getPrey(prey)->isPreyArea(area))
       for (preyl = Suitability(prey)[predl].minCol();
           preyl < Suitability(prey)[predl].maxCol(); preyl++)
         consumption[inarea][prey][predl][preyl] += (cons[inarea][prey][predl][preyl] *
-            Preys(prey)->getNumberPriorToEating(inarea)[preyl].W);
+            this->getPrey(prey)->getNumberPriorToEating(inarea)[preyl].W);
 }
 
 void NumberPredator::Print(ofstream& outfile) const {
@@ -132,7 +131,7 @@ const PopInfoVector& NumberPredator::getNumberPriorToEating(int area, const char
   int prey;
   for (prey = 0; prey < this->numPreys(); prey++)
     if (strcasecmp(getPreyName(prey), preyname) == 0)
-      return Preys(prey)->getNumberPriorToEating(area);
+      return this->getPrey(prey)->getNumberPriorToEating(area);
 
   handle.logMessage(LOGFAIL, "Error in linearpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);

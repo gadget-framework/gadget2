@@ -172,7 +172,7 @@ SurveyIndices::~SurveyIndices() {
 void SurveyIndices::addLikelihood(const TimeClass* const TimeInfo) {
   SI->Sum(TimeInfo);
   if (TimeInfo->getTime() == TimeInfo->numTotalSteps())
-    likelihood += SI->calcRegression();
+    likelihood += SI->calcSSE();
 }
 
 void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {

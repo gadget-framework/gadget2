@@ -114,18 +114,18 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
     grower->GrowthImplement(area, LgrpDiv);
     if (doesmature) {
       if (maturity->isMaturationStep(area, TimeInfo)) {
-        Alkeys[inarea].Grow(grower->increaseLength(area), grower->getWeight(area), maturity, TimeInfo, Area, area);
+        Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeight(area), maturity, TimeInfo, Area, area);
         if (tagAlkeys.numTagExperiments() > 0)
-          tagAlkeys[inarea].Grow(grower->increaseLength(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
+          tagAlkeys[inarea].Grow(grower->getLengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
       } else {
-        Alkeys[inarea].Grow(grower->increaseLength(area), grower->getWeight(area));
+        Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeight(area));
         if (tagAlkeys.numTagExperiments() > 0)
-          tagAlkeys[inarea].Grow(grower->increaseLength(area), Alkeys[inarea]);
+          tagAlkeys[inarea].Grow(grower->getLengthIncrease(area), Alkeys[inarea]);
       }
     } else {
-      Alkeys[inarea].Grow(grower->increaseLength(area), grower->getWeight(area));
+      Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeight(area));
       if (tagAlkeys.numTagExperiments() > 0)
-        tagAlkeys[inarea].Grow(grower->increaseLength(area), Alkeys[inarea]);
+        tagAlkeys[inarea].Grow(grower->getLengthIncrease(area), Alkeys[inarea]);
     }
 
   } else {
@@ -133,18 +133,18 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
     grower->GrowthImplement(area, NumberInArea[inarea], LgrpDiv);
     if (doesmature) {
       if (maturity->isMaturationStep(area, TimeInfo)) {
-        Alkeys[inarea].Grow(grower->increaseLength(area), grower->increaseWeight(area), maturity, TimeInfo, Area, area);
+        Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeightIncrease(area), maturity, TimeInfo, Area, area);
         if (tagAlkeys.numTagExperiments() > 0)
-          tagAlkeys[inarea].Grow(grower->increaseLength(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
+          tagAlkeys[inarea].Grow(grower->getLengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, Area, area);
       } else {
-        Alkeys[inarea].Grow(grower->increaseLength(area), grower->increaseWeight(area));
+        Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeightIncrease(area));
         if (tagAlkeys.numTagExperiments() > 0)
-          tagAlkeys[inarea].Grow(grower->increaseLength(area), Alkeys[inarea]);
+          tagAlkeys[inarea].Grow(grower->getLengthIncrease(area), Alkeys[inarea]);
       }
     } else {
-      Alkeys[inarea].Grow(grower->increaseLength(area), grower->increaseWeight(area));
+      Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeightIncrease(area));
       if (tagAlkeys.numTagExperiments() > 0)
-        tagAlkeys[inarea].Grow(grower->increaseLength(area), Alkeys[inarea]);
+        tagAlkeys[inarea].Grow(grower->getLengthIncrease(area), Alkeys[inarea]);
     }
   }
 }
@@ -159,7 +159,7 @@ void Stock::updateAgePart1(int area, const TimeClass* const TimeInfo) {
 }
 
 void Stock::updateAgePart2(int area, const TimeClass* const TimeInfo) {
-  if (this->Birthday(TimeInfo)) {
+  if (this->isBirthday(TimeInfo)) {
     Alkeys[this->areaNum(area)].IncrementAge();
     if (tagAlkeys.numTagExperiments() > 0)
       tagAlkeys[this->areaNum(area)].IncrementAge(Alkeys[this->areaNum(area)]);

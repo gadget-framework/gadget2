@@ -130,11 +130,11 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
 
   //Here comes some code that is only useful when handling one stock.
   if (stocks[0]->isEaten())
-    preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->returnPrey(), areas);
+    preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->getPrey(), areas);
   else
     handle.logMessage(LOGFAIL, "Error in stockpreyfullprinter - stock is not a prey");
 
-  LgrpDiv = new LengthGroupDivision(*stocks[0]->returnLengthGroupDiv());
+  LgrpDiv = new LengthGroupDivision(*stocks[0]->getLengthGroupDiv());
 }
 
 void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {

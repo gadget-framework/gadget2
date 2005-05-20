@@ -142,7 +142,7 @@ public:
    * \brief This will return the fleet, as a predator type, for use in other functions
    * \return predator
    */
-  LengthPredator* returnPredator() const;
+  LengthPredator* getPredator() const;
   /**
    * \brief This will return the amount that the fleet has consumed, for a given area and time step
    * \param area is an integer to denote the internal area of interest

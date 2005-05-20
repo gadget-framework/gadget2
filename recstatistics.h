@@ -129,6 +129,10 @@ private:
    * \brief This is the TagPtrVector of the relevant tagging experiments
    */
   TagPtrVector tagvec;
+  /**
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   */
+  const AgeBandMatrixPtrVector* alptr;
 };
 
 #endif

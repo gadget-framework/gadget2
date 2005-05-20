@@ -7,7 +7,7 @@ PreyOverAggregator::PreyOverAggregator(const PreyPtrVector& Preys,
 
   int i, j;
   for (i = 0; i < preys.Size(); i++)
-    checkLengthGroupIsFiner(preys[i]->returnLengthGroupDiv(), LgrpDiv);
+    checkLengthGroupIsFiner(preys[i]->getLengthGroupDiv(), LgrpDiv);
 
   total.AddRows(areas.Nrow(), LgrpDiv->numLengthGroups(), 0.0);
   for (i = 0; i < preys.Size(); i++) {

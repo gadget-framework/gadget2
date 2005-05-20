@@ -12,14 +12,13 @@
 RecAggregator::RecAggregator(const FleetPtrVector& Fleets,
   const StockPtrVector& Stocks, LengthGroupDivision* const Lgrpdiv,
   const IntMatrix& Areas, const IntMatrix& Ages, Tags* tag)
-  : fleets(Fleets), stocks(Stocks), LgrpDiv(Lgrpdiv),
+  : fleets(Fleets), stocks(Stocks), taggingExp(tag), LgrpDiv(Lgrpdiv),
     areas(Areas), ages(Ages), suitptr(0), alptr(0) {
 
-  taggingExp = tag;
   int i;
   CI.resize(stocks.Size());
   for (i = 0; i < stocks.Size(); i++)
-    CI[i] = new ConversionIndex(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);
+    CI[i] = new ConversionIndex(stocks[i]->getPrey()->getLengthGroupDiv(), LgrpDiv);
 
   //Resize total using dummy variables tmppop and popmatrix.
   PopInfo tmppop;
@@ -73,14 +72,13 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
       for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
         for (j = 0; j < areas.Ncol(aggrArea); j++) {
           area = areas[aggrArea][j];
-          if ((stocks[h]->returnPrey()->isPreyArea(area)) &&
+          if ((stocks[h]->getPrey()->isPreyArea(area)) &&
               (fleets[f]->isFleetStepArea(area, TimeInfo))) {
 
-            fleetscale = fleets[f]->Amount(area, TimeInfo) *
-                           fleets[f]->returnPredator()->Scaler(area);
-            for (i = 0; i < fleets[f]->returnPredator()->numPreys(); i++) {
-              if (strcasecmp(stocks[h]->returnPrey()->getName(), fleets[f]->returnPredator()->Preys(i)->getName()) == 0) {
-                suitptr = &fleets[f]->returnPredator()->Suitability(i)[0];
+            fleetscale = fleets[f]->Amount(area, TimeInfo) * fleets[f]->getPredator()->Scaler(area);
+            for (i = 0; i < fleets[f]->getPredator()->numPreys(); i++) {
+              if (strcasecmp(stocks[h]->getPrey()->getName(), fleets[f]->getPredator()->getPrey(i)->getName()) == 0) {
+                suitptr = &fleets[f]->getPredator()->Suitability(i)[0];
                 alptr = &taggingExp->getNumberPriorToEating(area, stocks[h]->getName());
                 for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
                   for (k = 0; k < ages.Ncol(aggrAge); k++) {

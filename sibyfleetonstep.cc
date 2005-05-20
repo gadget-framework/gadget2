@@ -43,14 +43,14 @@ void SIByFleetOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
   if (handle.getLogLevel() >= LOGWARN) {
     found = 0;
     for (i = 0; i < Stocks.Size(); i++)
-      if (LgrpDiv->maxLength(0) > Stocks[i]->returnLengthGroupDiv()->minLength())
+      if (LgrpDiv->maxLength(0) > Stocks[i]->getLengthGroupDiv()->minLength())
         found++;
     if (found == 0)
       handle.logMessage(LOGWARN, "Warning in surveyindex - minimum length group less than stock length");
 
     found = 0;
     for (i = 0; i < Stocks.Size(); i++)
-      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < Stocks[i]->returnLengthGroupDiv()->maxLength())
+      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < Stocks[i]->getLengthGroupDiv()->maxLength())
         found++;
     if (found == 0)
       handle.logMessage(LOGWARN, "Warning in surveyindex - maximum length group greater than stock length");
@@ -60,7 +60,7 @@ void SIByFleetOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
 }
 
 void SIByFleetOnStep::Sum(const TimeClass* const TimeInfo) {
-  if (!(this->isToSum(TimeInfo)))
+  if (!AAT.atCurrentTime(TimeInfo))
     return;
 
   if (handle.getLogLevel() >= LOGMESSAGE)
@@ -68,7 +68,7 @@ void SIByFleetOnStep::Sum(const TimeClass* const TimeInfo) {
   aggregator->Sum(TimeInfo);
   if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData() == 1))
     handle.logMessage(LOGWARN, "Warning in surveyindex - zero catch found");
-  alptr = &(aggregator->returnSum()[0]);
+  alptr = &(aggregator->getSum()[0]);
   int i;
   for (i = 0; i < this->numIndex(); i++)
     modelIndex[timeindex][i] = (*alptr)[0][i].N;

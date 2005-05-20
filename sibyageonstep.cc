@@ -24,12 +24,12 @@ SIByAgeOnStep::~SIByAgeOnStep() {
 
 void SIByAgeOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, found, minage, maxage;
-  double minlength = Stocks[0]->returnLengthGroupDiv()->minLength();
+  double minlength = Stocks[0]->getLengthGroupDiv()->minLength();
   double maxlength = minlength;
 
   for (i = 0; i < Stocks.Size(); i++) {
-    minlength = min(Stocks[i]->returnLengthGroupDiv()->minLength(), minlength);
-    maxlength = max(Stocks[i]->returnLengthGroupDiv()->maxLength(), maxlength);
+    minlength = min(Stocks[i]->getLengthGroupDiv()->minLength(), minlength);
+    maxlength = max(Stocks[i]->getLengthGroupDiv()->maxLength(), maxlength);
   }
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, maxlength - minlength);
 
@@ -63,13 +63,13 @@ void SIByAgeOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
 }
 
 void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {
-  if (!(this->isToSum(TimeInfo)))
+  if (!AAT.atCurrentTime(TimeInfo))
     return;
 
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Calculating index for surveyindex component", this->getSIName());
   aggregator->Sum();
-  alptr = &(aggregator->returnSum()[0]);
+  alptr = &(aggregator->getSum()[0]);
   int i;
   for (i = 0; i < this->numIndex(); i++)
     modelIndex[timeindex][i] = (*alptr)[i][0].N;

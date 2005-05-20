@@ -5,12 +5,12 @@
 extern ErrorHandler handle;
 
 LengthPredator::LengthPredator(const char* givenname, const IntVector& Areas,
-  Keeper* const keeper, Formula multi) : PopPredator(givenname, Areas) {
+  Keeper* const keeper, Formula multscaler) : PopPredator(givenname, Areas) {
 
   scaler.resize(Areas.Size(), 0.0);
-  Multiplicative = multi;
+  multi = multscaler;
   keeper->addString("scale");
-  Multiplicative.Inform(keeper);
+  multi.Inform(keeper);
   keeper->clearLast();
 }
 
@@ -23,6 +23,6 @@ void LengthPredator::Sum(const PopInfoVector& NumberInArea, int area) {
 
 void LengthPredator::Reset(const TimeClass* const TimeInfo) {
   PopPredator::Reset(TimeInfo);
-  if ((handle.getLogLevel() >= LOGWARN) && (Multiplicative < 0))
+  if ((handle.getLogLevel() >= LOGWARN) && (multi < 0))
     handle.logMessage(LOGWARN, "Warning in lengthpredator - negative value for multiplicative");
 }

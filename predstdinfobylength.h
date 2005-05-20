@@ -64,12 +64,12 @@ public:
    * \brief This will return the length group of the predator
    * \return predLgrpDiv, a LengthGroupDivision for the predator
    */
-  const LengthGroupDivision* returnPredLengthGroupDiv() const { return predLgrpDiv; };
+  const LengthGroupDivision* getPredLengthGroupDiv() const { return predLgrpDiv; };
   /**
    * \brief This will return the length group of the prey
    * \return preyLgrpDiv, a LengthGroupDivision for the prey
    */
-  const LengthGroupDivision* returnPreyLengthGroupDiv() const { return preyLgrpDiv; };
+  const LengthGroupDivision* getPreyLengthGroupDiv() const { return preyLgrpDiv; };
 private:
   /**
    * \brief This function will initialise and resize the objects created by the constructor

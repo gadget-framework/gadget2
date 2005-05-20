@@ -214,14 +214,14 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
 
     index = 0;
     for (i = 0; i < predators.Size(); i++)
-      if (predLgrpDiv->maxLength(0) > predators[i]->returnLengthGroupDiv()->minLength())
+      if (predLgrpDiv->maxLength(0) > predators[i]->getLengthGroupDiv()->minLength())
         index++;
     if (index == 0)
       handle.logMessage(LOGWARN, "Warning in predatorprinter - minimum length group less than predator length");
 
     index = 0;
     for (i = 0; i < predators.Size(); i++)
-      if (predLgrpDiv->minLength(predLgrpDiv->numLengthGroups()) < predators[i]->returnLengthGroupDiv()->maxLength())
+      if (predLgrpDiv->minLength(predLgrpDiv->numLengthGroups()) < predators[i]->getLengthGroupDiv()->maxLength())
         index++;
     if (index == 0)
       handle.logMessage(LOGWARN, "Warning in predatorprinter - maximum length group greater than predator length");
@@ -238,14 +238,14 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
 
     index = 0;
     for (i = 0; i < preys.Size(); i++)
-      if (preyLgrpDiv->maxLength(0) > preys[i]->returnLengthGroupDiv()->minLength())
+      if (preyLgrpDiv->maxLength(0) > preys[i]->getLengthGroupDiv()->minLength())
         index++;
     if (index == 0)
       handle.logMessage(LOGWARN, "Warning in predatorprinter - minimum length group less than prey length");
 
     index = 0;
     for (i = 0; i < preys.Size(); i++)
-      if (preyLgrpDiv->minLength(preyLgrpDiv->numLengthGroups()) < preys[i]->returnLengthGroupDiv()->maxLength())
+      if (preyLgrpDiv->minLength(preyLgrpDiv->numLengthGroups()) < preys[i]->getLengthGroupDiv()->maxLength())
         index++;
     if (index == 0)
       handle.logMessage(LOGWARN, "Warning in predatorprinter - maximum length group greater than prey length");
@@ -283,7 +283,7 @@ void PredatorPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
   int a, predl, preyl;
   for (a = 0; a < areas.Nrow(); a++) {
-    bptr = &aggregator->returnSum()[a];
+    bptr = &aggregator->getSum()[a];
     for (predl = 0; predl < bptr->Nrow(); predl++) {
       for (preyl = 0; preyl < bptr->Ncol(predl); preyl++) {
         outfile << setw(lowwidth) << TimeInfo->getYear() << sep

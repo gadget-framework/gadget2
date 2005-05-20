@@ -23,8 +23,8 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
       transitionStockNames.resize(1);
       transitionStockNames[i] = new char[strlen(text) + 1];
       strcpy(transitionStockNames[i], text);
-      Ratio.resize(1);
-      infile >> Ratio[i] >> text >> ws;
+      transitionRatio.resize(1);
+      infile >> transitionRatio[i] >> text >> ws;
       i++;
     }
   } else
@@ -56,7 +56,7 @@ void Transition::setStock(StockPtrVector& stockvec) {
         transitionStocks.resize(1);
         tmpratio.resize(1);
         transitionStocks[index] = stockvec[i];
-        tmpratio[index] = Ratio[j];
+        tmpratio[index] = transitionRatio[j];
         index++;
       }
 
@@ -69,16 +69,16 @@ void Transition::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  for (i = Ratio.Size(); i > 0; i--)
-    Ratio.Delete(0);
-  Ratio.resize(tmpratio.Size());
+  for (i = transitionRatio.Size(); i > 0; i--)
+    transitionRatio.Delete(0);
+  transitionRatio.resize(tmpratio.Size());
   for (i = 0; i < tmpratio.Size(); i++)
-    Ratio[i] = tmpratio[i];
+    transitionRatio[i] = tmpratio[i];
 
   numstocks = transitionStocks.Size();
   CI.resize(numstocks, 0);
   for (i = 0; i < numstocks; i++)
-    CI[i] = new ConversionIndex(LgrpDiv, transitionStocks[i]->returnLengthGroupDiv());
+    CI[i] = new ConversionIndex(LgrpDiv, transitionStocks[i]->getLengthGroupDiv());
 
   //JMB - check that the transition stocks are defined on the areas
   double mlength = 9999.0;
@@ -91,8 +91,8 @@ void Transition::setStock(StockPtrVector& stockvec) {
     if ((handle.getLogLevel() >= LOGWARN) && (index != 0))
       handle.logMessage(LOGWARN, "Warning in transition - transition stock isnt defined on all areas");
 
-    if (transitionStocks[i]->returnLengthGroupDiv()->minLength() < mlength)
-      mlength = transitionStocks[i]->returnLengthGroupDiv()->minLength();
+    if (transitionStocks[i]->getLengthGroupDiv()->minLength() < mlength)
+      mlength = transitionStocks[i]->getLengthGroupDiv()->minLength();
   }
 
   IntVector minlv(2, 0);
@@ -108,8 +108,8 @@ void Transition::Print(ofstream& outfile) const {
   for (i = 0; i < transitionStockNames.Size(); i++)
     outfile << sep << transitionStockNames[i];
   outfile << "\n\tRatio moving into each stock:";
-  for (i = 0; i < Ratio.Size(); i++)
-    outfile << sep << Ratio[i];
+  for (i = 0; i < transitionRatio.Size(); i++)
+    outfile << sep << transitionRatio[i];
   outfile << "\n\tTransition step " << transitionStep << endl;
 }
 
@@ -155,17 +155,17 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
     if (!transitionStocks[s]->isInArea(area))
       handle.logMessage(LOGFAIL, "Error in transition - transition stock doesnt live on area", area);
 
-    if (transitionStocks[s]->Birthday(TimeInfo)) {
+    if (transitionStocks[s]->isBirthday(TimeInfo)) {
       Storage[inarea].IncrementAge();
       if (tagStorage.numTagExperiments() > 0)
         tagStorage[inarea].IncrementAge(Storage[inarea]);
     }
 
-    transitionStocks[s]->Add(Storage[inarea], CI[s], area, Ratio[s],
+    transitionStocks[s]->Add(Storage[inarea], CI[s], area, transitionRatio[s],
       Storage[inarea].minAge(), Storage[inarea].maxAge());
 
     if (tagStorage.numTagExperiments() > 0)
-      transitionStocks[s]->Add(tagStorage, inarea, CI[s], area, Ratio[s],
+      transitionStocks[s]->Add(tagStorage, inarea, CI[s], area, transitionRatio[s],
         tagStorage[inarea].minAge(), tagStorage[inarea].maxAge());
   }
 

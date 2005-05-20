@@ -43,11 +43,11 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
   for (p = 0; p < this->numPreys(); p++) {
     suitFunction[p]->updateConstants(TimeInfo);
     if (suitFunction[p]->didChange(TimeInfo)) {
-      temp = new DoubleMatrix(pred->numLengthGroups(), pred->Preys(p)->numLengthGroups(), 0.0);
+      temp = new DoubleMatrix(pred->numLengthGroups(), pred->getPrey(p)->numLengthGroups(), 0.0);
       for (i = 0; i < pred->numLengthGroups(); i++) {
-        for (j = 0; j < pred->Preys(p)->numLengthGroups(); j++) {
+        for (j = 0; j < pred->getPrey(p)->numLengthGroups(); j++) {
           if (suitFunction[p]->usesPreyLength())
-            suitFunction[p]->setPreyLength(pred->Preys(p)->meanLength(j));
+            suitFunction[p]->setPreyLength(pred->getPrey(p)->meanLength(j));
 
           if (suitFunction[p]->usesPredLength())
             suitFunction[p]->setPredLength(pred->meanLength(i));

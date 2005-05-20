@@ -147,9 +147,9 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < outerareas.Size(); i++)
     outerareas[i] = stocks[0]->getPrintArea(stocks[0]->areaNum(areas[i]));
 
-  LgrpDiv = new LengthGroupDivision(*stocks[0]->returnLengthGroupDiv());
+  LgrpDiv = new LengthGroupDivision(*stocks[0]->getLengthGroupDiv());
   if (stocks[0]->isEaten())
-    preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->returnPrey(), areas);
+    preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->getPrey(), areas);
 
   //prepare for the creation of the aggregator
   minage = 100;
@@ -181,7 +181,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   aggregator->Sum();
   int a, age;
   double tmpnumber, tmpbiomass;
-  alptr = &aggregator->returnSum();
+  alptr = &aggregator->getSum();
   for (a = 0; a < areas.Size(); a++) {
     if (preyinfo)
       preyinfo->Sum(TimeInfo, areas[a]);

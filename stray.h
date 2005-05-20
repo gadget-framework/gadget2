@@ -92,7 +92,7 @@ protected:
   /**
    * \brief This is the DoubleVector of the ratio of the stock that will stray
    */
-  DoubleVector Ratio;
+  DoubleVector strayRatio;
   /**
    * \brief This is the IntVector of timesteps that the straying will take place on
    */

@@ -24,8 +24,8 @@ public:
   void GrowthImplement(int area, const PopInfoVector& NumberInArea,
     const LengthGroupDivision* const Lengths);
   void GrowthImplement(int area, const LengthGroupDivision* const Lengths);
-  const DoubleMatrix& increaseLength(int area) const;
-  const DoubleMatrix& increaseWeight(int area) const;
+  const DoubleMatrix& getLengthIncrease(int area) const;
+  const DoubleMatrix& getWeightIncrease(int area) const;
   const DoubleVector& getWeight(int area) const;
   void Sum(const PopInfoVector& NumberInArea, int area);
   void Reset();

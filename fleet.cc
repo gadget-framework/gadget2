@@ -134,7 +134,7 @@ void Fleet::Print(ofstream& outfile) const {
   predator->Print(outfile);
 }
 
-LengthPredator* Fleet::returnPredator() const {
+LengthPredator* Fleet::getPredator() const {
   return predator;
 }
 

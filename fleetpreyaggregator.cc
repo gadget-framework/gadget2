@@ -20,7 +20,7 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
   int i;
   CI.resize(stocks.Size());
   for (i = 0; i < stocks.Size(); i++)
-    CI[i] = new ConversionIndex(stocks[i]->returnPrey()->returnLengthGroupDiv(), LgrpDiv);
+    CI[i] = new ConversionIndex(stocks[i]->getPrey()->getLengthGroupDiv(), LgrpDiv);
 
   //Resize total using dummy variables tmppop and popmatrix.
   PopInfo tmppop;
@@ -85,16 +85,16 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
   this->Reset();
   //Sum over the appropriate fleets, stocks, areas, ages and length groups.
   for (f = 0; f < fleets.Size(); f++) {
-    LengthPredator* pred = fleets[f]->returnPredator();
+    LengthPredator* pred = fleets[f]->getPredator();
     for (h = 0; h < stocks.Size(); h++) {
-      StockPrey* prey = (StockPrey*)stocks[h]->returnPrey();
+      StockPrey* prey = (StockPrey*)stocks[h]->getPrey();
       for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
         for (j = 0; j < areas.Ncol(aggrArea); j++) {
           area = areas[aggrArea][j];
           if ((prey->isPreyArea(area)) && (fleets[f]->isFleetStepArea(area, TimeInfo))) {
             fleetscale = fleets[f]->Amount(area, TimeInfo) * pred->Scaler(area);
             for (i = 0; i < pred->numPreys(); i++) {
-              if (strcasecmp(prey->getName(), pred->Preys(i)->getName()) == 0) {
+              if (strcasecmp(prey->getName(), pred->getPrey(i)->getName()) == 0) {
                 suitptr = &pred->Suitability(i)[0];
                 alptr = &prey->AlkeysPriorToEating(area);
                 for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
@@ -104,8 +104,8 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
                       if (overconsumption) {
                         DoubleIndexVector Ratio = *suitptr;
                         for (z = Ratio.minCol(); z < Ratio.maxCol(); z++)
-                          if (prey->Ratio(area, z) > 1)
-                            Ratio[z] *= 1.0 / prey->Ratio(area, z);
+                          if (prey->getRatio(area, z) > 1)
+                            Ratio[z] *= 1.0 / prey->getRatio(area, z);
 
                         total[aggrArea][aggrAge].Add((*alptr)[age], *CI[h], fleetscale, Ratio);
                       } else {

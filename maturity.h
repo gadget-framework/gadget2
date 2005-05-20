@@ -128,7 +128,7 @@ protected:
   /**
    * \brief This is the DoubleVector of the ratio of the immature stock to mature into each mature stock
    */
-  DoubleVector Ratio;
+  DoubleVector matureRatio;
   /**
    * \brief This is the ConversionIndexPtrVector used to convert from the immature stock lengths to the mature stock lengths
    */

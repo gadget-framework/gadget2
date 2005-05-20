@@ -62,8 +62,8 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
       strayStockNames.resize(1);
       strayStockNames[i] = new char[strlen(text) + 1];
       strcpy(strayStockNames[i], text);
-      Ratio.resize(1);
-      infile >> Ratio[i] >> text >> ws;
+      strayRatio.resize(1);
+      infile >> strayRatio[i] >> text >> ws;
       i++;
     }
   } else
@@ -118,7 +118,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
         strayStocks.resize(1);
         tmpratio.resize(1);
         strayStocks[index] = stockvec[i];
-        tmpratio[index] = Ratio[j];
+        tmpratio[index] = strayRatio[j];
         index++;
       }
 
@@ -131,11 +131,11 @@ void StrayData::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  for (i = Ratio.Size(); i > 0; i--)
-    Ratio.Delete(0);
-  Ratio.resize(tmpratio.Size());
+  for (i = strayRatio.Size(); i > 0; i--)
+    strayRatio.Delete(0);
+  strayRatio.resize(tmpratio.Size());
   for (i = 0; i < tmpratio.Size(); i++)
-    Ratio[i] = tmpratio[i];
+    strayRatio[i] = tmpratio[i];
 
   //JMB - check that the straying stocks are defined on the areas
   int minStrayAge = 9999;
@@ -152,7 +152,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
 
     minStrayAge = min(strayStocks[i]->minAge(), minStrayAge);
     maxStrayAge = max(strayStocks[i]->maxAge(), maxStrayAge);
-    minlength = min(strayStocks[i]->returnLengthGroupDiv()->minLength(), minlength);
+    minlength = min(strayStocks[i]->getLengthGroupDiv()->minLength(), minlength);
   }
 
   minStrayLength = LgrpDiv->numLengthGroup(minlength);
@@ -167,7 +167,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
 
   CI.resize(strayStocks.Size(), 0);
   for (i = 0; i < strayStocks.Size(); i++)
-    CI[i] = new ConversionIndex(LgrpDiv, strayStocks[i]->returnLengthGroupDiv());
+    CI[i] = new ConversionIndex(LgrpDiv, strayStocks[i]->getLengthGroupDiv());
 
 }
 
@@ -210,17 +210,17 @@ void StrayData::addStrayStock(int area, const TimeClass* const TimeInfo) {
     if (!strayStocks[s]->isInArea(area))
       handle.logMessage(LOGFAIL, "Error in straying - stray stock doesnt live on area", area);
 
-    if (strayStocks[s]->Birthday(TimeInfo)) {
+    if (strayStocks[s]->isBirthday(TimeInfo)) {
       Storage[inarea].IncrementAge();
       if (tagStorage.numTagExperiments() > 0)
         tagStorage[inarea].IncrementAge(Storage[inarea]);
     }
 
-    strayStocks[s]->Add(Storage[inarea], CI[s], area, Ratio[s],
+    strayStocks[s]->Add(Storage[inarea], CI[s], area, strayRatio[s],
       Storage[inarea].minAge(), Storage[inarea].maxAge());
 
     if (tagStorage.numTagExperiments() > 0)
-      strayStocks[s]->Add(tagStorage, inarea, CI[s], area, Ratio[s],
+      strayStocks[s]->Add(tagStorage, inarea, CI[s], area, strayRatio[s],
         tagStorage[inarea].minAge(), tagStorage[inarea].maxAge());
   }
 }
@@ -269,8 +269,8 @@ void StrayData::Print(ofstream& outfile) const {
   for (i = 0; i < strayStockNames.Size(); i++)
     outfile << sep << strayStockNames[i];
   outfile << "\n\tRatio moving into each stock:";
-  for (i = 0; i < Ratio.Size(); i++)
-    outfile << sep << Ratio[i];
+  for (i = 0; i < strayRatio.Size(); i++)
+    outfile << sep << strayRatio[i];
   outfile << "\n\tStraying timesteps:";
   for (i = 0; i < strayStep.Size(); i++)
     outfile << sep << strayStep[i];

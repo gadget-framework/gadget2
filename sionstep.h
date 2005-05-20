@@ -67,14 +67,21 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
-  virtual double calcRegression();
+  /**
+   * \brief This function will calculate the SSE from the regression line
+   * \return SSE from the regession line
+   */
+  virtual double calcSSE();
 protected:
   /**
    * \brief This will return a null terminated text string containing the name of the SIOnStep object
    * \return siname
    */
   const char* getSIName() const { return siname; };
-  int isToSum(const TimeClass* const TimeInfo) const;
+  /**
+   * \brief This function will return the number of regression lines to be calculated
+   * \return number of regression lines
+   */
   int numIndex() const { return colindex.Size(); };
   /**
    * \brief This is the IntMatrix used to store information about the areas that the survey index should be calculated on
@@ -104,31 +111,44 @@ protected:
    * \brief This is the AgeBandMatrix used to temporarily store the information returned from aggregatation function
    */
   const AgeBandMatrix* alptr;
-  FitType getFitType() { return fittype; };
   /**
    * \brief This is the index of the timesteps for the survey index data
    */
   int timeindex;
 private:
   /**
-   * \brief This function will increase the internal error count by 1
-   */
-  void setError() { error++; };
-  /**
    * \brief This function will read the SIOnStep data from the input file
    * \param infile is the CommentStream to read the SIOnStep data from
    * \param TimeInfo is the TimeClass for the current model
    */
   void readSIData(CommentStream& infile, const TimeClass* const TimeInfo);
-  double fitRegression(const DoubleVector& stocksize, const DoubleVector& indices, int col);
   /**
-   * \brief This is the number of errors that occured when fitting the regression line (usually caused by comparing a non-zero number of zero)
+   * \brief This function will calculate the regression line used to fit the modelled data to the observed data 
+   * \param stocksize is the DoubleVector containing the index based on the modelled data
+   * \param indices is the DoubleVector containing the index based on the observed data
+   * \param i is the current index
+   * \return SSE from the regession line
    */
-  int error;
+  double calcRegression(const DoubleVector& stocksize, const DoubleVector& indices, int i);
+  /**
+   * \brief This is used to fix the slope of the regression lines if specified by the user
+   */
   double slope;
+  /**
+   * \brief This is used to fix the intercept of the regression lines if specified by the user
+   */
   double intercept;
+  /**
+   * \brief This is the DoubleVector used to store information about the slope of the regression lines
+   */
   DoubleVector slopes;
+  /**
+   * \brief This is the DoubleVector used to store information about the intercept of the regression lines
+   */
   DoubleVector intercepts;
+  /**
+   * \brief This is the DoubleVector used to store information about the sse of the regression lines
+   */
   DoubleVector sse;
   /**
    * \brief This is the CharPtrVector of the names of the areas
@@ -142,6 +162,9 @@ private:
    * \brief This is the name of the SIOnStep object
    */
   char* siname;
+  /**
+   * \brief This denotes what type of fit is to be used for the linear regression line
+   */
   FitType fittype;
 };
 

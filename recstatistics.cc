@@ -16,9 +16,8 @@ extern ErrorHandler handle;
 
 RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, TagPtrVector Tag, const char* name)
-  : Likelihood(RECSTATISTICSLIKELIHOOD, weight, name) {
+  : Likelihood(RECSTATISTICSLIKELIHOOD, weight, name), aggregator(0), alptr(0) {
 
-  aggregator = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j, numarea = 0;
@@ -273,7 +272,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       found = 0;
       for (j = 0; j < Stocks.Size(); j++)
         if (Stocks[j]->isEaten())
-          if (strcasecmp(stocknames->operator[](i), Stocks[j]->returnPrey()->getName()) == 0) {
+          if (strcasecmp(stocknames->operator[](i), Stocks[j]->getPrey()->getName()) == 0) {
             found++;
             stocks.resize(1, Stocks[j]);
           }
@@ -283,9 +282,9 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
 
     }
 
-    LgrpDiv = new LengthGroupDivision(*(stocks[0]->returnPrey()->returnLengthGroupDiv()));
+    LgrpDiv = new LengthGroupDivision(*(stocks[0]->getPrey()->getLengthGroupDiv()));
     for (i = 1; i < stocks.Size(); i++)
-      if (!LgrpDiv->Combine(stocks[i]->returnPrey()->returnLengthGroupDiv()))
+      if (!LgrpDiv->Combine(stocks[i]->getPrey()->getLengthGroupDiv()))
         handle.logMessage(LOGFAIL, "Error in recstatistics - length groups not compatible");
 
     minage = 999;
@@ -341,9 +340,9 @@ double RecStatistics::calcLikSumSquares() {
 
   for (t = 0; t < tagvec.Size(); t++) {
     if (timeindex[t] > -1) {
-      const AgeBandMatrixPtrVector *alptr = &aggregator[t]->returnSum();
+      alptr = &aggregator[t]->getSum();
       for (area = 0; area < alptr->Size(); area++) {
-        PopStatistics PopStat((*alptr)[area][0], aggregator[t]->returnLengthGroupDiv(), 1);
+        PopStatistics PopStat((*alptr)[area][0], aggregator[t]->getLengthGroupDiv(), 1);
 
         simdiff = PopStat.meanLength() - (*obsMean[t])[timeindex[t]][area];
         simvar = 0.0;

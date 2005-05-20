@@ -45,7 +45,7 @@ public:
    * \brief This will return the BandMatrixPtrVector containing the aggregated predation information
    * \return total, the BandMatrixPtrVector of aggregated predation information
    */
-  const BandMatrixPtrVector& returnSum() const { return total; };
+  const BandMatrixPtrVector& getSum() const { return total; };
 protected:
   /**
    * \brief This is the PredatorPtrVector of the predators that will be aggregated

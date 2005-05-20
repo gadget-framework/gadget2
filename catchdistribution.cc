@@ -461,7 +461,7 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->isEaten()) {
-        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->getName()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->getPrey()->getName()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);
         }
@@ -518,14 +518,14 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
 
     found = 0;
     for (i = 0; i < stocks.Size(); i++)
-      if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+      if (LgrpDiv->maxLength(0) > stocks[i]->getLengthGroupDiv()->minLength())
         found++;
     if (found == 0)
       handle.logMessage(LOGWARN, "Warning in catchdistribution - minimum length group less than stock length");
 
     found = 0;
     for (i = 0; i < stocks.Size(); i++)
-      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->getLengthGroupDiv()->maxLength())
         found++;
     if (found == 0)
       handle.logMessage(LOGWARN, "Warning in catchdistribution - maximum length group greater than stock length");
@@ -543,7 +543,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   aggregator->Sum(TimeInfo);
   if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData() == 1))
     handle.logMessage(LOGWARN, "Warning in catchdistribution - zero catch found");
-  alptr = &aggregator->returnSum();
+  alptr = &aggregator->getSum();
 
   switch (functionnumber) {
     case 1:

@@ -38,7 +38,7 @@ public:
    * \brief This function will return the LengthGroupDivision of the aggregator
    * \return LgrpDiv, the LengthGroupDivision of the aggregator
    */
-  LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
+  LengthGroupDivision* getLengthGroupDiv() const { return LgrpDiv; };
   /**
    * \brief This function will reset the recapture data
    */
@@ -57,7 +57,7 @@ public:
    * \brief This will return the AgeBandMatrixPtrVector containing the aggregated recaptures information
    * \return total, the AgeBandMatrixPtrVector of aggregated recaptures information
    */
-  const AgeBandMatrixPtrVector& returnSum() const { return total; };
+  const AgeBandMatrixPtrVector& getSum() const { return total; };
 private:
   /**
    * \brief This is the FleetPtrVector of the fleets that will be aggregated

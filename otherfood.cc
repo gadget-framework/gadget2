@@ -86,7 +86,7 @@ OtherFood::~OtherFood() {
   delete prey;
 }
 
-LengthPrey* OtherFood::returnPrey() const {
+LengthPrey* OtherFood::getPrey() const {
   return prey;
 }
 

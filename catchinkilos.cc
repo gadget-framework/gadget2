@@ -166,7 +166,7 @@ double CatchInKilos::calcLikSumSquares(const TimeClass* const TimeInfo) {
     for (a2 = 0; a2 < areas.Ncol(a); a2++)
       for (f = 0; f < preyindex.Nrow(); f++)
         for (p = 0; p < preyindex.Ncol(f); p++)
-          modelDistribution[timeindex][a] += fleets[f]->returnPredator()->getConsumptionBiomass(preyindex[f][p], a2);
+          modelDistribution[timeindex][a] += fleets[f]->getPredator()->getConsumptionBiomass(preyindex[f][p], a2);
 
     if ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
       likelihoodValues[timeindex][a] +=
@@ -233,7 +233,7 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->isEaten()) {
-        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->getName()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->getPrey()->getName()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);
         }
@@ -269,9 +269,9 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
   for (i = 0; i < fleets.Size(); i++) {
     found = 0;
     preyindex.AddRows(1, 0);
-    for (j = 0; j < fleets[i]->returnPredator()->numPreys(); j++)
+    for (j = 0; j < fleets[i]->getPredator()->numPreys(); j++)
       for (k = 0; k < stocknames.Size(); k++)
-        if (strcasecmp(stocknames[k], fleets[i]->returnPredator()->Preys(j)->getName()) == 0) {
+        if (strcasecmp(stocknames[k], fleets[i]->getPredator()->getPrey(j)->getName()) == 0) {
           found++;
           preyindex[i].resize(1, j);
         }

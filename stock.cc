@@ -360,11 +360,11 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
   }
 }
 
-Prey* Stock::returnPrey() const {
+Prey* Stock::getPrey() const {
   return prey;
 }
 
-PopPredator* Stock::returnPredator() const {
+PopPredator* Stock::getPredator() const {
   return predator;
 }
 
@@ -433,7 +433,7 @@ void Stock::Print(ofstream& outfile) const {
   }
 }
 
-int Stock::Birthday(const TimeClass* const TimeInfo) const {
+int Stock::isBirthday(const TimeClass* const TimeInfo) const {
   return (TimeInfo->getStep() == birthdate);
 }
 

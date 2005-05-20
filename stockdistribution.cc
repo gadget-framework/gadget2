@@ -355,7 +355,7 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->isEaten()) {
-        if (strcasecmp(stocknames[s], Stocks[j]->returnPrey()->getName()) == 0) {
+        if (strcasecmp(stocknames[s], Stocks[j]->getPrey()->getName()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);
         }
@@ -401,14 +401,14 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
 
       found = 0;
       for (i = 0; i < stocks.Size(); i++)
-        if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+        if (LgrpDiv->maxLength(0) > stocks[i]->getLengthGroupDiv()->minLength())
           found++;
       if (found == 0)
         handle.logMessage(LOGWARN, "Warning in stockdistribution - minimum length group less than stock length");
 
       found = 0;
       for (i = 0; i < stocks.Size(); i++)
-        if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+        if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->getLengthGroupDiv()->maxLength())
           found++;
       if (found == 0)
         handle.logMessage(LOGWARN, "Warning in stockdistribution - maximum length group greater than stock length");
@@ -463,7 +463,7 @@ double StockDistribution::calcLikMultinomial() {
     Dist[area] = new DoubleMatrix(num, stocknames.Size(), 0.0);
 
     for (sn = 0; sn < stocknames.Size(); sn++) {
-      alptr = &aggregator[sn]->returnSum();
+      alptr = &aggregator[sn]->getSum();
       minage = (*alptr)[area].minAge();
       maxage = (*alptr)[area].maxAge();
       for (age = minage; age <= maxage; age++) {
@@ -495,7 +495,7 @@ double StockDistribution::calcLikSumSquares() {
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     for (sn = 0; sn < stocknames.Size(); sn++) {
-      alptr = &aggregator[sn]->returnSum();
+      alptr = &aggregator[sn]->getSum();
       totalmodel = 0.0;
       totaldata = 0.0;
 

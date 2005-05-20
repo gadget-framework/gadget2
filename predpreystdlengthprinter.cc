@@ -45,8 +45,8 @@ void PredPreyStdLengthPrinter::Print(const TimeClass* const TimeInfo, int printt
     return;
 
   int a, predl, preyl;
-  const LengthGroupDivision* predLgrpDiv = predinfo->returnPredLengthGroupDiv();
-  const LengthGroupDivision* preyLgrpDiv = predinfo->returnPreyLengthGroupDiv();
+  const LengthGroupDivision* predLgrpDiv = predinfo->getPredLengthGroupDiv();
+  const LengthGroupDivision* preyLgrpDiv = predinfo->getPreyLengthGroupDiv();
 
   for (a = 0; a < areas.Size(); a++) {
     predinfo->Sum(TimeInfo, areas[a]);

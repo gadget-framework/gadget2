@@ -128,7 +128,7 @@ void StockFullPrinter::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < outerareas.Size(); i++)
     outerareas[i] = stocks[0]->getPrintArea(stocks[0]->areaNum(areas[i]));
 
-  LgrpDiv = new LengthGroupDivision(*stocks[0]->returnLengthGroupDiv());
+  LgrpDiv = new LengthGroupDivision(*stocks[0]->getLengthGroupDiv());
 
   //prepare for the creation of the aggregator
   minage = 100;
@@ -160,7 +160,7 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   aggregator->Sum();
   int a, age, len;
 
-  alptr = &aggregator->returnSum();
+  alptr = &aggregator->getSum();
   for (a = 0; a < areas.Size(); a++) {
     for (age = (*alptr)[a].minAge(); age <= (*alptr)[a].maxAge(); age++) {
       for (len = (*alptr)[a].minLength(age); len < (*alptr)[a].maxLength(age); len++) {

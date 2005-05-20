@@ -38,7 +38,7 @@ public:
    * \brief This will return the AgeBandMatrixPtrVector containing the aggregated stock information
    * \return total, the AgeBandMatrixPtrVector of aggregated stock information
    */
-  const AgeBandMatrixPtrVector& returnSum() const { return total; };
+  const AgeBandMatrixPtrVector& getSum() const { return total; };
   /**
    * \brief This will print the aggregator information to the ofstream specified
    * \param outfile is the ofstream to the file that the aggregator information gets sent to

@@ -117,8 +117,8 @@ void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     minl = 9999.0;
     maxl = 0.0;
     for (i = 0; i < this->numPreys(); i++) {
-      minl = min(Preys(i)->returnLengthGroupDiv()->minLength(), minl);
-      maxl = max(Preys(i)->returnLengthGroupDiv()->maxLength(), maxl);
+      minl = min(this->getPrey(i)->getLengthGroupDiv()->minLength(), minl);
+      maxl = max(this->getPrey(i)->getLengthGroupDiv()->maxLength(), maxl);
     }
     LgrpDiv = new LengthGroupDivision(minl, maxl, maxl - minl);
     if (LgrpDiv->Error())

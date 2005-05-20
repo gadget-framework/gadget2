@@ -138,6 +138,10 @@ private:
    * \brief This is the name of the function to be used to calculate the likelihood component
    */
   char* functionname;
+  /**
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   */
+  const AgeBandMatrixPtrVector* alptr;
 };
 
 #endif

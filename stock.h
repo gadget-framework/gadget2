@@ -155,9 +155,9 @@ public:
     int area, double ratio = 1.0, int MinAge = 0, int MaxAge = 100);
   void Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
     int area, double ratio = 1.0, int MinAge = 0, int MaxAge = 100);
-  Prey* returnPrey() const;
+  Prey* getPrey() const;
   const Migration* getMigration() const { return migration; };
-  PopPredator* returnPredator() const;
+  PopPredator* getPredator() const;
   const AgeBandMatrix& getAgeLengthKeys(int area) const;
   virtual void setStock(StockPtrVector& stockvec);
   void setCI();
@@ -166,8 +166,8 @@ public:
    * \param outfile is the ofstream that all the model information gets sent to
    */
   void Print(ofstream& outfile) const;
-  int Birthday(const TimeClass* const TimeInfo) const;
-  const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
+  int isBirthday(const TimeClass* const TimeInfo) const;
+  const LengthGroupDivision* getLengthGroupDiv() const { return LgrpDiv; };
   int isEaten() const { return iseaten; };
   int doesSpawn() const { return doesspawn; };
   int doesStray() const { return doesstray; };

@@ -92,7 +92,7 @@ protected:
   /**
    * \brief This is the DoubleVector of the ratio of the young stock to move into each older stock
    */
-  DoubleVector Ratio;
+  DoubleVector transitionRatio;
   /**
    * \brief This is the ConversionIndexPtrVector used to convert from the young stock lengths to the old stock lengths
    */

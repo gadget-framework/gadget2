@@ -165,14 +165,14 @@ void PreyOverPrinter::setPrey(PreyPtrVector& preyvec) {
 
     index = 0;
     for (i = 0; i < preys.Size(); i++)
-      if (preyLgrpDiv->maxLength(0) > preys[i]->returnLengthGroupDiv()->minLength())
+      if (preyLgrpDiv->maxLength(0) > preys[i]->getLengthGroupDiv()->minLength())
         index++;
     if (index == 0)
       handle.logMessage(LOGWARN, "Warning in preyoverprinter - minimum length group less than prey length");
 
     index = 0;
     for (i = 0; i < preys.Size(); i++)
-      if (preyLgrpDiv->minLength(preyLgrpDiv->numLengthGroups()) < preys[i]->returnLengthGroupDiv()->maxLength())
+      if (preyLgrpDiv->minLength(preyLgrpDiv->numLengthGroups()) < preys[i]->getLengthGroupDiv()->maxLength())
         index++;
     if (index == 0)
       handle.logMessage(LOGWARN, "Warning in preyoverprinter - maximum length group greater than prey length");
@@ -187,7 +187,7 @@ void PreyOverPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
     return;
 
   aggregator->Sum();
-  dptr = &aggregator->returnSum();
+  dptr = &aggregator->getSum();
   int a, len, p, w;
 
   for (a = 0; a < areas.Nrow(); a++) {

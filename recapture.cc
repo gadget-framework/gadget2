@@ -14,7 +14,7 @@ extern ErrorHandler handle;
 
 Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, TagPtrVector Tag, const char* name)
-  : Likelihood(TAGLIKELIHOOD, weight, name) {
+  : Likelihood(TAGLIKELIHOOD, weight, name), alptr(0) {
 
   aggregator = 0;
   char text[MaxStrLength];
@@ -266,7 +266,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       found = 0;
       for (j = 0; j < Stocks.Size(); j++) {
         if (Stocks[j]->isEaten()) {
-          if (strcasecmp(stocknames->operator[](i), Stocks[j]->returnPrey()->getName()) == 0) {
+          if (strcasecmp(stocknames->operator[](i), Stocks[j]->getPrey()->getName()) == 0) {
             found++;
             stocks.resize(1, Stocks[j]);
           }
@@ -324,7 +324,7 @@ void Recaptures::addLikelihood(const TimeClass* const TimeInfo) {
 
 double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
   double x, n, lik, total;
-  int t, i, ti, len, timeid, checktag, checktime;
+  int t, a, ti, len, timeid, checktag, checktime;
   int year = TimeInfo->getYear();
   int step = TimeInfo->getStep();
 
@@ -341,7 +341,7 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
       }
 
       aggregator[t]->Sum(TimeInfo);
-      const AgeBandMatrixPtrVector& alptr = aggregator[t]->returnSum();
+      alptr = &aggregator[t]->getSum();
 
       checktime = 0;
       timeid = -1;
@@ -366,18 +366,18 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
         }
       }
 
-      for (i = 0; i < alptr.Size(); i++) {
+      for (a = 0; a < areas.Nrow(); a++) {
         for (len = 0; len < lengths.Size() - 1; len++) {
-          x = alptr[i][0][len].N;
+          x = ((*alptr)[a][0][len]).N;
 
           if (checktime == 0) {
             // this is a modelled return that has a non-zero observed return
-            n = (*obsDistribution[t][timeid])[i][len];
-            (*modelDistribution[t][timeid])[i][len] = x;
+            n = (*obsDistribution[t][timeid])[a][len];
+            (*modelDistribution[t][timeid])[a][len] = x;
           } else {
             // this is a modelled return that doesnt have a corresponding observed return
             n = 0.0;
-            (*newDistribution[t][timeid])[i][len] = x;
+            (*newDistribution[t][timeid])[a][len] = x;
           }
 
           if (isZero(n))

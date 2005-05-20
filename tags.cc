@@ -44,7 +44,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   int i = 0, found = 0;
   while (found == 0 && i < stockvec.Size()) {
     if (strcasecmp(stockvec[i]->getName(), stocknames[0]) == 0) {
-      LgrpDiv = new LengthGroupDivision(*(stockvec[i]->returnLengthGroupDiv()));
+      LgrpDiv = new LengthGroupDivision(*(stockvec[i]->getLengthGroupDiv()));
       found++;
     }
     i++;
@@ -212,7 +212,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
   if (!(taggingstock->isInArea(tagarea)))
     handle.logMessage(LOGFAIL, "Error in tags - stock isnt defined on tagging area");
 
-  const LengthGroupDivision* tempLgrpDiv = taggingstock->returnLengthGroupDiv();
+  const LengthGroupDivision* tempLgrpDiv = taggingstock->getLengthGroupDiv();
   if (LgrpDiv->numLengthGroups() != tempLgrpDiv->numLengthGroups())
     handle.logMessage(LOGFAIL, "Error in tags - invalid length group for tagged stock");
   if (LgrpDiv->dl() != tempLgrpDiv->dl())
@@ -339,7 +339,7 @@ void Tags::Update(int timeid) {
   updated[0] = 1;
 
   if (taggingstock->isEaten()) {
-    tmpLgrpDiv = taggingstock->returnPrey()->returnLengthGroupDiv();
+    tmpLgrpDiv = taggingstock->getPrey()->getLengthGroupDiv();
     IntVector preysize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
     IntVector preyminlength(numberofagegroups, 0);
     NumBeforeEating.resize(1, new AgeBandMatrixPtrVector(numareas, minage, preyminlength, preysize));
@@ -377,7 +377,7 @@ void Tags::Update(int timeid) {
 
     AgeLengthStock.resize(1, new AgeBandMatrixPtrVector(numareas, minage, lowerlengthgroups, sizeoflengthgroups));
     if (tmpStock->isEaten()) {
-      tmpLgrpDiv = tmpStock->returnPrey()->returnLengthGroupDiv();
+      tmpLgrpDiv = tmpStock->getPrey()->getLengthGroupDiv();
       IntVector preysize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
       IntVector preyminlength(numberofagegroups, 0);
       NumBeforeEating.resize(1, new AgeBandMatrixPtrVector(numareas, minage, preyminlength, preysize));

@@ -56,7 +56,7 @@ protected:
   /**
    * \brief This is the DoubleVector of the ratio of the new stock to move into each spawned stock
    */
-  DoubleVector Ratio;
+  DoubleVector spawnRatio;
   /**
    * \brief This is the IntVector used to store information about the steps when the spawning takes place
    */

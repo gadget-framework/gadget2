@@ -25,7 +25,6 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
-  error = 0;
   timeindex = 0;
   slope = 0.0;
   intercept = 0.0;
@@ -177,7 +176,6 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
 }
 
 void SIOnStep::Reset(const Keeper* const keeper) {
-  error = 0;
   timeindex = 0;
   int i, j;
   for (i = 0; i < modelIndex.Nrow(); i++)
@@ -235,26 +233,23 @@ void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInf
   }
 }
 
-int SIOnStep::isToSum(const TimeClass* const TimeInfo) const {
-  return AAT.atCurrentTime(TimeInfo);
-}
-
-double SIOnStep::calcRegression() {
+double SIOnStep::calcSSE() {
   if (timeindex < 2)
     return 0.0;
 
   double score = 0.0;
-  int col, index;
-  for (col = 0; col < this->numIndex(); col++) {
+  int i, t;
+  DoubleVector indices(timeindex);
+  DoubleVector stocksize(timeindex);
+
+  for (i = 0; i < this->numIndex(); i++) {
     //Let LLR figure out what to do in the case of zero stock size.
-    DoubleVector indices(timeindex);
-    DoubleVector stocksize(timeindex);
-    for (index = 0; index < timeindex; index++) {
-      indices[index] = obsIndex[index][col];
-      stocksize[index] = modelIndex[index][col];
+    for (t = 0; t < timeindex; t++) {
+      indices[t] = obsIndex[t][i];
+      stocksize[t] = modelIndex[t][i];
     }
     //Now fit the log of the abundance indices as a function of stock size.
-    score += this->fitRegression(stocksize, indices, col);
+    score += this->calcRegression(stocksize, indices, i);
   }
 
   if (handle.getLogLevel() >= LOGMESSAGE) {
@@ -265,7 +260,7 @@ double SIOnStep::calcRegression() {
   return score;
 }
 
-double SIOnStep::fitRegression(const DoubleVector& stocksize, const DoubleVector& indices, int col) {
+double SIOnStep::calcRegression(const DoubleVector& stocksize, const DoubleVector& indices, int i) {
 
   LogLinearRegression LLR;
   LinearRegression LR;
@@ -307,22 +302,18 @@ double SIOnStep::fitRegression(const DoubleVector& stocksize, const DoubleVector
     case FIXEDSLOPELOGLINEARFIT:
     case FIXEDINTERCEPTLOGLINEARFIT:
     case FIXEDLOGLINEARFIT:
-      slopes[col] = LLR.slope();
-      intercepts[col] = LLR.intersection();
-      sse[col] = LLR.SSE();
-      if (LLR.Error())
-        this->setError();
+      slopes[i] = LLR.slope();
+      intercepts[i] = LLR.intersection();
+      sse[i] = LLR.SSE();
       return LLR.SSE();
       break;
     case LINEARFIT:
     case FIXEDSLOPELINEARFIT:
     case FIXEDINTERCEPTLINEARFIT:
     case FIXEDLINEARFIT:
-      slopes[col] = LR.slope();
-      intercepts[col] = LR.intersection();
-      sse[col] = LR.SSE();
-      if (LR.Error())
-        this->setError();
+      slopes[i] = LR.slope();
+      intercepts[i] = LR.intersection();
+      sse[i] = LR.SSE();
       return LR.SSE();
       break;
     default:

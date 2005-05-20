@@ -207,14 +207,14 @@ void StockPrinter::setStock(StockPtrVector& stockvec) {
 
     index = 0;
     for (i = 0; i < stocks.Size(); i++)
-      if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+      if (LgrpDiv->maxLength(0) > stocks[i]->getLengthGroupDiv()->minLength())
         index++;
     if (index == 0)
       handle.logMessage(LOGWARN, "Warning in stockprinter - minimum length group less than stock length");
 
     index = 0;
     for (i = 0; i < stocks.Size(); i++)
-      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->getLengthGroupDiv()->maxLength())
         index++;
     if (index == 0)
       handle.logMessage(LOGWARN, "Warning in stockprinter - maximum length group greater than stock length");
@@ -231,7 +231,7 @@ void StockPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   aggregator->Sum();
   int a, age, len;
 
-  alptr = &aggregator->returnSum();
+  alptr = &aggregator->getSum();
   for (a = 0; a < areas.Nrow(); a++) {
     for (age = (*alptr)[a].minAge(); age <= (*alptr)[a].maxAge(); age++) {
       for (len = (*alptr)[a].minLength(age); len < (*alptr)[a].maxLength(age); len++) {

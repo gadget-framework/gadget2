@@ -17,10 +17,10 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
   int i, j;
 
   for (i = 0; i < predators.Size(); i++)
-    checkLengthGroupIsFiner(predators[i]->returnLengthGroupDiv(), predLgrpDiv);
+    checkLengthGroupIsFiner(predators[i]->getLengthGroupDiv(), predLgrpDiv);
 
   for (i = 0; i < preys.Size(); i++)
-    checkLengthGroupIsFiner(preys[i]->returnLengthGroupDiv(), preyLgrpDiv);
+    checkLengthGroupIsFiner(preys[i]->getLengthGroupDiv(), preyLgrpDiv);
 
   for (i = 0; i < predators.Size(); i++) {
     predConv.AddRows(1, predators[i]->numLengthGroups(), 0);

@@ -70,8 +70,8 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
       spawnStockNames.resize(1);
       spawnStockNames[i] = new char[strlen(text) + 1];
       strcpy(spawnStockNames[i], text);
-      Ratio.resize(1);
-      infile >> Ratio[i];
+      spawnRatio.resize(1);
+      infile >> spawnRatio[i];
       i++;
       infile >> text >> ws;
     }
@@ -203,7 +203,7 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
         spawnStocks.resize(1);
         tmpratio.resize(1);
         spawnStocks[index] = stockvec[i];
-        tmpratio[index] = Ratio[j];
+        tmpratio[index] = spawnRatio[j];
         index++;
       }
 
@@ -216,11 +216,11 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  for (i = Ratio.Size(); i > 0; i--)
-    Ratio.Delete(0);
-  Ratio.resize(tmpratio.Size());
+  for (i = spawnRatio.Size(); i > 0; i--)
+    spawnRatio.Delete(0);
+  spawnRatio.resize(tmpratio.Size());
   for (i = 0; i < tmpratio.Size(); i++)
-    Ratio[i] = tmpratio[i];
+    spawnRatio[i] = tmpratio[i];
 
   //JMB - check that the spawned stocks are defined on the areas
   spawnAge = 9999;
@@ -237,9 +237,9 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
       handle.logMessage(LOGWARN, "Warning in spawner - spawned stock isnt defined on all areas");
 
     spawnAge = min(spawnStocks[i]->minAge(), spawnAge);
-    minlength = min(spawnStocks[i]->returnLengthGroupDiv()->minLength(), minlength);
-    maxlength = max(spawnStocks[i]->returnLengthGroupDiv()->maxLength(), maxlength);
-    dl = min(spawnStocks[i]->returnLengthGroupDiv()->dl(), dl);
+    minlength = min(spawnStocks[i]->getLengthGroupDiv()->minLength(), minlength);
+    maxlength = max(spawnStocks[i]->getLengthGroupDiv()->maxLength(), maxlength);
+    dl = min(spawnStocks[i]->getLengthGroupDiv()->dl(), dl);
   }
 
   spawnLgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
@@ -252,7 +252,7 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
 
   CI.resize(spawnStocks.Size(), 0);
   for (i = 0; i < spawnStocks.Size(); i++)
-    CI[i] = new ConversionIndex(spawnLgrpDiv, spawnStocks[i]->returnLengthGroupDiv());
+    CI[i] = new ConversionIndex(spawnLgrpDiv, spawnStocks[i]->getLengthGroupDiv());
 
 }
 
@@ -326,7 +326,7 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
     if (!spawnStocks[s]->isInArea(area))
       handle.logMessage(LOGFAIL, "Error in spawner - spawned stock doesnt live on area", area);
 
-    spawnStocks[s]->Add(Storage[inarea], CI[s], area, Ratio[s], spawnStocks[s]->minAge(), spawnStocks[s]->minAge());
+    spawnStocks[s]->Add(Storage[inarea], CI[s], area, spawnRatio[s], spawnStocks[s]->minAge(), spawnStocks[s]->minAge());
   }
 
   for (age = 0; age < spawnNumbers.Nrow(); age++)
@@ -445,6 +445,9 @@ void SpawnData::Print(ofstream& outfile) const {
   outfile << "\nSpawning data\n\tNames of spawned stocks:";
   for (i = 0; i < spawnStockNames.Size(); i++)
     outfile << sep << spawnStockNames[i];
+  outfile << "\n\tRatio spawning into each stock:";
+  for (i = 0; i < spawnRatio.Size(); i++)
+    outfile << sep << spawnRatio[i];
   outfile << "\n\t";
   spawnLgrpDiv->Print(outfile);
   outfile << "\tStored numbers:\n";

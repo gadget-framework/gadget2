@@ -166,14 +166,14 @@ void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec) {
 
     index = 0;
     for (i = 0; i < predators.Size(); i++)
-      if (predLgrpDiv->maxLength(0) > predators[i]->returnLengthGroupDiv()->minLength())
+      if (predLgrpDiv->maxLength(0) > predators[i]->getLengthGroupDiv()->minLength())
         index++;
     if (index == 0)
       handle.logMessage(LOGWARN, "Warning in predatoroverprinter - minimum length group less than predator length");
 
     index = 0;
     for (i = 0; i < predators.Size(); i++)
-      if (predLgrpDiv->minLength(predLgrpDiv->numLengthGroups()) < predators[i]->returnLengthGroupDiv()->maxLength())
+      if (predLgrpDiv->minLength(predLgrpDiv->numLengthGroups()) < predators[i]->getLengthGroupDiv()->maxLength())
         index++;
     if (index == 0)
       handle.logMessage(LOGWARN, "Warning in predatoroverprinter - maximum length group greater than predator length");
@@ -188,7 +188,7 @@ void PredatorOverPrinter::Print(const TimeClass* const TimeInfo, int printtime) 
     return;
 
   aggregator->Sum();
-  dptr = &aggregator->returnSum();
+  dptr = &aggregator->getSum();
   int a, len;
 
   for (a = 0; a < areas.Nrow(); a++) {

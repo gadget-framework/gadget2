@@ -202,7 +202,7 @@ double SC::calcLikelihood(const TimeClass* const TimeInfo) {
   int numprey = 0;
   for (i = 0; i < preyindex.Size(); i++) {
     this->aggregate(i);
-    bptr = &aggregator[i]->returnSum();
+    bptr = &aggregator[i]->getSum();
     for (a = 0; a < areas.Nrow(); a++)
       for (k = 0; k < (*bptr)[a].Nrow(); k++)
         for (p = 0; p < (*bptr)[a].Ncol(k); p++)
@@ -381,14 +381,14 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
       if (handle.getLogLevel() >= LOGWARN) {
         found = 0;
         for (j = 0; j < predators.Size(); j++)
-          if (predLgrpDiv[i]->maxLength(0) > predators[j]->returnLengthGroupDiv()->minLength())
+          if (predLgrpDiv[i]->maxLength(0) > predators[j]->getLengthGroupDiv()->minLength())
             found++;
         if (found == 0)
           handle.logMessage(LOGWARN, "Warning in stomachcontent - minimum length group less than predator length");
 
         found = 0;
         for (j = 0; j < predators.Size(); j++)
-          if (predLgrpDiv[i]->minLength(predLgrpDiv[i]->numLengthGroups()) < predators[j]->returnLengthGroupDiv()->maxLength())
+          if (predLgrpDiv[i]->minLength(predLgrpDiv[i]->numLengthGroups()) < predators[j]->getLengthGroupDiv()->maxLength())
             found++;
         if (found == 0)
           handle.logMessage(LOGWARN, "Warning in stomachcontent - maximum length group greater than predator length");

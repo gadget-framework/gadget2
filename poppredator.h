@@ -19,7 +19,7 @@ public:
   virtual const BandMatrix& getConsumption(int area, const char* preyname) const;
   virtual const DoubleVector& getOverConsumption(int area) const { return overconsumption[this->areaNum(area)]; };
   virtual double getTotalOverConsumption(int area) const;
-  virtual const LengthGroupDivision* returnLengthGroupDiv() const { return LgrpDiv; };
+  virtual const LengthGroupDivision* getLengthGroupDiv() const { return LgrpDiv; };
   virtual int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
   virtual double meanLength(int i) const { return LgrpDiv->meanLength(i); };
   virtual void Reset(const TimeClass* const TimeInfo);

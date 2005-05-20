@@ -16,10 +16,10 @@ public:
    * \param Areas is the IntVector of areas that the predator lives on
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
-   * \param multi is the Formula that can be used to scale the biomass consumed
+   * \param multscaler is the Formula that can be used to scale the biomass consumed
    */
   TotalPredator(CommentStream& infile, const char* givenname, const IntVector& Areas,
-    const TimeClass* const TimeInfo, Keeper* const keeper, Formula multi);
+    const TimeClass* const TimeInfo, Keeper* const keeper, Formula multscaler);
   /**
    * \brief This is the default TotalPredator destructor
    */

@@ -35,7 +35,7 @@ public:
    * \brief This will return the calculated overconsumption
    * \return total, the DoubleMatrix of overconsumption
    */
-  const DoubleMatrix& returnSum() const { return total; };
+  const DoubleMatrix& getSum() const { return total; };
 protected:
   /**
    * \brief This is the PredatorPtrVector of predators that will be aggregated

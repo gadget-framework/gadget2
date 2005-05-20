@@ -14,10 +14,10 @@ public:
    * \param givenname is the name of the predator
    * \param Areas is the IntVector of areas that the predator lives on
    * \param keeper is the Keeper for the current model
-   * \param multi is the Formula that can be used to scale the biomass consumed
+   * \param multscaler is the Formula that can be used to scale the biomass consumed
    */
   LengthPredator(const char* givenname, const IntVector& Areas,
-    Keeper* const keeper, Formula multi);
+    Keeper* const keeper, Formula multscaler);
   /**
    * \brief This is the default LengthPredator destructor
    */
@@ -38,7 +38,7 @@ public:
    * \brief This will return the multiplicative value used scale the catch
    * \return Multiplicative
    */
-  double multScaler() const { return Multiplicative; };
+  double multScaler() const { return multi; };
   /**
    * \brief This function will reset the predation information
    * \param TimeInfo is the KeeTimeClasser for the current model
@@ -52,7 +52,7 @@ protected:
   /**
    * \brief This is the multiplicative constant that can be used to scale the biomass consumed
    */
-  Formula Multiplicative;
+  Formula multi;
 };
 
 #endif

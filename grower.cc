@@ -162,11 +162,11 @@ void Grower::GrowthCalc(int area,
   CI->interpolateLengths(interpWeightGrowth[inarea], calcWeightGrowth[inarea]);
 }
 
-const DoubleMatrix& Grower::increaseLength(int area) const {
+const DoubleMatrix& Grower::getLengthIncrease(int area) const {
   return *lgrowth[this->areaNum(area)];
 }
 
-const DoubleMatrix& Grower::increaseWeight(int area) const {
+const DoubleMatrix& Grower::getWeightIncrease(int area) const {
   return *wgrowth[this->areaNum(area)];
 }
 

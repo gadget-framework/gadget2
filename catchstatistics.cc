@@ -311,7 +311,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->isEaten()) {
-        if (strcasecmp(stocknames[i], Stocks[j]->returnPrey()->getName()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->getPrey()->getName()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);
         }
@@ -321,9 +321,9 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
       handle.logMessage(LOGFAIL, "Error in catchstatistics - unrecognised stock", stocknames[i]);
   }
 
-  LgrpDiv = new LengthGroupDivision(*(stocks[0]->returnPrey()->returnLengthGroupDiv()));
+  LgrpDiv = new LengthGroupDivision(*(stocks[0]->getPrey()->getLengthGroupDiv()));
   for (i = 1; i < stocks.Size(); i++)
-    if (!LgrpDiv->Combine(stocks[i]->returnPrey()->returnLengthGroupDiv()))
+    if (!LgrpDiv->Combine(stocks[i]->getPrey()->getLengthGroupDiv()))
       handle.logMessage(LOGFAIL, "Error in catchstatistics - length groups for preys not compatible");
 
   //check fleet areas and stock areas, ages and lengths
@@ -373,14 +373,14 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
 
     found = 0;
     for (i = 0; i < stocks.Size(); i++)
-      if (LgrpDiv->maxLength(0) > stocks[i]->returnLengthGroupDiv()->minLength())
+      if (LgrpDiv->maxLength(0) > stocks[i]->getLengthGroupDiv()->minLength())
         found++;
     if (found == 0)
       handle.logMessage(LOGWARN, "Warning in catchstatistics - minimum length group less than stock length");
 
     found = 0;
     for (i = 0; i < stocks.Size(); i++)
-      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->returnLengthGroupDiv()->maxLength())
+      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->getLengthGroupDiv()->maxLength())
         found++;
     if (found == 0)
       handle.logMessage(LOGWARN, "Warning in catchstatistics - maximum length group greater than stock length");
@@ -413,11 +413,11 @@ double CatchStatistics::calcLikSumSquares() {
   double lik, totallikelihood, simvar, simdiff;
 
   lik = totallikelihood = simvar = simdiff = 0.0;
-  alptr = &aggregator->returnSum();
+  alptr = &aggregator->getSum();
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-      PopStatistics PopStat((*alptr)[area][age], aggregator->returnLengthGroupDiv());
+      PopStatistics PopStat((*alptr)[area][age], aggregator->getLengthGroupDiv());
 
       switch (functionnumber) {
         case 1:
