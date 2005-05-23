@@ -38,8 +38,7 @@ public:
   virtual void Reset(const TimeClass* const TimeInfo);
 protected:
   virtual void calcMaxConsumption(double Temperature, int inarea, const TimeClass* const TimeInfo);
-  double maxConsumption(double Length, const FormulaVector &maxcon, double Temperature);
-  FormulaVector maxconsumption;
+  FormulaVector maxcons;
   Formula halfFeedingValue;
   DoubleMatrix Phi;  //[area][predLengthgroup]
   DoubleMatrix fphi; //[area][predLengthgroup]

@@ -30,6 +30,10 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   } else
     handle.logFileUnexpected(LOGFAIL, "size", text);
 
+  for (i = 0; i < noareas; i++)
+    if (isZero(size[i]))
+      handle.logFileMessage(LOGWARN, "Found area with a size of zero");
+
   infile >> text >> ws;
   if (strcasecmp(text, "temperature") != 0)
     handle.logFileUnexpected(LOGFAIL, "temperature", text);

@@ -40,11 +40,11 @@ public:
   void printNumbers(ofstream& outfile) const;
   void printWeights(ofstream& outfile) const;
   void Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth);
-  void Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth, Maturity* const Mat,
-    const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
+  void Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth,
+    Maturity* const Mat, const TimeClass* const TimeInfo, int area);
   void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight);
-  void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight, Maturity* const Mat,
-    const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
+  void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight,
+    Maturity* const Mat, const TimeClass* const TimeInfo, int area);
   void Add(const AgeBandMatrix& Addition, const ConversionIndex& CI, double ratio = 1.0,
     int minaddage = 0, int maxaddage = 9999);
 protected:

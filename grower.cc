@@ -17,7 +17,6 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int rows = 0; //Number of rows in wgrowth and lgrowth
   int i;
 
   keeper->addString("grower");
@@ -63,10 +62,9 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     beta.Inform(keeper);
     readWordAndVariable(infile, "maxlengthgroupgrowth", maxlengthgroupgrowth);
 
-    rows = maxlengthgroupgrowth + 1;
-    part1.resize(rows, 0.0);
-    part2.resize(rows, 0.0);
-    part4.resize(rows, 0.0);
+    part1.resize(maxlengthgroupgrowth + 1, 0.0);
+    part2.resize(maxlengthgroupgrowth + 1, 0.0);
+    part4.resize(maxlengthgroupgrowth + 1, 0.0);
 
   } else if (strcasecmp(text, "meanvarianceparameters") == 0) {
     handle.logFileMessage(LOGFAIL, "The mean variance parameters implementation of the growth is no longer supported\nUse the beta-binomial distribution implementation of the growth instead");
@@ -90,8 +88,8 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   lgrowth.resize(noareas);
   wgrowth.resize(noareas);
   for (i = 0; i < noareas; i++) {
-    lgrowth[i] = new DoubleMatrix(rows, otherlen, 0.0);
-    wgrowth[i] = new DoubleMatrix(rows, otherlen, 0.0);
+    lgrowth[i] = new DoubleMatrix(maxlengthgroupgrowth + 1, otherlen, 0.0);
+    wgrowth[i] = new DoubleMatrix(maxlengthgroupgrowth + 1, otherlen, 0.0);
   }
   dummyfphi.resize(len, 0.0);
 }

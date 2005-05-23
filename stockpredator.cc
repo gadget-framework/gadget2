@@ -13,8 +13,7 @@ extern ErrorHandler handle;
 StockPredator::StockPredator(CommentStream& infile, const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
   int minage, int maxage, const TimeClass* const TimeInfo, Keeper* const keeper)
-  : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv),
-    maxconbylength(areas.Size(), GivenLgrpDiv->numLengthGroups(), 0.0) {
+  : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv) {
 
   keeper->addString("predator");
   char text[MaxStrLength];
@@ -27,27 +26,28 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   this->readSuitability(infile, "maxconsumption", TimeInfo, keeper);
 
   keeper->addString("maxconsumption");
-  maxconsumption.resize(4, keeper);
-  if (!(infile >> maxconsumption))
+  maxcons.resize(4, keeper);
+  if (!(infile >> maxcons))
     handle.logFileMessage(LOGFAIL, "Error in stock file - incorrect format of maxconsumption vector");
-  maxconsumption.Inform(keeper);
-
+  maxcons.Inform(keeper);
   keeper->clearLast();
+
   keeper->addString("halffeedingvalue");
   readWordAndFormula(infile, "halffeedingvalue", halfFeedingValue);
   halfFeedingValue.Inform(keeper);
   keeper->clearLast();
   keeper->clearLast();
 
-  //Everything read from infile.
-  IntVector size(maxage - minage + 1, GivenLgrpDiv->numLengthGroups());
-  IntVector minlength(maxage - minage + 1, 0);
-
+  //everything has been read from infile ... resize objects
   int numlength = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
+  IntVector size(maxage - minage + 1, numlength);
+  IntVector minlength(maxage - minage + 1, 0);
+  BandMatrix bm(minlength, size, minage);
+
   Alkeys.resize(numarea, minage, minlength, size);
-  BandMatrix bm(minlength, size, minage); //default initialization to 0.
   Alprop.resize(numarea, bm);
+  maxconbylength.AddRows(numarea, numlength, 0.0);
   Phi.AddRows(numarea, numlength, 0.0);
   fphi.AddRows(numarea, numlength, 0.0);
   fphI.AddRows(numarea, numlength, 0.0);
@@ -76,32 +76,31 @@ void StockPredator::Print(ofstream& outfile) const {
 }
 
 void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
-  int inarea = this->areaNum(area);
+  int age, len, inarea = this->areaNum(area);
   Alkeys[inarea].setToZero();
   Alkeys[inarea].Add(stock, *CI);
   Alkeys[inarea].sumColumns(prednumber[inarea]);
+  
+  for (age = Alprop[inarea].minRow(); age <= Alprop[inarea].maxRow(); age++) {
+    for (len = Alprop[inarea].minCol(age); len < Alprop[inarea].maxCol(age); len++) {
+      if (!(isZero(prednumber[inarea][len].N)))
+        Alprop[inarea][age][len] = Alkeys[inarea][age][len].N / prednumber[inarea][len].N;
+      else
+        Alprop[inarea][age][len] = 0.0;
+    }
+  }
 }
 
 void StockPredator::Reset(const TimeClass* const TimeInfo) {
   PopPredator::Reset(TimeInfo);
-  int a, l, age;
-  if (TimeInfo->getTime() == 1) {
-    for (a = 0; a < areas.Size(); a++) {
-      for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
-        Phi[a][l] = 0.0;
-        fphi[a][l] = 0.0;
-        maxconbylength[a][l] = 0.0;
-      }
-    }
-    for (a = 0; a < areas.Size(); a++) {
-      for (age = Alkeys[a].minAge(); age <= Alkeys[a].maxAge(); age++) {
-        for (l = Alkeys[a].minLength(age); l < Alkeys[a].maxLength(age); l++) {
-          Alkeys[a][age][l].N = 0.0;
-          Alkeys[a][age][l].W = 0.0;
-          Alprop[a][age][l] = 0.0;
-        }
-      }
-    }
+  // check that the various parameters that can be estimated are sensible
+  if (handle.getLogLevel() >= LOGWARN) {
+    int i;
+    for (i = 0; i < maxcons.Size(); i++)
+      if (maxcons[i] < 0)
+        handle.logMessage(LOGWARN, "Warning in stockpredator - negative consumption parameter", maxcons[i]);
+    if (halfFeedingValue < 0)
+      handle.logMessage(LOGWARN, "Warning in stockpredator - negative half feeding value", halfFeedingValue);
   }
 }
 
@@ -113,11 +112,6 @@ const PopInfoVector& StockPredator::getNumberPriorToEating(int area, const char*
 
   handle.logMessage(LOGFAIL, "Error in stockpredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
-}
-
-double StockPredator::maxConsumption(double Length, const FormulaVector &maxcons, double Temperature) {
-  return maxcons[0] * exp(Temperature * (maxcons[1] - Temperature *
-    Temperature * maxcons[2])) * pow(Length, maxcons[3]);
 }
 
 void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
@@ -132,7 +126,8 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       fphi[inarea][predl] = 0.0;
   }
 
-  this->calcMaxConsumption(Area->getTemperature(area, TimeInfo->getTime()), inarea, TimeInfo);
+  if (TimeInfo->getSubStep() == 1)
+    this->calcMaxConsumption(Area->getTemperature(area, TimeInfo->getTime()), inarea, TimeInfo);
 
   //Now maxconbylength contains the maximum consumption by length
   //Calculating Phi(L) and O(l,L,prey) (stored in consumption)
@@ -162,7 +157,9 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   //Calculating fphi(L) and totalcons of predator in area
   tmp = Area->getSize(area) * halfFeedingValue;
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-    if (isZero(Phi[inarea][predl] + tmp))
+    if (isZero(tmp))
+      fphI[inarea][predl] = 1.0;
+    else if (isZero(Phi[inarea][predl]) || isZero(Phi[inarea][predl] + tmp))
       fphI[inarea][predl] = 0.0;
     else
       fphI[inarea][predl] = Phi[inarea][predl] / (Phi[inarea][predl] + tmp);
@@ -252,34 +249,15 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
           consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
 }
 
-/* This function calculates the maximum consumption by length and puts in
- * maxconbylength. It also sets Alproportion. Breytt HB 30.3  With more than
- * one substep Alprop is only set on the last step.  This should possibly be
- * changed in later versions but that change would mean storage of Alkeys as
- * well as Alprop.  This change should though not have to be made.*/
-void StockPredator::calcMaxConsumption(double Temperature,
-  int inarea, const TimeClass* const TimeInfo) {
+void StockPredator::calcMaxConsumption(double Temperature, int inarea,
+  const TimeClass* const TimeInfo) {
 
-  int len, age;
-  double tmp, timeratio;
-//  timeratio = TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
-  timeratio = TimeInfo->LengthOfCurrent() / TimeInfo->numSubSteps();
+  int len;
+  double tmp;
 
-  if (TimeInfo->getSubStep() == 1) {
-    for (len = 0; len < maxconbylength.Ncol(); len++) {
-      tmp = maxConsumption(LgrpDiv->meanLength(len), maxconsumption, Temperature);
-      maxconbylength[inarea][len] = timeratio * tmp;
-    }
-  }
+  tmp = maxcons[0] * exp(Temperature * (maxcons[1] - Temperature * Temperature * maxcons[2]))
+         * TimeInfo->LengthOfCurrent() / TimeInfo->numSubSteps();
 
-  if (TimeInfo->getSubStep() == TimeInfo->numSubSteps()) {
-    for (age = Alprop[inarea].minRow(); age <= Alprop[inarea].maxRow(); age++) {
-      for (len = Alprop[inarea].minCol(age); len < Alprop[inarea].maxCol(age); len++) {
-        if (!(isZero(prednumber[inarea][len].N)))
-          Alprop[inarea][age][len] = Alkeys[inarea][age][len].N / prednumber[inarea][len].N;
-        else
-          Alprop[inarea][age][len] = 0.0;
-      }
-    }
-  }
+  for (len = 0; len < maxconbylength.Ncol(); len++)
+    maxconbylength[inarea][len] = tmp * pow(LgrpDiv->meanLength(len), maxcons[3]);
 }

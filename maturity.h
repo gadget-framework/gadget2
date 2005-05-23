@@ -56,23 +56,21 @@ public:
   virtual void Reset(const TimeClass* const TimeInfo) = 0;
   /**
    * \brief This will check if the maturation process will take place on the current timestep
-   * \param area is the area that the maturation is being calculated on
    * \param TimeInfo is the TimeClass for the current model
    * \return 0 (will be overridden in derived classes)
    */
-  virtual int isMaturationStep(int area, const TimeClass* const TimeInfo) = 0;
+  virtual int isMaturationStep(const TimeClass* const TimeInfo) = 0;
   /**
    * \brief This will calculate the probability of maturation for a given age and length of the immature stock
    * \param age is the age of the age-length cell that the maturation is being calculated on
    * \param length is the length of the age-length cell that the maturation is being calculated on
    * \param growth is the length of the age-length cell that the mature stock will grow into
    * \param TimeInfo is the TimeClass for the current model
-   * \param area is the area that the maturation is being calculated on
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return 0 (will be overridden in derived classes)
    */
   virtual double MaturationProbability(int age, int length, int growth,
-    const TimeClass* const TimeInfo, int area, double weight) = 0;
+    const TimeClass* const TimeInfo, double weight) = 0;
   /**
    * \brief This will store the calculated mature stock
    * \param area is the area that the maturation is being calculated on
@@ -184,23 +182,21 @@ public:
   virtual void Reset(const TimeClass* const TimeInfo);
   /**
    * \brief This will check if the maturation process will take place on the current timestep
-   * \param area is the area that the maturation is being calculated on
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the maturation process will take place, 0 otherwise
    */
-  virtual int isMaturationStep(int area, const TimeClass* const TimeInfo);
+  virtual int isMaturationStep(const TimeClass* const TimeInfo);
   /**
    * \brief This will calculate the probability of maturation for a given age and length of the immature stock
    * \param age is the age of the age-length cell that the maturation is being calculated on
    * \param length is the length of the age-length cell that the maturation is being calculated on
    * \param growth is the length of the age-length cell that the mature stock will grow into
    * \param TimeInfo is the TimeClass for the current model
-   * \param area is the area that the maturation is being calculated on
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
   virtual double MaturationProbability(int age, int length, int growth,
-    const TimeClass* const TimeInfo, int area, double weight);
+    const TimeClass* const TimeInfo, double weight);
   /**
    * \brief This function will print the maturation information
    * \param outfile is the ofstream that all the model information gets sent to
@@ -261,23 +257,21 @@ public:
   virtual void Reset(const TimeClass* const TimeInfo);
   /**
    * \brief This will check if the maturation process will take place on the current timestep
-   * \param area is the area that the maturation is being calculated on
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the maturation process will take place, 0 otherwise
    */
-  virtual int isMaturationStep(int area, const TimeClass* const TimeInfo);
+  virtual int isMaturationStep(const TimeClass* const TimeInfo);
   /**
    * \brief This will calculate the probability of maturation for a given age and length of the immature stock
    * \param age is the age of the age-length cell that the maturation is being calculated on
    * \param length is the length of the age-length cell that the maturation is being calculated on
    * \param growth is the length of the age-length cell that the mature stock will grow into
    * \param TimeInfo is the TimeClass for the current model
-   * \param area is the area that the maturation is being calculated on
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
   virtual double MaturationProbability(int age, int length, int growth,
-    const TimeClass* const TimeInfo, int area, double weight);
+    const TimeClass* const TimeInfo, double weight);
   /**
    * \brief This function will print the maturation information
    * \param outfile is the ofstream that all the model information gets sent to
@@ -331,23 +325,21 @@ public:
   virtual void Reset(const TimeClass* const TimeInfo);
   /**
    * \brief This will check if the maturation process will take place on the current timestep
-   * \param area is the area that the maturation is being calculated on
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the maturation process will take place, 0 otherwise
    */
-  virtual int isMaturationStep(int area, const TimeClass* const TimeInfo);
+  virtual int isMaturationStep(const TimeClass* const TimeInfo);
   /**
    * \brief This will calculate the probability of maturation for a given age and length of the immature stock
    * \param age is the age of the age-length cell that the maturation is being calculated on
    * \param length is the length of the age-length cell that the maturation is being calculated on
    * \param growth is the length of the age-length cell that the mature stock will grow into
    * \param TimeInfo is the TimeClass for the current model
-   * \param area is the area that the maturation is being calculated on
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
   virtual double MaturationProbability(int age, int length, int growth,
-    const TimeClass* const TimeInfo, int area, double weight);
+    const TimeClass* const TimeInfo, double weight);
   /**
    * \brief This function will print the maturation information
    * \param outfile is the ofstream that all the model information gets sent to
@@ -414,23 +406,21 @@ public:
   virtual void Reset(const TimeClass* const TimeInfo);
   /**
    * \brief This will check if the maturation process will take place on the current timestep
-   * \param area is the area that the maturation is being calculated on
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the maturation process will take place, 0 otherwise
    */
-  virtual int isMaturationStep(int area, const TimeClass* const TimeInfo);
+  virtual int isMaturationStep(const TimeClass* const TimeInfo);
   /**
    * \brief This will calculate the probability of maturation for a given age and length of the immature stock
    * \param age is the age of the age-length cell that the maturation is being calculated on
    * \param length is the length of the age-length cell that the maturation is being calculated on
    * \param growth is the length of the age-length cell that the mature stock will grow into
    * \param TimeInfo is the TimeClass for the current model
-   * \param area is the area that the maturation is being calculated on
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
   virtual double MaturationProbability(int age, int length, int growth,
-    const TimeClass* const TimeInfo, int area, double weight);
+    const TimeClass* const TimeInfo, double weight);
 protected:
   /**
    * \brief This is the DoubleVector of reference weight information

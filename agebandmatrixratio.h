@@ -28,8 +28,8 @@ public:
   int maxLength(int age) const { return v[age - minage]->maxCol(); };
   void IncrementAge(const AgeBandMatrix& Total);
   void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total);
-  void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total, Maturity* const Mat,
-    const TimeClass* const TimeInfo, const AreaClass* const Area, int area);
+  void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total,
+    Maturity* const Mat, const TimeClass* const TimeInfo, int area);
   PopRatioIndexVector& operator [] (int age) {
     assert(minage <= age && age < (minage + nrow));
     return *(v[age - minage]);
