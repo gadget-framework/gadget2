@@ -531,4 +531,60 @@ protected:
   TimeVariableVector growthPar;
 };
 
+/**
+ * \class GrowthCalcI
+ * \brief This is the class used to calculate the growth of a stock using a simple Jones growth function
+ */
+class GrowthCalcI : public GrowthCalcBase {
+public:
+  /**
+   * \brief This is the default GrowthCalcI constructor
+   * \param infile is the CommentStream to read the growth parameters from
+   * \param Areas is the IntVector of areas that the growth calculation can take place on
+   * \param TimeInfo is the TimeClass for the current model
+   * \param keeper is the Keeper for the current model
+   */
+  GrowthCalcI(CommentStream& infile, const IntVector& Areas,
+    const TimeClass* const TimeInfo, Keeper* const keeper);
+  /**
+   * \brief This is the default GrowthCalcI destructor
+   */
+  ~GrowthCalcI();
+  /**
+   * \brief This is the function that calculates the growth using a simple Jones growth function
+   * \param area is the area that the growth is being calculated on
+   * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
+   * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
+   * \param numGrow is the PopInfoVector of the current population of the stock
+   * \param Area is the AreaClass for the current model
+   * \param TimeInfo is the TimeClass for the current model
+   * \param Fphi is the DoubleVector of the feeding level of the stock
+   * \param MaxCon is the DoubleVector of the maximum consumption of the stock
+   * \param LgrpDiv is the LengthGroupDivision of the stock
+   */
+  virtual void GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+    const PopInfoVector& numGrow, const AreaClass* const Area,
+    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+  /**
+   * \brief This will return the power term of the length - weight relationship
+   * \return growthPar[4]
+   */
+  virtual double getPower() { return growthPar[4]; };
+  /**
+   * \brief This will return the multiplier of the length - weight relationship
+   * \return growthPar[5]
+   */
+  virtual double getMult() { return growthPar[5]; };
+protected:
+  /**
+   * \brief This is the number of growth parameters (set to 6)
+   */
+  int numGrowthConstants;
+  /**
+   * \brief This is the TimeVariableVector of growth parameters
+   */
+  TimeVariableVector growthPar;
+};
+
 #endif

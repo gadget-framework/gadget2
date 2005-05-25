@@ -41,6 +41,7 @@ protected:
   SuitFuncPtrVector suitFunction;
   /**
    * \brief This is the BandMatrixPtrVector of calculated suitability values
+   * \note the indices for this object are [prey][predator length][prey length]
    */
   BandMatrixPtrVector preCalcSuitability;
 };

@@ -40,12 +40,12 @@ protected:
   virtual void calcMaxConsumption(double Temperature, int inarea, const TimeClass* const TimeInfo);
   FormulaVector maxcons;
   Formula halfFeedingValue;
-  DoubleMatrix Phi;  //[area][predLengthgroup]
-  DoubleMatrix fphi; //[area][predLengthgroup]
-  DoubleMatrix fphI; //[area][predLengthgroup]  fphi per substep
-  BandMatrixPtrVector Alprop;     //[area][age][length group]
-  DoubleMatrix maxconbylength; //[area][length group]
-  AgeBandMatrixPtrVector Alkeys;  //[area][age][length group]
+  DoubleMatrix Phi;  //[area][len]
+  DoubleMatrix fphi; //[area][len]
+  DoubleMatrix subfphi; //[area][len]  fphi per substep
+  DoubleMatrix maxconbylength; //[area][len]
+  BandMatrixPtrVector Alprop;     //[area][age][len]
+  AgeBandMatrixPtrVector Alkeys;  //[area][age][len]
 };
 
 #endif

@@ -28,7 +28,7 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   keeper->addString("maxconsumption");
   maxcons.resize(4, keeper);
   if (!(infile >> maxcons))
-    handle.logFileMessage(LOGFAIL, "Error in stock file - incorrect format of maxconsumption vector");
+    handle.logFileMessage(LOGFAIL, "Error in stock file - incorrect format for maxconsumption vector");
   maxcons.Inform(keeper);
   keeper->clearLast();
 
@@ -50,7 +50,7 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   maxconbylength.AddRows(numarea, numlength, 0.0);
   Phi.AddRows(numarea, numlength, 0.0);
   fphi.AddRows(numarea, numlength, 0.0);
-  fphI.AddRows(numarea, numlength, 0.0);
+  subfphi.AddRows(numarea, numlength, 0.0);
 }
 
 void StockPredator::Print(ofstream& outfile) const {
@@ -59,8 +59,8 @@ void StockPredator::Print(ofstream& outfile) const {
   PopPredator::Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tPhi on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < Phi.Ncol(area); i++)
-      outfile << setw(smallwidth) << setprecision(smallprecision) << fphI[area][i] << sep;
+    for (i = 0; i < fphi.Ncol(area); i++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << fphi[area][i] << sep;
     outfile << "\n\tAlkeys (numbers) on internal area " << areas[area] << ":\n";
     Alkeys[area].printNumbers(outfile);
     outfile << "\tAlkeys (mean weights) on internal area " << areas[area] << ":\n";
@@ -120,14 +120,14 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   int inarea = this->areaNum(area);
   double tmp;
 
-  for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+  for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     Phi[inarea][predl] = 0.0;
-    if (TimeInfo->getSubStep() == 1)
-      fphi[inarea][predl] = 0.0;
-  }
 
-  if (TimeInfo->getSubStep() == 1)
+  if (TimeInfo->getSubStep() == 1) {
+    for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+      fphi[inarea][predl] = 0.0;
     this->calcMaxConsumption(Area->getTemperature(area, TimeInfo->getTime()), inarea, TimeInfo);
+  }
 
   //Now maxconbylength contains the maximum consumption by length
   //Calculating Phi(L) and O(l,L,prey) (stored in consumption)
@@ -158,17 +158,17 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   tmp = Area->getSize(area) * halfFeedingValue;
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     if (isZero(tmp))
-      fphI[inarea][predl] = 1.0;
+      subfphi[inarea][predl] = 1.0;
     else if (isZero(Phi[inarea][predl]) || isZero(Phi[inarea][predl] + tmp))
-      fphI[inarea][predl] = 0.0;
+      subfphi[inarea][predl] = 0.0;
     else
-      fphI[inarea][predl] = Phi[inarea][predl] / (Phi[inarea][predl] + tmp);
+      subfphi[inarea][predl] = Phi[inarea][predl] / (Phi[inarea][predl] + tmp);
 
-    totalcons[inarea][predl] = fphI[inarea][predl] *
+    totalcons[inarea][predl] = subfphi[inarea][predl] *
       maxconbylength[inarea][predl] * prednumber[inarea][predl].N;
   }
 
-  //Distributing the total consumption on the Preys()
+  //Distributing the total consumption on the preys
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
@@ -226,8 +226,8 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
   if (over == 1) {
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
       if (totalcons[inarea][predl] > verysmall) {
-        ratio = 1.0 - overcons[inarea][predl] / totalcons[inarea][predl];
-        fphI[inarea][predl] *= ratio;
+        ratio = 1.0 - (overcons[inarea][predl] / totalcons[inarea][predl]);
+        subfphi[inarea][predl] *= ratio;
         totalcons[inarea][predl] -= overcons[inarea][predl];
       }
     }
@@ -238,7 +238,7 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     totalconsumption[inarea][predl] += totalcons[inarea][predl];
     overconsumption[inarea][predl] += overcons[inarea][predl];
-    fphi[inarea][predl] = (rat2 * fphI[inarea][predl]) + (rat1 * fphi[inarea][predl]);
+    fphi[inarea][predl] = (rat2 * subfphi[inarea][predl]) + (rat1 * fphi[inarea][predl]);
   }
 
   for (prey = 0; prey < this->numPreys(); prey++)

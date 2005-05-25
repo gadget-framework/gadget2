@@ -51,6 +51,9 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   } else if (strcasecmp(text, "lengthvbsimple") == 0) {
     functionnumber = 8;
     growthcalc = new GrowthCalcH(infile, areas, TimeInfo, keeper);
+  } else if (strcasecmp(text, "weightjonessimple") == 0) {
+    functionnumber = 9;
+    growthcalc = new GrowthCalcI(infile, areas, TimeInfo, keeper);
   } else {
     handle.logFileMessage(LOGFAIL, "Error in stock file - unrecognised growth function", text);
   }
