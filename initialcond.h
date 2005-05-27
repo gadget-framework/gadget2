@@ -1,7 +1,7 @@
 #ifndef initialcond_h
 #define initialcond_h
 
-#include "formulamatrix.h"
+#include "formulamatrixptrvector.h"
 #include "conversionindex.h"
 #include "commentstream.h"
 #include "agebandmatrixptrvector.h"
@@ -95,6 +95,10 @@ protected:
    * \brief This is the AgeBandMatrixPtrVector used to store the initial population
    */
   AgeBandMatrixPtrVector initialPop;
+  /**
+   * \brief This is the FormulaMatrixPtrVector that contains the number (from the input file) of the initial population
+   */
+  FormulaMatrixPtrVector initialNumber;
   /**
    * \brief This is the FormulaMatrix of the area factor used to calculate the initial population
    */

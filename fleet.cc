@@ -84,7 +84,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   handle.checkIfFailure(subfile, text);
   handle.Open(text);
 
-  if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, this->getName()))
+  if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, this->getName()))
     handle.logFileMessage(LOGFAIL, "Error in fleet - failed to read fleet amounts");
   amount.Inform(keeper);
 

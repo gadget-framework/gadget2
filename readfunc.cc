@@ -1,5 +1,4 @@
 #include "readfunc.h"
-#include "keeper.h"
 #include "errorhandler.h"
 #include "gadget.h"
 
@@ -239,7 +238,7 @@ int countColumns(CommentStream& infile) {
 
 int readAmounts(CommentStream& infile, const IntVector& tmpareas,
   const TimeClass* const TimeInfo, const AreaClass* const Area,
-  FormulaMatrix& amount, Keeper* const keeper, const char* givenname) {
+  FormulaMatrix& amount, const char* givenname) {
 
   int i;
   int year, step, area;
@@ -332,7 +331,7 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
 
 int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   const AreaClass* const Area, FormulaMatrixPtrVector& amount,
-  const CharPtrVector& lenindex, Keeper* const keeper, const IntVector& tmpareas) {
+  const CharPtrVector& lenindex, const IntVector& tmpareas) {
 
   int i;
   int year, step, area;

@@ -90,7 +90,7 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
   datafile.open(datafilename, ios::in);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  i = readGrowthAmounts(subdata, TimeInfo, Area, lgrowth, lenindex, keeper, Areas);
+  i = readGrowthAmounts(subdata, TimeInfo, Area, lgrowth, lenindex, Areas);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -99,7 +99,7 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
   datafile.open(datafilename, ios::in);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, keeper, Areas);
+  i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, Areas);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -567,7 +567,7 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   datafile.open(text, ios::in);
   handle.checkIfFailure(datafile, text);
   handle.Open(text);
-  i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, keeper, Areas);
+  i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, Areas);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -631,7 +631,7 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   datafile.open(text, ios::in);
   handle.checkIfFailure(datafile, text);
   handle.Open(text);
-  i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, keeper, Areas);
+  i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, Areas);
   handle.Close();
   datafile.close();
   datafile.clear();

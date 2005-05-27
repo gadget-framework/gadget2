@@ -65,10 +65,10 @@ int readRefWeights(CommentStream& infile, DoubleMatrix& M);
 int FindContinuousYearAndStepWithNoText(CommentStream& infile, int year, int step);
 int readAmounts(CommentStream& infile, const IntVector& tmpareas,
   const TimeClass* const TimeInfo, const AreaClass* const Area,
-  FormulaMatrix& amount, Keeper* const keeper, const char* givenname);
+  FormulaMatrix& amount, const char* givenname);
 int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   const AreaClass* const Area, FormulaMatrixPtrVector& amount,
-  const CharPtrVector& lenindex, Keeper* const keeper, const IntVector& tmpareas);
+  const CharPtrVector& lenindex, const IntVector& tmpareas);
 
 #endif
 

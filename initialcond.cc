@@ -82,6 +82,8 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
     }
   }
 
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in initial conditions - found no data in the data file");
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   areaFactor.Inform(keeper);
@@ -169,6 +171,8 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
     }
   }
 
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in initial conditions - found no data in the data file");
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   areaFactor.Inform(keeper);
@@ -199,7 +203,8 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   //area - age - meanlength - number - weight
   int i, age, area, tmparea;
   int keepdata, ageid, areaid, lengthid;
-  double length, tmpnumber, tmpweight;
+  double length;
+  Formula number;
   int count = 0;
   int noareas = areas.Size();
   int nolengr = LgrpDiv->numLengthGroups();
@@ -207,13 +212,16 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   if (countColumns(infile) != 5)
     handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 5");
 
-  //set the numbers in the AgeBandMatrixPtrVector to zero (in case some arent in the inputfile)
-  for (areaid = 0; areaid < noareas; areaid++)
-    for (ageid = minage; ageid < noagegr + minage; ageid++)
+  //initialise things
+  for (areaid = 0; areaid < noareas; areaid++) {
+    initialNumber.resize(1, new FormulaMatrix(noagegr, nolengr, number));
+    for (ageid = minage; ageid < noagegr + minage; ageid++) {
       for (lengthid = 0; lengthid < nolengr; lengthid++) {
         initialPop[areaid][ageid][lengthid].N = 0.0;
         initialPop[areaid][ageid][lengthid].W = 0.0;
       }
+    }
+  }
 
   ageid = -1;
   areaid = -1;
@@ -221,7 +229,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   keeper->addString("numberdata");
   while (!infile.eof()) {
     keepdata = 0;
-    infile >> area >> age >> length >> tmpnumber >> tmpweight >> ws;
+    infile >> area >> age >> length >> ws;
 
     //crude age data check - perhaps there should be a better check?
     if ((age < minage) || (age >= (noagegr + minage))) {
@@ -255,13 +263,23 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
 
     if (keepdata == 0) {
       //initial data is required, so store it
+      infile >> (*initialNumber[areaid])[ageid - minage][lengthid] >> ws;
+      infile >> initialPop[areaid][ageid][lengthid].W >> ws;
       count++;
-      if ((isZero(tmpweight)) && (tmpnumber > 0))
-        handle.logFileMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
-      initialPop[areaid][ageid][lengthid].N = tmpnumber;
-      initialPop[areaid][ageid][lengthid].W = tmpweight;
+
+    } else { //initial data not required - skip rest of line
+      infile.get(c);
+      while (c != '\n' && !infile.eof())
+        infile.get(c);
+      infile >> ws;
     }
   }
+
+  for (i = 0; i < initialNumber.Size(); i++)
+    (*initialNumber[i]).Inform(keeper);
+
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in initial conditions - found no data in the data file");
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   keeper->clearLast();
@@ -407,8 +425,11 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
 }
 
 InitialCond::~InitialCond() {
+  int i;
   delete LgrpDiv;
   delete CI;
+  for (i = 0; i < initialNumber.Size(); i++)
+    delete initialNumber[i];
 }
 
 void InitialCond::setCI(const LengthGroupDivision* const GivenLDiv) {
@@ -453,7 +474,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
   double mult, scaler, dnorm;
 
   if (readoption == 0) {
-   for (area = 0; area < initialPop.Size(); area++) {
+    for (area = 0; area < initialPop.Size(); area++) {
       minage = initialPop[area].minAge();
       maxage = initialPop[area].maxAge();
       for (age = minage; age <= maxage; age++) {
@@ -509,7 +530,17 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
     }
 
   } else if (readoption == 2) {
-    //nothing to be done here
+    for (area = 0; area < initialPop.Size(); area++) {
+      minage = initialPop[area].minAge();
+      maxage = initialPop[area].maxAge();
+      for (age = minage; age <= maxage; age++) {
+        for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
+          initialPop[area][age][l].N = (*initialNumber[area])[age - minage][l];
+          if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0))
+            handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+        }
+      }
+    }
 
   } else
     handle.logMessage(LOGFAIL, "Error in initial conditions - unrecognised data format");

@@ -165,7 +165,7 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
       renewalArea.resize(1, Area->InnerArea(area));
       renewalAge.resize(1, age);
 
-      renewalNumber.resize(1, keeper);
+      renewalMult.resize(1, keeper);
       meanLength.resize(1, keeper);
       sdevLength.resize(1, keeper);
       alpha.resize(1, keeper);
@@ -174,13 +174,13 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
       PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
       renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
 
-      infile >> renewalNumber[count] >> ws;
+      infile >> renewalMult[count] >> ws;
       infile >> meanLength[count] >> ws;
       infile >> sdevLength[count] >> ws;
       infile >> alpha[count] >> ws;
       infile >> beta[count] >> ws;
 
-      renewalNumber[count].Inform(keeper);
+      renewalMult[count].Inform(keeper);
       meanLength[count].Inform(keeper);
       sdevLength[count].Inform(keeper);
       alpha[count].Inform(keeper);
@@ -195,6 +195,8 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
     }
   }
 
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in renewal - found no data in the data file");
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
 }
@@ -250,7 +252,7 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
       renewalArea.resize(1, Area->InnerArea(area));
       renewalAge.resize(1, age);
 
-      renewalNumber.resize(1, keeper);
+      renewalMult.resize(1, keeper);
       meanLength.resize(1, keeper);
       sdevLength.resize(1, keeper);
       relCond.resize(1, keeper);
@@ -258,12 +260,12 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
       PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
       renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
 
-      infile >> renewalNumber[count] >> ws;
+      infile >> renewalMult[count] >> ws;
       infile >> meanLength[count] >> ws;
       infile >> sdevLength[count] >> ws;
       infile >> relCond[count] >> ws;
 
-      renewalNumber[count].Inform(keeper);
+      renewalMult[count].Inform(keeper);
       meanLength[count].Inform(keeper);
       sdevLength[count].Inform(keeper);
       relCond[count].Inform(keeper);
@@ -277,6 +279,8 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
     }
   }
 
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in renewal - found no data in the data file");
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
 }
@@ -286,7 +290,9 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
 
   int count = 0;
   int i, year, step, area, age;
-  double length, tmpnumber, tmpweight;
+  double length;
+  Formula tempF;   //value of tempF is initiated to 0.0
+  int nolengr = LgrpDiv->numLengthGroups();
   int keepdata, id, lengthid;
 
   //Find start of data in datafile
@@ -310,7 +316,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
 
   while (!infile.eof()) {
     keepdata = 0;
-    infile >> year >> step >> area >> age >> length >> tmpnumber >> tmpweight >> ws;
+    infile >> year >> step >> area >> age >> length >> ws;
 
     if (!(TimeInfo->isWithinPeriod(year, step))) {
       handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside time range");
@@ -328,7 +334,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
     }
 
     lengthid = -1;
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+    for (i = 0; i < nolengr; i++)
       if (length == LgrpDiv->minLength(i))
         lengthid = i;
 
@@ -353,27 +359,39 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
         renewalAge.resize(1, age);
         id = renewalTime.Size() - 1;
 
-        PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
+        PopInfoIndexVector poptmp(nolengr, 0);
         renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
+        renewalNumber.resize(1, new FormulaMatrix(maxage - minage + 1, nolengr, tempF));
       }
 
-      if ((isZero(tmpweight)) && (tmpnumber > 0))
-        handle.logFileMessage(LOGWARN, "Warning in renewal - zero mean weight");
-
-      renewalDistribution[id][age][lengthid].N = tmpnumber;
-      renewalDistribution[id][age][lengthid].W = tmpweight;
+      renewalDistribution[id][age][lengthid].N = 0.0;
+      infile >> (*renewalNumber[id])[age - minage][lengthid] >> ws;
+      infile >> renewalDistribution[id][age][lengthid].W >> ws;
       count++;
+
+    } else { //renewal data not required - skip rest of line
+      infile.get(c);
+      while (c != '\n' && !infile.eof())
+        infile.get(c);
+      infile >> ws;
     }
-    infile >> ws;
   }
 
+  for (i = 0; i < renewalNumber.Size(); i++)
+    (*renewalNumber[i]).Inform(keeper);
+
+  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+    handle.logMessage(LOGWARN, "Warning in renewal - found no data in the data file");
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
 }
 
 RenewalData::~RenewalData() {
+  int i;
   delete LgrpDiv;
   delete CI;
+  for (i = 0; i < renewalNumber.Size(); i++)
+    delete renewalNumber[i];
 }
 
 void RenewalData::setCI(const LengthGroupDivision* const GivenLDiv) {
@@ -400,7 +418,7 @@ void RenewalData::Print(ofstream& outfile) const {
       if (readoption == 2)
         outfile << "\n\tNumbers\n";
       else
-        outfile << " multiplier " << renewalNumber[i] << "\n\tNumbers\n";
+        outfile << " multiplier " << renewalMult[i] << "\n\tNumbers\n";
 
       renewalDistribution[i].printNumbers(outfile);
       outfile << "\tMean weights\n";
@@ -411,7 +429,7 @@ void RenewalData::Print(ofstream& outfile) const {
 }
 
 void RenewalData::Reset() {
-  int i, age, l;
+  int i, age, l, minage;
   double sum, mult, dnorm;
 
   index = 0;
@@ -474,7 +492,17 @@ void RenewalData::Reset() {
     }
 
   } else if (readoption == 2) {
-    //nothing to be done here
+    for (i = 0; i < renewalDistribution.Size(); i++) {
+      age = renewalAge[i];
+      minage = renewalDistribution[i].minAge();
+      for (l = renewalDistribution[i].minLength(age);
+           l < renewalDistribution[i].maxLength(age); l++) {
+
+        renewalDistribution[i][age][l].N = (*renewalNumber[i])[age - minage][l];
+        if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0))
+          handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+      }
+    }
 
   } else
     handle.logMessage(LOGFAIL, "Error in renewal - unrecognised data format");
@@ -498,8 +526,8 @@ void RenewalData::addRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* c
       index = i;
       if (readoption == 2)
         Alkeys.Add(renewalDistribution[i], *CI);
-      else if (renewalNumber[i] > verysmall)
-        Alkeys.Add(renewalDistribution[i], *CI, renewalNumber[i]);
+      else if (renewalMult[i] > verysmall)
+        Alkeys.Add(renewalDistribution[i], *CI, renewalMult[i]);
     }
   }
 }

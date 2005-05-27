@@ -68,7 +68,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
 
-    if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, keeper, givenname))
+    if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, givenname))
       handle.logFileMessage(LOGFAIL, "Error in otherfood - failed to read otherfood amounts");
     amount.Inform(keeper);
 

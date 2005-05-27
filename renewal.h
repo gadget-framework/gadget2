@@ -1,7 +1,7 @@
 #ifndef renewal_h
 #define renewal_h
 
-#include "formulavector.h"
+#include "formulamatrixptrvector.h"
 #include "conversionindex.h"
 #include "commentstream.h"
 #include "stock.h"
@@ -121,9 +121,13 @@ protected:
    */
   AgeBandMatrixPtrVector renewalDistribution;
   /**
+   * \brief This is the FormulaMatrixPtrVector that contains the number (from the input file) of the renewal population
+   */
+  FormulaMatrixPtrVector renewalNumber;
+  /**
    * \brief This is the FormulaVector of the multiplier used to calculate the renewal population
    */
-  FormulaVector renewalNumber;
+  FormulaVector renewalMult;
   /**
    * \brief This is the FormulaVector of mean lengths of the stock used to calculate the renewal population
    */
