@@ -88,12 +88,6 @@ void DoubleVector::Reset() {
   }
 }
 
-void DoubleVector::setElementsTo(double d) {
-  int i;
-  for (i = 0; i < size; i++)
-    v[i] = d;
-}
-
 DoubleVector& DoubleVector::operator *= (double d) {
   int i;
   for (i = 0; i<size; i++)
@@ -187,11 +181,4 @@ int DoubleVector::operator == (const DoubleVector& d) const {
     if (v[i] != d[i])
       return 0;
   return 1;
-}
-
-ostream& operator << (ostream& out, const DoubleVector& d) {
-  int i;
-  for (i = 0; i < d.Size(); i++)
-    out << d[i] << sep;
-  return out;
 }

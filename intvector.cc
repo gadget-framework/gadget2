@@ -80,24 +80,24 @@ void IntVector::Delete(int pos) {
   }
 }
 
-IntVector& IntVector::operator = (const IntVector& d) {
-  if (this == &d)
+IntVector& IntVector::operator = (const IntVector& iv) {
+  if (this == &iv)
     return *this;
   int i;
-  if (size == d.size) {
+  if (size == iv.size) {
     for (i = 0; i < size; i++)
-      v[i] = d[i];
+      v[i] = iv[i];
     return *this;
   }
   if (v != 0) {
     delete[] v;
     v = 0;
   }
-  size = d.size;
+  size = iv.size;
   if (size > 0) {
     v = new int[size];
     for (i = 0; i < size; i++)
-      v[i] = d.v[i];
+      v[i] = iv.v[i];
   } else
     v = 0;
   return *this;

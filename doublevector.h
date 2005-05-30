@@ -18,7 +18,6 @@ public:
   double& operator [] (int pos) { return v[pos]; };
   const double& operator [] (int pos) const { return v[pos]; };
   void Reset();
-  void setElementsTo(double d);
   DoubleVector& operator *= (double d);
   DoubleVector& operator * (double d) const;
   DoubleVector& operator += (double d);
@@ -27,7 +26,6 @@ public:
   DoubleVector& operator - (double d) const;
   DoubleVector& operator += (const DoubleVector& d);
   DoubleVector& operator -= (const DoubleVector& d);
-  friend ostream& operator << (ostream& out, const DoubleVector& d);
   double operator * (const DoubleVector& d) const;
   int operator == (const DoubleVector& d) const;
   DoubleVector& operator = (const DoubleVector& d);

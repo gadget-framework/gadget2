@@ -630,8 +630,12 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     if (TimeInfo->getStep() == 1) { //start of a new year
-      (*calc_c[area]).setElementsTo(0.0);
-      (*obs_c[area]).setElementsTo(0.0);
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+          (*calc_c[area])[age][len] = 0.0;
+          (*obs_c[area])[age][len] = 0.0;
+        }
+      }
     }
 
     //JMB - changed to remove the need to store minrow and mincol stuff ...
@@ -686,8 +690,12 @@ double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     if (TimeInfo->getStep() == 1) { //start of a new year
-      (*calc_c[area]).setElementsTo(0.0);
-      (*obs_c[area]).setElementsTo(0.0);
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+          (*calc_c[area])[age][len] = 0.0;
+          (*obs_c[area])[age][len] = 0.0;
+        }
+      }
     }
 
     //JMB - changed to remove the need to store minrow and mincol stuff ...
@@ -741,8 +749,12 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
     totalmodel = 0.0;
     totaldata = 0.0;
     if (TimeInfo->getStep() == 1) { //start of a new year
-      (*calc_c[area]).setElementsTo(0.0);
-      (*obs_c[area]).setElementsTo(0.0);
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+          (*calc_c[area])[age][len] = 0.0;
+          (*obs_c[area])[age][len] = 0.0;
+        }
+      }
     }
 
     //JMB - changed to remove the need to store minrow and mincol stuff ...

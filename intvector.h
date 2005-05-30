@@ -68,7 +68,7 @@ public:
    * \return the value of the specified element
    */
   const int& operator [] (int pos) const { return v[pos]; };
-  IntVector& operator = (const IntVector& d);
+  IntVector& operator = (const IntVector& iv);
 protected:
   /**
    * \brief This is the vector of int values

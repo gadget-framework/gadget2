@@ -23,7 +23,6 @@ public:
   int maxRowSize() const;
   int minRowSize() const;
   int isRectangular() const;
-  void setElementsTo(double d);
   DoubleMatrix& operator += (const DoubleMatrix& d);
   DoubleMatrix& operator -= (const DoubleMatrix& d);
   DoubleMatrix& operator = (const DoubleMatrix& d);

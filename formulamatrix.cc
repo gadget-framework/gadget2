@@ -44,31 +44,6 @@ FormulaMatrix::~FormulaMatrix() {
   }
 }
 
-FormulaMatrix& FormulaMatrix::operator = (const FormulaMatrix& formulaM) {
-  if (this == &formulaM) {
-    //same object just return
-    return *this;
-  }
-  int i;
-  if (v != 0) {
-    //this has some vectors to return memory
-    for (i = 0; i < nrow; i++)
-      delete v[i];
-    delete[] v;
-    v = 0;
-  }
-  nrow = formulaM.nrow;
-  if (nrow >= 0) {
-    v = new FormulaVector*[nrow];
-    for (i = 0; i < nrow; i++)
-      v[i] = new FormulaVector(formulaM[i]);
-  } else {
-    v = 0;
-    nrow = 0;
-  }
-  return *this;
-}
-
 void FormulaMatrix::AddRows(int add, int length) {
   int i;
   if (add <= 0)
@@ -105,26 +80,6 @@ void FormulaMatrix::AddRows(int add, int length, Formula formula) {
 
 void FormulaMatrix::Inform(Keeper* keeper) {
   int i;
-  for (i = 0; i < nrow; i++) {
-    ostringstream ostr;
-    ostr << i + 1 << ends;
-    keeper->addString(ostr.str());
+  for (i = 0; i < nrow; i++)
     v[i]->Inform(keeper);
-    keeper->clearLast();
-  }
-}
-
-CommentStream& operator >> (CommentStream& infile, FormulaMatrix& Fmatrix) {
-  if (infile.fail()) {
-    infile.makebad();
-    return infile;
-  }
-  int i;
-  for (i = 0; i < Fmatrix.Nrow(); i++) {
-    if (!(infile >> Fmatrix[i])) {
-      infile.makebad();
-      return infile;
-    }
-  }
-  return infile;
 }

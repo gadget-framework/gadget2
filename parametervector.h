@@ -60,7 +60,7 @@ public:
    * \return the size of the vector
    */
   int Size() const { return size; };
-  ParameterVector& operator = (const ParameterVector& paramv);
+  ParameterVector& operator = (const ParameterVector& pv);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned

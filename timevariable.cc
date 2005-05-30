@@ -35,7 +35,7 @@ void TimeVariable::read(CommentStream& infile,
     delete number;
   } else {
     handle.Open(text);
-    readFromFile(subcomment, TimeInfo, keeper);
+    this->readFromFile(subcomment, TimeInfo, keeper);
     handle.Close();
   }
   keeper->clearLast();
@@ -150,38 +150,6 @@ void TimeVariable::Update(const TimeClass* const TimeInfo) {
   }
 }
 
-void TimeVariable::Interchange(TimeVariable& Newtvar, Keeper* const keeper) const {
-  int i, j;
-  Newtvar.lastvalue = lastvalue;
-  Newtvar.timestepnr = timestepnr;
-  Newtvar.time = time;
-  Newtvar.value = value;
-  Newtvar.firsttimestepnr = firsttimestepnr;
-  Value.Interchange(Newtvar.Value, keeper);
-  if (fromfile) {
-    Newtvar.fromfile = 1;
-    Newtvar.usemodelmatrix = usemodelmatrix;
-    Newtvar.years.resize(years.Size());
-    Newtvar.steps.resize(steps.Size());
-    Newtvar.values.resize(values.Size(), keeper);
-    for (i = 0; i < steps.Size(); i++) {
-      Newtvar.steps[i] = steps[i];
-      Newtvar.years[i] = years[i];
-      values[i].Interchange(Newtvar.values[i], keeper);
-    }
-
-    if (usemodelmatrix) {
-      Newtvar.coeff.resize(coeff.Size(), keeper);
-      for (i = 0; i < values.Size(); i++)
-        coeff[i].Interchange(Newtvar.coeff[i], keeper);
-      Newtvar.modelmatrix.AddRows(modelmatrix.Nrow(), modelmatrix.Ncol());
-      for (i = 0; i < modelmatrix.Nrow(); i++)
-        for (j = 0; j < modelmatrix.Ncol(); j++)
-          Newtvar.modelmatrix[i][j] = modelmatrix[i][j];
-    }
-  }
-}
-
 void TimeVariable::Delete(Keeper* const keeper) const {
   int i;
   for (i = 0; i < coeff.Size(); i++)
@@ -189,4 +157,36 @@ void TimeVariable::Delete(Keeper* const keeper) const {
   for (i = 0; i < values.Size(); i++)
     values[i].Delete(keeper);
   Value.Delete(keeper);
+}
+
+void TimeVariable::Interchange(TimeVariable& newTV, Keeper* const keeper) const {
+  int i, j;
+  newTV.lastvalue = lastvalue;
+  newTV.timestepnr = timestepnr;
+  newTV.time = time;
+  newTV.value = value;
+  newTV.firsttimestepnr = firsttimestepnr;
+  Value.Interchange(newTV.Value, keeper);
+  if (fromfile) {
+    newTV.fromfile = 1;
+    newTV.usemodelmatrix = usemodelmatrix;
+    newTV.years.resize(years.Size());
+    newTV.steps.resize(steps.Size());
+    newTV.values.resize(values.Size(), keeper);
+    for (i = 0; i < steps.Size(); i++) {
+      newTV.steps[i] = steps[i];
+      newTV.years[i] = years[i];
+      values[i].Interchange(newTV.values[i], keeper);
+    }
+
+    if (usemodelmatrix) {
+      newTV.coeff.resize(coeff.Size(), keeper);
+      for (i = 0; i < values.Size(); i++)
+        coeff[i].Interchange(newTV.coeff[i], keeper);
+      newTV.modelmatrix.AddRows(modelmatrix.Nrow(), modelmatrix.Ncol());
+      for (i = 0; i < modelmatrix.Nrow(); i++)
+        for (j = 0; j < modelmatrix.Ncol(); j++)
+          newTV.modelmatrix[i][j] = modelmatrix[i][j];
+    }
+  }
 }

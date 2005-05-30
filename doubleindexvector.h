@@ -62,7 +62,6 @@ public:
     assert(minpos <= pos && pos < minpos + size);
     return v[pos - minpos];
   };
-  DoubleIndexVector& operator = (const DoubleIndexVector& d);
   /**
    * \brief This will return the index of the vector
    * \return the index of the vector
@@ -84,6 +83,7 @@ public:
    * \return the value of the specified element
    */
   void Delete(int pos);
+  DoubleIndexVector& operator = (const DoubleIndexVector& dv);
 protected:
   /**
    * \brief This is the index for the vector

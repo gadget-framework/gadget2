@@ -83,8 +83,6 @@ public:
    * \param keeper is the Keeper for the current model
    */
   void Inform(Keeper* keeper);
-  FormulaMatrix& operator = (const FormulaMatrix& formulaM);
-  friend CommentStream& operator >> (CommentStream& infile, FormulaMatrix& Fmatrix);
 protected:
   /**
    * \brief This is number of rows of the vector

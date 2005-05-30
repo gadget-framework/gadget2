@@ -190,12 +190,6 @@ int DoubleMatrix::operator == (const DoubleMatrix& d) const {
   return 1;
 }
 
-void DoubleMatrix::setElementsTo(double d) {
-  int i;
-  for (i = 0; i < nrow; i++)
-    v[i]->setElementsTo(d);
-}
-
 DoubleMatrix& DoubleMatrix::operator *= (double d) {
   int i;
   for (i = 0; i < nrow; i++)

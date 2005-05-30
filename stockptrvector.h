@@ -70,7 +70,7 @@ public:
    * \return the value of the specified element
    */
   Stock* const& operator [] (int pos) const { return v[pos]; };
-  StockPtrVector& operator = (const StockPtrVector& d);
+  StockPtrVector& operator = (const StockPtrVector& sv);
 protected:
   /**
    * \brief This is the vector of Stock values

@@ -58,7 +58,7 @@ public:
    * \param keeper is the Keeper for the current model
    */
   void Inform(Keeper* keeper);
-  friend CommentStream& operator >> (CommentStream& infile, FormulaVector& Fvector);
+  friend CommentStream& operator >> (CommentStream& infile, FormulaVector& fv);
 protected:
   /**
    * \brief This is the size of the vector

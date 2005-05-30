@@ -64,25 +64,25 @@ void DoubleIndexVector::resize(int addsize, int lower, double initial) {
   minpos = lower;
 }
 
-DoubleIndexVector& DoubleIndexVector::operator = (const DoubleIndexVector& d) {
-  if (this == &d)
+DoubleIndexVector& DoubleIndexVector::operator = (const DoubleIndexVector& dv) {
+  if (this == &dv)
     return *this;
   int i;
-  minpos = d.minpos;
-  if (size == d.size) {
+  minpos = dv.minpos;
+  if (size == dv.size) {
     for (i = 0; i < size; i++)
-      v[i] = d[i];
+      v[i] = dv[i];
     return *this;
   }
   if (v != 0) {
     delete[] v;
     v = 0;
   }
-  size = d.size;
+  size = dv.size;
   if (size > 0) {
     v = new double[size];
     for (i = 0; i < size; i++)
-      v[i] = d.v[i];
+      v[i] = dv.v[i];
   } else
     v = 0;
   return *this;

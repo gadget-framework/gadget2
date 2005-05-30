@@ -106,7 +106,7 @@ private:
    */
   AgeBandMatrixPtrVector total;
   /**
-   * \brief This is the DoublIndexVector used to temporarily store suitability information when aggregating the catch
+   * \brief This is the DoubleIndexVector used to temporarily store suitability information when aggregating the catch
    */
   const DoubleIndexVector* suitptr;
   /**

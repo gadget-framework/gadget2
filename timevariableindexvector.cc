@@ -36,30 +36,29 @@ void TimeVariableIndexVector::resize(int addsize, int lower, Keeper* const keepe
 }
 
 void TimeVariableIndexVector::resize(const TimeVariable& tvar, int lower, Keeper* const keeper) {
-  int addsize = 1;
   int i;
   if (v == 0) {
-    size = addsize;
+    size = 1;
     v = new TimeVariable[size];
     tvar.Interchange(v[0], keeper);
     minpos = lower;
   } else {
-    TimeVariable* vnew = new TimeVariable[addsize + size];
+    TimeVariable* vnew = new TimeVariable[size + 1];
     for (i = 0; i < size; i++)
       v[i].Interchange(vnew[i], keeper);
     delete[] v;
     v = vnew;
     tvar.Interchange(v[size], keeper);
-    size += addsize;
+    size++;
   }
 }
 
 int TimeVariableIndexVector::didChange(const TimeClass* const TimeInfo) const {
-  int didchange = 0;
   int i;
   for (i = 0; i < size; i++)
-    didchange += v[i].didChange(TimeInfo);
-  return (didchange > 0 ? 1 : 0);
+    if (v[i].didChange(TimeInfo))
+      return 1;
+  return 0;
 }
 
 void TimeVariableIndexVector::Update(const TimeClass* const TimeInfo) {

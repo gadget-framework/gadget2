@@ -95,21 +95,21 @@ CommentStream& operator >> (CommentStream& infile, ParameterVector& paramVec) {
   return infile;
 }
 
-ParameterVector& ParameterVector::operator = (const ParameterVector& paramv) {
-  if (this == &paramv)
+ParameterVector& ParameterVector::operator = (const ParameterVector& pv) {
+  if (this == &pv)
     return *this;
   int i;
-  if (size == paramv.size) {
+  if (size == pv.size) {
     for (i = 0; i < size; i++)
-      v[i] = paramv[i];
+      v[i] = pv[i];
     return *this;
   }
   delete[] v;
-  size = paramv.size;
+  size = pv.size;
   if (size > 0) {
     v = new Parameter[size];
     for (i = 0; i < size; i++)
-      v[i] = paramv.v[i];
+      v[i] = pv.v[i];
   } else
     v = 0;
   return *this;

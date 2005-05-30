@@ -43,23 +43,18 @@ void FormulaVector::resize(int addsize, Keeper* keeper) {
 
 void FormulaVector::Inform(Keeper* keeper) {
   int i;
-  for (i = 0; i < size; i++) {
-    ostringstream ostr;
-    ostr << i << ends;
-    keeper->addString(ostr.str());
+  for (i = 0; i < size; i++)
     v[i].Inform(keeper);
-    keeper->clearLast();
-  }
 }
 
-CommentStream& operator >> (CommentStream& infile, FormulaVector& Fvector) {
+CommentStream& operator >> (CommentStream& infile, FormulaVector& fv) {
   if (infile.fail()) {
     infile.makebad();
     return infile;
   }
   int i;
-  for (i = 0; i < Fvector.size; i++) {
-    if (!(infile >> Fvector[i])) {
+  for (i = 0; i < fv.size; i++) {
+    if (!(infile >> fv[i])) {
       infile.makebad();
       return infile;
     }

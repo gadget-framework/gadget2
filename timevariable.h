@@ -9,13 +9,13 @@ public:
   TimeVariable();
   ~TimeVariable();
   void read(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
-  void readFromFile(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
   operator double() const { return value; };
-  void Interchange(TimeVariable& Newtvar, Keeper* const keeper) const;
+  void Interchange(TimeVariable& newTV, Keeper* const keeper) const;
   void Update(const TimeClass* const TimeInfo);
   void Delete(Keeper* const keeper) const;
   int didChange(const TimeClass* const TimeInfo);
 private:
+  void readFromFile(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
   int fromfile;
   int usemodelmatrix;
   int timestepnr;   //last timestep
