@@ -8,10 +8,9 @@
 
 extern ErrorHandler handle;
 
-Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
-  Keeper* const keeper) : HasName(givenname), LivesOnAreas(Areas), CI(0) {
+Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname)
+  : HasName(givenname), LivesOnAreas(Areas), CI(0) {
 
-  keeper->addString("prey");
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
@@ -45,8 +44,21 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname,
   else
     energy = 1.0;
 
-  this->InitialiseObjects();
-  keeper->clearLast();
+  //read from file - initialise things
+  int numlen = LgrpDiv->numLengthGroups();
+  int numarea = areas.Size();
+  PopInfo nullpop;
+
+  Number.AddRows(numarea, numlen, nullpop);
+  numberPriorToEating.AddRows(numarea, numlen, nullpop);
+  biomass.AddRows(numarea, numlen, 0.0);
+  cons.AddRows(numarea, numlen, 0.0);
+  consumption.AddRows(numarea, numlen, 0.0);
+  tooMuchConsumption.resize(numarea, 0);
+  total.resize(numarea, 0.0);
+  ratio.AddRows(numarea, numlen, 0.0);
+  overcons.AddRows(numarea, numlen, 0.0);
+  overconsumption.AddRows(numarea, numlen, 0.0);
 
   //preylenindex is not required - free up memory
   for (i = 0; i < preylenindex.Size(); i++)
@@ -60,11 +72,8 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas,
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
     handle.logMessage(LOGFAIL, "Error in prey - failed to create length group");
-  this->InitialiseObjects();
   CI = new ConversionIndex(LgrpDiv, LgrpDiv);
-}
 
-void Prey::InitialiseObjects() {
   int numlen = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
   PopInfo nullpop;

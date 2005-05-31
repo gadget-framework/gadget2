@@ -98,7 +98,7 @@ void Keeper::changeVariable(const double& pre, double& post) {
 }
 
 void Keeper::clearLast() {
-  stack->OutOfStack();
+  stack->clearString();
 }
 
 void Keeper::clearAll() {
@@ -107,11 +107,11 @@ void Keeper::clearAll() {
 
 void Keeper::setString(const char* str) {
   stack->clearStack();
-  stack->PutInStack(str);
+  stack->storeString(str);
 }
 
 void Keeper::addString(const char* str) {
-  stack->PutInStack(str);
+  stack->storeString(str);
 }
 
 void Keeper::addString(const string str) {
@@ -289,7 +289,7 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
   RUNID.print(outfile);
   outfile << "; Listing of the switches used in the current Gadget run\n";
   for (i = 0; i < address.Nrow(); i++) {
-    outfile << switches[i] << TAB;
+    outfile << switches[i].getName() << TAB;
     for (j = 0; j < address.Ncol(i); j++)
       outfile << address[i][j].name << TAB;
     outfile << endl;
@@ -298,7 +298,7 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
   outfile << ";\n; Listing of the likelihood components used in the current Gadget run\n;\n";
   outfile << "; Component\tType\tWeight\n";
   for (i = 0; i < likevec.Size(); i++)
-    outfile << likevec[i]->getName() << TAB << likevec[i]->Type() << TAB << likevec[i]->getWeight() << endl;
+    outfile << likevec[i]->getName() << TAB << likevec[i]->getType() << TAB << likevec[i]->getWeight() << endl;
   outfile << ";\n; Listing of the output from the likelihood components for the current Gadget run\n;\n";
   handle.Close();
   outfile.close();
@@ -377,14 +377,14 @@ void Keeper::writeValuesInColumns(const char* const filename, int prec) const {
 
   if (opt.Size() == 0) {
     for (i = 0; i < values.Size(); i++) {
-      outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i];
+      outfile << switches[i].getName() << TAB << setw(w) << setprecision(p) << values[i];
       outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i] << TAB
         << setw(smallwidth) << setprecision(smallprecision) << upperbds[i] << "\t1\n";
    }
 
   } else {
     for (i = 0; i < values.Size(); i++) {
-      outfile << switches[i] << TAB << setw(w) << setprecision(p) << values[i];
+      outfile << switches[i].getName() << TAB << setw(w) << setprecision(p) << values[i];
       outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i] << TAB
         << setw(smallwidth) << setprecision(smallprecision) << upperbds[i] << TAB << opt[i] << endl;
     }
@@ -538,16 +538,16 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec, int inte
     check = 0;
     if (lowerbds[i] > bestvalues[i]) {
       check++;
-      outfile << switches[i] << TAB << setw(w) << setprecision(p) << lowerbds[i] << TAB;
+      outfile << switches[i].getName() << TAB << setw(w) << setprecision(p) << lowerbds[i] << TAB;
       handle.logMessage(LOGWARN, "Warning in keeper - parameter has a final value", bestvalues[i]);
       handle.logMessage(LOGWARN, "which is lower than the corresponding lower bound", lowerbds[i]);
     } else if (upperbds[i] < bestvalues[i]) {
       check++;
-      outfile << switches[i] << TAB << setw(w) << setprecision(p) << upperbds[i] << TAB;
+      outfile << switches[i].getName() << TAB << setw(w) << setprecision(p) << upperbds[i] << TAB;
       handle.logMessage(LOGWARN, "Warning in keeper - parameter has a final value", bestvalues[i]);
       handle.logMessage(LOGWARN, "which is higher than the corresponding upper bound", upperbds[i]);
     } else
-      outfile << switches[i] << TAB << setw(w) << setprecision(p) << bestvalues[i] << TAB;
+      outfile << switches[i].getName() << TAB << setw(w) << setprecision(p) << bestvalues[i] << TAB;
 
     outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i]
       << setw(smallwidth) << setprecision(smallprecision) << upperbds[i]
@@ -616,7 +616,7 @@ void Keeper::checkBounds(const LikelihoodPtrVector& likevec) const {
   //check that we have a boundlikelihood component
   count = 0;
   for (i = 0; i < likevec.Size(); i++)
-    if (likevec[i]->Type() == BOUNDLIKELIHOOD)
+    if (likevec[i]->getType() == BOUNDLIKELIHOOD)
       count++;
 
   if (count == 0)

@@ -32,7 +32,7 @@ public:
    * \brief This function will return the log of the determinate of the matrix
    * \return logdet
    */
-  double LogDet() { return logdet; };
+  double getLogDet() { return logdet; };
   /**
    * \brief This function will return the flag to denote whether the algorithm will fail
    * \return illegal

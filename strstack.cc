@@ -7,12 +7,12 @@ StrStack::~StrStack() {
     delete[] v[i];
 }
 
-void StrStack::OutOfStack() {
+void StrStack::clearString() {
   if (size > 0)
     size--;
 }
 
-void StrStack::PutInStack(const char* str) {
+void StrStack::storeString(const char* str) {
   if (size == v.Size()) {
     v.resize(1);
     v[size] = new char[MaxStrLength];

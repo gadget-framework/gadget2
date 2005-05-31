@@ -65,8 +65,6 @@ void DoubleIndexVector::resize(int addsize, int lower, double initial) {
 }
 
 DoubleIndexVector& DoubleIndexVector::operator = (const DoubleIndexVector& dv) {
-  if (this == &dv)
-    return *this;
   int i;
   minpos = dv.minpos;
   if (size == dv.size) {

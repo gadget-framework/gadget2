@@ -18,20 +18,18 @@ class PredStdInfoByLength : protected LivesOnAreas {
 public:
   /**
    * \brief This is the PredStdInfo constructor for a non-dynamic prey (eg otherfood)
-   * \param predator is the PopPredator of the predator - prey pair
-   * \param prey is the Prey of the predator - prey pair
+   * \param pred is the PopPredator of the predator - prey pair
+   * \param p is the Prey of the predator - prey pair
    * \param areas is the IntVector of areas that the predation can take place on
    */
-  PredStdInfoByLength(const PopPredator* predator, const Prey* prey,
-    const IntVector& areas);
+  PredStdInfoByLength(const PopPredator* pred, const Prey* p, const IntVector& areas);
   /**
    * \brief This is the PredStdInfoByLength constructor for a dynamic prey (eg stock)
-   * \param predator is the PopPredator of the predator - prey pair
-   * \param prey is the StockPrey of the predator - prey pair
+   * \param pred is the PopPredator of the predator - prey pair
+   * \param p is the StockPrey of the predator - prey pair
    * \param areas is the IntVector of areas that the predation can take place on
    */
-  PredStdInfoByLength(const PopPredator* predator, const StockPrey* prey,
-    const IntVector& areas);
+  PredStdInfoByLength(const PopPredator* pred, const StockPrey* p, const IntVector& areas);
   /**
    * \brief This is the default PredStdInfoByLength destructor
    */
@@ -71,10 +69,6 @@ public:
    */
   const LengthGroupDivision* getPreyLengthGroupDiv() const { return preyLgrpDiv; };
 private:
-  /**
-   * \brief This function will initialise and resize the objects created by the constructor
-   */
-  void InitialiseObjects();
   /**
    * \brief This is the AbstrPreyStdInfoByLength giving information about the predation of the prey
    */

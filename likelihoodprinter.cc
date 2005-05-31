@@ -102,7 +102,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
 
   for (i = 0; i < like.Size(); i++) {
     outfile << "; Likelihood output file for the likelihood component " << like[i]->getName();
-    switch (like[i]->Type()) {
+    switch (like[i]->getType()) {
       case CATCHDISTRIBUTIONLIKELIHOOD:
         outfile << "\n; year-step-area-age-length-number\n";
         break;
@@ -137,7 +137,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
         handle.logMessage(LOGWARN, "Warning in likelihoodprinter - printing not implemented for", like[i]->getName());
         break;
       default:
-        handle.logMessage(LOGFAIL, "Error in likelihoodprinter - unrecognised likelihood type", like[i]->Type());
+        handle.logMessage(LOGFAIL, "Error in likelihoodprinter - unrecognised likelihood type", like[i]->getType());
         break;
     }
   }

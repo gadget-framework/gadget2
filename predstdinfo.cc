@@ -7,20 +7,19 @@
 #include "stockpreystdinfo.h"
 #include "stockprey.h"
 
-PredStdInfo::PredStdInfo(const PopPredator* pred, const Prey* pRey, const IntVector& Areas)
+PredStdInfo::PredStdInfo(const PopPredator* pred, const Prey* p, const IntVector& Areas)
   : AbstrPredStdInfo(Areas, 0, 0, 0, 0), //prey and pred. min and max age eq. 0
-  preyinfo(new PreyStdInfo(pRey, Areas)),
-  predinfo(new PredStdInfoByLength(pred, pRey, Areas)),
-  predator(pred), prey(pRey) {
+  preyinfo(new PreyStdInfo(p, Areas)),
+  predinfo(new PredStdInfoByLength(pred, p, Areas)),
+  predator(pred), prey(p) {
 }
 
-PredStdInfo::PredStdInfo(const PopPredator* pred, const StockPrey* pRey, const IntVector& Areas)
-  : AbstrPredStdInfo(Areas, 0, 0, //pred. min and max age equals 0
-  pRey->AlkeysPriorToEating(Areas[0]).minAge(),
-  pRey->AlkeysPriorToEating(Areas[0]).maxAge()),
-  preyinfo(new StockPreyStdInfo(pRey, Areas)),
-  predinfo(new PredStdInfoByLength(pred, pRey, Areas)),
-  predator(pred), prey(pRey) {
+PredStdInfo::PredStdInfo(const PopPredator* pred, const StockPrey* p, const IntVector& Areas)
+  : AbstrPredStdInfo(Areas, 0, 0, p->getALKPriorToEating(Areas[0]).minAge(),
+    p->getALKPriorToEating(Areas[0]).maxAge()),
+  preyinfo(new StockPreyStdInfo(p, Areas)),
+  predinfo(new PredStdInfoByLength(pred, p, Areas)),
+  predator(pred), prey(p) {
 }
 
 PredStdInfo::~PredStdInfo() {

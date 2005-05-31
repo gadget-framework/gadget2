@@ -80,8 +80,6 @@ void StockPtrVector::Delete(int pos) {
 }
 
 StockPtrVector& StockPtrVector::operator = (const StockPtrVector& sv) {
-  if (this == &sv)
-    return *this;
   int i;
   if (size == sv.size) {
     for (i = 0; i < size; i++)

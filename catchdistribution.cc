@@ -864,9 +864,8 @@ double CatchDistribution::calcLikMVNormal() {
   double totallikelihood = 0.0;
   double sumdata, sumdist;
   int age, len, area;
-  int i, j, p;
 
-  if (illegal == 1 || LU.isIllegal() == 1)
+  if (illegal == 1 || LU.isIllegal() == 1 || isZero(sigma))
     return verybig;
 
   DoubleVector diff(aggregator->numLengthGroups(), 0.0);
@@ -885,11 +884,11 @@ double CatchDistribution::calcLikMVNormal() {
     if (isZero(sumdata))
       sumdata = verybig;
     else
-      sumdata = 1 / sumdata;
+      sumdata = 1.0 / sumdata;
     if (isZero(sumdist))
       sumdist = verybig;
     else
-      sumdist = 1 / sumdist;
+      sumdist = 1.0 / sumdist;
 
     for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
       for (len = 0; len < diff.Size(); len++)
@@ -904,13 +903,7 @@ double CatchDistribution::calcLikMVNormal() {
     totallikelihood += likelihoodValues[timeindex][area];
   }
 
-  if (isZero(sigma)) {
-    if (handle.getLogLevel() >= LOGWARN)
-      handle.logMessage(LOGWARN, "Warning in catchdistribution - multivariate normal sigma is zero");
-    return verybig;
-  }
-
-  totallikelihood += LU.LogDet() * alptr->Size();
+  totallikelihood += LU.getLogDet() * alptr->Size();
   return totallikelihood;
 }
 
@@ -940,11 +933,11 @@ double CatchDistribution::calcLikMVLogistic() {
       if (isZero(sumdata))
         sumdata = verybig;
       else
-        sumdata = 1 / sumdata;
+        sumdata = 1.0 / sumdata;
       if (isZero(sumdist))
         sumdist = verybig;
       else
-        sumdist = 1 / sumdist;
+        sumdist = 1.0 / sumdist;
 
       sumnu = 0.0;
       for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {

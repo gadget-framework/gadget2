@@ -1,8 +1,8 @@
 #include "stockprey.h"
 
 StockPrey::StockPrey(CommentStream& infile, const IntVector& Areas,
-  const char* givenname, int minage, int maxage, Keeper* const keeper)
-  : Prey(infile, Areas, givenname, keeper) {
+  const char* givenname, int minage, int maxage)
+  : Prey(infile, Areas, givenname) {
 
   type = STOCKPREYTYPE;
   IntVector size(maxage - minage + 1, LgrpDiv->numLengthGroups());
@@ -41,22 +41,16 @@ void StockPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
 void StockPrey::Print(ofstream& outfile) const {
   Prey::Print(outfile);
   outfile << "\nStock prey\n";
-  int area;
-  for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tAlkeys on internal area " << areas[area] << ":\n";
-    Alkeys[area].printNumbers(outfile);
+  int i;
+  for (i = 0; i < Alkeys.Size(); i++) {
+    outfile << "\tAlkeys on internal area " << areas[i] << ":\n";
+    Alkeys[i].printNumbers(outfile);
   }
 }
 
 void StockPrey::Reset() {
   Prey::Reset();
-  int area, age, l;
-  for (area = 0; area < areas.Size(); area++) {
-    for (age = Alkeys[area].minAge(); age <= Alkeys[area].maxAge(); age++) {
-      for (l = Alkeys[area].minLength(age); l < Alkeys[area].maxLength(age); l++) {
-        Alkeys[area][age][l].N = 0.0;
-        Alkeys[area][age][l].W = 0.0;
-      }
-    }
-  }
+  int i;
+  for (i = 0; i < Alkeys.Size(); i++)
+    Alkeys[i].setToZero();
 }

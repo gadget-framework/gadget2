@@ -81,8 +81,6 @@ void IntVector::Delete(int pos) {
 }
 
 IntVector& IntVector::operator = (const IntVector& iv) {
-  if (this == &iv)
-    return *this;
   int i;
   if (size == iv.size) {
     for (i = 0; i < size; i++)

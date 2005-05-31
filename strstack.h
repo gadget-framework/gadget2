@@ -20,12 +20,12 @@ public:
   /**
    * \brief This function will remove the top string from the stack
    */
-  void OutOfStack();
+  void clearString();
   /**
    * \brief This function will put a new string on to the top of the stack
    * \param str is the name of the string
    */
-  void PutInStack(const char* str);
+  void storeString(const char* str);
   /**
    * \brief This function will clear all the strings from the stack
    */

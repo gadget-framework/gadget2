@@ -88,7 +88,7 @@ public:
    * \brief This will return the type of printer class
    * \return type
    */
-  PrinterType Type() { return type; };
+  PrinterType getType() { return type; };
 protected:
   /**
    * \brief This ActionAtTimes stores information about when the printer output is required in the model

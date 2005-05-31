@@ -113,7 +113,7 @@ void Transition::Print(ofstream& outfile) const {
   outfile << "\n\tTransition step " << transitionStep << endl;
 }
 
-void Transition::keepAgeGroup(int area, AgeBandMatrix& Alkeys,
+void Transition::storeTransitionStock(int area, AgeBandMatrix& Alkeys,
   AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo) {
 
   int inarea = this->areaNum(area);

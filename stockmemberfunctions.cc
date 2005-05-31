@@ -140,7 +140,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 void Stock::updateAgePart1(int area, const TimeClass* const TimeInfo) {
   if (doesmove)
     if (transition->isTransitionStep(area, TimeInfo))
-      transition->keepAgeGroup(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
+      transition->storeTransitionStock(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
 }
 
 void Stock::updateAgePart2(int area, const TimeClass* const TimeInfo) {
@@ -152,9 +152,14 @@ void Stock::updateAgePart2(int area, const TimeClass* const TimeInfo) {
 }
 
 void Stock::updateAgePart3(int area, const TimeClass* const TimeInfo) {
+  int i;
   if (doesmove) {
     if (transition->isTransitionStep(area, TimeInfo)) {
-      updateTransitionStockWithTags(TimeInfo);
+      if (transitionTags.Size() > 0) {
+        for (i = 0; i < transitionTags.Size(); i++)
+          transitionTags[i]->updateTransitionStock(TimeInfo);
+        transitionTags.deleteAll();
+      }
       transition->Move(area, TimeInfo);
     }
   }
@@ -171,9 +176,14 @@ void Stock::updatePopulationPart1(int area, const TimeClass* const TimeInfo) {
 }
 
 void Stock::updatePopulationPart2(int area, const TimeClass* const TimeInfo) {
+  int i;
   if (doesmature) {
     if (maturity->isMaturationStep(TimeInfo)) {
-      updateMatureStockWithTags(TimeInfo);
+      if (matureTags.Size() > 0) {
+        for (i = 0; i < matureTags.Size(); i++)
+          matureTags[i]->updateMatureStock(TimeInfo);
+        matureTags.deleteAll();
+      }
       maturity->Move(area, TimeInfo);
     }
   }
@@ -200,33 +210,17 @@ void Stock::updatePopulationPart4(int area, const TimeClass* const TimeInfo) {
 }
 
 void Stock::updatePopulationPart5(int area, const TimeClass* const TimeInfo) {
+  int i;
   if (doesstray) {
     if (stray->isStrayStepArea(area, TimeInfo)) {
-      updateStrayStockWithTags(TimeInfo);
+      if (strayTags.Size() > 0) {
+        for (i = 0; i < strayTags.Size(); i++)
+          strayTags[i]->updateStrayStock(TimeInfo);
+        strayTags.deleteAll();
+      }
       stray->addStrayStock(area, TimeInfo);
     }
   }
-}
-
-void Stock::updateMatureStockWithTags(const TimeClass* const TimeInfo) {
-  int i;
-  for (i = 0; i < matureTags.Size(); i++)
-    matureTags[i]->updateMatureStock(TimeInfo);
-  matureTags.deleteAll();
-}
-
-void Stock::updateTransitionStockWithTags(const TimeClass* const TimeInfo) {
-  int i;
-  for (i = 0; i < transitionTags.Size(); i++)
-    transitionTags[i]->updateTransitionStock(TimeInfo);
-  transitionTags.deleteAll();
-}
-
-void Stock::updateStrayStockWithTags(const TimeClass* const TimeInfo) {
-  int i;
-  for (i = 0; i < strayTags.Size(); i++)
-    strayTags[i]->updateStrayStock(TimeInfo);
-  strayTags.deleteAll();
 }
 
 void Stock::Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,

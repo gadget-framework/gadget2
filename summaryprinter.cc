@@ -53,7 +53,7 @@ void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
   }
 
   for (i = 0; i < like.Size(); i++) {
-    switch (like[i]->Type()) {
+    switch (like[i]->getType()) {
       case CATCHDISTRIBUTIONLIKELIHOOD:
       case CATCHSTATISTICSLIKELIHOOD:
       case CATCHINKILOSLIKELIHOOD:
@@ -70,7 +70,7 @@ void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
         handle.logMessage(LOGWARN, "Warning in summaryprinter - printing not implemented for", like[i]->getName());
         break;
       default:
-        handle.logMessage(LOGFAIL, "Error in summaryprinter - unrecognised likelihood type", like[i]->Type());
+        handle.logMessage(LOGFAIL, "Error in summaryprinter - unrecognised likelihood type", like[i]->getType());
         break;
     }
   }

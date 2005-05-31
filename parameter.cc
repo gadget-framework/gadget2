@@ -1,12 +1,19 @@
 #include "parameter.h"
 #include "gadget.h"
 
+Parameter::Parameter() {
+  name = NULL;
+  size = 0;
+}
+
 Parameter::Parameter(char* value) {
   if (value == NULL) {
     name = NULL;
+    size = 0;
   } else {
-    if (isLegalParameter(value)) {
-      name = new char[strlen(value) + 1];
+    if (isValidName(value)) {
+      size = strlen(value);
+      name = new char[size + 1];
       strcpy(name, value);
     } else {
       cerr << "Invalid parameter name - " << value << endl;
@@ -15,34 +22,15 @@ Parameter::Parameter(char* value) {
   }
 }
 
-int Parameter::isLegalParameter(char* param) {
-  int strlength = strlen(param);
-  int counter = 0;
-  int legal = 1;
-  if (strlength > MaxStrLength)
-    legal = 0;
-  else {
-    while ((counter < strlength) && (legal == 1)) {
-      legal = this->legalchar(param[counter]);
-      counter++;
-    }
-  }
-  return legal;
-}
-
-Parameter::Parameter() {
-  name = NULL;
-}
-
 Parameter::Parameter(const Parameter& p) {
   //AJ 03.11.00 Maybe should start checking if same parameter???
-  int len;
   if (p.name == NULL)  {
     name = NULL;
+    size = 0;
   } else {
-    len = strlen(p.name) + 1;
-    name = new char[len];
-    strncpy(name, p.name, len);
+    size = p.size;
+    name = new char[size + 1];
+    strcpy(name, p.name);
   }
 }
 
@@ -71,13 +59,24 @@ Parameter& Parameter::operator = (const Parameter& p) {
   }
   if (p.name == NULL) {
     name = NULL;
+    size = 0;
   } else {
-    len = strlen(p.name) + 1;
-    name = new char[len];
-    strncpy(name, p.name, len);
+    size = p.size;
+    name = new char[size + 1];
+    strcpy(name, p.name);
   }
-  //AJ 03.10.00 Adding return value
   return *this;
+}
+
+int Parameter::isValidName(char* param) {
+  int len = strlen(param);
+  if (len > MaxStrLength)
+    return 0;
+  int i;
+  for (i = 0; i < len; i++)
+    if (this->legalchar(param[i]) == 0)
+      return 0;
+  return 1;
 }
 
 int Parameter::legalchar(int c) {
@@ -97,26 +96,12 @@ int Parameter::legalchar(int c) {
   }
 }
 
-int Parameter::Size() const {
-  if (name == NULL)
-    return 0;
-  else
-    return strlen(name);
-}
-
 CommentStream& operator >> (CommentStream& in, Parameter& p) {
   int i = 0;
-  int len;
   char c;
 
-  char* tempString;
-  if (in.fail()) {
-    in.makebad();
-    return in;
-  }
-
+  char* tempString = new char[MaxStrLength];
   in >> ws;
-  tempString = new char[MaxStrLength];
   while (p.legalchar(in.peek()) && i < (MaxStrLength - 1)) {
     if (in.fail() && !in.eof()) {
       in.makebad();
@@ -124,11 +109,6 @@ CommentStream& operator >> (CommentStream& in, Parameter& p) {
       return in;
     }
     in.get(c);
-    if (in.fail() && !in.eof()) {
-      in.makebad();
-      delete[] tempString;
-      return in;
-    }
     tempString[i] = c;
     i++;
   }
@@ -137,31 +117,36 @@ CommentStream& operator >> (CommentStream& in, Parameter& p) {
   if (strlen(tempString) == MaxStrLength - 1)
     cerr << "Warning - name of switch has reached maximum allowed length\n";
 
-  //return memory possibly used by p.
   if (p.name != NULL) {
     delete[] p.name;
     p.name = NULL;
   }
+
   if (i <= 0) {
-    //did not read any string
     p.name = NULL;
+    p.size = 0;
   } else {
-    len = strlen(tempString) + 1;
-    p.name = new char[len];
-    strncpy(p.name, tempString, len);
+    p.size = strlen(tempString);
+    p.name = new char[p.size + 1];
+    strcpy(p.name, tempString);
   }
+
   delete[] tempString;
   return in;
 }
 
 istream& operator >> (istream& in, Parameter& p) {
   int i = 0;
-  int len;
   char c;
 
   char* tempString = new char[MaxStrLength];
   in >> ws;
   while (p.legalchar(in.peek()) && i < (MaxStrLength - 1)) {
+    if (in.fail() && !in.eof()) {
+//      in.makebad();
+      delete[] tempString;
+      return in;
+    }
     in.get(c);
     tempString[i] = c;
     i++;
@@ -177,13 +162,14 @@ istream& operator >> (istream& in, Parameter& p) {
   }
 
   if (i <= 0) {
-    //did not read any string
     p.name = NULL;
+    p.size = 0;
   } else {
-    len = strlen(tempString) + 1;
-    p.name = new char[len];
-    strncpy(p.name, tempString, len);
+    p.size = strlen(tempString);
+    p.name = new char[p.size + 1];
+    strcpy(p.name, tempString);
   }
+
   delete[] tempString;
   return in;
 }

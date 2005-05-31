@@ -142,7 +142,7 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  areas = stocks[0]->Areas();
+  areas = stocks[0]->getAreas();
   outerareas.resize(areas.Size(), 0);
   for (i = 0; i < outerareas.Size(); i++)
     outerareas[i] = stocks[0]->getPrintArea(stocks[0]->areaNum(areas[i]));

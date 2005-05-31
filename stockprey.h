@@ -17,10 +17,8 @@ public:
    * \param givenname is the name of the prey
    * \param minage is the minimum age of the prey
    * \param maxage is the maximum age of the prey
-   * \param keeper is the Keeper for the current model
    */
-  StockPrey(CommentStream& infile, const IntVector& areas, const char* givenname,
-    int minage, int maxage, Keeper* const keeper);
+  StockPrey(CommentStream& infile, const IntVector& areas, const char* givenname, int minage, int maxage);
   /**
    * \brief This is the default StockPrey destructor
    */
@@ -37,7 +35,7 @@ public:
    * \param area is the area that the prey consumption is being calculated on
    * \return Alkeys, the population of the prey for the area before consumption
    */
-  const AgeBandMatrix& AlkeysPriorToEating(int area) const { return Alkeys[this->areaNum(area)]; };
+  const AgeBandMatrix& getALKPriorToEating(int area) const { return Alkeys[this->areaNum(area)]; };
   /**
    * \brief This function will print the prey information
    * \param outfile is the ofstream that all the model information gets sent to

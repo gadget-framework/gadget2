@@ -107,7 +107,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
         predator = stockvec[i]->getPredator();
 
         if (areas.Size() == 0) {
-          areas = stockvec[i]->Areas();
+          areas = stockvec[i]->getAreas();
           outerareas.resize(areas.Size(), 0);
           for (j = 0; j < outerareas.Size(); j++)
             outerareas[j] = stockvec[i]->getPrintArea(stockvec[i]->areaNum(areas[j]));
@@ -123,7 +123,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
         prey = stockvec[i]->getPrey();
 
         if (areas.Size() == 0) {
-          areas = stockvec[i]->Areas();
+          areas = stockvec[i]->getAreas();
           outerareas.resize(areas.Size(), 0);
           for (j = 0; j < outerareas.Size(); j++)
             outerareas[j] = stockvec[i]->getPrintArea(stockvec[i]->areaNum(areas[j]));

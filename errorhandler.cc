@@ -79,7 +79,7 @@ void ErrorHandler::Open(const char* filename) {
     logfile << "Opening file " << filename << endl;
     logfile.flush();
   }
-  files->PutInStack(filename);
+  files->storeString(filename);
 }
 
 void ErrorHandler::Close() {
@@ -89,7 +89,7 @@ void ErrorHandler::Close() {
     logfile.flush();
     delete[] strFilename;
   }
-  files->OutOfStack();
+  files->clearString();
 }
 
 void ErrorHandler::logMessage(LogLevel mlevel, const char* msg) {

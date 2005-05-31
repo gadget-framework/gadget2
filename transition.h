@@ -42,7 +42,7 @@ public:
    * \param TagAlkeys is the AgeBandMatrixRatio of the tagged stock that fish will move from
    * \param TimeInfo is the TimeClass for the current model
    */
-  void keepAgeGroup(int area, AgeBandMatrix& Alkeys, AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo);
+  void storeTransitionStock(int area, AgeBandMatrix& Alkeys, AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo);
   /**
    * \brief This will move the younger stock into the older stock age-length cells
    * \param area is the area that the movement is being calculated on

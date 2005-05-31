@@ -8,44 +8,46 @@
 #include "stockprey.h"
 #include "gadget.h"
 
-PredStdInfoByLength::PredStdInfoByLength(const PopPredator* pred, const Prey* pRey, const IntVector& Areas)
-  : LivesOnAreas(Areas), preyinfo(new PreyStdInfoByLength(pRey, Areas)),
-  predator(pred), prey(pRey) {
+PredStdInfoByLength::PredStdInfoByLength(const PopPredator* pred, const Prey* p, const IntVector& Areas)
+  : LivesOnAreas(Areas), preyinfo(new PreyStdInfoByLength(p, Areas)),
+  predator(pred), prey(p) {
 
-  this->InitialiseObjects();
-}
+  predLgrpDiv = predator->getLengthGroupDiv();
+  preyLgrpDiv = prey->getLengthGroupDiv();
 
-PredStdInfoByLength::PredStdInfoByLength(const PopPredator* pred, const StockPrey* pRey, const IntVector& Areas)
-  : LivesOnAreas(Areas), preyinfo(new StockPreyStdInfoByLength(pRey, Areas)),
-  predator(pred), prey(pRey) {
-
-  this->InitialiseObjects();
-}
-
-PredStdInfoByLength::~PredStdInfoByLength() {
-  delete preyinfo;
-}
-
-void PredStdInfoByLength::InitialiseObjects() {
-  while (MortbyLength.Size() > 0) {
-    MortbyLength.Delete(0);
-    NconbyLength.Delete(0);
-    BconbyLength.Delete(0);
-  }
-  //Create a BandMatrix bm, filled with 0.
-  DoubleMatrix dm(predator->numLengthGroups(), prey->numLengthGroups(), 1);
+  DoubleMatrix dm(predLgrpDiv->numLengthGroups(), preyLgrpDiv->numLengthGroups(), 0.0);
   BandMatrix bm(dm);
   int i, j;
   for (i = 0; i < bm.Nrow(); i++)
     for (j = 0; j < bm.Ncol(i); j++)
-      bm[i][j] = 0;
+      bm[i][j] = 0.0;
 
   MortbyLength.resize(areas.Size(), bm);
   NconbyLength.resize(areas.Size(), bm);
   BconbyLength.resize(areas.Size(), bm);
+}
+
+PredStdInfoByLength::PredStdInfoByLength(const PopPredator* pred, const StockPrey* p, const IntVector& Areas)
+  : LivesOnAreas(Areas), preyinfo(new StockPreyStdInfoByLength(p, Areas)),
+  predator(pred), prey(p) {
 
   predLgrpDiv = predator->getLengthGroupDiv();
   preyLgrpDiv = prey->getLengthGroupDiv();
+
+  DoubleMatrix dm(predLgrpDiv->numLengthGroups(), preyLgrpDiv->numLengthGroups(), 0.0);
+  BandMatrix bm(dm);
+  int i, j;
+  for (i = 0; i < bm.Nrow(); i++)
+    for (j = 0; j < bm.Ncol(i); j++)
+      bm[i][j] = 0.0;
+
+  MortbyLength.resize(areas.Size(), bm);
+  NconbyLength.resize(areas.Size(), bm);
+  BconbyLength.resize(areas.Size(), bm);
+}
+
+PredStdInfoByLength::~PredStdInfoByLength() {
+  delete preyinfo;
 }
 
 void PredStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
@@ -58,18 +60,18 @@ void PredStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
   int predl, preyl;
   double proportion;
 
-  for (predl = 0; predl < NconbyLength[inarea].Nrow(); predl++) {
-    for (preyl = 0; preyl < NconbyLength[inarea].Ncol(); preyl++) {
+  for (predl = 0; predl < predLgrpDiv->numLengthGroups(); predl++) {
+    for (preyl = 0; preyl < preyLgrpDiv->numLengthGroups(); preyl++) {
       if (isZero(BpreyEaten[preyl])) {
-      NconbyLength[inarea][predl][preyl] = 0.0;
-      BconbyLength[inarea][predl][preyl] = 0.0;
-      MortbyLength[inarea][predl][preyl] = 0.0;
+        NconbyLength[inarea][predl][preyl] = 0.0;
+        BconbyLength[inarea][predl][preyl] = 0.0;
+        MortbyLength[inarea][predl][preyl] = 0.0;
       } else {
-      //proportion equals the proportion of the predation on preyl that predl acounts for.
-      proportion = BpredEaten[predl][preyl] / BpreyEaten[preyl];
-      NconbyLength[inarea][predl][preyl] = proportion * NpreyEaten[preyl];
-      BconbyLength[inarea][predl][preyl] = proportion * BpreyEaten[preyl];
-      MortbyLength[inarea][predl][preyl] = proportion * TotpreyMort[preyl];
+        //proportion equals the proportion of the predation on preyl that predl acounts for.
+        proportion = BpredEaten[predl][preyl] / BpreyEaten[preyl];
+        NconbyLength[inarea][predl][preyl] = proportion * NpreyEaten[preyl];
+        BconbyLength[inarea][predl][preyl] = proportion * BpreyEaten[preyl];
+        MortbyLength[inarea][predl][preyl] = proportion * TotpreyMort[preyl];
       }
     }
   }

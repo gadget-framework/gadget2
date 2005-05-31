@@ -12,28 +12,25 @@ PreyStdInfo::~PreyStdInfo() {
 }
 
 void PreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
-  //We never have to change the values of NconByAge and NconByAgeAndLength,
-  //since they are initialised to 0.
-  PSIByLength.Sum(TimeInfo, area);
-  int inarea = this->areaNum(area);
-  int l, age;
-  double timeratio;
 
-  age = 0;
-  BconbyAge[inarea][age] = 0.0;
-  timeratio = 1.0 / TimeInfo->getTimeStepSize();
+  int l;
+  int inarea = this->areaNum(area);
+  double timeratio = 1.0 / TimeInfo->getTimeStepSize();
+
+  BconbyAge[inarea][0] = 0.0;
+  PSIByLength.Sum(TimeInfo, area);
   for (l = 0; l < prey->numLengthGroups(); l++) {
-    BconbyAgeAndLength[inarea][age][l] = PSIByLength.BconsumptionByLength(area)[l];
-    BconbyAge[inarea][age] += BconbyAgeAndLength[inarea][age][l];
-    MortbyAgeAndLength[inarea][age][l] = PSIByLength.MortalityByLength(area)[l];
+    BconbyAgeAndLength[inarea][0][l] = PSIByLength.BconsumptionByLength(area)[l];
+    BconbyAge[inarea][0] += BconbyAgeAndLength[inarea][0][l];
+    MortbyAgeAndLength[inarea][0][l] = PSIByLength.MortalityByLength(area)[l];
   }
 
   if (isZero(prey->getTotalBiomass(area)))
-    MortbyAge[inarea][age] = 0.0;
-  else if (BconbyAge[inarea][age] >= prey->getTotalBiomass(area))
-    MortbyAge[inarea][age] = MaxMortality;
+    MortbyAge[inarea][0] = 0.0;
+  else if (BconbyAge[inarea][0] >= prey->getTotalBiomass(area))
+    MortbyAge[inarea][0] = MaxMortality;
   else
-    MortbyAge[inarea][age] = -log(1.0 - BconbyAge[inarea][age] / prey->getTotalBiomass(area)) * timeratio;
+    MortbyAge[inarea][0] = -log(1.0 - BconbyAge[inarea][0] / prey->getTotalBiomass(area)) * timeratio;
 }
 
 const DoubleVector& PreyStdInfo::NconsumptionByLength(int area) const {

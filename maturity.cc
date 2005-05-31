@@ -116,7 +116,7 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
     tagStorage[inarea].setToZero();
 }
 
-void Maturity::PutInStorage(int area, int age, int length, double number,
+void Maturity::storeMatureStock(int area, int age, int length, double number,
   double weight, const TimeClass* const TimeInfo) {
 
   if (!(this->isMaturationStep(TimeInfo)))
@@ -131,7 +131,7 @@ void Maturity::PutInStorage(int area, int age, int length, double number,
   }
 }
 
-void Maturity::PutInStorage(int area, int age, int length, double number,
+void Maturity::storeMatureStock(int area, int age, int length, double number,
   const TimeClass* const TimeInfo, int id) {
 
   if (!(this->isMaturationStep(TimeInfo)))

@@ -21,7 +21,10 @@ class Parameter {
 public:
   Parameter();
   Parameter(const Parameter& p);
+  Parameter(char* value);
   ~Parameter();
+  int Size() const { return size; };
+  char* getName() const { return name; };
   //reads and discards ' ', '\t', '\n' and EOF from start of pointer in ??????.
   //reads string until find a character which is not legal or have read MaxStrLength-1
   //characters into name. name has been terminated by '\0'.
@@ -31,17 +34,12 @@ public:
   //printed to screen.
   friend CommentStream& operator >> (CommentStream& in, Parameter& p);
   friend istream& operator >> (istream& in, Parameter& p);
-  friend ostream& operator << (ostream& out, const Parameter& p) {
-    return (out << p.name);
-  };
   Parameter& operator = (const Parameter& p);
   int operator == (const Parameter& p) const;
-  int legalchar(int c);
-  int Size() const;
-  char* getName() { return name; };
-  int isLegalParameter(char* param);
-  Parameter(char* value);
 private:
+  int isValidName(char* param);
+  int legalchar(int c);
+  int size;
   char* name;
 };
 

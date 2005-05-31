@@ -88,62 +88,12 @@ void DoubleVector::Reset() {
   }
 }
 
-DoubleVector& DoubleVector::operator *= (double d) {
-  int i;
-  for (i = 0; i<size; i++)
-    v[i] *= d;
-  return *this;
-}
-
-DoubleVector& DoubleVector::operator * (double d) const {
-  DoubleVector* result = new DoubleVector(*this);
-  return ((*result) *= d);
-}
-
-DoubleVector& DoubleVector::operator += (double d) {
-  int i;
-  for (i = 0; i < size; i++)
-    v[i] += d;
-  return *this;
-}
-
-DoubleVector& DoubleVector::operator + (double d) const {
-  DoubleVector* result = new DoubleVector(*this);
-  return ((*result) += d);
-}
-
-DoubleVector& DoubleVector::operator -= (double d) {
-  int i;
-  for (i = 0; i < size; i++)
-    v[i] -= d;
-  return *this;
-}
-
-DoubleVector& DoubleVector::operator - (double d) const {
-  DoubleVector* result = new DoubleVector(*this);
-  return ((*result) -= d);
-}
-
-DoubleVector& DoubleVector::operator += (const DoubleVector& d) {
-  int i;
-  for (i = 0; i < min(size, d.Size()); i++)
-    (*this)[i] += d[i];
-  return *this;
-}
-
-DoubleVector& DoubleVector::operator -= (const DoubleVector& d) {
-  int i;
-  for (i = 0; i < min(size, d.Size()); i++)
-    (*this)[i] -= d[i];
-  return *this;
-}
-
 double DoubleVector::operator * (const DoubleVector& d) const {
-  if (size !=d.Size()) {
+  if (size != d.Size()) {
     cerr << "Error - vectors must be of equal length for multiplication!\n";
     exit(EXIT_FAILURE);
   }
-  double result = 0;
+  double result = 0.0;
   int i;
   for (i = 0; i < size; i++)
     result += (d[i] * v[i]);
@@ -151,8 +101,6 @@ double DoubleVector::operator * (const DoubleVector& d) const {
 }
 
 DoubleVector& DoubleVector::operator = (const DoubleVector& d) {
-  if (this == &d)
-    return *this;
   int i;
   if (size == d.size) {
     for (i = 0; i < size; i++)
@@ -171,14 +119,4 @@ DoubleVector& DoubleVector::operator = (const DoubleVector& d) {
   } else
     v = 0;
   return *this;
-}
-
-int DoubleVector::operator == (const DoubleVector& d) const {
-  if (size != d.Size())
-    return 0;
-  int i;
-  for (i = 0; i < size; i++)
-    if (v[i] != d[i])
-      return 0;
-  return 1;
 }

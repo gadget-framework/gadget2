@@ -113,7 +113,7 @@ void Ecosystem::Initialise() {
   for (i = 0; i < likevec.Size(); i++) {
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "Initialising likelihood component", likevec[i]->getName());
-    switch (likevec[i]->Type()) {
+    switch (likevec[i]->getType()) {
       case SURVEYINDICESLIKELIHOOD:
         ((SurveyIndices*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
@@ -150,7 +150,7 @@ void Ecosystem::Initialise() {
       case BOUNDLIKELIHOOD:
         break;
       default:
-        handle.logMessage(LOGFAIL, "Error when initialising model - unrecognised likelihood type", likevec[i]->Type());
+        handle.logMessage(LOGFAIL, "Error when initialising model - unrecognised likelihood type", likevec[i]->getType());
         break;
     }
   }
@@ -159,7 +159,7 @@ void Ecosystem::Initialise() {
   for (i = 0; i < printvec.Size(); i++) {
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "Initialising printer for output file", printvec[i]->getFileName());
-    switch (printvec[i]->Type()) {
+    switch (printvec[i]->getType()) {
       case STOCKSTDPRINTER:
         ((StockStdPrinter*)(printvec[i]))->setStock(stockvec);
         break;
@@ -191,7 +191,7 @@ void Ecosystem::Initialise() {
         ((SummaryPrinter*)(printvec[i]))->setLikelihood(likevec);
         break;
       default:
-        handle.logMessage(LOGFAIL, "Error when initialising model - unrecognised printer type", printvec[i]->Type());
+        handle.logMessage(LOGFAIL, "Error when initialising model - unrecognised printer type", printvec[i]->getType());
         break;
     }
   }

@@ -490,6 +490,7 @@ void CatchStatistics::LikelihoodPrint(ofstream& outfile, const TimeClass* const 
         case 4:
         case 5:
           outfile << endl;
+          break;
         default:
           handle.logMessage(LOGWARN, "Warning in catchstatistics - unrecognised function", functionname);
           break;

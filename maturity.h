@@ -80,7 +80,7 @@ public:
    * \param weight is the weight of the calculated mature stock
    * \param TimeInfo is the TimeClass for the current model
    */
-  void PutInStorage(int area, int age, int length, double number,
+  void storeMatureStock(int area, int age, int length, double number,
     double weight, const TimeClass* const TimeInfo);
   /**
    * \brief This will store the calculated mature tagged stock
@@ -91,7 +91,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param id is the tagging identifier of the mature stock
    */
-  void PutInStorage(int area, int age, int length, double number,
+  void storeMatureStock(int area, int age, int length, double number,
     const TimeClass* const TimeInfo, int id);
   /**
    * \brief This will move the calculated mature stock into the mature stock age-length cells

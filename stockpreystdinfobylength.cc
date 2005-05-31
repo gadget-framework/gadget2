@@ -17,18 +17,18 @@ void StockPreyStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
   double timeratio;
   PopInfo nullpop;
   PopInfoVector PopBylength(BconbyLength.Ncol(inarea), nullpop);
-  const DoubleVector& Bconsumption = prey->getConsumption(area);
-  const AgeBandMatrix& Alk = prey->AlkeysPriorToEating(area);
+  const DoubleVector& cons = prey->getConsumption(area);
+  const AgeBandMatrix& Alk = prey->getALKPriorToEating(area);
 
   Alk.sumColumns(PopBylength);
   timeratio = 1.0 / TimeInfo->getTimeStepSize();
-  for (l = 0; l < BconbyLength.Ncol(inarea); l++) {
-    BconbyLength[inarea][l] = Bconsumption[l];
+  for (l = 0; l < cons.Size(); l++) {
+    BconbyLength[inarea][l] = cons[l];
 
     if (isZero(PopBylength[l].W))
       NconbyLength[inarea][l] = 0.0;
     else
-      NconbyLength[inarea][l] = BconbyLength[inarea][l] / PopBylength[l].W;
+      NconbyLength[inarea][l] = cons[l] / PopBylength[l].W;
 
     if (isZero(PopBylength[l].N))
       MortbyLength[inarea][l] = 0.0;

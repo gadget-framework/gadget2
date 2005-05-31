@@ -25,10 +25,9 @@ public:
    * \param infile is the CommentStream to read the Prey data from
    * \param areas is the IntVector of areas that the prey lives on
    * \param givenname is the name of the prey
-   * \param keeper is the Keeper for the current model
    * \note this constructor is used when creating dynamic prey (ie. StockPrey class)
    */
-  Prey(CommentStream& infile, const IntVector& areas, const char* givenname, Keeper* const keeper);
+  Prey(CommentStream& infile, const IntVector& areas, const char* givenname);
   /**
    * \brief This is the Prey constructor for a prey with a given length group
    * \param lengths is the DoubleVector of length groups of the prey
@@ -57,6 +56,7 @@ public:
   double getRatio(int area, int length) const { return ratio[this->areaNum(area)][length]; };
   double meanLength(int i) const { return LgrpDiv->meanLength(i); };
   int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
+  const DoubleVector& getBiomass(int area) const { return biomass[this->areaNum(area)]; };
   const DoubleVector& getConsumption(int area) const { return consumption[this->areaNum(area)]; };
   const DoubleVector& getOverConsumption(int area) const { return overconsumption[this->areaNum(area)]; };
   const LengthGroupDivision* getLengthGroupDiv() const { return LgrpDiv; };
@@ -72,9 +72,8 @@ public:
    * \brief This will return the type of prey class
    * \return type
    */
-  PreyType Type() { return type; };
+  PreyType getType() { return type; };
 protected:
-  void InitialiseObjects();
   ConversionIndex* CI;
   LengthGroupDivision* LgrpDiv;
   PopInfoMatrix Number;

@@ -27,7 +27,7 @@ int LivesOnAreas::areaNum(int area) const {
   return -1;
 }
 
-void LivesOnAreas::LetLiveOnAreas(const IntVector& Areas) {
+void LivesOnAreas::storeAreas(const IntVector& Areas) {
 
   while (areas.Size() > 0)
     areas.Delete(0);

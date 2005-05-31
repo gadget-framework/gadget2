@@ -78,7 +78,7 @@ public:
    * \brief This will return the type of likelihood class
    * \return type
    */
-  LikelihoodType Type() const { return type; };
+  LikelihoodType getType() const { return type; };
   /**
    * \brief This will return the unweighted likelihood score for the likelihood component
    * \return likelihood

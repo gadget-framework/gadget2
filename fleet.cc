@@ -39,7 +39,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
       c = infile.peek();
       i++;
     }
-    this->LetLiveOnAreas(tmpareas);
+    this->storeAreas(tmpareas);
   } else
     handle.logFileUnexpected(LOGFAIL, "livesonareas", text);
 

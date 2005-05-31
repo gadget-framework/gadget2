@@ -96,7 +96,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
             for (i = 0; i < pred->numPreys(); i++) {
               if (strcasecmp(prey->getName(), pred->getPrey(i)->getName()) == 0) {
                 suitptr = &pred->Suitability(i)[0];
-                alptr = &prey->AlkeysPriorToEating(area);
+                alptr = &prey->getALKPriorToEating(area);
                 for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
                   for (k = 0; k < ages.Ncol(aggrAge); k++) {
                     age = ages[aggrAge][k];

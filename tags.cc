@@ -296,7 +296,7 @@ void Tags::Update(int timeid) {
   //AgeLengthStock so that it can hold all information of number of tagged stock
   //per area/age/length after endtime. We must make AgeBandMatrixPtrVector same size as
   //the one in stock even though have only one area entry at the beginning
-  IntVector stockareas = taggingstock->Areas();
+  IntVector stockareas = taggingstock->getAreas();
   int numareas = stockareas.Size();
   int tagareaindex = -1;
   j = 0;
@@ -358,7 +358,7 @@ void Tags::Update(int timeid) {
     Stock* tmpStock = tagStocks[i];
     allStockPopInArea = &tagStocks[i]->getAgeLengthKeys(tagarea);
 
-    stockareas = tmpStock->Areas();
+    stockareas = tmpStock->getAreas();
     numareas = stockareas.Size();
     maxage = allStockPopInArea->maxAge();
     minage = allStockPopInArea->minAge();
@@ -494,7 +494,7 @@ int Tags::areaIndex(const char* stockname, int area) {
 
   for (i = 0; i < tagStocks.Size(); i++)
     if (strcasecmp(stockname, tagStocks[i]->getName()) == 0) {
-      IntVector stockareas = tagStocks[i]->Areas();
+      IntVector stockareas = tagStocks[i]->getAreas();
       for (j = 0; j < stockareas.Size(); j++)
         if (stockareas[j] == area)
           return j;
@@ -556,7 +556,7 @@ void Tags::addToTagStock(int timeid) {
 
   i = 0;
   tagareaindex = -1;
-  IntVector stockareas = taggingstock->Areas();
+  IntVector stockareas = taggingstock->getAreas();
   while (i <= stockareas.Size() && tagareaindex == -1) {
     if (tagarea == stockareas[i])
       tagareaindex = i;

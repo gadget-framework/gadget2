@@ -32,7 +32,7 @@ public:
    * \brief This function will return the internal areas that the object is defined on
    * \return areas
    */
-  IntVector& Areas() { return areas; };
+  IntVector& getAreas() { return areas; };
   /**
    * \brief This function will return the area associated with an internal area
    * \param area is an integer to denote the internal area of interest
@@ -41,10 +41,10 @@ public:
   int areaNum(int area) const;
 protected:
   /**
-   * \brief This function will set the internal areas to be used
+   * \brief This function will store the internal areas to be used
    * \param Areas is the IntVector of internal areas to be used
    */
-  void LetLiveOnAreas(const IntVector& Areas);
+  void storeAreas(const IntVector& Areas);
   /**
    * \brief This is the IntVector of internal areas that the object is defined on
    */

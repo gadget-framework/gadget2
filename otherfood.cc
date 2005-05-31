@@ -37,7 +37,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
       c = infile.peek();
       i++;
     }
-    this->LetLiveOnAreas(tmpareas);
+    this->storeAreas(tmpareas);
   } else
     handle.logFileUnexpected(LOGFAIL, "livesonareas", text);
 

@@ -22,12 +22,11 @@ public:
     return *(v[row - minage]);
   };
   int Nrow() const { return nrow; };
-  int Ncol(int row) const { return (operator[](row).Size()); };
-  int Ncol() const { return (operator[](minage).Size()); };
+  int Ncol(int row) const { return v[row - minage]->Size(); };
   int minRow() const { return minage; };
   int maxRow() const { return minage + nrow - 1; };
-  int minCol(int row) const { return (operator[](row).minCol()); };
-  int maxCol(int row) const { return (operator[](row).maxCol()); };
+  int minCol(int row) const { return v[row - minage]->minCol(); };
+  int maxCol(int row) const { return v[row - minage]->maxCol(); };
   void Print(ofstream& outfile) const;
 protected:
   DoubleIndexVector** v;

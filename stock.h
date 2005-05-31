@@ -184,9 +184,6 @@ public:
   const StockPtrVector& getStrayStocks();
   void updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss);
   void deleteTags(const char* tagname);
-  void updateMatureStockWithTags(const TimeClass* const TimeInfo);
-  void updateTransitionStockWithTags(const TimeClass* const TimeInfo);
-  void updateStrayStockWithTags(const TimeClass* const TimeInfo);
   int getPrintArea(int area) { return printAreas[area]; };
 protected:
   AgeBandMatrixPtrVector Alkeys;

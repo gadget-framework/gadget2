@@ -5,8 +5,8 @@
 #include "gadget.h"
 
 StockPreyStdInfo::StockPreyStdInfo(const StockPrey* p, const IntVector& Areas)
-  : AbstrPreyStdInfo(p, Areas, p->AlkeysPriorToEating(Areas[0]).minAge(),
-    p->AlkeysPriorToEating(Areas[0]).maxAge()),
+  : AbstrPreyStdInfo(p, Areas, p->getALKPriorToEating(Areas[0]).minAge(),
+      p->getALKPriorToEating(Areas[0]).maxAge()),
   SPByLength(p, Areas), prey(p) {
 }
 
@@ -23,7 +23,7 @@ void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
     NconbyAge[inarea][age] = 0.0;
     BconbyAge[inarea][age] = 0.0;
   }
-  const AgeBandMatrix& Alk = prey->AlkeysPriorToEating(area);
+  const AgeBandMatrix& Alk = prey->getALKPriorToEating(area);
   PopInfo nullpop;
 
   PopInfoIndexVector PopByAge(Alk.maxAge() - Alk.minAge() + 1, Alk.minAge(), nullpop);

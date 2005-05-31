@@ -12,21 +12,19 @@ PreyStdInfoByLength::~PreyStdInfoByLength() {
 
 void PreyStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
   int inarea = this->areaNum(area);
-  const DoubleVector& Bconsumption = prey->getConsumption(area);
+  const DoubleVector& cons = prey->getConsumption(area);
+  const DoubleVector& bio = prey->getBiomass(area);
 
   int l;
-  double timeratio;
+  double timeratio = 1.0 / TimeInfo->getTimeStepSize();
+  for (l = 0; l < cons.Size(); l++) {
+    BconbyLength[inarea][l] = cons[l];
 
-  timeratio = 1.0 / TimeInfo->getTimeStepSize();
-  for (l = 0; l < BconbyLength.Ncol(inarea); l++) {
-    BconbyLength[inarea][l] = Bconsumption[l];
-    //NconbyLength[inarea][l] = 0.0;  //initialised to zero
-
-    if (isZero(prey->getBiomass(area, l)))
+    if (isZero(bio[l]))
       MortbyLength[inarea][l] = 0.0;
-    else if (BconbyLength[inarea][l] >= prey->getBiomass(area, l))
+    else if (cons[l] >= bio[l])
       MortbyLength[inarea][l] = MaxMortality;
     else
-      MortbyLength[inarea][l] = -log(1.0 - BconbyLength[inarea][l] / prey->getBiomass(area, l)) * timeratio;
+      MortbyLength[inarea][l] = -log(1.0 - cons[l] / bio[l]) * timeratio;
   }
 }

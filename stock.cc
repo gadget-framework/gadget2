@@ -53,7 +53,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
       c = infile.peek();
       i++;
     }
-    this->LetLiveOnAreas(tmpareas);
+    this->storeAreas(tmpareas);
   } else
     handle.logFileUnexpected(LOGFAIL, "livesonareas", text);
 
@@ -134,7 +134,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //read the prey data
   readWordAndVariable(infile, "iseaten", iseaten);
   if (iseaten)
-    prey = new StockPrey(infile, areas, this->getName(), minage, maxage, keeper);
+    prey = new StockPrey(infile, areas, this->getName(), minage, maxage);
   else
     prey = 0;
   if (handle.getLogLevel() >= LOGMESSAGE)

@@ -11,9 +11,9 @@
 StockPredStdInfo::StockPredStdInfo(const StockPredator* predator,
   const StockPrey* conprey, const IntVector& Areas)
   : AbstrPredStdInfo(Areas, predator->Alproportion(Areas[0]).minRow(),
-    predator->Alproportion(Areas[0]).maxRow(),
-    conprey->AlkeysPriorToEating(Areas[0]).minAge(),
-    conprey->AlkeysPriorToEating(Areas[0]).maxAge()),
+      predator->Alproportion(Areas[0]).maxRow(),
+      conprey->getALKPriorToEating(Areas[0]).minAge(),
+      conprey->getALKPriorToEating(Areas[0]).maxAge()),
     pred(predator), prey(conprey) {
 
   preyinfo = new StockPreyStdInfo(conprey, Areas);
@@ -23,7 +23,7 @@ StockPredStdInfo::StockPredStdInfo(const StockPredator* predator,
 StockPredStdInfo::StockPredStdInfo(const StockPredator* predator,
   const Prey* conprey, const IntVector& Areas)
   : AbstrPredStdInfo(Areas, predator->Alproportion(Areas[0]).minRow(),
-    predator->Alproportion(Areas[0]).maxRow(), 0, 0),
+      predator->Alproportion(Areas[0]).maxRow(), 0, 0),
     pred(predator), prey(conprey) {
 
   preyinfo = new PreyStdInfo(prey, Areas);

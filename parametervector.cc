@@ -96,8 +96,6 @@ CommentStream& operator >> (CommentStream& infile, ParameterVector& paramVec) {
 }
 
 ParameterVector& ParameterVector::operator = (const ParameterVector& pv) {
-  if (this == &pv)
-    return *this;
   int i;
   if (size == pv.size) {
     for (i = 0; i < size; i++)
