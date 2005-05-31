@@ -244,9 +244,8 @@ int bfgs(int maxevl, double epsilon, double beta, double sigma, double step,
       newf = EcoSystem->SimulateAndUpdate(x);
       EcoSystem->setFuncEvalBFGS(FuncEval - offset);
       EcoSystem->setLikelihoodBFGS(newf);
-      if (scale == 1)
-        for (i = 0; i < nvars; i++)
-          x[i] *= init[i];
+      for (i = 0; i < nvars; i++)
+        x[i] *= init[i];
       EcoSystem->StoreVariables(newf, x);
       tmpf = getSmallestEigenValue(invhess);
       if (!isZero(tmpf))
@@ -368,9 +367,8 @@ int bfgs(int maxevl, double epsilon, double beta, double sigma, double step,
     }
 
     newf = EcoSystem->SimulateAndUpdate(x);
-    if (scale == 1)
-      for (i = 0; i < nvars; i++)
-        bestx[i] = x[i] * init[i];
+    for (i = 0; i < nvars; i++)
+      bestx[i] = x[i] * init[i];
 
     EcoSystem->StoreVariables(newf, bestx);
     handle.logMessage(LOGINFO, "\nNew optimum found after", (FuncEval - offset), "function evaluations");
