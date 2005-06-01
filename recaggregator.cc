@@ -75,7 +75,7 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
           if ((stocks[h]->getPrey()->isPreyArea(area)) &&
               (fleets[f]->isFleetStepArea(area, TimeInfo))) {
 
-            fleetscale = fleets[f]->Amount(area, TimeInfo) * fleets[f]->getPredator()->Scaler(area);
+            fleetscale = fleets[f]->getFleetAmount(area, TimeInfo) * fleets[f]->getPredator()->Scaler(area);
             for (i = 0; i < fleets[f]->getPredator()->numPreys(); i++) {
               if (strcasecmp(stocks[h]->getPrey()->getName(), fleets[f]->getPredator()->getPrey(i)->getName()) == 0) {
                 suitptr = &fleets[f]->getPredator()->Suitability(i)[0];

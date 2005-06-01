@@ -4,63 +4,63 @@
 
 extern ErrorHandler handle;
 
-void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
+void LogLinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y) {
   error = 0;
   DoubleVector Xlog(x);
   DoubleVector Ylog(y);
   this->calcLog(x, y, Xlog, Ylog);
   if (error)
     return;
-  LR.Fit(Xlog, Ylog);
-  error = LR.Error();
+  LR.calcFit(Xlog, Ylog);
+  error = LR.getError();
 }
 
-void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double slope) {
+void LogLinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y, double slope) {
   error = 0;
   DoubleVector Xlog(x);
   DoubleVector Ylog(y);
   this->calcLog(x, y, Xlog, Ylog);
   if (error)
     return;
-  LR.Fit(Xlog, Ylog, slope);
-  error = LR.Error();
+  LR.calcFit(Xlog, Ylog, slope);
+  error = LR.getError();
 }
 
-void LogLinearRegression::Fit(double intercept, const DoubleVector& x, const DoubleVector& y) {
+void LogLinearRegression::calcFit(double intercept, const DoubleVector& x, const DoubleVector& y) {
   error = 0;
   DoubleVector Xlog(x);
   DoubleVector Ylog(y);
   this->calcLog(x, y, Xlog, Ylog);
   if (error)
     return;
-  LR.Fit(intercept, Xlog, Ylog);
-  error = LR.Error();
+  LR.calcFit(intercept, Xlog, Ylog);
+  error = LR.getError();
 }
 
-void LogLinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double slope, double intercept) {
+void LogLinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y, double slope, double intercept) {
   error = 0;
   DoubleVector Xlog(x);
   DoubleVector Ylog(y);
   this->calcLog(x, y, Xlog, Ylog);
   if (error)
     return;
-  LR.Fit(Xlog, Ylog, slope, intercept);
-  error = LR.Error();
+  LR.calcFit(Xlog, Ylog, slope, intercept);
+  error = LR.getError();
 }
 
-double LogLinearRegression::SSE() {
+double LogLinearRegression::getSSE() {
   if (error)
     return verybig;
   else
-    return LR.SSE();
+    return LR.getSSE();
 }
 
-double LogLinearRegression::intersection() {
-  return LR.intersection();
+double LogLinearRegression::getIntersection() {
+  return LR.getIntersection();
 }
 
-double LogLinearRegression::slope() {
-  return LR.slope();
+double LogLinearRegression::getSlope() {
+  return LR.getSlope();
 }
 
 void LogLinearRegression::calcLog(const DoubleVector& x,

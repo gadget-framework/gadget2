@@ -148,6 +148,6 @@ int Fleet::isFleetStepArea(int area, const TimeClass* const TimeInfo) {
   return 1;
 }
 
-double Fleet::Amount(int area, const TimeClass* const TimeInfo) const {
+double Fleet::getFleetAmount(int area, const TimeClass* const TimeInfo) const {
   return amount[TimeInfo->getTime()][this->areaNum(area)];
 }

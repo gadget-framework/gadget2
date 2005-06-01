@@ -11,9 +11,26 @@
 
 class PopPredator : public Predator {
 public:
+  /**
+   * \brief This is the PopPredator constructor to create a predator with a specified length group
+   * \param givenname is the name of the predator
+   * \param area is the IntVector of the areas that the predator will live on
+   * \param OtherLgrpDiv is the LengthGroupDivision of the predator
+   * \param GivenLgrpDiv is the LengthGroupDivision that the predation will be calculated on
+   * \note this constructor is used when creating a dynamic predator (ie. StockPredator class)
+   */
   PopPredator(const char* givenname, const IntVector& areas,
     const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv);
+  /**
+   * \brief This is the PopPredator constructor to create a predator without a specified length group
+   * \param givenname is the name of the predator
+   * \param area is the IntVector of the areas that the predator will live on
+   * \note this constructor is used when creating a non-dynamic predator (ie. LengthPredator class)
+   */
   PopPredator(const char* givenname, const IntVector& areas);
+  /**
+   * \brief This is the default PopPredator destructor
+   */
   virtual ~PopPredator();
   virtual void Print(ofstream& outfile) const;
   virtual const BandMatrix& getConsumption(int area, const char* preyname) const;

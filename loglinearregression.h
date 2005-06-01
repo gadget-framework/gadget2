@@ -22,21 +22,21 @@ public:
    * \param x is the DoubleVector containing the modelled data
    * \param y is the DoubleVector containing the input data
    */
-  void Fit(const DoubleVector& x, const DoubleVector& y);
+  void calcFit(const DoubleVector& x, const DoubleVector& y);
   /**
    * \brief This is the function that fits a log linear regression line to compare 2 vectors, specifing the slope
    * \param x is the DoubleVector containing the modelled data
    * \param y is the DoubleVector containing the input data
    * \param slope is the slope of the regression line
    */
-  void Fit(const DoubleVector& x, const DoubleVector& y, double slope);
+  void calcFit(const DoubleVector& x, const DoubleVector& y, double slope);
   /**
    * \brief This is the function that fits a log linear regression line to compare 2 vectors, specifing the intercept
    * \param intercept is the intercept of the regression line
    * \param x is the DoubleVector containing the modelled data
    * \param y is the DoubleVector containing the input data
    */
-  void Fit(double intercept, const DoubleVector& x, const DoubleVector& y);
+  void calcFit(double intercept, const DoubleVector& x, const DoubleVector& y);
   /**
    * \brief This is the function that fits a log linear regression line to compare 2 vectors, specifing the slope and intercept
    * \param x is the DoubleVector containing the modelled data
@@ -44,27 +44,27 @@ public:
    * \param slope is the slope of the regression line
    * \param intercept is the intercept of the regression line
    */
-  void Fit(const DoubleVector& x, const DoubleVector& y, double slope, double intercept);
+  void calcFit(const DoubleVector& x, const DoubleVector& y, double slope, double intercept);
   /**
    * \brief This will check to see if an error has occured
    * \return error
    */
-  int Error() { return error; };
+  int getError() { return error; };
   /**
    * \brief This will return the sum of squares of errors calculated when fitting the regression line
    * \return sse
    */
-  double SSE();
+  double getSSE();
   /**
    * \brief This will return the intercept of the linear regression line
    * \return intercept
    */
-  double intersection();
+  double getIntersection();
   /**
    * \brief This will return the slope of the linear regression line
    * \return slope
    */
-  double slope();
+  double getSlope();
 protected:
   /**
    * \brief This is the function that takes the log of the 2 vectors, removing any point at (0,0)

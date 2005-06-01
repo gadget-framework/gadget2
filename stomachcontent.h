@@ -68,6 +68,10 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will aggregate consumption information for each StomachContent calculation
+   * \param i is the index of the prey that is being consumed
+   */
   virtual void aggregate(int i);
 protected:
   /**
@@ -139,8 +143,17 @@ protected:
    * \brief This is the flag used to denote whether the predators are specified using age groups or length groups
    */
   int usepredages;
+  /**
+   * \brief This is the PredatorAggregator used to collect information about the predation
+   */
   PredatorAggregator** aggregator;
+  /**
+   * \brief This is the LengthGroupDivision used to store predator length information
+   */
   LengthGroupDivision** preyLgrpDiv;
+  /**
+   * \brief This is the LengthGroupDivision used to store prey length information
+   */
   LengthGroupDivision** predLgrpDiv;
   /**
    * \brief This is the index of the timesteps for the likelihood component data
@@ -150,6 +163,9 @@ protected:
    * \brief This ActionAtTimes stores information about when the likelihood score should be calculated
    */
   ActionAtTimes AAT;
+  /**
+   * \brief This is the FormulaMatrix used to store digestion coefficiants for the various predator prey pairs
+   */
   FormulaMatrix digestioncoeff;
   /**
    * \brief This is the value of epsilon used when calculating the likelihood score
@@ -160,7 +176,7 @@ protected:
    */
   char* scname;
   /**
-   * \brief This is the BandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   * \brief This is the BandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
    */
   const BandMatrixPtrVector* bptr;
 };
@@ -186,6 +202,10 @@ public:
    * \brief This is the default SCNumbers destructor
    */
   virtual ~SCNumbers() {};
+  /**
+   * \brief This function will aggregate consumption information for each StomachContent calculation
+   * \param i is the index of the prey that is being consumed
+   */
   virtual void aggregate(int i);
 protected:
   /**
@@ -337,6 +357,14 @@ protected:
   virtual double calcLikelihood();
 };
 
+/**
+ * \class StomachContent
+ * \brief This is the class used to calculate a likelihood score based on data sampled from the stomach of stocks caught by fleets
+ *
+ * This class calculates a likelihood score based on the difference between stomach contents data sampled from stocks caught according to the model and that caught by fleets, according to the landings data.  The stomach contents data can either be aggregated into length groups (giving a distribution of prey groups for each length) or into prey groups (giving a distribution of length groups for each prey).  The model will calculate the stomach contents data for the predators that are caught according to the model parameters, and then compare this to the corresponding data calculated from the observed stomach contents data
+ *
+ * \note Care is needed when making this comparison, since the data will give information on the stomach content at the time of capture of the predator, where as the model can only give information about the modelled consumption of the prey by the predator.
+ */
 class StomachContent : public Likelihood {
 public:
   /**

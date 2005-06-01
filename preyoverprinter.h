@@ -61,7 +61,7 @@ protected:
    */
   PreyOverAggregator* aggregator;
   /**
-   * \brief This is the DoubleMatrix used to temporarily store the information returned from aggregatation function
+   * \brief This is the DoubleMatrix used to temporarily store the information returned from the aggregatation function
    */
   const DoubleMatrix* dptr;
 };

@@ -35,18 +35,15 @@ void LinearPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
       if ((handle.getLogLevel() >= LOGWARN) && (tmp > 10.0))
         handle.logMessage(LOGWARN, "Warning in linearpredator - excessive consumption required");
 
-      for (preyl = Suitability(prey)[predl].minCol();
-          preyl < Suitability(prey)[predl].maxCol(); preyl++) {
+      for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++) {
         cons[inarea][prey][predl][preyl] = tmp *
           Suitability(prey)[predl][preyl] * this->getPrey(prey)->getBiomass(area, preyl);
         totalcons[inarea][predl] += cons[inarea][prey][predl][preyl];
       }
 
     } else {
-      for (preyl = Suitability(prey)[predl].minCol();
-          preyl < Suitability(prey)[predl].maxCol(); preyl++) {
+      for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++)
         cons[inarea][prey][predl][preyl] = 0.0;
-      }
     }
   }
 
@@ -70,8 +67,7 @@ void LinearPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
     if (this->getPrey(prey)->isPreyArea(area)) {
       if (this->getPrey(prey)->checkOverConsumption(area)) {
         over = 1;
-        for (preyl = Suitability(prey)[predl].minCol();
-            preyl < Suitability(prey)[predl].maxCol(); preyl++) {
+        for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++) {
           ratio = this->getPrey(prey)->getRatio(area, preyl);
           if (ratio > maxRatio) {
             tmp = maxRatio / ratio;
@@ -91,8 +87,7 @@ void LinearPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
 
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
-      for (preyl = Suitability(prey)[predl].minCol();
-          preyl < Suitability(prey)[predl].maxCol(); preyl++)
+      for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++)
         consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
 }
 

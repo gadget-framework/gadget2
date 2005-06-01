@@ -12,7 +12,7 @@ PredPreyStdAgePrinter::PredPreyStdAgePrinter(CommentStream& infile, const TimeCl
 
   //finished initializing. Now print first lines
   outfile << "; ";
-  RUNID.print(outfile);
+  RUNID.Print(outfile);
   outfile << "; Predation file by age for predator " << predname << " and prey " << preyname;
 
   if (printtimeid == 0)

@@ -69,7 +69,7 @@ public:
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return 0 (will be overridden in derived classes)
    */
-  virtual double MaturationProbability(int age, int length, int growth,
+  virtual double calcMaturation(int age, int length, int growth,
     const TimeClass* const TimeInfo, double weight) = 0;
   /**
    * \brief This will store the calculated mature stock
@@ -195,7 +195,7 @@ public:
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
-  virtual double MaturationProbability(int age, int length, int growth,
+  virtual double calcMaturation(int age, int length, int growth,
     const TimeClass* const TimeInfo, double weight);
   /**
    * \brief This function will print the maturation information
@@ -270,7 +270,7 @@ public:
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
-  virtual double MaturationProbability(int age, int length, int growth,
+  virtual double calcMaturation(int age, int length, int growth,
     const TimeClass* const TimeInfo, double weight);
   /**
    * \brief This function will print the maturation information
@@ -338,7 +338,7 @@ public:
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
-  virtual double MaturationProbability(int age, int length, int growth,
+  virtual double calcMaturation(int age, int length, int growth,
     const TimeClass* const TimeInfo, double weight);
   /**
    * \brief This function will print the maturation information
@@ -419,7 +419,7 @@ public:
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
-  virtual double MaturationProbability(int age, int length, int growth,
+  virtual double calcMaturation(int age, int length, int growth,
     const TimeClass* const TimeInfo, double weight);
 protected:
   /**

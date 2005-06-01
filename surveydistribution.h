@@ -9,6 +9,12 @@
 #include "timevariablevector.h"
 #include "suitfunc.h"
 
+/**
+ * \class SurveyDistribution
+ * \brief This is the class used to calculate a likelihood score based on survey data compiled from the stocks caught by government surveys, including some form of a survey index calculation
+ *
+ * This class calculates a likelihood score based on the difference between survey data sampled from stocks caught according to the model and that caught by government surveys.  Note that this likelihood component assumes that catch-at-age data is available, and is used in the survey index calculations.   The model will calculate the survey data for the stock that is caught according to the model parameters, and aggregate this into the specified age and length groups.  This survey data is then compared to the corresponding data calculated from the observed data.
+ */
 class SurveyDistribution : public Likelihood {
 public:
   /**
@@ -176,11 +182,20 @@ private:
    * \brief This is the value of epsilon used when calculating the likelihood score
    */
   double epsilon;
+  /**
+   * \brief This is the SuitFunc used when calculating the survey index
+   */
   SuitFunc* suitfunction;
-  DoubleVector q_l; //length dependent catchability factor
+  /**
+   * \brief This is the DoubleVector used to store the length dependent suitability factor when calculating the survey index
+   */
+  DoubleVector suit;
+  /**
+   * \brief This is the TimeVariableVector used to store the parameters when calculating the survey index
+   */
   TimeVariableVector parameters;
   /**
-   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
    */
   const AgeBandMatrixPtrVector* alptr;
 };

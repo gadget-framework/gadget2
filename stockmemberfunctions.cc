@@ -103,10 +103,10 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
     return;
 
   if (doeseat)
-    grower->GrowthCalc(area, Area, TimeInfo, ((StockPredator*)predator)->FPhi(area),
-      ((StockPredator*)predator)->maxConByLength(area));
+    grower->calcGrowth(area, Area, TimeInfo, ((StockPredator*)predator)->getFPhi(area),
+      ((StockPredator*)predator)->getMaxConByLen(area));
   else
-    grower->GrowthCalc(area, Area, TimeInfo);
+    grower->calcGrowth(area, Area, TimeInfo);
 
   int inarea = this->areaNum(area);
   if (grower->getFixedWeights()) {

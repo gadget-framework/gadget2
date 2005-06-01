@@ -153,7 +153,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
 
   //finished initializing. Now print first lines
   outfile << "; ";
-  RUNID.print(outfile);
+  RUNID.Print(outfile);
   outfile << "; Predation output file for the following predators";
   for (i = 0; i < predatornames.Size(); i++)
     outfile << sep << predatornames[i];

@@ -12,7 +12,7 @@ LinearRegression::LinearRegression() {
   b = 0.0;
 }
 
-void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
+void LinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y) {
   sse = 0.0;
   error = 0;  //begin with cleaning up error status.
   if ((x.Size() != y.Size()) || (x.Size() == 0)) {
@@ -61,7 +61,7 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y) {
   }
 }
 
-void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double slope) {
+void LinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y, double slope) {
   sse = 0.0;
   error = 0;  //begin with cleaning up error status.
   if ((x.Size() != y.Size()) || (x.Size() == 0)) {
@@ -98,7 +98,7 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
   }
 }
 
-void LinearRegression::Fit(double intercept, const DoubleVector& x, const DoubleVector& y) {
+void LinearRegression::calcFit(double intercept, const DoubleVector& x, const DoubleVector& y) {
   sse = 0.0;
   error = 0;  //begin with cleaning up error status.
   if ((x.Size() != y.Size()) || (x.Size() == 0)) {
@@ -139,7 +139,7 @@ void LinearRegression::Fit(double intercept, const DoubleVector& x, const Double
   }
 }
 
-void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double slope, double intercept) {
+void LinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y, double slope, double intercept) {
   sse = 0.0;
   error = 0;  //begin with cleaning up error status.
   if ((x.Size() != y.Size()) || (x.Size() == 0)) {
@@ -166,7 +166,7 @@ void LinearRegression::Fit(const DoubleVector& x, const DoubleVector& y, double 
   }
 }
 
-double LinearRegression::SSE() {
+double LinearRegression::getSSE() {
   if (error)
     return verybig;
   else

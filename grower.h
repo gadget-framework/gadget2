@@ -18,9 +18,9 @@ public:
     const TimeClass* const TimeInfo, Keeper* const keeper, const char* refWeight,
     const AreaClass* const Area, const CharPtrVector& lenindex);
   ~Grower();
-  void GrowthCalc(int area, const AreaClass* const Area, const TimeClass* const TimeInfo,
+  void calcGrowth(int area, const AreaClass* const Area, const TimeClass* const TimeInfo,
     const DoubleVector& FeedingLevel, const DoubleVector& Consumption);
-  void GrowthCalc(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  void calcGrowth(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   void GrowthImplement(int area, const PopInfoVector& NumberInArea,
     const LengthGroupDivision* const Lengths);
   void GrowthImplement(int area, const LengthGroupDivision* const Lengths);

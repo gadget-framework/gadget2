@@ -98,7 +98,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
   }
 
   outfile << "; ";
-  RUNID.print(outfile);
+  RUNID.Print(outfile);
 
   for (i = 0; i < like.Size(); i++) {
     outfile << "; Likelihood output file for the likelihood component " << like[i]->getName();

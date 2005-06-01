@@ -149,7 +149,7 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \return amount
    */
-  double Amount(int area, const TimeClass* const TimeInfo) const;
+  double getFleetAmount(int area, const TimeClass* const TimeInfo) const;
   /**
    * \brief This will check if the fleet will operate on the current timestep
    * \param area is the area that the fleet will operate on

@@ -268,28 +268,28 @@ double SIOnStep::calcRegression(const DoubleVector& stocksize, const DoubleVecto
   //fit the data to the (log) linear regression curve
   switch (fittype) {
     case LOGLINEARFIT:
-      LLR.Fit(stocksize, indices);
+      LLR.calcFit(stocksize, indices);
       break;
     case FIXEDSLOPELOGLINEARFIT:
-      LLR.Fit(stocksize, indices, slope);
+      LLR.calcFit(stocksize, indices, slope);
       break;
     case FIXEDINTERCEPTLOGLINEARFIT:
-      LLR.Fit(intercept, stocksize, indices);
+      LLR.calcFit(intercept, stocksize, indices);
       break;
     case FIXEDLOGLINEARFIT:
-      LLR.Fit(stocksize, indices, slope, intercept);
+      LLR.calcFit(stocksize, indices, slope, intercept);
       break;
     case LINEARFIT:
-      LR.Fit(stocksize, indices);
+      LR.calcFit(stocksize, indices);
       break;
     case FIXEDSLOPELINEARFIT:
-      LR.Fit(stocksize, indices, slope);
+      LR.calcFit(stocksize, indices, slope);
       break;
     case FIXEDINTERCEPTLINEARFIT:
-      LR.Fit(intercept, stocksize, indices);
+      LR.calcFit(intercept, stocksize, indices);
       break;
     case FIXEDLINEARFIT:
-      LR.Fit(stocksize, indices, slope, intercept);
+      LR.calcFit(stocksize, indices, slope, intercept);
       break;
     default:
       handle.logMessage(LOGWARN, "Warning in surveyindex - unrecognised fittype", fittype);
@@ -302,19 +302,19 @@ double SIOnStep::calcRegression(const DoubleVector& stocksize, const DoubleVecto
     case FIXEDSLOPELOGLINEARFIT:
     case FIXEDINTERCEPTLOGLINEARFIT:
     case FIXEDLOGLINEARFIT:
-      slopes[i] = LLR.slope();
-      intercepts[i] = LLR.intersection();
-      sse[i] = LLR.SSE();
-      return LLR.SSE();
+      slopes[i] = LLR.getSlope();
+      intercepts[i] = LLR.getIntersection();
+      sse[i] = LLR.getSSE();
+      return LLR.getSSE();
       break;
     case LINEARFIT:
     case FIXEDSLOPELINEARFIT:
     case FIXEDINTERCEPTLINEARFIT:
     case FIXEDLINEARFIT:
-      slopes[i] = LR.slope();
-      intercepts[i] = LR.intersection();
-      sse[i] = LR.SSE();
-      return LR.SSE();
+      slopes[i] = LR.getSlope();
+      intercepts[i] = LR.getIntersection();
+      sse[i] = LR.getSSE();
+      return LR.getSSE();
       break;
     default:
       handle.logMessage(LOGWARN, "Warning in surveyindex - unrecognised fittype", fittype);

@@ -9,6 +9,12 @@
 #include "multinomial.h"
 #include "formulavector.h"
 
+/**
+ * \class CatchDistribution
+ * \brief This is the class used to calculate a likelihood score based on distribution data sampled from the stocks caught by fleets
+ *
+ * This class calculates a likelihood score based on the difference between distribution data sampled from stocks caught according to the model and that caught by fleets, according to the landings data.  The distribution data can either be aggregated into age groups (giving a distribution of length groups for each age), length groups (giving a distribution of age groups for each length) or into age-length groups.  The model will calculate the distribution data for the stock that is caught according to the model parameters, and aggregate this into the specified age and/or length groups.  This distribution data is then compared to the corresponding data calculated from the landings data.
+ */
 class CatchDistribution : public Likelihood {
 public:
   /**
@@ -107,6 +113,9 @@ private:
    * \return likelihood score
    */
   double calcLikLog(const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will calculate the correlation matrix used for the multivariate normal function
+   */
   void calcCorrelation();
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store age-length distribution information specified in the input file
@@ -187,10 +196,18 @@ private:
    * \brief This is the IntVector used to store information about the steps when the likelihood score should be calculated
    */
   IntVector Steps;
-  DoubleMatrixPtrVector calc_c;           //calc_c[area][age][length]
-  DoubleMatrixPtrVector obs_c;            //obs_c[area][age][length]
   /**
-   * \brief This is a flag to denote whether the likelihood calculation should aggregate data over a whole year.
+   * \brief This is the DoubleMatrixPtrVector used to aggreate the age-length distribution information from the model data over a year, if the likelihood calculation is based on the aggregated data
+   * \note the indices for this object are [area][age][length]
+   */
+  DoubleMatrixPtrVector modelYearData;
+  /**
+   * \brief This is the DoubleMatrixPtrVector used to aggreate the age-length distribution information from the observed data over a year, if the likelihood calculation is based on the aggregated data
+   * \note the indices for this object are [area][age][length]
+   */
+  DoubleMatrixPtrVector obsYearData;
+  /**
+   * \brief This is a flag to denote whether the likelihood calculation should aggregate data over a whole year
    * \note the default value is 0, which calculates the likelihood score on each timestep
    */
   int yearly;
@@ -202,22 +219,35 @@ private:
    * \brief This is the value of epsilon used when calculating the likelihood score
    */
   double epsilon;
+  /**
+   * \brief This is the Formula used to store sigma when calculating the likelihood score, if the multivariate normal function or the multivariate logistic function has been selected
+   */
   Formula sigma;
+  /**
+   * \brief This is the FormulaVector used to store the parameters when calculating the likelihood score, if the multivariate normal function has been selected
+   */
   FormulaVector params;
-  int illegal;
+  /**
+   * \brief This is the number of the parameters used when calculating the likelihood score, if the multivariate normal function has been selected
+   */
   int lag;
   /**
+   * \brief This is the flag used to denote whether the correlation matrix is valid, if the multivariate normal function has been selected
+   */
+  int illegal;
+  /**
    * \brief This is the LUDecomposition that can be used when calculating the likelihood score, if the multivariate normal function has been selected
-   * \note This is set to zero, and not used, if the multivariate normal function is not used
+   * \note this is set to zero, and not used, if the multivariate normal function is not used
    */
   LUDecomposition LU;
   /**
    * \brief This is the Multinomial that can be used when calculating the likelihood score, if the multinomial function has been selected
-   * \note This is set to zero, and not used, if the multinomial function is not used
+   * \note this is set to zero, and not used, if the multinomial function is not used
    */
   Multinomial MN;
   /**
-   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
+   * \note the indices for this object are [area][age][length]
    */
   const AgeBandMatrixPtrVector* alptr;
 };

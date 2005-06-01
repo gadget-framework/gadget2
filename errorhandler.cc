@@ -67,7 +67,7 @@ void ErrorHandler::setLogFile(const char* filename) {
     cerr << "Error - unable to open log file " << filename << endl;
     exit(EXIT_FAILURE);
   }
-  RUNID.print(logfile);
+  RUNID.Print(logfile);
   logfile << "Log file to record Gadget actions that take place during this run"
     << endl << endl;
   logfile.flush();

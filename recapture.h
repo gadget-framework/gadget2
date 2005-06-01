@@ -7,6 +7,12 @@
 #include "doublematrixptrmatrix.h"
 #include "tagptrvector.h"
 
+/**
+ * \class Recaptures
+ * \brief This is the class used to calculate a likelihood score based on returns data from tagging experiments
+ *
+ * This class calculates a likelihood score based on the difference between recaptures data from tagging experiments within the model with recaptures data obtained from returns from tagging experiments.  The model will calculate the expected number of recaptures for the tagging experiments according to the model parameters, and aggregate this into specified length groups.  This recaptures data is then compared to the corresponding data obtained from the returns data from tagging experiments.
+ */
 class Recaptures : public Likelihood {
 public:
   /**
@@ -139,7 +145,7 @@ private:
    */
   char* functionname;
   /**
-   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
    */
   const AgeBandMatrixPtrVector* alptr;
 };

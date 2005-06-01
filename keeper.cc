@@ -286,7 +286,7 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
   int i, j;
 
   outfile << "; ";
-  RUNID.print(outfile);
+  RUNID.Print(outfile);
   outfile << "; Listing of the switches used in the current Gadget run\n";
   for (i = 0; i < address.Nrow(); i++) {
     outfile << switches[i].getName() << TAB;
@@ -351,7 +351,7 @@ void Keeper::writeInitialInformationInColumns(const char* const filename) const 
   handle.Open(filename);
 
   outfile << "; ";
-  RUNID.print(outfile);
+  RUNID.Print(outfile);
   handle.Close();
   outfile.close();
   outfile.clear();
@@ -488,7 +488,7 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec, int inte
   w = p + 4;
 
   outfile << "; ";
-  RUNID.print(outfile);
+  RUNID.Print(outfile);
 
   if (interrupt == 1) {
     outfile << "; Gadget was interrupted after " << EcoSystem->getFuncEval()

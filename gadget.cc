@@ -111,7 +111,7 @@ int main(int aNumber, char* const aVector[]) {
 
   //JMB - dont print output if doing a network run
   if (!(MainInfo.runNetwork()))
-    RUNID.print(cout);
+    RUNID.Print(cout);
   MainInfo.checkUsage(inputdir, workingdir);
 
   if (aNumber == 1)

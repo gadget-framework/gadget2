@@ -8,6 +8,12 @@
 #include "multinomial.h"
 #include "actionattimes.h"
 
+/**
+ * \class StockDistribution
+ * \brief This is the class used to calculate a likelihood score based on distribution data for different stocks sampled from the stocks caught by fleets
+ *
+ * This class calculates a likelihood score based on the difference between distribution data sampled from different stocks caught according to the model and that caught by fleets, according to the landings data.  This is typically used to compare Gadget stocks that are based on the same species, but have differing biological properties (eg. immature and mature fish).  The distribution data can either be aggregated into age groups (giving a distribution of length groups for each age), length groups (giving a distribution of age groups for each length) or into age-length groups.  The model will calculate the distribution data for the stocks that are caught according to the model parameters, and aggregate this into the specified age and/or length groups.  This distribution data is then compared to the corresponding data calculated from the landings data.
+ */
 class StockDistribution : public Likelihood {
 public:
   /**
@@ -170,7 +176,8 @@ private:
    */
   Multinomial MN;
   /**
-   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
+   * \note the indices for this object are [area][age][length]
    */
   const AgeBandMatrixPtrVector* alptr;
 };

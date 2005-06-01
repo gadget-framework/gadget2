@@ -499,6 +499,8 @@ void RenewalData::Reset() {
            l < renewalDistribution[i].maxLength(age); l++) {
 
         renewalDistribution[i][age][l].N = (*renewalNumber[i])[age - minage][l];
+        if ((handle.getLogLevel() >= LOGWARN) && (renewalDistribution[i][age][l].N < 0))
+          handle.logMessage(LOGWARN, "Warning in renewal - negative number of recruits", renewalDistribution[i][age][l].N);
         if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0))
           handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
       }

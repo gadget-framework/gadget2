@@ -70,7 +70,7 @@ protected:
    */
   double scale;
   /**
-   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
    */
   const AgeBandMatrixPtrVector* alptr;
 };

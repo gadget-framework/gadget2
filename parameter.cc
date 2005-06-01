@@ -47,11 +47,10 @@ int Parameter::operator == (const Parameter& p) const {
 
 Parameter& Parameter::operator = (const Parameter& p) {
   //AJ 03.10.00 Adding checks if need to allocate/delete memory.
-  //What happens with a = a f.ex.x
   int len;
-  if (this == &p) {
+  if (this == &p)
     return *this;
-  }
+
   //return memory if needed
   if (name != NULL) {
     delete[] name;

@@ -145,18 +145,18 @@ void Grower::Sum(const PopInfoVector& NumberInArea, int area) {
   numGrow[inarea].Sum(&NumberInArea, *CI);
 }
 
-void Grower::GrowthCalc(int area,
+void Grower::calcGrowth(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  this->GrowthCalc(area, Area, TimeInfo, dummyfphi, dummyfphi);
+  this->calcGrowth(area, Area, TimeInfo, dummyfphi, dummyfphi);
 }
 
-void Grower::GrowthCalc(int area,
+void Grower::calcGrowth(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo,
   const DoubleVector& FPhi, const DoubleVector& MaxCon) {
 
   int inarea = this->areaNum(area);
-  growthcalc->GrowthCalc(area, calcLengthGrowth[inarea], calcWeightGrowth[inarea],
+  growthcalc->calcGrowth(area, calcLengthGrowth[inarea], calcWeightGrowth[inarea],
     numGrow[inarea], Area, TimeInfo, FPhi, MaxCon, LgrpDiv);
 
   CI->interpolateLengths(interpLengthGrowth[inarea], calcLengthGrowth[inarea]);

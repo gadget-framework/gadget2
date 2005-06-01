@@ -40,7 +40,7 @@ GrowthCalcA::GrowthCalcA(CommentStream& infile, const IntVector& Areas,
 GrowthCalcA::~GrowthCalcA() {
 }
 
-void GrowthCalcA::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+void GrowthCalcA::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
@@ -120,7 +120,7 @@ GrowthCalcB::~GrowthCalcB() {
   }
 }
 
-void GrowthCalcB::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+void GrowthCalcB::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
@@ -206,7 +206,7 @@ GrowthCalcC::~GrowthCalcC() {
  * final form of the function is
  * dw/dt = a0*exp(a1*T)*((w/a2)^a4 - (w/a3)^a5)
  * For no temperature dependency a1 = 0 */
-void GrowthCalcC::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+void GrowthCalcC::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
@@ -329,7 +329,7 @@ GrowthCalcD::~GrowthCalcD() {
  * part is derived from the weight increase part by assuming a formula
  * w = a*l^b. If the weight is below the curve no length increase takes place
  * but instead the weight increases until it reaches the curve. */
-void GrowthCalcD::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+void GrowthCalcD::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
@@ -483,7 +483,7 @@ GrowthCalcE::~GrowthCalcE() {
  *       AreaEffect
  *       StepEffect
  * Length increase is upgraded in the same way as earlier. */
-void GrowthCalcE::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+void GrowthCalcE::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
@@ -584,7 +584,7 @@ GrowthCalcF::~GrowthCalcF() {
     delete wgrowth[a];
 }
 
-void GrowthCalcF::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+void GrowthCalcF::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
@@ -648,7 +648,7 @@ GrowthCalcG::~GrowthCalcG() {
     delete wgrowth[a];
 }
 
-void GrowthCalcG::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+void GrowthCalcG::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
@@ -705,7 +705,7 @@ GrowthCalcH::~GrowthCalcH() {
 
 /* Simplified 2 parameter length based Von Bertalanffy growth function
  * compare with GrowthCalcC for the more complex weight based version */
-void GrowthCalcH::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+void GrowthCalcH::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
@@ -754,7 +754,7 @@ GrowthCalcI::~GrowthCalcI() {
 
 /* Simplified 4 parameter Jones growth function
  * compare with GrowthCalcD for the more complex version */
-void GrowthCalcI::GrowthCalc(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+void GrowthCalcI::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
   const PopInfoVector& numGrow, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const DoubleVector& Fphi,
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {

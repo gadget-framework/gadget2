@@ -6,34 +6,32 @@
 #include "gadget.h"
 
 NaturalM::NaturalM(CommentStream& infile, int minage, int maxage, const TimeClass* const TimeInfo,
-  Keeper* const keeper) : mortality(maxage - minage + 1, minage), proportion(maxage - minage + 1, 0.0) {
+  Keeper* const keeper) : mortality(maxage - minage + 1), proportion(maxage - minage + 1, 0.0) {
 
   keeper->addString("naturalm");
   mortality.read(infile, TimeInfo, keeper);
-  this->Reset(TimeInfo);
   keeper->clearLast();
 }
 
 void NaturalM::Reset(const TimeClass* const TimeInfo) {
   mortality.Update(TimeInfo);
-  double timeratio;
-  int age, shift;
 
   if (mortality.didChange(TimeInfo) || TimeInfo->didStepSizeChange()) {
-    shift = mortality.minCol();
-    timeratio = TimeInfo->getTimeStepSize();
-    for (age = mortality.minCol(); age < mortality.maxCol(); age++)
-      if (mortality[age] > verysmall)
-        proportion[age - shift] = exp(-mortality[age] * timeratio);
+    int i;
+    double timeratio = TimeInfo->getTimeStepSize();
+    for (i = 0; i < mortality.Size(); i++) {
+      if (mortality[i] > verysmall)
+        proportion[i] = exp(-mortality[i] * timeratio);
       else
-        proportion[age - shift] = 1.0; //i.e. use mortality rate 0
+        proportion[i] = 1.0; //i.e. use mortality rate 0
+    }
   }
 }
 
 void NaturalM::Print(ofstream& outfile) {
   int i;
   outfile << "Natural mortality\n\t";
-  for (i = mortality.minCol(); i < mortality.maxCol(); i++)
+  for (i = 0; i < mortality.Size(); i++)
     outfile << mortality[i] << sep;
   outfile << endl;
 }

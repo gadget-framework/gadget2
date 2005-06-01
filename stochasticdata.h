@@ -78,7 +78,7 @@ protected:
   int netrun;
 #ifdef GADGET_NETWORK
   /**
-   * \brief This is the SlaveCommunication that handles the network communication to send and received data
+   * \brief This is the SlaveCommunication that handles the network communication to send and receive data
    */
   SlaveCommunication* slave;
   /**

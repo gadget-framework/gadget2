@@ -77,7 +77,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
       //The part that grows to or above the highest length group.
       for (lgrp = v[i]->maxCol() - 1; lgrp >= v[i]->maxCol() - maxlgrp; lgrp--) {
         for (grow = v[i]->maxCol() - lgrp - 1; grow < maxlgrp; grow++) {
-          ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, Total[i + minage][lgrp].W);
+          ratio = Mat->calcMaturation(age, lgrp, grow, TimeInfo, Total[i + minage][lgrp].W);
           for (tag = 0; tag < numTagExperiments; tag++) {
             tmp = Lgrowth[grow][lgrp] * (*(*v[i])[lgrp][tag].N);
             matnum[tag] += tmp * ratio;
@@ -113,7 +113,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
         }
 
         for (grow = 0; grow < maxlgrp; grow++) {
-          ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, Total[i + minage][lgrp - grow].W);
+          ratio = Mat->calcMaturation(age, lgrp, grow, TimeInfo, Total[i + minage][lgrp - grow].W);
           for (tag = 0; tag < numTagExperiments; tag++) {
             tmp = Lgrowth[grow][lgrp - grow] * (*(*v[i])[lgrp - grow][tag].N);
             matnum[tag] += tmp * ratio;
@@ -149,7 +149,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
         }
 
         for (grow = 0; grow <= lgrp - v[i]->minCol(); grow++) {
-          ratio = Mat->MaturationProbability(age, lgrp, grow, TimeInfo, Total[i + minage][lgrp - grow].W);
+          ratio = Mat->calcMaturation(age, lgrp, grow, TimeInfo, Total[i + minage][lgrp - grow].W);
           for (tag = 0; tag < numTagExperiments; tag++) {
             tmp = Lgrowth[grow][lgrp - grow] * (*(*v[i])[lgrp - grow][tag].N);
             matnum[tag] += tmp * ratio;

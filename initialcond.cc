@@ -536,6 +536,8 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       for (age = minage; age <= maxage; age++) {
         for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           initialPop[area][age][l].N = (*initialNumber[area])[age - minage][l];
+          if ((handle.getLogLevel() >= LOGWARN) && (initialPop[area][age][l].N < 0))
+            handle.logMessage(LOGWARN, "Warning in initial conditions - negative initial population");
           if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0))
             handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
         }

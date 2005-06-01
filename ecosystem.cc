@@ -83,7 +83,7 @@ void Ecosystem::writeStatus(const char* filename) const {
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
   handle.Open(filename);
-  RUNID.print(outfile);
+  RUNID.Print(outfile);
   outfile << "The current simulation time is " << TimeInfo->getYear()
     << ", step " << TimeInfo->getStep() << endl;
 

@@ -78,7 +78,7 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile, const TimeClass* const
 
   //finished initializing. Now print first lines
   outfile << "; ";
-  RUNID.print(outfile);
+  RUNID.Print(outfile);
   outfile << "; Full output file for the stock " << stockname;
 
   if (printtimeid == 0)

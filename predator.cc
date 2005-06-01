@@ -73,7 +73,7 @@ void Predator::Print(ofstream& outfile) const {
   outfile << endl;
   for (i = 0; i < this->numPreys(); i++) {
     outfile << "\tSuitability for " << this->getPreyName(i) << endl;
-    Suitable->Suitable(i).Print(outfile);
+    Suitable->getSuitability(i).Print(outfile);
   }
 }
 

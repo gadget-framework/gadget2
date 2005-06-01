@@ -254,7 +254,7 @@ void MaturityA::setStock(StockPtrVector& stockvec) {
   minMatureLength = LgrpDiv->numLengthGroup(minlength);
 }
 
-double MaturityA::MaturationProbability(int age, int length, int growth,
+double MaturityA::calcMaturation(int age, int length, int growth,
   const TimeClass* const TimeInfo, double weight) {
 
   if ((age >= minMatureAge) && ((length + growth) >= minMatureLength)) {
@@ -357,7 +357,7 @@ void MaturityB::Reset(const TimeClass* const TimeInfo) {
       handle.logMessage(LOGMESSAGE, "Reset maturity data");
 }
 
-double MaturityB::MaturationProbability(int age, int length, int growth,
+double MaturityB::calcMaturation(int age, int length, int growth,
   const TimeClass* const TimeInfo, double weight) {
 
   int i;
@@ -470,7 +470,7 @@ void MaturityC::Reset(const TimeClass* const TimeInfo) {
   }
 }
 
-double MaturityC::MaturationProbability(int age, int length, int growth,
+double MaturityC::calcMaturation(int age, int length, int growth,
   const TimeClass* const TimeInfo, double weight) {
 
   if (this->isMaturationStep(TimeInfo))
@@ -560,7 +560,7 @@ void MaturityD::Reset(const TimeClass* const TimeInfo) {
   }
 }
 
-double MaturityD::MaturationProbability(int age, int length, int growth,
+double MaturityD::calcMaturation(int age, int length, int growth,
   const TimeClass* const TimeInfo, double weight) {
 
   if ((this->isMaturationStep(TimeInfo)) && (age >= minMatureAge) && (length >= minMatureLength)) {

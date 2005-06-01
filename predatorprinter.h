@@ -76,7 +76,7 @@ protected:
    */
   int biomass;
   /**
-   * \brief This is the BandMatrix used to temporarily store the information returned from aggregatation function
+   * \brief This is the BandMatrix used to temporarily store the information returned from the aggregatation function
    */
   const BandMatrix* bptr;
 };

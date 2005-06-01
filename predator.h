@@ -50,7 +50,7 @@ public:
   virtual double meanLength(int i) const = 0;
   virtual void Reset(const TimeClass* const TimeInfo);
   const char* getPreyName(int i) const { return Suitable->getPreyName(i); };
-  const BandMatrix& Suitability(int i) const { return Suitable->Suitable(i); };
+  const BandMatrix& Suitability(int i) const { return Suitable->getSuitability(i); };
   int numPreys() const { return Suitable->numPreys(); };
   Prey* getPrey(int i) const { return preys[i]; };
   int didChange(int i, const TimeClass* const TimeInfo) const { return Suitable->didChange(i, TimeInfo); };

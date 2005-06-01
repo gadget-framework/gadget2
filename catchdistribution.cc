@@ -93,24 +93,6 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
     if (yearly != 0 && yearly != 1)
       handle.logFileMessage(LOGFAIL, "Error in catchdistribution - aggregationlevel must be 0 or 1");
-
-    if (yearly == 1) {
-      switch (functionnumber) {
-        case 2:
-        case 3:
-        case 7:
-          break;
-        case 1:
-        case 4:
-        case 5:
-        case 6:
-          handle.logFileMessage(LOGWARN, "Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
-          break;
-        default:
-          handle.logMessage(LOGWARN, "Warning in catchdistribution - unrecognised function", functionname);
-          break;
-      }
-    }
   }
 
   //JMB - changed to make the reading of overconsumption optional
@@ -218,11 +200,27 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   datafile.close();
   datafile.clear();
 
-  calc_c.resize(numarea);
-  obs_c.resize(numarea);
-  for (i = 0; i < numarea; i++) {
-    calc_c[i] = new DoubleMatrix(numage, numlen, 0.0);
-    obs_c[i] = new DoubleMatrix(numage, numlen, 0.0);
+  switch (functionnumber) {
+    case 2:
+    case 3:
+    case 7:
+      modelYearData.resize(numarea);
+      obsYearData.resize(numarea);
+      for (i = 0; i < numarea; i++) {
+        modelYearData[i] = new DoubleMatrix(numage, numlen, 0.0);
+        obsYearData[i] = new DoubleMatrix(numage, numlen, 0.0);
+      }
+      break;
+    case 1:
+    case 4:
+    case 5:
+    case 6:
+      if (yearly == 1)
+        handle.logFileMessage(LOGWARN, "Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
+      break;
+    default:
+      handle.logMessage(LOGWARN, "Warning in catchdistribution - unrecognised function", functionname);
+      break;
   }
 }
 
@@ -341,9 +339,9 @@ CatchDistribution::~CatchDistribution() {
       delete obsDistribution[i][j];
       delete modelDistribution[i][j];
     }
-  for (i = 0; i < calc_c.Size(); i++) {
-    delete calc_c[i];
-    delete obs_c[i];
+  for (i = 0; i < modelYearData.Size(); i++) {
+    delete modelYearData[i];
+    delete obsYearData[i];
   }
   delete aggregator;
   delete LgrpDiv;
@@ -632,8 +630,8 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
     if (TimeInfo->getStep() == 1) { //start of a new year
       for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
         for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
-          (*calc_c[area])[age][len] = 0.0;
-          (*obs_c[area])[age][len] = 0.0;
+          (*modelYearData[area])[age][len] = 0.0;
+          (*obsYearData[area])[age][len] = 0.0;
         }
       }
     }
@@ -642,8 +640,8 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
     for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
       for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
         (*modelDistribution[timeindex][area])[age][len] = (*alptr)[area][age][len].N;
-        (*calc_c[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
-        (*obs_c[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
+        (*modelYearData[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
+        (*obsYearData[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
       }
     }
 
@@ -667,9 +665,9 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
         for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
           for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
             likelihoodValues[timeindex][area] +=
-              ((*calc_c[area])[age][len] - (*obs_c[area])[age][len]) *
-              ((*calc_c[area])[age][len] - (*obs_c[area])[age][len]) /
-              absolute(((*calc_c[area])[age][len] + epsilon));
+              ((*modelYearData[area])[age][len] - (*obsYearData[area])[age][len]) *
+              ((*modelYearData[area])[age][len] - (*obsYearData[area])[age][len]) /
+              absolute(((*modelYearData[area])[age][len] + epsilon));
           }
         }
         totallikelihood += likelihoodValues[timeindex][area];
@@ -692,8 +690,8 @@ double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
     if (TimeInfo->getStep() == 1) { //start of a new year
       for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
         for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
-          (*calc_c[area])[age][len] = 0.0;
-          (*obs_c[area])[age][len] = 0.0;
+          (*modelYearData[area])[age][len] = 0.0;
+          (*obsYearData[area])[age][len] = 0.0;
         }
       }
     }
@@ -702,8 +700,8 @@ double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
     for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
       for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
         (*modelDistribution[timeindex][area])[age][len] = (*alptr)[area][age][len].N;
-        (*calc_c[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
-        (*obs_c[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
+        (*modelYearData[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
+        (*obsYearData[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
       }
     }
 
@@ -725,8 +723,8 @@ double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
         for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
           for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
             likelihoodValues[timeindex][area] +=
-              (*obs_c[area])[age][len] / ((*calc_c[area])[age][len] + epsilon) +
-              log((*calc_c[area])[age][len] + epsilon);
+              (*obsYearData[area])[age][len] / ((*modelYearData[area])[age][len] + epsilon) +
+              log((*modelYearData[area])[age][len] + epsilon);
           }
         }
         totallikelihood += likelihoodValues[timeindex][area];
@@ -751,8 +749,8 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
     if (TimeInfo->getStep() == 1) { //start of a new year
       for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
         for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
-          (*calc_c[area])[age][len] = 0.0;
-          (*obs_c[area])[age][len] = 0.0;
+          (*modelYearData[area])[age][len] = 0.0;
+          (*obsYearData[area])[age][len] = 0.0;
         }
       }
     }
@@ -761,8 +759,8 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
     for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
       for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
         (*modelDistribution[timeindex][area])[age][len] = (*alptr)[area][age][len].N;
-        (*calc_c[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
-        (*obs_c[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
+        (*modelYearData[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
+        (*obsYearData[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
       }
     }
 
@@ -782,8 +780,8 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
       else { //last step in year, is to calculate likelihood contribution
         for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
           for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
-            totalmodel += (*calc_c[area])[age][len];
-            totaldata += (*obs_c[area])[age][len];
+            totalmodel += (*modelYearData[area])[age][len];
+            totaldata += (*obsYearData[area])[age][len];
           }
         }
         ratio = log(totaldata / totalmodel);

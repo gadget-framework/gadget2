@@ -3,7 +3,7 @@
 
 #include "areatime.h"
 #include "commentstream.h"
-#include "timevariableindexvector.h"
+#include "timevariablevector.h"
 #include "keeper.h"
 
 class NaturalM {
@@ -39,9 +39,9 @@ public:
   void Print(ofstream& outfile);
 protected:
   /**
-   * \brief This is the TimeVariableIndexVector used to store the mortality of each length group
+   * \brief This is the TimeVariableVector used to store the mortality of each length group
    */
-  TimeVariableIndexVector mortality;
+  TimeVariableVector mortality;
   /**
    * \brief This is the DoubleVector used to store the proportion of each length group that will survive (ie. will not die out due to natural mortality)
    */

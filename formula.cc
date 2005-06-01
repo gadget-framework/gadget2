@@ -300,9 +300,6 @@ void Formula::Inform(Keeper* keeper) {
 }
 
 void Formula::Interchange(Formula& NewF, Keeper* keeper) const {
-  if (this == &NewF)
-    return;
-
   while (NewF.argList.size() > 0)
     NewF.argList.pop_back();
 

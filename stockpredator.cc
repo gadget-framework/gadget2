@@ -80,7 +80,7 @@ void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
   Alkeys[inarea].setToZero();
   Alkeys[inarea].Add(stock, *CI);
   Alkeys[inarea].sumColumns(prednumber[inarea]);
-  
+
   for (age = Alprop[inarea].minRow(); age <= Alprop[inarea].maxRow(); age++) {
     for (len = Alprop[inarea].minCol(age); len < Alprop[inarea].maxCol(age); len++) {
       if (!(isZero(prednumber[inarea][len].N)))
@@ -134,9 +134,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-        for (preyl = Suitability(prey)[predl].minCol();
-            preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-
+        for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++) {
           cons[inarea][prey][predl][preyl] = Suitability(prey)[predl][preyl] *
             this->getPrey(prey)->getBiomass(area, preyl) * this->getPrey(prey)->getEnergy();
           Phi[inarea][predl] += cons[inarea][prey][predl][preyl];
@@ -144,13 +142,9 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       }
 
     } else {
-      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-        for (preyl = Suitability(prey)[predl].minCol();
-            preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-
+      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+        for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++)
           cons[inarea][prey][predl][preyl] = 0.0;
-        }
-      }
     }
   }
 
@@ -174,11 +168,8 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         if (!(isZero(Phi[inarea][predl]))) {
           tmp = totalcons[inarea][predl] / Phi[inarea][predl];
-          for (preyl = Suitability(prey)[predl].minCol();
-              preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-
-              cons[inarea][prey][predl][preyl] *= tmp;
-          }
+          for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++)
+            cons[inarea][prey][predl][preyl] *= tmp;
         }
       }
     }
@@ -208,9 +199,7 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
       if (this->getPrey(prey)->checkOverConsumption(area)) {
         over = 1;
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-          for (preyl = Suitability(prey)[predl].minCol();
-              preyl < Suitability(prey)[predl].maxCol(); preyl++) {
-
+          for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++) {
             ratio = this->getPrey(prey)->getRatio(area, preyl);
             if (ratio > maxRatio) {
               tmp = maxRatio / ratio;
@@ -244,8 +233,7 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-        for (preyl = Suitability(prey)[predl].minCol();
-            preyl < Suitability(prey)[predl].maxCol(); preyl++)
+        for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++)
           consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
 }
 

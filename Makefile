@@ -62,7 +62,7 @@ VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 	migvariableptrvector.o conversionindexptrvector.o likelihoodptrvector.o \
 	popratiomatrix.o popratiovector.o popinfomatrix.o popinfovector.o \
 	doubleindexvector.o predatorptrvector.o preyptrvector.o fleetptrvector.o \
-	doublematrixptrmatrix.o doublematrixptrvector.o timevariableindexvector.o \
+	doublematrixptrmatrix.o doublematrixptrvector.o \
 	agebandmatrixptrvector.o popratioindexvector.o agebandmatrixptrmatrix.o \
 	formulamatrix.o formulavector.o charptrmatrix.o charptrvector.o \
 	timevariablevector.o stockptrvector.o agebandmatrixratioptrvector.o \

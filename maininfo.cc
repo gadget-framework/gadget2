@@ -7,7 +7,7 @@ extern RunID RUNID;
 extern ErrorHandler handle;
 
 void MainInfo::showCorrectUsage(char* error) {
-  RUNID.print(cerr);
+  RUNID.Print(cerr);
   cerr << "\nError in command line value - unrecognised option " << error << endl
     << "Common options are -l or -s, -i <filename> -o <filename>\n"
     << "For more information try running Gadget with the -h switch\n";
@@ -15,7 +15,7 @@ void MainInfo::showCorrectUsage(char* error) {
 }
 
 void MainInfo::showUsage() {
-  RUNID.print(cout);
+  RUNID.Print(cout);
   cout << "\nOptions for running Gadget:\n"
     << " -l                           perform a likelihood (optimising) model run\n"
     << " -s                           perform a single (stochastic) model run\n"
@@ -198,7 +198,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         printinfo.setPrecision(atoi(aVector[k]));
 
       } else if ((strcasecmp(aVector[k], "-v") == 0) || (strcasecmp(aVector[k], "--version") == 0)) {
-        RUNID.print(cout);
+        RUNID.Print(cout);
         exit(EXIT_SUCCESS);
 
       } else if ((strcasecmp(aVector[k], "-h") == 0) || (strcasecmp(aVector[k], "--help") == 0)) {

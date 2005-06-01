@@ -167,7 +167,8 @@ private:
    */
   char* functionname;
   /**
-   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from aggregatation function
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
+   * \note the indices for this object are [area][age][length]
    */
   const AgeBandMatrixPtrVector* alptr;
 };

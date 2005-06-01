@@ -127,7 +127,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
 
   //finished initializing. Now print first lines
   outfile << "; ";
-  RUNID.print(outfile);
+  RUNID.Print(outfile);
   outfile << "; Output file for the following stocks";
   for (i = 0; i < stocknames.Size(); i++)
     outfile << sep << stocknames[i];

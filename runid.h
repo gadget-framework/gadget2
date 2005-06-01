@@ -21,7 +21,7 @@ public:
    * \brief This will print the model run information for the current model
    * \param o is the ofstream that the model run information will be written to
    */
-  void print(ostream& o);
+  void Print(ostream& o);
   /**
    * \brief This will print information about the run time for the current model
    * \param o is the ofstream that the model run information will be written to

@@ -104,7 +104,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   else
     handle.logFileUnexpected(LOGFAIL, "parameters", text);
 
-  q_l.resize(LgrpDiv->numLengthGroups(), 0.0);
+  suit.resize(LgrpDiv->numLengthGroups(), 0.0);
   infile >> text >> ws;
   if ((strcasecmp(text, "function") == 0)) {
     infile >> text;
@@ -118,14 +118,14 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
         if (suitfunction->usesPreyLength())
           suitfunction->setPreyLength(LgrpDiv->meanLength(i));
 
-        q_l[i] = suitfunction->calculate();
+        suit[i] = suitfunction->calculate();
       }
     }
 
   } else if (strcasecmp(text, "suitfile") == 0) {
     //read values from file
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
-      infile >> q_l[i];
+      infile >> suit[i];
 
   } else {
     handle.logFileMessage(LOGFAIL, "Error in surveydistribution - unrecognised suitability", text);
@@ -417,7 +417,7 @@ void SurveyDistribution::calcIndex(const TimeClass* const TimeInfo) {
         if (suitfunction->usesPreyLength())
           suitfunction->setPreyLength(LgrpDiv->meanLength(len));
 
-        q_l[len] = suitfunction->calculate();
+        suit[len] = suitfunction->calculate();
       }
     }
   }
@@ -428,13 +428,13 @@ void SurveyDistribution::calcIndex(const TimeClass* const TimeInfo) {
       for (area = 0; area < areas.Nrow(); area++)
         for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
           for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
-            (*modelDistribution[timeindex][area])[age][len] = parameters[0] * q_l[len] * (((*alptr)[area][age][len]).N + parameters[1]);
+            (*modelDistribution[timeindex][area])[age][len] = parameters[0] * suit[len] * (((*alptr)[area][age][len]).N + parameters[1]);
       break;
     case 2:
       for (area = 0; area < areas.Nrow(); area++)
         for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
           for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
-            (*modelDistribution[timeindex][area])[age][len] = parameters[0] * q_l[len] * pow(((*alptr)[area][age][len]).N, parameters[1]);
+            (*modelDistribution[timeindex][area])[age][len] = parameters[0] * suit[len] * pow(((*alptr)[area][age][len]).N, parameters[1]);
       break;
     default:
       handle.logMessage(LOGWARN, "Warning in surveydistribution - unrecognised fittype", fittype);
@@ -538,7 +538,6 @@ double SurveyDistribution::calcLikGamma() {
   //written by kgf 24/5 00
   //The gamma likelihood function as described by
   //Hans J Skaug 15/3 00, at present without internal weighting.
-  //-w_i (-x_obs/x_mod - log(x_mod))
 
   double total, temp;
   int area, age, len;

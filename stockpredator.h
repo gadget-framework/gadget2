@@ -32,9 +32,9 @@ public:
   virtual void adjustConsumption(int area, const TimeClass* const TimeInfo);
   virtual const PopInfoVector& getNumberPriorToEating(int area, const char* preyname) const;
   virtual void Print(ofstream& outfile) const;
-  const BandMatrix& Alproportion(int area) const { return Alprop[this->areaNum(area)]; };
-  const DoubleVector& FPhi(int area) const { return fphi[this->areaNum(area)]; };
-  const DoubleVector& maxConByLength(int area) const { return maxconbylength[this->areaNum(area)]; };
+  const BandMatrix& getALProportion(int area) const { return Alprop[this->areaNum(area)]; };
+  const DoubleVector& getFPhi(int area) const { return fphi[this->areaNum(area)]; };
+  const DoubleVector& getMaxConByLen(int area) const { return maxconbylength[this->areaNum(area)]; };
   virtual void Reset(const TimeClass* const TimeInfo);
 protected:
   virtual void calcMaxConsumption(double Temperature, int inarea, const TimeClass* const TimeInfo);

@@ -92,7 +92,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
 
   //finished initializing. Now print first lines
   outfile << "; ";
-  RUNID.print(outfile);
+  RUNID.Print(outfile);
   outfile << "; Standard output file for the stock " << stockname;
 
   if (scale != 1.0)

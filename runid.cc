@@ -15,7 +15,7 @@ RunID::RunID() {
     timestring = "-notime-";
 }
 
-void RunID::print(ostream& o) {
+void RunID::Print(ostream& o) {
   o << "Gadget version " << GADGETVERSION << " running on " << hostName << sep << timestring;
   if (timestring[strlen(timestring) - 1] != '\n')
     o << endl;

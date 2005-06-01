@@ -115,7 +115,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
 
   //finished initializing. Now print first lines
   outfile << "; ";
-  RUNID.print(outfile);
+  RUNID.Print(outfile);
   outfile << "; Prey overconsumption output file for the following preys";
   for (i = 0; i < preynames.Size(); i++)
     outfile << sep << preynames[i];

@@ -24,7 +24,7 @@ SummaryPrinter::SummaryPrinter(CommentStream& infile)
   handle.checkIfFailure(outfile, filename);
 
   outfile << "; ";
-  RUNID.print(outfile);
+  RUNID.Print(outfile);
   // print header information
   outfile << "; Summary likelihood information from the current run" << endl
     << "; year-step-area-component-weight-likelihood value" << endl;

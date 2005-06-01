@@ -79,7 +79,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
 
   //finished initializing. Now print first line.
   outfile << "; ";
-  RUNID.print(outfile);
+  RUNID.Print(outfile);
   outfile << "; Output file for the prey " << stockname;
 
   if (printtimeid == 0)
