@@ -14,9 +14,6 @@ extern ErrorHandler handle;
 GrowthCalcBase::GrowthCalcBase(const IntVector& Areas) : LivesOnAreas(Areas) {
 }
 
-GrowthCalcBase::~GrowthCalcBase() {
-}
-
 // ********************************************************
 // Functions for GrowthCalcA
 // ********************************************************
@@ -35,9 +32,6 @@ GrowthCalcA::GrowthCalcA(CommentStream& infile, const IntVector& Areas,
   else
     handle.logFileUnexpected(LOGFAIL, "growthparameters", text);
   keeper->clearLast();
-}
-
-GrowthCalcA::~GrowthCalcA() {
 }
 
 void GrowthCalcA::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
@@ -198,9 +192,6 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
   keeper->clearLast();
 }
 
-GrowthCalcC::~GrowthCalcC() {
-}
-
 /* Von Bertalanffy growth function. dw/dt = a*w^n - b*w^m;
  * As a generalisation a and b are made temperature dependent so the
  * final form of the function is
@@ -319,9 +310,6 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
 
   keeper->clearLast();
   keeper->clearLast();
-}
-
-GrowthCalcD::~GrowthCalcD() {
 }
 
 /* Growth function from Jones 1978.  Found from experiment in captivity.
@@ -469,9 +457,6 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
 
   keeper->clearLast();
   keeper->clearLast();
-}
-
-GrowthCalcE::~GrowthCalcE() {
 }
 
 /* Growthfunction to be tested for capelin.
@@ -700,9 +685,6 @@ GrowthCalcH::GrowthCalcH(CommentStream& infile, const IntVector& Areas,
   keeper->clearLast();
 }
 
-GrowthCalcH::~GrowthCalcH() {
-}
-
 /* Simplified 2 parameter length based Von Bertalanffy growth function
  * compare with GrowthCalcC for the more complex weight based version */
 void GrowthCalcH::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
@@ -747,9 +729,6 @@ GrowthCalcI::GrowthCalcI(CommentStream& infile, const IntVector& Areas,
   else
     handle.logFileUnexpected(LOGFAIL, "growthparameters", text);
   keeper->clearLast();
-}
-
-GrowthCalcI::~GrowthCalcI() {
 }
 
 /* Simplified 4 parameter Jones growth function

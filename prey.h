@@ -41,27 +41,119 @@ public:
    * \brief This is the default Prey destructor
    */
   virtual ~Prey() = 0;
-  virtual void Sum(const AgeBandMatrix& Alkeys, int area, int NrofSubstep) {};
-  virtual void Subtract(AgeBandMatrix& Alkeys, int area);
-  void addBiomassConsumption(int area, const DoubleIndexVector& predconsumption);
-  void addNumbersConsumption(int area, const DoubleIndexVector& predconsumption);
-  virtual void setCI(const LengthGroupDivision* const GivenLDiv);
-  virtual void Print(ofstream& outfile) const;
-  double getBiomass(int area, int length) const { return biomass[this->areaNum(area)][length]; };
-  double getNumber(int area, int length) const { return Number[this->areaNum(area)][length].N; };
-  double getEnergy() const { return energy; };
-  double getTotalBiomass(int area) const { return total[this->areaNum(area)]; };
-  int checkOverConsumption(int area) const { return tooMuchConsumption[this->areaNum(area)]; };
-  virtual void checkConsumption(int area, int numsubsteps);
-  double getRatio(int area, int length) const { return ratio[this->areaNum(area)][length]; };
-  double meanLength(int i) const { return LgrpDiv->meanLength(i); };
-  int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
-  const DoubleVector& getBiomass(int area) const { return biomass[this->areaNum(area)]; };
-  const DoubleVector& getConsumption(int area) const { return consumption[this->areaNum(area)]; };
-  const DoubleVector& getOverConsumption(int area) const { return overconsumption[this->areaNum(area)]; };
-  const LengthGroupDivision* getLengthGroupDiv() const { return LgrpDiv; };
+  /**
+   * \brief This will calculate the amount of prey that is consumed for a given area and timestep
+   * \param Alkeys is the AgeBandMatrix giving the amount of prey in the area
+   * \param area is the area that the prey consumption is being calculated on
+   * \note this will be overridden by the derived classes that actually calculate the consumption
+   */
+  virtual void Sum(const AgeBandMatrix& Alkeys, int area) {};
+  /**
+   * \brief This will calculate the amount of prey that is consumed for a given area and timestep
+   * \param NumberInArea is the PopInfoVector giving the amount of prey in the area
+   * \param area is the area that the prey consumption is being calculated on
+   * \note this will be overridden by the derived classes that actually calculate the consumption
+   */
+  virtual void Sum(const PopInfoVector& NumberInArea, int area) {};
+  /**
+   * \brief This will reset the consumption information for the current model run
+   */
   virtual void Reset();
-  const PopInfoVector& getNumberPriorToEating(int area) const { return numberPriorToEating[this->areaNum(area)]; };
+  /**
+   * \brief This function will print the consumption data
+   * \param outfile is the ofstream that all the model information gets sent to
+   */
+  virtual void Print(ofstream& outfile) const;
+  /**
+   * \brief This will set the ConversionIndex required for to calculate the consumption
+   * \param GivenLDiv is the LengthGroupDivision for the stock
+   */
+  virtual void setCI(const LengthGroupDivision* const GivenLDiv);
+  /**
+   * \brief This function will subtract the prey that is consumed from the stock
+   * \param Alkeys is the AgeBandMatrix containing the population of the stock
+   * \param area is the area that the consumption is being calculated on
+   */
+  virtual void Subtract(AgeBandMatrix& Alkeys, int area);
+  /**
+   * \brief This function will add predation (by biomass) to the amount of the prey that is consumed
+   * \param area is the area that the consumption is being calculated on
+   * \param predcons is the DoubleIndexVector containing the predation data
+   */
+  void addBiomassConsumption(int area, const DoubleIndexVector& predcons);
+  /**
+   * \brief This function will add predation (by numbers) to the amount of the prey that is consumed
+   * \param area is the area that the consumption is being calculated on
+   * \param predcons is the DoubleIndexVector containing the predation data
+   */
+  void addNumbersConsumption(int area, const DoubleIndexVector& predcons);
+  /**
+   * \brief This function will check for overconsumption of the prey
+   * \param area is the area that the consumption is being calculated on
+   * \param numsubsteps is the number of substeps in the current timestep
+   */
+  virtual void checkConsumption(int area, int numsubsteps);
+  /**
+   * \brief This will return the biomass of prey that is available for consumption by predators
+   * \param area is the area that the consumption is being calculated on
+   * \param length is the length group of the prey
+   * \return biomass
+   */
+  double getBiomass(int area, int length) const { return biomass[this->areaNum(area)][length]; };
+  /**
+   * \brief This will return the number of prey that is available for consumption by predators
+   * \param area is the area that the consumption is being calculated on
+   * \param length is the length group of the prey
+   * \return number
+   */
+  double getNumber(int area, int length) const { return preynumber[this->areaNum(area)][length].N; };
+  /**
+   * \brief This will return the ratio of prey that has been consumed by predators
+   * \param area is the area that the consumption is being calculated on
+   * \param length is the length group of the prey
+   * \return ratio
+   */
+  double getRatio(int area, int length) const { return ratio[this->areaNum(area)][length]; };
+  /**
+   * \brief This will return the total biomass of prey that is available for consumption
+   * \param area is the area that the consumption is being calculated on
+   * \return total biomass
+   */
+  double getTotalBiomass(int area) const { return total[this->areaNum(area)]; };
+  /**
+   * \brief This will return the flag that denotes if the prey has been overconsumed on a given area
+   * \param area is the area that the consumption is being calculated on
+   * \return 1 if the prey has been overconsumed, 0 otherwise
+   */
+  int isOverConsumption(int area) const { return isoverconsumption[this->areaNum(area)]; };
+  /**
+   * \brief This will return the amount of the prey that has been consumed on a given area
+   * \param area is the area that the consumption is being calculated on
+   * \return consumption, a DoubleVector containing the consumption of the prey
+   */
+  const DoubleVector& getConsumption(int area) const { return consumption[this->areaNum(area)]; };
+  /**
+   * \brief This will return the amount of the prey that has been overconsumed on a given area
+   * \param area is the area that the consumption is being calculated on
+   * \return overconsumption, a DoubleVector containing the overconsumption of the prey
+   */
+  const DoubleVector& getOverConsumption(int area) const { return overconsumption[this->areaNum(area)]; };
+  /**
+   * \brief This will return the length group information for the prey
+   * \return LgrpDiv
+   */
+  const LengthGroupDivision* getLengthGroupDiv() const { return LgrpDiv; };
+  /**
+   * \brief This will return the amount of prey on a given area prior to any consumption by the predators
+   * \param area is the area that the consumption is being calculated on
+   * \return preynumber, a PopInfoVector containing information about the prey population
+   */
+  const PopInfoVector& getNumberPriorToEating(int area) const { return preynumber[this->areaNum(area)]; };
+  /**
+   * \brief This will return the energy content of the prey
+   * \return energy
+   */
+  double getEnergy() const { return energy; };
   /**
    * \brief This will check if there is any prey to consume on a given area
    * \param area is the area that the prey will be consumed on
@@ -74,19 +166,61 @@ public:
    */
   PreyType getType() { return type; };
 protected:
+  /**
+   * \brief This is the ConversionIndex used to convert from the stock LengthGroupDivision to the LengthGroupDivision used for the consumption calculation
+   */
   ConversionIndex* CI;
+  /**
+   * \brief This is the LengthGroupDivision used to store length information
+   */
   LengthGroupDivision* LgrpDiv;
-  PopInfoMatrix Number;
-  PopInfoMatrix numberPriorToEating;
+  /**
+   * \brief This is the PopInfoMatrix used to store information on the number of preys for the current timestep
+   * \note the indices for this object are [area][prey length]
+   */
+  PopInfoMatrix preynumber;
+  /**
+   * \brief This is the energy content of the prey
+   */
   double energy;
+  /**
+   * \brief This is the DoubleMatrix used to store information on the biomass of the prey that is available for the predators to consume on the current timestep
+   * \note the indices for this object are [area][prey length]
+   */
   DoubleMatrix biomass;
-  DoubleMatrix ratio;
-  DoubleMatrix consumption;
-  IntVector tooMuchConsumption;      //set if any lengthgr is overconsumed in area
+  /**
+   * \brief This is the DoubleVector used to store information on the total biomass of the prey that is available for the predators to consume on the current timestep
+   */
   DoubleVector total;
+  /**
+   * \brief This is the DoubleMatrix used to store information on the ratio of the available biomass of the prey that is available for the predators to consume has been consumed on the current timestep
+   * \note the indices for this object are [area][prey length]
+   */
+  DoubleMatrix ratio;
+  /**
+   * \brief This is the DoubleMatrix used to store information on the consumption of the prey on the current timestep
+   * \note the indices for this object are [area][prey length]
+   */
+  DoubleMatrix consumption;
+  /**
+   * \brief This is the DoubleMatrix used to store information on the consumption of the prey on the current substep of the current timestep
+   * \note the indices for this object are [area][prey length]
+   */
+  DoubleMatrix cons;
+  /**
+   * \brief This is the DoubleMatrix used to store information on the overconsumption of the prey on the current timestep
+   * \note the indices for this object are [area][prey length]
+   */
   DoubleMatrix overconsumption;
-  DoubleMatrix overcons;             //overconsumption of prey in subinterval
-  DoubleMatrix cons;                 //consumption of prey in subinterval
+  /**
+   * \brief This is the DoubleMatrix used to store information on the overconsumption of the prey on the current substep of the current timestep
+   * \note the indices for this object are [area][prey length]
+   */
+  DoubleMatrix overcons;
+  /**
+   * \brief This is the IntVector used to store information on whether any overconsumption has occured on the current timestep
+   */
+  IntVector isoverconsumption;
   /**
    * \brief This denotes what type of prey class has been created
    */

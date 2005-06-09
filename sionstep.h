@@ -66,7 +66,7 @@ public:
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
+  virtual void printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the SSE from the regression line
    * \return SSE from the regession line
@@ -123,7 +123,7 @@ private:
    */
   void readSIData(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
-   * \brief This function will calculate the regression line used to fit the modelled data to the observed data 
+   * \brief This function will calculate the regression line used to fit the modelled data to the observed data
    * \param stocksize is the DoubleVector containing the index based on the modelled data
    * \param indices is the DoubleVector containing the index based on the observed data
    * \param i is the current index

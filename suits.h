@@ -17,7 +17,7 @@ public:
   /**
    * \brief This is the default Suits constructor
    */
-  Suits();
+  Suits() {};
   /**
    * \brief This is the default Suits destructor
    */

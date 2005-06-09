@@ -227,7 +227,7 @@ void SC::Reset() {
     handle.logMessage(LOGMESSAGE, "Reset stomachcontent component", scname);
 }
 
-void SC::SummaryPrint(ofstream& outfile, double weight) {
+void SC::printSummary(ofstream& outfile, double weight) {
   int year, area;
 
   for (year = 0; year < likelihoodValues.Nrow(); year++) {
@@ -243,7 +243,7 @@ void SC::SummaryPrint(ofstream& outfile, double weight) {
 }
 
 //JMB - note this ignores the standard deviation and number of samples ...
-void SC::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
+void SC::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
 
   if (!AAT.atCurrentTime(TimeInfo))
     return;

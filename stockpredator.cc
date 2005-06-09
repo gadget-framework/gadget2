@@ -118,7 +118,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
 
   int prey, predl, preyl;
   int inarea = this->areaNum(area);
-  double tmp;
+  double tmp, temperature;
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     Phi[inarea][predl] = 0.0;
@@ -126,7 +126,13 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   if (TimeInfo->getSubStep() == 1) {
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
       fphi[inarea][predl] = 0.0;
-    this->calcMaxConsumption(Area->getTemperature(area, TimeInfo->getTime()), inarea, TimeInfo);
+
+    temperature = Area->getTemperature(area, TimeInfo->getTime());
+    tmp = exp(temperature * (maxcons[1] - temperature * temperature * maxcons[2]))
+           * maxcons[0] * TimeInfo->LengthOfCurrent() / TimeInfo->numSubSteps();
+
+    for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+      maxconbylength[inarea][predl] = tmp * pow(LgrpDiv->meanLength(predl), maxcons[3]);
   }
 
   //Now maxconbylength contains the maximum consumption by length
@@ -134,7 +140,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-        for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++) {
+        for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++) {
           cons[inarea][prey][predl][preyl] = Suitability(prey)[predl][preyl] *
             this->getPrey(prey)->getBiomass(area, preyl) * this->getPrey(prey)->getEnergy();
           Phi[inarea][predl] += cons[inarea][prey][predl][preyl];
@@ -143,7 +149,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
 
     } else {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-        for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++)
+        for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
           cons[inarea][prey][predl][preyl] = 0.0;
     }
   }
@@ -168,7 +174,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         if (!(isZero(Phi[inarea][predl]))) {
           tmp = totalcons[inarea][predl] / Phi[inarea][predl];
-          for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++)
+          for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
             cons[inarea][prey][predl][preyl] *= tmp;
         }
       }
@@ -196,10 +202,10 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
   over = 0;
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
-      if (this->getPrey(prey)->checkOverConsumption(area)) {
+      if (this->getPrey(prey)->isOverConsumption(area)) {
         over = 1;
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-          for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++) {
+          for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++) {
             ratio = this->getPrey(prey)->getRatio(area, preyl);
             if (ratio > maxRatio) {
               tmp = maxRatio / ratio;
@@ -233,19 +239,6 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-        for (preyl = 0; preyl < this->getPrey(prey)->numLengthGroups(); preyl++)
+        for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
           consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
-}
-
-void StockPredator::calcMaxConsumption(double Temperature, int inarea,
-  const TimeClass* const TimeInfo) {
-
-  int len;
-  double tmp;
-
-  tmp = maxcons[0] * exp(Temperature * (maxcons[1] - Temperature * Temperature * maxcons[2]))
-         * TimeInfo->LengthOfCurrent() / TimeInfo->numSubSteps();
-
-  for (len = 0; len < maxconbylength.Ncol(); len++)
-    maxconbylength[inarea][len] = tmp * pow(LgrpDiv->meanLength(len), maxcons[3]);
 }

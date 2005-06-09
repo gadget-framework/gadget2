@@ -17,8 +17,22 @@ public:
    * \brief This is the default Keeper destructor
    */
   ~Keeper();
+  /**
+   * \brief This function will register a variable in the internal list, along with an initial value
+   * \param value is the value for the variable
+   * \param attr is the name of the Parameter for the variable
+   */
   void keepVariable(double& value, const Parameter& attr);
+  /**
+   * \brief This function will delete a variable from the internal list
+   * \param var is the value for the variable
+   */
   void deleteParameter(const double& var);
+  /**
+   * \brief This function will replace the value of a variable with a new value
+   * \param pre is the old value for the variable
+   * \param post is the new value for the variable
+   */
   void changeVariable(const double& pre, double& post);
   /**
    * \brief This function will set the text string that is used to describe a variable
@@ -48,71 +62,71 @@ public:
    * \param likvalue is the current likelihood value
    * \param point is the DoubleVector of the current parameter values
    */
-  void StoreVariables(double likvalue, const DoubleVector& point);
+  void storeVariables(double likvalue, const DoubleVector& point);
   /**
    * \brief This function will scale the variables to be optimised (for the Hooke & Jeeves optimisation algorithm)
    */
-  void ScaleVariables();
+  void scaleVariables();
   /**
-   * \brief This function will return a copy the flags to denote which variables will be optimsised
+   * \brief This function will return a copy of the flags to denote which variables will be optimsised
    * \param opt is the IntVector that will contain a copy of the flags
    */
-  void Opt(IntVector& opt) const;
+  void getOptFlags(IntVector& opt) const;
   /**
-   * \brief This function will return a copy the names of the variables
+   * \brief This function will return a copy of the names of the variables
    * \param sw is the ParameterVector that will contain a copy of the names
    */
-  void Switches(ParameterVector& sw) const;
+  void getSwitches(ParameterVector& sw) const;
   /**
-   * \brief This function will return a copy the lower bounds of the variables
+   * \brief This function will return a copy of the lower bounds of the variables
    * \param lbs is the DoubleVector that will contain a copy of the lower bounds
    */
-  void LowerBds(DoubleVector& lbs) const;
+  void getLowerBounds(DoubleVector& lbs) const;
   /**
-   * \brief This function will return a copy the upper bounds of the variables
+   * \brief This function will return a copy of the upper bounds of the variables
    * \param ubs is the DoubleVector that will contain a copy of the upper bounds
    */
-  void UpperBds(DoubleVector& ubs) const;
+  void getUpperBounds(DoubleVector& ubs) const;
   /**
-   * \brief This function will return a copy the initial value of the variables
+   * \brief This function will return a copy of the initial value of the variables
    * \param val is the DoubleVector that will contain a copy of the initial values
    */
-  void InitialValues(DoubleVector& val) const;
+  void getInitialValues(DoubleVector& val) const;
   /**
-   * \brief This function will return a copy the scaled value of the variables
+   * \brief This function will return a copy of the scaled value of the variables
    * \param val is the DoubleVector that will contain a copy of the scaled values
    */
-  void ScaledValues(DoubleVector& val) const;
+  void getScaledValues(DoubleVector& val) const;
   /**
-   * \brief This function will return a copy the current value of the variables
+   * \brief This function will return a copy of the current value of the variables
    * \param val is the DoubleVector that will contain a copy of the current values
    */
-  void CurrentValues(DoubleVector& val) const;
+  void getCurrentValues(DoubleVector& val) const;
   /**
-   * \brief This function will return a copy the names of the variables to be optimised
+   * \brief This function will return a copy of the names of the variables to be optimised
    * \param sw is the ParameterVector that will contain a copy of the names
    */
-  void OptSwitches(ParameterVector& sw) const;
+  void getOptSwitches(ParameterVector& sw) const;
   /**
-   * \brief This function will return a copy the lower bounds of the variables to be optimised
+   * \brief This function will return a copy of the lower bounds of the variables to be optimised
    * \param lbs is the DoubleVector that will contain a copy of the lower bounds
    */
-  void LowerOptBds(DoubleVector& lbs) const;
+  void getOptLowerBounds(DoubleVector& lbs) const;
   /**
-   * \brief This function will return a copy the upper bounds of the variables to be optimised
+   * \brief This function will return a copy of the upper bounds of the variables to be optimised
    * \param ubs is the DoubleVector that will contain a copy of the upper bounds
    */
-  void UpperOptBds(DoubleVector& ubs) const;
+  void getOptUpperBounds(DoubleVector& ubs) const;
   /**
-   * \brief This function will return a copy the initial value of the variables to be optimised
+   * \brief This function will return a copy of the initial value of the variables to be optimised
    * \param val is the DoubleVector that will contain a copy of the initial values
    */
-  void InitialOptValues(DoubleVector& val) const;
+  void getOptInitialValues(DoubleVector& val) const;
   /**
-   * \brief This function will return a copy the scaled value of the variables to be optimised
+   * \brief This function will return a copy of the scaled value of the variables to be optimised
    * \param val is the DoubleVector that will contain a copy of the scaled values
    */
-  void ScaledOptValues(DoubleVector& val) const;
+  void getOptScaledValues(DoubleVector& val) const;
   /**
    * \brief This function will return the number of variables
    * \return number of variables
@@ -124,13 +138,13 @@ public:
    */
   int numOptVariables() const;
   /**
-   * \brief This function will update one Keeper variables with a new value
+   * \brief This function will update one Keeper variable with a new value
    * \param pos is the identifier of the variable to update
    * \param value is the new value of the variable
    */
   void Update(int pos, double& value);
   /**
-   * \brief This function will update the Keeper variables with new values
+   * \brief This function will update the Keeper variables with new values from a vector
    * \param val is the DoubleVector containing the new values of the variables
    */
   void Update(const DoubleVector& val);

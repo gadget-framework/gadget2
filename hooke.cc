@@ -201,12 +201,12 @@ int hooke(double rho, double lambda, double epsilon, int maxevl, double bndcheck
   IntVector trapped(nvars, 0);
   ParameterVector optswitches(nvars);
 
-  EcoSystem->ScaleVariables();
-  EcoSystem->ScaledOptValues(x);
-  EcoSystem->LowerOptBds(lowerb);
-  EcoSystem->UpperOptBds(upperb);
-  EcoSystem->InitialOptValues(init);
-  EcoSystem->OptSwitches(optswitches);
+  EcoSystem->scaleVariables();
+  EcoSystem->getOptScaledValues(x);
+  EcoSystem->getOptLowerBounds(lowerb);
+  EcoSystem->getOptUpperBounds(upperb);
+  EcoSystem->getOptInitialValues(init);
+  EcoSystem->getOptSwitches(optswitches);
 
   for (i = 0; i < nvars; i++) {
     // Scaling the bounds, because the parameters are scaled
@@ -283,7 +283,7 @@ int hooke(double rho, double lambda, double epsilon, int maxevl, double bndcheck
       EcoSystem->setLikelihoodHJ(newf);
       for (i = 0; i < nvars; i++)
         bestx[i] *= init[i];
-      EcoSystem->StoreVariables(newf, bestx);
+      EcoSystem->storeVariables(newf, bestx);
       return 0;
     }
 
@@ -371,7 +371,7 @@ int hooke(double rho, double lambda, double epsilon, int maxevl, double bndcheck
         EcoSystem->setLikelihoodHJ(newf);
         for (i = 0; i < nvars; i++)
           bestx[i] *= init[i];
-        EcoSystem->StoreVariables(newf, bestx);
+        EcoSystem->storeVariables(newf, bestx);
         return 0;
       }
     }
@@ -382,7 +382,7 @@ int hooke(double rho, double lambda, double epsilon, int maxevl, double bndcheck
       check = fbefore;
       handle.logMessage(LOGINFO, "\nNew optimum found after", (FuncEval - offset), "function evaluations");
       handle.logMessage(LOGINFO, "The likelihood score is", fbefore, "at the point");
-      EcoSystem->StoreVariables(fbefore, bestx);
+      EcoSystem->storeVariables(fbefore, bestx);
       EcoSystem->writeBestValues();
 
     } else
@@ -403,7 +403,7 @@ int hooke(double rho, double lambda, double epsilon, int maxevl, double bndcheck
       EcoSystem->setLikelihoodHJ(newf);
       for (i = 0; i < nvars; i++)
         bestx[i] *= init[i];
-      EcoSystem->StoreVariables(newf, bestx);
+      EcoSystem->storeVariables(newf, bestx);
       return 1;
     }
 

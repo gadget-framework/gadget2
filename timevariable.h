@@ -7,7 +7,7 @@
 class TimeVariable {
 public:
   TimeVariable();
-  ~TimeVariable();
+  ~TimeVariable() {};
   void read(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
   operator double() const { return value; };
   void Interchange(TimeVariable& newTV, Keeper* const keeper) const;

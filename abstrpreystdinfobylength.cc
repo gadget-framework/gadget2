@@ -6,12 +6,9 @@
 AbstrPreyStdInfoByLength::AbstrPreyStdInfoByLength(const Prey* prey,
   const IntVector& areas) : LivesOnAreas(areas) {
 
-  MortbyLength.AddRows(areas.Size(), prey->numLengthGroups(), 0.0);
-  NconbyLength.AddRows(areas.Size(), prey->numLengthGroups(), 0.0);
-  BconbyLength.AddRows(areas.Size(), prey->numLengthGroups(), 0.0);
-}
-
-AbstrPreyStdInfoByLength::~AbstrPreyStdInfoByLength() {
+  MortbyLength.AddRows(areas.Size(), prey->getLengthGroupDiv()->numLengthGroups(), 0.0);
+  NconbyLength.AddRows(areas.Size(), prey->getLengthGroupDiv()->numLengthGroups(), 0.0);
+  BconbyLength.AddRows(areas.Size(), prey->getLengthGroupDiv()->numLengthGroups(), 0.0);
 }
 
 const DoubleVector& AbstrPreyStdInfoByLength::NconsumptionByLength(int area) const {

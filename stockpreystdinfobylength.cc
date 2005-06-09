@@ -9,9 +9,6 @@ StockPreyStdInfoByLength::StockPreyStdInfoByLength(const StockPrey* p, const Int
   preyLgrpDiv = p->getLengthGroupDiv();
 }
 
-StockPreyStdInfoByLength::~StockPreyStdInfoByLength() {
-}
-
 void StockPreyStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
   int l, inarea = this->areaNum(area);
   double timeratio;

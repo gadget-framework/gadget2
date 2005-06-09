@@ -11,9 +11,9 @@ PreyOverAggregator::PreyOverAggregator(const PreyPtrVector& Preys,
 
   total.AddRows(areas.Nrow(), LgrpDiv->numLengthGroups(), 0.0);
   for (i = 0; i < preys.Size(); i++) {
-    preyConv.AddRows(1, preys[i]->numLengthGroups(), 0);
+    preyConv.AddRows(1, preys[i]->getLengthGroupDiv()->numLengthGroups(), 0);
     for (j = 0; j < preyConv.Ncol(i); j++)
-      preyConv[i][j] = LgrpDiv->numLengthGroup(preys[i]->meanLength(j));
+      preyConv[i][j] = LgrpDiv->numLengthGroup(preys[i]->getLengthGroupDiv()->meanLength(j));
   }
 }
 

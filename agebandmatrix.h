@@ -9,6 +9,10 @@
 
 class Maturity;
 
+/**
+ * \class AgeBandMatrix
+ * \brief This class implements a vector of PopInfoIndexVector values, indexed from minage not 0
+ */
 class AgeBandMatrix {
 public:
   AgeBandMatrix(int age, const IntVector& minl, const IntVector& size);
@@ -48,8 +52,17 @@ public:
   void Add(const AgeBandMatrix& Addition, const ConversionIndex& CI, double ratio = 1.0,
     int minaddage = 0, int maxaddage = 9999);
 protected:
+  /**
+   * \brief This is the index for the vector
+   */
   int minage;
+  /**
+   * \brief This is number of rows of the vector
+   */
   int nrow;
+  /**
+   * \brief This is the indexed vector of PopInfoIndexVector values
+   */
   PopInfoIndexVector** v;
 };
 

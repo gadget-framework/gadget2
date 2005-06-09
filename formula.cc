@@ -135,21 +135,21 @@ double Formula::evalFunction() const {
   return v;
 }
 
-Formula::Formula(const Formula& form) {
-  type = form.type;
-  functiontype = form.functiontype;
+Formula::Formula(const Formula& initial) {
+  type = initial.type;
+  functiontype = initial.functiontype;
   switch (type) {
     case CONSTANT:
-      value = form.value;
+      value = initial.value;
       break;
     case PARAMETER:
-      value = form.value;
-      name = form.name;
+      value = initial.value;
+      name = initial.name;
       break;
     case FUNCTION:
       unsigned int i;
-      for (i = 0; i < form.argList.size(); i++) {
-        Formula* f = new Formula(*form.argList[i]);
+      for (i = 0; i < initial.argList.size(); i++) {
+        Formula* f = new Formula(*initial.argList[i]);
         argList.push_back(f);
       }
       break;
@@ -159,10 +159,10 @@ Formula::Formula(const Formula& form) {
   }
 }
 
-void Formula::setValue(double initValue) {
+void Formula::setValue(double init) {
   if (type == FUNCTION)
     handle.logMessage(LOGFAIL, "Error in formula - cannot set value for function");
-  value = initValue;
+  value = init;
 }
 
 CommentStream& operator >> (CommentStream& infile, Formula& F) {
@@ -241,7 +241,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     F.type = PARAMETER;
     infile.get(c);
     infile >> F.name;
-    if (F.name.Size() <= 0)
+    if (strlen(F.name.getName()) <= 0)
       handle.logMessage(LOGFAIL, "Error in formula - failed to read parameter name");
     return infile;
   }
@@ -269,7 +269,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     F.type = PARAMETER;
     infile.get(c);
     infile >> F.name;
-    if (F.name.Size() <= 0)
+    if (strlen(F.name.getName()) <= 0)
       handle.logMessage(LOGFAIL, "Error in formula - failed to read parameter name");
     return infile;
   }
@@ -299,31 +299,31 @@ void Formula::Inform(Keeper* keeper) {
   }
 }
 
-void Formula::Interchange(Formula& NewF, Keeper* keeper) const {
-  while (NewF.argList.size() > 0)
-    NewF.argList.pop_back();
+void Formula::Interchange(Formula& newF, Keeper* keeper) const {
+  while (newF.argList.size() > 0)
+    newF.argList.pop_back();
 
-  NewF.type = type;
+  newF.type = type;
   switch (type) {
     case CONSTANT:
-      NewF.value = value;
+      newF.value = value;
       break;
 
     case PARAMETER:
-      NewF.value = value;
-      NewF.name = name;
-      keeper->changeVariable(value, NewF.value);
+      newF.value = value;
+      newF.name = name;
+      keeper->changeVariable(value, newF.value);
       break;
 
     case FUNCTION:
-      NewF.functiontype = functiontype;
+      newF.functiontype = functiontype;
       unsigned int i;
       for (i = 0; i < argList.size(); i++) {
         Formula* f = new Formula(*argList[i]);
-        NewF.argList.push_back(f);
+        newF.argList.push_back(f);
       }
       for (i = 0; i < argList.size(); i++)
-        (*argList[i]).Interchange(*NewF.argList[i], keeper);
+        (*argList[i]).Interchange(*newF.argList[i], keeper);
       break;
 
     default:

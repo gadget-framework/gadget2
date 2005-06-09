@@ -58,8 +58,8 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   for (predage = Alprop.minRow(); predage <= Alprop.maxRow(); predage++) {
     for (preyage = NconbyAge[inarea].minCol(predage);
          preyage < NconbyAge[inarea].maxCol(predage); preyage++) {
-      for (preyl = 0; preyl < prey->numLengthGroups(); preyl++) {
-        for (predl = 0; predl < pred->numLengthGroups(); predl++) {
+      for (preyl = 0; preyl < prey->getLengthGroupDiv()->numLengthGroups(); preyl++) {
+        for (predl = 0; predl < pred->getLengthGroupDiv()->numLengthGroups(); predl++) {
           if (!(isZero(preyBcons[preyage][preyl])) && (!(isZero(predBcons[predl][preyl])))) {
             prop = predBcons[predl][preyl] * Alprop[predage][predl] / preyinfo->BconsumptionByLength(area)[preyl];
             B = prop * preyBcons[preyage][preyl];

@@ -4,42 +4,54 @@
 #include "commentstream.h"
 #include "gadget.h"
 
-/*
- * Class for reading, comparing, printing, and assigning parameter names.
- * Basicaly nothing more than a simple string class, but it can be extended
- * if we need to change the parameter name syntax in the future.
- * Parameter names can only be read from file or copied from other Parameter
- * names.  Parameter names can be case sensitive if PARAMETERS_CASE_SENSITIVE
- * is defined.  The member function legalchar defines the valid characters
- * in parameter names (mna 29.09.00)
- *
- * (AJ jan. 2002) Adding new parameter constructor where parameter is set with
- * a given value but error occures if the given value is not a valid parameter.
+/**
+ * \class Parameter
+ * \brief This is the class used to store the names of the variables used in the model simulation
  */
-
 class Parameter {
 public:
-  Parameter();
+  /**
+   * \brief This is the default Parameter constructor
+   */
+  Parameter() { name = NULL; };
+  /**
+   * \brief This is the Parameter constructor that creates a copy of an existing Parameter
+   * \param p is the Parameter to copy
+   */
   Parameter(const Parameter& p);
+  /**
+   * \brief This is the Parameter constructor for a given string value
+   * \param value is the string value that will be set to the name of the parameter
+   */
   Parameter(char* value);
+  /**
+   * \brief This is the default Parameter destructor
+   */
   ~Parameter();
-  int Size() const { return size; };
+  /**
+   * \brief This function will return the name of the parameter
+   * \return name
+   */
   char* getName() const { return name; };
-  //reads and discards ' ', '\t', '\n' and EOF from start of pointer in ??????.
-  //reads string until find a character which is not legal or have read MaxStrLength-1
-  //characters into name. name has been terminated by '\0'.
-  //If in fails while trying to read then returns in.makebad ??
-  //do not know what this is else returns in.
-  //If length of string read == MaxStrLength-1 then a warning message has been
-  //printed to screen.
   friend CommentStream& operator >> (CommentStream& in, Parameter& p);
   friend istream& operator >> (istream& in, Parameter& p);
   Parameter& operator = (const Parameter& p);
   int operator == (const Parameter& p) const;
 private:
-  int isValidName(char* param);
-  int legalchar(int c);
-  int size;
+  /**
+   * \brief This function will check to see if the string that is going to be the name of the parameter is valid or not
+   * \return 1 if the name is valid, 0 otherwise
+   */
+  int isValidName(char* value);
+  /**
+   * \brief This function will check to see if a character from the name of the parameter is valid or not
+   * \return 1 if the character is valid, 0 otherwise
+   * \note valid characters are alpha-numeric characters, '_' and '.'
+   */
+  int isValidChar(int c);
+  /**
+   * \brief This is the name of the parameter
+   */
   char* name;
 };
 

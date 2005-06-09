@@ -25,7 +25,7 @@ public:
   /**
    * \brief This is the default GrowthCalcBase destructor
    */
-  ~GrowthCalcBase();
+  ~GrowthCalcBase() {};
   /**
    * \brief This is the function that calculates the growth
    * \param area is the area that the growth is being calculated on
@@ -73,7 +73,7 @@ public:
   /**
    * \brief This is the default GrowthCalcA destructor
    */
-  ~GrowthCalcA();
+  ~GrowthCalcA() {};
   /**
    * \brief This is the function that calculates the growth using the MULTSPEC function
    * \param area is the area that the growth is being calculated on
@@ -169,7 +169,7 @@ public:
   /**
    * \brief This is the default GrowthCalcC destructor
    */
-  ~GrowthCalcC();
+  ~GrowthCalcC() {};
   /**
    * \brief This is the function that calculates the growth using a weight-based Von Bertalanffy function
    * \param area is the area that the growth is being calculated on
@@ -239,7 +239,7 @@ public:
   /**
    * \brief This is the default GrowthCalcD destructor
    */
-  ~GrowthCalcD();
+  ~GrowthCalcD() {};
   /**
    * \brief This is the function that calculates the growth using the Jones growth function
    * \param area is the area that the growth is being calculated on
@@ -309,7 +309,7 @@ public:
   /**
    * \brief This is the default GrowthCalcE destructor
    */
-  ~GrowthCalcE();
+  ~GrowthCalcE() {};
   /**
    * \brief This is the function that calculates the growth using an extended Von Bertalanffy growth function
    * \param area is the area that the growth is being calculated on
@@ -493,7 +493,7 @@ public:
   /**
    * \brief This is the default GrowthCalcH destructor
    */
-  ~GrowthCalcH();
+  ~GrowthCalcH() {};
   /**
    * \brief This is the function that calculates the growth using a simple length based Von Bertalanffy growth function
    * \param area is the area that the growth is being calculated on
@@ -549,7 +549,7 @@ public:
   /**
    * \brief This is the default GrowthCalcI destructor
    */
-  ~GrowthCalcI();
+  ~GrowthCalcI() {};
   /**
    * \brief This is the function that calculates the growth using a simple Jones growth function
    * \param area is the area that the growth is being calculated on

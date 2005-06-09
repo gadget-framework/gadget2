@@ -54,13 +54,13 @@ public:
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
-    SI->LikelihoodPrint(outfile, TimeInfo); };
+  virtual void printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
+    SI->printLikelihood(outfile, TimeInfo); };
   /**
    * \brief This function will print summary information from each SurveyIndices likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
-  virtual void SummaryPrint(ofstream& outfile);
+  virtual void printSummary(ofstream& outfile);
 protected:
   /**
    * \brief This is the SIOnStep used to calculate the likelihood score by fitting a linear regression line to the difference between the calculated indices and the input indices

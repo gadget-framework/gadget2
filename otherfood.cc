@@ -104,7 +104,7 @@ void OtherFood::calcNumbers(int area,
     pop.W = 1.0;   //warning - need to choose the weight to be 1
     pop.N = amount[TimeInfo->getTime()][this->areaNum(area)] * Area->getSize(area);
     PopInfoVector NumberInArea(1, pop);
-    prey->Sum(NumberInArea, area, TimeInfo->getSubStep());
+    prey->Sum(NumberInArea, area);
   }
 }
 

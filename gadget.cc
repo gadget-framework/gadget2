@@ -3,79 +3,19 @@
 #include "runid.h"
 #include "gadget.h"
 #include "optinfo.h"
+#include "errorhandler.h"
 #include "interrupthandler.h"
 
-//Ecosystem must be global due to the optimization functions.
 RunID RUNID;
 Ecosystem* EcoSystem;
 ErrorHandler handle;
 int FuncEval = 0;
 
-void stochasticRun(Ecosystem *EcoSystem, MainInfo* MainInfo) {
-  StochasticData* Stochasticdata;
-
-  int print = 1;
-  if (MainInfo->runNetwork()) {
-    print = 0;  //no printing during a network run
-    EcoSystem->Reset();
-
-    #ifdef GADGET_NETWORK //to help compiling when pvm libraries are unavailable
-      Stochasticdata = new StochasticData();
-      while (Stochasticdata->getDataFromNet()) {
-        EcoSystem->Update(Stochasticdata);
-        EcoSystem->Simulate(MainInfo->runLikelihood(), print);
-        //JMB - no printing during a network run ...
-        Stochasticdata->sendDataToMaster(EcoSystem->getLikelihood());
-        Stochasticdata->readNextLineFromNet();
-      }
-      delete Stochasticdata;
-    #endif
-
-  } else if (MainInfo->getInitialParamGiven()) {
-    Stochasticdata = new StochasticData(MainInfo->getInitialParamFile());
-    EcoSystem->Update(Stochasticdata);
-    EcoSystem->checkBounds();
-    EcoSystem->Reset();
-    if (MainInfo->printInitial())
-      EcoSystem->writeStatus(MainInfo->getPrintInitialFile());
-
-    EcoSystem->Simulate(MainInfo->runLikelihood(), print);
-    if ((MainInfo->getPI()).getPrint())
-      EcoSystem->writeValues((MainInfo->getPI()).getOutputFile(), (MainInfo->getPI()).getPrecision());
-    if ((MainInfo->getPI()).getPrintColumn())
-      EcoSystem->writeValuesInColumns((MainInfo->getPI()).getColumnOutputFile(), (MainInfo->getPI()).getPrecision());
-    while (Stochasticdata->DataIsLeft()) {
-      Stochasticdata->readDataFromNextLine();
-      EcoSystem->Update(Stochasticdata);
-      EcoSystem->checkBounds();
-      EcoSystem->Simulate(MainInfo->runLikelihood(), print);
-      if ((MainInfo->getPI()).getPrint())
-        EcoSystem->writeValues((MainInfo->getPI()).getOutputFile(), (MainInfo->getPI()).getPrecision());
-      if ((MainInfo->getPI()).getPrintColumn())
-        EcoSystem->writeValuesInColumns((MainInfo->getPI()).getColumnOutputFile(), (MainInfo->getPI()).getPrecision());
-    }
-    delete Stochasticdata;
-
-  } else {
-    if ((handle.getLogLevel() >= LOGWARN) && (EcoSystem->numOptVariables() != 0))
-      handle.logMessage(LOGWARN, "Warning - no parameter input file given, using default values");
-    EcoSystem->Reset();
-    if (MainInfo->printInitial())
-      EcoSystem->writeStatus(MainInfo->getPrintInitialFile());
-
-    EcoSystem->Simulate(MainInfo->runLikelihood(), print);
-    if ((MainInfo->getPI()).getPrint())
-      EcoSystem->writeValues((MainInfo->getPI()).getOutputFile(), (MainInfo->getPI()).getPrecision());
-    if ((MainInfo->getPI()).getPrintColumn())
-      EcoSystem->writeValuesInColumns((MainInfo->getPI()).getColumnOutputFile(), (MainInfo->getPI()).getPrecision());
-  }
-}
-
 int main(int aNumber, char* const aVector[]) {
 
-  MainInfo MainInfo;
-  OptInfo* Optinfo = 0;
-  StochasticData* Stochasticdata = 0;
+  MainInfo main;
+  OptInfo* opt = 0;
+  StochasticData* data = 0;
   int check = 0;
 
   //Test to see if the function double lgamma(double) is returning an integer.
@@ -107,69 +47,116 @@ int main(int aNumber, char* const aVector[]) {
   }
 
   if (aNumber > 1)
-    MainInfo.read(aNumber, aVector);
+    main.read(aNumber, aVector);
 
   //JMB - dont print output if doing a network run
-  if (!(MainInfo.runNetwork()))
+  if (!(main.runNetwork()))
     RUNID.Print(cout);
-  MainInfo.checkUsage(inputdir, workingdir);
+  main.checkUsage(inputdir, workingdir);
 
   if (aNumber == 1)
     handle.logMessage(LOGWARN, "Warning - no command line options specified, using default values");
 
-  EcoSystem = new Ecosystem(MainInfo.getMainGadgetFile(), MainInfo.runOptimise(),
-    MainInfo.runNetwork(), MainInfo.runLikelihood(), inputdir, workingdir, MainInfo.getPI());
+  EcoSystem = new Ecosystem(main, inputdir, workingdir);
 
   #ifdef INTERRUPT_HANDLER
     //JMB - dont register interrupt if doing a network run
-    if (!(MainInfo.runNetwork()))
+    if (!(main.runNetwork()))
       registerInterrupt(SIGINT, &EcoSystem->interrupted);
   #endif
 
   chdir(workingdir);
-  if ((MainInfo.getPI()).getPrint())
-    EcoSystem->writeInitialInformation((MainInfo.getPI()).getOutputFile());
-  if ((MainInfo.getPI()).getPrintColumn())
-    EcoSystem->writeInitialInformationInColumns((MainInfo.getPI()).getColumnOutputFile());
+  if ((main.getPI()).getPrint())
+    EcoSystem->writeInitialInformation((main.getPI()).getOutputFile());
+  if ((main.getPI()).getPrintColumn())
+    EcoSystem->writeInitialInformationInColumns((main.getPI()).getColumnOutputFile());
 
-  if (MainInfo.runStochastic())
-    stochasticRun(EcoSystem, &MainInfo);
+  if (main.runStochastic()) {
+    if (main.runNetwork()) {
+      EcoSystem->Reset();
+      #ifdef GADGET_NETWORK //to help compiling when pvm libraries are unavailable
+        data = new StochasticData();
+        while (data->getDataFromNetwork()) {
+          EcoSystem->Update(data);
+          EcoSystem->Simulate(main.runLikelihood(), 0);  //dont print
+          data->sendDataToNetwork(EcoSystem->getLikelihood());
+          data->readNextLineFromNetwork();
+        }
+        delete data;
+      #endif
 
-  if (MainInfo.runOptimise()) {
-    if (MainInfo.getInitialParamGiven()) {
-      Stochasticdata = new StochasticData(MainInfo.getInitialParamFile());
-      EcoSystem->Update(Stochasticdata);
+    } else if (main.getInitialParamGiven()) {
+      data = new StochasticData(main.getInitialParamFile());
+      EcoSystem->Update(data);
+      EcoSystem->checkBounds();
+      EcoSystem->Reset();
+      if (main.printInitial())
+        EcoSystem->writeStatus(main.getPrintInitialFile());
+      EcoSystem->Simulate(main.runLikelihood(), 1);   //printing OK
+      if ((main.getPI()).getPrint())
+        EcoSystem->writeValues((main.getPI()).getOutputFile(), (main.getPI()).getPrecision());
+      if ((main.getPI()).getPrintColumn())
+        EcoSystem->writeValuesInColumns((main.getPI()).getColumnOutputFile(), (main.getPI()).getPrecision());
+      while (data->isDataLeft()) {
+        data->readNextLine();
+        EcoSystem->Update(data);
+        EcoSystem->checkBounds();
+        EcoSystem->Simulate(main.runLikelihood(), 1); //printing OK
+        if ((main.getPI()).getPrint())
+          EcoSystem->writeValues((main.getPI()).getOutputFile(), (main.getPI()).getPrecision());
+        if ((main.getPI()).getPrintColumn())
+          EcoSystem->writeValuesInColumns((main.getPI()).getColumnOutputFile(), (main.getPI()).getPrecision());
+      }
+      delete data;
+
+    } else {
+      if (EcoSystem->numOptVariables() != 0)
+        handle.logMessage(LOGWARN, "Warning - no parameter input file given, using default values");
+      EcoSystem->Reset();
+      if (main.printInitial())
+        EcoSystem->writeStatus(main.getPrintInitialFile());
+      EcoSystem->Simulate(main.runLikelihood(), 1);   //printing OK
+      if ((main.getPI()).getPrint())
+        EcoSystem->writeValues((main.getPI()).getOutputFile(), (main.getPI()).getPrecision());
+      if ((main.getPI()).getPrintColumn())
+        EcoSystem->writeValuesInColumns((main.getPI()).getColumnOutputFile(), (main.getPI()).getPrecision());
+    }
+
+  } else if (main.runOptimise()) {
+    if (main.getInitialParamGiven()) {
+      data = new StochasticData(main.getInitialParamFile());
+      EcoSystem->Update(data);
       EcoSystem->checkBounds();
     } else
       handle.logMessage(LOGWARN, "Warning - no parameter input file given, using default values");
 
     EcoSystem->Reset();
-    if (MainInfo.printInitial())
-      EcoSystem->writeStatus(MainInfo.getPrintInitialFile());
+    if (main.printInitial())
+      EcoSystem->writeStatus(main.getPrintInitialFile());
 
-    Optinfo = new OptInfo(&MainInfo);
-    Optinfo->Optimise();
-    delete Optinfo;
+    opt = new OptInfo(&main);
+    opt->Optimise();
+    delete opt;
 
-    if ((MainInfo.getPI()).getForcePrint())
+    if ((main.getPI()).getForcePrint())
       EcoSystem->Simulate(0, 1);  //print and dont optimise
 
-    if (MainInfo.getInitialParamGiven())
-      delete Stochasticdata;
+    if (main.getInitialParamGiven())
+      delete data;
   }
 
   handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
-  if (MainInfo.printFinal())
-    EcoSystem->writeStatus(MainInfo.getPrintFinalFile());
+  if (main.printFinal())
+    EcoSystem->writeStatus(main.getPrintFinalFile());
 
   //JMB - print final values of parameters
-  if (!(MainInfo.runNetwork()))
-    EcoSystem->writeParamsInColumns((MainInfo.getPI()).getParamOutFile(), (MainInfo.getPI()).getPrecision());
+  if (!(main.runNetwork()))
+    EcoSystem->writeParamsInColumns((main.getPI()).getParamOutFile(), (main.getPI()).getPrecision());
 
   if (check == 1)
     free(workingdir);
 
   delete EcoSystem;
-  handle.logFinish(MainInfo.runOptimise());
+  handle.logFinish(main.runOptimise());
   return EXIT_SUCCESS;
 }

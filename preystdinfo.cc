@@ -4,11 +4,7 @@
 #include "gadget.h"
 
 PreyStdInfo::PreyStdInfo(const Prey* p, const IntVector& Areas)
-  : AbstrPreyStdInfo(p, Areas, 0, 0), //set minage and maxage to 0.
-  PSIByLength(p, Areas), prey(p) {
-}
-
-PreyStdInfo::~PreyStdInfo() {
+  : AbstrPreyStdInfo(p, Areas, 0, 0), PSIByLength(p, Areas), prey(p) {
 }
 
 void PreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
@@ -19,7 +15,7 @@ void PreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
 
   BconbyAge[inarea][0] = 0.0;
   PSIByLength.Sum(TimeInfo, area);
-  for (l = 0; l < prey->numLengthGroups(); l++) {
+  for (l = 0; l < prey->getLengthGroupDiv()->numLengthGroups(); l++) {
     BconbyAgeAndLength[inarea][0][l] = PSIByLength.BconsumptionByLength(area)[l];
     BconbyAge[inarea][0] += BconbyAgeAndLength[inarea][0][l];
     MortbyAgeAndLength[inarea][0][l] = PSIByLength.MortalityByLength(area)[l];

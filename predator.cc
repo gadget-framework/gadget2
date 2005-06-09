@@ -9,26 +9,26 @@
 extern ErrorHandler handle;
 
 Predator::Predator(const char* givenname, const IntVector& Areas)
-  : HasName(givenname), LivesOnAreas(Areas), Suitable(0) {
+  : HasName(givenname), LivesOnAreas(Areas), suitable(0) {
 }
 
 Predator::~Predator() {
-  if (Suitable != 0)
-    delete Suitable;
+  if (suitable != 0)
+    delete suitable;
 }
 
 void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   int i, j;
   int found = 0;
 
-  if (Suitable == 0)
+  if (suitable == 0)
     handle.logMessage(LOGFAIL, "Error in predator - found no suitability values");
 
-  preys.resize(this->numPreys(), 0);
+  preys.resize(suitable->numPreys(), 0);
   for (i = 0; i < preyvec.Size(); i++) {
     found = 0;
-    for (j = 0; j < this->numPreys(); j++) {
-      if (strcasecmp(this->getPreyName(j), preyvec[i]->getName()) == 0) {
+    for (j = 0; j < suitable->numPreys(); j++) {
+      if (strcasecmp(suitable->getPreyName(j), preyvec[i]->getName()) == 0) {
         if (found == 0) {
           preys[j] = preyvec[i];
           found++;
@@ -47,7 +47,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
       found++;
       handle.logMessage(LOGWARN, "Warning in predator - failed to match prey", this->getPreyName(i));
       preys.Delete(i);
-      Suitable->deletePrey(i, keeper);
+      suitable->deletePrey(i, keeper);
       if (found != preys.Size())
         i--;
     }
@@ -58,8 +58,8 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
 
 int Predator::doesEat(const char* preyname) const {
   int i;
-  for (i = 0; i < this->numPreys(); i++)
-    if (strcasecmp(this->getPreyName(i), preyname) == 0)
+  for (i = 0; i < suitable->numPreys(); i++)
+    if (strcasecmp(suitable->getPreyName(i), preyname) == 0)
       return 1;
   return 0;
 }
@@ -68,17 +68,17 @@ void Predator::Print(ofstream& outfile) const {
   int i;
   outfile << "\tName" << sep << this->getName()
     << "\n\tNames of preys:";
-  for (i = 0; i < this->numPreys(); i++)
-    outfile << sep << this->getPreyName(i);
+  for (i = 0; i < suitable->numPreys(); i++)
+    outfile << sep << suitable->getPreyName(i);
   outfile << endl;
-  for (i = 0; i < this->numPreys(); i++) {
-    outfile << "\tSuitability for " << this->getPreyName(i) << endl;
-    Suitable->getSuitability(i).Print(outfile);
+  for (i = 0; i < suitable->numPreys(); i++) {
+    outfile << "\tSuitability for " << suitable->getPreyName(i) << endl;
+    suitable->getSuitability(i).Print(outfile);
   }
 }
 
 void Predator::Reset(const TimeClass* const TimeInfo) {
-  Suitable->Reset(this, TimeInfo);
+  suitable->Reset(this, TimeInfo);
 }
 
 void Predator::readSuitability(CommentStream& infile,
@@ -89,7 +89,7 @@ void Predator::readSuitability(CommentStream& infile,
   char text[MaxStrLength];
   strncpy(preyname, "", MaxStrLength);
   strncpy(text, "", MaxStrLength);
-  Suitable = new Suits();
+  suitable = new Suits();
   SuitFuncPtrVector suitf;
   keeper->addString("suitabilityfor");
 
@@ -101,7 +101,7 @@ void Predator::readSuitability(CommentStream& infile,
     if (strcasecmp(text, "function") == 0) {
       infile >> text >> ws;
       if (readSuitFunction(suitf, infile, text, TimeInfo, keeper) == 1)
-        Suitable->addPrey(preyname, suitf[suitf.Size() - 1]);
+        suitable->addPrey(preyname, suitf[suitf.Size() - 1]);
       else
         handle.logFileMessage(LOGFAIL, "Error in suitability - unrecognised suitability function");
 
@@ -117,5 +117,5 @@ void Predator::readSuitability(CommentStream& infile,
 
   keeper->clearLast();
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read predation data - number of preys", this->numPreys());
+    handle.logMessage(LOGMESSAGE, "Read predation data - number of preys", suitable->numPreys());
 }

@@ -5,9 +5,6 @@
 
 extern ErrorHandler handle;
 
-ActionAtTimes::ActionAtTimes() : everyStep(0) {
-}
-
 int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const TimeInfo) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -86,9 +83,6 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
   if ((error == 1) || (column == 1 && error != 2))
     return 0;
   return 1;
-}
-
-ActionAtTimes::~ActionAtTimes() {
 }
 
 void ActionAtTimes::addActions(const IntVector& years,

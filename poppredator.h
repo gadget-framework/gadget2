@@ -9,12 +9,16 @@
 #include "predator.h"
 #include "keeper.h"
 
+/**
+ * \class PopPredator
+ * \brief This is the class used to model the predation of a population
+ */
 class PopPredator : public Predator {
 public:
   /**
    * \brief This is the PopPredator constructor to create a predator with a specified length group
    * \param givenname is the name of the predator
-   * \param area is the IntVector of the areas that the predator will live on
+   * \param areas is the IntVector of the areas that the predator will live on
    * \param OtherLgrpDiv is the LengthGroupDivision of the predator
    * \param GivenLgrpDiv is the LengthGroupDivision that the predation will be calculated on
    * \note this constructor is used when creating a dynamic predator (ie. StockPredator class)
@@ -24,7 +28,7 @@ public:
   /**
    * \brief This is the PopPredator constructor to create a predator without a specified length group
    * \param givenname is the name of the predator
-   * \param area is the IntVector of the areas that the predator will live on
+   * \param areas is the IntVector of the areas that the predator will live on
    * \note this constructor is used when creating a non-dynamic predator (ie. LengthPredator class)
    */
   PopPredator(const char* givenname, const IntVector& areas);
@@ -32,15 +36,52 @@ public:
    * \brief This is the default PopPredator destructor
    */
   virtual ~PopPredator();
+  /**
+   * \brief This function will print the predation data
+   * \param outfile is the ofstream that all the model information gets sent to
+   */
   virtual void Print(ofstream& outfile) const;
+  /**
+   * \brief This will return the amount the predator consumes of a given prey on a given area
+   * \param area is the area that the consumption is being calculated on
+   * \param preyname is the name of the prey that is being consumed
+   * \return BandMatrix containing the amount the predator consumes
+   */
   virtual const BandMatrix& getConsumption(int area, const char* preyname) const;
+  /**
+   * \brief This will return the amount the predator overconsumes on a given area
+   * \param area is the area that the consumption is being calculated on
+   * \return overconsumption, a DoubleVector containing the overconsumption by the predator
+   */
   virtual const DoubleVector& getOverConsumption(int area) const { return overconsumption[this->areaNum(area)]; };
+  /**
+   * \brief This will return the total amount the predator overconsumes on a given area
+   * \param area is the area that the consumption is being calculated on
+   * \return total overconsumption by of the predator
+   */
   virtual double getTotalOverConsumption(int area) const;
+  /**
+   * \brief This will return the length group information for the predator
+   * \return LgrpDiv
+   */
   virtual const LengthGroupDivision* getLengthGroupDiv() const { return LgrpDiv; };
-  virtual int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
-  virtual double meanLength(int i) const { return LgrpDiv->meanLength(i); };
+  /**
+   * \brief This function will reset the predation information for the current model run
+   * \param TimeInfo is the TimeClass for the current model
+   */
   virtual void Reset(const TimeClass* const TimeInfo);
+  /**
+   * \brief This will return the biomass the predator consumes of a given prey on a given area
+   * \param prey is the index for the prey
+   * \param area is the area that the consumption is being calculated on
+   * \return amount consumed by the predator of the prey
+   */
   virtual const double getConsumptionBiomass(int prey, int area) const;
+  /**
+   * \brief This will select the preys that will be consumed by the predator
+   * \param preyvec is the PreyPtrVector of all the available preys
+   * \param keeper is the Keeper for the current model
+   */
   void setPrey(PreyPtrVector& preyvec, Keeper* const keeper);
 protected:
   /**

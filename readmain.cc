@@ -54,8 +54,7 @@ void Ecosystem::readFleet(CommentStream& infile) {
     else
       handle.logFileMessage(LOGFAIL, "Error in fleet file - unrecognised fleet", text);
 
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Read fleet OK - created fleet", value);
+    handle.logMessage(LOGMESSAGE, "Read fleet OK - created fleet", value);
   }
 }
 
@@ -80,8 +79,7 @@ void Ecosystem::readTagging(CommentStream& infile) {
     else
       handle.logFileUnexpected(LOGFAIL, "tagid", text);
 
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Read tagging experiment OK - created tag", value);
+    handle.logMessage(LOGMESSAGE, "Read tagging experiment OK - created tag", value);
   }
 }
 
@@ -106,8 +104,7 @@ void Ecosystem::readOtherFood(CommentStream& infile) {
     else
       handle.logFileUnexpected(LOGFAIL, "foodname", text);
 
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Read otherfood OK - created otherfood", value);
+    handle.logMessage(LOGMESSAGE, "Read otherfood OK - created otherfood", value);
   }
 }
 
@@ -122,9 +119,7 @@ void Ecosystem::readStock(CommentStream& infile) {
   readWordAndValue(infile, "stockname", text);
   stockvec.resize(1);
   stockvec[stockvec.Size() - 1] = new Stock(infile, text, Area, TimeInfo, keeper);
-
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read stock OK - created stock", text);
+  handle.logMessage(LOGMESSAGE, "Read stock OK - created stock", text);
 }
 
 //
@@ -184,8 +179,7 @@ void Ecosystem::readPrinters(CommentStream& infile) {
     else
       handle.logFileMessage(LOGFAIL, "Error in printer file - unrecognised printer", type);
 
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Read printer OK - created printer class", type);
+    handle.logMessage(LOGMESSAGE, "Read printer OK - created printer class", type);
   }
 }
 
@@ -285,16 +279,15 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       handle.logFileMessage(LOGFAIL, "Error in likelihood file - unrecognised likelihood", type);
     }
 
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Read likelihood OK - created likelihood component", name);
+    handle.logMessage(LOGMESSAGE, "Read likelihood OK - created likelihood component", name);
   }
 }
 
 //
 // The main reading function
 //
-void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
-  int calclikelihood, const char* const inputdir, const char* const workingdir) {
+void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
+  const char* const inputdir, const char* const workingdir) {
 
   int i, j;
   char text[MaxStrLength];
@@ -335,7 +328,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
   while (!((strcasecmp(text, "[stock]") == 0) || infile.eof())) {
     //Do not read printfile if we are doing a net run, or if we are
     //optimising without the getForcePrint option set. 07.04.00 AJ & mnaa.
-    if (!netrun  && (printinfo.getForcePrint() || !optimise)) {
+    if (!main.runNetwork()  && (printinfo.getForcePrint() || !main.runOptimise())) {
       subfile.open(text, ios::in);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);
@@ -445,7 +438,7 @@ void Ecosystem::readMain(CommentStream& infile, int optimise, int netrun,
     handle.logFileUnexpected(LOGFAIL, "[likelihood]", text);
 
   //Now we have either read the word likelihood or reached end of file.
-  if (!infile.eof() && calclikelihood) {
+  if (!infile.eof() && main.runLikelihood()) {
     infile >> text >> ws;
     if (strcasecmp(text, "likelihoodfiles") == 0) {
       //There might not be any likelihood files

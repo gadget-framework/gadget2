@@ -451,16 +451,15 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 //The code here is probably unnessecarily complicated because
 //is always only one length group with this class.
 double StockDistribution::calcLikMultinomial() {
-  int age, len, area, sn, i, minage, maxage, num;
+  int age, len, area, sn, i, minage, maxage;
   DoubleMatrixPtrVector Dist(areas.Nrow());
   DoubleVector likdata(stocknames.Size(), 0.0);
 
   MN.Reset();
   //the object MN does most of the work, accumulating likelihood
-  num = aggregator[0]->numAgeGroups() * aggregator[0]->numLengthGroups();
   for (area = 0; area < Dist.Size(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
-    Dist[area] = new DoubleMatrix(num, stocknames.Size(), 0.0);
+    Dist[area] = new DoubleMatrix(ages.Nrow() * LgrpDiv->numLengthGroups(), stocknames.Size(), 0.0);
 
     for (sn = 0; sn < stocknames.Size(); sn++) {
       alptr = &aggregator[sn]->getSum();
@@ -530,7 +529,7 @@ double StockDistribution::calcLikSumSquares() {
   return totallikelihood;
 }
 
-void StockDistribution::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
+void StockDistribution::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
 
   if (!AAT.atCurrentTime(TimeInfo))
     return;
@@ -559,7 +558,7 @@ void StockDistribution::LikelihoodPrint(ofstream& outfile, const TimeClass* cons
   }
 }
 
-void StockDistribution::SummaryPrint(ofstream& outfile) {
+void StockDistribution::printSummary(ofstream& outfile) {
   int year, area;
 
   for (year = 0; year < likelihoodValues.Nrow(); year++)

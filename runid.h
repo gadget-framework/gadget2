@@ -16,7 +16,7 @@ public:
   /**
    * \brief This is the default RunID destructor
    */
-  ~RunID() {};
+  ~RunID();
   /**
    * \brief This will print the model run information for the current model
    * \param o is the ofstream that the model run information will be written to
@@ -31,11 +31,11 @@ protected:
   /**
    * \brief This is the name of the host machine that is running the current model
    */
-  const char* hostName;
+  char* hostname;
   /**
    * \brief This is the time stamp used to denote the time that the current model run started
    */
-  const char* timestring;
+  char* timestring;
   /**
    * \brief This is the host machine that is running the current model
    */

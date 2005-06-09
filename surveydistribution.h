@@ -13,7 +13,9 @@
  * \class SurveyDistribution
  * \brief This is the class used to calculate a likelihood score based on survey data compiled from the stocks caught by government surveys, including some form of a survey index calculation
  *
- * This class calculates a likelihood score based on the difference between survey data sampled from stocks caught according to the model and that caught by government surveys.  Note that this likelihood component assumes that catch-at-age data is available, and is used in the survey index calculations.   The model will calculate the survey data for the stock that is caught according to the model parameters, and aggregate this into the specified age and length groups.  This survey data is then compared to the corresponding data calculated from the observed data.
+ * This class calculates a likelihood score based on the difference between survey data sampled from stocks caught according to the model and that caught by government surveys.  The model will calculate the survey data for the stock that is caught according to the model parameters, and aggregate this into the specified age and length groups.  This survey data is then compared to the corresponding data calculated from the observed data.
+ *
+ * \note This likelihood component assumes that catch-at-age data is available, and is used in the survey index calculations
  */
 class SurveyDistribution : public Likelihood {
 public:
@@ -58,12 +60,12 @@ public:
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
+  virtual void printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo);
   /**
    * \brief This function will print summary information from each SurveyDistribution likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
-  virtual void SummaryPrint(ofstream& outfile);
+  virtual void printSummary(ofstream& outfile);
 private:
   /**
    * \brief This function will read the SurveyDistribution data from the input file

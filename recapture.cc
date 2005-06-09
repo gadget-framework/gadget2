@@ -417,7 +417,7 @@ void Recaptures::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void Recaptures::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
+void Recaptures::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
 
   int year = TimeInfo->getYear();
   int step = TimeInfo->getStep();

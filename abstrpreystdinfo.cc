@@ -8,7 +8,7 @@ AbstrPreyStdInfo::AbstrPreyStdInfo(const Prey* prey, const IntVector& areas,
   BconbyAge(minage, maxage - minage + 1, 0, areas.Size(), 0.0),
   MortbyAge(minage, maxage - minage + 1, 0, areas.Size(), 0.0) {
 
-  BandMatrix bm(0, prey->numLengthGroups(), minage, maxage - minage + 1, 0.0);
+  BandMatrix bm(0, prey->getLengthGroupDiv()->numLengthGroups(), minage, maxage - minage + 1, 0.0);
   NconbyAgeAndLength.resize(areas.Size(), bm);
   BconbyAgeAndLength.resize(areas.Size(), bm);
   MortbyAgeAndLength.resize(areas.Size(), bm);

@@ -205,7 +205,7 @@ void SIOnStep::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void SIOnStep::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
+void SIOnStep::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
 
   int t, area, i;
 

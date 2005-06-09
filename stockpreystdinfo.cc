@@ -6,11 +6,7 @@
 
 StockPreyStdInfo::StockPreyStdInfo(const StockPrey* p, const IntVector& Areas)
   : AbstrPreyStdInfo(p, Areas, p->getALKPriorToEating(Areas[0]).minAge(),
-      p->getALKPriorToEating(Areas[0]).maxAge()),
-  SPByLength(p, Areas), prey(p) {
-}
-
-StockPreyStdInfo::~StockPreyStdInfo() {
+      p->getALKPriorToEating(Areas[0]).maxAge()), SPByLength(p, Areas), prey(p) {
 }
 
 void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {

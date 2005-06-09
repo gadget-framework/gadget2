@@ -15,10 +15,7 @@ LengthPredator::LengthPredator(const char* givenname, const IntVector& Areas,
 }
 
 void LengthPredator::Sum(const PopInfoVector& NumberInArea, int area) {
-  int i, inarea = this->areaNum(area);
-  for (i = 0; i < prednumber[inarea].Size(); i++)
-    prednumber[inarea][i].N = 0.0;
-  prednumber[inarea].Sum(&NumberInArea, *CI);
+  prednumber[this->areaNum(area)].Sum(&NumberInArea, *CI);
 }
 
 void LengthPredator::Reset(const TimeClass* const TimeInfo) {

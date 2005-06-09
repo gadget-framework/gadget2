@@ -20,7 +20,7 @@ public:
   /**
    * \brief This is the default PreyStdInfo destructor
    */
-  virtual ~PreyStdInfo();
+  virtual ~PreyStdInfo() {};
   /**
    * \brief This will return the number consumed by length group for a specified area
    * \param area is the area that the predation is calculated on

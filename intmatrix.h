@@ -15,32 +15,32 @@ public:
   IntMatrix() { nrow = 0; v = 0; };
   /**
    * \brief This is the IntMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of each row to be created (ie. the size of the IntVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the IntVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  IntMatrix(int nrow, int ncol);
+  IntMatrix(int nr, int nc);
   /**
    * \brief This is the IntMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of each row to be created (ie. the size of the IntVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the IntVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
-  IntMatrix(int nrow, int ncol, int initial);
+  IntMatrix(int nr, int nc, int initial);
   /**
    * \brief This is the IntMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of the rows to be created (ie. the size of the IntVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of the rows to be created (ie. the size of the IntVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  IntMatrix(int nrow, const IntVector& ncol);
+  IntMatrix(int nr, const IntVector& nc);
   /**
    * \brief This is the IntMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of the rows to be created (ie. the size of the IntVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of the rows to be created (ie. the size of the IntVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
-  IntMatrix(int nrow, const IntVector& ncol, int initial);
+  IntMatrix(int nr, const IntVector& nc, int initial);
   /**
    * \brief This is the IntMatrix constructor that creates a copy of an existing IntMatrix
    * \param initial is the IntMatrix to copy

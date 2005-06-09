@@ -25,7 +25,7 @@ public:
   /**
    * \brief This is the default LengthGroupDivision destructor
    */
-  ~LengthGroupDivision();
+  ~LengthGroupDivision() {};
   /**
    * \brief This function will return the mean length of a specified length group
    * \param i is the identifier of the length group

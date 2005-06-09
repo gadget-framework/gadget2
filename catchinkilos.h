@@ -43,13 +43,13 @@ public:
    * \brief This function will print summary information from each CatchInKilos likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
-  virtual void SummaryPrint(ofstream& outfile);
+  virtual void printSummary(ofstream& outfile);
   /**
    * \brief This function will print information from each CatchInKilos calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
+  virtual void printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the likelihood score for the CatchInKilos component
    * \param TimeInfo is the TimeClass for the current model

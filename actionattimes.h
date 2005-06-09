@@ -16,11 +16,11 @@ public:
   /**
    * \brief This is the ActionAtTimes constructor
    */
-  ActionAtTimes();
+  ActionAtTimes() { everyStep = 0; };
   /**
    * \brief This is the ActionAtTimes destructor
    */
-  ~ActionAtTimes();
+  ~ActionAtTimes() {};
   /**
    * \brief This is the function used to read in the action at times parameters
    * \param infile is the CommentStream to read the actionattimes parameters from

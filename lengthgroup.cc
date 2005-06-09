@@ -53,9 +53,6 @@ LengthGroupDivision::LengthGroupDivision(const LengthGroupDivision& l)
     meanlength(l.meanlength), minlength(l.minlength) {
 }
 
-LengthGroupDivision::~LengthGroupDivision() {
-}
-
 int LengthGroupDivision::numLengthGroup(double length) const {
   //Allow some error.
   const double err = (maxlen - minLength(size - 1)) * rathersmall;

@@ -417,7 +417,7 @@ double CatchStatistics::calcLikSumSquares() {
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-      PopStatistics PopStat((*alptr)[area][age], aggregator->getLengthGroupDiv());
+      PopStatistics PopStat((*alptr)[area][age], LgrpDiv);
 
       switch (functionnumber) {
         case 1:
@@ -459,7 +459,7 @@ double CatchStatistics::calcLikSumSquares() {
   return totallikelihood;
 }
 
-void CatchStatistics::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
+void CatchStatistics::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
 
   if (!AAT.atCurrentTime(TimeInfo))
     return;
@@ -499,7 +499,7 @@ void CatchStatistics::LikelihoodPrint(ofstream& outfile, const TimeClass* const 
   }
 }
 
-void CatchStatistics::SummaryPrint(ofstream& outfile) {
+void CatchStatistics::printSummary(ofstream& outfile) {
   int year, area;
 
   for (year = 0; year < likelihoodValues.Nrow(); year++)

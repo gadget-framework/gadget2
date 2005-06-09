@@ -20,7 +20,7 @@ public:
   /**
    * \brief This is the default StockPreyStdInfoByLength destructor
    */
-  virtual ~StockPreyStdInfoByLength();
+  virtual ~StockPreyStdInfoByLength() {};
   /**
    * \brief This is the function that calculates the predation
    * \param TimeInfo is the TimeClass for the current model

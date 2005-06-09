@@ -166,7 +166,7 @@ void UnderStocking::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void UnderStocking::SummaryPrint(ofstream& outfile) {
+void UnderStocking::printSummary(ofstream& outfile) {
   int year, area;
 
   for (year = 0; year < likelihoodValues.Nrow(); year++)

@@ -118,9 +118,9 @@ int readVectorInLine(CommentStream& infile, ParameterVector& Vec) {
     return 0;
 
   int i;
-  char line[MaxStrLength];
-  strncpy(line, "", MaxStrLength);
-  infile.getLine(line, MaxStrLength);
+  char line[LongString];
+  strncpy(line, "", LongString);
+  infile.getLine(line, LongString);
   if (infile.fail())
     return 0;
 

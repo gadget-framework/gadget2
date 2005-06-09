@@ -1,19 +1,12 @@
 #include "parameter.h"
 #include "gadget.h"
 
-Parameter::Parameter() {
-  name = NULL;
-  size = 0;
-}
-
 Parameter::Parameter(char* value) {
   if (value == NULL) {
     name = NULL;
-    size = 0;
   } else {
-    if (isValidName(value)) {
-      size = strlen(value);
-      name = new char[size + 1];
+    if (this->isValidName(value)) {
+      name = new char[strlen(value) + 1];
       strcpy(name, value);
     } else {
       cerr << "Invalid parameter name - " << value << endl;
@@ -23,13 +16,10 @@ Parameter::Parameter(char* value) {
 }
 
 Parameter::Parameter(const Parameter& p) {
-  //AJ 03.11.00 Maybe should start checking if same parameter???
   if (p.name == NULL)  {
     name = NULL;
-    size = 0;
   } else {
-    size = p.size;
-    name = new char[size + 1];
+    name = new char[strlen(p.name) + 1];
     strcpy(name, p.name);
   }
 }
@@ -58,27 +48,25 @@ Parameter& Parameter::operator = (const Parameter& p) {
   }
   if (p.name == NULL) {
     name = NULL;
-    size = 0;
   } else {
-    size = p.size;
-    name = new char[size + 1];
+    name = new char[strlen(p.name) + 1];
     strcpy(name, p.name);
   }
   return *this;
 }
 
-int Parameter::isValidName(char* param) {
-  int len = strlen(param);
+int Parameter::isValidName(char* value) {
+  int len = strlen(value);
   if (len > MaxStrLength)
     return 0;
   int i;
   for (i = 0; i < len; i++)
-    if (this->legalchar(param[i]) == 0)
+    if (this->isValidChar(value[i]) == 0)
       return 0;
   return 1;
 }
 
-int Parameter::legalchar(int c) {
+int Parameter::isValidChar(int c) {
   //Numbers and letters are ok.
   if (isalnum(c))
     return 1;
@@ -96,25 +84,22 @@ int Parameter::legalchar(int c) {
 }
 
 CommentStream& operator >> (CommentStream& in, Parameter& p) {
-  int i = 0;
-  char c;
-
-  char* tempString = new char[MaxStrLength];
   in >> ws;
-  while (p.legalchar(in.peek()) && i < (MaxStrLength - 1)) {
+  int i = 0;
+  char* tempString = new char[MaxStrLength];
+  while (p.isValidChar(in.peek()) && i < (MaxStrLength - 1)) {
     if (in.fail() && !in.eof()) {
       in.makebad();
       delete[] tempString;
       return in;
     }
-    in.get(c);
-    tempString[i] = c;
+    in.get(tempString[i]);
     i++;
   }
 
   tempString[i] = '\0';
-  if (strlen(tempString) == MaxStrLength - 1)
-    cerr << "Warning - name of switch has reached maximum allowed length\n";
+  if (i == MaxStrLength)
+    cerr << "Warning - name of parameter has reached maximum allowed length\n";
 
   if (p.name != NULL) {
     delete[] p.name;
@@ -123,10 +108,8 @@ CommentStream& operator >> (CommentStream& in, Parameter& p) {
 
   if (i <= 0) {
     p.name = NULL;
-    p.size = 0;
   } else {
-    p.size = strlen(tempString);
-    p.name = new char[p.size + 1];
+    p.name = new char[strlen(tempString) + 1];
     strcpy(p.name, tempString);
   }
 
@@ -135,25 +118,22 @@ CommentStream& operator >> (CommentStream& in, Parameter& p) {
 }
 
 istream& operator >> (istream& in, Parameter& p) {
-  int i = 0;
-  char c;
-
-  char* tempString = new char[MaxStrLength];
   in >> ws;
-  while (p.legalchar(in.peek()) && i < (MaxStrLength - 1)) {
+  int i = 0;
+  char* tempString = new char[MaxStrLength];
+  while (p.isValidChar(in.peek()) && i < (MaxStrLength - 1)) {
     if (in.fail() && !in.eof()) {
-//      in.makebad();
+      //in.makebad();
       delete[] tempString;
       return in;
     }
-    in.get(c);
-    tempString[i] = c;
+    in.get(tempString[i]);
     i++;
   }
 
   tempString[i] = '\0';
-  if (strlen(tempString) == MaxStrLength - 1)
-    cerr << "Warning - name of switch has reached maximum allowed length\n";
+  if (i == MaxStrLength)
+    cerr << "Warning - name of parameter has reached maximum allowed length\n";
 
   if (p.name != NULL) {
     delete[] p.name;
@@ -162,10 +142,8 @@ istream& operator >> (istream& in, Parameter& p) {
 
   if (i <= 0) {
     p.name = NULL;
-    p.size = 0;
   } else {
-    p.size = strlen(tempString);
-    p.name = new char[p.size + 1];
+    p.name = new char[strlen(tempString) + 1];
     strcpy(p.name, tempString);
   }
 

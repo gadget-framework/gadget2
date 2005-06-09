@@ -13,10 +13,20 @@ enum FunctionType { NONE, MULT, DIV, PLUS, MINUS, PRINT, SIN, COS, LOG, EXP, SQR
 
 class Formula {
 public:
+  /**
+   * \brief This is the default Formula constructor
+   */
   Formula();
-  Formula(const Formula& form);
+  /**
+   * \brief This is the Formula constructor that creates a copy of an existing Formula
+   * \param initial is the Formula to copy
+   */
+  Formula(const Formula& initial);
+  /**
+   * \brief This is the default Formula destructor
+   */
   ~Formula();
-  void setValue(double initValue);
+  void setValue(double init);
   friend CommentStream& operator >> (CommentStream&, Formula&);
   /**
    * \brief This operator will return the value of the formula
@@ -24,7 +34,7 @@ public:
    */
   operator double() const;
   double evalFunction() const;
-  void Interchange(Formula& NewF, Keeper* keeper) const;
+  void Interchange(Formula& newF, Keeper* keeper) const;
   void Inform(Keeper* keeper);
   void Delete(Keeper* keeper) const;
 private:

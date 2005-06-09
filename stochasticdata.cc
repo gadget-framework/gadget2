@@ -9,89 +9,65 @@ StochasticData::StochasticData(const char* const filename) {
   netrun = 0;
   readInfo = new InitialInputFile(filename);
   readInfo->readFromFile();
-  if (readInfo->repeatedValuesFileFormat() == 1) {
-    if (readInfo->readSwitches() == 1)
-      readInfo->getSwitchValue(switches);
-    readInfo->getVectorValue(values);
+  if (readInfo->isRepeatedValues() == 1) {
+    if (readInfo->numSwitches() > 0)
+      readInfo->getSwitches(switches);
+    readInfo->getValues(values);
 
   } else
-    readInfo->getValues(switches, values, lowerbound, upperbound, optimise);
+    readInfo->getVectors(switches, values, lowerbound, upperbound, optimise);
 
-  if (this->SwitchesGiven())
-    if (switches.Size() != values.Size())
-      handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to read values");
-
+  if ((switches.Size() > 0) && (switches.Size() != values.Size()))
+    handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to read values");
 }
 
 StochasticData::StochasticData() {
   netrun = 1;
   readInfo = NULL;
-  if (netrun == 1) {
-    #ifdef GADGET_NETWORK
-      slave = new SlaveCommunication();
-      getdata = 0;
-      dataFromMaster = NULL;
-      numParam = 0;
-      this->readFromNetwork();
-    #endif
-  }
+#ifdef GADGET_NETWORK
+  slave = new SlaveCommunication();
+  getdata = 0;
+  dataFromMaster = NULL;
+  this->readFromNetwork();
+#endif
 }
 
 StochasticData::~StochasticData() {
   if (netrun == 1) {
-    #ifdef GADGET_NETWORK
-      if (dataFromMaster != NULL) {
-        delete[] dataFromMaster;
-        dataFromMaster = NULL;
-      }
-      if (getdata == 1)
-        slave->stopNetCommunication();
-
-      delete slave;
-    #endif
+#ifdef GADGET_NETWORK
+    if (dataFromMaster != NULL)
+      delete[] dataFromMaster;
+    if (getdata == 1)
+      slave->stopNetCommunication();
+    delete slave;
+#endif
   } else
     delete readInfo;
 }
 
-void StochasticData::readDataFromNextLine() {
-  if (netrun == 1)
+void StochasticData::readNextLine() {
+  if ((netrun == 1) || (readInfo->isRepeatedValues() == 0))
     return;
-  readInfo->readVectorFromLine();
+  readInfo->readNextLine();
   values.Reset();
-  readInfo->getVectorValue(values);
+  readInfo->getValues(values);
 }
 
-int StochasticData::numVariables() const {
-  return values.Size();
-}
-
-int StochasticData::DataIsLeft() {
-  return !(readInfo->reachedEndOfFile());
-}
-
-int StochasticData::DataFromFile() {
-  return !netrun;
-}
-
-int StochasticData::Optimise(int i) const {
+int StochasticData::getOptFlag(int i) const {
   if (netrun == 1)
     return 0;
   return optimise[i];
 }
 
-int StochasticData::OptGiven() const {
+int StochasticData::isOptGiven() const {
   if (netrun == 1)
     return 0;
-  return (optimise.Size() > 0 ? 1 : 0);
-}
-
-int StochasticData::SwitchesGiven() const {
-  return (switches.Size() > 0 ? 1 : 0);
+  return (optimise.Size() > 0);
 }
 
 #ifdef GADGET_NETWORK
 void StochasticData::readFromNetwork() {
-  int i, check;
+  int i, check, numParam;
 
   //Receive first data from master
   numParam = slave->startNetCommunication();
@@ -152,7 +128,7 @@ void StochasticData::readFromNetwork() {
   } else
     getdata = 0;
 
-  if (this->SwitchesGiven()) {
+  if (switches.Size() > 0) {
     if (switches.Size() != values.Size())
       handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to read values");
 
@@ -180,7 +156,7 @@ void StochasticData::readFromNetwork() {
   }
 }
 
-void StochasticData::readNextLineFromNet() {
+void StochasticData::readNextLineFromNetwork() {
   int i;
   getdata = slave->receiveFromMaster();
   if (getdata == 1) {
@@ -193,8 +169,8 @@ void StochasticData::readNextLineFromNet() {
   }
 }
 
-void StochasticData::sendDataToMaster(double funcValue) {
-  int info = slave->sendToMaster(funcValue);
+void StochasticData::sendDataToNetwork(double score) {
+  int info = slave->sendToMaster(score);
   if (info < 0) {
     slave->stopNetCommunication();
     handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to send data to PVM master");

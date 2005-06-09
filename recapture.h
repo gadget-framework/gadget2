@@ -56,7 +56,7 @@ public:
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
+  virtual void printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo);
 private:
   /**
    * \brief This function will read the Recaptures data from the input file

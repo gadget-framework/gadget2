@@ -201,9 +201,9 @@ int bfgs(int maxevl, double epsilon, double beta, double sigma, double step,
   DoubleMatrix invhess(nvars, nvars, 0.0);
 
   if (scale == 1)
-    EcoSystem->ScaleVariables();
-  EcoSystem->ScaledOptValues(x);
-  EcoSystem->InitialOptValues(init);
+    EcoSystem->scaleVariables();
+  EcoSystem->getOptScaledValues(x);
+  EcoSystem->getOptInitialValues(init);
 
   for (i = 0; i < nvars; i++) {
     trialx[i] = x[i];
@@ -246,7 +246,7 @@ int bfgs(int maxevl, double epsilon, double beta, double sigma, double step,
       EcoSystem->setLikelihoodBFGS(newf);
       for (i = 0; i < nvars; i++)
         x[i] *= init[i];
-      EcoSystem->StoreVariables(newf, x);
+      EcoSystem->storeVariables(newf, x);
       tmpf = getSmallestEigenValue(invhess);
       if (!isZero(tmpf))
         handle.logMessage(LOGINFO, "The smallest eigenvalue of the inverse Hessian matrix is", tmpf);
@@ -370,7 +370,7 @@ int bfgs(int maxevl, double epsilon, double beta, double sigma, double step,
     for (i = 0; i < nvars; i++)
       bestx[i] = x[i] * init[i];
 
-    EcoSystem->StoreVariables(newf, bestx);
+    EcoSystem->storeVariables(newf, bestx);
     handle.logMessage(LOGINFO, "\nNew optimum found after", (FuncEval - offset), "function evaluations");
     handle.logMessage(LOGINFO, "The likelihood score is", newf, "at the point");
     EcoSystem->writeBestValues();

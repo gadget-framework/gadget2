@@ -247,7 +247,7 @@ void SurveyIndices::Print(ofstream& outfile) const {
   SI->Print(outfile);
 }
 
-void SurveyIndices::SummaryPrint(ofstream& outfile) {
+void SurveyIndices::printSummary(ofstream& outfile) {
   int area;
 
   //JMB - this is nasty hack since there is only one area

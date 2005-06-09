@@ -557,8 +557,6 @@ void ErrorHandler::logFinish(int opt) {
     else
       logfile << "\nGadget simulation finished OK - runtime was ";
     RUNID.printTime(logfile);
-    logfile << " seconds\n";
-    logfile.flush();
   }
 
   if (loglevel != LOGNONE) {
@@ -568,7 +566,6 @@ void ErrorHandler::logFinish(int opt) {
     if (opt) {
       cout << "\nGadget optimisation finished OK - runtime was ";
       RUNID.printTime(cout);
-      cout << " seconds\n";
     } else
       cout << "\nGadget simulation finished OK\n";
     cout << endl;

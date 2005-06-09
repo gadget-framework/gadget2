@@ -83,7 +83,7 @@ void SummaryPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
   int i;
   for (i = 0; i < like.Size(); i++)
-    like[i]->SummaryPrint(outfile);
+    like[i]->printSummary(outfile);
 
   outfile.flush();
 }

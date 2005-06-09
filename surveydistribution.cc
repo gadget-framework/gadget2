@@ -309,7 +309,7 @@ void SurveyDistribution::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void SurveyDistribution::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
+void SurveyDistribution::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
 
   if (!AAT.atCurrentTime(TimeInfo))
     return;
@@ -583,7 +583,7 @@ double SurveyDistribution::calcLikLog() {
   return total;
 }
 
-void SurveyDistribution::SummaryPrint(ofstream& outfile) {
+void SurveyDistribution::printSummary(ofstream& outfile) {
   int year, area;
 
   for (year = 0; year < likelihoodValues.Nrow(); year++) {

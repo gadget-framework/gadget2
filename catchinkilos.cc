@@ -379,7 +379,7 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
     handle.logMessage(LOGMESSAGE, "Read catchinkilos data file - number of entries", count);
 }
 
-void CatchInKilos::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
+void CatchInKilos::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
   if (!AAT.atCurrentTime(TimeInfo))
     return;
 
@@ -410,7 +410,7 @@ void CatchInKilos::LikelihoodPrint(ofstream& outfile, const TimeClass* const Tim
   }
 }
 
-void CatchInKilos::SummaryPrint(ofstream& outfile) {
+void CatchInKilos::printSummary(ofstream& outfile) {
   int year, area;
 
   for (year = 0; year < likelihoodValues.Nrow(); year++) {

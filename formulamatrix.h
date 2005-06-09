@@ -16,25 +16,25 @@ public:
   FormulaMatrix() { nrow = 0; v = 0; };
   /**
    * \brief This is the FormulaMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of each row to be created (ie. the size of the FormulaVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the FormulaVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  FormulaMatrix(int nrow, int ncol);
+  FormulaMatrix(int nr, int nc);
   /**
    * \brief This is the FormulaMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of each row to be created (ie. the size of the FormulaVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the FormulaVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
-  FormulaMatrix(int nrow, int ncol, Formula initial);
+  FormulaMatrix(int nr, int nc, Formula initial);
   /**
    * \brief This is the FormulaMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of the rows to be created (ie. the size of the FormulaVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of the rows to be created (ie. the size of the FormulaVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  FormulaMatrix(int nrow, const IntVector& ncol);
+  FormulaMatrix(int nr, const IntVector& nc);
   /**
    * \brief This is the FormulaMatrix destructor
    * \note This will free all the memory allocated to all the elements of the vector

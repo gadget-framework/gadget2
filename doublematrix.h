@@ -6,7 +6,7 @@
 
 /**
  * \class DoubleMatrix
- * \brief This class implements a dynamic vector of IntVector values
+ * \brief This class implements a dynamic vector of DoubleVector values
  */
 class DoubleMatrix {
 public:
@@ -16,32 +16,32 @@ public:
   DoubleMatrix() { nrow = 0; v = 0; };
   /**
    * \brief This is the DoubleMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of each row to be created (ie. the size of the DoubleVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the DoubleVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  DoubleMatrix(int nrow, int ncol);
+  DoubleMatrix(int nr, int nc);
   /**
    * \brief This is the DoubleMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of each row to be created (ie. the size of the DoubleVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the DoubleVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
-  DoubleMatrix(int nrow, int ncol, double initial);
+  DoubleMatrix(int nr, int nc, double initial);
   /**
    * \brief This is the DoubleMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of the rows to be created (ie. the size of the DoubleVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of the rows to be created (ie. the size of the DoubleVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  DoubleMatrix(int nrow, const IntVector& ncol);
+  DoubleMatrix(int nr, const IntVector& nc);
   /**
    * \brief This is the DoubleMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of the rows to be created (ie. the size of the DoubleVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of the rows to be created (ie. the size of the DoubleVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
-  DoubleMatrix(int nrow, const IntVector& ncol, double initial);
+  DoubleMatrix(int nr, const IntVector& nc, double initial);
   /**
    * \brief This is the DoubleMatrix constructor that creates a copy of an existing DoubleMatrix
    * \param initial is the DoubleMatrix to copy

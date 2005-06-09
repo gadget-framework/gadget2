@@ -23,14 +23,14 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
     checkLengthGroupIsFiner(preys[i]->getLengthGroupDiv(), preyLgrpDiv);
 
   for (i = 0; i < predators.Size(); i++) {
-    predConv.AddRows(1, predators[i]->numLengthGroups(), 0);
+    predConv.AddRows(1, predators[i]->getLengthGroupDiv()->numLengthGroups(), 0);
     for (j = 0; j < predConv.Ncol(i); j++)
-      predConv[i][j] = predLgrpDiv->numLengthGroup(predators[i]->meanLength(j));
+      predConv[i][j] = predLgrpDiv->numLengthGroup(predators[i]->getLengthGroupDiv()->meanLength(j));
   }
   for (i = 0; i < preys.Size(); i++) {
-    preyConv.AddRows(1, preys[i]->numLengthGroups(), 0);
+    preyConv.AddRows(1, preys[i]->getLengthGroupDiv()->numLengthGroups(), 0);
     for (j = 0; j < preyConv.Ncol(i); j++)
-      preyConv[i][j] = preyLgrpDiv->numLengthGroup(preys[i]->meanLength(j));
+      preyConv[i][j] = preyLgrpDiv->numLengthGroup(preys[i]->getLengthGroupDiv()->meanLength(j));
   }
 
   for (i = 0; i < predators.Size(); i++)

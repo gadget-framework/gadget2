@@ -7,8 +7,24 @@
 #include "agebandmatrixptrvector.h"
 #include "poppredator.h"
 
+/**
+ * \class StockPredator
+ * \brief This is the class used to model the predation by stocks
+ */
 class StockPredator : public PopPredator {
 public:
+  /**
+   * \brief This is the StockPredator constructor
+   * \param infile is the CommentStream to read the predator information from
+   * \param givenname is the name of the predator
+   * \param areas is the IntVector of the areas that the predator will live on
+   * \param OtherLgrpDiv is the LengthGroupDivision of the predator
+   * \param GivenLgrpDiv is the LengthGroupDivision that the predation will be calculated on
+   * \param minage is the minimum age of the predator
+   * \param maxage is the maximum age of the predator
+   * \param TimeInfo is the TimeClass for the current model
+   * \param keeper is the Keeper for the current model
+   */
   StockPredator(CommentStream& infile, const char* givenname, const IntVector& areas,
     const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
     int minage, int maxage, const TimeClass* const TimeInfo, Keeper* const keeper);
@@ -23,29 +39,92 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void Eat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
-  virtual void Sum(const AgeBandMatrix& Alkeys, int area);
+  /**
+   * \brief This will calculate the amount of prey that is consumed by the predator
+   * \param stock is the AgeBandMatrix giving the amount of prey in the area
+   * \param area is the area that the prey consumption is being calculated on
+   */
+  virtual void Sum(const AgeBandMatrix& stock, int area);
   /**
    * \brief This will adjust the amount the predator consumes on a given area, to take oversconsumption into consideration
    * \param area is the area that the prey consumption is being calculated on
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void adjustConsumption(int area, const TimeClass* const TimeInfo);
-  virtual const PopInfoVector& getNumberPriorToEating(int area, const char* preyname) const;
-  virtual void Print(ofstream& outfile) const;
-  const BandMatrix& getALProportion(int area) const { return Alprop[this->areaNum(area)]; };
-  const DoubleVector& getFPhi(int area) const { return fphi[this->areaNum(area)]; };
-  const DoubleVector& getMaxConByLen(int area) const { return maxconbylength[this->areaNum(area)]; };
+  /**
+   * \brief This function will reset the predation information for the current model run
+   * \param TimeInfo is the TimeClass for the current model
+   */
   virtual void Reset(const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will print the predator information
+   * \param outfile is the ofstream that all the model information gets sent to
+   */
+  virtual void Print(ofstream& outfile) const;
+  /**
+   * \brief This function will return the number of a prey on a specified area before the consumption calculation takes place
+   * \param area is the area that the prey consumption is being calculated on
+   * \param preyname is the name of the prey
+   * \return PopInfoVector containing the number of prey before the consumption takes place
+   */
+  virtual const PopInfoVector& getNumberPriorToEating(int area, const char* preyname) const;
+  /**
+   * \brief This function will return the proportion of the predation that is due to each age-length cell of the predator
+   * \param area is the area that the prey consumption is being calculated on
+   * \return Alprop, a BandMatrix containing the age-length proportion of the
+   */
+  const BandMatrix& getALProportion(int area) const { return Alprop[this->areaNum(area)]; };
+  /**
+   * \brief This function will return the feeding level of the predator on a specified area
+   * \param area is the area that the prey consumption is being calculated on
+   * \return fphi, a DoubleVector containing the feeding level of the predator
+   */
+  const DoubleVector& getFPhi(int area) const { return fphi[this->areaNum(area)]; };
+  /**
+   * \brief This function will return the maximum consumption by length group of the predator on a specified area
+   * \param area is the area that the prey consumption is being calculated on
+   * \return maxconbylength, a DoubleVector containing the maximum consumption of the predator
+   */
+  const DoubleVector& getMaxConByLen(int area) const { return maxconbylength[this->areaNum(area)]; };
 protected:
-  virtual void calcMaxConsumption(double Temperature, int inarea, const TimeClass* const TimeInfo);
+  /**
+   * \brief This is the FormulaVector used to store the maximum consumption parameters
+   */
   FormulaVector maxcons;
+  /**
+   * \brief This is the Formula used to store the half feeding value parameter
+   */
   Formula halfFeedingValue;
-  DoubleMatrix Phi;  //[area][len]
-  DoubleMatrix fphi; //[area][len]
-  DoubleMatrix subfphi; //[area][len]  fphi per substep
-  DoubleMatrix maxconbylength; //[area][len]
-  BandMatrixPtrVector Alprop;     //[area][age][len]
-  AgeBandMatrixPtrVector Alkeys;  //[area][age][len]
+  /**
+   * \brief This is the DoubleMatrix used to store the sum of the feeding levels (over all preys) on the current timestep
+   * \note the indices for this object are [area][predator length]
+   */
+  DoubleMatrix Phi;
+  /**
+   * \brief This is the DoubleMatrix used to store the feeding level on the current timestep
+   * \note the indices for this object are [area][predator length]
+   */
+  DoubleMatrix fphi;
+  /**
+   * \brief This is the DoubleMatrix used to store the feeding level on the current substep of the current timestep
+   * \note the indices for this object are [area][predator length]
+   */
+  DoubleMatrix subfphi;
+  /**
+   * \brief This is the DoubleMatrix used to store maximum consumption by predator length group on the current timestep
+   * \note the indices for this object are [area][predator length]
+   */
+  DoubleMatrix maxconbylength;
+  /**
+   * \brief This is the BandMatrixPtrVector used to store proportion of the predation that is due to each age-length cell of the predator
+   * \note the indices for this object are [area][predator age][predator length]
+   */
+  BandMatrixPtrVector Alprop;
+  /**
+   * \brief This is the AgeBandMatrixPtrVector used to store information about the predator population
+   * \note the indices for this object are [area][predator age][predator length]
+   */
+  AgeBandMatrixPtrVector Alkeys;
 };
 
 #endif

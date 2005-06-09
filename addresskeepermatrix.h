@@ -16,32 +16,32 @@ public:
   AddressKeeperMatrix() { nrow = 0; v = 0; };
   /**
    * \brief This is the AddressKeeperMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of each row to be created (ie. the size of the AddressKeeperVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the AddressKeeperVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  AddressKeeperMatrix(int nrow, int ncol);
+  AddressKeeperMatrix(int nr, int nc);
   /**
    * \brief This is the AddressKeeperMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of each row to be created (ie. the size of the AddressKeeperVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the AddressKeeperVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
-  AddressKeeperMatrix(int nrow, int ncol, AddressKeeper initial);
+  AddressKeeperMatrix(int nr, int nc, AddressKeeper initial);
   /**
    * \brief This is the AddressKeeperMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of the rows to be created (ie. the size of the AddressKeeperVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of the rows to be created (ie. the size of the AddressKeeperVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  AddressKeeperMatrix(int nrow, const IntVector& ncol);
+  AddressKeeperMatrix(int nr, const IntVector& nc);
   /**
    * \brief This is the AddressKeeperMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of the rows to be created (ie. the size of the AddressKeeperVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of the rows to be created (ie. the size of the AddressKeeperVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
-  AddressKeeperMatrix(int nrow, const IntVector& ncol, AddressKeeper initial);
+  AddressKeeperMatrix(int nr, const IntVector& nc, AddressKeeper initial);
   /**
    * \brief This is the AddressKeeperMatrix constructor that creates a copy of an existing AddressKeeperMatrix
    * \param initial is the AddressKeeperMatrix to copy

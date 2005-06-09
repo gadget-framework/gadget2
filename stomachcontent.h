@@ -61,13 +61,13 @@ public:
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    * \param weight is the weight for the likelihood component
    */
-  virtual void SummaryPrint(ofstream& outfile, double weight);
+  virtual void printSummary(ofstream& outfile, double weight);
   /**
    * \brief This function will print information from each StomachContent calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
+  virtual void printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo);
   /**
    * \brief This function will aggregate consumption information for each StomachContent calculation
    * \param i is the index of the prey that is being consumed
@@ -410,15 +410,15 @@ public:
    * \brief This function will print summary information from each StomachContent likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
-  virtual void SummaryPrint(ofstream& outfile) {
-    StomCont->SummaryPrint(outfile, weight); };
+  virtual void printSummary(ofstream& outfile) {
+    StomCont->printSummary(outfile, weight); };
   /**
    * \brief This function will print information from each StomachContent calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
-    StomCont->LikelihoodPrint(outfile, TimeInfo); };
+  virtual void printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
+    StomCont->printLikelihood(outfile, TimeInfo); };
 private:
   /**
    * \brief This is the name of the function to be used to calculate the likelihood component

@@ -414,7 +414,7 @@ void CatchDistribution::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void CatchDistribution::LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo) {
+void CatchDistribution::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
 
   if (!AAT.atCurrentTime(TimeInfo))
     return;
@@ -833,7 +833,7 @@ double CatchDistribution::calcLikSumSquares() {
 
 void CatchDistribution::calcCorrelation() {
   int i, j, l, p;
-  p = aggregator->numLengthGroups();
+  p = LgrpDiv->numLengthGroups();
   DoubleMatrix correlation(p, p, 0.0);
 
   for (i = 0; i < lag; i++)
@@ -866,7 +866,7 @@ double CatchDistribution::calcLikMVNormal() {
   if (illegal == 1 || LU.isIllegal() == 1 || isZero(sigma))
     return verybig;
 
-  DoubleVector diff(aggregator->numLengthGroups(), 0.0);
+  DoubleVector diff(LgrpDiv->numLengthGroups(), 0.0);
   for (area = 0; area < areas.Nrow(); area++) {
     sumdata = 0.0;
     sumdist = 0.0;
@@ -911,7 +911,7 @@ double CatchDistribution::calcLikMVLogistic() {
   double sumdata = 0.0, sumdist = 0.0, sumnu = 0.0;
   int age, len, area, p;
 
-  p = aggregator->numLengthGroups();
+  p = LgrpDiv->numLengthGroups();
   DoubleVector nu(p, 0.0);
 
   for (area = 0; area < areas.Nrow(); area++) {
@@ -962,7 +962,7 @@ double CatchDistribution::calcLikMVLogistic() {
   return totallikelihood;
 }
 
-void CatchDistribution::SummaryPrint(ofstream& outfile) {
+void CatchDistribution::printSummary(ofstream& outfile) {
   int year, area;
 
   for (year = 0; year < likelihoodValues.Nrow(); year++) {

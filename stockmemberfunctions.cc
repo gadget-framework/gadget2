@@ -19,13 +19,7 @@
 
 extern ErrorHandler handle;
 
-/* In this file most of the member functions for the class stock are
- * defined. Most of them are rather simple, call member functions of
- * AgeLengthKeys etc. Migration function in stock.
- * Migration->Getmatrix returns a pointer to migrationlist. */
-
 void Stock::Migrate(const TimeClass* const TimeInfo) {
-  //age dependent migrations should also be here.
   if (doesmigrate) {
     Alkeys.Migrate(migration->MigrationMatrix(TimeInfo));
     if (tagAlkeys.numTagExperiments() > 0)
@@ -42,7 +36,7 @@ void Stock::calcNumbers(int area, const AreaClass* const Area, const TimeClass* 
   if (doesgrow)
     grower->Sum(NumberInArea[inarea], area);
   if (iseaten) {
-    prey->Sum(Alkeys[inarea], area, TimeInfo->getSubStep());
+    prey->Sum(Alkeys[inarea], area);
     for (i = 0; i < allTags.Size(); i++)
       allTags[i]->storeNumberPriorToEating(area, this->getName());
   }
@@ -111,7 +105,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
   int inarea = this->areaNum(area);
   if (grower->getFixedWeights()) {
     //Weights at length are fixed to the value in the input file
-    grower->GrowthImplement(area, LgrpDiv);
+    grower->implementGrowth(area, LgrpDiv);
     if (doesmature && maturity->isMaturationStep(TimeInfo))
       Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeight(area), maturity, TimeInfo, area);
     else
@@ -119,7 +113,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 
   } else {
     //New weights at length are calculated
-    grower->GrowthImplement(area, NumberInArea[inarea], LgrpDiv);
+    grower->implementGrowth(area, NumberInArea[inarea], LgrpDiv);
     if (doesmature && maturity->isMaturationStep(TimeInfo))
       Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeightIncrease(area), maturity, TimeInfo, area);
     else

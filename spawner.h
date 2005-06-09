@@ -10,8 +10,24 @@
 #include "selectfunc.h"
 #include "stock.h"
 
+/**
+ * \class SpawnData
+ * \brief This is the class used to calculate the affect of the spawning process on the stock, possibly including the creation of new recruits into the model
+ *
+ * This class calculates the proportion of the stock that should be removed from the model due to the spawning process, and the affect that the spawning process has on the remaining stock.  This class can optionally add new recruits into the model due to the spawning process, implementing a closed life cycle model.  For the 'parent' stock, the spawning process can remove a proportion of the stock due to a spawning mortality, and reduce the weight of those that survive.  For the 'child' stock, the spawning process will create a number of recruits based on a recruitment function, and then add these into the model in a similar way to the RenewalData class.
+ */
 class SpawnData : protected LivesOnAreas {
 public:
+  /**
+   * \brief This is the SpawnData constructor
+   * \param infile is the CommentStream to read the spawning data from
+   * \param maxage is the maximum age of the spawning stock
+   * \param LgrpDiv is the LengthGroupDivision that the spawning stock will be calculated on
+   * \param Areas is the IntVector of areas that the spawning stock will be calculated on
+   * \param Area is the AreaClass for the current model
+   * \param TimeInfo is the TimeClass for the current model
+   * \param keeper is the Keeper for the current model
+   */
   SpawnData(CommentStream& infile, int maxage, const LengthGroupDivision* const LgrpDiv,
     const IntVector& Areas, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper);
@@ -24,7 +40,18 @@ public:
    * \param stockvec is the StockPtrVector of all the available stocks
    */
   void setStock(StockPtrVector& stockvec);
+  /**
+   * \brief This will add the calculated spawned stock into the new stock age-length cells
+   * \param area is the area that the spawning process is being calculated on
+   * \param TimeInfo is the TimeClass for the current model
+   */
   void addSpawnStock(int area, const TimeClass* const TimeInfo);
+  /**
+   * \brief This will calculate the
+   * \param Alkeys is the AgeBandMatrix of the spawning stock
+   * \param area is the area that the transition is being calculated on
+   * \param TimeInfo is the TimeClass for the current model
+   */
   void Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo);
   /**
    * \brief This will check if the spawning process will take place on the current timestep and area
@@ -43,7 +70,19 @@ public:
    */
   void Reset(const TimeClass* const TimeInfo);
 protected:
+  /**
+   * \brief This function will calculate the number of recruits that will be created by the spawning process on the current timestep, for a given age-length cell of the spawning stock
+   * \param age is the age of the spawning stock
+   * \param len is the length of the spawning stock
+   * \param number is the number of the spawning stock in the age-length cell
+   * \param weight is the weight of the spawning stock in the age-length cell
+   * \return number of recruits
+   */
   double calcSpawnNumber(int age, int len, double number, double weight);
+  /**
+   * \brief This function will calculate the total number of recruits that have been created by the spawning process on the current timestep
+   * \return total number of recruits
+   */
   double calcRecruitNumber();
   /**
    * \brief This is the StockPtrVector of the stocks that will be spawned
@@ -105,9 +144,21 @@ protected:
    * \brief This is the LengthGroupDivision of the spawned stock
    */
   LengthGroupDivision* spawnLgrpDiv;
+  /**
+   * \brief This is the DoubleMatrix used to store the numnbers of the recruits, if the spawning process is to include the creation of the recruits
+   */
   DoubleMatrix spawnNumbers;
+  /**
+   * \brief This is the TimeVariableVector used to store the parameters when calculating the recruitment from the spawning process, if the spawning process is to include the creation of the recruits
+   */
   TimeVariableVector spawnParameters;
+  /**
+   * \brief This is the TimeVariableVector used to store the parameters when calculating the recruits, if the spawning process is to include the creation of the recruits
+   */
   TimeVariableVector stockParameters;
+  /**
+   * \brief This is the flag used to denote whether the spawning process should include the creation of the recruits
+   */
   int onlyParent;
   /**
    * \brief This is the age that the spawned stock will move into the new stocks

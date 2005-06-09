@@ -6,7 +6,7 @@ extern ErrorHandler handle;
 
 //Uses the length increase in interpLengthGrowth and mean weight change in
 //interpWeightGrowth to calculate lgrowth and wgrowth.
-void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
+void Grower::implementGrowth(int area, const PopInfoVector& NumberInArea,
   const LengthGroupDivision* const Lengths) {
 
   int lgroup, j;
@@ -17,9 +17,8 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
     handle.logMessage(LOGFAIL, "Error in growth - received invalid value for length step");
 
   int inarea = this->areaNum(area);
-  int type = this->getGrowthType();
-  double tmpMult = this->getMultValue();
-  double tmpPower = this->getPowerValue();
+  double tmpMult = growthcalc->getMult();
+  double tmpPower = growthcalc->getPower();
   double tmpDl = 1.0 / Lengths->dl();
 
   for (lgroup = 0; lgroup < Lengths->numLengthGroups(); lgroup++) {
@@ -42,7 +41,7 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
       for (j = 2; j <= maxlengthgroupgrowth; j++)
         part4[j] = part4[j - 1] * (j - 1 + alpha);
 
-    if (type == 8) {
+    if (functionnumber == 8) {
       for (j = 0; j <= maxlengthgroupgrowth; j++) {
         (*lgrowth[inarea])[j][lgroup] = part1[j] * part2[j] * tmppart3 * part4[j];
         (*wgrowth[inarea])[j][lgroup] = tmpMult * (pow(Lengths->meanLength(lgroup + j), tmpPower) - pow(Lengths->meanLength(lgroup), tmpPower));
@@ -63,7 +62,7 @@ void Grower::GrowthImplement(int area, const PopInfoVector& NumberInArea,
 }
 
 //Uses only the length increase in interpLengthGrowth to calculate lgrowth.
-void Grower::GrowthImplement(int area, const LengthGroupDivision* const Lengths) {
+void Grower::implementGrowth(int area, const LengthGroupDivision* const Lengths) {
 
   int lgroup, j;
   double growth, alpha, tmppart3;

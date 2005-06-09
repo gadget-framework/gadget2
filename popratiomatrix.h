@@ -16,32 +16,32 @@ public:
   PopRatioMatrix() { nrow = 0; v = 0; };
   /**
    * \brief This is the PopRatioMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of each row to be created (ie. the size of the PopRatioVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the PopRatioVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  PopRatioMatrix(int nrow, int ncol);
+  PopRatioMatrix(int nr, int nc);
   /**
    * \brief This is the PopRatioMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of each row to be created (ie. the size of the PopRatioVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the PopRatioVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
-  PopRatioMatrix(int nrow, int ncol, PopRatio initial);
+  PopRatioMatrix(int nr, int nc, PopRatio initial);
   /**
    * \brief This is the PopRatioMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of the rows to be created (ie. the size of the PopRatioVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of the rows to be created (ie. the size of the PopRatioVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  PopRatioMatrix(int nrow, const IntVector& ncol);
+  PopRatioMatrix(int nr, const IntVector& nc);
   /**
    * \brief This is the PopRatioMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of the rows to be created (ie. the size of the PopRatioVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of the rows to be created (ie. the size of the PopRatioVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
-  PopRatioMatrix(int nrow, const IntVector& ncol, PopRatio initial);
+  PopRatioMatrix(int nr, const IntVector& nc, PopRatio initial);
   /**
    * \brief This is the PopRatioMatrix constructor that creates a copy of an existing PopRatioMatrix
    * \param initial is the PopRatioMatrix to copy

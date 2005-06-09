@@ -34,21 +34,6 @@ public:
    */
   ~FleetPreyAggregator();
   /**
-   * \brief This function will return the number of length groups of the aggregator
-   * \return number of length groups
-   */
-  int numLengthGroups() const { return LgrpDiv->numLengthGroups(); };
-  /**
-   * \brief This function will return the number of age groups of the aggregator
-   * \return number of age groups
-   */
-  int numAgeGroups() const { return ages.Nrow(); };
-  /**
-   * \brief This function will return the LengthGroupDivision of the aggregator
-   * \return LgrpDiv, the LengthGroupDivision of the aggregator
-   */
-  LengthGroupDivision* getLengthGroupDiv() const { return LgrpDiv; };
-  /**
    * \brief This function will reset the fleet catch information
    */
   void Reset();

@@ -10,9 +10,6 @@ TimeVariable::TimeVariable()
     firsttimestepnr(0), lastvalue(-1.0), value(0.0) {
 }
 
-TimeVariable::~TimeVariable() {
-}
-
 void TimeVariable::read(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 

@@ -49,13 +49,13 @@ public:
    * \brief This function will print summary information from each StockDistribution likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
-  virtual void SummaryPrint(ofstream& outfile);
+  virtual void printSummary(ofstream& outfile);
   /**
    * \brief This function will print information from each StockDistribution calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void LikelihoodPrint(ofstream& outfile, const TimeClass* const TimeInfo);
+  virtual void printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo);
   /**
    * \brief This will select the fleets and stocks required to calculate the StockDistribution likelihood score
    * \param Fleets is the FleetPtrVector of all the available fleets

@@ -44,7 +44,7 @@ public:
    * \brief This function will print summary information from each non-zero UnderStocking likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
-  virtual void SummaryPrint(ofstream& outfile);
+  virtual void printSummary(ofstream& outfile);
   /**
    * \brief This function will print the non-zero UnderStocking likelihood information
    * \param outfile is the ofstream that all the model information gets sent to

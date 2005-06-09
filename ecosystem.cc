@@ -5,11 +5,7 @@ extern RunID RUNID;
 extern ErrorHandler handle;
 extern int FuncEval;
 
-Ecosystem::Ecosystem() {
-}
-
-Ecosystem::Ecosystem(const char* const filename, int optimise, int netrun, int calclikelihood,
-  const char* const inputdir, const char* const workingdir, const PrintInfo& pi) : printinfo(pi) {
+Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir, const char* const workingdir)   : printinfo(main.getPI()) {
 
   funceval = 0;
   interrupted = 0;
@@ -30,6 +26,7 @@ Ecosystem::Ecosystem(const char* const filename, int optimise, int netrun, int c
   likelihoodBFGS = 0.0;
 
   // read the model specification from the main file
+  char* filename = main.getMainGadgetFile();
   chdir(workingdir);
   ifstream infile;
   infile.open(filename, ios::in);
@@ -37,7 +34,7 @@ Ecosystem::Ecosystem(const char* const filename, int optimise, int netrun, int c
   handle.checkIfFailure(infile, filename);
   handle.Open(filename);
   chdir(inputdir);
-  this->readMain(commin, optimise, netrun, calclikelihood, inputdir, workingdir);
+  this->readMain(commin, main, inputdir, workingdir);
   handle.Close();
   infile.close();
   infile.clear();
@@ -55,7 +52,7 @@ Ecosystem::Ecosystem(const char* const filename, int optimise, int netrun, int c
   for (i = 0; i < fleetvec.Size(); i++)
     basevec[i + stockvec.Size() + otherfoodvec.Size()] = fleetvec[i];
 
-  if (optimise)
+  if (main.runOptimise())
     handle.logMessage(LOGINFO, "\nFinished reading input files, starting to run optimisation");
   else
     handle.logMessage(LOGINFO, "\nFinished reading input files, starting to run simulation");
@@ -106,14 +103,6 @@ void Ecosystem::Reset() {
     tagvec[i]->Reset(TimeInfo);
 }
 
-void Ecosystem::Update(const StochasticData* const Stochastic) const {
-  keeper->Update(Stochastic);
-}
-
-void Ecosystem::Update(const DoubleVector& values) const {
-  keeper->Update(values);
-}
-
 double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {
   ::FuncEval++;
   static int PrintCounter1 = printinfo.getPrint1() - 1;
@@ -126,9 +115,9 @@ double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {
   DoubleVector val(numvar);
   DoubleVector initialvalues(numvar);
   IntVector opt(numvar);
-  keeper->InitialValues(initialvalues);
-  keeper->CurrentValues(val);
-  keeper->Opt(opt);
+  keeper->getInitialValues(initialvalues);
+  keeper->getCurrentValues(val);
+  keeper->getOptFlags(opt);
 
   int i, j;
   j = 0;

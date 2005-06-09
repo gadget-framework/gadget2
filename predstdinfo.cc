@@ -7,19 +7,19 @@
 #include "stockpreystdinfo.h"
 #include "stockprey.h"
 
-PredStdInfo::PredStdInfo(const PopPredator* pred, const Prey* p, const IntVector& Areas)
-  : AbstrPredStdInfo(Areas, 0, 0, 0, 0), //prey and pred. min and max age eq. 0
-  preyinfo(new PreyStdInfo(p, Areas)),
-  predinfo(new PredStdInfoByLength(pred, p, Areas)),
-  predator(pred), prey(p) {
+PredStdInfo::PredStdInfo(const PopPredator* predator, const Prey* p, const IntVector& Areas)
+  : AbstrPredStdInfo(Areas, 0, 0, 0, 0), pred(predator), prey(p) {
+
+  preyinfo = new PreyStdInfo(prey, Areas);
+  predinfo = new PredStdInfoByLength(pred, prey, Areas);
 }
 
-PredStdInfo::PredStdInfo(const PopPredator* pred, const StockPrey* p, const IntVector& Areas)
+PredStdInfo::PredStdInfo(const PopPredator* predator, const StockPrey* p, const IntVector& Areas)
   : AbstrPredStdInfo(Areas, 0, 0, p->getALKPriorToEating(Areas[0]).minAge(),
-    p->getALKPriorToEating(Areas[0]).maxAge()),
-  preyinfo(new StockPreyStdInfo(p, Areas)),
-  predinfo(new PredStdInfoByLength(pred, p, Areas)),
-  predator(pred), prey(p) {
+      p->getALKPriorToEating(Areas[0]).maxAge()), pred(predator), prey(p) {
+
+  preyinfo = new StockPreyStdInfo(p, Areas);
+  predinfo = new PredStdInfoByLength(pred, prey, Areas);
 }
 
 PredStdInfo::~PredStdInfo() {
@@ -35,7 +35,7 @@ void PredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   int inarea = this->areaNum(area);
   const BandMatrix& preyNcons = preyinfo->NconsumptionByAgeAndLength(area);
   const BandMatrix& preyBcons = preyinfo->BconsumptionByAgeAndLength(area);
-  const BandMatrix& predBcons = predator->getConsumption(area, prey->getName());
+  const BandMatrix& predBcons = pred->getConsumption(area, prey->getName());
   int predage, preyage, predl, preyl;
   double B, N, prop;
 
@@ -44,9 +44,9 @@ void PredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
        preyage < NconbyAge[inarea].maxCol(predage); preyage++) {
     NconbyAge[inarea][predage][preyage] = 0.0;
     BconbyAge[inarea][predage][preyage] = 0.0;
-    for (preyl = 0; preyl < prey->numLengthGroups(); preyl++) {
+    for (preyl = 0; preyl < prey->getLengthGroupDiv()->numLengthGroups(); preyl++) {
       if (!(isZero(preyinfo->BconsumptionByLength(area)[preyl]))) {
-        for (predl = 0; predl < predator->numLengthGroups(); predl++) {
+        for (predl = 0; predl < pred->getLengthGroupDiv()->numLengthGroups(); predl++) {
           if (!(isZero(preyBcons[preyage][preyl])) && (!(isZero(predBcons[predl][preyl])))) {
             prop = predBcons[predl][preyl] / preyinfo->BconsumptionByLength(area)[preyl];
             B = prop * preyBcons[preyage][preyl];

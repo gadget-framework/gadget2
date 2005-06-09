@@ -27,9 +27,8 @@ public:
    * \brief This will calculate the amount of prey that is consumed for a given area and timestep
    * \param Alkeys is the AgeBandMatrix giving the amount of prey in the area
    * \param area is the area that the prey consumption is being calculated on
-   * \param CurrentSubstep is the substep of the current timestep
    */
-  virtual void Sum(const AgeBandMatrix& Alkeys, int area, int CurrentSubstep);
+  virtual void Sum(const AgeBandMatrix& Alkeys, int area);
   /**
    * \brief This function will return the amount of prey on the area before consumption
    * \param area is the area that the prey consumption is being calculated on

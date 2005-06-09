@@ -49,12 +49,11 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname)
   int numarea = areas.Size();
   PopInfo nullpop;
 
-  Number.AddRows(numarea, numlen, nullpop);
-  numberPriorToEating.AddRows(numarea, numlen, nullpop);
+  preynumber.AddRows(numarea, numlen, nullpop);
   biomass.AddRows(numarea, numlen, 0.0);
   cons.AddRows(numarea, numlen, 0.0);
   consumption.AddRows(numarea, numlen, 0.0);
-  tooMuchConsumption.resize(numarea, 0);
+  isoverconsumption.resize(numarea, 0);
   total.resize(numarea, 0.0);
   ratio.AddRows(numarea, numlen, 0.0);
   overcons.AddRows(numarea, numlen, 0.0);
@@ -78,12 +77,11 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas,
   int numarea = areas.Size();
   PopInfo nullpop;
 
-  Number.AddRows(numarea, numlen, nullpop);
-  numberPriorToEating.AddRows(numarea, numlen, nullpop);
+  preynumber.AddRows(numarea, numlen, nullpop);
   biomass.AddRows(numarea, numlen, 0.0);
   cons.AddRows(numarea, numlen, 0.0);
   consumption.AddRows(numarea, numlen, 0.0);
-  tooMuchConsumption.resize(numarea, 0);
+  isoverconsumption.resize(numarea, 0);
   total.resize(numarea, 0.0);
   ratio.AddRows(numarea, numlen, 0.0);
   overcons.AddRows(numarea, numlen, 0.0);
@@ -107,10 +105,10 @@ void Prey::Print(ofstream& outfile) const {
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tNumber of prey on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
-      outfile << setw(smallwidth) << setprecision(smallprecision) << Number[area][i].N << sep;
+      outfile << setw(smallwidth) << setprecision(smallprecision) << preynumber[area][i].N << sep;
     outfile << "\n\tWeight of prey on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
-      outfile << setw(smallwidth) << setprecision(smallprecision) << Number[area][i].W << sep;
+      outfile << setw(smallwidth) << setprecision(smallprecision) << preynumber[area][i].W << sep;
     outfile << "\n\tConsumption of prey on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
       outfile << setw(smallwidth) << setprecision(smallprecision) << consumption[area][i] << sep;
@@ -126,24 +124,24 @@ void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
   int i, inarea = this->areaNum(area);
   DoubleVector subConsume(cons[inarea].Size(), 0.0);
   for (i = 0; i < subConsume.Size(); i++)
-    if (!(isZero(Number[inarea][i].W)))
-      subConsume[i] = cons[inarea][i] / Number[inarea][i].W ;
+    if (!(isZero(preynumber[inarea][i].W)))
+      subConsume[i] = cons[inarea][i] / preynumber[inarea][i].W ;
 
-  Alkeys.Subtract(subConsume, *CI, Number[inarea]);
+  Alkeys.Subtract(subConsume, *CI, preynumber[inarea]);
 }
 
 //adds the consumption by biomass
-void Prey::addBiomassConsumption(int area, const DoubleIndexVector& predconsumption) {
+void Prey::addBiomassConsumption(int area, const DoubleIndexVector& predcons) {
   int i, inarea = this->areaNum(area);
-  for (i = predconsumption.minCol(); i < predconsumption.maxCol(); i++)
-    cons[inarea][i] += predconsumption[i];
+  for (i = predcons.minCol(); i < predcons.maxCol(); i++)
+    cons[inarea][i] += predcons[i];
 }
 
 //adds the consumption by numbers
-void Prey::addNumbersConsumption(int area, const DoubleIndexVector& predconsumption) {
+void Prey::addNumbersConsumption(int area, const DoubleIndexVector& predcons) {
   int i, inarea = this->areaNum(area);
-  for (i = predconsumption.minCol(); i < predconsumption.maxCol(); i++)
-    cons[inarea][i] += (predconsumption[i] * Number[inarea][i].W);
+  for (i = predcons.minCol(); i < predcons.maxCol(); i++)
+    cons[inarea][i] += (predcons[i] * preynumber[inarea][i].W);
 }
 
 //check if more is consumed of prey than was available.  If this is
@@ -154,38 +152,35 @@ void Prey::checkConsumption(int area, int numsubsteps) {
   double maxRatio = pow(MaxRatioConsumed, numsubsteps);
   int i, temp = 0;
   int inarea = this->areaNum(area);
-  double rat, biom;
+  double rat;
 
   for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
     rat = 1.0;
-    biom = Number[inarea][i].N * Number[inarea][i].W;
-    if (biom > verysmall)
-      rat = cons[inarea][i] / biom;
+    if (biomass[inarea][i] > verysmall)
+      rat = cons[inarea][i] / biomass[inarea][i];
 
     ratio[inarea][i] = rat;
     if (rat > maxRatio) {
       temp = 1;
-      overcons[inarea][i] = (rat - maxRatio) * biom;
+      overcons[inarea][i] = (rat - maxRatio) * biomass[inarea][i];
       overconsumption[inarea][i] += overcons[inarea][i];
-      cons[inarea][i] = biom * maxRatio;
+      cons[inarea][i] = biomass[inarea][i] * maxRatio;
     } else
       overcons[inarea][i] = 0.0;
 
     consumption[inarea][i] += cons[inarea][i];
   }
-  tooMuchConsumption[inarea] = temp;
+  isoverconsumption[inarea] = temp;
 }
 
 void Prey::Reset() {
   int area, l;
   for (area = 0; area < areas.Size(); area++) {
-    tooMuchConsumption[area] = 0;
+    isoverconsumption[area] = 0;
     total[area] = 0.0;
     for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
-      Number[area][l].N = 0.0;
-      Number[area][l].W = 0.0;
-      numberPriorToEating[area][l].N = 0.0;
-      numberPriorToEating[area][l].W = 0.0;
+      preynumber[area][l].N = 0.0;
+      preynumber[area][l].W = 0.0;
       ratio[area][l] = 0.0;
       biomass[area][l] = 0.0;
       consumption[area][l] = 0.0;

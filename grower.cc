@@ -137,12 +137,8 @@ void Grower::Print(ofstream& outfile) const {
   }
 }
 
-//The following function is just a copy of Prey::Sum
 void Grower::Sum(const PopInfoVector& NumberInArea, int area) {
-  int i, inarea = this->areaNum(area);
-  for (i = 0; i < numGrow[inarea].Size(); i++)
-    numGrow[inarea][i].N = 0.0;
-  numGrow[inarea].Sum(&NumberInArea, *CI);
+  numGrow[this->areaNum(area)].Sum(&NumberInArea, *CI);
 }
 
 void Grower::calcGrowth(int area,
@@ -161,26 +157,6 @@ void Grower::calcGrowth(int area,
 
   CI->interpolateLengths(interpLengthGrowth[inarea], calcLengthGrowth[inarea]);
   CI->interpolateLengths(interpWeightGrowth[inarea], calcWeightGrowth[inarea]);
-}
-
-const DoubleMatrix& Grower::getLengthIncrease(int area) const {
-  return *lgrowth[this->areaNum(area)];
-}
-
-const DoubleMatrix& Grower::getWeightIncrease(int area) const {
-  return *wgrowth[this->areaNum(area)];
-}
-
-const DoubleVector& Grower::getWeight(int area) const {
-  return interpWeightGrowth[this->areaNum(area)];
-}
-
-double Grower::getPowerValue() {
-  return growthcalc->getPower();
-}
-
-double Grower::getMultValue() {
-  return growthcalc->getMult();
 }
 
 void Grower::Reset() {

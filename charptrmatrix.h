@@ -16,32 +16,32 @@ public:
   CharPtrMatrix() { nrow = 0; v = 0; };
   /**
    * \brief This is the CharPtrMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of each row to be created (ie. the size of the CharPtrVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the CharPtrVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  CharPtrMatrix(int nrow, int ncol);
+  CharPtrMatrix(int nr, int nc);
   /**
    * \brief This is the CharPtrMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of each row to be created (ie. the size of the CharPtrVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the CharPtrVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
-  CharPtrMatrix(int nrow, int ncol, char* initial);
+  CharPtrMatrix(int nr, int nc, char* initial);
   /**
    * \brief This is the CharPtrMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of the rows to be created (ie. the size of the CharPtrVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of the rows to be created (ie. the size of the CharPtrVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  CharPtrMatrix(int nrow, const IntVector& ncol);
+  CharPtrMatrix(int nr, const IntVector& nc);
   /**
    * \brief This is the CharPtrMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of the rows to be created (ie. the size of the CharPtrVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of the rows to be created (ie. the size of the CharPtrVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
-  CharPtrMatrix(int nrow, const IntVector& ncol, char* initial);
+  CharPtrMatrix(int nr, const IntVector& nc, char* initial);
   /**
    * \brief This is the CharPtrMatrix constructor that creates a copy of an existing CharPtrMatrix
    * \param initial is the CharPtrMatrix to copy

@@ -152,7 +152,7 @@ void LikelihoodPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
   int i;
   for (i = 0; i < like.Size(); i++)
-    like[i]->LikelihoodPrint(outfile, TimeInfo);
+    like[i]->printLikelihood(outfile, TimeInfo);
 
   outfile.flush();
 }

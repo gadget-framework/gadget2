@@ -9,16 +9,7 @@ PopPredator::PopPredator(const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv)
   : Predator(givenname, Areas) {
 
-  int i;
-  if (isZero(GivenLgrpDiv->dl())) {
-    DoubleVector dv(GivenLgrpDiv->numLengthGroups() + 1);
-    for (i = 0; i < GivenLgrpDiv->numLengthGroups(); i++)
-      dv[i] = GivenLgrpDiv->minLength(i);
-    dv[i] = GivenLgrpDiv->maxLength();
-    LgrpDiv = new LengthGroupDivision(dv);
-  } else
-    LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
-
+  LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
   CI = new ConversionIndex(OtherLgrpDiv, LgrpDiv);
 }
 

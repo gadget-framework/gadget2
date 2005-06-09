@@ -15,17 +15,17 @@ public:
   BandMatrixPtrMatrix() { nrow = 0; v = 0; };
   /**
    * \brief This is the BandMatrixPtrMatrix constructor for a specified size
-   * \param nrow is the size of the vector to be created
-   * \param ncol is the length of each row to be created (ie. the size of the BandMatrixPtrVector to be created for each row)
+   * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the BandMatrixPtrVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */
-  BandMatrixPtrMatrix(int nrow, int ncol);
+  BandMatrixPtrMatrix(int nr, int nc);
   /**
    * \brief This is the BandMatrixPtrMatrix destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
   ~BandMatrixPtrMatrix();
-  void changeElement(int nrow, int ncol, const BandMatrix& value);
+  void changeElement(int row, int col, const BandMatrix& value);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned

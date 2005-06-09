@@ -1,41 +1,41 @@
 #include "initialinputfile.h"
 #include "gadget.h"
 
-int InitialInputFile::reachedEndOfFile() {
+int InitialInputFile::isDataLeft() {
+  if (repeatedValues == 0)
+    return 0;
   infile >> ws;
-  return infile.eof();
+  if (infile.eof())
+    return 0;
+  return 1;
 }
 
-void InitialInputFile::getValues(ParameterVector& sw, DoubleVector& val,
+void InitialInputFile::getVectors(ParameterVector& sw, DoubleVector& val,
   DoubleVector& low, DoubleVector& upp, IntVector& opt) {
 
   sw = switches;
   val = values;
   low = lowerbound;
   upp = upperbound;
-
-  int i;
-  opt.resize(optimise.Size());
-  for (i = 0; i < optimise.Size(); i++)
-    opt[i] = optimise[i];
+  opt = optimise;
 }
 
-void InitialInputFile::getVectorValue(DoubleVector& val) {
+void InitialInputFile::getValues(DoubleVector& val) {
   val = values;
 }
 
-void InitialInputFile::getSwitchValue(ParameterVector& sw) {
+void InitialInputFile::getSwitches(ParameterVector& sw) {
   sw = switches;
 }
 
-InitialInputFile::InitialInputFile(const char* const filename) : header(0) {
+InitialInputFile::InitialInputFile(const char* const filename) {
+  repeatedValues = 0;
   tmpinfile.open(filename, ios::in);
   infile.setStream(tmpinfile);
   if (infile.fail()) {
     cerr << "Error in initial input file - failed to open " << filename << endl;
     exit(EXIT_FAILURE);
   }
-  repeatedValues = 0;
 }
 
 InitialInputFile::~InitialInputFile() {
@@ -43,47 +43,9 @@ InitialInputFile::~InitialInputFile() {
   tmpinfile.clear();
 }
 
-void InitialInputFile::correctHeaderText(int index, const char* name) {
-  int i, correct;
-
-  switch (index) {
-    case 0:
-      correct = strcasecmp(name, "switch");
-      break;
-    case 1:
-      correct = strcasecmp(name, "value");
-      break;
-    case 2:
-      correct = strcasecmp(name, "lower");
-      break;
-    case 3:
-      correct = strcasecmp(name, "upper");
-      break;
-    case 4:
-      correct = strcasecmp(name, "optimise");
-      if (correct != 0)
-        correct = strcasecmp(name, "optimize");
-      break;
-    default:
-      correct = 1;
-  }
-
-  if (correct != 0) {
-    cerr << "While reading input file expected to read header in exactly this order\n"
-      << "switch value lower upper optimise\nBut the header just read was";
-
-    for (i = 0; i < header.Size(); i++)
-      cerr << sep << header[i];
-
-    cerr << " from " << name << endl;
-    exit(EXIT_FAILURE);
-  }
-}
-
 void InitialInputFile::readHeader() {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i, numColumns;
 
   infile >> ws;
   if (isdigit(infile.peek())) {
@@ -98,44 +60,46 @@ void InitialInputFile::readHeader() {
       exit(EXIT_FAILURE);
     }
     istringstream line(textInLine);
-    line >> text;
-    if (line.good())
-      line >> ws;
-
-    if (strcasecmp(text, "switches") == 0 && (line.eof() || line.peek() == ';')) {
+    line >> text >> ws;
+    if (strcasecmp(text, "switches") == 0) {
       // fileformat with switches and vector value/values.
+      repeatedValues = 1;
       infile >> ws;
       if (!readVectorInLine(infile, switches)) {
         cerr << "Error in initial input file - failed to read switches\n";
         exit(EXIT_FAILURE);
       }
-      repeatedValues = 1;
-      infile >> ws;
 
     } else {
       // fileformat must be of the form
       // switch value lowerbound upperbound optimise
       repeatedValues = 0;
-      numColumns = 0;
-      correctHeaderText(numColumns, text);
-      while (!line.eof() && !(line.peek() == ';')) {
-        header.resize(1, text);
-        line >> text;
-        if (line.good())
-          line >> ws;
-
-        numColumns++;
-        correctHeaderText(numColumns, text);
+      if (strcasecmp(text, "switch") != 0) {
+        cerr << "Error in initial input file - failed to read switch header information\n";
+        exit(EXIT_FAILURE);
       }
-
-      if (numColumns != 4) {
-        cerr << "While reading input file expected to read header in exactly this order\n"
-          << "switch value lower upper optimise\nBut the header just read was\n";
-
-        for (i = 0; i < header.Size(); i++)
-          cerr << header[i] << sep;
-
-        cerr << "from " << text << endl;
+      line >> text >> ws;
+      if (strcasecmp(text, "value") != 0) {
+        cerr << "Error in initial input file - failed to read value header information\n";
+        exit(EXIT_FAILURE);
+      }
+      line >> text >> ws;
+      if (strcasecmp(text, "lower") != 0) {
+        cerr << "Error in initial input file - failed to read lower bound header information\n";
+        exit(EXIT_FAILURE);
+      }
+      line >> text >> ws;
+      if (strcasecmp(text, "upper") != 0) {
+        cerr << "Error in initial input file - failed to read upper bound header information\n";
+        exit(EXIT_FAILURE);
+      }
+      line >> text >> ws;
+      if ((strcasecmp(text, "optimise") != 0) && (strcasecmp(text, "optimize") != 0)) {
+        cerr << "Error in initial input file - failed to read optimise header information\n";
+        exit(EXIT_FAILURE);
+      }
+      if (!line.eof()) {
+        cerr << "Error in initial input file - failed to read header information\n";
         exit(EXIT_FAILURE);
       }
     }
@@ -145,6 +109,7 @@ void InitialInputFile::readHeader() {
 void InitialInputFile::readFromFile() {
 
   this->readHeader();
+  infile >> ws;
   if (repeatedValues == 0) {
 
     Parameter sw;
@@ -226,17 +191,15 @@ void InitialInputFile::readFromFile() {
         }
 
   } else {
-    this->readVectorFromLine();
-    if (this->readSwitches() == 1) {
-      if (switches.Size() != values.Size()) {
-        cerr << "Error in initial input file - failed to read switches\n";
-        exit(EXIT_FAILURE);
-      }
+    this->readNextLine();
+    if ((switches.Size() > 0) && (switches.Size() != values.Size())) {
+      cerr << "Error in initial input file - failed to read switches\n";
+      exit(EXIT_FAILURE);
     }
   }
 }
 
-void InitialInputFile::readVectorFromLine() {
+void InitialInputFile::readNextLine() {
   int i;
   double tempX;
   DoubleVector tempValues;
@@ -271,36 +234,6 @@ void InitialInputFile::readVectorFromLine() {
     exit(EXIT_FAILURE);
   }
 
-  infile >> ws;
-  assert(tempValues.Size() == values.Size());
   for (i = 0; i < tempValues.Size(); i++)
     values[i] = tempValues[i];
-}
-
-int InitialInputFile::readSwitches() const {
-  return (switches.Size() > 0);
-}
-
-int InitialInputFile::numVariables() {
-  return values.Size();
-}
-
-int InitialInputFile::Optimise(int i) const {
-  return optimise[i];
-}
-
-double InitialInputFile::Values(int i) const {
-  return values[i];
-}
-
-double InitialInputFile::Lower(int i) const {
-  return lowerbound[i];
-}
-
-double InitialInputFile::Upper(int i) const {
-  return upperbound[i];
-}
-
-Parameter InitialInputFile::Switches(int i) const {
-  return switches[i];
 }

@@ -10,32 +10,21 @@ StockPrey::StockPrey(CommentStream& infile, const IntVector& Areas,
   Alkeys.resize(areas.Size(), minage, minlength, size);
 }
 
-void StockPrey::Sum(const AgeBandMatrix& stock, int area, int CurrentSubstep) {
+void StockPrey::Sum(const AgeBandMatrix& stock, int area) {
   int i, inarea = this->areaNum(area);
-  tooMuchConsumption[inarea] = 0;
-
-  for (i = 0; i < cons.Ncol(inarea); i++)
-    cons[inarea][i] = 0.0;
 
   Alkeys[inarea].setToZero();
   Alkeys[inarea].Add(stock, *CI);
-  Alkeys[inarea].sumColumns(Number[inarea]);
+  Alkeys[inarea].sumColumns(preynumber[inarea]);
 
   PopInfo sum;
-  for (i = 0; i < Number.Ncol(inarea); i++) {
-    sum += Number[inarea][i];
-    biomass[inarea][i] = Number[inarea][i].N * Number[inarea][i].W;
+  for (i = 0; i < preynumber.Ncol(inarea); i++) {
+    sum += preynumber[inarea][i];
+    biomass[inarea][i] = preynumber[inarea][i].N * preynumber[inarea][i].W;
+    cons[inarea][i] = 0.0;
   }
   total[inarea] = sum.N * sum.W;
-
-  if (CurrentSubstep == 1) {
-    for (i = 0; i < consumption.Ncol(inarea); i++) {
-      consumption[inarea][i] = 0.0;
-      overconsumption[inarea][i] = 0.0;
-    }
-    for (i = 0; i < Number[inarea].Size(); i++)
-      numberPriorToEating[inarea][i] = Number[inarea][i];
-  }
+  isoverconsumption[inarea] = 0;
 }
 
 void StockPrey::Print(ofstream& outfile) const {

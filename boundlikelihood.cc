@@ -45,7 +45,7 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
 
   if (switchnr.Size() != 0) {
     ParameterVector sw(keeper->numVariables());
-    keeper->Switches(sw);
+    keeper->getSwitches(sw);
     for (i = 0; i < switches.Size(); i++)
       for (j = 0; j < sw.Size(); j++)
         if (switches[i] == sw[j])
@@ -87,8 +87,8 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
 
     DoubleVector lbs(numvar);
     DoubleVector ubs(numvar);
-    keeper->LowerBds(lbs);
-    keeper->UpperBds(ubs);
+    keeper->getLowerBounds(lbs);
+    keeper->getUpperBounds(ubs);
 
     k = 0;
     for (i = 0; i < numvar; i++) {
@@ -130,7 +130,7 @@ void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keepe
   int i;
   double temp;
   DoubleVector values(keeper->numVariables());
-  keeper->CurrentValues(values);
+  keeper->getCurrentValues(values);
   for (i = 0; i < switchnr.Size(); i++) {
     if (values[switchnr[i]] < lowerbound[i]) {
       temp = absolute(values[switchnr[i]] - lowerbound[i]);
@@ -160,7 +160,7 @@ void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keepe
   }
 }
 
-void BoundLikelihood::SummaryPrint(ofstream& outfile) {
+void BoundLikelihood::printSummary(ofstream& outfile) {
   //JMB there is only one likelihood score here ...
   if (!(isZero(likelihood))) {
     outfile << "all   all        all" << sep << setw(largewidth) << this->getName() << sep

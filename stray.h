@@ -10,6 +10,12 @@
 #include "selectfunc.h"
 #include "stock.h"
 
+/**
+ * \class StrayData
+ * \brief This is the class used to calculate the movement from one stock to other stocks
+ *
+ * This class moves a proportion of fish from one stock to the corresponding age-length cell in other stocks.  This is an extension to the Transition class, since it can move fish from more than one age group.  The length groups of the new stocks are checked, and any fish that haven't yet reached the minimum length of the new stock remain in the original stock.
+ */
 class StrayData : protected LivesOnAreas {
 public:
   /**

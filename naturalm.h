@@ -6,6 +6,14 @@
 #include "timevariablevector.h"
 #include "keeper.h"
 
+/**
+ * \class NaturalM
+ * \brief This is the class used to calculate the affect of natural mortality on the stock
+ *
+ * This class calculates the proportion of the stock that should be removed from the model due to natural mortality (ie. any mortality that is not due to predation, either by another stock or by a fleet).  The vector that is stored after this calculation contains the proportion of each age group that will survive (ie. is not removed due to the natural mortality).
+ *
+ * \note this is currently an age-based calculation, and it would be much better to replace this with a length-based calculation, by re-implementing this as a simple predator with a new suitability function to allow for higher levels of 'predation' on both the young/short fish and the old/long fish
+ */
 class NaturalM {
 public:
   /**
@@ -23,8 +31,8 @@ public:
    */
   ~NaturalM() {};
   /**
-   * \brief This function will return the DoubleVector of the proportion of each length group that will survive on the current timestep
-   * \return proportion surviving from each length group
+   * \brief This function will return the DoubleVector of the proportion of each age group that will survive on the current timestep
+   * \return proportion surviving from each age group
    */
   const DoubleVector& getProportion() const { return proportion; };
   /**
@@ -39,11 +47,11 @@ public:
   void Print(ofstream& outfile);
 protected:
   /**
-   * \brief This is the TimeVariableVector used to store the mortality of each length group
+   * \brief This is the TimeVariableVector used to store the mortality of each age group
    */
   TimeVariableVector mortality;
   /**
-   * \brief This is the DoubleVector used to store the proportion of each length group that will survive (ie. will not die out due to natural mortality)
+   * \brief This is the DoubleVector used to store the proportion of each age group that will survive (ie. will not die out due to natural mortality)
    */
   DoubleVector proportion;
 };

@@ -421,10 +421,8 @@ void Tags::deleteStockTags() {
 
 void Tags::updateMatureStock(const TimeClass* const TimeInfo) {
   int i, id;
-  int currentYear = TimeInfo->getYear();
-  int currentStep = TimeInfo->getStep();
 
-  if (endyear <= currentYear)
+  if (endyear <= TimeInfo->getYear())
     handle.logMessage(LOGWARN, "Warning in tags - tagging experiment has finished");
   else
     for (i = 0; i < matureStocks.Size(); i++) {
@@ -441,10 +439,8 @@ void Tags::updateMatureStock(const TimeClass* const TimeInfo) {
 
 void Tags::updateTransitionStock(const TimeClass* const TimeInfo) {
   int i, id;
-  int currentYear = TimeInfo->getYear();
-  int currentStep = TimeInfo->getStep();
 
-  if (endyear <= currentYear)
+  if (endyear <= TimeInfo->getYear())
     handle.logMessage(LOGWARN, "Warning in tags - tagging experiment has finished");
   else
     for (i = 0; i < transitionStocks.Size(); i++) {
@@ -461,10 +457,8 @@ void Tags::updateTransitionStock(const TimeClass* const TimeInfo) {
 
 void Tags::updateStrayStock(const TimeClass* const TimeInfo) {
   int i, id;
-  int currentYear = TimeInfo->getYear();
-  int currentStep = TimeInfo->getStep();
 
-  if (endyear <= currentYear)
+  if (endyear <= TimeInfo->getYear())
     handle.logMessage(LOGWARN, "Warning in tags - tagging experiment has finished");
   else
     for (i = 0; i < strayStocks.Size(); i++) {

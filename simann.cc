@@ -232,9 +232,9 @@ int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
   IntVector param(nvars);
   IntVector nacp(nvars, 0);
 
-  EcoSystem->ScaledOptValues(x);
-  EcoSystem->LowerOptBds(lowerb);
-  EcoSystem->UpperOptBds(upperb);
+  EcoSystem->getOptScaledValues(x);
+  EcoSystem->getOptLowerBounds(lowerb);
+  EcoSystem->getOptUpperBounds(upperb);
 
   for (i = 0; i < nvars; i++) {
     bestx[i] = x[i];
@@ -322,7 +322,7 @@ int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
             trialf = EcoSystem->SimulateAndUpdate(bestx);
             EcoSystem->setFuncEvalSA(FuncEval - offset);
             EcoSystem->setLikelihoodSA(trialf);
-            EcoSystem->StoreVariables(trialf, bestx);
+            EcoSystem->storeVariables(trialf, bestx);
             return 0;
           }
 
@@ -364,7 +364,7 @@ int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
             fopt = trialf;
             handle.logMessage(LOGINFO, "\nNew optimum found after", (FuncEval - offset), "function evaluations");
             handle.logMessage(LOGINFO, "The likelihood score is", -trialf, "at the point");
-            EcoSystem->StoreVariables(-trialf, bestx);
+            EcoSystem->storeVariables(-trialf, bestx);
             EcoSystem->writeBestValues();
           }
         }
@@ -416,7 +416,7 @@ int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
       EcoSystem->setConvergeSA(1);
       EcoSystem->setFuncEvalSA(FuncEval - offset);
       EcoSystem->setLikelihoodSA(trialf);
-      EcoSystem->StoreVariables(trialf, bestx);
+      EcoSystem->storeVariables(trialf, bestx);
       return 1;
     }
 

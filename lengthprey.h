@@ -26,9 +26,8 @@ public:
    * \brief This will calculate the amount of prey that is consumed for a given area and timestep
    * \param NumberInArea is the PopInfoVector giving the amount of prey in the area
    * \param area is the area that the prey consumption is being calculated on
-   * \param CurrentSubstep is the substep of the current timestep
    */
-  void Sum(const PopInfoVector& NumberInArea, int area, int CurrentSubstep);
+  virtual void Sum(const PopInfoVector& NumberInArea, int area);
 };
 
 #endif

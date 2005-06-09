@@ -69,7 +69,7 @@ private:
   /**
    * \brief This is the PopPredator of the predator - prey pair
    */
-  const PopPredator* predator;
+  const PopPredator* pred;
   /**
    * \brief This is the Prey of the predator - prey pair
    */
