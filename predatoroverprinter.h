@@ -14,10 +14,9 @@ public:
   /**
    * \brief This is the default PredatorOverPrinter constructor
    * \param infile is the CommentStream to read the printer parameters from
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  PredatorOverPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  PredatorOverPrinter(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This is the default PredatorOverPrinter destructor
    */
@@ -25,8 +24,9 @@ public:
   /**
    * \brief This will select the predators required for the printer class to print the requested information
    * \param predatorvec is the PredatorPtrVector of all the available predators
+   * \param Area is the AreaClass for the current model
    */
-  void setPredator(PredatorPtrVector& predatorvec);
+  void setPredator(PredatorPtrVector& predatorvec, const AreaClass* const Area);
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model

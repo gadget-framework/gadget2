@@ -218,16 +218,16 @@ void Stock::updatePopulationPart5(int area, const TimeClass* const TimeInfo) {
 }
 
 void Stock::Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
-  int area, double ratio, int MinAge, int MaxAge) {
+  int area, double ratio, int minage, int maxage) {
 
-  Alkeys[this->areaNum(area)].Add(Addition, *CI, ratio, MinAge, MaxAge);
+  Alkeys[this->areaNum(area)].Add(Addition, *CI, ratio, minage, maxage);
 }
 
 void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
-  int area, double ratio, int MinAge, int MaxAge) {
+  int area, double ratio, int minage, int maxage) {
 
   if ((Addition.numTagExperiments() > 0) && (Addition.numTagExperiments() <= tagAlkeys.numTagExperiments())) {
-    AgebandmratioAdd(tagAlkeys, this->areaNum(area), Addition, AddArea, *CI, ratio, MinAge, MaxAge);
+    AgebandmratioAdd(tagAlkeys, this->areaNum(area), Addition, AddArea, *CI, ratio, minage, maxage);
     tagAlkeys[this->areaNum(area)].updateRatio(Alkeys[this->areaNum(area)]);
   }
 }

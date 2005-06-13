@@ -43,7 +43,7 @@ LengthGroupDivision::LengthGroupDivision(const DoubleVector& Breaks) : error(0),
   for (i = 0; i < size; i++) {
     minlength[i] = Breaks[i];
     meanlength[i] = 0.5 * (Breaks[i] + Breaks[i + 1]);
-    if (Breaks[i] >= Breaks[i + 1])
+    if ((Breaks[i] > Breaks[i + 1]) || (isZero(Breaks[i] - Breaks[i + 1])))
       error = 1;
   }
 }
@@ -54,41 +54,32 @@ LengthGroupDivision::LengthGroupDivision(const LengthGroupDivision& l)
 }
 
 int LengthGroupDivision::numLengthGroup(double length) const {
-  //Allow some error.
-  const double err = (maxlen - minLength(size - 1)) * rathersmall;
   int i;
-
-  //shift the length group down 'err' length units to allow some
-  //error in its representation as a double.
   for (i = 0; i < size; i++)
-    if (this->minLength(i) - err <= length && length < this->maxLength(i) - err)
+    if ((isZero(minlength[i] - length)) || (minlength[i] < length && length < this->maxLength(i)))
       return i;
 
   //Check if length equals the maximum length.
-  if (absolute(maxlen - length) < err)
+  if (isZero(maxlen - length))
     return size - 1;
-  else
-    return -1;
+  return -1;
 }
 
 double LengthGroupDivision::meanLength(int i) const {
   if (i >= size)
     return meanlength[size - 1];
-  else
-    return meanlength[i];
+  return meanlength[i];
 }
 
 double LengthGroupDivision::minLength(int i) const {
   if (i >= size)
     return minlength[size - 1];
-  else
-    return minlength[i];
+  return minlength[i];
 }
 
 double LengthGroupDivision::maxLength(int i) const {
   if (i >= (size - 1))
     return maxlen;
-
   return minlength[i + 1];
 }
 
@@ -97,27 +88,25 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
       || minLength(size - 1) < addition->minLength())
     return 0;
 
-  int i = 0;
-  int j = 0;
-
-  double tempmin = min(minlen, addition->minLength());
-  double tempmax = max(maxlen, addition->maxLength());
-
+  int i = 0, j = 0;
   if (minlen <= addition->minLength() &&
       minLength(size - 1) >= addition->minLength(addition->numLengthGroups() - 1)) {
-    //If this is broader, we only have to check if the divisions are the same
-    //in the overlapping region.
+    //only check if the divisions are the same in the overlapping region.
     while (minLength(i) < addition->minLength())
       i++;
-    for (j = 0; j < addition->numLengthGroups(); j++)
-      if (minLength(i + j) != addition->minLength(j)) {
+    for (j = 0; j < addition->numLengthGroups(); j++) {
+      if (!isZero(minLength(i + j) - addition->minLength(j))) {
         error = 1;
         return 0;
       }
+    }
     return 1;
   }
 
-  DoubleVector lower, middle;  //hold the minlength and meanlength of this
+  double tempmin = min(minlen, addition->minLength());
+  double tempmax = max(maxlen, addition->maxLength());
+  DoubleVector lower, middle;
+
   if (minlen >= addition->minLength()) {
     for (; minlen > addition->minLength(i); i++) {
       lower.resize(1, addition->minLength(i));
@@ -131,16 +120,17 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
       lower.resize(1, minLength(j - i));
       middle.resize(1, meanLength(j - i));
     }
-    if (j - i >= size)
+    if (j - i >= size) {
       for (; j < addition->numLengthGroups(); j++) {
         lower.resize(1, addition->minLength(j));
         middle.resize(1, addition->meanLength(j));
       }
-    else
+    } else {
       for (; j - i < size; j++) {
         lower.resize(1, minLength(j - i));
         middle.resize(1, meanLength(j - i));
       }
+    }
   } else {
     for (; minLength(i) < addition->minLength(); i++) {
       lower.resize(1, minLength(i));
@@ -197,38 +187,29 @@ int lengthGroupIsFiner(const LengthGroupDivision* finer,
   if (coarser->numLengthGroups() == 0 || finer->numLengthGroups() == 0)
     return 2;
 
-  int c = 0;
-  int f, fmin;
-
-  int cmax = coarser->numLengthGroups() - 1;
-  int fmax = finer->numLengthGroups() - 1;
-  double allowederror = (coarser->maxLength() - coarser->minLength()) *
-    rathersmall / coarser->numLengthGroups();
-
+  int c, f, fmin, fmax, cmax;
   double minlength = max(coarser->minLength(), finer->minLength());
   double maxlength = min(coarser->maxLength(), finer->maxLength());
-
-  //check to see if the intersection is empty
-  if (minlength - allowederror >= maxlength)
-    return 2;
-
+  cmax = coarser->numLengthGroups() - 1;
   fmin = finer->numLengthGroup(minlength);
   fmax = finer->numLengthGroup(maxlength);
 
-  if (minlength - allowederror > finer->minLength())
-    if (absolute(minlength - finer->minLength(fmin)) > allowederror) {
-      bogus = fmin;
-      return 0;
-    }
+  //check to see if the intersection is empty
+  if (minlength > maxlength)
+    return 2;
 
-  if (maxlength + allowederror < finer->maxLength())
-    if (absolute(maxlength - finer->minLength(fmax)) > allowederror) {
-      bogus = fmax;
-      return 0;
-    }
+  if ((minlength > finer->minLength()) && !isZero(minlength - finer->minLength(fmin))) {
+    bogus = fmin;
+    return 0;
+  }
+
+  if ((maxlength < finer->maxLength()) && !isZero(maxlength - finer->minLength(fmax))) {
+    bogus = fmax;
+    return 0;
+  }
 
   //if fmax in finer is not in the intersection of the length groups
-  while (absolute(maxlength - finer->minLength(fmax)) < allowederror)
+  while (isZero(maxlength - finer->minLength(fmax)))
     fmax--;
 
   //fmin is the first length group in finer that is wholly contained
@@ -238,8 +219,8 @@ int lengthGroupIsFiner(const LengthGroupDivision* finer,
     c = coarser->numLengthGroup(finer->minLength(f));
     if (c < 0)
       return -1;
-    if (!(coarser->minLength(c) - allowederror <= finer->minLength(f)
-        && finer->maxLength(f) <= coarser->maxLength(c) + allowederror)) {
+    if ((coarser->minLength(c) > finer->minLength(f)) ||
+         (finer->maxLength(f) > coarser->maxLength(c))) {
       bogus = f;
       return 0;
     }
@@ -253,11 +234,6 @@ void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
   int bogus = 0;
   int isfiner = lengthGroupIsFiner(finer, coarser, bogus);
   switch (isfiner) {
-    case -1:
-      handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner for the following lengthgroups");
-      finer->printError();
-      coarser->printError();
-      exit(EXIT_FAILURE);
     case 0:
       handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner for length cell", bogus);
       finer->printError();

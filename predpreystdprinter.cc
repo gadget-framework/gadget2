@@ -88,7 +88,7 @@ PredPreyStdPrinter::~PredPreyStdPrinter() {
 }
 
 void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
-  const PredatorPtrVector& predvec, const PreyPtrVector& preyvec) {
+  const PredatorPtrVector& predvec, const PreyPtrVector& preyvec, const AreaClass* const Area) {
 
   //First we try comparing the StockPredators and StockPreys to predname and preyname.
   int stockpred = 0;
@@ -110,7 +110,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
           areas = stockvec[i]->getAreas();
           outerareas.resize(areas.Size(), 0);
           for (j = 0; j < outerareas.Size(); j++)
-            outerareas[j] = stockvec[i]->getPrintArea(stockvec[i]->areaNum(areas[j]));
+            outerareas[j] = Area->OuterArea(areas[j]);
         }
       }
     }
@@ -126,7 +126,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
           areas = stockvec[i]->getAreas();
           outerareas.resize(areas.Size(), 0);
           for (j = 0; j < outerareas.Size(); j++)
-            outerareas[j] = stockvec[i]->getPrintArea(stockvec[i]->areaNum(areas[j]));
+            outerareas[j] = Area->OuterArea(areas[j]);
         }
       }
     }

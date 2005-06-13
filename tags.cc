@@ -575,3 +575,7 @@ void Tags::addToTagStock(int timeid) {
     }
   }
 }
+
+void Tags::Print(ofstream& outfile) const {
+//  outfile << "\nTag\nName" << sep << this->getName() << endl;
+}

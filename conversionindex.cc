@@ -15,13 +15,20 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   }
 
   int i, j, k, nc, nf;
-  int Mpos, NrOf;
-  const LengthGroupDivision* Lf;  //Will be the finer length group division.
-  const LengthGroupDivision* Lc;  //Will be the coarser length group division.
+  const LengthGroupDivision* Lf;  //will be the finer length group division
+  const LengthGroupDivision* Lc;  //will be the coarser length group division
 
-  //Here after is a check to see which lengthgroupdivision is coarser.
-  //targetisfiner means that L1 is strictly coarser than L2.
-  if (L1->dl() != 0 && L2->dl() != 0) {
+  samedl = 0;
+  offset = 0;
+  interpolate = interp;
+  //targetisfiner means that L1 is strictly coarser than L2
+  if (isZero(L1->dl()) || isZero(L2->dl())) {
+    checkLengthGroupIsFiner(L1, L2);
+    targetisfiner = 0;
+    Lc = L2;
+    Lf = L1;
+
+  } else {
     if (L1->dl() > L2->dl()) {
       targetisfiner = 1;
       Lc = L1;
@@ -31,48 +38,23 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       Lc = L2;
       Lf = L1;
     }
-
-  } else {
-    checkLengthGroupIsFiner(L1, L2);
-    targetisfiner = 0;
-    Lc = L2;
-    Lf = L1;
+    if (isZero(Lf->dl() - Lc->dl())) {
+      samedl = 1;
+      offset = int((Lf->meanLength(0) - Lc->meanLength(0)) / Lf->dl());
+    }
   }
-
-  //do the length group divisions have same dl?
-  offset = 0;
-  if ((Lf->dl() != 0) && (Lf->dl() == Lc->dl())) {
-    offset = int((Lf->meanLength(0) - Lc->meanLength(0)) / Lf->dl());
-    samedl = 1;
-  } else
-    samedl = 0;
-
-  interpolate = interp;
-  //set the switches Mpos and NrOf. They determine how much is needed
-  //of the conversionindex.
-  if (targetisfiner == 1 && samedl == 0)
-    NrOf = 1;
-  else
-    NrOf = 0;
-
-  if (samedl == 0)
-    Mpos = 1;
-  else
-    Mpos = 0;
 
   nf = Lf->numLengthGroups();
   nc = Lc->numLengthGroups();
-
-  //set minlength and maxlength if coarser LengthGroupDivision does
-  //not span all the range of the finer one.
+  //set minlength and maxlength
   for (i = 0; i < nf; i++)
-    if (Lf->minLength(i) >= Lc->minLength()) {
+    if (Lf->minLength(i) > Lc->minLength() || isZero(Lf->minLength(i) - Lc->minLength())) {
       minlength = i;
       break;
     }
 
   for (i = nf - 1; i >= 0; i--)
-    if (Lf->maxLength(i) <= Lc->maxLength()) {
+    if (Lf->maxLength(i) < Lc->maxLength() || isZero(Lf->maxLength(i) - Lc->maxLength())) {
       maxlength = i + 1;
       break;
     }
@@ -81,7 +63,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   pos.resize(nf, 0);
   for (i = minlength; i < maxlength; i++)
     for (j = k; j < nc; j++)
-      if (Lf->meanLength(i) >= Lc->minLength(j) && Lf->meanLength(i) <= Lc->maxLength(j)) {
+      if (Lf->meanLength(i) > Lc->minLength(j) && Lf->meanLength(i) < Lc->maxLength(j)) {
         pos[i] = j;
         k = j;
         break;
@@ -90,9 +72,9 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   for (i = maxlength; i < nf; i++)
     pos[i] = nc;
 
-  //If minpos and maxpos are needed.
-  if (Mpos == 1) {
-    minpos.resize(nc, nf - 1); //initialised to Lf->Size() - 1.
+  //if minpos and maxpos are needed
+  if (samedl == 0) {
+    minpos.resize(nc, nf - 1); //initialised to Lf->Size() - 1
     for (i = minlength; i < maxlength; i++)
       if (i < minpos[pos[i]])
         minpos[pos[i]] = i;
@@ -109,17 +91,17 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     for (i = 0; i < nc - 1;i++)
       if (maxpos[i + 1] < maxpos[i])
         maxpos[i + 1] = maxpos[i];
+
+    //if number in each length group is needed
+    if (targetisfiner == 1) {
+      nrof.resize(nf, 0);
+      for (i = minlength; i < maxlength; i++)
+        nrof[i] = maxpos[pos[i]] - minpos[pos[i]] + 1;
+    }
   }
 
-  //If number in each length group is needed.
-  if (NrOf) {
-    nrof.resize(nf, 0);
-    for (i = minlength; i < maxlength; i++)
-      nrof[i] = maxpos[pos[i]] - minpos[pos[i]] + 1;
-  }
-
-  //if the conversionindex is to be used for interpolation.
-  if (interpolate) {
+  //if the conversionindex is to be used for interpolation
+  if (interpolate == 1) {
     interpratio.resize(nf);
     interppos.resize(nf, -1);
     k = 0;
@@ -136,7 +118,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
         interpratio[i] = (Lf->meanLength(i) - Lc->meanLength(interppos[i])) /
           (Lc->meanLength(interppos[i] + 1) - Lc->meanLength(interppos[i]));
       else {
-        interpratio[i] = -1; //-1 when outside range.
+        interpratio[i] = -1.0; //-1 when outside range
         if (Lf->meanLength(i) < Lc->meanLength(0))
           interppos[i] = 0;
         else
@@ -146,7 +128,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 }
 
 //The function interpolates values calculated on a coarse length distribution
-//Vc to a finer length distribution Vf using the conversionindex CI.
+//Vc to a finer length distribution Vf using the conversionindex CI
 void ConversionIndex::interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc) {
 
   if (!(interpolate))
@@ -167,10 +149,10 @@ void ConversionIndex::interpolateLengths(DoubleVector& Vf, const DoubleVector& V
 
   } else {
     for (i = 0; i < Vf.Size(); i++) {
-      if (interpratio[i] != -1)
-        Vf[i] = Vc[interppos[i]] * (1.0 - interpratio[i]) + Vc[interppos[i] + 1] * interpratio[i];
-      else
+      if (isZero(interpratio[i] + 1.0))
         Vf[i] = Vc[interppos[i]];
+      else
+        Vf[i] = Vc[interppos[i]] * (1.0 - interpratio[i]) + Vc[interppos[i] + 1] * interpratio[i];
     }
   }
 }

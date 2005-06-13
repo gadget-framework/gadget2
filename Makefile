@@ -59,15 +59,15 @@ OBJECTS = $(GADGETOBJECTS)
 VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 	formulamatrixptrvector.o doublematrix.o doublevector.o parametervector.o \
 	otherfoodptrvector.o baseclassptrvector.o popinfoindexvector.o \
-	migvariableptrvector.o conversionindexptrvector.o likelihoodptrvector.o \
+	conversionindexptrvector.o likelihoodptrvector.o suitfuncptrvector.o  \
 	popratiomatrix.o popratiovector.o popinfomatrix.o popinfovector.o \
 	doubleindexvector.o predatorptrvector.o preyptrvector.o fleetptrvector.o \
-	doublematrixptrmatrix.o doublematrixptrvector.o \
+	doublematrixptrmatrix.o doublematrixptrvector.o printerptrvector.o \
 	agebandmatrixptrvector.o popratioindexvector.o agebandmatrixptrmatrix.o \
 	formulamatrix.o formulavector.o charptrmatrix.o charptrvector.o \
 	timevariablevector.o stockptrvector.o agebandmatrixratioptrvector.o \
-	suitfuncptrvector.o tagptrvector.o printerptrvector.o \
-	bandmatrixptrvector.o bandmatrixptrmatrix.o variableinfoptrvector.o
+	tagptrvector.o bandmatrixptrvector.o bandmatrixptrmatrix.o \
+	variableinfoptrvector.o migvariableptrvector.o
 
 GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.o \
 	abstrpredstdinfo.o abstrpreystdinfo.o catchdistribution.o errorhandler.o \
@@ -99,8 +99,9 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
-GADGETINPUT = doubleindexvector.o intvector.o doublevector.o intmatrix.o doublematrix.o \
-        initialinputfile.o charptrvector.o commentstream.o parameter.o parametervector.o 
+GADGETINPUT = doubleindexvector.o intvector.o doublevector.o intmatrix.o \
+        doublematrix.o initialinputfile.o charptrvector.o commentstream.o \
+        parameter.o parametervector.o errorhandler.o strstack.o
 
 LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
 

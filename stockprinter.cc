@@ -15,8 +15,7 @@
 extern RunID RUNID;
 extern ErrorHandler handle;
 
-StockPrinter::StockPrinter(CommentStream& infile,
-  const AreaClass* const Area, const TimeClass* const TimeInfo)
+StockPrinter::StockPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(STOCKPRINTER), LgrpDiv(0), aggregator(0), alptr(0) {
 
   char text[MaxStrLength];
@@ -75,11 +74,6 @@ StockPrinter::StockPrinter(CommentStream& infile,
   handle.Close();
   datafile.close();
   datafile.clear();
-
-  //Must change from outer areas to inner areas.
-  for (i = 0; i < areas.Nrow(); i++)
-    for (j = 0; j < areas.Ncol(i); j++)
-      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //Finished reading from infile.
   LgrpDiv = new LengthGroupDivision(lengths);
@@ -141,7 +135,7 @@ StockPrinter::StockPrinter(CommentStream& infile,
   outfile.flush();
 }
 
-void StockPrinter::setStock(StockPtrVector& stockvec) {
+void StockPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const Area) {
   StockPtrVector stocks;
   delete aggregator;
   int i, j, k, index, minage, maxage;
@@ -169,6 +163,11 @@ void StockPrinter::setStock(StockPtrVector& stockvec) {
     for (j = 0; j < stocks.Size(); j++)
       if ((strcasecmp(stocks[i]->getName(), stocks[j]->getName()) == 0) && (i != j))
         handle.logMessage(LOGFAIL, "Error in stockprinter - repeated stock", stocks[i]->getName());
+
+  //change from outer areas to inner areas.
+  for (i = 0; i < areas.Nrow(); i++)
+    for (j = 0; j < areas.Ncol(i); j++)
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //check stock areas, ages and lengths
   if (handle.getLogLevel() >= LOGWARN) {

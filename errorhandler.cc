@@ -1,8 +1,11 @@
 #include "errorhandler.h"
-#include "runid.h"
 #include "gadget.h"
 
+#ifndef GADGET_NETWORK
+//JMB dont access runid on a network run
+#include "runid.h"
 extern RunID RUNID;
+#endif
 
 ErrorHandler::ErrorHandler() {
   files = new StrStack();
@@ -58,35 +61,25 @@ void ErrorHandler::setLogLevel(int level) {
 }
 
 void ErrorHandler::setLogFile(const char* filename) {
-  if (uselog) {
-    logfile.close();
-    logfile.clear();
-  }
-  logfile.open(filename, ios::out);
-  if (logfile.fail()) {
-    cerr << "Error - unable to open log file " << filename << endl;
-    exit(EXIT_FAILURE);
-  }
-  RUNID.Print(logfile);
-  logfile << "Log file to record Gadget actions that take place during this run"
-    << endl << endl;
-  logfile.flush();
   uselog = 1;
+  logfile.open(filename, ios::out);
+  this->checkIfFailure(logfile, filename);
+#ifndef GADGET_NETWORK
+  RUNID.Print(logfile);
+#endif
+  logfile << "Log file to record Gadget actions that take place during this run\n\n";
+  logfile.flush();
 }
 
 void ErrorHandler::Open(const char* filename) {
-  if (uselog) {
-    logfile << "Opening file " << filename << endl;
-    logfile.flush();
-  }
+  this->logMessage(LOGMESSAGE, "Opening file", filename);
   files->storeString(filename);
 }
 
 void ErrorHandler::Close() {
-  if (uselog) {
+  if (loglevel >= LOGMESSAGE) {
     char* strFilename = files->sendTop();
-    logfile << "Closing file " << strFilename << endl;
-    logfile.flush();
+    this->logMessage(LOGMESSAGE, "Closing file", strFilename);
     delete[] strFilename;
   }
   files->clearString();
@@ -356,6 +349,65 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, double number, 
   }
 }
 
+void ErrorHandler::logMessage(LogLevel mlevel, DoubleVector vec) {
+  if (mlevel > loglevel)
+    return;
+
+  int i;
+  switch (mlevel) {
+    case LOGNONE:
+      break;
+    case LOGFAIL:
+      if (uselog) {
+        for (i = 0; i < vec.Size(); i++)
+          logfile << vec[i] << sep;
+        logfile << endl;
+        logfile.flush();
+      }
+      for (i = 0; i < vec.Size(); i++)
+        cerr << vec[i] << sep;
+      cerr << endl;
+      exit(EXIT_FAILURE);
+      break;
+    case LOGINFO:
+      if (uselog) {
+        for (i = 0; i < vec.Size(); i++)
+          logfile << vec[i] << sep;
+        logfile << endl;
+        logfile.flush();
+      }
+      for (i = 0; i < vec.Size(); i++)
+        cout << vec[i] << sep;
+      cout << endl;
+      break;
+    case LOGWARN:
+      numwarn++;
+      if (uselog) {
+        for (i = 0; i < vec.Size(); i++)
+          logfile << vec[i] << sep;
+        logfile << endl;
+        logfile.flush();
+      }
+      for (i = 0; i < vec.Size(); i++)
+        cerr << vec[i] << sep;
+      cerr << endl;
+      break;
+    case LOGMESSAGE:
+    case LOGDETAIL:
+    case LOGDEBUG:
+      if (uselog) {
+        for (i = 0; i < vec.Size(); i++)
+          logfile << vec[i] << sep;
+        logfile << endl;
+        logfile.flush();
+      }
+      break;
+    default:
+      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      break;
+  }
+}
+
 void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg) {
   if (mlevel > loglevel)
     return;
@@ -367,26 +419,38 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg) {
       break;
     case LOGFAIL:
       if (uselog) {
-        logfile << "Error in file " << strFilename << ":\n" << msg << endl;
+        if (strlen(strFilename) == 0)
+          logfile << "Error on commandline - " << msg << endl;
+        else
+          logfile << "Error in file " << strFilename << " - " << msg << endl;
         logfile.flush();
       }
-      cerr << "Error in file " << strFilename << ":\n" << msg << endl;
+      if (strlen(strFilename) == 0)
+        cerr << "Error on commandline - " << msg << endl;
+      else
+        cerr << "Error in file " << strFilename << " - " << msg << endl;
       delete[] strFilename;
       exit(EXIT_FAILURE);
       break;
     case LOGWARN:
       numwarn++;
       if (uselog) {
-        logfile << "Warning in file " << strFilename << ":\n" << msg << endl;
+        if (strlen(strFilename) == 0)
+          logfile << "Warning on commandline - " << msg << endl;
+        else
+          logfile << "Warning in file " << strFilename << " - " << msg << endl;
         logfile.flush();
       }
-      cerr << "Warning in file " << strFilename << ":\n" << msg << endl;
+      if (strlen(strFilename) == 0)
+        cerr << "Warning on commandline - " << msg << endl;
+      else
+        cerr << "Warning in file " << strFilename << " - " << msg << endl;
       break;
     case LOGMESSAGE:
     case LOGDETAIL:
     case LOGDEBUG:
       if (uselog) {
-        logfile << "Message in file " << strFilename << ":\n" << msg << endl;
+        logfile << "Message in file " << strFilename << endl << msg << endl;
         logfile.flush();
       }
       break;
@@ -408,26 +472,38 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg1, const char*
       break;
     case LOGFAIL:
       if (uselog) {
-        logfile << "Error in file " << strFilename << ":\n" << msg1 << sep << msg2 << endl;
+        if (strlen(strFilename) == 0)
+          logfile << "Error on commandline - " << msg1 << sep << msg2 << endl;
+        else
+          logfile << "Error in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
         logfile.flush();
       }
-      cerr << "Error in file " << strFilename << ":\n" << msg1 << sep << msg2 << endl;
+      if (strlen(strFilename) == 0)
+        cerr << "Error on commandline - " << msg1 << sep << msg2 << endl;
+      else
+        cerr << "Error in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
       delete[] strFilename;
       exit(EXIT_FAILURE);
       break;
     case LOGWARN:
       numwarn++;
       if (uselog) {
-        logfile << "Warning in file " << strFilename << ":\n" << msg1 << sep << msg2 << endl;
+        if (strlen(strFilename) == 0)
+          logfile << "Warning on commandline - " << msg1 << sep << msg2 << endl;
+        else
+          logfile << "Warning in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
         logfile.flush();
       }
-      cerr << "Warning in file " << strFilename << ":\n" << msg1 << sep << msg2 << endl;
+      if (strlen(strFilename) == 0)
+        cerr << "Warning on commandline - " << msg1 << sep << msg2 << endl;
+      else
+        cerr << "Warning in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
       break;
     case LOGMESSAGE:
     case LOGDETAIL:
     case LOGDEBUG:
       if (uselog) {
-        logfile << "Message in file " << strFilename << ":\n" << msg1 << sep << msg2 << endl;
+        logfile << "Message in file " << strFilename << endl << msg1 << sep << msg2 << endl;
         logfile.flush();
       }
       break;
@@ -490,11 +566,11 @@ void ErrorHandler::logFileUnexpected(LogLevel mlevel, const char* msg1, const ch
       break;
     case LOGFAIL:
       if (uselog) {
-        logfile << "Error in file " << strFilename << ":\n"
+        logfile << "Error in file " << strFilename << endl
           << "Expected " << msg1 << " but found instead " << msg2 << endl;
         logfile.flush();
       }
-      cerr << "Error in file " << strFilename << ":\n"
+      cerr << "Error in file " << strFilename << endl
         << "Expected " << msg1 << " but found instead " << msg2 << endl;
       delete[] strFilename;
       exit(EXIT_FAILURE);
@@ -502,18 +578,18 @@ void ErrorHandler::logFileUnexpected(LogLevel mlevel, const char* msg1, const ch
     case LOGWARN:
       numwarn++;
       if (uselog) {
-        logfile << "Warning in file " << strFilename << ":\n"
+        logfile << "Warning in file " << strFilename << endl
           << "Expected " << msg1 << " but found instead " << msg2 << endl;
         logfile.flush();
       }
-      cerr << "Warning in file " << strFilename << ":\n"
+      cerr << "Warning in file " << strFilename << endl
         << "Expected " << msg1 << " but found instead " << msg2 << endl;
       break;
     case LOGMESSAGE:
     case LOGDETAIL:
     case LOGDEBUG:
       if (uselog) {
-        logfile << "Message in file " << strFilename << ":\n"
+        logfile << "Message in file " << strFilename << endl
           << "Expected " << msg1 << " but found instead " << msg2 << endl;
         logfile.flush();
       }
@@ -526,46 +602,41 @@ void ErrorHandler::logFileUnexpected(LogLevel mlevel, const char* msg1, const ch
 }
 
 void ErrorHandler::checkIfFailure(ios& infile, const char* text) {
-  if (uselog)
-    logfile << "Checking to see if file " << text << " can be opened ... ";
-
   if (infile.fail()) {
-    if (uselog) {
-      logfile << "Failed" << endl;
+    if ((uselog) && (loglevel >= LOGMESSAGE)) {
+      logfile << "Checking to see if file " << text << " can be opened ... failed" << endl;
       logfile.flush();
     }
-    char* strFilename = files->sendTop();
-    cerr << "Error in file " << strFilename << ":\nUnable to open datafile " << text << endl;
-    delete[] strFilename;
-    exit(EXIT_FAILURE);
+    this->logFileMessage(LOGFAIL, "failed to open datafile", text);
   }
 
-  if (uselog) {
-    logfile << "OK" << endl;
+  if ((uselog) && (loglevel >= LOGMESSAGE)) {
+    logfile << "Checking to see if file " << text << " can be opened ... OK" << endl;
     logfile.flush();
   }
-  return;
 }
 
 void ErrorHandler::logFinish(int opt) {
-  if (uselog) {
-    if (numwarn > 0)
-      logfile << "\nTotal number of warnings was " << numwarn << endl;
+  if (numwarn > 0)
+    this->logMessage(LOGINFO, "\nTotal number of warnings was", numwarn);
 
+  if (uselog) {
     if (opt)
       logfile << "\nGadget optimisation finished OK - runtime was ";
     else
       logfile << "\nGadget simulation finished OK - runtime was ";
+    logfile.flush();
+#ifndef GADGET_NETWORK
     RUNID.printTime(logfile);
+#endif
   }
 
-  if (loglevel != LOGNONE) {
-    if (numwarn > 0)
-      cout << "\nTotal number of warnings was " << numwarn << endl;
-
+  if (loglevel >= LOGINFO) {
     if (opt) {
       cout << "\nGadget optimisation finished OK - runtime was ";
+#ifndef GADGET_NETWORK
       RUNID.printTime(cout);
+#endif
     } else
       cout << "\nGadget simulation finished OK\n";
     cout << endl;

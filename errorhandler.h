@@ -2,6 +2,7 @@
 #define errorhandler_h
 
 #include "strstack.h"
+#include "doublevector.h"
 #include "gadget.h"
 
 enum LogLevel { LOGNONE = 0, LOGFAIL, LOGINFO, LOGWARN, LOGMESSAGE, LOGDETAIL, LOGDEBUG };
@@ -93,6 +94,12 @@ public:
    * \param msg2 is the second message to be logged
    */
   void logMessage(LogLevel mlevel, const char* msg1, double number, const char* msg2);
+  /**
+   * \brief This function will log a vector of values
+   * \param mlevel is the logging level of the values to be logged
+   * \param vec is the DoubleVector of values to be logged
+   */
+  void logMessage(LogLevel mlevel, DoubleVector vec);
   /**
    * \brief This function will log a warning message generated when reading information from file
    * \param mlevel is the logging level of the message to be logged

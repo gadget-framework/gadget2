@@ -13,8 +13,7 @@
 extern RunID RUNID;
 extern ErrorHandler handle;
 
-PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
-  const AreaClass* const Area, const TimeClass* const TimeInfo)
+PreyOverPrinter::PreyOverPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(PREYOVERPRINTER), preyLgrpDiv(0), aggregator(0), dptr(0) {
 
   char text[MaxStrLength];
@@ -63,11 +62,6 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   handle.Close();
   datafile.close();
   datafile.clear();
-
-  //Must change from outer areas to inner areas.
-  for (i = 0; i < areas.Nrow(); i++)
-    for (j = 0; j < areas.Ncol(i); j++)
-      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //Finished reading from infile.
   preyLgrpDiv = new LengthGroupDivision(lengths);
@@ -129,7 +123,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile,
   outfile.flush();
 }
 
-void PreyOverPrinter::setPrey(PreyPtrVector& preyvec) {
+void PreyOverPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* const Area) {
   PreyPtrVector preys;
   delete aggregator;
   int i, j, k, index;
@@ -150,6 +144,11 @@ void PreyOverPrinter::setPrey(PreyPtrVector& preyvec) {
       handle.logMessage(LOGWARN, "Error in preyoverprinter - looking for prey", preynames[i]);
     exit(EXIT_FAILURE);
   }
+
+  //change from outer areas to inner areas.
+  for (i = 0; i < areas.Nrow(); i++)
+    for (j = 0; j < areas.Ncol(i); j++)
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //check prey areas and lengths
   if (handle.getLogLevel() >= LOGWARN) {

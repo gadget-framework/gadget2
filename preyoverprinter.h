@@ -16,10 +16,9 @@ public:
   /**
    * \brief This is the default PreyOverPrinter constructor
    * \param infile is the CommentStream to read the printer parameters from
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  PreyOverPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  PreyOverPrinter(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This is the default PreyOverPrinter destructor
    */
@@ -27,8 +26,9 @@ public:
   /**
    * \brief This will select the preys required for the printer class to print the requested information
    * \param preyvec is the PreyPtrVector of all the available preys
+   * \param Area is the AreaClass for the current model
    */
-  void setPrey(PreyPtrVector& preyvec);
+  void setPrey(PreyPtrVector& preyvec, const AreaClass* const Area);
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model

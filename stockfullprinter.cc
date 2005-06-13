@@ -99,7 +99,7 @@ StockFullPrinter::~StockFullPrinter() {
   delete[] stockname;
 }
 
-void StockFullPrinter::setStock(StockPtrVector& stockvec) {
+void StockFullPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const Area) {
   CharPtrVector stocknames(1, stockname);
   StockPtrVector stocks;
   delete aggregator;
@@ -126,22 +126,13 @@ void StockFullPrinter::setStock(StockPtrVector& stockvec) {
   areas = stocks[0]->getAreas();
   outerareas.resize(areas.Size(), 0);
   for (i = 0; i < outerareas.Size(); i++)
-    outerareas[i] = stocks[0]->getPrintArea(stocks[0]->areaNum(areas[i]));
+    outerareas[i] = Area->OuterArea(areas[i]);
 
   LgrpDiv = new LengthGroupDivision(*stocks[0]->getLengthGroupDiv());
 
   //prepare for the creation of the aggregator
-  minage = 100;
-  maxage = 0;
-  for (i = 0; i < areas.Size(); i++) {
-    tmpage = stocks[0]->getAgeLengthKeys(areas[i]).minAge();
-    if (tmpage < minage)
-      minage = tmpage;
-    tmpage = stocks[0]->getAgeLengthKeys(areas[i]).maxAge();
-    if (tmpage > maxage)
-      maxage = tmpage;
-  }
-
+  minage = stocks[0]->minAge();
+  maxage = stocks[0]->maxAge();
   IntMatrix agematrix(maxage - minage + 1, 1);
   for (i = 0; i < agematrix.Nrow(); i++)
     agematrix[i][0] = i + minage;

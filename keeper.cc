@@ -11,6 +11,7 @@ extern ErrorHandler handle;
 Keeper::Keeper() {
   stack = new StrStack();
   boundsgiven = 0;
+  fileopen = 0;
   bestlikelihood = 0.0;
 }
 
@@ -57,6 +58,11 @@ void Keeper::keepVariable(double& value, const Parameter& attr) {
 Keeper::~Keeper() {
   stack->clearStack();
   delete stack;
+  if (fileopen) {
+    handle.Close();
+    outfile.close();
+    outfile.clear();
+  }
 }
 
 void Keeper::deleteParameter(const double& var) {
@@ -257,36 +263,40 @@ void Keeper::Update(int pos, double& value) {
     scaledvalues[pos] = value / initialvalues[pos];
 }
 
-void Keeper::writeBestValues() const {
-  int i;
-  for (i = 0; i < values.Size(); i++)
-    if (opt[i] == 1 || opt.Size() == 0)
-      cout << values[i] << sep;
-  cout << endl;
+void Keeper::writeBestValues() {
+  if (opt.Size() == 0) {
+    handle.logMessage(LOGINFO, bestvalues);
+
+  } else {
+    DoubleVector tmpvec(this->numOptVariables(), 0.0);
+    int i, j;
+    j = 0;
+    for (i = 0; i < bestvalues.Size(); i++) {
+      if (opt[i] == 1) {
+        tmpvec[j] = bestvalues[i];
+        j++;
+      }
+    }
+    handle.logMessage(LOGINFO, tmpvec);
+  }
 }
 
-void Keeper::writeOptValues(const LikelihoodPtrVector& likevec) const {
-  int i;
-  for (i = 0; i < values.Size(); i++)
-    if (opt[i] == 1 || opt.Size() == 0)
-      cout << values[i] << sep;
-
-  cout << "\n\nThe scores from each likelihood component are\n";
-  for (i = 0; i < likevec.Size(); i++)
-    cout << likevec[i]->getUnweightedLikelihood() << sep;
-
-  cout << "\n\nThe overall likelihood score is " << EcoSystem->getLikelihood() << endl;
-}
-
-void Keeper::writeInitialInformation(const char* const filename, const LikelihoodPtrVector& likevec) {
-  ofstream outfile;
+void Keeper::openPrintFile(const char* const filename) {
+  if (fileopen)
+    handle.logMessage(LOGFAIL, "Error in keeper - cannot open output file");
+  fileopen = 1;
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
   handle.Open(filename);
-  int i, j;
-
   outfile << "; ";
   RUNID.Print(outfile);
+}
+
+void Keeper::writeInitialInformation(const LikelihoodPtrVector& likevec) {
+  if (!fileopen)
+    handle.logMessage(LOGFAIL, "Error in keeper - cannot write to output file");
+
+  int i, j;
   outfile << "; Listing of the switches used in the current Gadget run\n";
   for (i = 0; i < address.Nrow(); i++) {
     outfile << switches[i].getName() << TAB;
@@ -300,71 +310,43 @@ void Keeper::writeInitialInformation(const char* const filename, const Likelihoo
   for (i = 0; i < likevec.Size(); i++)
     outfile << likevec[i]->getName() << TAB << likevec[i]->getType() << TAB << likevec[i]->getWeight() << endl;
   outfile << ";\n; Listing of the output from the likelihood components for the current Gadget run\n;\n";
-  handle.Close();
-  outfile.close();
-  outfile.clear();
 }
 
-void Keeper::writeValues(const char* const filename,
-  const LikelihoodPtrVector& likevec, int prec) const {
+void Keeper::writeValues(const LikelihoodPtrVector& likevec, int prec) {
 
-  int i, p, w;
-  ofstream outfile;
-  outfile.open(filename, ios::app);
-  handle.checkIfFailure(outfile, filename);
-  handle.Open(filename);
+  if (!fileopen)
+    handle.logMessage(LOGFAIL, "Error in keeper - cannot write to output file");
 
   //JMB - print the number of function evaluations at the start of the line
   outfile << EcoSystem->getFuncEval() << TAB;
 
+  int i, p, w;
   p = prec;
-  w = p + 4;
-  if (prec == 0) {
+  if (prec == 0)
     p = printprecision;
-    w = printwidth;
-  }
+  w = p + 4;
   for (i = 0; i < values.Size(); i++)
     outfile << setw(w) << setprecision(p) << values[i] << sep;
 
-  if (prec == 0) {
+  if (prec == 0)
     p = smallprecision;
-    w = smallwidth;
-  }
+  w = p + 4;
   outfile << TAB << TAB;
   for (i = 0; i < likevec.Size(); i++)
     outfile << setw(w) << setprecision(p) << likevec[i]->getUnweightedLikelihood() << sep;
 
-  if (prec == 0) {
+  if (prec == 0)
     p = fullprecision;
-    w = fullwidth;
-  }
+  w = p + 4;
   outfile << TAB << TAB << setw(w) << setprecision(p) << EcoSystem->getLikelihood() << endl;
-  handle.Close();
-  outfile.close();
-  outfile.clear();
 }
 
-void Keeper::writeInitialInformationInColumns(const char* const filename) const {
-  ofstream outfile;
-  outfile.open(filename, ios::out);
-  handle.checkIfFailure(outfile, filename);
-  handle.Open(filename);
+void Keeper::writeValuesInColumns(int prec) {
 
-  outfile << "; ";
-  RUNID.Print(outfile);
-  handle.Close();
-  outfile.close();
-  outfile.clear();
-}
-
-void Keeper::writeValuesInColumns(const char* const filename, int prec) const {
+  if (!fileopen)
+    handle.logMessage(LOGFAIL, "Error in keeper - cannot write to output file");
 
   int i, p, w;
-  ofstream outfile;
-  outfile.open(filename, ios::app);
-  handle.checkIfFailure(outfile, filename);
-  handle.Open(filename);
-
   p = prec;
   if (prec == 0)
     p = largeprecision;
@@ -389,9 +371,6 @@ void Keeper::writeValuesInColumns(const char* const filename, int prec) const {
         << setw(smallwidth) << setprecision(smallprecision) << upperbds[i] << TAB << opt[i] << endl;
     }
   }
-  handle.Close();
-  outfile.close();
-  outfile.clear();
 }
 
 void Keeper::Update(const StochasticData* const Stoch) {
@@ -473,12 +452,12 @@ void Keeper::getSwitches(ParameterVector& sw) const {
     sw[i] = switches[i];
 }
 
-void Keeper::writeParamsInColumns(const char* const filename, int prec, int interrupt) const {
+void Keeper::writeParams(const char* const filename, int prec, int interrupt) {
 
   int i, p, w, check;
-  ofstream outfile;
-  outfile.open(filename, ios::out);
-  handle.checkIfFailure(outfile, filename);
+  ofstream paramfile;
+  paramfile.open(filename, ios::out);
+  handle.checkIfFailure(paramfile, filename);
   handle.Open(filename);
 
   p = prec;
@@ -486,79 +465,79 @@ void Keeper::writeParamsInColumns(const char* const filename, int prec, int inte
     p = largeprecision;
   w = p + 4;
 
-  outfile << "; ";
-  RUNID.Print(outfile);
+  paramfile << "; ";
+  RUNID.Print(paramfile);
 
   if (interrupt == 1) {
-    outfile << "; Gadget was interrupted after " << EcoSystem->getFuncEval()
+    paramfile << "; Gadget was interrupted after " << EcoSystem->getFuncEval()
       << " function evaluations\n; the best likelihood value found so far is "
       << setprecision(p) << bestlikelihood << endl;
 
   } else if (EcoSystem->getFuncEval() == 0) {
-    outfile << "; a stochastic run was performed giving a likelihood value of "
+    paramfile << "; a stochastic run was performed giving a likelihood value of "
       << setprecision(p) << EcoSystem->getLikelihood() << endl;
 
   } else {
     if (EcoSystem->getFuncEvalSA() != 0) {
-      outfile << "; the Simulated Annealing algorithm ran for " << EcoSystem->getFuncEvalSA()
+      paramfile << "; the Simulated Annealing algorithm ran for " << EcoSystem->getFuncEvalSA()
         << " function evaluations\n; and stopped when the likelihood value was "
         << setprecision(p) << EcoSystem->getLikelihoodSA();
       if (EcoSystem->getConvergeSA() == 1)
-        outfile << "\n; because the convergence criteria were met\n";
+        paramfile << "\n; because the convergence criteria were met\n";
       else
-        outfile << "\n; because the maximum number of function evaluations was reached\n";
+        paramfile << "\n; because the maximum number of function evaluations was reached\n";
     }
 
     if (EcoSystem->getFuncEvalHJ() != 0) {
-      outfile << "; the Hooke & Jeeves algorithm ran for " << EcoSystem->getFuncEvalHJ()
+      paramfile << "; the Hooke & Jeeves algorithm ran for " << EcoSystem->getFuncEvalHJ()
         << " function evaluations\n; and stopped when the likelihood value was "
         << setprecision(p) << EcoSystem->getLikelihoodHJ();
       if (EcoSystem->getConvergeHJ() == 1)
-        outfile << "\n; because the convergence criteria were met\n";
+        paramfile << "\n; because the convergence criteria were met\n";
       else
-        outfile << "\n; because the maximum number of function evaluations was reached\n";
+        paramfile << "\n; because the maximum number of function evaluations was reached\n";
     }
 
     if (EcoSystem->getFuncEvalBFGS() != 0) {
-      outfile << "; the BFGS algorithm ran for " << EcoSystem->getFuncEvalBFGS()
+      paramfile << "; the BFGS algorithm ran for " << EcoSystem->getFuncEvalBFGS()
         << " function evaluations\n; and stopped when the likelihood value was "
         << setprecision(p) << EcoSystem->getLikelihoodBFGS();
       if (EcoSystem->getConvergeBFGS() == 1)
-        outfile << "\n; because the convergence criteria were met\n";
+        paramfile << "\n; because the convergence criteria were met\n";
       else
-        outfile << "\n; because the maximum number of function evaluations was reached\n";
+        paramfile << "\n; because the maximum number of function evaluations was reached\n";
     }
   }
 
-  outfile << "switch\tvalue\t\tlower\tupper\toptimise\n";
+  paramfile << "switch\tvalue\t\tlower\tupper\toptimise\n";
   for (i = 0; i < bestvalues.Size(); i++) {
     //JMB - if a switch is outside the bounds, we need to reset this back to the bound
     //note that the simulation should have used the value of the bound anyway ...
     check = 0;
     if (lowerbds[i] > bestvalues[i]) {
       check++;
-      outfile << switches[i].getName() << TAB << setw(w) << setprecision(p) << lowerbds[i] << TAB;
+      paramfile << switches[i].getName() << TAB << setw(w) << setprecision(p) << lowerbds[i];
       handle.logMessage(LOGWARN, "Warning in keeper - parameter has a final value", bestvalues[i]);
       handle.logMessage(LOGWARN, "which is lower than the corresponding lower bound", lowerbds[i]);
     } else if (upperbds[i] < bestvalues[i]) {
       check++;
-      outfile << switches[i].getName() << TAB << setw(w) << setprecision(p) << upperbds[i] << TAB;
+      paramfile << switches[i].getName() << TAB << setw(w) << setprecision(p) << upperbds[i];
       handle.logMessage(LOGWARN, "Warning in keeper - parameter has a final value", bestvalues[i]);
       handle.logMessage(LOGWARN, "which is higher than the corresponding upper bound", upperbds[i]);
     } else
-      outfile << switches[i].getName() << TAB << setw(w) << setprecision(p) << bestvalues[i] << TAB;
+      paramfile << switches[i].getName() << TAB << setw(w) << setprecision(p) << bestvalues[i];
 
-    outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i]
+    paramfile << TAB << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i]
       << setw(smallwidth) << setprecision(smallprecision) << upperbds[i]
       << setw(smallwidth) << opt[i];
 
     if (check)
-      outfile << " ; warning - parameter has been reset to bound";
-    outfile << endl;
+      paramfile << " ; warning - parameter has been reset to bound";
+    paramfile << endl;
   }
   handle.Close();
-  outfile.close();
-  outfile.clear();
+  paramfile.close();
+  paramfile.clear();
 }
 
 void Keeper::getLowerBounds(DoubleVector& lbs) const {

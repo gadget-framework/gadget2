@@ -154,45 +154,37 @@ public:
    */
   void Update(const StochasticData* const Stoch);
   /**
-   * \brief This function will write header information about the model parameters to file
+   * \brief This function will open the output file and write header information
    * \param filename is the name of the file to write the model information to
+   */
+  void openPrintFile(const char* const filename);
+  /**
+   * \brief This function will write header information about the model parameters to file
    * \param likevec is the LikelihoodPtrVector containing the likelihood components for the current model
    */
-  void writeInitialInformation(const char* const filename, const LikelihoodPtrVector& likevec);
+  void writeInitialInformation(const LikelihoodPtrVector& likevec);
   /**
    * \brief This function will write current information about the model parameters to file
-   * \param filename is the name of the file to write the model information to
    * \param likevec is the LikelihoodPtrVector containing the likelihood components for the current model
    * \param prec is the precision to use in the output file
    */
-  void writeValues(const char* const filename, const LikelihoodPtrVector& likevec, int prec) const;
-  /**
-   * \brief This function will write header information about the model parameters to file in a column format
-   * \param filename is the name of the file to write the model information to
-   */
-  void writeInitialInformationInColumns(const char* const filename) const;
+  void writeValues(const LikelihoodPtrVector& likevec, int prec);
   /**
    * \brief This function will write current information about the model parameters to file in a column format
-   * \param filename is the name of the file to write the model information to
    * \param prec is the precision to use in the output file
    */
-  void writeValuesInColumns(const char* const filename, int prec) const;
+  void writeValuesInColumns(int prec);
   /**
    * \brief This function will write final information about the model parameters to file in a column format (which can then be used as the starting point for a subsequent model run)
    * \param filename is the name of the file to write the model information to
    * \param prec is the precision to use in the output file
    * \param interrupt is a flag to denote whether the current run was interrupted by the user or not
    */
-  void writeParamsInColumns(const char* const filename, int prec, int interrupt) const;
+  void writeParams(const char* const filename, int prec, int interrupt);
   /**
    * \brief This function will display information about the best values of the parameters found so far during an optimisation run
    */
-  void writeBestValues() const;
-  /**
-   * \brief This function will display information about the optimised values of the parameters
-   * \param likevec is the LikelihoodPtrVector containing the likelihood components for the current model
-   */
-  void writeOptValues(const LikelihoodPtrVector& likevec) const;
+  void writeBestValues();
   /**
    * \brief This function will check that the values of the parameters are within the bounds specified in the input file
    * \param likevec is the LikelihoodPtrVector containing the likelihood components for the current model
@@ -252,6 +244,14 @@ protected:
    * \brief This is the best likelihood score found so far by the optimisation process
    */
   double bestlikelihood;
+  /**
+   * \brief This is a flag used to denote whether an ouput file has been specified or not
+   */
+  int fileopen;
+  /**
+   * \brief This ofstream is the file that all the parameter information gets sent to
+   */
+  ofstream outfile;
 };
 
 #endif

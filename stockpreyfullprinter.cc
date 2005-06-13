@@ -101,7 +101,7 @@ StockPreyFullPrinter::~StockPreyFullPrinter() {
   delete[] stockname;
 }
 
-void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
+void StockPreyFullPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const Area) {
   CharPtrVector stocknames(1, stockname);
   StockPtrVector stocks;
   int index = 0;
@@ -126,7 +126,7 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec) {
   areas = stocks[0]->getAreas();
   outerareas.resize(areas.Size(), 0);
   for (i = 0; i < outerareas.Size(); i++)
-    outerareas[i] = stocks[0]->getPrintArea(stocks[0]->areaNum(areas[i]));
+    outerareas[i] = Area->OuterArea(areas[i]);
 
   //Here comes some code that is only useful when handling one stock.
   if (stocks[0]->isEaten())

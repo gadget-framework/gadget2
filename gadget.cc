@@ -23,28 +23,21 @@ int main(int aNumber, char* const aVector[]) {
   //-ansi flag lgamma returns an integer value. [MNAA&AJ 05.2001]
   assert(lgamma(1.2) != floor(lgamma(1.2)));
 
-  //JMB - changed to use GADGET_ .. instead of BORMICON_ ..
   char* workingdir = getenv("GADGET_WORKING_DIR");
   if (workingdir == 0) {
-    if ((workingdir = (char*)malloc(LongString)) == NULL) {
-      cerr << "Failed to malloc space for current working directory\n";
-      exit(EXIT_FAILURE);
-    }
+    if ((workingdir = (char*)malloc(LongString)) == NULL)
+      handle.logMessage(LOGFAIL, "Error - failed to malloc space for current working directory");
     check = 1;
-    if (getcwd(workingdir, LongString) == NULL) {
-      cerr << "Failed to get current working directory - pathname too long\n";
-      exit(EXIT_FAILURE);
-    }
+    if (getcwd(workingdir, LongString) == NULL)
+      handle.logMessage(LOGFAIL, "Error - failed to get current working directory");
   }
 
   char* inputdir = getenv("GADGET_DATA_DIR");
   if (inputdir == 0)
     inputdir = workingdir;
 
-  if (chdir(inputdir) != 0) {
-    cerr << "Failed to change working directory to\n" << inputdir << endl;
-    exit(EXIT_FAILURE);
-  }
+  if (chdir(inputdir) != 0)
+    handle.logMessage(LOGFAIL, "Error - failed change working directory to", inputdir);
 
   if (aNumber > 1)
     main.read(aNumber, aVector);
@@ -94,18 +87,18 @@ int main(int aNumber, char* const aVector[]) {
         EcoSystem->writeStatus(main.getPrintInitialFile());
       EcoSystem->Simulate(main.runLikelihood(), 1);   //printing OK
       if ((main.getPI()).getPrint())
-        EcoSystem->writeValues((main.getPI()).getOutputFile(), (main.getPI()).getPrecision());
+        EcoSystem->writeValues();
       if ((main.getPI()).getPrintColumn())
-        EcoSystem->writeValuesInColumns((main.getPI()).getColumnOutputFile(), (main.getPI()).getPrecision());
+        EcoSystem->writeValuesInColumns();
       while (data->isDataLeft()) {
         data->readNextLine();
         EcoSystem->Update(data);
         EcoSystem->checkBounds();
         EcoSystem->Simulate(main.runLikelihood(), 1); //printing OK
         if ((main.getPI()).getPrint())
-          EcoSystem->writeValues((main.getPI()).getOutputFile(), (main.getPI()).getPrecision());
+          EcoSystem->writeValues();
         if ((main.getPI()).getPrintColumn())
-          EcoSystem->writeValuesInColumns((main.getPI()).getColumnOutputFile(), (main.getPI()).getPrecision());
+          EcoSystem->writeValuesInColumns();
       }
       delete data;
 
@@ -117,9 +110,9 @@ int main(int aNumber, char* const aVector[]) {
         EcoSystem->writeStatus(main.getPrintInitialFile());
       EcoSystem->Simulate(main.runLikelihood(), 1);   //printing OK
       if ((main.getPI()).getPrint())
-        EcoSystem->writeValues((main.getPI()).getOutputFile(), (main.getPI()).getPrecision());
+        EcoSystem->writeValues();
       if ((main.getPI()).getPrintColumn())
-        EcoSystem->writeValuesInColumns((main.getPI()).getColumnOutputFile(), (main.getPI()).getPrecision());
+        EcoSystem->writeValuesInColumns();
     }
 
   } else if (main.runOptimise()) {
@@ -151,7 +144,7 @@ int main(int aNumber, char* const aVector[]) {
 
   //JMB - print final values of parameters
   if (!(main.runNetwork()))
-    EcoSystem->writeParamsInColumns((main.getPI()).getParamOutFile(), (main.getPI()).getPrecision());
+    EcoSystem->writeParams((main.getPI()).getParamOutFile(), (main.getPI()).getPrecision());
 
   if (check == 1)
     free(workingdir);

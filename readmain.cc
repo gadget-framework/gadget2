@@ -145,13 +145,13 @@ void Ecosystem::readPrinters(CommentStream& infile) {
     else if (strcasecmp(type, "stockfullprinter") == 0)
       printvec.resize(1, new StockFullPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "stockprinter") == 0)
-      printvec.resize(1, new StockPrinter(infile, Area, TimeInfo));
+      printvec.resize(1, new StockPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "predatorprinter") == 0)
-      printvec.resize(1, new PredatorPrinter(infile, Area, TimeInfo));
+      printvec.resize(1, new PredatorPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "predatoroverprinter") == 0)
-      printvec.resize(1, new PredatorOverPrinter(infile, Area, TimeInfo));
+      printvec.resize(1, new PredatorOverPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "preyoverprinter") == 0)
-      printvec.resize(1, new PreyOverPrinter(infile, Area, TimeInfo));
+      printvec.resize(1, new PreyOverPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "stockpreyfullprinter") == 0)
       printvec.resize(1, new StockPreyFullPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "predpreystdlengthprinter") == 0)

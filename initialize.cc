@@ -101,8 +101,6 @@ void Ecosystem::Initialise() {
       handle.logMessage(LOGMESSAGE, "Initialising stock", stockvec[i]->getName());
     stockvec[i]->setStock(stockvec);
   }
-  for (i = 0; i < stockvec.Size(); i++)
-    stockvec[i]->setCI();
   for (i = 0; i < tagvec.Size(); i++) {
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "Initialising tagging experiment", tagvec[i]->getName());
@@ -161,28 +159,28 @@ void Ecosystem::Initialise() {
       handle.logMessage(LOGMESSAGE, "Initialising printer for output file", printvec[i]->getFileName());
     switch (printvec[i]->getType()) {
       case STOCKSTDPRINTER:
-        ((StockStdPrinter*)(printvec[i]))->setStock(stockvec);
+        ((StockStdPrinter*)(printvec[i]))->setStock(stockvec, Area);
         break;
       case STOCKPRINTER:
-        ((StockPrinter*)(printvec[i]))->setStock(stockvec);
+        ((StockPrinter*)(printvec[i]))->setStock(stockvec, Area);
         break;
       case PREDATORPRINTER:
-        ((PredatorPrinter*)(printvec[i]))->setPredAndPrey(predvec, preyvec);
+        ((PredatorPrinter*)(printvec[i]))->setPredAndPrey(predvec, preyvec, Area);
         break;
       case PREDATOROVERPRINTER:
-        ((PredatorOverPrinter*)(printvec[i]))->setPredator(predvec);
+        ((PredatorOverPrinter*)(printvec[i]))->setPredator(predvec, Area);
         break;
       case PREYOVERPRINTER:
-        ((PreyOverPrinter*)(printvec[i]))->setPrey(preyvec);
+        ((PreyOverPrinter*)(printvec[i]))->setPrey(preyvec, Area);
         break;
       case STOCKPREYFULLPRINTER:
-        ((StockPreyFullPrinter*)(printvec[i]))->setStock(stockvec);
+        ((StockPreyFullPrinter*)(printvec[i]))->setStock(stockvec, Area);
         break;
       case PREDPREYSTDPRINTER:
-        ((PredPreyStdPrinter*)(printvec[i]))->setStocksAndPredAndPrey(stockvec, predvec, preyvec);
+        ((PredPreyStdPrinter*)(printvec[i]))->setStocksAndPredAndPrey(stockvec, predvec, preyvec, Area);
         break;
       case STOCKFULLPRINTER:
-        ((StockFullPrinter*)(printvec[i]))->setStock(stockvec);
+        ((StockFullPrinter*)(printvec[i]))->setStock(stockvec, Area);
         break;
       case LIKELIHOODPRINTER:
         ((LikelihoodPrinter*)(printvec[i]))->setLikelihood(likevec);

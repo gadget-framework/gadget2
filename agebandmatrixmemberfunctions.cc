@@ -21,8 +21,8 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
   if (maxaddage < minaddage)
     return;
 
-  if (CI.SameDl()) {
-    offset = CI.Offset();
+  if (CI.isSameDl()) {
+    offset = CI.getOffset();
     for (age = minaddage; age <= maxaddage; age++) {
       minl = max(this->minLength(age), Addition.minLength(age) + offset);
       maxl = min(this->maxLength(age), Addition.maxLength(age) + offset);
@@ -33,12 +33,12 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
       }
     }
   } else {
-    if (CI.TargetIsFiner()) {
+    if (CI.isFiner()) {
       for (age = minaddage; age <= maxaddage; age++) {
         minl = max(this->minLength(age), CI.minPos(Addition.minLength(age)));
         maxl = min(this->maxLength(age), CI.maxPos(Addition.maxLength(age) - 1) + 1);
         for (l = minl; l < maxl; l++) {
-          pop = Addition[age][CI.Pos(l)];
+          pop = Addition[age][CI.getPos(l)];
           pop *= ratio;
           if (isZero(CI.Nrof(l))) {
             if (handle.getLogLevel() >= LOGWARN)
@@ -52,12 +52,12 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
       for (age = minaddage; age <= maxaddage; age++) {
         minl = max(CI.minPos(this->minLength(age)), Addition.minLength(age));
         maxl = min(CI.maxPos(this->maxLength(age) - 1) + 1, Addition.maxLength(age));
-        if (maxl > minl && CI.Pos(maxl - 1) < this->maxLength(age)
-            && CI.Pos(minl) >= this->minLength(age)) {
+        if (maxl > minl && CI.getPos(maxl - 1) < this->maxLength(age)
+            && CI.getPos(minl) >= this->minLength(age)) {
           for (l = minl; l < maxl; l++) {
             pop = Addition[age][l];
             pop *= ratio;
-            (*v[age - minage])[CI.Pos(l)] += pop;
+            (*v[age - minage])[CI.getPos(l)] += pop;
           }
         }
       }
@@ -66,10 +66,10 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
 }
 
 void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& CI) {
-  if ((handle.getLogLevel() >= LOGWARN) && (CI.TargetIsFiner() == 1))
+  if ((handle.getLogLevel() >= LOGWARN) && (CI.isFiner() == 1))
     handle.logMessage(LOGWARN, "Warning in agebandmatrix - target is finer for multiply");
 
-  int i, j, j1, j2;
+  int i, j, j1, j2, offset;
   DoubleVector UsedRatio(Ratio);
   for (i = 0; i < UsedRatio.Size(); i++) {
     if (isZero(UsedRatio[i]))
@@ -81,19 +81,20 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& C
     }
   }
 
-  if (CI.SameDl()) {
+  if (CI.isSameDl()) {
+    offset = CI.getOffset();
     for (i = 0; i < nrow; i++) {
       j1 = max(v[i]->minCol(), CI.minLength());
       j2 = min(v[i]->maxCol(), CI.maxLength());
       for (j = j1; j < j2; j++)
-        (*v[i])[j].N *= UsedRatio[j - CI.Offset()];
+        (*v[i])[j].N *= UsedRatio[j - offset];
     }
   } else {
     for (i = 0; i < nrow; i++) {
       j1 = max(v[i]->minCol(), CI.minLength());
       j2 = min(v[i]->maxCol(), CI.maxLength());
       for (j = j1; j < j2; j++)
-        (*v[i])[j].N *= UsedRatio[CI.Pos(j)];
+        (*v[i])[j].N *= UsedRatio[CI.getPos(j)];
     }
   }
 }

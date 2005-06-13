@@ -14,8 +14,7 @@
 extern RunID RUNID;
 extern ErrorHandler handle;
 
-PredatorPrinter::PredatorPrinter(CommentStream& infile,
-  const AreaClass* const Area, const TimeClass* const TimeInfo)
+PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(PREDATORPRINTER), predLgrpDiv(0), preyLgrpDiv(0), aggregator(0), bptr(0) {
 
   char text[MaxStrLength];
@@ -92,11 +91,6 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   handle.Close();
   datafile.close();
   datafile.clear();
-
-  //Must change from outer areas to inner areas.
-  for (i = 0; i < areas.Nrow(); i++)
-    for (j = 0; j < areas.Ncol(i); j++)
-      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //Finished reading from infile.
   predLgrpDiv = new LengthGroupDivision(predlengths);
@@ -175,7 +169,9 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile,
   outfile.flush();
 }
 
-void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVector& preyvec) {
+void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec,
+  PreyPtrVector& preyvec, const AreaClass* const Area) {
+
   PredatorPtrVector predators;
   PreyPtrVector preys;
   int i, j, k, index;
@@ -199,6 +195,11 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVect
       }
     }
   }
+
+  //change from outer areas to inner areas.
+  for (i = 0; i < areas.Nrow(); i++)
+    for (j = 0; j < areas.Ncol(i); j++)
+      areas[i][j] = Area->InnerArea(areas[i][j]);
 
   //check predator and prey areas and length groups
   if (handle.getLogLevel() >= LOGWARN) {

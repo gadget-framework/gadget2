@@ -19,15 +19,15 @@ public:
    * \brief This is the default ConversionIndex destructor
    */
   ~ConversionIndex() {};
-  int Pos(int i) const { return pos[i]; };
+  int getPos(int i) const { return pos[i]; };
   int minLength() const { return minlength; };
   int maxLength() const { return maxlength; };
   int minPos(int i) const { return minpos[i]; };
   int maxPos(int i) const { return maxpos[i]; };
   int Nrof(int i) const { return nrof[i]; };
-  int Offset() const { return offset; };
-  int SameDl() const { return samedl; };
-  int TargetIsFiner() const { return targetisfiner; };
+  int getOffset() const { return offset; };
+  int isSameDl() const { return samedl; };
+  int isFiner() const { return targetisfiner; };
   int Size() const { return pos.Size(); };
   void interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc);
 protected:

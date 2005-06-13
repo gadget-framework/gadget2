@@ -14,7 +14,7 @@ public:
    * \param infile is the CommentStream to read the printer parameters from
    * \param TimeInfo is the TimeClass for the current model
    */
-  LikelihoodPrinter(CommentStream& infile, const  TimeClass* const TimeInfo);
+  LikelihoodPrinter(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This is the default LikelihoodPrinter destructor
    */

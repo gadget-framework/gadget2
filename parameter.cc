@@ -1,5 +1,8 @@
 #include "parameter.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 Parameter::Parameter(char* value) {
   if (value == NULL) {
@@ -9,8 +12,7 @@ Parameter::Parameter(char* value) {
       name = new char[strlen(value) + 1];
       strcpy(name, value);
     } else {
-      cerr << "Invalid parameter name - " << value << endl;
-      exit(EXIT_FAILURE);
+      handle.logMessage(LOGFAIL, "Error in parameter - invalid parameter name", value);
     }
   }
 }
@@ -99,7 +101,7 @@ CommentStream& operator >> (CommentStream& in, Parameter& p) {
 
   tempString[i] = '\0';
   if (i == MaxStrLength)
-    cerr << "Warning - name of parameter has reached maximum allowed length\n";
+    handle.logMessage(LOGWARN, "Error in parameter - parameter name has reached maximum length");
 
   if (p.name != NULL) {
     delete[] p.name;
@@ -133,7 +135,7 @@ istream& operator >> (istream& in, Parameter& p) {
 
   tempString[i] = '\0';
   if (i == MaxStrLength)
-    cerr << "Warning - name of parameter has reached maximum allowed length\n";
+    handle.logMessage(LOGWARN, "Error in parameter - parameter name has reached maximum length");
 
   if (p.name != NULL) {
     delete[] p.name;

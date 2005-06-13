@@ -65,5 +65,5 @@ void InterruptInterface::dumpParams() {
   char interruptfile[15];
   strncpy(interruptfile, "", 15);
   strcpy(interruptfile, "current.out");
-  eco->writeParamsInColumns(interruptfile, 0);
+  eco->writeParams(interruptfile, 0);
 }

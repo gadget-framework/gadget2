@@ -6,8 +6,7 @@
 extern ErrorHandler handle;
 
 TimeVariable::TimeVariable()
-  : fromfile(0), usemodelmatrix(0), timestepnr(1), time(1),
-    firsttimestepnr(0), lastvalue(-1.0), value(0.0) {
+  : fromfile(0), usemodelmatrix(0), timeid(1), time(1), lastvalue(-1.0), value(0.0) {
 }
 
 void TimeVariable::read(CommentStream& infile,
@@ -23,17 +22,20 @@ void TimeVariable::read(CommentStream& infile,
   infile >> text;
   subfile.open(text, ios::in);
   if (subfile.fail()) {
-    Formula* number = new Formula();
+    Formula* f = new Formula();
     infile.seekg(readPos);
-    if (!(infile >> *number))
+    if (!(infile >> *f))
       handle.logFileMessage(LOGFAIL, "Possible error in size of vector - didnt expect to find", text);
-    number->Inform(keeper);
-    number->Interchange(Value, keeper);
-    delete number;
+    f->Inform(keeper);
+    f->Interchange(init, keeper);
+    delete f;
+
   } else {
     handle.Open(text);
     this->readFromFile(subcomment, TimeInfo, keeper);
     handle.Close();
+    subfile.close();
+    subfile.clear();
   }
   keeper->clearLast();
 }
@@ -41,9 +43,9 @@ void TimeVariable::read(CommentStream& infile,
 void TimeVariable::readFromFile(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
-  int i, j;
+  int i, j, check;
   fromfile = 1;
-  int nrofcoeff = 0;
+  int numcoeff = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
@@ -52,16 +54,15 @@ void TimeVariable::readFromFile(CommentStream& infile,
 
   char c = infile.peek();
   if ((c == 'n') || (c == 'N'))
-    readWordAndVariable(infile, "nrofcoeff", nrofcoeff);
-  else
-    nrofcoeff = 0; //default value for nrofcoeff
+    readWordAndVariable(infile, "nrofcoeff", numcoeff);
 
-  if (nrofcoeff > 0) {
+  if (numcoeff > 0) {
     usemodelmatrix = 1;
-    coeff.resize(nrofcoeff, keeper);
+    coeff.resize(numcoeff, keeper);
     infile >> coeff;
     coeff.Inform(keeper);
   }
+
   infile >> ws >> text;
   if (strcasecmp(text, "data") != 0)
     handle.logFileUnexpected(LOGFAIL, "data", text);
@@ -84,8 +85,8 @@ void TimeVariable::readFromFile(CommentStream& infile,
     values[i].Inform(keeper);
 
     if (usemodelmatrix) {
-      modelmatrix.AddRows(1, nrofcoeff);
-      for (j = 0; j < nrofcoeff; j++) {
+      modelmatrix.AddRows(1, numcoeff);
+      for (j = 0; j < numcoeff; j++) {
         infile >> modelmatrix[i][j];
         if (infile.fail())
           handle.logFileMessage(LOGFAIL, "Error in timevariable - failed to read matrix");
@@ -96,21 +97,21 @@ void TimeVariable::readFromFile(CommentStream& infile,
   }
   keeper->clearLast();
 
-  //check if years and steps are not ordered in time.
+  //check if years and steps are ordered in time
   for (i = 0; i < years.Size() - 1; i++) {
     if ((years[i + 1] < years[i]) ||
        (years[i + 1] == years[i] && steps[i + 1] <= steps[i]))
       handle.logFileMessage(LOGFAIL, "Error in timevariable - years and steps are not increasing");
   }
 
-  firsttimestepnr = -1;
+  check = -1;
   for (i = 0; i < years.Size(); i++) {
     if (years[i] == TimeInfo->getFirstYear() && steps[i] == TimeInfo->getFirstStep()) {
-      firsttimestepnr = i;
+      check = i;
       break;
     }
   }
-  if (firsttimestepnr == -1)
+  if (check == -1)
     handle.logFileMessage(LOGFAIL, "Error in timevariable - nothing specified for first timestep of the simulation");
 }
 
@@ -126,13 +127,13 @@ int TimeVariable::didChange(const TimeClass* const TimeInfo) {
 void TimeVariable::Update(const TimeClass* const TimeInfo) {
   int i;
   if (!fromfile)
-    value = Value;
+    value = init;
   else {
     if (TimeInfo->getTime() == 1)
-      timestepnr = firsttimestepnr;
-    for (i = timestepnr; i < steps.Size(); i++) {
+      timeid = 0;
+    for (i = timeid; i < steps.Size(); i++) {
       if (steps[i] == TimeInfo->getStep() && years[i] == TimeInfo->getYear()) {
-        timestepnr = i;
+        timeid = i;
         time = TimeInfo->getTime();
         break;
       }
@@ -141,9 +142,9 @@ void TimeVariable::Update(const TimeClass* const TimeInfo) {
     value = 0.0;
     if (usemodelmatrix)
       for (i = 0; i < modelmatrix.Ncol(); i++)
-        value += coeff[i] * modelmatrix[timestepnr][i];
+        value += coeff[i] * modelmatrix[timeid][i];
 
-    value += values[timestepnr];
+    value += values[timeid];
   }
 }
 
@@ -153,17 +154,16 @@ void TimeVariable::Delete(Keeper* const keeper) const {
     coeff[i].Delete(keeper);
   for (i = 0; i < values.Size(); i++)
     values[i].Delete(keeper);
-  Value.Delete(keeper);
+  init.Delete(keeper);
 }
 
 void TimeVariable::Interchange(TimeVariable& newTV, Keeper* const keeper) const {
   int i, j;
   newTV.lastvalue = lastvalue;
-  newTV.timestepnr = timestepnr;
+  newTV.timeid = timeid;
   newTV.time = time;
   newTV.value = value;
-  newTV.firsttimestepnr = firsttimestepnr;
-  Value.Interchange(newTV.Value, keeper);
+  init.Interchange(newTV.init, keeper);
   if (fromfile) {
     newTV.fromfile = 1;
     newTV.usemodelmatrix = usemodelmatrix;

@@ -162,8 +162,8 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
     }
 
     numfish = 0.0;
-    if (CI.SameDl()) { //Same dl on length distributions
-      offset = CI.Offset();
+    if (CI.isSameDl()) { //Same dl on length distributions
+      offset = CI.getOffset();
       for (age = minage; age <= maxage; age++) {
         minl = max(Alkeys[AlkeysArea].minLength(age), Addition[AdditionArea].minLength(age) + offset);
         maxl = min(Alkeys[AlkeysArea].maxLength(age), Addition[AdditionArea].maxLength(age) + offset);
@@ -177,14 +177,14 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
       }
 
     } else { //Not same dl.
-      if (CI.TargetIsFiner()) {
+      if (CI.isFiner()) {
         //Stock that is added to has finer division than the stock that is added to it.
         for (age = minage; age <= maxage; age++) {
           minl = max(Alkeys[AlkeysArea].minLength(age), CI.minPos(Addition[AdditionArea].minLength(age)));
           maxl = min(Alkeys[AlkeysArea].maxLength(age), CI.maxPos(Addition[AdditionArea].maxLength(age) - 1) + 1);
           for (l = minl; l < maxl; l++) {
             for (tagid = 0; tagid < numtags; tagid++) {
-              numfish = *(Addition[AdditionArea][age][CI.Pos(l)][tagid].N);
+              numfish = *(Addition[AdditionArea][age][CI.getPos(l)][tagid].N);
               numfish *= ratio;
               if (isZero(CI.Nrof(l))) {
                 if (handle.getLogLevel() >= LOGWARN)
@@ -201,14 +201,14 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
         for (age = minage; age <= maxage; age++) {
           minl = max(CI.minPos(Alkeys[AlkeysArea].minLength(age)), Addition[AdditionArea].minLength(age));
           maxl = min(CI.maxPos(Alkeys[AlkeysArea].maxLength(age) - 1) + 1, Addition[AdditionArea].maxLength(age));
-          if (maxl > minl && CI.Pos(maxl - 1) < Alkeys[AlkeysArea].maxLength(age)
-            && CI.Pos(minl) >= Alkeys[AlkeysArea].minLength(age)) {
+          if (maxl > minl && CI.getPos(maxl - 1) < Alkeys[AlkeysArea].maxLength(age)
+            && CI.getPos(minl) >= Alkeys[AlkeysArea].minLength(age)) {
 
             for (l = minl; l < maxl; l++) {
               for (tagid = 0; tagid < numtags; tagid++) {
                 numfish = *(Addition[AdditionArea][age][l][tagid].N);
                 numfish *= ratio;
-                *(Alkeys[AlkeysArea][age][CI.Pos(l)][tagconversion[tagid]].N) += numfish;
+                *(Alkeys[AlkeysArea][age][CI.getPos(l)][tagconversion[tagid]].N) += numfish;
               }
             }
           }
@@ -220,7 +220,7 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
 
 void AgeBandMatrixRatioPtrVector::Migrate(const DoubleMatrix& MI, const AgeBandMatrixPtrVector& Total) {
 
-  DoubleVector tmp(size);
+  DoubleVector tmp(size, 0.0);
   int i, j, age, length, tag;
   int numTagExperiments = tagID.Size();
   if (numTagExperiments > 0) {
@@ -228,7 +228,7 @@ void AgeBandMatrixRatioPtrVector::Migrate(const DoubleMatrix& MI, const AgeBandM
       for (length = v[0]->minLength(age); length < v[0]->maxLength(age); length++) {
         for (tag = 0; tag < numTagExperiments; tag++) {
           for (j = 0; j < size; j++)
-            tmp[j] = 0;
+            tmp[j] = 0.0;
 
           for (j = 0; j < size; j++)
             for (i = 0; i < size; i++)

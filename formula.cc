@@ -84,13 +84,6 @@ double Formula::evalFunction() const {
       }
       break;
 
-    case PRINT:
-      if (argList.size() == 1)
-        v = *(argList[0]);
-      else
-        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for print");
-      break;
-
     case SIN:
       //JMB a bit experimental - works in radians ...
       if (argList.size() == 1)
@@ -200,8 +193,6 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
       F.functiontype = PLUS;
     else if (strcasecmp(text,"-") == 0)
       F.functiontype = MINUS;
-    else if (strcasecmp(text,"print") == 0)
-      F.functiontype = PRINT;
     else if (strcasecmp(text,"sin") == 0)
       F.functiontype = SIN;
     else if (strcasecmp(text,"cos") == 0)

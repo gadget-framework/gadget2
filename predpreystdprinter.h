@@ -28,9 +28,10 @@ public:
    * \param stockvec is the StockPtrVector of all the available stocks
    * \param predvec is the PredatorPtrVector of all the available predators
    * \param preyvec is the PreyPtrVector of all the available preys
+   * \param Area is the AreaClass for the current model
    */
   virtual void setStocksAndPredAndPrey(const StockPtrVector& stockvec,
-    const PredatorPtrVector& predvec, const PreyPtrVector& preyvec);
+    const PredatorPtrVector& predvec, const PreyPtrVector& preyvec, const AreaClass* const Area);
 protected:
   /**
    * \brief This will select the predator and prey required for the printer class to print the requested information

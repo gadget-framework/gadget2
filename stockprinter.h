@@ -13,10 +13,9 @@ public:
   /**
    * \brief This is the default StockPrinter constructor
    * \param infile is the CommentStream to read the printer parameters from
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  StockPrinter(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  StockPrinter(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This is the default StockPrinter destructor
    */
@@ -24,8 +23,9 @@ public:
   /**
    * \brief This will select the stocks required for the printer class to print the requested information
    * \param stockvec is the StockPtrVector of all the available stocks
+   * \param Area is the AreaClass for the current model
    */
-  virtual void setStock(StockPtrVector& stockvec);
+  virtual void setStock(StockPtrVector& stockvec, const AreaClass* const Area);
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model

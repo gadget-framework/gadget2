@@ -31,6 +31,15 @@ public:
   void updateStrayStock(const TimeClass* const TimeInfo);
   void storeNumberPriorToEating(int area, const char* stockname);
   const AgeBandMatrix& getNumberPriorToEating(int area, const char* stockname);
+  /**
+   * \brief This function will print the model tagged population
+   * \param outfile is the ofstream that all the model information gets sent to
+   */
+  void Print(ofstream& outfile) const;
+  /**
+   * \brief This function will reset the model tagged population
+   * \param TimeInfo is the TimeClass for the current model
+   */
   void Reset(const TimeClass* const TimeInfo);
   int isWithinPeriod(int year, int step);
   int stockIndex(const char* stockname);

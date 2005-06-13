@@ -47,7 +47,7 @@ void MainInfo::showUsage() {
 MainInfo::MainInfo()
   : givenOptInfo(0), givenInitialParam(0), runlikelihood(0),
     runoptimise(0), runstochastic(0), runnetwork(0),
-    printInitialInfo(0), printFinalInfo(0), printLogLevel(2) {
+    printInitialInfo(0), printFinalInfo(0), printLogLevel(0) {
 
   char tmpname[10];
   strncpy(tmpname, "", 10);
@@ -233,7 +233,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
 void MainInfo::checkUsage(const char* const inputdir, const char* const workingdir) {
   int check = 0;
   if (runnetwork == 1)
-    check = 0;
+    check = max(0, printLogLevel);
   else if (runstochastic == 1)
     check = max(3, printLogLevel);
   else
@@ -274,7 +274,7 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
   printinfo.checkPrintInfo(runnetwork);
 
   if (runnetwork == 1)
-    handle.logMessage(LOGINFO, "\n** Gadget running in network mode for Paramin **\n");
+    handle.logMessage(LOGINFO, "\n** Gadget running in network mode for Paramin **");
 
   if ((runstochastic != 1) && (runnetwork == 1)) {
     handle.logMessage(LOGWARN, "\nWarning - Gadget for the paramin network should be used with -s option\nGadget will now set the -s switch to perform a stochastic run");
@@ -288,13 +288,15 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
   }
 
   if ((printLogLevel == 1) && (runoptimise == 0))
-    handle.logMessage(LOGWARN, "\n** Gadget cannot disable warnings for a stochastic run **\n");
+    handle.logMessage(LOGWARN, "\n** Gadget cannot disable warnings for a stochastic run **");
 
-  if ((handle.checkLogFile()) && (runoptimise == 1))
-    handle.logMessage(LOGWARN, "\n** logging model information from a Gadget optimisation is not recommended **\n");
+  if ((handle.checkLogFile()) && (runoptimise == 1) && (printLogLevel >= 4))
+    handle.logMessage(LOGWARN, "\n** logging model information from a Gadget optimisation is not recommended **");
 
   if ((handle.checkLogFile()) && (runnetwork == 1))
-    handle.logMessage(LOGWARN, "\n** logging model information from a Gadget network run is not recommended **\n");
+    handle.logMessage(LOGWARN, "\n** logging model information from a Gadget network run is not recommended **");
+
+  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
 }
 
 void MainInfo::read(CommentStream& infile) {

@@ -142,6 +142,11 @@ public:
    */
   virtual void Reset(const TimeClass* const TimeInfo);
   /**
+   * \brief This function will print the model population
+   * \param outfile is the ofstream that all the model information gets sent to
+   */
+  void Print(ofstream& outfile) const;
+  /**
    * \brief This function will implement the migration of the model population for the model
    * \param TimeInfo is the TimeClass for the current model
    */
@@ -152,22 +157,16 @@ public:
    */
   virtual void calcMigration(const TimeClass* const TimeInfo);
   void Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
-    int area, double ratio = 1.0, int MinAge = 0, int MaxAge = 100);
+    int area, double ratio, int minage, int maxage);
   void Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
-    int area, double ratio = 1.0, int MinAge = 0, int MaxAge = 100);
-  Prey* getPrey() const;
+    int area, double ratio, int minage, int maxage);
+  Prey* getPrey() const { return prey; };
   const Migration* getMigration() const { return migration; };
-  PopPredator* getPredator() const;
-  const AgeBandMatrix& getAgeLengthKeys(int area) const;
-  virtual void setStock(StockPtrVector& stockvec);
-  void setCI();
-  /**
-   * \brief This function will print the model population
-   * \param outfile is the ofstream that all the model information gets sent to
-   */
-  void Print(ofstream& outfile) const;
-  int isBirthday(const TimeClass* const TimeInfo) const;
+  PopPredator* getPredator() const { return predator; };
+  const AgeBandMatrix& getAgeLengthKeys(int area) const { return Alkeys[this->areaNum(area)]; };
   const LengthGroupDivision* getLengthGroupDiv() const { return LgrpDiv; };
+  void setStock(StockPtrVector& stockvec);
+  int isBirthday(const TimeClass* const TimeInfo) const;
   int isEaten() const { return iseaten; };
   int doesSpawn() const { return doesspawn; };
   int doesStray() const { return doesstray; };
@@ -184,7 +183,6 @@ public:
   const StockPtrVector& getStrayStocks();
   void updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss);
   void deleteTags(const char* tagname);
-  int getPrintArea(int area) { return printAreas[area]; };
 protected:
   AgeBandMatrixPtrVector Alkeys;
   AgeBandMatrixRatioPtrVector tagAlkeys;
@@ -205,7 +203,6 @@ protected:
   Grower* grower;
   NaturalM* naturalm;
   PopInfoMatrix NumberInArea;
-  IntVector printAreas;
   int doeseat;
   int doesmove;
   int iseaten;

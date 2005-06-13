@@ -129,7 +129,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
           char interruptfile[15];
           strncpy(interruptfile, "", 15);
           strcpy(interruptfile, "interrupt.out");
-          this->writeParamsInColumns(interruptfile, 0);
+          this->writeParams(interruptfile, 0);
           handle.logMessage(LOGMESSAGE, "** Gadget interrupted - quitting current simulation **");
           exit(EXIT_SUCCESS);
         }
@@ -149,9 +149,8 @@ void Ecosystem::Simulate(int Optimise, int print) {
     for (j = 0; j < likevec.Size(); j++)
       likelihood += likevec[j]->getLikelihood();
   }
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "The current overall likelihood score is", likelihood);
 
+  handle.logMessage(LOGMESSAGE, "The current overall likelihood score is", likelihood);
   //Remove all the tagging experiments - they must have expired now
   tagvec.deleteAllTags();
 }

@@ -9,10 +9,8 @@ Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir, const cha
 
   funceval = 0;
   interrupted = 0;
-  TimeInfo = 0;
-  keeper = new Keeper;
-  Area = 0;
   likelihood = 0.0;
+  keeper = new Keeper;
 
   // initialise details used when printing the params.out file
   convergeSA = 0;
@@ -53,9 +51,9 @@ Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir, const cha
     basevec[i + stockvec.Size() + otherfoodvec.Size()] = fleetvec[i];
 
   if (main.runOptimise())
-    handle.logMessage(LOGINFO, "\nFinished reading input files, starting to run optimisation");
+    handle.logMessage(LOGINFO, "\nFinished reading model data files, starting to run optimisation");
   else
-    handle.logMessage(LOGINFO, "\nFinished reading input files, starting to run simulation");
+    handle.logMessage(LOGINFO, "\nFinished reading model data files, starting to run simulation");
   handle.logMessage(LOGMESSAGE, "");  //write a blank line to the log file
 }
 
@@ -89,6 +87,8 @@ void Ecosystem::writeStatus(const char* filename) const {
     basevec[i]->Print(outfile);
   for (i = 0; i < likevec.Size(); i++)
     likevec[i]->Print(outfile);
+  for (i = 0; i < tagvec.Size(); i++)
+    tagvec[i]->Print(outfile);
 
   handle.Close();
   outfile.close();
@@ -132,11 +132,11 @@ double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {
   this->Simulate(1, 0);  //optimise and dont print
 
   if (PrintCounter1 == printinfo.getPrint1() && printinfo.getPrint()) {
-    this->writeValues(printinfo.getOutputFile(), printinfo.getPrecision());
+    keeper->writeValues(likevec, printinfo.getPrecision());
     PrintCounter1 = 0;
   }
   if (PrintCounter2 == printinfo.getPrint2() && printinfo.getPrintColumn()) {
-    this->writeValuesInColumns(printinfo.getColumnOutputFile(), printinfo.getPrecision());
+    keeper->writeValuesInColumns(printinfo.getPrecision());
     PrintCounter2 = 0;
   }
 
@@ -144,32 +144,42 @@ double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {
   return likelihood;
 }
 
-void Ecosystem::writeInitialInformation(const char* const filename) const {
-  keeper->writeInitialInformation(filename, likevec);
+void Ecosystem::writeOptValues() {
+  int i;
+  DoubleVector tmpvec(likevec.Size(), 0.0);
+  for (i = 0; i < likevec.Size(); i++)
+    tmpvec[i] = likevec[i]->getUnweightedLikelihood();
+  keeper->writeBestValues();
+  handle.logMessage(LOGINFO, "\nThe scores from each likelihood component are");
+  handle.logMessage(LOGINFO, tmpvec);
+  handle.logMessage(LOGINFO, "\nThe overall likelihood score is", likelihood);
 }
 
-void Ecosystem::writeInitialInformationInColumns(const char* const filename) const {
-  keeper->writeInitialInformationInColumns(filename);
+void Ecosystem::writeInitialInformation(const char* const filename) {
+  keeper->openPrintFile(filename);
+  keeper->writeInitialInformation(likevec);
 }
 
-void Ecosystem::writeValues(const char* const filename, int prec) const {
-  keeper->writeValues(filename, likevec, prec);
+void Ecosystem::writeInitialInformationInColumns(const char* const filename) {
+  keeper->openPrintFile(filename);
 }
 
-void Ecosystem::writeValuesInColumns(const char* const filename, int prec) const {
-  keeper->writeValuesInColumns(filename, prec);
+void Ecosystem::writeValues() {
+  keeper->writeValues(likevec, printinfo.getPrecision());
 }
 
-void Ecosystem::writeParamsInColumns(const char* const filename, int prec) const {
+void Ecosystem::writeValuesInColumns() {
+  keeper->writeValuesInColumns(printinfo.getPrecision());
+}
 
+void Ecosystem::writeParams(const char* const filename, int prec) const {
   if ((funceval > 0) && (interrupted == 0)) {
     //JMB - print the final values to any output files specified
     //in case they have been missed by the -print1 or -print2 values
     if (printinfo.getPrint())
-      this->writeValues(printinfo.getOutputFile(), printinfo.getPrecision());
+      keeper->writeValues(likevec, printinfo.getPrecision());
     if (printinfo.getPrintColumn())
-      this->writeValuesInColumns(printinfo.getColumnOutputFile(), printinfo.getPrecision());
+      keeper->writeValuesInColumns(printinfo.getPrecision());
   }
-
-  keeper->writeParamsInColumns(filename, prec, interrupted);
+  keeper->writeParams(filename, prec, interrupted);
 }

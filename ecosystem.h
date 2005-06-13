@@ -79,38 +79,34 @@ public:
    * \brief This function will write header information about the model parameters to file
    * \param filename is the name of the file to write the model information to
    */
-  void writeInitialInformation(const char* const filename) const;
+  void writeInitialInformation(const char* const filename);
   /**
    * \brief This function will write header information about the model parameters to file in a column format
    * \param filename is the name of the file to write the model information to
    */
-  void writeInitialInformationInColumns(const char* const filename) const;
+  void writeInitialInformationInColumns(const char* const filename);
   /**
    * \brief This function will write current information about the model parameters to file
-   * \param filename is the name of the file to write the model information to
-   * \param prec is the precision to use in the output file
    */
-  void writeValues(const char* const filename, int prec) const;
+  void writeValues();
   /**
    * \brief This function will write current information about the model parameters to file in a column format
-   * \param filename is the name of the file to write the model information to
-   * \param prec is the precision to use in the output file
    */
-  void writeValuesInColumns(const char* const filename, int prec) const;
+  void writeValuesInColumns();
   /**
    * \brief This function will write final information about the model parameters to file in a column format (which can then be used as the starting point for a subsequent model run)
    * \param filename is the name of the file to write the model information to
    * \param prec is the precision to use in the output file
    */
-  void writeParamsInColumns(const char* const filename, int prec) const;
+  void writeParams(const char* const filename, int prec) const;
   /**
    * \brief This function will display information about the best values of the parameters found so far during an optimisation run
    */
-  void writeBestValues() const { keeper->writeBestValues(); };
+  void writeBestValues() { keeper->writeBestValues(); };
   /**
    * \brief This function will display information about the optimised values of the parameters
    */
-  void writeOptValues() const { keeper->writeOptValues(likevec); };
+  void writeOptValues();
   /**
    * \brief This function will initialise the Ecosystem parameters
    */

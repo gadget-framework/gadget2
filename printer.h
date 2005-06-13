@@ -43,37 +43,37 @@ public:
   /**
    * \brief This will select the stocks required for the printer class to print the requested information
    * \param stockvec is the StockPtrVector of all the available stocks
+   * \param Area is the AreaClass for the current model
    */
-  virtual void setStock(StockPtrVector& stockvec) {};
-  /**
-   * \brief This will select the fleets required for the printer class to print the requested information
-   * \param fleetvec is the FleetPtrVector of all the available fleets
-   */
-  virtual void setFleet(FleetPtrVector& fleetvec) {};
+  virtual void setStock(StockPtrVector& stockvec, const AreaClass* const Area) {};
   /**
    * \brief This will select the predators and preys required for the printer class to print the requested information
    * \param predatorvec is the PredatorPtrVector of all the available predators
    * \param preyvec is the PreyPtrVector of all the available preys
+   * \param Area is the AreaClass for the current model
    */
-  virtual void setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVector& preyvec) {};
+  virtual void setPredAndPrey(PredatorPtrVector& predatorvec, PreyPtrVector& preyvec, const AreaClass* const Area) {};
   /**
    * \brief This will select the preys required for the printer class to print the requested information
    * \param preyvec is the PreyPtrVector of all the available preys
+   * \param Area is the AreaClass for the current model
    */
-  virtual void setPrey(PreyPtrVector& preyvec) {};
+  virtual void setPrey(PreyPtrVector& preyvec, const AreaClass* const Area) {};
   /**
    * \brief This will select the stocks, predators and preys required for the printer class to print the requested information
    * \param stockvec is the StockPtrVector of all the available stocks
    * \param predvec is the PredatorPtrVector of all the available predators
    * \param preyvec is the PreyPtrVector of all the available preys
+   * \param Area is the AreaClass for the current model
    */
   virtual void setStocksAndPredAndPrey(const StockPtrVector& stockvec,
-    const PredatorPtrVector& predvec, const PreyPtrVector& preyvec) {};
+    const PredatorPtrVector& predvec, const PreyPtrVector& preyvec, const AreaClass* const Area) {};
   /**
    * \brief This will select the predators required for the printer class to print the requested information
    * \param predatorvec is the PredatorPtrVector of all the available predators
+   * \param Area is the AreaClass for the current model
    */
-  virtual void setPredator(PredatorPtrVector& predatorvec) {};
+  virtual void setPredator(PredatorPtrVector& predatorvec, const AreaClass* const Area) {};
   /**
    * \brief This will select the likelihood components required for the printer class to print the requested information
    * \param likevec is the LikelihoodPtrVector of all the available likelihood components

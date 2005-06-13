@@ -1,5 +1,8 @@
 #include "initialinputfile.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 int InitialInputFile::isDataLeft() {
   if (repeatedValues == 0)
@@ -29,13 +32,10 @@ void InitialInputFile::getSwitches(ParameterVector& sw) {
 }
 
 InitialInputFile::InitialInputFile(const char* const filename) {
-  repeatedValues = 0;
   tmpinfile.open(filename, ios::in);
+  handle.checkIfFailure(tmpinfile, filename);
   infile.setStream(tmpinfile);
-  if (infile.fail()) {
-    cerr << "Error in initial input file - failed to open " << filename << endl;
-    exit(EXIT_FAILURE);
-  }
+  handle.Open(filename);
 }
 
 InitialInputFile::~InitialInputFile() {
@@ -55,53 +55,43 @@ void InitialInputFile::readHeader() {
     char textInLine[LongString];
     strncpy(textInLine, "", LongString);
     infile.get(textInLine, LongString, '\n');
-    if (!infile.eof() && infile.peek() != '\n') {
-      cerr << "Error in initial input file - line too long in file\n";
-      exit(EXIT_FAILURE);
-    }
+    if (!infile.eof() && infile.peek() != '\n')
+      handle.logMessage(LOGFAIL, "Error in initial input file - line too long");
+
     istringstream line(textInLine);
     line >> text >> ws;
     if (strcasecmp(text, "switches") == 0) {
       // fileformat with switches and vector value/values.
       repeatedValues = 1;
       infile >> ws;
-      if (!readVectorInLine(infile, switches)) {
-        cerr << "Error in initial input file - failed to read switches\n";
-        exit(EXIT_FAILURE);
-      }
+      if (!readVectorInLine(infile, switches))
+        handle.logMessage(LOGFAIL, "Error in initial input file - failed to read switches");
 
     } else {
       // fileformat must be of the form
       // switch value lowerbound upperbound optimise
       repeatedValues = 0;
-      if (strcasecmp(text, "switch") != 0) {
-        cerr << "Error in initial input file - failed to read switch header information\n";
-        exit(EXIT_FAILURE);
-      }
+      if (strcasecmp(text, "switch") != 0)
+        handle.logFileUnexpected(LOGFAIL, "switch", text);
+
       line >> text >> ws;
-      if (strcasecmp(text, "value") != 0) {
-        cerr << "Error in initial input file - failed to read value header information\n";
-        exit(EXIT_FAILURE);
-      }
+      if (strcasecmp(text, "value") != 0)
+        handle.logFileUnexpected(LOGFAIL, "value", text);
+
       line >> text >> ws;
-      if (strcasecmp(text, "lower") != 0) {
-        cerr << "Error in initial input file - failed to read lower bound header information\n";
-        exit(EXIT_FAILURE);
-      }
+      if (strcasecmp(text, "lower") != 0)
+        handle.logFileUnexpected(LOGFAIL, "lower", text);
+
       line >> text >> ws;
-      if (strcasecmp(text, "upper") != 0) {
-        cerr << "Error in initial input file - failed to read upper bound header information\n";
-        exit(EXIT_FAILURE);
-      }
+      if (strcasecmp(text, "upper") != 0)
+        handle.logFileUnexpected(LOGFAIL, "upper", text);
+
       line >> text >> ws;
-      if ((strcasecmp(text, "optimise") != 0) && (strcasecmp(text, "optimize") != 0)) {
-        cerr << "Error in initial input file - failed to read optimise header information\n";
-        exit(EXIT_FAILURE);
-      }
-      if (!line.eof()) {
-        cerr << "Error in initial input file - failed to read header information\n";
-        exit(EXIT_FAILURE);
-      }
+      if ((strcasecmp(text, "optimise") != 0) && (strcasecmp(text, "optimize") != 0))
+        handle.logFileUnexpected(LOGFAIL, "optimise", text);
+
+      if (!line.eof())
+        handle.logFileUnexpected(LOGFAIL, "<end of line>", text);
     }
   }
 }
@@ -160,43 +150,32 @@ void InitialInputFile::readFromFile() {
     }
 
     // check that the parameters have been read correctly
-    if (upperbound.Size() != lowerbound.Size()) {
-      cerr << "Error in initial input file - failed to read bounds\n";
-      exit(EXIT_FAILURE);
-
-    } else if (upperbound.Size() == 0) {
-      cerr << "Error in initial input file - failed to read bounds\n";
-      exit(EXIT_FAILURE);
-
-    } else if (values.Size() != switches.Size()) {
-      cerr << "Error in initial input file - failed to read switches\n";
-      exit(EXIT_FAILURE);
-
-    } else if (values.Size() != lowerbound.Size()) {
-      cerr << "Error in initial input file - failed to read bounds\n";
-      exit(EXIT_FAILURE);
-
-    } else if (optimise.Size() != values.Size()) {
-      cerr << "Error in initial input file - failed to read optimise\n";
-      exit(EXIT_FAILURE);
-    }
+    if (upperbound.Size() != lowerbound.Size())
+      handle.logMessage(LOGFAIL, "Error in initial input file - failed to read bounds data");
+    else if (upperbound.Size() == 0)
+      handle.logMessage(LOGFAIL, "Error in initial input file - failed to read bounds data");
+    else if (values.Size() != switches.Size())
+      handle.logMessage(LOGFAIL, "Error in initial input file - failed to read switches data");
+    else if (values.Size() != lowerbound.Size())
+      handle.logMessage(LOGFAIL, "Error in initial input file - failed to read bounds data");
+    else if (optimise.Size() != values.Size())
+      handle.logMessage(LOGFAIL, "Error in initial input file - failed to read optimise data");
 
     //check that the names of the switches are unique
     int i, j;
     for (i = 0; i < switches.Size(); i++)
       for (j = 0; j < switches.Size(); j++)
-        if ((strcasecmp(switches[i].getName(), switches[j].getName()) == 0) && (i != j)) {
-          cerr << "Error in initial input file - repeated switch " << switches[i].getName() << endl;
-          exit(EXIT_FAILURE);
-        }
+        if ((strcasecmp(switches[i].getName(), switches[j].getName()) == 0) && (i != j))
+          handle.logMessage(LOGFAIL, "Error in initial input file - repeated switch", switches[i].getName());
 
   } else {
     this->readNextLine();
-    if ((switches.Size() > 0) && (switches.Size() != values.Size())) {
-      cerr << "Error in initial input file - failed to read switches\n";
-      exit(EXIT_FAILURE);
-    }
+    if ((switches.Size() > 0) && (switches.Size() != values.Size()))
+      handle.logMessage(LOGFAIL, "Error in initial input file - failed to read swotches");
   }
+
+  //JMB close the errorhandler to clear the filename from the stack
+  handle.Close();
 }
 
 void InitialInputFile::readNextLine() {
@@ -205,18 +184,14 @@ void InitialInputFile::readNextLine() {
   DoubleVector tempValues;
 
   infile >> ws;
-  if (infile.eof()) {
-    cerr << "Error in initial input file - failed to read vector\n";
-    exit(EXIT_FAILURE);
-  }
+  if (infile.eof())
+    handle.logMessage(LOGFAIL, "Error in initial input file - failed to read vector");
 
   char text[LongString];
   strncpy(text, "", LongString);
   infile.get(text, LongString, '\n');
-  if (!infile.eof() && infile.peek() != '\n') {
-    cerr << "Error in initial input file - line too long in file\n";
-    exit(EXIT_FAILURE);
-  }
+  if (!infile.eof() && infile.peek() != '\n')
+    handle.logMessage(LOGFAIL, "Error in initial input file - line too long");
 
   istringstream line(text);
   while (!line.eof() && !line.fail() && !(line.peek() == ';')) {
@@ -229,10 +204,8 @@ void InitialInputFile::readNextLine() {
   if (values.Size() == 0)
     values.resize(tempValues.Size());
 
-  if ((line.fail() && !line.eof()) || tempValues.Size() != values.Size()) {
-    cerr << "Error in initial input file - failed to read data\n";
-    exit(EXIT_FAILURE);
-  }
+  if ((line.fail() && !line.eof()) || tempValues.Size() != values.Size())
+    handle.logMessage(LOGFAIL, "Error in initial input file - failed to read vector");
 
   for (i = 0; i < tempValues.Size(); i++)
     values[i] = tempValues[i];

@@ -45,10 +45,8 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     i = 0;
     c = infile.peek();
     while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
-      printAreas.resize(1);
       tmpareas.resize(1);
       infile >> tmpint >> ws;
-      printAreas[i] = tmpint;
       tmpareas[i] = Area->InnerArea(tmpint);
       c = infile.peek();
       i++;
@@ -331,7 +329,6 @@ Stock::~Stock() {
 }
 
 void Stock::Reset(const TimeClass* const TimeInfo) {
-
   naturalm->Reset(TimeInfo);
   if (doeseat)
     predator->Reset(TimeInfo);
@@ -354,18 +351,9 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
       migration->Reset();
     if (doesmove)
       transition->Reset();
-
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "Reset stock data for stock", this->getName());
   }
-}
-
-Prey* Stock::getPrey() const {
-  return prey;
-}
-
-PopPredator* Stock::getPredator() const {
-  return predator;
 }
 
 void Stock::setStock(StockPtrVector& stockvec) {
@@ -377,9 +365,7 @@ void Stock::setStock(StockPtrVector& stockvec) {
     spawner->setStock(stockvec);
   if (doesstray)
     stray->setStock(stockvec);
-}
-
-void Stock::setCI() {
+  //JMB moved the CI stuff here
   initial->setCI(LgrpDiv);
   if (iseaten)
     prey->setCI(LgrpDiv);
@@ -435,10 +421,6 @@ void Stock::Print(ofstream& outfile) const {
 
 int Stock::isBirthday(const TimeClass* const TimeInfo) const {
   return (TimeInfo->getStep() == birthdate);
-}
-
-const AgeBandMatrix& Stock::getAgeLengthKeys(int area) const {
-  return Alkeys[this->areaNum(area)];
 }
 
 const StockPtrVector& Stock::getMatureStocks() {
