@@ -18,7 +18,7 @@ void MainInfo::showUsage() {
   RUNID.Print(cout);
   cout << "\nOptions for running Gadget:\n"
     << " -l                           perform a likelihood (optimising) model run\n"
-    << " -s                           perform a single (stochastic) model run\n"
+    << " -s                           perform a single (simulation) model run\n"
     << " -n                           perform a network run (using paramin)\n"
     << " -v --version                 display version information and exit\n"
     << " -h --help                    display this help screen and exit\n"
@@ -277,18 +277,18 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
     handle.logMessage(LOGINFO, "\n** Gadget running in network mode for Paramin **");
 
   if ((runstochastic != 1) && (runnetwork == 1)) {
-    handle.logMessage(LOGWARN, "\nWarning - Gadget for the paramin network should be used with -s option\nGadget will now set the -s switch to perform a stochastic run");
+    handle.logMessage(LOGWARN, "\nWarning - Gadget for the paramin network should be used with -s option\nGadget will now set the -s switch to perform a simulation run");
     runstochastic = 1;
     runlikelihood = 1;
   }
 
   if ((runstochastic == 1) && (runoptimise == 1)) {
-    handle.logMessage(LOGWARN, "\nWarning - Gadget has been started with both the -s switch and the -l switch\nHowever, it is not possible to do both a stochastic run and a likelihood run!\nGadget will perform only the stochastic run (and ignore the -l switch)");
+    handle.logMessage(LOGWARN, "\nWarning - Gadget has been started with both the -s switch and the -l switch\nHowever, it is not possible to do both a simulation run and a likelihood run!\nGadget will perform only the simulation run (and ignore the -l switch)");
     runoptimise = 0;
   }
 
   if ((printLogLevel == 1) && (runoptimise == 0))
-    handle.logMessage(LOGWARN, "\n** Gadget cannot disable warnings for a stochastic run **");
+    handle.logMessage(LOGWARN, "\n** Gadget cannot disable warnings for a simulation run **");
 
   if ((handle.checkLogFile()) && (runoptimise == 1) && (printLogLevel >= 4))
     handle.logMessage(LOGWARN, "\n** logging model information from a Gadget optimisation is not recommended **");

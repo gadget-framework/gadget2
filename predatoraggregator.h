@@ -30,6 +30,11 @@ public:
    */
   ~PredatorAggregator() {};
   /**
+   * \brief This will print the aggregator information to the ofstream specified
+   * \param outfile is the ofstream to the file that the aggregator information gets sent to
+   */
+  void Print(ofstream &outfile) const;
+  /**
    * \brief This function will reset the predation  data
    */
   void Reset();

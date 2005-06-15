@@ -35,6 +35,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
 
   yearly = 0;
   epsilon = 10.0;
+  timeindex = 0;
   functionnumber = 0;
   if (strcasecmp(functionname, "sumofsquares") == 0)
     functionnumber = 1;
@@ -133,7 +134,6 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
 
 void CatchInKilos::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
-  timeindex = 0;
   int i, j;
   for (i = 0; i < modelDistribution.Nrow(); i++)
     for (j = 0; j < modelDistribution.Ncol(i); j++)
@@ -144,7 +144,6 @@ void CatchInKilos::Reset(const Keeper* const keeper) {
 
 void CatchInKilos::Print(ofstream& outfile) const {
   int i;
-
   outfile << "\nCatch in Kilos " << this->getName() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname;
   outfile << "\n\tStock names:";
@@ -181,24 +180,35 @@ double CatchInKilos::calcLikSumSquares(const TimeClass* const TimeInfo) {
 
 void CatchInKilos::addLikelihood(const TimeClass* const TimeInfo) {
 
-  double l = 0.0;
-  if (AAT.atCurrentTime(TimeInfo)) {
-    switch (functionnumber) {
-      case 1:
-        l = calcLikSumSquares(TimeInfo);
-        break;
-      default:
-        handle.logMessage(LOGWARN, "Warning in catchinkilos - unrecognised function", functionname);
-        break;
-    }
+  if (!(AAT.atCurrentTime(TimeInfo)))
+    return;
 
-    if ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
-      likelihood += l;
-      if (handle.getLogLevel() >= LOGMESSAGE) {
-        handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchinkilos component", this->getName());
-        handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
-      }
-      timeindex++;
+  int i;
+  if (yearly == 1) {
+    for (i = 0; i < Years.Size(); i++)
+      if (Years[i] == TimeInfo->getYear())
+        timeindex = i;  
+  } else {
+    for (i = 0; i < Years.Size(); i++)
+      if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
+        timeindex = i;
+  }
+
+  double l = 0.0;
+  switch (functionnumber) {
+    case 1:
+      l = calcLikSumSquares(TimeInfo);
+      break;
+    default:
+      handle.logMessage(LOGWARN, "Warning in catchinkilos - unrecognised function", functionname);
+      break;
+  }
+
+  if ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
+    likelihood += l;
+    if (handle.getLogLevel() >= LOGMESSAGE) {
+      handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchinkilos component", this->getName());
+      handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
     }
   }
 }
@@ -386,18 +396,27 @@ void CatchInKilos::printLikelihood(ofstream& outfile, const TimeClass* const Tim
   if ((yearly == 1) && (TimeInfo->getStep() != TimeInfo->numSteps()))
     return;  //if data is aggregated into years then we need the last timestep
 
-  int t, area, age, len;
-  t = timeindex - 1; //timeindex was increased before this is called
+  int i, area, age, len;
+  timeindex = -1;
+  if (yearly == 1) {
+    for (i = 0; i < Years.Size(); i++)
+      if (Years[i] == TimeInfo->getYear())
+        timeindex = i;  
+  } else {
+    for (i = 0; i < Years.Size(); i++)
+      if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
+        timeindex = i;
+  }
 
-  if ((t >= Years.Size()) || t < 0)
-    handle.logMessage(LOGFAIL, "Error in catchinkilos - invalid timestep", t);
+  if (timeindex == -1)
+    handle.logMessage(LOGFAIL, "Error in catchinkilos - invalid timestep");
 
-  for (area = 0; area < modelDistribution.Ncol(t); area++) {
+  for (area = 0; area < modelDistribution.Ncol(timeindex); area++) {
     if (yearly == 0) {
-      outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
-        << Steps[t] << sep << setw(printwidth) << areaindex[area];
+      outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
+        << Steps[timeindex] << sep << setw(printwidth) << areaindex[area];
     } else {
-      outfile << setw(lowwidth) << Years[t] << "  all "
+      outfile << setw(lowwidth) << Years[timeindex] << "  all "
         << setw(printwidth) << areaindex[area];
     }
     if (fleetnames.Size() == 1) {
@@ -406,7 +425,7 @@ void CatchInKilos::printLikelihood(ofstream& outfile, const TimeClass* const Tim
       outfile << "  all     ";
     }
     outfile << setprecision(largeprecision) << setw(largewidth)
-      << modelDistribution[t][area] << endl;
+      << modelDistribution[timeindex][area] << endl;
   }
 }
 

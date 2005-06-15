@@ -198,6 +198,14 @@ double SC::calcLikelihood(const TimeClass* const TimeInfo) {
   int i, a, k, p;
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Calculating likelihood score for stomachcontent component", scname);
+
+  timeindex = -1;
+  for (i = 0; i < Years.Size(); i++)
+    if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
+      timeindex = i;
+  if (timeindex == -1)
+    handle.logMessage(LOGFAIL, "Error in stomachcontent - invalid timestep");
+
   //Get the consumption from aggregator, indexed the same way as in obsConsumption
   int numprey = 0;
   for (i = 0; i < preyindex.Size(); i++) {
@@ -215,14 +223,12 @@ double SC::calcLikelihood(const TimeClass* const TimeInfo) {
 
   //Now calculate likelihood score
   double l = calcLikelihood();
-  timeindex++;
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
   return l;
 }
 
 void SC::Reset() {
-  timeindex = 0;
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset stomachcontent component", scname);
 }
@@ -248,20 +254,22 @@ void SC::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
   if (!AAT.atCurrentTime(TimeInfo))
     return;
 
-  int t, area, pred, prey;
-  t = timeindex - 1; //timeindex was increased before this is called
+  int i, area, pred, prey;
+  timeindex = -1;
+  for (i = 0; i < Years.Size(); i++)
+    if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
+      timeindex = i;
+  if (timeindex == -1)
+    handle.logMessage(LOGFAIL, "Error in stomachcontent - invalid timestep");
 
-  if ((t >= Years.Size()) || t < 0)
-    handle.logMessage(LOGFAIL, "Error in stomachcontents - invalid timestep", t);
-
-  for (area = 0; area < modelConsumption.Ncol(t); area++) {
-    for (pred = 0; pred < modelConsumption[t][area]->Nrow(); pred++) {
-      for (prey = 0; prey < modelConsumption[t][area]->Ncol(pred); prey++) {
-        outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
-          << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
+  for (area = 0; area < modelConsumption.Ncol(timeindex); area++) {
+    for (pred = 0; pred < modelConsumption[timeindex][area]->Nrow(); pred++) {
+      for (prey = 0; prey < modelConsumption[timeindex][area]->Ncol(pred); prey++) {
+        outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
+          << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
           << setw(printwidth) << predatornames[pred] << sep << setw(printwidth)
           << preyindex[prey] << sep << setprecision(largeprecision) << setw(largewidth)
-          << (*modelConsumption[t][area])[pred][prey] << endl;
+          << (*modelConsumption[timeindex][area])[pred][prey] << endl;
       }
     }
   }
@@ -401,7 +409,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
 }
 
 void SC::Print(ofstream& outfile) const {
-  int i, j, r, t;
+  int i, j;
 
   outfile << "\tPredators:\n\t\t";
   for (i = 0; i < predatornames.Size(); i++)
@@ -419,7 +427,7 @@ void SC::Print(ofstream& outfile) const {
     outfile << endl;
   }
 
-  outfile << "\tPreys:";
+  outfile << "\n\tPreys:";
   for (i = 0; i < preyindex.Size(); i++) {
     outfile << "\n\t\t" << preyindex[i] << "\n\t\t";
     for (j = 0; j < preynames[i].Size(); j++)
@@ -427,20 +435,10 @@ void SC::Print(ofstream& outfile) const {
     outfile << "\n\t\tlengths: ";
     for (j = 0; j < preylengths[i].Size(); j++)
       outfile << preylengths[i][j] << sep;
+    outfile << endl;
+    aggregator[i]->Print(outfile);
   }
-
-  //timeindex was increased before this is called, so we subtract 1
-  t = timeindex - 1;
-
-  for (r = 0; r < modelConsumption[t].Size(); r++) {
-    outfile << "\n\tInternal areas" << sep << r;
-    for (i = 0; i < modelConsumption[t][r]->Nrow(); i++) {
-      outfile << "\n\t\t";
-      for (j = 0; j < modelConsumption[t][r]->Ncol(i); j++)
-        outfile << setw(smallwidth) << setprecision(smallprecision) << (*modelConsumption[t][r])[i][j] << sep;
-    }
-  }
-  outfile << endl;
+  outfile.flush();
 }
 
 // ********************************************************

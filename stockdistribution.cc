@@ -290,7 +290,6 @@ StockDistribution::~StockDistribution() {
 
 void StockDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
-  timeindex = 0;
   switch (functionnumber) {
     case 1:
       MN.setValue(epsilon);
@@ -419,33 +418,40 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
 }
 
 void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
-  int i;
-  double l = 0.0;
-  if (AAT.atCurrentTime(TimeInfo)) {
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Calculating likelihood score for stockdistribution component", this->getName());
-    for (i = 0; i < stocknames.Size(); i++) {
-      aggregator[i]->Sum(TimeInfo);
-      if ((handle.getLogLevel() >= LOGWARN) && (aggregator[i]->checkCatchData() == 1))
-        handle.logMessage(LOGWARN, "Warning in stockdistribution - zero catch found");
-    }
+  if (!(AAT.atCurrentTime(TimeInfo)))
+    return;
 
-    switch (functionnumber) {
-      case 1:
-        l = calcLikMultinomial();
-        break;
-      case 2:
-        l = calcLikSumSquares();
-        break;
-      default:
-        handle.logMessage(LOGWARN, "Warning in stockdistribution - unrecognised function", functionname);
-        break;
-    }
-    likelihood += l;
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
-    timeindex++;
+  int i;
+  timeindex = -1;
+  for (i = 0; i < Years.Size(); i++)
+    if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
+      timeindex = i;
+  if (timeindex == -1)
+    handle.logMessage(LOGFAIL, "Error in stockdistribution - invalid timestep");
+
+  double l = 0.0;
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for stockdistribution component", this->getName());
+  for (i = 0; i < stocknames.Size(); i++) {
+    aggregator[i]->Sum(TimeInfo);
+    if ((handle.getLogLevel() >= LOGWARN) && (aggregator[i]->checkCatchData() == 1))
+      handle.logMessage(LOGWARN, "Warning in stockdistribution - zero catch found");
   }
+
+  switch (functionnumber) {
+    case 1:
+      l = calcLikMultinomial();
+      break;
+    case 2:
+      l = calcLikSumSquares();
+      break;
+    default:
+      handle.logMessage(LOGWARN, "Warning in stockdistribution - unrecognised function", functionname);
+      break;
+  }
+  likelihood += l;
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
 }
 
 //The code here is probably unnessecarily complicated because
@@ -534,25 +540,27 @@ void StockDistribution::printLikelihood(ofstream& outfile, const TimeClass* cons
   if (!AAT.atCurrentTime(TimeInfo))
     return;
 
-  int t, area, s, i, age, len;
-  t = timeindex - 1; //timeindex was increased before this is called
+  int area, s, i, age, len;
+  timeindex = -1;
+  for (i = 0; i < Years.Size(); i++)
+    if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
+      timeindex = i;
+  if (timeindex == -1)
+    handle.logMessage(LOGFAIL, "Error in stockdistribution - invalid timestep");
 
-  if ((t >= Years.Size()) || t < 0)
-    handle.logMessage(LOGFAIL, "Error in stockdistribution - invalid timestep", t);
-
-  for (area = 0; area < modelDistribution.Ncol(t); area++) {
-    for (s = 0; s < modelDistribution[t][area]->Nrow(); s++) {
-      for (i = 0; i < modelDistribution[t][area]->Ncol(s); i++) {
+  for (area = 0; area < modelDistribution.Ncol(timeindex); area++) {
+    for (s = 0; s < modelDistribution[timeindex][area]->Nrow(); s++) {
+      for (i = 0; i < modelDistribution[timeindex][area]->Ncol(s); i++) {
         // need to calculate the age and length index from i
         // i = ageid + (numage * lenid);
         age = i % ageindex.Size();
         len = i - age;
-        outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
-          << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
+        outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
+          << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
           << setw(printwidth) << stocknames[s] << sep << setw(printwidth)
           << ageindex[age] << sep << setw(printwidth) << lenindex[len]
           << sep << setprecision(largeprecision) << setw(largewidth)
-          << (*modelDistribution[t][area])[s][i] << endl;
+          << (*modelDistribution[timeindex][area])[s][i] << endl;
       }
     }
   }

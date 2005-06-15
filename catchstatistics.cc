@@ -270,7 +270,6 @@ CatchStatistics::~CatchStatistics() {
 
 void CatchStatistics::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
-  timeindex = 0;
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset catchstatistics component", this->getName());
 }
@@ -391,20 +390,28 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
 
 void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
 
-  double l = 0.0;
-  if (AAT.atCurrentTime(TimeInfo)) {
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchstatistics component", this->getName());
-    aggregator->Sum(TimeInfo);
-    if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData() == 1))
-      handle.logMessage(LOGWARN, "Warning in catchstatistics - zero catch found");
+  if (!(AAT.atCurrentTime(TimeInfo)))
+    return;
 
-    l = calcLikSumSquares();
-    likelihood += l;
-    timeindex++;
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
-  }
+  int i;
+  timeindex = -1;
+  for (i = 0; i < Years.Size(); i++)
+    if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
+      timeindex = i;
+  if (timeindex == -1)
+    handle.logMessage(LOGFAIL, "Error in catchstatistics - invalid timestep");
+
+  double l = 0.0;
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchstatistics component", this->getName());
+  aggregator->Sum(TimeInfo);
+  if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData() == 1))
+    handle.logMessage(LOGWARN, "Warning in catchstatistics - zero catch found");
+
+  l = calcLikSumSquares();
+  likelihood += l;
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
 }
 
 double CatchStatistics::calcLikSumSquares() {
@@ -464,28 +471,30 @@ void CatchStatistics::printLikelihood(ofstream& outfile, const TimeClass* const 
   if (!AAT.atCurrentTime(TimeInfo))
     return;
 
-  int t, area, age;
-  t = timeindex - 1; //timeindex was increased before this is called
+  int i, area, age;
+  timeindex = -1;
+  for (i = 0; i < Years.Size(); i++)
+    if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
+      timeindex = i;
+  if (timeindex == -1)
+    handle.logMessage(LOGFAIL, "Error in catchstatistics - invalid timestep");
 
-  if ((t >= Years.Size()) || t < 0)
-    handle.logMessage(LOGFAIL, "Error in catchstatistcs - invalid timestep", t);
-
-  for (area = 0; area < (*modelMean[t]).Nrow(); area++) {
-    for (age = 0; age < (*modelMean[t]).Ncol(area); age++) {
-      outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
-        << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
+  for (area = 0; area < (*modelMean[timeindex]).Nrow(); area++) {
+    for (age = 0; age < (*modelMean[timeindex]).Ncol(area); age++) {
+      outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
+        << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
         << setw(printwidth) << ageindex[age] << sep << setprecision(printprecision)
-        << setw(printwidth) << (*numbers[t])[area][age] << sep
-        << setprecision(largeprecision) << setw(largewidth) << (*modelMean[t])[area][age];
+        << setw(printwidth) << (*numbers[timeindex])[area][age] << sep
+        << setprecision(largeprecision) << setw(largewidth) << (*modelMean[timeindex])[area][age];
       switch (functionnumber) {
         case 1:
           outfile << sep << setprecision(printprecision) << setw(printwidth)
-            << (*modelStdDev[t])[area][age] << endl;
+            << (*modelStdDev[timeindex])[area][age] << endl;
           break;
         case 2:
         case 3:
           outfile << sep << setprecision(printprecision) << setw(printwidth)
-            << (*obsStdDev[t])[area][age] << endl;
+            << (*obsStdDev[timeindex])[area][age] << endl;
           break;
         case 4:
         case 5:

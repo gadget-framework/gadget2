@@ -63,14 +63,20 @@ void SIByFleetOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!AAT.atCurrentTime(TimeInfo))
     return;
 
+  int i;
+  timeindex = -1;
+  for (i = 0; i < Years.Size(); i++)
+    if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
+      timeindex = i;
+  if (timeindex == -1)
+    handle.logMessage(LOGFAIL, "Error in surveyindex - invalid timestep");
+
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Calculating index for surveyindex component", this->getSIName());
   aggregator->Sum(TimeInfo);
   if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData() == 1))
     handle.logMessage(LOGWARN, "Warning in surveyindex - zero catch found");
   alptr = &(aggregator->getSum()[0]);
-  int i;
   for (i = 0; i < this->numIndex(); i++)
     modelIndex[timeindex][i] = (*alptr)[0][i].N;
-  timeindex++;
 }

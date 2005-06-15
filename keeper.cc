@@ -474,7 +474,7 @@ void Keeper::writeParams(const char* const filename, int prec, int interrupt) {
       << setprecision(p) << bestlikelihood << endl;
 
   } else if (EcoSystem->getFuncEval() == 0) {
-    paramfile << "; a stochastic run was performed giving a likelihood value of "
+    paramfile << "; a simulation run was performed giving a likelihood value of "
       << setprecision(p) << EcoSystem->getLikelihood() << endl;
 
   } else {

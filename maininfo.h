@@ -76,7 +76,7 @@ public:
    */
   int runLikelihood() const { return runlikelihood; };
   /**
-   * \brief This function will return the flag used to determine whether a stochastic run should be performed
+   * \brief This function will return the flag used to determine whether a simulation run should be performed
    * \return flag
    */
   int runStochastic() const { return runstochastic; };
@@ -182,7 +182,7 @@ private:
    */
   int runoptimise;
   /**
-   * \brief This is the flag used to denote whether a stochastic (single) run should be performed or not
+   * \brief This is the flag used to denote whether a simulation run should be performed or not
    */
   int runstochastic;
   /**

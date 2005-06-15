@@ -176,7 +176,6 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
 }
 
 void SIOnStep::Reset(const Keeper* const keeper) {
-  timeindex = 0;
   int i, j;
   for (i = 0; i < modelIndex.Nrow(); i++)
     for (j = 0; j < modelIndex.Ncol(i); j++)
@@ -185,42 +184,24 @@ void SIOnStep::Reset(const Keeper* const keeper) {
     handle.logMessage(LOGMESSAGE, "Reset surveyindex component", this->getSIName());
 }
 
-void SIOnStep::Print(ofstream& outfile) const {
-  int i, j, t;
-
-  t = timeindex - 1;
-  if (t < 0)
-    t = 0;
-
-  for (i = 0; i < Areas.Nrow(); i++) {
-    outfile << "\tInternal areas";
-    for (j = 0; j < Areas.Ncol(i); j++)
-      outfile << sep << Areas[i][j];
-  }
-  outfile << endl;
-
-  for (i = 0; i < this->numIndex(); i++)
-    outfile << TAB << setw(smallwidth) << modelIndex[t][i];
-  outfile << endl;
-  outfile.flush();
-}
-
 void SIOnStep::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  int t, area, i;
-
+  int i, area;
   if (AAT.atCurrentTime(TimeInfo)) {
-    t = timeindex - 1; //timeindex was increased before this is called
-    if ((t >= Years.Size()) || t < 0)
-      handle.logMessage(LOGFAIL, "Error in surveyindex - invalid timestep", t);
+    timeindex = -1;
+    for (i = 0; i < Years.Size(); i++)
+      if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
+        timeindex = i;
+    if (timeindex == -1)
+      handle.logMessage(LOGFAIL, "Error in surveyindex - invalid timestep");
 
     //JMB - this is nasty hack since there is only one area
     area = 0;
     for (i = 0; i < this->numIndex(); i++) {
-      outfile << setw(lowwidth) << Years[t] << sep << setw(lowwidth)
-        << Steps[t] << sep << setw(printwidth) << areaindex[area] << sep
+      outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
+        << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
         << setw(printwidth) << colindex[i] << sep << setprecision(largeprecision)
-        << setw(largewidth) << modelIndex[t][i] << endl;
+        << setw(largewidth) << modelIndex[timeindex][i] << endl;
     }
   }
 
@@ -234,19 +215,20 @@ void SIOnStep::printLikelihood(ofstream& outfile, const TimeClass* const TimeInf
 }
 
 double SIOnStep::calcSSE() {
-  if (timeindex < 2)
+  int totaltime = modelIndex.Nrow();
+  if (totaltime < 2)
     return 0.0;
 
   double score = 0.0;
-  int i, t;
-  DoubleVector indices(timeindex);
-  DoubleVector stocksize(timeindex);
+  DoubleVector indices(totaltime);
+  DoubleVector stocksize(totaltime);
 
+  int i, j;
   for (i = 0; i < this->numIndex(); i++) {
     //Let LLR figure out what to do in the case of zero stock size.
-    for (t = 0; t < timeindex; t++) {
-      indices[t] = obsIndex[t][i];
-      stocksize[t] = modelIndex[t][i];
+    for (j = 0; j < totaltime; j++) {
+      indices[j] = obsIndex[j][i];
+      stocksize[j] = modelIndex[j][i];
     }
     //Now fit the log of the abundance indices as a function of stock size.
     score += this->calcRegression(stocksize, indices, i);

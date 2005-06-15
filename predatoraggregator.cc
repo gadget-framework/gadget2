@@ -23,12 +23,12 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
     checkLengthGroupIsFiner(preys[i]->getLengthGroupDiv(), preyLgrpDiv);
 
   for (i = 0; i < predators.Size(); i++) {
-    predConv.AddRows(1, predators[i]->getLengthGroupDiv()->numLengthGroups(), 0);
+    predConv.AddRows(1, predators[i]->getLengthGroupDiv()->numLengthGroups(), -1);
     for (j = 0; j < predConv.Ncol(i); j++)
       predConv[i][j] = predLgrpDiv->numLengthGroup(predators[i]->getLengthGroupDiv()->meanLength(j));
   }
   for (i = 0; i < preys.Size(); i++) {
-    preyConv.AddRows(1, preys[i]->getLengthGroupDiv()->numLengthGroups(), 0);
+    preyConv.AddRows(1, preys[i]->getLengthGroupDiv()->numLengthGroups(), -1);
     for (j = 0; j < preyConv.Ncol(i); j++)
       preyConv[i][j] = preyLgrpDiv->numLengthGroup(preys[i]->getLengthGroupDiv()->meanLength(j));
   }
@@ -42,6 +42,21 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
   BandMatrix bm(dm, 0, 0);
   total.resize(areas.Nrow(), bm);
   this->Reset();
+}
+
+void PredatorAggregator::Print(ofstream& outfile) const {
+  int i, j, k;
+
+  for (i = 0; i < total.Size(); i++) {
+    outfile << "\t\tInternal areas " << i << endl;
+    for (j = 0; j < total[i].Nrow(); j++) {
+      outfile << TAB << TAB;
+      for (k = 0; k < total[i].Ncol(j); k++)
+        outfile << setw(smallwidth) << total[i][j][k] << sep;
+      outfile << endl;
+    }
+  }
+  outfile.flush();
 }
 
 void PredatorAggregator::Reset() {

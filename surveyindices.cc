@@ -245,6 +245,7 @@ void SurveyIndices::Print(ofstream& outfile) const {
     outfile << stocknames[i] << sep;
   outfile << endl;
   SI->Print(outfile);
+  outfile.flush();
 }
 
 void SurveyIndices::printSummary(ofstream& outfile) {

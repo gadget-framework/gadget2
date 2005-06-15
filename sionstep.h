@@ -60,7 +60,7 @@ public:
    * \brief This function will print the SIOnStep information
    * \param outfile is the ofstream that all the model information gets sent to
    */
-  virtual void Print(ofstream& outfile) const;
+  virtual void Print(ofstream& outfile) const = 0;
   /**
    * \brief This function will print information from each SIOnStep regression calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to

@@ -40,6 +40,11 @@ public:
    * \param Stocks is the StockPtrVector of all the available stocks
    */
   virtual void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
+  /**
+   * \brief This function will print the SIByFleetOnStep information
+   * \param outfile is the ofstream that all the model information gets sent to
+   */
+  virtual void Print(ofstream& outfile) const { aggregator->Print(outfile); };
 protected:
   /**
    * \brief This is the FleetPreyAggregator used to collect information about the relevant fleets for the survey index data

@@ -155,7 +155,7 @@ void Prey::checkConsumption(int area, int numsubsteps) {
   double rat;
 
   for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-    rat = 1.0;
+    rat = 0.0;
     if (biomass[inarea][i] > verysmall)
       rat = cons[inarea][i] / biomass[inarea][i];
 
