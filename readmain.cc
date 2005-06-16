@@ -326,9 +326,8 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
   //Now we have found the string "printfiles" we can create printer clases
   infile >> text >> ws;
   while (!((strcasecmp(text, "[stock]") == 0) || infile.eof())) {
-    //Do not read printfile if we are doing a net run, or if we are
-    //optimising without the getForcePrint option set. 07.04.00 AJ & mnaa.
-    if (!main.runNetwork()  && (printinfo.getForcePrint() || !main.runOptimise())) {
+    //Do not try to read printfile if we dont need it
+    if (main.runPrint() == 1) {
       subfile.open(text, ios::in);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);

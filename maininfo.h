@@ -86,6 +86,11 @@ public:
    */
   int runNetwork() const { return runnetwork; };
   /**
+   * \brief This function will return the flag used to determine whether the current simulation should print the model output
+   * \return flag
+   */
+  int runPrint() const { return runprint; };
+  /**
    * \brief This function will return the flag used to determine whether the optimisation parameters have been given
    * \return flag
    */
@@ -189,6 +194,10 @@ private:
    * \brief This is the flag used to denote whether the current simulation has been started using paramin (PVM) or not
    */
   int runnetwork;
+  /**
+   * \brief This is the flag used to denote whether the current simulation should print model output or not
+   */
+  int runprint;
   /**
    * \brief This is the flag used to denote whether the initial model information should be printed or not
    */

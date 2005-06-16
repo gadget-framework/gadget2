@@ -46,7 +46,7 @@ void MainInfo::showUsage() {
 
 MainInfo::MainInfo()
   : givenOptInfo(0), givenInitialParam(0), runlikelihood(0),
-    runoptimise(0), runstochastic(0), runnetwork(0),
+    runoptimise(0), runstochastic(0), runnetwork(0), runprint(1),
     printInitialInfo(0), printFinalInfo(0), printLogLevel(0) {
 
   char tmpname[10];
@@ -222,6 +222,10 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         k++;
         printLogLevel = atoi(aVector[k]);
 
+      } else if (strcasecmp(aVector[k], "-noprint") == 0) {
+        //JMB disable model printing from the commandline
+        runprint = 0;
+
       } else
         showCorrectUsage(aVector[k]);
 
@@ -295,6 +299,14 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
 
   if ((handle.checkLogFile()) && (runnetwork == 1))
     handle.logMessage(LOGWARN, "\n** logging model information from a Gadget network run is not recommended **");
+
+  //check the printing options
+  check = runprint;
+  if (runnetwork == 1)
+    check = 0;
+  else if ((runoptimise == 1) && (printinfo.getForcePrint() == 0))
+    check = 0;
+  runprint = check;
 
   handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
 }

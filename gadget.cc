@@ -71,7 +71,7 @@ int main(int aNumber, char* const aVector[]) {
         data = new StochasticData();
         while (data->getDataFromNetwork()) {
           EcoSystem->Update(data);
-          EcoSystem->Simulate(main.runLikelihood(), 0);  //dont print
+          EcoSystem->Simulate(main.runLikelihood(), main.runPrint());
           data->sendDataToNetwork(EcoSystem->getLikelihood());
           data->readNextLineFromNetwork();
         }
@@ -85,7 +85,7 @@ int main(int aNumber, char* const aVector[]) {
       EcoSystem->Reset();
       if (main.printInitial())
         EcoSystem->writeStatus(main.getPrintInitialFile());
-      EcoSystem->Simulate(main.runLikelihood(), 1);   //printing OK
+      EcoSystem->Simulate(main.runLikelihood(), main.runPrint());
       if ((main.getPI()).getPrint())
         EcoSystem->writeValues();
       if ((main.getPI()).getPrintColumn())
@@ -94,7 +94,7 @@ int main(int aNumber, char* const aVector[]) {
         data->readNextLine();
         EcoSystem->Update(data);
         EcoSystem->checkBounds();
-        EcoSystem->Simulate(main.runLikelihood(), 1); //printing OK
+        EcoSystem->Simulate(main.runLikelihood(), main.runPrint());
         if ((main.getPI()).getPrint())
           EcoSystem->writeValues();
         if ((main.getPI()).getPrintColumn())
@@ -108,7 +108,7 @@ int main(int aNumber, char* const aVector[]) {
       EcoSystem->Reset();
       if (main.printInitial())
         EcoSystem->writeStatus(main.getPrintInitialFile());
-      EcoSystem->Simulate(main.runLikelihood(), 1);   //printing OK
+      EcoSystem->Simulate(main.runLikelihood(), main.runPrint());
       if ((main.getPI()).getPrint())
         EcoSystem->writeValues();
       if ((main.getPI()).getPrintColumn())
