@@ -62,30 +62,29 @@ void RecAggregator::Reset() {
 
 void RecAggregator::Sum(const TimeClass* const TimeInfo) {
 
-  int i, j, k, f, h, z;
-  int aggrArea, aggrAge, area, age;
+  int area, age, i, j, k, f, h;
   double fleetscale;
 
   this->Reset();
   for (f = 0; f < fleets.Size(); f++) {
     for (h = 0; h < stocks.Size(); h++) {
-      for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
-        for (j = 0; j < areas.Ncol(aggrArea); j++) {
-          area = areas[aggrArea][j];
-          if ((stocks[h]->getPrey()->isPreyArea(area)) &&
-              (fleets[f]->isFleetStepArea(area, TimeInfo))) {
+      for (area = 0; area < areas.Nrow(); area++) {
+        for (j = 0; j < areas.Ncol(area); j++) {
+          if ((stocks[h]->getPrey()->isPreyArea(areas[area][j])) &&
+              (fleets[f]->isFleetStepArea(areas[area][j], TimeInfo))) {
 
-            fleetscale = fleets[f]->getFleetAmount(area, TimeInfo) * fleets[f]->getPredator()->Scaler(area);
+            fleetscale = fleets[f]->getFleetAmount(areas[area][j], TimeInfo)
+                          * fleets[f]->getPredator()->Scaler(areas[area][j]);
+
             for (i = 0; i < fleets[f]->getPredator()->numPreys(); i++) {
               if (strcasecmp(stocks[h]->getPrey()->getName(), fleets[f]->getPredator()->getPrey(i)->getName()) == 0) {
                 suitptr = &fleets[f]->getPredator()->Suitability(i)[0];
-                alptr = &taggingExp->getNumberPriorToEating(area, stocks[h]->getName());
-                for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
-                  for (k = 0; k < ages.Ncol(aggrAge); k++) {
-                    age = ages[aggrAge][k];
+                alptr = &taggingExp->getNumberPriorToEating(areas[area][j], stocks[h]->getName());
+                for (age = 0; age < ages.Nrow(); age++) {
+                  for (k = 0; k < ages.Ncol(age); k++) {
                     //JMB removed the overconsumption stuff
-                    if ((alptr->minAge() <= age) && (age <= alptr->maxAge()))
-                      total[aggrArea][aggrAge].Add((*alptr)[age], *CI[h], fleetscale, *suitptr);
+                    if ((alptr->minAge() <= ages[age][k]) && (ages[age][k] <= alptr->maxAge()))
+                      total[area][age].Add((*alptr)[ages[age][k]], *CI[h], fleetscale, *suitptr);
                   }
                 }
               }

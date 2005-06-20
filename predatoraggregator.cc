@@ -69,7 +69,7 @@ void PredatorAggregator::Reset() {
 }
 
 void PredatorAggregator::Sum() {
-  int area, g, h, i, j, k, l;
+  int g, h, i, j, k, l;
 
   this->Reset();
   //Sum over the appropriate preys, predators, areas, and lengths.
@@ -78,9 +78,8 @@ void PredatorAggregator::Sum() {
       if (doeseat[g][h]) {
         for (l = 0; l < areas.Nrow(); l++) {
           for (j = 0; j < areas.Ncol(l); j++) {
-            area = areas[l][j];
-            if (predators[g]->isInArea(area) && preys[h]->isInArea(area)) {
-              bptr = &predators[g]->getConsumption(area, preys[h]->getName());
+            if (predators[g]->isInArea(areas[l][j]) && preys[h]->isInArea(areas[l][j])) {
+              bptr = &predators[g]->getConsumption(areas[l][j], preys[h]->getName());
               for (k = bptr->minRow(); k <= bptr->maxRow(); k++)
                 if (predConv[g][k] >= 0)
                   for (i = bptr->minCol(k); i < bptr->maxCol(k); i++)
@@ -97,7 +96,7 @@ void PredatorAggregator::Sum() {
 
 //Sum the numbers (not biomass)
 void PredatorAggregator::NumberSum() {
-  int area, i, j, k, g, h, l;
+  int g, h, i, j, k, l;
   const PopInfoVector* preymeanw;
 
   this->Reset();
@@ -107,10 +106,9 @@ void PredatorAggregator::NumberSum() {
       if (doeseat[g][h]) {
         for (l = 0; l < areas.Nrow(); l++) {
           for (j = 0; j < areas.Ncol(l); j++) {
-            area = areas[l][j];
-            if (predators[g]->isInArea(area) && preys[h]->isInArea(area)) {
-              bptr = &predators[g]->getConsumption(area, preys[h]->getName());
-              preymeanw = &predators[g]->getNumberPriorToEating(area, preys[h]->getName());
+            if (predators[g]->isInArea(areas[l][j]) && preys[h]->isInArea(areas[l][j])) {
+              bptr = &predators[g]->getConsumption(areas[l][j], preys[h]->getName());
+              preymeanw = &predators[g]->getNumberPriorToEating(areas[l][j], preys[h]->getName());
               for (k = bptr->minRow(); k <= bptr->maxRow(); k++)
                 if (predConv[g][k] >= 0)
                   for (i = bptr->minCol(k); i < bptr->maxCol(k); i++)

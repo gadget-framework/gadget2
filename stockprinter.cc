@@ -131,7 +131,7 @@ StockPrinter::StockPrinter(CommentStream& infile, const TimeClass* const TimeInf
   else
     outfile << "\n; Printing the following information at the start of each timestep";
 
-  outfile << "\n; year-step-area-age-length-number-weight\n";
+  outfile << "\n; year-step-area-age-length-number-mean weight\n";
   outfile.flush();
 }
 

@@ -78,8 +78,7 @@ int FleetPreyAggregator::checkCatchData() {
 
 void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
 
-  int i, j, k, f, h, z;
-  int aggrArea, aggrAge, area, age;
+  int area, age, i, j, k, f, h, z;
   double fleetscale;
 
   this->Reset();
@@ -88,28 +87,30 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
     LengthPredator* pred = fleets[f]->getPredator();
     for (h = 0; h < stocks.Size(); h++) {
       StockPrey* prey = (StockPrey*)stocks[h]->getPrey();
-      for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
-        for (j = 0; j < areas.Ncol(aggrArea); j++) {
-          area = areas[aggrArea][j];
-          if ((prey->isPreyArea(area)) && (fleets[f]->isFleetStepArea(area, TimeInfo))) {
-            fleetscale = fleets[f]->getFleetAmount(area, TimeInfo) * pred->Scaler(area);
+      for (area = 0; area < areas.Nrow(); area++) {
+        for (j = 0; j < areas.Ncol(area); j++) {
+          if ((prey->isPreyArea(areas[area][j]))
+              && (fleets[f]->isFleetStepArea(areas[area][j], TimeInfo))) {
+
+            fleetscale = fleets[f]->getFleetAmount(areas[area][j], TimeInfo)
+                          * pred->Scaler(areas[area][j]);
+
             for (i = 0; i < pred->numPreys(); i++) {
               if (strcasecmp(prey->getName(), pred->getPrey(i)->getName()) == 0) {
                 suitptr = &pred->Suitability(i)[0];
-                alptr = &prey->getALKPriorToEating(area);
-                for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
-                  for (k = 0; k < ages.Ncol(aggrAge); k++) {
-                    age = ages[aggrAge][k];
-                    if ((alptr->minAge() <= age) && (age <= alptr->maxAge())) {
+                alptr = &prey->getALKPriorToEating(areas[area][j]);
+                for (age = 0; age < ages.Nrow(); age++) {
+                  for (k = 0; k < ages.Ncol(age); k++) {
+                    if ((alptr->minAge() <= ages[age][k]) && (ages[age][k] <= alptr->maxAge())) {
                       if (overconsumption) {
                         DoubleIndexVector Ratio = *suitptr;
                         for (z = Ratio.minCol(); z < Ratio.maxCol(); z++)
                           if (prey->getRatio(area, z) > 1)
-                            Ratio[z] *= 1.0 / prey->getRatio(area, z);
+                            Ratio[z] *= 1.0 / prey->getRatio(areas[area][j], z);
 
-                        total[aggrArea][aggrAge].Add((*alptr)[age], *CI[h], fleetscale, Ratio);
+                        total[area][age].Add((*alptr)[ages[age][k]], *CI[h], fleetscale, Ratio);
                       } else {
-                        total[aggrArea][aggrAge].Add((*alptr)[age], *CI[h], fleetscale, *suitptr);
+                        total[area][age].Add((*alptr)[ages[age][k]], *CI[h], fleetscale, *suitptr);
                       }
                     }
                   }

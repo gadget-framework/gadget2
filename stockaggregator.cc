@@ -53,22 +53,19 @@ void StockAggregator::Reset() {
 }
 
 void StockAggregator::Sum() {
-  int i, j, k;
-  int aggrArea, aggrAge, area, age;
+  int area, age, i, j, k;
 
   this->Reset();
   //Sum over the appropriate stocks, areas, ages and length groups.
   for (i = 0; i < stocks.Size(); i++) {
-    for (aggrArea = 0; aggrArea < areas.Nrow(); aggrArea++) {
-      for (j = 0; j < areas.Ncol(aggrArea); j++) {
-        area = areas[aggrArea][j];
-        if (stocks[i]->isInArea(area)) {
-          alptr = &stocks[i]->getAgeLengthKeys(area);
-          for (aggrAge = 0; aggrAge < ages.Nrow(); aggrAge++) {
-            for (k = 0; k < ages.Ncol(aggrAge); k++) {
-              age = ages[aggrAge][k];
-              if ((alptr->minAge() <= age) && (age <= alptr->maxAge()))
-                total[aggrArea][aggrAge].Add((*alptr)[age], *CI[i]);
+    for (area = 0; area < areas.Nrow(); area++) {
+      for (j = 0; j < areas.Ncol(area); j++) {
+        if (stocks[i]->isInArea(areas[area][j])) {
+          alptr = &stocks[i]->getAgeLengthKeys(areas[area][j]);
+          for (age = 0; age < ages.Nrow(); age++) {
+            for (k = 0; k < ages.Ncol(age); k++) {
+              if ((alptr->minAge() <= ages[age][k]) && (ages[age][k] <= alptr->maxAge()))
+                total[area][age].Add((*alptr)[ages[age][k]], *CI[i]);
             }
           }
         }
