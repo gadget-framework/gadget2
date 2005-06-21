@@ -9,11 +9,13 @@
 
 \title{\Huge{Gadget User Guide}}
 \author{Edited by James Begley}
-%\date{\today}  % show the date on the title page
-\date{}   % don't show the date on the title page
+\date{\today}  % show the date on the title page
+%\date{}   % don't show the date on the title page
 \maketitle
 
 \setlength{\parindent}{0mm}
+
+% run dvips -f -t a4 -Pcmz -Pamz -o userguide.ps userguide.dvi
 
 % set the header and footer styles
 \pagestyle{fancy}
@@ -27,10 +29,13 @@
 % set the header and footer styles for the first page of the chapters
 \fancypagestyle{plain}{\fancyhf{}\fancyfoot[LE,RO]{\textbf{\thepage}}\renewcommand{\headrulewidth}{0pt}}
 
+\thispagestyle{empty}
+
+\frontmatter
 \pagenumbering{roman}
 \tableofcontents
 
-\newpage
+\mainmatter
 \pagenumbering{arabic}
 
 \chapter{Introduction to Gadget}\label{chap:intro}
@@ -66,7 +71,7 @@ Gadget is distributed via anonymous ftp from the MRI ftp site, and the address o
 ftp://ftp.hafro.is/pub/reiknid/dst2/gadget/
 \end{verbatim}}
 
-The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.1.00, so the file to be downloaded is gadget2.1.00.tar.gz.
+The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.1.01, so the file to be downloaded is gadget2.1.01.tar.gz.
 
 \bigskip
 Gadget is a program that runs on a Unix computing platform, and is regularly tested on machines running versions of Solaris, Linux, Mac OSX and Cygwin (a Unix emulator for Microsoft Windows machines).  It should also run on other versions of Unix, but this may require modifications to the makefile in order to do so.  Gadget is distributed as a set of source code files, which need to be compiled into an executable program before it can be run.  To allow for various different versions, the makefile has a list of supported computing platforms, so the makefile should be checked (and if necessary changed) to ensure that the required options are available before the source code is compiled.  The default options in the makefile will compile Gadget for a Linux machine, using the GNU C++ compiler.  A summary of the commands required to compile Gadget, using the default options for a Linux machine from the downloaded file are:
@@ -87,11 +92,11 @@ A web site has been set up that contains details of the most recent changes to G
 http://www.hafro.is/gadget
 \end{verbatim}}
 
-Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.1.00 on a Linux machine:
+Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.1.01 on a Linux machine:
 
 {\small\begin{verbatim}
-gunzip gadget2.1.00.tar.gz
-tar -xvf gadget2.1.00.tar
+gunzip gadget2.1.01.tar.gz
+tar -xvf gadget2.1.01.tar
 cd source
 make
 \end{verbatim}}
@@ -133,7 +138,7 @@ The following is a list of the command line switches that Gadget will recognise,
 {\small\begin{verbatim}
 gadget -s
 \end{verbatim}}
-Starting Gadget with the -s switch will start a stochastic run, where a single run of the model will take place.  This option is useful since it will give the model output (see Print Files, chapter~\ref{chap:print}), and it is used when running large Gadget models, using the paramin parallel processing optimiser to find the optimum.
+Starting Gadget with the -s switch will start a simulation run, where a single run of the model will take place.  This option is useful since it will give the model output (see Print Files, chapter~\ref{chap:print}), and it is used when running large Gadget models, using the paramin parallel processing optimiser to find the optimum.
 
 {\small\begin{verbatim}
 gadget -l
@@ -210,7 +215,7 @@ Starting Gadget with the -precision switch will specify the number of digits to 
 {\small\begin{verbatim}
 gadget -log <filename>
 \end{verbatim}}
-Starting Gadget with the -log switch will specify a file to which Gadget will write logging information to keep a record of internal Gadget actions.  This file will be very large when Gadget is performing an optimising run, and it is of most use for debugging models when Gadget is performing a stochastic run.
+Starting Gadget with the -log switch will specify a file to which Gadget will write logging information to keep a record of internal Gadget actions.  This file will be very large when Gadget is performing an optimising run, and it is of most use for debugging models when Gadget is performing a simulation run.
 
 {\small\begin{verbatim}
 gadget -printinitial <filename>
@@ -233,7 +238,7 @@ gadget -l -i inputfile.txt -o likelihood.txt -opt optinfo.txt -print1 10
 will start Gadget for a likelihood run, taking the initial values and information about the parameters from the file inputfile.txt, with the optimisation being done in accordance with the information in optinfo.txt, and printing likelihood information (every 10 iterations) to the file likelihood.txt.
 
 \bigskip
-Note that it is not possible to do both a stochastic run and a likelihood run at the same time, and starting Gadget with both the -l and -s switches will result in a warning, after which Gadget will perform a stochastic run, with the -l switch being ignored.
+Note that it is not possible to do both a simulation run and a likelihood run at the same time, and starting Gadget with both the -l and -s switches will result in a warning, after which Gadget will perform a simulation run, with the -l switch being ignored.
 
 \chapter{Input Files}\label{chap:input}
 All the input files for Gadget are plain ASCII text files, so they can be viewed in any plain-text text editor.  Any whitespace or blank lines in the data files are ignored, so the layout of the files can be adjusted into a easily viewable form to check the content of the files.  The case of any text in an input file is ignored by Gadget, so for example, ''Stock'' and ''stock'' would be interpreted by Gadget as being the same.
@@ -909,6 +914,7 @@ Note that the fleets are treated as a predator by Gadget, so for the stock to be
 {\small\begin{verbatim}
 iseaten                1
 preylengths            <length aggregation file>
+energycontent          <energy value>
 \end{verbatim}}
 
 \section{Stock Predator}\label{sec:stockpredator}
@@ -937,7 +943,7 @@ C_{p}(l, L) = \frac{N_{L} M_{L} \psi_{L} F_{p}(l, L)}{\displaystyle \sum_{\it p}
 \end{equation}
 
 \begin{equation}\label{eq:preycons}
-F_{p}(l, L) = S_{p}(l, L) N_{l} W_{l}
+F_{p}(l, L) = S_{p}(l, L) E_{p} N_{l} W_{l}
 \end{equation}
 
 \begin{equation}\label{eq:maxcons}
@@ -996,13 +1002,15 @@ constant - use the Constant suitabilty function\newline
 straightline - use the StraightLine suitabilty function\newline
 exponential - use the Exponential suitabilty function\newline
 exponentiall50 - use the ExponentialL50 suitabilty function\newline
-andersen - use the Andersen suitabilty function
+richards - use the Richards suitabilty function\newline
+andersen - use the Andersen suitabilty function\newline
+gamma - use the Gamma suitabilty function
 
 \bigskip
 For the following suitability functions, the convention used is to represent the length group of the prey by l, and the length group of the predator by L.
 
 \subsection{Constant Suitability Function}
-This is a constant suitability function, where there is no dependence on either the length of the predator or the length of the prey is given by the following equation:
+This is a constant suitability function, where there is no dependence on either the length of the predator or the length of the prey as given by the following equation:
 
 \begin{equation}\label{eq:constsuit}
 S(l, L) = \alpha
@@ -1015,13 +1023,12 @@ Hence, to specify a constant suitability function, the file format required is:
 \end{verbatim}}
 
 \subsection{StraightLine Suitability Function}
-This is a suitability function that has no dependence on the length of the predator, and a linear dependence on the length of the prey is given by the following equation:
+This is a suitability function that has no dependence on the length of the predator, and a linear dependence on the length of the prey as given by the following equation:
 
 \begin{equation}\label{eq:straightsuit}
 S(l, L) = \alpha l + \beta
 \end{equation}
 
-\bigskip
 Hence, to specify a straight line suitability function, the file format required is:
 
 {\small\begin{verbatim}
@@ -1029,13 +1036,12 @@ Hence, to specify a straight line suitability function, the file format required
 \end{verbatim}}
 
 \subsection{Exponential Suitability Function}
-This is a suitability function that has a logarithmic dependence on both the length of the predator and the length of the prey is given by the following equation:
+This is a suitability function that has a logarithmic dependence on both the length of the predator and the length of the prey as given by the following equation:
 
 \begin{equation}\label{eq:expsuit}
-S(l, L) = { \frac{\delta}{1 + e^{- \alpha - \beta l - \gamma  L}}}
+S(l, L) = {\frac{\delta}{1 + e^{(- \alpha - \beta l - \gamma  L)}}}
 \end{equation}
 
-\bigskip
 Hence, to specify this suitability function, the file format required is:
 
 {\small\begin{verbatim}
@@ -1043,21 +1049,33 @@ Hence, to specify this suitability function, the file format required is:
 \end{verbatim}}
 
 \subsection{ExponentialL50 Suitability Function}
-This is a suitability function that has no dependence on the length of the predator, and a logarithmic dependence on the length of the prey is given by the following equation:
+This is a suitability function that has no dependence on the length of the predator, and a logarithmic dependence on the length of the prey as given by the following equation:
 
 \begin{equation}\label{eq:l50suit}
 S(l, L) = { \frac{1}{1 + e^{ -4 \alpha (l - l_{50})}}}
 \end{equation}
 
-\bigskip
 Note that the prey length dependence is actually dependant on the difference between the length of the prey and $l_{50}$, which is the length of the prey with a 50\% probability of predation.  Hence, to specify this suitability function, the file format required is:
 
 {\small\begin{verbatim}
 <preyname>    function exponentiall50 <alpha> <l50>
 \end{verbatim}}
 
+\subsection{Richards Suitability Function}
+This is a suitability function that is an extension to the Exponential suitiability function, and has a logarithmic dependence on both the length of the predator and the length of the prey as given by the following equation:
+
+\begin{equation}\label{eq:richsuit}
+S(l, L) = \left({\frac{p_3}{1 + e^{(- p_0 - p_1 l - p_2  L)}}}\right) ^ {\frac{1}{p_4}}
+\end{equation}
+
+Hence, to specify this suitability function, the file format required is:
+
+{\small\begin{verbatim}
+<preyname>    function richards <vector of 5 parameters>
+\end{verbatim}}
+
 \subsection{Andersen Suitability Function}
-This is a more general suitability function that is dependant on the ratio of the predator length to the prey length is given by the following equation:
+This is a more general suitability function that is dependant on the ratio of the predator length to the prey length as given by the following equation:
 
 \begin{equation}\label{eq:andersensuit}
 S(l, L) =
@@ -1067,11 +1085,23 @@ p_0 + p_2e^{-\frac{(\ln\frac{L}{l} - p_1)^2}{p_3}} & \textrm{if $\ln\frac{L}{l} 
 \end{cases}
 \end{equation}
 
-\bigskip
 Note that the log of the ratio of the predator/prey lengths is bounded, to ensure that the suitability function is always well defined.  To specify this suitability function, the file format required is:
 
 {\small\begin{verbatim}
 <preyname>    function andersen <vector of 5 parameters>
+\end{verbatim}}
+
+\subsection{Gamma Suitability Function}
+This is a suitability function that is more suitable for use when considering the predation by a fleet (see section~\ref{sec:fleetsuit}), and is only dependant on the prey length as given by the following equation:
+
+\begin{equation}\label{eq:gammasuit}
+S(l, L) = \left(\frac{l}{(\alpha - 1) \beta\gamma}\right) ^ {(\alpha - 1)}e ^ {(\alpha - 1 - \frac{l}{\beta\gamma})}
+\end{equation}
+
+Hence, to specify this suitability function, the file format required is:
+
+{\small\begin{verbatim}
+<preyname>    function gamma <alpha> <beta> <gamma>
 \end{verbatim}}
 
 \section{Initial Conditions}\label{sec:stockinitial}
@@ -1642,6 +1672,7 @@ The main otherfood file lists the otherfood, along with basic information about 
 foodname               <food name>
 livesonareas           <areas>
 lengths                <min>  <max>
+energycontent          <energy value>
 amount                 <see Food Amounts>
 \end{verbatim}}
 
@@ -1673,7 +1704,7 @@ To define fleets in the Gadget model, the ''main'' file must contain a list of t
 fleetfiles             <names of the fleet files>
 \end{verbatim}}
 
-There are two types of fleets implemented in Gadget, and the main fleet file lists the fleets and their type, along with information about the fleet and the name of the datafile that contains information about the landings.  The format for this file shown below, with each new fleet starting with the keyword [fleetcomponent]:
+There are three types of fleets implemented in Gadget, and the main fleet file lists the fleets and their type, along with information about the fleet and the name of the datafile that contains information about the landings.  The format for this file shown below, with each new fleet starting with the keyword [fleetcomponent]:
 
 {\small\begin{verbatim}
 [fleetcomponent]
@@ -1681,14 +1712,15 @@ There are two types of fleets implemented in Gadget, and the main fleet file lis
 <fleet data>
 \end{verbatim}}
 
-The fleet data for each fleet type is covered in the sub sections below.  The $<$type$>$ defines the type of fleet for the $<$fleetname$>$ fleet, and the two valid fleet types that can used in Gadget are:
+The fleet data for each fleet type is covered in the sub sections below.  The $<$type$>$ defines the type of fleet for the $<$fleetname$>$ fleet, and the three valid fleet types that can used in Gadget are:
 
 \bigskip
 TotalFleet\newline
-LinearFleet
+LinearFleet\newline
+NumberFleet
 
 \section{TotalFleet}\label{sec:totalfleet}
-The fleet type used that creates a predator based on the total landings data of the stock is called ''TotalFleet''.  This fleet type is defined by specifying the fleet name and areas it operates on, minimum and maximum length of fish caught (for compatibility with the printer types).
+The fleet type used that creates a predator based on the landings data (by biomass) of the stock is called ''TotalFleet''.  This fleet type is defined by specifying the fleet name and areas it operates on, along with a suitability function for each stock that the fleet will catch and a data file listing the biomass that the fleet will catch.
 
 \bigskip
 The file format for the TotalFleet is given below:
@@ -1697,7 +1729,6 @@ The file format for the TotalFleet is given below:
 [fleetcomponent]
 totalfleet             <fleetname>
 livesonareas           <areas>
-lengths                <min>  <max>
 multiplicative         <multi>
 suitability            <see Fleet Suitability>
 amount                 <see Fleet Amounts>
@@ -1706,10 +1737,10 @@ amount                 <see Fleet Amounts>
 The optional $<$multi$>$ value is a multiplicative constant used to scale the data if required - the default value for this multiplier is 1 (ie. no scaling).
 
 \bigskip
-The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The total amount that has been landed by the fleet is also required - this is taken for the landings data, based on timestep and area, and is specified in a separate file.
+The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The total amount that has been landed by the fleet is also required - this is taken from the landings data, based on timestep and area, and is specified in a separate file.
 
 \section{LinearFleet}\label{sec:linearfleet}
-The fleet type used that creates a predator based on a simple ratio of the abundance of the stock that it is catching is called ''LinearFleet''.  This fleet type is defined by specifying the fleet name and areas it operates on, minimum and maximum length of fish caught (for compatibility with the printer types).
+The fleet type used that creates a predator based on a simple proportion of the biomass of the stock that it is catching is called ''LinearFleet''.  This fleet type is defined by specifying the fleet name and areas it operates on, along with a suitability function for each stock that the fleet will catch and a data file listing the proportion of each stock that the fleet will catch.
 
 \bigskip
 The file format for the LinearFleet is given below:
@@ -1718,7 +1749,6 @@ The file format for the LinearFleet is given below:
 [fleetcomponent]
 linearfleet            <fleetname>
 livesonareas           <areas>
-lengths                <min>  <max>
 multiplicative         <multi>
 suitability            <see Fleet Suitability>
 amount                 <see Fleet Amounts>
@@ -1727,13 +1757,33 @@ amount                 <see Fleet Amounts>
 The optional $<$multi$>$ value is a multiplicative constant used to scale the data if required - the default value for this multiplier is 1 (ie. no scaling).
 
 \bigskip
-The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The ratio to be used when calculating the amount that the fleet will catch is also required, and this is specified in a separate file (in a similar format as for the TotalFleet).
+The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The proportion to be used when calculating the amount that the fleet will catch is also required, and this is specified in a separate file.
 
 \bigskip
 The fleet of type LinearFleet acts a simple predator, and can be used for fleets acting in the future, when the landings data is not available.
 
+\section{NumberFleet}\label{sec:numberfleet}
+The fleet type used that creates a predator based on the number of the stock landed (not the biomass) is called ''NumberFleet''.  This fleet type is defined by specifying the fleet name and areas it operates on, along with a suitability function for each stock that the fleet will catch and a data file listing the numbers that the fleet will catch.
+
+\bigskip
+The file format for the NumberFleet is given below:
+
+{\small\begin{verbatim}
+[fleetcomponent]
+numberfleet            <fleetname>
+livesonareas           <areas>
+multiplicative         <multi>
+suitability            <see Fleet Suitability>
+amount                 <see Fleet Amounts>
+\end{verbatim}}
+
+The optional $<$multi$>$ value is a multiplicative constant used to scale the data if required - the default value for this multiplier is 1 (ie. no scaling).
+
+\bigskip
+The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The total number of fish that has been caught by the fleet is also required - this is taken from the landings data, based on timestep and area, and is specified in a separate file.
+
 \section{Fleet Suitability}\label{sec:fleetsuit}
-The suitability determines how the fleets act on the stocks that are caught.  Since Gadget treats the fleets as predators of the stocks, the format for the suitability functions for the fleets is the same as the format for the suitability functions of the stock when they are acting as a predator.  The format for the suitability functions as discussed in section~\ref{sec:suitability} above.
+The suitability determines how the fleets act on the stocks that are caught.  Since Gadget treats the fleets as predators of the stocks, the format for the suitability functions for the fleets is the same as the format for the suitability functions of the stock when they are acting as a predator.  The format for the suitability functions as discussed in section~\ref{sec:suitability} above.  Note that in the equations for the suitability functions, the 'length' of the predator is a meaningless concept when the predator is a fleet.
 
 \section{Fleet Amounts}\label{sec:fleetamount}
 The amounts section of the fleet file gives the landings data for the fleets.  This data is listed in a column format in a separate file, so the main fleet file simply gives the name of this fleet data file, as shown in the example below:
@@ -1742,8 +1792,7 @@ The amounts section of the fleet file gives the landings data for the fleets.  T
 amount                 <name of data file>
 \end{verbatim}}
 
-\newpage %JMB insert page break
-For fleets of type TotalFleet, the data file is a list of year, timestep, area, fleetname and then the amount landed, taken from landings data, for that timestep/area/fleet combination:
+For fleets of type TotalFleet, the data file is a list of year, timestep, area, fleetname and then the biomass of catch landed, taken from landings data, for that timestep/area/fleet combination:
 
 {\small\begin{verbatim}
 <year>  <step>  <area>  <fleetname>  <amount>
@@ -1753,6 +1802,12 @@ For fleets of type LinearFleet, the data file is a list of year, timestep, area,
 
 {\small\begin{verbatim}
 <year>  <step>  <area>  <fleetname>  <level>
+\end{verbatim}}
+
+For fleets of type NumberFleet, the data file is a list of year, timestep, area, fleetname and then the number of catch landed, taken from landings data, for that timestep/area/fleet combination:
+
+{\small\begin{verbatim}
+<year>  <step>  <area>  <fleetname>  <number>
 \end{verbatim}}
 
 \chapter{Likelihood Files}\label{chap:like}
@@ -1873,7 +1928,7 @@ yearsandsteps        <ActionAtTime when to check for understocking>
 The $<$power$>$ value is optional, and if this is not given, the power coefficient is assumed to be 2, giving a sum of squares equation for this likelihood component.
 
 \section{CatchDistribution}\label{sec:catchdist}
-The CatchDistribution likelihood component is used to compare distribution data sampled from the model with distribution data sampled from landings or surveys.  The distribution data can either be aggregated into age groups (giving a distribution of length groups for each age), length groups (giving a distribution of age groups for each length) or into age-length groups.  The likelihood score that is calculated gives some measure as to how well the data from the model fits to the data from the landings.
+The CatchDistribution likelihood component is used to compare distribution data sampled from the model with distribution data sampled from landings or surveys.  The distribution data can either be aggregated into age groups (giving a distribution of length groups for each age), length groups (giving a distribution of age groups for each length) or into age-length groups.  The likelihood score that is calculated gives some measure as to how well the data from the model fit to the data from the sample catches.
 
 \bigskip
 To specify a CatchDistribution likelihood component, the format required in the main likelihood file is as follows:
@@ -1896,10 +1951,10 @@ fleetnames           <vector of the names of the fleets>
 stocknames           <vector of the names of the stocks>
 \end{verbatim}}
 
-The optional flag $<$aggregationlevel$>$ is used to specify whether the distribution data should be aggregated over the whole year (by setting aggregation level to 1) or not aggregated, and calculated for each timestep (by setting aggregation level to 0).  If this line is not specified, then an aggregation level of 0 is assumed, and the distribution data is not aggregated over the whole year.
+The optional flag $<$aggregationlevel$>$ is used to specify whether the distribution data should be aggregated over the whole year (by setting aggregation level to 1) or not aggregated, and calculated for each timestep (by setting aggregation level to 0).  If this line is not specified, then an aggregation level of 0 is assumed, and the distribution data is not aggregated over the whole year.  Note that not all of the functions used to compare the data can aggregate the data over the whole year.
 
 \bigskip
-The flag $<$overconsumption$>$ is used to specify whether any over consumption of the stock is to be taken into account when calculating the distribution.  If this is set to 1, then data is adjusted to ensure that the fleets cannot catch more stock than is available, by applying a bound to the catch of the fleets.  Whilst this leads to a better fit for this likelihood component, it does ignore any understocking that is present in the model, which can lead to an unrealistic result if the understocking likelihood component is not specified.
+The optional flag $<$overconsumption$>$ is used to specify whether any over consumption of the stock is to be taken into account when calculating the model distribution.  If this is set to 1, then the model catch data will be adjusted to ensure that the fleets don't catch more stock than is available, by applying a bound to the catch of the fleets.  If this line is not specified, then an overconsumption of 0 is assumed and any understocking that is present in the model is ignored, which can lead to an unrealistic result if the understocking likelihood component is not specified.
 
 \bigskip
 The optional $<$epsilon$>$ value is used whenever the calculated probability is very unlikely, although the exact format of this depends on the function that is to be used when calculating the likelihood score.  This means that the likelihood component is not dominated by one or two stray values, since these will be reset back to less unlikely values.  The default value for $<$epsilon$>$ is 10, which is used whenever it is not defined in the input file.
@@ -1911,8 +1966,8 @@ The $<$fleetnames$>$ vector contains a list of all the fleets to be aggregated i
 The $<$function name$>$ defines what likelihood function is to be used to compare the modelled age-length catch distribution to the input age-length catch distribution.  Currently, there are 7 likelihood functions defined, and the valid function names are:
 
 \bigskip
-multinomial - use a multinomial function\newline
 sumofsquares - use a sum of squares function\newline
+multinomial - use a multinomial function\newline
 pearson - use a Pearson function\newline
 gamma - use a gamma function\newline
 log - use a log function\newline
@@ -1931,17 +1986,6 @@ Finally, the file specified by $<$datafile$>$ contains a list of the age-length 
 
 where $<$number$>$ is the number of samples for the timestep/area/age/length combination.
 
-\subsection{Multinomial Function}
-The multinomial function calculates the likelihood component from equation~\ref{eq:catchdist1} below:
-
-\begin{equation}\label{eq:catchdist1}
-\ell = 2 \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Bigg( \log N_{tra}! - \sum_{\it lengths} \log N_{tral}! + \sum_{\it lengths} \Big( N_{tral} \log {\frac{\nu_{tral}}{\sum \nu_{tral}}} \Big) \Bigg)
-\end{equation}
-
-where:\newline
-$<$ N $>$ is the data sample size for that time/area/age/length combination\newline
-$<\nu>$ is the model sample size for that time/area/age/length combination
-
 \subsection{Sum of Squares Function}
 The sum of squares function calculates the likelihood component from equation~\ref{eq:catchdist4} below:
 
@@ -1952,6 +1996,17 @@ The sum of squares function calculates the likelihood component from equation~\r
 where:\newline
 $<$ P $>$ is the proportion of the data sample for that time/area/age/length combination\newline
 $<\pi>$ is the proportion of the model sample for that time/area/age/length combination
+
+\subsection{Multinomial Function}
+The multinomial function calculates the likelihood component from equation~\ref{eq:catchdist1} below:
+
+\begin{equation}\label{eq:catchdist1}
+\ell = 2 \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Bigg( \log N_{tra}! - \sum_{\it lengths} \log N_{tral}! + \sum_{\it lengths} \Big( N_{tral} \log {\frac{\nu_{tral}}{\sum \nu_{tral}}} \Big) \Bigg)
+\end{equation}
+
+where:\newline
+$<$ N $>$ is the data sample size for that time/area/age/length combination\newline
+$<\nu>$ is the model sample size for that time/area/age/length combination
 
 \subsection{Pearson Function}
 The Pearson function calculates the likelihood component from equation~\ref{eq:catchdist2} below:
@@ -2077,7 +2132,7 @@ fleetnames           <vector of the names of the fleets>
 stocknames           <vector of the names of the stocks>
 \end{verbatim}}
 
-The flag $<$overconsumption$>$ is used to specify whether any over consumption of the stock is to be taken into account when calculating the distribution.  If this is set to 1, then data is adjusted to ensure that the fleets cannot catch more stock than is available, by applying a bound to the catch of the fleets.  Whilst this leads to a better fit for this likelihood component, it does ignore any understocking that is present in the model, which can lead to an unrealistic result if the understocking likelihood component is not specified.
+The optional flag $<$overconsumption$>$ is used to specify whether any over consumption of the stock is to be taken into account when calculating the model statistical data.  If this is set to 1, then the model catch data will be adjusted to ensure that the fleets don't catch more stock than is available, by applying a bound to the catch of the fleets.  If this line is not specified, then an overconsumption of 0 is assumed and any understocking that is present in the model is ignored, which can lead to an unrealistic result if the understocking likelihood component is not specified.
 
 \bigskip
 The $<$fleetnames$>$ vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison.  Similarly, the $<$stocknames$>$ vector contains a list of all the stocks to be aggregated into a single pseudo stock.
@@ -2223,7 +2278,7 @@ fleetnames           <vector of the names of the fleets>
 stocknames           <vector of the names of the stocks>
 \end{verbatim}}
 
-The flag $<$overconsumption$>$ is used to specify whether any over consumption of the stock is to be taken into account when calculating the distribution.  If this is set to 1, then data is adjusted to ensure that the fleets cannot catch more stock than is available, by applying a bound to the catch of the fleets.  Whilst this leads to a better fit for this likelihood component, it does ignore any understocking that is present in the model, which can lead to an unrealistic result if the understocking likelihood component is not specified.
+The optional flag $<$overconsumption$>$ is used to specify whether any over consumption of the stock is to be taken into account when calculating the model distribution.  If this is set to 1, then the model catch data will be adjusted to ensure that the fleets don't catch more stock than is available, by applying a bound to the catch of the fleets.  If this line is not specified, then an overconsumption of 0 is assumed and any understocking that is present in the model is ignored, which can lead to an unrealistic result if the understocking likelihood component is not specified.
 
 \bigskip
 The optional $<$epsilon$>$ value is used whenever the calculated probability is very unlikely, although the exact format of this depends on the function that is to be used when calculating the likelihood score.  This means that the likelihood component is not dominated by one or two stray values, since these will be reset back to less unlikely values.  The default value for $<$epsilon$>$ is 10, which is used whenever it is not defined in the input file.
@@ -2235,8 +2290,8 @@ The $<$fleetnames$>$ vector contains a list of all the fleets to be aggregated i
 The $<$function name$>$ defines what likelihood function is to be used to compare the modelled age-length stock distribution to the input age-length stock distribution.  Currently, there are two likelihood functions defined, and the  valid functions are:
 
 \bigskip
-multinomial - use a multinomial function\newline
-sumofsquares - use a sum of squares function
+sumofsquares - use a sum of squares function\newline
+multinomial - use a multinomial function
 
 \bigskip
 Finally, the datafile is a list of the age-length catch distribution for each stock, that Gadget is to use to fit the likelihood function to, aggregated according to the aggregation files specified, for the numbers calculated in the model.  The format of this file is given below:
@@ -2246,17 +2301,6 @@ Finally, the datafile is a list of the age-length catch distribution for each st
 \end{verbatim}}
 
 where $<$number$>$ is the number of samples for the timestep/area/stock/age/length combination.
-
-\subsection{Multinomial Function}
-The multinomial function calculates the likelihood component from equation~\ref{eq:stockdist1} below:
-
-\begin{equation}\label{eq:stockdist1}
-\ell = 2 \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Bigg( \log N_{tral}! - \sum_{\it stocks} \log N_{trals}! + \sum_{\it stocks} \Big( N_{trals} \log {\frac{\nu_{tral}}{\sum \nu_{trals}}} \Big)\Bigg)
-\end{equation}
-
-where:\newline
-$<$ N $>$ is the data sample size for that time/area/age/length/stock combination\newline
-$<\nu>$ is the model sample size for that time/area/age/length/stock combination
 
 \subsection{Sum of Squares Function}
 The sum of squares function calculates the likelihood component from equation~\ref{eq:stockdist2} below:
@@ -2269,8 +2313,19 @@ where:\newline
 $<$ P $>$ is the proportion of the data sample for that time/area/age/length/stock combination\newline
 $<\pi>$ is the proportion of the model sample for that time/area/age/length/stock combination
 
+\subsection{Multinomial Function}
+The multinomial function calculates the likelihood component from equation~\ref{eq:stockdist1} below:
+
+\begin{equation}\label{eq:stockdist1}
+\ell = 2 \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Bigg( \log N_{tral}! - \sum_{\it stocks} \log N_{trals}! + \sum_{\it stocks} \Big( N_{trals} \log {\frac{\nu_{tral}}{\sum \nu_{trals}}} \Big)\Bigg)
+\end{equation}
+
+where:\newline
+$<$ N $>$ is the data sample size for that time/area/age/length/stock combination\newline
+$<\nu>$ is the model sample size for that time/area/age/length/stock combination
+
 \section{SurveyIndices}\label{sec:surveyindices}
-The SurveyIndices likelihood component is used to compare the development of a stock in the Gadget model to indices calculated from a standardized survey for that stock.  These indices can be aggregated into age groups or length groups.  The likelihood component that is used is the sum of squares of a linear regression fitted to the difference between the modelled data and the specified index, given by equation~\ref{eq:surveyindex} below:
+The SurveyIndices likelihood component is used to compare the development of a stock in the Gadget model to indices calculated from a standardized survey for that stock.  These indices can be aggregated into length groups or age groups.  The likelihood component that is used is the sum of squares of a linear regression fitted to the difference between the modelled data and the specified index, given by equation~\ref{eq:surveyindex} below:
 
 \begin{equation}\label{eq:surveyindex}
 \ell = \sum_{\it time}\Big(I_{t} - (\alpha + \beta N_{t})\Big)^2
@@ -2299,12 +2354,12 @@ sitype               <survey index type>
 The format of the survey index data, and the contents of the datafile, depend on the type of survey index that is to be used, which is specified by the value of $<$survey index type$>$.  There are currently three valid options, which are:
 
 \bigskip
-ages - defining an age group based survey index\newline
 lengths - defining a length group based survey index\newline
+ages - defining an age group based survey index\newline
 fleets - defining a length group based survey index, taking the fleet selectivity into account
 
-\subsection{SurveyIndices by Age}\label{subsec:sibyage}
-To specify an age group based SurveyIndices likelihood component, the format required in the main likelihood file is as follows:
+\subsection{SurveyIndices by Length}\label{subsec:sibylength}
+To specify a length group based SurveyIndices likelihood component, the format required in the main likelihood file is as follows:
 
 {\small\begin{verbatim}
 [component]
@@ -2312,21 +2367,21 @@ name                 <name for the likelihood component>
 weight               <weight for the likelihood component>
 type                 surveyindices
 datafile             <name for the datafile>
-sitype               ages
+sitype               lengths
 areaaggfile          <area aggregation file specifying areas>
-ageaggfile           <age aggregation file specifying ages>
+lenaggfile           <length aggregation file specifying lengths>
 stocknames           <vector of the names of the stocks>
 fittype              <fit type>
 <fit type parameters>
 \end{verbatim}}
 
-The datafile is a list of the indices that Gadget is to use to fit the linear regression to, aggregated according to the aggregation files specified, for the numbers calculated in the model.  The format of this file is given below:
+The datafile is a list of the indices that Gadget is to use to fit the linear regression to for the numbers calculated in the model.  The format of this file is given below:
 
 {\small\begin{verbatim}
-<year>  <step>  <area>  <age>  <number>
+<year>  <step>  <area>  <length>  <number>
 \end{verbatim}}
 
-where $<$number$>$ is the survey index for that timestep/area/age combination.
+where $<$number$>$ is the survey index for that timestep/area/length combination.
 
 \bigskip
 The $<$fit type$>$ defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component.  These options specify whether or not the log of the numbers is to be used, and whether the parameters alpha and beta are to be estimated by Gadget, or fixed.  If these parameters are to be fixed, then they are specified here.  In total, there are 8 valid entries for $<$fit type$>$, and the associated parameters, and these are:
@@ -2404,8 +2459,8 @@ slope                <beta>
 intercept            <alpha>
 \end{verbatim}}
 
-\subsection{SurveyIndices by Length}\label{subsec:sibylength}
-To specify a length group based SurveyIndices likelihood component, the format required in the main likelihood file is as follows:
+\subsection{SurveyIndices by Age}\label{subsec:sibyage}
+To specify an age group based SurveyIndices likelihood component, the format required in the main likelihood file is as follows:
 
 {\small\begin{verbatim}
 [component]
@@ -2413,24 +2468,24 @@ name                 <name for the likelihood component>
 weight               <weight for the likelihood component>
 type                 surveyindices
 datafile             <name for the datafile>
-sitype               lengths
+sitype               ages
 areaaggfile          <area aggregation file specifying areas>
-lenaggfile           <length aggregation file specifying lengths>
+ageaggfile           <age aggregation file specifying ages>
 stocknames           <vector of the names of the stocks>
 fittype              <fit type>
 <fit type parameters>
 \end{verbatim}}
 
-The datafile is a list of the indices that Gadget is to use to fit the linear regression to for the numbers calculated in the model.  The format of this file is given below:
+The datafile is a list of the indices that Gadget is to use to fit the linear regression to, aggregated according to the aggregation files specified, for the numbers calculated in the model.  The format of this file is given below:
 
 {\small\begin{verbatim}
-<year>  <step>  <area>  <length>  <number>
+<year>  <step>  <area>  <age>  <number>
 \end{verbatim}}
 
-where $<$number$>$ is the survey index for that timestep/area/length combination.
+where $<$number$>$ is the survey index for that timestep/area/age combination.
 
 \bigskip
-The $<$fit type$>$ defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component.  The valid fit type options are the same as for the age based survey indices, given in section~\ref{subsec:sibyage} above.
+The $<$fit type$>$ defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component.  The valid fit type options are the same as for the length based survey indices, given in section~\ref{subsec:sibylength} above.
 
 \subsection{SurveyIndices by Fleet}\label{subsec:sibyfleet}
 To specify a length group based SurveyIndices likelihood component taking the fleet selectivity into account, the format required in the main likelihood file is as follows:
@@ -2445,7 +2500,6 @@ sitype               fleets
 areaaggfile          <area aggregation file specifying areas>
 lenaggfile           <length aggregation file specifying lengths>
 fleetnames           <vector of the names of the fleets>
-overconsumption      <0 or 1> ; 1 to take overconsumption into account
 stocknames           <vector of the names of the stocks>
 fittype              <fit type>
 <fit type parameters>
@@ -2460,7 +2514,7 @@ The datafile is a list of the indices that Gadget is to use to fit the linear re
 where $<$number$>$ is the survey index for that timestep/area/length combination.
 
 \bigskip
-The $<$fit type$>$ defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component.  The valid fit type options are the same as for the age based survey indices, given in section~\ref{subsec:sibyage} above.
+The $<$fit type$>$ defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component.  The valid fit type options are the same as for the length based survey indices, given in section~\ref{subsec:sibylength} above.
 
 \section{SurveyDistribution}\label{sec:surveydistribution}
 The SurveyDistribution likelihood component is used to compare the development of a stock in the Gadget model to age-length indices calculated from a survey for that stock.  The likelihood score that is calculated gives some measure as to how well the data from the model fits to the data from the calculated survey index distribution.
@@ -3269,7 +3323,7 @@ year-step-area-age-number-mean[-stddev]
 \end{verbatim}}
 \item SurveyIndices likelihood component (see section~\ref{sec:surveyindices})
 {\small\begin{verbatim}
-year-step-area-age-length-number
+year-step-area-index-number
 \end{verbatim}}
 \end{enumerate}
 
@@ -3333,7 +3387,7 @@ The Hooke \& Jeeves algorithm used in Gadget is derived from that originally pre
 Hooke \& Jeeves is the default optimisation method used for Gadget, and will be used if no optimisation information file is specified.
 
 \subsection{File Format}\label{subsec:hookefile}
-To specify the Hooke \& Jeeves algorithm, the optimisation file should start with the keyword ''[hooke]'', followed by (up to) 4 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, is shown below:
+To specify the Hooke \& Jeeves algorithm, the optimisation file should start with the keyword ''[hooke]'', followed by (up to) 4 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, are shown below:
 
 {\small\begin{verbatim}
 [hooke]
@@ -3395,7 +3449,7 @@ In comparison to the Hooke \& Jeeves optimisation algorithm, where Hooke \& Jeev
 The Simulated Annealing algorithm used in Gadget is derived from that presented by Corana et al, ''Minimising Multimodal Functions of Continuous Variables with the 'Simulated Annealing' Algorithm'' in the September 1987 (Vol. 13, pp. 262-280) issue of the ACM Transactions on Mathematical Software and Goffe et al, ''Global Optimisation of Statistical Functions with Simulated Annealing'' in the January/February 1994 (Vol. 60, pp. 65-100) issue of the Journal of Econometrics.
 
 \subsection{File Format}\label{subsec:simannfile}
-To specify the Simulated Annealing algorithm, the optimisation file should start with the keyword ''[simann]'', followed by (up to) 11 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, is shown below:
+To specify the Simulated Annealing algorithm, the optimisation file should start with the keyword ''[simann]'', followed by (up to) 11 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, are shown below:
 
 {\small\begin{verbatim}
 [simann]
@@ -3488,7 +3542,7 @@ In comparison to the other optimising algorithms that are currently implemented 
 The BFGS algorithm used in Gadget is derived from that presented by Dimitri P Bertsekas, ''Nonlinear Programming'' ($2^{nd}$ edition, pp22-61) published by Athena Scientific.
 
 \subsection{File Format}\label{subsec:bfgsfile}
-To specify the BFGS algorithm, the optimisation file should start with the keyword ''[bfgs]'', followed by (up to) 4 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, is shown below:
+To specify the BFGS algorithm, the optimisation file should start with the keyword ''[bfgs]'', followed by (up to) 4 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, are shown below:
 
 {\small\begin{verbatim}
 [bfgs]
@@ -3638,7 +3692,7 @@ Goffe, W.L., Ferrier, G.D., and Rogers, J. 1994. Global Optimisation of Statisti
 
 Hooke, R., and Jeeves, T.A. 1961. Direct Search Solution of Numerical and Statistical Problems. ACM Journal. vol 8: pp212-229.\newline
 
-Jones, R., and Johnston, C. 1977. Growth, Reproduction and Mortality of the Gadoid Fish Species. Fisheries Mathematics, Academic Press 198, pp81.\newline
+Jones, R., and Johnston, C. 1977. Growth, Reproduction and Mortality in Gadoid Fish Species. Fisheries Mathematics, Academic Press, pp37-62.\newline
 
 Kaupe, A.F. 1963. Algorithm 178: Direct Search. ACM Communications. vol 6: pp313-314.\newline
 
@@ -3671,5 +3725,16 @@ Note that the consumption calculations include the ''consumption'' of the stocks
 \item {\bf printing}.  Default printing of the model information at the end of the timestep, after the calculations have taken place for this timestep.
 \item {\bf ageing}.  If this is the last timestep of the year, increase the age of the fish in the model.  As part of this process, the oldest age group (the plus group) can move to another stock (see section~\ref{sec:stockmove}).
 \end{enumerate}
+
+\chapter{Recent Changes}\label{chap:change}
+A version of this user guide was printed and published as a Marine Research Institute report, available from the MRI, Reykjavik (Hafranns\'{o}knastofnunin Fj\"{o}lrit nr. 120).  That published version of the described the input file formats for Gadget version 2.1.00.  Since the publication of that report, a number of changes to the Gadget software have been implemented, to fix any bugs that have been found and to add new features.  Some of these changes have resulted in small changes to the format of the input files, and these user visible changes are summarised below.
+
+\section{Gadget version 2.1.01}\label{sec:v2101}
+\begin{itemize}
+\item removed the need to specify the lengths of the fleets (see section~\ref{chap:fleet})
+\item added new suitability functions, the Richards suitability function and the Gamma suitability function (see section~\ref{sec:suitability})
+\item added a fleet that uses catch in numbers data (see section~\ref{sec:numberfleet})
+\item added an ''energycontent'' section for the preys (see section~\ref{sec:stockprey} and section~\ref{chap:other})
+\end{itemize}
 
 \end{document}

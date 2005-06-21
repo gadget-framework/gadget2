@@ -78,7 +78,7 @@ const int largewidth = 12;
 const int fullwidth = 18;
 
 /* Update the following line each time upgrades are implemented */
-#define GADGETVERSION "2.1.01-BETA"
+#define GADGETVERSION "2.1.01"
 
 #endif
 
@@ -171,6 +171,6 @@ Gadget is a program that has been developed on a Unix computing platform, and is
 
   \li Linux (Fedora Core 3), compiled using \c g++ versions 2.95.3, 3.3.4, 3.4.3 and 4.0.0
   \li Solaris (SunOS 5.9), compiled using  \c g++ version 3.4.2
-  \li Cygwin (1.5.17-1), compiled using  \c g++ version 3.3.3-3
+  \li Cygwin (1.5.17-1), compiled using  \c g++ version 3.4.4-1
 
 */
