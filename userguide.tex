@@ -3232,14 +3232,12 @@ The optional $<$precision$>$ value is used to specify the number of digits to be
 The output that is generated from this printer type is a file containing the following information for the prey specified on the $<$stockname$>$ line:
 
 {\small\begin{verbatim}
-year-step-area-age-length-number-biomass-numberbylength-biomassbylength
+year-step-area-age-length-number-biomass
 \end{verbatim}}
 
 where:\newline
 $<$number$>$ is the total population consumed for that timestep/area/age/length combination\newline
-$<$biomass$>$ is the total biomass consumed for that timestep/area/age/length combination\newline
-$<$numberbylength$>$ is the population consumed for that timestep/area/length combination (independent of age)\newline
-$<$biomassbylength$>$ is the biomass consumed for that timestep/area/length combination (independent of age)
+$<$biomass$>$ is the total biomass consumed for that timestep/area/age/length combination
 
 \section{PredPreyStdLengthPrinter}\label{sec:predpreystdlengthprinter}
 The printer type to output detailed information about a predator-prey combination, with both the predator and prey given a length based distribution, is called ''PredPreyStdLengthPrinter''.  This printer type is defined by specifying the predator name, prey name and timesteps of interest.  The file format for this component is given below:

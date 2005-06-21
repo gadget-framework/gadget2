@@ -87,8 +87,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
   else
     outfile << "\n; Printing the following information at the start of each timestep";
 
-  outfile << "\n; year-step-area-age-length-number consumed-biomass consumed"
-    << "-number consumed by length-biomass consumed by length\n";
+  outfile << "\n; year-step-area-age-length-number consumed-biomass consumed\n";
   outfile.flush();
 }
 
@@ -123,12 +122,13 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec, const AreaClass* c
     exit(EXIT_FAILURE);
   }
 
+  minage = stocks[0]->minAge();
+  maxage = stocks[0]->maxAge();
   areas = stocks[0]->getAreas();
   outerareas.resize(areas.Size(), 0);
   for (i = 0; i < outerareas.Size(); i++)
     outerareas[i] = Area->OuterArea(areas[i]);
 
-  //Here comes some code that is only useful when handling one stock.
   if (stocks[0]->isEaten())
     preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->getPrey(), areas);
   else
@@ -145,9 +145,7 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo, int printtime)
   int a, age, len;
   for (a = 0; a < areas.Size(); a++) {
     preyinfo->Sum(TimeInfo, areas[a]);
-    const BandMatrix& Nbyageandl = preyinfo->NconsumptionByAgeAndLength(areas[a]);
-
-    for (age = Nbyageandl.minRow(); age <= Nbyageandl.maxRow(); age++)
+    for (age = minage; age <= maxage; age++)
       for (len = 0; len < LgrpDiv->numLengthGroups(); len++) {
         outfile << setw(lowwidth) << TimeInfo->getYear() << sep << setw(lowwidth)
           << TimeInfo->getStep() << sep << setw(lowwidth) << outerareas[a] << sep
@@ -156,22 +154,15 @@ void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo, int printtime)
 
         //JMB crude filter to remove the 'silly' values from the output
         if ((preyinfo->NconsumptionByAgeAndLength(areas[a])[age][len] < rathersmall)
-           || (preyinfo->BconsumptionByAgeAndLength(areas[a])[age][len] < rathersmall)
-           || (preyinfo->NconsumptionByLength(areas[a])[len] < rathersmall)
-           || (preyinfo->BconsumptionByLength(areas[a])[len] < rathersmall))
+           || (preyinfo->BconsumptionByAgeAndLength(areas[a])[age][len] < rathersmall))
 
-          outfile << setw(width) << 0 << sep << setw(width) << 0
-            << sep << setw(width) << 0 << sep << setw(width) << 0 << endl;
+          outfile << setw(width) << 0 << sep << setw(width) << 0 << endl;
 
         else
           outfile << setprecision(precision) << setw(width)
             << preyinfo->NconsumptionByAgeAndLength(areas[a])[age][len] << sep
             << setprecision(precision) << setw(width)
-            << preyinfo->BconsumptionByAgeAndLength(areas[a])[age][len] << sep
-            << setprecision(precision) << setw(width)
-            << preyinfo->NconsumptionByLength(areas[a])[len] << sep
-            << setprecision(precision) << setw(width)
-            << preyinfo->BconsumptionByLength(areas[a])[len] << endl;
+            << preyinfo->BconsumptionByAgeAndLength(areas[a])[age][len] << endl;
 
       }
   }

@@ -38,6 +38,14 @@ protected:
    */
   char* stockname;
   /**
+   * \brief This is the minimum age of the stock
+   */
+  int minage;
+  /**
+   * \brief This is the maximum age of the stock
+   */
+  int maxage;
+  /**
    * \brief This is the IntVector used to store aggregated internal area information
    */
   IntVector areas;
