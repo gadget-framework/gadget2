@@ -108,31 +108,31 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         ifstream infile;
         CommentStream incomment(infile);
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
         infile.open(aVector[k], ios::in);
         handle.checkIfFailure(infile, aVector[k]);
         if (infile.fail())
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         this->read(incomment);
         infile.close();
         infile.clear();
 
       } else if (strcasecmp(aVector[k], "-i") == 0) {
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
-        setInitialParamFile(aVector[k]);
+        this->setInitialParamFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-o") == 0) {
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
         printinfo.setOutputFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-p") == 0) {
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
         printinfo.setParamOutFile(aVector[k]);
 
@@ -141,33 +141,33 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
 
       } else if (strcasecmp(aVector[k], "-co") == 0) {
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
         printinfo.setColumnOutputFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-printinitial") == 0) {
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
-        setPrintInitialFile(aVector[k]);
+        this->setPrintInitialFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-printfinal") == 0) {
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
-        setPrintFinalFile(aVector[k]);
+        this->setPrintFinalFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-main") == 0) {
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
-        setMainGadgetFile(aVector[k]);
+        this->setMainGadgetFile(aVector[k]);
 
       } else if (strcasecmp(aVector[k], "-opt") == 0) {
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
-        setOptInfoFile(aVector[k]);
+        this->setOptInfoFile(aVector[k]);
 
       } else if ((strcasecmp(aVector[k], "-printlikelihood") == 0) || (strcasecmp(aVector[k], "-likelihoodprint") == 0)) {
         handle.logMessage(LOGFAIL, "The -printlikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
@@ -180,20 +180,20 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
 
       } else if (strcasecmp(aVector[k], "-print1") == 0) {
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
         printinfo.setPrint1(atoi(aVector[k]));
 
       } else if (strcasecmp(aVector[k], "-print2") == 0) {
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
         printinfo.setPrint2(atoi(aVector[k]));
 
       } else if (strcasecmp(aVector[k], "-precision") == 0) {
         //JMB - experimental setting of printing precision
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
         printinfo.setPrecision(atoi(aVector[k]));
 
@@ -202,14 +202,14 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         exit(EXIT_SUCCESS);
 
       } else if ((strcasecmp(aVector[k], "-h") == 0) || (strcasecmp(aVector[k], "--help") == 0)) {
-        showUsage();
+        this->showUsage();
 
       } else if (strcasecmp(aVector[k], "-log") == 0) {
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
         handle.setLogFile(aVector[k]);
-        printLogLevel = 4;
+        printLogLevel = 5;
 
       } else if (strcasecmp(aVector[k], "-nowarnings") == 0) {
         //handle.logMessage(LOGWARN, "The -nowarnings switch is no longer supported\nSpecify a logging level using the -loglevel <number> instead");
@@ -218,7 +218,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
       } else if (strcasecmp(aVector[k], "-loglevel") == 0) {
         //JMB - experimental logging facility
         if (k == aNumber - 1)
-          showCorrectUsage(aVector[k]);
+          this->showCorrectUsage(aVector[k]);
         k++;
         printLogLevel = atoi(aVector[k]);
 
@@ -227,7 +227,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         runprint = 0;
 
       } else
-        showCorrectUsage(aVector[k]);
+        this->showCorrectUsage(aVector[k]);
 
       k++;
     }
@@ -294,7 +294,7 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
   if ((printLogLevel == 1) && (runoptimise == 0))
     handle.logMessage(LOGWARN, "\n** Gadget cannot disable warnings for a simulation run **");
 
-  if ((handle.checkLogFile()) && (runoptimise == 1) && (printLogLevel >= 4))
+  if ((handle.checkLogFile()) && (runoptimise == 1) && (printLogLevel >= 5))
     handle.logMessage(LOGWARN, "\n** logging model information from a Gadget optimisation is not recommended **");
 
   if ((handle.checkLogFile()) && (runnetwork == 1))
@@ -321,7 +321,7 @@ void MainInfo::read(CommentStream& infile) {
 
     if (strcasecmp(text, "-i") == 0) {
       infile >> text >> ws;
-      setInitialParamFile(text);
+      this->setInitialParamFile(text);
     } else if (strcasecmp(text, "-o") == 0) {
       infile >> text >> ws;
       printinfo.setOutputFile(text);
@@ -333,16 +333,16 @@ void MainInfo::read(CommentStream& infile) {
       printinfo.setParamOutFile(text);
     } else if (strcasecmp(text, "-main") == 0) {
       infile >> text >> ws;
-      setMainGadgetFile(text);
+      this->setMainGadgetFile(text);
     } else if (strcasecmp(text, "-printinitial") == 0) {
       infile >> text >> ws;
-      setPrintInitialFile(text);
+      this->setPrintInitialFile(text);
     } else if (strcasecmp(text, "-printfinal") == 0) {
       infile >> text >> ws;
-      setPrintFinalFile(text);
+      this->setPrintFinalFile(text);
     } else if (strcasecmp(text, "-opt") == 0) {
       infile >> text >> ws;
-      setOptInfoFile(text);
+      this->setOptInfoFile(text);
     } else if (strcasecmp(text, "-print") == 0) {
       printinfo.setForcePrint(1);
     } else if (strcasecmp(text, "-print1") == 0) {
@@ -357,6 +357,7 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-log") == 0) {
       infile >> text >> ws;
       handle.setLogFile(text);
+      printLogLevel = 5;
     } else if (strcasecmp(text, "-nowarnings") == 0) {
       printLogLevel = 1;
     } else if (strcasecmp(text, "-loglevel") == 0) {
@@ -369,7 +370,7 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-printonelikelihood") == 0) {
       handle.logMessage(LOGWARN, "The -printonelikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
     } else
-      showCorrectUsage(text);
+      this->showCorrectUsage(text);
   }
 }
 

@@ -92,8 +92,7 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
     infile >> text >> ws;
     handle.logFileUnexpected(LOGFAIL, "<end of file>", text);
   }
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read straying data file");
+  handle.logMessage(LOGMESSAGE, "Read straying data file");
   keeper->clearLast();
 }
 
@@ -147,7 +146,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
       if (!strayStocks[i]->isInArea(strayArea[j]))
         index++;
 
-    if ((handle.getLogLevel() >= LOGWARN) && (index != 0))
+    if (index != 0)
       handle.logMessage(LOGWARN, "Warning in straying data - straying stock isnt defined on all areas");
 
     minStrayAge = min(strayStocks[i]->minAge(), minStrayAge);
@@ -243,13 +242,11 @@ void StrayData::Reset(const TimeClass* const TimeInfo) {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       strayProportion[i] = fnProportion->calculate(LgrpDiv->meanLength(i));
       if (strayProportion[i] < 0.0) {
-        if (handle.getLogLevel() >= LOGWARN)
-          handle.logMessage(LOGWARN, "Warning in straying - function outside bounds", strayProportion[i]);
+        handle.logMessage(LOGWARN, "Warning in straying - function outside bounds", strayProportion[i]);
         strayProportion[i] = 0.0;
       }
       if (strayProportion[i] > 1.0) {
-        if (handle.getLogLevel() >= LOGWARN)
-          handle.logMessage(LOGWARN, "Warning in straying - function outside bounds", strayProportion[i]);
+        handle.logMessage(LOGWARN, "Warning in straying - function outside bounds", strayProportion[i]);
         strayProportion[i] = 1.0;
       }
     }

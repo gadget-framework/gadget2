@@ -192,7 +192,7 @@ void Prey::Reset() {
 }
 
 int Prey::isPreyArea(int area) {
-  if ((handle.getLogLevel() >= LOGWARN) && (total[this->areaNum(area)] < 0))
+  if (total[this->areaNum(area)] < 0)
     handle.logMessage(LOGWARN, "Warning in prey - negative amount consumed");
   if (isZero(total[this->areaNum(area)]))
     return 0;

@@ -27,7 +27,6 @@ int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggind
       if ((strcasecmp(aggindex[i], aggindex[j]) == 0) && (i != j))
         handle.logMessage(LOGFAIL, "Error in aggregation file - repeated label", aggindex[i]);
 
-  if (handle.getLogLevel() >= LOGMESSAGE)
   handle.logMessage(LOGMESSAGE, "Read aggregation file - number of entries", aggindex.Size());
   return aggindex.Size();
 }
@@ -51,8 +50,7 @@ int readAggregation(CommentStream& infile, IntVector& agg, CharPtrVector& aggind
       if ((strcasecmp(aggindex[i], aggindex[j]) == 0) && (i != j))
         handle.logMessage(LOGFAIL, "Error in aggregation file - repeated label", aggindex[i]);
 
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read aggregation file - number of entries", aggindex.Size());
+  handle.logMessage(LOGMESSAGE, "Read aggregation file - number of entries", aggindex.Size());
   return aggindex.Size();
 }
 
@@ -84,8 +82,7 @@ int readLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrV
       if ((strcasecmp(lenindex[i], lenindex[j]) == 0) && (i != j))
         handle.logMessage(LOGFAIL, "Error in length aggregation file - repeated label", lenindex[i]);
 
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read length aggregation file - number of entries", lenindex.Size());
+  handle.logMessage(LOGMESSAGE, "Read length aggregation file - number of entries", lenindex.Size());
   return lenindex.Size();
 }
 
@@ -139,7 +136,6 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
       if ((strcasecmp(preyindex[i], preyindex[j]) == 0) && (i != j))
         handle.logMessage(LOGFAIL, "Error in prey aggregation file - repeated label", preyindex[i]);
 
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read prey aggregation file - number of entries", preyindex.Size());
+  handle.logMessage(LOGMESSAGE, "Read prey aggregation file - number of entries", preyindex.Size());
   return preyindex.Size();
 }

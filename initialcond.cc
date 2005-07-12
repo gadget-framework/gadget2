@@ -82,10 +82,9 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
     }
   }
 
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in initial conditions - found no data in the data file");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   areaFactor.Inform(keeper);
   ageFactor.Inform(keeper);
   meanLength.Inform(keeper);
@@ -171,10 +170,9 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
     }
   }
 
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in initial conditions - found no data in the data file");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   areaFactor.Inform(keeper);
   ageFactor.Inform(keeper);
   meanLength.Inform(keeper);
@@ -278,10 +276,9 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   for (i = 0; i < initialNumber.Size(); i++)
     (*initialNumber[i]).Inform(keeper);
 
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in initial conditions - found no data in the data file");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   keeper->clearLast();
 }
 
@@ -568,8 +565,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
         mult = areaFactor[area][age - minage] * ageFactor[area][age - minage];
 
       if (mult < 0) {
-        if (handle.getLogLevel() >= LOGWARN)
-          handle.logMessage(LOGWARN, "Warning in initial conditions - negative stock multiplier", mult);
+        handle.logMessage(LOGWARN, "Warning in initial conditions - negative stock multiplier", mult);
         mult = -mult;
       }
 

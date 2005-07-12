@@ -128,10 +128,9 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
     }
   }
 
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in tags - found no data in the data file for", tagname);
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read tags data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read tags data file - number of entries", count);
 
   tagyear = 9999;
   tagstep = 9999;

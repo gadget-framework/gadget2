@@ -88,7 +88,7 @@ void Transition::setStock(StockPtrVector& stockvec) {
       if (!transitionStocks[i]->isInArea(areas[j]))
         index++;
 
-    if ((handle.getLogLevel() >= LOGWARN) && (index != 0))
+    if (index != 0)
       handle.logMessage(LOGWARN, "Warning in transition - transition stock isnt defined on all areas");
 
     if (transitionStocks[i]->getLengthGroupDiv()->minLength() < mlength)

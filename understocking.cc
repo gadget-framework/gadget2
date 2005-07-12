@@ -52,8 +52,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   }
   if (prednames.Size() == 0)
     handle.logFileMessage(LOGFAIL, "Error in understocking - failed to read predators");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", prednames.Size());
+  handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", prednames.Size());
 
   if (!AAT.readFromFile(infile, TimeInfo))
     handle.logFileMessage(LOGFAIL, "Error in understocking - wrong format for yearsandsteps");

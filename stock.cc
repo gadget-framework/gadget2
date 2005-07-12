@@ -108,8 +108,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     if (!(isZero(LgrpDiv->maxLength() - GrowLgrpDiv->maxLength())))
       handle.logMessage(LOGWARN, "Warning in stock - maximum lengths don't match for growth of", this->getName());
   }
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read basic stock data for stock", this->getName());
+  handle.logMessage(LOGMESSAGE, "Read basic stock data for stock", this->getName());
 
   //read the growth function data
   readWordAndVariable(infile, "doesgrow", doesgrow);
@@ -117,8 +116,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     grower = new Grower(infile, LgrpDiv, GrowLgrpDiv, areas, TimeInfo, keeper, refweight, Area, grlenindex);
   else
     grower = 0;
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read growth data for stock", this->getName());
+  handle.logMessage(LOGMESSAGE, "Read growth data for stock", this->getName());
 
   //read the natural mortality data
   infile >> text;
@@ -126,8 +124,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     naturalm = new NaturalM(infile, minage, maxage, TimeInfo, keeper);
   else
     handle.logFileUnexpected(LOGFAIL, "naturalmortality", text);
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read natural mortality data for stock", this->getName());
+  handle.logMessage(LOGMESSAGE, "Read natural mortality data for stock", this->getName());
 
   //read the prey data
   readWordAndVariable(infile, "iseaten", iseaten);
@@ -135,8 +132,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     prey = new StockPrey(infile, areas, this->getName(), minage, maxage);
   else
     prey = 0;
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read prey data for stock", this->getName());
+  handle.logMessage(LOGMESSAGE, "Read prey data for stock", this->getName());
 
   //read the predator data
   readWordAndVariable(infile, "doeseat", doeseat);
@@ -145,8 +141,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
       GrowLgrpDiv, minage, maxage, TimeInfo, keeper);
   else
     predator = 0;
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read predator data for stock", this->getName());
+  handle.logMessage(LOGMESSAGE, "Read predator data for stock", this->getName());
 
   //read the initial conditions
   infile >> text;
@@ -154,8 +149,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     initial = new InitialCond(infile, areas, keeper, refweight, Area, dl);
   else
     handle.logFileUnexpected(LOGFAIL, "initialconditions", text);
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read initial conditions data for stock", this->getName());
+  handle.logMessage(LOGMESSAGE, "Read initial conditions data for stock", this->getName());
 
   //read the migration data
   readWordAndVariable(infile, "doesmigrate", doesmigrate);
@@ -181,8 +175,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     migration = 0;
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read migration data for stock", this->getName());
+  handle.logMessage(LOGMESSAGE, "Read migration data for stock", this->getName());
 
   //read the maturation data
   readWordAndVariable(infile, "doesmature", doesmature);
@@ -217,8 +210,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     maturity = 0;
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read maturity data for stock", this->getName());
+  handle.logMessage(LOGMESSAGE, "Read maturity data for stock", this->getName());
 
   //read the movement data
   readWordAndVariable(infile, "doesmove", doesmove);
@@ -228,8 +220,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     transition = 0;
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read transition data for stock", this->getName());
+  handle.logMessage(LOGMESSAGE, "Read transition data for stock", this->getName());
 
   //read the renewal data
   readWordAndVariable(infile, "doesrenew", doesrenew);
@@ -238,8 +229,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     renewal = 0;
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read renewal data for stock", this->getName());
+  handle.logMessage(LOGMESSAGE, "Read renewal data for stock", this->getName());
 
   //read the spawning data
   readWordAndVariable(infile, "doesspawn", doesspawn);
@@ -257,8 +247,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   } else
     spawner = 0;
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read spawning data for stock", this->getName());
+  handle.logMessage(LOGMESSAGE, "Read spawning data for stock", this->getName());
 
   infile >> ws;
   if (!infile.eof()) {
@@ -278,8 +267,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
     } else
       stray = 0;
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Read straying data for stock", this->getName());
+    handle.logMessage(LOGMESSAGE, "Read straying data for stock", this->getName());
   }
 
   //set the birthday for the stock

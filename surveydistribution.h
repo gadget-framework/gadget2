@@ -77,6 +77,10 @@ private:
    */
   void readDistributionData(CommentStream& infile, const TimeClass* TimeInfo,
     int numarea, int numage, int numlen);
+  /**
+   * \brief This function will calculate the survey index based on the modelled population for the current timetsep
+   * \param TimeInfo is the TimeClass for the current model
+   */
   void calcIndex(const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the likelihood score for the current timestep based on a multinomial function

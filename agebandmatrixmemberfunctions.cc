@@ -41,8 +41,7 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
           pop = Addition[age][CI.getPos(l)];
           pop *= ratio;
           if (isZero(CI.Nrof(l))) {
-            if (handle.getLogLevel() >= LOGWARN)
-              handle.logMessage(LOGWARN, "Warning in agebandmatrix - divide by zero");
+            handle.logMessage(LOGWARN, "Warning in agebandmatrix - divide by zero");
           } else
             pop.N /= CI.Nrof(l);
           (*v[age - minage])[l] += pop;
@@ -66,7 +65,7 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
 }
 
 void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& CI) {
-  if ((handle.getLogLevel() >= LOGWARN) && (CI.isFiner() == 1))
+  if (CI.isFiner() == 1)
     handle.logMessage(LOGWARN, "Warning in agebandmatrix - target is finer for multiply");
 
   int i, j, j1, j2, offset;
@@ -75,8 +74,7 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& C
     if (isZero(UsedRatio[i]))
       UsedRatio[i] = 0.0;
     else if (UsedRatio[i] < 0) {
-      if (handle.getLogLevel() >= LOGWARN)
-        handle.logMessage(LOGWARN, "Error in agebandmatrix - negative ratio");
+      handle.logMessage(LOGWARN, "Warning in agebandmatrix - negative ratio");
       UsedRatio[i] = 0.0;
     }
   }
@@ -101,7 +99,7 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& C
 
 void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Nrof) {
 
-  if ((handle.getLogLevel() >= LOGWARN) && (Consumption.Size() != Nrof.Size()))
+  if (Consumption.Size() != Nrof.Size())
     handle.logMessage(LOGWARN, "Warning in agebandmatrix - different sizes in subtract");
 
   int i;
@@ -119,7 +117,7 @@ void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIn
 //natural mortality. Investigate if Ratio should be allowed to be shorter.
 void AgeBandMatrix::Multiply(const DoubleVector& Ratio) {
   int i, j;
-  if ((handle.getLogLevel() >= LOGWARN) && (Ratio.Size() != nrow))
+  if (Ratio.Size() != nrow)
     handle.logMessage(LOGWARN, "Warning in agebandmatrix - different sizes in multiply");
   for (i = 0; i < nrow; i++)
     for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)

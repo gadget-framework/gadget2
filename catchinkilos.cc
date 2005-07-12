@@ -101,8 +101,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   }
   if (fleetnames.Size() == 0)
     handle.logFileMessage(LOGFAIL, "Error in catchinkilos - failed to read fleets");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
+  handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
   i = 0;
@@ -118,8 +117,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   }
   if (stocknames.Size() == 0)
     handle.logFileMessage(LOGFAIL, "Error in catchinkilos - failed to read stocks");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
+  handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
@@ -286,7 +284,7 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
           preyindex[i].resize(1, j);
         }
 
-    if ((handle.getLogLevel() >= LOGWARN) && (found == 0))
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in catchinkilos - found no stocks for fleet", fleetnames[i]);
   }
 
@@ -383,10 +381,9 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
   else
     AAT.addActions(Years, Steps, TimeInfo);
 
-  if ((handle.getLogLevel() >= LOGMESSAGE) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in catchinkilos - found no data in the data file for", this->getName());
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read catchinkilos data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read catchinkilos data file - number of entries", count);
 }
 
 void CatchInKilos::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {

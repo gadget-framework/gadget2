@@ -170,8 +170,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     infile >> text >> ws;
     handle.logFileUnexpected(LOGFAIL, "<end of file>", text);
   }
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read spawning data file");
+  handle.logMessage(LOGMESSAGE, "Read spawning data file");
   keeper->clearLast();
 }
 
@@ -233,7 +232,7 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
       if (!spawnStocks[i]->isInArea(spawnArea[j]))
         index++;
 
-    if ((handle.getLogLevel() >= LOGWARN) && (index != 0))
+    if (index != 0)
       handle.logMessage(LOGWARN, "Warning in spawner - spawned stock isnt defined on all areas");
 
     spawnAge = min(spawnStocks[i]->minAge(), spawnAge);
@@ -352,13 +351,11 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       spawnProportion[i] = fnProportion->calculate(LgrpDiv->meanLength(i));
       if (spawnProportion[i] < 0.0) {
-        if (handle.getLogLevel() >= LOGWARN)
-          handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnProportion[i]);
+        handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnProportion[i]);
         spawnProportion[i] = 0.0;
       }
       if (spawnProportion[i] > 1.0) {
-        if (handle.getLogLevel() >= LOGWARN)
-          handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnProportion[i]);
+        handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnProportion[i]);
         spawnProportion[i] = 1.0;
       }
     }
@@ -369,13 +366,11 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       spawnWeightLoss[i] = fnWeightLoss->calculate(LgrpDiv->meanLength(i));
       if (spawnWeightLoss[i] < 0.0) {
-        if (handle.getLogLevel() >= LOGWARN)
-          handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnWeightLoss[i]);
+        handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnWeightLoss[i]);
         spawnWeightLoss[i] = 0.0;
       }
       if (spawnWeightLoss[i] > 1.0) {
-        if (handle.getLogLevel() >= LOGWARN)
-          handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnWeightLoss[i]);
+        handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnWeightLoss[i]);
         spawnWeightLoss[i] = 1.0;
       }
     }

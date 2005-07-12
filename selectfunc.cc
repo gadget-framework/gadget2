@@ -27,7 +27,6 @@ void SelectFunc::setName(const char* selectname) {
     delete[] name;
     name = NULL;
   }
-
   name = new char[strlen(selectname) + 1];
   strcpy(name, selectname);
 }

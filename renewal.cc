@@ -195,10 +195,9 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
     }
   }
 
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in renewal - found no data in the data file");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
 }
 
 void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const keeper,
@@ -279,10 +278,9 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
     }
   }
 
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in renewal - found no data in the data file");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
 }
 
 void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
@@ -380,10 +378,9 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
   for (i = 0; i < renewalNumber.Size(); i++)
     (*renewalNumber[i]).Inform(keeper);
 
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in renewal - found no data in the data file");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
 }
 
 RenewalData::~RenewalData() {
@@ -499,10 +496,12 @@ void RenewalData::Reset() {
            l < renewalDistribution[i].maxLength(age); l++) {
 
         renewalDistribution[i][age][l].N = (*renewalNumber[i])[age - minage][l];
-        if ((handle.getLogLevel() >= LOGWARN) && (renewalDistribution[i][age][l].N < 0))
-          handle.logMessage(LOGWARN, "Warning in renewal - negative number of recruits", renewalDistribution[i][age][l].N);
-        if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0))
-          handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+        if (handle.getLogLevel() >= LOGWARN) {
+          if (renewalDistribution[i][age][l].N < 0)
+            handle.logMessage(LOGWARN, "Warning in renewal - negative number of recruits", renewalDistribution[i][age][l].N);
+          if ((isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0))
+            handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+        }
       }
     }
 

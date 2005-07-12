@@ -86,14 +86,12 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
       count++;
     }
   }
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in area - found no temperature data");
-  if ((handle.getLogLevel() >= LOGWARN) && (count != (temperature.Nrow() - 1) * noareas))
+  if (count != (temperature.Nrow() - 1) * noareas)
     handle.logMessage(LOGWARN, "Warning in area - temperature data doesnt span time range");
-  if (handle.getLogLevel() >= LOGMESSAGE) {
-    handle.logMessage(LOGMESSAGE, "Read temperature data - number of entries", count);
-    handle.logMessage(LOGMESSAGE, "Read area file - number of areas", noareas);
-  }
+  handle.logMessage(LOGMESSAGE, "Read temperature data - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read area file - number of areas", noareas);
 }
 
 int AreaClass::InnerArea(int area) const {
@@ -103,7 +101,7 @@ int AreaClass::InnerArea(int area) const {
     if (area == OuterAreas[i])
       innerarea = i;
 
-  if ((handle.getLogLevel() >= LOGWARN) && (innerarea == -1))
+  if (innerarea == -1)
     handle.logMessage(LOGWARN, "Warning in area - failed to match area", area);
   return innerarea;
 }

@@ -104,8 +104,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     }
     if (fleetnames.Size() == 0)
       handle.logFileMessage(LOGFAIL, "Error in surveyindex - failed to read fleets");
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
+    handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
     handle.logFileMessage(LOGFAIL, "The ageandlengths surveyindex likelihood component is no longer supported\nUse the surveydistribution likelihood component instead");
@@ -127,8 +126,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   }
   if (stocknames.Size() == 0)
     handle.logFileMessage(LOGFAIL, "Error in surveyindex - failed to read stocks");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
+  handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
   if (strcasecmp(sitype, "lengths") == 0) {

@@ -78,8 +78,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   }
   if (fleetnames.Size() == 0)
     handle.logFileMessage(LOGFAIL, "Error in recaptures - failed to read fleets");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
+  handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the recapture data from datafilename
@@ -194,10 +193,9 @@ void Recaptures::readRecaptureData(CommentStream& infile,
       (*obsDistribution[tid][timeid])[areaid][lenid] = tmpnumber;
     }
   }
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in recaptures - found no data in the data file for", this->getName());
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read recaptures data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read recaptures data file - number of entries", count);
 }
 
 Recaptures::~Recaptures() {

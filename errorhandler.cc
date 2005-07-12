@@ -43,16 +43,16 @@ void ErrorHandler::setLogLevel(int level) {
       loglevel = LOGWARN;
       break;
     case 4:
-      //also get more information messages to be written to the logfile (if it exists)
-      loglevel = LOGMESSAGE;
-      break;
-    case 5:
-      //also get more detailed messages to be written to the logfile (if it exists)
-      loglevel = LOGDETAIL;
-      break;
-    case 6:
       //also get debug messages to be written to the logfile (if it exists)
       loglevel = LOGDEBUG;
+      break;
+    case 5:
+      //also get information messages to be written to the logfile (if it exists)
+      loglevel = LOGMESSAGE;
+      break;
+    case 6:
+      //also get more detailed messages to be written to the logfile (if it exists)
+      loglevel = LOGDETAIL;
       break;
     default:
       cerr << "Error in errorhandler - invalid log level " << level << endl;
@@ -115,9 +115,9 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg) {
       }
       cerr << msg << endl;
       break;
+    case LOGDEBUG:
     case LOGMESSAGE:
     case LOGDETAIL:
-    case LOGDEBUG:
       if (uselog) {
         logfile << msg << endl;
         logfile.flush();
@@ -159,9 +159,9 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, const char* msg
       }
       cerr << msg1 << sep << msg2 << endl;
       break;
+    case LOGDEBUG:
     case LOGMESSAGE:
     case LOGDETAIL:
-    case LOGDEBUG:
       if (uselog) {
         logfile << msg1 << sep << msg2 << endl;
         logfile.flush();
@@ -203,9 +203,9 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, int number) {
       }
       cerr << msg << sep << number << endl;
       break;
+    case LOGDEBUG:
     case LOGMESSAGE:
     case LOGDETAIL:
-    case LOGDEBUG:
       if (uselog) {
         logfile << msg << sep << number << endl;
         logfile.flush();
@@ -247,9 +247,9 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, double number) {
       }
       cerr << msg << sep << number << endl;
       break;
+    case LOGDEBUG:
     case LOGMESSAGE:
     case LOGDETAIL:
-    case LOGDEBUG:
       if (uselog) {
         logfile << msg << sep << number << endl;
         logfile.flush();
@@ -291,9 +291,9 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, int number, con
       }
       cerr << msg1 << sep << number << sep << msg2 << endl;
       break;
+    case LOGDEBUG:
     case LOGMESSAGE:
     case LOGDETAIL:
-    case LOGDEBUG:
       if (uselog) {
         logfile << msg1 << sep << number << sep << msg2 << endl;
         logfile.flush();
@@ -335,9 +335,9 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, double number, 
       }
       cerr << msg1 << sep << number << sep << msg2 << endl;
       break;
+    case LOGDEBUG:
     case LOGMESSAGE:
     case LOGDETAIL:
-    case LOGDEBUG:
       if (uselog) {
         logfile << msg1 << sep << number << sep << msg2 << endl;
         logfile.flush();
@@ -392,9 +392,9 @@ void ErrorHandler::logMessage(LogLevel mlevel, DoubleVector vec) {
         cerr << vec[i] << sep;
       cerr << endl;
       break;
+    case LOGDEBUG:
     case LOGMESSAGE:
     case LOGDETAIL:
-    case LOGDEBUG:
       if (uselog) {
         for (i = 0; i < vec.Size(); i++)
           logfile << vec[i] << sep;
@@ -446,9 +446,9 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg) {
       else
         cerr << "Warning in file " << strFilename << " - " << msg << endl;
       break;
+    case LOGDEBUG:
     case LOGMESSAGE:
     case LOGDETAIL:
-    case LOGDEBUG:
       if (uselog) {
         logfile << "Message in file " << strFilename << endl << msg << endl;
         logfile.flush();
@@ -499,9 +499,9 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg1, const char*
       else
         cerr << "Warning in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
       break;
+    case LOGDEBUG:
     case LOGMESSAGE:
     case LOGDETAIL:
-    case LOGDEBUG:
       if (uselog) {
         logfile << "Message in file " << strFilename << endl << msg1 << sep << msg2 << endl;
         logfile.flush();
@@ -540,9 +540,9 @@ void ErrorHandler::logFileEOFMessage(LogLevel mlevel) {
       }
       cerr << "Unexpected end of file " << strFilename << endl;
       break;
+    case LOGDEBUG:
     case LOGMESSAGE:
     case LOGDETAIL:
-    case LOGDEBUG:
       if (uselog) {
         logfile << "Unexpected end of file " << strFilename << endl;
         logfile.flush();
@@ -585,9 +585,9 @@ void ErrorHandler::logFileUnexpected(LogLevel mlevel, const char* msg1, const ch
       cerr << "Warning in file " << strFilename << endl
         << "Expected " << msg1 << " but found instead " << msg2 << endl;
       break;
+    case LOGDEBUG:
     case LOGMESSAGE:
     case LOGDETAIL:
-    case LOGDEBUG:
       if (uselog) {
         logfile << "Message in file " << strFilename << endl
           << "Expected " << msg1 << " but found instead " << msg2 << endl;

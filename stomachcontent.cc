@@ -141,8 +141,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
   }
   if (predatornames.Size() == 0)
     handle.logFileMessage(LOGFAIL, "Error in stomachcontent - failed to read predators");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", predatornames.Size());
+  handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", predatornames.Size());
 
   if (strcasecmp(text, "predatorlengths") == 0) { //read predator lengths
     usepredages = 0; //predator is length structured
@@ -568,10 +567,9 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
 }
 
 double SCNumbers::calcLikelihood() {
@@ -733,10 +731,9 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
 }
 
 void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -814,10 +811,9 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
       (*number[timeid])[areaid][predid] = tmpnumber;
     }
   }
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
 }
 
 SCAmounts::~SCAmounts() {
@@ -1032,10 +1028,9 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
 }
 
 void SCSimple::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {

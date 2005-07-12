@@ -116,6 +116,5 @@ void Predator::readSuitability(CommentStream& infile,
   }
 
   keeper->clearLast();
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read predation data - number of preys", suitable->numPreys());
+  handle.logMessage(LOGMESSAGE, "Read predation data - number of preys", suitable->numPreys());
 }

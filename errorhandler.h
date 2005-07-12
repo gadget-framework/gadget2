@@ -5,7 +5,7 @@
 #include "doublevector.h"
 #include "gadget.h"
 
-enum LogLevel { LOGNONE = 0, LOGFAIL, LOGINFO, LOGWARN, LOGMESSAGE, LOGDETAIL, LOGDEBUG };
+enum LogLevel { LOGNONE = 0, LOGFAIL, LOGINFO, LOGWARN, LOGDEBUG, LOGMESSAGE, LOGDETAIL };
 
 /**
  * \class ErrorHandler

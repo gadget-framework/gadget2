@@ -36,8 +36,7 @@ StockPrinter::StockPrinter(CommentStream& infile, const TimeClass* const TimeInf
   }
   if (stocknames.Size() == 0)
     handle.logFileMessage(LOGFAIL, "Error in stockprinter - failed to read stocks");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
+  handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //read in area aggregation from file
   filename = new char[MaxStrLength];

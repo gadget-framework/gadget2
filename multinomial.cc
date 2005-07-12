@@ -37,7 +37,7 @@ double Multinomial::calcLogLikelihood(const DoubleVector& data, const DoubleVect
 
   sumlog -= logFactorial(sumdata);
   tmpsum = 2.0 * (likely + sumlog);
-  if ((handle.getLogLevel() >= LOGWARN) && (tmpsum < 0))
+  if (tmpsum < 0)
     handle.logMessage(LOGWARN, "Warning in multinomial - negative total", tmpsum);
 
   loglikelihood += tmpsum;

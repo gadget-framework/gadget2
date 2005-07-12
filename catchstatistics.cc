@@ -98,8 +98,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   }
   if (fleetnames.Size() == 0)
     handle.logFileMessage(LOGFAIL, "Error in catchstatistics - failed to read fleets");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
+  handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
   i = 0;
@@ -115,8 +114,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   }
   if (stocknames.Size() == 0)
     handle.logFileMessage(LOGFAIL, "Error in catchstatistics - failed to read stocks");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
+  handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
@@ -238,10 +236,9 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
     }
   }
   AAT.addActions(Years, Steps, TimeInfo);
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in catchstatistics - found no data in the data file for", this->getName());
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read catchstatistics data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read catchstatistics data file - number of entries", count);
 }
 
 CatchStatistics::~CatchStatistics() {

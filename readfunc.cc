@@ -177,8 +177,7 @@ int readRefWeights(CommentStream& infile, DoubleMatrix& M) {
     if ((M[i][0] - M[i - 1][0]) < verysmall)
       handle.logFileMessage(LOGFAIL, "Lengths for reference weights must be strictly increasing");
 
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read reference weights OK - number of entries", i);
+  handle.logMessage(LOGMESSAGE, "Read reference weights OK - number of entries", i);
   return 1;
 }
 
@@ -322,10 +321,9 @@ int readAmounts(CommentStream& infile, const IntVector& tmpareas,
     }
   }
 
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in readamounts - found no data in the data file for", givenname);
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read amounts data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read amounts data file - number of entries", count);
   return 1;
 }
 
@@ -418,10 +416,9 @@ int readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
       infile >> ws;
     }
   }
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in growthamounts - found no data in the data file");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read growth data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read growth data file - number of entries", count);
   return 1;
 }
 

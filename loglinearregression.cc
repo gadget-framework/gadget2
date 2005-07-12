@@ -79,8 +79,7 @@ void LogLinearRegression::calcLog(const DoubleVector& x,
       Ylog.Delete(l);
       l--;
     } else if ((x[i] < 0) || (y[i] < 0) || (isZero(x[i])) || (isZero(y[i]))) {
-      if (handle.getLogLevel() >= LOGWARN)
-        handle.logMessage(LOGWARN, "Warning in LLR - received invalid values");
+      handle.logMessage(LOGWARN, "Warning in LLR - received invalid values");
       error = 1;
       return;
     } else {

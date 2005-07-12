@@ -109,7 +109,7 @@ void OtherFood::calcNumbers(int area,
 }
 
 int OtherFood::isOtherFoodStepArea(int area, const TimeClass* const TimeInfo) {
-  if ((handle.getLogLevel() >= LOGWARN) && (amount[TimeInfo->getTime()][this->areaNum(area)] < 0))
+  if (amount[TimeInfo->getTime()][this->areaNum(area)] < 0)
     handle.logMessage(LOGWARN, "Warning in otherfood - negative amount to be consumed");
   if (isZero(amount[TimeInfo->getTime()][this->areaNum(area)]))
     return 0;

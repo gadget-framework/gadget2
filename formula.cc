@@ -52,8 +52,7 @@ double Formula::evalFunction() const {
         if (!isZero(*(argList[0]))) {
           v = 1.0 / (*(argList[0]));
         } else {
-          if (handle.getLogLevel() >= LOGWARN)
-            handle.logMessage(LOGWARN, "Warning in formula - divide by zero");
+          handle.logMessage(LOGWARN, "Warning in formula - divide by zero");
         }
       } else {
         v = *(argList[0]);
@@ -61,8 +60,7 @@ double Formula::evalFunction() const {
           if (!isZero(*(argList[0]))) {
             v = v /= *(argList[i]);
           } else {
-            if (handle.getLogLevel() >= LOGWARN)
-              handle.logMessage(LOGWARN, "Warning in formula - divide by zero");
+            handle.logMessage(LOGWARN, "Warning in formula - divide by zero");
           }
         }
       }

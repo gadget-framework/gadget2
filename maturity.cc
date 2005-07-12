@@ -69,7 +69,7 @@ void Maturity::setStock(StockPtrVector& stockvec) {
       if (!matureStocks[i]->isInArea(areas[j]))
         index++;
 
-    if ((handle.getLogLevel() >= LOGWARN) && (index != 0))
+    if (index != 0)
       handle.logMessage(LOGWARN, "Warning in maturity - mature stock isnt defined on all areas");
   }
 
@@ -216,8 +216,7 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
     infile >> text >> ws;
     handle.logFileUnexpected(LOGFAIL, "<end of file>", text);
   }
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read maturity data file");
+  handle.logMessage(LOGMESSAGE, "Read maturity data file");
   keeper->clearLast();
 }
 
@@ -226,7 +225,7 @@ void MaturityA::Reset(const TimeClass* const TimeInfo) {
   double my;
   int age, len;
   if (maturityParameters.didChange(TimeInfo)) {
-    if ((handle.getLogLevel() >= LOGWARN) && (maturityParameters[1] > LgrpDiv->maxLength()))
+    if (maturityParameters[1] > LgrpDiv->maxLength())
       handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
 
     for (age = preCalcMaturation.minRow(); age <= preCalcMaturation.maxRow(); age++) {
@@ -329,8 +328,7 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
     infile >> text >> ws;
     handle.logFileUnexpected(LOGFAIL, "<end of file>", text);
   }
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read maturity data file");
+  handle.logMessage(LOGMESSAGE, "Read maturity data file");
   keeper->clearLast();
 }
 
@@ -352,9 +350,8 @@ void MaturityB::setStock(StockPtrVector& stockvec) {
 
 void MaturityB::Reset(const TimeClass* const TimeInfo) {
   maturitylength.Update(TimeInfo);
-  if (maturitylength.didChange(TimeInfo))
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Reset maturity data");
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset maturity data");
 }
 
 double MaturityB::calcMaturation(int age, int length, int growth,
@@ -429,8 +426,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
     infile >> text >> ws;
     handle.logFileUnexpected(LOGFAIL, "<end of file>", text);
   }
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read maturity data file");
+  handle.logMessage(LOGMESSAGE, "Read maturity data file");
   keeper->clearLast();
 }
 
@@ -452,7 +448,7 @@ void MaturityC::Reset(const TimeClass* const TimeInfo) {
   double my;
   int age, len;
   if (maturityParameters.didChange(TimeInfo)) {
-    if ((handle.getLogLevel() >= LOGWARN) && (maturityParameters[1] > LgrpDiv->maxLength()))
+    if (maturityParameters[1] > LgrpDiv->maxLength())
       handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
 
     for (age = preCalcMaturation.minRow(); age <= preCalcMaturation.maxRow(); age++) {
@@ -553,7 +549,7 @@ void MaturityD::setStock(StockPtrVector& stockvec) {
 void MaturityD::Reset(const TimeClass* const TimeInfo) {
   maturityParameters.Update(TimeInfo);
   if (maturityParameters.didChange(TimeInfo)) {
-    if ((handle.getLogLevel() >= LOGWARN) && (maturityParameters[1] > LgrpDiv->maxLength()))
+    if (maturityParameters[1] > LgrpDiv->maxLength())
       handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "Reset maturity data");

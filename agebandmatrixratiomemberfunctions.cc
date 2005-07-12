@@ -187,8 +187,7 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
               numfish = *(Addition[AdditionArea][age][CI.getPos(l)][tagid].N);
               numfish *= ratio;
               if (isZero(CI.Nrof(l))) {
-                if (handle.getLogLevel() >= LOGWARN)
-                  handle.logMessage(LOGWARN, "Warning in agebandmatrixratio - divide by zero");
+                handle.logMessage(LOGWARN, "Warning in agebandmatrixratio - divide by zero");
               } else
                 numfish /= CI.Nrof(l);
               *(Alkeys[AlkeysArea][age][l][tagconversion[tagid]].N) += numfish;

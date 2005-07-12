@@ -73,8 +73,7 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   }
   if (fleetnames.Size() == 0)
     handle.logFileMessage(LOGFAIL, "Error in recstatistics - failed to read fleets");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
+  handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
@@ -190,10 +189,9 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
   }
 
   timeindex.resize(tagvec.Size(), -1);
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in recstatistics - found no data in the data file for", this->getName());
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read recstatistics data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read recstatistics data file - number of entries", count);
 }
 
 RecStatistics::~RecStatistics() {

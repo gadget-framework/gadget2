@@ -85,8 +85,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   }
   if (stocknames.Size() == 0)
     handle.logFileMessage(LOGFAIL, "Error in surveydistribution - failed to read stocks");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
+  handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   infile >> fittype >> ws;
   fitnumber = 0;
@@ -256,10 +255,9 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
-  if ((handle.getLogLevel() >= LOGWARN) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in surveydistribution - found no data in the data file for", this->getName());
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read surveydistribution data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read surveydistribution data file - number of entries", count);
 }
 
 SurveyDistribution::~SurveyDistribution() {

@@ -73,8 +73,7 @@ DoubleVector LUDecomposition::Solve(const DoubleVector& b) {
 
     x[i] -= s;
     if (isZero(U[i][i])) {
-      if (handle.getLogLevel() >= LOGWARN)
-        handle.logMessage(LOGWARN, "Warning in ludecomposition - divide by zero");
+      handle.logMessage(LOGWARN, "Warning in ludecomposition - divide by zero");
     } else
       x[i] /= U[i][i];
   }

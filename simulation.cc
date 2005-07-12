@@ -80,8 +80,7 @@ void Ecosystem::SimulateOneTimestep() {
 void Ecosystem::Simulate(int Optimise, int print) {
   int i, j;
 
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
+  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
   if (Optimise) {
     for (j = 0; j < likevec.Size(); j++)
       likevec[j]->Reset(keeper);

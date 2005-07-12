@@ -213,7 +213,7 @@ void Keeper::scaleVariables() {
   int i;
   for (i = 0; i < values.Size(); i++) {
     if (isZero(values[i])) {
-      if ((handle.getLogLevel() >= LOGWARN) && ((opt.Size() == 0) || (opt[i] == 1)))
+      if ((opt.Size() == 0) || (opt[i] == 1))
         handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
 
       initialvalues[i] = 1.0;
@@ -236,7 +236,7 @@ void Keeper::Update(const DoubleVector& val) {
 
     values[i] = val[i];
     if (isZero(initialvalues[i])) {
-      if ((handle.getLogLevel() >= LOGWARN) && ((opt.Size() == 0) || (opt[i] == 1)))
+      if ((opt.Size() == 0) || (opt[i] == 1))
         handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
 
       scaledvalues[i] = val[i];
@@ -255,7 +255,7 @@ void Keeper::Update(int pos, double& value) {
 
   values[pos] = value;
   if (isZero(initialvalues[pos])) {
-    if ((handle.getLogLevel() >= LOGWARN) && ((opt.Size() == 0) || (opt[pos] == 1)))
+    if ((opt.Size() == 0) || (opt[pos] == 1))
       handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[pos].getName());
 
     scaledvalues[pos] = value;
@@ -395,7 +395,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
           }
 
           if (isZero(initialvalues[j])) {
-            if ((handle.getLogLevel() >= LOGWARN) && ((opt.Size() == 0) || (opt[j] == 1)))
+            if ((opt.Size() == 0) || (opt[j] == 1))
               handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[j].getName());
 
             scaledvalues[j] = values[j];
@@ -426,7 +426,7 @@ void Keeper::Update(const StochasticData* const Stoch) {
       values[i] = Stoch->getValue(i);
       bestvalues[i] = Stoch->getValue(i);
       if (isZero(initialvalues[i])) {
-        if ((handle.getLogLevel() >= LOGWARN) && ((opt.Size() == 0) || (opt[i] == 1)))
+        if ((opt.Size() == 0) || (opt[i] == 1))
           handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
 
         scaledvalues[i] = values[i];

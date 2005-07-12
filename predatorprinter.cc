@@ -38,8 +38,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
   }
   if (predatornames.Size() == 0)
     handle.logFileMessage(LOGFAIL, "Error in predatorprinter - failed to read predators");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", predatornames.Size());
+  handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", predatornames.Size());
 
   //read in the prey names
   i = 0;
@@ -52,8 +51,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
   }
   if (preynames.Size() == 0)
     handle.logFileMessage(LOGFAIL, "Error in predatorprinter - failed to read preys");
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read prey data - number of preys", preynames.Size());
+  handle.logMessage(LOGMESSAGE, "Read prey data - number of preys", preynames.Size());
 
   //read in area aggregation from file
   filename = new char[MaxStrLength];

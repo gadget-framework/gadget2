@@ -52,12 +52,11 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
           switchnr[i] = j;
 
     for (i = 0; i < switches.Size(); i++)
-      if ((handle.getLogLevel() >= LOGWARN) && (switchnr[i] == -1))
+      if (switchnr[i] == -1)
         handle.logMessage(LOGWARN, "Warning in boundlikelihood - failed to match switch", switches[i].getName());
   }
 
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read penalty file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read penalty file - number of entries", count);
   //set flag to initialise the bounds - called in Reset
   checkInitialised = 0;
 }
@@ -67,7 +66,7 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
 
   if (checkInitialised == 0) {
-    if ((handle.getLogLevel() >= LOGWARN) && (keeper->boundsGiven() == 0))
+    if (keeper->boundsGiven() == 0)
       handle.logMessage(LOGWARN, "Warning in boundlikelihood - no bounds have been set in input file");
 
     int i, j, k, numvar, numset;

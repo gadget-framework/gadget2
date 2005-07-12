@@ -32,7 +32,7 @@ void LinearPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
 
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
-      if ((handle.getLogLevel() >= LOGWARN) && (tmp > 10.0))
+      if (tmp > 10.0) //JMB arbitrary value here ...
         handle.logMessage(LOGWARN, "Warning in linearpredator - excessive consumption required");
 
       for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++) {

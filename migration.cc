@@ -138,8 +138,7 @@ Migration::Migration(CommentStream& infile, int AgeDepMig, const IntVector& Area
   CopyFromReadToCalc();
   keeper->clearLast();
   keeper->clearLast();
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read migration file - number of migration matrices", maxim);
+  handle.logMessage(LOGMESSAGE, "Read migration file - number of migration matrices", maxim);
 }
 
 Migration::~Migration() {

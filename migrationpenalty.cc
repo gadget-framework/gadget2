@@ -52,7 +52,7 @@ void MigrationPenalty::setStocks(StockPtrVector Stocks) {
 
   if (found == 0)
     handle.logMessage(LOGFAIL, "Error in migrationpenalty - failed to match stock", stockname);
-  if ((handle.getLogLevel() >= LOGWARN) && (!(stock->doesMigrate())))
+  if (!(stock->doesMigrate()))
     handle.logMessage(LOGWARN, "Warning in migrationpenalty - stock doesnt migrate");
 }
 

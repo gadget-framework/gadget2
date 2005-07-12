@@ -169,10 +169,9 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
     }
   }
   AAT.addActions(Years, Steps, TimeInfo);
-  if ((handle.getLogLevel() >= LOGMESSAGE) && (count == 0))
+  if (count == 0)
     handle.logMessage(LOGWARN, "Warning in surveyindex - found no data in the data file for", this->getSIName());
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Read surveyindex data file - number of entries", count);
+  handle.logMessage(LOGMESSAGE, "Read surveyindex data file - number of entries", count);
 }
 
 void SIOnStep::Reset(const Keeper* const keeper) {

@@ -92,25 +92,21 @@ void Ecosystem::Initialise() {
 
   //Now we can start initialising things
   for (i = 0; i < predvec.Size(); i++) {
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Initialising predator", predvec[i]->getName());
+    handle.logMessage(LOGMESSAGE, "Initialising predator", predvec[i]->getName());
     ((PopPredator*)predvec[i])->setPrey(preyvec, keeper);
   }
   for (i = 0; i < stockvec.Size(); i++) {
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Initialising stock", stockvec[i]->getName());
+    handle.logMessage(LOGMESSAGE, "Initialising stock", stockvec[i]->getName());
     stockvec[i]->setStock(stockvec);
   }
   for (i = 0; i < tagvec.Size(); i++) {
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Initialising tagging experiment", tagvec[i]->getName());
+    handle.logMessage(LOGMESSAGE, "Initialising tagging experiment", tagvec[i]->getName());
     tagvec[i]->setStock(stockvec);
   }
 
   //This is a good place to initialise the likelihood classes.
   for (i = 0; i < likevec.Size(); i++) {
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Initialising likelihood component", likevec[i]->getName());
+    handle.logMessage(LOGMESSAGE, "Initialising likelihood component", likevec[i]->getName());
     switch (likevec[i]->getType()) {
       case SURVEYINDICESLIKELIHOOD:
         ((SurveyIndices*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
@@ -155,8 +151,7 @@ void Ecosystem::Initialise() {
 
   //This is a good place to initialise the printer classes.
   for (i = 0; i < printvec.Size(); i++) {
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Initialising printer for output file", printvec[i]->getFileName());
+    handle.logMessage(LOGMESSAGE, "Initialising printer for output file", printvec[i]->getFileName());
     switch (printvec[i]->getType()) {
       case STOCKSTDPRINTER:
         ((StockStdPrinter*)(printvec[i]))->setStock(stockvec, Area);
