@@ -12,53 +12,36 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
   const TimeClass* const TimeInfo, const Keeper* const keeper, double weight, const char* name)
   : Likelihood(BOUNDLIKELIHOOD, weight, name) {
 
-  ParameterVector switches;
   int i, j;
   Parameter tempParam;
-  DoubleVector tmpvec;
+  double temp;
   int count = 0;
+  //set flag to initialise the bounds - called in Reset
+  checkInitialised = 0;
 
   infile >> ws;
+  if (countColumns(infile) != 4)
+    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 4");
   while (!infile.eof()) {
     infile >> tempParam >> ws;
-    if (!readVectorInLine(infile, tmpvec))
-      handle.logFileMessage(LOGFAIL, "Error in boundlikelihood - failed to read values");
-    if (tmpvec.Size() != 3)  //3 values plus the name ...
-      handle.logFileMessage(LOGFAIL, "Error in boundlikelihood - should be 4 columns");
-
     if (strcasecmp(tempParam.getName(), "default") == 0) {
+      infile >> defPower >> defLW >> defUW >> ws;
       count++;
-      defPower = tmpvec[0];
-      defLW = tmpvec[1];
-      defUW = tmpvec[2];
 
     } else {
-      count++;
       switches.resize(1, tempParam);
-      powers.resize(1, tmpvec[0]);
-      lowerweights.resize(1, tmpvec[1]);
-      upperweights.resize(1, tmpvec[2]);
+      infile >> temp >> ws;
+      powers.resize(1, temp);
+      infile >> temp >> ws;
+      lowerweights.resize(1, temp);
+      infile >> temp >> ws;
+      upperweights.resize(1, temp);
       switchnr.resize(1, -1);
+      count++;
     }
     infile >> ws;
   }
-
-  if (switchnr.Size() != 0) {
-    ParameterVector sw(keeper->numVariables());
-    keeper->getSwitches(sw);
-    for (i = 0; i < switches.Size(); i++)
-      for (j = 0; j < sw.Size(); j++)
-        if (switches[i] == sw[j])
-          switchnr[i] = j;
-
-    for (i = 0; i < switches.Size(); i++)
-      if (switchnr[i] == -1)
-        handle.logMessage(LOGWARN, "Warning in boundlikelihood - failed to match switch", switches[i].getName());
-  }
-
   handle.logMessage(LOGMESSAGE, "Read penalty file - number of entries", count);
-  //set flag to initialise the bounds - called in Reset
-  checkInitialised = 0;
 }
 
 void BoundLikelihood::Reset(const Keeper* const keeper) {
@@ -69,9 +52,35 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
     if (keeper->boundsGiven() == 0)
       handle.logMessage(LOGWARN, "Warning in boundlikelihood - no bounds have been set in input file");
 
-    int i, j, k, numvar, numset;
+    int i, j, k, numvar, numset, numfail;
     numvar = keeper->numVariables();
-    numset = switchnr.Size();
+    numset = switches.Size();
+
+    if (numset != 0) {
+      numfail = 0;
+      ParameterVector sw(numvar);
+      keeper->getSwitches(sw);
+      for (i = 0; i < numset; i++)
+        for (j = 0; j < numvar; j++)
+          if (switches[i] == sw[j])
+            switchnr[i] = j;
+
+      for (i = 0; i < numset; i++) {
+        if (switchnr[i] == -1) {
+          handle.logMessage(LOGWARN, "Warning in boundlikelihood - failed to match switch", switches[i].getName());
+          numfail++;
+          // delete the entries for the non-existant switch
+          switches.Delete(i);
+          powers.Delete(i);
+          lowerweights.Delete(i);
+          upperweights.Delete(i);
+          switchnr.Delete(i);
+          if (numfail != numset)
+            i--;
+        }
+      }
+      numset -= numfail;
+    }
 
     IntVector done(numset, 0);
     // resize vectors to store data

@@ -5,7 +5,7 @@
 #include "commentstream.h"
 #include "intvector.h"
 #include "doublevector.h"
-#include "parameter.h"
+#include "parametervector.h"
 
 /**
  * \class BoundLikelihood
@@ -88,6 +88,10 @@ protected:
    * \brief This is the DoubleVector of the penalty applied when the bound has been exceeded
    */
   DoubleVector likelihoods;
+  /**
+   * \brief This is the ParameterVector of the names of the input parameters
+   */
+  ParameterVector switches;
   /**
    * \brief This is the default weight applied when the lower bound is exceeded
    */

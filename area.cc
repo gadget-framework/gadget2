@@ -23,10 +23,10 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
 
   int noareas = OuterAreas.Size();
   size.resize(noareas);
-  infile >> text;
+  infile >> text >> ws;
   if (strcasecmp(text, "size") == 0) {
-    if (!readVector(infile, size))
-      handle.logFileMessage(LOGFAIL, "Failed to read size of areas");
+    for (i = 0; i < noareas; i++)
+      infile >> size[i] >> ws;
   } else
     handle.logFileUnexpected(LOGFAIL, "size", text);
 

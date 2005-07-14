@@ -21,16 +21,16 @@ TimeClass::TimeClass(CommentStream& infile) {
 
   infile >> ws;
   timesteps.resize(numtimesteps, 1, 0.0);
-  if (!readIndexVector(infile, timesteps))
-    handle.logFileMessage(LOGFAIL, "Failure in reading time steps");
+  for (i = 1; i <= numtimesteps; i++)
+    infile >> timesteps[i] >> ws;
 
   infile >> ws;
   if (!(infile.eof())) {
     infile >> text >> ws;
     if (!(strcasecmp(text, "nrofsubsteps") == 0))
       handle.logFileUnexpected(LOGFAIL, "nrofsubsteps", text);
-    if (!readVector(infile, numsubsteps))
-      handle.logFileMessage(LOGFAIL, "Failure in reading time substeps");
+    for (i = 0; i < numtimesteps; i++)
+      infile >> numsubsteps[i] >> ws;
   }
 
   lengthofyear = 0.0;
