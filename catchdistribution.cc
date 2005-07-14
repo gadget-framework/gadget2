@@ -163,8 +163,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
-    fleetnames.resize(1);
-    fleetnames[i] = new char[strlen(text) + 1];
+    fleetnames.resize(1, new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
   }
@@ -179,8 +178,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
     infile >> ws;
-    stocknames.resize(1);
-    stocknames[i] = new char[strlen(text) + 1];
+    stocknames.resize(1, new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
     infile >> text;
   }

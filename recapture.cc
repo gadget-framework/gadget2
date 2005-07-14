@@ -71,8 +71,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
     handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
-    fleetnames.resize(1);
-    fleetnames[i] = new char[strlen(text) + 1];
+    fleetnames.resize(1, new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
   }

@@ -45,8 +45,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
     handle.logFileUnexpected(LOGFAIL, "predatornames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "yearsandsteps") == 0)) {
-    prednames.resize(1);
-    prednames[i] = new char[strlen(text) + 1];
+    prednames.resize(1, new char[strlen(text) + 1]);
     strcpy(prednames[i++], text);
     infile >> text >> ws;
   }

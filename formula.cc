@@ -16,6 +16,20 @@ Formula::~Formula() {
     delete argList[i];
 }
 
+Formula::Formula(FunctionType ft, vector<Formula*> formlist) {
+  if (formlist.size() <= 0)
+    handle.logMessage(LOGFAIL, "Error in formula - no formula given in parameter list");
+
+  value = 0.0;
+  type = FUNCTION;
+  functiontype = ft;
+  unsigned int i;
+  for (i = 0; i < formlist.size(); i++) {
+    Formula *f = new Formula(*formlist[i]);
+    argList.push_back(f);
+  }
+}
+
 Formula::operator double() const {
   double v = 0.0;
   switch (type) {
@@ -58,7 +72,7 @@ double Formula::evalFunction() const {
         v = *(argList[0]);
         for (i = 1; i < argList.size(); i++) {
           if (!isZero(*(argList[0]))) {
-            v = v /= *(argList[i]);
+            v /= *(argList[i]);
           } else {
             handle.logMessage(LOGWARN, "Warning in formula - divide by zero");
           }
@@ -337,4 +351,32 @@ void Formula::Delete(Keeper* keeper) const {
       handle.logMessage(LOGFAIL, "Error in formula - unrecognised type", type);
       break;
   }
+}
+
+Formula& Formula::operator = (const Formula& F) {
+  type = F.type;
+  functiontype = F.functiontype;
+  switch(type) {
+    case CONSTANT:
+      value = F.value;
+      break;
+    case PARAMETER:
+      value = F.value;
+      name = F.name;
+      break;
+    case FUNCTION:
+      unsigned int i;
+      for (i = 0; i < argList.size(); i++)
+        delete argList[i];
+      argList.clear();
+      for (i = 0; i < F.argList.size(); i++) {
+        Formula *f = new Formula(*F.argList[i]);
+        argList.push_back(f);
+      }
+      break;
+    default:
+      handle.logMessage(LOGFAIL, "Error in formula - unrecognised type", type);
+      break;
+  }
+  return *this;
 }

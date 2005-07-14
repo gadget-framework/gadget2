@@ -25,8 +25,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
 
   //Currently can only have one stock per tagging experiment
   readWordAndValue(infile, "stock", text);
-  stocknames.resize(1);
-  stocknames[0] = new char[strlen(text) + 1];
+  stocknames.resize(1, new char[strlen(text) + 1]);
   strcpy(stocknames[0], text);
 
   int tmparea;
@@ -342,8 +341,7 @@ void Tags::Update(int timeid) {
     IntVector preysize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
     IntVector preyminlength(numberofagegroups, 0);
     NumBeforeEating.resize(1, new AgeBandMatrixPtrVector(numareas, minage, preyminlength, preysize));
-    CI.resize(1);
-    CI[CI.Size() - 1] = new ConversionIndex(LgrpDiv, tmpLgrpDiv);
+    CI.resize(1, new ConversionIndex(LgrpDiv, tmpLgrpDiv));
 
     stockid = stockIndex(taggingstock->getName());
     if (stockid < 0 || stockid >= preyindex.Size())
@@ -380,8 +378,7 @@ void Tags::Update(int timeid) {
       IntVector preysize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
       IntVector preyminlength(numberofagegroups, 0);
       NumBeforeEating.resize(1, new AgeBandMatrixPtrVector(numareas, minage, preyminlength, preysize));
-      CI.resize(1);
-      CI[CI.Size() - 1] = new ConversionIndex(LgrpDiv, tmpLgrpDiv);
+      CI.resize(1, new ConversionIndex(LgrpDiv, tmpLgrpDiv));
 
       stockid = stockIndex(tmpStock->getName());
       if (stockid < 0 || stockid >= preyindex.Size())

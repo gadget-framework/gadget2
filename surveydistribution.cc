@@ -78,8 +78,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "fittype") == 0)) {
     infile >> ws;
-    stocknames.resize(1);
-    stocknames[i] = new char[strlen(text) + 1];
+    stocknames.resize(1, new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
     infile >> text;
   }

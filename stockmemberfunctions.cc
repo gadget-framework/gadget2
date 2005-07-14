@@ -133,7 +133,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 //Transition to other Stocks, Maturity due to age and increased age.
 void Stock::updateAgePart1(int area, const TimeClass* const TimeInfo) {
   if (doesmove)
-    if (transition->isTransitionStep(area, TimeInfo))
+    if (transition->isTransitionStep(TimeInfo))
       transition->storeTransitionStock(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
 }
 
@@ -148,7 +148,7 @@ void Stock::updateAgePart2(int area, const TimeClass* const TimeInfo) {
 void Stock::updateAgePart3(int area, const TimeClass* const TimeInfo) {
   int i;
   if (doesmove) {
-    if (transition->isTransitionStep(area, TimeInfo)) {
+    if (transition->isTransitionStep(TimeInfo)) {
       if (transitionTags.Size() > 0) {
         for (i = 0; i < transitionTags.Size(); i++)
           transitionTags[i]->updateTransitionStock(TimeInfo);

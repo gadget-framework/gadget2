@@ -31,6 +31,13 @@ public:
   /**
    * \brief This is the FormulaMatrix constructor for a specified size
    * \param nr is the size of the vector to be created
+   * \param nc is the length of each row to be created (ie. the size of the FormulaVector to be created for each row)
+   * \param initial is the initial value for all the entries of the vector
+   */
+  FormulaMatrix(int nr, int nc, double initial);
+  /**
+   * \brief This is the FormulaMatrix constructor for a specified size
+   * \param nr is the size of the vector to be created
    * \param nc is the length of the rows to be created (ie. the size of the FormulaVector to be created for each row)
    * \note The elements of the vector will all be created, and set to zero
    */

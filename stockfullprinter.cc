@@ -102,14 +102,11 @@ StockFullPrinter::~StockFullPrinter() {
 void StockFullPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const Area) {
   StockPtrVector stocks;
   delete aggregator;
-  int i, index = 0;
+  int i;
 
-  for (i = 0; i < stockvec.Size(); i++) {
-    if (strcasecmp(stockvec[i]->getName(), stockname) == 0) {
-      stocks.resize(1);
-      stocks[index++] = stockvec[i];
-    }
-  }
+  for (i = 0; i < stockvec.Size(); i++)
+    if (strcasecmp(stockvec[i]->getName(), stockname) == 0)
+      stocks.resize(1, stockvec[i]);
 
   if (stocks.Size() != 1) {
     handle.logMessage(LOGWARN, "Error in stockfullprinter - failed to match stocks");

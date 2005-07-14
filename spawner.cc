@@ -67,8 +67,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     infile >> text >> ws;
     i = 0;
     while (strcasecmp(text, "proportionfunction") != 0 && !infile.eof()) {
-      spawnStockNames.resize(1);
-      spawnStockNames[i] = new char[strlen(text) + 1];
+      spawnStockNames.resize(1, new char[strlen(text) + 1]);
       strcpy(spawnStockNames[i], text);
       spawnRatio.resize(1);
       infile >> spawnRatio[i];
@@ -189,8 +188,7 @@ SpawnData::~SpawnData() {
 }
 
 void SpawnData::setStock(StockPtrVector& stockvec) {
-  int index = 0;
-  int i, j;
+  int i, j, index;
   DoubleVector tmpratio;
 
   if (onlyParent == 1)
@@ -199,14 +197,11 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < spawnStockNames.Size(); j++)
       if (strcasecmp(stockvec[i]->getName(), spawnStockNames[j]) == 0) {
-        spawnStocks.resize(1);
-        tmpratio.resize(1);
-        spawnStocks[index] = stockvec[i];
-        tmpratio[index] = spawnRatio[j];
-        index++;
+        spawnStocks.resize(1, stockvec[i]);
+        tmpratio.resize(1, spawnRatio[j]);
       }
 
-  if (index != spawnStockNames.Size()) {
+  if (spawnStocks.Size() != spawnStockNames.Size()) {
     handle.logMessage(LOGWARN, "Error in spawner - failed to match spawning stocks");
     for (i = 0; i < stockvec.Size(); i++)
       handle.logMessage(LOGWARN, "Error in spawner - found stock", stockvec[i]->getName());

@@ -322,7 +322,7 @@ int bfgs(int maxevl, double epsilon, double beta, double sigma, double step,
       continue;
     }
 
-    if (alpha < 0.0)
+    if (alpha < verysmall)
       continue;
 
     normgrad = 0.0;
@@ -355,7 +355,7 @@ int bfgs(int maxevl, double epsilon, double beta, double sigma, double step,
       yBy += y[i] * By[i];
     }
 
-    if ((isZero(hy)) || (isZero(yBy))) {
+    if ((isZero(hy)) || (yBy < verysmall)) {
       check = 0;
     } else {
       temphy = 1.0 / hy;

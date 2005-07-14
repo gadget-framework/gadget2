@@ -14,8 +14,7 @@ void StrStack::clearString() {
 
 void StrStack::storeString(const char* str) {
   if (size == v.Size()) {
-    v.resize(1);
-    v[size] = new char[MaxStrLength];
+    v.resize(1, new char[MaxStrLength]);
     strncpy(v[size], "", MaxStrLength);
   }
   strcpy(v[size], str);

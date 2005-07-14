@@ -42,13 +42,12 @@ void Ecosystem::readFleet(CommentStream& infile) {
       handle.logFileUnexpected(LOGFAIL, "[fleetcomponent]", text);
 
     infile >> text >> value;
-    fleetvec.resize(1);
     if (strcasecmp(text, "totalfleet") == 0)
-      fleetvec[fleetvec.Size() - 1] = new Fleet(infile, value, Area, TimeInfo, keeper, TOTALFLEET);
+      fleetvec.resize(1, new Fleet(infile, value, Area, TimeInfo, keeper, TOTALFLEET));
     else if (strcasecmp(text, "linearfleet") == 0)
-      fleetvec[fleetvec.Size() - 1] = new Fleet(infile, value, Area, TimeInfo, keeper, LINEARFLEET);
+      fleetvec.resize(1, new Fleet(infile, value, Area, TimeInfo, keeper, LINEARFLEET));
     else if (strcasecmp(text, "numberfleet") == 0)
-      fleetvec[fleetvec.Size() - 1] = new Fleet(infile, value, Area, TimeInfo, keeper, NUMBERFLEET);
+      fleetvec.resize(1, new Fleet(infile, value, Area, TimeInfo, keeper, NUMBERFLEET));
     else if (strcasecmp(text, "mortalityfleet") == 0)
       handle.logFileMessage(LOGFAIL, "The mortalityfleet fleet type is no longer supported");
     else
@@ -73,9 +72,8 @@ void Ecosystem::readTagging(CommentStream& infile) {
       handle.logFileUnexpected(LOGFAIL, "[tagcomponent]", text);
 
     infile >> text >> value;
-    tagvec.resize(1);
     if (strcasecmp(text, "tagid") == 0)
-      tagvec[tagvec.Size() - 1] = new Tags(infile, value, Area, TimeInfo, keeper, stockvec);
+      tagvec.resize(1, new Tags(infile, value, Area, TimeInfo, keeper, stockvec));
     else
       handle.logFileUnexpected(LOGFAIL, "tagid", text);
 
@@ -98,9 +96,8 @@ void Ecosystem::readOtherFood(CommentStream& infile) {
       handle.logFileUnexpected(LOGFAIL, "[foodcomponent]", text);
 
     infile >> text >> value;
-    otherfoodvec.resize(1);
     if (strcasecmp(text, "foodname") == 0)
-      otherfoodvec[otherfoodvec.Size() - 1] = new OtherFood(infile, value, Area, TimeInfo, keeper);
+      otherfoodvec.resize(1, new OtherFood(infile, value, Area, TimeInfo, keeper));
     else
       handle.logFileUnexpected(LOGFAIL, "foodname", text);
 
@@ -117,8 +114,7 @@ void Ecosystem::readStock(CommentStream& infile) {
   strncpy(text, "", MaxStrLength);
 
   readWordAndValue(infile, "stockname", text);
-  stockvec.resize(1);
-  stockvec[stockvec.Size() - 1] = new Stock(infile, text, Area, TimeInfo, keeper);
+  stockvec.resize(1, new Stock(infile, text, Area, TimeInfo, keeper));
   handle.logMessage(LOGMESSAGE, "Read stock OK - created stock", text);
 }
 
@@ -187,7 +183,6 @@ void Ecosystem::readPrinters(CommentStream& infile) {
 // A function to read likelihood information
 //
 void Ecosystem::readLikelihood(CommentStream& infile) {
-  int i = 0;
   double weight = 0.0;
   char text[MaxStrLength];
   char type[MaxStrLength];
@@ -212,15 +207,12 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
     readWordAndVariable(infile, "weight", weight);
     readWordAndValue(infile, "type", type);
 
-    likevec.resize(1);
-    i = likevec.Size() - 1;
-
     if (strcasecmp(type, "penalty") == 0) {
       readWordAndValue(infile, "datafile", datafilename);
       datafile.open(datafilename, ios::in);
       handle.checkIfFailure(datafile, datafilename);
       handle.Open(datafilename);
-      likevec[i] = new BoundLikelihood(subdata, Area, TimeInfo, keeper, weight, name);
+      likevec.resize(1, new BoundLikelihood(subdata, Area, TimeInfo, keeper, weight, name));
       handle.Close();
       datafile.close();
       datafile.clear();
@@ -234,37 +226,37 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       }
 
     } else if (strcasecmp(type, "understocking") == 0) {
-      likevec[i] = new UnderStocking(infile, Area, TimeInfo, weight, name);
+      likevec.resize(1, new UnderStocking(infile, Area, TimeInfo, weight, name));
 
     } else if (strcasecmp(type, "catchstatistics") == 0) {
-      likevec[i] = new CatchStatistics(infile, Area, TimeInfo, weight, name);
+      likevec.resize(1, new CatchStatistics(infile, Area, TimeInfo, weight, name));
 
     } else if (strcasecmp(type, "catchdistribution") == 0) {
-      likevec[i] = new CatchDistribution(infile, Area, TimeInfo, keeper, weight, name);
+      likevec.resize(1, new CatchDistribution(infile, Area, TimeInfo, keeper, weight, name));
 
     } else if (strcasecmp(type, "stockdistribution") == 0) {
-      likevec[i] = new StockDistribution(infile, Area, TimeInfo, weight, name);
+      likevec.resize(1, new StockDistribution(infile, Area, TimeInfo, weight, name));
 
     } else if (strcasecmp(type, "surveyindices") == 0) {
-      likevec[i] = new SurveyIndices(infile, Area, TimeInfo, weight, name);
+      likevec.resize(1, new SurveyIndices(infile, Area, TimeInfo, weight, name));
 
     } else if (strcasecmp(type, "surveydistribution") == 0) {
-      likevec[i] = new SurveyDistribution(infile, Area, TimeInfo, keeper, weight, name);
+      likevec.resize(1, new SurveyDistribution(infile, Area, TimeInfo, keeper, weight, name));
 
     } else if (strcasecmp(type, "stomachcontent") == 0) {
-      likevec[i] = new StomachContent(infile, Area, TimeInfo, keeper, weight, name);
+      likevec.resize(1, new StomachContent(infile, Area, TimeInfo, keeper, weight, name));
 
     } else if (strcasecmp(type, "recaptures") == 0) {
-      likevec[i] = new Recaptures(infile, Area, TimeInfo, weight, tagvec, name);
+      likevec.resize(1, new Recaptures(infile, Area, TimeInfo, weight, tagvec, name));
 
     } else if ((strcasecmp(type, "catchintons") == 0) || (strcasecmp(type, "catchinkilos") == 0)) {
-      likevec[i] = new CatchInKilos(infile, Area, TimeInfo, weight, name);
+      likevec.resize(1, new CatchInKilos(infile, Area, TimeInfo, weight, name));
 
     } else if (strcasecmp(type, "migrationpenalty") == 0) {
-      likevec[i] = new MigrationPenalty(infile, weight, name);
+      likevec.resize(1, new MigrationPenalty(infile, weight, name));
 
     } else if (strcasecmp(type, "recstatistics") == 0) {
-      likevec[i] = new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name);
+      likevec.resize(1, new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name));
 
     } else if (strcasecmp(type, "predatorindices") == 0) {
       handle.logFileMessage(LOGFAIL, "The predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");

@@ -12,7 +12,7 @@ FormulaMatrix::FormulaMatrix(int nr, int nc) {
     v = 0;
 }
 
-FormulaMatrix::FormulaMatrix(int nr, int nc, Formula value) {
+FormulaMatrix::FormulaMatrix(int nr, int nc, Formula initial) {
   nrow = nr;
   v = new FormulaVector*[nr];
   int i, j;
@@ -20,7 +20,19 @@ FormulaMatrix::FormulaMatrix(int nr, int nc, Formula value) {
     v[i] = new FormulaVector(nc);
   for (i = 0; i < nr; i++) {
     for (j = 0; j < nc; j++)
-      (*v[i])[j] = value;
+      (*v[i])[j] = initial;
+  }
+}
+
+FormulaMatrix::FormulaMatrix(int nr, int nc, double initial) {
+  nrow = nr;
+  v = new FormulaVector*[nr];
+  int i, j;
+  for (i = 0; i < nr; i++)
+    v[i] = new FormulaVector(nc);
+  for (i = 0; i < nr; i++) {
+    for (j = 0; j < nc; j++)
+      (*v[i])[j].setValue(initial);
   }
 }
 

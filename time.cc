@@ -76,10 +76,10 @@ int TimeClass::isWithinPeriod(int year, int step) const {
     return 0;  // year outside range
   if ((step < 1) || (step > numtimesteps))
     return 0;  // step outside range
-  if ((year == firstyear) && (step >= firststep))
-    return 1;  // first year
-  if ((year == lastyear) && (step <= laststep))
-    return 1;  // last year
+  if ((year == firstyear) && (step < firststep))
+    return 0;  // first year
+  if ((year == lastyear) && (step > laststep))
+    return 0;  // last year
   return 1;
 }
 

@@ -46,11 +46,9 @@ SummaryPrinter::~SummaryPrinter() {
 }
 
 void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
-  int i, index = 0;
-  for (i = 0; i < likevec.Size(); i++) {
-    like.resize(1);
-    like[index++] = likevec[i];
-  }
+  int i;
+  for (i = 0; i < likevec.Size(); i++)
+    like.resize(1, likevec[i]);
 
   for (i = 0; i < like.Size(); i++) {
     switch (like[i]->getType()) {

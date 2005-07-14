@@ -60,20 +60,17 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
         error = 2;   //We want to exit this while-loop.
       } else if ((readtext[0]) && !(readtext[1])) {
         if ((TimeInfo->getLastYear() != TimeInfo->getFirstYear()) ||
-            (TimeInfo->getFirstStep() <= step && step <= TimeInfo->getLastStep())) {
-          Steps.resize(1);
-          Steps[Steps.Size() - 1] = step;
-        }
+            (TimeInfo->getFirstStep() <= step && step <= TimeInfo->getLastStep()))
+          Steps.resize(1, step);
+
       } else if (!(readtext[0]) && (readtext[1])) {
-        if (TimeInfo->getFirstYear() <= year && year <=  TimeInfo->getLastYear()) {
-          Years.resize(1);
-          Years[Years.Size() - 1] = year;
-        }
+        if (TimeInfo->getFirstYear() <= year && year <=  TimeInfo->getLastYear())
+          Years.resize(1, year);
+
       } else {
-        if (TimeInfo->isWithinPeriod(year, step)) {
-          TimeSteps.resize(1);
-          TimeSteps[TimeSteps.Size() - 1] = TimeInfo->calcSteps(year, step);
-        }
+        if (TimeInfo->isWithinPeriod(year, step))
+          TimeSteps.resize(1, TimeInfo->calcSteps(year, step));
+
       }
     }
     column = !column;  //change column from 0 to 1 or from 1 to 0.
@@ -94,10 +91,8 @@ void ActionAtTimes::addActions(const IntVector& years,
     return;
   int i;
   for (i = 0; i < years.Size(); i++)
-    if (TimeInfo->isWithinPeriod(years[i], steps[i])) {
-      TimeSteps.resize(1);
-      TimeSteps[TimeSteps.Size() - 1] = TimeInfo->calcSteps(years[i], steps[i]);
-    }
+    if (TimeInfo->isWithinPeriod(years[i], steps[i]))
+      TimeSteps.resize(1, TimeInfo->calcSteps(years[i], steps[i]));
 }
 
 void ActionAtTimes::addActionsAllYears(const IntVector& steps, const TimeClass* const TimeInfo) {
@@ -107,10 +102,8 @@ void ActionAtTimes::addActionsAllYears(const IntVector& steps, const TimeClass* 
   int i;
   for (i = 0; i < steps.Size(); i++)
     if ((TimeInfo->getLastYear() != TimeInfo->getFirstYear()) ||
-        (TimeInfo->getFirstStep() <= steps[i] && steps[i] <= TimeInfo->getLastStep())) {
-      Steps.resize(1);
-      Steps[Steps.Size() - 1] = steps[i];
-    }
+        (TimeInfo->getFirstStep() <= steps[i] && steps[i] <= TimeInfo->getLastStep()))
+      Steps.resize(1, steps[i]);
 }
 
 void ActionAtTimes::addActionsAllSteps(const IntVector& years, const TimeClass* const TimeInfo) {
@@ -119,10 +112,8 @@ void ActionAtTimes::addActionsAllSteps(const IntVector& years, const TimeClass* 
     return;
   int i;
   for (i = 0; i < years.Size(); i++)
-    if (TimeInfo->getFirstYear() <= years[i] && years[i] <= TimeInfo->getLastYear()) {
-      Years.resize(1);
-      Years[Years.Size() - 1] = years[i];
-    }
+    if (TimeInfo->getFirstYear() <= years[i] && years[i] <= TimeInfo->getLastYear())
+      Years.resize(1, years[i]);
 }
 
 /* This function could be better implemented -- e.g. sort the vectors

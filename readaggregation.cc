@@ -10,8 +10,7 @@ int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggind
   i = 0;
   infile >> ws;
   while (!infile.eof()) {
-    aggindex.resize(1);
-    aggindex[i] = new char[MaxStrLength];
+    aggindex.resize(1, new char[MaxStrLength]);
     strncpy(aggindex[i], "", MaxStrLength);
     infile >> aggindex[i];
     agg.AddRows(1, 0);
@@ -36,8 +35,7 @@ int readAggregation(CommentStream& infile, IntVector& agg, CharPtrVector& aggind
   i = tmp = 0;
   infile >> ws;
   while (!infile.eof()) {
-    aggindex.resize(1);
-    aggindex[i] = new char[MaxStrLength];
+    aggindex.resize(1, new char[MaxStrLength]);
     strncpy(aggindex[i], "", MaxStrLength);
     infile >> aggindex[i] >> tmp >> ws;
     agg.resize(1, tmp);
@@ -60,8 +58,7 @@ int readLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrV
   i = 0;
   infile >> ws;
   while (!infile.eof()) {
-    lenindex.resize(1);
-    lenindex[i] = new char[MaxStrLength];
+    lenindex.resize(1, new char[MaxStrLength]);
     strncpy(lenindex[i], "", MaxStrLength);
     infile >> lenindex[i] >> dblA >> dblB >> ws;
 
@@ -96,8 +93,7 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
   i = j = 0;
   infile >> ws;
   while (!infile.eof()) {
-    preyindex.resize(1);
-    preyindex[i] = new char[MaxStrLength];
+    preyindex.resize(1, new char[MaxStrLength]);
     strncpy(preyindex[i], "", MaxStrLength);
     infile >> preyindex[i];
 

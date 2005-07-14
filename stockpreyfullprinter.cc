@@ -103,15 +103,12 @@ StockPreyFullPrinter::~StockPreyFullPrinter() {
 void StockPreyFullPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const Area) {
   CharPtrVector stocknames(1, stockname);
   StockPtrVector stocks;
-  int index = 0;
   int i, j;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < stocknames.Size(); j++)
-      if (strcasecmp(stockvec[i]->getName(), stocknames[j]) == 0) {
-        stocks.resize(1);
-        stocks[index++] = stockvec[i];
-      }
+      if (strcasecmp(stockvec[i]->getName(), stocknames[j]) == 0)
+        stocks.resize(1, stockvec[i]);
 
   if (stocks.Size() != stocknames.Size()) {
     handle.logMessage(LOGWARN, "Error in stockpreyfullprinter - failed to match stocks");

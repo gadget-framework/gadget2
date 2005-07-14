@@ -23,6 +23,12 @@ public:
    */
   Formula(const Formula& initial);
   /**
+   * \brief This is the Formula constructor for a given function type and list of paramters
+   * \param ft is the FunctionType for the new Formula function
+   * \param formlist is the vector of arguments for the new Formula function
+   */
+  Formula(FunctionType ft, vector<Formula*> formlist);
+  /**
    * \brief This is the default Formula destructor
    */
   ~Formula();
@@ -57,6 +63,7 @@ public:
    * \param keeper is the Keeper for the current model
    */
   void Delete(Keeper* keeper) const;
+  Formula& operator = (const Formula& F);
   friend CommentStream& operator >> (CommentStream&, Formula&);
 private:
   /**

@@ -59,8 +59,7 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
     i = 0;
     infile >> text >> ws;
     while (strcasecmp(text, "proportionfunction") != 0 && !infile.eof()) {
-      strayStockNames.resize(1);
-      strayStockNames[i] = new char[strlen(text) + 1];
+      strayStockNames.resize(1, new char[strlen(text) + 1]);
       strcpy(strayStockNames[i], text);
       strayRatio.resize(1);
       infile >> strayRatio[i] >> text >> ws;
@@ -107,21 +106,17 @@ StrayData::~StrayData() {
 }
 
 void StrayData::setStock(StockPtrVector& stockvec) {
-  int index = 0;
-  int i, j;
+  int i, j, index;
   DoubleVector tmpratio;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < strayStockNames.Size(); j++)
       if (strcasecmp(stockvec[i]->getName(), strayStockNames[j]) == 0) {
-        strayStocks.resize(1);
-        tmpratio.resize(1);
-        strayStocks[index] = stockvec[i];
-        tmpratio[index] = strayRatio[j];
-        index++;
+        strayStocks.resize(1, stockvec[i]);
+        tmpratio.resize(1, strayRatio[j]);
       }
 
-  if (index != strayStockNames.Size()) {
+  if (strayStocks.Size() != strayStockNames.Size()) {
     handle.logMessage(LOGWARN, "Error in straying data - failed to match straying stocks");
     for (i = 0; i < stockvec.Size(); i++)
       handle.logMessage(LOGWARN, "Error in straying data - found stock", stockvec[i]->getName());

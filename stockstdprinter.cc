@@ -123,15 +123,12 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const 
   StockPtrVector stocks;
   delete aggregator;
 
-  int index = 0;
   int i, j, tmpage;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < stocknames.Size(); j++)
-      if (strcasecmp(stockvec[i]->getName(), stocknames[j]) == 0) {
-        stocks.resize(1);
-        stocks[index++] = stockvec[i];
-      }
+      if (strcasecmp(stockvec[i]->getName(), stocknames[j]) == 0)
+        stocks.resize(1, stockvec[i]);
 
   if (stocks.Size() != stocknames.Size()) {
     handle.logMessage(LOGWARN, "Error in stockstdprinter - failed to match stocks");

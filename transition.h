@@ -75,11 +75,10 @@ public:
   void Reset();
   /**
    * \brief This will check if the transition process will take place on the current timestep
-   * \param area is the area that the transition is being calculated on
    * \param TimeInfo is the TimeClass for the current model
    * \return 1 if the transition process will take place, 0 otherwise
    */
-  virtual int isTransitionStep(int area, const TimeClass* const TimeInfo);
+  virtual int isTransitionStep(const TimeClass* const TimeInfo);
 protected:
   /**
    * \brief This is the StockPtrVector of the stocks that the young stock will move to

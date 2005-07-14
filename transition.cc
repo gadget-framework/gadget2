@@ -20,8 +20,7 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
     i = 0;
     infile >> text >> ws;
     while (strcasecmp(text, "transitionstep") != 0 && !infile.eof()) {
-      transitionStockNames.resize(1);
-      transitionStockNames[i] = new char[strlen(text) + 1];
+      transitionStockNames.resize(1, new char[strlen(text) + 1]);
       strcpy(transitionStockNames[i], text);
       transitionRatio.resize(1);
       infile >> transitionRatio[i] >> text >> ws;
@@ -46,21 +45,17 @@ Transition::~Transition() {
 }
 
 void Transition::setStock(StockPtrVector& stockvec) {
-  int index = 0;
-  int i, j, numstocks;
+  int i, j, numstocks, index;
   DoubleVector tmpratio;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < transitionStockNames.Size(); j++)
       if (strcasecmp(stockvec[i]->getName(), transitionStockNames[j]) == 0) {
-        transitionStocks.resize(1);
-        tmpratio.resize(1);
-        transitionStocks[index] = stockvec[i];
-        tmpratio[index] = transitionRatio[j];
-        index++;
+        transitionStocks.resize(1, stockvec[i]);
+        tmpratio.resize(1, transitionRatio[j]);
       }
 
-  if (index != transitionStockNames.Size()) {
+  if (transitionStocks.Size() != transitionStockNames.Size()) {
     handle.logMessage(LOGWARN, "Error in transition - failed to match transition stocks");
     for (i = 0; i < stockvec.Size(); i++)
       handle.logMessage(LOGWARN, "Error in transition - found stock", stockvec[i]->getName());
@@ -217,7 +212,7 @@ void Transition::deleteTransitionTag(const char* tagname) {
     handle.logMessage(LOGWARN, "Warning in transition - failed to delete tagging experiment", tagname);
 }
 
-int Transition::isTransitionStep(int area, const TimeClass* const TimeInfo) {
+int Transition::isTransitionStep(const TimeClass* const TimeInfo) {
   if (TimeInfo->getStep() == transitionStep)
     return 1;
   return 0;

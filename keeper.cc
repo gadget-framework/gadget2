@@ -26,18 +26,18 @@ void Keeper::keepVariable(double& value, const Parameter& attr) {
   if (index == -1) {
     //attr was not found -- add it to switches and values.
     index = switches.Size();
-    switches.resize(1);
-    values.resize(1);
-    bestvalues.resize(1);
+    switches.resize(1, attr);
+    values.resize(1, value);
+    bestvalues.resize(1, value);
     lowerbds.resize(1, -9999.0);  // default lower bound
     upperbds.resize(1, 9999.0);   // default upper bound
     opt.resize(1, 1);
     scaledvalues.resize(1, 1.0);
     initialvalues.resize(1, 1.0);
     address.AddRows(1, 1);
-    switches[index] = attr;
+/*    switches[index] = attr;
     values[index] = value;
-    bestvalues[index] = value;
+    bestvalues[index] = value;*/
     address[index][0] = &value;
     address[index][0] = stack->sendAll();
 

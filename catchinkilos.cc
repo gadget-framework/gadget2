@@ -94,8 +94,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
     handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
-    fleetnames.resize(1);
-    fleetnames[i] = new char[strlen(text) + 1];
+    fleetnames.resize(1, new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
   }
@@ -110,8 +109,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
     infile >> ws;
-    stocknames.resize(1);
-    stocknames[i] = new char[strlen(text) + 1];
+    stocknames.resize(1, new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
     infile >> text;
   }
@@ -185,7 +183,7 @@ void CatchInKilos::addLikelihood(const TimeClass* const TimeInfo) {
   if (yearly == 1) {
     for (i = 0; i < Years.Size(); i++)
       if (Years[i] == TimeInfo->getYear())
-        timeindex = i;  
+        timeindex = i;
   } else {
     for (i = 0; i < Years.Size(); i++)
       if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
@@ -398,7 +396,7 @@ void CatchInKilos::printLikelihood(ofstream& outfile, const TimeClass* const Tim
   if (yearly == 1) {
     for (i = 0; i < Years.Size(); i++)
       if (Years[i] == TimeInfo->getYear())
-        timeindex = i;  
+        timeindex = i;
   } else {
     for (i = 0; i < Years.Size(); i++)
       if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))

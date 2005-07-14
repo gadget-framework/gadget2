@@ -30,21 +30,17 @@ Maturity::~Maturity() {
 }
 
 void Maturity::setStock(StockPtrVector& stockvec) {
-  int index = 0;
-  int i, j;
+  int i, j, index;
   DoubleVector tmpratio;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < matureStockNames.Size(); j++)
       if (strcasecmp(stockvec[i]->getName(), matureStockNames[j]) == 0) {
-        matureStocks.resize(1);
-        tmpratio.resize(1);
-        matureStocks[index] = stockvec[i];
-        tmpratio[index] = matureRatio[j];
-        index++;
+        matureStocks.resize(1, stockvec[i]);
+        tmpratio.resize(1, matureRatio[j]);
       }
 
-  if (index != matureStockNames.Size()) {
+  if (matureStocks.Size() != matureStockNames.Size()) {
     handle.logMessage(LOGWARN, "Error in maturity - failed to match mature stocks");
     for (i = 0; i < stockvec.Size(); i++)
       handle.logMessage(LOGWARN, "Error in maturity - found stock", stockvec[i]->getName());
@@ -196,8 +192,7 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
     i = 0;
     infile >> text >> ws;
     while (strcasecmp(text, "coefficients") != 0 && !infile.eof()) {
-      matureStockNames.resize(1);
-      matureStockNames[i] = new char[strlen(text) + 1];
+      matureStockNames.resize(1, new char[strlen(text) + 1]);
       strcpy(matureStockNames[i], text);
       matureRatio.resize(1);
       infile >> matureRatio[i] >> text >> ws;
@@ -291,8 +286,7 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
     i = 0;
     infile >> text >> ws;
     while (!(strcasecmp(text, "maturitysteps") == 0) && !infile.eof()) {
-      matureStockNames.resize(1);
-      matureStockNames[i] = new char[strlen(text) + 1];
+      matureStockNames.resize(1, new char[strlen(text) + 1]);
       strcpy(matureStockNames[i], text);
       matureRatio.resize(1);
       infile >> matureRatio[i] >> text >> ws;
@@ -305,9 +299,11 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
     handle.logFileEOFMessage(LOGFAIL);
 
   infile >> ws;
+  i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
     maturitystep.resize(1);
-    infile >> maturitystep[maturitystep.Size() - 1] >> ws;
+    infile >> maturitystep[i] >> ws;
+    i++;
   }
   if (infile.eof())
     handle.logFileEOFMessage(LOGFAIL);
@@ -391,8 +387,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
     i = 0;
     infile >> text >> ws;
     while (strcasecmp(text, "coefficients") != 0 && !infile.eof()) {
-      matureStockNames.resize(1);
-      matureStockNames[i] = new char[strlen(text) + 1];
+      matureStockNames.resize(1, new char[strlen(text) + 1]);
       strcpy(matureStockNames[i], text);
       matureRatio.resize(1);
       infile >> matureRatio[i] >> text >> ws;

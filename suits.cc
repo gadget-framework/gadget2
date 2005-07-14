@@ -15,8 +15,7 @@ Suits::~Suits() {
 void Suits::addPrey(const char* preyname, SuitFunc* suitf) {
   preCalcSuitability.resize(1);
   suitFunction.resize(1, suitf);
-  preynames.resize(1);
-  preynames[preynames.Size() - 1] = new char[strlen(preyname) + 1];
+  preynames.resize(1, new char[strlen(preyname) + 1]);
   strcpy(preynames[preynames.Size() - 1], preyname);
 }
 

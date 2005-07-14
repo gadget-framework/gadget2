@@ -134,8 +134,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
   infile >> text >> ws;
   while (!infile.eof() && ((strcasecmp(text, "predatorlengths") != 0)
       && (strcasecmp(text, "predatorages") != 0))) {
-    predatornames.resize(1);
-    predatornames[i] = new char[strlen(text) + 1];
+    predatornames.resize(1, new char[strlen(text) + 1]);
     strcpy(predatornames[i++], text);
     infile >> text >> ws;
   }

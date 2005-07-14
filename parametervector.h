@@ -42,7 +42,7 @@ public:
    * \param add is the number of new entries to the vector
    * \param value is the value that will be entered for the new entries
    */
-  void resize(int add, Parameter& value);
+  void resize(int add, const Parameter& value);
   /**
    * \brief This will add new empty entries to the vector
    * \param add is the number of new entries to the vector

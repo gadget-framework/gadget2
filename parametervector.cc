@@ -38,7 +38,7 @@ ParameterVector::~ParameterVector() {
   }
 }
 
-void ParameterVector::resize(int addsize, Parameter& value) {
+void ParameterVector::resize(int addsize, const Parameter& value) {
   int oldsize = size;
   this->resize(addsize);
   int i;

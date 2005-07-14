@@ -97,8 +97,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
     infile >> text;
     while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
-      fleetnames.resize(1);
-      fleetnames[i] = new char[strlen(text) + 1];
+      fleetnames.resize(1, new char[strlen(text) + 1]);
       strcpy(fleetnames[i++], text);
       infile >> text >> ws;
     }
@@ -119,8 +118,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   infile >> text;
   //read in the stocknames
   while (!infile.eof() && !(strcasecmp(text, "fittype") == 0)) {
-    stocknames.resize(1);
-    stocknames[i] = new char[strlen(text) + 1];
+    stocknames.resize(1, new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
     infile >> text >> ws;
   }

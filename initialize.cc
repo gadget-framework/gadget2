@@ -70,25 +70,16 @@ void Ecosystem::Initialise() {
 
   //OK, next create a list of all the predators and all the preys
   for (i = 0; i < stockvec.Size(); i++) {
-    if (stockvec[i]->isEaten()) {
-      preyvec.resize(1);
-      preyvec[preyvec.Size() - 1] = stockvec[i]->getPrey();
-    }
-    if (stockvec[i]->doesEat()) {
-      predvec.resize(1);
-      predvec[predvec.Size() - 1] = stockvec[i]->getPredator();
-    }
+    if (stockvec[i]->isEaten())
+      preyvec.resize(1, stockvec[i]->getPrey());
+    if (stockvec[i]->doesEat())
+      predvec.resize(1, stockvec[i]->getPredator());
   }
 
-  for (i = 0; i < otherfoodvec.Size(); i++) {
-    preyvec.resize(1);
-    preyvec[preyvec.Size() - 1] = otherfoodvec[i]->getPrey();
-  }
-
-  for (i = 0; i < fleetvec.Size(); i++) {
-    predvec.resize(1);
-    predvec[predvec.Size() - 1] = fleetvec[i]->getPredator();
-  }
+  for (i = 0; i < otherfoodvec.Size(); i++)
+    preyvec.resize(1, otherfoodvec[i]->getPrey());
+  for (i = 0; i < fleetvec.Size(); i++)
+    predvec.resize(1, fleetvec[i]->getPredator());
 
   //Now we can start initialising things
   for (i = 0; i < predvec.Size(); i++) {

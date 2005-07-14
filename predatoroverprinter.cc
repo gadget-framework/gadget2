@@ -27,8 +27,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile, const TimeClass*
     handle.logFileUnexpected(LOGFAIL, "predators", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "areaaggfile") == 0)) {
-    predatornames.resize(1);
-    predatornames[i] = new char[strlen(text) + 1];
+    predatornames.resize(1, new char[strlen(text) + 1]);
     strcpy(predatornames[i++], text);
     infile >> text >> ws;
   }
@@ -127,14 +126,10 @@ void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec, const Area
   delete aggregator;
   int i, j, k, index;
 
-  index = 0;
-  for (i = 0; i < predatorvec.Size(); i++) {
+  for (i = 0; i < predatorvec.Size(); i++)
     for (j = 0; j < predatornames.Size(); j++)
-      if (strcasecmp(predatorvec[i]->getName(), predatornames[j]) == 0) {
-        predators.resize(1);
-        predators[index++] = predatorvec[i];
-      }
-  }
+      if (strcasecmp(predatorvec[i]->getName(), predatornames[j]) == 0)
+        predators.resize(1, predatorvec[i]);
 
   if (predators.Size() != predatornames.Size()) {
     handle.logMessage(LOGWARN, "Error in predatoroverprinter - failed to match predators");
