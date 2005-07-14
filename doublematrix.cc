@@ -128,3 +128,11 @@ DoubleMatrix& DoubleMatrix::operator = (const DoubleMatrix& d) {
   }
   return *this;
 }
+
+void DoubleMatrix::Reset() {
+  if (nrow > 0) {
+    delete[] v;
+    v = 0;
+    nrow = 0;
+  }
+}

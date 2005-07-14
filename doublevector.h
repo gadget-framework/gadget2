@@ -71,6 +71,10 @@ public:
    * \return the value of the specified element
    */
   const double& operator [] (int pos) const { return v[pos]; };
+  /**
+   * \brief This will reset the vector
+   * \note This will delete every entry from the vector and set the size to zero
+   */
   void Reset();
   double operator * (const DoubleVector& d) const;
   DoubleVector& operator = (const DoubleVector& d);

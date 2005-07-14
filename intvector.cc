@@ -100,3 +100,11 @@ IntVector& IntVector::operator = (const IntVector& iv) {
     v = 0;
   return *this;
 }
+
+void IntVector::Reset() {
+  if (size > 0) {
+    delete[] v;
+    v = 0;
+    size = 0;
+  }
+}

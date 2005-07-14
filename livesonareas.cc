@@ -34,16 +34,12 @@ int LivesOnAreas::areaNum(int area) const {
 }
 
 void LivesOnAreas::storeAreas(const IntVector& Areas) {
-
-  while (areas.Size() > 0)
-    areas.Delete(0);
-  while (areaConvert.Size() > 0)
-    areaConvert.Delete(0);
-
+  int i, j, maxim = 0;
   if (Areas.Size() == 0)
     handle.logMessage(LOGFAIL, "Error in input files - found no areas");
 
-  int i, j, maxim = 0;
+  areas.Reset();
+  areaConvert.Reset();
   areas.resize(Areas.Size());
   for (i = 0; i < areas.Size(); i++) {
     areas[i] = Areas[i];

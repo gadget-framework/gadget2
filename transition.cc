@@ -64,8 +64,7 @@ void Transition::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  for (i = transitionRatio.Size(); i > 0; i--)
-    transitionRatio.Delete(0);
+  transitionRatio.Reset();
   transitionRatio.resize(tmpratio.Size());
   for (i = 0; i < tmpratio.Size(); i++)
     transitionRatio[i] = tmpratio[i];

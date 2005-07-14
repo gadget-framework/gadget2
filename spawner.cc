@@ -210,8 +210,7 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  for (i = spawnRatio.Size(); i > 0; i--)
-    spawnRatio.Delete(0);
+  spawnRatio.Reset();
   spawnRatio.resize(tmpratio.Size());
   for (i = 0; i < tmpratio.Size(); i++)
     spawnRatio[i] = tmpratio[i];

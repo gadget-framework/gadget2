@@ -96,6 +96,11 @@ public:
    * \note This will free the memory allocated to the deleted element of the vector
    */
   void DeleteRow(int row);
+  /**
+   * \brief This will reset the vector
+   * \note This will delete every entry from the vector and set the number of rows to zero
+   */
+  void Reset();
   DoubleMatrix& operator = (const DoubleMatrix& d);
 protected:
   /**

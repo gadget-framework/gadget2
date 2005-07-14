@@ -49,8 +49,7 @@ void Maturity::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  for (i = matureRatio.Size(); i > 0; i--)
-    matureRatio.Delete(0);
+  matureRatio.Reset();
   matureRatio.resize(tmpratio.Size());
   for (i = 0; i < tmpratio.Size(); i++)
     matureRatio[i] = tmpratio[i];

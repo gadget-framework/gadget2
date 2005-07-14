@@ -125,8 +125,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  for (i = strayRatio.Size(); i > 0; i--)
-    strayRatio.Delete(0);
+  strayRatio.Reset();
   strayRatio.resize(tmpratio.Size());
   for (i = 0; i < tmpratio.Size(); i++)
     strayRatio[i] = tmpratio[i];

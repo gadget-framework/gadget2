@@ -92,14 +92,9 @@ void UnderStocking::setPredators(PredatorPtrVector& Predators) {
 
 void UnderStocking::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
-  if (Years.Size() != 0) {
-    while (Years.Size() > 0)
-      Years.Delete(0);
-    while (Steps.Size() > 0)
-      Steps.Delete(0);
-    while (likelihoodValues.Nrow() > 0)
-      likelihoodValues.DeleteRow(0);
-  }
+  Years.Reset();
+  Steps.Reset();
+  likelihoodValues.Reset();
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset understocking component", this->getName());
 }

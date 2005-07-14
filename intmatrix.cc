@@ -100,3 +100,11 @@ void IntMatrix::DeleteRow(int row) {
     nrow = 0;
   }
 }
+
+void IntMatrix::Reset() {
+  if (nrow > 0) {
+    delete[] v;
+    v = 0;
+    nrow = 0;
+  }
+}
