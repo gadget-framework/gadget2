@@ -38,7 +38,7 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
 
   for (i = 0; i < strayStep.Size(); i++)
     if (strayStep[i] < 1 || strayStep[i] > TimeInfo->numSteps())
-      handle.logFileMessage(LOGFAIL, "Error in straying data - invalid straying step");
+      handle.logFileMessage(LOGFAIL, "invalid straying step", strayStep[i]);
 
   infile >> text >> ws;
   if (!((strcasecmp(text, "strayarea") == 0) || (strcasecmp(text, "strayareas") == 0)))
@@ -80,7 +80,7 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
     else if (strcasecmp(text, "exponential") == 0)
       fnProportion = new ExpSelectFunc();
     else
-      handle.logFileMessage(LOGFAIL, "Error in straying data - unrecognised proportion function", text);
+      handle.logFileMessage(LOGFAIL, "unrecognised proportion function", text);
 
     fnProportion->readConstants(infile, TimeInfo, keeper);
   } else

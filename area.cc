@@ -32,7 +32,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
 
   for (i = 0; i < noareas; i++)
     if (isZero(size[i]))
-      handle.logFileMessage(LOGWARN, "Found area with a size of zero");
+      handle.logFileMessage(LOGWARN, "found area with a size of zero");
 
   infile >> text >> ws;
   if (strcasecmp(text, "temperature") != 0)
@@ -46,7 +46,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 4)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 4");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 4");
 
   count = 0;
   while (!infile.eof()) {

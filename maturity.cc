@@ -316,7 +316,7 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
   }
 
   if (maturitylength.Size() != maturitystep.Size())
-    handle.logFileMessage(LOGFAIL, "Error in maturity - number of maturitysteps does not equal number of maturitylengths");
+    handle.logFileMessage(LOGFAIL, "number of maturitysteps does not equal number of maturitylengths");
 
   infile >> ws;
   if (!infile.eof()) {
@@ -413,7 +413,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
 
   for (i = 0; i < maturitystep.Size(); i++)
     if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->numSteps())
-      handle.logFileMessage(LOGFAIL, "Error in maturity - invalid maturity step");
+      handle.logFileMessage(LOGFAIL, "invalid maturity step", maturitystep[i]);
 
   infile >> ws;
   if (!infile.eof()) {
@@ -502,8 +502,7 @@ MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
   handle.Open(refWeightFile);
   CommentStream subweightcomment(subweightfile);
   DoubleMatrix tmpRefW;
-  if (!readRefWeights(subweightcomment, tmpRefW))
-    handle.logFileMessage(LOGFAIL, "Wrong format for reference weights");
+  readRefWeights(subweightcomment, tmpRefW);
   handle.Close();
   subweightfile.close();
   subweightfile.clear();
@@ -511,7 +510,7 @@ MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
   //Aggregate the reference weight data to be the same length groups
   if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
       LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-    handle.logFileMessage(LOGFAIL, "Lengths for reference weights must span the range of growth lengths");
+    handle.logFileMessage(LOGFAIL, "lengths for reference weights must span the range of growth lengths");
 
   refWeight.resize(LgrpDiv->numLengthGroups(), 0.0);
   int i, j, pos = 0;

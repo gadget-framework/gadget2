@@ -38,13 +38,13 @@ TimeClass::TimeClass(CommentStream& infile) {
     lengthofyear += timesteps[i];
 
   if (!(isZero(lengthofyear - 12)))
-    handle.logFileMessage(LOGWARN, "Warning - length of year does not equal 12");
+    handle.logFileMessage(LOGWARN, "length of year does not equal 12");
   if (firstyear > lastyear || (firstyear == lastyear && firststep > laststep))
-    handle.logMessage(LOGFAIL, "Error in time - time period is empty");
+    handle.logFileMessage(LOGFAIL, "time period is empty");
 
   //JMB store lengthofyear as 1/lengthofyear to save processing time
   if (isZero(lengthofyear))
-    handle.logMessage(LOGFAIL, "Error in time - length of year is zero");
+    handle.logFileMessage(LOGFAIL, "length of year is zero");
   lengthofyear = 1.0 / lengthofyear;
   currentyear = firstyear;
   currentstep = firststep;

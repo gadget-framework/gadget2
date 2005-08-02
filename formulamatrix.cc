@@ -77,7 +77,7 @@ void FormulaMatrix::AddRows(int add, int length) {
   }
 }
 
-void FormulaMatrix::AddRows(int add, int length, Formula formula) {
+void FormulaMatrix::AddRows(int add, int length, Formula initial) {
   if (v == 0)
     nrow = 0;
   int oldnrow = nrow;
@@ -87,7 +87,20 @@ void FormulaMatrix::AddRows(int add, int length, Formula formula) {
   //Initiate added vectors with formula
   for (i = oldnrow; i < nrow; i++)
     for (j = 0; j < length; j++)
-      (*v[i])[j] = formula;
+      (*v[i])[j] = initial;
+}
+
+void FormulaMatrix::AddRows(int add, int length, double initial) {
+  if (v == 0)
+    nrow = 0;
+  int oldnrow = nrow;
+  //Add vectors to matrix
+  this->AddRows(add, length);
+  int i, j;
+  //Initiate added vectors with formula
+  for (i = oldnrow; i < nrow; i++)
+    for (j = 0; j < length; j++)
+      (*v[i])[j].setValue(initial);
 }
 
 void FormulaMatrix::Inform(Keeper* keeper) {

@@ -14,7 +14,8 @@ StockPtrVector::StockPtrVector(int sz, Stock* value) {
   int i;
   if (size > 0) {
     v = new Stock*[size];
-    for (i = 0; i < size; i++)v[i] = value;
+    for (i = 0; i < size; i++)
+      v[i] = value;
   } else
     v = 0;
 }

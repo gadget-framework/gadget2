@@ -50,11 +50,11 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
     infile >> text >> ws;
   }
   if (prednames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in understocking - failed to read predators");
+    handle.logFileMessage(LOGFAIL, "\nError in understocking - failed to read predators");
   handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", prednames.Size());
 
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.logFileMessage(LOGFAIL, "Error in understocking - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "\nError in understocking - wrong format for yearsandsteps");
 
   store.resize(areas.Nrow(), 0.0);
   //prepare for next likelihood component

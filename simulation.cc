@@ -69,12 +69,12 @@ void Ecosystem::SimulateOneTimestep() {
     for (i = 0; i < basevec.Size(); i++)
       basevec[i]->Migrate(TimeInfo);
     for (i = 0; i < Area->numAreas(); i++)
-      SimulateOneAreaOneTimeSubstep(i);
+      this->SimulateOneAreaOneTimeSubstep(i);
     TimeInfo->IncrementSubstep();
   }
 
   for (i = 0; i < Area->numAreas(); i++)
-    updatePopulationOneArea(i);
+    this->updatePopulationOneArea(i);
 }
 
 void Ecosystem::Simulate(int Optimise, int print) {
@@ -92,11 +92,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
   TimeInfo->Reset();
   for (i = 0; i < TimeInfo->numTotalSteps(); i++) {
 
-    for (j = 0; j < basevec.Size(); j++)
-      basevec[j]->Reset(TimeInfo);
-    for (j = 0; j < tagvec.Size(); j++)
-      tagvec[j]->Reset(TimeInfo);
-
+    this->Reset();
     //Add in any new tagging experiments
     tagvec.updateTags(TimeInfo);
 
@@ -104,11 +100,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
       for (j = 0; j < printvec.Size(); j++)
         printvec[j]->Print(TimeInfo, 1);  //start of timestep, so printtime is 1
 
-    if (TimeInfo->getStep() == 1) //Migration calculated once per year.
-      for (j = 0; j < basevec.Size(); j++)
-        basevec[j]->calcMigration(TimeInfo);
-
-    SimulateOneTimestep();
+    this->SimulateOneTimestep();
     if (Optimise)
       for (j = 0; j < likevec.Size(); j++)
         likevec[j]->addLikelihood(TimeInfo);
@@ -118,7 +110,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
         printvec[j]->Print(TimeInfo, 0);  //end of timestep, so printtime is 0
 
     for (j = 0; j < Area->numAreas(); j++)
-      updateAgesOneArea(j);
+      this->updateAgesOneArea(j);
 
     #ifdef INTERRUPT_HANDLER
       if (interrupted) {

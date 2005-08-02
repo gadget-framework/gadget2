@@ -103,11 +103,6 @@ public:
    */
   void getCurrentValues(DoubleVector& val) const;
   /**
-   * \brief This function will return a copy of the names of the variables to be optimised
-   * \param sw is the ParameterVector that will contain a copy of the names
-   */
-  void getOptSwitches(ParameterVector& sw) const;
-  /**
    * \brief This function will return a copy of the lower bounds of the variables to be optimised
    * \param lbs is the DoubleVector that will contain a copy of the lower bounds
    */
@@ -136,7 +131,7 @@ public:
    * \brief This function will return the number of variables to be optimised
    * \return number of variables to be optimised
    */
-  int numOptVariables() const;
+  int numOptVariables() const { return numoptvar; };
   /**
    * \brief This function will update one Keeper variable with a new value
    * \param pos is the identifier of the variable to update
@@ -237,6 +232,10 @@ protected:
    */
   DoubleVector upperbds;
   /**
+   * \brief This is the number of parameters to be optimised
+   */
+  int numoptvar;
+  /**
    * \brief This is a flag used to denote whether the bounds of the parameters have been specified or not
    */
   int boundsgiven;
@@ -245,7 +244,7 @@ protected:
    */
   double bestlikelihood;
   /**
-   * \brief This is a flag used to denote whether an ouput file has been specified or not
+   * \brief This is a flag used to denote whether an output file has been specified or not
    */
   int fileopen;
   /**

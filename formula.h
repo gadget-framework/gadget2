@@ -18,12 +18,17 @@ public:
    */
   Formula();
   /**
+   * \brief This is the Formula constructor that creates a Formula with a given initial value
+   * \param initial is the initial vlaue for the Formula
+   */
+  Formula(double initial);
+  /**
    * \brief This is the Formula constructor that creates a copy of an existing Formula
    * \param initial is the Formula to copy
    */
   Formula(const Formula& initial);
   /**
-   * \brief This is the Formula constructor for a given function type and list of paramters
+   * \brief This is the Formula constructor for a given function type and list of parameters
    * \param ft is the FunctionType for the new Formula function
    * \param formlist is the vector of arguments for the new Formula function
    */
@@ -59,12 +64,12 @@ public:
    */
   void Inform(Keeper* keeper);
   /**
-   * \brief This function will delete a TimeVariable value
+   * \brief This function will delete a Formula value
    * \param keeper is the Keeper for the current model
    */
   void Delete(Keeper* keeper) const;
   Formula& operator = (const Formula& F);
-  friend CommentStream& operator >> (CommentStream&, Formula&);
+  friend CommentStream& operator >> (CommentStream& infile, Formula& F);
 private:
   /**
    * \brief This denotes what type of Formula class has been created

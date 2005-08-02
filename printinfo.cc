@@ -105,7 +105,7 @@ void PrintInfo::checkPrintInfo(int network) {
     handle.logMessage(LOGWARN, "\nWarning - Gadget has been started with both the -o switch and the -co switch\nHowever, it is not possible to print the output in both formats\nGadget will print the output in the standard format (and ignore the -co switch)");
     printcolumn = 0;
   }
-  
+
   //JMB check to see if we can actually open required files ...
   ofstream tmpfile;
   if (network == 0) {

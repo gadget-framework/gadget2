@@ -1,10 +1,12 @@
 #include "optinfo.h"
+#include "ecosystem.h"
 #include "errorhandler.h"
 #include "gadget.h"
 
+extern Ecosystem* EcoSystem;
 extern ErrorHandler handle;
 
-OptInfo::OptInfo(MainInfo* MainInfo) {
+OptInfo::OptInfo(int readfile, const char* filename) {
   useSimann = 0;
   useHJ     = 0;
   useBFGS   = 0;
@@ -15,13 +17,12 @@ OptInfo::OptInfo(MainInfo* MainInfo) {
   // Initialise random number generator with system time [morten 02.02.26]
   srand(time(NULL));
 
-  if (MainInfo->getOptInfoGiven()) {
-    // Get the name of the optinfo file and open the commentstream
+  if (readfile) {
     ifstream infile;
-    infile.open(MainInfo->getOptInfoFile(), ios::in);
+    infile.open(filename, ios::in);
     CommentStream optfile(infile);
-    handle.checkIfFailure(infile, MainInfo->getOptInfoFile());
-    handle.Open(MainInfo->getOptInfoFile());
+    handle.checkIfFailure(infile, filename);
+    handle.Open(filename);
     this->readOptInfo(optfile);
     handle.Close();
     infile.close();
@@ -57,7 +58,6 @@ void OptInfo::readOptInfo(CommentStream& infile) {
       srand(seed);
 
     } else if (strcasecmp(text, "[simann]") == 0) {
-      handle.logMessage(LOGMESSAGE, "Reading Simulated Annealing parameters");
       optSimann = new OptInfoSimann();
       useSimann = 1;
 
@@ -72,7 +72,6 @@ void OptInfo::readOptInfo(CommentStream& infile) {
         handle.logMessage(LOGINFO, "Warning - no optimisation parameters specified for Simulated Annealing algorithm");
 
     } else if (strcasecmp(text, "[hooke]") == 0) {
-      handle.logMessage(LOGMESSAGE, "Reading Hooke & Jeeves parameters");
       optHJ = new OptInfoHooke();
       useHJ = 1;
 
@@ -87,7 +86,6 @@ void OptInfo::readOptInfo(CommentStream& infile) {
         handle.logMessage(LOGINFO, "Warning - no optimisation parameters specified for Hooke & Jeeves algorithm");
 
     } else if (strcasecmp(text, "[bfgs]") == 0) {
-      handle.logMessage(LOGMESSAGE, "Reading BFGS parameters");
       optBFGS = new OptInfoBFGS();
       useBFGS = 1;
 
@@ -107,15 +105,33 @@ void OptInfo::readOptInfo(CommentStream& infile) {
   }
 
   delete[] text;
-  if (useSimann == 0 && useHJ == 0 && useBFGS == 0)
-    handle.logFileMessage(LOGFAIL, "Error in optinfofile - no valid optimisation methods found");
+  if (useSimann == 0 && useHJ == 0 && useBFGS == 0) {
+    handle.logFileMessage(LOGWARN, "no optimisation methods found, using default values");
+    optHJ = new OptInfoHooke();
+    useHJ = 1;
+  }
 }
 
 void OptInfo::Optimise() {
-  if (useSimann)
+  if (useSimann) {
+    handle.logMessage(LOGINFO, "\nStarting Simulated Annealing optimisation algorithm\n");
     optSimann->OptimiseLikelihood();
-  if (useHJ)
+    handle.logMessage(LOGINFO, "\nSimulated Annealing finished with a final likelihood score of", EcoSystem->getLikelihood());
+    handle.logMessage(LOGINFO, "after a total of", EcoSystem->getFuncEval(), "function evaluations at the point");
+    EcoSystem->writeOptValues();
+  }
+  if (useHJ) {
+    handle.logMessage(LOGINFO, "\nStarting Hooke & Jeeves optimisation algorithm\n");
     optHJ->OptimiseLikelihood();
-  if (useBFGS)
+    handle.logMessage(LOGINFO, "\nHooke & Jeeves finished with a final likelihood score of", EcoSystem->getLikelihood());
+    handle.logMessage(LOGINFO, "after a total of", EcoSystem->getFuncEval(), "function evaluations at the point");
+    EcoSystem->writeOptValues();
+  }
+  if (useBFGS) {
+    handle.logMessage(LOGINFO, "\nStarting BFGS optimisation algorithm\n");
     optBFGS->OptimiseLikelihood();
+    handle.logMessage(LOGINFO, "\nBFGS finished with a final likelihood score of", EcoSystem->getLikelihood());
+    handle.logMessage(LOGINFO, "after a total of", EcoSystem->getFuncEval(), "function evaluations at the point");
+    EcoSystem->writeOptValues();
+  }
 }

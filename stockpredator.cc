@@ -28,12 +28,12 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   keeper->addString("maxconsumption");
   maxcons.resize(4, keeper);
   if (!(infile >> maxcons))
-    handle.logFileMessage(LOGFAIL, "Error in stock file - incorrect format for maxconsumption vector");
+    handle.logFileMessage(LOGFAIL, "invalid format for maxconsumption vector");
   maxcons.Inform(keeper);
   keeper->clearLast();
 
   keeper->addString("halffeedingvalue");
-  readWordAndFormula(infile, "halffeedingvalue", halfFeedingValue);
+  readWordAndVariable(infile, "halffeedingvalue", halfFeedingValue);
   halfFeedingValue.Inform(keeper);
   keeper->clearLast();
   keeper->clearLast();

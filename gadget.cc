@@ -9,7 +9,6 @@
 RunID RUNID;
 Ecosystem* EcoSystem;
 ErrorHandler handle;
-int FuncEval = 0;
 
 int main(int aNumber, char* const aVector[]) {
 
@@ -116,6 +115,8 @@ int main(int aNumber, char* const aVector[]) {
     }
 
   } else if (main.runOptimise()) {
+    opt = new OptInfo(main.getOptInfoGiven(), main.getOptInfoFile());
+
     if (main.getInitialParamGiven()) {
       data = new StochasticData(main.getInitialParamFile());
       EcoSystem->Update(data);
@@ -127,13 +128,12 @@ int main(int aNumber, char* const aVector[]) {
     if (main.printInitial())
       EcoSystem->writeStatus(main.getPrintInitialFile());
 
-    opt = new OptInfo(&main);
     opt->Optimise();
-    delete opt;
 
     if ((main.getPI()).getForcePrint())
       EcoSystem->Simulate(0, 1);  //print and dont optimise
 
+    delete opt;
     if (main.getInitialParamGiven())
       delete data;
   }

@@ -34,12 +34,23 @@ void readWordAndValue(CommentStream& infile, const char* str, char* value) {
     handle.logFileUnexpected(LOGFAIL, str, text);
 }
 
-void readWordAndFormula(CommentStream& infile, const char* str, Formula& formula) {
+void readWordAndVariable(CommentStream& infile, const char* str, Formula& formula) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
   if (strcasecmp(text, str) == 0)
     infile >> formula >> ws;
+  else
+    handle.logFileUnexpected(LOGFAIL, str, text);
+}
+
+void readWordAndTimeVariable(CommentStream& infile, const char* str, TimeVariable& timevariable,
+  const TimeClass* const TimeInfo, Keeper* const keeper) {
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  infile >> text;
+  if (strcasecmp(text, str) == 0)
+    timevariable.read(infile, TimeInfo, keeper);
   else
     handle.logFileUnexpected(LOGFAIL, str, text);
 }

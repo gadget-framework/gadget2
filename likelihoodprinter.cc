@@ -27,7 +27,7 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
     infile >> text >> ws;
   }
   if (likenames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in likelihoodprinter - failed to read component");
+    handle.logFileMessage(LOGFAIL, "\nError in likelihoodprinter - failed to read component");
 
   //read the name of the printfile, and then open the printfile
   filename = new char[MaxStrLength];
@@ -46,15 +46,15 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.logFileMessage(LOGFAIL, "Error in likelihoodprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "\nError in likelihoodprinter - invalid value of printatstart");
 
   if (printtimeid == 1)
-    handle.logFileMessage(LOGFAIL, "Error in likelihoodprinter - cannot print likelihood informtion at the start of the timestep");
+    handle.logFileMessage(LOGFAIL, "\nError in likelihoodprinter - cannot print likelihood informtion at the start of the timestep");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.logFileMessage(LOGFAIL, "Error in likelihoodprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "\nError in likelihoodprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;

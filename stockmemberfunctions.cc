@@ -21,9 +21,11 @@ extern ErrorHandler handle;
 
 void Stock::Migrate(const TimeClass* const TimeInfo) {
   if (doesmigrate) {
-    Alkeys.Migrate(migration->MigrationMatrix(TimeInfo));
-    if (tagAlkeys.numTagExperiments() > 0)
-      tagAlkeys.Migrate(migration->MigrationMatrix(TimeInfo), Alkeys);
+    if (migration->isMigrationStep(TimeInfo)) {
+      Alkeys.Migrate(migration->getMigrationMatrix(TimeInfo));
+      if (tagAlkeys.numTagExperiments() > 0)
+        tagAlkeys.Migrate(migration->getMigrationMatrix(TimeInfo), Alkeys);
+    }
   }
 }
 
@@ -230,11 +232,6 @@ void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const 
     AgebandmratioAdd(tagAlkeys, this->areaNum(area), Addition, AddArea, *CI, ratio, minage, maxage);
     tagAlkeys[this->areaNum(area)].updateRatio(Alkeys[this->areaNum(area)]);
   }
-}
-
-void Stock::calcMigration(const TimeClass* const TimeInfo) {
-  if (doesmigrate)
-    migration->MigrationRecalc(TimeInfo->getYear());
 }
 
 void Stock::updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss) {

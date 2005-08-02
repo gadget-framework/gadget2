@@ -40,7 +40,7 @@ StomachContent::StomachContent(CommentStream& infile,
   else if (strcasecmp(functionname, "scsimple") == 0)
     functionnumber = 4;
   else
-    handle.logFileMessage(LOGFAIL, "Error in stomachcontent - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "\nError in stomachcontent - unrecognised function", functionname);
 
   switch (functionnumber) {
     case 1:
@@ -107,7 +107,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
     epsilon = 10.0;
 
   if (epsilon < verysmall) {
-    handle.logFileMessage(LOGWARN, "Epsilon should be a positive integer - set to default value 10");
+    handle.logFileMessage(LOGWARN, "epsilon should be a positive integer - set to default value 10");
     epsilon = 10.0;
   }
 
@@ -139,7 +139,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
     infile >> text >> ws;
   }
   if (predatornames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in stomachcontent - failed to read predators");
+    handle.logFileMessage(LOGFAIL, "\nError in stomachcontent - failed to read predators");
   handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", predatornames.Size());
 
   if (strcasecmp(text, "predatorlengths") == 0) { //read predator lengths
@@ -153,7 +153,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
     datafile.close();
     datafile.clear();
   } else if (strcasecmp(text, "predatorages") == 0) { //read predator ages
-    handle.logFileMessage(LOGFAIL, "Stomach content data for age-based predators is currently not suppported");
+    handle.logFileMessage(LOGFAIL, "\nStomach content data for age-based predators is currently not suppported");
     usepredages = 1; //predator is age structured
     readWordAndValue(infile, "ageaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
@@ -487,18 +487,10 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
   if (numprey == 0)
     handle.logMessage(LOGWARN, "Warning in stomachcontents - no prey found for", scname);
 
-  //Find start of distribution data in datafile
-  infile >> ws;
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
-
   //Check the number of columns in the inputfile
+  infile >> ws;
   if (countColumns(infile) != 6)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -648,18 +640,10 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
   if (numprey == 0)
     handle.logMessage(LOGWARN, "Warning in stomachcontents - no prey found for", scname);
 
-  //Find start of distribution data in datafile
-  infile >> ws;
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
-
   //Check the number of columns in the inputfile
+  infile >> ws;
   if (countColumns(infile) != 7)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 7");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -758,18 +742,10 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
   for (i = 0; i < obsConsumption.Nrow(); i++)
     number[i] = new DoubleMatrix(numarea, numpred, 0.0);
 
-  //Find start of distribution data in datafile
-  infile >> ws;
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
-
   //Check the number of columns in the inputfile
+  infile >> ws;
   if (countColumns(infile) != 5)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 5");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -948,18 +924,10 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
   if (numprey == 0)
     handle.logMessage(LOGWARN, "Warning in stomachcontents - no prey found for", scname);
 
-  //Find start of distribution data in datafile
-  infile >> ws;
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
-
   //Check the number of columns in the inputfile
+  infile >> ws;
   if (countColumns(infile) != 6)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;

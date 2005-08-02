@@ -52,7 +52,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
     handle.logMessage(LOGFAIL, "Error in tags - failed to match stock", stocknames[0]);
 
   //Now read in the tagloss information
-  readWordAndFormula(infile, "tagloss", tagloss);
+  readWordAndVariable(infile, "tagloss", tagloss);
   tagloss.Inform(keeper);
 
   //read in the numbers format: tagid - length - number
@@ -80,7 +80,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
   infile >> ws;
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 5)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 5");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
   while (!infile.eof()) {
     keepdata = 0;

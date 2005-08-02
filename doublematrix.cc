@@ -131,6 +131,9 @@ DoubleMatrix& DoubleMatrix::operator = (const DoubleMatrix& d) {
 
 void DoubleMatrix::Reset() {
   if (nrow > 0) {
+    int i;
+    for (i = 0; i < nrow; i++)
+      delete v[i];
     delete[] v;
     v = 0;
     nrow = 0;

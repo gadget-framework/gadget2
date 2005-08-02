@@ -1,44 +1,44 @@
-#include "variableinfoptrvector.h"
+#include "rectangleptrvector.h"
 #include "gadget.h"
 
-VariableInfoPtrVector::VariableInfoPtrVector(int sz) {
+RectanglePtrVector::RectanglePtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
-    v = new VariableInfo*[size];
+    v = new Rectangle*[size];
   else
     v = 0;
 }
 
-VariableInfoPtrVector::VariableInfoPtrVector(int sz, VariableInfo* value) {
+RectanglePtrVector::RectanglePtrVector(int sz, Rectangle* value) {
   size = (sz > 0 ? sz : 0);
   int i;
   if (size > 0) {
-    v = new VariableInfo*[size];
+    v = new Rectangle*[size];
     for (i = 0; i < size; i++)
       v[i] = value;
   } else
     v = 0;
 }
 
-VariableInfoPtrVector::VariableInfoPtrVector(const VariableInfoPtrVector& initial) {
+RectanglePtrVector::RectanglePtrVector(const RectanglePtrVector& initial) {
   size = initial.size;
   int i;
   if (size > 0) {
-    v = new VariableInfo*[size];
+    v = new Rectangle*[size];
     for (i = 0; i < size; i++)
       v[i] = initial.v[i];
   } else
     v = 0;
 }
 
-VariableInfoPtrVector::~VariableInfoPtrVector() {
+RectanglePtrVector::~RectanglePtrVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
 }
 
-void VariableInfoPtrVector::resize(int addsize, VariableInfo* value) {
+void RectanglePtrVector::resize(int addsize, Rectangle* value) {
   int oldsize = size;
   this->resize(addsize);
   int i;
@@ -47,13 +47,13 @@ void VariableInfoPtrVector::resize(int addsize, VariableInfo* value) {
       v[i] = value;
 }
 
-void VariableInfoPtrVector::resize(int addsize) {
+void RectanglePtrVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
-    v = new VariableInfo*[size];
+    v = new Rectangle*[size];
   } else if (addsize > 0) {
-    VariableInfo** vnew = new VariableInfo*[addsize + size];
+    Rectangle** vnew = new Rectangle*[addsize + size];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
@@ -62,10 +62,10 @@ void VariableInfoPtrVector::resize(int addsize) {
   }
 }
 
-void VariableInfoPtrVector::Delete(int pos) {
+void RectanglePtrVector::Delete(int pos) {
   int i;
   if (size > 1) {
-    VariableInfo** vnew = new VariableInfo*[size - 1];
+    Rectangle** vnew = new Rectangle*[size - 1];
     for (i = 0; i < pos; i++)
       vnew[i] = v[i];
     for (i = pos; i < size - 1; i++)

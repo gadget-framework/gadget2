@@ -14,8 +14,8 @@ int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggind
     strncpy(aggindex[i], "", MaxStrLength);
     infile >> aggindex[i];
     agg.AddRows(1, 0);
-    if (!readVectorInLine(infile, agg[i]))
-      handle.logFileMessage(LOGFAIL, "Error in readaggregation - failed to read vector");
+    if (agg[i].readline(infile) == 0)
+      handle.logFileMessage(LOGFAIL, "failed to read aggregation vector");
     infile >> ws;
     i++;
   }
@@ -68,7 +68,7 @@ int readLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrV
     if (isZero(lengths[i] - dblA))
       lengths.resize(1, dblB); //add next length entry
     else
-      handle.logFileMessage(LOGFAIL, "Error in length aggregation - lengths not consecutive");
+      handle.logMessage(LOGFAIL, "Error in length aggregation - lengths not consecutive");
 
     i++;
   }

@@ -44,7 +44,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     overconsumption = 0;
 
   if (overconsumption != 0 && overconsumption != 1)
-    handle.logFileMessage(LOGFAIL, "Error in catchstatistics - overconsumption must be 0 or 1");
+    handle.logFileMessage(LOGFAIL, "\nError in catchstatistics - overconsumption must be 0 or 1");
 
   if ((strcasecmp(functionname, "lengthcalcvar") == 0) || (strcasecmp(functionname, "lengthcalcstddev") == 0))
     functionnumber = 1;
@@ -57,7 +57,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   else if ((strcasecmp(functionname, "lengthnovar") == 0) || (strcasecmp(functionname, "lengthnostddev") == 0))
     functionnumber = 5;
   else
-    handle.logFileMessage(LOGFAIL, "Error in catchstatistics - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "\nError in catchstatistics - unrecognised function", functionname);
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
@@ -96,7 +96,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     infile >> text >> ws;
   }
   if (fleetnames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in catchstatistics - failed to read fleets");
+    handle.logFileMessage(LOGFAIL, "\nError in catchstatistics - failed to read fleets");
   handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
@@ -111,7 +111,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     infile >> text;
   }
   if (stocknames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in catchstatistics - failed to read stocks");
+    handle.logFileMessage(LOGFAIL, "\nError in catchstatistics - failed to read stocks");
   handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
@@ -137,15 +137,6 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
   int timeid, ageid, areaid;
   int count = 0;
 
-  //Find start of statistics data in datafile
-  infile >> ws;
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
-
   readvar = 0;
   needvar = 0;
   switch (functionnumber) {
@@ -167,10 +158,11 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
   }
 
   //Check the number of columns in the inputfile
+  infile >> ws;
   if ((readvar == 1) && (countColumns(infile) != 7))
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 7");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
   else if ((readvar == 0) && (countColumns(infile) != 6))
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;

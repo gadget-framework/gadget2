@@ -36,14 +36,14 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
     scale = 1.0;
 
   if (scale < verysmall) {
-    handle.logFileMessage(LOGWARN, "Scale should be a positive integer - set to default value 1");
+    handle.logFileMessage(LOGWARN, "scale should be a positive integer - set to default value 1");
     scale = 1.0;
   }
 
   //JMB - removed the need to read in the area aggregation file
   if (strcasecmp(text, "areaaggfile") == 0) {
     infile >> text >> ws;
-    handle.logFileMessage(LOGWARN, "Warning in stockstdprinter - area aggreagtion file ignored");
+    handle.logMessage(LOGWARN, "Warning in stockstdprinter - area aggreagtion file ignored");
     infile >> text >> ws;
   }
 
@@ -67,7 +67,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
   }
 
   if (precision < 0)
-    handle.logFileMessage(LOGFAIL, "Error in stockstdprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "\nError in stockstdprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -75,12 +75,12 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.logFileMessage(LOGFAIL, "Error in stockstdprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "\nError in stockstdprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.logFileMessage(LOGFAIL, "Error in stockstdprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "\nError in stockstdprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;

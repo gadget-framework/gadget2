@@ -45,9 +45,8 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     i = 0;
     c = infile.peek();
     while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
-      tmpareas.resize(1);
       infile >> tmpint >> ws;
-      tmpareas[i] = Area->InnerArea(tmpint);
+      tmpareas.resize(1, Area->InnerArea(tmpint));
       c = infile.peek();
       i++;
     }
@@ -71,7 +70,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error())
-    handle.logFileMessage(LOGFAIL, "Error in stock - failed to create length group");
+    handle.logMessage(LOGFAIL, "Error in stock - failed to create length group");
 
   //JMB need to set the lowerlgrp and size vectors to a default
   //value to allow the whole range of lengths to be calculated
@@ -98,7 +97,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   LengthGroupDivision* GrowLgrpDiv = new LengthGroupDivision(grlengths);
   if (GrowLgrpDiv->Error())
-    handle.logFileMessage(LOGFAIL, "Error in stock - failed to create growth length group");
+    handle.logMessage(LOGFAIL, "Error in stock - failed to create growth length group");
 
   //Check the growth length groups cover the stock length groups
   checkLengthGroupIsFiner(LgrpDiv, GrowLgrpDiv);
@@ -155,23 +154,17 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   readWordAndVariable(infile, "doesmigrate", doesmigrate);
   if (doesmigrate) {
     infile >> ws;
-    //JMB make agedependentmigration optional, since we want to remove it entirely
     c = infile.peek();
-    if ((c == 'a') || (c == 'A'))
-      readWordAndVariable(infile, "agedependentmigration", tmpint);
-    else
-      tmpint = 0;
-
-    readWordAndValue(infile, "migrationfile", filename);
-    ifstream subfile;
-    subfile.open(filename, ios::in);
-    CommentStream subcomment(subfile);
-    handle.checkIfFailure(subfile, filename);
-    handle.Open(filename);
-    migration = new Migration(subcomment, tmpint, areas, Area, TimeInfo, keeper);
-    handle.Close();
-    subfile.close();
-    subfile.clear();
+    if ((c == 'y') || (c == 'Y')) {
+      //about to read the word yearstepfile
+      migration = new MigrationNumbers(infile, areas, Area, TimeInfo, keeper);
+    } else if ((c == 'd') || (c == 'D')) {
+      //about to read the word diffusion
+      migration = new MigrationFunction(infile, areas, Area, TimeInfo, keeper);
+    } else {
+      infile >> text >> ws;
+      handle.logFileUnexpected(LOGFAIL, "migrationnumbers or migrationfunction", text);
+    }
 
   } else
     migration = 0;
@@ -197,16 +190,16 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     else if (strcasecmp(text, "constantweight") == 0)
       maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 6, refweight);
     else if (strcasecmp(text, "ageandlength") == 0)
-      handle.logFileMessage(LOGFAIL, "Error in stock file - the ageandlength maturity function is no longer supported");
+      handle.logFileMessage(LOGFAIL, "\nThe ageandlength maturity function is no longer supported");
     else
-      handle.logFileMessage(LOGFAIL, "Error in stock file - unrecognised maturity", text);
+      handle.logFileMessage(LOGFAIL, "unrecognised maturity function", text);
 
     handle.Close();
     subfile.close();
     subfile.clear();
 
     if (!doesgrow)
-      handle.logFileMessage(LOGFAIL, "Error in stock - maturation without growth is not implemented");
+      handle.logMessage(LOGFAIL, "Error in stock - maturation without growth is not implemented");
 
   } else
     maturity = 0;

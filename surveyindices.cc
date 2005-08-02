@@ -49,7 +49,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   //Check if we read correct input
   if (areas.Nrow() != 1)
-    handle.logFileMessage(LOGFAIL, "Error in surveyindex - there should be only one area");
+    handle.logFileMessage(LOGFAIL, "\nError in surveyindex - there should be only one area");
 
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
@@ -102,11 +102,11 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       infile >> text >> ws;
     }
     if (fleetnames.Size() == 0)
-      handle.logFileMessage(LOGFAIL, "Error in surveyindex - failed to read fleets");
+      handle.logFileMessage(LOGFAIL, "\nError in surveyindex - failed to read fleets");
     handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
-    handle.logFileMessage(LOGFAIL, "The ageandlengths surveyindex likelihood component is no longer supported\nUse the surveydistribution likelihood component instead");
+    handle.logFileMessage(LOGFAIL, "\nThe ageandlengths surveyindex likelihood component is no longer supported\nUse the surveydistribution likelihood component instead");
 
   } else
     handle.logFileUnexpected(LOGFAIL, "lengths, ages or fleets", sitype);
@@ -123,7 +123,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     infile >> text >> ws;
   }
   if (stocknames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in surveyindex - failed to read stocks");
+    handle.logFileMessage(LOGFAIL, "\nError in surveyindex - failed to read stocks");
   handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
@@ -140,7 +140,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       charindex, TimeInfo, datafilename, this->getName());
 
   } else
-    handle.logFileMessage(LOGFAIL, "Error in surveyindex - unrecognised type", sitype);
+    handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised type", sitype);
 
   for (i = 0; i < charindex.Size(); i++)
     delete[] charindex[i];

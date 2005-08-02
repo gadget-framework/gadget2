@@ -37,7 +37,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   if (strcasecmp(functionname, "poisson") == 0)
     functionnumber = 1;
   else
-    handle.logFileMessage(LOGFAIL, "Error in recaptures - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "\nError in recaptures - unrecognised function", functionname);
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
@@ -76,7 +76,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
     infile >> text >> ws;
   }
   if (fleetnames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in recaptures - failed to read fleets");
+    handle.logFileMessage(LOGFAIL, "\nError in recaptures - failed to read fleets");
   handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //We have now read in all the data from the main likelihood file
@@ -120,7 +120,7 @@ void Recaptures::readRecaptureData(CommentStream& infile,
   infile >> ws;
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 6)
-      handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
+      handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;

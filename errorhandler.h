@@ -107,6 +107,20 @@ public:
    */
   void logFileMessage(LogLevel mlevel, const char* msg);
   /**
+   * \brief This function will log a warning message and a number, generated when reading information from file
+   * \param mlevel is the logging level of the message to be logged
+   * \param msg is the message to be logged
+   * \param number is the number to be logged
+   */
+  void logFileMessage(LogLevel mlevel, const char* msg, int number);
+  /**
+   * \brief This function will log a warning message and a number, generated when reading information from file
+   * \param mlevel is the logging level of the message to be logged
+   * \param msg is the message to be logged
+   * \param number is the number to be logged
+   */
+  void logFileMessage(LogLevel mlevel, const char* msg, double number);
+  /**
    * \brief This function will log 2 warning messages generated when reading information from file
    * \param mlevel is the logging level of the message to be logged
    * \param msg1 is the first message to be logged

@@ -450,7 +450,114 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg) {
     case LOGMESSAGE:
     case LOGDETAIL:
       if (uselog) {
-        logfile << "Message in file " << strFilename << endl << msg << endl;
+        logfile << "Message in file " << strFilename << " - " << msg << endl;
+        logfile.flush();
+      }
+      break;
+    default:
+      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      break;
+  }
+  delete[] strFilename;
+}
+
+
+void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, int number) {
+  if (mlevel > loglevel)
+    return;
+
+  char* strFilename = files->sendTop();
+  switch (mlevel) {
+    case LOGNONE:
+    case LOGINFO:
+      break;
+    case LOGFAIL:
+      if (uselog) {
+        if (strlen(strFilename) == 0)
+          logfile << "Error on commandline - " << msg << sep << number << endl;
+        else
+          logfile << "Error in file " << strFilename << " - " << msg << sep << number << endl;
+        logfile.flush();
+      }
+      if (strlen(strFilename) == 0)
+        cerr << "Error on commandline - " << msg << sep << number << endl;
+      else
+        cerr << "Error in file " << strFilename << " - " << msg << sep << number << endl;
+      delete[] strFilename;
+      exit(EXIT_FAILURE);
+      break;
+    case LOGWARN:
+      numwarn++;
+      if (uselog) {
+        if (strlen(strFilename) == 0)
+          logfile << "Warning on commandline - " << msg << sep << number << endl;
+        else
+          logfile << "Warning in file " << strFilename << " - " << msg << sep << number << endl;
+        logfile.flush();
+      }
+      if (strlen(strFilename) == 0)
+        cerr << "Warning on commandline - " << msg << sep << number << endl;
+      else
+        cerr << "Warning in file " << strFilename << " - " << msg << sep << number << endl;
+      break;
+    case LOGDEBUG:
+    case LOGMESSAGE:
+    case LOGDETAIL:
+      if (uselog) {
+        logfile << "Message in file " << strFilename << " - " << msg << sep << number << endl;
+        logfile.flush();
+      }
+      break;
+    default:
+      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      break;
+  }
+  delete[] strFilename;
+}
+
+void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, double number) {
+  if (mlevel > loglevel)
+    return;
+
+  char* strFilename = files->sendTop();
+  switch (mlevel) {
+    case LOGNONE:
+    case LOGINFO:
+      break;
+    case LOGFAIL:
+      if (uselog) {
+        if (strlen(strFilename) == 0)
+          logfile << "Error on commandline - " << msg << sep << number << endl;
+        else
+          logfile << "Error in file " << strFilename << " - " << msg << sep << number << endl;
+        logfile.flush();
+      }
+      if (strlen(strFilename) == 0)
+        cerr << "Error on commandline - " << msg << sep << number << endl;
+      else
+        cerr << "Error in file " << strFilename << " - " << msg << sep << number << endl;
+      delete[] strFilename;
+      exit(EXIT_FAILURE);
+      break;
+    case LOGWARN:
+      numwarn++;
+      if (uselog) {
+        if (strlen(strFilename) == 0)
+          logfile << "Warning on commandline - " << msg << sep << number << endl;
+        else
+          logfile << "Warning in file " << strFilename << " - " << msg << sep << number << endl;
+        logfile.flush();
+      }
+      if (strlen(strFilename) == 0)
+        cerr << "Warning on commandline - " << msg << sep << number << endl;
+      else
+        cerr << "Warning in file " << strFilename << " - " << msg << sep << number << endl;
+      break;
+    case LOGDEBUG:
+    case LOGMESSAGE:
+    case LOGDETAIL:
+      if (uselog) {
+        logfile << "Message in file " << strFilename << " - " << msg << sep << number << endl;
         logfile.flush();
       }
       break;
@@ -503,7 +610,7 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg1, const char*
     case LOGMESSAGE:
     case LOGDETAIL:
       if (uselog) {
-        logfile << "Message in file " << strFilename << endl << msg1 << sep << msg2 << endl;
+        logfile << "Message in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
         logfile.flush();
       }
       break;

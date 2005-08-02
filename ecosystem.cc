@@ -3,7 +3,6 @@
 
 extern RunID RUNID;
 extern ErrorHandler handle;
-extern int FuncEval;
 
 Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir, const char* const workingdir)   : printinfo(main.getPI()) {
 
@@ -11,6 +10,10 @@ Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir, const cha
   interrupted = 0;
   likelihood = 0.0;
   keeper = new Keeper;
+
+  // initialise counters used when printing output files
+  printcount1 = printinfo.getPrint1() - 1;
+  printcount2 = printinfo.getPrint2() - 1;
 
   // initialise details used when printing the params.out file
   convergeSA = 0;
@@ -104,11 +107,6 @@ void Ecosystem::Reset() {
 }
 
 double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {
-  ::FuncEval++;
-  static int PrintCounter1 = printinfo.getPrint1() - 1;
-  static int PrintCounter2 = printinfo.getPrint2() - 1;
-  PrintCounter1++;
-  PrintCounter2++;
 
   likelihood = 0.0;
   int numvar = keeper->numVariables();
@@ -131,13 +129,19 @@ double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {
   keeper->Update(val);
   this->Simulate(1, 0);  //optimise and dont print
 
-  if (PrintCounter1 == printinfo.getPrint1() && printinfo.getPrint()) {
-    keeper->writeValues(likevec, printinfo.getPrecision());
-    PrintCounter1 = 0;
+  if (printinfo.getPrint()) {
+    printcount1++;
+    if (printcount1 == printinfo.getPrint1()) {
+      keeper->writeValues(likevec, printinfo.getPrecision());
+      printcount1 = 0;
+    }
   }
-  if (PrintCounter2 == printinfo.getPrint2() && printinfo.getPrintColumn()) {
-    keeper->writeValuesInColumns(printinfo.getPrecision());
-    PrintCounter2 = 0;
+  if (printinfo.getPrintColumn()) {
+    printcount2++;
+    if (printcount2 == printinfo.getPrint2()) {
+      keeper->writeValuesInColumns(printinfo.getPrecision());
+      printcount2 = 0;
+    }
   }
 
   funceval++;

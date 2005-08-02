@@ -33,9 +33,8 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
     i = 0;
     c = infile.peek();
     while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
-      tmpareas.resize(1);
       infile >> tmpint >> ws;
-      tmpareas[i] = Area->InnerArea(tmpint);
+      tmpareas.resize(1, Area->InnerArea(tmpint));
       c = infile.peek();
       i++;
     }
@@ -47,7 +46,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   c = infile.peek();
   //JMB - removed the need to read in the fleet lengths
   if ((c == 'l') || (c == 'L')) {
-    handle.logFileMessage(LOGWARN, "Warning in fleet - length data ignored");
+    handle.logMessage(LOGWARN, "Warning in fleet - length data ignored");
     infile.get(c);
     while (c != '\n' && !infile.eof())
       infile.get(c);
@@ -56,7 +55,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   }
 
   if ((c == 'm') || (c == 'M'))
-    readWordAndFormula(infile, "multiplicative", multscaler);
+    readWordAndVariable(infile, "multiplicative", multscaler);
   else
     multscaler.setValue(1.0);
 
@@ -75,7 +74,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
       predator = new NumberPredator(infile, this->getName(), areas, TimeInfo, keeper, multscaler);
       break;
     default:
-      handle.logFileMessage(LOGFAIL, "Error in fleet - unrecognised fleet type for", this->getName());
+      handle.logMessage(LOGFAIL, "Error in fleet - unrecognised fleet type for", this->getName());
     }
 
   //the next entry in the file will be the name of the amounts datafile
@@ -83,11 +82,8 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   subfile.open(text, ios::in);
   handle.checkIfFailure(subfile, text);
   handle.Open(text);
-
-  if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, this->getName()))
-    handle.logFileMessage(LOGFAIL, "Error in fleet - failed to read fleet amounts");
+  readAmounts(subcomment, areas, TimeInfo, Area, amount, this->getName());
   amount.Inform(keeper);
-
   handle.Close();
   subfile.close();
   subfile.clear();

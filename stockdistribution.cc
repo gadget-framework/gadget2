@@ -41,7 +41,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   } else if (strcasecmp(functionname, "sumofsquares") == 0) {
     functionnumber = 2;
   } else
-    handle.logFileMessage(LOGFAIL, "Error in stockdistribution - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "\nError in stockdistribution - unrecognised function", functionname);
 
   //JMB - changed to make the reading of overconsumption optional
   infile >> ws;
@@ -54,7 +54,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
     overconsumption = 0;
 
   if (overconsumption != 0 && overconsumption != 1)
-    handle.logFileMessage(LOGFAIL, "Error in stockdistribution - overconsumption must be 0 or 1");
+    handle.logFileMessage(LOGFAIL, "\nError in stockdistribution - overconsumption must be 0 or 1");
 
   //JMB - changed to make the reading of minimum probability optional
   if ((c == 'm') || (c == 'M'))
@@ -65,7 +65,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
     epsilon = 10.0;
 
   if (epsilon < verysmall) {
-    handle.logFileMessage(LOGWARN, "Epsilon should be a positive integer - set to default value 10");
+    handle.logFileMessage(LOGWARN, "epsilon should be a positive integer - set to default value 10");
     epsilon = 10.0;
   }
 
@@ -119,7 +119,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
     infile >> text >> ws;
   }
   if (fleetnames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in stockdistribution - failed to read fleets");
+    handle.logFileMessage(LOGFAIL, "\nError in stockdistribution - failed to read fleets");
   handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
@@ -134,7 +134,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
     infile >> text;
   }
   if (stocknames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in stockdistribution - failed to read stocks");
+    handle.logFileMessage(LOGFAIL, "\nError in stockdistribution - failed to read stocks");
   handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
@@ -164,18 +164,10 @@ void StockDistribution::readStockData(CommentStream& infile,
   int numstock = stocknames.Size();
   int count = 0;
 
-  //Find start of distribution data in datafile
-  infile >> ws;
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
-
   //Check the number of columns in the inputfile
+  infile >> ws;
   if (countColumns(infile) != 7)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 7");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
 
   while (!infile.eof()) {
     keepdata = 0;

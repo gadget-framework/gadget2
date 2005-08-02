@@ -36,7 +36,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
     infile >> text >> ws;
   }
   if (predatornames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - failed to read predators");
+    handle.logFileMessage(LOGFAIL, "\nError in predatorprinter - failed to read predators");
   handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", predatornames.Size());
 
   //read in the prey names
@@ -48,7 +48,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
     infile >> text >> ws;
   }
   if (preynames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - failed to read preys");
+    handle.logFileMessage(LOGFAIL, "\nError in predatorprinter - failed to read preys");
   handle.logMessage(LOGMESSAGE, "Read prey data - number of preys", preynames.Size());
 
   //read in area aggregation from file
@@ -91,16 +91,16 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
   //Finished reading from infile.
   predLgrpDiv = new LengthGroupDivision(predlengths);
   if (predLgrpDiv->Error())
-    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - failed to create predator length group");
+    handle.logFileMessage(LOGFAIL, "\nError in predatorprinter - failed to create predator length group");
   preyLgrpDiv = new LengthGroupDivision(preylengths);
   if (predLgrpDiv->Error())
-    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - failed to create prey length group");
+    handle.logFileMessage(LOGFAIL, "\nError in predatorprinter - failed to create prey length group");
 
   char c = infile.peek();
   if ((c == 'b') || (c == 'B'))
     readWordAndVariable(infile, "biomass", biomass);
   if (biomass != 0 && biomass != 1)
-    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - biomass must be 0 or 1");
+    handle.logFileMessage(LOGFAIL, "\nError in predatorprinter - biomass must be 0 or 1");
 
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
@@ -118,7 +118,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
   }
 
   if (precision < 0)
-    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "\nError in predatorprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -126,12 +126,12 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "\nError in predatorprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.logFileMessage(LOGFAIL, "Error in predatorprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "\nError in predatorprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;

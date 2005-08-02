@@ -103,13 +103,13 @@ void Predator::readSuitability(CommentStream& infile,
       if (readSuitFunction(suitf, infile, text, TimeInfo, keeper) == 1)
         suitable->addPrey(preyname, suitf[suitf.Size() - 1]);
       else
-        handle.logFileMessage(LOGFAIL, "Error in suitability - unrecognised suitability function");
+        handle.logFileMessage(LOGFAIL, "unrecognised suitability function", text);
 
     } else if (strcasecmp(text, "suitfile") == 0) {
-      handle.logFileMessage(LOGFAIL, "Reading suitability values directly from file is no longer supported\nGadget version 2.0.07 was the last version to allow this functionality");
+      handle.logFileMessage(LOGFAIL, "\nReading suitability values directly from file is no longer supported\nGadget version 2.0.07 was the last version to allow this functionality");
 
     } else
-      handle.logFileMessage(LOGFAIL, "Error in suitability - unrecognised format", text);
+      handle.logFileMessage(LOGFAIL, "unrecognised predation format", text);
 
     infile >> preyname >> ws;
     keeper->clearLast();

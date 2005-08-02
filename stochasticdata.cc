@@ -67,7 +67,7 @@ int StochasticData::isOptGiven() const {
 
 #ifdef GADGET_NETWORK
 void StochasticData::readFromNetwork() {
-  int i, check, numParam;
+  int i, numParam;
 
   //Receive first data from master
   numParam = slave->startNetCommunication();
@@ -128,31 +128,18 @@ void StochasticData::readFromNetwork() {
   } else
     getdata = 0;
 
-  if (switches.Size() > 0) {
+  if (getdata == 1) {
     if (switches.Size() != values.Size())
       handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to read values");
 
-    check = 0;
     for (i = 0; i < values.Size(); i++) {
-      if (lowerbound[i] > upperbound[i]) {
-        check++;
-        handle.logMessage(LOGWARN, "Error in stochasticdata - parameter has upper bound", upperbound[i]);
-        handle.logMessage(LOGWARN, "which is lower than the corresponding lower bound", lowerbound[i]);
-      }
-      if (values[i] > upperbound[i]) {
-        check++;
-        handle.logMessage(LOGWARN, "Error in stochasticdata - parameter has initial value", values[i]);
-        handle.logMessage(LOGWARN, "which is higher than the corresponding upper bound", upperbound[i]);
-      }
-      if (values[i] < lowerbound[i]) {
-        check++;
-        handle.logMessage(LOGWARN, "Error in stochasticdata - parameter has initial value", values[i]);
-        handle.logMessage(LOGWARN, "which is lower than the corresponding lower bound", lowerbound[i]);
-      }
+      if ((lowerbound[i] > values[i]) || (upperbound[i] < values[i]))
+        handle.logMessage(LOGFAIL, "Error in stochasticdata - initial value outside bounds for parameter", switches[i].getName());
+      if (upperbound[i] < lowerbound[i])
+        handle.logMessage(LOGFAIL, "Error in stochasticdata - upper bound lower than lower bound for parameter", switches[i].getName());
+      if ((lowerbound[i] < 0) && (upperbound[i] > 0))
+        handle.logMessage(LOGWARN, "Warning in stochasticdata - bounds span zero for parameter", switches[i].getName());
     }
-    if (check > 0)
-      handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to read parameters and bounds correctly");
-
   }
 }
 

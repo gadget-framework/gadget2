@@ -31,7 +31,7 @@ void MigrationPenalty::addLikelihood(const TimeClass* const TimeInfo) {
   if ((stock->doesMigrate()) && (TimeInfo->getTime() == TimeInfo->numTotalSteps())) {
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "Calculating likelihood score for migrationpenalty component");
-    DoubleVector penalty(stock->getMigration()->Penalty());
+    DoubleVector penalty(stock->getMigration()->getPenalty());
     for (i = 0; i < penalty.Size(); i++)
       l += pow(penalty[i], powercoeffs[0]);
     l = pow(l, powercoeffs[1]);
@@ -50,7 +50,7 @@ void MigrationPenalty::setStocks(StockPtrVector Stocks) {
       stock = Stocks[i];
     }
 
-  if (found == 0)
+  if (found != 1)
     handle.logMessage(LOGFAIL, "Error in migrationpenalty - failed to match stock", stockname);
   if (!(stock->doesMigrate()))
     handle.logMessage(LOGWARN, "Warning in migrationpenalty - stock doesnt migrate");

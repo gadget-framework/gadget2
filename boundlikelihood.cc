@@ -21,7 +21,7 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
 
   infile >> ws;
   if (countColumns(infile) != 4)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 4");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 4");
   while (!infile.eof()) {
     infile >> tempParam >> ws;
     if (strcasecmp(tempParam.getName(), "default") == 0) {

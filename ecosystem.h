@@ -131,11 +131,6 @@ public:
    */
   void scaleVariables() { keeper->scaleVariables(); };
   /**
-   * \brief This function will return a copy of the names of the variables
-   * \param sw is the ParameterVector that will contain a copy of the names
-   */
-  void getOptSwitches(ParameterVector& sw) const { keeper->getOptSwitches(sw); };
-  /**
    * \brief This function will return a copy of the initial value of the variables to be optimised
    * \param val is the DoubleVector that will contain a copy of the initial values
    */
@@ -177,7 +172,7 @@ public:
    */
   void SimulateOneTimestep();
   /**
-   * \brief This function will calculate the predation, and update the population,  on an area
+   * \brief This function will calculate the predation, and update the population, on an area
    * \param area is the area to calculate the predation on
    * \note this function covers the predation of the preys by the predators, and consequent population changes, for a sub-step
    */
@@ -394,6 +389,14 @@ protected:
    * \brief This is the PrintInfo specifying the parameter output from the current model
    */
   PrintInfo printinfo;
+  /**
+   * \brief This is the counter for the printing interval for the -o output from the simualtion
+   */
+  int printcount1;
+  /**
+   * \brief This is the counter for the printing interval for the -co output from the simualtion
+   */
+  int printcount2;
   friend class InterruptInterface;
 };
 

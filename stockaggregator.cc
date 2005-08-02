@@ -31,7 +31,7 @@ void StockAggregator::Print(ofstream& outfile) const {
   int i, j, k;
 
   for (i = 0; i < total.Size(); i++) {
-    outfile << "\tInternal areas " << i << endl;
+    outfile << "\tInternal areas " << areas[i][0] << endl;
     for (j = 0; j < total[i].Nrow(); j++) {
       outfile << TAB;
       for (k = 0; k < total[i].maxLength(j); k++)

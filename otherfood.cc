@@ -31,9 +31,8 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
     i = 0;
     c = infile.peek();
     while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
-      tmpareas.resize(1);
       infile >> tmpint >> ws;
-      tmpareas[i] = Area->InnerArea(tmpint);
+      tmpareas.resize(1, Area->InnerArea(tmpint));
       c = infile.peek();
       i++;
     }
@@ -43,10 +42,10 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
 
   //read the length information
   DoubleVector lengths(2, 0.0);
-  infile >> text;
+  infile >> text >> ws;
   if (strcasecmp(text, "lengths") == 0) {
-    if (!readVector(infile, lengths))
-      handle.logFileMessage(LOGFAIL, "Failed to read lengths");
+    for (i = 0; i < 2; i++)
+      infile >> lengths[i] >> ws;
   } else
     handle.logFileUnexpected(LOGFAIL, "lengths", text);
 
@@ -67,11 +66,8 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
     subfile.open(text, ios::in);
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
-
-    if (!readAmounts(subcomment, areas, TimeInfo, Area, amount, givenname))
-      handle.logFileMessage(LOGFAIL, "Error in otherfood - failed to read otherfood amounts");
+    readAmounts(subcomment, areas, TimeInfo, Area, amount, this->getName());
     amount.Inform(keeper);
-
     handle.Close();
     subfile.close();
     subfile.clear();

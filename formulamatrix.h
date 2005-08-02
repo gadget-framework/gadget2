@@ -82,9 +82,16 @@ public:
    * \brief This will add new entries to the vector
    * \param add is the number of new entries to the vector
    * \param length is the number of entries to the FormulaVector that is created
-   * \param formula is the value that will be entered for the new entries
+   * \param initial is the value that will be entered for the new entries
    */
-  void AddRows(int add, int length, Formula formula);
+  void AddRows(int add, int length, Formula initial);
+  /**
+   * \brief This will add new entries to the vector
+   * \param add is the number of new entries to the vector
+   * \param length is the number of entries to the FormulaVector that is created
+   * \param initial is the value that will be entered for the new entries
+   */
+  void AddRows(int add, int length, double initial);
   /**
    * \brief This function will inform Keeper of the values of the stored Formula
    * \param keeper is the Keeper for the current model

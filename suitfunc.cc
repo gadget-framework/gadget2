@@ -49,31 +49,31 @@ int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname) {
     found++;
 
   } else if (strcasecmp(suitname, "inverse") == 0) {
-    handle.logFileMessage(LOGWARN, "The inverse suitability function is not yet implemented");
+    handle.logFileMessage(LOGWARN, "\nThe inverse suitability function is not yet implemented");
 
   } else if (strcasecmp(suitname, "improvedexpsuitfunc") == 0) {
-    handle.logFileMessage(LOGWARN, "The improvedexpsuitfunc suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "\nThe improvedexpsuitfunc suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "improvedandextendedexpsuitfunc") == 0) {
-    handle.logFileMessage(LOGWARN, "The improvedandextendedexpsuitfunc suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "\nThe improvedandextendedexpsuitfunc suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "extendedexpsuitfuncl50") == 0) {
-    handle.logFileMessage(LOGWARN, "The extendedexpsuitfuncl50 suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "\nThe extendedexpsuitfuncl50 suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "badexpsuitfuncl50") == 0) {
-    handle.logFileMessage(LOGWARN, "The badexpsuitfuncl50 suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "\nThe badexpsuitfuncl50 suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "surveyselection") == 0) {
-    handle.logFileMessage(LOGWARN, "The surveyselection suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "\nThe surveyselection suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "cloglog") == 0) {
-    handle.logFileMessage(LOGWARN, "The cloglog suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "\nThe cloglog suitability function is no longer supported");
 
   } else if (strcasecmp(suitname, "combination") == 0) {
-    handle.logFileMessage(LOGWARN, "The combination suitability function is no longer supported");
+    handle.logFileMessage(LOGWARN, "\nThe combination suitability function is no longer supported");
 
   } else
-    handle.logFileMessage(LOGFAIL, "Error in suitability function - no valid suitability function found");
+    handle.logFileMessage(LOGFAIL, "no valid suitability function found");
 
   return found;
 }

@@ -27,7 +27,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
   infile >> text >> ws;
   if (strcasecmp(text, "areaaggfile") == 0) {
     infile >> text >> ws;
-    handle.logFileMessage(LOGWARN, "Warning in stockpreyfullprinter - area aggreagtion file ignored");
+    handle.logMessage(LOGWARN, "Warning in stockpreyfullprinter - area aggreagtion file ignored");
     infile >> text >> ws;
   }
 
@@ -54,7 +54,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
   }
 
   if (precision < 0)
-    handle.logFileMessage(LOGFAIL, "Error in stockpreyfullprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "\nError in stockpreyfullprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -62,12 +62,12 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.logFileMessage(LOGFAIL, "Error in stockpreyfullprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "\nError in stockpreyfullprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.logFileMessage(LOGFAIL, "Error in stockpreyfullprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "\nError in stockpreyfullprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;

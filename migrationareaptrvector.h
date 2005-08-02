@@ -1,48 +1,46 @@
-#ifndef parametervector_h
-#define parametervector_h
+#ifndef migrationareaptrvector_h
+#define migrationareaptrvector_h
 
-#include "commentstream.h"
-#include "parameter.h"
-#include "gadget.h"
+class MigrationArea;
 
 /**
- * \class ParameterVector
- * \brief This class implements a dynamic vector of Parameter values
+ * \class MigrationAreaPtrVector
+ * \brief This class implements a dynamic vector of MigrationArea values
  */
-class ParameterVector {
+class MigrationAreaPtrVector {
 public:
   /**
-   * \brief This is the default ParameterVector constructor
+   * \brief This is the default MigrationAreaPtrVector constructor
    */
-  ParameterVector() { size = 0; v = 0; };
+  MigrationAreaPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the ParameterVector constructor for a specified size
+   * \brief This is the MigrationAreaPtrVector constructor for a specified size
    * \param sz is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  ParameterVector(int sz);
+  MigrationAreaPtrVector(int sz);
   /**
-   * \brief This is the ParameterVector constructor for a specified size with an initial value
+   * \brief This is the MigrationAreaPtrVector constructor for a specified size with an initial value
    * \param sz is the size of the vector to be created
    * \param initial is the initial value for all the entries of the vector
    */
-  ParameterVector(int sz, Parameter& initial);
+  MigrationAreaPtrVector(int sz, MigrationArea* initial);
   /**
-   * \brief This is the ParameterVector constructor that creates a copy of an existing ParameterVector
-   * \param initial is the ParameterVector to copy
+   * \brief This is the MigrationAreaPtrVector constructor that creates a copy of an existing MigrationAreaPtrVector
+   * \param initial is the MigrationAreaPtrVector to copy
    */
-  ParameterVector(const ParameterVector& initial);
+  MigrationAreaPtrVector(const MigrationAreaPtrVector& initial);
   /**
-   * \brief This is the ParameterVector destructor
+   * \brief This is the MigrationAreaPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~ParameterVector();
+  ~MigrationAreaPtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add is the number of new entries to the vector
    * \param value is the value that will be entered for the new entries
    */
-  void resize(int add, const Parameter& value);
+  void resize(int add, MigrationArea* value);
   /**
    * \brief This will add new empty entries to the vector
    * \param add is the number of new entries to the vector
@@ -61,29 +59,22 @@ public:
    */
   int Size() const { return size; };
   /**
-   * \brief This function will read a line of data from a CommentStream
-   * \param infile is the CommentStream to read the data from
-   * \return 1 if the read from file was successful, 0 otherwise
+   * \brief This will return the value of an element of the vector
+   * \param pos is the element of the vector to be returned
+   * \return the value of the specified element
    */
-  int readline(CommentStream& infile);
+  MigrationArea*& operator [] (int pos) { return v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  Parameter& operator [] (int pos) { return v[pos]; };
-  /**
-   * \brief This will return the value of an element of the vector
-   * \param pos is the element of the vector to be returned
-   * \return the value of the specified element
-   */
-  Parameter const& operator [] (int pos) const { return v[pos]; };
-  ParameterVector& operator = (const ParameterVector& pv);
+  MigrationArea* const& operator [] (int pos) const { return v[pos]; };
 protected:
   /**
-   * \brief This is the vector of Parameter values
+   * \brief This is the vector of MigrationArea values
    */
-  Parameter* v;
+  MigrationArea** v;
   /**
    * \brief This is the size of the vector
    */

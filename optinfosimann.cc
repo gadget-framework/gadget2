@@ -1,20 +1,17 @@
 #include "optinfo.h"
-#include "ecosystem.h"
+#include "errorhandler.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
-extern Ecosystem* EcoSystem;
-
-extern int simann(int maxeval, double cstep, double tempt, double vmlen, double rt,
-  int ns, int nt, double eps, double uratio, double lratio, int check);
 
 OptInfoSimann::OptInfoSimann()
   : OptSearch(), rt(0.85), simanneps(1e-4), ns(5), nt(2), t(100.0),
-    cs(2.0), vm(1.0), simanniter(2000), uratio(0.7), lratio(0.3), check(4) {
+    cs(2.0), vminit(1.0), simanniter(2000), uratio(0.7), lratio(0.3), check(4) {
   handle.logMessage(LOGMESSAGE, "\nInitialising Simulated Annealing optimisation algorithm");
 }
 
 void OptInfoSimann::read(CommentStream& infile, char* text) {
+  handle.logMessage(LOGMESSAGE, "Reading Simulated Annealing optimisation parameters");
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
     infile >> ws;
     if (strcasecmp(text, "simanniter") == 0) {
@@ -36,7 +33,7 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
       infile >> ns;
 
     } else if (strcasecmp(text, "vm") == 0) {
-      infile >> vm;
+      infile >> vminit;
 
     } else if (strcasecmp(text, "cstep") == 0) {
       infile >> cs;
@@ -82,9 +79,9 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of ns outside bounds", ns);
     ns = 5;
   }
-  if (vm < rathersmall) {
-    handle.logMessage(LOGINFO, "Warning in optinfofile - value of vm outside bounds", vm);
-    vm = 1.0;
+  if (vminit < rathersmall) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of vm outside bounds", vminit);
+    vminit = 1.0;
   }
   if (cs < rathersmall) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of cstep outside bounds", cs);
@@ -94,12 +91,4 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of simanneps outside bounds", simanneps);
     simanneps = 1e-4;
   }
-}
-
-void OptInfoSimann::OptimiseLikelihood() {
-  handle.logMessage(LOGINFO, "\nStarting Simulated Annealing optimisation algorithm\n");
-  int opt = simann(simanniter, cs, t, vm, rt, ns, nt, simanneps, uratio, lratio, check);
-  handle.logMessage(LOGINFO, "\nSimulated Annealing finished with a final likelihood score of", EcoSystem->getLikelihood());
-  handle.logMessage(LOGINFO, "after a total of", EcoSystem->getFuncEval(), "function evaluations at the point");
-  EcoSystem->writeOptValues();
 }

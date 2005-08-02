@@ -25,7 +25,7 @@ public:
    * \param keeper is the Keeper for the current model
    * \param ftype is the FleetType of the fleet
    */
-   Fleet(CommentStream& infile, const char* givenname, const AreaClass* const Area,
+  Fleet(CommentStream& infile, const char* givenname, const AreaClass* const Area,
      const TimeClass* const TimeInfo, Keeper* const keeper, FleetType ftype);
   /**
    * \brief This is the default Fleet destructor
@@ -128,11 +128,6 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void Migrate(const TimeClass* const TimeInfo) {};
-  /**
-   * \brief This function will calculate the migration of the model population for the model
-   * \param TimeInfo is the TimeClass for the current model
-   */
-  virtual void calcMigration(const TimeClass* const TimeInfo) {};
   /**
    * \brief This function will reset the model population
    * \param TimeInfo is the TimeClass for the current model

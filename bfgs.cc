@@ -1,9 +1,7 @@
-#include "optinfo.h"
 #include "errorhandler.h"
+#include "optinfo.h"
 #include "mathfunc.h"
 #include "doublematrix.h"
-#include "doublevector.h"
-#include "intvector.h"
 #include "ecosystem.h"
 #include "gadget.h"
 
@@ -11,21 +9,15 @@
 /* This means that the function has been replaced by a call to ecosystem */
 /* object, and we can use the vector objects that have been defined      */
 
-/* global ecosystem used to store whether the model converged */
 extern Ecosystem* EcoSystem;
-
-/* global errorhandler used to log messages */
 extern ErrorHandler handle;
 
-/* global variable, defined and initialised in gadget.cc and not modified here */
-extern int FuncEval;
-
 /* calculate the smallest eigenvalue of a matrix */
-double getSmallestEigenValue(DoubleMatrix M) {
+double OptInfoBFGS::getSmallestEigenValue(DoubleMatrix M) {
 
   double eigen, temp, phi, norm;
-  int    i, j, k;
-  int    nvars = M.Nrow();
+  int i, j, k;
+  int nvars = M.Nrow();
   DoubleMatrix L(nvars, nvars);
   DoubleVector xo(nvars, 1.0);
 
@@ -101,92 +93,39 @@ double getSmallestEigenValue(DoubleMatrix M) {
   return 1.0 / eigen;
 }
 
-/* calculate the gradient of a function at a point */
-void gradient(DoubleVector& point, double pointvalue, DoubleVector& diaghess,
-  DoubleVector& grad, int diffgrad, double gradacc, double gradstep) {
+/* calculate the gradient of a function at a given point                    */
+/* based on the forward difference gradient approximation (A5.6.3 FDGRAD)   */
+/* Numerical Methods for Unconstrained Optimization and Nonlinear Equations */
+/* by J E Dennis and Robert B Schnabel, published by SIAM, 1996             */
+void OptInfoBFGS::gradient(DoubleVector& point, double pointvalue, DoubleVector& grad) {
 
-  double tmpacc;
-  int    i, j;
-  int    nvars = point.Size();
+  double ftmp, tmpacc;
+  int i, j;
+  int nvars = point.Size();
+  DoubleVector gtmp(point);
 
-  if (diffgrad < 1) {
-    DoubleVector gtmp(nvars);
-    double ftmp;
-    tmpacc = 1.0 / gradacc;
-    for (i = 0; i < nvars; i++) {
-      for (j = 0; j < nvars; j++)
-        gtmp[j] = point[j];
-      gtmp[i] += gradacc;
-      ftmp = EcoSystem->SimulateAndUpdate(gtmp);
-      grad[i] = (ftmp - pointvalue) * tmpacc;
-      diaghess[i] = 1.0;
-    }
+  for (i = 0; i < nvars; i++) {
+    for (j = 0; j < nvars; j++)
+      gtmp[j] = point[j];
 
-  } else if (diffgrad == 1) {
-    DoubleVector gtmpp(nvars);
-    DoubleVector gtmpm(nvars);
-    double ftmpp, ftmpm;
-    tmpacc = 1.0 / (2.0 * gradacc);
-    for (i = 0; i < nvars; i++) {
-      for (j = 0; j < nvars; j++) {
-        gtmpp[j] = point[j];
-        gtmpm[j] = point[j];
-      }
-      gtmpp[i] += gradacc;
-      gtmpm[i] -= gradacc;
-      ftmpp = EcoSystem->SimulateAndUpdate(gtmpp);
-      ftmpm = EcoSystem->SimulateAndUpdate(gtmpm);
-      grad[i] = (ftmpp - ftmpm) * tmpacc;
-      if (abs((ftmpm - ftmpp) / pointvalue) < rathersmall) {
-        gradacc = min(0.01, gradacc / gradstep);
-        handle.logMessage(LOGINFO, "Warning in BFGS - possible roundoff errors in gradient");
-      }
-      if ((ftmpm > pointvalue) && (ftmpp > pointvalue))
-        diffgrad++;
-      diaghess[i] = (ftmpp - 2.0 * pointvalue + ftmpm) / (gradacc * gradacc);
-    }
+    //JMB - the scaled parameter values should aways be positive ...
+    if (point[i] < 0)
+      handle.logMessage(LOGINFO, "Error in BFGS - negative parameter when calculating the gradient", point[i]);
 
-  } else {
-    DoubleVector gtmpp1(nvars);
-    DoubleVector gtmpm1(nvars);
-    DoubleVector gtmpp2(nvars);
-    DoubleVector gtmpm2(nvars);
-    double ftmpp1, ftmpm1, ftmpp2, ftmpm2;
-    tmpacc = 1.0 / (12.0 * gradacc);
-    for (i = 0; i < nvars; i++) {
-      for (j = 0; j < nvars; j++) {
-        gtmpp1[j] = point[j];
-        gtmpp2[j] = point[j];
-        gtmpm1[j] = point[j];
-        gtmpm2[j] = point[j];
-      }
-      gtmpp1[i] += gradacc;
-      gtmpp2[i] += 2.0 * gradacc;
-      gtmpm1[i] -= gradacc;
-      gtmpm2[i] -= 2.0 * gradacc;
-      ftmpp1 = EcoSystem->SimulateAndUpdate(gtmpp1);
-      ftmpp2 = EcoSystem->SimulateAndUpdate(gtmpp2);
-      ftmpm1 = EcoSystem->SimulateAndUpdate(gtmpm1);
-      ftmpm2 = EcoSystem->SimulateAndUpdate(gtmpm2);
-      grad[i] = (8.0 * ftmpp1 - ftmpp2 - 8.0 * ftmpm1 + ftmpm2) * tmpacc;
-      if ((abs(ftmpm2 - ftmpp2) / pointvalue) < rathersmall) {
-        gradacc = min(0.01, gradacc / gradstep);
-        handle.logMessage(LOGINFO, "Warning in BFGS - possible roundoff errors in gradient");
-      }
-      diaghess[i] = (-ftmpp2 + 16.0 * ftmpp1 - 30.0 * pointvalue + 16.0 * ftmpm1 - ftmpm2 ) * 12.0 * tmpacc * tmpacc;
-    }
+    tmpacc = gradacc * max(point[i], 1.0);
+    gtmp[i] += tmpacc;
+    ftmp = EcoSystem->SimulateAndUpdate(gtmp);
+    grad[i] = (ftmp - pointvalue) / tmpacc;
   }
 }
 
-int bfgs(int maxevl, double epsilon, double beta, double sigma, double step,
-  double gradacc, double gradstep, double errortol, int diffgrad, int scale) {
+void OptInfoBFGS::OptimiseLikelihood() {
 
-  double hy, yBy, temphy, tempyby;
-  double normgrad, normdeltax;
+  double hy, yBy, temphy, tempyby, normgrad;
   double alpha, searchgrad, newf, tmpf, betan;
-  int    i, j, check, offset, armijoproblem, armijoquit;
+  int i, j, check, offset, armijo, iters;
 
-  int    nvars = EcoSystem->numOptVariables();
+  int nvars = EcoSystem->numOptVariables();
   DoubleVector x(nvars);
   DoubleVector trialx(nvars);
   DoubleVector bestx(nvars);
@@ -196,12 +135,10 @@ int bfgs(int maxevl, double epsilon, double beta, double sigma, double step,
   DoubleVector By(nvars, 0.0);
   DoubleVector grad(nvars, 0.0);
   DoubleVector oldgrad(nvars, 0.0);
-  DoubleVector diaghess(nvars, 0.0);
   DoubleVector search(nvars, 0.0);
   DoubleMatrix invhess(nvars, nvars, 0.0);
 
-  if (scale == 1)
-    EcoSystem->scaleVariables();
+  EcoSystem->scaleVariables();  //JMB - need to scale variables
   EcoSystem->getOptScaledValues(x);
   EcoSystem->getOptInitialValues(init);
 
@@ -211,66 +148,75 @@ int bfgs(int maxevl, double epsilon, double beta, double sigma, double step,
   }
 
   newf = EcoSystem->SimulateAndUpdate(trialx);
-  gradient(trialx, newf, diaghess, grad, diffgrad, gradacc, gradstep);
-  offset = FuncEval;
+  if (newf != newf) { // check for NaN
+    handle.logMessage(LOGINFO, "Error starting BFGS optimisation with f(x) = infinity");
+    return;
+  }
 
+  this->gradient(trialx, newf, grad);
+  offset = EcoSystem->getFuncEval();  // number of function evaluations done before loop
   for (i = 0; i < nvars; i++) {
     oldgrad[i] = grad[i];
-    for (j = 0; j < nvars; j++)
-      invhess[i][j] = 0.0;
-    invhess[i][i] = diaghess[i];
+    invhess[i][i] = 1.0;
   }
 
   check = 1;
-  armijoproblem = 0;
   alpha = 1.0;
-
-  if (newf != newf) //check for NaN
-    handle.logMessage(LOGFAIL, "Error starting BFGS optimisation with f(x) = infinity");
-
   while (1) {
+    iters = EcoSystem->getFuncEval() - offset;
     if (isZero(newf)) {
-      handle.logMessage(LOGINFO, "Error in BFGS optimisation after", (FuncEval - offset), "function evaluations, f(x) = 0");
-      return 0;
+      handle.logMessage(LOGINFO, "Error in BFGS optimisation after", iters, "function evaluations, f(x) = 0");
+      return;
     }
 
-    //If too many function evaluations occur, terminate the algorithm
-    if ((FuncEval - offset) > maxevl) {
+    // terminate the algorithm if too many function evaluations occur
+    if (iters > bfgsiter) {
       handle.logMessage(LOGINFO, "\nStopping BFGS optimisation algorithm\n");
-      handle.logMessage(LOGINFO, "The optimisation stopped after", (FuncEval - offset), "function evaluations");
+      handle.logMessage(LOGINFO, "The optimisation stopped after", iters, "function evaluations");
       handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of function evaluations");
       handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
 
       newf = EcoSystem->SimulateAndUpdate(x);
-      EcoSystem->setFuncEvalBFGS(FuncEval - offset);
+      EcoSystem->setFuncEvalBFGS(iters++);
       EcoSystem->setLikelihoodBFGS(newf);
       for (i = 0; i < nvars; i++)
         x[i] *= init[i];
       EcoSystem->storeVariables(newf, x);
-      tmpf = getSmallestEigenValue(invhess);
+      tmpf = this->getSmallestEigenValue(invhess);
       if (!isZero(tmpf))
         handle.logMessage(LOGINFO, "The smallest eigenvalue of the inverse Hessian matrix is", tmpf);
-      return 0;
+      return;
     }
 
-    if (check == 0 || alpha < 0.0) {
-      //JMB - dont print warning on the first loop ...
-      if ((FuncEval - offset) > 0)
-        handle.logMessage(LOGINFO, "Warning in BFGS - resetting search algorithm after", (FuncEval - offset), "function evaluations");
+    // terminate the algorithm if the gradient accuracy required has got too small
+    if (gradacc < rathersmall) {
+      handle.logMessage(LOGINFO, "\nStopping BFGS optimisation algorithm\n");
+      handle.logMessage(LOGINFO, "The optimisation stopped after", iters, "function evaluations");
+      handle.logMessage(LOGINFO, "The optimisation stopped because the accuracy required for the gradient");
+      handle.logMessage(LOGINFO, "calculation is too small and NOT because an optimum was found for this run");
+
+      newf = EcoSystem->SimulateAndUpdate(x);
+      EcoSystem->setFuncEvalBFGS(iters++);
+      EcoSystem->setLikelihoodBFGS(newf);
+      for (i = 0; i < nvars; i++)
+        x[i] *= init[i];
+      EcoSystem->storeVariables(newf, x);
+      tmpf = this->getSmallestEigenValue(invhess);
+      if (!isZero(tmpf))
+        handle.logMessage(LOGINFO, "The smallest eigenvalue of the inverse Hessian matrix is", tmpf);
+      return;
+    }
+
+    if (check == 0 || alpha < verysmall) {
+      check++;
+      //JMB - make the step size when calculating the gradient smaller
+      gradacc *= gradstep;
+      handle.logMessage(LOGINFO, "Warning in BFGS - resetting search algorithm after", iters, "function evaluations");
 
       for (i = 0; i < nvars; i++) {
         for (j = 0; j < nvars; j++)
           invhess[i][j] = 0.0;
-        invhess[i][i] = diaghess[i];
-      }
-
-      check++;
-      armijoproblem = 0;
-      //JMB - make the step size when calculating the gradient smaller
-      gradacc *= gradstep;
-      if (gradacc < errortol) {
-        gradacc /= gradstep;
-        diffgrad++;
+        invhess[i][i] = 1.0;
       }
     }
 
@@ -286,50 +232,41 @@ int bfgs(int maxevl, double epsilon, double beta, double sigma, double step,
       trialx[i] = x[i];
 
     searchgrad = 0.0;
-    alpha = -1.0;
     for (i = 0; i < nvars; i++)
       searchgrad += grad[i] * search[i];
     searchgrad *= sigma;
 
+    armijo = 0;
+    alpha = -1.0;
     if (searchgrad < 0.0) {
       betan = step;
-      armijoquit = 0;
-      while ((armijoquit == 0) && (betan > verysmall)) {
+      while ((armijo == 0) && (betan > rathersmall)) {
         for (i = 0; i < nvars; i++)
-          trialx[i] = x[i] + betan * search[i];
+          trialx[i] = x[i] + (betan * search[i]);
 
         tmpf = EcoSystem->SimulateAndUpdate(trialx);
-        if (((newf - tmpf) >= (-betan * searchgrad)) && (newf > tmpf))
-          armijoquit = 1;
+        if ((tmpf == tmpf) && (newf > tmpf) && ((newf - tmpf) > (-betan * searchgrad)))
+          armijo = 1;
         else
           betan *= beta;
       }
 
-      if ((armijoquit) && (tmpf == tmpf)) {
+      if (armijo == 1) {
         newf = tmpf;
-        gradient(trialx, tmpf, diaghess, grad, diffgrad, gradacc, gradstep);
+        this->gradient(trialx, tmpf, grad);
         alpha = betan;
-      } else
-        alpha = 0.0;
+      }
     }
 
-    if ((isZero(alpha)) || (searchgrad > 0.0) || (isZero(searchgrad))) {
-      diffgrad++;
-      gradient(x, newf, diaghess, grad, diffgrad, gradacc, gradstep);
-      armijoproblem++;
-      if (armijoproblem == 6)
-        check = 0;
+handle.logMessage(LOGDEBUG, "BFGS - alpha", alpha);
+    if (armijo == 0) {
+      this->gradient(x, newf, grad);
       continue;
     }
-
-    if (alpha < verysmall)
-      continue;
 
     normgrad = 0.0;
-    normdeltax = 0.0;
     hy = 0.0;
     yBy = 0.0;
-
     for (i = 0; i < nvars; i++) {
       h[i] = alpha * search[i];
       x[i] += h[i];
@@ -337,16 +274,8 @@ int bfgs(int maxevl, double epsilon, double beta, double sigma, double step,
       oldgrad[i] = grad[i];
       hy += h[i] * y[i];
       normgrad += grad[i] * grad[i];
-      normdeltax += h[i] * h[i];
     }
     normgrad = sqrt(normgrad);
-    normdeltax = sqrt(normdeltax);
-
-    if (normdeltax < errortol) {
-      handle.logMessage(LOGINFO, "Warning in BFGS - search failed because normed deltax value too small");
-      check = 0;
-      continue;
-    }
 
     for (i = 0; i < nvars; i++) {
       By[i] = 0.0;
@@ -370,24 +299,27 @@ int bfgs(int maxevl, double epsilon, double beta, double sigma, double step,
     for (i = 0; i < nvars; i++)
       bestx[i] = x[i] * init[i];
 
+    iters = EcoSystem->getFuncEval() - offset;
     EcoSystem->storeVariables(newf, bestx);
-    handle.logMessage(LOGINFO, "\nNew optimum found after", (FuncEval - offset), "function evaluations");
+    handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
     handle.logMessage(LOGINFO, "The likelihood score is", newf, "at the point");
     EcoSystem->writeBestValues();
 
-    //If the algorithm has met the convergence criteria, terminate the algorithm
-    if (normgrad / (1.0 + abs(newf)) < epsilon) {
+handle.logMessage(LOGDEBUG, "BFGS - norm gradient", normgrad);
+handle.logMessage(LOGDEBUG, "BFGS - check convergnce", normgrad / (1.0 + newf));
+    // terminate the algorithm if the convergence criteria has been met
+    if (normgrad / (1.0 + newf) < bfgseps) {
       handle.logMessage(LOGINFO, "\nStopping BFGS optimisation algorithm\n");
-      handle.logMessage(LOGINFO, "The optimisation stopped after", (FuncEval - offset), "function evaluations");
+      handle.logMessage(LOGINFO, "The optimisation stopped after", iters, "function evaluations");
       handle.logMessage(LOGINFO, "The optimisation stopped because an optimum was found for this run");
 
       EcoSystem->setConvergeBFGS(1);
-      EcoSystem->setFuncEvalBFGS(FuncEval - offset);
+      EcoSystem->setFuncEvalBFGS(iters);
       EcoSystem->setLikelihoodBFGS(newf);
-      tmpf = getSmallestEigenValue(invhess);
+      tmpf = this->getSmallestEigenValue(invhess);
       if (!isZero(tmpf))
         handle.logMessage(LOGINFO, "The smallest eigenvalue of the inverse Hessian matrix is", tmpf);
-      return 1;
+      return;
     }
   }
 }

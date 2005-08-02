@@ -49,9 +49,9 @@ void Ecosystem::readFleet(CommentStream& infile) {
     else if (strcasecmp(text, "numberfleet") == 0)
       fleetvec.resize(1, new Fleet(infile, value, Area, TimeInfo, keeper, NUMBERFLEET));
     else if (strcasecmp(text, "mortalityfleet") == 0)
-      handle.logFileMessage(LOGFAIL, "The mortalityfleet fleet type is no longer supported");
+      handle.logFileMessage(LOGFAIL, "\nThe mortalityfleet fleet type is no longer supported");
     else
-      handle.logFileMessage(LOGFAIL, "Error in fleet file - unrecognised fleet", text);
+      handle.logFileMessage(LOGFAIL, "unrecognised fleet class", text);
 
     handle.logMessage(LOGMESSAGE, "Read fleet OK - created fleet", value);
   }
@@ -160,20 +160,20 @@ void Ecosystem::readPrinters(CommentStream& infile) {
       printvec.resize(1, new SummaryPrinter(infile));
 
     else if (strcasecmp(type, "formatedstockprinter") == 0)
-      handle.logFileMessage(LOGFAIL, "The formatedstockprinter printer class is no longer supported");
+      handle.logFileMessage(LOGFAIL, "\nThe formatedstockprinter printer class is no longer supported");
     else if (strcasecmp(type, "formatedchatprinter") == 0)
-      handle.logFileMessage(LOGFAIL, "The formatedchatprinter printer class is no longer supported");
+      handle.logFileMessage(LOGFAIL, "\nThe formatedchatprinter printer class is no longer supported");
     else if (strcasecmp(type, "formatedpreyprinter") == 0)
-      handle.logFileMessage(LOGFAIL, "The formatedpreyprinter printer class is no longer supported");
+      handle.logFileMessage(LOGFAIL, "\nThe formatedpreyprinter printer class is no longer supported");
     else if (strcasecmp(type, "mortprinter") == 0)
-      handle.logFileMessage(LOGFAIL, "The mortprinter printer class is no longer supported");
+      handle.logFileMessage(LOGFAIL, "\nThe mortprinter printer class is no longer supported");
     else if (strcasecmp(type, "biomassprinter") == 0)
-      handle.logFileMessage(LOGFAIL, "The biomassprinter printer class is no longer supported");
+      handle.logFileMessage(LOGFAIL, "\nThe biomassprinter printer class is no longer supported");
     else if (strcasecmp(type, "formatedcatchprinter") == 0)
-      handle.logFileMessage(LOGFAIL, "The formatedcatchprinter printer class is no longer supported");
+      handle.logFileMessage(LOGFAIL, "\nThe formatedcatchprinter printer class is no longer supported");
 
     else
-      handle.logFileMessage(LOGFAIL, "Error in printer file - unrecognised printer", type);
+      handle.logFileMessage(LOGFAIL, "unrecognised printer class", type);
 
     handle.logMessage(LOGMESSAGE, "Read printer OK - created printer class", type);
   }
@@ -259,16 +259,16 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       likevec.resize(1, new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name));
 
     } else if (strcasecmp(type, "predatorindices") == 0) {
-      handle.logFileMessage(LOGFAIL, "The predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");
+      handle.logFileMessage(LOGFAIL, "\nThe predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");
 
     } else if (strcasecmp(type, "logcatch") == 0) {
-      handle.logFileMessage(LOGFAIL, "The logcatch likelihood component is no longer supported\nUse the log function from the catchdistribution likelihood component instead");
+      handle.logFileMessage(LOGFAIL, "\nThe logcatch likelihood component is no longer supported\nUse the log function from the catchdistribution likelihood component instead");
 
     } else if (strcasecmp(type, "logsurveyindices") == 0) {
-      handle.logFileMessage(LOGFAIL, "The logsurveyindices likelihood component is no longer supported\nUse the log function from the surveyindices likelihood component instead");
+      handle.logFileMessage(LOGFAIL, "\nThe logsurveyindices likelihood component is no longer supported\nUse the log function from the surveyindices likelihood component instead");
 
     } else {
-      handle.logFileMessage(LOGFAIL, "Error in likelihood file - unrecognised likelihood", type);
+      handle.logFileMessage(LOGFAIL, "unrecognised likelihood class", type);
     }
 
     handle.logMessage(LOGMESSAGE, "Read likelihood OK - created likelihood component", name);
@@ -339,7 +339,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
   infile >> text >> ws;
 
   if (strcasecmp(text, "mortalitymodel") == 0)
-    handle.logFileMessage(LOGFAIL, "Fleksibest-style mortality models are no longer supported\nGadget version 2.0.07 was the last version to allow this functionality");
+    handle.logFileMessage(LOGFAIL, "\nFleksibest-style mortality models are no longer supported\nGadget version 2.0.07 was the last version to allow this functionality");
 
   if (!(strcasecmp(text, "stockfiles") == 0))
     handle.logFileUnexpected(LOGFAIL, "stockfiles", text);

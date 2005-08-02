@@ -67,7 +67,7 @@ VECTORS = addresskeepermatrix.o addresskeepervector.o intmatrix.o intvector.o \
 	formulamatrix.o formulavector.o charptrmatrix.o charptrvector.o \
 	timevariablevector.o stockptrvector.o agebandmatrixratioptrvector.o \
 	tagptrvector.o bandmatrixptrvector.o bandmatrixptrmatrix.o \
-	variableinfoptrvector.o migvariableptrvector.o
+        rectangleptrvector.o migrationareaptrvector.o
 
 GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.o \
 	abstrpredstdinfo.o abstrpreystdinfo.o catchdistribution.o errorhandler.o \
@@ -88,14 +88,14 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 	loglinearregression.o time.o stockprey.o maininfo.o stockpreyfullprinter.o \
 	stockpreystdinfo.o stockpreystdinfobylength.o stockprinter.o readword.o \
 	stockstdprinter.o maturity.o suitfunc.o suits.o stomachcontent.o runid.o \
-	migration.o variableinfo.o binarytree.o vectorusingkeeper.o recaggregator.o \
-	surveyindices.o migrationpenalty.o recapture.o stock.o readaggregation.o \
-	migvariables.o multinomial.o totalpredator.o understocking.o recstatistics.o \
-	transition.o otherfood.o selectfunc.o optinfo.o tags.o likelihoodprinter.o \
-	catchinkilos.o interruptinterface.o interrupthandler.o naturalm.o renewal.o \
-	taggrow.o initialinputfile.o optinfohooke.o optinfobfgs.o optinfosimann.o \
-	popratio.o popinfo.o popinfomemberfunctions.o agebandmatrixratio.o \
-	numberpredator.o summaryprinter.o agebandmatrixratiomemberfunctions.o
+	migration.o recaggregator.o surveyindices.o migrationpenalty.o recapture.o \
+        stock.o readaggregation.o multinomial.o totalpredator.o understocking.o \
+        recstatistics.o transition.o otherfood.o selectfunc.o optinfo.o naturalm.o \
+        likelihoodprinter.o catchinkilos.o interruptinterface.o interrupthandler.o \
+        tags.o renewal.o taggrow.o initialinputfile.o optinfohooke.o optinfobfgs.o \
+        optinfosimann.o popratio.o popinfo.o popinfomemberfunctions.o summaryprinter.o \
+        numberpredator.o agebandmatrixratio.o agebandmatrixratiomemberfunctions.o \
+        rectangle.o migrationarea.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 

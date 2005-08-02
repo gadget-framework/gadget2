@@ -136,12 +136,12 @@ protected:
    */
   DoubleMatrix calcWeightGrowth;
   /**
-   * \brief This is the DoubleMatrix used to store the calculated increase in length for each length group on the current timestep
+   * \brief This is the DoubleMatrixPtrVector used to store the calculated increase in length for each length group on the current timestep
    * \note the indices for this object are [area][change in length][stock length]
    */
   DoubleMatrixPtrVector lgrowth;
   /**
-   * \brief This is the DoubleMatrix used to store the calculated increase in weight for each length group on the current timestep
+   * \brief This is the DoubleMatrixPtrVector used to store the calculated increase in weight for each length group on the current timestep
    * \note the indices for this object are [area][change in length][stock length]
    */
   DoubleMatrixPtrVector wgrowth;

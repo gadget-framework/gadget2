@@ -10,6 +10,12 @@ Formula::Formula() {
   functiontype = NONE;
 }
 
+Formula::Formula(double initial) {
+  value = initial;
+  type = CONSTANT;
+  functiontype = NONE;
+}
+
 Formula::~Formula() {
   unsigned int i;
   for (i = 0; i < argList.size(); i++)
@@ -216,7 +222,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     else if (strcasecmp(text,"sqrt") == 0)
       F.functiontype = SQRT;
     else {
-      handle.logFileMessage(LOGFAIL, "Error in formula - unrecognised function name", text);
+      handle.logFileMessage(LOGFAIL, "unrecognised formula function name", text);
       return infile;
     }
 
@@ -228,7 +234,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
       infile >> ws;
       if (infile.eof()) {
         // Something has gone wrong, no closing bracket
-        handle.logFileMessage(LOGFAIL, "Error in formula - failed to read parameter data");
+        handle.logFileMessage(LOGFAIL, "failed to read formula data");
         return infile;
       }
       c = infile.peek();
@@ -245,7 +251,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     infile.get(c);
     infile >> F.name;
     if (strlen(F.name.getName()) <= 0)
-      handle.logMessage(LOGFAIL, "Error in formula - failed to read parameter name");
+      handle.logFileMessage(LOGFAIL, "failed to read parameter name");
     return infile;
   }
 
@@ -273,11 +279,11 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     infile.get(c);
     infile >> F.name;
     if (strlen(F.name.getName()) <= 0)
-      handle.logMessage(LOGFAIL, "Error in formula - failed to read parameter name");
+      handle.logFileMessage(LOGFAIL, "failed to read parameter name");
     return infile;
   }
 
-  handle.logFileMessage(LOGFAIL, "Error in formula - failed to read parameter data");
+  handle.logFileMessage(LOGFAIL, "failed to read formula data");
   return infile;
 }
 
@@ -356,7 +362,7 @@ void Formula::Delete(Keeper* keeper) const {
 Formula& Formula::operator = (const Formula& F) {
   type = F.type;
   functiontype = F.functiontype;
-  switch(type) {
+  switch (type) {
     case CONSTANT:
       value = F.value;
       break;

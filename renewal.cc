@@ -56,8 +56,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
     subfile.open(refWeightFile, ios::in);
     handle.checkIfFailure(subfile, refWeightFile);
     handle.Open(refWeightFile);
-    if (!readRefWeights(subcomment, tmpRefW))
-      handle.logFileMessage(LOGFAIL, "Wrong format for reference weights");
+    readRefWeights(subcomment, tmpRefW);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -65,7 +64,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
     //Interpolate the reference weights. First there are some error checks.
     if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
         LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-      handle.logFileMessage(LOGFAIL, "Lengths for reference weights must span the range of initial condition lengths");
+      handle.logFileMessage(LOGFAIL, "lengths for reference weights must span the range of initial condition lengths");
 
     //Aggregate the reference weight data to be the same format
     double ratio;
@@ -109,7 +108,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
     subfile.clear();
 
   } else
-    handle.logFileMessage(LOGFAIL, "Error in renewal - unrecognised data format", text);
+    handle.logFileMessage(LOGFAIL, "unrecognised renewal data format", text);
 
   keeper->clearLast();
 }
@@ -120,42 +119,30 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
   int count = 0;
   int year, step, area, age;
   int keepdata;
-
-  //Find start of data in datafile
-  infile >> ws;
-  if (infile.eof()) {
-    handle.logFileMessage(LOGFAIL, "Error in renewal - renewal data file empty");
-    return;
-  }
-
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
+  char c;
 
   //We now expect to find the renewal data in the following format
   //year, step, area, age, number, mean, sdev, alpha, beta
+  infile >> ws;
   if (countColumns(infile) != 9)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 9");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 9");
 
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> age >> ws;
 
     if (!(TimeInfo->isWithinPeriod(year, step))) {
-      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside time range");
+      handle.logFileMessage(LOGWARN, "ignoring data found outside time range");
       keepdata = 1;
     }
 
     if (!(this->isInArea(Area->InnerArea(area)))) {
-      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside area range");
+      handle.logFileMessage(LOGWARN, "ignoring data found outside area range");
       keepdata = 1;
     }
 
     if ((age < minage) || (age > maxage)) {
-      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside age range");
+      handle.logFileMessage(LOGWARN, "ignoring data found outside age range");
       keepdata = 1;
     }
 
@@ -206,42 +193,30 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
   int count = 0;
   int year, step, area, age;
   int keepdata;
-
-  //Find start of data in datafile
-  infile >> ws;
-  if (infile.eof()) {
-    handle.logFileMessage(LOGFAIL, "Error in renewal - renewal data file empty");
-    return;
-  }
-
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
+  char c;
 
   //We now expect to find the renewal data in the following format
   //year, step, area, age, number, mean, sdev, cond
+  infile >> ws;
   if (countColumns(infile) != 8)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 8");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 8");
 
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> age >> ws;
 
     if (!(TimeInfo->isWithinPeriod(year, step))) {
-      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside time range");
+      handle.logFileMessage(LOGWARN, "ignoring data found outside time range");
       keepdata = 1;
     }
 
     if (!(this->isInArea(Area->InnerArea(area)))) {
-      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside area range");
+      handle.logFileMessage(LOGWARN, "ignoring data found outside area range");
       keepdata = 1;
     }
 
     if ((age < minage) || (age > maxage)) {
-      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside age range");
+      handle.logFileMessage(LOGWARN, "ignoring data found outside age range");
       keepdata = 1;
     }
 
@@ -289,45 +264,32 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
   int count = 0;
   int i, year, step, area, age;
   double length;
-  Formula tempF;   //value of tempF is initiated to 0.0
   int nolengr = LgrpDiv->numLengthGroups();
   int keepdata, id, lengthid;
-
-  //Find start of data in datafile
-  infile >> ws;
-  if (infile.eof()) {
-    handle.logFileMessage(LOGFAIL, "Error in renewal - renewal data file empty");
-    return;
-  }
-
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
+  char c;
 
   //We now expect to find the renewal data in the following format
   //year, step, area, age, length, number, mean weight
+  infile >> ws;
   if (countColumns(infile) != 7)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 7");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
 
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> age >> length >> ws;
 
     if (!(TimeInfo->isWithinPeriod(year, step))) {
-      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside time range");
+      handle.logFileMessage(LOGWARN, "ignoring data found outside time range");
       keepdata = 1;
     }
 
     if (!(this->isInArea(Area->InnerArea(area)))) {
-      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside area range");
+      handle.logFileMessage(LOGWARN, "ignoring data found outside area range");
       keepdata = 1;
     }
 
     if ((age < minage) || (age > maxage)) {
-      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside age range");
+      handle.logFileMessage(LOGWARN, "ignoring data found outside age range");
       keepdata = 1;
     }
 
@@ -337,7 +299,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
         lengthid = i;
 
     if (lengthid == -1) {
-      handle.logFileMessage(LOGWARN, "Warning in renewal - ignoring data found outside length range");
+      handle.logFileMessage(LOGWARN, "ignoring data found outside length range");
       keepdata = 1;
     }
 
@@ -359,7 +321,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
 
         PopInfoIndexVector poptmp(nolengr, 0);
         renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
-        renewalNumber.resize(1, new FormulaMatrix(maxage - minage + 1, nolengr, tempF));
+        renewalNumber.resize(1, new FormulaMatrix(maxage - minage + 1, nolengr, 0.0));
       }
 
       renewalDistribution[id][age][lengthid].N = 0.0;

@@ -53,18 +53,18 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     functionnumber = 5;
 
     readWordAndVariable(infile, "lag", lag);
-    readWordAndFormula(infile, "sigma", sigma);
+    readWordAndVariable(infile, "sigma", sigma);
     sigma.Inform(keeper);
 
     params.resize(lag, keeper);
     for (i = 0; i < lag; i++)
-      readWordAndFormula(infile, "param", params[i]);
+      readWordAndVariable(infile, "param", params[i]);
     params.Inform(keeper);
 
   } else if (strcasecmp(functionname, "mvlogistic") == 0) {
     functionnumber = 6;
 
-    readWordAndFormula(infile, "sigma", sigma);
+    readWordAndVariable(infile, "sigma", sigma);
     sigma.Inform(keeper);
 
   } else if (strcasecmp(functionname, "log") == 0) {
@@ -72,7 +72,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     functionnumber = 7;
 
   } else
-    handle.logFileMessage(LOGFAIL, "Error in catchdistribution - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "\nError in catchdistribution - unrecognised function", functionname);
 
   infile >> ws;
   char c = infile.peek();
@@ -92,7 +92,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     c = infile.peek();
 
     if (yearly != 0 && yearly != 1)
-      handle.logFileMessage(LOGFAIL, "Error in catchdistribution - aggregationlevel must be 0 or 1");
+      handle.logFileMessage(LOGFAIL, "\nError in catchdistribution - aggregationlevel must be 0 or 1");
   }
 
   //JMB - changed to make the reading of overconsumption optional
@@ -104,7 +104,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     overconsumption = 0;
 
   if (overconsumption != 0 && overconsumption != 1)
-    handle.logFileMessage(LOGFAIL, "Error in catchdistribution - overconsumption must be 0 or 1");
+    handle.logFileMessage(LOGFAIL, "\nError in catchdistribution - overconsumption must be 0 or 1");
 
   //JMB - changed to make the reading of minimum probability optional
   if ((c == 'm') || (c == 'M'))
@@ -115,7 +115,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     epsilon = 10.0;
 
   if (epsilon < verysmall) {
-    handle.logFileMessage(LOGWARN, "Epsilon should be a positive integer - set to default value 10");
+    handle.logFileMessage(LOGWARN, "epsilon should be a positive integer - set to default value 10");
     epsilon = 10.0;
   }
 
@@ -168,7 +168,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     infile >> text >> ws;
   }
   if (fleetnames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in catchdistribution - failed to read fleets");
+    handle.logFileMessage(LOGFAIL, "\nError in catchdistribution - failed to read fleets");
   handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
@@ -183,7 +183,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     infile >> text;
   }
   if (stocknames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in catchdistribution - failed to read stocks");
+    handle.logFileMessage(LOGFAIL, "\nError in catchdistribution - failed to read stocks");
   handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
@@ -212,7 +212,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     case 5:
     case 6:
       if (yearly == 1)
-        handle.logFileMessage(LOGWARN, "Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
+        handle.logMessage(LOGWARN, "Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
       break;
     default:
       handle.logMessage(LOGWARN, "Warning in catchdistribution - unrecognised function", functionname);
@@ -233,18 +233,10 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
   int keepdata, timeid, ageid, areaid, lenid;
   int count = 0;
 
-  //Find start of distribution data in datafile
-  infile >> ws;
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
-
   //Check the number of columns in the inputfile
+  infile >> ws;
   if (countColumns(infile) != 6)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;
@@ -840,7 +832,7 @@ void CatchDistribution::calcCorrelation() {
   DoubleMatrix correlation(p, p, 0.0);
 
   for (i = 0; i < lag; i++)
-    if (abs(params[i] - 1.0) >= 1.0)
+    if (absolute(params[i] - 1.0) > 1.0)
       illegal = 1;
 
   if (illegal == 0) {

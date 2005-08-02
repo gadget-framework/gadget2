@@ -72,10 +72,9 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
   CommentStream subdata(datafile);
 
   int i;
-  Formula tempF;   //value of tempF is initiated to 0.0
   for (i = 0; i < Areas.Size(); i++) {
-    lgrowth[i] = new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), tempF);
-    wgrowth[i] = new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), tempF);
+    lgrowth[i] = new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0);
+    wgrowth[i] = new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0);
   }
 
   keeper->addString("growthcalcB");
@@ -84,7 +83,7 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
   datafile.open(datafilename, ios::in);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  i = readGrowthAmounts(subdata, TimeInfo, Area, lgrowth, lenindex, Areas);
+  readGrowthAmounts(subdata, TimeInfo, Area, lgrowth, lenindex, Areas);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -93,7 +92,7 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
   datafile.open(datafilename, ios::in);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
-  i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, Areas);
+  readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, Areas);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -158,17 +157,13 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
 
   //read information on reference weights.
   keeper->addString("referenceweights");
-  //JMB - changed since filename is passed as refWeight
   ifstream subfile;
   subfile.open(refWeightFile, ios::in);
   handle.checkIfFailure(subfile, refWeightFile);
   handle.Open(refWeightFile);
   CommentStream subcomment(subfile);
-
-  //read information on length increase.
   DoubleMatrix tmpRefW;
-  if (!readRefWeights(subcomment, tmpRefW))
-    handle.logFileMessage(LOGFAIL, "Wrong format for reference weights");
+  readRefWeights(subcomment, tmpRefW);
   handle.Close();
   subfile.close();
   subfile.clear();
@@ -176,7 +171,7 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
   //Interpolate the reference weights. First there are some error checks.
   if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
       LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-    handle.logFileMessage(LOGFAIL, "Lengths for reference weights must span the range of growth lengths");
+    handle.logFileMessage(LOGFAIL, "lengths for reference weights must span the range of growth lengths");
 
   double ratio;
   int pos = 0;
@@ -278,17 +273,13 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
 
   //read information on reference weights.
   keeper->addString("referenceweights");
-  //JMB - changed since filename is passed as refWeight
   ifstream subfile;
   subfile.open(refWeightFile, ios::in);
   handle.checkIfFailure(subfile, refWeightFile);
   handle.Open(refWeightFile);
   CommentStream subcomment(subfile);
-
-  //read information on length increase.
   DoubleMatrix tmpRefW;
-  if (!readRefWeights(subcomment, tmpRefW))
-    handle.logFileMessage(LOGFAIL, "Wrong format for reference weights");
+  readRefWeights(subcomment, tmpRefW);
   handle.Close();
   subfile.close();
   subfile.clear();
@@ -296,7 +287,7 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
   //Interpolate the reference weights. First there are some error checks.
   if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
       LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-    handle.logFileMessage(LOGFAIL, "Lengths for reference weights must span the range of growth lengths");
+    handle.logFileMessage(LOGFAIL, "lengths for reference weights must span the range of growth lengths");
 
   double ratio;
   int pos = 0;
@@ -401,7 +392,7 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   infile >> text >> ws;
   if (strcasecmp(text, "yeareffect") == 0) {
     if (!(infile >> yearEffect))
-      handle.logFileMessage(LOGFAIL, "Incorrect format of yeareffect vector");
+      handle.logFileMessage(LOGFAIL, "invalid format of yeareffect vector");
     yearEffect.Inform(keeper);
   } else
     handle.logFileUnexpected(LOGFAIL, "yeareffect", text);
@@ -409,7 +400,7 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   infile >> text >> ws;
   if (strcasecmp(text, "stepeffect") == 0) {
     if (!(infile >> stepEffect))
-      handle.logFileMessage(LOGFAIL, "Incorrect format of stepeffect vector");
+      handle.logFileMessage(LOGFAIL, "invalid format of stepeffect vector");
     stepEffect.Inform(keeper);
   } else
     handle.logFileUnexpected(LOGFAIL, "stepeffect", text);
@@ -417,24 +408,20 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   infile >> text >> ws;
   if (strcasecmp(text, "areaeffect") == 0) {
     if (!(infile >> areaEffect))
-      handle.logFileMessage(LOGFAIL, "Incorrect format of areaeffect vector");
+      handle.logFileMessage(LOGFAIL, "invalid format of areaeffect vector");
     areaEffect.Inform(keeper);
   } else
     handle.logFileUnexpected(LOGFAIL, "areaeffect", text);
 
   //read information on reference weights.
   keeper->addString("referenceweights");
-  //JMB - changed since filename is passed as refWeight
   ifstream subfile;
   subfile.open(refWeightFile, ios::in);
   handle.checkIfFailure(subfile, refWeightFile);
   handle.Open(refWeightFile);
   CommentStream subcomment(subfile);
-
-  //read information on length increase.
   DoubleMatrix tmpRefW;
-  if (!readRefWeights(subcomment, tmpRefW))
-    handle.logFileMessage(LOGFAIL, "Wrong format for reference weights");
+  readRefWeights(subcomment, tmpRefW);
   handle.Close();
   subfile.close();
   subfile.clear();
@@ -442,7 +429,7 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   //Interpolate the reference weights.
   if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
       LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-    handle.logFileMessage(LOGFAIL, "Lengths for reference weights must span the range of growth lengths");
+    handle.logFileMessage(LOGFAIL, "lengths for reference weights must span the range of growth lengths");
 
   double ratio;
   int pos = 0;
@@ -543,16 +530,15 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
 
   ifstream datafile;
   int i;
-  Formula tempF;   //value of tempF is initiated to 0.0
   for (i = 0; i < Areas.Size(); i++)
-    wgrowth[i] = new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), tempF);
+    wgrowth[i] = new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0);
 
   CommentStream subdata(datafile);
   readWordAndValue(infile, "weightgrowthfile", text);
   datafile.open(text, ios::in);
   handle.checkIfFailure(datafile, text);
   handle.Open(text);
-  i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, Areas);
+  readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, Areas);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -606,9 +592,8 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
     handle.logFileUnexpected(LOGFAIL, "growthparameters", text);
 
   int i;
-  Formula tempF;   //value of tempF is initiated to 0.0
   for (i = 0; i < Areas.Size(); i++)
-    wgrowth[i] = new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), tempF);
+    wgrowth[i] = new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0);
 
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -616,7 +601,7 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   datafile.open(text, ios::in);
   handle.checkIfFailure(datafile, text);
   handle.Open(text);
-  i = readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, Areas);
+  readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, Areas);
   handle.Close();
   datafile.close();
   datafile.clear();

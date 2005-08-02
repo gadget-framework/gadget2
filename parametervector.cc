@@ -80,21 +80,6 @@ void ParameterVector::Delete(int pos) {
   }
 }
 
-CommentStream& operator >> (CommentStream& infile, ParameterVector& paramVec) {
-  if (infile.fail()) {
-    infile.makebad();
-    return infile;
-  }
-  int i;
-  for (i = 0; i < paramVec.size; i++) {
-    if (!(infile >> paramVec[i])) {
-      infile.makebad();
-      return infile;
-    }
-  }
-  return infile;
-}
-
 ParameterVector& ParameterVector::operator = (const ParameterVector& pv) {
   int i;
   if (size == pv.size) {
@@ -113,11 +98,7 @@ ParameterVector& ParameterVector::operator = (const ParameterVector& pv) {
   return *this;
 }
 
-int readVectorInLine(CommentStream& infile, ParameterVector& Vec) {
-  if (infile.fail())
-    return 0;
-
-  int i;
+int ParameterVector::readline(CommentStream& infile) {
   char line[LongString];
   strncpy(line, "", LongString);
   infile.getLine(line, LongString);
@@ -126,16 +107,12 @@ int readVectorInLine(CommentStream& infile, ParameterVector& Vec) {
 
   istringstream istr(line);
   istr >> ws;
-  i = 0;
   while (!istr.eof()) {
-    if (i == Vec.Size())
-      Vec.resize(1);
-    istr >> Vec[i];
+    this->resize(1);
+    istr >> v[size - 1];
     if (istr.fail() && !istr.eof())
       return 0;
-
     istr >> ws;
-    i++;
   }
   return 1;
 }

@@ -170,46 +170,17 @@
 /* object, and we can use the vector objects that have been defined         */
 
 #include "gadget.h"    //All the required standard header files are in here
+#include "optinfo.h"
 #include "mathfunc.h"
 #include "doublevector.h"
 #include "intvector.h"
 #include "errorhandler.h"
 #include "ecosystem.h"
 
-/* global ecosystem used to store whether the model converged */
 extern Ecosystem* EcoSystem;
-
-/* global errorhandler used to log messages */
 extern ErrorHandler handle;
 
-/* global variable, defined and initialised in gadget.cc and not modified here */
-extern int FuncEval;
-
-/* This function replaces exp to give an answer in the range 0.0 to 1.0 */
-double expRep(double n) {
-  double exprep = 0.0;
-  if (n > verysmall)
-    exprep = 1.0;
-  else if (n < -25.0)
-    exprep = rathersmall;
-  else
-    exprep = exp(n);
-  return exprep;
-}
-
-/* Returns uniformly-distributed doubles in the range 0.0 to 1.0 */
-double randomNumber() {
-  int r = rand();
-  double k = r % 32767;
-  return k / 32767.0;
-}
-
-int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
-  int ns, int nt, double eps, double uratio, double lratio, int check) {
-
-  double t = tempt;     //The "temperature" of the algorithm
-  double fopt;          //The optimal value of the function
-  double funcval, trialf;
+void OptInfoSimann::OptimiseLikelihood() {
 
   //set initial values
   int nacc = 0;         //The number of accepted function evaluations
@@ -218,8 +189,9 @@ int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
   int quit = 0;         //Used to check the exit criteria
   int max = 0;          //Used to denote that the function should be minimised
 
-  double p, pp, cs, ratio, nsdiv;
-  int    i, a, j, h, k, change, l, offset;
+  double p, pp, ratio, nsdiv;
+  double fopt, funcval, trialf;
+  int    i, a, j, h, k, change, l, offset, iters;
 
   int nvars = EcoSystem->numOptVariables();
   DoubleVector x(nvars);
@@ -228,7 +200,7 @@ int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
   DoubleVector lowerb(nvars);
   DoubleVector upperb(nvars);
   DoubleVector fstar(check);
-  DoubleVector vm(nvars, vmlen);
+  DoubleVector vm(nvars, vminit);
   IntVector param(nvars);
   IntVector nacp(nvars, 0);
 
@@ -243,17 +215,20 @@ int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
 
   //funcval is the function value at x
   funcval = EcoSystem->SimulateAndUpdate(x);
-  nacc++;               //accept the first point no matter what
-  offset = FuncEval;    //number of function evaluations done before loop
-  cs = cstep / lratio;
+  offset = EcoSystem->getFuncEval();  //number of function evaluations done before loop
+  iters = offset;
+  nacc++;
+  cs /= lratio;  //JMB save processing time
   nsdiv = 1.0 / ns;
 
   //If the function is to be minimised, switch the sign of the function
   if (!max)
     funcval = -funcval;
 
-  if (funcval != funcval) //check for NaN
-    handle.logMessage(LOGFAIL, "Error starting Simulated Annealing optimisation with f(x) = infinity");
+  if (funcval != funcval) { //check for NaN
+    handle.logMessage(LOGINFO, "Error starting Simulated Annealing optimisation with f(x) = infinity");
+    return;
+  }
 
   fopt = funcval;
   for (i = 0; i < check; i++)
@@ -309,9 +284,10 @@ int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
             trialf = -trialf;
 
           //If too many function evaluations occur, terminate the algorithm
-          if ((FuncEval - offset) > maxevl) {
+          iters = EcoSystem->getFuncEval() - offset;
+          if (iters > simanniter) {
             handle.logMessage(LOGINFO, "\nStopping Simulated Annealing optimisation algorithm\n");
-            handle.logMessage(LOGINFO, "The optimisation stopped after", (FuncEval - offset), "function evaluations");
+            handle.logMessage(LOGINFO, "The optimisation stopped after", iters, "function evaluations");
             handle.logMessage(LOGINFO, "The temperature was reduced to", t);
             handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of function evaluations");
             handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
@@ -320,10 +296,10 @@ int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
             handle.logMessage(LOGINFO, "Number of rejected points", nrej);
 
             trialf = EcoSystem->SimulateAndUpdate(bestx);
-            EcoSystem->setFuncEvalSA(FuncEval - offset);
+            EcoSystem->setFuncEvalSA(iters++);
             EcoSystem->setLikelihoodSA(trialf);
             EcoSystem->storeVariables(trialf, bestx);
-            return 0;
+            return;
           }
 
           //Accept the new point if the new function value better
@@ -353,8 +329,8 @@ int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
 
           // JMB added check for really silly values
           if (isZero(trialf)) {
-            handle.logMessage(LOGINFO, "Error in Simulated Annealing optimisation after", (FuncEval - offset), "function evaluations, f(x) = 0");
-            return 0;
+            handle.logMessage(LOGINFO, "Error in Simulated Annealing optimisation after", iters, "function evaluations, f(x) = 0");
+            return;
           }
 
           //If greater than any other point, record as new optimum
@@ -362,7 +338,7 @@ int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
             for (i = 0; i < nvars; i++)
               bestx[i] = trialx[i];
             fopt = trialf;
-            handle.logMessage(LOGINFO, "\nNew optimum found after", (FuncEval - offset), "function evaluations");
+            handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
             handle.logMessage(LOGINFO, "The likelihood score is", -trialf, "at the point");
             EcoSystem->storeVariables(-trialf, bestx);
             EcoSystem->writeBestValues();
@@ -393,19 +369,19 @@ int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
     fstar[0] = funcval;
 
     quit = 0;
-    if (absolute(fopt - funcval) < eps) {
+    if (absolute(fopt - funcval) < simanneps) {
       quit = 1;
       for (i = 0; i < check - 1; i++)
-        if (absolute(fstar[i + 1] - fstar[i]) > eps)
+        if (absolute(fstar[i + 1] - fstar[i]) > simanneps)
           quit = 0;
     }
 
-    handle.logMessage(LOGINFO, "Checking convergence criteria after", (FuncEval - offset), "function evaluations ...");
+    handle.logMessage(LOGINFO, "Checking convergence criteria after", iters, "function evaluations ...");
 
     //Terminate SA if appropriate
     if (quit) {
       handle.logMessage(LOGINFO, "\nStopping Simulated Annealing optimisation algorithm\n");
-      handle.logMessage(LOGINFO, "The optimisation stopped after", (FuncEval - offset), "function evaluations");
+      handle.logMessage(LOGINFO, "The optimisation stopped after", iters, "function evaluations");
       handle.logMessage(LOGINFO, "The temperature was reduced to", t);
       handle.logMessage(LOGINFO, "The optimisation stopped because an optimum was found for this run");
       handle.logMessage(LOGINFO, "Number of directly accepted points", nacc);
@@ -414,10 +390,10 @@ int simann(int maxevl, double cstep, double tempt, double vmlen, double rt,
 
       trialf = EcoSystem->SimulateAndUpdate(bestx);
       EcoSystem->setConvergeSA(1);
-      EcoSystem->setFuncEvalSA(FuncEval - offset);
+      EcoSystem->setFuncEvalSA(iters++);
       EcoSystem->setLikelihoodSA(trialf);
       EcoSystem->storeVariables(trialf, bestx);
-      return 1;
+      return;
     }
 
     //If termination criteria is not met, prepare for another loop.

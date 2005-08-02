@@ -40,7 +40,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   if (strcasecmp(functionname, "sumofsquares") == 0)
     functionnumber = 1;
   else
-    handle.logFileMessage(LOGFAIL, "Error in catchinkilos - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "\nError in catchinkilos - unrecognised function", functionname);
 
   infile >> ws;
   char c = infile.peek();
@@ -60,7 +60,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
     c = infile.peek();
 
     if (yearly != 0 && yearly != 1)
-      handle.logFileMessage(LOGFAIL, "Error in catchinkilos - aggregationlevel must be 0 or 1");
+      handle.logFileMessage(LOGFAIL, "\nError in catchinkilos - aggregationlevel must be 0 or 1");
   }
 
   //JMB - changed to make the reading of epsilon optional
@@ -68,7 +68,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   if ((c == 'e') || (c == 'E')) {
     readWordAndVariable(infile, "epsilon", epsilon);
     if (epsilon < verysmall) {
-      handle.logFileMessage(LOGWARN, "Epsilon should be a positive number - set to default value 10");
+      handle.logFileMessage(LOGWARN, "epsilon should be a positive number - set to default value 10");
       epsilon = 10.0;
     }
   }
@@ -99,7 +99,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
     infile >> text >> ws;
   }
   if (fleetnames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in catchinkilos - failed to read fleets");
+    handle.logFileMessage(LOGFAIL, "\nError in catchinkilos - failed to read fleets");
   handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //read in the stocknames
@@ -114,7 +114,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
     infile >> text;
   }
   if (stocknames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in catchinkilos - failed to read stocks");
+    handle.logFileMessage(LOGFAIL, "\nError in catchinkilos - failed to read stocks");
   handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
@@ -303,19 +303,11 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
   int keepdata, timeid, areaid, fleetid, check;
   int count = 0;
 
-  //Find start of distribution data in datafile
-  infile >> ws;
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
-
   //Check the number of columns in the inputfile
+  infile >> ws;
   check = countColumns(infile);
   if (!(((yearly == 1) && ((check == 4) || (check == 5))) || ((yearly == 0) && (check == 5))))
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 4 or 5");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 4 or 5");
 
   step = 1; //default value in case there are only 4 columns in the datafile
   while (!infile.eof()) {

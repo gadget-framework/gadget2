@@ -55,7 +55,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     functionnumber = 9;
     growthcalc = new GrowthCalcI(infile, areas, TimeInfo, keeper);
   } else {
-    handle.logFileMessage(LOGFAIL, "Error in stock file - unrecognised growth function", text);
+    handle.logFileMessage(LOGFAIL, "unrecognised growth function", text);
   }
 
   infile >> ws >>  text;
@@ -70,7 +70,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     part4.resize(maxlengthgroupgrowth + 1, 0.0);
 
   } else if (strcasecmp(text, "meanvarianceparameters") == 0) {
-    handle.logFileMessage(LOGFAIL, "The mean variance parameters implementation of the growth is no longer supported\nUse the beta-binomial distribution implementation of the growth instead");
+    handle.logFileMessage(LOGFAIL, "\nThe mean variance parameters implementation of the growth is no longer supported\nUse the beta-binomial distribution implementation of the growth instead");
 
   } else
     handle.logFileUnexpected(LOGFAIL, "beta", text);

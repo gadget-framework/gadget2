@@ -2,6 +2,9 @@
 #define optinfo_h
 
 #include "maininfo.h"
+#include "doublematrix.h"
+#include "doublevector.h"
+#include "intvector.h"
 
 /**
  * \class OptSearch
@@ -39,9 +42,10 @@ class OptInfo {
 public:
   /**
    * \brief This is the default OptInfo constructor
-   * \param MainInfo is the MainInfo to read commandline options from
+   * \param readfile is the flag used to denote whether the optimisation parameters have been given or not
+   * \param filename is the name of the file to read the optimisation parameters from
    */
-  OptInfo(MainInfo* MainInfo);
+  OptInfo(int readfile, const char* filename);
   /**
    * \brief This is the default OptInfo destructor
    */
@@ -111,6 +115,15 @@ public:
    * \brief This is the function that will calculate the likelihood score using the Hooke & Jeeves optimiser
    */
   virtual void OptimiseLikelihood();
+  /**
+   * \brief This function will calculate the best point that can be found close to the current point
+   * \param delta is the DoubleVector of the steps to take when looking for the best point
+   * \param point is the DoubleVector that will contain the parameters corresponding to the best function value found from the search
+   * \param prevbest is the current best point value
+   * \param param is the IntVector containing the order that the parameters should be searched in
+   * \return the best function value found from the search
+   */
+  double bestNearby(DoubleVector& delta, DoubleVector& point, double prevbest, IntVector& param);
 protected:
   /**
    * \brief This is the maximum number of iterations for the Hooke & Jeeves optimisation
@@ -188,9 +201,9 @@ protected:
    */
   double cs;
   /**
-   * \brief This is the step length
+   * \brief This is the initial value for the maximum step length
    */
-  double vm;
+  double vminit;
   /**
    * \brief This is the maximum number of function evaluations for the Simulated Annealing optimiation
    */
@@ -237,6 +250,19 @@ public:
    * \brief This is the function that will calculate the likelihood score using the BFGS optimiser
    */
   virtual void OptimiseLikelihood();
+  /**
+   * \brief This function will numerically calculate the gradient of the function at the current point
+   * \param point is the DoubleVector that contains the parameters corresponding to the current function value
+   * \param pointvalue is the current function value
+   * \param grad is the DoubleVector that will contain the gradient vector for the current point
+   */
+  void gradient(DoubleVector& point, double pointvalue, DoubleVector& grad);
+  /**
+   * \brief This function will calculate the smallest eigenvalue of the inverse Hessian matrix
+   * \param M is the DoubleMatrix containing the inverse Hessian matrix
+   * \return the smallest eigen value of the matrix
+   */
+  double getSmallestEigenValue(DoubleMatrix M);
 private:
   /**
    * \brief This is the maximum number of function evaluations for the BFGS optimiation
@@ -266,17 +292,5 @@ private:
    * \brief This is the factor used to adjust the gradient accuracy term
    */
   double gradstep;
-  /**
-   * \brief This is the lower limit for error tolerance, used to restart the algorithm when running into possible round-off errors
-   */
-  double errortol;
-  /**
-   * \brief This is used to indicate the number of terms required when calculating the gradient of the function
-   */
-  int diffgrad;
-  /**
-   * \brief This is a flag to denote whether the parameters should be scaled or not, prior to the BFGS optimisation
-   */
-  int scale;
 };
 #endif

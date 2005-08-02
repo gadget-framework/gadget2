@@ -61,7 +61,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   else if (strcasecmp(text, "fixedloglinearfit") == 0)
     fittype = FIXEDLOGLINEARFIT;
   else
-    handle.logFileMessage(LOGFAIL, "Error in surveyindex - unrecognised fittype", text);
+    handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised fittype", text);
 
   switch (fittype) {
     case LINEARFIT:
@@ -81,13 +81,13 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
       readWordAndVariable(infile, "intercept", intercept);
       break;
     default:
-      handle.logFileMessage(LOGFAIL, "Error in surveyindex - unrecognised fittype");
+      handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised fittype", text);
       break;
   }
 
   //JMB - check that the slope of the regression line is positive
   if (slope < 0)
-    handle.logFileMessage(LOGFAIL, "Error in surveyindex - slope of the regression line must be positive");
+    handle.logFileMessage(LOGFAIL, "\nError in surveyindex - slope of the regression line must be positive", slope);
 
   //read the survey indices data from the datafile
   ifstream datafile;
@@ -119,8 +119,9 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
   int count = 0;
 
   //Check the number of columns in the inputfile
+  infile >> ws;
   if (countColumns(infile) != 5)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 5");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
   while (!infile.eof()) {
     keepdata = 0;

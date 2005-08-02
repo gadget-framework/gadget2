@@ -1,6 +1,9 @@
 #ifndef intvector_h
 #define intvector_h
 
+#include "commentstream.h"
+#include "gadget.h"
+
 /**
  * \class IntVector
  * \brief This class implements a dynamic vector of int values
@@ -73,6 +76,12 @@ public:
    * \note This will delete every entry from the vector and set the size to zero
    */
   void Reset();
+  /**
+   * \brief This function will read a line of data from a CommentStream
+   * \param infile is the CommentStream to read the data from
+   * \return 1 if the read from file was successful, 0 otherwise
+   */
+  int readline(CommentStream& infile);
   IntVector& operator = (const IntVector& iv);
 protected:
   /**

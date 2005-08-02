@@ -41,7 +41,7 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   else if ((strcasecmp(functionname, "lengthnovar") == 0) || (strcasecmp(functionname, "lengthnostddev") == 0))
     functionnumber = 3;
   else
-    handle.logFileMessage(LOGFAIL, "Error in recstatistics - unrecognised function", functionname);
+    handle.logFileMessage(LOGFAIL, "\nError in recstatistics - unrecognised function", functionname);
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
@@ -71,7 +71,7 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
     infile >> text;
   }
   if (fleetnames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in recstatistics - failed to read fleets");
+    handle.logFileMessage(LOGFAIL, "\nError in recstatistics - failed to read fleets");
   handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
   //We have now read in all the data from the main likelihood file
@@ -105,9 +105,9 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
   //Check the number of columns in the inputfile
   infile >> ws;
   if ((needvar == 1) && (countColumns(infile) != 7))
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 7");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
   else if ((needvar == 0) && (countColumns(infile) != 6))
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;

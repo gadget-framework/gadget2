@@ -83,7 +83,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
     infile >> text;
   }
   if (stocknames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in surveydistribution - failed to read stocks");
+    handle.logFileMessage(LOGFAIL, "\nError in surveydistribution - failed to read stocks");
   handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   infile >> fittype >> ws;
@@ -93,7 +93,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   } else if (strcasecmp(fittype, "powerfit") == 0) {
     fitnumber = 2;
   } else
-    handle.logFileMessage(LOGFAIL, "Error in surveydistribution - unrecognised fittype", fittype);
+    handle.logFileMessage(LOGFAIL, "\nError in surveydistribution - unrecognised fittype", fittype);
 
   parameters.resize(2, keeper);
   infile >> text >> ws;
@@ -126,7 +126,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
       infile >> suit[i];
 
   } else {
-    handle.logFileMessage(LOGFAIL, "Error in surveydistribution - unrecognised suitability", text);
+    handle.logFileMessage(LOGFAIL, "\nError in surveydistribution - unrecognised suitability", text);
   }
 
   //JMB - changed to make the reading of epsilon optional
@@ -138,7 +138,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
     epsilon = 1.0;
 
   if (epsilon < verysmall) {
-    handle.logFileMessage(LOGWARN, "Epsilon should be a positive integer - set to default value 1");
+    handle.logFileMessage(LOGWARN, "epsilon should be a positive integer - set to default value 1");
     epsilon = 1.0;
   }
 
@@ -153,7 +153,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   else if (strcasecmp(liketype, "log") == 0)
     likenumber = 4;
   else
-    handle.logFileMessage(LOGFAIL, "Error in surveydistribution - unrecognised likelihoodtype", liketype);
+    handle.logFileMessage(LOGFAIL, "\nError in surveydistribution - unrecognised likelihoodtype", liketype);
 
   //read the survey distribution data from the datafile
   datafile.open(datafilename, ios::in);
@@ -188,7 +188,7 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 6)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 6");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;

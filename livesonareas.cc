@@ -29,7 +29,6 @@ int LivesOnAreas::isInArea(int area) const {
 int LivesOnAreas::areaNum(int area) const {
   if (0 <= area && area < areaConvert.Size())
     return areaConvert[area];
-  handle.logMessage(LOGFAIL, "Error in livesonareas - failed to match area", area);
   return -1;
 }
 

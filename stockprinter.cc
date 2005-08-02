@@ -34,7 +34,7 @@ StockPrinter::StockPrinter(CommentStream& infile, const TimeClass* const TimeInf
     infile >> text >> ws;
   }
   if (stocknames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in stockprinter - failed to read stocks");
+    handle.logFileMessage(LOGFAIL, "\nError in stockprinter - failed to read stocks");
   handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //read in area aggregation from file
@@ -76,7 +76,7 @@ StockPrinter::StockPrinter(CommentStream& infile, const TimeClass* const TimeInf
   //Finished reading from infile.
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
-    handle.logFileMessage(LOGFAIL, "Error in stockprinter - failed to create length group");
+    handle.logFileMessage(LOGFAIL, "\nError in stockprinter - failed to create length group");
 
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
@@ -94,7 +94,7 @@ StockPrinter::StockPrinter(CommentStream& infile, const TimeClass* const TimeInf
   }
 
   if (precision < 0)
-    handle.logFileMessage(LOGFAIL, "Error in stockprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "\nError in stockprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -102,12 +102,12 @@ StockPrinter::StockPrinter(CommentStream& infile, const TimeClass* const TimeInf
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.logFileMessage(LOGFAIL, "Error in stockprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "\nError in stockprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.logFileMessage(LOGFAIL, "Error in stockprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "\nError in stockprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;

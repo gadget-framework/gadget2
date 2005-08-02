@@ -32,7 +32,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile, const TimeClass* const T
     infile >> text >> ws;
   }
   if (preynames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in preyoverprinter - failed to read preys");
+    handle.logFileMessage(LOGFAIL, "\nError in preyoverprinter - failed to read preys");
   handle.logMessage(LOGMESSAGE, "Read prey data - number of preys", preynames.Size());
 
   //read in area aggregation from file
@@ -64,7 +64,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile, const TimeClass* const T
   //Finished reading from infile.
   preyLgrpDiv = new LengthGroupDivision(lengths);
   if (preyLgrpDiv->Error())
-    handle.logFileMessage(LOGFAIL, "Error in preyoverprinter - failed to create length group");
+    handle.logFileMessage(LOGFAIL, "\nError in preyoverprinter - failed to create length group");
 
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
@@ -82,7 +82,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile, const TimeClass* const T
   }
 
   if (precision < 0)
-    handle.logFileMessage(LOGFAIL, "Error in preyoverprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "\nError in preyoverprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -90,12 +90,12 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile, const TimeClass* const T
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.logFileMessage(LOGFAIL, "Error in preyoverprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "\nError in preyoverprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.logFileMessage(LOGFAIL, "Error in preyoverprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "\nError in preyoverprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;

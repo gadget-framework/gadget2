@@ -151,11 +151,6 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void Migrate(const TimeClass* const TimeInfo);
-  /**
-   * \brief This function will calculate the migration of the model population for the model
-   * \param TimeInfo is the TimeClass for the current model
-   */
-  virtual void calcMigration(const TimeClass* const TimeInfo);
   void Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
     int area, double ratio, int minage, int maxage);
   void Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,

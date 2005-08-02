@@ -1,46 +1,46 @@
-#ifndef variableinfoptrvector_h
-#define variableinfoptrvector_h
+#ifndef rectangleptrvector_h
+#define rectangleptrvector_h
 
-class VariableInfo;
+class Rectangle;
 
 /**
- * \class VariableInfoPtrVector
- * \brief This class implements a dynamic vector of VariableInfo values
+ * \class RectanglePtrVector
+ * \brief This class implements a dynamic vector of Rectangle values
  */
-class VariableInfoPtrVector {
+class RectanglePtrVector {
 public:
   /**
-   * \brief This is the default VariableInfoPtrVector constructor
+   * \brief This is the default RectanglePtrVector constructor
    */
-  VariableInfoPtrVector() { size = 0; v = 0; };
+  RectanglePtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the VariableInfoPtrVector constructor for a specified size
+   * \brief This is the RectanglePtrVector constructor for a specified size
    * \param sz is the size of the vector to be created
    * \note The elements of the vector will all be created, and set to zero
    */
-  VariableInfoPtrVector(int sz);
+  RectanglePtrVector(int sz);
   /**
-   * \brief This is the VariableInfoPtrVector constructor for a specified size with an initial value
+   * \brief This is the RectanglePtrVector constructor for a specified size with an initial value
    * \param sz is the size of the vector to be created
    * \param initial is the initial value for all the entries of the vector
    */
-  VariableInfoPtrVector(int sz, VariableInfo* initial);
+  RectanglePtrVector(int sz, Rectangle* initial);
   /**
-   * \brief This is the VariableInfoPtrVector constructor that creates a copy of an existing VariableInfoPtrVector
-   * \param initial is the VariableInfoPtrVector to copy
+   * \brief This is the RectanglePtrVector constructor that creates a copy of an existing RectanglePtrVector
+   * \param initial is the RectanglePtrVector to copy
    */
-  VariableInfoPtrVector(const VariableInfoPtrVector& initial);
+  RectanglePtrVector(const RectanglePtrVector& initial);
   /**
-   * \brief This is the VariableInfoPtrVector destructor
+   * \brief This is the RectanglePtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
-  ~VariableInfoPtrVector();
+  ~RectanglePtrVector();
   /**
    * \brief This will add new entries to the vector
    * \param add is the number of new entries to the vector
    * \param value is the value that will be entered for the new entries
    */
-  void resize(int add, VariableInfo* value);
+  void resize(int add, Rectangle* value);
   /**
    * \brief This will add new empty entries to the vector
    * \param add is the number of new entries to the vector
@@ -63,18 +63,18 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  VariableInfo*& operator [] (int pos) { return v[pos]; };
+  Rectangle*& operator [] (int pos) { return v[pos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  VariableInfo* const& operator [] (int pos) const { return v[pos]; };
+  Rectangle* const& operator [] (int pos) const { return v[pos]; };
 protected:
   /**
-   * \brief This is the vector of VariableInfo values
+   * \brief This is the vector of Rectangle values
    */
-  VariableInfo** v;
+  Rectangle** v;
   /**
    * \brief This is the size of the vector
    */

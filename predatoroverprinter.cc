@@ -32,7 +32,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile, const TimeClass*
     infile >> text >> ws;
   }
   if (predatornames.Size() == 0)
-    handle.logFileMessage(LOGFAIL, "Error in predatoroverprinter - failed to read predators");
+    handle.logFileMessage(LOGFAIL, "\nError in predatoroverprinter - failed to read predators");
   handle.logMessage(LOGMESSAGE, "Read predator data - number of predators", predatornames.Size());
 
   //read in area aggregation from file
@@ -64,7 +64,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile, const TimeClass*
   //Finished reading from infile.
   predLgrpDiv = new LengthGroupDivision(lengths);
   if (predLgrpDiv->Error())
-    handle.logFileMessage(LOGFAIL, "Error in predatoroverprinter - failed to create length group");
+    handle.logFileMessage(LOGFAIL, "\nError in predatoroverprinter - failed to create length group");
 
   //Open the printfile
   readWordAndValue(infile, "printfile", filename);
@@ -82,7 +82,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile, const TimeClass*
   }
 
   if (precision < 0)
-    handle.logFileMessage(LOGFAIL, "Error in predatoroverprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "\nError in predatoroverprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -90,12 +90,12 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile, const TimeClass*
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.logFileMessage(LOGFAIL, "Error in predatoroverprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "\nError in predatoroverprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.logFileMessage(LOGFAIL, "Error in predatoroverprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "\nError in predatoroverprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;

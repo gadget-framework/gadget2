@@ -28,7 +28,7 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile, const TimeClass* c
   infile >> text >> ws;
   if (strcasecmp(text, "areaaggfile") == 0) {
     infile >> text >> ws;
-    handle.logFileMessage(LOGWARN, "Warning in predpreystdprinter - area aggreagtion file ignored");
+    handle.logMessage(LOGWARN, "Warning in predpreystdprinter - area aggreagtion file ignored");
     infile >> text >> ws;
   }
 
@@ -55,7 +55,7 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile, const TimeClass* c
   }
 
   if (precision < 0)
-    handle.logFileMessage(LOGFAIL, "Error in predpreystdprinter - invalid value of precision");
+    handle.logFileMessage(LOGFAIL, "\nError in predpreystdprinter - invalid value of precision");
 
   if (strcasecmp(text, "printatstart") == 0)
     infile >> printtimeid >> ws >> text >> ws;
@@ -63,12 +63,12 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile, const TimeClass* c
     printtimeid = 0;
 
   if (printtimeid != 0 && printtimeid != 1)
-    handle.logFileMessage(LOGFAIL, "Error in predpreystdprinter - invalid value of printatstart");
+    handle.logFileMessage(LOGFAIL, "\nError in predpreystdprinter - invalid value of printatstart");
 
   if (!(strcasecmp(text, "yearsandsteps") == 0))
     handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
-    handle.logFileMessage(LOGFAIL, "Error in predpreystdprinter - wrong format for yearsandsteps");
+    handle.logFileMessage(LOGFAIL, "\nError in predpreystdprinter - wrong format for yearsandsteps");
 
   //prepare for next printfile component
   infile >> ws;

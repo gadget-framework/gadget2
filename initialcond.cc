@@ -10,34 +10,23 @@ extern ErrorHandler handle;
 void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
-  //Find start of data in datafile
-  infile >> ws;
-  if (infile.eof())
-    handle.logFileMessage(LOGFAIL, "Error in initial conditions - initial stock data file empty");
-
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
-
   int noareas = areas.Size();
   int i, age, area, ageid, areaid, tmparea, keepdata;
   int count = 0;
-  Formula number;
+  char c;
 
   //Resize the matrices to hold the data
-  areaFactor.AddRows(noareas, noagegr, number);
-  ageFactor.AddRows(noareas, noagegr, number);
-  meanLength.AddRows(noareas, noagegr, number);
-  sdevLength.AddRows(noareas, noagegr, number);
-  relCond.AddRows(noareas, noagegr, number);
+  areaFactor.AddRows(noareas, noagegr, 0.0);
+  ageFactor.AddRows(noareas, noagegr, 0.0);
+  meanLength.AddRows(noareas, noagegr, 0.0);
+  sdevLength.AddRows(noareas, noagegr, 0.0);
+  relCond.AddRows(noareas, noagegr, 0.0);
 
-  //Found the start of the data in the following format
+  //Find the start of the data in the following format
   //age - area - agedist - areadist - meanlen - standdev - relcond
+  infile >> ws;
   if (countColumns(infile) != 7)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 7");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
 
   ageid = -1;
   tmparea = -1;
@@ -48,7 +37,7 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
 
     //crude age data check - perhaps there should be a better check?
     if ((age < minage) || (age >= (noagegr + minage))) {
-      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside age range");
+      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside age range");
       keepdata = 1;
     } else
       ageid = age - minage;
@@ -61,7 +50,7 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
         areaid = i;
 
     if (areaid == -1) {
-      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside area range");
+      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside area range");
       keepdata = 1;
     }
 
@@ -96,35 +85,24 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
 void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
-  //Find start of data in datafile
-  infile >> ws;
-  if (infile.eof())
-    handle.logFileMessage(LOGFAIL, "Error in initial conditions - initial stock data file empty");
-
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
-
   int noareas = areas.Size();
   int i, age, area, ageid, areaid, tmparea, keepdata;
   int count = 0;
-  Formula number;
+  char c;
 
   //Resize the matrices to hold the data
-  areaFactor.AddRows(noareas, noagegr, number);
-  ageFactor.AddRows(noareas, noagegr, number);
-  meanLength.AddRows(noareas, noagegr, number);
-  sdevLength.AddRows(noareas, noagegr, number);
-  alpha.AddRows(noareas, noagegr, number);
-  beta.AddRows(noareas, noagegr, number);
+  areaFactor.AddRows(noareas, noagegr, 0.0);
+  ageFactor.AddRows(noareas, noagegr, 0.0);
+  meanLength.AddRows(noareas, noagegr, 0.0);
+  sdevLength.AddRows(noareas, noagegr, 0.0);
+  alpha.AddRows(noareas, noagegr, 0.0);
+  beta.AddRows(noareas, noagegr, 0.0);
 
-  //Found the start of the data in the following format
+  //Find the start of the data in the following format
   //age - area - agedist - areadist - meanlen - standdev - alpha - beta
+  infile >> ws;
   if (countColumns(infile) != 8)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 8");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 8");
 
   ageid = -1;
   tmparea = -1;
@@ -135,7 +113,7 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
 
     //crude age data check - perhaps there should be a better check?
     if ((age < minage) || (age >= (noagegr + minage))) {
-      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside age range");
+      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside age range");
       keepdata = 1;
     } else
       ageid = age - minage;
@@ -148,7 +126,7 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
         areaid = i;
 
     if (areaid == -1) {
-      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside area range");
+      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside area range");
       keepdata = 1;
     }
 
@@ -185,34 +163,23 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
 void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
-  //Find start of data in datafile
-  infile >> ws;
-  if (infile.eof())
-    handle.logFileMessage(LOGFAIL, "Error in initial conditions - initial stock data file empty");
-
-  char c = infile.peek();
-  if (!isdigit(c)) {
-    infile.get(c);
-    while (c != '\n' && !infile.eof())
-      infile.get(c);
-  }
-
-  //Found the start of the data in the following format
-  //area - age - meanlength - number - weight
   int i, age, area, tmparea;
   int keepdata, ageid, areaid, lengthid;
   double length;
-  Formula number;
+  char c;
   int count = 0;
   int noareas = areas.Size();
   int nolengr = LgrpDiv->numLengthGroups();
 
+  //Find the start of the data in the following format
+  //area - age - meanlength - number - weight
+  infile >> ws;
   if (countColumns(infile) != 5)
-    handle.logFileMessage(LOGFAIL, "Wrong number of columns in inputfile - should be 5");
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
   //initialise things
   for (areaid = 0; areaid < noareas; areaid++) {
-    initialNumber.resize(1, new FormulaMatrix(noagegr, nolengr, number));
+    initialNumber.resize(1, new FormulaMatrix(noagegr, nolengr, 0.0));
     for (ageid = minage; ageid < noagegr + minage; ageid++) {
       for (lengthid = 0; lengthid < nolengr; lengthid++) {
         initialPop[areaid][ageid][lengthid].N = 0.0;
@@ -231,7 +198,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
 
     //crude age data check - perhaps there should be a better check?
     if ((age < minage) || (age >= (noagegr + minage))) {
-      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside age range");
+      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside age range");
       keepdata = 1;
     } else
       ageid = age;
@@ -243,7 +210,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
         lengthid = i;
 
     if (lengthid == -1) {
-      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside length range");
+      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside length range");
       keepdata = 1;
     }
 
@@ -255,7 +222,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
         areaid = i;
 
     if (areaid == -1) {
-      handle.logFileMessage(LOGWARN, "Ignoring initial conditions data found outside area range");
+      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside area range");
       keepdata = 1;
     }
 
@@ -326,7 +293,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   infile >> ws;
   c = infile.peek();
   if ((c == 's') || (c == 'S'))
-    readWordAndFormula(infile, "sdev", sdevMult);
+    readWordAndVariable(infile, "sdev", sdevMult);
   else
     sdevMult.setValue(1.0);
   sdevMult.Inform(keeper);
@@ -363,8 +330,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     subfile.open(refWeightFile, ios::in);
     handle.checkIfFailure(subfile, refWeightFile);
     handle.Open(refWeightFile);
-    if (!readRefWeights(subcomment, tmpRefW))
-      handle.logFileMessage(LOGFAIL, "Wrong format for reference weights");
+    readRefWeights(subcomment, tmpRefW);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -372,7 +338,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     //Interpolate the reference weights. First there are some error checks.
     if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
         LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
-      handle.logFileMessage(LOGFAIL, "Lengths for reference weights must span the range of initial condition lengths");
+      handle.logFileMessage(LOGFAIL, "lengths for reference weights must span the range of initial condition lengths");
 
     //Aggregate the reference weight data to be the same format
     double ratio;
@@ -416,7 +382,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     subfile.clear();
 
   } else
-    handle.logFileMessage(LOGFAIL, "Error in initial conditions - unrecognised data format", text);
+    handle.logFileMessage(LOGFAIL, "unrecognised initial conditions format", text);
 
   keeper->clearLast();
 }

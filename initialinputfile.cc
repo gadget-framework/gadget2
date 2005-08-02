@@ -64,7 +64,7 @@ void InitialInputFile::readHeader() {
       // fileformat with switches and vector value/values.
       repeatedValues = 1;
       infile >> ws;
-      if (!readVectorInLine(infile, switches))
+      if (switches.readline(infile) == 0)
         handle.logMessage(LOGFAIL, "Error in initial input file - failed to read switches");
 
     } else {
