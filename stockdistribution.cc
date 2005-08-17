@@ -444,21 +444,19 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 //The code here is probably unnessecarily complicated because
 //is always only one length group with this class.
 double StockDistribution::calcLikMultinomial() {
-  int age, len, area, sn, i, minage, maxage;
+  int age, len, area, sn, i;
   DoubleMatrixPtrVector Dist(areas.Nrow());
   DoubleVector likdata(stocknames.Size(), 0.0);
 
   MN.Reset();
   //the object MN does most of the work, accumulating likelihood
-  for (area = 0; area < Dist.Size(); area++) {
+  for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     Dist[area] = new DoubleMatrix(ages.Nrow() * LgrpDiv->numLengthGroups(), stocknames.Size(), 0.0);
 
     for (sn = 0; sn < stocknames.Size(); sn++) {
       alptr = &aggregator[sn]->getSum();
-      minage = (*alptr)[area].minAge();
-      maxage = (*alptr)[area].maxAge();
-      for (age = minage; age <= maxage; age++) {
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
         for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
           i = age + (ages.Nrow() * len);
           (*modelDistribution[timeindex][area])[sn][i] = ((*alptr)[area][age][len]).N;
@@ -488,21 +486,26 @@ double StockDistribution::calcLikSumSquares() {
     likelihoodValues[timeindex][area] = 0.0;
     for (sn = 0; sn < stocknames.Size(); sn++) {
       alptr = &aggregator[sn]->getSum();
-      totalmodel = 0.0;
-      totaldata = 0.0;
-
       for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
         for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
           i = age + (ages.Nrow() * len);
           (*modelDistribution[timeindex][area])[sn][i] = ((*alptr)[area][age][len]).N;
+        }
+      }
+    }
+
+    //JMB - number of age and length groups is constant for all stocks
+    for (age = 0; age < ages.Nrow(); age++) {
+      for (len = 0; len < LgrpDiv->numLengthGroups(); len++) {
+        totalmodel = 0.0;
+        totaldata = 0.0;
+        i = age + (ages.Nrow() * len);
+        for (sn = 0; sn < stocknames.Size(); sn++) {
           totalmodel += (*modelDistribution[timeindex][area])[sn][i];
           totaldata += (*obsDistribution[timeindex][area])[sn][i];
         }
-      }
 
-      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
-          i = age + (ages.Nrow() * len);
+        for (sn = 0; sn < stocknames.Size(); sn++) {
           if ((isZero(totaldata)) && (isZero(totalmodel)))
             temp = 0.0;
           else if (isZero(totaldata))
