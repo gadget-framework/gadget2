@@ -398,11 +398,9 @@ void OptInfoHooke::OptimiseLikelihood() {
       return;
     }
 
-    if ((newf - fbefore) > verysmall) {
-      steplength *= rho;
-      handle.logMessage(LOGINFO, "Reducing the steplength to", steplength);
-      for (i = 0; i < nvars; i++)
-        delta[i] *= rho;
-    }
+    steplength *= rho;
+    handle.logMessage(LOGINFO, "Reducing the steplength to", steplength);
+    for (i = 0; i < nvars; i++)
+      delta[i] *= rho;
   }
 }
