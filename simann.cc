@@ -227,6 +227,9 @@ void OptInfoSimann::OptimiseLikelihood() {
 
   if (funcval != funcval) { //check for NaN
     handle.logMessage(LOGINFO, "Error starting Simulated Annealing optimisation with f(x) = infinity");
+    EcoSystem->setConvergeSA(-1);
+    EcoSystem->setFuncEvalSA(1);
+    EcoSystem->setLikelihoodSA(0.0);
     return;
   }
 
@@ -330,6 +333,9 @@ void OptInfoSimann::OptimiseLikelihood() {
           // JMB added check for really silly values
           if (isZero(trialf)) {
             handle.logMessage(LOGINFO, "Error in Simulated Annealing optimisation after", iters, "function evaluations, f(x) = 0");
+            EcoSystem->setConvergeSA(-1);
+            EcoSystem->setFuncEvalSA(iters);
+            EcoSystem->setLikelihoodSA(0.0);
             return;
           }
 

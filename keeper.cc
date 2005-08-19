@@ -444,6 +444,8 @@ void Keeper::writeParams(const char* const filename, int prec, int interrupt) {
         << setprecision(p) << EcoSystem->getLikelihoodSA();
       if (EcoSystem->getConvergeSA() == 1)
         paramfile << "\n; because the convergence criteria were met\n";
+      else if (EcoSystem->getConvergeSA() == -1)
+        paramfile << "\n; because an error occured during the optimisation\n";
       else
         paramfile << "\n; because the maximum number of function evaluations was reached\n";
     }
@@ -454,6 +456,8 @@ void Keeper::writeParams(const char* const filename, int prec, int interrupt) {
         << setprecision(p) << EcoSystem->getLikelihoodHJ();
       if (EcoSystem->getConvergeHJ() == 1)
         paramfile << "\n; because the convergence criteria were met\n";
+      else if (EcoSystem->getConvergeHJ() == -1)
+        paramfile << "\n; because an error occured during the optimisation\n";
       else
         paramfile << "\n; because the maximum number of function evaluations was reached\n";
     }
@@ -464,6 +468,8 @@ void Keeper::writeParams(const char* const filename, int prec, int interrupt) {
         << setprecision(p) << EcoSystem->getLikelihoodBFGS();
       if (EcoSystem->getConvergeBFGS() == 1)
         paramfile << "\n; because the convergence criteria were met\n";
+      else if (EcoSystem->getConvergeBFGS() == -1)
+        paramfile << "\n; because an error occured during the optimisation\n";
       else
         paramfile << "\n; because the maximum number of function evaluations was reached\n";
     }

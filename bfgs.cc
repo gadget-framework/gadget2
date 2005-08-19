@@ -150,6 +150,9 @@ void OptInfoBFGS::OptimiseLikelihood() {
   newf = EcoSystem->SimulateAndUpdate(trialx);
   if (newf != newf) { // check for NaN
     handle.logMessage(LOGINFO, "Error starting BFGS optimisation with f(x) = infinity");
+    EcoSystem->setConvergeBFGS(-1);
+    EcoSystem->setFuncEvalBFGS(1);
+    EcoSystem->setLikelihoodBFGS(0.0);
     return;
   }
 
@@ -166,6 +169,9 @@ void OptInfoBFGS::OptimiseLikelihood() {
     iters = EcoSystem->getFuncEval() - offset;
     if (isZero(newf)) {
       handle.logMessage(LOGINFO, "Error in BFGS optimisation after", iters, "function evaluations, f(x) = 0");
+      EcoSystem->setConvergeBFGS(-1);
+      EcoSystem->setFuncEvalBFGS(iters);
+      EcoSystem->setLikelihoodBFGS(0.0);
       return;
     }
 
@@ -196,6 +202,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
       handle.logMessage(LOGINFO, "calculation is too small and NOT because an optimum was found for this run");
 
       newf = EcoSystem->SimulateAndUpdate(x);
+      EcoSystem->setConvergeBFGS(-1);
       EcoSystem->setFuncEvalBFGS(iters++);
       EcoSystem->setLikelihoodBFGS(newf);
       for (i = 0; i < nvars; i++)

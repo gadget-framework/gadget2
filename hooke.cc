@@ -222,6 +222,9 @@ void OptInfoHooke::OptimiseLikelihood() {
 
   if (fbefore != fbefore) { //JMB added check for NaN
     handle.logMessage(LOGINFO, "Error starting Hooke & Jeeves optimisation with f(x) = infinity");
+    EcoSystem->setConvergeHJ(-1);
+    EcoSystem->setFuncEvalHJ(1);
+    EcoSystem->setLikelihoodHJ(0.0);
     return;
   }
 
@@ -229,6 +232,9 @@ void OptInfoHooke::OptimiseLikelihood() {
     if (isZero(fbefore)) {
       iters = EcoSystem->getFuncEval() - offset;
       handle.logMessage(LOGINFO, "Error in Hooke & Jeeves optimisation after", iters, "function evaluations, f(x) = 0");
+      EcoSystem->setConvergeHJ(-1);
+      EcoSystem->setFuncEvalHJ(iters);
+      EcoSystem->setLikelihoodHJ(0.0);
       return;
     }
 

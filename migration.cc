@@ -196,9 +196,9 @@ void MigrationNumbers::readGivenRatios(CommentStream& infile, Keeper* const keep
         (*readMigration[i])[j][j] = *missingValue;
         delete missingValue;
 
-      } else if (checkvalues[i][j] == numAreas - 1) {
+      } else if (checkvalues[i][j] == (numAreas - 1)) {
         // read migration data from this area to all other areas but 1
-        count = 0;
+        count = -1;
         vector<Formula*> checklist;
         for (k = 0; k < readMigration[i]->Ncol(); k++) {
           if (isZero((*readMigration[i])[k][j]))
@@ -207,6 +207,8 @@ void MigrationNumbers::readGivenRatios(CommentStream& infile, Keeper* const keep
             checklist.push_back(&(*readMigration[i])[k][j]);
         }
 
+        if (count == -1)
+          handle.logFileMessage(LOGFAIL, "missing data for migration matrix", usedmatrixnames[i]);
         checklist.insert(checklist.begin(), &missing);
         Formula* missingValue = new Formula(MINUS, checklist);
         (*readMigration[i])[count][j] = *missingValue;
@@ -263,7 +265,8 @@ void MigrationNumbers::readGivenMatrices(CommentStream& infile, Keeper* const ke
         for (i = 0; i < numAreas; i++)
           (*readMigration[count])[i][i].setValue(1.0);
 
-      } else if (isdigit(infile.peek()) || infile.peek() == '-') {
+      } else if (isdigit(infile.peek()) || infile.peek() == '#' || infile.peek() == '(') {
+        // look for a number or a formula as the next entry to be read
         for (i = 0; i < numAreas; i++)
           for (j = 0; j < numAreas; j++)
             if (!(infile >> (*readMigration[count])[i][j]))
