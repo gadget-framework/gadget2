@@ -202,7 +202,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
       handle.logMessage(LOGINFO, "calculation is too small and NOT because an optimum was found for this run");
 
       newf = EcoSystem->SimulateAndUpdate(x);
-      EcoSystem->setConvergeBFGS(-1);
+      EcoSystem->setConvergeBFGS(2);
       EcoSystem->setFuncEvalBFGS(iters++);
       EcoSystem->setLikelihoodBFGS(newf);
       for (i = 0; i < nvars; i++)

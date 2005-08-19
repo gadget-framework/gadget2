@@ -442,10 +442,10 @@ void Keeper::writeParams(const char* const filename, int prec, int interrupt) {
       paramfile << "; the Simulated Annealing algorithm ran for " << EcoSystem->getFuncEvalSA()
         << " function evaluations\n; and stopped when the likelihood value was "
         << setprecision(p) << EcoSystem->getLikelihoodSA();
-      if (EcoSystem->getConvergeSA() == 1)
-        paramfile << "\n; because the convergence criteria were met\n";
-      else if (EcoSystem->getConvergeSA() == -1)
+      if (EcoSystem->getConvergeSA() == -1)
         paramfile << "\n; because an error occured during the optimisation\n";
+      else if (EcoSystem->getConvergeSA() == 1)
+        paramfile << "\n; because the convergence criteria were met\n";
       else
         paramfile << "\n; because the maximum number of function evaluations was reached\n";
     }
@@ -454,10 +454,10 @@ void Keeper::writeParams(const char* const filename, int prec, int interrupt) {
       paramfile << "; the Hooke & Jeeves algorithm ran for " << EcoSystem->getFuncEvalHJ()
         << " function evaluations\n; and stopped when the likelihood value was "
         << setprecision(p) << EcoSystem->getLikelihoodHJ();
-      if (EcoSystem->getConvergeHJ() == 1)
-        paramfile << "\n; because the convergence criteria were met\n";
-      else if (EcoSystem->getConvergeHJ() == -1)
+      if (EcoSystem->getConvergeHJ() == -1)
         paramfile << "\n; because an error occured during the optimisation\n";
+      else if (EcoSystem->getConvergeHJ() == 1)
+        paramfile << "\n; because the convergence criteria were met\n";
       else
         paramfile << "\n; because the maximum number of function evaluations was reached\n";
     }
@@ -466,10 +466,12 @@ void Keeper::writeParams(const char* const filename, int prec, int interrupt) {
       paramfile << "; the BFGS algorithm ran for " << EcoSystem->getFuncEvalBFGS()
         << " function evaluations\n; and stopped when the likelihood value was "
         << setprecision(p) << EcoSystem->getLikelihoodBFGS();
-      if (EcoSystem->getConvergeBFGS() == 1)
-        paramfile << "\n; because the convergence criteria were met\n";
-      else if (EcoSystem->getConvergeBFGS() == -1)
+      if (EcoSystem->getConvergeBFGS() == -1)
         paramfile << "\n; because an error occured during the optimisation\n";
+      else if (EcoSystem->getConvergeBFGS() == 1)
+        paramfile << "\n; because the convergence criteria were met\n";
+      else if (EcoSystem->getConvergeBFGS() == 2)
+        paramfile << "\n; because the accuracy limit for the gradient calculation was reached\n";
       else
         paramfile << "\n; because the maximum number of function evaluations was reached\n";
     }
