@@ -128,14 +128,4 @@ protected:
 extern void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
   const LengthGroupDivision* coarser);
 
-/**
- * \brief This is the function that will check whether one LengthGroupDivision has groups that are finer than a second LengthGroupDivision, and print an error if this is not the case
- * \param finer is the LengthGroupDivision that should be on a finer scale
- * \param coarser is the LengthGroupDivision that should be on a coarser scale
- * \param bogus is a temporary length group identifier
- * \return 1 if the finer LengthGroupDivision is finer than the coarser LengthGroupDivision, 0 if finer is not finer than coarser and 2 if an error has occured
- */
-extern int lengthGroupIsFiner(const LengthGroupDivision* finer,
-  const LengthGroupDivision* coarser, int& bogus);
-
 #endif
