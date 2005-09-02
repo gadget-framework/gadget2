@@ -6,7 +6,7 @@ extern ErrorHandler handle;
 
 //Constructor for length division with even increments.
 LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : error(0), Dl(DL) {
-  if ((MaxL < MinL) || (MinL < 0.0) || (DL < verysmall)) {
+  if ((MaxL < MinL) || (MinL < 0.0) || (Dl < verysmall)) {
     error = 1;
     return;
   }
@@ -21,7 +21,7 @@ LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : 
   tmp = 0.5 * Dl;
   int i;
   for (i = 0; i < size; i++) {
-    minlength[i] = MinL + (Dl * i);
+    minlength[i] = minlen + (Dl * i);
     meanlength[i] = minlength[i] + tmp;
   }
 }
@@ -54,14 +54,20 @@ LengthGroupDivision::LengthGroupDivision(const LengthGroupDivision& l)
 }
 
 int LengthGroupDivision::numLengthGroup(double length) const {
+  //check if length equals the minimum length.
+  if (isZero(minlen - length))
+    return 0;
+
+  //check if length equals the maximum length.
+  if (isZero(maxlen - length))
+    return size - 1;
+
   int i;
   for (i = 0; i < size; i++)
     if ((isZero(minlength[i] - length)) || (minlength[i] < length && length < this->maxLength(i)))
       return i;
 
-  //Check if length equals the maximum length.
-  if (isZero(maxlen - length))
-    return size - 1;
+  //failed to find length group that matches length
   return -1;
 }
 
@@ -132,6 +138,7 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
         middle.resize(1, meanLength(j - i));
       }
     }
+
   } else {
     for (; minLength(i) < addition->minLength(); i++) {
       lower.resize(1, minLength(i));
@@ -169,55 +176,37 @@ void LengthGroupDivision::Print(ofstream& outfile) const {
 }
 
 void LengthGroupDivision::printError() const {
-  handle.logMessage(LOGWARN, "Warning in lengthgroupdivision - failure in length group");
-  handle.logMessage(LOGWARN, "Minimum length of length group", this->minLength());
-  handle.logMessage(LOGWARN, "Maximum length of length group", this->maxLength());
+  handle.logMessage(LOGWARN, "Minimum length of length group division is", this->minLength());
+  handle.logMessage(LOGWARN, "Maximum length of length group division is", this->maxLength());
 }
 
 void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
   const LengthGroupDivision* coarser) {
 
-  double minlength = max(coarser->minLength(), finer->minLength());
-  double maxlength = min(coarser->maxLength(), finer->maxLength());
+  int c, f, fmin, fmax;
+  double minlength, maxlength;
 
+  //check to see if the intersection exists
+  if ((coarser->numLengthGroups() == 0) || (finer->numLengthGroups() == 0)) {
+    handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner - invalid length group");
+    finer->printError();
+    coarser->printError();
+    exit(EXIT_FAILURE);
+  }
+
+  minlength = max(coarser->minLength(), finer->minLength()) + rathersmall;
+  maxlength = min(coarser->maxLength(), finer->maxLength()) - rathersmall;
   //check to see if the intersection is empty
-  if ((coarser->numLengthGroups() == 0) ||
-       (finer->numLengthGroups() == 0) || (minlength > maxlength)) {
-
+  if ((minlength > maxlength) || isZero(minlength - maxlength)) {
     handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner - empty intersection");
     finer->printError();
     coarser->printError();
     exit(EXIT_FAILURE);
   }
 
-  int c, f, fmin, fmax;
   fmin = finer->numLengthGroup(minlength);
   fmax = finer->numLengthGroup(maxlength);
-
-  //check the minimum length cell of the intersection
-  if ((minlength > finer->minLength()) && !isZero(minlength - finer->minLength(fmin))) {
-    handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner for minimum length cell");
-    finer->printError();
-    coarser->printError();
-    exit(EXIT_FAILURE);
-  }
-
-  //check the maximum length cell of the intersection
-  if ((maxlength < finer->maxLength()) && !isZero(maxlength - finer->minLength(fmax))) {
-    handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner for maximum length cell");
-    finer->printError();
-    coarser->printError();
-    exit(EXIT_FAILURE);
-  }
-
-  //if fmax in finer is not in the intersection of the length groups
-  while (isZero(maxlength - finer->minLength(fmax)))
-    fmax--;
-
-  //fmin is the first length group in finer that is wholly contained
-  //in the intersection of finer and coarser.
-  //fmax is the last length group in finer in the intersection
-  for (f = fmin; f <= fmax; f++) {
+  for (f = fmin; f < fmax; f++) {
     c = coarser->numLengthGroup(finer->minLength(f));
     if (c < 0) {
       handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner for the following lengthgroups");
@@ -225,10 +214,11 @@ void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
       coarser->printError();
       exit(EXIT_FAILURE);
     }
+
     if ((coarser->minLength(c) > (finer->minLength(f) + rathersmall)) ||
          (finer->maxLength(f) > (coarser->maxLength(c) + rathersmall))) {
 
-      handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner for length cell", f);
+      handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner for length group", f);
       finer->printError();
       coarser->printError();
       exit(EXIT_FAILURE);

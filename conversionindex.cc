@@ -7,16 +7,21 @@ extern ErrorHandler handle;
 ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   const LengthGroupDivision* const L2, int interp) {
 
-  if (L1->maxLength() <= L2->minLength() || L2->maxLength() <= L1->minLength()) {
+  int i, j, k, nc, nf;
+  const LengthGroupDivision* Lf;  //will be the finer length group division
+  const LengthGroupDivision* Lc;  //will be the coarser length group division
+  double tmpmin = max(L1->minLength(), L2->minLength());
+  double tmpmax = min(L1->maxLength(), L2->maxLength());
+
+  //check to see if the intersection is empty
+  if ((L1->numLengthGroups() == 0) || (L2->numLengthGroups() == 0) ||
+       (tmpmin > tmpmax) || isZero(tmpmin - tmpmax)) {
+
     handle.logMessage(LOGWARN, "Error in conversionindex - intersection between length groups is empty");
     L1->printError();
     L2->printError();
     exit(EXIT_FAILURE);
   }
-
-  int i, j, k, nc, nf;
-  const LengthGroupDivision* Lf;  //will be the finer length group division
-  const LengthGroupDivision* Lc;  //will be the coarser length group division
 
   samedl = 0;
   offset = 0;
