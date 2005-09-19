@@ -5,7 +5,7 @@
 #include "conversionindex.h"
 #include "commentstream.h"
 #include "agebandmatrix.h"
-#include "bandmatrixptrmatrix.h"
+#include "doublematrixptrmatrix.h"
 #include "predator.h"
 #include "keeper.h"
 
@@ -45,9 +45,9 @@ public:
    * \brief This will return the amount the predator consumes of a given prey on a given area
    * \param area is the area that the consumption is being calculated on
    * \param preyname is the name of the prey that is being consumed
-   * \return BandMatrix containing the amount the predator consumes
+   * \return DoubleMatrix containing the amount the predator consumes
    */
-  virtual const BandMatrix& getConsumption(int area, const char* preyname) const;
+  virtual const DoubleMatrix& getConsumption(int area, const char* preyname) const;
   /**
    * \brief This will return the amount the predator overconsumes on a given area
    * \param area is the area that the consumption is being calculated on
@@ -103,10 +103,10 @@ protected:
    */
   DoubleMatrix overconsumption;
   /**
-   * \brief This is the BandMatrixPtrMatrix used to store information on the consumption by the predators on the current timestep
+   * \brief This is the DoubleMatrixPtrMatrix used to store information on the consumption by the predators on the current timestep
    * \note the indices for this object are [area][prey][predator length][prey length]
    */
-  BandMatrixPtrMatrix consumption;
+  DoubleMatrixPtrMatrix consumption;
   /**
    * \brief This is the DoubleMatrix used to store information on the total consumption by the predators on the current timestep
    * \note the indices for this object are [area][predator length]
@@ -118,10 +118,10 @@ protected:
    */
   DoubleMatrix overcons;
   /**
-   * \brief This is the BandMatrixPtrMatrix used to store information on the consumption by the predators on the current substep of the current timestep
+   * \brief This is the DoubleMatrixPtrMatrix used to store information on the consumption by the predators on the current substep of the current timestep
    * \note the indices for this object are [area][prey][predator length][prey length]
    */
-  BandMatrixPtrMatrix cons;
+  DoubleMatrixPtrMatrix cons;
   /**
    * \brief This is the DoubleMatrix used to store information on the total consumption by the predators on the current substep of the current timestep
    * \note the indices for this object are [area][predator length]

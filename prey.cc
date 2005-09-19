@@ -131,16 +131,20 @@ void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
 }
 
 //adds the consumption by biomass
-void Prey::addBiomassConsumption(int area, const DoubleIndexVector& predcons) {
+void Prey::addBiomassConsumption(int area, const DoubleVector& predcons) {
   int i, inarea = this->areaNum(area);
-  for (i = predcons.minCol(); i < predcons.maxCol(); i++)
+  if (predcons.Size() != cons[inarea].Size())
+    handle.logMessage(LOGFAIL, "Error in consumption - cannot add different size vectors");
+  for (i = 0; i < predcons.Size(); i++)
     cons[inarea][i] += predcons[i];
 }
 
 //adds the consumption by numbers
-void Prey::addNumbersConsumption(int area, const DoubleIndexVector& predcons) {
+void Prey::addNumbersConsumption(int area, const DoubleVector& predcons) {
   int i, inarea = this->areaNum(area);
-  for (i = predcons.minCol(); i < predcons.maxCol(); i++)
+  if (predcons.Size() != cons[inarea].Size())
+    handle.logMessage(LOGFAIL, "Error in consumption - cannot add different size vectors");
+  for (i = 0; i < predcons.Size(); i++)
     cons[inarea][i] += (predcons[i] * preynumber[inarea][i].W);
 }
 

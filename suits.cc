@@ -9,6 +9,7 @@ Suits::~Suits() {
   for (i = 0; i < preynames.Size(); i++) {
     delete[] preynames[i];
     delete suitFunction[i];
+    delete preCalcSuitability[i];
   }
 }
 
@@ -33,30 +34,26 @@ void Suits::deletePrey(int i, Keeper* const keeper) {
 
 void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
   int i, j, p;
-  DoubleMatrix* temp = 0;
-  BandMatrix* suit = 0;
 
   for (p = 0; p < preynames.Size(); p++) {
     suitFunction[p]->updateConstants(TimeInfo);
     if (suitFunction[p]->didChange(TimeInfo)) {
-      temp = new DoubleMatrix(pred->getLengthGroupDiv()->numLengthGroups(), pred->getPrey(p)->getLengthGroupDiv()->numLengthGroups(), 0.0);
-      for (i = 0; i < pred->getLengthGroupDiv()->numLengthGroups(); i++) {
-        for (j = 0; j < pred->getPrey(p)->getLengthGroupDiv()->numLengthGroups(); j++) {
+      // first time through we need to create the matrix
+      if (init == 0)
+        preCalcSuitability[p] = new DoubleMatrix(pred->getLengthGroupDiv()->numLengthGroups(),
+                                pred->getPrey(p)->getLengthGroupDiv()->numLengthGroups(), 0.0);
+
+      for (i = 0; i < preCalcSuitability[p]->Nrow(); i++) {
+        for (j = 0; j < preCalcSuitability[p]->Ncol(i); j++) {
           if (suitFunction[p]->usesPreyLength())
             suitFunction[p]->setPreyLength(pred->getPrey(p)->getLengthGroupDiv()->meanLength(j));
 
           if (suitFunction[p]->usesPredLength())
             suitFunction[p]->setPredLength(pred->getLengthGroupDiv()->meanLength(i));
 
-          (*temp)[i][j] = suitFunction[p]->calculate();
-          if ((*temp)[i][j] < 0)
-            (*temp)[i][j] = 0.0;
+          (*preCalcSuitability[p])[i][j] = suitFunction[p]->calculate();
         }
       }
-      suit = new BandMatrix(*temp);
-      preCalcSuitability.changeElement(p, *suit);
-      delete suit;
-      delete temp;
     }
   }
 
@@ -64,18 +61,19 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
   //Scaling of suitabilities, so that in each lengthgroup of each predator, the
   //maximum suitability is exactly 1, if any suitability is different from 0.
   double mult;
-  for (i = 0; i < pred->numLengthGroups(); i++) {
+  for (i = 0; i < pred->getLengthGroupDiv()->numLengthGroups(); i++) {
     mult = 0.0;
     for (p = 0; p < preynames.Size(); p++)
-      if (i >= preCalcSuitability[p].minRow() && i <= preCalcSuitability[p].maxRow())
-        for (j = preCalcSuitability[p].minCol(i); j < preCalcSuitability[p].maxCol(i); j++)
-          mult = max(preCalcSuitability[p][i][j], mult);
+      for (j = 0; j < preCalcSuitability[p]->Ncol(i); j++)
+        mult = max((*preCalcSuitability[p])[i][j], mult);
 
     if (!(isZero(mult)))
       for (p = 0; p < preynames.Size(); p++)
-        if (i >= preCalcSuitability[p].minRow() && i <= preCalcSuitability[p].maxRow())
-          for (j = preCalcSuitability[p].minCol(i); j < preCalcSuitability[p].maxCol(i); j++)
-            preCalcSuitability[p][i][j] /= mult;
+        for (j = 0; j < preCalcSuitability[p]->Ncol(i); j++)
+          (*preCalcSuitability[p])[i][j] /= mult;
   }
   #endif
+
+  // the matrices have now been initialised so we can reset the flag
+  init = 1;  
 }

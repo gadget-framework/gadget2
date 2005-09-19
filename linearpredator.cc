@@ -36,21 +36,21 @@ void LinearPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
         handle.logMessage(LOGWARN, "Warning in linearpredator - excessive consumption required");
 
       for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++) {
-        cons[inarea][prey][predl][preyl] = tmp *
-          Suitability(prey)[predl][preyl] * this->getPrey(prey)->getBiomass(area, preyl);
-        totalcons[inarea][predl] += cons[inarea][prey][predl][preyl];
+        (*cons[inarea][prey])[predl][preyl] = tmp *
+          this->getSuitability(prey)[predl][preyl] * this->getPrey(prey)->getBiomass(area, preyl);
+        totalcons[inarea][predl] += (*cons[inarea][prey])[predl][preyl];
       }
 
     } else {
       for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
-        cons[inarea][prey][predl][preyl] = 0.0;
+        (*cons[inarea][prey])[predl][preyl] = 0.0;
     }
   }
 
   //Inform the preys of the consumption.
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
-      this->getPrey(prey)->addBiomassConsumption(area, cons[inarea][prey][predl]);
+      this->getPrey(prey)->addBiomassConsumption(area, (*cons[inarea][prey])[predl]);
 }
 
 void LinearPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
@@ -71,8 +71,8 @@ void LinearPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
           ratio = this->getPrey(prey)->getRatio(area, preyl);
           if (ratio > maxRatio) {
             tmp = maxRatio / ratio;
-            overcons[inarea][predl] += (1.0 - tmp) * cons[inarea][prey][predl][preyl];
-            cons[inarea][prey][predl][preyl] *= tmp;
+            overcons[inarea][predl] += (1.0 - tmp) * (*cons[inarea][prey])[predl][preyl];
+            (*cons[inarea][prey])[predl][preyl] *= tmp;
           }
         }
       }
@@ -88,7 +88,7 @@ void LinearPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
       for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
-        consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
+        (*consumption[inarea][prey])[predl][preyl] += (*cons[inarea][prey])[predl][preyl];
 }
 
 void LinearPredator::Print(ofstream& outfile) const {
@@ -99,7 +99,7 @@ void LinearPredator::Print(ofstream& outfile) const {
 const PopInfoVector& LinearPredator::getNumberPriorToEating(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (strcasecmp(getPreyName(prey), preyname) == 0)
+    if (strcasecmp(this->getPreyName(prey), preyname) == 0)
       return this->getPrey(prey)->getNumberPriorToEating(area);
 
   handle.logMessage(LOGFAIL, "Error in linearpredator - failed to match prey", preyname);

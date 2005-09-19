@@ -5,6 +5,7 @@
 #include "lengthgroup.h"
 #include "commentstream.h"
 #include "agebandmatrixptrvector.h"
+#include "bandmatrixptrvector.h"
 #include "poppredator.h"
 
 /**

@@ -101,6 +101,11 @@ public:
    * \note This will delete every entry from the vector and set the number of rows to zero
    */
   void Reset();
+  /**
+   * \brief This function will print the data stored in the vector
+   * \param outfile is the ofstream that all the model information gets sent to
+   */
+  void Print(ofstream& outfile) const;
   DoubleMatrix& operator = (const DoubleMatrix& d);
 protected:
   /**

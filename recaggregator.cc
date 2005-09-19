@@ -78,7 +78,7 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
 
             for (i = 0; i < fleets[f]->getPredator()->numPreys(); i++) {
               if (strcasecmp(stocks[h]->getPrey()->getName(), fleets[f]->getPredator()->getPrey(i)->getName()) == 0) {
-                suitptr = &fleets[f]->getPredator()->Suitability(i)[0];
+                suitptr = &fleets[f]->getPredator()->getSuitability(i)[0];
                 alptr = &taggingExp->getNumberPriorToEating(areas[area][j], stocks[h]->getName());
                 for (age = 0; age < ages.Nrow(); age++) {
                   for (k = 0; k < ages.Ncol(age); k++) {

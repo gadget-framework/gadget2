@@ -24,7 +24,6 @@ public:
    * \note This will free all the memory allocated to all the elements of the vector
    */
   ~BandMatrixPtrVector();
-  void changeElement(int nr, const BandMatrix& value);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned

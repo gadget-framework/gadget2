@@ -100,6 +100,14 @@ public:
    * \param Ratio is a DoubleIndexVector of multiplicative constants to be applied to entries individually
    */
   void Add(const PopInfoIndexVector& Addition, const ConversionIndex& CI, double ratio, const DoubleIndexVector& Ratio);
+  /**
+   * \brief This function will add a PopInfoIndexVector to the current vector
+   * \param Addition is the PopInfoIndexVector that will be added to the current vector
+   * \param CI is the ConversionIndex that will convert between the length groups of the 2 vectors
+   * \param ratio is a multiplicative constant applied to each entry
+   * \param Ratio is a DoubleVector of multiplicative constants to be applied to entries individually
+   */
+  void Add(const PopInfoIndexVector& Addition, const ConversionIndex& CI, double ratio, const DoubleVector& Ratio);
 protected:
   /**
    * \brief This is the index for the vector

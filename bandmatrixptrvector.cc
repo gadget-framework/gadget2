@@ -22,12 +22,6 @@ BandMatrixPtrVector::~BandMatrixPtrVector() {
   }
 }
 
-void BandMatrixPtrVector::changeElement(int nr, const BandMatrix& value) {
-  if (v[nr] != 0)
-    delete v[nr];
-  v[nr] = new BandMatrix(value);
-}
-
 void BandMatrixPtrVector::resize(int addsize) {
   int i;
   if (addsize <= 0)

@@ -97,14 +97,14 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
 
             for (i = 0; i < pred->numPreys(); i++) {
               if (strcasecmp(prey->getName(), pred->getPrey(i)->getName()) == 0) {
-                suitptr = &pred->Suitability(i)[0];
+                suitptr = &pred->getSuitability(i)[0];
                 alptr = &prey->getALKPriorToEating(areas[area][j]);
                 for (age = 0; age < ages.Nrow(); age++) {
                   for (k = 0; k < ages.Ncol(age); k++) {
                     if ((alptr->minAge() <= ages[age][k]) && (ages[age][k] <= alptr->maxAge())) {
                       if (overconsumption) {
-                        DoubleIndexVector Ratio = *suitptr;
-                        for (z = Ratio.minCol(); z < Ratio.maxCol(); z++)
+                        DoubleVector Ratio = *suitptr;
+                        for (z = 0; z < Ratio.Size(); z++)
                           if (prey->getRatio(area, z) > 1)
                             Ratio[z] *= 1.0 / prey->getRatio(areas[area][j], z);
 

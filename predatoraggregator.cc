@@ -12,7 +12,7 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
   const PreyPtrVector& Preys, const IntMatrix& Areas,
   const LengthGroupDivision* const predLgrpDiv, const LengthGroupDivision* const preyLgrpDiv)
   : predators(Predators), preys(Preys), areas(Areas),
-    doeseat(Predators.Size(), Preys.Size(), 0), bptr(0) {
+    doeseat(Predators.Size(), Preys.Size(), 0), dptr(0) {
 
   int i, j;
 
@@ -38,10 +38,14 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
       if (predators[i]->doesEat(preys[j]->getName()))
         doeseat[i][j] = 1;
 
-  DoubleMatrix dm(predLgrpDiv->numLengthGroups(), preyLgrpDiv->numLengthGroups(), 1.0);
-  BandMatrix bm(dm, 0, 0);
-  total.resize(areas.Nrow(), bm);
+  total.resize(areas.Nrow(), new DoubleMatrix(predLgrpDiv->numLengthGroups(),  preyLgrpDiv->numLengthGroups(), 0.0));
   this->Reset();
+}
+
+PredatorAggregator::~PredatorAggregator() {
+  int i;
+  for (i = 0; i < total.Size(); i++)
+    delete total[i];
 }
 
 void PredatorAggregator::Print(ofstream& outfile) const {
@@ -49,10 +53,10 @@ void PredatorAggregator::Print(ofstream& outfile) const {
 
   for (i = 0; i < total.Size(); i++) {
     outfile << "\t\tInternal areas " << i << endl;
-    for (j = 0; j < total[i].Nrow(); j++) {
+    for (j = 0; j < total[i]->Nrow(); j++) {
       outfile << TAB << TAB;
-      for (k = 0; k < total[i].Ncol(j); k++)
-        outfile << setw(smallwidth) << total[i][j][k] << sep;
+      for (k = 0; k < total[i]->Ncol(j); k++)
+        outfile << setw(smallwidth) << (*total[i])[j][k] << sep;
       outfile << endl;
     }
   }
@@ -63,9 +67,9 @@ void PredatorAggregator::Reset() {
   int i, j, k;
 
   for (i = 0; i < total.Size(); i++)
-    for (j = 0; j < total[i].Nrow(); j++)
-      for (k = 0; k < total[i].Ncol(j); k++)
-        total[i][j][k] = 0.0;
+    for (j = 0; j < total[i]->Nrow(); j++)
+      for (k = 0; k < total[i]->Ncol(j); k++)
+        (*total[i])[j][k] = 0.0;
 }
 
 void PredatorAggregator::Sum() {
@@ -79,12 +83,12 @@ void PredatorAggregator::Sum() {
         for (l = 0; l < areas.Nrow(); l++) {
           for (j = 0; j < areas.Ncol(l); j++) {
             if (predators[g]->isInArea(areas[l][j]) && preys[h]->isInArea(areas[l][j])) {
-              bptr = &predators[g]->getConsumption(areas[l][j], preys[h]->getName());
-              for (k = bptr->minRow(); k <= bptr->maxRow(); k++)
+              dptr = &predators[g]->getConsumption(areas[l][j], preys[h]->getName());
+              for (k = 0; k < dptr->Nrow(); k++)
                 if (predConv[g][k] >= 0)
-                  for (i = bptr->minCol(k); i < bptr->maxCol(k); i++)
+                  for (i = 0; i < dptr->Ncol(k); i++)
                     if (preyConv[h][i] >= 0)
-                      total[l][predConv[g][k]][preyConv[h][i]] += (*bptr)[k][i];
+                      (*total[l])[predConv[g][k]][preyConv[h][i]] += (*dptr)[k][i];
 
             }
           }
@@ -107,13 +111,13 @@ void PredatorAggregator::NumberSum() {
         for (l = 0; l < areas.Nrow(); l++) {
           for (j = 0; j < areas.Ncol(l); j++) {
             if (predators[g]->isInArea(areas[l][j]) && preys[h]->isInArea(areas[l][j])) {
-              bptr = &predators[g]->getConsumption(areas[l][j], preys[h]->getName());
+              dptr = &predators[g]->getConsumption(areas[l][j], preys[h]->getName());
               preymeanw = &predators[g]->getNumberPriorToEating(areas[l][j], preys[h]->getName());
-              for (k = bptr->minRow(); k <= bptr->maxRow(); k++)
+              for (k = 0; k < dptr->Nrow(); k++)
                 if (predConv[g][k] >= 0)
-                  for (i = bptr->minCol(k); i < bptr->maxCol(k); i++)
+                  for (i = 0; i < dptr->Ncol(k); i++)
                     if (preyConv[h][i] >= 0 && (!(isZero((*preymeanw)[i].W))))
-                      total[l][predConv[g][k]][preyConv[h][i]] += (*bptr)[k][i] / (*preymeanw)[i].W;
+                      (*total[l])[predConv[g][k]][preyConv[h][i]] += (*dptr)[k][i] / (*preymeanw)[i].W;
 
             }
           }

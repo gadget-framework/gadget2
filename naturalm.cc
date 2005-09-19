@@ -2,7 +2,6 @@
 #include "readfunc.h"
 #include "areatime.h"
 #include "keeper.h"
-#include "doubleindexvector.h"
 #include "gadget.h"
 
 NaturalM::NaturalM(CommentStream& infile, int minage, int maxage, const TimeClass* const TimeInfo,

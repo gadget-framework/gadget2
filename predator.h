@@ -71,7 +71,7 @@ public:
    * \param preyname is the name of the prey that is being consumed
    * \return 0 (will be overridden by the derived classes)
    */
-  virtual const BandMatrix& getConsumption(int area, const char* preyname) const = 0;
+  virtual const DoubleMatrix& getConsumption(int area, const char* preyname) const = 0;
   /**
    * \brief This will return the amount the predator overconsumes on a given area
    * \param area is the area that the consumption is being calculated on
@@ -118,7 +118,7 @@ public:
    * \param i is the index of the prey
    * \return suitability matrix for the prey
    */
-  const BandMatrix& Suitability(int i) const { return suitable->getSuitability(i); };
+  const DoubleMatrix& getSuitability(int i) const { return suitable->getSuitability(i); };
   /**
    * \brief This function will check to see if the suitability values for a given prey have changed
    * \param i is the index of the prey

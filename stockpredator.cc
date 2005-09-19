@@ -107,7 +107,7 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
 const PopInfoVector& StockPredator::getNumberPriorToEating(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (strcasecmp(getPreyName(prey), preyname) == 0)
+    if (strcasecmp(this->getPreyName(prey), preyname) == 0)
       return this->getPrey(prey)->getNumberPriorToEating(area);
 
   handle.logMessage(LOGFAIL, "Error in stockpredator - failed to match prey", preyname);
@@ -141,16 +141,16 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
     if (this->getPrey(prey)->isPreyArea(area)) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++) {
-          cons[inarea][prey][predl][preyl] = Suitability(prey)[predl][preyl] *
+          (*cons[inarea][prey])[predl][preyl] = this->getSuitability(prey)[predl][preyl] *
             this->getPrey(prey)->getBiomass(area, preyl) * this->getPrey(prey)->getEnergy();
-          Phi[inarea][predl] += cons[inarea][prey][predl][preyl];
+          Phi[inarea][predl] += (*cons[inarea][prey])[predl][preyl];
         }
       }
 
     } else {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
         for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
-          cons[inarea][prey][predl][preyl] = 0.0;
+          (*cons[inarea][prey])[predl][preyl] = 0.0;
     }
   }
 
@@ -175,7 +175,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
         if (!(isZero(Phi[inarea][predl]))) {
           tmp = totalcons[inarea][predl] / Phi[inarea][predl];
           for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
-            cons[inarea][prey][predl][preyl] *= tmp;
+            (*cons[inarea][prey])[predl][preyl] *= tmp;
         }
       }
     }
@@ -185,7 +185,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-        this->getPrey(prey)->addBiomassConsumption(area, cons[inarea][prey][predl]);
+        this->getPrey(prey)->addBiomassConsumption(area, (*cons[inarea][prey])[predl]);
 }
 
 //Check if any of the preys of the predator are eaten up.
@@ -209,8 +209,8 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
             ratio = this->getPrey(prey)->getRatio(area, preyl);
             if (ratio > maxRatio) {
               tmp = maxRatio / ratio;
-              overcons[inarea][predl] += (1.0 - tmp) * cons[inarea][prey][predl][preyl];
-              cons[inarea][prey][predl][preyl] *= tmp;
+              overcons[inarea][predl] += (1.0 - tmp) * (*cons[inarea][prey])[predl][preyl];
+              (*cons[inarea][prey])[predl][preyl] *= tmp;
             }
           }
         }
@@ -240,5 +240,5 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
     if (this->getPrey(prey)->isPreyArea(area))
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
         for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
-          consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
+          (*consumption[inarea][prey])[predl][preyl] += (*cons[inarea][prey])[predl][preyl];
 }

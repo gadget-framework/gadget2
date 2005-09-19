@@ -18,8 +18,15 @@ PopPredator::PopPredator(const char* givenname, const IntVector& Areas)
 }
 
 PopPredator::~PopPredator() {
+  int i, j;
   delete LgrpDiv;
   delete CI;
+  for (i = 0; i < consumption.Nrow(); i++) {
+    for (j = 0; j < consumption[i].Size(); j++) {
+      delete consumption[i][j];
+      delete cons[i][j];
+    }
+  }
 }
 
 void PopPredator::Print(ofstream& outfile) const {
@@ -45,41 +52,31 @@ void PopPredator::Print(ofstream& outfile) const {
   }
 }
 
-const BandMatrix& PopPredator::getConsumption(int area, const char* preyname) const {
+const DoubleMatrix& PopPredator::getConsumption(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (strcasecmp(getPreyName(prey), preyname) == 0)
-      return consumption[this->areaNum(area)][prey];
+    if (strcasecmp(this->getPreyName(prey), preyname) == 0)
+      return (*consumption[this->areaNum(area)][prey]);
 
   handle.logMessage(LOGFAIL, "Error in poppredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);
 }
 
 const double PopPredator::getConsumptionBiomass(int prey, int area) const{
-  int age, len;
+  int i, j;
   int inarea = this->areaNum(area);
   double kilos = 0.0;
-  for (age = consumption[inarea][prey].minRow(); age <= consumption[inarea][prey].maxRow(); age++)
-    for (len = consumption[inarea][prey].minCol(age); len < consumption[inarea][prey].maxCol(age); len++)
-      kilos += (consumption[inarea][prey])[age][len];
+  for (i = 0; i < (*consumption[inarea][prey]).Nrow(); i++)
+    for (j = 0; j < (*consumption[inarea][prey]).Ncol(i); j++)
+      kilos += (*consumption[inarea][prey])[i][j];
 
   return kilos;
 }
 
 void PopPredator::Reset(const TimeClass* const TimeInfo) {
   Predator::Reset(TimeInfo);
-  //Now the matrices Suitability(prey) are of the correct size.
-  //We must adjust the size of consumption accordingly.
-  int i, j, area, prey;
-  for (area = 0; area < areas.Size(); area++) {
-    for (prey = 0; prey < this->numPreys(); prey++) {
-      if (this->didChange(prey, TimeInfo)) {
-        cons.changeElement(area, prey, Suitability(prey));
-        consumption.changeElement(area, prey, Suitability(prey));
-      }
-    }
-  }
 
+  int i, j, area, prey;
   if (TimeInfo->getSubStep() == 1) {
     for (area = 0; area < areas.Size(); area++) {
       for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
@@ -88,8 +85,8 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
         overconsumption[area][i] = 0.0;
         totalconsumption[area][i] = 0.0;
         for (prey = 0; prey < this->numPreys(); prey++)
-          for (j = consumption[area][prey].minCol(i); j < consumption[area][prey].maxCol(i); j++)
-            consumption[area][prey][i][j] = 0.0;
+          for (j = 0; j < (*consumption[area][prey]).Ncol(i); j++)
+            (*consumption[area][prey])[i][j] = 0.0;
       }
     }
   }
@@ -101,9 +98,9 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
 void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   Predator::setPrey(preyvec, keeper);
 
+  int i, j;
   if (LgrpDiv == 0) {
     //need to construct length group based on the min/max lengths of the preys
-    int i;
     double minl, maxl;
     minl = 9999.0;
     maxl = 0.0;
@@ -120,9 +117,16 @@ void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   PopInfo nullpop;
   //add rows to matrices and initialise
   cons.AddRows(areas.Size(), this->numPreys());
+  consumption.AddRows(areas.Size(), this->numPreys());
+  for (i = 0; i < areas.Size(); i++) {
+    for (j = 0; j < this->numPreys(); j++) {
+      cons[i][j] = new DoubleMatrix(LgrpDiv->numLengthGroups(),  this->getPrey(j)->getLengthGroupDiv()->numLengthGroups(), 0.0);
+      consumption[i][j] = new DoubleMatrix(LgrpDiv->numLengthGroups(),  this->getPrey(j)->getLengthGroupDiv()->numLengthGroups(), 0.0);
+    }
+  }
+
   totalcons.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
   overcons.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
-  consumption.AddRows(areas.Size(), this->numPreys());
   totalconsumption.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
   overconsumption.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
   prednumber.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), nullpop);

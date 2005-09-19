@@ -33,14 +33,14 @@ void TotalPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
       for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++) {
-        cons[inarea][prey][predl][preyl]
-          = Suitability(prey)[predl][preyl] * this->getPrey(prey)->getBiomass(area, preyl);
-        totalcons[inarea][predl] += cons[inarea][prey][predl][preyl];
+        (*cons[inarea][prey])[predl][preyl]
+          = this->getSuitability(prey)[predl][preyl] * this->getPrey(prey)->getBiomass(area, preyl);
+        totalcons[inarea][predl] += (*cons[inarea][prey])[predl][preyl];
       }
 
     } else {
       for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
-        cons[inarea][prey][predl][preyl] = 0.0;
+        (*cons[inarea][prey])[predl][preyl] = 0.0;
     }
   }
 
@@ -50,7 +50,7 @@ void TotalPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
     if (this->getPrey(prey)->isPreyArea(area)) {
       wanttoeat = tmp * prednumber[inarea][predl].N;
       for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
-        cons[inarea][prey][predl][preyl] *= wanttoeat / totalcons[inarea][predl];
+        (*cons[inarea][prey])[predl][preyl] *= wanttoeat / totalcons[inarea][predl];
     }
   }
 
@@ -62,7 +62,7 @@ void TotalPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   //Inform the preys of the consumption.
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
-      this->getPrey(prey)->addBiomassConsumption(area, cons[inarea][prey][predl]);
+      this->getPrey(prey)->addBiomassConsumption(area, (*cons[inarea][prey])[predl]);
 
   //set totalconsumption to the actual total consumption
   for (prey = 0; prey < this->numPreys(); prey++)
@@ -90,8 +90,8 @@ void TotalPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
           ratio = this->getPrey(prey)->getRatio(area, preyl);
           if (ratio > maxRatio) {
             tmp = maxRatio / ratio;
-            overcons[inarea][predl] += (1.0 - tmp) * cons[inarea][prey][predl][preyl];
-            cons[inarea][prey][predl][preyl] *= tmp;
+            overcons[inarea][predl] += (1.0 - tmp) * (*cons[inarea][prey])[predl][preyl];
+            (*cons[inarea][prey])[predl][preyl] *= tmp;
           }
         }
       }
@@ -111,7 +111,7 @@ void TotalPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
       for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
-        consumption[inarea][prey][predl][preyl] += cons[inarea][prey][predl][preyl];
+        (*consumption[inarea][prey])[predl][preyl] += (*cons[inarea][prey])[predl][preyl];
 }
 
 void TotalPredator::Print(ofstream& outfile) const {
@@ -122,7 +122,7 @@ void TotalPredator::Print(ofstream& outfile) const {
 const PopInfoVector& TotalPredator::getNumberPriorToEating(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < this->numPreys(); prey++)
-    if (strcasecmp(getPreyName(prey), preyname) == 0)
+    if (strcasecmp(this->getPreyName(prey), preyname) == 0)
       return this->getPrey(prey)->getNumberPriorToEating(area);
 
   handle.logMessage(LOGFAIL, "Error in totalpredator - failed to match prey", preyname);

@@ -2,7 +2,7 @@
 #define predatoraggregator_h
 
 #include "agebandmatrix.h"
-#include "bandmatrixptrvector.h"
+#include "doublematrixptrvector.h"
 #include "intmatrix.h"
 #include "predatorptrvector.h"
 #include "preyptrvector.h"
@@ -28,7 +28,7 @@ public:
   /**
    * \brief This is the default PredatorAggregator destructor
    */
-  ~PredatorAggregator() {};
+  ~PredatorAggregator();
   /**
    * \brief This will print the aggregator information to the ofstream specified
    * \param outfile is the ofstream to the file that the aggregator information gets sent to
@@ -47,10 +47,10 @@ public:
    */
   void NumberSum();
   /**
-   * \brief This will return the BandMatrixPtrVector containing the aggregated predation information
-   * \return total, the BandMatrixPtrVector of aggregated predation information
+   * \brief This will return the DoubleMatrixPtrVector containing the aggregated predation information
+   * \return total, the DoubleMatrixPtrVector of aggregated predation information
    */
-  const BandMatrixPtrVector& getSum() const { return total; };
+  const DoubleMatrixPtrVector& getSum() const { return total; };
 protected:
   /**
    * \brief This is the PredatorPtrVector of the predators that will be aggregated
@@ -62,12 +62,12 @@ protected:
   PreyPtrVector preys;
   /**
    * \brief This is the IntMatrix used to convert length group information for predators
-   * \note predConv[i][j] is the index of the length group in BandMatrixPtrVector total to which length group j of predator i belongs.
+   * \note predConv[i][j] is the index of the length group in DoubleMatrixPtrVector total to which length group j of predator i belongs.
    */
   IntMatrix predConv;
   /**
    * \brief This is the IntMatrix used to convert length group information for preys
-   * \note preyConv[i][j] is the index of the length group in BandMatrixPtrVector total to which length group j of prey i belongs.
+   * \note preyConv[i][j] is the index of the length group in DoubleMatrixPtrVector total to which length group j of prey i belongs.
    */
   IntMatrix preyConv;
   /**
@@ -80,13 +80,13 @@ protected:
    */
   IntMatrix doeseat;
   /**
-   * \brief This is the BandMatrixPtrVector used to store the aggregated predation information
+   * \brief This is the DoubleMatrixPtrVector used to store the aggregated predation information
    */
-  BandMatrixPtrVector total;
+  DoubleMatrixPtrVector total;
   /**
-   * \brief This is the BandMatrix used to temporarily store information when aggregating the predation
+   * \brief This is the DoubleMatrix used to temporarily store information when aggregating the predation
    */
-  const BandMatrix* bptr;
+  const DoubleMatrix* dptr;
 };
 
 #endif

@@ -78,9 +78,8 @@ public:
    */
   int Size() const { return size; };
   /**
-   * \brief This will return the value of an element of the vector
-   * \param pos is the element of the vector to be returned
-   * \return the value of the specified element
+   * \brief This will delete an element of the vector
+   * \param pos is the element of the vector to be deleted
    */
   void Delete(int pos);
   DoubleIndexVector& operator = (const DoubleIndexVector& dv);

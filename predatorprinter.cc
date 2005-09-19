@@ -15,7 +15,7 @@ extern RunID RUNID;
 extern ErrorHandler handle;
 
 PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
-  : Printer(PREDATORPRINTER), predLgrpDiv(0), preyLgrpDiv(0), aggregator(0), bptr(0) {
+  : Printer(PREDATORPRINTER), predLgrpDiv(0), preyLgrpDiv(0), aggregator(0), dptr(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -271,9 +271,9 @@ void PredatorPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
   int a, predl, preyl;
   for (a = 0; a < areas.Nrow(); a++) {
-    bptr = &aggregator->getSum()[a];
-    for (predl = 0; predl < bptr->Nrow(); predl++) {
-      for (preyl = 0; preyl < bptr->Ncol(predl); preyl++) {
+    dptr = aggregator->getSum()[a];
+    for (predl = 0; predl < dptr->Nrow(); predl++) {
+      for (preyl = 0; preyl < dptr->Ncol(predl); preyl++) {
         outfile << setw(lowwidth) << TimeInfo->getYear() << sep
           << setw(lowwidth) << TimeInfo->getStep() << sep
           << setw(printwidth) << areaindex[a] << sep
@@ -281,10 +281,10 @@ void PredatorPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
           << setw(printwidth) << preylenindex[preyl] << sep;
 
         //JMB crude filter to remove the 'silly' values from the output
-        if ((*bptr)[predl][preyl] < rathersmall)
+        if ((*dptr)[predl][preyl] < rathersmall)
           outfile << setw(width) << 0 << endl;
         else
-          outfile << setprecision(precision) << setw(width) << (*bptr)[predl][preyl] << endl;
+          outfile << setprecision(precision) << setw(width) << (*dptr)[predl][preyl] << endl;
       }
     }
   }

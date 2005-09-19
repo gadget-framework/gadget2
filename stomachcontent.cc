@@ -78,7 +78,7 @@ void StomachContent::Print(ofstream& outfile) const {
 // ********************************************************
 SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo,
   Keeper* const keeper, const char* datafilename, const char* name)
-    : aggregator(0), preyLgrpDiv(0), predLgrpDiv(0), bptr(0) {
+    : aggregator(0), preyLgrpDiv(0), predLgrpDiv(0), dptr(0) {
 
   int i, j;
   char text[MaxStrLength];
@@ -208,14 +208,15 @@ double SC::calcLikelihood(const TimeClass* const TimeInfo) {
   int numprey = 0;
   for (i = 0; i < preyindex.Size(); i++) {
     this->aggregate(i);
-    bptr = &aggregator[i]->getSum();
-    for (a = 0; a < areas.Nrow(); a++)
-      for (k = 0; k < (*bptr)[a].Nrow(); k++)
-        for (p = 0; p < (*bptr)[a].Ncol(k); p++)
-          (*modelConsumption[timeindex][a])[k][numprey + p] = (*bptr)[a][k][p] *
+    for (a = 0; a < areas.Nrow(); a++) {
+      dptr = aggregator[i]->getSum()[a];
+      for (k = 0; k < dptr->Nrow(); k++)
+        for (p = 0; p < dptr->Ncol(k); p++)
+          (*modelConsumption[timeindex][a])[k][numprey + p] = (*dptr)[k][p] *
                (digestioncoeff[i][0] + digestioncoeff[i][1] *
                 pow(preyLgrpDiv[i]->meanLength(p), digestioncoeff[i][2]));
 
+    }
     numprey += preylengths[i].Size() - 1;
   }
 
@@ -275,11 +276,12 @@ void SC::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
 
 SC::~SC() {
   int i, j;
-  for (i = 0; i < obsConsumption.Nrow(); i++)
+  for (i = 0; i < obsConsumption.Nrow(); i++) {
     for (j = 0; j < obsConsumption[i].Size(); j++) {
       delete obsConsumption[i][j];
       delete modelConsumption[i][j];
     }
+  }
 
   for (i = 0; i < preyindex.Size(); i++) {
     delete aggregator[i];

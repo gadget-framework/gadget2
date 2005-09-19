@@ -176,9 +176,9 @@ protected:
    */
   char* scname;
   /**
-   * \brief This is the BandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
+   * \brief This is the DoubleMatrix used to temporarily store the information returned from the aggregatation function
    */
-  const BandMatrixPtrVector* bptr;
+  const DoubleMatrix* dptr;
 };
 
 /**

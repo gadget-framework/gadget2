@@ -139,3 +139,13 @@ void DoubleMatrix::Reset() {
     nrow = 0;
   }
 }
+
+void DoubleMatrix::Print(ofstream& outfile) const {
+  int i, j;
+  for (i = 0; i < nrow; i++) {
+    outfile << TAB;
+    for (j = 0; j < v[i]->Size(); j++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << (*v[i])[j] << sep;
+    outfile << endl;
+  }
+}

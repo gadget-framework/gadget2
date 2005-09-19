@@ -78,15 +78,15 @@ public:
   /**
    * \brief This function will add predation (by biomass) to the amount of the prey that is consumed
    * \param area is the area that the consumption is being calculated on
-   * \param predcons is the DoubleIndexVector containing the predation data
+   * \param predcons is the DoubleVector containing the predation data
    */
-  void addBiomassConsumption(int area, const DoubleIndexVector& predcons);
+  void addBiomassConsumption(int area, const DoubleVector& predcons);
   /**
    * \brief This function will add predation (by numbers) to the amount of the prey that is consumed
    * \param area is the area that the consumption is being calculated on
-   * \param predcons is the DoubleIndexVector containing the predation data
+   * \param predcons is the DoubleVector containing the predation data
    */
-  void addNumbersConsumption(int area, const DoubleIndexVector& predcons);
+  void addNumbersConsumption(int area, const DoubleVector& predcons);
   /**
    * \brief This function will check for overconsumption of the prey
    * \param area is the area that the consumption is being calculated on

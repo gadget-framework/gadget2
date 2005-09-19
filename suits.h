@@ -3,7 +3,7 @@
 
 #include "charptrvector.h"
 #include "suitfuncptrvector.h"
-#include "bandmatrixptrvector.h"
+#include "doublematrixptrvector.h"
 #include "keeper.h"
 
 class Predator;
@@ -17,7 +17,7 @@ public:
   /**
    * \brief This is the default Suits constructor
    */
-  Suits() {};
+  Suits() { init = 0; };
   /**
    * \brief This is the default Suits destructor
    */
@@ -48,9 +48,9 @@ public:
   /**
    * \brief This function will return the calculated suitability values for a given prey
    * \param i is the index of the prey
-   * \return preCalcSuitability[i], the BandMatrix containing the suitability values
+   * \return preCalcSuitability[i], the DoubleMatrix containing the suitability values
    */
-  const BandMatrix& getSuitability(int i) const { return preCalcSuitability[i]; };
+  const DoubleMatrix& getSuitability(int i) const { return (*preCalcSuitability[i]); };
   /**
    * \brief This function will reset the suitability information for a given predator
    * \param pred is the Predator that the suitability functions are defined for
@@ -74,10 +74,15 @@ protected:
    */
   SuitFuncPtrVector suitFunction;
   /**
-   * \brief This is the BandMatrixPtrVector of calculated suitability values
+   * \brief This is the DoubleMatrixPtrVector of calculated suitability values
    * \note the indices for this object are [prey][predator length][prey length]
    */
-  BandMatrixPtrVector preCalcSuitability;
+  DoubleMatrixPtrVector preCalcSuitability;
+private:
+  /**
+   * \brief This is the flag used to denote whether the objects have been initialised or not
+   */
+  int init;
 };
 
 #endif

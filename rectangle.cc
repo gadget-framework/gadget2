@@ -7,6 +7,7 @@ Rectangle::Rectangle() {
 }
 
 //JMB - we need to do some checks here ...
+//should we convert these into something?  km?
 Rectangle::Rectangle(CommentStream& infile) {
   infile >> yLower >> xLower >> yUpper >> xUpper >> ws;
 //  infile >> xLower >> yLower >> xUpper >> yUpper >> ws;
