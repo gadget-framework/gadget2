@@ -63,13 +63,6 @@ public:
    */
   virtual void Print(ofstream& outfile) const;
   /**
-   * \brief This function will return the number of a prey on a specified area before the consumption calculation takes place
-   * \param area is the area that the prey consumption is being calculated on
-   * \param preyname is the name of the prey
-   * \return PopInfoVector containing the number of prey before the consumption takes place
-   */
-  virtual const PopInfoVector& getNumberPriorToEating(int area, const char* preyname) const;
-  /**
    * \brief This function will return the proportion of the predation that is due to each age-length cell of the predator
    * \param area is the area that the prey consumption is being calculated on
    * \return Alprop, a BandMatrix containing the age-length proportion of the
@@ -86,16 +79,12 @@ public:
    * \param area is the area that the prey consumption is being calculated on
    * \return maxconbylength, a DoubleVector containing the maximum consumption of the predator
    */
-  const DoubleVector& getMaxConByLen(int area) const { return maxconbylength[this->areaNum(area)]; };
+  const DoubleVector& getMaxConsumption(int area) const { return maxcons[this->areaNum(area)]; };
 protected:
   /**
-   * \brief This is the FormulaVector used to store the maximum consumption parameters
+   * \brief This is the FormulaVector used to store the consumption parameters
    */
-  FormulaVector maxcons;
-  /**
-   * \brief This is the Formula used to store the half feeding value parameter
-   */
-  Formula halfFeedingValue;
+  FormulaVector consParam;
   /**
    * \brief This is the DoubleMatrix used to store the sum of the feeding levels (over all preys) on the current timestep
    * \note the indices for this object are [area][predator length]
@@ -115,7 +104,7 @@ protected:
    * \brief This is the DoubleMatrix used to store maximum consumption by predator length group on the current timestep
    * \note the indices for this object are [area][predator length]
    */
-  DoubleMatrix maxconbylength;
+  DoubleMatrix maxcons;
   /**
    * \brief This is the BandMatrixPtrVector used to store proportion of the predation that is due to each age-length cell of the predator
    * \note the indices for this object are [area][predator age][predator length]

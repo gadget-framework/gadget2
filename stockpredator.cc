@@ -15,26 +15,47 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   int minage, int maxage, const TimeClass* const TimeInfo, Keeper* const keeper)
   : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv) {
 
+  type = STOCKPREDATOR;
   keeper->addString("predator");
+  int i;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
+  //first read in the suitability parameters
   infile >> text >> ws;
   if (!(strcasecmp(text, "suitability") == 0))
     handle.logFileUnexpected(LOGFAIL, "suitability", text);
+  this->readSuitability(infile, TimeInfo, keeper);
 
-  this->readSuitability(infile, "maxconsumption", TimeInfo, keeper);
+  //now we read in the prey preference parameters - should be one for each prey
+  keeper->addString("preypreference");
+  int count = 0;
+  infile >> text >> ws;
+  while (!(strcasecmp(text, "maxconsumption") == 0) && (!infile.eof())) {
+    for (i = 0; i < preference.Size(); i++) {
+      if (strcasecmp(text, this->getPreyName(i)) == 0) {
+        infile >> preference[i] >> ws;
+        count++;
+      }
+    }
+    infile >> text >> ws;
+  }      
+  if (count != preference.Size())
+    handle.logMessage(LOGFAIL, "Error in stockpredator - missing prey preference data");
+  preference.Inform(keeper);
+  keeper->clearLast();  
 
-  keeper->addString("maxconsumption");
-  maxcons.resize(4, keeper);
-  if (!(infile >> maxcons))
-    handle.logFileMessage(LOGFAIL, "invalid format for maxconsumption vector");
-  maxcons.Inform(keeper);
-  keeper->clearLast();
+  //then read in the maximum consumption parameters
+  if (!(strcasecmp(text, "maxconsumption") == 0))
+    handle.logFileUnexpected(LOGFAIL, "maxconsumption", text);
+  keeper->addString("consumption");
+  consParam.resize(5, keeper);
+  for (i = 0; i < 4; i++)
+    if (!(infile >> consParam[i]))
+      handle.logFileMessage(LOGFAIL, "invalid format for maxconsumption vector");
 
-  keeper->addString("halffeedingvalue");
-  readWordAndVariable(infile, "halffeedingvalue", halfFeedingValue);
-  halfFeedingValue.Inform(keeper);
+  readWordAndVariable(infile, "halffeedingvalue", consParam[4]);
+  consParam.Inform(keeper);
   keeper->clearLast();
   keeper->clearLast();
 
@@ -47,7 +68,7 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
 
   Alkeys.resize(numarea, minage, minlength, size);
   Alprop.resize(numarea, bm);
-  maxconbylength.AddRows(numarea, numlength, 0.0);
+  maxcons.AddRows(numarea, numlength, 0.0);
   Phi.AddRows(numarea, numlength, 0.0);
   fphi.AddRows(numarea, numlength, 0.0);
   subfphi.AddRows(numarea, numlength, 0.0);
@@ -68,8 +89,8 @@ void StockPredator::Print(ofstream& outfile) const {
     outfile << "\tAge-length proportion on internal area " << areas[area] << ":\n";
     Alprop[area].Print(outfile);
     outfile << "\tMaximum consumption by length on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < maxconbylength.Ncol(); i++)
-      outfile << setw(smallwidth) << setprecision(smallprecision) << maxconbylength[area][i] << sep;
+    for (i = 0; i < maxcons.Ncol(); i++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << maxcons[area][i] << sep;
     outfile << endl;
   }
   outfile << endl;
@@ -93,25 +114,14 @@ void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
 
 void StockPredator::Reset(const TimeClass* const TimeInfo) {
   PopPredator::Reset(TimeInfo);
+
   // check that the various parameters that can be estimated are sensible
-  if (handle.getLogLevel() >= LOGWARN) {
+  if ((TimeInfo->getTime() == 1) && (handle.getLogLevel() >= LOGWARN)) {
     int i;
-    for (i = 0; i < maxcons.Size(); i++)
-      if (maxcons[i] < 0)
-        handle.logMessage(LOGWARN, "Warning in stockpredator - negative consumption parameter", maxcons[i]);
-    if (halfFeedingValue < 0)
-      handle.logMessage(LOGWARN, "Warning in stockpredator - negative half feeding value", halfFeedingValue);
+    for (i = 0; i < consParam.Size(); i++)
+      if (consParam[i] < 0)
+        handle.logMessage(LOGWARN, "Warning in stockpredator - negative consumption parameter", consParam[i]);
   }
-}
-
-const PopInfoVector& StockPredator::getNumberPriorToEating(int area, const char* preyname) const {
-  int prey;
-  for (prey = 0; prey < this->numPreys(); prey++)
-    if (strcasecmp(this->getPreyName(prey), preyname) == 0)
-      return this->getPrey(prey)->getNumberPriorToEating(area);
-
-  handle.logMessage(LOGFAIL, "Error in stockpredator - failed to match prey", preyname);
-  exit(EXIT_FAILURE);
 }
 
 void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
@@ -128,21 +138,22 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       fphi[inarea][predl] = 0.0;
 
     temperature = Area->getTemperature(area, TimeInfo->getTime());
-    tmp = exp(temperature * (maxcons[1] - temperature * temperature * maxcons[2]))
-           * maxcons[0] * TimeInfo->LengthOfCurrent() / TimeInfo->numSubSteps();
+    tmp = exp(temperature * (consParam[1] - temperature * temperature * consParam[2]))
+           * consParam[0] * TimeInfo->LengthOfCurrent() / TimeInfo->numSubSteps();
 
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-      maxconbylength[inarea][predl] = tmp * pow(LgrpDiv->meanLength(predl), maxcons[3]);
+      maxcons[inarea][predl] = tmp * pow(LgrpDiv->meanLength(predl), consParam[3]);
   }
 
   //Now maxconbylength contains the maximum consumption by length
-  //Calculating Phi(L) and O(l,L,prey) (stored in consumption)
+  //Calculating Phi(L) and O(l,L,prey) based on energy requirements
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++) {
-          (*cons[inarea][prey])[predl][preyl] = this->getSuitability(prey)[predl][preyl] *
+          tmp = this->getSuitability(prey)[predl][preyl] *
             this->getPrey(prey)->getBiomass(area, preyl) * this->getPrey(prey)->getEnergy();
+          (*cons[inarea][prey])[predl][preyl] = pow(tmp, preference[prey]);
           Phi[inarea][predl] += (*cons[inarea][prey])[predl][preyl];
         }
       }
@@ -155,7 +166,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   }
 
   //Calculating fphi(L) and totalcons of predator in area
-  tmp = Area->getSize(area) * halfFeedingValue;
+  tmp = Area->getSize(area) * consParam[4];
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     if (isZero(tmp))
       subfphi[inarea][predl] = 1.0;
@@ -165,15 +176,15 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       subfphi[inarea][predl] = Phi[inarea][predl] / (Phi[inarea][predl] + tmp);
 
     totalcons[inarea][predl] = subfphi[inarea][predl] *
-      maxconbylength[inarea][predl] * prednumber[inarea][predl].N;
+      maxcons[inarea][predl] * prednumber[inarea][predl].N;
   }
 
-  //Distributing the total consumption on the preys
+  //Distributing the total consumption on the preys and converting to biomass
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         if (!(isZero(Phi[inarea][predl]))) {
-          tmp = totalcons[inarea][predl] / Phi[inarea][predl];
+          tmp = totalcons[inarea][predl] / (Phi[inarea][predl] * this->getPrey(prey)->getEnergy());
           for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
             (*cons[inarea][prey])[predl][preyl] *= tmp;
         }

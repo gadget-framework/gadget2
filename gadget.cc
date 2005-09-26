@@ -102,7 +102,7 @@ int main(int aNumber, char* const aVector[]) {
       delete data;
 
     } else {
-      if (EcoSystem->numOptVariables() != 0)
+      if (EcoSystem->numVariables() != 0)
         handle.logMessage(LOGWARN, "Warning - no parameter input file given, using default values");
       EcoSystem->Reset();
       if (main.printInitial())
@@ -122,7 +122,7 @@ int main(int aNumber, char* const aVector[]) {
       EcoSystem->Update(data);
       EcoSystem->checkBounds();
     } else
-      handle.logMessage(LOGWARN, "Warning - no parameter input file given, using default values");
+      handle.logMessage(LOGWARN, "Error - no parameter input file specified");
 
     EcoSystem->Reset();
     if (main.printInitial())

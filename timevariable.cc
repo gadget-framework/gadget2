@@ -59,7 +59,9 @@ void TimeVariable::readFromFile(CommentStream& infile,
   if (numcoeff > 0) {
     usemodelmatrix = 1;
     coeff.resize(numcoeff, keeper);
-    infile >> coeff;
+    for (i = 0; i < numcoeff; i++)
+      if (!(infile >> coeff[i]))
+        handle.logFileMessage(LOGFAIL, "failed to read timevariable coefficient");
     coeff.Inform(keeper);
   }
 

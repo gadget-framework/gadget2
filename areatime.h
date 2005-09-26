@@ -2,7 +2,6 @@
 #define areatime_h
 
 #include "doublematrix.h"
-#include "doubleindexvector.h"
 #include "commentstream.h"
 
 class AreaClass;
@@ -221,9 +220,9 @@ protected:
    */
   double lengthofyear;
   /**
-   * \brief This is the DoubleIndexVector of timesteps in each year
+   * \brief This is the DoubleVector of timesteps in each year
    */
-  DoubleIndexVector timesteps;
+  DoubleVector timesteps;
   /**
    * \brief This is the IntVector of substeps in each step
    */

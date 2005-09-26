@@ -47,17 +47,20 @@ void FormulaVector::Inform(Keeper* keeper) {
     v[i].Inform(keeper);
 }
 
-CommentStream& operator >> (CommentStream& infile, FormulaVector& fv) {
-  if (infile.fail()) {
-    infile.makebad();
-    return infile;
-  }
+void FormulaVector::Delete(int pos, Keeper* keeper) {
   int i;
-  for (i = 0; i < fv.size; i++) {
-    if (!(infile >> fv[i])) {
-      infile.makebad();
-      return infile;
-    }
+  if (size > 1) {
+    Formula* vnew = new Formula[size - 1];
+    for (i = 0; i < pos; i++)
+      v[i].Interchange(vnew[i], keeper);
+    for (i = pos; i < size - 1; i++)
+      v[i + 1].Interchange(vnew[i], keeper);
+    delete[] v;
+    v = vnew;
+    size--;
+  } else {
+    delete[] v;
+    v = 0;
+    size = 0;
   }
-  return infile;
 }

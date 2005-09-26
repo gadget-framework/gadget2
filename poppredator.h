@@ -42,6 +42,13 @@ public:
    */
   virtual void Print(ofstream& outfile) const;
   /**
+   * \brief This function will return the number of a prey on a specified area before the consumption calculation takes place
+   * \param area is the area that the prey consumption is being calculated on
+   * \param preyname is the name of the prey
+   * \return PopInfoVector containing the number of prey before the consumption takes place
+   */
+  virtual const PopInfoVector& getNumberPriorToEating(int area, const char* preyname) const;
+  /**
    * \brief This will return the amount the predator consumes of a given prey on a given area
    * \param area is the area that the consumption is being calculated on
    * \param preyname is the name of the prey that is being consumed

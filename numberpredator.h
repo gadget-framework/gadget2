@@ -42,13 +42,6 @@ public:
    * \param outfile is the ofstream that all the model information gets sent to
    */
   virtual void Print(ofstream& outfile) const;
-  /**
-   * \brief This function will return the amount of prey on the area before consumption
-   * \param area is the area that the prey consumption is being calculated on
-   * \param preyname is the name of the prey that is being consumed
-   * \return the population of the prey for the area before consumption
-   */
-  virtual const PopInfoVector& getNumberPriorToEating(int area, const char* preyname) const;
 };
 
 #endif

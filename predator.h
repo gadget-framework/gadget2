@@ -11,6 +11,8 @@
 #include "keeper.h"
 #include "prey.h"
 
+enum PredatorType { STOCKPREDATOR = 1, TOTALPREDATOR, LINEARPREDATOR, NUMBERPREDATOR };
+
 /**
  * \class Predator
  * \brief This is the base class used to model the consumption by a predator
@@ -126,16 +128,27 @@ public:
    * \return 1 if the values have changed, 0 otherwise
    */
   int didChange(int i, const TimeClass* const TimeInfo) const { return suitable->didChange(i, TimeInfo); };
+  /**
+   * \brief This will return the type of predator class
+   * \return type
+   */
+  PredatorType getType() { return type; };
 protected:
   /**
    * \brief This function will read the suitability data from the input file
    * \param infile is the CommentStream to read the suitabiltiy data from
-   * \param strFinal is the string that indicates the end of the suitability data
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
-  void readSuitability(CommentStream& infile, const char* strFinal,
-    const TimeClass* const TimeInfo, Keeper* const keeper);
+  void readSuitability(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
+  /**
+   * \brief This is the FormulaVector used to store the prey preference parameters
+   */
+  FormulaVector preference;
+  /**
+   * \brief This denotes what type of predator class has been created
+   */
+  PredatorType type;
 private:
   /**
    * \brief This is the PreyPtrVector of the preys that will be consumed by the predator

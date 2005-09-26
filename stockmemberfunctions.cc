@@ -100,7 +100,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 
   if (doeseat)
     grower->calcGrowth(area, Area, TimeInfo, ((StockPredator*)predator)->getFPhi(area),
-      ((StockPredator*)predator)->getMaxConByLen(area));
+      ((StockPredator*)predator)->getMaxConsumption(area));
   else
     grower->calcGrowth(area, Area, TimeInfo);
 

@@ -87,7 +87,7 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
   DoubleMatrix& preylengths, FormulaMatrix& digestioncoeff,
   CharPtrVector& preyindex, Keeper* const keeper) {
 
-  int i, j;
+  int i, j, k;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   i = j = 0;
@@ -119,7 +119,9 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
 
     //JMB - changed so that only 3 elements are read in
     digestioncoeff.AddRows(1, 3);
-    infile >> digestioncoeff[i];
+    for (k = 0; k < 3; k++)
+      if (!(infile >> digestioncoeff[i][k]))
+        handle.logFileMessage(LOGFAIL, "invalid format for digestion coefficient vector");
     digestioncoeff[i].Inform(keeper);
 
     infile >> ws;

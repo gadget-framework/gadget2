@@ -20,7 +20,7 @@ TimeClass::TimeClass(CommentStream& infile) {
   numsubsteps.resize(numtimesteps, 1);
 
   infile >> ws;
-  timesteps.resize(numtimesteps, 1, 0.0);
+  timesteps.resize(numtimesteps + 1, 0.0);
   for (i = 1; i <= numtimesteps; i++)
     infile >> timesteps[i] >> ws;
 
@@ -34,7 +34,7 @@ TimeClass::TimeClass(CommentStream& infile) {
   }
 
   lengthofyear = 0.0;
-  for (i = timesteps.minCol(); i < timesteps.maxCol(); i++)
+  for (i = 1; i <= numtimesteps; i++)
     lengthofyear += timesteps[i];
 
   if (!(isZero(lengthofyear - 12)))
@@ -53,10 +53,9 @@ TimeClass::TimeClass(CommentStream& infile) {
 }
 
 void TimeClass::IncrementTime() {
-  handle.logMessage(LOGMESSAGE, "");  //write a blank line to the log file
   if (currentyear == lastyear && currentstep == laststep) {
     if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "The simulation has reached the last timestep for the current model run");
+      handle.logMessage(LOGMESSAGE, "\nThe simulation has reached the last timestep for the current model run");
 
   } else {
     currentsubstep = 1;
@@ -67,7 +66,7 @@ void TimeClass::IncrementTime() {
       currentstep++;
 
     if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Increased time in the simulation to timestep", this->getTime());
+      handle.logMessage(LOGMESSAGE, "\nIncreased time in the simulation to timestep", this->getTime());
   }
 }
 

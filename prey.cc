@@ -44,6 +44,9 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname)
   else
     energy = 1.0;
 
+  if (isZero(energy))
+    handle.logMessage(LOGFAIL, "Error in prey - energy content must be non-zero");
+
   //read from file - initialise things
   int numlen = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();

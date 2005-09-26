@@ -35,7 +35,14 @@ public:
    * \param keeper is the Keeper for the current model
    * \note The new elements of the vector will be created, and set to zero
    */
- void resize(int addsize, Keeper* keeper);
+  void resize(int addsize, Keeper* keeper);
+  /**
+   * \brief This will delete an entry from the vector
+   * \param pos is the element of the vector to be deleted
+   * \param keeper is the Keeper for the current model
+   * \note This will free the memory allocated to the deleted element of the vector
+   */
+  void Delete(int pos, Keeper* const keeper);
   /**
    * \brief This will return the size of the vector
    * \return the size of the vector
@@ -58,7 +65,6 @@ public:
    * \param keeper is the Keeper for the current model
    */
   void Inform(Keeper* keeper);
-  friend CommentStream& operator >> (CommentStream& infile, FormulaVector& fv);
 protected:
   /**
    * \brief This is the size of the vector

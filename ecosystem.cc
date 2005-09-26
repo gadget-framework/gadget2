@@ -107,26 +107,28 @@ void Ecosystem::Reset() {
 }
 
 double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {
-
-  likelihood = 0.0;
-  int numvar = keeper->numVariables();
-  DoubleVector val(numvar);
-  DoubleVector initialvalues(numvar);
-  IntVector opt(numvar);
-  keeper->getInitialValues(initialvalues);
-  keeper->getCurrentValues(val);
-  keeper->getOptFlags(opt);
-
   int i, j;
+  likelihood = 0.0;
+
+  if (funceval == 0) {
+    // JMB - only need to create these vectors once
+    initialval.resize(keeper->numVariables(), 0.0);
+    currentval.resize(keeper->numVariables(), 0.0);
+    optflag.resize(keeper->numVariables(), 0);
+    keeper->getInitialValues(initialval);
+    keeper->getOptFlags(optflag);
+  }
+
   j = 0;
-  for (i = 0; i < numvar; i++) {
-    if (opt[i] == 1) {
-      val[i] = x[j] * initialvalues[i];
+  keeper->getCurrentValues(currentval);
+  for (i = 0; i < currentval.Size(); i++) {
+    if (optflag[i] == 1) {
+      currentval[i] = x[j] * initialval[i];
       j++;
     }
   }
 
-  keeper->Update(val);
+  keeper->Update(currentval);
   this->Simulate(1, 0);  //optimise and dont print
 
   if (printinfo.getPrint()) {

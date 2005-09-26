@@ -155,6 +155,11 @@ public:
    */
   void checkBounds() const { keeper->checkBounds(likevec); };
   /**
+   * \brief This function will return the number of variables
+   * \return number of variables
+   */
+  int numVariables() const { return keeper->numVariables(); };
+  /**
    * \brief This function will return the number of variables to be optimised
    * \return number of variables to be optimised
    */
@@ -397,6 +402,21 @@ protected:
    * \brief This is the counter for the printing interval for the -co output from the simualtion
    */
   int printcount2;
+  /**
+   * \brief This is the DoubleVector used to store the initial values of the parameters
+   * \note this vector is only used to temporarily store values during an optimising run
+   */
+  DoubleVector initialval;
+  /**
+   * \brief This is the DoubleVector used to store the current values of the parameters
+   * \note this vector is only used to temporarily store values during an optimising run
+   */
+  DoubleVector currentval;
+  /**
+   * \brief This is the IntVector used to store information about whether the parameters are to be optimised
+   * \note this vector is only used to temporarily store values during an optimising run
+   */
+  IntVector optflag;
   friend class InterruptInterface;
 };
 

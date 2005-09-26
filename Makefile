@@ -15,14 +15,14 @@ GADGET = gadget
 ##########################################################################
 # Pick the appropriate compiler from the following switches
 ##########################################################################
-# 1. Linux, or Solaris, without pvm, g++ compiler
+# 1. Linux, or Cygwin, or Solaris, without pvm, g++ compiler
 CXX = g++
 LIBDIRS = -L. -L/usr/local/lib
 LIBRARIES = -lm -lvec
 CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 OBJECTS = $(GADGETOBJECTS)
 ##########################################################################
-# 2. Linux, or Solaris, with pvm3, g++ compiler
+# 2. Linux, or Cygwin, or Solaris, with pvm3, g++ compiler
 #CXX = g++
 #PVMDIR = $(PVM_ROOT)
 #PVMINCLUDE = $(PVMDIR)/include

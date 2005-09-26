@@ -22,7 +22,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   int found = 0;
 
   if (suitable == 0)
-    handle.logMessage(LOGFAIL, "Error in predator - found no suitability values");
+    handle.logMessage(LOGFAIL, "Error in predator - found no suitability values for predator", this->getName());
 
   preys.resize(suitable->numPreys(), 0);
   for (i = 0; i < preyvec.Size(); i++) {
@@ -47,13 +47,18 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
       found++;
       handle.logMessage(LOGWARN, "Warning in predator - failed to match prey", this->getPreyName(i));
       preys.Delete(i);
+      if (this->getType() == STOCKPREDATOR)
+        preference.Delete(i, keeper);
       suitable->deletePrey(i, keeper);
       if (found != preys.Size())
         i--;
     }
   }
   if (this->numPreys() == 0)
-    handle.logMessage(LOGFAIL, "Error in predator - no preys for predator", this->getName());
+    handle.logMessage(LOGFAIL, "Error in predator - found no preys for predator", this->getName());
+  // check that the preference vector is still the right size
+  if ((this->getType() == STOCKPREDATOR) && (this->numPreys() != preference.Size()))
+    handle.logMessage(LOGFAIL, "Error in predator - invalid prey preference data");
 }
 
 int Predator::doesEat(const char* preyname) const {
@@ -66,13 +71,14 @@ int Predator::doesEat(const char* preyname) const {
 
 void Predator::Print(ofstream& outfile) const {
   int i;
-  outfile << "\tName" << sep << this->getName()
-    << "\n\tNames of preys:";
+  outfile << "\tName" << sep << this->getName() << "\n\tNames of preys:";
   for (i = 0; i < suitable->numPreys(); i++)
     outfile << sep << suitable->getPreyName(i);
   outfile << endl;
   for (i = 0; i < suitable->numPreys(); i++) {
-    outfile << "\tSuitability for " << suitable->getPreyName(i) << endl;
+    if (preference.Size() != 0)
+      outfile << "\tPreference for prey " << suitable->getPreyName(i) << sep << preference[i] << endl;
+    outfile << "\tSuitability for prey " << suitable->getPreyName(i) << endl;
     suitable->getSuitability(i).Print(outfile);
   }
 }
@@ -82,9 +88,8 @@ void Predator::Reset(const TimeClass* const TimeInfo) {
 }
 
 void Predator::readSuitability(CommentStream& infile,
-  const char* strFinal, const TimeClass* const TimeInfo, Keeper* const keeper) {
+  const TimeClass* const TimeInfo, Keeper* const keeper) {
 
-  int i, j;
   char preyname[MaxStrLength];
   char text[MaxStrLength];
   strncpy(preyname, "", MaxStrLength);
@@ -93,8 +98,16 @@ void Predator::readSuitability(CommentStream& infile,
   SuitFuncPtrVector suitf;
   keeper->addString("suitabilityfor");
 
+  //JMB - this is the next word to look for after the list of suitability values
+  char strcheck[15];
+  strncpy(strcheck, "", 15);
+  if (this->getType() == STOCKPREDATOR)
+    strcpy(strcheck, "preference");
+  else
+    strcpy(strcheck, "amount");
+
   infile >> preyname >> ws;
-  while (!(strcasecmp(preyname, strFinal) == 0) && (!infile.eof())) {
+  while (!(strcasecmp(preyname, strcheck) == 0) && (!infile.eof())) {
     keeper->addString(preyname);
 
     infile >> text >> ws;
@@ -115,6 +128,9 @@ void Predator::readSuitability(CommentStream& infile,
     keeper->clearLast();
   }
 
+  //resize the prey preference vector - only used for stockpredators
+  if (this->getType() == STOCKPREDATOR)
+    preference.resize(suitable->numPreys(), keeper);
   keeper->clearLast();
   handle.logMessage(LOGMESSAGE, "Read predation data - number of preys", suitable->numPreys());
 }

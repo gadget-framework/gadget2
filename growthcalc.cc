@@ -391,24 +391,27 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
 
   infile >> text >> ws;
   if (strcasecmp(text, "yeareffect") == 0) {
-    if (!(infile >> yearEffect))
-      handle.logFileMessage(LOGFAIL, "invalid format of yeareffect vector");
+    for (i = 0; i < yearEffect.Size(); i++)
+      if (!(infile >> yearEffect[i]))
+        handle.logFileMessage(LOGFAIL, "invalid format of yeareffect vector");
     yearEffect.Inform(keeper);
   } else
     handle.logFileUnexpected(LOGFAIL, "yeareffect", text);
 
   infile >> text >> ws;
   if (strcasecmp(text, "stepeffect") == 0) {
-    if (!(infile >> stepEffect))
-      handle.logFileMessage(LOGFAIL, "invalid format of stepeffect vector");
+    for (i = 0; i < stepEffect.Size(); i++)
+      if (!(infile >> stepEffect[i]))
+        handle.logFileMessage(LOGFAIL, "invalid format of stepeffect vector");
     stepEffect.Inform(keeper);
   } else
     handle.logFileUnexpected(LOGFAIL, "stepeffect", text);
 
   infile >> text >> ws;
   if (strcasecmp(text, "areaeffect") == 0) {
-    if (!(infile >> areaEffect))
-      handle.logFileMessage(LOGFAIL, "invalid format of areaeffect vector");
+    for (i = 0; i < areaEffect.Size(); i++)
+      if (!(infile >> areaEffect[i]))
+        handle.logFileMessage(LOGFAIL, "invalid format of areaeffect vector");
     areaEffect.Inform(keeper);
   } else
     handle.logFileUnexpected(LOGFAIL, "areaeffect", text);

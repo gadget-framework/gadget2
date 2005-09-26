@@ -10,9 +10,10 @@ NumberPredator::NumberPredator(CommentStream& infile, const char* givenname,
   const IntVector& Areas, const TimeClass* const TimeInfo, Keeper* const keeper, Formula multscaler)
   : LengthPredator(givenname, Areas, keeper, multscaler) {
 
+  type = NUMBERPREDATOR;
   keeper->addString("predator");
   keeper->addString(givenname);
-  this->readSuitability(infile, "amount", TimeInfo, keeper);
+  this->readSuitability(infile, TimeInfo, keeper);
   keeper->clearLast();
   keeper->clearLast();
 }
@@ -118,14 +119,4 @@ void NumberPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
 void NumberPredator::Print(ofstream& outfile) const {
   outfile << "NumberPredator\n";
   PopPredator::Print(outfile);
-}
-
-const PopInfoVector& NumberPredator::getNumberPriorToEating(int area, const char* preyname) const {
-  int prey;
-  for (prey = 0; prey < this->numPreys(); prey++)
-    if (strcasecmp(this->getPreyName(prey), preyname) == 0)
-      return this->getPrey(prey)->getNumberPriorToEating(area);
-
-  handle.logMessage(LOGFAIL, "Error in linearpredator - failed to match prey", preyname);
-  exit(EXIT_FAILURE);
 }
