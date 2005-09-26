@@ -298,10 +298,9 @@ void OptInfoSimann::OptimiseLikelihood() {
             handle.logMessage(LOGINFO, "Number of metropolis accepted points", naccmet);
             handle.logMessage(LOGINFO, "Number of rejected points", nrej);
 
-            trialf = EcoSystem->SimulateAndUpdate(bestx);
-            EcoSystem->setFuncEvalSA(iters++);
-            EcoSystem->setLikelihoodSA(trialf);
-            EcoSystem->storeVariables(trialf, bestx);
+            EcoSystem->setFuncEvalSA(iters);
+            fopt = EcoSystem->SimulateAndUpdate(bestx);
+            EcoSystem->setLikelihoodSA(fopt);
             return;
           }
 
@@ -345,8 +344,8 @@ void OptInfoSimann::OptimiseLikelihood() {
               bestx[i] = trialx[i];
             fopt = trialf;
             handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
-            handle.logMessage(LOGINFO, "The likelihood score is", -trialf, "at the point");
-            EcoSystem->storeVariables(-trialf, bestx);
+            handle.logMessage(LOGINFO, "The likelihood score is", -fopt, "at the point");
+            EcoSystem->storeVariables(-fopt, bestx);
             EcoSystem->writeBestValues();
           }
         }
@@ -394,11 +393,10 @@ void OptInfoSimann::OptimiseLikelihood() {
       handle.logMessage(LOGINFO, "Number of metropolis accepted points", naccmet);
       handle.logMessage(LOGINFO, "Number of rejected points", nrej);
 
-      trialf = EcoSystem->SimulateAndUpdate(bestx);
       EcoSystem->setConvergeSA(1);
-      EcoSystem->setFuncEvalSA(iters++);
-      EcoSystem->setLikelihoodSA(trialf);
-      EcoSystem->storeVariables(trialf, bestx);
+      EcoSystem->setFuncEvalSA(iters);
+      fopt = EcoSystem->SimulateAndUpdate(bestx);
+      EcoSystem->setLikelihoodSA(fopt);
       return;
     }
 

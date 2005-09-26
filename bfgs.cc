@@ -182,12 +182,9 @@ void OptInfoBFGS::OptimiseLikelihood() {
       handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of function evaluations");
       handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
 
-      newf = EcoSystem->SimulateAndUpdate(x);
-      EcoSystem->setFuncEvalBFGS(iters++);
+      EcoSystem->setFuncEvalBFGS(iters);
+      newf = EcoSystem->SimulateAndUpdate(bestx);
       EcoSystem->setLikelihoodBFGS(newf);
-      for (i = 0; i < nvars; i++)
-        x[i] *= init[i];
-      EcoSystem->storeVariables(newf, x);
       tmpf = this->getSmallestEigenValue(invhess);
       if (!isZero(tmpf))
         handle.logMessage(LOGINFO, "The smallest eigenvalue of the inverse Hessian matrix is", tmpf);
@@ -201,13 +198,10 @@ void OptInfoBFGS::OptimiseLikelihood() {
       handle.logMessage(LOGINFO, "The optimisation stopped because the accuracy required for the gradient");
       handle.logMessage(LOGINFO, "calculation is too small and NOT because an optimum was found for this run");
 
-      newf = EcoSystem->SimulateAndUpdate(x);
       EcoSystem->setConvergeBFGS(2);
-      EcoSystem->setFuncEvalBFGS(iters++);
+      EcoSystem->setFuncEvalBFGS(iters);
+      newf = EcoSystem->SimulateAndUpdate(bestx);
       EcoSystem->setLikelihoodBFGS(newf);
-      for (i = 0; i < nvars; i++)
-        x[i] *= init[i];
-      EcoSystem->storeVariables(newf, x);
       tmpf = this->getSmallestEigenValue(invhess);
       if (!isZero(tmpf))
         handle.logMessage(LOGINFO, "The smallest eigenvalue of the inverse Hessian matrix is", tmpf);
@@ -259,13 +253,11 @@ void OptInfoBFGS::OptimiseLikelihood() {
       }
 
       if (armijo == 1) {
-        newf = tmpf;
         this->gradient(trialx, tmpf, grad);
         alpha = betan;
       }
     }
 
-handle.logMessage(LOGDEBUG, "BFGS - alpha", alpha);
     if (armijo == 0) {
       this->gradient(x, newf, grad);
       continue;
@@ -303,17 +295,17 @@ handle.logMessage(LOGDEBUG, "BFGS - alpha", alpha);
     }
 
     newf = EcoSystem->SimulateAndUpdate(x);
-    for (i = 0; i < nvars; i++)
-      bestx[i] = x[i] * init[i];
+    for (i = 0; i < nvars; i++) {
+      bestx[i] = x[i];
+      trialx[i] = x[i] * init[i];
+    }
 
     iters = EcoSystem->getFuncEval() - offset;
-    EcoSystem->storeVariables(newf, bestx);
+    EcoSystem->storeVariables(newf, trialx);
     handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
     handle.logMessage(LOGINFO, "The likelihood score is", newf, "at the point");
     EcoSystem->writeBestValues();
 
-handle.logMessage(LOGDEBUG, "BFGS - norm gradient", normgrad);
-handle.logMessage(LOGDEBUG, "BFGS - check convergnce", normgrad / (1.0 + newf));
     // terminate the algorithm if the convergence criteria has been met
     if (normgrad / (1.0 + newf) < bfgseps) {
       handle.logMessage(LOGINFO, "\nStopping BFGS optimisation algorithm\n");
@@ -322,6 +314,7 @@ handle.logMessage(LOGDEBUG, "BFGS - check convergnce", normgrad / (1.0 + newf));
 
       EcoSystem->setConvergeBFGS(1);
       EcoSystem->setFuncEvalBFGS(iters);
+      newf = EcoSystem->SimulateAndUpdate(bestx);
       EcoSystem->setLikelihoodBFGS(newf);
       tmpf = this->getSmallestEigenValue(invhess);
       if (!isZero(tmpf))
