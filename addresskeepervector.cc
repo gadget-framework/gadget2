@@ -9,42 +9,11 @@ AddressKeeperVector::AddressKeeperVector(int sz) {
     v = 0;
 }
 
-AddressKeeperVector::AddressKeeperVector(int sz, AddressKeeper value) {
-  size = (sz > 0 ? sz : 0);
-  int i;
-  if (size > 0) {
-    v = new AddressKeeper[size];
-    for (i = 0; i < size; i++)
-      v[i] = value;
-  } else
-    v = 0;
-}
-
-AddressKeeperVector::AddressKeeperVector(const AddressKeeperVector& initial) {
-  size = initial.size;
-  int i;
-  if (size > 0) {
-    v = new AddressKeeper[size];
-    for (i = 0; i < size; i++)
-      v[i] = initial.v[i];
-  } else
-    v = 0;
-}
-
 AddressKeeperVector::~AddressKeeperVector() {
   if (v != 0) {
     delete[] v;
     v = 0;
   }
-}
-
-void AddressKeeperVector::resize(int addsize, AddressKeeper value) {
-  int oldsize = size;
-  int i;
-  this->resize(addsize);
-  if (addsize > 0)
-    for (i = oldsize; i < size; i++)
-      v[i] = value;
 }
 
 void AddressKeeperVector::resize(int addsize) {

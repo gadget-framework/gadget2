@@ -16,6 +16,9 @@ enum PreyType { STOCKPREYTYPE = 1, LENGTHPREYTYPE };
 /**
  * \class Prey
  * \brief This is the base class used to model the consumption of a prey
+ *
+ * This class is used to remove fish from the model due to predation, either by a fleet or through consumption by another stock.  The proportion of the fish that are to be removed is calculated, based on the required consumption by all the various predators that will consume the prey.  This ''target consumption'' is then checked to ensure that no more than 95% of the prey species is to be consumed, and the consumption is adjusted if this is the case.  The population of the prey species is then reduced by the total amount that the various predators consume.
+ *
  * \note This will be overridden by the derived classes that actually calculate the consumption
  */
 class Prey : public HasName, public LivesOnAreas {
@@ -25,7 +28,7 @@ public:
    * \param infile is the CommentStream to read the Prey data from
    * \param areas is the IntVector of areas that the prey lives on
    * \param givenname is the name of the prey
-   * \note this constructor is used when creating dynamic prey (ie. StockPrey class)
+   * \note This constructor is used when creating dynamic prey (ie. StockPrey class)
    */
   Prey(CommentStream& infile, const IntVector& areas, const char* givenname);
   /**
@@ -34,7 +37,7 @@ public:
    * \param areas is the IntVector of areas that the prey lives on
    * \param Energy is the energy content of the prey
    * \param givenname is the name of the prey
-   * \note this constructor is used when creating non-dynamic prey (ie. OtherFood class)
+   * \note This constructor is used when creating non-dynamic prey (ie. OtherFood class)
    */
   Prey(const DoubleVector& lengths, const IntVector& areas, double Energy, const char* givenname);
   /**
@@ -45,14 +48,14 @@ public:
    * \brief This will calculate the amount of prey that is consumed for a given area and timestep
    * \param Alkeys is the AgeBandMatrix giving the amount of prey in the area
    * \param area is the area that the prey consumption is being calculated on
-   * \note this will be overridden by the derived classes that actually calculate the consumption
+   * \note This will be overridden by the derived classes that actually calculate the consumption
    */
   virtual void Sum(const AgeBandMatrix& Alkeys, int area) {};
   /**
    * \brief This will calculate the amount of prey that is consumed for a given area and timestep
    * \param NumberInArea is the PopInfoVector giving the amount of prey in the area
    * \param area is the area that the prey consumption is being calculated on
-   * \note this will be overridden by the derived classes that actually calculate the consumption
+   * \note This will be overridden by the derived classes that actually calculate the consumption
    */
   virtual void Sum(const PopInfoVector& NumberInArea, int area) {};
   /**
@@ -176,16 +179,16 @@ protected:
   LengthGroupDivision* LgrpDiv;
   /**
    * \brief This is the PopInfoMatrix used to store information on the number of preys for the current timestep
-   * \note the indices for this object are [area][prey length]
+   * \note The indices for this object are [area][prey length]
    */
   PopInfoMatrix preynumber;
   /**
-   * \brief This is the energy content of the prey
+   * \brief This is the energy content of the prey (in kilojoules per kilogramme)
    */
   double energy;
   /**
    * \brief This is the DoubleMatrix used to store information on the biomass of the prey that is available for the predators to consume on the current timestep
-   * \note the indices for this object are [area][prey length]
+   * \note The indices for this object are [area][prey length]
    */
   DoubleMatrix biomass;
   /**
@@ -194,27 +197,27 @@ protected:
   DoubleVector total;
   /**
    * \brief This is the DoubleMatrix used to store information on the ratio of the available biomass of the prey that is available for the predators to consume has been consumed on the current timestep
-   * \note the indices for this object are [area][prey length]
+   * \note The indices for this object are [area][prey length]
    */
   DoubleMatrix ratio;
   /**
    * \brief This is the DoubleMatrix used to store information on the consumption of the prey on the current timestep
-   * \note the indices for this object are [area][prey length]
+   * \note The indices for this object are [area][prey length]
    */
   DoubleMatrix consumption;
   /**
    * \brief This is the DoubleMatrix used to store information on the consumption of the prey on the current substep of the current timestep
-   * \note the indices for this object are [area][prey length]
+   * \note The indices for this object are [area][prey length]
    */
   DoubleMatrix cons;
   /**
    * \brief This is the DoubleMatrix used to store information on the overconsumption of the prey on the current timestep
-   * \note the indices for this object are [area][prey length]
+   * \note The indices for this object are [area][prey length]
    */
   DoubleMatrix overconsumption;
   /**
    * \brief This is the DoubleMatrix used to store information on the overconsumption of the prey on the current substep of the current timestep
-   * \note the indices for this object are [area][prey length]
+   * \note The indices for this object are [area][prey length]
    */
   DoubleMatrix overcons;
   /**

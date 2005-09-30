@@ -70,6 +70,10 @@ public:
    * \return the value of the specified element
    */
   Stock* const& operator [] (int pos) const { return v[pos]; };
+  /**
+   * \brief This operator will set the vector equal to an existing StockPtrVector
+   * \param sv is the StockPtrVector to copy
+   */
   StockPtrVector& operator = (const StockPtrVector& sv);
 protected:
   /**

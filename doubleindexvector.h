@@ -82,6 +82,10 @@ public:
    * \param pos is the element of the vector to be deleted
    */
   void Delete(int pos);
+  /**
+   * \brief This operator will set the vector equal to an existing DoubleIndexVector
+   * \param dv is the DoubleIndexVector to copy
+   */
   DoubleIndexVector& operator = (const DoubleIndexVector& dv);
 protected:
   /**

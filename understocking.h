@@ -90,7 +90,7 @@ private:
   IntVector Steps;
   /**
    * \brief This is the DoubleMatrix used to store the calculated non-zero likelihood information
-   * \note the indices for this object are [time][area]
+   * \note The indices for this object are [time][area]
    */
   DoubleMatrix likelihoodValues;
   /**

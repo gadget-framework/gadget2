@@ -26,19 +26,23 @@ MigrationPenalty::MigrationPenalty(CommentStream& infile, double weight, const c
 }
 
 void MigrationPenalty::addLikelihood(const TimeClass* const TimeInfo) {
+  if (TimeInfo->getTime() != TimeInfo->numTotalSteps())
+    return;
+
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for migrationpenalty component", this->getName());
+
   int i;
   double l = 0.0;
-  if ((stock->doesMigrate()) && (TimeInfo->getTime() == TimeInfo->numTotalSteps())) {
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Calculating likelihood score for migrationpenalty component");
+  if (stock->doesMigrate()) {
     DoubleVector penalty(stock->getMigration()->getPenalty());
     for (i = 0; i < penalty.Size(); i++)
       l += pow(penalty[i], powercoeffs[0]);
     l = pow(l, powercoeffs[1]);
     likelihood += l;
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
- }
+  }
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
 }
 
 void MigrationPenalty::setStocks(StockPtrVector Stocks) {

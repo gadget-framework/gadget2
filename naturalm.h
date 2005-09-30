@@ -7,41 +7,41 @@
 #include "keeper.h"
 
 /**
- * \class NaturalM
+ * \class NaturalMortality
  * \brief This is the class used to calculate the affect of natural mortality on the stock
  *
  * This class calculates the proportion of the stock that should be removed from the model due to natural mortality (ie. any mortality that is not due to predation, either by another stock or by a fleet).  The vector that is stored after this calculation contains the proportion of each age group that will survive (ie. is not removed due to the natural mortality).
  *
- * \note this is currently an age-based calculation, and it would be much better to replace this with a length-based calculation, by re-implementing this as a simple predator with a new suitability function to allow for higher levels of 'predation' on both the young/short fish and the old/long fish
+ * \note This is currently an age-based calculation, and it would be much better to replace this with a length-based calculation, by re-implementing this as a simple predator with a new suitability function to allow for higher levels of 'predation' on both the young/short fish and the old/long fish
  */
-class NaturalM {
+class NaturalMortality {
 public:
   /**
-   * \brief This is the NaturalM constructor
-   * \param infile is the CommentStream to read the NaturalM information from
+   * \brief This is the NaturalMortality constructor
+   * \param infile is the CommentStream to read the NaturalMortality information from
    * \param minage is the minimum age of the stock
    * \param maxage is the maximum age of the stock
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
-  NaturalM(CommentStream& infile, int minage, int maxage,
+  NaturalMortality(CommentStream& infile, int minage, int maxage,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
-   * \brief This is the default NaturalM destructor
+   * \brief This is the default NaturalMortality destructor
    */
-  ~NaturalM() {};
+  ~NaturalMortality() {};
   /**
    * \brief This function will return the DoubleVector of the proportion of each age group that will survive on the current timestep
    * \return proportion surviving from each age group
    */
   const DoubleVector& getProportion() const { return proportion; };
   /**
-   * \brief This function will reset the NaturalM information
+   * \brief This function will reset the NaturalMortality information
    * \param TimeInfo is the TimeClass for the current model
    */
   void Reset(const TimeClass* const TimeInfo);
   /**
-   * \brief This function will print the summary NaturalM information
+   * \brief This function will print the summary NaturalMortality information
    * \param outfile is the ofstream that all the model information gets sent to
    */
   void Print(ofstream& outfile);

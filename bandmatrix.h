@@ -23,8 +23,8 @@ public:
    * \brief This is the BandMatrix constructor for a specified size with an initial value
    * \param minl is the IntVector of the minpos of the DoubleIndexVector values created
    * \param size is the IntVector of the size of the DoubleIndexVector values created
-   * \param minpos is the index for the vector to be created
-   * \param initial is the initial value for all the entries of the vector
+   * \param minpos is the index for the vector to be created (default value 0)
+   * \param initial is the initial value for all the entries of the vector (default value 0.0)
    */
   BandMatrix(const IntVector& minl, const IntVector& size, int minpos = 0, double initial = 0.0);
   /**
@@ -33,14 +33,14 @@ public:
    * \param size is the size of all the size of the DoubleIndexVector values created
    * \param minpos is the index for the vector to be created
    * \param nr is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
+   * \param initial is the initial value for all the entries of the vector (default value 0.0)
    */
   BandMatrix(int minl, int size, int minpos, int nr, double initial = 0.0);
   /**
    * \brief This is the BandMatrix constructor, based on an existing DoubleMatrix
    * \param initial is the DoubleMatrix to copy
-   * \param minpos is the index for the vector to be created
-   * \param minl is the minpos of all the DoubleIndexVector values created
+   * \param minpos is the index for the vector to be created (default value 0)
+   * \param minl is the minpos of all the DoubleIndexVector values created (default value 0)
    */
   BandMatrix(const DoubleMatrix& initial, int minpos = 0, int minl = 0);
   /**
@@ -74,7 +74,7 @@ public:
    * \brief This will return the number of columns in row i of the vector
    * \param i is the row of the vector to have the number of columns counted
    * \return the number of columns in row i of the vector
-   * \note this is the number of entries in the DoubleIndexVector that is entry i of the BandMatrix
+   * \note This is the number of entries in the DoubleIndexVector that is entry i of the BandMatrix
    */
   int Ncol(int i) const { return v[i - pos]->Size(); };
   /**

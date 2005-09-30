@@ -29,7 +29,7 @@ public:
   /**
    * \brief This function will clear all the strings from the stack
    */
-  void clearStack();
+  void clearStack() { size = 0; };
   /**
    * \brief This function will send all the strings on the stack as one long new string
    * \return stack
@@ -40,6 +40,11 @@ public:
    * \return string
    */
   char* sendTop() const;
+  /**
+   * \brief This will return the number of strings currently stored on the stack
+   * \return the number of strings on the stack
+   */
+  int getSize() { return size; };
 private:
   /**
    * \brief This is size of the string stack

@@ -15,6 +15,10 @@
 #include "slavecommunication.h"
 #endif
 
+/**
+ * \class StochasticData
+ * \brief This is the class used to get values for the variables used in the model simulation.  These values are either read from an InitialInputFile, or received from the network if the simulation is part of a parallel optimisation, using paramin
+ */
 class StochasticData {
 public:
   /**
@@ -32,7 +36,7 @@ public:
   virtual ~StochasticData();
   /**
    * \brief This function will read the next line of data from the input file
-   * \note this function is only called if the input file has data using the 'repeated values' format
+   * \note This function is only called if the input file has data using the 'repeated values' format
    */
   void readNextLine();
   /**

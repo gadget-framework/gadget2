@@ -76,7 +76,16 @@ public:
    * \note This will delete every entry from the vector and set the size to zero
    */
   void Reset();
+  /**
+   * \brief This operator will calculate the dot product of the vector and an existing DoubleVector
+   * \param d is the DoubleVector to copy
+   * \return the dot product of the two vectors
+   */
   double operator * (const DoubleVector& d) const;
+  /**
+   * \brief This operator will set the vector equal to an existing DoubleVector
+   * \param d is the DoubleVector to copy
+   */
   DoubleVector& operator = (const DoubleVector& d);
 protected:
   /**

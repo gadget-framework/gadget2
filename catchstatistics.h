@@ -78,32 +78,32 @@ private:
   double calcLikSumSquares();
   /**
    * \brief This is the DoubleMatrixPtrVector used to store number information specified in the input file
-   * \note the indices for this object are [time][area][age]
+   * \note The indices for this object are [time][area][age]
    */
   DoubleMatrixPtrVector numbers;
   /**
    * \brief This is the DoubleMatrixPtrVector used to store the mean length/weight information specified in the input file
-   * \note the indices for this object are [time][area][age]
+   * \note The indices for this object are [time][area][age]
    */
   DoubleMatrixPtrVector obsMean;
   /**
    * \brief This is the DoubleMatrixPtrVector used to store the mean length/weight information calculated in the model
-   * \note the indices for this object are [time][area][age]
+   * \note The indices for this object are [time][area][age]
    */
   DoubleMatrixPtrVector modelMean;
   /**
    * \brief This is the DoubleMatrixPtrVector used to store the standard deviation of the length/weight information specified in the input file
-   * \note the indices for this object are [time][area][age]
+   * \note The indices for this object are [time][area][age]
    */
   DoubleMatrixPtrVector obsStdDev;
   /**
    * \brief This is the DoubleMatrixPtrVector used to store the standard deviation of the length/weight information calculated in the model
-   * \note the indices for this object are [time][area][age]
+   * \note The indices for this object are [time][area][age]
    */
   DoubleMatrixPtrVector modelStdDev;
   /**
    * \brief This is the DoubleMatrix used to store the calculated likelihood information
-   * \note the indices for this object are [time][area]
+   * \note The indices for this object are [time][area]
    */
   DoubleMatrix likelihoodValues;
   /**
@@ -168,7 +168,7 @@ private:
   char* functionname;
   /**
    * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
-   * \note the indices for this object are [area][age][length]
+   * \note The indices for this object are [area][age][length]
    */
   const AgeBandMatrixPtrVector* alptr;
 };

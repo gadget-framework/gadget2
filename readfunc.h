@@ -9,7 +9,7 @@
  * \brief This is the function that will count the number of columns of data in a file
  * \param infile is the CommentStream to read the data from
  * \return number of columns of data in the file
- * \note this function currently counts the number of columns that the first line of data in the file has, and then assumes that the rest of the file has the same number of columns
+ * \note This function currently counts the number of columns that the first line of data in the file has, and then assumes that the rest of the file has the same number of columns
  */
 int countColumns(CommentStream& infile);
 /**

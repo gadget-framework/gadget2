@@ -75,7 +75,7 @@ protected:
   SuitFuncPtrVector suitFunction;
   /**
    * \brief This is the DoubleMatrixPtrVector of calculated suitability values
-   * \note the indices for this object are [prey][predator length][prey length]
+   * \note The indices for this object are [prey][predator length][prey length]
    */
   DoubleMatrixPtrVector preCalcSuitability;
 private:

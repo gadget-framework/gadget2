@@ -171,7 +171,7 @@ void InitialInputFile::readFromFile() {
   } else {
     this->readNextLine();
     if ((switches.Size() > 0) && (switches.Size() != values.Size()))
-      handle.logMessage(LOGFAIL, "Error in initial input file - failed to read swotches");
+      handle.logMessage(LOGFAIL, "Error in initial input file - failed to read switches");
   }
 
   //JMB close the errorhandler to clear the filename from the stack

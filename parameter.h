@@ -6,7 +6,7 @@
 
 /**
  * \class Parameter
- * \brief This is the class used to store the names of the variables used in the model simulation
+ * \brief This is the class used to store the name of a variable used in the model simulation
  */
 class Parameter {
 public:
@@ -21,7 +21,7 @@ public:
   Parameter(const Parameter& p);
   /**
    * \brief This is the Parameter constructor for a given string value
-   * \param value is the string value that will be set to the name of the parameter
+   * \param value is the string value that will be set to the name of the Parameter
    */
   Parameter(char* value);
   /**
@@ -29,28 +29,37 @@ public:
    */
   ~Parameter();
   /**
-   * \brief This function will return the name of the parameter
+   * \brief This function will return the name of the Parameter
    * \return name
    */
   char* getName() const { return name; };
   friend CommentStream& operator >> (CommentStream& in, Parameter& p);
   friend istream& operator >> (istream& in, Parameter& p);
+  /**
+   * \brief This operator will set the Parameter equal to an existing Parameter
+   * \param p is the Parameter to copy
+   */
   Parameter& operator = (const Parameter& p);
+  /**
+   * \brief This operator will check to see if the Parameter is equal to an existing Parameter
+   * \param p is the Parameter to check
+   * \return 1 if the two Parameters are equal, 0 otherwise
+   */
   int operator == (const Parameter& p) const;
 private:
   /**
-   * \brief This function will check to see if the string that is going to be the name of the parameter is valid or not
+   * \brief This function will check to see if the string that is going to be the name of the Parameter is valid or not
    * \return 1 if the name is valid, 0 otherwise
    */
   int isValidName(char* value);
   /**
-   * \brief This function will check to see if a character from the name of the parameter is valid or not
+   * \brief This function will check to see if a character from the name of the Parameter is valid or not
    * \return 1 if the character is valid, 0 otherwise
-   * \note valid characters are alpha-numeric characters, '_' and '.'
+   * \note Valid characters are alpha-numeric characters, '_' and '.'
    */
   int isValidChar(int c);
   /**
-   * \brief This is the name of the parameter
+   * \brief This is the name of the Parameter
    */
   char* name;
 };

@@ -105,22 +105,22 @@ private:
   IntMatrix areas;
   /**
    * \brief This is the DoubleMatrix used to store catch information specified in the input file
-   * \note the indices for this object are [time][area]
+   * \note The indices for this object are [time][area]
    */
   DoubleMatrix obsDistribution;
   /**
    * \brief This is the DoubleMatrix used to store catch information calculated in the model
-   * \note the indices for this object are [time][area]
+   * \note The indices for this object are [time][area]
    */
   DoubleMatrix modelDistribution;
   /**
    * \brief This is the DoubleMatrix used to store the calculated likelihood information
-   * \note the indices for this object are [time][area]
+   * \note The indices for this object are [time][area]
    */
   DoubleMatrix likelihoodValues;
   /**
    * \brief This is a flag to denote whether the likelihood calculation should aggregate data over a whole year.
-   * \note the default value is 0, which calculates the likelihood score on each timestep
+   * \note The default value is 0, which calculates the likelihood score on each timestep
    */
   int yearly;
   /**

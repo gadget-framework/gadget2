@@ -7,6 +7,12 @@
 #include "addresskeepermatrix.h"
 #include "strstack.h"
 
+/**
+ * \class Keeper
+ * \brief This is the class used to store information about the variables that are used in model simulation
+ *
+ * This class stores all the information about the variables that are used in the model simulation.  This includes the current value, the initial value and best value found so far by any optimisation routines, the upper and lower bounds for the variables and a flag to denote whether the variable is to be optimised or not.  This class also updates the model parameters with new values for the variables, either as a result of the optimisation routines or when new values for the parameters are received from the network if the simulation is part of a parallel optimisation, using paramin.
+ */
 class Keeper {
 public:
   /**
@@ -212,7 +218,7 @@ protected:
   DoubleVector bestvalues;
   /**
    * \brief This is the IntVector used to store information about whether the parameters are to be optimised
-   * \note if opt[i] is 1 then parameter i is to be optimised, else if opt[i] is 0 then parameter i is not to be optimised and its value is fixed throughout the optimisation process
+   * \note If opt[i] is 1 then parameter i is to be optimised, else if opt[i] is 0 then parameter i is not to be optimised and its value is fixed throughout the optimisation process
    */
   IntVector opt;
   /**

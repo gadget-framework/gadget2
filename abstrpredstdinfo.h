@@ -15,10 +15,10 @@ public:
   /**
    * \brief This is the AbstrPredStdInfo constructor
    * \param areas is the IntVector of areas that the predation can take place on
-   * \param predminage is the minimum age of the predator
-   * \param predmaxage is the maximum age of the predator
-   * \param preyminage is the minimum age of the prey
-   * \param preymaxage is the maximum age of the prey
+   * \param predminage is the minimum age of the predator (default value 0)
+   * \param predmaxage is the maximum age of the predator (default value 0)
+   * \param preyminage is the minimum age of the prey (default value 0)
+   * \param preymaxage is the maximum age of the prey (default value 0)
    */
   AbstrPredStdInfo(const IntVector& areas, int predminage = 0,
     int predmaxage = 0, int preyminage = 0, int preymaxage = 0);

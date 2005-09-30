@@ -20,27 +20,10 @@ public:
    */
   AddressKeeperVector(int sz);
   /**
-   * \brief This is the AddressKeeperVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  AddressKeeperVector(int sz, AddressKeeper initial);
-  /**
-   * \brief This is the AddressKeeperVector constructor that creates a copy of an existing AddressKeeperVector
-   * \param initial is the AddressKeeperVector to copy
-   */
-  AddressKeeperVector(const AddressKeeperVector& initial);
-  /**
    * \brief This is the AddressKeeperVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
   ~AddressKeeperVector();
-  /**
-   * \brief This will add new entries to the vector
-   * \param add is the number of new entries to the vector
-   * \param value is the value that will be entered for the new entries
-   */
-  void resize(int add, AddressKeeper value);
   /**
    * \brief This will add new empty entries to the vector
    * \param add is the number of new entries to the vector

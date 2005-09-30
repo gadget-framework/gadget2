@@ -18,14 +18,13 @@ Keeper::Keeper() {
 
 void Keeper::keepVariable(double& value, const Parameter& attr) {
 
-  //Try to find the value attr in the vector switches.
   int i, index = -1;
   for (i = 0; i < switches.Size(); i++)
     if (switches[i] == attr)
       index = i;
 
   if (index == -1) {
-    //attr was not found -- add it to switches and values.
+    //attr was not found -- add it to switches and values
     index = switches.Size();
     switches.resize(1, attr);
     values.resize(1, value);
@@ -37,24 +36,24 @@ void Keeper::keepVariable(double& value, const Parameter& attr) {
     initialvalues.resize(1, 1.0);
     address.AddRows(1, 1);
     address[index][0] = &value;
-    address[index][0] = stack->sendAll();
+    if (stack->getSize() != 0)
+      address[index][0] = stack->sendAll();
 
   } else {
     if (value != values[index]) {
       handle.logFileMessage(LOGFAIL, "read repeated switch name but different initial value", switches[index].getName());
 
     } else {
-      //Everything is ok, just add the address &value to address.
       i = address[index].Size();
       address[index].resize(1);
       address[index][i] = &value;
-      address[index][i] = stack->sendAll();
+      if (stack->getSize() != 0)
+        address[index][i] = stack->sendAll();
     }
   }
 }
 
 Keeper::~Keeper() {
-  stack->clearStack();
   delete stack;
   if (fileopen) {
     handle.Close();
@@ -72,7 +71,7 @@ void Keeper::deleteParameter(const double& var) {
         check++;
         address[i].Delete(j);
         if (address[i].Size() == 0) {
-          //The variable we deleted was the only one with this switch.
+          //the variable we deleted was the only one with this switch
           address.DeleteRow(i);
           switches.Delete(i);
           values.Delete(i);
@@ -95,7 +94,7 @@ void Keeper::changeVariable(const double& pre, double& post) {
   int i, j, check;
   check = 0;
   for (i = 0; i < address.Nrow(); i++) {
-    for (j = 0; j < address[i].Size(); j++) {
+    for (j = 0; j < address.Ncol(i); j++) {
       if (address[i][j] == &pre) {
         check++;
         address[i][j] = &post;
@@ -262,7 +261,7 @@ void Keeper::writeInitialInformation(const LikelihoodPtrVector& likevec) {
   for (i = 0; i < address.Nrow(); i++) {
     outfile << switches[i].getName() << TAB;
     for (j = 0; j < address.Ncol(i); j++)
-      outfile << address[i][j].name << TAB;
+      outfile << address[i][j].getName() << TAB;
     outfile << endl;
   }
 
@@ -274,7 +273,6 @@ void Keeper::writeInitialInformation(const LikelihoodPtrVector& likevec) {
 }
 
 void Keeper::writeValues(const LikelihoodPtrVector& likevec, int prec) {
-
   if (!fileopen)
     handle.logMessage(LOGFAIL, "Error in keeper - cannot write to output file");
 
@@ -303,7 +301,6 @@ void Keeper::writeValues(const LikelihoodPtrVector& likevec, int prec) {
 }
 
 void Keeper::writeValuesInColumns(int prec) {
-
   if (!fileopen)
     handle.logMessage(LOGFAIL, "Error in keeper - cannot write to output file");
 

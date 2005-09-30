@@ -106,6 +106,10 @@ public:
    * \param outfile is the ofstream that all the model information gets sent to
    */
   void Print(ofstream& outfile) const;
+  /**
+   * \brief This operator will set the vector equal to an existing DoubleMatrix
+   * \param d is the DoubleMatrix to copy
+   */
   DoubleMatrix& operator = (const DoubleMatrix& d);
 protected:
   /**

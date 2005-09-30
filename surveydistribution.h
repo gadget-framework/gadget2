@@ -168,12 +168,12 @@ private:
   IntVector Steps;
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store survey distribution information specified in the input file
-   * \note the indices for this object are [time][area][age][length]
+   * \note The indices for this object are [time][area][age][length]
    */
   DoubleMatrixPtrMatrix obsDistribution;
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store survey distribution information calculated in the model
-   * \note the indices for this object are [time][area][age][length]
+   * \note The indices for this object are [time][area][age][length]
    */
   DoubleMatrixPtrMatrix modelDistribution;
   /**

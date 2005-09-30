@@ -87,6 +87,7 @@ void BoundLikelihood::Reset(const Keeper* const keeper) {
     likelihoods.resize(numvar, 0.0);
     lowerbound.resize(numvar, 0.0);
     upperbound.resize(numvar, 0.0);
+    values.resize(numvar, 0.0);
 
     powers.resize(numvar - numset, 0.0);
     lowerweights.resize(numvar - numset, 0.0);
@@ -137,7 +138,6 @@ void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keepe
 
   int i;
   double temp;
-  DoubleVector values(keeper->numVariables());
   keeper->getCurrentValues(values);
   for (i = 0; i < switchnr.Size(); i++) {
     if (values[switchnr[i]] < lowerbound[i]) {

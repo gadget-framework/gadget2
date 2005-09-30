@@ -17,8 +17,8 @@ public:
    * \brief This is the AbstrPreyStdInfo constructor
    * \param p is the Prey that the predation is consuming
    * \param areas is the IntVector of areas that the predation can take place on
-   * \param minage is the minimum age
-   * \param maxage is the maximum age
+   * \param minage is the minimum age (default value 0)
+   * \param maxage is the maximum age (default value 0)
    */
   AbstrPreyStdInfo(const Prey* p, const IntVector& areas,
     int minage = 0, int maxage = 0);

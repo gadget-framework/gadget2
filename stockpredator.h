@@ -87,32 +87,32 @@ protected:
   FormulaVector consParam;
   /**
    * \brief This is the DoubleMatrix used to store the sum of the feeding levels (over all preys) on the current timestep
-   * \note the indices for this object are [area][predator length]
+   * \note The indices for this object are [area][predator length]
    */
   DoubleMatrix Phi;
   /**
    * \brief This is the DoubleMatrix used to store the feeding level on the current timestep
-   * \note the indices for this object are [area][predator length]
+   * \note The indices for this object are [area][predator length]
    */
   DoubleMatrix fphi;
   /**
    * \brief This is the DoubleMatrix used to store the feeding level on the current substep of the current timestep
-   * \note the indices for this object are [area][predator length]
+   * \note The indices for this object are [area][predator length]
    */
   DoubleMatrix subfphi;
   /**
    * \brief This is the DoubleMatrix used to store maximum consumption by predator length group on the current timestep
-   * \note the indices for this object are [area][predator length]
+   * \note The indices for this object are [area][predator length]
    */
   DoubleMatrix maxcons;
   /**
    * \brief This is the BandMatrixPtrVector used to store proportion of the predation that is due to each age-length cell of the predator
-   * \note the indices for this object are [area][predator age][predator length]
+   * \note The indices for this object are [area][predator age][predator length]
    */
   BandMatrixPtrVector Alprop;
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store information about the predator population
-   * \note the indices for this object are [area][predator age][predator length]
+   * \note The indices for this object are [area][predator age][predator length]
    */
   AgeBandMatrixPtrVector Alkeys;
 };

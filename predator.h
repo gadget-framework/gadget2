@@ -16,6 +16,9 @@ enum PredatorType { STOCKPREDATOR = 1, TOTALPREDATOR, LINEARPREDATOR, NUMBERPRED
 /**
  * \class Predator
  * \brief This is the base class used to model the consumption by a predator
+ *
+ * This class is used to calculate the predation of prey species by a predator, either by a fleet or by a modelled stock in the simulation.  The amount of the various prey species that the predator wants to consume is calculated, based on the suitability functions defined for each prey.   This ''target consumption'' is then checked to ensure that no more than 95% of each the prey species is to be consumed (by all the predators of that prey), and the consumption is adjusted if this is the case.  The population of the prey species is then reduced by the total amount that the predators consume.
+ *
  * \note This will be overridden by the derived classes that actually calculate the consumption
  */
 class Predator : public HasName, public LivesOnAreas {

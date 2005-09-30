@@ -4,17 +4,17 @@
 #include "keeper.h"
 #include "gadget.h"
 
-NaturalM::NaturalM(CommentStream& infile, int minage, int maxage, const TimeClass* const TimeInfo,
-  Keeper* const keeper) : mortality(maxage - minage + 1), proportion(maxage - minage + 1, 0.0) {
+NaturalMortality::NaturalMortality(CommentStream& infile, int minage, int maxage,
+  const TimeClass* const TimeInfo, Keeper* const keeper)
+  : mortality(maxage - minage + 1), proportion(maxage - minage + 1, 0.0) {
 
-  keeper->addString("naturalm");
+  keeper->addString("naturalmortality");
   mortality.read(infile, TimeInfo, keeper);
   keeper->clearLast();
 }
 
-void NaturalM::Reset(const TimeClass* const TimeInfo) {
+void NaturalMortality::Reset(const TimeClass* const TimeInfo) {
   mortality.Update(TimeInfo);
-
   if (mortality.didChange(TimeInfo) || TimeInfo->didStepSizeChange()) {
     int i;
     double timeratio = TimeInfo->getTimeStepSize();
@@ -27,7 +27,7 @@ void NaturalM::Reset(const TimeClass* const TimeInfo) {
   }
 }
 
-void NaturalM::Print(ofstream& outfile) {
+void NaturalMortality::Print(ofstream& outfile) {
   int i;
   outfile << "Natural mortality\n\t";
   for (i = 0; i < mortality.Size(); i++)

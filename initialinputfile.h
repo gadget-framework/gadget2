@@ -7,30 +7,10 @@
 #include "intvector.h"
 #include "commentstream.h"
 
-/* Class InitialInfoFile can read and store information of a specified fileformat.
- * It can read files of one of the following 3 formats:
- *
- * 1. Just plain vector value or values.
- * x11 x12 x13 .. x1n
- * ..
- * xm1 xm2 xm3 .. xmn
- * where each vector is located on a separate line and m, n > 0.
- *
- * 2. Fileformat witch starts with the keyword
- * switches
- * sw1 sw2 sw3 .. swn
- * x11 x12 x12 .. x1n
- * ...
- * xm1 xm2 xm3 .. xmn
- * where m, n > 0 and number of switches equals number of parameters in vector.
- *
- * 3. Fileformat witch starts with the keywords in the same exact order:
- * switch value lowerbound upperbound optimize/optimise
- * sw1 x1 lower1 upper1 opt1
- * ..
- * swn xn lowern uppern optn
- * where n > 0. */
-
+/**
+ * \class InitialInputFile
+ * \brief This is the class used to get and store initial values for the variables used in the model simulation from an input file
+ */
 class InitialInputFile {
 public:
   /**
@@ -64,7 +44,7 @@ public:
   void getSwitches(ParameterVector& sw);
   /**
    * \brief This is the function that will read the next line of the data from the input file
-   * \note this function is only used when the data is in the 'repeated values' format
+   * \note This function is only used when the data is in the 'repeated values' format
    */
   void readNextLine();
   /**
@@ -91,7 +71,6 @@ public:
    * \return repeatedValues
    */
   int isRepeatedValues() { return repeatedValues; };
-#ifdef GADGET_NETWORK
   /**
    * \brief This function will return the optimising flag for a switch in the input file
    * \param i is the index for the switch
@@ -122,7 +101,6 @@ public:
    * \return parameter name for the switch
    */
   Parameter getSwitch(int i) const { return switches[i]; };
-#endif
 private:
   /**
    * \brief This is the function that will read the header information from the input file

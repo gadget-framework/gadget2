@@ -119,17 +119,17 @@ private:
   void calcCorrelation();
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store age-length distribution information specified in the input file
-   * \note the indices for this object are [time][area][age][length]
+   * \note The indices for this object are [time][area][age][length]
    */
   DoubleMatrixPtrMatrix obsDistribution;
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store age-length distribution information calculated in the model
-   * \note the indices for this object are [time][area][age][length]
+   * \note The indices for this object are [time][area][age][length]
    */
   DoubleMatrixPtrMatrix modelDistribution;
   /**
    * \brief This is the DoubleMatrix used to store the calculated likelihood information
-   * \note the indices for this object are [time][area]
+   * \note The indices for this object are [time][area]
    */
   DoubleMatrix likelihoodValues;
   /**
@@ -198,17 +198,17 @@ private:
   IntVector Steps;
   /**
    * \brief This is the DoubleMatrixPtrVector used to aggreate the age-length distribution information from the model data over a year, if the likelihood calculation is based on the aggregated data
-   * \note the indices for this object are [area][age][length]
+   * \note The indices for this object are [area][age][length]
    */
   DoubleMatrixPtrVector modelYearData;
   /**
    * \brief This is the DoubleMatrixPtrVector used to aggreate the age-length distribution information from the observed data over a year, if the likelihood calculation is based on the aggregated data
-   * \note the indices for this object are [area][age][length]
+   * \note The indices for this object are [area][age][length]
    */
   DoubleMatrixPtrVector obsYearData;
   /**
    * \brief This is a flag to denote whether the likelihood calculation should aggregate data over a whole year
-   * \note the default value is 0, which calculates the likelihood score on each timestep
+   * \note The default value is 0, which calculates the likelihood score on each timestep
    */
   int yearly;
   /**
@@ -237,17 +237,17 @@ private:
   int illegal;
   /**
    * \brief This is the LUDecomposition that can be used when calculating the likelihood score, if the multivariate normal function has been selected
-   * \note this is set to zero, and not used, if the multivariate normal function is not used
+   * \note This is set to zero, and not used, if the multivariate normal function is not used
    */
   LUDecomposition LU;
   /**
    * \brief This is the Multinomial that can be used when calculating the likelihood score, if the multinomial function has been selected
-   * \note this is set to zero, and not used, if the multinomial function is not used
+   * \note This is set to zero, and not used, if the multinomial function is not used
    */
   Multinomial MN;
   /**
    * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
-   * \note the indices for this object are [area][age][length]
+   * \note The indices for this object are [area][age][length]
    */
   const AgeBandMatrixPtrVector* alptr;
 };

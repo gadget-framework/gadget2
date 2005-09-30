@@ -127,7 +127,6 @@ void AgeBandMatrixRatioPtrVector::addTagName(const char* tagname) {
 // Returns -1 if do not contain tag with name == tagname.
 // Else return the index into the location of the tag with name == tagname.
 int AgeBandMatrixRatioPtrVector::getTagID(const char* tagname) {
-
   int i = 0;
   int found = 0;
   while (i < tagID.Size() && found == 0) {
@@ -142,7 +141,6 @@ int AgeBandMatrixRatioPtrVector::getTagID(const char* tagname) {
 }
 
 void AgeBandMatrixRatioPtrVector::deleteTag(const char* tagname) {
-
   int minlength, maxlength, i, age, length;
   int index = getTagID(tagname);
   int minage = v[0]->minAge();

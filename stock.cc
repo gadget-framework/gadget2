@@ -120,7 +120,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //read the natural mortality data
   infile >> text;
   if (strcasecmp(text, "naturalmortality") == 0)
-    naturalm = new NaturalM(infile, minage, maxage, TimeInfo, keeper);
+    naturalm = new NaturalMortality(infile, minage, maxage, TimeInfo, keeper);
   else
     handle.logFileUnexpected(LOGFAIL, "naturalmortality", text);
   handle.logMessage(LOGMESSAGE, "Read natural mortality data for stock", this->getName());
@@ -357,17 +357,17 @@ void Stock::setStock(StockPtrVector& stockvec) {
 void Stock::Print(ofstream& outfile) const {
   int i;
 
-  outfile << "\nStock\nName" << sep << this->getName() << "\nLives on internal areas";
+  outfile << "\nStock\nName " << this->getName() << "\nLives on internal areas";
 
   for (i = 0; i < areas.Size(); i++)
     outfile << sep << areas[i];
   outfile << endl;
 
-  outfile << "\ndoes grow" << sep << doesgrow << "\nis eaten" << sep << iseaten
-    << "\ndoes eat" << sep << doeseat << "\ndoes migrate" << sep << doesmigrate
-    << "\ndoes mature" << sep << doesmature << "\ndoes move" << sep << doesmove
-    << "\ndoes renew" << sep << doesrenew << "\ndoes spawn" << sep << doesspawn
-    << "\ndoes stray" << sep << doesstray << endl << endl;
+  outfile << "\ndoes grow " << doesgrow << "\nis eaten " << iseaten
+    << "\ndoes eat " << doeseat << "\ndoes migrate " << doesmigrate
+    << "\ndoes mature " << doesmature << "\ndoes move " << doesmove
+    << "\ndoes renew " << doesrenew << "\ndoes spawn " << doesspawn
+    << "\ndoes stray " << doesstray << endl << endl;
 
   LgrpDiv->Print(outfile);
   initial->Print(outfile);
@@ -402,6 +402,24 @@ void Stock::Print(ofstream& outfile) const {
 
 int Stock::isBirthday(const TimeClass* const TimeInfo) const {
   return (TimeInfo->getStep() == birthdate);
+}
+
+Prey* Stock::getPrey() const {
+  if (iseaten == 0)
+    handle.logMessage(LOGFAIL, "Error in stock - no prey defined for", this->getName());
+  return prey;
+}
+
+const Migration* Stock::getMigration() const {
+  if (doesmigrate == 0)
+    handle.logMessage(LOGFAIL, "Error in stock - no migration defined for", this->getName());
+  return migration;
+}
+
+PopPredator* Stock::getPredator() const {
+  if (doeseat == 0)
+    handle.logMessage(LOGFAIL, "Error in stock - no predator defined for", this->getName());
+  return predator;
 }
 
 const StockPtrVector& Stock::getMatureStocks() {

@@ -11,6 +11,12 @@
 #include "keeper.h"
 #include "growthcalc.h"
 
+/**
+ * \class Grower
+ * \brief This is the class used to calculate, and implement, the affect of growth on the stock
+ *
+ * This class calculates the growth of the stock, according to the different growth functions derived from the GrowthCalcBase class.  Since the growth calculations can take place on a coarser scale than the stock is defined on, the calculated growth is then interpolated to take the length group of the stock into account.  This growth is then implemented by moving the fish up from the old length groups to the new length groups, taking care to ensure that the fish that would move to beyond the largest length group are kept in the plus group.
+ */
 class Grower : protected LivesOnAreas {
 public:
   /**
@@ -117,37 +123,37 @@ protected:
   ConversionIndex* CI;
   /**
    * \brief This is the DoubleMatrix used to store the increase in length on the current timestep
-   * \note the indices for this object are [area][stock length]
+   * \note The indices for this object are [area][stock length]
    */
   DoubleMatrix interpLengthGrowth;
   /**
    * \brief This is the DoubleMatrix used to store the increase in weight on the current timestep
-   * \note the indices for this object are [area][stock length]
+   * \note The indices for this object are [area][stock length]
    */
   DoubleMatrix interpWeightGrowth;
   /**
    * \brief This is the DoubleMatrix used to store the calculated increase in length on the current timestep
-   * \note the indices for this object are [area][length]
+   * \note The indices for this object are [area][length]
    */
   DoubleMatrix calcLengthGrowth;
   /**
    * \brief This is the DoubleMatrix used to store the calculated increase in weight on the current timestep
-   * \note the indices for this object are [area][length]
+   * \note The indices for this object are [area][length]
    */
   DoubleMatrix calcWeightGrowth;
   /**
    * \brief This is the DoubleMatrixPtrVector used to store the calculated increase in length for each length group on the current timestep
-   * \note the indices for this object are [area][change in length][stock length]
+   * \note The indices for this object are [area][change in length][stock length]
    */
   DoubleMatrixPtrVector lgrowth;
   /**
    * \brief This is the DoubleMatrixPtrVector used to store the calculated increase in weight for each length group on the current timestep
-   * \note the indices for this object are [area][change in length][stock length]
+   * \note The indices for this object are [area][change in length][stock length]
    */
   DoubleMatrixPtrVector wgrowth;
   /**
    * \brief This is the dummy DoubleVector used during the growth calculation
-   * \note the values of this vector are set to zero, and never used, unless the growth function depends on the feeding level of the stock (ie. growth is based on consumption of preys)
+   * \note The values of this vector are set to zero, and never used, unless the growth function depends on the feeding level of the stock (ie. growth is based on consumption of preys)
    */
   DoubleVector dummyfphi;
   /**
@@ -172,22 +178,22 @@ protected:
   Formula beta;
   /**
    * \brief This is a DoubleVector used when calculating the beta binomial distribution
-   * \note this stores the value of n*(n-1)*....(n-x+1)/x!
+   * \note This stores the value of n*(n-1)*....(n-x+1)/x!
    */
   DoubleVector part1;
   /**
    * \brief This is a DoubleVector used when calculating the beta binomial distribution
-   * \note this stores the value of gamma(n-x+beta)/gamma(beta)
+   * \note This stores the value of gamma(n-x+beta)/gamma(beta)
    */
   DoubleVector part2;
   /**
    * \brief This is a double used when calculating the beta binomial distribution
-   * \note this stores the value of gamma(alpha+beta)/gamma(n+alpha+beta)
+   * \note This stores the value of gamma(alpha+beta)/gamma(n+alpha+beta)
    */
   double part3;
   /**
    * \brief This is a DoubleVector used when calculating the beta binomial distribution
-   * \note this stores the value of gamma(x+alpha)/gamma(x)
+   * \note This stores the value of gamma(x+alpha)/gamma(x)
    */
   DoubleVector part4;
 };

@@ -93,6 +93,10 @@ protected:
    */
   ParameterVector switches;
   /**
+   * \brief This is the DoubleVector used to temporarily store the values of the parameters
+   */
+  DoubleVector values;
+  /**
    * \brief This is the default weight applied when the lower bound is exceeded
    */
   double defLW;

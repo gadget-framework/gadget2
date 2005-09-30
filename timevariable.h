@@ -4,6 +4,10 @@
 #include "formulavector.h"
 #include "commentstream.h"
 
+/**
+ * \class TimeVariable
+ * \brief This is the class used to calculate the value of the time-dependent variables used in the model simulation
+ */
 class TimeVariable {
 public:
   /**
@@ -86,12 +90,12 @@ private:
   FormulaVector values;
   /**
    * \brief This is the DoubleMatrix of the multiplier values for the TimeVariable
-   * \note this is only used when the the 'modelmatrix' formulation is specified
+   * \note This is only used when the the 'modelmatrix' formulation is specified
    */
   DoubleMatrix modelmatrix;
   /**
    * \brief This is the FormulaVector of the coefficients for the TimeVariable
-   * \note this is only used when the the 'modelmatrix' formulation is specified
+   * \note This is only used when the the 'modelmatrix' formulation is specified
    */
   FormulaVector coeff;
   /**

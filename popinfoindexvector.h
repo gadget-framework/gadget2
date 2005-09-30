@@ -89,7 +89,7 @@ public:
    * \brief This function will add a PopInfoIndexVector to the current vector
    * \param Addition is the PopInfoIndexVector that will be added to the current vector
    * \param CI is the ConversionIndex that will convert between the length groups of the 2 vectors
-   * \param ratio is a multiplicative constant applied to each entry
+   * \param ratio is a multiplicative constant applied to each entry (default value 1.0)
    */
   void Add(const PopInfoIndexVector& Addition, const ConversionIndex& CI, double ratio = 1.0);
   /**

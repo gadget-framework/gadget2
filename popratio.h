@@ -23,9 +23,25 @@ public:
    * \brief This is the ratio of tagged fish in the population cell
    */
   double R;
+  /**
+   * \brief This operator will add an existing PopRatio to the current PopRatio
+   * \param a is the PopRatio to add
+   */
   PopRatio& operator += (const PopRatio& a);
+  /**
+   * \brief This operator will set the PopRatio equal to an existing PopRatio
+   * \param a is the PopRatio to copy
+   */
   PopRatio& operator = (const PopRatio& a);
+  /**
+   * \brief This operator will subtract a number from the PopRatio
+   * \param a is the number to subtract
+   */
   void operator -= (double a);
+  /**
+   * \brief This operator will increase the PopRatio by a multiplicative constant
+   * \param a is the multiplicative constant
+   */
   void operator *= (double a);
 };
 

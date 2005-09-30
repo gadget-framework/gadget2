@@ -68,17 +68,17 @@ private:
   double calcLikSumSquares();
   /**
    * \brief This is the DoubleMatrixPtrVector used to store number information specified in the input file
-   * \note the indices for this object are [tag][time][area]
+   * \note The indices for this object are [tag][time][area]
    */
   DoubleMatrixPtrVector numbers;
   /**
    * \brief This is the DoubleMatrixPtrVector used to store mean length information specified in the input file
-   * \note the indices for this object are [tag][time][area]
+   * \note The indices for this object are [tag][time][area]
    */
   DoubleMatrixPtrVector obsMean;
   /**
    * \brief This is the DoubleMatrixPtrVector used to store the standard deviation of the length information specified in the input file
-   * \note the indices for this object are [tag][time][area]
+   * \note The indices for this object are [tag][time][area]
    */
   DoubleMatrixPtrVector obsStdDev;
   /**

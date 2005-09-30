@@ -85,17 +85,17 @@ private:
   double calcLikSumSquares();
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store age-length distribution information specified in the input file
-   * \note the indices for this object are [time][area][stock][id] where id = age+(numage*length)
+   * \note The indices for this object are [time][area][stock][id] where id = age+(numage*length)
    */
   DoubleMatrixPtrMatrix obsDistribution;
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store age-length distribution information calculated in the model
-   * \note the indices for this object are [time][area][stock][id] where id = age+(numage*length)
+   * \note The indices for this object are [time][area][stock][id] where id = age+(numage*length)
    */
   DoubleMatrixPtrMatrix modelDistribution;
   /**
    * \brief This is the DoubleMatrix used to store the calculated likelihood information
-   * \note the indices for this object are [time][area]
+   * \note The indices for this object are [time][area]
    */
   DoubleMatrix likelihoodValues;
   /**
@@ -177,7 +177,7 @@ private:
   Multinomial MN;
   /**
    * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
-   * \note the indices for this object are [area][age][length]
+   * \note The indices for this object are [area][age][length]
    */
   const AgeBandMatrixPtrVector* alptr;
 };

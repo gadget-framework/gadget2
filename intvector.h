@@ -82,6 +82,10 @@ public:
    * \return 1 if the read from file was successful, 0 otherwise
    */
   int readline(CommentStream& infile);
+  /**
+   * \brief This operator will set the vector equal to an existing IntVector
+   * \param iv is the IntVector to copy
+   */
   IntVector& operator = (const IntVector& iv);
 protected:
   /**

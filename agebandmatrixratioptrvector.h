@@ -25,13 +25,11 @@ public:
   void addTag(AgeBandMatrixPtrVector* initial, const AgeBandMatrixPtrVector& Alkeys, const char* tagname, double tagloss);
   void addTag(const char* tagname);
   void deleteTag(const char* tagname);
-//  void deleteTag(int id);
   int Size() const { return size; };
   int getTagID(const char* tagname);
   const char* getTagName(int id) const;
   void Migrate(const DoubleMatrix& MI, const AgeBandMatrixPtrVector& Total);
   const int numTagExperiments() const { return tagID.Size(); };
-//  const CharPtrVector getTagNameList() const { return tagID; };
   const DoubleVector& getTagLoss() const { return tagLoss; };
   AgeBandMatrixRatio& operator [] (int pos) { return *v[pos]; };
   const AgeBandMatrixRatio& operator [] (int pos) const { return *v[pos]; };
@@ -39,12 +37,11 @@ public:
     const AgeBandMatrixRatioPtrVector& Addition, int AdditionArea, const ConversionIndex &CI,
     double ratio, int minage, int maxage);
 protected:
+  void addTagName(const char* name);
   int size;
   AgeBandMatrixRatio** v;
   CharPtrVector tagID;
   DoubleVector tagLoss;
-private:
-  void addTagName(const char* name);
 };
 
 #endif

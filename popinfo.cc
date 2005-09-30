@@ -18,9 +18,9 @@ PopInfo& PopInfo::operator += (const PopInfo& a) {
   return *this;
 }
 
-PopInfo PopInfo::operator * (double b) {
+PopInfo PopInfo::operator * (double a) {
   PopInfo c;
-  c.N = N * b;
+  c.N = N * a;
   c.W = W;
   return c;
 }

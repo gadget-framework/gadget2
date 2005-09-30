@@ -1,19 +1,30 @@
 #ifndef ecosystem_h
 #define ecosystem_h
 
-#include "stock.h"
-#include "baseclassptrvector.h"
-#include "otherfoodptrvector.h"
-#include "readfunc.h"
+#include "areatime.h"
+#include "keeper.h"
 #include "errorhandler.h"
 #include "tagptrvector.h"
+#include "baseclassptrvector.h"
+#include "stockptrvector.h"
+#include "fleetptrvector.h"
+#include "otherfoodptrvector.h"
 #include "printerptrvector.h"
-#include "printer.h"
+#include "likelihoodptrvector.h"
+#include "stock.h"
 #include "fleet.h"
+#include "otherfood.h"
+#include "printer.h"
 #include "maininfo.h"
 #include "printinfo.h"
 #include "gadget.h"
 
+/**
+ * \class Ecosystem
+ * \brief This is the class used to control the model simulation
+ *
+ * This is the main class for the model simulation.  This class contains pointers to all the objects that are to be used in the model simulation - the stocks and fleets, the model variables, any printer classes used to output the modelled population and any likelihood classes used to compare the modelled population to data.  This class controls the model simulation, from the reading of the input files, simulating the modelled population on each timestep and printing the results, and finally calculating an overall likelihood score.  This class is also used during an optimising run to update the variables to new values from the optimisation algorithm and calculating a new likelihood score based on these new values.
+ */
 class Ecosystem {
 public:
   /**
@@ -168,37 +179,37 @@ public:
    * \brief This function will run the model
    * \param optimise is a flag to denote whether the likelihood score should be calculated or not
    * \param print is a flag to denote whether the model output should be printed or not
-   * \note this function covers a single running of the model, calculating the population structure and also calculating the likelihood score obtained from comparing the modelled population to the data specified in the likelihood components
+   * \note This function covers a single running of the model, calculating the population structure and also calculating the likelihood score obtained from comparing the modelled population to the data specified in the likelihood components
    */
   void Simulate(int optimise, int print);
   /**
    * \brief This function will calculate the population change on a timestep in the model
-   * \note this function covers the migration between areas
+   * \note This function covers the migration between areas
    */
   void SimulateOneTimestep();
   /**
    * \brief This function will calculate the predation, and update the population, on an area
    * \param area is the area to calculate the predation on
-   * \note this function covers the predation of the preys by the predators, and consequent population changes, for a sub-step
+   * \note This function covers the predation of the preys by the predators, and consequent population changes, for a sub-step
    */
   void SimulateOneAreaOneTimeSubstep(int area);
   /**
    * \brief This function will update the population numbers on an area
    * \param area is the area to update the population on
-   * \note this function covers the growth, various movements between stocks due to maturity and straying, spawning, and adding new recruits into the model
+   * \note This function covers the growth, various movements between stocks due to maturity and straying, spawning, and adding new recruits into the model
    */
   void updatePopulationOneArea(int area);
   /**
    * \brief This function will update the ages of the population on an area
    * \param area is the area to update the population on
-   * \note this function covers the increase in age and the simple 'doesmove' option for movement between stocks
+   * \note This function covers the increase in age and the simple 'doesmove' option for movement between stocks
    */
   void updateAgesOneArea(int area);
   /**
    * \brief This function will update the model parameters, run the model and calculate a likelihood score
    * \param x is the DoubleVector containing the updated values for the parameters
    * \return likelihood score
-   * \note this function gets updated values for the model parameters from the optimisation algorithm and performs a model run based on these new values, calculating a new likelihood score that is then returned to the optimisation algorithm
+   * \note This function gets updated values for the model parameters from the optimisation algorithm and performs a model run based on these new values, calculating a new likelihood score that is then returned to the optimisation algorithm
    */
   double SimulateAndUpdate(const DoubleVector& x);
   /**
@@ -404,17 +415,17 @@ protected:
   int printcount2;
   /**
    * \brief This is the DoubleVector used to store the initial values of the parameters
-   * \note this vector is only used to temporarily store values during an optimising run
+   * \note This vector is only used to temporarily store values during an optimising run
    */
   DoubleVector initialval;
   /**
    * \brief This is the DoubleVector used to store the current values of the parameters
-   * \note this vector is only used to temporarily store values during an optimising run
+   * \note This vector is only used to temporarily store values during an optimising run
    */
   DoubleVector currentval;
   /**
    * \brief This is the IntVector used to store information about whether the parameters are to be optimised
-   * \note this vector is only used to temporarily store values during an optimising run
+   * \note This vector is only used to temporarily store values during an optimising run
    */
   IntVector optflag;
   friend class InterruptInterface;

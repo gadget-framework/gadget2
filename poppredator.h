@@ -21,7 +21,7 @@ public:
    * \param areas is the IntVector of the areas that the predator will live on
    * \param OtherLgrpDiv is the LengthGroupDivision of the predator
    * \param GivenLgrpDiv is the LengthGroupDivision that the predation will be calculated on
-   * \note this constructor is used when creating a dynamic predator (ie. StockPredator class)
+   * \note This constructor is used when creating a dynamic predator (ie. StockPredator class)
    */
   PopPredator(const char* givenname, const IntVector& areas,
     const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv);
@@ -29,7 +29,7 @@ public:
    * \brief This is the PopPredator constructor to create a predator without a specified length group
    * \param givenname is the name of the predator
    * \param areas is the IntVector of the areas that the predator will live on
-   * \note this constructor is used when creating a non-dynamic predator (ie. LengthPredator class)
+   * \note This constructor is used when creating a non-dynamic predator (ie. LengthPredator class)
    */
   PopPredator(const char* givenname, const IntVector& areas);
   /**
@@ -101,37 +101,37 @@ protected:
   ConversionIndex* CI;
   /**
    * \brief This is the PopInfoMatrix used to store information on the number of predators for the current timestep
-   * \note the indices for this object are [area][predator length]
+   * \note The indices for this object are [area][predator length]
    */
   PopInfoMatrix prednumber;
   /**
    * \brief This is the DoubleMatrix used to store information on the overconsumption by the predators on the current timestep
-   * \note the indices for this object are [area][predator length]
+   * \note The indices for this object are [area][predator length]
    */
   DoubleMatrix overconsumption;
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store information on the consumption by the predators on the current timestep
-   * \note the indices for this object are [area][prey][predator length][prey length]
+   * \note The indices for this object are [area][prey][predator length][prey length]
    */
   DoubleMatrixPtrMatrix consumption;
   /**
    * \brief This is the DoubleMatrix used to store information on the total consumption by the predators on the current timestep
-   * \note the indices for this object are [area][predator length]
+   * \note The indices for this object are [area][predator length]
    */
   DoubleMatrix totalconsumption;
   /**
    * \brief This is the DoubleMatrix used to store information on the overconsumption by the predators on the current substep of the current timestep
-   * \note the indices for this object are [area][predator length]
+   * \note The indices for this object are [area][predator length]
    */
   DoubleMatrix overcons;
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store information on the consumption by the predators on the current substep of the current timestep
-   * \note the indices for this object are [area][prey][predator length][prey length]
+   * \note The indices for this object are [area][prey][predator length][prey length]
    */
   DoubleMatrixPtrMatrix cons;
   /**
    * \brief This is the DoubleMatrix used to store information on the total consumption by the predators on the current substep of the current timestep
-   * \note the indices for this object are [area][predator length]
+   * \note The indices for this object are [area][predator length]
    */
   DoubleMatrix totalcons;
 };

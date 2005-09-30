@@ -81,17 +81,17 @@ protected:
   virtual double calcLikelihood() = 0;
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store stomach content (consumption) information specified in the input file
-   * \note the indices for this object are [time][area][predator][prey]
+   * \note The indices for this object are [time][area][predator][prey]
    */
   DoubleMatrixPtrMatrix obsConsumption;
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store consumption (stomach content) information calculated in the model
-   * \note the indices for this object are [time][area][predator][prey]
+   * \note The indices for this object are [time][area][predator][prey]
    */
   DoubleMatrixPtrMatrix modelConsumption;
   /**
    * \brief This is the DoubleMatrix used to store the calculated likelihood information
-   * \note the indices for this object are [time][area]
+   * \note The indices for this object are [time][area]
    */
   DoubleMatrix likelihoodValues;
   /**
@@ -132,7 +132,7 @@ protected:
   IntVector predatorages;
   /**
    * \brief This is the DoubleMatrix used to store prey length information
-   * \note the indices for this object are [prey number][prey length]
+   * \note The indices for this object are [prey number][prey length]
    */
   DoubleMatrix preylengths;
   /**
@@ -268,12 +268,12 @@ protected:
   virtual double calcLikelihood();
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store the standard deviation values for the consumption information specified in the input file
-   * \note the indices for this object are [time][area][predator][prey]
+   * \note The indices for this object are [time][area][predator][prey]
    */
   DoubleMatrixPtrMatrix stddev;
   /**
    * \brief This is the DoubleMatrixPtrVector used to store the number of stomach samples specified in the input file
-   * \note the indices for this object are [time][area][predator]
+   * \note The indices for this object are [time][area][predator]
    */
   DoubleMatrixPtrVector number;
 };

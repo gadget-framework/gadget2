@@ -3,6 +3,10 @@
 
 #include "doublevector.h"
 
+/**
+ * \class LengthGroupDivision
+ * \brief This is the class used to store information about the length groups of the modelled stock population
+ */
 class LengthGroupDivision {
 public:
   /**
@@ -121,7 +125,7 @@ protected:
 };
 
 /**
- * \brief This is the function that will check whether one LengthGroupDivision has groups that are finer than a second LengthGroupDivision, and print an error if this is not the case
+ * \brief This is the function that will check whether one LengthGroupDivision has length groups that are finer than a second LengthGroupDivision, and print an error if this is not the case
  * \param finer is the LengthGroupDivision that should be on a finer scale
  * \param coarser is the LengthGroupDivision that should be on a coarser scale
  */

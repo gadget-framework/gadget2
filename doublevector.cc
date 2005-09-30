@@ -91,8 +91,9 @@ void DoubleVector::Reset() {
 double DoubleVector::operator * (const DoubleVector& d) const {
   double result = 0.0;
   int i;
-  for (i = 0; i < size; i++)
-    result += (d[i] * v[i]);
+  if (size == d.size)
+    for (i = 0; i < size; i++)
+      result += (d[i] * v[i]);
   return result;
 }
 

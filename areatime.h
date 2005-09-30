@@ -216,7 +216,7 @@ protected:
   int numtimesteps;
   /**
    * \brief This is the length of a year in the model simulation (should be 12)
-   * \note this is stored as 1/length of year to save processing time
+   * \note This is stored as 1/length of year to save processing time
    */
   double lengthofyear;
   /**

@@ -11,6 +11,10 @@ class Keeper;
 enum FormulaType { CONSTANT = 1, PARAMETER, FUNCTION };
 enum FunctionType { NONE = 1, MULT, DIV, PLUS, MINUS, SIN, COS, LOG, EXP, SQRT };
 
+/**
+ * \class Formula
+ * \brief This is the class used to calculate the value of the variables used in the model simulation
+ */
 class Formula {
 public:
   /**
@@ -68,6 +72,10 @@ public:
    * \param keeper is the Keeper for the current model
    */
   void Delete(Keeper* keeper) const;
+  /**
+   * \brief This operator will set the Formula equal to an existing Formula
+   * \param F is the Formula to copy
+   */
   Formula& operator = (const Formula& F);
   friend CommentStream& operator >> (CommentStream& infile, Formula& F);
 private:

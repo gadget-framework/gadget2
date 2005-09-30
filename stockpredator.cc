@@ -145,7 +145,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       maxcons[inarea][predl] = tmp * pow(LgrpDiv->meanLength(predl), consParam[3]);
   }
 
-  //Now maxconbylength contains the maximum consumption by length
+  //Now maxcons contains the maximum consumption by length
   //Calculating Phi(L) and O(l,L,prey) based on energy requirements
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {

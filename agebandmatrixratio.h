@@ -15,9 +15,9 @@ class Maturity;
 
 class AgeBandMatrixRatio {
 public:
-  AgeBandMatrixRatio(int MinAge, const IntVector& minl, const IntVector& size);
-  AgeBandMatrixRatio(int MinAge, const PopRatioMatrix& initial);
-  AgeBandMatrixRatio(int MinAge, const PopRatioIndexVector& initial);
+  AgeBandMatrixRatio(int age, const IntVector& minl, const IntVector& size);
+  AgeBandMatrixRatio(int age, const PopRatioMatrix& initial);
+  AgeBandMatrixRatio(int age, const PopRatioIndexVector& initial);
   AgeBandMatrixRatio(const AgeBandMatrixRatio& initial);
   AgeBandMatrixRatio() { minage = 0; nrow = 0; v = 0; };
   ~AgeBandMatrixRatio();

@@ -12,7 +12,7 @@
 
 class Stock;
 class Keeper;
-class NaturalM;
+class NaturalMortality;
 class Grower;
 class InitialCond;
 class Migration;
@@ -27,6 +27,8 @@ class StrayData;
 /**
  * \class Stock
  * \brief This is the class used to model a stock within the Gadget model
+ *
+ * This class is used to model the population of a stock during a model simulation.
  */
 class Stock : public BaseClass {
 public:
@@ -155,23 +157,71 @@ public:
     int area, double ratio, int minage, int maxage);
   void Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
     int area, double ratio, int minage, int maxage);
-  Prey* getPrey() const { return prey; };
-  const Migration* getMigration() const { return migration; };
-  PopPredator* getPredator() const { return predator; };
+  Prey* getPrey() const;
+  const Migration* getMigration() const;
+  PopPredator* getPredator() const;
   const AgeBandMatrix& getAgeLengthKeys(int area) const { return Alkeys[this->areaNum(area)]; };
+  /**
+   * \brief This will return the length group information for the stock
+   * \return LgrpDiv
+   */
   const LengthGroupDivision* getLengthGroupDiv() const { return LgrpDiv; };
   void setStock(StockPtrVector& stockvec);
   int isBirthday(const TimeClass* const TimeInfo) const;
+  /**
+   * \brief This function will return the flag used to denote whether the stock is eaten or not
+   * \return flag
+   */
   int isEaten() const { return iseaten; };
+  /**
+   * \brief This function will return the flag used to denote whether the stock will spawn or not
+   * \return flag
+   */
   int doesSpawn() const { return doesspawn; };
+  /**
+   * \brief This function will return the flag used to denote whether the stock will stray or not
+   * \return flag
+   */
   int doesStray() const { return doesstray; };
+  /**
+   * \brief This function will return the flag used to denote whether the stock will move or not
+   * \return flag
+   */
   int doesMove() const { return doesmove; };
+  /**
+   * \brief This function will return the flag used to denote whether the stock will eat or not
+   * \return flag
+   */
   int doesEat() const { return doeseat; };
+  /**
+   * \brief This function will return the flag used to denote whether the stock will mature or not
+   * \return flag
+   */
   int doesMature() const { return doesmature; };
+  /**
+   * \brief This function will return the flag used to denote whether the stock will renew or not
+   * \return flag
+   */
   int doesRenew() const { return doesrenew; };
+  /**
+   * \brief This function will return the flag used to denote whether the stock will grow or not
+   * \return flag
+   */
   int doesGrow() const { return doesgrow; };
+  /**
+   * \brief This function will return the flag used to denote whether the stock will migrate or not
+   * \return flag
+   */
   int doesMigrate() const { return doesmigrate; };
+  /**
+   * \brief This will return the minimum age of the stock
+   * \return minimum age
+   */
   int minAge() const { return Alkeys[0].minAge(); };
+  /**
+   * \brief This will return the maximum age of the stock
+   * \return maximum age
+   */
   int maxAge() const { return Alkeys[0].maxAge(); };
   const StockPtrVector& getMatureStocks();
   const StockPtrVector& getTransitionStocks();
@@ -185,27 +235,90 @@ protected:
   TagPtrVector matureTags;
   TagPtrVector transitionTags;
   TagPtrVector strayTags;
+  /**
+   * \brief This is the StrayData used to calculate information about the straying of the stock
+   */
   StrayData* stray;
+  /**
+   * \brief This is the SpawnData used to calculate information about the spawning of the stock
+   */
   SpawnData* spawner;
+  /**
+   * \brief This is the RenewalData used to calculate information about the renewal of the stock
+   */
   RenewalData* renewal;
+  /**
+   * \brief This is the Maturity used to calculate information about the maturation of the stock
+   */
   Maturity* maturity;
+  /**
+   * \brief This is the Transition used to calculate information about the movement of the stock
+   */
   Transition* transition;
+  /**
+   * \brief This is the Migration used to calculate information about the migration of the stock
+   */
   Migration* migration;
+  /**
+   * \brief This is the Prey used to calculate information about the consumption of the stock
+   */
   Prey* prey;
+  /**
+   * \brief This is the PopPredator used to calculate information about the consumption by the stock
+   */
   PopPredator* predator;
+  /**
+   * \brief This is the InitialCond used to calculate information about the initial conditions of the stock
+   */
   InitialCond* initial;
+  /**
+   * \brief This is the LengthGroupDivision used to store length information
+   */
   LengthGroupDivision* LgrpDiv;
+  /**
+   * \brief This is the Grower used to calculate information about the growth of the stock
+   */
   Grower* grower;
-  NaturalM* naturalm;
+  /**
+   * \brief This is the NaturalMortality used to calculate information about the natural mortality of the stock
+   */
+  NaturalMortality* naturalm;
   PopInfoMatrix NumberInArea;
+  /**
+   * \brief This is the flag used to denote whether the stock will eat (ie. is a Predator) or not
+   */
   int doeseat;
+  /**
+   * \brief This is the flag used to denote whether the stock will move or not
+   */
   int doesmove;
+  /**
+   * \brief This is the flag used to denote whether the stock is eaten (ie. is a Prey) or not
+   */
   int iseaten;
+  /**
+   * \brief This is the flag used to denote whether the stock will spawn or not
+   */
   int doesspawn;
+  /**
+   * \brief This is the flag used to denote whether the stock will mature or not
+   */
   int doesmature;
+  /**
+   * \brief This is the flag used to denote whether the stock will renew or not
+   */
   int doesrenew;
+  /**
+   * \brief This is the flag used to denote whether the stock will grow or not
+   */
   int doesgrow;
+  /**
+   * \brief This is the flag used to denote whether the stock will migrate or not
+   */
   int doesmigrate;
+  /**
+   * \brief This is the flag used to denote whether the stock will stray or not
+   */
   int doesstray;
   int birthdate;
 };

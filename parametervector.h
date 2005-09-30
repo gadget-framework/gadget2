@@ -78,6 +78,10 @@ public:
    * \return the value of the specified element
    */
   Parameter const& operator [] (int pos) const { return v[pos]; };
+  /**
+   * \brief This operator will set the vector equal to an existing ParameterVector
+   * \param pv is the ParameterVector to copy
+   */
   ParameterVector& operator = (const ParameterVector& pv);
 protected:
   /**

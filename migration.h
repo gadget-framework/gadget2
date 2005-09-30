@@ -15,6 +15,8 @@
  * \class Migration
  * \brief This is the base class used to calculate the migration of a stock within the model
  *
+ * This class moves fish from one area to another within the model.  The proportion of the fish that move is calculated according to a migration matrix.  The migration matrix is either specified in the input files (either directly or by specifying the ratio that move), or is calculated from a migration function, based on drift and diffusion parameters.  Care is taken to ensure that the columns of the migration matrix will sum to 1, so that no fish are created or lost during the migration process.  Once the migration matrix has been calculated, the fish are moved between the areas using a simple matrix multiplication function.
+ *
  * \note This will always be overridden by the derived classes that actually calculate the migration
  */
 class Migration : protected LivesOnAreas {
@@ -61,6 +63,10 @@ protected:
   DoubleVector penalty;
 };
 
+/**
+ * \class MigrationNumbers
+ * \brief This is the class used to calculate the migration of a stock within the model based on migration ratios specified in the input file
+ */
 class MigrationNumbers : public Migration {
 public:
   /**
@@ -99,20 +105,70 @@ public:
    */
   virtual int isMigrationStep(const TimeClass* const TimeInfo);
 private:
+  /**
+   * \brief This function will read the migration timestep data from the input file
+   * \param infile is the CommentStream to read the migration timestep data from
+   * \param TimeInfo is the TimeClass for the current model
+   */
   void readTimeStepData(CommentStream& infile, const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will read the migration ratio data from the input file
+   * \param infile is the CommentStream to read the migration timestep data from
+   * \param keeper is the Keeper for the current model
+   * \param Area is the AreaClass for the current model
+   */
   void readGivenRatios(CommentStream& infile, Keeper* const keeper, const AreaClass* const Area);
+  /**
+   * \brief This function will read the migration matrix data from the input file
+   * \param infile is the CommentStream to read the migration timestep data from
+   * \param keeper is the Keeper for the current model
+   */
   void readGivenMatrices(CommentStream& infile, Keeper* const keeper);
+  /**
+   * \brief This will set the name of the migration matrix to be used in the simulation
+   * \param name is the name of the migration matrix
+   */
   void setMatrixName(char* name);
+  /**
+   * \brief This will check if the migration matrix is used in the simulation
+   * \param name is the name of the migration matrix
+   * \return 1 if the migration matrix is used, 0 otherwise
+   */
   int useMatrix(char* name);
+  /**
+   * \brief This will check to ensure that all the required migration information has been specified in the input file
+   */
   void checkMatrixIndex();
+  /**
+   * \brief This is the CharPtrVector used to store the names of the migration matrices that have been read from file
+   */
   CharPtrVector allmatrixnames;
+  /**
+   * \brief This is the CharPtrVector used to store the names of the migration matrices that are used in the simulation
+   */
   CharPtrVector usedmatrixnames;
+  /**
+   * \brief This is the IntVector used to store information about when the migration matrices are to be used in the simulation
+   */
   IntVector timeindex;
+  /**
+   * \brief This is the IntMatrix used to check that sufficient information has been specified to calculate the migration matrices based on the migration ratios given in the input file
+   */
   IntMatrix checkvalues;
+  /**
+   * \brief This is the DoubleMatrixPtrVector used to store the calculated migration parameters
+   */
   DoubleMatrixPtrVector calcMigration;
+  /**
+   * \brief This is the FormulaMatrixPtrVector used to store the migration variables
+   */
   FormulaMatrixPtrVector readMigration;
 };
 
+/**
+ * \class MigrationFunction
+ * \brief This is the class used to calculate the migration of a stock within the model based on a migration function
+ */
 class MigrationFunction : public Migration {
 public:
   /**
@@ -151,6 +207,13 @@ public:
    */
   virtual int isMigrationStep(const TimeClass* const TimeInfo);
 private:
+  /**
+   * \brief This function will read the migration data from the input file
+   * \param infile is the CommentStream to read the migration timestep data from
+   * \param Area is the AreaClass for the current model
+   * \param TimeInfo is the TimeClass for the current model
+   * \param keeper is the Keeper for the current model
+   */
   void readAreaData(CommentStream& infile, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   int updateVariables(const TimeClass* const TimeInfo);
@@ -159,11 +222,23 @@ private:
   double f1x(double w, double u, double D, double beta);
   double f2x(double w, double u, double D, double beta);
   DoubleMatrix calcMigration;
+  /**
+   * \brief This is the TimeVariable used to store the diffusion parameter
+   */
   TimeVariable diffusion;
+  /**
+   * \brief This is the TimeVariable used to store the longitude drift parameter
+   */
   TimeVariable driftx;
+  /**
+   * \brief This is the TimeVariable used to store the latitude drift parameter
+   */
   TimeVariable drifty;
   double lambda;
   double delta;
+  /**
+   * \brief This is the MigrationAreaPtrVector used to store the migration area information
+   */
   MigrationAreaPtrVector oceanareas;
 };
 

@@ -104,17 +104,17 @@ protected:
   ofstream outfile;
   /**
    * \brief This is a flag used to denote whether the printing takes place at the start or the end of the timestep
-   * \note the default value is 0, which corresponds to printing at the end of the timestep
+   * \note The default value is 0, which corresponds to printing at the end of the timestep
    */
   int printtimeid;
   /**
    * \brief This is precision which can be used to override the default values when printing the information to the output file
-   * \note the default value is 0, which corresponds to using values specified in gadget.h
+   * \note The default value is 0, which corresponds to using values specified in gadget.h
    */
   int precision;
   /**
    * \brief This is width used when printing the information to the output file
-   * \note this value is set to precision + 4
+   * \note This value is set to precision + 4
    */
   int width;
 private:

@@ -82,4 +82,3 @@ void SuitFuncPtrVector::Delete(int pos, Keeper* const keeper) {
     size = 0;
   }
 }
-

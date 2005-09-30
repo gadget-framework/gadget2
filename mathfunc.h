@@ -85,7 +85,7 @@ inline double absolute(double a) {
  * \brief This function will check to see if a number is very close to zero
  * \param a is the number that is being checked
  * \return 1 if the number is very close to zero, 0 otherwise
- * \note this function replaces 'a == 0' to take account of numerical inaccuracies when calculating the exact value of a double
+ * \note This function replaces 'a == 0' to take account of numerical inaccuracies when calculating the exact value of a double
  */
 inline int isZero(double a) {
   return ((absolute(a) < verysmall) ? 1 : 0);
@@ -95,7 +95,7 @@ inline int isZero(double a) {
  * \brief This function will calculate the value of the logarithm of n factorial
  * \param n is the number that the logfactorial will be calculated for
  * \return the value of log (n!)
- * \note this function is not an ANSI function and so will not compile correctly if gadget is compiled with the -ansi flag, unless we include #define _GNU_SOURCE in this file
+ * \note This function is not an ANSI function and so will not compile correctly if gadget is compiled with the -ansi flag, unless we include #define _GNU_SOURCE in this file
  */
 inline double logFactorial(double n) {
   return lgamma(n + 1.0);
@@ -105,7 +105,7 @@ inline double logFactorial(double n) {
  * \brief This function will calculate the value of the exponential of n
  * \param n is the number that the exponential will be calculated for
  * \return the value of exp (n)
- * \note this function replaces 'exp' to return a value in the range 0.0 to 1.0
+ * \note This function replaces 'exp' to return a value in the range 0.0 to 1.0
  */
 inline double expRep(double n) {
   double exprep = 0.0;
@@ -121,7 +121,7 @@ inline double expRep(double n) {
 /**
  * \brief This function will generate a random number in the range 0.0 to 1.0
  * \return random number
- * \note this function generates uniformly-distributed doubles in the range 0.0 to 1.0
+ * \note This function generates uniformly-distributed doubles in the range 0.0 to 1.0
  */
 inline double randomNumber() {
   int r = rand();

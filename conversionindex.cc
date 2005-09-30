@@ -25,11 +25,11 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 
   samedl = 0;
   offset = 0;
+  targetisfiner = 0;
   interpolate = interp;
   //targetisfiner means that L1 is strictly coarser than L2
   if (isZero(L1->dl()) || isZero(L2->dl())) {
     checkLengthGroupIsFiner(L1, L2);
-    targetisfiner = 0;
     Lc = L2;
     Lf = L1;
 
@@ -39,7 +39,6 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       Lc = L1;
       Lf = L2;
     } else {
-      targetisfiner = 0;
       Lc = L2;
       Lf = L1;
     }
@@ -93,7 +92,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       if (i > maxpos[pos[i]])
         maxpos[pos[i]] = i;
 
-    for (i = 0; i < nc - 1;i++)
+    for (i = 0; i < nc - 1; i++)
       if (maxpos[i + 1] < maxpos[i])
         maxpos[i + 1] = maxpos[i];
 
@@ -107,7 +106,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 
   //if the conversionindex is to be used for interpolation
   if (interpolate == 1) {
-    interpratio.resize(nf);
+    interpratio.resize(nf, -1.0);
     interppos.resize(nf, -1);
     k = 0;
     for (i = minlength; i < maxlength; i++)
@@ -123,7 +122,6 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
         interpratio[i] = (Lf->meanLength(i) - Lc->meanLength(interppos[i])) /
           (Lc->meanLength(interppos[i] + 1) - Lc->meanLength(interppos[i]));
       else {
-        interpratio[i] = -1.0; //-1 when outside range
         if (Lf->meanLength(i) < Lc->meanLength(0))
           interppos[i] = 0;
         else
@@ -136,7 +134,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 //Vc to a finer length distribution Vf using the conversionindex CI
 void ConversionIndex::interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc) {
 
-  if (!(interpolate))
+  if (interpolate == 0)
     handle.logMessage(LOGFAIL, "Error in conversionindex - cannot interpolate between lengthgroups");
 
   int i;

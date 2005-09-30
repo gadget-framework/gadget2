@@ -15,12 +15,11 @@ ErrorHandler::ErrorHandler() {
 }
 
 ErrorHandler::~ErrorHandler() {
+  delete files;
   if (uselog) {
     logfile.close();
     logfile.clear();
   }
-  files->clearStack();
-  delete files;
 }
 
 void ErrorHandler::setLogLevel(int level) {
@@ -419,13 +418,13 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg) {
       break;
     case LOGFAIL:
       if (uselog) {
-        if (strlen(strFilename) == 0)
+        if (files->getSize() == 0)
           logfile << "Error on commandline - " << msg << endl;
         else
           logfile << "Error in file " << strFilename << " - " << msg << endl;
         logfile.flush();
       }
-      if (strlen(strFilename) == 0)
+      if (files->getSize() == 0)
         cerr << "Error on commandline - " << msg << endl;
       else
         cerr << "Error in file " << strFilename << " - " << msg << endl;
@@ -435,13 +434,13 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg) {
     case LOGWARN:
       numwarn++;
       if (uselog) {
-        if (strlen(strFilename) == 0)
+        if (files->getSize() == 0)
           logfile << "Warning on commandline - " << msg << endl;
         else
           logfile << "Warning in file " << strFilename << " - " << msg << endl;
         logfile.flush();
       }
-      if (strlen(strFilename) == 0)
+      if (files->getSize() == 0)
         cerr << "Warning on commandline - " << msg << endl;
       else
         cerr << "Warning in file " << strFilename << " - " << msg << endl;
@@ -473,13 +472,13 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, int number) 
       break;
     case LOGFAIL:
       if (uselog) {
-        if (strlen(strFilename) == 0)
+        if (files->getSize() == 0)
           logfile << "Error on commandline - " << msg << sep << number << endl;
         else
           logfile << "Error in file " << strFilename << " - " << msg << sep << number << endl;
         logfile.flush();
       }
-      if (strlen(strFilename) == 0)
+      if (files->getSize() == 0)
         cerr << "Error on commandline - " << msg << sep << number << endl;
       else
         cerr << "Error in file " << strFilename << " - " << msg << sep << number << endl;
@@ -489,13 +488,13 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, int number) 
     case LOGWARN:
       numwarn++;
       if (uselog) {
-        if (strlen(strFilename) == 0)
+        if (files->getSize() == 0)
           logfile << "Warning on commandline - " << msg << sep << number << endl;
         else
           logfile << "Warning in file " << strFilename << " - " << msg << sep << number << endl;
         logfile.flush();
       }
-      if (strlen(strFilename) == 0)
+     if (files->getSize() == 0)
         cerr << "Warning on commandline - " << msg << sep << number << endl;
       else
         cerr << "Warning in file " << strFilename << " - " << msg << sep << number << endl;
@@ -526,13 +525,13 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, double numbe
       break;
     case LOGFAIL:
       if (uselog) {
-        if (strlen(strFilename) == 0)
+        if (files->getSize() == 0)
           logfile << "Error on commandline - " << msg << sep << number << endl;
         else
           logfile << "Error in file " << strFilename << " - " << msg << sep << number << endl;
         logfile.flush();
       }
-      if (strlen(strFilename) == 0)
+      if (files->getSize() == 0)
         cerr << "Error on commandline - " << msg << sep << number << endl;
       else
         cerr << "Error in file " << strFilename << " - " << msg << sep << number << endl;
@@ -542,13 +541,13 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, double numbe
     case LOGWARN:
       numwarn++;
       if (uselog) {
-        if (strlen(strFilename) == 0)
+        if (files->getSize() == 0)
           logfile << "Warning on commandline - " << msg << sep << number << endl;
         else
           logfile << "Warning in file " << strFilename << " - " << msg << sep << number << endl;
         logfile.flush();
       }
-      if (strlen(strFilename) == 0)
+      if (files->getSize() == 0)
         cerr << "Warning on commandline - " << msg << sep << number << endl;
       else
         cerr << "Warning in file " << strFilename << " - " << msg << sep << number << endl;
@@ -579,13 +578,13 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg1, const char*
       break;
     case LOGFAIL:
       if (uselog) {
-        if (strlen(strFilename) == 0)
+        if (files->getSize() == 0)
           logfile << "Error on commandline - " << msg1 << sep << msg2 << endl;
         else
           logfile << "Error in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
         logfile.flush();
       }
-      if (strlen(strFilename) == 0)
+      if (files->getSize() == 0)
         cerr << "Error on commandline - " << msg1 << sep << msg2 << endl;
       else
         cerr << "Error in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
@@ -595,13 +594,13 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg1, const char*
     case LOGWARN:
       numwarn++;
       if (uselog) {
-        if (strlen(strFilename) == 0)
+        if (files->getSize() == 0)
           logfile << "Warning on commandline - " << msg1 << sep << msg2 << endl;
         else
           logfile << "Warning in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
         logfile.flush();
       }
-      if (strlen(strFilename) == 0)
+      if (files->getSize() == 0)
         cerr << "Warning on commandline - " << msg1 << sep << msg2 << endl;
       else
         cerr << "Warning in file " << strFilename << " - " << msg1 << sep << msg2 << endl;

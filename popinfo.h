@@ -23,10 +23,30 @@ public:
    * \brief This is the mean weight of the fish in the population cell
    */
   double W;
+  /**
+   * \brief This operator will add an existing PopInfo to the current PopInfo
+   * \param a is the PopInfo to add
+   */
   PopInfo& operator += (const PopInfo& a);
+  /**
+   * \brief This operator will subtract a number from the PopInfo
+   * \param a is the number to subtract
+   */
   void operator -= (double a) { N -= a; };
+  /**
+   * \brief This operator will increase the PopInfo by a multiplicative constant
+   * \param a is the multiplicative constant
+   */
   void operator *= (double a) { N *= a; };
-  PopInfo operator * (double b);
+  /**
+   * \brief This operator will multiply the PopInfo by a constant
+   * \param a is the constant
+   */
+  PopInfo operator * (double a);
+  /**
+   * \brief This operator will set the PopInfo equal to an existing PopInfo
+   * \param a is the PopInfo to copy
+   */
   PopInfo& operator = (const PopInfo& a);
 };
 
