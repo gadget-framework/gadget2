@@ -107,7 +107,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   if ((strcasecmp(text, "function") == 0)) {
     infile >> text;
     SuitFuncPtrVector tempsuitfunc;
-    if (readSuitFunction(tempsuitfunc, infile, text, TimeInfo, keeper)) {
+    if (tempsuitfunc.readSuitFunction(infile, text, TimeInfo, keeper)) {
       suitfunction = tempsuitfunc[0];
       if (suitfunction->usesPredLength())
         suitfunction->setPredLength(0.0);

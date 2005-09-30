@@ -1,35 +1,8 @@
 #include "suitfuncptrvector.h"
+#include "errorhandler.h"
 #include "gadget.h"
 
-SuitFuncPtrVector::SuitFuncPtrVector(int sz) {
-  size = (sz > 0 ? sz : 0);
-  if (size > 0)
-    v = new SuitFunc*[size];
-  else
-    v = 0;
-}
-
-SuitFuncPtrVector::SuitFuncPtrVector(int sz, SuitFunc* value) {
-  size = (sz > 0 ? sz : 0);
-  int i;
-  if (size > 0) {
-    v = new SuitFunc*[size];
-    for (i = 0; i < size; i++)
-      v[i] = value;
-  } else
-    v = 0;
-}
-
-SuitFuncPtrVector::SuitFuncPtrVector(const SuitFuncPtrVector& initial) {
-  size = initial.size;
-  int i;
-  if (size > 0) {
-    v = new SuitFunc*[size];
-    for (i = 0; i < size; i++)
-      v[i] = initial.v[i];
-  } else
-    v = 0;
-}
+extern ErrorHandler handle;
 
 SuitFuncPtrVector::~SuitFuncPtrVector() {
   if (v != 0) {
@@ -81,4 +54,76 @@ void SuitFuncPtrVector::Delete(int pos, Keeper* const keeper) {
     v = 0;
     size = 0;
   }
+}
+
+int SuitFuncPtrVector::readSuitFunction(CommentStream& infile,
+  const char* suitname, const TimeClass* const TimeInfo, Keeper* const keeper) {
+
+  int found = 0;
+  SuitFunc* tempFunc = 0;
+
+  if ((strcasecmp(suitname, "expsuitfunca") == 0) || (strcasecmp(suitname, "exponential") == 0)) {
+    tempFunc = new ExpSuitFuncA();
+    found++;
+
+  } else if ((strcasecmp(suitname, "constsuitfunc") == 0) || (strcasecmp(suitname, "constant") == 0)) {
+    tempFunc = new ConstSuitFunc();
+    found++;
+
+  } else if (strcasecmp(suitname, "straightline") == 0) {
+    tempFunc = new StraightSuitFunc();
+    found++;
+
+  } else if (strcasecmp(suitname, "straightlineunbounded") == 0) {
+    tempFunc = new StraightUnboundedSuitFunc();
+    found++;
+
+  } else if ((strcasecmp(suitname, "expsuitfuncl50") == 0) || (strcasecmp(suitname, "exponentiall50") == 0)) {
+    tempFunc = new ExpSuitFuncL50();
+    found++;
+
+  } else if ((strcasecmp(suitname, "andersensuitfunc") == 0) || (strcasecmp(suitname, "andersen") == 0)) {
+    tempFunc = new AndersenSuitFunc();
+    found++;
+
+  } else if (strcasecmp(suitname, "richards") == 0) {
+    tempFunc = new RichardsSuitFunc();
+    found++;
+
+  } else if (strcasecmp(suitname, "gamma") == 0) {
+    tempFunc = new GammaSuitFunc();
+    found++;
+
+  } else if (strcasecmp(suitname, "inverse") == 0) {
+    handle.logFileMessage(LOGWARN, "\nThe inverse suitability function is not yet implemented");
+
+  } else if (strcasecmp(suitname, "improvedexpsuitfunc") == 0) {
+    handle.logFileMessage(LOGWARN, "\nThe improvedexpsuitfunc suitability function is no longer supported");
+
+  } else if (strcasecmp(suitname, "improvedandextendedexpsuitfunc") == 0) {
+    handle.logFileMessage(LOGWARN, "\nThe improvedandextendedexpsuitfunc suitability function is no longer supported");
+
+  } else if (strcasecmp(suitname, "extendedexpsuitfuncl50") == 0) {
+    handle.logFileMessage(LOGWARN, "\nThe extendedexpsuitfuncl50 suitability function is no longer supported");
+
+  } else if (strcasecmp(suitname, "badexpsuitfuncl50") == 0) {
+    handle.logFileMessage(LOGWARN, "\nThe badexpsuitfuncl50 suitability function is no longer supported");
+
+  } else if (strcasecmp(suitname, "surveyselection") == 0) {
+    handle.logFileMessage(LOGWARN, "\nThe surveyselection suitability function is no longer supported");
+
+  } else if (strcasecmp(suitname, "cloglog") == 0) {
+    handle.logFileMessage(LOGWARN, "\nThe cloglog suitability function is no longer supported");
+
+  } else if (strcasecmp(suitname, "combination") == 0) {
+    handle.logFileMessage(LOGWARN, "\nThe combination suitability function is no longer supported");
+
+  } else
+    handle.logFileMessage(LOGFAIL, "no valid suitability function found");
+
+  if (found == 1) {
+    tempFunc->readConstants(infile, TimeInfo, keeper);
+    this->resize(1, tempFunc);
+  }
+  return found;
 }

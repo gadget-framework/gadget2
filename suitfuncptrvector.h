@@ -16,23 +16,6 @@ public:
    */
   SuitFuncPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the SuitFuncPtrVector constructor for a specified size
-   * \param sz is the size of the vector to be created
-   * \note The elements of the vector will all be created, and set to zero
-   */
-  SuitFuncPtrVector(int sz);
-  /**
-   * \brief This is the SuitFuncPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  SuitFuncPtrVector(int sz, SuitFunc* initial);
-  /**
-   * \brief This is the SuitFuncPtrVector constructor that creates a copy of an existing SuitFuncPtrVector
-   * \param initial is the SuitFuncPtrVector to copy
-   */
-  SuitFuncPtrVector(const SuitFuncPtrVector& initial);
-  /**
    * \brief This is the SuitFuncPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
@@ -73,6 +56,16 @@ public:
    * \return the value of the specified element
    */
   SuitFunc* const& operator [] (int pos) const { return v[pos]; };
+  /**
+   * \brief This function will read SuitFunc data from the input file
+   * \param infile is the CommentStream to read suitability function data from
+   * \param name is the name for the suitability function
+   * \param TimeInfo is the TimeClass for the current model
+   * \param keeper is the Keeper for the current model
+   * \return 1 if the suitability function has been read from file, 0 otherwise
+   */
+  int readSuitFunction(CommentStream& infile, const char* suitfname,
+    const TimeClass* const TimeInfo, Keeper* const keeper);
 protected:
   /**
    * \brief This is the vector of SuitFunc values

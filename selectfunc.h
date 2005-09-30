@@ -31,11 +31,6 @@ public:
    */
   const char* getName();
   /**
-   * \brief This function will return the value of the selection function parameters
-   * \return v, a TimeVariableVector of the parameters
-   */
-  const TimeVariableVector& getConstants() const;
-  /**
    * \brief This function will read the value of the selection function parameters from file
    * \param infile is the CommentStream to read the parameters from
    * \param TimeInfo is the TimeClass for the current model

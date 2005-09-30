@@ -113,7 +113,7 @@ void Predator::readSuitability(CommentStream& infile,
     infile >> text >> ws;
     if (strcasecmp(text, "function") == 0) {
       infile >> text >> ws;
-      if (readSuitFunction(suitf, infile, text, TimeInfo, keeper) == 1)
+      if (suitf.readSuitFunction(infile, text, TimeInfo, keeper) == 1)
         suitable->addPrey(preyname, suitf[suitf.Size() - 1]);
       else
         handle.logFileMessage(LOGFAIL, "unrecognised suitability function", text);

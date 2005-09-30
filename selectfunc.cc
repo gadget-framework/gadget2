@@ -35,10 +35,6 @@ const char* SelectFunc::getName() {
   return name;
 }
 
-const TimeVariableVector& SelectFunc::getConstants() const {
-  return coeff;
-}
-
 void SelectFunc::updateConstants(const TimeClass* const TimeInfo) {
   coeff.Update(TimeInfo);
 }

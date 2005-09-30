@@ -4,9 +4,6 @@
 #include "commentstream.h"
 #include "keeper.h"
 #include "timevariablevector.h"
-#include "suitfuncptrvector.h"
-
-class SuitFuncPtrVector;
 
 /**
  * \class SuitFunc
@@ -86,9 +83,6 @@ public:
    * \return number
    */
   int numConstants();
-  friend int readSuitFunction(SuitFuncPtrVector& suitf, CommentStream& infile,
-    const char* suitfname, const TimeClass* const TimeInfo, Keeper* const keeper);
-  friend int findSuitFunc(SuitFuncPtrVector& suitf, const char* suitname);
 protected:
   /**
    * \brief This is the name of the suitability function
