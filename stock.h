@@ -154,8 +154,7 @@ public:
    */
   virtual void Migrate(const TimeClass* const TimeInfo);
   void Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI, int area, double ratio);
-  void Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
-    int area, double ratio, int minage, int maxage);
+  void Add(const AgeBandMatrixRatioPtrVector& Addition, const ConversionIndex* const CI, int area, double ratio);
   /**
    * \brief This will return the prey information for the stock
    * \return prey

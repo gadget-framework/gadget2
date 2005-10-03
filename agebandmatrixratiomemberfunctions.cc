@@ -15,8 +15,8 @@ void AgeBandMatrixRatio::updateAndTagLoss(const AgeBandMatrix& Total, const Doub
       maxlen = this->maxLength(age);
       for (length = minlen; length < maxlen; length++) {
         for (tag = 0; tag < numTagExperiments; tag++) {
-          (this->operator[](age))[length][tag].R *= tagloss[tag];
-          *((this->operator[](age))[length][tag].N) = (this->operator[](age))[length][tag].R * Total[age][length].N;
+          (*v[age - minage])[length][tag].R *= tagloss[tag];
+          (*(*v[age - minage])[length][tag].N) = (*v[age - minage])[length][tag].R * Total[age][length].N;
         }
       }
     }
@@ -36,12 +36,12 @@ void AgeBandMatrixRatio::updateNumbers(const AgeBandMatrix& Total) {
       for (length = minlen; length < maxlen; length++) {
         for (tag = 0; tag < numTagExperiments; tag++) {
           number = Total[age][length].N;
-          ratio = (this->operator[](age))[length][tag].R;
+          ratio = (*v[age - minage])[length][tag].R;
           if (number < verysmall || ratio < verysmall) {
-            *((this->operator[](age))[length][tag].N) = 0.0;
-            (this->operator[](age))[length][tag].R = 0.0;
+            (*(*v[age - minage])[length][tag].N) = 0.0;
+            (*v[age - minage])[length][tag].R = 0.0;
           } else {
-            *((this->operator[](age))[length][tag].N) = ratio * number;
+            (*(*v[age - minage])[length][tag].N) = ratio * number;
           }
         }
       }
@@ -61,13 +61,13 @@ void AgeBandMatrixRatio::updateRatio(const AgeBandMatrix& Total) {
       maxlen = this->maxLength(age);
       for (length = minlen; length < maxlen; length++) {
         for (tag = 0; tag < numTagExperiments; tag++) {
-          tagnum = *((this->operator[](age))[length][tag].N);
+          tagnum = (*(*v[age - minage])[length][tag].N);
           totalnum = Total[age][length].N;
           if (tagnum < verysmall || totalnum < verysmall) {
-            *((this->operator[](age))[length][tag].N) = 0.0;
-            (this->operator[](age))[length][tag].R = 0.0;
+            (*(*v[age - minage])[length][tag].N) = 0.0;
+            (*v[age - minage])[length][tag].R = 0.0;
           } else {
-            (this->operator[](age))[length][tag].R = tagnum / totalnum;
+            (*v[age - minage])[length][tag].R = tagnum / totalnum;
           }
         }
       }
@@ -136,12 +136,12 @@ void AgeBandMatrixRatio::IncrementAge(const AgeBandMatrix& Total) {
   }
 }
 
-void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
-  const AgeBandMatrixRatioPtrVector& Addition, int AdditionArea,
-  const ConversionIndex &CI, double ratio, int minage, int maxage) {
+void AgeBandMatrixRatioPtrVector::Add(const AgeBandMatrixRatioPtrVector& Addition,
+  int area, const ConversionIndex &CI, double ratio) {
 
-  minage =  max(Alkeys[AlkeysArea].minAge(), Addition[AdditionArea].minAge(), minage);
-  maxage =  min(Alkeys[AlkeysArea].maxAge(), Addition[AdditionArea].maxAge(), maxage);
+  //JMB - note area has already been converted to internal area
+  int minage =  max(v[area]->minAge(), Addition[area].minAge());
+  int maxage =  min(v[area]->maxAge(), Addition[area].maxAge());
   if (maxage < minage)
     return;
 
@@ -149,66 +149,63 @@ void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
   double numfish;
 
   numtags = Addition.numTagExperiments();
-  if (numtags > Alkeys.numTagExperiments())
+  if (numtags > tagID.Size())
     handle.logMessage(LOGFAIL, "Error in agebandmatrixratio - wrong number of tagging experiments");
 
-  if (numtags > 0) {
-    IntVector tagconversion(numtags);
-    for (i = 0; i < numtags; i++) {
-      tagconversion[i] = Alkeys.getTagID(Addition.getTagName(i));
-      if (tagconversion[i] < 0)
-        handle.logMessage(LOGFAIL, "Error in agebandmatrixratio - unrecognised tagging experiment", Addition.getTagName(i));
+  if (numtags == 0)
+    return;
 
+  IntVector tagconversion(numtags);
+  for (i = 0; i < numtags; i++) {
+    tagconversion[i] = this->getTagID(Addition.getTagName(i));
+    if (tagconversion[i] < 0)
+      handle.logMessage(LOGFAIL, "Error in agebandmatrixratio - unrecognised tagging experiment", Addition.getTagName(i));
+  }
+
+  numfish = 0.0;
+  if (CI.isSameDl()) { //Same dl on length distributions
+    offset = CI.getOffset();
+    for (age = minage; age <= maxage; age++) {
+      minl = max(v[area]->minLength(age), Addition[area].minLength(age) + offset);
+      maxl = min(v[area]->maxLength(age), Addition[area].maxLength(age) + offset);
+      for (l = minl; l < maxl; l++) {
+        for (tagid = 0; tagid < numtags; tagid++) {
+          numfish = *(Addition[area][age][l - offset][tagid].N) * ratio;
+          *((*v[area])[age][l][tagconversion[tagid]].N) += numfish;
+        }
+      }
     }
 
-    numfish = 0.0;
-    if (CI.isSameDl()) { //Same dl on length distributions
-      offset = CI.getOffset();
+  } else { //Not same dl.
+    if (CI.isFiner()) {
+      //Stock that is added to has finer division than the stock that is added to it.
       for (age = minage; age <= maxage; age++) {
-        minl = max(Alkeys[AlkeysArea].minLength(age), Addition[AdditionArea].minLength(age) + offset);
-        maxl = min(Alkeys[AlkeysArea].maxLength(age), Addition[AdditionArea].maxLength(age) + offset);
+        minl = max(v[area]->minLength(age), CI.minPos(Addition[area].minLength(age)));
+        maxl = min(v[area]->maxLength(age), CI.maxPos(Addition[area].maxLength(age) - 1) + 1);
         for (l = minl; l < maxl; l++) {
           for (tagid = 0; tagid < numtags; tagid++) {
-            numfish = *(Addition[AdditionArea][age][l - offset][tagid].N);
-            numfish *= ratio;
-            (*Alkeys[AlkeysArea][age][l][tagconversion[tagid]].N) += numfish;
+            numfish = *(Addition[area][age][CI.getPos(l)][tagid].N) * ratio;
+            if (isZero(CI.Nrof(l))) {
+              handle.logMessage(LOGWARN, "Warning in agebandmatrixratio - divide by zero");
+            } else
+              numfish /= CI.Nrof(l);
+            *((*v[area])[age][l][tagconversion[tagid]].N) += numfish;
           }
         }
       }
 
-    } else { //Not same dl.
-      if (CI.isFiner()) {
-        //Stock that is added to has finer division than the stock that is added to it.
-        for (age = minage; age <= maxage; age++) {
-          minl = max(Alkeys[AlkeysArea].minLength(age), CI.minPos(Addition[AdditionArea].minLength(age)));
-          maxl = min(Alkeys[AlkeysArea].maxLength(age), CI.maxPos(Addition[AdditionArea].maxLength(age) - 1) + 1);
+    } else {
+      //Stock that is added to has coarser division than the stock that is added to it.
+      for (age = minage; age <= maxage; age++) {
+        minl = max(CI.minPos(v[area]->minLength(age)), Addition[area].minLength(age));
+        maxl = min(CI.maxPos(v[area]->maxLength(age) - 1) + 1, Addition[area].maxLength(age));
+        if (maxl > minl && CI.getPos(maxl - 1) < v[area]->maxLength(age)
+          && CI.getPos(minl) >= v[area]->minLength(age)) {
+
           for (l = minl; l < maxl; l++) {
             for (tagid = 0; tagid < numtags; tagid++) {
-              numfish = *(Addition[AdditionArea][age][CI.getPos(l)][tagid].N);
-              numfish *= ratio;
-              if (isZero(CI.Nrof(l))) {
-                handle.logMessage(LOGWARN, "Warning in agebandmatrixratio - divide by zero");
-              } else
-                numfish /= CI.Nrof(l);
-              *(Alkeys[AlkeysArea][age][l][tagconversion[tagid]].N) += numfish;
-            }
-          }
-        }
-
-      } else {
-        //Stock that is added to has coarser division than the stock that is added to it.
-        for (age = minage; age <= maxage; age++) {
-          minl = max(CI.minPos(Alkeys[AlkeysArea].minLength(age)), Addition[AdditionArea].minLength(age));
-          maxl = min(CI.maxPos(Alkeys[AlkeysArea].maxLength(age) - 1) + 1, Addition[AdditionArea].maxLength(age));
-          if (maxl > minl && CI.getPos(maxl - 1) < Alkeys[AlkeysArea].maxLength(age)
-            && CI.getPos(minl) >= Alkeys[AlkeysArea].minLength(age)) {
-
-            for (l = minl; l < maxl; l++) {
-              for (tagid = 0; tagid < numtags; tagid++) {
-                numfish = *(Addition[AdditionArea][age][l][tagid].N);
-                numfish *= ratio;
-                *(Alkeys[AlkeysArea][age][CI.getPos(l)][tagconversion[tagid]].N) += numfish;
-              }
+              numfish = *(Addition[area][age][l][tagid].N) * ratio;
+              *((*v[area])[age][CI.getPos(l)][tagconversion[tagid]].N) += numfish;
             }
           }
         }

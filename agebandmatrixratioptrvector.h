@@ -33,9 +33,8 @@ public:
   const DoubleVector& getTagLoss() const { return tagLoss; };
   AgeBandMatrixRatio& operator [] (int pos) { return *v[pos]; };
   const AgeBandMatrixRatio& operator [] (int pos) const { return *v[pos]; };
-  friend void AgebandmratioAdd(AgeBandMatrixRatioPtrVector& Alkeys, int AlkeysArea,
-    const AgeBandMatrixRatioPtrVector& Addition, int AdditionArea, const ConversionIndex &CI,
-    double ratio, int minage, int maxage);
+  void Add(const AgeBandMatrixRatioPtrVector& Addition, int area,
+    const ConversionIndex &CI, double ratio);
 protected:
   void addTagName(const char* name);
   int size;

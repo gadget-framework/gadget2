@@ -210,11 +210,11 @@ void Stock::Add(const AgeBandMatrix& Addition,
   Alkeys[this->areaNum(area)].Add(Addition, *CI, ratio);
 }
 
-void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
-  int area, double ratio, int minage, int maxage) {
+void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition,
+  const ConversionIndex* const CI, int area, double ratio) {
 
   if ((Addition.numTagExperiments() > 0) && (Addition.numTagExperiments() <= tagAlkeys.numTagExperiments())) {
-    AgebandmratioAdd(tagAlkeys, this->areaNum(area), Addition, AddArea, *CI, ratio, minage, maxage);
+    tagAlkeys.Add(Addition, this->areaNum(area), *CI, ratio);
     tagAlkeys[this->areaNum(area)].updateRatio(Alkeys[this->areaNum(area)]);
   }
 }

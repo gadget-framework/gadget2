@@ -46,8 +46,7 @@ AgeBandMatrixRatio::~AgeBandMatrixRatio() {
 
 int AgeBandMatrixRatio::numTagExperiments() const {
   if (nrow > 0) {
-    int minlength = this->minLength(minage);
-    return (this->operator[](minage))[minlength].Size();
+    return (*v[0])[v[0]->minCol()].Size();
   } else
     return 0;
 }

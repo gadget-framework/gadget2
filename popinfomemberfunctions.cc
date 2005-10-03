@@ -17,7 +17,7 @@ void PopInfoVector::Sum(const PopInfoVector* const Number, const ConversionIndex
     v[i].W = 0.0;
   }
   for (i = CI.minLength(); i < CI.maxLength(); i++)
-    this->operator[](CI.getPos(i)) += (*Number)[i];
+    v[CI.getPos(i)] += (*Number)[i];
 }
 
 void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,

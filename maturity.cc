@@ -101,8 +101,7 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
     matureStocks[i]->Add(Storage[inarea], CI[i], area, matureRatio[i]);
 
     if (tagStorage.numTagExperiments() > 0)
-      matureStocks[i]->Add(tagStorage, inarea, CI[i], area, matureRatio[i],
-        tagStorage[inarea].minAge(), tagStorage[inarea].maxAge());
+      matureStocks[i]->Add(tagStorage, CI[i], area, matureRatio[i]);
   }
 
   Storage[inarea].setToZero();
