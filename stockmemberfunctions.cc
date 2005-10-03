@@ -20,12 +20,10 @@
 extern ErrorHandler handle;
 
 void Stock::Migrate(const TimeClass* const TimeInfo) {
-  if (doesmigrate) {
-    if (migration->isMigrationStep(TimeInfo)) {
-      Alkeys.Migrate(migration->getMigrationMatrix(TimeInfo));
-      if (tagAlkeys.numTagExperiments() > 0)
-        tagAlkeys.Migrate(migration->getMigrationMatrix(TimeInfo), Alkeys);
-    }
+  if (doesmigrate && migration->isMigrationStep(TimeInfo)) {
+    Alkeys.Migrate(migration->getMigrationMatrix(TimeInfo));
+    if (tagAlkeys.numTagExperiments() > 0)
+      tagAlkeys.Migrate(migration->getMigrationMatrix(TimeInfo), Alkeys);
   }
 }
 
@@ -134,9 +132,8 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 //A number of Special functions, Spawning, Renewal, Maturation and
 //Transition to other Stocks, Maturity due to age and increased age.
 void Stock::updateAgePart1(int area, const TimeClass* const TimeInfo) {
-  if (doesmove)
-    if (transition->isTransitionStep(TimeInfo))
-      transition->storeTransitionStock(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
+  if (doesmove && transition->isTransitionStep(TimeInfo))
+    transition->storeTransitionStock(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
 }
 
 void Stock::updateAgePart2(int area, const TimeClass* const TimeInfo) {
@@ -149,80 +146,68 @@ void Stock::updateAgePart2(int area, const TimeClass* const TimeInfo) {
 
 void Stock::updateAgePart3(int area, const TimeClass* const TimeInfo) {
   int i;
-  if (doesmove) {
-    if (transition->isTransitionStep(TimeInfo)) {
-      if (transitionTags.Size() > 0) {
-        for (i = 0; i < transitionTags.Size(); i++)
-          transitionTags[i]->updateTransitionStock(TimeInfo);
-        transitionTags.deleteAll();
-      }
-      transition->Move(area, TimeInfo);
+  if (doesmove && transition->isTransitionStep(TimeInfo)) {
+    if (transitionTags.Size() > 0) {
+      for (i = 0; i < transitionTags.Size(); i++)
+        transitionTags[i]->updateTransitionStock(TimeInfo);
+      transitionTags.deleteAll();
     }
+    transition->Move(area, TimeInfo);
   }
 }
 
 void Stock::updatePopulationPart1(int area, const TimeClass* const TimeInfo) {
-  if (doesspawn) {
-    if (spawner->isSpawnStepArea(area, TimeInfo)) {
-      spawner->Spawn(Alkeys[this->areaNum(area)], area, TimeInfo);
-      if (tagAlkeys.numTagExperiments() > 0)
-        tagAlkeys[this->areaNum(area)].updateNumbers(Alkeys[this->areaNum(area)]);
-    }
+  if (doesspawn && spawner->isSpawnStepArea(area, TimeInfo)) {
+    spawner->Spawn(Alkeys[this->areaNum(area)], area, TimeInfo);
+    if (tagAlkeys.numTagExperiments() > 0)
+      tagAlkeys[this->areaNum(area)].updateNumbers(Alkeys[this->areaNum(area)]);
   }
 }
 
 void Stock::updatePopulationPart2(int area, const TimeClass* const TimeInfo) {
   int i;
-  if (doesmature) {
-    if (maturity->isMaturationStep(TimeInfo)) {
-      if (matureTags.Size() > 0) {
-        for (i = 0; i < matureTags.Size(); i++)
-          matureTags[i]->updateMatureStock(TimeInfo);
-        matureTags.deleteAll();
-      }
-      maturity->Move(area, TimeInfo);
+  if (doesmature && maturity->isMaturationStep(TimeInfo)) {
+    if (matureTags.Size() > 0) {
+      for (i = 0; i < matureTags.Size(); i++)
+        matureTags[i]->updateMatureStock(TimeInfo);
+      matureTags.deleteAll();
     }
+    maturity->Move(area, TimeInfo);
   }
 }
 
 void Stock::updatePopulationPart3(int area, const TimeClass* const TimeInfo) {
-  if (doesrenew) {
-    if (renewal->isRenewalStepArea(area, TimeInfo)) {
-      renewal->addRenewal(Alkeys[this->areaNum(area)], area, TimeInfo);
-      if (tagAlkeys.numTagExperiments() > 0)
-        tagAlkeys[this->areaNum(area)].updateRatio(Alkeys[this->areaNum(area)]);
-    }
+  if (doesrenew && renewal->isRenewalStepArea(area, TimeInfo)) {
+    renewal->addRenewal(Alkeys[this->areaNum(area)], area, TimeInfo);
+    if (tagAlkeys.numTagExperiments() > 0)
+      tagAlkeys[this->areaNum(area)].updateRatio(Alkeys[this->areaNum(area)]);
   }
 
-  if (doesspawn)
-    if (spawner->isSpawnStepArea(area, TimeInfo))
-      spawner->addSpawnStock(area, TimeInfo);
+  if (doesspawn && spawner->isSpawnStepArea(area, TimeInfo))
+    spawner->addSpawnStock(area, TimeInfo);
 }
 
 void Stock::updatePopulationPart4(int area, const TimeClass* const TimeInfo) {
-  if (doesstray)
-    if (stray->isStrayStepArea(area, TimeInfo))
-      stray->storeStrayingStock(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
+  if (doesstray && stray->isStrayStepArea(area, TimeInfo))
+    stray->storeStrayingStock(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
 }
 
 void Stock::updatePopulationPart5(int area, const TimeClass* const TimeInfo) {
   int i;
-  if (doesstray) {
-    if (stray->isStrayStepArea(area, TimeInfo)) {
-      if (strayTags.Size() > 0) {
-        for (i = 0; i < strayTags.Size(); i++)
-          strayTags[i]->updateStrayStock(TimeInfo);
-        strayTags.deleteAll();
-      }
-      stray->addStrayStock(area, TimeInfo);
+  if (doesstray && stray->isStrayStepArea(area, TimeInfo)) {
+    if (strayTags.Size() > 0) {
+      for (i = 0; i < strayTags.Size(); i++)
+        strayTags[i]->updateStrayStock(TimeInfo);
+      strayTags.deleteAll();
     }
+    stray->addStrayStock(area, TimeInfo);
   }
 }
 
-void Stock::Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
-  int area, double ratio, int minage, int maxage) {
+void Stock::Add(const AgeBandMatrix& Addition,
+  const ConversionIndex* const CI, int area, double ratio) {
 
-  Alkeys[this->areaNum(area)].Add(Addition, *CI, ratio, minage, maxage);
+  Alkeys[this->areaNum(area)].Add(Addition, *CI, ratio);
 }
 
 void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
@@ -235,7 +220,6 @@ void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const 
 }
 
 void Stock::updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss) {
-
   tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->getName(), tagloss);
   allTags.resize(1, newtag);
   if (doesmature) {

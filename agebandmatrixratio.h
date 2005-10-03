@@ -30,14 +30,8 @@ public:
   void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total);
   void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total,
     Maturity* const Mat, const TimeClass* const TimeInfo, int area);
-  PopRatioIndexVector& operator [] (int age) {
-    assert(minage <= age && age < (minage + nrow));
-    return *(v[age - minage]);
-  };
-  const PopRatioIndexVector& operator [] (int age) const {
-    assert(minage <= age && age < (minage + nrow));
-    return *(v[age - minage]);
-  };
+  PopRatioIndexVector& operator [] (int age) { return *(v[age - minage]); };
+  const PopRatioIndexVector& operator [] (int age) const { return *(v[age - minage]); };
   void updateRatio(const AgeBandMatrix& Total);
   void updateNumbers(const AgeBandMatrix& Total);
   void updateAndTagLoss(const AgeBandMatrix& Total, const DoubleVector& tagloss);

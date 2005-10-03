@@ -7,7 +7,6 @@ struct sigaction irhOldAct;
 volatile int* irhInterrupted;
 
 int registerInterrupt(int signal, volatile int* interrupted) {
-  assert(interrupted != NULL);
   irhInterrupted = interrupted;
   struct sigaction act;
   act.sa_handler = interruptHandler;

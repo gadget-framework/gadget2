@@ -26,11 +26,6 @@ public:
    */
   BaseClassPtrVector(int sz, BaseClass* initial);
   /**
-   * \brief This is the BaseClassPtrVector constructor that creates a copy of an existing AgeBandMatrixPtrVector
-   * \param initial is the BaseClassPtrVector to copy
-   */
-  BaseClassPtrVector(const BaseClassPtrVector& initial);
-  /**
    * \brief This is the BaseClassPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
@@ -47,12 +42,6 @@ public:
    * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
-  /**
-   * \brief This will delete an entry from the vector
-   * \param pos is the element of the vector to be deleted
-   * \note This will free the memory allocated to the deleted element of the vector
-   */
-  void Delete(int pos);
   /**
    * \brief This will return the size of the vector
    * \return the size of the vector

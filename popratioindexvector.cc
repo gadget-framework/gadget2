@@ -55,7 +55,6 @@ void PopRatioIndexVector::resize(int addsize, int lower, const PopRatioVector& i
   PopRatioVector** vnew = new PopRatioVector*[size + addsize];
   int i;
   if (v != 0) {
-    assert(lower <= minpos);
     for (i = 0; i < size; i++)
       vnew[i + minpos - lower] = v[i];
     for (i = size; i < size + addsize; i++)

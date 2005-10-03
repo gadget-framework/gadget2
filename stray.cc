@@ -209,8 +209,7 @@ void StrayData::addStrayStock(int area, const TimeClass* const TimeInfo) {
         tagStorage[inarea].IncrementAge(Storage[inarea]);
     }
 
-    strayStocks[s]->Add(Storage[inarea], CI[s], area, strayRatio[s],
-      Storage[inarea].minAge(), Storage[inarea].maxAge());
+    strayStocks[s]->Add(Storage[inarea], CI[s], area, strayRatio[s]);
 
     if (tagStorage.numTagExperiments() > 0)
       strayStocks[s]->Add(tagStorage, inarea, CI[s], area, strayRatio[s],

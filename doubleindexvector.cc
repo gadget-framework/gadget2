@@ -46,7 +46,6 @@ void DoubleIndexVector::resize(int addsize, int lower, double initial) {
   double* vnew = new double[size + addsize];
   int i;
   if (v != 0) {
-    assert(lower <= minpos);
     for (i = 0; i < size; i++)
       vnew[i + minpos - lower] = v[i];
     for (i = size; i < size + addsize; i++)

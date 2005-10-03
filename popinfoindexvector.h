@@ -51,19 +51,13 @@ public:
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  PopInfo& operator [] (int pos) {
-    assert(minpos <= pos && pos < minpos + size);
-    return v[pos - minpos];
-  };
+  PopInfo& operator [] (int pos) { return v[pos - minpos]; };
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const PopInfo& operator [] (int pos) const {
-    assert(minpos <= pos && pos < minpos + size);
-    return v[pos - minpos];
-  };
+  const PopInfo& operator [] (int pos) const { return v[pos - minpos]; };
   /**
    * \brief This will return the index of the vector
    * \return the index of the vector

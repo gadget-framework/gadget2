@@ -153,12 +153,23 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void Migrate(const TimeClass* const TimeInfo);
-  void Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI,
-    int area, double ratio, int minage, int maxage);
+  void Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI, int area, double ratio);
   void Add(const AgeBandMatrixRatioPtrVector& Addition, int AddArea, const ConversionIndex* const CI,
     int area, double ratio, int minage, int maxage);
+  /**
+   * \brief This will return the prey information for the stock
+   * \return prey
+   */
   Prey* getPrey() const;
-  const Migration* getMigration() const;
+  /**
+   * \brief This will return the migration information for the stock
+   * \return migration
+   */
+  Migration* getMigration() const;
+  /**
+   * \brief This will return the predation information for the stock
+   * \return predator
+   */
   PopPredator* getPredator() const;
   const AgeBandMatrix& getAgeLengthKeys(int area) const { return Alkeys[this->areaNum(area)]; };
   /**
@@ -231,9 +242,21 @@ public:
 protected:
   AgeBandMatrixPtrVector Alkeys;
   AgeBandMatrixRatioPtrVector tagAlkeys;
+  /**
+   * \brief This is the TagPtrVector used to store information about the tagging experiments
+   */
   TagPtrVector allTags;
+  /**
+   * \brief This is the TagPtrVector used to store information about how the tagging experiments affect the population that mature
+   */
   TagPtrVector matureTags;
+  /**
+   * \brief This is the TagPtrVector used to store information about how the tagging experiments affect the population that move
+   */
   TagPtrVector transitionTags;
+  /**
+   * \brief This is the TagPtrVector used to store information about how the tagging experiments affect the population that stray
+   */
   TagPtrVector strayTags;
   /**
    * \brief This is the StrayData used to calculate information about the straying of the stock
@@ -283,7 +306,6 @@ protected:
    * \brief This is the NaturalMortality used to calculate information about the natural mortality of the stock
    */
   NaturalMortality* naturalm;
-  PopInfoMatrix NumberInArea;
   /**
    * \brief This is the flag used to denote whether the stock will eat (ie. is a Predator) or not
    */
@@ -320,7 +342,15 @@ protected:
    * \brief This is the flag used to denote whether the stock will stray or not
    */
   int doesstray;
+  /**
+   * \brief This is the timestep that the population will increase in age in the simulation
+   * \note This is currently set to the last timestep in the year
+   */
   int birthdate;
+  /**
+   * \brief This is the PopInfoMatrix used to temporarily store the population on each area
+   */
+  PopInfoMatrix NumberInArea;
 };
 
 #endif

@@ -27,7 +27,7 @@ public:
   void deleteTag(const char* tagname);
   int Size() const { return size; };
   int getTagID(const char* tagname);
-  const char* getTagName(int id) const;
+  const char* getTagName(int id) const { return tagID[id]; };
   void Migrate(const DoubleMatrix& MI, const AgeBandMatrixPtrVector& Total);
   const int numTagExperiments() const { return tagID.Size(); };
   const DoubleVector& getTagLoss() const { return tagLoss; };

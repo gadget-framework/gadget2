@@ -24,8 +24,8 @@ PopRatio& PopRatio::operator = (const PopRatio& a) {
 
 PopRatio& PopRatio::operator += (const PopRatio& a) {
   assert(N != NULL);
+  *N += *(a.N);
   R = 0.0;
-  *N = *N + *(a.N);
   return *this;
 }
 

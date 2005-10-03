@@ -62,7 +62,7 @@ protected:
 
 /**
  * \class PredPreyStdLengthPrinter
- * \brief This is the base class used to print information about a specific predator - prey relationship, split into length groups
+ * \brief This is the class used to print information about a specific predator - prey relationship, split into length groups
  */
 class PredPreyStdLengthPrinter : public PredPreyStdPrinter {
 public:
@@ -109,7 +109,7 @@ private:
 
 /**
  * \class PredPreyStdAgePrinter
- * \brief This is the base class used to print information about a specific predator - prey relationship, split into age groups
+ * \brief This is the class used to print information about a specific predator - prey relationship, split into age groups
  */
 class PredPreyStdAgePrinter : public PredPreyStdPrinter {
 public:

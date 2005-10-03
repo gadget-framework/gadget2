@@ -159,8 +159,3 @@ void AgeBandMatrixRatioPtrVector::deleteTag(const char* tagname) {
     }
   }
 }
-
-const char* AgeBandMatrixRatioPtrVector::getTagName(int id) const {
-  assert(0 <= id && id < this->numTagExperiments());
-  return tagID[id];
-}

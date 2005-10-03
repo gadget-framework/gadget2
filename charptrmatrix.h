@@ -29,25 +29,6 @@ public:
    */
   CharPtrMatrix(int nr, int nc, char* initial);
   /**
-   * \brief This is the CharPtrMatrix constructor for a specified size
-   * \param nr is the size of the vector to be created
-   * \param nc is the length of the rows to be created (ie. the size of the CharPtrVector to be created for each row)
-   * \note The elements of the vector will all be created, and set to zero
-   */
-  CharPtrMatrix(int nr, const IntVector& nc);
-  /**
-   * \brief This is the CharPtrMatrix constructor for a specified size
-   * \param nr is the size of the vector to be created
-   * \param nc is the length of the rows to be created (ie. the size of the CharPtrVector to be created for each row)
-   * \param initial is the initial value for all the entries of the vector
-   */
-  CharPtrMatrix(int nr, const IntVector& nc, char* initial);
-  /**
-   * \brief This is the CharPtrMatrix constructor that creates a copy of an existing CharPtrMatrix
-   * \param initial is the CharPtrMatrix to copy
-   */
-  CharPtrMatrix(const CharPtrMatrix& initial);
-  /**
    * \brief This is the CharPtrMatrix destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
@@ -90,12 +71,6 @@ public:
    * \note The new elements of the vector will be created, and set to zero
    */
   void AddRows(int add, int length);
-  /**
-   * \brief This will delete an entry from the vector
-   * \param row is the element of the vector to be deleted
-   * \note This will free the memory allocated to the deleted element of the vector
-   */
-  void DeleteRow(int row);
 protected:
   /**
    * \brief This is number of rows of the vector

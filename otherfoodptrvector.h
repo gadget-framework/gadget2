@@ -28,11 +28,6 @@ public:
    */
   OtherFoodPtrVector(int sz, OtherFood* initial);
   /**
-   * \brief This is the OtherFoodPtrVector constructor that creates a copy of an existing OtherFoodPtrVector
-   * \param initial is the OtherFoodPtrVector to copy
-   */
-  OtherFoodPtrVector(const OtherFoodPtrVector& initial);
-  /**
    * \brief This is the OtherFoodPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
@@ -49,12 +44,6 @@ public:
    * \note The new elements of the vector will be created, and set to zero
    */
   void resize(int add);
-  /**
-   * \brief This will delete an entry from the vector
-   * \param pos is the element of the vector to be deleted
-   * \note This will free the memory allocated to the deleted element of the vector
-   */
-  void Delete(int pos);
   /**
    * \brief This will return the size of the vector
    * \return the size of the vector

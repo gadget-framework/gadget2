@@ -42,7 +42,6 @@ void PopInfoIndexVector::resize(int addsize, int lower, PopInfo initial) {
   PopInfo* vnew = new PopInfo[size + addsize];
   int i;
   if (v != 0) {
-    assert(lower <= minpos);
     for (i = 0; i < size; i++)
       vnew[i + minpos - lower] = v[i];
     for (i = size; i < size + addsize; i++)

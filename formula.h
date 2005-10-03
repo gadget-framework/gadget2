@@ -2,7 +2,6 @@
 #define formula_h
 
 #include "keeper.h"
-#include "doublevector.h"
 #include "parameter.h"
 #include "gadget.h"
 

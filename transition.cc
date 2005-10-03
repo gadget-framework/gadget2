@@ -155,8 +155,7 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
         tagStorage[inarea].IncrementAge(Storage[inarea]);
     }
 
-    transitionStocks[s]->Add(Storage[inarea], CI[s], area, transitionRatio[s],
-      Storage[inarea].minAge(), Storage[inarea].maxAge());
+    transitionStocks[s]->Add(Storage[inarea], CI[s], area, transitionRatio[s]);
 
     if (tagStorage.numTagExperiments() > 0)
       transitionStocks[s]->Add(tagStorage, inarea, CI[s], area, transitionRatio[s],

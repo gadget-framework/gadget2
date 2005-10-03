@@ -59,12 +59,12 @@ public:
   /**
    * \brief This function will read SuitFunc data from the input file
    * \param infile is the CommentStream to read suitability function data from
-   * \param name is the name for the suitability function
+   * \param suitname is the name for the suitability function
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \return 1 if the suitability function has been read from file, 0 otherwise
    */
-  int readSuitFunction(CommentStream& infile, const char* suitfname,
+  int readSuitFunction(CommentStream& infile, const char* suitname,
     const TimeClass* const TimeInfo, Keeper* const keeper);
 protected:
   /**

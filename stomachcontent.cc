@@ -355,7 +355,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
 
   for (i = 0; i < preynames.Nrow(); i++) {
     PreyPtrVector preys;
-    for (j = 0; j < preynames[i].Size(); j++) {
+    for (j = 0; j < preynames.Ncol(i); j++) {
       found = 0;
       for (k = 0; k < Preys.Size(); k++)
         if (strcasecmp(preynames[i][j], Preys[k]->getName()) == 0) {

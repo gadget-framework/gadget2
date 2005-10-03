@@ -10,12 +10,11 @@
 
 extern ErrorHandler handle;
 
-void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
-  const ConversionIndex &CI, double ratio, int minaddage, int maxaddage) {
+void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI, double ratio) {
 
   PopInfo pop;
-  minaddage = max(this->minAge(), Addition.minAge(), minaddage);
-  maxaddage = min(this->maxAge(), Addition.maxAge(), maxaddage);
+  int minaddage = max(this->minAge(), Addition.minAge());
+  int maxaddage = min(this->maxAge(), Addition.maxAge());
   int age, l, minl, maxl, offset;
 
   if (maxaddage < minaddage)
@@ -64,19 +63,20 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition,
   }
 }
 
-void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& CI) {
+void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Number) {
+
   if (CI.isFiner() == 1)
-    handle.logMessage(LOGWARN, "Warning in agebandmatrix - target is finer for multiply");
+    handle.logMessage(LOGWARN, "Warning in agebandmatrix - target is finer for subtract");
+  if (Consumption.Size() != Number.Size())
+    handle.logMessage(LOGWARN, "Warning in agebandmatrix - different sizes in subtract");
 
   int i, j, j1, j2, offset;
-  DoubleVector UsedRatio(Ratio);
-  for (i = 0; i < UsedRatio.Size(); i++) {
-    if (isZero(UsedRatio[i]))
-      UsedRatio[i] = 0.0;
-    else if (UsedRatio[i] < 0) {
-      handle.logMessage(LOGWARN, "Warning in agebandmatrix - negative ratio");
-      UsedRatio[i] = 0.0;
-    }
+  DoubleVector Ratio(Consumption.Size(), 1.0);
+  for (i = 0; i < Consumption.Size(); i++) {
+    if (Number[i].N > verysmall)
+      Ratio[i] = 1.0 - (Consumption[i] / Number[i].N);
+    if (Ratio[i] < verysmall)
+      Ratio[i] = 0.0;
   }
 
   if (CI.isSameDl()) {
@@ -85,31 +85,16 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio, const ConversionIndex& C
       j1 = max(v[i]->minCol(), CI.minLength());
       j2 = min(v[i]->maxCol(), CI.maxLength());
       for (j = j1; j < j2; j++)
-        (*v[i])[j].N *= UsedRatio[j - offset];
+        (*v[i])[j].N *= Ratio[j - offset];
     }
   } else {
     for (i = 0; i < nrow; i++) {
       j1 = max(v[i]->minCol(), CI.minLength());
       j2 = min(v[i]->maxCol(), CI.maxLength());
       for (j = j1; j < j2; j++)
-        (*v[i])[j].N *= UsedRatio[CI.getPos(j)];
+        (*v[i])[j].N *= Ratio[CI.getPos(j)];
     }
   }
-}
-
-void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Nrof) {
-
-  if (Consumption.Size() != Nrof.Size())
-    handle.logMessage(LOGWARN, "Warning in agebandmatrix - different sizes in subtract");
-
-  int i;
-  DoubleVector Ratio(Consumption.Size(), 1.0);
-  for (i = 0; i < Consumption.Size(); i++) {
-    if (Nrof[i].N > verysmall)
-      Ratio[i] = 1.0 - (Consumption[i] / Nrof[i].N);
-  }
-
-  this->Multiply(Ratio, CI);
 }
 
 //-----------------------------------------------------------------

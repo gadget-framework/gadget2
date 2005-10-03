@@ -52,19 +52,13 @@ public:
    * \param i is the element of the vector to be returned
    * \return the value of the specified element
    */
-  DoubleIndexVector& operator [] (int i) {
-    assert(pos <= i && i < (pos + nrow));
-    return *(v[i - pos]);
-  };
+  DoubleIndexVector& operator [] (int i) { return *(v[i - pos]); };
   /**
    * \brief This will return the value of an element of the vector
    * \param i is the element of the vector to be returned
    * \return the value of the specified element
    */
-  const DoubleIndexVector& operator [] (int i) const {
-    assert(pos <= i && i < (pos + nrow));
-    return *(v[i - pos]);
-  };
+  const DoubleIndexVector& operator [] (int i) const { return *(v[i - pos]); };
   /**
    * \brief This will return the number of rows of the vector
    * \return the number of rows of the vector

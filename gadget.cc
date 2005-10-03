@@ -4,6 +4,7 @@
 #include "gadget.h"
 #include "optinfo.h"
 #include "errorhandler.h"
+#include "stochasticdata.h"
 #include "interrupthandler.h"
 
 RunID RUNID;

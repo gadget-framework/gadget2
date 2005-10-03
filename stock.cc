@@ -410,7 +410,7 @@ Prey* Stock::getPrey() const {
   return prey;
 }
 
-const Migration* Stock::getMigration() const {
+Migration* Stock::getMigration() const {
   if (doesmigrate == 0)
     handle.logMessage(LOGFAIL, "Error in stock - no migration defined for", this->getName());
   return migration;

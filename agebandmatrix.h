@@ -25,19 +25,12 @@ public:
   int minAge() const { return minage; };
   int maxAge() const { return minage + nrow - 1; };
   int Nrow() const { return nrow; };
-  PopInfoIndexVector& operator [] (int age) {
-    assert(minage <= age && age < (minage + nrow));
-    return *(v[age - minage]);
-  };
-  const PopInfoIndexVector& operator [] (int age) const {
-    assert(minage <= age && age < (minage + nrow));
-    return *(v[age - minage]);
-  };
+  PopInfoIndexVector& operator [] (int age) { return *(v[age - minage]); };
+  const PopInfoIndexVector& operator [] (int age) const { return *(v[age - minage]); };
   int minLength(int age) const { return v[age - minage]->minCol(); };
   int maxLength(int age) const { return v[age - minage]->maxCol(); };
   void sumColumns(PopInfoVector& Result) const;
-  void Multiply(const DoubleVector& Ratio, const ConversionIndex& CI);
-  void Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Nrof);
+  void Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Number);
   void Multiply(const DoubleVector& Ratio);
   void setToZero();
   void IncrementAge();
@@ -49,8 +42,7 @@ public:
   void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight);
   void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight,
     Maturity* const Mat, const TimeClass* const TimeInfo, int area);
-  void Add(const AgeBandMatrix& Addition, const ConversionIndex& CI, double ratio = 1.0,
-    int minaddage = 0, int maxaddage = 9999);
+  void Add(const AgeBandMatrix& Addition, const ConversionIndex& CI, double ratio = 1.0);
 protected:
   /**
    * \brief This is the index for the vector

@@ -98,8 +98,7 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
     if (!matureStocks[i]->isInArea(area))
       handle.logMessage(LOGFAIL, "Error in maturity - mature stock doesnt live on area", area);
 
-    matureStocks[i]->Add(Storage[inarea], CI[i], area, matureRatio[i],
-      Storage[inarea].minAge(), Storage[inarea].maxAge());
+    matureStocks[i]->Add(Storage[inarea], CI[i], area, matureRatio[i]);
 
     if (tagStorage.numTagExperiments() > 0)
       matureStocks[i]->Add(tagStorage, inarea, CI[i], area, matureRatio[i],

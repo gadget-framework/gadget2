@@ -319,7 +319,7 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
     if (!spawnStocks[s]->isInArea(area))
       handle.logMessage(LOGFAIL, "Error in spawner - spawned stock doesnt live on area", area);
 
-    spawnStocks[s]->Add(Storage[inarea], CI[s], area, spawnRatio[s], spawnStocks[s]->minAge(), spawnStocks[s]->minAge());
+    spawnStocks[s]->Add(Storage[inarea], CI[s], area, spawnRatio[s]);
   }
 
   for (age = 0; age < spawnNumbers.Nrow(); age++)
