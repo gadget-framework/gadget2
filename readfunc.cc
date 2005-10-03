@@ -111,6 +111,10 @@ void readAmounts(CommentStream& infile, const IntVector& tmpareas,
     keepdata = 0;
     infile >> year >> step >> area >> tmpname;
 
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (strlen(tmpname) == 0)
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     //check if the year and step are in the simulation
     timeid = -1;
     if (TimeInfo->isWithinPeriod(year, step))
@@ -170,6 +174,10 @@ void readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> tmplength;
+
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (strlen(tmplength) == 0)
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
 
     //check if the year and step are in the simulation
     timeid = -1;

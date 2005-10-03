@@ -127,6 +127,10 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmplabel >> tmpnumber >> ws;
 
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (strlen(tmparea) == 0)
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     //check if the year and step are in the simulation
     timeid = -1;
     if (TimeInfo->isWithinPeriod(year, step)) {

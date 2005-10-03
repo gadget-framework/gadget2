@@ -116,6 +116,10 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
     else
       infile >> tmptag >> year >> step >> tmparea >> tmpnumber >> tmpmean >> ws;
 
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (strlen(tmparea) == 0)
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     //if tmparea is in areaindex find areaid, else dont keep the data
     areaid = -1;
     for (i = 0; i < areaindex.Size(); i++)

@@ -498,6 +498,10 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmppred >> tmpprey >> tmpnumber >> ws;
 
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (strlen(tmparea) == 0)
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     //if tmparea is in areaindex find areaid, else dont keep the data
     areaid = -1;
     for (i = 0; i < areaindex.Size(); i++)
@@ -651,6 +655,10 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmppred >> tmpprey >> tmpnumber >> tmpstddev >> ws;
 
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (strlen(tmparea) == 0)
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     //if tmparea is in areaindex find areaid, else dont keep the data
     areaid = -1;
     for (i = 0; i < areaindex.Size(); i++)
@@ -752,6 +760,10 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmppred >> tmpnumber >> ws;
+
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (strlen(tmparea) == 0)
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
 
     //check if the year and step are in the simulation
     timeid = -1;
@@ -934,6 +946,10 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmppred >> tmpprey >> tmpnumber >> ws;
+
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (strlen(tmparea) == 0)
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
 
     //if tmparea is in areaindex find areaid, else dont keep the data
     areaid = -1;

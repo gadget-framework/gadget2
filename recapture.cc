@@ -126,6 +126,10 @@ void Recaptures::readRecaptureData(CommentStream& infile,
     keepdata = 0;
     infile >> tmptagid >> year >> step >> tmparea >> tmplength >> tmpnumber >> ws;
 
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (strlen(tmparea) == 0)
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     //if tmparea is in areaindex find areaid, else dont keep the data
     areaid = -1;
     for (i = 0; i < areaindex.Size(); i++)

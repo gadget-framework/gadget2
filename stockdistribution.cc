@@ -173,6 +173,10 @@ void StockDistribution::readStockData(CommentStream& infile,
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmpstock >> tmpage >> tmplen >> tmpnumber >> ws;
 
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (strlen(tmparea) == 0)
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     //if tmpstock is in stocknames find stockid, else dont keep the data
     stockid = -1;
     for (i = 0; i < numstock; i++)
