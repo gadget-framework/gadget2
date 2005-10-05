@@ -91,7 +91,6 @@ CommentStream& operator >> (CommentStream& in, Parameter& p) {
   char* tempString = new char[MaxStrLength];
   while (p.isValidChar(in.peek()) && i < (MaxStrLength - 1)) {
     if (in.fail() && !in.eof()) {
-      in.makebad();
       delete[] tempString;
       return in;
     }
@@ -125,7 +124,6 @@ istream& operator >> (istream& in, Parameter& p) {
   char* tempString = new char[MaxStrLength];
   while (p.isValidChar(in.peek()) && i < (MaxStrLength - 1)) {
     if (in.fail() && !in.eof()) {
-      //in.makebad();
       delete[] tempString;
       return in;
     }

@@ -212,9 +212,7 @@ double SC::calcLikelihood(const TimeClass* const TimeInfo) {
       dptr = aggregator[i]->getSum()[a];
       for (k = 0; k < dptr->Nrow(); k++)
         for (p = 0; p < dptr->Ncol(k); p++)
-          (*modelConsumption[timeindex][a])[k][numprey + p] = (*dptr)[k][p] *
-               (digestioncoeff[i][0] + digestioncoeff[i][1] *
-                pow(preyLgrpDiv[i]->meanLength(p), digestioncoeff[i][2]));
+          (*modelConsumption[timeindex][a])[k][numprey + p] = (*dptr)[k][p] * digestion[i][p];
 
     }
     numprey += preylengths[i].Size() - 1;
@@ -228,6 +226,16 @@ double SC::calcLikelihood(const TimeClass* const TimeInfo) {
 }
 
 void SC::Reset() {
+  //JMB - calculate the digestion coefficiant matrix
+  int i, j;
+  if (digestion.Nrow() != digestioncoeff.Nrow())
+    handle.logMessage(LOGFAIL, "Error in stomachcontent - missing digestion coefficient data");
+
+  for (i = 0; i < digestion.Nrow(); i++)
+    for (j = 0; j < digestion.Ncol(i); j++)
+      digestion[i][j] = digestioncoeff[i][0] + digestioncoeff[i][1] *
+                          pow(preyLgrpDiv[i]->meanLength(j), digestioncoeff[i][2]);
+  
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset stomachcontent component", scname);
 }
@@ -381,6 +389,9 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
       }
     }
 
+    //resize the digestion matrix
+    digestion.AddRows(1, preylengths[i].Size(), 0.0);
+
     preyLgrpDiv[i] = new LengthGroupDivision(preylengths[i]);
     if (usepredages == 0) { //length structured predator
       predLgrpDiv[i] = new LengthGroupDivision(predatorlengths);
@@ -462,6 +473,8 @@ SCNumbers::SCNumbers(CommentStream& infile, const AreaClass* const Area,
 
   MN = Multinomial();
   MN.setValue(epsilon);
+  mndist.resize(likelihoodValues.Nrow(), 0.0);
+  mndata.resize(likelihoodValues.Nrow(), 0.0);
 }
 
 void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -574,15 +587,12 @@ double SCNumbers::calcLikelihood() {
   MN.Reset();
   for (a = 0; a < areas.Nrow(); a++) {
     likelihoodValues[timeindex][a] = 0.0;
-
-    DoubleVector dist(obsConsumption[timeindex][a]->Nrow(), 0.0);
-    DoubleVector data(obsConsumption[timeindex][a]->Nrow(), 0.0);
     for (preyl = 0; preyl < obsConsumption[timeindex][a]->Ncol(0); preyl++) {
-      for (predl = 0; predl < obsConsumption[timeindex][a]->Nrow(); predl++) {
-        dist[predl] = (*modelConsumption[timeindex][a])[predl][preyl];
-        data[predl] = (*obsConsumption[timeindex][a])[predl][preyl];
+      for (predl = 0; predl < mndata.Size(); predl++) {
+        mndata[predl] = (*obsConsumption[timeindex][a])[predl][preyl];
+        mndist[predl] = (*modelConsumption[timeindex][a])[predl][preyl];
       }
-      likelihoodValues[timeindex][a] += MN.calcLogLikelihood(data, dist);
+      likelihoodValues[timeindex][a] += MN.calcLogLikelihood(mndata, mndist);
     }
   }
   return MN.getLogLikelihood();

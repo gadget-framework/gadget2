@@ -13,7 +13,7 @@ class Whitespace {
 public:
   Whitespace() { v = 0; };
   ~Whitespace() {};
-  friend istream& operator >> (istream& istr, Whitespace& ws);
+  friend istream& operator >> (istream& istr, Whitespace& Ws);
 private:
   int v;
 };
@@ -27,12 +27,12 @@ public:
   void setStream(istream& istr) { istrptr = &istr; };
   CommentStream& operator >> (int& a) {
     killComments(istrptr);
-    istrptr->operator >> (a);
+    (*istrptr) >> a;
     return *this;
   };
   CommentStream& operator >> (double& a) {
     killComments(istrptr);
-    istrptr->operator >> (a);
+    (*istrptr) >> a;
     return *this;
   };
   CommentStream& operator >> (char* a) {
@@ -50,8 +50,6 @@ public:
   int peek() { return (istrptr->peek() == chrComment ? '\n' : istrptr->peek()); };
   int eof() { return istrptr->eof(); };
   int fail() { return istrptr->fail(); };
-  int bad() { return istrptr->bad(); };
-  int good() { return istrptr->good(); };
   void get(char* text, int length, char sep) { istrptr->get(text, length, sep); };
   CommentStream& seekg(streampos Pos) {
     istrptr->seekg(Pos);
@@ -59,7 +57,6 @@ public:
   };
   streampos tellg() { return istrptr->tellg(); };
   int operator !() { return istrptr->fail(); };
-  void makebad() { istrptr->clear(ios::badbit|istrptr->rdstate()); };
   CommentStream& get(char& c);
   CommentStream& getLine(char* ptr, int len, char delim = '\n');
 protected:

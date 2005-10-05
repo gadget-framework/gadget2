@@ -164,9 +164,13 @@ protected:
    */
   ActionAtTimes AAT;
   /**
-   * \brief This is the FormulaMatrix used to store digestion coefficiants for the various predator prey pairs
+   * \brief This is the FormulaMatrix used to store the digestion parameters for the various predator prey pairs
    */
   FormulaMatrix digestioncoeff;
+  /**
+   * \brief This is the DoubleMatrix used to store the calculated digestion coefficiants for the various predator prey pairs
+   */
+  DoubleMatrix digestion;
   /**
    * \brief This is the value of epsilon used when calculating the likelihood score
    */
@@ -223,6 +227,14 @@ protected:
    * \brief This is the Multinomial that is used when calculating the likelihood score
    */
   Multinomial MN;
+  /**
+   * \brief This is the DoubleVector used to temporarily store the observed consumption when calculating the likelihood score
+   */
+  DoubleVector mndata;
+  /**
+   * \brief This is the DoubleVector used to temporarily store the modelled consumption when calculating the likelihood score
+   */
+  DoubleVector mndist;
 };
 
 /**

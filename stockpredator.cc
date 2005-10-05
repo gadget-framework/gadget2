@@ -126,7 +126,7 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
 
 void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
-  int prey, predl, preyl;
+  int prey, predl, preyl, check;
   int inarea = this->areaNum(area);
   double tmp, temperature;
 
@@ -148,13 +148,20 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   //Now maxcons contains the maximum consumption by length
   //Calculating Phi(L) and O(l,L,prey) based on energy requirements
   for (prey = 0; prey < this->numPreys(); prey++) {
+    check = 0;
+    if (isZero(preference[prey] - 1.0))
+      check = 1;
+    
     if (this->getPrey(prey)->isPreyArea(area)) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++) {
           tmp = this->getSuitability(prey)[predl][preyl] *
             this->getPrey(prey)->getBiomass(area, preyl) * this->getPrey(prey)->getEnergy();
-          (*cons[inarea][prey])[predl][preyl] = pow(tmp, preference[prey]);
-          Phi[inarea][predl] += (*cons[inarea][prey])[predl][preyl];
+          //JMB - dont take the power if we dont have to
+          if (check == 0)
+            tmp = pow(tmp, preference[prey]);
+          (*cons[inarea][prey])[predl][preyl] = tmp;
+          Phi[inarea][predl] += tmp;
         }
       }
 

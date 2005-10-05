@@ -1,13 +1,12 @@
 #include "commentstream.h"
 
-istream& operator >> (istream& istr, Whitespace& ws) {
+istream& operator >> (istream& istr, Whitespace& Ws) {
   int ch;
   while (istr.peek() == ' ' || istr.peek() == '\t' || istr.peek() == '\r' || istr.peek() == '\n')
     ch = istr.get();
 
-  if (!istr.eof())
-    if (istr.peek() == EOF)
-      ch = istr.get();
+  if (!istr.eof() && istr.peek() == EOF)
+    ch = istr.get();
   return istr;
 }
 

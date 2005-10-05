@@ -180,10 +180,8 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
   if (F.type != CONSTANT)
     handle.logMessage(LOGFAIL, "Error in formula - failed to read formula");
 
-  if (infile.fail()) {
-    infile.makebad();
+  if (infile.fail())
     return infile;
-  }
 
   /* Read formula expression. Syntax:
        3.14        - Constant                             (CONSTANT)
@@ -256,16 +254,14 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
   }
 
   // Read initial value (could be CONSTANT or PARAMETER)
-  if (!(infile >> F.value)) {
-    infile.makebad();
+  if (!(infile >> F.value))
     return infile;
-  }
+
   // then '#' if there is one
   c = infile.peek();
-  if (infile.fail() && !infile.eof()) {
-    infile.makebad();
+  if (infile.fail() && !infile.eof())
     return infile;
-  }
+
   // Read CONSTANT
   if ((c != '#') || infile.eof()) {
     //If not '#' then return
