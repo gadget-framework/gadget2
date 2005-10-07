@@ -33,14 +33,14 @@ void NumberPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
   //Calculate number consumed up to a multiplicative constant.
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
-      for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++) {
+      for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
         (*cons[inarea][prey])[predl][preyl] =
           this->getSuitability(prey)[predl][preyl] * this->getPrey(prey)->getNumber(area, preyl);
         totalcons[inarea][predl] += (*cons[inarea][prey])[predl][preyl];
       }
 
     } else {
-      for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
+      for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
         (*cons[inarea][prey])[predl][preyl] = 0.0;
     }
   }
@@ -50,7 +50,7 @@ void NumberPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
       wanttoeat = tmp * prednumber[inarea][predl].N;
-      for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
+      for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
         (*cons[inarea][prey])[predl][preyl] *= wanttoeat / totalcons[inarea][predl];
     }
   }
@@ -72,13 +72,15 @@ void NumberPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
 }
 
 void NumberPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
-  double maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
   int check, over, prey, preyl;
-  double ratio, tmp;
   int inarea = this->areaNum(area);
+  double maxRatio, ratio, tmp;
 
   int predl = 0;  //JMB there is only ever one length group ...
   overcons[inarea][predl] = 0.0;
+  maxRatio = MaxRatioConsumed;
+  if (TimeInfo->numSubSteps() != 1)
+    maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
 
   over = 0;
   check = 0;
@@ -87,7 +89,7 @@ void NumberPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
       check = 1;
       if (this->getPrey(prey)->isOverConsumption(area)) {
         over = 1;
-        for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++) {
+        for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
           ratio = this->getPrey(prey)->getRatio(area, preyl);
           if (ratio > maxRatio) {
             tmp = maxRatio / ratio;
@@ -108,10 +110,9 @@ void NumberPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
 
   totalconsumption[inarea][predl] += totalcons[inarea][predl];
   overconsumption[inarea][predl] += overcons[inarea][predl];
-
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
-      for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
+      for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
         (*consumption[inarea][prey])[predl][preyl] += ((*cons[inarea][prey])[predl][preyl] *
             this->getPrey(prey)->getNumberPriorToEating(inarea)[preyl].W);
 }

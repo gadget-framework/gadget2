@@ -435,7 +435,7 @@ MigrationFunction::MigrationFunction(CommentStream& infile, const IntVector& Are
   readWordAndTimeVariable(infile, "driftx", driftx, TimeInfo, keeper);
   readWordAndTimeVariable(infile, "drifty", drifty, TimeInfo, keeper);
   readWordAndVariable(infile, "lambda", lambda);
-  delta = TimeInfo->LengthOfCurrent();
+  delta = TimeInfo->getTimeStepLength();
 
   // Open and read given year and step information
   readWordAndValue(infile, "areadefinition", filename);
@@ -584,7 +584,7 @@ int MigrationFunction::isMigrationStep(const TimeClass* const TimeInfo) {
 
 int MigrationFunction::updateVariables(const TimeClass* const TimeInfo) {
   //update the values of the variables that can change
-  delta = TimeInfo->LengthOfCurrent();
+  delta = TimeInfo->getTimeStepLength();
   diffusion.Update(TimeInfo);
   driftx.Update(TimeInfo);
   drifty.Update(TimeInfo);

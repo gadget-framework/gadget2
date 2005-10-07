@@ -52,7 +52,7 @@ void Stock::calcEat(int area, const AreaClass* const Area, const TimeClass* cons
 
 void Stock::checkEat(int area, const TimeClass* const TimeInfo) {
   if (iseaten)
-    prey->checkConsumption(area, TimeInfo->numSubSteps());
+    prey->checkConsumption(area, TimeInfo);
 }
 
 void Stock::adjustEat(int area, const TimeClass* const TimeInfo) {

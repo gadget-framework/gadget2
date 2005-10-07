@@ -89,7 +89,7 @@ LengthPrey* OtherFood::getPrey() const {
 void OtherFood::checkEat(int area, const TimeClass* const TimeInfo) {
 
   if (this->isOtherFoodStepArea(area, TimeInfo))
-    prey->checkConsumption(area, TimeInfo->numSubSteps());
+    prey->checkConsumption(area, TimeInfo);
 }
 
 void OtherFood::calcNumbers(int area,

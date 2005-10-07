@@ -155,11 +155,14 @@ void Prey::addNumbersConsumption(int area, const DoubleVector& predcons) {
 //the case a flag is set. Changed 22 - May 1997  so that only 95% of a prey
 //in an area can be eaten in one timestep.  This is to avoid problems
 //with survey indices etc.
-void Prey::checkConsumption(int area, int numsubsteps) {
-  double maxRatio = pow(MaxRatioConsumed, numsubsteps);
+void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
   int i, temp = 0;
   int inarea = this->areaNum(area);
-  double rat;
+  double maxRatio, rat;
+
+  maxRatio = MaxRatioConsumed;
+  if (TimeInfo->numSubSteps() != 1)
+    maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
 
   for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
     rat = 0.0;

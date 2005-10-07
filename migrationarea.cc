@@ -6,7 +6,7 @@
 
 extern ErrorHandler handle;
 
-MigrationArea:: MigrationArea(CommentStream& infile, char* name, int id) {
+MigrationArea::MigrationArea(CommentStream& infile, char* name, int id) {
 
   areaid = id;
   areaName = new char[strlen(name) + 1];

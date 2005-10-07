@@ -31,6 +31,9 @@ TimeClass::TimeClass(CommentStream& infile) {
       handle.logFileUnexpected(LOGFAIL, "nrofsubsteps", text);
     for (i = 0; i < numtimesteps; i++)
       infile >> numsubsteps[i] >> ws;
+    for (i = 0; i < numtimesteps; i++)
+      if (numsubsteps[i] == 0)
+        handle.logFileMessage(LOGFAIL, "number of substeps must be non-zero");
   }
 
   lengthofyear = 0.0;
@@ -88,7 +91,7 @@ int TimeClass::didStepSizeChange() const {
   return (timesteps[currentstep] != timesteps[currentstep - 1]);
 }
 
-void TimeClass:: Reset() {
+void TimeClass::Reset() {
   currentyear = firstyear;
   currentstep = firststep;
   currentsubstep = 1;

@@ -136,7 +136,7 @@ public:
    * \brief This will return the length of the current step of the model simulation
    * \return length of step
    */
-  double LengthOfCurrent() const { return timesteps[currentstep]; };
+  double getTimeStepLength() const { return timesteps[currentstep]; };
   /**
    * \brief This will return the total number of timesteps that have taken place in the simulation from the start of the model simulation until a specifed year and step
    * \param year is the specified year

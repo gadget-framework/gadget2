@@ -116,7 +116,7 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
   PopPredator::Reset(TimeInfo);
 
   // check that the various parameters that can be estimated are sensible
-  if ((TimeInfo->getTime() == 1) && (handle.getLogLevel() >= LOGWARN)) {
+  if ((handle.getLogLevel() >= LOGWARN) && (TimeInfo->getTime() == 1)) {
     int i;
     for (i = 0; i < consParam.Size(); i++)
       if (consParam[i] < 0)
@@ -139,7 +139,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
 
     temperature = Area->getTemperature(area, TimeInfo->getTime());
     tmp = exp(temperature * (consParam[1] - temperature * temperature * consParam[2]))
-           * consParam[0] * TimeInfo->LengthOfCurrent() / TimeInfo->numSubSteps();
+           * consParam[0] * TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
 
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
       maxcons[inarea][predl] = tmp * pow(LgrpDiv->meanLength(predl), consParam[3]);
@@ -154,9 +154,9 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
     
     if (this->getPrey(prey)->isPreyArea(area)) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-        for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++) {
-          tmp = this->getSuitability(prey)[predl][preyl] *
-            this->getPrey(prey)->getBiomass(area, preyl) * this->getPrey(prey)->getEnergy();
+        for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
+          tmp = this->getSuitability(prey)[predl][preyl] * this->getPrey(prey)->getEnergy()
+                  * this->getPrey(prey)->getBiomass(area, preyl);
           //JMB - dont take the power if we dont have to
           if (check == 0)
             tmp = pow(tmp, preference[prey]);
@@ -167,13 +167,15 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
 
     } else {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-        for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
+        for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
           (*cons[inarea][prey])[predl][preyl] = 0.0;
     }
   }
 
   //Calculating fphi(L) and totalcons of predator in area
-  tmp = Area->getSize(area) * consParam[4];
+  //JMB make this dependant on the length of the timestep
+  tmp = Area->getSize(area) * consParam[4]
+         * TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     if (isZero(tmp))
       subfphi[inarea][predl] = 1.0;
@@ -192,7 +194,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         if (!(isZero(Phi[inarea][predl]))) {
           tmp = totalcons[inarea][predl] / (Phi[inarea][predl] * this->getPrey(prey)->getEnergy());
-          for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
+          for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
             (*cons[inarea][prey])[predl][preyl] *= tmp;
         }
       }
@@ -209,10 +211,13 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
 //Check if any of the preys of the predator are eaten up.
 //adjust the consumption according to that.
 void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
-  double maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
   int inarea = this->areaNum(area);
   int over, preyl, predl, prey;
-  double ratio, rat1, rat2, tmp;
+  double maxRatio, ratio, rat1, rat2, tmp;
+
+  maxRatio = MaxRatioConsumed;
+  if (TimeInfo->numSubSteps() != 1)
+    maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     overcons[inarea][predl] = 0.0;
@@ -223,7 +228,7 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
       if (this->getPrey(prey)->isOverConsumption(area)) {
         over = 1;
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-          for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++) {
+          for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
             ratio = this->getPrey(prey)->getRatio(area, preyl);
             if (ratio > maxRatio) {
               tmp = maxRatio / ratio;
@@ -246,8 +251,13 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
     }
   }
 
-  rat2 = 1.0 / TimeInfo->getSubStep();
-  rat1 = 1.0 - rat2;
+  rat2 = 1.0;
+  rat1 = 0.0;
+  if (TimeInfo->numSubSteps() != 1) {
+    rat2 = 1.0 / TimeInfo->getSubStep();
+    rat1 = 1.0 - rat2;
+  }
+
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     totalconsumption[inarea][predl] += totalcons[inarea][predl];
     overconsumption[inarea][predl] += overcons[inarea][predl];
@@ -257,6 +267,6 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-        for (preyl = 0; preyl < this->getPrey(prey)->getLengthGroupDiv()->numLengthGroups(); preyl++)
+        for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
           (*consumption[inarea][prey])[predl][preyl] += (*cons[inarea][prey])[predl][preyl];
 }

@@ -93,9 +93,9 @@ public:
   /**
    * \brief This function will check for overconsumption of the prey
    * \param area is the area that the consumption is being calculated on
-   * \param numsubsteps is the number of substeps in the current timestep
+   * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void checkConsumption(int area, int numsubsteps);
+  virtual void checkConsumption(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This will return the biomass of prey that is available for consumption by predators
    * \param area is the area that the consumption is being calculated on

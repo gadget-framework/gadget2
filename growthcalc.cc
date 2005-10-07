@@ -328,7 +328,7 @@ void GrowthCalcD::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   int i;
   double ratio, fx, x;
-  double tempC = TimeInfo->numSubSteps() * TimeInfo->getTimeStepSize() / wgrowthPar[0];
+  double tempC = TimeInfo->getTimeStepSize() / wgrowthPar[0];
   double tempW = TimeInfo->getTimeStepSize() * wgrowthPar[2] *
       exp(wgrowthPar[4] * Area->getTemperature(area, TimeInfo->getTime()) + wgrowthPar[5]);
 
@@ -564,12 +564,14 @@ void GrowthCalcF::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
   growthPar.Update(TimeInfo);
-  int i, inarea = this->areaNum(area);
-  double kval = growthPar[1] * TimeInfo->getTimeStepSize();
+  int i, t, inarea;
+  t = TimeInfo->getTime();
+  inarea = this->areaNum(area);
+  double kval = 1.0 - exp(-(growthPar[1] * TimeInfo->getTimeStepSize()));
 
   for (i = 0; i < Lgrowth.Size(); i++) {
-    Lgrowth[i] = (growthPar[0] - LgrpDiv->meanLength(i)) * (1.0 - exp(-kval));
-    Wgrowth[i] = (*wgrowth[inarea])[TimeInfo->getTime()][i];
+    Lgrowth[i] = (growthPar[0] - LgrpDiv->meanLength(i)) * kval;
+    Wgrowth[i] = (*wgrowth[inarea])[t][i];
     if ((handle.getLogLevel() >= LOGWARN) && (Wgrowth[i] < 0.0))
       handle.logMessage(LOGWARN, "Warning in growth calculation - weight growth parameter is negative");
   }
@@ -630,7 +632,9 @@ void GrowthCalcG::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   //Gives linear growth (growthPar[0] == 0) or
   //growth decreasing with length (growthPar[0] < 0).
   growthPar.Update(TimeInfo);
-  int i, inarea = this->areaNum(area);
+  int i, t, inarea;
+  t = TimeInfo->getTime();
+  inarea = this->areaNum(area);
   double kval = growthPar[1] * TimeInfo->getTimeStepSize();
 
   if ((handle.getLogLevel() >= LOGWARN) && (growthPar[0] > 0))
@@ -639,14 +643,21 @@ void GrowthCalcG::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   if (isZero(growthPar[0])) {
     for (i = 0; i < Lgrowth.Size(); i++) {
       Lgrowth[i] = kval;
-      Wgrowth[i] = (*wgrowth[inarea])[TimeInfo->getTime()][i];
+      Wgrowth[i] = (*wgrowth[inarea])[t][i];
+      if ((handle.getLogLevel() >= LOGWARN) && (Wgrowth[i] < 0.0))
+        handle.logMessage(LOGWARN, "Warning in growth calculation - weight growth parameter is negative");
+    }
+  } else if (isZero(growthPar[0]) - 1.0) {
+    for (i = 0; i < Lgrowth.Size(); i++) {
+      Lgrowth[i] = kval * LgrpDiv->meanLength(i);
+      Wgrowth[i] = (*wgrowth[inarea])[t][i];
       if ((handle.getLogLevel() >= LOGWARN) && (Wgrowth[i] < 0.0))
         handle.logMessage(LOGWARN, "Warning in growth calculation - weight growth parameter is negative");
     }
   } else {
     for (i = 0; i < Lgrowth.Size(); i++) {
       Lgrowth[i] = kval * pow(LgrpDiv->meanLength(i), growthPar[0]);
-      Wgrowth[i] = (*wgrowth[inarea])[TimeInfo->getTime()][i];
+      Wgrowth[i] = (*wgrowth[inarea])[t][i];
       if ((handle.getLogLevel() >= LOGWARN) && (Wgrowth[i] < 0.0))
         handle.logMessage(LOGWARN, "Warning in growth calculation - weight growth parameter is negative");
     }
@@ -681,7 +692,6 @@ void GrowthCalcH::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
   growthPar.Update(TimeInfo);
-
   //JMB - first some error checking
   if (handle.getLogLevel() >= LOGWARN) {
     if (isZero(growthPar[1]) || isZero(growthPar[2]))
@@ -727,7 +737,6 @@ void GrowthCalcI::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
 
   growthPar.Update(TimeInfo);
-
   //JMB - first some error checking
   if (handle.getLogLevel() >= LOGWARN) {
     if (isZero(growthPar[0]) || isZero(growthPar[1]))
@@ -736,7 +745,7 @@ void GrowthCalcI::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
       handle.logMessage(LOGWARN, "Warning in growth calculation - length growth parameter is zero");
   }
 
-  double tempC = TimeInfo->numSubSteps() * TimeInfo->getTimeStepSize() * growthPar[0];
+  double tempC = TimeInfo->getTimeStepSize() * growthPar[0];
   double tempW = TimeInfo->getTimeStepSize() * growthPar[1] *
       exp(growthPar[3] * Area->getTemperature(area, TimeInfo->getTime()));
 
