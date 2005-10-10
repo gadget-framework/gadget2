@@ -40,7 +40,7 @@ TimeClass::TimeClass(CommentStream& infile) {
   for (i = 1; i <= numtimesteps; i++)
     lengthofyear += timesteps[i];
 
-  if (!(isZero(lengthofyear - 12)))
+  if (!(isEqual(lengthofyear, 12.0)))
     handle.logFileMessage(LOGWARN, "length of year does not equal 12");
   if (firstyear > lastyear || (firstyear == lastyear && firststep > laststep))
     handle.logFileMessage(LOGFAIL, "time period is empty");

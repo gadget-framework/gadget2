@@ -65,7 +65,7 @@ int readLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrV
     if (i == 0)
       lengths.resize(1, dblA); //first length entry to be read
 
-    if (isZero(lengths[i] - dblA))
+    if (isEqual(lengths[i], dblA))
       lengths.resize(1, dblB); //add next length entry
     else
       handle.logMessage(LOGFAIL, "Error in length aggregation - lengths not consecutive");

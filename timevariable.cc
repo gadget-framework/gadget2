@@ -123,7 +123,7 @@ int TimeVariable::didChange(const TimeClass* const TimeInfo) {
   if (!fromfile)
     return 0;  //return false if the values were not read from file
 
-  return ((!(isZero(lastvalue - value))) && (time == TimeInfo->getTime()));
+  return ((!(isEqual(lastvalue, value))) && (time == TimeInfo->getTime()));
 }
 
 void TimeVariable::Update(const TimeClass* const TimeInfo) {

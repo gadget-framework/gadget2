@@ -115,7 +115,7 @@ void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
 void StockPredator::Reset(const TimeClass* const TimeInfo) {
   PopPredator::Reset(TimeInfo);
 
-  // check that the various parameters that can be estimated are sensible
+  //check that the various parameters that can be estimated are sensible
   if ((handle.getLogLevel() >= LOGWARN) && (TimeInfo->getTime() == 1)) {
     int i;
     for (i = 0; i < consParam.Size(); i++)
@@ -130,26 +130,29 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   int inarea = this->areaNum(area);
   double tmp, temperature;
 
-  for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-    Phi[inarea][predl] = 0.0;
-
   if (TimeInfo->getSubStep() == 1) {
-    for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
-      fphi[inarea][predl] = 0.0;
-
+    //this is the first substep of the timestep so need to reset things
     temperature = Area->getTemperature(area, TimeInfo->getTime());
     tmp = exp(temperature * (consParam[1] - temperature * temperature * consParam[2]))
            * consParam[0] * TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
 
-    for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+    for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+      Phi[inarea][predl] = 0.0;
+      fphi[inarea][predl] = 0.0;
       maxcons[inarea][predl] = tmp * pow(LgrpDiv->meanLength(predl), consParam[3]);
+    }
+
+  } else {
+    //this is not the first substep of the timestep so only reset Phi  
+    for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+      Phi[inarea][predl] = 0.0;
   }
 
   //Now maxcons contains the maximum consumption by length
   //Calculating Phi(L) and O(l,L,prey) based on energy requirements
   for (prey = 0; prey < this->numPreys(); prey++) {
     check = 0;
-    if (isZero(preference[prey] - 1.0))
+    if (isEqual(preference[prey], 1.0))
       check = 1;
     
     if (this->getPrey(prey)->isPreyArea(area)) {
@@ -157,6 +160,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
         for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
           tmp = this->getSuitability(prey)[predl][preyl] * this->getPrey(prey)->getEnergy()
                   * this->getPrey(prey)->getBiomass(area, preyl);
+
           //JMB - dont take the power if we dont have to
           if (check == 0)
             tmp = pow(tmp, preference[prey]);
@@ -172,10 +176,9 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
     }
   }
 
-  //Calculating fphi(L) and totalcons of predator in area
   //JMB make this dependant on the length of the timestep
-  tmp = Area->getSize(area) * consParam[4]
-         * TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
+  tmp = Area->getSize(area) * consParam[4] * TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
+  //Calculating fphi(L) and totalcons of predator in area
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     if (isZero(tmp))
       subfphi[inarea][predl] = 1.0;

@@ -15,7 +15,7 @@ Rectangle::Rectangle(CommentStream& infile) {
   double R = 6371.0;
   double yLowerSin = sin(yLower*pivalue/180.0);
   double yUpperSin = sin(yUpper*pivalue/180.0);
-  areaSize = ((pivalue/180.0)*R*R)*absolute(yLowerSin - yUpperSin)*absolute(xLower - xUpper);
+  areaSize = ((pivalue/180.0)*R*R)*fabs(yLowerSin - yUpperSin)*fabs(xLower - xUpper);
 }
 
 /*

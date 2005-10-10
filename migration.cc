@@ -385,7 +385,7 @@ void MigrationNumbers::Reset() {
             (*calcMigration[i])[j][k] = 0.0;
         }
 
-      } else if (isZero(colsum - 1.0)) {
+      } else if (isEqual(colsum, 1.0)) {
         // everything is OK ...
 
       } else {
@@ -558,7 +558,7 @@ handle.logMessage(LOGDEBUG, "migration - area", oceanareas[from]->getArea());
       penalty.resize(1, 1.0);
       calcMigration[idfrom][idfrom] = 1.0;
 
-    } else if (isZero(colsum - 1.0)) {
+    } else if (isEqual(colsum, 1.0)) {
       // everything is OK ...
 
     } else {

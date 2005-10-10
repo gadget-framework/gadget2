@@ -15,7 +15,7 @@ const double pivalue = atan(1.0) * 4.0;
  * \return a if a is greater than b, b otherwise
  */
 inline int max(int a, int b) {
-  return ((a >= b) ? a : b);
+  return ((a > b) ? a : b);
 }
 
 /**
@@ -25,7 +25,7 @@ inline int max(int a, int b) {
  * \return a if a is greater than b, b otherwise
  */
 inline double max(double a, double b) {
-  return ((a >= b) ? a : b);
+  return ((a > b) ? a : b);
 }
 
 /**
@@ -36,8 +36,8 @@ inline double max(double a, double b) {
  * \return a if a is greater than b and c, b if b is greater than a and c, c otherwise
  */
 inline int max(int a, int b, int c) {
-  int d = ((a >= b) ? a : b);
-  return ((c >= d) ? c : d);
+  int d = ((a > b) ? a : b);
+  return ((c > d) ? c : d);
 }
 
 /**
@@ -73,22 +73,24 @@ inline int min(int a, int b, int c) {
 }
 
 /**
- * \brief This function will calculate the absolute value of a number
- * \param a is the number
- * \return a if a is greater than zero, -a otherwise
- */
-inline double absolute(double a) {
-  return ((a < 0) ? -a : a);
-}
-
-/**
  * \brief This function will check to see if a number is very close to zero
  * \param a is the number that is being checked
  * \return 1 if the number is very close to zero, 0 otherwise
  * \note This function replaces 'a == 0' to take account of numerical inaccuracies when calculating the exact value of a double
  */
 inline int isZero(double a) {
-  return ((absolute(a) < verysmall) ? 1 : 0);
+  return ((fabs(a) < verysmall) ? 1 : 0);
+}
+
+/**
+ * \brief This function will check to see if two numbers are equal
+ * \param a is the first number that is being checked
+ * \param b is the second number that is being checked
+ * \return 1 if the two numbers are equal, 0 otherwise
+ * \note This function replaces 'a == b' to take account of numerical inaccuracies when calculating the exact value of a double
+ */
+inline int isEqual(double a, double b) {
+  return ((fabs(a - b) < verysmall) ? 1 : 0);
 }
 
 /**

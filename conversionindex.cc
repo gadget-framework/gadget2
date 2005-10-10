@@ -15,7 +15,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 
   //check to see if the intersection is empty
   if ((L1->numLengthGroups() == 0) || (L2->numLengthGroups() == 0) ||
-       (tmpmin > tmpmax) || isZero(tmpmin - tmpmax)) {
+       (tmpmin > tmpmax) || isEqual(tmpmin, tmpmax)) {
 
     handle.logMessage(LOGWARN, "Error in conversionindex - intersection between length groups is empty");
     L1->printError();
@@ -42,7 +42,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       Lc = L2;
       Lf = L1;
     }
-    if (isZero(Lf->dl() - Lc->dl())) {
+    if (isEqual(Lf->dl(), Lc->dl())) {
       samedl = 1;
       offset = int((Lf->meanLength(0) - Lc->meanLength(0)) / Lf->dl());
     }
@@ -52,13 +52,13 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   nc = Lc->numLengthGroups();
   //set minlength and maxlength
   for (i = 0; i < nf; i++)
-    if (Lf->minLength(i) > Lc->minLength() || isZero(Lf->minLength(i) - Lc->minLength())) {
+    if (Lf->minLength(i) > Lc->minLength() || isEqual(Lf->minLength(i), Lc->minLength())) {
       minlength = i;
       break;
     }
 
   for (i = nf - 1; i >= 0; i--)
-    if (Lf->maxLength(i) < Lc->maxLength() || isZero(Lf->maxLength(i) - Lc->maxLength())) {
+    if (Lf->maxLength(i) < Lc->maxLength() || isEqual(Lf->maxLength(i), Lc->maxLength())) {
       maxlength = i + 1;
       break;
     }

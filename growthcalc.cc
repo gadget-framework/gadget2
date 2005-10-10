@@ -647,7 +647,7 @@ void GrowthCalcG::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
       if ((handle.getLogLevel() >= LOGWARN) && (Wgrowth[i] < 0.0))
         handle.logMessage(LOGWARN, "Warning in growth calculation - weight growth parameter is negative");
     }
-  } else if (isZero(growthPar[0]) - 1.0) {
+  } else if (isEqual(growthPar[0], 1.0)) {
     for (i = 0; i < Lgrowth.Size(); i++) {
       Lgrowth[i] = kval * LgrpDiv->meanLength(i);
       Wgrowth[i] = (*wgrowth[inarea])[t][i];

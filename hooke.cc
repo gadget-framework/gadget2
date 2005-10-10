@@ -324,9 +324,9 @@ void OptInfoHooke::OptimiseLikelihood() {
       for (i = 0; i < nvars; i++) {
         /* firstly, arrange the sign of delta[] */
         if (trialx[i] < x[i])
-          delta[i] = 0.0 - absolute(delta[i]);
+          delta[i] = 0.0 - fabs(delta[i]);
         else
-          delta[i] = absolute(delta[i]);
+          delta[i] = fabs(delta[i]);
 
         /* now, move further in this direction  */
         tmp = x[i];

@@ -374,10 +374,10 @@ void OptInfoSimann::OptimiseLikelihood() {
     fstar[0] = funcval;
 
     quit = 0;
-    if (absolute(fopt - funcval) < simanneps) {
+    if (fabs(fopt - funcval) < simanneps) {
       quit = 1;
       for (i = 0; i < check - 1; i++)
-        if (absolute(fstar[i + 1] - fstar[i]) > simanneps)
+        if (fabs(fstar[i + 1] - fstar[i]) > simanneps)
           quit = 0;
     }
 

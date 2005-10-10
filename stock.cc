@@ -102,9 +102,9 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //Check the growth length groups cover the stock length groups
   checkLengthGroupIsFiner(LgrpDiv, GrowLgrpDiv);
   if (handle.getLogLevel() >= LOGWARN) {
-    if (!(isZero(LgrpDiv->minLength() - GrowLgrpDiv->minLength())))
+    if (!(isEqual(LgrpDiv->minLength(),GrowLgrpDiv->minLength())))
       handle.logMessage(LOGWARN, "Warning in stock - minimum lengths don't match for growth of", this->getName());
-    if (!(isZero(LgrpDiv->maxLength() - GrowLgrpDiv->maxLength())))
+    if (!(isEqual(LgrpDiv->maxLength(), GrowLgrpDiv->maxLength())))
       handle.logMessage(LOGWARN, "Warning in stock - maximum lengths don't match for growth of", this->getName());
   }
   handle.logMessage(LOGMESSAGE, "Read basic stock data for stock", this->getName());

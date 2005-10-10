@@ -215,7 +215,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
     handle.logMessage(LOGFAIL, "Error in tags - invalid length group for tagged stock");
   if (LgrpDiv->dl() != tempLgrpDiv->dl())
     handle.logMessage(LOGFAIL, "Error in tags - invalid length group for tagged stock");
-  if (!(isZero(LgrpDiv->minLength() - tempLgrpDiv->minLength())))
+  if (!(isEqual(LgrpDiv->minLength(), tempLgrpDiv->minLength())))
     handle.logMessage(LOGFAIL, "Error in tags - invalid length group for tagged stock");
 
   preyindex.resize(1, -1);

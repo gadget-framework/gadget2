@@ -652,7 +652,7 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
             (*obsDistribution[timeindex][area])[age][len]) *
             ((*modelDistribution[timeindex][area])[age][len] -
             (*obsDistribution[timeindex][area])[age][len]) /
-            absolute(((*modelDistribution[timeindex][area])[age][len] + epsilon));
+            fabs(((*modelDistribution[timeindex][area])[age][len] + epsilon));
         }
       }
       totallikelihood += likelihoodValues[timeindex][area];
@@ -666,7 +666,7 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
             likelihoodValues[timeindex][area] +=
               ((*modelYearData[area])[age][len] - (*obsYearData[area])[age][len]) *
               ((*modelYearData[area])[age][len] - (*obsYearData[area])[age][len]) /
-              absolute(((*modelYearData[area])[age][len] + epsilon));
+              fabs(((*modelYearData[area])[age][len] + epsilon));
           }
         }
         totallikelihood += likelihoodValues[timeindex][area];
@@ -836,7 +836,7 @@ void CatchDistribution::calcCorrelation() {
   DoubleMatrix correlation(p, p, 0.0);
 
   for (i = 0; i < lag; i++)
-    if (absolute(params[i] - 1.0) > 1.0)
+    if (fabs(params[i] - 1.0) > 1.0)
       illegal = 1;
 
   if (illegal == 0) {

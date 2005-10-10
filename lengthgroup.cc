@@ -43,7 +43,7 @@ LengthGroupDivision::LengthGroupDivision(const DoubleVector& Breaks) : error(0),
   for (i = 0; i < size; i++) {
     minlength[i] = Breaks[i];
     meanlength[i] = 0.5 * (Breaks[i] + Breaks[i + 1]);
-    if ((Breaks[i] > Breaks[i + 1]) || (isZero(Breaks[i] - Breaks[i + 1])))
+    if ((Breaks[i] > Breaks[i + 1]) || (isEqual(Breaks[i], Breaks[i + 1])))
       error = 1;
   }
 }
@@ -55,16 +55,16 @@ LengthGroupDivision::LengthGroupDivision(const LengthGroupDivision& l)
 
 int LengthGroupDivision::numLengthGroup(double length) const {
   //check if length equals the minimum length.
-  if (isZero(minlen - length))
+  if (isEqual(minlen, length))
     return 0;
 
   //check if length equals the maximum length.
-  if (isZero(maxlen - length))
+  if (isEqual(maxlen, length))
     return size - 1;
 
   int i;
   for (i = 0; i < size; i++)
-    if ((isZero(minlength[i] - length)) || (minlength[i] < length && length < this->maxLength(i)))
+    if ((isEqual(minlength[i], length)) || (minlength[i] < length && length < this->maxLength(i)))
       return i;
 
   //failed to find length group that matches length
@@ -102,7 +102,7 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
     while (minLength(i) < addition->minLength())
       i++;
     for (j = 0; j < addition->numLengthGroups(); j++) {
-      if (!isZero(minLength(i + j) - addition->minLength(j))) {
+      if (!(isEqual(minLength(i + j), addition->minLength(j)))) {
         error = 1;
         return 0;
       }
@@ -197,7 +197,7 @@ void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
   minlength = max(coarser->minLength(), finer->minLength()) + rathersmall;
   maxlength = min(coarser->maxLength(), finer->maxLength()) - rathersmall;
   //check to see if the intersection is empty
-  if ((minlength > maxlength) || isZero(minlength - maxlength)) {
+  if ((minlength > maxlength) || isEqual(minlength, maxlength)) {
     handle.logMessage(LOGWARN, "Error when checking lengthgroupisfiner - empty intersection");
     finer->printError();
     coarser->printError();
