@@ -95,6 +95,14 @@ void Ecosystem::Initialise() {
     tagvec[i]->setStock(stockvec);
   }
 
+  basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size(), 0);
+  for (i = 0; i < stockvec.Size(); i++)
+    basevec[i] = stockvec[i];
+  for (i = 0; i < otherfoodvec.Size(); i++)
+    basevec[i + stockvec.Size()] = otherfoodvec[i];
+  for (i = 0; i < fleetvec.Size(); i++)
+    basevec[i + stockvec.Size() + otherfoodvec.Size()] = fleetvec[i];
+
   //This is a good place to initialise the likelihood classes.
   for (i = 0; i < likevec.Size(); i++) {
     handle.logMessage(LOGMESSAGE, "Initialising likelihood component", likevec[i]->getName());

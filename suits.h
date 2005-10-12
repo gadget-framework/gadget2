@@ -17,7 +17,7 @@ public:
   /**
    * \brief This is the default Suits constructor
    */
-  Suits() { init = 0; };
+  Suits() {};
   /**
    * \brief This is the default Suits destructor
    */
@@ -40,6 +40,11 @@ public:
    * \return name of the prey
    */
   const char* getPreyName(int i) const { return preynames[i]; };
+  /**
+   * \brief This will initialise the preys that will be consumed by the predator
+   * \param pred is the Predator that the suitability functions are defined for
+   */
+  void Initialise(const Predator* const pred);
   /**
    * \brief This function will return the number of preys that have suitability values
    * \return number of preys
@@ -78,11 +83,6 @@ protected:
    * \note The indices for this object are [prey][predator length][prey length]
    */
   DoubleMatrixPtrVector preCalcSuitability;
-private:
-  /**
-   * \brief This is the flag used to denote whether the objects have been initialised or not
-   */
-  int init;
 };
 
 #endif

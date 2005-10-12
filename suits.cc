@@ -32,17 +32,18 @@ void Suits::deletePrey(int i, Keeper* const keeper) {
   preCalcSuitability.Delete(i);
 }
 
+void Suits::Initialise(const Predator* const pred) {
+  int p;
+  for (p = 0; p < preynames.Size(); p++)
+    preCalcSuitability[p] = new DoubleMatrix(pred->getLengthGroupDiv()->numLengthGroups(), pred->getPrey(p)->getLengthGroupDiv()->numLengthGroups(), 0.0);
+}
+
 void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
   int i, j, p;
 
   for (p = 0; p < preynames.Size(); p++) {
     suitFunction[p]->updateConstants(TimeInfo);
     if (suitFunction[p]->didChange(TimeInfo)) {
-      // first time through we need to create the matrix
-      if (init == 0)
-        preCalcSuitability[p] = new DoubleMatrix(pred->getLengthGroupDiv()->numLengthGroups(),
-                                pred->getPrey(p)->getLengthGroupDiv()->numLengthGroups(), 0.0);
-
       for (i = 0; i < preCalcSuitability[p]->Nrow(); i++) {
         for (j = 0; j < preCalcSuitability[p]->Ncol(i); j++) {
           if (suitFunction[p]->usesPreyLength())
@@ -73,7 +74,4 @@ void Suits::Reset(const Predator* const pred, const TimeClass* const TimeInfo) {
           (*preCalcSuitability[p])[i][j] /= mult;
   }
   #endif
-
-  // the matrices have now been initialised so we can reset the flag
-  init = 1;  
 }

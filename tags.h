@@ -38,9 +38,8 @@ public:
   void Print(ofstream& outfile) const;
   /**
    * \brief This function will reset the model tagged population
-   * \param TimeInfo is the TimeClass for the current model
    */
-  void Reset(const TimeClass* const TimeInfo);
+  void Reset();
   int isWithinPeriod(int year, int step);
   int stockIndex(const char* stockname);
   int areaIndex(const char* stockname, int area);

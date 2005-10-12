@@ -69,7 +69,7 @@ public:
    * \brief This will reset the predation information for the current model run
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void Reset(const TimeClass* const TimeInfo);
+  virtual void Reset(const TimeClass* const TimeInfo) { suitable->Reset(this, TimeInfo); };
   /**
    * \brief This will return the amount the predator consumes of a given prey on a given area
    * \param area is the area that the consumption is being calculated on
@@ -101,6 +101,10 @@ public:
    * \return 0 (will be overridden by the derived classes)
    */
   virtual const LengthGroupDivision* getLengthGroupDiv() const = 0;
+  /**
+   * \brief This will initialise the preys that will be consumed by the predator
+   */
+  virtual void Initialise() { suitable->Initialise(this); };
   /**
    * \brief This will return the number of prey stocks that the predator will consume
    * \return number of preys

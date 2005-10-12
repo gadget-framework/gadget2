@@ -567,7 +567,7 @@ void GrowthCalcF::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   int i, t, inarea;
   t = TimeInfo->getTime();
   inarea = this->areaNum(area);
-  double kval = 1.0 - exp(-(growthPar[1] * TimeInfo->getTimeStepSize()));
+  double kval = 1.0 - exp(-growthPar[1] * TimeInfo->getTimeStepSize());
 
   for (i = 0; i < Lgrowth.Size(); i++) {
     Lgrowth[i] = (growthPar[0] - LgrpDiv->meanLength(i)) * kval;

@@ -54,6 +54,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
         i--;
     }
   }
+
   if (this->numPreys() == 0)
     handle.logMessage(LOGFAIL, "Error in predator - found no preys for predator", this->getName());
   // check that the preference vector is still the right size
@@ -81,10 +82,6 @@ void Predator::Print(ofstream& outfile) const {
     outfile << "\tSuitability for prey " << suitable->getPreyName(i) << endl;
     suitable->getSuitability(i).Print(outfile);
   }
-}
-
-void Predator::Reset(const TimeClass* const TimeInfo) {
-  suitable->Reset(this, TimeInfo);
 }
 
 void Predator::readSuitability(CommentStream& infile,

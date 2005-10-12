@@ -2,10 +2,6 @@
 #include "charptrvector.h"
 #include "gadget.h"
 
-InterruptInterface::InterruptInterface(const Ecosystem& ecosystem) {
-  eco = &ecosystem;
-}
-
 void InterruptInterface::printMenu() {
   cout << "\nInterrupted at year " << eco->TimeInfo->getYear() << ", step "
     << eco->TimeInfo->getStep() << " (" << eco->TimeInfo->getTime()

@@ -65,7 +65,7 @@ void Ecosystem::updateAgesOneArea(int area) {
 
 void Ecosystem::SimulateOneTimestep() {
   int i;
-  while (TimeInfo->getSubStep() <=  TimeInfo->numSubSteps()) {
+  while (TimeInfo->getSubStep() <= TimeInfo->numSubSteps()) {
     for (i = 0; i < basevec.Size(); i++)
       basevec[i]->Migrate(TimeInfo);
     for (i = 0; i < Area->numAreas(); i++)
@@ -77,22 +77,25 @@ void Ecosystem::SimulateOneTimestep() {
     this->updatePopulationOneArea(i);
 }
 
-void Ecosystem::Simulate(int Optimise, int print) {
+void Ecosystem::Simulate(int optimise, int print) {
   int i, j;
 
   handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
-  if (Optimise) {
-    for (j = 0; j < likevec.Size(); j++)
-      likevec[j]->Reset(keeper);
-    //put here since boundlikelihood is allowed to change values
+  for (j = 0; j < likevec.Size(); j++)
+    likevec[j]->Reset(keeper);
+
+  if (optimise)
     for (j = 0; j < likevec.Size(); j++)
       likevec[j]->addLikelihoodKeeper(TimeInfo, keeper);
-  }
+
+  for (j = 0; j < tagvec.Size(); j++)
+    tagvec[j]->Reset();
 
   TimeInfo->Reset();
   for (i = 0; i < TimeInfo->numTotalSteps(); i++) {
+    for (j = 0; j < basevec.Size(); j++)
+      basevec[j]->Reset(TimeInfo);
 
-    this->Reset();
     //Add in any new tagging experiments
     tagvec.updateTags(TimeInfo);
 
@@ -101,7 +104,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
         printvec[j]->Print(TimeInfo, 1);  //start of timestep, so printtime is 1
 
     this->SimulateOneTimestep();
-    if (Optimise)
+    if (optimise)
       for (j = 0; j < likevec.Size(); j++)
         likevec[j]->addLikelihood(TimeInfo);
 
@@ -115,7 +118,7 @@ void Ecosystem::Simulate(int Optimise, int print) {
     #ifdef INTERRUPT_HANDLER
       if (interrupted) {
         InterruptInterface ui(*this);
-        if (!ui.menu()) {
+        if (ui.menu() == 0) {
           handle.logMessage(LOGMESSAGE, "\n** Gadget interrupted - quitting current simulation **");
           char interruptfile[15];
           strncpy(interruptfile, "", 15);
@@ -135,13 +138,13 @@ void Ecosystem::Simulate(int Optimise, int print) {
     TimeInfo->IncrementTime();
   }
 
-  if (Optimise) {
+  //Remove all the tagging experiments - they must have expired now
+  tagvec.deleteAllTags();
+
+  if (optimise) {
     likelihood = 0.0;
     for (j = 0; j < likevec.Size(); j++)
       likelihood += likevec[j]->getLikelihood();
   }
-
   handle.logMessage(LOGMESSAGE, "The current overall likelihood score is", likelihood);
-  //Remove all the tagging experiments - they must have expired now
-  tagvec.deleteAllTags();
 }

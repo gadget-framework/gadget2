@@ -13,7 +13,7 @@ public:
    * \brief This is the InterruptInterface constructor
    * \param ecosystem is the Ecosystem that the model is currently simulating
    */
-  InterruptInterface(const Ecosystem& ecosystem);
+  InterruptInterface(const Ecosystem& ecosystem) { eco = &ecosystem; };
   /**
    * \brief This is the default InterruptInterface destructor
    */

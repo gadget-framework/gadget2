@@ -39,20 +39,10 @@ Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir, const cha
   handle.Close();
   infile.close();
   infile.clear();
+  handle.logMessage(LOGMESSAGE, "");  //write a blank line to the log file
 
   // check and initialise the model
-  handle.logMessage(LOGMESSAGE, "");  //write a blank line to the log file
   this->Initialise();
-  basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size(), 0);
-
-  int i;
-  for (i = 0; i < stockvec.Size(); i++)
-    basevec[i] = stockvec[i];
-  for (i = 0; i < otherfoodvec.Size(); i++)
-    basevec[i + stockvec.Size()] = otherfoodvec[i];
-  for (i = 0; i < fleetvec.Size(); i++)
-    basevec[i + stockvec.Size() + otherfoodvec.Size()] = fleetvec[i];
-
   if (main.runOptimise())
     handle.logMessage(LOGINFO, "\nFinished reading model data files, starting to run optimisation");
   else
@@ -102,13 +92,10 @@ void Ecosystem::Reset() {
   int i;
   for (i = 0; i < basevec.Size(); i++)
     basevec[i]->Reset(TimeInfo);
-  for (i = 0; i < tagvec.Size(); i++)
-    tagvec[i]->Reset(TimeInfo);
 }
 
 double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {
   int i, j;
-  likelihood = 0.0;
 
   if (funceval == 0) {
     // JMB - only need to create these vectors once

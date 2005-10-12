@@ -169,22 +169,20 @@ Tags::~Tags() {
   delete LgrpDiv;
 }
 
-void Tags::Reset(const TimeClass* const TimeInfo) {
+void Tags::Reset() {
   int i;
-  if (TimeInfo->getTime() == 1) {
-    while (AgeLengthStock.Size() > 0)
-      AgeLengthStock.Delete(0);
-    while (NumBeforeEating.Size() > 0)
-      NumBeforeEating.Delete(0);
-    while (CI.Size() > 0) {
-      delete CI[0];
-      CI.Delete(0);
-    }
-    for (i = 0; i < preyindex.Size(); i++)
-      preyindex[i] = -1;
-    for (i = 0; i < updated.Size(); i++)
-      updated[i] = 0;
+  while (AgeLengthStock.Size() > 0)
+    AgeLengthStock.Delete(0);
+  while (NumBeforeEating.Size() > 0)
+    NumBeforeEating.Delete(0);
+  while (CI.Size() > 0) {
+    delete CI[0];
+    CI.Delete(0);
   }
+  for (i = 0; i < preyindex.Size(); i++)
+    preyindex[i] = -1;
+  for (i = 0; i < updated.Size(); i++)
+    updated[i] = 0;
 }
 
 void Tags::setStock(StockPtrVector& Stocks) {
