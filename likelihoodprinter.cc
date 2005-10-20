@@ -69,7 +69,6 @@ LikelihoodPrinter::~LikelihoodPrinter() {
   outfile.close();
   outfile.clear();
   int i;
-  delete[] filename;
   for (i = 0; i < likenames.Size(); i++)
     delete[] likenames[i];
 }
@@ -122,8 +121,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
         outfile << "\n; tagid-year-step-area-length-number\n";
         break;
       case RECSTATISTICSLIKELIHOOD:
-        handle.logMessage(LOGWARN, "Warning in likelihoodprinter - printing not currently implemented for", like[i]->getName());
-        //outfile << "\n; tagid-year-step-area-number-mean\n";
+        outfile << "\n; tagid-year-step-area-number-mean[-stddev]\n";
         break;
       case BOUNDLIKELIHOOD:
       case UNDERSTOCKINGLIKELIHOOD:
@@ -135,18 +133,15 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
         break;
     }
   }
-
   outfile.flush();
 }
 
 void LikelihoodPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
-
   if ((!AAT.atCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
   int i;
   for (i = 0; i < like.Size(); i++)
     like[i]->printLikelihood(outfile, TimeInfo);
-
   outfile.flush();
 }

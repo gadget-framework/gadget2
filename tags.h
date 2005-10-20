@@ -24,7 +24,7 @@ public:
   void deleteStockTags();
   const int getEndYear() const { return endyear; };
   int getNumTagTimeSteps() const { return numtagtimesteps; };
-  const CharPtrVector* getStockNames() const { return &stocknames; };
+  CharPtrVector getStockNames() { return stocknames; };
   void setStock(StockPtrVector& Stocks);
   void updateMatureStock(const TimeClass* const TimeInfo);
   void updateTransitionStock(const TimeClass* const TimeInfo);

@@ -114,7 +114,6 @@ StockStdPrinter::~StockStdPrinter() {
   delete preyinfo;
   delete aggregator;
   delete LgrpDiv;
-  delete[] filename;
   delete[] stockname;
 }
 

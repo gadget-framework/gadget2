@@ -161,7 +161,6 @@ void StrayData::setStock(StockPtrVector& stockvec) {
   CI.resize(strayStocks.Size(), 0);
   for (i = 0; i < strayStocks.Size(); i++)
     CI[i] = new ConversionIndex(LgrpDiv, strayStocks[i]->getLengthGroupDiv());
-
 }
 
 void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
@@ -210,7 +209,6 @@ void StrayData::addStrayStock(int area, const TimeClass* const TimeInfo) {
     }
 
     strayStocks[s]->Add(Storage[inarea], CI[s], area, strayRatio[s]);
-
     if (tagStorage.numTagExperiments() > 0)
       strayStocks[s]->Add(tagStorage, CI[s], area, strayRatio[s]);
   }

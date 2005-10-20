@@ -156,7 +156,6 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
     }
 
     transitionStocks[s]->Add(Storage[inarea], CI[s], area, transitionRatio[s]);
-
     if (tagStorage.numTagExperiments() > 0)
       transitionStocks[s]->Add(tagStorage, CI[s], area, transitionRatio[s]);
   }

@@ -204,7 +204,6 @@ void PredatorOverPrinter::Print(const TimeClass* const TimeInfo, int printtime) 
 PredatorOverPrinter::~PredatorOverPrinter() {
   outfile.close();
   outfile.clear();
-  delete[] filename;
   delete predLgrpDiv;
   delete aggregator;
   int i;

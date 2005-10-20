@@ -15,17 +15,40 @@ class Maturity;
  */
 class AgeBandMatrix {
 public:
-  AgeBandMatrix(int age, const IntVector& minl, const IntVector& size);
-  AgeBandMatrix(int age, const PopInfoMatrix& initial);
-  AgeBandMatrix(int age, int minl, const PopInfoMatrix& initial);
-  AgeBandMatrix(int age, const PopInfoIndexVector& initial);
-  AgeBandMatrix(const AgeBandMatrix& initial);
+  /**
+   * \brief This is the default AgeBandMatrix constructor
+   */
   AgeBandMatrix() { minage = 0; nrow = 0; v = 0; };
+  AgeBandMatrix(int age, const IntVector& minl, const IntVector& size);
+  AgeBandMatrix(int age, const PopInfoMatrix& initial, int minl = 0);
+  AgeBandMatrix(int age, const PopInfoIndexVector& initial);
+  /**
+   * \brief This is the AgeBandMatrix constructor that creates a copy of an existing AgeBandMatrix
+   * \param initial is the AgeBandMatrix to copy
+   */
+  AgeBandMatrix(const AgeBandMatrix& initial);
+  /**
+   * \brief This is the AgeBandMatrix destructor
+   */
   ~AgeBandMatrix();
   int minAge() const { return minage; };
   int maxAge() const { return minage + nrow - 1; };
+  /**
+   * \brief This will return the number of rows of the vector
+   * \return the number of rows of the vector
+   */
   int Nrow() const { return nrow; };
+  /**
+   * \brief This will return the value of an element of the vector
+   * \param age is the element of the vector to be returned
+   * \return the value of the specified element
+   */
   PopInfoIndexVector& operator [] (int age) { return *(v[age - minage]); };
+  /**
+   * \brief This will return the value of an element of the vector
+   * \param age is the element of the vector to be returned
+   * \return the value of the specified element
+   */
   const PopInfoIndexVector& operator [] (int age) const { return *(v[age - minage]); };
   int minLength(int age) const { return v[age - minage]->minCol(); };
   int maxLength(int age) const { return v[age - minage]->maxCol(); };

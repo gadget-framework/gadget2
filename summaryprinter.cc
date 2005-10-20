@@ -40,7 +40,6 @@ SummaryPrinter::SummaryPrinter(CommentStream& infile)
 }
 
 SummaryPrinter::~SummaryPrinter() {
-  delete[] filename;
   outfile.close();
   outfile.clear();
 }
@@ -61,10 +60,10 @@ void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
       case SURVEYINDICESLIKELIHOOD:
       case UNDERSTOCKINGLIKELIHOOD:
       case BOUNDLIKELIHOOD:
+      case MIGRATIONPENALTYLIKELIHOOD:
         break;
       case TAGLIKELIHOOD:
       case RECSTATISTICSLIKELIHOOD:
-      case MIGRATIONPENALTYLIKELIHOOD:
         handle.logMessage(LOGWARN, "Warning in summaryprinter - printing not implemented for", like[i]->getName());
         break;
       default:
@@ -75,13 +74,11 @@ void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
 }
 
 void SummaryPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
-
   if ((TimeInfo->getTime() != TimeInfo->numTotalSteps()) || (printtime != printtimeid))
     return;
 
   int i;
   for (i = 0; i < like.Size(); i++)
     like[i]->printSummary(outfile);
-
   outfile.flush();
 }

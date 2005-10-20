@@ -297,7 +297,6 @@ PredatorPrinter::~PredatorPrinter() {
   delete predLgrpDiv;
   delete preyLgrpDiv;
   delete aggregator;
-  delete[] filename;
   int i;
   for (i = 0; i < predatornames.Size(); i++)
     delete[] predatornames[i];

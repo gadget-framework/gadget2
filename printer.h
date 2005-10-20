@@ -33,7 +33,7 @@ public:
   /**
    * \brief This is the default Printer destructor
    */
-  virtual ~Printer() {};
+  virtual ~Printer() { delete[] filename; };
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model

@@ -94,7 +94,6 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
 StockPreyFullPrinter::~StockPreyFullPrinter() {
   outfile.close();
   outfile.clear();
-  delete[] filename;
   delete preyinfo;
   delete LgrpDiv;
   delete[] stockname;

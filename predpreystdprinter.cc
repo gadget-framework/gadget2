@@ -82,7 +82,6 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile, const TimeClass* c
 PredPreyStdPrinter::~PredPreyStdPrinter() {
   outfile.close();
   outfile.clear();
-  delete[] filename;
   delete[] predname;
   delete[] preyname;
 }

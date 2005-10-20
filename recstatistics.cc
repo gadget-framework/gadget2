@@ -93,25 +93,27 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
   char tmparea[MaxStrLength], tmptag[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmptag, "", MaxStrLength);
-  int keepdata, needvar;
+  int keepdata, needvar, readvar;
   int i, timeid, tagid, areaid, tmpindex;
   int count = 0;
 
+  readvar = 0;
   if (functionnumber == 2)
+    readvar = 1;
+  needvar = 0;
+  if (functionnumber == 1)
     needvar = 1;
-  else
-    needvar = 0;
 
   //Check the number of columns in the inputfile
   infile >> ws;
-  if ((needvar == 1) && (countColumns(infile) != 7))
+  if ((readvar == 1) && (countColumns(infile) != 7))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
-  else if ((needvar == 0) && (countColumns(infile) != 6))
+  else if ((readvar == 0) && (countColumns(infile) != 6))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
   while (!infile.eof()) {
     keepdata = 0;
-    if (needvar == 1)
+    if (readvar == 1)
       infile >> tmptag >> year >> step >> tmparea >> tmpnumber >> tmpmean >> tmpstddev >> ws;
     else
       infile >> tmptag >> year >> step >> tmparea >> tmpnumber >> tmpmean >> ws;
@@ -155,7 +157,10 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
           timeid = 0;
           numbers.resize(1, new DoubleMatrix(1, numarea, 0.0));
           obsMean.resize(1, new DoubleMatrix(1, numarea, 0.0));
+          modelMean.resize(1, new DoubleMatrix(1, numarea, 0.0));
           if (needvar == 1)
+            modelStdDev.resize(1, new DoubleMatrix(1, numarea, 0.0));
+          if (readvar == 1)
             obsStdDev.resize(1, new DoubleMatrix(1, numarea, 0.0));
         }
 
@@ -170,7 +175,7 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
           Steps[tagid].resize(1, step);
           (*numbers[tagid]).AddRows(1, numarea, 0.0);
           (*obsMean[tagid]).AddRows(1, numarea, 0.0);
-          if (needvar == 1)
+          if (readvar == 1)
             (*obsStdDev[tagid]).AddRows(1, numarea, 0.0);
           timeid = Years.Ncol(tagid) - 1;
         }
@@ -186,7 +191,7 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
       count++;
       (*numbers[tagid])[timeid][areaid] = tmpnumber;
       (*obsMean[tagid])[timeid][areaid] = tmpmean;
-      if (needvar == 1)
+      if (readvar == 1)
         (*obsStdDev[tagid])[timeid][areaid] = tmpstddev;
     }
   }
@@ -208,9 +213,12 @@ RecStatistics::~RecStatistics() {
   for (i = 0; i < numbers.Size(); i++) {
     delete numbers[i];
     delete obsMean[i];
+    delete modelMean[i];
   }
   for (i = 0; i < obsStdDev.Size(); i++)
     delete obsStdDev[i];
+  for (i = 0; i < modelStdDev.Size(); i++)
+    delete modelStdDev[i];
   delete[] functionname;
   if (aggregator != 0)  {
     for (i = 0; i < tagvec.Size(); i++)
@@ -251,7 +259,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
   int i, j, t, found, minage, maxage;
   FleetPtrVector fleets;
   StockPtrVector stocks;
-  const CharPtrVector* stocknames;
+  CharPtrVector stocknames;
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
@@ -263,24 +271,22 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
 
     if (found == 0)
       handle.logMessage(LOGFAIL, "Error in recstatistics - unrecognised fleet", fleetnames[i]);
-
   }
 
   aggregator = new RecAggregator*[tagvec.Size()];
   for (t = 0; t < tagvec.Size(); t++) {
     stocknames = tagvec[t]->getStockNames();
-    for (i = 0; i < stocknames->Size(); i++) {
+    for (i = 0; i < stocknames.Size(); i++) {
       found = 0;
       for (j = 0; j < Stocks.Size(); j++)
         if (Stocks[j]->isEaten())
-          if (strcasecmp(stocknames->operator[](i), Stocks[j]->getPrey()->getName()) == 0) {
+          if (strcasecmp(stocknames[i], Stocks[j]->getPrey()->getName()) == 0) {
             found++;
             stocks.resize(1, Stocks[j]);
           }
 
       if (found == 0)
-        handle.logMessage(LOGFAIL, "Error in recstatistics - unrecognised stock", stocknames->operator[](i));
-
+        handle.logMessage(LOGFAIL, "Error in recstatistics - unrecognised stock", stocknames[i]);
     }
 
     LgrpDiv = new LengthGroupDivision(*(stocks[0]->getPrey()->getLengthGroupDiv()));
@@ -299,9 +305,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     for (i = 0; i <= maxage - minage; i++)
       ages[0].resize(1, minage + i);
     aggregator[t] = new RecAggregator(fleets, stocks, LgrpDiv, areas, ages, tagvec[t]);
-
-    while (stocks.Size() > 0)
-      stocks.Delete(0);
+    stocks.Reset();
   }
 }
 
@@ -345,12 +349,14 @@ double RecStatistics::calcLikSumSquares() {
       for (area = 0; area < alptr->Size(); area++) {
         PopStatistics PopStat((*alptr)[area][0], aggregator[t]->getLengthGroupDiv(), 1);
 
-        simdiff = PopStat.meanLength() - (*obsMean[t])[timeindex[t]][area];
+        (*modelMean[t])[timeindex[t]][area] = PopStat.meanLength();
+        simdiff = (*obsMean[t])[timeindex[t]][area] - (*obsMean[t])[timeindex[t]][area];
         simvar = 0.0;
 
         switch (functionnumber) {
           case 1:
-            simvar = PopStat.sdevLength() * PopStat.sdevLength();
+            (*modelStdDev[t])[timeindex[t]][area] = PopStat.sdevLength();
+            simvar = (*modelStdDev[t])[timeindex[t]][area] * (*modelStdDev[t])[timeindex[t]][area];
             break;
           case 2:
             simvar = (*obsStdDev[t])[timeindex[t]][area] * (*obsStdDev[t])[timeindex[t]][area];
@@ -371,4 +377,46 @@ double RecStatistics::calcLikSumSquares() {
     }
   }
   return lik;
+}
+
+void RecStatistics::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
+  int year = TimeInfo->getYear();
+  int step = TimeInfo->getStep();
+  int t, ti, timeid, area;
+
+  for (t = 0; t < tagvec.Size(); t++) {
+    if (tagvec[t]->isWithinPeriod(year, step)) {
+      timeid = -1;
+      for (ti = 0; ti < Years.Ncol(t); ti++)
+        if (Years[t][ti] == year && Steps[t][ti] == step)
+          timeid = ti;
+
+      if (timeid > -1) {
+        for (area = 0; area < areaindex.Size(); area++) {
+          outfile << setw(printwidth) << tagnames[t] << sep << setw(lowwidth)
+            << year << sep << setw(lowwidth) << step << sep << setw(printwidth)
+            << areaindex[area] << sep << setprecision(printprecision) << setw(printwidth)
+            << (*numbers[t])[timeid][area] << sep << setprecision(largeprecision)
+            << setw(largewidth) << (*modelMean[t])[timeid][area];
+
+          switch (functionnumber) {
+            case 1:
+              outfile << sep << setprecision(printprecision) << setw(printwidth)
+                << (*modelStdDev[t])[timeid][area] << endl;
+              break;
+            case 2:
+              outfile << sep << setprecision(printprecision) << setw(printwidth)
+                << (*obsStdDev[t])[timeid][area] << endl;
+              break;
+            case 3:
+              outfile << endl;
+              break;
+            default:
+              handle.logMessage(LOGWARN, "Warning in recstatistics - unrecognised function", functionname);
+              break;
+          }
+        }
+      }
+    }
+  }
 }

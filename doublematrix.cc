@@ -117,15 +117,16 @@ DoubleMatrix& DoubleMatrix::operator = (const DoubleMatrix& d) {
       delete v[i];
     delete[] v;
   }
+
   nrow = d.nrow;
   if (nrow > 0) {
     v = new DoubleVector*[nrow];
     for (i = 0; i < nrow; i++)
       v[i] = new DoubleVector(d[i]);
-  } else {
+
+  } else
     v = 0;
-    nrow = 0;
-  }
+
   return *this;
 }
 

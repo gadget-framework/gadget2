@@ -170,7 +170,7 @@ public:
    * \return predator
    */
   PopPredator* getPredator() const;
-  const AgeBandMatrix& getAgeLengthKeys(int area) const { return Alkeys[this->areaNum(area)]; };
+  AgeBandMatrix& getAgeLengthKeys(int area) { return Alkeys[this->areaNum(area)]; };
   /**
    * \brief This will return the length group information for the stock
    * \return LgrpDiv

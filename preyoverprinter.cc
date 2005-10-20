@@ -206,7 +206,6 @@ PreyOverPrinter::~PreyOverPrinter() {
   outfile.clear();
   delete preyLgrpDiv;
   delete aggregator;
-  delete[] filename;
   int i;
   for (i = 0; i < preynames.Size(); i++)
     delete[] preynames[i];

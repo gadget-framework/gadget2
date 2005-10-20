@@ -19,36 +19,36 @@ void StockPreyStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
     NconbyAge[inarea][age] = 0.0;
     BconbyAge[inarea][age] = 0.0;
   }
-  const AgeBandMatrix& Alk = prey->getALKPriorToEating(area);
+  const AgeBandMatrix& alk = prey->getALKPriorToEating(area);
   PopInfo nullpop;
 
-  PopInfoIndexVector PopByAge(Alk.maxAge() - Alk.minAge() + 1, Alk.minAge(), nullpop);
+  PopInfoIndexVector PopByAge(alk.maxAge() - alk.minAge() + 1, alk.minAge(), nullpop);
   PopInfoVector PopByLength(SPByLength.BconsumptionByLength(area).Size(), nullpop);
-  Alk.sumColumns(PopByLength);
+  alk.sumColumns(PopByLength);
 
   timeratio = 1.0 / TimeInfo->getTimeStepSize();
   for (age = NconbyAge.minCol(inarea); age < NconbyAge.maxCol(inarea); age++) {
-    for (l = Alk.minLength(age); l < Alk.maxLength(age); l++) {
-      PopByAge[age] += Alk[age][l];
+    for (l = alk.minLength(age); l < alk.maxLength(age); l++) {
+      PopByAge[age] += alk[age][l];
 
-      if (isZero(Alk[age][l].N)) {
+      if (isZero(alk[age][l].N)) {
         NconbyAgeAndLength[inarea][age][l] = 0.0;
         BconbyAgeAndLength[inarea][age][l] = 0.0;
         MortbyAgeAndLength[inarea][age][l] = 0.0;
 
       } else {
-        tmp = Alk[age][l].N * SPByLength.BconsumptionByLength(area)[l] / (PopByLength[l].N * PopByLength[l].W);
+        tmp = alk[age][l].N * SPByLength.BconsumptionByLength(area)[l] / (PopByLength[l].N * PopByLength[l].W);
 
-        BconbyAgeAndLength[inarea][age][l] = tmp * Alk[age][l].W;
+        BconbyAgeAndLength[inarea][age][l] = tmp * alk[age][l].W;
         NconbyAgeAndLength[inarea][age][l] = tmp;
 
         NconbyAge[inarea][age] += NconbyAgeAndLength[inarea][age][l];
         BconbyAge[inarea][age] += BconbyAgeAndLength[inarea][age][l];
-        if (NconbyAgeAndLength[inarea][age][l] >= Alk[age][l].N)
+        if (NconbyAgeAndLength[inarea][age][l] >= alk[age][l].N)
           MortbyAgeAndLength[inarea][age][l] = MaxMortality;
         else
           MortbyAgeAndLength[inarea][age][l]
-            = -log(1.0 - NconbyAgeAndLength[inarea][age][l] / Alk[age][l].N) * timeratio;
+            = -log(1.0 - NconbyAgeAndLength[inarea][age][l] / alk[age][l].N) * timeratio;
       }
     }
 

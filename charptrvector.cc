@@ -79,3 +79,24 @@ void CharPtrVector::Delete(int pos) {
     size = 0;
   }
 }
+
+CharPtrVector& CharPtrVector::operator = (const CharPtrVector& cv) {
+  int i;
+  if (size == cv.size) {
+    for (i = 0; i < size; i++)
+      v[i] = cv[i];
+    return *this;
+  }
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
+  size = cv.size;
+  if (size > 0) {
+    v = new char*[size];
+    for (i = 0; i < size; i++)
+      v[i] = cv.v[i];
+  } else
+    v = 0;
+  return *this;
+}

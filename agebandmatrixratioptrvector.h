@@ -34,7 +34,7 @@ public:
   AgeBandMatrixRatio& operator [] (int pos) { return *v[pos]; };
   const AgeBandMatrixRatio& operator [] (int pos) const { return *v[pos]; };
   void Add(const AgeBandMatrixRatioPtrVector& Addition, int area,
-    const ConversionIndex &CI, double ratio);
+    const ConversionIndex &CI, double ratio = 1.0);
 protected:
   void addTagName(const char* name);
   int size;

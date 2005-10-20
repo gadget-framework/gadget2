@@ -68,6 +68,11 @@ public:
    * \return the value of the specified element
    */
   char* const& operator [] (int pos) const { return v[pos]; };
+  /**
+   * \brief This operator will set the vector equal to an existing CharPtrVector
+   * \param cv is the StockPtrVector to copy
+   */
+  CharPtrVector& operator = (const CharPtrVector& cv);
 protected:
   /**
    * \brief This is the vector of char values

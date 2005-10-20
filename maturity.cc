@@ -14,10 +14,10 @@ extern ErrorHandler handle;
 // ********************************************************
 Maturity::Maturity(const IntVector& tmpareas, int minage, const IntVector& minlength,
   const IntVector& size, const LengthGroupDivision* const lgrpdiv)
-  : LivesOnAreas(tmpareas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)),
-    Storage(tmpareas.Size(), minage, minlength, size),
-    tagStorage(tmpareas.Size(), minage, minlength, size) {
+  : LivesOnAreas(tmpareas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)) {
 
+  Storage.resize(tmpareas.Size(), minage, minlength, size);
+  tagStorage.resize(tmpareas.Size(), minage, minlength, size);
 }
 
 Maturity::~Maturity() {
@@ -99,7 +99,6 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
       handle.logMessage(LOGFAIL, "Error in maturity - mature stock doesnt live on area", area);
 
     matureStocks[i]->Add(Storage[inarea], CI[i], area, matureRatio[i]);
-
     if (tagStorage.numTagExperiments() > 0)
       matureStocks[i]->Add(tagStorage, CI[i], area, matureRatio[i]);
   }

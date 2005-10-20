@@ -95,7 +95,7 @@ void AgeBandMatrixPtrVector::resize(int addsize, int minage,
     size = addsize;
     v = new AgeBandMatrix*[size];
     for (i = 0; i < size; i++)
-      v[i] = new AgeBandMatrix(minage, minl, matr);
+      v[i] = new AgeBandMatrix(minage, matr, minl);
 
   } else {
     AgeBandMatrix** vnew = new AgeBandMatrix*[addsize + size];
@@ -104,7 +104,7 @@ void AgeBandMatrixPtrVector::resize(int addsize, int minage,
     delete[] v;
     v = vnew;
     for (i = size; i < addsize + size; i++)
-      v[i] = new AgeBandMatrix(minage, minl, matr);
+      v[i] = new AgeBandMatrix(minage, matr, minl);
     size = addsize + size;
   }
 }

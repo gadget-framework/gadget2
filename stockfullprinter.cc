@@ -93,7 +93,6 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile, const TimeClass* const
 StockFullPrinter::~StockFullPrinter() {
   outfile.close();
   outfile.clear();
-  delete[] filename;
   delete aggregator;
   delete LgrpDiv;
   delete[] stockname;

@@ -70,6 +70,16 @@ void MigrationPenalty::Reset(const Keeper* const keeper) {
     handle.logMessage(LOGMESSAGE, "Reset migrationpenalty component");
 }
 
+void MigrationPenalty::printSummary(ofstream& outfile) {
+  //JMB there is only one likelihood score here ...
+  if (!(isZero(likelihood))) {
+    outfile << "all   all        all" << sep << setw(largewidth) << this->getName() << sep
+      << setprecision(smallprecision) << setw(smallwidth) << weight << sep
+      << setprecision(largeprecision) << setw(largewidth) << likelihood << endl;
+    outfile.flush();
+  }
+}
+
 void MigrationPenalty::Print(ofstream& outfile) const {
   outfile << "\nMigration Penalty " << this->getName() << " - likelihood value "
     << likelihood << endl;

@@ -51,6 +51,12 @@ public:
    * \param Stocks is the StockPtrVector of all the available stocks
    */
   void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
+  /**
+   * \brief This function will print information from each Recaptures calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   * \param TimeInfo is the TimeClass for the current model
+   */
+  virtual void printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo);
 private:
   /**
    * \brief This function will read the RecStatistics data from the input file
@@ -77,10 +83,20 @@ private:
    */
   DoubleMatrixPtrVector obsMean;
   /**
+   * \brief This is the DoubleMatrixPtrVector used to store mean length information calculated in the model
+   * \note The indices for this object are [tag][time][area]
+   */
+  DoubleMatrixPtrVector modelMean;
+  /**
    * \brief This is the DoubleMatrixPtrVector used to store the standard deviation of the length information specified in the input file
    * \note The indices for this object are [tag][time][area]
    */
   DoubleMatrixPtrVector obsStdDev;
+  /**
+   * \brief This is the DoubleMatrixPtrVector used to store the standard deviation of the length information calculated in the model
+   * \note The indices for this object are [tag][time][area]
+   */
+  DoubleMatrixPtrVector modelStdDev;
   /**
    * \brief This is the RecAggregator used to collect information about the racptured tagged fish
    */

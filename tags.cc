@@ -162,19 +162,19 @@ Tags::~Tags() {
     delete NumberByLength[i];
   for (i = 0; i < CI.Size(); i++)
     delete CI[i];
-  while (AgeLengthStock.Size() > 0)
-    AgeLengthStock.Delete(0);
-  while (NumBeforeEating.Size() > 0)
-    NumBeforeEating.Delete(0);
+  while (AgeLengthStock.Nrow() > 0)
+    AgeLengthStock.DeleteRow(0);
+  while (NumBeforeEating.Nrow() > 0)
+    NumBeforeEating.DeleteRow(0);
   delete LgrpDiv;
 }
 
 void Tags::Reset() {
   int i;
-  while (AgeLengthStock.Size() > 0)
-    AgeLengthStock.Delete(0);
-  while (NumBeforeEating.Size() > 0)
-    NumBeforeEating.Delete(0);
+  while (AgeLengthStock.Nrow() > 0)
+    AgeLengthStock.DeleteRow(0);
+  while (NumBeforeEating.Nrow() > 0)
+    NumBeforeEating.DeleteRow(0);
   while (CI.Size() > 0) {
     delete CI[0];
     CI.Delete(0);
@@ -309,16 +309,16 @@ void Tags::Update(int timeid) {
   int numberofagegroups = maxage - minage + 1;
   int upperlgrp, minl, maxl, age, length, stockid;
   double numfishinarea, numstockinarea;
-  IntVector sizeoflengthgroups(numberofagegroups);
-  IntVector lowerlengthgroups(numberofagegroups);
+  IntVector lgrpsize(numberofagegroups);
+  IntVector lgrpmin(numberofagegroups);
 
   for (i = 0; i < numberofagegroups; i++) {
-    lowerlengthgroups[i]= stockPopInArea->minLength(i + minage);
+    lgrpmin[i]= stockPopInArea->minLength(i + minage);
     upperlgrp = stockPopInArea->maxLength(i + minage);
-    sizeoflengthgroups[i] = upperlgrp - lowerlengthgroups[i];
+    lgrpsize[i] = upperlgrp - lgrpmin[i];
   }
 
-  AgeLengthStock.resize(1, new AgeBandMatrixPtrVector(numareas, minage, lowerlengthgroups, sizeoflengthgroups));
+  AgeLengthStock.AddRows(1, new AgeBandMatrixPtrVector(numareas, minage, lgrpmin, lgrpsize));
   for (age = minage; age <= maxage; age++) {
     minl = stockPopInArea->minLength(age);
     maxl = stockPopInArea->maxLength(age);
@@ -336,53 +336,52 @@ void Tags::Update(int timeid) {
 
   if (taggingstock->isEaten()) {
     tmpLgrpDiv = taggingstock->getPrey()->getLengthGroupDiv();
-    IntVector preysize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
-    IntVector preyminlength(numberofagegroups, 0);
-    NumBeforeEating.resize(1, new AgeBandMatrixPtrVector(numareas, minage, preyminlength, preysize));
+    lgrpmin.Reset();
+    lgrpsize.Reset();
+    lgrpmin.resize(numberofagegroups, 0);
+    lgrpsize.resize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
+    NumBeforeEating.AddRows(1, new AgeBandMatrixPtrVector(numareas, minage, lgrpmin, lgrpsize));
     CI.resize(1, new ConversionIndex(LgrpDiv, tmpLgrpDiv));
 
     stockid = stockIndex(taggingstock->getName());
     if (stockid < 0 || stockid >= preyindex.Size())
       handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
-    preyindex[stockid] = NumBeforeEating.Size() - 1;
+    preyindex[stockid] = NumBeforeEating.Nrow() - 1;
   }
 
-  const AgeBandMatrix* allStockPopInArea;
   for (i = 1; i < tagStocks.Size(); i++) {
-    Stock* tmpStock = tagStocks[i];
-    allStockPopInArea = &tagStocks[i]->getAgeLengthKeys(tagarea);
-
-    stockareas = tmpStock->getAreas();
+    stockPopInArea = &tagStocks[i]->getAgeLengthKeys(tagarea);
+    stockareas = tagStocks[i]->getAreas();
     numareas = stockareas.Size();
-    maxage = allStockPopInArea->maxAge();
-    minage = allStockPopInArea->minAge();
+    maxage = stockPopInArea->maxAge();
+    minage = stockPopInArea->minAge();
     numberofagegroups = maxage - minage + 1;
-    while (sizeoflengthgroups.Size() > 0) {
-      sizeoflengthgroups.Delete(0);
-      lowerlengthgroups.Delete(0);
-    }
-    sizeoflengthgroups.resize(numberofagegroups);
-    lowerlengthgroups.resize(numberofagegroups);
+    lgrpmin.Reset();
+    lgrpsize.Reset();
+    lgrpmin.resize(numberofagegroups);
+    lgrpsize.resize(numberofagegroups);
     for (j = 0; j < numberofagegroups; j++) {
-      lowerlengthgroups[j] = allStockPopInArea->minLength(j + minage);
-      upperlgrp = allStockPopInArea->maxLength(j + minage);
-      sizeoflengthgroups[j] = upperlgrp - lowerlengthgroups[j];
+      lgrpmin[j] = stockPopInArea->minLength(j + minage);
+      upperlgrp = stockPopInArea->maxLength(j + minage);
+      lgrpsize[j] = upperlgrp - lgrpmin[j];
     }
 
-    AgeLengthStock.resize(1, new AgeBandMatrixPtrVector(numareas, minage, lowerlengthgroups, sizeoflengthgroups));
-    if (tmpStock->isEaten()) {
-      tmpLgrpDiv = tmpStock->getPrey()->getLengthGroupDiv();
-      IntVector preysize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
-      IntVector preyminlength(numberofagegroups, 0);
-      NumBeforeEating.resize(1, new AgeBandMatrixPtrVector(numareas, minage, preyminlength, preysize));
+    AgeLengthStock.AddRows(1, new AgeBandMatrixPtrVector(numareas, minage, lgrpmin, lgrpsize));
+    if (tagStocks[i]->isEaten()) {
+      tmpLgrpDiv = tagStocks[i]->getPrey()->getLengthGroupDiv();
+      lgrpmin.Reset();
+      lgrpsize.Reset();
+      lgrpmin.resize(numberofagegroups, 0);
+      lgrpsize.resize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
+      NumBeforeEating.AddRows(1, new AgeBandMatrixPtrVector(numareas, minage, lgrpmin, lgrpsize));
       CI.resize(1, new ConversionIndex(LgrpDiv, tmpLgrpDiv));
 
-      stockid = stockIndex(tmpStock->getName());
+      stockid = stockIndex(tagStocks[i]->getName());
       if (stockid < 0 || stockid >= preyindex.Size())
         handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
-      preyindex[stockid] = NumBeforeEating.Size() - 1;
+      preyindex[stockid] = NumBeforeEating.Nrow() - 1;
     }
   }
 }
@@ -418,10 +417,10 @@ void Tags::updateMatureStock(const TimeClass* const TimeInfo) {
 
   if (endyear <= TimeInfo->getYear())
     handle.logMessage(LOGWARN, "Warning in tags - tagging experiment has finished");
-  else
+  else {
     for (i = 0; i < matureStocks.Size(); i++) {
       id = stockIndex(matureStocks[i]->getName());
-      if (id < 0 || id >= AgeLengthStock.Size())
+      if (id < 0 || id >= AgeLengthStock.Nrow())
         handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
       if (updated[id] == 0) {
@@ -429,6 +428,7 @@ void Tags::updateMatureStock(const TimeClass* const TimeInfo) {
         updated[id] = 1;
       }
     }
+  }
 }
 
 void Tags::updateTransitionStock(const TimeClass* const TimeInfo) {
@@ -436,10 +436,10 @@ void Tags::updateTransitionStock(const TimeClass* const TimeInfo) {
 
   if (endyear <= TimeInfo->getYear())
     handle.logMessage(LOGWARN, "Warning in tags - tagging experiment has finished");
-  else
+  else {
     for (i = 0; i < transitionStocks.Size(); i++) {
       id = stockIndex(transitionStocks[i]->getName());
-      if (id < 0 || id >= AgeLengthStock.Size())
+      if (id < 0 || id >= AgeLengthStock.Nrow())
         handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
       if (updated[id] == 0) {
@@ -447,6 +447,7 @@ void Tags::updateTransitionStock(const TimeClass* const TimeInfo) {
         updated[id] = 1;
       }
     }
+  }
 }
 
 void Tags::updateStrayStock(const TimeClass* const TimeInfo) {
@@ -454,10 +455,10 @@ void Tags::updateStrayStock(const TimeClass* const TimeInfo) {
 
   if (endyear <= TimeInfo->getYear())
     handle.logMessage(LOGWARN, "Warning in tags - tagging experiment has finished");
-  else
+  else {
     for (i = 0; i < strayStocks.Size(); i++) {
       id = stockIndex(strayStocks[i]->getName());
-      if (id < 0 || id >= AgeLengthStock.Size())
+      if (id < 0 || id >= AgeLengthStock.Nrow())
         handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
       if (updated[id] == 0) {
@@ -465,6 +466,7 @@ void Tags::updateStrayStock(const TimeClass* const TimeInfo) {
         updated[id] = 1;
       }
     }
+  }
 }
 
 int Tags::stockIndex(const char* stockname) {
@@ -499,7 +501,7 @@ void Tags::storeNumberPriorToEating(int area, const char* stockname) {
     handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
   preyid = preyindex[stockid];
-  if (preyid > NumBeforeEating.Size() || preyid < 0)
+  if (preyid > NumBeforeEating.Nrow() || preyid < 0)
     handle.logMessage(LOGFAIL, "Error in tags - invalid prey identifier");
 
   areaid = areaIndex(stockname, area);
@@ -517,7 +519,7 @@ const AgeBandMatrix& Tags::getNumberPriorToEating(int area, const char* stocknam
     handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
   preyid = preyindex[stockid];
-  if (preyid > NumBeforeEating.Size() || preyid < 0)
+  if (preyid > NumBeforeEating.Nrow() || preyid < 0)
     handle.logMessage(LOGFAIL, "Error in tags - invalid prey identifier");
 
   areaid = areaIndex(stockname, area);

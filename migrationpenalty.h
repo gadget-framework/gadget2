@@ -39,6 +39,11 @@ public:
    */
   virtual void Reset(const Keeper* const keeper);
   /**
+   * \brief This function will print summary information from the MigrationPenalty likelihood calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   */
+  virtual void printSummary(ofstream& outfile);
+  /**
    * \brief This function will print the summary MigrationPenalty likelihood information
    * \param outfile is the ofstream that all the model information gets sent to
    * \note This function is not used for this likelihood component

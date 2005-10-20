@@ -59,6 +59,11 @@ public:
    */
   int Size() const { return size; };
   /**
+   * \brief This will reset the vector
+   * \note This will delete every entry from the vector and set the size to zero
+   */
+  void Reset();
+  /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element

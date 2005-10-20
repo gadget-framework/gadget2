@@ -243,7 +243,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
   int i, j, k, l, found;
   FleetPtrVector fleets;
   StockPtrVector stocks;
-  const CharPtrVector* stocknames;
+  CharPtrVector stocknames;
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
@@ -263,18 +263,18 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
   aggregator = new RecAggregator*[tagvec.Size()];
   for (k = 0; k < tagvec.Size(); k++) {
     stocknames = tagvec[k]->getStockNames();
-    for (i = 0; i < stocknames->Size(); i++)  {
+    for (i = 0; i < stocknames.Size(); i++)  {
       found = 0;
       for (j = 0; j < Stocks.Size(); j++) {
         if (Stocks[j]->isEaten()) {
-          if (strcasecmp(stocknames->operator[](i), Stocks[j]->getPrey()->getName()) == 0) {
+          if (strcasecmp(stocknames[i], Stocks[j]->getPrey()->getName()) == 0) {
             found++;
             stocks.resize(1, Stocks[j]);
           }
         }
       }
       if (found == 0)
-        handle.logMessage(LOGFAIL, "Error in recaptures - failed to match stock", stocknames->operator[](i));
+        handle.logMessage(LOGFAIL, "Error in recaptures - failed to match stock", stocknames[i]);
     }
 
     //Check if the stock lives on all the areas that were read in
@@ -299,13 +299,11 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
     aggregator[k] = new RecAggregator(fleets, stocks, lgrpdiv, areas, agematrix, tagvec[k]);
 
     delete lgrpdiv;
-    while (stocks.Size() > 0)
-      stocks.Delete(0);
+    stocks.Reset();
   }
 }
 
 void Recaptures::addLikelihood(const TimeClass* const TimeInfo) {
-
   double l = 0.0;
   switch (functionnumber) {
     case 1:
@@ -397,21 +395,21 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
 }
 
 void Recaptures::Print(ofstream& outfile) const {
-  int t, ti, i, j;
+  int t, ti, area, len;
   outfile << "\nRecaptures Data " << this->getName() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << endl;
   for (t = 0; t < tagvec.Size(); t++) {
     outfile << "\tTagging experiment:\t" << tagnames[t];
     for (ti = 0; ti < obsYears.Ncol(t); ti++) {
       outfile << "\n\tyear " << obsYears[t][ti] << " and step " << obsSteps[t][ti] << "\n\tobserved recaptures";
-      for (i = 0; i < (*obsDistribution[t][ti]).Nrow(); i++)
-        for (j = 0; j < (*obsDistribution[t][ti]).Ncol(i); j++)
-          outfile << TAB << (*obsDistribution[t][ti])[i][j];
+      for (area = 0; area < (*obsDistribution[t][ti]).Nrow(); area++)
+        for (len = 0; len < (*obsDistribution[t][ti]).Ncol(area); len++)
+          outfile << TAB << (*obsDistribution[t][ti])[area][len];
 
       outfile << "\n\tmodelled recaptures";
-      for (i = 0; i < (*modelDistribution[t][ti]).Nrow(); i++)
-        for (j = 0; j < (*modelDistribution[t][ti]).Ncol(i); j++)
-          outfile << TAB << (*modelDistribution[t][ti])[i][j];
+      for (area = 0; area < (*modelDistribution[t][ti]).Nrow(); area++)
+        for (len = 0; len < (*modelDistribution[t][ti]).Ncol(area); len++)
+          outfile << TAB << (*modelDistribution[t][ti])[area][len];
     }
     outfile << endl;
   }
@@ -419,7 +417,6 @@ void Recaptures::Print(ofstream& outfile) const {
 }
 
 void Recaptures::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
-
   int year = TimeInfo->getYear();
   int step = TimeInfo->getStep();
   int t, ti, timeid, area, len;

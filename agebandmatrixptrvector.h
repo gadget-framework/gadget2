@@ -29,12 +29,12 @@ public:
   AgeBandMatrixPtrVector(int sz, AgeBandMatrix* initial);
   /**
    * \brief This is the AgeBandMatrixPtrVector constructor for a specified size with an initial value specified by the minimum age and length of the new AgeBandMatrix created
-   * \param size1 is the size of the vector to be created
+   * \param sz is the size of the vector to be created
    * \param minage is the minimum age of the AgeBandMatrix to be created
    * \param minl is the IntVector of minimum lengths of the AgeBandMatrix to be created
-   * \param size2 is the IntVector of sizes of the AgeBandMatrix to be created
+   * \param lsize is the IntVector of sizes of the AgeBandMatrix to be created
    */
-  AgeBandMatrixPtrVector(int size1, int minage, const IntVector& minl, const IntVector& size2);
+  AgeBandMatrixPtrVector(int sz, int minage, const IntVector& minl, const IntVector& lsize);
   /**
    * \brief This is the AgeBandMatrixPtrVector constructor that creates a copy of an existing AgeBandMatrixPtrVector
    * \param initial is the AgeBandMatrixPtrVector to copy
@@ -62,9 +62,9 @@ public:
    * \param add is the number of new entries to the vector
    * \param minage is the minimum age of the AgeBandMatrix to be created
    * \param minl is the IntVector of minimum lengths of the AgeBandMatrix to be created
-   * \param size is the IntVector of sizes of the AgeBandMatrix to be created
+   * \param lsize is the IntVector of sizes of the AgeBandMatrix to be created
    */
-  void resize(int add, int minage, const IntVector& minl, const IntVector& size);
+  void resize(int add, int minage, const IntVector& minl, const IntVector& lsize);
   /**
    * \brief This will add new entries to the vector and create new AgeBandMatrix initial values
    * \param add is the number of new entries to the vector
