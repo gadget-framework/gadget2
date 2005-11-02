@@ -48,8 +48,8 @@ void GrowthCalcA::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   int i;
   for (i = 0; i < Lgrowth.Size(); i++) {
     Lgrowth[i] = tempL * pow(LgrpDiv->meanLength(i), growthPar[1]) * Fphi[i];
-    if (Lgrowth[i] < 0)
-      Lgrowth[i] = 0;
+    if (Lgrowth[i] < 0.0)
+      Lgrowth[i] = 0.0;
 
     if (numGrow[i].W < verysmall)
       Wgrowth[i] = 0.0;
@@ -206,7 +206,7 @@ void GrowthCalcC::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
       handle.logMessage(LOGWARN, "Warning in growth calculation - weight growth parameter is zero");
     if (isZero(lgrowthPar[6]) || isZero(lgrowthPar[7]))
       handle.logMessage(LOGWARN, "Warning in growth calculation - length growth parameter is zero");
-    if (lgrowthPar[5] < 0)
+    if (lgrowthPar[5] < 0.0)
       handle.logMessage(LOGWARN, "Warning in growth calculation - length growth parameter is negative");
   }
 
@@ -322,7 +322,7 @@ void GrowthCalcD::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
       handle.logMessage(LOGWARN, "Warning in growth calculation - weight growth parameter is zero");
     if (isZero(lgrowthPar[6]) || isZero(lgrowthPar[7]))
       handle.logMessage(LOGWARN, "Warning in growth calculation - length growth parameter is zero");
-    if (lgrowthPar[5] < 0)
+    if (lgrowthPar[5] < 0.0)
       handle.logMessage(LOGWARN, "Warning in growth calculation - length growth parameter is negative");
   }
 
@@ -472,7 +472,7 @@ void GrowthCalcE::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
       handle.logMessage(LOGWARN, "Warning in growth calculation - weight growth parameter is zero");
     if (isZero(lgrowthPar[6]) || isZero(lgrowthPar[7]))
       handle.logMessage(LOGWARN, "Warning in growth calculation - length growth parameter is zero");
-    if (lgrowthPar[5] < 0)
+    if (lgrowthPar[5] < 0.0)
       handle.logMessage(LOGWARN, "Warning in growth calculation - length growth parameter is negative");
   }
 
@@ -630,14 +630,14 @@ void GrowthCalcG::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   //written by kgf 24/10 00
   //Gives linear growth (growthPar[0] == 0) or
-  //growth decreasing with length (growthPar[0] < 0).
+  //growth decreasing with length (growthPar[0] < 0)
   growthPar.Update(TimeInfo);
   int i, t, inarea;
   t = TimeInfo->getTime();
   inarea = this->areaNum(area);
   double kval = growthPar[1] * TimeInfo->getTimeStepSize();
 
-  if ((handle.getLogLevel() >= LOGWARN) && (growthPar[0] > 0))
+  if ((handle.getLogLevel() >= LOGWARN) && (growthPar[0] > 0.0))
     handle.logMessage(LOGWARN, "Warning in growth calculation - growth parameter is positive");
 
   if (isZero(growthPar[0])) {

@@ -36,15 +36,15 @@ void OptInfoHooke::read(CommentStream& infile, char* text) {
   }
 
   //check the values specified in the optinfo file ...
-  if ((rho < rathersmall) || (rho > 1)) {
+  if ((rho < rathersmall) || (rho > 1.0)) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of rho outside bounds", rho);
     rho = 0.5;
   }
-  if ((lambda < 0) || (lambda > 1)) {
+  if ((lambda < 0.0) || (lambda > 1.0)) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of lambda outside bounds", lambda);
     lambda = rho;
   }
-  if ((bndcheck < 0.5) || (bndcheck > 1)) {
+  if ((bndcheck < 0.5) || (bndcheck > 1.0)) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of bndcheck outside bounds", bndcheck);
     bndcheck = 0.9999;
   }

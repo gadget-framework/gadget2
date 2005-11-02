@@ -86,7 +86,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   }
 
   //JMB - check that the slope of the regression line is positive
-  if (slope < 0)
+  if (slope < 0.0)
     handle.logFileMessage(LOGFAIL, "\nError in surveyindex - slope of the regression line must be positive", slope);
 
   //read the survey indices data from the datafile

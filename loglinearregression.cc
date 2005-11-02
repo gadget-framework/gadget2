@@ -78,7 +78,7 @@ void LogLinearRegression::calcLog(const DoubleVector& x,
       Xlog.Delete(l);
       Ylog.Delete(l);
       l--;
-    } else if ((x[i] < 0) || (y[i] < 0) || (isZero(x[i])) || (isZero(y[i]))) {
+    } else if ((x[i] < 0.0) || (y[i] < 0.0) || (isZero(x[i])) || (isZero(y[i]))) {
       handle.logMessage(LOGWARN, "Warning in log linear regession - received invalid values");
       error = 1;
       return;

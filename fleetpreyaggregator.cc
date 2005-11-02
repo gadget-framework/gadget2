@@ -105,7 +105,7 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
                       if (overconsumption) {
                         DoubleVector Ratio = *suitptr;
                         for (z = 0; z < Ratio.Size(); z++)
-                          if (prey->getRatio(area, z) > 1)
+                          if (prey->getRatio(area, z) > 1.0)
                             Ratio[z] *= 1.0 / prey->getRatio(areas[area][j], z);
 
                         total[area][age].Add((*alptr)[ages[age][k]], *CI[h], fleetscale, Ratio);

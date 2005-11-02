@@ -55,7 +55,7 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
   }
 
   //check the values specified in the optinfo file ...
-  if ((uratio < 0.5) || (uratio > 1)) {
+  if ((uratio < 0.5) || (uratio > 1.0)) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of uratio outside bounds", uratio);
     uratio = 0.7;
   }
@@ -63,7 +63,7 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of lratio outside bounds", lratio);
     lratio = 0.3;
   }
-  if ((rt < rathersmall) || (rt > 1)) {
+  if ((rt < rathersmall) || (rt > 1.0)) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of rt outside bounds", rt);
     rt = 0.85;
   }

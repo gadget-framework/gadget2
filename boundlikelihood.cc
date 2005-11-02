@@ -142,7 +142,7 @@ void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keepe
   for (i = 0; i < switchnr.Size(); i++) {
     if (values[switchnr[i]] < lowerbound[i]) {
       temp = fabs(values[switchnr[i]] - lowerbound[i]);
-      if (temp < 1)
+      if (temp < 1.0)
         likelihoods[i] = lowerweights[i] * pow(temp, (1.0 / powers[i]));
       else
         likelihoods[i] = lowerweights[i] * pow(temp, powers[i]);
@@ -151,7 +151,7 @@ void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keepe
 
     } else if (values[switchnr[i]] > upperbound[i]) {
       temp = fabs(values[switchnr[i]] - upperbound[i]);
-      if (temp < 1)
+      if (temp < 1.0)
         likelihoods[i] = upperweights[i] * pow(temp, (1.0 / powers[i]));
       else
         likelihoods[i] = upperweights[i] * pow(temp, powers[i]);

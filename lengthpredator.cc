@@ -20,6 +20,6 @@ void LengthPredator::Sum(const PopInfoVector& NumberInArea, int area) {
 
 void LengthPredator::Reset(const TimeClass* const TimeInfo) {
   PopPredator::Reset(TimeInfo);
-  if (multi < 0)
+  if (multi < 0.0)
     handle.logMessage(LOGWARN, "Warning in lengthpredator - negative value for multiplicative");
 }

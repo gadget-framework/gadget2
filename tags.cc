@@ -100,7 +100,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
       keepdata = 1;
 
     //only keep the data if the number is positive
-    if (tmpnumber < 0) {
+    if (tmpnumber < 0.0) {
       handle.logMessage(LOGWARN, "Warning in tags - found negative number of tags", tmpnumber);
       keepdata = 1;
     }

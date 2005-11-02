@@ -137,7 +137,7 @@ void StochasticData::readFromNetwork() {
         handle.logMessage(LOGFAIL, "Error in stochasticdata - initial value outside bounds for parameter", switches[i].getName());
       if (upperbound[i] < lowerbound[i])
         handle.logMessage(LOGFAIL, "Error in stochasticdata - upper bound lower than lower bound for parameter", switches[i].getName());
-      if ((lowerbound[i] < 0) && (upperbound[i] > 0))
+      if ((lowerbound[i] < 0.0) && (upperbound[i] > 0.0))
         handle.logMessage(LOGWARN, "Warning in stochasticdata - bounds span zero for parameter", switches[i].getName());
     }
   }

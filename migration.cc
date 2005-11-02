@@ -360,11 +360,11 @@ void MigrationNumbers::Reset() {
       for (j = 0; j < readMigration[i]->Nrow(); j++) {
         if (isZero((*readMigration[i])[j][k])) {
           (*calcMigration[i])[j][k] = 0.0;
-        } else if ((*readMigration[i])[j][k] < 0) {
+        } else if ((*readMigration[i])[j][k] < 0.0) {
           penalty.resize(1, (*readMigration[i])[j][k]);
           (*calcMigration[i])[j][k] = 0.0;
           handle.logMessage(LOGWARN, "Warning in migration - value outside bounds", (*readMigration[i])[j][k]);
-        } else if ((*readMigration[i])[j][k] > 1) {
+        } else if ((*readMigration[i])[j][k] > 1.0) {
           penalty.resize(1, (*readMigration[i])[j][k]);
           (*calcMigration[i])[j][k] = 1.0;
           handle.logMessage(LOGWARN, "Warning in migration - value outside bounds", (*readMigration[i])[j][k]);

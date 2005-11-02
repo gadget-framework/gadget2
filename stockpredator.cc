@@ -119,7 +119,7 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
   if ((handle.getLogLevel() >= LOGWARN) && (TimeInfo->getTime() == 1)) {
     int i;
     for (i = 0; i < consParam.Size(); i++)
-      if (consParam[i] < 0)
+      if (consParam[i] < 0.0)
         handle.logMessage(LOGWARN, "Warning in stockpredator - negative consumption parameter", consParam[i]);
   }
 }

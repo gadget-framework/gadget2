@@ -43,15 +43,15 @@ void OptInfoBFGS::read(CommentStream& infile, char* text) {
   }
 
   //check the values specified in the optinfo file ...
-  if ((beta < rathersmall) || (beta > 1)) {
+  if ((beta < rathersmall) || (beta > 1.0)) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of beta outside bounds", beta);
     beta = 0.3;
   }
-  if ((sigma < rathersmall)|| (sigma > 1)) {
+  if ((sigma < rathersmall)|| (sigma > 1.0)) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of sigma outside bounds", sigma);
     sigma = 0.01;
   }
-  if (step < 1) {
+  if (step < 1.0) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of step outside bounds", step);
     step = 1.0;
   }
@@ -59,11 +59,11 @@ void OptInfoBFGS::read(CommentStream& infile, char* text) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of bfgseps outside bounds", bfgseps);
     bfgseps = 0.01;
   }
-  if ((gradacc < rathersmall) || (gradacc > 1)) {
+  if ((gradacc < rathersmall) || (gradacc > 1.0)) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of gradacc outside bounds", gradacc);
     gradacc = 1e-6;
   }
-  if ((gradstep < rathersmall) || (gradstep > 1)) {
+  if ((gradstep < rathersmall) || (gradstep > 1.0)) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of gradstep outside bounds", gradstep);
     gradstep = 0.5;
   }

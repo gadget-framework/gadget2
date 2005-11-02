@@ -153,7 +153,7 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
           << LgrpDiv->meanLength(len) << sep;
 
         //JMB crude filter to remove the 'silly' values from the output
-        if (((*alptr)[a][age][len].N < rathersmall) || ((*alptr)[a][age][len].W < 0))
+        if (((*alptr)[a][age][len].N < rathersmall) || ((*alptr)[a][age][len].W < 0.0))
           outfile << setw(width) << 0 << sep << setw(width) << 0 << endl;
         else
           outfile << setprecision(precision) << setw(width) << (*alptr)[a][age][len].N << sep

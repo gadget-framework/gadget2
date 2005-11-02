@@ -109,7 +109,7 @@ void OptInfoBFGS::gradient(DoubleVector& point, double pointvalue, DoubleVector&
       gtmp[j] = point[j];
 
     //JMB - the scaled parameter values should aways be positive ...
-    if (point[i] < 0)
+    if (point[i] < 0.0)
       handle.logMessage(LOGINFO, "Error in BFGS - negative parameter when calculating the gradient", point[i]);
 
     tmpacc = gradacc * max(point[i], 1.0);

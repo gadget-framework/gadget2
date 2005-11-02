@@ -393,7 +393,7 @@ void RenewalData::Reset() {
 
   index = 0;
   if (readoption == 0) {
-    for (i = 0; i < renewalDistribution.Size(); i++) {
+    for (i = 0; i < renewalTime.Size(); i++) {
       age = renewalAge[i];
       sum = 0.0;
 
@@ -416,13 +416,13 @@ void RenewalData::Reset() {
 
         renewalDistribution[i][age][l].N *= sum;
         renewalDistribution[i][age][l].W = refWeight[l] * relCond[i];
-        if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0))
+        if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
           handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
       }
     }
 
   } else if (readoption == 1) {
-    for (i = 0; i < renewalDistribution.Size(); i++) {
+    for (i = 0; i < renewalTime.Size(); i++) {
       age = renewalAge[i];
       sum = 0.0;
 
@@ -445,13 +445,13 @@ void RenewalData::Reset() {
 
         renewalDistribution[i][age][l].N *= sum;
         renewalDistribution[i][age][l].W = alpha[i] * pow(LgrpDiv->meanLength(l), beta[i]);
-        if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0))
+        if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
           handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
       }
     }
 
   } else if (readoption == 2) {
-    for (i = 0; i < renewalDistribution.Size(); i++) {
+    for (i = 0; i < renewalTime.Size(); i++) {
       age = renewalAge[i];
       minage = renewalDistribution[i].minAge();
       for (l = renewalDistribution[i].minLength(age);
@@ -459,9 +459,9 @@ void RenewalData::Reset() {
 
         renewalDistribution[i][age][l].N = (*renewalNumber[i])[age - minage][l];
         if (handle.getLogLevel() >= LOGWARN) {
-          if (renewalDistribution[i][age][l].N < 0)
+          if (renewalDistribution[i][age][l].N < 0.0)
             handle.logMessage(LOGWARN, "Warning in renewal - negative number of recruits", renewalDistribution[i][age][l].N);
-          if ((isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0))
+          if ((isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
             handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
         }
       }

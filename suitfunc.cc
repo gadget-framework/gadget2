@@ -78,9 +78,9 @@ ExpSuitFuncA::~ExpSuitFuncA() {
 double ExpSuitFuncA::calculate() {
   double check = 0.0;
 
-  if (coeff[0] < 0 && coeff[1] < 0)
+  if (coeff[0] < 0.0 && coeff[1] < 0.0)
     check = coeff[3] / (1.0 + exp(-(coeff[0] - coeff[1] * preyLength + coeff[2] * predLength)));
-  else if (coeff[0] > 0 && coeff[1] > 0)
+  else if (coeff[0] > 0.0 && coeff[1] > 0.0)
     check = coeff[3] / (1.0 + exp(-(-coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
   else
     check = coeff[3] / (1.0 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
@@ -143,7 +143,7 @@ double AndersenSuitFunc::calculate() {
 
   if (isZero(q))
     q = 1.0;
-  if (q < 0)
+  if (q < 0.0)
     q = -q;
 
   e = (l - coeff[1]) * (l - coeff[1]);
@@ -267,9 +267,9 @@ RichardsSuitFunc::~RichardsSuitFunc() {
 double RichardsSuitFunc::calculate() {
   double check = 0.0;
 
-  if (coeff[0] < 0 && coeff[1] < 0)
+  if (coeff[0] < 0.0 && coeff[1] < 0.0)
     check = pow(coeff[3] / (1.0 + exp(-(coeff[0] - coeff[1] * preyLength + coeff[2] * predLength))), (1.0 / coeff[4]));
-  else if (coeff[0] > 0 && coeff[1] > 0)
+  else if (coeff[0] > 0.0 && coeff[1] > 0.0)
     check = pow(coeff[3] / (1.0 + exp(-(-coeff[0] + coeff[1] * preyLength + coeff[2] * predLength))), (1.0 / coeff[4]));
   else
     check = pow(coeff[3] / (1.0 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength))), (1.0 / coeff[4]));
