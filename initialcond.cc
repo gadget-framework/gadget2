@@ -73,6 +73,11 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
 
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in initial conditions - found no data in the data file");
+  else if (count < (noareas * noagegr))
+    handle.logMessage(LOGWARN, "Warning in initial conditions - missing entries from data file");
+  else if (count > (noareas * noagegr))
+    handle.logMessage(LOGWARN, "Warning in initial conditions - repeated entries in data file");
+
   handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   areaFactor.Inform(keeper);
   ageFactor.Inform(keeper);
@@ -150,6 +155,11 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
 
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in initial conditions - found no data in the data file");
+  else if (count < (noareas * noagegr))
+    handle.logMessage(LOGWARN, "Warning in initial conditions - missing entries from data file");
+  else if (count > (noareas * noagegr))
+    handle.logMessage(LOGWARN, "Warning in initial conditions - repeated entries in data file");
+
   handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   areaFactor.Inform(keeper);
   ageFactor.Inform(keeper);
@@ -245,6 +255,11 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
 
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in initial conditions - found no data in the data file");
+  else if (count < (noareas * noagegr * nolengr))
+    handle.logMessage(LOGWARN, "Warning in initial conditions - missing entries from data file");
+  else if (count > (noareas * noagegr * nolengr))
+    handle.logMessage(LOGWARN, "Warning in initial conditions - repeated entries in data file");
+
   handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   keeper->clearLast();
 }
@@ -458,7 +473,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
         for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           initialPop[area][age][l].N *= scaler;
           initialPop[area][age][l].W = refWeight[l] * relCond[area][age - minage];
-          if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0))
+          if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
             handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
         }
       }
@@ -486,7 +501,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
         for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           initialPop[area][age][l].N *= scaler;
           initialPop[area][age][l].W = alpha[area][age - minage] * pow(LgrpDiv->meanLength(l), beta[area][age - minage]);
-          if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0))
+          if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
             handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
         }
       }
@@ -499,9 +514,9 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       for (age = minage; age <= maxage; age++) {
         for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           initialPop[area][age][l].N = (*initialNumber[area])[age - minage][l];
-          if ((handle.getLogLevel() >= LOGWARN) && (initialPop[area][age][l].N < 0))
+          if ((handle.getLogLevel() >= LOGWARN) && (initialPop[area][age][l].N < 0.0))
             handle.logMessage(LOGWARN, "Warning in initial conditions - negative initial population");
-          if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0))
+          if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
             handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
         }
       }
@@ -530,7 +545,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       if ((readoption == 0) || (readoption == 1))
         mult = areaFactor[area][age - minage] * ageFactor[area][age - minage];
 
-      if (mult < 0) {
+      if (mult < 0.0) {
         handle.logMessage(LOGWARN, "Warning in initial conditions - negative stock multiplier", mult);
         mult = -mult;
       }
