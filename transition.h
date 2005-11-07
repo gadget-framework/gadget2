@@ -22,10 +22,12 @@ public:
    * \param areas is the IntVector of areas that the movements will be calculated on
    * \param age is the maximum age for the (young) stock
    * \param lgrpdiv is the LengthGroupDivision for the stock
+   * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
   Transition(CommentStream& infile, const IntVector& areas, int age,
-    const LengthGroupDivision* const lgrpdiv, Keeper* const keeper);
+    const LengthGroupDivision* const lgrpdiv,
+    const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default Transition destructor
    */

@@ -117,9 +117,9 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
   const TimeClass* const TimeInfo, const AreaClass* const Area, int minage, int maxage) {
 
   int count = 0;
-  int year, step, area, age;
-  int keepdata;
   char c;
+  int year, step, area, age, keepdata;
+  PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
 
   //We now expect to find the renewal data in the following format
   //year, step, area, age, number, mean, sdev, alpha, beta
@@ -157,8 +157,6 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
       sdevLength.resize(1, keeper);
       alpha.resize(1, keeper);
       beta.resize(1, keeper);
-
-      PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
       renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
 
       infile >> renewalMult[count] >> ws;
@@ -191,9 +189,9 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
   const TimeClass* const TimeInfo, const AreaClass* const Area, int minage, int maxage) {
 
   int count = 0;
-  int year, step, area, age;
-  int keepdata;
   char c;
+  int year, step, area, age, keepdata;
+  PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
 
   //We now expect to find the renewal data in the following format
   //year, step, area, age, number, mean, sdev, cond
@@ -230,8 +228,6 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
       meanLength.resize(1, keeper);
       sdevLength.resize(1, keeper);
       relCond.resize(1, keeper);
-
-      PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
       renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
 
       infile >> renewalMult[count] >> ws;
@@ -262,11 +258,11 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
   const TimeClass* const TimeInfo, const AreaClass* const Area, int minage, int maxage) {
 
   int count = 0;
-  int i, year, step, area, age;
-  double length;
-  int nolengr = LgrpDiv->numLengthGroups();
-  int keepdata, id, lengthid;
   char c;
+  double length;
+  int i, year, step, area, age, keepdata, id, lengthid;
+  int nolengr = LgrpDiv->numLengthGroups();
+  PopInfoIndexVector poptmp(nolengr, 0);
 
   //We now expect to find the renewal data in the following format
   //year, step, area, age, length, number, mean weight
@@ -319,7 +315,6 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
         renewalAge.resize(1, age);
         id = renewalTime.Size() - 1;
 
-        PopInfoIndexVector poptmp(nolengr, 0);
         renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
         renewalNumber.resize(1, new FormulaMatrix(maxage - minage + 1, nolengr, 0.0));
       }
@@ -366,7 +361,6 @@ void RenewalData::setCI(const LengthGroupDivision* const GivenLDiv) {
 
 void RenewalData::Print(ofstream& outfile) const {
   int i;
-
   outfile << "\nRenewal data\n\t";
   LgrpDiv->Print(outfile);
   //need to find all areas and ages for current index value ...

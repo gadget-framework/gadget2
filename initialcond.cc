@@ -452,7 +452,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
   double mult, scaler, dnorm;
 
   if (readoption == 0) {
-    for (area = 0; area < initialPop.Size(); area++) {
+    for (area = 0; area < areas.Size(); area++) {
       minage = initialPop[area].minAge();
       maxage = initialPop[area].maxAge();
       for (age = minage; age <= maxage; age++) {
@@ -480,7 +480,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
     }
 
   } else if (readoption == 1) {
-    for (area = 0; area < initialPop.Size(); area++) {
+    for (area = 0; area < areas.Size(); area++) {
       minage = initialPop[area].minAge();
       maxage = initialPop[area].maxAge();
       for (age = minage; age <= maxage; age++) {
@@ -508,7 +508,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
     }
 
   } else if (readoption == 2) {
-    for (area = 0; area < initialPop.Size(); area++) {
+    for (area = 0; area < areas.Size(); area++) {
       minage = initialPop[area].minAge();
       maxage = initialPop[area].maxAge();
       for (age = minage; age <= maxage; age++) {

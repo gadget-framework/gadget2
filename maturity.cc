@@ -312,6 +312,10 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
     maturitylength[maturitylength.Size() - 1].read(infile, TimeInfo, keeper);
   }
 
+  for (i = 0; i < maturitystep.Size(); i++)
+    if (maturitystep[i] < 1 || maturitystep[i] > TimeInfo->numSteps())
+      handle.logFileMessage(LOGFAIL, "invalid maturity step", maturitystep[i]);
+
   if (maturitylength.Size() != maturitystep.Size())
     handle.logFileMessage(LOGFAIL, "number of maturitysteps does not equal number of maturitylengths");
 

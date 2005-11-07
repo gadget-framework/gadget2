@@ -7,7 +7,7 @@
 extern ErrorHandler handle;
 
 Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
-  const LengthGroupDivision* const lgrpdiv, Keeper* const keeper)
+  const LengthGroupDivision* const lgrpdiv, const TimeClass* const TimeInfo, Keeper* const keeper)
   : LivesOnAreas(areas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)), age(Age) {
 
   int i;
@@ -32,6 +32,8 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
   if (infile.eof())
     handle.logFileEOFMessage(LOGFAIL);
   infile >> transitionStep >> ws;
+  if (transitionStep < 1 || transitionStep > TimeInfo->numSteps())
+    handle.logFileMessage(LOGFAIL, "invalid transition step", transitionStep);
   keeper->clearLast();
 }
 

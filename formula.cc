@@ -1,5 +1,6 @@
 #include "formula.h"
 #include "errorhandler.h"
+#include "mathfunc.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
@@ -68,7 +69,9 @@ double Formula::evalFunction() const {
       break;
 
     case DIV:
-      if (argList.size() == 1) {
+      if (argList.size() == 0) {
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for divide");
+      } else if (argList.size() == 1) {
         if (!isZero(*(argList[0]))) {
           v = 1.0 / (*(argList[0]));
         } else {
@@ -93,7 +96,9 @@ double Formula::evalFunction() const {
       break;
 
     case MINUS:
-      if (argList.size() == 1) {
+      if (argList.size() == 0) {
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for minus");
+      } else if (argList.size() == 1) {
         v = -(*(argList[0]));
       } else {
         v = *(argList[0]);
@@ -137,6 +142,13 @@ double Formula::evalFunction() const {
         v = sqrt(*(argList[0]));
       else
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for sqrt");
+      break;
+
+    case RAND:
+      if (argList.size() == 0)
+        v = randomNumber();
+      else
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for random");
       break;
 
     default:
@@ -201,25 +213,27 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     char text[MaxStrLength];
     strncpy(text, "", MaxStrLength);
     infile >> ws >> text >> ws;
-    if (strcasecmp(text,"*") == 0)
+    if (strcasecmp(text,"*") == 0) {
       F.functiontype = MULT;
-    else if (strcasecmp(text,"/") == 0)
+    } else if (strcasecmp(text,"/") == 0) {
       F.functiontype = DIV;
-    else if (strcasecmp(text,"+") == 0)
+    } else if (strcasecmp(text,"+") == 0) {
       F.functiontype = PLUS;
-    else if (strcasecmp(text,"-") == 0)
+    } else if (strcasecmp(text,"-") == 0) {
       F.functiontype = MINUS;
-    else if (strcasecmp(text,"sin") == 0)
+    } else if (strcasecmp(text,"sin") == 0) {
       F.functiontype = SIN;
-    else if (strcasecmp(text,"cos") == 0)
+    } else if (strcasecmp(text,"cos") == 0) {
       F.functiontype = COS;
-    else if (strcasecmp(text,"log") == 0)
+    } else if (strcasecmp(text,"log") == 0) {
       F.functiontype = LOG;
-    else if (strcasecmp(text,"exp") == 0)
+    } else if (strcasecmp(text,"exp") == 0) {
       F.functiontype = EXP;
-    else if (strcasecmp(text,"sqrt") == 0)
+    } else if (strcasecmp(text,"sqrt") == 0) {
       F.functiontype = SQRT;
-    else {
+    } else if (strcasecmp(text,"rand") == 0) {
+      F.functiontype = RAND;
+    } else {
       handle.logFileMessage(LOGFAIL, "unrecognised formula function name", text);
       return infile;
     }

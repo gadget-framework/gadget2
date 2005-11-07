@@ -14,9 +14,6 @@ OptInfo::OptInfo(int readfile, const char* filename) {
   optHJ     = NULL;
   optBFGS   = NULL;
 
-  // Initialise random number generator with system time [morten 02.02.26]
-  srand(time(NULL));
-
   if (readfile) {
     ifstream infile;
     infile.open(filename, ios::in);

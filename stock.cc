@@ -209,7 +209,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   readWordAndVariable(infile, "doesmove", doesmove);
   if (doesmove) {
     //transition handles the movements of the age group maxage:
-    transition = new Transition(infile, areas, maxage, LgrpDiv, keeper);
+    transition = new Transition(infile, areas, maxage, LgrpDiv, TimeInfo, keeper);
 
   } else
     transition = 0;
