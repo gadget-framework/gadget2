@@ -223,6 +223,21 @@ public:
    */
   int getFuncEval() const { return funceval; };
   /**
+   * \brief This function will return the current time in the simulation
+   * \return current time
+   */
+  int getCurrentTime() const { return TimeInfo->getTime(); };
+  /**
+   * \brief This function will return the current year in the simulation
+   * \return current year
+   */
+  int getCurrentYear() const { return TimeInfo->getYear(); };
+  /**
+   * \brief This function will return the current step in the simulation
+   * \return current step
+   */
+  int getCurrentStep() const { return TimeInfo->getStep(); };
+  /**
    * \brief This function will return the flag used to determine whether the Simulated Annealing optimisation has converged or not
    * \return flag
    */

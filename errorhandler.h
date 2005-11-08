@@ -48,9 +48,8 @@ public:
   int checkLogFile() { return uselog; };
   /**
    * \brief This function will log information about the finish of the current model run to std::cout and a log file if one exists
-   * \param opt is a flag to denote whether the current model run is an optimising run or not
    */
-  void logFinish(int opt);
+  void logFinish();
   /**
    * \brief This function will log a warning message
    * \param mlevel is the logging level of the message to be logged
@@ -140,6 +139,15 @@ public:
    */
   void logFileUnexpected(LogLevel mlevel, const char* msg1, const char* msg2);
   /**
+   * \brief This function will set the optimise flag for the current model run
+   * \param opt is the optimise flag to be set
+   */
+  void setRunOptimise(int opt) { runopt = opt; };
+  /**
+   * \brief This function will return the optimise flag for the current model run
+   */
+  int getRunOptimise() const { return runopt; };
+  /**
    * \brief This function will set the level of logging information used for the current model run
    * \param level is the logging level to be set
    */
@@ -158,6 +166,10 @@ protected:
    */
   StrStack* files;
 private:
+  /**
+   * \brief This is the flag used to denote whether the current run will optimise the model or not
+   */
+  int runopt;
   /**
    * \brief This is the flag used to denote whether a logfile exists or not
    */

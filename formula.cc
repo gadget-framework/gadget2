@@ -70,7 +70,7 @@ double Formula::evalFunction() const {
 
     case DIV:
       if (argList.size() == 0) {
-        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for divide");
+        v = 1.0;
       } else if (argList.size() == 1) {
         if (!isZero(*(argList[0]))) {
           v = 1.0 / (*(argList[0]));
@@ -97,7 +97,7 @@ double Formula::evalFunction() const {
 
     case MINUS:
       if (argList.size() == 0) {
-        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for minus");
+        v = 0.0;
       } else if (argList.size() == 1) {
         v = -(*(argList[0]));
       } else {
@@ -108,47 +108,41 @@ double Formula::evalFunction() const {
       break;
 
     case SIN:
-      //JMB a bit experimental - works in radians ...
-      if (argList.size() == 1)
-        v = sin(*(argList[0]));
-      else
+      //JMB note that this works in radians
+      if (argList.size() != 1)
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for sin");
+      v = sin(*(argList[0]));
       break;
 
     case COS:
-      //JMB a bit experimental - works in radians ...
-      if (argList.size() == 1)
-        v = cos(*(argList[0]));
-      else
+      //JMB note that this works in radians
+      if (argList.size() != 1)
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for cos");
+      v = cos(*(argList[0]));
       break;
 
     case LOG:
-      if (argList.size() == 1)
-        v = log(*(argList[0]));
-      else
+      if (argList.size() != 1)
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for log");
+      v = log(*(argList[0]));
       break;
 
     case EXP:
-      if (argList.size() == 1)
-        v = exp(*(argList[0]));
-      else
+      if (argList.size() != 1)
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for exp");
+      v = exp(*(argList[0]));
       break;
 
     case SQRT:
-      if (argList.size() == 1)
-        v = sqrt(*(argList[0]));
-      else
+      if (argList.size() != 1)
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for sqrt");
+      v = sqrt(*(argList[0]));
       break;
 
     case RAND:
-      if (argList.size() == 0)
-        v = randomNumber();
-      else
-        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for random");
+      if (argList.size() != 1)
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for rand");
+      v = *(argList[0]);
       break;
 
     default:
@@ -190,7 +184,7 @@ void Formula::setValue(double init) {
 
 CommentStream& operator >> (CommentStream& infile, Formula& F) {
   if (F.type != CONSTANT)
-    handle.logMessage(LOGFAIL, "Error in formula - failed to read formula");
+    handle.logFileMessage(LOGFAIL, "failed to read formula data");
 
   if (infile.fail())
     return infile;
@@ -213,26 +207,40 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     char text[MaxStrLength];
     strncpy(text, "", MaxStrLength);
     infile >> ws >> text >> ws;
-    if (strcasecmp(text,"*") == 0) {
+    if (strcasecmp(text, "*") == 0) {
       F.functiontype = MULT;
-    } else if (strcasecmp(text,"/") == 0) {
+
+    } else if (strcasecmp(text, "/") == 0) {
       F.functiontype = DIV;
-    } else if (strcasecmp(text,"+") == 0) {
+
+    } else if (strcasecmp(text, "+") == 0) {
       F.functiontype = PLUS;
-    } else if (strcasecmp(text,"-") == 0) {
+
+    } else if (strcasecmp(text, "-") == 0) {
       F.functiontype = MINUS;
-    } else if (strcasecmp(text,"sin") == 0) {
+
+    } else if (strcasecmp(text, "sin") == 0) {
       F.functiontype = SIN;
-    } else if (strcasecmp(text,"cos") == 0) {
+
+    } else if (strcasecmp(text, "cos") == 0) {
       F.functiontype = COS;
-    } else if (strcasecmp(text,"log") == 0) {
+
+    } else if (strcasecmp(text, "log") == 0) {
       F.functiontype = LOG;
-    } else if (strcasecmp(text,"exp") == 0) {
+
+    } else if (strcasecmp(text, "exp") == 0) {
       F.functiontype = EXP;
-    } else if (strcasecmp(text,"sqrt") == 0) {
+
+    } else if (strcasecmp(text, "sqrt") == 0) {
       F.functiontype = SQRT;
-    } else if (strcasecmp(text,"rand") == 0) {
+
+    } else if (strcasecmp(text, "rand") == 0) {
       F.functiontype = RAND;
+      Formula* f = new Formula(randomNumber());
+      F.argList.push_back(f);
+      if (handle.getRunOptimise())
+        handle.logMessage(LOGWARN, "Warning in formula - random function used for optimising run");
+
     } else {
       handle.logFileMessage(LOGFAIL, "unrecognised formula function name", text);
       return infile;

@@ -11,7 +11,8 @@ ErrorHandler::ErrorHandler() {
   files = new StrStack();
   uselog = 0;
   numwarn = 0;
-  loglevel = LOGFAIL;
+  runopt = 0;
+  loglevel = LOGINFO;
 }
 
 ErrorHandler::~ErrorHandler() {
@@ -722,12 +723,12 @@ void ErrorHandler::checkIfFailure(ios& infile, const char* text) {
   }
 }
 
-void ErrorHandler::logFinish(int opt) {
+void ErrorHandler::logFinish() {
   if (numwarn > 0)
     this->logMessage(LOGINFO, "\nTotal number of warnings was", numwarn);
 
   if (uselog) {
-    if (opt)
+    if (runopt)
       logfile << "\nGadget optimisation finished OK - runtime was ";
     else
       logfile << "\nGadget simulation finished OK - runtime was ";
@@ -738,7 +739,7 @@ void ErrorHandler::logFinish(int opt) {
   }
 
   if (loglevel >= LOGINFO) {
-    if (opt) {
+    if (runopt) {
       cout << "\nGadget optimisation finished OK - runtime was ";
 #ifndef GADGET_NETWORK
       RUNID.printTime(cout);

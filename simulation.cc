@@ -63,17 +63,17 @@ void Ecosystem::updateAgesOneArea(int area) {
 }
 
 void Ecosystem::SimulateOneTimestep() {
-  int i;
-  while (TimeInfo->getSubStep() <= TimeInfo->numSubSteps()) {
-    for (i = 0; i < basevec.Size(); i++)
-      basevec[i]->Migrate(TimeInfo);
-    for (i = 0; i < Area->numAreas(); i++)
-      this->SimulateOneAreaOneTimeSubstep(i);
+  int i, j;
+  for (i = 0; i < TimeInfo->numSubSteps(); i++) {
+    for (j = 0; j < basevec.Size(); j++)
+      basevec[j]->Migrate(TimeInfo);
+    for (j = 0; j < Area->numAreas(); j++)
+      this->SimulateOneAreaOneTimeSubstep(j);
     TimeInfo->IncrementSubstep();
   }
 
-  for (i = 0; i < Area->numAreas(); i++)
-    this->updatePopulationOneArea(i);
+  for (j = 0; j < Area->numAreas(); j++)
+    this->updatePopulationOneArea(j);
 }
 
 void Ecosystem::Simulate(int optimise, int print) {

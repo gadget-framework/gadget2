@@ -85,7 +85,7 @@ MainInfo::~MainInfo() {
 }
 
 void MainInfo::read(int aNumber, char* const aVector[]) {
-  int k, len;
+  int k;
   if (aNumber > 1) {
     k = 1;
     while (k < aNumber) {
@@ -226,6 +226,15 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         //JMB disable model printing from the commandline
         runprint = 0;
 
+      } else if (strcasecmp(aVector[k], "-seed") == 0) {
+        //JMB - experimental setting of random number seed from the commandline
+        //if the "seed" is also specified in the optinfo file then that will override
+        //any seed that is specified on the commandline
+        if (k == aNumber - 1)
+          this->showCorrectUsage(aVector[k]);
+        k++;
+        srand(atoi(aVector[k]));
+
       } else
         this->showCorrectUsage(aVector[k]);
 
@@ -291,6 +300,7 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
     runoptimise = 0;
   }
 
+  handle.setRunOptimise(runoptimise);
   if ((printLogLevel == 1) && (runoptimise == 0))
     handle.logMessage(LOGWARN, "\n** Gadget cannot disable warnings for a simulation run **");
 
@@ -363,6 +373,9 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-loglevel") == 0) {
       infile >> dummy >> ws;
       printLogLevel = dummy;
+    } else if (strcasecmp(text, "-seed") == 0) {
+      infile >> dummy >> ws;
+      srand(dummy);
     } else if (strcasecmp(text, "-printlikesummary") == 0) {
       handle.logMessage(LOGWARN, "The -printlikesummary switch is no longer supported\nSpecify a likelihoodsummaryprinter class in the model print file instead");
     } else if (strcasecmp(text, "-printlikelihood") == 0) {

@@ -154,6 +154,6 @@ int main(int aNumber, char* const aVector[]) {
     free(workingdir);
 
   delete EcoSystem;
-  handle.logFinish(main.runOptimise());
+  handle.logFinish();
   return EXIT_SUCCESS;
 }
