@@ -1,8 +1,6 @@
 #ifndef interruptinterface_h
 #define interruptinterface_h
 
-#include "ecosystem.h"
-
 /**
  * \class InterruptInterface
  * \brief This is the class used to communicate with the user after an interrupt
@@ -11,9 +9,8 @@ class InterruptInterface {
 public:
   /**
    * \brief This is the InterruptInterface constructor
-   * \param ecosystem is the Ecosystem that the model is currently simulating
    */
-  InterruptInterface(const Ecosystem& ecosystem) { eco = &ecosystem; };
+  InterruptInterface() {};
   /**
    * \brief This is the default InterruptInterface destructor
    */
@@ -36,10 +33,6 @@ private:
    * \brief This is the function used to dump the current model parameters to a file
    */
   void dumpParams();
-  /**
-   * \brief This is the Ecosystem that the model is currently simulating
-   */
-  const Ecosystem* eco;
 };
 
 #endif

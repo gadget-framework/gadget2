@@ -9,7 +9,6 @@
 #include "multinomial.h"
 #include "mathfunc.h"
 #include "stockprey.h"
-#include "ecosystem.h"
 #include "ludecomposition.h"
 #include "gadget.h"
 

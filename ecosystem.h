@@ -238,6 +238,11 @@ public:
    */
   int getCurrentStep() const { return TimeInfo->getStep(); };
   /**
+   * \brief This function will return the total number of timestep in the simulation
+   * \return number of timesteps
+   */
+  int numTotalSteps() const { return TimeInfo->numTotalSteps(); };
+  /**
    * \brief This function will return the flag used to determine whether the Simulated Annealing optimisation has converged or not
    * \return flag
    */

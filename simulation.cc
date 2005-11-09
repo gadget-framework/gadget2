@@ -116,7 +116,7 @@ void Ecosystem::Simulate(int optimise, int print) {
 
     #ifdef INTERRUPT_HANDLER
       if (interrupted) {
-        InterruptInterface ui(*this);
+        InterruptInterface ui;
         if (ui.menu() == 0) {
           handle.logMessage(LOGMESSAGE, "\n** Gadget interrupted - quitting current simulation **");
           char interruptfile[15];

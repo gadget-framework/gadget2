@@ -1,11 +1,14 @@
 #include "interruptinterface.h"
 #include "charptrvector.h"
+#include "ecosystem.h"
 #include "gadget.h"
 
+extern Ecosystem* EcoSystem;
+
 void InterruptInterface::printMenu() {
-  cout << "\nInterrupted at year " << eco->TimeInfo->getYear() << ", step "
-    << eco->TimeInfo->getStep() << " (" << eco->TimeInfo->getTime()
-    << " of " << eco->TimeInfo->numTotalSteps() << " timesteps)\n"
+  cout << "\nInterrupted at year " << EcoSystem->getCurrentYear() << ", step "
+    << EcoSystem->getCurrentStep() << " (" << EcoSystem->getCurrentTime()
+    << " of " << EcoSystem->numTotalSteps() << " timesteps)\n"
     << " q   ->  quit simulation\n"
     << " c   ->  continue simulation\n"
     << " p   ->  write current parameters to file\n"
@@ -43,6 +46,8 @@ int InterruptInterface::menu() {
       case '?':
         printMenu();
         break;
+      default:
+        break;      
     }
   }
   cout << "\nContinuing current simulation ...\n";
@@ -54,12 +59,12 @@ void InterruptInterface::dumpAll() {
   char interruptfile[15];
   strncpy(interruptfile, "", 15);
   strcpy(interruptfile, "modeldump.out");
-  eco->writeStatus(interruptfile);
+  EcoSystem->writeStatus(interruptfile);
 }
 
 void InterruptInterface::dumpParams() {
   char interruptfile[15];
   strncpy(interruptfile, "", 15);
   strcpy(interruptfile, "current.out");
-  eco->writeParams(interruptfile, 0);
+  EcoSystem->writeParams(interruptfile, 0);
 }

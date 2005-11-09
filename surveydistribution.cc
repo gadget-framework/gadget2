@@ -6,7 +6,7 @@
 #include "mathfunc.h"
 #include "areatime.h"
 #include "stock.h"
-#include "ecosystem.h"
+#include "suitfuncptrvector.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
