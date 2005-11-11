@@ -6,6 +6,8 @@
 extern Ecosystem* EcoSystem;
 
 void InterruptInterface::printMenu() {
+  if (EcoSystem->getFuncEval() != 0)
+    cout << "\nInterrupted after " << EcoSystem->getFuncEval() << " iterations ...";
   cout << "\nInterrupted at year " << EcoSystem->getCurrentYear() << ", step "
     << EcoSystem->getCurrentStep() << " (" << EcoSystem->getCurrentTime()
     << " of " << EcoSystem->numTotalSteps() << " timesteps)\n"
