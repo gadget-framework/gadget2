@@ -80,6 +80,17 @@ public:
    * \return maxconbylength, a DoubleVector containing the maximum consumption of the predator
    */
   const DoubleVector& getMaxConsumption(int area) const { return maxcons[this->areaNum(area)]; };
+  /**
+   * \brief This will return the minimum age of the predator
+   * \return minimum age
+   */
+  int minAge() const { return Alkeys[0].minAge(); };
+  /**
+   * \brief This will return the maximum age of the predator
+   * \return maximum age
+   */
+  int maxAge() const { return Alkeys[0].maxAge(); };
+  AgeBandMatrix& getAgeLengthKeys(int area) { return Alkeys[this->areaNum(area)]; };
 protected:
   /**
    * \brief This is the FormulaVector used to store the consumption parameters

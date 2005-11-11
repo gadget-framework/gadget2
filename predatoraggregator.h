@@ -15,7 +15,7 @@
 class PredatorAggregator {
 public:
   /**
-   * \brief This is the PredatorAggregator constructor
+   * \brief This is the PredatorAggregator constructor for length based predators
    * \param predators is the PredatorPtrVector of the predators that will be aggregated
    * \param preys is the PreyPtrVector of the preys that will be aggregated
    * \param Areas is the IntMatrix of areas that the predation can take place on
@@ -24,6 +24,17 @@ public:
    */
   PredatorAggregator(const PredatorPtrVector& predators, const PreyPtrVector& preys,
     const IntMatrix& Areas, const LengthGroupDivision* const predLgrpDiv,
+    const LengthGroupDivision* const preyLgrpDiv);
+  /**
+   * \brief This is the PredatorAggregator constructor for age based predators
+   * \param predators is the PredatorPtrVector of the predators that will be aggregated
+   * \param preys is the PreyPtrVector of the preys that will be aggregated
+   * \param Areas is the IntMatrix of areas that the predation can take place on
+   * \param predAges is the IntMatrix of the predator ages
+   * \param preyLgrpDiv is the LengthGroupDivision of the preys
+   */
+  PredatorAggregator(const PredatorPtrVector& predators, const PreyPtrVector& preys,
+    const IntMatrix& Areas, const IntMatrix& predAges,
     const LengthGroupDivision* const preyLgrpDiv);
   /**
    * \brief This is the default PredatorAggregator destructor
@@ -42,6 +53,10 @@ public:
    * \brief This function will aggregate the predation biomass data
    */
   void Sum();
+  /**
+   * \brief This function will aggregate the predation biomass data for age based predators
+   */
+  void AgeSum();
   /**
    * \brief This function will aggregate the predation number data
    */

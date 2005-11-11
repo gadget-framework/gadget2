@@ -127,9 +127,9 @@ protected:
    */
   DoubleVector predatorlengths;
   /**
-   * \brief This is the IntVector used to store predator age information
+   * \brief This is the IntMatrix used to store predator age information
    */
-  IntVector predatorages;
+  IntMatrix predatorages;
   /**
    * \brief This is the DoubleMatrix used to store prey length information
    * \note The indices for this object are [prey number][prey length]

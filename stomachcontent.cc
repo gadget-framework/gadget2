@@ -87,6 +87,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
   int numarea = 0;
 
   timeindex = 0;
+  usepredages = 0;
   scname = new char[strlen(name) + 1];
   strcpy(scname, name);
 
@@ -153,7 +154,6 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
     datafile.close();
     datafile.clear();
   } else if (strcasecmp(text, "predatorages") == 0) { //read predator ages
-    handle.logFileMessage(LOGFAIL, "\nStomach content data for age-based predators is currently not suppported");
     usepredages = 1; //predator is age structured
     readWordAndValue(infile, "ageaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
@@ -186,7 +186,10 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
 }
 
 void SC::aggregate(int i) {
-  aggregator[i]->Sum();
+  if (usepredages)
+    aggregator[i]->AgeSum();
+  else
+    aggregator[i]->Sum();
 }
 
 double SC::calcLikelihood(const TimeClass* const TimeInfo) {
@@ -274,7 +277,7 @@ void SC::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
       for (prey = 0; prey < modelConsumption[timeindex][area]->Ncol(pred); prey++) {
         outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
           << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
-          << setw(printwidth) << predatornames[pred] << sep << setw(printwidth)
+          << setw(printwidth) << predindex[pred] << sep << setw(printwidth)
           << preyindex[prey] << sep << setprecision(largeprecision) << setw(largewidth)
           << (*modelConsumption[timeindex][area])[pred][prey] << endl;
       }
@@ -414,8 +417,11 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
       }
 
       aggregator[i] = new PredatorAggregator(predators, preys, areas, predLgrpDiv[i], preyLgrpDiv[i]);
-    } else
-      handle.logMessage(LOGFAIL, "Stomach contents data for age-based predators is currently not supported");
+
+    } else {
+
+      aggregator[i] = new PredatorAggregator(predators, preys, areas, predatorages, preyLgrpDiv[i]);
+    }
   }
 }
 
@@ -427,9 +433,12 @@ void SC::Print(ofstream& outfile) const {
     outfile << predatornames[i] << sep;
 
   if (usepredages) {
-    outfile << "\n\t\tages: ";
-    for (i = 0; i < predatorages.Size(); i++)
-      outfile << predatorages[i] << sep;
+    outfile << "\n\t\tages:";
+    for (i = 0; i < predatorages.Nrow(); i++) {
+      outfile << "\n\t\t\t";
+      for (j = 0; j < predatorages.Ncol(i); j++)
+        outfile << predatorages[i][j] << sep;
+    }
     outfile << endl;
   } else {
     outfile << "\n\t\tlengths: ";
@@ -489,12 +498,10 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
   int count = 0;
   int keepdata, timeid, areaid, predid, preyid;
 
-  int numpred = 0;
   if (usepredages) //age structured predator
-    numpred = predatorages.Size();
-  else
-    numpred = predatorlengths.Size() - 1;
+    handle.logMessage(LOGFAIL, "Error in stomachcontent - age based predators cannot be used with scnumbers");
 
+  int numpred = predatorlengths.Size() - 1;
   int numarea = areas.Nrow();
   int numprey = 0;
   for (i = 0; i < preylengths.Nrow(); i++)
@@ -583,14 +590,14 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
 }
 
 double SCNumbers::calcLikelihood() {
-  int a, predl, preyl;
+  int a, pred, prey;
   MN.Reset();
   for (a = 0; a < areas.Nrow(); a++) {
     likelihoodValues[timeindex][a] = 0.0;
-    for (preyl = 0; preyl < obsConsumption[timeindex][a]->Ncol(0); preyl++) {
-      for (predl = 0; predl < mndata.Size(); predl++) {
-        mndata[predl] = (*obsConsumption[timeindex][a])[predl][preyl];
-        mndist[predl] = (*modelConsumption[timeindex][a])[predl][preyl];
+    for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(0); prey++) {
+      for (pred = 0; pred < mndata.Size(); pred++) {
+        mndata[pred] = (*obsConsumption[timeindex][a])[pred][prey];
+        mndist[pred] = (*modelConsumption[timeindex][a])[pred][prey];
       }
       likelihoodValues[timeindex][a] += MN.calcLogLikelihood(mndata, mndist);
     }
@@ -645,7 +652,7 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
 
   int numpred = 0;
   if (usepredages) //age structured predator
-    numpred = predatorages.Size();
+    numpred = predatorages.Nrow();
   else
     numpred = predatorlengths.Size() - 1;
 
@@ -752,7 +759,7 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
 
   int numpred = 0;
   if (usepredages) //age structured predator
-    numpred = predatorages.Size();
+    numpred = predatorages.Nrow();
   else
     numpred = predatorlengths.Size() - 1;
 
@@ -825,20 +832,20 @@ SCAmounts::~SCAmounts() {
 }
 
 double SCAmounts::calcLikelihood() {
-  int a, predl, preyl;
+  int a, pred, prey;
   double tmplik, lik = 0.0;
 
   for (a = 0; a < areas.Nrow(); a++) {
     likelihoodValues[timeindex][a] = 0.0;
-    for (predl = 0; predl < obsConsumption[timeindex][a]->Nrow(); predl++) {
+    for (pred = 0; pred < obsConsumption[timeindex][a]->Nrow(); pred++) {
       tmplik = 0.0;
-      for (preyl = 0; preyl < obsConsumption[timeindex][a]->Ncol(predl); preyl++) {
-        if (!(isZero((*stddev[timeindex][a])[predl][preyl])))
-          tmplik += ((*modelConsumption[timeindex][a])[predl][preyl] - (*obsConsumption[timeindex][a])[predl][preyl]) *
-            ((*modelConsumption[timeindex][a])[predl][preyl] - (*obsConsumption[timeindex][a])[predl][preyl]) /
-            ((*stddev[timeindex][a])[predl][preyl] * (*stddev[timeindex][a])[predl][preyl]);
+      for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(pred); prey++) {
+        if (!(isZero((*stddev[timeindex][a])[pred][prey])))
+          tmplik += ((*modelConsumption[timeindex][a])[pred][prey] - (*obsConsumption[timeindex][a])[pred][prey]) *
+            ((*modelConsumption[timeindex][a])[pred][prey] - (*obsConsumption[timeindex][a])[pred][prey]) /
+            ((*stddev[timeindex][a])[pred][prey] * (*stddev[timeindex][a])[pred][prey]);
       }
-      tmplik *= (*number[timeindex])[a][predl];
+      tmplik *= (*number[timeindex])[a][pred];
       lik += tmplik;
       likelihoodValues[timeindex][a] += tmplik;
     }
@@ -872,29 +879,29 @@ void SCRatios::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector&
 }
 
 double SCRatios::calcLikelihood() {
-  int a, predl, preyl;
+  int a, pred, prey;
   double scale, tmplik, tmpdivide;
   double lik = 0.0;
 
   for (a = 0; a < areas.Nrow(); a++) {
     likelihoodValues[timeindex][a] = 0.0;
-    for (predl = 0; predl < obsConsumption[timeindex][a]->Nrow(); predl++) {
+    for (pred = 0; pred < obsConsumption[timeindex][a]->Nrow(); pred++) {
       scale = 0.0;
-      for (preyl = 0; preyl < modelConsumption[timeindex][a]->Ncol(predl); preyl++)
-        scale += (*modelConsumption[timeindex][a])[predl][preyl];
+      for (prey = 0; prey < modelConsumption[timeindex][a]->Ncol(pred); prey++)
+        scale += (*modelConsumption[timeindex][a])[pred][prey];
 
       if (!(isZero(scale))) {
         tmpdivide = 1.0 / scale;
         tmplik = 0.0;
-        for (preyl = 0; preyl < obsConsumption[timeindex][a]->Ncol(predl); preyl++) {
-          if (!(isZero((*stddev[timeindex][a])[predl][preyl])))
-            tmplik += ((*modelConsumption[timeindex][a])[predl][preyl] * tmpdivide -
-              (*obsConsumption[timeindex][a])[predl][preyl]) *
-              ((*modelConsumption[timeindex][a])[predl][preyl] * tmpdivide -
-              (*obsConsumption[timeindex][a])[predl][preyl]) /
-              ((*stddev[timeindex][a])[predl][preyl] * (*stddev[timeindex][a])[predl][preyl]);
+        for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(pred); prey++) {
+          if (!(isZero((*stddev[timeindex][a])[pred][prey])))
+            tmplik += ((*modelConsumption[timeindex][a])[pred][prey] * tmpdivide -
+              (*obsConsumption[timeindex][a])[pred][prey]) *
+              ((*modelConsumption[timeindex][a])[pred][prey] * tmpdivide -
+              (*obsConsumption[timeindex][a])[pred][prey]) /
+              ((*stddev[timeindex][a])[pred][prey] * (*stddev[timeindex][a])[pred][prey]);
         }
-        tmplik *= (*number[timeindex])[a][predl];
+        tmplik *= (*number[timeindex])[a][pred];
         lik += tmplik;
         likelihoodValues[timeindex][a] += tmplik;
       }
@@ -937,7 +944,7 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
 
   int numpred = 0;
   if (usepredages) //age structured predator
-    numpred = predatorages.Size();
+    numpred = predatorages.Nrow();
   else
     numpred = predatorlengths.Size() - 1;
 
@@ -1051,25 +1058,25 @@ void SCSimple::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector&
 }
 
 double SCSimple::calcLikelihood() {
-  int a, predl, preyl;
+  int a, pred, prey;
   double scale, tmplik, tmpdivide;
   double lik = 0.0;
 
   for (a = 0; a < areas.Nrow(); a++) {
     likelihoodValues[timeindex][a] = 0.0;
-    for (predl = 0; predl < obsConsumption[timeindex][a]->Nrow(); predl++) {
+    for (pred = 0; pred < obsConsumption[timeindex][a]->Nrow(); pred++) {
       scale = 0.0;
-      for (preyl = 0; preyl < modelConsumption[timeindex][a]->Ncol(predl); preyl++)
-        scale += (*modelConsumption[timeindex][a])[predl][preyl];
+      for (prey = 0; prey < modelConsumption[timeindex][a]->Ncol(pred); prey++)
+        scale += (*modelConsumption[timeindex][a])[pred][prey];
 
       if (!(isZero(scale))) {
         tmpdivide = 1.0 / scale;
         tmplik = 0.0;
-        for (preyl = 0; preyl < obsConsumption[timeindex][a]->Ncol(predl); preyl++) {
-          tmplik += ((*modelConsumption[timeindex][a])[predl][preyl] * tmpdivide -
-              (*obsConsumption[timeindex][a])[predl][preyl]) *
-              ((*modelConsumption[timeindex][a])[predl][preyl] * tmpdivide -
-              (*obsConsumption[timeindex][a])[predl][preyl]);
+        for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(pred); prey++) {
+          tmplik += ((*modelConsumption[timeindex][a])[pred][prey] * tmpdivide -
+              (*obsConsumption[timeindex][a])[pred][prey]) *
+              ((*modelConsumption[timeindex][a])[pred][prey] * tmpdivide -
+              (*obsConsumption[timeindex][a])[pred][prey]);
         }
         lik += tmplik;
         likelihoodValues[timeindex][a] += tmplik;
