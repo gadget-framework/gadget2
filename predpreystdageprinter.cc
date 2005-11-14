@@ -2,9 +2,9 @@
 #include "predpreystdprinter.h"
 #include "areatime.h"
 #include "stockpredstdinfo.h"
+#include "runid.h"
 #include "gadget.h"
 
-#include "runid.h"
 extern RunID RUNID;
 
 PredPreyStdAgePrinter::PredPreyStdAgePrinter(CommentStream& infile, const TimeClass* const TimeInfo)
@@ -38,11 +38,12 @@ void PredPreyStdAgePrinter::setPopPredAndPrey(const PopPredator* pred,
       predinfo = new StockPredStdInfo((const StockPredator*)(predator), (const StockPrey*)(prey), areas);
     else
       predinfo = new StockPredStdInfo((const StockPredator*)(predator), prey, areas);
-  } else
+  } else {
     if (IsStockPrey)
       predinfo = new PredStdInfo(predator, (const StockPrey*)(prey), areas);
     else
       predinfo = new PredStdInfo(predator, prey, areas);
+  }
 }
 
 void PredPreyStdAgePrinter::Print(const TimeClass * const TimeInfo, int printtime) {

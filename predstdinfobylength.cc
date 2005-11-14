@@ -17,11 +17,6 @@ PredStdInfoByLength::PredStdInfoByLength(const PopPredator* pred, const Prey* p,
 
   DoubleMatrix dm(predLgrpDiv->numLengthGroups(), preyLgrpDiv->numLengthGroups(), 0.0);
   BandMatrix bm(dm);
-  int i, j;
-  for (i = 0; i < bm.Nrow(); i++)
-    for (j = 0; j < bm.Ncol(i); j++)
-      bm[i][j] = 0.0;
-
   MortbyLength.resize(areas.Size(), bm);
   NconbyLength.resize(areas.Size(), bm);
   BconbyLength.resize(areas.Size(), bm);
@@ -36,11 +31,6 @@ PredStdInfoByLength::PredStdInfoByLength(const PopPredator* pred, const StockPre
 
   DoubleMatrix dm(predLgrpDiv->numLengthGroups(), preyLgrpDiv->numLengthGroups(), 0.0);
   BandMatrix bm(dm);
-  int i, j;
-  for (i = 0; i < bm.Nrow(); i++)
-    for (j = 0; j < bm.Ncol(i); j++)
-      bm[i][j] = 0.0;
-
   MortbyLength.resize(areas.Size(), bm);
   NconbyLength.resize(areas.Size(), bm);
   BconbyLength.resize(areas.Size(), bm);
@@ -56,7 +46,7 @@ void PredStdInfoByLength::Sum(const TimeClass* const TimeInfo, int area) {
   const DoubleVector& NpreyEaten = preyinfo->NconsumptionByLength(area);
   const DoubleVector& BpreyEaten = preyinfo->BconsumptionByLength(area);
   const DoubleVector& TotpreyMort = preyinfo->MortalityByLength(area);
-  const BandMatrix& BpredEaten = predator->getConsumption(area, prey->getName());
+  const DoubleMatrix& BpredEaten = predator->getConsumption(area, prey->getName());
   int predl, preyl;
   double proportion;
 

@@ -7,7 +7,6 @@
 #include "stockpreystdinfo.h"
 #include "stockprey.h"
 
-
 StockPredStdInfo::StockPredStdInfo(const StockPredator* predator,
   const StockPrey* conprey, const IntVector& Areas)
   : AbstrPredStdInfo(Areas, predator->getALProportion(Areas[0]).minRow(),
@@ -17,7 +16,7 @@ StockPredStdInfo::StockPredStdInfo(const StockPredator* predator,
     pred(predator), prey(conprey) {
 
   preyinfo = new StockPreyStdInfo(conprey, Areas);
-  predinfo = new PredStdInfoByLength(pred, prey, Areas);
+  predinfo = new PredStdInfoByLength(predator, conprey, Areas);
 }
 
 StockPredStdInfo::StockPredStdInfo(const StockPredator* predator,
@@ -26,8 +25,8 @@ StockPredStdInfo::StockPredStdInfo(const StockPredator* predator,
       predator->getALProportion(Areas[0]).maxRow(), 0, 0),
     pred(predator), prey(conprey) {
 
-  preyinfo = new PreyStdInfo(prey, Areas);
-  predinfo = new PredStdInfoByLength(pred, prey, Areas);
+  preyinfo = new PreyStdInfo(conprey, Areas);
+  predinfo = new PredStdInfoByLength(predator, conprey, Areas);
 }
 
 StockPredStdInfo::~StockPredStdInfo() {
@@ -44,7 +43,7 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   DoubleVector predBconsbyAge(Alprop.maxRow() - Alprop.minRow() + 1, 0.0);
   const BandMatrix& preyNcons = preyinfo->NconsumptionByAgeAndLength(area);
   const BandMatrix& preyBcons = preyinfo->BconsumptionByAgeAndLength(area);
-  const BandMatrix& predBcons = pred->getConsumption(area, prey->getName());
+  const DoubleMatrix& predBcons = pred->getConsumption(area, prey->getName());
 
   int predage, preyage, preyl, predl;
   double B, N, prop;

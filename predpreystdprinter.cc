@@ -98,7 +98,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
 
   for (i = 0; i < stockvec.Size(); i++) {
     if (stockvec[i]->doesEat()) {
-      if (strcasecmp(stockvec[i]->getPredator()->getName(), predname) == 0) {
+      if (strcasecmp(stockvec[i]->getName(), predname) == 0) {
         if (predator)
           handle.logMessage(LOGFAIL, "Error in predpreystdprinter - repeated predator", predname);
 
@@ -114,7 +114,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
       }
     }
     if (stockvec[i]->isEaten()) {
-      if (strcasecmp(stockvec[i]->getPrey()->getName(), preyname) == 0) {
+      if (strcasecmp(stockvec[i]->getName(), preyname) == 0) {
         if (prey)
           handle.logMessage(LOGFAIL, "Error in predpreystdprinter - repeated prey", preyname);
 

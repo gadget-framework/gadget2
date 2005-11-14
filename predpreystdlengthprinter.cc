@@ -2,9 +2,9 @@
 #include "predpreystdprinter.h"
 #include "predstdinfo.h"
 #include "areatime.h"
+#include "runid.h"
 #include "gadget.h"
 
-#include "runid.h"
 extern RunID RUNID;
 
 PredPreyStdLengthPrinter::PredPreyStdLengthPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
