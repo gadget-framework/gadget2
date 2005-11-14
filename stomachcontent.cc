@@ -1,6 +1,7 @@
 #include "stomachcontent.h"
 #include "areatime.h"
 #include "predator.h"
+#include "stockpredator.h"
 #include "prey.h"
 #include "predatoraggregator.h"
 #include "readfunc.h"
@@ -332,6 +333,7 @@ SC::~SC() {
 
 void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys) {
   int i, j, k, l, found;
+  int minage, maxage;
   PredatorPtrVector predators;
   aggregator = new PredatorAggregator*[preyindex.Size()];
 
@@ -420,6 +422,32 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
 
     } else {
 
+      //check predator lengths
+      if (handle.getLogLevel() >= LOGWARN) {
+        minage = 9999;
+        maxage = -1;
+        for (j = 0; j < predatorages.Nrow(); j++) {
+          for (k = 0; k < predatorages.Ncol(j); k++) {
+            minage = min(predatorages[j][k], minage);
+            maxage = max(predatorages[j][k], maxage);
+          }
+        }
+
+        found = 0;
+        for (j = 0; j < predators.Size(); j++)
+          if (minage >= ((StockPredator*)(predators[j]))->minAge())
+            found++;
+        if (found == 0)
+          handle.logMessage(LOGWARN, "Warning in stomachcontent - minimum age less than predator age");
+
+        found = 0;
+        for (j = 0; j < predators.Size(); j++)
+          if (maxage <= ((StockPredator*)(predators[j]))->maxAge())
+            found++;
+        if (found == 0)
+          handle.logMessage(LOGWARN, "Warning in stomachcontent - maximum age greater than predator age");
+      }
+      
       aggregator[i] = new PredatorAggregator(predators, preys, areas, predatorages, preyLgrpDiv[i]);
     }
   }
