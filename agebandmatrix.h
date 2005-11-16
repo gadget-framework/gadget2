@@ -53,7 +53,7 @@ public:
   int minLength(int age) const { return v[age - minage]->minCol(); };
   int maxLength(int age) const { return v[age - minage]->maxCol(); };
   void sumColumns(PopInfoVector& Result) const;
-  void Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Number);
+  void Subtract(const DoubleVector& Ratio, const ConversionIndex& CI);
   void Multiply(const DoubleVector& Ratio);
   void setToZero();
   void IncrementAge();

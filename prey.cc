@@ -48,6 +48,7 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname)
     handle.logMessage(LOGFAIL, "Error in prey - energy content must be non-zero");
 
   //read from file - initialise things
+  maxRatio = MaxRatioConsumed;
   int numlen = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
   PopInfo nullpop;
@@ -59,6 +60,7 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname)
   isoverconsumption.resize(numarea, 0);
   total.resize(numarea, 0.0);
   ratio.AddRows(numarea, numlen, 0.0);
+  consratio.AddRows(numarea, numlen, 0.0);
   overcons.AddRows(numarea, numlen, 0.0);
   overconsumption.AddRows(numarea, numlen, 0.0);
 
@@ -76,6 +78,7 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas,
     handle.logMessage(LOGFAIL, "Error in prey - failed to create length group");
   CI = new ConversionIndex(LgrpDiv, LgrpDiv);
 
+  maxRatio = MaxRatioConsumed;
   int numlen = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
   PopInfo nullpop;
@@ -87,6 +90,7 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas,
   isoverconsumption.resize(numarea, 0);
   total.resize(numarea, 0.0);
   ratio.AddRows(numarea, numlen, 0.0);
+  consratio.AddRows(numarea, numlen, 0.0);
   overcons.AddRows(numarea, numlen, 0.0);
   overconsumption.AddRows(numarea, numlen, 0.0);
 }
@@ -125,12 +129,13 @@ void Prey::Print(ofstream& outfile) const {
 //reduce the population of the stock by the consumption
 void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
   int i, inarea = this->areaNum(area);
-  DoubleVector subConsume(cons[inarea].Size(), 0.0);
-  for (i = 0; i < subConsume.Size(); i++)
-    if (!(isZero(preynumber[inarea][i].W)))
-      subConsume[i] = cons[inarea][i] / preynumber[inarea][i].W ;
-
-  Alkeys.Subtract(subConsume, *CI, preynumber[inarea]);
+  for (i = 0; i < cons[inarea].Size(); i++) {
+    if (ratio[inarea][i] > maxRatio)
+      consratio[inarea][i] = 1.0 - maxRatio;
+    else
+      consratio[inarea][i] = 1.0 - ratio[inarea][i];
+  }
+  Alkeys.Subtract(consratio[inarea], *CI);
 }
 
 //adds the consumption by biomass
@@ -158,7 +163,7 @@ void Prey::addNumbersConsumption(int area, const DoubleVector& predcons) {
 void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
   int i, temp = 0;
   int inarea = this->areaNum(area);
-  double maxRatio, rat;
+  double rat;
 
   maxRatio = MaxRatioConsumed;
   if (TimeInfo->numSubSteps() != 1)
@@ -191,6 +196,7 @@ void Prey::Reset() {
     for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
       preynumber[area][l].N = 0.0;
       preynumber[area][l].W = 0.0;
+      consratio[area][l] = 0.0;
       ratio[area][l] = 0.0;
       biomass[area][l] = 0.0;
       consumption[area][l] = 0.0;

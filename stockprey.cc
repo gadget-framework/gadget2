@@ -11,20 +11,18 @@ StockPrey::StockPrey(CommentStream& infile, const IntVector& Areas,
 }
 
 void StockPrey::Sum(const AgeBandMatrix& stock, int area) {
+  PopInfo sum;
   int i, inarea = this->areaNum(area);
 
   Alkeys[inarea].setToZero();
   Alkeys[inarea].Add(stock, *CI);
   Alkeys[inarea].sumColumns(preynumber[inarea]);
-
-  PopInfo sum;
   for (i = 0; i < preynumber.Ncol(inarea); i++) {
     sum += preynumber[inarea][i];
     biomass[inarea][i] = preynumber[inarea][i].N * preynumber[inarea][i].W;
     cons[inarea][i] = 0.0;
   }
   total[inarea] = sum.N * sum.W;
-  isoverconsumption[inarea] = 0;
 }
 
 void StockPrey::Print(ofstream& outfile) const {

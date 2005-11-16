@@ -1,6 +1,5 @@
 #include "popinfovector.h"
 #include "popinfoindexvector.h"
-#include "doubleindexvector.h"
 #include "conversionindex.h"
 #include "mathfunc.h"
 #include "popinfo.h"

@@ -2,7 +2,6 @@
 #define popinfoindexvector_h
 
 #include "popinfo.h"
-#include "doubleindexvector.h"
 #include "conversionindex.h"
 
 /**

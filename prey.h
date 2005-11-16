@@ -187,6 +187,10 @@ protected:
    */
   double energy;
   /**
+   * \brief This is the maximum ratio of the prey that can be consumed on any given timestep
+   */
+  double maxRatio;
+  /**
    * \brief This is the DoubleMatrix used to store information on the biomass of the prey that is available for the predators to consume on the current timestep
    * \note The indices for this object are [area][prey length]
    */
@@ -224,6 +228,11 @@ protected:
    * \brief This is the IntVector used to store information on whether any overconsumption has occured on the current timestep
    */
   IntVector isoverconsumption;
+  /**
+   * \brief This is the DoubleMatrix used to store information on the ratio of the prey to subtract on the current timestep
+   * \note The indices for this object are [area][prey length]
+   */
+  DoubleMatrix consratio;
   /**
    * \brief This denotes what type of prey class has been created
    */

@@ -63,22 +63,12 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
   }
 }
 
-void AgeBandMatrix::Subtract(const DoubleVector& Consumption, const ConversionIndex& CI, const PopInfoVector& Number) {
+void AgeBandMatrix::Subtract(const DoubleVector& Ratio, const ConversionIndex& CI) {
 
   if (CI.isFiner() == 1)
     handle.logMessage(LOGWARN, "Warning in agebandmatrix - target is finer for subtract");
-  if (Consumption.Size() != Number.Size())
-    handle.logMessage(LOGWARN, "Warning in agebandmatrix - different sizes in subtract");
 
   int i, j, j1, j2, offset;
-  DoubleVector Ratio(Consumption.Size(), 1.0);
-  for (i = 0; i < Consumption.Size(); i++) {
-    if (Number[i].N > verysmall)
-      Ratio[i] = 1.0 - (Consumption[i] / Number[i].N);
-    if (Ratio[i] < verysmall)
-      Ratio[i] = 0.0;
-  }
-
   if (CI.isSameDl()) {
     offset = CI.getOffset();
     for (i = 0; i < nrow; i++) {

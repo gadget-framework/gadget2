@@ -15,7 +15,7 @@ GADGET = gadget
 ##########################################################################
 # Pick the appropriate compiler from the following switches
 ##########################################################################
-# 1. Linux, or Cygwin, or Solaris, without pvm, g++ compiler
+# 1. Linux, or Cygwin, or Solaris, without pvm3, g++ compiler
 CXX = g++
 LIBDIRS = -L. -L/usr/local/lib
 LIBRARIES = -lm -lvec
@@ -98,8 +98,8 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
-GADGETINPUT = doubleindexvector.o intvector.o doublevector.o intmatrix.o \
-        doublematrix.o initialinputfile.o charptrvector.o commentstream.o \
+GADGETINPUT = intvector.o doublevector.o intmatrix.o doublematrix.o \
+        initialinputfile.o charptrvector.o commentstream.o \
         parameter.o parametervector.o errorhandler.o strstack.o
 
 LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
