@@ -60,7 +60,6 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname)
   total.resize(numarea, 0.0);
   ratio.AddRows(numarea, numlen, 0.0);
   consratio.AddRows(numarea, numlen, 0.0);
-  overcons.AddRows(numarea, numlen, 0.0);
   overconsumption.AddRows(numarea, numlen, 0.0);
 
   //preylenindex is not required - free up memory
@@ -89,7 +88,6 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas,
   total.resize(numarea, 0.0);
   ratio.AddRows(numarea, numlen, 0.0);
   consratio.AddRows(numarea, numlen, 0.0);
-  overcons.AddRows(numarea, numlen, 0.0);
   overconsumption.AddRows(numarea, numlen, 0.0);
 }
 
@@ -168,12 +166,10 @@ void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
     ratio[inarea][i] = rat;
     if (rat > maxRatio) {
       temp = 1;
-      overcons[inarea][i] = (rat - maxRatio) * biomass[inarea][i];
-      overconsumption[inarea][i] += overcons[inarea][i];
+      overconsumption[inarea][i] += (rat - maxRatio) * biomass[inarea][i];
       consratio[inarea][i] = 1.0 - maxRatio;
       cons[inarea][i] = biomass[inarea][i] * maxRatio;
     } else {
-      overcons[inarea][i] = 0.0;
       consratio[inarea][i] = 1.0 - rat;
     }
 
@@ -186,13 +182,7 @@ void Prey::Reset() {
   int area, l;
   for (area = 0; area < areas.Size(); area++) {
     isoverconsumption[area] = 0;
-    total[area] = 0.0;
     for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
-      preynumber[area][l].N = 0.0;
-      preynumber[area][l].W = 0.0;
-      consratio[area][l] = 0.0;
-      ratio[area][l] = 0.0;
-      biomass[area][l] = 0.0;
       consumption[area][l] = 0.0;
       overconsumption[area][l] = 0.0;
     }

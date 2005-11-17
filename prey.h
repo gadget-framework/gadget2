@@ -216,11 +216,6 @@ protected:
    */
   DoubleMatrix overconsumption;
   /**
-   * \brief This is the DoubleMatrix used to store information on the overconsumption of the prey on the current substep of the current timestep
-   * \note The indices for this object are [area][prey length]
-   */
-  DoubleMatrix overcons;
-  /**
    * \brief This is the IntVector used to store information on whether any overconsumption has occured on the current timestep
    */
   IntVector isoverconsumption;
