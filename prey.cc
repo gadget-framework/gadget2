@@ -48,7 +48,6 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname)
     handle.logMessage(LOGFAIL, "Error in prey - energy content must be non-zero");
 
   //read from file - initialise things
-  maxRatio = MaxRatioConsumed;
   int numlen = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
   PopInfo nullpop;
@@ -78,7 +77,6 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas,
     handle.logMessage(LOGFAIL, "Error in prey - failed to create length group");
   CI = new ConversionIndex(LgrpDiv, LgrpDiv);
 
-  maxRatio = MaxRatioConsumed;
   int numlen = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
   PopInfo nullpop;
@@ -128,14 +126,7 @@ void Prey::Print(ofstream& outfile) const {
 
 //reduce the population of the stock by the consumption
 void Prey::Subtract(AgeBandMatrix& Alkeys, int area) {
-  int i, inarea = this->areaNum(area);
-  for (i = 0; i < cons[inarea].Size(); i++) {
-    if (ratio[inarea][i] > maxRatio)
-      consratio[inarea][i] = 1.0 - maxRatio;
-    else
-      consratio[inarea][i] = 1.0 - ratio[inarea][i];
-  }
-  Alkeys.Subtract(consratio[inarea], *CI);
+  Alkeys.Subtract(consratio[this->areaNum(area)], *CI);
 }
 
 //adds the consumption by biomass
@@ -163,7 +154,7 @@ void Prey::addNumbersConsumption(int area, const DoubleVector& predcons) {
 void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
   int i, temp = 0;
   int inarea = this->areaNum(area);
-  double rat;
+  double maxRatio, rat;
 
   maxRatio = MaxRatioConsumed;
   if (TimeInfo->numSubSteps() != 1)
@@ -179,9 +170,12 @@ void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
       temp = 1;
       overcons[inarea][i] = (rat - maxRatio) * biomass[inarea][i];
       overconsumption[inarea][i] += overcons[inarea][i];
+      consratio[inarea][i] = 1.0 - maxRatio;
       cons[inarea][i] = biomass[inarea][i] * maxRatio;
-    } else
+    } else {
       overcons[inarea][i] = 0.0;
+      consratio[inarea][i] = 1.0 - rat;
+    }
 
     consumption[inarea][i] += cons[inarea][i];
   }

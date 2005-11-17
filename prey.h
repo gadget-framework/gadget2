@@ -187,10 +187,6 @@ protected:
    */
   double energy;
   /**
-   * \brief This is the maximum ratio of the prey that can be consumed on any given timestep
-   */
-  double maxRatio;
-  /**
    * \brief This is the DoubleMatrix used to store information on the biomass of the prey that is available for the predators to consume on the current timestep
    * \note The indices for this object are [area][prey length]
    */
