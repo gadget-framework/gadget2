@@ -10,7 +10,7 @@ void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {
   // calculate the number of preys and predators in area.
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->isInArea(area))
-      basevec[i]->calcNumbers(area, Area, TimeInfo);
+      basevec[i]->calcNumbers(area, TimeInfo);
   for (i = 0; i < basevec.Size(); i++)
     if (basevec[i]->isInArea(area))
       basevec[i]->calcEat(area, Area, TimeInfo);
@@ -93,7 +93,7 @@ void Ecosystem::Simulate(int optimise, int print) {
   TimeInfo->Reset();
   for (i = 0; i < TimeInfo->numTotalSteps(); i++) {
     for (j = 0; j < basevec.Size(); j++)
-      basevec[j]->Reset(TimeInfo);
+      basevec[j]->Reset(TimeInfo, Area);
 
     //Add in any new tagging experiments
     tagvec.updateTags(TimeInfo);

@@ -99,8 +99,9 @@ public:
   /**
    * \brief This function will implement the migration of entries from one AgeBandMatrix to another within the vector of values
    * \param MI is the DoubleMatrix describing the migration
+   * \param tmp is the PopInfoVector used to temporarily store the population during migration
    */
-  void Migrate(const DoubleMatrix& MI);
+  void Migrate(const DoubleMatrix& MI, PopInfoVector& tmp);
 protected:
   /**
    * \brief This is the vector of AgeBandMatrix values

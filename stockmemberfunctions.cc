@@ -21,7 +21,7 @@ extern ErrorHandler handle;
 
 void Stock::Migrate(const TimeClass* const TimeInfo) {
   if (doesmigrate && migration->isMigrationStep(TimeInfo)) {
-    Alkeys.Migrate(migration->getMigrationMatrix(TimeInfo));
+    Alkeys.Migrate(migration->getMigrationMatrix(TimeInfo), tmpMigrate);
     if (tagAlkeys.numTagExperiments() > 0)
       tagAlkeys.Migrate(migration->getMigrationMatrix(TimeInfo), Alkeys);
   }
@@ -30,11 +30,11 @@ void Stock::Migrate(const TimeClass* const TimeInfo) {
 //-------------------------------------------------------------------
 //Sum up into Growth+Predator and Prey Lengthgroups.  Storage is a
 //vector of PopInfo that stores the sum over each lengthgroup.
-void Stock::calcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Stock::calcNumbers(int area, const TimeClass* const TimeInfo) {
   int i, inarea = this->areaNum(area);
-  Alkeys[inarea].sumColumns(NumberInArea[inarea]);
+  Alkeys[inarea].sumColumns(tmpPopulation[inarea]);
   if (doesgrow)
-    grower->Sum(NumberInArea[inarea], area);
+    grower->Sum(tmpPopulation[inarea], area);
   if (iseaten) {
     prey->Sum(Alkeys[inarea], area);
     for (i = 0; i < allTags.Size(); i++)
@@ -113,7 +113,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 
   } else {
     //New weights at length are calculated
-    grower->implementGrowth(area, NumberInArea[inarea], LgrpDiv);
+    grower->implementGrowth(area, tmpPopulation[inarea], LgrpDiv);
     if (doesmature && maturity->isMaturationStep(TimeInfo))
       Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeightIncrease(area), maturity, TimeInfo, area);
     else

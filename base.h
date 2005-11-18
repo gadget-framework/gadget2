@@ -32,6 +32,12 @@ public:
    */
   virtual ~BaseClass() {};
   /**
+   * \brief This function will update the model population for an area in the model
+   * \param area is an integer to denote the internal area of interest
+   * \param TimeInfo is the TimeClass for the current model
+   */
+  virtual void calcNumbers(int area, const TimeClass* const TimeInfo) = 0;
+  /**
    * \brief This function will calculate the modelled consumption for an area in the model
    * \param area is an integer to denote the internal area of interest
    * \param Area is the AreaClass for the current model
@@ -112,13 +118,6 @@ public:
    */
   virtual void updatePopulationPart5(int area, const TimeClass* const TimeInfo) = 0;
   /**
-   * \brief This function will update the model population for an area in the model
-   * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
-   * \param TimeInfo is the TimeClass for the current model
-   */
-  virtual void calcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) = 0;
-  /**
    * \brief This function will implement the migration of the model population for the model
    * \param TimeInfo is the TimeClass for the current model
    */
@@ -126,8 +125,9 @@ public:
   /**
    * \brief This function will reset the model population
    * \param TimeInfo is the TimeClass for the current model
+   * \param Area is the AreaClass for the current model
    */
-  virtual void Reset(const TimeClass* const TimeInfo) = 0;
+  virtual void Reset(const TimeClass* const TimeInfo, const AreaClass* const Area) = 0;
   /**
    * \brief This function will print the model population
    * \param outfile is the ofstream that all the model information gets sent to

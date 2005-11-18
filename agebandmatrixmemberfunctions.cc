@@ -218,10 +218,8 @@ void AgeBandMatrix::printWeights(ofstream& outfile) const {
   }
 }
 
-void AgeBandMatrixPtrVector::Migrate(const DoubleMatrix& MI) {
-  PopInfoVector tmp(size);
+void AgeBandMatrixPtrVector::Migrate(const DoubleMatrix& MI, PopInfoVector& tmp) {
   int i, j, age, length;
-
   for (age = v[0]->minAge(); age <= v[0]->maxAge(); age++) {
     for (length = v[0]->minLength(age); length < v[0]->maxLength(age); length++) {
       for (j = 0; j < size; j++) {

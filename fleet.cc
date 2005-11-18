@@ -88,6 +88,11 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   subfile.close();
   subfile.clear();
 
+  //resize tmpPopulation, and set the weight to 1 since this will never change
+  PopInfo tmppop;
+  tmppop.W = 1.0;
+  tmpPopulation.AddRows(Area->numAreas(), 1, tmppop);
+
   keeper->clearLast();
   keeper->clearLast();
 }
@@ -109,20 +114,18 @@ void Fleet::adjustEat(int area, const TimeClass* const TimeInfo) {
     predator->adjustConsumption(area, TimeInfo);
 }
 
-void Fleet::calcNumbers(int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void Fleet::calcNumbers(int area, const TimeClass* const TimeInfo) {
 
-  if (this->isFleetStepArea(area, TimeInfo)) {
-    PopInfo pop;
-    pop.N = amount[TimeInfo->getTime()][this->areaNum(area)];
-    pop.W = 1.0;
-    PopInfoVector NumberInArea(1, pop);
-    predator->Sum(NumberInArea, area);
-  }
+  if (this->isFleetStepArea(area, TimeInfo))
+    predator->Sum(tmpPopulation[this->areaNum(area)], area);
 }
 
-void Fleet::Reset(const TimeClass* const TimeInfo) {
+void Fleet::Reset(const TimeClass* const TimeInfo, const AreaClass* const Area) {
+  int i;
   predator->Reset(TimeInfo);
+  for (i = 0; i < tmpPopulation.Nrow(); i++)
+    if (this->isFleetStepArea(i, TimeInfo))
+      tmpPopulation[this->areaNum(i)][0].N = amount[TimeInfo->getTime()][this->areaNum(i)];
 }
 
 void Fleet::Print(ofstream& outfile) const {
@@ -135,7 +138,7 @@ LengthPredator* Fleet::getPredator() const {
 }
 
 int Fleet::isFleetStepArea(int area, const TimeClass* const TimeInfo) {
-  if (isZero(predator->multScaler()))
+  if ((this->isInArea(area) == 0) || isZero(predator->multScaler()))
     return 0;
   if (amount[TimeInfo->getTime()][this->areaNum(area)] < 0.0)
     handle.logMessage(LOGWARN, "Warning in fleet - negative amount consumed");

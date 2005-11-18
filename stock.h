@@ -54,10 +54,9 @@ public:
   /**
    * \brief This function will update the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void calcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void calcNumbers(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will reduce the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
@@ -141,8 +140,9 @@ public:
   /**
    * \brief This function will reset the model population
    * \param TimeInfo is the TimeClass for the current model
+   * \param Area is the AreaClass for the current model
    */
-  virtual void Reset(const TimeClass* const TimeInfo);
+  virtual void Reset(const TimeClass* const TimeInfo, const AreaClass* const Area);
   /**
    * \brief This function will print the model population
    * \param outfile is the ofstream that all the model information gets sent to
@@ -347,9 +347,13 @@ protected:
    */
   int birthdate;
   /**
-   * \brief This is the PopInfoMatrix used to temporarily store the population on each area
+   * \brief This is the PopInfoMatrix used to temporarily store the population during the growth calculation
    */
-  PopInfoMatrix NumberInArea;
+  PopInfoMatrix tmpPopulation;
+  /**
+   * \brief This is the PopInfoVector used to temporarily store the population during the migration calculation
+   */
+  PopInfoVector tmpMigrate;
 };
 
 #endif

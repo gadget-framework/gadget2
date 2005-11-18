@@ -110,6 +110,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   handle.logMessage(LOGMESSAGE, "Read basic stock data for stock", this->getName());
 
   //read the growth function data
+  tmpPopulation.AddRows(areas.Size(), LgrpDiv->numLengthGroups());
   readWordAndVariable(infile, "doesgrow", doesgrow);
   if (doesgrow)
     grower = new Grower(infile, LgrpDiv, GrowLgrpDiv, areas, TimeInfo, keeper, refweight, Area, grlenindex);
@@ -153,6 +154,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //read the migration data
   readWordAndVariable(infile, "doesmigrate", doesmigrate);
   if (doesmigrate) {
+    tmpMigrate.resize(areas.Size());
     infile >> ws;
     c = infile.peek();
     if ((c == 'y') || (c == 'Y')) {
@@ -266,8 +268,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //set the birthday for the stock
   birthdate = TimeInfo->numSteps();
 
-  //Finished reading from infile - resize objects and clean up
-  NumberInArea.AddRows(areas.Size(), LgrpDiv->numLengthGroups());
+  //finished reading from infile
   delete GrowLgrpDiv;
   for (i = 0; i < grlenindex.Size(); i++)
     delete[] grlenindex[i];
@@ -309,7 +310,7 @@ Stock::~Stock() {
     delete stray;
 }
 
-void Stock::Reset(const TimeClass* const TimeInfo) {
+void Stock::Reset(const TimeClass* const TimeInfo, const AreaClass* const Area) {
   naturalm->Reset(TimeInfo);
   if (doeseat)
     predator->Reset(TimeInfo);

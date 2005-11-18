@@ -119,10 +119,9 @@ public:
   /**
    * \brief This function will update the model population for an area in the model
    * \param area is an integer to denote the internal area of interest
-   * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void calcNumbers(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
+  virtual void calcNumbers(int area, const TimeClass* const TimeInfo);
   /**
    * \brief This function will implement the migration of the model population for the model
    * \param TimeInfo is the TimeClass for the current model
@@ -131,8 +130,9 @@ public:
   /**
    * \brief This function will reset the model population
    * \param TimeInfo is the TimeClass for the current model
+   * \param Area is the AreaClass for the current model
    */
-  virtual void Reset(const TimeClass* const TimeInfo);
+  virtual void Reset(const TimeClass* const TimeInfo, const AreaClass* const Area);
   /**
    * \brief This will return the fleet, as a predator type, for use in other functions
    * \return predator
@@ -166,6 +166,10 @@ protected:
    * \brief This is the amount of the preys that the fleet has consumed
    */
   FormulaMatrix amount;
+  /**
+   * \brief This is the PopInfoMatrix used to temporarily store the amount consumed
+   */
+  PopInfoMatrix tmpPopulation;
 private:
   /**
    * \brief This denotes what type of fleet class has been created

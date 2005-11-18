@@ -74,6 +74,11 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   } else
     handle.logFileUnexpected(LOGFAIL, "amount", text);
 
+  //resize tmpPopulation, and set the weight to 1 since this will never change
+  PopInfo tmppop;
+  tmppop.W = 1.0;
+  tmpPopulation.AddRows(Area->numAreas(), 1, tmppop);
+
   keeper->clearLast();
   keeper->clearLast();
 }
@@ -92,19 +97,15 @@ void OtherFood::checkEat(int area, const TimeClass* const TimeInfo) {
     prey->checkConsumption(area, TimeInfo);
 }
 
-void OtherFood::calcNumbers(int area,
-  const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void OtherFood::calcNumbers(int area, const TimeClass* const TimeInfo) {
 
-  if (this->isOtherFoodStepArea(area, TimeInfo)) {
-    PopInfo pop;
-    pop.W = 1.0;   //warning - need to choose the weight to be 1
-    pop.N = amount[TimeInfo->getTime()][this->areaNum(area)] * Area->getSize(area);
-    PopInfoVector NumberInArea(1, pop);
-    prey->Sum(NumberInArea, area);
-  }
+  if (this->isOtherFoodStepArea(area, TimeInfo))
+    prey->Sum(tmpPopulation[this->areaNum(area)], area);
 }
 
 int OtherFood::isOtherFoodStepArea(int area, const TimeClass* const TimeInfo) {
+  if (this->isInArea(area) == 0)
+    return 0;
   if (amount[TimeInfo->getTime()][this->areaNum(area)] < 0.0)
     handle.logMessage(LOGWARN, "Warning in otherfood - negative amount to be consumed");
   if (isZero(amount[TimeInfo->getTime()][this->areaNum(area)]))
@@ -118,6 +119,10 @@ void OtherFood::Print(ofstream& outfile) const {
   outfile << endl;
 }
 
-void OtherFood::Reset(const TimeClass* const TimeInfo) {
+void OtherFood::Reset(const TimeClass* const TimeInfo, const AreaClass* const Area) {
+  int i;
   prey->Reset();
+  for (i = 0; i < tmpPopulation.Nrow(); i++)
+    if (this->isOtherFoodStepArea(i, TimeInfo))
+      tmpPopulation[this->areaNum(i)][0].N = amount[TimeInfo->getTime()][this->areaNum(i)] * Area->getSize(i);
 }
