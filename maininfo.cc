@@ -32,9 +32,7 @@ void MainInfo::showUsage() {
     << " -p <filename>                print final model parameters to <filename>\n"
     << "                              (default filename is 'params.out')\n"
     << " -o <filename>                print likelihood output to <filename>\n"
-    << " -co <filename>               print likelihood column output to <filename>\n"
-    << " -print1 <number>             print -o output every <number> iterations\n"
-    << " -print2 <number>             print -co output every <number> iterations\n"
+    << " -print <number>              print -o output every <number> iterations\n"
     << " -precision <number>          set the precision to <number> in output files\n"
     << "\nOptions for debugging Gadget models:\n"
     << " -log <filename>              print logging information to <filename>\n"
@@ -46,7 +44,7 @@ void MainInfo::showUsage() {
 
 MainInfo::MainInfo()
   : givenOptInfo(0), givenInitialParam(0), runlikelihood(0),
-    runoptimise(0), runstochastic(0), runnetwork(0), runprint(1),
+    runoptimise(0), runstochastic(0), runnetwork(0), runprint(1), forceprint(0),
     printInitialInfo(0), printFinalInfo(0), printLogLevel(0) {
 
   char tmpname[10];
@@ -136,8 +134,8 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         k++;
         printinfo.setParamOutFile(aVector[k]);
 
-      } else if (strcasecmp(aVector[k], "-print") == 0) {
-        printinfo.setForcePrint(1);
+      } else if (strcasecmp(aVector[k], "-forceprint") == 0) {
+        forceprint = 1;
 
       } else if (strcasecmp(aVector[k], "-co") == 0) {
         if (k == aNumber - 1)
@@ -178,7 +176,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
       } else if (strcasecmp(aVector[k], "-printonelikelihood") == 0) {
         handle.logMessage(LOGFAIL, "The -printonelikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
 
-      } else if (strcasecmp(aVector[k], "-print1") == 0) {
+      } else if ((strcasecmp(aVector[k], "-print") == 0) || (strcasecmp(aVector[k], "-print1") == 0)) {
         if (k == aNumber - 1)
           this->showCorrectUsage(aVector[k]);
         k++;
@@ -314,7 +312,7 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
   check = runprint;
   if (runnetwork == 1)
     check = 0;
-  else if ((runoptimise == 1) && (printinfo.getForcePrint() == 0))
+  else if ((runoptimise == 1) && (forceprint == 0))
     check = 0;
   runprint = check;
 
@@ -353,9 +351,11 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-opt") == 0) {
       infile >> text >> ws;
       this->setOptInfoFile(text);
-    } else if (strcasecmp(text, "-print") == 0) {
-      printinfo.setForcePrint(1);
-    } else if (strcasecmp(text, "-print1") == 0) {
+    } else if (strcasecmp(text, "-forceprint") == 0) {
+      forceprint = 1;
+    } else if (strcasecmp(text, "-noprint") == 0) {
+      runprint = 0;
+    } else if ((strcasecmp(text, "-print") == 0) || (strcasecmp(text, "-print1") == 0)) {
       infile >> dummy >> ws;
       printinfo.setPrint1(dummy);
     } else if (strcasecmp(text, "-print2") == 0) {
@@ -371,8 +371,7 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-nowarnings") == 0) {
       printLogLevel = 1;
     } else if (strcasecmp(text, "-loglevel") == 0) {
-      infile >> dummy >> ws;
-      printLogLevel = dummy;
+      infile >> printLogLevel >> ws;
     } else if (strcasecmp(text, "-seed") == 0) {
       infile >> dummy >> ws;
       srand(dummy);

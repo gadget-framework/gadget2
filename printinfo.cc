@@ -4,7 +4,7 @@
 
 extern ErrorHandler handle;
 
-PrintInfo::PrintInfo() : printIter1(-2), printIter2(-2), forceprint(0),
+PrintInfo::PrintInfo() : printIter1(-2), printIter2(-2),
   printoutput(0), printcolumn(0), givenPrecision(0) {
 
   strOutputFile = NULL;
@@ -29,7 +29,6 @@ PrintInfo::PrintInfo(const PrintInfo& pi) {
   if (pi.strColumnFile != NULL)
     setColumnOutputFile(pi.strColumnFile);
 
-  forceprint = pi.forceprint;
   printoutput = pi.printoutput;
   printcolumn = pi.printcolumn;
   givenPrecision = pi.givenPrecision;

@@ -101,6 +101,11 @@ public:
    */
   int getInitialParamGiven() const { return givenInitialParam; };
   /**
+   * \brief This function will return the flag used to force the model to print the model output to file
+   * \return flag
+   */
+  int getForcePrint() const { return forceprint; };
+  /**
    * \brief This function will return the PrintInfo used to store printing information
    * \return pi, the PrintInfo containing the printing information
    */
@@ -198,6 +203,10 @@ private:
    * \brief This is the flag used to denote whether the current simulation should print model output or not
    */
   int runprint;
+  /**
+   * \brief This is the flag used to override the default settings and force the model to print model output at the end of an optimisation run
+   */
+  int forceprint;
   /**
    * \brief This is the flag used to denote whether the initial model information should be printed or not
    */

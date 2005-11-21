@@ -134,7 +134,7 @@ int main(int aNumber, char* const aVector[]) {
 
     opt->Optimise();
 
-    if ((main.getPI()).getForcePrint())
+    if (main.getForcePrint())
       EcoSystem->Simulate(0, 1);  //print and dont optimise
 
     delete opt;

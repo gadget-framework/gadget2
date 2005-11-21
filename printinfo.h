@@ -38,11 +38,6 @@ public:
    */
   void setColumnOutputFile(char* filename);
   /**
-   * \brief This function will set the flag used to force the model to print parameter values to file
-   * \param print is the value of the flag (0 or 1)
-   */
-  void setForcePrint(int print) { forceprint = print; };
-  /**
    * \brief This function will set the interval between iterations to be used when printing the model parameters to file
    * \param print is the interval
    */
@@ -88,11 +83,6 @@ public:
    */
   int getPrintColumn() const { return printcolumn; };
   /**
-   * \brief This function will return the flag used to force the model to print parameter values to file
-   * \return flag
-   */
-  int getForcePrint() const { return forceprint; };
-  /**
    * \brief This function will return the precision to be used when printing the model parameters
    * \return precision
    */
@@ -128,10 +118,6 @@ private:
    * \brief This is the interval between iterations that the model parameters should be written to file in a column format
    */
   int printIter2;
-  /**
-   * \brief This is the flag used to override the default settings and force the model to print the parameter values to file
-   */
-  int forceprint;
   /**
    * \brief This is the flag used to denote whether the model parameters should be printed or not
    */
