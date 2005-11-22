@@ -76,16 +76,14 @@ void Ecosystem::SimulateOneTimestep() {
     this->updatePopulationOneArea(j);
 }
 
-void Ecosystem::Simulate(int optimise, int print) {
+void Ecosystem::Simulate(int print) {
   int i, j;
 
   handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
   for (j = 0; j < likevec.Size(); j++)
     likevec[j]->Reset(keeper);
-
-  if (optimise)
-    for (j = 0; j < likevec.Size(); j++)
-      likevec[j]->addLikelihoodKeeper(TimeInfo, keeper);
+  for (j = 0; j < likevec.Size(); j++)
+    likevec[j]->addLikelihoodKeeper(TimeInfo, keeper);
 
   for (j = 0; j < tagvec.Size(); j++)
     tagvec[j]->Reset();
@@ -103,9 +101,8 @@ void Ecosystem::Simulate(int optimise, int print) {
         printvec[j]->Print(TimeInfo, 1);  //start of timestep, so printtime is 1
 
     this->SimulateOneTimestep();
-    if (optimise)
-      for (j = 0; j < likevec.Size(); j++)
-        likevec[j]->addLikelihood(TimeInfo);
+    for (j = 0; j < likevec.Size(); j++)
+      likevec[j]->addLikelihood(TimeInfo);
 
     if (print)
       for (j = 0; j < printvec.Size(); j++)
@@ -140,10 +137,9 @@ void Ecosystem::Simulate(int optimise, int print) {
   //Remove all the tagging experiments - they must have expired now
   tagvec.deleteAllTags();
 
-  if (optimise) {
-    likelihood = 0.0;
-    for (j = 0; j < likevec.Size(); j++)
-      likelihood += likevec[j]->getLikelihood();
-  }
+  likelihood = 0.0;
+  for (j = 0; j < likevec.Size(); j++)
+    likelihood += likevec[j]->getLikelihood();
+
   handle.logMessage(LOGMESSAGE, "The current overall likelihood score is", likelihood);
 }

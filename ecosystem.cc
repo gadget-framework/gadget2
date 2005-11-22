@@ -4,7 +4,8 @@
 extern RunID RUNID;
 extern ErrorHandler handle;
 
-Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir, const char* const workingdir)   : printinfo(main.getPI()) {
+Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir,
+  const char* const workingdir) : printinfo(main.getPI()) {
 
   funceval = 0;
   interrupted = 0;
@@ -116,7 +117,7 @@ double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {
   }
 
   keeper->Update(currentval);
-  this->Simulate(1, 0);  //optimise and dont print
+  this->Simulate(0);  //dont print whilst optimising
 
   if (printinfo.getPrint()) {
     printcount1++;

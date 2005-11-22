@@ -43,8 +43,8 @@ void MainInfo::showUsage() {
 }
 
 MainInfo::MainInfo()
-  : givenOptInfo(0), givenInitialParam(0), runlikelihood(0),
-    runoptimise(0), runstochastic(0), runnetwork(0), runprint(1), forceprint(0),
+  : givenOptInfo(0), givenInitialParam(0), runoptimise(0),
+    runstochastic(0), runnetwork(0), runprint(1), forceprint(0),
     printInitialInfo(0), printFinalInfo(0), printLogLevel(0) {
 
   char tmpname[10];
@@ -88,7 +88,6 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
     k = 1;
     while (k < aNumber) {
       if (strcasecmp(aVector[k], "-l") == 0) {
-        runlikelihood = 1;
         runoptimise = 1;
 
       } else if (strcasecmp(aVector[k], "-n") == 0) {
@@ -100,7 +99,6 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
 
       } else if (strcasecmp(aVector[k], "-s") == 0) {
         runstochastic = 1;
-        runlikelihood = 1;
 
       } else if (strcasecmp(aVector[k], "-m") == 0) {
         ifstream infile;
@@ -290,7 +288,6 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
   if ((runstochastic != 1) && (runnetwork == 1)) {
     handle.logMessage(LOGWARN, "\nWarning - Gadget for the paramin network should be used with -s option\nGadget will now set the -s switch to perform a simulation run");
     runstochastic = 1;
-    runlikelihood = 1;
   }
 
   if ((runstochastic == 1) && (runoptimise == 1)) {

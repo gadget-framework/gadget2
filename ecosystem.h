@@ -177,11 +177,10 @@ public:
   int numOptVariables() const { return keeper->numOptVariables(); };
   /**
    * \brief This function will run the model
-   * \param optimise is a flag to denote whether the likelihood score should be calculated or not
    * \param print is a flag to denote whether the model output should be printed or not
    * \note This function covers a single running of the model, calculating the population structure and also calculating the likelihood score obtained from comparing the modelled population to the data specified in the likelihood components
    */
-  void Simulate(int optimise, int print);
+  void Simulate(int print);
   /**
    * \brief This function will calculate the population change on a timestep in the model
    * \note This function covers the migration between areas

@@ -71,11 +71,6 @@ public:
    */
   int runOptimise() const { return runoptimise; };
   /**
-   * \brief This function will return the flag used to determine whether the likelihood score should be calculated
-   * \return flag
-   */
-  int runLikelihood() const { return runlikelihood; };
-  /**
    * \brief This function will return the flag used to determine whether a simulation run should be performed
    * \return flag
    */
@@ -183,10 +178,6 @@ private:
    * \brief This is the flag used to denote whether the initial values for the model parameters have been given or not
    */
   int givenInitialParam;
-  /**
-   * \brief This is the flag used to denote whether the likelihood score should be calculated or not
-   */
-  int runlikelihood;
   /**
    * \brief This is the flag used to denote whether the likelihood score should be optimised or not
    */

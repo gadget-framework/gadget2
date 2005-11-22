@@ -429,7 +429,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
     handle.logFileUnexpected(LOGFAIL, "[likelihood]", text);
 
   //Now we have either read the word likelihood or reached end of file.
-  if (!infile.eof() && main.runLikelihood()) {
+  if (!infile.eof()) {
     infile >> text >> ws;
     if (strcasecmp(text, "likelihoodfiles") == 0) {
       //There might not be any likelihood files
