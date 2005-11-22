@@ -313,6 +313,7 @@ void StockDistribution::Print(ofstream& outfile) const {
 void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int s, i, j, k, found, minage, maxage;
   FleetPtrVector fleets;
+  StockPtrVector checkstocks;
   aggregator = new FleetPreyAggregator*[stocknames.Size()];
 
   for (i = 0; i < fleetnames.Size(); i++) {
@@ -348,63 +349,64 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
         if (strcasecmp(stocknames[s], Stocks[j]->getPrey()->getName()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);
+          checkstocks.resize(1, Stocks[j]);
         }
       }
     }
     if (found == 0)
       handle.logMessage(LOGFAIL, "Error in stockdistribution - unrecognised stock", stocknames[i]);
 
-    //check areas, ages and lengths
-    if (handle.getLogLevel() >= LOGWARN) {
-      for (j = 0; j < areas.Nrow(); j++) {
-        found = 0;
-        for (i = 0; i < stocks.Size(); i++)
-          for (k = 0; k < areas.Ncol(j); k++)
-            if (stocks[i]->isInArea(areas[j][k]))
-              found++;
-        if (found == 0)
-          handle.logMessage(LOGWARN, "Warning in stockdistribution - stock not defined on all areas");
-      }
+    aggregator[s] = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
+  }
 
-      minage = 9999;
-      maxage = 0;
-      for (i = 0; i < ages.Nrow(); i++) {
-        for (j = 0; j < ages.Ncol(i); j++) {
-          minage = min(ages[i][j], minage);
-          maxage = max(ages[i][j], maxage);
-        }
-      }
-
+  //check areas, ages and lengths
+  if (handle.getLogLevel() >= LOGWARN) {
+    for (j = 0; j < areas.Nrow(); j++) {
       found = 0;
-      for (i = 0; i < stocks.Size(); i++)
-        if (minage >= stocks[i]->minAge())
-          found++;
+      for (i = 0; i < checkstocks.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (checkstocks[i]->isInArea(areas[j][k]))
+            found++;
       if (found == 0)
-        handle.logMessage(LOGWARN, "Warning in stockdistribution - minimum age less than stock age");
-
-      found = 0;
-      for (i = 0; i < stocks.Size(); i++)
-        if (maxage <= stocks[i]->maxAge())
-          found++;
-      if (found == 0)
-        handle.logMessage(LOGWARN, "Warning in stockdistribution - maximum age greater than stock age");
-
-      found = 0;
-      for (i = 0; i < stocks.Size(); i++)
-        if (LgrpDiv->maxLength(0) > stocks[i]->getLengthGroupDiv()->minLength())
-          found++;
-      if (found == 0)
-        handle.logMessage(LOGWARN, "Warning in stockdistribution - minimum length group less than stock length");
-
-      found = 0;
-      for (i = 0; i < stocks.Size(); i++)
-        if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->getLengthGroupDiv()->maxLength())
-          found++;
-      if (found == 0)
-        handle.logMessage(LOGWARN, "Warning in stockdistribution - maximum length group greater than stock length");
+        handle.logMessage(LOGWARN, "Warning in stockdistribution - stock not defined on all areas");
     }
 
-    aggregator[s] = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
+    minage = 9999;
+    maxage = 0;
+    for (i = 0; i < ages.Nrow(); i++) {
+      for (j = 0; j < ages.Ncol(i); j++) {
+        minage = min(ages[i][j], minage);
+        maxage = max(ages[i][j], maxage);
+      }
+    }
+
+    found = 0;
+    for (i = 0; i < checkstocks.Size(); i++)
+      if (minage >= checkstocks[i]->minAge())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in stockdistribution - minimum age less than stock age");
+
+    found = 0;
+    for (i = 0; i < checkstocks.Size(); i++)
+      if (maxage <= checkstocks[i]->maxAge())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in stockdistribution - maximum age greater than stock age");
+
+    found = 0;
+    for (i = 0; i < checkstocks.Size(); i++)
+      if (LgrpDiv->maxLength(0) > checkstocks[i]->getLengthGroupDiv()->minLength())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in stockdistribution - minimum length group less than stock length");
+
+    found = 0;
+    for (i = 0; i < checkstocks.Size(); i++)
+      if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < checkstocks[i]->getLengthGroupDiv()->maxLength())
+        found++;
+    if (found == 0)
+      handle.logMessage(LOGWARN, "Warning in stockdistribution - maximum length group greater than stock length");
   }
 }
 
