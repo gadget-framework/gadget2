@@ -405,7 +405,7 @@ int Stock::isBirthday(const TimeClass* const TimeInfo) const {
   return (TimeInfo->getStep() == birthdate);
 }
 
-Prey* Stock::getPrey() const {
+StockPrey* Stock::getPrey() const {
   if (iseaten == 0)
     handle.logMessage(LOGFAIL, "Error in stock - no prey defined for", this->getName());
   return prey;

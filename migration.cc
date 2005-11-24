@@ -541,14 +541,11 @@ void MigrationFunction::recalcMatrix() {
         if (!(isZero(sa))) {
           for (j = 0; j < oceanareas[to]->getNumRectangles(); j++) {
             mig = this->getMigrationFunction(oceanareas[from]->getRectangles()[i], oceanareas[to]->getRectangles()[j]);
-//handle.logMessage(LOGDEBUG, "migration - migration function", mig);
             sum += (mig * sa);
           }
         }
       }
 
-handle.logMessage(LOGDEBUG, "migration - sum", sum);
-handle.logMessage(LOGDEBUG, "migration - area", oceanareas[from]->getArea());
       calcMigration[idto][idfrom] = sum / oceanareas[from]->getArea();
       colsum += calcMigration[idto][idfrom];
     }

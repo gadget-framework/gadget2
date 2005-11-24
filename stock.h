@@ -18,7 +18,7 @@ class InitialCond;
 class Migration;
 class Transition;
 class PopPredator;
-class Prey;
+class StockPrey;
 class Maturity;
 class RenewalData;
 class SpawnData;
@@ -159,7 +159,7 @@ public:
    * \brief This will return the prey information for the stock
    * \return prey
    */
-  Prey* getPrey() const;
+  StockPrey* getPrey() const;
   /**
    * \brief This will return the migration information for the stock
    * \return migration
@@ -284,7 +284,7 @@ protected:
   /**
    * \brief This is the Prey used to calculate information about the consumption of the stock
    */
-  Prey* prey;
+  StockPrey* prey;
   /**
    * \brief This is the PopPredator used to calculate information about the consumption by the stock
    */

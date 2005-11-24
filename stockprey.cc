@@ -34,10 +34,3 @@ void StockPrey::Print(ofstream& outfile) const {
     Alkeys[i].printNumbers(outfile);
   }
 }
-
-void StockPrey::Reset() {
-  Prey::Reset();
-  int i;
-  for (i = 0; i < Alkeys.Size(); i++)
-    Alkeys[i].setToZero();
-}

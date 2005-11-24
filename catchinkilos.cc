@@ -238,7 +238,7 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->isEaten()) {
-        if (strcasecmp(stocknames[i], Stocks[j]->getPrey()->getName()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->getName()) == 0) {
           found++;
           stocks.resize(1, Stocks[j]);
         }

@@ -40,10 +40,6 @@ public:
    * \param outfile is the ofstream that all the model information gets sent to
    */
   virtual void Print(ofstream& outfile) const;
-  /**
-   * \brief This function will reset the prey information
-   */
-  virtual void Reset();
 protected:
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store the amount of the prey
