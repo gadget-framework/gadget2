@@ -64,8 +64,6 @@ int main(int aNumber, char* const aVector[]) {
   chdir(workingdir);
   if ((main.getPI()).getPrint())
     EcoSystem->writeInitialInformation((main.getPI()).getOutputFile());
-  if ((main.getPI()).getPrintColumn())
-    EcoSystem->writeInitialInformationInColumns((main.getPI()).getColumnOutputFile());
 
   if (main.runStochastic()) {
     if (main.runNetwork()) {
@@ -91,8 +89,6 @@ int main(int aNumber, char* const aVector[]) {
       EcoSystem->Simulate(main.runPrint());
       if ((main.getPI()).getPrint())
         EcoSystem->writeValues();
-      if ((main.getPI()).getPrintColumn())
-        EcoSystem->writeValuesInColumns();
       while (data->isDataLeft()) {
         data->readNextLine();
         EcoSystem->Update(data);
@@ -100,8 +96,6 @@ int main(int aNumber, char* const aVector[]) {
         EcoSystem->Simulate(main.runPrint());
         if ((main.getPI()).getPrint())
           EcoSystem->writeValues();
-        if ((main.getPI()).getPrintColumn())
-          EcoSystem->writeValuesInColumns();
       }
       delete data;
 
@@ -114,8 +108,6 @@ int main(int aNumber, char* const aVector[]) {
       EcoSystem->Simulate(main.runPrint());
       if ((main.getPI()).getPrint())
         EcoSystem->writeValues();
-      if ((main.getPI()).getPrintColumn())
-        EcoSystem->writeValuesInColumns();
     }
 
   } else if (main.runOptimise()) {

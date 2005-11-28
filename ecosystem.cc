@@ -13,8 +13,7 @@ Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir,
   keeper = new Keeper;
 
   // initialise counters used when printing output files
-  printcount1 = printinfo.getPrint1() - 1;
-  printcount2 = printinfo.getPrint2() - 1;
+  printcount = printinfo.getPrintIteration() - 1;
 
   // initialise details used when printing the params.out file
   convergeSA = 0;
@@ -120,17 +119,10 @@ double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {
   this->Simulate(0);  //dont print whilst optimising
 
   if (printinfo.getPrint()) {
-    printcount1++;
-    if (printcount1 == printinfo.getPrint1()) {
+    printcount++;
+    if (printcount == printinfo.getPrintIteration()) {
       keeper->writeValues(likevec, printinfo.getPrecision());
-      printcount1 = 0;
-    }
-  }
-  if (printinfo.getPrintColumn()) {
-    printcount2++;
-    if (printcount2 == printinfo.getPrint2()) {
-      keeper->writeValuesInColumns(printinfo.getPrecision());
-      printcount2 = 0;
+      printcount = 0;
     }
   }
 
@@ -154,26 +146,16 @@ void Ecosystem::writeInitialInformation(const char* const filename) {
   keeper->writeInitialInformation(likevec);
 }
 
-void Ecosystem::writeInitialInformationInColumns(const char* const filename) {
-  keeper->openPrintFile(filename);
-}
-
 void Ecosystem::writeValues() {
   keeper->writeValues(likevec, printinfo.getPrecision());
-}
-
-void Ecosystem::writeValuesInColumns() {
-  keeper->writeValuesInColumns(printinfo.getPrecision());
 }
 
 void Ecosystem::writeParams(const char* const filename, int prec) const {
   if ((funceval > 0) && (interrupted == 0)) {
     //JMB - print the final values to any output files specified
-    //in case they have been missed by the -print1 or -print2 values
+    //in case they have been missed by the -print value
     if (printinfo.getPrint())
       keeper->writeValues(likevec, printinfo.getPrecision());
-    if (printinfo.getPrintColumn())
-      keeper->writeValuesInColumns(printinfo.getPrecision());
   }
   keeper->writeParams(filename, prec, interrupted);
 }

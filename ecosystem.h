@@ -92,18 +92,9 @@ public:
    */
   void writeInitialInformation(const char* const filename);
   /**
-   * \brief This function will write header information about the model parameters to file in a column format
-   * \param filename is the name of the file to write the model information to
-   */
-  void writeInitialInformationInColumns(const char* const filename);
-  /**
    * \brief This function will write current information about the model parameters to file
    */
   void writeValues();
-  /**
-   * \brief This function will write current information about the model parameters to file in a column format
-   */
-  void writeValuesInColumns();
   /**
    * \brief This function will write final information about the model parameters to file in a column format (which can then be used as the starting point for a subsequent model run)
    * \param filename is the name of the file to write the model information to
@@ -427,11 +418,7 @@ protected:
   /**
    * \brief This is the counter for the printing interval for the -o output from the simualtion
    */
-  int printcount1;
-  /**
-   * \brief This is the counter for the printing interval for the -co output from the simualtion
-   */
-  int printcount2;
+  int printcount;
   /**
    * \brief This is the DoubleVector used to store the initial values of the parameters
    * \note This vector is only used to temporarily store values during an optimising run

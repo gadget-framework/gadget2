@@ -300,28 +300,6 @@ void Keeper::writeValues(const LikelihoodPtrVector& likevec, int prec) {
   outfile << TAB << TAB << setw(w) << setprecision(p) << EcoSystem->getLikelihood() << endl;
 }
 
-void Keeper::writeValuesInColumns(int prec) {
-  if (!fileopen)
-    handle.logMessage(LOGFAIL, "Error in keeper - cannot write to output file");
-
-  int i, p, w;
-  p = prec;
-  if (prec == 0)
-    p = largeprecision;
-  w = p + 4;
-
-  outfile << ";\n; the optimisation has run for " << EcoSystem->getFuncEval()
-    << " function evaluations\n; the current likelihood value is "
-    << setprecision(p) << EcoSystem->getLikelihood()
-    << "\nswitch\tvalue\t\tlower\tupper\toptimise\n";
-
-  for (i = 0; i < values.Size(); i++) {
-    outfile << switches[i].getName() << TAB << setw(w) << setprecision(p) << values[i];
-    outfile << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i] << TAB
-      << setw(smallwidth) << setprecision(smallprecision) << upperbds[i] << TAB << opt[i] << endl;
-  }
-}
-
 void Keeper::Update(const StochasticData* const Stoch) {
 
   int i, j;

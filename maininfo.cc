@@ -136,10 +136,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         forceprint = 1;
 
       } else if (strcasecmp(aVector[k], "-co") == 0) {
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        printinfo.setColumnOutputFile(aVector[k]);
+        handle.logMessage(LOGFAIL, "The -co switch is no longer supported");
 
       } else if (strcasecmp(aVector[k], "-printinitial") == 0) {
         if (k == aNumber - 1)
@@ -178,13 +175,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         if (k == aNumber - 1)
           this->showCorrectUsage(aVector[k]);
         k++;
-        printinfo.setPrint1(atoi(aVector[k]));
-
-      } else if (strcasecmp(aVector[k], "-print2") == 0) {
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        printinfo.setPrint2(atoi(aVector[k]));
+        printinfo.setPrintIteration(atoi(aVector[k]));
 
       } else if (strcasecmp(aVector[k], "-precision") == 0) {
         //JMB - experimental setting of printing precision
@@ -331,8 +322,7 @@ void MainInfo::read(CommentStream& infile) {
       infile >> text >> ws;
       printinfo.setOutputFile(text);
     } else if (strcasecmp(text, "-co") == 0) {
-      infile >> text >> ws;
-      printinfo.setColumnOutputFile(text);
+      handle.logMessage(LOGFAIL, "The -co switch is no longer supported");
     } else if (strcasecmp(text, "-p") == 0) {
       infile >> text >> ws;
       printinfo.setParamOutFile(text);
@@ -354,10 +344,7 @@ void MainInfo::read(CommentStream& infile) {
       runprint = 0;
     } else if ((strcasecmp(text, "-print") == 0) || (strcasecmp(text, "-print1") == 0)) {
       infile >> dummy >> ws;
-      printinfo.setPrint1(dummy);
-    } else if (strcasecmp(text, "-print2") == 0) {
-      infile >> dummy >> ws;
-      printinfo.setPrint2(dummy);
+      printinfo.setPrintIteration(dummy);
     } else if (strcasecmp(text, "-precision") == 0) {
       infile >> dummy >> ws;
       printinfo.setPrecision(dummy);

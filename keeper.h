@@ -171,11 +171,6 @@ public:
    */
   void writeValues(const LikelihoodPtrVector& likevec, int prec);
   /**
-   * \brief This function will write current information about the model parameters to file in a column format
-   * \param prec is the precision to use in the output file
-   */
-  void writeValuesInColumns(int prec);
-  /**
    * \brief This function will write final information about the model parameters to file in a column format (which can then be used as the starting point for a subsequent model run)
    * \param filename is the name of the file to write the model information to
    * \param prec is the precision to use in the output file
