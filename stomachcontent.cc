@@ -239,7 +239,7 @@ void SC::Reset() {
     for (j = 0; j < digestion.Ncol(i); j++)
       digestion[i][j] = digestioncoeff[i][0] + digestioncoeff[i][1] *
                           pow(preyLgrpDiv[i]->meanLength(j), digestioncoeff[i][2]);
-  
+
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset stomachcontent component", scname);
 }
@@ -447,7 +447,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
         if (found == 0)
           handle.logMessage(LOGWARN, "Warning in stomachcontent - maximum age greater than predator age");
       }
-      
+
       aggregator[i] = new PredatorAggregator(predators, preys, areas, predatorages, preyLgrpDiv[i]);
     }
   }

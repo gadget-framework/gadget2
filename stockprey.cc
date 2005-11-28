@@ -7,16 +7,16 @@ StockPrey::StockPrey(CommentStream& infile, const IntVector& Areas,
   type = STOCKPREYTYPE;
   IntVector size(maxage - minage + 1, LgrpDiv->numLengthGroups());
   IntVector minlength(maxage - minage + 1, 0);
-  Alkeys.resize(areas.Size(), minage, minlength, size);
+  preyAlkeys.resize(areas.Size(), minage, minlength, size);
 }
 
-void StockPrey::Sum(const AgeBandMatrix& stock, int area) {
+void StockPrey::Sum(const AgeBandMatrix& stockAlkeys, int area) {
   PopInfo sum;
   int i, inarea = this->areaNum(area);
 
-  Alkeys[inarea].setToZero();
-  Alkeys[inarea].Add(stock, *CI);
-  Alkeys[inarea].sumColumns(preynumber[inarea]);
+  preyAlkeys[inarea].setToZero();
+  preyAlkeys[inarea].Add(stockAlkeys, *CI);
+  preyAlkeys[inarea].sumColumns(preynumber[inarea]);
   for (i = 0; i < preynumber.Ncol(inarea); i++) {
     sum += preynumber[inarea][i];
     biomass[inarea][i] = preynumber[inarea][i].N * preynumber[inarea][i].W;
@@ -29,8 +29,8 @@ void StockPrey::Print(ofstream& outfile) const {
   Prey::Print(outfile);
   outfile << "\nStock prey\n";
   int i;
-  for (i = 0; i < Alkeys.Size(); i++) {
+  for (i = 0; i < preyAlkeys.Size(); i++) {
     outfile << "\tAlkeys on internal area " << areas[i] << ":\n";
-    Alkeys[i].printNumbers(outfile);
+    preyAlkeys[i].printNumbers(outfile);
   }
 }

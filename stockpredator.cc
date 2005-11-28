@@ -39,11 +39,11 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
       }
     }
     infile >> text >> ws;
-  }      
+  }
   if (count != preference.Size())
     handle.logMessage(LOGFAIL, "Error in stockpredator - missing prey preference data");
   preference.Inform(keeper);
-  keeper->clearLast();  
+  keeper->clearLast();
 
   //then read in the maximum consumption parameters
   if (!(strcasecmp(text, "maxconsumption") == 0))
@@ -143,7 +143,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
     }
 
   } else {
-    //this is not the first substep of the timestep so only reset Phi  
+    //this is not the first substep of the timestep so only reset Phi
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
       Phi[inarea][predl] = 0.0;
   }
@@ -154,7 +154,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
     check = 0;
     if (isEqual(preference[prey], 1.0))
       check = 1;
-    
+
     if (this->getPrey(prey)->isPreyArea(area)) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {

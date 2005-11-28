@@ -25,16 +25,16 @@ public:
   virtual ~StockPrey() {};
   /**
    * \brief This will calculate the amount of prey that is consumed for a given area and timestep
-   * \param Alkeys is the AgeBandMatrix giving the amount of prey in the area
+   * \param stockAlkeys is the AgeBandMatrix giving the amount of prey in the area
    * \param area is the area that the prey consumption is being calculated on
    */
-  virtual void Sum(const AgeBandMatrix& Alkeys, int area);
+  virtual void Sum(const AgeBandMatrix& stockAlkeys, int area);
   /**
    * \brief This function will return the amount of prey on the area before consumption
    * \param area is the area that the prey consumption is being calculated on
-   * \return Alkeys, the population of the prey for the area before consumption
+   * \return preyAlkeys, the population of the prey for the area before consumption
    */
-  const AgeBandMatrix& getALKPriorToEating(int area) const { return Alkeys[this->areaNum(area)]; };
+  const AgeBandMatrix& getALKPriorToEating(int area) const { return preyAlkeys[this->areaNum(area)]; };
   /**
    * \brief This function will print the prey information
    * \param outfile is the ofstream that all the model information gets sent to
@@ -44,7 +44,7 @@ protected:
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store the amount of the prey
    */
-  AgeBandMatrixPtrVector Alkeys;
+  AgeBandMatrixPtrVector preyAlkeys;
 };
 
 #endif

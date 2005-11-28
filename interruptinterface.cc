@@ -49,7 +49,7 @@ int InterruptInterface::menu() {
         printMenu();
         break;
       default:
-        break;      
+        break;
     }
   }
   cout << "\nContinuing current simulation ...\n";
