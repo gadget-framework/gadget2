@@ -145,6 +145,69 @@ double Formula::evalFunction() const {
       v = *(argList[0]);
       break;
 
+    case LESS:
+      if (argList.size() < 2)
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for <");
+      v = 1.0;
+      for (i = 1; i < argList.size(); i++)
+        if (*(argList[i - 1]) >= *(argList[i]))
+	        v = 0.0;
+      break;
+
+    case GREATER:
+      if (argList.size() < 2)
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for >");
+      v = 1.0;
+      for (i = 1; i < argList.size(); i++)
+        if (*(argList[i - 1]) <= *(argList[i]))
+      	  v = 0.0;
+      break;
+
+    case EQUAL:
+      if (argList.size() < 2)
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for =");
+      v = 1.0;
+      for (i = 1; i < argList.size(); i++)
+        if (!isEqual(*(argList[i - 1]), *(argList[i])))
+      	  v = 0.0;
+      break;
+
+    case AND:
+      if (argList.size() < 1)
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for and");
+      v = 1.0;
+      for (i = 0; i < argList.size(); i++)
+        if (isZero(*(argList[i])))
+      	  v = 0.0;
+      break;
+
+    case OR:
+      if (argList.size() < 1)
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for or");
+      v = 0.0;
+      for (i = 0; i < argList.size(); i++)
+        if (!isZero(*(argList[i])))
+      	  v = 1.0;
+      break;
+
+    case NOT:
+      if (argList.size() != 1)
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for not");
+      v = 0.0;
+      if (isZero(*(argList[0])))
+      	v = 1.0;
+      break;
+
+    case IF:
+      if (argList.size() != 3)
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for if");
+      v = 0.0;
+      if (isZero(*(argList[0])))
+       	v = *(argList[2]);
+      else
+	      v = *(argList[1]);
+      break;
+
     default:
       handle.logMessage(LOGFAIL, "Error in formula - unrecognised function type", type);
       break;
@@ -240,6 +303,28 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
       F.argList.push_back(f);
       if (handle.getRunOptimise())
         handle.logMessage(LOGWARN, "Warning in formula - random function used for optimising run");
+    } else if (strcasecmp(text, "<") == 0) {
+      F.functiontype = LESS;
+
+    } else if (strcasecmp(text, ">") == 0) {
+      F.functiontype = GREATER;
+
+    } else if (strcasecmp(text, "=") == 0) {
+      F.functiontype = EQUAL;
+
+    } else if (strcasecmp(text, "and") == 0) {
+      F.functiontype = AND;
+
+    } else if (strcasecmp(text, "or") == 0) {
+      F.functiontype = OR;
+
+    } else if (strcasecmp(text, "not") == 0) {
+      F.functiontype = NOT;
+
+    } else if (strcasecmp(text, "if") == 0) {
+      F.functiontype = IF;
+      if (handle.getRunOptimise())
+        handle.logMessage(LOGWARN, "Warning in formula - if statement used for optimising run");
 
     } else {
       handle.logFileMessage(LOGFAIL, "unrecognised formula function name", text);
