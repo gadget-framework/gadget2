@@ -793,9 +793,8 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
 
   //We know the size that numbers[] will be from obsConsumption
   int numarea = areas.Nrow();
-  number.resize(obsConsumption.Nrow());
   for (i = 0; i < obsConsumption.Nrow(); i++)
-    number[i] = new DoubleMatrix(numarea, numpred, 0.0);
+    number.resize(1, new DoubleMatrix(numarea, numpred, 0.0));
 
   //Check the number of columns in the inputfile
   infile >> ws;

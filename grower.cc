@@ -88,13 +88,11 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   calcWeightGrowth.AddRows(noareas, len, 0.0);
   interpLengthGrowth.AddRows(noareas, otherlen, 0.0);
   interpWeightGrowth.AddRows(noareas, otherlen, 0.0);
-  lgrowth.resize(noareas);
-  wgrowth.resize(noareas);
-  for (i = 0; i < noareas; i++) {
-    lgrowth[i] = new DoubleMatrix(maxlengthgroupgrowth + 1, otherlen, 0.0);
-    wgrowth[i] = new DoubleMatrix(maxlengthgroupgrowth + 1, otherlen, 0.0);
-  }
   dummyfphi.resize(len, 0.0);
+  for (i = 0; i < noareas; i++) {
+    lgrowth.resize(1, new DoubleMatrix(maxlengthgroupgrowth + 1, otherlen, 0.0));
+    wgrowth.resize(1, new DoubleMatrix(maxlengthgroupgrowth + 1, otherlen, 0.0));
+  }
 }
 
 Grower::~Grower() {

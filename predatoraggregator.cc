@@ -36,7 +36,8 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
       if (predators[i]->doesEat(preys[j]->getName()))
         doeseat[i][j] = 1;
 
-  total.resize(areas.Nrow(), new DoubleMatrix(predLgrpDiv->numLengthGroups(),  preyLgrpDiv->numLengthGroups(), 0.0));
+  for (i = 0; i < areas.Nrow(); i++)
+    total.resize(1, new DoubleMatrix(predLgrpDiv->numLengthGroups(),  preyLgrpDiv->numLengthGroups(), 0.0));
   this->Reset();
 }
 
@@ -72,7 +73,8 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
       if (predators[i]->doesEat(preys[j]->getName()))
         doeseat[i][j] = 1;
 
-  total.resize(areas.Nrow(), new DoubleMatrix(predAges.Nrow(),  preyLgrpDiv->numLengthGroups(), 0.0));
+  for (i = 0; i < areas.Nrow(); i++)
+    total.resize(1, new DoubleMatrix(predAges.Nrow(),  preyLgrpDiv->numLengthGroups(), 0.0));
   this->Reset();
 }
 

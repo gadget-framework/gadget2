@@ -199,11 +199,9 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     case 2:
     case 3:
     case 7:
-      modelYearData.resize(numarea);
-      obsYearData.resize(numarea);
       for (i = 0; i < numarea; i++) {
-        modelYearData[i] = new DoubleMatrix(numage, numlen, 0.0);
-        obsYearData[i] = new DoubleMatrix(numage, numlen, 0.0);
+        modelYearData.resize(1, new DoubleMatrix(numage, numlen, 0.0));
+        obsYearData.resize(1, new DoubleMatrix(numage, numlen, 0.0));
       }
       break;
     case 1:
