@@ -54,7 +54,7 @@ void Maturity::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < tmpratio.Size(); i++)
     matureRatio[i] = tmpratio[i];
 
-  CI.resize(matureStocks.Size(), 0);
+  CI.resize(matureStocks.Size());
   for (i = 0; i < matureStocks.Size(); i++)
     CI[i] = new ConversionIndex(LgrpDiv, matureStocks[i]->getLengthGroupDiv());
 

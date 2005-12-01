@@ -20,12 +20,6 @@ public:
    */
   StockPtrVector(int sz);
   /**
-   * \brief This is the StockPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  StockPtrVector(int sz, Stock* initial);
-  /**
    * \brief This is the StockPtrVector constructor that creates a copy of an existing StockPtrVector
    * \param initial is the StockPtrVector to copy
    */

@@ -22,13 +22,6 @@ public:
    */
   CharPtrMatrix(int nr, int nc);
   /**
-   * \brief This is the CharPtrMatrix constructor for a specified size
-   * \param nr is the size of the vector to be created
-   * \param nc is the length of each row to be created (ie. the size of the CharPtrVector to be created for each row)
-   * \param initial is the initial value for all the entries of the vector
-   */
-  CharPtrMatrix(int nr, int nc, char* initial);
-  /**
    * \brief This is the CharPtrMatrix destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
@@ -57,13 +50,6 @@ public:
    * \return the value of the specified element
    */
   const CharPtrVector& operator [] (int pos) const { return *v[pos]; };
-  /**
-   * \brief This will add new entries to the vector
-   * \param add is the number of new entries to the vector
-   * \param length is the number of entries to the CharPtrVector that is created
-   * \param initial is the value that will be entered for the new entries
-   */
-  void AddRows(int add, int length, char* initial);
   /**
    * \brief This will add new empty entries to the vector
    * \param add is the number of new entries to the vector

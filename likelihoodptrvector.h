@@ -20,12 +20,6 @@ public:
    */
   LikelihoodPtrVector(int sz);
   /**
-   * \brief This is the LikelihoodPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  LikelihoodPtrVector(int sz, Likelihood* initial);
-  /**
    * \brief This is the LikelihoodPtrVector constructor that creates a copy of an existing LikelihoodPtrVector
    * \param initial is the LikelihoodPtrVector to copy
    */

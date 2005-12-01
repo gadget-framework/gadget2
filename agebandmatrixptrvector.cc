@@ -1,4 +1,8 @@
 #include "agebandmatrixptrvector.h"
+#include "errorhandler.h"
+#include "gadget.h"
+
+extern ErrorHandler handle;
 
 AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
@@ -8,13 +12,13 @@ AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(int sz) {
     v = 0;
 }
 
-AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(int sz, AgeBandMatrix* value) {
+AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(const AgeBandMatrixPtrVector& initial) {
+  size = initial.size;
   int i;
-  size = (sz > 0 ? sz : 0);
   if (size > 0) {
     v = new AgeBandMatrix*[size];
     for (i = 0; i < size; i++)
-      v[i] = value;
+      v[i] = initial.v[i];
   } else
     v = 0;
 }
@@ -24,13 +28,12 @@ AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(int sz, int minage,
 
   int i;
   size = (sz > 0 ? sz : 0);
-  if (size == 0) {
-    v = 0;
-  } else {
+  if (size > 0) {
     v = new AgeBandMatrix*[size];
     for (i = 0; i < size; i++)
       v[i] = new AgeBandMatrix(minage, minl, lsize);
-  }
+  } else
+    v = 0;
 }
 
 AgeBandMatrixPtrVector::~AgeBandMatrixPtrVector() {
@@ -44,20 +47,21 @@ AgeBandMatrixPtrVector::~AgeBandMatrixPtrVector() {
 }
 
 void AgeBandMatrixPtrVector::resize(int addsize, AgeBandMatrix* value) {
-  int oldsize = size;
+  if (addsize != 1)
+    handle.logMessage(LOGFAIL, "Error in agebandmatrixptrvector - cannot add entries to vector");
+
   this->resize(addsize);
-  int i;
-  if (addsize > 0)
-    for (i = oldsize; i < size; i++)
-      v[i] = value;
+  v[size - 1] = value;
 }
 
 void AgeBandMatrixPtrVector::resize(int addsize) {
+  if (addsize <= 0)
+    return;
   int i;
   if (v == 0) {
     size = addsize;
     v = new AgeBandMatrix*[size];
-  } else if (addsize > 0) {
+  } else {
     AgeBandMatrix** vnew = new AgeBandMatrix*[addsize + size];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
@@ -73,15 +77,23 @@ void AgeBandMatrixPtrVector::resize(int addsize, int minage,
   if (addsize <= 0)
     return;
 
-  AgeBandMatrix** vnew = new AgeBandMatrix*[size + addsize];
   int i;
-  for (i = 0; i < size; i++)
-    vnew[i] = v[i];
-  for (i = size; i < size + addsize; i++)
-    vnew[i] = new AgeBandMatrix(minage, minl, lsize);
-  delete[] v;
-  v = vnew;
-  size += addsize;
+  if (v == 0) {
+    size = addsize;
+    v = new AgeBandMatrix*[size];
+    for (i = 0; i < size; i++)
+      v[i] = new AgeBandMatrix(minage, minl, lsize);
+
+  } else {
+    AgeBandMatrix** vnew = new AgeBandMatrix*[size + addsize];
+    for (i = 0; i < size; i++)
+      vnew[i] = v[i];
+    for (i = size; i < size + addsize; i++)
+      vnew[i] = new AgeBandMatrix(minage, minl, lsize);
+    delete[] v;
+    v = vnew;
+    size += addsize;
+  }
 }
 
 void AgeBandMatrixPtrVector::resize(int addsize, int minage,
@@ -101,11 +113,11 @@ void AgeBandMatrixPtrVector::resize(int addsize, int minage,
     AgeBandMatrix** vnew = new AgeBandMatrix*[addsize + size];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
+    for (i = size; i < addsize + size; i++)
+      vnew[i] = new AgeBandMatrix(minage, matr, minl);
     delete[] v;
     v = vnew;
-    for (i = size; i < addsize + size; i++)
-      v[i] = new AgeBandMatrix(minage, matr, minl);
-    size = addsize + size;
+    size += addsize;
   }
 }
 

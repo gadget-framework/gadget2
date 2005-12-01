@@ -1,22 +1,14 @@
 #include "fleetptrvector.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 FleetPtrVector::FleetPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new Fleet*[size];
   else
-    v = 0;
-}
-
-FleetPtrVector::FleetPtrVector(int sz, Fleet* value) {
-  size = (sz > 0 ? sz : 0);
-  int i;
-  if (size > 0) {
-    v = new Fleet*[size];
-    for (i = 0; i < size; i++)
-      v[i] = value;
-  } else
     v = 0;
 }
 
@@ -39,20 +31,21 @@ FleetPtrVector::~FleetPtrVector() {
 }
 
 void FleetPtrVector::resize(int addsize, Fleet* value) {
-  int oldsize = size;
+  if (addsize != 1)
+    handle.logMessage(LOGFAIL, "Error in fleetptrvector - cannot add entries to vector");
+
   this->resize(addsize);
-  int i;
-  if (addsize > 0)
-    for (i = oldsize; i < size; i++)
-      v[i] = value;
+  v[size - 1] = value;
 }
 
 void FleetPtrVector::resize(int addsize) {
+  if (addsize <= 0)
+    return;
   int i;
   if (v == 0) {
     size = addsize;
     v = new Fleet*[size];
-  } else if (addsize > 0) {
+  } else {
     Fleet** vnew = new Fleet*[addsize + size];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];

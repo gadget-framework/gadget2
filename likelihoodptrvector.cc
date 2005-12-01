@@ -1,22 +1,14 @@
 #include "likelihoodptrvector.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 LikelihoodPtrVector::LikelihoodPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new Likelihood*[size];
   else
-    v = 0;
-}
-
-LikelihoodPtrVector::LikelihoodPtrVector(int sz, Likelihood* value) {
-  size = (sz > 0 ? sz : 0);
-  int i;
-  if (size > 0) {
-    v = new Likelihood*[size];
-    for (i = 0; i < size; i++)
-      v[i] = value;
-  } else
     v = 0;
 }
 
@@ -39,20 +31,21 @@ LikelihoodPtrVector::~LikelihoodPtrVector() {
 }
 
 void LikelihoodPtrVector::resize(int addsize, Likelihood* value) {
-  int oldsize = size;
+  if (addsize != 1)
+    handle.logMessage(LOGFAIL, "Error in likelihoodptrvector - cannot add entries to vector");
+
   this->resize(addsize);
-  int i;
-  if (addsize > 0)
-    for (i = oldsize; i < size; i++)
-      v[i] = value;
+  v[size - 1] = value;
 }
 
 void LikelihoodPtrVector::resize(int addsize) {
+  if (addsize <= 0)
+    return;
   int i;
   if (v == 0) {
     size = addsize;
     v = new Likelihood*[size];
-  } else if (addsize > 0) {
+  } else {
     Likelihood** vnew = new Likelihood*[addsize + size];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];

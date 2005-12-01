@@ -20,11 +20,10 @@ public:
    */
   BaseClassPtrVector(int sz);
   /**
-   * \brief This is the BaseClassPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
+   * \brief This is the BaseClassPtrVector constructor that creates a copy of an existing BaseClassPtrVector
+   * \param initial is the BaseClassPtrVector to copy
    */
-  BaseClassPtrVector(int sz, BaseClass* initial);
+  BaseClassPtrVector(const BaseClassPtrVector& initial);
   /**
    * \brief This is the BaseClassPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector

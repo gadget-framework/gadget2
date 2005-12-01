@@ -22,11 +22,10 @@ public:
    */
   OtherFoodPtrVector(int sz);
   /**
-   * \brief This is the OtherFoodPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
+   * \brief This is the OtherFoodPtrVector constructor that creates a copy of an existing OtherFoodPtrVector
+   * \param initial is the OtherFoodPtrVector to copy
    */
-  OtherFoodPtrVector(int sz, OtherFood* initial);
+  OtherFoodPtrVector(const OtherFoodPtrVector& initial);
   /**
    * \brief This is the OtherFoodPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector

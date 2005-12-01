@@ -42,7 +42,7 @@ public:
   virtual void Print(ofstream& outfile) const;
 protected:
   /**
-   * \brief This is the AgeBandMatrixPtrVector used to store the amount of the prey
+   * \brief This is the AgeBandMatrixPtrVector used to store the amount of the prey on each area
    */
   AgeBandMatrixPtrVector preyAlkeys;
 };

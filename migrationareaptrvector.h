@@ -20,11 +20,10 @@ public:
    */
   MigrationAreaPtrVector(int sz);
   /**
-   * \brief This is the MigrationAreaPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
+   * \brief This is the MigrationAreaPtrVector constructor that creates a copy of an existing MigrationAreaPtrVector
+   * \param initial is the MigrationAreaPtrVector to copy
    */
-  MigrationAreaPtrVector(int sz, MigrationArea* initial);
+  MigrationAreaPtrVector(const MigrationAreaPtrVector& initial);
   /**
    * \brief This is the MigrationAreaPtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector

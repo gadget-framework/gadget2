@@ -95,7 +95,7 @@ void Ecosystem::Initialise() {
     tagvec[i]->setStock(stockvec);
   }
 
-  basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size(), 0);
+  basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size());
   for (i = 0; i < stockvec.Size(); i++)
     basevec[i] = stockvec[i];
   for (i = 0; i < otherfoodvec.Size(); i++)

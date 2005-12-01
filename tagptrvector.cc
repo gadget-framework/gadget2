@@ -1,21 +1,14 @@
 #include "tagptrvector.h"
+#include "errorhandler.h"
+#include "gadget.h"
+
+extern ErrorHandler handle;
 
 TagPtrVector::TagPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
   if (size > 0)
     v = new Tags*[size];
   else
-    v = 0;
-}
-
-TagPtrVector::TagPtrVector(int sz, Tags* value) {
-  size = (sz > 0 ? sz : 0);
-  int i;
-  if (size > 0) {
-    v = new Tags*[size];
-    for (i = 0; i < size; i++)
-      v[i] = value;
-  } else
     v = 0;
 }
 
@@ -38,20 +31,21 @@ TagPtrVector::~TagPtrVector() {
 }
 
 void TagPtrVector::resize(int addsize, Tags* value) {
-  int oldsize = size;
+  if (addsize != 1)
+    handle.logMessage(LOGFAIL, "Error in tagptrvector - cannot add entries to vector");
+
   this->resize(addsize);
-  int i;
-  if (addsize > 0)
-    for (i = oldsize; i < size; i++)
-      v[i] = value;
+  v[size - 1] = value;
 }
 
 void TagPtrVector::resize(int addsize) {
+  if (addsize <= 0)
+    return;
   int i;
   if (v == 0) {
     size = addsize;
     v = new Tags*[size];
-  } else if (addsize > 0) {
+  } else {
     Tags** vnew = new Tags*[addsize + size];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];

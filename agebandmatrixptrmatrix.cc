@@ -8,17 +8,6 @@ AgeBandMatrixPtrMatrix::AgeBandMatrixPtrMatrix(int nr) {
     v = 0;
 }
 
-AgeBandMatrixPtrMatrix::AgeBandMatrixPtrMatrix(int nr, AgeBandMatrixPtrVector* value) {
-  nrow = (nr > 0 ? nr : 0);
-  int i;
-  if (nrow > 0) {
-    v = new AgeBandMatrixPtrVector*[nrow];
-    for (i = 0; i < nrow; i++)
-      v[i] = value;
-  } else
-    v = 0;
-}
-
 AgeBandMatrixPtrMatrix::~AgeBandMatrixPtrMatrix() {
   int i;
   if (v != 0) {

@@ -9,49 +9,6 @@ DoubleMatrixPtrMatrix::DoubleMatrixPtrMatrix(int nr, int nc) {
     v[i] = new DoubleMatrixPtrVector(nc);
 }
 
-DoubleMatrixPtrMatrix::DoubleMatrixPtrMatrix(int nr, int nc, DoubleMatrix* value) {
-  nrow = nr;
-  v = new DoubleMatrixPtrVector*[nr];
-  int i, j;
-  for (i = 0; i < nr; i++)
-    v[i] = new DoubleMatrixPtrVector(nc);
-  for (i = 0; i < nr; i++) {
-    for (j = 0; j < nc; j++)
-      (*v[i])[j] = value;
-  }
-}
-
-DoubleMatrixPtrMatrix::DoubleMatrixPtrMatrix(int nr, const IntVector& nc) {
-  nrow = nr;
-  v = new DoubleMatrixPtrVector*[nr];
-  int i;
-  for (i = 0; i < nr; i++)
-    v[i] = new DoubleMatrixPtrVector(nc[i]);
-}
-
-DoubleMatrixPtrMatrix::DoubleMatrixPtrMatrix(int nr, const IntVector& nc, DoubleMatrix* value) {
-  nrow = nr;
-  v = new DoubleMatrixPtrVector*[nr];
-  int i, j;
-  for (i = 0; i < nr; i++)
-    v[i] = new DoubleMatrixPtrVector(nc[i]);
-  for (i = 0; i < nr; i++)
-    for (j = 0; j < nc[i]; j++)
-      (*v[i])[j] = value;
-}
-
-DoubleMatrixPtrMatrix::DoubleMatrixPtrMatrix(const DoubleMatrixPtrMatrix& initial) : nrow(initial.nrow) {
-  int i;
-  if (nrow >= 0) {
-    v = new DoubleMatrixPtrVector*[nrow];
-    for (i = 0; i < nrow; i++)
-      v[i] = new DoubleMatrixPtrVector(initial[i]);
-  } else {
-    v = 0;
-    nrow = 0;
-  }
-}
-
 DoubleMatrixPtrMatrix::~DoubleMatrixPtrMatrix() {
   int i;
   if (v != 0) {
@@ -72,15 +29,6 @@ void DoubleMatrixPtrMatrix::AddRows(int add, int length) {
   for (i = nrow; i < nrow + add; i++)
     v[i] = new DoubleMatrixPtrVector(length);
   nrow += add;
-}
-
-void DoubleMatrixPtrMatrix::AddRows(int add, int length, DoubleMatrix* initial) {
-  int oldnrow = nrow;
-  this->AddRows(add, length);
-  int i, j;
-  for (i = oldnrow; i < nrow; i++)
-    for (j = 0; j < length; j++)
-      (*v[i])[j] = initial;
 }
 
 void DoubleMatrixPtrMatrix::DeleteRow(int row) {

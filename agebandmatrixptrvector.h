@@ -22,12 +22,6 @@ public:
    */
   AgeBandMatrixPtrVector(int sz);
   /**
-   * \brief This is the AgeBandMatrixPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  AgeBandMatrixPtrVector(int sz, AgeBandMatrix* initial);
-  /**
    * \brief This is the AgeBandMatrixPtrVector constructor for a specified size with an initial value specified by the minimum age and length of the new AgeBandMatrix created
    * \param sz is the size of the vector to be created
    * \param minage is the minimum age of the AgeBandMatrix to be created

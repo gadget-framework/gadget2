@@ -87,7 +87,7 @@ void MigrationNumbers::readTimeStepData(CommentStream& infile, const TimeClass* 
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 3");
 
   count = 0;
-  allmatrixnames.resize(TimeInfo->numTotalSteps() + 1, NULL);
+  allmatrixnames.resize(TimeInfo->numTotalSteps() + 1);
   timeindex.resize(TimeInfo->numTotalSteps() + 1, -1);
   while (!infile.eof()) {
     infile >> year >> step >> text >> ws;

@@ -20,12 +20,6 @@ public:
    */
   PreyPtrVector(int sz);
   /**
-   * \brief This is the PreyPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  PreyPtrVector(int sz, Prey* initial);
-  /**
    * \brief This is the PreyPtrVector constructor that creates a copy of an existing PreyPtrVector
    * \param initial is the PreyPtrVector to copy
    */

@@ -12,22 +12,22 @@ SuitFuncPtrVector::~SuitFuncPtrVector() {
 }
 
 void SuitFuncPtrVector::resize(int addsize, SuitFunc* value) {
-  int oldsize = size;
+  if (addsize != 1)
+    handle.logMessage(LOGFAIL, "Error in suitfuncptrvector - cannot add entries to vector");
+
   this->resize(addsize);
-  int i = 0;
-  if (addsize > 0)
-    for (i = oldsize; i < size; i++)
-      v[i] = value;
+  v[size - 1] = value;
 }
 
 void SuitFuncPtrVector::resize(int addsize) {
+  if (addsize <= 0)
+    return;
+  int i;
   if (v == 0) {
     size = addsize;
     v = new SuitFunc*[size];
-
-  } else if (addsize > 0) {
+  } else {
     SuitFunc** vnew = new SuitFunc*[addsize + size];
-    int i = 0;
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;

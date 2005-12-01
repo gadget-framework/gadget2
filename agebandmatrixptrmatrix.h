@@ -20,17 +20,6 @@ public:
    */
   AgeBandMatrixPtrMatrix(int nr);
   /**
-   * \brief This is the AgeBandMatrixPtrMatrix constructor for a specified size with an initial value
-   * \param nr is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  AgeBandMatrixPtrMatrix(int nr, AgeBandMatrixPtrVector* initial);
-  /**
-   * \brief This is the AgeBandMatrixPtrMatrix constructor that creates a copy of an existing AgeBandMatrixPtrMatrix
-   * \param initial is the AgeBandMatrixPtrMatrix to copy
-   */
-  AgeBandMatrixPtrMatrix(const AgeBandMatrixPtrMatrix& initial);
-  /**
    * \brief This is the AgeBandMatrixPtrMatrix destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */

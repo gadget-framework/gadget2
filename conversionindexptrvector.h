@@ -20,12 +20,6 @@ public:
    */
   ConversionIndexPtrVector(int sz);
   /**
-   * \brief This is the ConversionIndexPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  ConversionIndexPtrVector(int sz, ConversionIndex* initial);
-  /**
    * \brief This is the ConversionIndexPtrVector constructor that creates a copy of an existing ConversionIndexPtrVector
    * \param initial is the ConversionIndexPtrVector to copy
    */

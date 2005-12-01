@@ -20,12 +20,6 @@ public:
    */
   FleetPtrVector(int sz);
   /**
-   * \brief This is the FleetPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  FleetPtrVector(int sz, Fleet* initial);
-  /**
    * \brief This is the FleetPtrVector constructor that creates a copy of an existing FleetPtrVector
    * \param initial is the FleetPtrVector to copy
    */

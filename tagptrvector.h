@@ -22,12 +22,6 @@ public:
    */
   TagPtrVector(int sz);
   /**
-   * \brief This is the TagPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  TagPtrVector(int sz, Tags* initial);
-  /**
    * \brief This is the TagPtrVector constructor that creates a copy of an existing TagPtrVector
    * \param initial is the TagPtrVector to copy
    */

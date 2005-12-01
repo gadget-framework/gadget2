@@ -20,12 +20,6 @@ public:
    */
   DoubleMatrixPtrVector(int sz);
   /**
-   * \brief This is the DoubleMatrixPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  DoubleMatrixPtrVector(int sz, DoubleMatrix* initial);
-  /**
    * \brief This is the DoubleMatrixPtrVector constructor that creates a copy of an existing DoubleMatrixPtrVector
    * \param initial is the DoubleMatrixPtrVector to copy
    */

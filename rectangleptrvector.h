@@ -20,11 +20,10 @@ public:
    */
   RectanglePtrVector(int sz);
   /**
-   * \brief This is the RectanglePtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
+   * \brief This is the RectanglePtrVector constructor that creates a copy of an existing RectanglePtrVector
+   * \param initial is the RectanglePtrVector to copy
    */
-  RectanglePtrVector(int sz, Rectangle* initial);
+  RectanglePtrVector(const RectanglePtrVector& initial);
   /**
    * \brief This is the RectanglePtrVector destructor
    * \note This will free all the memory allocated to all the elements of the vector

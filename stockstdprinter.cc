@@ -118,23 +118,18 @@ StockStdPrinter::~StockStdPrinter() {
 }
 
 void StockStdPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const Area) {
-  CharPtrVector stocknames(1, stockname);
   StockPtrVector stocks;
-  delete aggregator;
-
-  int i, j, tmpage;
+  int i;
 
   for (i = 0; i < stockvec.Size(); i++)
-    for (j = 0; j < stocknames.Size(); j++)
-      if (strcasecmp(stockvec[i]->getName(), stocknames[j]) == 0)
-        stocks.resize(1, stockvec[i]);
+    if (strcasecmp(stockvec[i]->getName(), stockname) == 0)
+      stocks.resize(1, stockvec[i]);
 
-  if (stocks.Size() != stocknames.Size()) {
+  if (stocks.Size() != 1) {
     handle.logMessage(LOGWARN, "Error in stockstdprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
       handle.logMessage(LOGWARN, "Error in stockstdprinter - found stock", stocks[i]->getName());
-    for (i = 0; i < stocknames.Size(); i++)
-      handle.logMessage(LOGWARN, "Error in stockstdprinter - looking for stock", stocknames[i]);
+    handle.logMessage(LOGWARN, "Error in stockstdprinter - looking for stock", stockname);
     exit(EXIT_FAILURE);
   }
 

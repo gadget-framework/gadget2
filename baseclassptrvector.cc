@@ -1,5 +1,8 @@
 #include "baseclassptrvector.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 BaseClassPtrVector::BaseClassPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
@@ -9,13 +12,13 @@ BaseClassPtrVector::BaseClassPtrVector(int sz) {
     v = 0;
 }
 
-BaseClassPtrVector::BaseClassPtrVector(int sz, BaseClass* value) {
-  size = (sz > 0 ? sz : 0);
+BaseClassPtrVector::BaseClassPtrVector(const BaseClassPtrVector& initial) {
+  size = initial.size;
   int i;
   if (size > 0) {
     v = new BaseClass*[size];
     for (i = 0; i < size; i++)
-      v[i] = value;
+      v[i] = initial.v[i];
   } else
     v = 0;
 }
@@ -28,20 +31,21 @@ BaseClassPtrVector::~BaseClassPtrVector() {
 }
 
 void BaseClassPtrVector::resize(int addsize, BaseClass* value) {
-  int oldsize = size;
+  if (addsize != 1)
+    handle.logMessage(LOGFAIL, "Error in baseclassptrvector - cannot add entries to vector");
+
   this->resize(addsize);
-  int i;
-  if (addsize > 0)
-    for (i = oldsize; i < size; i++)
-      v[i] = value;
+  v[size - 1] = value;
 }
 
 void BaseClassPtrVector::resize(int addsize) {
+  if (addsize <= 0)
+    return;
   int i;
   if (v == 0) {
     size = addsize;
     v = new BaseClass*[size];
-  } else if (addsize > 0) {
+  } else {
     BaseClass** vnew = new BaseClass*[addsize + size];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];

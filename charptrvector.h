@@ -18,12 +18,6 @@ public:
    */
   CharPtrVector(int sz);
   /**
-   * \brief This is the CharPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  CharPtrVector(int sz, char* initial);
-  /**
    * \brief This is the CharPtrVector constructor that creates a copy of an existing CharPtrVector
    * \param initial is the CharPtrVector to copy
    */

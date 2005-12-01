@@ -9,17 +9,6 @@ CharPtrMatrix::CharPtrMatrix(int nr, int nc) {
     v[i] = new CharPtrVector(nc);
 }
 
-CharPtrMatrix::CharPtrMatrix(int nr, int nc, char* value) {
-  nrow = nr;
-  v = new CharPtrVector*[nr];
-  int i, j;
-  for (i = 0; i < nr; i++)
-    v[i] = new CharPtrVector(nc);
-  for (i = 0; i < nr; i++)
-    for (j = 0; j < nc; j++)
-      (*v[i])[j] = value;
-}
-
 CharPtrMatrix::~CharPtrMatrix() {
   int i;
   if (v != 0) {
@@ -40,13 +29,4 @@ void CharPtrMatrix::AddRows(int add, int length) {
   for (i = nrow; i < nrow + add; i++)
     v[i] = new CharPtrVector(length);
   nrow += add;
-}
-
-void CharPtrMatrix::AddRows(int add, int length, char* initial) {
-  int oldnrow = nrow;
-  this->AddRows(add, length);
-  int i, j;
-  for (i = oldnrow; i < nrow; i++)
-    for (j = 0; j < length; j++)
-      (*v[i])[j] = initial;
 }

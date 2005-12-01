@@ -243,7 +243,7 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < Storage.Size(); i++)
     Storage[i].setToZero();
 
-  CI.resize(spawnStocks.Size(), 0);
+  CI.resize(spawnStocks.Size());
   for (i = 0; i < spawnStocks.Size(); i++)
     CI[i] = new ConversionIndex(spawnLgrpDiv, spawnStocks[i]->getLengthGroupDiv());
 

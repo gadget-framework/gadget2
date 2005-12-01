@@ -24,7 +24,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   if (suitable == 0)
     handle.logMessage(LOGFAIL, "Error in predator - found no suitability values for predator", this->getName());
 
-  preys.resize(suitable->numPreys(), 0);
+  preys.resize(suitable->numPreys());
   for (i = 0; i < preyvec.Size(); i++) {
     found = 0;
     for (j = 0; j < suitable->numPreys(); j++) {

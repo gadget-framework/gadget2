@@ -72,7 +72,7 @@ void Transition::setStock(StockPtrVector& stockvec) {
     transitionRatio[i] = tmpratio[i];
 
   numstocks = transitionStocks.Size();
-  CI.resize(numstocks, 0);
+  CI.resize(numstocks);
   for (i = 0; i < numstocks; i++)
     CI[i] = new ConversionIndex(LgrpDiv, transitionStocks[i]->getLengthGroupDiv());
 

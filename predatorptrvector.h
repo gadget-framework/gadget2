@@ -20,12 +20,6 @@ public:
    */
   PredatorPtrVector(int sz);
   /**
-   * \brief This is the PredatorPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  PredatorPtrVector(int sz, Predator* initial);
-  /**
    * \brief This is the PredatorPtrVector constructor that creates a copy of an existing PredatorPtrVector
    * \param initial is the PredatorPtrVector to copy
    */

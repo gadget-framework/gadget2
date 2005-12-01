@@ -158,7 +158,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
     tagStorage[i].setToZero();
   }
 
-  CI.resize(strayStocks.Size(), 0);
+  CI.resize(strayStocks.Size());
   for (i = 0; i < strayStocks.Size(); i++)
     CI[i] = new ConversionIndex(LgrpDiv, strayStocks[i]->getLengthGroupDiv());
 }

@@ -590,8 +590,8 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
         Steps.resize(1, step);
         timeid = Years.Size() - 1;
 
-        obsConsumption.AddRows(1, numarea, 0);
-        modelConsumption.AddRows(1, numarea, 0);
+        obsConsumption.AddRows(1, numarea);
+        modelConsumption.AddRows(1, numarea);
         likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
           obsConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
@@ -744,9 +744,9 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
         Steps.resize(1, step);
         timeid = Years.Size() - 1;
 
-        obsConsumption.AddRows(1, numarea, 0);
-        modelConsumption.AddRows(1, numarea, 0);
-        stddev.AddRows(1, numarea, 0);
+        obsConsumption.AddRows(1, numarea);
+        modelConsumption.AddRows(1, numarea);
+        stddev.AddRows(1, numarea);
         likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
           obsConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
@@ -1035,8 +1035,8 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
         Steps.resize(1, step);
         timeid = Years.Size() - 1;
 
-        obsConsumption.AddRows(1, numarea, 0);
-        modelConsumption.AddRows(1, numarea, 0);
+        obsConsumption.AddRows(1, numarea);
+        modelConsumption.AddRows(1, numarea);
         likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
           obsConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);

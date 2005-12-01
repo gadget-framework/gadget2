@@ -100,23 +100,23 @@ StockPreyFullPrinter::~StockPreyFullPrinter() {
 }
 
 void StockPreyFullPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const Area) {
-  CharPtrVector stocknames(1, stockname);
   StockPtrVector stocks;
-  int i, j;
+  int i;
 
   for (i = 0; i < stockvec.Size(); i++)
-    for (j = 0; j < stocknames.Size(); j++)
-      if (strcasecmp(stockvec[i]->getName(), stocknames[j]) == 0)
-        stocks.resize(1, stockvec[i]);
+    if (strcasecmp(stockvec[i]->getName(), stockname) == 0)
+      stocks.resize(1, stockvec[i]);
 
-  if (stocks.Size() != stocknames.Size()) {
+  if (stocks.Size() != 1) {
     handle.logMessage(LOGWARN, "Error in stockpreyfullprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
       handle.logMessage(LOGWARN, "Error in stockpreyfullprinter - found stock", stocks[i]->getName());
-    for (i = 0; i < stocknames.Size(); i++)
-      handle.logMessage(LOGWARN, "Error in stockpreyfullprinter - looking for stock", stocknames[i]);
+    handle.logMessage(LOGWARN, "Error in stockpreyfullprinter - looking for stock", stockname);
     exit(EXIT_FAILURE);
   }
+
+  if (!(stocks[0]->isEaten()))
+    handle.logMessage(LOGFAIL, "Error in stockpreyfullprinter - stock is not a prey");
 
   minage = stocks[0]->minAge();
   maxage = stocks[0]->maxAge();
@@ -125,12 +125,8 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec, const AreaClass* c
   for (i = 0; i < outerareas.Size(); i++)
     outerareas[i] = Area->OuterArea(areas[i]);
 
-  if (stocks[0]->isEaten())
-    preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->getPrey(), areas);
-  else
-    handle.logMessage(LOGFAIL, "Error in stockpreyfullprinter - stock is not a prey");
-
   LgrpDiv = new LengthGroupDivision(*stocks[0]->getLengthGroupDiv());
+  preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->getPrey(), areas);
 }
 
 void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {

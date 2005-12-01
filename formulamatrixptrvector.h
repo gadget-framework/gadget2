@@ -20,12 +20,6 @@ public:
    */
   FormulaMatrixPtrVector(int sz);
   /**
-   * \brief This is the FormulaMatrixPtrVector constructor for a specified size with an initial value
-   * \param sz is the size of the vector to be created
-   * \param initial is the initial value for all the entries of the vector
-   */
-  FormulaMatrixPtrVector(int sz, FormulaMatrix* initial);
-  /**
    * \brief This is the FormulaMatrixPtrVector constructor that creates a copy of an existing FormulaMatrixPtrVector
    * \param initial is the FormulaMatrixPtrVector to copy
    */
