@@ -71,15 +71,15 @@ void Ecosystem::Initialise() {
   //OK, next create a list of all the predators and all the preys
   for (i = 0; i < stockvec.Size(); i++) {
     if (stockvec[i]->isEaten())
-      preyvec.resize(1, stockvec[i]->getPrey());
+      preyvec.resize(stockvec[i]->getPrey());
     if (stockvec[i]->doesEat())
-      predvec.resize(1, stockvec[i]->getPredator());
+      predvec.resize(stockvec[i]->getPredator());
   }
 
   for (i = 0; i < otherfoodvec.Size(); i++)
-    preyvec.resize(1, otherfoodvec[i]->getPrey());
+    preyvec.resize(otherfoodvec[i]->getPrey());
   for (i = 0; i < fleetvec.Size(); i++)
-    predvec.resize(1, fleetvec[i]->getPredator());
+    predvec.resize(fleetvec[i]->getPredator());
 
   //Now we can start initialising things
   for (i = 0; i < predvec.Size(); i++) {
@@ -95,13 +95,12 @@ void Ecosystem::Initialise() {
     tagvec[i]->setStock(stockvec);
   }
 
-  basevec.resize(stockvec.Size() + otherfoodvec.Size() + fleetvec.Size());
   for (i = 0; i < stockvec.Size(); i++)
-    basevec[i] = stockvec[i];
+    basevec.resize(stockvec[i]);
   for (i = 0; i < otherfoodvec.Size(); i++)
-    basevec[i + stockvec.Size()] = otherfoodvec[i];
+    basevec.resize(otherfoodvec[i]);
   for (i = 0; i < fleetvec.Size(); i++)
-    basevec[i + stockvec.Size() + otherfoodvec.Size()] = fleetvec[i];
+    basevec.resize(fleetvec[i]);
 
   //This is a good place to initialise the likelihood classes.
   for (i = 0; i < likevec.Size(); i++) {

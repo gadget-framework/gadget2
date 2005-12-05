@@ -189,7 +189,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
 
   //initialise things
   for (areaid = 0; areaid < noareas; areaid++) {
-    initialNumber.resize(1, new FormulaMatrix(noagegr, nolengr, 0.0));
+    initialNumber.resize(new FormulaMatrix(noagegr, nolengr, 0.0));
     for (ageid = minage; ageid < noagegr + minage; ageid++) {
       for (lengthid = 0; lengthid < nolengr; lengthid++) {
         initialPop[areaid][ageid][lengthid].N = 0.0;
@@ -289,6 +289,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   readWordAndVariable(infile, "maxage", maxage);
   readWordAndVariable(infile, "minlength", minlength);
   readWordAndVariable(infile, "maxlength", maxlength);
+  int noagegr = maxage - minage + 1;
 
   //JMB - changed to make the reading of dl optional
   //if it isnt specifed here, it will default to the dl value of the stock
@@ -315,16 +316,11 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   keeper->clearLast();
 
   //create the initialPop object of the correct size
-  int noagegr = maxage - minage + 1;
-  PopInfoMatrix tmpPop(noagegr, LgrpDiv->numLengthGroups());
-  for (i = 0; i < noagegr; i++) {
-    for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
-      //these values for tmpPop[i][j] must not be zero - set them to 1
-      tmpPop[i][j].N = 1.0;
-      tmpPop[i][j].W = 1.0;
-    }
-  }
-  initialPop.resize(areas.Size(), minage, 0, tmpPop);
+  PopInfo tmppop;
+  tmppop.N = 1.0;
+  tmppop.W = 1.0;
+  PopInfoMatrix popmatrix(noagegr, LgrpDiv->numLengthGroups(), tmppop);
+  initialPop.resize(areas.Size(), minage, 0, popmatrix);
 
   infile >> text >> ws;
   if ((strcasecmp(text, "initstockfile") == 0) || (strcasecmp(text, "normalcondfile") == 0)) {
@@ -357,7 +353,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
 
     //Aggregate the reference weight data to be the same format
     double ratio;
-    refWeight.resize(LgrpDiv->numLengthGroups());
+    refWeight.resize(LgrpDiv->numLengthGroups(), 0.0);
     int pos = 0;
     for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
       for (i = pos; i < tmpRefW.Nrow() - 1; i++) {

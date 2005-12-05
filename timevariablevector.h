@@ -14,12 +14,6 @@ public:
    */
   TimeVariableVector() { size = 0; v = 0; };
   /**
-   * \brief This is the TimeVariableVector constructor for a specified size
-   * \param sz is the size of the vector to be created
-   * \note The elements of the vector will all be created, and set to zero
-   */
-  TimeVariableVector(int sz);
-  /**
    * \brief This is the TimeVariableVector destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
@@ -29,7 +23,7 @@ public:
    * \param addsize is the number of new entries to the vector
    * \note All elements of the vector will be created, and set to zero
    */
-  void resize(int addsize);
+  void setsize(int addsize);
   /**
    * \brief This will add new empty entries to the vector and inform Keeper of the change
    * \param addsize is the number of new entries to the vector

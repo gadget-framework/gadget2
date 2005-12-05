@@ -15,7 +15,8 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   Keeper* const keeper) : LivesOnAreas(Areas) {
 
   keeper->addString("spawner");
-  int i;
+  int i, tmpint;
+  double tmpratio;
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -36,11 +37,9 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   if (!((strcasecmp(text, "spawnstep") == 0) || (strcasecmp(text, "spawnsteps") == 0)))
     handle.logFileUnexpected(LOGFAIL, "spawnsteps", text);
 
-  i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
-    spawnStep.resize(1);
-    infile >> spawnStep[i] >> ws;
-    i++;
+    infile >> tmpint >> ws;
+    spawnStep.resize(1, tmpint);
   }
 
   for (i = 0; i < spawnStep.Size(); i++)
@@ -51,11 +50,9 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   if (!((strcasecmp(text, "spawnarea") == 0) || (strcasecmp(text, "spawnareas") == 0)))
     handle.logFileUnexpected(LOGFAIL, "spawnareas", text);
 
-  i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
-    spawnArea.resize(1);
-    infile >> spawnArea[i] >> ws;
-    i++;
+    infile >> tmpint >> ws;
+    spawnArea.resize(1, tmpint);
   }
 
   for (i = 0; i < spawnArea.Size(); i++)
@@ -64,15 +61,14 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   infile >> text;
   if (strcasecmp(text, "spawnstocksandratios") == 0) {
     onlyParent = 0;
-    infile >> text >> ws;
     i = 0;
+    infile >> text >> ws;
     while (strcasecmp(text, "proportionfunction") != 0 && !infile.eof()) {
-      spawnStockNames.resize(1, new char[strlen(text) + 1]);
+      spawnStockNames.resize(new char[strlen(text) + 1]);
       strcpy(spawnStockNames[i], text);
-      spawnRatio.resize(1);
-      infile >> spawnRatio[i];
+      infile >> tmpratio >> text >> ws;
+      spawnRatio.resize(1, tmpratio);
       i++;
-      infile >> text >> ws;
     }
   } else if (strcasecmp(text, "onlyparent") == 0) {
     onlyParent = 1;
@@ -197,7 +193,7 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < spawnStockNames.Size(); j++)
       if (strcasecmp(stockvec[i]->getName(), spawnStockNames[j]) == 0) {
-        spawnStocks.resize(1, stockvec[i]);
+        spawnStocks.resize(stockvec[i]);
         tmpratio.resize(1, spawnRatio[j]);
       }
 
@@ -211,9 +207,7 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
   }
 
   spawnRatio.Reset();
-  spawnRatio.resize(tmpratio.Size());
-  for (i = 0; i < tmpratio.Size(); i++)
-    spawnRatio[i] = tmpratio[i];
+  spawnRatio = tmpratio;
 
   //JMB - check that the spawned stocks are defined on the areas
   spawnAge = 9999;
@@ -236,17 +230,14 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
   }
 
   spawnLgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
+  for (i = 0; i < spawnStocks.Size(); i++)
+    CI.resize(new ConversionIndex(spawnLgrpDiv, spawnStocks[i]->getLengthGroupDiv()));
 
   IntVector minlv(1, 0);
   IntVector sizev(1, spawnLgrpDiv->numLengthGroups());
   Storage.resize(areas.Size(), spawnAge, minlv, sizev);
   for (i = 0; i < Storage.Size(); i++)
     Storage[i].setToZero();
-
-  CI.resize(spawnStocks.Size());
-  for (i = 0; i < spawnStocks.Size(); i++)
-    CI[i] = new ConversionIndex(spawnLgrpDiv, spawnStocks[i]->getLengthGroupDiv());
-
 }
 
 void SpawnData::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo) {

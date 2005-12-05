@@ -1,16 +1,5 @@
 #include "charptrvector.h"
-#include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
-
-CharPtrVector::CharPtrVector(int sz) {
-  size = (sz > 0 ? sz : 0);
-  if (size > 0)
-    v = new char*[size];
-  else
-    v = 0;
-}
 
 CharPtrVector::CharPtrVector(const CharPtrVector& initial) {
   size = initial.size;
@@ -30,15 +19,22 @@ CharPtrVector::~CharPtrVector() {
   }
 }
 
-void CharPtrVector::resize(int addsize, char* value) {
-  if (addsize != 1)
-    handle.logMessage(LOGFAIL, "Error in charptrvector - cannot add entries to vector");
-
-  this->resize(addsize);
-  v[size - 1] = value;
+void CharPtrVector::resize(char* value) {
+  int i;
+  if (v == 0) {
+    v = new char*[1];
+  } else {
+    char** vnew = new char*[size + 1];
+    for (i = 0; i < size; i++)
+      vnew[i] = v[i];
+    delete[] v;
+    v = vnew;
+  }
+  v[size] = value;
+  size++;
 }
 
-void CharPtrVector::resize(int addsize) {
+void CharPtrVector::resizeBlank(int addsize) {
   if (addsize <= 0)
     return;
   int i;

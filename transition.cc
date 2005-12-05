@@ -11,6 +11,7 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
   : LivesOnAreas(areas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)), age(Age) {
 
   int i;
+  double tmpratio;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   keeper->addString("transition");
@@ -20,10 +21,10 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
     i = 0;
     infile >> text >> ws;
     while (strcasecmp(text, "transitionstep") != 0 && !infile.eof()) {
-      transitionStockNames.resize(1, new char[strlen(text) + 1]);
+      transitionStockNames.resize(new char[strlen(text) + 1]);
       strcpy(transitionStockNames[i], text);
-      transitionRatio.resize(1);
-      infile >> transitionRatio[i] >> text >> ws;
+      infile >> tmpratio >> text >> ws;
+      transitionRatio.resize(1, tmpratio);
       i++;
     }
   } else
@@ -47,13 +48,13 @@ Transition::~Transition() {
 }
 
 void Transition::setStock(StockPtrVector& stockvec) {
-  int i, j, numstocks, index;
+  int i, j, index;
   DoubleVector tmpratio;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < transitionStockNames.Size(); j++)
       if (strcasecmp(stockvec[i]->getName(), transitionStockNames[j]) == 0) {
-        transitionStocks.resize(1, stockvec[i]);
+        transitionStocks.resize(stockvec[i]);
         tmpratio.resize(1, transitionRatio[j]);
       }
 
@@ -67,18 +68,11 @@ void Transition::setStock(StockPtrVector& stockvec) {
   }
 
   transitionRatio.Reset();
-  transitionRatio.resize(tmpratio.Size());
-  for (i = 0; i < tmpratio.Size(); i++)
-    transitionRatio[i] = tmpratio[i];
+  transitionRatio = tmpratio;
 
-  numstocks = transitionStocks.Size();
-  CI.resize(numstocks);
-  for (i = 0; i < numstocks; i++)
-    CI[i] = new ConversionIndex(LgrpDiv, transitionStocks[i]->getLengthGroupDiv());
-
-  //JMB - check that the transition stocks are defined on the areas
   double mlength = 9999.0;
-  for (i = 0; i < numstocks; i++) {
+  for (i = 0; i < transitionStocks.Size(); i++) {
+    CI.resize(new ConversionIndex(LgrpDiv, transitionStocks[i]->getLengthGroupDiv()));
     index = 0;
     for (j = 0; j < areas.Size(); j++)
       if (!transitionStocks[i]->isInArea(areas[j]))

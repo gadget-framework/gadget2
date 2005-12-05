@@ -52,7 +52,7 @@ int SelectFunc::numConstants() {
 // ********************************************************
 ConstSelectFunc::ConstSelectFunc() {
   this->setName("ConstantSelectFunc");
-  coeff.resize(1);
+  coeff.setsize(1);
 }
 
 ConstSelectFunc::~ConstSelectFunc() {
@@ -67,7 +67,7 @@ double ConstSelectFunc::calculate(double len) {
 // ********************************************************
 ExpSelectFunc::ExpSelectFunc() {
   this->setName("ExponentialSelectFunc");
-  coeff.resize(2);
+  coeff.setsize(2);
 }
 
 ExpSelectFunc::~ExpSelectFunc() {
@@ -82,7 +82,7 @@ double ExpSelectFunc::calculate(double len) {
 // ********************************************************
 StraightSelectFunc::StraightSelectFunc() {
   this->setName("StraightLineSelectFunc");
-  coeff.resize(2);
+  coeff.setsize(2);
 }
 
 StraightSelectFunc::~StraightSelectFunc() {

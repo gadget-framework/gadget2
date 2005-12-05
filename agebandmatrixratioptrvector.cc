@@ -84,7 +84,7 @@ void AgeBandMatrixRatioPtrVector::addTag(const char* tagname) {
       for (length = minlength; length < maxlength; length++) {
         num = new double[1];
         num[0] = 0.0;
-        (*v[i])[age][length].resize(1, num, 0.0);
+        (*v[i])[age][length].resize(num, 0.0);
       }
     }
   }
@@ -109,9 +109,9 @@ void AgeBandMatrixRatioPtrVector::addTag(AgeBandMatrixPtrVector* initial,
       for (length = minlength; length < maxlength; length++) {
         totalnum = Alkeys[i][age][length].N;
         if (totalnum < verysmall)
-          (*v[i])[age][length].resize(1, (&(*initial)[i][age][length].N), 0.0);
+          (*v[i])[age][length].resize((&(*initial)[i][age][length].N), 0.0);
         else
-          (*v[i])[age][length].resize(1, (&(*initial)[i][age][length].N), (*initial)[i][age][length].N / totalnum);
+          (*v[i])[age][length].resize((&(*initial)[i][age][length].N), (*initial)[i][age][length].N / totalnum);
       }
     }
   }
@@ -121,7 +121,7 @@ void AgeBandMatrixRatioPtrVector::addTagName(const char* tagname) {
   char* tempid;
   tempid = new char[strlen(tagname) + 1];
   strcpy(tempid, tagname);
-  tagID.resize(1, tempid);
+  tagID.resize(tempid);
 }
 
 // Returns -1 if do not contain tag with name == tagname.

@@ -1,16 +1,5 @@
 #include "stockptrvector.h"
-#include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
-
-StockPtrVector::StockPtrVector(int sz) {
-  size = (sz > 0 ? sz : 0);
-  if (size > 0)
-    v = new Stock*[size];
-  else
-    v = 0;
-}
 
 StockPtrVector::StockPtrVector(const StockPtrVector& initial) {
   size = initial.size;
@@ -30,29 +19,19 @@ StockPtrVector::~StockPtrVector() {
   }
 }
 
-void StockPtrVector::resize(int addsize, Stock* value) {
-  if (addsize != 1)
-    handle.logMessage(LOGFAIL, "Error in baseclassptrvector - cannot add entries to vector");
-
-  this->resize(addsize);
-  v[size - 1] = value;
-}
-
-void StockPtrVector::resize(int addsize) {
-  if (addsize <= 0)
-    return;
+void StockPtrVector::resize(Stock* value) {
   int i;
   if (v == 0) {
-    size = addsize;
-    v = new Stock*[size];
+    v = new Stock*[1];
   } else {
-    Stock** vnew = new Stock*[addsize + size];
+    Stock** vnew = new Stock*[size + 1];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
     v = vnew;
-    size += addsize;
   }
+  v[size] = value;
+  size++;
 }
 
 void StockPtrVector::Delete(int pos) {

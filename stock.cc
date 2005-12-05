@@ -110,7 +110,8 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   handle.logMessage(LOGMESSAGE, "Read basic stock data for stock", this->getName());
 
   //read the growth function data
-  tmpPopulation.AddRows(areas.Size(), LgrpDiv->numLengthGroups());
+  PopInfo nullpop;
+  tmpPopulation.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), nullpop);
   readWordAndVariable(infile, "doesgrow", doesgrow);
   if (doesgrow)
     grower = new Grower(infile, LgrpDiv, GrowLgrpDiv, areas, TimeInfo, keeper, refweight, Area, grlenindex);
@@ -154,7 +155,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //read the migration data
   readWordAndVariable(infile, "doesmigrate", doesmigrate);
   if (doesmigrate) {
-    tmpMigrate.resize(areas.Size());
+    tmpMigrate.resizeBlank(areas.Size());
     infile >> ws;
     c = infile.peek();
     if ((c == 'y') || (c == 'Y')) {

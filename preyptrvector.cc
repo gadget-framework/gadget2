@@ -1,16 +1,5 @@
 #include "preyptrvector.h"
-#include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
-
-PreyPtrVector::PreyPtrVector(int sz) {
-  size = (sz > 0 ? sz : 0);
-  if (size > 0)
-    v = new Prey*[size];
-  else
-    v = 0;
-}
 
 PreyPtrVector::PreyPtrVector(const PreyPtrVector& initial) {
   size = initial.size;
@@ -30,15 +19,22 @@ PreyPtrVector::~PreyPtrVector() {
   }
 }
 
-void PreyPtrVector::resize(int addsize, Prey* value) {
-  if (addsize != 1)
-    handle.logMessage(LOGFAIL, "Error in preyptrvector - cannot add entries to vector");
-
-  this->resize(addsize);
-  v[size - 1] = value;
+void PreyPtrVector::resize(Prey* value) {
+  int i;
+  if (v == 0) {
+    v = new Prey*[1];
+  } else {
+    Prey** vnew = new Prey*[size + 1];
+    for (i = 0; i < size; i++)
+      vnew[i] = v[i];
+    delete[] v;
+    v = vnew;
+  }
+  v[size] = value;
+  size++;
 }
 
-void PreyPtrVector::resize(int addsize) {
+void PreyPtrVector::resizeBlank(int addsize) {
   if (addsize <= 0)
     return;
   int i;

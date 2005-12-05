@@ -1,16 +1,5 @@
 #include "migrationareaptrvector.h"
-#include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
-
-MigrationAreaPtrVector::MigrationAreaPtrVector(int sz) {
-  size = (sz > 0 ? sz : 0);
-  if (size > 0)
-    v = new MigrationArea*[size];
-  else
-    v = 0;
-}
 
 MigrationAreaPtrVector::MigrationAreaPtrVector(const MigrationAreaPtrVector& initial) {
   size = initial.size;
@@ -30,27 +19,35 @@ MigrationAreaPtrVector::~MigrationAreaPtrVector() {
   }
 }
 
-void MigrationAreaPtrVector::resize(int addsize, MigrationArea* value) {
-  if (addsize != 1)
-    handle.logMessage(LOGFAIL, "Error in migrationareaptrvector - cannot add entries to vector");
-
-  this->resize(addsize);
-  v[size - 1] = value;
-}
-
-void MigrationAreaPtrVector::resize(int addsize) {
-  if (addsize <= 0)
-    return;
+void MigrationAreaPtrVector::resize(MigrationArea* value) {
   int i;
   if (v == 0) {
-    size = addsize;
-    v = new MigrationArea*[size];
+    v = new MigrationArea*[1];
   } else {
-    MigrationArea** vnew = new MigrationArea*[addsize + size];
+    MigrationArea** vnew = new MigrationArea*[size + 1];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
     v = vnew;
-    size += addsize;
+  }
+  v[size] = value;
+  size++;
+}
+
+void MigrationAreaPtrVector::Delete(int pos) {
+  int i;
+  if (size > 1) {
+    MigrationArea** vnew = new MigrationArea*[size - 1];
+    for (i = 0; i < pos; i++)
+      vnew[i] = v[i];
+    for (i = pos; i < size - 1; i++)
+      vnew[i] = v[i + 1];
+    delete[] v;
+    v = vnew;
+    size--;
+  } else {
+    delete[] v;
+    v = 0;
+    size = 0;
   }
 }

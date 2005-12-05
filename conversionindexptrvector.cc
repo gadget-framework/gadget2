@@ -1,16 +1,5 @@
 #include "conversionindexptrvector.h"
-#include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
-
-ConversionIndexPtrVector::ConversionIndexPtrVector(int sz) {
-  size = (sz > 0 ? sz : 0);
-  if (size > 0)
-    v = new ConversionIndex*[size];
-  else
-    v = 0;
-}
 
 ConversionIndexPtrVector::ConversionIndexPtrVector(const ConversionIndexPtrVector& initial) {
   size = initial.size;
@@ -30,29 +19,19 @@ ConversionIndexPtrVector::~ConversionIndexPtrVector() {
   }
 }
 
-void ConversionIndexPtrVector::resize(int addsize, ConversionIndex* value) {
-  if (addsize != 1)
-    handle.logMessage(LOGFAIL, "Error in conversionindexptrvector - cannot add entries to vector");
-
-  this->resize(addsize);
-  v[size - 1] = value;
-}
-
-void ConversionIndexPtrVector::resize(int addsize) {
-  if (addsize <= 0)
-    return;
+void ConversionIndexPtrVector::resize(ConversionIndex* value) {
   int i;
   if (v == 0) {
-    size = addsize;
-    v = new ConversionIndex*[size];
+    v = new ConversionIndex*[1];
   } else {
-    ConversionIndex** vnew = new ConversionIndex*[addsize + size];
+    ConversionIndex** vnew = new ConversionIndex*[size + 1];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
     v = vnew;
-    size += addsize;
   }
+  v[size] = value;
+  size++;
 }
 
 void ConversionIndexPtrVector::Delete(int pos) {

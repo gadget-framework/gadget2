@@ -8,9 +8,8 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
   : stocks(Stocks), areas(Areas), ages(Ages), alptr(0) {
 
   int i;
-  CI.resize(stocks.Size());
   for (i = 0; i < stocks.Size(); i++)
-    CI[i] = new ConversionIndex(stocks[i]->getLengthGroupDiv(), LgrpDiv);
+    CI.resize(new ConversionIndex(stocks[i]->getLengthGroupDiv(), LgrpDiv));
 
   //Resize total using dummy variables tmppop and popmatrix.
   PopInfo tmppop;

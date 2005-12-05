@@ -14,13 +14,12 @@ void readRefWeights(CommentStream& infile, DoubleMatrix& M) {
 
   i = 0;
   while (!infile.eof()) {
-    M.AddRows(1, 2);
+    M.AddRows(1, 2, 0.0);
     for (j = 0; j < 2; j++) {
       infile >> ws >> N;
-      if (!infile.fail())
-        M[i][j] = N;
-      else
+      if (infile.fail())
         handle.logFileMessage(LOGFAIL, "failed to read reference weights");
+      M[i][j] = N;
     }
     infile >> ws;
     i++;

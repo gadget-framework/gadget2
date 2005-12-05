@@ -3,22 +3,12 @@
 #include "commentstream.h"
 #include "gadget.h"
 
-void TimeVariableVector::resize(int addsize) {
-  int i;
-  if (v == 0) {
-    size = addsize;
-    v = new TimeVariable[size];
-  } else if (addsize > 0) {
-    //this loses the old values and should never happen ...
-    TimeVariable* vnew = new TimeVariable[addsize + size];
-    delete[] v;
-    v = vnew;
-    size += addsize;
-  }
-}
-
-TimeVariableVector::TimeVariableVector(int sz) {
+void TimeVariableVector::setsize(int sz) {
   size = (sz > 0 ? sz : 0);
+  if (v != 0) {
+    delete[] v;
+    v = 0;
+  }
   if (size > 0)
     v = new TimeVariable[size];
   else
@@ -26,11 +16,13 @@ TimeVariableVector::TimeVariableVector(int sz) {
 }
 
 void TimeVariableVector::resize(int addsize, Keeper* const keeper) {
+  if (addsize <= 0)
+    return;
   int i;
   if (v == 0) {
     size = addsize;
     v = new TimeVariable[size];
-  } else if (addsize > 0) {
+  } else {
     TimeVariable* vnew = new TimeVariable[addsize + size];
     for (i = 0; i < size; i++)
       v[i].Interchange(vnew[i], keeper);
@@ -50,18 +42,16 @@ TimeVariableVector::~TimeVariableVector() {
 void TimeVariableVector::resize(const TimeVariable& tvar, Keeper* const keeper) {
   int i;
   if (v == 0) {
-    size = 1;
-    v = new TimeVariable[size];
-    tvar.Interchange(v[0], keeper);
+    v = new TimeVariable[1];
   } else {
     TimeVariable* vnew = new TimeVariable[size + 1];
     for (i = 0; i < size; i++)
       v[i].Interchange(vnew[i], keeper);
     delete[] v;
     v = vnew;
-    tvar.Interchange(v[size], keeper);
-    size++;
   }
+  tvar.Interchange(v[size], keeper);
+  size++;
 }
 
 int TimeVariableVector::didChange(const TimeClass* const TimeInfo) const {

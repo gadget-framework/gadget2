@@ -39,23 +39,22 @@ DoubleVector::~DoubleVector() {
 }
 
 void DoubleVector::resize(int addsize, double value) {
-  int oldsize = size;
-  this->resize(addsize);
-  int i;
-  if (addsize > 0)
-    for (i = oldsize; i < size; i++)
-      v[i] = value;
-}
+  if (addsize <= 0)
+    return;
 
-void DoubleVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
     v = new double[size];
+    for (i = 0; i < size; i++)
+      v[i] = value;
+
   } else if (addsize > 0) {
-    double* vnew = new double[addsize + size];
+    double* vnew = new double[size + addsize];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
+    for (i = size; i < size + addsize; i++)
+      vnew[i] = value;
     delete[] v;
     v = vnew;
     size += addsize;

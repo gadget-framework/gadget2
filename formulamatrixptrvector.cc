@@ -1,16 +1,5 @@
 #include "formulamatrixptrvector.h"
-#include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
-
-FormulaMatrixPtrVector::FormulaMatrixPtrVector(int sz) {
-  size = (sz > 0 ? sz : 0);
-  if (size > 0)
-    v = new FormulaMatrix*[size];
-  else
-    v = 0;
-}
 
 FormulaMatrixPtrVector::FormulaMatrixPtrVector(const FormulaMatrixPtrVector& initial) {
   size = initial.size;
@@ -30,29 +19,19 @@ FormulaMatrixPtrVector::~FormulaMatrixPtrVector() {
   }
 }
 
-void FormulaMatrixPtrVector::resize(int addsize, FormulaMatrix* value) {
-  if (addsize != 1)
-    handle.logMessage(LOGFAIL, "Error in formulamatrxptrvector - cannot add entries to vector");
-
-  this->resize(addsize);
-  v[size - 1] = value;
-}
-
-void FormulaMatrixPtrVector::resize(int addsize) {
-  if (addsize <= 0)
-    return;
+void FormulaMatrixPtrVector::resize(FormulaMatrix* value) {
   int i;
   if (v == 0) {
-    size = addsize;
-    v = new FormulaMatrix*[size];
+    v = new FormulaMatrix*[1];
   } else {
-    FormulaMatrix** vnew = new FormulaMatrix*[addsize + size];
+    FormulaMatrix** vnew = new FormulaMatrix*[size + 1];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
     v = vnew;
-    size += addsize;
   }
+  v[size] = value;
+  size++;
 }
 
 void FormulaMatrixPtrVector::Delete(int pos) {

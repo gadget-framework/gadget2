@@ -67,7 +67,7 @@ int SuitFunc::numConstants() {
 // ********************************************************
 ExpSuitFuncA::ExpSuitFuncA() {
   this->setName("ExponentialSuitFunc");
-  coeff.resize(4);
+  coeff.setsize(4);
   preyLength = -1.0;
   predLength = -1.0;
 }
@@ -100,7 +100,7 @@ double ExpSuitFuncA::calculate() {
 // ********************************************************
 ConstSuitFunc::ConstSuitFunc() {
   this->setName("ConstantSuitFunc");
-  coeff.resize(1);
+  coeff.setsize(1);
 }
 
 ConstSuitFunc::~ConstSuitFunc() {
@@ -122,7 +122,7 @@ double ConstSuitFunc::calculate() {
 // ********************************************************
 AndersenSuitFunc::AndersenSuitFunc() {
   this->setName("AndersenSuitFunc");
-  coeff.resize(5);
+  coeff.setsize(5);
   preyLength = -1.0;
   predLength = -1.0;
 }
@@ -163,7 +163,7 @@ double AndersenSuitFunc::calculate() {
 // ********************************************************
 ExpSuitFuncL50::ExpSuitFuncL50() {
   this->setName("ExponentialL50SuitFunc");
-  coeff.resize(2);
+  coeff.setsize(2);
   preyLength = -1.0;
 }
 
@@ -187,7 +187,7 @@ double ExpSuitFuncL50::calculate() {
 // ********************************************************
 StraightSuitFunc::StraightSuitFunc() {
   this->setName("StraightLineSuitFunc");
-  coeff.resize(2);
+  coeff.setsize(2);
   preyLength = -1.0;
 }
 
@@ -211,7 +211,7 @@ double StraightSuitFunc::calculate() {
 // ********************************************************
 InverseSuitFunc::InverseSuitFunc() {
   this->setName("InverseSuitFunc");
-  coeff.resize(2);
+  coeff.setsize(2);
   preyLength = -1.0;
 }
 
@@ -235,7 +235,7 @@ double InverseSuitFunc::calculate() {
 // ********************************************************
 StraightUnboundedSuitFunc::StraightUnboundedSuitFunc() {
   this->setName("StraightLineUnboundedSuitFunc");
-  coeff.resize(2);
+  coeff.setsize(2);
   preyLength = -1.0;
 }
 
@@ -256,7 +256,7 @@ double StraightUnboundedSuitFunc::calculate() {
 // ********************************************************
 RichardsSuitFunc::RichardsSuitFunc() {
   this->setName("RichardsSuitFunc");
-  coeff.resize(5);
+  coeff.setsize(5);
   preyLength = -1.0;
   predLength = -1.0;
 }
@@ -289,7 +289,7 @@ double RichardsSuitFunc::calculate() {
 // ********************************************************
 GammaSuitFunc::GammaSuitFunc() {
   this->setName("GammaSuitFunc");
-  coeff.resize(3);
+  coeff.setsize(3);
   preyLength = -1.0;
 }
 

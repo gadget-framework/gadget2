@@ -66,7 +66,7 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
     infile >> ws;
-    fleetnames.resize(1, new char[strlen(text) + 1]);
+    fleetnames.resize(new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
     infile >> text;
   }
@@ -148,20 +148,20 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
         if (tmpindex == -1) {
           keepdata = 1;
         } else {
-          tagvec.resize(1, Tag[tmpindex]);
-          tagnames.resize(1, new char[strlen(tmptag) + 1]);
+          tagvec.resize(Tag[tmpindex]);
+          tagnames.resize(new char[strlen(tmptag) + 1]);
           strcpy(tagnames[tagnames.Size() - 1], tmptag);
           tagid = tagvec.Size() - 1;
           Years.AddRows(1, 1, year);
           Steps.AddRows(1, 1, step);
           timeid = 0;
-          numbers.resize(1, new DoubleMatrix(1, numarea, 0.0));
-          obsMean.resize(1, new DoubleMatrix(1, numarea, 0.0));
-          modelMean.resize(1, new DoubleMatrix(1, numarea, 0.0));
+          numbers.resize(new DoubleMatrix(1, numarea, 0.0));
+          obsMean.resize(new DoubleMatrix(1, numarea, 0.0));
+          modelMean.resize(new DoubleMatrix(1, numarea, 0.0));
           if (needvar == 1)
-            modelStdDev.resize(1, new DoubleMatrix(1, numarea, 0.0));
+            modelStdDev.resize(new DoubleMatrix(1, numarea, 0.0));
           if (readvar == 1)
-            obsStdDev.resize(1, new DoubleMatrix(1, numarea, 0.0));
+            obsStdDev.resize(new DoubleMatrix(1, numarea, 0.0));
         }
 
       } else {
@@ -266,7 +266,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     for (j = 0; j < Fleets.Size(); j++)
       if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
-        fleets.resize(1, Fleets[j]);
+        fleets.resize(Fleets[j]);
       }
 
     if (found == 0)
@@ -282,7 +282,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
         if (Stocks[j]->isEaten())
           if (strcasecmp(stocknames[i], Stocks[j]->getName()) == 0) {
             found++;
-            stocks.resize(1, Stocks[j]);
+            stocks.resize(Stocks[j]);
           }
 
       if (found == 0)
@@ -301,7 +301,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       maxage = max(stocks[i]->maxAge(), maxage);
     }
 
-    IntMatrix ages(1, 0);
+    IntMatrix ages(1, 0, 0);
     for (i = 0; i <= maxage - minage; i++)
       ages[0].resize(1, minage + i);
     aggregator[t] = new RecAggregator(fleets, stocks, LgrpDiv, areas, ages, tagvec[t]);

@@ -2,28 +2,20 @@
 #include "charptrvector.h"
 #include "gadget.h"
 
-PopRatioVector::PopRatioVector(int sz) {
+PopRatioVector::PopRatioVector(int sz, PopRatio initial) {
   size = (sz > 0 ? sz : 0);
-  if (size > 0)
-    v = new PopRatio[size];
-  else
-    v = 0;
-}
-
-PopRatioVector::PopRatioVector(int sz, PopRatio value) {
-  size = (sz > 0 ? sz : 0);
-  int i = 0;
+  int i;
   if (size > 0) {
     v = new PopRatio[size];
     for (i = 0; i < size; i++)
-      v[i] = value;
+      v[i] = initial;
   } else
     v = 0;
 }
 
 PopRatioVector::PopRatioVector(const PopRatioVector& initial) {
   size = initial.size;
-  int i = 0;
+  int i;
   if (size > 0) {
     v = new PopRatio[size];
     for (i = 0; i < size; i++)
@@ -39,42 +31,37 @@ PopRatioVector::~PopRatioVector() {
   }
 }
 
-void PopRatioVector::resize(int addsize, PopRatio value) {
-  int oldsize = size;
-  this->resize(addsize);
-  int i;
-  if (addsize > 0)
-    for (i = oldsize; i < size; i++)
-      v[i] = value;
-}
-
-void PopRatioVector::resize(int addsize, double* num, double rat) {
-  int oldsize = size;
-  this->resize(addsize);
-  int i;
-  PopRatio pop;
-  if (addsize > 0) {
-    for (i = oldsize; i < size; i++) {
-      v[i] = pop;
-      v[i].N = num;
-      v[i].R = rat;
-    }
-  }
-}
-
-void PopRatioVector::resize(int addsize) {
+void PopRatioVector::resize(PopRatio value) {
   int i;
   if (v == 0) {
-    size = addsize;
-    v = new PopRatio[size];
-  } else if (addsize > 0) {
-    PopRatio* vnew = new PopRatio[addsize + size];
+    v = new PopRatio[1];
+  } else {
+    PopRatio* vnew = new PopRatio[size + 1];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
     v = vnew;
-    size += addsize;
   }
+  v[size] = value;
+  size++;
+}
+
+void PopRatioVector::resize(double* num, double rat) {
+  int i;
+  if (v == 0) {
+    v = new PopRatio[1];
+  } else {
+    PopRatio* vnew = new PopRatio[size + 1];
+    for (i = 0; i < size; i++)
+      vnew[i] = v[i];
+    delete[] v;
+    v = vnew;
+  }
+  PopRatio pop;
+  v[size] = pop;
+  v[size].N = num;
+  v[size].R = rat;
+  size++;
 }
 
 void PopRatioVector::Delete(int pos) {

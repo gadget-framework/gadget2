@@ -68,7 +68,7 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
 
     //Aggregate the reference weight data to be the same format
     double ratio;
-    refWeight.resize(LgrpDiv->numLengthGroups());
+    refWeight.resize(LgrpDiv->numLengthGroups(), 0.0);
     int pos = 0;
     for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
       for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
@@ -316,7 +316,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
         id = renewalTime.Size() - 1;
 
         renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
-        renewalNumber.resize(1, new FormulaMatrix(maxage - minage + 1, nolengr, 0.0));
+        renewalNumber.resize(new FormulaMatrix(maxage - minage + 1, nolengr, 0.0));
       }
 
       renewalDistribution[id][age][lengthid].N = 0.0;

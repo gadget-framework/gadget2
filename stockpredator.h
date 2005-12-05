@@ -65,7 +65,7 @@ public:
   /**
    * \brief This function will return the proportion of the predation that is due to each age-length cell of the predator
    * \param area is the area that the prey consumption is being calculated on
-   * \return Alprop, a BandMatrix containing the age-length proportion of the
+   * \return Alprop, a BandMatrix containing the age-length proportion of the predation
    */
   const BandMatrix& getALProportion(int area) const { return Alprop[this->areaNum(area)]; };
   /**

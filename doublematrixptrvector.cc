@@ -1,8 +1,5 @@
 #include "doublematrixptrvector.h"
-#include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
 
 DoubleMatrixPtrVector::DoubleMatrixPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);
@@ -30,15 +27,22 @@ DoubleMatrixPtrVector::~DoubleMatrixPtrVector() {
   }
 }
 
-void DoubleMatrixPtrVector::resize(int addsize, DoubleMatrix* value) {
-  if (addsize != 1)
-    handle.logMessage(LOGFAIL, "Error in doublematrixptrvector - cannot add entries to vector");
-
-  this->resize(addsize);
-  v[size - 1] = value;
+void DoubleMatrixPtrVector::resize(DoubleMatrix* value) {
+  int i;
+  if (v == 0) {
+    v = new DoubleMatrix*[1];
+  } else {
+    DoubleMatrix** vnew = new DoubleMatrix*[size + 1];
+    for (i = 0; i < size; i++)
+      vnew[i] = v[i];
+    delete[] v;
+    v = vnew;
+  }
+  v[size] = value;
+  size++;
 }
 
-void DoubleMatrixPtrVector::resize(int addsize) {
+void DoubleMatrixPtrVector::resizeBlank(int addsize) {
   if (addsize <= 0)
     return;
   int i;

@@ -39,7 +39,7 @@ void LivesOnAreas::storeAreas(const IntVector& Areas) {
 
   areas.Reset();
   areaConvert.Reset();
-  areas.resize(Areas.Size());
+  areas.resize(Areas.Size(), -1);
   for (i = 0; i < areas.Size(); i++) {
     areas[i] = Areas[i];
     if (areas[i] > maxim)

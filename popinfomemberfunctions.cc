@@ -62,7 +62,7 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
 }
 
 void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
-  const ConversionIndex& CI, double ratio, const DoubleVector& Ratio) {
+  const ConversionIndex& CI, const DoubleVector& Ratio, double ratio) {
 
   PopInfo pop;
   int l, minl, maxl, offset;

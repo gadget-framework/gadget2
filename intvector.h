@@ -15,12 +15,6 @@ public:
    */
   IntVector() { size = 0; v = 0; };
   /**
-   * \brief This is the IntVector constructor for a specified size
-   * \param sz is the size of the vector to be created
-   * \note The elements of the vector will all be created, and set to zero
-   */
-  IntVector(int sz);
-  /**
    * \brief This is the IntVector constructor for a specified size with an initial value
    * \param sz is the size of the vector to be created
    * \param initial is the initial value for all the entries of the vector
@@ -38,16 +32,10 @@ public:
   ~IntVector();
   /**
    * \brief This will add new entries to the vector
-   * \param add is the number of new entries to the vector
+   * \param addsize is the number of new entries to the vector
    * \param value is the value that will be entered for the new entries
    */
-  void resize(int add, int value);
-  /**
-   * \brief This will add new empty entries to the vector
-   * \param add is the number of new entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
-   */
-  void resize(int add);
+  void resize(int addsize, int value);
   /**
    * \brief This will delete an entry from the vector
    * \param pos is the element of the vector to be deleted

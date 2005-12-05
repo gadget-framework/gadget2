@@ -15,7 +15,8 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
   Keeper* const keeper) : LivesOnAreas(areas) {
 
   keeper->addString("stray");
-  int i;
+  int i, tmpint;
+  double tmpratio;
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -29,11 +30,9 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
   if (!((strcasecmp(text, "straystep") == 0) || (strcasecmp(text, "straysteps") == 0)))
     handle.logFileUnexpected(LOGFAIL, "straysteps", text);
 
-  i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
-    strayStep.resize(1);
-    infile >> strayStep[i] >> ws;
-    i++;
+    infile >> tmpint >> ws;
+    strayStep.resize(1, tmpint);
   }
 
   for (i = 0; i < strayStep.Size(); i++)
@@ -44,11 +43,9 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
   if (!((strcasecmp(text, "strayarea") == 0) || (strcasecmp(text, "strayareas") == 0)))
     handle.logFileUnexpected(LOGFAIL, "strayareas", text);
 
-  i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
-    strayArea.resize(1);
-    infile >> strayArea[i] >> ws;
-    i++;
+    infile >> tmpint >> ws;
+    strayArea.resize(1, tmpint);
   }
 
   for (i = 0; i < strayArea.Size(); i++)
@@ -59,10 +56,10 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
     i = 0;
     infile >> text >> ws;
     while (strcasecmp(text, "proportionfunction") != 0 && !infile.eof()) {
-      strayStockNames.resize(1, new char[strlen(text) + 1]);
+      strayStockNames.resize(new char[strlen(text) + 1]);
       strcpy(strayStockNames[i], text);
-      strayRatio.resize(1);
-      infile >> strayRatio[i] >> text >> ws;
+      infile >> tmpratio >> text >> ws;
+      strayRatio.resize(1, tmpratio);
       i++;
     }
   } else
@@ -112,7 +109,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < strayStockNames.Size(); j++)
       if (strcasecmp(stockvec[i]->getName(), strayStockNames[j]) == 0) {
-        strayStocks.resize(1, stockvec[i]);
+        strayStocks.resize(stockvec[i]);
         tmpratio.resize(1, strayRatio[j]);
       }
 
@@ -126,9 +123,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
   }
 
   strayRatio.Reset();
-  strayRatio.resize(tmpratio.Size());
-  for (i = 0; i < tmpratio.Size(); i++)
-    strayRatio[i] = tmpratio[i];
+  strayRatio = tmpratio;
 
   //JMB - check that the straying stocks are defined on the areas
   int minStrayAge = 9999;
@@ -149,6 +144,8 @@ void StrayData::setStock(StockPtrVector& stockvec) {
   }
 
   minStrayLength = LgrpDiv->numLengthGroup(minlength);
+  for (i = 0; i < strayStocks.Size(); i++)
+    CI.resize(new ConversionIndex(LgrpDiv, strayStocks[i]->getLengthGroupDiv()));
   IntVector minlv(maxStrayAge - minStrayAge + 1, 0);
   IntVector sizev(maxStrayAge - minStrayAge + 1, LgrpDiv->numLengthGroups());
   Storage.resize(areas.Size(), minStrayAge, minlv, sizev);
@@ -157,10 +154,6 @@ void StrayData::setStock(StockPtrVector& stockvec) {
     Storage[i].setToZero();
     tagStorage[i].setToZero();
   }
-
-  CI.resize(strayStocks.Size());
-  for (i = 0; i < strayStocks.Size(); i++)
-    CI[i] = new ConversionIndex(LgrpDiv, strayStocks[i]->getLengthGroupDiv());
 }
 
 void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,

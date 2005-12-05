@@ -18,7 +18,7 @@ double OptInfoBFGS::getSmallestEigenValue(DoubleMatrix M) {
   double eigen, temp, phi, norm;
   int i, j, k;
   int nvars = M.Nrow();
-  DoubleMatrix L(nvars, nvars);
+  DoubleMatrix L(nvars, nvars, 0.0);
   DoubleVector xo(nvars, 1.0);
 
   // calculate the Cholesky factor of the matrix

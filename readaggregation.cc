@@ -10,10 +10,10 @@ int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggind
   i = 0;
   infile >> ws;
   while (!infile.eof()) {
-    aggindex.resize(1, new char[MaxStrLength]);
+    aggindex.resize(new char[MaxStrLength]);
     strncpy(aggindex[i], "", MaxStrLength);
     infile >> aggindex[i];
-    agg.AddRows(1, 0);
+    agg.AddRows(1, 0, 0);
     if (agg[i].readline(infile) == 0)
       handle.logFileMessage(LOGFAIL, "failed to read aggregation vector");
     infile >> ws;
@@ -35,7 +35,7 @@ int readAggregation(CommentStream& infile, IntVector& agg, CharPtrVector& aggind
   i = tmp = 0;
   infile >> ws;
   while (!infile.eof()) {
-    aggindex.resize(1, new char[MaxStrLength]);
+    aggindex.resize(new char[MaxStrLength]);
     strncpy(aggindex[i], "", MaxStrLength);
     infile >> aggindex[i] >> tmp >> ws;
     agg.resize(1, tmp);
@@ -58,7 +58,7 @@ int readLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrV
   i = 0;
   infile >> ws;
   while (!infile.eof()) {
-    lenindex.resize(1, new char[MaxStrLength]);
+    lenindex.resize(new char[MaxStrLength]);
     strncpy(lenindex[i], "", MaxStrLength);
     infile >> lenindex[i] >> dblA >> dblB >> ws;
 
@@ -93,16 +93,15 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
   i = j = 0;
   infile >> ws;
   while (!infile.eof()) {
-    preyindex.resize(1, new char[MaxStrLength]);
+    preyindex.resize(new char[MaxStrLength]);
     strncpy(preyindex[i], "", MaxStrLength);
     infile >> preyindex[i];
 
     j = 0;
-    preynames.AddRows(1, 0);
+    preynames.resize();
     infile >> text >> ws;
     while (!infile.eof() && (!(strcasecmp(text, "lengths") == 0))) {
-      preynames[i].resize(1);
-      preynames[i][j] = new char[strlen(text) + 1];
+      preynames[i].resize(new char[strlen(text) + 1]);
       strcpy(preynames[i][j++], text);
       infile >> text >> ws;
     }
@@ -111,14 +110,14 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
       handle.logFileUnexpected(LOGFAIL, "lengths", text);
 
     //JMB - changed so that only 2 lengths are read in
-    preylengths.AddRows(1, 2);
+    preylengths.AddRows(1, 2, 0.0);
     infile >> preylengths[i][0] >> preylengths[i][1] >> text >> ws;
 
     if (!(strcasecmp(text, "digestioncoefficients") == 0))
       handle.logFileUnexpected(LOGFAIL, "digestioncoefficients", text);
 
     //JMB - changed so that only 3 elements are read in
-    digestioncoeff.AddRows(1, 3);
+    digestioncoeff.AddRows(1, 3, 0);
     for (k = 0; k < 3; k++)
       if (!(infile >> digestioncoeff[i][k]))
         handle.logFileMessage(LOGFAIL, "invalid format for digestion coefficient vector");

@@ -10,7 +10,7 @@ extern RunID RUNID;
 extern ErrorHandler handle;
 
 SummaryPrinter::SummaryPrinter(CommentStream& infile)
-  : Printer(LIKELIHOODSUMMARYPRINTER), like(0) {
+  : Printer(LIKELIHOODSUMMARYPRINTER) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -47,7 +47,7 @@ SummaryPrinter::~SummaryPrinter() {
 void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
   int i;
   for (i = 0; i < likevec.Size(); i++)
-    like.resize(1, likevec[i]);
+    like.resize(likevec[i]);
 
   for (i = 0; i < like.Size(); i++) {
     switch (like[i]->getType()) {

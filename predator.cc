@@ -24,13 +24,15 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   if (suitable == 0)
     handle.logMessage(LOGFAIL, "Error in predator - found no suitability values for predator", this->getName());
 
-  preys.resize(suitable->numPreys());
+  preys.resizeBlank(suitable->numPreys());
+  IntVector check(suitable->numPreys(), 0);
   for (i = 0; i < preyvec.Size(); i++) {
     found = 0;
     for (j = 0; j < suitable->numPreys(); j++) {
       if (strcasecmp(suitable->getPreyName(j), preyvec[i]->getName()) == 0) {
         if (found == 0) {
           preys[j] = preyvec[i];
+          check[j]++;
           found++;
         } else
           handle.logMessage(LOGFAIL, "Error in predator - repeated suitability values for prey", preyvec[i]->getName());
@@ -40,10 +42,10 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   }
 
   found = 0;
-  for (i = 0; i < preys.Size(); i++) {
+  for (i = 0; i < check.Size(); i++) {
     //If we find a prey that we have read the suitability for, but not
     //received a pointer to, we issue a warning and delete it
-    if (preys[i] == 0) {
+    if (check[i] == 0) {
       found++;
       handle.logMessage(LOGWARN, "Warning in predator - failed to match prey", this->getPreyName(i));
       preys.Delete(i);

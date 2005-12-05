@@ -72,11 +72,6 @@ public:
    */
   int Size() const { return size; };
   /**
-   * \brief This will delete an element of the vector
-   * \param pos is the element of the vector to be deleted
-   */
-  void Delete(int pos);
-  /**
    * \brief This operator will set the vector equal to an existing DoubleIndexVector
    * \param dv is the DoubleIndexVector to copy
    */

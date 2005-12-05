@@ -16,9 +16,8 @@ RecAggregator::RecAggregator(const FleetPtrVector& Fleets,
     areas(Areas), ages(Ages), suitptr(0), alptr(0) {
 
   int i;
-  CI.resize(stocks.Size());
   for (i = 0; i < stocks.Size(); i++)
-    CI[i] = new ConversionIndex(stocks[i]->getPrey()->getLengthGroupDiv(), LgrpDiv);
+    CI.resize(new ConversionIndex(stocks[i]->getPrey()->getLengthGroupDiv(), LgrpDiv));
 
   //Resize total using dummy variables tmppop and popmatrix.
   PopInfo tmppop;
@@ -77,14 +76,14 @@ void RecAggregator::Sum(const TimeClass* const TimeInfo) {
                           * fleets[f]->getPredator()->Scaler(areas[area][j]);
 
             for (i = 0; i < fleets[f]->getPredator()->numPreys(); i++) {
-              if (strcasecmp(stocks[h]->getPrey()->getName(), fleets[f]->getPredator()->getPrey(i)->getName()) == 0) {
+              if (strcasecmp(stocks[h]->getName(), fleets[f]->getPredator()->getPrey(i)->getName()) == 0) {
                 suitptr = &fleets[f]->getPredator()->getSuitability(i)[0];
                 alptr = &taggingExp->getNumberPriorToEating(areas[area][j], stocks[h]->getName());
                 for (age = 0; age < ages.Nrow(); age++) {
                   for (k = 0; k < ages.Ncol(age); k++) {
                     //JMB removed the overconsumption stuff
                     if ((alptr->minAge() <= ages[age][k]) && (ages[age][k] <= alptr->maxAge()))
-                      total[area][age].Add((*alptr)[ages[age][k]], *CI[h], fleetscale, *suitptr);
+                      total[area][age].Add((*alptr)[ages[age][k]], *CI[h], *suitptr, fleetscale);
                   }
                 }
               }

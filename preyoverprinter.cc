@@ -27,7 +27,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile, const TimeClass* const T
     handle.logFileUnexpected(LOGFAIL, "preys", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "areaaggfile") == 0)) {
-    preynames.resize(1, new char[strlen(text) + 1]);
+    preynames.resize(new char[strlen(text) + 1]);
     strcpy(preynames[i++], text);
     infile >> text >> ws;
   }
@@ -129,7 +129,7 @@ void PreyOverPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* const Are
   for (i = 0; i < preyvec.Size(); i++)
     for (j = 0; j < preynames.Size(); j++)
       if (strcasecmp(preyvec[i]->getName(), preynames[j]) == 0)
-        preys.resize(1, preyvec[i]);
+        preys.resize(preyvec[i]);
 
   if (preys.Size() != preynames.Size()) {
     handle.logMessage(LOGWARN, "Error in preyoverprinter - failed to match preys");

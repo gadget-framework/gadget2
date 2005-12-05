@@ -45,7 +45,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
     handle.logFileUnexpected(LOGFAIL, "predatornames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "yearsandsteps") == 0)) {
-    prednames.resize(1, new char[strlen(text) + 1]);
+    prednames.resize(new char[strlen(text) + 1]);
     strcpy(prednames[i++], text);
     infile >> text >> ws;
   }
@@ -82,7 +82,7 @@ void UnderStocking::setPredators(PredatorPtrVector& Predators) {
     for (j = 0; j < Predators.Size(); j++)
       if (strcasecmp(prednames[i], Predators[j]->getName()) == 0) {
         found++;
-        predators.resize(1, Predators[j]);
+        predators.resize(Predators[j]);
       }
 
     if (found == 0)

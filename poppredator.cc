@@ -117,12 +117,12 @@ void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   //now we need to initialise things
   this->Initialise();
   PopInfo nullpop;
-  cons.AddRows(areas.Size(), this->numPreys());
-  consumption.AddRows(areas.Size(), this->numPreys());
   for (i = 0; i < areas.Size(); i++) {
+    cons.resize();
+    consumption.resize();
     for (j = 0; j < this->numPreys(); j++) {
-      cons[i][j] = new DoubleMatrix(LgrpDiv->numLengthGroups(), this->getPrey(j)->getLengthGroupDiv()->numLengthGroups(), 0.0);
-      consumption[i][j] = new DoubleMatrix(LgrpDiv->numLengthGroups(),  this->getPrey(j)->getLengthGroupDiv()->numLengthGroups(), 0.0);
+      cons[i].resize(new DoubleMatrix(LgrpDiv->numLengthGroups(), this->getPrey(j)->getLengthGroupDiv()->numLengthGroups(), 0.0));
+      consumption[i].resize(new DoubleMatrix(LgrpDiv->numLengthGroups(),  this->getPrey(j)->getLengthGroupDiv()->numLengthGroups(), 0.0));
     }
   }
 

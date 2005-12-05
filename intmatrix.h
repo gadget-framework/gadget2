@@ -17,30 +17,9 @@ public:
    * \brief This is the IntMatrix constructor for a specified size
    * \param nr is the size of the vector to be created
    * \param nc is the length of each row to be created (ie. the size of the IntVector to be created for each row)
-   * \note The elements of the vector will all be created, and set to zero
-   */
-  IntMatrix(int nr, int nc);
-  /**
-   * \brief This is the IntMatrix constructor for a specified size
-   * \param nr is the size of the vector to be created
-   * \param nc is the length of each row to be created (ie. the size of the IntVector to be created for each row)
    * \param initial is the initial value for all the entries of the vector
    */
   IntMatrix(int nr, int nc, int initial);
-  /**
-   * \brief This is the IntMatrix constructor for a specified size
-   * \param nr is the size of the vector to be created
-   * \param nc is the length of the rows to be created (ie. the size of the IntVector to be created for each row)
-   * \note The elements of the vector will all be created, and set to zero
-   */
-  IntMatrix(int nr, const IntVector& nc);
-  /**
-   * \brief This is the IntMatrix constructor for a specified size
-   * \param nr is the size of the vector to be created
-   * \param nc is the length of the rows to be created (ie. the size of the IntVector to be created for each row)
-   * \param initial is the initial value for all the entries of the vector
-   */
-  IntMatrix(int nr, const IntVector& nc, int initial);
   /**
    * \brief This is the IntMatrix constructor that creates a copy of an existing IntMatrix
    * \param initial is the IntMatrix to copy
@@ -79,22 +58,15 @@ public:
    * \brief This will add new entries to the vector
    * \param add is the number of new entries to the vector
    * \param length is the number of entries to the IntVector that is created
-   * \param initial is the value that will be entered for the new entries
+   * \param value is the value that will be entered for the new entries
    */
-  void AddRows(int add, int length, int initial);
-  /**
-   * \brief This will add new empty entries to the vector
-   * \param add is the number of new entries to the vector
-   * \param length is the number of entries to the IntVector that is created
-   * \note The new elements of the vector will be created, and set to zero
-   */
-  void AddRows(int add, int length);
+  void AddRows(int add, int length, int value);
   /**
    * \brief This will delete an entry from the vector
-   * \param row is the element of the vector to be deleted
+   * \param pos is the element of the vector to be deleted
    * \note This will free the memory allocated to the deleted element of the vector
    */
-  void DeleteRow(int row);
+  void Delete(int pos);
   /**
    * \brief This will reset the vector
    * \note This will delete every entry from the vector and set the number of rows to zero

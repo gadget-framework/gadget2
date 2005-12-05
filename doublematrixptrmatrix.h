@@ -17,13 +17,6 @@ public:
    */
   DoubleMatrixPtrMatrix() { nrow = 0; v = 0; };
   /**
-   * \brief This is the DoubleMatrixPtrMatrix constructor for a specified size
-   * \param nr is the size of the vector to be created
-   * \param nc is the length of each row to be created (ie. the size of the DoubleMatrixPtrVector to be created for each row)
-   * \note The elements of the vector will all be created, and set to zero
-   */
-  DoubleMatrixPtrMatrix(int nr, int nc);
-  /**
    * \brief This is the DoubleMatrixPtrMatrix destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
@@ -53,18 +46,16 @@ public:
    */
   const DoubleMatrixPtrVector& operator [] (int pos) const { return *v[pos]; };
   /**
-   * \brief This will add new empty entries to the vector
-   * \param add is the number of new entries to the vector
-   * \param length is the number of entries to the DoubleMatrixPtrVector that is created
-   * \note The new elements of the vector will be created, and set to zero
+   * \brief This will add one new empty entry to the vector
+   * \note The new element of the vector will be created, and set to zero
    */
-  void AddRows(int add, int length);
+  void resize();
   /**
    * \brief This will delete an entry from the vector
-   * \param row is the element of the vector to be deleted
+   * \param pos is the element of the vector to be deleted
    * \note This will free the memory allocated to the deleted element of the vector
    */
-  void DeleteRow(int row);
+  void Delete(int pos);
 protected:
   /**
    * \brief This is number of rows of the vector

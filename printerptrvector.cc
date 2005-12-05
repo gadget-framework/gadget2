@@ -1,16 +1,5 @@
 #include "printerptrvector.h"
-#include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
-
-PrinterPtrVector::PrinterPtrVector(int sz) {
-  size = (sz > 0 ? sz : 0);
-  if (size > 0)
-    v = new Printer*[size];
-  else
-    v = 0;
-}
 
 PrinterPtrVector::PrinterPtrVector(const PrinterPtrVector& initial) {
   size = initial.size;
@@ -30,27 +19,35 @@ PrinterPtrVector::~PrinterPtrVector() {
   }
 }
 
-void PrinterPtrVector::resize(int addsize, Printer* value) {
-  if (addsize != 1)
-    handle.logMessage(LOGFAIL, "Error in printerptrvector - cannot add entries to vector");
-
-  this->resize(addsize);
-  v[size - 1] = value;
-}
-
-void PrinterPtrVector::resize(int addsize) {
-  if (addsize <= 0)
-    return;
+void PrinterPtrVector::resize(Printer* value) {
   int i;
   if (v == 0) {
-    size = addsize;
-    v = new Printer*[size];
+    v = new Printer*[1];
   } else {
-    Printer** vnew = new Printer*[addsize + size];
+    Printer** vnew = new Printer*[size + 1];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
     v = vnew;
-    size += addsize;
+  }
+  v[size] = value;
+  size++;
+}
+
+void PrinterPtrVector::Delete(int pos) {
+  int i;
+  if (size > 1) {
+    Printer** vnew = new Printer*[size - 1];
+    for (i = 0; i < pos; i++)
+      vnew[i] = v[i];
+    for (i = pos; i < size - 1; i++)
+      vnew[i] = v[i + 1];
+    delete[] v;
+    v = vnew;
+    size--;
+  } else {
+    delete[] v;
+    v = 0;
+    size = 0;
   }
 }

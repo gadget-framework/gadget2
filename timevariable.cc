@@ -43,7 +43,7 @@ void TimeVariable::read(CommentStream& infile,
 void TimeVariable::readFromFile(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
-  int i, j, check;
+  int i, j, check, tmpint;
   fromfile = 1;
   int numcoeff = 0;
   char text[MaxStrLength];
@@ -71,23 +71,23 @@ void TimeVariable::readFromFile(CommentStream& infile,
 
   i = 0;
   while (!infile.eof()) {
-    years.resize(1);
-    steps.resize(1);
-    values.resize(1, keeper);
-
-    infile >> ws >> years[i];
+    infile >> ws >> tmpint;
+    years.resize(1, tmpint);
     if (infile.fail())
       handle.logFileMessage(LOGFAIL, "failed to read timevariable year");
-    infile >> ws >> steps[i];
+    infile >> ws >> tmpint;
+    steps.resize(1, tmpint);
     if (infile.fail())
       handle.logFileMessage(LOGFAIL, "failed to read timevariable step");
+
+    values.resize(1, keeper);
     infile >> ws >> values[i];
     if (infile.fail())
       handle.logFileMessage(LOGFAIL, "failed to read timevariable value");
     values[i].Inform(keeper);
 
     if (usemodelmatrix) {
-      modelmatrix.AddRows(1, numcoeff);
+      modelmatrix.AddRows(1, numcoeff, 0.0);
       for (j = 0; j < numcoeff; j++) {
         infile >> modelmatrix[i][j];
         if (infile.fail())
@@ -169,22 +169,19 @@ void TimeVariable::Interchange(TimeVariable& newTV, Keeper* const keeper) const 
   if (fromfile) {
     newTV.fromfile = 1;
     newTV.usemodelmatrix = usemodelmatrix;
-    newTV.years.resize(years.Size());
-    newTV.steps.resize(steps.Size());
+    newTV.years = years;
+    newTV.steps = steps;
     newTV.values.resize(values.Size(), keeper);
-    for (i = 0; i < steps.Size(); i++) {
-      newTV.steps[i] = steps[i];
-      newTV.years[i] = years[i];
+    for (i = 0; i < steps.Size(); i++)
       values[i].Interchange(newTV.values[i], keeper);
-    }
 
     if (usemodelmatrix) {
       newTV.coeff.resize(coeff.Size(), keeper);
       for (i = 0; i < values.Size(); i++)
         coeff[i].Interchange(newTV.coeff[i], keeper);
-      newTV.modelmatrix.AddRows(modelmatrix.Nrow(), modelmatrix.Ncol());
+      newTV.modelmatrix.AddRows(modelmatrix.Nrow(), modelmatrix.Ncol(), 0.0);
       for (i = 0; i < modelmatrix.Nrow(); i++)
-        for (j = 0; j < modelmatrix.Ncol(); j++)
+        for (j = 0; j < modelmatrix.Ncol(i); j++)
           newTV.modelmatrix[i][j] = modelmatrix[i][j];
     }
   }

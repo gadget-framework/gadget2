@@ -16,9 +16,15 @@ public:
   /**
    * \brief This is the FormulaVector constructor for a specified size
    * \param sz is the size of the vector to be created
-   * \note The elements of the vector will all be created, and set to zero
+   * \param initial is the initial value for all the entries of the vector
    */
-  FormulaVector(int sz);
+  FormulaVector(int sz, Formula initial);
+  /**
+   * \brief This is the FormulaVector constructor for a specified size
+   * \param sz is the size of the vector to be created
+   * \param initial is the initial value for all the entries of the vector
+   */
+  FormulaVector(int sz, double initial);
   /**
    * \brief This is the FormulaVector constructor that creates a copy of an existing FormulaVector
    * \param initial is the FormulaVector to copy
@@ -29,9 +35,9 @@ public:
    * \note This will free all the memory allocated to all the elements of the vector
    */
   ~FormulaVector();
-   /**
-   * \brief This will add new empty entries to the vector and inform Keeper of the change
-   * \param addsize is the number of new entries to the vector
+  /**
+   * \brief This will add new blank (ie. NULL) entries to the vector
+   * \param addsize is the number of blank entries that will be entered
    * \param keeper is the Keeper for the current model
    * \note The new elements of the vector will be created, and set to zero
    */
@@ -42,7 +48,7 @@ public:
    * \param keeper is the Keeper for the current model
    * \note This will free the memory allocated to the deleted element of the vector
    */
-  void Delete(int pos, Keeper* const keeper);
+  void Delete(int pos, Keeper* keeper);
   /**
    * \brief This will return the size of the vector
    * \return the size of the vector

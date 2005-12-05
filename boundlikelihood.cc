@@ -29,7 +29,7 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
       count++;
 
     } else {
-      switches.resize(1, tempParam);
+      switches.resize(tempParam);
       infile >> temp >> ws;
       powers.resize(1, temp);
       infile >> temp >> ws;

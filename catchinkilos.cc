@@ -93,7 +93,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
     handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
-    fleetnames.resize(1, new char[strlen(text) + 1]);
+    fleetnames.resize(new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
   }
@@ -108,7 +108,7 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
     infile >> ws;
-    stocknames.resize(1, new char[strlen(text) + 1]);
+    stocknames.resize(new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
     infile >> text;
   }
@@ -227,7 +227,7 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
     for (j = 0; j < Fleets.Size(); j++) {
       if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
-        fleets.resize(1, Fleets[j]);
+        fleets.resize(Fleets[j]);
       }
     }
     if (found == 0)
@@ -240,7 +240,7 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
       if (Stocks[j]->isEaten()) {
         if (strcasecmp(stocknames[i], Stocks[j]->getName()) == 0) {
           found++;
-          stocks.resize(1, Stocks[j]);
+          stocks.resize(Stocks[j]);
         }
       }
     }
@@ -273,7 +273,7 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
 
   for (i = 0; i < fleets.Size(); i++) {
     found = 0;
-    preyindex.AddRows(1, 0);
+    preyindex.AddRows(1, 0, 0);
     for (j = 0; j < fleets[i]->getPredator()->numPreys(); j++)
       for (k = 0; k < stocknames.Size(); k++)
         if (strcasecmp(stocknames[k], fleets[i]->getPredator()->getPrey(j)->getName()) == 0) {

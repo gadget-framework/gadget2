@@ -97,7 +97,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
     infile >> text;
     while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
-      fleetnames.resize(1, new char[strlen(text) + 1]);
+      fleetnames.resize(new char[strlen(text) + 1]);
       strcpy(fleetnames[i++], text);
       infile >> text >> ws;
     }
@@ -118,7 +118,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   infile >> text;
   //read in the stocknames
   while (!infile.eof() && !(strcasecmp(text, "fittype") == 0)) {
-    stocknames.resize(1, new char[strlen(text) + 1]);
+    stocknames.resize(new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
     infile >> text >> ws;
   }
@@ -181,7 +181,7 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     for (j = 0; j < Fleets.Size(); j++) {
       if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
-        f.resize(1, Fleets[j]);
+        f.resize(Fleets[j]);
       }
     }
     if (found == 0)
@@ -206,7 +206,7 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     for (j = 0; j < Stocks.Size(); j++) {
       if (strcasecmp(stocknames[i], Stocks[j]->getName()) == 0) {
         found++;
-        s.resize(1, Stocks[j]);
+        s.resize(Stocks[j]);
       }
     }
     if (found == 0)

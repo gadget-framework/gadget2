@@ -10,7 +10,7 @@ extern RunID RUNID;
 extern ErrorHandler handle;
 
 LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
-  : Printer(LIKELIHOODPRINTER), like(0) {
+  : Printer(LIKELIHOODPRINTER) {
 
   int i = 0;
   char text[MaxStrLength];
@@ -22,7 +22,7 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
     handle.logFileUnexpected(LOGFAIL, "likelihood", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "printfile") == 0)) {
-    likenames.resize(1, new char[strlen(text) + 1]);
+    likenames.resize(new char[strlen(text) + 1]);
     strcpy(likenames[i++], text);
     infile >> text >> ws;
   }
@@ -79,7 +79,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
   for (i = 0; i < likevec.Size(); i++)
     for (j = 0; j < likenames.Size(); j++)
       if (strcasecmp(likevec[i]->getName(), likenames[j]) == 0)
-        like.resize(1, likevec[i]);
+        like.resize(likevec[i]);
 
   if (like.Size() != likenames.Size()) {
     handle.logMessage(LOGWARN, "Error in likelihoodprinter - failed to match likelihood components");

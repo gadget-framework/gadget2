@@ -1,14 +1,6 @@
 #include "doublematrixptrmatrix.h"
 #include "gadget.h"
 
-DoubleMatrixPtrMatrix::DoubleMatrixPtrMatrix(int nr, int nc) {
-  nrow = nr;
-  v = new DoubleMatrixPtrVector*[nr];
-  int i;
-  for (i = 0; i < nr; i++)
-    v[i] = new DoubleMatrixPtrVector(nc);
-}
-
 DoubleMatrixPtrMatrix::~DoubleMatrixPtrMatrix() {
   int i;
   if (v != 0) {
@@ -19,26 +11,29 @@ DoubleMatrixPtrMatrix::~DoubleMatrixPtrMatrix() {
   }
 }
 
-void DoubleMatrixPtrMatrix::AddRows(int add, int length) {
-  DoubleMatrixPtrVector** vnew = new DoubleMatrixPtrVector*[nrow + add];
+void DoubleMatrixPtrMatrix::resize() {
   int i;
-  for (i = 0; i < nrow; i++)
-    vnew[i] = v[i];
-  delete[] v;
-  v = vnew;
-  for (i = nrow; i < nrow + add; i++)
-    v[i] = new DoubleMatrixPtrVector(length);
-  nrow += add;
+  if (v == 0) {
+    v = new DoubleMatrixPtrVector*[1];
+  } else {
+    DoubleMatrixPtrVector** vnew = new DoubleMatrixPtrVector*[nrow + 1];
+    for (i = 0; i < nrow; i++)
+      vnew[i] = v[i];
+    delete[] v;
+    v = vnew;
+  }
+  v[nrow] = new DoubleMatrixPtrVector();
+  nrow++;
 }
 
-void DoubleMatrixPtrMatrix::DeleteRow(int row) {
-  delete v[row];
+void DoubleMatrixPtrMatrix::Delete(int pos) {
+  delete v[pos];
   int i;
   if (nrow > 1) {
     DoubleMatrixPtrVector** vnew = new DoubleMatrixPtrVector*[nrow - 1];
-    for (i = 0; i < row; i++)
+    for (i = 0; i < pos; i++)
       vnew[i] = v[i];
-    for (i = row; i < nrow - 1; i++)
+    for (i = pos; i < nrow - 1; i++)
       vnew[i] = v[i + 1];
     delete[] v;
     v = vnew;

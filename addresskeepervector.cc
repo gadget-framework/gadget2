@@ -1,14 +1,6 @@
 #include "addresskeepervector.h"
 #include "gadget.h"
 
-AddressKeeperVector::AddressKeeperVector(int sz) {
-  size = (sz > 0 ? sz : 0);
-  if (size > 0)
-    v = new AddressKeeper[size];
-  else
-    v = 0;
-}
-
 AddressKeeperVector::~AddressKeeperVector() {
   if (v != 0) {
     delete[] v;
@@ -16,19 +8,18 @@ AddressKeeperVector::~AddressKeeperVector() {
   }
 }
 
-void AddressKeeperVector::resize(int addsize) {
+void AddressKeeperVector::resize() {
   int i;
   if (v == 0) {
-    size = addsize;
-    v = new AddressKeeper[size];
-  } else if (addsize > 0) {
-    AddressKeeper* vnew = new AddressKeeper[addsize + size];
+    v = new AddressKeeper[1];
+  } else {
+    AddressKeeper* vnew = new AddressKeeper[size + 1];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
     v = vnew;
-    size = addsize + size;
   }
+  size++;
 }
 
 void AddressKeeperVector::Delete(int pos) {

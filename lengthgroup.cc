@@ -15,11 +15,11 @@ LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : 
   size = int(tmp + rathersmall);
   minlen = MinL;
   maxlen = MaxL;
-
-  meanlength.resize(size);
-  minlength.resize(size);
   tmp = 0.5 * Dl;
+
   int i;
+  meanlength.resize(size, 0.0);
+  minlength.resize(size, 0.0);
   for (i = 0; i < size; i++) {
     minlength[i] = minlen + (Dl * i);
     meanlength[i] = minlength[i] + tmp;
@@ -37,9 +37,9 @@ LengthGroupDivision::LengthGroupDivision(const DoubleVector& Breaks) : error(0),
   minlen = Breaks[0];
   maxlen = Breaks[size];
 
-  minlength.resize(size);
-  meanlength.resize(size);
   int i;
+  meanlength.resize(size, 0.0);
+  minlength.resize(size, 0.0);
   for (i = 0; i < size; i++) {
     minlength[i] = Breaks[i];
     meanlength[i] = 0.5 * (Breaks[i] + Breaks[i + 1]);

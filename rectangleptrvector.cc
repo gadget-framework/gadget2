@@ -1,16 +1,5 @@
 #include "rectangleptrvector.h"
-#include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
-
-RectanglePtrVector::RectanglePtrVector(int sz) {
-  size = (sz > 0 ? sz : 0);
-  if (size > 0)
-    v = new Rectangle*[size];
-  else
-    v = 0;
-}
 
 RectanglePtrVector::RectanglePtrVector(const RectanglePtrVector& initial) {
   size = initial.size;
@@ -30,27 +19,35 @@ RectanglePtrVector::~RectanglePtrVector() {
   }
 }
 
-void RectanglePtrVector::resize(int addsize, Rectangle* value) {
-  if (addsize != 1)
-    handle.logMessage(LOGFAIL, "Error in rectangleptrvector - cannot add entries to vector");
-
-  this->resize(addsize);
-  v[size - 1] = value;
-}
-
-void RectanglePtrVector::resize(int addsize) {
+void RectanglePtrVector::resize(Rectangle* value) {
   int i;
-  if (addsize <= 0)
-    return;
   if (v == 0) {
-    size = addsize;
-    v = new Rectangle*[size];
+    v = new Rectangle*[1];
   } else {
-    Rectangle** vnew = new Rectangle*[addsize + size];
+    Rectangle** vnew = new Rectangle*[size + 1];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
     v = vnew;
-    size += addsize;
+  }
+  v[size] = value;
+  size++;
+}
+
+void RectanglePtrVector::Delete(int pos) {
+  int i;
+  if (size > 1) {
+    Rectangle** vnew = new Rectangle*[size - 1];
+    for (i = 0; i < pos; i++)
+      vnew[i] = v[i];
+    for (i = pos; i < size - 1; i++)
+      vnew[i] = v[i + 1];
+    delete[] v;
+    v = vnew;
+    size--;
+  } else {
+    delete[] v;
+    v = 0;
+    size = 0;
   }
 }

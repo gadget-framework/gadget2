@@ -123,7 +123,7 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const 
 
   for (i = 0; i < stockvec.Size(); i++)
     if (strcasecmp(stockvec[i]->getName(), stockname) == 0)
-      stocks.resize(1, stockvec[i]);
+      stocks.resize(stockvec[i]);
 
   if (stocks.Size() != 1) {
     handle.logMessage(LOGWARN, "Error in stockstdprinter - failed to match stocks");
@@ -140,15 +140,15 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const 
 
   LgrpDiv = new LengthGroupDivision(*stocks[0]->getLengthGroupDiv());
   if (stocks[0]->isEaten())
-    preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->getPrey(), areas);
+    preyinfo = new StockPreyStdInfo(stocks[0]->getPrey(), areas);
 
   //prepare for the creation of the aggregator
   minage = stocks[0]->minAge();
   maxage = stocks[0]->maxAge();
-  IntMatrix agematrix(maxage - minage + 1, 1);
+  IntMatrix agematrix(maxage - minage + 1, 1, 0);
   for (i = 0; i < agematrix.Nrow(); i++)
     agematrix[i][0] = i + minage;
-  IntMatrix areamatrix(areas.Size(), 1);
+  IntMatrix areamatrix(areas.Size(), 1, 0);
   for (i = 0; i < areamatrix.Nrow(); i++)
     areamatrix[i][0] = areas[i];
 

@@ -201,7 +201,7 @@ void OptInfoSimann::OptimiseLikelihood() {
   DoubleVector upperb(nvars);
   DoubleVector fstar(check);
   DoubleVector vm(nvars, vminit);
-  IntVector param(nvars);
+  IntVector param(nvars, 0);
   IntVector nacp(nvars, 0);
 
   EcoSystem->getOptScaledValues(x);

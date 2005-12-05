@@ -155,7 +155,7 @@ void AgeBandMatrixRatioPtrVector::Add(const AgeBandMatrixRatioPtrVector& Additio
   if (numtags == 0)
     return;
 
-  IntVector tagconversion(numtags);
+  IntVector tagconversion(numtags, -1);
   for (i = 0; i < numtags; i++) {
     tagconversion[i] = this->getTagID(Addition.getTagName(i));
     if (tagconversion[i] < 0)

@@ -36,7 +36,7 @@ void Maturity::setStock(StockPtrVector& stockvec) {
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < matureStockNames.Size(); j++)
       if (strcasecmp(stockvec[i]->getName(), matureStockNames[j]) == 0) {
-        matureStocks.resize(1, stockvec[i]);
+        matureStocks.resize(stockvec[i]);
         tmpratio.resize(1, matureRatio[j]);
       }
 
@@ -50,15 +50,10 @@ void Maturity::setStock(StockPtrVector& stockvec) {
   }
 
   matureRatio.Reset();
-  matureRatio.resize(tmpratio.Size());
-  for (i = 0; i < tmpratio.Size(); i++)
-    matureRatio[i] = tmpratio[i];
-
-  CI.resize(matureStocks.Size());
-  for (i = 0; i < matureStocks.Size(); i++)
-    CI[i] = new ConversionIndex(LgrpDiv, matureStocks[i]->getLengthGroupDiv());
+  matureRatio = tmpratio;
 
   for (i = 0; i < matureStocks.Size(); i++) {
+    CI.resize(new ConversionIndex(LgrpDiv, matureStocks[i]->getLengthGroupDiv()));
     index = 0;
     for (j = 0; j < areas.Size(); j++)
       if (!matureStocks[i]->isInArea(areas[j]))
@@ -182,16 +177,18 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
+  double tmpratio;
+
   keeper->addString("maturity");
   infile >> text;
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
     i = 0;
     infile >> text >> ws;
     while (strcasecmp(text, "coefficients") != 0 && !infile.eof()) {
-      matureStockNames.resize(1, new char[strlen(text) + 1]);
+      matureStockNames.resize(new char[strlen(text) + 1]);
       strcpy(matureStockNames[i], text);
-      matureRatio.resize(1);
-      infile >> matureRatio[i] >> text >> ws;
+      infile >> tmpratio >> text >> ws;
+      matureRatio.resize(1, tmpratio);
       i++;
     }
   } else
@@ -275,17 +272,19 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i;
+  int i, tmpint;
+  double tmpratio;
+
   infile >> text;
   keeper->addString("maturity");
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
     i = 0;
     infile >> text >> ws;
     while (!(strcasecmp(text, "maturitysteps") == 0) && !infile.eof()) {
-      matureStockNames.resize(1, new char[strlen(text) + 1]);
+      matureStockNames.resize(new char[strlen(text) + 1]);
       strcpy(matureStockNames[i], text);
-      matureRatio.resize(1);
-      infile >> matureRatio[i] >> text >> ws;
+      infile >> tmpratio >> text >> ws;
+      matureRatio.resize(1, tmpratio);
       i++;
     }
   } else
@@ -295,11 +294,9 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
     handle.logFileEOFMessage(LOGFAIL);
 
   infile >> ws;
-  i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
-    maturitystep.resize(1);
-    infile >> maturitystep[i] >> ws;
-    i++;
+    infile >> tmpint >> ws;
+    maturitystep.resize(1, tmpint);
   }
   if (infile.eof())
     handle.logFileEOFMessage(LOGFAIL);
@@ -380,17 +377,19 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i = 0;
+  int i, tmpint;
+  double tmpratio;
+
   keeper->addString("maturity");
   infile >> text;
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
     i = 0;
     infile >> text >> ws;
     while (strcasecmp(text, "coefficients") != 0 && !infile.eof()) {
-      matureStockNames.resize(1, new char[strlen(text) + 1]);
+      matureStockNames.resize(new char[strlen(text) + 1]);
       strcpy(matureStockNames[i], text);
-      matureRatio.resize(1);
-      infile >> matureRatio[i] >> text >> ws;
+      infile >> tmpratio >> text >> ws;
+      matureRatio.resize(1, tmpratio);
       i++;
     }
   } else
@@ -405,10 +404,9 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
   if (!((strcasecmp(text, "maturitystep") == 0) || (strcasecmp(text, "maturitysteps") == 0)))
     handle.logFileUnexpected(LOGFAIL, "maturitysteps", text);
 
-  i = 0;
   while (isdigit(infile.peek()) && !infile.eof()) {
-    maturitystep.resize(1);
-    infile >> maturitystep[i] >> ws;
+    infile >> tmpint >> ws;
+    maturitystep.resize(1, tmpint);
     i++;
   }
 

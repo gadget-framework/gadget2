@@ -87,7 +87,7 @@ void MigrationNumbers::readTimeStepData(CommentStream& infile, const TimeClass* 
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 3");
 
   count = 0;
-  allmatrixnames.resize(TimeInfo->numTotalSteps() + 1);
+  allmatrixnames.resizeBlank(TimeInfo->numTotalSteps() + 1);
   timeindex.resize(TimeInfo->numTotalSteps() + 1, -1);
   while (!infile.eof()) {
     infile >> year >> step >> text >> ws;
@@ -136,7 +136,7 @@ void MigrationNumbers::readGivenRatios(CommentStream& infile, Keeper* const keep
       this->setMatrixName(name);
       count = readMigration.Size();
       checkvalues.AddRows(1, numAreas, 0);
-      readMigration.resize(1, new FormulaMatrix(numAreas, numAreas, 0.0));
+      readMigration.resize(new FormulaMatrix(numAreas, numAreas, 0.0));
 
       infile >> ws;
       while (!infile.eof() && !infile.fail() && (infile.peek() != '[')) {
@@ -225,7 +225,7 @@ void MigrationNumbers::readGivenRatios(CommentStream& infile, Keeper* const keep
   // Inform keeper of the values and resize
   for (i = 0; i < readMigration.Size(); i++) {
     (*readMigration[i]).Inform(keeper);
-    calcMigration.resize(1, new DoubleMatrix(numAreas, numAreas, 0.0));
+    calcMigration.resize(new DoubleMatrix(numAreas, numAreas, 0.0));
   }
 }
 
@@ -258,7 +258,7 @@ void MigrationNumbers::readGivenMatrices(CommentStream& infile, Keeper* const ke
     if (this->useMatrix(name)) {
       this->setMatrixName(name);
       count = readMigration.Size();
-      readMigration.resize(1, new FormulaMatrix(numAreas, numAreas, 0.0));
+      readMigration.resize(new FormulaMatrix(numAreas, numAreas, 0.0));
 
       infile >> ws;
       if (infile.peek() == '[' || infile.eof()) {
@@ -289,7 +289,7 @@ void MigrationNumbers::readGivenMatrices(CommentStream& infile, Keeper* const ke
   // Inform keeper of the values and resize
   for (i = 0; i < readMigration.Size(); i++) {
     (*readMigration[i]).Inform(keeper);
-    calcMigration.resize(1, new DoubleMatrix(numAreas, numAreas, 0.0));
+    calcMigration.resize(new DoubleMatrix(numAreas, numAreas, 0.0));
   }
 }
 
@@ -345,7 +345,7 @@ void MigrationNumbers::setMatrixName(char* name) {
   // store the new matrix name
   char* tempname = new char[strlen(name) + 1];
   strcpy(tempname, name);
-  usedmatrixnames.resize(1, tempname);
+  usedmatrixnames.resize(tempname);
 }
 
 void MigrationNumbers::Reset() {
@@ -495,7 +495,7 @@ void MigrationFunction::readAreaData(CommentStream& infile, const AreaClass* con
     subfile.open(filename, ios::in);
     handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
-    oceanareas.resize(1, new MigrationArea(subcomment, areaname, inarea));
+    oceanareas.resize(new MigrationArea(subcomment, areaname, inarea));
     handle.Close();
     subfile.close();
     subfile.clear();

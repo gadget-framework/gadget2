@@ -34,11 +34,11 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
 
   int i;
   for (i = 0; i < aindex.Size(); i++) {
-    areaindex.resize(1, new char[strlen(aindex[i]) + 1]);
+    areaindex.resize(new char[strlen(aindex[i]) + 1]);
     strcpy(areaindex[i], aindex[i]);
   }
   for (i = 0; i < charindex.Size(); i++) {
-    colindex.resize(1, new char[strlen(charindex[i]) + 1]);
+    colindex.resize(new char[strlen(charindex[i]) + 1]);
     strcpy(colindex[i], charindex[i]);
   }
 

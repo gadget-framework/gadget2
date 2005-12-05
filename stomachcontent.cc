@@ -136,7 +136,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
   infile >> text >> ws;
   while (!infile.eof() && ((strcasecmp(text, "predatorlengths") != 0)
       && (strcasecmp(text, "predatorages") != 0))) {
-    predatornames.resize(1, new char[strlen(text) + 1]);
+    predatornames.resize(new char[strlen(text) + 1]);
     strcpy(predatornames[i++], text);
     infile >> text >> ws;
   }
@@ -342,7 +342,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
     for (j = 0; j < Predators.Size(); j++)
       if (strcasecmp(predatornames[i], Predators[j]->getName()) == 0) {
         found++;
-        predators.resize(1, Predators[j]);
+        predators.resize(Predators[j]);
       }
 
     if (found == 0)
@@ -373,7 +373,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
       for (k = 0; k < Preys.Size(); k++)
         if (strcasecmp(preynames[i][j], Preys[k]->getName()) == 0) {
           found++;
-          preys.resize(1, Preys[k]);
+          preys.resize(Preys[k]);
         }
 
       if (found == 0)
@@ -590,12 +590,12 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
         Steps.resize(1, step);
         timeid = Years.Size() - 1;
 
-        obsConsumption.AddRows(1, numarea);
-        modelConsumption.AddRows(1, numarea);
+        obsConsumption.resize();
+        modelConsumption.resize();
         likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
-          obsConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
-          modelConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
+          obsConsumption[timeid].resize(new DoubleMatrix(numpred, numprey, 0.0));
+          modelConsumption[timeid].resize(new DoubleMatrix(numpred, numprey, 0.0));
         }
       }
 
@@ -744,14 +744,14 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
         Steps.resize(1, step);
         timeid = Years.Size() - 1;
 
-        obsConsumption.AddRows(1, numarea);
-        modelConsumption.AddRows(1, numarea);
-        stddev.AddRows(1, numarea);
+        obsConsumption.resize();
+        modelConsumption.resize();
+        stddev.resize();
         likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
-          obsConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
-          modelConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
-          stddev[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
+          obsConsumption[timeid].resize(new DoubleMatrix(numpred, numprey, 0.0));
+          modelConsumption[timeid].resize(new DoubleMatrix(numpred, numprey, 0.0));
+          stddev[timeid].resize(new DoubleMatrix(numpred, numprey, 0.0));
         }
       }
 
@@ -794,7 +794,7 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
   //We know the size that numbers[] will be from obsConsumption
   int numarea = areas.Nrow();
   for (i = 0; i < obsConsumption.Nrow(); i++)
-    number.resize(1, new DoubleMatrix(numarea, numpred, 0.0));
+    number.resize(new DoubleMatrix(numarea, numpred, 0.0));
 
   //Check the number of columns in the inputfile
   infile >> ws;
@@ -1035,12 +1035,12 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
         Steps.resize(1, step);
         timeid = Years.Size() - 1;
 
-        obsConsumption.AddRows(1, numarea);
-        modelConsumption.AddRows(1, numarea);
+        obsConsumption.resize();
+        modelConsumption.resize();
         likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
-          obsConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
-          modelConsumption[timeid][i] = new DoubleMatrix(numpred, numprey, 0.0);
+          obsConsumption[timeid].resize(new DoubleMatrix(numpred, numprey, 0.0));
+          modelConsumption[timeid].resize(new DoubleMatrix(numpred, numprey, 0.0));
         }
       }
 

@@ -1,14 +1,6 @@
 #include "intvector.h"
 #include "gadget.h"
 
-IntVector::IntVector(int sz) {
-  size = (sz > 0 ? sz : 0);
-  if (size > 0)
-    v = new int[size];
-  else
-    v = 0;
-}
-
 IntVector::IntVector(int sz, int value) {
   size = (sz > 0 ? sz : 0);
   int i;
@@ -39,23 +31,22 @@ IntVector::~IntVector() {
 }
 
 void IntVector::resize(int addsize, int value) {
-  int oldsize = size;
-  this->resize(addsize);
-  int i;
-  if (addsize > 0)
-    for (i = oldsize; i < size; i++)
-      v[i] = value;
-}
+  if (addsize <= 0)
+    return;
 
-void IntVector::resize(int addsize) {
   int i;
   if (v == 0) {
     size = addsize;
     v = new int[size];
-  } else if (addsize > 0) {
-    int* vnew = new int[addsize + size];
+    for (i = 0; i < size; i++)
+      v[i] = value;
+
+  } else {
+    int* vnew = new int[size + addsize];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
+    for (i = size; i < size + addsize; i++)
+      vnew[i] = value;
     delete[] v;
     v = vnew;
     size += addsize;
@@ -110,6 +101,7 @@ void IntVector::Reset() {
 }
 
 int IntVector::readline(CommentStream& infile) {
+  int tmpint;
   char line[MaxStrLength];
   strncpy(line, "", MaxStrLength);
   infile.getLine(line, MaxStrLength);
@@ -119,11 +111,10 @@ int IntVector::readline(CommentStream& infile) {
   istringstream istr(line);
   istr >> ws;
   while (!istr.eof()) {
-    this->resize(1);
-    istr >> v[size - 1];
+    istr >> tmpint >> ws;
     if (istr.fail() && !istr.eof())
       return 0;
-    istr >> ws;
+    this->resize(1, tmpint);
   }
   return 1;
 }

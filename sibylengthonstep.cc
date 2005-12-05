@@ -35,7 +35,7 @@ void SIByLengthOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector
     maxage = max(Stocks[i]->maxAge(), maxage);
   }
 
-  Ages.AddRows(1, maxage - minage + 1);
+  Ages.AddRows(1, maxage - minage + 1, 0);
   for (i = 0; i < Ages.Ncol(); i++)
     Ages[0][i] = i + minage;
 

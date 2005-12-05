@@ -16,7 +16,7 @@ Keeper::Keeper() {
   bestlikelihood = 0.0;
 }
 
-void Keeper::keepVariable(double& value, const Parameter& attr) {
+void Keeper::keepVariable(double& value, Parameter& attr) {
 
   int i, index = -1;
   for (i = 0; i < switches.Size(); i++)
@@ -26,7 +26,7 @@ void Keeper::keepVariable(double& value, const Parameter& attr) {
   if (index == -1) {
     //attr was not found -- add it to switches and values
     index = switches.Size();
-    switches.resize(1, attr);
+    switches.resize(attr);
     values.resize(1, value);
     bestvalues.resize(1, value);
     lowerbds.resize(1, -9999.0);  // default lower bound
@@ -34,7 +34,8 @@ void Keeper::keepVariable(double& value, const Parameter& attr) {
     opt.resize(1, 0);
     scaledvalues.resize(1, 1.0);
     initialvalues.resize(1, 1.0);
-    address.AddRows(1, 1);
+    address.resize();
+    address[index].resize();
     address[index][0] = &value;
     if (stack->getSize() != 0)
       address[index][0] = stack->sendAll();
@@ -45,7 +46,7 @@ void Keeper::keepVariable(double& value, const Parameter& attr) {
 
     } else {
       i = address[index].Size();
-      address[index].resize(1);
+      address[index].resize();
       address[index][i] = &value;
       if (stack->getSize() != 0)
         address[index][i] = stack->sendAll();
@@ -72,7 +73,7 @@ void Keeper::deleteParameter(const double& var) {
         address[i].Delete(j);
         if (address[i].Size() == 0) {
           //the variable we deleted was the only one with this switch
-          address.DeleteRow(i);
+          address.Delete(i);
           switches.Delete(i);
           values.Delete(i);
           bestvalues.Delete(i);

@@ -29,7 +29,7 @@ StockPrinter::StockPrinter(CommentStream& infile, const TimeClass* const TimeInf
     handle.logFileUnexpected(LOGFAIL, "stocknames", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "areaaggfile") == 0)) {
-    stocknames.resize(1, new char[strlen(text) + 1]);
+    stocknames.resize(new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
     infile >> text >> ws;
   }
@@ -141,7 +141,7 @@ void StockPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const Are
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < stocknames.Size(); j++)
       if (strcasecmp(stockvec[i]->getName(), stocknames[j]) == 0)
-        stocks.resize(1, stockvec[i]);
+        stocks.resize(stockvec[i]);
 
   if (stocks.Size() != stocknames.Size()) {
     handle.logMessage(LOGWARN, "Error in stockprinter - failed to match stocks");

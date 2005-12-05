@@ -18,9 +18,8 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
     ages(Ages), overconsumption(overcons), suitptr(0), alptr(0) {
 
   int i;
-  CI.resize(stocks.Size());
   for (i = 0; i < stocks.Size(); i++)
-    CI[i] = new ConversionIndex(stocks[i]->getPrey()->getLengthGroupDiv(), LgrpDiv);
+    CI.resize(new ConversionIndex(stocks[i]->getPrey()->getLengthGroupDiv(), LgrpDiv));
 
   //Resize total using dummy variables tmppop and popmatrix.
   PopInfo tmppop;
@@ -108,9 +107,9 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
                           if (prey->getRatio(area, z) > 1.0)
                             Ratio[z] *= 1.0 / prey->getRatio(areas[area][j], z);
 
-                        total[area][age].Add((*alptr)[ages[age][k]], *CI[h], fleetscale, Ratio);
+                        total[area][age].Add((*alptr)[ages[age][k]], *CI[h], Ratio, fleetscale);
                       } else {
-                        total[area][age].Add((*alptr)[ages[age][k]], *CI[h], fleetscale, *suitptr);
+                        total[area][age].Add((*alptr)[ages[age][k]], *CI[h], *suitptr, fleetscale);
                       }
                     }
                   }

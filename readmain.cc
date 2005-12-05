@@ -43,11 +43,11 @@ void Ecosystem::readFleet(CommentStream& infile) {
 
     infile >> text >> value;
     if (strcasecmp(text, "totalfleet") == 0)
-      fleetvec.resize(1, new Fleet(infile, value, Area, TimeInfo, keeper, TOTALFLEET));
+      fleetvec.resize(new Fleet(infile, value, Area, TimeInfo, keeper, TOTALFLEET));
     else if (strcasecmp(text, "linearfleet") == 0)
-      fleetvec.resize(1, new Fleet(infile, value, Area, TimeInfo, keeper, LINEARFLEET));
+      fleetvec.resize(new Fleet(infile, value, Area, TimeInfo, keeper, LINEARFLEET));
     else if (strcasecmp(text, "numberfleet") == 0)
-      fleetvec.resize(1, new Fleet(infile, value, Area, TimeInfo, keeper, NUMBERFLEET));
+      fleetvec.resize(new Fleet(infile, value, Area, TimeInfo, keeper, NUMBERFLEET));
     else if (strcasecmp(text, "mortalityfleet") == 0)
       handle.logFileMessage(LOGFAIL, "\nThe mortalityfleet fleet type is no longer supported");
     else
@@ -73,7 +73,7 @@ void Ecosystem::readTagging(CommentStream& infile) {
 
     infile >> text >> value;
     if (strcasecmp(text, "tagid") == 0)
-      tagvec.resize(1, new Tags(infile, value, Area, TimeInfo, keeper, stockvec));
+      tagvec.resize(new Tags(infile, value, Area, TimeInfo, keeper, stockvec));
     else
       handle.logFileUnexpected(LOGFAIL, "tagid", text);
 
@@ -97,7 +97,7 @@ void Ecosystem::readOtherFood(CommentStream& infile) {
 
     infile >> text >> value;
     if (strcasecmp(text, "foodname") == 0)
-      otherfoodvec.resize(1, new OtherFood(infile, value, Area, TimeInfo, keeper));
+      otherfoodvec.resize(new OtherFood(infile, value, Area, TimeInfo, keeper));
     else
       handle.logFileUnexpected(LOGFAIL, "foodname", text);
 
@@ -114,7 +114,7 @@ void Ecosystem::readStock(CommentStream& infile) {
   strncpy(text, "", MaxStrLength);
 
   readWordAndValue(infile, "stockname", text);
-  stockvec.resize(1, new Stock(infile, text, Area, TimeInfo, keeper));
+  stockvec.resize(new Stock(infile, text, Area, TimeInfo, keeper));
   handle.logMessage(LOGMESSAGE, "Read stock OK - created stock", text);
 }
 
@@ -137,27 +137,27 @@ void Ecosystem::readPrinters(CommentStream& infile) {
     readWordAndValue(infile, "type", type);
 
     if (strcasecmp(type, "stockstdprinter") == 0)
-      printvec.resize(1, new StockStdPrinter(infile, TimeInfo));
+      printvec.resize(new StockStdPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "stockfullprinter") == 0)
-      printvec.resize(1, new StockFullPrinter(infile, TimeInfo));
+      printvec.resize(new StockFullPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "stockprinter") == 0)
-      printvec.resize(1, new StockPrinter(infile, TimeInfo));
+      printvec.resize(new StockPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "predatorprinter") == 0)
-      printvec.resize(1, new PredatorPrinter(infile, TimeInfo));
+      printvec.resize(new PredatorPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "predatoroverprinter") == 0)
-      printvec.resize(1, new PredatorOverPrinter(infile, TimeInfo));
+      printvec.resize(new PredatorOverPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "preyoverprinter") == 0)
-      printvec.resize(1, new PreyOverPrinter(infile, TimeInfo));
+      printvec.resize(new PreyOverPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "stockpreyfullprinter") == 0)
-      printvec.resize(1, new StockPreyFullPrinter(infile, TimeInfo));
+      printvec.resize(new StockPreyFullPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "predpreystdlengthprinter") == 0)
-      printvec.resize(1, new PredPreyStdLengthPrinter(infile, TimeInfo));
+      printvec.resize(new PredPreyStdLengthPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "predpreystdageprinter") == 0)
-      printvec.resize(1, new PredPreyStdAgePrinter(infile, TimeInfo));
+      printvec.resize(new PredPreyStdAgePrinter(infile, TimeInfo));
     else if (strcasecmp(type, "likelihoodprinter") == 0)
-      printvec.resize(1, new LikelihoodPrinter(infile, TimeInfo));
+      printvec.resize(new LikelihoodPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "likelihoodsummaryprinter") == 0)
-      printvec.resize(1, new SummaryPrinter(infile));
+      printvec.resize(new SummaryPrinter(infile));
 
     else if (strcasecmp(type, "formatedstockprinter") == 0)
       handle.logFileMessage(LOGFAIL, "\nThe formatedstockprinter printer class is no longer supported");
@@ -212,7 +212,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       datafile.open(datafilename, ios::in);
       handle.checkIfFailure(datafile, datafilename);
       handle.Open(datafilename);
-      likevec.resize(1, new BoundLikelihood(subdata, Area, TimeInfo, keeper, weight, name));
+      likevec.resize(new BoundLikelihood(subdata, Area, TimeInfo, keeper, weight, name));
       handle.Close();
       datafile.close();
       datafile.clear();
@@ -226,37 +226,37 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       }
 
     } else if (strcasecmp(type, "understocking") == 0) {
-      likevec.resize(1, new UnderStocking(infile, Area, TimeInfo, weight, name));
+      likevec.resize(new UnderStocking(infile, Area, TimeInfo, weight, name));
 
     } else if (strcasecmp(type, "catchstatistics") == 0) {
-      likevec.resize(1, new CatchStatistics(infile, Area, TimeInfo, weight, name));
+      likevec.resize(new CatchStatistics(infile, Area, TimeInfo, weight, name));
 
     } else if (strcasecmp(type, "catchdistribution") == 0) {
-      likevec.resize(1, new CatchDistribution(infile, Area, TimeInfo, keeper, weight, name));
+      likevec.resize(new CatchDistribution(infile, Area, TimeInfo, keeper, weight, name));
 
     } else if (strcasecmp(type, "stockdistribution") == 0) {
-      likevec.resize(1, new StockDistribution(infile, Area, TimeInfo, weight, name));
+      likevec.resize(new StockDistribution(infile, Area, TimeInfo, weight, name));
 
     } else if (strcasecmp(type, "surveyindices") == 0) {
-      likevec.resize(1, new SurveyIndices(infile, Area, TimeInfo, weight, name));
+      likevec.resize(new SurveyIndices(infile, Area, TimeInfo, weight, name));
 
     } else if (strcasecmp(type, "surveydistribution") == 0) {
-      likevec.resize(1, new SurveyDistribution(infile, Area, TimeInfo, keeper, weight, name));
+      likevec.resize(new SurveyDistribution(infile, Area, TimeInfo, keeper, weight, name));
 
     } else if (strcasecmp(type, "stomachcontent") == 0) {
-      likevec.resize(1, new StomachContent(infile, Area, TimeInfo, keeper, weight, name));
+      likevec.resize(new StomachContent(infile, Area, TimeInfo, keeper, weight, name));
 
     } else if (strcasecmp(type, "recaptures") == 0) {
-      likevec.resize(1, new Recaptures(infile, Area, TimeInfo, weight, tagvec, name));
+      likevec.resize(new Recaptures(infile, Area, TimeInfo, weight, tagvec, name));
 
     } else if ((strcasecmp(type, "catchintons") == 0) || (strcasecmp(type, "catchinkilos") == 0)) {
-      likevec.resize(1, new CatchInKilos(infile, Area, TimeInfo, weight, name));
+      likevec.resize(new CatchInKilos(infile, Area, TimeInfo, weight, name));
 
     } else if (strcasecmp(type, "migrationpenalty") == 0) {
-      likevec.resize(1, new MigrationPenalty(infile, weight, name));
+      likevec.resize(new MigrationPenalty(infile, weight, name));
 
     } else if (strcasecmp(type, "recstatistics") == 0) {
-      likevec.resize(1, new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name));
+      likevec.resize(new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name));
 
     } else if (strcasecmp(type, "predatorindices") == 0) {
       handle.logFileMessage(LOGFAIL, "\nThe predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");

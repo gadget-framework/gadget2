@@ -38,16 +38,10 @@ public:
   ~DoubleVector();
   /**
    * \brief This will add new entries to the vector
-   * \param add is the number of new entries to the vector
+   * \param addsize is the number of new entries to the vector
    * \param value is the value that will be entered for the new entries
    */
-  void resize(int add, double value);
-  /**
-   * \brief This will add new empty entries to the vector
-   * \param add is the number of new entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
-   */
-  void resize(int add);
+  void resize(int addsize, double value);
   /**
    * \brief This will delete an entry from the vector
    * \param pos is the element of the vector to be deleted

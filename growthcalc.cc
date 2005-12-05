@@ -64,7 +64,7 @@ void GrowthCalcA::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper,
   const AreaClass* const Area, const CharPtrVector& lenindex)
-  : GrowthCalcBase(Areas), lgrowth(Areas.Size()), wgrowth(Areas.Size()) {
+  : GrowthCalcBase(Areas) {
 
   char datafilename[MaxStrLength];
   strncpy(datafilename, "", MaxStrLength);
@@ -73,8 +73,8 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
 
   int i;
   for (i = 0; i < Areas.Size(); i++) {
-    lgrowth[i] = new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0);
-    wgrowth[i] = new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0);
+    lgrowth.resize(new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0));
+    wgrowth.resize(new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0));
   }
 
   keeper->addString("growthcalcB");
@@ -138,7 +138,7 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
   keeper->addString("growthcalcC");
   wgrowthPar.resize(numWeightGrowthConstants, keeper);
   lgrowthPar.resize(numLengthGrowthConstants, keeper);
-  refWeight.resize(LgrpDiv->numLengthGroups());
+  refWeight.resize(LgrpDiv->numLengthGroups(), 0.0);
 
   int i, j;
   char text[MaxStrLength];
@@ -254,7 +254,7 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
   keeper->addString("growthcalcD");
   wgrowthPar.resize(numWeightGrowthConstants, keeper);
   lgrowthPar.resize(numLengthGrowthConstants, keeper);
-  refWeight.resize(LgrpDiv->numLengthGroups());
+  refWeight.resize(LgrpDiv->numLengthGroups(), 0.0);
 
   int i, j;
   char text[MaxStrLength];
@@ -369,7 +369,7 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   keeper->addString("growthcalcE");
   wgrowthPar.resize(numWeightGrowthConstants, keeper);
   lgrowthPar.resize(numLengthGrowthConstants, keeper);
-  refWeight.resize(LgrpDiv->numLengthGroups());
+  refWeight.resize(LgrpDiv->numLengthGroups(), 0.0);
   yearEffect.resize(TimeInfo->getLastYear() - TimeInfo->getFirstYear() + 1, keeper);
   stepEffect.resize(TimeInfo->numSteps(), keeper);
   areaEffect.resize(Areas.Size(), keeper);
@@ -518,7 +518,7 @@ void GrowthCalcE::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper,
   const AreaClass* const Area, const CharPtrVector& lenindex)
-  : GrowthCalcBase(Areas), numGrowthConstants(2), wgrowth(Areas.Size()) {
+  : GrowthCalcBase(Areas), numGrowthConstants(2) {
 
   keeper->addString("growthcalcF");
   growthPar.resize(numGrowthConstants, keeper);
@@ -534,7 +534,7 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   ifstream datafile;
   int i;
   for (i = 0; i < Areas.Size(); i++)
-    wgrowth[i] = new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0);
+    wgrowth.resize(new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0));
 
   CommentStream subdata(datafile);
   readWordAndValue(infile, "weightgrowthfile", text);
@@ -583,7 +583,7 @@ void GrowthCalcF::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper,
   const AreaClass* const Area, const CharPtrVector& lenindex)
-  : GrowthCalcBase(Areas), numGrowthConstants(2), wgrowth(Areas.Size()) {
+  : GrowthCalcBase(Areas), numGrowthConstants(2) {
 
   keeper->addString("growthcalcG");
   growthPar.resize(numGrowthConstants, keeper);
@@ -598,7 +598,7 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
 
   int i;
   for (i = 0; i < Areas.Size(); i++)
-    wgrowth[i] = new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0);
+    wgrowth.resize(new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0));
 
   ifstream datafile;
   CommentStream subdata(datafile);

@@ -16,12 +16,6 @@ public:
    */
   TagPtrVector() { size = 0; v = 0; };
   /**
-   * \brief This is the TagPtrVector constructor for a specified size
-   * \param sz is the size of the vector to be created
-   * \note The elements of the vector will all be created, and set to zero
-   */
-  TagPtrVector(int sz);
-  /**
    * \brief This is the TagPtrVector constructor that creates a copy of an existing TagPtrVector
    * \param initial is the TagPtrVector to copy
    */
@@ -32,17 +26,10 @@ public:
    */
   ~TagPtrVector();
   /**
-   * \brief This will add new entries to the vector
-   * \param add is the number of new entries to the vector
-   * \param value is the value that will be entered for the new entries
+   * \brief This will add one new entry to the vector
+   * \param value is the value that will be entered for the new entry
    */
-  void resize(int add, Tags* value);
-  /**
-   * \brief This will add new empty entries to the vector
-   * \param add is the number of new entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
-   */
-  void resize(int add);
+  void resize(Tags* value);
   /**
    * \brief This will delete an entry from the vector
    * \param pos is the element of the vector to be deleted

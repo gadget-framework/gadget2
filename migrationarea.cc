@@ -17,7 +17,7 @@ MigrationArea::MigrationArea(CommentStream& infile, char* name, int id) {
   if (countColumns(infile) != 4)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 4");
   while (!infile.eof() && !infile.fail())
-    rectangles.resize(1, new Rectangle(infile));
+    rectangles.resize(new Rectangle(infile));
 
   int i;
   areaSize = 0.0;

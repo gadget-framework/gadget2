@@ -112,7 +112,7 @@ void InitialInputFile::readFromFile() {
     infile >> ws;
     while (check == 0) {
       infile >> sw >> ws;
-      switches.resize(1, sw);
+      switches.resize(sw);
       if (infile.eof())
         check++;
 
@@ -200,13 +200,8 @@ void InitialInputFile::readNextLine() {
     if (line.good())
       line >> ws;
   }
-
-  if (values.Size() == 0)
-    values.resize(tempValues.Size());
-
-  if ((line.fail() && !line.eof()) || tempValues.Size() != values.Size())
+  if (line.fail() && !line.eof())
     handle.logMessage(LOGFAIL, "Error in initial input file - failed to read vector");
-
-  for (i = 0; i < tempValues.Size(); i++)
-    values[i] = tempValues[i];
+  values.Reset();
+  values = tempValues;
 }

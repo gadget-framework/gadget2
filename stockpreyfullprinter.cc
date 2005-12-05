@@ -105,7 +105,7 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec, const AreaClass* c
 
   for (i = 0; i < stockvec.Size(); i++)
     if (strcasecmp(stockvec[i]->getName(), stockname) == 0)
-      stocks.resize(1, stockvec[i]);
+      stocks.resize(stockvec[i]);
 
   if (stocks.Size() != 1) {
     handle.logMessage(LOGWARN, "Error in stockpreyfullprinter - failed to match stocks");
@@ -126,7 +126,7 @@ void StockPreyFullPrinter::setStock(StockPtrVector& stockvec, const AreaClass* c
     outerareas[i] = Area->OuterArea(areas[i]);
 
   LgrpDiv = new LengthGroupDivision(*stocks[0]->getLengthGroupDiv());
-  preyinfo = new StockPreyStdInfo((StockPrey*)stocks[0]->getPrey(), areas);
+  preyinfo = new StockPreyStdInfo(stocks[0]->getPrey(), areas);
 }
 
 void StockPreyFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {

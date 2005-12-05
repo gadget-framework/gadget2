@@ -20,6 +20,11 @@ public:
    */
   ~AddressKeeperMatrix();
   /**
+   * \brief This will add one new empty entry to the vector
+   * \note The new element of the vector will be created, and set to zero
+   */
+  void resize();
+  /**
    * \brief This will return the number of rows of the vector
    * \return the number of rows of the vector
    */
@@ -32,18 +37,11 @@ public:
    */
   int Ncol(int i = 0) const { return v[i]->Size(); };
   /**
-   * \brief This will add new empty entries to the vector
-   * \param add is the number of new entries to the vector
-   * \param length is the number of entries to the AddressKeeperVector that is created
-   * \note The new elements of the vector will be created, and set to zero
-   */
-  void AddRows(int add, int length);
-  /**
    * \brief This will delete an entry from the vector
-   * \param row is the element of the vector to be deleted
+   * \param pos is the element of the vector to be deleted
    * \note This will free the memory allocated to the deleted element of the vector
    */
-  void DeleteRow(int row);
+  void Delete(int pos);
   /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned

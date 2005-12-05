@@ -1,16 +1,5 @@
 #include "predatorptrvector.h"
-#include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
-
-PredatorPtrVector::PredatorPtrVector(int sz) {
-  size = (sz > 0 ? sz : 0);
-  if (size > 0)
-    v = new Predator*[size];
-  else
-    v = 0;
-}
 
 PredatorPtrVector::PredatorPtrVector(const PredatorPtrVector& initial) {
   size = initial.size;
@@ -30,29 +19,19 @@ PredatorPtrVector::~PredatorPtrVector() {
   }
 }
 
-void PredatorPtrVector::resize(int addsize, Predator* value) {
-  if (addsize != 1)
-    handle.logMessage(LOGFAIL, "Error in predatorptrvector - cannot add entries to vector");
-
-  this->resize(addsize);
-  v[size - 1] = value;
-}
-
-void PredatorPtrVector::resize(int addsize) {
-  if (addsize <= 0)
-    return;
+void PredatorPtrVector::resize(Predator* value) {
   int i;
   if (v == 0) {
-    size = addsize;
-    v = new Predator*[size];
+    v = new Predator*[1];
   } else {
-    Predator** vnew = new Predator*[addsize + size];
+    Predator** vnew = new Predator*[size + 1];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
     v = vnew;
-    size += addsize;
   }
+  v[size] = value;
+  size++;
 }
 
 void PredatorPtrVector::Delete(int pos) {

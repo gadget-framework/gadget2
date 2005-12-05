@@ -71,7 +71,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
     handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
-    fleetnames.resize(1, new char[strlen(text) + 1]);
+    fleetnames.resize(new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
   }
@@ -94,7 +94,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
     for (i = 0; i < Tag.Size(); i++) {
       if (strcasecmp(tagnames[j], Tag[i]->getName()) == 0) {
         check++;
-        tagvec.resize(1, Tag[i]);
+        tagvec.resize(Tag[i]);
         //likelihoodValues.AddRows(1, Tag[i]->getNumTagTimeSteps(), 0.0);
       }
     }
@@ -160,19 +160,19 @@ void Recaptures::readRecaptureData(CommentStream& infile,
         //if this is a new tagging experiment, resize to store the data
         tagName = new char[strlen(tmptagid) + 1];
         strcpy(tagName, tmptagid);
-        tagnames.resize(1, tagName);
+        tagnames.resize(tagName);
         tid = tagnames.Size() - 1;
         obsYears.AddRows(1, 1, year);
         obsSteps.AddRows(1, 1, step);
         timeid = 0;
-        obsDistribution.AddRows(1, 1);
-        obsDistribution[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
-        modelDistribution.AddRows(1, 1);
-        modelDistribution[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
+        obsDistribution.resize();
+        obsDistribution[tid].resize(new DoubleMatrix(numarea, numlen, 0.0));
+        modelDistribution.resize();
+        modelDistribution[tid].resize(new DoubleMatrix(numarea, numlen, 0.0));
         //JMB - add objects to allow for timesteps when no recpatures are found
-        modYears.AddRows(1, 0);
-        modSteps.AddRows(1, 0);
-        newDistribution.AddRows(1, 0);
+        modYears.AddRows(1, 0, 0);
+        modSteps.AddRows(1, 0, 0);
+        newDistribution.resize();
 
       } else {
         for (i = 0; i < obsYears[tid].Size(); i++)
@@ -184,10 +184,8 @@ void Recaptures::readRecaptureData(CommentStream& infile,
           obsYears[tid].resize(1, year);
           obsSteps[tid].resize(1, step);
           timeid = obsYears.Ncol(tid) - 1;
-          obsDistribution[tid].resize(1);
-          obsDistribution[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
-          modelDistribution[tid].resize(1);
-          modelDistribution[tid][timeid] = new DoubleMatrix(numarea, numlen, 0.0);
+          obsDistribution[tid].resize(new DoubleMatrix(numarea, numlen, 0.0));
+          modelDistribution[tid].resize(new DoubleMatrix(numarea, numlen, 0.0));
         }
       }
 
@@ -250,7 +248,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
     for (j = 0; j < Fleets.Size(); j++)
       if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
-        fleets.resize(1, Fleets[j]);
+        fleets.resize(Fleets[j]);
       }
 
     if (found == 0)
@@ -269,7 +267,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
         if (Stocks[j]->isEaten()) {
           if (strcasecmp(stocknames[i], Stocks[j]->getName()) == 0) {
             found++;
-            stocks.resize(1, Stocks[j]);
+            stocks.resize(Stocks[j]);
           }
         }
       }
@@ -284,7 +282,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
           if (!stocks[j]->isInArea(areas[i][l]))
             handle.logMessage(LOGFAIL, "Error in recaptures - stocks arent defined on all areas");
 
-    IntMatrix agematrix(1, 0);
+    IntMatrix agematrix(1, 0, 0);
     minage = 999;
     maxage = 0;
     for (i = 0; i < stocks.Size(); i++) {
@@ -360,8 +358,7 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
           modYears[t].resize(1, year);
           modSteps[t].resize(1, step);
           timeid = modYears.Ncol(t) - 1;
-          newDistribution[t].resize(1);
-          newDistribution[t][timeid] = new DoubleMatrix(areaindex.Size(), lenindex.Size(), 0.0);
+          newDistribution[t].resize(new DoubleMatrix(areaindex.Size(), lenindex.Size(), 0.0));
         }
       }
 

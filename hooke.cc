@@ -185,7 +185,7 @@ void OptInfoHooke::OptimiseLikelihood() {
   DoubleVector init(nvars);
   DoubleVector initialstep(nvars, rho);
   DoubleVector delta(nvars);
-  IntVector param(nvars);
+  IntVector param(nvars, 0);
   IntVector nacp(nvars, 0);
   IntVector lbound(nvars, 0);
   IntVector rbounds(nvars, 0);

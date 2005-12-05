@@ -90,8 +90,8 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   interpWeightGrowth.AddRows(noareas, otherlen, 0.0);
   dummyfphi.resize(len, 0.0);
   for (i = 0; i < noareas; i++) {
-    lgrowth.resize(1, new DoubleMatrix(maxlengthgroupgrowth + 1, otherlen, 0.0));
-    wgrowth.resize(1, new DoubleMatrix(maxlengthgroupgrowth + 1, otherlen, 0.0));
+    lgrowth.resize(new DoubleMatrix(maxlengthgroupgrowth + 1, otherlen, 0.0));
+    wgrowth.resize(new DoubleMatrix(maxlengthgroupgrowth + 1, otherlen, 0.0));
   }
 }
 

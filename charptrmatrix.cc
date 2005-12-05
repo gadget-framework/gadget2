@@ -1,14 +1,6 @@
 #include "charptrmatrix.h"
 #include "gadget.h"
 
-CharPtrMatrix::CharPtrMatrix(int nr, int nc) {
-  nrow = nr;
-  v = new CharPtrVector*[nr];
-  int i;
-  for (i = 0; i < nr; i++)
-    v[i] = new CharPtrVector(nc);
-}
-
 CharPtrMatrix::~CharPtrMatrix() {
   int i;
   if (v != 0) {
@@ -19,14 +11,17 @@ CharPtrMatrix::~CharPtrMatrix() {
   }
 }
 
-void CharPtrMatrix::AddRows(int add, int length) {
-  CharPtrVector** vnew = new CharPtrVector*[nrow + add];
+void CharPtrMatrix::resize() {
   int i;
-  for (i = 0; i < nrow; i++)
-    vnew[i] = v[i];
-  delete[] v;
-  v = vnew;
-  for (i = nrow; i < nrow + add; i++)
-    v[i] = new CharPtrVector(length);
-  nrow += add;
+  if (v == 0) {
+    v = new CharPtrVector*[1];
+  } else {
+    CharPtrVector** vnew = new CharPtrVector*[nrow + 1];
+    for (i = 0; i < nrow; i++)
+      vnew[i] = v[i];
+    delete[] v;
+    v = vnew;
+  }
+  v[nrow] = new CharPtrVector();
+  nrow++;
 }

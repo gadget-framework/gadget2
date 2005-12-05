@@ -78,7 +78,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "fittype") == 0)) {
     infile >> ws;
-    stocknames.resize(1, new char[strlen(text) + 1]);
+    stocknames.resize(new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
     infile >> text;
   }
@@ -237,12 +237,12 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
         Steps.resize(1, step);
         timeid = (Years.Size() - 1);
 
-        obsDistribution.AddRows(1, numarea);
-        modelDistribution.AddRows(1, numarea);
+        obsDistribution.resize();
+        modelDistribution.resize();
         likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
-          obsDistribution[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
-          modelDistribution[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
+          obsDistribution[timeid].resize(new DoubleMatrix(numage, numlen, 0.0));
+          modelDistribution[timeid].resize(new DoubleMatrix(numage, numlen, 0.0));
         }
       }
 
@@ -345,7 +345,7 @@ void SurveyDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVect
     for (j = 0; j < Stocks.Size(); j++) {
       if (strcasecmp(stocknames[i], Stocks[j]->getName()) == 0) {
         found++;
-        stocks.resize(1, Stocks[j]);
+        stocks.resize(Stocks[j]);
       }
     }
     if (found == 0)

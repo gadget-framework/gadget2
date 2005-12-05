@@ -5,10 +5,11 @@
 #include "gadget.h"
 
 NaturalMortality::NaturalMortality(CommentStream& infile, int minage, int maxage,
-  const TimeClass* const TimeInfo, Keeper* const keeper)
-  : mortality(maxage - minage + 1), proportion(maxage - minage + 1, 0.0) {
+  const TimeClass* const TimeInfo, Keeper* const keeper) {
 
   keeper->addString("naturalmortality");
+  proportion.resize(maxage - minage + 1, 0.0);
+  mortality.setsize(maxage - minage + 1);
   mortality.read(infile, TimeInfo, keeper);
   keeper->clearLast();
 }

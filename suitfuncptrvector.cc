@@ -11,29 +11,19 @@ SuitFuncPtrVector::~SuitFuncPtrVector() {
   }
 }
 
-void SuitFuncPtrVector::resize(int addsize, SuitFunc* value) {
-  if (addsize != 1)
-    handle.logMessage(LOGFAIL, "Error in suitfuncptrvector - cannot add entries to vector");
-
-  this->resize(addsize);
-  v[size - 1] = value;
-}
-
-void SuitFuncPtrVector::resize(int addsize) {
-  if (addsize <= 0)
-    return;
+void SuitFuncPtrVector::resize(SuitFunc* value) {
   int i;
   if (v == 0) {
-    size = addsize;
-    v = new SuitFunc*[size];
+    v = new SuitFunc*[1];
   } else {
-    SuitFunc** vnew = new SuitFunc*[addsize + size];
+    SuitFunc** vnew = new SuitFunc*[size + 1];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
     v = vnew;
-    size += addsize;
   }
+  v[size] = value;
+  size++;
 }
 
 void SuitFuncPtrVector::Delete(int pos, Keeper* const keeper) {
@@ -123,7 +113,7 @@ int SuitFuncPtrVector::readSuitFunction(CommentStream& infile,
 
   if (found == 1) {
     tempFunc->readConstants(infile, TimeInfo, keeper);
-    this->resize(1, tempFunc);
+    this->resize(tempFunc);
   }
   return found;
 }

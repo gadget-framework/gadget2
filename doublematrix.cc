@@ -2,17 +2,6 @@
 #include "mathfunc.h"
 #include "gadget.h"
 
-DoubleMatrix::DoubleMatrix(int nr, int nc) {
-  nrow = (nr > 0 ? nr : 0);
-  int i;
-  if (nrow > 0) {
-    v = new DoubleVector*[nrow];
-    for (i = 0; i < nrow; i++)
-      v[i] = new DoubleVector(nc);
-  } else
-    v = 0;
-}
-
 DoubleMatrix::DoubleMatrix(int nr, int nc, double value) {
   nrow = nr;
   v = new DoubleVector*[nr];
@@ -23,25 +12,6 @@ DoubleMatrix::DoubleMatrix(int nr, int nc, double value) {
     for (j = 0; j < nc; j++)
       (*v[i])[j] = value;
   }
-}
-
-DoubleMatrix::DoubleMatrix(int nr, const IntVector& nc) {
-  nrow = nr;
-  v = new DoubleVector*[nr];
-  int i;
-  for (i = 0; i < nr; i++)
-    v[i] = new DoubleVector(nc[i]);
-}
-
-DoubleMatrix::DoubleMatrix(int nr, const IntVector& nc, double value) {
-  nrow = nr;
-  v = new DoubleVector*[nr];
-  int i, j;
-  for (i = 0; i < nr; i++)
-    v[i] = new DoubleVector(nc[i]);
-  for (i = 0; i < nr; i++)
-    for (j = 0; j < nc[i]; j++)
-      (*v[i])[j] = value;
 }
 
 DoubleMatrix::DoubleMatrix(const DoubleMatrix& initial) : nrow(initial.nrow) {
@@ -66,39 +36,37 @@ DoubleMatrix::~DoubleMatrix() {
   }
 }
 
-void DoubleMatrix::AddRows(int add, int length) {
-  if (v == 0)
-    nrow = 0;
-  DoubleVector** vnew = new DoubleVector*[nrow + add];
+void DoubleMatrix::AddRows(int add, int length, double value) {
+  if (add <= 0)
+    return;
+
   int i;
-  for (i = 0; i < nrow; i++)
-    vnew[i] = v[i];
-  delete[] v;
-  v = vnew;
-  for (i = nrow; i < nrow + add; i++)
-    v[i] = new DoubleVector(length);
-  nrow += add;
+  if (v == 0) {
+   nrow = add;
+   v = new DoubleVector*[nrow];
+   for (i = 0; i < nrow; i++)
+     v[i] = new DoubleVector(length, value);
+
+  } else {
+    DoubleVector** vnew = new DoubleVector*[nrow + add];
+    for (i = 0; i < nrow; i++)
+      vnew[i] = v[i];
+    for (i = nrow; i < nrow + add; i++)
+      vnew[i] = new DoubleVector(length, value);
+    delete[] v;
+    v = vnew;
+    nrow += add;
+  }
 }
 
-void DoubleMatrix::AddRows(int add, int length, double initial) {
-  if (v == 0)
-    nrow = 0;
-  int oldnrow = nrow;
-  this->AddRows(add, length);
-  int i, j;
-  for (i = oldnrow; i < nrow; i++)
-    for (j = 0; j < length; j++)
-      (*v[i])[j] = initial;
-}
-
-void DoubleMatrix::DeleteRow(int row) {
-  delete v[row];
+void DoubleMatrix::Delete(int pos) {
+  delete v[pos];
   int i;
   if (nrow > 1) {
     DoubleVector** vnew = new DoubleVector*[nrow - 1];
-    for (i = 0; i < row; i++)
+    for (i = 0; i < pos; i++)
       vnew[i] = v[i];
-    for (i = row; i < nrow - 1; i++)
+    for (i = pos; i < nrow - 1; i++)
       vnew[i] = v[i + 1];
     delete[] v;
     v = vnew;

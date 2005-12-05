@@ -28,7 +28,7 @@ public:
    * \param value is the value for the variable
    * \param attr is the name of the Parameter for the variable
    */
-  void keepVariable(double& value, const Parameter& attr);
+  void keepVariable(double& value, Parameter& attr);
   /**
    * \brief This function will delete a variable from the internal list
    * \param var is the value for the variable

@@ -31,7 +31,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
     handle.logFileUnexpected(LOGFAIL, "predators", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "preys") == 0)) {
-    predatornames.resize(1, new char[strlen(text) + 1]);
+    predatornames.resize(new char[strlen(text) + 1]);
     strcpy(predatornames[i++], text);
     infile >> text >> ws;
   }
@@ -43,7 +43,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
   i = 0;
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "areaaggfile") == 0)) {
-    preynames.resize(1, new char[strlen(text) + 1]);
+    preynames.resize(new char[strlen(text) + 1]);
     strcpy(preynames[i++], text);
     infile >> text >> ws;
   }
@@ -176,12 +176,12 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec,
   for (i = 0; i < predatorvec.Size(); i++)
     for (j = 0; j < predatornames.Size(); j++)
       if (strcasecmp(predatorvec[i]->getName(), predatornames[j]) == 0)
-        predators.resize(1, predatorvec[i]);
+        predators.resize(predatorvec[i]);
 
   for (i = 0; i < preyvec.Size(); i++)
     for (j = 0; j < preynames.Size(); j++)
       if (strcasecmp(preyvec[i]->getName(), preynames[j]) == 0)
-        preys.resize(1, preyvec[i]);
+        preys.resize(preyvec[i]);
 
   //change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)

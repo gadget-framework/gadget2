@@ -9,17 +9,6 @@ ParameterVector::ParameterVector(int sz) {
     v = 0;
 }
 
-ParameterVector::ParameterVector(int sz, Parameter& value) {
-  size = (sz > 0 ? sz : 0);
-  int i;
-  if (size > 0) {
-    v = new Parameter[size];
-    for (i = 0; i < size; i++)
-      v[i] = value;
-  } else
-    v = 0;
-}
-
 ParameterVector::ParameterVector(const ParameterVector& initial) {
   size = initial.size;
   int i;
@@ -38,28 +27,19 @@ ParameterVector::~ParameterVector() {
   }
 }
 
-void ParameterVector::resize(int addsize, const Parameter& value) {
-  int oldsize = size;
-  this->resize(addsize);
-  int i;
-  if (addsize > 0)
-    for (i = oldsize; i < size; i++)
-      v[i] = value;
-}
-
-void ParameterVector::resize(int addsize) {
+void ParameterVector::resize(Parameter& value) {
   int i;
   if (v == 0) {
-    size = addsize;
-    v = new Parameter[size];
-  } else if (addsize > 0) {
-    Parameter* vnew = new Parameter[addsize + size];
+    v = new Parameter[1];
+  } else {
+    Parameter* vnew = new Parameter[size + 1];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
     v = vnew;
-    size += addsize;
   }
+  v[size] = value;
+  size++;
 }
 
 void ParameterVector::Delete(int pos) {
@@ -99,6 +79,7 @@ ParameterVector& ParameterVector::operator = (const ParameterVector& pv) {
 }
 
 int ParameterVector::readline(CommentStream& infile) {
+  Parameter tmpparam;
   char line[LongString];
   strncpy(line, "", LongString);
   infile.getLine(line, LongString);
@@ -108,11 +89,10 @@ int ParameterVector::readline(CommentStream& infile) {
   istringstream istr(line);
   istr >> ws;
   while (!istr.eof()) {
-    this->resize(1);
-    istr >> v[size - 1];
+    istr >> tmpparam >> ws;
     if (istr.fail() && !istr.eof())
       return 0;
-    istr >> ws;
+    this->resize(tmpparam);
   }
   return 1;
 }

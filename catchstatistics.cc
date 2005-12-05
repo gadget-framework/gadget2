@@ -91,7 +91,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
-    fleetnames.resize(1, new char[strlen(text) + 1]);
+    fleetnames.resize(new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
   }
@@ -106,7 +106,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
     infile >> ws;
-    stocknames.resize(1, new char[strlen(text) + 1]);
+    stocknames.resize(new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
     infile >> text;
   }
@@ -205,13 +205,13 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
         Years.resize(1, year);
         Steps.resize(1, step);
         likelihoodValues.AddRows(1, numarea, 0.0);
-        numbers.resize(1, new DoubleMatrix(numarea, numage, 0.0));
-        obsMean.resize(1, new DoubleMatrix(numarea, numage, 0.0));
-        modelMean.resize(1, new DoubleMatrix(numarea, numage, 0.0));
+        numbers.resize(new DoubleMatrix(numarea, numage, 0.0));
+        obsMean.resize(new DoubleMatrix(numarea, numage, 0.0));
+        modelMean.resize(new DoubleMatrix(numarea, numage, 0.0));
         if (readvar == 1)
-          obsStdDev.resize(1, new DoubleMatrix(numarea, numage, 0.0));
+          obsStdDev.resize(new DoubleMatrix(numarea, numage, 0.0));
         if (needvar == 1)
-          modelStdDev.resize(1, new DoubleMatrix(numarea, numage, 0.0));
+          modelStdDev.resize(new DoubleMatrix(numarea, numage, 0.0));
         timeid = (Years.Size() - 1);
       }
 
@@ -290,7 +290,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
     for (j = 0; j < Fleets.Size(); j++) {
       if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found++;
-        fleets.resize(1, Fleets[j]);
+        fleets.resize(Fleets[j]);
       }
     }
     if (found == 0)
@@ -301,9 +301,9 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->isEaten()) {
-        if (strcasecmp(stocknames[i], Stocks[j]->getPrey()->getName()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->getName()) == 0) {
           found++;
-          stocks.resize(1, Stocks[j]);
+          stocks.resize(Stocks[j]);
         }
       }
     }

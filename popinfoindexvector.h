@@ -73,12 +73,6 @@ public:
    */
   int Size() const { return size; };
   /**
-   * \brief This will delete an entry from the vector
-   * \param pos is the element of the vector to be deleted
-   * \note This will free the memory allocated to the deleted element of the vector
-   */
-  void Delete(int pos);
-  /**
    * \brief This function will add a PopInfoIndexVector to the current vector
    * \param Addition is the PopInfoIndexVector that will be added to the current vector
    * \param CI is the ConversionIndex that will convert between the length groups of the 2 vectors
@@ -89,10 +83,10 @@ public:
    * \brief This function will add a PopInfoIndexVector to the current vector
    * \param Addition is the PopInfoIndexVector that will be added to the current vector
    * \param CI is the ConversionIndex that will convert between the length groups of the 2 vectors
-   * \param ratio is a multiplicative constant applied to each entry
    * \param Ratio is a DoubleVector of multiplicative constants to be applied to entries individually
+   * \param ratio is a multiplicative constant applied to each entry (default value 1.0)
    */
-  void Add(const PopInfoIndexVector& Addition, const ConversionIndex& CI, double ratio, const DoubleVector& Ratio);
+  void Add(const PopInfoIndexVector& Addition, const ConversionIndex& CI, const DoubleVector& Ratio, double ratio = 1.0);
 protected:
   /**
    * \brief This is the index for the vector

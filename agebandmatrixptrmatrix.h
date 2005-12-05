@@ -14,34 +14,21 @@ public:
    */
   AgeBandMatrixPtrMatrix() { nrow = 0; v = 0; };
   /**
-   * \brief This is the AgeBandMatrixPtrMatrix constructor for a specified size
-   * \param nr is the size of the vector to be created
-   * \note The elements of the vector will all be created, and set to zero
-   */
-  AgeBandMatrixPtrMatrix(int nr);
-  /**
    * \brief This is the AgeBandMatrixPtrMatrix destructor
    * \note This will free all the memory allocated to all the elements of the vector
    */
   ~AgeBandMatrixPtrMatrix();
   /**
-   * \brief This will add new entries to the vector
-   * \param add is the number of new entries to the vector
-   * \param value is the value that will be entered for the new entries
+   * \brief This will add one new entry to the vector
+   * \param value is the value that will be entered for the new entry
    */
-  void AddRows(int add, AgeBandMatrixPtrVector* value);
-  /**
-   * \brief This will add new empty entries to the vector
-   * \param add is the number of new entries to the vector
-   * \note The new elements of the vector will be created, and set to zero
-   */
-  void AddRows(int add);
+  void resize(AgeBandMatrixPtrVector* value);
   /**
    * \brief This will delete an entry from the vector
-   * \param row is the element of the vector to be deleted
+   * \param pos is the element of the vector to be deleted
    * \note This will free the memory allocated to the deleted element of the vector
    */
-  void DeleteRow(int row);
+  void Delete(int pos);
   /**
    * \brief This will return the number of columns in row i of the vector
    * \param i is the row of the vector to have the number of columns counted

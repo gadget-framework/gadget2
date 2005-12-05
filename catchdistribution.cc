@@ -162,7 +162,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
-    fleetnames.resize(1, new char[strlen(text) + 1]);
+    fleetnames.resize(new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
   }
@@ -177,7 +177,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   infile >> text;
   while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
     infile >> ws;
-    stocknames.resize(1, new char[strlen(text) + 1]);
+    stocknames.resize(new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
     infile >> text;
   }
@@ -200,8 +200,8 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     case 3:
     case 7:
       for (i = 0; i < numarea; i++) {
-        modelYearData.resize(1, new DoubleMatrix(numage, numlen, 0.0));
-        obsYearData.resize(1, new DoubleMatrix(numage, numlen, 0.0));
+        modelYearData.resize(new DoubleMatrix(numage, numlen, 0.0));
+        obsYearData.resize(new DoubleMatrix(numage, numlen, 0.0));
       }
       break;
     case 1:
@@ -283,12 +283,12 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
         Steps.resize(1, step);
         timeid = (Years.Size() - 1);
 
-        obsDistribution.AddRows(1, numarea);
-        modelDistribution.AddRows(1, numarea);
+        obsDistribution.resize();
+        modelDistribution.resize();
         likelihoodValues.AddRows(1, numarea, 0.0);
         for (i = 0; i < numarea; i++) {
-          obsDistribution[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
-          modelDistribution[timeid][i] = new DoubleMatrix(numage, numlen, 0.0);
+          obsDistribution[timeid].resize(new DoubleMatrix(numage, numlen, 0.0));
+          modelDistribution[timeid].resize(new DoubleMatrix(numage, numlen, 0.0));
         }
       }
 
@@ -437,7 +437,7 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     for (j = 0; j < Fleets.Size(); j++) {
       if (strcasecmp(fleetnames[i], Fleets[j]->getName()) == 0) {
         found ++;
-        fleets.resize(1, Fleets[j]);
+        fleets.resize(Fleets[j]);
       }
     }
     if (found == 0)
@@ -448,9 +448,9 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->isEaten()) {
-        if (strcasecmp(stocknames[i], Stocks[j]->getPrey()->getName()) == 0) {
+        if (strcasecmp(stocknames[i], Stocks[j]->getName()) == 0) {
           found++;
-          stocks.resize(1, Stocks[j]);
+          stocks.resize(Stocks[j]);
         }
       }
     }

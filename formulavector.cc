@@ -11,11 +11,25 @@ FormulaVector::FormulaVector(const FormulaVector& initial) {
     v = 0;
 }
 
-FormulaVector::FormulaVector(int sz) {
+FormulaVector::FormulaVector(int sz, Formula initial) {
+  int i;
   size = (sz > 0 ? sz : 0);
-  if (size > 0)
+  if (size > 0) {
     v = new Formula[size];
-  else
+    for (i = 0; i < size; i++)
+      v[i] = initial;
+  } else
+    v = 0;
+}
+
+FormulaVector::FormulaVector(int sz, double initial) {
+  int i;
+  size = (sz > 0 ? sz : 0);
+  if (size > 0) {
+    v = new Formula[size];
+    for (i = 0; i < size; i++)
+      v[i].setValue(initial);
+  } else
     v = 0;
 }
 
@@ -27,12 +41,15 @@ FormulaVector::~FormulaVector() {
 }
 
 void FormulaVector::resize(int addsize, Keeper* keeper) {
+  if (addsize <= 0)
+    return;
+
   int i;
   if (v == 0) {
     size = addsize;
     v = new Formula[size];
-  } else if (addsize > 0) {
-    Formula* vnew = new Formula[addsize + size];
+  } else {
+    Formula* vnew = new Formula[size + addsize];
     for (i = 0; i < size; i++)
       v[i].Interchange(vnew[i], keeper);
     delete[] v;

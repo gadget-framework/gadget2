@@ -218,18 +218,18 @@ void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition,
 
 void Stock::updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss) {
   tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->getName(), tagloss);
-  allTags.resize(1, newtag);
+  allTags.resize(newtag);
   if (doesmature) {
     maturity->addMaturityTag(newtag->getName());
-    matureTags.resize(1, newtag);
+    matureTags.resize(newtag);
   }
   if (doesmove) {
     transition->addTransitionTag(newtag->getName());
-    transitionTags.resize(1, newtag);
+    transitionTags.resize(newtag);
   }
   if (doesstray) {
     stray->addStrayTag(newtag->getName());
-    strayTags.resize(1, newtag);
+    strayTags.resize(newtag);
   }
 }
 

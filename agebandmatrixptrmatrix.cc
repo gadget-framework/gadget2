@@ -1,13 +1,5 @@
 #include "agebandmatrixptrmatrix.h"
 
-AgeBandMatrixPtrMatrix::AgeBandMatrixPtrMatrix(int nr) {
-  nrow = (nr > 0 ? nr : 0);
-  if (nrow > 0)
-    v = new AgeBandMatrixPtrVector*[nrow];
-  else
-    v = 0;
-}
-
 AgeBandMatrixPtrMatrix::~AgeBandMatrixPtrMatrix() {
   int i;
   if (v != 0) {
@@ -18,38 +10,29 @@ AgeBandMatrixPtrMatrix::~AgeBandMatrixPtrMatrix() {
   }
 }
 
-void AgeBandMatrixPtrMatrix::AddRows(int add, AgeBandMatrixPtrVector* value) {
-  int oldnrow = nrow;
-  this->AddRows(add);
-  int i;
-  if (add > 0)
-    for (i = oldnrow; i < nrow; i++)
-      v[i] = value;
-}
-
-void AgeBandMatrixPtrMatrix::AddRows(int add) {
+void AgeBandMatrixPtrMatrix::resize(AgeBandMatrixPtrVector* value) {
   int i;
   if (v == 0) {
-    nrow = add;
-    v = new AgeBandMatrixPtrVector*[nrow];
-  } else if (add > 0) {
-    AgeBandMatrixPtrVector** vnew = new AgeBandMatrixPtrVector*[add + nrow];
+    v = new AgeBandMatrixPtrVector*[1];
+  } else {
+    AgeBandMatrixPtrVector** vnew = new AgeBandMatrixPtrVector*[nrow + 1];
     for (i = 0; i < nrow; i++)
       vnew[i] = v[i];
     delete[] v;
     v = vnew;
-    nrow += add;
   }
+  v[nrow] = value;
+  nrow++;
 }
 
-void AgeBandMatrixPtrMatrix::DeleteRow(int row) {
-  delete v[row];
+void AgeBandMatrixPtrMatrix::Delete(int pos) {
+  delete v[pos];
   int i;
   if (nrow > 1) {
     AgeBandMatrixPtrVector** vnew = new AgeBandMatrixPtrVector*[nrow - 1];
-    for (i = 0; i < row; i++)
+    for (i = 0; i < pos; i++)
       vnew[i] = v[i];
-    for (i = row; i < nrow - 1; i++)
+    for (i = pos; i < nrow - 1; i++)
       vnew[i] = v[i + 1];
     delete[] v;
     v = vnew;
