@@ -32,10 +32,11 @@ public:
    * \param areas is the IntMatrix of the areas that the survey indices are calculated on
    * \param charindex is the CharPtrVector of the names of the column index for the survey indices
    * \param name is the name for the SIOnStep component
+   * \param bio is the flag to denote whether the index should be based on the biomass or not
    */
   SIOnStep(CommentStream& infile, const char* datafilename,
     const CharPtrVector& aindex, const TimeClass* const TimeInfo,
-    const IntMatrix& areas, const CharPtrVector& charindex, const char* name);
+    const IntMatrix& areas, const CharPtrVector& charindex, const char* name, int bio);
   /**
    * \brief This is the default SIOnStep destructor
    */
@@ -115,6 +116,11 @@ protected:
    * \brief This is the index of the timesteps for the survey index data
    */
   int timeindex;
+  /**
+   * \brief This is the flag to denote whether the index should be based on the biomass or not
+   * \note The default value for this is 0, which means that the index is based on the number of the population
+   */
+  int biomass;
 private:
   /**
    * \brief This function will read the SIOnStep data from the input file

@@ -11,8 +11,8 @@ extern ErrorHandler handle;
 SIByLengthOnStep::SIByLengthOnStep(CommentStream& infile, const IntMatrix& areas,
   const DoubleVector& lengths, const CharPtrVector& areaindex,
   const CharPtrVector& lenindex, const TimeClass* const TimeInfo,
-  const char* datafilename, const char* name)
-  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, lenindex, name) {
+  const char* datafilename, const char* name, int bio)
+  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, lenindex, name, bio) {
 
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
@@ -75,6 +75,11 @@ void SIByLengthOnStep::Sum(const TimeClass* const TimeInfo) {
     handle.logMessage(LOGMESSAGE, "Calculating index for surveyindex component", this->getSIName());
   aggregator->Sum();
   alptr = &(aggregator->getSum()[0]);
-  for (i = 0; i < this->numIndex(); i++)
-    modelIndex[timeindex][i] = (*alptr)[0][i].N;
+  //JMB experimental survey index based on the biomass
+  if (biomass == 1)
+    for (i = 0; i < this->numIndex(); i++)
+      modelIndex[timeindex][i] = (*alptr)[0][i].N * (*alptr)[0][i].W;
+  else
+    for (i = 0; i < this->numIndex(); i++)
+      modelIndex[timeindex][i] = (*alptr)[0][i].N;
 }

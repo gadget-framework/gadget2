@@ -19,11 +19,12 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param datafilename is the name of the file containing the survey index data
    * \param name is the name of the SIByLengthOnStep likelihood component
+   * \param bio is the flag to denote whether the index should be based on the biomass or not
    */
   SIByLengthOnStep(CommentStream& infile, const IntMatrix& areas,
     const DoubleVector& lengths, const CharPtrVector& areaindex,
     const CharPtrVector& lenindex, const TimeClass* const TimeInfo,
-    const char* datafilename, const char* name);
+    const char* datafilename, const char* name, int bio);
   /**
    * \brief This is the default SIByLengthOnStep destructor
    */

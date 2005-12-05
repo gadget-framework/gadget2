@@ -10,8 +10,8 @@ extern ErrorHandler handle;
 
 SIByAgeOnStep::SIByAgeOnStep(CommentStream& infile, const IntMatrix& areas,
   const IntMatrix& ages, const CharPtrVector& areaindex, const CharPtrVector& ageindex,
-  const TimeClass* const TimeInfo, const char* datafilename, const char* name)
-  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, ageindex, name), Ages(ages) {
+  const TimeClass* const TimeInfo, const char* datafilename, const char* name, int bio)
+  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, ageindex, name, bio), Ages(ages) {
 
 }
 
@@ -78,6 +78,11 @@ void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {
     handle.logMessage(LOGMESSAGE, "Calculating index for surveyindex component", this->getSIName());
   aggregator->Sum();
   alptr = &(aggregator->getSum()[0]);
-  for (i = 0; i < this->numIndex(); i++)
-    modelIndex[timeindex][i] = (*alptr)[i][0].N;
+  //JMB experimental survey index based on the biomass
+  if (biomass == 1)
+    for (i = 0; i < this->numIndex(); i++)
+      modelIndex[timeindex][i] = (*alptr)[i][0].N * (*alptr)[i][0].W;
+  else
+    for (i = 0; i < this->numIndex(); i++)
+      modelIndex[timeindex][i] = (*alptr)[i][0].N;
 }

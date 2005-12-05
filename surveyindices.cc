@@ -18,7 +18,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i, j;
+  int i, j, biomass;
 
   IntMatrix ages;
   DoubleVector lengths;
@@ -36,6 +36,15 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   readWordAndValue(infile, "datafile", datafilename);
   readWordAndValue(infile, "sitype", sitype);
+
+  //JMB - added the optional reading of the biomass flag
+  infile >> ws;
+  char c = infile.peek();
+  biomass = 0;
+  if ((c == 'b') || (c == 'B'))
+    readWordAndVariable(infile, "biomass", biomass);
+  if (biomass != 0 && biomass != 1)
+    handle.logFileMessage(LOGFAIL, "\nError in surveyindex - biomass must be 0 or 1");
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
@@ -129,15 +138,15 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   //We have now read in all the data from the main likelihood file
   if (strcasecmp(sitype, "lengths") == 0) {
     SI = new SIByLengthOnStep(infile, areas, lengths, areaindex,
-      charindex, TimeInfo, datafilename, this->getName());
+      charindex, TimeInfo, datafilename, this->getName(), biomass);
 
   } else if (strcasecmp(sitype, "ages") == 0) {
     SI = new SIByAgeOnStep(infile, areas, ages, areaindex,
-      charindex, TimeInfo, datafilename, this->getName());
+      charindex, TimeInfo, datafilename, this->getName(), biomass);
 
   } else if (strcasecmp(sitype, "fleets") == 0) {
     SI = new SIByFleetOnStep(infile, areas, lengths, areaindex,
-      charindex, TimeInfo, datafilename, this->getName());
+      charindex, TimeInfo, datafilename, this->getName(), biomass);
 
   } else
     handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised type", sitype);

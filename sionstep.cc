@@ -20,7 +20,7 @@ SIOnStep::~SIOnStep() {
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   const CharPtrVector& aindex, const TimeClass* const TimeInfo,
   const IntMatrix& areas, const CharPtrVector& charindex,
-  const char* name) : Areas(areas), alptr(0) {
+  const char* name, int bio) : Areas(areas), alptr(0), biomass(bio) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
