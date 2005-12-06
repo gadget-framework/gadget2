@@ -111,13 +111,6 @@ public:
    */
   double getNumber(int area, int length) const { return preynumber[this->areaNum(area)][length].N; };
   /**
-   * \brief This will return the ratio of prey that has been consumed by predators
-   * \param area is the area that the consumption is being calculated on
-   * \param length is the length group of the prey
-   * \return ratio
-   */
-  double getRatio(int area, int length) const { return ratio[this->areaNum(area)][length]; };
-  /**
    * \brief This will return the total biomass of prey that is available for consumption
    * \param area is the area that the consumption is being calculated on
    * \return total biomass
@@ -129,6 +122,12 @@ public:
    * \return 1 if the prey has been overconsumed, 0 otherwise
    */
   int isOverConsumption(int area) const { return isoverconsumption[this->areaNum(area)]; };
+  /**
+   * \brief This will return the ratio of the prey that has been consumed on a given area
+   * \param area is the area that the consumption is being calculated on
+   * \return ratio, a DoubleVector containing the ratio of the prey that is consumed
+   */
+  const DoubleVector& getRatio(int area) const { return ratio[this->areaNum(area)]; };
   /**
    * \brief This will return the amount of the prey that has been consumed on a given area
    * \param area is the area that the consumption is being calculated on

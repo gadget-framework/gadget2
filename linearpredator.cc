@@ -57,7 +57,7 @@ void LinearPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
 void LinearPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
   int over, prey, preyl;
   int inarea = this->areaNum(area);
-  double maxRatio, ratio, tmp;
+  double maxRatio, tmp;
 
   int predl = 0;  //JMB there is only ever one length group ...
   overcons[inarea][predl] = 0.0;
@@ -70,10 +70,10 @@ void LinearPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
     if (this->getPrey(prey)->isPreyArea(area)) {
       if (this->getPrey(prey)->isOverConsumption(area)) {
         over = 1;
+        DoubleVector ratio = this->getPrey(prey)->getRatio(inarea);
         for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
-          ratio = this->getPrey(prey)->getRatio(area, preyl);
-          if (ratio > maxRatio) {
-            tmp = maxRatio / ratio;
+          if (ratio[preyl] > maxRatio) {
+            tmp = maxRatio / ratio[preyl];
             overcons[inarea][predl] += (1.0 - tmp) * (*cons[inarea][prey])[predl][preyl];
             (*cons[inarea][prey])[predl][preyl] *= tmp;
           }

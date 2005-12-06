@@ -90,7 +90,7 @@ public:
    * \return maximum age
    */
   int maxAge() const { return Alkeys[0].maxAge(); };
-  AgeBandMatrix& getAgeLengthKeys(int area) { return Alkeys[this->areaNum(area)]; };
+  const AgeBandMatrix& getAgeLengthKeys(int area) const { return Alkeys[this->areaNum(area)]; };
 protected:
   /**
    * \brief This is the FormulaVector used to store the consumption parameters

@@ -102,12 +102,13 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
                   for (k = 0; k < ages.Ncol(age); k++) {
                     if ((alptr->minAge() <= ages[age][k]) && (ages[age][k] <= alptr->maxAge())) {
                       if (overconsumption) {
-                        DoubleVector Ratio = *suitptr;
-                        for (z = 0; z < Ratio.Size(); z++)
-                          if (prey->getRatio(area, z) > 1.0)
-                            Ratio[z] *= 1.0 / prey->getRatio(areas[area][j], z);
+                        DoubleVector usesuit = *suitptr;
+                        DoubleVector ratio = prey->getRatio(area);
+                        for (z = 0; z < usesuit.Size(); z++)
+                          if (ratio[z] > 1.0)
+                            usesuit[z] *= 1.0 / ratio[z];
 
-                        total[area][age].Add((*alptr)[ages[age][k]], *CI[h], Ratio, fleetscale);
+                        total[area][age].Add((*alptr)[ages[age][k]], *CI[h], usesuit, fleetscale);
                       } else {
                         total[area][age].Add((*alptr)[ages[age][k]], *CI[h], *suitptr, fleetscale);
                       }

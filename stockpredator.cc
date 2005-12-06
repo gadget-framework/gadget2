@@ -86,8 +86,6 @@ void StockPredator::Print(ofstream& outfile) const {
     Alkeys[area].printNumbers(outfile);
     outfile << "\tAlkeys (mean weights) on internal area " << areas[area] << ":\n";
     Alkeys[area].printWeights(outfile);
-    outfile << "\tAge-length proportion on internal area " << areas[area] << ":\n";
-    Alprop[area].Print(outfile);
     outfile << "\tMaximum consumption by length on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < maxcons.Ncol(); i++)
       outfile << setw(smallwidth) << setprecision(smallprecision) << maxcons[area][i] << sep;
@@ -97,11 +95,12 @@ void StockPredator::Print(ofstream& outfile) const {
 }
 
 void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
-  int age, len, inarea = this->areaNum(area);
+  int inarea = this->areaNum(area);
   Alkeys[inarea].setToZero();
   Alkeys[inarea].Add(stock, *CI);
   Alkeys[inarea].sumColumns(prednumber[inarea]);
 
+  int age, len;
   for (age = Alprop[inarea].minRow(); age <= Alprop[inarea].maxRow(); age++) {
     for (len = Alprop[inarea].minCol(age); len < Alprop[inarea].maxCol(age); len++) {
       if (!(isZero(prednumber[inarea][len].N)))
@@ -216,7 +215,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
 void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
   int inarea = this->areaNum(area);
   int over, preyl, predl, prey;
-  double maxRatio, ratio, rat1, rat2, tmp;
+  double maxRatio, ratio1, ratio2, tmp;
 
   maxRatio = MaxRatioConsumed;
   if (TimeInfo->numSubSteps() != 1)
@@ -230,11 +229,11 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
     if (this->getPrey(prey)->isPreyArea(area)) {
       if (this->getPrey(prey)->isOverConsumption(area)) {
         over = 1;
+        DoubleVector ratio = this->getPrey(prey)->getRatio(inarea);
         for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
           for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
-            ratio = this->getPrey(prey)->getRatio(area, preyl);
-            if (ratio > maxRatio) {
-              tmp = maxRatio / ratio;
+            if (ratio[preyl] > maxRatio) {
+              tmp = maxRatio / ratio[preyl];
               overcons[inarea][predl] += (1.0 - tmp) * (*cons[inarea][prey])[predl][preyl];
               (*cons[inarea][prey])[predl][preyl] *= tmp;
             }
@@ -247,24 +246,24 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
   if (over == 1) {
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
       if (totalcons[inarea][predl] > verysmall) {
-        ratio = 1.0 - (overcons[inarea][predl] / totalcons[inarea][predl]);
-        subfphi[inarea][predl] *= ratio;
+        tmp = 1.0 - (overcons[inarea][predl] / totalcons[inarea][predl]);
+        subfphi[inarea][predl] *= tmp;
         totalcons[inarea][predl] -= overcons[inarea][predl];
       }
     }
   }
 
-  rat2 = 1.0;
-  rat1 = 0.0;
+  ratio2 = 1.0;
+  ratio1 = 0.0;
   if (TimeInfo->numSubSteps() != 1) {
-    rat2 = 1.0 / TimeInfo->getSubStep();
-    rat1 = 1.0 - rat2;
+    ratio2 = 1.0 / TimeInfo->getSubStep();
+    ratio1 = 1.0 - ratio2;
   }
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     totalconsumption[inarea][predl] += totalcons[inarea][predl];
     overconsumption[inarea][predl] += overcons[inarea][predl];
-    fphi[inarea][predl] = (rat2 * subfphi[inarea][predl]) + (rat1 * fphi[inarea][predl]);
+    fphi[inarea][predl] = (ratio2 * subfphi[inarea][predl]) + (ratio1 * fphi[inarea][predl]);
   }
 
   for (prey = 0; prey < this->numPreys(); prey++)
