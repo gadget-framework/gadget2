@@ -82,8 +82,9 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
     tags.o renewal.o taggrow.o initialinputfile.o optinfohooke.o optinfobfgs.o \
     optinfosimann.o popratio.o popinfo.o popinfomemberfunctions.o summaryprinter.o \
     numberpredator.o agebandmatrixratio.o agebandmatrixratiomemberfunctions.o \
-    rectangle.o migrationarea.o addresskeepermatrix.o addresskeepervector.o \
-    intmatrix.o intvector.o formulamatrixptrvector.o doublematrix.o doublevector.o \
+    stockpreyaggregator.o stockpreyprinter.o rectangle.o migrationarea.o \
+    addresskeepermatrix.o addresskeepervector.o formulamatrixptrvector.o \
+    intmatrix.o intvector.o doublematrix.o doublevector.o \
     parametervector.o otherfoodptrvector.o baseclassptrvector.o popinfoindexvector.o \
     conversionindexptrvector.o likelihoodptrvector.o suitfuncptrvector.o  \
     popratiomatrix.o popratiovector.o popinfomatrix.o popinfovector.o \

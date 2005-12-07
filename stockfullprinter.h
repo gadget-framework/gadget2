@@ -34,10 +34,6 @@ public:
   virtual void Print(const TimeClass* const TimeInfo, int printtime);
 protected:
   /**
-   * \brief This is the IntVector used to store aggregated internal area information
-   */
-  IntVector areas;
-  /**
    * \brief This is the IntVector used to store aggregated area information
    */
   IntVector outerareas;
@@ -45,10 +41,6 @@ protected:
    * \brief This is the minimum age of the stock
    */
   int minage;
-  /**
-   * \brief This is the maximum age of the stock
-   */
-  int maxage;
   /**
    * \brief This is the name of the stock
    */

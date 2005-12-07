@@ -3,7 +3,7 @@
 
 #include "printer.h"
 #include "stockaggregator.h"
-#include "stockpreystdinfo.h"
+#include "stockpreyaggregator.h"
 
 /**
  * \class StockStdPrinter
@@ -43,37 +43,37 @@ protected:
    */
   LengthGroupDivision* LgrpDiv;
   /**
-   * \brief This is the IntVector used to store internal area information
-   */
-  IntVector areas;
-  /**
    * \brief This is the IntVector used to store aggregated area information
    */
   IntVector outerareas;
+  /**
+   * \brief This is the flag to denote whether the stock is a prey or not
+   */
+  int isaprey;
   /**
    * \brief This is the minimum age of the stock
    */
   int minage;
   /**
-   * \brief This is the maximum age of the stock
-   */
-  int maxage;
-  /**
-   * \brief This is the StockAggregator used to collect information about the stock
-   */
-  StockAggregator* aggregator;
-  /**
-   * \brief This is the StockPreyStdInfo used to collect information about the consumption of the stock
-   */
-  StockPreyStdInfo* preyinfo;
-  /**
    * \brief This is the scaling factor used to scale the size of the stock
    */
   double scale;
   /**
-   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
+   * \brief This is the StockAggregator used to collect information about the stock
    */
-  const AgeBandMatrixPtrVector* alptr;
+  StockAggregator* saggregator;
+  /**
+   * \brief This is the StockPreyAggregator used to collect information about the stock prey
+   */
+  StockPreyAggregator* paggregator;
+  /**
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the stock aggregatation function
+   */
+  const AgeBandMatrixPtrVector* salptr;
+  /**
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the prey aggregatation function
+   */
+  const AgeBandMatrixPtrVector* palptr;
 };
 
 #endif

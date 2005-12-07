@@ -7,6 +7,7 @@
 #include "preyoverprinter.h"
 #include "stockpreyfullprinter.h"
 #include "predpreystdprinter.h"
+#include "stockpreyprinter.h"
 #include "stockfullprinter.h"
 #include "likelihoodprinter.h"
 #include "summaryprinter.h"
@@ -148,6 +149,8 @@ void Ecosystem::readPrinters(CommentStream& infile) {
       printvec.resize(new PredatorOverPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "preyoverprinter") == 0)
       printvec.resize(new PreyOverPrinter(infile, TimeInfo));
+    else if (strcasecmp(type, "stockpreyprinter") == 0)
+      printvec.resize(new StockPreyPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "stockpreyfullprinter") == 0)
       printvec.resize(new StockPreyFullPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "predpreystdlengthprinter") == 0)

@@ -30,16 +30,26 @@ public:
    */
   virtual void Sum(const AgeBandMatrix& stockAlkeys, int area);
   /**
+   * \brief This function will print the prey information
+   * \param outfile is the ofstream that all the model information gets sent to
+   */
+  virtual void Print(ofstream& outfile) const;
+  /**
+   * \brief This will return the minimum age of the prey
+   * \return minimum age
+   */
+  int minAge() const { return preyAlkeys[0].minAge(); };
+  /**
+   * \brief This will return the maximum age of the prey
+   * \return maximum age
+   */
+  int maxAge() const { return preyAlkeys[0].maxAge(); };
+  /**
    * \brief This function will return the amount of prey on the area before consumption
    * \param area is the area that the prey consumption is being calculated on
    * \return preyAlkeys, the population of the prey for the area before consumption
    */
   const AgeBandMatrix& getALKPriorToEating(int area) const { return preyAlkeys[this->areaNum(area)]; };
-  /**
-   * \brief This function will print the prey information
-   * \param outfile is the ofstream that all the model information gets sent to
-   */
-  virtual void Print(ofstream& outfile) const;
 protected:
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store the amount of the prey on each area

@@ -100,8 +100,7 @@ StockFullPrinter::~StockFullPrinter() {
 
 void StockFullPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const Area) {
   StockPtrVector stocks;
-  delete aggregator;
-  int i;
+  int i, maxage;
 
   for (i = 0; i < stockvec.Size(); i++)
     if (strcasecmp(stockvec[i]->getName(), stockname) == 0)
@@ -114,12 +113,10 @@ void StockFullPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const
     handle.logMessage(LOGFAIL, "Error in stockfullprinter - looking for stock", stockname);
   }
 
-  areas = stocks[0]->getAreas();
+  IntVector areas = stocks[0]->getAreas();
   outerareas.resize(areas.Size(), 0);
   for (i = 0; i < outerareas.Size(); i++)
     outerareas[i] = Area->OuterArea(areas[i]);
-
-  LgrpDiv = new LengthGroupDivision(*stocks[0]->getLengthGroupDiv());
 
   //prepare for the creation of the aggregator
   minage = stocks[0]->minAge();
@@ -131,6 +128,7 @@ void StockFullPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const
   for (i = 0; i < areamatrix.Nrow(); i++)
     areamatrix[i][0] = areas[i];
 
+  LgrpDiv = new LengthGroupDivision(*stocks[0]->getLengthGroupDiv());
   aggregator = new StockAggregator(stocks, LgrpDiv, areamatrix, agematrix);
 }
 
@@ -143,7 +141,7 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   int a, age, len;
 
   alptr = &aggregator->getSum();
-  for (a = 0; a < areas.Size(); a++) {
+  for (a = 0; a < outerareas.Size(); a++) {
     for (age = (*alptr)[a].minAge(); age <= (*alptr)[a].maxAge(); age++) {
       for (len = (*alptr)[a].minLength(age); len < (*alptr)[a].maxLength(age); len++) {
         outfile << setw(lowwidth) << TimeInfo->getYear() << sep

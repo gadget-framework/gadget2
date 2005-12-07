@@ -2,7 +2,7 @@
 #define stockpreyfullprinter_h
 
 #include "printer.h"
-#include "stockpreystdinfo.h"
+#include "stockpreyaggregator.h"
 
 /**
  * \class StockPreyFullPrinter
@@ -21,11 +21,11 @@ public:
    */
   virtual ~StockPreyFullPrinter();
   /**
-   * \brief This will select the stocks required for the printer class to print the requested information
-   * \param stockvec is the StockPtrVector of all the available stocks
+   * \brief This will select the preys required for the printer class to print the requested information
+   * \param stockvec is the PreyPtrVector of all the available preys
    * \param Area is the AreaClass for the current model
    */
-  virtual void setStock(StockPtrVector& stockvec, const AreaClass* const Area);
+  virtual void setPrey(PreyPtrVector& preyvec, const AreaClass* const Area);
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model
@@ -34,33 +34,29 @@ public:
   virtual void Print(const TimeClass* const TimeInfo, int printtime);
 protected:
   /**
-   * \brief This is the name of the stock
+   * \brief This is the name of the stock prey
    */
-  char* stockname;
+  char* preyname;
   /**
-   * \brief This is the minimum age of the stock
+   * \brief This is the minimum age of the stock prey
    */
   int minage;
-  /**
-   * \brief This is the maximum age of the stock
-   */
-  int maxage;
-  /**
-   * \brief This is the IntVector used to store aggregated internal area information
-   */
-  IntVector areas;
   /**
    * \brief This is the IntVector used to store aggregated area information
    */
   IntVector outerareas;
   /**
-   * \brief This is the StockPreyStdInfo used to collect information about the consumption of the stock
-   */
-  StockPreyStdInfo* preyinfo;
-  /**
-   * \brief This is the LengthGroupDivision used to store aggregated area information
+   * \brief This is the LengthGroupDivision of the prey
    */
   LengthGroupDivision* LgrpDiv;
+  /**
+   * \brief This is the StockPreyAggregator used to collect information about the stock prey
+   */
+  StockPreyAggregator* aggregator;
+  /**
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
+   */
+  const AgeBandMatrixPtrVector* alptr;
 };
 
 #endif
