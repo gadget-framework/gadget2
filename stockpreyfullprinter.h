@@ -22,7 +22,7 @@ public:
   virtual ~StockPreyFullPrinter();
   /**
    * \brief This will select the preys required for the printer class to print the requested information
-   * \param stockvec is the PreyPtrVector of all the available preys
+   * \param preyvec is the PreyPtrVector of all the available preys
    * \param Area is the AreaClass for the current model
    */
   virtual void setPrey(PreyPtrVector& preyvec, const AreaClass* const Area);
