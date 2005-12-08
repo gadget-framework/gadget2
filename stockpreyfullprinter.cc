@@ -20,7 +20,13 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
 
   preyname = new char[MaxStrLength];
   strncpy(preyname, "", MaxStrLength);
-  readWordAndValue(infile, "stockname", preyname);
+  //JMB - changed to read either preyname or stockname
+  infile >> ws;
+  char c = infile.peek();
+  if ((c == 's') || (c == 'S'))
+    readWordAndValue(infile, "stockname", preyname);
+  else
+    readWordAndValue(infile, "preyname", preyname);
 
   //JMB - removed the need to read in the area aggregation file
   infile >> text >> ws;

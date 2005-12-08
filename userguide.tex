@@ -71,7 +71,7 @@ Gadget is distributed via anonymous ftp from the MRI ftp site, and the address o
 ftp://ftp.hafro.is/pub/reiknid/dst2/gadget/
 \end{verbatim}}
 
-The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.1.02, so the file to be downloaded is gadget2.1.02.tar.gz.
+The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.1.03, so the file to be downloaded is gadget2.1.03.tar.gz.
 
 \bigskip
 Gadget is a program that runs on a Unix computing platform, and is regularly tested on machines running versions of Solaris, Linux, Mac OSX and Cygwin (a Unix emulator for Microsoft Windows machines).  It should also run on other versions of Unix, but this may require modifications to the makefile in order to do so.  Gadget is distributed as a set of source code files, which need to be compiled into an executable program before it can be run.  To allow for various different versions, the makefile has a list of supported computing platforms, so the makefile should be checked (and if necessary changed) to ensure that the required options are available before the source code is compiled.  The default options in the makefile will compile Gadget for a Linux machine, using the GNU C++ compiler.  A summary of the commands required to compile Gadget, using the default options for a Linux machine from the downloaded file are:
@@ -92,11 +92,11 @@ A web site has been set up that contains details of the most recent changes to G
 http://www.hafro.is/gadget
 \end{verbatim}}
 
-Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.1.02 on a Linux machine:
+Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.1.03 on a Linux machine:
 
 {\small\begin{verbatim}
-gunzip gadget2.1.02.tar.gz
-tar -xvf gadget2.1.02.tar
+gunzip gadget2.1.03.tar.gz
+tar -xvf gadget2.1.03.tar
 cd source
 make
 \end{verbatim}}
@@ -3076,7 +3076,7 @@ type                 <printer type>
 <printer data>
 \end{verbatim}}
 
-The printer data for each printer type is covered in the sub sections below.  The $<$printer type$>$ defines the type of output that will be generated from the Gadget model, and there are currently 11 valid printer types defined in Gadget.  These are:
+The printer data for each printer type is covered in the sub sections below.  The $<$printer type$>$ defines the type of output that will be generated from the Gadget model, and there are currently 12 valid printer types defined in Gadget.  These are:
 
 \bigskip
 StockStdPrinter\newline
@@ -3086,11 +3086,13 @@ PredatorPrinter\newline
 PredatorOverPrinter\newline
 PreyOverPrinter\newline
 StockPreyFullPrinter\newline
+StockPreyPrinter\newline
 PredPreyStdLengthPrinter\newline
 PredPreyStdAgePrinter\newline
 LikelihoodPrinter\newline
 LikelihoodSummaryPrinter
 
+\newpage %JMB insert page break
 \section{StockStdPrinter}\label{sec:stockstdprinter}
 The printer type to output the standard details of a stock is called ''StockStdPrinter''.  This printer type is defined by specifying the stock name and timesteps of interest.  The file format for this component is given below:
 
@@ -3158,7 +3160,7 @@ $<$number$>$ is the population for that timestep/area/age/length combination\new
 $<$weight$>$ is the mean weight for that timestep/area/age/length combination
 
 \section{StockPrinter}\label{sec:stockprinter}
-The printer type to output information about (one or more) stocks, with the information aggregated into a convenient grouping, is called ''StockPrinter''.  This printer type is defined by specifying the stock name, areas, age groups, length groups and timesteps of interest.  The file format for this component is given below:
+The printer type to output information about (one or more) stocks, with the information aggregated into a convenient grouping, is called ''StockPrinter''.  This printer type is defined by specifying the stock names, areas, age groups, length groups and timesteps of interest.  The file format for this component is given below:
 
 {\small\begin{verbatim}
 [component]
@@ -3212,7 +3214,7 @@ precision            <precision to be used in the output file>
 yearsandsteps        <ActionAtTime to determine when to print>
 \end{verbatim}}
 
-Note that this printer type can aggregate more than one predators into a combined pseudo predator, and one or more preys into a pseudo prey, for the output file.
+Note that this printer type can aggregate more than one predator into a combined pseudo predator, and more than one prey into a pseudo prey, for the output file.
 
 \bigskip
 The optional flag $<$biomass$>$ is used to specify whether the information about the consumption of the preys by the predators is printed by biomass consumed or by number consumed.  If this is set to 1 then information about the consumption is printed by biomass consumed.  If this is set to 0 then this information is printed by number consumed.  The default value for $<$biomass$>$ is 1, which means that the consumption by biomass will be printed if this flag is not specified in the input file.
@@ -3236,7 +3238,6 @@ $<$amount$>$ is the biomass (or number) consumed for that timestep/area/predator
 \section{PredatorOverPrinter}\label{sec:predatoroverprinter}
 The printer type to output information about predator over consumption (where a predator has failed to eat the required amount of prey since the prey is not available), with the information aggregated into a convenient grouping, is called ''PredatorOverPrinter''.  This printer type is defined by specifying the predator name, areas, length groups and timesteps of interest.  The file format for this component is given below:
 
-\newpage %JMB insert page break
 {\small\begin{verbatim}
 [component]
 type                 predatoroverprinter
@@ -3248,7 +3249,7 @@ precision            <precision to be used in the output file>
 yearsandsteps        <ActionAtTime to determine when to print>
 \end{verbatim}}
 
-Note that this printer type can aggregate more than one predators into a combined pseudo predator for the output file.
+Note that this printer type can aggregate more than one predator into a combined pseudo predator for the output file.
 
 \bigskip
 The optional $<$precision$>$ value is used to specify the number of digits to be used when printing the information to the specified output file, overriding the default settings for this printer type.
@@ -3279,7 +3280,7 @@ precision            <precision to be used in the output file>
 yearsandsteps        <ActionAtTime to determine when to print>
 \end{verbatim}}
 
-Note that this printer type can aggregate more than one preys into a combined pseudo prey for the output file.
+Note that this printer type can aggregate more than one prey into a combined pseudo prey for the output file.
 
 \bigskip
 The optional $<$precision$>$ value is used to specify the number of digits to be used when printing the information to the specified output file, overriding the default settings for this printer type.
@@ -3302,7 +3303,7 @@ The printer type to output detailed information about a prey is called ''StockPr
 {\small\begin{verbatim}
 [component]
 type                 stockpreyfullprinter
-stockname            <name of the stock>
+preyname             <name of the prey>
 printfile            <name for the output file to be created>
 precision            <precision to be used in the output file>
 yearsandsteps        <ActionAtTime to determine when to print>
@@ -3311,13 +3312,47 @@ yearsandsteps        <ActionAtTime to determine when to print>
 The optional $<$precision$>$ value is used to specify the number of digits to be used when printing the information to the specified output file, overriding the default settings for this printer type.
 
 \bigskip
-The output that is generated from this printer type is a file containing the following information for the prey specified on the $<$stockname$>$ line:
+The output that is generated from this printer type is a file containing the following information for the prey specified on the $<$preyname$>$ line:
 
 {\small\begin{verbatim}
 year-step-area-age-length-number-biomass
 \end{verbatim}}
 
 where:\newline
+$<$number$>$ is the total population consumed for that timestep/area/age/length combination\newline
+$<$biomass$>$ is the total biomass consumed for that timestep/area/age/length combination
+
+\section{StockPreyPrinter}\label{sec:stockpreyprinter}
+The printer type to output information about (one or more) preys, with the information aggregated into a convenient grouping, is called ''StockPreyPrinter''.  This printer type is defined by specifying the prey names, areas, age groups, length groups and timesteps of interest.  The file format for this component is given below:
+
+{\small\begin{verbatim}
+[component]
+type                 stockpreyprinter
+preynames            <vector of the names of the preys>
+printfile            <name for the output file to be created>
+areaaggfile          <area aggregation file specifying areas>
+ageaggfile           <age aggregation file specifying ages>
+lenaggfile           <length aggregation file specifying lengths>
+precision            <precision to be used in the output file>
+yearsandsteps        <ActionAtTime to determine when to print>
+\end{verbatim}}
+
+Note that this printer type can aggregate more than one prey into a combined pseudo prey for the output file.
+
+\bigskip
+The optional $<$precision$>$ value is used to specify the number of digits to be used when printing the information to the specified output file, overriding the default settings for this printer type.
+
+\bigskip
+The output that is generated from this printer type is a file containing the following information for all the preys specified on the $<$preynames$>$ line:
+
+{\small\begin{verbatim}
+year-step-area-age-length-number-biomass
+\end{verbatim}}
+
+where:\newline
+$<$area$>$ is the label for the area from the area aggregation file\newline
+$<$age$>$ is the label for the age group from the age aggregation file\newline
+$<$length$>$ is the label for the length group from the length aggregation file\newline
 $<$number$>$ is the total population consumed for that timestep/area/age/length combination\newline
 $<$biomass$>$ is the total biomass consumed for that timestep/area/age/length combination
 
@@ -3819,6 +3854,11 @@ A version of this user guide was printed and published as a Marine Research Inst
 \begin{itemize}
 \item simplified the format for the migration data (see section~\ref{sec:stockmigrate})
 \item added prey preference parameters to allow for a Type III functional response when one stock is consuming another (see section~\ref{sec:consumption})
+\end{itemize}
+
+\section{Gadget version 2.1.03}\label{sec:v2103}
+\begin{itemize}
+\item added the StockPreyPrinter to the list of available printer classes (see section~\ref{sec:stockpreyprinter})
 \end{itemize}
 
 \end{document}
