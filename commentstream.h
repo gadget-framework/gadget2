@@ -62,5 +62,6 @@ public:
 protected:
   istream* istrptr;
 };
+CommentStream& ws(CommentStream& ins);
 
 #endif
