@@ -31,7 +31,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   int tmparea;
   //Currently can only have one area per tagging experiment
   readWordAndVariable(infile, "tagarea", tmparea);
-  tagarea = Area->InnerArea(tmparea);
+  tagarea = Area->getInnerArea(tmparea);
 
   infile >> ws;
   char c = infile.peek();

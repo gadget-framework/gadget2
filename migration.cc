@@ -146,8 +146,8 @@ void MigrationNumbers::readGivenRatios(CommentStream& infile, Keeper* const keep
         }
 
         infile >> fromArea >> toArea >> ws;
-        innerrow = Area->InnerArea(toArea);
-        innercol = Area->InnerArea(fromArea);
+        innerrow = Area->getInnerArea(toArea);
+        innercol = Area->getInnerArea(fromArea);
         if (!this->isInArea(innerrow) || !this->isInArea(innercol))
           handle.logMessage(LOGFAIL, "Error in migration - invalid area for matrix", name);
 
@@ -488,7 +488,7 @@ void MigrationFunction::readAreaData(CommentStream& infile, const AreaClass* con
     readWordAndVariable(infile, "number", area);
     readWordAndValue(infile, "rectangles", filename);
 
-    inarea = Area->InnerArea(area);
+    inarea = Area->getInnerArea(area);
     if (!this->isInArea(inarea))
       handle.logMessage(LOGFAIL, "Error in migration - invalid area", area);
 

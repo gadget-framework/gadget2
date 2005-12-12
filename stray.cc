@@ -49,7 +49,7 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
   }
 
   for (i = 0; i < strayArea.Size(); i++)
-    strayArea[i] = Area->InnerArea(strayArea[i]);
+    strayArea[i] = Area->getInnerArea(strayArea[i]);
 
   infile >> text;
   if (strcasecmp(text, "straystocksandratios") == 0) {

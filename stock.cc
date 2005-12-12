@@ -46,7 +46,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     c = infile.peek();
     while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
       infile >> tmpint >> ws;
-      tmpareas.resize(1, Area->InnerArea(tmpint));
+      tmpareas.resize(1, Area->getInnerArea(tmpint));
       c = infile.peek();
       i++;
     }

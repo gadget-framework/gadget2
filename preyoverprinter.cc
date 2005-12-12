@@ -143,7 +143,7 @@ void PreyOverPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* const Are
   //change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      areas[i][j] = Area->InnerArea(areas[i][j]);
+      areas[i][j] = Area->getInnerArea(areas[i][j]);
 
   //check prey areas and lengths
   if (handle.getLogLevel() >= LOGWARN) {

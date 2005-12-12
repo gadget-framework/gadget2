@@ -109,7 +109,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
           areas = stockvec[i]->getAreas();
           outerareas.resize(areas.Size(), 0);
           for (j = 0; j < outerareas.Size(); j++)
-            outerareas[j] = Area->OuterArea(areas[j]);
+            outerareas[j] = Area->getModelArea(areas[j]);
         }
       }
     }
@@ -125,7 +125,7 @@ void PredPreyStdPrinter::setStocksAndPredAndPrey(const StockPtrVector& stockvec,
           areas = stockvec[i]->getAreas();
           outerareas.resize(areas.Size(), 0);
           for (j = 0; j < outerareas.Size(); j++)
-            outerareas[j] = Area->OuterArea(areas[j]);
+            outerareas[j] = Area->getModelArea(areas[j]);
         }
       }
     }

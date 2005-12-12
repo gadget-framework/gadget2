@@ -128,7 +128,7 @@ void StockPreyFullPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* cons
 
   outerareas.resize(areas.Size(), 0);
   for (i = 0; i < outerareas.Size(); i++)
-    outerareas[i] = Area->OuterArea(areas[i]);
+    outerareas[i] = Area->getModelArea(areas[i]);
 
   minage = ((StockPrey*)preys[0])->minAge();
   maxage = ((StockPrey*)preys[0])->maxAge();

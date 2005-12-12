@@ -139,7 +139,7 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const 
   IntVector areas = stocks[0]->getAreas();
   outerareas.resize(areas.Size(), 0);
   for (i = 0; i < outerareas.Size(); i++)
-    outerareas[i] = Area->OuterArea(areas[i]);
+    outerareas[i] = Area->getModelArea(areas[i]);
 
   //prepare for the creation of the aggregator
   minage = stocks[0]->minAge();

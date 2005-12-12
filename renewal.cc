@@ -136,7 +136,7 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
       keepdata = 1;
     }
 
-    if (!(this->isInArea(Area->InnerArea(area)))) {
+    if (!(this->isInArea(Area->getInnerArea(area)))) {
       handle.logFileMessage(LOGWARN, "ignoring data found outside area range");
       keepdata = 1;
     }
@@ -149,7 +149,7 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
     if (keepdata == 0) {
       //renewal data is required, so store it
       renewalTime.resize(1, TimeInfo->calcSteps(year, step));
-      renewalArea.resize(1, Area->InnerArea(area));
+      renewalArea.resize(1, Area->getInnerArea(area));
       renewalAge.resize(1, age);
 
       renewalMult.resize(1, keeper);
@@ -208,7 +208,7 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
       keepdata = 1;
     }
 
-    if (!(this->isInArea(Area->InnerArea(area)))) {
+    if (!(this->isInArea(Area->getInnerArea(area)))) {
       handle.logFileMessage(LOGWARN, "ignoring data found outside area range");
       keepdata = 1;
     }
@@ -221,7 +221,7 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
     if (keepdata == 0) {
       //renewal data is required, so store it
       renewalTime.resize(1, TimeInfo->calcSteps(year, step));
-      renewalArea.resize(1, Area->InnerArea(area));
+      renewalArea.resize(1, Area->getInnerArea(area));
       renewalAge.resize(1, age);
 
       renewalMult.resize(1, keeper);
@@ -279,7 +279,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
       keepdata = 1;
     }
 
-    if (!(this->isInArea(Area->InnerArea(area)))) {
+    if (!(this->isInArea(Area->getInnerArea(area)))) {
       handle.logFileMessage(LOGWARN, "ignoring data found outside area range");
       keepdata = 1;
     }
@@ -304,14 +304,14 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
       id = -1;
       for (i = 0; i < renewalTime.Size(); i++)
         if ((renewalTime[i] == TimeInfo->calcSteps(year, step))
-            && (renewalArea[i] == Area->InnerArea(area))
+            && (renewalArea[i] == Area->getInnerArea(area))
             && (renewalAge[i] == age))
           id = i;
 
       if (id == -1) {
         //this is a new timestep/area combination
         renewalTime.resize(1, TimeInfo->calcSteps(year, step));
-        renewalArea.resize(1, Area->InnerArea(area));
+        renewalArea.resize(1, Area->getInnerArea(area));
         renewalAge.resize(1, age);
         id = renewalTime.Size() - 1;
 

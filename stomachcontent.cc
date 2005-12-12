@@ -126,7 +126,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
-      areas[i][j] = Area->InnerArea(areas[i][j]);
+      areas[i][j] = Area->getInnerArea(areas[i][j]);
 
   //read in the predators
   i = 0;

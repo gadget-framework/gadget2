@@ -44,7 +44,7 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
 
     //crude area data check
     areaid = -1;
-    tmparea = Area->InnerArea(area);
+    tmparea = Area->getInnerArea(area);
     for (i = 0; i < noareas; i++)
       if (areas[i] == tmparea)
         areaid = i;
@@ -125,7 +125,7 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
 
     //crude area data check
     areaid = -1;
-    tmparea = Area->InnerArea(area);
+    tmparea = Area->getInnerArea(area);
     for (i = 0; i < noareas; i++)
       if (areas[i] == tmparea)
         areaid = i;
@@ -226,7 +226,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
 
     //crude area data check
     areaid = -1;
-    tmparea = Area->InnerArea(area);
+    tmparea = Area->getInnerArea(area);
     for (i = 0; i < noareas; i++)
       if (areas[i] == tmparea)
         areaid = i;

@@ -127,7 +127,7 @@ void readAmounts(CommentStream& infile, const IntVector& tmpareas,
 
     //only keep the data if area is a required area
     areaid = -1;
-    tmpareaid = Area->InnerArea(area);
+    tmpareaid = Area->getInnerArea(area);
     for (i = 0; i < tmpareas.Size(); i++)
       if (tmpareas[i] == tmpareaid)
         areaid = i;
@@ -196,7 +196,7 @@ void readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
 
     //only keep the data if area is a required area
     areaid = -1;
-    tmpareaid = Area->InnerArea(area);
+    tmpareaid = Area->getInnerArea(area);
     for (i = 0; i < tmpareas.Size(); i++)
       if (tmpareas[i] == tmpareaid)
         areaid = i;

@@ -15,12 +15,12 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   if (strcasecmp(text, "areas") == 0) {
     while (isdigit(infile.peek()) && !infile.eof()) {
       infile >> tmpint >> ws;
-      OuterAreas.resize(1, tmpint);
+      modelAreas.resize(1, tmpint);
     }
   } else
     handle.logFileUnexpected(LOGFAIL, "areas", text);
 
-  int noareas = OuterAreas.Size();
+  int noareas = modelAreas.Size();
   infile >> text >> ws;
   if (strcasecmp(text, "size") == 0) {
     while (isdigit(infile.peek()) && !infile.eof()) {
@@ -70,10 +70,10 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
       keepdata = 1;
     }
 
-    //if area is in OuterAreas find areaid, else dont keep the data
+    //if area is in modelAreas find areaid, else dont keep the data
     areaid = -1;
-    for (i = 0; i < OuterAreas.Size(); i++)
-      if (area == OuterAreas[i])
+    for (i = 0; i < noareas; i++)
+      if (area == modelAreas[i])
         areaid = i;
 
     if (areaid == -1)
@@ -93,11 +93,11 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   handle.logMessage(LOGMESSAGE, "Read area file - number of areas", noareas);
 }
 
-int AreaClass::InnerArea(int area) const {
+int AreaClass::getInnerArea(int area) const {
   int innerarea = -1;
   int i;
-  for (i = 0; i < OuterAreas.Size(); i++)
-    if (area == OuterAreas[i])
+  for (i = 0; i < modelAreas.Size(); i++)
+    if (area == modelAreas[i])
       innerarea = i;
 
   if (innerarea == -1)

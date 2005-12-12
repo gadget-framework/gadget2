@@ -56,7 +56,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   }
 
   for (i = 0; i < spawnArea.Size(); i++)
-    spawnArea[i] = Area->InnerArea(spawnArea[i]);
+    spawnArea[i] = Area->getInnerArea(spawnArea[i]);
 
   infile >> text;
   if (strcasecmp(text, "spawnstocksandratios") == 0) {

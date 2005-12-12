@@ -29,7 +29,7 @@ public:
    * \brief This will return the number of areas for the current model
    * \return number
    */
-  int numAreas() const { return OuterAreas.Size(); };
+  int numAreas() const { return modelAreas.Size(); };
   /**
    * \brief This will return the size of an area
    * \param area is the identifier for the required area
@@ -48,18 +48,18 @@ public:
    * \param area is the identifier for the required area
    * \return innerarea
    */
-  int InnerArea(int area) const;
+  int getInnerArea(int area) const;
   /**
    * \brief This will return the external identifier of an area
    * \param area is the identifier for the required area
    * \return outerarea
    */
-  int OuterArea(int area) const { return OuterAreas[area]; };
+  int getModelArea(int area) const { return modelAreas[area]; };
 protected:
   /**
    * \brief This is the IntVector of the areas in the current model
    */
-  IntVector OuterAreas;
+  IntVector modelAreas;
   /**
    * \brief This is the DoubleVector of the size of the areas in the current model
    */
