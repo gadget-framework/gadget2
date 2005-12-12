@@ -1,12 +1,9 @@
 #include "fleetpreyaggregator.h"
-#include "areatime.h"
 #include "errorhandler.h"
-#include "readfunc.h"
 #include "stock.h"
 #include "stockprey.h"
 #include "lengthpredator.h"
 #include "fleet.h"
-#include "readword.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;

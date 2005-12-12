@@ -2,14 +2,12 @@
 #define fleetpreyaggregator_h
 
 #include "areatime.h"
-#include "conversionindex.h"
-#include "agebandmatrix.h"
 #include "agebandmatrixptrvector.h"
-#include "charptrvector.h"
+#include "conversionindexptrvector.h"
+#include "lengthgroup.h"
 #include "fleetptrvector.h"
 #include "stockptrvector.h"
 #include "intmatrix.h"
-#include "conversionindexptrvector.h"
 
 /**
  * \class FleetPreyAggregator

@@ -3,7 +3,6 @@
 
 #include "popratio.h"
 #include "lengthgroup.h"
-#include "bandmatrix.h"
 #include "popratiomatrix.h"
 #include "popratioindexvector.h"
 #include "agebandmatrix.h"

@@ -3,6 +3,7 @@
 
 #include "likelihood.h"
 #include "commentstream.h"
+#include "charptrvector.h"
 #include "fleetpreyaggregator.h"
 #include "doublematrixptrvector.h"
 #include "actionattimes.h"

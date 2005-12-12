@@ -3,7 +3,6 @@
 
 #include "areatime.h"
 #include "conversionindex.h"
-#include "bandmatrix.h"
 #include "popinfomatrix.h"
 #include "popinfoindexvector.h"
 

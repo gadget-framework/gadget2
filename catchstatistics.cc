@@ -1,5 +1,4 @@
 #include "catchstatistics.h"
-#include "commentstream.h"
 #include "readfunc.h"
 #include "readword.h"
 #include "errorhandler.h"

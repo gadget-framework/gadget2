@@ -29,12 +29,12 @@ public:
    * \brief This is the Maturity constructor
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param minage is the minimum age of the stock that can mature
-   * \param minabslength is the IntVector of minimum lengths for the stock that can mature
-   * \param size is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
+   * \param minlength is the IntVector of minimum lengths for the stock that can mature
+   * \param agesize is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
    * \param LgrpDiv is the LengthGroupDivision for the stock
    */
-  Maturity(const IntVector& areas, int minage, const IntVector& minabslength,
-    const IntVector& size, const LengthGroupDivision* const LgrpDiv);
+  Maturity(const IntVector& areas, int minage, const IntVector& minlength,
+    const IntVector& agesize, const LengthGroupDivision* const LgrpDiv);
   /**
    * \brief This is the default Maturity destructor
    */
@@ -158,13 +158,13 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param minage is the minimum age of the stock that can mature
-   * \param minabslength is the IntVector of minimum lengths for the stock that can mature
-   * \param size is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
+   * \param minlength is the IntVector of minimum lengths for the stock that can mature
+   * \param agesize is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision for the stock
    */
   MaturityA(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
-    int minage, const IntVector& minabslength, const IntVector& size, const IntVector& areas,
+    int minage, const IntVector& minlength, const IntVector& agesize, const IntVector& areas,
     const LengthGroupDivision* const LgrpDiv);
   /**
    * \brief This is the default MaturityA destructor
@@ -204,13 +204,17 @@ public:
   virtual void Print(ofstream& outfile) const;
 protected:
   /**
-   * \brief This is the BandMatrix of maturation parameters
+   * \brief This is the DoubleMatrix of maturation parameters
    */
-  BandMatrix preCalcMaturation;
+  DoubleMatrix preCalcMaturation;
   /**
    * \brief This is the TimeVariableVector of maturation parameters
    */
   TimeVariableVector maturityParameters;
+  /**
+   * \brief This is the minimum age of the maturing stock, used as an index for preCalcMaturation
+   */
+  int minStockAge;
   /**
    * \brief This is the minimum age when maturation will take place
    */
@@ -233,13 +237,13 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param minage is the minimum age of the stock that can mature
-   * \param minabslength is the IntVector of minimum lengths for the stock that can mature
-   * \param size is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
+   * \param minlength is the IntVector of minimum lengths for the stock that can mature
+   * \param agesize is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision for the stock
    */
   MaturityB(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
-    int minage, const IntVector& minabslength, const IntVector& size,
+    int minage, const IntVector& minlength, const IntVector& agesize,
     const IntVector& areas, const LengthGroupDivision* const LgrpDiv);
   /**
    * \brief This is the default MaturityB destructor
@@ -300,14 +304,14 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param minage is the minimum age of the stock that can mature
-   * \param minabslength is the IntVector of minimum lengths for the stock that can mature
-   * \param size is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
+   * \param minlength is the IntVector of minimum lengths for the stock that can mature
+   * \param agesize is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision for the stock
    * \param numMatConst is the number of maturation parameters (4)
    */
   MaturityC(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
-    int minage, const IntVector& minabslength, const IntVector& size,
+    int minage, const IntVector& minlength, const IntVector& agesize,
     const IntVector& areas, const LengthGroupDivision* const LgrpDiv, int numMatConst);
   /**
    * \brief This is the default MaturityC destructor
@@ -347,13 +351,17 @@ public:
   virtual void Print(ofstream& outfile) const;
 protected:
   /**
-   * \brief This is the BandMatrix of maturation parameters
+   * \brief This is the DoubleMatrix of maturation parameters
    */
-  BandMatrix preCalcMaturation;
+  DoubleMatrix preCalcMaturation;
   /**
    * \brief This is the TimeVariableVector of maturation parameters
    */
   TimeVariableVector maturityParameters;
+  /**
+   * \brief This is the minimum age of the maturing stock, used as an index for preCalcMaturation
+   */
+  int minStockAge;
   /**
    * \brief This is the minimum age when maturation will take place
    */
@@ -380,15 +388,15 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param minage is the minimum age of the stock that can mature
-   * \param minabslength is the IntVector of minimum lengths for the stock that can mature
-   * \param size is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
+   * \param minlength is the IntVector of minimum lengths for the stock that can mature
+   * \param agesize is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision for the stock
    * \param numMatConst is the number of maturation parameters (6)
    * \param refWeightFile is the name of the file to read the reference weight information from
    */
   MaturityD(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
-    int minage, const IntVector& minabslength, const IntVector& size, const IntVector& areas,
+    int minage, const IntVector& minlength, const IntVector& agesize, const IntVector& areas,
     const LengthGroupDivision* const LgrpDiv, int numMatConst, const char* refWeightFile);
   /**
    * \brief This is the default MaturityD destructor
@@ -421,6 +429,11 @@ public:
    */
   virtual double calcMaturation(int age, int length, int growth,
     const TimeClass* const TimeInfo, double weight);
+  /**
+   * \brief This function will print the maturation information
+   * \param outfile is the ofstream that all the model information gets sent to
+   */
+  virtual void Print(ofstream& outfile) const;
 protected:
   /**
    * \brief This is the DoubleVector of reference weight information

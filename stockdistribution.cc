@@ -7,7 +7,6 @@
 #include "fleet.h"
 #include "stock.h"
 #include "mathfunc.h"
-#include "multinomial.h"
 #include "stockprey.h"
 #include "gadget.h"
 

@@ -1,7 +1,6 @@
 #include "agebandmatrix.h"
 #include "agebandmatrixptrvector.h"
 #include "mathfunc.h"
-#include "bandmatrix.h"
 #include "doublevector.h"
 #include "conversionindex.h"
 #include "popinfovector.h"
@@ -100,7 +99,7 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio) {
 }
 
 //--------------------------------------------------------------
-//Find the Column sum of a BandMatrix.  In AgeBandMatrix it means
+//Find the Column sum of an AgeBandMatrix.  In AgeBandMatrix it means
 //summation over all ages for each length.
 void AgeBandMatrix::sumColumns(PopInfoVector& Result) const {
   int i, j;

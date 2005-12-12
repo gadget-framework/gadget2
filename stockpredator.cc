@@ -179,15 +179,17 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   tmp = Area->getSize(area) * consParam[4] * TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
   //Calculating fphi(L) and totalcons of predator in area
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-    if (isZero(tmp))
+    if (isZero(tmp)) {
       subfphi[inarea][predl] = 1.0;
-    else if (isZero(Phi[inarea][predl]) || isZero(Phi[inarea][predl] + tmp))
+      totalcons[inarea][predl] = maxcons[inarea][predl] * prednumber[inarea][predl].N;
+    } else if (isZero(Phi[inarea][predl]) || isZero(Phi[inarea][predl] + tmp)) {
       subfphi[inarea][predl] = 0.0;
-    else
+      totalcons[inarea][predl] = 0.0;
+    } else {
       subfphi[inarea][predl] = Phi[inarea][predl] / (Phi[inarea][predl] + tmp);
-
-    totalcons[inarea][predl] = subfphi[inarea][predl] *
-      maxcons[inarea][predl] * prednumber[inarea][predl].N;
+      totalcons[inarea][predl] = subfphi[inarea][predl]
+        * maxcons[inarea][predl] * prednumber[inarea][predl].N;
+    }
   }
 
   //Distributing the total consumption on the preys and converting to biomass
