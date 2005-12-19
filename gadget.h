@@ -161,13 +161,13 @@ Example:
 
 \section cvs Version Control
 
-To maintain version control of the source files, a CVS repository has been set up on the Marine Research Institute server in Reykjavik.  Any user with secure shell access to the MRI server can access this CVS repository.  Any ''official'' version of the Gadget software will be tagged and released from the source code that is in the CVS repository.  The CVS repository should also contain any user documents and files external to the main source code that are distributed with the source code (for example, shell scripts to help analyse the output from a Gadget simulation).
+To maintain version control of the source files, a CVS repository has been set up on the Marine Research Institute server in Reykjavik.  Any user with secure shell access to the MRI server can access this repository, and a web interface to this repository is also available to allow users to browse the source code online (see http://www.hafro.is/viewcvs/viewcvs.cgi/gadget/).  Any ''official'' version of the Gadget software will be tagged and released from the source code that is in the CVS repository.  The CVS repository should also contain any user documents and files external to the main source code that are distributed with the source code (for example, shell scripts to help analyse the output from a Gadget simulation).
 
 \section compat Code Compatibility
 
 Gadget is a program that has been developed on a Unix computing platform, and is regularly compiled and run on machines running versions of Linux, Solaris and Cygwin (a Unix emulator for Microsoft Windows machines, see http://www.cygwin.com for more information).  By regularly compiling and running Gadget on a variety of computing platforms, it is hoped that the source code is compatible with as many computing platforms as possible.  The list of computing platforms, and C++ compilers, that Gadget is regularly tested on is:
 
-  \li Linux (Fedora Core 4), compiled using \c g++ versions 3.2.3 and 4.0.1
+  \li Linux (Fedora Core 4), compiled using \c g++ versions 3.2.3, 4.0.2 and 4.1.0 (20051209 prerelease)
   \li Solaris (SunOS 5.9), compiled using  \c g++ version 3.4.2
   \li Cygwin (1.5.18-1), compiled using  \c g++ version 3.4.4-1
 
