@@ -208,6 +208,12 @@ double Formula::evalFunction() const {
 	      v = *(argList[1]);
       break;
 
+    case PI:
+      if (argList.size() != 1)
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for pi");
+      v = *(argList[0]);
+      break;
+
     default:
       handle.logMessage(LOGFAIL, "Error in formula - unrecognised function type", type);
       break;
@@ -303,6 +309,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
       F.argList.push_back(f);
       if (handle.getRunOptimise())
         handle.logMessage(LOGWARN, "Warning in formula - random function used for optimising run");
+
     } else if (strcasecmp(text, "<") == 0) {
       F.functiontype = LESS;
 
@@ -325,6 +332,11 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
       F.functiontype = IF;
       if (handle.getRunOptimise())
         handle.logMessage(LOGWARN, "Warning in formula - if statement used for optimising run");
+
+    } else if (strcasecmp(text, "pi") == 0) {
+      F.functiontype = PI;
+      Formula* f = new Formula(pivalue);
+      F.argList.push_back(f);
 
     } else {
       handle.logFileMessage(LOGFAIL, "unrecognised formula function name", text);
