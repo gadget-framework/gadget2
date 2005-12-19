@@ -32,15 +32,15 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
   readWordAndValue(infile, "stockname", stockname);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "scale") == 0)
+  if (strcasecmp(text, "scale") == 0) {
     infile >> scale >> ws >> text >> ws;
-  else
-    scale = 1.0;
+    if (scale < verysmall) {
+      handle.logFileMessage(LOGWARN, "scale should be a positive integer - set to default value 1");
+      scale = 1.0;
+    }
 
-  if (scale < verysmall) {
-    handle.logFileMessage(LOGWARN, "scale should be a positive integer - set to default value 1");
+  } else
     scale = 1.0;
-  }
 
   //JMB - removed the need to read in the area aggregation file
   if (strcasecmp(text, "areaaggfile") == 0) {
@@ -97,8 +97,11 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
   RUNID.Print(outfile);
   outfile << "; Standard output file for the stock " << stockname;
 
-  if (scale != 1.0)
+  if (scale != 1.0) {
     outfile << "\n; Scaling factor for the number and number consumed is " << scale;
+    //JMB - store this as 1/scale
+    scale = 1.0 / scale;
+  }
 
   if (printtimeid == 0)
     outfile << "\n; Printing the following information at the end of each timestep";
@@ -167,7 +170,7 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const 
       handle.logMessage(LOGFAIL, "Error in stockstdprinter - failed to create length group");
 
     paggregator = new StockPreyAggregator(preys, tmpLgrpDiv, areamatrix, agematrix);
-    //JMB tmpLgrpDiv is no longer needed to delete it to free memory
+    //JMB tmpLgrpDiv is no longer needed so delete it to free memory
     delete tmpLgrpDiv;
   }
 }
@@ -177,9 +180,6 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   if ((!AAT.atCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
-  int a, age;
-  double tmpnumber, tmpbiomass;
-
   saggregator->Sum();
   salptr = &saggregator->getSum();
   if (isaprey) {
@@ -187,6 +187,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
     palptr = &paggregator->getSum();
   }
 
+  int a, age;
   for (a = 0; a < outerareas.Size(); a++) {
     for (age = (*salptr)[a].minAge(); age <= (*salptr)[a].maxAge(); age++) {
       PopStatistics popstat((*salptr)[a][age], LgrpDiv);
@@ -196,13 +197,13 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
         << age + minage << sep;
 
       //JMB crude filters to remove the 'silly' values from the output
-      if (popstat.totalNumber() < rathersmall) {
+       if (popstat.totalNumber() < rathersmall) {
         outfile << setw(width) << 0 << sep << setw(printwidth) << 0
           << sep << setw(printwidth) << 0 << sep << setw(printwidth) << 0
           << sep << setw(width) << 0 << sep << setw(width) << 0 << endl;
 
       } else {
-        outfile << setprecision(precision) << setw(width) << popstat.totalNumber() / scale << sep
+        outfile << setprecision(precision) << setw(width) << popstat.totalNumber() * scale << sep
           << setprecision(printprecision) << setw(printwidth) << popstat.meanLength() << sep
           << setprecision(printprecision) << setw(printwidth) << popstat.meanWeight() << sep
           << setprecision(printprecision) << setw(printwidth) << popstat.sdevLength() << sep;

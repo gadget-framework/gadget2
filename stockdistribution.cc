@@ -453,33 +453,27 @@ double StockDistribution::calcLikMultinomial() {
   //JMB - number of age and length groups is constant for all stocks
   int numage = ages.Nrow();
   int numlen = LgrpDiv->numLengthGroups();
-  DoubleMatrixPtrVector Dist(areas.Nrow());
-  DoubleVector likdata(stocknames.Size(), 0.0);
+  DoubleVector obsdata(stocknames.Size(), 0.0);
+  DoubleVector moddata(stocknames.Size(), 0.0);
 
   MN.Reset();
   //the object MN does most of the work, accumulating likelihood
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
-    Dist[area] = new DoubleMatrix(numage * numlen, stocknames.Size(), 0.0);
-
     for (s = 0; s < stocknames.Size(); s++) {
       alptr = &aggregator[s]->getSum();
-      for (age = 0; age < numage; age++) {
-        for (len = 0; len < numlen; len++) {
-          i = age + (numage * len);
-          (*modelDistribution[timeindex][area])[s][i] = ((*alptr)[area][age][len]).N;
-          (*Dist[area])[i][s] = ((*alptr)[area][age][len]).N;
-        }
+      for (age = 0; age < numage; age++)
+        for (len = 0; len < numlen; len++)
+          (*modelDistribution[timeindex][area])[s][age + (numage * len)] = ((*alptr)[area][age][len]).N;
+    }
+
+    for (i = 0; i < (numage * numlen); i++) {
+      for (s = 0; s < stocknames.Size(); s++) {
+        obsdata[s] = (*obsDistribution[timeindex][area])[s][i];
+        moddata[s] = (*modelDistribution[timeindex][area])[s][i];
       }
+      likelihoodValues[timeindex][area] += MN.calcLogLikelihood(obsdata, moddata);
     }
-
-    for (i = 0; i < Dist[area]->Nrow(); i++) {
-      for (s = 0; s < stocknames.Size(); s++)
-        likdata[s] = (*obsDistribution[timeindex][area])[s][i];
-
-      likelihoodValues[timeindex][area] += MN.calcLogLikelihood(likdata, (*Dist[area])[i]);
-    }
-    delete Dist[area];
   }
   return MN.getLogLikelihood();
 }
@@ -497,12 +491,9 @@ double StockDistribution::calcLikSumSquares() {
     likelihoodValues[timeindex][area] = 0.0;
     for (s = 0; s < stocknames.Size(); s++) {
       alptr = &aggregator[s]->getSum();
-      for (age = 0; age < numage; age++) {
-        for (len = 0; len < numlen; len++) {
-          i = age + (numage * len);
-          (*modelDistribution[timeindex][area])[s][i] = ((*alptr)[area][age][len]).N;
-        }
-      }
+      for (age = 0; age < numage; age++)
+        for (len = 0; len < numlen; len++)
+          (*modelDistribution[timeindex][area])[s][age + (numage * len)] = ((*alptr)[area][age][len]).N;
     }
 
     for (age = 0; age < numage; age++) {
