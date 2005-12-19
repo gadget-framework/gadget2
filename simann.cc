@@ -353,7 +353,7 @@ void OptInfoSimann::OptimiseLikelihood() {
 
       //Adjust vm so that approximately half of all evaluations are accepted
       for (i = 0; i < nvars; i++) {
-        ratio = (double) nacp[i] * nsdiv;
+        ratio = nsdiv * nacp[i];
         nacp[i] = 0;
         if (ratio > uratio) {
           vm[i] = vm[i] * (1.0 + cs * (ratio - uratio));
