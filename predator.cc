@@ -52,8 +52,6 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
       if (this->getType() == STOCKPREDATOR)
         preference.Delete(i, keeper);
       suitable->deletePrey(i, keeper);
-      if (found != preys.Size())
-        i--;
     }
   }
 

@@ -48,5 +48,6 @@ void PredatorPtrVector::Delete(int pos) {
   } else {
     delete[] v;
     v = 0;
+    size = 0;
   }
 }
