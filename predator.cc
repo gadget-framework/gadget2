@@ -46,12 +46,15 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     //If we find a prey that we have read the suitability for, but not
     //received a pointer to, we issue a warning and delete it
     if (check[i] == 0) {
-      found++;
-      handle.logMessage(LOGWARN, "Warning in predator - failed to match prey", this->getPreyName(i));
-      preys.Delete(i);
+      //JMB - need to make sure that we keep track of how many entries from
+      //the vector we have deleted so that we ensure that we delete the right ones
+      j = i + found;
+      handle.logMessage(LOGWARN, "Warning in predator - failed to match prey", this->getPreyName(j));
+      preys.Delete(j);
       if (this->getType() == STOCKPREDATOR)
-        preference.Delete(i, keeper);
-      suitable->deletePrey(i, keeper);
+        preference.Delete(j, keeper);
+      suitable->deletePrey(j, keeper);
+      found++;
     }
   }
 
