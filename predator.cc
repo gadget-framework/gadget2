@@ -48,7 +48,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     if (check[i] == 0) {
       //JMB - need to make sure that we keep track of how many entries from
       //the vector we have deleted so that we ensure that we delete the right ones
-      j = i + found;
+      j = i - found;
       handle.logMessage(LOGWARN, "Warning in predator - failed to match prey", this->getPreyName(j));
       preys.Delete(j);
       if (this->getType() == STOCKPREDATOR)
