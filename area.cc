@@ -6,8 +6,8 @@
 extern ErrorHandler handle;
 
 AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
+
   int i, j, tmpint;
-  double tmpnumber;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
@@ -21,12 +21,11 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
     handle.logFileUnexpected(LOGFAIL, "areas", text);
 
   int noareas = modelAreas.Size();
+  size.resize(noareas, 0.0);
   infile >> text >> ws;
   if (strcasecmp(text, "size") == 0) {
-    while (isdigit(infile.peek()) && !infile.eof()) {
-      infile >> tmpnumber >> ws;
-      size.resize(1, tmpnumber);
-    }
+    for (i = 0; i < noareas; i++)
+      infile >> size[i] >> ws;
   } else
     handle.logFileUnexpected(LOGFAIL, "size", text);
 
@@ -42,6 +41,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   temperature.AddRows(TimeInfo->numTotalSteps() + 1, noareas, 0.0);
   IntVector Years, Steps;
   int timeid, areaid, keepdata, year, step, area, count;
+  double tmpnumber;
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 4)

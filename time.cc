@@ -19,10 +19,9 @@ TimeClass::TimeClass(CommentStream& infile) {
   readWordAndVariable(infile, "notimesteps", numtimesteps);
   numsubsteps.resize(numtimesteps, 1);
 
-  infile >> ws;
   timesteps.resize(numtimesteps + 1, 0.0);
   for (i = 1; i <= numtimesteps; i++)
-    infile >> timesteps[i] >> ws;
+    infile >> ws >> timesteps[i];
 
   infile >> ws;
   if (!(infile.eof())) {
