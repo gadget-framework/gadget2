@@ -165,8 +165,7 @@ void Grower::Reset() {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       calcLengthGrowth[area][i] = 0.0;
       calcWeightGrowth[area][i] = 0.0;
-      numGrow[area][i].N = 0.0;
-      numGrow[area][i].W = 0.0;
+      numGrow[area][i].setToZero();
     }
 
     for (i = 0; i < wgrowth[area]->Nrow(); i++) {
@@ -182,7 +181,7 @@ void Grower::Reset() {
     }
   }
 
-  tmpmax = double(maxlengthgroupgrowth) * 1.0;
+  tmpmax = double(maxlengthgroupgrowth);
   part1[0] = 1.0;
   part1[1] = tmpmax;
   factorialx = 1.0;

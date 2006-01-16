@@ -11,10 +11,8 @@ extern ErrorHandler handle;
 //Pre: CI maps from Number to 'this' and Number has finer or even resolution than 'this'.
 void PopInfoVector::Sum(const PopInfoVector* const Number, const ConversionIndex& CI) {
   int i;
-  for (i = 0; i < size; i++) {
-    v[i].N = 0.0;
-    v[i].W = 0.0;
-  }
+  for (i = 0; i < size; i++)
+    v[i].setToZero();
   for (i = CI.minLength(); i < CI.maxLength(); i++)
     v[CI.getPos(i)] += (*Number)[i];
 }

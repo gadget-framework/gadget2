@@ -110,8 +110,7 @@ void Maturity::storeMatureStock(int area, int age, int length, double number,
     handle.logMessage(LOGFAIL, "Error in maturity - maturity requested on wrong timestep");
 
   if (isZero(number) || isZero(weight)) {
-    Storage[this->areaNum(area)][age][length].N = 0.0;
-    Storage[this->areaNum(area)][age][length].W = 0.0;
+    Storage[this->areaNum(area)][age][length].setToZero();
   } else {
     Storage[this->areaNum(area)][age][length].N = number;
     Storage[this->areaNum(area)][age][length].W = weight;

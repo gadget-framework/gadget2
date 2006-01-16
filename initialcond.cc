@@ -190,12 +190,9 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   //initialise things
   for (areaid = 0; areaid < noareas; areaid++) {
     initialNumber.resize(new FormulaMatrix(noagegr, nolengr, 0.0));
-    for (ageid = minage; ageid < noagegr + minage; ageid++) {
-      for (lengthid = 0; lengthid < nolengr; lengthid++) {
-        initialPop[areaid][ageid][lengthid].N = 0.0;
-        initialPop[areaid][ageid][lengthid].W = 0.0;
-      }
-    }
+    for (ageid = minage; ageid < noagegr + minage; ageid++)
+      for (lengthid = 0; lengthid < nolengr; lengthid++)
+        initialPop[areaid][ageid][lengthid].setToZero();
   }
 
   ageid = -1;

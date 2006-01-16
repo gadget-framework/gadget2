@@ -28,8 +28,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
     }
 
     if ((isZero(num)) || (wt < verysmall)) {
-      (*v[i])[v[i]->maxCol() - 1].W = 0.0;
-      (*v[i])[v[i]->maxCol() - 1].N = 0.0;
+      (*v[i])[v[i]->maxCol() - 1].setToZero();
     } else {
       (*v[i])[v[i]->maxCol() - 1].W = wt / num;
       (*v[i])[v[i]->maxCol() - 1].N = num;
@@ -46,8 +45,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
       }
 
       if ((isZero(num)) || (wt < verysmall)) {
-        (*v[i])[lgrp].W = 0.0;
-        (*v[i])[lgrp].N = 0.0;
+        (*v[i])[lgrp].setToZero();
       } else {
         (*v[i])[lgrp].W = wt / num;
         (*v[i])[lgrp].N = num;
@@ -65,8 +63,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
       }
 
       if ((isZero(num)) || (wt < verysmall)) {
-        (*v[i])[lgrp].W = 0.0;
-        (*v[i])[lgrp].N = 0.0;
+        (*v[i])[lgrp].setToZero();
       } else {
         (*v[i])[lgrp].W = wt / num;
         (*v[i])[lgrp].N = num;
@@ -103,13 +100,11 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
 
     if ((isZero(num)) || (wt < verysmall)) {
       //no fish grow to this length cell
-      (*v[i])[v[i]->maxCol() - 1].W = 0.0;
-      (*v[i])[v[i]->maxCol() - 1].N = 0.0;
+      (*v[i])[v[i]->maxCol() - 1].setToZero();
       Mat->storeMatureStock(area, age, v[i]->maxCol() - 1, 0.0, 0.0, TimeInfo);
     } else if (num - matnum < verysmall) {
       //all the fish that grow to this length cell mature
-      (*v[i])[v[i]->maxCol() - 1].W = 0.0;
-      (*v[i])[v[i]->maxCol() - 1].N = 0.0;
+      (*v[i])[v[i]->maxCol() - 1].setToZero();
       Mat->storeMatureStock(area, age, v[i]->maxCol() - 1, num, wt / num, TimeInfo);
     } else if (isZero(matnum)) {
       //none of the fish that grow to this length cell mature
@@ -136,13 +131,11 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
 
       if ((isZero(num)) || (wt < verysmall)) {
         //no fish grow to this length cell
-        (*v[i])[lgrp].W = 0.0;
-        (*v[i])[lgrp].N = 0.0;
+        (*v[i])[lgrp].setToZero();
         Mat->storeMatureStock(area, age, lgrp, 0.0, 0.0, TimeInfo);
       } else if (num - matnum < verysmall) {
         //all the fish that grow to this length cell mature
-        (*v[i])[lgrp].W = 0.0;
-        (*v[i])[lgrp].N = 0.0;
+        (*v[i])[lgrp].setToZero();
         Mat->storeMatureStock(area, age, lgrp, num, wt / num, TimeInfo);
       } else if (isZero(matnum)) {
         //none of the fish that grow to this length cell mature
@@ -170,13 +163,11 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
 
       if ((isZero(num)) || (wt < verysmall)) {
         //no fish grow to this length cell
-        (*v[i])[lgrp].W = 0.0;
-        (*v[i])[lgrp].N = 0.0;
+        (*v[i])[lgrp].setToZero();
         Mat->storeMatureStock(area, age, lgrp, 0.0, 0.0, TimeInfo);
       } else if (num - matnum < verysmall) {
         //all the fish that grow to this length cell mature
-        (*v[i])[lgrp].W = 0.0;
-        (*v[i])[lgrp].N = 0.0;
+        (*v[i])[lgrp].setToZero();
         Mat->storeMatureStock(area, age, lgrp, num, wt / num, TimeInfo);
       } else if (isZero(matnum)) {
         //none of the fish that grow to this length cell mature
@@ -205,8 +196,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight
         num += Lgrowth[grow][lgrp] * (*v[i])[lgrp].N;
 
     if (isZero(num)) {
-      (*v[i])[v[i]->maxCol() - 1].N = 0.0;
-      (*v[i])[v[i]->maxCol() - 1].W = 0.0;
+      (*v[i])[v[i]->maxCol() - 1].setToZero();
     } else {
       (*v[i])[v[i]->maxCol() - 1].N = num;
       (*v[i])[v[i]->maxCol() - 1].W = Weight[v[i]->maxCol() - 1];
@@ -218,8 +208,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight
         num += Lgrowth[grow][lgrp - grow] * (*v[i])[lgrp - grow].N;
 
       if (isZero(num)) {
-        (*v[i])[lgrp].N = 0.0;
-        (*v[i])[lgrp].W = 0.0;
+        (*v[i])[lgrp].setToZero();
       } else {
         (*v[i])[lgrp].N = num;
         (*v[i])[lgrp].W = Weight[lgrp];
@@ -232,8 +221,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight
         num += Lgrowth[grow][lgrp - grow] * (*v[i])[lgrp - grow].N;
 
       if (isZero(num)) {
-        (*v[i])[lgrp].N = 0.0;
-        (*v[i])[lgrp].W = 0.0;
+        (*v[i])[lgrp].setToZero();
       } else {
         (*v[i])[lgrp].N = num;
         (*v[i])[lgrp].W = Weight[lgrp];
@@ -268,13 +256,11 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight
 
     if (isZero(num)) {
       //no fish grow to this length cell
-      (*v[i])[v[i]->maxCol() - 1].W = 0.0;
-      (*v[i])[v[i]->maxCol() - 1].N = 0.0;
+      (*v[i])[v[i]->maxCol() - 1].setToZero();
       Mat->storeMatureStock(area, age, v[i]->maxCol() - 1, 0.0, 0.0, TimeInfo);
     } else if (num - matnum < verysmall) {
       //all the fish that grow to this length cell mature
-      (*v[i])[v[i]->maxCol() - 1].W = 0.0;
-      (*v[i])[v[i]->maxCol() - 1].N = 0.0;
+      (*v[i])[v[i]->maxCol() - 1].setToZero();
       Mat->storeMatureStock(area, age, v[i]->maxCol() - 1, num, Weight[v[i]->maxCol() - 1], TimeInfo);
     } else if (isZero(matnum)) {
       //none of the fish that grow to this length cell mature
@@ -299,13 +285,11 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight
 
       if (isZero(num)) {
         //no fish grow to this length cell
-        (*v[i])[lgrp].W = 0.0;
-        (*v[i])[lgrp].N = 0.0;
+        (*v[i])[lgrp].setToZero();
         Mat->storeMatureStock(area, age, lgrp, 0.0, 0.0, TimeInfo);
       } else if (num - matnum < verysmall) {
         //all the fish that grow to this length cell mature
-        (*v[i])[lgrp].W = 0.0;
-        (*v[i])[lgrp].N = 0.0;
+        (*v[i])[lgrp].setToZero();
         Mat->storeMatureStock(area, age, lgrp, num, Weight[lgrp], TimeInfo);
       } else if (isZero(matnum)) {
         //none of the fish that grow to this length cell mature
@@ -331,13 +315,11 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight
 
       if (isZero(num)) {
         //no fish grow to this length cell
-        (*v[i])[lgrp].W = 0.0;
-        (*v[i])[lgrp].N = 0.0;
+        (*v[i])[lgrp].setToZero();
         Mat->storeMatureStock(area, age, lgrp, 0.0, 0.0, TimeInfo);
       } else if (num - matnum < verysmall) {
         //all the fish that grow to this length cell mature
-        (*v[i])[lgrp].W = 0.0;
-        (*v[i])[lgrp].N = 0.0;
+        (*v[i])[lgrp].setToZero();
         Mat->storeMatureStock(area, age, lgrp, num, Weight[lgrp], TimeInfo);
       } else if (isZero(matnum)) {
         //none of the fish that grow to this length cell mature

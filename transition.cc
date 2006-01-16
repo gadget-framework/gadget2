@@ -117,10 +117,8 @@ void Transition::storeTransitionStock(int area, AgeBandMatrix& Alkeys,
     Storage[inarea][age][l].N = Alkeys[age][l].N;
     Storage[inarea][age][l].W = Alkeys[age][l].W;
 
-    if (l >= minTransitionLength) {
-      Alkeys[age][l].N = 0.0;
-      Alkeys[age][l].W = 0.0;
-    }
+    if (l >= minTransitionLength)
+      Alkeys[age][l].setToZero();
 
     for (i = 0; i < numtags; i++) {
       tagnumber = *(TagAlkeys[age][l][i].N);

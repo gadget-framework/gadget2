@@ -38,9 +38,9 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
         for (l = minl; l < maxl; l++) {
           pop = Addition[age][CI.getPos(l)];
           pop *= ratio;
-          if (isZero(CI.Nrof(l))) {
+          if (isZero(CI.Nrof(l)))
             handle.logMessage(LOGWARN, "Warning in agebandmatrix - divide by zero");
-          } else
+          else
             pop.N /= CI.Nrof(l);
           (*v[age - minage])[l] += pop;
         }
@@ -126,10 +126,8 @@ void AgeBandMatrix::IncrementAge() {
   //For the highest age group
   for (j = j1; j < j2; j++)
     (*v[i])[j] += (*v[i - 1])[j];
-  for (j = v[i - 1]->minCol(); j < v[i - 1]->maxCol(); j++) {
-    (*v[i - 1])[j].N = 0.0;
-    (*v[i - 1])[j].W = 0.0;
-  }
+  for (j = v[i - 1]->minCol(); j < v[i - 1]->maxCol(); j++)
+    (*v[i - 1])[j].setToZero();
   //Now v[nrow-2] has been added to v[nrow-1] and then set to 0.
 
   //For the other age groups.
@@ -138,35 +136,26 @@ void AgeBandMatrix::IncrementAge() {
   for (i = nrow - 2; i > 0; i--) {
     j1 = max(v[i]->minCol(), v[i - 1]->minCol());
     j2 = min(v[i]->maxCol(), v[i - 1]->maxCol());
-    for (j = v[i - 1]->minCol(); j < j1; j++) {
-      (*v[i - 1])[j].N = 0.0;
-      (*v[i - 1])[j].W = 0.0;
-    }
+    for (j = v[i - 1]->minCol(); j < j1; j++)
+      (*v[i - 1])[j].setToZero();
     for (j = j1; j < j2; j++) {
       (*v[i])[j] = (*v[i - 1])[j];
-      (*v[i - 1])[j].N = 0.0;
-      (*v[i - 1])[j].W = 0.0;
+      (*v[i - 1])[j].setToZero();
     }
-    for (j = j2; j < v[i - 1]->maxCol(); j++) {
-      (*v[i - 1])[j].N = 0.0;
-      (*v[i - 1])[j].W = 0.0;
-    }
+    for (j = j2; j < v[i - 1]->maxCol(); j++)
+      (*v[i - 1])[j].setToZero();
   }
 
   //set number in age zero to zero.
-  for (j = v[0]->minCol(); j < v[0]->maxCol(); j++) {
-    (*v[0])[j].N = 0.0;
-    (*v[0])[j].W = 0.0;
-  }
+  for (j = v[0]->minCol(); j < v[0]->maxCol(); j++)
+    (*v[0])[j].setToZero();
 }
 
 void AgeBandMatrix::setToZero() {
   int i, j;
   for (i = 0; i < nrow; i++)
-    for (j = v[i]->minCol(); j < v[i]->maxCol(); j++) {
-      (*v[i])[j].N = 0.0;
-      (*v[i])[j].W = 0.0;
-    }
+    for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
+      (*v[i])[j].setToZero();
 }
 
 void AgeBandMatrix::printNumbers(ofstream& outfile) const {
@@ -221,10 +210,9 @@ void AgeBandMatrixPtrVector::Migrate(const DoubleMatrix& MI, PopInfoVector& tmp)
   int i, j, age, length;
   for (age = v[0]->minAge(); age <= v[0]->maxAge(); age++) {
     for (length = v[0]->minLength(age); length < v[0]->maxLength(age); length++) {
-      for (j = 0; j < size; j++) {
-        tmp[j].N = 0.0;
-        tmp[j].W = 0.0;
-      }
+      for (j = 0; j < size; j++)
+        tmp[j].setToZero();
+
       //Let tmp[j] keep the population of agelength group on area j after the migration
       for (j = 0; j < size; j++)
         for (i = 0; i < size; i++)
