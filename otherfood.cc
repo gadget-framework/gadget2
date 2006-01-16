@@ -92,13 +92,11 @@ LengthPrey* OtherFood::getPrey() const {
 }
 
 void OtherFood::checkEat(int area, const TimeClass* const TimeInfo) {
-
   if (this->isOtherFoodStepArea(area, TimeInfo))
     prey->checkConsumption(area, TimeInfo);
 }
 
 void OtherFood::calcNumbers(int area, const TimeClass* const TimeInfo) {
-
   if (this->isOtherFoodStepArea(area, TimeInfo))
     prey->Sum(tmpPopulation[this->areaNum(area)], area);
 }
@@ -119,10 +117,10 @@ void OtherFood::Print(ofstream& outfile) const {
   outfile << endl;
 }
 
-void OtherFood::Reset(const TimeClass* const TimeInfo, const AreaClass* const Area) {
+void OtherFood::Reset(const TimeClass* const TimeInfo) {
   int i;
   prey->Reset();
   for (i = 0; i < tmpPopulation.Nrow(); i++)
     if (this->isOtherFoodStepArea(i, TimeInfo))
-      tmpPopulation[this->areaNum(i)][0].N = amount[TimeInfo->getTime()][this->areaNum(i)] * Area->getSize(i);
+      tmpPopulation[this->areaNum(i)][0].N = amount[TimeInfo->getTime()][this->areaNum(i)];
 }

@@ -91,7 +91,7 @@ void Ecosystem::writeStatus(const char* filename) const {
 void Ecosystem::Reset() {
   int i;
   for (i = 0; i < basevec.Size(); i++)
-    basevec[i]->Reset(TimeInfo, Area);
+    basevec[i]->Reset(TimeInfo);
 }
 
 double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {

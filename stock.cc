@@ -311,7 +311,7 @@ Stock::~Stock() {
     delete stray;
 }
 
-void Stock::Reset(const TimeClass* const TimeInfo, const AreaClass* const Area) {
+void Stock::Reset(const TimeClass* const TimeInfo) {
   naturalm->Reset(TimeInfo);
   if (doeseat)
     predator->Reset(TimeInfo);

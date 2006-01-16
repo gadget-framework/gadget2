@@ -130,9 +130,8 @@ public:
   /**
    * \brief This function will reset the model population
    * \param TimeInfo is the TimeClass for the current model
-   * \param Area is the AreaClass for the current model
    */
-  virtual void Reset(const TimeClass* const TimeInfo, const AreaClass* const Area);
+  virtual void Reset(const TimeClass* const TimeInfo);
   /**
    * \brief This will return the fleet, as a predator type, for use in other functions
    * \return predator

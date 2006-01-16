@@ -125,9 +125,8 @@ public:
   /**
    * \brief This function will reset the model population
    * \param TimeInfo is the TimeClass for the current model
-   * \param Area is the AreaClass for the current model
    */
-  virtual void Reset(const TimeClass* const TimeInfo, const AreaClass* const Area) = 0;
+  virtual void Reset(const TimeClass* const TimeInfo) = 0;
   /**
    * \brief This function will print the model population
    * \param outfile is the ofstream that all the model information gets sent to

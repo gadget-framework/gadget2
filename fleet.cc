@@ -109,18 +109,16 @@ void Fleet::calcEat(int area,
 }
 
 void Fleet::adjustEat(int area, const TimeClass* const TimeInfo) {
-
   if (this->isFleetStepArea(area, TimeInfo))
     predator->adjustConsumption(area, TimeInfo);
 }
 
 void Fleet::calcNumbers(int area, const TimeClass* const TimeInfo) {
-
   if (this->isFleetStepArea(area, TimeInfo))
     predator->Sum(tmpPopulation[this->areaNum(area)], area);
 }
 
-void Fleet::Reset(const TimeClass* const TimeInfo, const AreaClass* const Area) {
+void Fleet::Reset(const TimeClass* const TimeInfo) {
   int i;
   predator->Reset(TimeInfo);
   for (i = 0; i < tmpPopulation.Nrow(); i++)

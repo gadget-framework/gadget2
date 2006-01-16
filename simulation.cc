@@ -91,7 +91,7 @@ void Ecosystem::Simulate(int print) {
   TimeInfo->Reset();
   for (i = 0; i < TimeInfo->numTotalSteps(); i++) {
     for (j = 0; j < basevec.Size(); j++)
-      basevec[j]->Reset(TimeInfo, Area);
+      basevec[j]->Reset(TimeInfo);
 
     //Add in any new tagging experiments
     tagvec.updateTags(TimeInfo);
