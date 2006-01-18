@@ -15,7 +15,7 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
   Keeper* const keeper) : LivesOnAreas(areas) {
 
   keeper->addString("stray");
-  int i, tmpint;
+  int i, tmpint = 0;
   double tmpratio;
 
   char text[MaxStrLength];

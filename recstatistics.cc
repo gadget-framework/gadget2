@@ -88,14 +88,13 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
 void RecStatistics::readStatisticsData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea, TagPtrVector Tag) {
 
-  int year, step;
   double tmpnumber, tmpmean, tmpstddev;
   char tmparea[MaxStrLength], tmptag[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmptag, "", MaxStrLength);
   int keepdata, needvar, readvar;
   int i, timeid, tagid, areaid, tmpindex;
-  int count = 0;
+  int year, step, count;
 
   readvar = 0;
   if (functionnumber == 2)
@@ -111,6 +110,7 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
   else if ((readvar == 0) && (countColumns(infile) != 6))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
+  year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     if (readvar == 1)

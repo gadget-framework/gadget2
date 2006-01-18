@@ -91,13 +91,11 @@ void readAmounts(CommentStream& infile, const IntVector& tmpareas,
   const TimeClass* const TimeInfo, const AreaClass* const Area,
   FormulaMatrix& amount, const char* givenname) {
 
-  int i;
-  int year, step, area;
   char c;
   char tmpname[MaxStrLength];
   strncpy(tmpname, "", MaxStrLength);
-  int count = 0;
-  int keepdata, timeid, areaid, tmpareaid;
+  int i, year, step, area;
+  int keepdata, timeid, areaid, tmpareaid, count;
 
   //Check the number of columns in the inputfile
   infile >> ws;
@@ -106,6 +104,8 @@ void readAmounts(CommentStream& infile, const IntVector& tmpareas,
 
   //Create storage for the data - size of the data is known
   amount.AddRows(TimeInfo->numTotalSteps() + 1, tmpareas.Size(), 0.0);
+
+  year = step = area = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> tmpname;
@@ -157,19 +157,18 @@ void readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   const AreaClass* const Area, FormulaMatrixPtrVector& amount,
   const CharPtrVector& lenindex, const IntVector& tmpareas) {
 
-  int i;
-  int year, step, area;
+  int i, year, step, area;
   char c;
   char tmplength[MaxStrLength];
   strncpy(tmplength, "", MaxStrLength);
-  int keepdata, timeid, areaid, lenid, tmpareaid;
-  int count = 0;
+  int keepdata, timeid, areaid, lenid, tmpareaid, count;
 
   //Check the number of columns in the inputfile
   infile >> ws;
   if (countColumns(infile) != 5)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
+  year = step = area = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> tmplength;

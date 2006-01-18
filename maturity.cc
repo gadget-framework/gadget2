@@ -275,7 +275,7 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i, tmpint;
+  int i, tmpint = 0;
   double tmpratio;
 
   infile >> text;
@@ -380,7 +380,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i, tmpint;
+  int i, tmpint = 0;
   double tmpratio;
 
   keeper->addString("maturity");

@@ -11,8 +11,7 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
   int noagegr, int minage, const AreaClass* const Area) {
 
   int noareas = areas.Size();
-  int i, age, area, ageid, areaid, tmparea, keepdata;
-  int count = 0;
+  int i, age, area, ageid, areaid, tmparea, keepdata, count;
   char c;
 
   //Resize the matrices to hold the data
@@ -28,8 +27,7 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
   if (countColumns(infile) != 7)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
 
-  ageid = -1;
-  tmparea = -1;
+  area = age = ageid = count = 0;
   keeper->addString("meandata");
   while (!infile.eof()) {
     keepdata = 0;
@@ -91,8 +89,7 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
   int noagegr, int minage, const AreaClass* const Area) {
 
   int noareas = areas.Size();
-  int i, age, area, ageid, areaid, tmparea, keepdata;
-  int count = 0;
+  int i, age, area, ageid, areaid, tmparea, keepdata, count;
   char c;
 
   //Resize the matrices to hold the data
@@ -109,8 +106,7 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
   if (countColumns(infile) != 8)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 8");
 
-  ageid = -1;
-  tmparea = -1;
+  area = age = ageid = count = 0;
   keeper->addString("meandata");
   while (!infile.eof()) {
     keepdata = 0;
@@ -173,11 +169,10 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
 void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
-  int i, age, area, tmparea;
+  int i, age, area, tmparea, count;
   int keepdata, ageid, areaid, lengthid;
   double length;
   char c;
-  int count = 0;
   int noareas = areas.Size();
   int nolengr = LgrpDiv->numLengthGroups();
 
@@ -195,9 +190,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
         initialPop[areaid][ageid][lengthid].setToZero();
   }
 
-  ageid = -1;
-  areaid = -1;
-  lengthid = -1;
+  area = age = ageid = count = 0;
   keeper->addString("numberdata");
   while (!infile.eof()) {
     keepdata = 0;

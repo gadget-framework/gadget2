@@ -7,7 +7,7 @@ extern ErrorHandler handle;
 
 AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  int i, j, tmpint;
+  int i, j, tmpint = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
@@ -47,7 +47,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   if (countColumns(infile) != 4)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 4");
 
-  count = 0;
+  year = step = area = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> tmpnumber >> ws;

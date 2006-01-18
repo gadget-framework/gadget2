@@ -86,7 +86,7 @@ void MigrationNumbers::readTimeStepData(CommentStream& infile, const TimeClass* 
   if (countColumns(infile) != 3)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 3");
 
-  count = 0;
+  year = step = count = 0;
   allmatrixnames.resizeBlank(TimeInfo->numTotalSteps() + 1);
   timeindex.resize(TimeInfo->numTotalSteps() + 1, -1);
   while (!infile.eof()) {
@@ -125,6 +125,7 @@ void MigrationNumbers::readGivenRatios(CommentStream& infile, Keeper* const keep
      ...
   */
 
+  toArea = fromArea = 0;
   // Read ratio information from file
   while (!infile.eof() && !infile.fail()) {
     infile >> text >> ws;

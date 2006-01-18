@@ -176,20 +176,19 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
 void SurveyDistribution::readDistributionData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea, int numage, int numlen) {
 
-  int i;
-  int year, step;
   double tmpnumber;
   char tmparea[MaxStrLength], tmpage[MaxStrLength], tmplen[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpage, "", MaxStrLength);
   strncpy(tmplen, "", MaxStrLength);
   int keepdata, timeid, areaid, ageid, lenid;
-  int count = 0;
+  int i, year, step, count;
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 6)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
+  year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmpage >> tmplen >> tmpnumber >> ws;

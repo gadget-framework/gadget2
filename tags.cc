@@ -70,18 +70,18 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
 
 void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeClass* const TimeInfo) {
 
-  int year, step;
+  int year, step, count;
   int i, lenid, keepdata, timeid;
   double tmplength, tmpnumber;
   char tmpname[MaxStrLength];
   strncpy(tmpname, "", MaxStrLength);
-  int count = 0;
 
   infile >> ws;
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 5)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
+  year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> tmpname >> year >> step >> tmplength >> tmpnumber >> ws;

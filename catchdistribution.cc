@@ -220,21 +220,20 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 void CatchDistribution::readDistributionData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea, int numage, int numlen) {
 
-  int i;
-  int year, step;
+  int i, year, step;
   double tmpnumber;
   char tmparea[MaxStrLength], tmpage[MaxStrLength], tmplen[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpage, "", MaxStrLength);
   strncpy(tmplen, "", MaxStrLength);
-  int keepdata, timeid, ageid, areaid, lenid;
-  int count = 0;
+  int keepdata, timeid, ageid, areaid, lenid, count;
 
   //Check the number of columns in the inputfile
   infile >> ws;
   if (countColumns(infile) != 6)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
+  year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmpage >> tmplen >> tmpnumber >> ws;

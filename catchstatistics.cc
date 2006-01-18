@@ -133,8 +133,7 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpage, "", MaxStrLength);
   int keepdata, needvar, readvar;
-  int timeid, ageid, areaid;
-  int count = 0;
+  int timeid, ageid, areaid, count;
 
   readvar = 0;
   needvar = 0;
@@ -163,6 +162,7 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
   else if ((readvar == 0) && (countColumns(infile) != 6))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
+  year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     if (readvar == 1)

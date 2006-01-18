@@ -150,8 +150,6 @@ StockDistribution::StockDistribution(CommentStream& infile,
 void StockDistribution::readStockData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea, int numage, int numlen) {
 
-  int i, j;
-  int year, step;
   double tmpnumber;
   char tmparea[MaxStrLength], tmpstock[MaxStrLength];
   char tmpage[MaxStrLength], tmplen[MaxStrLength];
@@ -159,15 +157,16 @@ void StockDistribution::readStockData(CommentStream& infile,
   strncpy(tmpstock, "", MaxStrLength);
   strncpy(tmpage, "", MaxStrLength);
   strncpy(tmplen, "", MaxStrLength);
+  int i, j, year, step, count;
   int keepdata, timeid, stockid, ageid, areaid, lenid;
   int numstock = stocknames.Size();
-  int count = 0;
 
   //Check the number of columns in the inputfile
   infile >> ws;
   if (countColumns(infile) != 7)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
 
+  year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmpstock >> tmpage >> tmplen >> tmpnumber >> ws;

@@ -43,7 +43,7 @@ void TimeVariable::read(CommentStream& infile,
 void TimeVariable::readFromFile(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
-  int i, j, check, tmpint;
+  int i, j, check, tmpint = 0;
   fromfile = 1;
   int numcoeff = 0;
   char text[MaxStrLength];

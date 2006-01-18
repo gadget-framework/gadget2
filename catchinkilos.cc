@@ -292,15 +292,13 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
 void CatchInKilos::readCatchInKilosData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea) {
 
-  int i;
-  int year, step;
+  int i, year, step, count;
   double tmpnumber = 0.0;
   char tmparea[MaxStrLength];
   char tmpfleet[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpfleet, "", MaxStrLength);
   int keepdata, timeid, areaid, fleetid, check;
-  int count = 0;
 
   //Check the number of columns in the inputfile
   infile >> ws;
@@ -309,6 +307,7 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 4 or 5");
 
   step = 1; //default value in case there are only 4 columns in the datafile
+  year = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     if ((yearly == 1) && (check == 4))

@@ -107,14 +107,13 @@ void Recaptures::readRecaptureData(CommentStream& infile,
   const TimeClass* const TimeInfo, int numarea, int numlen) {
 
   int i, j, k;
-  int year, step;
   double tmpnumber;
   char tmparea[MaxStrLength], tmplength[MaxStrLength], tmptagid[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmplength, "", MaxStrLength);
   strncpy(tmptagid, "", MaxStrLength);
   int keepdata, timeid, areaid, lenid, tid;
-  int count = 0;
+  int year, step, count;
   char* tagName;
 
   infile >> ws;
@@ -122,6 +121,7 @@ void Recaptures::readRecaptureData(CommentStream& infile,
   if (countColumns(infile) != 6)
       handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
+  year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> tmptagid >> year >> step >> tmparea >> tmplength >> tmpnumber >> ws;

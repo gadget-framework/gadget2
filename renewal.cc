@@ -116,9 +116,8 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
 void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const keeper,
   const TimeClass* const TimeInfo, const AreaClass* const Area, int minage, int maxage) {
 
-  int count = 0;
   char c;
-  int year, step, area, age, keepdata;
+  int year, step, area, age, keepdata, count;
   PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
 
   //We now expect to find the renewal data in the following format
@@ -127,6 +126,7 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
   if (countColumns(infile) != 9)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 9");
 
+  year = step = area = age = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> age >> ws;
@@ -188,9 +188,8 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
 void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const keeper,
   const TimeClass* const TimeInfo, const AreaClass* const Area, int minage, int maxage) {
 
-  int count = 0;
   char c;
-  int year, step, area, age, keepdata;
+  int year, step, area, age, keepdata, count;
   PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
 
   //We now expect to find the renewal data in the following format
@@ -199,6 +198,7 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
   if (countColumns(infile) != 8)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 8");
 
+  year = step = area = age = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> age >> ws;
@@ -257,10 +257,9 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
 void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
   const TimeClass* const TimeInfo, const AreaClass* const Area, int minage, int maxage) {
 
-  int count = 0;
   char c;
   double length;
-  int i, year, step, area, age, keepdata, id, lengthid;
+  int i, year, step, area, age, keepdata, count, id, lengthid;
   int nolengr = LgrpDiv->numLengthGroups();
   PopInfoIndexVector poptmp(nolengr, 0);
 
@@ -270,6 +269,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
   if (countColumns(infile) != 7)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
 
+  year = step = area = age = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> area >> age >> length >> ws;

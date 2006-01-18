@@ -15,7 +15,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   Keeper* const keeper) : LivesOnAreas(Areas) {
 
   keeper->addString("spawner");
-  int i, tmpint;
+  int i, tmpint = 0;
   double tmpratio;
 
   char text[MaxStrLength];

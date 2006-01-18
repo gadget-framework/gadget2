@@ -19,7 +19,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   ifstream subfile;
   CommentStream subcomment(subfile);
   char c;
-  int i, tmpint;
+  int i, tmpint = 0;
 
   keeper->addString("otherfood");
   keeper->addString(givenname);

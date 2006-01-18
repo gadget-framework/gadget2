@@ -20,7 +20,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   strncpy(text, "", MaxStrLength);
   ifstream subfile;
   CommentStream subcomment(subfile);
-  int i, tmpint;
+  int i, tmpint = 0;
   Formula multscaler;
   IntVector tmpareas;
   char c;

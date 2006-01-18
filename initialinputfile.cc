@@ -103,13 +103,10 @@ void InitialInputFile::readFromFile() {
   if (repeatedValues == 0) {
 
     Parameter sw;
-    double val;
-    double lower;
-    double upper;
-    int opt;
-    int check = 0;
+    double val, lower, upper;
+    int opt, check;
 
-    infile >> ws;
+    opt = check = 0;
     while (check == 0) {
       infile >> sw >> ws;
       switches.resize(sw);

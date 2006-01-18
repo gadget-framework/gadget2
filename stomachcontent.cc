@@ -516,14 +516,12 @@ SCNumbers::SCNumbers(CommentStream& infile, const AreaClass* const Area,
 
 void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  int i;
-  int year, step;
+  int i, year, step, count;
   double tmpnumber;
   char tmparea[MaxStrLength], tmppred[MaxStrLength], tmpprey[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmppred, "", MaxStrLength);
   strncpy(tmpprey, "", MaxStrLength);
-  int count = 0;
   int keepdata, timeid, areaid, predid, preyid;
 
   if (usepredages) //age structured predator
@@ -542,6 +540,7 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
   if (countColumns(infile) != 6)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
+  year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmppred >> tmpprey >> tmpnumber >> ws;
@@ -668,14 +667,12 @@ SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
 
 void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  int i;
-  int year, step;
+  int i, year, step, count;
   double tmpnumber, tmpstddev;
   char tmparea[MaxStrLength], tmppred[MaxStrLength], tmpprey[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmppred, "", MaxStrLength);
   strncpy(tmpprey, "", MaxStrLength);
-  int count = 0;
   int keepdata, timeid, areaid, predid, preyid;
 
   int numpred = 0;
@@ -696,6 +693,7 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
   if (countColumns(infile) != 7)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
 
+  year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmppred >> tmpprey >> tmpnumber >> tmpstddev >> ws;
@@ -776,12 +774,10 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
 
 void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  int i;
-  int year, step;
+  int i, year, step, count;
   double tmpnumber;
   int keepdata, timeid, areaid, predid;
   char tmparea[MaxStrLength], tmppred[MaxStrLength];
-  int count = 0;
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmppred, "", MaxStrLength);
 
@@ -801,6 +797,7 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
   if (countColumns(infile) != 5)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
+  year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmppred >> tmpnumber >> ws;
@@ -959,14 +956,12 @@ SCSimple::SCSimple(CommentStream& infile, const AreaClass* const Area,
 
 void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  int i;
-  int year, step;
+  int i, year, step, count;
   double tmpnumber;
   char tmparea[MaxStrLength], tmppred[MaxStrLength], tmpprey[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmppred, "", MaxStrLength);
   strncpy(tmpprey, "", MaxStrLength);
-  int count = 0;
   int keepdata, timeid, areaid, predid, preyid;
 
   int numpred = 0;
@@ -987,6 +982,7 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
   if (countColumns(infile) != 6)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
+  year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmppred >> tmpprey >> tmpnumber >> ws;

@@ -27,7 +27,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   doesgrow = doeseat = iseaten = doesmigrate = 0;
   doesmove = doesrenew = doesmature = doesspawn = doesstray = 0;
-  int i, tmpint;
+  int i, tmpint = 0;
   char c;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);

@@ -49,7 +49,7 @@ void OptInfo::readOptInfo(CommentStream& infile) {
   while (!infile.eof()) {
     infile >> ws;  //trim whitespace from infile
     if ((strcasecmp(text, "seed")) == 0 && (!infile.eof())) {
-      int seed;
+      int seed = 0;
       infile >> seed >> ws >> text;
       handle.logMessage(LOGMESSAGE, "Initialising random number generator with", seed);
       srand(seed);

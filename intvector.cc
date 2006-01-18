@@ -101,7 +101,7 @@ void IntVector::Reset() {
 }
 
 int IntVector::readline(CommentStream& infile) {
-  int tmpint;
+  int tmpint = 0;
   char line[MaxStrLength];
   strncpy(line, "", MaxStrLength);
   infile.getLine(line, MaxStrLength);

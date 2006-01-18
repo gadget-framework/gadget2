@@ -109,20 +109,19 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
 
 void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  int i;
-  int year, step;
   double tmpnumber;
   char tmparea[MaxStrLength], tmplabel[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmplabel, "", MaxStrLength);
   int keepdata, timeid, colid, areaid;
-  int count = 0;
+  int i, year, step, count;
 
   //Check the number of columns in the inputfile
   infile >> ws;
   if (countColumns(infile) != 5)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
+  year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
     infile >> year >> step >> tmparea >> tmplabel >> tmpnumber >> ws;
