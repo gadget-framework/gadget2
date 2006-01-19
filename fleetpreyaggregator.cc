@@ -11,12 +11,17 @@ extern ErrorHandler handle;
 FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
   const StockPtrVector& Stocks, LengthGroupDivision* const Lgrpdiv,
   const IntMatrix& Areas, const IntMatrix& Ages, int overcons)
-  : fleets(Fleets), stocks(Stocks), LgrpDiv(Lgrpdiv), areas(Areas),
-    ages(Ages), overconsumption(overcons), suitptr(0), alptr(0) {
+  : fleets(Fleets), stocks(Stocks), LgrpDiv(Lgrpdiv), areas(Areas), ages(Ages),
+    doescatch(Fleets.Size(), Stocks.Size(), 0), overconsumption(overcons), suitptr(0), alptr(0) {
 
-  int i;
+  int i, j;
   for (i = 0; i < stocks.Size(); i++)
     CI.resize(new ConversionIndex(stocks[i]->getPrey()->getLengthGroupDiv(), LgrpDiv));
+
+  for (i = 0; i < fleets.Size(); i++)
+    for (j = 0; j < stocks.Size(); j++)
+      if (fleets[i]->getPredator()->doesEat(stocks[i]->getPrey()->getName()))
+        doescatch[i][j] = 1;
 
   //Resize total using dummy variables tmppop and popmatrix.
   PopInfo tmppop;
@@ -82,32 +87,33 @@ void FleetPreyAggregator::Sum(const TimeClass* const TimeInfo) {
   for (f = 0; f < fleets.Size(); f++) {
     LengthPredator* pred = fleets[f]->getPredator();
     for (h = 0; h < stocks.Size(); h++) {
-      StockPrey* prey = (StockPrey*)stocks[h]->getPrey();
-      for (area = 0; area < areas.Nrow(); area++) {
-        for (j = 0; j < areas.Ncol(area); j++) {
-          if ((prey->isPreyArea(areas[area][j]))
-              && (fleets[f]->isFleetStepArea(areas[area][j], TimeInfo))) {
+      if (doescatch[f][h]) {
+        StockPrey* prey = (StockPrey*)stocks[h]->getPrey();
+        for (area = 0; area < areas.Nrow(); area++) {
+          for (j = 0; j < areas.Ncol(area); j++) {
+            if ((prey->isPreyArea(areas[area][j]))
+                && (fleets[f]->isFleetStepArea(areas[area][j], TimeInfo))) {
 
-            fleetscale = fleets[f]->getFleetAmount(areas[area][j], TimeInfo)
-                          * pred->Scaler(areas[area][j]);
+              fleetscale = fleets[f]->getFleetAmount(areas[area][j], TimeInfo)
+                            * pred->Scaler(areas[area][j]);
+              for (i = 0; i < pred->numPreys(); i++) {
+                if (strcasecmp(prey->getName(), pred->getPrey(i)->getName()) == 0) {
+                  suitptr = &pred->getSuitability(i)[0];
+                  alptr = &prey->getALKPriorToEating(areas[area][j]);
+                  for (age = 0; age < ages.Nrow(); age++) {
+                    for (k = 0; k < ages.Ncol(age); k++) {
+                      if ((alptr->minAge() <= ages[age][k]) && (ages[age][k] <= alptr->maxAge())) {
+                        if (overconsumption) {
+                          DoubleVector usesuit = *suitptr;
+                          DoubleVector ratio = prey->getRatio(area);
+                          for (z = 0; z < usesuit.Size(); z++)
+                            if (ratio[z] > 1.0)
+                              usesuit[z] *= 1.0 / ratio[z];
 
-            for (i = 0; i < pred->numPreys(); i++) {
-              if (strcasecmp(prey->getName(), pred->getPrey(i)->getName()) == 0) {
-                suitptr = &pred->getSuitability(i)[0];
-                alptr = &prey->getALKPriorToEating(areas[area][j]);
-                for (age = 0; age < ages.Nrow(); age++) {
-                  for (k = 0; k < ages.Ncol(age); k++) {
-                    if ((alptr->minAge() <= ages[age][k]) && (ages[age][k] <= alptr->maxAge())) {
-                      if (overconsumption) {
-                        DoubleVector usesuit = *suitptr;
-                        DoubleVector ratio = prey->getRatio(area);
-                        for (z = 0; z < usesuit.Size(); z++)
-                          if (ratio[z] > 1.0)
-                            usesuit[z] *= 1.0 / ratio[z];
-
-                        total[area][age].Add((*alptr)[ages[age][k]], *CI[h], usesuit, fleetscale);
-                      } else {
-                        total[area][age].Add((*alptr)[ages[age][k]], *CI[h], *suitptr, fleetscale);
+                          total[area][age].Add((*alptr)[ages[age][k]], *CI[h], usesuit, fleetscale);
+                        } else {
+                          total[area][age].Add((*alptr)[ages[age][k]], *CI[h], *suitptr, fleetscale);
+                        }
                       }
                     }
                   }

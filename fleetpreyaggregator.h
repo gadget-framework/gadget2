@@ -77,6 +77,11 @@ private:
    */
   IntMatrix ages;
   /**
+   * \brief This is the IntMatrix used to store predation information
+   * \note doescatch[i][j] is a flag to denote whether fleet i catches stock j
+   */
+  IntMatrix doescatch;
+  /**
    * \brief This is the flag used to denote whether to calculate overconsumption of the stocks or not
    */
   int overconsumption;
