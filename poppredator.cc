@@ -97,7 +97,7 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
 void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   Predator::setPrey(preyvec, keeper);
 
-  int i, j;
+  int i, j, numlen, numarea, preylen;
   if (LgrpDiv == 0) {
     //need to construct length group based on the min/max lengths of the preys
     double minl, maxl;
@@ -114,22 +114,25 @@ void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   }
 
   //now we need to initialise things
-  this->Initialise();
+  Predator::Initialise();
   PopInfo nullpop;
-  for (i = 0; i < areas.Size(); i++) {
+  numlen = LgrpDiv->numLengthGroups();
+  numarea = areas.Size();
+  for (i = 0; i < numarea; i++) {
     cons.resize();
     consumption.resize();
     for (j = 0; j < this->numPreys(); j++) {
-      cons[i].resize(new DoubleMatrix(LgrpDiv->numLengthGroups(), this->getPrey(j)->getLengthGroupDiv()->numLengthGroups(), 0.0));
-      consumption[i].resize(new DoubleMatrix(LgrpDiv->numLengthGroups(),  this->getPrey(j)->getLengthGroupDiv()->numLengthGroups(), 0.0));
+      preylen = this->getPrey(j)->getLengthGroupDiv()->numLengthGroups();
+      cons[i].resize(new DoubleMatrix(numlen, preylen, 0.0));
+      consumption[i].resize(new DoubleMatrix(numlen, preylen, 0.0));
     }
   }
 
-  totalcons.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
-  overcons.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
-  totalconsumption.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
-  overconsumption.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), 0.0);
-  prednumber.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), nullpop);
+  totalcons.AddRows(numarea, numlen, 0.0);
+  overcons.AddRows(numarea, numlen, 0.0);
+  totalconsumption.AddRows(numarea, numlen, 0.0);
+  overconsumption.AddRows(numarea, numlen, 0.0);
+  prednumber.AddRows(numarea, numlen, nullpop);
 }
 
 double PopPredator::getTotalOverConsumption(int area) const {
