@@ -39,14 +39,33 @@ void StockPredStdInfo::Sum(const TimeClass* const TimeInfo, int area) {
   preyinfo->Sum(TimeInfo, area);
   predinfo->Sum(TimeInfo, area);
 
-  const BandMatrix& Alprop = pred->getALProportion(area);
+  int predage, preyage, preyl, predl;
+  double B, N, prop;
+
+  const AgeBandMatrix& alk = pred->getAgeLengthKeys(area);
+  const PopInfoVector& pn = pred->getPredatorNumber(area);
+
+  int minage, maxage, numlength;
+  minage = pred->minAge();
+  maxage = pred->maxAge();
+  numlength = pred->getLengthGroupDiv()->numLengthGroups();
+  IntVector size(maxage - minage + 1, numlength);
+  IntVector minlength(maxage - minage + 1, 0);
+  BandMatrix Alprop(minlength, size, minage);
+
+  for (predage = Alprop.minRow(); predage <= Alprop.maxRow(); predage++) {
+    for (predl = Alprop.minCol(predage); predl < Alprop.maxCol(predage); predl++) {
+      if (!(isZero(pn[predl].N)))
+        Alprop[predage][predl] = alk[predage][predl].N / pn[predl].N;
+      else
+        Alprop[predage][predl] = 0.0;
+    }
+  }
+
   DoubleVector predBconsbyAge(Alprop.maxRow() - Alprop.minRow() + 1, 0.0);
   const BandMatrix& preyNcons = preyinfo->NconsumptionByAgeAndLength(area);
   const BandMatrix& preyBcons = preyinfo->BconsumptionByAgeAndLength(area);
   const DoubleMatrix& predBcons = pred->getConsumption(area, prey->getName());
-
-  int predage, preyage, preyl, predl;
-  double B, N, prop;
 
   for (predage = NconbyAge[inarea].minRow(); predage <= NconbyAge[inarea].maxRow(); predage++)
     for (preyage = NconbyAge[inarea].minCol(predage); preyage < NconbyAge[inarea].maxCol(predage); preyage++) {

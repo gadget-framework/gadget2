@@ -5,7 +5,6 @@
 #include "lengthgroup.h"
 #include "commentstream.h"
 #include "agebandmatrixptrvector.h"
-#include "bandmatrixptrvector.h"
 #include "poppredator.h"
 
 /**
@@ -63,12 +62,6 @@ public:
    */
   virtual void Print(ofstream& outfile) const;
   /**
-   * \brief This function will return the proportion of the predation that is due to each age-length cell of the predator
-   * \param area is the area that the prey consumption is being calculated on
-   * \return Alprop, a BandMatrix containing the age-length proportion of the predation
-   */
-  const BandMatrix& getALProportion(int area) const { return Alprop[this->areaNum(area)]; };
-  /**
    * \brief This function will return the feeding level of the predator on a specified area
    * \param area is the area that the prey consumption is being calculated on
    * \return fphi, a DoubleVector containing the feeding level of the predator
@@ -116,11 +109,6 @@ protected:
    * \note The indices for this object are [area][predator length]
    */
   DoubleMatrix maxcons;
-  /**
-   * \brief This is the BandMatrixPtrVector used to store proportion of the predation that is due to each age-length cell of the predator
-   * \note The indices for this object are [area][predator age][predator length]
-   */
-  BandMatrixPtrVector Alprop;
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store information about the predator population
    * \note The indices for this object are [area][predator age][predator length]

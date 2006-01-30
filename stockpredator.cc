@@ -64,10 +64,8 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   int numarea = areas.Size();
   IntVector size(maxage - minage + 1, numlength);
   IntVector minlength(maxage - minage + 1, 0);
-  BandMatrix bm(minlength, size, minage);
 
   Alkeys.resize(numarea, minage, minlength, size);
-  Alprop.resize(numarea, bm);
   maxcons.AddRows(numarea, numlength, 0.0);
   Phi.AddRows(numarea, numlength, 0.0);
   fphi.AddRows(numarea, numlength, 0.0);
@@ -99,16 +97,6 @@ void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
   Alkeys[inarea].setToZero();
   Alkeys[inarea].Add(stock, *CI);
   Alkeys[inarea].sumColumns(prednumber[inarea]);
-
-  int age, len;
-  for (age = Alprop[inarea].minRow(); age <= Alprop[inarea].maxRow(); age++) {
-    for (len = Alprop[inarea].minCol(age); len < Alprop[inarea].maxCol(age); len++) {
-      if (!(isZero(prednumber[inarea][len].N)))
-        Alprop[inarea][age][len] = Alkeys[inarea][age][len].N / prednumber[inarea][len].N;
-      else
-        Alprop[inarea][age][len] = 0.0;
-    }
-  }
 }
 
 void StockPredator::Reset(const TimeClass* const TimeInfo) {
