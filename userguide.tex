@@ -1737,7 +1737,7 @@ For the tag datafile, this is a simple list of tag identifier, timestep, length 
 Note that the $<$length$>$ value refers to the minimum length of the length cell that the tagged fish will be put into.
 
 \chapter{Otherfood Files}\label{chap:other}
-The otherfood files contain the information about non-dynamic prey that is available for the predators to consume.  The otherfood acts as a prey that is always available, and it is used to avoid the situation where the non-availability of a prey stock prevents the predators from growing as expected.  Note that due to the way the consumption is defined (see Consumption, section~\ref{sec:consumption}) the otherfood is given as the density of the non-modelled prey available.
+The otherfood files contain the information about non-dynamic prey that is available for the predators to consume.  The otherfood acts as a prey that is always available, and it is used to avoid the situation where the non-availability of a prey stock prevents the predators from growing as expected.
 
 \bigskip
 To define otherfood in the Gadget model, the ''main'' file must contain a list of the data files that contain the description of the otherfood, and the format for this is shown below:
@@ -1761,19 +1761,17 @@ amount                 <see Food Amounts>
 The otherfood is defined by specifying the otherfood name and areas it is available for consumption on and the minimum and maximum length of food (for compatibility with the dynamic stock predation and printer classes).
 
 \section{Food Amounts}\label{sec:foodamounts}
-The amounts section of the otherfood file gives the amount of otherfood that is available for the predators to eat.  This data is listed in a column format in a separate file, so the main otherfood file simply gives the name of this otherfood data file, as shown in the example below:
+The amounts section of the otherfood file gives the biomass of otherfood that is available for the predators to eat.  This data is listed in a column format in a separate file, so the main otherfood file simply gives the name of this otherfood data file, as shown in the example below:
 
 {\small\begin{verbatim}
 amount                 <name of data file>
 \end{verbatim}}
 
-For the otherfood datafile, this is a simple list of year, timestep, area, food name and then the amount of the food available for the predators to eat, for that timestep/area combination.  This format is shown below:
+For the otherfood datafile, this is a simple list of year, timestep, area, food name and then the biomass of the food available for the predators to eat, for that timestep/area combination.  This format is shown below:
 
 {\small\begin{verbatim}
 <year>  <step>  <area>  <food name>  <amount>
 \end{verbatim}}
-
-Note that the $<$amount$>$ represents the density of the other food that is available for the stock to consume.
 
 \chapter{Fleet Files}\label{chap:fleet}
 The fleet files contain the information about the fleets that are reducing the stocks in the Gadget model.  The fleets act as a predator in the model, with the landings data treated as the fleets ''consumption'' of the stock that is caught.
@@ -3123,11 +3121,11 @@ year-step-area-age-number-length-weight-stddev-consumed-biomass
 \end{verbatim}}
 
 where:\newline
-$<$number$>$ is the stock population for that timestep/area/age combination (scaled by dividing by the scaling factor)\newline
+$<$number$>$ is the stock population for that timestep/area/age combination\newline
 $<$length$>$ is the mean length for that timestep/area/age combination\newline
 $<$weight$>$ is the mean weight for that timestep/area/age combination\newline
 $<$stddev$>$ is the standard deviation for the length for that timestep/area/age combination\newline
-$<$consumed$>$ is the stock population that has been consumed by all the predators (including fleets) for that timestep/area/age combination (scaled by dividing by the scaling factor)\newline
+$<$consumed$>$ is the stock population that has been consumed by all the predators (including fleets) for that timestep/area/age combination\newline
 $<$biomass$>$ is the stock biomass that has been consumed by all the predators (including fleets) for that timestep/area/age combination
 
 \section{StockFullPrinter}\label{sec:stockfullprinter}
@@ -3858,6 +3856,7 @@ A version of this user guide was printed and published as a Marine Research Inst
 
 \section{Gadget version 2.1.03}\label{sec:v2103}
 \begin{itemize}
+\item changed the otherfood file format to specify the biomass of otherfood available, rather than the density of the otherfood (see section~\ref{sec:foodamounts})
 \item added the StockPreyPrinter to the list of available printer classes (see section~\ref{sec:stockpreyprinter})
 \end{itemize}
 
