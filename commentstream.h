@@ -3,18 +3,35 @@
 
 #include "gadget.h"
 
-const char chrComment = ';';
 extern void killComments(istream* const istrptr);
 
 class CommentStream;
 typedef CommentStream& (*__commentmanip)(CommentStream&);
 
+/**
+ * \class Whitespace
+ * \brief This is the dummy class used to strip white space from any input stream
+ */
 class Whitespace {
 public:
+  /**
+   * \brief This is the default Whitespace constructor
+   */
   Whitespace() { v = 0; };
+  /**
+   * \brief This is the default Whitespace destructor
+   */
   ~Whitespace() {};
+  /**
+   * \brief This operator will strip white space from a given input istream
+   * \param istr is the istream to strip white space from
+   * \param Ws is the Whitespace used to strip white space from the data
+   */
   friend istream& operator >> (istream& istr, Whitespace& Ws);
 private:
+  /**
+   * \brief This is a dummy object used when stripping the white space from any input files
+   */
   int v;
 };
 

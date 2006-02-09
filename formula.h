@@ -76,6 +76,11 @@ public:
    * \param F is the Formula to copy
    */
   Formula& operator = (const Formula& F);
+  /**
+   * \brief This operator will read data from a CommentStream into a Formula
+   * \param infile is the CommentStream to read from
+   * \param F is the Formula used to store the data
+   */
   friend CommentStream& operator >> (CommentStream& infile, Formula& F);
 private:
   /**

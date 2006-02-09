@@ -27,8 +27,7 @@ AgeBandMatrix::AgeBandMatrix(int age, const PopInfoMatrix& initial, int minl)
   : minage(age), nrow(initial.Nrow()) {
 
   v = new PopInfoIndexVector*[nrow];
-  int i, j;
-  int lower, upper;
+  int i, j, lower, upper;
   for (i = 0; i < nrow; i++) {
     lower = 0;
     upper = initial.Ncol(i) - 1;
@@ -45,7 +44,7 @@ AgeBandMatrix::AgeBandMatrix(int age, const PopInfoMatrix& initial, int minl)
 AgeBandMatrix::AgeBandMatrix(int age, const PopInfoIndexVector& initial)
   : minage(age), nrow(1) {
 
-  v = new PopInfoIndexVector*[1];
+  v = new PopInfoIndexVector*[nrow];
   v[0] = new PopInfoIndexVector(initial);
 }
 

@@ -331,7 +331,7 @@ void Tags::Update(int timeid) {
         (*AgeLengthStock[0])[tagareaindex][age][length].N = 0.0;
     }
   }
-  taggingstock->updateTags(AgeLengthStock[0], this, exp(-tagloss));
+  taggingstock->addTags(AgeLengthStock[0], this, exp(-tagloss));
   updated[0] = 1;
 
   if (taggingstock->isEaten()) {
@@ -424,7 +424,7 @@ void Tags::updateMatureStock(const TimeClass* const TimeInfo) {
         handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
       if (updated[id] == 0) {
-        matureStocks[i]->updateTags(AgeLengthStock[id], this, exp(-tagloss));
+        matureStocks[i]->addTags(AgeLengthStock[id], this, exp(-tagloss));
         updated[id] = 1;
       }
     }
@@ -443,7 +443,7 @@ void Tags::updateTransitionStock(const TimeClass* const TimeInfo) {
         handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
       if (updated[id] == 0) {
-        transitionStocks[i]->updateTags(AgeLengthStock[id], this, exp(-tagloss));
+        transitionStocks[i]->addTags(AgeLengthStock[id], this, exp(-tagloss));
         updated[id] = 1;
       }
     }
@@ -462,7 +462,7 @@ void Tags::updateStrayStock(const TimeClass* const TimeInfo) {
         handle.logMessage(LOGFAIL, "Error in tags - invalid stock identifier");
 
       if (updated[id] == 0) {
-        strayStocks[i]->updateTags(AgeLengthStock[id], this, exp(-tagloss));
+        strayStocks[i]->addTags(AgeLengthStock[id], this, exp(-tagloss));
         updated[id] = 1;
       }
     }

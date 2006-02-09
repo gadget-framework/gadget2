@@ -14,8 +14,9 @@ extern ErrorHandler handle;
 // ********************************************************
 Maturity::Maturity(const IntVector& tmpareas, int minage, const IntVector& minlength,
   const IntVector& agesize, const LengthGroupDivision* const lgrpdiv)
-  : LivesOnAreas(tmpareas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)) {
+  : LivesOnAreas(tmpareas) {
 
+  LgrpDiv = new LengthGroupDivision(*lgrpdiv);
   Storage.resize(tmpareas.Size(), minage, minlength, agesize);
   tagStorage.resize(tmpareas.Size(), minage, minlength, agesize);
 }
@@ -31,13 +32,13 @@ Maturity::~Maturity() {
 
 void Maturity::setStock(StockPtrVector& stockvec) {
   int i, j, index;
-  DoubleVector tmpratio;
+  DoubleVector dvratio;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < matureStockNames.Size(); j++)
       if (strcasecmp(stockvec[i]->getName(), matureStockNames[j]) == 0) {
         matureStocks.resize(stockvec[i]);
-        tmpratio.resize(1, matureRatio[j]);
+        dvratio.resize(1, matureRatio[j]);
       }
 
   if (matureStocks.Size() != matureStockNames.Size()) {
@@ -50,7 +51,7 @@ void Maturity::setStock(StockPtrVector& stockvec) {
   }
 
   matureRatio.Reset();
-  matureRatio = tmpratio;
+  matureRatio = dvratio;
 
   for (i = 0; i < matureStocks.Size(); i++) {
     CI.resize(new ConversionIndex(LgrpDiv, matureStocks[i]->getLengthGroupDiv()));
@@ -103,12 +104,7 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
     tagStorage[inarea].setToZero();
 }
 
-void Maturity::storeMatureStock(int area, int age, int length, double number,
-  double weight, const TimeClass* const TimeInfo) {
-
-  if (!(this->isMaturationStep(TimeInfo)))
-    handle.logMessage(LOGFAIL, "Error in maturity - maturity requested on wrong timestep");
-
+void Maturity::storeMatureStock(int area, int age, int length, double number, double weight) {
   if (isZero(number) || isZero(weight)) {
     Storage[this->areaNum(area)][age][length].setToZero();
   } else {
@@ -117,16 +113,9 @@ void Maturity::storeMatureStock(int area, int age, int length, double number,
   }
 }
 
-void Maturity::storeMatureStock(int area, int age, int length, double number,
-  const TimeClass* const TimeInfo, int id) {
-
-  if (!(this->isMaturationStep(TimeInfo)))
-    handle.logMessage(LOGFAIL, "Error in maturity - maturity requested on wrong timestep");
-  if (tagStorage.numTagExperiments() <= 0)
-    handle.logMessage(LOGFAIL, "Error in maturity - no tagging experiment");
+void Maturity::storeMatureTagStock(int area, int age, int length, double number, int id) {
   if ((id >= tagStorage.numTagExperiments()) || (id < 0))
     handle.logMessage(LOGFAIL, "Error in maturity - invalid tagging experiment");
-
   if (isZero(number))
     *(tagStorage[this->areaNum(area)][age][length][id].N) = 0.0;
   else
@@ -148,7 +137,7 @@ void Maturity::deleteMaturityTag(const char* tagname) {
   if (id >= 0) {
     minage = tagStorage[0].minAge();
     maxage = tagStorage[0].maxAge();
-    // Remove allocated memory
+    //need to free allocated memory
     for (i = 0; i < tagStorage.Size(); i++) {
       for (age = minage; age <= maxage; age++) {
         minlen = tagStorage[i].minLength(age);
@@ -173,10 +162,12 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
   const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv)
   : Maturity(tmpareas, minage, minlength, agesize, lgrpdiv), minStockAge(minage) {
 
+  //JMB store the length of the timestep
+  timesteplength = TimeInfo->getTimeStepSize();
+
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
-  double tmpratio;
 
   keeper->addString("maturity");
   infile >> text;
@@ -210,22 +201,23 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
 
 void MaturityA::Reset(const TimeClass* const TimeInfo) {
   maturityParameters.Update(TimeInfo);
-  double my;
-  int age, len;
   if (maturityParameters.didChange(TimeInfo)) {
     if (maturityParameters[1] > LgrpDiv->maxLength())
       handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
 
+    int age, len;
     for (age = 0; age < preCalcMaturation.Nrow(); age++) {
       for (len = 0; len < LgrpDiv->numLengthGroups(); len++) {
-        my = exp(-maturityParameters[0] * (LgrpDiv->meanLength(len) - maturityParameters[1])
-               - maturityParameters[2] * (age + minStockAge - maturityParameters[3]));
-        preCalcMaturation[age][len] = 1.0 / (1.0 + my);
+        tmpratio = exp(-maturityParameters[0] * (LgrpDiv->meanLength(len) - maturityParameters[1]) -
+             maturityParameters[2] * (age + minStockAge - maturityParameters[3]));
+        preCalcMaturation[age][len] = 1.0 / (1.0 + tmpratio);
       }
     }
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "Reset maturity data");
   }
+  if (TimeInfo->didStepSizeChange())
+    timesteplength = TimeInfo->getTimeStepSize();
 }
 
 void MaturityA::setStock(StockPtrVector& stockvec) {
@@ -243,14 +235,12 @@ void MaturityA::setStock(StockPtrVector& stockvec) {
     handle.logMessage(LOGFAIL, "Error in maturity - minimum mature age is less than stock age");
 }
 
-double MaturityA::calcMaturation(int age, int length, int growth,
-  const TimeClass* const TimeInfo, double weight) {
+double MaturityA::calcMaturation(int age, int length, int growth, double weight) {
 
   if ((age >= minMatureAge) && ((length + growth) >= minMatureLength)) {
-    double ratio = preCalcMaturation[age - minStockAge][length] *
-                    (maturityParameters[0] * growth * LgrpDiv->dl() +
-                    maturityParameters[2] * TimeInfo->getTimeStepSize());
-    return (min(max(0.0, ratio), 1.0));
+    tmpratio = preCalcMaturation[age - minStockAge][length] *
+       (maturityParameters[0] * growth * LgrpDiv->dl() + maturityParameters[2] * timesteplength);
+    return (min(max(0.0, tmpratio), 1.0));
   }
   return 0.0;
 }
@@ -273,10 +263,12 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
   const IntVector& agesize, const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv)
   : Maturity(tmpareas, minage, minlength, agesize, lgrpdiv) {
 
+  //JMB set the default value for currenttimestep
+  currentmaturitystep = 0;
+
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, tmpint = 0;
-  double tmpratio;
 
   infile >> text;
   keeper->addString("maturity");
@@ -350,23 +342,21 @@ void MaturityB::Reset(const TimeClass* const TimeInfo) {
     handle.logMessage(LOGMESSAGE, "Reset maturity data");
 }
 
-double MaturityB::calcMaturation(int age, int length, int growth,
-  const TimeClass* const TimeInfo, double weight) {
+double MaturityB::calcMaturation(int age, int length, int growth, double weight) {
 
-  int i;
-  for (i = 0; i < maturitylength.Size(); i++)
-    if (TimeInfo->getStep() == maturitystep[i])
-      if (LgrpDiv->meanLength(length) >= maturitylength[i])
-        return 1.0;
-
+  if (LgrpDiv->meanLength(length) >= maturitylength[currentmaturitystep])
+    return 1.0;
   return 0.0;
 }
 
 int MaturityB::isMaturationStep(const TimeClass* const TimeInfo) {
   int i;
-  for (i = 0; i < maturitystep.Size(); i++)
-    if (maturitystep[i] == TimeInfo->getStep())
+  for (i = 0; i < maturitystep.Size(); i++) {
+    if (maturitystep[i] == TimeInfo->getStep()) {
+      currentmaturitystep = i;
       return 1;
+    }
+  }
   return 0;
 }
 
@@ -381,7 +371,6 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, tmpint = 0;
-  double tmpratio;
 
   keeper->addString("maturity");
   infile >> text;
@@ -444,18 +433,22 @@ void MaturityC::setStock(StockPtrVector& stockvec) {
 
 void MaturityC::Reset(const TimeClass* const TimeInfo) {
   maturityParameters.Update(TimeInfo);
-  double my;
-  int age, len;
   if (maturityParameters.didChange(TimeInfo)) {
     if (maturityParameters[1] > LgrpDiv->maxLength())
       handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
 
+    int age, len;
     for (age = 0; age < preCalcMaturation.Nrow(); age++) {
       for (len = 0; len < LgrpDiv->numLengthGroups(); len++) {
         if ((age + minStockAge >= minMatureAge) && (len >= minMatureLength)) {
-          my = exp(-4.0 * maturityParameters[0] * (LgrpDiv->meanLength(len) - maturityParameters[1])
+          tmpratio = exp(-4.0 * maturityParameters[0] * (LgrpDiv->meanLength(len) - maturityParameters[1])
                  - 4.0 * maturityParameters[2] * (age + minStockAge - maturityParameters[3]));
-          preCalcMaturation[age][len] = 1.0 / (1.0 + my);
+          preCalcMaturation[age][len] = 1.0 / (1.0 + tmpratio);
+          if (preCalcMaturation[age][len] < 0.0)
+            preCalcMaturation[age][len] = 0.0;
+          if (preCalcMaturation[age][len] > 1.0)
+            preCalcMaturation[age][len] = 1.0;
+
         } else
           preCalcMaturation[age][len] = 0.0;
       }
@@ -465,11 +458,10 @@ void MaturityC::Reset(const TimeClass* const TimeInfo) {
   }
 }
 
-double MaturityC::calcMaturation(int age, int length, int growth,
-  const TimeClass* const TimeInfo, double weight) {
+double MaturityC::calcMaturation(int age, int length, int growth, double weight) {
 
-  if ((this->isMaturationStep(TimeInfo)) && (age >= minStockAge))
-    return (min(max(0.0, preCalcMaturation[age - minStockAge][length]), 1.0));
+  if (age >= minStockAge)
+    return preCalcMaturation[age - minStockAge][length];
   return 0.0;
 }
 
@@ -512,19 +504,18 @@ MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
   subweightfile.close();
   subweightfile.clear();
 
-  //Aggregate the reference weight data to be the same length groups
+  //aggregate the reference weight data to be the same length groups
   if (LgrpDiv->meanLength(0) < tmpRefW[0][0] ||
       LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
     handle.logFileMessage(LOGFAIL, "lengths for reference weights must span the range of growth lengths");
 
   refWeight.resize(LgrpDiv->numLengthGroups(), 0.0);
   int i, j, pos = 0;
-  double tmp;
   for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
     for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
       if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] && LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
-        tmp = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
-        refWeight[j] = tmpRefW[i][1] + tmp * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
+        tmpratio = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+        refWeight[j] = tmpRefW[i][1] + tmpratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
         pos = i;
       }
     }
@@ -556,11 +547,10 @@ void MaturityD::Reset(const TimeClass* const TimeInfo) {
   }
 }
 
-double MaturityD::calcMaturation(int age, int length, int growth,
-  const TimeClass* const TimeInfo, double weight) {
+double MaturityD::calcMaturation(int age, int length, int growth, double weight) {
 
-  if ((this->isMaturationStep(TimeInfo)) && (age >= minMatureAge) && (length >= minMatureLength)) {
-    double tmpweight, my, ratio;
+  if ((age >= minMatureAge) && (length >= minMatureLength)) {
+    double tmpweight, my;
 
     if ((length >= refWeight.Size()) || (isZero(refWeight[length])))
       tmpweight = maturityParameters[5];
@@ -570,8 +560,8 @@ double MaturityD::calcMaturation(int age, int length, int growth,
     my = exp(-4.0 * maturityParameters[0] * (LgrpDiv->meanLength(length) - maturityParameters[1])
            - 4.0 * maturityParameters[2] * (age + minStockAge - maturityParameters[3])
            - 4.0 * maturityParameters[4] * (tmpweight - maturityParameters[5]));
-    ratio = 1.0 / (1.0 + my);
-    return (min(max(0.0, ratio), 1.0));
+    tmpratio = 1.0 / (1.0 + my);
+    return (min(max(0.0, tmpratio), 1.0));
   }
   return 0.0;
 }

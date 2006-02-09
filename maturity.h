@@ -65,12 +65,10 @@ public:
    * \param age is the age of the age-length cell that the maturation is being calculated on
    * \param length is the length of the age-length cell that the maturation is being calculated on
    * \param growth is the length of the age-length cell that the mature stock will grow into
-   * \param TimeInfo is the TimeClass for the current model
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return 0 (will be overridden in derived classes)
    */
-  virtual double calcMaturation(int age, int length, int growth,
-    const TimeClass* const TimeInfo, double weight) = 0;
+  virtual double calcMaturation(int age, int length, int growth, double weight) = 0;
   /**
    * \brief This will store the calculated mature stock
    * \param area is the area that the maturation is being calculated on
@@ -78,21 +76,17 @@ public:
    * \param length is the length of the calculated mature stock
    * \param number is the number of the calculated mature stock
    * \param weight is the weight of the calculated mature stock
-   * \param TimeInfo is the TimeClass for the current model
    */
-  void storeMatureStock(int area, int age, int length, double number,
-    double weight, const TimeClass* const TimeInfo);
+  void storeMatureStock(int area, int age, int length, double number, double weight);
   /**
    * \brief This will store the calculated mature tagged stock
    * \param area is the area that the maturation is being calculated on
    * \param age is the age of the calculated mature stock
    * \param length is the length of the calculated mature stock
    * \param number is the number of the calculated mature stock
-   * \param TimeInfo is the TimeClass for the current model
    * \param id is the tagging identifier of the mature stock
    */
-  void storeMatureStock(int area, int age, int length, double number,
-    const TimeClass* const TimeInfo, int id);
+  void storeMatureTagStock(int area, int age, int length, double number, int id);
   /**
    * \brief This will move the calculated mature stock into the mature stock age-length cells
    * \param area is the area that the maturation is being calculated on
@@ -115,6 +109,10 @@ public:
    */
   void deleteMaturityTag(const char* tagname);
 protected:
+  /**
+   * \brief This is used to temporarily store the maturation ratio
+   */
+  double tmpratio;
   /**
    * \brief This is the StockPtrVector of the mature stocks
    */
@@ -191,12 +189,10 @@ public:
    * \param age is the age of the age-length cell that the maturation is being calculated on
    * \param length is the length of the age-length cell that the maturation is being calculated on
    * \param growth is the length of the age-length cell that the mature stock will grow into
-   * \param TimeInfo is the TimeClass for the current model
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
-  virtual double calcMaturation(int age, int length, int growth,
-    const TimeClass* const TimeInfo, double weight);
+  virtual double calcMaturation(int age, int length, int growth, double weight);
   /**
    * \brief This function will print the maturation information
    * \param outfile is the ofstream that all the model information gets sent to
@@ -223,6 +219,10 @@ protected:
    * \brief This is the minimum length group division when maturation will take place
    */
   int minMatureLength;
+  /**
+   * \brief This is the length of the current timestep
+   */
+  double timesteplength;
 };
 
 /**
@@ -270,18 +270,20 @@ public:
    * \param age is the age of the age-length cell that the maturation is being calculated on
    * \param length is the length of the age-length cell that the maturation is being calculated on
    * \param growth is the length of the age-length cell that the mature stock will grow into
-   * \param TimeInfo is the TimeClass for the current model
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
-  virtual double calcMaturation(int age, int length, int growth,
-    const TimeClass* const TimeInfo, double weight);
+  virtual double calcMaturation(int age, int length, int growth, double weight);
   /**
    * \brief This function will print the maturation information
    * \param outfile is the ofstream that all the model information gets sent to
    */
   virtual void Print(ofstream& outfile) const;
 protected:
+  /**
+   * \brief This is the current time step for the maturation process within the model simulation
+   */
+  int currentmaturitystep;
   /**
    * \brief This is the IntVector of timesteps when maturation will take place
    */
@@ -338,12 +340,10 @@ public:
    * \param age is the age of the age-length cell that the maturation is being calculated on
    * \param length is the length of the age-length cell that the maturation is being calculated on
    * \param growth is the length of the age-length cell that the mature stock will grow into
-   * \param TimeInfo is the TimeClass for the current model
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
-  virtual double calcMaturation(int age, int length, int growth,
-    const TimeClass* const TimeInfo, double weight);
+  virtual double calcMaturation(int age, int length, int growth, double weight);
   /**
    * \brief This function will print the maturation information
    * \param outfile is the ofstream that all the model information gets sent to
@@ -423,12 +423,10 @@ public:
    * \param age is the age of the age-length cell that the maturation is being calculated on
    * \param length is the length of the age-length cell that the maturation is being calculated on
    * \param growth is the length of the age-length cell that the mature stock will grow into
-   * \param TimeInfo is the TimeClass for the current model
    * \param weight is the weight of the fish of the age-length cell that are maturing
    * \return maturation probability
    */
-  virtual double calcMaturation(int age, int length, int growth,
-    const TimeClass* const TimeInfo, double weight);
+  virtual double calcMaturation(int age, int length, int growth, double weight);
   /**
    * \brief This function will print the maturation information
    * \param outfile is the ofstream that all the model information gets sent to

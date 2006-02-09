@@ -85,16 +85,16 @@ int Parameter::isValidChar(int c) {
   }
 }
 
-CommentStream& operator >> (CommentStream& in, Parameter& p) {
-  in >> ws;
+CommentStream& operator >> (CommentStream& infile, Parameter& p) {
+  infile >> ws;
   int i = 0;
   char* tempString = new char[MaxStrLength];
-  while (p.isValidChar(in.peek()) && i < (MaxStrLength - 1)) {
-    if (in.fail() && !in.eof()) {
+  while (p.isValidChar(infile.peek()) && i < (MaxStrLength - 1)) {
+    if (infile.fail() && !infile.eof()) {
       delete[] tempString;
-      return in;
+      return infile;
     }
-    in.get(tempString[i]);
+    infile.get(tempString[i]);
     i++;
   }
 
@@ -115,19 +115,19 @@ CommentStream& operator >> (CommentStream& in, Parameter& p) {
   }
 
   delete[] tempString;
-  return in;
+  return infile;
 }
 
-istream& operator >> (istream& in, Parameter& p) {
-  in >> ws;
+istream& operator >> (istream& infile, Parameter& p) {
+  infile >> ws;
   int i = 0;
   char* tempString = new char[MaxStrLength];
-  while (p.isValidChar(in.peek()) && i < (MaxStrLength - 1)) {
-    if (in.fail() && !in.eof()) {
+  while (p.isValidChar(infile.peek()) && i < (MaxStrLength - 1)) {
+    if (infile.fail() && !infile.eof()) {
       delete[] tempString;
-      return in;
+      return infile;
     }
-    in.get(tempString[i]);
+    infile.get(tempString[i]);
     i++;
   }
 
@@ -148,5 +148,5 @@ istream& operator >> (istream& in, Parameter& p) {
   }
 
   delete[] tempString;
-  return in;
+  return infile;
 }

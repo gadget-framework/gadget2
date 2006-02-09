@@ -33,8 +33,18 @@ public:
    * \return name
    */
   char* getName() const { return name; };
-  friend CommentStream& operator >> (CommentStream& in, Parameter& p);
-  friend istream& operator >> (istream& in, Parameter& p);
+  /**
+   * \brief This operator will read data from a CommentStream into a Parameter
+   * \param infile is the CommentStream to read from
+   * \param p is the Parameter used to store the data
+   */
+  friend CommentStream& operator >> (CommentStream& infile, Parameter& p);
+  /**
+   * \brief This operator will read data from a istream into a Parameter
+   * \param infile is the istream to read from
+   * \param p is the Parameter used to store the data
+   */
+  friend istream& operator >> (istream& infile, Parameter& p);
   /**
    * \brief This operator will set the Parameter equal to an existing Parameter
    * \param p is the Parameter to copy

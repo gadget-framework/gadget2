@@ -104,7 +104,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
     //Weights at length are fixed to the value in the input file
     grower->implementGrowth(area, LgrpDiv);
     if (doesmature && maturity->isMaturationStep(TimeInfo))
-      Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeight(area), maturity, TimeInfo, area);
+      Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeight(area), maturity, area);
     else
       Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeight(area));
 
@@ -112,14 +112,14 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
     //New weights at length are calculated
     grower->implementGrowth(area, tmpPopulation[inarea], LgrpDiv);
     if (doesmature && maturity->isMaturationStep(TimeInfo))
-      Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeightIncrease(area), maturity, TimeInfo, area);
+      Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeightIncrease(area), maturity, area);
     else
       Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeightIncrease(area));
   }
 
   if (tagAlkeys.numTagExperiments() > 0) {
     if (doesmature && maturity->isMaturationStep(TimeInfo))
-      tagAlkeys[inarea].Grow(grower->getLengthIncrease(area), Alkeys[inarea], maturity, TimeInfo, area);
+      tagAlkeys[inarea].Grow(grower->getLengthIncrease(area), Alkeys[inarea], maturity, area);
     else
       tagAlkeys[inarea].Grow(grower->getLengthIncrease(area), Alkeys[inarea]);
   }
@@ -216,7 +216,7 @@ void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition,
   }
 }
 
-void Stock::updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss) {
+void Stock::addTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss) {
   tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->getName(), tagloss);
   allTags.resize(newtag);
   if (doesmature) {

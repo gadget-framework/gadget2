@@ -1,7 +1,6 @@
 #ifndef popratiovector_h
 #define popratiovector_h
 
-#include "conversionindex.h"
 #include "popratio.h"
 
 /**
@@ -37,8 +36,8 @@ public:
   void resize(PopRatio value);
   /**
    * \brief This will add one new entry to the vector
-   * \param num is the value of N of the new PopRatio entry
-   * \param rat is the value of R of the new PopRatio entry
+   * \param num is the value of N for the new PopRatio entry
+   * \param rat is the value of R for the new PopRatio entry
    */
   void resize(double* num, double rat);
   /**
@@ -64,7 +63,6 @@ public:
    * \return the value of the specified element
    */
   const PopRatio& operator [] (int pos) const { return v[pos]; };
-  void Sum(const PopRatioVector* const Number, const ConversionIndex& CI);
 protected:
   /**
    * \brief This is the vector of PopRatio values

@@ -63,6 +63,11 @@ public:
    * \return the value of the specified element
    */
   const PopInfo& operator [] (int pos) const { return v[pos]; };
+  /**
+   * \brief This function will sum the elements of an existing PopInfoVector, possibly allowing for the length grouping to be changed using a ConversionIndex
+   * \param Number is the PopInfoVector containing the elements to be summed
+   * \param CI is the ConversionIndex to be used to convert from one length grouping to another
+   */
   void Sum(const PopInfoVector* const Number, const ConversionIndex& CI);
 protected:
   /**

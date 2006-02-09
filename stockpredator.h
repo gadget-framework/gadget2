@@ -40,7 +40,7 @@ public:
    */
   virtual void Eat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   /**
-   * \brief This will calculate the amount of prey that is consumed by the predator
+   * \brief This will calculate the amount of prey that is consumed by the predator on a given area
    * \param stock is the AgeBandMatrix giving the amount of prey in the area
    * \param area is the area that the prey consumption is being calculated on
    */
@@ -62,13 +62,13 @@ public:
    */
   virtual void Print(ofstream& outfile) const;
   /**
-   * \brief This function will return the feeding level of the predator on a specified area
+   * \brief This function will return the feeding level of the predator on a given area
    * \param area is the area that the prey consumption is being calculated on
    * \return fphi, a DoubleVector containing the feeding level of the predator
    */
   const DoubleVector& getFPhi(int area) const { return fphi[this->areaNum(area)]; };
   /**
-   * \brief This function will return the maximum consumption by length group of the predator on a specified area
+   * \brief This function will return the maximum consumption by length group of the predator on a given area
    * \param area is the area that the prey consumption is being calculated on
    * \return maxconbylength, a DoubleVector containing the maximum consumption of the predator
    */
@@ -83,6 +83,11 @@ public:
    * \return maximum age
    */
   int maxAge() const { return Alkeys[0].maxAge(); };
+  /**
+   * \brief This will return the population of the predator on a given area
+   * \param area is the area that the consumption is being calculated on
+   * \return alkeys, a AgeBandMatrix containing the population of the predator
+   */
   const AgeBandMatrix& getAgeLengthKeys(int area) const { return Alkeys[this->areaNum(area)]; };
 protected:
   /**

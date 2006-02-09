@@ -30,6 +30,7 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
         (*v[age - minage])[l] += pop;
       }
     }
+
   } else {
     if (CI.isFiner()) {
       for (age = minaddage; age <= maxaddage; age++) {
@@ -45,6 +46,7 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
           (*v[age - minage])[l] += pop;
         }
       }
+
     } else {
       for (age = minaddage; age <= maxaddage; age++) {
         minl = max(CI.minPos(this->minLength(age)), Addition.minLength(age));
@@ -63,10 +65,6 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
 }
 
 void AgeBandMatrix::Subtract(const DoubleVector& Ratio, const ConversionIndex& CI) {
-
-  if (CI.isFiner() == 1)
-    handle.logMessage(LOGWARN, "Warning in agebandmatrix - target is finer for subtract");
-
   int i, j, j1, j2, offset;
   if (CI.isSameDl()) {
     offset = CI.getOffset();
@@ -86,26 +84,18 @@ void AgeBandMatrix::Subtract(const DoubleVector& Ratio, const ConversionIndex& C
   }
 }
 
-//-----------------------------------------------------------------
-//Multiply AgeBandMatrix by a age dependent vector for example
-//natural mortality. Investigate if Ratio should be allowed to be shorter.
 void AgeBandMatrix::Multiply(const DoubleVector& Ratio) {
   int i, j;
-  if (Ratio.Size() != nrow)
-    handle.logMessage(LOGWARN, "Warning in agebandmatrix - different sizes in multiply");
   for (i = 0; i < nrow; i++)
     for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
       (*v[i])[j] *= Ratio[i];
 }
 
-//--------------------------------------------------------------
-//Find the Column sum of an AgeBandMatrix.  In AgeBandMatrix it means
 //summation over all ages for each length.
 void AgeBandMatrix::sumColumns(PopInfoVector& Result) const {
   int i, j;
-  PopInfo nullpop;
   for (i = 0; i < Result.Size(); i++)
-    Result[i] = nullpop;
+    Result[i].setToZero();
   for (i = 0; i < nrow; i++)
     for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
       Result[j] += (*v[i])[j];
@@ -123,14 +113,14 @@ void AgeBandMatrix::IncrementAge() {
   i = nrow - 1;
   j1 = max(v[i]->minCol(), v[i - 1]->minCol());
   j2 = min(v[i]->maxCol(), v[i - 1]->maxCol());
-  //For the highest age group
+  //For the oldest age group
   for (j = j1; j < j2; j++)
     (*v[i])[j] += (*v[i - 1])[j];
   for (j = v[i - 1]->minCol(); j < v[i - 1]->maxCol(); j++)
     (*v[i - 1])[j].setToZero();
   //Now v[nrow-2] has been added to v[nrow-1] and then set to 0.
 
-  //For the other age groups.
+  //For the other age groups
   //At the end of each for (i=nrow-2...) loop, the intersection of v[i-1] with
   //v[i] has been copied from v[i-1] to v[i] and v[i-1] has been set to 0.
   for (i = nrow - 2; i > 0; i--) {
@@ -146,7 +136,7 @@ void AgeBandMatrix::IncrementAge() {
       (*v[i - 1])[j].setToZero();
   }
 
-  //set number in age zero to zero.
+  //set number in youngest age group to zero.
   for (j = v[0]->minCol(); j < v[0]->maxCol(); j++)
     (*v[0])[j].setToZero();
 }

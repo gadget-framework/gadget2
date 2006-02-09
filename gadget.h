@@ -57,6 +57,7 @@ const double verysmall = 1e-100;
 const double verybig = 1e+10;
 const int MaxMortality = 1000;
 const double MaxRatioConsumed = 0.95;
+const char chrComment = ';';
 const char sep = ' ';
 
 #ifndef TAB
@@ -167,7 +168,7 @@ To maintain version control of the source files, a CVS repository has been set u
 
 Gadget is a program that has been developed on a Unix computing platform, and is regularly compiled and run on machines running versions of Linux, Solaris and Cygwin (a Unix emulator for Microsoft Windows machines, see http://www.cygwin.com for more information).  By regularly compiling and running Gadget on a variety of computing platforms, it is hoped that the source code is compatible with as many computing platforms as possible.  The list of computing platforms, and C++ compilers, that Gadget is regularly tested on is:
 
-  \li Linux (Fedora Core 4), compiled using \c g++ versions 3.2.3, 4.0.2 and 4.1.0 (20051209 prerelease)
+  \li Linux (Fedora Core 4), compiled using \c g++ versions 3.2.3, 4.0.2 and 4.1.0 (20060203 prerelease)
   \li Solaris (SunOS 5.9), compiled using  \c g++ version 3.4.2
   \li Cygwin (1.5.18-1), compiled using  \c g++ version 3.4.4-1
 

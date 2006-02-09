@@ -152,7 +152,21 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void Migrate(const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will add a AgeBandMatrix to the current stock population
+   * \param Addition is the AgeBandMatrix that will be added to the population
+   * \param CI is the ConversionIndex that will convert between the length groups
+   * \param area is an integer to denote the internal area of interest
+   * \param ratio is a multiplicative constant applied
+   */
   void Add(const AgeBandMatrix& Addition, const ConversionIndex* const CI, int area, double ratio);
+  /**
+   * \brief This function will add a AgeBandMatrixRatioPtrVector to the current tagged stock population
+   * \param Addition is the AgeBandMatrixRatioPtrVector that will be added to the tagged population
+   * \param CI is the ConversionIndex that will convert between the length groups
+   * \param area is an integer to denote the internal area of interest
+   * \param ratio is a multiplicative constant applied
+   */
   void Add(const AgeBandMatrixRatioPtrVector& Addition, const ConversionIndex* const CI, int area, double ratio);
   /**
    * \brief This will return the prey information for the stock
@@ -169,13 +183,27 @@ public:
    * \return predator
    */
   PopPredator* getPredator() const;
+  /**
+   * \brief This will return the population of the stock on a given area
+   * \param area is the area identifier
+   * \return alkeys, a AgeBandMatrix containing the population of the stock
+   */
   AgeBandMatrix& getAgeLengthKeys(int area) { return Alkeys[this->areaNum(area)]; };
   /**
    * \brief This will return the length group information for the stock
    * \return LgrpDiv
    */
   const LengthGroupDivision* getLengthGroupDiv() const { return LgrpDiv; };
+  /**
+   * \brief This function will initialise the stock and set-up links to any related stocks
+   * \param stockvec is the StockPtrVector of all the available stocks
+   */
   void setStock(StockPtrVector& stockvec);
+  /**
+   * \brief This function will check to see if the age of the stock should be increased on the current timestep or not
+   * \param TimeInfo is the TimeClass for the current model
+   * \return 1 if the age of the stock should be increased, 0 otherwise
+   */
   int isBirthday(const TimeClass* const TimeInfo) const;
   /**
    * \brief This function will return the flag used to denote whether the stock is eaten or not
@@ -232,13 +260,41 @@ public:
    * \return maximum age
    */
   int maxAge() const { return Alkeys[0].maxAge(); };
+  /**
+   * \brief This will return the stocks that this stock will mature in to
+   * \return maturestocks, a StockPtrVector of the stocks that this stock will mature into
+   */
   const StockPtrVector& getMatureStocks();
+  /**
+   * \brief This will return the stocks that this stock will move in to
+   * \return transitionstocks, a StockPtrVector of the stocks that this stock will move into
+   */
   const StockPtrVector& getTransitionStocks();
+  /**
+   * \brief This will return the stocks that this stock will stray in to
+   * \return straystocks, a StockPtrVector of the stocks that this stock will stray into
+   */
   const StockPtrVector& getStrayStocks();
-  void updateTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss);
+  /**
+   * \brief This function will add details for a new tagging experiment on the current stock
+   * \param tagbyagelength is the AgeBandMatrixPtrVector of the new tagged population
+   * \param newtag is the Tags for the new tagging experiment
+   * \param tagloss is the proportion of tags that are lost for the new tagging experiment
+   */
+  void addTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss);
+  /**
+   * \brief This function will remove a tagging experiment from the current tagged stock population
+   * \param tagname is the name of the tagging experiment to be removed
+   */
   void deleteTags(const char* tagname);
 protected:
+  /**
+   * \brief This is the AgeBandMatrixPtrVector used to store information about the stock population
+   */
   AgeBandMatrixPtrVector Alkeys;
+  /**
+   * \brief This is the AgeBandMatrixRatioPtrVector used to store information about the tagged population from any tagging experiments performed on the stock
+   */
   AgeBandMatrixRatioPtrVector tagAlkeys;
   /**
    * \brief This is the TagPtrVector used to store information about the tagging experiments

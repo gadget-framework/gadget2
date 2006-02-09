@@ -55,8 +55,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
 }
 
 //Same program with certain number of fish made mature.
-void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total,
-  Maturity* const Mat, const TimeClass* const TimeInfo, int area) {
+void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total, Maturity* const Mat, int area) {
 
   int numTagExperiments = this->numTagExperiments();
   int i, lgrp, grow, maxlgrp, age, tag;
@@ -77,7 +76,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
       //The part that grows to or above the highest length group.
       for (lgrp = v[i]->maxCol() - 1; lgrp >= v[i]->maxCol() - maxlgrp; lgrp--) {
         for (grow = v[i]->maxCol() - lgrp - 1; grow < maxlgrp; grow++) {
-          ratio = Mat->calcMaturation(age, lgrp, grow, TimeInfo, Total[i + minage][lgrp].W);
+          ratio = Mat->calcMaturation(age, lgrp, grow, Total[i + minage][lgrp].W);
           for (tag = 0; tag < numTagExperiments; tag++) {
             tmp = Lgrowth[grow][lgrp] * (*(*v[i])[lgrp][tag].N);
             matnum[tag] += tmp * ratio;
@@ -90,18 +89,18 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
         if (isZero(number[tag])) {
           //no fish grow to this length cell
           (*(*v[i])[v[i]->maxCol() - 1][tag].N) = 0.0;
-          Mat->storeMatureStock(area, age, v[i]->maxCol() - 1, 0.0, TimeInfo, tag);
+          Mat->storeMatureTagStock(area, age, v[i]->maxCol() - 1, 0.0, tag);
         } else if (number[tag] - matnum[tag] < verysmall) {
           //all the fish that grow to this length cell mature
           (*(*v[i])[v[i]->maxCol() - 1][tag].N) = 0.0;
-          Mat->storeMatureStock(area, age, v[i]->maxCol() - 1, matnum[tag], TimeInfo, tag);
+          Mat->storeMatureTagStock(area, age, v[i]->maxCol() - 1, matnum[tag], tag);
         } else if (isZero(matnum[tag])) {
           //none of the fish that grow to this length cell mature
           (*(*v[i])[v[i]->maxCol() - 1][tag].N) = number[tag];
-          Mat->storeMatureStock(area, age, v[i]->maxCol() - 1, 0.0, TimeInfo, tag);
+          Mat->storeMatureTagStock(area, age, v[i]->maxCol() - 1, 0.0, tag);
         } else {
           (*(*v[i])[v[i]->maxCol() - 1][tag].N) = number[tag] - matnum[tag];
-          Mat->storeMatureStock(area, age, v[i]->maxCol() - 1, matnum[tag], TimeInfo, tag);
+          Mat->storeMatureTagStock(area, age, v[i]->maxCol() - 1, matnum[tag], tag);
         }
       }
 
@@ -113,7 +112,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
         }
 
         for (grow = 0; grow < maxlgrp; grow++) {
-          ratio = Mat->calcMaturation(age, lgrp, grow, TimeInfo, Total[i + minage][lgrp - grow].W);
+          ratio = Mat->calcMaturation(age, lgrp, grow, Total[i + minage][lgrp - grow].W);
           for (tag = 0; tag < numTagExperiments; tag++) {
             tmp = Lgrowth[grow][lgrp - grow] * (*(*v[i])[lgrp - grow][tag].N);
             matnum[tag] += tmp * ratio;
@@ -125,18 +124,18 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
           if (isZero(number[tag])) {
             //no fish grow to this length cell
             (*(*v[i])[lgrp][tag].N) = 0.0;
-            Mat->storeMatureStock(area, age, lgrp, 0.0, TimeInfo, tag);
+            Mat->storeMatureTagStock(area, age, lgrp, 0.0, tag);
           } else if (number[tag] - matnum[tag] < verysmall) {
             //all the fish that grow to this length cell mature
             (*(*v[i])[lgrp][tag].N) = 0.0;
-            Mat->storeMatureStock(area, age, lgrp, matnum[tag], TimeInfo, tag);
+            Mat->storeMatureTagStock(area, age, lgrp, matnum[tag], tag);
           } else if (isZero(matnum[tag])) {
             //none of the fish that grow to this length cell mature
             (*(*v[i])[lgrp][tag].N) = number[tag];
-            Mat->storeMatureStock(area, age, lgrp, 0.0, TimeInfo, tag);
+            Mat->storeMatureTagStock(area, age, lgrp, 0.0, tag);
           } else {
             (*(*v[i])[lgrp][tag].N) = number[tag] - matnum[tag];
-            Mat->storeMatureStock(area, age, lgrp, matnum[tag], TimeInfo, tag);
+            Mat->storeMatureTagStock(area, age, lgrp, matnum[tag], tag);
           }
         }
       }
@@ -149,7 +148,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
         }
 
         for (grow = 0; grow <= lgrp - v[i]->minCol(); grow++) {
-          ratio = Mat->calcMaturation(age, lgrp, grow, TimeInfo, Total[i + minage][lgrp - grow].W);
+          ratio = Mat->calcMaturation(age, lgrp, grow, Total[i + minage][lgrp - grow].W);
           for (tag = 0; tag < numTagExperiments; tag++) {
             tmp = Lgrowth[grow][lgrp - grow] * (*(*v[i])[lgrp - grow][tag].N);
             matnum[tag] += tmp * ratio;
@@ -161,18 +160,18 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
           if (isZero(number[tag])) {
             //no fish grow to this length cell
             (*(*v[i])[lgrp][tag].N) = 0.0;
-            Mat->storeMatureStock(area, age, lgrp, 0.0, TimeInfo, tag);
+            Mat->storeMatureTagStock(area, age, lgrp, 0.0, tag);
           } else if (number[tag] - matnum[tag] < verysmall) {
             //all the fish that grow to this length cell mature
             (*(*v[i])[lgrp][tag].N) = 0.0;
-            Mat->storeMatureStock(area, age, lgrp, matnum[tag], TimeInfo, tag);
+            Mat->storeMatureTagStock(area, age, lgrp, matnum[tag], tag);
           } else if (isZero(matnum[tag])) {
             //none of the fish that grow to this length cell mature
             (*(*v[i])[lgrp][tag].N) = number[tag];
-            Mat->storeMatureStock(area, age, lgrp, 0.0, TimeInfo, tag);
+            Mat->storeMatureTagStock(area, age, lgrp, 0.0, tag);
           } else {
             (*(*v[i])[lgrp][tag].N) = number[tag] - matnum[tag];
-            Mat->storeMatureStock(area, age, lgrp, matnum[tag], TimeInfo, tag);
+            Mat->storeMatureTagStock(area, age, lgrp, matnum[tag], tag);
           }
         }
       }

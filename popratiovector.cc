@@ -1,5 +1,4 @@
 #include "popratiovector.h"
-#include "charptrvector.h"
 #include "gadget.h"
 
 PopRatioVector::PopRatioVector(int sz, PopRatio initial) {

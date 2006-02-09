@@ -14,7 +14,6 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
   //Resize total using dummy variables tmppop and popmatrix.
   PopInfo tmppop;
   tmppop.N = 1.0;
-  tmppop.W = 1.0;
   PopInfoMatrix popmatrix(ages.Nrow(), LgrpDiv->numLengthGroups(), tmppop);
   total.resize(areas.Nrow(), 0, 0, popmatrix);
   this->Reset();
@@ -27,28 +26,18 @@ StockAggregator::~StockAggregator() {
 }
 
 void StockAggregator::Print(ofstream& outfile) const {
-  int i, j, k;
-
+  int i;
   for (i = 0; i < total.Size(); i++) {
     outfile << "\tInternal areas " << areas[i][0] << endl;
-    for (j = 0; j < total[i].Nrow(); j++) {
-      outfile << TAB;
-      for (k = 0; k < total[i].maxLength(j); k++)
-        outfile << setw(smallwidth) << total[i][j][k].N << sep;
-      outfile << endl;
-    }
+    total[i].printNumbers(outfile);
   }
   outfile.flush();
 }
 
 void StockAggregator::Reset() {
-  int i, j, k;
-  PopInfo nullpop;
-
+  int i;
   for (i = 0; i < total.Size(); i++)
-    for (j = 0; j < total[i].Nrow(); j++)
-      for (k = 0; k < total[i].maxLength(j); k++)
-        total[i][j][k] = nullpop;
+    total[i].setToZero();
 }
 
 void StockAggregator::Sum() {

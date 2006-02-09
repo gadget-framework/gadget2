@@ -308,7 +308,6 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   //create the initialPop object of the correct size
   PopInfo tmppop;
   tmppop.N = 1.0;
-  tmppop.W = 1.0;
   PopInfoMatrix popmatrix(noagegr, LgrpDiv->numLengthGroups(), tmppop);
   initialPop.resize(areas.Size(), minage, 0, popmatrix);
 
