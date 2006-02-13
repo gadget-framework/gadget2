@@ -54,10 +54,6 @@ public:
    */
   void Sum();
   /**
-   * \brief This function will aggregate the predation biomass data for age based predators
-   */
-  void AgeSum();
-  /**
    * \brief This function will aggregate the predation number data
    */
   void NumberSum();
@@ -102,6 +98,14 @@ protected:
    * \brief This is the DoubleMatrix used to temporarily store information when aggregating the predation
    */
   const DoubleMatrix* dptr;
+  /**
+   * \brief This is the AgeBandMatrix used to temporarily store information when aggregating the predation
+   */
+  const AgeBandMatrix* alk;
+  /**
+   * \brief This is the flag used to denote whether the predators are specified using age groups or length groups
+   */
+  int usepredages;
 };
 
 #endif

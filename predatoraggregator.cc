@@ -13,10 +13,9 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
   const PreyPtrVector& Preys, const IntMatrix& Areas,
   const LengthGroupDivision* const predLgrpDiv, const LengthGroupDivision* const preyLgrpDiv)
   : predators(Predators), preys(Preys), areas(Areas),
-    doeseat(Predators.Size(), Preys.Size(), 0), dptr(0) {
+    doeseat(Predators.Size(), Preys.Size(), 0), dptr(0), alk(0), usepredages(0) {
 
   int i, j;
-
   for (i = 0; i < predators.Size(); i++) {
     checkLengthGroupIsFiner(predators[i]->getLengthGroupDiv(), predLgrpDiv);
     predConv.AddRows(1, predators[i]->getLengthGroupDiv()->numLengthGroups(), -1);
@@ -45,11 +44,9 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
   const PreyPtrVector& Preys, const IntMatrix& Areas,
   const IntMatrix& predAges, const LengthGroupDivision* const preyLgrpDiv)
   : predators(Predators), preys(Preys), areas(Areas),
-    doeseat(Predators.Size(), Preys.Size(), 0), dptr(0) {
+    doeseat(Predators.Size(), Preys.Size(), 0), dptr(0), alk(0), usepredages(1) {
 
-  int i, j, k, l;
-  int minage, maxage;
-
+  int i, j, k, l, minage, maxage;
   for (i = 0; i < predators.Size(); i++) {
     minage = ((StockPredator*)(predators[i]))->minAge();
     maxage = ((StockPredator*)(predators[i]))->maxAge();
@@ -86,7 +83,6 @@ PredatorAggregator::~PredatorAggregator() {
 
 void PredatorAggregator::Print(ofstream& outfile) const {
   int i, j, k;
-
   for (i = 0; i < total.Size(); i++) {
     outfile << "\t\tInternal areas " << i << endl;
     for (j = 0; j < total[i]->Nrow(); j++) {
@@ -101,7 +97,6 @@ void PredatorAggregator::Print(ofstream& outfile) const {
 
 void PredatorAggregator::Reset() {
   int i, j, k;
-
   for (i = 0; i < total.Size(); i++)
     for (j = 0; j < total[i]->Nrow(); j++)
       for (k = 0; k < total[i]->Ncol(j); k++)
@@ -109,60 +104,42 @@ void PredatorAggregator::Reset() {
 }
 
 void PredatorAggregator::Sum() {
-  int g, h, i, j, k, l;
-
-  this->Reset();
-  //Sum over the appropriate preys, predators, areas and lengths.
-  for (g = 0; g < predators.Size(); g++) {
-    for (h = 0; h < preys.Size(); h++) {
-      if (doeseat[g][h]) {
-        for (l = 0; l < areas.Nrow(); l++) {
-          for (j = 0; j < areas.Ncol(l); j++) {
-            if (predators[g]->isInArea(areas[l][j]) && preys[h]->isInArea(areas[l][j])) {
-              dptr = &predators[g]->getConsumption(areas[l][j], preys[h]->getName());
-              for (k = 0; k < dptr->Nrow(); k++)
-                if (predConv[g][k] >= 0)
-                  for (i = 0; i < dptr->Ncol(k); i++)
-                    if (preyConv[h][i] >= 0)
-                      (*total[l])[predConv[g][k]][preyConv[h][i]] += (*dptr)[k][i];
-
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-//Sum the biomass for age-based predators
-void PredatorAggregator::AgeSum() {
   int g, h, i, j, k, l, m;
   double sum, consum;
-  const AgeBandMatrix* alk;
 
   this->Reset();
-  //Sum over the appropriate preys, predators, areas, ages and lengths.
+  //sum over the appropriate preys, predators, areas and lengths
   for (g = 0; g < predators.Size(); g++) {
     for (h = 0; h < preys.Size(); h++) {
       if (doeseat[g][h]) {
         for (l = 0; l < areas.Nrow(); l++) {
           for (j = 0; j < areas.Ncol(l); j++) {
             if (predators[g]->isInArea(areas[l][j]) && preys[h]->isInArea(areas[l][j])) {
-              alk = &((StockPredator*)(predators[g]))->getAgeLengthKeys(areas[l][j]);
               dptr = &predators[g]->getConsumption(areas[l][j], preys[h]->getName());
-              //Need to convert from length groups (in dptr) to age groups (in alk)
-              for (k = alk->minAge(); k <= alk->maxAge(); k++) {
-                if (predConv[g][k] >= 0) {
-                  for (i = 0; i < dptr->Ncol(); i++) {
-                    if (preyConv[h][i] >= 0) {
-                      sum = 0.0;
-                      consum = 0.0;
-                      for (m = 0; m < dptr->Nrow(); m++) {
-                        sum += (*alk)[k][m].N;
-                        consum += (*dptr)[m][i] * (*alk)[k][m].N;
+
+              if (usepredages == 0) {
+                for (k = 0; k < dptr->Nrow(); k++)
+                  if (predConv[g][k] >= 0)
+                    for (i = 0; i < dptr->Ncol(k); i++)
+                      if (preyConv[h][i] >= 0)
+                        (*total[l])[predConv[g][k]][preyConv[h][i]] += (*dptr)[k][i];
+
+              } else {
+                //need to convert from length groups to age groups
+                alk = &((StockPredator*)(predators[g]))->getAgeLengthKeys(areas[l][j]);
+                for (k = alk->minAge(); k <= alk->maxAge(); k++) {
+                  if (predConv[g][k] >= 0) {
+                    for (i = 0; i < dptr->Ncol(); i++) {
+                      if (preyConv[h][i] >= 0) {
+                        sum = 0.0;
+                        consum = 0.0;
+                        for (m = 0; m < dptr->Nrow(); m++) {
+                          sum += (*alk)[k][m].N;
+                          consum += (*dptr)[m][i] * (*alk)[k][m].N;
+                        }
+                        if (!isZero(sum))
+                          (*total[l])[predConv[g][k]][preyConv[h][i]] += consum / sum;
                       }
-                      if (!isZero(sum))
-                        (*total[l])[predConv[g][k]][preyConv[h][i]] += consum / sum;
                     }
                   }
                 }
@@ -175,13 +152,11 @@ void PredatorAggregator::AgeSum() {
   }
 }
 
-//Sum the numbers (not biomass)
 void PredatorAggregator::NumberSum() {
   int g, h, i, j, k, l;
   const PopInfoVector* preymeanw;
 
   this->Reset();
-  //Sum over the appropriate preys, predators, areas and lengths.
   for (g = 0; g < predators.Size(); g++) {
     for (h = 0; h < preys.Size(); h++) {
       if (doeseat[g][h]) {

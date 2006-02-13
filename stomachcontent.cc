@@ -187,10 +187,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
 }
 
 void SC::aggregate(int i) {
-  if (usepredages)
-    aggregator[i]->AgeSum();
-  else
-    aggregator[i]->Sum();
+  aggregator[i]->Sum();
 }
 
 double SC::calcLikelihood(const TimeClass* const TimeInfo) {
