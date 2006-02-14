@@ -20,7 +20,7 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
 
   for (i = 0; i < fleets.Size(); i++)
     for (j = 0; j < stocks.Size(); j++)
-      if (fleets[i]->getPredator()->doesEat(stocks[i]->getPrey()->getName()))
+      if (fleets[i]->getPredator()->doesEat(stocks[j]->getPrey()->getName()))
         doescatch[i][j] = 1;
 
   //Resize total using dummy variables tmppop and popmatrix.
