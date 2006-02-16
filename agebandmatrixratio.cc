@@ -12,7 +12,7 @@ AgeBandMatrixRatio::AgeBandMatrixRatio(const AgeBandMatrixRatio& initial)
     for (i = 0; i < nrow; i++)
       v[i] = new PopRatioIndexVector(initial[i + minage]);
   } else
-      v = 0;
+    v = 0;
 }
 
 AgeBandMatrixRatio::AgeBandMatrixRatio(int age, const IntVector& minl,
@@ -24,7 +24,7 @@ AgeBandMatrixRatio::AgeBandMatrixRatio(int age, const IntVector& minl,
     for (i = 0; i < nrow; i++)
       v[i] = new PopRatioIndexVector(size[i], minl[i]);
   } else
-      v = 0;
+    v = 0;
 }
 
 AgeBandMatrixRatio::AgeBandMatrixRatio(int age, const PopRatioIndexVector& initial)

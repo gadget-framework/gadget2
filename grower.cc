@@ -65,6 +65,11 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     beta.Inform(keeper);
     readWordAndVariable(infile, "maxlengthgroupgrowth", maxlengthgroupgrowth);
 
+    if (maxlengthgroupgrowth > LgrpDiv->numLengthGroups()) {
+      handle.logMessage(LOGWARN, "Warning in grower - maxlengthgroupgrowth is greater than number of length groups");
+      maxlengthgroupgrowth = LgrpDiv->numLengthGroups();
+    }
+
     part1.resize(maxlengthgroupgrowth + 1, 0.0);
     part2.resize(maxlengthgroupgrowth + 1, 0.0);
     part4.resize(maxlengthgroupgrowth + 1, 0.0);
