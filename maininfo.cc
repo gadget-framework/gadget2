@@ -244,6 +244,11 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
   handle.logMessage(LOGINFO, "using data from directory:", inputdir);
   handle.logMessage(LOGMESSAGE, ""); //write a blank line to the log file
 
+  //JMB check to see that the input and output filenames are different
+  //Otherwise Gadget will over-write the inputfile with a blank outputfile ...
+  if (strcasecmp(strInitialParamFile, printinfo.getParamOutFile()) == 0)
+    handle.logFileMessage(LOGFAIL, "the parameter input and output filenames are the same");
+
   //JMB check to see if we can actually open required files ...
   ifstream tmpin;
   if (givenInitialParam == 1) {
