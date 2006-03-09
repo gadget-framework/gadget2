@@ -61,7 +61,7 @@ private:
    */
   CharPtrVector prednames;
   /**
-   * \brief This is the FleetPtrVector of the predators that will be checked for understocking
+   * \brief This is the PredatorPtrVector of the predators that will be checked for understocking
    */
   PredatorPtrVector predators;
   /**
