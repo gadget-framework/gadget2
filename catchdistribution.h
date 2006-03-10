@@ -7,6 +7,7 @@
 #include "actionattimes.h"
 #include "ludecomposition.h"
 #include "multinomial.h"
+#include "charptrvector.h"
 #include "formulavector.h"
 
 /**

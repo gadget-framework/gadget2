@@ -7,41 +7,37 @@ extern ErrorHandler handle;
 
 AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  int i, j, tmpint = 0;
+  int i, tmpint = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "areas") == 0) {
-    while (isdigit(infile.peek()) && !infile.eof()) {
-      infile >> tmpint >> ws;
-      modelAreas.resize(1, tmpint);
-    }
-  } else
+  if (strcasecmp(text, "areas") != 0)
     handle.logFileUnexpected(LOGFAIL, "areas", text);
 
-  int noareas = modelAreas.Size();
-  size.resize(noareas, 0.0);
+  while (isdigit(infile.peek()) && !infile.eof()) {
+    infile >> tmpint >> ws;
+    modelAreas.resize(1, tmpint);
+  }
+
   infile >> text >> ws;
-  if (strcasecmp(text, "size") == 0) {
-    for (i = 0; i < noareas; i++)
-      infile >> size[i] >> ws;
-  } else
+  if (strcasecmp(text, "size") != 0)
     handle.logFileUnexpected(LOGFAIL, "size", text);
 
-  for (i = 0; i < noareas; i++)
-    if (isZero(size[i]))
-      handle.logFileMessage(LOGWARN, "found area with a size of zero");
+  size.resize(modelAreas.Size(), 0.0);
+  for (i = 0; i < modelAreas.Size(); i++)
+    if (!(infile >> size[i]))
+      handle.logFileMessage(LOGFAIL, "invalid format for area size vector");
 
   infile >> text >> ws;
   if (strcasecmp(text, "temperature") != 0)
     handle.logFileUnexpected(LOGFAIL, "temperature", text);
 
   //Now the data which is in the following format: year step area temperature.
-  temperature.AddRows(TimeInfo->numTotalSteps() + 1, noareas, 0.0);
+  temperature.AddRows(TimeInfo->numTotalSteps() + 1, modelAreas.Size(), 0.0);
   IntVector Years, Steps;
   int timeid, areaid, keepdata, year, step, area, count;
-  double tmpnumber;
+  char c;
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 4)
@@ -50,7 +46,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   year = step = area = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
-    infile >> year >> step >> area >> tmpnumber >> ws;
+    infile >> year >> step >> area >> ws;
 
     //check if the year and step are in the simulation
     timeid = -1;
@@ -72,7 +68,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
 
     //if area is in modelAreas find areaid, else dont keep the data
     areaid = -1;
-    for (i = 0; i < noareas; i++)
+    for (i = 0; i < modelAreas.Size(); i++)
       if (area == modelAreas[i])
         areaid = i;
 
@@ -81,16 +77,22 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
 
     if (keepdata == 0) {
       //temperature data is required, so store it
-      temperature[timeid][areaid] = tmpnumber;
+      infile >> temperature[timeid][areaid] >> ws;
       count++;
+    } else { //temperature data not required - skip rest of line
+      infile.get(c);
+      while (c != '\n' && !infile.eof())
+        infile.get(c);
+      infile >> ws;
     }
   }
+
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in area - found no temperature data");
-  if (count != (temperature.Nrow() - 1) * noareas)
+  if (count != (temperature.Nrow() - 1) * modelAreas.Size())
     handle.logMessage(LOGWARN, "Warning in area - temperature data doesnt span time range");
   handle.logMessage(LOGMESSAGE, "Read temperature data - number of entries", count);
-  handle.logMessage(LOGMESSAGE, "Read area file - number of areas", noareas);
+  handle.logMessage(LOGMESSAGE, "Read area file - number of areas", modelAreas.Size());
 }
 
 int AreaClass::getInnerArea(int area) const {

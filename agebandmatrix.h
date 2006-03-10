@@ -1,8 +1,8 @@
 #ifndef agebandmatrix_h
 #define agebandmatrix_h
 
-#include "areatime.h"
 #include "conversionindex.h"
+#include "doublematrix.h"
 #include "popinfomatrix.h"
 #include "popinfoindexvector.h"
 

@@ -49,6 +49,10 @@ void TimeVariable::readFromFile(CommentStream& infile,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
+  //JMB need to initialise init to something
+  init.setValue(0.0);
+  init.Inform(keeper);
+
   infile >> text >> ws;  //description of time variable
   keeper->addString(text);
 
@@ -100,19 +104,16 @@ void TimeVariable::readFromFile(CommentStream& infile,
   keeper->clearLast();
 
   //check if years and steps are ordered in time
-  for (i = 0; i < years.Size() - 1; i++) {
+  for (i = 0; i < years.Size() - 1; i++)
     if ((years[i + 1] < years[i]) ||
        (years[i + 1] == years[i] && steps[i + 1] <= steps[i]))
       handle.logMessage(LOGFAIL, "Error in timevariable - years and steps are not increasing");
-  }
 
   check = -1;
-  for (i = 0; i < years.Size(); i++) {
-    if (years[i] == TimeInfo->getFirstYear() && steps[i] == TimeInfo->getFirstStep()) {
+  for (i = 0; i < years.Size(); i++)
+    if (years[i] == TimeInfo->getFirstYear() && steps[i] == TimeInfo->getFirstStep())
       check = i;
-      break;
-    }
-  }
+
   if (check == -1)
     handle.logMessage(LOGFAIL, "Error in timevariable - nothing specified for first timestep of the simulation");
 }

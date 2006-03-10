@@ -7,6 +7,7 @@
 #include "charptrvector.h"
 #include "hasname.h"
 #include "livesonareas.h"
+#include "doublematrix.h"
 #include "agebandmatrix.h"
 #include "keeper.h"
 #include "gadget.h"
