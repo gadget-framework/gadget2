@@ -187,7 +187,6 @@ void OptInfoSimann::OptimiseLikelihood() {
   int nrej = 0;         //The number of rejected function evaluations
   int naccmet = 0;      //The number of metropolis accepted function evaluations
   int quit = 0;         //Used to check the exit criteria
-  int max = 0;          //Used to denote that the function should be minimised
 
   double p, pp, ratio, nsdiv;
   double fopt, funcval, trialf;
@@ -215,15 +214,13 @@ void OptInfoSimann::OptimiseLikelihood() {
 
   //funcval is the function value at x
   funcval = EcoSystem->SimulateAndUpdate(x);
+  //the function is to be minimised so switch the sign of funcval (and trialf)
+  funcval = -funcval;
   offset = EcoSystem->getFuncEval();  //number of function evaluations done before loop
   iters = offset;
   nacc++;
   cs /= lratio;  //JMB save processing time
   nsdiv = 1.0 / ns;
-
-  //If the function is to be minimised, switch the sign of the function
-  if (!max)
-    funcval = -funcval;
 
   if (funcval != funcval) { //check for NaN
     handle.logMessage(LOGINFO, "Error starting Simulated Annealing optimisation with f(x) = infinity");
@@ -281,10 +278,9 @@ void OptInfoSimann::OptimiseLikelihood() {
               trialx[i] = x[i];
           }
 
-          //Evaluate the function with the trial point trialx and return as trialf
+          //Evaluate the function with the trial point trialx and return as -trialf
           trialf = EcoSystem->SimulateAndUpdate(trialx);
-          if (!max)
-            trialf = -trialf;
+          trialf = -trialf;
 
           //If too many function evaluations occur, terminate the algorithm
           iters = EcoSystem->getFuncEval() - offset;
