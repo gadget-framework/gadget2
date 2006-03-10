@@ -5,7 +5,8 @@
 
 extern ErrorHandler handle;
 
-AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
+AreaClass::AreaClass(CommentStream& infile,
+  Keeper* const keeper, const TimeClass* const TimeInfo) {
 
   int i, tmpint = 0;
   char text[MaxStrLength];
@@ -20,14 +21,17 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
     modelAreas.resize(1, tmpint);
   }
 
+  keeper->addString("area");
   infile >> text >> ws;
   if (strcasecmp(text, "size") != 0)
     handle.logFileUnexpected(LOGFAIL, "size", text);
 
-  size.resize(modelAreas.Size(), 0.0);
+  size.resize(modelAreas.Size(), keeper);
   for (i = 0; i < modelAreas.Size(); i++)
     if (!(infile >> size[i]))
       handle.logFileMessage(LOGFAIL, "invalid format for area size vector");
+  size.Inform(keeper);
+  keeper->clearLast();
 
   infile >> text >> ws;
   if (strcasecmp(text, "temperature") != 0)
@@ -37,7 +41,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   temperature.AddRows(TimeInfo->numTotalSteps() + 1, modelAreas.Size(), 0.0);
   IntVector Years, Steps;
   int timeid, areaid, keepdata, year, step, area, count;
-  char c;
+  double tmp;
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 4)
@@ -46,7 +50,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
   year = step = area = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
-    infile >> year >> step >> area >> ws;
+    infile >> year >> step >> area >> tmp >> ws;
 
     //check if the year and step are in the simulation
     timeid = -1;
@@ -77,13 +81,8 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
 
     if (keepdata == 0) {
       //temperature data is required, so store it
-      infile >> temperature[timeid][areaid] >> ws;
+      temperature[timeid][areaid] = tmp;
       count++;
-    } else { //temperature data not required - skip rest of line
-      infile.get(c);
-      while (c != '\n' && !infile.eof())
-        infile.get(c);
-      infile >> ws;
     }
   }
 
@@ -96,8 +95,7 @@ AreaClass::AreaClass(CommentStream& infile, const TimeClass* const TimeInfo) {
 }
 
 int AreaClass::getInnerArea(int area) const {
-  int innerarea = -1;
-  int i;
+  int i, innerarea = -1;
   for (i = 0; i < modelAreas.Size(); i++)
     if (area == modelAreas[i])
       innerarea = i;

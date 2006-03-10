@@ -308,7 +308,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
   subfile.open(filename, ios::in);
   handle.checkIfFailure(subfile, filename);
   handle.Open(filename);
-  Area = new AreaClass(subcomment, TimeInfo);
+  Area = new AreaClass(subcomment, keeper, TimeInfo);
   handle.Close();
   subfile.close();
   subfile.clear();

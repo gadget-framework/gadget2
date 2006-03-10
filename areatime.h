@@ -2,7 +2,9 @@
 #define areatime_h
 
 #include "doublematrix.h"
+#include "formulavector.h"
 #include "commentstream.h"
+#include "keeper.h"
 
 class AreaClass;
 class TimeClass;
@@ -18,9 +20,10 @@ public:
   /**
    * \brief This is the AreaClass constructor
    * \param infile is the CommentStream to read the area data from
+   * \param keeper is the Keeper for the current model
    * \param TimeInfo is the TimeClass for the current model
    */
-  AreaClass(CommentStream& infile, const TimeClass* const TimeInfo);
+  AreaClass(CommentStream& infile, Keeper* const keeper, const TimeClass* const TimeInfo);
   /**
    * \brief This is the default AreaClass destructor
    */
@@ -61,9 +64,9 @@ protected:
    */
   IntVector modelAreas;
   /**
-   * \brief This is the DoubleVector of the size of the areas in the current model
+   * \brief This is the FormulaVector of the size of the areas in the current model
    */
-  DoubleVector size;
+  FormulaVector size;
   /**
    * \brief This is the DoubleMatrix of the temperature, for each timestep, of the areas in the current model
    */
