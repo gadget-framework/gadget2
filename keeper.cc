@@ -544,7 +544,7 @@ void Keeper::checkBounds(const LikelihoodPtrVector& likevec) const {
       handle.logMessage(LOGFAIL, "Error in keeper - initial value outside bounds for parameter", switches[i].getName());
     if (upperbds[i] < lowerbds[i])
       handle.logMessage(LOGFAIL, "Error in keeper - upper bound lower than lower bound for parameter", switches[i].getName());
-    if ((lowerbds[i] < 0.0) && (upperbds[i] > 0.0))
+    if ((lowerbds[i] < 0.0) && (upperbds[i] > 0.0) && (opt[i] == 1))
       handle.logMessage(LOGWARN, "Warning in keeper - bounds span zero for parameter", switches[i].getName());
   }
 }
