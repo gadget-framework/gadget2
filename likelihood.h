@@ -1,13 +1,13 @@
 #ifndef likelihood_h
 #define likelihood_h
 
-#include "areatime.h"
 #include "stockptrvector.h"
 #include "fleetptrvector.h"
 #include "printinfo.h"
 #include "hasname.h"
 #include "gadget.h"
 
+class TimeClass;
 class Keeper;
 
 enum LikelihoodType { SURVEYINDICESLIKELIHOOD = 1, UNDERSTOCKINGLIKELIHOOD,

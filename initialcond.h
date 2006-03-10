@@ -2,6 +2,7 @@
 #define initialcond_h
 
 #include "formulamatrixptrvector.h"
+#include "areatime.h"
 #include "conversionindex.h"
 #include "commentstream.h"
 #include "agebandmatrixptrvector.h"

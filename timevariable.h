@@ -2,6 +2,7 @@
 #define timevariable_h
 
 #include "formulavector.h"
+#include "areatime.h"
 #include "doublematrix.h"
 #include "commentstream.h"
 

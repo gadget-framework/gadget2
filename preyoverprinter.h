@@ -4,9 +4,6 @@
 #include "printer.h"
 #include "preyoveraggregator.h"
 
-//class PreyOverPrinter;
-//class PreyOverAggregator;
-
 /**
  * \class PreyOverPrinter
  * \brief This is the class used to print the overconsumption information for one or more preys

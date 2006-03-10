@@ -2,6 +2,8 @@
 #define readfunc_h
 
 #include "doublematrix.h"
+#include "areatime.h"
+#include "charptrvector.h"
 #include "formulamatrixptrvector.h"
 #include "commentstream.h"
 

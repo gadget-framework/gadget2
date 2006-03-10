@@ -5,6 +5,7 @@
 #include "actionattimes.h"
 #include "commentstream.h"
 #include "charptrvector.h"
+#include "doublematrix.h"
 #include "intmatrix.h"
 
 /**

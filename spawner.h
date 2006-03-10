@@ -145,7 +145,7 @@ protected:
    */
   LengthGroupDivision* spawnLgrpDiv;
   /**
-   * \brief This is the DoubleMatrix used to store the numnbers of the recruits, if the spawning process is to include the creation of the recruits
+   * \brief This is the DoubleMatrix used to store the numbers of the recruits, if the spawning process is to include the creation of the recruits
    */
   DoubleMatrix spawnNumbers;
   /**

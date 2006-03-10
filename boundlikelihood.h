@@ -2,6 +2,7 @@
 #define boundlikelihood_h
 
 #include "likelihood.h"
+#include "areatime.h"
 #include "commentstream.h"
 #include "intvector.h"
 #include "doublevector.h"

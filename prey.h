@@ -8,6 +8,7 @@
 #include "hasname.h"
 #include "livesonareas.h"
 #include "doublematrix.h"
+#include "areatime.h"
 #include "agebandmatrix.h"
 #include "keeper.h"
 #include "gadget.h"
