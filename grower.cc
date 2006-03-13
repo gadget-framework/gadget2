@@ -205,6 +205,9 @@ void Grower::Reset() {
     for (i = maxlengthgroupgrowth - 2; i >= 0; i--)
       part2[i] = part2[i + 1] * (beta + tmpmax - i - 1);
 
+  //JMB this will never change so we can set it once
+  part4[0] = 1.0;
+
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset grower data");
 }

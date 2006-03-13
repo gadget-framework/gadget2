@@ -62,15 +62,14 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   readWordAndVariable(infile, "minlength", minlength);
   readWordAndVariable(infile, "maxlength", maxlength);
   readWordAndVariable(infile, "dl", dl);
+  LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
+  if (LgrpDiv->Error() || isZero(dl))
+    handle.logMessage(LOGFAIL, "Error in stock - failed to create length group");
 
   //JMB need to read the location of the reference weights file
   char refweight[MaxStrLength];
   strncpy(refweight, "", MaxStrLength);
   readWordAndValue(infile, "refweightfile", refweight);
-
-  LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
-  if (LgrpDiv->Error())
-    handle.logMessage(LOGFAIL, "Error in stock - failed to create length group");
 
   //JMB need to set the lowerlgrp and size vectors to a default
   //value to allow the whole range of lengths to be calculated

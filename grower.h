@@ -173,6 +173,14 @@ protected:
    */
   int maxlengthgroupgrowth;
   /**
+   * \brief This is the mean growth, as calculated for this length group by the GrowthCalc function
+   */
+  double growth;
+  /**
+   * \brief This is the value of alpha in the beta binomial distribution
+   */
+  double alpha;
+  /**
    * \brief This is the value of beta in the beta binomial distribution
    */
   Formula beta;

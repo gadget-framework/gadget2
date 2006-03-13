@@ -9,22 +9,16 @@ extern ErrorHandler handle;
 void Grower::implementGrowth(int area, const PopInfoVector& NumberInArea,
   const LengthGroupDivision* const Lengths) {
 
-  int lgroup, j;
-  double meanw, dw;
-  double growth, alpha, tmppart3, tmpMeanLength;
-
-  if (isZero(Lengths->dl()))
-    handle.logMessage(LOGFAIL, "Error in growth - received invalid value for length step");
-
-  int inarea = this->areaNum(area);
+  int lgroup, j, inarea = this->areaNum(area);
+  double meanw, dw, tmppart3, tmpweight;
   double tmpMult = growthcalc->getMult();
   double tmpPower = growthcalc->getPower();
-  double tmpDl = 1.0 / Lengths->dl();
+  double tmpDl = 1.0 / Lengths->dl();  //JMB no need to check zero here
 
   for (lgroup = 0; lgroup < Lengths->numLengthGroups(); lgroup++) {
     meanw = 0.0;
     part3 = 1.0;
-    tmpMeanLength = (tmpPower * Lengths->dl()) / Lengths->meanLength(lgroup);
+    tmpweight = (NumberInArea[lgroup].W * tmpPower * Lengths->dl()) / Lengths->meanLength(lgroup);
     growth = interpLengthGrowth[inarea][lgroup] * tmpDl;
     if (growth >= maxlengthgroupgrowth)
       growth = double(maxlengthgroupgrowth) - 0.1;
@@ -34,8 +28,7 @@ void Grower::implementGrowth(int area, const PopInfoVector& NumberInArea,
     for (j = 0; j < maxlengthgroupgrowth; j++)
       part3 *= (alpha + beta + double(j));
 
-    tmppart3 = 1 / part3;
-    part4[0] = 1.0;
+    tmppart3 = 1.0 / part3;
     part4[1] = alpha;
     if (maxlengthgroupgrowth > 1)
       for (j = 2; j <= maxlengthgroupgrowth; j++)
@@ -50,7 +43,7 @@ void Grower::implementGrowth(int area, const PopInfoVector& NumberInArea,
     } else {
       for (j = 0; j <= maxlengthgroupgrowth; j++) {
         (*lgrowth[inarea])[j][lgroup] = part1[j] * part2[j] * tmppart3 * part4[j];
-        (*wgrowth[inarea])[j][lgroup] = NumberInArea[lgroup].W * tmpMeanLength * j;
+        (*wgrowth[inarea])[j][lgroup] = tmpweight * j;
         meanw += (*wgrowth[inarea])[j][lgroup] * (*lgrowth[inarea])[j][lgroup];
       }
 
@@ -64,13 +57,9 @@ void Grower::implementGrowth(int area, const PopInfoVector& NumberInArea,
 //Uses only the length increase in interpLengthGrowth to calculate lgrowth.
 void Grower::implementGrowth(int area, const LengthGroupDivision* const Lengths) {
 
-  int lgroup, j;
-  double growth, alpha, tmppart3;
-
-  int inarea = this->areaNum(area);
-  if (isZero(Lengths->dl()))
-    handle.logMessage(LOGFAIL, "Error in growth - received invalid value for length step");
-  double tmpDl = 1.0 / Lengths->dl();
+  int lgroup, j, inarea = this->areaNum(area);
+  double tmppart3;
+  double tmpDl = 1.0 / Lengths->dl();  //JMB no need to check zero here
 
   for (lgroup = 0; lgroup < Lengths->numLengthGroups(); lgroup++) {
     part3 = 1.0;
@@ -83,8 +72,7 @@ void Grower::implementGrowth(int area, const LengthGroupDivision* const Lengths)
     for (j = 0; j < maxlengthgroupgrowth; j++)
       part3 *= (alpha + beta + double(j));
 
-    tmppart3 = 1 / part3;
-    part4[0] = 1.0;
+    tmppart3 = 1.0 / part3;
     part4[1] = alpha;
     if (maxlengthgroupgrowth > 1)
       for (j = 2; j <= maxlengthgroupgrowth; j++)
