@@ -74,7 +74,7 @@ ExpSelectFunc::~ExpSelectFunc() {
 }
 
 double ExpSelectFunc::calculate(double len) {
-  return (1.0 / (1 + exp(coeff[0] * (len - coeff[1]))));
+  return (1.0 / (1.0 + exp(coeff[0] * (len - coeff[1]))));
 }
 
 // ********************************************************
