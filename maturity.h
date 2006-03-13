@@ -53,7 +53,7 @@ public:
    * \brief This will reset the maturation information for the current model run
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void Reset(const TimeClass* const TimeInfo) = 0;
+  virtual void Reset(const TimeClass* const TimeInfo);
   /**
    * \brief This will check if the maturation process will take place on the current timestep
    * \param TimeInfo is the TimeClass for the current model
@@ -122,9 +122,17 @@ protected:
    */
   CharPtrVector matureStockNames;
   /**
-   * \brief This is the DoubleVector of the ratio of the immature stock to mature into each mature stock
+   * \brief This is the FormulaVector of the ratio of the immature stock to mature into each mature stock
    */
-  DoubleVector matureRatio;
+  FormulaVector matureRatio;
+  /**
+   * \brief This is used to scale the ratios to ensure that they will always sum to 1
+   */
+  double ratioscale;
+  /**
+   * \brief This is the IntVector used as an index for the ratio vector
+   */
+  IntVector ratioindex;
   /**
    * \brief This is the ConversionIndexPtrVector used to convert from the immature stock lengths to the mature stock lengths
    */

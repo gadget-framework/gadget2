@@ -16,7 +16,7 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
 
   keeper->addString("stray");
   int i, tmpint = 0;
-  double tmpratio;
+  ratioscale = 1.0; //JMB used to scale the ratios to ensure that they sum to 1
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -51,23 +51,26 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
   for (i = 0; i < strayArea.Size(); i++)
     strayArea[i] = Area->getInnerArea(strayArea[i]);
 
-  infile >> text;
-  if (strcasecmp(text, "straystocksandratios") == 0) {
-    i = 0;
-    infile >> text >> ws;
-    while (strcasecmp(text, "proportionfunction") != 0 && !infile.eof()) {
-      strayStockNames.resize(new char[strlen(text) + 1]);
-      strcpy(strayStockNames[i], text);
-      infile >> tmpratio >> text >> ws;
-      strayRatio.resize(1, tmpratio);
-      i++;
-    }
-  } else
+  infile >> text >> ws;
+  if (strcasecmp(text, "straystocksandratios") != 0)
     handle.logFileUnexpected(LOGFAIL, "straystocksandratios", text);
+
+  i = 0;
+  infile >> text >> ws;
+  while (strcasecmp(text, "proportionfunction") != 0 && !infile.eof()) {
+    strayStockNames.resize(new char[strlen(text) + 1]);
+    strcpy(strayStockNames[i], text);
+    strayRatio.resize(1, keeper);
+    ratioindex.resize(1, 0);
+    if (!(infile >> strayRatio[i]))
+      handle.logFileMessage(LOGFAIL, "invalid format for stray ratio");
+
+    infile >> text >> ws;
+    i++;
+  }
 
   if (infile.eof())
     handle.logFileEOFMessage(LOGFAIL);
-
   if (strcasecmp(text, "proportionfunction") == 0) {
     infile >> text >> ws;
     if (strcasecmp(text, "constant") == 0)
@@ -104,14 +107,11 @@ StrayData::~StrayData() {
 
 void StrayData::setStock(StockPtrVector& stockvec) {
   int i, j, index;
-  DoubleVector tmpratio;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < strayStockNames.Size(); j++)
-      if (strcasecmp(stockvec[i]->getName(), strayStockNames[j]) == 0) {
+      if (strcasecmp(stockvec[i]->getName(), strayStockNames[j]) == 0)
         strayStocks.resize(stockvec[i]);
-        tmpratio.resize(1, strayRatio[j]);
-      }
 
   if (strayStocks.Size() != strayStockNames.Size()) {
     handle.logMessage(LOGWARN, "Error in straying data - failed to match straying stocks");
@@ -122,10 +122,13 @@ void StrayData::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  strayRatio.Reset();
-  strayRatio = tmpratio;
+  //JMB ensure that the ratio vector is indexed in the right order
+  for (i = 0; i < strayStocks.Size(); i++)
+    for (j = 0; j < strayStockNames.Size(); j++)
+      if (strcasecmp(strayStocks[i]->getName(), strayStockNames[j]) == 0)
+        ratioindex[i] = j;
 
-  //JMB - check that the straying stocks are defined on the areas
+  //JMB check that the straying stocks are defined on all the areas
   int minStrayAge = 9999;
   int maxStrayAge = 0;
   double minlength = 9999.0;
@@ -190,20 +193,22 @@ void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
 
 void StrayData::addStrayStock(int area, const TimeClass* const TimeInfo) {
 
-  int s, inarea = this->areaNum(area);
-  for (s = 0; s < strayStocks.Size(); s++) {
-    if (!strayStocks[s]->isInArea(area))
+  int i, inarea = this->areaNum(area);
+  double ratio;
+  for (i = 0; i < strayStocks.Size(); i++) {
+    if (!strayStocks[i]->isInArea(area))
       handle.logMessage(LOGFAIL, "Error in straying - stray stock doesnt live on area", area);
 
-    if (strayStocks[s]->isBirthday(TimeInfo)) {
+    if (strayStocks[i]->isBirthday(TimeInfo)) {
       Storage[inarea].IncrementAge();
       if (tagStorage.numTagExperiments() > 0)
         tagStorage[inarea].IncrementAge(Storage[inarea]);
     }
 
-    strayStocks[s]->Add(Storage[inarea], CI[s], area, strayRatio[s]);
+    ratio = strayRatio[ratioindex[i]] * ratioscale;
+    strayStocks[i]->Add(Storage[inarea], CI[i], area, ratio);
     if (tagStorage.numTagExperiments() > 0)
-      strayStocks[s]->Add(tagStorage, CI[s], area, strayRatio[s]);
+      strayStocks[i]->Add(tagStorage, CI[i], area, ratio);
   }
 }
 
@@ -235,6 +240,23 @@ void StrayData::Reset(const TimeClass* const TimeInfo) {
     }
   }
 
+  //JMB check that the sum of the ratios is 1
+  if (TimeInfo->getTime() == 1) {
+    ratioscale = 0.0;
+    for (i = 0; i < strayRatio.Size(); i++ )
+      ratioscale += strayRatio[i];
+
+    if (isZero(ratioscale)) {
+      handle.logMessage(LOGWARN, "Warning in straying - specified ratios are zero");
+      ratioscale = 1.0;
+    } else if (isEqual(ratioscale, 1.0)) {
+      // do nothing
+    } else {
+      handle.logMessage(LOGWARN, "Warning in straying - scaling ratios using", ratioscale);
+      ratioscale = 1.0 / ratioscale;
+    }
+  }
+
   for (i = 0; i < Storage.Size(); i++) {
     Storage[i].setToZero();
     tagStorage[i].setToZero();
@@ -250,7 +272,7 @@ void StrayData::Print(ofstream& outfile) const {
     outfile << sep << strayStockNames[i];
   outfile << "\n\tRatio moving into each stock:";
   for (i = 0; i < strayRatio.Size(); i++)
-    outfile << sep << strayRatio[i];
+    outfile << sep << (strayRatio[ratioindex[i]] * ratioscale);
   outfile << "\n\tStraying timesteps:";
   for (i = 0; i < strayStep.Size(); i++)
     outfile << sep << strayStep[i];

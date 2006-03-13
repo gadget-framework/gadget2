@@ -2,6 +2,7 @@
 #define spawner_h
 
 #include "areatime.h"
+#include "formulavector.h"
 #include "timevariablevector.h"
 #include "commentstream.h"
 #include "agebandmatrix.h"
@@ -93,9 +94,17 @@ protected:
    */
   CharPtrVector spawnStockNames;
   /**
-   * \brief This is the DoubleVector of the ratio of the new stock to move into each spawned stock
+   * \brief This is the FormulaVector of the ratio of the new stock to move into each spawned stock
    */
-  DoubleVector spawnRatio;
+  FormulaVector spawnRatio;
+  /**
+   * \brief This is used to scale the ratios to ensure that they will always sum to 1
+   */
+  double ratioscale;
+  /**
+   * \brief This is the IntVector used as an index for the ratio vector
+   */
+  IntVector ratioindex;
   /**
    * \brief This is the IntVector used to store information about the steps when the spawning takes place
    */

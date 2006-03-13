@@ -2,6 +2,7 @@
 #define transition_h
 
 #include "areatime.h"
+#include "formulavector.h"
 #include "conversionindex.h"
 #include "commentstream.h"
 #include "agebandmatrixptrvector.h"
@@ -91,9 +92,17 @@ protected:
    */
   CharPtrVector transitionStockNames;
   /**
-   * \brief This is the DoubleVector of the ratio of the young stock to move into each older stock
+   * \brief This is the FormulaVector of the ratio of the young stock to move into each older stock
    */
-  DoubleVector transitionRatio;
+  FormulaVector transitionRatio;
+  /**
+   * \brief This is used to scale the ratios to ensure that they will always sum to 1
+   */
+  double ratioscale;
+  /**
+   * \brief This is the IntVector used as an index for the ratio vector
+   */
+  IntVector ratioindex;
   /**
    * \brief This is the ConversionIndexPtrVector used to convert from the young stock lengths to the old stock lengths
    */

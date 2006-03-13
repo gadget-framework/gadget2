@@ -16,7 +16,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
 
   keeper->addString("spawner");
   int i, tmpint = 0;
-  double tmpratio;
+  ratioscale = 1.0; //JMB used to scale the ratios to ensure that they sum to 1
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -58,7 +58,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   for (i = 0; i < spawnArea.Size(); i++)
     spawnArea[i] = Area->getInnerArea(spawnArea[i]);
 
-  infile >> text;
+  infile >> text >> ws;
   if (strcasecmp(text, "spawnstocksandratios") == 0) {
     onlyParent = 0;
     i = 0;
@@ -66,8 +66,12 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     while (strcasecmp(text, "proportionfunction") != 0 && !infile.eof()) {
       spawnStockNames.resize(new char[strlen(text) + 1]);
       strcpy(spawnStockNames[i], text);
-      infile >> tmpratio >> text >> ws;
-      spawnRatio.resize(1, tmpratio);
+      spawnRatio.resize(1, keeper);
+      ratioindex.resize(1, 0);
+      if (!(infile >> spawnRatio[i]))
+        handle.logFileMessage(LOGFAIL, "invalid format for spawn ratio");
+
+      infile >> text >> ws;
       i++;
     }
   } else if (strcasecmp(text, "onlyparent") == 0) {
@@ -185,17 +189,14 @@ SpawnData::~SpawnData() {
 
 void SpawnData::setStock(StockPtrVector& stockvec) {
   int i, j, index;
-  DoubleVector tmpratio;
 
   if (onlyParent == 1)
     return;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < spawnStockNames.Size(); j++)
-      if (strcasecmp(stockvec[i]->getName(), spawnStockNames[j]) == 0) {
+      if (strcasecmp(stockvec[i]->getName(), spawnStockNames[j]) == 0)
         spawnStocks.resize(stockvec[i]);
-        tmpratio.resize(1, spawnRatio[j]);
-      }
 
   if (spawnStocks.Size() != spawnStockNames.Size()) {
     handle.logMessage(LOGWARN, "Error in spawner - failed to match spawning stocks");
@@ -206,10 +207,13 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  spawnRatio.Reset();
-  spawnRatio = tmpratio;
+  //JMB ensure that the ratio vector is indexed in the right order
+  for (i = 0; i < spawnStocks.Size(); i++)
+    for (j = 0; j < spawnStockNames.Size(); j++)
+      if (strcasecmp(spawnStocks[i]->getName(), spawnStockNames[j]) == 0)
+        ratioindex[i] = j;
 
-  //JMB - check that the spawned stocks are defined on the areas
+  //JMB check that the spawned stocks are defined on all the areas
   spawnAge = 9999;
   double minlength = 9999.0;
   double maxlength = 0.0;
@@ -270,8 +274,7 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
 
   int s, age, len;
   int inarea = this->areaNum(area);
-  double sum = 0.0;
-  double tmpsdev, length, N;
+  double tmp, length, N, total, sum;
 
   for (s = 0; s < Storage.Size(); s++)
     Storage[s].setToZero();
@@ -285,18 +288,19 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
       handle.logMessage(LOGWARN, "Warning in spawner - invalid standard deviation for spawned stock");
   }
 
+  sum = 0.0;
   if (stockParameters[1] > verysmall) {
-    tmpsdev = 1.0 / (2 * stockParameters[1] * stockParameters[1]);
+    tmp = 1.0 / (2 * stockParameters[1] * stockParameters[1]);
     for (len = 0; len < spawnLgrpDiv->numLengthGroups(); len++) {
       length = spawnLgrpDiv->meanLength(len) - stockParameters[0];
-      N = exp(-(length * length * tmpsdev));
+      N = exp(-(length * length * tmp));
       Storage[inarea][spawnAge][len].N = N;
       sum += N;
     }
   }
 
   //calculate the total number of recruits and distribute this through the length groups
-  double total = calcRecruitNumber();
+  total = calcRecruitNumber();
   if (sum > verysmall) {
     for (len = 0; len < spawnLgrpDiv->numLengthGroups(); len++) {
       length = spawnLgrpDiv->meanLength(len);
@@ -310,7 +314,8 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
     if (!spawnStocks[s]->isInArea(area))
       handle.logMessage(LOGFAIL, "Error in spawner - spawned stock doesnt live on area", area);
 
-    spawnStocks[s]->Add(Storage[inarea], CI[s], area, spawnRatio[s]);
+    tmp = spawnRatio[ratioindex[s]] * ratioscale;
+    spawnStocks[s]->Add(Storage[inarea], CI[s], area, tmp);
   }
 
   for (age = 0; age < spawnNumbers.Nrow(); age++)
@@ -365,6 +370,23 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
   if (fnMortality->didChange(TimeInfo)) {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       spawnMortality[i] = fnMortality->calculate(LgrpDiv->meanLength(i));
+    }
+  }
+
+  //JMB check that the sum of the ratios is 1
+  if (TimeInfo->getTime() == 1) {
+    ratioscale = 0.0;
+    for (i = 0; i < spawnRatio.Size(); i++ )
+      ratioscale += spawnRatio[i];
+
+    if (isZero(ratioscale)) {
+      handle.logMessage(LOGWARN, "Warning in spawning - specified ratios are zero");
+      ratioscale = 1.0;
+    } else if (isEqual(ratioscale, 1.0)) {
+      // do nothing
+    } else {
+      handle.logMessage(LOGWARN, "Warning in spawning - scaling ratios using", ratioscale);
+      ratioscale = 1.0 / ratioscale;
     }
   }
 
@@ -427,7 +449,7 @@ void SpawnData::Print(ofstream& outfile) const {
     outfile << sep << spawnStockNames[i];
   outfile << "\n\tRatio spawning into each stock:";
   for (i = 0; i < spawnRatio.Size(); i++)
-    outfile << sep << spawnRatio[i];
+    outfile << sep << (spawnRatio[ratioindex[i]] * ratioscale);
   outfile << "\n\t";
   spawnLgrpDiv->Print(outfile);
   outfile << "\tStored numbers:\n";

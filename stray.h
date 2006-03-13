@@ -2,7 +2,7 @@
 #define stray_h
 
 #include "areatime.h"
-#include "timevariablevector.h"
+#include "formulavector.h"
 #include "commentstream.h"
 #include "agebandmatrix.h"
 #include "intmatrix.h"
@@ -96,9 +96,17 @@ protected:
    */
   CharPtrVector strayStockNames;
   /**
-   * \brief This is the DoubleVector of the ratio of the stock that will stray
+   * \brief This is the FormulaVector of the ratio of the stock that will stray
    */
-  DoubleVector strayRatio;
+  FormulaVector strayRatio;
+  /**
+   * \brief This is used to scale the ratios to ensure that they will always sum to 1
+   */
+  double ratioscale;
+  /**
+   * \brief This is the IntVector used as an index for the ratio vector
+   */
+  IntVector ratioindex;
   /**
    * \brief This is the IntVector of timesteps that the straying will take place on
    */

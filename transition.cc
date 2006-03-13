@@ -10,25 +10,28 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
   const LengthGroupDivision* const lgrpdiv, const TimeClass* const TimeInfo, Keeper* const keeper)
   : LivesOnAreas(areas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)), age(Age) {
 
-  int i;
-  double tmpratio;
+  int i = 0;
+  ratioscale = 1.0; //JMB used to scale the ratios to ensure that they sum to 1
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   keeper->addString("transition");
 
-  infile >> text;
-  if (strcasecmp(text, "transitionstocksandratios") == 0) {
-    i = 0;
-    infile >> text >> ws;
-    while (strcasecmp(text, "transitionstep") != 0 && !infile.eof()) {
-      transitionStockNames.resize(new char[strlen(text) + 1]);
-      strcpy(transitionStockNames[i], text);
-      infile >> tmpratio >> text >> ws;
-      transitionRatio.resize(1, tmpratio);
-      i++;
-    }
-  } else
+  infile >> text >> ws;
+  if (strcasecmp(text, "transitionstocksandratios") != 0)
     handle.logFileUnexpected(LOGFAIL, "transitionstocksandratios", text);
+
+  infile >> text >> ws;
+  while (strcasecmp(text, "transitionstep") != 0 && !infile.eof()) {
+    transitionStockNames.resize(new char[strlen(text) + 1]);
+    strcpy(transitionStockNames[i], text);
+    transitionRatio.resize(1, keeper);
+    ratioindex.resize(1, 0);
+    if (!(infile >> transitionRatio[i]))
+      handle.logFileMessage(LOGFAIL, "invalid format for transition ratio");
+
+    infile >> text >> ws;
+    i++;
+  }
 
   if (infile.eof())
     handle.logFileEOFMessage(LOGFAIL);
@@ -49,14 +52,11 @@ Transition::~Transition() {
 
 void Transition::setStock(StockPtrVector& stockvec) {
   int i, j, index;
-  DoubleVector tmpratio;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < transitionStockNames.Size(); j++)
-      if (strcasecmp(stockvec[i]->getName(), transitionStockNames[j]) == 0) {
+      if (strcasecmp(stockvec[i]->getName(), transitionStockNames[j]) == 0)
         transitionStocks.resize(stockvec[i]);
-        tmpratio.resize(1, transitionRatio[j]);
-      }
 
   if (transitionStocks.Size() != transitionStockNames.Size()) {
     handle.logMessage(LOGWARN, "Error in transition - failed to match transition stocks");
@@ -67,8 +67,11 @@ void Transition::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  transitionRatio.Reset();
-  transitionRatio = tmpratio;
+  //JMB ensure that the ratio vector is indexed in the right order
+  for (i = 0; i < transitionStocks.Size(); i++)
+    for (j = 0; j < transitionStockNames.Size(); j++)
+      if (strcasecmp(transitionStocks[i]->getName(), transitionStockNames[j]) == 0)
+        ratioindex[i] = j;
 
   double mlength = 9999.0;
   for (i = 0; i < transitionStocks.Size(); i++) {
@@ -99,7 +102,7 @@ void Transition::Print(ofstream& outfile) const {
     outfile << sep << transitionStockNames[i];
   outfile << "\n\tRatio moving into each stock:";
   for (i = 0; i < transitionRatio.Size(); i++)
-    outfile << sep << transitionRatio[i];
+    outfile << sep << (transitionRatio[ratioindex[i]] * ratioscale);
   outfile << "\n\tTransition step " << transitionStep << endl;
 }
 
@@ -138,20 +141,22 @@ void Transition::storeTransitionStock(int area, AgeBandMatrix& Alkeys,
 //area in the call to this routine is not in the local area numbering of the stock.
 void Transition::Move(int area, const TimeClass* const TimeInfo) {
 
-  int s, inarea = this->areaNum(area);
-  for (s = 0; s < transitionStocks.Size(); s++) {
-    if (!transitionStocks[s]->isInArea(area))
+  int i, inarea = this->areaNum(area);
+  double ratio;
+  for (i = 0; i < transitionStocks.Size(); i++) {
+    if (!transitionStocks[i]->isInArea(area))
       handle.logMessage(LOGFAIL, "Error in transition - transition stock doesnt live on area", area);
 
-    if (transitionStocks[s]->isBirthday(TimeInfo)) {
+    if (transitionStocks[i]->isBirthday(TimeInfo)) {
       Storage[inarea].IncrementAge();
       if (tagStorage.numTagExperiments() > 0)
         tagStorage[inarea].IncrementAge(Storage[inarea]);
     }
 
-    transitionStocks[s]->Add(Storage[inarea], CI[s], area, transitionRatio[s]);
+    ratio = transitionRatio[ratioindex[i]] * ratioscale;
+    transitionStocks[i]->Add(Storage[inarea], CI[i], area, ratio);
     if (tagStorage.numTagExperiments() > 0)
-      transitionStocks[s]->Add(tagStorage, CI[s], area, transitionRatio[s]);
+      transitionStocks[i]->Add(tagStorage, CI[i], area, ratio);
   }
 
   Storage[inarea].setToZero();
@@ -165,6 +170,22 @@ void Transition::Reset() {
     Storage[i].setToZero();
     tagStorage[i].setToZero();
   }
+
+  //JMB check that the sum of the ratios is 1
+  ratioscale = 0.0;
+  for (i = 0; i < transitionRatio.Size(); i++ )
+    ratioscale += transitionRatio[i];
+
+  if (isZero(ratioscale)) {
+    handle.logMessage(LOGWARN, "Warning in transition - specified ratios are zero");
+    ratioscale = 1.0;
+  } else if (isEqual(ratioscale, 1.0)) {
+    // do nothing
+  } else {
+    handle.logMessage(LOGWARN, "Warning in transition - scaling ratios using", ratioscale);
+    ratioscale = 1.0 / ratioscale;
+  }
+
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset transition data");
 }

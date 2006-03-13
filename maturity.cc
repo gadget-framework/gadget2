@@ -16,6 +16,8 @@ Maturity::Maturity(const IntVector& tmpareas, int minage, const IntVector& minle
   const IntVector& agesize, const LengthGroupDivision* const lgrpdiv)
   : LivesOnAreas(tmpareas) {
 
+  tmpratio = 1.0;
+  ratioscale = 1.0; //JMB used to scale the ratios to ensure that they sum to 1
   LgrpDiv = new LengthGroupDivision(*lgrpdiv);
   Storage.resize(tmpareas.Size(), minage, minlength, agesize);
   tagStorage.resize(tmpareas.Size(), minage, minlength, agesize);
@@ -32,14 +34,11 @@ Maturity::~Maturity() {
 
 void Maturity::setStock(StockPtrVector& stockvec) {
   int i, j, index;
-  DoubleVector dvratio;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < matureStockNames.Size(); j++)
-      if (strcasecmp(stockvec[i]->getName(), matureStockNames[j]) == 0) {
+      if (strcasecmp(stockvec[i]->getName(), matureStockNames[j]) == 0)
         matureStocks.resize(stockvec[i]);
-        dvratio.resize(1, matureRatio[j]);
-      }
 
   if (matureStocks.Size() != matureStockNames.Size()) {
     handle.logMessage(LOGWARN, "Error in maturity - failed to match mature stocks");
@@ -50,8 +49,11 @@ void Maturity::setStock(StockPtrVector& stockvec) {
     exit(EXIT_FAILURE);
   }
 
-  matureRatio.Reset();
-  matureRatio = dvratio;
+  //JMB ensure that the ratio vector is indexed in the right order
+  for (i = 0; i < matureStocks.Size(); i++)
+    for (j = 0; j < matureStockNames.Size(); j++)
+      if (strcasecmp(matureStocks[i]->getName(), matureStockNames[j]) == 0)
+        ratioindex[i] = j;
 
   for (i = 0; i < matureStocks.Size(); i++) {
     CI.resize(new ConversionIndex(LgrpDiv, matureStocks[i]->getLengthGroupDiv()));
@@ -78,11 +80,31 @@ void Maturity::Print(ofstream& outfile) const {
     outfile << sep << matureStockNames[i];
   outfile << "\n\tRatio maturing into each stock:";
   for (i = 0; i < matureRatio.Size(); i++)
-    outfile << sep << matureRatio[i];
+    outfile << sep << (matureRatio[ratioindex[i]] * ratioscale);
   outfile << "\n\tStored numbers:\n";
   for (i = 0; i < areas.Size(); i++) {
     outfile << "\tInternal area " << areas[i] << endl;
     Storage[i].printNumbers(outfile);
+  }
+}
+
+void Maturity::Reset(const TimeClass* const TimeInfo) {
+  //JMB check that the sum of the ratios is 1
+  if (TimeInfo->getTime() == 1) {
+    int i;
+    ratioscale = 0.0;
+    for (i = 0; i < matureRatio.Size(); i++ )
+      ratioscale += matureRatio[i];
+
+    if (isZero(ratioscale)) {
+      handle.logMessage(LOGWARN, "Warning in maturity - specified ratios are zero");
+      ratioscale = 1.0;
+    } else if (isEqual(ratioscale, 1.0)) {
+      // do nothing
+    } else {
+      handle.logMessage(LOGWARN, "Warning in maturity - scaling ratios using", ratioscale);
+      ratioscale = 1.0 / ratioscale;
+    }
   }
 }
 
@@ -94,9 +116,10 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
     if (!matureStocks[i]->isInArea(area))
       handle.logMessage(LOGFAIL, "Error in maturity - mature stock doesnt live on area", area);
 
-    matureStocks[i]->Add(Storage[inarea], CI[i], area, matureRatio[i]);
+    tmpratio = matureRatio[ratioindex[i]] * ratioscale;
+    matureStocks[i]->Add(Storage[inarea], CI[i], area, tmpratio);
     if (tagStorage.numTagExperiments() > 0)
-      matureStocks[i]->Add(tagStorage, CI[i], area, matureRatio[i]);
+      matureStocks[i]->Add(tagStorage, CI[i], area, tmpratio);
   }
 
   Storage[inarea].setToZero();
@@ -170,15 +193,19 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
   int i;
 
   keeper->addString("maturity");
-  infile >> text;
+  infile >> text >> ws;
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
     i = 0;
     infile >> text >> ws;
     while (strcasecmp(text, "coefficients") != 0 && !infile.eof()) {
       matureStockNames.resize(new char[strlen(text) + 1]);
       strcpy(matureStockNames[i], text);
-      infile >> tmpratio >> text >> ws;
-      matureRatio.resize(1, tmpratio);
+      matureRatio.resize(1, keeper);
+      ratioindex.resize(1, 0);
+      if (!(infile >> matureRatio[i]))
+        handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
+
+      infile >> text >> ws;
       i++;
     }
   } else
@@ -200,6 +227,10 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
 }
 
 void MaturityA::Reset(const TimeClass* const TimeInfo) {
+  Maturity::Reset(TimeInfo);
+
+  if (TimeInfo->didStepSizeChange())
+    timesteplength = TimeInfo->getTimeStepSize();
   maturityParameters.Update(TimeInfo);
   if (maturityParameters.didChange(TimeInfo)) {
     if (maturityParameters[1] > LgrpDiv->maxLength())
@@ -216,8 +247,6 @@ void MaturityA::Reset(const TimeClass* const TimeInfo) {
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "Reset maturity data");
   }
-  if (TimeInfo->didStepSizeChange())
-    timesteplength = TimeInfo->getTimeStepSize();
 }
 
 void MaturityA::setStock(StockPtrVector& stockvec) {
@@ -270,16 +299,20 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
   strncpy(text, "", MaxStrLength);
   int i, tmpint = 0;
 
-  infile >> text;
   keeper->addString("maturity");
+  infile >> text >> ws;
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
     i = 0;
     infile >> text >> ws;
-    while (!(strcasecmp(text, "maturitysteps") == 0) && !infile.eof()) {
+    while (strcasecmp(text, "maturitysteps") != 0 && !infile.eof()) {
       matureStockNames.resize(new char[strlen(text) + 1]);
       strcpy(matureStockNames[i], text);
-      infile >> tmpratio >> text >> ws;
-      matureRatio.resize(1, tmpratio);
+      matureRatio.resize(1, keeper);
+      ratioindex.resize(1, 0);
+      if (!(infile >> matureRatio[i]))
+        handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
+
+      infile >> text >> ws;
       i++;
     }
   } else
@@ -337,6 +370,8 @@ void MaturityB::setStock(StockPtrVector& stockvec) {
 }
 
 void MaturityB::Reset(const TimeClass* const TimeInfo) {
+  Maturity::Reset(TimeInfo);
+
   maturitylength.Update(TimeInfo);
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset maturity data");
@@ -373,15 +408,19 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
   int i, tmpint = 0;
 
   keeper->addString("maturity");
-  infile >> text;
+  infile >> text >> ws;
   if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
     i = 0;
     infile >> text >> ws;
     while (strcasecmp(text, "coefficients") != 0 && !infile.eof()) {
       matureStockNames.resize(new char[strlen(text) + 1]);
       strcpy(matureStockNames[i], text);
-      infile >> tmpratio >> text >> ws;
-      matureRatio.resize(1, tmpratio);
+      matureRatio.resize(1, keeper);
+      ratioindex.resize(1, 0);
+      if (!(infile >> matureRatio[i]))
+        handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
+
+      infile >> text >> ws;
       i++;
     }
   } else
@@ -432,6 +471,8 @@ void MaturityC::setStock(StockPtrVector& stockvec) {
 }
 
 void MaturityC::Reset(const TimeClass* const TimeInfo) {
+  Maturity::Reset(TimeInfo);
+
   maturityParameters.Update(TimeInfo);
   if (maturityParameters.didChange(TimeInfo)) {
     if (maturityParameters[1] > LgrpDiv->maxLength())
@@ -459,7 +500,6 @@ void MaturityC::Reset(const TimeClass* const TimeInfo) {
 }
 
 double MaturityC::calcMaturation(int age, int length, int growth, double weight) {
-
   if (age >= minStockAge)
     return preCalcMaturation[age - minStockAge][length];
   return 0.0;
@@ -538,6 +578,8 @@ void MaturityD::setStock(StockPtrVector& stockvec) {
 }
 
 void MaturityD::Reset(const TimeClass* const TimeInfo) {
+  Maturity::Reset(TimeInfo);
+
   maturityParameters.Update(TimeInfo);
   if (maturityParameters.didChange(TimeInfo)) {
     if (maturityParameters[1] > LgrpDiv->maxLength())
