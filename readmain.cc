@@ -39,8 +39,8 @@ void Ecosystem::readFleet(CommentStream& infile) {
 
   while (!infile.eof()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[fleetcomponent]") == 0))
-      handle.logFileUnexpected(LOGFAIL, "[fleetcomponent]", text);
+    if (!((strcasecmp(text, "[fleetcomponent]") == 0) || (strcasecmp(text, "[component]") == 0)))
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
 
     infile >> text >> value;
     if (strcasecmp(text, "totalfleet") == 0)
@@ -63,22 +63,16 @@ void Ecosystem::readFleet(CommentStream& infile) {
 //
 void Ecosystem::readTagging(CommentStream& infile) {
   char text[MaxStrLength];
-  char value[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  strncpy(value, "", MaxStrLength);
 
   while (!infile.eof()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[tagcomponent]") == 0))
-      handle.logFileUnexpected(LOGFAIL, "[tagcomponent]", text);
+    if (!((strcasecmp(text, "[tagcomponent]") == 0) || (strcasecmp(text, "[component]") == 0)))
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
 
-    infile >> text >> value;
-    if (strcasecmp(text, "tagid") == 0)
-      tagvec.resize(new Tags(infile, value, Area, TimeInfo, keeper, stockvec));
-    else
-      handle.logFileUnexpected(LOGFAIL, "tagid", text);
-
-    handle.logMessage(LOGMESSAGE, "Read tagging experiment OK - created tag", value);
+    readWordAndValue(infile, "tagid", text);
+    tagvec.resize(new Tags(infile, text, Area, TimeInfo, keeper, stockvec));
+    handle.logMessage(LOGMESSAGE, "Read tagging experiment OK - created tag", text);
   }
 }
 
@@ -87,22 +81,16 @@ void Ecosystem::readTagging(CommentStream& infile) {
 //
 void Ecosystem::readOtherFood(CommentStream& infile) {
   char text[MaxStrLength];
-  char value[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  strncpy(value, "", MaxStrLength);
 
   while (!infile.eof()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[foodcomponent]") == 0))
-      handle.logFileUnexpected(LOGFAIL, "[foodcomponent]", text);
+    if (!((strcasecmp(text, "[foodcomponent]") == 0) || (strcasecmp(text, "[component]") == 0)))
+      handle.logFileUnexpected(LOGFAIL, "[component]", text);
 
-    infile >> text >> value;
-    if (strcasecmp(text, "foodname") == 0)
-      otherfoodvec.resize(new OtherFood(infile, value, Area, TimeInfo, keeper));
-    else
-      handle.logFileUnexpected(LOGFAIL, "foodname", text);
-
-    handle.logMessage(LOGMESSAGE, "Read otherfood OK - created otherfood", value);
+    readWordAndValue(infile, "foodname", text);
+    otherfoodvec.resize(new OtherFood(infile, text, Area, TimeInfo, keeper));
+    handle.logMessage(LOGMESSAGE, "Read otherfood OK - created otherfood", text);
   }
 }
 

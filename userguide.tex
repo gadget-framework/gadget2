@@ -1693,10 +1693,10 @@ To define tagged populations in the Gadget model, the ''main'' file must contain
 tagfiles               <names of the tag files>
 \end{verbatim}}
 
-The main tag file lists the tagging experiments, along with basic information about the experiments and the name of the datafile that contains information about the number of fish tagged for the tagging experiment.  The format for this file shown below, with each new tagging experiment starting with the keyword [tagcomponent]:
+The main tag file lists the tagging experiments, along with basic information about the experiments and the name of the datafile that contains information about the number of fish tagged for the tagging experiment.  The format for this file shown below, with each new tagging experiment starting with the keyword [component]:
 
 {\small\begin{verbatim}
-[tagcomponent]
+[component]
 tagid                  <name of the tagging experiment>
 stock                  <name of the tagged stock>
 tagarea                <area that the tagging took place>
@@ -1747,10 +1747,10 @@ To define otherfood in the Gadget model, the ''main'' file must contain a list o
 otherfoodfiles         <names of the otherfood files>
 \end{verbatim}}
 
-The main otherfood file lists the otherfood, along with basic information about the food and the name of the datafile that contains information about the amount of food that is available for the predators to eat.  The format for this file shown below, with each new otherfood starting with the keyword [foodcomponent]:
+The main otherfood file lists the otherfood, along with basic information about the food and the name of the datafile that contains information about the amount of food that is available for the predators to eat.  The format for this file shown below, with each new otherfood starting with the keyword [component]:
 
 {\small\begin{verbatim}
-[foodcomponent]
+[component]
 foodname               <food name>
 livesonareas           <areas>
 lengths                <min>  <max>
@@ -1784,10 +1784,10 @@ To define fleets in the Gadget model, the ''main'' file must contain a list of t
 fleetfiles             <names of the fleet files>
 \end{verbatim}}
 
-There are three types of fleets implemented in Gadget, and the main fleet file lists the fleets and their type, along with information about the fleet and the name of the datafile that contains information about the landings.  The format for this file shown below, with each new fleet starting with the keyword [fleetcomponent]:
+There are three types of fleets implemented in Gadget, and the main fleet file lists the fleets and their type, along with information about the fleet and the name of the datafile that contains information about the landings.  The format for this file shown below, with each new fleet starting with the keyword [component]:
 
 {\small\begin{verbatim}
-[fleetcomponent]
+[component]
 <type>                 <fleetname>
 <fleet data>
 \end{verbatim}}
@@ -1806,7 +1806,7 @@ The fleet type used that creates a predator based on the landings data (by bioma
 The file format for the TotalFleet is given below:
 
 {\small\begin{verbatim}
-[fleetcomponent]
+[component]
 totalfleet             <fleetname>
 livesonareas           <areas>
 multiplicative         <multi>
@@ -1826,7 +1826,7 @@ The fleet type used that creates a predator based on a simple proportion of the 
 The file format for the LinearFleet is given below:
 
 {\small\begin{verbatim}
-[fleetcomponent]
+[component]
 linearfleet            <fleetname>
 livesonareas           <areas>
 multiplicative         <multi>
@@ -1849,7 +1849,7 @@ The fleet type used that creates a predator based on the number of the stock lan
 The file format for the NumberFleet is given below:
 
 {\small\begin{verbatim}
-[fleetcomponent]
+[component]
 numberfleet            <fleetname>
 livesonareas           <areas>
 multiplicative         <multi>
