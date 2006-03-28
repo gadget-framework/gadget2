@@ -244,6 +244,18 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
   handle.logMessage(LOGINFO, "using data from directory:", inputdir);
   handle.logMessage(LOGMESSAGE, ""); //write a blank line to the log file
 
+  if (runnetwork == 1) {
+    handle.logMessage(LOGINFO, "\n** Gadget running in network mode for Paramin **");
+    if (printInitialInfo == 1) {
+      handle.logMessage(LOGINFO, "Warning - cannot print initial model information");
+      printInitialInfo = 0;
+    }
+    if (printFinalInfo == 1) {
+      handle.logMessage(LOGINFO, "Warning - cannot print final model information");
+      printFinalInfo = 0;
+    }
+  }
+
   //JMB check to see if we can actually open required files ...
   ifstream tmpin;
   if (givenInitialParam == 1) {
@@ -277,9 +289,6 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
     tmpout.clear();
   }
   printinfo.checkPrintInfo(runnetwork);
-
-  if (runnetwork == 1)
-    handle.logMessage(LOGINFO, "\n** Gadget running in network mode for Paramin **");
 
   if ((runstochastic != 1) && (runnetwork == 1)) {
     handle.logMessage(LOGWARN, "\nWarning - Gadget for the paramin network should be used with -s option\nGadget will now set the -s switch to perform a simulation run");

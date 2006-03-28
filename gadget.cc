@@ -117,6 +117,7 @@ int main(int aNumber, char* const aVector[]) {
       data = new StochasticData(main.getInitialParamFile());
       EcoSystem->Update(data);
       EcoSystem->checkBounds();
+      delete data;
     } else
       handle.logMessage(LOGWARN, "Error - no parameter input file specified");
 
@@ -125,13 +126,9 @@ int main(int aNumber, char* const aVector[]) {
       EcoSystem->writeStatus(main.getPrintInitialFile());
 
     opt->Optimise();
-
+    delete opt;
     if (main.getForcePrint())
       EcoSystem->Simulate(main.getForcePrint());
-
-    delete opt;
-    if (main.getInitialParamGiven())
-      delete data;
   }
 
   handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
