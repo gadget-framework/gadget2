@@ -139,7 +139,7 @@ public:
    * \brief This will return the type of predator class
    * \return type
    */
-  PredatorType getType() { return type; };
+  const PredatorType getType() const { return type; };
 protected:
   /**
    * \brief This function will read the suitability data from the input file

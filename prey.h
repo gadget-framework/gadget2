@@ -174,7 +174,7 @@ public:
    * \brief This will return the type of prey class
    * \return type
    */
-  PreyType getType() { return type; };
+  const PreyType getType() const { return type; };
 protected:
   /**
    * \brief This is the ConversionIndex used to convert from the stock LengthGroupDivision to the LengthGroupDivision used for the consumption calculation

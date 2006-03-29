@@ -73,6 +73,11 @@ public:
    * \return SSE from the regession line
    */
   virtual double calcSSE();
+  /**
+   * \brief This will return the fit type for the regression line
+   * \return fittype
+   */
+  const FitType getType() const { return fittype; };
 protected:
   /**
    * \brief This will return a null terminated text string containing the name of the SIOnStep object

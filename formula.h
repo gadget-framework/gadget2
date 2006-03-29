@@ -82,6 +82,11 @@ public:
    * \param F is the Formula used to store the data
    */
   friend CommentStream& operator >> (CommentStream& infile, Formula& F);
+  /**
+   * \brief This will return the type of Formula class
+   * \return type
+   */
+  const FormulaType getType() const { return type; };
 private:
   /**
    * \brief This denotes what type of Formula class has been created

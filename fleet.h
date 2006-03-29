@@ -155,7 +155,7 @@ public:
    * \brief This will return the type of fleet class
    * \return type
    */
-  FleetType getType() { return type; };
+  const FleetType getType() const { return type; };
 protected:
   /**
    * \brief This is the fleet, as a predator in the current model
