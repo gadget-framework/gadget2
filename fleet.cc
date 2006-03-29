@@ -4,6 +4,7 @@
 #include "totalpredator.h"
 #include "linearpredator.h"
 #include "numberpredator.h"
+#include "effortpredator.h"
 #include "readfunc.h"
 #include "readword.h"
 #include "errorhandler.h"
@@ -59,10 +60,6 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   else
     multscaler.setValue(1.0);
 
-  infile >> text >> ws;
-  if (!(strcasecmp(text, "suitability") == 0))
-    handle.logFileUnexpected(LOGFAIL, "suitability", text);
-
   switch (type) {
     case TOTALFLEET:
       predator = new TotalPredator(infile, this->getName(), areas, TimeInfo, keeper, multscaler);
@@ -72,6 +69,9 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
       break;
     case NUMBERFLEET:
       predator = new NumberPredator(infile, this->getName(), areas, TimeInfo, keeper, multscaler);
+      break;
+    case EFFORTFLEET:
+      predator = new EffortPredator(infile, this->getName(), areas, TimeInfo, keeper, multscaler);
       break;
     default:
       handle.logMessage(LOGFAIL, "Error in fleet - unrecognised fleet type for", this->getName());

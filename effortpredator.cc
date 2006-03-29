@@ -1,4 +1,4 @@
-#include "linearpredator.h"
+#include "effortpredator.h"
 #include "keeper.h"
 #include "prey.h"
 #include "mathfunc.h"
@@ -7,19 +7,42 @@
 
 extern ErrorHandler handle;
 
-LinearPredator::LinearPredator(CommentStream& infile, const char* givenname,
+EffortPredator::EffortPredator(CommentStream& infile, const char* givenname,
   const IntVector& Areas, const TimeClass* const TimeInfo, Keeper* const keeper, Formula multscaler)
   : LengthPredator(givenname, Areas, keeper, multscaler) {
 
-  type = LINEARPREDATOR;
+  type = EFFORTPREDATOR;
   keeper->addString("predator");
   keeper->addString(givenname);
+
+  //first read in the suitability parameters
   this->readSuitability(infile, TimeInfo, keeper);
+
+  //now we read in the catchability parameters - should be one for each prey
+  keeper->addString("catchability");
+  int i, count = 0;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  infile >> text >> ws;
+  while (!(strcasecmp(text, "amount") == 0) && (!infile.eof())) {
+    for (i = 0; i < preference.Size(); i++) {
+      if (strcasecmp(text, this->getPreyName(i)) == 0) {
+        infile >> preference[i] >> ws;
+        count++;
+      }
+    }
+    infile >> text >> ws;
+  }
+  if (count != preference.Size())
+    handle.logMessage(LOGFAIL, "Error in effortpredator - missing catchability data");
+  preference.Inform(keeper);
+  keeper->clearLast();
+
   keeper->clearLast();
   keeper->clearLast();
 }
 
-void LinearPredator::Eat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
+void EffortPredator::Eat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo) {
 
   int inarea = this->areaNum(area);
   int prey, preyl;
@@ -28,11 +51,12 @@ void LinearPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
   int predl = 0;  //JMB there is only ever one length group ...
   totalcons[inarea][predl] = 0.0;
   scaler[inarea] = multi * TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
-  tmp = scaler[inarea] * prednumber[inarea][predl].N;
-  if (tmp > 10.0) //JMB arbitrary value here ...
-    handle.logMessage(LOGWARN, "Warning in linearpredator - excessive consumption required");
 
   for (prey = 0; prey < this->numPreys(); prey++) {
+    tmp = preference[prey] * scaler[inarea] * prednumber[inarea][predl].N;
+    if (tmp > 10.0) //JMB arbitrary value here ...
+      handle.logMessage(LOGWARN, "Warning in effortpredator - excessive consumption required");
+
     if (this->getPrey(prey)->isPreyArea(area)) {
       for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
         (*cons[inarea][prey])[predl][preyl] = tmp *
@@ -52,7 +76,7 @@ void LinearPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
       this->getPrey(prey)->addBiomassConsumption(area, (*cons[inarea][prey])[predl]);
 }
 
-void LinearPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
+void EffortPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
   int over, prey, preyl;
   int inarea = this->areaNum(area);
   double maxRatio, tmp;
@@ -91,7 +115,7 @@ void LinearPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
         (*consumption[inarea][prey])[predl][preyl] += (*cons[inarea][prey])[predl][preyl];
 }
 
-void LinearPredator::Print(ofstream& outfile) const {
-  outfile << "LinearPredator\n";
+void EffortPredator::Print(ofstream& outfile) const {
+  outfile << "EffortPredator\n";
   PopPredator::Print(outfile);
 }

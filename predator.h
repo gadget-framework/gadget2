@@ -11,7 +11,7 @@
 #include "keeper.h"
 #include "prey.h"
 
-enum PredatorType { STOCKPREDATOR = 1, TOTALPREDATOR, LINEARPREDATOR, NUMBERPREDATOR };
+enum PredatorType { STOCKPREDATOR = 1, TOTALPREDATOR, LINEARPREDATOR, NUMBERPREDATOR, EFFORTPREDATOR };
 
 /**
  * \class Predator

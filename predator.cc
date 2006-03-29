@@ -51,7 +51,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
       j = i - found;
       handle.logMessage(LOGWARN, "Warning in predator - failed to match prey", this->getPreyName(j));
       preys.Delete(j);
-      if (this->getType() == STOCKPREDATOR)
+      if ((this->getType() == STOCKPREDATOR) || (this->getType() == EFFORTPREDATOR))
         preference.Delete(j, keeper);
       suitable->deletePrey(j, keeper);
       found++;
@@ -61,7 +61,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   if (this->numPreys() == 0)
     handle.logMessage(LOGFAIL, "Error in predator - found no preys for predator", this->getName());
   // check that the preference vector is still the right size
-  if ((this->getType() == STOCKPREDATOR) && (this->numPreys() != preference.Size()))
+  if (((this->getType() == STOCKPREDATOR) || (this->getType() == EFFORTPREDATOR)) && (this->numPreys() != preference.Size()))
     handle.logMessage(LOGFAIL, "Error in predator - invalid prey preference data");
 }
 
@@ -98,11 +98,17 @@ void Predator::readSuitability(CommentStream& infile,
   SuitFuncPtrVector suitf;
   keeper->addString("suitabilityfor");
 
+  infile >> text >> ws;
+  if (!(strcasecmp(text, "suitability") == 0))
+    handle.logFileUnexpected(LOGFAIL, "suitability", text);
+
   //JMB - this is the next word to look for after the list of suitability values
   char strcheck[15];
   strncpy(strcheck, "", 15);
   if (this->getType() == STOCKPREDATOR)
     strcpy(strcheck, "preference");
+  else if (this->getType() == EFFORTPREDATOR)
+    strcpy(strcheck, "catchability");
   else
     strcpy(strcheck, "amount");
 
@@ -128,8 +134,8 @@ void Predator::readSuitability(CommentStream& infile,
     keeper->clearLast();
   }
 
-  //resize the prey preference vector - only used for stockpredators
-  if (this->getType() == STOCKPREDATOR)
+  //resize the prey preference vector - only used for stockpredators and effortpredators
+  if ((this->getType() == STOCKPREDATOR) || (this->getType() == EFFORTPREDATOR))
     preference.resize(suitable->numPreys(), keeper);
   keeper->clearLast();
   handle.logMessage(LOGMESSAGE, "Read predation data - number of preys", suitable->numPreys());

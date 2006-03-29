@@ -17,19 +17,16 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
 
   type = STOCKPREDATOR;
   keeper->addString("predator");
-  int i;
-  char text[MaxStrLength];
-  strncpy(text, "", MaxStrLength);
+  keeper->addString(givenname);
 
   //first read in the suitability parameters
-  infile >> text >> ws;
-  if (!(strcasecmp(text, "suitability") == 0))
-    handle.logFileUnexpected(LOGFAIL, "suitability", text);
   this->readSuitability(infile, TimeInfo, keeper);
 
   //now we read in the prey preference parameters - should be one for each prey
   keeper->addString("preypreference");
-  int count = 0;
+  int i, count = 0;
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
   infile >> text >> ws;
   while (!(strcasecmp(text, "maxconsumption") == 0) && (!infile.eof())) {
     for (i = 0; i < preference.Size(); i++) {
@@ -57,19 +54,20 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   readWordAndVariable(infile, "halffeedingvalue", consParam[4]);
   consParam.Inform(keeper);
   keeper->clearLast();
-  keeper->clearLast();
 
   //everything has been read from infile ... resize objects
   int numlength = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
   IntVector size(maxage - minage + 1, numlength);
   IntVector minlength(maxage - minage + 1, 0);
-
   Alkeys.resize(numarea, minage, minlength, size);
   maxcons.AddRows(numarea, numlength, 0.0);
   Phi.AddRows(numarea, numlength, 0.0);
   fphi.AddRows(numarea, numlength, 0.0);
   subfphi.AddRows(numarea, numlength, 0.0);
+
+  keeper->clearLast();
+  keeper->clearLast();
 }
 
 void StockPredator::Print(ofstream& outfile) const {

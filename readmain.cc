@@ -49,6 +49,8 @@ void Ecosystem::readFleet(CommentStream& infile) {
       fleetvec.resize(new Fleet(infile, value, Area, TimeInfo, keeper, LINEARFLEET));
     else if (strcasecmp(text, "numberfleet") == 0)
       fleetvec.resize(new Fleet(infile, value, Area, TimeInfo, keeper, NUMBERFLEET));
+    else if (strcasecmp(text, "effortfleet") == 0)
+      fleetvec.resize(new Fleet(infile, value, Area, TimeInfo, keeper, EFFORTFLEET));
     else if (strcasecmp(text, "mortalityfleet") == 0)
       handle.logFileMessage(LOGFAIL, "\nThe mortalityfleet fleet type is no longer supported");
     else
