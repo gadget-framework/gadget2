@@ -259,6 +259,18 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in surveydistribution - found no data in the data file for", this->getName());
+
+  if (Steps.Size() > 0) {
+    //JMB - to be comparable, this should only take place on the same step in each year
+    step = Steps[0];
+    timeid = 0;
+    for (i = 1; i < Steps.Size(); i++)
+      if (Steps[i] != step)
+        timeid++;
+
+    if (timeid != 0)
+      handle.logMessage(LOGWARN, "Warning in surveydistribution - differing timesteps for", this->getName());
+  }
   handle.logMessage(LOGMESSAGE, "Read surveydistribution data file - number of entries", count);
 }
 
