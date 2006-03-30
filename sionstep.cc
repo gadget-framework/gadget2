@@ -170,9 +170,22 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
       obsIndex[timeid][colid] = tmpnumber;
     }
   }
+
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in surveyindex - found no data in the data file for", this->getSIName());
+
+  if (Steps.Size() > 0) {
+    //JMB - to be comparable, this should only take place on the same step in each year
+    step = Steps[0];
+    timeid = 0;
+    for (i = 1; i < Steps.Size(); i++)
+      if (Steps[i] != step)
+        timeid++;
+
+    if (timeid != 0)
+      handle.logMessage(LOGWARN, "Warning in surveyindex - differing timesteps for", this->getSIName());
+  }
   handle.logMessage(LOGMESSAGE, "Read surveyindex data file - number of entries", count);
 }
 
