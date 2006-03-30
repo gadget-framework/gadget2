@@ -141,5 +141,10 @@ void Ecosystem::Simulate(int print) {
   for (j = 0; j < likevec.Size(); j++)
     likelihood += likevec[j]->getLikelihood();
 
-  handle.logMessage(LOGMESSAGE, "The current overall likelihood score is", likelihood);
+  if (handle.getLogLevel() >= LOGMESSAGE) {
+    handle.logMessage(LOGMESSAGE, "\nThe current likelihood scores for each component are:");
+    for (j = 0; j < likevec.Size(); j++)
+      handle.logMessage(LOGMESSAGE, likevec[j]->getName(), likevec[j]->getLikelihood());
+    handle.logMessage(LOGMESSAGE, "\nThe current overall likelihood score is", likelihood);
+  }
 }
