@@ -51,8 +51,7 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
       j = i - found;
       handle.logMessage(LOGWARN, "Warning in predator - failed to match prey", this->getPreyName(j));
       preys.Delete(j);
-      if ((this->getType() == STOCKPREDATOR) || (this->getType() == EFFORTPREDATOR))
-        preference.Delete(j, keeper);
+      preference.Delete(j, keeper);
       suitable->deletePrey(j, keeper);
       found++;
     }
@@ -60,9 +59,6 @@ void Predator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
 
   if (this->numPreys() == 0)
     handle.logMessage(LOGFAIL, "Error in predator - found no preys for predator", this->getName());
-  // check that the preference vector is still the right size
-  if (((this->getType() == STOCKPREDATOR) || (this->getType() == EFFORTPREDATOR)) && (this->numPreys() != preference.Size()))
-    handle.logMessage(LOGFAIL, "Error in predator - invalid prey preference data");
 }
 
 int Predator::doesEat(const char* preyname) const {
@@ -80,8 +76,11 @@ void Predator::Print(ofstream& outfile) const {
     outfile << sep << suitable->getPreyName(i);
   outfile << endl;
   for (i = 0; i < suitable->numPreys(); i++) {
-    if (preference.Size() != 0)
+    if (this->getType() == STOCKPREDATOR)
       outfile << "\tPreference for prey " << suitable->getPreyName(i) << sep << preference[i] << endl;
+    else if (this->getType() == EFFORTPREDATOR)
+      outfile << "\tCatchability for stock " << suitable->getPreyName(i) << sep << preference[i] << endl;
+
     outfile << "\tSuitability for prey " << suitable->getPreyName(i) << endl;
     suitable->getSuitability(i).Print(outfile);
   }
@@ -134,9 +133,9 @@ void Predator::readSuitability(CommentStream& infile,
     keeper->clearLast();
   }
 
-  //resize the prey preference vector - only used for stockpredators and effortpredators
-  if ((this->getType() == STOCKPREDATOR) || (this->getType() == EFFORTPREDATOR))
-    preference.resize(suitable->numPreys(), keeper);
+  //resize the prey preference vector - used for stockpredators and effortpredators
+  preference.resize(suitable->numPreys(), keeper);
+
   keeper->clearLast();
   handle.logMessage(LOGMESSAGE, "Read predation data - number of preys", suitable->numPreys());
 }

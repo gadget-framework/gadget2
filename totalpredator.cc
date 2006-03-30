@@ -30,7 +30,7 @@ void TotalPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   if (TimeInfo->getSubStep() == 1)
     scaler[inarea] = 0.0;
 
-  //Calculate consumption up to a multiplicative constant.
+  //calculate consumption up to a multiplicative constant
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
       for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
@@ -45,30 +45,26 @@ void TotalPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
     }
   }
 
-  //adjust the consumption by the multiplicative factor.
-  tmp = multi / TimeInfo->numSubSteps();  //use the multiplicative factor
-  for (prey = 0; prey < this->numPreys(); prey++) {
-    if (this->getPrey(prey)->isPreyArea(area)) {
-      wanttoeat = tmp * prednumber[inarea][predl].N;
+  //adjust the consumption by the multiplicative factor
+  wanttoeat = prednumber[inarea][predl].N * multi / TimeInfo->numSubSteps();
+  tmp = wanttoeat / totalcons[inarea][predl];
+  for (prey = 0; prey < this->numPreys(); prey++)
+    if (this->getPrey(prey)->isPreyArea(area))
       for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
-        (*cons[inarea][prey])[predl][preyl] *= wanttoeat / totalcons[inarea][predl];
-    }
-  }
+        (*cons[inarea][prey])[predl][preyl] *= tmp;
+
+  //inform the preys of the consumption
+  for (prey = 0; prey < this->numPreys(); prey++)
+    if (this->getPrey(prey)->isPreyArea(area))
+      this->getPrey(prey)->addBiomassConsumption(area, (*cons[inarea][prey])[predl]);
 
   //set the multiplicative constant
   scaler[inarea] += totalcons[inarea][predl];
   if ((TimeInfo->getSubStep() == TimeInfo->numSubSteps()) && (!(isZero(scaler[inarea]))))
     scaler[inarea] = 1.0 / scaler[inarea];
 
-  //Inform the preys of the consumption.
-  for (prey = 0; prey < this->numPreys(); prey++)
-    if (this->getPrey(prey)->isPreyArea(area))
-      this->getPrey(prey)->addBiomassConsumption(area, (*cons[inarea][prey])[predl]);
-
-  //set totalconsumption to the actual total consumption
-  for (prey = 0; prey < this->numPreys(); prey++)
-    if (this->getPrey(prey)->isPreyArea(area))
-      totalcons[inarea][predl] = tmp * prednumber[inarea][predl].N;
+  //finally set totalcons to the actual consumption
+  totalcons[inarea][predl] = wanttoeat;
 }
 
 void TotalPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
