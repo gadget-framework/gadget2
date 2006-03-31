@@ -124,7 +124,10 @@ double Formula::evalFunction() const {
     case LOG:
       if (argList.size() != 1)
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for log");
-      v = log(*(argList[0]));
+      if (isZero(*(argList[0])))
+        handle.logMessage(LOGFAIL, "Warning in formula - cannot take log of zero");
+      else
+        v = log(*(argList[0]));
       break;
 
     case EXP:
@@ -136,7 +139,10 @@ double Formula::evalFunction() const {
     case SQRT:
       if (argList.size() != 1)
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for sqrt");
-      v = sqrt(*(argList[0]));
+      if (*(argList[0]) < 0.0)
+        handle.logMessage(LOGFAIL, "Warning in formula - cannot take sqrt of negative number");
+      else
+        v = sqrt(*(argList[0]));
       break;
 
     case RAND:

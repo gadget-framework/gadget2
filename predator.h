@@ -136,6 +136,12 @@ public:
    */
   int didChange(int i, const TimeClass* const TimeInfo) const { return suitable->didChange(i, TimeInfo); };
   /**
+   * \brief This will return the preference for a given prey
+   * \param i is the index of the prey
+   * \return preference
+   */
+  double getPreference(int i) const { return preference[i]; };
+  /**
    * \brief This will return the type of predator class
    * \return type
    */
