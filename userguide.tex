@@ -940,7 +940,7 @@ The $<$suitability$>$ defines the prey that the predator will consume, and is di
 The consumption determines how much of a given prey is consumed by the predator.  This will result in the population of the prey being reduced, and can also affect the growth of the predator, depending on the growth function selected.  The consumption of a prey is dependant on the length of both the predator and the prey, and the amount of the prey available, as a proportion of the total amount of food available.  The consumption of prey $p$ is given by equation~\ref{eq:totalcons} below:
 
 \begin{equation}\label{eq:totalcons}
-C_{p}(l, L) = \frac{N_{L} M_{L} \psi_{L} F_{p}(l, L)}{\displaystyle \sum_{\it p} F_{p}(l, L)}
+C_{p}(l, L) = \frac{N_{L} M_{L} \psi_{L} F_{p}(l, L)}{\displaystyle \sum_{\it preys} F_{p}(l, L)}
 \end{equation}
 
 \begin{equation}\label{eq:preycons}
@@ -952,7 +952,7 @@ M_{L} = m_{0} e^{(m_{1}T - m_{2}T^3)} L^{m_{3}}
 \end{equation}
 
 \begin{equation}\label{eq:feedlevel}
-\psi_{L} = \frac{\displaystyle \sum_{\it p} F_{p}(l, L)}{H A + \displaystyle \sum_{\it p} F_{p}(l, L)}
+\psi_{L} = \frac{\displaystyle \sum_{\it preys} F_{p}(l, L)}{H A + \displaystyle \sum_{\it preys} F_{p}(l, L)}
 \end{equation}
 
 where:\newline
@@ -962,7 +962,7 @@ $<$ H $>$ is the half feeding value\newline
 $<$ d $>$ is the preference of the predator for the prey\newline
 $<$ N $>$ is the number of prey in the length cell\newline
 $<$ W $>$ is the mean weight of the prey in the length cell\newline
-$<$ S $>$ is the suitability (see section~\ref{sec:suitability})\newline
+$<$ S $>$ is the suitability function (see section~\ref{sec:suitability})\newline
 $<$ A $>$ is the size of the area that the feeding takes place on\newline
 $<$ T $>$ is the temperature of the area that the feeding takes place on
 
@@ -1774,7 +1774,7 @@ For the otherfood datafile, this is a simple list of year, timestep, area, food 
 \end{verbatim}}
 
 \chapter{Fleet Files}\label{chap:fleet}
-The fleet files contain the information about the fleets that are reducing the stocks in the Gadget model.  The fleets act as a predator in the model, with the landings data treated as the fleets ''consumption'' of the stock that is caught.
+The fleet files contain the information about the fleets that are reducing the population of the stocks in the Gadget model.  The fleets act as a simple predator in the model, with the landings data treated as the fleets ''consumption'' of the stock that is caught.
 
 \bigskip
 To define fleets in the Gadget model, the ''main'' file must contain a list of the data files that contain the description of the fleets, and the format for this is shown below:
@@ -1784,7 +1784,7 @@ To define fleets in the Gadget model, the ''main'' file must contain a list of t
 fleetfiles             <names of the fleet files>
 \end{verbatim}}
 
-There are three types of fleets implemented in Gadget, and the main fleet file lists the fleets and their type, along with information about the fleet and the name of the datafile that contains information about the landings.  The format for this file shown below, with each new fleet starting with the keyword [component]:
+There are 4 types of fleets implemented in Gadget, and the main fleet file lists the fleets and their type, along with information about the fleet and the name of the datafile that contains information about the landings.  The format for this file shown below, with each new fleet starting with the keyword [component]:
 
 {\small\begin{verbatim}
 [component]
@@ -1792,18 +1792,29 @@ There are three types of fleets implemented in Gadget, and the main fleet file l
 <fleet data>
 \end{verbatim}}
 
-The fleet data for each fleet type is covered in the sub sections below.  The $<$type$>$ defines the type of fleet for the $<$fleetname$>$ fleet, and the three valid fleet types that can used in Gadget are:
+The fleet data for each fleet type is covered in the sub sections below.  The $<$type$>$ defines the type of fleet for the $<$fleetname$>$ fleet, and the 4 valid fleet types that can used in Gadget are:
 
 \bigskip
 TotalFleet\newline
+NumberFleet\newline
 LinearFleet\newline
-NumberFleet
+EffortFleet
 
 \section{TotalFleet}\label{sec:totalfleet}
-The fleet type used that creates a predator based on the landings data (by biomass) of the stock is called ''TotalFleet''.  This fleet type is defined by specifying the fleet name and areas it operates on, along with a suitability function for each stock that the fleet will catch and a data file listing the biomass that the fleet will catch.
+The fleet type used that creates a predator based on the landings data (by biomass) for the fleet is called ''TotalFleet''.  This total amount landed is then split between the various stocks, and length groups of the stocks, according to equation~\ref{eq:tcons} below:
+
+\begin{equation}\label{eq:tcons}
+C_{s}(l) = \frac{E S_{s}(l) N_{sl} W_{sl}}{\displaystyle \sum_{\it stocks} \sum_{\it lengths} S_{s}(l) N_{sl} W_{sl}}
+\end{equation}
+
+where:\newline
+$<$ E $>$ is the biomass caught by the fleet\newline
+$<$ N $>$ is the number of stock in the length cell\newline
+$<$ W $>$ is the mean weight of the stock in the length cell\newline
+$<$ S $>$ is the suitability function (see section~\ref{sec:fleetsuit})
 
 \bigskip
-The file format for the TotalFleet is given below:
+This fleet type is defined by specifying the fleet name and areas it operates on, along with a suitability function for each stock that the fleet will catch and a data file listing the biomass that the fleet will catch.  The file format for the TotalFleet is given below:
 
 {\small\begin{verbatim}
 [component]
@@ -1819,11 +1830,50 @@ The optional $<$multi$>$ value is a multiplicative constant used to scale the da
 \bigskip
 The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The total amount that has been landed by the fleet is also required - this is taken from the landings data, based on timestep and area, and is specified in a separate file.
 
-\section{LinearFleet}\label{sec:linearfleet}
-The fleet type used that creates a predator based on a simple proportion of the biomass of the stock that it is catching is called ''LinearFleet''.  This fleet type is defined by specifying the fleet name and areas it operates on, along with a suitability function for each stock that the fleet will catch and a data file listing the proportion of each stock that the fleet will catch.
+\section{NumberFleet}\label{sec:numberfleet}
+The fleet type used that creates a predator based on the number of the stock landed (not the biomass) is called ''NumberFleet''.  This total number caught is then split between the various stocks, and length groups of the stocks, according to equation~\ref{eq:ncons} below:
+
+\begin{equation}\label{eq:ncons}
+C_{s}(l) = \frac{E S_{s}(l) N_{sl}}{\displaystyle \sum_{\it stocks} \sum_{\it lengths} S_{s}(l) N_{sl}}
+\end{equation}
+
+where:\newline
+$<$ E $>$ is the number caught by the fleet\newline
+$<$ N $>$ is the number of stock in the length cell\newline
+$<$ S $>$ is the suitability function (see section~\ref{sec:fleetsuit})
 
 \bigskip
-The file format for the LinearFleet is given below:
+This fleet type is defined by specifying the fleet name and areas it operates on, along with a suitability function for each stock that the fleet will catch and a data file listing the numbers that the fleet will catch.  The file format for the NumberFleet is given below:
+
+{\small\begin{verbatim}
+[component]
+numberfleet            <fleetname>
+livesonareas           <areas>
+multiplicative         <multi>
+suitability            <see Fleet Suitability>
+amount                 <see Fleet Amounts>
+\end{verbatim}}
+
+The optional $<$multi$>$ value is a multiplicative constant used to scale the data if required - the default value for this multiplier is 1 (ie. no scaling).
+
+\bigskip
+The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The total number of fish that has been caught by the fleet is also required - this is taken from the landings data, based on timestep and area, and is specified in a separate file.
+
+\section{LinearFleet}\label{sec:linearfleet}
+The fleet type used that creates a predator based on a simple proportion of the biomass of the stock that it is catching is called ''LinearFleet''.  The number caught is then split between the various stocks, and length groups of the stocks, according to equation~\ref{eq:lcons} below:
+
+\begin{equation}\label{eq:lcons}
+C_{s}(l) = E S_{s}(l) N_{sl} W_{sl}
+\end{equation}
+
+where:\newline
+$<$ E $>$ is the proportion of the stock that is to be caught\newline
+$<$ N $>$ is the number of stock in the length cell\newline
+$<$ W $>$ is the mean weight of the stock in the length cell\newline
+$<$ S $>$ is the suitability function (see section~\ref{sec:fleetsuit})
+
+\bigskip
+This fleet type is defined by specifying the fleet name and areas it operates on, along with a suitability function for each stock that the fleet will catch and a data file listing the fishing level for the fleet.  The file format for the LinearFleet is given below:
 
 {\small\begin{verbatim}
 [component]
@@ -1842,25 +1892,49 @@ The fleets act as a predator, so Gadget also requires a suitability function to 
 \bigskip
 The fleet of type LinearFleet acts a simple predator, and can be used for fleets acting in the future, when the landings data is not available.
 
-\section{NumberFleet}\label{sec:numberfleet}
-The fleet type used that creates a predator based on the number of the stock landed (not the biomass) is called ''NumberFleet''.  This fleet type is defined by specifying the fleet name and areas it operates on, along with a suitability function for each stock that the fleet will catch and a data file listing the numbers that the fleet will catch.
+\section{EffortFleet}\label{sec:effortfleet}
+The fleet type used that creates a predator based on a simple proportion of the biomass of the stock, and a 'catchability' parameter for that stock, is called ''EffortFleet''.  The number caught is then split between the various stocks, and length groups of the stocks, according to equation~\ref{eq:econs} below:
+
+\begin{equation}\label{eq:econs}
+C_{s}(l) = E q_{s} S_{s}(l) N_{sl} W_{sl}
+\end{equation}
+
+where:\newline
+$<$ E $>$ is the proportion of the stock that is to be caught\newline
+$<$ q $>$ is the catchability paramater for that stock\newline
+$<$ N $>$ is the number of stock in the length cell\newline
+$<$ W $>$ is the mean weight of the stock in the length cell\newline
+$<$ S $>$ is the suitability function (see section~\ref{sec:fleetsuit})
 
 \bigskip
-The file format for the NumberFleet is given below:
+This fleet type is defined by specifying the fleet name and areas it operates on, along with a suitability function and catchability parameter for each stock that the fleet will catch and a data file listing the proportion of each stock that the fleet will catch.  The file format for the EffortFleet is given below:
 
 {\small\begin{verbatim}
 [component]
-numberfleet            <fleetname>
+effortfleet            <fleetname>
 livesonareas           <areas>
 multiplicative         <multi>
 suitability            <see Fleet Suitability>
+catchability           <stock catchability parameters>
 amount                 <see Fleet Amounts>
 \end{verbatim}}
 
 The optional $<$multi$>$ value is a multiplicative constant used to scale the data if required - the default value for this multiplier is 1 (ie. no scaling).
 
 \bigskip
-The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The total number of fish that has been caught by the fleet is also required - this is taken from the landings data, based on timestep and area, and is specified in a separate file.
+The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The proportion to be used when calculating the amount that the fleet will catch is also required, and this is specified in a separate file.
+
+\bigskip
+The fleet of type EffortFleet is a multi-species extension to the fleet of type LinearFleet (see section~\ref{sec:linearfleet} above).  This means that when a fleet is used to catch more than one species (either directly or as bycatch) the different catchability for these species can be taken into account.  This catchability parameter is specified by listing the names of the prey and the associated preference value, as shown in the example below:
+
+{\small\begin{verbatim}
+...
+catchability
+<name of stock 1>      <catchability for stock 1>
+<name of stock 2>      <catchability for stock 2>
+amount
+...
+\end{verbatim}}
 
 \section{Fleet Suitability}\label{sec:fleetsuit}
 The suitability determines how the fleets act on the stocks that are caught.  Since Gadget treats the fleets as predators of the stocks, the format for the suitability functions for the fleets is the same as the format for the suitability functions of the stock when they are acting as a predator.  The format for the suitability functions as discussed in section~\ref{sec:suitability} above.  Note that in the equations for the suitability functions, the 'length' of the predator is a meaningless concept when the predator is a fleet.
@@ -1872,22 +1946,16 @@ The amounts section of the fleet file gives the landings data for the fleets.  T
 amount                 <name of data file>
 \end{verbatim}}
 
-For fleets of type TotalFleet, the data file is a list of year, timestep, area, fleetname and then the biomass of catch landed, taken from landings data, for that timestep/area/fleet combination:
+For fleets of type TotalFleet or NumberFleet, the data file is a list of year, timestep, area, fleetname and then the amount of catch landed (either biomass or number), taken from landings data, for that timestep/area/fleet combination:
 
 {\small\begin{verbatim}
 <year>  <step>  <area>  <fleetname>  <amount>
 \end{verbatim}}
 
-For fleets of type LinearFleet, the data file is a list of year, timestep, area, fleetname and then the fishing level to be used when calculating the amount of the catch for that timestep/area/fleet combination:
+For fleets of type LinearFleet or EffortFleet, the data file is a list of year, timestep, area, fleetname and then the proportion to be used when calculating the amount of the catch for that timestep/area/fleet combination:
 
 {\small\begin{verbatim}
-<year>  <step>  <area>  <fleetname>  <level>
-\end{verbatim}}
-
-For fleets of type NumberFleet, the data file is a list of year, timestep, area, fleetname and then the number of catch landed, taken from landings data, for that timestep/area/fleet combination:
-
-{\small\begin{verbatim}
-<year>  <step>  <area>  <fleetname>  <number>
+<year>  <step>  <area>  <fleetname>  <proportion>
 \end{verbatim}}
 
 \chapter{Likelihood Files}\label{chap:like}
@@ -2773,7 +2841,7 @@ where $<$ratio$>$ is the ratio of prey $<$prey$>$ in the stomachs of predator $<
 The scsimple function calculates the likelihood component by comparing the ratio of the consumption of different preys by a predator in the model to the ratio of the preys found in the stomach contents data specified in the input file, as shown in equation~\ref{eq:stomach1} below:
 
 \begin{equation}\label{eq:stomach1}
-\ell = \sum_{\it time}\sum_{\it area}\sum_{\it predator}\sum_{\it prey} \Big( P_{trpp} - \pi_{trpp} \Big) ^2
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it predators}\sum_{\it preys} \Big( P_{trpp} - \pi_{trpp} \Big) ^2
 \end{equation}
 
 where:\newline
@@ -2831,7 +2899,7 @@ where $<$number$>$ is the number of recaptures for the tag/timestep/area/length 
 The Poisson function calculates the likelihood component from equation~\ref{eq:recap1} below:
 
 \begin{equation}\label{eq:recap1}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it length} \Big( N_{trl} + \log \nu_{trl}! - N_{trl} \log \nu_{trl} \Big)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it lengths} \Big( N_{trl} + \log \nu_{trl}! - N_{trl} \log \nu_{trl} \Big)
 \end{equation}
 
 where:\newline
@@ -3857,6 +3925,7 @@ A version of this user guide was printed and published as a Marine Research Inst
 \section{Gadget version 2.1.03}\label{sec:v2103}
 \begin{itemize}
 \item changed the otherfood file format to specify the biomass of otherfood available, rather than the density of the otherfood (see section~\ref{sec:foodamounts})
+\item added a fleet that extends the LinearFleet to take the different catchability of the various stocks into account (see section~\ref{sec:effortfleet})
 \item added the StockPreyPrinter to the list of available printer classes (see section~\ref{sec:stockpreyprinter})
 \end{itemize}
 
