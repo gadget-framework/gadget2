@@ -534,7 +534,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
     handle.logMessage(LOGFAIL, "Error in catchdistribution - invalid timestep");
 
   double l = 0.0;
-  aggregator->Sum(TimeInfo);
+  aggregator->Sum();
   if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData() == 1))
     handle.logMessage(LOGWARN, "Warning in catchdistribution - zero catch found");
   alptr = &aggregator->getSum();

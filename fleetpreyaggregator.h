@@ -37,9 +37,8 @@ public:
   void Reset();
   /**
    * \brief This function will aggregate the fleet catch data
-   * \param TimeInfo is the TimeClass for the current model
    */
-  void Sum(const TimeClass* const TimeInfo);
+  void Sum();
   /**
    * \brief This function will check the fleet catch data
    * \return 1 if there is no catch data found, 0 otherwise

@@ -394,7 +394,7 @@ void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
   double l = 0.0;
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchstatistics component", this->getName());
-  aggregator->Sum(TimeInfo);
+  aggregator->Sum();
   if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData() == 1))
     handle.logMessage(LOGWARN, "Warning in catchstatistics - zero catch found");
 

@@ -73,11 +73,10 @@ void SIByFleetOnStep::Sum(const TimeClass* const TimeInfo) {
 
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Calculating index for surveyindex component", this->getSIName());
-  aggregator->Sum(TimeInfo);
+  aggregator->Sum();
   if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData() == 1))
     handle.logMessage(LOGWARN, "Warning in surveyindex - zero catch found");
   alptr = &(aggregator->getSum()[0]);
-  //JMB experimental survey index based on the biomass
   //JMB experimental survey index based on the biomass
   if (biomass == 1)
     for (i = 0; i < this->numIndex(); i++)
