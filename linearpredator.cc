@@ -46,14 +46,14 @@ void LinearPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
     }
   }
 
-  //Inform the preys of the consumption.
+  //inform the preys of the consumption
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
       this->getPrey(prey)->addBiomassConsumption(area, (*cons[inarea][prey])[predl]);
 }
 
 void LinearPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
-  int over, prey, preyl;
+  int prey, preyl;
   int inarea = this->areaNum(area);
   double maxRatio, tmp;
 
@@ -63,26 +63,20 @@ void LinearPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
   if (TimeInfo->numSubSteps() != 1)
     maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
 
-  over = 0;
   for (prey = 0; prey < this->numPreys(); prey++) {
-    if (this->getPrey(prey)->isPreyArea(area)) {
-      if (this->getPrey(prey)->isOverConsumption(area)) {
-        over = 1;
-        DoubleVector ratio = this->getPrey(prey)->getRatio(inarea);
-        for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
-          if (ratio[preyl] > maxRatio) {
-            tmp = maxRatio / ratio[preyl];
-            overcons[inarea][predl] += (1.0 - tmp) * (*cons[inarea][prey])[predl][preyl];
-            (*cons[inarea][prey])[predl][preyl] *= tmp;
-          }
+    if (this->getPrey(prey)->isOverConsumption(area)) {
+      DoubleVector ratio = this->getPrey(prey)->getRatio(inarea);
+      for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
+        if (ratio[preyl] > maxRatio) {
+          tmp = maxRatio / ratio[preyl];
+          overcons[inarea][predl] += (1.0 - tmp) * (*cons[inarea][prey])[predl][preyl];
+          (*cons[inarea][prey])[predl][preyl] *= tmp;
         }
       }
     }
   }
 
-  if (over == 1)
-    totalcons[inarea][predl] -= overcons[inarea][predl];
-
+  totalcons[inarea][predl] -= overcons[inarea][predl];
   totalconsumption[inarea][predl] += totalcons[inarea][predl];
   overconsumption[inarea][predl] += overcons[inarea][predl];
   for (prey = 0; prey < this->numPreys(); prey++)

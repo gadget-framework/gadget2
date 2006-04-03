@@ -8,8 +8,8 @@ LengthPredator::LengthPredator(const char* givenname, const IntVector& Areas,
   Keeper* const keeper, Formula multscaler) : PopPredator(givenname, Areas) {
 
   scaler.resize(Areas.Size(), 0.0);
-  multi = multscaler;
   keeper->addString("scale");
+  multi = multscaler;
   multi.Inform(keeper);
   keeper->clearLast();
 }

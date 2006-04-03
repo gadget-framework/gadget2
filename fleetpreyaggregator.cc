@@ -38,9 +38,12 @@ FleetPreyAggregator::~FleetPreyAggregator() {
 }
 
 void FleetPreyAggregator::Print(ofstream& outfile) const {
-  int i;
+  int i, j;
   for (i = 0; i < total.Size(); i++) {
-    outfile << "\tInternal areas " << areas[i][0] << endl;
+    outfile << "\tInternal areas";
+    for (j = 0; j < areas.Ncol(i); j++)
+      outfile << sep << areas[i][j];
+    outfile << endl;
     total[i].printNumbers(outfile);
   }
   outfile.flush();

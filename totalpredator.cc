@@ -68,7 +68,7 @@ void TotalPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
 }
 
 void TotalPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
-  int check, over, prey, preyl;
+  int check, prey, preyl;
   int inarea = this->areaNum(area);
   double maxRatio, tmp;
 
@@ -78,13 +78,11 @@ void TotalPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
   if (TimeInfo->numSubSteps() != 1)
     maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
 
-  over = 0;
   check = 0;
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
       check = 1;
       if (this->getPrey(prey)->isOverConsumption(area)) {
-        over = 1;
         DoubleVector ratio = this->getPrey(prey)->getRatio(inarea);
         for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
           if (ratio[preyl] > maxRatio) {
@@ -97,13 +95,11 @@ void TotalPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
     }
   }
 
-  if (over == 1)
-    totalcons[inarea][predl] -= overcons[inarea][predl];
-
   //if no prey found to consume then overcons set to actual consumption
   if (check == 0)
-    overcons[inarea][predl] = prednumber[inarea][predl].N * multi / TimeInfo->numSubSteps();
+    overcons[inarea][predl] = totalcons[inarea][predl];
 
+  totalcons[inarea][predl] -= overcons[inarea][predl];
   totalconsumption[inarea][predl] += totalcons[inarea][predl];
   overconsumption[inarea][predl] += overcons[inarea][predl];
   for (prey = 0; prey < this->numPreys(); prey++)
