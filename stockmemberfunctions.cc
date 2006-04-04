@@ -129,8 +129,12 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
 //A number of Special functions, Spawning, Renewal, Maturation and
 //Transition to other Stocks, Maturity due to age and increased age.
 void Stock::updateAgePart1(int area, const TimeClass* const TimeInfo) {
-  if (doesmove && transition->isTransitionStep(TimeInfo))
-    transition->storeTransitionStock(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
+  if (doesmove && transition->isTransitionStep(TimeInfo)) {
+    if (tagAlkeys.numTagExperiments() > 0)
+      transition->storeTransitionStock(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
+    else
+      transition->storeTransitionStock(area, Alkeys[this->areaNum(area)], TimeInfo);
+  }
 }
 
 void Stock::updateAgePart2(int area, const TimeClass* const TimeInfo) {
@@ -185,8 +189,13 @@ void Stock::updatePopulationPart3(int area, const TimeClass* const TimeInfo) {
 }
 
 void Stock::updatePopulationPart4(int area, const TimeClass* const TimeInfo) {
-  if (doesstray && stray->isStrayStepArea(area, TimeInfo))
-    stray->storeStrayingStock(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
+  if (doesstray && stray->isStrayStepArea(area, TimeInfo)) {
+    if (tagAlkeys.numTagExperiments() > 0) {
+      stray->storeStrayingStock(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
+      tagAlkeys[this->areaNum(area)].updateRatio(Alkeys[this->areaNum(area)]);
+    } else
+      stray->storeStrayingStock(area, Alkeys[this->areaNum(area)], TimeInfo);
+  }
 }
 
 void Stock::updatePopulationPart5(int area, const TimeClass* const TimeInfo) {

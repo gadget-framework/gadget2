@@ -133,6 +133,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
   int maxStrayAge = 0;
   double minlength = 9999.0;
   for (i = 0; i < strayStocks.Size(); i++) {
+    CI.resize(new ConversionIndex(LgrpDiv, strayStocks[i]->getLengthGroupDiv()));
     index = 0;
     for (j = 0; j < strayArea.Size(); j++)
       if (!strayStocks[i]->isInArea(strayArea[j]))
@@ -147,8 +148,6 @@ void StrayData::setStock(StockPtrVector& stockvec) {
   }
 
   minStrayLength = LgrpDiv->numLengthGroup(minlength);
-  for (i = 0; i < strayStocks.Size(); i++)
-    CI.resize(new ConversionIndex(LgrpDiv, strayStocks[i]->getLengthGroupDiv()));
   IntVector minlv(maxStrayAge - minStrayAge + 1, 0);
   IntVector sizev(maxStrayAge - minStrayAge + 1, LgrpDiv->numLengthGroups());
   Storage.resize(areas.Size(), minStrayAge, minlv, sizev);
@@ -159,12 +158,30 @@ void StrayData::setStock(StockPtrVector& stockvec) {
   }
 }
 
+void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys, const TimeClass* const TimeInfo) {
+
+  int age, len;
+  int inarea = this->areaNum(area);
+  double straynumber;
+
+  for (age = Storage[inarea].minAge(); age < Storage[inarea].maxAge(); age++) {
+    for (len = Storage[inarea].minLength(age); len < Storage[inarea].maxLength(age); len++) {
+      straynumber = Alkeys[age][len].N * strayProportion[len];
+      Storage[inarea][age][len].N = straynumber;
+      Storage[inarea][age][len].W = Alkeys[age][len].W;
+
+      if (len >= minStrayLength)
+        Alkeys[age][len].N -= straynumber;
+    }
+  }
+}
+
 void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
   AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo) {
 
   int age, len, tag;
   int inarea = this->areaNum(area);
-  double straynumber, tagnumber;
+  double straynumber;
 
   for (age = Storage[inarea].minAge(); age < Storage[inarea].maxAge(); age++) {
     for (len = Storage[inarea].minLength(age); len < Storage[inarea].maxLength(age); len++) {
@@ -176,19 +193,17 @@ void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
         Alkeys[age][len].N -= straynumber;
 
       for (tag = 0; tag < TagAlkeys.numTagExperiments(); tag++) {
-        tagnumber = *(TagAlkeys[age][len][tag].N) * strayProportion[len];
-        if (tagnumber < verysmall)
+        straynumber = *(TagAlkeys[age][len][tag].N) * strayProportion[len];
+        if (straynumber < verysmall)
           *(tagStorage[inarea][age][len][tag].N) = 0.0;
         else
-          *(tagStorage[inarea][age][len][tag].N) = tagnumber;
+          *(tagStorage[inarea][age][len][tag].N) = straynumber;
 
         if (len >= minStrayLength)
-          *(TagAlkeys[age][len][tag].N) -= tagnumber;
+          *(TagAlkeys[age][len][tag].N) -= straynumber;
       }
-
     }
   }
-  TagAlkeys.updateRatio(Alkeys);
 }
 
 void StrayData::addStrayStock(int area, const TimeClass* const TimeInfo) {
@@ -210,6 +225,9 @@ void StrayData::addStrayStock(int area, const TimeClass* const TimeInfo) {
     if (tagStorage.numTagExperiments() > 0)
       strayStocks[i]->Add(tagStorage, CI[i], area, ratio);
   }
+  Storage[inarea].setToZero();
+  if (tagStorage.numTagExperiments() > 0)
+    tagStorage[inarea].setToZero();
 }
 
 int StrayData::isStrayStepArea(int area, const TimeClass* const TimeInfo) {
@@ -257,10 +275,6 @@ void StrayData::Reset(const TimeClass* const TimeInfo) {
     }
   }
 
-  for (i = 0; i < Storage.Size(); i++) {
-    Storage[i].setToZero();
-    tagStorage[i].setToZero();
-  }
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset straying data");
 }

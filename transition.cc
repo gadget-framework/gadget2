@@ -88,11 +88,15 @@ void Transition::setStock(StockPtrVector& stockvec) {
       mlength = transitionStocks[i]->getLengthGroupDiv()->minLength();
   }
 
+  minTransitionLength = LgrpDiv->numLengthGroup(mlength);
   IntVector minlv(2, 0);
   IntVector sizev(2, LgrpDiv->numLengthGroups());
   Storage.resize(areas.Size(), age, minlv, sizev);
   tagStorage.resize(areas.Size(), age, minlv, sizev);
-  minTransitionLength = LgrpDiv->numLengthGroup(mlength);
+  for (i = 0; i < Storage.Size(); i++) {
+    Storage[i].setToZero();
+    tagStorage[i].setToZero();
+  }
 }
 
 void Transition::Print(ofstream& outfile) const {
@@ -106,33 +110,42 @@ void Transition::Print(ofstream& outfile) const {
   outfile << "\n\tTransition step " << transitionStep << endl;
 }
 
+void Transition::storeTransitionStock(int area, AgeBandMatrix& Alkeys, const TimeClass* const TimeInfo) {
+
+  int len, inarea = this->areaNum(area);
+  for (len = Storage[inarea].minLength(age); len < Storage[inarea].maxLength(age); len++) {
+    Storage[inarea][age][len].N = Alkeys[age][len].N;
+    Storage[inarea][age][len].W = Alkeys[age][len].W;
+
+    if (len >= minTransitionLength)
+      Alkeys[age][len].setToZero();
+  }
+}
+
 void Transition::storeTransitionStock(int area, AgeBandMatrix& Alkeys,
   AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo) {
 
+  int len, tag;
   int inarea = this->areaNum(area);
-  int numtags = TagAlkeys.numTagExperiments();
-  int i, l, minl, maxl;
   double tagnumber;
 
-  minl = Storage[inarea].minLength(age);
-  maxl = Storage[inarea].maxLength(age);
-  for (l = minl; l < maxl; l++) {
-    Storage[inarea][age][l].N = Alkeys[age][l].N;
-    Storage[inarea][age][l].W = Alkeys[age][l].W;
+  for (len = Storage[inarea].minLength(age); len < Storage[inarea].maxLength(age); len++) {
+    Storage[inarea][age][len].N = Alkeys[age][len].N;
+    Storage[inarea][age][len].W = Alkeys[age][len].W;
 
-    if (l >= minTransitionLength)
-      Alkeys[age][l].setToZero();
+    if (len >= minTransitionLength)
+      Alkeys[age][len].setToZero();
 
-    for (i = 0; i < numtags; i++) {
-      tagnumber = *(TagAlkeys[age][l][i].N);
+    for (tag = 0; tag < TagAlkeys.numTagExperiments(); tag++) {
+      tagnumber = *(TagAlkeys[age][len][tag].N);
       if (tagnumber < verysmall)
-        *(tagStorage[inarea][age][l][i].N) = 0.0;
+        *(tagStorage[inarea][age][len][tag].N) = 0.0;
       else
-        *(tagStorage[inarea][age][l][i].N) = tagnumber;
+        *(tagStorage[inarea][age][len][tag].N) = tagnumber;
 
-      if (l >= minTransitionLength) {
-        *(TagAlkeys[age][l][i].N) = 0.0;
-        TagAlkeys[age][l][i].R = 0.0;
+      if (len >= minTransitionLength) {
+        *(TagAlkeys[age][len][tag].N) = 0.0;
+        TagAlkeys[age][len][tag].R = 0.0;
       }
     }
   }
@@ -166,10 +179,6 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
 
 void Transition::Reset() {
   int i;
-  for (i = 0; i < Storage.Size(); i++) {
-    Storage[i].setToZero();
-    tagStorage[i].setToZero();
-  }
 
   //JMB check that the sum of the ratios is 1
   ratioscale = 0.0;

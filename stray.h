@@ -54,11 +54,18 @@ public:
    * \brief This will store the part of the current stock that will stray into other stocks
    * \param area is the area that the straying is being calculated on
    * \param Alkeys is the AgeBandMatrix of the stock that fish will move from
+   * \param TimeInfo is the TimeClass for the current model
+   */
+  void storeStrayingStock(int area, AgeBandMatrix& Alkeys, const TimeClass* const TimeInfo);
+  /**
+   * \brief This will store the part of the current stock that will stray into other stocks
+   * \param area is the area that the straying is being calculated on
+   * \param Alkeys is the AgeBandMatrix of the stock that fish will move from
    * \param TagAlkeys is the AgeBandMatrixRatio of the tagged stock that fish will move from
    * \param TimeInfo is the TimeClass for the current model
    */
   void storeStrayingStock(int area, AgeBandMatrix& Alkeys,
-    AgeBandMatrixRatio& TagAlkeys,const TimeClass* const TimeInfo);
+    AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo);
   /**
    * \brief This will check if the straying process will take place on the current timestep
    * \param area is the area that the straying is being calculated on

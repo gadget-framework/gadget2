@@ -42,10 +42,18 @@ public:
    * \brief This will store the part of the younger stock that will move into the older stocks
    * \param area is the area that the transition is being calculated on
    * \param Alkeys is the AgeBandMatrix of the stock that fish will move from
+   * \param TimeInfo is the TimeClass for the current model
+   */
+  void storeTransitionStock(int area, AgeBandMatrix& Alkeys, const TimeClass* const TimeInfo);
+  /**
+   * \brief This will store the part of the younger stock that will move into the older stocks
+   * \param area is the area that the transition is being calculated on
+   * \param Alkeys is the AgeBandMatrix of the stock that fish will move from
    * \param TagAlkeys is the AgeBandMatrixRatio of the tagged stock that fish will move from
    * \param TimeInfo is the TimeClass for the current model
    */
-  void storeTransitionStock(int area, AgeBandMatrix& Alkeys, AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo);
+  void storeTransitionStock(int area, AgeBandMatrix& Alkeys,
+    AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo);
   /**
    * \brief This will move the younger stock into the older stock age-length cells
    * \param area is the area that the movement is being calculated on
