@@ -28,10 +28,9 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   stocknames.resize(new char[strlen(text) + 1]);
   strcpy(stocknames[0], text);
 
-  int tmparea;
   //Currently can only have one area per tagging experiment
-  readWordAndVariable(infile, "tagarea", tmparea);
-  tagarea = Area->getInnerArea(tmparea);
+  readWordAndVariable(infile, "tagarea", tagarea);
+  tagarea = Area->getInnerArea(tagarea);
 
   infile >> ws;
   char c = infile.peek();
@@ -40,16 +39,21 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
   else
     endyear = TimeInfo->getLastYear();
 
-  int i = 0, found = 0;
-  while (found == 0 && i < stockvec.Size()) {
+  int i, found = 0;
+  for (i = 0; i < stockvec.Size(); i++) {
     if (strcasecmp(stockvec[i]->getName(), stocknames[0]) == 0) {
-      LgrpDiv = new LengthGroupDivision(*(stockvec[i]->getLengthGroupDiv()));
+      if (found == 0) {
+        taggingstock = stockvec[i];
+        LgrpDiv = new LengthGroupDivision(*(taggingstock->getLengthGroupDiv()));
+        tagStocks.resize(taggingstock);
+      }
       found++;
     }
-    i++;
   }
   if (found == 0)
     handle.logMessage(LOGFAIL, "Error in tags - failed to match stock", stocknames[0]);
+  if (found > 1)
+    handle.logMessage(LOGFAIL, "Error in tags - repeated stock", stocknames[0]);
 
   //Now read in the tagloss information
   readWordAndVariable(infile, "tagloss", tagloss);
@@ -187,82 +191,58 @@ void Tags::Reset() {
 
 void Tags::setStock(StockPtrVector& Stocks) {
   int i, j, found;
-  StockPtrVector tempMatureStock, tempTransitionStock, tempStrayStock;
+  StockPtrVector tmpStockVector;
   char* stockname;
-
-  j = 0;
-  found = 0;
-  while (found == 0 && j < Stocks.Size()) {
-    if (strcasecmp(Stocks[j]->getName(), stocknames[0]) == 0) {
-      tagStocks.resize(Stocks[j]);
-      taggingstock = Stocks[j];
-      found++;
-    }
-    j++;
-  }
-  if (found == 0)
-    handle.logMessage(LOGFAIL, "Error in tags - failed to match stock", stocknames[0]);
-
-  //Make sure that given stocks are defined on tagarea and have same
-  //lengthgroup division for the tagging experiment and the stock
-  if (!(taggingstock->isInArea(tagarea)))
-    handle.logMessage(LOGFAIL, "Error in tags - stock isnt defined on tagging area");
-
-  const LengthGroupDivision* tempLgrpDiv = taggingstock->getLengthGroupDiv();
-  if (LgrpDiv->numLengthGroups() != tempLgrpDiv->numLengthGroups())
-    handle.logMessage(LOGFAIL, "Error in tags - invalid length group for tagged stock");
-  if (LgrpDiv->dl() != tempLgrpDiv->dl())
-    handle.logMessage(LOGFAIL, "Error in tags - invalid length group for tagged stock");
-  if (!(isEqual(LgrpDiv->minLength(), tempLgrpDiv->minLength())))
-    handle.logMessage(LOGFAIL, "Error in tags - invalid length group for tagged stock");
 
   preyindex.resize(1, -1);
   updated.resize(1, 0);
+  if (!(taggingstock->isInArea(tagarea)))
+    handle.logMessage(LOGFAIL, "Error in tags - stock isnt defined on tagging area");
 
   if (taggingstock->doesMove()) {
-    tempTransitionStock = taggingstock->getTransitionStocks();
-    for (i = 0; i < tempTransitionStock.Size(); i++) {
-      transitionStocks.resize(tempTransitionStock[i]);
+    tmpStockVector = taggingstock->getTransitionStocks();
+    for (i = 0; i < tmpStockVector.Size(); i++) {
+      transitionStocks.resize(tmpStockVector[i]);
       preyindex.resize(1, -1);
       updated.resize(1, 0);
-      tagStocks.resize(tempTransitionStock[i]);
+      tagStocks.resize(tmpStockVector[i]);
     }
   }
 
   if (taggingstock->doesMature()) {
-    tempMatureStock = taggingstock->getMatureStocks();
-    for (i = 0; i < tempMatureStock.Size(); i++) {
-      matureStocks.resize(tempMatureStock[i]);
+    tmpStockVector = taggingstock->getMatureStocks();
+    for (i = 0; i < tmpStockVector.Size(); i++) {
+      matureStocks.resize(tmpStockVector[i]);
       found = 0;
       for (j = 0; j < transitionStocks.Size(); j++)
-        if (!(strcasecmp(transitionStocks[j]->getName(), tempMatureStock[i]->getName()) == 0))
+        if (!(strcasecmp(transitionStocks[j]->getName(), tmpStockVector[i]->getName()) == 0))
           found++;
 
       if (found == 0) {
         preyindex.resize(1, -1);
         updated.resize(1, 0);
-        tagStocks.resize(tempMatureStock[i]);
+        tagStocks.resize(tmpStockVector[i]);
       }
     }
   }
 
   if (taggingstock->doesStray()) {
-    tempStrayStock = taggingstock->getStrayStocks();
-    for (i = 0; i < tempStrayStock.Size(); i++) {
-      strayStocks.resize(tempStrayStock[i]);
+    tmpStockVector = taggingstock->getStrayStocks();
+    for (i = 0; i < tmpStockVector.Size(); i++) {
+      strayStocks.resize(tmpStockVector[i]);
       found = 0;
       for (j = 0; j < transitionStocks.Size(); j++)
-        if (!(strcasecmp(transitionStocks[j]->getName(), tempStrayStock[i]->getName()) == 0))
+        if (!(strcasecmp(transitionStocks[j]->getName(), tmpStockVector[i]->getName()) == 0))
           found++;
 
       for (j = 0; j < matureStocks.Size(); j++)
-        if (!(strcasecmp(matureStocks[j]->getName(), tempStrayStock[i]->getName()) == 0))
+        if (!(strcasecmp(matureStocks[j]->getName(), tmpStockVector[i]->getName()) == 0))
           found++;
 
       if (found == 0) {
         preyindex.resize(1, -1);
         updated.resize(1, 0);
-        tagStocks.resize(tempStrayStock[i]);
+        tagStocks.resize(tmpStockVector[i]);
       }
     }
   }

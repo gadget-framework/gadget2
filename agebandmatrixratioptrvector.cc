@@ -56,15 +56,26 @@ void AgeBandMatrixRatioPtrVector::resize(int addsize, AgeBandMatrixRatio* matr) 
 void AgeBandMatrixRatioPtrVector::resize(int addsize, int minage,
   const IntVector& minl, const IntVector& lsize) {
 
-  AgeBandMatrixRatio** vnew = new AgeBandMatrixRatio*[size + addsize];
+  if (addsize <= 0)
+    return;
+
   int i;
-  for (i = 0; i < size; i++)
-    vnew[i] = v[i];
-  for (i = size; i < size + addsize; i++)
-    vnew[i] = new AgeBandMatrixRatio(minage, minl, lsize);
-  delete[] v;
-  v = vnew;
-  size += addsize;
+  if (v == 0) {
+    size = addsize;
+    v = new AgeBandMatrixRatio*[size];
+    for (i = 0; i < size; i++)
+      v[i] = new AgeBandMatrixRatio(minage, minl, lsize);
+
+  } else {
+    AgeBandMatrixRatio** vnew = new AgeBandMatrixRatio*[size + addsize];
+    for (i = 0; i < size; i++)
+      vnew[i] = v[i];
+    delete[] v;
+    v = vnew;
+    for (i = size; i < size + addsize; i++)
+      v[i] = new AgeBandMatrixRatio(minage, minl, lsize);
+    size += addsize;
+  }
 }
 
 // New memory has been allocated for each v[i][age][length][tag].N.

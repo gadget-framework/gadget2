@@ -45,10 +45,9 @@ AgeBandMatrixRatio::~AgeBandMatrixRatio() {
 }
 
 int AgeBandMatrixRatio::numTagExperiments() const {
-  if (nrow > 0) {
+  if (nrow > 0)
     return (*v[0])[v[0]->minCol()].Size();
-  } else
-    return 0;
+  return 0;
 }
 
 void AgeBandMatrixRatio::setToZero() {
