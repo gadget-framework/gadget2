@@ -250,19 +250,22 @@ void SpawnData::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const Ti
     spawnParameters.Update(TimeInfo);
 
   int age, len;
+  PopInfo pop;
   for (age = Alkeys.minAge(); age <= Alkeys.maxAge(); age++) {
     //subtract mortality and reduce the weight of the living ones.
     for (len = Alkeys.minLength(age); len < Alkeys.maxLength(age); len++) {
-      PopInfo p = Alkeys[age][len] * spawnProportion[len];
+      if (!isZero(spawnProportion[len])) {
+        pop = Alkeys[age][len] * spawnProportion[len];
 
-      //calculate the spawning stock biomss if needed
-      if (onlyParent == 0)
-        spawnNumbers[age][len] = calcSpawnNumber(age, len, p.N, p.W);
+        //calculate the spawning stock biomass if needed
+        if (onlyParent == 0)
+          spawnNumbers[age][len] = calcSpawnNumber(age, len, pop.N, pop.W);
 
-      p *= exp(-spawnMortality[len]);
-      p.W -= (spawnWeightLoss[len] * p.W);
-      Alkeys[age][len] *= (1.0 - spawnProportion[len]);
-      Alkeys[age][len] += p;
+        pop *= exp(-spawnMortality[len]);
+        pop.W -= (spawnWeightLoss[len] * pop.W);
+        Alkeys[age][len] *= (1.0 - spawnProportion[len]);
+        Alkeys[age][len] += pop;
+      }
     }
   }
 }

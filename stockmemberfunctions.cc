@@ -158,6 +158,10 @@ void Stock::updateAgePart3(int area, const TimeClass* const TimeInfo) {
     }
     transition->Move(area, TimeInfo);
   }
+
+  //JMB - only update the ratio for the tagged stock after all other age updates
+  if (istagged && tagAlkeys.numTagExperiments() > 0)
+    tagAlkeys[this->areaNum(area)].updateRatio(Alkeys[this->areaNum(area)]);
 }
 
 void Stock::updatePopulationPart1(int area, const TimeClass* const TimeInfo) {
@@ -181,11 +185,8 @@ void Stock::updatePopulationPart2(int area, const TimeClass* const TimeInfo) {
 }
 
 void Stock::updatePopulationPart3(int area, const TimeClass* const TimeInfo) {
-  if (doesrenew && renewal->isRenewalStepArea(area, TimeInfo)) {
+  if (doesrenew && renewal->isRenewalStepArea(area, TimeInfo))
     renewal->addRenewal(Alkeys[this->areaNum(area)], area, TimeInfo);
-    if (istagged && tagAlkeys.numTagExperiments() > 0)
-      tagAlkeys[this->areaNum(area)].updateRatio(Alkeys[this->areaNum(area)]);
-  }
 
   if (doesspawn && spawner->isSpawnStepArea(area, TimeInfo))
     spawner->addSpawnStock(area, TimeInfo);
@@ -193,10 +194,9 @@ void Stock::updatePopulationPart3(int area, const TimeClass* const TimeInfo) {
 
 void Stock::updatePopulationPart4(int area, const TimeClass* const TimeInfo) {
   if (doesstray && stray->isStrayStepArea(area, TimeInfo)) {
-    if (istagged && tagAlkeys.numTagExperiments() > 0) {
+    if (istagged && tagAlkeys.numTagExperiments() > 0)
       stray->storeStrayingStock(area, Alkeys[this->areaNum(area)], tagAlkeys[this->areaNum(area)], TimeInfo);
-      tagAlkeys[this->areaNum(area)].updateRatio(Alkeys[this->areaNum(area)]);
-    } else
+    else
       stray->storeStrayingStock(area, Alkeys[this->areaNum(area)], TimeInfo);
   }
 }
@@ -211,6 +211,10 @@ void Stock::updatePopulationPart5(int area, const TimeClass* const TimeInfo) {
     }
     stray->addStrayStock(area, TimeInfo);
   }
+
+  //JMB - only update the ratio for the tagged stock after all other population updates
+  if (istagged && tagAlkeys.numTagExperiments() > 0)
+    tagAlkeys[this->areaNum(area)].updateRatio(Alkeys[this->areaNum(area)]);
 }
 
 void Stock::Add(const AgeBandMatrix& Addition,
