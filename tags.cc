@@ -46,6 +46,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
         taggingstock = stockvec[i];
         LgrpDiv = new LengthGroupDivision(*(taggingstock->getLengthGroupDiv()));
         tagStocks.resize(taggingstock);
+        taggingstock->setTaggedStock();
       }
       found++;
     }
@@ -206,6 +207,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
       preyindex.resize(1, -1);
       updated.resize(1, 0);
       tagStocks.resize(tmpStockVector[i]);
+      tmpStockVector[i]->setTaggedStock();
     }
   }
 
@@ -222,6 +224,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
         preyindex.resize(1, -1);
         updated.resize(1, 0);
         tagStocks.resize(tmpStockVector[i]);
+        tmpStockVector[i]->setTaggedStock();
       }
     }
   }
@@ -243,6 +246,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
         preyindex.resize(1, -1);
         updated.resize(1, 0);
         tagStocks.resize(tmpStockVector[i]);
+        tmpStockVector[i]->setTaggedStock();
       }
     }
   }
@@ -451,7 +455,6 @@ void Tags::updateStrayStock(const TimeClass* const TimeInfo) {
 
 int Tags::stockIndex(const char* stockname) {
   int i;
-
   for (i = 0; i < tagStocks.Size(); i++)
     if (strcasecmp(stockname, tagStocks[i]->getName()) == 0)
       return i;
@@ -461,8 +464,7 @@ int Tags::stockIndex(const char* stockname) {
 
 int Tags::areaIndex(const char* stockname, int area) {
   int i, j;
-
-  for (i = 0; i < tagStocks.Size(); i++)
+  for (i = 0; i < tagStocks.Size(); i++) {
     if (strcasecmp(stockname, tagStocks[i]->getName()) == 0) {
       IntVector stockareas = tagStocks[i]->getAreas();
       for (j = 0; j < stockareas.Size(); j++)
@@ -470,7 +472,7 @@ int Tags::areaIndex(const char* stockname, int area) {
           return j;
       return -1;
     }
-
+  }
   return -1;
 }
 
@@ -512,8 +514,7 @@ const AgeBandMatrix& Tags::getNumberPriorToEating(int area, const char* stocknam
 int Tags::isWithinPeriod(int year, int step) {
   if ((year > tagyear || (year == tagyear && step >= tagstep)) && (year <= endyear))
     return 1;
-  else
-    return 0;
+  return 0;
 }
 
 void Tags::addToTagStock(int timeid) {

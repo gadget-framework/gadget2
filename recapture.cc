@@ -275,6 +275,11 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
         handle.logMessage(LOGFAIL, "Error in recaptures - failed to match stock", stocknames[i]);
     }
 
+    //Check the stock has been tagged
+    for (j = 0; j < stocks.Size(); j++)
+      if (!stocks[j]->isTagged())
+        handle.logMessage(LOGFAIL, "Error in recaptures - stocks hasnt been tagged", stocks[j]->getName());
+
     //Check if the stock lives on all the areas that were read in
     for (i = 0; i < areas.Nrow(); i++)
       for (l = 0; l < areas.Ncol(i); l++)

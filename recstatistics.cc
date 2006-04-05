@@ -289,6 +289,11 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
         handle.logMessage(LOGFAIL, "Error in recstatistics - unrecognised stock", stocknames[i]);
     }
 
+    //Check the stock has been tagged
+    for (j = 0; j < stocks.Size(); j++)
+      if (!stocks[j]->isTagged())
+        handle.logMessage(LOGFAIL, "Error in recstatistics - stocks hasnt been tagged", stocks[j]->getName());
+
     LgrpDiv = new LengthGroupDivision(*(stocks[0]->getPrey()->getLengthGroupDiv()));
     for (i = 1; i < stocks.Size(); i++)
       if (!LgrpDiv->Combine(stocks[i]->getPrey()->getLengthGroupDiv()))

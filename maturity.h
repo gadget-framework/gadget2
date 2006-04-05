@@ -99,6 +99,10 @@ public:
    */
   const StockPtrVector& getMatureStocks();
   /**
+   * \brief This function will initialise the tagging experiments for the maturation calculations
+   */
+  void setTagged();
+  /**
    * \brief This will add a tagging experiment to the maturation calculations
    * \param tagname is the name of the tagging experiment
    */
@@ -150,6 +154,10 @@ private:
    * \brief This is the AgeBandMatrixRatioPtrVector used to store the calculated mature tagged stocks
    */
   AgeBandMatrixRatioPtrVector tagStorage;
+  /**
+   * \brief This is the flag used to denote whether the stock has been included in a tagging experiment or not
+   */
+  int istagged;
 };
 
 /**

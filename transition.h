@@ -71,6 +71,10 @@ public:
    */
   const StockPtrVector& getTransitionStocks();
   /**
+   * \brief This function will initialise the tagging experiments for the transition calculations
+   */
+  void setTagged();
+  /**
    * \brief This will add a tagging experiment to the transition calculations
    * \param tagname is the name of the tagging experiment
    */
@@ -139,6 +143,10 @@ protected:
    * \brief This is the minimum length group of the younger stock that exists in the older stock
    */
   int minTransitionLength;
+  /**
+   * \brief This is the flag used to denote whether the stock has been included in a tagging experiment or not
+   */
+  int istagged;
 };
 
 #endif

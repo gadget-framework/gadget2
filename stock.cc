@@ -25,7 +25,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   : BaseClass(givenname), stray(0), spawner(0), renewal(0), maturity(0), transition(0),
     migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), naturalm(0) {
 
-  doesgrow = doeseat = iseaten = doesmigrate = 0;
+  doesgrow = doeseat = iseaten = doesmigrate = istagged = 0;
   doesmove = doesrenew = doesmature = doesspawn = doesstray = 0;
   int i, tmpint = 0;
   char c;
@@ -75,9 +75,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //value to allow the whole range of lengths to be calculated
   IntVector lowerlgrp(maxage - minage + 1, 0);
   IntVector size(maxage - minage + 1, LgrpDiv->numLengthGroups());
-
   Alkeys.resize(areas.Size(), minage, lowerlgrp, size);
-  tagAlkeys.resize(areas.Size(), minage, lowerlgrp, size);
   for (i = 0; i < Alkeys.Size(); i++)
     Alkeys[i].setToZero();
 
@@ -279,7 +277,7 @@ Stock::Stock(const char* givenname)
   : BaseClass(givenname), stray(0), spawner(0), renewal(0), maturity(0), transition(0),
     migration(0), prey(0), predator(0), initial(0), LgrpDiv(0), grower(0), naturalm(0) {
 
-  doesgrow = doeseat = iseaten = doesmigrate = 0;
+  doesgrow = doeseat = iseaten = doesmigrate = istagged = 0;
   doesmove = doesrenew = doesmature = doesspawn = doesstray = 0;
 }
 
@@ -355,11 +353,30 @@ void Stock::setStock(StockPtrVector& stockvec) {
     renewal->setCI(LgrpDiv);
 }
 
+void Stock::setTagged() {
+  //resize tagAlkeys to be the same size as Alkeys
+  int i, minage, maxage;
+  minage = Alkeys[0].minAge();
+  maxage = Alkeys[0].maxAge();
+  IntVector lower(maxage - minage + 1, 0);
+  IntVector size(maxage - minage + 1, LgrpDiv->numLengthGroups());
+  tagAlkeys.resize(areas.Size(), minage, lower, size);
+  for (i = 0; i < tagAlkeys.Size(); i++)
+    tagAlkeys[i].setToZero();
+
+  if (doesmature)
+    maturity->setTagged();
+  if (doesmove)
+    transition->setTagged();
+  if (doesstray)
+    stray->setTagged();
+}
+
 void Stock::Print(ofstream& outfile) const {
-  int i;
 
   outfile << "\nStock\nName " << this->getName() << "\nLives on internal areas";
 
+  int i;
   for (i = 0; i < areas.Size(); i++)
     outfile << sep << areas[i];
   outfile << endl;
@@ -368,7 +385,7 @@ void Stock::Print(ofstream& outfile) const {
     << "\ndoes eat " << doeseat << "\ndoes migrate " << doesmigrate
     << "\ndoes mature " << doesmature << "\ndoes move " << doesmove
     << "\ndoes renew " << doesrenew << "\ndoes spawn " << doesspawn
-    << "\ndoes stray " << doesstray << endl << endl;
+    << "\ndoes stray " << doesstray << "\nis tagged " << istagged << endl << endl;
 
   LgrpDiv->Print(outfile);
   initial->Print(outfile);

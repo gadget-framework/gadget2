@@ -11,6 +11,7 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
   : LivesOnAreas(areas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)), age(Age) {
 
   int i = 0;
+  istagged = 0;
   ratioscale = 1.0; //JMB used to scale the ratios to ensure that they sum to 1
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -92,11 +93,8 @@ void Transition::setStock(StockPtrVector& stockvec) {
   IntVector minlv(2, 0);
   IntVector sizev(2, LgrpDiv->numLengthGroups());
   Storage.resize(areas.Size(), age, minlv, sizev);
-  tagStorage.resize(areas.Size(), age, minlv, sizev);
-  for (i = 0; i < Storage.Size(); i++) {
+  for (i = 0; i < Storage.Size(); i++)
     Storage[i].setToZero();
-    tagStorage[i].setToZero();
-  }
 }
 
 void Transition::Print(ofstream& outfile) const {
@@ -124,6 +122,9 @@ void Transition::storeTransitionStock(int area, AgeBandMatrix& Alkeys, const Tim
 
 void Transition::storeTransitionStock(int area, AgeBandMatrix& Alkeys,
   AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo) {
+
+  if (istagged == 0)
+    handle.logMessage(LOGFAIL, "Error in transition - invalid tagging experiment");
 
   int len, tag;
   int inarea = this->areaNum(area);
@@ -162,18 +163,18 @@ void Transition::Move(int area, const TimeClass* const TimeInfo) {
 
     if (transitionStocks[i]->isBirthday(TimeInfo)) {
       Storage[inarea].IncrementAge();
-      if (tagStorage.numTagExperiments() > 0)
+      if (istagged && tagStorage.numTagExperiments() > 0)
         tagStorage[inarea].IncrementAge(Storage[inarea]);
     }
 
     ratio = transitionRatio[ratioindex[i]] * ratioscale;
     transitionStocks[i]->Add(Storage[inarea], CI[i], area, ratio);
-    if (tagStorage.numTagExperiments() > 0)
+    if (istagged && tagStorage.numTagExperiments() > 0)
       transitionStocks[i]->Add(tagStorage, CI[i], area, ratio);
   }
 
   Storage[inarea].setToZero();
-  if (tagStorage.numTagExperiments() > 0)
+  if (istagged && tagStorage.numTagExperiments() > 0)
     tagStorage[inarea].setToZero();
 }
 
@@ -203,26 +204,39 @@ const StockPtrVector& Transition::getTransitionStocks() {
   return transitionStocks;
 }
 
+void Transition::setTagged() {
+  istagged = 1;
+  //resize tagStorage to be the same size as Storage
+  int i;
+  IntVector lower(2, 0);
+  IntVector size(2, LgrpDiv->numLengthGroups());
+  tagStorage.resize(areas.Size(), age, lower, size);
+  for (i = 0; i < tagStorage.Size(); i++)
+    tagStorage[i].setToZero();
+}
+
 void Transition::addTransitionTag(const char* tagname) {
+  if (istagged == 0)
+    handle.logMessage(LOGFAIL, "Error in transition - invalid tagging experiment", tagname);
   tagStorage.addTag(tagname);
 }
 
 void Transition::deleteTransitionTag(const char* tagname) {
-  int minage, maxage, minlen, maxlen, a, length, i;
+  if (istagged == 0)
+    handle.logMessage(LOGFAIL, "Error in transition - invalid tagging experiment", tagname);
+
+  int minage, maxage, age, len, a;
   int id = tagStorage.getTagID(tagname);
 
   if (id >= 0) {
     minage = tagStorage[0].minAge();
     maxage = tagStorage[0].maxAge();
-
-    // Remove allocated memory
-    for (i = 0; i < tagStorage.Size(); i++) {
-      for (a = minage; a <= maxage; a++) {
-        minlen = tagStorage[i].minLength(a);
-        maxlen = tagStorage[i].maxLength(a);
-        for (length = minlen; length < maxlen; length++) {
-          delete[] (tagStorage[i][a][length][id].N);
-          (tagStorage[i][a][length][id].N) = NULL;
+    //free memory allocated for tagging experiment
+    for (a = 0; a < tagStorage.Size(); a++) {
+      for (age = minage; age <= maxage; age++) {
+        for (len = tagStorage[a].minLength(age); len < tagStorage[a].maxLength(age); len++) {
+          delete[] (tagStorage[a][age][len][id].N);
+          (tagStorage[a][age][len][id].N) = NULL;
         }
       }
     }

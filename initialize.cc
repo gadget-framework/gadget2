@@ -96,6 +96,13 @@ void Ecosystem::Initialise() {
     tagvec[i]->setStock(stockvec);
   }
 
+  //If there are any tagging experiments we need to resize objects to store them
+  //This has to take place last, since some tagged stocks might not be set explicitly
+  if (tagvec.Size() != 0)
+    for (i = 0; i < stockvec.Size(); i++)
+      if (stockvec[i]->isTagged())
+        stockvec[i]->setTagged();
+
   for (i = 0; i < stockvec.Size(); i++)
     basevec.resize(stockvec[i]);
   for (i = 0; i < otherfoodvec.Size(); i++)

@@ -251,6 +251,19 @@ public:
    */
   int doesMigrate() const { return doesmigrate; };
   /**
+   * \brief This function will return the flag used to denote whether the stock has been tagged or not
+   * \return flag
+   */
+  int isTagged() const { return istagged; };
+  /**
+   * \brief This function will set the flag to denote that the stock has been tagged
+   */
+  void setTaggedStock() { istagged = 1; };
+  /**
+   * \brief This function will initialise the tagging experiments for the stock and any related stocks
+   */
+  void setTagged();
+  /**
    * \brief This will return the minimum age of the stock
    * \return minimum age
    */
@@ -401,6 +414,10 @@ protected:
    * \note This is currently set to the last timestep in the year
    */
   int birthdate;
+  /**
+   * \brief This is the flag used to denote whether the stock has been included in a tagging experiment or not
+   */
+  int istagged;
   /**
    * \brief This is the PopInfoMatrix used to temporarily store the population during the growth calculation
    */

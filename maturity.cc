@@ -16,11 +16,14 @@ Maturity::Maturity(const IntVector& tmpareas, int minage, const IntVector& minle
   const IntVector& agesize, const LengthGroupDivision* const lgrpdiv)
   : LivesOnAreas(tmpareas) {
 
+  int i;
+  istagged = 0;
   tmpratio = 1.0;
   ratioscale = 1.0; //JMB used to scale the ratios to ensure that they sum to 1
   LgrpDiv = new LengthGroupDivision(*lgrpdiv);
   Storage.resize(tmpareas.Size(), minage, minlength, agesize);
-  tagStorage.resize(tmpareas.Size(), minage, minlength, agesize);
+  for (i = 0; i < areas.Size(); i++)
+    Storage[i].setToZero();
 }
 
 Maturity::~Maturity() {
@@ -64,12 +67,6 @@ void Maturity::setStock(StockPtrVector& stockvec) {
 
     if (index != 0)
       handle.logMessage(LOGWARN, "Warning in maturity - mature stock isnt defined on all areas");
-  }
-
-  for (i = 0; i < areas.Size(); i++) {
-    Storage[i].setToZero();
-    if (tagStorage.numTagExperiments() > 0)
-      tagStorage[i].setToZero();
   }
 }
 
@@ -118,12 +115,12 @@ void Maturity::Move(int area, const TimeClass* const TimeInfo) {
 
     tmpratio = matureRatio[ratioindex[i]] * ratioscale;
     matureStocks[i]->Add(Storage[inarea], CI[i], area, tmpratio);
-    if (tagStorage.numTagExperiments() > 0)
+    if (istagged && tagStorage.numTagExperiments() > 0)
       matureStocks[i]->Add(tagStorage, CI[i], area, tmpratio);
   }
 
   Storage[inarea].setToZero();
-  if (tagStorage.numTagExperiments() > 0)
+  if (istagged && tagStorage.numTagExperiments() > 0)
     tagStorage[inarea].setToZero();
 }
 
@@ -137,6 +134,8 @@ void Maturity::storeMatureStock(int area, int age, int length, double number, do
 }
 
 void Maturity::storeMatureTagStock(int area, int age, int length, double number, int id) {
+  if (istagged == 0)
+    handle.logMessage(LOGFAIL, "Error in maturity - invalid tagging experiment");
   if ((id >= tagStorage.numTagExperiments()) || (id < 0))
     handle.logMessage(LOGFAIL, "Error in maturity - invalid tagging experiment");
   if (isZero(number))
@@ -149,25 +148,41 @@ const StockPtrVector& Maturity::getMatureStocks() {
   return matureStocks;
 }
 
+void Maturity::setTagged() {
+  istagged = 1;
+  //resize tagStorage to be the same size as Storage
+  int i, minage, maxage;
+  minage = Storage[0].minAge();
+  maxage = Storage[0].maxAge();
+  IntVector lower(maxage - minage + 1, 0);
+  IntVector size(maxage - minage + 1, LgrpDiv->numLengthGroups());
+  tagStorage.resize(areas.Size(), minage, lower, size);
+  for (i = 0; i < tagStorage.Size(); i++)
+    tagStorage[i].setToZero();
+}
+
 void Maturity::addMaturityTag(const char* tagname) {
+  if (istagged == 0)
+    handle.logMessage(LOGFAIL, "Error in maturity - invalid tagging experiment", tagname);
   tagStorage.addTag(tagname);
 }
 
 void Maturity::deleteMaturityTag(const char* tagname) {
-  int minage, maxage, minlen, maxlen, age, length, i;
+  if (istagged == 0)
+    handle.logMessage(LOGFAIL, "Error in maturity - invalid tagging experiment", tagname);
+
+  int minage, maxage, age, len, a;
   int id = tagStorage.getTagID(tagname);
 
   if (id >= 0) {
     minage = tagStorage[0].minAge();
     maxage = tagStorage[0].maxAge();
-    //need to free allocated memory
-    for (i = 0; i < tagStorage.Size(); i++) {
+    //free memory allocated for tagging experiment
+    for (a = 0; a < tagStorage.Size(); a++) {
       for (age = minage; age <= maxage; age++) {
-        minlen = tagStorage[i].minLength(age);
-        maxlen = tagStorage[i].maxLength(age);
-        for (length = minlen; length < maxlen; length++) {
-          delete[] (tagStorage[i][age][length][id].N);
-          (tagStorage[i][age][length][id].N) = NULL;
+        for (len = tagStorage[a].minLength(age); len < tagStorage[a].maxLength(age); len++) {
+          delete[] (tagStorage[a][age][len][id].N);
+          (tagStorage[a][age][len][id].N) = NULL;
         }
       }
     }

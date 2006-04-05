@@ -84,6 +84,10 @@ public:
    */
   const StockPtrVector& getStrayStocks();
   /**
+   * \brief This function will initialise the tagging experiments for the straying calculations
+   */
+  void setTagged();
+  /**
    * \brief This will add a tagging experiment to the straying calculations
    * \param tagname is the name of the tagging experiment
    */
@@ -150,6 +154,10 @@ protected:
    * \brief This is the minimum length group division of the straying stock
    */
   int minStrayLength;
+  /**
+   * \brief This is the flag used to denote whether the stock has been included in a tagging experiment or not
+   */
+  int istagged;
 };
 
 #endif
