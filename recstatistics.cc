@@ -347,20 +347,19 @@ double RecStatistics::calcLikSumSquares() {
   double lik = 0.0;
   int t, area;
   double simvar, simdiff;
+  PopStatistics ps;
 
   for (t = 0; t < tagvec.Size(); t++) {
     if (timeindex[t] > -1) {
       alptr = &aggregator[t]->getSum();
       for (area = 0; area < alptr->Size(); area++) {
-        PopStatistics PopStat((*alptr)[area][0], aggregator[t]->getLengthGroupDiv(), 1);
-
-        (*modelMean[t])[timeindex[t]][area] = PopStat.meanLength();
-        simdiff = (*obsMean[t])[timeindex[t]][area] - (*obsMean[t])[timeindex[t]][area];
         simvar = 0.0;
+        ps.calcStatistics((*alptr)[area][0], aggregator[t]->getLengthGroupDiv(), 0);
+        (*modelMean[t])[timeindex[t]][area] = ps.meanLength();
 
         switch (functionnumber) {
           case 1:
-            (*modelStdDev[t])[timeindex[t]][area] = PopStat.sdevLength();
+            (*modelStdDev[t])[timeindex[t]][area] = ps.sdevLength();
             simvar = (*modelStdDev[t])[timeindex[t]][area] * (*modelStdDev[t])[timeindex[t]][area];
             break;
           case 2:
@@ -374,10 +373,10 @@ double RecStatistics::calcLikSumSquares() {
             break;
         }
 
-      if (isZero(simvar))
-        lik += 0.0;
-      else
-        lik += simdiff * simdiff * (*numbers[t])[timeindex[t]][area] / simvar;
+        if (!(isZero(simvar))) {
+          simdiff = (*modelMean[t])[timeindex[t]][area] - (*obsMean[t])[timeindex[t]][area];
+          lik += simdiff * simdiff * (*numbers[t])[timeindex[t]][area] / simvar;
+        }
       }
     }
   }

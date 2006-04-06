@@ -407,35 +407,40 @@ void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
 double CatchStatistics::calcLikSumSquares() {
 
   int area, age;
-  double lik, totallikelihood, simvar, simdiff;
+  double lik, total, simvar, simdiff;
+  PopStatistics ps;
 
-  lik = totallikelihood = simvar = simdiff = 0.0;
+  lik = total = simvar = simdiff = 0.0;
   alptr = &aggregator->getSum();
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-      PopStatistics PopStat((*alptr)[area][age], LgrpDiv);
 
       switch (functionnumber) {
         case 1:
-          (*modelMean[timeindex])[area][age] = PopStat.meanLength();
-          simvar = PopStat.sdevLength() * PopStat.sdevLength();
-          (*modelStdDev[timeindex])[area][age] = PopStat.sdevLength();
+          ps.calcStatistics((*alptr)[area][age], LgrpDiv, 0);
+          (*modelMean[timeindex])[area][age] = ps.meanLength();
+          simvar = ps.sdevLength() * ps.sdevLength();
+          (*modelStdDev[timeindex])[area][age] = ps.sdevLength();
           break;
         case 2:
-          (*modelMean[timeindex])[area][age] = PopStat.meanLength();
+          ps.calcStatistics((*alptr)[area][age], LgrpDiv, 0);
+          (*modelMean[timeindex])[area][age] = ps.meanLength();
           simvar = (*obsStdDev[timeindex])[area][age] * (*obsStdDev[timeindex])[area][age];
           break;
         case 3:
-          (*modelMean[timeindex])[area][age] = PopStat.meanWeight();
+          ps.calcStatistics((*alptr)[area][age], LgrpDiv);
+          (*modelMean[timeindex])[area][age] = ps.meanWeight();
           simvar = (*obsStdDev[timeindex])[area][age] * (*obsStdDev[timeindex])[area][age];
           break;
         case 4:
-          (*modelMean[timeindex])[area][age] = PopStat.meanWeight();
+          ps.calcStatistics((*alptr)[area][age], LgrpDiv);
+          (*modelMean[timeindex])[area][age] = ps.meanWeight();
           simvar = 1.0;
           break;
         case 5:
-          (*modelMean[timeindex])[area][age] = PopStat.meanLength();
+          ps.calcStatistics((*alptr)[area][age], LgrpDiv, 0);
+          (*modelMean[timeindex])[area][age] = ps.meanLength();
           simvar = 1.0;
           break;
         default:
@@ -443,17 +448,15 @@ double CatchStatistics::calcLikSumSquares() {
           break;
       }
 
-      simdiff = (*modelMean[timeindex])[area][age] - (*obsMean[timeindex])[area][age];
-      if (isZero(simvar))
-        lik = 0.0;
-      else
+      if (!(isZero(simvar))) {
+        simdiff = (*modelMean[timeindex])[area][age] - (*obsMean[timeindex])[area][age];
         lik = simdiff * simdiff * (*numbers[timeindex])[area][age] / simvar;
-
-      likelihoodValues[timeindex][area] += lik;
+        likelihoodValues[timeindex][area] += lik;
+      }
     }
-    totallikelihood += likelihoodValues[timeindex][area];
+    total += likelihoodValues[timeindex][area];
   }
-  return totallikelihood;
+  return total;
 }
 
 void CatchStatistics::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {

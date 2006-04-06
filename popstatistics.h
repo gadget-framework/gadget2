@@ -12,16 +12,20 @@
 class PopStatistics {
 public:
   /**
-   * \brief This is the PopStatistics constructor for a given PopInfoIndexVector
-   * \param pop is the PopInfoIndexVector that specifies the population
-   * \param lgrpdiv is the LengthGroupDivision of the population
-   * \param calcweight is a flag to denote whether the mean weight should be calculated or not (default value 0)
+   * \brief This is the default PopStatistics constructor
    */
-  PopStatistics(const PopInfoIndexVector& pop, const LengthGroupDivision* const lgrpdiv, int calcweight = 0);
+  PopStatistics() { meanlength = 0.0; meanweight = 0.0; totalnumber = 0.0; sdevlength = 0.0; };
   /**
    * \brief This is the default PopStatistics destructor
    */
   ~PopStatistics() {};
+  /**
+   * \brief This function will calculate the standard statistics for a given population
+   * \param pop is the PopInfoIndexVector that specifies the population
+   * \param lgrpdiv is the LengthGroupDivision of the population
+   * \param calcweight is a flag to denote whether the mean weight should be calculated or not (default value 1)
+   */
+  void calcStatistics(const PopInfoIndexVector& pop, const LengthGroupDivision* const lgrpdiv, int calcweight = 1);
   /**
    * \brief This will return the mean length of the population
    * \return meanlength
@@ -42,7 +46,7 @@ public:
    * \return sdevlength
    */
   double sdevLength() const { return sdevlength; };
-protected:
+private:
   /**
    * \brief This is the mean length of the stock in the population
    */

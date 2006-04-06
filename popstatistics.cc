@@ -5,42 +5,41 @@
 
 extern ErrorHandler handle;
 
-PopStatistics::PopStatistics(const PopInfoIndexVector& pop,
-  const LengthGroupDivision* const lgrpdiv, int calcweight)
-  : meanlength(0.0), meanweight(0.0), totalnumber(0.0), sdevlength(0.0) {
+void PopStatistics::calcStatistics(const PopInfoIndexVector& pop,
+  const LengthGroupDivision* const lgrpdiv, int calcweight) {
 
   PopInfo sum;
   int i, offset;
-  double length;
+  double tmp;
 
   if (pop.Size() != lgrpdiv->numLengthGroups())
     handle.logMessage(LOGFAIL, "Error in popstatistics - length groups dont match population");
 
   offset = pop.minCol();
-  for (i = pop.minCol(); i < pop.maxCol(); i++) {
-    if (handle.getLogLevel() >= LOGWARN)
-      if ((isZero(pop[i].W)) && (!(isZero(pop[i].N))) && (calcweight == 0))
+  meanlength = meanweight = totalnumber = sdevlength = 0.0;
+  for (i = offset; i < pop.maxCol(); i++) {
+    if ((handle.getLogLevel() >= LOGWARN) && calcweight)
+      if ((isZero(pop[i].W)) && (!(isZero(pop[i].N))))
         handle.logMessage(LOGWARN, "Warning in popstatistics - non-zero population has zero mean weight");
 
-    length = lgrpdiv->meanLength(i - offset);
-    sum += pop[i];
-    meanlength += (length * pop[i].N);
+    if (calcweight)
+      sum += pop[i];
+    totalnumber += pop[i].N;
+    meanlength += pop[i].N * lgrpdiv->meanLength(i - offset);
   }
 
-  if (sum.N > rathersmall) {
-    totalnumber = sum.N;
-    meanlength /= totalnumber;
-
-    if (calcweight == 0)
+  if (totalnumber > rathersmall) {
+    if (calcweight)
       meanweight = sum.W;
-
-    for (i = pop.minCol(); i < pop.maxCol(); i++) {
-      length = lgrpdiv->meanLength(i - offset);
-      sdevlength += pop[i].N * (meanlength - length) * (meanlength - length);
+    meanlength /= totalnumber;
+    for (i = offset; i < pop.maxCol(); i++) {
+      tmp = meanlength - lgrpdiv->meanLength(i - offset);
+      sdevlength += pop[i].N * tmp * tmp;
     }
     sdevlength = ((sdevlength < rathersmall) ? 0.0 : sqrt(sdevlength / totalnumber));
   } else  {
-    //JMB reset the meanlength value back to 0
+    //JMB reset back to 0
     meanlength = 0.0;
+    totalnumber = 0.0;
   }
 }

@@ -142,7 +142,8 @@ void AgeBandMatrixRatioPtrVector::Add(const AgeBandMatrixRatioPtrVector& Additio
   //JMB - note area has already been converted to internal area
   int minage =  max(v[area]->minAge(), Addition[area].minAge());
   int maxage =  min(v[area]->maxAge(), Addition[area].maxAge());
-  if (maxage < minage)
+
+  if ((maxage < minage) || isZero(ratio))
     return;
 
   int age, minl, maxl, i, l, tagid, numtags, offset;
@@ -185,10 +186,7 @@ void AgeBandMatrixRatioPtrVector::Add(const AgeBandMatrixRatioPtrVector& Additio
         for (l = minl; l < maxl; l++) {
           for (tagid = 0; tagid < numtags; tagid++) {
             numfish = *(Addition[area][age][CI.getPos(l)][tagid].N) * ratio;
-            if (isZero(CI.Nrof(l))) {
-              handle.logMessage(LOGWARN, "Warning in agebandmatrixratio - divide by zero");
-            } else
-              numfish /= CI.Nrof(l);
+            numfish /= CI.Nrof(l);  //JMB CI.Nrof() should never be zero
             *((*v[area])[age][l][tagconversion[tagid]].N) += numfish;
           }
         }

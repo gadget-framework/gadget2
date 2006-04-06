@@ -98,7 +98,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 
     //if number in each length group is needed
     if (targetisfiner == 1) {
-      nrof.resize(nf, 0);
+      nrof.resize(nf, 1);
       for (i = minlength; i < maxlength; i++)
         nrof[i] = maxpos[pos[i]] - minpos[pos[i]] + 1;
     }

@@ -16,7 +16,7 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
   int maxaddage = min(this->maxAge(), Addition.maxAge());
   int age, l, minl, maxl, offset;
 
-  if (maxaddage < minaddage)
+  if ((maxaddage < minaddage) || (isZero(ratio)))
     return;
 
   if (CI.isSameDl()) {
@@ -39,10 +39,7 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
         for (l = minl; l < maxl; l++) {
           pop = Addition[age][CI.getPos(l)];
           pop *= ratio;
-          if (isZero(CI.Nrof(l)))
-            handle.logMessage(LOGWARN, "Warning in agebandmatrix - divide by zero");
-          else
-            pop.N /= CI.Nrof(l);
+          pop.N /= CI.Nrof(l);  //JMB CI.Nrof() should never be zero
           (*v[age - minage])[l] += pop;
         }
       }
@@ -72,14 +69,14 @@ void AgeBandMatrix::Subtract(const DoubleVector& Ratio, const ConversionIndex& C
       j1 = max(v[i]->minCol(), CI.minLength());
       j2 = min(v[i]->maxCol(), CI.maxLength());
       for (j = j1; j < j2; j++)
-        (*v[i])[j].N *= Ratio[j - offset];
+        (*v[i])[j] *= Ratio[j - offset];
     }
   } else {
     for (i = 0; i < nrow; i++) {
       j1 = max(v[i]->minCol(), CI.minLength());
       j2 = min(v[i]->maxCol(), CI.maxLength());
       for (j = j1; j < j2; j++)
-        (*v[i])[j].N *= Ratio[CI.getPos(j)];
+        (*v[i])[j] *= Ratio[CI.getPos(j)];
     }
   }
 }

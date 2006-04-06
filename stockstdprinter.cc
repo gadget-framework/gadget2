@@ -188,25 +188,26 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   }
 
   int a, age;
+  PopStatistics ps;
   for (a = 0; a < outerareas.Size(); a++) {
     for (age = (*salptr)[a].minAge(); age <= (*salptr)[a].maxAge(); age++) {
-      PopStatistics popstat((*salptr)[a][age], LgrpDiv);
       outfile << setw(lowwidth) << TimeInfo->getYear() << sep
         << setw(lowwidth) << TimeInfo->getStep() << sep
         << setw(lowwidth) << outerareas[a] << sep << setw(lowwidth)
         << age + minage << sep;
 
+      ps.calcStatistics((*salptr)[a][age], LgrpDiv);
       //JMB crude filters to remove the 'silly' values from the output
-       if (popstat.totalNumber() < rathersmall) {
+       if (ps.totalNumber() < rathersmall) {
         outfile << setw(width) << 0 << sep << setw(printwidth) << 0
           << sep << setw(printwidth) << 0 << sep << setw(printwidth) << 0
           << sep << setw(width) << 0 << sep << setw(width) << 0 << endl;
 
       } else {
-        outfile << setprecision(precision) << setw(width) << popstat.totalNumber() * scale << sep
-          << setprecision(printprecision) << setw(printwidth) << popstat.meanLength() << sep
-          << setprecision(printprecision) << setw(printwidth) << popstat.meanWeight() << sep
-          << setprecision(printprecision) << setw(printwidth) << popstat.sdevLength() << sep;
+        outfile << setprecision(precision) << setw(width) << ps.totalNumber() * scale << sep
+          << setprecision(printprecision) << setw(printwidth) << ps.meanLength() << sep
+          << setprecision(printprecision) << setw(printwidth) << ps.meanWeight() << sep
+          << setprecision(printprecision) << setw(printwidth) << ps.sdevLength() << sep;
 
         if (isaprey) {
           //JMB crude filter to remove the 'silly' values from the output
