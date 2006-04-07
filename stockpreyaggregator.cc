@@ -2,14 +2,22 @@
 #include "conversionindex.h"
 #include "stockprey.h"
 #include "mathfunc.h"
+#include "errorhandler.h"
+#include "gadget.h"
+
+extern ErrorHandler handle;
 
 StockPreyAggregator::StockPreyAggregator(const PreyPtrVector& Preys,
   const LengthGroupDivision* const LgrpDiv, const IntMatrix& Areas, const IntMatrix& Ages)
   : preys(Preys), areas(Areas), ages(Ages), alptr(0) {
 
   int i;
-  for (i = 0; i < preys.Size(); i++)
+  for (i = 0; i < preys.Size(); i++) {
     CI.resize(new ConversionIndex(preys[i]->getLengthGroupDiv(), LgrpDiv));
+    //check that the prey is a stock
+    if (preys[i]->getType() == LENGTHPREYTYPE)
+      handle.logMessage(LOGFAIL, "Error in stockpreyaggregator - cannot aggregate prey", preys[i]->getName());
+  }
 
   //Resize total using dummy variables tmppop and popmatrix.
   PopInfo tmppop;
