@@ -131,4 +131,22 @@ inline double randomNumber() {
   return k / 32767.0;
 }
 
+/**
+ * \brief This function will calculate the calculate the effective annual mortality caused by a given predation on a specified population during a timestep
+ * \param pred is the number that is removed from the population by the predation
+ * \param pop is the population size (before predation)
+ * \param t is the inverse of proportion of the year covered by the current timestep
+ * \return calculated mortality
+ */
+inline double calcMortality(double pred, double pop, double t) {
+  double m = 0.0;
+  if (pred < verysmall)
+    m = 0.0;
+  else if (pred > pop)
+    m = verybig;
+  else
+    m = -log(1.0 - (pred / pop)) * t;
+  return m;
+}
+
 #endif
