@@ -21,10 +21,10 @@ PredatorPreyPrinter::PredatorPreyPrinter(CommentStream& infile, const TimeClass*
   //read in the predator names
   int i = 0;
   infile >> text >> ws;
-  if (!(strcasecmp(text, "predators") == 0))
-    handle.logFileUnexpected(LOGFAIL, "predators", text);
+  if (!(strcasecmp(text, "predatornames") == 0))
+    handle.logFileUnexpected(LOGFAIL, "predatornames", text);
   infile >> text >> ws;
-  while (!infile.eof() && !(strcasecmp(text, "preys") == 0)) {
+  while (!infile.eof() && !(strcasecmp(text, "preynames") == 0)) {
     predatornames.resize(new char[strlen(text) + 1]);
     strcpy(predatornames[i++], text);
     infile >> text >> ws;

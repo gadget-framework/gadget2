@@ -23,8 +23,8 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile, const TimeClass* const T
   //read in the prey names
   i = 0;
   infile >> text >> ws;
-  if (!(strcasecmp(text, "preys") == 0))
-    handle.logFileUnexpected(LOGFAIL, "preys", text);
+  if (!((strcasecmp(text, "preys") == 0) || (strcasecmp(text, "preynames") == 0)))
+    handle.logFileUnexpected(LOGFAIL, "preynames", text);
   infile >> text >> ws;
   while (!infile.eof() && !(strcasecmp(text, "areaaggfile") == 0)) {
     preynames.resize(new char[strlen(text) + 1]);
