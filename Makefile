@@ -93,7 +93,8 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
     agebandmatrixptrvector.o popratioindexvector.o agebandmatrixptrmatrix.o \
     formulamatrix.o formulavector.o charptrmatrix.o charptrvector.o \
     timevariablevector.o stockptrvector.o agebandmatrixratioptrvector.o \
-    tagptrvector.o bandmatrixptrvector.o rectangleptrvector.o migrationareaptrvector.o
+    tagptrvector.o bandmatrixptrvector.o rectangleptrvector.o migrationareaptrvector.o \
+    predatorpreyaggregator.o predatorpreyprinter.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 

@@ -10,6 +10,7 @@
 #include "stockstdprinter.h"
 #include "stockpreyprinter.h"
 #include "predatorprinter.h"
+#include "predatorpreyprinter.h"
 #include "predatoroverprinter.h"
 #include "preyoverprinter.h"
 #include "stockpreyfullprinter.h"
@@ -179,6 +180,9 @@ void Ecosystem::Initialise() {
         break;
       case STOCKPREYFULLPRINTER:
         ((StockPreyFullPrinter*)(printvec[i]))->setPrey(preyvec, Area);
+        break;
+      case PREDATORPREYPRINTER:
+        ((PredatorPreyPrinter*)(printvec[i]))->setPredAndPrey(predvec, preyvec, Area);
         break;
       case PREDPREYSTDPRINTER:
         ((PredPreyStdPrinter*)(printvec[i]))->setStocksAndPredAndPrey(stockvec, predvec, preyvec, Area);
