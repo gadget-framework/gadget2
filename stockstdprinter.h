@@ -4,6 +4,7 @@
 #include "printer.h"
 #include "stockaggregator.h"
 #include "stockpreyaggregator.h"
+#include "popstatistics.h"
 
 /**
  * \class StockStdPrinter
@@ -66,6 +67,10 @@ protected:
    * \brief This is the StockPreyAggregator used to collect information about the stock prey
    */
   StockPreyAggregator* paggregator;
+  /**
+   * \brief This is the PopStatistics used to calculate the statistics of the population
+   */
+  PopStatistics ps;
   /**
    * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the stock aggregatation function
    */

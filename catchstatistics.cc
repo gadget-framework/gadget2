@@ -7,7 +7,6 @@
 #include "stock.h"
 #include "stockprey.h"
 #include "mathfunc.h"
-#include "popstatistics.h"
 #include "readaggregation.h"
 #include "gadget.h"
 
@@ -408,7 +407,6 @@ double CatchStatistics::calcLikSumSquares() {
 
   int area, age;
   double lik, total, simvar, simdiff;
-  PopStatistics ps;
 
   lik = total = simvar = simdiff = 0.0;
   alptr = &aggregator->getSum();

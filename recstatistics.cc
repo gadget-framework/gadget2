@@ -8,7 +8,6 @@
 #include "stock.h"
 #include "stockprey.h"
 #include "mathfunc.h"
-#include "popstatistics.h"
 #include "readaggregation.h"
 #include "gadget.h"
 
@@ -347,7 +346,6 @@ double RecStatistics::calcLikSumSquares() {
   double lik = 0.0;
   int t, area;
   double simvar, simdiff;
-  PopStatistics ps;
 
   for (t = 0; t < tagvec.Size(); t++) {
     if (timeindex[t] > -1) {

@@ -6,6 +6,7 @@
 #include "charptrvector.h"
 #include "fleetpreyaggregator.h"
 #include "doublematrixptrvector.h"
+#include "popstatistics.h"
 #include "actionattimes.h"
 
 /**
@@ -167,6 +168,10 @@ private:
    * \brief This is the name of the function to be used to calculate the likelihood component
    */
   char* functionname;
+  /**
+   * \brief This is the PopStatistics used to calculate the statistics of the population
+   */
+  PopStatistics ps;
   /**
    * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
    * \note The indices for this object are [area][age][length]

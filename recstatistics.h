@@ -6,6 +6,7 @@
 #include "recaggregator.h"
 #include "doublematrixptrvector.h"
 #include "tagptrvector.h"
+#include "popstatistics.h"
 
 /**
  * \class RecStatistics
@@ -145,6 +146,10 @@ private:
    * \brief This is the TagPtrVector of the relevant tagging experiments
    */
   TagPtrVector tagvec;
+  /**
+   * \brief This is the PopStatistics used to calculate the statistics of the population
+   */
+  PopStatistics ps;
   /**
    * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
    */

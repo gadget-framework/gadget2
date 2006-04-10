@@ -8,7 +8,6 @@
 #include "preyptrvector.h"
 #include "stock.h"
 #include "stockprey.h"
-#include "popstatistics.h"
 #include "conversionindex.h"
 #include "readword.h"
 #include "gadget.h"
@@ -188,7 +187,6 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   }
 
   int a, age;
-  PopStatistics ps;
   for (a = 0; a < outerareas.Size(); a++) {
     for (age = (*salptr)[a].minAge(); age <= (*salptr)[a].maxAge(); age++) {
       outfile << setw(lowwidth) << TimeInfo->getYear() << sep
