@@ -91,6 +91,14 @@ public:
    */
   virtual const double getConsumptionBiomass(int prey, int area) const;
   /**
+   * \brief This will return the ratio used to split the predation between the areas and length groups
+   * \param area is the area that the consumption is being calculated on
+   * \param prey is the index for the prey
+   * \param len is the length group of the predator
+   * \return scaler
+   */
+  virtual double getConsumptionRatio(int area, int prey, int len) const { return (*predratio[this->areaNum(area)])[prey][len]; };
+  /**
    * \brief This will select the preys that will be consumed by the predator
    * \param preyvec is the PreyPtrVector of all the available preys
    * \param keeper is the Keeper for the current model
@@ -140,6 +148,11 @@ protected:
    * \note The indices for this object are [area][predator length]
    */
   DoubleMatrix totalcons;
+  /**
+   * \brief This is the DoubleMatrixPtrVector used to store the ratio used to split the predation between the areas and length groups
+   * \note The indices for this object are [area][prey][predator length]
+   */
+  DoubleMatrixPtrVector predratio;
 };
 
 #endif

@@ -27,6 +27,8 @@ PopPredator::~PopPredator() {
       delete cons[i][j];
     }
   }
+  for (i = 0; i < predratio.Size(); i++)
+    delete predratio[i];
 }
 
 void PopPredator::Print(ofstream& outfile) const {
@@ -87,6 +89,9 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
           for (j = 0; j < (*consumption[area][prey]).Ncol(i); j++)
             (*consumption[area][prey])[i][j] = 0.0;
       }
+      for (prey = 0; prey < this->numPreys(); prey++)
+        for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+          (*predratio[area])[prey][i] = 0.0;
     }
   }
 
@@ -121,6 +126,7 @@ void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   for (i = 0; i < numarea; i++) {
     cons.resize();
     consumption.resize();
+    predratio.resize(new DoubleMatrix(this->numPreys(), numlen, 0.0));
     for (j = 0; j < this->numPreys(); j++) {
       preylen = this->getPrey(j)->getLengthGroupDiv()->numLengthGroups();
       cons[i].resize(new DoubleMatrix(numlen, preylen, 0.0));

@@ -45,9 +45,8 @@ public:
   void Reset();
   /**
    * \brief This function will aggregate the recapture data
-   * \param TimeInfo is the TimeClass for the current model
    */
-  void Sum(const TimeClass* const TimeInfo);
+  void Sum();
   /**
    * \brief This will print the aggregator information to the ofstream specified
    * \param outfile is the ofstream to the file that the aggregator information gets sent to
@@ -83,6 +82,11 @@ private:
    * \brief This is the IntMatrix used to store age information
    */
   IntMatrix ages;
+  /**
+   * \brief This is the IntMatrix used to store predation information
+   * \note doescatch[i][j] is a flag to denote whether fleet i catches stock j
+   */
+  IntMatrix doescatch;
   /**
    * \brief This is the ConversionIndexPtrVector used to convert the length groups of the stocks to be aggregated
    */

@@ -136,7 +136,7 @@ LengthPredator* Fleet::getPredator() const {
 }
 
 int Fleet::isFleetStepArea(int area, const TimeClass* const TimeInfo) {
-  if ((this->isInArea(area) == 0) || isZero(predator->multScaler()))
+  if ((this->isInArea(area) == 0) || isZero(predator->getMultScaler()))
     return 0;
   if (amount[TimeInfo->getTime()][this->areaNum(area)] < 0.0)
     handle.logMessage(LOGWARN, "Warning in fleet - negative amount consumed");

@@ -328,7 +328,7 @@ void RecStatistics::addLikelihood(const TimeClass* const TimeInfo) {
             if (handle.getLogLevel() >= LOGMESSAGE)
               handle.logMessage(LOGMESSAGE, "Calculating likelihood score for recstatistics component", this->getName());
           timeindex[t] = i;
-          aggregator[t]->Sum(TimeInfo);
+          aggregator[t]->Sum();
           check++;
         }
       }

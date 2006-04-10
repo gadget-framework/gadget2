@@ -29,26 +29,16 @@ public:
    */
   virtual void Sum(const PopInfoVector& NumberInArea, int area);
   /**
-   * \brief This will return a scaler used to split the catch between the areas
-   * \param area is the area that the prey consumption is being calculated on
-   * \return scaler
-   */
-  double Scaler(int area) const { return scaler[this->areaNum(area)]; };
-  /**
    * \brief This will return the multiplicative value used scale the catch
-   * \return Multiplicative
+   * \return multi
    */
-  double multScaler() const { return multi; };
+  double getMultScaler() const { return multi; };
   /**
    * \brief This function will reset the predation information
    * \param TimeInfo is the KeeTimeClasser for the current model
    */
   virtual void Reset(const TimeClass* const TimeInfo);
 protected:
-  /**
-   * \brief This is the DoubleVector of scalers used to split the total catch between the areas of the prey
-   */
-  DoubleVector scaler;
   /**
    * \brief This is the multiplicative constant that can be used to scale the biomass consumed
    */

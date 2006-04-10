@@ -156,6 +156,11 @@ void StockPreyPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* const Ar
       if ((strcasecmp(preys[i]->getName(), preys[j]->getName()) == 0) && (i != j))
         handle.logMessage(LOGFAIL, "Error in stockpreyprinter - repeated prey", preys[i]->getName());
 
+  //check that the preys are stocks and not otherfood
+  for (i = 0; i < preys.Size(); i++)
+    if (preys[i]->getType() == LENGTHPREYTYPE)
+      handle.logMessage(LOGFAIL, "Error in stockpreyprinter - cannot print prey", preys[i]->getName());
+
   //change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
@@ -191,7 +196,7 @@ void StockPreyPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* const Ar
 
     index = 0;
     for (i = 0; i < preys.Size(); i++)
-      if (maxage >= ((StockPrey*)preys[i])->maxAge())
+      if (maxage <= ((StockPrey*)preys[i])->maxAge())
         index++;
     if (index == 0)
       handle.logMessage(LOGWARN, "Warning in stockpreyprinter - maximum age greater than prey age");

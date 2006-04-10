@@ -23,12 +23,8 @@ void TotalPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   int inarea = this->areaNum(area);
   int prey, preyl;
   double tmp, wanttoeat;
-
   int predl = 0;  //JMB there is only ever one length group ...
   totalcons[inarea][predl] = 0.0;
-
-  if (TimeInfo->getSubStep() == 1)
-    scaler[inarea] = 0.0;
 
   //calculate consumption up to a multiplicative constant
   for (prey = 0; prey < this->numPreys(); prey++) {
@@ -38,7 +34,6 @@ void TotalPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
           = this->getSuitability(prey)[predl][preyl] * this->getPrey(prey)->getBiomass(area, preyl);
         totalcons[inarea][predl] += (*cons[inarea][prey])[predl][preyl];
       }
-
     } else {
       for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
         (*cons[inarea][prey])[predl][preyl] = 0.0;
@@ -48,20 +43,19 @@ void TotalPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   //adjust the consumption by the multiplicative factor
   wanttoeat = prednumber[inarea][predl].N * multi / TimeInfo->numSubSteps();
   tmp = wanttoeat / totalcons[inarea][predl];
-  for (prey = 0; prey < this->numPreys(); prey++)
-    if (this->getPrey(prey)->isPreyArea(area))
+  for (prey = 0; prey < this->numPreys(); prey++) {
+    if (this->getPrey(prey)->isPreyArea(area)) {
       for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
         (*cons[inarea][prey])[predl][preyl] *= tmp;
 
-  //inform the preys of the consumption
-  for (prey = 0; prey < this->numPreys(); prey++)
-    if (this->getPrey(prey)->isPreyArea(area))
+      //inform the preys of the consumption
       this->getPrey(prey)->addBiomassConsumption(area, (*cons[inarea][prey])[predl]);
-
-  //set the multiplicative constant
-  scaler[inarea] += totalcons[inarea][predl];
-  if ((TimeInfo->getSubStep() == TimeInfo->numSubSteps()) && (!(isZero(scaler[inarea]))))
-    scaler[inarea] = 1.0 / scaler[inarea];
+      //set the multiplicative constant
+      (*predratio[inarea])[prey][predl] += totalcons[inarea][predl];
+      if ((TimeInfo->getSubStep() == TimeInfo->numSubSteps()) && (!(isZero((*predratio[inarea])[prey][predl]))))
+        (*predratio[inarea])[prey][predl] = wanttoeat / (*predratio[inarea])[prey][predl];
+    }
+  }
 
   //finally set totalcons to the actual consumption
   totalcons[inarea][predl] = wanttoeat;

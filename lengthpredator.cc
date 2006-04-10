@@ -7,7 +7,6 @@ extern ErrorHandler handle;
 LengthPredator::LengthPredator(const char* givenname, const IntVector& Areas,
   Keeper* const keeper, Formula multscaler) : PopPredator(givenname, Areas) {
 
-  scaler.resize(Areas.Size(), 0.0);
   keeper->addString("scale");
   multi = multscaler;
   multi.Inform(keeper);

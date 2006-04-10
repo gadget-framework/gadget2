@@ -137,12 +137,6 @@ public:
    */
   const DoubleVector& getConsumption(int area) const { return consumption[this->areaNum(area)]; };
   /**
-   * \brief This will return the ratio of the prey that has been consumed on a given area
-   * \param area is the area that the consumption is being calculated on
-   * \return consratio, a DoubleVector containing the ratio of the prey that is consumed
-   */
-  const DoubleVector& getConsumptionRatio(int area) const { return consratio[this->areaNum(area)]; };
-  /**
    * \brief This will return the amount of the prey that has been overconsumed on a given area
    * \param area is the area that the consumption is being calculated on
    * \return overconsumption, a DoubleVector containing the overconsumption of the prey

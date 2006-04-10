@@ -102,7 +102,6 @@ void Prey::setCI(const LengthGroupDivision* const GivenLDiv) {
 
 void Prey::Print(ofstream& outfile) const {
   int i, area;
-
   outfile << "\nPrey\n\tName " << this->getName() << "\n\tEnergy content " << energy << "\n\t";
   LgrpDiv->Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
@@ -150,7 +149,7 @@ void Prey::addNumbersConsumption(int area, const DoubleVector& predcons) {
 //in an area can be eaten in one timestep.  This is to avoid problems
 //with survey indices etc.
 void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
-  int i, temp = 0;
+  int i, over = 0;
   int inarea = this->areaNum(area);
   double maxRatio, rat;
 
@@ -165,7 +164,7 @@ void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
 
     ratio[inarea][i] = rat;
     if (rat > maxRatio) {
-      temp = 1;
+      over = 1;
       overconsumption[inarea][i] += (rat - maxRatio) * biomass[inarea][i];
       consratio[inarea][i] = 1.0 - maxRatio;
       cons[inarea][i] = biomass[inarea][i] * maxRatio;
@@ -175,16 +174,15 @@ void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
 
     consumption[inarea][i] += cons[inarea][i];
   }
-  isoverconsumption[inarea] = temp;
+  isoverconsumption[inarea] = over;
 }
 
 void Prey::Reset() {
-  int area, l;
+  int i, area;
   for (area = 0; area < areas.Size(); area++) {
-    isoverconsumption[area] = 0;
-    for (l = 0; l < LgrpDiv->numLengthGroups(); l++) {
-      consumption[area][l] = 0.0;
-      overconsumption[area][l] = 0.0;
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
+      consumption[area][i] = 0.0;
+      overconsumption[area][i] = 0.0;
     }
   }
   if (handle.getLogLevel() >= LOGMESSAGE)

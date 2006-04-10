@@ -342,7 +342,7 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
         checktag++;
       }
 
-      aggregator[t]->Sum(TimeInfo);
+      aggregator[t]->Sum();
       alptr = &aggregator[t]->getSum();
 
       checktime = 0;

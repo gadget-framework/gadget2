@@ -46,34 +46,27 @@ void EffortPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
 
   int inarea = this->areaNum(area);
   int prey, preyl;
-  double tmp;
-
   int predl = 0;  //JMB there is only ever one length group ...
   totalcons[inarea][predl] = 0.0;
-  scaler[inarea] = multi * TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
 
   for (prey = 0; prey < this->numPreys(); prey++) {
-    tmp = preference[prey] * scaler[inarea] * prednumber[inarea][predl].N;
-    if (tmp > 10.0) //JMB arbitrary value here ...
-      handle.logMessage(LOGWARN, "Warning in effortpredator - excessive consumption required");
-
     if (this->getPrey(prey)->isPreyArea(area)) {
+      (*predratio[inarea])[prey][predl] = prednumber[inarea][predl].N * preference[prey] * multi * TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
+      if ((*predratio[inarea])[prey][predl] > 10.0) //JMB arbitrary value here ...
+        handle.logMessage(LOGWARN, "Warning in effortpredator - excessive consumption required");
       for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
-        (*cons[inarea][prey])[predl][preyl] = tmp *
+        (*cons[inarea][prey])[predl][preyl] = (*predratio[inarea])[prey][predl] *
           this->getSuitability(prey)[predl][preyl] * this->getPrey(prey)->getBiomass(area, preyl);
         totalcons[inarea][predl] += (*cons[inarea][prey])[predl][preyl];
       }
+      //inform the preys of the consumption
+      this->getPrey(prey)->addBiomassConsumption(area, (*cons[inarea][prey])[predl]);
 
     } else {
       for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
         (*cons[inarea][prey])[predl][preyl] = 0.0;
     }
   }
-
-  //inform the preys of the consumption
-  for (prey = 0; prey < this->numPreys(); prey++)
-    if (this->getPrey(prey)->isPreyArea(area))
-      this->getPrey(prey)->addBiomassConsumption(area, (*cons[inarea][prey])[predl]);
 }
 
 void EffortPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {

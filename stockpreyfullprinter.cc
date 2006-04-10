@@ -120,6 +120,10 @@ void StockPreyFullPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* cons
     exit(EXIT_FAILURE);
   }
 
+  //check that the prey is a stock and not otherfood
+  if (preys[0]->getType() == LENGTHPREYTYPE)
+    handle.logMessage(LOGFAIL, "Error in stockpreyfullprinter - cannot print prey", preys[i]->getName());
+
   //JMB need to construct a matrix of all the areas and ages for the prey
   IntVector areas = preys[0]->getAreas();
   IntMatrix areamatrix(areas.Size(), 1, 0);

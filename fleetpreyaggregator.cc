@@ -73,38 +73,36 @@ void FleetPreyAggregator::Sum() {
 
   int f, g, h, i, j, k, r, z;
   int predl = 0;  //JMB there is only ever one length group ...
-  double scale;
+  double ratio;
 
   this->Reset();
   //Sum over the appropriate fleets, stocks, areas, ages and length groups.
   for (f = 0; f < fleets.Size(); f++) {
-    LengthPredator* pred = fleets[f]->getPredator();
     for (h = 0; h < stocks.Size(); h++) {
       if (doescatch[f][h]) {
-        StockPrey* prey = (StockPrey*)stocks[h]->getPrey();
         for (r = 0; r < areas.Nrow(); r++) {
           for (j = 0; j < areas.Ncol(r); j++) {
-            if ((prey->isPreyArea(areas[r][j])) && (pred->isInArea(areas[r][j]))) {
-              scale = pred->getPredatorNumber(areas[r][j])[predl].N * pred->Scaler(areas[r][j]);
-              if (!(isZero(scale))) {
-                for (i = 0; i < pred->numPreys(); i++) {
-                  if (strcasecmp(prey->getName(), pred->getPrey(i)->getName()) == 0) {
-                    suitptr = &pred->getSuitability(i)[predl];
-                    alptr = &prey->getALKPriorToEating(areas[r][j]);
-                    for (g = 0; g < ages.Nrow(); g++) {
-                      for (k = 0; k < ages.Ncol(g); k++) {
-                        if ((alptr->minAge() <= ages[g][k]) && (ages[g][k] <= alptr->maxAge())) {
-                          if (overconsumption) {
-                            DoubleVector usesuit = *suitptr;
-                            DoubleVector ratio = prey->getRatio(r);
-                            for (z = 0; z < usesuit.Size(); z++)
-                              if (ratio[z] > 1.0)
-                                usesuit[z] *= 1.0 / ratio[z];
+            if ((stocks[h]->getPrey()->isPreyArea(areas[r][j])) &&
+                (fleets[f]->getPredator()->isInArea(areas[r][j]))) {
 
-                            total[r][g].Add((*alptr)[ages[g][k]], *CI[h], usesuit, scale);
-                          } else {
-                            total[r][g].Add((*alptr)[ages[g][k]], *CI[h], *suitptr, scale);
-                          }
+              for (i = 0; i < fleets[f]->getPredator()->numPreys(); i++) {
+                if (strcasecmp(stocks[h]->getPrey()->getName(), fleets[f]->getPredator()->getPrey(i)->getName()) == 0) {
+                  suitptr = &fleets[f]->getPredator()->getSuitability(i)[predl];
+                  alptr = &((StockPrey*)stocks[h]->getPrey())->getALKPriorToEating(areas[r][j]);
+                  ratio = fleets[f]->getPredator()->getConsumptionRatio(areas[r][j], i, predl);
+                  for (g = 0; g < ages.Nrow(); g++) {
+                    for (k = 0; k < ages.Ncol(g); k++) {
+                      if ((alptr->minAge() <= ages[g][k]) && (ages[g][k] <= alptr->maxAge())) {
+                        if (overconsumption) {
+                          DoubleVector usesuit = *suitptr;
+                          DoubleVector preyratio = stocks[h]->getPrey()->getRatio(r);
+                          for (z = 0; z < usesuit.Size(); z++)
+                            if (preyratio[z] > 1.0)
+                              usesuit[z] *= 1.0 / preyratio[z];
+
+                          total[r][g].Add((*alptr)[ages[g][k]], *CI[h], usesuit, ratio);
+                        } else {
+                          total[r][g].Add((*alptr)[ages[g][k]], *CI[h], *suitptr, ratio);
                         }
                       }
                     }
