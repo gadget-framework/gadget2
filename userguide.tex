@@ -3142,7 +3142,7 @@ type                 <printer type>
 <printer data>
 \end{verbatim}}
 
-The printer data for each printer type is covered in the sub sections below.  The $<$printer type$>$ defines the type of output that will be generated from the Gadget model, and there are currently 12 valid printer types defined in Gadget.  These are:
+The printer data for each printer type is covered in the sub sections below.  The $<$printer type$>$ defines the type of output that will be generated from the Gadget model, and there are currently 11 valid printer types defined in Gadget.  These are:
 
 \bigskip
 StockStdPrinter\newline
@@ -3153,14 +3153,15 @@ PredatorOverPrinter\newline
 PreyOverPrinter\newline
 StockPreyFullPrinter\newline
 StockPreyPrinter\newline
-PredPreyStdLengthPrinter\newline
-PredPreyStdAgePrinter\newline
+PredatorPreyPrinter\newline
+%PredPreyStdLengthPrinter\newline
+%PredPreyStdAgePrinter\newline
 LikelihoodPrinter\newline
 LikelihoodSummaryPrinter
 
 \newpage %JMB insert page break
 \section{StockStdPrinter}\label{sec:stockstdprinter}
-The printer type to output the standard details of a stock is called ''StockStdPrinter''.  This printer type is defined by specifying the stock name and timesteps of interest.  The file format for this component is given below:
+The printer type to output the standard details of a stock is called ''StockStdPrinter''.  This printer type is defined by specifying the stock and timesteps of interest.  The file format for this component is given below:
 
 {\small\begin{verbatim}
 [component]
@@ -3197,7 +3198,7 @@ $<$consumed$>$ is the stock population that has been consumed by all the predato
 $<$biomass$>$ is the stock biomass that has been consumed by all the predators (including fleets) for that timestep/area/age combination
 
 \section{StockFullPrinter}\label{sec:stockfullprinter}
-The printer type to output some more detailed information about a stock is called ''StockFullPrinter''.  This printer type is defined by specifying the stock name and timesteps of interest.  The file format for this component is given below:
+The printer type to output some more detailed information about a stock is called ''StockFullPrinter''.  This printer type is defined by specifying the stock and timesteps of interest.  The file format for this component is given below:
 
 {\small\begin{verbatim}
 [component]
@@ -3226,7 +3227,7 @@ $<$number$>$ is the population for that timestep/area/age/length combination\new
 $<$weight$>$ is the mean weight for that timestep/area/age/length combination
 
 \section{StockPrinter}\label{sec:stockprinter}
-The printer type to output information about (one or more) stocks, with the information aggregated into a convenient grouping, is called ''StockPrinter''.  This printer type is defined by specifying the stock names, areas, age groups, length groups and timesteps of interest.  The file format for this component is given below:
+The printer type to output information about (one or more) stocks, with the information aggregated into a convenient grouping, is called ''StockPrinter''.  This printer type is defined by specifying the stocks, areas, age groups, length groups and timesteps of interest.  The file format for this component is given below:
 
 {\small\begin{verbatim}
 [component]
@@ -3264,13 +3265,13 @@ $<$number$>$ is the population for that timestep/area/age/length combination\new
 $<$weight$>$ is the mean weight for that timestep/area/age/length combination
 
 \section{PredatorPrinter}\label{sec:predatorprinter}
-The printer type to output information about predation, with the information aggregated into a convenient grouping, is called ''PredatorPrinter''.  This printer type is defined by specifying the predator name, prey name, areas, length groups and timesteps of interest.  The file format for this component is given below:
+The printer type to output information about predation, with the information aggregated into a convenient grouping, is called ''PredatorPrinter''.  This printer type is defined by specifying the predators, preys, areas, length groups and timesteps of interest.  The file format for this component is given below:
 
 {\small\begin{verbatim}
 [component]
 type                 predatorprinter
-predators            <vector of the names of the predators>
-preys                <vector of the names of the preys>
+predatornames        <vector of the names of the predators>
+preynames            <vector of the names of the preys>
 areaaggfile          <area aggregation file specifying areas>
 predlenaggfile       <length aggregation file specifying predator lengths>
 preylenaggfile       <length aggregation file specifying prey lengths>
@@ -3289,7 +3290,7 @@ The optional flag $<$biomass$>$ is used to specify whether the information about
 The optional $<$precision$>$ value is used to specify the number of digits to be used when printing the information to the specified output file, overriding the default settings for this printer type.
 
 \bigskip
-The output that is generated from this printer type is a file containing the following predation information for all the predators specified on the $<$predators$>$ line, eating all the preys specified on the $<$preys$>$ line:
+The output that is generated from this printer type is a file containing the following predation information for all the predators specified on the $<$predatornames$>$ line, consuming all the preys specified on the $<$preynames$>$ line:
 
 {\small\begin{verbatim}
 year-step-area-pred-prey-amount
@@ -3302,12 +3303,12 @@ $<$prey$>$ is the label for the prey length group from the length aggregation fi
 $<$amount$>$ is the biomass (or number) consumed for that timestep/area/predator length/prey length combination, depending on the value of the $<$biomass$>$ flag in the input file
 
 \section{PredatorOverPrinter}\label{sec:predatoroverprinter}
-The printer type to output information about predator over consumption (where a predator has failed to eat the required amount of prey since the prey is not available), with the information aggregated into a convenient grouping, is called ''PredatorOverPrinter''.  This printer type is defined by specifying the predator name, areas, length groups and timesteps of interest.  The file format for this component is given below:
+The printer type to output information about predator over consumption (where a predator has failed to eat the required amount of prey since the prey is not available), with the information aggregated into a convenient grouping, is called ''PredatorOverPrinter''.  This printer type is defined by specifying the predators, areas, length groups and timesteps of interest.  The file format for this component is given below:
 
 {\small\begin{verbatim}
 [component]
 type                 predatoroverprinter
-predators            <vector of the names of the predators>
+predatornames        <vector of the names of the predators>
 areaaggfile          <area aggregation file specifying areas>
 lenaggfile           <length aggregation file specifying lengths>
 printfile            <name for the output file to be created>
@@ -3321,7 +3322,7 @@ Note that this printer type can aggregate more than one predator into a combined
 The optional $<$precision$>$ value is used to specify the number of digits to be used when printing the information to the specified output file, overriding the default settings for this printer type.
 
 \bigskip
-The output that is generated from this printer type is a file containing the following over-consumption information for all the predators specified on the $<$predators$>$ line:
+The output that is generated from this printer type is a file containing the following over-consumption information for all the predators specified on the $<$predatornames$>$ line:
 
 {\small\begin{verbatim}
 year-step-area-length-biomass
@@ -3333,12 +3334,12 @@ $<$length$>$ is the label for the length group from the length aggregation file\
 $<$biomass$>$ is the biomass that the predator failed to consume for that timestep/area/length combination
 
 \section{PreyOverPrinter}\label{sec:preyoverprinter}
-The printer type to output information about prey over consumption (where there has been insufficient prey for a predator to consume), with the information aggregated into a convenient grouping, is called ''PreyOverPrinter''.  This printer type is the inverse of the PredatorOverPrinter printer type, in that it gives the same information, but from the point of view of the preys, not the predators.  This printer type is defined by specifying the prey name, areas, length groups and timesteps of interest.  The file format for this component is given below:
+The printer type to output information about prey over consumption (where there has been insufficient prey for a predator to consume), with the information aggregated into a convenient grouping, is called ''PreyOverPrinter''.  This printer type is the inverse of the PredatorOverPrinter printer type, in that it gives the same information, but from the point of view of the preys, not the predators.  This printer type is defined by specifying the preys, areas, length groups and timesteps of interest.  The file format for this component is given below:
 
 {\small\begin{verbatim}
 [component]
 type                 preyoverprinter
-preys                <vector of the names of the preys>
+preynames            <vector of the names of the preys>
 areaaggfile          <area aggregation file specifying areas>
 lenaggfile           <length aggregation file specifying lengths>
 printfile            <name for the output file to be created>
@@ -3352,7 +3353,7 @@ Note that this printer type can aggregate more than one prey into a combined pse
 The optional $<$precision$>$ value is used to specify the number of digits to be used when printing the information to the specified output file, overriding the default settings for this printer type.
 
 \bigskip
-The output that is generated from this printer type is a file containing the following over-consumption information for all the preys specified on the $<$preys$>$ line:
+The output that is generated from this printer type is a file containing the following over-consumption information for all the preys specified on the $<$preynames$>$ line:
 
 {\small\begin{verbatim}
 year-step-area-length-biomass
@@ -3364,7 +3365,7 @@ $<$length$>$ is the label for the length group from the length aggregation file\
 $<$biomass$>$ is the biomass of the prey that was unavailable, for that timestep/area/length combination
 
 \section{StockPreyFullPrinter}\label{sec:stockpreyfullprinter}
-The printer type to output detailed information about a prey is called ''StockPreyFullPrinter''.  This printer type is defined by specifying the prey name and timesteps of interest.  The file format for this component is given below:
+The printer type to output detailed information about a prey is called ''StockPreyFullPrinter''.  This printer type is defined by specifying the prey and timesteps of interest.  The file format for this component is given below:
 
 {\small\begin{verbatim}
 [component]
@@ -3389,7 +3390,7 @@ $<$number$>$ is the total population consumed for that timestep/area/age/length 
 $<$biomass$>$ is the total biomass consumed for that timestep/area/age/length combination
 
 \section{StockPreyPrinter}\label{sec:stockpreyprinter}
-The printer type to output information about (one or more) preys, with the information aggregated into a convenient grouping, is called ''StockPreyPrinter''.  This printer type is defined by specifying the prey names, areas, age groups, length groups and timesteps of interest.  The file format for this component is given below:
+The printer type to output information about (one or more) preys, with the information aggregated into a convenient grouping, is called ''StockPreyPrinter''.  This printer type is defined by specifying the preys, areas, age groups, length groups and timesteps of interest.  The file format for this component is given below:
 
 {\small\begin{verbatim}
 [component]
@@ -3422,63 +3423,98 @@ $<$length$>$ is the label for the length group from the length aggregation file\
 $<$number$>$ is the total population consumed for that timestep/area/age/length combination\newline
 $<$biomass$>$ is the total biomass consumed for that timestep/area/age/length combination
 
-\section{PredPreyStdLengthPrinter}\label{sec:predpreystdlengthprinter}
-The printer type to output detailed information about a predator-prey combination, with both the predator and prey given a length based distribution, is called ''PredPreyStdLengthPrinter''.  This printer type is defined by specifying the predator name, prey name and timesteps of interest.  The file format for this component is given below:
+\section{PredatorPreyPrinter}\label{sec:predatorpreyprinter}
+The printer type to output detailed information about predator-prey combinations, with the information aggregated into a convenient grouping, is called ''PredatorPreyPrinter''.  This printer type is defined by specifying the predators, preys, areas, age groups, length groups and timesteps of interest.  The file format for this component is given below:
 
 {\small\begin{verbatim}
 [component]
-type                 predpreystdlengthprinter
-predator             <name of the predator>
-prey                 <name of the prey>
+type                 predatorpreyprinter
+predatornames        <vector of the names of the predators>
+preynames            <vector of the names of the preys>
+areaaggfile          <area aggregation file specifying areas>
+ageaggfile           <age aggregation file specifying prey ages>
+lenaggfile           <length aggregation file specifying prey lengths>
 printfile            <name for the output file to be created>
 precision            <precision to be used in the output file>
 yearsandsteps        <ActionAtTime to determine when to print>
 \end{verbatim}}
 
+Note that this printer type can aggregate more than one predator into a combined pseudo predator, and more than one prey into a pseudo prey, for the output file.
+
+\bigskip
 The optional $<$precision$>$ value is used to specify the number of digits to be used when printing the information to the specified output file, overriding the default settings for this printer type.
 
 \bigskip
-The output that is generated from this printer type is a file containing the following information for the predator specified on the $<$predator$>$ line, consuming the prey specified on the $<$prey$>$ line:
+The output that is generated from this printer type is a file containing the following predation information for all the predators specified on the $<$predatornames$>$ line, consuming all the preys specified on the $<$preynames$>$ line:
 
 {\small\begin{verbatim}
-year-step-area-pred-prey-number-biomass-mortality
+year-step-area-age-length-number-biomass-mortality
 \end{verbatim}}
 
 where:\newline
-$<$pred$>$ is the predator length group\newline
-$<$prey$>$ is the prey length group\newline
-$<$number$>$ is the number consumed for that timestep/area/predator length/prey length combination\newline
-$<$biomass$>$ is the biomass consumed for that timestep/area/predator length/prey length combination\newline
-$<$mortality$>$ is the effective annual mortality induced in the prey by the predation for that timestep/area/predator length/prey length combination
+$<$age$>$ is the label for the prey age group from the age aggregation file\newline
+$<$length$>$ is the label for the prey length group from the length aggregation file\newline
+$<$number$>$ is the number consumed for that timestep/area/age/length combination\newline
+$<$biomass$>$ is the biomass consumed for that timestep/area/age/length combination\newline
+$<$mortality$>$ is the effective annual mortality induced in the prey by the predation for that timestep/area/age/length combination
 
-\section{PredPreyStdAgePrinter}\label{sec:predpreystdageprinter}
-The printer type to output detailed information about a predator-prey combination, with both the predator and prey given a age based distribution, is called ''PredPreyStdAgePrinter''.  This printer type is defined by specifying the predator name, prey name and timesteps of interest.  The file format for this component is given below:
+%\section{PredPreyStdLengthPrinter}\label{sec:predpreystdlengthprinter}
+%The printer type to output detailed information about a predator-prey combination, with both the predator and prey given a length based distribution, is called ''PredPreyStdLengthPrinter''.  This printer type is defined by specifying the predator name, prey name and timesteps of interest.  The file format for this component is given below:
 
-{\small\begin{verbatim}
-[component]
-type                 predpreystdageprinter
-predator             <name of the predator>
-prey                 <name of the prey>
-printfile            <name for the output file to be created>
-precision            <precision to be used in the output file>
-yearsandsteps        <ActionAtTime to determine when to print>
-\end{verbatim}}
+%{\small\begin{verbatim}
+%[component]
+%type                 predpreystdlengthprinter
+%predator             <name of the predator>
+%prey                 <name of the prey>
+%printfile            <name for the output file to be created>
+%precision            <precision to be used in the output file>
+%yearsandsteps        <ActionAtTime to determine when to print>
+%\end{verbatim}}
 
-The optional $<$precision$>$ value is used to specify the number of digits to be used when printing the information to the specified output file, overriding the default settings for this printer type.
+%The optional $<$precision$>$ value is used to specify the number of digits to be used when printing the information to the specified output file, overriding the default settings for this printer type.
 
-\bigskip
-The output that is generated from this printer type is a file containing the following information for the predator specified on the $<$predator$>$ line, consuming the prey specified on the $<$prey$>$ line:
+%\bigskip
+%The output that is generated from this printer type is a file containing the following information for the predator specified on the $<$predator$>$ line, consuming the prey specified on the $<$prey$>$ line:
 
-{\small\begin{verbatim}
-year-step-area-pred-prey-number-biomass-mortality
-\end{verbatim}}
+%{\small\begin{verbatim}
+%year-step-area-pred-prey-number-biomass-mortality
+%\end{verbatim}}
 
-where:\newline
-$<$pred$>$ is the predator age group\newline
-$<$prey$>$ is the prey age group\newline
-$<$number$>$ is the number consumed for that timestep/area/predator age/prey age combination\newline
-$<$biomass$>$ is the biomass consumed for that timestep/area/predator age/prey age combination\newline
-$<$mortality$>$ is the effective annual mortality induced in the prey by the predation for that timestep/area/predator age/prey age combination
+%where:\newline
+%$<$pred$>$ is the predator length group\newline
+%$<$prey$>$ is the prey length group\newline
+%$<$number$>$ is the number consumed for that timestep/area/predator length/prey length combination\newline
+%$<$biomass$>$ is the biomass consumed for that timestep/area/predator length/prey length combination\newline
+%$<$mortality$>$ is the effective annual mortality induced in the prey by the predation for that timestep/area/predator length/prey length combination
+
+%\section{PredPreyStdAgePrinter}\label{sec:predpreystdageprinter}
+%The printer type to output detailed information about a predator-prey combination, with both the predator and prey given a age based distribution, is called ''PredPreyStdAgePrinter''.  This printer type is defined by specifying the predator name, prey name and timesteps of interest.  The file format for this component is given below:
+
+%{\small\begin{verbatim}
+%[component]
+%type                 predpreystdageprinter
+%predator             <name of the predator>
+%prey                 <name of the prey>
+%printfile            <name for the output file to be created>
+%precision            <precision to be used in the output file>
+%yearsandsteps        <ActionAtTime to determine when to print>
+%\end{verbatim}}
+
+%The optional $<$precision$>$ value is used to specify the number of digits to be used when printing the information to the specified output file, overriding the default settings for this printer type.
+
+%\bigskip
+%The output that is generated from this printer type is a file containing the following information for the predator specified on the $<$predator$>$ line, consuming the prey specified on the $<$prey$>$ line:
+
+%{\small\begin{verbatim}
+%year-step-area-pred-prey-number-biomass-mortality
+%\end{verbatim}}
+
+%where:\newline
+%$<$pred$>$ is the predator age group\newline
+%$<$prey$>$ is the prey age group\newline
+%$<$number$>$ is the number consumed for that timestep/area/predator age/prey age combination\newline
+%$<$biomass$>$ is the biomass consumed for that timestep/area/predator age/prey age combination\newline
+%$<$mortality$>$ is the effective annual mortality induced in the prey by the predation for that timestep/area/predator age/prey age combination
 
 \section{LikelihoodPrinter}\label{sec:likelihoodprinter}
 The printer type to output detailed information about a likelihood component is called ''LikelihoodPrinter''.  This printer type is defined by specifying the likelihood component and timesteps of interest.  The file format for this component is given below:
