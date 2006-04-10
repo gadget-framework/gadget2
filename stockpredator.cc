@@ -186,6 +186,9 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
           tmp = totalcons[inarea][predl] / (Phi[inarea][predl] * this->getPrey(prey)->getEnergy());
           for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
             (*cons[inarea][prey])[predl][preyl] *= tmp;
+
+          //set the multiplicative constant
+          (*predratio[inarea])[prey][predl] += tmp;
         }
       }
     }
