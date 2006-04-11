@@ -88,12 +88,12 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
   datafile.close();
   datafile.clear();
 
-  //Finished reading from infile.
+  //finished reading from infile
   predLgrpDiv = new LengthGroupDivision(predlengths);
   if (predLgrpDiv->Error())
     handle.logFileMessage(LOGFAIL, "\nError in predatorprinter - failed to create predator length group");
   preyLgrpDiv = new LengthGroupDivision(preylengths);
-  if (predLgrpDiv->Error())
+  if (preyLgrpDiv->Error())
     handle.logFileMessage(LOGFAIL, "\nError in predatorprinter - failed to create prey length group");
 
   char c = infile.peek();
@@ -102,7 +102,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
   if (biomass != 0 && biomass != 1)
     handle.logFileMessage(LOGFAIL, "\nError in predatorprinter - biomass must be 0 or 1");
 
-  //Open the printfile
+  //open the printfile
   readWordAndValue(infile, "printfile", filename);
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
@@ -112,7 +112,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
     infile >> precision >> ws >> text >> ws;
     width = precision + 4;
   } else {
-    // use default values
+    //use default values
     precision = largeprecision;
     width = largewidth;
   }
@@ -141,7 +141,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
       handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 
-  //finished initializing. Now print first lines
+  //finished initializing - now print first lines
   outfile << "; ";
   RUNID.Print(outfile);
   outfile << "; Predation output file for the following predators";
@@ -183,7 +183,7 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec,
       if (strcasecmp(preyvec[i]->getName(), preynames[j]) == 0)
         preys.resize(preyvec[i]);
 
-  //change from outer areas to inner areas.
+  //change from outer areas to inner areas
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
       areas[i][j] = Area->getInnerArea(areas[i][j]);
