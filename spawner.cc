@@ -377,7 +377,7 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
   }
 
   //JMB check that the sum of the ratios is 1
-  if (TimeInfo->getTime() == 1) {
+  if ((onlyParent == 0) && (TimeInfo->getTime() == 1)) {
     ratioscale = 0.0;
     for (i = 0; i < spawnRatio.Size(); i++ )
       ratioscale += spawnRatio[i];
@@ -446,6 +446,13 @@ double SpawnData::calcRecruitNumber() {
 }
 
 void SpawnData::Print(ofstream& outfile) const {
+
+  if (onlyParent == 1) {
+    outfile << "\nSpawning data\n\t** Only modelling the affect on the parent stock **"
+     << "\n\t** No recruits are created during the spawning process **\n";
+    return;
+  }
+
   int i;
   outfile << "\nSpawning data\n\tNames of spawned stocks:";
   for (i = 0; i < spawnStockNames.Size(); i++)
