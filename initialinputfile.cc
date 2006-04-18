@@ -104,46 +104,48 @@ void InitialInputFile::readFromFile() {
 
     Parameter sw;
     double val, lower, upper;
-    int opt, check;
+    int opt, check, rand;
+    char c;
+    char text[MaxStrLength];
+    strncpy(text, "", MaxStrLength);
 
-    opt = check = 0;
+    rand = check = 0;
     while (check == 0) {
       infile >> sw >> ws;
       switches.resize(sw);
       if (infile.eof())
         check++;
 
-      if (isdigit(infile.peek()) || (infile.peek() == '-')) {
+      c = infile.peek();
+      if (isdigit(c) || (c == '-')) {
         infile >> val >> ws;
         values.resize(1, val);
+      } else if ((c == 'r') || (c == 'R')) {
+        infile >> text >> ws;
+        if (strcasecmp(text, "random") == 0)
+          rand++;
+        else
+          check++;
       } else
         check++;
+
       if (infile.eof())
         check++;
 
-      if (isdigit(infile.peek()) || (infile.peek() == '-')) {
-        infile >> lower >> ws;
-        lowerbound.resize(1, lower);
-      } else
-        check++;
+      infile >> lower >> upper >> opt >> ws;
+      lowerbound.resize(1, lower);
+      upperbound.resize(1, upper);
+      optimise.resize(1, opt);
       if (infile.eof())
         check++;
 
-      if (isdigit(infile.peek()) || (infile.peek() == '-')) {
-        infile >> upper >> ws;
-        upperbound.resize(1, upper);
-      } else
-        check++;
-      if (infile.eof())
-        check++;
-
-      if (isdigit(infile.peek())) {
-        infile >> opt >> ws;
-        optimise.resize(1, opt);
-      } else
-        check++;
-      if (infile.eof())
-        check++;
+      if (rand == 1) {
+        // generate a random point somewhere between the bounds
+        handle.logMessage(LOGMESSAGE, "Generating a random starting point for switch", sw.getName());
+        val = lower + (randomNumber() * (upper - lower));
+        values.resize(1, val);
+        rand = 0;
+      }
     }
 
     // check that the parameters have been read correctly
@@ -158,7 +160,7 @@ void InitialInputFile::readFromFile() {
     else if (optimise.Size() != values.Size())
       handle.logMessage(LOGFAIL, "Error in initial input file - failed to read optimise data");
 
-    //check that the names of the switches are unique
+    // check that the names of the switches are unique
     int i, j;
     for (i = 0; i < switches.Size(); i++)
       for (j = 0; j < switches.Size(); j++)
