@@ -1901,7 +1901,7 @@ C_{s}(l) = E q_{s} S_{s}(l) N_{sl} W_{sl}
 
 where:\newline
 $<$ E $>$ is the proportion of the stock that is to be caught\newline
-$<$ q $>$ is the catchability paramater for that stock\newline
+$<$ q $>$ is the catchability parameter for that stock\newline
 $<$ N $>$ is the number of stock in the length cell\newline
 $<$ W $>$ is the mean weight of the stock in the length cell\newline
 $<$ S $>$ is the suitability function (see section~\ref{sec:fleetsuit})
@@ -3578,6 +3578,15 @@ switch  value    lower    upper    optimise
 <name>  <value>  <lower>  <upper>  <0 or 1> ; 1 to optimise this parameter
 \end{verbatim}}
 
+Note that if Gadget is performing a simulation run, then the ''optimise'' column is still required, although the value of the optimise flag will have no affect on the outcome of the simulation.
+
+\bigskip
+In some cases an initial value for a parameter is not known, or a random starting point is wanted (for example, to ensure that the value of the starting point has little affect on the outcome of the optimisation).  This is done by specifying the keyword ''random'' instead of an initial value, which will ensure that Gadget will set the initial value for that parameter to a random point within the bounds.  This is shown in the example below, where the initial value for the parameter ''age2'' will be set to a random point between 1 and 10:
+
+{\small\begin{verbatim}
+age2    random   1        10       1 ; random value between 1 and 10
+\end{verbatim}}
+
 \chapter{Optimisation File}\label{chap:optim}
 The optimisation file is used to specify the type of optimisation to be used, along with any parameters that are needed for the optimisation algorithm.  This file is specified by a ''-opt $<$filename$>$'' command line option when Gadget is started, for example, this would take the optimisation information from a file called ''optinfo.txt'':
 
@@ -3963,6 +3972,7 @@ A version of this user guide was printed and published as a Marine Research Inst
 \item changed the otherfood file format to specify the biomass of otherfood available, rather than the density of the otherfood (see section~\ref{sec:foodamounts})
 \item added a fleet that extends the LinearFleet to take the different catchability of the various stocks into account (see section~\ref{sec:effortfleet})
 \item added the StockPreyPrinter to the list of available printer classes (see section~\ref{sec:stockpreyprinter})
+\item added the PredatorPreyPrinter to the list of available printer classes (see section~\ref{sec:predatorpreyprinter}) to replace the old PredPreyStdAgePrinter and PredPreyStdLengthPrinter printer classes, which are no longer supported
 \end{itemize}
 
 \end{document}
