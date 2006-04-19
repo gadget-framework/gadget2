@@ -12,6 +12,7 @@ OptInfoSimann::OptInfoSimann()
 
 void OptInfoSimann::read(CommentStream& infile, char* text) {
   handle.logMessage(LOGMESSAGE, "Reading Simulated Annealing optimisation parameters");
+
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
     infile >> ws;
     if (strcasecmp(text, "simanniter") == 0) {
@@ -46,6 +47,9 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
 
     } else if (strcasecmp(text, "lratio") == 0) {
       infile >> lratio;
+
+    } else if (strcasecmp(text, "[simann]") == 0) {
+      handle.logMessage(LOGINFO, "Warning in optinfofile - repeated definition of Simulated Annealing parameters");
 
     } else {
       handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);

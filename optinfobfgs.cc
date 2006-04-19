@@ -12,6 +12,7 @@ OptInfoBFGS::OptInfoBFGS()
 
 void OptInfoBFGS::read(CommentStream& infile, char* text) {
   handle.logMessage(LOGMESSAGE, "Reading BFGS optimisation parameters");
+
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]")) {
     infile >> ws;
     if (strcasecmp(text,"beta") == 0) {
@@ -34,6 +35,9 @@ void OptInfoBFGS::read(CommentStream& infile, char* text) {
 
     } else if (strcasecmp(text, "bfgseps") == 0) {
       infile >> bfgseps;
+
+    } else if (strcasecmp(text, "[bfgs]") == 0) {
+      handle.logMessage(LOGINFO, "Warning in optinfofile - repeated definition of BFGS parameters");
 
     } else {
       handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);

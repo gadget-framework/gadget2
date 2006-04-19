@@ -11,6 +11,7 @@ OptInfoHooke::OptInfoHooke()
 
 void OptInfoHooke::read(CommentStream& infile, char* text) {
   handle.logMessage(LOGMESSAGE, "Reading Hooke & Jeeves optimisation parameters");
+
   while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[bfgs]")) {
     infile >> ws;
     if (strcasecmp(text, "rho") == 0) {
@@ -27,6 +28,9 @@ void OptInfoHooke::read(CommentStream& infile, char* text) {
 
     } else if (strcasecmp(text, "bndcheck") == 0) {
       infile >> bndcheck;
+
+    } else if (strcasecmp(text, "[hooke]") == 0) {
+      handle.logMessage(LOGINFO, "Warning in optinfofile - repeated definition of Hooke & Jeeves parameters");
 
     } else {
       handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);

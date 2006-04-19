@@ -124,7 +124,7 @@ public:
    * \return the best function value found from the search
    */
   double bestNearby(DoubleVector& delta, DoubleVector& point, double prevbest, IntVector& param);
-protected:
+private:
   /**
    * \brief This is the maximum number of iterations for the Hooke & Jeeves optimisation
    */
@@ -175,7 +175,7 @@ public:
    * \brief This is the function that will calculate the likelihood score using the Simulated Annealing optimiser
    */
   virtual void OptimiseLikelihood();
-protected:
+private:
   /**
    * \brief This is the temperature reduction factor
    */

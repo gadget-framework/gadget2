@@ -55,8 +55,11 @@ void OptInfo::readOptInfo(CommentStream& infile) {
       srand(seed);
 
     } else if (strcasecmp(text, "[simann]") == 0) {
-      optSimann = new OptInfoSimann();
       useSimann = 1;
+      if (optSimann != NULL)
+        handle.logMessage(LOGINFO, "Warning in optinfofile - repeated definition of Simulated Annealing parameters");
+      else      
+        optSimann = new OptInfoSimann();
 
       if (!infile.eof()) {
         infile >> text;
@@ -69,8 +72,11 @@ void OptInfo::readOptInfo(CommentStream& infile) {
         handle.logMessage(LOGINFO, "Warning - no optimisation parameters specified for Simulated Annealing algorithm");
 
     } else if (strcasecmp(text, "[hooke]") == 0) {
-      optHJ = new OptInfoHooke();
       useHJ = 1;
+      if (optHJ != NULL)
+        handle.logMessage(LOGINFO, "Warning in optinfofile - repeated definition of Hooke & Jeeves parameters");
+      else      
+        optHJ = new OptInfoHooke();
 
       if (!infile.eof()) {
         infile >> text;
@@ -83,8 +89,11 @@ void OptInfo::readOptInfo(CommentStream& infile) {
         handle.logMessage(LOGINFO, "Warning - no optimisation parameters specified for Hooke & Jeeves algorithm");
 
     } else if (strcasecmp(text, "[bfgs]") == 0) {
-      optBFGS = new OptInfoBFGS();
       useBFGS = 1;
+      if (optBFGS != NULL)
+        handle.logMessage(LOGINFO, "Warning in optinfofile - repeated definition of BFGS parameters");
+      else      
+        optBFGS = new OptInfoBFGS();
 
       if (!infile.eof()) {
         infile >> text;
