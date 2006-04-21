@@ -862,8 +862,10 @@ double SCAmounts::calcLikelihood() {
       tmplik = 0.0;
       for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(pred); prey++) {
         if (!(isZero((*stddev[timeindex][a])[pred][prey])))
-          tmplik += ((*modelConsumption[timeindex][a])[pred][prey] - (*obsConsumption[timeindex][a])[pred][prey]) *
-            ((*modelConsumption[timeindex][a])[pred][prey] - (*obsConsumption[timeindex][a])[pred][prey]) /
+          tmplik += ((*modelConsumption[timeindex][a])[pred][prey] -
+            (*obsConsumption[timeindex][a])[pred][prey]) *
+            ((*modelConsumption[timeindex][a])[pred][prey] -
+            (*obsConsumption[timeindex][a])[pred][prey]) /
             ((*stddev[timeindex][a])[pred][prey] * (*stddev[timeindex][a])[pred][prey]);
       }
       tmplik *= (*number[timeindex])[a][pred];
@@ -915,10 +917,11 @@ double SCRatios::calcLikelihood() {
         tmpdivide = 1.0 / scale;
         tmplik = 0.0;
         for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(pred); prey++) {
+          (*modelConsumption[timeindex][a])[pred][prey] *= tmpdivide;
           if (!(isZero((*stddev[timeindex][a])[pred][prey])))
-            tmplik += ((*modelConsumption[timeindex][a])[pred][prey] * tmpdivide -
+            tmplik += ((*modelConsumption[timeindex][a])[pred][prey]  -
               (*obsConsumption[timeindex][a])[pred][prey]) *
-              ((*modelConsumption[timeindex][a])[pred][prey] * tmpdivide -
+              ((*modelConsumption[timeindex][a])[pred][prey]  -
               (*obsConsumption[timeindex][a])[pred][prey]) /
               ((*stddev[timeindex][a])[pred][prey] * (*stddev[timeindex][a])[pred][prey]);
         }
@@ -1093,9 +1096,10 @@ double SCSimple::calcLikelihood() {
         tmpdivide = 1.0 / scale;
         tmplik = 0.0;
         for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(pred); prey++) {
-          tmplik += ((*modelConsumption[timeindex][a])[pred][prey] * tmpdivide -
+          (*modelConsumption[timeindex][a])[pred][prey] *= tmpdivide;
+          tmplik += ((*modelConsumption[timeindex][a])[pred][prey] -
               (*obsConsumption[timeindex][a])[pred][prey]) *
-              ((*modelConsumption[timeindex][a])[pred][prey] * tmpdivide -
+              ((*modelConsumption[timeindex][a])[pred][prey] -
               (*obsConsumption[timeindex][a])[pred][prey]);
         }
         lik += tmplik;
