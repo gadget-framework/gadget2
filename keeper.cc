@@ -388,7 +388,7 @@ void Keeper::getSwitches(ParameterVector& sw) const {
     sw[i] = switches[i];
 }
 
-void Keeper::writeParams(const char* const filename, int prec, int interrupt) {
+void Keeper::writeParams(const OptInfoPtrVector& optvec, const char* const filename, int prec, int interrupt) {
 
   int i, p, w, check;
   ofstream paramfile;
@@ -414,43 +414,8 @@ void Keeper::writeParams(const char* const filename, int prec, int interrupt) {
       << setprecision(p) << EcoSystem->getLikelihood() << endl;
 
   } else {
-    if (EcoSystem->getFuncEvalSA() != 0) {
-      paramfile << "; the Simulated Annealing algorithm ran for " << EcoSystem->getFuncEvalSA()
-        << " function evaluations\n; and stopped when the likelihood value was "
-        << setprecision(p) << EcoSystem->getLikelihoodSA();
-      if (EcoSystem->getConvergeSA() == -1)
-        paramfile << "\n; because an error occured during the optimisation\n";
-      else if (EcoSystem->getConvergeSA() == 1)
-        paramfile << "\n; because the convergence criteria were met\n";
-      else
-        paramfile << "\n; because the maximum number of function evaluations was reached\n";
-    }
-
-    if (EcoSystem->getFuncEvalHJ() != 0) {
-      paramfile << "; the Hooke & Jeeves algorithm ran for " << EcoSystem->getFuncEvalHJ()
-        << " function evaluations\n; and stopped when the likelihood value was "
-        << setprecision(p) << EcoSystem->getLikelihoodHJ();
-      if (EcoSystem->getConvergeHJ() == -1)
-        paramfile << "\n; because an error occured during the optimisation\n";
-      else if (EcoSystem->getConvergeHJ() == 1)
-        paramfile << "\n; because the convergence criteria were met\n";
-      else
-        paramfile << "\n; because the maximum number of function evaluations was reached\n";
-    }
-
-    if (EcoSystem->getFuncEvalBFGS() != 0) {
-      paramfile << "; the BFGS algorithm ran for " << EcoSystem->getFuncEvalBFGS()
-        << " function evaluations\n; and stopped when the likelihood value was "
-        << setprecision(p) << EcoSystem->getLikelihoodBFGS();
-      if (EcoSystem->getConvergeBFGS() == -1)
-        paramfile << "\n; because an error occured during the optimisation\n";
-      else if (EcoSystem->getConvergeBFGS() == 1)
-        paramfile << "\n; because the convergence criteria were met\n";
-      else if (EcoSystem->getConvergeBFGS() == 2)
-        paramfile << "\n; because the accuracy limit for the gradient calculation was reached\n";
-      else
-        paramfile << "\n; because the maximum number of function evaluations was reached\n";
-    }
+    for (i = 0; i < optvec.Size(); i++)
+      optvec[i]->Print(paramfile, p);
   }
 
   paramfile << "switch\tvalue\t\tlower\tupper\toptimise\n";

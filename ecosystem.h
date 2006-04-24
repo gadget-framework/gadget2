@@ -11,12 +11,14 @@
 #include "otherfoodptrvector.h"
 #include "printerptrvector.h"
 #include "likelihoodptrvector.h"
+#include "optinfoptrvector.h"
 #include "stock.h"
 #include "fleet.h"
 #include "otherfood.h"
 #include "printer.h"
 #include "maininfo.h"
 #include "printinfo.h"
+#include "optinfo.h"
 #include "gadget.h"
 
 /**
@@ -82,6 +84,11 @@ public:
    */
   void readStock(CommentStream& infile);
   /**
+   * \brief This function will read in the optimisation parameters from the input file
+   * \param infile is the CommentStream to read the optimisation parameters from
+   */
+  void readOptimisation(CommentStream& infile);
+  /**
    * \brief This function will write the current model status to file
    * \param filename is the name of the file to write the model information to
    */
@@ -109,6 +116,10 @@ public:
    * \brief This function will display information about the optimised values of the parameters
    */
   void writeOptValues();
+  /**
+   * \brief This is the function that will optimise the likelihood score
+   */
+  void Optimise();
   /**
    * \brief This function will initialise the Ecosystem parameters
    */
@@ -233,96 +244,6 @@ public:
    */
   int numTotalSteps() const { return TimeInfo->numTotalSteps(); };
   /**
-   * \brief This function will return the flag used to determine whether the Simulated Annealing optimisation has converged or not
-   * \return flag
-   */
-  int getConvergeSA() const { return convergeSA; };
-  /**
-   * \brief This function will set the flag used to denote whether the Simulated Annealing optimisation has converged or not
-   * \param set is the value of the flag (0 or 1)
-   */
-  void setConvergeSA(int set) { convergeSA = set; };
-  /**
-   * \brief This function will return the number of iterations that took place during the Simulated Annealing optimisation
-   * \return number of iterations
-   */
-  int getFuncEvalSA() const { return funcevalSA; };
-  /**
-   * \brief This function will set the number of iterations that took place during the Simulated Annealing optimisation
-   * \param set is the number of iterations
-   */
-  void setFuncEvalSA(int set) { funcevalSA = set; };
-  /**
-   * \brief This function will return the best likelihood score from the Simulated Annealing optimisation
-   * \return likelihood score
-   */
-  double getLikelihoodSA() const { return likelihoodSA; };
-  /**
-   * \brief This function will set the best likelihood score for the Simulated Annealing optimisation
-   * \param set is the best likelihood score
-   */
-  void setLikelihoodSA(double set) { likelihoodSA = set; };
-  /**
-   * \brief This function will return the flag used to determine whether the Hooke & Jeeves optimisation has converged or not
-   * \return flag
-   */
-  int getConvergeHJ() const { return convergeHJ; };
-  /**
-   * \brief This function will set the flag used to denote whether the Hooke & Jeeves optimisation has converged or not
-   * \param set is the value of the flag (0 or 1)
-   */
-  void setConvergeHJ(int set) { convergeHJ = set; };
-  /**
-   * \brief This function will return the number of iterations that took place during the Hooke & Jeeves optimisation
-   * \return number of iterations
-   */
-  int getFuncEvalHJ() const { return funcevalHJ; };
-  /**
-   * \brief This function will set the number of iterations that took place during the Hooke & Jeeves optimisation
-   * \param set is the number of iterations
-   */
-  void setFuncEvalHJ(int set) { funcevalHJ = set; };
-  /**
-   * \brief This function will return the best likelihood score from the Hooke & Jeeves optimisation
-   * \return likelihood score
-   */
-  double getLikelihoodHJ() const { return likelihoodHJ; };
-  /**
-   * \brief This function will set the best likelihood score for the Hooke & Jeeves optimisation
-   * \param set is the best likelihood score
-   */
-  void setLikelihoodHJ(double set) { likelihoodHJ = set; };
-  /**
-   * \brief This function will return the flag used to determine whether the BFGS optimisation has converged or not
-   * \return flag
-   */
-  int getConvergeBFGS() const { return convergeBFGS; };
-  /**
-   * \brief This function will set the flag used to denote whether the BFGS optimisation has converged or not
-   * \param set is the value of the flag (0 or 1)
-   */
-  void setConvergeBFGS(int set) { convergeBFGS = set; };
-  /**
-   * \brief This function will return the number of iterations that took place during the BFGS optimisation
-   * \return number of iterations
-   */
-  int getFuncEvalBFGS() const { return funcevalBFGS; };
-  /**
-   * \brief This function will set the number of iterations that took place during the BFGS optimisation
-   * \param set is the number of iterations
-   */
-  void setFuncEvalBFGS(int set) { funcevalBFGS = set; };
-  /**
-   * \brief This function will return the best likelihood score from the BFGS optimisation
-   * \return likelihood score
-   */
-  double getLikelihoodBFGS() const { return likelihoodBFGS; };
-  /**
-   * \brief This function will set the best likelihood score for the BFGS optimisation
-   * \param set is the best likelihood score
-   */
-  void setLikelihoodBFGS(double set) { likelihoodBFGS = set; };
-  /**
    * \brief This is the flag used to denote whether the user has interrupted the current model run
    */
   volatile int interrupted;
@@ -336,42 +257,6 @@ protected:
    */
   int funceval;
   /**
-   * \brief This is the flag used to denote whether the Simulated Annealing optimisation converged or not
-   */
-  int convergeSA;
-  /**
-   * \brief This is the number of iterations that took place during the Simulated Annealing optimisation
-   */
-  int funcevalSA;
-  /**
-   * \brief This is the value of the best likelihood score from the Simulated Annealing optimisation
-   */
-  double likelihoodSA;
-  /**
-   * \brief This is the flag used to denote whether the Hooke & Jeeves optimisation converged or not
-   */
-  int convergeHJ;
-  /**
-   * \brief This is the number of iterations that took place during the Hooke & Jeeves optimisation
-   */
-  int funcevalHJ;
-  /**
-   * \brief This is the value of the best likelihood score from the Hooke & Jeeves optimisation
-   */
-  double likelihoodHJ;
-  /**
-   * \brief This is the flag used to denote whether the BFGS optimisation converged or not
-   */
-  int convergeBFGS;
-  /**
-   * \brief This is the number of iterations that took place during the BFGS optimisation
-   */
-  int funcevalBFGS;
-  /**
-   * \brief This is the value of the best likelihood score from the BFGS optimisation
-   */
-  double likelihoodBFGS;
-  /**
    * \brief This is the BaseClassPtrVector of the stocks, fleets and otherfood classes for the current model
    */
   BaseClassPtrVector basevec;
@@ -383,6 +268,10 @@ protected:
    * \brief This is the PrinterPtrVector of the printer classes for the current model
    */
   PrinterPtrVector printvec;
+  /**
+   * \brief This is the OptInfoPtrVector of the optimisation algorithms for the current model
+   */
+  OptInfoPtrVector optvec;
   /**
    * \brief This is the TimeClass for the current model
    */

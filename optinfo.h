@@ -6,22 +6,24 @@
 #include "doublevector.h"
 #include "intvector.h"
 
+enum OptType { OPTHOOKE = 1, OPTSIMANN, OPTBFGS };
+
 /**
- * \class OptSearch
+ * \class OptInfo
  * \brief This is the base class used to perform the optimisation calculation for the model
  *
  * \note This will always be overridden by the derived classes that actually perform the optimisation calculation
 */
-class OptSearch {
+class OptInfo {
 public:
   /**
-   * \brief This is the default OptSearch constructor
+   * \brief This is the default OptInfo constructor
    */
-  OptSearch() {};
+  OptInfo() { converge = 0; iters = 0; score = 0.0; };
   /**
-   * \brief This is the default OptSearch destructor
+   * \brief This is the default OptInfo destructor
    */
-  ~OptSearch() {};
+  ~OptInfo() {};
   /**
    * \brief This is the function used to read in the optimisation parameters
    * \param infile is the CommentStream to read the optimisation parameters from
@@ -29,61 +31,37 @@ public:
    */
   virtual void read(CommentStream& infile, char* text) {};
   /**
+   * \brief This function will print information from the optimisation algorithm
+   * \param outfile is the ofstream that the optimisation information gets sent to
+   * \param prec is the precision to use in the output file
+   */
+  virtual void Print(ofstream& outfile, int prec) {};
+  /**
    * \brief This is the function used to call the optimisation algorithms
    */
   virtual void OptimiseLikelihood() {};
-};
-
-/**
- * \class OptInfo
- * \brief This is the master class used to control the optimisation process within gadget
- */
-class OptInfo {
-public:
   /**
-   * \brief This is the default OptInfo constructor
-   * \param readfile is the flag used to denote whether the optimisation parameters have been given or not
-   * \param filename is the name of the file to read the optimisation parameters from
+   * \brief This will return the type of optimisation class
+   * \return type
    */
-  OptInfo(int readfile, const char* filename);
+  const OptType getType() const { return type; };
+protected:
   /**
-   * \brief This is the default OptInfo destructor
+   * \brief This is the flag used to denote whether the optimisation converged or not
    */
-  ~OptInfo();
+  int converge;
   /**
-   * \brief This is the function that will optimise the likelihood score
+   * \brief This is the number of iterations that took place during the optimisation
    */
-  void Optimise();
+  int iters;
   /**
-   * \brief This is the function used to read in the optimisation function parameters
-   * \param infile is the CommentStream to read the optimisation parameters from
+   * \brief This is the value of the best likelihood score from the optimisation
    */
-  void readOptInfo(CommentStream& infile);
-private:
+  double score;
   /**
-   * \brief This is the flag used to denote whether Simulated Annealing is used in the optimisation or not
+   * \brief This denotes what type of optimisation class has been created
    */
-  int useSimann;
-  /**
-   * \brief This is the flag used to denote whether Hooke & Jeeves is used in the optimisation or not
-   */
-  int useHJ;
-  /**
-   * \brief This is the flag used to denote whether BFGS is used in the optimisation or not
-   */
-  int useBFGS;
-  /**
-   * \brief This is the OptSearch that performs the Simulated Annealing optimisation
-   */
-  OptSearch* optSimann;
-  /**
-   * \brief This is the OptSearch that performs the Hooke & Jeeves optimisation
-   */
-  OptSearch* optHJ;
-  /**
-   * \brief This is the OptSearch that performs the BFGS optimisation
-   */
-  OptSearch* optBFGS;
+  OptType type;
 };
 
 /**
@@ -95,7 +73,7 @@ private:
  * The Hooke & Jeeves algorithm used in Gadget is derived from that originally presented by R. Hooke and T. A. Jeeves, ''Direct Search Solution of Numerical and Statistical Problems'' in the April 1961 (Vol. 8, pp. 212-229) issue of the Journal of the ACM, with improvements presented by Arthur F Kaupe Jr., ''Algorithm 178: Direct Search'' in the June 1963 (Vol 6, pp.313-314) issue of the Communications of the ACM.
 
  */
-class OptInfoHooke : public OptSearch {
+class OptInfoHooke : public OptInfo {
 public:
   /**
    * \brief This is the default OptInfoHooke constructor
@@ -112,9 +90,16 @@ public:
    */
   virtual void read(CommentStream& infile, char* text);
   /**
+   * \brief This function will print information from the optimisation algorithm
+   * \param outfile is the ofstream that the optimisation information gets sent to
+   * \param prec is the precision to use in the output file
+   */
+  virtual void Print(ofstream& outfile, int prec);
+  /**
    * \brief This is the function that will calculate the likelihood score using the Hooke & Jeeves optimiser
    */
   virtual void OptimiseLikelihood();
+private:
   /**
    * \brief This function will calculate the best point that can be found close to the current point
    * \param delta is the DoubleVector of the steps to take when looking for the best point
@@ -124,7 +109,6 @@ public:
    * \return the best function value found from the search
    */
   double bestNearby(DoubleVector& delta, DoubleVector& point, double prevbest, IntVector& param);
-private:
   /**
    * \brief This is the maximum number of iterations for the Hooke & Jeeves optimisation
    */
@@ -155,7 +139,7 @@ private:
  *
  * The Simulated Annealing algorithm used in Gadget is derived from that presented by Corana et al, ''Minimising Multimodal Functions of Continuous Variables with the 'Simulated Annealing' Algorithm'' in the September 1987 (Vol. 13, pp. 262-280) issue of the ACM Transactions on Mathematical Software and Goffe et al, ''Global Optimisation of Statistical Functions with Simulated Annealing'' in the January/February 1994 (Vol. 60, pp. 65-100) issue of the Journal of Econometrics.
  */
-class OptInfoSimann : public OptSearch {
+class OptInfoSimann : public OptInfo {
 public:
   /**
    * \brief This is the default OptInfoSimann constructor
@@ -171,6 +155,12 @@ public:
    * \param text is a text string used to compare parameter names
    */
   virtual void read(CommentStream& infile, char* text);
+  /**
+   * \brief This function will print information from the optimisation algorithm
+   * \param outfile is the ofstream that the optimisation information gets sent to
+   * \param prec is the precision to use in the output file
+   */
+  virtual void Print(ofstream& outfile, int prec);
   /**
    * \brief This is the function that will calculate the likelihood score using the Simulated Annealing optimiser
    */
@@ -230,7 +220,7 @@ private:
  *
  * The BFGS algorithm used in Gadget is derived from that presented by Dimitri P Bertsekas, ''Nonlinear Programming'' (2nd edition, pp22-61) published by Athena Scientific.
  */
-class OptInfoBFGS : public OptSearch  {
+class OptInfoBFGS : public OptInfo  {
 public:
   /**
    * \brief This is the default OptInfoBFGS constructor
@@ -247,9 +237,16 @@ public:
    */
   virtual void read(CommentStream& infile, char* text);
   /**
+   * \brief This function will print information from the optimisation algorithm
+   * \param outfile is the ofstream that the optimisation information gets sent to
+   * \param prec is the precision to use in the output file
+   */
+  virtual void Print(ofstream& outfile, int prec);
+  /**
    * \brief This is the function that will calculate the likelihood score using the BFGS optimiser
    */
   virtual void OptimiseLikelihood();
+private:
   /**
    * \brief This function will numerically calculate the gradient of the function at the current point
    * \param point is the DoubleVector that contains the parameters corresponding to the current function value
@@ -263,7 +260,6 @@ public:
    * \return the smallest eigen value of the matrix
    */
   double getSmallestEigenValue(DoubleMatrix M);
-private:
   /**
    * \brief This is the maximum number of function evaluations for the BFGS optimiation
    */
@@ -293,4 +289,5 @@ private:
    */
   double gradstep;
 };
+
 #endif

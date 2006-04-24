@@ -3,6 +3,7 @@
 
 #include "likelihood.h"
 #include "likelihoodptrvector.h"
+#include "optinfoptrvector.h"
 #include "stochasticdata.h"
 #include "addresskeepermatrix.h"
 #include "strstack.h"
@@ -172,11 +173,12 @@ public:
   void writeValues(const LikelihoodPtrVector& likevec, int prec);
   /**
    * \brief This function will write final information about the model parameters to file in a column format (which can then be used as the starting point for a subsequent model run)
+   * \param optvec is the OptInfoPtrVector containing the optimisation algorithms used for the current model
    * \param filename is the name of the file to write the model information to
    * \param prec is the precision to use in the output file
    * \param interrupt is a flag to denote whether the current run was interrupted by the user or not
    */
-  void writeParams(const char* const filename, int prec, int interrupt);
+  void writeParams(const OptInfoPtrVector& optvec, const char* const filename, int prec, int interrupt);
   /**
    * \brief This function will display information about the best values of the parameters found so far during an optimisation run
    */

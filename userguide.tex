@@ -197,17 +197,6 @@ gadget -print <number>
 \end{verbatim}}
 Starting Gadget with the -print switch will specify the frequency with which information is written to the likelihood output file (specified with the -o switch).  The default value for this is 1, meaning that the likelihood information is written for every iteration.
 
-%JMB removed this from the documentation
-%{\small\begin{verbatim}
-%gadget -co <filename>
-%\end{verbatim}}
-%Starting Gadget with the -co switch specifies the file that Gadget will use to print the score from the likelihood calculations in a column format.  This file will only give details on the parameters that have been used, and will not give information on the likelihood components.  This can be a large file if Gadget is performing an optimising run (see Output Files, chapter~\ref{chap:output}, for more information on the format of this file).
-
-%{\small\begin{verbatim}
-%gadget -print2 <number>
-%\end{verbatim}}
-%Starting Gadget with the -print2 switch will specify the frequency with which information is written to the likelihood column output file (specified with the -co switch).  The default value for this is 5, meaning that the likelihood information is written for every fifth iteration.
-
 {\small\begin{verbatim}
 gadget -precision <number>
 \end{verbatim}}
@@ -981,24 +970,13 @@ maxconsumption         <maximum consumption vector>
 ...
 \end{verbatim}}
 
-In equation~\ref{eq:maxcons}, the parameter $<$ M $>$ gives the maximum possible consumption for the predator on the current timestep.  This is a function of temperature and the length of the predator, using the 4 parameters specified by the $<$maximum consumption$>$ vector in the input file.  Note that the maximum consumption should be specified in kilojoules per kilogram per month.
+In equation~\ref{eq:maxcons}, the parameter $<$ M $>$ gives the maximum possible consumption for the predator on the current timestep.  This is a function of temperature and the length of the predator, using the 4 parameters specified by the $<$maximum consumption$>$ vector in the input file.  Note that the maximum consumption should be specified in kilojoules per month.
 
 \bigskip
 In equation~\ref{eq:feedlevel}, the parameter $<\psi>$ gives the ''feeding level'' which denotes the fraction of the available food that the predator is consuming.  This is governed by the total amount of prey available and the $<$half feeding$>$ value which is specified in the input file.  The $<$half feeding$>$ value is the density of prey required to allow the predator to consume prey at half the maximum consumption level.  The value of $<\psi>$ can have an affect on the growth of the predator (ie. when there isn't sufficient food available) when the growth function has been set to ''MULTSPEC'' or ''WeightJones''.
 
 \section{Suitability}\label{sec:suitability}
 The suitability determines how the predators act on the preys.  This selectivity relationship between the predator and the prey is based on the lengths of the predator and prey, and are defined  by declaring a suitability function and the parameters for that function.  The suitability values can be thought of as the proportion of the prey length group that the predator length group can consume, and as such the suitability values should be between 0 and 1.
-
-%JMB removed this from the model
-%\bigskip
-%To define a suitability relationship based on a suitability matrix, the stock file (for the predator) needs to contain the following data:
-
-%{\small\begin{verbatim}
-%suitability
-%<preyname>    suitfile <filename>     <multi>      ; for each prey
-%\end{verbatim}}
-
-%This would result in Gadget opening a file of name $<$filename$>$ to read in a suitability matrix, which would then be multiplied by $<$multi$>$ for that prey.  The suitability matrix should have L rows and l columns, where L is the number of length groups for the predator, and l is the number of length groups for the prey.
 
 \bigskip
 To define a suitability relationship based on a suitability function, the stock file (for the predator) needs to contain the following data:
@@ -2998,50 +2976,6 @@ For this RecStatistics function, the format of the statistical data required in 
 
 where $<$number$>$ is the number of samples for the tag/timestep/area combination, and $<$mean$>$ is the mean length of these samples.
 
-%JMB removed predatorindices stuff from the documentation
-%\section{PredatorIndices}\label{sec:predatorindex}
-%The PredatorIndices likelihood component is an extension to the SurveyIndices likelihood component, to take the selection of the predator (usually a fleet) into account when calculating the indices in the Gadget model.  The likelihood component that is used is the sum of squares of a linear regression fitted to the difference between the modelled data and the specified index, given by equation~\ref{eq:predatorindex} below:
-
-%\begin{equation}\label{eq:predatorindex}
-%\ell = \sum_{\it time}\Big(I_{t} - (\alpha + \beta N_{t})\Big)^2
-%\end{equation}
-
-%where:\newline
-%$<$ I $>$ is the specified index\newline
-%$<$ N $>$ is the corresponding index calculated in the Gadget model
-
-%\bigskip
-%To specify a PredatorIndices likelihood component, the format required in the main likelihood file is as follows:
-
-%{\small\begin{verbatim}
-%[component]
-%name                 <name for the likelihood component>
-%weight               <weight for the likelihood component>
-%type                 predatorindices
-%datafile             <name for the datafile>
-%predatornames        <vector of the names of the predators>
-%predlenaggfile       <length aggregation file specifying predator lengths>
-%preynames            <vector of the names of the preys>
-%preylenaggfile       <length aggregation file specifying prey lengths>
-%areaaggfile          <area aggregation file specifying areas>
-%fittype              <fit type>
-%<fit type parameters>
-%\end{verbatim}}
-
-%The $<$predatornames$>$ vector contains a list of all the predators to be aggregated into a single pseudo predator for the purposes of the data comparison.  Similarly, the $<$preynames$>$ vector contains a list of all the preys to be aggregated into a single pseudo prey.
-
-%\bigskip
-%The datafile is a list of the indices that Gadget is to use to fit the linear regression to for the numbers calculated in the model.  The format of this file is given below:
-
-%{\small\begin{verbatim}
-%<year>  <step>  <area>  <predlen>  <preylen>  <number>
-%\end{verbatim}}
-
-%where $<$number$>$ is the survey index for that timestep/area/predator length/prey length combination, with the values for $<$predlen$>$ defined in the predator length aggregation file, and the values for $<$preylen$>$ defined in the prey length aggregation file.
-
-%\bigskip
-%The $<$fit type$>$ defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component.  The valid fit type options, and the $<$fit type parameters$>$, are the same as for the survey indices, given in section~\ref{subsec:sibyage} above.
-
 \section{MigrationPenalty}\label{sec:migpenalty}
 The MigrationPenalty likelihood component is used to give a penalty whenever there is a negative migration value from the migration matrices (which is meaningless).  The MigrationPenalty component is used (rather than the BoundLikelihood component) since the values in the migration matrices are calculated from more than one parameter, and it is not necessarily the individual parameters that are wrong, rather the combination of the parameters that give the migration matrix value that is wrong.  The likelihood component that is used is based on the sum of squares of the migration values, given by the equation below:
 
@@ -3458,6 +3392,7 @@ $<$number$>$ is the number consumed for that timestep/area/age/length combinatio
 $<$biomass$>$ is the biomass consumed for that timestep/area/age/length combination\newline
 $<$mortality$>$ is the effective annual mortality induced in the prey by the predation for that timestep/area/age/length combination
 
+%JMB removed this from the documentation
 %\section{PredPreyStdLengthPrinter}\label{sec:predpreystdlengthprinter}
 %The printer type to output detailed information about a predator-prey combination, with both the predator and prey given a length based distribution, is called ''PredPreyStdLengthPrinter''.  This printer type is defined by specifying the predator name, prey name and timesteps of interest.  The file format for this component is given below:
 
@@ -3830,7 +3765,7 @@ sigma      0.01  ; armijo convergence criteria
 beta       0.3   ; armijo adjustment factor
 \end{verbatim}}
 
-It should be noted that the optimisation algorithms will always be performed in the following order, irrespective of the order that they are specified in the input file: first Simulated Annealing, second Hooke \& Jeeves and finally BFGS.
+It should be noted that the optimisation algorithms will be performed in the order that they are specified in the input file, so for this example the order will be: first Simulated Annealing, second Hooke \& Jeeves and finally BFGS.
 
 \subsection{Parameters}\label{subsec:combinepar}
 The parameters for this combined optimisation algorithm are the same as for the individual algorithms, and are described in sections \ref{subsec:hookepar} (for the Hooke \& Jeeves parameters), \ref{subsec:simannpar} (for the Simulated Annealing parameters) and \ref{subsec:bfgspar} (for the BFGS parameters).
@@ -3871,25 +3806,6 @@ gadget -l -o likelihood.txt -print 10
 \end{verbatim}}
 
 which will set Gadget to write this information, to the file ''likelihood.txt'', after every 10th iteration.
-
-%JMB removed this from the documentation
-%\section{Column Output}\label{sec:columnoutput}
-%The column output file is generated when Gadget is started with the ''-co $<$filename$>$'' option, and the output is written to the file specified after that option, so, for example, this would write the output to a file called ''columnoutput.txt'':
-
-%{\small\begin{verbatim}
-%gadget -l -co columnoutput.txt
-%\end{verbatim}}
-
-%The column output file only contains information about the progress of the optimisation process.  It contains a large number of sections, with each section giving the overall likelihood score, followed by one line for each switch, giving the value and bounds for each of the switches that are being used for the current Gadget run.
-
-%\bigskip
-%For a long optimisation run, this can result in this file being very large.  The default option is for this line to be written for every fifth iteration, but this can be changed using the ''-print2 $<$number$>$'' option, which will only write out this line every $<$number$>$ iterations, as shown in the example below:
-
-%{\small\begin{verbatim}
-%gadget -l -co columnoutput.txt -print2 100
-%\end{verbatim}}
-
-%which will set Gadget to write this information, to the file ''columnoutput.txt'', after every 100th iteration.
 
 \section{Parameter Output}\label{sec:paramoutput}
 The parameter output file is automatically generated by Gadget every time that Gadget is run.  If Gadget is not started with the ''-p $<$filename$>$'' option, this file will be called ''params.out''.  This file contains information about the values of the switches at the end of the Gadget run, in the same format as for the column output file.  In the header of this file there will be information about the Gadget run, followed by the final overall likelihood score and the total number of iterations.  There is then the information about the switches used in the Gadget run - the name, value, lower bound, upper bound and whether the switch is to be optimised.

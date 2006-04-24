@@ -272,6 +272,51 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
 }
 
 //
+// A function to read optimisation information
+//
+void Ecosystem::readOptimisation(CommentStream& infile) {
+  char* text = new char[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+
+  int i = 0;
+  handle.logMessage(LOGMESSAGE, "Reading optimisation information");
+  infile >> text;
+  while (!infile.eof()) {
+    infile >> ws;  //trim whitespace from infile
+    if ((strcasecmp(text, "seed")) == 0 && (!infile.eof())) {
+      int seed = 0;
+      infile >> seed >> ws >> text;
+      handle.logMessage(LOGMESSAGE, "Initialising random number generator with", seed);
+      srand(seed);
+
+    } else if (strcasecmp(text, "[hooke]") == 0) {
+      optvec.resize(new OptInfoHooke());
+    } else if (strcasecmp(text, "[simann]") == 0) {
+      optvec.resize(new OptInfoSimann());
+    } else if (strcasecmp(text, "[bfgs]") == 0) {
+      optvec.resize(new OptInfoBFGS());
+    } else {
+      handle.logFileUnexpected(LOGFAIL, "[hooke], [simann], [bfgs] or seed", text);
+    }
+
+    if (!infile.eof()) {
+      infile >> text;
+      if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
+        handle.logMessage(LOGINFO, "Warning - no parameters specified for optimisation algorithm");
+      else
+        optvec[i++]->read(infile, text);
+    } else
+      handle.logMessage(LOGINFO, "Warning - no parameters specified for optimisation algorithm");
+  }
+
+  delete[] text;
+  if (optvec.Size() == 0) {
+    handle.logFileMessage(LOGWARN, "no optimisation methods found, using default values");
+    optvec.resize(new OptInfoHooke());
+  }
+}
+
+//
 // The main reading function
 //
 void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,

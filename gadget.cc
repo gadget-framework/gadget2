@@ -2,7 +2,6 @@
 #include "maininfo.h"
 #include "runid.h"
 #include "gadget.h"
-#include "optinfo.h"
 #include "errorhandler.h"
 #include "stochasticdata.h"
 #include "interrupthandler.h"
@@ -14,7 +13,6 @@ ErrorHandler handle;
 int main(int aNumber, char* const aVector[]) {
 
   MainInfo main;
-  OptInfo* opt = 0;
   StochasticData* data = 0;
   int check = 0;
 
@@ -54,6 +52,7 @@ int main(int aNumber, char* const aVector[]) {
     handle.logMessage(LOGWARN, "Warning - no command line options specified, using default values");
 
   EcoSystem = new Ecosystem(main, inputdir, workingdir);
+  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
 
   #ifdef INTERRUPT_HANDLER
     //JMB - dont register interrupt if doing a network run
@@ -111,8 +110,6 @@ int main(int aNumber, char* const aVector[]) {
     }
 
   } else if (main.runOptimise()) {
-    opt = new OptInfo(main.getOptInfoGiven(), main.getOptInfoFile());
-
     if (main.getInitialParamGiven()) {
       data = new StochasticData(main.getInitialParamFile());
       EcoSystem->Update(data);
@@ -125,8 +122,7 @@ int main(int aNumber, char* const aVector[]) {
     if (main.printInitial())
       EcoSystem->writeStatus(main.getPrintInitialFile());
 
-    opt->Optimise();
-    delete opt;
+    EcoSystem->Optimise();
     if (main.getForcePrint())
       EcoSystem->Simulate(main.getForcePrint());
   }

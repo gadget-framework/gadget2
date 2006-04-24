@@ -174,8 +174,9 @@ double OptInfoHooke::bestNearby(DoubleVector& delta, DoubleVector& point, double
 void OptInfoHooke::OptimiseLikelihood() {
 
   double oldf, newf, fbefore, steplength, tmp, check;
-  int    i, k, h, change, iters, offset;
+  int    i, k, h, change, offset;
 
+  handle.logMessage(LOGINFO, "\nStarting Hooke & Jeeves optimisation algorithm\n");
   int nvars = EcoSystem->numOptVariables();
   DoubleVector x(nvars);
   DoubleVector trialx(nvars);
@@ -222,9 +223,8 @@ void OptInfoHooke::OptimiseLikelihood() {
 
   if (fbefore != fbefore) { //JMB added check for NaN
     handle.logMessage(LOGINFO, "Error starting Hooke & Jeeves optimisation with f(x) = infinity");
-    EcoSystem->setConvergeHJ(-1);
-    EcoSystem->setFuncEvalHJ(1);
-    EcoSystem->setLikelihoodHJ(0.0);
+    converge = -1;
+    iters = 1;
     return;
   }
 
@@ -232,9 +232,7 @@ void OptInfoHooke::OptimiseLikelihood() {
     if (isZero(fbefore)) {
       iters = EcoSystem->getFuncEval() - offset;
       handle.logMessage(LOGINFO, "Error in Hooke & Jeeves optimisation after", iters, "function evaluations, f(x) = 0");
-      EcoSystem->setConvergeHJ(-1);
-      EcoSystem->setFuncEvalHJ(iters);
-      EcoSystem->setLikelihoodHJ(0.0);
+      converge = -1;
       return;
     }
 
@@ -273,12 +271,11 @@ void OptInfoHooke::OptimiseLikelihood() {
         for (i = 0; i < nvars; i++)
           bestx[i] = x[i];
 
-      newf = EcoSystem->SimulateAndUpdate(bestx);
-      EcoSystem->setFuncEvalHJ(iters++);  //JMB one last function evalution
-      EcoSystem->setLikelihoodHJ(newf);
+      score = EcoSystem->SimulateAndUpdate(bestx);
+      handle.logMessage(LOGINFO, "\nHooke & Jeeves finished with a likelihood score of", score);
       for (i = 0; i < nvars; i++)
         bestx[i] *= init[i];
-      EcoSystem->storeVariables(newf, bestx);
+      EcoSystem->storeVariables(score, bestx);
       return;
     }
 
@@ -362,12 +359,11 @@ void OptInfoHooke::OptimiseLikelihood() {
           for (i = 0; i < nvars; i++)
             bestx[i] = x[i];
 
-        newf = EcoSystem->SimulateAndUpdate(bestx);
-        EcoSystem->setFuncEvalHJ(iters++);  //JMB one last function evalution
-        EcoSystem->setLikelihoodHJ(newf);
+        score = EcoSystem->SimulateAndUpdate(bestx);
+        handle.logMessage(LOGINFO, "\nHooke & Jeeves finished with a likelihood score of", score);
         for (i = 0; i < nvars; i++)
           bestx[i] *= init[i];
-        EcoSystem->storeVariables(newf, bestx);
+        EcoSystem->storeVariables(score, bestx);
         return;
       }
     }
@@ -394,13 +390,12 @@ void OptInfoHooke::OptimiseLikelihood() {
 
       for (i = 0; i < nvars; i++)
         bestx[i] = x[i];
-      newf = EcoSystem->SimulateAndUpdate(bestx);
-      EcoSystem->setConvergeHJ(1);
-      EcoSystem->setFuncEvalHJ(iters++);  //JMB one last function evalution
-      EcoSystem->setLikelihoodHJ(newf);
+      converge = 1;
+      score = EcoSystem->SimulateAndUpdate(bestx);
+      handle.logMessage(LOGINFO, "\nHooke & Jeeves finished with a likelihood score of", score);
       for (i = 0; i < nvars; i++)
         bestx[i] *= init[i];
-      EcoSystem->storeVariables(newf, bestx);
+      EcoSystem->storeVariables(score, bestx);
       return;
     }
 

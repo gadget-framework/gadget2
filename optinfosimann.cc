@@ -5,15 +5,16 @@
 extern ErrorHandler handle;
 
 OptInfoSimann::OptInfoSimann()
-  : OptSearch(), rt(0.85), simanneps(1e-4), ns(5), nt(2), t(100.0),
+  : OptInfo(), rt(0.85), simanneps(1e-4), ns(5), nt(2), t(100.0),
     cs(2.0), vminit(1.0), simanniter(2000), uratio(0.7), lratio(0.3), check(4) {
+  type = OPTSIMANN;
   handle.logMessage(LOGMESSAGE, "\nInitialising Simulated Annealing optimisation algorithm");
 }
 
 void OptInfoSimann::read(CommentStream& infile, char* text) {
   handle.logMessage(LOGMESSAGE, "Reading Simulated Annealing optimisation parameters");
 
-  while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
+  while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
     infile >> ws;
     if (strcasecmp(text, "simanniter") == 0) {
       infile >> simanniter;
@@ -47,9 +48,6 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
 
     } else if (strcasecmp(text, "lratio") == 0) {
       infile >> lratio;
-
-    } else if (strcasecmp(text, "[simann]") == 0) {
-      handle.logMessage(LOGINFO, "Warning in optinfofile - repeated definition of Simulated Annealing parameters");
 
     } else {
       handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);
@@ -95,4 +93,16 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of simanneps outside bounds", simanneps);
     simanneps = 1e-4;
   }
+}
+
+void OptInfoSimann::Print(ofstream& outfile, int prec) {
+  outfile << "; Simulated Annealing algorithm ran for " << iters
+    << " function evaluations\n; and stopped when the likelihood value was "
+    << setprecision(prec) << score;
+  if (converge == -1)
+    outfile << "\n; because an error occured during the optimisation\n";
+  else if (converge == 1)
+    outfile << "\n; because the convergence criteria were met\n";
+  else
+    outfile << "\n; because the maximum number of function evaluations was reached\n";
 }

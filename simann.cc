@@ -190,8 +190,9 @@ void OptInfoSimann::OptimiseLikelihood() {
 
   double p, pp, ratio, nsdiv;
   double fopt, funcval, trialf;
-  int    i, a, j, h, k, change, l, offset, iters;
+  int    i, a, j, h, k, change, l, offset;
 
+  handle.logMessage(LOGINFO, "\nStarting Simulated Annealing optimisation algorithm\n");
   int nvars = EcoSystem->numOptVariables();
   DoubleVector x(nvars);
   DoubleVector trialx(nvars, 0.0);
@@ -224,9 +225,8 @@ void OptInfoSimann::OptimiseLikelihood() {
 
   if (funcval != funcval) { //check for NaN
     handle.logMessage(LOGINFO, "Error starting Simulated Annealing optimisation with f(x) = infinity");
-    EcoSystem->setConvergeSA(-1);
-    EcoSystem->setFuncEvalSA(1);
-    EcoSystem->setLikelihoodSA(0.0);
+    converge = -1;
+    iters = 1;
     return;
   }
 
@@ -294,9 +294,8 @@ void OptInfoSimann::OptimiseLikelihood() {
             handle.logMessage(LOGINFO, "Number of metropolis accepted points", naccmet);
             handle.logMessage(LOGINFO, "Number of rejected points", nrej);
 
-            EcoSystem->setFuncEvalSA(iters);
-            fopt = EcoSystem->SimulateAndUpdate(bestx);
-            EcoSystem->setLikelihoodSA(fopt);
+            score = EcoSystem->SimulateAndUpdate(bestx);
+            handle.logMessage(LOGINFO, "\nSimulated Annealing finished with a likelihood score of", score);
             return;
           }
 
@@ -328,9 +327,7 @@ void OptInfoSimann::OptimiseLikelihood() {
           // JMB added check for really silly values
           if (isZero(trialf)) {
             handle.logMessage(LOGINFO, "Error in Simulated Annealing optimisation after", iters, "function evaluations, f(x) = 0");
-            EcoSystem->setConvergeSA(-1);
-            EcoSystem->setFuncEvalSA(iters);
-            EcoSystem->setLikelihoodSA(0.0);
+            converge = -1;
             return;
           }
 
@@ -389,10 +386,9 @@ void OptInfoSimann::OptimiseLikelihood() {
       handle.logMessage(LOGINFO, "Number of metropolis accepted points", naccmet);
       handle.logMessage(LOGINFO, "Number of rejected points", nrej);
 
-      EcoSystem->setConvergeSA(1);
-      EcoSystem->setFuncEvalSA(iters);
-      fopt = EcoSystem->SimulateAndUpdate(bestx);
-      EcoSystem->setLikelihoodSA(fopt);
+      converge = 1;
+      score = EcoSystem->SimulateAndUpdate(bestx);
+      handle.logMessage(LOGINFO, "\nSimulated Annealing finished with a likelihood score of", score);
       return;
     }
 

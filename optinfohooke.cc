@@ -5,14 +5,15 @@
 extern ErrorHandler handle;
 
 OptInfoHooke::OptInfoHooke()
-  : OptSearch(), hookeiter(1000), rho(0.5), lambda(0.0), hookeeps(1e-4), bndcheck(0.9999) {
+  : OptInfo(), hookeiter(1000), rho(0.5), lambda(0.0), hookeeps(1e-4), bndcheck(0.9999) {
+  type = OPTHOOKE;
   handle.logMessage(LOGMESSAGE, "\nInitialising Hooke & Jeeves optimisation algorithm");
 }
 
 void OptInfoHooke::read(CommentStream& infile, char* text) {
   handle.logMessage(LOGMESSAGE, "Reading Hooke & Jeeves optimisation parameters");
 
-  while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[bfgs]")) {
+  while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
     infile >> ws;
     if (strcasecmp(text, "rho") == 0) {
       infile >> rho;
@@ -28,9 +29,6 @@ void OptInfoHooke::read(CommentStream& infile, char* text) {
 
     } else if (strcasecmp(text, "bndcheck") == 0) {
       infile >> bndcheck;
-
-    } else if (strcasecmp(text, "[hooke]") == 0) {
-      handle.logMessage(LOGINFO, "Warning in optinfofile - repeated definition of Hooke & Jeeves parameters");
 
     } else {
       handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);
@@ -56,4 +54,16 @@ void OptInfoHooke::read(CommentStream& infile, char* text) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of hookeeps outside bounds", hookeeps);
     hookeeps = 1e-4;
   }
+}
+
+void OptInfoHooke::Print(ofstream& outfile, int prec) {
+  outfile << "; Hooke & Jeeves algorithm ran for " << iters
+    << " function evaluations\n; and stopped when the likelihood value was "
+    << setprecision(prec) << score;
+  if (converge == -1)
+    outfile << "\n; because an error occured during the optimisation\n";
+  else if (converge == 1)
+    outfile << "\n; because the convergence criteria were met\n";
+  else
+    outfile << "\n; because the maximum number of function evaluations was reached\n";
 }

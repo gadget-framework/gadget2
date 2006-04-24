@@ -77,7 +77,7 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
     stockstdprinter.o maturity.o suitfunc.o suits.o stomachcontent.o runid.o \
     migration.o recaggregator.o surveyindices.o migrationpenalty.o recapture.o \
     stock.o readaggregation.o multinomial.o totalpredator.o understocking.o \
-    recstatistics.o transition.o otherfood.o selectfunc.o optinfo.o naturalm.o \
+    recstatistics.o transition.o otherfood.o selectfunc.o naturalm.o \
     likelihoodprinter.o catchinkilos.o interruptinterface.o interrupthandler.o \
     tags.o renewal.o taggrow.o initialinputfile.o optinfohooke.o optinfobfgs.o \
     optinfosimann.o popratio.o popinfo.o popinfomemberfunctions.o summaryprinter.o \
@@ -94,7 +94,7 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
     formulamatrix.o formulavector.o charptrmatrix.o charptrvector.o \
     timevariablevector.o stockptrvector.o agebandmatrixratioptrvector.o \
     tagptrvector.o bandmatrixptrvector.o rectangleptrvector.o migrationareaptrvector.o \
-    predatorpreyaggregator.o predatorpreyprinter.o
+    predatorpreyaggregator.o predatorpreyprinter.o optinfoptrvector.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 

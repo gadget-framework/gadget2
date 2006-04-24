@@ -5,15 +5,16 @@
 extern ErrorHandler handle;
 
 OptInfoBFGS::OptInfoBFGS()
-  : OptSearch(), bfgsiter(10000), bfgseps(0.01), beta(0.3), sigma(0.01),
+  : OptInfo(), bfgsiter(10000), bfgseps(0.01), beta(0.3), sigma(0.01),
     step(1.0), gradacc(1e-6), gradstep(0.5) {
+  type = OPTBFGS;
   handle.logMessage(LOGMESSAGE, "\nInitialising BFGS optimisation algorithm");
 }
 
 void OptInfoBFGS::read(CommentStream& infile, char* text) {
   handle.logMessage(LOGMESSAGE, "Reading BFGS optimisation parameters");
 
-  while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]")) {
+  while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
     infile >> ws;
     if (strcasecmp(text,"beta") == 0) {
       infile >> beta;
@@ -35,9 +36,6 @@ void OptInfoBFGS::read(CommentStream& infile, char* text) {
 
     } else if (strcasecmp(text, "bfgseps") == 0) {
       infile >> bfgseps;
-
-    } else if (strcasecmp(text, "[bfgs]") == 0) {
-      handle.logMessage(LOGINFO, "Warning in optinfofile - repeated definition of BFGS parameters");
 
     } else {
       handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);
@@ -71,4 +69,18 @@ void OptInfoBFGS::read(CommentStream& infile, char* text) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of gradstep outside bounds", gradstep);
     gradstep = 0.5;
   }
+}
+
+void OptInfoBFGS::Print(ofstream& outfile, int prec) {
+  outfile << "; BFGS algorithm ran for " << iters
+    << " function evaluations\n; and stopped when the likelihood value was "
+    << setprecision(prec) << score;
+  if (converge == -1)
+    outfile << "\n; because an error occured during the optimisation\n";
+  else if (converge == 1)
+    outfile << "\n; because the convergence criteria were met\n";
+  else if (converge == 2)
+    outfile << "\n; because the accuracy limit for the gradient calculation was reached\n";
+  else
+    outfile << "\n; because the maximum number of function evaluations was reached\n";
 }

@@ -12,19 +12,8 @@ Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir,
   likelihood = 0.0;
   keeper = new Keeper;
 
-  // initialise counters used when printing output files
+  // initialise counter used when printing output files
   printcount = printinfo.getPrintIteration() - 1;
-
-  // initialise details used when printing the params.out file
-  convergeSA = 0;
-  funcevalSA = 0;
-  likelihoodSA = 0.0;
-  convergeHJ = 0;
-  funcevalHJ = 0;
-  likelihoodHJ = 0.0;
-  convergeBFGS = 0;
-  funcevalBFGS = 0;
-  likelihoodBFGS = 0.0;
 
   // read the model specification from the main file
   char* filename = main.getMainGadgetFile();
@@ -43,15 +32,33 @@ Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir,
 
   // check and initialise the model
   this->Initialise();
-  if (main.runOptimise())
+
+  // if this is an optimising run then read the optimisation parameters from file
+  if (main.runOptimise()) {
+
+    if (main.getOptInfoGiven()) {
+      filename = main.getOptInfoFile();
+      infile.open(filename, ios::in);
+      handle.checkIfFailure(infile, filename);
+      handle.Open(filename);
+      this->readOptimisation(commin);
+      handle.Close();
+      infile.close();
+      infile.clear();
+    } else {
+      handle.logMessage(LOGINFO, "Warning - no optimisation file specified, using default values");
+      optvec.resize(new OptInfoHooke());
+    }
     handle.logMessage(LOGINFO, "\nFinished reading model data files, starting to run optimisation");
-  else
+
+  } else
     handle.logMessage(LOGINFO, "\nFinished reading model data files, starting to run simulation");
-  handle.logMessage(LOGMESSAGE, "");  //write a blank line to the log file
 }
 
 Ecosystem::~Ecosystem() {
   int i;
+  for (i = 0; i < optvec.Size(); i++)
+    delete optvec[i];
   for (i = 0; i < printvec.Size(); i++)
     delete printvec[i];
   for (i = 0; i < likevec.Size(); i++)
@@ -92,6 +99,14 @@ void Ecosystem::Reset() {
   int i;
   for (i = 0; i < basevec.Size(); i++)
     basevec[i]->Reset(TimeInfo);
+}
+
+void Ecosystem::Optimise() {
+  int i;
+  for (i = 0; i < optvec.Size(); i++) {
+    optvec[i]->OptimiseLikelihood();
+    this->writeOptValues();
+  }
 }
 
 double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {
@@ -135,6 +150,8 @@ void Ecosystem::writeOptValues() {
   DoubleVector tmpvec(likevec.Size(), 0.0);
   for (i = 0; i < likevec.Size(); i++)
     tmpvec[i] = likevec[i]->getUnweightedLikelihood();
+
+  handle.logMessage(LOGINFO, "\nAfter a total of", funceval, "function evaluations the best point found is");
   keeper->writeBestValues();
   handle.logMessage(LOGINFO, "\nThe scores from each likelihood component are");
   handle.logMessage(LOGINFO, tmpvec);
@@ -157,5 +174,5 @@ void Ecosystem::writeParams(const char* const filename, int prec) const {
     if (printinfo.getPrint())
       keeper->writeValues(likevec, printinfo.getPrecision());
   }
-  keeper->writeParams(filename, prec, interrupted);
+  keeper->writeParams(optvec, filename, prec, interrupted);
 }
