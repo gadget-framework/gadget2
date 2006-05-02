@@ -154,7 +154,7 @@ protected:
   /**
    * \brief This is the LengthGroupDivision used to store prey length information
    */
-  LengthGroupDivision** predLgrpDiv;
+  LengthGroupDivision* predLgrpDiv;
   /**
    * \brief This is the index of the timesteps for the likelihood component data
    */

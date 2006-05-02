@@ -144,7 +144,7 @@ void TimeVariable::Update(const TimeClass* const TimeInfo) {
     lastvalue = value;
     value = 0.0;
     if (usemodelmatrix)
-      for (i = 0; i < modelmatrix.Ncol(); i++)
+      for (i = 0; i < coeff.Size(); i++)
         value += coeff[i] * modelmatrix[timeid][i];
 
     value += values[timeid];
@@ -178,7 +178,7 @@ void TimeVariable::Interchange(TimeVariable& newTV, Keeper* const keeper) const 
 
     if (usemodelmatrix) {
       newTV.coeff.resize(coeff.Size(), keeper);
-      for (i = 0; i < values.Size(); i++)
+      for (i = 0; i < coeff.Size(); i++)
         coeff[i].Interchange(newTV.coeff[i], keeper);
       newTV.modelmatrix.AddRows(modelmatrix.Nrow(), modelmatrix.Ncol(), 0.0);
       for (i = 0; i < modelmatrix.Nrow(); i++)

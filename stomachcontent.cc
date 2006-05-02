@@ -309,13 +309,7 @@ SC::~SC() {
   }
 
   if (usepredages == 0)
-    for (i = 0; i < preyindex.Size(); i++)
-      delete predLgrpDiv[i];
-
-  if (predLgrpDiv != 0) {
-    delete[] predLgrpDiv;
-    predLgrpDiv = 0;
-  }
+    delete predLgrpDiv;
 
   delete[] scname;
   for (i = 0; i < predatornames.Size(); i++)
@@ -361,7 +355,51 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
 
   preyLgrpDiv = new LengthGroupDivision*[preyindex.Size()];
   if (usepredages == 0)
-    predLgrpDiv = new LengthGroupDivision*[preyindex.Size()];
+    predLgrpDiv = new LengthGroupDivision(predatorlengths);
+
+  if (handle.getLogLevel() >= LOGWARN) {
+    if (usepredages == 1) {
+      //check predator ages
+      minage = 9999;
+      maxage = -1;
+      for (j = 0; j < predatorages.Nrow(); j++) {
+        for (k = 0; k < predatorages.Ncol(j); k++) {
+          minage = min(predatorages[j][k], minage);
+          maxage = max(predatorages[j][k], maxage);
+        }
+      }
+
+      found = 0;
+      for (j = 0; j < predators.Size(); j++)
+        if (minage >= ((StockPredator*)(predators[j]))->minAge())
+          found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in stomachcontent - minimum age less than predator age");
+
+      found = 0;
+      for (j = 0; j < predators.Size(); j++)
+        if (maxage <= ((StockPredator*)(predators[j]))->maxAge())
+          found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in stomachcontent - maximum age greater than predator age");
+
+    } else {
+      //check predator lengths
+      found = 0;
+      for (j = 0; j < predators.Size(); j++)
+        if (predLgrpDiv->maxLength(0) > predators[j]->getLengthGroupDiv()->minLength())
+          found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in stomachcontent - minimum length group less than predator length");
+
+      found = 0;
+      for (j = 0; j < predators.Size(); j++)
+        if (predLgrpDiv->minLength(predLgrpDiv->numLengthGroups()) < predators[j]->getLengthGroupDiv()->maxLength())
+          found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in stomachcontent - maximum length group greater than predator length");
+    }
+  }
 
   for (i = 0; i < preynames.Nrow(); i++) {
     PreyPtrVector preys;
@@ -375,7 +413,6 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
 
       if (found == 0)
         handle.logMessage(LOGFAIL, "Error in stomachcontent - failed to match prey", preynames[i][j]);
-
     }
 
     //check prey areas
@@ -393,60 +430,12 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
 
     //resize the digestion matrix
     digestion.AddRows(1, preylengths[i].Size(), 0.0);
-
     preyLgrpDiv[i] = new LengthGroupDivision(preylengths[i]);
-    if (usepredages == 0) { //length structured predator
-      predLgrpDiv[i] = new LengthGroupDivision(predatorlengths);
 
-      //check predator lengths
-      if (handle.getLogLevel() >= LOGWARN) {
-        found = 0;
-        for (j = 0; j < predators.Size(); j++)
-          if (predLgrpDiv[i]->maxLength(0) > predators[j]->getLengthGroupDiv()->minLength())
-            found++;
-        if (found == 0)
-          handle.logMessage(LOGWARN, "Warning in stomachcontent - minimum length group less than predator length");
-
-        found = 0;
-        for (j = 0; j < predators.Size(); j++)
-          if (predLgrpDiv[i]->minLength(predLgrpDiv[i]->numLengthGroups()) < predators[j]->getLengthGroupDiv()->maxLength())
-            found++;
-        if (found == 0)
-          handle.logMessage(LOGWARN, "Warning in stomachcontent - maximum length group greater than predator length");
-      }
-
-      aggregator[i] = new PredatorAggregator(predators, preys, areas, predLgrpDiv[i], preyLgrpDiv[i]);
-
-    } else {
-
-      //check predator lengths
-      if (handle.getLogLevel() >= LOGWARN) {
-        minage = 9999;
-        maxage = -1;
-        for (j = 0; j < predatorages.Nrow(); j++) {
-          for (k = 0; k < predatorages.Ncol(j); k++) {
-            minage = min(predatorages[j][k], minage);
-            maxage = max(predatorages[j][k], maxage);
-          }
-        }
-
-        found = 0;
-        for (j = 0; j < predators.Size(); j++)
-          if (minage >= ((StockPredator*)(predators[j]))->minAge())
-            found++;
-        if (found == 0)
-          handle.logMessage(LOGWARN, "Warning in stomachcontent - minimum age less than predator age");
-
-        found = 0;
-        for (j = 0; j < predators.Size(); j++)
-          if (maxage <= ((StockPredator*)(predators[j]))->maxAge())
-            found++;
-        if (found == 0)
-          handle.logMessage(LOGWARN, "Warning in stomachcontent - maximum age greater than predator age");
-      }
-
+    if (usepredages == 0)
+      aggregator[i] = new PredatorAggregator(predators, preys, areas, predLgrpDiv, preyLgrpDiv[i]);
+    else
       aggregator[i] = new PredatorAggregator(predators, preys, areas, predatorages, preyLgrpDiv[i]);
-    }
   }
 }
 

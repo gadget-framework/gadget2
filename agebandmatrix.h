@@ -89,6 +89,12 @@ public:
    */
   int maxLength(int age) const { return v[age - minage]->maxCol(); };
   /**
+   * \brief This will return the number of length groups for an age group stored in the vector
+   * \param age is identifier for the age group
+   * \return number of length groups length
+   */
+  int numLengthGroups(int age) const { return v[age - minage]->Size(); };
+  /**
    * \brief This function will sum the columns of each element stored in the vector (ie sum over all ages for each length group of the population)
    * \param Result is the PopInfoVector containing the sum over all ages for each length
    */

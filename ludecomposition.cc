@@ -11,7 +11,7 @@ LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
   int i, k, j;
   double s, tmp;
 
-  size = A.Ncol();
+  size = A.Nrow();
   L = DoubleMatrix(size, size, 0.0);
   U = DoubleMatrix(A);
   logdet = 0.0;

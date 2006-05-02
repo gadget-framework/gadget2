@@ -180,7 +180,7 @@ void Grower::Reset() {
       }
     }
 
-    for (i = 0; i < interpLengthGrowth.Ncol(); i++) {
+    for (i = 0; i < interpLengthGrowth.Ncol(area); i++) {
       interpLengthGrowth[area][i] = 0.0;
       interpWeightGrowth[area][i] = 0.0;
     }

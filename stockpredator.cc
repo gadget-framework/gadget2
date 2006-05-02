@@ -83,7 +83,7 @@ void StockPredator::Print(ofstream& outfile) const {
     outfile << "\tAlkeys (mean weights) on internal area " << areas[area] << ":\n";
     Alkeys[area].printWeights(outfile);
     outfile << "\tMaximum consumption by length on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < maxcons.Ncol(); i++)
+    for (i = 0; i < maxcons.Ncol(area); i++)
       outfile << setw(smallwidth) << setprecision(smallprecision) << maxcons[area][i] << sep;
     outfile << endl;
   }

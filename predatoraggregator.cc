@@ -127,11 +127,11 @@ void PredatorAggregator::Sum() {
                 alk = &((StockPredator*)(predators[g]))->getAgeLengthKeys(areas[l][j]);
                 for (k = alk->minAge(); k <= alk->maxAge(); k++) {
                   if (predConv[g][k] >= 0) {
-                    for (i = 0; i < dptr->Ncol(); i++) {
+                    for (i = 0; i < dptr->Ncol(k); i++) {
                       if (preyConv[h][i] >= 0) {
                         sum = 0.0;
                         consum = 0.0;
-                        for (m = 0; m < dptr->Nrow(); m++) {
+                        for (m = alk->minLength(k); m < alk->maxLength(k); m++) {
                           sum += (*alk)[k][m].N;
                           consum += (*dptr)[m][i] * (*alk)[k][m].N;
                         }
