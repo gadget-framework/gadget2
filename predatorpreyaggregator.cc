@@ -23,7 +23,7 @@ PredatorPreyAggregator::PredatorPreyAggregator(const PredatorPtrVector& Predator
   for (i = 0; i < preys.Size(); i++) {
     CI.resize(new ConversionIndex(preys[i]->getLengthGroupDiv(), LgrpDiv));
     //check that the prey is a stock
-    if (preys[i]->getType() == LENGTHPREYTYPE)
+    if (preys[i]->getType() == LENGTHPREY)
       handle.logMessage(LOGFAIL, "Error in predatorpreyaggregator - cannot aggregate prey", preys[i]->getName());
   }
 

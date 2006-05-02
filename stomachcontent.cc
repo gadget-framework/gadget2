@@ -353,6 +353,12 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
     }
   }
 
+  //check that the preys are stocks and not otherfood
+  for (i = 0; i < predators.Size(); i++)
+    if (predators[i]->getType() != STOCKPREDATOR)
+      handle.logMessage(LOGFAIL, "Error in stomachcontent - cannot aggregate predator", predators[i]->getName());
+
+
   preyLgrpDiv = new LengthGroupDivision*[preyindex.Size()];
   if (usepredages == 0)
     predLgrpDiv = new LengthGroupDivision(predatorlengths);

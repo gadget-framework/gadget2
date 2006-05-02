@@ -4,7 +4,7 @@ StockPrey::StockPrey(CommentStream& infile, const IntVector& Areas,
   const char* givenname, int minage, int maxage)
   : Prey(infile, Areas, givenname) {
 
-  type = STOCKPREYTYPE;
+  type = STOCKPREY;
   IntVector size(maxage - minage + 1, LgrpDiv->numLengthGroups());
   IntVector minlength(maxage - minage + 1, 0);
   preyAlkeys.resize(areas.Size(), minage, minlength, size);

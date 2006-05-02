@@ -192,7 +192,7 @@ void PredatorPreyPrinter::setPredAndPrey(PredatorPtrVector& predatorvec,
 
   //check that the preys are stocks and not otherfood
   for (i = 0; i < preys.Size(); i++)
-    if (preys[i]->getType() == LENGTHPREYTYPE)
+    if (preys[i]->getType() == LENGTHPREY)
       handle.logMessage(LOGFAIL, "Error in predatorpreyprinter - cannot print prey", preys[i]->getName());
 
   //change from outer areas to inner areas.

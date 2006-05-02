@@ -47,6 +47,9 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
 
   int i, j, k, l, minage, maxage;
   for (i = 0; i < predators.Size(); i++) {
+    if (predators[i]->getType() != STOCKPREDATOR)
+      handle.logMessage(LOGFAIL, "Error in predatoraggregator - predator is not age structured", predators[i]->getName());
+
     minage = ((StockPredator*)(predators[i]))->minAge();
     maxage = ((StockPredator*)(predators[i]))->maxAge();
     predConv.AddRows(1, maxage + 1, -1);
@@ -115,14 +118,7 @@ void PredatorAggregator::Sum() {
             if (predators[g]->isInArea(areas[l][j]) && preys[h]->isInArea(areas[l][j])) {
               dptr = &predators[g]->getConsumption(areas[l][j], preys[h]->getName());
 
-              if (usepredages == 0) {
-                for (k = 0; k < dptr->Nrow(); k++)
-                  if (predConv[g][k] >= 0)
-                    for (i = 0; i < dptr->Ncol(k); i++)
-                      if (preyConv[h][i] >= 0)
-                        (*total[l])[predConv[g][k]][preyConv[h][i]] += (*dptr)[k][i];
-
-              } else {
+              if (usepredages) {
                 //need to convert from length groups to age groups
                 alk = &((StockPredator*)(predators[g]))->getAgeLengthKeys(areas[l][j]);
                 for (k = alk->minAge(); k <= alk->maxAge(); k++) {
@@ -141,6 +137,14 @@ void PredatorAggregator::Sum() {
                     }
                   }
                 }
+
+              } else {
+                for (k = 0; k < dptr->Nrow(); k++)
+                  if (predConv[g][k] >= 0)
+                    for (i = 0; i < dptr->Ncol(k); i++)
+                      if (preyConv[h][i] >= 0)
+                        (*total[l])[predConv[g][k]][preyConv[h][i]] += (*dptr)[k][i];
+
               }
             }
           }
@@ -151,6 +155,9 @@ void PredatorAggregator::Sum() {
 }
 
 void PredatorAggregator::NumberSum() {
+  if (usepredages)
+    handle.logMessage(LOGFAIL, "Error in predatoraggregator - cannot sum numbers for age structured predators");
+
   int g, h, i, j, k, l;
   const PopInfoVector* preymeanw;
 

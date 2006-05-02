@@ -3,7 +3,7 @@
 LengthPrey::LengthPrey(const DoubleVector& lengths, const IntVector& Areas,
   double Energy, const char* givenname) : Prey(lengths, Areas, Energy, givenname) {
 
-  type = LENGTHPREYTYPE;
+  type = LENGTHPREY;
 }
 
 /* Sum number in Prey length groups. Prey length division is not
