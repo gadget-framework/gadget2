@@ -2,14 +2,13 @@
 #define recaggregator_h
 
 #include "areatime.h"
-#include "conversionindex.h"
-#include "agebandmatrix.h"
 #include "agebandmatrixptrvector.h"
-#include "charptrvector.h"
+#include "conversionindexptrvector.h"
 #include "fleetptrvector.h"
 #include "stockptrvector.h"
+#include "predatorptrvector.h"
+#include "preyptrvector.h"
 #include "intmatrix.h"
-#include "conversionindexptrvector.h"
 #include "tags.h"
 
 /**
@@ -59,13 +58,13 @@ public:
   const AgeBandMatrixPtrVector& getSum() const { return total; };
 private:
   /**
-   * \brief This is the FleetPtrVector of the fleets that will be aggregated
+   * \brief This is the PredatorPtrVector of the fleets that will be aggregated
    */
-  FleetPtrVector fleets;
+  PredatorPtrVector predators;
   /**
-   * \brief This is the StockPtrVector of the stocks that will be aggregated
+   * \brief This is the PreyPtrVector of the stocks that will be aggregated
    */
-  StockPtrVector stocks;
+  PreyPtrVector preys;
   /**
    * \brief This is the Tags containing details of the tagging experiment that will be aggregated
    */
