@@ -32,7 +32,7 @@ void PreyOverAggregator::Sum() {
   for (h = 0; h < preys.Size(); h++)
     for (i = 0; i < areas.Nrow(); i++)
       for (j = 0; j < areas.Ncol(i); j++)
-        if (preys[h]->isInArea(areas[i][j]))
+        if ((preys[h]->isInArea(areas[i][j])) && (preys[h]->isOverConsumption(areas[i][j])))
           for (l = 0; l < preyConv.Ncol(h); l++)
             if (preyConv[h][l] >= 0)
               total[i][preyConv[h][l]] += (preys[h]->getOverConsumption(areas[i][j]))[l];

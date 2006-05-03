@@ -77,6 +77,7 @@ void NumberPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
     if (this->getPrey(prey)->isPreyArea(area)) {
       check = 1;
       if (this->getPrey(prey)->isOverConsumption(area)) {
+        hasoverconsumption[inarea] = 1;
         DoubleVector ratio = this->getPrey(prey)->getRatio(inarea);
         for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
           if (ratio[preyl] > maxRatio) {
@@ -89,13 +90,16 @@ void NumberPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
     }
   }
 
-  //if no prey found to consume then overcons set to actual consumption
-  if (check == 0)
+  if (check == 0) {  //if no prey found to consume then overcons set to actual consumption
+    hasoverconsumption[inarea] = 1;
     overcons[inarea][predl] = totalcons[inarea][predl];
+  }
 
-  totalcons[inarea][predl] -= overcons[inarea][predl];
+  if (hasoverconsumption[inarea]) {
+    totalcons[inarea][predl] -= overcons[inarea][predl];
+    overconsumption[inarea][predl] += overcons[inarea][predl];
+  }
   totalconsumption[inarea][predl] += totalcons[inarea][predl];
-  overconsumption[inarea][predl] += overcons[inarea][predl];
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
       for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)

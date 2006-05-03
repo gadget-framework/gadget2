@@ -50,8 +50,8 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
     if (predators[i]->getType() != STOCKPREDATOR)
       handle.logMessage(LOGFAIL, "Error in predatoraggregator - predator is not age structured", predators[i]->getName());
 
-    minage = ((StockPredator*)(predators[i]))->minAge();
-    maxage = ((StockPredator*)(predators[i]))->maxAge();
+    minage = ((StockPredator*)predators[i])->minAge();
+    maxage = ((StockPredator*)predators[i])->maxAge();
     predConv.AddRows(1, maxage + 1, -1);
     for (j = minage; j <= maxage; j++)
       for (k = 0; k < predAges.Nrow(); k++)
@@ -120,7 +120,7 @@ void PredatorAggregator::Sum() {
 
               if (usepredages) {
                 //need to convert from length groups to age groups
-                alk = &((StockPredator*)(predators[g]))->getAgeLengthKeys(areas[l][j]);
+                alk = &((StockPredator*)predators[g])->getAgeLengthKeys(areas[l][j]);
                 for (k = alk->minAge(); k <= alk->maxAge(); k++) {
                   if (predConv[g][k] >= 0) {
                     for (i = 0; i < dptr->Ncol(k); i++) {

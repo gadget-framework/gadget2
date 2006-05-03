@@ -205,7 +205,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
 //adjust the consumption according to that.
 void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
   int inarea = this->areaNum(area);
-  int over, preyl, predl, prey;
+  int preyl, predl, prey;
   double maxRatio, ratio1, ratio2, tmp;
 
   maxRatio = MaxRatioConsumed;
@@ -215,10 +215,9 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
     overcons[inarea][predl] = 0.0;
 
-  over = 0;
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isOverConsumption(area)) {
-      over = 1;
+      hasoverconsumption[inarea] = 1;
       DoubleVector ratio = this->getPrey(prey)->getRatio(inarea);
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
@@ -232,8 +231,9 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
     }
   }
 
-  if (over == 1) {
+  if (hasoverconsumption[inarea]) {
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+      overconsumption[inarea][predl] += overcons[inarea][predl];
       if (totalcons[inarea][predl] > verysmall) {
         tmp = 1.0 - (overcons[inarea][predl] / totalcons[inarea][predl]);
         subfphi[inarea][predl] *= tmp;
@@ -251,7 +251,6 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
 
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     totalconsumption[inarea][predl] += totalcons[inarea][predl];
-    overconsumption[inarea][predl] += overcons[inarea][predl];
     fphi[inarea][predl] = (ratio2 * subfphi[inarea][predl]) + (ratio1 * fphi[inarea][predl]);
   }
 

@@ -78,6 +78,12 @@ public:
    */
   virtual const DoubleMatrix& getConsumption(int area, const char* preyname) const = 0;
   /**
+   * \brief This will return the flag that denotes if the predator has overconsumed on a given area
+   * \param area is the area that the consumption is being calculated on
+   * \return 0 (will be overridden by the derived classes)
+   */
+  virtual int hasOverConsumption(int area) const = 0;
+  /**
    * \brief This will return the amount the predator overconsumes on a given area
    * \param area is the area that the consumption is being calculated on
    * \return 0 (will be overridden by the derived classes)

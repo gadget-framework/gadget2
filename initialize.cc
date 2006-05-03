@@ -161,40 +161,40 @@ void Ecosystem::Initialise() {
     handle.logMessage(LOGMESSAGE, "Initialising printer for output file", printvec[i]->getFileName());
     switch (printvec[i]->getType()) {
       case STOCKSTDPRINTER:
-        ((StockStdPrinter*)(printvec[i]))->setStock(stockvec, Area);
+        ((StockStdPrinter*)printvec[i])->setStock(stockvec, Area);
         break;
       case STOCKPRINTER:
-        ((StockPrinter*)(printvec[i]))->setStock(stockvec, Area);
+        ((StockPrinter*)printvec[i])->setStock(stockvec, Area);
         break;
       case PREDATORPRINTER:
-        ((PredatorPrinter*)(printvec[i]))->setPredAndPrey(predvec, preyvec, Area);
+        ((PredatorPrinter*)printvec[i])->setPredAndPrey(predvec, preyvec, Area);
         break;
       case PREDATOROVERPRINTER:
-        ((PredatorOverPrinter*)(printvec[i]))->setPredator(predvec, Area);
+        ((PredatorOverPrinter*)printvec[i])->setPredator(predvec, Area);
         break;
       case PREYOVERPRINTER:
-        ((PreyOverPrinter*)(printvec[i]))->setPrey(preyvec, Area);
+        ((PreyOverPrinter*)printvec[i])->setPrey(preyvec, Area);
         break;
       case STOCKPREYPRINTER:
-        ((StockPreyPrinter*)(printvec[i]))->setPrey(preyvec, Area);
+        ((StockPreyPrinter*)printvec[i])->setPrey(preyvec, Area);
         break;
       case STOCKPREYFULLPRINTER:
-        ((StockPreyFullPrinter*)(printvec[i]))->setPrey(preyvec, Area);
+        ((StockPreyFullPrinter*)printvec[i])->setPrey(preyvec, Area);
         break;
       case PREDATORPREYPRINTER:
-        ((PredatorPreyPrinter*)(printvec[i]))->setPredAndPrey(predvec, preyvec, Area);
+        ((PredatorPreyPrinter*)printvec[i])->setPredAndPrey(predvec, preyvec, Area);
         break;
       case PREDPREYSTDPRINTER:
-        ((PredPreyStdPrinter*)(printvec[i]))->setStocksAndPredAndPrey(stockvec, predvec, preyvec, Area);
+        ((PredPreyStdPrinter*)printvec[i])->setStocksAndPredAndPrey(stockvec, predvec, preyvec, Area);
         break;
       case STOCKFULLPRINTER:
-        ((StockFullPrinter*)(printvec[i]))->setStock(stockvec, Area);
+        ((StockFullPrinter*)printvec[i])->setStock(stockvec, Area);
         break;
       case LIKELIHOODPRINTER:
-        ((LikelihoodPrinter*)(printvec[i]))->setLikelihood(likevec);
+        ((LikelihoodPrinter*)printvec[i])->setLikelihood(likevec);
         break;
       case LIKELIHOODSUMMARYPRINTER:
-        ((SummaryPrinter*)(printvec[i]))->setLikelihood(likevec);
+        ((SummaryPrinter*)printvec[i])->setLikelihood(likevec);
         break;
       default:
         handle.logMessage(LOGFAIL, "Error when initialising model - unrecognised printer type", printvec[i]->getType());

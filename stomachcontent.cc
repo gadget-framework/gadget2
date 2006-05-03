@@ -353,7 +353,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
     }
   }
 
-  //check that the preys are stocks and not otherfood
+  //check that the predators are stocks and not fleets
   for (i = 0; i < predators.Size(); i++)
     if (predators[i]->getType() != STOCKPREDATOR)
       handle.logMessage(LOGFAIL, "Error in stomachcontent - cannot aggregate predator", predators[i]->getName());
@@ -377,14 +377,14 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
 
       found = 0;
       for (j = 0; j < predators.Size(); j++)
-        if (minage >= ((StockPredator*)(predators[j]))->minAge())
+        if (minage >= ((StockPredator*)predators[j])->minAge())
           found++;
       if (found == 0)
         handle.logMessage(LOGWARN, "Warning in stomachcontent - minimum age less than predator age");
 
       found = 0;
       for (j = 0; j < predators.Size(); j++)
-        if (maxage <= ((StockPredator*)(predators[j]))->maxAge())
+        if (maxage <= ((StockPredator*)predators[j])->maxAge())
           found++;
       if (found == 0)
         handle.logMessage(LOGWARN, "Warning in stomachcontent - maximum age greater than predator age");

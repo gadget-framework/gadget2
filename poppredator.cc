@@ -81,6 +81,7 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
   int i, j, area, prey;
   if (TimeInfo->getSubStep() == 1) {
     for (area = 0; area < areas.Size(); area++) {
+      hasoverconsumption[area] = 0;
       for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
         prednumber[area][i].setToZero();
         overconsumption[area][i] = 0.0;
@@ -134,6 +135,7 @@ void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     }
   }
 
+  hasoverconsumption.resize(numarea, 0);
   totalcons.AddRows(numarea, numlen, 0.0);
   overcons.AddRows(numarea, numlen, 0.0);
   totalconsumption.AddRows(numarea, numlen, 0.0);

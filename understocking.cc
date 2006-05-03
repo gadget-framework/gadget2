@@ -100,39 +100,40 @@ void UnderStocking::Reset(const Keeper* const keeper) {
 }
 
 void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
+
+  if (!AAT.atCurrentTime(TimeInfo))
+    return;
+
   int i, j, k;
   double err, l;
-  if (AAT.atCurrentTime(TimeInfo)) {
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Checking understocking likelihood component", this->getName());
-    l = 0.0;
+
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Checking understocking likelihood component", this->getName());
+
+  l = 0.0;
+  for (k = 0; k < areas.Nrow(); k++) {
+    err = 0.0;
+    store[k] = 0.0;
+    for (i = 0; i < predators.Size(); i++)
+      for (j = 0; j < areas[k].Size(); j++)
+        if ((predators[i]->isInArea(areas[k][j])) && (predators[i]->hasOverConsumption(areas[k][j])))
+          err += predators[i]->getTotalOverConsumption(areas[k][j]);
+
+    if (!(isZero(err))) {
+      store[k] = pow(err, powercoeff);
+      l += store[k];
+    }
+  }
+
+  if (!(isZero(l))) {
+    likelihoodValues.AddRows(1, areas.Nrow(), 0.0);
     for (k = 0; k < areas.Nrow(); k++)
-      store[k] = 0.0;
-
-    for (k = 0; k < areas.Nrow(); k++) {
-      err = 0.0;
-      for (i = 0; i < predators.Size(); i++)
-        for (j = 0; j < areas[k].Size(); j++)
-          if (predators[i]->isInArea(areas[k][j]))
-            err += predators[i]->getTotalOverConsumption(areas[k][j]);
-
-      if (!(isZero(err))) {
-        store[k] += pow(err, powercoeff);
-        l += store[k];
-      }
-    }
-
-    if (!(isZero(l))) {
-      likelihoodValues.AddRows(1, areas.Nrow(), 0.0);
-      for (k = 0; k < areas.Nrow(); k++)
-        likelihoodValues[Years.Size()][k] = store[k];
-      Years.resize(1, TimeInfo->getYear());
-      Steps.resize(1, TimeInfo->getStep());
-
-      if (handle.getLogLevel() >= LOGMESSAGE)
-        handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
-      likelihood += l;
-    }
+      likelihoodValues[Years.Size()][k] = store[k];
+    Years.resize(1, TimeInfo->getYear());
+    Steps.resize(1, TimeInfo->getStep());
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
+    likelihood += l;
   }
 }
 

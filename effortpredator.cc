@@ -82,6 +82,7 @@ void EffortPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
 
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isOverConsumption(area)) {
+      hasoverconsumption[inarea] = 1;
       DoubleVector ratio = this->getPrey(prey)->getRatio(inarea);
       for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
         if (ratio[preyl] > maxRatio) {
@@ -93,9 +94,11 @@ void EffortPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
     }
   }
 
-  totalcons[inarea][predl] -= overcons[inarea][predl];
+  if (hasoverconsumption[inarea]) {
+    totalcons[inarea][predl] -= overcons[inarea][predl];
+    overconsumption[inarea][predl] += overcons[inarea][predl];
+  }
   totalconsumption[inarea][predl] += totalcons[inarea][predl];
-  overconsumption[inarea][predl] += overcons[inarea][predl];
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
       for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)

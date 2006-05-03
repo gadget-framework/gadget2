@@ -62,6 +62,12 @@ public:
    */
   virtual const DoubleMatrix& getConsumption(int area, const char* preyname) const;
   /**
+   * \brief This will return the flag that denotes if the predator has overconsumed on a given area
+   * \param area is the area that the consumption is being calculated on
+   * \return 1 if the predator has been overconsumed, 0 otherwise
+   */
+  virtual int hasOverConsumption(int area) const { return hasoverconsumption[this->areaNum(area)]; };
+  /**
    * \brief This will return the amount the predator overconsumes on a given area
    * \param area is the area that the consumption is being calculated on
    * \return overconsumption, a DoubleVector containing the overconsumption by the predator
@@ -153,6 +159,10 @@ protected:
    * \note The indices for this object are [area][prey][predator length]
    */
   DoubleMatrixPtrVector predratio;
+  /**
+   * \brief This is the IntVector used to store information on whether any overconsumption has occured on the current timestep
+   */
+  IntVector hasoverconsumption;
 };
 
 #endif
