@@ -7,6 +7,8 @@
 #include "lengthgroup.h"
 #include "fleetptrvector.h"
 #include "stockptrvector.h"
+#include "predatorptrvector.h"
+#include "preyptrvector.h"
 #include "intmatrix.h"
 
 /**
@@ -56,13 +58,13 @@ public:
   const AgeBandMatrixPtrVector& getSum() const { return total; };
 private:
   /**
-   * \brief This is the FleetPtrVector of the fleets that will be aggregated
+   * \brief This is the PredatorPtrVector of the fleets that will be aggregated
    */
-  FleetPtrVector fleets;
+  PredatorPtrVector predators;
   /**
-   * \brief This is the StockPtrVector of the stocks that will be aggregated
+   * \brief This is the PreyPtrVector of the stocks that will be aggregated
    */
-  StockPtrVector stocks;
+  PreyPtrVector preys;
   /**
    * \brief This is the LengthGroupDivision of the aggregated stocks
    */
@@ -76,14 +78,14 @@ private:
    */
   IntMatrix ages;
   /**
+   * \brief This is the flag used to denote whether to calculate overconsumption of the stocks or not
+   */
+  int overconsumption;
+  /**
    * \brief This is the IntMatrix used to store predation information
    * \note doescatch[i][j] is a flag to denote whether fleet i catches stock j
    */
   IntMatrix doescatch;
-  /**
-   * \brief This is the flag used to denote whether to calculate overconsumption of the stocks or not
-   */
-  int overconsumption;
   /**
    * \brief This is the ConversionIndexPtrVector used to convert the length groups of the stocks to be aggregated
    */

@@ -2,7 +2,7 @@
 #include "errorhandler.h"
 #include "stock.h"
 #include "stockprey.h"
-#include "lengthpredator.h"
+#include "poppredator.h"
 #include "mathfunc.h"
 #include "gadget.h"
 
