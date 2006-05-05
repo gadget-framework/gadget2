@@ -27,39 +27,28 @@ StomachContent::StomachContent(CommentStream& infile,
 
   char datafilename[MaxStrLength];
   strncpy(datafilename, "", MaxStrLength);
-  char numfilename[MaxStrLength];
-  strncpy(numfilename, "", MaxStrLength);
   readWordAndValue(infile, "datafile", datafilename);
 
-  int functionnumber = 0;
-  if (strcasecmp(functionname, "scnumbers") == 0)
-    functionnumber = 1;
-  else if (strcasecmp(functionname, "scratios") == 0)
-    functionnumber = 2;
-  else if (strcasecmp(functionname, "scamounts") == 0)
-    functionnumber = 3;
-  else if (strcasecmp(functionname, "scsimple") == 0)
-    functionnumber = 4;
-  else
-    handle.logFileMessage(LOGFAIL, "\nError in stomachcontent - unrecognised function", functionname);
+  if (strcasecmp(functionname, "scnumbers") == 0) {
+    StomCont = new SCNumbers(infile, Area, TimeInfo, keeper, datafilename, this->getName());
 
-  switch (functionnumber) {
-    case 1:
-      StomCont = new SCNumbers(infile, Area, TimeInfo, keeper, datafilename, this->getName());
-      break;
-    case 2:
-      readWordAndValue(infile, "numberfile", numfilename);
-      StomCont = new SCRatios(infile, Area, TimeInfo, keeper, datafilename, numfilename, this->getName());
-      break;
-    case 3:
-      readWordAndValue(infile, "numberfile", numfilename);
-      StomCont = new SCAmounts(infile, Area, TimeInfo, keeper, datafilename, numfilename, this->getName());
-      break;
-    case 4:
-      StomCont = new SCSimple(infile, Area, TimeInfo, keeper, datafilename, this->getName());
-      break;
-    default:
-      handle.logMessage(LOGWARN, "Warning in stomachcontent - unrecognised function", functionname);
+  } else if (strcasecmp(functionname, "scratios") == 0) {
+    char numfilename[MaxStrLength];
+    strncpy(numfilename, "", MaxStrLength);
+    readWordAndValue(infile, "numberfile", numfilename);
+    StomCont = new SCRatios(infile, Area, TimeInfo, keeper, datafilename, numfilename, this->getName());
+
+  } else if (strcasecmp(functionname, "scamounts") == 0) {
+    char numfilename[MaxStrLength];
+    strncpy(numfilename, "", MaxStrLength);
+    readWordAndValue(infile, "numberfile", numfilename);
+    StomCont = new SCAmounts(infile, Area, TimeInfo, keeper, datafilename, numfilename, this->getName());
+
+  } else if (strcasecmp(functionname, "scsimple") == 0) {
+    StomCont = new SCSimple(infile, Area, TimeInfo, keeper, datafilename, this->getName());
+
+  } else {
+    handle.logFileMessage(LOGFAIL, "\nError in stomachcontent - unrecognised function", functionname);
   }
 }
 
@@ -256,7 +245,6 @@ void SC::printSummary(ofstream& outfile, double weight) {
   outfile.flush();
 }
 
-//JMB - note this ignores the standard deviation and number of samples ...
 void SC::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
 
   if (!AAT.atCurrentTime(TimeInfo))
@@ -358,13 +346,15 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
     if (predators[i]->getType() != STOCKPREDATOR)
       handle.logMessage(LOGFAIL, "Error in stomachcontent - cannot aggregate predator", predators[i]->getName());
 
-
   preyLgrpDiv = new LengthGroupDivision*[preyindex.Size()];
-  if (usepredages == 0)
+  if (usepredages == 0) {
     predLgrpDiv = new LengthGroupDivision(predatorlengths);
+    if (predLgrpDiv->Error())
+      handle.logFileMessage(LOGFAIL, "\nError in stomachcontent - failed to create length group");
+  }
 
   if (handle.getLogLevel() >= LOGWARN) {
-    if (usepredages == 1) {
+    if (usepredages) {
       //check predator ages
       minage = 9999;
       maxage = -1;
@@ -437,11 +427,13 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
     //resize the digestion matrix
     digestion.AddRows(1, preylengths[i].Size(), 0.0);
     preyLgrpDiv[i] = new LengthGroupDivision(preylengths[i]);
+    if (preyLgrpDiv[i]->Error())
+      handle.logFileMessage(LOGFAIL, "\nError in stomachcontent - failed to create length group");
 
-    if (usepredages == 0)
-      aggregator[i] = new PredatorAggregator(predators, preys, areas, predLgrpDiv, preyLgrpDiv[i]);
-    else
+    if (usepredages)
       aggregator[i] = new PredatorAggregator(predators, preys, areas, predatorages, preyLgrpDiv[i]);
+    else
+      aggregator[i] = new PredatorAggregator(predators, preys, areas, predLgrpDiv, preyLgrpDiv[i]);
   }
 }
 
@@ -844,6 +836,35 @@ SCAmounts::~SCAmounts() {
     delete number[i];
     for (j = 0; j < stddev[i].Size(); j++)
       delete stddev[i][j];
+  }
+}
+
+//JMB - note this ignores the number of samples ...
+void SCAmounts::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
+
+  if (!AAT.atCurrentTime(TimeInfo))
+    return;
+
+  int i, area, pred, prey;
+  timeindex = -1;
+  for (i = 0; i < Years.Size(); i++)
+    if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
+      timeindex = i;
+  if (timeindex == -1)
+    handle.logMessage(LOGFAIL, "Error in stomachcontent - invalid timestep");
+
+  for (area = 0; area < modelConsumption.Ncol(timeindex); area++) {
+    for (pred = 0; pred < modelConsumption[timeindex][area]->Nrow(); pred++) {
+      for (prey = 0; prey < modelConsumption[timeindex][area]->Ncol(pred); prey++) {
+        outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
+          << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
+          << setw(printwidth) << predindex[pred] << sep << setw(printwidth)
+          << preyindex[prey] << sep << setprecision(largeprecision) << setw(largewidth)
+          << (*modelConsumption[timeindex][area])[pred][prey] << sep
+          << setprecision(largeprecision) << setw(largewidth)
+          << (*stddev[timeindex][area])[pred][prey] << endl;
+      }
+    }
   }
 }
 

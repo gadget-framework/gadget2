@@ -260,6 +260,12 @@ public:
    * \brief This is the default SCAmounts destructor
    */
   virtual ~SCAmounts();
+  /**
+   * \brief This function will print information from each SCAmounts calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   * \param TimeInfo is the TimeClass for the current model
+   */
+  virtual void printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo);
 protected:
   /**
    * \brief This function will read the StomachContent amount data from the input file
