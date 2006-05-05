@@ -115,7 +115,7 @@ void PredatorAggregator::Sum() {
       if (doeseat[g][h]) {
         for (l = 0; l < areas.Nrow(); l++) {
           for (j = 0; j < areas.Ncol(l); j++) {
-            if (predators[g]->isInArea(areas[l][j]) && preys[h]->isInArea(areas[l][j])) {
+            if (predators[g]->isInArea(areas[l][j]) && preys[h]->isPreyArea(areas[l][j])) {
               dptr = &predators[g]->getConsumption(areas[l][j], preys[h]->getName());
 
               if (usepredages) {
@@ -123,16 +123,19 @@ void PredatorAggregator::Sum() {
                 alk = &((StockPredator*)predators[g])->getAgeLengthKeys(areas[l][j]);
                 for (k = alk->minAge(); k <= alk->maxAge(); k++) {
                   if (predConv[g][k] >= 0) {
-                    for (i = 0; i < dptr->Ncol(k); i++) {
-                      if (preyConv[h][i] >= 0) {
-                        sum = 0.0;
-                        consum = 0.0;
-                        for (m = alk->minLength(k); m < alk->maxLength(k); m++) {
-                          sum += (*alk)[k][m].N;
-                          consum += (*dptr)[m][i] * (*alk)[k][m].N;
-                        }
-                        if (!isZero(sum))
+                    sum = 0.0;
+                    for (m = alk->minLength(k); m < alk->maxLength(k); m++)
+                      sum += (*alk)[k][m].N;
+
+                    if (!isZero(sum)) {
+                      for (i = 0; i < dptr->Ncol(k); i++) {
+                        if (preyConv[h][i] >= 0) {
+                          consum = 0.0;
+                          for (m = 0; m < dptr->Nrow(); m++)
+                            consum += (*dptr)[m][i];
+
                           (*total[l])[predConv[g][k]][preyConv[h][i]] += consum / sum;
+                        }
                       }
                     }
                   }
@@ -167,7 +170,7 @@ void PredatorAggregator::NumberSum() {
       if (doeseat[g][h]) {
         for (l = 0; l < areas.Nrow(); l++) {
           for (j = 0; j < areas.Ncol(l); j++) {
-            if (predators[g]->isInArea(areas[l][j]) && preys[h]->isInArea(areas[l][j])) {
+            if (predators[g]->isInArea(areas[l][j]) && preys[h]->isPreyArea(areas[l][j])) {
               dptr = &predators[g]->getConsumption(areas[l][j], preys[h]->getName());
               preymeanw = &predators[g]->getNumberPriorToEating(areas[l][j], preys[h]->getName());
               for (k = 0; k < dptr->Nrow(); k++)
