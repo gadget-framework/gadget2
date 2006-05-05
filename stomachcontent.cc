@@ -885,9 +885,9 @@ double SCAmounts::calcLikelihood() {
             ((*stddev[timeindex][a])[pred][prey] * (*stddev[timeindex][a])[pred][prey]);
       }
       tmplik *= (*number[timeindex])[a][pred];
-      lik += tmplik;
       likelihoodValues[timeindex][a] += tmplik;
     }
+    lik += likelihoodValues[timeindex][a];
   }
   return lik;
 }
@@ -942,10 +942,10 @@ double SCRatios::calcLikelihood() {
               ((*stddev[timeindex][a])[pred][prey] * (*stddev[timeindex][a])[pred][prey]);
         }
         tmplik *= (*number[timeindex])[a][pred];
-        lik += tmplik;
         likelihoodValues[timeindex][a] += tmplik;
       }
     }
+    lik += likelihoodValues[timeindex][a];
   }
   return lik;
 }
@@ -1118,10 +1118,10 @@ double SCSimple::calcLikelihood() {
               ((*modelConsumption[timeindex][a])[pred][prey] -
               (*obsConsumption[timeindex][a])[pred][prey]);
         }
-        lik += tmplik;
         likelihoodValues[timeindex][a] += tmplik;
       }
     }
+    lik += likelihoodValues[timeindex][a];
   }
   return lik;
 }
