@@ -204,6 +204,12 @@ double Formula::evalFunction() const {
       	v = 1.0;
       break;
 
+    case ABS:
+      if (argList.size() != 1)
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for abs");
+      v = fabs(*(argList[0]));
+      break;
+
     case IF:
       if (argList.size() != 3)
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for if");
@@ -333,6 +339,9 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
 
     } else if (strcasecmp(text, "not") == 0) {
       F.functiontype = NOT;
+
+    } else if (strcasecmp(text, "abs") == 0) {
+      F.functiontype = ABS;
 
     } else if (strcasecmp(text, "if") == 0) {
       F.functiontype = IF;
