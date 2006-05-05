@@ -75,7 +75,7 @@ UnderStocking::~UnderStocking() {
 }
 
 void UnderStocking::setPredators(PredatorPtrVector& Predators) {
-  int i, j;
+  int i, j, k;
   int found;
   for (i = 0; i < prednames.Size(); i++) {
     found = 0;
@@ -87,6 +87,19 @@ void UnderStocking::setPredators(PredatorPtrVector& Predators) {
 
     if (found == 0)
       handle.logMessage(LOGFAIL, "Error in understocking - unrecognised predator", prednames[i]);
+  }
+
+  //check predator areas
+  if (handle.getLogLevel() >= LOGWARN) {
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < predators.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (predators[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in understocking - predator not defined on all areas");
+    }
   }
 }
 

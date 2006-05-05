@@ -11,7 +11,7 @@ PreyOverAggregator::PreyOverAggregator(const PreyPtrVector& Preys,
 
   total.AddRows(areas.Nrow(), LgrpDiv->numLengthGroups(), 0.0);
   for (i = 0; i < preys.Size(); i++) {
-    preyConv.AddRows(1, preys[i]->getLengthGroupDiv()->numLengthGroups(), 0);
+    preyConv.AddRows(1, preys[i]->getLengthGroupDiv()->numLengthGroups(), -1);
     for (j = 0; j < preyConv.Ncol(i); j++)
       preyConv[i][j] = LgrpDiv->numLengthGroup(preys[i]->getLengthGroupDiv()->meanLength(j));
   }
@@ -25,16 +25,16 @@ void PreyOverAggregator::Reset() {
 }
 
 void PreyOverAggregator::Sum() {
-  int i, j, h, l;
+  int i, j, k, l;
 
   this->Reset();
   //Sum over the appropriate preys, areas, and lengths.
-  for (h = 0; h < preys.Size(); h++)
+  for (k = 0; k < preys.Size(); k++)
     for (i = 0; i < areas.Nrow(); i++)
       for (j = 0; j < areas.Ncol(i); j++)
-        if ((preys[h]->isInArea(areas[i][j])) && (preys[h]->isOverConsumption(areas[i][j])))
-          for (l = 0; l < preyConv.Ncol(h); l++)
-            if (preyConv[h][l] >= 0)
-              total[i][preyConv[h][l]] += (preys[h]->getOverConsumption(areas[i][j]))[l];
+        if ((preys[k]->isPreyArea(areas[i][j])) && (preys[k]->isOverConsumption(areas[i][j])))
+          for (l = 0; l < preyConv.Ncol(k); l++)
+            if (preyConv[k][l] >= 0)
+              total[i][preyConv[k][l]] += (preys[k]->getOverConsumption(areas[i][j]))[l];
 
 }

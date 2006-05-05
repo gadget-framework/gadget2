@@ -7,11 +7,11 @@ PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
 
   int i, j;
   for (i = 0; i < predators.Size(); i++)
-    checkLengthGroupIsFiner(preds[i]->getLengthGroupDiv(), LgrpDiv);
+    checkLengthGroupIsFiner(predators[i]->getLengthGroupDiv(), LgrpDiv);
 
   total.AddRows(areas.Nrow(), LgrpDiv->numLengthGroups(), 0.0);
   for (i = 0; i < predators.Size(); i++) {
-    predConv.AddRows(1, predators[i]->getLengthGroupDiv()->numLengthGroups(), 0);
+    predConv.AddRows(1, predators[i]->getLengthGroupDiv()->numLengthGroups(), -1);
     for (j = 0; j < predConv.Ncol(i); j++)
       predConv[i][j] = LgrpDiv->numLengthGroup(predators[i]->getLengthGroupDiv()->meanLength(j));
   }
@@ -25,16 +25,16 @@ void PredatorOverAggregator::Reset() {
 }
 
 void PredatorOverAggregator::Sum() {
-  int i, j, g, l;
+  int i, j, k, l;
 
   this->Reset();
   //Sum over the appropriate predators, areas, and lengths.
-  for (g = 0; g < predators.Size(); g++)
+  for (k = 0; k < predators.Size(); k++)
     for (i = 0; i < areas.Nrow(); i++)
       for (j = 0; j < areas.Ncol(i); j++)
-        if ((predators[g]->isInArea(areas[i][j])) && (predators[g]->hasOverConsumption(areas[i][j])))
-          for (l = 0; l < predConv.Ncol(g); l++)
-            if (predConv[g][l] >= 0)
-              total[i][predConv[g][l]] += (predators[g]->getOverConsumption(areas[i][j]))[l];
+        if ((predators[k]->isInArea(areas[i][j])) && (predators[k]->hasOverConsumption(areas[i][j])))
+          for (l = 0; l < predConv.Ncol(k); l++)
+            if (predConv[k][l] >= 0)
+              total[i][predConv[k][l]] += (predators[k]->getOverConsumption(areas[i][j]))[l];
 
 }
