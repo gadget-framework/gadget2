@@ -106,7 +106,8 @@ void PredatorAggregator::Reset() {
 
 void PredatorAggregator::Sum() {
   int g, h, i, j, k, l, m;
-  double sum, consum;
+  double agesum, consum;
+  DoubleVector lensum;
 
   this->Reset();
   //sum over the appropriate preys, predators, areas and lengths
@@ -121,20 +122,29 @@ void PredatorAggregator::Sum() {
               if (usepredages) {
                 //need to convert from length groups to age groups
                 alk = &((StockPredator*)predators[g])->getAgeLengthKeys(areas[l][j]);
+                
+                //first we need to calculate how many predators there are in each length group
+                lensum.Reset();
+                lensum.resize(predators[g]->getLengthGroupDiv()->numLengthGroups(), 0.0);
+                for (k = alk->minAge(); k <= alk->maxAge(); k++)
+                  for (m = alk->minLength(k); m < alk->maxLength(k); m++)
+                    lensum[m] += (*alk)[k][m].N;                
+
                 for (k = alk->minAge(); k <= alk->maxAge(); k++) {
                   if (predConv[g][k] >= 0) {
-                    sum = 0.0;
+                    agesum = 0.0;
                     for (m = alk->minLength(k); m < alk->maxLength(k); m++)
-                      sum += (*alk)[k][m].N;
+                      agesum += (*alk)[k][m].N;
 
-                    if (!isZero(sum)) {
+                    if (!isZero(agesum)) {
                       for (i = 0; i < dptr->Ncol(k); i++) {
                         if (preyConv[h][i] >= 0) {
                           consum = 0.0;
                           for (m = 0; m < dptr->Nrow(); m++)
-                            consum += (*dptr)[m][i];
+                            if (!isZero(lensum[m]))
+                              consum += (*dptr)[m][i] * (*alk)[k][m].N / lensum[m];
 
-                          (*total[l])[predConv[g][k]][preyConv[h][i]] += consum / sum;
+                          (*total[l])[predConv[g][k]][preyConv[h][i]] += consum / agesum;
                         }
                       }
                     }
