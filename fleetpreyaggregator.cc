@@ -100,7 +100,7 @@ void FleetPreyAggregator::Sum() {
                       if ((alptr->minAge() <= ages[g][k]) && (ages[g][k] <= alptr->maxAge())) {
                         if (overconsumption) {
                           DoubleVector usesuit = *suitptr;
-                          DoubleVector preyratio = preys[h]->getRatio(r);
+                          DoubleVector preyratio = preys[h]->getRatio(areas[r][j]);
                           for (z = 0; z < usesuit.Size(); z++)
                             if (preyratio[z] > 1.0)
                               usesuit[z] *= 1.0 / preyratio[z];

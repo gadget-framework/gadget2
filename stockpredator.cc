@@ -218,7 +218,7 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isOverConsumption(area)) {
       hasoverconsumption[inarea] = 1;
-      DoubleVector ratio = this->getPrey(prey)->getRatio(inarea);
+      DoubleVector ratio = this->getPrey(prey)->getRatio(area);
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
           if (ratio[preyl] > maxRatio) {
