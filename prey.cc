@@ -198,3 +198,9 @@ int Prey::isPreyArea(int area) {
     return 0;
   return 1;
 }
+
+int Prey::isOverConsumption(int area) {
+  if (this->isInArea(area) == 0)
+    return 0;
+  return isoverconsumption[this->areaNum(area)];
+}

@@ -123,7 +123,7 @@ public:
    * \param area is the area that the consumption is being calculated on
    * \return 1 if the prey has been overconsumed, 0 otherwise
    */
-  int isOverConsumption(int area) const { return isoverconsumption[this->areaNum(area)]; };
+  int isOverConsumption(int area);
   /**
    * \brief This will return the ratio of the prey that has been consumed on a given area
    * \param area is the area that the consumption is being calculated on
