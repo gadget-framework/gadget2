@@ -55,8 +55,8 @@ DoubleVector LUDecomposition::Solve(const DoubleVector& b) {
 
   int i, j;
   double s;
-  DoubleVector y = DoubleVector(b);
-  DoubleVector x = DoubleVector(size, 0.0);
+  DoubleVector y(b);
+  DoubleVector x(size, 0.0);
 
   for (i = 0; i < size; i++) {
     s = 0.0;

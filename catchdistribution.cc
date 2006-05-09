@@ -525,6 +525,9 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   if (!(AAT.atCurrentTime(TimeInfo)))
     return;
 
+  if ((handle.getLogLevel() >= LOGMESSAGE) && ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())))
+    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchdistribution component", this->getName());
+
   int i;
   timeindex = -1;
   for (i = 0; i < Years.Size(); i++)
@@ -568,15 +571,15 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
   if ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
     likelihood += l;
-    if (handle.getLogLevel() >= LOGMESSAGE) {
-      handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchdistribution component", this->getName());
+    if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
-    }
   }
 }
 
 double CatchDistribution::calcLikMultinomial() {
   int area, age, len;
+  DoubleVector dist(ages.Nrow(), 0.0);
+  DoubleVector data(ages.Nrow(), 0.0);
 
   MN.Reset();
   //the object MN does most of the work, accumulating likelihood
@@ -594,8 +597,6 @@ double CatchDistribution::calcLikMultinomial() {
 
     } else {
       //Many age-groups, so calculate multinomial based on age distribution per length group
-      DoubleVector dist(obsDistribution[timeindex][area]->Nrow(), 0.0);
-      DoubleVector data(obsDistribution[timeindex][area]->Nrow(), 0.0);
       for (len = 0; len < obsDistribution[timeindex][area]->Ncol(0); len++) {
         for (age = 0; age < obsDistribution[timeindex][area]->Nrow(); age++) {
           dist[age] = (*modelDistribution[timeindex][area])[age][len];
