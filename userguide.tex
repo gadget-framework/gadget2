@@ -937,7 +937,7 @@ F_{p}(l, L) =\Big( S_{p}(l, L) E_{p} N_{l} W_{l} \Big) ^{d_{p}}
 \end{equation}
 
 \begin{equation}\label{eq:maxcons}
-M_{L} = m_{0} e^{(m_{1}T - m_{2}T^3)} L^{m_{3}}
+M_{L} = m_{0} \Delta t e^{(m_{1}T - m_{2}T^3)} L^{m_{3}}
 \end{equation}
 
 \begin{equation}\label{eq:feedlevel}
@@ -949,10 +949,12 @@ $<$ L $>$ is the length of the predator\newline
 $<$ l $>$ is the length of the prey\newline
 $<$ H $>$ is the half feeding value\newline
 $<$ d $>$ is the preference of the predator for the prey\newline
+$<$ E $>$ is the energy content of the prey (see section~\ref{sec:stockprey})\newline
 $<$ N $>$ is the number of prey in the length cell\newline
 $<$ W $>$ is the mean weight of the prey in the length cell\newline
 $<$ S $>$ is the suitability function (see section~\ref{sec:suitability})\newline
 $<$ A $>$ is the size of the area that the feeding takes place on\newline
+$<\Delta t>$ is the length of the timestep\newline
 $<$ T $>$ is the temperature of the area that the feeding takes place on
 
 \bigskip
@@ -986,7 +988,7 @@ suitability
 <preyname>    function <functionname> <parameters> ; for each prey
 \end{verbatim}}
 
-The $<$functionname$>$ defines which suitability function is to be used to calculate the suitability for the predator acting on the prey.  Currently there are 5 suitability functions defined, and the valid suitability function names are:
+The $<$functionname$>$ defines which suitability function is to be used to calculate the suitability for the predator acting on the prey.  Currently there are 7 suitability functions defined, and the valid suitability function names are:
 
 \bigskip
 constant - use the Constant suitabilty function\newline
@@ -1326,7 +1328,7 @@ coefficients                <alpha>  <l50>  <beta>  <a50>
 maturitysteps               <vector of timesteps>
 \end{verbatim}}
 
-The $<$maturitystep$>$ vector is a vector of timesteps that the maturation process will take place on.
+The $<$maturitysteps$>$ vector is a vector of timesteps that the maturation process will take place on.
 
 \subsection{ConstantWeight Maturity Function}
 This maturity function is an extension to the Constant maturity function, with the maturity proportion being calculated according to the maturity equation~\ref{eq:mat4} given below:
@@ -1362,7 +1364,7 @@ maturitysteps               <vector of timesteps>
 maturitylengths             <vector of lengths>
 \end{verbatim}}
 
-Note that the $<$vector of timesteps$>$ and the $<$vector of lengths$>$ need to be the same size.
+Note that the $<$maturitysteps$>$ and the $<$maturitylengths$>$ vectors need to be the same size.
 
 \section{Movement (''Transition'')}\label{sec:stockmove}
 The movement section of the stock file determines if, and how, the stock will move (into a different stock) in the Gadget model.  This allows for a Gadget model to be set up with different stock files for stock that is the same species, but with differing properties (for instance age or maturity status) and for the entries to move between these stocks when required.  For the current version of Gadget, the only movement between stocks that is valid is for the stock in the oldest age group of one stock to move into a different stock.  The format for the first part of the movement section is given below:
@@ -1841,11 +1843,12 @@ The fleets act as a predator, so Gadget also requires a suitability function to 
 The fleet type used that creates a predator based on a simple proportion of the biomass of the stock that it is catching is called ''LinearFleet''.  The number caught is then split between the various stocks, and length groups of the stocks, according to equation~\ref{eq:lcons} below:
 
 \begin{equation}\label{eq:lcons}
-C_{s}(l) = E S_{s}(l) N_{sl} W_{sl}
+C_{s}(l) = E \Delta t S_{s}(l) N_{sl} W_{sl}
 \end{equation}
 
 where:\newline
-$<$ E $>$ is the proportion of the stock that is to be caught\newline
+$<$ E $>$ is the proportion of the stock that is to be caught per month\newline
+$<\Delta t>$ is the length of the timestep\newline
 $<$ N $>$ is the number of stock in the length cell\newline
 $<$ W $>$ is the mean weight of the stock in the length cell\newline
 $<$ S $>$ is the suitability function (see section~\ref{sec:fleetsuit})
@@ -1874,12 +1877,13 @@ The fleet of type LinearFleet acts a simple predator, and can be used for fleets
 The fleet type used that creates a predator based on a simple proportion of the biomass of the stock, and a 'catchability' parameter for that stock, is called ''EffortFleet''.  The number caught is then split between the various stocks, and length groups of the stocks, according to equation~\ref{eq:econs} below:
 
 \begin{equation}\label{eq:econs}
-C_{s}(l) = E q_{s} S_{s}(l) N_{sl} W_{sl}
+C_{s}(l) = E q_{s} \Delta t S_{s}(l) N_{sl} W_{sl}
 \end{equation}
 
 where:\newline
-$<$ E $>$ is the proportion of the stock that is to be caught\newline
+$<$ E $>$ is the proportion of the stock that is to be caught per month\newline
 $<$ q $>$ is the catchability parameter for that stock\newline
+$<\Delta t>$ is the length of the timestep\newline
 $<$ N $>$ is the number of stock in the length cell\newline
 $<$ W $>$ is the mean weight of the stock in the length cell\newline
 $<$ S $>$ is the suitability function (see section~\ref{sec:fleetsuit})
