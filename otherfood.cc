@@ -87,10 +87,6 @@ OtherFood::~OtherFood() {
   delete prey;
 }
 
-LengthPrey* OtherFood::getPrey() const {
-  return prey;
-}
-
 void OtherFood::checkEat(int area, const TimeClass* const TimeInfo) {
   if (this->isOtherFoodStepArea(area, TimeInfo))
     prey->checkConsumption(area, TimeInfo);

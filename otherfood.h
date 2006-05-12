@@ -136,7 +136,7 @@ public:
    * \brief This will return the otherfood, as a prey type, for use in other functions
    * \return prey
    */
-  LengthPrey* getPrey() const;
+  LengthPrey* getPrey() const { return prey; };
   /**
    * \brief This function will print the model population
    * \param outfile is the ofstream that all the model information gets sent to

@@ -131,10 +131,6 @@ void Fleet::Print(ofstream& outfile) const {
   predator->Print(outfile);
 }
 
-LengthPredator* Fleet::getPredator() const {
-  return predator;
-}
-
 int Fleet::isFleetStepArea(int area, const TimeClass* const TimeInfo) {
   if ((this->isInArea(area) == 0) || isZero(predator->getMultScaler()))
     return 0;
@@ -143,8 +139,4 @@ int Fleet::isFleetStepArea(int area, const TimeClass* const TimeInfo) {
   if (isZero(amount[TimeInfo->getTime()][this->areaNum(area)]))
     return 0;
   return 1;
-}
-
-double Fleet::getFleetAmount(int area, const TimeClass* const TimeInfo) const {
-  return amount[TimeInfo->getTime()][this->areaNum(area)];
 }

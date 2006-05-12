@@ -136,14 +136,7 @@ public:
    * \brief This will return the fleet, as a predator type, for use in other functions
    * \return predator
    */
-  LengthPredator* getPredator() const;
-  /**
-   * \brief This will return the amount that the fleet has consumed, for a given area and time step
-   * \param area is an integer to denote the internal area of interest
-   * \param TimeInfo is the TimeClass for the current model
-   * \return amount
-   */
-  double getFleetAmount(int area, const TimeClass* const TimeInfo) const;
+  LengthPredator* getPredator() const { return predator; };
   /**
    * \brief This will check if the fleet will operate on the current timestep
    * \param area is the area that the fleet will operate on
