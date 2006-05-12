@@ -106,8 +106,8 @@ void PredatorAggregator::Reset() {
 
 void PredatorAggregator::Sum() {
   int g, h, i, j, k, l, m;
-  double agesum, consum;
-  DoubleVector lensum;
+  double consum;
+  DoubleVector agesum, lensum;
 
   this->Reset();
   //sum over the appropriate preys, predators, areas and lengths
@@ -122,34 +122,40 @@ void PredatorAggregator::Sum() {
               if (usepredages) {
                 //need to convert from length groups to age groups
                 alk = &((StockPredator*)predators[g])->getAgeLengthKeys(areas[l][j]);
-                
-                //first we need to calculate how many predators there are in each length group
-                lensum.Reset();
-                lensum.resize(predators[g]->getLengthGroupDiv()->numLengthGroups(), 0.0);
-                for (k = alk->minAge(); k <= alk->maxAge(); k++)
-                  for (m = alk->minLength(k); m < alk->maxLength(k); m++)
-                    lensum[m] += (*alk)[k][m].N;                
 
+                //first calculate how many predators there are in each age and length group
+                agesum.Reset();
+                lensum.Reset();
+                agesum.resize(alk->maxAge() + 1, 0.0);
+                lensum.resize(predators[g]->getLengthGroupDiv()->numLengthGroups(), 0.0);
+                for (k = alk->minAge(); k <= alk->maxAge(); k++) {
+                  for (m = alk->minLength(k); m < alk->maxLength(k); m++) {
+                    agesum[k] += (*alk)[k][m].N;
+                    lensum[m] += (*alk)[k][m].N;
+                  }
+                }
+
+                //then calculate the total consumption by the predators
                 for (k = alk->minAge(); k <= alk->maxAge(); k++) {
                   if (predConv[g][k] >= 0) {
-                    agesum = 0.0;
-                    for (m = alk->minLength(k); m < alk->maxLength(k); m++)
-                      agesum += (*alk)[k][m].N;
+                    for (i = 0; i < dptr->Ncol(k); i++) {
+                      if (preyConv[h][i] >= 0) {
+                        consum = 0.0;
+                        for (m = 0; m < dptr->Nrow(); m++)
+                          if (!isZero(lensum[m]))
+                            consum += (*dptr)[m][i] * (*alk)[k][m].N / lensum[m];
 
-                    if (!isZero(agesum)) {
-                      for (i = 0; i < dptr->Ncol(k); i++) {
-                        if (preyConv[h][i] >= 0) {
-                          consum = 0.0;
-                          for (m = 0; m < dptr->Nrow(); m++)
-                            if (!isZero(lensum[m]))
-                              consum += (*dptr)[m][i] * (*alk)[k][m].N / lensum[m];
-
-                          (*total[l])[predConv[g][k]][preyConv[h][i]] += consum / agesum;
-                        }
+                        (*total[l])[predConv[g][k]][preyConv[h][i]] += consum;
                       }
                     }
                   }
                 }
+
+                //finally convert this total consumption to a per-predator consumption
+                for (k = alk->minAge(); k <= alk->maxAge(); k++)
+                  if ((predConv[g][k] >= 0) && (!isZero(agesum[k])))
+                    for (i = 0; i < (*total[l])[predConv[g][k]].Size(); i++)
+                      (*total[l])[predConv[g][k]][i] /= agesum[k];
 
               } else {
                 for (k = 0; k < dptr->Nrow(); k++)
