@@ -66,7 +66,6 @@ int main(int aNumber, char* const aVector[]) {
 
   if (main.runStochastic()) {
     if (main.runNetwork()) {
-      EcoSystem->Reset();
       #ifdef GADGET_NETWORK //to help compiling when pvm libraries are unavailable
         data = new StochasticData();
         while (data->getDataFromNetwork()) {
@@ -82,9 +81,12 @@ int main(int aNumber, char* const aVector[]) {
       data = new StochasticData(main.getInitialParamFile());
       EcoSystem->Update(data);
       EcoSystem->checkBounds();
-      EcoSystem->Reset();
-      if (main.printInitial())
+
+      if (main.printInitial()) {
+        EcoSystem->Reset();  //JMB only need to call reset() before the print commands
         EcoSystem->writeStatus(main.getPrintInitialFile());
+      }
+
       EcoSystem->Simulate(main.runPrint());
       if ((main.getPI()).getPrint())
         EcoSystem->writeValues();
@@ -101,9 +103,12 @@ int main(int aNumber, char* const aVector[]) {
     } else {
       if (EcoSystem->numVariables() != 0)
         handle.logMessage(LOGWARN, "Warning - no parameter input file given, using default values");
-      EcoSystem->Reset();
-      if (main.printInitial())
+
+      if (main.printInitial()) {
+        EcoSystem->Reset();  //JMB only need to call reset() before the print commands
         EcoSystem->writeStatus(main.getPrintInitialFile());
+      }
+
       EcoSystem->Simulate(main.runPrint());
       if ((main.getPI()).getPrint())
         EcoSystem->writeValues();
@@ -118,9 +123,10 @@ int main(int aNumber, char* const aVector[]) {
     } else
       handle.logMessage(LOGWARN, "Error - no parameter input file specified");
 
-    EcoSystem->Reset();
-    if (main.printInitial())
+    if (main.printInitial()) {
+      EcoSystem->Reset();  //JMB only need to call reset() before the print commands
       EcoSystem->writeStatus(main.getPrintInitialFile());
+    }
 
     EcoSystem->Optimise();
     if (main.getForcePrint())
@@ -128,7 +134,7 @@ int main(int aNumber, char* const aVector[]) {
   }
 
   handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
-  if (main.printFinal())
+  if (main.printFinal() && !(main.runNetwork()))
     EcoSystem->writeStatus(main.getPrintFinalFile());
 
   //JMB - print final values of parameters

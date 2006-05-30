@@ -97,6 +97,9 @@ void Ecosystem::writeStatus(const char* filename) const {
 
 void Ecosystem::Reset() {
   int i;
+  TimeInfo->Reset();
+  for (i = 0; i < likevec.Size(); i++)
+    likevec[i]->Reset(keeper);
   for (i = 0; i < basevec.Size(); i++)
     basevec[i]->Reset(TimeInfo);
 }
