@@ -1,20 +1,23 @@
 #include "predatoroveraggregator.h"
 #include "predator.h"
+#include "errorhandler.h"
+#include "gadget.h"
+
+extern ErrorHandler handle;
 
 PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
   const IntMatrix& Areas, const LengthGroupDivision* const LgrpDiv)
   : predators(preds), areas(Areas) {
 
   int i, j;
-  for (i = 0; i < predators.Size(); i++)
-    checkLengthGroupIsFiner(predators[i]->getLengthGroupDiv(), LgrpDiv);
-
-  total.AddRows(areas.Nrow(), LgrpDiv->numLengthGroups(), 0.0);
   for (i = 0; i < predators.Size(); i++) {
+    if (checkLengthGroupStructure(predators[i]->getLengthGroupDiv(), LgrpDiv))
+      handle.logMessage(LOGFAIL, "Error in predatoroveraggregator - invalid length group structure");
     predConv.AddRows(1, predators[i]->getLengthGroupDiv()->numLengthGroups(), -1);
     for (j = 0; j < predConv.Ncol(i); j++)
       predConv[i][j] = LgrpDiv->numLengthGroup(predators[i]->getLengthGroupDiv()->meanLength(j));
   }
+  total.AddRows(areas.Nrow(), LgrpDiv->numLengthGroups(), 0.0);
 }
 
 void PredatorOverAggregator::Reset() {

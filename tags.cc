@@ -45,6 +45,8 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
       if (found == 0) {
         taggingstock = stockvec[i];
         LgrpDiv = new LengthGroupDivision(*(taggingstock->getLengthGroupDiv()));
+        if (LgrpDiv->Error())
+          handle.logMessage(LOGFAIL, "Error in tags - failed to create length group");
         tagStocks.resize(taggingstock);
         taggingstock->setTaggedStock();
       }
@@ -92,7 +94,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
     infile >> tmpname >> year >> step >> tmplength >> tmpnumber >> ws;
 
     //only keep the data if tmpname matches tagname
-    if (!(strcasecmp(tagname, tmpname) == 0))
+    if (strcasecmp(tagname, tmpname) != 0)
       keepdata = 1;
 
     //only keep the data if the length is valid
@@ -217,7 +219,7 @@ void Tags::setStock(StockPtrVector& Stocks) {
       matureStocks.resize(tmpStockVector[i]);
       found = 0;
       for (j = 0; j < transitionStocks.Size(); j++)
-        if (!(strcasecmp(transitionStocks[j]->getName(), tmpStockVector[i]->getName()) == 0))
+        if (strcasecmp(transitionStocks[j]->getName(), tmpStockVector[i]->getName()) != 0)
           found++;
 
       if (found == 0) {
@@ -235,11 +237,11 @@ void Tags::setStock(StockPtrVector& Stocks) {
       strayStocks.resize(tmpStockVector[i]);
       found = 0;
       for (j = 0; j < transitionStocks.Size(); j++)
-        if (!(strcasecmp(transitionStocks[j]->getName(), tmpStockVector[i]->getName()) == 0))
+        if (strcasecmp(transitionStocks[j]->getName(), tmpStockVector[i]->getName()) != 0)
           found++;
 
       for (j = 0; j < matureStocks.Size(); j++)
-        if (!(strcasecmp(matureStocks[j]->getName(), tmpStockVector[i]->getName()) == 0))
+        if (strcasecmp(matureStocks[j]->getName(), tmpStockVector[i]->getName()) != 0)
           found++;
 
       if (found == 0) {
@@ -326,6 +328,8 @@ void Tags::Update(int timeid) {
     lgrpsize.resize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
     NumBeforeEating.resize(new AgeBandMatrixPtrVector(numareas, minage, lgrpmin, lgrpsize));
     CI.resize(new ConversionIndex(LgrpDiv, tmpLgrpDiv));
+    if (CI[CI.Size() - 1]->Error())
+      handle.logMessage(LOGFAIL, "Error in tags - error when checking length structure");
 
     stockid = stockIndex(taggingstock->getName());
     if (stockid < 0 || stockid >= preyindex.Size())
@@ -360,6 +364,8 @@ void Tags::Update(int timeid) {
       lgrpsize.resize(numberofagegroups, tmpLgrpDiv->numLengthGroups());
       NumBeforeEating.resize(new AgeBandMatrixPtrVector(numareas, minage, lgrpmin, lgrpsize));
       CI.resize(new ConversionIndex(LgrpDiv, tmpLgrpDiv));
+      if (CI[CI.Size() - 1]->Error())
+        handle.logMessage(LOGFAIL, "Error in tags - error when checking length structure");
 
       stockid = stockIndex(tagStocks[i]->getName());
       if (stockid < 0 || stockid >= preyindex.Size())

@@ -32,6 +32,8 @@ void SIByAgeOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     maxlength = max(Stocks[i]->getLengthGroupDiv()->maxLength(), maxlength);
   }
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, maxlength - minlength);
+  if (LgrpDiv->Error())
+    handle.logMessage(LOGFAIL, "Error in surveyindex - failed to create length group");
 
   //check stock ages
   if (handle.getLogLevel() >= LOGWARN) {

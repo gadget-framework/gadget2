@@ -22,8 +22,11 @@ FleetPreyAggregator::FleetPreyAggregator(const FleetPtrVector& Fleets,
   for (i = 0; i < Fleets.Size(); i++)
     predators.resize(Fleets[i]->getPredator());
 
-  for (i = 0; i < preys.Size(); i++)
+  for (i = 0; i < preys.Size(); i++) {
     CI.resize(new ConversionIndex(preys[i]->getLengthGroupDiv(), LgrpDiv));
+    if (CI[i]->Error())
+      handle.logMessage(LOGFAIL, "Error in fleetpreyaggregator - error when checking length structure");
+  }
 
   for (i = 0; i < predators.Size(); i++)
     for (j = 0; j < preys.Size(); j++)
@@ -94,7 +97,7 @@ void FleetPreyAggregator::Sum() {
                 if (strcasecmp(preys[h]->getName(), predators[f]->getPrey(i)->getName()) == 0) {
                   suitptr = &predators[f]->getSuitability(i)[predl];
                   alptr = &((StockPrey*)preys[h])->getALKPriorToEating(areas[r][j]);
-                  ratio = ((PopPredator*)predators[f])->getConsumptionRatio(areas[r][j], i, predl);
+                  ratio = predators[f]->getConsumptionRatio(areas[r][j], i, predl);
                   for (g = 0; g < ages.Nrow(); g++) {
                     for (k = 0; k < ages.Ncol(g); k++) {
                       if ((alptr->minAge() <= ages[g][k]) && (ages[g][k] <= alptr->maxAge())) {

@@ -22,6 +22,9 @@ PredatorPreyAggregator::PredatorPreyAggregator(const PredatorPtrVector& Predator
 
   for (i = 0; i < preys.Size(); i++) {
     CI.resize(new ConversionIndex(preys[i]->getLengthGroupDiv(), LgrpDiv));
+    if (CI[i]->Error())
+      handle.logMessage(LOGFAIL, "Error in predatorpreyaggregator - error when checking length structure");
+
     //check that the prey is a stock
     if (preys[i]->getType() == LENGTHPREY)
       handle.logMessage(LOGFAIL, "Error in predatorpreyaggregator - cannot aggregate prey", preys[i]->getName());
@@ -76,7 +79,7 @@ void PredatorPreyAggregator::Sum(const TimeClass* const TimeInfo) {
                   alptr = &((StockPrey*)preys[g])->getALKPriorToEating(areas[i][j]);
                   for (h = 0; h < predators[f]->getLengthGroupDiv()->numLengthGroups(); h++) {
                     suitptr = &predators[f]->getSuitability(k)[h];
-                    ratio = ((PopPredator*)predators[f])->getConsumptionRatio(areas[i][j], k, h);
+                    ratio = predators[f]->getConsumptionRatio(areas[i][j], k, h);
                     for (l = 0; l < ages.Nrow(); l++) {
                       for (m = 0; m < ages.Ncol(l); m++) {
                         if ((alptr->minAge() <= ages[l][m]) && (ages[l][m] <= alptr->maxAge())) {

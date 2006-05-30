@@ -128,8 +128,9 @@ protected:
  * \brief This is the function that will check whether one LengthGroupDivision has length groups that are finer than a second LengthGroupDivision, and print an error if this is not the case
  * \param finer is the LengthGroupDivision that should be on a finer scale
  * \param coarser is the LengthGroupDivision that should be on a coarser scale
+ * \return 1 if the structure of the LengthGroupDivision objects are not compatible, 0 otherwise
  */
-extern void checkLengthGroupIsFiner(const LengthGroupDivision* finer,
+extern int checkLengthGroupStructure(const LengthGroupDivision* finer,
   const LengthGroupDivision* coarser);
 
 #endif

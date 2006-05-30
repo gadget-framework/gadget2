@@ -274,6 +274,18 @@ public:
    */
   int maxAge() const { return Alkeys[0].maxAge(); };
   /**
+   * \brief This will return the total population size (in numbers) of the stock on a given area
+   * \param area is the area identifier
+   * \return population size
+   */
+  const double getTotalStockNumber(int area) const;
+  /**
+   * \brief This will return the total population biomass of the stock on a given area
+   * \param area is the area identifier
+   * \return population biomass
+   */
+  const double getTotalStockBiomass(int area) const;
+  /**
    * \brief This will return the stocks that this stock will mature in to
    * \return maturestocks, a StockPtrVector of the stocks that this stock will mature into
    */

@@ -102,10 +102,10 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     //read in the fleetnames
     i = 0;
     infile >> text >> ws;
-    if (!(strcasecmp(text, "fleetnames") == 0))
+    if (strcasecmp(text, "fleetnames") != 0)
       handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
     infile >> text;
-    while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
+    while (!infile.eof() && (strcasecmp(text, "stocknames") != 0)) {
       fleetnames.resize(new char[strlen(text) + 1]);
       strcpy(fleetnames[i++], text);
       infile >> text >> ws;
@@ -120,13 +120,13 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   } else
     handle.logFileUnexpected(LOGFAIL, "lengths, ages or fleets", sitype);
 
-  if (!(strcasecmp(text, "stocknames") == 0))
+  if (strcasecmp(text, "stocknames") != 0)
     handle.logFileUnexpected(LOGFAIL, "stocknames", text);
 
   i = 0;
   infile >> text;
   //read in the stocknames
-  while (!infile.eof() && !(strcasecmp(text, "fittype") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "fittype") != 0)) {
     stocknames.resize(new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
     infile >> text >> ws;
@@ -158,7 +158,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[component]") == 0))
+    if (strcasecmp(text, "[component]") != 0)
       handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 }

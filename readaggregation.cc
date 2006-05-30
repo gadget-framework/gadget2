@@ -8,6 +8,9 @@ extern ErrorHandler handle;
 int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggindex) {
   int i, j;
   i = 0;
+
+  agg.Reset();
+  aggindex.Reset();
   infile >> ws;
   while (!infile.eof()) {
     aggindex.resize(new char[MaxStrLength]);
@@ -31,14 +34,17 @@ int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggind
 }
 
 int readAggregation(CommentStream& infile, IntVector& agg, CharPtrVector& aggindex) {
-  int i, j, tmp;
-  i = tmp = 0;
+  int i, j;
+  i = 0;
+
+  agg.Reset();
+  aggindex.Reset();
   infile >> ws;
   while (!infile.eof()) {
     aggindex.resize(new char[MaxStrLength]);
     strncpy(aggindex[i], "", MaxStrLength);
-    infile >> aggindex[i] >> tmp >> ws;
-    agg.resize(1, tmp);
+    agg.resize(1, 0);
+    infile >> aggindex[i] >> agg[i] >> ws;
     i++;
   }
 
@@ -56,6 +62,9 @@ int readLengthAggregation(CommentStream& infile, DoubleVector& lengths, CharPtrV
   int i, j;
   double dblA, dblB;
   i = 0;
+
+  lengths.Reset();
+  lenindex.Reset();
   infile >> ws;
   while (!infile.eof()) {
     lenindex.resize(new char[MaxStrLength]);
@@ -91,6 +100,9 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   i = j = 0;
+
+  preylengths.Reset();
+  preyindex.Reset();
   infile >> ws;
   while (!infile.eof()) {
     preyindex.resize(new char[MaxStrLength]);
@@ -100,20 +112,20 @@ int readPreyAggregation(CommentStream& infile, CharPtrMatrix& preynames,
     j = 0;
     preynames.resize();
     infile >> text >> ws;
-    while (!infile.eof() && (!(strcasecmp(text, "lengths") == 0))) {
+    while (!infile.eof() && (strcasecmp(text, "lengths") != 0)) {
       preynames[i].resize(new char[strlen(text) + 1]);
       strcpy(preynames[i][j++], text);
       infile >> text >> ws;
     }
 
-    if (!(strcasecmp(text, "lengths") == 0))
+    if (strcasecmp(text, "lengths") != 0)
       handle.logFileUnexpected(LOGFAIL, "lengths", text);
 
     //JMB - changed so that only 2 lengths are read in
     preylengths.AddRows(1, 2, 0.0);
     infile >> preylengths[i][0] >> preylengths[i][1] >> text >> ws;
 
-    if (!(strcasecmp(text, "digestioncoefficients") == 0))
+    if (strcasecmp(text, "digestioncoefficients") != 0)
       handle.logFileUnexpected(LOGFAIL, "digestioncoefficients", text);
 
     //JMB - changed so that only 3 elements are read in

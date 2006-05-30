@@ -120,7 +120,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
   //read in the predators
   i = 0;
   infile >> text >> ws;
-  if (!((strcasecmp(text, "predators") == 0) || (strcasecmp(text, "predatornames") == 0)))
+  if ((strcasecmp(text, "predators") != 0) && (strcasecmp(text, "predatornames") != 0))
     handle.logFileUnexpected(LOGFAIL, "predatornames", text);
   infile >> text >> ws;
   while (!infile.eof() && ((strcasecmp(text, "predatorlengths") != 0)
@@ -170,7 +170,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[component]") == 0))
+    if (strcasecmp(text, "[component]") != 0)
       handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 }

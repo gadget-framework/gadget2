@@ -16,6 +16,7 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv) {
 
   type = STOCKPREDATOR;
+  functionnumber = 0;
   keeper->addString("predator");
   keeper->addString(givenname);
 
@@ -28,7 +29,7 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text >> ws;
-  while (!(strcasecmp(text, "maxconsumption") == 0) && (!infile.eof())) {
+  while (!infile.eof() && (((strcasecmp(text, "maxconsumption") != 0)) && (strcasecmp(text, "whaleconsumption") != 0))) {
     for (i = 0; i < preference.Size(); i++) {
       if (strcasecmp(text, this->getPreyName(i)) == 0) {
         infile >> preference[i] >> ws;
@@ -43,15 +44,28 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   keeper->clearLast();
 
   //then read in the maximum consumption parameters
-  if (!(strcasecmp(text, "maxconsumption") == 0))
-    handle.logFileUnexpected(LOGFAIL, "maxconsumption", text);
   keeper->addString("consumption");
-  consParam.resize(5, keeper);
-  for (i = 0; i < 4; i++)
-    if (!(infile >> consParam[i]))
-      handle.logFileMessage(LOGFAIL, "invalid format for maxconsumption vector");
+  if (strcasecmp(text, "maxconsumption") == 0) {
+    functionnumber = 1;
+    consParam.resize(5, keeper);
+    for (i = 0; i < 4; i++)
+      if (!(infile >> consParam[i]))
+        handle.logFileMessage(LOGFAIL, "invalid format for maxconsumption vector");
 
-  readWordAndVariable(infile, "halffeedingvalue", consParam[4]);
+    readWordAndVariable(infile, "halffeedingvalue", consParam[4]);
+
+  } else if (strcasecmp(text, "whaleconsumption") == 0) {
+    functionnumber = 2;
+    consParam.resize(16, keeper);
+    for (i = 0; i < 15; i++)
+      if (!(infile >> consParam[i]))
+        handle.logFileMessage(LOGFAIL, "invalid format for whaleconsumption vector");
+
+    readWordAndVariable(infile, "halffeedingvalue", consParam[15]);
+
+  } else
+    handle.logFileUnexpected(LOGFAIL, "maxconsumption", text);
+
   consParam.Inform(keeper);
   keeper->clearLast();
 
@@ -101,7 +115,7 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
   PopPredator::Reset(TimeInfo);
 
   //check that the various parameters that can be estimated are sensible
-  if ((handle.getLogLevel() >= LOGWARN) && (TimeInfo->getTime() == 1)) {
+  if ((handle.getLogLevel() >= LOGWARN) && (TimeInfo->getTime() == 1) && (functionnumber == 1)) {
     int i;
     for (i = 0; i < consParam.Size(); i++)
       if (consParam[i] < 0.0)
@@ -113,19 +127,36 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
 
   int prey, predl, preyl, check;
   int inarea = this->areaNum(area);
-  double tmp, temperature;
+  double tmp;
 
   if (TimeInfo->getSubStep() == 1) {
     //this is the first substep of the timestep so need to reset things
-    temperature = Area->getTemperature(area, TimeInfo->getTime());
-    tmp = exp(temperature * (consParam[1] - temperature * temperature * consParam[2]))
-           * consParam[0] * TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
-
     for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
       Phi[inarea][predl] = 0.0;
       fphi[inarea][predl] = 0.0;
-      maxcons[inarea][predl] = tmp * pow(LgrpDiv->meanLength(predl), consParam[3]);
     }
+
+    if (functionnumber == 1) {
+      double temperature = Area->getTemperature(area, TimeInfo->getTime());
+      tmp = exp(temperature * (consParam[1] - temperature * temperature * consParam[2]))
+           * consParam[0] * TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
+      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+        maxcons[inarea][predl] = tmp * pow(LgrpDiv->meanLength(predl), consParam[3]);
+
+    } else if (functionnumber == 2) {
+      double max1, max2, max3, l;
+      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+        l = LgrpDiv->meanLength(predl);
+        max1 = max(0.0, consParam[6] * (consParam[7] + consParam[8] * l));
+        max2 = max(0.0, consParam[9] * (consParam[10] + consParam[11] * l));
+        max3 = max(0.0, consParam[12] * (consParam[13] + consParam[14] * l));
+        tmp = consParam[2] * pow(prednumber[inarea][predl].W, consParam[3])
+             + consParam[4] * pow(l, consParam[5]) + max1 + max2 + max3;
+        maxcons[inarea][predl] = consParam[0] * consParam[1] * tmp;        
+      }
+
+    } else
+      handle.logMessage(LOGWARN, "Warning in stockpredator - unrecognised consumption format");
 
   } else {
     //this is not the first substep of the timestep so only reset Phi
@@ -162,7 +193,14 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   }
 
   //JMB make this dependant on the length of the timestep
-  tmp = Area->getSize(area) * consParam[4] * TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
+  tmp = Area->getSize(area) * TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
+  if (functionnumber == 1)
+    tmp *= consParam[4];
+  else if (functionnumber == 2)
+    tmp *= consParam[15];
+  else
+    handle.logMessage(LOGWARN, "Warning in stockpredator - unrecognised consumption format");
+  
   //Calculating fphi(L) and totalcons of predator in area
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     if (isZero(tmp)) {

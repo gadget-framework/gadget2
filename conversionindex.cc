@@ -13,23 +13,24 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   double tmpmin = max(L1->minLength(), L2->minLength());
   double tmpmax = min(L1->maxLength(), L2->maxLength());
 
-  //check to see if the intersection is empty
-  if ((L1->numLengthGroups() == 0) || (L2->numLengthGroups() == 0) ||
-       (tmpmin > tmpmax) || isEqual(tmpmin, tmpmax)) {
-
-    handle.logMessage(LOGWARN, "Error in conversionindex - intersection between length groups is empty");
-    L1->printError();
-    L2->printError();
-    exit(EXIT_FAILURE);
-  }
-
+  error = 0;
   samedl = 0;
   offset = 0;
-  targetisfiner = 0;
+  targetisfiner = 0;  //targetisfiner means that L1 is strictly coarser than L2
   interpolate = interp;
-  //targetisfiner means that L1 is strictly coarser than L2
+
+  //check to see if the intersection is empty
+  if ((tmpmin > tmpmax) || isEqual(tmpmin, tmpmax)) {
+    handle.logMessage(LOGWARN, "Error when checking length structure - empty intersection");
+    error = 1;
+    return;
+  }
+
   if (isZero(L1->dl()) || isZero(L2->dl())) {
-    checkLengthGroupIsFiner(L1, L2);
+    if (checkLengthGroupStructure(L1, L2)) {
+      error = 1;
+      return;
+    }
     Lc = L2;
     Lf = L1;
 
@@ -109,24 +110,27 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     interpratio.resize(nf, -1.0);
     interppos.resize(nf, -1);
     k = 0;
-    for (i = minlength; i < maxlength; i++)
-      for (j = k; j < nc - 1; j++)
+    for (i = minlength; i < maxlength; i++) {
+      for (j = k; j < nc - 1; j++) {
         if (Lf->meanLength(i) >= Lc->meanLength(j) && Lf->meanLength(i) < Lc->meanLength(j + 1)) {
           interppos[i] = j;
           k = j;
           break;
         }
+      }
+    }
 
-    for (i = 0; i < nf; i++)
-      if (interppos[i] != -1)
+    for (i = 0; i < nf; i++) {
+      if (interppos[i] != -1) {
         interpratio[i] = (Lf->meanLength(i) - Lc->meanLength(interppos[i])) /
           (Lc->meanLength(interppos[i] + 1) - Lc->meanLength(interppos[i]));
-      else {
+      } else {
         if (Lf->meanLength(i) < Lc->meanLength(0))
           interppos[i] = 0;
         else
           interppos[i] = nc - 1;
       }
+    }
   }
 }
 

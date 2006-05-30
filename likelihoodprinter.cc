@@ -18,10 +18,10 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
 
   //read in the names of the likelihood components
   infile >> text >> ws;
-  if (!(strcasecmp(text, "likelihood") == 0))
+  if (strcasecmp(text, "likelihood") != 0)
     handle.logFileUnexpected(LOGFAIL, "likelihood", text);
   infile >> text >> ws;
-  while (!infile.eof() && !(strcasecmp(text, "printfile") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "printfile") != 0)) {
     likenames.resize(new char[strlen(text) + 1]);
     strcpy(likenames[i++], text);
     infile >> text >> ws;
@@ -33,7 +33,7 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
   filename = new char[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
 
-  if (!(strcasecmp(text, "printfile") == 0))
+  if (strcasecmp(text, "printfile") != 0)
     handle.logFileUnexpected(LOGFAIL, "printfile", text);
   infile >> filename >> ws;
   outfile.open(filename, ios::out);
@@ -51,7 +51,7 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
   if (printtimeid == 1)
     handle.logFileMessage(LOGFAIL, "\nError in likelihoodprinter - cannot print likelihood informtion at the start of the timestep");
 
-  if (!(strcasecmp(text, "yearsandsteps") == 0))
+  if (strcasecmp(text, "yearsandsteps") != 0)
     handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
     handle.logFileMessage(LOGFAIL, "\nError in likelihoodprinter - wrong format for yearsandsteps");
@@ -60,7 +60,7 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[component]") == 0))
+    if (strcasecmp(text, "[component]") != 0)
       handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 }
@@ -103,7 +103,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
         outfile << "\n; year-step-area-age-number-mean[-stddev]\n";
         break;
       case CATCHINKILOSLIKELIHOOD:
-        outfile << "\n; year-step-area-fleet-number\n";
+        outfile << "\n; year-step-area-fleet-biomass\n";
         break;
       case SURVEYDISTRIBUTIONLIKELIHOOD:
         outfile << "\n; year-step-area-age-length-number\n";

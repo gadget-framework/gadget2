@@ -17,14 +17,16 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
 
   int i, j;
   for (i = 0; i < predators.Size(); i++) {
-    checkLengthGroupIsFiner(predators[i]->getLengthGroupDiv(), predLgrpDiv);
+    if (checkLengthGroupStructure(predators[i]->getLengthGroupDiv(), predLgrpDiv))
+      handle.logMessage(LOGFAIL, "Error in predatoraggregator - invalid predator length group structure");
     predConv.AddRows(1, predators[i]->getLengthGroupDiv()->numLengthGroups(), -1);
     for (j = 0; j < predConv.Ncol(i); j++)
       predConv[i][j] = predLgrpDiv->numLengthGroup(predators[i]->getLengthGroupDiv()->meanLength(j));
   }
 
   for (i = 0; i < preys.Size(); i++) {
-    checkLengthGroupIsFiner(preys[i]->getLengthGroupDiv(), preyLgrpDiv);
+    if (checkLengthGroupStructure(preys[i]->getLengthGroupDiv(), preyLgrpDiv))
+      handle.logMessage(LOGFAIL, "Error in predatoraggregator - invalid prey length group structure");
     preyConv.AddRows(1, preys[i]->getLengthGroupDiv()->numLengthGroups(), -1);
     for (j = 0; j < preyConv.Ncol(i); j++)
       preyConv[i][j] = preyLgrpDiv->numLengthGroup(preys[i]->getLengthGroupDiv()->meanLength(j));
@@ -61,7 +63,8 @@ PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
   }
 
   for (i = 0; i < preys.Size(); i++) {
-    checkLengthGroupIsFiner(preys[i]->getLengthGroupDiv(), preyLgrpDiv);
+    if (checkLengthGroupStructure(preys[i]->getLengthGroupDiv(), preyLgrpDiv))
+      handle.logMessage(LOGFAIL, "Error in predatoraggregator - invalid prey length group structure");
     preyConv.AddRows(1, preys[i]->getLengthGroupDiv()->numLengthGroups(), -1);
     for (j = 0; j < preyConv.Ncol(i); j++)
       preyConv[i][j] = preyLgrpDiv->numLengthGroup(preys[i]->getLengthGroupDiv()->meanLength(j));

@@ -8,7 +8,7 @@ extern ErrorHandler handle;
 
 Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
   const LengthGroupDivision* const lgrpdiv, const TimeClass* const TimeInfo, Keeper* const keeper)
-  : LivesOnAreas(areas), LgrpDiv(new LengthGroupDivision(*lgrpdiv)), age(Age) {
+  : LivesOnAreas(areas), age(Age) {
 
   int i = 0;
   istagged = 0;
@@ -16,6 +16,10 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   keeper->addString("transition");
+
+  LgrpDiv = new LengthGroupDivision(*lgrpdiv);
+  if (LgrpDiv->Error())
+    handle.logMessage(LOGFAIL, "Error in transition - failed to create length group");
 
   infile >> text >> ws;
   if (strcasecmp(text, "transitionstocksandratios") != 0)
@@ -26,7 +30,6 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
     transitionStockNames.resize(new char[strlen(text) + 1]);
     strcpy(transitionStockNames[i], text);
     transitionRatio.resize(1, keeper);
-    ratioindex.resize(1, 0);
     if (!(infile >> transitionRatio[i]))
       handle.logFileMessage(LOGFAIL, "invalid format for transition ratio");
 
@@ -69,6 +72,7 @@ void Transition::setStock(StockPtrVector& stockvec) {
   }
 
   //JMB ensure that the ratio vector is indexed in the right order
+  ratioindex.resize(transitionStocks.Size(), 0);
   for (i = 0; i < transitionStocks.Size(); i++)
     for (j = 0; j < transitionStockNames.Size(); j++)
       if (strcasecmp(transitionStocks[i]->getName(), transitionStockNames[j]) == 0)
@@ -77,6 +81,8 @@ void Transition::setStock(StockPtrVector& stockvec) {
   double mlength = 9999.0;
   for (i = 0; i < transitionStocks.Size(); i++) {
     CI.resize(new ConversionIndex(LgrpDiv, transitionStocks[i]->getLengthGroupDiv()));
+    if (CI[i]->Error())
+      handle.logMessage(LOGFAIL, "Error in transition - error when checking length structure");
     index = 0;
     for (j = 0; j < areas.Size(); j++)
       if (!transitionStocks[i]->isInArea(areas[j]))

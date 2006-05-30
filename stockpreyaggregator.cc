@@ -14,6 +14,9 @@ StockPreyAggregator::StockPreyAggregator(const PreyPtrVector& Preys,
   int i;
   for (i = 0; i < preys.Size(); i++) {
     CI.resize(new ConversionIndex(preys[i]->getLengthGroupDiv(), LgrpDiv));
+    if (CI[i]->Error())
+      handle.logMessage(LOGFAIL, "Error in stockpreyaggregator - error when checking length structure");
+
     //check that the prey is a stock
     if (preys[i]->getType() == LENGTHPREY)
       handle.logMessage(LOGFAIL, "Error in stockpreyaggregator - cannot aggregate prey", preys[i]->getName());

@@ -67,10 +67,10 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
   //read in the fleetnames
   i = 0;
   infile >> text >> ws;
-  if (!(strcasecmp(text, "fleetnames") == 0))
+  if (strcasecmp(text, "fleetnames") != 0)
     handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text;
-  while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "[component]") != 0)) {
     fleetnames.resize(new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
@@ -299,6 +299,8 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       agematrix[0].resize(1, minage + i);
 
     LengthGroupDivision* lgrpdiv = new LengthGroupDivision(lengths);
+    if (lgrpdiv->Error())
+      handle.logMessage(LOGFAIL, "Error in recaptures - failed to create length group");
     aggregator[k] = new RecAggregator(fleets, stocks, lgrpdiv, areas, agematrix, tagvec[k]);
 
     delete lgrpdiv;

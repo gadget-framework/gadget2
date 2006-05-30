@@ -96,6 +96,21 @@ public:
    */
   virtual double getTotalOverConsumption(int area) const = 0;
   /**
+   * \brief This will return the biomass the predator consumes of a given prey on a given area
+   * \param prey is the index for the prey
+   * \param area is the area that the consumption is being calculated on
+   * \return 0 (will be overridden by the derived classes)
+   */
+  virtual const double getConsumptionBiomass(int prey, int area) const = 0;
+  /**
+   * \brief This will return the ratio used to split the predation between the areas and length groups
+   * \param area is the area that the consumption is being calculated on
+   * \param prey is the index for the prey
+   * \param len is the length group of the predator
+   * \return 0 (will be overridden by the derived classes)
+   */
+  virtual double getConsumptionRatio(int area, int prey, int len) const = 0;
+  /**
    * \brief This will return the amount of a given prey on a given area prior to any consumption by the predator
    * \param area is the area that the consumption is being calculated on
    * \param preyname is the name of the prey that is being consumed

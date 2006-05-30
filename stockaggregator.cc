@@ -2,14 +2,21 @@
 #include "conversionindex.h"
 #include "stock.h"
 #include "mathfunc.h"
+#include "errorhandler.h"
+#include "gadget.h"
+
+extern ErrorHandler handle;
 
 StockAggregator::StockAggregator(const StockPtrVector& Stocks,
   const LengthGroupDivision* const LgrpDiv, const IntMatrix& Areas, const IntMatrix& Ages)
   : stocks(Stocks), areas(Areas), ages(Ages), alptr(0) {
 
   int i;
-  for (i = 0; i < stocks.Size(); i++)
+  for (i = 0; i < stocks.Size(); i++) {
     CI.resize(new ConversionIndex(stocks[i]->getLengthGroupDiv(), LgrpDiv));
+    if (CI[i]->Error())
+      handle.logMessage(LOGFAIL, "Error in stockaggregator - error when checking length structure");
+  }
 
   //Resize total using dummy variables tmppop and popmatrix.
   PopInfo tmppop;

@@ -244,6 +244,16 @@ public:
    */
   int numTotalSteps() const { return TimeInfo->numTotalSteps(); };
   /**
+   * \brief This function will return the stocks that are used in the current model
+   * \return stockvec, the StockPtrVector of the stocks that are used in the current model
+   */
+  const StockPtrVector& getModelStocks() const { return stockvec; };
+  /**
+   * \brief This function will return the fleets that are used in the current model
+   * \return fleetvec, the FleetPtrVector of the fleets that are used in the current model
+   */
+  const FleetPtrVector& getModelFleets() const { return fleetvec; };
+  /**
    * \brief This is the flag used to denote whether the user has interrupted the current model run
    */
   volatile int interrupted;

@@ -25,10 +25,12 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
   CommentStream subdata(datafile);
 
   LgrpDiv = new LengthGroupDivision(*lgrpdiv);
+  if (LgrpDiv->Error())
+    handle.logMessage(LOGFAIL, "Error in straying data - failed to create length group");
   strayProportion.resize(LgrpDiv->numLengthGroups(), 0.0);
 
   infile >> text >> ws;
-  if (!((strcasecmp(text, "straystep") == 0) || (strcasecmp(text, "straysteps") == 0)))
+  if ((strcasecmp(text, "straystep") != 0) && (strcasecmp(text, "straysteps") != 0))
     handle.logFileUnexpected(LOGFAIL, "straysteps", text);
 
   while (isdigit(infile.peek()) && !infile.eof()) {
@@ -41,7 +43,7 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
       handle.logFileMessage(LOGFAIL, "invalid straying step", strayStep[i]);
 
   infile >> text >> ws;
-  if (!((strcasecmp(text, "strayarea") == 0) || (strcasecmp(text, "strayareas") == 0)))
+  if ((strcasecmp(text, "strayarea") != 0) && (strcasecmp(text, "strayareas") != 0))
     handle.logFileUnexpected(LOGFAIL, "strayareas", text);
 
   while (isdigit(infile.peek()) && !infile.eof()) {
@@ -62,7 +64,6 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
     strayStockNames.resize(new char[strlen(text) + 1]);
     strcpy(strayStockNames[i], text);
     strayRatio.resize(1, keeper);
-    ratioindex.resize(1, 0);
     if (!(infile >> strayRatio[i]))
       handle.logFileMessage(LOGFAIL, "invalid format for stray ratio");
 
@@ -124,6 +125,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
   }
 
   //JMB ensure that the ratio vector is indexed in the right order
+  ratioindex.resize(strayStocks.Size(), 0);
   for (i = 0; i < strayStocks.Size(); i++)
     for (j = 0; j < strayStockNames.Size(); j++)
       if (strcasecmp(strayStocks[i]->getName(), strayStockNames[j]) == 0)
@@ -135,6 +137,8 @@ void StrayData::setStock(StockPtrVector& stockvec) {
   double minlength = 9999.0;
   for (i = 0; i < strayStocks.Size(); i++) {
     CI.resize(new ConversionIndex(LgrpDiv, strayStocks[i]->getLengthGroupDiv()));
+    if (CI[i]->Error())
+      handle.logMessage(LOGFAIL, "Error in straying data - error when checking length structure");
     index = 0;
     for (j = 0; j < strayArea.Size(); j++)
       if (!strayStocks[i]->isInArea(strayArea[j]))

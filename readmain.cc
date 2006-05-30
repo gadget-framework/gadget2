@@ -40,7 +40,7 @@ void Ecosystem::readFleet(CommentStream& infile) {
 
   while (!infile.eof()) {
     infile >> text >> ws;
-    if (!((strcasecmp(text, "[fleetcomponent]") == 0) || (strcasecmp(text, "[component]") == 0)))
+    if ((strcasecmp(text, "[fleetcomponent]") != 0) && (strcasecmp(text, "[component]") != 0))
       handle.logFileUnexpected(LOGFAIL, "[component]", text);
 
     infile >> text >> value;
@@ -70,7 +70,7 @@ void Ecosystem::readTagging(CommentStream& infile) {
 
   while (!infile.eof()) {
     infile >> text >> ws;
-    if (!((strcasecmp(text, "[tagcomponent]") == 0) || (strcasecmp(text, "[component]") == 0)))
+    if ((strcasecmp(text, "[tagcomponent]") != 0) && (strcasecmp(text, "[component]") != 0))
       handle.logFileUnexpected(LOGFAIL, "[component]", text);
 
     readWordAndValue(infile, "tagid", text);
@@ -88,7 +88,7 @@ void Ecosystem::readOtherFood(CommentStream& infile) {
 
   while (!infile.eof()) {
     infile >> text >> ws;
-    if (!((strcasecmp(text, "[foodcomponent]") == 0) || (strcasecmp(text, "[component]") == 0)))
+    if ((strcasecmp(text, "[foodcomponent]") != 0) && (strcasecmp(text, "[component]") != 0))
       handle.logFileUnexpected(LOGFAIL, "[component]", text);
 
     readWordAndValue(infile, "foodname", text);
@@ -122,7 +122,7 @@ void Ecosystem::readPrinters(CommentStream& infile) {
   if (!infile.eof())
     infile >> text >> ws;
 
-  if (!(strcasecmp(text, "[component]") == 0))
+  if (strcasecmp(text, "[component]") != 0)
     handle.logFileUnexpected(LOGFAIL, "[component]", text);
 
   while (!infile.eof()) {
@@ -195,7 +195,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
   if (!infile.eof())
     infile >> text >> ws;
 
-  if (!(strcasecmp(text, "[component]") == 0))
+  if (strcasecmp(text, "[component]") != 0)
     handle.logFileUnexpected(LOGFAIL, "[component]", text);
 
   while (!infile.eof()) {
@@ -217,7 +217,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
       infile >> ws;
       if (!infile.eof()) {
         infile >> text >> ws;
-        if (!(strcasecmp(text, "[component]") == 0))
+        if (strcasecmp(text, "[component]") != 0)
           handle.logFileUnexpected(LOGFAIL, "[component]", text);
       }
 
@@ -353,12 +353,12 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
 
   //next, read in the printing information
   infile >> text >> ws;
-  if (!((strcasecmp(text, "printfile") == 0) || (strcasecmp(text, "printfiles") == 0)))
+  if ((strcasecmp(text, "printfile") != 0) && (strcasecmp(text, "printfiles") != 0))
     handle.logFileUnexpected(LOGFAIL, "printfiles", text);
 
   //Now we have found the string "printfiles" we can create printer clases
   infile >> text >> ws;
-  while (!((strcasecmp(text, "[stock]") == 0) || infile.eof())) {
+  while ((strcasecmp(text, "[stock]") != 0) && !infile.eof()) {
     //Do not try to read printfile if we dont need it
     if (main.runPrint() == 1) {
       subfile.open(text, ios::in);
@@ -375,19 +375,19 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
   }
 
   //then read in the stock information
-  if (!(strcasecmp(text, "[stock]") == 0))
+  if (strcasecmp(text, "[stock]") != 0)
     handle.logFileUnexpected(LOGFAIL, "[stock]", text);
   infile >> text >> ws;
 
   if (strcasecmp(text, "mortalitymodel") == 0)
     handle.logFileMessage(LOGFAIL, "\nFleksibest-style mortality models are no longer supported\nGadget version 2.0.07 was the last version to allow this functionality");
 
-  if (!(strcasecmp(text, "stockfiles") == 0))
+  if (strcasecmp(text, "stockfiles") != 0)
     handle.logFileUnexpected(LOGFAIL, "stockfiles", text);
 
   //Now we have found the string "stockfiles" we can create stock
   infile >> text >> ws;
-  while (!((strcasecmp(text, "[tagging]") == 0) || infile.eof())) {
+  while ((strcasecmp(text, "[tagging]") != 0) && !infile.eof()) {
     subfile.open(text, ios::in);
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
@@ -401,14 +401,14 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
   }
 
   //Now we read the names of the tagging files
-  if (!(strcasecmp(text, "[tagging]") == 0))
+  if (strcasecmp(text, "[tagging]") != 0)
     handle.logFileUnexpected(LOGFAIL, "[tagging]", text);
 
   infile >> text >> ws;
   if (strcasecmp(text, "tagfiles") == 0) {
     //There might not be any tagging files
     infile >> text >> ws;
-    while (!((strcasecmp(text, "[otherfood]") == 0) || infile.eof())) {
+    while ((strcasecmp(text, "[otherfood]") != 0) && !infile.eof()) {
       subfile.open(text, ios::in);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);
@@ -423,14 +423,14 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
   }
 
   //Now we read the names of the otherfood files
-  if (!(strcasecmp(text, "[otherfood]") == 0))
+  if (strcasecmp(text, "[otherfood]") != 0)
     handle.logFileUnexpected(LOGFAIL, "[otherfood]", text);
 
   infile >> text >> ws;
   if (strcasecmp(text, "otherfoodfiles") == 0) {
     //There might not be any otherfood files
     infile >> text >> ws;
-    while (!((strcasecmp(text, "[fleet]") == 0) || infile.eof())) {
+    while ((strcasecmp(text, "[fleet]") != 0) && !infile.eof()) {
       subfile.open(text, ios::in);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);
@@ -445,14 +445,14 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
   }
 
   //Now we read the names of the fleet files
-  if (!(strcasecmp(text, "[fleet]") == 0))
+  if (strcasecmp(text, "[fleet]") != 0)
     handle.logFileUnexpected(LOGFAIL, "[fleet]", text);
 
   infile >> text >> ws;
   if (strcasecmp(text, "fleetfiles") == 0) {
     //There might not be any fleet files
     infile >> text >> ws;
-    while (!((strcasecmp(text, "[likelihood]") == 0) || infile.eof())) {
+    while ((strcasecmp(text, "[likelihood]") != 0) && !infile.eof()) {
       subfile.open(text, ios::in);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);
@@ -466,10 +466,10 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
     }
   }
 
-  if (!(strcasecmp(text, "[likelihood]") == 0))
+  if (strcasecmp(text, "[likelihood]") != 0)
     handle.logFileUnexpected(LOGFAIL, "[likelihood]", text);
 
-  //Now we have either read the word likelihood or reached end of file.
+  //Now we have either read the word likelihood or reached the end of file
   if (!infile.eof()) {
     infile >> text >> ws;
     if (strcasecmp(text, "likelihoodfiles") == 0) {

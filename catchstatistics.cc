@@ -85,10 +85,10 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   //read in the fleetnames
   i = 0;
   infile >> text >> ws;
-  if (!(strcasecmp(text, "fleetnames") == 0))
+  if (strcasecmp(text, "fleetnames") != 0)
     handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text >> ws;
-  while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "stocknames") != 0)) {
     fleetnames.resize(new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
@@ -99,10 +99,10 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
 
   //read in the stocknames
   i = 0;
-  if (!(strcasecmp(text, "stocknames") == 0))
+  if (strcasecmp(text, "stocknames") != 0)
     handle.logFileUnexpected(LOGFAIL, "stocknames", text);
   infile >> text;
-  while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "[component]") != 0)) {
     infile >> ws;
     stocknames.resize(new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
@@ -313,6 +313,9 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
   for (i = 1; i < stocks.Size(); i++)
     if (!LgrpDiv->Combine(stocks[i]->getPrey()->getLengthGroupDiv()))
       handle.logMessage(LOGFAIL, "Error in catchstatistics - length groups for preys not compatible");
+
+  if (LgrpDiv->Error())
+    handle.logMessage(LOGFAIL, "Error in catchstatistics - failed to create length group");
 
   //check fleet areas and stock areas, ages and lengths
   if (handle.getLogLevel() >= LOGWARN) {

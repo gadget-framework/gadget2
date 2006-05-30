@@ -397,13 +397,13 @@ InitialCond::~InitialCond() {
 
 void InitialCond::setCI(const LengthGroupDivision* const GivenLDiv) {
   //check minimum and maximum lengths
-  if (handle.getLogLevel() >= LOGWARN) {
-    if (LgrpDiv->minLength() < GivenLDiv->minLength())
-      handle.logMessage(LOGWARN, "Warning in initial conditions - minimum length less than stock length");
-    if (LgrpDiv->maxLength() > GivenLDiv->maxLength())
-      handle.logMessage(LOGWARN, "Warning in initial conditions - maximum length greater than stock length");
-  }
+  if (LgrpDiv->minLength() < GivenLDiv->minLength())
+    handle.logMessage(LOGWARN, "Warning in initial conditions - minimum length less than stock length");
+  if (LgrpDiv->maxLength() > GivenLDiv->maxLength())
+    handle.logMessage(LOGWARN, "Warning in initial conditions - maximum length greater than stock length");
   CI = new ConversionIndex(LgrpDiv, GivenLDiv);
+  if (CI->Error())
+    handle.logMessage(LOGFAIL, "Error in initial conditions - error when checking length structure");
 }
 
 void InitialCond::Print(ofstream& outfile) const {
@@ -448,6 +448,10 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
         else
           mult = 1.0 / (sdevLength[area][age - minage] * sdevMult);
 
+        //JMB check that the mean length is greater than the minimum length
+        if (meanLength[area][age - minage] < LgrpDiv->minLength())
+          handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is less than minimum length");
+
         for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           dnorm = (LgrpDiv->meanLength(l) - meanLength[area][age - minage]) * mult;
           initialPop[area][age][l].N = exp(-(dnorm * dnorm) * 0.5);
@@ -475,6 +479,10 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
           mult = 0.0;
         else
           mult = 1.0 / (sdevLength[area][age - minage] * sdevMult);
+
+        //JMB check that the mean length is greater than the minimum length
+        if (meanLength[area][age - minage] < LgrpDiv->minLength())
+          handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is less than minimum length");
 
         for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           dnorm = (LgrpDiv->meanLength(l) - meanLength[area][age - minage]) * mult;

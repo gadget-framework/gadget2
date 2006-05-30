@@ -149,6 +149,8 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   datafile.clear();
 
   LgrpDiv = new LengthGroupDivision(lengths);
+  if (LgrpDiv->Error())
+    handle.logMessage(LOGFAIL, "Error in catchdistribution - failed to create length group");
 
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
@@ -158,10 +160,10 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   //read in the fleetnames
   i = 0;
   infile >> text >> ws;
-  if (!(strcasecmp(text, "fleetnames") == 0))
+  if (strcasecmp(text, "fleetnames") != 0)
     handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text >> ws;
-  while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "stocknames") != 0)) {
     fleetnames.resize(new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
@@ -172,10 +174,10 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   //read in the stocknames
   i = 0;
-  if (!(strcasecmp(text, "stocknames") == 0))
+  if (strcasecmp(text, "stocknames") != 0)
     handle.logFileUnexpected(LOGFAIL, "stocknames", text);
   infile >> text;
-  while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "[component]") != 0)) {
     infile >> ws;
     stocknames.resize(new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);

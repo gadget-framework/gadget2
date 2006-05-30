@@ -27,6 +27,8 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
 
   spawnLgrpDiv = 0;
   LgrpDiv = new LengthGroupDivision(*lgrpdiv);
+  if (LgrpDiv->Error())
+    handle.logMessage(LOGFAIL, "Error in spawner - failed to create length group");
   int numlength = LgrpDiv->numLengthGroups();
   spawnNumbers.AddRows(maxage + 1, numlength, 0.0);
   spawnProportion.resize(numlength, 0.0);
@@ -34,7 +36,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   spawnWeightLoss.resize(numlength, 0.0);
 
   infile >> text >> ws;
-  if (!((strcasecmp(text, "spawnstep") == 0) || (strcasecmp(text, "spawnsteps") == 0)))
+  if ((strcasecmp(text, "spawnstep") != 0) && (strcasecmp(text, "spawnsteps") != 0))
     handle.logFileUnexpected(LOGFAIL, "spawnsteps", text);
 
   while (isdigit(infile.peek()) && !infile.eof()) {
@@ -47,7 +49,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
       handle.logFileMessage(LOGFAIL, "invalid spawning step", spawnStep[i]);
 
   infile >> text >> ws;
-  if (!((strcasecmp(text, "spawnarea") == 0) || (strcasecmp(text, "spawnareas") == 0)))
+  if ((strcasecmp(text, "spawnarea") != 0) && (strcasecmp(text, "spawnareas") != 0))
     handle.logFileUnexpected(LOGFAIL, "spawnareas", text);
 
   while (isdigit(infile.peek()) && !infile.eof()) {
@@ -67,7 +69,6 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
       spawnStockNames.resize(new char[strlen(text) + 1]);
       strcpy(spawnStockNames[i], text);
       spawnRatio.resize(1, keeper);
-      ratioindex.resize(1, 0);
       if (!(infile >> spawnRatio[i]))
         handle.logFileMessage(LOGFAIL, "invalid format for spawn ratio");
 
@@ -132,7 +133,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
 
   if (onlyParent == 0) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "recruitment") == 0))
+    if (strcasecmp(text, "recruitment") != 0)
       handle.logFileUnexpected(LOGFAIL, "recruitment", text);
 
     //read in the recruitment function details
@@ -208,6 +209,7 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
   }
 
   //JMB ensure that the ratio vector is indexed in the right order
+  ratioindex.resize(spawnStocks.Size(), 0);
   for (i = 0; i < spawnStocks.Size(); i++)
     for (j = 0; j < spawnStockNames.Size(); j++)
       if (strcasecmp(spawnStocks[i]->getName(), spawnStockNames[j]) == 0)
@@ -234,8 +236,13 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
   }
 
   spawnLgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
-  for (i = 0; i < spawnStocks.Size(); i++)
+  if (spawnLgrpDiv->Error())
+    handle.logMessage(LOGFAIL, "Error in spawner - failed to create length group");
+  for (i = 0; i < spawnStocks.Size(); i++) {
     CI.resize(new ConversionIndex(spawnLgrpDiv, spawnStocks[i]->getLengthGroupDiv()));
+    if (CI[i]->Error())
+      handle.logMessage(LOGFAIL, "Error in spawner - error when checking length structure");
+  }
 
   IntVector minlv(1, 0);
   IntVector sizev(1, spawnLgrpDiv->numLengthGroups());

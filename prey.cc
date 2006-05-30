@@ -75,6 +75,8 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas,
   if (LgrpDiv->Error())
     handle.logMessage(LOGFAIL, "Error in prey - failed to create length group");
   CI = new ConversionIndex(LgrpDiv, LgrpDiv);
+  if (CI->Error())
+    handle.logMessage(LOGFAIL, "Error in prey - error when checking length structure");
 
   int numlen = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
@@ -98,6 +100,8 @@ Prey::~Prey() {
 
 void Prey::setCI(const LengthGroupDivision* const GivenLDiv) {
   CI = new ConversionIndex(GivenLDiv, LgrpDiv);
+  if (CI->Error())
+    handle.logMessage(LOGFAIL, "Error in prey - error when checking length structure");
 }
 
 void Prey::Print(ofstream& outfile) const {

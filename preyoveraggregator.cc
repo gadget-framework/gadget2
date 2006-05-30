@@ -1,20 +1,23 @@
 #include "preyoveraggregator.h"
 #include "prey.h"
+#include "errorhandler.h"
+#include "gadget.h"
+
+extern ErrorHandler handle;
 
 PreyOverAggregator::PreyOverAggregator(const PreyPtrVector& Preys,
   const IntMatrix& Areas, const LengthGroupDivision* const LgrpDiv)
   : preys(Preys), areas(Areas) {
 
   int i, j;
-  for (i = 0; i < preys.Size(); i++)
-    checkLengthGroupIsFiner(preys[i]->getLengthGroupDiv(), LgrpDiv);
-
-  total.AddRows(areas.Nrow(), LgrpDiv->numLengthGroups(), 0.0);
   for (i = 0; i < preys.Size(); i++) {
+    if (checkLengthGroupStructure(preys[i]->getLengthGroupDiv(), LgrpDiv))
+      handle.logMessage(LOGFAIL, "Error in preyoveraggregator - invalid length group structure");
     preyConv.AddRows(1, preys[i]->getLengthGroupDiv()->numLengthGroups(), -1);
     for (j = 0; j < preyConv.Ncol(i); j++)
       preyConv[i][j] = LgrpDiv->numLengthGroup(preys[i]->getLengthGroupDiv()->meanLength(j));
   }
+  total.AddRows(areas.Nrow(), LgrpDiv->numLengthGroups(), 0.0);
 }
 
 void PreyOverAggregator::Reset() {

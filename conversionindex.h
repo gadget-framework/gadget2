@@ -30,8 +30,17 @@ public:
   int isFiner() const { return targetisfiner; };
   int Size() const { return pos.Size(); };
   void interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc);
+  /**
+   * \brief This function will return the flag denoting whether an error has occured or not
+   * \return error
+   */
+  int Error() const { return error; }
 protected:
   int targetisfiner;
+  /**
+   * \brief This is the flag to denote whether an error has occured or not
+   */
+  int error;
   /**
    * \brief This is a flag to denote whether the 2 LengthGroupDivision objects have the same step length
    */

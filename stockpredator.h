@@ -91,6 +91,10 @@ public:
   const AgeBandMatrix& getAgeLengthKeys(int area) const { return Alkeys[this->areaNum(area)]; };
 protected:
   /**
+   * \brief This is the identifier of the function to be used to calculate the maximum consumption
+   */
+  int functionnumber;
+  /**
    * \brief This is the FormulaVector used to store the consumption parameters
    */
   FormulaVector consParam;

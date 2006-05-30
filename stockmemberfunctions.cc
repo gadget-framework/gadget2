@@ -270,3 +270,31 @@ void Stock::deleteTags(const char* tagname) {
   if (doesstray)
     stray->deleteStrayTag(tagname);
 }
+
+const double Stock::getTotalStockNumber(int area) const {
+  int inarea = this->areaNum(area);
+  if (inarea == -1)
+    return 0.0;
+
+  int age, len;
+  double num = 0.0;
+  for (age = Alkeys[inarea].minAge(); age <= Alkeys[inarea].maxAge(); age++)
+    for (len = Alkeys[inarea].minLength(age); len < Alkeys[inarea].maxLength(age); len++)
+      num += (Alkeys[inarea])[age][len].N;
+
+  return num;
+}
+
+const double Stock::getTotalStockBiomass(int area) const {
+  int inarea = this->areaNum(area);
+  if (inarea == -1)
+    return 0.0;
+
+  int age, len;
+  double kilos = 0.0;
+  for (age = Alkeys[inarea].minAge(); age <= Alkeys[inarea].maxAge(); age++)
+    for (len = Alkeys[inarea].minLength(age); len < Alkeys[inarea].maxLength(age); len++)
+      kilos += ((Alkeys[inarea])[age][len].N * (Alkeys[inarea])[age][len].W);
+
+  return kilos;
+}

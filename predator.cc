@@ -98,7 +98,7 @@ void Predator::readSuitability(CommentStream& infile,
   keeper->addString("suitabilityfor");
 
   infile >> text >> ws;
-  if (!(strcasecmp(text, "suitability") == 0))
+  if (strcasecmp(text, "suitability") != 0)
     handle.logFileUnexpected(LOGFAIL, "suitability", text);
 
   //JMB - this is the next word to look for after the list of suitability values
@@ -112,7 +112,7 @@ void Predator::readSuitability(CommentStream& infile,
     strcpy(strcheck, "amount");
 
   infile >> preyname >> ws;
-  while (!(strcasecmp(preyname, strcheck) == 0) && (!infile.eof())) {
+  while ((strcasecmp(preyname, strcheck) != 0) && (!infile.eof())) {
     keeper->addString(preyname);
 
     infile >> text >> ws;

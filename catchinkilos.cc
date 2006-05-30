@@ -89,10 +89,10 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   //read in the fleetnames
   i = 0;
   infile >> text >> ws;
-  if (!(strcasecmp(text, "fleetnames") == 0))
+  if (strcasecmp(text, "fleetnames") != 0)
     handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text >> ws;
-  while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "stocknames") != 0)) {
     fleetnames.resize(new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
@@ -103,10 +103,10 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
 
   //read in the stocknames
   i = 0;
-  if (!(strcasecmp(text, "stocknames") == 0))
+  if (strcasecmp(text, "stocknames") != 0)
     handle.logFileUnexpected(LOGFAIL, "stocknames", text);
   infile >> text;
-  while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "[component]") != 0)) {
     infile >> ws;
     stocknames.resize(new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
@@ -152,22 +152,22 @@ void CatchInKilos::Print(ofstream& outfile) const {
 }
 
 double CatchInKilos::calcLikSumSquares(const TimeClass* const TimeInfo) {
-  int a, a2, f, p;
+  int r, a, f, p;
   double totallikelihood = 0.0;
 
-  for (a = 0; a < areas.Nrow(); a++) {
-    likelihoodValues[timeindex][a] = 0.0;
-    for (a2 = 0; a2 < areas.Ncol(a); a2++)
-      for (f = 0; f < preyindex.Nrow(); f++)
+  for (r = 0; r < areas.Nrow(); r++) {
+    likelihoodValues[timeindex][r] = 0.0;
+    for (a = 0; a < areas.Ncol(r); a++)
+      for (f = 0; f < predators.Size(); f++)
         for (p = 0; p < preyindex.Ncol(f); p++)
-          modelDistribution[timeindex][a] += fleets[f]->getPredator()->getConsumptionBiomass(preyindex[f][p], a2);
+          modelDistribution[timeindex][r] += predators[f]->getConsumptionBiomass(preyindex[f][p], areas[r][a]);
 
     if ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
-      likelihoodValues[timeindex][a] +=
-        (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon))
-        * (log(modelDistribution[timeindex][a] + epsilon) - log(obsDistribution[timeindex][a] + epsilon));
+      likelihoodValues[timeindex][r] +=
+        (log(modelDistribution[timeindex][r] + epsilon) - log(obsDistribution[timeindex][r] + epsilon))
+        * (log(modelDistribution[timeindex][r] + epsilon) - log(obsDistribution[timeindex][r] + epsilon));
 
-      totallikelihood += likelihoodValues[timeindex][a];
+      totallikelihood += likelihoodValues[timeindex][r];
     }
   }
   return totallikelihood;
@@ -177,6 +177,9 @@ void CatchInKilos::addLikelihood(const TimeClass* const TimeInfo) {
 
   if (!(AAT.atCurrentTime(TimeInfo)))
     return;
+
+  if ((handle.getLogLevel() >= LOGMESSAGE) && ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())))
+    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchinkilos component", this->getName());
 
   int i;
   if (yearly == 1) {
@@ -201,10 +204,8 @@ void CatchInKilos::addLikelihood(const TimeClass* const TimeInfo) {
 
   if ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
     likelihood += l;
-    if (handle.getLogLevel() >= LOGMESSAGE) {
-      handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchinkilos component", this->getName());
+    if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
-    }
   }
 }
 
@@ -221,6 +222,8 @@ CatchInKilos::~CatchInKilos() {
 
 void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, k, found;
+  StockPtrVector stocks;
+  FleetPtrVector fleets;
 
   for (i = 0; i < fleetnames.Size(); i++) {
     found = 0;
@@ -271,12 +274,16 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
     }
   }
 
-  for (i = 0; i < fleets.Size(); i++) {
+  //JMB its simpler to just store pointers to the predators rather than the fleets
+  for (i = 0; i < fleets.Size(); i++)
+    predators.resize(fleets[i]->getPredator());
+
+  for (i = 0; i < predators.Size(); i++) {
     found = 0;
     preyindex.AddRows(1, 0, 0);
-    for (j = 0; j < fleets[i]->getPredator()->numPreys(); j++)
+    for (j = 0; j < predators[i]->numPreys(); j++)
       for (k = 0; k < stocknames.Size(); k++)
-        if (strcasecmp(stocknames[k], fleets[i]->getPredator()->getPrey(j)->getName()) == 0) {
+        if (strcasecmp(stocknames[k], predators[i]->getPrey(j)->getName()) == 0) {
           found++;
           preyindex[i].resize(1, j);
         }
@@ -284,9 +291,6 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
     if (found == 0)
       handle.logMessage(LOGWARN, "Warning in catchinkilos - found no stocks for fleet", fleetnames[i]);
   }
-
-  if (preyindex.Nrow() != fleets.Size())
-    handle.logMessage(LOGFAIL, "Error in catchinkilos - failed to match stocks to fleets");
 }
 
 void CatchInKilos::readCatchInKilosData(CommentStream& infile,

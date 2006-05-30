@@ -55,6 +55,11 @@ public:
    */
   char* const& operator [] (int pos) const { return v[pos]; };
   /**
+   * \brief This will reset the vector
+   * \note This will delete every entry from the vector and set the size to zero
+   */
+  void Reset();
+  /**
    * \brief This operator will set the vector equal to an existing CharPtrVector
    * \param cv is the StockPtrVector to copy
    */

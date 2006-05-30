@@ -101,7 +101,7 @@ public:
    * \param area is the area that the consumption is being calculated on
    * \param prey is the index for the prey
    * \param len is the length group of the predator
-   * \return scaler
+   * \return ratio used to split the predation between the various areas and length groups
    */
   virtual double getConsumptionRatio(int area, int prey, int len) const { return (*predratio[this->areaNum(area)])[prey][len]; };
   /**

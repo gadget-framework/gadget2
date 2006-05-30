@@ -21,6 +21,8 @@ Maturity::Maturity(const IntVector& tmpareas, int minage, const IntVector& minle
   tmpratio = 1.0;
   ratioscale = 1.0; //JMB used to scale the ratios to ensure that they sum to 1
   LgrpDiv = new LengthGroupDivision(*lgrpdiv);
+  if (LgrpDiv->Error())
+    handle.logMessage(LOGFAIL, "Error in maturity - failed to create length group");
   Storage.resize(tmpareas.Size(), minage, minlength, agesize);
   for (i = 0; i < areas.Size(); i++)
     Storage[i].setToZero();
@@ -53,6 +55,7 @@ void Maturity::setStock(StockPtrVector& stockvec) {
   }
 
   //JMB ensure that the ratio vector is indexed in the right order
+  ratioindex.resize(matureStocks.Size(), 0);
   for (i = 0; i < matureStocks.Size(); i++)
     for (j = 0; j < matureStockNames.Size(); j++)
       if (strcasecmp(matureStocks[i]->getName(), matureStockNames[j]) == 0)
@@ -60,6 +63,9 @@ void Maturity::setStock(StockPtrVector& stockvec) {
 
   for (i = 0; i < matureStocks.Size(); i++) {
     CI.resize(new ConversionIndex(LgrpDiv, matureStocks[i]->getLengthGroupDiv()));
+    if (CI[i]->Error())
+      handle.logMessage(LOGFAIL, "Error in maturity - error when checking length structure");
+
     index = 0;
     for (j = 0; j < areas.Size(); j++)
       if (!matureStocks[i]->isInArea(areas[j]))
@@ -216,7 +222,6 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
       matureStockNames.resize(new char[strlen(text) + 1]);
       strcpy(matureStockNames[i], text);
       matureRatio.resize(1, keeper);
-      ratioindex.resize(1, 0);
       if (!(infile >> matureRatio[i]))
         handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
 
@@ -323,7 +328,6 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
       matureStockNames.resize(new char[strlen(text) + 1]);
       strcpy(matureStockNames[i], text);
       matureRatio.resize(1, keeper);
-      ratioindex.resize(1, 0);
       if (!(infile >> matureRatio[i]))
         handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
 
@@ -345,7 +349,7 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
     handle.logFileEOFMessage(LOGFAIL);
 
   infile >> text;
-  if (!(strcasecmp(text, "maturitylengths") == 0))
+  if (strcasecmp(text, "maturitylengths") != 0)
     handle.logFileUnexpected(LOGFAIL, "maturitylengths", text);
   while (maturitylength.Size() < maturitystep.Size() && !infile.eof()) {
     maturitylength.resize(1, keeper);
@@ -431,7 +435,6 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
       matureStockNames.resize(new char[strlen(text) + 1]);
       strcpy(matureStockNames[i], text);
       matureRatio.resize(1, keeper);
-      ratioindex.resize(1, 0);
       if (!(infile >> matureRatio[i]))
         handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
 
@@ -448,7 +451,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
   preCalcMaturation.AddRows(agesize.Size(), LgrpDiv->numLengthGroups(), 0.0);
 
   infile >> text >> ws;
-  if (!((strcasecmp(text, "maturitystep") == 0) || (strcasecmp(text, "maturitysteps") == 0)))
+  if ((strcasecmp(text, "maturitystep") != 0) && (strcasecmp(text, "maturitysteps") != 0))
     handle.logFileUnexpected(LOGFAIL, "maturitysteps", text);
 
   while (isdigit(infile.peek()) && !infile.eof()) {

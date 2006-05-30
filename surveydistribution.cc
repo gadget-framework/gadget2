@@ -58,7 +58,10 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   handle.Close();
   datafile.close();
   datafile.clear();
+
   LgrpDiv = new LengthGroupDivision(lengths);
+  if (LgrpDiv->Error())
+    handle.logMessage(LOGFAIL, "Error in surveydistribution - failed to create length group");
 
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
@@ -73,10 +76,10 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   //read in the stocknames
   i = 0;
   infile >> text >> ws;
-  if (!(strcasecmp(text, "stocknames") == 0))
+  if (strcasecmp(text, "stocknames") != 0)
     handle.logFileUnexpected(LOGFAIL, "stocknames", text);
   infile >> text;
-  while (!infile.eof() && !(strcasecmp(text, "fittype") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "fittype") != 0)) {
     infile >> ws;
     stocknames.resize(new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);
@@ -168,7 +171,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[component]") == 0))
+    if (strcasecmp(text, "[component]") != 0)
       handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 }

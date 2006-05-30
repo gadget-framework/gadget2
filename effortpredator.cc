@@ -24,7 +24,7 @@ EffortPredator::EffortPredator(CommentStream& infile, const char* givenname,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text >> ws;
-  while (!(strcasecmp(text, "amount") == 0) && (!infile.eof())) {
+  while ((strcasecmp(text, "amount") != 0) && !infile.eof()) {
     for (i = 0; i < preference.Size(); i++) {
       if (strcasecmp(text, this->getPreyName(i)) == 0) {
         infile >> preference[i] >> ws;

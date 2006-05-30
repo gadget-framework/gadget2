@@ -20,7 +20,7 @@ MigrationPenalty::MigrationPenalty(CommentStream& infile, double weight, const c
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[component]") == 0))
+    if (strcasecmp(text, "[component]") != 0)
       handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 }

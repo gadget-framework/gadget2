@@ -105,14 +105,16 @@ StockDistribution::StockDistribution(CommentStream& infile,
 
   //Must create the length group division
   LgrpDiv = new LengthGroupDivision(lengths);
+  if (LgrpDiv->Error())
+    handle.logMessage(LOGFAIL, "Error in stockdistribution - failed to create length group");
 
   //read in the fleetnames
   i = 0;
   infile >> text >> ws;
-  if (!(strcasecmp(text, "fleetnames") == 0))
+  if (strcasecmp(text, "fleetnames") != 0)
     handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text >> ws;
-  while (!infile.eof() && !(strcasecmp(text, "stocknames") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "stocknames") != 0)) {
     fleetnames.resize(new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
     infile >> text >> ws;
@@ -123,10 +125,10 @@ StockDistribution::StockDistribution(CommentStream& infile,
 
   //read in the stocknames
   i = 0;
-  if (!(strcasecmp(text, "stocknames") == 0))
+  if (strcasecmp(text, "stocknames") != 0)
     handle.logFileUnexpected(LOGFAIL, "stocknames", text);
   infile >> text;
-  while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "[component]") != 0)) {
     infile >> ws;
     stocknames.resize(new char[strlen(text) + 1]);
     strcpy(stocknames[i++], text);

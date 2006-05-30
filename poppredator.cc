@@ -10,7 +10,11 @@ PopPredator::PopPredator(const char* givenname, const IntVector& Areas,
   : Predator(givenname, Areas) {
 
   LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
+  if (LgrpDiv->Error())
+    handle.logMessage(LOGFAIL, "Error in poppredator - failed to create length group");
   CI = new ConversionIndex(OtherLgrpDiv, LgrpDiv);
+  if (CI->Error())
+    handle.logMessage(LOGFAIL, "Error in poppredator - error when checking length structure");
 }
 
 PopPredator::PopPredator(const char* givenname, const IntVector& Areas)
@@ -65,8 +69,11 @@ const DoubleMatrix& PopPredator::getConsumption(int area, const char* preyname) 
 }
 
 const double PopPredator::getConsumptionBiomass(int prey, int area) const{
-  int i, j;
   int inarea = this->areaNum(area);
+  if (inarea == -1)
+    return 0.0;
+
+  int i, j;
   double kilos = 0.0;
   for (i = 0; i < (*consumption[inarea][prey]).Nrow(); i++)
     for (j = 0; j < (*consumption[inarea][prey]).Ncol(i); j++)
@@ -117,6 +124,8 @@ void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
     if (LgrpDiv->Error())
       handle.logMessage(LOGFAIL, "Error in poppredator - failed to create length group");
     CI = new ConversionIndex(LgrpDiv, LgrpDiv);
+    if (CI->Error())
+      handle.logMessage(LOGFAIL, "Error in poppredator - error when checking length structure");
   }
 
   //now we need to initialise things
@@ -144,9 +153,12 @@ void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
 }
 
 double PopPredator::getTotalOverConsumption(int area) const {
-  int i, inarea = this->areaNum(area);
-  double total;
-  total = 0.0;
+  int inarea = this->areaNum(area);
+  if (inarea == -1)
+    return 0.0;
+
+  int i;
+  double total = 0.0;
   for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
     total += overconsumption[inarea][i];
   return total;

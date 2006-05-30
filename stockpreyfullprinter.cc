@@ -69,7 +69,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
   if (printtimeid != 0 && printtimeid != 1)
     handle.logFileMessage(LOGFAIL, "\nError in stockpreyfullprinter - invalid value of printatstart");
 
-  if (!(strcasecmp(text, "yearsandsteps") == 0))
+  if (strcasecmp(text, "yearsandsteps") != 0)
     handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
     handle.logFileMessage(LOGFAIL, "\nError in stockpreyfullprinter - wrong format for yearsandsteps");
@@ -78,7 +78,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[component]") == 0))
+    if (strcasecmp(text, "[component]") != 0)
       handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 
@@ -141,6 +141,8 @@ void StockPreyFullPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* cons
     agematrix[i][0] = i + minage;
 
   LgrpDiv = new LengthGroupDivision(*preys[0]->getLengthGroupDiv());
+  if (LgrpDiv->Error())
+    handle.logMessage(LOGFAIL, "Error in stockpreyfullprinter - failed to create length group");
   aggregator = new StockPreyAggregator(preys, LgrpDiv, areamatrix, agematrix);
 }
 

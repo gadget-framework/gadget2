@@ -69,6 +69,14 @@ void CharPtrVector::Delete(int pos) {
   }
 }
 
+void CharPtrVector::Reset() {
+  if (size > 0) {
+    delete[] v;
+    v = 0;
+    size = 0;
+  }
+}
+
 CharPtrVector& CharPtrVector::operator = (const CharPtrVector& cv) {
   int i;
   if (size == cv.size) {

@@ -24,10 +24,10 @@ StockPreyPrinter::StockPreyPrinter(CommentStream& infile, const TimeClass* const
   //read in the stocknames
   i = 0;
   infile >> text >> ws;
-  if (!(strcasecmp(text, "preynames") == 0))
+  if (strcasecmp(text, "preynames") != 0)
     handle.logFileUnexpected(LOGFAIL, "preynames", text);
   infile >> text >> ws;
-  while (!infile.eof() && !(strcasecmp(text, "areaaggfile") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "areaaggfile") != 0)) {
     preynames.resize(new char[strlen(text) + 1]);
     strcpy(preynames[i++], text);
     infile >> text >> ws;
@@ -103,7 +103,7 @@ StockPreyPrinter::StockPreyPrinter(CommentStream& infile, const TimeClass* const
   if (printtimeid != 0 && printtimeid != 1)
     handle.logFileMessage(LOGFAIL, "\nError in stockpreyprinter - invalid value of printatstart");
 
-  if (!(strcasecmp(text, "yearsandsteps") == 0))
+  if (strcasecmp(text, "yearsandsteps") != 0)
     handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
     handle.logFileMessage(LOGFAIL, "\nError in stockpreyprinter - wrong format for yearsandsteps");
@@ -112,7 +112,7 @@ StockPreyPrinter::StockPreyPrinter(CommentStream& infile, const TimeClass* const
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[component]") == 0))
+    if (strcasecmp(text, "[component]") != 0)
       handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 

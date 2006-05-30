@@ -22,7 +22,11 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   keeper->addString("grower");
   fixedweights = 0;
   LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
+  if (LgrpDiv->Error())
+    handle.logMessage(LOGFAIL, "Error in grower - failed to create length group");
   CI = new ConversionIndex(OtherLgrpDiv, LgrpDiv, 1);
+  if (CI->Error())
+    handle.logMessage(LOGFAIL, "Error in grower - error when checking length structure");
 
   readWordAndValue(infile, "growthfunction", text);
   if (strcasecmp(text, "multspec") == 0) {

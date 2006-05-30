@@ -129,7 +129,7 @@ void MigrationNumbers::readGivenRatios(CommentStream& infile, Keeper* const keep
   // Read ratio information from file
   while (!infile.eof() && !infile.fail()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[migrationmatrix]") == 0))
+    if (strcasecmp(text, "[migrationmatrix]") != 0)
       handle.logFileUnexpected(LOGFAIL, "[migrationmatrix]", text);
 
     readWordAndValue(infile, "name", name);
@@ -252,7 +252,7 @@ void MigrationNumbers::readGivenMatrices(CommentStream& infile, Keeper* const ke
   // Read matrix information from file
   while (!infile.eof() && !infile.fail()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[migrationmatrix]") == 0))
+    if (strcasecmp(text, "[migrationmatrix]") != 0)
       handle.logFileUnexpected(LOGFAIL, "[migrationmatrix]", text);
 
     readWordAndValue(infile, "name", name);
@@ -482,7 +482,7 @@ void MigrationFunction::readAreaData(CommentStream& infile, const AreaClass* con
   infile >> ws;
   while (!infile.eof() && !infile.fail()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[area]") == 0))
+    if (strcasecmp(text, "[area]") != 0)
       handle.logFileUnexpected(LOGFAIL, "[area]", text);
 
     readWordAndValue(infile, "name", areaname);

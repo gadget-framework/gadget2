@@ -41,10 +41,10 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
 
   //read in the predator names
   i = 0;
-  if (!((strcasecmp(text, "predatornames") == 0) || (strcasecmp(text, "fleetnames") == 0)))
+  if ((strcasecmp(text, "predatornames") != 0) && (strcasecmp(text, "fleetnames") != 0))
     handle.logFileUnexpected(LOGFAIL, "predatornames", text);
   infile >> text;
-  while (!infile.eof() && !(strcasecmp(text, "yearsandsteps") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "yearsandsteps") != 0)) {
     prednames.resize(new char[strlen(text) + 1]);
     strcpy(prednames[i++], text);
     infile >> text >> ws;
@@ -61,7 +61,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[component]") == 0))
+    if (strcasecmp(text, "[component]") != 0)
       handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 }

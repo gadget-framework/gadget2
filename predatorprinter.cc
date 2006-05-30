@@ -27,10 +27,10 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
   //read in the predator names
   i = 0;
   infile >> text >> ws;
-  if (!((strcasecmp(text, "predators") == 0) || (strcasecmp(text, "predatornames") == 0)))
+  if ((strcasecmp(text, "predators") != 0) && (strcasecmp(text, "predatornames") != 0))
     handle.logFileUnexpected(LOGFAIL, "predatornames", text);
   infile >> text >> ws;
-  while (!infile.eof() && (!((strcasecmp(text, "preys") == 0) || (strcasecmp(text, "preynames") == 0)))) {
+  while (!infile.eof() && ((strcasecmp(text, "preys") != 0) && (strcasecmp(text, "preynames") != 0))) {
     predatornames.resize(new char[strlen(text) + 1]);
     strcpy(predatornames[i++], text);
     infile >> text >> ws;
@@ -42,7 +42,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
   //read in the prey names
   i = 0;
   infile >> text >> ws;
-  while (!infile.eof() && !(strcasecmp(text, "areaaggfile") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "areaaggfile") != 0)) {
     preynames.resize(new char[strlen(text) + 1]);
     strcpy(preynames[i++], text);
     infile >> text >> ws;
@@ -128,7 +128,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
   if (printtimeid != 0 && printtimeid != 1)
     handle.logFileMessage(LOGFAIL, "\nError in predatorprinter - invalid value of printatstart");
 
-  if (!(strcasecmp(text, "yearsandsteps") == 0))
+  if (strcasecmp(text, "yearsandsteps") != 0)
     handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
   if (!AAT.readFromFile(infile, TimeInfo))
     handle.logFileMessage(LOGFAIL, "\nError in predatorprinter - wrong format for yearsandsteps");
@@ -137,7 +137,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
   infile >> ws;
   if (!infile.eof()) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "[component]") == 0))
+    if (strcasecmp(text, "[component]") != 0)
       handle.logFileUnexpected(LOGFAIL, "[component]", text);
   }
 

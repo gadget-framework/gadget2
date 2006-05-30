@@ -77,7 +77,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   //resize tmpPopulation, and set the weight to 1 since this will never change
   PopInfo tmppop;
   tmppop.W = 1.0;
-  tmpPopulation.AddRows(areas.Size(), 1, tmppop);
+  tmpPopulation.AddRows(Area->numAreas(), 1, tmppop);
 
   keeper->clearLast();
   keeper->clearLast();

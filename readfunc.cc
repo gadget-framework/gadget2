@@ -9,18 +9,14 @@ void readRefWeights(CommentStream& infile, DoubleMatrix& M) {
   if (countColumns(infile) != 2)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 2");
 
-  int i, j;
-  double N;
-
-  i = 0;
+  int i = 0;
+  M.Reset();
+  infile >> ws;
   while (!infile.eof()) {
     M.AddRows(1, 2, 0.0);
-    for (j = 0; j < 2; j++) {
-      infile >> ws >> N;
-      if (infile.fail())
-        handle.logFileMessage(LOGFAIL, "failed to read reference weights");
-      M[i][j] = N;
-    }
+    infile >> M[i][0] >> M[i][1];
+    if (infile.fail())
+      handle.logFileMessage(LOGFAIL, "failed to read reference weights");
     infile >> ws;
     i++;
   }
@@ -111,8 +107,8 @@ void readAmounts(CommentStream& infile, const IntVector& tmpareas,
     infile >> year >> step >> area >> tmpname;
 
     //crude check to see if something has gone wrong and avoid infinite loops
-    if (strlen(tmpname) == 0)
-      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+    if ((strlen(tmpname) == 0) || infile.eof())
+      handle.logFileMessage(LOGFAIL, "failed to read data for", givenname);
 
     //check if the year and step are in the simulation
     timeid = -1;
@@ -122,7 +118,7 @@ void readAmounts(CommentStream& infile, const IntVector& tmpareas,
       keepdata = 1;
 
     //only keep the data if tmpname matches givenname
-    if (!(strcasecmp(givenname, tmpname) == 0))
+    if (strcasecmp(givenname, tmpname) != 0)
       keepdata = 1;
 
     //only keep the data if area is a required area
@@ -174,8 +170,8 @@ void readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
     infile >> year >> step >> area >> tmplength;
 
     //crude check to see if something has gone wrong and avoid infinite loops
-    if (strlen(tmplength) == 0)
-      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+    if ((strlen(tmplength) == 0) || infile.eof())
+      handle.logFileMessage(LOGFAIL, "failed to read growth data");
 
     //check if the year and step are in the simulation
     timeid = -1;

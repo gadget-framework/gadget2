@@ -350,13 +350,13 @@ RenewalData::~RenewalData() {
 
 void RenewalData::setCI(const LengthGroupDivision* const GivenLDiv) {
   //check minimum and maximum lengths
-  if (handle.getLogLevel() >= LOGWARN) {
-    if (LgrpDiv->minLength() < GivenLDiv->minLength())
-      handle.logMessage(LOGWARN, "Warning in renewal - minimum length less than stock length");
-    if (LgrpDiv->maxLength() > GivenLDiv->maxLength())
-      handle.logMessage(LOGWARN, "Warning in renewal - maximum length greater than stock length");
-  }
+  if (LgrpDiv->minLength() < GivenLDiv->minLength())
+    handle.logMessage(LOGWARN, "Warning in renewal - minimum length less than stock length");
+  if (LgrpDiv->maxLength() > GivenLDiv->maxLength())
+    handle.logMessage(LOGWARN, "Warning in renewal - maximum length greater than stock length");
   CI = new ConversionIndex(LgrpDiv, GivenLDiv);
+  if (CI->Error())
+    handle.logMessage(LOGFAIL, "Error in renewal - error when checking length structure");
 }
 
 void RenewalData::Print(ofstream& outfile) const {
@@ -391,6 +391,10 @@ void RenewalData::Reset() {
       age = renewalAge[i];
       sum = 0.0;
 
+      //JMB check that the mean length is greater than the minimum length
+      if (meanLength[i] < LgrpDiv->minLength())
+        handle.logMessage(LOGWARN, "Warning in renewal - mean length is less than minimum length");
+
       if (isZero(sdevLength[i]))
         mult = 0.0;
       else
@@ -419,6 +423,10 @@ void RenewalData::Reset() {
     for (i = 0; i < renewalTime.Size(); i++) {
       age = renewalAge[i];
       sum = 0.0;
+
+      //JMB check that the mean length is greater than the minimum length
+      if (meanLength[i] < LgrpDiv->minLength())
+        handle.logMessage(LOGWARN, "Warning in renewal - mean length is less than minimum length");
 
       if (isZero(sdevLength[i]))
         mult = 0.0;

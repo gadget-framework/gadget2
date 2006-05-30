@@ -1,13 +1,15 @@
 #include "recaggregator.h"
 #include "areatime.h"
-#include "errorhandler.h"
 #include "readfunc.h"
 #include "stock.h"
 #include "stockprey.h"
 #include "poppredator.h"
 #include "fleet.h"
 #include "readword.h"
+#include "errorhandler.h"
 #include "gadget.h"
+
+extern ErrorHandler handle;
 
 RecAggregator::RecAggregator(const FleetPtrVector& Fleets,
   const StockPtrVector& Stocks, LengthGroupDivision* const Lgrpdiv,
@@ -23,8 +25,11 @@ RecAggregator::RecAggregator(const FleetPtrVector& Fleets,
   for (i = 0; i < Fleets.Size(); i++)
     predators.resize(Fleets[i]->getPredator());
 
-  for (i = 0; i < preys.Size(); i++)
+  for (i = 0; i < preys.Size(); i++) {
     CI.resize(new ConversionIndex(preys[i]->getLengthGroupDiv(), LgrpDiv));
+    if (CI[i]->Error())
+      handle.logMessage(LOGFAIL, "Error in recaggregator - error when checking length structure");
+  }
 
   for (i = 0; i < predators.Size(); i++)
     for (j = 0; j < preys.Size(); j++)
@@ -80,7 +85,7 @@ void RecAggregator::Sum() {
                 if (strcasecmp(preys[h]->getName(), predators[f]->getPrey(i)->getName()) == 0) {
                   suitptr = &predators[f]->getSuitability(i)[predl];
                   alptr = &taggingExp->getNumberPriorToEating(areas[r][j], preys[h]->getName());
-                  ratio = ((PopPredator*)predators[f])->getConsumptionRatio(areas[r][j], i, predl);
+                  ratio = predators[f]->getConsumptionRatio(areas[r][j], i, predl);
                   for (g = 0; g < ages.Nrow(); g++) {
                     for (k = 0; k < ages.Ncol(g); k++) {
                       //JMB removed the overconsumption stuff

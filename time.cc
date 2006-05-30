@@ -26,7 +26,7 @@ TimeClass::TimeClass(CommentStream& infile) {
   infile >> ws;
   if (!(infile.eof())) {
     infile >> text >> ws;
-    if (!(strcasecmp(text, "nrofsubsteps") == 0))
+    if (strcasecmp(text, "nrofsubsteps") != 0)
       handle.logFileUnexpected(LOGFAIL, "nrofsubsteps", text);
     for (i = 0; i < numtimesteps; i++)
       infile >> numsubsteps[i] >> ws;

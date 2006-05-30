@@ -60,10 +60,10 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   //read in the fleetnames
   i = 0;
   infile >> text >> ws;
-  if (!(strcasecmp(text, "fleetnames") == 0))
+  if (strcasecmp(text, "fleetnames") != 0)
     handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
   infile >> text;
-  while (!infile.eof() && !(strcasecmp(text, "[component]") == 0)) {
+  while (!infile.eof() && (strcasecmp(text, "[component]") != 0)) {
     infile >> ws;
     fleetnames.resize(new char[strlen(text) + 1]);
     strcpy(fleetnames[i++], text);
@@ -274,6 +274,7 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
 
   aggregator = new RecAggregator*[tagvec.Size()];
   for (t = 0; t < tagvec.Size(); t++) {
+    stocks.Reset();
     stocknames = tagvec[t]->getStockNames();
     for (i = 0; i < stocknames.Size(); i++) {
       found = 0;
@@ -298,6 +299,9 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       if (!LgrpDiv->Combine(stocks[i]->getPrey()->getLengthGroupDiv()))
         handle.logMessage(LOGFAIL, "Error in recstatistics - length groups not compatible");
 
+    if (LgrpDiv->Error())
+      handle.logMessage(LOGFAIL, "Error in recstatistics - failed to create length group");
+
     minage = 999;
     maxage = 0;
     for (i = 0; i < stocks.Size(); i++) {
@@ -309,7 +313,6 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     for (i = 0; i <= maxage - minage; i++)
       ages[0].resize(1, minage + i);
     aggregator[t] = new RecAggregator(fleets, stocks, LgrpDiv, areas, ages, tagvec[t]);
-    stocks.Reset();
   }
 }
 

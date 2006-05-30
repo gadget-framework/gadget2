@@ -5,6 +5,7 @@
 #include "actionattimes.h"
 #include "commentstream.h"
 #include "charptrvector.h"
+#include "predatorptrvector.h"
 #include "doublematrix.h"
 #include "intmatrix.h"
 
@@ -93,13 +94,9 @@ private:
    */
   IntMatrix preyindex;
   /**
-   * \brief This is the FleetPtrVector of the fleets that will be used to calculate the likelihood score
+   * \brief This is the PredatorPtrVector of the predators that will be used to calculate the likelihood score
    */
-  FleetPtrVector fleets;
-  /**
-   * \brief This is the StockPtrVector of the stocks that will be used to calculate the likelihood score
-   */
-  StockPtrVector stocks;
+  PredatorPtrVector predators;
   /**
    * \brief This is the IntMatrix used to store area information
    */
