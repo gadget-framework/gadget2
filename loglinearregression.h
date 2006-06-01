@@ -70,15 +70,20 @@ protected:
    * \brief This is the function that takes the log of the 2 vectors, removing any point at (0,0)
    * \param x is the DoubleVector containing the modelled data
    * \param y is the DoubleVector containing the input data
-   * \param Xlog is the DoubleVector that will contain the log of x
-   * \param Ylog is the DoubleVector that will contain the log of y
    */
-  void calcLog(const DoubleVector& x, const DoubleVector& y,
-    DoubleVector& Xlog, DoubleVector& Ylog);
+  void calcLog(const DoubleVector& x, const DoubleVector& y);
   /**
    * \brief This is a LinearRegression that stores the linear regression line
    */
   LinearRegression LR;
+  /**
+   * \brief This is the DoubleVector that will contain the log of x
+   */
+  DoubleVector Xlog;
+  /**
+   * \brief This is the DoubleVector that will contain the log of y
+   */
+  DoubleVector Ylog;
   /**
    * \brief This is a flag to denote whether an error has occured
    */

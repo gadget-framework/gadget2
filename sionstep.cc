@@ -3,7 +3,6 @@
 #include "errorhandler.h"
 #include "readfunc.h"
 #include "readword.h"
-#include "loglinearregression.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
@@ -64,6 +63,24 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
     handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised fittype", text);
 
   switch (fittype) {
+    case LOGLINEARFIT:
+    case FIXEDSLOPELOGLINEARFIT:
+    case FIXEDINTERCEPTLOGLINEARFIT:
+    case FIXEDLOGLINEARFIT:
+      LLR = LogLinearRegression();
+      break;
+    case LINEARFIT:
+    case FIXEDSLOPELINEARFIT:
+    case FIXEDINTERCEPTLINEARFIT:
+    case FIXEDLINEARFIT:
+      LR = LinearRegression();
+      break;
+    default:
+      handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised fittype", text);
+      break;
+  }
+
+  switch (fittype) {
     case LINEARFIT:
     case LOGLINEARFIT:
       break;
@@ -105,6 +122,8 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   slopes.resize(this->numIndex(), 0.0);
   intercepts.resize(this->numIndex(), 0.0);
   sse.resize(this->numIndex(), 0.0);
+  stocksize.resize(obsIndex.Nrow(), 0.0);
+  indices.resize(obsIndex.Nrow(), 0.0);
 }
 
 void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -194,6 +213,8 @@ void SIOnStep::Reset(const Keeper* const keeper) {
   for (i = 0; i < modelIndex.Nrow(); i++)
     for (j = 0; j < modelIndex.Ncol(i); j++)
       modelIndex[i][j] = 0.0;
+  for (i = 0; i < sse.Size(); i++)
+    sse[i] = 0.0;
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset surveyindex component", this->getSIName());
 }
@@ -229,37 +250,30 @@ void SIOnStep::printLikelihood(ofstream& outfile, const TimeClass* const TimeInf
 }
 
 double SIOnStep::calcSSE() {
-  int totaltime = modelIndex.Nrow();
-  if (totaltime < 2)
+  if (modelIndex.Nrow() < 2)
     return 0.0;
 
-  double score = 0.0;
-  DoubleVector indices(totaltime);
-  DoubleVector stocksize(totaltime);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for surveyindex component", this->getSIName());
 
   int i, j;
+  double score = 0.0;
   for (i = 0; i < this->numIndex(); i++) {
-    //Let LLR figure out what to do in the case of zero stock size.
-    for (j = 0; j < totaltime; j++) {
+    for (j = 0; j < modelIndex.Nrow(); j++) {
       indices[j] = obsIndex[j][i];
       stocksize[j] = modelIndex[j][i];
     }
-    //Now fit the log of the abundance indices as a function of stock size.
-    score += this->calcRegression(stocksize, indices, i);
+    this->calcRegression(i);
+    score += sse[i];
   }
 
-  if (handle.getLogLevel() >= LOGMESSAGE) {
-    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for surveyindex component", this->getSIName());
+  if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "The likelihood score from the regression line for this component is", score);
-  }
 
   return score;
 }
 
-double SIOnStep::calcRegression(const DoubleVector& stocksize, const DoubleVector& indices, int i) {
-
-  LogLinearRegression LLR;
-  LinearRegression LR;
+void SIOnStep::calcRegression(int index) {
 
   //fit the data to the (log) linear regression curve
   switch (fittype) {
@@ -298,23 +312,20 @@ double SIOnStep::calcRegression(const DoubleVector& stocksize, const DoubleVecto
     case FIXEDSLOPELOGLINEARFIT:
     case FIXEDINTERCEPTLOGLINEARFIT:
     case FIXEDLOGLINEARFIT:
-      slopes[i] = LLR.getSlope();
-      intercepts[i] = LLR.getIntersection();
-      sse[i] = LLR.getSSE();
-      return LLR.getSSE();
+      slopes[index] = LLR.getSlope();
+      intercepts[index] = LLR.getIntersection();
+      sse[index] = LLR.getSSE();
       break;
     case LINEARFIT:
     case FIXEDSLOPELINEARFIT:
     case FIXEDINTERCEPTLINEARFIT:
     case FIXEDLINEARFIT:
-      slopes[i] = LR.getSlope();
-      intercepts[i] = LR.getIntersection();
-      sse[i] = LR.getSSE();
-      return LR.getSSE();
+      slopes[index] = LR.getSlope();
+      intercepts[index] = LR.getIntersection();
+      sse[index] = LR.getSSE();
       break;
     default:
       handle.logMessage(LOGWARN, "Warning in surveyindex - unrecognised fittype", fittype);
       break;
   }
-  return 0.0;
 }

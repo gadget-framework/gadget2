@@ -13,12 +13,15 @@ LinearRegression::LinearRegression() {
 }
 
 void LinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y) {
+
   sse = 0.0;
   error = 0;  //begin with cleaning up error status.
   if ((x.Size() != y.Size()) || (x.Size() == 0)) {
+    handle.logMessage(LOGWARN, "Warning in linear regression - size of vectors not the same");
     error = 1;
     return;
   }
+
   double Xmean = 0.0;
   double Ymean = 0.0;
   int i;
@@ -47,7 +50,7 @@ void LinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y) {
 
   //JMB - if there is a negative slope for the regression then things are going wrong ...
   if (b < 0.0) {
-    handle.logMessage(LOGWARN, "Warning in LR - negative slope for regression line", b);
+    handle.logMessage(LOGWARN, "Warning in linear regression - negative slope for regression line", b);
     error = 1;
     return;
   }
@@ -61,12 +64,22 @@ void LinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y) {
 }
 
 void LinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y, double slope) {
+
   sse = 0.0;
   error = 0;  //begin with cleaning up error status.
-  if ((x.Size() != y.Size()) || (x.Size() == 0)) {
+  //JMB - if there is a negative slope for the regression then things are going wrong ...
+  if (slope < 0.0) {
+    handle.logMessage(LOGWARN, "Warning in linear regression - negative slope for regression line", b);
     error = 1;
     return;
   }
+
+  if ((x.Size() != y.Size()) || (x.Size() == 0)) {
+    handle.logMessage(LOGWARN, "Warning in linear regression - size of vectors not the same");
+    error = 1;
+    return;
+  }
+
   double Xmean = 0.0;
   double Ymean = 0.0;
   int i;
@@ -81,13 +94,6 @@ void LinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y, dou
   b = slope;
   a = Ymean - (b * Xmean);
 
-  //JMB - if there is a negative slope for the regression then things are going wrong ...
-  if (b < 0.0) {
-    handle.logMessage(LOGWARN, "Warning in LR - negative slope for regression line", b);
-    error = 1;
-    return;
-  }
-
   //Now we can calculate the sum of squares of errors.
   double tmp;
   for (i = 0; i < x.Size(); i++) {
@@ -97,12 +103,15 @@ void LinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y, dou
 }
 
 void LinearRegression::calcFit(double intercept, const DoubleVector& x, const DoubleVector& y) {
+
   sse = 0.0;
   error = 0;  //begin with cleaning up error status.
   if ((x.Size() != y.Size()) || (x.Size() == 0)) {
+    handle.logMessage(LOGWARN, "Warning in linear regression - size of vectors not the same");
     error = 1;
     return;
   }
+
   double Xmean = 0.0;
   double Ymean = 0.0;
   int i;
@@ -114,16 +123,15 @@ void LinearRegression::calcFit(double intercept, const DoubleVector& x, const Do
   Ymean /= y.Size();
 
   //Now we have calculated the mean and can proceed to calculate the fit.
+  a = intercept;
   if (isZero(Xmean))
     b = 0.0;
   else
     b = (Ymean - intercept) / Xmean;
 
-  a = intercept;
-
   //JMB - if there is a negative slope for the regression then things are going wrong ...
   if (b < 0.0) {
-    handle.logMessage(LOGWARN, "Warning in LR - negative slope for regression line", b);
+    handle.logMessage(LOGWARN, "Warning in linear regression - negative slope for regression line", b);
     error = 1;
     return;
   }
@@ -137,21 +145,25 @@ void LinearRegression::calcFit(double intercept, const DoubleVector& x, const Do
 }
 
 void LinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y, double slope, double intercept) {
+
   sse = 0.0;
   error = 0;  //begin with cleaning up error status.
-  if ((x.Size() != y.Size()) || (x.Size() == 0)) {
-    error = 1;
-    return;
-  }
-  b = slope;
-  a = intercept;
 
   //JMB - if there is a negative slope for the regression then things are going wrong ...
-  if (b < 0.0) {
-    handle.logMessage(LOGWARN, "Warning in LR - negative slope for regression line", b);
+  if (slope < 0.0) {
+    handle.logMessage(LOGWARN, "Warning in linear regression - negative slope for regression line", b);
     error = 1;
     return;
   }
+
+  if ((x.Size() != y.Size()) || (x.Size() == 0)) {
+    handle.logMessage(LOGWARN, "Warning in linear regression - size of vectors not the same");
+    error = 1;
+    return;
+  }
+
+  b = slope;
+  a = intercept;
 
   //Now we can calculate the sum of squares of errors.
   int i;
@@ -165,6 +177,5 @@ void LinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y, dou
 double LinearRegression::getSSE() {
   if (error)
     return verybig;
-  else
-    return sse;
+  return sse;
 }

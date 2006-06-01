@@ -11,6 +11,7 @@
 #include "keeper.h"
 #include "agebandmatrix.h"
 #include "stockaggregator.h"
+#include "loglinearregression.h"
 #include "gadget.h"
 
 enum FitType { LINEARFIT = 1, LOGLINEARFIT, FIXEDSLOPELINEARFIT, FIXEDSLOPELOGLINEARFIT,
@@ -135,12 +136,9 @@ private:
   void readSIData(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the regression line used to fit the modelled data to the observed data
-   * \param stocksize is the DoubleVector containing the index based on the modelled data
-   * \param indices is the DoubleVector containing the index based on the observed data
-   * \param i is the current index
-   * \return SSE from the regession line
+   * \param index is the current index
    */
-  double calcRegression(const DoubleVector& stocksize, const DoubleVector& indices, int i);
+  void calcRegression(int index);
   /**
    * \brief This is used to fix the slope of the regression lines if specified by the user
    */
@@ -162,6 +160,14 @@ private:
    */
   DoubleVector sse;
   /**
+   * \brief This is the DoubleVector of the stocksize, used when calculating the fit to the regression line
+   */
+  DoubleVector stocksize;
+  /**
+   * \brief This is the DoubleVector of the indices, used when calculating the fit to the regression line
+   */
+  DoubleVector indices;
+  /**
    * \brief This is the CharPtrVector of the names of the areas
    */
   CharPtrVector areaindex;
@@ -177,6 +183,16 @@ private:
    * \brief This denotes what type of fit is to be used for the linear regression line
    */
   FitType fittype;
+  /**
+   * \brief This is a LogLinearRegression that stores the log linear regression line used when calculating the likelihood score, if a log linear regession line is used to compare the modelled and observed data
+   * \note This is set to zero, and not used, if a log linear regression line is not used
+   */
+  LogLinearRegression LLR;
+  /**
+   * \brief This is a LinearRegression that stores the linear regression line used when calculating the likelihood score, if a linear regession line is used to compare the modelled and observed data
+   * \note This is set to zero, and not used, if a linear regression line is not used
+   */
+  LinearRegression LR;
 };
 
 #endif

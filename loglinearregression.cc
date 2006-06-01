@@ -6,9 +6,7 @@ extern ErrorHandler handle;
 
 void LogLinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y) {
   error = 0;
-  DoubleVector Xlog(x);
-  DoubleVector Ylog(y);
-  this->calcLog(x, y, Xlog, Ylog);
+  this->calcLog(x, y);
   if (error)
     return;
   LR.calcFit(Xlog, Ylog);
@@ -17,9 +15,7 @@ void LogLinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y) 
 
 void LogLinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y, double slope) {
   error = 0;
-  DoubleVector Xlog(x);
-  DoubleVector Ylog(y);
-  this->calcLog(x, y, Xlog, Ylog);
+  this->calcLog(x, y);
   if (error)
     return;
   LR.calcFit(Xlog, Ylog, slope);
@@ -28,9 +24,7 @@ void LogLinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y, 
 
 void LogLinearRegression::calcFit(double intercept, const DoubleVector& x, const DoubleVector& y) {
   error = 0;
-  DoubleVector Xlog(x);
-  DoubleVector Ylog(y);
-  this->calcLog(x, y, Xlog, Ylog);
+  this->calcLog(x, y);
   if (error)
     return;
   LR.calcFit(intercept, Xlog, Ylog);
@@ -39,9 +33,7 @@ void LogLinearRegression::calcFit(double intercept, const DoubleVector& x, const
 
 void LogLinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y, double slope, double intercept) {
   error = 0;
-  DoubleVector Xlog(x);
-  DoubleVector Ylog(y);
-  this->calcLog(x, y, Xlog, Ylog);
+  this->calcLog(x, y);
   if (error)
     return;
   LR.calcFit(Xlog, Ylog, slope, intercept);
@@ -51,8 +43,7 @@ void LogLinearRegression::calcFit(const DoubleVector& x, const DoubleVector& y, 
 double LogLinearRegression::getSSE() {
   if (error)
     return verybig;
-  else
-    return LR.getSSE();
+  return LR.getSSE();
 }
 
 double LogLinearRegression::getIntersection() {
@@ -63,13 +54,18 @@ double LogLinearRegression::getSlope() {
   return LR.getSlope();
 }
 
-void LogLinearRegression::calcLog(const DoubleVector& x,
-  const DoubleVector& y, DoubleVector& Xlog, DoubleVector& Ylog) {
+void LogLinearRegression::calcLog(const DoubleVector& x, const DoubleVector& y) {
 
-  if ((x.Size() != y.Size()) || (Xlog.Size() != x.Size()) || (Xlog.Size() != Ylog.Size())) {
+  if ((x.Size() != y.Size()) || (x.Size() == 0)) {
+    handle.logMessage(LOGWARN, "Warning in log linear regression - size of vectors not the same");
     error = 1;
     return;
   }
+
+  Xlog.Reset();
+  Xlog.resize(x.Size(), 0.0);
+  Ylog.Reset();
+  Ylog.resize(y.Size(), 0.0);
 
   int i, l = 0;
   for (i = 0; i < x.Size(); i++, l++) {
@@ -78,7 +74,7 @@ void LogLinearRegression::calcLog(const DoubleVector& x,
       Xlog.Delete(l);
       Ylog.Delete(l);
       l--;
-    } else if ((x[i] < 0.0) || (y[i] < 0.0) || (isZero(x[i])) || (isZero(y[i]))) {
+    } else if ((x[i] < verysmall) || (y[i] < verysmall)) {
       handle.logMessage(LOGWARN, "Warning in log linear regession - received invalid values");
       error = 1;
       return;
