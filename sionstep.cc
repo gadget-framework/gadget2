@@ -10,6 +10,8 @@ extern ErrorHandler handle;
 SIOnStep::~SIOnStep() {
   int i;
   delete[] siname;
+  if (LR != 0)
+    delete LR;
   for (i = 0; i < areaindex.Size(); i++)
     delete[] areaindex[i];
   for (i = 0; i < colindex.Size(); i++)
@@ -43,59 +45,53 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
 
   //read the fittype
   infile >> text;
-  if (strcasecmp(text, "linearfit") == 0)
+  if (strcasecmp(text, "linearfit") == 0) {
     fittype = LINEARFIT;
-  else if (strcasecmp(text, "loglinearfit") == 0)
+    LR = new LinearRegression(FREE);
+  } else if (strcasecmp(text, "loglinearfit") == 0) {
     fittype = LOGLINEARFIT;
-  else if (strcasecmp(text, "fixedslopelinearfit") == 0)
+    LR = new LogLinearRegression(FREE);
+  } else if (strcasecmp(text, "fixedslopelinearfit") == 0) {
     fittype = FIXEDSLOPELINEARFIT;
-  else if (strcasecmp(text, "fixedslopeloglinearfit") == 0)
+    LR = new LinearRegression(FIXEDSLOPE);
+  } else if (strcasecmp(text, "fixedslopeloglinearfit") == 0) {
     fittype = FIXEDSLOPELOGLINEARFIT;
-  else if (strcasecmp(text, "fixedinterceptlinearfit") == 0)
+    LR = new LogLinearRegression(FIXEDSLOPE);
+  } else if (strcasecmp(text, "fixedinterceptlinearfit") == 0) {
     fittype = FIXEDINTERCEPTLINEARFIT;
-  else if (strcasecmp(text, "fixedinterceptloglinearfit") == 0)
+    LR = new LinearRegression(FIXEDINTERCEPT);
+  } else if (strcasecmp(text, "fixedinterceptloglinearfit") == 0) {
     fittype = FIXEDINTERCEPTLOGLINEARFIT;
-  else if (strcasecmp(text, "fixedlinearfit") == 0)
+    LR = new LogLinearRegression(FIXEDINTERCEPT);
+  } else if (strcasecmp(text, "fixedlinearfit") == 0) {
     fittype = FIXEDLINEARFIT;
-  else if (strcasecmp(text, "fixedloglinearfit") == 0)
+    LR = new LinearRegression(FIXED);
+  } else if (strcasecmp(text, "fixedloglinearfit") == 0) {
     fittype = FIXEDLOGLINEARFIT;
-  else
+    LR = new LogLinearRegression(FIXED);
+  } else
     handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised fittype", text);
 
   switch (fittype) {
-    case LOGLINEARFIT:
-    case FIXEDSLOPELOGLINEARFIT:
-    case FIXEDINTERCEPTLOGLINEARFIT:
-    case FIXEDLOGLINEARFIT:
-      LLR = LogLinearRegression();
-      break;
-    case LINEARFIT:
-    case FIXEDSLOPELINEARFIT:
-    case FIXEDINTERCEPTLINEARFIT:
-    case FIXEDLINEARFIT:
-      LR = LinearRegression();
-      break;
-    default:
-      handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised fittype", text);
-      break;
-  }
-
-  switch (fittype) {
     case LINEARFIT:
     case LOGLINEARFIT:
       break;
     case FIXEDSLOPELINEARFIT:
     case FIXEDSLOPELOGLINEARFIT:
       readWordAndVariable(infile, "slope", slope);
+      LR->setSlope(slope);
       break;
     case FIXEDINTERCEPTLINEARFIT:
     case FIXEDINTERCEPTLOGLINEARFIT:
       readWordAndVariable(infile, "intercept", intercept);
+      LR->setIntercept(intercept);
       break;
     case FIXEDLINEARFIT:
     case FIXEDLOGLINEARFIT:
       readWordAndVariable(infile, "slope", slope);
       readWordAndVariable(infile, "intercept", intercept);
+      LR->setSlope(slope);
+      LR->setIntercept(intercept);
       break;
     default:
       handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised fittype", text);
@@ -274,58 +270,13 @@ double SIOnStep::calcSSE() {
 }
 
 void SIOnStep::calcRegression(int index) {
-
   //fit the data to the (log) linear regression curve
-  switch (fittype) {
-    case LOGLINEARFIT:
-      LLR.calcFit(stocksize, indices);
-      break;
-    case FIXEDSLOPELOGLINEARFIT:
-      LLR.calcFit(stocksize, indices, slope);
-      break;
-    case FIXEDINTERCEPTLOGLINEARFIT:
-      LLR.calcFit(intercept, stocksize, indices);
-      break;
-    case FIXEDLOGLINEARFIT:
-      LLR.calcFit(stocksize, indices, slope, intercept);
-      break;
-    case LINEARFIT:
-      LR.calcFit(stocksize, indices);
-      break;
-    case FIXEDSLOPELINEARFIT:
-      LR.calcFit(stocksize, indices, slope);
-      break;
-    case FIXEDINTERCEPTLINEARFIT:
-      LR.calcFit(intercept, stocksize, indices);
-      break;
-    case FIXEDLINEARFIT:
-      LR.calcFit(stocksize, indices, slope, intercept);
-      break;
-    default:
-      handle.logMessage(LOGWARN, "Warning in surveyindex - unrecognised fittype", fittype);
-      break;
-  }
+  LR->storeVectors(stocksize, indices);
+  LR->calcFit();
+  LR->calcSSE();
 
   //and then store the results
-  switch (fittype) {
-    case LOGLINEARFIT:
-    case FIXEDSLOPELOGLINEARFIT:
-    case FIXEDINTERCEPTLOGLINEARFIT:
-    case FIXEDLOGLINEARFIT:
-      slopes[index] = LLR.getSlope();
-      intercepts[index] = LLR.getIntersection();
-      sse[index] = LLR.getSSE();
-      break;
-    case LINEARFIT:
-    case FIXEDSLOPELINEARFIT:
-    case FIXEDINTERCEPTLINEARFIT:
-    case FIXEDLINEARFIT:
-      slopes[index] = LR.getSlope();
-      intercepts[index] = LR.getIntersection();
-      sse[index] = LR.getSSE();
-      break;
-    default:
-      handle.logMessage(LOGWARN, "Warning in surveyindex - unrecognised fittype", fittype);
-      break;
-  }
+  slopes[index] = LR->getSlope();
+  intercepts[index] = LR->getIntercept();
+  sse[index] = LR->getSSE();
 }

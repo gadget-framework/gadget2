@@ -1,7 +1,6 @@
 #include "sibyageonstep.h"
 #include "stock.h"
 #include "areatime.h"
-#include "loglinearregression.h"
 #include "mathfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"

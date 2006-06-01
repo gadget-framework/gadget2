@@ -70,9 +70,9 @@ GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.
     sibylengthonstep.o formula.o grower.o growthcalc.o simulation.o hooke.o \
     simann.o sionstep.o initialcond.o spawner.o initialize.o stochasticdata.o \
     lengthpredator.o stockaggregator.o lengthprey.o surveydistribution.o bfgs.o \
-    stockdistribution.o linearpredator.o stockfullprinter.o linearregression.o \
+    stockdistribution.o linearpredator.o stockfullprinter.o regressionline.o \
     stockmemberfunctions.o livesonareas.o stockpredator.o stockpredstdinfo.o \
-    loglinearregression.o time.o stockprey.o maininfo.o stockpreyfullprinter.o \
+    time.o stockprey.o maininfo.o stockpreyfullprinter.o \
     stockpreystdinfo.o stockpreystdinfobylength.o stockprinter.o readword.o \
     stockstdprinter.o maturity.o suitfunc.o suits.o stomachcontent.o runid.o \
     migration.o recaggregator.o surveyindices.o migrationpenalty.o recapture.o \

@@ -11,7 +11,7 @@
 #include "keeper.h"
 #include "agebandmatrix.h"
 #include "stockaggregator.h"
-#include "loglinearregression.h"
+#include "regressionline.h"
 #include "gadget.h"
 
 enum FitType { LINEARFIT = 1, LOGLINEARFIT, FIXEDSLOPELINEARFIT, FIXEDSLOPELOGLINEARFIT,
@@ -184,15 +184,9 @@ private:
    */
   FitType fittype;
   /**
-   * \brief This is a LogLinearRegression that stores the log linear regression line used when calculating the likelihood score, if a log linear regession line is used to compare the modelled and observed data
-   * \note This is set to zero, and not used, if a log linear regression line is not used
+   * \brief This is a Regression that stores the regression line used when calculating the likelihood score
    */
-  LogLinearRegression LLR;
-  /**
-   * \brief This is a LinearRegression that stores the linear regression line used when calculating the likelihood score, if a linear regession line is used to compare the modelled and observed data
-   * \note This is set to zero, and not used, if a linear regression line is not used
-   */
-  LinearRegression LR;
+  Regression* LR;
 };
 
 #endif

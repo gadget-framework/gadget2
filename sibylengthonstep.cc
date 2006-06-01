@@ -1,7 +1,6 @@
 #include "sibylengthonstep.h"
 #include "stock.h"
 #include "areatime.h"
-#include "loglinearregression.h"
 #include "errorhandler.h"
 #include "mathfunc.h"
 #include "gadget.h"
