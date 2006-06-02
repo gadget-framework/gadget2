@@ -31,7 +31,7 @@ void Regression::calcFit() {
     return;
 
   int i;
-  double sumX, sumY;
+  double tmp, sumX, sumY;
   switch (linetype) {
     case FREE:
       double nom, denom;
@@ -89,21 +89,15 @@ void Regression::calcFit() {
       handle.logMessage(LOGWARN, "Warning in regression - unrecognised linetype", linetype);
       break;
   }
-}
 
-void Regression::calcSSE() {
-  if (error)
-    return;
-
-  //JMB - if there is a negative slope for the regression then things are going wrong ...
+  //JMB - if there is a negative slope for the regression then things are going wrong
   if (b < 0.0) {
     handle.logMessage(LOGWARN, "Warning in regression - negative slope for regression line", b);
     error = 1;
     return;
   }
 
-  int i;
-  double tmp;
+  //finally calculate the SSE value
   sse = 0.0;
   for (i = 0; i < x.Size(); i++) {
     tmp = y[i] - (a + b * x[i]);

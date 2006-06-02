@@ -115,8 +115,8 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
 
   //resize to hold the model information
   modelIndex.AddRows(obsIndex.Nrow(), this->numIndex(), 0.0);
-  slopes.resize(this->numIndex(), 0.0);
-  intercepts.resize(this->numIndex(), 0.0);
+  slopes.resize(this->numIndex(), slope);
+  intercepts.resize(this->numIndex(), intercept);
   sse.resize(this->numIndex(), 0.0);
   stocksize.resize(obsIndex.Nrow(), 0.0);
   indices.resize(obsIndex.Nrow(), 0.0);
@@ -180,7 +180,7 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
         Years.resize(1, year);
         Steps.resize(1, step);
         timeid = (Years.Size() - 1);
-        obsIndex.AddRows(1, this->numIndex(), 0.0);
+        obsIndex.AddRows(1, colindex.Size(), 0.0);
       }
       obsIndex[timeid][colid] = tmpnumber;
     }
@@ -228,7 +228,7 @@ void SIOnStep::printLikelihood(ofstream& outfile, const TimeClass* const TimeInf
 
     //JMB - this is nasty hack since there is only one area
     area = 0;
-    for (i = 0; i < this->numIndex(); i++) {
+    for (i = 0; i < colindex.Size(); i++) {
       outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
         << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
         << setw(printwidth) << colindex[i] << sep << setprecision(largeprecision)
@@ -239,7 +239,7 @@ void SIOnStep::printLikelihood(ofstream& outfile, const TimeClass* const TimeInf
   //JMB - this is nasty hack to output the regression information
   if (TimeInfo->getTime() == TimeInfo->numTotalSteps()) {
     outfile << "; Regression information\n";
-    for (i = 0; i < this->numIndex(); i++)
+    for (i = 0; i < colindex.Size(); i++)
       outfile << "; " << colindex[i] << " intercept " << intercepts[i]
         << " slope " << slopes[i] << " sse " << sse[i] << endl;
   }
@@ -259,7 +259,15 @@ double SIOnStep::calcSSE() {
       indices[j] = obsIndex[j][i];
       stocksize[j] = modelIndex[j][i];
     }
-    this->calcRegression(i);
+
+    //fit the data to the (log) linear regression curve
+    LR->storeVectors(stocksize, indices);
+    LR->calcFit();
+
+    //and then store the results
+    slopes[i] = LR->getSlope();
+    intercepts[i] = LR->getIntercept();
+    sse[i] = LR->getSSE();
     score += sse[i];
   }
 
@@ -267,16 +275,4 @@ double SIOnStep::calcSSE() {
     handle.logMessage(LOGMESSAGE, "The likelihood score from the regression line for this component is", score);
 
   return score;
-}
-
-void SIOnStep::calcRegression(int index) {
-  //fit the data to the (log) linear regression curve
-  LR->storeVectors(stocksize, indices);
-  LR->calcFit();
-  LR->calcSSE();
-
-  //and then store the results
-  slopes[index] = LR->getSlope();
-  intercepts[index] = LR->getIntercept();
-  sse[index] = LR->getSSE();
 }

@@ -135,11 +135,6 @@ private:
    */
   void readSIData(CommentStream& infile, const TimeClass* const TimeInfo);
   /**
-   * \brief This function will calculate the regression line used to fit the modelled data to the observed data
-   * \param index is the current index
-   */
-  void calcRegression(int index);
-  /**
    * \brief This is used to fix the slope of the regression lines if specified by the user
    */
   double slope;

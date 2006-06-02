@@ -36,10 +36,6 @@ public:
    */
   void calcFit();
   /**
-   * \brief This is the function that calculates the sum of squares of errors for the fit to the regression line
-   */
-  void calcSSE();
-  /**
    * \brief This function will set the intercept of the regression line
    * \param intercept is the intercept of the regression line
    */
