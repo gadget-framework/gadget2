@@ -114,8 +114,8 @@ LinearRegression::LinearRegression(LineType ltype) : Regression(ltype) {
 void LinearRegression::storeVectors(const DoubleVector& modData, const DoubleVector& obsData) {
 
   error = 0;  //begin by cleaning up error status
-  if ((modData.Size() != obsData.Size()) || (modData.Size() == 0)) {
-    handle.logMessage(LOGWARN, "Warning in linear regression - size of vectors not the same");
+  if ((modData.Size() != obsData.Size()) || (modData.Size() < 2)) {
+    handle.logMessage(LOGWARN, "Warning in linear regression - invalid vector sizes");
     error = 1;
     return;
   }
@@ -141,8 +141,8 @@ LogLinearRegression::LogLinearRegression(LineType ltype) : Regression(ltype) {
 void LogLinearRegression::storeVectors(const DoubleVector& modData, const DoubleVector& obsData) {
 
   error = 0;  //begin by cleaning up error status
-  if ((modData.Size() != obsData.Size()) || (modData.Size() == 0)) {
-    handle.logMessage(LOGWARN, "Warning in log linear regression - size of vectors not the same");
+  if ((modData.Size() != obsData.Size()) || (modData.Size() < 2)) {
+    handle.logMessage(LOGWARN, "Warning in linear regression - invalid vector sizes");
     error = 1;
     return;
   }
