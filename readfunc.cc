@@ -21,12 +21,17 @@ void readRefWeights(CommentStream& infile, DoubleMatrix& M) {
     i++;
   }
 
-  //Check the data to make sure that it is continuous
+  //Check the data to make sure that it is continuous and the weights are positive
+  if (M[0][0] < 0.0)
+    handle.logFileMessage(LOGFAIL, "lengths for reference weights must be positive");
   for (i = 1; i < M.Nrow(); i++)
     if ((M[i][0] - M[i - 1][0]) < verysmall)
       handle.logFileMessage(LOGFAIL, "lengths for reference weights must be strictly increasing");
+  for (i = 0; i < M.Nrow(); i++)
+    if ((M[i][1] < verysmall) && !(isZero(M[i][0])))
+      handle.logFileMessage(LOGFAIL, "weights for reference weights must be positive");
 
-  handle.logMessage(LOGMESSAGE, "Read reference weights OK - number of entries", i);
+  handle.logMessage(LOGMESSAGE, "Read reference weights OK - number of entries", M.Nrow());
 }
 
 int countColumns(CommentStream& infile) {
