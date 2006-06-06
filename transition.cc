@@ -32,6 +32,7 @@ Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
     transitionRatio.resize(1, keeper);
     if (!(infile >> transitionRatio[i]))
       handle.logFileMessage(LOGFAIL, "invalid format for transition ratio");
+    transitionRatio[i].Inform(keeper);
 
     infile >> text >> ws;
     i++;

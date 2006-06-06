@@ -224,6 +224,7 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
       matureRatio.resize(1, keeper);
       if (!(infile >> matureRatio[i]))
         handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
+      matureRatio[i].Inform(keeper);
 
       infile >> text >> ws;
       i++;
@@ -330,6 +331,7 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
       matureRatio.resize(1, keeper);
       if (!(infile >> matureRatio[i]))
         handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
+      matureRatio[i].Inform(keeper);
 
       infile >> text >> ws;
       i++;
@@ -437,6 +439,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
       matureRatio.resize(1, keeper);
       if (!(infile >> matureRatio[i]))
         handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
+      matureRatio[i].Inform(keeper);
 
       infile >> text >> ws;
       i++;

@@ -66,6 +66,7 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
     strayRatio.resize(1, keeper);
     if (!(infile >> strayRatio[i]))
       handle.logFileMessage(LOGFAIL, "invalid format for stray ratio");
+    strayRatio[i].Inform(keeper);
 
     infile >> text >> ws;
     i++;

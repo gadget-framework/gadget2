@@ -71,6 +71,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
       spawnRatio.resize(1, keeper);
       if (!(infile >> spawnRatio[i]))
         handle.logFileMessage(LOGFAIL, "invalid format for spawn ratio");
+      spawnRatio[i].Inform(keeper);
 
       infile >> text >> ws;
       i++;
