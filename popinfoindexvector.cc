@@ -26,7 +26,7 @@ PopInfoIndexVector::PopInfoIndexVector(const PopInfoIndexVector& initial) {
   size = initial.size;
   minpos = initial.minpos;
   int i;
-  if (size > 0)  {
+  if (size > 0) {
     v = new PopInfo[size];
     for (i = 0; i < size; i++)
       v[i] = initial.v[i];

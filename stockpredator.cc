@@ -152,7 +152,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
         max3 = max(0.0, consParam[12] * (consParam[13] + consParam[14] * l));
         tmp = consParam[2] * pow(prednumber[inarea][predl].W, consParam[3])
              + consParam[4] * pow(l, consParam[5]) + max1 + max2 + max3;
-        maxcons[inarea][predl] = consParam[0] * consParam[1] * tmp;        
+        maxcons[inarea][predl] = consParam[0] * consParam[1] * tmp;
       }
 
     } else
@@ -200,7 +200,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
     tmp *= consParam[15];
   else
     handle.logMessage(LOGWARN, "Warning in stockpredator - unrecognised consumption format");
-  
+
   //Calculating fphi(L) and totalcons of predator in area
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     if (isZero(tmp)) {
