@@ -16,6 +16,10 @@ SIOnStep::~SIOnStep() {
     delete[] areaindex[i];
   for (i = 0; i < colindex.Size(); i++)
     delete[] colindex[i];
+  for (i = 0; i < obsIndex.Size(); i++) {
+    delete obsIndex[i];
+    delete modelIndex[i];
+  }
 }
 
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
@@ -113,13 +117,13 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   datafile.close();
   datafile.clear();
 
-  //resize to hold the model information
-  modelIndex.AddRows(obsIndex.Nrow(), this->numIndex(), 0.0);
-  slopes.resize(this->numIndex(), slope);
-  intercepts.resize(this->numIndex(), intercept);
-  sse.resize(this->numIndex(), 0.0);
-  stocksize.resize(obsIndex.Nrow(), 0.0);
-  indices.resize(obsIndex.Nrow(), 0.0);
+  //resize to store the regression information
+  slopes.AddRows(areaindex.Size(), colindex.Size(), slope);
+  intercepts.AddRows(areaindex.Size(), colindex.Size(), intercept);
+  sse.AddRows(areaindex.Size(), colindex.Size(), 0.0);
+  stocksize.resize(Years.Size(), 0.0);
+  indices.resize(Years.Size(), 0.0);
+  likelihoodValues.resize(areaindex.Size(), 0.0);
 }
 
 void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo) {
@@ -180,15 +184,18 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
         Years.resize(1, year);
         Steps.resize(1, step);
         timeid = (Years.Size() - 1);
-        obsIndex.AddRows(1, colindex.Size(), 0.0);
+        obsIndex.resize(new DoubleMatrix(areaindex.Size(), colindex.Size(), 0.0));
+        modelIndex.resize(new DoubleMatrix(areaindex.Size(), colindex.Size(), 0.0));
       }
-      obsIndex[timeid][colid] = tmpnumber;
+      (*obsIndex[timeid])[areaid][colid] = tmpnumber;
     }
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in surveyindex - found no data in the data file for", this->getSIName());
+  if (Years.Size() < 2)
+    handle.logMessage(LOGFAIL, "Error in surveyindex - insufficient data to fit a regression line for", this->getSIName());
 
   if (Steps.Size() > 0) {
     //JMB - to be comparable, this should only take place on the same step in each year
@@ -201,23 +208,13 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
     if (timeid != 0)
       handle.logMessage(LOGWARN, "Warning in surveyindex - differing timesteps for", this->getSIName());
   }
-  handle.logMessage(LOGMESSAGE, "Read surveyindex data file - number of entries", count);
-}
 
-void SIOnStep::Reset(const Keeper* const keeper) {
-  int i, j;
-  for (i = 0; i < modelIndex.Nrow(); i++)
-    for (j = 0; j < modelIndex.Ncol(i); j++)
-      modelIndex[i][j] = 0.0;
-  for (i = 0; i < sse.Size(); i++)
-    sse[i] = 0.0;
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Reset surveyindex component", this->getSIName());
+  handle.logMessage(LOGMESSAGE, "Read surveyindex data file - number of entries", count);
 }
 
 void SIOnStep::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  int i, area;
+  int a, i;
   if (AAT.atCurrentTime(TimeInfo)) {
     timeindex = -1;
     for (i = 0; i < Years.Size(); i++)
@@ -226,53 +223,66 @@ void SIOnStep::printLikelihood(ofstream& outfile, const TimeClass* const TimeInf
     if (timeindex == -1)
       handle.logMessage(LOGFAIL, "Error in surveyindex - invalid timestep");
 
-    //JMB - this is nasty hack since there is only one area
-    area = 0;
-    for (i = 0; i < colindex.Size(); i++) {
-      outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
-        << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(printwidth) << colindex[i] << sep << setprecision(largeprecision)
-        << setw(largewidth) << modelIndex[timeindex][i] << endl;
+    for (a = 0; a < areaindex.Size(); a++) {
+      for (i = 0; i < colindex.Size(); i++) {
+        outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
+          << Steps[timeindex] << sep << setw(printwidth) << areaindex[a] << sep
+          << setw(printwidth) << colindex[i] << sep << setprecision(largeprecision)
+          << setw(largewidth) << (*modelIndex[timeindex])[a][i] << endl;
+      }
     }
   }
 
   //JMB - this is nasty hack to output the regression information
   if (TimeInfo->getTime() == TimeInfo->numTotalSteps()) {
-    outfile << "; Regression information\n";
-    for (i = 0; i < colindex.Size(); i++)
-      outfile << "; " << colindex[i] << " intercept " << intercepts[i]
-        << " slope " << slopes[i] << " sse " << sse[i] << endl;
+    for (a = 0; a < areaindex.Size(); a++) {
+      outfile << "; Regression information for area " << areaindex[a] << endl;
+      for (i = 0; i < colindex.Size(); i++)
+        outfile << "; " << colindex[i] << " intercept " << intercepts[a][i]
+          << " slope " << slopes[a][i] << " sse " << sse[a][i] << endl;
+    }
   }
 }
 
 double SIOnStep::calcSSE() {
-  if (modelIndex.Nrow() < 2)
-    return 0.0;
 
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Calculating likelihood score for surveyindex component", this->getSIName());
 
-  int i, j;
+  int a, i, j;
   double score = 0.0;
-  for (i = 0; i < this->numIndex(); i++) {
-    for (j = 0; j < modelIndex.Nrow(); j++) {
-      indices[j] = obsIndex[j][i];
-      stocksize[j] = modelIndex[j][i];
+  for (a = 0; a < areaindex.Size(); a++) {
+    likelihoodValues[a] = 0.0;
+    for (i = 0; i < colindex.Size(); i++) {
+      for (j = 0; j < indices.Size(); j++) {
+        indices[j] = (*obsIndex[j])[a][i];
+        stocksize[j] = (*modelIndex[j])[a][i];
+      }
+
+      //fit the data to the (log) linear regression curve
+      LR->storeVectors(stocksize, indices);
+      LR->calcFit();
+
+      //and then store the results
+      slopes[a][i] = LR->getSlope();
+      intercepts[a][i] = LR->getIntercept();
+      sse[a][i] = LR->getSSE();
+      likelihoodValues[a] += LR->getSSE();
     }
-
-    //fit the data to the (log) linear regression curve
-    LR->storeVectors(stocksize, indices);
-    LR->calcFit();
-
-    //and then store the results
-    slopes[i] = LR->getSlope();
-    intercepts[i] = LR->getIntercept();
-    sse[i] = LR->getSSE();
-    score += sse[i];
+    score += likelihoodValues[a];
   }
 
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "The likelihood score from the regression line for this component is", score);
-
   return score;
+}
+
+void SIOnStep::printSummary(ofstream& outfile, const double weight) {
+  int a;
+  for (a = 0; a < areaindex.Size(); a++)
+    outfile << "all   all " << setw(printwidth) << areaindex[a] << sep
+      << setw(largewidth) << this->getSIName() << sep << setprecision(smallprecision)
+      << setw(smallwidth) << weight << sep << setprecision(largeprecision)
+      << setw(largewidth) << likelihoodValues[a] << endl;
+  outfile.flush();
 }

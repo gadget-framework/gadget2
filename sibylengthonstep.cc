@@ -62,7 +62,7 @@ void SIByLengthOnStep::Sum(const TimeClass* const TimeInfo) {
   if (!AAT.atCurrentTime(TimeInfo))
     return;
 
-  int i;
+  int a, i;
   timeindex = -1;
   for (i = 0; i < Years.Size(); i++)
     if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
@@ -72,13 +72,15 @@ void SIByLengthOnStep::Sum(const TimeClass* const TimeInfo) {
 
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Calculating index for surveyindex component", this->getSIName());
+
   aggregator->Sum();
-  alptr = &(aggregator->getSum()[0]);
-  //JMB experimental survey index based on the biomass
-  if (biomass == 1)
-    for (i = 0; i < this->numIndex(); i++)
-      modelIndex[timeindex][i] = (*alptr)[0][i].N * (*alptr)[0][i].W;
-  else
-    for (i = 0; i < this->numIndex(); i++)
-      modelIndex[timeindex][i] = (*alptr)[0][i].N;
+  alptr = &aggregator->getSum();
+  for (a = 0; a < Areas.Nrow(); a++) {
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
+      if (biomass)  //JMB experimental survey index based on the biomass
+        (*modelIndex[timeindex])[a][i] = (*alptr)[a][0][i].N * (*alptr)[a][0][i].W;
+      else
+        (*modelIndex[timeindex])[a][i] = (*alptr)[a][0][i].N;
+    }
+  }
 }

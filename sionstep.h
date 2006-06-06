@@ -2,13 +2,12 @@
 #define sionstep_h
 
 #include "areatime.h"
-#include "doublematrix.h"
+#include "doublematrixptrvector.h"
 #include "intmatrix.h"
 #include "charptrvector.h"
 #include "conversionindex.h"
 #include "commentstream.h"
 #include "actionattimes.h"
-#include "keeper.h"
 #include "agebandmatrix.h"
 #include "stockaggregator.h"
 #include "regressionline.h"
@@ -54,11 +53,6 @@ public:
    */
   virtual void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) = 0;
   /**
-   * \brief This function will reset the SIOnStep information
-   * \param keeper is the Keeper for the current model
-   */
-  virtual void Reset(const Keeper* const keeper);
-  /**
    * \brief This function will print the SIOnStep information
    * \param outfile is the ofstream that all the model information gets sent to
    */
@@ -69,6 +63,12 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    */
   virtual void printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will print summary information from each SIOnStep regression calculation
+   * \param outfile is the ofstream that all the model likelihood information gets sent to
+   * \param weight is the weight of the likelihood component
+   */
+  virtual void printSummary(ofstream& outfile, const double weight);
   /**
    * \brief This function will calculate the SSE from the regression line
    * \return SSE from the regession line
@@ -86,11 +86,6 @@ protected:
    */
   const char* getSIName() const { return siname; };
   /**
-   * \brief This function will return the number of regression lines to be calculated
-   * \return number of regression lines
-   */
-  int numIndex() const { return colindex.Size(); };
-  /**
    * \brief This is the IntMatrix used to store information about the areas that the survey index should be calculated on
    */
   IntMatrix Areas;
@@ -103,21 +98,27 @@ protected:
    */
   IntVector Steps;
   /**
+   * \brief This is the DoubleVector used to store the calculated likelihood information
+   */
+  DoubleVector likelihoodValues;
+  /**
    * \brief This ActionAtTimes stores information about when the survey index should be calculated
    */
   ActionAtTimes AAT;
   /**
-   * \brief This is the DoubleMatrix used to store the survey indices specified in the input file
+   * \brief This is the DoubleMatrixPtrVector used to store the survey indices specified in the input file
+   * \note The indices for this object are [time][area][index]
    */
-  DoubleMatrix obsIndex;
+  DoubleMatrixPtrVector obsIndex;
   /**
-   * \brief This is the DoubleMatrix used to store the survey indices calculated in the model
+   * \brief This is the DoubleMatrixPtrVector used to store the survey indices calculated in the model
+   * \note The indices for this object are [time][area][index]
    */
-  DoubleMatrix modelIndex;
+  DoubleMatrixPtrVector modelIndex;
   /**
-   * \brief This is the AgeBandMatrix used to temporarily store the information returned from the aggregatation function
+   * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
    */
-  const AgeBandMatrix* alptr;
+  const AgeBandMatrixPtrVector* alptr;
   /**
    * \brief This is the index of the timesteps for the survey index data
    */
@@ -143,17 +144,17 @@ private:
    */
   double intercept;
   /**
-   * \brief This is the DoubleVector used to store information about the slope of the regression lines
+   * \brief This is the DoubleMatrix used to store information about the slope of the regression lines
    */
-  DoubleVector slopes;
+  DoubleMatrix slopes;
   /**
-   * \brief This is the DoubleVector used to store information about the intercept of the regression lines
+   * \brief This is the DoubleMatrix used to store information about the intercept of the regression lines
    */
-  DoubleVector intercepts;
+  DoubleMatrix intercepts;
   /**
-   * \brief This is the DoubleVector used to store information about the sse of the regression lines
+   * \brief This is the DoubleMatrix used to store information about the sse of the regression lines
    */
-  DoubleVector sse;
+  DoubleMatrix sse;
   /**
    * \brief This is the DoubleVector of the stocksize, used when calculating the fit to the regression line
    */
@@ -167,7 +168,7 @@ private:
    */
   CharPtrVector areaindex;
   /**
-   * \brief This is the CharPtrVector of the names of the index
+   * \brief This is the CharPtrVector of the names of the indices
    */
   CharPtrVector colindex;
   /**

@@ -56,10 +56,6 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   datafile.close();
   datafile.clear();
 
-  //Check if we read correct input
-  if (areas.Nrow() != 1)
-    handle.logFileMessage(LOGFAIL, "\nError in surveyindex - there should be only one area");
-
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)
@@ -197,19 +193,6 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       handle.logMessage(LOGFAIL, "Error in surveyindex - failed to match fleet", fleetnames[i]);
   }
 
-  //check fleet areas
-  if ((handle.getLogLevel() >= LOGWARN) && (fleetnames.Size() > 0)) {
-    for (j = 0; j < areas.Nrow(); j++) {
-      found = 0;
-      for (i = 0; i < f.Size(); i++)
-        for (k = 0; k < areas.Ncol(j); k++)
-          if (f[i]->isInArea(areas[j][k]))
-            found++;
-      if (found == 0)
-        handle.logMessage(LOGWARN, "Warning in surveyindex - fleet not defined on all areas");
-    }
-  }
-
   for (i = 0; i < stocknames.Size(); i++) {
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
@@ -222,8 +205,20 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       handle.logMessage(LOGFAIL, "Error in surveyindex - failed to match stock", stocknames[i]);
   }
 
-  //check stock areas
+  //check fleet and stock areas
   if (handle.getLogLevel() >= LOGWARN) {
+    if (fleetnames.Size() > 0) {
+      for (j = 0; j < areas.Nrow(); j++) {
+        found = 0;
+        for (i = 0; i < f.Size(); i++)
+          for (k = 0; k < areas.Ncol(j); k++)
+            if (f[i]->isInArea(areas[j][k]))
+              found++;
+        if (found == 0)
+          handle.logMessage(LOGWARN, "Warning in surveyindex - fleet not defined on all areas");
+      }
+    }
+
     for (j = 0; j < areas.Nrow(); j++) {
       found = 0;
       for (i = 0; i < s.Size(); i++)
@@ -239,8 +234,9 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
 }
 
 void SurveyIndices::Reset(const Keeper* const keeper) {
-  SI->Reset(keeper);
   Likelihood::Reset(keeper);
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset surveyindex component", this->getName());
 }
 
 void SurveyIndices::Print(ofstream& outfile) const {
@@ -250,18 +246,5 @@ void SurveyIndices::Print(ofstream& outfile) const {
     outfile << stocknames[i] << sep;
   outfile << endl;
   SI->Print(outfile);
-  outfile.flush();
-}
-
-void SurveyIndices::printSummary(ofstream& outfile) {
-  int area;
-
-  //JMB - this is nasty hack since there is only one area
-  for (area = 0; area < areaindex.Size(); area++) {
-    outfile << "all   all " << setw(printwidth) << areaindex[area] << sep
-      << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
-      << setw(smallwidth) << weight << sep << setprecision(largeprecision)
-      << setw(largewidth) << likelihood << endl;
-  }
   outfile.flush();
 }

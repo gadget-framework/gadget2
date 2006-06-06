@@ -60,7 +60,7 @@ public:
    * \brief This function will print summary information from each SurveyIndices likelihood calculation
    * \param outfile is the ofstream that all the model likelihood information gets sent to
    */
-  virtual void printSummary(ofstream& outfile);
+  virtual void printSummary(ofstream& outfile) { SI->printSummary(outfile, weight); };
 protected:
   /**
    * \brief This is the SIOnStep used to calculate the likelihood score by fitting a linear regression line to the difference between the calculated indices and the input indices
