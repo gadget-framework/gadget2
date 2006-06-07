@@ -389,66 +389,70 @@ void RenewalData::Reset() {
   if (readoption == 0) {
     for (i = 0; i < renewalTime.Size(); i++) {
       age = renewalAge[i];
-      sum = 0.0;
 
-      //JMB check that the mean length is greater than the minimum length
-      if (meanLength[i] < LgrpDiv->minLength())
-        handle.logMessage(LOGWARN, "Warning in renewal - mean length is less than minimum length");
+      //JMB check that the length data is valid
+      if (isZero(meanLength[i]) || isZero(sdevLength[i])) {
+        handle.logMessage(LOGWARN, "Warning in renewal - invalid length data");
 
-      if (isZero(sdevLength[i]))
-        mult = 0.0;
-      else
+        //JMB set the population to zero
+        for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++)
+          renewalDistribution[i][age][l].setToZero();
+
+      } else {
+        //JMB check that the mean length is greater than the minimum length
+        if (meanLength[i] < LgrpDiv->minLength())
+          handle.logMessage(LOGWARN, "Warning in renewal - mean length is less than minimum length");
+
+        sum = 0.0;
         mult = 1.0 / sdevLength[i];
+        for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++) {
+          dnorm = (LgrpDiv->meanLength(l) - meanLength[i]) * mult;
+          renewalDistribution[i][age][l].N = exp(-(dnorm * dnorm) * 0.5);
+          sum += renewalDistribution[i][age][l].N;
+        }
 
-      for (l = renewalDistribution[i].minLength(age);
-           l < renewalDistribution[i].maxLength(age); l++) {
-
-        dnorm = (LgrpDiv->meanLength(l) - meanLength[i]) * mult;
-        renewalDistribution[i][age][l].N = exp(-(dnorm * dnorm) * 0.5);
-        sum += renewalDistribution[i][age][l].N;
-      }
-
-      sum = (sum > rathersmall ? 10000.0 / sum : 0.0);
-      for (l = renewalDistribution[i].minLength(age);
-           l < renewalDistribution[i].maxLength(age); l++) {
-
-        renewalDistribution[i][age][l].N *= sum;
-        renewalDistribution[i][age][l].W = refWeight[l] * relCond[i];
-        if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
-          handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+        sum = (sum > rathersmall ? 10000.0 / sum : 0.0);
+        for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++) {
+          renewalDistribution[i][age][l].N *= sum;
+          renewalDistribution[i][age][l].W = refWeight[l] * relCond[i];
+          if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
+            handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+        }
       }
     }
 
   } else if (readoption == 1) {
     for (i = 0; i < renewalTime.Size(); i++) {
       age = renewalAge[i];
-      sum = 0.0;
 
-      //JMB check that the mean length is greater than the minimum length
-      if (meanLength[i] < LgrpDiv->minLength())
-        handle.logMessage(LOGWARN, "Warning in renewal - mean length is less than minimum length");
+      //JMB check that the length data is valid
+      if (isZero(meanLength[i]) || isZero(sdevLength[i])) {
+        handle.logMessage(LOGWARN, "Warning in renewal - invalid length data");
 
-      if (isZero(sdevLength[i]))
-        mult = 0.0;
-      else
+        //JMB set the population to zero
+        for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++)
+          renewalDistribution[i][age][l].setToZero();
+
+      } else {
+        //JMB check that the mean length is greater than the minimum length
+        if (meanLength[i] < LgrpDiv->minLength())
+          handle.logMessage(LOGWARN, "Warning in renewal - mean length is less than minimum length");
+
+        sum = 0.0;
         mult = 1.0 / sdevLength[i];
+        for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++) {
+          dnorm = (LgrpDiv->meanLength(l) - meanLength[i]) * mult;
+          renewalDistribution[i][age][l].N = exp(-(dnorm * dnorm) * 0.5);
+          sum += renewalDistribution[i][age][l].N;
+        }
 
-      for (l = renewalDistribution[i].minLength(age);
-           l < renewalDistribution[i].maxLength(age); l++) {
-
-        dnorm = (LgrpDiv->meanLength(l) - meanLength[i]) * mult;
-        renewalDistribution[i][age][l].N = exp(-(dnorm * dnorm) * 0.5);
-        sum += renewalDistribution[i][age][l].N;
-      }
-
-      sum = (sum > rathersmall ? 10000.0 / sum : 0.0);
-      for (l = renewalDistribution[i].minLength(age);
-           l < renewalDistribution[i].maxLength(age); l++) {
-
-        renewalDistribution[i][age][l].N *= sum;
-        renewalDistribution[i][age][l].W = alpha[i] * pow(LgrpDiv->meanLength(l), beta[i]);
-        if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
-          handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+        sum = (sum > rathersmall ? 10000.0 / sum : 0.0);
+        for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++) {
+          renewalDistribution[i][age][l].N *= sum;
+          renewalDistribution[i][age][l].W = alpha[i] * pow(LgrpDiv->meanLength(l), beta[i]);
+          if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
+            handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+        }
       }
     }
 
@@ -456,9 +460,7 @@ void RenewalData::Reset() {
     for (i = 0; i < renewalTime.Size(); i++) {
       age = renewalAge[i];
       minage = renewalDistribution[i].minAge();
-      for (l = renewalDistribution[i].minLength(age);
-           l < renewalDistribution[i].maxLength(age); l++) {
-
+      for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++) {
         renewalDistribution[i][age][l].N = (*renewalNumber[i])[age - minage][l];
         if (handle.getLogLevel() >= LOGWARN) {
           if (renewalDistribution[i][age][l].N < 0.0)

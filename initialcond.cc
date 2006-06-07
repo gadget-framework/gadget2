@@ -441,29 +441,35 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       minage = initialPop[area].minAge();
       maxage = initialPop[area].maxAge();
       for (age = minage; age <= maxage; age++) {
-        scaler = 0.0;
 
-        if (isZero(sdevLength[area][age - minage] * sdevMult))
-          mult = 0.0;
-        else
+        //JMB check that the length data is valid
+        if (isZero(meanLength[area][age - minage] ) || isZero(sdevLength[area][age - minage] * sdevMult)) {
+          handle.logMessage(LOGWARN, "Warning in initial conditions - invalid length data");
+
+          //JMB set the population to zero
+          for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++)
+            initialPop[area][age][l].setToZero();
+
+        } else {
+          //JMB check that the mean length is greater than the minimum length
+          if (meanLength[area][age - minage] < LgrpDiv->minLength())
+            handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is less than minimum length");
+
+          scaler = 0.0;
           mult = 1.0 / (sdevLength[area][age - minage] * sdevMult);
+          for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
+            dnorm = (LgrpDiv->meanLength(l) - meanLength[area][age - minage]) * mult;
+            initialPop[area][age][l].N = exp(-(dnorm * dnorm) * 0.5);
+            scaler += initialPop[area][age][l].N;
+          }
 
-        //JMB check that the mean length is greater than the minimum length
-        if (meanLength[area][age - minage] < LgrpDiv->minLength())
-          handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is less than minimum length");
-
-        for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
-          dnorm = (LgrpDiv->meanLength(l) - meanLength[area][age - minage]) * mult;
-          initialPop[area][age][l].N = exp(-(dnorm * dnorm) * 0.5);
-          scaler += initialPop[area][age][l].N;
-        }
-
-        scaler = (scaler > rathersmall ? 10000.0 / scaler : 0.0);
-        for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
-          initialPop[area][age][l].N *= scaler;
-          initialPop[area][age][l].W = refWeight[l] * relCond[area][age - minage];
-          if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
-            handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+          scaler = (scaler > rathersmall ? 10000.0 / scaler : 0.0);
+          for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
+            initialPop[area][age][l].N *= scaler;
+            initialPop[area][age][l].W = refWeight[l] * relCond[area][age - minage];
+            if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
+              handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+          }
         }
       }
     }
@@ -473,29 +479,35 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       minage = initialPop[area].minAge();
       maxage = initialPop[area].maxAge();
       for (age = minage; age <= maxage; age++) {
-        scaler = 0.0;
 
-        if (isZero(sdevLength[area][age - minage] * sdevMult))
-          mult = 0.0;
-        else
+        //JMB check that the length data is valid
+        if (isZero(meanLength[area][age - minage] ) || isZero(sdevLength[area][age - minage] * sdevMult)) {
+          handle.logMessage(LOGWARN, "Warning in initial conditions - invalid length data");
+
+          //JMB set the population to zero
+          for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++)
+            initialPop[area][age][l].setToZero();
+
+        } else {
+          //JMB check that the mean length is greater than the minimum length
+          if (meanLength[area][age - minage] < LgrpDiv->minLength())
+            handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is less than minimum length");
+
+          scaler = 0.0;
           mult = 1.0 / (sdevLength[area][age - minage] * sdevMult);
+          for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
+            dnorm = (LgrpDiv->meanLength(l) - meanLength[area][age - minage]) * mult;
+            initialPop[area][age][l].N = exp(-(dnorm * dnorm) * 0.5);
+            scaler += initialPop[area][age][l].N;
+          }
 
-        //JMB check that the mean length is greater than the minimum length
-        if (meanLength[area][age - minage] < LgrpDiv->minLength())
-          handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is less than minimum length");
-
-        for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
-          dnorm = (LgrpDiv->meanLength(l) - meanLength[area][age - minage]) * mult;
-          initialPop[area][age][l].N = exp(-(dnorm * dnorm) * 0.5);
-          scaler += initialPop[area][age][l].N;
-        }
-
-        scaler = (scaler > rathersmall ? 10000.0 / scaler : 0.0);
-        for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
-          initialPop[area][age][l].N *= scaler;
-          initialPop[area][age][l].W = alpha[area][age - minage] * pow(LgrpDiv->meanLength(l), beta[area][age - minage]);
-          if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
-            handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+          scaler = (scaler > rathersmall ? 10000.0 / scaler : 0.0);
+          for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
+            initialPop[area][age][l].N *= scaler;
+            initialPop[area][age][l].W = alpha[area][age - minage] * pow(LgrpDiv->meanLength(l), beta[area][age - minage]);
+            if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
+              handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+          }
         }
       }
     }
