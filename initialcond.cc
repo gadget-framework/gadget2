@@ -414,18 +414,23 @@ void InitialCond::Print(ofstream& outfile) const {
     outfile << "\tInternal area " << areas[i] << endl;
     initialPop[i].printNumbers(outfile);
   }
-  outfile << "\tMean lengths\n";
-  for (i = 0; i < meanLength.Nrow(); i++) {
-    for (j = 0; j < meanLength.Ncol(i); j++)
-      outfile << TAB << meanLength[i][j];
-    outfile << endl;
+
+  if ((readoption == 0) || (readoption == 1)) {
+    //JMB print the multipliers that are used to scale the population
+    outfile << "\tArea multipliers used to scale the population\n";
+    for (i = 0; i < areaFactor.Nrow(); i++) {
+      for (j = 0; j < areaFactor.Ncol(i); j++)
+        outfile << TAB << areaFactor[i][j];
+      outfile << endl;
+    }
+    outfile << "\tAge multipliers used to scale the population\n";
+    for (i = 0; i < ageFactor.Nrow(); i++) {
+      for (j = 0; j < ageFactor.Ncol(i); j++)
+        outfile << TAB << ageFactor[i][j];
+      outfile << endl;
+    }
   }
-  outfile << "\tStandard deviation\n";
-  for (i = 0; i < sdevLength.Nrow(); i++) {
-    for (j = 0; j < sdevLength.Ncol(i); j++)
-      outfile << TAB << sdevLength[i][j];
-    outfile << endl;
-  }
+
   outfile << endl;
   outfile.flush();
 }
@@ -437,13 +442,16 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
   double mult, scaler, dnorm;
 
   if (readoption == 0) {
+    if (isZero(sdevMult))  //JMB this should never happen ...
+      handle.logMessage(LOGFAIL, "Error in initial conditions - multiplier for standard deviation is zero");
+
     for (area = 0; area < areas.Size(); area++) {
       minage = initialPop[area].minAge();
       maxage = initialPop[area].maxAge();
       for (age = minage; age <= maxage; age++) {
 
         //JMB check that the length data is valid
-        if (isZero(meanLength[area][age - minage] ) || isZero(sdevLength[area][age - minage] * sdevMult)) {
+        if (isZero(meanLength[area][age - minage] ) || isZero(sdevLength[area][age - minage])) {
           handle.logMessage(LOGWARN, "Warning in initial conditions - invalid length data");
 
           //JMB set the population to zero
@@ -475,13 +483,16 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
     }
 
   } else if (readoption == 1) {
+    if (isZero(sdevMult))  //JMB this should never happen ...
+      handle.logMessage(LOGFAIL, "Error in initial conditions - multiplier for standard deviation is zero");
+
     for (area = 0; area < areas.Size(); area++) {
       minage = initialPop[area].minAge();
       maxage = initialPop[area].maxAge();
       for (age = minage; age <= maxage; age++) {
 
         //JMB check that the length data is valid
-        if (isZero(meanLength[area][age - minage] ) || isZero(sdevLength[area][age - minage] * sdevMult)) {
+        if (isZero(meanLength[area][age - minage] ) || isZero(sdevLength[area][age - minage])) {
           handle.logMessage(LOGWARN, "Warning in initial conditions - invalid length data");
 
           //JMB set the population to zero
