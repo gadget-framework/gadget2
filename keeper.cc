@@ -155,7 +155,7 @@ void Keeper::getOptScaledValues(DoubleVector& val) const {
     handle.logMessage(LOGFAIL, "Error in keeper - received invalid number of optimising variables");
 
   for (i = 0; i < scaledvalues.Size(); i++) {
-    if (opt[i] == 1) {
+    if (opt[i]) {
       val[j] = scaledvalues[i];
       j++;
     }
@@ -168,7 +168,7 @@ void Keeper::getOptInitialValues(DoubleVector& val) const {
     handle.logMessage(LOGFAIL, "Error in keeper - received invalid number of optimising variables");
 
   for (i = 0; i < initialvalues.Size(); i++) {
-    if (opt[i] == 1) {
+    if (opt[i]) {
       val[j] = initialvalues[i];
       j++;
     }
@@ -179,7 +179,7 @@ void Keeper::scaleVariables() {
   int i;
   for (i = 0; i < values.Size(); i++) {
     if (isZero(values[i])) {
-      if (opt[i] == 1)
+      if (opt[i])
         handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
 
       initialvalues[i] = 1.0;
@@ -203,7 +203,7 @@ void Keeper::Update(const DoubleVector& val) {
 
     values[i] = val[i];
     if (isZero(initialvalues[i])) {
-      if (opt[i] == 1)
+      if (opt[i])
         handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[i].getName());
 
       scaledvalues[i] = val[i];
@@ -222,7 +222,7 @@ void Keeper::Update(int pos, double& value) {
 
   values[pos] = value;
   if (isZero(initialvalues[pos])) {
-    if (opt[pos] == 1)
+    if (opt[pos])
       handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[pos].getName());
 
     scaledvalues[pos] = value;
@@ -234,7 +234,7 @@ void Keeper::writeBestValues() {
   int i, j = 0;
   DoubleVector tmpvec(numoptvar, 0.0);
   for (i = 0; i < bestvalues.Size(); i++) {
-    if (opt[i] == 1) {
+    if (opt[i]) {
       tmpvec[j] = bestvalues[i];
       j++;
     }
@@ -318,19 +318,19 @@ void Keeper::Update(const StochasticData* const Stoch) {
           values[j] = Stoch->getValue(i);
           bestvalues[j] = Stoch->getValue(i);
 
-          if (boundsgiven == 0) {
+          if (!boundsgiven) {
             //JMB we are going to optimise all variables
             opt[j] = 1;
           } else {
             lowerbds[j] = Stoch->getLowerBound(i);
             upperbds[j] = Stoch->getUpperBound(i);
             opt[j] = Stoch->getOptFlag(i);
-            if (opt[j] == 1)
+            if (opt[j])
               numoptvar++;
           }
 
           if (isZero(initialvalues[j])) {
-            if (opt[j] == 1)
+            if (opt[j])
               handle.logMessage(LOGWARN, "Warning in keeper - cannot scale switch with initial value zero", switches[j].getName());
 
             scaledvalues[j] = values[j];
@@ -345,11 +345,11 @@ void Keeper::Update(const StochasticData* const Stoch) {
 
     if (handle.getLogLevel() >= LOGWARN) {
       for (i = 0; i < Stoch->numVariables(); i++)
-        if (match[i] == 0)
+        if (!match[i])
           handle.logMessage(LOGWARN, "Warning in keeper - failed to match switch", Stoch->getSwitch(i).getName());
 
       for (i = 0; i < switches.Size(); i++)
-        if (found[i] == 0)
+        if (!found[i])
           handle.logMessage(LOGWARN, "Warning in keeper - using default values for switch", switches[i].getName());
     }
 
@@ -404,7 +404,7 @@ void Keeper::writeParams(const OptInfoPtrVector& optvec, const char* const filen
   paramfile << "; ";
   RUNID.Print(paramfile);
 
-  if (interrupt == 1) {
+  if (interrupt) {
     paramfile << "; Gadget was interrupted after " << EcoSystem->getFuncEval()
       << " function evaluations\n; the best likelihood value found so far is "
       << setprecision(p) << bestlikelihood << endl;
@@ -467,7 +467,7 @@ void Keeper::getOptLowerBounds(DoubleVector& lbs) const {
     handle.logMessage(LOGFAIL, "Error in keeper - received invalid number of optimising variables");
 
   for (i = 0; i < lowerbds.Size(); i++) {
-    if (opt[i] == 1) {
+    if (opt[i]) {
       lbs[j] = lowerbds[i];
       j++;
     }
@@ -480,7 +480,7 @@ void Keeper::getOptUpperBounds(DoubleVector& ubs) const {
     handle.logMessage(LOGFAIL, "Error in keeper - received invalid number of optimising variables");
 
   for (i = 0; i < upperbds.Size(); i++) {
-    if (opt[i] == 1) {
+    if (opt[i]) {
       ubs[j] = upperbds[i];
       j++;
     }
@@ -488,7 +488,7 @@ void Keeper::getOptUpperBounds(DoubleVector& ubs) const {
 }
 
 void Keeper::checkBounds(const LikelihoodPtrVector& likevec) const {
-  if (boundsgiven == 0)
+  if (!boundsgiven)
     return;
 
   int i, count;
@@ -498,7 +498,7 @@ void Keeper::checkBounds(const LikelihoodPtrVector& likevec) const {
     if (likevec[i]->getType() == BOUNDLIKELIHOOD)
       count++;
 
-  if (count == 0)
+  if ((count == 0) && (handle.getRunOptimise()))
     handle.logMessage(LOGWARN, "Warning in keeper - no boundlikelihood component found\nNo penalties will be applied if any of the parameter bounds are exceeded");
   if (count > 1)
     handle.logMessage(LOGWARN, "Warning in keeper - repeated boundlikelihood components found");
@@ -509,7 +509,7 @@ void Keeper::checkBounds(const LikelihoodPtrVector& likevec) const {
       handle.logMessage(LOGFAIL, "Error in keeper - initial value outside bounds for parameter", switches[i].getName());
     if (upperbds[i] < lowerbds[i])
       handle.logMessage(LOGFAIL, "Error in keeper - upper bound lower than lower bound for parameter", switches[i].getName());
-    if ((lowerbds[i] < 0.0) && (upperbds[i] > 0.0) && (opt[i] == 1))
+    if ((lowerbds[i] < 0.0) && (upperbds[i] > 0.0) && (opt[i]))
       handle.logMessage(LOGWARN, "Warning in keeper - bounds span zero for parameter", switches[i].getName());
   }
 }
@@ -518,7 +518,7 @@ void Keeper::storeVariables(double likvalue, const DoubleVector& point) {
   int i, j = 0;
   bestlikelihood = likvalue;
   for (i = 0; i < bestvalues.Size(); i++) {
-    if (opt[i] == 1) {
+    if (opt[i]) {
       bestvalues[i] = point[j];
       j++;
     }

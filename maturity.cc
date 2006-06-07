@@ -140,7 +140,7 @@ void Maturity::storeMatureStock(int area, int age, int length, double number, do
 }
 
 void Maturity::storeMatureTagStock(int area, int age, int length, double number, int id) {
-  if (istagged == 0)
+  if (!istagged)
     handle.logMessage(LOGFAIL, "Error in maturity - invalid tagging experiment");
   if ((id >= tagStorage.numTagExperiments()) || (id < 0))
     handle.logMessage(LOGFAIL, "Error in maturity - invalid tagging experiment");
@@ -168,13 +168,13 @@ void Maturity::setTagged() {
 }
 
 void Maturity::addMaturityTag(const char* tagname) {
-  if (istagged == 0)
+  if (!istagged)
     handle.logMessage(LOGFAIL, "Error in maturity - invalid tagging experiment", tagname);
   tagStorage.addTag(tagname);
 }
 
 void Maturity::deleteMaturityTag(const char* tagname) {
-  if (istagged == 0)
+  if (!istagged)
     handle.logMessage(LOGFAIL, "Error in maturity - invalid tagging experiment", tagname);
 
   int minage, maxage, age, len, a;

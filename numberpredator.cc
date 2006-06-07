@@ -90,7 +90,7 @@ void NumberPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
     }
   }
 
-  if (check == 0) {  //if no prey found to consume then overcons set to actual consumption
+  if (!check) {  //if no prey found to consume then overcons set to actual consumption
     hasoverconsumption[inarea] = 1;
     overcons[inarea][predl] = totalcons[inarea][predl];
   }

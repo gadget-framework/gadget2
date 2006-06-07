@@ -149,7 +149,7 @@ void PredatorPreyPrinter::setPredAndPrey(PredatorPtrVector& predatorvec,
 
   PredatorPtrVector predators;
   PreyPtrVector preys;
-  int i, j, k, index, minage, maxage;
+  int i, j, k, found, minage, maxage;
   delete aggregator;
 
   for (i = 0; i < predatorvec.Size(); i++)
@@ -203,22 +203,22 @@ void PredatorPreyPrinter::setPredAndPrey(PredatorPtrVector& predatorvec,
   //check predator and prey areas, ages and length groups
   if (handle.getLogLevel() >= LOGWARN) {
     for (j = 0; j < areas.Nrow(); j++) {
-      index = 0;
+      found = 0;
       for (i = 0; i < predators.Size(); i++)
         for (k = 0; k < areas.Ncol(j); k++)
           if (predators[i]->isInArea(areas[j][k]))
-            index++;
-      if (index == 0)
+            found++;
+      if (found == 0)
         handle.logMessage(LOGWARN, "Warning in predatorpreyprinter - predators not defined on all areas");
     }
 
     for (j = 0; j < areas.Nrow(); j++) {
-      index = 0;
+      found = 0;
       for (i = 0; i < preys.Size(); i++)
         for (k = 0; k < areas.Ncol(j); k++)
           if (preys[i]->isInArea(areas[j][k]))
-            index++;
-      if (index == 0)
+            found++;
+      if (found == 0)
         handle.logMessage(LOGWARN, "Warning in predatorpreyprinter - preys not defined on all areas");
     }
 
@@ -231,32 +231,32 @@ void PredatorPreyPrinter::setPredAndPrey(PredatorPtrVector& predatorvec,
       }
     }
 
-    index = 0;
+    found = 0;
     for (i = 0; i < preys.Size(); i++)
       if (minage >= ((StockPrey*)preys[i])->minAge())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in predatorpreyprinter - minimum age less than prey age");
 
-    index = 0;
+    found = 0;
     for (i = 0; i < preys.Size(); i++)
       if (maxage <= ((StockPrey*)preys[i])->maxAge())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in predatorpreyprinter - maximum age greater than prey age");
 
-    index = 0;
+    found = 0;
     for (i = 0; i < preys.Size(); i++)
       if (LgrpDiv->maxLength(0) > preys[i]->getLengthGroupDiv()->minLength())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in predatorpreyprinter - minimum length group less than prey length");
 
-    index = 0;
+    found = 0;
     for (i = 0; i < preys.Size(); i++)
       if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < preys[i]->getLengthGroupDiv()->maxLength())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in predatorpreyprinter - maximum length group greater than prey length");
   }
 

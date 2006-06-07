@@ -127,7 +127,7 @@ double Ecosystem::SimulateAndUpdate(const DoubleVector& x) {
   keeper->getCurrentValues(currentval);
   keeper->getInitialValues(initialval);
   for (i = 0; i < currentval.Size(); i++) {
-    if (optflag[i] == 1) {
+    if (optflag[i]) {
       currentval[i] = x[j] * initialval[i];
       j++;
     }

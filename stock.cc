@@ -422,37 +422,37 @@ int Stock::isBirthday(const TimeClass* const TimeInfo) const {
 }
 
 StockPrey* Stock::getPrey() const {
-  if (iseaten == 0)
+  if (!iseaten)
     handle.logMessage(LOGFAIL, "Error in stock - no prey defined for", this->getName());
   return prey;
 }
 
 Migration* Stock::getMigration() const {
-  if (doesmigrate == 0)
+  if (!doesmigrate)
     handle.logMessage(LOGFAIL, "Error in stock - no migration defined for", this->getName());
   return migration;
 }
 
 PopPredator* Stock::getPredator() const {
-  if (doeseat == 0)
+  if (!doeseat)
     handle.logMessage(LOGFAIL, "Error in stock - no predator defined for", this->getName());
   return predator;
 }
 
 const StockPtrVector& Stock::getMatureStocks() {
-  if (doesmature == 0)
+  if (!doesmature)
     handle.logMessage(LOGFAIL, "Error in stock - no mature stocks defined for", this->getName());
   return maturity->getMatureStocks();
 }
 
 const StockPtrVector& Stock::getTransitionStocks() {
-  if (doesmove == 0)
+  if (!doesmove)
     handle.logMessage(LOGFAIL, "Error in stock - no transition stocks defined for", this->getName());
   return transition->getTransitionStocks();
 }
 
 const StockPtrVector& Stock::getStrayStocks() {
-  if (doesstray == 0)
+  if (!doesstray)
     handle.logMessage(LOGFAIL, "Error in stock - no straying stocks defined for", this->getName());
   return stray->getStrayStocks();
 }

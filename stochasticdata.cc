@@ -9,7 +9,7 @@ StochasticData::StochasticData(const char* const filename) {
   netrun = 0;
   readInfo = new InitialInputFile(filename);
   readInfo->readFromFile();
-  if (readInfo->isRepeatedValues() == 1) {
+  if (readInfo->isRepeatedValues()) {
     if (readInfo->numSwitches() > 0)
       readInfo->getSwitches(switches);
     readInfo->getValues(values);
@@ -33,11 +33,11 @@ StochasticData::StochasticData() {
 }
 
 StochasticData::~StochasticData() {
-  if (netrun == 1) {
+  if (netrun) {
 #ifdef GADGET_NETWORK
     if (dataFromMaster != NULL)
       delete[] dataFromMaster;
-    if (getdata == 1)
+    if (getdata)
       slave->stopNetCommunication();
     delete slave;
 #endif
@@ -46,7 +46,7 @@ StochasticData::~StochasticData() {
 }
 
 void StochasticData::readNextLine() {
-  if ((netrun == 1) || (readInfo->isRepeatedValues() == 0))
+  if ((netrun) || (!readInfo->isRepeatedValues()))
     return;
   readInfo->readNextLine();
   values.Reset();
@@ -54,13 +54,13 @@ void StochasticData::readNextLine() {
 }
 
 int StochasticData::getOptFlag(int i) const {
-  if (netrun == 1)
+  if (netrun)
     return 0;
   return optimise[i];
 }
 
 int StochasticData::isOptGiven() const {
-  if (netrun == 1)
+  if (netrun)
     return 0;
   return (optimise.Size() > 0);
 }
@@ -82,7 +82,7 @@ void StochasticData::readFromNetwork() {
 
     //try to receive switches from master
     getdata = slave->receiveFromMaster();
-    if (getdata == 1) {
+    if (getdata) {
       if (slave->receivedString()) {
         for (i = 0; i < numParam; i++) {
           Parameter sw(slave->getString(i));
@@ -94,7 +94,7 @@ void StochasticData::readFromNetwork() {
 
     //try to receive lowerbounds from master
     getdata = slave->receiveFromMaster();
-    if (getdata == 1) {
+    if (getdata) {
       if (slave->receivedBounds()) {
         slave->getBound(dataFromMaster);
         for (i = 0; i < numParam; i++)
@@ -105,7 +105,7 @@ void StochasticData::readFromNetwork() {
 
     //try to receive upperbounds from master
     getdata = slave->receiveFromMaster();
-    if (getdata == 1) {
+    if (getdata) {
       if (slave->receivedBounds()) {
         slave->getBound(dataFromMaster);
         for (i = 0; i < numParam; i++)
@@ -116,7 +116,7 @@ void StochasticData::readFromNetwork() {
 
     //try to receive vector value from master
     getdata = slave->receiveFromMaster();
-    if (getdata == 1) {
+    if (getdata) {
       if (slave->receivedVector()) {
         slave->getVector(dataFromMaster);
         for (i = 0; i < values.Size(); i++)
@@ -128,7 +128,7 @@ void StochasticData::readFromNetwork() {
   } else
     getdata = 0;
 
-  if (getdata == 1) {
+  if (getdata) {
     if (switches.Size() != values.Size())
       handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to read values");
 
@@ -146,7 +146,7 @@ void StochasticData::readFromNetwork() {
 void StochasticData::readNextLineFromNetwork() {
   int i;
   getdata = slave->receiveFromMaster();
-  if (getdata == 1) {
+  if (getdata) {
     if (slave->receivedVector()) {
       slave->getVector(dataFromMaster);
       for (i = 0; i < values.Size(); i++)

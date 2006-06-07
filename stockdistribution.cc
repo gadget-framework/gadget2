@@ -427,7 +427,7 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
     handle.logMessage(LOGMESSAGE, "Calculating likelihood score for stockdistribution component", this->getName());
   for (i = 0; i < stocknames.Size(); i++) {
     aggregator[i]->Sum();
-    if ((handle.getLogLevel() >= LOGWARN) && (aggregator[i]->checkCatchData() == 1))
+    if ((handle.getLogLevel() >= LOGWARN) && (aggregator[i]->checkCatchData()))
       handle.logMessage(LOGWARN, "Warning in stockdistribution - zero catch found");
   }
 

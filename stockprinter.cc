@@ -136,7 +136,7 @@ StockPrinter::StockPrinter(CommentStream& infile, const TimeClass* const TimeInf
 void StockPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const Area) {
   StockPtrVector stocks;
   delete aggregator;
-  int i, j, k, index, minage, maxage;
+  int i, j, k, found, minage, maxage;
 
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < stocknames.Size(); j++)
@@ -165,12 +165,12 @@ void StockPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const Are
   //check stock areas, ages and lengths
   if (handle.getLogLevel() >= LOGWARN) {
     for (j = 0; j < areas.Nrow(); j++) {
-      index = 0;
+      found = 0;
       for (i = 0; i < stocks.Size(); i++)
         for (k = 0; k < areas.Ncol(j); k++)
           if (stocks[i]->isInArea(areas[j][k]))
-            index++;
-      if (index == 0)
+            found++;
+      if (found == 0)
         handle.logMessage(LOGWARN, "Warning in stockprinter - stock not defined on all areas");
     }
 
@@ -183,32 +183,32 @@ void StockPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const Are
       }
     }
 
-    index = 0;
+    found = 0;
     for (i = 0; i < stocks.Size(); i++)
       if (minage >= stocks[i]->minAge())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in stockprinter - minimum age less than stock age");
 
-    index = 0;
+    found = 0;
     for (i = 0; i < stocks.Size(); i++)
       if (maxage <= stocks[i]->maxAge())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in stockprinter - maximum age greater than stock age");
 
-    index = 0;
+    found = 0;
     for (i = 0; i < stocks.Size(); i++)
       if (LgrpDiv->maxLength(0) > stocks[i]->getLengthGroupDiv()->minLength())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in stockprinter - minimum length group less than stock length");
 
-    index = 0;
+    found = 0;
     for (i = 0; i < stocks.Size(); i++)
       if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < stocks[i]->getLengthGroupDiv()->maxLength())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in stockprinter - maximum length group greater than stock length");
   }
 

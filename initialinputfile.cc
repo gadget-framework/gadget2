@@ -5,7 +5,7 @@
 extern ErrorHandler handle;
 
 int InitialInputFile::isDataLeft() {
-  if (repeatedValues == 0)
+  if (!repeatedValues)
     return 0;
   infile >> ws;
   if (infile.eof())
@@ -100,8 +100,13 @@ void InitialInputFile::readFromFile() {
 
   this->readHeader();
   infile >> ws;
-  if (repeatedValues == 0) {
 
+  if (repeatedValues) {
+    this->readNextLine();
+    if ((switches.Size() > 0) && (switches.Size() != values.Size()))
+      handle.logMessage(LOGFAIL, "Error in initial input file - failed to read switches");
+
+  } else {
     Parameter sw;
     double val, lower, upper;
     int opt, check, rand;
@@ -139,7 +144,7 @@ void InitialInputFile::readFromFile() {
       if (infile.eof())
         check++;
 
-      if (rand == 1) {
+      if (rand) {
         // generate a random point somewhere between the bounds
         handle.logMessage(LOGMESSAGE, "Generating a random starting point for switch", sw.getName());
         val = lower + (randomNumber() * (upper - lower));
@@ -166,11 +171,6 @@ void InitialInputFile::readFromFile() {
       for (j = 0; j < switches.Size(); j++)
         if ((strcasecmp(switches[i].getName(), switches[j].getName()) == 0) && (i != j))
           handle.logMessage(LOGFAIL, "Error in initial input file - repeated switch", switches[i].getName());
-
-  } else {
-    this->readNextLine();
-    if ((switches.Size() > 0) && (switches.Size() != values.Size()))
-      handle.logMessage(LOGFAIL, "Error in initial input file - failed to read switches");
   }
 
   //JMB close the errorhandler to clear the filename from the stack

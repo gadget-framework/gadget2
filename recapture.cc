@@ -338,7 +338,7 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
     lik = 0.0;
     if (tagvec[t]->isWithinPeriod(year, step)) {
 
-      if (checktag == 0) {
+      if (!checktag) {
         if (handle.getLogLevel() >= LOGMESSAGE)
           handle.logMessage(LOGMESSAGE, "Calculating likelihood score for recaptures component", this->getName());
         checktag++;
@@ -373,7 +373,7 @@ double Recaptures::calcLikPoisson(const TimeClass* const TimeInfo) {
         for (len = 0; len < lengths.Size() - 1; len++) {
           x = ((*alptr)[a][0][len]).N;
 
-          if (checktime == 0) {
+          if (!checktime) {
             // this is a modelled return that has a non-zero observed return
             n = (*obsDistribution[t][timeid])[a][len];
             (*modelDistribution[t][timeid])[a][len] = x;

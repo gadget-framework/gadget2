@@ -232,9 +232,9 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
 
 void MainInfo::checkUsage(const char* const inputdir, const char* const workingdir) {
   int check = 0;
-  if (runnetwork == 1)
+  if (runnetwork)
     check = max(0, printLogLevel);
-  else if (runstochastic == 1)
+  else if (runstochastic)
     check = max(3, printLogLevel);
   else
     check = max(2, printLogLevel);
@@ -244,13 +244,13 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
   handle.logMessage(LOGINFO, "using data from directory:", inputdir);
   handle.logMessage(LOGMESSAGE, ""); //write a blank line to the log file
 
-  if (runnetwork == 1) {
+  if (runnetwork) {
     handle.logMessage(LOGINFO, "\n** Gadget running in network mode for Paramin **");
-    if (printInitialInfo == 1) {
+    if (printInitialInfo) {
       handle.logMessage(LOGINFO, "Warning - cannot print initial model information");
       printInitialInfo = 0;
     }
-    if (printFinalInfo == 1) {
+    if (printFinalInfo) {
       handle.logMessage(LOGINFO, "Warning - cannot print final model information");
       printFinalInfo = 0;
     }
@@ -258,7 +258,7 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
 
   //JMB check to see if we can actually open required files ...
   ifstream tmpin;
-  if (givenInitialParam == 1) {
+  if (givenInitialParam) {
     //JMB check to see that the input and output filenames are different
     //Otherwise Gadget will over-write the inputfile with a blank outputfile ...
     if (strcasecmp(strInitialParamFile, printinfo.getParamOutFile()) == 0)
@@ -269,20 +269,20 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
     tmpin.close();
     tmpin.clear();
   }
-  if (givenOptInfo == 1) {
+  if (givenOptInfo) {
     tmpin.open(strOptInfoFile, ios::in);
     handle.checkIfFailure(tmpin, strOptInfoFile);
     tmpin.close();
     tmpin.clear();
   }
   ofstream tmpout;
-  if (printInitialInfo == 1) {
+  if (printInitialInfo) {
     tmpout.open(strPrintInitialFile, ios::out);
     handle.checkIfFailure(tmpout, strPrintInitialFile);
     tmpout.close();
     tmpout.clear();
   }
-  if (printFinalInfo == 1) {
+  if (printFinalInfo) {
     tmpout.open(strPrintFinalFile, ios::out);
     handle.checkIfFailure(tmpout, strPrintFinalFile);
     tmpout.close();
@@ -290,31 +290,31 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
   }
   printinfo.checkPrintInfo(runnetwork);
 
-  if ((runstochastic != 1) && (runnetwork == 1)) {
+  if ((!runstochastic) && (runnetwork)) {
     handle.logMessage(LOGWARN, "\nWarning - Gadget for the paramin network should be used with -s option\nGadget will now set the -s switch to perform a simulation run");
     runstochastic = 1;
   }
 
-  if ((runstochastic == 1) && (runoptimise == 1)) {
+  if ((runstochastic) && (runoptimise)) {
     handle.logMessage(LOGWARN, "\nWarning - Gadget has been started with both the -s switch and the -l switch\nHowever, it is not possible to do both a simulation run and a likelihood run!\nGadget will perform only the simulation run (and ignore the -l switch)");
     runoptimise = 0;
   }
 
   handle.setRunOptimise(runoptimise);
-  if ((printLogLevel == 1) && (runoptimise == 0))
+  if ((printLogLevel == 1) && (!runoptimise))
     handle.logMessage(LOGWARN, "\n** Gadget cannot disable warnings for a simulation run **");
 
-  if ((handle.checkLogFile()) && (runoptimise == 1) && (printLogLevel >= 5))
+  if ((handle.checkLogFile()) && (runoptimise) && (printLogLevel >= 5))
     handle.logMessage(LOGWARN, "\n** logging model information from a Gadget optimisation is not recommended **");
 
-  if ((handle.checkLogFile()) && (runnetwork == 1))
+  if ((handle.checkLogFile()) && (runnetwork))
     handle.logMessage(LOGWARN, "\n** logging model information from a Gadget network run is not recommended **");
 
   //check the printing options
   check = runprint;
-  if (runnetwork == 1)
+  if (runnetwork)
     check = 0;
-  else if ((runoptimise == 1) && (forceprint == 0))
+  else if ((runoptimise) && (!forceprint))
     check = 0;
   runprint = check;
 

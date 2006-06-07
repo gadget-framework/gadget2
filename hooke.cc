@@ -285,7 +285,7 @@ void OptInfoHooke::OptimiseLikelihood() {
         /* if it has been trapped but f has now gotten better (bndcheck) */
         /* we assume that we are out of the trap, reset the counters     */
         /* and go back to the stepsize we had when we got trapped        */
-        if ((trapped[i] == 1) && (newf < oldf * bndcheck)) {
+        if ((trapped[i]) && (newf < oldf * bndcheck)) {
           trapped[i] = 0;
           lbound[i] = 0;
           rbounds[i] = 0;
@@ -294,7 +294,7 @@ void OptInfoHooke::OptimiseLikelihood() {
         } else if (trialx[i] < (lowerb[i] + verysmall)) {
           lbound[i]++;
           trialx[i] = lowerb[i];
-          if (trapped[i] == 0) {
+          if (!trapped[i]) {
             initialstep[i] = delta[i];
             trapped[i] = 1;
           }
@@ -306,7 +306,7 @@ void OptInfoHooke::OptimiseLikelihood() {
         } else if (trialx[i] > (upperb[i] - verysmall)) {
           rbounds[i]++;
           trialx[i] = upperb[i];
-          if (trapped[i] == 0) {
+          if (!trapped[i]) {
             initialstep[i] = delta[i];
             trapped[i] = 1;
           }

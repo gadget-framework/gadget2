@@ -111,7 +111,7 @@ int SuitFuncPtrVector::readSuitFunction(CommentStream& infile,
   } else
     handle.logFileMessage(LOGFAIL, "no valid suitability function found");
 
-  if (found == 1) {
+  if (found) {
     tempFunc->readConstants(infile, TimeInfo, keeper);
     this->resize(tempFunc);
   }

@@ -124,7 +124,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile, const TimeClass*
 void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec, const AreaClass* const Area) {
   PredatorPtrVector predators;
   delete aggregator;
-  int i, j, k, index;
+  int i, j, k, found;
 
   for (i = 0; i < predatorvec.Size(); i++)
     for (j = 0; j < predatornames.Size(); j++)
@@ -148,27 +148,27 @@ void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec, const Area
   //check predator areas and lengths
   if (handle.getLogLevel() >= LOGWARN) {
     for (j = 0; j < areas.Nrow(); j++) {
-      index = 0;
+      found = 0;
       for (i = 0; i < predators.Size(); i++)
         for (k = 0; k < areas.Ncol(j); k++)
           if (predators[i]->isInArea(areas[j][k]))
-            index++;
-      if (index == 0)
+            found++;
+      if (found == 0)
         handle.logMessage(LOGWARN, "Warning in predatoroverprinter - predator not defined on all areas");
     }
 
-    index = 0;
+    found = 0;
     for (i = 0; i < predators.Size(); i++)
       if (predLgrpDiv->maxLength(0) > predators[i]->getLengthGroupDiv()->minLength())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in predatoroverprinter - minimum length group less than predator length");
 
-    index = 0;
+    found = 0;
     for (i = 0; i < predators.Size(); i++)
       if (predLgrpDiv->minLength(predLgrpDiv->numLengthGroups()) < predators[i]->getLengthGroupDiv()->maxLength())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in predatoroverprinter - maximum length group greater than predator length");
   }
 

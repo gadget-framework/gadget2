@@ -141,7 +141,7 @@ int main(int aNumber, char* const aVector[]) {
   if (!(main.runNetwork()))
     EcoSystem->writeParams((main.getPI()).getParamOutFile(), (main.getPI()).getPrecision());
 
-  if (check == 1)
+  if (check)
     free(workingdir);
 
   delete EcoSystem;

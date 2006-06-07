@@ -178,7 +178,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
                   * this->getPrey(prey)->getBiomass(area, preyl);
 
           //JMB - dont take the power if we dont have to
-          if (check == 0)
+          if (!check)
             tmp = pow(tmp, preference[prey]);
           (*cons[inarea][prey])[predl][preyl] = tmp;
           Phi[inarea][predl] += tmp;

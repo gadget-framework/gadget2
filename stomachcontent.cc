@@ -296,7 +296,7 @@ SC::~SC() {
     preyLgrpDiv = 0;
   }
 
-  if (usepredages == 0)
+  if (!usepredages)
     delete predLgrpDiv;
 
   delete[] scname;
@@ -347,7 +347,7 @@ void SC::setPredatorsAndPreys(PredatorPtrVector& Predators, PreyPtrVector& Preys
       handle.logMessage(LOGFAIL, "Error in stomachcontent - cannot aggregate predator", predators[i]->getName());
 
   preyLgrpDiv = new LengthGroupDivision*[preyindex.Size()];
-  if (usepredages == 0) {
+  if (!usepredages) {
     predLgrpDiv = new LengthGroupDivision(predatorlengths);
     if (predLgrpDiv->Error())
       handle.logFileMessage(LOGFAIL, "\nError in stomachcontent - failed to create length group");

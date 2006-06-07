@@ -360,7 +360,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
   infile >> text >> ws;
   while ((strcasecmp(text, "[stock]") != 0) && !infile.eof()) {
     //Do not try to read printfile if we dont need it
-    if (main.runPrint() == 1) {
+    if (main.runPrint()) {
       subfile.open(text, ios::in);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);

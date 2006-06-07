@@ -210,7 +210,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     case 4:
     case 5:
     case 6:
-      if (yearly == 1)
+      if (yearly)
         handle.logMessage(LOGWARN, "Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
       break;
     default:
@@ -353,7 +353,7 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
     case 5:
       illegal = 0;
       this->calcCorrelation();
-      if (illegal == 1 || LU.isIllegal() == 1)
+      if ((illegal) || (LU.isIllegal()))
         handle.logMessage(LOGWARN, "Warning in catchdistribution - multivariate normal out of bounds");
       break;
     default:
@@ -527,7 +527,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   if (!(AAT.atCurrentTime(TimeInfo)))
     return;
 
-  if ((handle.getLogLevel() >= LOGMESSAGE) && ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())))
+  if ((handle.getLogLevel() >= LOGMESSAGE) && ((!yearly) || (TimeInfo->getStep() == TimeInfo->numSteps())))
     handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchdistribution component", this->getName());
 
   int i;
@@ -540,7 +540,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
   aggregator->Sum();
-  if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData() == 1))
+  if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData()))
     handle.logMessage(LOGWARN, "Warning in catchdistribution - zero catch found");
   alptr = &aggregator->getSum();
 
@@ -571,7 +571,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
       break;
   }
 
-  if ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
+  if ((!yearly) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
     likelihood += l;
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
@@ -643,7 +643,7 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
       }
     }
 
-    if (yearly == 0) { //calculate likelihood on all steps
+    if (!yearly) { //calculate likelihood on all steps
       for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
         for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
           likelihoodValues[timeindex][area] +=
@@ -703,7 +703,7 @@ double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
       }
     }
 
-    if (yearly == 0) { //calculate likelihood on all steps
+    if (!yearly) { //calculate likelihood on all steps
       for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
         for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
           likelihoodValues[timeindex][area] +=
@@ -762,7 +762,7 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
       }
     }
 
-    if (yearly == 0) { //calculate likelihood on all steps
+    if (!yearly) { //calculate likelihood on all steps
       for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
         for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
           totalmodel += (*modelDistribution[timeindex][area])[age][len];
@@ -838,7 +838,7 @@ void CatchDistribution::calcCorrelation() {
     if (fabs(params[i] - 1.0) > 1.0)
       illegal = 1;
 
-  if (illegal == 0) {
+  if (!illegal) {
     for (i = 0; i < p; i++) {
       for (j = 0; j <= i; j++) {
         for (l = 1; l <= lag; l++) {
@@ -861,7 +861,7 @@ double CatchDistribution::calcLikMVNormal() {
   double sumdata, sumdist;
   int age, len, area;
 
-  if (illegal == 1 || LU.isIllegal() == 1 || isZero(sigma))
+  if ((illegal) || (LU.isIllegal()) || isZero(sigma))
     return verybig;
 
   DoubleVector diff(LgrpDiv->numLengthGroups(), 0.0);
@@ -964,7 +964,7 @@ void CatchDistribution::printSummary(ofstream& outfile) {
 
   for (year = 0; year < likelihoodValues.Nrow(); year++) {
     for (area = 0; area < likelihoodValues.Ncol(year); area++) {
-      if (yearly == 0) {
+      if (!yearly) {
         outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
           << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
           << setw(largewidth) << this->getName() << sep << setw(smallwidth) << weight

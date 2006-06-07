@@ -132,7 +132,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   } else
     handle.logFileUnexpected(LOGFAIL, "weightlossfunction", text);
 
-  if (onlyParent == 0) {
+  if (!onlyParent) {
     infile >> text >> ws;
     if (strcasecmp(text, "recruitment") != 0)
       handle.logFileUnexpected(LOGFAIL, "recruitment", text);
@@ -192,7 +192,7 @@ SpawnData::~SpawnData() {
 void SpawnData::setStock(StockPtrVector& stockvec) {
   int i, j, index;
 
-  if (onlyParent == 1)
+  if (onlyParent)
     return;
 
   for (i = 0; i < stockvec.Size(); i++)
@@ -254,7 +254,7 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
 
 void SpawnData::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo) {
 
-  if (onlyParent == 0)
+  if (!onlyParent)
     spawnParameters.Update(TimeInfo);
 
   int age, len;
@@ -266,7 +266,7 @@ void SpawnData::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const Ti
         pop = Alkeys[age][len] * spawnProportion[len];
 
         //calculate the spawning stock biomass if needed
-        if (onlyParent == 0)
+        if (!onlyParent)
           spawnNumbers[age][len] = calcSpawnNumber(age, len, pop.N, pop.W);
 
         pop *= exp(-spawnMortality[len]);
@@ -280,7 +280,7 @@ void SpawnData::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const Ti
 
 void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
 
-  if (onlyParent == 1)
+  if (onlyParent)
     return;
 
   int s, age, len;
@@ -385,7 +385,7 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
   }
 
   //JMB check that the sum of the ratios is 1
-  if ((onlyParent == 0) && (TimeInfo->getTime() == 1)) {
+  if ((!onlyParent) && (TimeInfo->getTime() == 1)) {
     ratioscale = 0.0;
     for (i = 0; i < spawnRatio.Size(); i++ )
       ratioscale += spawnRatio[i];
@@ -455,7 +455,7 @@ double SpawnData::calcRecruitNumber() {
 
 void SpawnData::Print(ofstream& outfile) const {
 
-  if (onlyParent == 1) {
+  if (onlyParent) {
     outfile << "\nSpawning data\n\t** Only modelling the affect on the parent stock **"
      << "\n\t** No recruits are created during the spawning process **\n";
     return;

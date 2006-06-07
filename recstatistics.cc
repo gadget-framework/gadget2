@@ -104,15 +104,15 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
 
   //Check the number of columns in the inputfile
   infile >> ws;
-  if ((readvar == 1) && (countColumns(infile) != 7))
+  if ((readvar) && (countColumns(infile) != 7))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
-  else if ((readvar == 0) && (countColumns(infile) != 6))
+  else if ((!readvar) && (countColumns(infile) != 6))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
   year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
-    if (readvar == 1)
+    if (readvar)
       infile >> tmptag >> year >> step >> tmparea >> tmpnumber >> tmpmean >> tmpstddev >> ws;
     else
       infile >> tmptag >> year >> step >> tmparea >> tmpnumber >> tmpmean >> ws;
@@ -157,9 +157,9 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
           numbers.resize(new DoubleMatrix(1, numarea, 0.0));
           obsMean.resize(new DoubleMatrix(1, numarea, 0.0));
           modelMean.resize(new DoubleMatrix(1, numarea, 0.0));
-          if (needvar == 1)
+          if (needvar)
             modelStdDev.resize(new DoubleMatrix(1, numarea, 0.0));
-          if (readvar == 1)
+          if (readvar)
             obsStdDev.resize(new DoubleMatrix(1, numarea, 0.0));
         }
 
@@ -174,7 +174,7 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
           Steps[tagid].resize(1, step);
           (*numbers[tagid]).AddRows(1, numarea, 0.0);
           (*obsMean[tagid]).AddRows(1, numarea, 0.0);
-          if (readvar == 1)
+          if (readvar)
             (*obsStdDev[tagid]).AddRows(1, numarea, 0.0);
           timeid = Years.Ncol(tagid) - 1;
         }
@@ -190,7 +190,7 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
       count++;
       (*numbers[tagid])[timeid][areaid] = tmpnumber;
       (*obsMean[tagid])[timeid][areaid] = tmpmean;
-      if (readvar == 1)
+      if (readvar)
         (*obsStdDev[tagid])[timeid][areaid] = tmpstddev;
     }
   }

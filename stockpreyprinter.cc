@@ -135,7 +135,7 @@ StockPreyPrinter::StockPreyPrinter(CommentStream& infile, const TimeClass* const
 void StockPreyPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* const Area) {
   PreyPtrVector preys;
   delete aggregator;
-  int i, j, k, index, minage, maxage;
+  int i, j, k, found, minage, maxage;
 
   for (i = 0; i < preyvec.Size(); i++)
     for (j = 0; j < preynames.Size(); j++)
@@ -169,12 +169,12 @@ void StockPreyPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* const Ar
   //check stock areas, ages and lengths
   if (handle.getLogLevel() >= LOGWARN) {
     for (j = 0; j < areas.Nrow(); j++) {
-      index = 0;
+      found = 0;
       for (i = 0; i < preys.Size(); i++)
         for (k = 0; k < areas.Ncol(j); k++)
           if (preys[i]->isInArea(areas[j][k]))
-            index++;
-      if (index == 0)
+            found++;
+      if (found == 0)
         handle.logMessage(LOGWARN, "Warning in stockpreyprinter - prey not defined on all areas");
     }
 
@@ -187,32 +187,32 @@ void StockPreyPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* const Ar
       }
     }
 
-    index = 0;
+    found = 0;
     for (i = 0; i < preys.Size(); i++)
       if (minage >= ((StockPrey*)preys[i])->minAge())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in stockpreyprinter - minimum age less than prey age");
 
-    index = 0;
+    found = 0;
     for (i = 0; i < preys.Size(); i++)
       if (maxage <= ((StockPrey*)preys[i])->maxAge())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in stockpreyprinter - maximum age greater than prey age");
 
-    index = 0;
+    found = 0;
     for (i = 0; i < preys.Size(); i++)
       if (LgrpDiv->maxLength(0) > preys[i]->getLengthGroupDiv()->minLength())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in stockpreyprinter - minimum length group less than prey length");
 
-    index = 0;
+    found = 0;
     for (i = 0; i < preys.Size(); i++)
       if (LgrpDiv->minLength(LgrpDiv->numLengthGroups()) < preys[i]->getLengthGroupDiv()->maxLength())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in stockpreyprinter - maximum length group greater than prey length");
   }
 

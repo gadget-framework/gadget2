@@ -182,7 +182,7 @@ void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys, const TimeCl
 void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
   AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo) {
 
-  if (istagged == 0)
+  if (!istagged)
     handle.logMessage(LOGFAIL, "Error in stray - invalid tagging experiment");
 
   int age, len, tag;
@@ -317,13 +317,13 @@ void StrayData::setTagged() {
 }
 
 void StrayData::addStrayTag(const char* tagname) {
-  if (istagged == 0)
+  if (!istagged)
     handle.logMessage(LOGFAIL, "Error in stray - invalid tagging experiment", tagname);
   tagStorage.addTag(tagname);
 }
 
 void StrayData::deleteStrayTag(const char* tagname) {
-  if (istagged == 0)
+  if (!istagged)
     handle.logMessage(LOGFAIL, "Error in stray - invalid tagging experiment", tagname);
 
   int minage, maxage, age, len, a;

@@ -78,7 +78,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     pos[i] = nc;
 
   //if minpos and maxpos are needed
-  if (samedl == 0) {
+  if (!samedl) {
     minpos.resize(nc, nf - 1); //initialised to Lf->Size() - 1
     for (i = minlength; i < maxlength; i++)
       if (i < minpos[pos[i]])
@@ -98,7 +98,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
         maxpos[i + 1] = maxpos[i];
 
     //if number in each length group is needed
-    if (targetisfiner == 1) {
+    if (targetisfiner) {
       nrof.resize(nf, 1);
       for (i = minlength; i < maxlength; i++)
         nrof[i] = maxpos[pos[i]] - minpos[pos[i]] + 1;
@@ -106,7 +106,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   }
 
   //if the conversionindex is to be used for interpolation
-  if (interpolate == 1) {
+  if (interpolate) {
     interpratio.resize(nf, -1.0);
     interppos.resize(nf, -1);
     k = 0;
@@ -138,7 +138,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 //Vc to a finer length distribution Vf using the conversionindex CI
 void ConversionIndex::interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc) {
 
-  if (interpolate == 0)
+  if (!interpolate)
     handle.logMessage(LOGFAIL, "Error in conversionindex - cannot interpolate between lengthgroups");
 
   int i;

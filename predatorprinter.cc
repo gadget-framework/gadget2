@@ -147,7 +147,6 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
   outfile << "; Predation output file for the following predators";
   for (i = 0; i < predatornames.Size(); i++)
     outfile << sep << predatornames[i];
-
   outfile << "\n; Consuming the following preys";
   for (i = 0; i < preynames.Size(); i++)
     outfile << sep << preynames[i];
@@ -157,7 +156,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
   else
     outfile << "\n; Printing the following information at the start of each timestep";
 
-  if (biomass == 1)
+  if (biomass)
     outfile << "\n; year-step-area-pred length-prey length-biomass consumed\n";
   else
     outfile << "\n; year-step-area-pred length-prey length-number consumed\n";
@@ -170,7 +169,7 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec,
 
   PredatorPtrVector predators;
   PreyPtrVector preys;
-  int i, j, k, index;
+  int i, j, k, found;
   delete aggregator;
 
   for (i = 0; i < predatorvec.Size(); i++)
@@ -191,51 +190,51 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec,
   //check predator and prey areas and length groups
   if (handle.getLogLevel() >= LOGWARN) {
     for (j = 0; j < areas.Nrow(); j++) {
-      index = 0;
+      found = 0;
       for (i = 0; i < predators.Size(); i++)
         for (k = 0; k < areas.Ncol(j); k++)
           if (predators[i]->isInArea(areas[j][k]))
-            index++;
-      if (index == 0)
+            found++;
+      if (found == 0)
         handle.logMessage(LOGWARN, "Warning in predatorprinter - predators not defined on all areas");
     }
 
-    index = 0;
+    found = 0;
     for (i = 0; i < predators.Size(); i++)
       if (predLgrpDiv->maxLength(0) > predators[i]->getLengthGroupDiv()->minLength())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in predatorprinter - minimum length group less than predator length");
 
-    index = 0;
+    found = 0;
     for (i = 0; i < predators.Size(); i++)
       if (predLgrpDiv->minLength(predLgrpDiv->numLengthGroups()) < predators[i]->getLengthGroupDiv()->maxLength())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in predatorprinter - maximum length group greater than predator length");
 
     for (j = 0; j < areas.Nrow(); j++) {
-      index = 0;
+      found = 0;
       for (i = 0; i < preys.Size(); i++)
         for (k = 0; k < areas.Ncol(j); k++)
           if (preys[i]->isInArea(areas[j][k]))
-            index++;
-      if (index == 0)
+            found++;
+      if (found == 0)
         handle.logMessage(LOGWARN, "Warning in predatorprinter - preys not defined on all areas");
     }
 
-    index = 0;
+    found = 0;
     for (i = 0; i < preys.Size(); i++)
       if (preyLgrpDiv->maxLength(0) > preys[i]->getLengthGroupDiv()->minLength())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in predatorprinter - minimum length group less than prey length");
 
-    index = 0;
+    found = 0;
     for (i = 0; i < preys.Size(); i++)
       if (preyLgrpDiv->minLength(preyLgrpDiv->numLengthGroups()) < preys[i]->getLengthGroupDiv()->maxLength())
-        index++;
-    if (index == 0)
+        found++;
+    if (found == 0)
       handle.logMessage(LOGWARN, "Warning in predatorprinter - maximum length group greater than prey length");
   }
 
@@ -264,7 +263,7 @@ void PredatorPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   if ((!AAT.atCurrentTime(TimeInfo)) || (printtime != printtimeid))
     return;
 
-  if (biomass == 1)
+  if (biomass)
     aggregator->Sum();
   else
     aggregator->NumberSum();

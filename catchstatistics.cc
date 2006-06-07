@@ -156,15 +156,15 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
 
   //Check the number of columns in the inputfile
   infile >> ws;
-  if ((readvar == 1) && (countColumns(infile) != 7))
+  if ((readvar) && (countColumns(infile) != 7))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
-  else if ((readvar == 0) && (countColumns(infile) != 6))
+  else if ((!readvar) && (countColumns(infile) != 6))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
   year = step = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
-    if (readvar == 1)
+    if (readvar)
       infile >> year >> step >> tmparea >> tmpage >> tmpnumber >> tmpmean >> tmpstddev >> ws;
     else
       infile >> year >> step >> tmparea >> tmpage >> tmpnumber >> tmpmean >> ws;
@@ -206,9 +206,9 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
         numbers.resize(new DoubleMatrix(numarea, numage, 0.0));
         obsMean.resize(new DoubleMatrix(numarea, numage, 0.0));
         modelMean.resize(new DoubleMatrix(numarea, numage, 0.0));
-        if (readvar == 1)
+        if (readvar)
           obsStdDev.resize(new DoubleMatrix(numarea, numage, 0.0));
-        if (needvar == 1)
+        if (needvar)
           modelStdDev.resize(new DoubleMatrix(numarea, numage, 0.0));
         timeid = (Years.Size() - 1);
       }
@@ -223,7 +223,7 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
       count++;
       (*numbers[timeid])[areaid][ageid] = tmpnumber;
       (*obsMean[timeid])[areaid][ageid] = tmpmean;
-      if (readvar == 1)
+      if (readvar)
         (*obsStdDev[timeid])[areaid][ageid] = tmpstddev;
     }
   }
@@ -397,7 +397,7 @@ void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchstatistics component", this->getName());
   aggregator->Sum();
-  if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData() == 1))
+  if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData()))
     handle.logMessage(LOGWARN, "Warning in catchstatistics - zero catch found");
 
   l = calcLikSumSquares();

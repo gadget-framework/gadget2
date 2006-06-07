@@ -226,7 +226,7 @@ void Stock::Add(const AgeBandMatrix& Addition,
 void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition,
   const ConversionIndex* const CI, int area, double ratio) {
 
-  if (istagged == 0)
+  if (!istagged)
     return;
 
   if ((Addition.numTagExperiments() > 0) && (Addition.numTagExperiments() <= tagAlkeys.numTagExperiments())) {
@@ -237,7 +237,7 @@ void Stock::Add(const AgeBandMatrixRatioPtrVector& Addition,
 
 void Stock::addTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double tagloss) {
 
-  if (istagged == 0)
+  if (!istagged)
     return;
 
   tagAlkeys.addTag(tagbyagelength, Alkeys, newtag->getName(), tagloss);
@@ -258,7 +258,7 @@ void Stock::addTags(AgeBandMatrixPtrVector* tagbyagelength, Tags* newtag, double
 
 void Stock::deleteTags(const char* tagname) {
 
-  if (istagged == 0)
+  if (!istagged)
     return;
 
   allTags.Delete(tagAlkeys.getTagID(tagname));

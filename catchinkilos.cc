@@ -162,7 +162,7 @@ double CatchInKilos::calcLikSumSquares(const TimeClass* const TimeInfo) {
         for (p = 0; p < preyindex.Ncol(f); p++)
           modelDistribution[timeindex][r] += predators[f]->getConsumptionBiomass(preyindex[f][p], areas[r][a]);
 
-    if ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
+    if ((!yearly) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
       likelihoodValues[timeindex][r] +=
         (log(modelDistribution[timeindex][r] + epsilon) - log(obsDistribution[timeindex][r] + epsilon))
         * (log(modelDistribution[timeindex][r] + epsilon) - log(obsDistribution[timeindex][r] + epsilon));
@@ -178,11 +178,11 @@ void CatchInKilos::addLikelihood(const TimeClass* const TimeInfo) {
   if (!(AAT.atCurrentTime(TimeInfo)))
     return;
 
-  if ((handle.getLogLevel() >= LOGMESSAGE) && ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())))
+  if ((handle.getLogLevel() >= LOGMESSAGE) && ((!yearly) || (TimeInfo->getStep() == TimeInfo->numSteps())))
     handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchinkilos component", this->getName());
 
   int i;
-  if (yearly == 1) {
+  if (yearly) {
     for (i = 0; i < Years.Size(); i++)
       if (Years[i] == TimeInfo->getYear())
         timeindex = i;
@@ -202,7 +202,7 @@ void CatchInKilos::addLikelihood(const TimeClass* const TimeInfo) {
       break;
   }
 
-  if ((yearly == 0) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
+  if ((!yearly) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
     likelihood += l;
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
@@ -307,14 +307,14 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
   //Check the number of columns in the inputfile
   infile >> ws;
   check = countColumns(infile);
-  if (!(((yearly == 1) && ((check == 4) || (check == 5))) || ((yearly == 0) && (check == 5))))
+  if (!(((yearly) && ((check == 4) || (check == 5))) || ((!yearly) && (check == 5))))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 4 or 5");
 
   step = 1; //default value in case there are only 4 columns in the datafile
   year = count = 0;
   while (!infile.eof()) {
     keepdata = 0;
-    if ((yearly == 1) && (check == 4))
+    if ((yearly) && (check == 4))
       infile >> year >> tmparea >> tmpfleet >> tmpnumber >> ws;
     else
       infile >> year >> step >> tmparea >> tmpfleet >> tmpnumber >> ws;
@@ -386,12 +386,12 @@ void CatchInKilos::printLikelihood(ofstream& outfile, const TimeClass* const Tim
   if (!AAT.atCurrentTime(TimeInfo))
     return;
 
-  if ((yearly == 1) && (TimeInfo->getStep() != TimeInfo->numSteps()))
+  if ((yearly) && (TimeInfo->getStep() != TimeInfo->numSteps()))
     return;  //if data is aggregated into years then we need the last timestep
 
   int i, area, age, len;
   timeindex = -1;
-  if (yearly == 1) {
+  if (yearly) {
     for (i = 0; i < Years.Size(); i++)
       if (Years[i] == TimeInfo->getYear())
         timeindex = i;
@@ -405,12 +405,12 @@ void CatchInKilos::printLikelihood(ofstream& outfile, const TimeClass* const Tim
     handle.logMessage(LOGFAIL, "Error in catchinkilos - invalid timestep");
 
   for (area = 0; area < modelDistribution.Ncol(timeindex); area++) {
-    if (yearly == 0) {
-      outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
-        << Steps[timeindex] << sep << setw(printwidth) << areaindex[area];
-    } else {
+    if (yearly) {
       outfile << setw(lowwidth) << Years[timeindex] << "  all "
         << setw(printwidth) << areaindex[area];
+    } else {
+      outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
+        << Steps[timeindex] << sep << setw(printwidth) << areaindex[area];
     }
     if (fleetnames.Size() == 1) {
       outfile << sep << setw(printwidth) << fleetnames[0] << sep;
@@ -427,15 +427,15 @@ void CatchInKilos::printSummary(ofstream& outfile) {
 
   for (year = 0; year < likelihoodValues.Nrow(); year++) {
     for (area = 0; area < likelihoodValues.Ncol(year); area++) {
-      if (yearly == 0) {
-        outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
-          << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
+      if (yearly) {
+        outfile << setw(lowwidth) << Years[year] << "  all "
+          << setw(printwidth) << areaindex[area] << sep
           << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
           << setw(smallwidth) << weight << sep << setprecision(largeprecision)
           << setw(largewidth) << likelihoodValues[year][area] << endl;
       } else {
-        outfile << setw(lowwidth) << Years[year] << "  all "
-          << setw(printwidth) << areaindex[area] << sep
+        outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
+          << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
           << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
           << setw(smallwidth) << weight << sep << setprecision(largeprecision)
           << setw(largewidth) << likelihoodValues[year][area] << endl;

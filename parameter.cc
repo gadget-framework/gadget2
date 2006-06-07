@@ -63,7 +63,7 @@ int Parameter::isValidName(char* value) {
     return 0;
   int i;
   for (i = 0; i < len; i++)
-    if (this->isValidChar(value[i]) == 0)
+    if (!this->isValidChar(value[i]))
       return 0;
   return 1;
 }

@@ -130,7 +130,7 @@ void Transition::storeTransitionStock(int area, AgeBandMatrix& Alkeys, const Tim
 void Transition::storeTransitionStock(int area, AgeBandMatrix& Alkeys,
   AgeBandMatrixRatio& TagAlkeys, const TimeClass* const TimeInfo) {
 
-  if (istagged == 0)
+  if (!istagged)
     handle.logMessage(LOGFAIL, "Error in transition - invalid tagging experiment");
 
   int len, tag;
@@ -223,13 +223,13 @@ void Transition::setTagged() {
 }
 
 void Transition::addTransitionTag(const char* tagname) {
-  if (istagged == 0)
+  if (!istagged)
     handle.logMessage(LOGFAIL, "Error in transition - invalid tagging experiment", tagname);
   tagStorage.addTag(tagname);
 }
 
 void Transition::deleteTransitionTag(const char* tagname) {
-  if (istagged == 0)
+  if (!istagged)
     handle.logMessage(LOGFAIL, "Error in transition - invalid tagging experiment", tagname);
 
   int minage, maxage, age, len, a;
