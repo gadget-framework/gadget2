@@ -6,6 +6,9 @@ extern ErrorHandler handle;
 
 LivesOnAreas::LivesOnAreas(const IntVector& Areas) : areas(Areas) {
   int i, j, maxim = 0;
+  if (areas.Size() == 0)
+    handle.logMessage(LOGFAIL, "Error in input files - found no areas");
+
   for (i = 0; i < areas.Size(); i++)
     if (areas[i] > maxim)
       maxim = areas[i];
@@ -15,9 +18,11 @@ LivesOnAreas::LivesOnAreas(const IntVector& Areas) : areas(Areas) {
       if ((areas[i] == areas[j]) && (i != j))
         handle.logMessage(LOGFAIL, "Error in input files - repeated area", i);
 
+  areaConvert.Reset();
   areaConvert.resize(maxim + 1, -1);
   for (i = 0; i < areas.Size(); i++)
-    areaConvert[areas[i]] = i;
+    if ((areas[i] >= 0) && (areas[i] <= maxim))
+      areaConvert[areas[i]] = i;
 }
 
 int LivesOnAreas::isInArea(int area) const {
@@ -38,7 +43,6 @@ void LivesOnAreas::storeAreas(const IntVector& Areas) {
     handle.logMessage(LOGFAIL, "Error in input files - found no areas");
 
   areas.Reset();
-  areaConvert.Reset();
   areas.resize(Areas.Size(), -1);
   for (i = 0; i < areas.Size(); i++) {
     areas[i] = Areas[i];
@@ -51,7 +55,9 @@ void LivesOnAreas::storeAreas(const IntVector& Areas) {
       if ((areas[i] == areas[j]) && (i != j))
         handle.logMessage(LOGFAIL, "Error in input files - repeated area", i);
 
+  areaConvert.Reset();
   areaConvert.resize(maxim + 1, -1);
   for (i = 0; i < areas.Size(); i++)
-    areaConvert[areas[i]] = i;
+    if ((areas[i] >= 0) && (areas[i] <= maxim))
+      areaConvert[areas[i]] = i;
 }
