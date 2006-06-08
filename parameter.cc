@@ -38,12 +38,9 @@ int Parameter::operator == (const Parameter& p) const {
 }
 
 Parameter& Parameter::operator = (const Parameter& p) {
-  //AJ 03.10.00 Adding checks if need to allocate/delete memory.
-  int len;
   if (this == &p)
     return *this;
 
-  //return memory if needed
   if (name != NULL) {
     delete[] name;
     name = NULL;
@@ -69,26 +66,33 @@ int Parameter::isValidName(char* value) {
 }
 
 int Parameter::isValidChar(int c) {
-  //Numbers and letters are ok.
+  //numbers and letters are ok
   if (isalnum(c))
     return 1;
 
   switch (c) {
     case '_':
     case '.':
-      //Valid characters in addition to numbers and letters
+      //other valid characters in addition to numbers and letters
       return 1;
       break;
+    case '\\':
+      //reading backslash will do nasty things to the input stream
+      handle.logFileMessage(LOGFAIL, "error in parameter - name cannot include backslash");
+      return 0;
+      break;
     default:
-      //All other character are invalid in parameter names
+      //all other character are invalid in parameter names
       return 0;
   }
+  return 0;
 }
 
 CommentStream& operator >> (CommentStream& infile, Parameter& p) {
-  infile >> ws;
-  int i = 0;
   char* tempString = new char[MaxStrLength];
+  strncpy(tempString, "", MaxStrLength);
+  int i = 0;
+  infile >> ws;
   while (p.isValidChar(infile.peek()) && i < (MaxStrLength - 1)) {
     if (infile.fail() && !infile.eof()) {
       delete[] tempString;
@@ -100,16 +104,14 @@ CommentStream& operator >> (CommentStream& infile, Parameter& p) {
 
   tempString[i] = '\0';
   if (i == MaxStrLength)
-    handle.logMessage(LOGWARN, "Error in parameter - parameter name has reached maximum length");
+    handle.logMessage(LOGWARN, "Warning in parameter - parameter name has reached maximum length");
 
   if (p.name != NULL) {
     delete[] p.name;
     p.name = NULL;
   }
 
-  if (i <= 0) {
-    p.name = NULL;
-  } else {
+  if (i != 0) {
     p.name = new char[strlen(tempString) + 1];
     strcpy(p.name, tempString);
   }
@@ -119,9 +121,10 @@ CommentStream& operator >> (CommentStream& infile, Parameter& p) {
 }
 
 istream& operator >> (istream& infile, Parameter& p) {
-  infile >> ws;
-  int i = 0;
   char* tempString = new char[MaxStrLength];
+  strncpy(tempString, "", MaxStrLength);
+  int i = 0;
+  infile >> ws;
   while (p.isValidChar(infile.peek()) && i < (MaxStrLength - 1)) {
     if (infile.fail() && !infile.eof()) {
       delete[] tempString;
@@ -133,16 +136,14 @@ istream& operator >> (istream& infile, Parameter& p) {
 
   tempString[i] = '\0';
   if (i == MaxStrLength)
-    handle.logMessage(LOGWARN, "Error in parameter - parameter name has reached maximum length");
+    handle.logMessage(LOGWARN, "Warning in parameter - parameter name has reached maximum length");
 
   if (p.name != NULL) {
     delete[] p.name;
     p.name = NULL;
   }
 
-  if (i <= 0) {
-    p.name = NULL;
-  } else {
+  if (i != 0) {
     p.name = new char[strlen(tempString) + 1];
     strcpy(p.name, tempString);
   }

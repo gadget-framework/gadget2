@@ -1,4 +1,7 @@
 #include "commentstream.h"
+#include "errorhandler.h"
+
+extern ErrorHandler handle;
 
 istream& operator >> (istream& istr, Whitespace& Ws) {
   int ch;
@@ -29,6 +32,20 @@ void killComments(istream* const istrptr) {
 CommentStream& ws(CommentStream& ins) {
   killComments(ins.istrptr);
   return ins;
+}
+
+int CommentStream::peek() {
+  if (istrptr->peek() == chrComment) {
+    killComments(istrptr);
+    return '\n';
+  } else if (istrptr->peek() == '\r') {
+    char tmp;
+    istrptr->get(tmp);   //JMB get the carriage return and discard it
+  } else if (istrptr->peek() == '\\') {
+    //reading backslash will do nasty things to the input stream
+    handle.logFileMessage(LOGFAIL, "backslash is an invalid character");
+  }
+  return istrptr->peek();
 }
 
 CommentStream& CommentStream::get(char& c) {

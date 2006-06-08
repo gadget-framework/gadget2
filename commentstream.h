@@ -64,7 +64,7 @@ public:
     (*func)(*this);
     return *this;
   };
-  int peek() { return (istrptr->peek() == chrComment ? '\n' : istrptr->peek()); };
+  int peek();
   int eof() { return istrptr->eof(); };
   int fail() { return istrptr->fail(); };
   void get(char* text, int length, char sep) { istrptr->get(text, length, sep); };
