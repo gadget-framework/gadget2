@@ -48,12 +48,6 @@ public:
    */
   int Size() const { return size; };
   /**
-   * \brief This function will read a line of data from a CommentStream
-   * \param infile is the CommentStream to read the data from
-   * \return 1 if the read from file was successful, 0 otherwise
-   */
-  int readline(CommentStream& infile);
-  /**
    * \brief This will return the value of an element of the vector
    * \param pos is the element of the vector to be returned
    * \return the value of the specified element

@@ -65,12 +65,6 @@ public:
    */
   void Reset();
   /**
-   * \brief This function will read a line of data from a CommentStream
-   * \param infile is the CommentStream to read the data from
-   * \return 1 if the read from file was successful, 0 otherwise
-   */
-  int readline(CommentStream& infile);
-  /**
    * \brief This operator will set the vector equal to an existing IntVector
    * \param iv is the IntVector to copy
    */

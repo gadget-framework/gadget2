@@ -3,29 +3,29 @@
 
 extern ErrorHandler handle;
 
-istream& operator >> (istream& istr, Whitespace& Ws) {
-  int ch;
+istream& operator >> (istream& istr, Whitespace& ws) {
+  int c;
   while (istr.peek() == ' ' || istr.peek() == '\t' || istr.peek() == '\r' || istr.peek() == '\n')
-    ch = istr.get();
+    c = istr.get();
 
   if (!istr.eof() && istr.peek() == EOF)
-    ch = istr.get();
+    c = istr.get();
   return istr;
 }
 
 void killComments(istream* const istrptr) {
-  Whitespace Ws;
   if (istrptr->eof())
     return;
-  char c;
-  *istrptr >> Ws;
+  Whitespace ws;
+  *istrptr >> ws;
   if (istrptr->eof())
     return;
 
+  char c;
   while (istrptr->peek() == chrComment) {
     while (istrptr->peek() != '\n' && !(istrptr->eof()))
       istrptr->get(c);
-    *istrptr >> Ws;
+    *istrptr >> ws;
   }
 }
 
@@ -42,7 +42,7 @@ int CommentStream::peek() {
     char tmp;
     istrptr->get(tmp);   //JMB get the carriage return and discard it
   } else if (istrptr->peek() == '\\') {
-    //reading backslash will do nasty things to the input stream
+    //attempting to read backslash will do nasty things to the input stream
     handle.logFileMessage(LOGFAIL, "backslash is an invalid character");
   }
   return istrptr->peek();
@@ -61,14 +61,40 @@ CommentStream& CommentStream::get(char& c) {
   return *this;
 }
 
-CommentStream& CommentStream::getLine(char* ptr, int len, char delim) {
+CommentStream& CommentStream::getLine(char* ptr, int length, char delim) {
   int i = 0;
-  while ((i < len - 2) && (istrptr->peek() != delim) && (istrptr->peek() != chrComment)) {
+  while ((i < length - 2) && (istrptr->peek() != delim) && (istrptr->peek() != chrComment)) {
     ptr[i] = istrptr->get();
     i++;
   }
   if (istrptr->peek() == delim)
     ptr[i++] = istrptr->get();
   ptr[i] = '\0';
+  return *this;
+}
+
+CommentStream& CommentStream::operator >> (int& a) {
+  killComments(istrptr);
+  (*istrptr) >> a;
+  return *this;
+}
+
+CommentStream& CommentStream::operator >> (double& a) {
+  killComments(istrptr);
+  (*istrptr) >> a;
+  return *this;
+}
+
+CommentStream& CommentStream::operator >> (char* a) {
+  killComments(istrptr);
+  string s;
+  (*istrptr) >> s;
+  s.copy(a, string::npos);
+  a[s.length()] = '\0';
+  return *this;
+}
+
+CommentStream& CommentStream::operator >> (__commentmanip func) {
+  (*func)(*this);
   return *this;
 }

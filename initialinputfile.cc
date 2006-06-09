@@ -44,28 +44,33 @@ InitialInputFile::~InitialInputFile() {
 }
 
 void InitialInputFile::readHeader() {
-  char text[MaxStrLength];
-  strncpy(text, "", MaxStrLength);
 
   infile >> ws;
   if (isdigit(infile.peek())) {
     repeatedValues = 1;
 
   } else {
+    char text[MaxStrLength];
     char textInLine[LongString];
+    strncpy(text, "", MaxStrLength);
     strncpy(textInLine, "", LongString);
     infile.get(textInLine, LongString, '\n');
-    if (!infile.eof() && infile.peek() != '\n')
+    if (!infile.eof() && (infile.peek() != '\n'))
       handle.logMessage(LOGFAIL, "Error in initial input file - line too long");
 
     istringstream line(textInLine);
     line >> text >> ws;
     if (strcasecmp(text, "switches") == 0) {
-      // fileformat with switches and vector value/values.
+      // fileformat with switches and vector of values
       repeatedValues = 1;
-      infile >> ws;
-      if (switches.readline(infile) == 0)
-        handle.logMessage(LOGFAIL, "Error in initial input file - failed to read switches");
+
+      Parameter tmpparam;
+      while (!line.eof()) {
+        line >> tmpparam >> ws;
+        if (line.fail() && !line.eof())
+          handle.logMessage(LOGFAIL, "Error in initial input file - failed to read switches");
+        switches.resize(tmpparam);
+      }
 
     } else {
       // fileformat must be of the form

@@ -99,22 +99,3 @@ void IntVector::Reset() {
     size = 0;
   }
 }
-
-int IntVector::readline(CommentStream& infile) {
-  int tmpint = 0;
-  char line[MaxStrLength];
-  strncpy(line, "", MaxStrLength);
-  infile.getLine(line, MaxStrLength);
-  if (infile.fail())
-    return 0;
-
-  istringstream istr(line);
-  istr >> ws;
-  while (!istr.eof()) {
-    istr >> tmpint >> ws;
-    if (istr.fail() && !istr.eof())
-      return 0;
-    this->resize(1, tmpint);
-  }
-  return 1;
-}

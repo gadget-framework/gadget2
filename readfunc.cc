@@ -42,9 +42,8 @@ int countColumns(CommentStream& infile) {
   char temp[MaxStrLength];
   strncpy(line, "", MaxStrLength);
   strncpy(temp, "", MaxStrLength);
-  streampos pos;
+  streampos pos = infile.tellg();
 
-  pos = infile.tellg();
   infile >> ws;
   infile.getLine(line, MaxStrLength);
   if (infile.fail())

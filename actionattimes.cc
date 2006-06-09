@@ -6,34 +6,33 @@
 extern ErrorHandler handle;
 
 int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const TimeInfo) {
-  char text[MaxStrLength];
-  strncpy(text, "", MaxStrLength);
 
   /* File format is:
    *  y1 s1
    *  ...
    *  yN sN
    * where y1, ..., yN are either a year or the text "all"
-   * and s1, ..., sN either steps or the text "all".
+   *   and s1, ..., sN are either a step or the text "all"
    */
 
-  streampos readPos = infile.tellg();
+  streampos pos = infile.tellg();
   infile >> ws;
   if (infile.fail()) {
-    infile.seekg(readPos);
+    infile.seekg(pos);
     return 0;
   }
 
-  int error = 0;  //error = 0 OK(no error), 1 error occurred or 2 quit
-  int year = 0;
-  int step = 0;
-  IntVector readtext(2, 0);  //Is 1 if text was read in a column.
-  int column = 0;            //What column we are reading, no. 0 or 1.
+  int error = 0;  //error = 0 no error, 1 error occurred or 2 quit
+  int year, step, column;
+  year = step = column = 0;
+  IntVector readtext(2, 0);
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
   while (!infile.eof() && (error == 0)) {
     infile >> ws;
-    readPos = infile.tellg();
+    pos = infile.tellg();
 
-    //First we read from infile.
+    //first we read from infile
     if (isdigit(infile.peek())) {
       readtext[column] = 0;
       if (column == 0)
@@ -44,7 +43,7 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
       infile >> text;
       readtext[column] = 1;
       if ((strcasecmp(text, "all") == 0))
-        readPos = infile.tellg();
+        pos = infile.tellg();
       else
         if (column == 0)
           error = 2;
@@ -52,12 +51,11 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
           error = 1;
     }
 
-    //Now we have read from infile.
-    //If we have read the second column, we keep the data.
+    //now we have read from infile if we have read the second column, we keep the data
     if ((error == 0) && (column == 1)) {
       if ((readtext[0]) && (readtext[1])) {
         everyStep = 1;
-        error = 2;   //We want to exit this while-loop.
+        error = 2;   //we want to exit this while loop.
       } else if ((readtext[0]) && !(readtext[1])) {
         if ((TimeInfo->getLastYear() != TimeInfo->getFirstYear()) ||
             (TimeInfo->getFirstStep() <= step && step <= TimeInfo->getLastStep()))
@@ -73,10 +71,10 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
 
       }
     }
-    column = !column;  //change column from 0 to 1 or from 1 to 0.
+    column = !column;  //change column to be read
   }
 
-  infile.seekg(readPos);
+  infile.seekg(pos);
   if ((error == 1) || (column == 1 && error != 2))
     return 0;
   return 1;
@@ -120,8 +118,7 @@ void ActionAtTimes::addActionsAllSteps(const IntVector& years, const TimeClass* 
  * TimeSteps, Years and Steps and use that to increase speed. That
  * could be done by insisting that TimeInfo's time is not decreasing
  * between calls, so that we can keep three indices, one for each
- * vector, telling us where we quit our search in the last call -- much
- * like done in Renewal::AddRenewal. */
+ * vector, telling us where we quit our search in the last call */
 int ActionAtTimes::atCurrentTime(const TimeClass* const TimeInfo) const {
   if (everyStep)
     return 1;

@@ -77,22 +77,3 @@ ParameterVector& ParameterVector::operator = (const ParameterVector& pv) {
     v = 0;
   return *this;
 }
-
-int ParameterVector::readline(CommentStream& infile) {
-  Parameter tmpparam;
-  char line[LongString];
-  strncpy(line, "", LongString);
-  infile.getLine(line, LongString);
-  if (infile.fail())
-    return 0;
-
-  istringstream istr(line);
-  istr >> ws;
-  while (!istr.eof()) {
-    istr >> tmpparam >> ws;
-    if (istr.fail() && !istr.eof())
-      return 0;
-    this->resize(tmpparam);
-  }
-  return 1;
-}

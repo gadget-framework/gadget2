@@ -25,9 +25,9 @@ public:
   /**
    * \brief This operator will strip white space from a given input istream
    * \param istr is the istream to strip white space from
-   * \param Ws is the Whitespace used to strip white space from the data
+   * \param ws is the Whitespace used to strip white space from the data
    */
-  friend istream& operator >> (istream& istr, Whitespace& Ws);
+  friend istream& operator >> (istream& istr, Whitespace& ws);
 private:
   /**
    * \brief This is a dummy object used when stripping the white space from any input files
@@ -38,47 +38,45 @@ private:
 class CommentStream {
 public:
   friend CommentStream& ws(CommentStream& ins);
+  /**
+   * \brief This is the default CommentStream constructor
+   */
   CommentStream() { istrptr = NULL; };
   CommentStream(istream& istr) { istrptr = &istr; };
+  /**
+   * \brief This is the default CommentStream destructor
+   */
   ~CommentStream() {};
   void setStream(istream& istr) { istrptr = &istr; };
-  CommentStream& operator >> (int& a) {
-    killComments(istrptr);
-    (*istrptr) >> a;
-    return *this;
-  };
-  CommentStream& operator >> (double& a) {
-    killComments(istrptr);
-    (*istrptr) >> a;
-    return *this;
-  };
-  CommentStream& operator >> (char* a) {
-    killComments(istrptr);
-    string s;
-    (*istrptr) >> s;
-    s.copy(a, string::npos);
-    a[s.length()] = '\0';
-    return *this;
-  };
-  CommentStream& operator >> (__commentmanip func) {
-    (*func)(*this);
-    return *this;
-  };
+  /**
+   * \brief This operator will read data from the CommentStream and store it as an integer
+   * \param a is the integer used to store the data that has been read
+   */
+  CommentStream& operator >> (int& a);
+  /**
+   * \brief This operator will read data from the CommentStream and store it as a double
+   * \param a is the double used to store the data that has been read
+   */
+  CommentStream& operator >> (double& a);
+  /**
+   * \brief This operator will read data from the CommentStream and store it as a char*
+   * \param a is the char* used to store the data that has been read
+   */
+  CommentStream& operator >> (char* a);
+  CommentStream& operator >> (__commentmanip func);
   int peek();
   int eof() { return istrptr->eof(); };
   int fail() { return istrptr->fail(); };
-  void get(char* text, int length, char sep) { istrptr->get(text, length, sep); };
-  CommentStream& seekg(streampos Pos) {
-    istrptr->seekg(Pos);
-    return *this;
-  };
-  streampos tellg() { return istrptr->tellg(); };
   int operator !() { return istrptr->fail(); };
+  void get(char* text, int length, char sep) { istrptr->get(text, length, sep); };
+  CommentStream& seekg(streampos Pos) { istrptr->seekg(Pos); return *this; };
+  streampos tellg() { return istrptr->tellg(); };
   CommentStream& get(char& c);
-  CommentStream& getLine(char* ptr, int len, char delim = '\n');
+  CommentStream& getLine(char* ptr, int length, char delim = '\n');
 protected:
   istream* istrptr;
 };
+
 CommentStream& ws(CommentStream& ins);
 
 #endif
