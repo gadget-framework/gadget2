@@ -18,23 +18,21 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   strncpy(text, "", MaxStrLength);
   ifstream subfile;
   CommentStream subcomment(subfile);
+  int tmpint = 0;
+  IntVector tmpareas;
   char c;
-  int i, tmpint = 0;
 
   keeper->addString("otherfood");
   keeper->addString(givenname);
 
   infile >> text;
-  IntVector tmpareas;
   if (strcasecmp(text, "livesonareas") == 0) {
     infile >> ws;
-    i = 0;
     c = infile.peek();
-    while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
+    while (isdigit(c) && !infile.eof()) {
       infile >> tmpint >> ws;
       tmpareas.resize(1, Area->getInnerArea(tmpint));
       c = infile.peek();
-      i++;
     }
     this->storeAreas(tmpareas);
   } else
@@ -43,10 +41,9 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   //read the length information
   DoubleVector lengths(2, 0.0);
   infile >> text >> ws;
-  if (strcasecmp(text, "lengths") == 0) {
-    for (i = 0; i < 2; i++)
-      infile >> lengths[i] >> ws;
-  } else
+  if (strcasecmp(text, "lengths") == 0)
+    infile >> lengths[0] >> lengths[1] >> ws;
+  else
     handle.logFileUnexpected(LOGFAIL, "lengths", text);
 
   //read the energy content of this prey

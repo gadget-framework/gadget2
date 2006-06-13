@@ -21,7 +21,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   strncpy(text, "", MaxStrLength);
   ifstream subfile;
   CommentStream subcomment(subfile);
-  int i, tmpint = 0;
+  int tmpint = 0;
   Formula multscaler;
   IntVector tmpareas;
   char c;
@@ -31,13 +31,11 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
 
   infile >> text >> ws;
   if (strcasecmp(text, "livesonareas") == 0) {
-    i = 0;
     c = infile.peek();
-    while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
+    while (isdigit(c) && !infile.eof()) {
       infile >> tmpint >> ws;
       tmpareas.resize(1, Area->getInnerArea(tmpint));
       c = infile.peek();
-      i++;
     }
     this->storeAreas(tmpareas);
   } else

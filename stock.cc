@@ -42,13 +42,11 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   infile >> text >> ws;
   IntVector tmpareas;
   if (strcasecmp(text, "livesonareas") == 0) {
-    i = 0;
     c = infile.peek();
-    while (isdigit(c) && !infile.eof() && (i < Area->numAreas())) {
+    while (isdigit(c) && !infile.eof()) {
       infile >> tmpint >> ws;
       tmpareas.resize(1, Area->getInnerArea(tmpint));
       c = infile.peek();
-      i++;
     }
     this->storeAreas(tmpareas);
   } else
