@@ -13,9 +13,15 @@ istream& operator >> (istream& istr, Whitespace& ws) {
   return istr;
 }
 
-void killComments(istream* const istrptr) {
+CommentStream& ws(CommentStream& ins) {
+  ins.killComments();
+  return ins;
+}
+
+void CommentStream::killComments() {
   if (istrptr->eof())
     return;
+
   Whitespace ws;
   *istrptr >> ws;
   if (istrptr->eof())
@@ -29,14 +35,9 @@ void killComments(istream* const istrptr) {
   }
 }
 
-CommentStream& ws(CommentStream& ins) {
-  killComments(ins.istrptr);
-  return ins;
-}
-
 int CommentStream::peek() {
   if (istrptr->peek() == chrComment) {
-    killComments(istrptr);
+    this->killComments();
     return '\n';
   } else if (istrptr->peek() == '\r') {
     char tmp;
@@ -50,7 +51,7 @@ int CommentStream::peek() {
 
 CommentStream& CommentStream::get(char& c) {
   if (istrptr->peek() == chrComment) {
-    killComments(istrptr);
+    this->killComments();
     c = '\n';
   } else if (istrptr->peek() == '\r') {
     char tmp;
@@ -63,10 +64,9 @@ CommentStream& CommentStream::get(char& c) {
 
 CommentStream& CommentStream::getLine(char* text, int length, char delim) {
   int i = 0;
-  while ((i < length - 2) && (istrptr->peek() != delim) && (istrptr->peek() != chrComment)) {
-    text[i] = istrptr->get();
-    i++;
-  }
+  while ((i < length - 2) && (istrptr->peek() != delim) && (istrptr->peek() != chrComment))
+    text[i++] = istrptr->get();
+
   if (istrptr->peek() == delim)
     text[i++] = istrptr->get();
   text[i] = '\0';
@@ -74,19 +74,19 @@ CommentStream& CommentStream::getLine(char* text, int length, char delim) {
 }
 
 CommentStream& CommentStream::operator >> (int& a) {
-  killComments(istrptr);
+  this->killComments();
   (*istrptr) >> a;
   return *this;
 }
 
 CommentStream& CommentStream::operator >> (double& a) {
-  killComments(istrptr);
+  this->killComments();
   (*istrptr) >> a;
   return *this;
 }
 
 CommentStream& CommentStream::operator >> (char* a) {
-  killComments(istrptr);
+  this->killComments();
   string s;
   (*istrptr) >> s;
   s.copy(a, string::npos);

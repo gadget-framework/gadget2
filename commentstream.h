@@ -3,8 +3,6 @@
 
 #include "gadget.h"
 
-extern void killComments(istream* const istrptr);
-
 class CommentStream;
 typedef CommentStream& (*__commentmanip)(CommentStream&);
 
@@ -98,7 +96,7 @@ public:
   int operator !() { return istrptr->fail(); };
   /**
    * \brief This function will find the specified position in the input stream
-   * \param pos, the position in the input stream to be found
+   * \param pos is the position in the input stream to be found
    */
   CommentStream& seekg(streampos pos) { istrptr->seekg(pos); return *this; };
   /**
@@ -119,6 +117,10 @@ public:
    */
   CommentStream& getLine(char* text, int length, char delim = '\n');
 protected:
+  /**
+   * \brief This function will remove the comments and whitespace from the input stream
+   */
+  void killComments();
   /**
    * \brief This is the input stream that will have the comments and whitespace removed
    */
