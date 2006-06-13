@@ -54,8 +54,9 @@ void InitialInputFile::readHeader() {
     char textInLine[LongString];
     strncpy(text, "", MaxStrLength);
     strncpy(textInLine, "", LongString);
-    infile.get(textInLine, LongString, '\n');
-    if (!infile.eof() && (infile.peek() != '\n'))
+
+    infile.getLine(textInLine, LongString);
+    if (infile.fail())
       handle.logMessage(LOGFAIL, "Error in initial input file - line too long");
 
     istringstream line(textInLine);
@@ -193,8 +194,8 @@ void InitialInputFile::readNextLine() {
 
   char text[LongString];
   strncpy(text, "", LongString);
-  infile.get(text, LongString, '\n');
-  if (!infile.eof() && infile.peek() != '\n')
+  infile.getLine(text, LongString);
+  if (infile.fail())
     handle.logMessage(LOGFAIL, "Error in initial input file - line too long");
 
   istringstream line(text);

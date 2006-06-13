@@ -61,15 +61,15 @@ CommentStream& CommentStream::get(char& c) {
   return *this;
 }
 
-CommentStream& CommentStream::getLine(char* ptr, int length, char delim) {
+CommentStream& CommentStream::getLine(char* text, int length, char delim) {
   int i = 0;
   while ((i < length - 2) && (istrptr->peek() != delim) && (istrptr->peek() != chrComment)) {
-    ptr[i] = istrptr->get();
+    text[i] = istrptr->get();
     i++;
   }
   if (istrptr->peek() == delim)
-    ptr[i++] = istrptr->get();
-  ptr[i] = '\0';
+    text[i++] = istrptr->get();
+  text[i] = '\0';
   return *this;
 }
 

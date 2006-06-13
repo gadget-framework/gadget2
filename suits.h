@@ -62,13 +62,6 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    */
   void Reset(const Predator* const pred, const TimeClass* const TimeInfo);
-  /**
-   * \brief This function will check to see if the suitability values for a given prey have changed
-   * \param i is the index of the prey
-   * \param TimeInfo is the TimeClass for the current model
-   * \return 1 if the values have changed, 0 otherwise
-   */
-  int didChange(int i, const TimeClass* const TimeInfo) const;
 protected:
   /**
    * \brief This is the CharPtrVector of prey names

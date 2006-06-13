@@ -150,13 +150,6 @@ public:
    */
   const DoubleMatrix& getSuitability(int i) const { return suitable->getSuitability(i); };
   /**
-   * \brief This function will check to see if the suitability values for a given prey have changed
-   * \param i is the index of the prey
-   * \param TimeInfo is the TimeClass for the current model
-   * \return 1 if the values have changed, 0 otherwise
-   */
-  int didChange(int i, const TimeClass* const TimeInfo) const { return suitable->didChange(i, TimeInfo); };
-  /**
    * \brief This will return the preference for a given prey
    * \param i is the index of the prey
    * \return preference

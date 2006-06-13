@@ -7,8 +7,8 @@ extern ErrorHandler handle;
 
 int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggindex) {
   int i, j, tmp;
-  char text[LongString];
-  strncpy(text, "", LongString);
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
 
   agg.Reset();
   aggindex.Reset();
@@ -20,8 +20,8 @@ int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggind
     infile >> aggindex[i];
     agg.AddRows(1, 0, 0);
 
-    infile.get(text, LongString, '\n');
-    if (!infile.eof() && (infile.peek() != '\n'))
+    infile.getLine(text, MaxStrLength);
+    if (infile.fail())
         handle.logFileMessage(LOGFAIL, "failed to read aggregation vector");
 
     istringstream line(text);

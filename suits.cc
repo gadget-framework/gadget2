@@ -20,10 +20,6 @@ void Suits::addPrey(const char* preyname, SuitFunc* suitf) {
   strcpy(preynames[preynames.Size() - 1], preyname);
 }
 
-int Suits::didChange(int i, const TimeClass* const TimeInfo) const {
-  return suitFunction[i]->didChange(TimeInfo);
-}
-
 void Suits::deletePrey(int i, Keeper* const keeper) {
   if (preynames.Size() == 0)
     return;
