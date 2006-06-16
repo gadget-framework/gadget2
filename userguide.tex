@@ -941,7 +941,7 @@ M_{L} = m_{0} \Delta t e^{(m_{1}T - m_{2}T^3)} L^{m_{3}}
 \end{equation}
 
 \begin{equation}\label{eq:feedlevel}
-\psi_{L} = \frac{\displaystyle \sum_{\it preys} F_{p}(l, L)}{H A + \displaystyle \sum_{\it preys} F_{p}(l, L)}
+\psi_{L} = \frac{\displaystyle \sum_{\it preys} F_{p}(l, L)}{H A \Delta t + \displaystyle \sum_{\it preys} F_{p}(l, L)}
 \end{equation}
 
 where:\newline
@@ -1012,7 +1012,7 @@ S(l, L) = \alpha
 Hence, to specify a constant suitability function, the file format required is:
 
 {\small\begin{verbatim}
-<preyname>    function constsant <alpha>
+<preyname>    function constant <alpha>
 \end{verbatim}}
 
 \subsection{StraightLine Suitability Function}
@@ -1085,7 +1085,7 @@ Note that the log of the ratio of the predator/prey lengths is bounded, to ensur
 \end{verbatim}}
 
 \subsection{Gamma Suitability Function}
-This is a suitability function that is more suitable for use when considering the predation by a fleet (see section~\ref{sec:fleetsuit}), and is only dependant on the prey length as given by the following equation:
+This is a suitability function that is only dependant on the prey length as given by the following equation:
 
 \begin{equation}\label{eq:gammasuit}
 S(l, L) = \left(\frac{l}{(\alpha - 1) \beta\gamma}\right) ^ {(\alpha - 1)}e ^ {(\alpha - 1 - \frac{l}{\beta\gamma})}
@@ -1096,6 +1096,8 @@ Hence, to specify this suitability function, the file format required is:
 {\small\begin{verbatim}
 <preyname>    function gamma <alpha> <beta> <gamma>
 \end{verbatim}}
+
+This is a suitability function that is more suitable for use when considering the predation by a fleet (see section~\ref{sec:fleetsuit}), where the parameter $<\gamma>$ would represent the size of the mesh used by the fleet (specified in centimetres).
 
 \section{Initial Conditions}\label{sec:stockinitial}
 The initial conditions section of stock file specifies the stock population at the start of the simulation (ie. at the beginning of the first timestep specified in the ''time'' file).  This includes setting up the population size, the length distribution and the mean weight for each length group.  This is done by specifying the minimum and maximum age and length for the stock on this timestep, and either specifying parameters to allow Gadget to create a stock distribution based on a Normal distribution, or the numbers that make up the stock distribution required.
@@ -3042,13 +3044,13 @@ sumofsquares - use a log sum of squares function
 Finally, the file specified by $<$datafile$>$ contains the landings data that Gadget is to use to fit the likelihood function to for the catch calculated in the model.  The format of this file is given below:
 
 {\small\begin{verbatim}
-<year>  <step>  <area>  <fleet>  <number>
+<year>  <step>  <area>  <fleet>  <biomass>
 \end{verbatim}}
 
-where $<$number$>$ is the catch for the timestep/area/fleet combination.  The $<$step$>$ column is optional if the $<$aggregationlevel$>$ flag has been set to 1, since the data will be aggregated over the whole year.  In this case, it is possible to specify the landings data in the following format:
+where $<$biomass$>$ is the catch for the timestep/area/fleet combination.  The $<$step$>$ column is optional if the $<$aggregationlevel$>$ flag has been set to 1, since the data will be aggregated over the whole year.  In this case, it is possible to specify the landings data in the following format:
 
 {\small\begin{verbatim}
-<year>  <area>  <fleet>  <number>
+<year>  <area>  <fleet>  <biomass>
 \end{verbatim}}
 
 \subsection{Sum of Squares Function}
@@ -3059,8 +3061,8 @@ The sum of squares function calculates the likelihood component from equation~\r
 \end{equation}
 
 where:\newline
-$<$ N $>$ is the catch data for that time/area/fleet combination\newline
-$<\nu>$ is the modelled catch data for that time/area/fleet combination
+$<$ N $>$ is the catch biomass for that time/area/fleet combination\newline
+$<\nu>$ is the modelled catch biomass for that time/area/fleet combination
 
 \chapter{Print Files}\label{chap:print}
 The print files are used to control the output from the Gadget model (and not the output from the optimisation process).  To avoid writing the model output from each iteration of a optimising process (and thus generating very large files), any printfile settings are ignored if Gadget is started with the -l switch.
