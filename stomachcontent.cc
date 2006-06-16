@@ -875,17 +875,19 @@ double SCAmounts::calcLikelihood() {
   for (a = 0; a < areas.Nrow(); a++) {
     likelihoodValues[timeindex][a] = 0.0;
     for (pred = 0; pred < obsConsumption[timeindex][a]->Nrow(); pred++) {
-      tmplik = 0.0;
-      for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(pred); prey++) {
-        if (!(isZero((*stddev[timeindex][a])[pred][prey])))
-          tmplik += ((*modelConsumption[timeindex][a])[pred][prey] -
-            (*obsConsumption[timeindex][a])[pred][prey]) *
-            ((*modelConsumption[timeindex][a])[pred][prey] -
-            (*obsConsumption[timeindex][a])[pred][prey]) /
-            ((*stddev[timeindex][a])[pred][prey] * (*stddev[timeindex][a])[pred][prey]);
+      if (!(isZero((*number[timeindex])[a][pred]))) {
+        tmplik = 0.0;
+        for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(pred); prey++) {
+          if (!(isZero((*stddev[timeindex][a])[pred][prey])))
+            tmplik += ((*modelConsumption[timeindex][a])[pred][prey] -
+              (*obsConsumption[timeindex][a])[pred][prey]) *
+              ((*modelConsumption[timeindex][a])[pred][prey] -
+              (*obsConsumption[timeindex][a])[pred][prey]) /
+              ((*stddev[timeindex][a])[pred][prey] * (*stddev[timeindex][a])[pred][prey]);
+        }
+        tmplik *= (*number[timeindex])[a][pred];
+        likelihoodValues[timeindex][a] += tmplik;
       }
-      tmplik *= (*number[timeindex])[a][pred];
-      likelihoodValues[timeindex][a] += tmplik;
     }
     lik += likelihoodValues[timeindex][a];
   }
@@ -931,18 +933,22 @@ double SCRatios::calcLikelihood() {
 
       if (!(isZero(scale))) {
         tmpdivide = 1.0 / scale;
-        tmplik = 0.0;
-        for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(pred); prey++) {
+        for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(pred); prey++)
           (*modelConsumption[timeindex][a])[pred][prey] *= tmpdivide;
-          if (!(isZero((*stddev[timeindex][a])[pred][prey])))
-            tmplik += ((*modelConsumption[timeindex][a])[pred][prey]  -
-              (*obsConsumption[timeindex][a])[pred][prey]) *
-              ((*modelConsumption[timeindex][a])[pred][prey]  -
-              (*obsConsumption[timeindex][a])[pred][prey]) /
-              ((*stddev[timeindex][a])[pred][prey] * (*stddev[timeindex][a])[pred][prey]);
+
+        if (!(isZero((*number[timeindex])[a][pred]))) {
+          tmplik = 0.0;
+          for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(pred); prey++) {
+            if (!(isZero((*stddev[timeindex][a])[pred][prey])))
+              tmplik += ((*modelConsumption[timeindex][a])[pred][prey]  -
+                (*obsConsumption[timeindex][a])[pred][prey]) *
+                ((*modelConsumption[timeindex][a])[pred][prey]  -
+                (*obsConsumption[timeindex][a])[pred][prey]) /
+                ((*stddev[timeindex][a])[pred][prey] * (*stddev[timeindex][a])[pred][prey]);
+          }
+          tmplik *= (*number[timeindex])[a][pred];
+          likelihoodValues[timeindex][a] += tmplik;
         }
-        tmplik *= (*number[timeindex])[a][pred];
-        likelihoodValues[timeindex][a] += tmplik;
       }
     }
     lik += likelihoodValues[timeindex][a];
