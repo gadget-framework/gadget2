@@ -46,7 +46,10 @@ InitialInputFile::~InitialInputFile() {
 void InitialInputFile::readHeader() {
 
   infile >> ws;
-  if (isdigit(infile.peek())) {
+  if (infile.eof() || infile.fail()) {
+    handle.logMessage(LOGFAIL, "Error in initial input file - found no parameters in data file");
+
+  } else if (isdigit(infile.peek())) {
     repeatedValues = 1;
 
   } else {
