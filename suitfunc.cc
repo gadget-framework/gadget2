@@ -79,11 +79,16 @@ double ExpSuitFuncA::calculate() {
   double check = 0.0;
 
   if (coeff[0] < 0.0 && coeff[1] < 0.0)
-    check = coeff[3] / (1.0 + exp(-(coeff[0] - coeff[1] * preyLength + coeff[2] * predLength)));
+    check = coeff[3] / (1.0 + exp(-(coeff[0] - (coeff[1] * preyLength) + (coeff[2] * predLength))));
   else if (coeff[0] > 0.0 && coeff[1] > 0.0)
-    check = coeff[3] / (1.0 + exp(-(-coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
+    check = coeff[3] / (1.0 + exp(-(-coeff[0] + (coeff[1] * preyLength) + (coeff[2] * predLength))));
   else
-    check = coeff[3] / (1.0 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength)));
+    check = coeff[3] / (1.0 + exp(-(coeff[0] + (coeff[1] * preyLength) + (coeff[2] * predLength))));
+
+  if (check != check) { //check for NaN
+    handle.logMessage(LOGWARN, "Warning in suitability - function calculated to be infinity");
+    return 0.0;
+  }
 
   if (check < 0.0) {
     handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
@@ -172,6 +177,12 @@ ExpSuitFuncL50::~ExpSuitFuncL50() {
 
 double ExpSuitFuncL50::calculate() {
   double check = 1.0 / (1.0 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
+
+  if (check != check) { //check for NaN
+    handle.logMessage(LOGWARN, "Warning in suitability - function calculated to be infinity");
+    return 0.0;
+  }
+
   if (check < 0.0) {
     handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 0.0;
@@ -265,14 +276,24 @@ RichardsSuitFunc::~RichardsSuitFunc() {
 }
 
 double RichardsSuitFunc::calculate() {
-  double check = 0.0;
 
+  if (isZero(coeff[4])) {
+    handle.logMessage(LOGWARN, "Warning in suitability - divide by zero error");
+    return 1.0;
+  }
+
+  double check = 0.0;
   if (coeff[0] < 0.0 && coeff[1] < 0.0)
     check = pow(coeff[3] / (1.0 + exp(-(coeff[0] - coeff[1] * preyLength + coeff[2] * predLength))), (1.0 / coeff[4]));
   else if (coeff[0] > 0.0 && coeff[1] > 0.0)
     check = pow(coeff[3] / (1.0 + exp(-(-coeff[0] + coeff[1] * preyLength + coeff[2] * predLength))), (1.0 / coeff[4]));
   else
     check = pow(coeff[3] / (1.0 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength))), (1.0 / coeff[4]));
+
+  if (check != check) { //check for NaN
+    handle.logMessage(LOGWARN, "Warning in suitability - function calculated to be infinity");
+    return 0.0;
+  }
 
   if (check < 0.0) {
     handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
@@ -297,10 +318,20 @@ GammaSuitFunc::~GammaSuitFunc() {
 }
 
 double GammaSuitFunc::calculate() {
-  double check;
 
-  check = exp(coeff[0] - 1.0 - (preyLength / coeff[1] * coeff[2]));
+  if (isZero(coeff[1]) || (isZero(coeff[2])) || (isEqual(coeff[0], 1.0))) {
+    handle.logMessage(LOGWARN, "Warning in suitability - divide by zero error");
+    return 1.0;
+  }
+
+  double check = exp(coeff[0] - 1.0 - (preyLength / (coeff[1] * coeff[2])));
   check *= pow(preyLength / ((coeff[0] - 1.0) * coeff[1] * coeff[2]), (coeff[0] - 1.0));
+
+  if (check != check) { //check for NaN
+    handle.logMessage(LOGWARN, "Warning in suitability - function calculated to be infinity");
+    return 0.0;
+  }
+
   if (check < 0.0) {
     handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 0.0;
