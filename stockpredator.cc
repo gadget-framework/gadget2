@@ -74,7 +74,7 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   int numarea = areas.Size();
   IntVector size(maxage - minage + 1, numlength);
   IntVector minlength(maxage - minage + 1, 0);
-  Alkeys.resize(numarea, minage, minlength, size);
+  predAlkeys.resize(numarea, minage, minlength, size);
   maxcons.AddRows(numarea, numlength, 0.0);
   Phi.AddRows(numarea, numlength, 0.0);
   fphi.AddRows(numarea, numlength, 0.0);
@@ -88,15 +88,19 @@ void StockPredator::Print(ofstream& outfile) const {
   int i, area;
   outfile << "\nStock predator\n";
   PopPredator::Print(outfile);
+  outfile << "\n\tPredator age length keys\n";
   for (area = 0; area < areas.Size(); area++) {
-    outfile << "\tPhi on internal area " << areas[area] << ":\n\t";
+    outfile << "\tInternal area " << areas[area] << "\n\tNumbers\n";
+    predAlkeys[area].printNumbers(outfile);
+    outfile << "\tMean weights\n";
+    predAlkeys[area].printWeights(outfile);
+  }
+  outfile << "\n\tConsumption information\n";
+  for (area = 0; area < areas.Size(); area++) {
+    outfile << "\tPhi by length on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < fphi.Ncol(area); i++)
       outfile << setw(smallwidth) << setprecision(smallprecision) << fphi[area][i] << sep;
-    outfile << "\n\tAlkeys (numbers) on internal area " << areas[area] << ":\n";
-    Alkeys[area].printNumbers(outfile);
-    outfile << "\tAlkeys (mean weights) on internal area " << areas[area] << ":\n";
-    Alkeys[area].printWeights(outfile);
-    outfile << "\tMaximum consumption by length on internal area " << areas[area] << ":\n\t";
+    outfile << "\n\tMaximum consumption by length on internal area " << areas[area] << ":\n\t";
     for (i = 0; i < maxcons.Ncol(area); i++)
       outfile << setw(smallwidth) << setprecision(smallprecision) << maxcons[area][i] << sep;
     outfile << endl;
@@ -104,11 +108,11 @@ void StockPredator::Print(ofstream& outfile) const {
   outfile << endl;
 }
 
-void StockPredator::Sum(const AgeBandMatrix& stock, int area) {
+void StockPredator::Sum(const AgeBandMatrix& stockAlkeys, int area) {
   int inarea = this->areaNum(area);
-  Alkeys[inarea].setToZero();
-  Alkeys[inarea].Add(stock, *CI);
-  Alkeys[inarea].sumColumns(prednumber[inarea]);
+  predAlkeys[inarea].setToZero();
+  predAlkeys[inarea].Add(stockAlkeys, *CI);
+  predAlkeys[inarea].sumColumns(prednumber[inarea]);
 }
 
 void StockPredator::Reset(const TimeClass* const TimeInfo) {

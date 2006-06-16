@@ -408,9 +408,9 @@ void Stock::Print(ofstream& outfile) const {
 
   outfile << "\nAge length keys\n";
   for (i = 0; i < areas.Size(); i++) {
-    outfile << "\tInternal area " << areas[i] << "\n\tNumbers\n";
+    outfile << "\tInternal area " << areas[i] << "\n\tNumber\n";
     Alkeys[i].printNumbers(outfile);
-    outfile << "\tMean weights\n";
+    outfile << "\tMean weight\n";
     Alkeys[i].printWeights(outfile);
   }
 }

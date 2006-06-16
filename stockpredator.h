@@ -41,10 +41,10 @@ public:
   virtual void Eat(int area, const AreaClass* const Area, const TimeClass* const TimeInfo);
   /**
    * \brief This will calculate the amount of prey that is consumed by the predator on a given area
-   * \param stock is the AgeBandMatrix giving the amount of prey in the area
+   * \param stockAlkeys is the AgeBandMatrix giving the amount of the stock in the area
    * \param area is the area that the prey consumption is being calculated on
    */
-  virtual void Sum(const AgeBandMatrix& stock, int area);
+  virtual void Sum(const AgeBandMatrix& stockAlkeys, int area);
   /**
    * \brief This will adjust the amount the predator consumes on a given area, to take oversconsumption into consideration
    * \param area is the area that the prey consumption is being calculated on
@@ -77,18 +77,18 @@ public:
    * \brief This will return the minimum age of the predator
    * \return minimum age
    */
-  int minAge() const { return Alkeys[0].minAge(); };
+  int minAge() const { return predAlkeys[0].minAge(); };
   /**
    * \brief This will return the maximum age of the predator
    * \return maximum age
    */
-  int maxAge() const { return Alkeys[0].maxAge(); };
+  int maxAge() const { return predAlkeys[0].maxAge(); };
   /**
    * \brief This will return the population of the predator on a given area
    * \param area is the area that the consumption is being calculated on
    * \return alkeys, a AgeBandMatrix containing the population of the predator
    */
-  const AgeBandMatrix& getAgeLengthKeys(int area) const { return Alkeys[this->areaNum(area)]; };
+  const AgeBandMatrix& getAgeLengthKeys(int area) const { return predAlkeys[this->areaNum(area)]; };
 protected:
   /**
    * \brief This is the identifier of the function to be used to calculate the maximum consumption
@@ -122,7 +122,7 @@ protected:
    * \brief This is the AgeBandMatrixPtrVector used to store information about the predator population
    * \note The indices for this object are [area][predator age][predator length]
    */
-  AgeBandMatrixPtrVector Alkeys;
+  AgeBandMatrixPtrVector predAlkeys;
 };
 
 #endif
