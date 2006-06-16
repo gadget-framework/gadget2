@@ -73,7 +73,7 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
       break;
     default:
       handle.logMessage(LOGFAIL, "Error in fleet - unrecognised fleet type for", this->getName());
-    }
+  }
 
   //the next entry in the file will be the name of the amounts datafile
   infile >> text >> ws;

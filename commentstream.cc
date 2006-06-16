@@ -7,9 +7,6 @@ istream& operator >> (istream& istr, Whitespace& ws) {
   int c;
   while (istr.peek() == ' ' || istr.peek() == '\t' || istr.peek() == '\r' || istr.peek() == '\n')
     c = istr.get();
-
-  if (!istr.eof() && istr.peek() == EOF)
-    c = istr.get();
   return istr;
 }
 
