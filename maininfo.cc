@@ -311,6 +311,11 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
     handle.logMessage(LOGWARN, "\n** logging model information from a Gadget network run is not recommended **");
 
   //check the printing options
+  if (forceprint)
+    handle.logMessage(LOGMESSAGE, "\nPrinting model output has been enabled from the command line");
+  if (!runprint)
+    handle.logMessage(LOGMESSAGE, "\nPrinting model output has been disabled from the command line");
+
   check = runprint;
   if (runnetwork)
     check = 0;
