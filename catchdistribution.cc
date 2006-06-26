@@ -339,6 +339,8 @@ CatchDistribution::~CatchDistribution() {
 
 void CatchDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
+  if (isZero(weight))
+    handle.logMessage(LOGWARN, "Warning in catchdistribution - zero weight for", this->getName());
 
   switch (functionnumber) {
     case 2:
@@ -524,7 +526,7 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
 
 void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
-  if (!(AAT.atCurrentTime(TimeInfo)))
+  if ((!(AAT.atCurrentTime(TimeInfo))) || (isZero(weight)))
     return;
 
   if ((handle.getLogLevel() >= LOGMESSAGE) && ((!yearly) || (TimeInfo->getStep() == TimeInfo->numSteps())))

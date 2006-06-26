@@ -281,6 +281,8 @@ StockDistribution::~StockDistribution() {
 
 void StockDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
+  if (isZero(weight))
+    handle.logMessage(LOGWARN, "Warning in stockdistribution - zero weight for", this->getName());
   switch (functionnumber) {
     case 1:
       MN.setValue(epsilon);
@@ -411,7 +413,8 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
 }
 
 void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
-  if (!(AAT.atCurrentTime(TimeInfo)))
+
+  if ((!(AAT.atCurrentTime(TimeInfo))) || (isZero(weight)))
     return;
 
   int i;

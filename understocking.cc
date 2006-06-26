@@ -105,6 +105,8 @@ void UnderStocking::setPredators(PredatorPtrVector& Predators) {
 
 void UnderStocking::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
+  if (isZero(weight))
+    handle.logMessage(LOGWARN, "Warning in understocking - zero weight for", this->getName());
   Years.Reset();
   Steps.Reset();
   likelihoodValues.Reset();
@@ -114,7 +116,7 @@ void UnderStocking::Reset(const Keeper* const keeper) {
 
 void UnderStocking::addLikelihood(const TimeClass* const TimeInfo) {
 
-  if (!AAT.atCurrentTime(TimeInfo))
+  if ((!(AAT.atCurrentTime(TimeInfo))) || (isZero(weight)))
     return;
 
   int i, j, k;

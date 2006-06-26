@@ -259,6 +259,8 @@ CatchStatistics::~CatchStatistics() {
 
 void CatchStatistics::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
+  if (isZero(weight))
+    handle.logMessage(LOGWARN, "Warning in catchstatistics - zero weight for", this->getName());
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset catchstatistics component", this->getName());
 }
@@ -382,7 +384,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
 
 void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
 
-  if (!(AAT.atCurrentTime(TimeInfo)))
+  if ((!(AAT.atCurrentTime(TimeInfo))) || (isZero(weight)))
     return;
 
   int i;

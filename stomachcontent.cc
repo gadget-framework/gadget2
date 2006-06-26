@@ -57,6 +57,19 @@ StomachContent::~StomachContent() {
   delete[] functionname;
 }
 
+void StomachContent::addLikelihood(const TimeClass* const TimeInfo) {
+  if (isZero(weight))
+    return;
+  likelihood += StomCont->calcLikelihood(TimeInfo);
+}
+
+void StomachContent::Reset(const Keeper* const keeper) {
+  Likelihood::Reset(keeper);
+  if (isZero(weight))
+    handle.logMessage(LOGWARN, "Warning in stomachcontent - zero weight for", this->getName());
+  StomCont->Reset();
+}
+
 void StomachContent::Print(ofstream& outfile) const {
   outfile << "\nStomach Content " << this->getName() << " - likelihood value " << likelihood
     << "\n\tFunction " << functionname << endl;
@@ -180,7 +193,8 @@ void SC::aggregate(int i) {
 }
 
 double SC::calcLikelihood(const TimeClass* const TimeInfo) {
-  if (!AAT.atCurrentTime(TimeInfo))
+
+  if (!(AAT.atCurrentTime(TimeInfo)))
     return 0.0;
 
   int i, a, k, p;

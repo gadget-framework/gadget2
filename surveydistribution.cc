@@ -308,6 +308,8 @@ SurveyDistribution::~SurveyDistribution() {
 
 void SurveyDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
+  if (isZero(weight))
+    handle.logMessage(LOGWARN, "Warning in surveydistribution - zero weight for", this->getName());
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset surveydistribution component", this->getName());
 }
@@ -325,7 +327,7 @@ void SurveyDistribution::Print(ofstream& outfile) const {
 
 void SurveyDistribution::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  if (!AAT.atCurrentTime(TimeInfo))
+  if ((!(AAT.atCurrentTime(TimeInfo))) || (isZero(weight)))
     return;
 
   int i, area, age, len;

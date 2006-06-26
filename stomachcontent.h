@@ -404,14 +404,12 @@ public:
    * \brief This function will calculate the likelihood score for the StomachContent component
    * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void addLikelihood(const TimeClass* const TimeInfo)
-    { likelihood += StomCont->calcLikelihood(TimeInfo); };
+  virtual void addLikelihood(const TimeClass* const TimeInfo);
   /**
    * \brief This function will reset the StomachContent likelihood information
    * \param keeper is the Keeper for the current model
    */
-  virtual void Reset(const Keeper* const keeper)
-    { Likelihood::Reset(keeper); StomCont->Reset(); };
+  virtual void Reset(const Keeper* const keeper);
   /**
    * \brief This function will print the summary StomachContent likelihood information
    * \param outfile is the ofstream that all the model information gets sent to
