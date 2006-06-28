@@ -42,9 +42,14 @@ public:
   void setIntercept(double intercept) { a = intercept; };
   /**
    * \brief This function will set the slope of the regression line
-   * \param slope if the slope of the regession line
+   * \param slope is the slope of the regession line
    */
   void setSlope(double slope) { b = slope; };
+  /**
+   * \brief This function will set the weights that can be used to fit the regression line
+   * \param weights is the DoubleVector of weights to be used
+   */
+  void setWeights(const DoubleVector& weights);
   /**
    * \brief This function will check to see if an error has occured
    * \return error
@@ -72,9 +77,33 @@ public:
   const LineType getType() const { return linetype; };
 protected:
   /**
+   * \brief This function will calculate the sum of squares of errors for the regession line
+   */
+  void calcSSE();
+  /**
+   * \brief This function will calculate the weighted sum of squares of errors for the regession line
+   */
+  void calcSSEWeights();
+  /**
+   * \brief This function will calculate the slope of the regession line
+   */
+  void calcSlope();
+  /**
+   * \brief This function will calculate the intercept of the regession line
+   */
+  void calcIntercept();
+  /**
+   * \brief This function will calculate both the slope and the intercept of the regession line
+   */
+  void calcSlopeIntercept();
+  /**
    * \brief This is a flag to denote whether an error has occured
    */
   int error;
+  /**
+   * \brief This is a flag to denote whether the weights should be used when calculating the fit to the regression line
+   */
+  int useweights;
   /**
    * \brief This is the sum of squares of errors from the regression line
    */
@@ -87,6 +116,10 @@ protected:
    * \brief This is the slope of the regression line
    */
   double b;
+  /**
+   * \brief This is the DoubleVector of weights that can be used to fit the regression line
+   */
+  DoubleVector w;
   /**
    * \brief This is the DoubleVector that will contain the the modelled data to be used to fit the regression line
    */
@@ -139,6 +172,52 @@ public:
    * \brief This is the default LogLinearRegression destructor
    */
   ~LogLinearRegression() {};
+  /**
+   * \brief This is the function that stores 2 vectors that will be compared using a log linear regression line
+   * \param modData is the DoubleVector containing the modelled data
+   * \param obsData is the DoubleVector containing the observed data
+   */
+  virtual void storeVectors(const DoubleVector& modData, const DoubleVector& obsData);
+};
+
+/**
+ * \class WeightRegression
+ * \brief This is the class used to fit a weighted linear regression line to compare 2 vectors
+ */
+class WeightRegression : public LinearRegression {
+public:
+  /**
+   * \brief This is the default WeightRegression constructor
+   * \param ltype is the LineType of the regression line
+   */
+  WeightRegression(LineType ltype);
+  /**
+   * \brief This is the default WeightRegression destructor
+   */
+  ~WeightRegression() {};
+  /**
+   * \brief This is the function that stores 2 vectors that will be compared using a linear regression line
+   * \param modData is the DoubleVector containing the modelled data
+   * \param obsData is the DoubleVector containing the observed data
+   */
+  virtual void storeVectors(const DoubleVector& modData, const DoubleVector& obsData);
+};
+
+/**
+ * \class LogWeightRegression
+ * \brief This is the class used to fit a weighted log linear regression line to compare 2 vectors
+ */
+class LogWeightRegression : public LogLinearRegression {
+public:
+  /**
+   * \brief This is the default LogWeightRegression constructor
+   * \param ltype is the LineType of the regression line
+   */
+  LogWeightRegression(LineType ltype);
+  /**
+   * \brief This is the default LogWeightRegression destructor
+   */
+  ~LogWeightRegression() {};
   /**
    * \brief This is the function that stores 2 vectors that will be compared using a log linear regression line
    * \param modData is the DoubleVector containing the modelled data
