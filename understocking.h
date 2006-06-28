@@ -2,12 +2,11 @@
 #define understocking_h
 
 #include "likelihood.h"
-#include "actionattimes.h"
+#include "areatime.h"
 #include "commentstream.h"
 #include "intmatrix.h"
 #include "doublematrix.h"
-#include "charptrvector.h"
-#include "predatorptrvector.h"
+#include "preyptrvector.h"
 
 /**
  * \class UnderStocking
@@ -30,7 +29,7 @@ public:
   /**
    * \brief This is the default UnderStocking destructor
    */
-  virtual ~UnderStocking();
+  virtual ~UnderStocking() {};
   /**
    * \brief This function will calculate the likelihood score for the UnderStocking component
    * \param TimeInfo is the TimeClass for the current model
@@ -52,31 +51,20 @@ public:
    */
   virtual void Print(ofstream& outfile) const;
   /**
-   * \brief This will select the predators required to calculate the UnderStocking likelihood score
-   * \param Predators is the PredatorPtrVector of all the available predators
+   * \brief This will select the preys required to calculate the UnderStocking likelihood score
+   * \param preyvec is the PreyPtrVector of all the available predators
+   * \param Area is the AreaClass for the current model
    */
-  void setPredators(PredatorPtrVector& Predators);
+  void setPreys(PreyPtrVector& preyvec, const AreaClass* const Area);
 private:
   /**
-   * \brief This is the CharPtrVector of the names of the predators that will be checked for understocking
+   * \brief This is the PreyPtrVector of the preys that will be checked for understocking
    */
-  CharPtrVector prednames;
+  PreyPtrVector preys;
   /**
-   * \brief This is the PredatorPtrVector of the predators that will be checked for understocking
+   * \brief This is the IntVector used to store area information
    */
-  PredatorPtrVector predators;
-  /**
-   * \brief This is the IntMatrix used to store area information
-   */
-  IntMatrix areas;
-  /**
-   * \brief This is the CharPtrVector of the names of the areas
-   */
-  CharPtrVector areaindex;
-  /**
-   * \brief This ActionAtTimes stores information about when the likelihood score should be calculated
-   */
-  ActionAtTimes AAT;
+  IntVector areas;
   /**
    * \brief This is the power coefficient used when calculating the likelihood score (default 2)
    */
@@ -90,14 +78,9 @@ private:
    */
   IntVector Steps;
   /**
-   * \brief This is the DoubleMatrix used to store the calculated non-zero likelihood information
-   * \note The indices for this object are [time][area]
+   * \brief This is the DoubleVector used to store the calculated non-zero likelihood score
    */
-  DoubleMatrix likelihoodValues;
-  /**
-   * \brief This is the DoubleVector used to temporarily store any overconsumption
-   */
-  DoubleVector store;
+  DoubleVector likelihoodValues;
 };
 
 #endif

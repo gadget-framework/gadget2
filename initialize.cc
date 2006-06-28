@@ -37,7 +37,7 @@ extern ErrorHandler handle;
 void Ecosystem::Initialise() {
   PreyPtrVector preyvec;
   PredatorPtrVector predvec;
-  int i, j;
+  int i, j, count;
 
   //first check that the names of the components are unique
   for (i = 0; i < fleetvec.Size(); i++)
@@ -111,7 +111,8 @@ void Ecosystem::Initialise() {
   for (i = 0; i < fleetvec.Size(); i++)
     basevec.resize(fleetvec[i]);
 
-  //This is a good place to initialise the likelihood classes.
+  //Next we initialise the likelihood classes
+  count = 0;  //JMB count the number of understocking classes
   for (i = 0; i < likevec.Size(); i++) {
     handle.logMessage(LOGMESSAGE, "Initialising likelihood component", likevec[i]->getName());
     switch (likevec[i]->getType()) {
@@ -119,7 +120,8 @@ void Ecosystem::Initialise() {
         ((SurveyIndices*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case UNDERSTOCKINGLIKELIHOOD:
-        ((UnderStocking*)likevec[i])->setPredators(predvec);
+        ((UnderStocking*)likevec[i])->setPreys(preyvec, Area);
+        count++;
         break;
       case CATCHDISTRIBUTIONLIKELIHOOD:
         ((CatchDistribution*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
@@ -156,7 +158,12 @@ void Ecosystem::Initialise() {
     }
   }
 
-  //This is a good place to initialise the printer classes.
+  if (count == 0)
+    handle.logMessage(LOGWARN, "Warning in input files - no understocking component found");
+  if (count > 1)
+    handle.logMessage(LOGWARN, "Warning in input files - repeated understocking components found");
+
+  //Finally we initialise the printer classes
   for (i = 0; i < printvec.Size(); i++) {
     handle.logMessage(LOGMESSAGE, "Initialising printer for output file", printvec[i]->getFileName());
     switch (printvec[i]->getType()) {

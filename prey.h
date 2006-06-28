@@ -143,6 +143,12 @@ public:
    */
   const DoubleVector& getOverConsumption(int area) const { return overconsumption[this->areaNum(area)]; };
   /**
+   * \brief This will return the total amount of the prey that has been overconsumed on a given area
+   * \param area is the area that the consumption is being calculated on
+   * \return total overconsumption of the prey
+   */
+  double getTotalOverConsumption(int area) const;
+  /**
    * \brief This will return the length group information for the prey
    * \return LgrpDiv
    */

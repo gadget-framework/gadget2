@@ -58,6 +58,11 @@ public:
    * \return outerarea
    */
   int getModelArea(int area) const { return modelAreas[area]; };
+  /**
+   * \brief This will return the the IntVector of all the areas in the current model
+   * \return modelAreas
+   */
+  const IntVector& getAllModelAreas() const { return modelAreas; };
 protected:
   /**
    * \brief This is the IntVector of the areas in the current model

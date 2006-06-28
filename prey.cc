@@ -208,3 +208,15 @@ int Prey::isOverConsumption(int area) {
     return 0;
   return isoverconsumption[this->areaNum(area)];
 }
+
+double Prey::getTotalOverConsumption(int area) const {
+  int inarea = this->areaNum(area);
+  if (inarea == -1)
+    return 0.0;
+
+  int i;
+  double total = 0.0;
+  for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+    total += overconsumption[inarea][i];
+  return total;
+}
