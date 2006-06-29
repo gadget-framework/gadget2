@@ -82,9 +82,10 @@ protected:
   double calcSpawnNumber(int age, int len, double number, double weight);
   /**
    * \brief This function will calculate the total number of recruits that have been created by the spawning process on the current timestep
+   * \param temp is the current temperature
    * \return total number of recruits
    */
-  double calcRecruitNumber();
+  double calcRecruitNumber(double temp);
   /**
    * \brief This is the StockPtrVector of the stocks that will be spawned
    */

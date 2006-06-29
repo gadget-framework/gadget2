@@ -297,6 +297,8 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
       handle.logMessage(LOGWARN, "Warning in spawner - invalid mean length for spawned stock");
     if (isZero(stockParameters[0]))
       handle.logMessage(LOGWARN, "Warning in spawner - invalid standard deviation for spawned stock");
+    if (stockParameters[0] < spawnLgrpDiv->minLength())
+      handle.logMessage(LOGWARN, "Warning in spawner - mean length is less than minimum length");
   }
 
   sum = 0.0;
@@ -311,22 +313,23 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   }
 
   //calculate the total number of recruits and distribute this through the length groups
-  total = calcRecruitNumber();
-  if (sum > verysmall) {
+  if (!isZero(sum)) {
+    tmp = 0.0;  //JMB dummy temperature of zero
+    total = calcRecruitNumber(tmp) / sum;
     for (len = 0; len < spawnLgrpDiv->numLengthGroups(); len++) {
       length = spawnLgrpDiv->meanLength(len);
-      Storage[inarea][spawnAge][len].N *= total / sum;
+      Storage[inarea][spawnAge][len].N *= total;
       Storage[inarea][spawnAge][len].W = stockParameters[2] * pow(length, stockParameters[3]);
     }
-  }
 
-  //add this to the spawned stocks
-  for (s = 0; s < spawnStocks.Size(); s++) {
-    if (!spawnStocks[s]->isInArea(area))
-      handle.logMessage(LOGFAIL, "Error in spawner - spawned stock doesnt live on area", area);
+    //add this to the spawned stocks
+    for (s = 0; s < spawnStocks.Size(); s++) {
+      if (!spawnStocks[s]->isInArea(area))
+        handle.logMessage(LOGFAIL, "Error in spawner - spawned stock doesnt live on area", area);
 
-    tmp = spawnRatio[ratioindex[s]] * ratioscale;
-    spawnStocks[s]->Add(Storage[inarea], CI[s], area, tmp);
+      tmp = spawnRatio[ratioindex[s]] * ratioscale;
+      spawnStocks[s]->Add(Storage[inarea], CI[s], area, tmp);
+    }
   }
 
   for (age = 0; age < spawnNumbers.Nrow(); age++)
@@ -352,11 +355,11 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       spawnProportion[i] = fnProportion->calculate(LgrpDiv->meanLength(i));
       if (spawnProportion[i] < 0.0) {
-        handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnProportion[i]);
+        handle.logMessage(LOGWARN, "Warning in spawner - function outside bounds", spawnProportion[i]);
         spawnProportion[i] = 0.0;
       }
       if (spawnProportion[i] > 1.0) {
-        handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnProportion[i]);
+        handle.logMessage(LOGWARN, "Warning in spawner - function outside bounds", spawnProportion[i]);
         spawnProportion[i] = 1.0;
       }
     }
@@ -367,11 +370,11 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       spawnWeightLoss[i] = fnWeightLoss->calculate(LgrpDiv->meanLength(i));
       if (spawnWeightLoss[i] < 0.0) {
-        handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnWeightLoss[i]);
+        handle.logMessage(LOGWARN, "Warning in spawner - function outside bounds", spawnWeightLoss[i]);
         spawnWeightLoss[i] = 0.0;
       }
       if (spawnWeightLoss[i] > 1.0) {
-        handle.logMessage(LOGWARN, "Warning in spawning - function outside bounds", spawnWeightLoss[i]);
+        handle.logMessage(LOGWARN, "Warning in spawner - function outside bounds", spawnWeightLoss[i]);
         spawnWeightLoss[i] = 1.0;
       }
     }
@@ -391,12 +394,12 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
       ratioscale += spawnRatio[i];
 
     if (isZero(ratioscale)) {
-      handle.logMessage(LOGWARN, "Warning in spawning - specified ratios are zero");
+      handle.logMessage(LOGWARN, "Warning in spawner - specified ratios are zero");
       ratioscale = 1.0;
     } else if (isEqual(ratioscale, 1.0)) {
       // do nothing
     } else {
-      handle.logMessage(LOGWARN, "Warning in spawning - scaling ratios using", ratioscale);
+      handle.logMessage(LOGWARN, "Warning in spawner - scaling ratios using", ratioscale);
       ratioscale = 1.0 / ratioscale;
     }
   }
@@ -426,31 +429,31 @@ double SpawnData::calcSpawnNumber(int age, int len, double number, double weight
   return temp;
 }
 
-double SpawnData::calcRecruitNumber() {
+double SpawnData::calcRecruitNumber(double temp) {
   int age, len;
-  double recruits = 0.0, temp = 0.0;
+  double total = 0.0, ssb = 0.0;
 
   for (age = 0; age < spawnNumbers.Nrow(); age++)
     for (len = 0; len < spawnNumbers.Ncol(age); len++)
-      temp += spawnNumbers[age][len];
+      ssb += spawnNumbers[age][len];
 
   switch (functionnumber) {
     case 1:
     case 4:
-      recruits = temp * spawnParameters[0];
+      total = ssb * spawnParameters[0];
       break;
     case 2:
-      recruits = temp * spawnParameters[0] * exp(-spawnParameters[1] * temp);
+      total = ssb * spawnParameters[0] * exp(-spawnParameters[1] * ssb);
       break;
     case 3:
-      recruits = temp * spawnParameters[0] / (spawnParameters[1] + temp);
+      total = ssb * spawnParameters[0] / (spawnParameters[1] + ssb);
       break;
     default:
       handle.logMessage(LOGWARN, "Warning in spawner - unrecognised recruitment function", functionname);
       break;
   }
 
-  return recruits;
+  return total;
 }
 
 void SpawnData::Print(ofstream& outfile) const {
