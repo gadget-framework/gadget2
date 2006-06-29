@@ -13,6 +13,8 @@ extern ErrorHandler handle;
 PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(PREDPREYSTDPRINTER), predname(0), preyname(0) {
 
+  handle.logFileMessage(LOGWARN, "\n *** The predpreystdprinter class will soon be removed from Gadget\n *** Please use the predatorpreyprinter class instead\n");
+
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
