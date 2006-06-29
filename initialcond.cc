@@ -471,12 +471,14 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
             scaler += initialPop[area][age][l].N;
           }
 
-          scaler = (scaler > rathersmall ? 10000.0 / scaler : 0.0);
-          for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
-            initialPop[area][age][l].N *= scaler;
-            initialPop[area][age][l].W = refWeight[l] * relCond[area][age - minage];
-            if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
-              handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+          if (!isZero(scaler)) {
+            scaler = 10000.0 / scaler;
+            for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
+              initialPop[area][age][l].N *= scaler;
+              initialPop[area][age][l].W = refWeight[l] * relCond[area][age - minage];
+              if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
+                handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+            }
           }
         }
       }
@@ -512,12 +514,14 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
             scaler += initialPop[area][age][l].N;
           }
 
-          scaler = (scaler > rathersmall ? 10000.0 / scaler : 0.0);
-          for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
-            initialPop[area][age][l].N *= scaler;
-            initialPop[area][age][l].W = alpha[area][age - minage] * pow(LgrpDiv->meanLength(l), beta[area][age - minage]);
-            if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
-              handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+          if (!isZero(scaler)) {
+            scaler = 10000.0 / scaler;
+            for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
+              initialPop[area][age][l].N *= scaler;
+              initialPop[area][age][l].W = alpha[area][age - minage] * pow(LgrpDiv->meanLength(l), beta[area][age - minage]);
+              if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
+                handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+            }
           }
         }
       }
@@ -530,10 +534,12 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       for (age = minage; age <= maxage; age++) {
         for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
           initialPop[area][age][l].N = (*initialNumber[area])[age - minage][l];
-          if ((handle.getLogLevel() >= LOGWARN) && (initialPop[area][age][l].N < 0.0))
-            handle.logMessage(LOGWARN, "Warning in initial conditions - negative initial population");
-          if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
-            handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+          if (handle.getLogLevel() >= LOGWARN) {
+            if (initialPop[area][age][l].N < 0.0)
+              handle.logMessage(LOGWARN, "Warning in initial conditions - negative initial population");
+            if ((isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
+              handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+          }
         }
       }
     }

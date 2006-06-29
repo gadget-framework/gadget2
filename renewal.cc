@@ -411,12 +411,14 @@ void RenewalData::Reset() {
           sum += renewalDistribution[i][age][l].N;
         }
 
-        sum = (sum > rathersmall ? 10000.0 / sum : 0.0);
-        for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++) {
-          renewalDistribution[i][age][l].N *= sum;
-          renewalDistribution[i][age][l].W = refWeight[l] * relCond[i];
-          if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
-            handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+        if (!isZero(sum)) {
+          sum = 10000.0 / sum;
+          for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++) {
+            renewalDistribution[i][age][l].N *= sum;
+            renewalDistribution[i][age][l].W = refWeight[l] * relCond[i];
+            if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
+              handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+          }
         }
       }
     }
@@ -446,12 +448,14 @@ void RenewalData::Reset() {
           sum += renewalDistribution[i][age][l].N;
         }
 
-        sum = (sum > rathersmall ? 10000.0 / sum : 0.0);
-        for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++) {
-          renewalDistribution[i][age][l].N *= sum;
-          renewalDistribution[i][age][l].W = alpha[i] * pow(LgrpDiv->meanLength(l), beta[i]);
-          if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
-            handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+        if (!isZero(sum)) {
+          sum = 10000.0 / sum;
+          for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++) {
+            renewalDistribution[i][age][l].N *= sum;
+            renewalDistribution[i][age][l].W = alpha[i] * pow(LgrpDiv->meanLength(l), beta[i]);
+            if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
+              handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+          }
         }
       }
     }
