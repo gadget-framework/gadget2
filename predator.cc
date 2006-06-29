@@ -108,6 +108,8 @@ void Predator::readSuitability(CommentStream& infile,
     strcpy(strcheck, "preference");
   else if (this->getType() == EFFORTPREDATOR)
     strcpy(strcheck, "catchability");
+  else if (this->getType() == QUOTAPREDATOR)
+    strcpy(strcheck, "quotafunction");
   else
     strcpy(strcheck, "amount");
 

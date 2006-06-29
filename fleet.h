@@ -6,13 +6,13 @@
 #include "lengthpredator.h"
 #include "keeper.h"
 
-enum FleetType { TOTALFLEET = 1, LINEARFLEET, NUMBERFLEET, EFFORTFLEET };
+enum FleetType { TOTALFLEET = 1, LINEARFLEET, NUMBERFLEET, EFFORTFLEET, QUOTAFLEET };
 
 /**
  * \class Fleet
  * \brief This is the class used to model the predation that is due to the action of a fleet in the Gadget model
  *
- * This class calculates the catch of the fleets that are to be modelled within the simulation.  The fleets are treated as (non-dynamic) predators that ''eat'' the stock that is defined as the prey of the fleet.  The amount of the stock that is eaten is calculated by the predator that is associated with the fleet.  There are 4 types of fleet, each with a different predator class to calculate the level of predation.  A fleet that has been declared as a TOTALFLEET uses the TotalPredator class to calculate the predation, a LINEARFLEET uses the LinearPredator class to calculate the predation, a NUMBERFLEET uses the NumberPredator class to calculate the predation by number and a EFFORTFLEET uses the EffortPredator class to calculate the predation based on effort data.
+ * This class calculates the catch of the fleets that are to be modelled within the simulation.  The fleets are treated as (non-dynamic) predators that ''eat'' the stock that is defined as the prey of the fleet.  The amount of the stock that is eaten is calculated by the predator that is associated with the fleet.  There are 5 types of fleet, each with a different predator class to calculate the level of predation.  A fleet that has been declared as a TOTALFLEET uses the TotalPredator class to calculate the predation, a LINEARFLEET uses the LinearPredator class to calculate the predation, a NUMBERFLEET uses the NumberPredator class to calculate the predation by number, a EFFORTFLEET uses the EffortPredator class to calculate the predation based on effort data and a QUOTAFLEET uses the QuotaPredator class to calculate the fishing quota based on the biomass of stock available, and then uses this calculated fishing level to calculate the predation of the stock.
  */
 class Fleet : public BaseClass {
 public:
