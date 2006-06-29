@@ -219,7 +219,9 @@ void OptInfoHooke::OptimiseLikelihood() {
   newf = fbefore;
   oldf = fbefore;
   check = fbefore;
-  steplength = ((lambda < verysmall) ? rho : lambda);
+  steplength = lambda;
+  if (isZero(steplength))
+    steplength = rho;
 
   if (fbefore != fbefore) { //JMB added check for NaN
     handle.logMessage(LOGINFO, "Error starting Hooke & Jeeves optimisation with f(x) = infinity");
@@ -299,9 +301,8 @@ void OptInfoHooke::OptimiseLikelihood() {
             trapped[i] = 1;
           }
           /* if it has hit the bounds 2 times then increase the stepsize */
-          if (lbound[i] >= 2) {
+          if (lbound[i] >= 2)
             delta[i] /= rho;
-          }
 
         } else if (trialx[i] > (upperb[i] - verysmall)) {
           rbounds[i]++;
@@ -311,13 +312,11 @@ void OptInfoHooke::OptimiseLikelihood() {
             trapped[i] = 1;
           }
           /* if it has hit the bounds 2 times then increase the stepsize */
-          if (rbounds[i] >= 2) {
+          if (rbounds[i] >= 2)
             delta[i] /= rho;
-          }
         }
       }
 
-      oldf = newf;
       for (i = 0; i < nvars; i++) {
         /* firstly, arrange the sign of delta[] */
         if (trialx[i] < x[i])
@@ -332,9 +331,9 @@ void OptInfoHooke::OptimiseLikelihood() {
       }
 
       /* only move forward if this is really an improvement    */
-      fbefore = newf;
+      oldf = newf;
       newf = EcoSystem->SimulateAndUpdate(trialx);
-      if ((newf - fbefore) > verysmall)
+      if ((newf - oldf) > verysmall)
         break;
 
       /* OK, it's better, so update variables and look around  */
@@ -342,6 +341,9 @@ void OptInfoHooke::OptimiseLikelihood() {
       for (i = 0; i < nvars; i++)
         x[i] = trialx[i];
       newf = this->bestNearby(delta, trialx, fbefore, param);
+
+      if (isEqual(newf, fbefore))
+        break;
 
       /* if too many function evaluations occur, terminate the algorithm */
       iters = EcoSystem->getFuncEval() - offset;
