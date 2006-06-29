@@ -59,7 +59,9 @@ int TimeVariableVector::didChange(const TimeClass* const TimeInfo) const {
   int i;
   for (i = 0; i < size; i++)
     didchange += v[i].didChange(TimeInfo);
-  return (didchange > 0 ? 1 : 0);
+  if (didchange == 0)
+    return 0;
+  return 1;
 }
 
 void TimeVariableVector::Update(const TimeClass* const TimeInfo) {

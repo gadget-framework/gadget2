@@ -36,7 +36,7 @@ void PopStatistics::calcStatistics(const PopInfoIndexVector& pop,
       tmp = meanlength - lgrpdiv->meanLength(i - offset);
       sdevlength += pop[i].N * tmp * tmp;
     }
-    sdevlength = ((sdevlength < rathersmall) ? 0.0 : sqrt(sdevlength / totalnumber));
+    sdevlength = sqrt(sdevlength / totalnumber);
   } else  {
     //JMB reset back to 0
     meanlength = 0.0;
