@@ -12,9 +12,12 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, const char* name)
   : Likelihood(UNDERSTOCKINGLIKELIHOOD, weight, name), powercoeff(2) {
 
+  infile >> ws;
+  if (infile.eof())
+    return;  //JMB - OK, we're done here
+
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-
   infile >> text >> ws;
   //JMB - removed the need to read in the area aggregation file
   if (strcasecmp(text, "areaaggfile") == 0) {
@@ -43,6 +46,10 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
     while (!infile.eof() && (strcasecmp(text, "[component]") != 0))
       infile >> text >> ws;
   }
+
+  //prepare for next likelihood component
+  if (!infile.eof() && (strcasecmp(text, "[component]") != 0))
+    handle.logFileUnexpected(LOGFAIL, "[component]", text);
 }
 
 void UnderStocking::setPreys(PreyPtrVector& preyvec, const AreaClass* const Area) {
