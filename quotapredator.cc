@@ -30,6 +30,8 @@ QuotaPredator::QuotaPredator(CommentStream& infile, const char* givenname,
   infile >> functionname >> ws;
   if (strcasecmp(functionname, "simple") == 0)
     functionnumber = 1;
+  if (strcasecmp(functionname, "simplesum") == 0)
+    functionnumber = 2;
   else
     handle.logFileMessage(LOGFAIL, "\nError in quotapredator - unrecognised function", functionname);
 
@@ -81,35 +83,61 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   int inarea = this->areaNum(area);
   int prey, preyl;
   int predl = 0;  //JMB there is only ever one length group ...
-  double tmp;
+  double tmp, bio;
   totalcons[inarea][predl] = 0.0;
 
-  for (prey = 0; prey < this->numPreys(); prey++) {
-    if (this->getPrey(prey)->isPreyArea(area)) {
+  tmp = prednumber[inarea][predl].N * multi * TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
+  switch (functionnumber) {
+    case 1:
       //Calculate the fishing level based on the available biomass of the stock
-      tmp = this->calcQuota(this->getPrey(prey)->getTotalBiomass(area));
+      for (prey = 0; prey < this->numPreys(); prey++) {
+        if (this->getPrey(prey)->isPreyArea(area)) {
+          bio = this->getPrey(prey)->getTotalBiomass(area);
+          (*predratio[inarea])[prey][predl] = calcQuota(bio) * tmp;
+          if ((*predratio[inarea])[prey][predl] > 10.0) //JMB arbitrary value here ...
+            handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
 
-      (*predratio[inarea])[prey][predl] = prednumber[inarea][predl].N * tmp * multi * TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
-
-      if (isZero((*predratio[inarea])[prey][predl])) {
-        for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
-          (*cons[inarea][prey])[predl][preyl] = 0.0;
-
-      } else {
-        if ((*predratio[inarea])[prey][predl] > 10.0) //JMB arbitrary value here ...
-          handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
-        for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
-          (*cons[inarea][prey])[predl][preyl] = (*predratio[inarea])[prey][predl] *
-            this->getSuitability(prey)[predl][preyl] * this->getPrey(prey)->getBiomass(area, preyl);
-          totalcons[inarea][predl] += (*cons[inarea][prey])[predl][preyl];
-        }
-        //inform the preys of the consumption
-        this->getPrey(prey)->addBiomassConsumption(area, (*cons[inarea][prey])[predl]);
+        } else
+          (*predratio[inarea])[prey][predl] = 0.0;
       }
+      break;
 
-    } else {
+    case 2:
+      //Calculate the fishing level based on the available biomass of all stocks
+      bio = 0.0;
+      for (prey = 0; prey < this->numPreys(); prey++)
+        if (this->getPrey(prey)->isPreyArea(area))
+          bio += this->getPrey(prey)->getTotalBiomass(area);
+
+      tmp *= calcQuota(bio);
+      if (tmp > 10.0) //JMB arbitrary value here ...
+        handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
+      for (prey = 0; prey < this->numPreys(); prey++) {
+        if (this->getPrey(prey)->isPreyArea(area))
+          (*predratio[inarea])[prey][predl] = tmp;
+        else
+          (*predratio[inarea])[prey][predl] = 0.0;
+      }
+      break;
+
+    default:
+      handle.logMessage(LOGWARN, "Warning in quotapredator - unrecognised function", functionname);
+      break;
+  }
+
+  for (prey = 0; prey < this->numPreys(); prey++) {
+    if (isZero((*predratio[inarea])[prey][predl])) {
       for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
         (*cons[inarea][prey])[predl][preyl] = 0.0;
+
+    } else {
+      for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
+        (*cons[inarea][prey])[predl][preyl] = (*predratio[inarea])[prey][predl] *
+          this->getSuitability(prey)[predl][preyl] * this->getPrey(prey)->getBiomass(area, preyl);
+        totalcons[inarea][predl] += (*cons[inarea][prey])[predl][preyl];
+      }
+      //inform the preys of the consumption
+      this->getPrey(prey)->addBiomassConsumption(area, (*cons[inarea][prey])[predl]);
     }
   }
 }
@@ -169,5 +197,7 @@ double QuotaPredator::calcQuota(double biomass) {
   }
 handle.logMessage(LOGDEBUG, "quotapredator - calculated biomass", biomass);
 handle.logMessage(LOGDEBUG, "quotapredator - calculated quota level", quota);
+  if (quota < 0.0)
+    handle.logMessage(LOGWARN, "Warning in quotapredator - negative quota", quota);
   return quota;
 }
