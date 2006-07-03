@@ -47,6 +47,8 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
 void BoundLikelihood::Reset(const Keeper* const keeper) {
 
   Likelihood::Reset(keeper);
+  if (isZero(weight))
+    handle.logMessage(LOGWARN, "Warning in boundlikelihood - zero weight for", this->getName());
 
   if (!checkInitialised) {
     if (!keeper->boundsGiven())

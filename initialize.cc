@@ -159,7 +159,7 @@ void Ecosystem::Initialise() {
   }
 
   if (count == 0)
-    handle.logMessage(LOGWARN, "Warning in input files - no understocking component found");
+    handle.logMessage(LOGWARN, "Warning in input files - no understocking likelihood component found");
   if (count > 1)
     handle.logMessage(LOGWARN, "Warning in input files - repeated understocking components found");
 
