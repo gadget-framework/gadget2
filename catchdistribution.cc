@@ -70,6 +70,10 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     //JMB moved the logcatch function to here instead of it being a seperate class
     functionnumber = 7;
 
+  } else if (strcasecmp(functionname, "stratified") == 0) {
+    //JMB experimental version of the sum of squares function for stratified samples
+    functionnumber = 8;
+
   } else
     handle.logFileMessage(LOGFAIL, "\nError in catchdistribution - unrecognised function", functionname);
 
@@ -210,6 +214,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
     case 4:
     case 5:
     case 6:
+    case 8:
       if (yearly)
         handle.logMessage(LOGWARN, "Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
       break;
@@ -348,6 +353,7 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
     case 4:
     case 6:
     case 7:
+    case 8:
       break;
     case 1:
       MN.setValue(epsilon);
@@ -385,6 +391,7 @@ void CatchDistribution::Print(ofstream& outfile) const {
     case 3:
     case 4:
     case 7:
+    case 8:
       break;
     case 5:
       outfile << "\tMultivariate normal distribution parameters: sigma " << sigma;
@@ -567,6 +574,9 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
       break;
     case 7:
       l = calcLikLog(TimeInfo);
+      break;
+    case 8:
+      l = calcLikStratified();
       break;
     default:
       handle.logMessage(LOGWARN, "Warning in catchdistribution - unrecognised function", functionname);
@@ -809,8 +819,6 @@ double CatchDistribution::calcLikSumSquares() {
       for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
         (*modelDistribution[timeindex][area])[age][len] = ((*alptr)[area][age][len]).N;
 
-    //for stratified sampling it might be better to 
-    //calculate an age distribution for each length group
     totalmodel = 0.0;
     totaldata = 0.0;
     for (age = 0; age < numage; age++) {
@@ -832,7 +840,45 @@ double CatchDistribution::calcLikSumSquares() {
         likelihoodValues[timeindex][area] += (temp * temp);
       }
     }
+    totallikelihood += likelihoodValues[timeindex][area];
+  }
+  return totallikelihood;
+}
 
+double CatchDistribution::calcLikStratified() {
+
+  int numage = ages.Nrow();
+  int numlen = LgrpDiv->numLengthGroups();
+  double temp, totallikelihood, totalmodel, totaldata;
+  int age, len, area;
+
+  totallikelihood = 0.0;
+  for (area = 0; area < areas.Nrow(); area++) {
+    likelihoodValues[timeindex][area] = 0.0;
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
+        (*modelDistribution[timeindex][area])[age][len] = ((*alptr)[area][age][len]).N;
+
+    //calculate an age distribution for each length class
+    for (len = 0; len < numlen; len++) {
+      totalmodel = 0.0;
+      totaldata = 0.0;
+      for (age = 0; age < numage; age++) {
+        totalmodel += (*modelDistribution[timeindex][area])[age][len];
+        totaldata += (*obsDistribution[timeindex][area])[age][len];
+      }
+
+      if (!(isZero(totalmodel)))
+        totalmodel = 1.0 / totalmodel;
+      if (!(isZero(totaldata)))
+        totaldata = 1.0 / totaldata;
+
+      for (age = 0; age < numage; age++) {
+        temp = (((*obsDistribution[timeindex][area])[age][len] * totaldata)
+          - ((*modelDistribution[timeindex][area])[age][len] * totalmodel));
+        likelihoodValues[timeindex][area] += (temp * temp);
+      }
+    }
     totallikelihood += likelihoodValues[timeindex][area];
   }
   return totallikelihood;

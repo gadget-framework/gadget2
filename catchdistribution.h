@@ -115,6 +115,11 @@ private:
    */
   double calcLikLog(const TimeClass* const TimeInfo);
   /**
+   * \brief This function will calculate the likelihood score for the current timestep based on a sum of squares function, based on data that has been collected from a stratified sampling scheme
+   * \return likelihood score
+   */
+  double calcLikStratified();
+  /**
    * \brief This function will calculate the correlation matrix used for the multivariate normal function
    */
   void calcCorrelation();
