@@ -425,7 +425,6 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   if (timeindex == -1)
     handle.logMessage(LOGFAIL, "Error in stockdistribution - invalid timestep");
 
-  double l = 0.0;
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Calculating likelihood score for stockdistribution component", this->getName());
   for (i = 0; i < stocknames.Size(); i++) {
@@ -434,6 +433,7 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
       handle.logMessage(LOGWARN, "Warning in stockdistribution - zero catch found");
   }
 
+  double l = 0.0;
   switch (functionnumber) {
     case 1:
       l = calcLikMultinomial();
@@ -457,22 +457,23 @@ double StockDistribution::calcLikMultinomial() {
   //JMB - number of age and length groups is constant for all stocks
   int numage = ages.Nrow();
   int numlen = LgrpDiv->numLengthGroups();
-  DoubleVector obsdata(stocknames.Size(), 0.0);
-  DoubleVector moddata(stocknames.Size(), 0.0);
+  int numstock = stocknames.Size();
+  DoubleVector obsdata(numstock, 0.0);
+  DoubleVector moddata(numstock, 0.0);
 
   MN.Reset();
   //the object MN does most of the work, accumulating likelihood
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
-    for (s = 0; s < stocknames.Size(); s++) {
+    for (s = 0; s < numstock; s++) {
       alptr = &aggregator[s]->getSum();
-      for (age = 0; age < numage; age++)
-        for (len = 0; len < numlen; len++)
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
           (*modelDistribution[timeindex][area])[s][age + (numage * len)] = ((*alptr)[area][age][len]).N;
     }
 
     for (i = 0; i < (numage * numlen); i++) {
-      for (s = 0; s < stocknames.Size(); s++) {
+      for (s = 0; s < numstock; s++) {
         obsdata[s] = (*obsDistribution[timeindex][area])[s][i];
         moddata[s] = (*modelDistribution[timeindex][area])[s][i];
       }
@@ -483,46 +484,40 @@ double StockDistribution::calcLikMultinomial() {
 }
 
 double StockDistribution::calcLikSumSquares() {
-  double totallikelihood = 0.0, temp = 0.0;
-  double totalmodel, totaldata;
+  double temp, totalmodel, totaldata, totallikelihood;
   int age, len, area, s, i;
-
   //JMB - number of age and length groups is constant for all stocks
   int numage = ages.Nrow();
   int numlen = LgrpDiv->numLengthGroups();
+  int numstock = stocknames.Size();
 
+  totallikelihood = 0.0;
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
-    for (s = 0; s < stocknames.Size(); s++) {
+    for (s = 0; s < numstock; s++) {
       alptr = &aggregator[s]->getSum();
-      for (age = 0; age < numage; age++)
-        for (len = 0; len < numlen; len++)
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
           (*modelDistribution[timeindex][area])[s][age + (numage * len)] = ((*alptr)[area][age][len]).N;
     }
 
-    for (age = 0; age < numage; age++) {
-      for (len = 0; len < numlen; len++) {
-        totalmodel = 0.0;
-        totaldata = 0.0;
-        i = age + (numage * len);
-        for (s = 0; s < stocknames.Size(); s++) {
-          totalmodel += (*modelDistribution[timeindex][area])[s][i];
-          totaldata += (*obsDistribution[timeindex][area])[s][i];
-        }
+    for (i = 0; i < (numage * numlen); i++) {
+      totalmodel = 0.0;
+      totaldata = 0.0;
+      for (s = 0; s < numstock; s++) {
+        totalmodel += (*modelDistribution[timeindex][area])[s][i];
+        totaldata += (*obsDistribution[timeindex][area])[s][i];
+      }
 
-        for (s = 0; s < stocknames.Size(); s++) {
-          if ((isZero(totaldata)) && (isZero(totalmodel)))
-            temp = 0.0;
-          else if (isZero(totaldata))
-            temp = (*modelDistribution[timeindex][area])[s][i] / totalmodel;
-          else if (isZero(totalmodel))
-            temp = (*obsDistribution[timeindex][area])[s][i] / totaldata;
-          else
-            temp = (((*obsDistribution[timeindex][area])[s][i] / totaldata)
-              - ((*modelDistribution[timeindex][area])[s][i] / totalmodel));
+      if (!(isZero(totalmodel)))
+        totalmodel = 1.0 / totalmodel;
+      if (!(isZero(totaldata)))
+        totaldata = 1.0 / totaldata;
 
-          likelihoodValues[timeindex][area] += (temp * temp);
-        }
+      for (s = 0; s < numstock; s++) {
+        temp = (((*obsDistribution[timeindex][area])[s][i] * totaldata)
+          - ((*modelDistribution[timeindex][area])[s][i] * totalmodel));
+        likelihoodValues[timeindex][area] += (temp * temp);
       }
     }
     totallikelihood += likelihoodValues[timeindex][area];

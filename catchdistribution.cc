@@ -582,8 +582,10 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
 double CatchDistribution::calcLikMultinomial() {
   int area, age, len;
-  DoubleVector dist(ages.Nrow(), 0.0);
-  DoubleVector data(ages.Nrow(), 0.0);
+  int numage = ages.Nrow();
+  int numlen = LgrpDiv->numLengthGroups();
+  DoubleVector dist(numage, 0.0);
+  DoubleVector data(numage, 0.0);
 
   MN.Reset();
   //the object MN does most of the work, accumulating likelihood
@@ -593,16 +595,16 @@ double CatchDistribution::calcLikMultinomial() {
       for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
         (*modelDistribution[timeindex][area])[age][len] = ((*alptr)[area][age][len]).N;
 
-    if (obsDistribution[timeindex][area]->Nrow() == 1) {
-      //Only one age-group, so calculate multinomial based on length distribution
+    if (numage == 1) {
+      //only one age-group, so calculate multinomial based on length distribution
       likelihoodValues[timeindex][area] +=
         MN.calcLogLikelihood((*obsDistribution[timeindex][area])[0],
           (*modelDistribution[timeindex][area])[0]);
 
     } else {
-      //Many age-groups, so calculate multinomial based on age distribution per length group
-      for (len = 0; len < obsDistribution[timeindex][area]->Ncol(0); len++) {
-        for (age = 0; age < obsDistribution[timeindex][area]->Nrow(); age++) {
+      //many age-groups, so calculate multinomial based on age distribution per length group
+      for (len = 0; len < numlen; len++) {
+        for (age = 0; age < numage; age++) {
           dist[age] = (*modelDistribution[timeindex][area])[age][len];
           data[age] = (*obsDistribution[timeindex][area])[age][len];
         }
@@ -795,37 +797,42 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
 
 double CatchDistribution::calcLikSumSquares() {
 
-  double totallikelihood = 0.0, temp = 0.0;
-  double totalmodel, totaldata;
+  int numage = ages.Nrow();
+  int numlen = LgrpDiv->numLengthGroups();
+  double temp, totallikelihood, totalmodel, totaldata;
   int age, len, area;
 
+  totallikelihood = 0.0;
   for (area = 0; area < areas.Nrow(); area++) {
+    likelihoodValues[timeindex][area] = 0.0;
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
+        (*modelDistribution[timeindex][area])[age][len] = ((*alptr)[area][age][len]).N;
+
+    //for stratified sampling it might be better to 
+    //calculate an age distribution for each length group
     totalmodel = 0.0;
     totaldata = 0.0;
-    likelihoodValues[timeindex][area] = 0.0;
-    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
-        (*modelDistribution[timeindex][area])[age][len] = ((*alptr)[area][age][len]).N;
+    for (age = 0; age < numage; age++) {
+      for (len = 0; len < numlen; len++) {
         totalmodel += (*modelDistribution[timeindex][area])[age][len];
         totaldata += (*obsDistribution[timeindex][area])[age][len];
       }
     }
 
-    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
-        if ((isZero(totaldata)) && (isZero(totalmodel)))
-          temp = 0.0;
-        else if (isZero(totaldata))
-          temp = (*modelDistribution[timeindex][area])[age][len] / totalmodel;
-        else if (isZero(totalmodel))
-          temp = (*obsDistribution[timeindex][area])[age][len] / totaldata;
-        else
-          temp = (((*obsDistribution[timeindex][area])[age][len] / totaldata)
-            - ((*modelDistribution[timeindex][area])[age][len] / totalmodel));
+    if (!(isZero(totalmodel)))
+      totalmodel = 1.0 / totalmodel;
+    if (!(isZero(totaldata)))
+      totaldata = 1.0 / totaldata;
 
+    for (age = 0; age < numage; age++) {
+      for (len = 0; len < numlen; len++) {
+        temp = (((*obsDistribution[timeindex][area])[age][len] * totaldata)
+          - ((*modelDistribution[timeindex][area])[age][len] * totalmodel));
         likelihoodValues[timeindex][area] += (temp * temp);
       }
     }
+
     totallikelihood += likelihoodValues[timeindex][area];
   }
   return totallikelihood;
