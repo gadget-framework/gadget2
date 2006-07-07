@@ -33,6 +33,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   strncpy(text, "", MaxStrLength);
   char filename[MaxStrLength];
   strncpy(filename, "", MaxStrLength);
+  IntVector tmpareas;
 
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -40,17 +41,16 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   //read the area data
   infile >> text >> ws;
-  IntVector tmpareas;
-  if (strcasecmp(text, "livesonareas") == 0) {
-    c = infile.peek();
-    while (isdigit(c) && !infile.eof()) {
-      infile >> tmpint >> ws;
-      tmpareas.resize(1, Area->getInnerArea(tmpint));
-      c = infile.peek();
-    }
-    this->storeAreas(tmpareas);
-  } else
+  if (strcasecmp(text, "livesonareas") != 0)
     handle.logFileUnexpected(LOGFAIL, "livesonareas", text);
+
+  c = infile.peek();
+  while (isdigit(c) && !infile.eof()) {
+    infile >> tmpint >> ws;
+    tmpareas.resize(1, Area->getInnerArea(tmpint));
+    c = infile.peek();
+  }
+  this->storeAreas(tmpareas);
 
   //read the stock age and length data
   int minage, maxage;
@@ -115,10 +115,9 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   //read the natural mortality data
   infile >> text;
-  if (strcasecmp(text, "naturalmortality") == 0)
-    naturalm = new NaturalMortality(infile, minage, maxage, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, "naturalmortality") != 0)
     handle.logFileUnexpected(LOGFAIL, "naturalmortality", text);
+  naturalm = new NaturalMortality(infile, minage, maxage, TimeInfo, keeper);
   handle.logMessage(LOGMESSAGE, "Read natural mortality data for stock", this->getName());
 
   //read the prey data
@@ -140,10 +139,9 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   //read the initial conditions
   infile >> text;
-  if (strcasecmp(text, "initialconditions") == 0)
-    initial = new InitialCond(infile, areas, keeper, refweight, Area, dl);
-  else
+  if (strcasecmp(text, "initialconditions") != 0)
     handle.logFileUnexpected(LOGFAIL, "initialconditions", text);
+  initial = new InitialCond(infile, areas, keeper, refweight, Area, dl);
   handle.logMessage(LOGMESSAGE, "Read initial conditions data for stock", this->getName());
 
   //read the migration data

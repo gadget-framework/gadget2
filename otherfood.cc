@@ -25,26 +25,24 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   keeper->addString("otherfood");
   keeper->addString(givenname);
 
-  infile >> text;
-  if (strcasecmp(text, "livesonareas") == 0) {
-    infile >> ws;
-    c = infile.peek();
-    while (isdigit(c) && !infile.eof()) {
-      infile >> tmpint >> ws;
-      tmpareas.resize(1, Area->getInnerArea(tmpint));
-      c = infile.peek();
-    }
-    this->storeAreas(tmpareas);
-  } else
+  infile >> text >> ws;
+  if (strcasecmp(text, "livesonareas") != 0)
     handle.logFileUnexpected(LOGFAIL, "livesonareas", text);
+
+  c = infile.peek();
+  while (isdigit(c) && !infile.eof()) {
+    infile >> tmpint >> ws;
+    tmpareas.resize(1, Area->getInnerArea(tmpint));
+    c = infile.peek();
+  }
+  this->storeAreas(tmpareas);
 
   //read the length information
   DoubleVector lengths(2, 0.0);
   infile >> text >> ws;
-  if (strcasecmp(text, "lengths") == 0)
-    infile >> lengths[0] >> lengths[1] >> ws;
-  else
+  if (strcasecmp(text, "lengths") != 0)
     handle.logFileUnexpected(LOGFAIL, "lengths", text);
+  infile >> lengths[0] >> lengths[1] >> ws;
 
   //read the energy content of this prey
   double energy;
@@ -58,18 +56,18 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   prey = new LengthPrey(lengths, areas, energy, this->getName());
 
   infile >> text >> ws;
-  if ((strcasecmp(text, "amount") == 0) || (strcasecmp(text, "amounts") == 0)) {
-    infile >> text >> ws;
-    subfile.open(text, ios::in);
-    handle.checkIfFailure(subfile, text);
-    handle.Open(text);
-    readAmounts(subcomment, areas, TimeInfo, Area, amount, this->getName());
-    amount.Inform(keeper);
-    handle.Close();
-    subfile.close();
-    subfile.clear();
-  } else
+  if ((strcasecmp(text, "amount") != 0) && (strcasecmp(text, "amounts") != 0))
     handle.logFileUnexpected(LOGFAIL, "amount", text);
+
+  infile >> text >> ws;
+  subfile.open(text, ios::in);
+  handle.checkIfFailure(subfile, text);
+  handle.Open(text);
+  readAmounts(subcomment, areas, TimeInfo, Area, amount, this->getName());
+  amount.Inform(keeper);
+  handle.Close();
+  subfile.close();
+  subfile.clear();
 
   //resize tmpPopulation, and set the weight to 1 since this will never change
   PopInfo tmppop;

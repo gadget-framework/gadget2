@@ -100,10 +100,9 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
 
   parameters.resize(2, keeper);
   infile >> text >> ws;
-  if (strcasecmp(text, "parameters") == 0)
-    parameters.read(infile, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, "parameters") != 0)
     handle.logFileUnexpected(LOGFAIL, "parameters", text);
+  parameters.read(infile, TimeInfo, keeper);
 
   suit.resize(LgrpDiv->numLengthGroups(), 0.0);
   infile >> text >> ws;

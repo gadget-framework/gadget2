@@ -49,15 +49,14 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
   }
 
   //open the printfile
-  if (strcasecmp(text, "printfile") == 0)
-    infile >> filename >> ws >> text >> ws;
-  else
+  if (strcasecmp(text, "printfile") != 0)
     handle.logFileUnexpected(LOGFAIL, "printfile", text);
+  infile >> filename >> ws;
 
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
 
-  //infile >> text >> ws;
+  infile >> text >> ws;
   if (strcasecmp(text, "precision") == 0) {
     infile >> precision >> ws >> text >> ws;
     width = precision + 4;

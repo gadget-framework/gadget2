@@ -85,52 +85,41 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   if (infile.eof())
     handle.logFileEOFMessage(LOGFAIL);
 
-  if (strcasecmp(text, "proportionfunction") == 0) {
-    infile >> text >> ws;
-    if (strcasecmp(text, "constant") == 0)
-      fnProportion = new ConstSelectFunc();
-    else if (strcasecmp(text, "straightline") == 0)
-      fnProportion = new StraightSelectFunc();
-    else if (strcasecmp(text, "exponential") == 0)
-      fnProportion = new ExpSelectFunc();
-    else
-      handle.logFileMessage(LOGFAIL, "unrecognised proportion function", text);
-
-    fnProportion->readConstants(infile, TimeInfo, keeper);
-  } else
+  if (strcasecmp(text, "proportionfunction") != 0)
     handle.logFileUnexpected(LOGFAIL, "proportionfunction", text);
 
-  infile >> text;
-  if (strcasecmp(text, "mortalityfunction") == 0) {
-    infile >> text >> ws;
-    if (strcasecmp(text, "constant") == 0)
-      fnMortality = new ConstSelectFunc();
-    else if (strcasecmp(text, "straightline") == 0)
-      fnMortality = new StraightSelectFunc();
-    else if (strcasecmp(text, "exponential") == 0)
-      fnMortality = new ExpSelectFunc();
-    else
-      handle.logFileMessage(LOGFAIL, "unrecognised mortality function", text);
+  infile >> text >> ws;
+  if (strcasecmp(text, "constant") == 0)
+    fnProportion = new ConstSelectFunc();
+  else if (strcasecmp(text, "straightline") == 0)
+    fnProportion = new StraightSelectFunc();
+  else if (strcasecmp(text, "exponential") == 0)
+    fnProportion = new ExpSelectFunc();
+  else
+    handle.logFileMessage(LOGFAIL, "unrecognised proportion function", text);
+  fnProportion->readConstants(infile, TimeInfo, keeper);
 
-    fnMortality->readConstants(infile, TimeInfo, keeper);
-  } else
-    handle.logFileUnexpected(LOGFAIL, "mortalityfunction", text);
+  readWordAndValue(infile, "mortalityfunction", text);
+  if (strcasecmp(text, "constant") == 0)
+    fnMortality = new ConstSelectFunc();
+  else if (strcasecmp(text, "straightline") == 0)
+    fnMortality = new StraightSelectFunc();
+  else if (strcasecmp(text, "exponential") == 0)
+    fnMortality = new ExpSelectFunc();
+  else
+    handle.logFileMessage(LOGFAIL, "unrecognised mortality function", text);
+  fnMortality->readConstants(infile, TimeInfo, keeper);
 
-  infile >> text;
-  if (strcasecmp(text, "weightlossfunction") == 0) {
-    infile >> text >> ws;
-    if (strcasecmp(text, "constant") == 0)
-      fnWeightLoss = new ConstSelectFunc();
-    else if (strcasecmp(text, "straightline") == 0)
-      fnWeightLoss = new StraightSelectFunc();
-    else if (strcasecmp(text, "exponential") == 0)
-      fnWeightLoss = new ExpSelectFunc();
-    else
-      handle.logFileMessage(LOGFAIL, "unrecognised weight loss function", text);
-
-    fnWeightLoss->readConstants(infile, TimeInfo, keeper);
-  } else
-    handle.logFileUnexpected(LOGFAIL, "weightlossfunction", text);
+  readWordAndValue(infile, "weightlossfunction", text);
+  if (strcasecmp(text, "constant") == 0)
+    fnWeightLoss = new ConstSelectFunc();
+  else if (strcasecmp(text, "straightline") == 0)
+    fnWeightLoss = new StraightSelectFunc();
+  else if (strcasecmp(text, "exponential") == 0)
+    fnWeightLoss = new ExpSelectFunc();
+  else
+    handle.logFileMessage(LOGFAIL, "unrecognised weight loss function", text);
+  fnWeightLoss->readConstants(infile, TimeInfo, keeper);
 
   if (!onlyParent) {
     infile >> text >> ws;
@@ -160,10 +149,9 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     //read in the details about the new stock
     stockParameters.resize(4, keeper);
     infile >> text >> ws;
-    if (strcasecmp(text, "stockparameters") == 0)
-      stockParameters.read(infile, TimeInfo, keeper);
-    else
+    if (strcasecmp(text, "stockparameters") != 0)
       handle.logFileUnexpected(LOGFAIL, "stockparameters", text);
+    stockParameters.read(infile, TimeInfo, keeper);
   }
 
   infile >> ws;

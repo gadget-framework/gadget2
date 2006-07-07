@@ -43,7 +43,7 @@ public:
    * \brief This will return the temperature of an area on a timestep
    * \param area is the identifier for the required area
    * \param time is the identifier for the required timestep
-   * \return size
+   * \return temperature
    */
   double getTemperature(int area, int time) const { return temperature[time][area]; };
   /**

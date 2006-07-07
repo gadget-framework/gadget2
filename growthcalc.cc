@@ -27,10 +27,9 @@ GrowthCalcA::GrowthCalcA(CommentStream& infile, const IntVector& Areas,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text >> ws;
-  if (strcasecmp(text, "growthparameters") == 0)
-    growthPar.read(infile, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, "growthparameters") != 0)
     handle.logFileUnexpected(LOGFAIL, "growthparameters", text);
+  growthPar.read(infile, TimeInfo, keeper);
   keeper->clearLast();
 }
 
@@ -144,16 +143,14 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text >> ws;
-  if (strcasecmp(text, "wgrowthparameters") == 0)
-    wgrowthPar.read(infile, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, "wgrowthparameters") != 0)
     handle.logFileUnexpected(LOGFAIL, "wgrowthparameters", text);
+  wgrowthPar.read(infile, TimeInfo, keeper);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "lgrowthparameters") == 0)
-    lgrowthPar.read(infile, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, "lgrowthparameters") != 0)
     handle.logFileUnexpected(LOGFAIL, "lgrowthparameters", text);
+  lgrowthPar.read(infile, TimeInfo, keeper);
 
   //read information on reference weights.
   keeper->addString("referenceweights");
@@ -211,7 +208,7 @@ void GrowthCalcC::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   }
 
   int i;
-  double x, fx;
+  double fx;
   double ratio = lgrowthPar[0] + lgrowthPar[8] * (lgrowthPar[1] + lgrowthPar[2] * lgrowthPar[8]);
   double tempW = TimeInfo->getTimeStepSize() * wgrowthPar[0] *
       exp(wgrowthPar[1] * Area->getTemperature(area, TimeInfo->getTime()));
@@ -230,14 +227,14 @@ void GrowthCalcC::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
         Wgrowth[i] = 0.0;
         Lgrowth[i] = 0.0;
       } else {
-        x = (numGrow[i].W - ratio * refWeight[i]) / numGrow[i].W;
-        fx = lgrowthPar[3] + lgrowthPar[4] * x;
-        if (fx < verysmall)
-          fx = 0.0;
+        fx = lgrowthPar[3] + (lgrowthPar[4] * (numGrow[i].W - ratio * refWeight[i]) / numGrow[i].W);
         if (fx > lgrowthPar[5])
           fx = lgrowthPar[5];
-        Lgrowth[i] = fx * Wgrowth[i] / (lgrowthPar[6] * lgrowthPar[7] *
-          pow(LgrpDiv->meanLength(i), lgrowthPar[7] - 1.0));
+        if (fx < verysmall)
+          Lgrowth[i] = 0.0;
+        else
+          Lgrowth[i] = fx * Wgrowth[i] / (lgrowthPar[6] * lgrowthPar[7] *
+            pow(LgrpDiv->meanLength(i), lgrowthPar[7] - 1.0));
       }
     }
   }
@@ -260,16 +257,14 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text >> ws;
-  if (strcasecmp(text, "wgrowthparameters") == 0)
-    wgrowthPar.read(infile, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, "wgrowthparameters") != 0)
     handle.logFileUnexpected(LOGFAIL, "wgrowthparameters", text);
+  wgrowthPar.read(infile, TimeInfo, keeper);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "lgrowthparameters") == 0)
-    lgrowthPar.read(infile, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, "lgrowthparameters") != 0)
     handle.logFileUnexpected(LOGFAIL, "lgrowthparameters", text);
+  lgrowthPar.read(infile, TimeInfo, keeper);
 
   //read information on reference weights.
   keeper->addString("referenceweights");
@@ -327,13 +322,13 @@ void GrowthCalcD::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   }
 
   int i;
-  double ratio, fx, x;
+  double ratio, fx;
   double tempC = TimeInfo->getTimeStepSize() / wgrowthPar[0];
   double tempW = TimeInfo->getTimeStepSize() * wgrowthPar[2] *
       exp(wgrowthPar[4] * Area->getTemperature(area, TimeInfo->getTime()) + wgrowthPar[5]);
 
   for (i = 0; i < Wgrowth.Size(); i++) {
-    if (numGrow[i].W < verysmall || isZero(tempW)) {
+    if (numGrow[i].W < verysmall) {
       Wgrowth[i] = 0.0;
       Lgrowth[i] = 0.0;
     } else {
@@ -345,14 +340,14 @@ void GrowthCalcD::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
         Lgrowth[i] = 0.0;
       } else {
         ratio = lgrowthPar[0] + Fphi[i] * (lgrowthPar[1] + lgrowthPar[2] * Fphi[i]);
-        x = (numGrow[i].W - ratio * refWeight[i]) / numGrow[i].W;
-        fx = lgrowthPar[3] + lgrowthPar[4] * x;
-        if (fx < verysmall)
-          fx = 0.0;
+        fx = lgrowthPar[3] + (lgrowthPar[4] * (numGrow[i].W - ratio * refWeight[i]) / numGrow[i].W);
         if (fx > lgrowthPar[5])
           fx = lgrowthPar[5];
-        Lgrowth[i] = fx * Wgrowth[i] / (lgrowthPar[6] * lgrowthPar[7] *
-          pow(LgrpDiv->meanLength(i), lgrowthPar[7] - 1.0));
+        if (fx < verysmall)
+          Lgrowth[i] = 0.0;
+        else
+          Lgrowth[i] = fx * Wgrowth[i] / (lgrowthPar[6] * lgrowthPar[7] *
+            pow(LgrpDiv->meanLength(i), lgrowthPar[7] - 1.0));
       }
     }
   }
@@ -378,43 +373,38 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text >> ws;
-  if (strcasecmp(text, "wgrowthparameters") == 0)
-    wgrowthPar.read(infile, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, "wgrowthparameters") != 0)
     handle.logFileUnexpected(LOGFAIL, "wgrowthparameters", text);
+  wgrowthPar.read(infile, TimeInfo, keeper);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "lgrowthparameters") == 0)
-    lgrowthPar.read(infile, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, "lgrowthparameters") != 0)
     handle.logFileUnexpected(LOGFAIL, "lgrowthparameters", text);
+  lgrowthPar.read(infile, TimeInfo, keeper);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "yeareffect") == 0) {
-    for (i = 0; i < yearEffect.Size(); i++)
-      if (!(infile >> yearEffect[i]))
-        handle.logFileMessage(LOGFAIL, "invalid format of yeareffect vector");
-    yearEffect.Inform(keeper);
-  } else
+  if (strcasecmp(text, "yeareffect") != 0)
     handle.logFileUnexpected(LOGFAIL, "yeareffect", text);
+  for (i = 0; i < yearEffect.Size(); i++)
+    if (!(infile >> yearEffect[i]))
+      handle.logFileMessage(LOGFAIL, "invalid format of yeareffect vector");
+  yearEffect.Inform(keeper);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "stepeffect") == 0) {
-    for (i = 0; i < stepEffect.Size(); i++)
-      if (!(infile >> stepEffect[i]))
-        handle.logFileMessage(LOGFAIL, "invalid format of stepeffect vector");
-    stepEffect.Inform(keeper);
-  } else
+  if (strcasecmp(text, "stepeffect") != 0)
     handle.logFileUnexpected(LOGFAIL, "stepeffect", text);
+  for (i = 0; i < stepEffect.Size(); i++)
+    if (!(infile >> stepEffect[i]))
+      handle.logFileMessage(LOGFAIL, "invalid format of stepeffect vector");
+  stepEffect.Inform(keeper);
 
   infile >> text >> ws;
-  if (strcasecmp(text, "areaeffect") == 0) {
-    for (i = 0; i < areaEffect.Size(); i++)
-      if (!(infile >> areaEffect[i]))
-        handle.logFileMessage(LOGFAIL, "invalid format of areaeffect vector");
-    areaEffect.Inform(keeper);
-  } else
+  if (strcasecmp(text, "areaeffect") != 0)
     handle.logFileUnexpected(LOGFAIL, "areaeffect", text);
+  for (i = 0; i < areaEffect.Size(); i++)
+    if (!(infile >> areaEffect[i]))
+      handle.logFileMessage(LOGFAIL, "invalid format of areaeffect vector");
+  areaEffect.Inform(keeper);
 
   //read information on reference weights.
   keeper->addString("referenceweights");
@@ -477,7 +467,7 @@ void GrowthCalcE::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
   }
 
   int i;
-  double x, fx;
+  double fx;
   double factor = yearEffect[TimeInfo->getYear() - TimeInfo->getFirstYear()] *
       stepEffect[TimeInfo->getStep() - 1] * areaEffect[this->areaNum(area)];
   double ratio = lgrowthPar[0] + lgrowthPar[8] * (lgrowthPar[1] + lgrowthPar[2] * lgrowthPar[8]);
@@ -496,14 +486,14 @@ void GrowthCalcE::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
         Wgrowth[i] = 0.0;
         Lgrowth[i] = 0.0;
       } else {
-        x = (numGrow[i].W - ratio * refWeight[i]) / numGrow[i].W;
-        fx = lgrowthPar[3] + lgrowthPar[4] * x;
-        if (fx < verysmall)
-          fx = 0.0;
+        fx = lgrowthPar[3] + (lgrowthPar[4] * (numGrow[i].W - ratio * refWeight[i]) / numGrow[i].W);
         if (fx > lgrowthPar[5])
           fx = lgrowthPar[5];
-        Lgrowth[i] = fx * Wgrowth[i] / (lgrowthPar[6] * lgrowthPar[7] *
-          pow(LgrpDiv->meanLength(i), lgrowthPar[7] - 1.0));
+        if (fx < verysmall)
+          Lgrowth[i] = 0.0;
+        else
+          Lgrowth[i] = fx * Wgrowth[i] / (lgrowthPar[6] * lgrowthPar[7] *
+            pow(LgrpDiv->meanLength(i), lgrowthPar[7] - 1.0));
       }
     }
   }
@@ -523,19 +513,18 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   keeper->addString("growthcalcF");
   growthPar.resize(numGrowthConstants, keeper);
 
+  int i;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text >> ws;
-  if (strcasecmp(text, "growthparameters") == 0)
-    growthPar.read(infile, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, "growthparameters") != 0)
     handle.logFileUnexpected(LOGFAIL, "growthparameters", text);
+  growthPar.read(infile, TimeInfo, keeper);
 
-  ifstream datafile;
-  int i;
   for (i = 0; i < Areas.Size(); i++)
     wgrowth.resize(new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0));
 
+  ifstream datafile;
   CommentStream subdata(datafile);
   readWordAndValue(infile, "weightgrowthfile", text);
   datafile.open(text, ios::in);
@@ -588,15 +577,14 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   keeper->addString("growthcalcG");
   growthPar.resize(numGrowthConstants, keeper);
 
+  int i;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text >> ws;
-  if (strcasecmp(text, "growthparameters") == 0)
-    growthPar.read(infile, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, "growthparameters") != 0)
     handle.logFileUnexpected(LOGFAIL, "growthparameters", text);
+  growthPar.read(infile, TimeInfo, keeper);
 
-  int i;
   for (i = 0; i < Areas.Size(); i++)
     wgrowth.resize(new FormulaMatrix(TimeInfo->numTotalSteps() + 1, lenindex.Size(), 0.0));
 
@@ -677,10 +665,9 @@ GrowthCalcH::GrowthCalcH(CommentStream& infile, const IntVector& Areas,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text >> ws;
-  if (strcasecmp(text, "growthparameters") == 0)
-    growthPar.read(infile, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, "growthparameters") != 0)
     handle.logFileUnexpected(LOGFAIL, "growthparameters", text);
+  growthPar.read(infile, TimeInfo, keeper);
   keeper->clearLast();
 }
 
@@ -722,10 +709,9 @@ GrowthCalcI::GrowthCalcI(CommentStream& infile, const IntVector& Areas,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text >> ws;
-  if (strcasecmp(text, "growthparameters") == 0)
-    growthPar.read(infile, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, "growthparameters") != 0)
     handle.logFileUnexpected(LOGFAIL, "growthparameters", text);
+  growthPar.read(infile, TimeInfo, keeper);
   keeper->clearLast();
 }
 

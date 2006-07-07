@@ -215,22 +215,22 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
 
   keeper->addString("maturity");
   infile >> text >> ws;
-  if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
-    i = 0;
-    infile >> text >> ws;
-    while (strcasecmp(text, "coefficients") != 0 && !infile.eof()) {
-      matureStockNames.resize(new char[strlen(text) + 1]);
-      strcpy(matureStockNames[i], text);
-      matureRatio.resize(1, keeper);
-      if (!(infile >> matureRatio[i]))
-        handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
-      matureRatio[i].Inform(keeper);
-
-      infile >> text >> ws;
-      i++;
-    }
-  } else
+  if ((strcasecmp(text, "nameofmaturestocksandratio") != 0) && (strcasecmp(text, "maturestocksandratios") != 0))
     handle.logFileUnexpected(LOGFAIL, "maturestocksandratios", text);
+
+  i = 0;
+  infile >> text >> ws;
+  while (strcasecmp(text, "coefficients") != 0 && !infile.eof()) {
+    matureStockNames.resize(new char[strlen(text) + 1]);
+    strcpy(matureStockNames[i], text);
+    matureRatio.resize(1, keeper);
+    if (!(infile >> matureRatio[i]))
+      handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
+    matureRatio[i].Inform(keeper);
+
+    infile >> text >> ws;
+    i++;
+  }
 
   if (infile.eof())
     handle.logFileEOFMessage(LOGFAIL);
@@ -322,22 +322,22 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
 
   keeper->addString("maturity");
   infile >> text >> ws;
-  if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
-    i = 0;
-    infile >> text >> ws;
-    while (strcasecmp(text, "maturitysteps") != 0 && !infile.eof()) {
-      matureStockNames.resize(new char[strlen(text) + 1]);
-      strcpy(matureStockNames[i], text);
-      matureRatio.resize(1, keeper);
-      if (!(infile >> matureRatio[i]))
-        handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
-      matureRatio[i].Inform(keeper);
-
-      infile >> text >> ws;
-      i++;
-    }
-  } else
+  if ((strcasecmp(text, "nameofmaturestocksandratio") != 0) && (strcasecmp(text, "maturestocksandratios") != 0))
     handle.logFileUnexpected(LOGFAIL, "maturestocksandratios", text);
+
+  i = 0;
+  infile >> text >> ws;
+  while (strcasecmp(text, "maturitysteps") != 0 && !infile.eof()) {
+    matureStockNames.resize(new char[strlen(text) + 1]);
+    strcpy(matureStockNames[i], text);
+    matureRatio.resize(1, keeper);
+    if (!(infile >> matureRatio[i]))
+      handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
+    matureRatio[i].Inform(keeper);
+
+    infile >> text >> ws;
+    i++;
+  }
 
   if (infile.eof())
     handle.logFileEOFMessage(LOGFAIL);
@@ -430,22 +430,22 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
 
   keeper->addString("maturity");
   infile >> text >> ws;
-  if ((strcasecmp(text, "nameofmaturestocksandratio") == 0) || (strcasecmp(text, "maturestocksandratios") == 0)) {
-    i = 0;
-    infile >> text >> ws;
-    while (strcasecmp(text, "coefficients") != 0 && !infile.eof()) {
-      matureStockNames.resize(new char[strlen(text) + 1]);
-      strcpy(matureStockNames[i], text);
-      matureRatio.resize(1, keeper);
-      if (!(infile >> matureRatio[i]))
-        handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
-      matureRatio[i].Inform(keeper);
-
-      infile >> text >> ws;
-      i++;
-    }
-  } else
+  if ((strcasecmp(text, "nameofmaturestocksandratio") != 0) && (strcasecmp(text, "maturestocksandratios") != 0))
     handle.logFileUnexpected(LOGFAIL, "maturestocksandratios", text);
+
+  i = 0;
+  infile >> text >> ws;
+  while (strcasecmp(text, "coefficients") != 0 && !infile.eof()) {
+    matureStockNames.resize(new char[strlen(text) + 1]);
+    strcpy(matureStockNames[i], text);
+    matureRatio.resize(1, keeper);
+    if (!(infile >> matureRatio[i]))
+      handle.logFileMessage(LOGFAIL, "invalid format for mature ratio");
+    matureRatio[i].Inform(keeper);
+
+    infile >> text >> ws;
+    i++;
+  }
 
   if (infile.eof())
     handle.logFileEOFMessage(LOGFAIL);

@@ -31,16 +31,16 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   keeper->addString(this->getName());
 
   infile >> text >> ws;
-  if (strcasecmp(text, "livesonareas") == 0) {
-    c = infile.peek();
-    while (isdigit(c) && !infile.eof()) {
-      infile >> tmpint >> ws;
-      tmpareas.resize(1, Area->getInnerArea(tmpint));
-      c = infile.peek();
-    }
-    this->storeAreas(tmpareas);
-  } else
+  if (strcasecmp(text, "livesonareas") != 0)
     handle.logFileUnexpected(LOGFAIL, "livesonareas", text);
+
+  c = infile.peek();
+  while (isdigit(c) && !infile.eof()) {
+    infile >> tmpint >> ws;
+    tmpareas.resize(1, Area->getInnerArea(tmpint));
+    c = infile.peek();
+  }
+  this->storeAreas(tmpareas);
 
   infile >> ws;
   c = infile.peek();

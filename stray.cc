@@ -74,20 +74,20 @@ StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgr
 
   if (infile.eof())
     handle.logFileEOFMessage(LOGFAIL);
-  if (strcasecmp(text, "proportionfunction") == 0) {
-    infile >> text >> ws;
-    if (strcasecmp(text, "constant") == 0)
-      fnProportion = new ConstSelectFunc();
-    else if (strcasecmp(text, "straightline") == 0)
-      fnProportion = new StraightSelectFunc();
-    else if (strcasecmp(text, "exponential") == 0)
-      fnProportion = new ExpSelectFunc();
-    else
-      handle.logFileMessage(LOGFAIL, "unrecognised proportion function", text);
-
-    fnProportion->readConstants(infile, TimeInfo, keeper);
-  } else
+  if (strcasecmp(text, "proportionfunction") != 0)
     handle.logFileUnexpected(LOGFAIL, "proportionfunction", text);
+
+  infile >> text >> ws;
+  if (strcasecmp(text, "constant") == 0)
+    fnProportion = new ConstSelectFunc();
+  else if (strcasecmp(text, "straightline") == 0)
+    fnProportion = new StraightSelectFunc();
+  else if (strcasecmp(text, "exponential") == 0)
+    fnProportion = new ExpSelectFunc();
+  else
+    handle.logFileMessage(LOGFAIL, "unrecognised proportion function", text);
+
+  fnProportion->readConstants(infile, TimeInfo, keeper);
 
   infile >> ws;
   if (!infile.eof()) {

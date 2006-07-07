@@ -8,40 +8,36 @@ void readWordAndVariable(CommentStream& infile, const char* str, double& number)
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
-  if (strcasecmp(text, str) == 0)
-    infile >> number >> ws;
-  else
+  if (strcasecmp(text, str) != 0)
     handle.logFileUnexpected(LOGFAIL, str, text);
+  infile >> number >> ws;
 }
 
 void readWordAndVariable(CommentStream& infile, const char* str, int& number) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
-  if (strcasecmp(text, str) == 0)
-    infile >> number >> ws;
-  else
+  if (strcasecmp(text, str) != 0)
     handle.logFileUnexpected(LOGFAIL, str, text);
+  infile >> number >> ws;
 }
 
 void readWordAndValue(CommentStream& infile, const char* str, char* value) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
-  if (strcasecmp(text, str) == 0)
-    infile >> value >> ws;
-  else
+  if (strcasecmp(text, str) != 0)
     handle.logFileUnexpected(LOGFAIL, str, text);
+  infile >> value >> ws;
 }
 
 void readWordAndVariable(CommentStream& infile, const char* str, Formula& formula) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
-  if (strcasecmp(text, str) == 0)
-    infile >> formula >> ws;
-  else
+  if (strcasecmp(text, str) != 0)
     handle.logFileUnexpected(LOGFAIL, str, text);
+  infile >> formula >> ws;
 }
 
 void readWordAndTimeVariable(CommentStream& infile, const char* str, TimeVariable& timevariable,
@@ -49,28 +45,25 @@ void readWordAndTimeVariable(CommentStream& infile, const char* str, TimeVariabl
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
-  if (strcasecmp(text, str) == 0)
-    timevariable.read(infile, TimeInfo, keeper);
-  else
+  if (strcasecmp(text, str) != 0)
     handle.logFileUnexpected(LOGFAIL, str, text);
+  timevariable.read(infile, TimeInfo, keeper);
 }
 
 void readWordAndTwoVariables(CommentStream& infile, const char* str, double& number1, double& number2) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
-  if (strcasecmp(text, str) == 0)
-    infile >> number1 >> number2 >> ws;
-  else
+  if (strcasecmp(text, str) != 0)
     handle.logFileUnexpected(LOGFAIL, str, text);
+  infile >> number1 >> number2 >> ws;
 }
 
 void readWordAndTwoVariables(CommentStream& infile, const char* str, int& number1, int& number2) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
-  if (strcasecmp(text, str) == 0)
-    infile >> number1 >> number2 >> ws;
-  else
+  if (strcasecmp(text, str) != 0)
     handle.logFileUnexpected(LOGFAIL, str, text);
+  infile >> number1 >> number2 >> ws;
 }
