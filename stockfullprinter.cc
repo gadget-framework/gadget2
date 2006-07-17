@@ -26,7 +26,7 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile, const TimeClass* const
   infile >> text >> ws;
   if (strcasecmp(text, "areaaggfile") == 0) {
     infile >> text >> ws;
-    handle.logMessage(LOGWARN, "Warning in stockfullprinter - area aggreagtion file ignored");
+    handle.logMessage(LOGWARN, "Warning in stockfullprinter - area aggregation file ignored");
     infile >> text >> ws;
   }
 

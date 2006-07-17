@@ -30,7 +30,7 @@ PredPreyStdPrinter::PredPreyStdPrinter(CommentStream& infile, const TimeClass* c
   infile >> text >> ws;
   if (strcasecmp(text, "areaaggfile") == 0) {
     infile >> text >> ws;
-    handle.logMessage(LOGWARN, "Warning in predpreystdprinter - area aggreagtion file ignored");
+    handle.logMessage(LOGWARN, "Warning in predpreystdprinter - area aggregation file ignored");
     infile >> text >> ws;
   }
 

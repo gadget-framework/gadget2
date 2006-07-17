@@ -44,7 +44,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
   //JMB - removed the need to read in the area aggregation file
   if (strcasecmp(text, "areaaggfile") == 0) {
     infile >> text >> ws;
-    handle.logMessage(LOGWARN, "Warning in stockstdprinter - area aggreagtion file ignored");
+    handle.logMessage(LOGWARN, "Warning in stockstdprinter - area aggregation file ignored");
     infile >> text >> ws;
   }
 

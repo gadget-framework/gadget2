@@ -22,7 +22,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   //JMB - removed the need to read in the area aggregation file
   if (strcasecmp(text, "areaaggfile") == 0) {
     infile >> text >> ws;
-    handle.logMessage(LOGWARN, "Warning in understocking - area aggreagtion file ignored");
+    handle.logMessage(LOGWARN, "Warning in understocking - area aggregation file ignored");
     infile >> text >> ws;
   }
 

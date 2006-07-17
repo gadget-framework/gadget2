@@ -32,7 +32,7 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
   infile >> text >> ws;
   if (strcasecmp(text, "areaaggfile") == 0) {
     infile >> text >> ws;
-    handle.logMessage(LOGWARN, "Warning in stockpreyfullprinter - area aggreagtion file ignored");
+    handle.logMessage(LOGWARN, "Warning in stockpreyfullprinter - area aggregation file ignored");
     infile >> text >> ws;
   }
 
