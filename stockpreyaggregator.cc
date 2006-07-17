@@ -67,7 +67,7 @@ void StockPreyAggregator::Sum() {
           for (age = 0; age < ages.Nrow(); age++) {
             for (k = 0; k < ages.Ncol(age); k++) {
               if ((alptr->minAge() <= ages[age][k]) && (ages[age][k] <= alptr->maxAge()))
-                total[area][age].Add((*alptr)[ages[age][k]], *CI[i], preys[i]->getRatio(areas[area][j]));
+                total[area][age].Add((*alptr)[ages[age][k]], *CI[i], preys[i]->getUseRatio(areas[area][j]));
             }
           }
         }

@@ -59,6 +59,7 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname)
   isoverconsumption.resize(numarea, 0);
   total.resize(numarea, 0.0);
   ratio.AddRows(numarea, numlen, 0.0);
+  useratio.AddRows(numarea, numlen, 0.0);
   consratio.AddRows(numarea, numlen, 0.0);
   overconsumption.AddRows(numarea, numlen, 0.0);
 
@@ -89,6 +90,7 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas,
   isoverconsumption.resize(numarea, 0);
   total.resize(numarea, 0.0);
   ratio.AddRows(numarea, numlen, 0.0);
+  useratio.AddRows(numarea, numlen, 0.0);
   consratio.AddRows(numarea, numlen, 0.0);
   overconsumption.AddRows(numarea, numlen, 0.0);
 }
@@ -171,9 +173,11 @@ void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
       over = 1;
       overconsumption[inarea][i] += (rat - maxRatio) * biomass[inarea][i];
       consratio[inarea][i] = 1.0 - maxRatio;
+      useratio[inarea][i] = maxRatio;
       cons[inarea][i] = biomass[inarea][i] * maxRatio;
     } else {
       consratio[inarea][i] = 1.0 - rat;
+      useratio[inarea][i] = rat;
     }
 
     consumption[inarea][i] += cons[inarea][i];

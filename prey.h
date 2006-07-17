@@ -131,6 +131,12 @@ public:
    */
   const DoubleVector& getRatio(int area) const { return ratio[this->areaNum(area)]; };
   /**
+   * \brief This will return the ratio of the prey that has been consumed on a given area
+   * \param area is the area that the consumption is being calculated on
+   * \return ratio, a DoubleVector containing the ratio of the prey that is consumed
+   */
+  const DoubleVector& getUseRatio(int area) const { return useratio[this->areaNum(area)]; };
+  /**
    * \brief This will return the amount of the prey that has been consumed on a given area
    * \param area is the area that the consumption is being calculated on
    * \return consumption, a DoubleVector containing the consumption of the prey
@@ -207,6 +213,11 @@ protected:
    * \note The indices for this object are [area][prey length]
    */
   DoubleMatrix ratio;
+  /**
+   * \brief This is the DoubleMatrix used to store information on the ratio of the available biomass of the prey that is available for the predators to consume has been consumed on the current timestep, adjusted to MaxRatio whenever overconsumption has occured
+   * \note The indices for this object are [area][prey length]
+   */
+  DoubleMatrix useratio;
   /**
    * \brief This is the DoubleMatrix used to store information on the consumption of the prey on the current timestep
    * \note The indices for this object are [area][prey length]
