@@ -28,6 +28,10 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   if (CI->Error())
     handle.logMessage(LOGFAIL, "Error in grower - error when checking length structure");
 
+  //JMB check that the growth is defined on evenly spaced length groups
+  if (isZero(LgrpDiv->dl()))
+    handle.logMessage(LOGWARN, "Warning in grower - length structure not evenly spaced");
+
   readWordAndValue(infile, "growthfunction", text);
   if (strcasecmp(text, "multspec") == 0) {
     functionnumber = 1;
