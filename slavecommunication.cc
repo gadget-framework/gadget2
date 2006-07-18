@@ -11,8 +11,8 @@ SlaveCommunication::SlaveCommunication() {
   typeReceived = -1;
   parenttid = -1;
   mytid = -1;
-  myId = -1;
-  numberOfVar = 0;
+  myID = -1;
+  numVar = 0;
   netDataVar = NULL;
   tmout.tv_sec = MAXWAIT;
   tmout.tv_usec = 0;
@@ -37,7 +37,7 @@ void SlaveCommunication::printErrorMsg(const char* errorMsg) {
 int SlaveCommunication::startNetCommunication() {
   int info, bytes, type, source;
   int OK = 1;
-  int bufId = 0;
+  int bufID = 0;
 
   //enroll in pvm and get identity of process for myself
   mytid = pvm_mytid();
@@ -52,17 +52,17 @@ int SlaveCommunication::startNetCommunication() {
   }
 
   //Wait for message from parenttid
-  bufId = pvm_trecv(parenttid, -1, &tmout);
-  if (bufId < 0) {
+  bufID = pvm_trecv(parenttid, -1, &tmout);
+  if (bufID < 0) {
     cerr << "Error in slavecommunication - no message from master\n";
     return !OK;
-  } else if (bufId == 0) {
+  } else if (bufID == 0) {
     cerr << "Error in slavecommunication - no message from master in " << MAXWAIT << " seconds\n";
     return !OK;
 
   } else {
-    //there is a waiting message to be received from master in buffer with id = bufId
-    info = pvm_bufinfo(bufId, &bytes, &type, &source);
+    //there is a waiting message to be received from master in buffer with id = bufID
+    info = pvm_bufinfo(bufID, &bytes, &type, &source);
     if (info < 0) {
       printErrorMsg("Error in slavecommunication - invalid buffer");
       return !OK;
@@ -79,28 +79,28 @@ int SlaveCommunication::startNetCommunication() {
       return !OK;
 
     } else if (type == pvmConst->getStartTag()) {
-      info = pvm_upkint(&numberOfVar, 1, 1);
+      info = pvm_upkint(&numVar, 1, 1);
       if (info < 0) {
         printErrorMsg("Error in slavecommunication - can not receive data");
         return !OK;
       }
-      if (numberOfVar <= 0) {
+      if (numVar <= 0) {
         cerr << "Error in slavecommunication - number of variables received from master is less than zero\n";
         return !OK;
       }
 
-      info = pvm_upkint(&myId, 1, 1);
+      info = pvm_upkint(&myID, 1, 1);
       if (info < 0) {
         printErrorMsg("Error in slavecommunication - can not receive data");
         return !OK;
       }
-      if (myId < 0) {
-        cerr << "Error in slavecommunication - received invalid id of " << myId << endl;
+      if (myID < 0) {
+        cerr << "Error in slavecommunication - received invalid id of " << myID << endl;
         return !OK;
       }
-      netDataVar = new NetDataVariables(numberOfVar);
+      netDataVar = new NetDataVariables(numVar);
       typeReceived = pvmConst->getStartTag();
-      return numberOfVar;
+      return numVar;
 
     } else {
       cerr << "Error in slavecommunication - received unrecognised tag of type " << type << endl;
@@ -110,37 +110,37 @@ int SlaveCommunication::startNetCommunication() {
 }
 
 void SlaveCommunication::stopNetCommunication() {
-  int tid;
-  tid = pvm_mytid();
+  int tid = pvm_mytid();
   if (tid >= 0)
     pvm_exit();
 }
 
 int SlaveCommunication::sendToMaster(double res) {
-  int OK, info;
+  int info;
   assert(netDataVar != NULL);
   if (netDataVar->x_id < 0 || netDataVar->tag < 0) {
     cerr << "Error in slavecommunication - invalid id received\n";
-    OK = 0;
-  } else if (myId < 0) {
+    return 0;
+  } else if (myID < 0) {
     cerr << "Error in slavecommunication - invalid id received\n";
-    OK = 0;
+    return 0;
   } else {
     NetDataResult* sendData = new NetDataResult;
-    sendData->who = myId;
+    sendData->who = myID;
     sendData->result = res;
     sendData->x_id = netDataVar->x_id;
     sendData->tag = netDataVar->tag;
     info = send(sendData);
+    delete sendData;
+
     if (info > 0) {
       netDataVar->tag = -1;
       netDataVar->x_id = -1;
-      OK = 1;
+      return 1;
     } else
-      OK = 0;
-    delete sendData;
+      return 0;
   }
-  return OK;
+  return 0;
 }
 
 int SlaveCommunication::send(NetDataResult* sendData) {
@@ -186,22 +186,22 @@ int SlaveCommunication::send(NetDataResult* sendData) {
 }
 
 int SlaveCommunication::receiveFromMaster() {
-  int bufId = 0;
+  int bufID = 0;
   int OK = 1;
   int info, bytes, source, type;
   typeReceived = -1;
 
-  bufId = pvm_trecv(parenttid, -1, &tmout);
-  if (bufId < 0) {
+  bufID = pvm_trecv(parenttid, -1, &tmout);
+  if (bufID < 0) {
     cerr << "Error in slavecommunication - no message from master\n";
     return !OK;
-  } else if (bufId == 0) {
+  } else if (bufID == 0) {
     cerr << "Error in slavecommunication - no message from master in " << MAXWAIT << " seconds\n";
     return !OK;
 
   } else {
-    //there is a waiting message to be received from master in buffer with id = bufId
-    info = pvm_bufinfo(bufId, &bytes, &type, &source);
+    //there is a waiting message to be received from master in buffer with id = bufID
+    info = pvm_bufinfo(bufID, &bytes, &type, &source);
     if (info < 0) {
       printErrorMsg("Error in slavecommunication - invalid buffer");
       return !OK;
@@ -254,17 +254,14 @@ int SlaveCommunication::receiveFromMaster() {
 }
 
 int SlaveCommunication::receiveBound() {
-  int info;
-  int OK = 1;
-
-  netDataDouble = new double[numberOfVar];
-  info = pvm_upkdouble(netDataDouble, numberOfVar, 1);
+  netDataDouble = new double[numVar];
+  int info = pvm_upkdouble(netDataDouble, numVar, 1);
   if (info < 0) {
     printErrorMsg("Error in slavecommunication - receive bound failed");
     cerr << "Error in slavecommunication - receive bound failed\n";
-    return !OK;
+    return 0;
   }
-  return OK;
+  return 1;
 }
 
 int SlaveCommunication::receive() {
@@ -283,8 +280,8 @@ int SlaveCommunication::receive() {
     cerr << "Error in slavecommunication - receive data failed\n";
     return !OK;
   }
-  assert(numberOfVar > 0);
-  info = pvm_upkdouble(netDataVar->x, numberOfVar, 1);
+  assert(numVar > 0);
+  info = pvm_upkdouble(netDataVar->x, numVar, 1);
   if (info < 0) {
     printErrorMsg("Error in slavecommunication - receive data failed");
     cerr << "Error in slavecommunication - receive data failed\n";
@@ -296,13 +293,12 @@ int SlaveCommunication::receive() {
 int SlaveCommunication::receivedVector() {
   if (pvmConst->getMasterSendVarTag() == typeReceived)
     return 1;
-  else
-    return 0;
+  return 0;
 }
 
 void SlaveCommunication::getVector(double* vec) {
   int i;
-  for (i = 0; i < numberOfVar; i++)
+  for (i = 0; i < numVar; i++)
     vec[i] = netDataVar->x[i];
 }
 
@@ -322,7 +318,7 @@ int SlaveCommunication::receiveString() {
     netDataStr = tempvec;
   }
 
-  for (i = 0; i < numberOfVar; i++) {
+  for (i = 0; i < numVar; i++) {
     info = pvm_upkstr(tempString);
     if (info < 0) {
       printErrorMsg("Error in slavecommunication - receive string failed");
@@ -339,25 +335,23 @@ int SlaveCommunication::receiveString() {
 int SlaveCommunication::receivedString() {
   if (pvmConst->getMasterSendStringTag() == typeReceived)
     return 1;
-  else
-    return 0;
+  return 0;
 }
 
 int SlaveCommunication::receivedBounds() {
   if (pvmConst->getMasterSendBoundTag() == typeReceived)
     return 1;
-  else
-    return 0;
+  return 0;
 }
 
 char* SlaveCommunication::getString(int num) {
   assert(num >= 0);
-  assert(netDataStr.Size() == numberOfVar);
+  assert(netDataStr.Size() == numVar);
   return netDataStr[num];
 }
 
 void SlaveCommunication::getBound(double* vec) {
   int i;
-  for (i = 0; i < numberOfVar; i++)
+  for (i = 0; i < numVar; i++)
     vec[i] = netDataDouble[i];
 }

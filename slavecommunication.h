@@ -6,15 +6,11 @@
 #include "pvmconstants.h"
 #include "charptrvector.h"
 
-/* AJ, 07.09.99
- * The class SlaveCommunication handles netcommunication for a
- * slave process communicating with a master process using PVM.
- * It provides functions for starting/stopping communication with
- * master and sending/receiving data to/from master. The class can
- * receive data of the type: NetDataVariables and CharPtrVector and
- * send data of the type: NetDataResult.
- * To successfully start netcommunication pvmd must be running on
- * host and the process must have been spawned by a master process. */
+// AJ, 07.09.99
+/**
+ * \class SlaveCommunication 
+ * \brief The class SlaveCommunication handles netcommunication for a slave process communicating with a master process using PVM. It provides functions for starting/stopping communication with master and sending/receiving data to/from master. The class can receive data of the type: NetDataVariables and CharPtrVector and send data of the type: NetDataResult. To successfully start netcommunication pvmd must be running on host and the process must have been spawned by a master process. 
+ */
 
 class SlaveCommunication {
 private:
@@ -22,14 +18,20 @@ private:
   PVMConstants* pvmConst;
   int typeReceived;
   //identities for netcommunication
-  int parenttid;      //id of my master recognized by pvm.
-                      //parenttid = -1 if has not started communications with master.
-  int mytid;          //id of myself recognized by pvm.
-                      //mytid = -1 if has not enrolled in pvm else >= 0.
-  int myId;           //id recognized by master, equals -1 if has not started
-                      //initial communication with master,
+  /**
+   * \brief id of my master recognized by pvm.parenttid = -1 if has not started communications with master.
+   */
+  int parenttid;    
+  /**
+   * \brief id of myself recognized by pvm.mytid = -1 if has not enrolled in pvm else >= 0.
+   */
+  int mytid;          
+  /**
+   *\brief id recognized by master, equals -1 if has not started initial communication with master,
+   */
+  int myID;           
 
-  int numberOfVar;
+  int numVar;
   NetDataVariables* netDataVar;
   double* netDataDouble;
   struct timeval tmout;
