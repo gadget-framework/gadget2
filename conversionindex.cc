@@ -35,44 +35,54 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     Lf = L1;
 
   } else {
-    if (L1->dl() > L2->dl()) {
-      targetisfiner = 1;
-      Lc = L1;
-      Lf = L2;
-    } else {
-      Lc = L2;
+    if (isEqual(L1->dl(), L2->dl())) {
       Lf = L1;
-    }
-    if (isEqual(Lf->dl(), Lc->dl())) {
-      samedl = 1;
-      offset = int((Lf->meanLength(0) - Lc->meanLength(0)) / Lf->dl());
+      Lc = L2;
+      //JMB - only really the same if they have the same number of length groups
+      if (L1->numLengthGroups() == L2->numLengthGroups()) {
+        samedl = 1;
+        offset = int((Lf->meanLength(0) - Lc->meanLength(0)) / Lf->dl());
+      }
+
+    } else if (L1->dl() > L2->dl()) {
+      targetisfiner = 1;
+      Lf = L2;
+      Lc = L1;
+
+    } else {
+      Lf = L1;
+      Lc = L2;
     }
   }
 
   nf = Lf->numLengthGroups();
   nc = Lc->numLengthGroups();
   //set minlength and maxlength
-  for (i = 0; i < nf; i++)
+  for (i = 0; i < nf; i++) {
     if (Lf->minLength(i) > Lc->minLength() || isEqual(Lf->minLength(i), Lc->minLength())) {
       minlength = i;
       break;
     }
+  }
 
-  for (i = nf - 1; i >= 0; i--)
+  for (i = nf - 1; i >= 0; i--) {
     if (Lf->maxLength(i) < Lc->maxLength() || isEqual(Lf->maxLength(i), Lc->maxLength())) {
       maxlength = i + 1;
       break;
     }
+  }
 
   k = 0;
   pos.resize(nf, 0);
-  for (i = minlength; i < maxlength; i++)
-    for (j = k; j < nc; j++)
+  for (i = minlength; i < maxlength; i++) {
+    for (j = k; j < nc; j++) {
       if (Lf->meanLength(i) > Lc->minLength(j) && Lf->meanLength(i) < Lc->maxLength(j)) {
         pos[i] = j;
         k = j;
         break;
       }
+    }
+  }
 
   for (i = maxlength; i < nf; i++)
     pos[i] = nc;

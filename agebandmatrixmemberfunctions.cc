@@ -14,13 +14,13 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
   PopInfo pop;
   int minaddage = max(this->minAge(), Addition.minAge());
   int maxaddage = min(this->maxAge(), Addition.maxAge());
-  int age, l, minl, maxl, offset;
+  int age, l, minl, maxl;
 
   if ((maxaddage < minaddage) || (isZero(ratio)))
     return;
 
   if (CI.isSameDl()) {
-    offset = CI.getOffset();
+    int offset = CI.getOffset();
     for (age = minaddage; age <= maxaddage; age++) {
       minl = max(this->minLength(age), Addition.minLength(age) + offset);
       maxl = min(this->maxLength(age), Addition.maxLength(age) + offset);
@@ -62,9 +62,9 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
 }
 
 void AgeBandMatrix::Subtract(const DoubleVector& Ratio, const ConversionIndex& CI) {
-  int i, j, j1, j2, offset;
+  int i, j, j1, j2;
   if (CI.isSameDl()) {
-    offset = CI.getOffset();
+    int offset = CI.getOffset();
     for (i = 0; i < nrow; i++) {
       j1 = max(v[i]->minCol(), CI.minLength());
       j2 = min(v[i]->maxCol(), CI.maxLength());

@@ -43,7 +43,7 @@ LengthGroupDivision::LengthGroupDivision(const DoubleVector& Breaks) : error(0),
   maxlen = Breaks[size];
 
   int i;
-  //JMB should we try to work out if the Dl is the same?
+  double tmp = Breaks[1] - Breaks[0];
   meanlength.resize(size, 0.0);
   minlength.resize(size, 0.0);
   for (i = 0; i < size; i++) {
@@ -51,7 +51,10 @@ LengthGroupDivision::LengthGroupDivision(const DoubleVector& Breaks) : error(0),
     meanlength[i] = 0.5 * (Breaks[i] + Breaks[i + 1]);
     if ((Breaks[i] > Breaks[i + 1]) || (isEqual(Breaks[i], Breaks[i + 1])))
       error = 1;
+    if (!(isEqual(tmp, (Breaks[i + 1] - Breaks[i]))))
+      tmp = 0.0;
   }
+  Dl = tmp;
 }
 
 LengthGroupDivision::LengthGroupDivision(const LengthGroupDivision& l)
