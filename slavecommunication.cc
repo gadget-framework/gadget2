@@ -330,7 +330,7 @@ int SlaveCommunication::receiveString() {
       delete tempString;
       return !OK;
     }
-    netDataStr.resize(1, tempString);
+    netDataStr.resize(tempString);
   }
   delete tempString;
   return OK;

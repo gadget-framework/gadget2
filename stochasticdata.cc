@@ -75,9 +75,9 @@ void StochasticData::readFromNetwork() {
     //successfully started netcommunication
     dataFromMaster = new double[numParam];
     if (values.Size() == 0) {
-      values.resize(numParam);
-      lowerbound.resize(numParam);
-      upperbound.resize(numParam);
+      values.resize(numParam, 0.0);
+      lowerbound.resize(numParam, 0.0);
+      upperbound.resize(numParam, 0.0);
     }
 
     //try to receive switches from master
@@ -86,7 +86,7 @@ void StochasticData::readFromNetwork() {
       if (slave->receivedString()) {
         for (i = 0; i < numParam; i++) {
           Parameter sw(slave->getString(i));
-          switches.resize(1, sw);
+          switches.resize(sw);
         }
       } else
         getdata = 0;
