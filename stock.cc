@@ -97,10 +97,13 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //Check the growth length groups cover the stock length groups
   if (checkLengthGroupStructure(LgrpDiv, GrowLgrpDiv))
     handle.logMessage(LOGFAIL, "Error in stock - invalid length group structure for growth of", this->getName());
-  if (!(isEqual(LgrpDiv->minLength(),GrowLgrpDiv->minLength())))
+  if (!(isEqual(LgrpDiv->minLength(), GrowLgrpDiv->minLength())))
     handle.logMessage(LOGWARN, "Warning in stock - minimum lengths don't match for growth of", this->getName());
   if (!(isEqual(LgrpDiv->maxLength(), GrowLgrpDiv->maxLength())))
     handle.logMessage(LOGWARN, "Warning in stock - maximum lengths don't match for growth of", this->getName());
+  //JMB check that the growth is defined on evenly spaced length groups
+  if (isZero(GrowLgrpDiv->dl()))
+    handle.logMessage(LOGWARN, "Warning in stock - growth length structure not evenly spaced for", this->getName());
   handle.logMessage(LOGMESSAGE, "Read basic stock data for stock", this->getName());
 
   //read the growth function data
