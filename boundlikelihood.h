@@ -111,7 +111,7 @@ protected:
   double defPower;
 private:
   /**
-   * \brief This is a flag used to check whether the vectors have been initialised
+   * \brief This is the flag used to check whether the vectors have been initialised
    */
   int checkInitialised;
 };

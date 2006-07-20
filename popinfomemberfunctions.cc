@@ -43,7 +43,7 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
         pop = Addition[CI.getPos(l)];
         pop *= ratio;
         v[l] += pop;
-        v[l].N /= CI.Nrof(l);  //JMB CI.Nrof() should never be zero
+        v[l].N /= CI.getNumPos(l);  //JMB CI.getNumPos() should never be zero
       }
 
     } else {
@@ -95,7 +95,7 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
         pop = Addition[CI.getPos(l)];
         pop *= (ratio * Ratio[l]);
         v[l] += pop;
-        v[l].N /= CI.Nrof(l);  //JMB CI.Nrof() should never be zero
+        v[l].N /= CI.getNumPos(l);  //JMB CI.getNumPos() should never be zero
       }
 
     } else {

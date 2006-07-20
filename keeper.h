@@ -176,7 +176,7 @@ public:
    * \param optvec is the OptInfoPtrVector containing the optimisation algorithms used for the current model
    * \param filename is the name of the file to write the model information to
    * \param prec is the precision to use in the output file
-   * \param interrupt is a flag to denote whether the current run was interrupted by the user or not
+   * \param interrupt is the flag to denote whether the current run was interrupted by the user or not
    */
   void writeParams(const OptInfoPtrVector& optvec, const char* const filename, int prec, int interrupt);
   /**
@@ -239,7 +239,7 @@ protected:
    */
   int numoptvar;
   /**
-   * \brief This is a flag used to denote whether the bounds of the parameters have been specified or not
+   * \brief This is the flag used to denote whether the bounds of the parameters have been specified or not
    */
   int boundsgiven;
   /**
@@ -247,7 +247,7 @@ protected:
    */
   double bestlikelihood;
   /**
-   * \brief This is a flag used to denote whether an output file has been specified or not
+   * \brief This is the flag used to denote whether an output file has been specified or not
    */
   int fileopen;
   /**

@@ -16,7 +16,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   error = 0;
   samedl = 0;
   offset = 0;
-  targetisfiner = 0;  //targetisfiner means that L1 is strictly coarser than L2
+  isfiner = 0;
   interpolate = interp;
 
   //check to see if the intersection is empty
@@ -31,21 +31,21 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       error = 1;
       return;
     }
-    Lc = L2;
     Lf = L1;
+    Lc = L2;
 
   } else {
     if (isEqual(L1->dl(), L2->dl())) {
       Lf = L1;
       Lc = L2;
-      //JMB - only really the same if they have the same number of length groups
-      if (L1->numLengthGroups() == L2->numLengthGroups()) {
+      //check that the length group divisions are aligned
+      double check = (Lf->minLength() - Lc->minLength()) / Lf->dl();
+      offset = int(check);
+      if (Lf->numLengthGroups() == Lc->numLengthGroups() && isEqual(check, floor(check)))
         samedl = 1;
-        offset = int((Lf->meanLength(0) - Lc->meanLength(0)) / Lf->dl());
-      }
 
     } else if (L1->dl() > L2->dl()) {
-      targetisfiner = 1;
+      isfiner = 1;
       Lf = L2;
       Lc = L1;
 
@@ -76,7 +76,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   pos.resize(nf, 0);
   for (i = minlength; i < maxlength; i++) {
     for (j = k; j < nc; j++) {
-      if (Lf->meanLength(i) > Lc->minLength(j) && Lf->meanLength(i) < Lc->maxLength(j)) {
+      if ((Lf->meanLength(i) > Lc->minLength(j)) && (Lf->meanLength(i) < Lc->maxLength(j))) {
         pos[i] = j;
         k = j;
         break;
@@ -108,37 +108,39 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
         maxpos[i + 1] = maxpos[i];
 
     //if number in each length group is needed
-    if (targetisfiner) {
-      nrof.resize(nf, 1);
+    if (isfiner) {
+      numpos.resize(nf, 1);
       for (i = minlength; i < maxlength; i++)
-        nrof[i] = maxpos[pos[i]] - minpos[pos[i]] + 1;
+        numpos[i] = maxpos[pos[i]] - minpos[pos[i]] + 1;
     }
-  }
 
-  //if the conversionindex is to be used for interpolation
-  if (interpolate) {
-    interpratio.resize(nf, -1.0);
-    interppos.resize(nf, -1);
-    k = 0;
-    for (i = minlength; i < maxlength; i++) {
-      for (j = k; j < nc - 1; j++) {
-        if (Lf->meanLength(i) >= Lc->meanLength(j) && Lf->meanLength(i) < Lc->meanLength(j + 1)) {
-          interppos[i] = j;
-          k = j;
-          break;
+    //if the conversionindex is to be used for interpolation
+    if (interpolate) {
+      iratio.resize(nf, -1.0);
+      ipos.resize(nf, -1);
+      k = 0;
+      for (i = minlength; i < maxlength; i++) {
+        for (j = k; j < nc - 1; j++) {
+          if (((Lf->meanLength(i) > Lc->meanLength(j)) || isEqual(Lf->meanLength(i), Lc->meanLength(j))) && (Lf->meanLength(i) < Lc->meanLength(j + 1))) {
+
+            ipos[i] = j;
+            k = j;
+            break;
+          }
         }
       }
-    }
 
-    for (i = 0; i < nf; i++) {
-      if (interppos[i] != -1) {
-        interpratio[i] = (Lf->meanLength(i) - Lc->meanLength(interppos[i])) /
-          (Lc->meanLength(interppos[i] + 1) - Lc->meanLength(interppos[i]));
-      } else {
-        if (Lf->meanLength(i) < Lc->meanLength(0))
-          interppos[i] = 0;
-        else
-          interppos[i] = nc - 1;
+      for (i = 0; i < nf; i++) {
+        if (ipos[i] == -1) {
+          if (Lf->meanLength(i) < Lc->meanLength(0))
+            ipos[i] = 0;
+          else
+            ipos[i] = nc - 1;
+
+        } else {
+          iratio[i] = (Lf->meanLength(i) - Lc->meanLength(ipos[i])) /
+              (Lc->meanLength(ipos[i] + 1) - Lc->meanLength(ipos[i]));
+        }
       }
     }
   }
@@ -166,10 +168,10 @@ void ConversionIndex::interpolateLengths(DoubleVector& Vf, const DoubleVector& V
 
   } else {
     for (i = 0; i < Vf.Size(); i++) {
-      if (isZero(interpratio[i] + 1.0))
-        Vf[i] = Vc[interppos[i]];
+      if (isEqual(iratio[i], -1.0))
+        Vf[i] = Vc[ipos[i]];
       else
-        Vf[i] = Vc[interppos[i]] * (1.0 - interpratio[i]) + Vc[interppos[i] + 1] * interpratio[i];
+        Vf[i] = (Vc[ipos[i]] * (1.0 - iratio[i])) + (Vc[ipos[i] + 1] * iratio[i]);
     }
   }
 }

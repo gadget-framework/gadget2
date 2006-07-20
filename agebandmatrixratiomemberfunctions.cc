@@ -186,7 +186,7 @@ void AgeBandMatrixRatioPtrVector::Add(const AgeBandMatrixRatioPtrVector& Additio
         for (l = minl; l < maxl; l++) {
           for (tagid = 0; tagid < numtags; tagid++) {
             numfish = *(Addition[area][age][CI.getPos(l)][tagid].N) * ratio;
-            numfish /= CI.Nrof(l);  //JMB CI.Nrof() should never be zero
+            numfish /= CI.getNumPos(l);  //JMB CI.getNumPos() should never be zero
             *((*v[area])[age][l][tagconversion[tagid]].N) += numfish;
           }
         }

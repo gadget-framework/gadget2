@@ -87,7 +87,7 @@ protected:
   IntMatrix areas;
   /**
    * \brief This is the IntMatrix used to store predation information
-   * \note doeseat[i][j] is a flag to denote whether predator i eats prey j
+   * \note doeseat[i][j] is the flag to denote whether predator i eats prey j
    */
   IntMatrix doeseat;
   /**

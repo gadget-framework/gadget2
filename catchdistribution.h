@@ -175,7 +175,7 @@ private:
    */
   CharPtrVector lenindex;
   /**
-   * \brief This is a flag to denote whether the likelihood calculation should take overconsumption into account or not
+   * \brief This is the flag to denote whether the likelihood calculation should take overconsumption into account or not
    */
   int overconsumption;
   /**
@@ -213,7 +213,7 @@ private:
    */
   DoubleMatrixPtrVector obsYearData;
   /**
-   * \brief This is a flag to denote whether the likelihood calculation should aggregate data over a whole year
+   * \brief This is the flag to denote whether the likelihood calculation should aggregate data over a whole year
    * \note The default value is 0, which calculates the likelihood score on each timestep
    */
   int yearly;

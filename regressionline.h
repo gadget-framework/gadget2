@@ -97,11 +97,11 @@ protected:
    */
   void calcSlopeIntercept();
   /**
-   * \brief This is a flag to denote whether an error has occured
+   * \brief This is the flag to denote whether an error has occured
    */
   int error;
   /**
-   * \brief This is a flag to denote whether the weights should be used when calculating the fit to the regression line
+   * \brief This is the flag to denote whether the weights should be used when calculating the fit to the regression line
    */
   int useweights;
   /**

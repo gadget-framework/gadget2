@@ -55,7 +55,7 @@ public:
   int atCurrentTime(const TimeClass* const TimeInfo) const;
 protected:
   /**
-   * \brief This is a flag if the action takes place on every timestep
+   * \brief This is the flag if the action takes place on every timestep
    */
   int everyStep;
   /**

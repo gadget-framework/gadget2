@@ -141,7 +141,7 @@ private:
    */
   CharPtrVector ageindex;
   /**
-   * \brief This is a flag to denote whether the likelihood calculation should take overconsumption into account or not
+   * \brief This is the flag to denote whether the likelihood calculation should take overconsumption into account or not
    */
   int overconsumption;
   /**

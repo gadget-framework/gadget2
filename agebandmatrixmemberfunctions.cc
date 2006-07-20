@@ -39,7 +39,7 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
         for (l = minl; l < maxl; l++) {
           pop = Addition[age][CI.getPos(l)];
           pop *= ratio;
-          pop.N /= CI.Nrof(l);  //JMB CI.Nrof() should never be zero
+          pop.N /= CI.getNumPos(l);  //JMB CI.getNumPos() should never be zero
           (*v[age - minage])[l] += pop;
         }
       }

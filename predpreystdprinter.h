@@ -37,8 +37,8 @@ protected:
    * \brief This will select the predator and prey required for the printer class to print the requested information
    * \param predator is the PopPredator of the predator - prey relationship
    * \param prey is the Prey  of the predator - prey relationship
-   * \param IsStockPredator is a flag to denite whether the predator is a modelled stock
-   * \param IsStockPrey is a flag to denite whether the prey is a modelled stock
+   * \param IsStockPredator is the flag to denite whether the predator is a modelled stock
+   * \param IsStockPrey is the flag to denite whether the prey is a modelled stock
    */
   virtual void setPopPredAndPrey(const PopPredator* predator,
     const Prey* prey, int IsStockPredator, int IsStockPrey) = 0;
@@ -79,7 +79,7 @@ public:
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model
-   * \param printtime is a flag to denote when the printing is taking place
+   * \param printtime is the flag to denote when the printing is taking place
    */
   virtual void Print(const TimeClass* const TimeInfo, int printtime);
 protected:
@@ -87,8 +87,8 @@ protected:
    * \brief This will select the predator and prey required for the printer class to print the requested information
    * \param predator is the PopPredator of the predator - prey relationship
    * \param prey is the Prey  of the predator - prey relationship
-   * \param IsStockPredator is a flag to denite whether the predator is a modelled stock
-   * \param IsStockPrey is a flag to denite whether the prey is a modelled stock
+   * \param IsStockPredator is the flag to denite whether the predator is a modelled stock
+   * \param IsStockPrey is the flag to denite whether the prey is a modelled stock
    */
   virtual void setPopPredAndPrey(const PopPredator* predator, const Prey* prey,
     int IsStockPredator, int IsStockPrey);
@@ -126,7 +126,7 @@ public:
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model
-   * \param printtime is a flag to denote when the printing is taking place
+   * \param printtime is the flag to denote when the printing is taking place
    */
   virtual void Print(const TimeClass* const TimeInfo, int printtime);
 protected:
@@ -134,8 +134,8 @@ protected:
    * \brief This will select the predator and prey required for the printer class to print the requested information
    * \param predator is the PopPredator of the predator - prey relationship
    * \param prey is the Prey  of the predator - prey relationship
-   * \param IsStockPredator is a flag to denite whether the predator is a modelled stock
-   * \param IsStockPrey is a flag to denite whether the prey is a modelled stock
+   * \param IsStockPredator is the flag to denite whether the predator is a modelled stock
+   * \param IsStockPrey is the flag to denite whether the prey is a modelled stock
    */
   virtual void setPopPredAndPrey(const PopPredator* predator, const Prey* prey,
     int IsStockPredator, int IsStockPrey);

@@ -165,7 +165,7 @@ protected:
    */
   int functionnumber;
   /**
-   * \brief This is a flag used to denote whether the change is weight is to be calculated, or fixed to values specified in the input files
+   * \brief This is the flag used to denote whether the change is weight is to be calculated, or fixed to values specified in the input files
    */
   int fixedweights;
   /**

@@ -56,7 +56,7 @@ private:
    */
   int size;
   /**
-   * \brief This is a flag to denote that the matrix has a non-positive number of the diagonal which will cause the LUDecomposition algorithm to fail
+   * \brief This is the flag to denote that the matrix has a non-positive number of the diagonal which will cause the LUDecomposition algorithm to fail
    */
   int illegal;
 };

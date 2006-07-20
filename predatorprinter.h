@@ -31,7 +31,7 @@ public:
   /**
    * \brief This will print the requested information for the printer class to the ofstream specified
    * \param TimeInfo is the TimeClass for the current model
-   * \param printtime is a flag to denote when the printing is taking place
+   * \param printtime is the flag to denote when the printing is taking place
    */
   virtual void Print(const TimeClass* const TimeInfo, int printtime);
 protected:

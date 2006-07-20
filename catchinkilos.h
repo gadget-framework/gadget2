@@ -117,7 +117,7 @@ private:
    */
   DoubleMatrix likelihoodValues;
   /**
-   * \brief This is a flag to denote whether the likelihood calculation should aggregate data over a whole year.
+   * \brief This is the flag to denote whether the likelihood calculation should aggregate data over a whole year.
    * \note The default value is 0, which calculates the likelihood score on each timestep
    */
   int yearly;

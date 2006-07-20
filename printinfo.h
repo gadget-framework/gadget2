@@ -44,7 +44,7 @@ public:
   void setPrecision(int prec) { givenPrecision = prec; };
   /**
    * \brief This function will check the printing intervals and precision values that have been set, and override them with default vakues if required
-   * \param net is a flag to denote whether the current model run is a network run or not
+   * \param net is the flag to denote whether the current model run is a network run or not
    */
   void checkPrintInfo(int net);
   /**

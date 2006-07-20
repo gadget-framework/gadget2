@@ -23,7 +23,7 @@ public:
    * \brief This function will calculate the standard statistics for a given population
    * \param pop is the PopInfoIndexVector that specifies the population
    * \param lgrpdiv is the LengthGroupDivision of the population
-   * \param calcweight is a flag to denote whether the mean weight should be calculated or not (default value 1)
+   * \param calcweight is the flag to denote whether the mean weight should be calculated or not (default value 1)
    */
   void calcStatistics(const PopInfoIndexVector& pop, const LengthGroupDivision* const lgrpdiv, int calcweight = 1);
   /**

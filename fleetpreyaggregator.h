@@ -24,7 +24,7 @@ public:
    * \param Lgrpdiv is the LengthGroupDivision of the stocks
    * \param Areas is the IntMatrix of areas that the catch can take place on
    * \param Ages is the IntMatrix of ages of the stocks
-   * \param overcons is a flag to determine whether to calculate overconsumption of the stocks
+   * \param overcons is the flag to determine whether to calculate overconsumption of the stocks
    */
   FleetPreyAggregator(const FleetPtrVector& Fleets, const StockPtrVector& Stocks,
     LengthGroupDivision* const Lgrpdiv, const IntMatrix& Areas,
@@ -83,7 +83,7 @@ private:
   int overconsumption;
   /**
    * \brief This is the IntMatrix used to store predation information
-   * \note doescatch[i][j] is a flag to denote whether fleet i catches stock j
+   * \note doescatch[i][j] is the flag to denote whether fleet i catches stock j
    */
   IntMatrix doescatch;
   /**
