@@ -40,16 +40,16 @@ AreaClass::AreaClass(CommentStream& infile,
   //Now the data which is in the following format: year step area temperature.
   temperature.AddRows(TimeInfo->numTotalSteps() + 1, modelAreas.Size(), 0.0);
   IntVector Years, Steps;
-  int timeid, areaid, keepdata, year, step, area, count;
+  int timeid, areaid, keepdata, year, step, area, count, reject;
   double tmp;
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 4)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 4");
 
-  year = step = area = count = 0;
+  year = step = area = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> area >> tmp >> ws;
 
     //check if the year and step are in the simulation
@@ -65,10 +65,8 @@ AreaClass::AreaClass(CommentStream& infile,
         timeid = Years.Size();  //time=0 isnt in the simulation
       }
 
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
+    } else
+      keepdata = 0;  //dont keep data
 
     //if area is in modelAreas find areaid, else dont keep the data
     areaid = -1;
@@ -77,19 +75,22 @@ AreaClass::AreaClass(CommentStream& infile,
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //temperature data is required, so store it
       temperature[timeid][areaid] = tmp;
       count++;
-    }
+    } else
+      reject++;  //count number of rejected data points read from file
   }
 
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in area - found no temperature data");
   if (count != (temperature.Nrow() - 1) * modelAreas.Size())
     handle.logMessage(LOGWARN, "Warning in area - temperature data doesnt span time range");
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid temperature data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read temperature data - number of entries", count);
   handle.logMessage(LOGMESSAGE, "Read area file - number of areas", modelAreas.Size());
 }

@@ -132,7 +132,7 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpage, "", MaxStrLength);
   int keepdata, needvar, readvar;
-  int timeid, ageid, areaid, count;
+  int timeid, ageid, areaid, count, reject;
 
   readvar = 0;
   needvar = 0;
@@ -161,9 +161,9 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
   else if ((!readvar) && (countColumns(infile) != 6))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
-  year = step = count = 0;
+  year = step = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     if (readvar)
       infile >> year >> step >> tmparea >> tmpage >> tmpnumber >> tmpmean >> tmpstddev >> ws;
     else
@@ -180,7 +180,7 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmpage is in ageindex find ageid, else dont keep the data
     ageid = -1;
@@ -189,11 +189,11 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
         ageid = i;
 
     if (ageid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -213,23 +213,25 @@ void CatchStatistics::readStatisticsData(CommentStream& infile,
         timeid = (Years.Size() - 1);
       }
 
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
+    } else
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //statistics data is required, so store it
       count++;
       (*numbers[timeid])[areaid][ageid] = tmpnumber;
       (*obsMean[timeid])[areaid][ageid] = tmpmean;
       if (readvar)
         (*obsStdDev[timeid])[areaid][ageid] = tmpstddev;
-    }
+    } else
+      reject++;  //count number of rejected data points read from file
   }
+
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in catchstatistics - found no data in the data file for", this->getName());
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid catchstatistics data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read catchstatistics data file - number of entries", count);
 }
 

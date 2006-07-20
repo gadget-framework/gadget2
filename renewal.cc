@@ -117,7 +117,7 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
   const TimeClass* const TimeInfo, const AreaClass* const Area, int minage, int maxage) {
 
   char c;
-  int year, step, area, age, keepdata, count;
+  int year, step, area, age, keepdata, count, reject;
   PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
 
   //We now expect to find the renewal data in the following format
@@ -126,27 +126,21 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
   if (countColumns(infile) != 9)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 9");
 
-  year = step = area = age = count = 0;
+  year = step = area = age = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> area >> age >> ws;
 
-    if (!(TimeInfo->isWithinPeriod(year, step))) {
-      handle.logFileMessage(LOGWARN, "ignoring data found outside time range");
-      keepdata = 1;
-    }
+    if (!(TimeInfo->isWithinPeriod(year, step)))
+      keepdata = 0;
 
-    if (!(this->isInArea(Area->getInnerArea(area)))) {
-      handle.logFileMessage(LOGWARN, "ignoring data found outside area range");
-      keepdata = 1;
-    }
+    if (!(this->isInArea(Area->getInnerArea(area))))
+      keepdata = 0;
 
-    if ((age < minage) || (age > maxage)) {
-      handle.logFileMessage(LOGWARN, "ignoring data found outside age range");
-      keepdata = 1;
-    }
+    if ((age < minage) || (age > maxage))
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //renewal data is required, so store it
       renewalTime.resize(1, TimeInfo->calcSteps(year, step));
       renewalArea.resize(1, Area->getInnerArea(area));
@@ -173,6 +167,7 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
       count++;
 
     } else { //renewal data not required - skip rest of line
+      reject++;
       infile.get(c);
       while (c != '\n' && !infile.eof())
         infile.get(c);
@@ -182,6 +177,8 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
 
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in renewal - found no data in the data file");
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid renewal data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
 }
 
@@ -189,7 +186,7 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
   const TimeClass* const TimeInfo, const AreaClass* const Area, int minage, int maxage) {
 
   char c;
-  int year, step, area, age, keepdata, count;
+  int year, step, area, age, keepdata, count, reject;
   PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
 
   //We now expect to find the renewal data in the following format
@@ -198,27 +195,21 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
   if (countColumns(infile) != 8)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 8");
 
-  year = step = area = age = count = 0;
+  year = step = area = age = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> area >> age >> ws;
 
-    if (!(TimeInfo->isWithinPeriod(year, step))) {
-      handle.logFileMessage(LOGWARN, "ignoring data found outside time range");
-      keepdata = 1;
-    }
+    if (!(TimeInfo->isWithinPeriod(year, step)))
+      keepdata = 0;
 
-    if (!(this->isInArea(Area->getInnerArea(area)))) {
-      handle.logFileMessage(LOGWARN, "ignoring data found outside area range");
-      keepdata = 1;
-    }
+    if (!(this->isInArea(Area->getInnerArea(area))))
+      keepdata = 0;
 
-    if ((age < minage) || (age > maxage)) {
-      handle.logFileMessage(LOGWARN, "ignoring data found outside age range");
-      keepdata = 1;
-    }
+    if ((age < minage) || (age > maxage))
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //renewal data is required, so store it
       renewalTime.resize(1, TimeInfo->calcSteps(year, step));
       renewalArea.resize(1, Area->getInnerArea(area));
@@ -242,6 +233,7 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
       count++;
 
     } else { //renewal data not required - skip rest of line
+      reject++;
       infile.get(c);
       while (c != '\n' && !infile.eof())
         infile.get(c);
@@ -251,6 +243,8 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
 
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in renewal - found no data in the data file");
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid renewal data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
 }
 
@@ -259,7 +253,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
 
   char c;
   double length;
-  int i, year, step, area, age, keepdata, count, id, lengthid;
+  int i, year, step, area, age, keepdata, count, id, lengthid, reject;
   int nolengr = LgrpDiv->numLengthGroups();
   PopInfoIndexVector poptmp(nolengr, 0);
 
@@ -269,37 +263,29 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
   if (countColumns(infile) != 7)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
 
-  year = step = area = age = count = 0;
+  year = step = area = age = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> area >> age >> length >> ws;
 
-    if (!(TimeInfo->isWithinPeriod(year, step))) {
-      handle.logFileMessage(LOGWARN, "ignoring data found outside time range");
-      keepdata = 1;
-    }
+    if (!(TimeInfo->isWithinPeriod(year, step)))
+      keepdata = 0;
 
-    if (!(this->isInArea(Area->getInnerArea(area)))) {
-      handle.logFileMessage(LOGWARN, "ignoring data found outside area range");
-      keepdata = 1;
-    }
+    if (!(this->isInArea(Area->getInnerArea(area))))
+      keepdata = 0;
 
-    if ((age < minage) || (age > maxage)) {
-      handle.logFileMessage(LOGWARN, "ignoring data found outside age range");
-      keepdata = 1;
-    }
+    if ((age < minage) || (age > maxage))
+      keepdata = 0;
 
     lengthid = -1;
     for (i = 0; i < nolengr; i++)
       if (length == LgrpDiv->minLength(i))
         lengthid = i;
 
-    if (lengthid == -1) {
-      handle.logFileMessage(LOGWARN, "ignoring data found outside length range");
-      keepdata = 1;
-    }
+    if (lengthid == -1)
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //renewal data is required, so store it
       id = -1;
       for (i = 0; i < renewalTime.Size(); i++)
@@ -325,6 +311,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
       count++;
 
     } else { //renewal data not required - skip rest of line
+      reject++;
       infile.get(c);
       while (c != '\n' && !infile.eof())
         infile.get(c);
@@ -337,6 +324,8 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
 
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in renewal - found no data in the data file");
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid renewal data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read renewal data file - number of entries", count);
 }
 

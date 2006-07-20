@@ -95,7 +95,7 @@ void readAmounts(CommentStream& infile, const IntVector& tmpareas,
   char tmpname[MaxStrLength];
   strncpy(tmpname, "", MaxStrLength);
   int i, year, step, area;
-  int keepdata, timeid, areaid, tmpareaid, count;
+  int keepdata, timeid, areaid, tmpareaid, count, reject;
 
   //Check the number of columns in the inputfile
   infile >> ws;
@@ -105,9 +105,9 @@ void readAmounts(CommentStream& infile, const IntVector& tmpareas,
   //Create storage for the data - size of the data is known
   amount.AddRows(TimeInfo->numTotalSteps() + 1, tmpareas.Size(), 0.0);
 
-  year = step = area = count = 0;
+  year = step = area = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> area >> tmpname;
 
     //crude check to see if something has gone wrong and avoid infinite loops
@@ -119,11 +119,11 @@ void readAmounts(CommentStream& infile, const IntVector& tmpareas,
     if (TimeInfo->isWithinPeriod(year, step))
       timeid = TimeInfo->calcSteps(year, step);
     else
-      keepdata = 1;
+      keepdata = 0;
 
     //only keep the data if tmpname matches givenname
     if (strcasecmp(givenname, tmpname) != 0)
-      keepdata = 1;
+      keepdata = 0;
 
     //only keep the data if area is a required area
     areaid = -1;
@@ -133,14 +133,15 @@ void readAmounts(CommentStream& infile, const IntVector& tmpareas,
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //data is required, so store it
       count++;
       infile >> amount[timeid][areaid] >> ws;
 
     } else { //data not required - skip rest of line
+      reject++;
       infile.get(c);
       while (c != '\n' && !infile.eof())
         infile.get(c);
@@ -150,6 +151,8 @@ void readAmounts(CommentStream& infile, const IntVector& tmpareas,
 
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in readamounts - found no data in the data file for", givenname);
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid amounts data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read amounts data file - number of entries", count);
 }
 
@@ -161,16 +164,16 @@ void readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
   char c;
   char tmplength[MaxStrLength];
   strncpy(tmplength, "", MaxStrLength);
-  int keepdata, timeid, areaid, lenid, tmpareaid, count;
+  int keepdata, timeid, areaid, lenid, tmpareaid, count, reject;
 
   //Check the number of columns in the inputfile
   infile >> ws;
   if (countColumns(infile) != 5)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
-  year = step = area = count = 0;
+  year = step = area = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> area >> tmplength;
 
     //crude check to see if something has gone wrong and avoid infinite loops
@@ -182,7 +185,7 @@ void readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
     if (TimeInfo->isWithinPeriod(year, step))
       timeid = TimeInfo->calcSteps(year, step);
     else
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmplength is in lenindex find lengthid, else dont keep the data
     lenid = -1;
@@ -191,7 +194,7 @@ void readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
         lenid = i;
 
     if (lenid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //only keep the data if area is a required area
     areaid = -1;
@@ -201,20 +204,24 @@ void readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       count++;
       infile >> (*amount[areaid])[timeid][lenid] >> ws;
 
     } else { //data not required - skip rest of line
+      reject++;
       infile.get(c);
       while (c != '\n' && !infile.eof())
         infile.get(c);
       infile >> ws;
     }
   }
+
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in growthamounts - found no data in the data file");
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid growth data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read growth data file - number of entries", count);
 }

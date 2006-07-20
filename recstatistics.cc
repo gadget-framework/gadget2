@@ -93,7 +93,7 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
   strncpy(tmptag, "", MaxStrLength);
   int keepdata, needvar, readvar;
   int i, timeid, tagid, areaid, tmpindex;
-  int year, step, count;
+  int year, step, count, reject;
 
   readvar = 0;
   if (functionnumber == 2)
@@ -109,9 +109,9 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
   else if ((!readvar) && (countColumns(infile) != 6))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
-  year = step = count = 0;
+  year = step = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     if (readvar)
       infile >> tmptag >> year >> step >> tmparea >> tmpnumber >> tmpmean >> tmpstddev >> ws;
     else
@@ -128,12 +128,12 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //check if the year and step are in the simulation
     timeid = -1;
     tagid = -1;
-    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
       for (i = 0; i < tagvec.Size(); i++)
         if (strcasecmp(tagvec[i]->getName(), tmptag) == 0)
           tagid = i;
@@ -145,7 +145,7 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
             tmpindex = i;
 
         if (tmpindex == -1) {
-          keepdata = 1;
+          keepdata = 0;
         } else {
           tagvec.resize(Tag[tmpindex]);
           tagnames.resize(new char[strlen(tmptag) + 1]);
@@ -180,24 +180,25 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
         }
       }
 
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
+    } else
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //statistics data is required, so store it
       count++;
       (*numbers[tagid])[timeid][areaid] = tmpnumber;
       (*obsMean[tagid])[timeid][areaid] = tmpmean;
       if (readvar)
         (*obsStdDev[tagid])[timeid][areaid] = tmpstddev;
-    }
+    } else
+      reject++;  //count number of rejected data points read from file
   }
 
   timeindex.resize(tagvec.Size(), -1);
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in recstatistics - found no data in the data file for", this->getName());
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid recstatistics data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read recstatistics data file - number of entries", count);
 }
 

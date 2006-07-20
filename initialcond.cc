@@ -11,7 +11,7 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
   int noagegr, int minage, const AreaClass* const Area) {
 
   int noareas = areas.Size();
-  int i, age, area, ageid, areaid, tmparea, keepdata, count;
+  int i, age, area, ageid, areaid, tmparea, keepdata, count, reject;
   char c;
 
   //Resize the matrices to hold the data
@@ -27,17 +27,16 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
   if (countColumns(infile) != 7)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
 
-  area = age = ageid = count = 0;
+  area = age = ageid = count = reject = 0;
   keeper->addString("meandata");
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> age >> area >> ws;
 
     //crude age data check - perhaps there should be a better check?
-    if ((age < minage) || (age >= (noagegr + minage))) {
-      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside age range");
-      keepdata = 1;
-    } else
+    if ((age < minage) || (age >= (noagegr + minage)))
+      keepdata = 0;
+    else
       ageid = age - minage;
 
     //crude area data check
@@ -47,12 +46,10 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
       if (areas[i] == tmparea)
         areaid = i;
 
-    if (areaid == -1) {
-      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside area range");
-      keepdata = 1;
-    }
+    if (areaid == -1)
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //initial data is required, so store it
       count++;
       infile >> ageFactor[areaid][ageid] >> ws;
@@ -62,6 +59,7 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
       infile >> relCond[areaid][ageid] >> ws;
 
     } else { //initial data not required - skip rest of line
+      reject++;
       infile.get(c);
       while (c != '\n' && !infile.eof())
         infile.get(c);
@@ -76,6 +74,9 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
   else if (count > (noareas * noagegr))
     handle.logMessage(LOGWARN, "Warning in initial conditions - repeated entries in data file");
 
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid initial conditions data - number of invalid entries", reject);
+
   handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   areaFactor.Inform(keeper);
   ageFactor.Inform(keeper);
@@ -89,7 +90,7 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
   int noagegr, int minage, const AreaClass* const Area) {
 
   int noareas = areas.Size();
-  int i, age, area, ageid, areaid, tmparea, keepdata, count;
+  int i, age, area, ageid, areaid, tmparea, keepdata, count, reject;
   char c;
 
   //Resize the matrices to hold the data
@@ -106,17 +107,16 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
   if (countColumns(infile) != 8)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 8");
 
-  area = age = ageid = count = 0;
+  area = age = ageid = count = reject = 0;
   keeper->addString("meandata");
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> age >> area >> ws;
 
     //crude age data check - perhaps there should be a better check?
-    if ((age < minage) || (age >= (noagegr + minage))) {
-      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside age range");
-      keepdata = 1;
-    } else
+    if ((age < minage) || (age >= (noagegr + minage)))
+      keepdata = 0;
+    else
       ageid = age - minage;
 
     //crude area data check
@@ -126,12 +126,10 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
       if (areas[i] == tmparea)
         areaid = i;
 
-    if (areaid == -1) {
-      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside area range");
-      keepdata = 1;
-    }
+    if (areaid == -1)
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //initial data is required, so store it
       count++;
       infile >> ageFactor[areaid][ageid] >> ws;
@@ -142,6 +140,7 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
       infile >> beta[areaid][ageid] >> ws;
 
     } else { //initial data not required - skip rest of line
+      reject++;
       infile.get(c);
       while (c != '\n' && !infile.eof())
         infile.get(c);
@@ -156,6 +155,9 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
   else if (count > (noareas * noagegr))
     handle.logMessage(LOGWARN, "Warning in initial conditions - repeated entries in data file");
 
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid initial conditions data - number of invalid entries", reject);
+
   handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   areaFactor.Inform(keeper);
   ageFactor.Inform(keeper);
@@ -169,7 +171,7 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
 void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   int noagegr, int minage, const AreaClass* const Area) {
 
-  int i, age, area, tmparea, count;
+  int i, age, area, tmparea, count, reject;
   int keepdata, ageid, areaid, lengthid;
   double length;
   char c;
@@ -190,17 +192,16 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
         initialPop[areaid][ageid][lengthid].setToZero();
   }
 
-  area = age = ageid = count = 0;
+  area = age = ageid = count = reject = 0;
   keeper->addString("numberdata");
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> area >> age >> length >> ws;
 
     //crude age data check - perhaps there should be a better check?
-    if ((age < minage) || (age >= (noagegr + minage))) {
-      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside age range");
-      keepdata = 1;
-    } else
+    if ((age < minage) || (age >= (noagegr + minage)))
+      keepdata = 0;
+    else
       ageid = age;
 
     //crude length data check
@@ -209,10 +210,8 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
       if (length == LgrpDiv->minLength(i))
         lengthid = i;
 
-    if (lengthid == -1) {
-      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside length range");
-      keepdata = 1;
-    }
+    if (lengthid == -1)
+      keepdata = 0;
 
     //crude area data check
     areaid = -1;
@@ -221,18 +220,17 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
       if (areas[i] == tmparea)
         areaid = i;
 
-    if (areaid == -1) {
-      handle.logFileMessage(LOGWARN, "ignoring initial conditions data found outside area range");
-      keepdata = 1;
-    }
+    if (areaid == -1)
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //initial data is required, so store it
       infile >> (*initialNumber[areaid])[ageid - minage][lengthid] >> ws;
       infile >> initialPop[areaid][ageid][lengthid].W >> ws;
       count++;
 
     } else { //initial data not required - skip rest of line
+      reject++;
       infile.get(c);
       while (c != '\n' && !infile.eof())
         infile.get(c);
@@ -249,6 +247,9 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
     handle.logMessage(LOGWARN, "Warning in initial conditions - missing entries from data file");
   else if (count > (noareas * noagegr * nolengr))
     handle.logMessage(LOGWARN, "Warning in initial conditions - repeated entries in data file");
+
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid initial conditions data - number of invalid entries", reject);
 
   handle.logMessage(LOGMESSAGE, "Read initial conditions data file - number of entries", count);
   keeper->clearLast();

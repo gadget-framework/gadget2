@@ -113,7 +113,7 @@ void Recaptures::readRecaptureData(CommentStream& infile,
   strncpy(tmplength, "", MaxStrLength);
   strncpy(tmptagid, "", MaxStrLength);
   int keepdata, timeid, areaid, lenid, tid;
-  int year, step, count;
+  int year, step, count, reject;
   char* tagName;
 
   infile >> ws;
@@ -121,9 +121,9 @@ void Recaptures::readRecaptureData(CommentStream& infile,
   if (countColumns(infile) != 6)
       handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
-  year = step = count = 0;
+  year = step = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> tmptagid >> year >> step >> tmparea >> tmplength >> tmpnumber >> ws;
 
     //crude check to see if something has gone wrong and avoid infinite loops
@@ -137,7 +137,7 @@ void Recaptures::readRecaptureData(CommentStream& infile,
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmplength is in lenindex find lenid, else dont keep the data
     lenid = -1;
@@ -146,11 +146,11 @@ void Recaptures::readRecaptureData(CommentStream& infile,
         lenid = i;
 
     if (lenid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     timeid = -1;
     tid = -1;
-    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
       //if this is a new tagging exp. then resize
       for (i = 0; i < tagnames.Size(); i++)
         if (strcasecmp(tagnames[i], tmptagid) == 0)
@@ -189,13 +189,18 @@ void Recaptures::readRecaptureData(CommentStream& infile,
         }
       }
 
-      //store the number of the obsDistribution
+      //finally store the number of the obsDistribution
       count++;
       (*obsDistribution[tid][timeid])[areaid][lenid] = tmpnumber;
-    }
+
+    } else
+      reject++;  //count number of rejected data points read from file
   }
+
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in recaptures - found no data in the data file for", this->getName());
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid recaptures data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read recaptures data file - number of entries", count);
 }
 

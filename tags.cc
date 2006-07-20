@@ -77,7 +77,7 @@ Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const 
 
 void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeClass* const TimeInfo) {
 
-  int year, step, count;
+  int year, step, count, reject;
   int i, lenid, keepdata, timeid;
   double tmplength, tmpnumber;
   char tmpname[MaxStrLength];
@@ -88,14 +88,14 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
   if (countColumns(infile) != 5)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
-  year = step = count = 0;
+  year = step = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> tmpname >> year >> step >> tmplength >> tmpnumber >> ws;
 
     //only keep the data if tmpname matches tagname
     if (strcasecmp(tagname, tmpname) != 0)
-      keepdata = 1;
+      keepdata = 0;
 
     //only keep the data if the length is valid
     lenid = -1;
@@ -104,16 +104,16 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
         lenid = i;
 
     if (lenid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //only keep the data if the number is positive
     if (tmpnumber < 0.0) {
       handle.logMessage(LOGWARN, "Warning in tags - found negative number of tags", tmpnumber);
-      keepdata = 1;
+      keepdata = 0;
     }
 
     timeid = -1;
-    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
           timeid = i;
@@ -126,16 +126,19 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
       }
 
     } else
-      keepdata = 1;
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       count++;
       (*NumberByLength[timeid])[0][lenid] = tmpnumber;
-    }
+    } else
+      reject++;  //count number of rejected data points read from file
   }
 
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in tags - found no data in the data file for", tagname);
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid tags data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read tags data file - number of entries", count);
 
   tagyear = 9999;

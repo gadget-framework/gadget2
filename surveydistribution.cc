@@ -184,15 +184,15 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
   strncpy(tmpage, "", MaxStrLength);
   strncpy(tmplen, "", MaxStrLength);
   int keepdata, timeid, areaid, ageid, lenid;
-  int i, year, step, count;
+  int i, year, step, count, reject;
 
   //Check the number of columns in the inputfile
   if (countColumns(infile) != 6)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
-  year = step = count = 0;
+  year = step = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> tmparea >> tmpage >> tmplen >> tmpnumber >> ws;
 
     //crude check to see if something has gone wrong and avoid infinite loops
@@ -206,7 +206,7 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmpage is in ageindex keep data, else dont keep the data
     ageid = -1;
@@ -215,7 +215,7 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
         ageid = i;
 
     if (ageid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmplen is in lenindex keep data, else dont keep the data
     lenid = -1;
@@ -224,11 +224,11 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
         lenid = i;
 
     if (lenid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
           timeid = i;
@@ -248,14 +248,15 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
       }
 
     } else
-      keepdata = 1;
+      keepdata = 0;
 
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //survey distribution data is required, so store it
       count++;
       (*obsDistribution[timeid][areaid])[ageid][lenid] = tmpnumber;
-    }
+    } else
+      reject++;  //count number of rejected data points read from file
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
@@ -273,6 +274,9 @@ void SurveyDistribution::readDistributionData(CommentStream& infile,
     if (timeid != 0)
       handle.logMessage(LOGWARN, "Warning in surveydistribution - differing timesteps for", this->getName());
   }
+
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid surveydistribution data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read surveydistribution data file - number of entries", count);
 }
 

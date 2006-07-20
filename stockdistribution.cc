@@ -159,7 +159,7 @@ void StockDistribution::readStockData(CommentStream& infile,
   strncpy(tmpstock, "", MaxStrLength);
   strncpy(tmpage, "", MaxStrLength);
   strncpy(tmplen, "", MaxStrLength);
-  int i, j, year, step, count;
+  int i, j, year, step, count, reject;
   int keepdata, timeid, stockid, ageid, areaid, lenid;
   int numstock = stocknames.Size();
 
@@ -168,9 +168,9 @@ void StockDistribution::readStockData(CommentStream& infile,
   if (countColumns(infile) != 7)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
 
-  year = step = count = 0;
+  year = step = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> tmparea >> tmpstock >> tmpage >> tmplen >> tmpnumber >> ws;
 
     //crude check to see if something has gone wrong and avoid infinite loops
@@ -184,7 +184,7 @@ void StockDistribution::readStockData(CommentStream& infile,
         stockid = i;
 
     if (stockid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmparea is in areaindex find areaid, else dont keep the data
     areaid = -1;
@@ -193,7 +193,7 @@ void StockDistribution::readStockData(CommentStream& infile,
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmpage is in ageindex find ageid, else dont keep the data
     ageid = -1;
@@ -202,7 +202,7 @@ void StockDistribution::readStockData(CommentStream& infile,
         ageid = i;
 
     if (ageid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmplen is in lenindex find lenid, else dont keep the data
     lenid = -1;
@@ -211,11 +211,11 @@ void StockDistribution::readStockData(CommentStream& infile,
         lenid = i;
 
     if (lenid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -235,22 +235,24 @@ void StockDistribution::readStockData(CommentStream& infile,
         }
       }
 
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
+    } else
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //stock distribution data is required, so store it
       count++;
       i = ageid + (numage * lenid);
       //JMB - this should be stored as [time][area][stock][age][length]
       (*obsDistribution[timeid][areaid])[stockid][i] = tmpnumber;
-    }
+    } else
+      reject++;  //count number of rejected data points read from file
   }
+
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in stockdistribution - found no data in the data file for", this->getName());
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid stockdistribution data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read stockdistribution data file - number of entries", count);
 }
 

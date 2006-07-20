@@ -133,31 +133,21 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmplabel, "", MaxStrLength);
   int keepdata, timeid, colid, areaid;
-  int i, year, step, count;
+  int i, year, step, count, reject;
 
   //Check the number of columns in the inputfile
   infile >> ws;
   if (countColumns(infile) != 5)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
-  year = step = count = 0;
+  year = step = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> tmparea >> tmplabel >> tmpnumber >> ws;
 
     //crude check to see if something has gone wrong and avoid infinite loops
     if (strlen(tmparea) == 0)
       handle.logFileMessage(LOGFAIL, "failed to read data from file");
-
-    //check if the year and step are in the simulation
-    timeid = -1;
-    if (TimeInfo->isWithinPeriod(year, step)) {
-      for (i = 0; i < Years.Size(); i++)
-        if ((Years[i] == year) && (Steps[i] == step))
-          timeid = i;
-
-    } else
-      keepdata = 1;
 
     //if tmparea is in areaindex keep data, else dont keep the data
     areaid = -1;
@@ -166,7 +156,7 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmplabel is in colindex find colid, else dont keep the data
     colid = -1;
@@ -175,11 +165,15 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
         colid = i;
 
     if (colid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
-    if (keepdata == 0) {
-      //survey indices data is required, so store it
-      count++;
+    //check if the year and step are in the simulation
+    timeid = -1;
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
+      for (i = 0; i < Years.Size(); i++)
+        if ((Years[i] == year) && (Steps[i] == step))
+          timeid = i;
+
       if (timeid == -1) {
         Years.resize(1, year);
         Steps.resize(1, step);
@@ -187,8 +181,16 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
         obsIndex.resize(new DoubleMatrix(areaindex.Size(), colindex.Size(), 0.0));
         modelIndex.resize(new DoubleMatrix(areaindex.Size(), colindex.Size(), 0.0));
       }
+
+    } else
+      keepdata = 0;
+
+    if (keepdata == 1) {
+      //survey indices data is required, so store it
+      count++;
       (*obsIndex[timeid])[areaid][colid] = tmpnumber;
-    }
+    } else
+      reject++;  //count number of rejected data points read from file
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
@@ -209,6 +211,8 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
       handle.logMessage(LOGWARN, "Warning in surveyindex - differing timesteps for", this->getSIName());
   }
 
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid surveyindex data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read surveyindex data file - number of entries", count);
 }
 

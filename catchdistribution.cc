@@ -233,16 +233,16 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpage, "", MaxStrLength);
   strncpy(tmplen, "", MaxStrLength);
-  int keepdata, timeid, ageid, areaid, lenid, count;
+  int keepdata, timeid, ageid, areaid, lenid, count, reject;
 
   //Check the number of columns in the inputfile
   infile >> ws;
   if (countColumns(infile) != 6)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
-  year = step = count = 0;
+  year = step = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> tmparea >> tmpage >> tmplen >> tmpnumber >> ws;
 
     //crude check to see if something has gone wrong and avoid infinite loops
@@ -256,7 +256,7 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmpage is in ageindex find ageid, else dont keep the data
     ageid = -1;
@@ -265,7 +265,7 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
         ageid = i;
 
     if (ageid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmplen is in lenindex find lenid, else dont keep the data
     lenid = -1;
@@ -274,11 +274,11 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
         lenid = i;
 
     if (lenid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -298,21 +298,22 @@ void CatchDistribution::readDistributionData(CommentStream& infile,
         }
       }
 
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
+    } else
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //distribution data is required, so store it
       count++;
       (*obsDistribution[timeid][areaid])[ageid][lenid] = tmpnumber;
-    }
+    } else
+      reject++;  //count number of rejected data points read from file
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in catchdistribution - found no data in the data file for", this->getName());
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid catchdistribution data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read catchdistribution data file - number of entries", count);
 }
 

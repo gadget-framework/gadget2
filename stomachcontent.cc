@@ -514,7 +514,7 @@ SCNumbers::SCNumbers(CommentStream& infile, const AreaClass* const Area,
 
 void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  int i, year, step, count;
+  int i, year, step, count, reject;
   double tmpnumber;
   char tmparea[MaxStrLength], tmppred[MaxStrLength], tmpprey[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
@@ -538,9 +538,9 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
   if (countColumns(infile) != 6)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
-  year = step = count = 0;
+  year = step = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> tmparea >> tmppred >> tmpprey >> tmpnumber >> ws;
 
     //crude check to see if something has gone wrong and avoid infinite loops
@@ -554,7 +554,7 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmppred is in predindex find predid, else dont keep the data
     predid = -1;
@@ -563,7 +563,7 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
         predid = i;
 
     if (predid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmpprey is in preyindex find preyid, else dont keep the data
     preyid = -1;
@@ -572,11 +572,11 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
         preyid = i;
 
     if (preyid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -596,21 +596,22 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
         }
       }
 
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
+    } else
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //stomach content data is required, so store it
       count++;
       (*obsConsumption[timeid][areaid])[predid][preyid] = tmpnumber;
-    }
+    } else
+      reject++;  //count number of rejected data points read from file
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid stomachcontent data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
 }
 
@@ -665,7 +666,7 @@ SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
 
 void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  int i, year, step, count;
+  int i, year, step, count, reject;
   double tmpnumber, tmpstddev;
   char tmparea[MaxStrLength], tmppred[MaxStrLength], tmpprey[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
@@ -691,9 +692,9 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
   if (countColumns(infile) != 7)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
 
-  year = step = count = 0;
+  year = step = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> tmparea >> tmppred >> tmpprey >> tmpnumber >> tmpstddev >> ws;
 
     //crude check to see if something has gone wrong and avoid infinite loops
@@ -707,7 +708,7 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmppred is in predindex find predid, else dont keep the data
     predid = -1;
@@ -716,7 +717,7 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
         predid = i;
 
     if (predid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmpprey is in preyindex find preyid, else dont keep the data
     preyid = -1;
@@ -725,11 +726,11 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
         preyid = i;
 
     if (preyid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -751,28 +752,29 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
         }
       }
 
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
+    } else
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //stomach content data is required, so store it
       count++;
       (*obsConsumption[timeid][areaid])[predid][preyid] = tmpnumber;
       (*stddev[timeid][areaid])[predid][preyid] = tmpstddev;
-    }
+    } else
+      reject++;  //count number of rejected data points read from file
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid stomachcontent data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
 }
 
 void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  int i, year, step, count;
+  int i, year, step, count, reject;
   double tmpnumber;
   int keepdata, timeid, areaid, predid;
   char tmparea[MaxStrLength], tmppred[MaxStrLength];
@@ -795,9 +797,9 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
   if (countColumns(infile) != 5)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
-  year = step = count = 0;
+  year = step = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> tmparea >> tmppred >> tmpnumber >> ws;
 
     //crude check to see if something has gone wrong and avoid infinite loops
@@ -813,7 +815,7 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
           timeid = i;
 
     if (timeid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmparea is in areaindex find areaid, else dont keep the data
     areaid = -1;
@@ -822,7 +824,7 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmppred is in predindex find predid, else dont keep the data
     predid = -1;
@@ -831,16 +833,20 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
         predid = i;
 
     if (predid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //stomach content data is required, so store it
       count++;
       (*number[timeid])[areaid][predid] = tmpnumber;
-    }
+    } else
+      reject++;  //count number of rejected data points read from file
   }
+
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid stomachcontent data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
 }
 
@@ -992,7 +998,7 @@ SCSimple::SCSimple(CommentStream& infile, const AreaClass* const Area,
 
 void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  int i, year, step, count;
+  int i, year, step, count, reject;
   double tmpnumber;
   char tmparea[MaxStrLength], tmppred[MaxStrLength], tmpprey[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
@@ -1018,9 +1024,9 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
   if (countColumns(infile) != 6)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
-  year = step = count = 0;
+  year = step = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     infile >> year >> step >> tmparea >> tmppred >> tmpprey >> tmpnumber >> ws;
 
     //crude check to see if something has gone wrong and avoid infinite loops
@@ -1034,7 +1040,7 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmppred is in predindex find predid, else dont keep the data
     predid = -1;
@@ -1043,7 +1049,7 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
         predid = i;
 
     if (predid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmpprey is in preyindex find preyid, else dont keep the data
     preyid = -1;
@@ -1052,11 +1058,11 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
         preyid = i;
 
     if (preyid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (Steps[i] == step))
@@ -1076,21 +1082,22 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
         }
       }
 
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
+    } else
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //stomach content data is required, so store it
       count++;
       (*obsConsumption[timeid][areaid])[predid][preyid] = tmpnumber;
-    }
+    } else
+      reject++;  //count number of rejected data points read from file
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid stomachcontent data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
 }
 

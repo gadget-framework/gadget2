@@ -298,7 +298,7 @@ void CatchInKilos::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& St
 void CatchInKilos::readCatchInKilosData(CommentStream& infile,
   const TimeClass* TimeInfo, int numarea) {
 
-  int i, year, step, count;
+  int i, year, step, count, reject;
   double tmpnumber = 0.0;
   char tmparea[MaxStrLength];
   char tmpfleet[MaxStrLength];
@@ -313,9 +313,9 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 4 or 5");
 
   step = 1; //default value in case there are only 4 columns in the datafile
-  year = count = 0;
+  year = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 0;
+    keepdata = 1;
     if ((yearly) && (check == 4))
       infile >> year >> tmparea >> tmpfleet >> tmpnumber >> ws;
     else
@@ -332,7 +332,7 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
         areaid = i;
 
     if (areaid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //if tmpfleet is a required fleet keep the data, else ignore it
     fleetid = -1;
@@ -341,11 +341,11 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
         fleetid = i;
 
     if (fleetid == -1)
-      keepdata = 1;
+      keepdata = 0;
 
     //check if the year and step are in the simulation
     timeid = -1;
-    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 0)) {
+    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
       //if this is a new timestep, resize to store the data
       for (i = 0; i < Years.Size(); i++)
         if ((Years[i] == year) && (yearly || (Steps[i] == step)))
@@ -361,17 +361,16 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
         likelihoodValues.AddRows(1, numarea, 0.0);
       }
 
-    } else {
-      //dont keep the data
-      keepdata = 1;
-    }
+    } else
+      keepdata = 0;
 
-    if (keepdata == 0) {
+    if (keepdata == 1) {
       //distribution data is required, so store it
       count++;
       //note that we use += to sum the data over all fleets (and possibly time)
       obsDistribution[timeid][areaid] += tmpnumber;
-    }
+    } else
+      reject++;  //count number of rejected data points read from file
   }
 
   if (yearly)
@@ -381,6 +380,8 @@ void CatchInKilos::readCatchInKilosData(CommentStream& infile,
 
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in catchinkilos - found no data in the data file for", this->getName());
+  if (reject != 0)
+    handle.logMessage(LOGMESSAGE, "Discarded invalid catchinkilos data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read catchinkilos data file - number of entries", count);
 }
 
