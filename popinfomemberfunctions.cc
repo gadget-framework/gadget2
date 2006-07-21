@@ -71,14 +71,12 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
     int offset = CI.getOffset();
     minl = max(this->minCol(), Addition.minCol() + offset);
     maxl = min(this->maxCol(), Addition.maxCol() + offset);
-    if (maxl > Ratio.Size()) {
-      handle.logMessage(LOGWARN, "Warning in popinfoindexvector - invalid vector sizes");
-      maxl = Ratio.Size();
-    }
+    if (maxl > Ratio.Size() + offset)
+      maxl = Ratio.Size() + offset;
 
     for (l = minl; l < maxl; l++) {
       pop = Addition[l - offset];
-      pop *= (ratio * Ratio[l]);
+      pop *= (ratio * Ratio[l - offset]);
       v[l] += pop;
     }
 
@@ -86,14 +84,10 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
     if (CI.isFiner()) {
       minl = max(this->minCol(), CI.minPos(Addition.minCol()));
       maxl = min(this->maxCol(), CI.maxPos(Addition.maxCol() - 1) + 1);
-      if (maxl > Ratio.Size()) {
-        handle.logMessage(LOGWARN, "Warning in popinfoindexvector - invalid vector sizes");
-        maxl = Ratio.Size();
-      }
 
       for (l = minl; l < maxl; l++) {
         pop = Addition[CI.getPos(l)];
-        pop *= (ratio * Ratio[l]);
+        pop *= (ratio * Ratio[CI.getPos(l)]);
         v[l] += pop;
         v[l].N /= CI.getNumPos(l);  //JMB CI.getNumPos() should never be zero
       }
@@ -101,10 +95,8 @@ void PopInfoIndexVector::Add(const PopInfoIndexVector& Addition,
     } else {
       minl = max(CI.minPos(this->minCol()), Addition.minCol());
       maxl = min(CI.maxPos(this->maxCol() - 1) + 1, Addition.maxCol());
-      if (maxl > Ratio.Size()) {
-        handle.logMessage(LOGWARN, "Warning in popinfoindexvector - invalid vector sizes");
+      if (maxl > Ratio.Size())
         maxl = Ratio.Size();
-      }
 
       for (l = minl; l < maxl; l++) {
         pop = Addition[l];
