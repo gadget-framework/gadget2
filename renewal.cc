@@ -67,15 +67,16 @@ RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
       handle.logFileMessage(LOGFAIL, "lengths for reference weights must span the range of initial condition lengths");
 
     //Aggregate the reference weight data to be the same format
-    double ratio;
+    double ratio, tmplen;
     refWeight.resize(LgrpDiv->numLengthGroups(), 0.0);
     int pos = 0;
     for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
+      tmplen = LgrpDiv->meanLength(j);
       for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
-        if ((LgrpDiv->meanLength(j) >= tmpRefW[i][0]) &&
-            (LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0])) {
+        if (((tmplen > tmpRefW[i][0]) || (isEqual(tmplen, tmpRefW[i][0]))) &&
+            ((tmplen < tmpRefW[i + 1][0]) || (isEqual(tmplen, tmpRefW[i + 1][0])))) {
 
-          ratio = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+          ratio = (tmplen - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
           refWeight[j] = tmpRefW[i][1] + ratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
           pos = i;
         }

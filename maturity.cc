@@ -399,8 +399,8 @@ void MaturityB::Reset(const TimeClass* const TimeInfo) {
 }
 
 double MaturityB::calcMaturation(int age, int length, int growth, double weight) {
-
-  if (LgrpDiv->meanLength(length) >= maturitylength[currentmaturitystep])
+  if ((LgrpDiv->meanLength(length) > maturitylength[currentmaturitystep]) ||
+      (isEqual(LgrpDiv->meanLength(length), maturitylength[currentmaturitystep])))
     return 1.0;
   return 0.0;
 }
@@ -572,10 +572,14 @@ MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
 
   refWeight.resize(LgrpDiv->numLengthGroups(), 0.0);
   int i, j, pos = 0;
+  double tmplen;
   for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
+    tmplen = LgrpDiv->meanLength(j);
     for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
-      if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] && LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
-        tmpratio = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+      if (((tmplen > tmpRefW[i][0]) || (isEqual(tmplen, tmpRefW[i][0]))) &&
+          ((tmplen < tmpRefW[i + 1][0]) || (isEqual(tmplen, tmpRefW[i + 1][0])))) {
+
+        tmpratio = (tmplen - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
         refWeight[j] = tmpRefW[i][1] + tmpratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
         pos = i;
       }

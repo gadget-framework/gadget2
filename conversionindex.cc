@@ -13,14 +13,11 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   double tmpmin = max(L1->minLength(), L2->minLength());
   double tmpmax = min(L1->maxLength(), L2->maxLength());
 
-  error = 0;
-  samedl = 0;
-  offset = 0;
-  isfiner = 0;
+  error = samedl = offset = isfiner = 0;
   interpolate = interp;
 
   //check to see if the intersection is empty
-  if ((tmpmin > tmpmax) || isEqual(tmpmin, tmpmax)) {
+  if ((tmpmin > tmpmax) || (isEqual(tmpmin, tmpmax))) {
     handle.logMessage(LOGWARN, "Error when checking length structure - empty intersection");
     error = 1;
     return;
@@ -34,39 +31,37 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     Lf = L1;
     Lc = L2;
 
+  } else if (isEqual(L1->dl(), L2->dl())) {
+    Lf = L1;
+    Lc = L2;
+    //check that the length group divisions are aligned
+    double check = (Lf->minLength() - Lc->minLength()) / Lf->dl();
+    offset = int(check);
+    if (isEqual(check, floor(check)))
+      samedl = 1;
+
+  } else if (L1->dl() > L2->dl()) {
+    isfiner = 1;
+    Lf = L2;
+    Lc = L1;
+
   } else {
-    if (isEqual(L1->dl(), L2->dl())) {
-      Lf = L1;
-      Lc = L2;
-      //check that the length group divisions are aligned
-      double check = (Lf->minLength() - Lc->minLength()) / Lf->dl();
-      offset = int(check);
-      if (Lf->numLengthGroups() == Lc->numLengthGroups() && isEqual(check, floor(check)))
-        samedl = 1;
-
-    } else if (L1->dl() > L2->dl()) {
-      isfiner = 1;
-      Lf = L2;
-      Lc = L1;
-
-    } else {
-      Lf = L1;
-      Lc = L2;
-    }
+    Lf = L1;
+    Lc = L2;
   }
 
   nf = Lf->numLengthGroups();
   nc = Lc->numLengthGroups();
   //set minlength and maxlength
   for (i = 0; i < nf; i++) {
-    if (Lf->minLength(i) > Lc->minLength() || isEqual(Lf->minLength(i), Lc->minLength())) {
+    if ((Lf->minLength(i) > Lc->minLength()) || (isEqual(Lf->minLength(i), Lc->minLength()))) {
       minlength = i;
       break;
     }
   }
 
   for (i = nf - 1; i >= 0; i--) {
-    if (Lf->maxLength(i) < Lc->maxLength() || isEqual(Lf->maxLength(i), Lc->maxLength())) {
+    if ((Lf->maxLength(i) < Lc->maxLength()) || (isEqual(Lf->maxLength(i), Lc->maxLength()))) {
       maxlength = i + 1;
       break;
     }
@@ -121,7 +116,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       k = 0;
       for (i = minlength; i < maxlength; i++) {
         for (j = k; j < nc - 1; j++) {
-          if (((Lf->meanLength(i) > Lc->meanLength(j)) || isEqual(Lf->meanLength(i), Lc->meanLength(j))) && (Lf->meanLength(i) < Lc->meanLength(j + 1))) {
+          if (((Lf->meanLength(i) > Lc->meanLength(j)) || (isEqual(Lf->meanLength(i), Lc->meanLength(j)))) && (Lf->meanLength(i) < Lc->meanLength(j + 1))) {
 
             ipos[i] = j;
             k = j;

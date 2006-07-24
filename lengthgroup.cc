@@ -73,7 +73,7 @@ int LengthGroupDivision::numLengthGroup(double length) const {
 
   int i;
   for (i = 0; i < size; i++)
-    if ((isEqual(minlength[i], length)) || (minlength[i] < length && length < this->maxLength(i)))
+    if ((isEqual(minlength[i], length)) || ((minlength[i] < length) && (length < this->maxLength(i))))
       return i;
 
   //failed to find length group that matches length
@@ -99,19 +99,21 @@ double LengthGroupDivision::maxLength(int i) const {
 }
 
 int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
-  if (minlen > addition->minLength(addition->numLengthGroups() - 1)
-      || minLength(size - 1) < addition->minLength())
+  if ((minlen > addition->minLength(addition->numLengthGroups() - 1))
+      || (this->minLength(size - 1) < addition->minLength()))
     return 0;
 
   int i, j;
   i = j = 0;
-  if (minlen <= addition->minLength() &&
-      minLength(size - 1) >= addition->minLength(addition->numLengthGroups() - 1)) {
+  if (((minlen < addition->minLength()) || (isEqual(minlen, addition->minLength()))) &&
+      ((this->minLength(size - 1) > addition->minLength(addition->numLengthGroups() - 1)) ||
+      (isEqual(this->minLength(size - 1), addition->minLength(addition->numLengthGroups() - 1))))) {
+
     //only check if the divisions are the same in the overlapping region.
-    while (minLength(i) < addition->minLength())
+    while (this->minLength(i) < addition->minLength())
       i++;
     for (j = 0; j < addition->numLengthGroups(); j++) {
-      if (!(isEqual(minLength(i + j), addition->minLength(j)))) {
+      if (!(isEqual(this->minLength(i + j), addition->minLength(j)))) {
         error = 1;
         return 0;
       }
@@ -123,18 +125,18 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
   double tempmax = max(maxlen, addition->maxLength());
   DoubleVector lower, middle;
 
-  if (minlen >= addition->minLength()) {
+  if ((minlen > addition->minLength()) || (isEqual(minlen, addition->minLength()))) {
     for (; minlen > addition->minLength(i); i++) {
       lower.resize(1, addition->minLength(i));
       middle.resize(1, addition->meanLength(i));
     }
     for (; j - i < size && j < addition->numLengthGroups(); j++) {
-      if (minLength(j - i) != addition->minLength(j)) {
+      if (!(isEqual(this->minLength(j - i), addition->minLength(j)))) {
         error = 1;
         return 0;
       }
-      lower.resize(1, minLength(j - i));
-      middle.resize(1, meanLength(j - i));
+      lower.resize(1, this->minLength(j - i));
+      middle.resize(1, this->meanLength(j - i));
     }
     if (j - i >= size) {
       for (; j < addition->numLengthGroups(); j++) {
@@ -143,15 +145,15 @@ int LengthGroupDivision::Combine(const LengthGroupDivision* const addition) {
       }
     } else {
       for (; j - i < size; j++) {
-        lower.resize(1, minLength(j - i));
-        middle.resize(1, meanLength(j - i));
+        lower.resize(1, this->minLength(j - i));
+        middle.resize(1, this->meanLength(j - i));
       }
     }
 
   } else {
-    for (; minLength(i) < addition->minLength(); i++) {
-      lower.resize(1, minLength(i));
-      middle.resize(1, meanLength(i));
+    for (; this->minLength(i) < addition->minLength(); i++) {
+      lower.resize(1, this->minLength(i));
+      middle.resize(1, this->meanLength(i));
     }
     for (j = 0; j < addition->numLengthGroups(); j++) {
       lower.resize(1, addition->minLength(j));

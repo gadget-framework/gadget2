@@ -170,16 +170,20 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
       LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
     handle.logFileMessage(LOGFAIL, "lengths for reference weights must span the range of growth lengths");
 
-  double ratio;
+  double ratio, tmplen;
   int pos = 0;
-  for (j = pos; j < LgrpDiv->numLengthGroups(); j++)
-    for (i = pos; i < tmpRefW.Nrow() - 1; i++)
-      if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] && LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
-        ratio = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+  for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
+    tmplen = LgrpDiv->meanLength(j);
+    for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
+      if (((tmplen > tmpRefW[i][0]) || (isEqual(tmplen, tmpRefW[i][0]))) &&
+          ((tmplen < tmpRefW[i + 1][0]) || (isEqual(tmplen, tmpRefW[i + 1][0])))) {
+
+        ratio = (tmplen - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
         refWeight[j] = tmpRefW[i][1] + ratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
         pos = i;
       }
-
+    }
+  }
   keeper->clearLast();
   keeper->clearLast();
 }
@@ -284,16 +288,20 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
       LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
     handle.logFileMessage(LOGFAIL, "lengths for reference weights must span the range of growth lengths");
 
-  double ratio;
+  double ratio, tmplen;
   int pos = 0;
-  for (j = pos; j < LgrpDiv->numLengthGroups(); j++)
-    for (i = pos; i < tmpRefW.Nrow() - 1; i++)
-      if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] && LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
-        ratio = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+  for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
+    tmplen = LgrpDiv->meanLength(j);
+    for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
+      if (((tmplen > tmpRefW[i][0]) || (isEqual(tmplen, tmpRefW[i][0]))) &&
+          ((tmplen < tmpRefW[i + 1][0]) || (isEqual(tmplen, tmpRefW[i + 1][0])))) {
+
+        ratio = (tmplen - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
         refWeight[j] = tmpRefW[i][1] + ratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
         pos = i;
       }
-
+    }
+  }
   keeper->clearLast();
   keeper->clearLast();
 }
@@ -424,17 +432,20 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
       LgrpDiv->meanLength(LgrpDiv->numLengthGroups() - 1) > tmpRefW[tmpRefW.Nrow() - 1][0])
     handle.logFileMessage(LOGFAIL, "lengths for reference weights must span the range of growth lengths");
 
-  double ratio;
+  double ratio, tmplen;
   int pos = 0;
-  for (j = pos; j < LgrpDiv->numLengthGroups(); j++)
-    for (i = pos; i < tmpRefW.Nrow() - 1; i++)
-      if (LgrpDiv->meanLength(j) >= tmpRefW[i][0] &&
-          LgrpDiv->meanLength(j) <= tmpRefW[i + 1][0]) {
-        ratio = (LgrpDiv->meanLength(j) - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
+  for (j = 0; j < LgrpDiv->numLengthGroups(); j++) {
+    tmplen = LgrpDiv->meanLength(j);
+    for (i = pos; i < tmpRefW.Nrow() - 1; i++) {
+      if (((tmplen > tmpRefW[i][0]) || (isEqual(tmplen, tmpRefW[i][0]))) &&
+          ((tmplen < tmpRefW[i + 1][0]) || (isEqual(tmplen, tmpRefW[i + 1][0])))) {
+
+        ratio = (tmplen - tmpRefW[i][0]) / (tmpRefW[i + 1][0] - tmpRefW[i][0]);
         refWeight[j] = tmpRefW[i][1] + ratio * (tmpRefW[i + 1][1] - tmpRefW[i][1]);
         pos = i;
       }
-
+    }
+  }
   keeper->clearLast();
   keeper->clearLast();
 }
