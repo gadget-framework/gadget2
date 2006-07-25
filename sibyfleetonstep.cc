@@ -10,9 +10,10 @@ extern ErrorHandler handle;
 SIByFleetOnStep::SIByFleetOnStep(CommentStream& infile, const IntMatrix& areas,
   const DoubleVector& lengths, const CharPtrVector& areaindex,
   const CharPtrVector& lenindex, const TimeClass* const TimeInfo,
-  const char* datafilename, const char* name, int bio)
-  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, lenindex, name, bio) {
+  const char* datafilename, const char* givenname, int bio)
+  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, lenindex, givenname, bio) {
 
+  sitype = SIFLEET;
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
     handle.logMessage(LOGFAIL, "Error in surveyindex - failed to create length group");
@@ -71,7 +72,7 @@ void SIByFleetOnStep::Sum(const TimeClass* const TimeInfo) {
     handle.logMessage(LOGFAIL, "Error in surveyindex - invalid timestep");
 
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Calculating index for surveyindex component", this->getSIName());
+    handle.logMessage(LOGMESSAGE, "Calculating index for surveyindex component", this->getName());
 
   aggregator->Sum();
   if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData()))

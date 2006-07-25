@@ -9,9 +9,10 @@ extern ErrorHandler handle;
 
 SIByAgeOnStep::SIByAgeOnStep(CommentStream& infile, const IntMatrix& areas,
   const IntMatrix& ages, const CharPtrVector& areaindex, const CharPtrVector& ageindex,
-  const TimeClass* const TimeInfo, const char* datafilename, const char* name, int bio)
-  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, ageindex, name, bio), Ages(ages) {
+  const TimeClass* const TimeInfo, const char* datafilename, const char* givenname, int bio)
+  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, ageindex, givenname, bio), Ages(ages) {
 
+  sitype = SIAGE;
 }
 
 SIByAgeOnStep::~SIByAgeOnStep() {
@@ -76,7 +77,7 @@ void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {
     handle.logMessage(LOGFAIL, "Error in surveyindex - invalid timestep");
 
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Calculating index for surveyindex component", this->getSIName());
+    handle.logMessage(LOGMESSAGE, "Calculating index for surveyindex component", this->getName());
 
   aggregator->Sum();
   alptr = &aggregator->getSum();

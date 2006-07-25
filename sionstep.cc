@@ -9,7 +9,6 @@ extern ErrorHandler handle;
 
 SIOnStep::~SIOnStep() {
   int i;
-  delete[] siname;
   if (LR != 0)
     delete LR;
   for (i = 0; i < areaindex.Size(); i++)
@@ -25,7 +24,7 @@ SIOnStep::~SIOnStep() {
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   const CharPtrVector& aindex, const TimeClass* const TimeInfo,
   const IntMatrix& areas, const CharPtrVector& charindex,
-  const char* name, int bio) : Areas(areas), alptr(0), biomass(bio) {
+  const char* givenname, int bio) : HasName(givenname), Areas(areas), alptr(0), biomass(bio) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -33,9 +32,6 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   timeindex = 0;
   slope = 0.0;
   intercept = 0.0;
-
-  siname = new char[strlen(name) + 1];
-  strcpy(siname, name);
 
   int i;
   for (i = 0; i < aindex.Size(); i++) {
@@ -195,9 +191,9 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logMessage(LOGWARN, "Warning in surveyindex - found no data in the data file for", this->getSIName());
+    handle.logMessage(LOGWARN, "Warning in surveyindex - found no data in the data file for", this->getName());
   if (Years.Size() < 2)
-    handle.logMessage(LOGWARN, "Warning in surveyindex - insufficient data to fit a regression line for", this->getSIName());
+    handle.logMessage(LOGWARN, "Warning in surveyindex - insufficient data to fit a regression line for", this->getName());
 
   if ((handle.getLogLevel() >= LOGWARN) && (Steps.Size() > 0)) {
     //JMB - to be comparable, this should only take place on the same step in each year
@@ -208,7 +204,7 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
         timeid++;
 
     if (timeid != 0)
-      handle.logMessage(LOGWARN, "Warning in surveyindex - differing timesteps for", this->getSIName());
+      handle.logMessage(LOGWARN, "Warning in surveyindex - differing timesteps for", this->getName());
   }
 
   if (reject != 0)
@@ -251,7 +247,7 @@ void SIOnStep::printLikelihood(ofstream& outfile, const TimeClass* const TimeInf
 double SIOnStep::calcSSE() {
 
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for surveyindex component", this->getSIName());
+    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for surveyindex component", this->getName());
 
   int a, i, j;
   double score = 0.0;
@@ -285,7 +281,7 @@ void SIOnStep::printSummary(ofstream& outfile, const double weight) {
   int a;
   for (a = 0; a < areaindex.Size(); a++)
     outfile << "all   all " << setw(printwidth) << areaindex[a] << sep
-      << setw(largewidth) << this->getSIName() << sep << setprecision(smallprecision)
+      << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
       << setw(smallwidth) << weight << sep << setprecision(largeprecision)
       << setw(largewidth) << likelihoodValues[a] << endl;
   outfile.flush();

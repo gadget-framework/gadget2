@@ -11,17 +11,19 @@
 #include "agebandmatrix.h"
 #include "stockaggregator.h"
 #include "regressionline.h"
+#include "hasname.h"
 #include "gadget.h"
 
 enum FitType { LINEARFIT = 1, LOGLINEARFIT, FIXEDSLOPELINEARFIT, FIXEDSLOPELOGLINEARFIT,
   FIXEDINTERCEPTLINEARFIT, FIXEDINTERCEPTLOGLINEARFIT, FIXEDLINEARFIT, FIXEDLOGLINEARFIT };
+enum SIType { SILENGTH = 1, SIAGE, SIFLEET };
 
 /**
  * \class SIOnStep
  * \brief This is the base class used to calculate a likelihood score by fitting a regression line to the model population and survey index data
  * \note This will always be overridden by the derived classes that actually calculate the survey indices and the likelihood score from the regression line
  */
-class SIOnStep {
+class SIOnStep : public HasName {
 public:
   /**
    * \brief This is the SIOnStep constructor
@@ -31,12 +33,12 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param areas is the IntMatrix of the areas that the survey indices are calculated on
    * \param charindex is the CharPtrVector of the names of the column index for the survey indices
-   * \param name is the name for the SIOnStep component
+   * \param givenname is the name for the SIOnStep component
    * \param bio is the flag to denote whether the index should be based on the biomass or not
    */
   SIOnStep(CommentStream& infile, const char* datafilename,
     const CharPtrVector& aindex, const TimeClass* const TimeInfo,
-    const IntMatrix& areas, const CharPtrVector& charindex, const char* name, int bio);
+    const IntMatrix& areas, const CharPtrVector& charindex, const char* givenname, int bio);
   /**
    * \brief This is the default SIOnStep destructor
    */
@@ -79,12 +81,12 @@ public:
    * \return fittype
    */
   const FitType getType() const { return fittype; };
-protected:
   /**
-   * \brief This will return a null terminated text string containing the name of the SIOnStep object
-   * \return siname
+   * \brief This will return the type of survey index data to be used
+   * \return sitype
    */
-  const char* getSIName() const { return siname; };
+  const SIType getSIType() const { return sitype; };
+protected:
   /**
    * \brief This is the IntMatrix used to store information about the areas that the survey index should be calculated on
    */
@@ -119,6 +121,10 @@ protected:
    * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
    */
   const AgeBandMatrixPtrVector* alptr;
+  /**
+   * \brief This denotes what type of survey index data is to be used
+   */
+  SIType sitype;
   /**
    * \brief This is the index of the timesteps for the survey index data
    */
@@ -171,10 +177,6 @@ private:
    * \brief This is the CharPtrVector of the names of the indices
    */
   CharPtrVector colindex;
-  /**
-   * \brief This is the name of the SIOnStep object
-   */
-  char* siname;
   /**
    * \brief This denotes what type of fit is to be used for the linear regression line
    */

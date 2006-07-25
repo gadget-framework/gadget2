@@ -219,14 +219,16 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       }
     }
 
-    for (j = 0; j < areas.Nrow(); j++) {
-      found = 0;
-      for (i = 0; i < s.Size(); i++)
-        for (k = 0; k < areas.Ncol(j); k++)
-          if (s[i]->isInArea(areas[j][k]))
-            found++;
-      if (found == 0)
-        handle.logMessage(LOGWARN, "Warning in surveyindex - stock not defined on all areas");
+    if (stocknames.Size() > 0) {
+      for (j = 0; j < areas.Nrow(); j++) {
+        found = 0;
+        for (i = 0; i < s.Size(); i++)
+          for (k = 0; k < areas.Ncol(j); k++)
+            if (s[i]->isInArea(areas[j][k]))
+              found++;
+        if (found == 0)
+          handle.logMessage(LOGWARN, "Warning in surveyindex - stock not defined on all areas");
+      }
     }
   }
 
@@ -241,9 +243,17 @@ void SurveyIndices::Reset(const Keeper* const keeper) {
 
 void SurveyIndices::Print(ofstream& outfile) const {
   int i;
-  outfile << "\nSurvey Indices " << this->getName() << " - likelihood value " << likelihood << "\n\tStock names: ";
-  for (i = 0; i < stocknames.Size(); i++)
-    outfile << stocknames[i] << sep;
+  outfile << "\nSurvey Indices " << this->getName() << " - likelihood value " << likelihood;
+  if (stocknames.Size() > 0) {
+    outfile << "\n\tStock names: ";
+    for (i = 0; i < stocknames.Size(); i++)
+      outfile << stocknames[i] << sep;
+  }
+  if (fleetnames.Size() > 0) {
+    outfile << "\n\tFleet names: ";
+    for (i = 0; i < fleetnames.Size(); i++)
+      outfile << fleetnames[i] << sep;
+  }
   outfile << endl;
   SI->Print(outfile);
   outfile.flush();
