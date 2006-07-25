@@ -2,6 +2,7 @@
 #define suitfunc_h
 
 #include "commentstream.h"
+#include "hasname.h"
 #include "keeper.h"
 #include "timevariablevector.h"
 
@@ -10,26 +11,17 @@
  * \brief This is the base class used to calculate the predator prey suitability value
  * \note This will always be overridden by the derived classes that actually calculate the suitability value
  */
-class SuitFunc {
+class SuitFunc : public HasName {
 public:
   /**
    * \brief This is the default SuitFunc constructor
+   * \param givenname is the name for the SuitFunc selection function
    */
-  SuitFunc();
+  SuitFunc(const char* givenname) : HasName(givenname) {};
   /**
    * \brief This is the default SuitFunc destructor
    */
-  virtual ~SuitFunc();
-  /**
-   * \brief This will set the name of the suitabilty function
-   * \param suitfuncName is the name of the suitability function
-   */
-  void setName(const char* suitfuncName);
-  /**
-   * \brief This will return the name of the suitability function
-   * \return name
-   */
-  const char* getName();
+  virtual ~SuitFunc() {};
   /**
    * \brief This function will return the value of the selection function parameters
    * \return v, a TimeVariableVector of the parameters
@@ -82,12 +74,8 @@ public:
    * \brief This will return the number of constants used to calculate the suitability value
    * \return number
    */
-  int numConstants();
+  int numConstants() { return coeff.Size(); };
 protected:
-  /**
-   * \brief This is the name of the suitability function
-   */
-  char* name;
   /**
    * \brief This is the TimeVariableVector of suitability function constants
    */
@@ -107,7 +95,7 @@ public:
   /**
    * \brief This is the default ExpSuitFuncA destructor
    */
-  virtual ~ExpSuitFuncA();
+  virtual ~ExpSuitFuncA() {};
   /**
    * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
    * \return 1
@@ -157,7 +145,7 @@ public:
   /**
    * \brief This is the default ConstSuitFunc destructor
    */
-  virtual ~ConstSuitFunc();
+  virtual ~ConstSuitFunc() {};
   /**
    * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
    * \return 0
@@ -188,7 +176,7 @@ public:
   /**
    * \brief This is the default AndersenSuitFunc destructor
    */
-  virtual ~AndersenSuitFunc();
+  virtual ~AndersenSuitFunc() {};
   /**
    * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
    * \return 1
@@ -238,7 +226,7 @@ public:
   /**
    * \brief This is the default ExpSuitFuncL50 destructor
    */
-  virtual ~ExpSuitFuncL50();
+  virtual ~ExpSuitFuncL50() {};
   /**
    * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
    * \return 0
@@ -279,7 +267,7 @@ public:
   /**
    * \brief This is the default StraightSuitFunc destructor
    */
-  virtual ~StraightSuitFunc();
+  virtual ~StraightSuitFunc() {};
   /**
    * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
    * \return 0
@@ -320,7 +308,7 @@ public:
   /**
    * \brief This is the default InverseSuitFunc destructor
    */
-  virtual ~InverseSuitFunc();
+  virtual ~InverseSuitFunc() {};
   /**
    * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
    * \return 0
@@ -361,7 +349,7 @@ public:
   /**
    * \brief This is the default StraightUnboundedSuitFunc destructor
    */
-  virtual ~StraightUnboundedSuitFunc();
+  virtual ~StraightUnboundedSuitFunc() {};
   /**
    * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
    * \return 0
@@ -402,7 +390,7 @@ public:
   /**
    * \brief This is the default RichardsSuitFunc destructor
    */
-  virtual ~RichardsSuitFunc();
+  virtual ~RichardsSuitFunc() {};
   /**
    * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
    * \return 1
@@ -452,7 +440,7 @@ public:
   /**
    * \brief This is the default GammaSuitFunc destructor
    */
-  virtual ~GammaSuitFunc();
+  virtual ~GammaSuitFunc() {};
   /**
    * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
    * \return 0

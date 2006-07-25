@@ -80,8 +80,8 @@ void StomachContent::Print(ofstream& outfile) const {
 // Functions for base SC
 // ********************************************************
 SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo,
-  Keeper* const keeper, const char* datafilename, const char* name)
-    : aggregator(0), preyLgrpDiv(0), predLgrpDiv(0), dptr(0) {
+  Keeper* const keeper, const char* datafilename, const char* givenname)
+    : HasName(givenname), aggregator(0), preyLgrpDiv(0), predLgrpDiv(0), dptr(0) {
 
   int i, j;
   char text[MaxStrLength];
@@ -91,8 +91,6 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
 
   timeindex = 0;
   usepredages = 0;
-  scname = new char[strlen(name) + 1];
-  strcpy(scname, name);
 
   char aggfilename[MaxStrLength];
   strncpy(aggfilename, "", MaxStrLength);
@@ -199,7 +197,7 @@ double SC::calcLikelihood(const TimeClass* const TimeInfo) {
 
   int i, a, k, p;
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for stomachcontent component", scname);
+    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for stomachcontent component", this->getName());
 
   timeindex = -1;
   for (i = 0; i < Years.Size(); i++)
@@ -241,7 +239,7 @@ void SC::Reset() {
                           pow(preyLgrpDiv[i]->meanLength(j), digestioncoeff[i][2]);
 
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Reset stomachcontent component", scname);
+    handle.logMessage(LOGMESSAGE, "Reset stomachcontent component", this->getName());
 }
 
 void SC::printSummary(ofstream& outfile, double weight) {
@@ -251,7 +249,7 @@ void SC::printSummary(ofstream& outfile, double weight) {
     for (area = 0; area < likelihoodValues.Ncol(year); area++) {
       outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
         << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(largewidth) << scname << sep << setprecision(smallprecision)
+        << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
         << setw(smallwidth) << weight << sep << setprecision(largeprecision)
         << setw(largewidth) << likelihoodValues[year][area] << endl;
     }
@@ -313,7 +311,6 @@ SC::~SC() {
   if (!usepredages)
     delete predLgrpDiv;
 
-  delete[] scname;
   for (i = 0; i < predatornames.Size(); i++)
     delete[] predatornames[i];
   for (i = 0; i < areaindex.Size(); i++)
@@ -492,8 +489,8 @@ void SC::Print(ofstream& outfile) const {
 // ********************************************************
 SCNumbers::SCNumbers(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper,
-  const char* datafilename, const char* name)
-  : SC(infile, Area, TimeInfo, keeper, datafilename, name) {
+  const char* datafilename, const char* givenname)
+  : SC(infile, Area, TimeInfo, keeper, datafilename, givenname) {
 
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -531,7 +528,7 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
   for (i = 0; i < preylengths.Nrow(); i++)
     numprey += preylengths[i].Size() - 1;
   if (numprey == 0)
-    handle.logMessage(LOGWARN, "Warning in stomachcontents - no prey found for", scname);
+    handle.logMessage(LOGWARN, "Warning in stomachcontents - no prey found for", this->getName());
 
   //Check the number of columns in the inputfile
   infile >> ws;
@@ -609,7 +606,7 @@ void SCNumbers::readStomachNumberContent(CommentStream& infile, const TimeClass*
 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
+    handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", this->getName());
   if (reject != 0)
     handle.logMessage(LOGMESSAGE, "Discarded invalid stomachcontent data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
@@ -640,8 +637,8 @@ void SCNumbers::aggregate(int i) {
 // ********************************************************
 SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper,
-  const char* datafilename, const char* numfilename, const char* name)
-  : SC(infile, Area, TimeInfo, keeper, datafilename, name) {
+  const char* datafilename, const char* numfilename, const char* givenname)
+  : SC(infile, Area, TimeInfo, keeper, datafilename, givenname) {
 
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -685,7 +682,7 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
   for (i = 0; i < preylengths.Nrow(); i++)
     numprey += preylengths[i].Size() - 1;
   if (numprey == 0)
-    handle.logMessage(LOGWARN, "Warning in stomachcontents - no prey found for", scname);
+    handle.logMessage(LOGWARN, "Warning in stomachcontents - no prey found for", this->getName());
 
   //Check the number of columns in the inputfile
   infile >> ws;
@@ -766,7 +763,7 @@ void SCAmounts::readStomachAmountContent(CommentStream& infile, const TimeClass*
 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
+    handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", this->getName());
   if (reject != 0)
     handle.logMessage(LOGMESSAGE, "Discarded invalid stomachcontent data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
@@ -844,7 +841,7 @@ void SCAmounts::readStomachSampleContent(CommentStream& infile, const TimeClass*
   }
 
   if (count == 0)
-    handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
+    handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", this->getName());
   if (reject != 0)
     handle.logMessage(LOGMESSAGE, "Discarded invalid stomachcontent data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);
@@ -981,8 +978,8 @@ double SCRatios::calcLikelihood() {
 // ********************************************************
 SCSimple::SCSimple(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper,
-  const char* datafilename, const char* name)
-  : SC(infile, Area, TimeInfo, keeper, datafilename, name) {
+  const char* datafilename, const char* givenname)
+  : SC(infile, Area, TimeInfo, keeper, datafilename, givenname) {
 
   ifstream datafile;
   CommentStream subdata(datafile);
@@ -1017,7 +1014,7 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
   for (i = 0; i < preylengths.Nrow(); i++)
     numprey += preylengths[i].Size() - 1;
   if (numprey == 0)
-    handle.logMessage(LOGWARN, "Warning in stomachcontents - no prey found for", scname);
+    handle.logMessage(LOGWARN, "Warning in stomachcontents - no prey found for", this->getName());
 
   //Check the number of columns in the inputfile
   infile >> ws;
@@ -1095,7 +1092,7 @@ void SCSimple::readStomachSimpleContent(CommentStream& infile, const TimeClass* 
 
   AAT.addActions(Years, Steps, TimeInfo);
   if (count == 0)
-    handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", scname);
+    handle.logMessage(LOGWARN, "Warning in stomachcontent - found no data in the data file for", this->getName());
   if (reject != 0)
     handle.logMessage(LOGMESSAGE, "Discarded invalid stomachcontent data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read stomachcontent data file - number of entries", count);

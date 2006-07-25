@@ -18,7 +18,7 @@
  * \brief This is the base class used to calculate the stomach content likelihood score based on the consumption of the preys in the model and the stomach content data specified in the input files
  * \note This will always be overridden by the derived classes that actually calculate the stomach content likelihood score
  */
-class SC {
+class SC : public HasName {
 public:
   /**
    * \brief This is the SC constructor
@@ -27,10 +27,10 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param datafilename is the name of the file containing the SC data
-   * \param name is the name for the likelihood component
+   * \param givenname is the name for the likelihood component
    */
   SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo,
-    Keeper* const keeper, const char* datafilename, const char* name);
+    Keeper* const keeper, const char* datafilename, const char* givenname);
   /**
    * \brief This is the default SC destructor
    */
@@ -176,10 +176,6 @@ protected:
    */
   double epsilon;
   /**
-   * \brief This is the name of the SC likelihood component
-   */
-  char* scname;
-  /**
    * \brief This is the DoubleMatrix used to temporarily store the information returned from the aggregatation function
    */
   const DoubleMatrix* dptr;
@@ -198,10 +194,10 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param datafilename is the name of the file containing the SCNumbers data
-   * \param name is the name for the likelihood component
+   * \param givenname is the name for the likelihood component
    */
   SCNumbers(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo,
-    Keeper* const keeper, const char* datafilename, const char* name);
+    Keeper* const keeper, const char* datafilename, const char* givenname);
   /**
    * \brief This is the default SCNumbers destructor
    */
@@ -251,11 +247,11 @@ public:
    * \param keeper is the Keeper for the current model
    * \param datafilename is the name of the file containing the SCAmounts data
    * \param numfilename is the name of the file containing the SCAmounts numbers data
-   * \param name is the name for the likelihood component
+   * \param givenname is the name for the likelihood component
    */
   SCAmounts(CommentStream& infile, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper,
-    const char* datafilename, const char* numfilename, const char* name);
+    const char* datafilename, const char* numfilename, const char* givenname);
   /**
    * \brief This is the default SCAmounts destructor
    */
@@ -310,12 +306,12 @@ public:
    * \param keeper is the Keeper for the current model
    * \param datafilename is the name of the file containing the SCRatios data
    * \param numfilename is the name of the file containing the SCRatios numbers data
-   * \param name is the name for the likelihood component
+   * \param givenname is the name for the likelihood component
    */
   SCRatios(CommentStream& infile, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper,
-    const char* datafilename, const char* numfilename, const char* name)
-    : SCAmounts(infile, Area, TimeInfo, keeper, datafilename, numfilename, name) {};
+    const char* datafilename, const char* numfilename, const char* givenname)
+    : SCAmounts(infile, Area, TimeInfo, keeper, datafilename, numfilename, givenname) {};
   /**
    * \brief This is the default SCRatios destructor
    */
@@ -347,10 +343,10 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param datafilename is the name of the file containing the SCSimple data
-   * \param name is the name for the likelihood component
+   * \param givenname is the name for the likelihood component
    */
   SCSimple(CommentStream& infile, const AreaClass* const Area, const TimeClass* const TimeInfo,
-    Keeper* const keeper, const char* datafilename, const char* name);
+    Keeper* const keeper, const char* datafilename, const char* givenname);
   /**
    * \brief This is the default SCSimple destructor
    */

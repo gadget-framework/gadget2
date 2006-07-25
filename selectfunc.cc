@@ -11,30 +11,6 @@ void SelectFunc::readConstants(CommentStream& infile,
   coeff.Update(TimeInfo);
 }
 
-SelectFunc::SelectFunc() {
-  name = NULL;
-}
-
-SelectFunc::~SelectFunc() {
-  if (name != NULL) {
-    delete[] name;
-    name = NULL;
-  }
-}
-
-void SelectFunc::setName(const char* selectname) {
-  if (name != NULL) {
-    delete[] name;
-    name = NULL;
-  }
-  name = new char[strlen(selectname) + 1];
-  strcpy(name, selectname);
-}
-
-const char* SelectFunc::getName() {
-  return name;
-}
-
 void SelectFunc::updateConstants(const TimeClass* const TimeInfo) {
   coeff.Update(TimeInfo);
 }
@@ -43,19 +19,11 @@ int SelectFunc::didChange(const TimeClass* const TimeInfo) {
   return coeff.didChange(TimeInfo);
 }
 
-int SelectFunc::numConstants() {
-  return coeff.Size();
-}
-
 // ********************************************************
 // Functions for ConstSelectFunc selection function
 // ********************************************************
-ConstSelectFunc::ConstSelectFunc() {
-  this->setName("ConstantSelectFunc");
+ConstSelectFunc::ConstSelectFunc() : SelectFunc("ConstantSelectFunc") {
   coeff.setsize(1);
-}
-
-ConstSelectFunc::~ConstSelectFunc() {
 }
 
 double ConstSelectFunc::calculate(double len) {
@@ -65,12 +33,8 @@ double ConstSelectFunc::calculate(double len) {
 // ********************************************************
 // Functions for ExpSelectFunc selection function
 // ********************************************************
-ExpSelectFunc::ExpSelectFunc() {
-  this->setName("ExponentialSelectFunc");
+ExpSelectFunc::ExpSelectFunc() : SelectFunc("ExponentialSelectFunc") {
   coeff.setsize(2);
-}
-
-ExpSelectFunc::~ExpSelectFunc() {
 }
 
 double ExpSelectFunc::calculate(double len) {
@@ -80,12 +44,8 @@ double ExpSelectFunc::calculate(double len) {
 // ********************************************************
 // Functions for StraightSelectFunc selection function
 // ********************************************************
-StraightSelectFunc::StraightSelectFunc() {
-  this->setName("StraightLineSelectFunc");
+StraightSelectFunc::StraightSelectFunc() : SelectFunc("StraightLineSelectFunc") {
   coeff.setsize(2);
-}
-
-StraightSelectFunc::~StraightSelectFunc() {
 }
 
 double StraightSelectFunc::calculate(double len) {

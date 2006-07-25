@@ -2,6 +2,7 @@
 #define selectfunc_h
 
 #include "commentstream.h"
+#include "hasname.h"
 #include "keeper.h"
 #include "timevariablevector.h"
 
@@ -10,26 +11,17 @@
  * \brief This is the base class used to calculate the selection level as a function of length
  * \note This will always be overridden by the derived classes that actually calculate the selection level
  */
-class SelectFunc {
+class SelectFunc : public HasName {
 public:
   /**
    * \brief This is the default SelectFunc constructor
+   * \param givenname is the name for the SelectFunc selection function
    */
-  SelectFunc();
+  SelectFunc(const char* givenname) : HasName(givenname) {};
   /**
    * \brief This is the default SelectFunc destructor
    */
-  virtual ~SelectFunc();
-  /**
-   * \brief This will set the name of the selection function
-   * \param selectFuncName is the name of the selection function
-   */
-  void setName(const char* selectFuncName);
-  /**
-   * \brief This will return the name of the selection function
-   * \return name
-   */
-  const char* getName();
+  virtual ~SelectFunc() {};
   /**
    * \brief This function will read the value of the selection function parameters from file
    * \param infile is the CommentStream to read the parameters from
@@ -58,12 +50,8 @@ public:
    * \brief This will return the number of constants used to calculate the selection value
    * \return number
    */
-  int numConstants();
+  int numConstants() { return coeff.Size(); };
 protected:
-  /**
-   * \brief This is the name of the selection function
-   */
-  char* name;
   /**
    * \brief This is the TimeVariableVector of the selection function constants
    */
@@ -83,7 +71,7 @@ public:
   /**
    * \brief This is the default ConstSelectFunc destructor
    */
-  virtual ~ConstSelectFunc();
+  virtual ~ConstSelectFunc() {};
   /**
    * \brief This will return the selection level that has been calculated
    * \param len is the length of the length class that is selected
@@ -105,7 +93,7 @@ public:
   /**
    * \brief This is the default ExpSelectFunc destructor
    */
-  virtual ~ExpSelectFunc();
+  virtual ~ExpSelectFunc() {};
   /**
    * \brief This will return the selection level that has been calculated
    * \param len is the length of the length class that is selected
@@ -127,7 +115,7 @@ public:
   /**
    * \brief This is the default StraightSelectFunc destructor
    */
-  virtual ~StraightSelectFunc();
+  virtual ~StraightSelectFunc() {};
   /**
    * \brief This will return the selection level that has been calculated
    * \param len is the length of the length class that is selected

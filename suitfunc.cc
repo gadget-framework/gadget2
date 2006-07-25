@@ -14,36 +14,12 @@ void SuitFunc::readConstants(CommentStream& infile,
   coeff.Update(TimeInfo);
 }
 
-SuitFunc::SuitFunc() {
-  name = NULL;
-}
-
-SuitFunc::~SuitFunc() {
-  if (name != NULL) {
-    delete[] name;
-    name = NULL;
-  }
-}
-
 void SuitFunc::setPredLength(double length) {
   handle.logMessage(LOGWARN, "Warning in suitability - trying to set predator length for", this->getName());
 }
 
 void SuitFunc::setPreyLength(double length) {
   handle.logMessage(LOGWARN, "Warning in suitability - trying to set prey length for", this->getName());
-}
-
-void SuitFunc::setName(const char* suitFuncName) {
-  if (name != NULL) {
-    delete[] name;
-    name = NULL;
-  }
-  name = new char[strlen(suitFuncName) + 1];
-  strcpy(name, suitFuncName);
-}
-
-const char* SuitFunc::getName() {
-  return name;
 }
 
 const TimeVariableVector& SuitFunc::getConstants() const {
@@ -58,21 +34,13 @@ int SuitFunc::didChange(const TimeClass* const TimeInfo) {
   return coeff.didChange(TimeInfo);
 }
 
-int SuitFunc::numConstants() {
-  return coeff.Size();
-}
-
 // ********************************************************
 // Functions for ExpSuitFuncA suitability function
 // ********************************************************
-ExpSuitFuncA::ExpSuitFuncA() {
-  this->setName("ExponentialSuitFunc");
+ExpSuitFuncA::ExpSuitFuncA() : SuitFunc("ExponentialSuitFunc") {
   coeff.setsize(4);
   preyLength = -1.0;
   predLength = -1.0;
-}
-
-ExpSuitFuncA::~ExpSuitFuncA() {
 }
 
 double ExpSuitFuncA::calculate() {
@@ -103,12 +71,8 @@ double ExpSuitFuncA::calculate() {
 // ********************************************************
 // Functions for ConstSuitFunc suitability function
 // ********************************************************
-ConstSuitFunc::ConstSuitFunc() {
-  this->setName("ConstantSuitFunc");
+ConstSuitFunc::ConstSuitFunc() : SuitFunc("ConstantSuitFunc") {
   coeff.setsize(1);
-}
-
-ConstSuitFunc::~ConstSuitFunc() {
 }
 
 double ConstSuitFunc::calculate() {
@@ -125,14 +89,10 @@ double ConstSuitFunc::calculate() {
 // ********************************************************
 // Functions for AndersenSuitFunc suitability function
 // ********************************************************
-AndersenSuitFunc::AndersenSuitFunc() {
-  this->setName("AndersenSuitFunc");
+AndersenSuitFunc::AndersenSuitFunc() : SuitFunc("AndersenSuitFunc") {
   coeff.setsize(5);
   preyLength = -1.0;
   predLength = -1.0;
-}
-
-AndersenSuitFunc::~AndersenSuitFunc() {
 }
 
 double AndersenSuitFunc::calculate() {
@@ -166,13 +126,9 @@ double AndersenSuitFunc::calculate() {
 // ********************************************************
 // Functions for ExpSuitFuncL50 suitability function
 // ********************************************************
-ExpSuitFuncL50::ExpSuitFuncL50() {
-  this->setName("ExponentialL50SuitFunc");
+ExpSuitFuncL50::ExpSuitFuncL50() : SuitFunc("ExponentialL50SuitFunc") {
   coeff.setsize(2);
   preyLength = -1.0;
-}
-
-ExpSuitFuncL50::~ExpSuitFuncL50() {
 }
 
 double ExpSuitFuncL50::calculate() {
@@ -196,13 +152,9 @@ double ExpSuitFuncL50::calculate() {
 // ********************************************************
 // Functions for StraightSuitFunc suitability function
 // ********************************************************
-StraightSuitFunc::StraightSuitFunc() {
-  this->setName("StraightLineSuitFunc");
+StraightSuitFunc::StraightSuitFunc() : SuitFunc("StraightLineSuitFunc") {
   coeff.setsize(2);
   preyLength = -1.0;
-}
-
-StraightSuitFunc::~StraightSuitFunc() {
 }
 
 double StraightSuitFunc::calculate() {
@@ -220,13 +172,9 @@ double StraightSuitFunc::calculate() {
 // ********************************************************
 // Functions for InverseSuitFunc suitability function
 // ********************************************************
-InverseSuitFunc::InverseSuitFunc() {
-  this->setName("InverseSuitFunc");
+InverseSuitFunc::InverseSuitFunc() : SuitFunc("InverseSuitFunc") {
   coeff.setsize(2);
   preyLength = -1.0;
-}
-
-InverseSuitFunc::~InverseSuitFunc() {
 }
 
 double InverseSuitFunc::calculate() {
@@ -244,13 +192,9 @@ double InverseSuitFunc::calculate() {
 // ********************************************************
 // Functions for StraightUnboundedSuitFunc suitability function
 // ********************************************************
-StraightUnboundedSuitFunc::StraightUnboundedSuitFunc() {
-  this->setName("StraightLineUnboundedSuitFunc");
+StraightUnboundedSuitFunc::StraightUnboundedSuitFunc() : SuitFunc("StraightLineUnboundedSuitFunc") {
   coeff.setsize(2);
   preyLength = -1.0;
-}
-
-StraightUnboundedSuitFunc::~StraightUnboundedSuitFunc() {
 }
 
 double StraightUnboundedSuitFunc::calculate() {
@@ -265,14 +209,10 @@ double StraightUnboundedSuitFunc::calculate() {
 // ********************************************************
 // Functions for Richards suitability function
 // ********************************************************
-RichardsSuitFunc::RichardsSuitFunc() {
-  this->setName("RichardsSuitFunc");
+RichardsSuitFunc::RichardsSuitFunc() : SuitFunc("RichardsSuitFunc") {
   coeff.setsize(5);
   preyLength = -1.0;
   predLength = -1.0;
-}
-
-RichardsSuitFunc::~RichardsSuitFunc() {
 }
 
 double RichardsSuitFunc::calculate() {
@@ -308,13 +248,9 @@ double RichardsSuitFunc::calculate() {
 // ********************************************************
 // Functions for GammaSuitFunc suitability function
 // ********************************************************
-GammaSuitFunc::GammaSuitFunc() {
-  this->setName("GammaSuitFunc");
+GammaSuitFunc::GammaSuitFunc() : SuitFunc("GammaSuitFunc") {
   coeff.setsize(3);
   preyLength = -1.0;
-}
-
-GammaSuitFunc::~GammaSuitFunc() {
 }
 
 double GammaSuitFunc::calculate() {
