@@ -146,34 +146,33 @@ double OptInfoHooke::bestNearby(DoubleVector& delta, DoubleVector& point, double
 
   double minf, ftmp;
   int i;
-  int nvars = point.Size();
   DoubleVector z(point);
 
   minf = prevbest;
-  for (i = 0; i < nvars; i++) {
+  for (i = 0; i < point.Size(); i++) {
     z[param[i]] = point[param[i]] + delta[param[i]];
     ftmp = EcoSystem->SimulateAndUpdate(z);
-    if ((ftmp < minf) && (ftmp == ftmp)) //JMB added check for NaN
+    if (ftmp < minf) {
       minf = ftmp;
-    else {
+    } else {
       delta[param[i]] = 0.0 - delta[param[i]];
       z[param[i]] = point[param[i]] + delta[param[i]];
       ftmp = EcoSystem->SimulateAndUpdate(z);
-      if ((ftmp < minf) && (ftmp == ftmp)) //JMB added check for NaN
+      if (ftmp < minf)
         minf = ftmp;
       else
         z[param[i]] = point[param[i]];
     }
   }
 
-  for (i = 0; i < nvars; i++)
+  for (i = 0; i < point.Size(); i++)
     point[i] = z[i];
   return minf;
 }
 
 void OptInfoHooke::OptimiseLikelihood() {
 
-  double oldf, newf, fbefore, steplength, tmp, check;
+  double oldf, newf, bestf, steplength, tmp;
   int    i, k, h, change, offset;
 
   handle.logMessage(LOGINFO, "\nStarting Hooke & Jeeves optimisation algorithm\n");
@@ -187,7 +186,6 @@ void OptInfoHooke::OptimiseLikelihood() {
   DoubleVector initialstep(nvars, rho);
   DoubleVector delta(nvars);
   IntVector param(nvars, 0);
-  IntVector nacp(nvars, 0);
   IntVector lbound(nvars, 0);
   IntVector rbounds(nvars, 0);
   IntVector trapped(nvars, 0);
@@ -214,26 +212,25 @@ void OptInfoHooke::OptimiseLikelihood() {
     delta[i] = ((2 * (rand() % 2)) - 1) * rho;  //JMB - randomise the sign
   }
 
-  fbefore = EcoSystem->SimulateAndUpdate(trialx);
+  bestf = EcoSystem->SimulateAndUpdate(trialx);
   offset = EcoSystem->getFuncEval();  //number of function evaluations done before loop
-  newf = fbefore;
-  oldf = fbefore;
-  check = fbefore;
+  newf = bestf;
+  oldf = bestf;
   steplength = lambda;
   if (isZero(steplength))
     steplength = rho;
 
-  if (fbefore != fbefore) { //JMB added check for NaN
-    handle.logMessage(LOGINFO, "Error starting Hooke & Jeeves optimisation with f(x) = infinity");
-    converge = -1;
-    iters = 1;
-    return;
-  }
-
   while (1) {
-    if (isZero(fbefore)) {
+    if (isZero(bestf)) {
       iters = EcoSystem->getFuncEval() - offset;
       handle.logMessage(LOGINFO, "Error in Hooke & Jeeves optimisation after", iters, "function evaluations, f(x) = 0");
+      converge = -1;
+      return;
+    }
+
+    if (bestf != bestf) { //JMB added check for NaN
+      iters = EcoSystem->getFuncEval() - offset;
+      handle.logMessage(LOGINFO, "Error in Hooke & Jeeves optimisation after", iters, "function evaluations, f(x) = infinity");
       converge = -1;
       return;
     }
@@ -255,7 +252,7 @@ void OptInfoHooke::OptimiseLikelihood() {
     /* find best new point, one coord at a time */
     for (i = 0; i < nvars; i++)
       trialx[i] = x[i];
-    newf = this->bestNearby(delta, trialx, fbefore, param);
+    newf = this->bestNearby(delta, trialx, bestf, param);
 
     /* if too many function evaluations occur, terminate the algorithm */
     iters = EcoSystem->getFuncEval() - offset;
@@ -266,13 +263,8 @@ void OptInfoHooke::OptimiseLikelihood() {
       handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of function evaluations");
       handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
 
-      if (newf < fbefore)
-        for (i = 0; i < nvars; i++)
-          bestx[i] = trialx[i];
-      else
-        for (i = 0; i < nvars; i++)
-          bestx[i] = x[i];
-
+      for (i = 0; i < nvars; i++)
+        bestx[i] = trialx[i];
       score = EcoSystem->SimulateAndUpdate(bestx);
       handle.logMessage(LOGINFO, "\nHooke & Jeeves finished with a likelihood score of", score);
       for (i = 0; i < nvars; i++)
@@ -282,7 +274,7 @@ void OptInfoHooke::OptimiseLikelihood() {
     }
 
     /* if we made some improvements, pursue that direction */
-    while (newf < fbefore) {
+    while (newf < bestf) {
       for (i = 0; i < nvars; i++) {
         /* if it has been trapped but f has now gotten better (bndcheck) */
         /* we assume that we are out of the trap, reset the counters     */
@@ -333,16 +325,17 @@ void OptInfoHooke::OptimiseLikelihood() {
       /* only move forward if this is really an improvement    */
       oldf = newf;
       newf = EcoSystem->SimulateAndUpdate(trialx);
-      if ((newf - oldf) > verysmall)
+      if ((isEqual(newf, oldf)) || (newf > oldf)) {
+        newf = oldf;  //JMB no improvment, so reset the value of newf
         break;
+      }
 
       /* OK, it's better, so update variables and look around  */
-      fbefore = newf;
+      bestf = newf;
       for (i = 0; i < nvars; i++)
         x[i] = trialx[i];
-      newf = this->bestNearby(delta, trialx, fbefore, param);
-
-      if (isEqual(newf, fbefore))
+      newf = this->bestNearby(delta, trialx, bestf, param);
+      if (isEqual(newf, bestf))
         break;
 
       /* if too many function evaluations occur, terminate the algorithm */
@@ -354,13 +347,8 @@ void OptInfoHooke::OptimiseLikelihood() {
         handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of function evaluations");
         handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
 
-        if (newf < fbefore)
-          for (i = 0; i < nvars; i++)
-            bestx[i] = trialx[i];
-        else
-          for (i = 0; i < nvars; i++)
-            bestx[i] = x[i];
-
+        for (i = 0; i < nvars; i++)
+          bestx[i] = trialx[i];
         score = EcoSystem->SimulateAndUpdate(bestx);
         handle.logMessage(LOGINFO, "\nHooke & Jeeves finished with a likelihood score of", score);
         for (i = 0; i < nvars; i++)
@@ -371,13 +359,13 @@ void OptInfoHooke::OptimiseLikelihood() {
     }
 
     iters = EcoSystem->getFuncEval() - offset;
-    if (fbefore < check) {
+    if (newf < bestf) {
       for (i = 0; i < nvars; i++)
         bestx[i] = x[i] * init[i];
-      check = fbefore;
+      bestf = newf;
       handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
-      handle.logMessage(LOGINFO, "The likelihood score is", fbefore, "at the point");
-      EcoSystem->storeVariables(fbefore, bestx);
+      handle.logMessage(LOGINFO, "The likelihood score is", bestf, "at the point");
+      EcoSystem->storeVariables(bestf, bestx);
       EcoSystem->writeBestValues();
 
     } else
