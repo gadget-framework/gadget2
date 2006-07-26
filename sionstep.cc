@@ -117,8 +117,8 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   slopes.AddRows(areaindex.Size(), colindex.Size(), slope);
   intercepts.AddRows(areaindex.Size(), colindex.Size(), intercept);
   sse.AddRows(areaindex.Size(), colindex.Size(), 0.0);
-  stocksize.resize(Years.Size(), 0.0);
-  indices.resize(Years.Size(), 0.0);
+  tmpModel.resize(Years.Size(), 0.0);
+  tmpData.resize(Years.Size(), 0.0);
   likelihoodValues.resize(areaindex.Size(), 0.0);
 }
 
@@ -254,13 +254,13 @@ double SIOnStep::calcSSE() {
   for (a = 0; a < areaindex.Size(); a++) {
     likelihoodValues[a] = 0.0;
     for (i = 0; i < colindex.Size(); i++) {
-      for (j = 0; j < indices.Size(); j++) {
-        indices[j] = (*obsIndex[j])[a][i];
-        stocksize[j] = (*modelIndex[j])[a][i];
+      for (j = 0; j < tmpData.Size(); j++) {
+        tmpData[j] = (*obsIndex[j])[a][i];
+        tmpModel[j] = (*modelIndex[j])[a][i];
       }
 
       //fit the data to the (log) linear regression curve
-      LR->storeVectors(stocksize, indices);
+      LR->storeVectors(tmpModel, tmpData);
       LR->calcFit();
 
       //and then store the results

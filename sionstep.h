@@ -162,13 +162,13 @@ private:
    */
   DoubleMatrix sse;
   /**
-   * \brief This is the DoubleVector of the stocksize, used when calculating the fit to the regression line
+   * \brief This is the DoubleVector used to temporarily store the model indices when calculating the fit to the regression line
    */
-  DoubleVector stocksize;
+  DoubleVector tmpModel;
   /**
-   * \brief This is the DoubleVector of the indices, used when calculating the fit to the regression line
+   * \brief This is the DoubleVector used to temporarily store the observed data indices when calculating the fit to the regression line
    */
-  DoubleVector indices;
+  DoubleVector tmpData;
   /**
    * \brief This is the CharPtrVector of the names of the areas
    */
