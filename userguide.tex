@@ -56,7 +56,7 @@ Gadget allows the user to include a number of features of the ecosystem into the
 Like any large piece of code, Gadget is based on previous ideas by several authors.  Conceptually the modelling framework extends earlier multi species programming work such as MSVPA and MULTSPEC into a more generic statistical framework.  Alternatively, Gadget is a conceptual extension of the Stock Synthesis statistical assessment single-species framework into a multi species setting.
 
 \bigskip
-The initial BORMICON code was developed as part of a multi species programme implemented at the Marine Research Institute in Reykjavik, Iceland, starting in 1992 with \'{O}lafur K P\'{a}lsson as project coordinator and Gunnar Stef\'{a}nsson coordinating the modelling work.  Subsequently the code became the basis for Fleksibest at the Institute of Marine Research in Bergen, Norway.  Further development work in 1999-2003 was partly funded by EU grant QLK5-CT1999-01609.
+The initial BORMICON code was developed as part of a multi species programme implemented at the Marine Research Institute in Reykjavik, Iceland, starting in 1992 with \'{O}lafur K P\'{a}lsson as project coordinator and Gunnar Stef\'{a}nsson coordinating the modelling work.  Subsequently the code became the basis for Fleksibest at the Institute of Marine Research in Bergen, Norway.  Further development work in 1999-2003 was partly funded by EU grant QLK5-CT1999-01609 (''Development of Structurally Detailed Statistically Testable Models of Marine Populations'').  Development work for 2004-2006 is currently being partly funded by EU grant 502482 (''Critical Interactions Between Species and their Implications for a Precautionary Fisheries Management in a Variable Environment - a Modelling Approach'').
 
 \bigskip
 The Gadget code is derived from the original BORMICON code of Halld\'{o}r Narfi Stef\'{a}nsson, H\"{o}skuldur Bj\"{o}rnsson and Hersir Sigurgeirsson.  Subsequent contributions include program additions by Morten Nygaard {\AA}snes and Kristin Fr{\o}ysa to include the Fleksibest model.  The ability to run in parallel across a network of computers using PVM was implemented primarily by Au{\dh}bj\"{o}rg Jakobsd\'{o}ttir with input from several other people, including J\'{o}n Gu{\dh}mundsson who worked on a variant based on Condor.  Several mathematical additions and changes to allow for parallel minimisation on a network were implemented by {\TH}\'{o}rd\'{i}s Linda {\TH}\'{o}rarinsd\'{o}ttir and Kristjana \'{Y}r J\'{o}nsd\'{o}ttir.
@@ -71,7 +71,7 @@ Gadget is distributed via anonymous ftp from the MRI ftp site, and the address o
 ftp://ftp.hafro.is/pub/reiknid/dst2/gadget/
 \end{verbatim}}
 
-The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.1.03, so the file to be downloaded is gadget2.1.03.tar.gz.
+The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.1.04, so the file to be downloaded is gadget2.1.04.tar.gz.
 
 \bigskip
 Gadget is a program that runs on a Unix computing platform, and is regularly tested on machines running versions of Solaris, Linux, Mac OSX and Cygwin (a Unix emulator for Microsoft Windows machines).  It should also run on other versions of Unix, but this may require modifications to the makefile in order to do so.  Gadget is distributed as a set of source code files, which need to be compiled into an executable program before it can be run.  To allow for various different versions, the makefile has a list of supported computing platforms, so the makefile should be checked (and if necessary changed) to ensure that the required options are available before the source code is compiled.  The default options in the makefile will compile Gadget for a Linux machine, using the GNU C++ compiler.  A summary of the commands required to compile Gadget, using the default options for a Linux machine from the downloaded file are:
@@ -92,17 +92,17 @@ A web site has been set up that contains details of the most recent changes to G
 http://www.hafro.is/gadget
 \end{verbatim}}
 
-Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.1.03 on a Linux machine:
+Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.1.04 on a Linux machine:
 
 {\small\begin{verbatim}
-gunzip gadget2.1.03.tar.gz
-tar -xvf gadget2.1.03.tar
+gunzip gadget2.1.04.tar.gz
+tar -xvf gadget2.1.04.tar
 cd source
 make
 \end{verbatim}}
 
 \section{Running Gadget}\label{sec:runninggadget}
-Gadget is a command line program that runs on a Unix computing platform.  To start Gadget, simply type the following at a standard Unix prompt:
+Gadget is a command line program that runs on a Linux computing platform.  To start Gadget, simply type the following at a standard Linux prompt:
 
 {\small\begin{verbatim}
 gadget <options>
@@ -117,7 +117,7 @@ Gadget is not an interactive program, so once it has started there is no need fo
 When Gadget starts, it will look for a file called ''main'', which contains a list of all the other data files required.  Gadget will search for this file in the following 2 locations:
 
 \begin{enumerate}
-\item the directory specified by the Unix environment variable called ''GADGET\_WORKING\_DIR'', optionally taking data from the directory specified by the Unix environment variable called ''GADGET\_DATA\_DIR''
+\item the directory specified by the Linux environment variable called ''GADGET\_WORKING\_DIR'', optionally taking data from the directory specified by the Linux environment variable called ''GADGET\_DATA\_DIR''
 \item the current directory (ie. from where Gadget has been started) if these environment variables have not been set
 \end{enumerate}
 
@@ -177,11 +177,7 @@ gadget -main <filename>
 \end{verbatim}}
 Starting Gadget with the -main switch will specify a filename for the main Gadget model input file, which contains links to all the other data files that are to be used by Gadget (see Main File, section~\ref{sec:mainfile}, for more information on the format of this file).  If Gadget is started without the -main switch, Gadget will use the default filename ''main'' as the name for the main file.
 
-{\small\begin{verbatim}
-gadget -m <filename>
-\end{verbatim}}
-Starting Gadget with the -m switch will specify a file from which Gadget can read the other command line options.  This file should contain a simple list of the switches and their values, as they would be entered from the command line.
-
+\newpage %JMB insert page break
 {\small\begin{verbatim}
 gadget -p <filename>
 \end{verbatim}}
@@ -200,13 +196,29 @@ Starting Gadget with the -print switch will specify the frequency with which inf
 {\small\begin{verbatim}
 gadget -precision <number>
 \end{verbatim}}
-Starting Gadget with the -precision switch will specify the number of digits to be used when printing the output from the likelihood calculations to files specified with either the -o switch or -co switch.
+Starting Gadget with the -precision switch will specify the number of digits to be used when printing the output from the likelihood calculations to files specified with the -o switch.
 
 {\small\begin{verbatim}
 gadget -log <filename>
 \end{verbatim}}
-Starting Gadget with the -log switch will specify a file to which Gadget will write logging information to keep a record of internal Gadget actions.  This file will be very large when Gadget is performing an optimising run, and it is of most use for debugging models when Gadget is performing a simulation run.
+Starting Gadget with the -log switch will specify a file to which Gadget will write logging messages to keep a record of internal Gadget actions.  This can be a large file if Gadget is performing an optimising run (see Log Output, section~\ref{sec:logoutput}, for more information on the format of this file).
 
+{\small\begin{verbatim}
+gadget -loglevel <number>
+\end{verbatim}}
+Starting Gadget with the -loglevel switch will specify the level of detail that is to be used by Gadget when logging messages (both to the screen and to a log file if one has been specified with the -log switch).  If Gadget is started without the -loglevel switch then the default is for warning messages and error messages to be shown during a simulation run (when Gadget is started with the -s switch) and only error messages are shown during an optimising run (when Gadget is started with the -l switch).
+
+{\small\begin{verbatim}
+gadget -seed <number>
+\end{verbatim}}
+Starting Gadget with the -seed switch will specify the value that is used to initialise the random number generator used within Gadget (see Repeatability, section~\ref{sec:repeat} for more information on the use of the random number generator within Gadget runs).
+
+{\small\begin{verbatim}
+gadget -m <filename>
+\end{verbatim}}
+Starting Gadget with the -m switch will specify a file from which Gadget can read the other command line options.  This file should contain a simple list of the switches and their values, as they would be entered from the command line.
+
+\newpage %JMB insert page break
 {\small\begin{verbatim}
 gadget -printinitial <filename>
 \end{verbatim}}
@@ -216,6 +228,9 @@ Starting Gadget with the -printinitial switch will specify a file to which Gadge
 gadget -printfinal <filename>
 \end{verbatim}}
 Starting Gadget with the -printfinal switch will specify a file to which Gadget will write all internal information for the model at the end of the run (ie. the stock populations, likelihood calculations and other information from after the last timestep).  This file will be large for moderately complicated models, and it is of most use for debugging purposes.
+
+%gadget -noprint
+%gadget -forceprint
 
 \bigskip
 Most of these switches can be combined to specify more information about the Gadget run that will be performed.  For instance:
@@ -241,7 +256,7 @@ Unless stated otherwise, all the input and output files use the following measur
 \item age - all measurements are in years
 \end{itemize}
 
-Gadget is a program that runs on a Unix computing platform, so the input data files must use a Unix style end-of-line character ($<$linefeed$>$) and not a Windows style end-of-line character ($<$carriage return$><$linefeed$>$).  All the lines of the input files containing data should end with an end-of-line character.
+Gadget is a program that runs on a Linux computing platform, so the input data files must use a Linux style end-of-line character ($<$linefeed$>$) and not a Windows style end-of-line character ($<$carriage return$><$linefeed$>$).  All the lines of the input files containing data should end with an end-of-line character.
 
 \section{Comments in Input Files}\label{sec:comments}
 Any of the input files used by Gadget can contain comments that are not used by Gadget.  The start of the comment is denoted by a semi-colon '';''.  Once Gadget has read as far as the semi-colon, the rest of the line will be ignored.
@@ -1842,14 +1857,14 @@ The optional $<$multi$>$ value is a multiplicative constant used to scale the da
 The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The total number of fish that has been caught by the fleet is also required - this is taken from the landings data, based on timestep and area, and is specified in a separate file.
 
 \section{LinearFleet}\label{sec:linearfleet}
-The fleet type used that creates a predator based on a simple proportion of the biomass of the stock that it is catching is called ''LinearFleet''.  The number caught is then split between the various stocks, and length groups of the stocks, according to equation~\ref{eq:lcons} below:
+The fleet type used that creates a predator that removes the caught fish based on the available biomass of the stock multiplied by a scaling factor is called ''LinearFleet''.  The biomass caught is then split between the various stocks, and length groups of the stocks, according to equation~\ref{eq:lcons} below:
 
 \begin{equation}\label{eq:lcons}
 C_{s}(l) = E \Delta t S_{s}(l) N_{sl} W_{sl}
 \end{equation}
 
 where:\newline
-$<$ E $>$ is the proportion of the stock that is to be caught per month\newline
+$<$ E $>$ is the scaling factor for the stock that is to be caught, per month\newline
 $<\Delta t>$ is the length of the timestep\newline
 $<$ N $>$ is the number of stock in the length cell\newline
 $<$ W $>$ is the mean weight of the stock in the length cell\newline
@@ -1876,14 +1891,14 @@ The fleets act as a predator, so Gadget also requires a suitability function to 
 The fleet of type LinearFleet acts a simple predator, and can be used for fleets acting in the future, when the landings data is not available.
 
 \section{EffortFleet}\label{sec:effortfleet}
-The fleet type used that creates a predator based on a simple proportion of the biomass of the stock, and a 'catchability' parameter for that stock, is called ''EffortFleet''.  The number caught is then split between the various stocks, and length groups of the stocks, according to equation~\ref{eq:econs} below:
+The fleet type used that creates a predator that removes the caught fish based on the available biomass of the stock multiplied by a scaling factor and a 'catchability' parameter for that stock is called ''EffortFleet''.  The biomass caught is then split between the various stocks, and length groups of the stocks, according to equation~\ref{eq:econs} below:
 
 \begin{equation}\label{eq:econs}
 C_{s}(l) = E q_{s} \Delta t S_{s}(l) N_{sl} W_{sl}
 \end{equation}
 
 where:\newline
-$<$ E $>$ is the proportion of the stock that is to be caught per month\newline
+$<$ E $>$ is the scaling factor for the stock that is to be caught, per month\newline
 $<$ q $>$ is the catchability parameter for that stock\newline
 $<\Delta t>$ is the length of the timestep\newline
 $<$ N $>$ is the number of stock in the length cell\newline
@@ -1920,6 +1935,8 @@ amount
 ...
 \end{verbatim}}
 
+%\section{QuotaFleet}\label{sec:quotafleet}
+
 \section{Fleet Suitability}\label{sec:fleetsuit}
 The suitability determines how the fleets act on the stocks that are caught.  Since Gadget treats the fleets as predators of the stocks, the format for the suitability functions for the fleets is the same as the format for the suitability functions of the stock when they are acting as a predator.  The format for the suitability functions as discussed in section~\ref{sec:suitability} above.  Note that in the equations for the suitability functions, the 'length' of the predator is a meaningless concept when the predator is a fleet.
 
@@ -1936,7 +1953,7 @@ For fleets of type TotalFleet or NumberFleet, the data file is a list of year, t
 <year>  <step>  <area>  <fleetname>  <amount>
 \end{verbatim}}
 
-For fleets of type LinearFleet or EffortFleet, the data file is a list of year, timestep, area, fleetname and then the proportion to be used when calculating the amount of the catch for that timestep/area/fleet combination:
+For fleets of type LinearFleet or EffortFleet, the data file is a list of year, timestep, area, fleetname and then the scaling factor to be used when calculating the amount of the catch for that timestep/area/fleet combination:
 
 {\small\begin{verbatim}
 <year>  <step>  <area>  <fleetname>  <proportion>
@@ -2033,10 +2050,10 @@ default    2        1000     1000
 would define a default penalty, where the lower and upper weights were 1000, and the power was 2.
 
 \section{Understocking}\label{sec:understocking}
-The Understocking likelihood component is used to give a penalty whenever there has been overconsumption by a predator (usually a fleet), and there has been insufficient fish for that predator to consume.  In the case of a fleet, this means that the landings data indicates that more fish have been landed than there are fish in the model, for that timetep and area combination.  The likelihood component that is used is the sum of squares of the overconsumption, given by the equation below:
+The Understocking likelihood component calculates a penalty that is applied if there are an insufficient number of a particular prey to meet the requirements of the predators.  In the case of a fleet, this means that the landings data indicates that more fish have been landed than there are fish in the model, for that timetep and area combination.  A well defined model will have a zero likelihood score from this component.  The likelihood component that is used is the sum of squares of the overconsumption, given by the equation below:
 
 \begin{equation}\label{eq:understocking}
-\ell = \sum_{\it time}\sum_{\it areas} \Big(\sum_{\it predators} U_{trp} \Big)^p
+\ell = \sum_{\it time}\sum_{\it areas} \Big(\sum_{\it preys} U_{trp} \Big)^p
 \end{equation}
 
 where:\newline
@@ -2051,10 +2068,7 @@ To specify an Understocking likelihood component, the format required in the mai
 name                 <name for the likelihood component>
 weight               <weight for the likelihood component>
 type                 understocking
-areaaggfile          <area aggregation file specifying areas>
 powercoeff           <power>
-predatornames        <vector of the names of the predators>
-yearsandsteps        <ActionAtTime when to check for understocking>
 \end{verbatim}}
 
 The $<$power$>$ value is optional, and if this is not given, the power coefficient is assumed to be 2, giving a sum of squares equation for this likelihood component.
@@ -3786,8 +3800,16 @@ The use of a random number generator means that it is unlikely that two optimisi
 seed       n     ; seed the random number generator with n
 \end{verbatim}}
 
+It is also possible to specify the value that is used to seed the random number generator from the command line, by starting Gadget with the ''-seed <number>'' switch.  It should be noted that any value for the seed that is specified in the optimisation file will override the value that is specified as a command line option.
+
 \chapter{Output Files}\label{chap:output}
-The model output files contain information about the optimisation process (and not information about the stocks in the model - see the section on the Print Files, section~\ref{chap:print}, for information on these).  The output files are specified by some of the commandline parameters used to start Gadget.  There are two types of output file.
+The model output files contain information about the optimisation process (and not information about the stocks in the model - see the section on the Print Files, section~\ref{chap:print}, for information on these).  The output files are specified by some of the commandline parameters used to start Gadget.  There are three types of output file.
+
+\section{Parameter Output}\label{sec:paramoutput}
+The parameter output file is automatically generated by Gadget every time that Gadget is run.  If Gadget is not started with the ''-p $<$filename$>$'' option, this file will be called ''params.out''.  This file contains information about the values of the switches at the end of the Gadget run, in the same format as for the column output file.  In the header of this file there will be information about the Gadget run, followed by the final overall likelihood score and the total number of iterations.  There is then the information about the switches used in the Gadget run - the name, value, lower bound, upper bound and whether the switch is to be optimised.
+
+\bigskip
+This file is written in the same format as the parameter input file, and it can be used as the starting point for a subsequent Gadget run.
 
 \section{Likelihood Output}\label{sec:likelihoodoutput}
 The likelihood output file is generated when Gadget is started with the ''-o $<$filename$>$'' option, and the output is written to the file specified after that option, so, for example, this would write the output to a file called ''likelihood.txt'':
@@ -3813,11 +3835,42 @@ gadget -l -o likelihood.txt -print 10
 
 which will set Gadget to write this information, to the file ''likelihood.txt'', after every 10th iteration.
 
-\section{Parameter Output}\label{sec:paramoutput}
-The parameter output file is automatically generated by Gadget every time that Gadget is run.  If Gadget is not started with the ''-p $<$filename$>$'' option, this file will be called ''params.out''.  This file contains information about the values of the switches at the end of the Gadget run, in the same format as for the column output file.  In the header of this file there will be information about the Gadget run, followed by the final overall likelihood score and the total number of iterations.  There is then the information about the switches used in the Gadget run - the name, value, lower bound, upper bound and whether the switch is to be optimised.
+\section{Log Output}\label{sec:logoutput}
+The log output file is generated when Gadget is started with the ''-log $<$filename$>$'' option, and the output is written to the file specified after that option, so, for example, this would write the output to a file called ''gadget.log'':
+
+{\small\begin{verbatim}
+gadget -log gadget.log
+\end{verbatim}}
+
+The log file contains a listing of the actions that Gadget is performing, as those actions are being performed - an entry can be made whenever data is read from a file, or a likelihood score is calculated, for example.  The log file is of most use when initially setting up and debugging a Gadget model, since it makes it easy to trace what Gadget is doing, so, for example, the details of the last actions that were performed before displayed a warning message are recorded.
 
 \bigskip
-This file is written in the same format as the parameter input file, and it can be used as the starting point for a subsequent Gadget run.
+This log file that is generated can be a large file if Gadget is performing an optimising run.  It is possible to control the amount of information that is written to the log file using the ''-loglevel $<$number$>$'' command line option.  The valid values for the loglevel number, and the associated meanings, are given in the list below:
+
+\bigskip
+\begin{tabular}{cl}
+{\bf loglevel} & {\bf meaning} \\
+0 & no output, only used in conjunction with the Paramin optimiser \\
+1 & output informational messages only (cannot be set from the command line) \\
+2 & also output error messages (default value for an optimising run) \\
+3 & also output warning messages (default value for a simulation run) \\
+4 & also output debug messages (only useful when debugging Gadget code) \\
+5 & also output detailed messages (default value if a log file is specified) \\
+\end{tabular}
+
+\bigskip
+Examples of valid loglevel values include:
+
+\begin{enumerate}
+\item specifying a log file (called ''gadget.log'') for an optimising run that only includes informational and error messages (and not the more detailed messages that would be written to the log file by default)
+{\small\begin{verbatim}
+gadget -l -log gadget.log -loglevel 2
+\end{verbatim}}
+\item specifying a log file for a simulation run that includes error and warning messages (note that it is not possible to disable the warning messages during a simulation run)
+{\small\begin{verbatim}
+gadget -s -log gadget.log -loglevel 3
+\end{verbatim}}
+\end{enumerate}
 
 \chapter{References}\label{chap:reference}
 Anon. 2002. Development of Structurally Detailed Statistically Testable Models of Marine Populations (dst$^{2}$). QLK5-CT1999-01609. Progress Report for 1 January to 31 December 2001. Marine Research Institute Report No. 87, Marine Research Institute, Reykjavik, Iceland.\newline
@@ -3879,7 +3932,17 @@ A version of this user guide was printed and published as a Marine Research Inst
 \begin{itemize}
 \item removed the need to specify the lengths of the fleets (see section~\ref{chap:fleet})
 \item added new suitability functions, the Richards suitability function and the Gamma suitability function (see section~\ref{sec:suitability})
-\item added a fleet that uses catch in numbers data (see section~\ref{sec:numberfleet})
+\item added a fleet that uses catch in nu\begin{enumerate}
+\item defining a simple switch (called ''age2'') without an initial value
+{\small\begin{verbatim}
+#age2
+\end{verbatim}}
+\item defining a switch with an initial value
+{\small\begin{verbatim}
+10#age2
+\end{verbatim}}
+\end{enumerate}
+mbers data (see section~\ref{sec:numberfleet})
 \item added an ''energycontent'' section for the preys (see section~\ref{sec:stockprey} and section~\ref{chap:other})
 \end{itemize}
 
@@ -3895,6 +3958,11 @@ A version of this user guide was printed and published as a Marine Research Inst
 \item added a fleet that extends the LinearFleet to take the different catchability of the various stocks into account (see section~\ref{sec:effortfleet})
 \item added the StockPreyPrinter to the list of available printer classes (see section~\ref{sec:stockpreyprinter})
 \item added the PredatorPreyPrinter to the list of available printer classes (see section~\ref{sec:predatorpreyprinter}) to replace the old PredPreyStdAgePrinter and PredPreyStdLengthPrinter printer classes, which are no longer supported
+\end{itemize}
+
+\section{Gadget version 2.1.04}\label{sec:v2104}
+\begin{itemize}
+\item removed the need to specify the areas, predators or timesteps when calculating the score for the Understocking likelihood component (see section~\ref{sec:understocking})
 \end{itemize}
 
 \end{document}
