@@ -204,7 +204,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
       return;
     }
 
-    if (check == 0 || alpha < verysmall) {
+    if (check == 0 || alpha < rathersmall) {
       check++;
       //JMB - make the step size when calculating the gradient smaller
       gradacc *= gradstep;
@@ -279,7 +279,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
       yBy += y[i] * By[i];
     }
 
-    if ((isZero(hy)) || (yBy < verysmall)) {
+    if ((isZero(hy)) || (isZero(yBy))) {
       check = 0;
     } else {
       temphy = 1.0 / hy;

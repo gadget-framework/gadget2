@@ -21,6 +21,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
 
   keeper->addString("grower");
   fixedweights = 0;
+  functionnumber = 0;
   LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
   if (LgrpDiv->Error())
     handle.logMessage(LOGFAIL, "Error in grower - failed to create length group");

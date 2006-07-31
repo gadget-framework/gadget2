@@ -28,7 +28,7 @@ void PopStatistics::calcStatistics(const PopInfoIndexVector& pop,
     meanlength += pop[i].N * lgrpdiv->meanLength(i - offset);
   }
 
-  if (totalnumber > rathersmall) {
+  if (totalnumber > verysmall) {
     if (calcweight)
       meanweight = sum.W;
     meanlength /= totalnumber;

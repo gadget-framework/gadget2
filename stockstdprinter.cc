@@ -33,7 +33,7 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
   infile >> text >> ws;
   if (strcasecmp(text, "scale") == 0) {
     infile >> scale >> ws >> text >> ws;
-    if (scale < verysmall) {
+    if (scale < rathersmall) {
       handle.logFileMessage(LOGWARN, "scale should be a positive integer - set to default value 1");
       scale = 1.0;
     }
@@ -197,7 +197,7 @@ void StockStdPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
       ps.calcStatistics((*salptr)[a][age], LgrpDiv);
       //JMB crude filters to remove the 'silly' values from the output
-       if (ps.totalNumber() < rathersmall) {
+      if (ps.totalNumber() < rathersmall) {
         outfile << setw(width) << 0 << sep << setw(printwidth) << 0
           << sep << setw(printwidth) << 0 << sep << setw(printwidth) << 0
           << sep << setw(width) << 0 << sep << setw(width) << 0 << endl;
