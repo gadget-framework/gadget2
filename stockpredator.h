@@ -17,17 +17,17 @@ public:
    * \brief This is the StockPredator constructor
    * \param infile is the CommentStream to read the predator information from
    * \param givenname is the name of the predator
-   * \param areas is the IntVector of the areas that the predator will live on
+   * \param Areas is the IntVector of the areas that the predator will live on
    * \param OtherLgrpDiv is the LengthGroupDivision of the predator
    * \param GivenLgrpDiv is the LengthGroupDivision that the predation will be calculated on
    * \param minage is the minimum age of the predator
-   * \param maxage is the maximum age of the predator
+   * \param numage is the number of age groups for the predator
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
-  StockPredator(CommentStream& infile, const char* givenname, const IntVector& areas,
+  StockPredator(CommentStream& infile, const char* givenname, const IntVector& Areas,
     const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
-    int minage, int maxage, const TimeClass* const TimeInfo, Keeper* const keeper);
+    int minage, int numage, const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default StockPredator destructor
    */

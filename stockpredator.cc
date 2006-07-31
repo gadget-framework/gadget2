@@ -12,7 +12,7 @@ extern ErrorHandler handle;
 
 StockPredator::StockPredator(CommentStream& infile, const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,
-  int minage, int maxage, const TimeClass* const TimeInfo, Keeper* const keeper)
+  int minage, int numage, const TimeClass* const TimeInfo, Keeper* const keeper)
   : PopPredator(givenname, Areas, OtherLgrpDiv, GivenLgrpDiv) {
 
   type = STOCKPREDATOR;
@@ -72,9 +72,11 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   //everything has been read from infile ... resize objects
   int numlength = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
-  IntVector size(maxage - minage + 1, numlength);
-  IntVector minlength(maxage - minage + 1, 0);
-  predAlkeys.resize(numarea, minage, minlength, size);
+  IntVector lower(numage, 0);
+  IntVector agesize(numage, numlength);
+  predAlkeys.resize(numarea, minage, lower, agesize);
+  for (i = 0; i < predAlkeys.Size(); i++)
+    predAlkeys[i].setToZero();
   maxcons.AddRows(numarea, numlength, 0.0);
   Phi.AddRows(numarea, numlength, 0.0);
   fphi.AddRows(numarea, numlength, 0.0);

@@ -8,18 +8,18 @@
 extern ErrorHandler handle;
 
 void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const keeper,
-  int noagegr, int minage, const AreaClass* const Area) {
+  int numage, int minage, const AreaClass* const Area) {
 
   int noareas = areas.Size();
   int i, age, area, ageid, areaid, tmparea, keepdata, count, reject;
   char c;
 
   //Resize the matrices to hold the data
-  areaFactor.AddRows(noareas, noagegr, 0.0);
-  ageFactor.AddRows(noareas, noagegr, 0.0);
-  meanLength.AddRows(noareas, noagegr, 0.0);
-  sdevLength.AddRows(noareas, noagegr, 0.0);
-  relCond.AddRows(noareas, noagegr, 0.0);
+  areaFactor.AddRows(noareas, numage, 0.0);
+  ageFactor.AddRows(noareas, numage, 0.0);
+  meanLength.AddRows(noareas, numage, 0.0);
+  sdevLength.AddRows(noareas, numage, 0.0);
+  relCond.AddRows(noareas, numage, 0.0);
 
   //Find the start of the data in the following format
   //age - area - agedist - areadist - meanlen - standdev - relcond
@@ -34,7 +34,7 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
     infile >> age >> area >> ws;
 
     //crude age data check - perhaps there should be a better check?
-    if ((age < minage) || (age >= (noagegr + minage)))
+    if ((age < minage) || (age >= (numage + minage)))
       keepdata = 0;
     else
       ageid = age - minage;
@@ -69,9 +69,9 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
 
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in initial conditions - found no data in the data file");
-  else if (count < (noareas * noagegr))
+  else if (count < (noareas * numage))
     handle.logMessage(LOGWARN, "Warning in initial conditions - missing entries from data file");
-  else if (count > (noareas * noagegr))
+  else if (count > (noareas * numage))
     handle.logMessage(LOGWARN, "Warning in initial conditions - repeated entries in data file");
 
   if (reject != 0)
@@ -87,19 +87,19 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
 }
 
 void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const keeper,
-  int noagegr, int minage, const AreaClass* const Area) {
+  int numage, int minage, const AreaClass* const Area) {
 
   int noareas = areas.Size();
   int i, age, area, ageid, areaid, tmparea, keepdata, count, reject;
   char c;
 
   //Resize the matrices to hold the data
-  areaFactor.AddRows(noareas, noagegr, 0.0);
-  ageFactor.AddRows(noareas, noagegr, 0.0);
-  meanLength.AddRows(noareas, noagegr, 0.0);
-  sdevLength.AddRows(noareas, noagegr, 0.0);
-  alpha.AddRows(noareas, noagegr, 0.0);
-  beta.AddRows(noareas, noagegr, 0.0);
+  areaFactor.AddRows(noareas, numage, 0.0);
+  ageFactor.AddRows(noareas, numage, 0.0);
+  meanLength.AddRows(noareas, numage, 0.0);
+  sdevLength.AddRows(noareas, numage, 0.0);
+  alpha.AddRows(noareas, numage, 0.0);
+  beta.AddRows(noareas, numage, 0.0);
 
   //Find the start of the data in the following format
   //age - area - agedist - areadist - meanlen - standdev - alpha - beta
@@ -114,7 +114,7 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
     infile >> age >> area >> ws;
 
     //crude age data check - perhaps there should be a better check?
-    if ((age < minage) || (age >= (noagegr + minage)))
+    if ((age < minage) || (age >= (numage + minage)))
       keepdata = 0;
     else
       ageid = age - minage;
@@ -150,9 +150,9 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
 
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in initial conditions - found no data in the data file");
-  else if (count < (noareas * noagegr))
+  else if (count < (noareas * numage))
     handle.logMessage(LOGWARN, "Warning in initial conditions - missing entries from data file");
-  else if (count > (noareas * noagegr))
+  else if (count > (noareas * numage))
     handle.logMessage(LOGWARN, "Warning in initial conditions - repeated entries in data file");
 
   if (reject != 0)
@@ -169,14 +169,14 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
 }
 
 void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
-  int noagegr, int minage, const AreaClass* const Area) {
+  int numage, int minage, const AreaClass* const Area) {
 
   int i, age, area, tmparea, count, reject;
   int keepdata, ageid, areaid, lengthid;
   double length;
   char c;
   int noareas = areas.Size();
-  int nolengr = LgrpDiv->numLengthGroups();
+  int numlen = LgrpDiv->numLengthGroups();
 
   //Find the start of the data in the following format
   //area - age - meanlength - number - weight
@@ -186,9 +186,9 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
 
   //initialise things
   for (areaid = 0; areaid < noareas; areaid++) {
-    initialNumber.resize(new FormulaMatrix(noagegr, nolengr, 0.0));
-    for (ageid = minage; ageid < noagegr + minage; ageid++)
-      for (lengthid = 0; lengthid < nolengr; lengthid++)
+    initialNumber.resize(new FormulaMatrix(numage, numlen, 0.0));
+    for (ageid = minage; ageid < numage + minage; ageid++)
+      for (lengthid = 0; lengthid < numlen; lengthid++)
         initialPop[areaid][ageid][lengthid].setToZero();
   }
 
@@ -199,14 +199,14 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
     infile >> area >> age >> length >> ws;
 
     //crude age data check - perhaps there should be a better check?
-    if ((age < minage) || (age >= (noagegr + minage)))
+    if ((age < minage) || (age >= (numage + minage)))
       keepdata = 0;
     else
       ageid = age;
 
     //crude length data check
     lengthid = -1;
-    for (i = 0; i < nolengr; i++)
+    for (i = 0; i < numlen; i++)
       if (length == LgrpDiv->minLength(i))
         lengthid = i;
 
@@ -243,9 +243,9 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
 
   if (count == 0)
     handle.logMessage(LOGWARN, "Warning in initial conditions - found no data in the data file");
-  else if (count < (noareas * noagegr * nolengr))
+  else if (count < (noareas * numage * numlen))
     handle.logMessage(LOGWARN, "Warning in initial conditions - missing entries from data file");
-  else if (count > (noareas * noagegr * nolengr))
+  else if (count > (noareas * numage * numlen))
     handle.logMessage(LOGWARN, "Warning in initial conditions - repeated entries in data file");
 
   if (reject != 0)
@@ -280,7 +280,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   readWordAndVariable(infile, "maxage", maxage);
   readWordAndVariable(infile, "minlength", minlength);
   readWordAndVariable(infile, "maxlength", maxlength);
-  int noagegr = maxage - minage + 1;
+  int numage = maxage - minage + 1;
 
   //JMB - changed to make the reading of dl optional
   //if it isnt specifed here, it will default to the dl value of the stock
@@ -309,7 +309,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   //create the initialPop object of the correct size
   PopInfo tmppop;
   tmppop.N = 1.0;
-  PopInfoMatrix popmatrix(noagegr, LgrpDiv->numLengthGroups(), tmppop);
+  PopInfoMatrix popmatrix(numage, LgrpDiv->numLengthGroups(), tmppop);
   initialPop.resize(areas.Size(), minage, 0, popmatrix);
 
   infile >> text >> ws;
@@ -320,7 +320,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     subfile.open(text, ios::in);
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
-    this->readNormalConditionData(subcomment, keeper, noagegr, minage, Area);
+    this->readNormalConditionData(subcomment, keeper, numage, minage, Area);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -366,7 +366,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     subfile.open(text, ios::in);
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
-    this->readNormalParameterData(subcomment, keeper, noagegr, minage, Area);
+    this->readNormalParameterData(subcomment, keeper, numage, minage, Area);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -378,7 +378,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     subfile.open(text, ios::in);
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
-    this->readNumberData(subcomment, keeper, noagegr, minage, Area);
+    this->readNumberData(subcomment, keeper, numage, minage, Area);
     handle.Close();
     subfile.close();
     subfile.clear();

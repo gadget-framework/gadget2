@@ -12,9 +12,8 @@ extern ErrorHandler handle;
 // ********************************************************
 // Functions for base Maturity
 // ********************************************************
-Maturity::Maturity(const IntVector& tmpareas, int minage, const IntVector& minlength,
-  const IntVector& agesize, const LengthGroupDivision* const lgrpdiv)
-  : LivesOnAreas(tmpareas) {
+Maturity::Maturity(const IntVector& tmpareas, int minage, int numage,
+  const LengthGroupDivision* const lgrpdiv) : LivesOnAreas(tmpareas) {
 
   int i;
   istagged = 0;
@@ -23,8 +22,11 @@ Maturity::Maturity(const IntVector& tmpareas, int minage, const IntVector& minle
   LgrpDiv = new LengthGroupDivision(*lgrpdiv);
   if (LgrpDiv->Error())
     handle.logMessage(LOGFAIL, "Error in maturity - failed to create length group");
-  Storage.resize(tmpareas.Size(), minage, minlength, agesize);
-  for (i = 0; i < areas.Size(); i++)
+
+  IntVector lower(numage, 0);
+  IntVector agesize(numage, LgrpDiv->numLengthGroups());
+  Storage.resize(areas.Size(), minage, lower, agesize);
+  for (i = 0; i < Storage.Size(); i++)
     Storage[i].setToZero();
 }
 
@@ -202,9 +204,9 @@ void Maturity::deleteMaturityTag(const char* tagname) {
 // Functions for MaturityA
 // ********************************************************
 MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
-  Keeper* const keeper, int minage, const IntVector& minlength, const IntVector& agesize,
-  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv)
-  : Maturity(tmpareas, minage, minlength, agesize, lgrpdiv), minStockAge(minage) {
+  Keeper* const keeper, int minage, int numage, const IntVector& tmpareas,
+  const LengthGroupDivision* const lgrpdiv)
+  : Maturity(tmpareas, minage, numage, lgrpdiv), minStockAge(minage) {
 
   //JMB store the length of the timestep
   timesteplength = TimeInfo->getTimeStepSize();
@@ -236,7 +238,7 @@ MaturityA::MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
     handle.logFileEOFMessage(LOGFAIL);
   maturityParameters.resize(4, keeper);
   maturityParameters.read(infile, TimeInfo, keeper);
-  preCalcMaturation.AddRows(agesize.Size(), LgrpDiv->numLengthGroups(), 0.0);
+  preCalcMaturation.AddRows(numage, LgrpDiv->numLengthGroups(), 0.0);
 
   infile >> ws;
   if (!infile.eof()) {
@@ -309,9 +311,9 @@ int MaturityA::isMaturationStep(const TimeClass* const TimeInfo) {
 // Functions for MaturityB
 // ********************************************************
 MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
-  Keeper* const keeper, int minage, const IntVector& minlength,
-  const IntVector& agesize, const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv)
-  : Maturity(tmpareas, minage, minlength, agesize, lgrpdiv) {
+  Keeper* const keeper, int minage, int numage, const IntVector& tmpareas,
+  const LengthGroupDivision* const lgrpdiv)
+  : Maturity(tmpareas, minage, numage, lgrpdiv) {
 
   //JMB set the default value for currenttimestep
   currentmaturitystep = 0;
@@ -420,9 +422,9 @@ int MaturityB::isMaturationStep(const TimeClass* const TimeInfo) {
 // Functions for MaturityC
 // ********************************************************
 MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
-  Keeper* const keeper, int minage, const IntVector& minlength, const IntVector& agesize,
-  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int numMatConst)
-  : Maturity(tmpareas, minage, minlength, agesize, lgrpdiv), minStockAge(minage) {
+  Keeper* const keeper, int minage, int numage, const IntVector& tmpareas,
+  const LengthGroupDivision* const lgrpdiv, int numMatConst)
+  : Maturity(tmpareas, minage, numage, lgrpdiv), minStockAge(minage) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -451,7 +453,7 @@ MaturityC::MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
     handle.logFileEOFMessage(LOGFAIL);
   maturityParameters.resize(numMatConst, keeper);
   maturityParameters.read(infile, TimeInfo, keeper);
-  preCalcMaturation.AddRows(agesize.Size(), LgrpDiv->numLengthGroups(), 0.0);
+  preCalcMaturation.AddRows(numage, LgrpDiv->numLengthGroups(), 0.0);
 
   infile >> text >> ws;
   if ((strcasecmp(text, "maturitystep") != 0) && (strcasecmp(text, "maturitysteps") != 0))
@@ -549,9 +551,9 @@ void MaturityC::Print(ofstream& outfile) const {
 // Functions for MaturityD
 // ********************************************************
 MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
-  Keeper* const keeper, int minage, const IntVector& minlength, const IntVector& agesize,
-  const IntVector& tmpareas, const LengthGroupDivision* const lgrpdiv, int numMatConst, const char* refWeightFile)
-  : MaturityC(infile, TimeInfo, keeper, minage, minlength, agesize, tmpareas, lgrpdiv, numMatConst) {
+  Keeper* const keeper, int minage, int numage, const IntVector& tmpareas,
+  const LengthGroupDivision* const lgrpdiv, int numMatConst, const char* refWeightFile)
+  : MaturityC(infile, TimeInfo, keeper, minage, numage, tmpareas, lgrpdiv, numMatConst) {
 
   //read information on reference weights.
   ifstream subweightfile;

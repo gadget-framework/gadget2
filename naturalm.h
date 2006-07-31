@@ -20,16 +20,16 @@ public:
    * \brief This is the NaturalMortality constructor
    * \param infile is the CommentStream to read the NaturalMortality information from
    * \param minage is the minimum age of the stock
-   * \param maxage is the maximum age of the stock
+   * \param numage is the number of age groups for the stock
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
-  NaturalMortality(CommentStream& infile, int minage, int maxage,
+  NaturalMortality(CommentStream& infile, int minage, int numage,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default NaturalMortality destructor
    */
-  ~NaturalMortality() {};
+  ~NaturalMortality();
   /**
    * \brief This function will return the DoubleVector of the proportion of each age group that will survive on the current timestep
    * \return proportion surviving from each age group

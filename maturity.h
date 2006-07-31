@@ -29,12 +29,10 @@ public:
    * \brief This is the Maturity constructor
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param minage is the minimum age of the stock that can mature
-   * \param minlength is the IntVector of minimum lengths for the stock that can mature
-   * \param agesize is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
+   * \param numage is the number of age groups for the stock that can mature
    * \param LgrpDiv is the LengthGroupDivision for the stock
    */
-  Maturity(const IntVector& areas, int minage, const IntVector& minlength,
-    const IntVector& agesize, const LengthGroupDivision* const LgrpDiv);
+  Maturity(const IntVector& areas, int minage, int numage, const LengthGroupDivision* const LgrpDiv);
   /**
    * \brief This is the default Maturity destructor
    */
@@ -172,14 +170,12 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param minage is the minimum age of the stock that can mature
-   * \param minlength is the IntVector of minimum lengths for the stock that can mature
-   * \param agesize is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
+   * \param numage is the number of age groups for the stock that can mature
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision for the stock
    */
   MaturityA(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
-    int minage, const IntVector& minlength, const IntVector& agesize, const IntVector& areas,
-    const LengthGroupDivision* const LgrpDiv);
+    int minage, int numage, const IntVector& areas, const LengthGroupDivision* const LgrpDiv);
   /**
    * \brief This is the default MaturityA destructor
    */
@@ -253,14 +249,12 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param minage is the minimum age of the stock that can mature
-   * \param minlength is the IntVector of minimum lengths for the stock that can mature
-   * \param agesize is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
+   * \param numage is the number of age groups for the stock that can mature
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision for the stock
    */
   MaturityB(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
-    int minage, const IntVector& minlength, const IntVector& agesize,
-    const IntVector& areas, const LengthGroupDivision* const LgrpDiv);
+    int minage, int numage, const IntVector& areas, const LengthGroupDivision* const LgrpDiv);
   /**
    * \brief This is the default MaturityB destructor
    */
@@ -322,15 +316,13 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param minage is the minimum age of the stock that can mature
-   * \param minlength is the IntVector of minimum lengths for the stock that can mature
-   * \param agesize is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
+   * \param numage is the number of age groups for the stock that can mature
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision for the stock
    * \param numMatConst is the number of maturation parameters (4)
    */
   MaturityC(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
-    int minage, const IntVector& minlength, const IntVector& agesize,
-    const IntVector& areas, const LengthGroupDivision* const LgrpDiv, int numMatConst);
+    int minage, int numage, const IntVector& areas, const LengthGroupDivision* const LgrpDiv, int numMatConst);
   /**
    * \brief This is the default MaturityC destructor
    */
@@ -404,16 +396,15 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param minage is the minimum age of the stock that can mature
-   * \param minlength is the IntVector of minimum lengths for the stock that can mature
-   * \param agesize is the IntVector of the number of age groups for the stock, used to resize the AgeBandMatrixPtrVector
+   * \param numage is the number of age groups for the stock that can mature
    * \param areas is the IntVector of areas that the maturity calculation can take place on
    * \param LgrpDiv is the LengthGroupDivision for the stock
    * \param numMatConst is the number of maturation parameters (6)
    * \param refWeightFile is the name of the file to read the reference weight information from
    */
   MaturityD(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
-    int minage, const IntVector& minlength, const IntVector& agesize, const IntVector& areas,
-    const LengthGroupDivision* const LgrpDiv, int numMatConst, const char* refWeightFile);
+    int minage, int numage, const IntVector& areas, const LengthGroupDivision* const LgrpDiv,
+    int numMatConst, const char* refWeightFile);
   /**
    * \brief This is the default MaturityD destructor
    */

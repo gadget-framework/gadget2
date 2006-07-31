@@ -53,10 +53,14 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   this->storeAreas(tmpareas);
 
   //read the stock age and length data
-  int minage, maxage;
+  int minage, maxage, numage;
   double minlength, maxlength, dl;
   readWordAndVariable(infile, "minage", minage);
   readWordAndVariable(infile, "maxage", maxage);
+  numage = maxage - minage + 1;
+  if (numage < 1)
+    handle.logMessage(LOGFAIL, "Error in stock - failed to create age groups");
+
   readWordAndVariable(infile, "minlength", minlength);
   readWordAndVariable(infile, "maxlength", maxlength);
   readWordAndVariable(infile, "dl", dl);
@@ -71,9 +75,9 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   //JMB need to set the lowerlgrp and size vectors to a default
   //value to allow the whole range of lengths to be calculated
-  IntVector lowerlgrp(maxage - minage + 1, 0);
-  IntVector size(maxage - minage + 1, LgrpDiv->numLengthGroups());
-  Alkeys.resize(areas.Size(), minage, lowerlgrp, size);
+  IntVector lower(numage, 0);
+  IntVector agesize(numage, LgrpDiv->numLengthGroups());
+  Alkeys.resize(areas.Size(), minage, lower, agesize);
   for (i = 0; i < Alkeys.Size(); i++)
     Alkeys[i].setToZero();
 
@@ -110,9 +114,10 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   PopInfo nullpop;
   tmpPopulation.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), nullpop);
   readWordAndVariable(infile, "doesgrow", doesgrow);
-  if (doesgrow)
+  if (doesgrow) {
     grower = new Grower(infile, LgrpDiv, GrowLgrpDiv, areas, TimeInfo, keeper, refweight, Area, grlenindex);
-  else
+
+  } else
     grower = 0;
   handle.logMessage(LOGMESSAGE, "Read growth data for stock", this->getName());
 
@@ -120,23 +125,25 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   infile >> text;
   if (strcasecmp(text, "naturalmortality") != 0)
     handle.logFileUnexpected(LOGFAIL, "naturalmortality", text);
-  naturalm = new NaturalMortality(infile, minage, maxage, TimeInfo, keeper);
+  naturalm = new NaturalMortality(infile, minage, numage, TimeInfo, keeper);
   handle.logMessage(LOGMESSAGE, "Read natural mortality data for stock", this->getName());
 
   //read the prey data
   readWordAndVariable(infile, "iseaten", iseaten);
-  if (iseaten)
-    prey = new StockPrey(infile, areas, this->getName(), minage, maxage);
-  else
+  if (iseaten) {
+    prey = new StockPrey(infile, areas, this->getName(), minage, numage);
+
+  } else
     prey = 0;
   handle.logMessage(LOGMESSAGE, "Read prey data for stock", this->getName());
 
   //read the predator data
   readWordAndVariable(infile, "doeseat", doeseat);
-  if (doeseat)
+  if (doeseat) {
     predator = new StockPredator(infile, this->getName(), areas, LgrpDiv,
-      GrowLgrpDiv, minage, maxage, TimeInfo, keeper);
-  else
+      GrowLgrpDiv, minage, numage, TimeInfo, keeper);
+
+  } else
     predator = 0;
   handle.logMessage(LOGMESSAGE, "Read predator data for stock", this->getName());
 
@@ -180,13 +187,13 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     handle.Open(filename);
 
     if (strcasecmp(text, "continuous") == 0)
-      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv);
+      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, numage, areas, LgrpDiv);
     else if (strcasecmp(text, "fixedlength") == 0)
-      maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv);
+      maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, numage, areas, LgrpDiv);
     else if (strcasecmp(text, "constant") == 0)
-      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 4);
+      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, numage, areas, LgrpDiv, 4);
     else if (strcasecmp(text, "constantweight") == 0)
-      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, lowerlgrp, size, areas, LgrpDiv, 6, refweight);
+      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, numage, areas, LgrpDiv, 6, refweight);
     else if (strcasecmp(text, "ageandlength") == 0)
       handle.logFileMessage(LOGFAIL, "\nThe ageandlength maturity function is no longer supported");
     else
@@ -206,7 +213,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //read the movement data
   readWordAndVariable(infile, "doesmove", doesmove);
   if (doesmove) {
-    //transition handles the movements of the age group maxage:
+    //transition handles the movements of the age group maxage
     transition = new Transition(infile, areas, maxage, LgrpDiv, TimeInfo, keeper);
 
   } else

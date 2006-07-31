@@ -1,13 +1,16 @@
 #include "stockprey.h"
 
 StockPrey::StockPrey(CommentStream& infile, const IntVector& Areas,
-  const char* givenname, int minage, int maxage)
+  const char* givenname, int minage, int numage)
   : Prey(infile, Areas, givenname) {
 
+  int i;
   type = STOCKPREY;
-  IntVector size(maxage - minage + 1, LgrpDiv->numLengthGroups());
-  IntVector minlength(maxage - minage + 1, 0);
-  preyAlkeys.resize(areas.Size(), minage, minlength, size);
+  IntVector lower(numage, 0);
+  IntVector agesize(numage, LgrpDiv->numLengthGroups());
+  preyAlkeys.resize(areas.Size(), minage, lower, agesize);
+  for (i = 0; i < preyAlkeys.Size(); i++)
+    preyAlkeys[i].setToZero();
 }
 
 void StockPrey::Sum(const AgeBandMatrix& stockAlkeys, int area) {

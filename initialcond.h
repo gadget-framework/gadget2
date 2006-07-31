@@ -58,32 +58,32 @@ protected:
    * \brief This is the function used to read the normal distribution and condition factor for the initial condtion data
    * \param infile is the CommentStream to read the initial conditions data from
    * \param keeper is the Keeper for the current model
-   * \param noagegr is the number of age groups for the initial population
+   * \param numage is the number of age groups for the initial population
    * \param minage is the minimum age for the initial population
    * \param Area is the AreaClass for the current model
    */
   void readNormalConditionData(CommentStream& infile, Keeper* const keeper,
-     int noagegr, int minage, const AreaClass* const Area);
+     int numage, int minage, const AreaClass* const Area);
   /**
    * \brief This is the function used to read the normal distribution for the initial condtion data
    * \param infile is the CommentStream to read the initial conditions data from
    * \param keeper is the Keeper for the current model
-   * \param noagegr is the number of age groups for the initial population
+   * \param numage is the number of age groups for the initial population
    * \param minage is the minimum age for the initial population
    * \param Area is the AreaClass for the current model
    */
   void readNormalParameterData(CommentStream& infile, Keeper* const keeper,
-     int noagegr, int minage, const AreaClass* const Area);
+     int numage, int minage, const AreaClass* const Area);
   /**
    * \brief This is the function used to read the numbers of the initial population
    * \param infile is the CommentStream to read the initial conditions data from
    * \param keeper is the Keeper for the current model
-   * \param noagegr is the number of age groups for the initial population
+   * \param numage is the number of age groups for the initial population
    * \param minage is the minimum age for the initial population
    * \param Area is the AreaClass for the current model
    */
   void readNumberData(CommentStream& infile, Keeper* const keeper,
-     int noagegr, int minage, const AreaClass* const Area);
+     int numage, int minage, const AreaClass* const Area);
   /**
    * \brief This is the LengthGroupDivision of the initial population of the stock
    */
