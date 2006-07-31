@@ -7,7 +7,6 @@
 #include "predatoroverprinter.h"
 #include "preyoverprinter.h"
 #include "stockpreyfullprinter.h"
-#include "predpreystdprinter.h"
 #include "stockpreyprinter.h"
 #include "stockfullprinter.h"
 #include "likelihoodprinter.h"
@@ -148,10 +147,6 @@ void Ecosystem::readPrinters(CommentStream& infile) {
       printvec.resize(new StockPreyFullPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "predatorpreyprinter") == 0)
       printvec.resize(new PredatorPreyPrinter(infile, TimeInfo));
-    else if (strcasecmp(type, "predpreystdlengthprinter") == 0)
-      printvec.resize(new PredPreyStdLengthPrinter(infile, TimeInfo));
-    else if (strcasecmp(type, "predpreystdageprinter") == 0)
-      printvec.resize(new PredPreyStdAgePrinter(infile, TimeInfo));
     else if (strcasecmp(type, "likelihoodprinter") == 0)
       printvec.resize(new LikelihoodPrinter(infile, TimeInfo));
     else if (strcasecmp(type, "likelihoodsummaryprinter") == 0)
@@ -169,6 +164,10 @@ void Ecosystem::readPrinters(CommentStream& infile) {
       handle.logFileMessage(LOGFAIL, "\nThe biomassprinter printer class is no longer supported");
     else if (strcasecmp(type, "formatedcatchprinter") == 0)
       handle.logFileMessage(LOGFAIL, "\nThe formatedcatchprinter printer class is no longer supported");
+    else if (strcasecmp(type, "predpreystdlengthprinter") == 0)
+      handle.logFileMessage(LOGFAIL, "\nThe predpreystdlengthprinter printer class is no longer supported");
+    else if (strcasecmp(type, "predpreystdageprinter") == 0)
+      handle.logFileMessage(LOGFAIL, "\nThe predpreystdageprinter printer class is no longer supported");
 
     else
       handle.logFileMessage(LOGFAIL, "unrecognised printer class", type);

@@ -20,7 +20,7 @@ CXX = g++
 LIBDIRS = -L. -L/usr/local/lib
 LIBRARIES = -lm
 CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
-OBJECTS = $(GADGETOBJECTS)
+OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
 ##########################################################################
 # 2. Linux, or Cygwin, or Solaris, with pvm3, g++ compiler
 #CXX = g++
@@ -31,76 +31,69 @@ OBJECTS = $(GADGETOBJECTS)
 #LIBRARIES = -lm -lpvm3 -lnsl
 ## note that some (older) linux machines also require the -lsocket library
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
-#OBJECTS = $(GADGETOBJECTS) $(SLAVEOBJECTS)
+#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
 ##########################################################################
 # 3. Solaris, without pvm3, using CC compiler
 #CXX = CC
 #LIBDIRS = -L. -L/usr/local/lib
 #LIBRARIES = -lm
 #CXXFLAGS = $(DEFINE_FLAGS)
-#OBJECTS = $(GADGETOBJECTS)
+#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
 ##########################################################################
 # 4. Linux or Solaris, without pvm3, g++ compiler running CONDOR
 #CXX = condor_compile g++
 #LIBDIRS = -L. -L/usr/local/lib
 #LIBRARIES = -lm
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
-#OBJECTS = $(GADGETOBJECTS)
+#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
 ##########################################################################
 # 5. Windows using services for unix
 #CXX = g++
 #LIBDIRS = -L. -L/usr/local/lib
 #LIBRARIES = -lm
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
-#OBJECTS = $(GADGETOBJECTS)
+#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
 #CPPFLAGS = -I/usr/local/include #-I/dev/fs/C/x/SDK/opt/gcc.3.3/include/c++/3.3/backward
 ##########################################################################
 
-GADGETOBJECTS = gadget.o parameter.o growermemberfunctions.o predatoraggregator.o \
-    abstrpredstdinfo.o abstrpreystdinfo.o catchdistribution.o errorhandler.o \
-    predatorprinter.o abstrpreystdinfobylength.o predatoroveraggregator.o \
-    actionattimes.o predatoroverprinter.o strstack.o ecosystem.o poppredator.o \
-    predpreystdageprinter.o agebandmatrix.o predpreystdlengthprinter.o grow.o \
-    agebandmatrixmemberfunctions.o predpreystdprinter.o area.o predstdinfo.o \
-    bandmatrix.o predstdinfobylength.o prey.o popstatistics.o ludecomposition.o \
-    preyoveraggregator.o lengthgroup.o preyoverprinter.o catchstatistics.o \
-    preystdinfo.o preystdinfobylength.o timevariable.o boundlikelihood.o stray.o \
-    commentstream.o printinfo.o readfunc.o conversionindex.o readmain.o keeper.o \
-    fleet.o sibyageonstep.o fleetpreyaggregator.o sibyfleetonstep.o predator.o \
-    sibylengthonstep.o formula.o grower.o growthcalc.o simulation.o hooke.o \
-    simann.o sionstep.o initialcond.o spawner.o initialize.o stochasticdata.o \
-    lengthpredator.o stockaggregator.o lengthprey.o surveydistribution.o bfgs.o \
-    stockdistribution.o linearpredator.o stockfullprinter.o regressionline.o \
-    stockmemberfunctions.o livesonareas.o stockpredator.o stockpredstdinfo.o \
-    time.o stockprey.o maininfo.o stockpreyfullprinter.o quotapredator.o \
-    stockpreystdinfo.o stockpreystdinfobylength.o stockprinter.o readword.o \
-    stockstdprinter.o maturity.o suitfunc.o suits.o stomachcontent.o runid.o \
-    migration.o recaggregator.o surveyindices.o migrationpenalty.o recapture.o \
-    stock.o readaggregation.o multinomial.o totalpredator.o understocking.o \
-    recstatistics.o transition.o otherfood.o selectfunc.o naturalm.o \
-    likelihoodprinter.o catchinkilos.o interruptinterface.o interrupthandler.o \
-    tags.o renewal.o taggrow.o initialinputfile.o optinfohooke.o optinfobfgs.o \
-    optinfosimann.o popratio.o popinfo.o popinfomemberfunctions.o summaryprinter.o \
-    numberpredator.o agebandmatrixratio.o agebandmatrixratiomemberfunctions.o \
-    stockpreyaggregator.o stockpreyprinter.o rectangle.o migrationarea.o \
-    addresskeepermatrix.o addresskeepervector.o formulamatrixptrvector.o \
-    intmatrix.o intvector.o doublematrix.o doublevector.o effortpredator.o \
-    parametervector.o otherfoodptrvector.o baseclassptrvector.o popinfoindexvector.o \
-    conversionindexptrvector.o likelihoodptrvector.o suitfuncptrvector.o  \
-    popratiomatrix.o popratiovector.o popinfomatrix.o popinfovector.o \
-    doubleindexvector.o predatorptrvector.o preyptrvector.o fleetptrvector.o \
-    doublematrixptrmatrix.o doublematrixptrvector.o printerptrvector.o \
-    agebandmatrixptrvector.o popratioindexvector.o agebandmatrixptrmatrix.o \
-    formulamatrix.o formulavector.o charptrmatrix.o charptrvector.o \
-    timevariablevector.o stockptrvector.o agebandmatrixratioptrvector.o \
-    tagptrvector.o bandmatrixptrvector.o rectangleptrvector.o migrationareaptrvector.o \
-    predatorpreyaggregator.o predatorpreyprinter.o optinfoptrvector.o
+GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood.o \
+    area.o time.o keeper.o maininfo.o printinfo.o runid.o stochasticdata.o \
+    timevariable.o formula.o readaggregation.o readfunc.o readmain.o readword.o \
+    actionattimes.o livesonareas.o lengthgroup.o conversionindex.o selectfunc.o \
+    suitfunc.o suits.o popinfo.o popinfomemberfunctions.o popratio.o popstatistics.o \
+    interruptinterface.o agebandmatrix.o agebandmatrixmemberfunctions.o tags.o \
+    interrupthandler.o agebandmatrixratio.o agebandmatrixratiomemberfunctions.o \
+    migrationarea.o rectangle.o ludecomposition.o multinomial.o renewal.o spawner.o \
+    stock.o stockmemberfunctions.o taggrow.o grow.o grower.o growermemberfunctions.o \
+    growthcalc.o maturity.o stray.o transition.o initialcond.o migration.o naturalm.o \
+    effortpredator.o lengthpredator.o linearpredator.o numberpredator.o \
+    quotapredator.o predator.o poppredator.o stockpredator.o totalpredator.o \
+    lengthprey.o prey.o stockprey.o recaggregator.o stockpreyaggregator.o \
+    predatoraggregator.o predatoroveraggregator.o preyoveraggregator.o \
+    fleetpreyaggregator.o predatorpreyaggregator.o stockaggregator.o \
+    predatoroverprinter.o predatorpreyprinter.o preyoverprinter.o \
+    stockfullprinter.o stockpreyfullprinter.o stockpreyprinter.o stockprinter.o \
+    predatorprinter.o stockstdprinter.o likelihoodprinter.o summaryprinter.o \
+    catchdistribution.o catchinkilos.o catchstatistics.o understocking.o \
+    recapture.o recstatistics.o stockdistribution.o stomachcontent.o sionstep.o \
+    boundlikelihood.o surveydistribution.o migrationpenalty.o surveyindices.o \
+    sibyageonstep.o sibyfleetonstep.o sibylengthonstep.o regressionline.o \
+    optinfobfgs.o optinfohooke.o optinfosimann.o bfgs.o hooke.o simann.o \
+    addresskeepervector.o addresskeepermatrix.o intmatrix.o doublematrix.o \
+    agebandmatrixptrvector.o agebandmatrixptrmatrix.o agebandmatrixratioptrvector.o \
+    doublematrixptrvector.o doublematrixptrmatrix.o timevariablevector.o \
+    formulavector.o formulamatrix.o formulamatrixptrvector.o charptrmatrix.o \
+    popinfovector.o popinfomatrix.o popinfoindexvector.o suitfuncptrvector.o \
+    popratiovector.o popratiomatrix.o popratioindexvector.o fleetptrvector.o \
+    baseclassptrvector.o conversionindexptrvector.o likelihoodptrvector.o \
+    predatorptrvector.o preyptrvector.o printerptrvector.o stockptrvector.o \
+    migrationareaptrvector.o rectangleptrvector.o otherfoodptrvector.o \
+    tagptrvector.o optinfoptrvector.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
-GADGETINPUT = intvector.o doublevector.o intmatrix.o doublematrix.o \
-    initialinputfile.o charptrvector.o commentstream.o \
-    parameter.o parametervector.o errorhandler.o strstack.o
+GADGETINPUT = intvector.o doublevector.o charptrvector.o initialinputfile.o \
+    commentstream.o parameter.o parametervector.o errorhandler.o strstack.o
 
 LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
 

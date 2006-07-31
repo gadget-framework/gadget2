@@ -15,8 +15,8 @@
 #include "gadget.h"
 
 enum PrinterType { STOCKPRINTER = 1, PREDATORPRINTER, PREDATOROVERPRINTER,
-  PREYOVERPRINTER, STOCKSTDPRINTER, STOCKPREYFULLPRINTER, PREDPREYSTDPRINTER,
-  STOCKFULLPRINTER, LIKELIHOODPRINTER, LIKELIHOODSUMMARYPRINTER, STOCKPREYPRINTER, PREDATORPREYPRINTER };
+  PREYOVERPRINTER, STOCKSTDPRINTER, STOCKPREYFULLPRINTER, STOCKFULLPRINTER,
+  LIKELIHOODPRINTER, LIKELIHOODSUMMARYPRINTER, STOCKPREYPRINTER, PREDATORPREYPRINTER };
 
 /**
  * \class Printer
@@ -59,15 +59,6 @@ public:
    * \param Area is the AreaClass for the current model
    */
   virtual void setPrey(PreyPtrVector& preyvec, const AreaClass* const Area) {};
-  /**
-   * \brief This will select the stocks, predators and preys required for the printer class to print the requested information
-   * \param stockvec is the StockPtrVector of all the available stocks
-   * \param predvec is the PredatorPtrVector of all the available predators
-   * \param preyvec is the PreyPtrVector of all the available preys
-   * \param Area is the AreaClass for the current model
-   */
-  virtual void setStocksAndPredAndPrey(const StockPtrVector& stockvec,
-    const PredatorPtrVector& predvec, const PreyPtrVector& preyvec, const AreaClass* const Area) {};
   /**
    * \brief This will select the predators required for the printer class to print the requested information
    * \param predatorvec is the PredatorPtrVector of all the available predators
