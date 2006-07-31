@@ -276,8 +276,13 @@ void SC::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
         outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
           << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
           << setw(printwidth) << predindex[pred] << sep << setw(printwidth)
-          << preyindex[prey] << sep << setprecision(largeprecision) << setw(largewidth)
-          << (*modelConsumption[timeindex][area])[pred][prey] << endl;
+          << preyindex[prey] << sep << setprecision(largeprecision) << setw(largewidth);
+
+        //JMB crude filter to remove the 'silly' values from the output
+        if ((*modelConsumption[timeindex][area])[pred][prey] < rathersmall)
+          outfile << 0 << endl;
+        else
+          outfile << (*modelConsumption[timeindex][area])[pred][prey] << endl;
       }
     }
   }
@@ -876,9 +881,15 @@ void SCAmounts::printLikelihood(ofstream& outfile, const TimeClass* const TimeIn
         outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
           << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
           << setw(printwidth) << predindex[pred] << sep << setw(printwidth)
-          << preyindex[prey] << sep << setprecision(largeprecision) << setw(largewidth)
-          << (*modelConsumption[timeindex][area])[pred][prey] << sep
-          << setprecision(largeprecision) << setw(largewidth)
+          << preyindex[prey] << sep << setprecision(largeprecision) << setw(largewidth);
+
+        //JMB crude filter to remove the 'silly' values from the output
+        if ((*modelConsumption[timeindex][area])[pred][prey] < rathersmall)
+          outfile << 0;
+        else
+          outfile << (*modelConsumption[timeindex][area])[pred][prey];
+
+        outfile << sep << setprecision(largeprecision) << setw(largewidth)
           << (*stddev[timeindex][area])[pred][prey] << endl;
       }
     }

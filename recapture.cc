@@ -443,8 +443,13 @@ void Recaptures::printLikelihood(ofstream& outfile, const TimeClass* const TimeI
             outfile << setw(printwidth) << tagnames[t] << sep << setw(lowwidth)
               << obsYears[t][timeid] << sep << setw(lowwidth) << obsSteps[t][timeid] << sep
               << setw(printwidth) << areaindex[area] << sep << setw(printwidth)
-              << lenindex[len] << sep << setprecision(largeprecision) << setw(largewidth)
-              << (*modelDistribution[t][timeid])[area][len] << endl;
+              << lenindex[len] << sep << setprecision(largeprecision) << setw(largewidth);
+
+            //JMB crude filter to remove the 'silly' values from the output
+            if ((*modelDistribution[t][timeid])[area][len] < rathersmall)
+              outfile << 0 << endl;
+            else
+              outfile << (*modelDistribution[t][timeid])[area][len] << endl;
           }
         }
 
@@ -459,8 +464,13 @@ void Recaptures::printLikelihood(ofstream& outfile, const TimeClass* const TimeI
               outfile << setw(printwidth) << tagnames[t] << sep << setw(lowwidth)
                 << modYears[t][timeid] << sep << setw(lowwidth) << modSteps[t][timeid] << sep
                 << setw(printwidth) << areaindex[area] << sep << setw(printwidth)
-                << lenindex[len] << sep << setprecision(largeprecision) << setw(largewidth)
-                << (*newDistribution[t][timeid])[area][len] << endl;
+                << lenindex[len] << sep << setprecision(largeprecision) << setw(largewidth);
+
+            //JMB crude filter to remove the 'silly' values from the output
+            if ((*newDistribution[t][timeid])[area][len] < rathersmall)
+              outfile << 0 << endl;
+            else
+              outfile << (*newDistribution[t][timeid])[area][len] << endl;
             }
           }
         }

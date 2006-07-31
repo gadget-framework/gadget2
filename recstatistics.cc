@@ -401,9 +401,15 @@ void RecStatistics::printLikelihood(ofstream& outfile, const TimeClass* const Ti
         for (area = 0; area < areaindex.Size(); area++) {
           outfile << setw(printwidth) << tagnames[t] << sep << setw(lowwidth)
             << year << sep << setw(lowwidth) << step << sep << setw(printwidth)
-            << areaindex[area] << sep << setprecision(printprecision) << setw(printwidth)
-            << (*numbers[t])[timeid][area] << sep << setprecision(largeprecision)
-            << setw(largewidth) << (*modelMean[t])[timeid][area];
+            << areaindex[area] << sep << setprecision(printprecision)
+            << setw(printwidth) << (*numbers[t])[timeid][area] << sep
+            << setprecision(largeprecision) << setw(largewidth);
+
+          //JMB crude filter to remove the 'silly' values from the output
+          if ((*modelMean[t])[timeid][area] < rathersmall)
+            outfile << 0;
+          else
+            outfile << (*modelMean[t])[timeid][area];
 
           switch (functionnumber) {
             case 1:

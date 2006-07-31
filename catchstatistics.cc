@@ -482,8 +482,15 @@ void CatchStatistics::printLikelihood(ofstream& outfile, const TimeClass* const 
       outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
         << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
         << setw(printwidth) << ageindex[age] << sep << setprecision(printprecision)
-        << setw(printwidth) << (*numbers[timeindex])[area][age] << sep
-        << setprecision(largeprecision) << setw(largewidth) << (*modelMean[timeindex])[area][age];
+        << setw(printwidth) << (*numbers[timeindex])[area][age]
+        << sep << setprecision(largeprecision) << setw(largewidth);
+
+      //JMB crude filter to remove the 'silly' values from the output
+      if ((*modelMean[timeindex])[area][age] < rathersmall)
+        outfile << 0;
+      else
+        outfile << (*modelMean[timeindex])[area][age];
+
       switch (functionnumber) {
         case 1:
           outfile << sep << setprecision(printprecision) << setw(printwidth)

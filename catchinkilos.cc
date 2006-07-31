@@ -408,20 +408,24 @@ void CatchInKilos::printLikelihood(ofstream& outfile, const TimeClass* const Tim
     handle.logMessage(LOGFAIL, "Error in catchinkilos - invalid timestep");
 
   for (area = 0; area < modelDistribution.Ncol(timeindex); area++) {
-    if (yearly) {
+    if (yearly)
       outfile << setw(lowwidth) << Years[timeindex] << "  all "
         << setw(printwidth) << areaindex[area];
-    } else {
+    else
       outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
         << Steps[timeindex] << sep << setw(printwidth) << areaindex[area];
-    }
-    if (fleetnames.Size() == 1) {
+
+    if (fleetnames.Size() == 1)
       outfile << sep << setw(printwidth) << fleetnames[0] << sep;
-    } else {
+    else
       outfile << "  all     ";
-    }
-    outfile << setprecision(largeprecision) << setw(largewidth)
-      << modelDistribution[timeindex][area] << endl;
+
+    //JMB crude filter to remove the 'silly' values from the output
+    if (modelDistribution[timeindex][area] < rathersmall)
+      outfile << setw(largewidth) << 0 << endl;
+    else
+      outfile << setprecision(largeprecision) << setw(largewidth)
+        << modelDistribution[timeindex][area] << endl;
   }
 }
 

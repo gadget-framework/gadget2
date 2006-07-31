@@ -431,8 +431,13 @@ void CatchDistribution::printLikelihood(ofstream& outfile, const TimeClass* cons
         outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
           << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
           << setw(printwidth) << ageindex[age] << sep << setw(printwidth)
-          << lenindex[len] << sep << setprecision(largeprecision) << setw(largewidth)
-          << (*modelDistribution[timeindex][area])[age][len] << endl;
+          << lenindex[len] << sep << setprecision(largeprecision) << setw(largewidth);
+
+        //JMB crude filter to remove the 'silly' values from the output
+        if ((*modelDistribution[timeindex][area])[age][len] < rathersmall)
+          outfile << 0 << endl;
+        else
+          outfile << (*modelDistribution[timeindex][area])[age][len] << endl;
       }
     }
   }

@@ -553,8 +553,13 @@ void StockDistribution::printLikelihood(ofstream& outfile, const TimeClass* cons
           << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
           << setw(printwidth) << stocknames[s] << sep << setw(printwidth)
           << ageindex[age] << sep << setw(printwidth) << lenindex[len]
-          << sep << setprecision(largeprecision) << setw(largewidth)
-          << (*modelDistribution[timeindex][area])[s][i] << endl;
+          << sep << setprecision(largeprecision) << setw(largewidth);
+
+        //JMB crude filter to remove the 'silly' values from the output
+        if ((*modelDistribution[timeindex][area])[s][i] < rathersmall)
+          outfile << 0 << endl;
+        else
+          outfile << (*modelDistribution[timeindex][area])[s][i] << endl;
       }
     }
   }

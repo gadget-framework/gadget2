@@ -227,8 +227,13 @@ void SIOnStep::printLikelihood(ofstream& outfile, const TimeClass* const TimeInf
       for (i = 0; i < colindex.Size(); i++) {
         outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
           << Steps[timeindex] << sep << setw(printwidth) << areaindex[a] << sep
-          << setw(printwidth) << colindex[i] << sep << setprecision(largeprecision)
-          << setw(largewidth) << (*modelIndex[timeindex])[a][i] << endl;
+          << setw(printwidth) << colindex[i] << sep << setw(largewidth);
+
+        //JMB crude filter to remove the 'silly' values from the output
+        if ((*modelIndex[timeindex])[a][i] < rathersmall)
+          outfile << 0 << endl;
+        else
+          outfile << setprecision(largeprecision) << (*modelIndex[timeindex])[a][i] << endl;
       }
     }
   }
