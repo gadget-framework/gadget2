@@ -36,7 +36,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
     Lc = L2;
     //check that the length group divisions are aligned
     double check = (Lf->minLength() - Lc->minLength()) / Lf->dl();
-    offset = int(check);
+    offset = int(check + verysmall);
     if (isEqual(check, floor(check)))
       samedl = 1;
 

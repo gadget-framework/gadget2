@@ -12,7 +12,7 @@ LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : 
   }
 
   double tmp = (MaxL - MinL) / Dl;
-  size = int(tmp + rathersmall);
+  size = int(tmp + verysmall);
   if (size == 0) {
     error = 1;
     return;
@@ -51,7 +51,7 @@ LengthGroupDivision::LengthGroupDivision(const DoubleVector& Breaks) : error(0),
     meanlength[i] = 0.5 * (Breaks[i] + Breaks[i + 1]);
     if ((Breaks[i] > Breaks[i + 1]) || (isEqual(Breaks[i], Breaks[i + 1])))
       error = 1;
-    if (!(isEqual(tmp, (Breaks[i + 1] - Breaks[i]))))
+    if ((!(isEqual(tmp, (Breaks[i + 1] - Breaks[i])))) && (!(isZero(tmp))))
       tmp = 0.0;
   }
   Dl = tmp;
@@ -199,8 +199,8 @@ int checkLengthGroupStructure(const LengthGroupDivision* finer,
   double minlength, maxlength;
 
   //check to see if the intersection is empty
-  minlength = max(coarser->minLength(), finer->minLength()) + rathersmall;
-  maxlength = min(coarser->maxLength(), finer->maxLength()) - rathersmall;
+  minlength = max(coarser->minLength(), finer->minLength());
+  maxlength = min(coarser->maxLength(), finer->maxLength());
   if ((minlength > maxlength) || isEqual(minlength, maxlength)) {
     handle.logMessage(LOGWARN, "Error when checking length structure - empty intersection");
     finer->printError();
@@ -219,8 +219,8 @@ int checkLengthGroupStructure(const LengthGroupDivision* finer,
       return 1;
     }
 
-    if ((coarser->minLength(c) > (finer->minLength(f) + rathersmall)) ||
-         (finer->maxLength(f) > (coarser->maxLength(c) + rathersmall))) {
+    if ((coarser->minLength(c) > (finer->minLength(f) + verysmall)) ||
+         (finer->maxLength(f) > (coarser->maxLength(c) + verysmall))) {
 
       handle.logMessage(LOGWARN, "Error when checking length structure for length group", f);
       finer->printError();

@@ -90,7 +90,7 @@ inline int isZero(double a) {
  * \note This function replaces 'a == b' to take account of numerical inaccuracies when calculating the exact value of a double
  */
 inline int isEqual(double a, double b) {
-  return ((fabs(a - b) < verysmall) ? 1 : 0);
+  return ((fabs(a - b) < (2.0 * verysmall)) ? 1 : 0);
 }
 
 /**
