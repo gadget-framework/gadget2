@@ -165,7 +165,7 @@ void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
 
   for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
     rat = 0.0;
-    if (biomass[inarea][i] > verysmall)
+    if (!(isZero(biomass[inarea][i])))
       rat = cons[inarea][i] / biomass[inarea][i];
 
     ratio[inarea][i] = rat;

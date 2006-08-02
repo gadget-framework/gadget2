@@ -110,14 +110,11 @@ inline double logFactorial(double n) {
  * \note This function replaces 'exp' to return a value in the range 0.0 to 1.0
  */
 inline double expRep(double n) {
-  double exprep = 0.0;
   if (n > verysmall)
-    exprep = 1.0;
+    return 1.0;
   else if (n < -25.0)
-    exprep = rathersmall;
-  else
-    exprep = exp(n);
-  return exprep;
+    return rathersmall;
+  return exp(n);
 }
 
 /**
@@ -128,7 +125,7 @@ inline double expRep(double n) {
 inline double randomNumber() {
   int r = rand();
   double k = r % 32767;
-  return k / 32767.0;
+  return (k / 32767.0);
 }
 
 /**
@@ -139,14 +136,11 @@ inline double randomNumber() {
  * \return calculated mortality
  */
 inline double calcMortality(double pred, double pop, double t) {
-  double m = 0.0;
   if (pred < verysmall)
-    m = 0.0;
+    return 0.0;
   else if (pred > pop)
-    m = verybig;
-  else
-    m = -log(1.0 - (pred / pop)) * t;
-  return m;
+    return verybig;
+  return (-log(1.0 - (pred / pop)) * t);
 }
 
 #endif
