@@ -61,7 +61,7 @@ public:
   void Reset();
   /**
    * \brief This operator will set the vector equal to an existing CharPtrVector
-   * \param cv is the StockPtrVector to copy
+   * \param cv is the CharPtrVector to copy
    */
   CharPtrVector& operator = (const CharPtrVector& cv);
 protected:
