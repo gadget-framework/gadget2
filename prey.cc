@@ -157,30 +157,39 @@ void Prey::addNumbersConsumption(int area, const DoubleVector& predcons) {
 void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
   int i, over = 0;
   int inarea = this->areaNum(area);
-  double maxRatio, rat;
-
-  maxRatio = MaxRatioConsumed;
+  double maxRatio = MaxRatioConsumed;
   if (TimeInfo->numSubSteps() != 1)
     maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
 
   for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-    rat = 0.0;
-    if (!(isZero(biomass[inarea][i])))
-      rat = cons[inarea][i] / biomass[inarea][i];
+    if (isZero(biomass[inarea][i])) {
+      //no prey biomass available to consume
+      ratio[inarea][i] = 0.0;
+      useratio[inarea][i] = 0.0;
+      consratio[inarea][i] = 0.0;
+      if (!(isZero(cons[inarea][i]))) {
+        //consumption required but no prey exists
+        over = 1;
+        overconsumption[inarea][i] += cons[inarea][i];
+      }
 
-    ratio[inarea][i] = rat;
-    if (rat > maxRatio) {
-      over = 1;
-      overconsumption[inarea][i] += (rat - maxRatio) * biomass[inarea][i];
-      consratio[inarea][i] = 1.0 - maxRatio;
-      useratio[inarea][i] = maxRatio;
-      cons[inarea][i] = biomass[inarea][i] * maxRatio;
     } else {
-      consratio[inarea][i] = 1.0 - rat;
-      useratio[inarea][i] = rat;
+      //prey available to consume so only need to check overconsumption
+      ratio[inarea][i] = cons[inarea][i] / biomass[inarea][i];
+      if (ratio[inarea][i] > maxRatio) {
+        over = 1;
+        overconsumption[inarea][i] += (ratio[inarea][i] - maxRatio) * biomass[inarea][i];
+        consratio[inarea][i] = 1.0 - maxRatio;
+        useratio[inarea][i] = maxRatio;
+        cons[inarea][i] = biomass[inarea][i] * maxRatio;
+      } else {
+        consratio[inarea][i] = 1.0 - ratio[inarea][i];
+        //JMB - this is right if there is more than one substep ...
+        useratio[inarea][i] = ratio[inarea][i];
+      }
+      //finally add the consumption
+      consumption[inarea][i] += cons[inarea][i];
     }
-
-    consumption[inarea][i] += cons[inarea][i];
   }
   isoverconsumption[inarea] = over;
 }
