@@ -175,6 +175,14 @@ void Keeper::getOptInitialValues(DoubleVector& val) const {
   }
 }
 
+void Keeper::resetVariables() {
+  int i;
+  for (i = 0; i < values.Size(); i++) {
+    initialvalues[i] = 1.0;
+    scaledvalues[i] = values[i];
+  }
+}
+
 void Keeper::scaleVariables() {
   int i;
   for (i = 0; i < values.Size(); i++) {

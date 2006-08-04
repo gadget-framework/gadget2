@@ -140,7 +140,11 @@ public:
    */
   void storeVariables(double likvalue, const DoubleVector& point) { keeper->storeVariables(likvalue, point); };
   /**
-   * \brief This function will scale the variables to be optimised (for the Hooke & Jeeves and possibly the BFGS optimisation algorithm)
+   * \brief This function will reset the variables that have been scaled, to be optimised using the Simulated Annealing optimisation algorithm
+   */
+  void resetVariables() { keeper->resetVariables(); };
+  /**
+   * \brief This function will scale the variables to be optimised, for the Hooke & Jeeves and BFGS optimisation algorithms
    */
   void scaleVariables() { keeper->scaleVariables(); };
   /**

@@ -204,6 +204,7 @@ void OptInfoSimann::OptimiseLikelihood() {
   IntVector param(nvars, 0);
   IntVector nacp(nvars, 0);
 
+  EcoSystem->resetVariables();  //JMB need to reset variables in case they have been scaled
   EcoSystem->getOptScaledValues(x);
   EcoSystem->getOptLowerBounds(lowerb);
   EcoSystem->getOptUpperBounds(upperb);
