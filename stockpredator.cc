@@ -249,21 +249,22 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
 //adjust the consumption according to that.
 void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
   int inarea = this->areaNum(area);
+  int numlen = LgrpDiv->numLengthGroups();
   int preyl, predl, prey;
-  double maxRatio, ratio1, ratio2, tmp;
+  double maxRatio, tmp;
 
   maxRatio = MaxRatioConsumed;
   if (TimeInfo->numSubSteps() != 1)
     maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
 
-  for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+  for (predl = 0; predl < numlen; predl++)
     overcons[inarea][predl] = 0.0;
 
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isOverConsumption(area)) {
       hasoverconsumption[inarea] = 1;
       DoubleVector ratio = this->getPrey(prey)->getRatio(area);
-      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+      for (predl = 0; predl < numlen; predl++) {
         for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
           if (ratio[preyl] > maxRatio) {
             tmp = maxRatio / ratio[preyl];
@@ -276,7 +277,7 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
   }
 
   if (hasoverconsumption[inarea]) {
-    for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
+    for (predl = 0; predl < numlen; predl++) {
       overconsumption[inarea][predl] += overcons[inarea][predl];
       if (totalcons[inarea][predl] > verysmall) {
         tmp = 1.0 - (overcons[inarea][predl] / totalcons[inarea][predl]);
@@ -286,21 +287,23 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
     }
   }
 
-  ratio2 = 1.0;
-  ratio1 = 0.0;
+  for (predl = 0; predl < numlen; predl++)
+    totalconsumption[inarea][predl] += totalcons[inarea][predl];
+
   if (TimeInfo->numSubSteps() != 1) {
+    double ratio1, ratio2;
     ratio2 = 1.0 / TimeInfo->getSubStep();
     ratio1 = 1.0 - ratio2;
-  }
+    for (predl = 0; predl < numlen; predl++)
+      fphi[inarea][predl] = (ratio2 * subfphi[inarea][predl]) + (ratio1 * fphi[inarea][predl]);
 
-  for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
-    totalconsumption[inarea][predl] += totalcons[inarea][predl];
-    fphi[inarea][predl] = (ratio2 * subfphi[inarea][predl]) + (ratio1 * fphi[inarea][predl]);
-  }
+  } else 
+    for (predl = 0; predl < numlen; predl++)
+      fphi[inarea][predl] = subfphi[inarea][predl];
 
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
-      for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
+      for (predl = 0; predl < numlen; predl++)
         for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
           (*consumption[inarea][prey])[predl][preyl] += (*cons[inarea][prey])[predl][preyl];
 }

@@ -157,15 +157,20 @@ void Prey::addNumbersConsumption(int area, const DoubleVector& predcons) {
 void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
   int i, over = 0;
   int inarea = this->areaNum(area);
+
+  double timeratio = 1.0;
   double maxRatio = MaxRatioConsumed;
-  if (TimeInfo->numSubSteps() != 1)
+  if (TimeInfo->numSubSteps() != 1) {
     maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
+    timeratio = 1.0 / TimeInfo->getSubStep();
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+      useratio[inarea][i] *= (1.0 - timeratio);
+  }
 
   for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
     if (isZero(biomass[inarea][i])) {
       //no prey biomass available to consume
       ratio[inarea][i] = 0.0;
-      useratio[inarea][i] = 0.0;
       consratio[inarea][i] = 0.0;
       if (!(isZero(cons[inarea][i]))) {
         //consumption required but no prey exists
@@ -180,12 +185,11 @@ void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
         over = 1;
         overconsumption[inarea][i] += (ratio[inarea][i] - maxRatio) * biomass[inarea][i];
         consratio[inarea][i] = 1.0 - maxRatio;
-        useratio[inarea][i] = maxRatio;
+        useratio[inarea][i] += (timeratio * maxRatio);
         cons[inarea][i] = biomass[inarea][i] * maxRatio;
       } else {
         consratio[inarea][i] = 1.0 - ratio[inarea][i];
-        //JMB - this is right if there is more than one substep ...
-        useratio[inarea][i] = ratio[inarea][i];
+        useratio[inarea][i] += (timeratio * ratio[inarea][i]);
       }
       //finally add the consumption
       consumption[inarea][i] += cons[inarea][i];
@@ -200,6 +204,7 @@ void Prey::Reset() {
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
       consumption[area][i] = 0.0;
       overconsumption[area][i] = 0.0;
+      useratio[area][i] = 0.0;
     }
   }
   if (handle.getLogLevel() >= LOGMESSAGE)
