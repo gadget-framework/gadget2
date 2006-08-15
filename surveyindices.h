@@ -71,10 +71,6 @@ protected:
    */
   IntMatrix areas;
   /**
-   * \brief This is the CharPtrVector of the names of the areas
-   */
-  CharPtrVector areaindex;
-  /**
    * \brief This is the CharPtrVector of the names of the stocks that will be used to calculate the likelihood score
    */
   CharPtrVector stocknames;

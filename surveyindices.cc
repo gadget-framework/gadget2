@@ -22,7 +22,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   IntMatrix ages;
   DoubleVector lengths;
-  CharPtrVector charindex;
+  CharPtrVector charindex, areaindex;
 
   char datafilename[MaxStrLength];
   char aggfilename[MaxStrLength];
@@ -147,8 +147,11 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   } else
     handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised type", sitype);
 
+  //delete objects that are no longer needed to free memory
   for (i = 0; i < charindex.Size(); i++)
     delete[] charindex[i];
+  for (i = 0; i < areaindex.Size(); i++)
+    delete[] areaindex[i];
 
   //prepare for next likelihood component
   infile >> ws;
@@ -165,8 +168,6 @@ SurveyIndices::~SurveyIndices() {
     delete[] stocknames[i];
   for (i = 0; i < fleetnames.Size(); i++)
     delete[] fleetnames[i];
-  for (i = 0; i < areaindex.Size(); i++)
-    delete[] areaindex[i];
   delete SI;
 }
 
