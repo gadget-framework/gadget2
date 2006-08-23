@@ -81,12 +81,12 @@ void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {
 
   aggregator->Sum();
   alptr = &aggregator->getSum();
-  for (a = 0; a < Areas.Nrow(); a++) {
-    for (i = 0; i < Ages.Nrow(); i++) {
-      if (biomass)  //JMB experimental survey index based on the biomass
-        (*modelIndex[timeindex])[a][i] = (*alptr)[a][i][0].N * (*alptr)[a][i][0].W;
-      else
-        (*modelIndex[timeindex])[a][i] = (*alptr)[a][i][0].N;
-    }
-  }
+  for (a = 0; a < Areas.Nrow(); a++)
+    for (i = 0; i < Ages.Nrow(); i++)
+      (*modelIndex[timeindex])[a][i] = (*alptr)[a][i][0].N;
+
+  if (biomass)  //JMB experimental survey index based on the biomass
+    for (a = 0; a < Areas.Nrow(); a++)
+      for (i = 0; i < Ages.Nrow(); i++)
+        (*modelIndex[timeindex])[a][i] *= (*alptr)[a][i][0].W;
 }

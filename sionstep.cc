@@ -195,8 +195,9 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
   if (Years.Size() < 2)
     handle.logMessage(LOGWARN, "Warning in surveyindex - insufficient data to fit a regression line for", this->getName());
 
-  if ((handle.getLogLevel() >= LOGWARN) && (Steps.Size() > 0)) {
-    //JMB - to be comparable, this should only take place on the same step in each year
+  if ((handle.getLogLevel() >= LOGWARN) && (Steps.Size() > 0) && (this->getSIType() != SIEFFORT)) {
+    //JMB to be comparable, this should only take place on the same step in each year
+    //However the effort data will be on most timesteps so this check isnt required
     step = Steps[0];
     timeid = 0;
     for (i = 1; i < Steps.Size(); i++)

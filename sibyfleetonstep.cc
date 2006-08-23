@@ -79,12 +79,12 @@ void SIByFleetOnStep::Sum(const TimeClass* const TimeInfo) {
     handle.logMessage(LOGWARN, "Warning in surveyindex - zero catch found");
 
   alptr = &aggregator->getSum();
-  for (a = 0; a < Areas.Nrow(); a++) {
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-      if (biomass)  //JMB experimental survey index based on the biomass
-        (*modelIndex[timeindex])[a][i] = (*alptr)[a][0][i].N * (*alptr)[a][0][i].W;
-      else
-        (*modelIndex[timeindex])[a][i] = (*alptr)[a][0][i].N;
-    }
-  }
+  for (a = 0; a < Areas.Nrow(); a++)
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+      (*modelIndex[timeindex])[a][i] = (*alptr)[a][0][i].N;
+
+  if (biomass)  //JMB experimental survey index based on the biomass
+    for (a = 0; a < Areas.Nrow(); a++)
+      for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+        (*modelIndex[timeindex])[a][i] *= (*alptr)[a][0][i].W;
 }
