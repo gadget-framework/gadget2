@@ -35,10 +35,12 @@ public:
    * \param charindex is the CharPtrVector of the names of the column index for the survey indices
    * \param givenname is the name for the SIOnStep component
    * \param bio is the flag to denote whether the index should be based on the biomass or not
+   * \param type is the SIType of the SIOnStep
    */
   SIOnStep(CommentStream& infile, const char* datafilename,
     const CharPtrVector& aindex, const TimeClass* const TimeInfo,
-    const IntMatrix& areas, const CharPtrVector& charindex, const char* givenname, int bio);
+    const IntMatrix& areas, const CharPtrVector& charindex,
+    const char* givenname, int bio, SIType type);
   /**
    * \brief This is the default SIOnStep destructor
    */

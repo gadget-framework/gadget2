@@ -24,11 +24,13 @@ SIOnStep::~SIOnStep() {
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   const CharPtrVector& aindex, const TimeClass* const TimeInfo,
   const IntMatrix& areas, const CharPtrVector& charindex,
-  const char* givenname, int bio) : HasName(givenname), Areas(areas), alptr(0), biomass(bio) {
+  const char* givenname, int bio, SIType type) : HasName(givenname), Areas(areas), alptr(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
+  biomass = bio;
+  sitype = type;
   timeindex = 0;
   slope = 0.0;
   intercept = 0.0;
