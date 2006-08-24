@@ -11,7 +11,7 @@ PreyOverAggregator::PreyOverAggregator(const PreyPtrVector& Preys,
 
   int i, j;
   for (i = 0; i < preys.Size(); i++) {
-    if (checkLengthGroupStructure(preys[i]->getLengthGroupDiv(), LgrpDiv))
+    if (!checkLengthGroupStructure(preys[i]->getLengthGroupDiv(), LgrpDiv))
       handle.logMessage(LOGFAIL, "Error in preyoveraggregator - invalid length group structure");
     preyConv.AddRows(1, preys[i]->getLengthGroupDiv()->numLengthGroups(), -1);
     for (j = 0; j < preyConv.Ncol(i); j++)

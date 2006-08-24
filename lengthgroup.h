@@ -70,10 +70,10 @@ public:
   int numLengthGroups() const { return size; };
   /**
    * \brief This function will return the identifier of a length group containing a specified length
-   * \param length is the length to find in the length group
+   * \param len is the length to find in the length group
    * \return the identifier of the length group
    */
-  int numLengthGroup(double length) const;
+  int numLengthGroup(double len) const;
   /**
    * \brief This function will combine a second LengthGroupDivision with the current LengthGroupDivision
    * \return 1 if the LengthGroupDivision has been combined sucessfully, 0 otherwise
@@ -128,7 +128,7 @@ protected:
  * \brief This is the function that will check whether one LengthGroupDivision has length groups that are finer than a second LengthGroupDivision, and print an error if this is not the case
  * \param finer is the LengthGroupDivision that should be on a finer scale
  * \param coarser is the LengthGroupDivision that should be on a coarser scale
- * \return 1 if the structure of the LengthGroupDivision objects are not compatible, 0 otherwise
+ * \return 1 if the structure of the LengthGroupDivision objects are compatible, 0 otherwise
  */
 extern int checkLengthGroupStructure(const LengthGroupDivision* finer,
   const LengthGroupDivision* coarser);

@@ -27,8 +27,8 @@ void readRefWeights(CommentStream& infile, DoubleMatrix& M) {
   for (i = 1; i < M.Nrow(); i++)
     if ((M[i][0] - M[i - 1][0]) < verysmall)
       handle.logFileMessage(LOGFAIL, "lengths for reference weights must be strictly increasing");
-  for (i = 0; i < M.Nrow(); i++)
-    if ((M[i][1] < verysmall) && !(isZero(M[i][0])))
+  for (i = 1; i < M.Nrow(); i++)
+    if (M[i][1] < verysmall)
       handle.logFileMessage(LOGFAIL, "weights for reference weights must be positive");
 
   handle.logMessage(LOGMESSAGE, "Read reference weights OK - number of entries", M.Nrow());

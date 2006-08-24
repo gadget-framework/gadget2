@@ -24,14 +24,14 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   }
 
   if (isZero(L1->dl()) || isZero(L2->dl())) {
-    if (checkLengthGroupStructure(L1, L2)) {
+    if (!checkLengthGroupStructure(L1, L2)) {
       error = 1;
       return;
     }
     Lf = L1;
     Lc = L2;
 
-  } else if (isEqual(L1->dl(), L2->dl())) {
+  } else if (isSmall(L1->dl() - L2->dl())) {
     Lf = L1;
     Lc = L2;
     //check that the length group divisions are aligned
@@ -54,14 +54,14 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   nc = Lc->numLengthGroups();
   //set minlength and maxlength
   for (i = 0; i < nf; i++) {
-    if ((Lf->minLength(i) > Lc->minLength()) || (isEqual(Lf->minLength(i), Lc->minLength()))) {
+    if ((Lf->minLength(i) > Lc->minLength()) || (isSmall(Lf->minLength(i) - Lc->minLength()))) {
       minlength = i;
       break;
     }
   }
 
   for (i = nf - 1; i >= 0; i--) {
-    if ((Lf->maxLength(i) < Lc->maxLength()) || (isEqual(Lf->maxLength(i), Lc->maxLength()))) {
+    if ((Lf->maxLength(i) < Lc->maxLength()) || (isSmall(Lf->maxLength(i) - Lc->maxLength()))) {
       maxlength = i + 1;
       break;
     }
@@ -116,7 +116,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
       k = 0;
       for (i = minlength; i < maxlength; i++) {
         for (j = k; j < nc - 1; j++) {
-          if (((Lf->meanLength(i) > Lc->meanLength(j)) || (isEqual(Lf->meanLength(i), Lc->meanLength(j)))) && (Lf->meanLength(i) < Lc->meanLength(j + 1))) {
+          if (((Lf->meanLength(i) > Lc->meanLength(j)) || (isSmall(Lf->meanLength(i) - Lc->meanLength(j)))) && (Lf->meanLength(i) < Lc->meanLength(j + 1))) {
 
             ipos[i] = j;
             k = j;

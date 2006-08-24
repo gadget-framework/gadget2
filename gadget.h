@@ -52,11 +52,11 @@ using namespace std;
 /* Also defined are some of the constants used by Gadget */
 const int MaxStrLength = 129;                 /* 128 + 1 */
 const int LongString = 4097;                  /* 4Kb + 1 */
-const double rathersmall = 1e-10;
-/* from <climits> machine accuracy is set to 2.2204460492503131e-016 */
-const double verysmall = 4.44089e-16;      /* twice machine accuracy */
 const double verybig = 1e+10;
-const int MaxMortality = 1000;
+const double rathersmall = 1e-10;
+/* machine accuracy for doubles is apparently 2.2204460492503131e-16 */
+//const double verysmall = 4.4408921e-16;  /* twice machine accuracy */
+const double verysmall = 1e-20;
 const double MaxRatioConsumed = 0.95;
 const char chrComment = ';';
 const char sep = ' ';

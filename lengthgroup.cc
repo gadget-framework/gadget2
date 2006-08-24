@@ -4,57 +4,69 @@
 
 extern ErrorHandler handle;
 
-//Constructor for length division with even increments.
+//Constructor for length division with even increments
 LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : error(0), Dl(DL) {
   if ((MaxL < MinL) || (MinL < 0.0) || (Dl < verysmall)) {
     error = 1;
     return;
   }
 
-  double tmp = (MaxL - MinL) / Dl;
+  int i;
+  minlen = MinL;
+  maxlen = MaxL;
+  double tmp = (maxlen - minlen) / Dl;
   size = int(tmp + verysmall);
   if (size == 0) {
     error = 1;
     return;
   }
 
-  minlen = MinL;
-  maxlen = MaxL;
-  tmp = 0.5 * Dl;
-
-  int i;
   meanlength.resize(size, 0.0);
   minlength.resize(size, 0.0);
   for (i = 0; i < size; i++) {
     minlength[i] = minlen + (Dl * i);
-    meanlength[i] = minlength[i] + tmp;
+    meanlength[i] = minlength[i] + (Dl * 0.5);
   }
 }
 
-//Constructor for length division with uneven increments.
+//Constructor for length division with uneven increments
 LengthGroupDivision::LengthGroupDivision(const DoubleVector& Breaks) : error(0), Dl(0.0) {
   if ((Breaks.Size() < 2) || (Breaks[0] < 0.0)) {
     error = 1;
     return;
   }
 
+  int i;
   size = Breaks.Size() - 1;
   minlen = Breaks[0];
   maxlen = Breaks[size];
-
-  int i;
-  double tmp = Breaks[1] - Breaks[0];
+  Dl = Breaks[1] - Breaks[0];
   meanlength.resize(size, 0.0);
   minlength.resize(size, 0.0);
+
   for (i = 0; i < size; i++) {
-    minlength[i] = Breaks[i];
-    meanlength[i] = 0.5 * (Breaks[i] + Breaks[i + 1]);
-    if ((Breaks[i] > Breaks[i + 1]) || (isEqual(Breaks[i], Breaks[i + 1])))
+    //JMB first some error checks ...
+    if ((Breaks[i] > Breaks[i + 1]) || (isEqual(Breaks[i], Breaks[i + 1]))) {
       error = 1;
-    if ((!(isEqual(tmp, (Breaks[i + 1] - Breaks[i])))) && (!(isZero(tmp))))
-      tmp = 0.0;
+      return;
+    }
+    //... and check to see if the step lengths are actually equal
+    if (!isZero(Dl) && !isSmall(Breaks[i + 1] - Breaks[i] - Dl))
+      Dl = 0.0;
   }
-  Dl = tmp;
+
+  //finally store the mean and minimum lengths for the length division
+  if (isZero(Dl)) {
+    for (i = 0; i < size; i++) {
+      minlength[i] = Breaks[i];
+      meanlength[i] = 0.5 * (Breaks[i] + Breaks[i + 1]);
+    }
+  } else {
+    for (i = 0; i < size; i++) {
+      minlength[i] = minlen + (Dl * i);
+      meanlength[i] = minlength[i] + (Dl * 0.5);
+    }
+  }
 }
 
 LengthGroupDivision::LengthGroupDivision(const LengthGroupDivision& l)
@@ -62,21 +74,21 @@ LengthGroupDivision::LengthGroupDivision(const LengthGroupDivision& l)
     meanlength(l.meanlength), minlength(l.minlength) {
 }
 
-int LengthGroupDivision::numLengthGroup(double length) const {
-  //check if length equals the minimum length.
-  if (isEqual(minlen, length))
+int LengthGroupDivision::numLengthGroup(double len) const {
+  //check if len equals the minimum length
+  if (isEqual(minlen, len))
     return 0;
 
-  //check if length equals the maximum length.
-  if (isEqual(maxlen, length))
+  //check if len equals the maximum length
+  if (isEqual(maxlen, len))
     return size - 1;
 
   int i;
   for (i = 0; i < size; i++)
-    if ((isEqual(minlength[i], length)) || ((minlength[i] < length) && (length < this->maxLength(i))))
+    if ((isEqual(minlength[i], len)) || ((minlength[i] < len) && (len < this->maxLength(i))))
       return i;
 
-  //failed to find length group that matches length
+  //failed to find length group that matches len
   return -1;
 }
 
@@ -195,7 +207,7 @@ void LengthGroupDivision::printError() const {
 int checkLengthGroupStructure(const LengthGroupDivision* finer,
   const LengthGroupDivision* coarser) {
 
-  int c, f, fmin, fmax;
+  int c, f;
   double minlength, maxlength;
 
   //check to see if the intersection is empty
@@ -205,28 +217,31 @@ int checkLengthGroupStructure(const LengthGroupDivision* finer,
     handle.logMessage(LOGWARN, "Error when checking length structure - empty intersection");
     finer->printError();
     coarser->printError();
-    return 1;
+    return 0;
   }
 
-  fmin = finer->numLengthGroup(minlength);
-  fmax = finer->numLengthGroup(maxlength);
-  for (f = fmin; f < fmax; f++) {
+  //if the length groups have the same dl then no need to check any further
+  if (isSmall(finer->dl() - coarser->dl()))
+    return 1;
+
+  //now we need to check the length grouping for the intersection
+  for (f = finer->numLengthGroup(minlength); f < finer->numLengthGroup(maxlength); f++) {
     c = coarser->numLengthGroup(finer->minLength(f));
     if (c == -1) {
       handle.logMessage(LOGWARN, "Error when checking length structure for the following lengthgroups");
       finer->printError();
       coarser->printError();
-      return 1;
+      return 0;
     }
 
-    if ((coarser->minLength(c) > (finer->minLength(f) + verysmall)) ||
-         (finer->maxLength(f) > (coarser->maxLength(c) + verysmall))) {
+    if ((coarser->minLength(c) > (finer->minLength(f) + rathersmall)) ||
+         (finer->maxLength(f) > (coarser->maxLength(c) + rathersmall))) {
 
       handle.logMessage(LOGWARN, "Error when checking length structure for length group", f);
       finer->printError();
       coarser->printError();
-      return 1;
+      return 0;
     }
   }
-  return 0;
+  return 1;
 }

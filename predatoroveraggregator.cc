@@ -11,7 +11,7 @@ PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
 
   int i, j;
   for (i = 0; i < predators.Size(); i++) {
-    if (checkLengthGroupStructure(predators[i]->getLengthGroupDiv(), LgrpDiv))
+    if (!checkLengthGroupStructure(predators[i]->getLengthGroupDiv(), LgrpDiv))
       handle.logMessage(LOGFAIL, "Error in predatoroveraggregator - invalid length group structure");
     predConv.AddRows(1, predators[i]->getLengthGroupDiv()->numLengthGroups(), -1);
     for (j = 0; j < predConv.Ncol(i); j++)
