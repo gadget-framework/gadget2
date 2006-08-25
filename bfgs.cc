@@ -206,7 +206,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
 
     if (check == 0 || alpha < rathersmall) {
       check++;
-      //JMB - make the step size when calculating the gradient smaller
+      // make the step size when calculating the gradient smaller
       gradacc *= gradstep;
       handle.logMessage(LOGINFO, "Warning in BFGS - resetting search algorithm after", iters, "function evaluations");
 
@@ -259,9 +259,8 @@ void OptInfoBFGS::OptimiseLikelihood() {
       continue;
     }
 
-    normgrad = 0.0;
     hy = 0.0;
-    yBy = 0.0;
+    normgrad = 0.0;
     for (i = 0; i < nvars; i++) {
       h[i] = alpha * search[i];
       x[i] += h[i];
@@ -272,6 +271,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
     }
     normgrad = sqrt(normgrad);
 
+    yBy = 0.0;
     for (i = 0; i < nvars; i++) {
       By[i] = 0.0;
       for (j = 0; j < nvars; j++)
@@ -281,6 +281,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
 
     if ((isZero(hy)) || (isZero(yBy))) {
       check = 0;
+      continue;
     } else {
       temphy = 1.0 / hy;
       tempyby = 1.0 / yBy;
@@ -303,7 +304,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
     EcoSystem->writeBestValues();
 
     // terminate the algorithm if the convergence criteria has been met
-    if (normgrad / (1.0 + newf) < bfgseps) {
+    if ((normgrad / (1.0 + newf)) < bfgseps) {
       handle.logMessage(LOGINFO, "\nStopping BFGS optimisation algorithm\n");
       handle.logMessage(LOGINFO, "The optimisation stopped after", iters, "function evaluations");
       handle.logMessage(LOGINFO, "The optimisation stopped because an optimum was found for this run");
