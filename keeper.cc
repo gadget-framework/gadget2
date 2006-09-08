@@ -445,8 +445,8 @@ void Keeper::writeParams(const OptInfoPtrVector& optvec, const char* const filen
       paramfile << switches[i].getName() << TAB << setw(w) << setprecision(p) << bestvalues[i];
 
     paramfile << TAB << setw(smallwidth) << setprecision(smallprecision) << lowerbds[i]
-      << setw(smallwidth) << setprecision(smallprecision) << upperbds[i]
-      << setw(smallwidth) << opt[i];
+      << sep << setw(smallwidth) << setprecision(smallprecision) << upperbds[i]
+      << sep << setw(smallwidth) << opt[i];
 
     if (check)
       paramfile << " ; warning - parameter has been reset to bound";
