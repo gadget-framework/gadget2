@@ -76,16 +76,16 @@ LengthGroupDivision::LengthGroupDivision(const LengthGroupDivision& l)
 
 int LengthGroupDivision::numLengthGroup(double len) const {
   //check if len equals the minimum length
-  if (isEqual(minlen, len))
+  if (isSmall(minlen - len))
     return 0;
 
   //check if len equals the maximum length
-  if (isEqual(maxlen, len))
+  if (isSmall(maxlen - len))
     return size - 1;
 
   int i;
   for (i = 0; i < size; i++)
-    if ((isEqual(minlength[i], len)) || ((minlength[i] < len) && (len < this->maxLength(i))))
+    if ((isSmall(minlength[i] - len)) || ((minlength[i] < len) && (len < this->maxLength(i))))
       return i;
 
   //failed to find length group that matches len
@@ -213,7 +213,7 @@ int checkLengthGroupStructure(const LengthGroupDivision* finer,
   //check to see if the intersection is empty
   minlength = max(coarser->minLength(), finer->minLength());
   maxlength = min(coarser->maxLength(), finer->maxLength());
-  if ((minlength > maxlength) || isEqual(minlength, maxlength)) {
+  if ((minlength > maxlength) || isSmall(maxlength - minlength)) {
     handle.logMessage(LOGWARN, "Error when checking length structure - empty intersection");
     finer->printError();
     coarser->printError();
