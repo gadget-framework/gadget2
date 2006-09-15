@@ -195,8 +195,7 @@ double QuotaPredator::calcQuota(double biomass) {
       if ((biomasslevel[i - 1] < biomass) && (biomass < biomasslevel[i]))
         quota = quotalevel[i];
   }
-handle.logMessage(LOGDEBUG, "quotapredator - calculated biomass", biomass);
-handle.logMessage(LOGDEBUG, "quotapredator - calculated quota level", quota);
+
   if (quota < 0.0)
     handle.logMessage(LOGWARN, "Warning in quotapredator - negative quota", quota);
   return quota;
