@@ -395,7 +395,13 @@ void MaturityB::setStock(StockPtrVector& stockvec) {
 void MaturityB::Reset(const TimeClass* const TimeInfo) {
   Maturity::Reset(TimeInfo);
 
+  int i;
   maturitylength.Update(TimeInfo);
+  if (maturitylength.didChange(TimeInfo))
+    for (i = 0; i < maturitylength.Size(); i++)
+      if (maturitylength[i] > LgrpDiv->maxLength())
+        handle.logMessage(LOGWARN, "Warning in maturity calculation - length greater than maximum stock length");
+
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset maturity data");
 }
