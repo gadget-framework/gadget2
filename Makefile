@@ -63,21 +63,22 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     suitfunc.o suits.o popinfo.o popinfomemberfunctions.o popratio.o popstatistics.o \
     interruptinterface.o agebandmatrix.o agebandmatrixmemberfunctions.o tags.o \
     interrupthandler.o agebandmatrixratio.o agebandmatrixratiomemberfunctions.o \
-    migrationarea.o rectangle.o ludecomposition.o multinomial.o renewal.o spawner.o \
-    stock.o stockmemberfunctions.o taggrow.o grow.o grower.o growermemberfunctions.o \
-    growthcalc.o maturity.o stray.o transition.o initialcond.o migration.o naturalm.o \
+    migrationarea.o rectangle.o ludecomposition.o multinomial.o regressionline.o \
+    stock.o stockmemberfunctions.o renewal.o spawner.o stray.o transition.o \
+    grow.o grower.o growermemberfunctions.o growthcalc.o taggrow.o maturity.o \
+    initialcond.o migration.o naturalm.o lengthprey.o prey.o stockprey.o \
     effortpredator.o lengthpredator.o linearpredator.o numberpredator.o \
     quotapredator.o predator.o poppredator.o stockpredator.o totalpredator.o \
-    lengthprey.o prey.o stockprey.o recaggregator.o stockpreyaggregator.o \
+    recaggregator.o stockpreyaggregator.o predatorpreyaggregator.o \
     predatoraggregator.o predatoroveraggregator.o preyoveraggregator.o \
-    fleetpreyaggregator.o predatorpreyaggregator.o stockaggregator.o \
+    fleetpreyaggregator.o stockaggregator.o fleeteffortaggregator.o \
     predatoroverprinter.o predatorpreyprinter.o preyoverprinter.o \
     stockfullprinter.o stockpreyfullprinter.o stockpreyprinter.o stockprinter.o \
     predatorprinter.o stockstdprinter.o likelihoodprinter.o summaryprinter.o \
     catchdistribution.o catchinkilos.o catchstatistics.o understocking.o \
     recapture.o recstatistics.o stockdistribution.o stomachcontent.o sionstep.o \
     boundlikelihood.o surveydistribution.o migrationpenalty.o surveyindices.o \
-    sibyageonstep.o sibyfleetonstep.o sibylengthonstep.o regressionline.o \
+    sibyageonstep.o sibyfleetonstep.o sibylengthonstep.o sibyeffortonstep.o \
     optinfobfgs.o optinfohooke.o optinfosimann.o bfgs.o hooke.o simann.o \
     addresskeepervector.o addresskeepermatrix.o intmatrix.o doublematrix.o \
     agebandmatrixptrvector.o agebandmatrixptrmatrix.o agebandmatrixratioptrvector.o \
