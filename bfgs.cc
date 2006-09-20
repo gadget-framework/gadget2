@@ -189,7 +189,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
     }
 
     // terminate the algorithm if the gradient accuracy required has got too small
-    if (gradacc < rathersmall) {
+    if (gradacc < gradeps) {
       handle.logMessage(LOGINFO, "\nStopping BFGS optimisation algorithm\n");
       handle.logMessage(LOGINFO, "The optimisation stopped after", iters, "function evaluations");
       handle.logMessage(LOGINFO, "The optimisation stopped because the accuracy required for the gradient");

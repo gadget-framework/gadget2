@@ -281,13 +281,17 @@ private:
    */
   double step;
   /**
-   * \brief This is the accuracy term used when calculating the gradient for BFGS
+   * \brief This is the accuracy term used when calculating the gradient
    */
   double gradacc;
   /**
    * \brief This is the factor used to adjust the gradient accuracy term
    */
   double gradstep;
+  /**
+   * \brief This is the halt criteria for the gradient accuracy term 
+   */
+  double gradeps;
 };
 
 #endif

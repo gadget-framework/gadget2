@@ -6,7 +6,7 @@ extern ErrorHandler handle;
 
 OptInfoBFGS::OptInfoBFGS()
   : OptInfo(), bfgsiter(10000), bfgseps(0.01), beta(0.3), sigma(0.01),
-    step(1.0), gradacc(1e-6), gradstep(0.5) {
+    step(1.0), gradacc(1e-6), gradstep(0.5), gradeps(1e-10) {
   type = OPTBFGS;
   handle.logMessage(LOGMESSAGE, "\nInitialising BFGS optimisation algorithm");
 }
@@ -30,6 +30,9 @@ void OptInfoBFGS::read(CommentStream& infile, char* text) {
 
     } else if (strcasecmp(text, "gradstep") == 0) {
       infile >> gradstep;
+
+    } else if (strcasecmp(text, "gradeps") == 0) {
+      infile >> gradeps;
 
     } else if ((strcasecmp(text, "bfgsiter") == 0) || (strcasecmp(text, "maxiter") == 0)) {
       infile >> bfgsiter;
@@ -68,6 +71,10 @@ void OptInfoBFGS::read(CommentStream& infile, char* text) {
   if ((gradstep < rathersmall) || (gradstep > 1.0)) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of gradstep outside bounds", gradstep);
     gradstep = 0.5;
+  }
+  if ((gradeps < verysmall) || (gradeps > gradacc)) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of gradeps outside bounds", gradeps);
+    gradeps = 1e-10;
   }
 }
 
