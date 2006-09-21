@@ -81,6 +81,10 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of ns outside bounds", ns);
     ns = 5;
   }
+  if (check < 1) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of check outside bounds", check);
+    check = 4;
+  }
   if (vminit < rathersmall) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of vm outside bounds", vminit);
     vminit = 1.0;
