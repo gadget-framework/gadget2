@@ -14,8 +14,11 @@
 #include "hasname.h"
 #include "gadget.h"
 
-enum FitType { LINEARFIT = 1, LOGLINEARFIT, FIXEDSLOPELINEARFIT, FIXEDSLOPELOGLINEARFIT,
-  FIXEDINTERCEPTLINEARFIT, FIXEDINTERCEPTLOGLINEARFIT, FIXEDLINEARFIT, FIXEDLOGLINEARFIT };
+enum FitType { LINEARFIT = 1, LOGLINEARFIT, WEIGHTLINEARFIT, LOGWEIGHTLINEARFIT,
+  FIXEDSLOPELINEARFIT, FIXEDSLOPELOGLINEARFIT, FIXEDSLOPEWEIGHTLINEARFIT,
+  FIXEDSLOPELOGWEIGHTLINEARFIT, FIXEDINTERCEPTLINEARFIT, FIXEDINTERCEPTLOGLINEARFIT,
+  FIXEDINTERCEPTWEIGHTLINEARFIT, FIXEDINTERCEPTLOGWEIGHTLINEARFIT,
+  FIXEDLINEARFIT, FIXEDLOGLINEARFIT, FIXEDWEIGHTLINEARFIT, FIXEDLOGWEIGHTLINEARFIT };
 enum SIType { SILENGTH = 1, SIAGE, SIFLEET, SIEFFORT, SIACOUSTIC };
 
 /**
@@ -120,6 +123,11 @@ protected:
    */
   DoubleMatrixPtrVector modelIndex;
   /**
+   * \brief This is the DoubleMatrixPtrVector used to store the weights specified for the regression line
+   * \note The indices for this object are [time][area][weight]
+   */
+  DoubleMatrixPtrVector weightIndex;
+  /**
    * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
    */
   const AgeBandMatrixPtrVector* alptr;
@@ -136,6 +144,11 @@ protected:
    * \note The default value for this is 0, which means that the index is based on the number of the population
    */
   int biomass;
+  /**
+   * \brief This is the flag to denote whether weighted regression line should be used when calculating the fit to the data or not
+   * \note The default value for this is 0, which means that the regression line doesnt use weights
+   */
+  int useweight;
 private:
   /**
    * \brief This function will read the SIOnStep data from the input file
@@ -171,6 +184,10 @@ private:
    * \brief This is the DoubleVector used to temporarily store the observed data indices when calculating the fit to the regression line
    */
   DoubleVector tmpData;
+  /**
+   * \brief This is the DoubleVector used to temporarily store the weights when calculating the fit to the regression line
+   */
+  DoubleVector tmpWeight;
   /**
    * \brief This is the CharPtrVector of the names of the areas
    */

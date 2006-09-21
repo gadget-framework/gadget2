@@ -19,6 +19,8 @@ SIOnStep::~SIOnStep() {
     delete obsIndex[i];
     delete modelIndex[i];
   }
+  for (i = 0; i < weightIndex.Size(); i++)
+    delete weightIndex[i];
 }
 
 SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
@@ -31,6 +33,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
 
   biomass = bio;
   sitype = type;
+  useweight = 0;
   timeindex = 0;
   slope = 0.0;
   intercept = 0.0;
@@ -53,43 +56,83 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   } else if (strcasecmp(text, "loglinearfit") == 0) {
     fittype = LOGLINEARFIT;
     LR = new LogLinearRegression(FREE);
+  } else if (strcasecmp(text, "weightlinearfit") == 0) {
+    useweight = 1;
+    fittype = WEIGHTLINEARFIT;
+    LR = new WeightRegression(FREE);
+  } else if (strcasecmp(text, "logweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = LOGWEIGHTLINEARFIT;
+    LR = new LogWeightRegression(FREE);
   } else if (strcasecmp(text, "fixedslopelinearfit") == 0) {
     fittype = FIXEDSLOPELINEARFIT;
     LR = new LinearRegression(FIXEDSLOPE);
   } else if (strcasecmp(text, "fixedslopeloglinearfit") == 0) {
     fittype = FIXEDSLOPELOGLINEARFIT;
     LR = new LogLinearRegression(FIXEDSLOPE);
+  } else if (strcasecmp(text, "fixedslopeweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = FIXEDSLOPEWEIGHTLINEARFIT;
+    LR = new WeightRegression(FIXEDSLOPE);
+  } else if (strcasecmp(text, "fixedslopelogweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = FIXEDSLOPELOGWEIGHTLINEARFIT;
+    LR = new LogWeightRegression(FIXEDSLOPE);
   } else if (strcasecmp(text, "fixedinterceptlinearfit") == 0) {
     fittype = FIXEDINTERCEPTLINEARFIT;
     LR = new LinearRegression(FIXEDINTERCEPT);
   } else if (strcasecmp(text, "fixedinterceptloglinearfit") == 0) {
     fittype = FIXEDINTERCEPTLOGLINEARFIT;
     LR = new LogLinearRegression(FIXEDINTERCEPT);
+  } else if (strcasecmp(text, "fixedinterceptweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = FIXEDINTERCEPTWEIGHTLINEARFIT;
+    LR = new WeightRegression(FIXEDINTERCEPT);
+  } else if (strcasecmp(text, "fixedinterceptlogweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = FIXEDINTERCEPTLOGWEIGHTLINEARFIT;
+    LR = new LogWeightRegression(FIXEDINTERCEPT);
   } else if (strcasecmp(text, "fixedlinearfit") == 0) {
     fittype = FIXEDLINEARFIT;
     LR = new LinearRegression(FIXED);
   } else if (strcasecmp(text, "fixedloglinearfit") == 0) {
     fittype = FIXEDLOGLINEARFIT;
     LR = new LogLinearRegression(FIXED);
+  } else if (strcasecmp(text, "fixedweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = FIXEDWEIGHTLINEARFIT;
+    LR = new WeightRegression(FIXED);
+  } else if (strcasecmp(text, "fixedlogweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = FIXEDLOGWEIGHTLINEARFIT;
+    LR = new LogWeightRegression(FIXED);
   } else
     handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised fittype", text);
 
   switch (fittype) {
     case LINEARFIT:
     case LOGLINEARFIT:
+    case WEIGHTLINEARFIT:
+    case LOGWEIGHTLINEARFIT:
       break;
     case FIXEDSLOPELINEARFIT:
     case FIXEDSLOPELOGLINEARFIT:
+    case FIXEDSLOPEWEIGHTLINEARFIT:
+    case FIXEDSLOPELOGWEIGHTLINEARFIT:
       readWordAndVariable(infile, "slope", slope);
       LR->setSlope(slope);
       break;
     case FIXEDINTERCEPTLINEARFIT:
     case FIXEDINTERCEPTLOGLINEARFIT:
+    case FIXEDINTERCEPTWEIGHTLINEARFIT:
+    case FIXEDINTERCEPTLOGWEIGHTLINEARFIT:
       readWordAndVariable(infile, "intercept", intercept);
       LR->setIntercept(intercept);
       break;
     case FIXEDLINEARFIT:
     case FIXEDLOGLINEARFIT:
+    case FIXEDWEIGHTLINEARFIT:
+    case FIXEDLOGWEIGHTLINEARFIT:
       readWordAndVariable(infile, "slope", slope);
       readWordAndVariable(infile, "intercept", intercept);
       LR->setSlope(slope);
@@ -119,6 +162,8 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   slopes.AddRows(areaindex.Size(), colindex.Size(), slope);
   intercepts.AddRows(areaindex.Size(), colindex.Size(), intercept);
   sse.AddRows(areaindex.Size(), colindex.Size(), 0.0);
+  if (useweight)
+    tmpWeight.resize(Years.Size(), 0.0);
   tmpModel.resize(Years.Size(), 0.0);
   tmpData.resize(Years.Size(), 0.0);
   likelihoodValues.resize(areaindex.Size(), 0.0);
@@ -126,7 +171,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
 
 void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo) {
 
-  double tmpnumber;
+  double tmpnumber, tmpweight;
   char tmparea[MaxStrLength], tmplabel[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmplabel, "", MaxStrLength);
@@ -135,13 +180,19 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
 
   //Check the number of columns in the inputfile
   infile >> ws;
-  if (countColumns(infile) != 5)
+  if ((!useweight) && (countColumns(infile) != 5))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
+  else if ((useweight) && (countColumns(infile) != 6))
+    handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
   year = step = count = reject = 0;
   while (!infile.eof()) {
     keepdata = 1;
-    infile >> year >> step >> tmparea >> tmplabel >> tmpnumber >> ws;
+    
+    if (useweight)
+      infile >> year >> step >> tmparea >> tmplabel >> tmpnumber >> tmpweight >> ws;
+    else
+      infile >> year >> step >> tmparea >> tmplabel >> tmpnumber >> ws;
 
     //crude check to see if something has gone wrong and avoid infinite loops
     if (strlen(tmparea) == 0)
@@ -178,6 +229,8 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
         timeid = (Years.Size() - 1);
         obsIndex.resize(new DoubleMatrix(areaindex.Size(), colindex.Size(), 0.0));
         modelIndex.resize(new DoubleMatrix(areaindex.Size(), colindex.Size(), 0.0));
+        if (useweight)
+          weightIndex.resize(new DoubleMatrix(areaindex.Size(), colindex.Size(), 0.0));
       }
 
     } else
@@ -187,6 +240,8 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
       //survey indices data is required, so store it
       count++;
       (*obsIndex[timeid])[areaid][colid] = tmpnumber;
+      if (useweight)
+        (*weightIndex[timeid])[areaid][colid] = tmpweight;
     } else
       reject++;  //count number of rejected data points read from file
   }
@@ -234,9 +289,13 @@ void SIOnStep::printLikelihood(ofstream& outfile, const TimeClass* const TimeInf
 
         //JMB crude filter to remove the 'silly' values from the output
         if ((*modelIndex[timeindex])[a][i] < rathersmall)
-          outfile << 0 << endl;
+          outfile << 0;
         else
-          outfile << setprecision(largeprecision) << (*modelIndex[timeindex])[a][i] << endl;
+          outfile << setprecision(largeprecision) << (*modelIndex[timeindex])[a][i];
+        
+        if (useweight)
+          outfile << sep << setw(printwidth) << (*weightIndex[timeindex])[a][i];
+        outfile << endl;
       }
     }
   }
@@ -267,7 +326,14 @@ double SIOnStep::calcSSE() {
         tmpModel[j] = (*modelIndex[j])[a][i];
       }
 
-      //fit the data to the (log) linear regression curve
+      //if the weights are required then pass them to the regression line
+      if (useweight) {
+        for (j = 0; j < tmpWeight.Size(); j++)
+          tmpWeight[j] = (*weightIndex[j])[a][i];
+        LR->setWeights(tmpWeight);
+      }
+
+      //fit the data to the (log) linear regression line
       LR->storeVectors(tmpModel, tmpData);
       LR->calcFit();
 
