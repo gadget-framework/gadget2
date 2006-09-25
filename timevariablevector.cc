@@ -55,13 +55,12 @@ void TimeVariableVector::resize(const TimeVariable& tvar, Keeper* const keeper) 
 }
 
 int TimeVariableVector::didChange(const TimeClass* const TimeInfo) const {
-  int didchange = 0;
   int i;
   for (i = 0; i < size; i++)
-    didchange += v[i].didChange(TimeInfo);
-  if (didchange == 0)
-    return 0;
-  return 1;
+    if (v[i].didChange(TimeInfo))
+      return 1;
+
+  return 0;
 }
 
 void TimeVariableVector::Update(const TimeClass* const TimeInfo) {
