@@ -107,15 +107,13 @@ double Formula::evalFunction() const {
       }
       break;
 
-    case SIN:
-      //JMB note that this works in radians
+    case SIN: //JMB note that this works in radians
       if (argList.size() != 1)
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for sin");
       v = sin(*(argList[0]));
       break;
 
-    case COS:
-      //JMB note that this works in radians
+    case COS: //JMB note that this works in radians
       if (argList.size() != 1)
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for cos");
       v = cos(*(argList[0]));
@@ -124,8 +122,8 @@ double Formula::evalFunction() const {
     case LOG:
       if (argList.size() != 1)
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for log");
-      if (isZero(*(argList[0])))
-        handle.logMessage(LOGFAIL, "Warning in formula - cannot take log of zero");
+      if (*(argList[0]) < verysmall)
+        handle.logMessage(LOGWARN, "Warning in formula - cannot take log of zero");
       else
         v = log(*(argList[0]));
       break;
@@ -136,11 +134,29 @@ double Formula::evalFunction() const {
       v = exp(*(argList[0]));
       break;
 
+    case LOG10:
+      if (argList.size() != 1)
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for log10");
+      if (*(argList[0]) < verysmall)
+        handle.logMessage(LOGWARN, "Warning in formula - cannot take log10 of zero");
+      else
+        v = log10(*(argList[0]));
+      break;
+
+    case POWER:
+      if (argList.size() == 1)
+        v = pow(10.0, *(argList[0]));
+      else if (argList.size() == 2)
+        v = pow(*(argList[0]), *(argList[1]));
+      else
+        handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for power");
+      break;
+
     case SQRT:
       if (argList.size() != 1)
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for sqrt");
       if (*(argList[0]) < 0.0)
-        handle.logMessage(LOGFAIL, "Warning in formula - cannot take sqrt of negative number");
+        handle.logMessage(LOGWARN, "Warning in formula - cannot take sqrt of negative number");
       else
         v = sqrt(*(argList[0]));
       break;
@@ -157,7 +173,7 @@ double Formula::evalFunction() const {
       v = 1.0;
       for (i = 1; i < argList.size(); i++)
         if (*(argList[i - 1]) >= *(argList[i]))
-	        v = 0.0;
+            v = 0.0;
       break;
 
     case GREATER:
@@ -166,7 +182,7 @@ double Formula::evalFunction() const {
       v = 1.0;
       for (i = 1; i < argList.size(); i++)
         if (*(argList[i - 1]) <= *(argList[i]))
-      	  v = 0.0;
+          v = 0.0;
       break;
 
     case EQUAL:
@@ -175,7 +191,7 @@ double Formula::evalFunction() const {
       v = 1.0;
       for (i = 1; i < argList.size(); i++)
         if (!isEqual(*(argList[i - 1]), *(argList[i])))
-      	  v = 0.0;
+          v = 0.0;
       break;
 
     case AND:
@@ -184,7 +200,7 @@ double Formula::evalFunction() const {
       v = 1.0;
       for (i = 0; i < argList.size(); i++)
         if (isZero(*(argList[i])))
-      	  v = 0.0;
+          v = 0.0;
       break;
 
     case OR:
@@ -193,7 +209,7 @@ double Formula::evalFunction() const {
       v = 0.0;
       for (i = 0; i < argList.size(); i++)
         if (!isZero(*(argList[i])))
-      	  v = 1.0;
+          v = 1.0;
       break;
 
     case NOT:
@@ -201,7 +217,7 @@ double Formula::evalFunction() const {
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for not");
       v = 0.0;
       if (isZero(*(argList[0])))
-      	v = 1.0;
+        v = 1.0;
       break;
 
     case ABS:
@@ -215,9 +231,9 @@ double Formula::evalFunction() const {
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for if");
       v = 0.0;
       if (isZero(*(argList[0])))
-       	v = *(argList[2]);
+        v = *(argList[2]);
       else
-	      v = *(argList[1]);
+        v = *(argList[1]);
       break;
 
     case PI:
@@ -306,11 +322,17 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     } else if (strcasecmp(text, "cos") == 0) {
       F.functiontype = COS;
 
-    } else if (strcasecmp(text, "log") == 0) {
+    } else if ((strcasecmp(text, "log") == 0) || (strcasecmp(text, "ln") == 0)) {
       F.functiontype = LOG;
 
     } else if (strcasecmp(text, "exp") == 0) {
       F.functiontype = EXP;
+
+    } else if (strcasecmp(text, "log10") == 0) {
+      F.functiontype = LOG10;
+
+    } else if ((strcasecmp(text, "power") == 0) || (strcasecmp(text, "**") == 0)) {
+      F.functiontype = POWER;
 
     } else if (strcasecmp(text, "sqrt") == 0) {
       F.functiontype = SQRT;
@@ -402,9 +424,9 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     F.type = CONSTANT;
     return infile;
   }
+
   // Read PARAMETER (with initial value)
   if (c == '#') {
-    // Only one mark
     F.type = PARAMETER;
     infile.get(c);
     infile >> F.name;
