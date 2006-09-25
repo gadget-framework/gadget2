@@ -691,7 +691,7 @@ void GrowthCalcH::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   growthPar.Update(TimeInfo);
   //JMB - first some error checking
-  if (handle.getLogLevel() >= LOGWARN) {
+  if ((handle.getLogLevel() >= LOGWARN) && (growthPar.didChange(TimeInfo))) {
     if (isZero(growthPar[1]) || isZero(growthPar[2]))
       handle.logMessage(LOGWARN, "Warning in growth calculation - growth parameter is zero");
     if (LgrpDiv->maxLength() > growthPar[0])
@@ -700,11 +700,8 @@ void GrowthCalcH::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   double mult = 1.0 - exp(-growthPar[1] * TimeInfo->getTimeStepSize());
   int i;
-  for (i = 0; i < Wgrowth.Size(); i++) {
+  for (i = 0; i < Lgrowth.Size(); i++)
     Lgrowth[i] = (growthPar[0] - LgrpDiv->meanLength(i)) * mult;
-    Wgrowth[i] = growthPar[2] * (pow(LgrpDiv->meanLength(i) + Lgrowth[i], growthPar[3])
-      - pow(LgrpDiv->meanLength(i), growthPar[3]));
-  }
 }
 
 // ********************************************************

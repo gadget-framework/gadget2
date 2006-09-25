@@ -164,7 +164,8 @@ void Grower::calcGrowth(int area,
     numGrow[inarea], Area, TimeInfo, FPhi, MaxCon, LgrpDiv);
 
   CI->interpolateLengths(interpLengthGrowth[inarea], calcLengthGrowth[inarea]);
-  CI->interpolateLengths(interpWeightGrowth[inarea], calcWeightGrowth[inarea]);
+  if (functionnumber != 8)
+    CI->interpolateLengths(interpWeightGrowth[inarea], calcWeightGrowth[inarea]);
 }
 
 void Grower::Reset() {
