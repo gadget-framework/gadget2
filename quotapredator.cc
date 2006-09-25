@@ -36,6 +36,9 @@ QuotaPredator::QuotaPredator(CommentStream& infile, const char* givenname,
     handle.logFileMessage(LOGFAIL, "\nError in quotapredator - unrecognised function", functionname);
 
   //now read in the stock biomass levels
+  infile >> text >> ws;
+  if (strcasecmp(text, "biomasslevel") != 0)
+    handle.logFileUnexpected(LOGFAIL, "biomasslevel", text);
   while (isdigit(infile.peek()) && !infile.eof()) {
     infile >> tmp >> ws;
     biomasslevel.resize(1, tmp);
