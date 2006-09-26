@@ -289,7 +289,7 @@ private:
    */
   double gradstep;
   /**
-   * \brief This is the halt criteria for the gradient accuracy term 
+   * \brief This is the halt criteria for the gradient accuracy term
    */
   double gradeps;
 };

@@ -297,7 +297,7 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
     for (predl = 0; predl < numlen; predl++)
       fphi[inarea][predl] = (ratio2 * subfphi[inarea][predl]) + (ratio1 * fphi[inarea][predl]);
 
-  } else 
+  } else
     for (predl = 0; predl < numlen; predl++)
       fphi[inarea][predl] = subfphi[inarea][predl];
 

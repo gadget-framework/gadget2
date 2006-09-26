@@ -82,7 +82,7 @@ inline int isSmall(double a) {
  * \brief This function will calculate the value of the logarithm of n factorial
  * \param n is the number that the logfactorial will be calculated for
  * \return the value of log(n!)
- * \note This function is not an ANSI function and so will not compile correctly if gadget is compiled with the -ansi flag, unless we include #define _GNU_SOURCE in this file
+ * \note This function is not an ANSI function and so will not compile correctly if gadget is compiled with the \c -ansi flag, unless we include \c \#define \c __GNU_SOURCE in this file
  */
 inline double logFactorial(double n) {
   return lgamma(n + 1.0);

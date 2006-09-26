@@ -7,7 +7,7 @@
 extern ErrorHandler handle;
 
 SIByEffortOnStep::SIByEffortOnStep(CommentStream& infile, const IntMatrix& areas,
-  const CharPtrVector& areaindex, const CharPtrVector& fleetindex, 
+  const CharPtrVector& areaindex, const CharPtrVector& fleetindex,
   const TimeClass* const TimeInfo, const char* datafilename, const char* givenname, int bio)
   : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, fleetindex, givenname, bio, SIEFFORT) {
 }

@@ -188,7 +188,7 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
   year = step = count = reject = 0;
   while (!infile.eof()) {
     keepdata = 1;
-    
+
     if (useweight)
       infile >> year >> step >> tmparea >> tmplabel >> tmpnumber >> tmpweight >> ws;
     else
@@ -292,7 +292,7 @@ void SIOnStep::printLikelihood(ofstream& outfile, const TimeClass* const TimeInf
           outfile << 0;
         else
           outfile << setprecision(largeprecision) << (*modelIndex[timeindex])[a][i];
-        
+
         if (useweight)
           outfile << sep << setw(printwidth) << (*weightIndex[timeindex])[a][i];
         outfile << endl;

@@ -506,7 +506,7 @@ void Keeper::checkBounds(const LikelihoodPtrVector& likevec) const {
     if (likevec[i]->getType() == BOUNDLIKELIHOOD)
       count++;
 
-  if ((count == 0) && (handle.getRunOptimise()))
+  if ((count == 0) && (values.Size() != 0))
     handle.logMessage(LOGWARN, "Warning in keeper - no boundlikelihood component found\nNo penalties will be applied if any of the parameter bounds are exceeded");
   if (count > 1)
     handle.logMessage(LOGWARN, "Warning in keeper - repeated boundlikelihood components found");

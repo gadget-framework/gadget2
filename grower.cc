@@ -63,7 +63,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
     handle.logFileMessage(LOGFAIL, "unrecognised growth function", text);
   }
 
-  infile >> ws >>  text;
+  infile >> ws >> text;
   if (strcasecmp(text, "beta") == 0) {
     //Beta binomial growth distribution code is used
     infile >> beta;
@@ -179,16 +179,20 @@ void Grower::Reset() {
       numGrow[area][i].setToZero();
     }
 
-    for (i = 0; i < wgrowth[area]->Nrow(); i++) {
-      for (j = 0; j < wgrowth[area]->Ncol(i); j++) {
-        (*wgrowth[area])[i][j] = 0.0;
+    for (i = 0; i < lgrowth[area]->Nrow(); i++)
+      for (j = 0; j < lgrowth[area]->Ncol(i); j++)
         (*lgrowth[area])[i][j] = 0.0;
-      }
-    }
 
-    for (i = 0; i < interpLengthGrowth.Ncol(area); i++) {
+    for (i = 0; i < interpLengthGrowth.Ncol(area); i++)
       interpLengthGrowth[area][i] = 0.0;
-      interpWeightGrowth[area][i] = 0.0;
+
+    if (functionnumber != 8) {
+      for (i = 0; i < wgrowth[area]->Nrow(); i++)
+        for (j = 0; j < wgrowth[area]->Ncol(i); j++)
+          (*wgrowth[area])[i][j] = 0.0;
+
+      for (i = 0; i < interpWeightGrowth.Ncol(area); i++)
+        interpWeightGrowth[area][i] = 0.0;
     }
   }
 
