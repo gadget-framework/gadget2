@@ -122,8 +122,8 @@ void OptInfoBFGS::gradient(DoubleVector& point, double pointvalue, DoubleVector&
 void OptInfoBFGS::OptimiseLikelihood() {
 
   double hy, yBy, temphy, tempyby, normgrad;
-  double alpha, searchgrad, newf, tmpf, betan;
-  int i, j, check, offset, armijo;
+  double searchgrad, newf, tmpf, betan;
+  int i, j, resetgrad, offset, armijo;
 
   handle.logMessage(LOGINFO, "\nStarting BFGS optimisation algorithm\n");
   int nvars = EcoSystem->numOptVariables();
@@ -163,8 +163,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
     invhess[i][i] = 1.0;
   }
 
-  check = 1;
-  alpha = 1.0;
+  resetgrad = 0;
   while (1) {
     iters = EcoSystem->getFuncEval() - offset;
     if (isZero(newf)) {
@@ -181,6 +180,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
       handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
 
       score = EcoSystem->SimulateAndUpdate(bestx);
+      //JMB hmmm ... the hessian has been updated since it was used so this isnt correct
       tmpf = this->getSmallestEigenValue(invhess);
       if (!isZero(tmpf))
         handle.logMessage(LOGINFO, "The smallest eigenvalue of the inverse Hessian matrix is", tmpf);
@@ -197,6 +197,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
 
       converge = 2;
       score = EcoSystem->SimulateAndUpdate(bestx);
+      //JMB hmmm ... the hessian has been updated since it was used so this isnt correct
       tmpf = this->getSmallestEigenValue(invhess);
       if (!isZero(tmpf))
         handle.logMessage(LOGINFO, "The smallest eigenvalue of the inverse Hessian matrix is", tmpf);
@@ -204,8 +205,8 @@ void OptInfoBFGS::OptimiseLikelihood() {
       return;
     }
 
-    if (check == 0 || alpha < rathersmall) {
-      check++;
+    if (resetgrad) {
+      resetgrad = 0;
       // make the step size when calculating the gradient smaller
       gradacc *= gradstep;
       handle.logMessage(LOGINFO, "Warning in BFGS - resetting search algorithm after", iters, "function evaluations");
@@ -220,77 +221,47 @@ void OptInfoBFGS::OptimiseLikelihood() {
     for (i = 0; i < nvars; i++) {
       search[i] = 0.0;
       for (j = 0; j < nvars; j++)
-        search[i] -= invhess[i][j] * grad[j];
+        search[i] -= (invhess[i][j] * grad[j]);
     }
 
     // do armijo calculation
-    tmpf = newf;
-    for (i = 0; i < nvars; i++)
-      trialx[i] = x[i];
-
     searchgrad = 0.0;
     for (i = 0; i < nvars; i++)
-      searchgrad += grad[i] * search[i];
-    searchgrad *= sigma;
+      searchgrad += (grad[i] * search[i]);
+    searchgrad *= -sigma; //JMB change sign
 
     armijo = 0;
-    alpha = -1.0;
-    if (searchgrad < 0.0) {
-      betan = step;
+    betan = step;
+    if (searchgrad > verysmall) {
       while ((armijo == 0) && (betan > rathersmall)) {
         for (i = 0; i < nvars; i++)
           trialx[i] = x[i] + (betan * search[i]);
 
         tmpf = EcoSystem->SimulateAndUpdate(trialx);
-        if ((tmpf == tmpf) && (newf > tmpf) && ((newf - tmpf) > (-betan * searchgrad)))
+        if ((newf > tmpf) && ((newf - tmpf) > (betan * searchgrad)))
           armijo = 1;
         else
           betan *= beta;
       }
-
-      if (armijo == 1) {
-        this->gradient(trialx, tmpf, grad);
-        alpha = betan;
-      }
     }
 
-    if (armijo == 0) {
+    if (armijo) {
+      this->gradient(trialx, tmpf, grad);
+    } else {
+      resetgrad = 1;
       this->gradient(x, newf, grad);
       continue;
     }
 
-    hy = 0.0;
     normgrad = 0.0;
     for (i = 0; i < nvars; i++) {
-      h[i] = alpha * search[i];
+      h[i] = betan * search[i];
       x[i] += h[i];
       y[i] = grad[i] - oldgrad[i];
       oldgrad[i] = grad[i];
-      hy += h[i] * y[i];
       normgrad += grad[i] * grad[i];
     }
     normgrad = sqrt(normgrad);
-
-    yBy = 0.0;
-    for (i = 0; i < nvars; i++) {
-      By[i] = 0.0;
-      for (j = 0; j < nvars; j++)
-        By[i] += invhess[i][j] * y[j];
-      yBy += y[i] * By[i];
-    }
-
-    if ((isZero(hy)) || (isZero(yBy))) {
-      check = 0;
-      continue;
-    } else {
-      temphy = 1.0 / hy;
-      tempyby = 1.0 / yBy;
-      for (i = 0; i < nvars; i++)
-        for (j = 0; j < nvars; j++)
-          invhess[i][j] += (h[i] * h[j] * temphy) - (By[i] * By[j] * tempyby)
-            + yBy * (h[i] * temphy - By[i] * tempyby) * (h[j] * temphy - By[j] * tempyby);
-    }
-
     newf = EcoSystem->SimulateAndUpdate(x);
     for (i = 0; i < nvars; i++) {
       bestx[i] = x[i];
@@ -316,6 +287,28 @@ void OptInfoBFGS::OptimiseLikelihood() {
         handle.logMessage(LOGINFO, "The smallest eigenvalue of the inverse Hessian matrix is", tmpf);
       handle.logMessage(LOGINFO, "\nBFGS finished with a likelihood score of", score);
       return;
+    }
+
+    // update the estimate for the inverse hessian matrix
+    hy = 0.0;
+    yBy = 0.0;
+    for (i = 0; i < nvars; i++) {
+      hy += h[i] * y[i];
+      By[i] = 0.0;
+      for (j = 0; j < nvars; j++)
+        By[i] += (invhess[i][j] * y[j]);
+      yBy += y[i] * By[i];
+    }
+
+    if ((isZero(hy)) || (isZero(yBy))) {
+      resetgrad = 1;
+    } else {
+      temphy = 1.0 / hy;
+      tempyby = 1.0 / yBy;
+      for (i = 0; i < nvars; i++)
+        for (j = 0; j < nvars; j++)
+          invhess[i][j] += (h[i] * h[j] * temphy) - (By[i] * By[j] * tempyby)
+            + yBy * (h[i] * temphy - By[i] * tempyby) * (h[j] * temphy - By[j] * tempyby);
     }
   }
 }
