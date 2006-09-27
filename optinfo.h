@@ -251,9 +251,9 @@ private:
    * \brief This function will numerically calculate the gradient of the function at the current point
    * \param point is the DoubleVector that contains the parameters corresponding to the current function value
    * \param pointvalue is the current function value
-   * \param grad is the DoubleVector that will contain the gradient vector for the current point
+   * \param newgrad is the DoubleVector that will contain the gradient vector for the current point
    */
-  void gradient(DoubleVector& point, double pointvalue, DoubleVector& grad);
+  void gradient(DoubleVector& point, double pointvalue, DoubleVector& newgrad);
   /**
    * \brief This function will calculate the smallest eigenvalue of the inverse Hessian matrix
    * \param M is the DoubleMatrix containing the inverse Hessian matrix

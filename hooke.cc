@@ -213,6 +213,13 @@ void OptInfoHooke::OptimiseLikelihood() {
   }
 
   bestf = EcoSystem->SimulateAndUpdate(trialx);
+  if (bestf != bestf) { //check for NaN
+    handle.logMessage(LOGINFO, "Error starting Hooke & Jeeves optimisation with f(x) = infinity");
+    converge = -1;
+    iters = 1;
+    return;
+  }
+
   offset = EcoSystem->getFuncEval();  //number of function evaluations done before loop
   newf = bestf;
   oldf = bestf;
@@ -224,13 +231,6 @@ void OptInfoHooke::OptimiseLikelihood() {
     if (isZero(bestf)) {
       iters = EcoSystem->getFuncEval() - offset;
       handle.logMessage(LOGINFO, "Error in Hooke & Jeeves optimisation after", iters, "function evaluations, f(x) = 0");
-      converge = -1;
-      return;
-    }
-
-    if (bestf != bestf) { //JMB added check for NaN
-      iters = EcoSystem->getFuncEval() - offset;
-      handle.logMessage(LOGINFO, "Error in Hooke & Jeeves optimisation after", iters, "function evaluations, f(x) = infinity");
       converge = -1;
       return;
     }

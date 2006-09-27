@@ -25,11 +25,11 @@ double OptInfoBFGS::getSmallestEigenValue(DoubleMatrix M) {
   for (k = 0; k < nvars; k++) {
     L[k][k] = M[k][k];
     for (j = 0; j < k - 1; j++)
-      L[k][k] -= L[k][j] * L[k][j];
+      L[k][k] -= (L[k][j] * L[k][j]);
     for (i = k + 1; i < nvars; i++) {
       L[i][k] = M[i][k];
       for (j = 0; j < k - 1; j++)
-        L[i][k] -= L[i][j] * L[k][j];
+        L[i][k] -= (L[i][j] * L[k][j]);
 
       if (isZero(L[k][k])) {
         handle.logMessage(LOGINFO, "Error in BFGS - divide by zero when calculating smallest eigen value");
@@ -44,45 +44,30 @@ double OptInfoBFGS::getSmallestEigenValue(DoubleMatrix M) {
   for (k = 0; k < nvars; k++) {
     for (i = 0; i < nvars; i++) {
       for (j = 0; j < i - 1; j++)
-        xo[i] -= L[i][j] * xo[j];
-
-      if (isZero(L[i][i])) {
-        handle.logMessage(LOGINFO, "Error in BFGS - divide by zero when calculating smallest eigen value");
-        return 0.0;
-      } else
-        xo[i] /= L[i][i];
+        xo[i] -= (L[i][j] * xo[j]);
+      xo[i] /= L[i][i];  //JMB we've already checked that L[i][i] is not zero
     }
     for (i = nvars - 1; i >= 0; i--) {
       for (j = nvars - 1; j > i + 1; j--)
-        xo[i] -= L[j][i] * xo[j];
-
-      if (isZero(L[i][i])) {
-        handle.logMessage(LOGINFO, "Error in BFGS - divide by zero when calculating smallest eigen value");
-        return 0.0;
-      } else
-        xo[i] /= L[i][i];
+        xo[i] -= (L[j][i] * xo[j]);
+      xo[i] /= L[i][i];  //JMB we've already checked that L[i][i] is not zero
     }
 
     phi = 0.0;
     norm = 0.0;
     for (i = 0; i < nvars; i++) {
       phi += xo[i];
-      norm += xo[i] * xo[i];
+      norm += (xo[i] * xo[i]);
     }
 
-    if (isZero(norm)) {
+    if (isZero(norm) || isZero(temp) || isZero(phi)) {
       handle.logMessage(LOGINFO, "Error in BFGS - divide by zero when calculating smallest eigen value");
       return 0.0;
-    } else
-      for (i = 0; i < nvars; i++)
-        xo[i] /= norm;
+    }
 
-    if (isZero(temp)) {
-      handle.logMessage(LOGINFO, "Error in BFGS - divide by zero when calculating smallest eigen value");
-      return 0.0;
-    } else
-      eigen = phi / temp;
-
+    for (i = 0; i < nvars; i++)
+      xo[i] /= norm;
+    eigen = phi / temp;
     temp = phi;
   }
 
@@ -97,7 +82,7 @@ double OptInfoBFGS::getSmallestEigenValue(DoubleMatrix M) {
 /* based on the forward difference gradient approximation (A5.6.3 FDGRAD)   */
 /* Numerical Methods for Unconstrained Optimization and Nonlinear Equations */
 /* by J E Dennis and Robert B Schnabel, published by SIAM, 1996             */
-void OptInfoBFGS::gradient(DoubleVector& point, double pointvalue, DoubleVector& grad) {
+void OptInfoBFGS::gradient(DoubleVector& point, double pointvalue, DoubleVector& newgrad) {
 
   double ftmp, tmpacc;
   int i, j;
@@ -108,14 +93,14 @@ void OptInfoBFGS::gradient(DoubleVector& point, double pointvalue, DoubleVector&
     for (j = 0; j < nvars; j++)
       gtmp[j] = point[j];
 
-    //JMB - the scaled parameter values should aways be positive ...
+    //JMB the scaled parameter values should aways be positive
     if (point[i] < 0.0)
       handle.logMessage(LOGINFO, "Error in BFGS - negative parameter when calculating the gradient", point[i]);
 
     tmpacc = gradacc * max(point[i], 1.0);
     gtmp[i] += tmpacc;
     ftmp = EcoSystem->SimulateAndUpdate(gtmp);
-    grad[i] = (ftmp - pointvalue) / tmpacc;
+    newgrad[i] = (ftmp - pointvalue) / tmpacc;
   }
 }
 
@@ -139,7 +124,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
   DoubleVector search(nvars, 0.0);
   DoubleMatrix invhess(nvars, nvars, 0.0);
 
-  EcoSystem->scaleVariables();  //JMB - need to scale variables
+  EcoSystem->scaleVariables();  //JMB need to scale variables
   EcoSystem->getOptScaledValues(x);
   EcoSystem->getOptInitialValues(init);
 
@@ -158,12 +143,13 @@ void OptInfoBFGS::OptimiseLikelihood() {
 
   this->gradient(trialx, newf, grad);
   offset = EcoSystem->getFuncEval();  // number of function evaluations done before loop
+  sigma = -sigma; //JMB change sign of sigma (and consequently searchgrad)
+  resetgrad = 0;
   for (i = 0; i < nvars; i++) {
     oldgrad[i] = grad[i];
     invhess[i][i] = 1.0;
   }
 
-  resetgrad = 0;
   while (1) {
     iters = EcoSystem->getFuncEval() - offset;
     if (isZero(newf)) {
@@ -180,32 +166,24 @@ void OptInfoBFGS::OptimiseLikelihood() {
       handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
 
       score = EcoSystem->SimulateAndUpdate(bestx);
-      //JMB hmmm ... the hessian has been updated since it was used so this isnt correct
-      tmpf = this->getSmallestEigenValue(invhess);
-      if (!isZero(tmpf))
-        handle.logMessage(LOGINFO, "The smallest eigenvalue of the inverse Hessian matrix is", tmpf);
-      handle.logMessage(LOGINFO, "\nBFGS finished with a likelihood score of", score);
-      return;
-    }
-
-    // terminate the algorithm if the gradient accuracy required has got too small
-    if (gradacc < gradeps) {
-      handle.logMessage(LOGINFO, "\nStopping BFGS optimisation algorithm\n");
-      handle.logMessage(LOGINFO, "The optimisation stopped after", iters, "function evaluations");
-      handle.logMessage(LOGINFO, "The optimisation stopped because the accuracy required for the gradient");
-      handle.logMessage(LOGINFO, "calculation is too small and NOT because an optimum was found for this run");
-
-      converge = 2;
-      score = EcoSystem->SimulateAndUpdate(bestx);
-      //JMB hmmm ... the hessian has been updated since it was used so this isnt correct
-      tmpf = this->getSmallestEigenValue(invhess);
-      if (!isZero(tmpf))
-        handle.logMessage(LOGINFO, "The smallest eigenvalue of the inverse Hessian matrix is", tmpf);
       handle.logMessage(LOGINFO, "\nBFGS finished with a likelihood score of", score);
       return;
     }
 
     if (resetgrad) {
+      // terminate the algorithm if the gradient accuracy required has got too small
+      if (gradacc < gradeps) {
+        handle.logMessage(LOGINFO, "\nStopping BFGS optimisation algorithm\n");
+        handle.logMessage(LOGINFO, "The optimisation stopped after", iters, "function evaluations");
+        handle.logMessage(LOGINFO, "The optimisation stopped because the accuracy required for the gradient");
+        handle.logMessage(LOGINFO, "calculation is too small and NOT because an optimum was found for this run");
+
+        converge = 2;
+        score = EcoSystem->SimulateAndUpdate(bestx);
+        handle.logMessage(LOGINFO, "\nBFGS finished with a likelihood score of", score);
+        return;
+      }
+
       resetgrad = 0;
       // make the step size when calculating the gradient smaller
       gradacc *= gradstep;
@@ -228,7 +206,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
     searchgrad = 0.0;
     for (i = 0; i < nvars; i++)
       searchgrad += (grad[i] * search[i]);
-    searchgrad *= -sigma; //JMB change sign
+    searchgrad *= sigma;
 
     armijo = 0;
     betan = step;

@@ -216,14 +216,6 @@ void OptInfoSimann::OptimiseLikelihood() {
 
   //funcval is the function value at x
   funcval = EcoSystem->SimulateAndUpdate(x);
-  //the function is to be minimised so switch the sign of funcval (and trialf)
-  funcval = -funcval;
-  offset = EcoSystem->getFuncEval();  //number of function evaluations done before loop
-  iters = offset;
-  nacc++;
-  cs /= lratio;  //JMB save processing time
-  nsdiv = 1.0 / ns;
-
   if (funcval != funcval) { //check for NaN
     handle.logMessage(LOGINFO, "Error starting Simulated Annealing optimisation with f(x) = infinity");
     converge = -1;
@@ -231,6 +223,12 @@ void OptInfoSimann::OptimiseLikelihood() {
     return;
   }
 
+  //the function is to be minimised so switch the sign of funcval (and trialf)
+  funcval = -funcval;
+  offset = EcoSystem->getFuncEval();  //number of function evaluations done before loop
+  nacc++;
+  cs /= lratio;  //JMB save processing time
+  nsdiv = 1.0 / ns;
   fopt = funcval;
   for (i = 0; i < check; i++)
     fstar[i] = funcval;
