@@ -142,6 +142,7 @@ void OptInfoBFGS::OptimiseLikelihood() {
   }
 
   this->gradient(trialx, newf, grad);
+  tmpf = newf;
   offset = EcoSystem->getFuncEval();  // number of function evaluations done before loop
   sigma = -sigma; //JMB change sign of sigma (and consequently searchgrad)
   resetgrad = 0;
