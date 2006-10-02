@@ -180,7 +180,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   int numage, int minage, const AreaClass* const Area) {
 
   int i, age, area, tmparea, count, reject;
-  int keepdata, ageid, areaid, lengthid;
+  int keepdata, areaid, lengthid;
   double length;
   char c;
   int noareas = areas.Size();
@@ -198,7 +198,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   if (countColumns(infile) != 5)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
-  area = age = ageid = count = reject = 0;
+  area = age = count = reject = 0;
   keeper->addString("numberdata");
   while (!infile.eof()) {
     //crude check to see if something has gone wrong and avoid infinite loops
@@ -211,8 +211,6 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
     //crude age data check - perhaps there should be a better check?
     if ((age < minage) || (age >= (numage + minage)))
       keepdata = 0;
-    else
-      ageid = age;
 
     //crude length data check
     lengthid = -1;
@@ -235,8 +233,8 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
 
     if (keepdata == 1) {
       //initial data is required, so store it
-      infile >> (*initialNumber[areaid])[ageid - minage][lengthid] >> ws;
-      infile >> initialPop[areaid][ageid][lengthid].W >> ws;
+      infile >> (*initialNumber[areaid])[age - minage][lengthid] >> ws;
+      infile >> initialPop[areaid][age][lengthid].W >> ws;
       count++;
 
     } else { //initial data not required - skip rest of line
