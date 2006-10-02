@@ -4,19 +4,6 @@
 
 extern ErrorHandler handle;
 
-Parameter::Parameter(char* value) {
-  if (value == NULL) {
-    name = NULL;
-  } else {
-    if (this->isValidName(value)) {
-      name = new char[strlen(value) + 1];
-      strcpy(name, value);
-    } else {
-      handle.logMessage(LOGFAIL, "Error in parameter - invalid parameter name", value);
-    }
-  }
-}
-
 Parameter::Parameter(const Parameter& p) {
   if (p.name == NULL)  {
     name = NULL;
@@ -54,19 +41,8 @@ Parameter& Parameter::operator = (const Parameter& p) {
   return *this;
 }
 
-int Parameter::isValidName(char* value) {
-  int len = strlen(value);
-  if (len > MaxStrLength)
-    return 0;
-  int i;
-  for (i = 0; i < len; i++)
-    if (!this->isValidChar(value[i]))
-      return 0;
-  return 1;
-}
-
 int Parameter::isValidChar(int c) {
-  //numbers and letters are ok
+  //standard latin numbers and letters are ok
   if (isalnum(c))
     return 1;
 
@@ -76,13 +52,9 @@ int Parameter::isValidChar(int c) {
       //other valid characters in addition to numbers and letters
       return 1;
       break;
-    case '\\':
-      //reading backslash will do nasty things to the input stream
-      handle.logFileMessage(LOGFAIL, "error in parameter - name cannot include backslash");
-      return 0;
-      break;
     default:
       //all other character are invalid in parameter names
+      //JMB this means that Icelandic, Norwegian, etc characters are invalid
       return 0;
   }
   return 0;

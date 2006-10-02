@@ -42,6 +42,9 @@ int CommentStream::peek() {
   } else if (istrptr->peek() == '\\') {
     //attempting to read backslash will do nasty things to the input stream
     handle.logFileMessage(LOGFAIL, "backslash is an invalid character");
+  } else if ((istrptr->peek() == '\'') || (istrptr->peek() == '\"')) {
+    //attempting to read quote will do nasty things to the input stream
+    handle.logFileMessage(LOGFAIL, "quote is an invalid character");
   }
   return istrptr->peek();
 }
