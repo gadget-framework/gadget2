@@ -83,9 +83,10 @@ protected:
   /**
    * \brief This function will calculate the total number of recruits that have been created by the spawning process on the current timestep
    * \param temp is the current temperature
+   * \param inarea is the current area identifier
    * \return total number of recruits
    */
-  double calcRecruitNumber(double temp);
+  double calcRecruitNumber(double temp, int inarea);
   /**
    * \brief This is the StockPtrVector of the stocks that will be spawned
    */
@@ -106,6 +107,16 @@ protected:
    * \brief This is the IntVector used as an index for the ratio vector
    */
   IntVector ratioindex;
+  /**
+   * \brief This is the first year of the simulation that the spawning will take place on
+   * \not This is optional, and will default to the first year of the simulation if it is not specified
+   */
+  int spawnFirstYear;
+  /**
+   * \brief This is the last year of the simulation that the spawning will take place on
+   * \not This is optional, and will default to the last year of the simulation if it is not specified
+   */
+  int spawnLastYear;
   /**
    * \brief This is the IntVector used to store information about the steps when the spawning takes place
    */
@@ -157,7 +168,7 @@ protected:
   /**
    * \brief This is the DoubleMatrix used to store the numbers of the recruits, if the spawning process is to include the creation of the recruits
    */
-  DoubleMatrix spawnNumbers;
+  DoubleMatrixPtrVector spawnNumbers;
   /**
    * \brief This is the TimeVariableVector used to store the parameters when calculating the recruitment from the spawning process, if the spawning process is to include the creation of the recruits
    */

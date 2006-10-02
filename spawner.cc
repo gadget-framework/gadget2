@@ -30,7 +30,8 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   if (LgrpDiv->Error())
     handle.logMessage(LOGFAIL, "Error in spawner - failed to create length group");
   int numlength = LgrpDiv->numLengthGroups();
-  spawnNumbers.AddRows(maxage + 1, numlength, 0.0);
+  spawnFirstYear = TimeInfo->getFirstYear();
+  spawnLastYear = TimeInfo->getLastYear();
   spawnProportion.resize(numlength, 0.0);
   spawnMortality.resize(numlength, 0.0);
   spawnWeightLoss.resize(numlength, 0.0);
@@ -61,6 +62,18 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     spawnArea[i] = Area->getInnerArea(spawnArea[i]);
 
   infile >> text >> ws;
+  //JMB check for optional firstspwanyear and lastspawnyear values
+  if (strcasecmp(text, "firstspawnyear") == 0) {
+    infile >> spawnFirstYear >> text >> ws;
+    if (spawnFirstYear < TimeInfo->getFirstYear())
+      handle.logFileMessage(LOGFAIL, "invalid first spawning year", spawnFirstYear);
+  }
+  if (strcasecmp(text, "lastspawnyear") == 0) {
+    infile >> spawnLastYear >> text >> ws;
+    if (spawnLastYear > TimeInfo->getLastYear())
+      handle.logFileMessage(LOGFAIL, "invalid last spawning year", spawnLastYear);
+  }
+  
   if (strcasecmp(text, "spawnstocksandratios") == 0) {
     onlyParent = 0;
     i = 0;
@@ -152,6 +165,10 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     if (strcasecmp(text, "stockparameters") != 0)
       handle.logFileUnexpected(LOGFAIL, "stockparameters", text);
     stockParameters.read(infile, TimeInfo, keeper);
+
+    //resize spawnNumbers to store details of the spawning stock biomass
+    for (i = 0; i < areas.Size(); i++)
+      spawnNumbers.resize(new DoubleMatrix(maxage + 1, numlength, 0.0));
   }
 
   infile >> ws;
@@ -167,6 +184,8 @@ SpawnData::~SpawnData() {
   int i;
   for (i = 0; i < spawnStockNames.Size(); i++)
     delete[] spawnStockNames[i];
+  for (i = 0; i < spawnNumbers.Size(); i++)
+    delete spawnNumbers[i];
   for (i = 0; i < CI.Size(); i++)
     delete CI[i];
   delete LgrpDiv;
@@ -246,6 +265,7 @@ void SpawnData::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const Ti
     spawnParameters.Update(TimeInfo);
 
   int age, len;
+  int inarea = this->areaNum(area);
   PopInfo pop;
   for (age = Alkeys.minAge(); age <= Alkeys.maxAge(); age++) {
     //subtract mortality and reduce the weight of the living ones.
@@ -255,7 +275,7 @@ void SpawnData::Spawn(AgeBandMatrix& Alkeys, int area, const TimeClass* const Ti
 
         //calculate the spawning stock biomass if needed
         if (!onlyParent)
-          spawnNumbers[age][len] = calcSpawnNumber(age, len, pop.N, pop.W);
+          (*spawnNumbers[inarea])[age][len] = calcSpawnNumber(age, len, pop.N, pop.W);
 
         pop *= exp(-spawnMortality[len]);
         pop.W -= (spawnWeightLoss[len] * pop.W);
@@ -275,9 +295,6 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   int inarea = this->areaNum(area);
   double tmp, length, N, total, sum;
 
-  for (s = 0; s < Storage.Size(); s++)
-    Storage[s].setToZero();
-
   //create a length distribution and mean weight for the new stock
   stockParameters.Update(TimeInfo);
   if (handle.getLogLevel() >= LOGWARN) {
@@ -290,6 +307,7 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   }
 
   sum = 0.0;
+  Storage[inarea].setToZero();
   if (stockParameters[1] > verysmall) {
     tmp = 1.0 / (2 * stockParameters[1] * stockParameters[1]);
     for (len = 0; len < spawnLgrpDiv->numLengthGroups(); len++) {
@@ -303,7 +321,7 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   //calculate the total number of recruits and distribute this through the length groups
   if (!isZero(sum)) {
     tmp = 0.0;  //JMB dummy temperature of zero
-    total = calcRecruitNumber(tmp) / sum;
+    total = calcRecruitNumber(tmp, inarea) / sum;
     for (len = 0; len < spawnLgrpDiv->numLengthGroups(); len++) {
       length = spawnLgrpDiv->meanLength(len);
       Storage[inarea][spawnAge][len].N *= total;
@@ -319,14 +337,13 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
       spawnStocks[s]->Add(Storage[inarea], CI[s], area, tmp);
     }
   }
-
-  for (age = 0; age < spawnNumbers.Nrow(); age++)
-    for (len = 0; len < spawnNumbers.Ncol(age); len++)
-      spawnNumbers[age][len] = 0.0;
 }
 
 int SpawnData::isSpawnStepArea(int area, const TimeClass* const TimeInfo) {
   int i, j;
+
+  if ((TimeInfo->getYear() < spawnFirstYear) || (TimeInfo->getYear() > spawnLastYear))
+    return 0;
 
   for (i = 0; i < spawnStep.Size(); i++)
     for (j = 0; j < spawnArea.Size(); j++)
@@ -417,13 +434,13 @@ double SpawnData::calcSpawnNumber(int age, int len, double number, double weight
   return temp;
 }
 
-double SpawnData::calcRecruitNumber(double temp) {
+double SpawnData::calcRecruitNumber(double temp, int inarea) {
   int age, len;
   double total = 0.0, ssb = 0.0;
 
-  for (age = 0; age < spawnNumbers.Nrow(); age++)
-    for (len = 0; len < spawnNumbers.Ncol(age); len++)
-      ssb += spawnNumbers[age][len];
+  for (age = 0; age < (*spawnNumbers[inarea]).Nrow(); age++)
+    for (len = 0; len < (*spawnNumbers[inarea]).Ncol(age); len++)
+      ssb += (*spawnNumbers[inarea])[age][len];
 
   switch (functionnumber) {
     case 1:
