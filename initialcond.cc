@@ -30,6 +30,10 @@ void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const k
   area = age = ageid = count = reject = 0;
   keeper->addString("meandata");
   while (!infile.eof()) {
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (!(isdigit(infile.peek())))
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     keepdata = 1;
     infile >> age >> area >> ws;
 
@@ -110,6 +114,10 @@ void InitialCond::readNormalParameterData(CommentStream& infile, Keeper* const k
   area = age = ageid = count = reject = 0;
   keeper->addString("meandata");
   while (!infile.eof()) {
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (!(isdigit(infile.peek())))
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     keepdata = 1;
     infile >> age >> area >> ws;
 
@@ -178,23 +186,25 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
   int noareas = areas.Size();
   int numlen = LgrpDiv->numLengthGroups();
 
+  //initialise things
+  for (areaid = 0; areaid < noareas; areaid++) {
+    initialNumber.resize(new FormulaMatrix(numage, numlen, 0.0));
+    initialPop[areaid].setToZero();
+  }
+
   //Find the start of the data in the following format
   //area - age - meanlength - number - weight
   infile >> ws;
   if (countColumns(infile) != 5)
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 5");
 
-  //initialise things
-  for (areaid = 0; areaid < noareas; areaid++) {
-    initialNumber.resize(new FormulaMatrix(numage, numlen, 0.0));
-    for (ageid = minage; ageid < numage + minage; ageid++)
-      for (lengthid = 0; lengthid < numlen; lengthid++)
-        initialPop[areaid][ageid][lengthid].setToZero();
-  }
-
   area = age = ageid = count = reject = 0;
   keeper->addString("numberdata");
   while (!infile.eof()) {
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (!(isdigit(infile.peek())))
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     keepdata = 1;
     infile >> area >> age >> length >> ws;
 
@@ -207,7 +217,7 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
     //crude length data check
     lengthid = -1;
     for (i = 0; i < numlen; i++)
-      if (length == LgrpDiv->minLength(i))
+      if (isEqual(length, LgrpDiv->minLength(i)))
         lengthid = i;
 
     if (lengthid == -1)

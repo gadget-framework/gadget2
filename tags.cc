@@ -100,7 +100,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
     //only keep the data if the length is valid
     lenid = -1;
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
-      if (tmplength == LgrpDiv->minLength(i))
+      if (isEqual(tmplength, LgrpDiv->minLength(i)))
         lenid = i;
 
     if (lenid == -1)

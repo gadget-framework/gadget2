@@ -129,6 +129,10 @@ void RenewalData::readNormalParameterData(CommentStream& infile, Keeper* const k
 
   year = step = area = age = count = reject = 0;
   while (!infile.eof()) {
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (!(isdigit(infile.peek())))
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     keepdata = 1;
     infile >> year >> step >> area >> age >> ws;
 
@@ -198,6 +202,10 @@ void RenewalData::readNormalConditionData(CommentStream& infile, Keeper* const k
 
   year = step = area = age = count = reject = 0;
   while (!infile.eof()) {
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (!(isdigit(infile.peek())))
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     keepdata = 1;
     infile >> year >> step >> area >> age >> ws;
 
@@ -266,6 +274,10 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
 
   year = step = area = age = count = reject = 0;
   while (!infile.eof()) {
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (!(isdigit(infile.peek())))
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     keepdata = 1;
     infile >> year >> step >> area >> age >> length >> ws;
 
@@ -280,7 +292,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
 
     lengthid = -1;
     for (i = 0; i < nolengr; i++)
-      if (length == LgrpDiv->minLength(i))
+      if (isEqual(length, LgrpDiv->minLength(i)))
         lengthid = i;
 
     if (lengthid == -1)

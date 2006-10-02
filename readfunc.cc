@@ -13,6 +13,10 @@ void readRefWeights(CommentStream& infile, DoubleMatrix& M) {
   M.Reset();
   infile >> ws;
   while (!infile.eof()) {
+    //crude check to see if something has gone wrong and avoid infinite loops
+    if (!(isdigit(infile.peek())))
+      handle.logFileMessage(LOGFAIL, "failed to read data from file");
+
     M.AddRows(1, 2, 0.0);
     infile >> M[i][0] >> M[i][1];
     if (infile.fail())
@@ -111,7 +115,7 @@ void readAmounts(CommentStream& infile, const IntVector& tmpareas,
     infile >> year >> step >> area >> tmpname;
 
     //crude check to see if something has gone wrong and avoid infinite loops
-    if ((strlen(tmpname) == 0) || infile.eof())
+    if (strlen(tmpname) == 0)
       handle.logFileMessage(LOGFAIL, "failed to read data for", givenname);
 
     //check if the year and step are in the simulation
@@ -177,7 +181,7 @@ void readGrowthAmounts(CommentStream& infile, const TimeClass* const TimeInfo,
     infile >> year >> step >> area >> tmplength;
 
     //crude check to see if something has gone wrong and avoid infinite loops
-    if ((strlen(tmplength) == 0) || infile.eof())
+    if (strlen(tmplength) == 0)
       handle.logFileMessage(LOGFAIL, "failed to read growth data");
 
     //check if the year and step are in the simulation
