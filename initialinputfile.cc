@@ -155,8 +155,8 @@ void InitialInputFile::readFromFile() {
 
       if (rand) {
         // generate a random point somewhere between the bounds
-        handle.logMessage(LOGMESSAGE, "Generating a random starting point for switch", sw.getName());
         val = lower + (randomNumber() * (upper - lower));
+        handle.logMessage(LOGMESSAGE, "Generating a random starting point", val, sw.getName());
         values.resize(1, val);
         rand = 0;
       }
