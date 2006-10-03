@@ -73,6 +73,26 @@ void IntMatrix::Delete(int pos) {
   }
 }
 
+IntMatrix& IntMatrix::operator = (const IntMatrix& initial) {
+  int i;
+  if (v != 0) {
+    for (i = 0; i < nrow; i++)
+      delete v[i];
+    delete[] v;
+  }
+
+  nrow = initial.nrow;
+  if (nrow > 0) {
+    v = new IntVector*[nrow];
+    for (i = 0; i < nrow; i++)
+      v[i] = new IntVector(initial[i]);
+
+  } else
+    v = 0;
+
+  return *this;
+}
+
 void IntMatrix::Reset() {
   if (nrow > 0) {
     int i;
@@ -81,5 +101,15 @@ void IntMatrix::Reset() {
     delete[] v;
     v = 0;
     nrow = 0;
+  }
+}
+
+void IntMatrix::Print(ofstream& outfile) const {
+  int i, j;
+  for (i = 0; i < nrow; i++) {
+    outfile << TAB;
+    for (j = 0; j < v[i]->Size(); j++)
+      outfile << setw(smallwidth) << (*v[i])[j] << sep;
+    outfile << endl;
   }
 }
