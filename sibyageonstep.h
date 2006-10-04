@@ -50,14 +50,6 @@ protected:
    * \brief This is the StockAggregator used to collect information about the relevant stocks for the survey index data
    */
   StockAggregator* aggregator;
-  /**
-   * \brief This is the IntMatrix used to store age information
-   */
-  IntMatrix Ages;
-  /**
-   * \brief This is the LengthGroupDivision used to store length information
-   */
-  LengthGroupDivision* LgrpDiv;
 };
 
 #endif

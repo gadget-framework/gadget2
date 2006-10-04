@@ -51,14 +51,6 @@ protected:
    * \brief This is the FleetPreyAggregator used to collect information about the relevant fleets for the survey index data
    */
   FleetPreyAggregator* aggregator;
-  /**
-   * \brief This is the IntMatrix used to store age information
-   */
-  IntMatrix Ages;
-  /**
-   * \brief This is the LengthGroupDivision used to store length information
-   */
-  LengthGroupDivision* LgrpDiv;
 };
 
 #endif

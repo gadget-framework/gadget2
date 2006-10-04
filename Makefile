@@ -71,13 +71,13 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     quotapredator.o predator.o poppredator.o stockpredator.o totalpredator.o \
     recaggregator.o stockpreyaggregator.o predatorpreyaggregator.o \
     predatoraggregator.o predatoroveraggregator.o preyoveraggregator.o \
-    fleetpreyaggregator.o stockaggregator.o fleeteffortaggregator.o \
-    predatoroverprinter.o predatorpreyprinter.o preyoverprinter.o \
+    fleetpreyaggregator.o stockaggregator.o fleeteffortaggregator.o stockstdprinter.o \
+    predatorprinter.o predatoroverprinter.o predatorpreyprinter.o preyoverprinter.o \
     stockfullprinter.o stockpreyfullprinter.o stockpreyprinter.o stockprinter.o \
-    predatorprinter.o stockstdprinter.o likelihoodprinter.o summaryprinter.o \
+    likelihoodprinter.o summaryprinter.o boundlikelihood.o migrationpenalty.o \
     catchdistribution.o catchinkilos.o catchstatistics.o understocking.o \
-    recapture.o recstatistics.o stockdistribution.o stomachcontent.o sionstep.o \
-    boundlikelihood.o surveydistribution.o migrationpenalty.o surveyindices.o \
+    recapture.o recstatistics.o stockdistribution.o stomachcontent.o \
+    surveydistribution.o surveyindices.o sionstep.o sibyacousticonstep.o \
     sibyageonstep.o sibyfleetonstep.o sibylengthonstep.o sibyeffortonstep.o \
     optinfobfgs.o optinfohooke.o optinfosimann.o bfgs.o hooke.o simann.o \
     addresskeepervector.o addresskeepermatrix.o intmatrix.o doublematrix.o \

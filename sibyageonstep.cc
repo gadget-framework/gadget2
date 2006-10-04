@@ -10,25 +10,32 @@ extern ErrorHandler handle;
 SIByAgeOnStep::SIByAgeOnStep(CommentStream& infile, const IntMatrix& areas,
   const IntMatrix& ages, const CharPtrVector& areaindex, const CharPtrVector& ageindex,
   const TimeClass* const TimeInfo, const char* datafilename, const char* givenname, int bio)
-  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, ageindex, givenname, bio, SIAGE), Ages(ages) {
+  : SIOnStep(infile, datafilename, areaindex, TimeInfo, areas, ageindex, givenname, bio, SIAGE) {
+
+  Ages = ages;
 }
 
 SIByAgeOnStep::~SIByAgeOnStep() {
   if (aggregator != 0)
     delete aggregator;
-  if (LgrpDiv != 0)
-    delete LgrpDiv;
 }
 
 void SIByAgeOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i, j, found, minage, maxage;
-  double minlength = Stocks[0]->getLengthGroupDiv()->minLength();
-  double maxlength = minlength;
+  double minlength, maxlength;
 
-  for (i = 0; i < Stocks.Size(); i++) {
-    minlength = min(Stocks[i]->getLengthGroupDiv()->minLength(), minlength);
-    maxlength = max(Stocks[i]->getLengthGroupDiv()->maxLength(), maxlength);
+  if (Stocks.Size() == 0)
+    handle.logMessage(LOGFAIL, "Error in surveyindex - failed to initialise stock data");
+
+  minlength = Stocks[0]->getLengthGroupDiv()->minLength();
+  maxlength = Stocks[0]->getLengthGroupDiv()->maxLength();
+  if (Stocks.Size() > 1) {
+    for (i = 1; i < Stocks.Size(); i++) {
+      minlength = min(Stocks[i]->getLengthGroupDiv()->minLength(), minlength);
+      maxlength = max(Stocks[i]->getLengthGroupDiv()->maxLength(), maxlength);
+    }
   }
+
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, maxlength - minlength);
   if (LgrpDiv->Error())
     handle.logMessage(LOGFAIL, "Error in surveyindex - failed to create length group");
@@ -79,6 +86,7 @@ void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {
 
   aggregator->Sum();
   alptr = &aggregator->getSum();
+  //alptr will only have one length group
   for (a = 0; a < Areas.Nrow(); a++)
     for (i = 0; i < Ages.Nrow(); i++)
       (*modelIndex[timeindex])[a][i] = (*alptr)[a][i][0].N;

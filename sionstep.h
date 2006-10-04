@@ -29,7 +29,7 @@ enum SIType { SILENGTH = 1, SIAGE, SIFLEET, SIEFFORT, SIACOUSTIC };
 class SIOnStep : public HasName {
 public:
   /**
-   * \brief This is the SIOnStep constructor
+   * \brief This is the default SIOnStep constructor
    * \param infile is the CommentStream to read the SIOnStep data from
    * \param datafilename is the name of the file to read the index data from
    * \param aindex is the CharPtrVector of the names of the areas for the survey indices
@@ -40,9 +40,8 @@ public:
    * \param bio is the flag to denote whether the index should be based on the biomass or not
    * \param type is the SIType of the SIOnStep
    */
-  SIOnStep(CommentStream& infile, const char* datafilename,
-    const CharPtrVector& aindex, const TimeClass* const TimeInfo,
-    const IntMatrix& areas, const CharPtrVector& charindex,
+  SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& aindex,
+    const TimeClass* const TimeInfo, const IntMatrix& areas, const CharPtrVector& charindex,
     const char* givenname, int bio, SIType type);
   /**
    * \brief This is the default SIOnStep destructor
@@ -105,6 +104,14 @@ protected:
    */
   IntVector Steps;
   /**
+   * \brief This is the IntMatrix used to store information about the ages that the survey index should be calculated on
+   */
+  IntMatrix Ages;
+  /**
+   * \brief This is the LengthGroupDivision used to store information about the lengths that the survey index should be calculated on
+   */
+  LengthGroupDivision* LgrpDiv;
+  /**
    * \brief This is the DoubleVector used to store the calculated likelihood information
    */
   DoubleVector likelihoodValues;
@@ -156,6 +163,11 @@ private:
    * \param TimeInfo is the TimeClass for the current model
    */
   void readSIData(CommentStream& infile, const TimeClass* const TimeInfo);
+  /**
+   * \brief This function will read the regression data data from the input file
+   * \param infile is the CommentStream to read the regression data from
+   */
+  void readSIRegressionData(CommentStream& infile);
   /**
    * \brief This is used to fix the slope of the regression lines if specified by the user
    */

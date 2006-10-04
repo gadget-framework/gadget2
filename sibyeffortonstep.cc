@@ -18,6 +18,10 @@ SIByEffortOnStep::~SIByEffortOnStep() {
 }
 
 void SIByEffortOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
+  if (Stocks.Size() == 0)
+    handle.logMessage(LOGFAIL, "Error in surveyindex - failed to initialise stock data");
+  if (Fleets.Size() == 0)
+    handle.logMessage(LOGFAIL, "Error in surveyindex - failed to initialise fleet data");
   aggregator = new FleetEffortAggregator(Fleets, Stocks, Areas);
 }
 

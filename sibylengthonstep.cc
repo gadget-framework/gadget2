@@ -21,17 +21,21 @@ SIByLengthOnStep::SIByLengthOnStep(CommentStream& infile, const IntMatrix& areas
 SIByLengthOnStep::~SIByLengthOnStep() {
   if (aggregator != 0)
     delete aggregator;
-  if (LgrpDiv != 0)
-    delete LgrpDiv;
 }
 
 void SIByLengthOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
-  int i, found;
-  int minage = 100;
-  int maxage = 0;
-  for (i = 0; i < Stocks.Size(); i++) {
-    minage = min(Stocks[i]->minAge(), minage);
-    maxage = max(Stocks[i]->maxAge(), maxage);
+  int i, found, minage, maxage;
+
+  if (Stocks.Size() == 0)
+    handle.logMessage(LOGFAIL, "Error in surveyindex - failed to initialise stock data");
+
+  minage = Stocks[0]->minAge();
+  maxage = Stocks[0]->maxAge();
+  if (Stocks.Size() > 1) {
+    for (i = 1; i < Stocks.Size(); i++) {
+      minage = min(Stocks[i]->minAge(), minage);
+      maxage = max(Stocks[i]->maxAge(), maxage);
+    }
   }
 
   Ages.AddRows(1, maxage - minage + 1, 0);
@@ -75,6 +79,7 @@ void SIByLengthOnStep::Sum(const TimeClass* const TimeInfo) {
 
   aggregator->Sum();
   alptr = &aggregator->getSum();
+  //alptr will only have one age group
   for (a = 0; a < Areas.Nrow(); a++)
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
       (*modelIndex[timeindex])[a][i] = (*alptr)[a][0][i].N;

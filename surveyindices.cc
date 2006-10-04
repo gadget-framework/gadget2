@@ -9,6 +9,7 @@
 #include "sibyageonstep.h"
 #include "sibyfleetonstep.h"
 #include "sibyeffortonstep.h"
+#include "sibyacousticonstep.h"
 #include "gadget.h"
 
 extern ErrorHandler handle;
@@ -126,11 +127,30 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     if (fleetnames.Size() == 0)
       handle.logFileMessage(LOGFAIL, "\nError in surveyindex - failed to read fleets");
     handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
-    
-    if (biomass) { //JMB the biomass flag is meaningless for the effort index
+
+    if (biomass) //JMB the biomass flag is not used for effort index
       handle.logMessage(LOGWARN, "Warning in surveyindex - biomass flag ignored for effort index");
-      biomass = 0;      
+
+  } else if (strcasecmp(sitype, "acoustic") == 0) {
+    //read in the fleetnames
+    i = 0;
+    infile >> text >> ws;
+    if (strcasecmp(text, "fleetnames") != 0)
+      handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
+    infile >> text;
+    while (!infile.eof() && (strcasecmp(text, "stocknames") != 0)) {
+      charindex.resize(new char[strlen(text) + 1]);
+      strcpy(charindex[i++], text);
+      infile >> text >> ws;
     }
+    if (charindex.Size() == 0)
+      handle.logFileMessage(LOGFAIL, "\nError in surveyindex - failed to read fleets");
+    if (charindex.Size() > 1)
+      handle.logFileMessage(LOGWARN, "Warning in surveyindex - more than one acoustic fleet defined");
+    handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", charindex.Size());
+
+    if (!biomass) //JMB the biomass flag is probably needed for acoustic index
+      handle.logMessage(LOGWARN, "Warning in surveyindex - biomass flag missing for acoustic index");
 
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
     handle.logFileMessage(LOGFAIL, "\nThe ageandlengths surveyindex likelihood component is no longer supported\nUse the surveydistribution likelihood component instead");
@@ -169,6 +189,10 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   } else if (strcasecmp(sitype, "effort") == 0) {
     SI = new SIByEffortOnStep(infile, areas, areaindex,
       fleetnames, TimeInfo, datafilename, this->getName(), biomass);
+
+  } else if (strcasecmp(sitype, "acoustic") == 0) {
+    SI = new SIByAcousticOnStep(infile, areas, areaindex,
+      charindex, TimeInfo, datafilename, this->getName(), biomass);
 
   } else
     handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised type", sitype);

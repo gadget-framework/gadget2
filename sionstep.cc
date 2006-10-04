@@ -9,6 +9,8 @@ extern ErrorHandler handle;
 
 SIOnStep::~SIOnStep() {
   int i;
+  if (LgrpDiv != 0)
+    delete LgrpDiv;
   if (LR != 0)
     delete LR;
   for (i = 0; i < areaindex.Size(); i++)
@@ -23,13 +25,9 @@ SIOnStep::~SIOnStep() {
     delete weightIndex[i];
 }
 
-SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
-  const CharPtrVector& aindex, const TimeClass* const TimeInfo,
-  const IntMatrix& areas, const CharPtrVector& charindex,
+SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPtrVector& aindex,
+  const TimeClass* const TimeInfo, const IntMatrix& areas, const CharPtrVector& charindex,
   const char* givenname, int bio, SIType type) : HasName(givenname), Areas(areas), alptr(0) {
-
-  char text[MaxStrLength];
-  strncpy(text, "", MaxStrLength);
 
   biomass = bio;
   sitype = type;
@@ -49,103 +47,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename,
   }
 
   //read the fittype
-  infile >> text;
-  if (strcasecmp(text, "linearfit") == 0) {
-    fittype = LINEARFIT;
-    LR = new LinearRegression(FREE);
-  } else if (strcasecmp(text, "loglinearfit") == 0) {
-    fittype = LOGLINEARFIT;
-    LR = new LogLinearRegression(FREE);
-  } else if (strcasecmp(text, "weightlinearfit") == 0) {
-    useweight = 1;
-    fittype = WEIGHTLINEARFIT;
-    LR = new WeightRegression(FREE);
-  } else if (strcasecmp(text, "logweightlinearfit") == 0) {
-    useweight = 1;
-    fittype = LOGWEIGHTLINEARFIT;
-    LR = new LogWeightRegression(FREE);
-  } else if (strcasecmp(text, "fixedslopelinearfit") == 0) {
-    fittype = FIXEDSLOPELINEARFIT;
-    LR = new LinearRegression(FIXEDSLOPE);
-  } else if (strcasecmp(text, "fixedslopeloglinearfit") == 0) {
-    fittype = FIXEDSLOPELOGLINEARFIT;
-    LR = new LogLinearRegression(FIXEDSLOPE);
-  } else if (strcasecmp(text, "fixedslopeweightlinearfit") == 0) {
-    useweight = 1;
-    fittype = FIXEDSLOPEWEIGHTLINEARFIT;
-    LR = new WeightRegression(FIXEDSLOPE);
-  } else if (strcasecmp(text, "fixedslopelogweightlinearfit") == 0) {
-    useweight = 1;
-    fittype = FIXEDSLOPELOGWEIGHTLINEARFIT;
-    LR = new LogWeightRegression(FIXEDSLOPE);
-  } else if (strcasecmp(text, "fixedinterceptlinearfit") == 0) {
-    fittype = FIXEDINTERCEPTLINEARFIT;
-    LR = new LinearRegression(FIXEDINTERCEPT);
-  } else if (strcasecmp(text, "fixedinterceptloglinearfit") == 0) {
-    fittype = FIXEDINTERCEPTLOGLINEARFIT;
-    LR = new LogLinearRegression(FIXEDINTERCEPT);
-  } else if (strcasecmp(text, "fixedinterceptweightlinearfit") == 0) {
-    useweight = 1;
-    fittype = FIXEDINTERCEPTWEIGHTLINEARFIT;
-    LR = new WeightRegression(FIXEDINTERCEPT);
-  } else if (strcasecmp(text, "fixedinterceptlogweightlinearfit") == 0) {
-    useweight = 1;
-    fittype = FIXEDINTERCEPTLOGWEIGHTLINEARFIT;
-    LR = new LogWeightRegression(FIXEDINTERCEPT);
-  } else if (strcasecmp(text, "fixedlinearfit") == 0) {
-    fittype = FIXEDLINEARFIT;
-    LR = new LinearRegression(FIXED);
-  } else if (strcasecmp(text, "fixedloglinearfit") == 0) {
-    fittype = FIXEDLOGLINEARFIT;
-    LR = new LogLinearRegression(FIXED);
-  } else if (strcasecmp(text, "fixedweightlinearfit") == 0) {
-    useweight = 1;
-    fittype = FIXEDWEIGHTLINEARFIT;
-    LR = new WeightRegression(FIXED);
-  } else if (strcasecmp(text, "fixedlogweightlinearfit") == 0) {
-    useweight = 1;
-    fittype = FIXEDLOGWEIGHTLINEARFIT;
-    LR = new LogWeightRegression(FIXED);
-  } else
-    handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised fittype", text);
-
-  switch (fittype) {
-    case LINEARFIT:
-    case LOGLINEARFIT:
-    case WEIGHTLINEARFIT:
-    case LOGWEIGHTLINEARFIT:
-      break;
-    case FIXEDSLOPELINEARFIT:
-    case FIXEDSLOPELOGLINEARFIT:
-    case FIXEDSLOPEWEIGHTLINEARFIT:
-    case FIXEDSLOPELOGWEIGHTLINEARFIT:
-      readWordAndVariable(infile, "slope", slope);
-      LR->setSlope(slope);
-      break;
-    case FIXEDINTERCEPTLINEARFIT:
-    case FIXEDINTERCEPTLOGLINEARFIT:
-    case FIXEDINTERCEPTWEIGHTLINEARFIT:
-    case FIXEDINTERCEPTLOGWEIGHTLINEARFIT:
-      readWordAndVariable(infile, "intercept", intercept);
-      LR->setIntercept(intercept);
-      break;
-    case FIXEDLINEARFIT:
-    case FIXEDLOGLINEARFIT:
-    case FIXEDWEIGHTLINEARFIT:
-    case FIXEDLOGWEIGHTLINEARFIT:
-      readWordAndVariable(infile, "slope", slope);
-      readWordAndVariable(infile, "intercept", intercept);
-      LR->setSlope(slope);
-      LR->setIntercept(intercept);
-      break;
-    default:
-      handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised fittype", text);
-      break;
-  }
-
-  //JMB - check that the slope of the regression line is positive
-  if (slope < 0.0)
-    handle.logFileMessage(LOGFAIL, "\nError in surveyindex - slope of the regression line must be positive", slope);
+  readSIRegressionData(infile);
 
   //read the survey indices data from the datafile
   ifstream datafile;
@@ -268,6 +170,110 @@ void SIOnStep::readSIData(CommentStream& infile, const TimeClass* const TimeInfo
   if (reject != 0)
     handle.logMessage(LOGMESSAGE, "Discarded invalid surveyindex data - number of invalid entries", reject);
   handle.logMessage(LOGMESSAGE, "Read surveyindex data file - number of entries", count);
+}
+
+void SIOnStep::readSIRegressionData(CommentStream& infile) {
+
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+
+  infile >> ws >> text;
+  if (strcasecmp(text, "linearfit") == 0) {
+    fittype = LINEARFIT;
+    LR = new LinearRegression(FREE);
+  } else if (strcasecmp(text, "loglinearfit") == 0) {
+    fittype = LOGLINEARFIT;
+    LR = new LogLinearRegression(FREE);
+  } else if (strcasecmp(text, "weightlinearfit") == 0) {
+    useweight = 1;
+    fittype = WEIGHTLINEARFIT;
+    LR = new WeightRegression(FREE);
+  } else if (strcasecmp(text, "logweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = LOGWEIGHTLINEARFIT;
+    LR = new LogWeightRegression(FREE);
+  } else if (strcasecmp(text, "fixedslopelinearfit") == 0) {
+    fittype = FIXEDSLOPELINEARFIT;
+    LR = new LinearRegression(FIXEDSLOPE);
+  } else if (strcasecmp(text, "fixedslopeloglinearfit") == 0) {
+    fittype = FIXEDSLOPELOGLINEARFIT;
+    LR = new LogLinearRegression(FIXEDSLOPE);
+  } else if (strcasecmp(text, "fixedslopeweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = FIXEDSLOPEWEIGHTLINEARFIT;
+    LR = new WeightRegression(FIXEDSLOPE);
+  } else if (strcasecmp(text, "fixedslopelogweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = FIXEDSLOPELOGWEIGHTLINEARFIT;
+    LR = new LogWeightRegression(FIXEDSLOPE);
+  } else if (strcasecmp(text, "fixedinterceptlinearfit") == 0) {
+    fittype = FIXEDINTERCEPTLINEARFIT;
+    LR = new LinearRegression(FIXEDINTERCEPT);
+  } else if (strcasecmp(text, "fixedinterceptloglinearfit") == 0) {
+    fittype = FIXEDINTERCEPTLOGLINEARFIT;
+    LR = new LogLinearRegression(FIXEDINTERCEPT);
+  } else if (strcasecmp(text, "fixedinterceptweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = FIXEDINTERCEPTWEIGHTLINEARFIT;
+    LR = new WeightRegression(FIXEDINTERCEPT);
+  } else if (strcasecmp(text, "fixedinterceptlogweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = FIXEDINTERCEPTLOGWEIGHTLINEARFIT;
+    LR = new LogWeightRegression(FIXEDINTERCEPT);
+  } else if (strcasecmp(text, "fixedlinearfit") == 0) {
+    fittype = FIXEDLINEARFIT;
+    LR = new LinearRegression(FIXED);
+  } else if (strcasecmp(text, "fixedloglinearfit") == 0) {
+    fittype = FIXEDLOGLINEARFIT;
+    LR = new LogLinearRegression(FIXED);
+  } else if (strcasecmp(text, "fixedweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = FIXEDWEIGHTLINEARFIT;
+    LR = new WeightRegression(FIXED);
+  } else if (strcasecmp(text, "fixedlogweightlinearfit") == 0) {
+    useweight = 1;
+    fittype = FIXEDLOGWEIGHTLINEARFIT;
+    LR = new LogWeightRegression(FIXED);
+  } else
+    handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised fittype", text);
+
+  switch (fittype) {
+    case LINEARFIT:
+    case LOGLINEARFIT:
+    case WEIGHTLINEARFIT:
+    case LOGWEIGHTLINEARFIT:
+      break;
+    case FIXEDSLOPELINEARFIT:
+    case FIXEDSLOPELOGLINEARFIT:
+    case FIXEDSLOPEWEIGHTLINEARFIT:
+    case FIXEDSLOPELOGWEIGHTLINEARFIT:
+      readWordAndVariable(infile, "slope", slope);
+      LR->setSlope(slope);
+      break;
+    case FIXEDINTERCEPTLINEARFIT:
+    case FIXEDINTERCEPTLOGLINEARFIT:
+    case FIXEDINTERCEPTWEIGHTLINEARFIT:
+    case FIXEDINTERCEPTLOGWEIGHTLINEARFIT:
+      readWordAndVariable(infile, "intercept", intercept);
+      LR->setIntercept(intercept);
+      break;
+    case FIXEDLINEARFIT:
+    case FIXEDLOGLINEARFIT:
+    case FIXEDWEIGHTLINEARFIT:
+    case FIXEDLOGWEIGHTLINEARFIT:
+      readWordAndVariable(infile, "slope", slope);
+      readWordAndVariable(infile, "intercept", intercept);
+      LR->setSlope(slope);
+      LR->setIntercept(intercept);
+      break;
+    default:
+      handle.logFileMessage(LOGFAIL, "\nError in surveyindex - unrecognised fittype", text);
+      break;
+  }
+
+  //JMB - check that the slope of the regression line is positive
+  if (slope < 0.0)
+    handle.logFileMessage(LOGFAIL, "\nError in surveyindex - slope of the regression line must be positive", slope);
 }
 
 void SIOnStep::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
