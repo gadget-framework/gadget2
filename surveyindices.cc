@@ -135,8 +135,8 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     //read in the fleetnames
     i = 0;
     infile >> text >> ws;
-    if (strcasecmp(text, "fleetnames") != 0)
-      handle.logFileUnexpected(LOGFAIL, "fleetnames", text);
+    if (strcasecmp(text, "surveynames") != 0)
+      handle.logFileUnexpected(LOGFAIL, "surveynames", text);
     infile >> text;
     while (!infile.eof() && (strcasecmp(text, "stocknames") != 0)) {
       charindex.resize(new char[strlen(text) + 1]);
