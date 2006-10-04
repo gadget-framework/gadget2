@@ -128,8 +128,8 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       handle.logFileMessage(LOGFAIL, "\nError in surveyindex - failed to read fleets");
     handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
-    if (biomass) //JMB the biomass flag is not used for effort index
-      handle.logMessage(LOGWARN, "Warning in surveyindex - biomass flag ignored for effort index");
+    if (!biomass) //JMB the biomass flag is probably needed for effort index
+      handle.logMessage(LOGWARN, "Warning in surveyindex - biomass flag missing for effort index");
 
   } else if (strcasecmp(sitype, "acoustic") == 0) {
     //read in the fleetnames
@@ -144,10 +144,10 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       infile >> text >> ws;
     }
     if (charindex.Size() == 0)
-      handle.logFileMessage(LOGFAIL, "\nError in surveyindex - failed to read fleets");
+      handle.logFileMessage(LOGFAIL, "\nError in surveyindex - failed to read acoustic survey names");
     if (charindex.Size() > 1)
-      handle.logFileMessage(LOGWARN, "Warning in surveyindex - more than one acoustic fleet defined");
-    handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", charindex.Size());
+      handle.logFileMessage(LOGWARN, "Warning in surveyindex - more than one acoustic survey defined");
+    handle.logMessage(LOGMESSAGE, "Read acoustic survey data - number of survey names", charindex.Size());
 
     if (!biomass) //JMB the biomass flag is probably needed for acoustic index
       handle.logMessage(LOGWARN, "Warning in surveyindex - biomass flag missing for acoustic index");
