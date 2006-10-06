@@ -300,6 +300,11 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
     runoptimise = 0;
   }
 
+  if ((!runstochastic) && (!runoptimise)) {
+    handle.logMessage(LOGWARN, "\nWarning - Gadget has been started without either the -s switch or the -l switch\nGadget will now set the -s switch to perform a simulation run");
+    runstochastic = 1;
+  }
+
   handle.setRunOptimise(runoptimise);
   if ((printLogLevel == 1) && (!runoptimise))
     handle.logMessage(LOGWARN, "\n** Gadget cannot disable warnings for a simulation run **");
