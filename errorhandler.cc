@@ -17,10 +17,6 @@ ErrorHandler::ErrorHandler() {
 
 ErrorHandler::~ErrorHandler() {
   delete files;
-  if (uselog) {
-    logfile.close();
-    logfile.clear();
-  }
 }
 
 void ErrorHandler::setLogLevel(int level) {
@@ -736,6 +732,9 @@ void ErrorHandler::logFinish() {
 #ifndef GADGET_NETWORK
     RUNID.printTime(logfile);
 #endif
+    logfile.close();
+    logfile.clear();
+    uselog = 0;
   }
 
   if (loglevel >= LOGINFO) {
