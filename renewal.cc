@@ -263,8 +263,8 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
   char c;
   double length;
   int i, year, step, area, age, keepdata, count, id, lengthid, reject;
-  int nolengr = LgrpDiv->numLengthGroups();
-  PopInfoIndexVector poptmp(nolengr, 0);
+  int numlen = LgrpDiv->numLengthGroups();
+  PopInfoIndexVector poptmp(numlen, 0);
 
   //We now expect to find the renewal data in the following format
   //year, step, area, age, length, number, mean weight
@@ -291,9 +291,21 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
       keepdata = 0;
 
     lengthid = -1;
-    for (i = 0; i < nolengr; i++)
+    for (i = 0; i < numlen; i++)
       if (isEqual(length, LgrpDiv->minLength(i)))
         lengthid = i;
+
+    //OK the length doesnt match a minimum length so find the length group it is in
+    if ((lengthid == -1) && (length > LgrpDiv->minLength()) && (length < LgrpDiv->maxLength())) {
+      for (i = 1; i < numlen; i++) {
+        if (length < LgrpDiv->minLength(i)) {
+          lengthid = i - 1;
+          break;
+        }
+      }
+      if (lengthid == -1)
+        lengthid = numlen - 1;  //then this must be the last length group
+    }
 
     if (lengthid == -1)
       keepdata = 0;
@@ -315,7 +327,7 @@ void RenewalData::readNumberData(CommentStream& infile, Keeper* const keeper,
         id = renewalTime.Size() - 1;
 
         renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
-        renewalNumber.resize(new FormulaMatrix(maxage - minage + 1, nolengr, 0.0));
+        renewalNumber.resize(new FormulaMatrix(maxage - minage + 1, numlen, 0.0));
       }
 
       renewalDistribution[id][age][lengthid].N = 0.0;

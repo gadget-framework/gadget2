@@ -79,6 +79,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
 
   int year, step, count, reject;
   int i, lenid, keepdata, timeid;
+  int numlen = LgrpDiv->numLengthGroups();
   double tmplength, tmpnumber;
   char tmpname[MaxStrLength];
   strncpy(tmpname, "", MaxStrLength);
@@ -99,9 +100,21 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
 
     //only keep the data if the length is valid
     lenid = -1;
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
+    for (i = 0; i < numlen; i++)
       if (isEqual(tmplength, LgrpDiv->minLength(i)))
         lenid = i;
+
+    //OK the length doesnt match a minimum length so find the length group it is in
+    if ((lenid == -1) && (tmplength > LgrpDiv->minLength()) && (tmplength < LgrpDiv->maxLength())) {
+      for (i = 1; i < numlen; i++) {
+        if (tmplength < LgrpDiv->minLength(i)) {
+          lenid = i - 1;
+          break;
+        }
+      }
+      if (lenid == -1)
+        lenid = numlen - 1;  //then this must be the last length group
+    }
 
     if (lenid == -1)
       keepdata = 0;
@@ -122,7 +135,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
         Years.resize(1, year);
         Steps.resize(1, step);
         timeid = Years.Size() - 1;
-        NumberByLength.resize(new DoubleMatrix(1, LgrpDiv->numLengthGroups(), 0.0));
+        NumberByLength.resize(new DoubleMatrix(1, numlen, 0.0));
       }
 
     } else
@@ -130,7 +143,7 @@ void Tags::readNumbers(CommentStream& infile, const char* tagname, const TimeCla
 
     if (keepdata == 1) {
       count++;
-      (*NumberByLength[timeid])[0][lenid] = tmpnumber;
+      (*NumberByLength[timeid])[0][lenid] += tmpnumber;
     } else
       reject++;  //count number of rejected data points read from file
   }

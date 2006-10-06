@@ -208,6 +208,16 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
     keepdata = 1;
     infile >> area >> age >> length >> ws;
 
+    //crude area data check
+    areaid = -1;
+    tmparea = Area->getInnerArea(area);
+    for (i = 0; i < noareas; i++)
+      if (areas[i] == tmparea)
+        areaid = i;
+
+    if (areaid == -1)
+      keepdata = 0;
+
     //crude age data check - perhaps there should be a better check?
     if ((age < minage) || (age >= (numage + minage)))
       keepdata = 0;
@@ -218,17 +228,19 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
       if (isEqual(length, LgrpDiv->minLength(i)))
         lengthid = i;
 
+    //OK the length doesnt match a minimum length so find the length group it is in
+    if ((lengthid == -1) && (length > LgrpDiv->minLength()) && (length < LgrpDiv->maxLength())) {
+      for (i = 1; i < numlen; i++) {
+        if (length < LgrpDiv->minLength(i)) {
+          lengthid = i - 1;
+          break;
+        }
+      }
+      if (lengthid == -1)
+        lengthid = numlen - 1;  //then this must be the last length group
+    }
+
     if (lengthid == -1)
-      keepdata = 0;
-
-    //crude area data check
-    areaid = -1;
-    tmparea = Area->getInnerArea(area);
-    for (i = 0; i < noareas; i++)
-      if (areas[i] == tmparea)
-        areaid = i;
-
-    if (areaid == -1)
       keepdata = 0;
 
     if (keepdata == 1) {
