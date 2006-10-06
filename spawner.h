@@ -109,12 +109,12 @@ protected:
   IntVector ratioindex;
   /**
    * \brief This is the first year of the simulation that the spawning will take place on
-   * \not This is optional, and will default to the first year of the simulation if it is not specified
+   * \note This is optional, and will default to the first year of the simulation if it is not specified
    */
   int spawnFirstYear;
   /**
    * \brief This is the last year of the simulation that the spawning will take place on
-   * \not This is optional, and will default to the last year of the simulation if it is not specified
+   * \note This is optional, and will default to the last year of the simulation if it is not specified
    */
   int spawnLastYear;
   /**
