@@ -138,7 +138,7 @@ void Ecosystem::Initialise() {
         ((StockDistribution*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case MIGRATIONPENALTYLIKELIHOOD:
-        ((MigrationPenalty*)likevec[i])->setStocks(stockvec);
+        ((MigrationPenalty*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case CATCHINKILOSLIKELIHOOD:
         ((CatchInKilos*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);

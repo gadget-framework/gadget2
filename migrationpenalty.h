@@ -29,10 +29,11 @@ public:
    */
   virtual void addLikelihood(const TimeClass* const TimeInfo);
   /**
-   * \brief This will select the stocks required to calculate the MigrationPenalty likelihood score
+   * \brief This will select the fleets and stocks required to calculate the MigrationPenalty likelihood score
+   * \param Fleets is the FleetPtrVector of all the available fleets
    * \param Stocks is the StockPtrVector of all the available stocks
    */
-  void setStocks(StockPtrVector Stocks);
+  void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks);
   /**
    * \brief This function will reset the MigrationPenalty likelihood information
    * \param keeper is the Keeper for the current model

@@ -45,7 +45,7 @@ void MigrationPenalty::addLikelihood(const TimeClass* const TimeInfo) {
     handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
 }
 
-void MigrationPenalty::setStocks(StockPtrVector Stocks) {
+void MigrationPenalty::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int i;
   int found = 0;
   for (i = 0; i < Stocks.Size(); i++)
