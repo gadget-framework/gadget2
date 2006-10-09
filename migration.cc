@@ -13,6 +13,9 @@ extern ErrorHandler handle;
 // ********************************************************
 Migration::Migration(const IntVector& Areas)
   : LivesOnAreas(Areas) {
+
+  if (areas.Size() == 1)
+    handle.logMessage(LOGWARN, "Warning in migration - only one area defined");
 }
 
 // ********************************************************

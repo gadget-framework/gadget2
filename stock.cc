@@ -343,14 +343,31 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
 }
 
 void Stock::setStock(StockPtrVector& stockvec) {
-  if (doesmature)
+  int i;
+  StockPtrVector tmpStockVector;
+  if (doesmature) {
     maturity->setStock(stockvec);
-  if (doesmove)
+    tmpStockVector = maturity->getMatureStocks();
+    for (i = 0; i < tmpStockVector.Size(); i++)
+      if (strcasecmp(tmpStockVector[i]->getName(), this->getName()) == 0)
+        handle.logMessage(LOGWARN, "Warning in stock - stock maturing into itself", this->getName());
+  }
+  if (doesmove) {
     transition->setStock(stockvec);
+    tmpStockVector = transition->getTransitionStocks();
+    for (i = 0; i < tmpStockVector.Size(); i++)
+      if (strcasecmp(tmpStockVector[i]->getName(), this->getName()) == 0)
+        handle.logMessage(LOGWARN, "Warning in stock - stock moving into itself", this->getName());
+  }
+  if (doesstray) {
+    stray->setStock(stockvec);
+    tmpStockVector = stray->getStrayStocks();
+    for (i = 0; i < tmpStockVector.Size(); i++)
+      if (strcasecmp(tmpStockVector[i]->getName(), this->getName()) == 0)
+        handle.logMessage(LOGWARN, "Warning in stock - stock straying into itself", this->getName());
+  }
   if (doesspawn)
     spawner->setStock(stockvec);
-  if (doesstray)
-    stray->setStock(stockvec);
   //JMB moved the CI stuff here
   initial->setCI(LgrpDiv);
   if (iseaten)
