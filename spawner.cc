@@ -304,6 +304,8 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
       handle.logMessage(LOGWARN, "Warning in spawner - invalid standard deviation for spawned stock");
     if (stockParameters[0] < spawnLgrpDiv->minLength())
       handle.logMessage(LOGWARN, "Warning in spawner - mean length is less than minimum length");
+    if (stockParameters[0] > spawnLgrpDiv->maxLength())
+      handle.logMessage(LOGWARN, "Warning in spawner - mean length is greater than maximum length");
   }
 
   sum = 0.0;

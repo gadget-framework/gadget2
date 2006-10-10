@@ -481,9 +481,11 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
             initialPop[area][age][l].setToZero();
 
         } else {
-          //JMB check that the mean length is greater than the minimum length
+          //JMB check that the mean length is within the length group range
           if (meanLength[area][age - minage] < LgrpDiv->minLength())
             handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is less than minimum length");
+          if (meanLength[area][age - minage] > LgrpDiv->maxLength())
+            handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is greater than maximum length");
 
           scaler = 0.0;
           mult = 1.0 / (sdevLength[area][age - minage] * sdevMult);
@@ -524,9 +526,11 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
             initialPop[area][age][l].setToZero();
 
         } else {
-          //JMB check that the mean length is greater than the minimum length
+          //JMB check that the mean length is within the length group range
           if (meanLength[area][age - minage] < LgrpDiv->minLength())
             handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is less than minimum length");
+          if (meanLength[area][age - minage] > LgrpDiv->maxLength())
+            handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is greater than maximum length");
 
           scaler = 0.0;
           mult = 1.0 / (sdevLength[area][age - minage] * sdevMult);

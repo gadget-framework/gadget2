@@ -256,6 +256,8 @@ void MaturityA::Reset(const TimeClass* const TimeInfo) {
     timesteplength = TimeInfo->getTimeStepSize();
   maturityParameters.Update(TimeInfo);
   if (maturityParameters.didChange(TimeInfo)) {
+    if (maturityParameters[1] < LgrpDiv->minLength())
+      handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 less than minimum length");
     if (maturityParameters[1] > LgrpDiv->maxLength())
       handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
 
@@ -398,9 +400,12 @@ void MaturityB::Reset(const TimeClass* const TimeInfo) {
   int i;
   maturitylength.Update(TimeInfo);
   if (maturitylength.didChange(TimeInfo))
-    for (i = 0; i < maturitylength.Size(); i++)
+    for (i = 0; i < maturitylength.Size(); i++) {
+      if (maturitylength[i] < LgrpDiv->minLength())
+        handle.logMessage(LOGWARN, "Warning in maturity calculation - length less than minimum stock length");
       if (maturitylength[i] > LgrpDiv->maxLength())
         handle.logMessage(LOGWARN, "Warning in maturity calculation - length greater than maximum stock length");
+    }
 
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset maturity data");
@@ -504,6 +509,8 @@ void MaturityC::Reset(const TimeClass* const TimeInfo) {
 
   maturityParameters.Update(TimeInfo);
   if (maturityParameters.didChange(TimeInfo)) {
+    if (maturityParameters[1] < LgrpDiv->minLength())
+      handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 less than minimum length");
     if (maturityParameters[1] > LgrpDiv->maxLength())
       handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
 
@@ -615,6 +622,8 @@ void MaturityD::Reset(const TimeClass* const TimeInfo) {
 
   maturityParameters.Update(TimeInfo);
   if (maturityParameters.didChange(TimeInfo)) {
+    if (maturityParameters[1] < LgrpDiv->minLength())
+      handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 less than minimum length");
     if (maturityParameters[1] > LgrpDiv->maxLength())
       handle.logMessage(LOGWARN, "Warning in maturity calculation - l50 greater than maximum length");
     if (handle.getLogLevel() >= LOGMESSAGE)

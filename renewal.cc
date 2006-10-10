@@ -413,9 +413,11 @@ void RenewalData::Reset() {
           renewalDistribution[i][age][l].setToZero();
 
       } else {
-        //JMB check that the mean length is greater than the minimum length
+        //JMB check that the mean length is within the length group range
         if (meanLength[i] < LgrpDiv->minLength())
           handle.logMessage(LOGWARN, "Warning in renewal - mean length is less than minimum length");
+        if (meanLength[i] > LgrpDiv->maxLength())
+          handle.logMessage(LOGWARN, "Warning in renewal - mean length is greater than maximum length");
 
         sum = 0.0;
         mult = 1.0 / sdevLength[i];
@@ -450,9 +452,11 @@ void RenewalData::Reset() {
           renewalDistribution[i][age][l].setToZero();
 
       } else {
-        //JMB check that the mean length is greater than the minimum length
+        //JMB check that the mean length is within the length group range
         if (meanLength[i] < LgrpDiv->minLength())
           handle.logMessage(LOGWARN, "Warning in renewal - mean length is less than minimum length");
+        if (meanLength[i] > LgrpDiv->maxLength())
+          handle.logMessage(LOGWARN, "Warning in renewal - mean length is greater than maximum length");
 
         sum = 0.0;
         mult = 1.0 / sdevLength[i];
