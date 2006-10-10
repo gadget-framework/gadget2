@@ -126,7 +126,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   infile >> text;
   if (strcasecmp(text, "naturalmortality") != 0)
     handle.logFileUnexpected(LOGFAIL, "naturalmortality", text);
-  naturalm = new NaturalMortality(infile, minage, numage, TimeInfo, keeper);
+  naturalm = new NaturalMortality(infile, minage, numage, areas, TimeInfo, keeper);
   handle.logMessage(LOGMESSAGE, "Read natural mortality data for stock", this->getName());
 
   //read the prey data

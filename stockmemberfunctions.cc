@@ -62,31 +62,31 @@ void Stock::adjustEat(int area, const TimeClass* const TimeInfo) {
 
 //-------------------------------------------------------------------
 void Stock::reducePop(int area, const TimeClass* const TimeInfo) {
+  int inarea = this->areaNum(area);
 
   //Predation
   if (iseaten)
-    prey->Subtract(Alkeys[this->areaNum(area)], area);
+    prey->Subtract(Alkeys[inarea], area);
 
   //Natural mortality
   if (TimeInfo->numSubSteps() == 1) {
-    Alkeys[this->areaNum(area)].Multiply(naturalm->getProportion());
-
+    Alkeys[inarea].Multiply(naturalm->getProportion(area));
   } else {
     //changed to include the possibility of substeps
     DoubleVector* PropSurviving;
-    PropSurviving = new DoubleVector(naturalm->getProportion());
+    PropSurviving = new DoubleVector(naturalm->getProportion(area));
     double timeratio = 1.0 / TimeInfo->numSubSteps();
 
     int i;
     for (i = 0; i < PropSurviving->Size(); i++)
       (*PropSurviving)[i] = pow((*PropSurviving)[i], timeratio);
 
-    Alkeys[this->areaNum(area)].Multiply(*PropSurviving);
+    Alkeys[inarea].Multiply(*PropSurviving);
     delete PropSurviving;
   }
 
   if (istagged && tagAlkeys.numTagExperiments() > 0)
-    tagAlkeys[this->areaNum(area)].updateAndTagLoss(Alkeys[this->areaNum(area)], tagAlkeys.getTagLoss());
+    tagAlkeys[inarea].updateAndTagLoss(Alkeys[inarea], tagAlkeys.getTagLoss());
 }
 
 //-----------------------------------------------------------------------
