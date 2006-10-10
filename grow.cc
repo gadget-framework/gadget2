@@ -27,7 +27,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
     }
 
     lgrp = v[i]->maxCol() - 1;
-    if (isZero(num) || isZero(wt / num)) {
+    if (isZero(num) || (wt < verysmall)) {
       (*v[i])[lgrp].setToZero();
     } else {
       (*v[i])[lgrp].W = wt / num;
@@ -44,7 +44,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
         wt += tmp * (Wgrowth[grow][lgrp - grow] + (*v[i])[lgrp - grow].W);
       }
 
-      if (isZero(num) || isZero(wt / num)) {
+      if (isZero(num) || (wt < verysmall)) {
         (*v[i])[lgrp].setToZero();
       } else {
         (*v[i])[lgrp].W = wt / num;
@@ -62,7 +62,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
         wt += tmp * (Wgrowth[grow][lgrp - grow] + (*v[i])[lgrp - grow].W);
       }
 
-      if (isZero(num) || isZero(wt / num)) {
+      if (isZero(num) || (wt < verysmall)) {
         (*v[i])[lgrp].setToZero();
       } else {
         (*v[i])[lgrp].W = wt / num;
@@ -95,7 +95,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
     }
 
     lgrp = v[i]->maxCol() - 1;
-    if (isZero(num) || isZero(wt / num)) {
+    if (isZero(num) || (wt < verysmall)) {
       //no fish grow to this length cell
       (*v[i])[lgrp].setToZero();
       Mat->storeMatureStock(area, age, lgrp, 0.0, 0.0);
@@ -126,7 +126,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
         wt += tmp * (Wgrowth[grow][lgrp - grow] + (*v[i])[lgrp - grow].W);
       }
 
-      if (isZero(num) || isZero(wt / num)) {
+      if (isZero(num) || (wt < verysmall)) {
         //no fish grow to this length cell
         (*v[i])[lgrp].setToZero();
         Mat->storeMatureStock(area, age, lgrp, 0.0, 0.0);
@@ -158,7 +158,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
         wt += tmp * (Wgrowth[grow][lgrp - grow] + (*v[i])[lgrp - grow].W);
       }
 
-      if (isZero(num) || isZero(wt / num)) {
+      if (isZero(num) || (wt < verysmall)) {
         //no fish grow to this length cell
         (*v[i])[lgrp].setToZero();
         Mat->storeMatureStock(area, age, lgrp, 0.0, 0.0);

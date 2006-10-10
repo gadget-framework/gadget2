@@ -50,7 +50,7 @@ void GrowthCalcA::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
     if (Lgrowth[i] < 0.0)
       Lgrowth[i] = 0.0;
 
-    if (numGrow[i].W < verysmall)
+    if (numGrow[i].W < verysmall || isZero(tempW))
       Wgrowth[i] = 0.0;
     else
       Wgrowth[i] = tempW * pow(numGrow[i].W, growthPar[5]) * (Fphi[i] - growthPar[6]);
@@ -225,8 +225,6 @@ void GrowthCalcC::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
       Wgrowth[i] = tempW * (pow(numGrow[i].W / wgrowthPar[2], wgrowthPar[4]) -
         pow(numGrow[i].W / wgrowthPar[3], wgrowthPar[5]));
 
-      //Here after the code is similar as for GrowthCalcD except an extra
-      //parameter Lgrowthpar[8] comes instead of Fphi[i]
       if (Wgrowth[i] < verysmall) {
         Wgrowth[i] = 0.0;
         Lgrowth[i] = 0.0;
