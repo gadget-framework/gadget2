@@ -88,7 +88,6 @@ void AgeBandMatrix::Multiply(const DoubleVector& Ratio) {
       (*v[i])[j] *= Ratio[i];
 }
 
-//summation over all ages for each length.
 void AgeBandMatrix::sumColumns(PopInfoVector& Result) const {
   int i, j;
   for (i = 0; i < Result.Size(); i++)
@@ -98,42 +97,23 @@ void AgeBandMatrix::sumColumns(PopInfoVector& Result) const {
       Result[j] += (*v[i])[j];
 }
 
-//This function increases the age.  When moving from one age class to
-//another only the intersection of the agegroups of the length
-//classes is moved.  This could possibly be improved later on.
 void AgeBandMatrix::IncrementAge() {
-  int i, j, j1, j2;
+  int i, j;
 
   if (nrow <= 1)
-    return;  //No ageing takes place where there is only one age.
+    return;  //only one age
 
+  //for the oldest age group
   i = nrow - 1;
-  j1 = max(v[i]->minCol(), v[i - 1]->minCol());
-  j2 = min(v[i]->maxCol(), v[i - 1]->maxCol());
-  //For the oldest age group
-  for (j = j1; j < j2; j++)
+  for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
     (*v[i])[j] += (*v[i - 1])[j];
-  for (j = v[i - 1]->minCol(); j < v[i - 1]->maxCol(); j++)
-    (*v[i - 1])[j].setToZero();
-  //Now v[nrow-2] has been added to v[nrow-1] and then set to 0.
 
-  //For the other age groups
-  //At the end of each for (i=nrow-2...) loop, the intersection of v[i-1] with
-  //v[i] has been copied from v[i-1] to v[i] and v[i-1] has been set to 0.
-  for (i = nrow - 2; i > 0; i--) {
-    j1 = max(v[i]->minCol(), v[i - 1]->minCol());
-    j2 = min(v[i]->maxCol(), v[i - 1]->maxCol());
-    for (j = v[i - 1]->minCol(); j < j1; j++)
-      (*v[i - 1])[j].setToZero();
-    for (j = j1; j < j2; j++) {
+  //for the other age groups
+  for (i = nrow - 2; i > 0; i--)
+    for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
       (*v[i])[j] = (*v[i - 1])[j];
-      (*v[i - 1])[j].setToZero();
-    }
-    for (j = j2; j < v[i - 1]->maxCol(); j++)
-      (*v[i - 1])[j].setToZero();
-  }
 
-  //set number in youngest age group to zero.
+  //for the youngest age group
   for (j = v[0]->minCol(); j < v[0]->maxCol(); j++)
     (*v[0])[j].setToZero();
 }
@@ -148,23 +128,18 @@ void AgeBandMatrix::setToZero() {
 void AgeBandMatrix::printNumbers(ofstream& outfile) const {
   int i, j;
   int maxcol = 0;
-  for (i = minage; i < minage + nrow; i++)
-    if (v[i - minage]->maxCol() > maxcol)
-      maxcol = v[i - minage]->maxCol();
+  for (i = 0; i < nrow; i++)
+    if (v[i]->maxCol() > maxcol)
+      maxcol = v[i]->maxCol();
 
-  for (i = minage; i < minage + nrow; i++) {
+  for (i = 0; i < nrow; i++) {
     outfile << TAB;
-    if (v[i - minage]->minCol() > 0)
-      for (j = 0; j < v[i - minage]->minCol(); j++)
-        outfile << setw(smallwidth) << setprecision(smallprecision) << 0.0 << sep;
-
-    for (j = v[i - minage]->minCol(); j < v[i - minage]->maxCol(); j++)
-      outfile << setw(smallwidth) << setprecision(smallprecision) << (*v[i - minage])[j].N << sep;
-
-    if (v[i - minage]->maxCol() < maxcol)
-      for (j = v[i - minage]->maxCol(); j < maxcol; j++)
-        outfile << setw(smallwidth) << setprecision(smallprecision) << 0.0 << sep;
-
+    for (j = 0; j < v[i]->minCol(); j++)
+      outfile << setw(smallwidth) << 0.0 << sep;
+    for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << (*v[i])[j].N << sep;
+    for (j = v[i]->maxCol(); j < maxcol; j++)
+      outfile << setw(smallwidth) << 0.0 << sep;
     outfile << endl;
   }
 }
@@ -172,23 +147,18 @@ void AgeBandMatrix::printNumbers(ofstream& outfile) const {
 void AgeBandMatrix::printWeights(ofstream& outfile) const {
   int i, j;
   int maxcol = 0;
-  for (i = minage; i < minage + nrow; i++)
-    if (v[i - minage]->maxCol() > maxcol)
-      maxcol = v[i - minage]->maxCol();
+  for (i = 0; i < nrow; i++)
+    if (v[i]->maxCol() > maxcol)
+      maxcol = v[i]->maxCol();
 
-  for (i = minage; i < minage + nrow; i++) {
+  for (i = 0; i < nrow; i++) {
     outfile << TAB;
-    if (v[i - minage]->minCol() > 0)
-      for (j = 0; j < v[i - minage]->minCol(); j++)
-        outfile << setw(smallwidth) << setprecision(smallprecision) << 0.0 << sep;
-
-    for (j = v[i - minage]->minCol(); j < v[i - minage]->maxCol(); j++)
-      outfile << setw(smallwidth) << setprecision(smallprecision) << (*v[i - minage])[j].W << sep;
-
-    if (v[i - minage]->maxCol() < maxcol)
-      for (j = v[i - minage]->maxCol(); j < maxcol; j++)
-        outfile << setw(smallwidth) << setprecision(smallprecision) << 0.0 << sep;
-
+    for (j = 0; j < v[i]->minCol(); j++)
+      outfile << setw(smallwidth) << 0.0 << sep;
+    for (j = v[i]->minCol(); j < v[i]->maxCol(); j++)
+      outfile << setw(smallwidth) << setprecision(smallprecision) << (*v[i])[j].W << sep;
+    for (j = v[i]->maxCol(); j < maxcol; j++)
+      outfile << setw(smallwidth) << 0.0 << sep;
     outfile << endl;
   }
 }
@@ -200,7 +170,7 @@ void AgeBandMatrixPtrVector::Migrate(const DoubleMatrix& MI, PopInfoVector& tmp)
       for (j = 0; j < size; j++)
         tmp[j].setToZero();
 
-      //Let tmp[j] keep the population of agelength group on area j after the migration
+      //let tmp[j] keep the population of agelength group on area j after the migration
       for (j = 0; j < size; j++)
         for (i = 0; i < size; i++)
           tmp[j] += (*v[i])[age][length] * MI[j][i];
