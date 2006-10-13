@@ -273,6 +273,11 @@ void RecStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       handle.logMessage(LOGFAIL, "Error in recstatistics - unrecognised fleet", fleetnames[i]);
   }
 
+  for (i = 0; i < fleets.Size(); i++)
+    for (j = 0; j < fleets.Size(); j++)
+      if ((strcasecmp(fleets[i]->getName(), fleets[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in recstatistics - repeated fleet", fleets[i]->getName());
+
   aggregator = new RecAggregator*[tagvec.Size()];
   for (t = 0; t < tagvec.Size(); t++) {
     stocks.Reset();

@@ -376,6 +376,11 @@ void SurveyDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVect
       handle.logMessage(LOGFAIL, "Error in surveydistribution - failed to match stock", stocknames[i]);
   }
 
+  for (i = 0; i < stocks.Size(); i++)
+    for (j = 0; j < stocks.Size(); j++)
+      if ((strcasecmp(stocks[i]->getName(), stocks[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in surveydistribution - repeated stock", stocks[i]->getName());
+
   //check areas, ages and lengths
   if (handle.getLogLevel() >= LOGWARN) {
     for (j = 0; j < areas.Nrow(); j++) {

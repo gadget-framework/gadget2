@@ -460,6 +460,11 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
       handle.logMessage(LOGFAIL, "Error in catchdistribution - unrecognised fleet", fleetnames[i]);
   }
 
+  for (i = 0; i < fleets.Size(); i++)
+    for (j = 0; j < fleets.Size(); j++)
+      if ((strcasecmp(fleets[i]->getName(), fleets[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in catchdistribution - repeated fleet", fleets[i]->getName());
+
   for (i = 0; i < stocknames.Size(); i++) {
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
@@ -473,6 +478,11 @@ void CatchDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
     if (found == 0)
       handle.logMessage(LOGFAIL, "Error in catchdistribution - unrecognised stock", stocknames[i]);
   }
+
+  for (i = 0; i < stocks.Size(); i++)
+    for (j = 0; j < stocks.Size(); j++)
+      if ((strcasecmp(stocks[i]->getName(), stocks[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in catchdistribution - repeated stock", stocks[i]->getName());
 
   //check fleet areas and stock areas, ages and lengths
   if (handle.getLogLevel() >= LOGWARN) {

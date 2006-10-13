@@ -140,6 +140,11 @@ void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec, const Area
     exit(EXIT_FAILURE);
   }
 
+  for (i = 0; i < predators.Size(); i++)
+    for (j = 0; j < predators.Size(); j++)
+      if ((strcasecmp(predators[i]->getName(), predators[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in predatoroverprinter - repeated predator", predators[i]->getName());
+
   //change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)

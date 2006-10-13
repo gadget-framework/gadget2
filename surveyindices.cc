@@ -63,7 +63,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     for (j = 0; j < areas.Ncol(i); j++)
       areas[i][j] = Area->getInnerArea(areas[i][j]);
 
-  if (strcasecmp(sitype, "lengths") == 0) {
+  if ((strcasecmp(sitype, "lengths") == 0) || (strcasecmp(sitype, "length") == 0)) {
     readWordAndValue(infile, "lenaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
     handle.checkIfFailure(datafile, aggfilename);
@@ -75,7 +75,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     //read the word 'stocknames'
     infile >> text >> ws;
 
-  } else if (strcasecmp(sitype, "ages") == 0) {
+  } else if ((strcasecmp(sitype, "ages") == 0) || (strcasecmp(sitype, "age") == 0)) {
     readWordAndValue(infile, "ageaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
     handle.checkIfFailure(datafile, aggfilename);
@@ -87,7 +87,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     //read the word 'stocknames'
     infile >> text >> ws;
 
-  } else if (strcasecmp(sitype, "fleets") == 0) {
+  } else if ((strcasecmp(sitype, "fleets") == 0) || (strcasecmp(sitype, "fleet") == 0)) {
     readWordAndValue(infile, "lenaggfile", aggfilename);
     datafile.open(aggfilename, ios::in);
     handle.checkIfFailure(datafile, aggfilename);
@@ -112,7 +112,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       handle.logFileMessage(LOGFAIL, "\nError in surveyindex - failed to read fleets");
     handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
-  } else if (strcasecmp(sitype, "effort") == 0) {
+  } else if ((strcasecmp(sitype, "effort") == 0) || (strcasecmp(sitype, "cpue") == 0)) {
     //read in the fleetnames
     i = 0;
     infile >> text >> ws;
@@ -145,8 +145,6 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
     }
     if (charindex.Size() == 0)
       handle.logFileMessage(LOGFAIL, "\nError in surveyindex - failed to read acoustic survey names");
-    if (charindex.Size() > 1)
-      handle.logFileMessage(LOGWARN, "Warning in surveyindex - more than one acoustic survey defined");
     handle.logMessage(LOGMESSAGE, "Read acoustic survey data - number of survey names", charindex.Size());
 
     if (!biomass) //JMB the biomass flag is probably needed for acoustic index
@@ -174,19 +172,19 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   handle.logMessage(LOGMESSAGE, "Read stock data - number of stocks", stocknames.Size());
 
   //We have now read in all the data from the main likelihood file
-  if (strcasecmp(sitype, "lengths") == 0) {
+  if ((strcasecmp(sitype, "lengths") == 0) || (strcasecmp(sitype, "length") == 0)) {
     SI = new SIByLengthOnStep(infile, areas, lengths, areaindex,
       charindex, TimeInfo, datafilename, this->getName(), biomass);
 
-  } else if (strcasecmp(sitype, "ages") == 0) {
+  } else if ((strcasecmp(sitype, "ages") == 0) || (strcasecmp(sitype, "age") == 0)) {
     SI = new SIByAgeOnStep(infile, areas, ages, areaindex,
       charindex, TimeInfo, datafilename, this->getName(), biomass);
 
-  } else if (strcasecmp(sitype, "fleets") == 0) {
+  } else if ((strcasecmp(sitype, "fleets") == 0) || (strcasecmp(sitype, "fleet") == 0)) {
     SI = new SIByFleetOnStep(infile, areas, lengths, areaindex,
       charindex, TimeInfo, datafilename, this->getName(), biomass);
 
-  } else if (strcasecmp(sitype, "effort") == 0) {
+  } else if ((strcasecmp(sitype, "effort") == 0) || (strcasecmp(sitype, "cpue") == 0)) {
     SI = new SIByEffortOnStep(infile, areas, areaindex,
       fleetnames, TimeInfo, datafilename, this->getName(), biomass);
 
@@ -244,6 +242,12 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       handle.logMessage(LOGFAIL, "Error in surveyindex - failed to match fleet", fleetnames[i]);
   }
 
+  if (fleetnames.Size() > 0)
+    for (i = 0; i < f.Size(); i++)
+      for (j = 0; j < f.Size(); j++)
+        if ((strcasecmp(f[i]->getName(), f[j]->getName()) == 0) && (i != j))
+          handle.logMessage(LOGFAIL, "Error in surveyindex - repeated fleet", f[i]->getName());
+
   for (i = 0; i < stocknames.Size(); i++) {
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
@@ -255,6 +259,12 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
     if (found == 0)
       handle.logMessage(LOGFAIL, "Error in surveyindex - failed to match stock", stocknames[i]);
   }
+
+  if (stocknames.Size() > 0)
+    for (i = 0; i < s.Size(); i++)
+      for (j = 0; j < s.Size(); j++)
+        if ((strcasecmp(s[i]->getName(), s[j]->getName()) == 0) && (i != j))
+          handle.logMessage(LOGFAIL, "Error in surveyindex - repeated stock", s[i]->getName());
 
   //check fleet and stock areas
   if (handle.getLogLevel() >= LOGWARN) {

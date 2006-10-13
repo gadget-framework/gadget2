@@ -299,6 +299,11 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
       handle.logMessage(LOGFAIL, "Error in catchstatistics - unrecognised fleet", fleetnames[i]);
   }
 
+  for (i = 0; i < fleets.Size(); i++)
+    for (j = 0; j < fleets.Size(); j++)
+      if ((strcasecmp(fleets[i]->getName(), fleets[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in catchstatistics - repeated fleet", fleets[i]->getName());
+
   for (i = 0; i < stocknames.Size(); i++) {
     found = 0;
     for (j = 0; j < Stocks.Size(); j++) {
@@ -312,6 +317,11 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
     if (found == 0)
       handle.logMessage(LOGFAIL, "Error in catchstatistics - unrecognised stock", stocknames[i]);
   }
+
+  for (i = 0; i < stocks.Size(); i++)
+    for (j = 0; j < stocks.Size(); j++)
+      if ((strcasecmp(stocks[i]->getName(), stocks[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in catchstatistics - repeated stock", stocks[i]->getName());
 
   LgrpDiv = new LengthGroupDivision(*(stocks[0]->getPrey()->getLengthGroupDiv()));
   for (i = 1; i < stocks.Size(); i++)

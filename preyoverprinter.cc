@@ -140,6 +140,11 @@ void PreyOverPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* const Are
     exit(EXIT_FAILURE);
   }
 
+  for (i = 0; i < preys.Size(); i++)
+    for (j = 0; j < preys.Size(); j++)
+      if ((strcasecmp(preys[i]->getName(), preys[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in preyoverprinter - repeated prey", preys[i]->getName());
+
   //change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
     for (j = 0; j < areas.Ncol(i); j++)

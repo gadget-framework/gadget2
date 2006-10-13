@@ -317,6 +317,7 @@ void StockDistribution::Print(ofstream& outfile) const {
 void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) {
   int s, i, j, k, found, minage, maxage;
   FleetPtrVector fleets;
+  StockPtrVector stocks;
   StockPtrVector checkstocks;
   aggregator = new FleetPreyAggregator*[stocknames.Size()];
 
@@ -332,6 +333,11 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
       handle.logMessage(LOGFAIL, "Error in stockdistribution - unrecognised fleet", fleetnames[i]);
   }
 
+  for (i = 0; i < fleets.Size(); i++)
+    for (j = 0; j < fleets.Size(); j++)
+      if ((strcasecmp(fleets[i]->getName(), fleets[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in stockdistribution - repeated fleet", fleets[i]->getName());
+
   //check fleet areas
   if (handle.getLogLevel() >= LOGWARN) {
     for (j = 0; j < areas.Nrow(); j++) {
@@ -346,8 +352,8 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
   }
 
   for (s = 0; s < stocknames.Size(); s++) {
-    StockPtrVector stocks;
     found = 0;
+    stocks.Reset();
     for (j = 0; j < Stocks.Size(); j++) {
       if (Stocks[j]->isEaten()) {
         if (strcasecmp(stocknames[s], Stocks[j]->getName()) == 0) {
@@ -362,6 +368,11 @@ void StockDistribution::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVecto
 
     aggregator[s] = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
   }
+
+  for (i = 0; i < checkstocks.Size(); i++)
+    for (j = 0; j < checkstocks.Size(); j++)
+      if ((strcasecmp(checkstocks[i]->getName(), checkstocks[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in stockdistribution - repeated stock", checkstocks[i]->getName());
 
   //check areas, ages and lengths
   if (handle.getLogLevel() >= LOGWARN) {

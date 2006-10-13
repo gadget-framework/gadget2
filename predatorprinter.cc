@@ -255,6 +255,16 @@ void PredatorPrinter::setPredAndPrey(PredatorPtrVector& predatorvec,
     exit(EXIT_FAILURE);
   }
 
+  for (i = 0; i < predators.Size(); i++)
+    for (j = 0; j < predators.Size(); j++)
+      if ((strcasecmp(predators[i]->getName(), predators[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in predatorprinter - repeated predator", predators[i]->getName());
+
+  for (i = 0; i < preys.Size(); i++)
+    for (j = 0; j < preys.Size(); j++)
+      if ((strcasecmp(preys[i]->getName(), preys[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in predatorprinter - repeated prey", preys[i]->getName());
+
   aggregator = new PredatorAggregator(predators, preys, areas, predLgrpDiv, preyLgrpDiv);
 }
 

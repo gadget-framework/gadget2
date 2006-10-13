@@ -260,6 +260,11 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       handle.logMessage(LOGFAIL, "Error in recaptures - failed to match fleet", fleetnames[i]);
   }
 
+  for (i = 0; i < fleets.Size(); i++)
+    for (j = 0; j < fleets.Size(); j++)
+      if ((strcasecmp(fleets[i]->getName(), fleets[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in recaptures - repeated fleet", fleets[i]->getName());
+
   double minlen, maxlen;
   int minage, maxage, size;
 
