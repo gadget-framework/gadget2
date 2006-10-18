@@ -327,7 +327,6 @@ protected:
    * \note This vector is only used to temporarily store values during an optimising run
    */
   IntVector optflag;
-  friend class InterruptInterface;
 };
 
 #endif

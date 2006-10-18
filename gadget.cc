@@ -57,7 +57,7 @@ int main(int aNumber, char* const aVector[]) {
   #ifdef INTERRUPT_HANDLER
     //JMB - dont register interrupt if doing a network run
     if (!(main.runNetwork()))
-      registerInterrupt(SIGINT, &EcoSystem->interrupted);
+      registerInterrupts(&EcoSystem->interrupted);
   #endif
 
   chdir(workingdir);

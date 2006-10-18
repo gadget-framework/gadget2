@@ -25,14 +25,6 @@ private:
    * \brief This is the function used to print a menu to communicate with the user
    */
   void printMenu();
-  /**
-   * \brief This is the function used to dump the current model to a file
-   */
-  void dumpAll();
-  /**
-   * \brief This is the function used to dump the current model parameters to a file
-   */
-  void dumpParams();
 };
 
 #endif

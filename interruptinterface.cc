@@ -19,15 +19,23 @@ void InterruptInterface::printMenu() {
 }
 
 int InterruptInterface::menu() {
-  printMenu();
-  char s[MaxStrLength];
-  strncpy(s, "", MaxStrLength);
-  s[0] = 0;
-  while ((s[0] != 'c') && (s[0] != 'C')) {
+
+  char userinput[MaxStrLength];
+  char interruptfile[MaxStrLength];
+  strncpy(userinput, "", MaxStrLength);
+  strncpy(interruptfile, "", MaxStrLength);
+
+  this->printMenu();
+  while (1) {
     cout << "> ";
     cout.flush();
-    while (fgets(s, MaxStrLength, stdin) == 0);
-    switch (s[0]) {
+    while (fgets(userinput, MaxStrLength, stdin) == 0);
+    switch (userinput[0]) {
+      case 'c':
+      case 'C':
+        cout << "\nContinuing current simulation ...\n";
+        cout.flush();
+        return 1;
       case 'q':
       case 'Q':
         cout << "\nQuitting current simulation ...\nThe best parameter values will be written to file (called interrupt.out)\n";
@@ -36,37 +44,25 @@ int InterruptInterface::menu() {
       case 'f':
       case 'F':
         cout << "\nWriting current model to file (called modeldump.out) ...\n";
-        dumpAll();
+        strcpy(interruptfile, "modeldump.out");
+        EcoSystem->writeStatus(interruptfile);
+        strncpy(interruptfile, "", MaxStrLength);  //JMB clear the text string
         break;
       case 'p':
       case 'P':
         cout << "\nWriting current parameters to file (called current.out) ...\n";
-        dumpParams();
+        strcpy(interruptfile, "current.out");
+        EcoSystem->writeParams(interruptfile, 0);
+        strncpy(interruptfile, "", MaxStrLength);  //JMB clear the text string
         break;
       case 'h':
       case 'H':
       case '?':
-        printMenu();
+        this->printMenu();
         break;
       default:
         break;
     }
   }
-  cout << "\nContinuing current simulation ...\n";
-  cout.flush();
-  return 1;
-}
-
-void InterruptInterface::dumpAll() {
-  char interruptfile[15];
-  strncpy(interruptfile, "", 15);
-  strcpy(interruptfile, "modeldump.out");
-  EcoSystem->writeStatus(interruptfile);
-}
-
-void InterruptInterface::dumpParams() {
-  char interruptfile[15];
-  strncpy(interruptfile, "", 15);
-  strcpy(interruptfile, "current.out");
-  EcoSystem->writeParams(interruptfile, 0);
+  return 1;  //JMB default return value
 }
