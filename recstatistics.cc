@@ -19,7 +19,7 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i, j, numarea = 0;
+  int i, j, check, numarea = 0;
 
   char datafilename[MaxStrLength];
   char aggfilename[MaxStrLength];
@@ -82,6 +82,18 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   handle.Close();
   datafile.close();
   datafile.clear();
+
+  for (j = 0; j < tagnames.Size(); j++) {
+    check = 0;
+    for (i = 0; i < Tag.Size(); i++) {
+      if (strcasecmp(tagnames[j], Tag[i]->getName()) == 0) {
+        check++;
+        tagvec.resize(Tag[i]);
+      }
+    }
+    if (check == 0)
+      handle.logMessage(LOGFAIL, "Error in recstatistics - failed to match tag", tagnames[j]);
+  }
 }
 
 void RecStatistics::readStatisticsData(CommentStream& infile,
@@ -94,6 +106,7 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
   int keepdata, needvar, readvar;
   int i, timeid, tagid, areaid, tmpindex;
   int year, step, count, reject;
+  char* tagName;
 
   readvar = 0;
   if (functionnumber == 2)
@@ -147,10 +160,10 @@ void RecStatistics::readStatisticsData(CommentStream& infile,
         if (tmpindex == -1) {
           keepdata = 0;
         } else {
-          tagvec.resize(Tag[tmpindex]);
-          tagnames.resize(new char[strlen(tmptag) + 1]);
-          strcpy(tagnames[tagnames.Size() - 1], tmptag);
-          tagid = tagvec.Size() - 1;
+          tagName = new char[strlen(tmptag) + 1];
+          strcpy(tagName, tmptag);
+          tagnames.resize(tagName);
+          tagid = tagnames.Size() - 1;
           Years.AddRows(1, 1, year);
           Steps.AddRows(1, 1, step);
           timeid = 0;

@@ -89,6 +89,7 @@ void Predator::Print(ofstream& outfile) const {
 void Predator::readSuitability(CommentStream& infile,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
 
+  int i = 0;
   char preyname[MaxStrLength];
   char text[MaxStrLength];
   strncpy(preyname, "", MaxStrLength);
@@ -121,7 +122,7 @@ void Predator::readSuitability(CommentStream& infile,
     if (strcasecmp(text, "function") == 0) {
       infile >> text >> ws;
       if (suitf.readSuitFunction(infile, text, TimeInfo, keeper))
-        suitable->addPrey(preyname, suitf[suitf.Size() - 1]);
+        suitable->addPrey(preyname, suitf[i++]);
       else
         handle.logFileMessage(LOGFAIL, "unrecognised suitability function", text);
 
@@ -139,5 +140,5 @@ void Predator::readSuitability(CommentStream& infile,
   preference.resize(suitable->numPreys(), keeper);
 
   keeper->clearLast();
-  handle.logMessage(LOGMESSAGE, "Read predation data - number of preys", suitable->numPreys());
+  handle.logMessage(LOGMESSAGE, "Read predation data - number of preys", i);
 }

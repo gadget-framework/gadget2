@@ -354,12 +354,13 @@ MaturityB::MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
   if (infile.eof())
     handle.logFileEOFMessage(LOGFAIL);
 
+  i = 0;
   infile >> text;
   if (strcasecmp(text, "maturitylengths") != 0)
     handle.logFileUnexpected(LOGFAIL, "maturitylengths", text);
-  while (maturitylength.Size() < maturitystep.Size() && !infile.eof()) {
+  while (i < maturitystep.Size() && !infile.eof()) {
     maturitylength.resize(1, keeper);
-    maturitylength[maturitylength.Size() - 1].read(infile, TimeInfo, keeper);
+    maturitylength[i++].read(infile, TimeInfo, keeper);
   }
 
   for (i = 0; i < maturitystep.Size(); i++)
