@@ -4,8 +4,7 @@
 extern RunID RUNID;
 extern ErrorHandler handle;
 
-Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir,
-  const char* const workingdir) : printinfo(main.getPI()) {
+Ecosystem::Ecosystem(const MainInfo& main) : printinfo(main.getPI()) {
 
   funceval = 0;
   interrupted = 0;
@@ -17,25 +16,19 @@ Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir,
 
   // read the model specification from the main file
   char* filename = main.getMainGadgetFile();
-  chdir(workingdir);
   ifstream infile;
   infile.open(filename, ios::in);
   CommentStream commin(infile);
   handle.checkIfFailure(infile, filename);
   handle.Open(filename);
-  chdir(inputdir);
-  this->readMain(commin, main, inputdir, workingdir);
+  this->readMain(commin, main);
   handle.Close();
   infile.close();
   infile.clear();
-  handle.logMessage(LOGMESSAGE, "");  //write a blank line to the log file
-
-  // check and initialise the model
-  this->Initialise();
 
   // if this is an optimising run then read the optimisation parameters from file
   if (main.runOptimise()) {
-
+    handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
     if (main.getOptInfoGiven()) {
       filename = main.getOptInfoFile();
       infile.open(filename, ios::in);
@@ -49,10 +42,17 @@ Ecosystem::Ecosystem(const MainInfo& main, const char* const inputdir,
       handle.logMessage(LOGINFO, "Warning - no optimisation file specified, using default values");
       optvec.resize(new OptInfoHooke());
     }
-    handle.logMessage(LOGINFO, "\nFinished reading model data files, starting to run optimisation");
+  }
 
-  } else
+  // check and initialise the model
+  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
+  this->Initialise();
+
+  if (main.runOptimise())
+    handle.logMessage(LOGINFO, "\nFinished reading model data files, starting to run optimisation");
+  else
     handle.logMessage(LOGINFO, "\nFinished reading model data files, starting to run simulation");
+  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
 }
 
 Ecosystem::~Ecosystem() {

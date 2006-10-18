@@ -36,10 +36,8 @@ public:
   /**
    * \brief This is the Ecosystem constructor specifying details about the model
    * \param main is the MainInfo specifying the command line options for the model run
-   * \param inputdir is the name of the directory containing the input files to the model
-   * \param workingdir is the name of the directory used for the output from the model
    */
-  Ecosystem(const MainInfo& main, const char* const inputdir, const char* const workingdir);
+  Ecosystem(const MainInfo& main);
   /**
    * \brief This is the default Ecosystem destructor
    */
@@ -48,11 +46,8 @@ public:
    * \brief This function will read the model data from the main input file
    * \param infile is the CommentStream to read the likelihood data from
    * \param main is the MainInfo specifying the command line options for the model run
-   * \param inputdir is the name of the directory containing the input files to the model
-   * \param workingdir is the name of the directory used for the output from the model
    */
-  void readMain(CommentStream& infile, const MainInfo& main,
-    const char* const inputdir, const char* const workingdir);
+  void readMain(CommentStream& infile, const MainInfo& main);
   /**
    * \brief This function will read the likelihood data from the input file
    * \param infile is the CommentStream to read the likelihood data from

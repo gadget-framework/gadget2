@@ -83,150 +83,151 @@ MainInfo::~MainInfo() {
 }
 
 void MainInfo::read(int aNumber, char* const aVector[]) {
-  int k;
-  if (aNumber > 1) {
-    k = 1;
-    while (k < aNumber) {
-      if (strcasecmp(aVector[k], "-l") == 0) {
-        runoptimise = 1;
 
-      } else if (strcasecmp(aVector[k], "-n") == 0) {
-        runnetwork = 1;
+  if (aNumber == 1) {
+    handle.logMessage(LOGWARN, "Warning - no command line options specified, using default values");
+    return;
+  }
 
-        #ifndef GADGET_NETWORK
-          handle.logMessage(LOGFAIL, "Error - Gadget cannot currently run in network mode for paramin\nGadget must be recompiled to enable the network communication");
-        #endif
+  int k = 1;
+  while (k < aNumber) {
+    if (strcasecmp(aVector[k], "-l") == 0) {
+      runoptimise = 1;
 
-      } else if (strcasecmp(aVector[k], "-s") == 0) {
-        runstochastic = 1;
+    } else if (strcasecmp(aVector[k], "-n") == 0) {
+      runnetwork = 1;
 
-      } else if (strcasecmp(aVector[k], "-m") == 0) {
-        ifstream infile;
-        CommentStream incomment(infile);
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        infile.open(aVector[k], ios::in);
-        handle.checkIfFailure(infile, aVector[k]);
-        if (infile.fail())
-          this->showCorrectUsage(aVector[k]);
-        this->read(incomment);
-        infile.close();
-        infile.clear();
+#ifndef GADGET_NETWORK
+      handle.logMessage(LOGFAIL, "Error - Gadget cannot currently run in network mode for paramin\nGadget must be recompiled to enable the network communication");
+#endif
 
-      } else if (strcasecmp(aVector[k], "-i") == 0) {
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        this->setInitialParamFile(aVector[k]);
+    } else if (strcasecmp(aVector[k], "-s") == 0) {
+      runstochastic = 1;
 
-      } else if (strcasecmp(aVector[k], "-o") == 0) {
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        printinfo.setOutputFile(aVector[k]);
-
-      } else if (strcasecmp(aVector[k], "-p") == 0) {
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        printinfo.setParamOutFile(aVector[k]);
-
-      } else if (strcasecmp(aVector[k], "-forceprint") == 0) {
-        forceprint = 1;
-
-      } else if (strcasecmp(aVector[k], "-co") == 0) {
-        handle.logMessage(LOGFAIL, "The -co switch is no longer supported");
-
-      } else if (strcasecmp(aVector[k], "-printinitial") == 0) {
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        this->setPrintInitialFile(aVector[k]);
-
-      } else if (strcasecmp(aVector[k], "-printfinal") == 0) {
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        this->setPrintFinalFile(aVector[k]);
-
-      } else if (strcasecmp(aVector[k], "-main") == 0) {
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        this->setMainGadgetFile(aVector[k]);
-
-      } else if (strcasecmp(aVector[k], "-opt") == 0) {
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        this->setOptInfoFile(aVector[k]);
-
-      } else if ((strcasecmp(aVector[k], "-printlikelihood") == 0) || (strcasecmp(aVector[k], "-likelihoodprint") == 0)) {
-        handle.logMessage(LOGFAIL, "The -printlikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
-
-      } else if (strcasecmp(aVector[k], "-printlikesummary") == 0) {
-        handle.logMessage(LOGFAIL, "The -printlikesummary switch is no longer supported\nSpecify a likelihoodsummaryprinter class in the model print file instead");
-
-      } else if (strcasecmp(aVector[k], "-printonelikelihood") == 0) {
-        handle.logMessage(LOGFAIL, "The -printonelikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
-
-      } else if ((strcasecmp(aVector[k], "-print") == 0) || (strcasecmp(aVector[k], "-print1") == 0)) {
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        printinfo.setPrintIteration(atoi(aVector[k]));
-
-      } else if (strcasecmp(aVector[k], "-precision") == 0) {
-        //JMB - experimental setting of printing precision
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        printinfo.setPrecision(atoi(aVector[k]));
-
-      } else if ((strcasecmp(aVector[k], "-v") == 0) || (strcasecmp(aVector[k], "--version") == 0)) {
-        RUNID.Print(cout);
-        exit(EXIT_SUCCESS);
-
-      } else if ((strcasecmp(aVector[k], "-h") == 0) || (strcasecmp(aVector[k], "--help") == 0)) {
-        this->showUsage();
-
-      } else if (strcasecmp(aVector[k], "-log") == 0) {
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        handle.setLogFile(aVector[k]);
-        printLogLevel = 5;
-
-      } else if (strcasecmp(aVector[k], "-nowarnings") == 0) {
-        //handle.logMessage(LOGWARN, "The -nowarnings switch is no longer supported\nSpecify a logging level using the -loglevel <number> instead");
-        printLogLevel = 1;
-
-      } else if (strcasecmp(aVector[k], "-loglevel") == 0) {
-        //JMB - experimental logging facility
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        printLogLevel = atoi(aVector[k]);
-
-      } else if (strcasecmp(aVector[k], "-noprint") == 0) {
-        //JMB disable model printing from the commandline
-        runprint = 0;
-
-      } else if (strcasecmp(aVector[k], "-seed") == 0) {
-        //JMB - experimental setting of random number seed from the commandline
-        //if the "seed" is also specified in the optinfo file then that will override
-        //any seed that is specified on the commandline
-        if (k == aNumber - 1)
-          this->showCorrectUsage(aVector[k]);
-        k++;
-        srand(atoi(aVector[k]));
-
-      } else
+    } else if (strcasecmp(aVector[k], "-m") == 0) {
+      ifstream infile;
+      CommentStream incomment(infile);
+      if (k == aNumber - 1)
         this->showCorrectUsage(aVector[k]);
-
       k++;
-    }
+      infile.open(aVector[k], ios::in);
+      handle.checkIfFailure(infile, aVector[k]);
+      if (infile.fail())
+        this->showCorrectUsage(aVector[k]);
+      this->read(incomment);
+      infile.close();
+      infile.clear();
+
+    } else if (strcasecmp(aVector[k], "-i") == 0) {
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      this->setInitialParamFile(aVector[k]);
+
+    } else if (strcasecmp(aVector[k], "-o") == 0) {
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      printinfo.setOutputFile(aVector[k]);
+
+    } else if (strcasecmp(aVector[k], "-p") == 0) {
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      printinfo.setParamOutFile(aVector[k]);
+
+    } else if (strcasecmp(aVector[k], "-forceprint") == 0) {
+      forceprint = 1;
+
+    } else if (strcasecmp(aVector[k], "-co") == 0) {
+      handle.logMessage(LOGFAIL, "The -co switch is no longer supported");
+
+    } else if (strcasecmp(aVector[k], "-printinitial") == 0) {
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      this->setPrintInitialFile(aVector[k]);
+
+    } else if (strcasecmp(aVector[k], "-printfinal") == 0) {
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      this->setPrintFinalFile(aVector[k]);
+
+    } else if (strcasecmp(aVector[k], "-main") == 0) {
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      this->setMainGadgetFile(aVector[k]);
+
+    } else if (strcasecmp(aVector[k], "-opt") == 0) {
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      this->setOptInfoFile(aVector[k]);
+
+    } else if ((strcasecmp(aVector[k], "-printlikelihood") == 0) || (strcasecmp(aVector[k], "-likelihoodprint") == 0)) {
+      handle.logMessage(LOGFAIL, "The -printlikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
+
+    } else if (strcasecmp(aVector[k], "-printlikesummary") == 0) {
+      handle.logMessage(LOGFAIL, "The -printlikesummary switch is no longer supported\nSpecify a likelihoodsummaryprinter class in the model print file instead");
+
+    } else if (strcasecmp(aVector[k], "-printonelikelihood") == 0) {
+      handle.logMessage(LOGFAIL, "The -printonelikelihood switch is no longer supported\nSpecify a likelihoodprinter class in the model print file instead");
+
+    } else if ((strcasecmp(aVector[k], "-print") == 0) || (strcasecmp(aVector[k], "-print1") == 0)) {
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      printinfo.setPrintIteration(atoi(aVector[k]));
+
+    } else if (strcasecmp(aVector[k], "-precision") == 0) {
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      printinfo.setPrecision(atoi(aVector[k]));
+
+    } else if ((strcasecmp(aVector[k], "-v") == 0) || (strcasecmp(aVector[k], "--version") == 0)) {
+      RUNID.Print(cout);
+      exit(EXIT_SUCCESS);
+
+    } else if ((strcasecmp(aVector[k], "-h") == 0) || (strcasecmp(aVector[k], "--help") == 0)) {
+      this->showUsage();
+
+    } else if (strcasecmp(aVector[k], "-log") == 0) {
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      handle.setLogFile(aVector[k]);
+      printLogLevel = 5;
+
+    } else if (strcasecmp(aVector[k], "-nowarnings") == 0) {
+      //handle.logMessage(LOGWARN, "The -nowarnings switch is no longer supported\nSpecify a logging level using the -loglevel <number> instead");
+      printLogLevel = 1;
+
+    } else if (strcasecmp(aVector[k], "-loglevel") == 0) {
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      printLogLevel = atoi(aVector[k]);
+
+    } else if (strcasecmp(aVector[k], "-noprint") == 0) {
+      //JMB disable model printing from the commandline
+      runprint = 0;
+
+    } else if (strcasecmp(aVector[k], "-seed") == 0) {
+      //JMB experimental setting of random number seed from the commandline
+      //if the "seed" is also specified in the optinfo file then that will override
+      //any seed that is specified on the commandline
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      srand(atoi(aVector[k]));
+
+    } else
+      this->showCorrectUsage(aVector[k]);
+
+    k++;
   }
 }
 
@@ -240,9 +241,14 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
     check = max(2, printLogLevel);
   handle.setLogLevel(check);
 
+  //JMB dont print output if doing a network run
+  if (!runnetwork)
+    RUNID.Print(cout);
   handle.logMessage(LOGINFO, "Starting Gadget from directory:", workingdir);
   handle.logMessage(LOGINFO, "using data from directory:", inputdir);
   handle.logMessage(LOGMESSAGE, ""); //write a blank line to the log file
+  if (strcasecmp(inputdir, workingdir) != 0)
+    handle.logMessage(LOGWARN, "Warning - working directory different from input directory");
 
   if (runnetwork) {
     handle.logMessage(LOGINFO, "\n** Gadget running in network mode for Paramin **");
@@ -258,6 +264,7 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
 
   //JMB check to see if we can actually open required files ...
   ifstream tmpin;
+  chdir(inputdir);
   if (givenInitialParam) {
     //JMB check to see that the input and output filenames are different
     //Otherwise Gadget will over-write the inputfile with a blank outputfile ...
@@ -276,6 +283,7 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
     tmpin.clear();
   }
   ofstream tmpout;
+  chdir(workingdir);
   if (printInitialInfo) {
     tmpout.open(strPrintInitialFile, ios::out);
     handle.checkIfFailure(tmpout, strPrintInitialFile);

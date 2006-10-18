@@ -111,21 +111,21 @@ void Ecosystem::Simulate(int print) {
     for (j = 0; j < Area->numAreas(); j++)
       this->updateAgesOneArea(j);
 
-    #ifdef INTERRUPT_HANDLER
-      if (interrupted) {
-        InterruptInterface ui;
-        if (!ui.menu()) {
-          handle.logMessage(LOGMESSAGE, "\n** Gadget interrupted - quitting current simulation **");
-          char interruptfile[15];
-          strncpy(interruptfile, "", 15);
-          strcpy(interruptfile, "interrupt.out");
-          this->writeParams(interruptfile, 0);
-          handle.logMessage(LOGMESSAGE, "** Gadget interrupted - quitting current simulation **");
-          exit(EXIT_SUCCESS);
-        }
-        interrupted = 0;
+#ifdef INTERRUPT_HANDLER
+    if (interrupted) {
+      InterruptInterface ui;
+      if (!ui.menu()) {
+        handle.logMessage(LOGMESSAGE, "\n** Gadget interrupted - quitting current simulation **");
+        char interruptfile[15];
+        strncpy(interruptfile, "", 15);
+        strcpy(interruptfile, "interrupt.out");
+        this->writeParams(interruptfile, 0);
+        handle.logMessage(LOGMESSAGE, "** Gadget interrupted - quitting current simulation **");
+        exit(EXIT_SUCCESS);
       }
-    #endif
+      interrupted = 0;
+    }
+#endif
 
     //Remove any expired tagging experiments
     tagvec.deleteTags(TimeInfo);

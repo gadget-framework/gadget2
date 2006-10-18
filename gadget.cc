@@ -32,33 +32,26 @@ int main(int aNumber, char* const aVector[]) {
     if (getcwd(workingdir, LongString) == NULL)
       handle.logMessage(LOGFAIL, "Error - failed to get current working directory");
   }
+  if (chdir(workingdir) != 0)
+    handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
 
   char* inputdir = getenv("GADGET_DATA_DIR");
   if (inputdir == 0)
     inputdir = workingdir;
-
   if (chdir(inputdir) != 0)
-    handle.logMessage(LOGFAIL, "Error - failed change working directory to", inputdir);
+    handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
 
-  if (aNumber > 1)
-    main.read(aNumber, aVector);
-
-  //JMB - dont print output if doing a network run
-  if (!(main.runNetwork()))
-    RUNID.Print(cout);
+  main.read(aNumber, aVector);
   main.checkUsage(inputdir, workingdir);
 
-  if (aNumber == 1)
-    handle.logMessage(LOGWARN, "Warning - no command line options specified, using default values");
+  chdir(inputdir);
+  EcoSystem = new Ecosystem(main);
 
-  EcoSystem = new Ecosystem(main, inputdir, workingdir);
-  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
-
-  #ifdef INTERRUPT_HANDLER
-    //JMB - dont register interrupt if doing a network run
-    if (!(main.runNetwork()))
-      registerInterrupts(&EcoSystem->interrupted);
-  #endif
+#ifdef INTERRUPT_HANDLER
+  //JMB dont register interrupt if doing a network run
+  if (!(main.runNetwork()))
+    registerInterrupts(&EcoSystem->interrupted);
+#endif
 
   chdir(workingdir);
   if ((main.getPI()).getPrint())
@@ -66,16 +59,16 @@ int main(int aNumber, char* const aVector[]) {
 
   if (main.runStochastic()) {
     if (main.runNetwork()) {
-      #ifdef GADGET_NETWORK //to help compiling when pvm libraries are unavailable
-        data = new StochasticData();
-        while (data->getDataFromNetwork()) {
-          EcoSystem->Update(data);
-          EcoSystem->Simulate(main.runPrint());
-          data->sendDataToNetwork(EcoSystem->getLikelihood());
-          data->readNextLineFromNetwork();
-        }
-        delete data;
-      #endif
+#ifdef GADGET_NETWORK //to help compiling when pvm libraries are unavailable
+      data = new StochasticData();
+      while (data->getDataFromNetwork()) {
+        EcoSystem->Update(data);
+        EcoSystem->Simulate(main.runPrint());
+        data->sendDataToNetwork(EcoSystem->getLikelihood());
+        data->readNextLineFromNetwork();
+      }
+      delete data;
+#endif
 
     } else if (main.getInitialParamGiven()) {
       data = new StochasticData(main.getInitialParamFile());
@@ -115,13 +108,15 @@ int main(int aNumber, char* const aVector[]) {
     }
 
   } else if (main.runOptimise()) {
+    if (EcoSystem->numVariables() == 0)
+      handle.logMessage(LOGFAIL, "Error - no parameters can be optimised");
     if (main.getInitialParamGiven()) {
       data = new StochasticData(main.getInitialParamFile());
       EcoSystem->Update(data);
       EcoSystem->checkBounds();
       delete data;
     } else
-      handle.logMessage(LOGWARN, "Error - no parameter input file specified");
+      handle.logMessage(LOGFAIL, "Error - no parameter input file specified");
 
     if (main.printInitial()) {
       EcoSystem->Reset();  //JMB only need to call reset() before the print commands
@@ -137,7 +132,7 @@ int main(int aNumber, char* const aVector[]) {
   if (main.printFinal() && !(main.runNetwork()))
     EcoSystem->writeStatus(main.getPrintFinalFile());
 
-  //JMB - print final values of parameters
+  //JMB print final values of parameters
   if (!(main.runNetwork()))
     EcoSystem->writeParams((main.getPI()).getParamOutFile(), (main.getPI()).getPrecision());
 

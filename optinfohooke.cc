@@ -7,28 +7,40 @@ extern ErrorHandler handle;
 OptInfoHooke::OptInfoHooke()
   : OptInfo(), hookeiter(1000), rho(0.5), lambda(0.0), hookeeps(1e-4), bndcheck(0.9999) {
   type = OPTHOOKE;
-  handle.logMessage(LOGMESSAGE, "\nInitialising Hooke & Jeeves optimisation algorithm");
+  handle.logMessage(LOGMESSAGE, "Initialising Hooke & Jeeves optimisation algorithm");
 }
 
 void OptInfoHooke::read(CommentStream& infile, char* text) {
   handle.logMessage(LOGMESSAGE, "Reading Hooke & Jeeves optimisation parameters");
 
-  while (!infile.eof() && strcasecmp(text, "seed") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
+  int count = 0;
+  while (!infile.eof() && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
     infile >> ws;
-    if (strcasecmp(text, "rho") == 0) {
+    if (strcasecmp(text, "seed") == 0) {
+      int seed = 0;
+      infile >> seed >> ws;
+      handle.logMessage(LOGMESSAGE, "Initialising random number generator with", seed);
+      srand(seed);
+
+    } else if (strcasecmp(text, "rho") == 0) {
       infile >> rho;
+      count++;
 
     } else if (strcasecmp(text, "lambda") == 0) {
       infile >> lambda;
+      count++;
 
     } else if (strcasecmp(text, "hookeeps") == 0) {
       infile >> hookeeps;
+      count++;
 
     } else if (strcasecmp(text, "hookeiter") == 0) {
       infile >> hookeiter;
+      count++;
 
     } else if (strcasecmp(text, "bndcheck") == 0) {
       infile >> bndcheck;
+      count++;
 
     } else {
       handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);
@@ -36,6 +48,9 @@ void OptInfoHooke::read(CommentStream& infile, char* text) {
     }
     infile >> text;
   }
+
+  if (count == 0)
+    handle.logMessage(LOGINFO, "Warning - no parameters specified for Hooke & Jeeves optimisation algorithm");
 
   //check the values specified in the optinfo file ...
   if ((rho < rathersmall) || (rho > 1.0)) {

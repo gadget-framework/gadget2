@@ -278,41 +278,44 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
 void Ecosystem::readOptimisation(CommentStream& infile) {
   char* text = new char[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-
-  int i = 0;
   handle.logMessage(LOGMESSAGE, "Reading optimisation information");
-  infile >> text;
+
+  infile >> ws;
+  if (!infile.eof())
+    infile >> text;
+
+  int count = 0;
   while (!infile.eof()) {
     infile >> ws;  //trim whitespace from infile
-    if ((strcasecmp(text, "seed")) == 0 && (!infile.eof())) {
+    if (strcasecmp(text, "seed") == 0) {
       int seed = 0;
-      infile >> seed >> ws >> text;
+      infile >> seed >> ws;
       handle.logMessage(LOGMESSAGE, "Initialising random number generator with", seed);
       srand(seed);
-
-    } else if (strcasecmp(text, "[hooke]") == 0) {
-      optvec.resize(new OptInfoHooke());
-    } else if (strcasecmp(text, "[simann]") == 0) {
-      optvec.resize(new OptInfoSimann());
-    } else if (strcasecmp(text, "[bfgs]") == 0) {
-      optvec.resize(new OptInfoBFGS());
-    } else {
-      handle.logFileUnexpected(LOGFAIL, "[hooke], [simann], [bfgs] or seed", text);
+      if (!infile.eof())
+        infile >> text;
     }
+
+    if (strcasecmp(text, "[hooke]") == 0)
+      optvec.resize(new OptInfoHooke());
+    else if (strcasecmp(text, "[simann]") == 0)
+      optvec.resize(new OptInfoSimann());
+    else if (strcasecmp(text, "[bfgs]") == 0)
+      optvec.resize(new OptInfoBFGS());
+    else
+      handle.logFileUnexpected(LOGFAIL, "[hooke], [simann], or [bfgs]", text);
 
     if (!infile.eof()) {
       infile >> text;
-      if ((text[0] == '[') || (strcasecmp(text, "seed") == 0))
-        handle.logMessage(LOGINFO, "Warning - no parameters specified for optimisation algorithm");
-      else
-        optvec[i++]->read(infile, text);
+      optvec[count]->read(infile, text);
     } else
       handle.logMessage(LOGINFO, "Warning - no parameters specified for optimisation algorithm");
+    count++;
   }
 
   delete[] text;
-  if (optvec.Size() == 0) {
-    handle.logFileMessage(LOGWARN, "no optimisation methods found, using default values");
+  if (count == 0) {
+    handle.logFileMessage(LOGWARN, "no optimisation algorithms found, using default values");
     optvec.resize(new OptInfoHooke());
   }
 }
@@ -320,8 +323,7 @@ void Ecosystem::readOptimisation(CommentStream& infile) {
 //
 // The main reading function
 //
-void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
-  const char* const inputdir, const char* const workingdir) {
+void Ecosystem::readMain(CommentStream& infile, const MainInfo& main) {
 
   int i, j;
   char text[MaxStrLength];
@@ -357,7 +359,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
   if ((strcasecmp(text, "printfile") != 0) && (strcasecmp(text, "printfiles") != 0))
     handle.logFileUnexpected(LOGFAIL, "printfiles", text);
 
-  //Now we have found the string "printfiles" we can create printer clases
+  //Now we have found the string "printfiles" we can create printer classes
   infile >> text >> ws;
   while ((strcasecmp(text, "[stock]") != 0) && !infile.eof()) {
     //Do not try to read printfile if we dont need it
@@ -365,9 +367,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
       subfile.open(text, ios::in);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);
-      chdir(workingdir);
       this->readPrinters(subcomment);
-      chdir(inputdir);
       handle.Close();
       subfile.close();
       subfile.clear();
@@ -392,9 +392,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
     subfile.open(text, ios::in);
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
-    chdir(workingdir);
     this->readStock(subcomment);
-    chdir(inputdir);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -413,9 +411,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
       subfile.open(text, ios::in);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);
-      chdir(workingdir);
       this->readTagging(subcomment);
-      chdir(inputdir);
       handle.Close();
       subfile.close();
       subfile.clear();
@@ -435,9 +431,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
       subfile.open(text, ios::in);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);
-      chdir(workingdir);
       this->readOtherFood(subcomment);
-      chdir(inputdir);
       handle.Close();
       subfile.close();
       subfile.clear();
@@ -457,9 +451,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
       subfile.open(text, ios::in);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);
-      chdir(workingdir);
       this->readFleet(subcomment);
-      chdir(inputdir);
       handle.Close();
       subfile.close();
       subfile.clear();
@@ -480,9 +472,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main,
         subfile.open(text, ios::in);
         handle.checkIfFailure(subfile, text);
         handle.Open(text);
-        chdir(workingdir);
         this->readLikelihood(subcomment);
-        chdir(inputdir);
         handle.Close();
         subfile.close();
         subfile.clear();
