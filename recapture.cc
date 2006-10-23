@@ -430,6 +430,18 @@ void Recaptures::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
+void Recaptures::printSummary(ofstream& outfile) {
+  //JMB to start with just print a summary of all likelihood scores
+  //This needs to be changed to print something for each timestep and area
+  //but we need to sort out how to get the information in the same format as other components
+  if (!(isZero(likelihood))) {
+    outfile << "all   all        all" << sep << setw(largewidth) << this->getName() << sep
+      << setprecision(smallprecision) << setw(smallwidth) << weight << sep
+      << setprecision(largeprecision) << setw(largewidth) << likelihood << endl;
+    outfile.flush();
+  }
+}
+
 void Recaptures::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
   int year = TimeInfo->getYear();
   int step = TimeInfo->getStep();

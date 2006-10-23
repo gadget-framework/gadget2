@@ -64,7 +64,7 @@ void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
         break;
       case TAGLIKELIHOOD:
       case RECSTATISTICSLIKELIHOOD:
-        handle.logMessage(LOGWARN, "Warning in summaryprinter - printing not implemented for", like[i]->getName());
+        handle.logMessage(LOGWARN, "Warning in summaryprinter - printing incomplete for", like[i]->getName());
         break;
       default:
         handle.logMessage(LOGFAIL, "Error in summaryprinter - unrecognised likelihood type", like[i]->getType());
