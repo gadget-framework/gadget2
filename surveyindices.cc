@@ -128,8 +128,8 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       handle.logFileMessage(LOGFAIL, "\nError in surveyindex - failed to read fleets");
     handle.logMessage(LOGMESSAGE, "Read fleet data - number of fleets", fleetnames.Size());
 
-    if (!biomass) //JMB the biomass flag is probably needed for effort index
-      handle.logMessage(LOGWARN, "Warning in surveyindex - biomass flag missing for effort index");
+    if (biomass) //JMB the biomass flag is probably not needed for effort index
+      handle.logMessage(LOGWARN, "Warning in surveyindex - biomass flag specified for effort index");
 
   } else if (strcasecmp(sitype, "acoustic") == 0) {
     //read in the fleetnames
@@ -147,8 +147,8 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
       handle.logFileMessage(LOGFAIL, "\nError in surveyindex - failed to read acoustic survey names");
     handle.logMessage(LOGMESSAGE, "Read acoustic survey data - number of survey names", charindex.Size());
 
-    if (!biomass) //JMB the biomass flag is probably needed for acoustic index
-      handle.logMessage(LOGWARN, "Warning in surveyindex - biomass flag missing for acoustic index");
+    if (biomass) //JMB the biomass flag is probably not needed for acoustic index
+      handle.logMessage(LOGWARN, "Warning in surveyindex - biomass flag specified for acoustic index");
 
   } else if (strcasecmp(sitype, "ageandlengths") == 0) {
     handle.logFileMessage(LOGFAIL, "\nThe ageandlengths surveyindex likelihood component is no longer supported\nUse the surveydistribution likelihood component instead");
@@ -242,11 +242,10 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       handle.logMessage(LOGFAIL, "Error in surveyindex - failed to match fleet", fleetnames[i]);
   }
 
-  if (fleetnames.Size() > 0)
-    for (i = 0; i < f.Size(); i++)
-      for (j = 0; j < f.Size(); j++)
-        if ((strcasecmp(f[i]->getName(), f[j]->getName()) == 0) && (i != j))
-          handle.logMessage(LOGFAIL, "Error in surveyindex - repeated fleet", f[i]->getName());
+  for (i = 0; i < f.Size(); i++)
+    for (j = 0; j < f.Size(); j++)
+      if ((strcasecmp(f[i]->getName(), f[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in surveyindex - repeated fleet", f[i]->getName());
 
   for (i = 0; i < stocknames.Size(); i++) {
     found = 0;
@@ -260,15 +259,14 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       handle.logMessage(LOGFAIL, "Error in surveyindex - failed to match stock", stocknames[i]);
   }
 
-  if (stocknames.Size() > 0)
-    for (i = 0; i < s.Size(); i++)
-      for (j = 0; j < s.Size(); j++)
-        if ((strcasecmp(s[i]->getName(), s[j]->getName()) == 0) && (i != j))
-          handle.logMessage(LOGFAIL, "Error in surveyindex - repeated stock", s[i]->getName());
+  for (i = 0; i < s.Size(); i++)
+    for (j = 0; j < s.Size(); j++)
+      if ((strcasecmp(s[i]->getName(), s[j]->getName()) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in surveyindex - repeated stock", s[i]->getName());
 
   //check fleet and stock areas
   if (handle.getLogLevel() >= LOGWARN) {
-    if (fleetnames.Size() > 0) {
+    if (fleetnames.Size() > 0) {  //JMB might not be any fleets
       for (j = 0; j < areas.Nrow(); j++) {
         found = 0;
         for (i = 0; i < f.Size(); i++)
@@ -280,16 +278,14 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       }
     }
 
-    if (stocknames.Size() > 0) {
-      for (j = 0; j < areas.Nrow(); j++) {
-        found = 0;
-        for (i = 0; i < s.Size(); i++)
-          for (k = 0; k < areas.Ncol(j); k++)
-            if (s[i]->isInArea(areas[j][k]))
-              found++;
-        if (found == 0)
-          handle.logMessage(LOGWARN, "Warning in surveyindex - stock not defined on all areas");
-      }
+    for (j = 0; j < areas.Nrow(); j++) {
+      found = 0;
+      for (i = 0; i < s.Size(); i++)
+        for (k = 0; k < areas.Ncol(j); k++)
+          if (s[i]->isInArea(areas[j][k]))
+            found++;
+      if (found == 0)
+        handle.logMessage(LOGWARN, "Warning in surveyindex - stock not defined on all areas");
     }
   }
 
