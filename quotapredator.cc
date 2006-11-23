@@ -22,6 +22,7 @@ QuotaPredator::QuotaPredator(CommentStream& infile, const char* givenname,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
+  quota = 0.0;
   functionnumber = 0;
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
@@ -30,8 +31,12 @@ QuotaPredator::QuotaPredator(CommentStream& infile, const char* givenname,
   infile >> functionname >> ws;
   if (strcasecmp(functionname, "simple") == 0)
     functionnumber = 1;
-  if (strcasecmp(functionname, "simplesum") == 0)
+  else if (strcasecmp(functionname, "simplesum") == 0)
     functionnumber = 2;
+  else if (strcasecmp(functionname, "annual") == 0)
+    functionnumber = 3;
+  else if (strcasecmp(functionname, "annualsum") == 0)
+    functionnumber = 4;
   else
     handle.logFileMessage(LOGFAIL, "\nError in quotapredator - unrecognised function", functionname);
 
@@ -96,7 +101,8 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       for (prey = 0; prey < this->numPreys(); prey++) {
         if (this->getPrey(prey)->isPreyArea(area)) {
           bio = this->getPrey(prey)->getTotalBiomass(area);
-          (*predratio[inarea])[prey][predl] = calcQuota(bio) * tmp;
+          quota = calcQuota(bio);
+          (*predratio[inarea])[prey][predl] = quota * tmp;
           if ((*predratio[inarea])[prey][predl] > 10.0) //JMB arbitrary value here ...
             handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
 
@@ -112,7 +118,47 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
         if (this->getPrey(prey)->isPreyArea(area))
           bio += this->getPrey(prey)->getTotalBiomass(area);
 
-      tmp *= calcQuota(bio);
+      quota = calcQuota(bio);
+      tmp *= quota;
+      if (tmp > 10.0) //JMB arbitrary value here ...
+        handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
+      for (prey = 0; prey < this->numPreys(); prey++) {
+        if (this->getPrey(prey)->isPreyArea(area))
+          (*predratio[inarea])[prey][predl] = tmp;
+        else
+          (*predratio[inarea])[prey][predl] = 0.0;
+      }
+      break;
+
+    case 3:
+      //Calculate the annual fishing level based on the available biomass of the stock
+      for (prey = 0; prey < this->numPreys(); prey++) {
+        if (this->getPrey(prey)->isPreyArea(area)) {
+          if (TimeInfo->getStep() == 1) {
+            bio = this->getPrey(prey)->getTotalBiomass(area);
+            quota = calcQuota(bio);
+          }
+          (*predratio[inarea])[prey][predl] = quota * tmp;
+          if ((*predratio[inarea])[prey][predl] > 10.0) //JMB arbitrary value here ...
+            handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
+
+        } else
+          (*predratio[inarea])[prey][predl] = 0.0;
+      }
+      break;
+
+    case 4:
+      //Calculate the annual fishing level based on the available biomass of all stocks
+      if (TimeInfo->getStep() == 1) {
+        bio = 0.0;
+        for (prey = 0; prey < this->numPreys(); prey++)
+          if (this->getPrey(prey)->isPreyArea(area))
+            bio += this->getPrey(prey)->getTotalBiomass(area);
+
+        quota = calcQuota(bio);
+      }
+
+      tmp *= quota;
       if (tmp > 10.0) //JMB arbitrary value here ...
         handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
       for (prey = 0; prey < this->numPreys(); prey++) {

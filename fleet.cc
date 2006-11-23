@@ -138,6 +138,8 @@ int Fleet::isFleetStepArea(int area, const TimeClass* const TimeInfo) {
     return 0;
   if (amount[TimeInfo->getTime()][this->areaNum(area)] < 0.0)
     handle.logMessage(LOGWARN, "Warning in fleet - negative amount consumed");
+  if ((predator->getType() == QUOTAPREDATOR) && (TimeInfo->getStep() == 1))
+    return 1;  //JMB need to check the first step
   if (isZero(amount[TimeInfo->getTime()][this->areaNum(area)]))
     return 0;
   return 1;

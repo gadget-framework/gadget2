@@ -24,18 +24,23 @@ StockPredator::StockPredator(CommentStream& infile, const char* givenname, const
   this->readSuitability(infile, TimeInfo, keeper);
 
   //now we read in the prey preference parameters - should be one for each prey
-  keeper->addString("preypreference");
-  int i, count = 0;
+  int i, check, count = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
+
+  keeper->addString("preypreference");
   infile >> text >> ws;
   while (!infile.eof() && (((strcasecmp(text, "maxconsumption") != 0)) && (strcasecmp(text, "whaleconsumption") != 0))) {
+    check = 0;
     for (i = 0; i < preference.Size(); i++) {
       if (strcasecmp(text, this->getPreyName(i)) == 0) {
         infile >> preference[i] >> ws;
         count++;
+        check = 1;
       }
     }
+    if (!check)
+      handle.logMessage(LOGWARN, "Warning in stockpredator - failed to match prey", text);
     infile >> text >> ws;
   }
   if (count != preference.Size())
@@ -121,11 +126,16 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
   PopPredator::Reset(TimeInfo);
 
   //check that the various parameters that can be estimated are sensible
-  if ((handle.getLogLevel() >= LOGWARN) && (TimeInfo->getTime() == 1) && (functionnumber == 1)) {
+  if ((handle.getLogLevel() >= LOGWARN) && (TimeInfo->getTime() == 1)) {
     int i;
-    for (i = 0; i < consParam.Size(); i++)
-      if (consParam[i] < 0.0)
-        handle.logMessage(LOGWARN, "Warning in stockpredator - negative consumption parameter", consParam[i]);
+    if (functionnumber == 1)
+      for (i = 0; i < consParam.Size(); i++)
+        if (consParam[i] < 0.0)
+          handle.logMessage(LOGWARN, "Warning in stockpredator - negative consumption parameter", consParam[i]);
+    if (preference.Size() > 1)
+      for (i = 1; i < preference.Size(); i++)
+        if (!(isEqual(preference[0], preference[i])))
+          handle.logMessage(LOGWARN, "Warning in stockpredator - preference parameters differ");
   }
 }
 

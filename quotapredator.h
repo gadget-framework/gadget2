@@ -65,6 +65,10 @@ protected:
    * \brief This is the FormulaVector used to store the fishing quota levels
    */
   FormulaVector quotalevel;
+  /**
+   * \brief This is the calculated fishing quota
+   */
+  double quota;
 };
 
 #endif

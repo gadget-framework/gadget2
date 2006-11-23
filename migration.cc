@@ -439,7 +439,7 @@ MigrationFunction::MigrationFunction(CommentStream& infile, const IntVector& Are
   readWordAndTimeVariable(infile, "driftx", driftx, TimeInfo, keeper);
   readWordAndTimeVariable(infile, "drifty", drifty, TimeInfo, keeper);
   readWordAndVariable(infile, "lambda", lambda);
-  delta = TimeInfo->getTimeStepLength();
+  delta = TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
 
   // Open and read given year and step information
   readWordAndValue(infile, "areadefinition", filename);
@@ -475,7 +475,7 @@ void MigrationFunction::readAreaData(CommentStream& infile, const AreaClass* con
   /* File format:
      [area]
      name        areaname
-     number      areaname
+     number      areanumber
      rectangles  filename containing the rectangle information
      [area]
      ...
@@ -585,7 +585,7 @@ int MigrationFunction::isMigrationStep(const TimeClass* const TimeInfo) {
 
 int MigrationFunction::updateVariables(const TimeClass* const TimeInfo) {
   //update the values of the variables that can change
-  delta = TimeInfo->getTimeStepLength();
+  delta = TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
   diffusion.Update(TimeInfo);
   driftx.Update(TimeInfo);
   drifty.Update(TimeInfo);
