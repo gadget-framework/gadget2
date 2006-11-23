@@ -330,7 +330,7 @@ void SurveyDistribution::Print(ofstream& outfile) const {
 
 void SurveyDistribution::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
 
-  if ((!(AAT.atCurrentTime(TimeInfo))) || (isZero(weight)))
+  if (!AAT.atCurrentTime(TimeInfo))
     return;
 
   int i, area, age, len;
@@ -475,7 +475,7 @@ void SurveyDistribution::calcIndex(const TimeClass* const TimeInfo) {
 
 void SurveyDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
-  if (!(AAT.atCurrentTime(TimeInfo)))
+  if ((!(AAT.atCurrentTime(TimeInfo))) || (isZero(weight)))
     return;
 
   int i;

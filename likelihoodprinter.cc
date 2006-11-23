@@ -137,7 +137,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
 }
 
 void LikelihoodPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
-  if ((!AAT.atCurrentTime(TimeInfo)) || (printtime != printtimeid))
+  if (printtime != printtimeid)
     return;
 
   int i;
