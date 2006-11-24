@@ -298,9 +298,7 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   //create a length distribution and mean weight for the new stock
   stockParameters.Update(TimeInfo);
   if (handle.getLogLevel() >= LOGWARN) {
-    if (stockParameters[0] > spawnLgrpDiv->maxLength())
-      handle.logMessage(LOGWARN, "Warning in spawner - invalid mean length for spawned stock");
-    if (isZero(stockParameters[0]))
+    if (isZero(stockParameters[1]))
       handle.logMessage(LOGWARN, "Warning in spawner - invalid standard deviation for spawned stock");
     if (stockParameters[0] < spawnLgrpDiv->minLength())
       handle.logMessage(LOGWARN, "Warning in spawner - mean length is less than minimum length");
