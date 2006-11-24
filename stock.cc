@@ -58,12 +58,16 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   readWordAndVariable(infile, "minage", minage);
   readWordAndVariable(infile, "maxage", maxage);
   numage = maxage - minage + 1;
+  if (minage < 0)
+    handle.logMessage(LOGFAIL, "Error in stock - stock age must be positive");
   if (numage < 1)
     handle.logMessage(LOGFAIL, "Error in stock - failed to create age groups");
 
   readWordAndVariable(infile, "minlength", minlength);
   readWordAndVariable(infile, "maxlength", maxlength);
   readWordAndVariable(infile, "dl", dl);
+  if (minlength < 0.0)
+    handle.logMessage(LOGFAIL, "Error in stock - stock length must be positive");
   LgrpDiv = new LengthGroupDivision(minlength, maxlength, dl);
   if (LgrpDiv->Error() || isZero(dl))
     handle.logMessage(LOGFAIL, "Error in stock - failed to create length group");
