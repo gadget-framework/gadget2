@@ -15,6 +15,7 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
   int i = 0;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
+  printtimeid = 0;
 
   //read in the names of the likelihood components
   infile >> text >> ws;
@@ -39,22 +40,18 @@ LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* con
   outfile.open(filename, ios::out);
   handle.checkIfFailure(outfile, filename);
 
-  infile >> text >> ws;
-  if (strcasecmp(text, "printatstart") == 0)
-    infile >> printtimeid >> ws >> text >> ws;
-  else
-    printtimeid = 0;
-
-  if (printtimeid != 0 && printtimeid != 1)
-    handle.logFileMessage(LOGFAIL, "\nError in likelihoodprinter - invalid value of printatstart");
-
-  if (printtimeid == 1)
-    handle.logFileMessage(LOGFAIL, "\nError in likelihoodprinter - cannot print likelihood informtion at the start of the timestep");
-
-  if (strcasecmp(text, "yearsandsteps") != 0)
-    handle.logFileUnexpected(LOGFAIL, "yearsandsteps", text);
-  if (!AAT.readFromFile(infile, TimeInfo))
-    handle.logFileMessage(LOGFAIL, "\nError in likelihoodprinter - wrong format for yearsandsteps");
+  //JMB - removed the need to read in the yearsandsteps data
+  infile >> ws;
+  if (!infile.eof()) {
+    char c = infile.peek();
+    if ((c == 'y') || (c == 'Y')) {
+      infile >> text >> ws;
+      if (strcasecmp(text, "yearsandsteps") == 0) {
+        handle.logMessage(LOGWARN, "Warning in likelihoodprinter - yearsandsteps data ignored");
+        AAT.readFromFile(infile, TimeInfo);
+      }
+    }
+  }
 
   //prepare for next printfile component
   infile >> ws;
