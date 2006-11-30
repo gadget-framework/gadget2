@@ -208,8 +208,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
     }
   }
 
-  //JMB make this dependant on the length of the timestep
-  tmp = Area->getSize(area) * TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
+  tmp = TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
   if (functionnumber == 1)
     tmp *= consParam[4];
   else if (functionnumber == 2)
