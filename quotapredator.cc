@@ -95,6 +95,9 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   totalcons[inarea][predl] = 0.0;
 
   tmp = prednumber[inarea][predl].N * multi * TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
+  if (isZero(tmp)) //JMB no predation takes place on this timestep
+    return;
+
   switch (functionnumber) {
     case 1:
       //Calculate the fishing level based on the available biomass of the stock
@@ -194,10 +197,13 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
 void QuotaPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
   int prey, preyl;
   int inarea = this->areaNum(area);
-  double maxRatio, tmp;
-
   int predl = 0;  //JMB there is only ever one length group ...
   overcons[inarea][predl] = 0.0;
+
+  if (isZero(totalcons[inarea][predl])) //JMB no predation takes place on this timestep
+    return;
+
+  double maxRatio, tmp;
   maxRatio = MaxRatioConsumed;
   if (TimeInfo->numSubSteps() != 1)
     maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
@@ -220,6 +226,7 @@ void QuotaPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
     totalcons[inarea][predl] -= overcons[inarea][predl];
     overconsumption[inarea][predl] += overcons[inarea][predl];
   }
+
   totalconsumption[inarea][predl] += totalcons[inarea][predl];
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))

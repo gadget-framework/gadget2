@@ -49,9 +49,14 @@ void EffortPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
   int predl = 0;  //JMB there is only ever one length group ...
   totalcons[inarea][predl] = 0.0;
 
+  double tmp;
+  tmp = prednumber[inarea][predl].N * multi * TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
+  if (isZero(tmp)) //JMB no predation takes place on this timestep
+    return;
+
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
-      (*predratio[inarea])[prey][predl] = prednumber[inarea][predl].N * preference[prey] * multi * TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
+      (*predratio[inarea])[prey][predl] = tmp * preference[prey];
       if ((*predratio[inarea])[prey][predl] > 10.0) //JMB arbitrary value here ...
         handle.logMessage(LOGWARN, "Warning in effortpredator - excessive consumption required");
       for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
@@ -72,10 +77,13 @@ void EffortPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
 void EffortPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
   int prey, preyl;
   int inarea = this->areaNum(area);
-  double maxRatio, tmp;
-
   int predl = 0;  //JMB there is only ever one length group ...
   overcons[inarea][predl] = 0.0;
+
+  if (isZero(totalcons[inarea][predl])) //JMB no predation takes place on this timestep
+    return;
+
+  double maxRatio, tmp;
   maxRatio = MaxRatioConsumed;
   if (TimeInfo->numSubSteps() != 1)
     maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
@@ -98,6 +106,7 @@ void EffortPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
     totalcons[inarea][predl] -= overcons[inarea][predl];
     overconsumption[inarea][predl] += overcons[inarea][predl];
   }
+
   totalconsumption[inarea][predl] += totalcons[inarea][predl];
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))

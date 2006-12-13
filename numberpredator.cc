@@ -25,8 +25,11 @@ void NumberPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
   double tmp, wanttoeat;
   int predl = 0;  //JMB there is only ever one length group ...
   wanttoeat = prednumber[inarea][predl].N * multi / TimeInfo->numSubSteps();
-
   totalcons[inarea][predl] = 0.0;
+
+  if (isZero(wanttoeat)) //JMB no predation takes place on this timestep
+    return;
+
   //calculate number consumed up to a multiplicative constant
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isPreyArea(area)) {
@@ -66,10 +69,13 @@ void NumberPredator::Eat(int area, const AreaClass* const Area, const TimeClass*
 void NumberPredator::adjustConsumption(int area, const TimeClass* const TimeInfo) {
   int check, prey, preyl;
   int inarea = this->areaNum(area);
-  double maxRatio, tmp;
-
   int predl = 0;  //JMB there is only ever one length group ...
   overcons[inarea][predl] = 0.0;
+
+  if (isZero(totalcons[inarea][predl])) //JMB no predation takes place on this timestep
+    return;
+
+  double maxRatio, tmp;
   maxRatio = MaxRatioConsumed;
   if (TimeInfo->numSubSteps() != 1)
     maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
@@ -101,6 +107,7 @@ void NumberPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
     totalcons[inarea][predl] -= overcons[inarea][predl];
     overconsumption[inarea][predl] += overcons[inarea][predl];
   }
+
   totalconsumption[inarea][predl] += totalcons[inarea][predl];
   for (prey = 0; prey < this->numPreys(); prey++)
     if (this->getPrey(prey)->isPreyArea(area))
