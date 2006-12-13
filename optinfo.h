@@ -207,9 +207,9 @@ private:
    */
   double lratio;
   /**
-   * \brief This is the number of temperature loops to check
+   * \brief This is the number of temperature loops to check when testing for convergence
    */
-  int check;
+  int tempcheck;
 };
 
 /**

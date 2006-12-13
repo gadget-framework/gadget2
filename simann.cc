@@ -190,7 +190,8 @@ void OptInfoSimann::OptimiseLikelihood() {
 
   double p, pp, ratio, nsdiv;
   double fopt, funcval, trialf;
-  int    i, a, j, h, k, change, l, offset;
+  int    a, i, j, k, l, offset;
+  int    rchange, rcheck, rnumber;  //Used to randomise the order of the parameters
 
   handle.logMessage(LOGINFO, "\nStarting Simulated Annealing optimisation algorithm\n");
   int nvars = EcoSystem->numOptVariables();
@@ -199,7 +200,7 @@ void OptInfoSimann::OptimiseLikelihood() {
   DoubleVector bestx(nvars);
   DoubleVector lowerb(nvars);
   DoubleVector upperb(nvars);
-  DoubleVector fstar(check);
+  DoubleVector fstar(tempcheck);
   DoubleVector vm(nvars, vminit);
   IntVector param(nvars, 0);
   IntVector nacp(nvars, 0);
@@ -230,7 +231,7 @@ void OptInfoSimann::OptimiseLikelihood() {
   cs /= lratio;  //JMB save processing time
   nsdiv = 1.0 / ns;
   fopt = funcval;
-  for (i = 0; i < check; i++)
+  for (i = 0; i < tempcheck; i++)
     fstar[i] = funcval;
 
   //Start the main loop.  Note that it terminates if
@@ -240,17 +241,16 @@ void OptInfoSimann::OptimiseLikelihood() {
     for (a = 0; a < nt; a++) {
       //Randomize the order of the parameters once in a while, to avoid
       //the order having an influence on which changes are accepted
-      change = 0;
-      while (change < nvars) {
-        h = rand() % nvars;
-        k = 1;
-        for (i = 0; i < change; i++)
-          if (param[i] == h)
-            k = 0;
-
-        if (k) {
-          param[change] = h;
-          change++;
+      rchange = 0;
+      while (rchange < nvars) {
+        rnumber = rand() % nvars;
+        rcheck = 1;
+        for (i = 0; i < rchange; i++)
+          if (param[i] == rnumber)
+            rcheck = 0;
+        if (rcheck) {
+          param[rchange] = rnumber;
+          rchange++;
         }
       }
 
@@ -361,14 +361,14 @@ void OptInfoSimann::OptimiseLikelihood() {
     }
 
     //Check termination criteria
-    for (i = check - 1; i > 0; i--)
+    for (i = tempcheck - 1; i > 0; i--)
       fstar[i] = fstar[i - 1];
     fstar[0] = funcval;
 
     quit = 0;
     if (fabs(fopt - funcval) < simanneps) {
       quit = 1;
-      for (i = 0; i < check - 1; i++)
+      for (i = 0; i < tempcheck - 1; i++)
         if (fabs(fstar[i + 1] - fstar[i]) > simanneps)
           quit = 0;
     }

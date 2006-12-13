@@ -6,7 +6,7 @@ extern ErrorHandler handle;
 
 OptInfoSimann::OptInfoSimann()
   : OptInfo(), rt(0.85), simanneps(1e-4), ns(5), nt(2), t(100.0),
-    cs(2.0), vminit(1.0), simanniter(2000), uratio(0.7), lratio(0.3), check(4) {
+    cs(2.0), vminit(1.0), simanniter(2000), uratio(0.7), lratio(0.3), tempcheck(4) {
   type = OPTSIMANN;
   handle.logMessage(LOGMESSAGE, "Initialising Simulated Annealing optimisation algorithm");
 }
@@ -56,7 +56,7 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
       count++;
 
     } else if (strcasecmp(text, "check") == 0) {
-      infile >> check;
+      infile >> tempcheck;
       count++;
 
     } else if (strcasecmp(text, "uratio") == 0) {
@@ -102,9 +102,9 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of ns outside bounds", ns);
     ns = 5;
   }
-  if (check < 1) {
-    handle.logMessage(LOGINFO, "Warning in optinfofile - value of check outside bounds", check);
-    check = 4;
+  if (tempcheck < 1) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of check outside bounds", tempcheck);
+    tempcheck = 4;
   }
   if (vminit < rathersmall) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of vm outside bounds", vminit);

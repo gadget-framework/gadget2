@@ -173,7 +173,8 @@ double OptInfoHooke::bestNearby(DoubleVector& delta, DoubleVector& point, double
 void OptInfoHooke::OptimiseLikelihood() {
 
   double oldf, newf, bestf, steplength, tmp;
-  int    i, k, h, change, offset;
+  int    i, offset;
+  int    rchange, rcheck, rnumber;  //Used to randomise the order of the parameters
 
   handle.logMessage(LOGINFO, "\nStarting Hooke & Jeeves optimisation algorithm\n");
   int nvars = EcoSystem->numOptVariables();
@@ -236,16 +237,16 @@ void OptInfoHooke::OptimiseLikelihood() {
     }
 
     /* randomize the order of the parameters once in a while */
-    change = 0;
-    while (change < nvars) {
-      h = rand() % nvars;
-      k = 1;
-      for (i = 0; i < change; i++)
-        if (param[i] == h)
-          k = 0;
-      if (k) {
-        param[change] = h;
-        change++;
+    rchange = 0;
+    while (rchange < nvars) {
+      rnumber = rand() % nvars;
+      rcheck = 1;
+      for (i = 0; i < rchange; i++)
+        if (param[i] == rnumber)
+          rcheck = 0;
+      if (rcheck) {
+        param[rchange] = rnumber;
+        rchange++;
       }
     }
 
@@ -263,12 +264,10 @@ void OptInfoHooke::OptimiseLikelihood() {
       handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of function evaluations");
       handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
 
-      for (i = 0; i < nvars; i++)
-        bestx[i] = trialx[i];
-      score = EcoSystem->SimulateAndUpdate(bestx);
+      score = EcoSystem->SimulateAndUpdate(trialx);
       handle.logMessage(LOGINFO, "\nHooke & Jeeves finished with a likelihood score of", score);
       for (i = 0; i < nvars; i++)
-        bestx[i] *= init[i];
+        bestx[i] = trialx[i] * init[i];
       EcoSystem->storeVariables(score, bestx);
       return;
     }
@@ -326,7 +325,7 @@ void OptInfoHooke::OptimiseLikelihood() {
       oldf = newf;
       newf = EcoSystem->SimulateAndUpdate(trialx);
       if ((isEqual(newf, oldf)) || (newf > oldf)) {
-        newf = oldf;  //JMB no improvment, so reset the value of newf
+        newf = oldf;  //JMB no improvement, so reset the value of newf
         break;
       }
 
@@ -347,12 +346,10 @@ void OptInfoHooke::OptimiseLikelihood() {
         handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of function evaluations");
         handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
 
-        for (i = 0; i < nvars; i++)
-          bestx[i] = trialx[i];
-        score = EcoSystem->SimulateAndUpdate(bestx);
+        score = EcoSystem->SimulateAndUpdate(trialx);
         handle.logMessage(LOGINFO, "\nHooke & Jeeves finished with a likelihood score of", score);
         for (i = 0; i < nvars; i++)
-          bestx[i] *= init[i];
+          bestx[i] = trialx[i] * init[i];
         EcoSystem->storeVariables(score, bestx);
         return;
       }
@@ -378,14 +375,9 @@ void OptInfoHooke::OptimiseLikelihood() {
       handle.logMessage(LOGINFO, "The steplength was reduced to", steplength);
       handle.logMessage(LOGINFO, "The optimisation stopped because an optimum was found for this run");
 
-      for (i = 0; i < nvars; i++)
-        bestx[i] = x[i];
       converge = 1;
-      score = EcoSystem->SimulateAndUpdate(bestx);
-      handle.logMessage(LOGINFO, "\nHooke & Jeeves finished with a likelihood score of", score);
-      for (i = 0; i < nvars; i++)
-        bestx[i] *= init[i];
-      EcoSystem->storeVariables(score, bestx);
+      handle.logMessage(LOGINFO, "\nHooke & Jeeves finished with a likelihood score of", bestf);
+      EcoSystem->storeVariables(bestf, bestx);
       return;
     }
 
