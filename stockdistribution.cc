@@ -545,6 +545,7 @@ void StockDistribution::printLikelihood(ofstream& outfile, const TimeClass* cons
 
   int area, s, i, age, len;
   int numage = ages.Nrow();
+  int numlen = LgrpDiv->numLengthGroups();
 
   timeindex = -1;
   for (i = 0; i < Years.Size(); i++)
@@ -553,13 +554,14 @@ void StockDistribution::printLikelihood(ofstream& outfile, const TimeClass* cons
   if (timeindex == -1)
     handle.logMessage(LOGFAIL, "Error in stockdistribution - invalid timestep");
 
-  for (area = 0; area < modelDistribution.Ncol(timeindex); area++) {
-    for (s = 0; s < modelDistribution[timeindex][area]->Nrow(); s++) {
-      for (i = 0; i < modelDistribution[timeindex][area]->Ncol(s); i++) {
+  for (area = 0; area < areas.Nrow(); area++) {
+    for (s = 0; s < stocknames.Size(); s++) {
+      for (i = 0; i < (numage * numlen); i++) {
         // need to calculate the age and length index from i
         // i = ageid + (numage * lenid);
         age = i % numage;
-        len = i - age;
+        len = (i - age) / numage;
+
         outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
           << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
           << setw(printwidth) << stocknames[s] << sep << setw(printwidth)
