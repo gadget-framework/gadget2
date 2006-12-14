@@ -95,9 +95,6 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   totalcons[inarea][predl] = 0.0;
 
   tmp = prednumber[inarea][predl].N * multi * TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
-  if (isZero(tmp)) //JMB no predation takes place on this timestep
-    return;
-
   switch (functionnumber) {
     case 1:
       //Calculate the fishing level based on the available biomass of the stock
@@ -176,6 +173,9 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       handle.logMessage(LOGWARN, "Warning in quotapredator - unrecognised function", functionname);
       break;
   }
+
+  if (isZero(tmp)) //JMB no predation takes place on this timestep
+    return;
 
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (isZero((*predratio[inarea])[prey][predl])) {
