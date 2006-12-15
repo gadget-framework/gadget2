@@ -71,7 +71,7 @@ Gadget is distributed via anonymous ftp from the MRI ftp site, and the address o
 ftp://ftp.hafro.is/pub/reiknid/dst2/gadget/
 \end{verbatim}}
 
-The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.1.04, so the file to be downloaded is gadget2.1.04.tar.gz.
+The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.1.05, so the file to be downloaded is gadget2.1.05.tar.gz.
 
 \bigskip
 Gadget is a program that runs on a Unix computing platform, and is regularly tested on machines running versions of Solaris, Linux, Mac OSX and Cygwin (a Unix emulator for Microsoft Windows machines).  It should also run on other versions of Unix, but this may require modifications to the makefile in order to do so.  Gadget is distributed as a set of source code files, which need to be compiled into an executable program before it can be run.  To allow for various different versions, the makefile has a list of supported computing platforms, so the makefile should be checked (and if necessary changed) to ensure that the required options are available before the source code is compiled.  The default options in the makefile will compile Gadget for a Linux machine, using the GNU C++ compiler.  A summary of the commands required to compile Gadget, using the default options for a Linux machine from the downloaded file are:
@@ -86,17 +86,14 @@ make
 The most recent copy of this document will also be placed on the MRI ftp site, along with copies of any example datasets that are available.  These datasets will be checked so that they run without any problems, and will also contain some comments to help the user understand the format of the data files.  It is recommended that this user guide is read in conjunction with an example dataset.
 
 \bigskip
-A web site has been set up that contains details of the most recent changes to Gadget, documentation updates and other news.  This is also a good place to look for more information about Gadget.  The address of the Gadget web site is:
+A web site has been set up that contains details of the recent changes to Gadget, documentation updates and other news.  This is also a good place to look for more information about Gadget.  The address of the Gadget web site is {\tt http://www.hafro.is/gadget}
+
+\bigskip
+Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.1.05 on a Linux machine:
 
 {\small\begin{verbatim}
-http://www.hafro.is/gadget
-\end{verbatim}}
-
-Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.1.04 on a Linux machine:
-
-{\small\begin{verbatim}
-gunzip gadget2.1.04.tar.gz
-tar -xvf gadget2.1.04.tar
+gunzip gadget2.1.05.tar.gz
+tar -xvf gadget2.1.05.tar
 cd source
 make
 \end{verbatim}}
@@ -108,7 +105,7 @@ Gadget is a command line program that runs on a Linux computing platform.  To st
 gadget <options>
 \end{verbatim}}
 
-where $<$options$>$ are a combination of the starting switches described in the next section.
+where $<$options$>$ are a combination of the starting switches described in the next section.  Note that this assumes that the Gadget executable has been placed in a directory that is included in the \$PATH, which might not be the case for some Linux distributions.  If this is the case, Gadget should be started by including the path to the Gadget executable, for example by typing {\small{\tt ./gadget}} if the Gadget executable is in the current directory.
 
 \bigskip
 Gadget is not an interactive program, so once it has started there is no need for any further input from the user.  However, if Gadget was started incorrectly (for example, using the wrong input files) then Gadget can be stopped by pressing $<$CTRL$><$C$>$, which will interrupt the calculations, displaying a menu from which it is possible to either store the current calculations to a text file, or to exit (by pressing $<$Q$>$).
@@ -118,18 +115,15 @@ When Gadget starts, it will look for a file called ''main'', which contains a li
 
 \begin{enumerate}
 \item the directory specified by the Linux environment variable called ''GADGET\_WORKING\_DIR'', optionally taking data from the directory specified by the Linux environment variable called ''GADGET\_DATA\_DIR''
-\item the current directory (ie. from where Gadget has been started) if these environment variables have not been set
+\item the current directory (ie. from where Gadget has been started) if these environment variables have not been set (note that this is the default location)
 \end{enumerate}
 
 When Gadget is reading in the input data files, these files will be checked to ensure that they are in the correct format, and if there is an error in the format Gadget will print an error message and stop.  Note that when Gadget is checking the format of a data file containing a number of columns (eg. the ''area'' file) it will only check the first data line in the file (so, for the case of the ''area'' file it will check that there are 4 entries on the first row and then assume that all the other rows also have 4 entries).  Hopefully, there should be enough information in these error messages to lead the user to the input file that is causing the error.
 
 \bigskip
-If all else fails, and the error messages do not lead the user to the source of the error, then there is an email address set up for any difficulties or questions that may arise, or reporting any bugs that get found.  In addition to sorting out any problems that the user may be getting, we can also try to help with interpreting the output.  This email address is:
+If all else fails, and the error messages do not lead the user to the source of the error, then there is an email address set up for any difficulties or questions that may arise, or reporting any bugs that get found.  In addition to sorting out any problems that the user may be getting, we can also try to help with interpreting the output.  This email address is {\tt gadgethelp@hafro.is}
 
-{\small\begin{verbatim}
-mailto:gadgethelp@hafro.is
-\end{verbatim}}
-
+\bigskip
 Sending an email to this address should get a response within a couple of working days.  This email address can also be used to give us any feedback on the usefulness (or otherwise) of Gadget, so let us know what you think!
 
 \section{Starting Switches}\label{sec:starting}
@@ -297,7 +291,7 @@ The format for the functions is given by:
 (<function> <parameters>)
 \end{verbatim}}
 
-where the $<$function$>$ defines the name of the function, and the $<$parameters$>$ is a vectors of the parameters to be used - either numbers or the names of switches denoted by the '\#' character.  Note that the function is contained with (round brackets).  Valid function names include the 4 mathematical operators ('*', '+', '-' and '/'), trigonometric functions ('sin' and 'cos', with the argument in radians), logarithmic functions ('log' and 'exp'), square root ('sqrt') and a function to generate a random number between 0 and 1 ('rand').
+where the $<$function$>$ defines the name of the function, and the $<$parameters$>$ is a vectors of the parameters to be used - either numbers or the names of switches denoted by the '\#' character.  Note that the function is contained within (round brackets).  Valid function names include the 4 mathematical operators ('*', '+', '-' and '/'), trigonometric functions ('sin' and 'cos', with the argument in radians), logarithmic functions ('log', 'log10' and 'exp'), square root ('sqrt') and a function to generate a random number between 0 and 1 ('rand').
 
 \bigskip
 Examples of valid functions for the switches in the data files can include:
@@ -747,7 +741,8 @@ where:\newline
 $<\Delta t>$ is the length of the timestep\newline
 $<$ C $>$ is the consumption (see section~\ref{sec:consumption})\newline
 $<$ T $>$ is the temperature\newline
-$<\psi>$ is the feeding level (see section~\ref{sec:consumption})
+$<\psi>$ is the feeding level (see section~\ref{sec:consumption})\newline
+$<W_{ref}>$ is the reference weight
 
 \bigskip
 There are 6 parameters for the equation for increase of the weight, and a further 8 parameters for the increase in length.  These are declared in 2 vectors, as shown below:
@@ -893,14 +888,14 @@ The $<$max length group growth$>$ value is the maximum number of length categori
 The natural mortality is a measure of how much of the stock will be removed from the model due to additional natural causes that are not modelled as part of other processes (for example predation).  In Gadget, this is simply modelled as the proportion of the stock that is removed due to these additional causes (the residual mortality) from each age group, on each timestep, as shown in equation~\ref{eq:natmort} below:
 
 \begin{equation}\label{eq:natmort}
-N_{a} = e^{\displaystyle \frac{-m_{a}} {\Delta t}}
+N_{a} = e^{-m_{a} \Delta t}
 \end{equation}
 
 where:\newline
 $<\Delta t>$ is the length of the timestep
 
 \bigskip
-The natural mortality parameters $<$m$>$ are specified in the stock file as a vector, with one parameter per age group, as shown below:
+The natural mortality parameters $<m_{a}>$ are specified in the stock file as a vector, with one parameter per age group, as shown below:
 
 {\small\begin{verbatim}
 naturalmortality       <natural mortality vector>
@@ -956,7 +951,7 @@ M_{L} = m_{0} \Delta t e^{(m_{1}T - m_{2}T^3)} L^{m_{3}}
 \end{equation}
 
 \begin{equation}\label{eq:feedlevel}
-\psi_{L} = \frac{\displaystyle \sum_{\it preys} F_{p}(l, L)}{H A \Delta t + \displaystyle \sum_{\it preys} F_{p}(l, L)}
+\psi_{L} = \frac{\displaystyle \sum_{\it preys} F_{p}(l, L)}{H \Delta t + \displaystyle \sum_{\it preys} F_{p}(l, L)}
 \end{equation}
 
 where:\newline
@@ -968,7 +963,6 @@ $<$ E $>$ is the energy content of the prey (see section~\ref{sec:stockprey})\ne
 $<$ N $>$ is the number of prey in the length cell\newline
 $<$ W $>$ is the mean weight of the prey in the length cell\newline
 $<$ S $>$ is the suitability function (see section~\ref{sec:suitability})\newline
-$<$ A $>$ is the size of the area that the feeding takes place on\newline
 $<\Delta t>$ is the length of the timestep\newline
 $<$ T $>$ is the temperature of the area that the feeding takes place on
 
@@ -990,7 +984,7 @@ maxconsumption         <maximum consumption vector>
 In equation~\ref{eq:maxcons}, the parameter $<$ M $>$ gives the maximum possible consumption for the predator on the current timestep.  This is a function of temperature and the length of the predator, using the 4 parameters specified by the $<$maximum consumption$>$ vector in the input file.  Note that the maximum consumption should be specified in kilojoules per month.
 
 \bigskip
-In equation~\ref{eq:feedlevel}, the parameter $<\psi>$ gives the ''feeding level'' which denotes the fraction of the available food that the predator is consuming.  This is governed by the total amount of prey available and the $<$half feeding$>$ value which is specified in the input file.  The $<$half feeding$>$ value is the density of prey required to allow the predator to consume prey at half the maximum consumption level.  The value of $<\psi>$ can have an affect on the growth of the predator (ie. when there isn't sufficient food available) when the growth function has been set to ''MULTSPEC'' or ''WeightJones''.
+In equation~\ref{eq:feedlevel}, the parameter $<\psi>$ gives the ''feeding level'' which denotes the fraction of the available food that the predator is consuming.  This is governed by the total amount of prey available and the $<$half feeding$>$ value which is specified in the input file.  The $<$half feeding$>$ value is the biomass of prey required to allow the predator to consume prey at half the maximum consumption level.  The value of $<\psi>$ can have an affect on the growth of the predator (ie. when there isn't sufficient food available) when the growth function has been set to ''MULTSPEC'' or ''WeightJones''.
 
 \section{Suitability}\label{sec:suitability}
 The suitability determines how the predators act on the preys.  This selectivity relationship between the predator and the prey is based on the lengths of the predator and prey, and are defined  by declaring a suitability function and the parameters for that function.  The suitability values can be thought of as the proportion of the prey length group that the predator length group can consume, and as such the suitability values should be between 0 and 1.
@@ -1510,22 +1504,29 @@ $<w>$ is the spawning weight loss for that length group
 In equation~\ref{eq:spawn1}, the population of the age-length cell of the mature stock is reduced due to the spawning mortality of the fish that spawn.  In equation~\ref{eq:spawn2}, the mean weight of the population in the age-length cell is adjusted to take the reduction in weight of the fish that spawn, and the change in population, into account.
 
 \bigskip
-Spawning is considered to be an annual event, that takes place on the same timestep and the same area in each year.  To model the spawning process as it affects the parent (without the creation of a child stock), it is necessary to specify the timestep and area that the spawning will take place on, and the length selection functions to determine proportion of each length group that will spawn, and the spawning mortality and weight loss of those that spawn.  This is done in the spawning data file, as shown below:
+Spawning is considered to be an annual event, that takes place on the same timestep and the same area in each year that the spawning occurs.  To model the spawning process as it affects the parent (without the creation of a child stock), it is necessary to specify the timestep and area that the spawning will take place on, and the length selection functions to determine proportion of each length group that will spawn, and the spawning mortality and weight loss of those that spawn.  This is done in the spawning data file, as shown below:
 
 {\small\begin{verbatim}
 spawnsteps             <vector of timesteps>
 spawnareas             <vector of areas>
+firstspawnyear         <first year that the spawning occurs>
+lastspawnyear          <last year that the spawning occurs>
 onlyparent
 proportionfunction     <see Length Selection>
 mortalityfunction      <see Length Selection>
 weightlossfunction     <see Length Selection>
 \end{verbatim}}
 
+The optional <firstspawnyear> and <lastspawnyear> values define the first and last years on which the spawning process will take place.  This means that it is possible to define recruits (see section~\ref{sec:stockrenew} above) for some years in the model and use a spawning process in other years in the model.  If these are not specified in the input file, then it assumed that the spawning process will take place on all years in the simulation, and these will default to the first year and last year in the simulation.
+
+\bigskip
 Alternatively, it is possible to consider the spawning process as part of a through life-cycle model, and so the spawning process can create recruits to be added to one or more stocks (in a similar manner to the renewal data, given in section~\ref{sec:stockrenew} above).  The total number of recruits given by the spawning process is added to the youngest age group of the spawned stock at the start of the following timestep.  The lengths of the spawned stock are distributed with a Normal distribution about a specified mean length $<$mean$>$ with a standard deviation $<$stddev$>$.  The mean weight of the fish in these age length cells is given from equation~\ref{eq:wlen}, with $\alpha$ and $\beta$ specified in the spawning data file.  Hence, if the spawning process is to calculate a number of recruits to the model, the format for the spawning data file is shown below:
 
 {\small\begin{verbatim}
 spawnsteps             <vector of timesteps>
 spawnareas             <vector of areas>
+firstspawnyear         <first year that the spawning occurs>
+lastspawnyear          <last year that the spawning occurs>
 spawnstocksandratios   <stockname i> <ratio i> ; for each stock i
 proportionfunction     <see Length Selection>
 mortalityfunction      <see Length Selection>
@@ -1789,13 +1790,14 @@ There are 4 types of fleets implemented in Gadget, and the main fleet file lists
 <fleet data>
 \end{verbatim}}
 
-The fleet data for each fleet type is covered in the sub sections below.  The $<$type$>$ defines the type of fleet for the $<$fleetname$>$ fleet, and the 4 valid fleet types that can used in Gadget are:
+The fleet data for each fleet type is covered in the sub sections below.  The $<$type$>$ defines the type of fleet for the $<$fleetname$>$ fleet, and the 5 valid fleet types that can used in Gadget are:
 
 \bigskip
 TotalFleet\newline
 NumberFleet\newline
 LinearFleet\newline
-EffortFleet
+EffortFleet\newline
+QuotaFleet
 
 \section{TotalFleet}\label{sec:totalfleet}
 The fleet type used that creates a predator based on the landings data (by biomass) for the fleet is called ''TotalFleet''.  This total amount landed is then split between the various stocks, and length groups of the stocks, according to equation~\ref{eq:tcons} below:
@@ -1885,7 +1887,7 @@ amount                 <see Fleet Amounts>
 The optional $<$multi$>$ value is a multiplicative constant used to scale the data if required - the default value for this multiplier is 1 (ie. no scaling).
 
 \bigskip
-The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The proportion to be used when calculating the amount that the fleet will catch is also required, and this is specified in a separate file.
+The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The scaling factor to be used when calculating the amount that the fleet will catch is also required, and this is specified in a separate file.
 
 \bigskip
 The fleet of type LinearFleet acts a simple predator, and can be used for fleets acting in the future, when the landings data is not available.
@@ -1921,7 +1923,7 @@ amount                 <see Fleet Amounts>
 The optional $<$multi$>$ value is a multiplicative constant used to scale the data if required - the default value for this multiplier is 1 (ie. no scaling).
 
 \bigskip
-The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The proportion to be used when calculating the amount that the fleet will catch is also required, and this is specified in a separate file.
+The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  The scaling factor to be used when calculating the amount that the fleet will catch is also required, and this is specified in a separate file.
 
 \bigskip
 The fleet of type EffortFleet is a multi-species extension to the fleet of type LinearFleet (see section~\ref{sec:linearfleet} above).  This means that when a fleet is used to catch more than one species (either directly or as bycatch) the different catchability for these species can be taken into account.  This catchability parameter is specified by listing the names of the prey and the associated preference value, as shown in the example below:
@@ -1935,7 +1937,48 @@ amount
 ...
 \end{verbatim}}
 
-%\section{QuotaFleet}\label{sec:quotafleet}
+\section{QuotaFleet}\label{sec:quotafleet}
+The fleet type used that creates a predator that removes the caught fish based on the available biomass of the stock multiplied by a scaling factor set according to a simple harvest control rule is called ''QuotaFleet''.  The biomass caught is then split between the various stocks, and length groups of the stocks, according to equation~\ref{eq:lcons} (see section~\ref{sec:linearfleet} above).  The scaling factor (the parameter ''E'' in the equation above) is set according to a simple harvest control rule.
+
+\bigskip
+This fleet type is defined by specifying the fleet name and areas it operates on, along with a suitability function for each stock that the fleet will catch, a simple harvest control rule and a data file listing the proportion of each stock that the fleet will catch.  The file format for the QuotaFleet is given below:
+
+{\small\begin{verbatim}
+[component]
+quotafleet             <fleetname>
+livesonareas           <areas>
+multiplicative         <multi>
+suitability            <see Fleet Suitability>
+quotafunction          <function name>
+biomasslevel           <vector of biomass levels>
+quotalevel             <vector of quota levels>
+amount                 <see Fleet Amounts>
+\end{verbatim}}
+
+The optional $<$multi$>$ value is a multiplicative constant used to scale the data if required - the default value for this multiplier is 1 (ie. no scaling).
+
+\bigskip
+The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  A scaling factor that can be used when calculating the amount that the fleet will catch is also required, and this is specified in a separate file (although this is usually set to 1, since the scaling factor to be used is multiplied by that calculated using the simple harvest control rule below).
+
+\bigskip
+The simple harvest control rule that is used to calculate the scaling factor to be used to determine the fishing level is defined by the $<$function name$>$ value, along with the $<$biomasslevel$>$ and $<$quotalevel$>$ vectors.  Currently there are 2 quota functions defined, and the valid function names are:
+
+\bigskip
+simple - use a simple harvest control rule, based on the biomass of each stock\newline
+simplesum - use a simple harvest control rule, based on the biomass of all the stocks
+
+\bigskip
+The $<$biomasslevel$>$ vector is a list of $n$ biomass points at which the fishing level will change, and the $<$quotalevel$>$ vector is the corresponding list of $n+1$ fishing levels.  Note that the first quotalevel value corresponds to the fishing level that will be used when the biomass is between 0 and the first biomasslevel value, so the quotalevel vector must have one more entry than the biomasslevel vector.
+
+\bigskip
+An example of valid biomasslevel and quotalevel vectors is given below:
+
+{\small\begin{verbatim}
+biomasslevel           10000  250000
+quotalevel             0.1  0.4  0.9
+\end{verbatim}}
+
+The fishing level for the stock in the example shown above would be set to 0.1 if the biomass of the stock is less than 10,000 kilogrammes, 0.4 if the biomass is between 10,000 and 250,000 kilogrammes and 0.9 if the biomass is above 250,000 kilogrammes.  Note that the biomasslevel vector has 2 entries, and that the quotalevel vector has a third entry.
 
 \section{Fleet Suitability}\label{sec:fleetsuit}
 The suitability determines how the fleets act on the stocks that are caught.  Since Gadget treats the fleets as predators of the stocks, the format for the suitability functions for the fleets is the same as the format for the suitability functions of the stock when they are acting as a predator.  The format for the suitability functions as discussed in section~\ref{sec:suitability} above.  Note that in the equations for the suitability functions, the 'length' of the predator is a meaningless concept when the predator is a fleet.
@@ -1953,10 +1996,10 @@ For fleets of type TotalFleet or NumberFleet, the data file is a list of year, t
 <year>  <step>  <area>  <fleetname>  <amount>
 \end{verbatim}}
 
-For fleets of type LinearFleet or EffortFleet, the data file is a list of year, timestep, area, fleetname and then the scaling factor to be used when calculating the amount of the catch for that timestep/area/fleet combination:
+For fleets of type LinearFleet, EffortFleet or QuotaFleet, the data file is a list of year, timestep, area, fleetname and then the scaling factor to be used when calculating the amount of the catch for that timestep/area/fleet combination:
 
 {\small\begin{verbatim}
-<year>  <step>  <area>  <fleetname>  <proportion>
+<year>  <step>  <area>  <fleetname>  <scaling factor>
 \end{verbatim}}
 
 \chapter{Likelihood Files}\label{chap:like}
@@ -2109,10 +2152,11 @@ The optional $<$epsilon$>$ value is used whenever the calculated probability is 
 The $<$fleetnames$>$ vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison.  Similarly, the $<$stocknames$>$ vector contains a list of all the stocks to be aggregated into a single pseudo stock.
 
 \bigskip
-The $<$function name$>$ defines what likelihood function is to be used to compare the modelled age-length catch distribution to the input age-length catch distribution.  Currently, there are 7 likelihood functions defined, and the valid function names are:
+The $<$function name$>$ defines what likelihood function is to be used to compare the modelled age-length catch distribution to the input age-length catch distribution.  Currently, there are 8 likelihood functions defined, and the valid function names are:
 
 \bigskip
 sumofsquares - use a sum of squares function\newline
+stratified - use a stratified sum of squares function\newline
 multinomial - use a multinomial function\newline
 pearson - use a Pearson function\newline
 gamma - use a gamma function\newline
@@ -2142,6 +2186,9 @@ The sum of squares function calculates the likelihood component from equation~\r
 where:\newline
 $<$ P $>$ is the proportion of the data sample for that time/area/age/length combination\newline
 $<\pi>$ is the proportion of the model sample for that time/area/age/length combination
+
+\subsection{Stratified Sum of Squares Function}
+The stratified function is a variant of the sum of squares function that calculates an age distribution for each length class, and then calculates the likelihood component from equation~\ref{eq:catchdist4} above.  The difference between this function and the sum of squares function above is in the way the proportions of the samples are calculated - for this function the proportion is calculated for each length group in turn, whereas for the sum of squares function the proportion is taken over all the length groups.  If there is only one length group then these two functions are identical.
 
 \subsection{Multinomial Function}
 The multinomial function calculates the likelihood component from equation~\ref{eq:catchdist1} below:
@@ -2350,8 +2397,7 @@ $<\mu>$ is the mean weight calculated from the model\newline
 $<$ s $>$ is the standard deviation of the weight from the data\newline
 $<$ N $>$ is the sample size
 
-%\bigskip
-\newpage %JMB insert page break
+\bigskip
 For this CatchStatistics function, the format of the statistical data required in the file specified by $<$datafile$>$ is given below:
 
 {\small\begin{verbatim}
@@ -2478,8 +2524,17 @@ The SurveyIndices likelihood component is used to compare the development of a s
 \end{equation}
 
 where:\newline
-$<$ I $>$ is the survey index\newline
+$<$ I $>$ is the observed survey index\newline
 $<$ N $>$ is the corresponding index calculated in the Gadget model
+
+%\begin{equation}\label{eq:weightsurveyindex}
+%\ell = \sum_{\it time} w_{t} \Big(I_{t} - (\alpha + \beta N_{t})\Big)^2
+%\end{equation}
+
+%where:\newline
+%$<$ w $>$ is the weight for the survey index\newline
+%$<$ I $>$ is the observed survey index\newline
+%$<$ N $>$ is the corresponding index calculated in the Gadget model
 
 \bigskip
 The exact format of this linear regression equation will vary, depending on survey index data available.  It is possible to take the log of the indices and the modelled data before fitting the linear regression line.  The slope and intercept of the linear regression line are controlled by the parameters alpha and beta, and it is possible to fix these to specified numbers, or let Gadget calculate these to get the best fit to the modelled data.
@@ -2494,15 +2549,21 @@ weight               <weight for the likelihood component>
 type                 surveyindices
 datafile             <name for the datafile>
 sitype               <survey index type>
+biomass              <0 or 1> ; 1 to base index data on biomass
 <survey index data>
 \end{verbatim}}
 
-The format of the survey index data, and the contents of the datafile, depend on the type of survey index that is to be used, which is specified by the value of $<$survey index type$>$.  There are currently three valid options, which are:
+The optional flag $<$biomass$>$ is used to specify whether the index data should be based on the biomass of the stock or on the population numbers for the stock.  If this is set to 1, then the index data calculated in the model will be based on the available biomass of the stock.  If this line is not specified, then a biomass value of 0 is assumed and the index data calculated in the model will be based on the available population numbers for the stock.
+
+\bigskip
+The format of the survey index data, and the contents of the datafile, depend on the type of survey index that is to be used, which is specified by the value of $<$survey index type$>$.  There are currently 5 valid options, which are:
 
 \bigskip
 lengths - defining a length group based survey index\newline
 ages - defining an age group based survey index\newline
-fleets - defining a length group based survey index, taking the fleet selectivity into account
+fleets - defining a length group based survey index, taking the fleet selectivity into account\newline
+acoustic - defining an acoustic based survey index\newline
+effort - defining an fishing effort based survey index
 
 \subsection{SurveyIndices by Length}\label{subsec:sibylength}
 To specify a length group based SurveyIndices likelihood component, the format required in the main likelihood file is as follows:
@@ -2514,6 +2575,7 @@ weight               <weight for the likelihood component>
 type                 surveyindices
 datafile             <name for the datafile>
 sitype               lengths
+biomass              <0 or 1> ; 1 to base index data on biomass
 areaaggfile          <area aggregation file specifying areas>
 lenaggfile           <length aggregation file specifying lengths>
 stocknames           <vector of the names of the stocks>
@@ -2521,7 +2583,7 @@ fittype              <fit type>
 <fit type parameters>
 \end{verbatim}}
 
-The datafile is a list of the indices that Gadget is to use to fit the linear regression to for the numbers calculated in the model.  The format of this file is given below:
+The datafile is a list of the indices that Gadget is to use to fit the linear regression to, aggregated according to the length aggregation file specified, for the population numbers calculated in the model.  The format of this file is given below:
 
 {\small\begin{verbatim}
 <year>  <step>  <area>  <length>  <number>
@@ -2615,6 +2677,7 @@ weight               <weight for the likelihood component>
 type                 surveyindices
 datafile             <name for the datafile>
 sitype               ages
+biomass              <0 or 1> ; 1 to base index data on biomass
 areaaggfile          <area aggregation file specifying areas>
 ageaggfile           <age aggregation file specifying ages>
 stocknames           <vector of the names of the stocks>
@@ -2622,7 +2685,7 @@ fittype              <fit type>
 <fit type parameters>
 \end{verbatim}}
 
-The datafile is a list of the indices that Gadget is to use to fit the linear regression to, aggregated according to the aggregation files specified, for the numbers calculated in the model.  The format of this file is given below:
+The datafile is a list of the indices that Gadget is to use to fit the linear regression to, aggregated according to the age aggregation file specified, for the population numbers calculated in the model.  The format of this file is given below:
 
 {\small\begin{verbatim}
 <year>  <step>  <area>  <age>  <number>
@@ -2643,6 +2706,7 @@ weight               <weight for the likelihood component>
 type                 surveyindices
 datafile             <name for the datafile>
 sitype               fleets
+biomass              <0 or 1> ; 1 to base index data on biomass
 areaaggfile          <area aggregation file specifying areas>
 lenaggfile           <length aggregation file specifying lengths>
 fleetnames           <vector of the names of the fleets>
@@ -2651,13 +2715,71 @@ fittype              <fit type>
 <fit type parameters>
 \end{verbatim}}
 
-The datafile is a list of the indices that Gadget is to use to fit the linear regression to for the numbers calculated in the model.  The format of this file is given below:
+The datafile is a list of the indices that Gadget is to use to fit the linear regression to, aggregated according to the length aggregation file specified, for the population numbers calculated in the model.  The format of this file is given below:
 
 {\small\begin{verbatim}
 <year>  <step>  <area>  <length>  <number>
 \end{verbatim}}
 
 where $<$number$>$ is the survey index for that timestep/area/length combination.
+
+\bigskip
+The $<$fit type$>$ defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component.  The valid fit type options are the same as for the length based survey indices, given in section~\ref{subsec:sibylength} above.
+
+\subsection{SurveyIndices by Acoustic}\label{subsec:sibyacoustic}
+To specify an acoustic based SurveyIndices likelihood component, the format required in the main likelihood file is as follows:
+
+{\small\begin{verbatim}
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 surveyindices
+datafile             <name for the datafile>
+sitype               acoustic
+biomass              <0 or 1> ; 1 to base index data on biomass
+areaaggfile          <area aggregation file specifying areas>
+surveynames          <vector of the names of the acoustic surveys>
+stocknames           <vector of the names of the stocks>
+fittype              <fit type>
+<fit type parameters>
+\end{verbatim}}
+
+The datafile is a list of the acoustic indices that Gadget is to use to fit the linear regression to, for the population calculated in the model.  The format of this file is given below:
+
+{\small\begin{verbatim}
+<year>  <step>  <area>  <survey>  <acoustic>
+\end{verbatim}}
+
+where $<$acoustic$>$ is the acoustic index for that timestep/area/survey combination.
+
+\bigskip
+The $<$fit type$>$ defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component.  The valid fit type options are the same as for the length based survey indices, given in section~\ref{subsec:sibylength} above.
+
+\subsection{SurveyIndices by Effort}\label{subsec:sibyeffort}
+To specify an effort based SurveyIndices likelihood component, the format required in the main likelihood file is as follows:
+
+{\small\begin{verbatim}
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 surveyindices
+datafile             <name for the datafile>
+sitype               effort
+biomass              <0 or 1> ; 1 to base index data on biomass
+areaaggfile          <area aggregation file specifying areas>
+fleetnames           <vector of the names of the fleets>
+stocknames           <vector of the names of the stocks>
+fittype              <fit type>
+<fit type parameters>
+\end{verbatim}}
+
+The datafile is a list of the fleet effort indices that Gadget is to use to fit the linear regression to, for the fishing effort calculated in the model.  The format of this file is given below:
+
+{\small\begin{verbatim}
+<year>  <step>  <area>  <fleet>  <effort>
+\end{verbatim}}
+
+where $<$effort$>$ is the effort index for that timestep/area/fleet combination.
 
 \bigskip
 The $<$fit type$>$ defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component.  The valid fit type options are the same as for the length based survey indices, given in section~\ref{subsec:sibylength} above.
@@ -3108,8 +3230,6 @@ PreyOverPrinter\newline
 StockPreyFullPrinter\newline
 StockPreyPrinter\newline
 PredatorPreyPrinter\newline
-%PredPreyStdLengthPrinter\newline
-%PredPreyStdAgePrinter\newline
 LikelihoodPrinter\newline
 LikelihoodSummaryPrinter
 
@@ -3412,65 +3532,6 @@ $<$number$>$ is the number consumed for that timestep/area/age/length combinatio
 $<$biomass$>$ is the biomass consumed for that timestep/area/age/length combination\newline
 $<$mortality$>$ is the effective annual mortality induced in the prey by the predation for that timestep/area/age/length combination
 
-%JMB removed this from the documentation
-%\section{PredPreyStdLengthPrinter}\label{sec:predpreystdlengthprinter}
-%The printer type to output detailed information about a predator-prey combination, with both the predator and prey given a length based distribution, is called ''PredPreyStdLengthPrinter''.  This printer type is defined by specifying the predator name, prey name and timesteps of interest.  The file format for this component is given below:
-
-%{\small\begin{verbatim}
-%[component]
-%type                 predpreystdlengthprinter
-%predator             <name of the predator>
-%prey                 <name of the prey>
-%printfile            <name for the output file to be created>
-%precision            <precision to be used in the output file>
-%yearsandsteps        <ActionAtTime to determine when to print>
-%\end{verbatim}}
-
-%The optional $<$precision$>$ value is used to specify the number of digits to be used when printing the information to the specified output file, overriding the default settings for this printer type.
-
-%\bigskip
-%The output that is generated from this printer type is a file containing the following information for the predator specified on the $<$predator$>$ line, consuming the prey specified on the $<$prey$>$ line:
-
-%{\small\begin{verbatim}
-%year-step-area-pred-prey-number-biomass-mortality
-%\end{verbatim}}
-
-%where:\newline
-%$<$pred$>$ is the predator length group\newline
-%$<$prey$>$ is the prey length group\newline
-%$<$number$>$ is the number consumed for that timestep/area/predator length/prey length combination\newline
-%$<$biomass$>$ is the biomass consumed for that timestep/area/predator length/prey length combination\newline
-%$<$mortality$>$ is the effective annual mortality induced in the prey by the predation for that timestep/area/predator length/prey length combination
-
-%\section{PredPreyStdAgePrinter}\label{sec:predpreystdageprinter}
-%The printer type to output detailed information about a predator-prey combination, with both the predator and prey given a age based distribution, is called ''PredPreyStdAgePrinter''.  This printer type is defined by specifying the predator name, prey name and timesteps of interest.  The file format for this component is given below:
-
-%{\small\begin{verbatim}
-%[component]
-%type                 predpreystdageprinter
-%predator             <name of the predator>
-%prey                 <name of the prey>
-%printfile            <name for the output file to be created>
-%precision            <precision to be used in the output file>
-%yearsandsteps        <ActionAtTime to determine when to print>
-%\end{verbatim}}
-
-%The optional $<$precision$>$ value is used to specify the number of digits to be used when printing the information to the specified output file, overriding the default settings for this printer type.
-
-%\bigskip
-%The output that is generated from this printer type is a file containing the following information for the predator specified on the $<$predator$>$ line, consuming the prey specified on the $<$prey$>$ line:
-
-%{\small\begin{verbatim}
-%year-step-area-pred-prey-number-biomass-mortality
-%\end{verbatim}}
-
-%where:\newline
-%$<$pred$>$ is the predator age group\newline
-%$<$prey$>$ is the prey age group\newline
-%$<$number$>$ is the number consumed for that timestep/area/predator age/prey age combination\newline
-%$<$biomass$>$ is the biomass consumed for that timestep/area/predator age/prey age combination\newline
-%$<$mortality$>$ is the effective annual mortality induced in the prey by the predation for that timestep/area/predator age/prey age combination
-
 \section{LikelihoodPrinter}\label{sec:likelihoodprinter}
 The printer type to output detailed information about a likelihood component is called ''LikelihoodPrinter''.  This printer type is defined by specifying the likelihood component and timesteps of interest.  The file format for this component is given below:
 
@@ -3479,7 +3540,6 @@ The printer type to output detailed information about a likelihood component is 
 type                 likelihoodprinter
 likelihood           <name of the likelihood component>
 printfile            <name for the output file to be created>
-yearsandsteps        <ActionAtTime to determine when to print>
 \end{verbatim}}
 
 The output that is generated from this printer type is a file containing the internal model information for the likelihood component specified on the $<$likelihood$>$ line, in the same format as the data in the input file for that component, allowing the user to easily compare the modelled data to the input data.  The exact format of this output file will vary according to the likelihood component chosen.  Some examples of output are:
@@ -3574,7 +3634,7 @@ To specify the Hooke \& Jeeves algorithm, the optimisation file should start wit
 [hooke]
 hookeiter  1000  ; number of hooke & jeeves iterations
 hookeeps   1e-04 ; minimum epsilon, hooke & jeeves halt criteria
-rho        0.5   ; value for the resizing multiplier
+rho        0.5   ; step length adjustment factor
 lambda     0     ; initial value for the step length
 \end{verbatim}}
 
@@ -3694,7 +3754,7 @@ $<$ U $>$ is the value of the ''uratio'' parameter\newline
 $<$ L $>$ is the value of the ''lratio'' parameter
 
 \subsubsection{check}
-This is the number of temperature loops that the Simulated Annealing algorithm will check to confirm that the current best point that has been found is a stable minimum, and so it can be accepted as a solution.
+This is the number of temperature loops that the Simulated Annealing algorithm will check to confirm that the current best point that has been found is a stable minimum, so that it can be accepted as a solution.
 
 \section{BFGS}\label{sec:bfgs}
 \subsection{Overview}\label{subsec:bfgsover}
@@ -3707,23 +3767,24 @@ From an initial starting point, the gradient of the function is calculated and t
 For a point at a stable minimum, the magnitude of the gradient vector will be zero, since there is no direction that the algorithm can move in to find a better local point.  However, finding such a point using an iterative process can take an infinite number of steps, so the algorithm exits when the magnitude of the gradient vector is less than a small number.  The current point is then accepted as being the 'solution'.
 
 \bigskip
-The ''Armijo'' linesearch calculates the stepsize that is to be used to move to a point that is ''sufficiently better'', in the direction given by the gradient, to be $\beta^n$, where n is the first integer that satisfies the Armijo rule given by inequality~\ref{eq:armijo} below:
+The ''Armijo'' linesearch calculates the stepsize that is to be used to move to a point that is ''sufficiently better'', along the search direction vector calculated from the gradient, to be $\beta^n$, where n is the first integer that satisfies the Armijo rule given by inequality~\ref{eq:armijo} below:
 
 \begin{equation}\label{eq:armijo}
-f(x) - f(x + \beta^{n}) \geq - \sigma \beta^{n} \nabla f(x) ^{T}
+f(x) - f(x + \beta^{n}d) \geq - \sigma \beta^{n}d \nabla f(x) ^{T}
 \end{equation}
 
 where:\newline
-$<\nabla f(x)>$ is the gradient of the function at the current point
+$<\nabla f(x)>$ is the gradient of the function at the current point\newline
+$<$ d $>$ is the search direction vector
 
 \bigskip
-In comparison to the other optimising algorithms that are currently implemented in Gadget, BFGS performs a local search, and so it doesn't cover the wide search area that the Simulated Annealing algorithm can use to look for an optimum.  BFGS will usually take more computer time to find an optimum than the Hooke \& Jeeves algorithm, since numerically calculating the gradient of the function is computationally very intensive.  However, the optimum found by the BFGS algorithm will usually be better than that found by the Hooke \& Jeeves algorithm, since a gradient search method is more accurate than a stepwise search method.
+In comparison to the other optimising algorithms that are currently implemented in Gadget, BFGS performs a local search, and so it doesn't cover the wide search area that the Simulated Annealing algorithm can use to look for an optimum.  BFGS will usually take more computer time to find an optimum than the Hooke \& Jeeves algorithm, since numerically calculating the gradient of the function is computationally very intensive.  However, the optimum found by the BFGS algorithm will usually be better than that found by the Hooke \& Jeeves algorithm, since a gradient search method is usually more accurate than a stepwise search method.
 
 \bigskip
-The BFGS algorithm used in Gadget is derived from that presented by Dimitri P Bertsekas, ''Nonlinear Programming'' ($2^{nd}$ edition, pp22-61) published by Athena Scientific.
+The BFGS algorithm used in Gadget is derived from that presented by Dimitri P Bertsekas, ''Nonlinear Programming'' ($2^{nd}$ edition, pp22-61) published by Athena Scientific.  The forward difference gradient algorithm used to calculate the gradient is derived from that presented by Dennis and Schnabel, ''Numerical Methods for Unconstrained Optimisation and Nonlinear Equations'' (''Classics'' edition, published by SIAM).
 
 \subsection{File Format}\label{subsec:bfgsfile}
-To specify the BFGS algorithm, the optimisation file should start with the keyword ''[bfgs]'', followed by (up to) 4 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, are shown below:
+To specify the BFGS algorithm, the optimisation file should start with the keyword ''[bfgs]'', followed by (up to) 7 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, are shown below:
 
 {\small\begin{verbatim}
 [bfgs]
@@ -3731,6 +3792,9 @@ bfgsiter   10000 ; number of bfgs iterations
 bfgseps    0.01  ; minimum epsilon, bfgs halt criteria
 sigma      0.01  ; armijo convergence criteria
 beta       0.3   ; armijo adjustment factor
+gradacc    1e-06 ; initial value for gradient accuracy
+gradstep   0.5   ; gradient accuracy adjustment factor
+gradeps    1e-10 ; minimum value for gradient accuracy
 \end{verbatim}}
 
 \subsection{Parameters}\label{subsec:bfgspar}
@@ -3741,14 +3805,25 @@ This is the maximum number of Gadget model runs that the BFGS algorithm will use
 This is the criteria for halting the BFGS algorithm at a minimum, and accepting the current point as the 'solution'.  The algorithm has ''converged'' if the magnitude of the gradient vector is less than bfgseps.  Lower values of bfgseps will give a better estimate of the minimum, at the cost of a considerably increased running time.  At the true minimum, the magnitude of the gradient vector will be zero, since there would be no direction for the algorithm to move to, but this point could take an infinite number of iterations to find.
 
 \subsubsection{sigma}
-This is the criteria for stopping the Armijo linesearch at a point that is ''sufficiently better'', and recalculating the gradient of the function at this new point.  Lower values of sigma will increase the size of the acceptance region of the Armijo linesearch, which will mean that the linesearch will stop earlier, leading to larger steps by the BFGS algorithm.  Conversely, higher values of sigma will decrease the size of the acceptance region, which will mean that the BFGS algorithm will take smaller steps.  The value of sigma must be between 0 and 1, and should be close to zero.
+This is the criteria for stopping the Armijo linesearch at a point that is ''sufficiently better'', and recalculating the gradient of the function at this new point.  Lower values of sigma will increase the size of the acceptance region of the Armijo linesearch (by relaxing the condition for the inequality, see equation~\ref{eq:armijo} above), which will mean that the linesearch will stop earlier, leading to larger steps by the BFGS algorithm.  Conversely, higher values of sigma will decrease the size of the acceptance region, which will mean that the BFGS algorithm will take smaller steps.  The value of sigma must be between 0 and 1, and should be close to zero.
 
 \subsubsection{beta}
-This is the adjustment factor for the Armijo linesearch, used to calculate the size of the step taken by the linesearch to find the next point.  The value of beta must be between 0 and 1.
+This is the adjustment factor for the Armijo linesearch, used to calculate the size of the step taken by the linesearch to find the next point.  Lower values of beta will mean that the size of the step that the algorithm tries to take in the direction of the gradient vector is smaller, but the step is more likely to be in the acceptance region.  Conversely, higher values of beta will result in larger steps being tried, but these steps are more likely to be rejected since they may be outside the acceptance region.  The value of beta must be between 0 and 1.
 
 %\subsubsection{step}
-%\subsubsection{gradacc}
-%\subsubsection{gradstep}
+
+\subsubsection{gradacc, gradstep and gradeps}
+These parameters control the accuracy that is used for the gradient calculations.  The gradient of the function is calculated numerically by Gadget using a forward difference algorithm, as shown in equation~\ref{eq:grad} below:
+
+\begin{equation}\label{eq:grad}
+\nabla f(x) \approx \frac{f(x + \delta x) - f(x)} {\delta x}
+\end{equation}
+
+where:\newline
+$<\delta>$ is the value of the ''gradacc'' parameter
+
+\bigskip
+When the BFGS algorithm is reset (that is, if the Armijo linesearch fails to find a better point) the gradient accuracy parameter is made smaller to increase the level of accuracy that is used in the gradient calculations.  This is done by multiplying the gradacc parameter by the gradstep parameter, which is a simple reduction factor (and as such must be between 0 and 1).  To prevent the gradacc parameter getting too small, the BFGS algorithm will stop once the value of gradacc is less that the value of gradeps.  Both gradacc and gradeps must be between 0 and 1, with gradeps smaller than gradacc, and the gradient calculations are more accurate when the gradacc parameter is very small.
 
 \section{Combining Optimisation Algorithms}\label{sec:combine}
 \subsection{Overview}\label{subsec:combineover}
@@ -3776,13 +3851,16 @@ check      4     ; number of temperature loops to check
 [hooke]
 hookeiter  1000  ; number of hooke & jeeves iterations
 hookeeps   1e-04 ; minimum epsilon, hooke & jeeves halt criteria
-rho        0.5   ; value for the resizing multiplier
+rho        0.5   ; step length adjustment factor
 lambda     0     ; initial value for the step length
 [bfgs]
 bfgsiter   10000 ; number of bfgs iterations
 bfgseps    0.01  ; minimum epsilon, bfgs halt criteria
 sigma      0.01  ; armijo convergence criteria
 beta       0.3   ; armijo adjustment factor
+gradacc    1e-06 ; initial value for gradient accuracy
+gradstep   0.5   ; gradient accuracy adjustment factor
+gradeps    1e-10 ; minimum value for gradient accuracy
 \end{verbatim}}
 
 It should be noted that the optimisation algorithms will be performed in the order that they are specified in the input file, so for this example the order will be: first Simulated Annealing, second Hooke \& Jeeves and finally BFGS.
@@ -3879,9 +3957,11 @@ Anon. 2003. Development of Structurally Detailed Statistically Testable Models o
 
 Bertsekas, D.P. 1999. Nonlinear Programming. Athena Scientific $2^{nd}$ edition, pp22-61.\newline
 
-Bogstad, B., Hiis Hauge, K., and Ulltang, {\O}. 1997. MULTSPEC - A Multi-Species Model for Fish and Marine Mammals in the Barents Sea. Journal of Northwest Atlantic Fisheries Science. vol 22: pp317-341.\newline
+Bogstad, B., Hiis Hauge, K., and Ulltang, {\O}. 1997. MULTSPEC - A Multispecies Model for Fish and Marine Mammals in the Barents Sea. Journal of Northwest Atlantic Fisheries Science. vol 22: pp317-341.\newline
 
-%Bogstad, B., Tjelmeland, S., Tjelta, T. and Ulltang, {\O}. 1992. Description of a Multispecies Model for the Barents Sea (MULTSPEC) and a Study of its Sensitivity to Assumptions on Food Preferences and Stock Sizes of Minke Whales and Harp Seals. Institute of Marine Research Technical Report SC/44/O 9, Institute of Marine Research, Bergen, Norway.\newline
+Bogstad, B., Tjelmeland, S., Tjelta, T. and Ulltang, {\O}. 1992. Description of a Multispecies Model for the Barents Sea (MULTSPEC) and a Study of its Sensitivity to Assumptions on Food Preferences and Stock Sizes of Minke Whales and Harp Seals. Institute of Marine Research Technical Report SC/44/O 9, Institute of Marine Research, Bergen, Norway.\newline
+
+Dennis, J.E., and Schnabel, R.B. 1996. Numerical Methods for Unconstrained Optimisation and Nonlinear Equations.  SIAM ''Classics'' edition.\newline
 
 Corana, A., Marchesi, M., Martini, C., and Ridella, S. 1987, Minimising Multimodal Functions of Continuous Variables with the 'Simulated Annealing' Algorithm. ACM Transactions on Mathematical Software vol 13: pp262-280.\newline
 
@@ -3953,6 +4033,15 @@ A version of this user guide was printed and published as a Marine Research Inst
 \section{Gadget version 2.1.04}\label{sec:v2104}
 \begin{itemize}
 \item removed the need to specify the areas, predators or timesteps when calculating the score for the Understocking likelihood component (see section~\ref{sec:understocking})
+\end{itemize}
+
+\section{Gadget version 2.1.05}\label{sec:v2105}
+\begin{itemize}
+\item added a fleet that implements a simple harvest control rule (see section~\ref{sec:quotafleet})
+\item added a survey index likelihood component that can use an index based on acoustic data (see section~\ref{subsec:sibyacoustic})
+\item added a survey index likelihood component that can use an index based on effort data (see section~\ref{subsec:sibyeffort})
+\item removed the need to specify the timesteps for the LikelihoodPrinter printer class, since the output is generated on the timesteps that the likelihood components have data for (see section~\ref{sec:likelihoodprinter})
+\item changed the ''half feeding value'' format to specify the biomass of the prey, rather than the density of the prey (see section~\ref{sec:consumption})
 \end{itemize}
 
 \end{document}
