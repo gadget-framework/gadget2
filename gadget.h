@@ -78,7 +78,7 @@ const int largewidth = 12;
 const int fullwidth = 18;
 
 /* Update the following line each time upgrades are implemented */
-#define GADGETVERSION "2.1.05"
+#define GADGETVERSION "2.1.06-BETA"
 
 #endif
 
@@ -169,9 +169,9 @@ To maintain version control of the source files, a CVS repository has been set u
 
 Gadget is a program that has been developed on a Unix computing platform, and is regularly compiled and run on machines running versions of Linux, Solaris and Cygwin (a Unix emulator for Microsoft Windows machines, see http://www.cygwin.com for more information).  By regularly compiling and running Gadget on a variety of computing platforms, it is hoped that the source code is compatible with as many computing platforms as possible.  The list of computing platforms, and C++ compilers, that Gadget is regularly tested on is:
 
-  \li Linux (Fedora Core 4), compiled using \c g++ versions 3.2.3, 4.0.2, 4.1.1 and 4.2.0 (20060610 experimental)
+  \li Linux (Fedora Core 4), compiled using \c g++ versions 3.2.3, 4.0.2, 4.1.1 and 4.2.0 (20061107 prerelease)
   \li 64bit Linux (Fedora Core 4), compiled using \c g++ version 4.0.2
   \li Solaris (SunOS 5.9), compiled using  \c g++ version 3.4.2
-  \li Cygwin (1.5.19-1), compiled using  \c g++ version 3.4.4-1
+  \li Cygwin (1.5.22-1), compiled using  \c g++ version 3.4.4-3
 
 */
