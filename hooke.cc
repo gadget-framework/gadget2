@@ -376,7 +376,8 @@ void OptInfoHooke::OptimiseLikelihood() {
       handle.logMessage(LOGINFO, "The optimisation stopped because an optimum was found for this run");
 
       converge = 1;
-      handle.logMessage(LOGINFO, "\nHooke & Jeeves finished with a likelihood score of", bestf);
+      score = bestf;
+      handle.logMessage(LOGINFO, "\nHooke & Jeeves finished with a likelihood score of", score);
       EcoSystem->storeVariables(bestf, bestx);
       return;
     }

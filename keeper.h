@@ -194,8 +194,14 @@ public:
   void checkBounds(const LikelihoodPtrVector& likevec) const;
   /**
    * \brief This function will return the flag used to denote whether the bounds of the parameters have been specified or not
+   * \return flag to denote whether the bounds have been given or not
    */
   int boundsGiven() const { return boundsgiven; };
+  /**
+   * \brief This function will return the best likelihood score found so far by the optimisation process
+   * \return bestlikelihood
+   */
+  double getBestLikelihoodScore() const { return bestlikelihood; };
 protected:
   /**
    * \brief This is the AddressKeeperMatrix used to store information about the value and name of the parameters

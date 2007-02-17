@@ -158,7 +158,7 @@ void Ecosystem::writeOptValues() {
   keeper->writeBestValues();
   handle.logMessage(LOGINFO, "\nThe scores from each likelihood component are");
   handle.logMessage(LOGINFO, tmpvec);
-  handle.logMessage(LOGINFO, "\nThe overall likelihood score is", likelihood);
+  handle.logMessage(LOGINFO, "\nThe overall likelihood score is", keeper->getBestLikelihoodScore());
 }
 
 void Ecosystem::writeInitialInformation(const char* const filename) {

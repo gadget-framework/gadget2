@@ -64,14 +64,19 @@ void Ecosystem::updateAgesOneArea(int area) {
 
 void Ecosystem::SimulateOneTimestep() {
   int i, j;
+
+  // migration between areas
+  for (j = 0; j < basevec.Size(); j++)
+    basevec[j]->Migrate(TimeInfo);
+
+  // predation can be split into substeps
   for (i = 0; i < TimeInfo->numSubSteps(); i++) {
-    for (j = 0; j < basevec.Size(); j++)
-      basevec[j]->Migrate(TimeInfo);
     for (j = 0; j < Area->numAreas(); j++)
       this->SimulateOneAreaOneTimeSubstep(j);
     TimeInfo->IncrementSubstep();
   }
 
+  // maturation, spawning, recruits etc
   for (j = 0; j < Area->numAreas(); j++)
     this->updatePopulationOneArea(j);
 }
@@ -93,7 +98,7 @@ void Ecosystem::Simulate(int print) {
     for (j = 0; j < basevec.Size(); j++)
       basevec[j]->Reset(TimeInfo);
 
-    //Add in any new tagging experiments
+    // add in any new tagging experiments
     tagvec.updateTags(TimeInfo);
 
     if (print)
@@ -127,14 +132,14 @@ void Ecosystem::Simulate(int print) {
     }
 #endif
 
-    //Remove any expired tagging experiments
+    // remove any expired tagging experiments
     tagvec.deleteTags(TimeInfo);
 
-    //Increase the time in the simulation
+    // increase the time in the simulation
     TimeInfo->IncrementTime();
   }
 
-  //Remove all the tagging experiments - they must have expired now
+  // remove all the tagging experiments - they must have expired now
   tagvec.deleteAllTags();
 
   likelihood = 0.0;
