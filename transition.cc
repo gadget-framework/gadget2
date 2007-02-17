@@ -58,6 +58,11 @@ Transition::~Transition() {
 void Transition::setStock(StockPtrVector& stockvec) {
   int i, j, index;
 
+  for (i = 0; i < transitionStockNames.Size(); i++)
+    for (j = 0; j < transitionStockNames.Size(); j++)
+      if ((strcasecmp(transitionStockNames[i], transitionStockNames[j]) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in transition - repeated stock", transitionStockNames[i]);
+
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < transitionStockNames.Size(); j++)
       if (strcasecmp(stockvec[i]->getName(), transitionStockNames[j]) == 0)

@@ -111,6 +111,11 @@ StrayData::~StrayData() {
 void StrayData::setStock(StockPtrVector& stockvec) {
   int i, j, index;
 
+  for (i = 0; i < strayStockNames.Size(); i++)
+    for (j = 0; j < strayStockNames.Size(); j++)
+      if ((strcasecmp(strayStockNames[i], strayStockNames[j]) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in straying data - repeated stock", strayStockNames[i]);
+
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < strayStockNames.Size(); j++)
       if (strcasecmp(stockvec[i]->getName(), strayStockNames[j]) == 0)

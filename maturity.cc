@@ -42,6 +42,11 @@ Maturity::~Maturity() {
 void Maturity::setStock(StockPtrVector& stockvec) {
   int i, j, index;
 
+  for (i = 0; i < matureStockNames.Size(); i++)
+    for (j = 0; j < matureStockNames.Size(); j++)
+      if ((strcasecmp(matureStockNames[i], matureStockNames[j]) == 0) && (i != j))
+        handle.logMessage(LOGFAIL, "Error in maturity - repeated stock", matureStockNames[i]);
+
   for (i = 0; i < stockvec.Size(); i++)
     for (j = 0; j < matureStockNames.Size(); j++)
       if (strcasecmp(stockvec[i]->getName(), matureStockNames[j]) == 0)
