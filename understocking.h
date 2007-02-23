@@ -6,6 +6,7 @@
 #include "commentstream.h"
 #include "intmatrix.h"
 #include "doublematrix.h"
+#include "predatorptrvector.h"
 #include "preyptrvector.h"
 
 /**
@@ -29,7 +30,7 @@ public:
   /**
    * \brief This is the default UnderStocking destructor
    */
-  virtual ~UnderStocking() {};
+  virtual ~UnderStocking();
   /**
    * \brief This function will calculate the likelihood score for the UnderStocking component
    * \param TimeInfo is the TimeClass for the current model
@@ -51,12 +52,17 @@ public:
    */
   virtual void Print(ofstream& outfile) const;
   /**
-   * \brief This will select the preys required to calculate the UnderStocking likelihood score
-   * \param preyvec is the PreyPtrVector of all the available predators
+   * \brief This will select the predators and preys required to calculate the UnderStocking likelihood score
+   * \param predvec is the PredatorPtrVector of all the available predators
+   * \param preyvec is the PreyPtrVector of all the available preys
    * \param Area is the AreaClass for the current model
    */
-  void setPreys(PreyPtrVector& preyvec, const AreaClass* const Area);
+  void setPredatorsAndPreys(PredatorPtrVector& predvec, PreyPtrVector& preyvec, const AreaClass* const Area);
 private:
+  /**
+   * \brief This is the PredatorPtrVector of the predators that will be checked for understocking
+   */
+  PredatorPtrVector predators;
   /**
    * \brief This is the PreyPtrVector of the preys that will be checked for understocking
    */
@@ -70,6 +76,10 @@ private:
    */
   double powercoeff;
   /**
+   * \brief This is the flag used to denote whether the likelihood score is to be based on the predation by all the predators or not
+   */
+  int allpredators;
+  /**
    * \brief This is the IntVector used to store information about the years when the likelihood score was calculated to be non-zero
    */
   IntVector Years;
@@ -81,6 +91,10 @@ private:
    * \brief This is the DoubleVector used to store the calculated non-zero likelihood score
    */
   DoubleVector likelihoodValues;
+  /**
+   * \brief This is the CharPtrVector used to store the names of the predators that will be checked for understocking
+   */
+  CharPtrVector prednames;
 };
 
 #endif

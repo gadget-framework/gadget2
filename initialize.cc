@@ -119,7 +119,7 @@ void Ecosystem::Initialise() {
         ((SurveyIndices*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case UNDERSTOCKINGLIKELIHOOD:
-        ((UnderStocking*)likevec[i])->setPreys(preyvec, Area);
+        ((UnderStocking*)likevec[i])->setPredatorsAndPreys(predvec, preyvec, Area);
         count++;
         break;
       case CATCHDISTRIBUTIONLIKELIHOOD:
