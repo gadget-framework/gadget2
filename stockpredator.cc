@@ -127,15 +127,18 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
 
   //check that the various parameters that can be estimated are sensible
   if ((handle.getLogLevel() >= LOGWARN) && (TimeInfo->getTime() == 1)) {
-    int i;
+    int i, check;
     if (functionnumber == 1)
       for (i = 0; i < consParam.Size(); i++)
         if (consParam[i] < 0.0)
           handle.logMessage(LOGWARN, "Warning in stockpredator - negative consumption parameter", consParam[i]);
+    check = 0;
     if (preference.Size() > 1)
       for (i = 1; i < preference.Size(); i++)
         if (!(isEqual(preference[0], preference[i])))
-          handle.logMessage(LOGWARN, "Warning in stockpredator - preference parameters differ");
+          check++;
+    if (check != 0)
+      handle.logMessage(LOGWARN, "Warning in stockpredator - preference parameters differ for", this->getName());
   }
 }
 
