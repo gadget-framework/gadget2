@@ -15,7 +15,7 @@ LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : 
   minlen = MinL;
   maxlen = MaxL;
   double tmp = (maxlen - minlen) / Dl;
-  size = int(tmp + verysmall);
+  size = int(tmp + rathersmall);
   if (size == 0) {
     error = 1;
     return;
