@@ -5,8 +5,8 @@
 extern ErrorHandler handle;
 
 OptInfoSimann::OptInfoSimann()
-  : OptInfo(), rt(0.85), simanneps(1e-4), ns(5), nt(2), t(100.0),
-    cs(2.0), vminit(1.0), simanniter(2000), uratio(0.7), lratio(0.3), tempcheck(4) {
+  : OptInfo(), rt(0.85), simanneps(1e-4), ns(5), nt(2), t(100.0), cs(2.0),
+    vminit(1.0), simanniter(2000), uratio(0.7), lratio(0.3), tempcheck(4), scale(0) {
   type = OPTSIMANN;
   handle.logMessage(LOGMESSAGE, "Initialising Simulated Annealing optimisation algorithm");
 }
@@ -67,6 +67,10 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
       infile >> lratio;
       count++;
 
+    } else if (strcasecmp(text, "scale") == 0) {
+      infile >> scale;
+      count++;
+
     } else {
       handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);
       infile >> text;  //read and ignore the next entry
@@ -117,6 +121,10 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
   if (simanneps < rathersmall) {
     handle.logMessage(LOGINFO, "Warning in optinfofile - value of simanneps outside bounds", simanneps);
     simanneps = 1e-4;
+  }
+  if (scale != 0 && scale != 1) {
+    handle.logMessage(LOGINFO, "Warning in optinfofile - value of scale outside bounds", scale);
+    scale = 0;
   }
 }
 

@@ -186,18 +186,19 @@ void OptInfoSimann::OptimiseLikelihood() {
   int nacc = 0;         //The number of accepted function evaluations
   int nrej = 0;         //The number of rejected function evaluations
   int naccmet = 0;      //The number of metropolis accepted function evaluations
-  int quit = 0;         //Used to check the exit criteria
 
-  double p, pp, ratio, nsdiv;
+  double tmp, p, pp, ratio, nsdiv;
   double fopt, funcval, trialf;
-  int    a, i, j, k, l, offset;
+  int    a, i, j, k, l, offset, quit;
   int    rchange, rcheck, rnumber;  //Used to randomise the order of the parameters
 
   handle.logMessage(LOGINFO, "\nStarting Simulated Annealing optimisation algorithm\n");
   int nvars = EcoSystem->numOptVariables();
   DoubleVector x(nvars);
+  DoubleVector init(nvars);
   DoubleVector trialx(nvars, 0.0);
   DoubleVector bestx(nvars);
+  DoubleVector scalex(nvars);
   DoubleVector lowerb(nvars);
   DoubleVector upperb(nvars);
   DoubleVector fstar(tempcheck);
@@ -206,13 +207,30 @@ void OptInfoSimann::OptimiseLikelihood() {
   IntVector nacp(nvars, 0);
 
   EcoSystem->resetVariables();  //JMB need to reset variables in case they have been scaled
+  if (scale)
+    EcoSystem->scaleVariables();
   EcoSystem->getOptScaledValues(x);
   EcoSystem->getOptLowerBounds(lowerb);
   EcoSystem->getOptUpperBounds(upperb);
+  EcoSystem->getOptInitialValues(init);
 
   for (i = 0; i < nvars; i++) {
     bestx[i] = x[i];
     param[i] = i;
+  }
+
+  if (scale) {
+    for (i = 0; i < nvars; i++) {
+      scalex[i] = x[i];
+      // Scaling the bounds, because the parameters are scaled
+      lowerb[i] = lowerb[i] / init[i];
+      upperb[i] = upperb[i] / init[i];
+      if (lowerb[i] > upperb[i]) {
+        tmp = lowerb[i];
+        lowerb[i] = upperb[i];
+        upperb[i] = tmp;
+      }
+    }
   }
 
   //funcval is the function value at x
@@ -335,9 +353,16 @@ void OptInfoSimann::OptimiseLikelihood() {
             for (i = 0; i < nvars; i++)
               bestx[i] = trialx[i];
             fopt = trialf;
+
+            if (scale) {
+              for (i = 0; i < nvars; i++)
+                scalex[i] = bestx[i] * init[i];
+              EcoSystem->storeVariables(-fopt, scalex);
+            } else
+              EcoSystem->storeVariables(-fopt, bestx);
+
             handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
             handle.logMessage(LOGINFO, "The likelihood score is", -fopt, "at the point");
-            EcoSystem->storeVariables(-fopt, bestx);
             EcoSystem->writeBestValues();
           }
         }

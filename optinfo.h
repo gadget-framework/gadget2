@@ -210,6 +210,10 @@ private:
    * \brief This is the number of temperature loops to check when testing for convergence
    */
   int tempcheck;
+  /**
+   * \brief This is the flag to denote whether the parameters should be scaled or not (default 0, not scale)
+   */
+  int scale;
 };
 
 /**
