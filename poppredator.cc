@@ -164,11 +164,11 @@ double PopPredator::getTotalOverConsumption(int area) const {
   return total;
 }
 
-const PopInfoVector& PopPredator::getNumberPriorToEating(int area, const char* preyname) const {
+const PopInfoVector& PopPredator::getConsumptionPopInfo(int area, const char* preyname) const {
   int prey;
   for (prey = 0; prey < this->numPreys(); prey++)
     if (strcasecmp(this->getPreyName(prey), preyname) == 0)
-      return this->getPrey(prey)->getNumberPriorToEating(area);
+      return this->getPrey(prey)->getConsumptionPopInfo(area);
 
   handle.logMessage(LOGFAIL, "Error in poppredator - failed to match prey", preyname);
   exit(EXIT_FAILURE);

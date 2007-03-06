@@ -63,7 +63,7 @@ void StockPreyAggregator::Sum() {
     for (area = 0; area < areas.Nrow(); area++) {
       for (j = 0; j < areas.Ncol(area); j++) {
         if (preys[i]->isPreyArea(areas[area][j])) {
-          alptr = &((StockPrey*)preys[i])->getALKPriorToEating(areas[area][j]);
+          alptr = &((StockPrey*)preys[i])->getConsumptionALK(areas[area][j]);
           for (age = 0; age < ages.Nrow(); age++) {
             for (k = 0; k < ages.Ncol(age); k++) {
               if ((alptr->minAge() <= ages[age][k]) && (ages[age][k] <= alptr->maxAge()))

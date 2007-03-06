@@ -29,8 +29,8 @@ public:
   void updateMatureStock(const TimeClass* const TimeInfo);
   void updateTransitionStock(const TimeClass* const TimeInfo);
   void updateStrayStock(const TimeClass* const TimeInfo);
-  void storeNumberPriorToEating(int area, const char* stockname);
-  const AgeBandMatrix& getNumberPriorToEating(int area, const char* stockname);
+  void storeConsumptionALK(int area, const char* stockname);
+  const AgeBandMatrix& getConsumptionALK(int area, const char* stockname);
   /**
    * \brief This function will print the model tagged population
    * \param outfile is the ofstream that all the model information gets sent to

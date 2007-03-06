@@ -164,7 +164,7 @@ public:
    * \param area is the area that the consumption is being calculated on
    * \return preynumber, a PopInfoVector containing information about the prey population
    */
-  const PopInfoVector& getNumberPriorToEating(int area) const { return preynumber[this->areaNum(area)]; };
+  const PopInfoVector& getConsumptionPopInfo(int area) const { return preynumber[this->areaNum(area)]; };
   /**
    * \brief This will return the energy content of the prey
    * \return energy

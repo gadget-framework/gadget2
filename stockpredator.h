@@ -88,7 +88,7 @@ public:
    * \param area is the area that the consumption is being calculated on
    * \return alkeys, a AgeBandMatrix containing the population of the predator
    */
-  const AgeBandMatrix& getAgeLengthKeys(int area) const { return predAlkeys[this->areaNum(area)]; };
+  const AgeBandMatrix& getCurrentALK(int area) const { return predAlkeys[this->areaNum(area)]; };
 protected:
   /**
    * \brief This is the identifier of the function to be used to calculate the maximum consumption

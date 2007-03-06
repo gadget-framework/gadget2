@@ -47,7 +47,7 @@ public:
    * \param preyname is the name of the prey
    * \return PopInfoVector containing the number of prey before the consumption takes place
    */
-  virtual const PopInfoVector& getNumberPriorToEating(int area, const char* preyname) const;
+  virtual const PopInfoVector& getConsumptionPopInfo(int area, const char* preyname) const;
   /**
    * \brief This function will return the population number of the predator on a given area
    * \param area is the area that the consumption is being calculated on

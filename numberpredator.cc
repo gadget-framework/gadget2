@@ -113,7 +113,7 @@ void NumberPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
     if (this->getPrey(prey)->isPreyArea(area))
       for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
         (*consumption[inarea][prey])[predl][preyl] += ((*cons[inarea][prey])[predl][preyl] *
-            this->getPrey(prey)->getNumberPriorToEating(inarea)[preyl].W);
+            this->getPrey(prey)->getConsumptionPopInfo(inarea)[preyl].W);
 }
 
 void NumberPredator::Print(ofstream& outfile) const {

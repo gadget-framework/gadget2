@@ -47,14 +47,6 @@ OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
 #OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
 ##########################################################################
-# 5. Windows using services for unix
-#CXX = g++
-#LIBDIRS = -L. -L/usr/local/lib
-#LIBRARIES = -lm
-#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
-#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
-#CPPFLAGS = -I/usr/local/include #-I/dev/fs/C/x/SDK/opt/gcc.3.3/include/c++/3.3/backward
-##########################################################################
 
 GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood.o \
     area.o time.o keeper.o maininfo.o printinfo.o runid.o stochasticdata.o \
@@ -69,7 +61,7 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     initialcond.o migration.o naturalm.o lengthprey.o prey.o stockprey.o \
     effortpredator.o lengthpredator.o linearpredator.o numberpredator.o \
     quotapredator.o predator.o poppredator.o stockpredator.o totalpredator.o \
-    recaggregator.o stockpreyaggregator.o predatorpreyaggregator.o \
+    recaggregator.o siaggregator.o predatorpreyaggregator.o stockpreyaggregator.o \
     predatoraggregator.o predatoroveraggregator.o preyoveraggregator.o \
     fleetpreyaggregator.o stockaggregator.o fleeteffortaggregator.o stockstdprinter.o \
     predatorprinter.o predatoroverprinter.o predatorpreyprinter.o preyoverprinter.o \

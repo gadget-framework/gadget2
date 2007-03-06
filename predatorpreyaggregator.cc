@@ -76,7 +76,7 @@ void PredatorPreyAggregator::Sum(const TimeClass* const TimeInfo) {
             if ((preys[g]->isPreyArea(areas[i][j])) && (predators[f]->isInArea(areas[i][j]))) {
               for (k = 0; k < predators[f]->numPreys(); k++) {
                 if (strcasecmp(preys[g]->getName(), predators[f]->getPrey(k)->getName()) == 0) {
-                  alptr = &((StockPrey*)preys[g])->getALKPriorToEating(areas[i][j]);
+                  alptr = &((StockPrey*)preys[g])->getConsumptionALK(areas[i][j]);
                   for (h = 0; h < predators[f]->getLengthGroupDiv()->numLengthGroups(); h++) {
                     suitptr = &predators[f]->getSuitability(k)[h];
                     ratio = predators[f]->getConsumptionRatio(areas[i][j], k, h);
@@ -102,7 +102,7 @@ void PredatorPreyAggregator::Sum(const TimeClass* const TimeInfo) {
     for (i = 0; i < areas.Nrow(); i++) {
       for (j = 0; j < areas.Ncol(i); j++) {
         if (preys[g]->isPreyArea(areas[i][j])) {
-          alptr = &((StockPrey*)preys[g])->getALKPriorToEating(areas[i][j]);
+          alptr = &((StockPrey*)preys[g])->getConsumptionALK(areas[i][j]);
           for (l = 0; l < ages.Nrow(); l++) {
             for (m = 0; m < ages.Ncol(l); m++) {
               if ((alptr->minAge() <= ages[l][m]) && (ages[l][m] <= alptr->maxAge())) {

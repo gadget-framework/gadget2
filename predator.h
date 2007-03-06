@@ -117,7 +117,7 @@ public:
    * \param preyname is the name of the prey that is being consumed
    * \return 0 (will be overridden by the derived classes)
    */
-  virtual const PopInfoVector& getNumberPriorToEating(int area, const char* preyname) const = 0;
+  virtual const PopInfoVector& getConsumptionPopInfo(int area, const char* preyname) const = 0;
   /**
    * \brief This will return the length group information for the predator
    * \return 0 (will be overridden by the derived classes)

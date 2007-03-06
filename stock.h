@@ -184,11 +184,17 @@ public:
    */
   PopPredator* getPredator() const;
   /**
-   * \brief This will return the population of the stock on a given area
+   * \brief This will return the current population of the stock on a given area
    * \param area is the area identifier
    * \return alkeys, a AgeBandMatrix containing the population of the stock
    */
-  AgeBandMatrix& getAgeLengthKeys(int area) { return Alkeys[this->areaNum(area)]; };
+  AgeBandMatrix& getCurrentALK(int area) { return Alkeys[this->areaNum(area)]; };
+  /**
+   * \brief This will return the population of the stock on a given area at the start of the current timestep
+   * \param area is the area identifier
+   * \return alkeys, a AgeBandMatrix containing the population of the stock
+   */
+  AgeBandMatrix& getConsumptionALK(int area);
   /**
    * \brief This will return the length group information for the stock
    * \return LgrpDiv

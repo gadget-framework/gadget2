@@ -9,7 +9,7 @@
 #include "commentstream.h"
 #include "actionattimes.h"
 #include "agebandmatrix.h"
-#include "stockaggregator.h"
+#include "siaggregator.h"
 #include "regressionline.h"
 #include "hasname.h"
 #include "gadget.h"

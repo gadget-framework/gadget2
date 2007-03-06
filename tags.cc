@@ -286,7 +286,7 @@ void Tags::Update(int timeid) {
   const AgeBandMatrix* stockPopInArea;
   const LengthGroupDivision* tmpLgrpDiv;
 
-  stockPopInArea = &(taggingstock->getAgeLengthKeys(tagarea));
+  stockPopInArea = &(taggingstock->getCurrentALK(tagarea));
   stockPopInArea->sumColumns(NumberInArea);
 
   //Now we have total number of stock per length in tagarea, N(., l) (NumberInArea) and
@@ -355,7 +355,7 @@ void Tags::Update(int timeid) {
   }
 
   for (i = 1; i < tagStocks.Size(); i++) {
-    stockPopInArea = &tagStocks[i]->getAgeLengthKeys(tagarea);
+    stockPopInArea = &tagStocks[i]->getCurrentALK(tagarea);
     stockareas = tagStocks[i]->getAreas();
     numareas = stockareas.Size();
     maxage = stockPopInArea->maxAge();
@@ -498,7 +498,7 @@ int Tags::areaIndex(const char* stockname, int area) {
   return -1;
 }
 
-void Tags::storeNumberPriorToEating(int area, const char* stockname) {
+void Tags::storeConsumptionALK(int area, const char* stockname) {
   int stockid, preyid, areaid;
   stockid = stockIndex(stockname);
   if (stockid < 0)
@@ -516,7 +516,7 @@ void Tags::storeNumberPriorToEating(int area, const char* stockname) {
   (*NumBeforeEating[preyid])[areaid].Add((*AgeLengthStock[stockid])[areaid], *CI[preyid]);
 }
 
-const AgeBandMatrix& Tags::getNumberPriorToEating(int area, const char* stockname) {
+const AgeBandMatrix& Tags::getConsumptionALK(int area, const char* stockname) {
   int stockid, preyid, areaid;
   stockid = stockIndex(stockname);
   if (stockid < 0)
@@ -544,7 +544,7 @@ void Tags::addToTagStock(int timeid) {
   PopInfoVector NumberInArea;
   NumberInArea.resizeBlank(LgrpDiv->numLengthGroups());
   const AgeBandMatrix* stockPopInArea;
-  stockPopInArea = &(taggingstock->getAgeLengthKeys(tagarea));
+  stockPopInArea = &(taggingstock->getCurrentALK(tagarea));
   stockPopInArea->sumColumns(NumberInArea);
 
   i = 0;

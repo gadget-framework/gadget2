@@ -47,9 +47,9 @@ public:
   virtual void Print(ofstream& outfile) const { aggregator->Print(outfile); };
 protected:
   /**
-   * \brief This is the StockAggregator used to collect information about the relevant stocks for the survey index data
+   * \brief This is the SIAggregator used to collect information about the relevant stocks for the survey index data
    */
-  StockAggregator* aggregator;
+  SIAggregator* aggregator;
 };
 
 #endif

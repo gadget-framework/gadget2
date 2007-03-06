@@ -1,4 +1,4 @@
-#include "stockaggregator.h"
+#include "siaggregator.h"
 #include "conversionindex.h"
 #include "stock.h"
 #include "mathfunc.h"
@@ -7,7 +7,7 @@
 
 extern ErrorHandler handle;
 
-StockAggregator::StockAggregator(const StockPtrVector& Stocks,
+SIAggregator::SIAggregator(const StockPtrVector& Stocks,
   const LengthGroupDivision* const LgrpDiv, const IntMatrix& Areas, const IntMatrix& Ages)
   : stocks(Stocks), areas(Areas), ages(Ages), alptr(0) {
 
@@ -15,7 +15,7 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
   for (i = 0; i < stocks.Size(); i++) {
     CI.resize(new ConversionIndex(stocks[i]->getLengthGroupDiv(), LgrpDiv));
     if (CI[i]->Error())
-      handle.logMessage(LOGFAIL, "Error in stockaggregator - error when checking length structure");
+      handle.logMessage(LOGFAIL, "Error in siaggregator - error when checking length structure");
   }
 
   //Resize total using dummy variables tmppop and popmatrix.
@@ -26,13 +26,13 @@ StockAggregator::StockAggregator(const StockPtrVector& Stocks,
   this->Reset();
 }
 
-StockAggregator::~StockAggregator() {
+SIAggregator::~SIAggregator() {
   int i;
   for (i = 0; i < CI.Size(); i++)
     delete CI[i];
 }
 
-void StockAggregator::Print(ofstream& outfile) const {
+void SIAggregator::Print(ofstream& outfile) const {
   int i, j;
   for (i = 0; i < total.Size(); i++) {
     outfile << "\tInternal areas";
@@ -44,13 +44,13 @@ void StockAggregator::Print(ofstream& outfile) const {
   outfile.flush();
 }
 
-void StockAggregator::Reset() {
+void SIAggregator::Reset() {
   int i;
   for (i = 0; i < total.Size(); i++)
     total[i].setToZero();
 }
 
-void StockAggregator::Sum() {
+void SIAggregator::Sum() {
   int area, age, i, j, k;
 
   this->Reset();
@@ -59,7 +59,7 @@ void StockAggregator::Sum() {
     for (area = 0; area < areas.Nrow(); area++) {
       for (j = 0; j < areas.Ncol(area); j++) {
         if (stocks[i]->isInArea(areas[area][j])) {
-          alptr = &stocks[i]->getCurrentALK(areas[area][j]);
+          alptr = &stocks[i]->getConsumptionALK(areas[area][j]);
           for (age = 0; age < ages.Nrow(); age++) {
             for (k = 0; k < ages.Ncol(age); k++) {
               if ((alptr->minAge() <= ages[age][k]) && (ages[age][k] <= alptr->maxAge()))

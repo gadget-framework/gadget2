@@ -84,7 +84,7 @@ void RecAggregator::Sum() {
               for (i = 0; i < predators[f]->numPreys(); i++) {
                 if (strcasecmp(preys[h]->getName(), predators[f]->getPrey(i)->getName()) == 0) {
                   suitptr = &predators[f]->getSuitability(i)[predl];
-                  alptr = &taggingExp->getNumberPriorToEating(areas[r][j], preys[h]->getName());
+                  alptr = &taggingExp->getConsumptionALK(areas[r][j], preys[h]->getName());
                   ratio = predators[f]->getConsumptionRatio(areas[r][j], i, predl);
                   for (g = 0; g < ages.Nrow(); g++) {
                     for (k = 0; k < ages.Ncol(g); k++) {

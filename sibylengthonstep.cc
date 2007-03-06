@@ -59,7 +59,7 @@ void SIByLengthOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector
       handle.logMessage(LOGWARN, "Warning in surveyindex - maximum length group greater than stock length");
   }
 
-  aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, Ages);
+  aggregator = new SIAggregator(Stocks, LgrpDiv, Areas, Ages);
 }
 
 void SIByLengthOnStep::Sum(const TimeClass* const TimeInfo) {

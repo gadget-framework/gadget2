@@ -37,7 +37,7 @@ void Stock::calcNumbers(int area, const TimeClass* const TimeInfo) {
     if (istagged) {
       int i;
       for (i = 0; i < allTags.Size(); i++)
-        allTags[i]->storeNumberPriorToEating(area, this->getName());
+        allTags[i]->storeConsumptionALK(area, this->getName());
     }
   }
   if (doeseat)

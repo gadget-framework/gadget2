@@ -50,7 +50,7 @@ public:
    * \param area is the area that the prey consumption is being calculated on
    * \return preyAlkeys, the population of the prey for the area before consumption
    */
-  const AgeBandMatrix& getALKPriorToEating(int area) const { return preyAlkeys[this->areaNum(area)]; };
+  AgeBandMatrix& getConsumptionALK(int area) { return preyAlkeys[this->areaNum(area)]; };
 protected:
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store the amount of the prey on each area

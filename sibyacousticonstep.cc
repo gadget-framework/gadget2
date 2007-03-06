@@ -47,7 +47,7 @@ void SIByAcousticOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVect
   for (i = 0; i < Ages.Ncol(); i++)
     Ages[0][i] = i + minage;
 
-  aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, Ages);
+  aggregator = new SIAggregator(Stocks, LgrpDiv, Areas, Ages);
 }
 
 void SIByAcousticOnStep::Sum(const TimeClass* const TimeInfo) {

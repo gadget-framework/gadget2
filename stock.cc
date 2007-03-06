@@ -484,3 +484,10 @@ const StockPtrVector& Stock::getStrayStocks() {
     handle.logMessage(LOGFAIL, "Error in stock - no straying stocks defined for", this->getName());
   return stray->getStrayStocks();
 }
+
+AgeBandMatrix& Stock::getConsumptionALK(int area) {
+//  if (!iseaten)
+//    handle.logMessage(LOGWARN, "Error in stock - no prey for", this->getName());
+//  return prey->getConsumptionALK(area);
+  return Alkeys[this->areaNum(area)];
+}

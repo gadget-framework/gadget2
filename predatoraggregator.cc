@@ -124,7 +124,7 @@ void PredatorAggregator::Sum() {
 
               if (usepredages) {
                 //need to convert from length groups to age groups
-                alk = &((StockPredator*)predators[g])->getAgeLengthKeys(areas[l][j]);
+                alk = &((StockPredator*)predators[g])->getCurrentALK(areas[l][j]);
 
                 //first calculate how many predators there are in each age and length group
                 agesum.Reset();
@@ -191,7 +191,7 @@ void PredatorAggregator::NumberSum() {
           for (j = 0; j < areas.Ncol(l); j++) {
             if (predators[g]->isInArea(areas[l][j]) && preys[h]->isPreyArea(areas[l][j])) {
               dptr = &predators[g]->getConsumption(areas[l][j], preys[h]->getName());
-              preymeanw = &predators[g]->getNumberPriorToEating(areas[l][j], preys[h]->getName());
+              preymeanw = &predators[g]->getConsumptionPopInfo(areas[l][j], preys[h]->getName());
               for (k = 0; k < dptr->Nrow(); k++)
                 if (predConv[g][k] >= 0)
                   for (i = 0; i < dptr->Ncol(k); i++)

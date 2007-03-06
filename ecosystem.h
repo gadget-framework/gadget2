@@ -177,34 +177,29 @@ public:
    */
   int numOptVariables() const { return keeper->numOptVariables(); };
   /**
-   * \brief This function will run the model
+   * \brief This function will simulate the population in the model
    * \param print is the flag to denote whether the model output should be printed or not
    * \note This function covers a single running of the model, calculating the population structure and also calculating the likelihood score obtained from comparing the modelled population to the data specified in the likelihood components
    */
   void Simulate(int print);
   /**
-   * \brief This function will calculate the population change on a timestep in the model
-   * \note This function covers the migration between areas
-   */
-  void SimulateOneTimestep();
-  /**
    * \brief This function will calculate the predation, and update the population, on an area
-   * \param area is the area to calculate the predation on
-   * \note This function covers the predation of the preys by the predators, and consequent population changes, for a sub-step
+   * \param area is the area to calculate the predation on (default value 0)
+   * \note This function covers the predation of the preys by the predators, and consequent population changes, for a sub-step within a timestep of the model
    */
-  void SimulateOneAreaOneTimeSubstep(int area);
+  void updatePredationOneArea(int area = 0);
   /**
    * \brief This function will update the population numbers on an area
-   * \param area is the area to update the population on
+   * \param area is the area to update the population on (default value 0)
    * \note This function covers the growth, various movements between stocks due to maturity and straying, spawning, and adding new recruits into the model
    */
-  void updatePopulationOneArea(int area);
+  void updatePopulationOneArea(int area = 0);
   /**
    * \brief This function will update the ages of the population on an area
-   * \param area is the area to update the population on
+   * \param area is the area to update the population on (default value 0)
    * \note This function covers the increase in age and the simple 'doesmove' option for movement between stocks
    */
-  void updateAgesOneArea(int area);
+  void updateAgesOneArea(int area = 0);
   /**
    * \brief This function will update the model parameters, run the model and calculate a likelihood score
    * \param x is the DoubleVector containing the updated values for the parameters

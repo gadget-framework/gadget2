@@ -49,7 +49,7 @@ protected:
   /**
    * \brief This is the StockAggregator used to collect information about the relevant stocks for the survey index data
    */
-  StockAggregator* aggregator;
+  SIAggregator* aggregator;
 };
 
 #endif

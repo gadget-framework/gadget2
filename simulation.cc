@@ -5,7 +5,7 @@
 
 extern ErrorHandler handle;
 
-void Ecosystem::SimulateOneAreaOneTimeSubstep(int area) {
+void Ecosystem::updatePredationOneArea(int area) {
   int i;
   // calculate the number of preys and predators in area.
   for (i = 0; i < basevec.Size(); i++)
@@ -62,27 +62,8 @@ void Ecosystem::updateAgesOneArea(int area) {
       basevec[i]->updateAgePart3(area, TimeInfo);
 }
 
-void Ecosystem::SimulateOneTimestep() {
-  int i, j;
-
-  // migration between areas
-  for (j = 0; j < basevec.Size(); j++)
-    basevec[j]->Migrate(TimeInfo);
-
-  // predation can be split into substeps
-  for (i = 0; i < TimeInfo->numSubSteps(); i++) {
-    for (j = 0; j < Area->numAreas(); j++)
-      this->SimulateOneAreaOneTimeSubstep(j);
-    TimeInfo->IncrementSubstep();
-  }
-
-  // maturation, spawning, recruits etc
-  for (j = 0; j < Area->numAreas(); j++)
-    this->updatePopulationOneArea(j);
-}
-
 void Ecosystem::Simulate(int print) {
-  int i, j;
+  int i, j, k;
 
   handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
   for (j = 0; j < likevec.Size(); j++)
@@ -105,7 +86,22 @@ void Ecosystem::Simulate(int print) {
       for (j = 0; j < printvec.Size(); j++)
         printvec[j]->Print(TimeInfo, 1);  //start of timestep, so printtime is 1
 
-    this->SimulateOneTimestep();
+    // migration between areas
+    if (Area->numAreas() > 1)    //no migration if there is only one area
+      for (j = 0; j < basevec.Size(); j++)
+        basevec[j]->Migrate(TimeInfo);
+
+    // predation can be split into substeps
+    for (k = 0; k < TimeInfo->numSubSteps(); k++) {
+      for (j = 0; j < Area->numAreas(); j++)
+        this->updatePredationOneArea(j);
+      TimeInfo->IncrementSubstep();
+    }
+
+    // maturation, spawning, recruits etc
+    for (j = 0; j < Area->numAreas(); j++)
+      this->updatePopulationOneArea(j);
+
     for (j = 0; j < likevec.Size(); j++)
       likevec[j]->addLikelihood(TimeInfo);
 
