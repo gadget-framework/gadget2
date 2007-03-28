@@ -11,6 +11,8 @@
  * \brief This is the class used to calculate a likelihood score by fitting a linear regression line to calculated and modelled survey indices
  *
  * This class calculates a likelihood score by fitting a linear regression line to the difference between survey indices calculated within the model and survey indices calculated directly from standardized survey data.  This is used to compare the relative abundance levels of the stock.  The model will calculate an index for the population, and then fit a linear regression line between these calculated indices and those input from data files.  The precise format of the linear regression line depends on a number of options specified by the user.
+ *
+ * \note This likelihood component is based on the \b current population, where as most likelihood components are based on the population at the beginning of the timestep.  It would be better if this likelihood component was changed to be based on the population at the beginning of the timestep.
  */
 class SurveyIndices : public Likelihood {
 public:

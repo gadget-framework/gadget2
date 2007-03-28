@@ -16,6 +16,7 @@
  * This class calculates a likelihood score based on the difference between survey data sampled from stocks caught according to the model and that caught by government surveys.  The model will calculate the survey data for the stock that is caught according to the model parameters, and aggregate this into the specified age and length groups.  This survey data is then compared to the corresponding data calculated from the observed data.
  *
  * \note This likelihood component assumes that catch-at-age data is available, and is used in the survey index calculations
+ * \note This likelihood component is based on the \b current population, where as most likelihood components are based on the population at the beginning of the timestep.  It would be better if this likelihood component was changed to be based on the population at the beginning of the timestep.
  */
 class SurveyDistribution : public Likelihood {
 public:

@@ -66,7 +66,7 @@ void SIByAgeOnStep::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
       handle.logMessage(LOGWARN, "Warning in surveyindex - maximum age greater than stock age");
   }
 
-  aggregator = new SIAggregator(Stocks, LgrpDiv, Areas, Ages);
+  aggregator = new StockAggregator(Stocks, LgrpDiv, Areas, Ages);
 }
 
 void SIByAgeOnStep::Sum(const TimeClass* const TimeInfo) {
