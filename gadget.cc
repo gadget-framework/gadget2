@@ -40,6 +40,7 @@ int main(int aNumber, char* const aVector[]) {
     inputdir = workingdir;
   if (chdir(inputdir) != 0)
     handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
+  chdir(workingdir);  //JMB change back to where we were ...
 
   main.read(aNumber, aVector);
   main.checkUsage(inputdir, workingdir);
@@ -71,7 +72,10 @@ int main(int aNumber, char* const aVector[]) {
 #endif
 
     } else if (main.getInitialParamGiven()) {
+      chdir(inputdir);  //JMB need to change back to inputdir to read the file
       data = new StochasticData(main.getInitialParamFile());
+      chdir(workingdir);
+
       EcoSystem->Update(data);
       EcoSystem->checkBounds();
 
@@ -110,8 +114,12 @@ int main(int aNumber, char* const aVector[]) {
   } else if (main.runOptimise()) {
     if (EcoSystem->numVariables() == 0)
       handle.logMessage(LOGFAIL, "Error - no parameters can be optimised");
+
     if (main.getInitialParamGiven()) {
+      chdir(inputdir);  //JMB need to change back to inputdir to read the file
       data = new StochasticData(main.getInitialParamFile());
+      chdir(workingdir);
+
       EcoSystem->Update(data);
       EcoSystem->checkBounds();
       delete data;
