@@ -101,9 +101,20 @@ Prey::~Prey() {
 }
 
 void Prey::setCI(const LengthGroupDivision* const GivenLDiv) {
+  if (!checkLengthGroupStructure(LgrpDiv, GivenLDiv))
+    handle.logMessage(LOGFAIL, "Error in prey - invalid length group structure for consumption of", this->getName());
+  if (GivenLDiv->minLength() < LgrpDiv->minLength())
+    handle.logMessage(LOGFAIL, "Error in prey - invalid minimum length group for consumption of", this->getName());
+  if (!isSmall(LgrpDiv->minLength() - GivenLDiv->minLength()))
+    handle.logMessage(LOGWARN, "Warning in prey - minimum lengths don't match for consumption of", this->getName());
+  if (GivenLDiv->maxLength() > LgrpDiv->maxLength())
+    handle.logMessage(LOGFAIL, "Error in prey - invalid maximum length group for consumption of", this->getName());
+  if (!isSmall(LgrpDiv->maxLength() - GivenLDiv->maxLength()))
+    handle.logMessage(LOGWARN, "Warning in prey - maximum lengths don't match for consumption of", this->getName());
+
   CI = new ConversionIndex(GivenLDiv, LgrpDiv);
   if (CI->Error())
-    handle.logMessage(LOGFAIL, "Error in prey - error when checking length structure");
+    handle.logMessage(LOGFAIL, "Error in prey - error when checking length structure for", this->getName());
 }
 
 void Prey::Print(ofstream& outfile) const {
@@ -199,14 +210,9 @@ void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
 }
 
 void Prey::Reset() {
-  int i, area;
-  for (area = 0; area < areas.Size(); area++) {
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-      consumption[area][i] = 0.0;
-      overconsumption[area][i] = 0.0;
-      useratio[area][i] = 0.0;
-    }
-  }
+  consumption.setToZero();
+  overconsumption.setToZero();
+  useratio.setToZero();
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset consumption data for prey", this->getName());
 }

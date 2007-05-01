@@ -50,13 +50,11 @@ PredatorPreyAggregator::~PredatorPreyAggregator() {
 }
 
 void PredatorPreyAggregator::Reset() {
-  int i, j, k;
+  int i;
   for (i = 0; i < mortality.Size(); i++) {
     total[i].setToZero();
     consume[i].setToZero();
-    for (j = 0; j < mortality[i]->Nrow(); j++)
-      for (k = 0; k < mortality[i]->Ncol(j); k++)
-        (*mortality[i])[j][k] = 0.0;
+    (*mortality[i]).setToZero();
   }
 }
 

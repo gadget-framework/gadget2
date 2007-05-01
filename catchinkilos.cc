@@ -131,10 +131,7 @@ void CatchInKilos::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   if (isZero(weight))
     handle.logMessage(LOGWARN, "Warning in catchinkilos - zero weight for", this->getName());
-  int i, j;
-  for (i = 0; i < modelDistribution.Nrow(); i++)
-    for (j = 0; j < modelDistribution.Ncol(i); j++)
-      modelDistribution[i][j] = 0.0;
+  modelDistribution.setToZero();
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset catchinkilos component", this->getName());
 }

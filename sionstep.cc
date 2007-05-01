@@ -366,3 +366,9 @@ void SIOnStep::printSummary(ofstream& outfile, const double weight) {
       << setw(largewidth) << likelihoodValues[a] << endl;
   outfile.flush();
 }
+
+void SIOnStep::Reset() {
+  int i;
+  for (i = 0; i < modelIndex.Size(); i++)
+    (*modelIndex[i]).setToZero();
+}

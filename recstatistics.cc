@@ -247,6 +247,8 @@ void RecStatistics::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   for (i = 0; i < timeindex.Size(); i++)
     timeindex[i] = -1;
+  for (i = 0; i < modelMean.Size(); i++)
+    (*modelMean[i]).setToZero();
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset recstatistics component", this->getName());
 }

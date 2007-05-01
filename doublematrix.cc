@@ -118,3 +118,9 @@ void DoubleMatrix::Print(ofstream& outfile) const {
     outfile << endl;
   }
 }
+
+void DoubleMatrix::setToZero() {
+  int i;
+  for (i = 0; i < nrow; i++)
+    (*v[i]).setToZero();
+}

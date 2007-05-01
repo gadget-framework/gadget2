@@ -59,6 +59,10 @@ public:
    */
   virtual void setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stocks) = 0;
   /**
+   * \brief This function will reset the SIOnStep information
+   */
+  virtual void Reset();
+  /**
    * \brief This function will print the SIOnStep information
    * \param outfile is the ofstream that all the model information gets sent to
    */

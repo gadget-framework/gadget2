@@ -172,28 +172,19 @@ void Grower::Reset() {
   int i, j, area;
   double factorialx, tmppart, tmpmax;
 
+  calcLengthGrowth.setToZero();
+  calcWeightGrowth.setToZero();
+  interpLengthGrowth.setToZero();
   for (area = 0; area < areas.Size(); area++) {
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-      calcLengthGrowth[area][i] = 0.0;
-      calcWeightGrowth[area][i] = 0.0;
+    (*lgrowth[area]).setToZero();
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
       numGrow[area][i].setToZero();
-    }
+  }
 
-    for (i = 0; i < lgrowth[area]->Nrow(); i++)
-      for (j = 0; j < lgrowth[area]->Ncol(i); j++)
-        (*lgrowth[area])[i][j] = 0.0;
-
-    for (i = 0; i < interpLengthGrowth.Ncol(area); i++)
-      interpLengthGrowth[area][i] = 0.0;
-
-    if (functionnumber != 8) {
-      for (i = 0; i < wgrowth[area]->Nrow(); i++)
-        for (j = 0; j < wgrowth[area]->Ncol(i); j++)
-          (*wgrowth[area])[i][j] = 0.0;
-
-      for (i = 0; i < interpWeightGrowth.Ncol(area); i++)
-        interpWeightGrowth[area][i] = 0.0;
-    }
+  if (functionnumber != 8) {
+    interpWeightGrowth.setToZero();
+    for (area = 0; area < areas.Size(); area++)
+      (*wgrowth[area]).setToZero();
   }
 
   tmpmax = double(maxlengthgroupgrowth);

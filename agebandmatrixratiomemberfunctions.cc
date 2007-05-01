@@ -221,9 +221,7 @@ void AgeBandMatrixRatioPtrVector::Migrate(const DoubleMatrix& MI, const AgeBandM
     for (age = v[0]->minAge(); age <= v[0]->maxAge(); age++) {
       for (length = v[0]->minLength(age); length < v[0]->maxLength(age); length++) {
         for (tag = 0; tag < numTagExperiments; tag++) {
-          for (j = 0; j < size; j++)
-            tmp[j] = 0.0;
-
+          tmp.setToZero();
           for (j = 0; j < size; j++)
             for (i = 0; i < size; i++)
               tmp[j] += *((*v[i])[age][length][tag].N) * MI[j][i];

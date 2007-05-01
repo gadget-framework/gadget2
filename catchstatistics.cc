@@ -263,6 +263,9 @@ void CatchStatistics::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   if (isZero(weight))
     handle.logMessage(LOGWARN, "Warning in catchstatistics - zero weight for", this->getName());
+  int i;
+  for (i = 0; i < modelMean.Size(); i++)
+    (*modelMean[i]).setToZero();
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset catchstatistics component", this->getName());
 }

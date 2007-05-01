@@ -74,6 +74,10 @@ public:
    */
   void Reset();
   /**
+   * \brief This function will set all of the entries of the vector to zero
+   */
+  void setToZero();
+  /**
    * \brief This function will print the data stored in the vector
    * \param outfile is the ofstream that all the model information gets sent to
    */

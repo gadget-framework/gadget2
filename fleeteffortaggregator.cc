@@ -50,11 +50,9 @@ void FleetEffortAggregator::Print(ofstream& outfile) const {
 }
 
 void FleetEffortAggregator::Reset() {
-  int i, j, k;
+  int i;
   for (i = 0; i < total.Size(); i++)
-    for (j = 0; j < total[i]->Nrow(); j++)
-      for (k = 0; k < total[i]->Ncol(j); k++)
-        (*total[i])[j][k] = 0.0;
+    (*total[i]).setToZero();
 }
 
 void FleetEffortAggregator::Sum() {

@@ -348,6 +348,15 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
   if (isZero(weight))
     handle.logMessage(LOGWARN, "Warning in catchdistribution - zero weight for", this->getName());
 
+  int i, j;
+  for (i = 0; i < modelDistribution.Nrow(); i++)
+    for (j = 0; j < modelDistribution.Ncol(i); j++)
+      (*modelDistribution[i][j]).setToZero();
+  for (i = 0; i < modelYearData.Size(); i++) {
+    (*modelYearData[i]).setToZero();
+    (*obsYearData[i]).setToZero();
+  }
+
   switch (functionnumber) {
     case 2:
     case 3:
@@ -656,12 +665,8 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     if (TimeInfo->getStep() == 1) { //start of a new year
-      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
-          (*modelYearData[area])[age][len] = 0.0;
-          (*obsYearData[area])[age][len] = 0.0;
-        }
-      }
+      (*modelYearData[area]).setToZero();
+      (*obsYearData[area]).setToZero();
     }
 
     //JMB - changed to remove the need to store minrow and mincol stuff ...
@@ -716,12 +721,8 @@ double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     if (TimeInfo->getStep() == 1) { //start of a new year
-      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
-          (*modelYearData[area])[age][len] = 0.0;
-          (*obsYearData[area])[age][len] = 0.0;
-        }
-      }
+      (*modelYearData[area]).setToZero();
+      (*obsYearData[area]).setToZero();
     }
 
     //JMB - changed to remove the need to store minrow and mincol stuff ...
@@ -775,12 +776,8 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
     totalmodel = 0.0;
     totaldata = 0.0;
     if (TimeInfo->getStep() == 1) { //start of a new year
-      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
-          (*modelYearData[area])[age][len] = 0.0;
-          (*obsYearData[area])[age][len] = 0.0;
-        }
-      }
+      (*modelYearData[area]).setToZero();
+      (*obsYearData[area]).setToZero();
     }
 
     //JMB - changed to remove the need to store minrow and mincol stuff ...
@@ -958,9 +955,7 @@ double CatchDistribution::calcLikMVNormal() {
       sumdist = 1.0 / sumdist;
 
     for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-      for (len = 0; len < diff.Size(); len++)
-        diff[len] = 0.0;
-
+      diff.setToZero();
       for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
         diff[len] = ((*obsDistribution[timeindex][area])[age][len] * sumdata)
                     - ((*modelDistribution[timeindex][area])[age][len] * sumdist);
@@ -986,9 +981,6 @@ double CatchDistribution::calcLikMVLogistic() {
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
     for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-      for (len = 0; len < nu.Size(); len++)
-        nu[len] = 0.0;
-
       sumdata = 0.0;
       sumdist = 0.0;
       for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
@@ -1007,6 +999,7 @@ double CatchDistribution::calcLikMVLogistic() {
         sumdist = 1.0 / sumdist;
 
       sumnu = 0.0;
+      nu.setToZero();
       for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
         nu[len] = log(((*obsDistribution[timeindex][area])[age][len] * sumdata) + verysmall)
                   - log(((*modelDistribution[timeindex][area])[age][len] * sumdist) + verysmall);

@@ -294,6 +294,7 @@ void SurveyIndices::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& S
 
 void SurveyIndices::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
+  SI->Reset();
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset surveyindex component", this->getName());
 }

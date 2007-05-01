@@ -87,6 +87,12 @@ void DoubleVector::Reset() {
   }
 }
 
+void DoubleVector::setToZero() {
+  int i;
+  for (i = 0; i < size; i++)
+    v[i] = 0.0;
+}
+
 double DoubleVector::operator * (const DoubleVector& d) const {
   double result = 0.0;
   int i;

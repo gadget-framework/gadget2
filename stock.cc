@@ -100,13 +100,17 @@ Stock::Stock(CommentStream& infile, const char* givenname,
 
   LengthGroupDivision* GrowLgrpDiv = new LengthGroupDivision(grlengths);
   if (GrowLgrpDiv->Error())
-    handle.logMessage(LOGFAIL, "Error in stock - failed to create growth length group");
+    handle.logMessage(LOGFAIL, "Error in stock - failed to create growth length group for", this->getName());
 
   //Check the growth length groups cover the stock length groups
   if (!checkLengthGroupStructure(LgrpDiv, GrowLgrpDiv))
     handle.logMessage(LOGFAIL, "Error in stock - invalid length group structure for growth of", this->getName());
+  if (LgrpDiv->minLength() < GrowLgrpDiv->minLength())
+    handle.logMessage(LOGFAIL, "Error in stock - invalid minimum length group for growth of", this->getName());
   if (!isSmall(LgrpDiv->minLength() - GrowLgrpDiv->minLength()))
     handle.logMessage(LOGWARN, "Warning in stock - minimum lengths don't match for growth of", this->getName());
+  if (LgrpDiv->maxLength() > GrowLgrpDiv->maxLength())
+    handle.logMessage(LOGFAIL, "Error in stock - invalid maximum length group for growth of", this->getName());
   if (!isSmall(LgrpDiv->maxLength() - GrowLgrpDiv->maxLength()))
     handle.logMessage(LOGWARN, "Warning in stock - maximum lengths don't match for growth of", this->getName());
 

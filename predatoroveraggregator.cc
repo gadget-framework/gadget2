@@ -21,10 +21,7 @@ PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
 }
 
 void PredatorOverAggregator::Reset() {
-  int i, j;
-  for (i = 0; i < total.Nrow(); i++)
-    for (j = 0; j < total.Ncol(i); j++)
-      total[i][j] = 0.0;
+  total.setToZero();
 }
 
 void PredatorOverAggregator::Sum() {

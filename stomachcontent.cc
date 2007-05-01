@@ -238,6 +238,10 @@ void SC::Reset() {
       digestion[i][j] = digestioncoeff[i][0] + digestioncoeff[i][1] *
                           pow(preyLgrpDiv[i]->meanLength(j), digestioncoeff[i][2]);
 
+  for (i = 0; i < modelConsumption.Nrow(); i++)
+    for (j = 0; j < modelConsumption.Ncol(i); j++)
+      (*modelConsumption[i][j]).setToZero();
+
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset stomachcontent component", this->getName());
 }

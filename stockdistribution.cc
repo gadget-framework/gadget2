@@ -285,6 +285,11 @@ void StockDistribution::Reset(const Keeper* const keeper) {
   Likelihood::Reset(keeper);
   if (isZero(weight))
     handle.logMessage(LOGWARN, "Warning in stockdistribution - zero weight for", this->getName());
+  int i, j;
+  for (i = 0; i < modelDistribution.Nrow(); i++)
+    for (j = 0; j < modelDistribution.Ncol(i); j++)
+      (*modelDistribution[i][j]).setToZero();
+
   switch (functionnumber) {
     case 1:
       MN.setValue(epsilon);

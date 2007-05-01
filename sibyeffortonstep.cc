@@ -43,10 +43,8 @@ void SIByEffortOnStep::Sum(const TimeClass* const TimeInfo) {
   aggregator->Sum();
   for (a = 0; a < Areas.Nrow(); a++) {
     dptr = aggregator->getSum()[a];
-    for (i = 0; i < dptr->Nrow(); i++) {
-      (*modelIndex[timeindex])[a][i] = 0.0;
+    for (i = 0; i < dptr->Nrow(); i++)
       for (j = 0; j < dptr->Ncol(i); j++)
         (*modelIndex[timeindex])[a][i] += (*dptr)[i][j];
-    }
   }
 }

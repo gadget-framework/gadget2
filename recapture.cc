@@ -238,6 +238,9 @@ void Recaptures::Reset(const Keeper* const keeper) {
   for (i = 0; i < newDistribution.Nrow(); i++)
     for (j = 0; j < newDistribution.Ncol(i); j++)
       delete newDistribution[i][j];
+  for (i = 0; i < modelDistribution.Nrow(); i++)
+    for (j = 0; j < modelDistribution.Ncol(i); j++)
+      (*modelDistribution[i][j]).setToZero();
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset recaptures component", this->getName());
 }

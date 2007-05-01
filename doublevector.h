@@ -71,6 +71,10 @@ public:
    */
   void Reset();
   /**
+   * \brief This function will set all of the entries of the vector to zero
+   */
+  void setToZero();
+  /**
    * \brief This operator will calculate the dot product of the vector and an existing DoubleVector
    * \param d is the DoubleVector to copy
    * \return the dot product of the two vectors
