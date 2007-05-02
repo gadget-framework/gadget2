@@ -101,7 +101,7 @@ Prey::~Prey() {
 }
 
 void Prey::setCI(const LengthGroupDivision* const GivenLDiv) {
-  if (!checkLengthGroupStructure(LgrpDiv, GivenLDiv))
+  if (!checkLengthGroupStructure(GivenLDiv, LgrpDiv))
     handle.logMessage(LOGFAIL, "Error in prey - invalid length group structure for consumption of", this->getName());
   if (GivenLDiv->minLength() < LgrpDiv->minLength())
     handle.logMessage(LOGFAIL, "Error in prey - invalid minimum length group for consumption of", this->getName());
