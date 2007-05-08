@@ -363,6 +363,8 @@ RenewalData::~RenewalData() {
 }
 
 void RenewalData::setCI(const LengthGroupDivision* const GivenLDiv) {
+  if (!checkLengthGroupStructure(GivenLDiv, LgrpDiv))
+    handle.logMessage(LOGFAIL, "Error in renewal - invalid length group structure");
   //check minimum and maximum lengths
   if (LgrpDiv->minLength() < GivenLDiv->minLength())
     handle.logMessage(LOGWARN, "Warning in renewal - minimum length less than stock length");
@@ -405,7 +407,8 @@ void RenewalData::Reset() {
       age = renewalAge[i];
 
       //JMB check that the length data is valid
-      if (isZero(meanLength[i]) || isZero(sdevLength[i])) {
+      if (isZero(meanLength[i]) || sdevLength[i] < 0.04) {
+        //JMB the limit has been set at 0.04 to keep the exponential calculation sane
         handle.logMessage(LOGWARN, "Warning in renewal - invalid length data");
 
         //JMB set the population to zero
@@ -427,7 +430,12 @@ void RenewalData::Reset() {
           sum += renewalDistribution[i][age][l].N;
         }
 
-        if (!isZero(sum)) {
+        if (isZero(sum)) {
+          handle.logMessage(LOGWARN, "Warning in renewal - calculated zero recruits");
+          for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++)
+            renewalDistribution[i][age][l].setToZero();
+
+        } else {
           sum = 10000.0 / sum;
           for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++) {
             renewalDistribution[i][age][l].N *= sum;
@@ -444,7 +452,8 @@ void RenewalData::Reset() {
       age = renewalAge[i];
 
       //JMB check that the length data is valid
-      if (isZero(meanLength[i]) || isZero(sdevLength[i])) {
+      if (isZero(meanLength[i]) || sdevLength[i] < 0.04) {
+        //JMB the limit has been set at 0.04 to keep the exponential calculation sane
         handle.logMessage(LOGWARN, "Warning in renewal - invalid length data");
 
         //JMB set the population to zero
@@ -466,7 +475,12 @@ void RenewalData::Reset() {
           sum += renewalDistribution[i][age][l].N;
         }
 
-        if (!isZero(sum)) {
+        if (isZero(sum)) {
+          handle.logMessage(LOGWARN, "Warning in renewal - calculated zero recruits");
+          for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++)
+            renewalDistribution[i][age][l].setToZero();
+
+        } else {
           sum = 10000.0 / sum;
           for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++) {
             renewalDistribution[i][age][l].N *= sum;

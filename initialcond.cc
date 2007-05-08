@@ -418,6 +418,8 @@ InitialCond::~InitialCond() {
 }
 
 void InitialCond::setCI(const LengthGroupDivision* const GivenLDiv) {
+  if (!checkLengthGroupStructure(GivenLDiv, LgrpDiv))
+    handle.logMessage(LOGFAIL, "Error in initial conditions - invalid length group structure");
   //check minimum and maximum lengths
   if (LgrpDiv->minLength() < GivenLDiv->minLength())
     handle.logMessage(LOGWARN, "Warning in initial conditions - minimum length less than stock length");
@@ -473,7 +475,8 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       for (age = minage; age <= maxage; age++) {
 
         //JMB check that the length data is valid
-        if (isZero(meanLength[area][age - minage] ) || isZero(sdevLength[area][age - minage])) {
+        if (isZero(meanLength[area][age - minage]) || sdevLength[area][age - minage] < 0.04) {
+          //JMB the limit has been set at 0.04 to keep the exponential calculation sane
           handle.logMessage(LOGWARN, "Warning in initial conditions - invalid length data");
 
           //JMB set the population to zero
@@ -495,7 +498,12 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
             scaler += initialPop[area][age][l].N;
           }
 
-          if (!isZero(scaler)) {
+          if (isZero(scaler)) {
+            handle.logMessage(LOGWARN, "Warning in initial population - calculated zero population");
+            for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++)
+              initialPop[area][age][l].setToZero();
+
+          } else {
             scaler = 10000.0 / scaler;
             for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
               initialPop[area][age][l].N *= scaler;
@@ -518,7 +526,8 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       for (age = minage; age <= maxage; age++) {
 
         //JMB check that the length data is valid
-        if (isZero(meanLength[area][age - minage] ) || isZero(sdevLength[area][age - minage])) {
+        if (isZero(meanLength[area][age - minage]) || sdevLength[area][age - minage] < 0.04) {
+          //JMB the limit has been set at 0.04 to keep the exponential calculation sane
           handle.logMessage(LOGWARN, "Warning in initial conditions - invalid length data");
 
           //JMB set the population to zero
@@ -540,7 +549,12 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
             scaler += initialPop[area][age][l].N;
           }
 
-          if (!isZero(scaler)) {
+          if (isZero(scaler)) {
+            handle.logMessage(LOGWARN, "Warning in initial population - calculated zero population");
+            for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++)
+              initialPop[area][age][l].setToZero();
+
+          } else {
             scaler = 10000.0 / scaler;
             for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++) {
               initialPop[area][age][l].N *= scaler;

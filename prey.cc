@@ -221,7 +221,7 @@ int Prey::isPreyArea(int area) {
   if (this->isInArea(area) == 0)
     return 0;
   if (total[this->areaNum(area)] < 0.0)
-    handle.logMessage(LOGWARN, "Warning in prey - negative amount consumed");
+    handle.logMessage(LOGWARN, "Warning in prey - negative amount consumed for", this->getName());
   if (isZero(total[this->areaNum(area)]))
     return 0;
   return 1;
