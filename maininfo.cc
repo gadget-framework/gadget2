@@ -45,7 +45,7 @@ void MainInfo::showUsage() {
 MainInfo::MainInfo()
   : givenOptInfo(0), givenInitialParam(0), runoptimise(0),
     runstochastic(0), runnetwork(0), runprint(1), forceprint(0),
-    printInitialInfo(0), printFinalInfo(0), printLogLevel(0) {
+    printInitialInfo(0), printFinalInfo(0), printLogLevel(0), maxratio(0.95) {
 
   char tmpname[10];
   strncpy(tmpname, "", 10);
@@ -224,6 +224,13 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
       k++;
       srand(atoi(aVector[k]));
 
+    } else if (strcasecmp(aVector[k], "-maxratio") == 0) {
+      //JMB experimental setting of maximum ratio of stock consumed in one timestep
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      maxratio = atof(aVector[k]);
+
     } else
       this->showCorrectUsage(aVector[k]);
 
@@ -297,6 +304,12 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
     tmpout.clear();
   }
   printinfo.checkPrintInfo(runnetwork);
+
+  //JMB check the value of maxratio
+  if ((maxratio < rathersmall) || (maxratio > 1.0)) {
+    handle.logMessage(LOGWARN, "Warning - value of maxratio outside bounds", maxratio);
+    maxratio = 0.95;
+  }
 
   if ((!runstochastic) && (runnetwork)) {
     handle.logMessage(LOGWARN, "\nWarning - Gadget for the paramin network should be used with -s option\nGadget will now set the -s switch to perform a simulation run");
@@ -391,6 +404,8 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-seed") == 0) {
       infile >> dummy >> ws;
       srand(dummy);
+    } else if (strcasecmp(text, "-maxratio") == 0) {
+      infile >> maxratio >> ws;
     } else if (strcasecmp(text, "-printlikesummary") == 0) {
       handle.logMessage(LOGWARN, "The -printlikesummary switch is no longer supported\nSpecify a likelihoodsummaryprinter class in the model print file instead");
     } else if (strcasecmp(text, "-printlikelihood") == 0) {

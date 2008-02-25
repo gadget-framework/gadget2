@@ -105,7 +105,7 @@ void FleetPreyAggregator::Sum() {
                           DoubleVector usesuit = *suitptr;
                           DoubleVector preyratio = preys[h]->getRatio(areas[r][j]);
                           for (z = 0; z < usesuit.Size(); z++)
-                            if (preyratio[z] > 1.0)
+                            if (preyratio[z] > 1.0)  //JMB shouldn't this be maxratio ??
                               usesuit[z] *= 1.0 / preyratio[z];
 
                           total[r][g].Add((*alptr)[ages[g][k]], *CI[h], usesuit, ratio);

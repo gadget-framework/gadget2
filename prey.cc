@@ -170,9 +170,8 @@ void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
   int inarea = this->areaNum(area);
 
   double timeratio = 1.0;
-  double maxRatio = MaxRatioConsumed;
+  double maxRatio = TimeInfo->getMaxRatioConsumed();
   if (TimeInfo->numSubSteps() != 1) {
-    maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
     timeratio = 1.0 / TimeInfo->getSubStep();
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
       useratio[inarea][i] *= (1.0 - timeratio);
@@ -206,13 +205,17 @@ void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
       consumption[inarea][i] += cons[inarea][i];
     }
   }
-  isoverconsumption[inarea] = over;
+
+  //JMB changed to deal with substeps a little better
+  if (over)
+    isoverconsumption[inarea] = over;
 }
 
 void Prey::Reset() {
   consumption.setToZero();
   overconsumption.setToZero();
   useratio.setToZero();
+  isoverconsumption.setToZero();
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset consumption data for prey", this->getName());
 }

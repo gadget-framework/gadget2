@@ -265,10 +265,7 @@ void StockPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
   int preyl, predl, prey;
   double maxRatio, tmp;
 
-  maxRatio = MaxRatioConsumed;
-  if (TimeInfo->numSubSteps() != 1)
-    maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
-
+  maxRatio = TimeInfo->getMaxRatioConsumed();
   for (predl = 0; predl < numlen; predl++)
     overcons[inarea][predl] = 0.0;
 

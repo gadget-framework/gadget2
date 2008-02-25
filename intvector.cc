@@ -99,3 +99,9 @@ void IntVector::Reset() {
     size = 0;
   }
 }
+
+void IntVector::setToZero() {
+  int i;
+  for (i = 0; i < size; i++)
+    v[i] = 0;
+}

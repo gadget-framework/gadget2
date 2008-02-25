@@ -89,8 +89,9 @@ public:
   /**
    * \brief This is the TimeClass constructor
    * \param infile is the CommentStream to read the time data from
+   * \param maxratio is the maximum ratio of a stock that will be consumed on any given timestep
    */
-  TimeClass(CommentStream& infile);
+  TimeClass(CommentStream& infile, double maxratio);
   /**
    * \brief This is the TimeClass destructor
    */
@@ -193,6 +194,11 @@ public:
    * \return 1 if the length of the timestep has changed, 0 otherwise
    */
   int didStepSizeChange() const;
+  /**
+   * \brief This function will return the maximum ratio of any stock that can be consumed on the current substep
+   * \return maximum ratio of the stock that can be consumed on the current substep
+   */
+  double getMaxRatioConsumed() const;
 protected:
   /**
    * \brief This is the current step of the model simulation
@@ -227,6 +233,11 @@ protected:
    * \note This is stored as 1/length of year to save processing time
    */
   double lengthofyear;
+  /**
+   * \brief This is the maximum ratio of stock that can be consumed in any given timestep
+   * \note This value will enforce a limit on the consumption of a stock which should prevent a stock from collapsing on any given timestep.  If the calculated consumption is over this ratio, then the consumption is limited to this value and the rest is treated as "overconsumption", which will lead to understocking.
+   */
+  double maxratioconsumed;
   /**
    * \brief This is the DoubleVector of timesteps in each year
    */

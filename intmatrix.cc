@@ -113,3 +113,9 @@ void IntMatrix::Print(ofstream& outfile) const {
     outfile << endl;
   }
 }
+
+void IntMatrix::setToZero() {
+  int i;
+  for (i = 0; i < nrow; i++)
+    (*v[i]).setToZero();
+}

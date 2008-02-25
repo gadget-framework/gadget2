@@ -57,7 +57,6 @@ const double rathersmall = 1e-10;
 /* machine accuracy for doubles is apparently 2.2204460492503131e-16 */
 //const double verysmall = 4.4408921e-16;  /* twice machine accuracy */
 const double verysmall = 1e-20;
-const double MaxRatioConsumed = 0.95;
 const char chrComment = ';';
 const char sep = ' ';
 
@@ -167,11 +166,9 @@ To maintain version control of the source files, a CVS repository has been set u
 
 \section compat Code Compatibility
 
-Gadget is a program that has been developed on a Unix computing platform, and is regularly compiled and run on machines running versions of Linux, Solaris and Cygwin (a Unix emulator for Microsoft Windows machines, see http://www.cygwin.com for more information).  By regularly compiling and running Gadget on a variety of computing platforms, it is hoped that the source code is compatible with as many computing platforms as possible.  The list of computing platforms, and C++ compilers, that Gadget is regularly tested on is:
+Gadget is a program that has been developed on a Unix computing platform, and is regularly compiled and run on machines running versions of Linux and Cygwin (a Unix emulator for Microsoft Windows machines, see http://www.cygwin.com for more information).  By regularly compiling and running Gadget on a variety of computing platforms, it is hoped that the source code is compatible with as many computing platforms as possible.  The list of computing platforms, and C++ compilers, that Gadget is regularly tested on is:
 
-  \li Linux (Fedora Core 4), compiled using \c g++ versions 3.2.3, 4.0.2, 4.1.1 and 4.2.0 (20061107 prerelease)
-  \li 64bit Linux (Fedora Core 4), compiled using \c g++ version 4.0.2
-  \li Solaris (SunOS 5.9), compiled using  \c g++ version 3.4.2
-  \li Cygwin (1.5.22-1), compiled using  \c g++ version 3.4.4-3
+  \li Linux (Fedora 8), compiled using \c g++ version 4.1.2
+  \li Cygwin (1.5.25-7), compiled using  \c g++ version 3.4.4-3
 
 */

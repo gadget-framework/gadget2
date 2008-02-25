@@ -204,9 +204,7 @@ void QuotaPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
     return;
 
   double maxRatio, tmp;
-  maxRatio = MaxRatioConsumed;
-  if (TimeInfo->numSubSteps() != 1)
-    maxRatio = pow(MaxRatioConsumed, TimeInfo->numSubSteps());
+  maxRatio = TimeInfo->getMaxRatioConsumed();
 
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (this->getPrey(prey)->isOverConsumption(area)) {

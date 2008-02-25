@@ -140,6 +140,11 @@ public:
    * \return filename
    */
   char* getOptInfoFile() const { return strOptInfoFile; };
+  /**
+   * \brief This function will return the maximum ratio of a stock that can be consumed on any given timestep
+   * \return maxratio
+   */
+  double getMaxRatio() const { return maxratio; };
 private:
   /**
    * \brief This function will read input from a file instead of the command line
@@ -210,6 +215,10 @@ private:
    * \brief This is the value used to decide on the level of warnings displayed during the model run
    */
   int printLogLevel;
+  /**
+   * \brief This is the maximum ratio of a stock that can be consumed on any given timestep
+   */
+  double maxratio;
 };
 
 #endif

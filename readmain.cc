@@ -339,7 +339,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main) {
   subfile.open(filename, ios::in);
   handle.checkIfFailure(subfile, filename);
   handle.Open(filename);
-  TimeInfo = new TimeClass(subcomment);
+  TimeInfo = new TimeClass(subcomment, main.getMaxRatio());
   handle.Close();
   subfile.close();
   subfile.clear();

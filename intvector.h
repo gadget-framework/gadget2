@@ -65,6 +65,10 @@ public:
    */
   void Reset();
   /**
+   * \brief This function will set all of the entries of the vector to zero
+   */
+  void setToZero();
+  /**
    * \brief This operator will set the vector equal to an existing IntVector
    * \param iv is the IntVector to copy
    */

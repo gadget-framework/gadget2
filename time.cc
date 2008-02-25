@@ -6,12 +6,13 @@
 
 extern ErrorHandler handle;
 
-TimeClass::TimeClass(CommentStream& infile) {
+TimeClass::TimeClass(CommentStream& infile, double maxratio) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i;
 
+  maxratioconsumed = maxratio;
   readWordAndVariable(infile, "firstyear", firstyear);
   readWordAndVariable(infile, "firststep", firststep);
   readWordAndVariable(infile, "lastyear", lastyear);
@@ -96,4 +97,10 @@ void TimeClass::Reset() {
   currentsubstep = 1;
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "\nReset time in the simulation to timestep", this->getTime());
+}
+
+double TimeClass::getMaxRatioConsumed() const {
+  if (numsubsteps[currentstep - 1] == 1)
+    return maxratioconsumed;
+  return pow(maxratioconsumed, numsubsteps[currentstep - 1]);
 }
