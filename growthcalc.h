@@ -373,7 +373,7 @@ protected:
 
 /**
  * \class GrowthCalcF
- * \brief This is the class used to calculate the growth of a stock using using a length based Von Bertalanffy growth function
+ * \brief This is the class used to calculate the growth of a stock using a length based Von Bertalanffy growth function
  */
 class GrowthCalcF : public GrowthCalcBase {
 public:

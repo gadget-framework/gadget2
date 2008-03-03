@@ -166,9 +166,9 @@ To maintain version control of the source files, a CVS repository has been set u
 
 \section compat Code Compatibility
 
-Gadget is a program that has been developed on a Unix computing platform, and is regularly compiled and run on machines running versions of Linux and Cygwin (a Unix emulator for Microsoft Windows machines, see http://www.cygwin.com for more information).  By regularly compiling and running Gadget on a variety of computing platforms, it is hoped that the source code is compatible with as many computing platforms as possible.  The list of computing platforms, and C++ compilers, that Gadget is regularly tested on is:
+Gadget is a program that has been developed on a Unix computing platform, and is regularly compiled and run on machines running versions of Linux, Solaris and Cygwin (a Unix emulator for Microsoft Windows machines, see http://www.cygwin.com for more information).  By regularly compiling and running Gadget on a variety of computing platforms, it is hoped that the source code is compatible with as many computing platforms as possible.  The list of computing platforms, and C++ compilers, that Gadget is regularly tested on is:
 
-  \li Linux (Fedora 8), compiled using \c g++ version 4.1.2
+  \li Linux (Fedora 8), compiled using \c g++ versions 4.1.2
   \li Cygwin (1.5.25-7), compiled using  \c g++ version 3.4.4-3
 
 */

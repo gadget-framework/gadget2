@@ -40,7 +40,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
     allpredators = 0;
     int i = 0;
     infile >> text >> ws;
-    while (!infile.eof() && (strcasecmp(text, "[component]") != 0) && (strcasecmp(text, "yearsandsteps") !=0)) {
+    while (!infile.eof() && (strcasecmp(text, "[component]") != 0) && (strcasecmp(text, "yearsandsteps") != 0)) {
       prednames.resize(new char[strlen(text) + 1]);
       strcpy(prednames[i++], text);
       infile >> text >> ws;

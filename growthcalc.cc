@@ -730,7 +730,7 @@ void GrowthCalcI::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
 
   growthPar.Update(TimeInfo);
   //JMB - first some error checking
-  if (handle.getLogLevel() >= LOGWARN) {
+  if ((handle.getLogLevel() >= LOGWARN) && (growthPar.didChange(TimeInfo))) {
     if (isZero(growthPar[0]) || isZero(growthPar[1]))
       handle.logMessage(LOGWARN, "Warning in growth calculation - weight growth parameter is zero");
     if (isZero(growthPar[4]) || isZero(growthPar[5]))
