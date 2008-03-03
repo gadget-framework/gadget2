@@ -85,21 +85,21 @@ const double PopPredator::getConsumptionBiomass(int prey, int area) const{
 void PopPredator::Reset(const TimeClass* const TimeInfo) {
   Predator::Reset(TimeInfo);
 
-  int i, j, area, prey;
+  int i, area;
   if (TimeInfo->getSubStep() == 1) {
     for (area = 0; area < areas.Size(); area++) {
-      hasoverconsumption[area] = 0;
-      for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
+      totalconsumption[area].setToZero();
+      (*predratio[area]).setToZero();
+      for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
         prednumber[area][i].setToZero();
-        overconsumption[area][i] = 0.0;
-        totalconsumption[area][i] = 0.0;
-        for (prey = 0; prey < this->numPreys(); prey++)
-          for (j = 0; j < (*consumption[area][prey]).Ncol(i); j++)
-            (*consumption[area][prey])[i][j] = 0.0;
+      for (i = 0; i < this->numPreys(); i++)
+        (*consumption[area][i]).setToZero();
+
+      if (hasoverconsumption[area]) {
+        //JMB only reset these if they are needed ...
+        hasoverconsumption[area] = 0;
+        overconsumption[area].setToZero();
       }
-      for (prey = 0; prey < this->numPreys(); prey++)
-        for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
-          (*predratio[area])[prey][i] = 0.0;
     }
   }
 
