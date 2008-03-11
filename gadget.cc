@@ -17,7 +17,7 @@ int main(int aNumber, char* const aVector[]) {
   int check = 0;
 
   //Initialise random number generator with system time [MNAA 02.02.26]
-  srand(time(NULL));
+  srand((int)time(NULL));
 
   //Test to see if the function double lgamma(double) is returning an integer.
   //lgamma is a non-ansi function and on some platforms when compiled with the

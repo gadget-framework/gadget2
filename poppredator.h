@@ -95,7 +95,7 @@ public:
    * \param area is the area that the consumption is being calculated on
    * \return amount consumed by the predator of the prey
    */
-  virtual const double getConsumptionBiomass(int prey, int area) const;
+  virtual double getConsumptionBiomass(int prey, int area) const;
   /**
    * \brief This will return the ratio used to split the predation between the areas and length groups
    * \param area is the area that the consumption is being calculated on

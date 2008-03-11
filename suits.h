@@ -51,6 +51,13 @@ public:
    */
   int numPreys() const { return preynames.Size(); };
   /**
+   * \brief This function will check to see if the suitability parameters for a given prey have changed on the current timestep
+   * \param i is the index of the prey
+   * \param TimeInfo is the TimeClass for the current model
+   * \return 1 if the values have changed, 0 otherwise
+   */
+  int didChange(int i, const TimeClass* const TimeInfo) { return suitFunction[i]->didChange(TimeInfo); };
+  /**
    * \brief This function will return the calculated suitability values for a given prey
    * \param i is the index of the prey
    * \return preCalcSuitability[i], the DoubleMatrix containing the suitability values

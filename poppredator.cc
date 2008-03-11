@@ -68,7 +68,7 @@ const DoubleMatrix& PopPredator::getConsumption(int area, const char* preyname) 
   exit(EXIT_FAILURE);
 }
 
-const double PopPredator::getConsumptionBiomass(int prey, int area) const{
+double PopPredator::getConsumptionBiomass(int prey, int area) const {
   int inarea = this->areaNum(area);
   if (inarea == -1)
     return 0.0;
@@ -96,7 +96,6 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
         (*consumption[area][i]).setToZero();
 
       if (hasoverconsumption[area]) {
-        //JMB only reset these if they are needed ...
         hasoverconsumption[area] = 0;
         overconsumption[area].setToZero();
       }

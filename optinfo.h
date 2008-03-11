@@ -44,7 +44,7 @@ public:
    * \brief This will return the type of optimisation class
    * \return type
    */
-  const OptType getType() const { return type; };
+  OptType getType() const { return type; };
 protected:
   /**
    * \brief This is the flag used to denote whether the optimisation converged or not

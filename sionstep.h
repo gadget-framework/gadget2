@@ -88,12 +88,12 @@ public:
    * \brief This will return the fit type for the regression line
    * \return fittype
    */
-  const FitType getType() const { return fittype; };
+  FitType getType() const { return fittype; };
   /**
    * \brief This will return the type of survey index data to be used
    * \return sitype
    */
-  const SIType getSIType() const { return sitype; };
+  SIType getSIType() const { return sitype; };
 protected:
   /**
    * \brief This is the IntMatrix used to store information about the areas that the survey index should be calculated on

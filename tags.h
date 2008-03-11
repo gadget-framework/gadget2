@@ -22,7 +22,7 @@ public:
   void Update(int timeid);
   void updateTags(int year, int step);
   void deleteStockTags();
-  const int getEndYear() const { return endyear; };
+  int getEndYear() const { return endyear; };
   int getNumTagTimeSteps() const { return numtagtimesteps; };
   CharPtrVector getStockNames() { return stocknames; };
   void setStock(StockPtrVector& Stocks);

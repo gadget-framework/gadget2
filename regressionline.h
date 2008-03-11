@@ -74,7 +74,7 @@ public:
    * \brief This function will return the fit type for the regression line
    * \return fittype
    */
-  const LineType getType() const { return linetype; };
+  LineType getType() const { return linetype; };
 protected:
   /**
    * \brief This function will calculate the sum of squares of errors for the regession line

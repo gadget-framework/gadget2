@@ -271,7 +271,7 @@ void Stock::deleteTags(const char* tagname) {
     stray->deleteStrayTag(tagname);
 }
 
-const double Stock::getTotalStockNumber(int area) const {
+double Stock::getTotalStockNumber(int area) const {
   int inarea = this->areaNum(area);
   if (inarea == -1)
     return 0.0;
@@ -285,7 +285,7 @@ const double Stock::getTotalStockNumber(int area) const {
   return num;
 }
 
-const double Stock::getTotalStockBiomass(int area) const {
+double Stock::getTotalStockBiomass(int area) const {
   int inarea = this->areaNum(area);
   if (inarea == -1)
     return 0.0;

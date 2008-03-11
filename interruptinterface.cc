@@ -29,7 +29,7 @@ int InterruptInterface::menu() {
   while (1) {
     cout << "> ";
     cout.flush();
-    while (fgets(userinput, MaxStrLength, stdin) == 0);
+    while (fgets(userinput, MaxStrLength, stdin) == 0) {};
     switch (userinput[0]) {
       case 'c':
       case 'C':

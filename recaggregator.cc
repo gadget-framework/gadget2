@@ -83,16 +83,15 @@ void RecAggregator::Sum() {
             if ((preys[h]->isPreyArea(areas[r][j])) && (predators[f]->isInArea(areas[r][j]))) {
               for (i = 0; i < predators[f]->numPreys(); i++) {
                 if (strcasecmp(preys[h]->getName(), predators[f]->getPrey(i)->getName()) == 0) {
+
+                  //JMB removed the overconsumption stuff
                   suitptr = &predators[f]->getSuitability(i)[predl];
                   alptr = &taggingExp->getConsumptionALK(areas[r][j], preys[h]->getName());
                   ratio = predators[f]->getConsumptionRatio(areas[r][j], i, predl);
-                  for (g = 0; g < ages.Nrow(); g++) {
-                    for (k = 0; k < ages.Ncol(g); k++) {
-                      //JMB removed the overconsumption stuff
+                  for (g = 0; g < ages.Nrow(); g++)
+                    for (k = 0; k < ages.Ncol(g); k++)
                       if ((alptr->minAge() <= ages[g][k]) && (ages[g][k] <= alptr->maxAge()))
                         total[r][g].Add((*alptr)[ages[g][k]], *CI[h], *suitptr, ratio);
-                    }
-                  }
                 }
               }
             }

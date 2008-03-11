@@ -87,7 +87,7 @@ public:
    * \brief This will return the type of Formula class
    * \return type
    */
-  const FormulaType getType() const { return type; };
+  FormulaType getType() const { return type; };
 private:
   /**
    * \brief This denotes what type of Formula class has been created

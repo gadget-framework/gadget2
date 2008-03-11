@@ -102,7 +102,7 @@ public:
    * \param area is the area that the consumption is being calculated on
    * \return 0 (will be overridden by the derived classes)
    */
-  virtual const double getConsumptionBiomass(int prey, int area) const = 0;
+  virtual double getConsumptionBiomass(int prey, int area) const = 0;
   /**
    * \brief This will return the ratio used to split the predation between the areas and length groups
    * \param area is the area that the consumption is being calculated on
@@ -145,6 +145,13 @@ public:
    */
   const char* getPreyName(int i) const { return suitable->getPreyName(i); };
   /**
+   * \brief This function will check to see if the suitability parameters for a given prey have changed on the current timestep
+   * \param i is the index of the prey
+   * \param TimeInfo is the TimeClass for the current model
+   * \return 1 if the values have changed, 0 otherwise
+   */
+  int didChange(int i, const TimeClass* const TimeInfo) { return suitable->didChange(i, TimeInfo); };
+  /**
    * \brief This will return the suitability values for a given prey
    * \param i is the index of the prey
    * \return suitability matrix for the prey
@@ -160,7 +167,7 @@ public:
    * \brief This will return the type of predator class
    * \return type
    */
-  const PredatorType getType() const { return type; };
+  PredatorType getType() const { return type; };
 protected:
   /**
    * \brief This function will read the suitability data from the input file
