@@ -32,7 +32,7 @@ void CommentStream::killComments() {
   }
 }
 
-int CommentStream::peek() {
+char CommentStream::peek() {
   if (istrptr->peek() == chrComment) {
     this->killComments();
     return '\n';
@@ -46,7 +46,9 @@ int CommentStream::peek() {
     //attempting to read quote will do nasty things to the input stream
     handle.logFileMessage(LOGFAIL, "quote is an invalid character");
   }
-  return istrptr->peek();
+  //JMB GCC 4.3 has a stricter implemenation of the C++ standard
+  //so we need to cast this to a char to avoid generating warnings
+  return (char)istrptr->peek();
 }
 
 CommentStream& CommentStream::get(char& c) {
@@ -62,13 +64,14 @@ CommentStream& CommentStream::get(char& c) {
   return *this;
 }
 
-CommentStream& CommentStream::getLine(char* text, int length, char delim) {
+CommentStream& CommentStream::getLine(char* text, int length) {
   int i = 0;
-  while ((i < length - 2) && (istrptr->peek() != delim) && (istrptr->peek() != chrComment))
-    text[i++] = istrptr->get();
+  while ((i < length - 2) && (istrptr->peek() != chrComment)
+          && (istrptr->peek() != '\n') && (istrptr->peek() != '\r'))
+    text[i++] = (char)istrptr->get();
 
-  if (istrptr->peek() == delim)
-    text[i++] = istrptr->get();
+  if ((istrptr->peek() == '\n') || (istrptr->peek() == '\r'))
+    text[i++] = (char)istrptr->get();
   text[i] = '\0';
   return *this;
 }

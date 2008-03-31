@@ -78,7 +78,7 @@ public:
    * \brief This function will inspect (but not read) the next character in the input stream
    * \return the next character in the input stream
    */
-  int peek();
+  char peek();
   /**
    * \brief This function will check to see if the input stream has reached the end of file marker
    * \return 1 if the input stream has reached the end of file marker, 0 otherwise
@@ -113,9 +113,8 @@ public:
    * \brief This function will read the next line from the input stream
    * \param text will store the next line in the input stream
    * \param length is the length of the line to be read from the input stream
-   * \param delim is the character denoting the end of the line (default value '\n')
    */
-  CommentStream& getLine(char* text, int length, char delim = '\n');
+  CommentStream& getLine(char* text, int length);
 protected:
   /**
    * \brief This function will remove the comments and whitespace from the input stream

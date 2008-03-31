@@ -63,7 +63,7 @@ int countColumns(CommentStream& infile) {
     // with the new formula syntax a column can contain whitespace,
     // so this code was changed to keep track of opening and closing
     // parens when counting columns. [mnaa]
-    c = istr.peek();
+    c = (char)istr.peek(); //JMB keep GCC 4.3 happy
     if (c == '(') {
       istr.get(c);
       p++;
