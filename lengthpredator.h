@@ -35,7 +35,7 @@ public:
   double getMultScaler() const { return multi; };
   /**
    * \brief This function will reset the predation information
-   * \param TimeInfo is the KeeTimeClasser for the current model
+   * \param TimeInfo is the TimeClass for the current model
    */
   virtual void Reset(const TimeClass* const TimeInfo);
 protected:

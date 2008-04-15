@@ -95,26 +95,20 @@ void FleetPreyAggregator::Sum() {
             if ((preys[h]->isPreyArea(areas[r][j])) && (predators[f]->isInArea(areas[r][j]))) {
               for (i = 0; i < predators[f]->numPreys(); i++) {
                 if (strcasecmp(preys[h]->getName(), predators[f]->getPrey(i)->getName()) == 0) {
-                  suitptr = &predators[f]->getSuitability(i)[predl];
+
+                  //JMB cleaned up the overconsumption stuff
+                  if (overconsumption)
+                    suitptr = &((PopPredator*)predators[f])->getUseSuitability(areas[r][j], i)[predl];
+                  else
+                    suitptr = &predators[f]->getSuitability(i)[predl];
+
                   alptr = &((StockPrey*)preys[h])->getConsumptionALK(areas[r][j]);
                   ratio = predators[f]->getConsumptionRatio(areas[r][j], i, predl);
-                  for (g = 0; g < ages.Nrow(); g++) {
-                    for (k = 0; k < ages.Ncol(g); k++) {
-                      if ((alptr->minAge() <= ages[g][k]) && (ages[g][k] <= alptr->maxAge())) {
-                        if (overconsumption) {
-                          DoubleVector usesuit = *suitptr;
-                          DoubleVector preyratio = preys[h]->getRatio(areas[r][j]);
-                          for (z = 0; z < usesuit.Size(); z++)
-                            if (preyratio[z] > 1.0)  //JMB shouldn't this be maxratio ??
-                              usesuit[z] *= 1.0 / preyratio[z];
+                  for (g = 0; g < ages.Nrow(); g++)
+                    for (k = 0; k < ages.Ncol(g); k++)
+                      if ((alptr->minAge() <= ages[g][k]) && (ages[g][k] <= alptr->maxAge()))
+                        total[r][g].Add((*alptr)[ages[g][k]], *CI[h], *suitptr, ratio);
 
-                          total[r][g].Add((*alptr)[ages[g][k]], *CI[h], usesuit, ratio);
-                        } else {
-                          total[r][g].Add((*alptr)[ages[g][k]], *CI[h], *suitptr, ratio);
-                        }
-                      }
-                    }
-                  }
                 }
               }
             }

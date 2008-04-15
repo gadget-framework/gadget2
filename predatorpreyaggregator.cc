@@ -76,7 +76,8 @@ void PredatorPreyAggregator::Sum(const TimeClass* const TimeInfo) {
                 if (strcasecmp(preys[g]->getName(), predators[f]->getPrey(k)->getName()) == 0) {
                   alptr = &((StockPrey*)preys[g])->getConsumptionALK(areas[i][j]);
                   for (h = 0; h < predators[f]->getLengthGroupDiv()->numLengthGroups(); h++) {
-                    suitptr = &predators[f]->getSuitability(k)[h];
+                    //suitptr = &predators[f]->getSuitability(k)[h];
+                    suitptr = &((PopPredator*)predators[f])->getUseSuitability(areas[i][j], k)[h];
                     ratio = predators[f]->getConsumptionRatio(areas[i][j], k, h);
                     for (l = 0; l < ages.Nrow(); l++)
                       for (m = 0; m < ages.Ncol(l); m++)

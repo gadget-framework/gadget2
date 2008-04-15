@@ -90,6 +90,7 @@ void NumberPredator::adjustConsumption(int area, const TimeClass* const TimeInfo
             tmp = maxRatio / ratio[preyl];
             overcons[inarea][predl] += (1.0 - tmp) * (*cons[inarea][prey])[predl][preyl];
             (*cons[inarea][prey])[predl][preyl] *= tmp;
+            (*usesuit[inarea][prey])[predl][preyl] *= tmp;
           }
         }
       }

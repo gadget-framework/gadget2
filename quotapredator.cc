@@ -17,12 +17,11 @@ QuotaPredator::QuotaPredator(CommentStream& infile, const char* givenname,
   //first read in the suitability parameters
   this->readSuitability(infile, TimeInfo, keeper);
 
-  int i;
+  int i, j;
   double tmp;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
-  quota = 0.0;
   functionnumber = 0;
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
@@ -33,10 +32,14 @@ QuotaPredator::QuotaPredator(CommentStream& infile, const char* givenname,
     functionnumber = 1;
   else if (strcasecmp(functionname, "simplesum") == 0)
     functionnumber = 2;
-  else if (strcasecmp(functionname, "annual") == 0)
+  else if (strcasecmp(functionname, "simpleselect") == 0)
     functionnumber = 3;
-  else if (strcasecmp(functionname, "annualsum") == 0)
+  else if (strcasecmp(functionname, "annual") == 0)
     functionnumber = 4;
+  else if (strcasecmp(functionname, "annualsum") == 0)
+    functionnumber = 5;
+  else if (strcasecmp(functionname, "annualselect") == 0)
+    functionnumber = 6;
   else
     handle.logFileMessage(LOGFAIL, "\nError in quotapredator - unrecognised function", functionname);
 
@@ -74,7 +77,52 @@ QuotaPredator::QuotaPredator(CommentStream& infile, const char* givenname,
   quotalevel.Inform(keeper);
   keeper->clearLast();
 
+  calcquota.resize(preference.Size(), 0.0);
+  selectprey.resize(preference.Size(), 0);  //default to not using the prey
+
+  //if we need to select the stocks used to calculate the fishing quota
   infile >> text >> ws;
+  if ((functionnumber == 3) || (functionnumber == 6)) {
+    if (strcasecmp(text, "selectstocks") != 0)
+      handle.logFileUnexpected(LOGFAIL, "selectstocks", text);
+
+    i = 0;
+    CharPtrVector preynames;
+    infile >> text >> ws;
+    while (!infile.eof() && (strcasecmp(text, "amount") != 0)) {
+      preynames.resize(new char[strlen(text) + 1]);
+      strcpy(preynames[i++], text);
+      infile >> text >> ws;
+    }
+
+    if (preynames.Size() == 0)
+      handle.logFileMessage(LOGFAIL, "no stocks selected to calculate quota");
+
+    //check that the prey names are unique
+    for (i = 0; i < preynames.Size(); i++)
+      for (j = 0; j < preynames.Size(); j++)
+        if ((strcasecmp(preynames[i], preynames[j]) == 0) && (i != j))
+          handle.logFileMessage(LOGFAIL, "repeated stock", preynames[i]);
+
+    //work out which preys are needed to calculate the fishing quota
+    int check = 0;
+    for (i = 0; i < preynames.Size(); i++) {
+      check = 0;
+      for (j = 0; j < preference.Size(); j++) {
+        if (strcasecmp(preynames[i], this->getPreyName(j)) == 0) {
+          selectprey[j] = 1;
+          check = 1;
+        }
+      }
+      if (check == 0)
+        handle.logFileMessage(LOGFAIL, "failed to match stock", preynames[i]);
+    }
+
+    //finally free the memory since the prey names are no longer needed
+    for (i = 0; i < preynames.Size(); i++)
+      delete[] preynames[i];
+  }
+
   if (strcasecmp(text, "amount") != 0)
     handle.logFileUnexpected(LOGFAIL, "amount", text);
 
@@ -92,17 +140,21 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   int prey, preyl;
   int predl = 0;  //JMB there is only ever one length group ...
   double tmp, bio;
-  totalcons[inarea][predl] = 0.0;
 
+  totalcons[inarea][predl] = 0.0;
   tmp = prednumber[inarea][predl].N * multi * TimeInfo->getTimeStepSize() / TimeInfo->numSubSteps();
+  if (isZero(tmp)) { //JMB no predation takes place on this timestep
+    for (prey = 0; prey < this->numPreys(); prey++)
+      (*predratio[inarea])[prey][predl] = 0.0;
+    return;
+  }
+
   switch (functionnumber) {
     case 1:
-      //Calculate the fishing level based on the available biomass of the stock
+      //Calculate the fishing level based on the available biomass of each stock
       for (prey = 0; prey < this->numPreys(); prey++) {
         if (this->getPrey(prey)->isPreyArea(area)) {
-          bio = this->getPrey(prey)->getTotalBiomass(area);
-          quota = calcQuota(bio);
-          (*predratio[inarea])[prey][predl] = quota * tmp;
+          (*predratio[inarea])[prey][predl] = tmp * calcQuota(this->getPrey(prey)->getTotalBiomass(area));
           if ((*predratio[inarea])[prey][predl] > 10.0) //JMB arbitrary value here ...
             handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
 
@@ -118,8 +170,7 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
         if (this->getPrey(prey)->isPreyArea(area))
           bio += this->getPrey(prey)->getTotalBiomass(area);
 
-      quota = calcQuota(bio);
-      tmp *= quota;
+      tmp *= calcQuota(bio);
       if (tmp > 10.0) //JMB arbitrary value here ...
         handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
       for (prey = 0; prey < this->numPreys(); prey++) {
@@ -131,14 +182,32 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       break;
 
     case 3:
-      //Calculate the annual fishing level based on the available biomass of the stock
+      //Calculate the fishing level based on the available biomass of the selected stocks
+      bio = 0.0;
+      for (prey = 0; prey < this->numPreys(); prey++)
+        if ((this->getPrey(prey)->isPreyArea(area)) && (selectprey[prey]))
+          bio += this->getPrey(prey)->getTotalBiomass(area);
+
+      tmp *= calcQuota(bio);
+      if (tmp > 10.0) //JMB arbitrary value here ...
+        handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
+      for (prey = 0; prey < this->numPreys(); prey++) {
+        if (this->getPrey(prey)->isPreyArea(area))
+          (*predratio[inarea])[prey][predl] = tmp;
+        else
+          (*predratio[inarea])[prey][predl] = 0.0;
+      }
+      break;
+
+    case 4:
+      //Calculate the annual fishing level based on the available biomass of each stock
       for (prey = 0; prey < this->numPreys(); prey++) {
         if (this->getPrey(prey)->isPreyArea(area)) {
-          if (TimeInfo->getStep() == 1) {
-            bio = this->getPrey(prey)->getTotalBiomass(area);
-            quota = calcQuota(bio);
-          }
-          (*predratio[inarea])[prey][predl] = quota * tmp;
+          if (TimeInfo->getStep() == 1)
+            calcquota[prey] = calcQuota(this->getPrey(prey)->getTotalBiomass(area));
+
+          //JMB this doesnt work if there is more than one stock since the value of quota will have changed
+          (*predratio[inarea])[prey][predl] = calcquota[prey] * tmp;
           if ((*predratio[inarea])[prey][predl] > 10.0) //JMB arbitrary value here ...
             handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
 
@@ -147,7 +216,7 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       }
       break;
 
-    case 4:
+    case 5:
       //Calculate the annual fishing level based on the available biomass of all stocks
       if (TimeInfo->getStep() == 1) {
         bio = 0.0;
@@ -155,10 +224,32 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
           if (this->getPrey(prey)->isPreyArea(area))
             bio += this->getPrey(prey)->getTotalBiomass(area);
 
-        quota = calcQuota(bio);
+        calcquota[0] = calcQuota(bio);  //JMB all quotas are the same
       }
 
-      tmp *= quota;
+      tmp *= calcquota[0];
+      if (tmp > 10.0) //JMB arbitrary value here ...
+        handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
+      for (prey = 0; prey < this->numPreys(); prey++) {
+        if (this->getPrey(prey)->isPreyArea(area))
+          (*predratio[inarea])[prey][predl] = tmp;
+        else
+          (*predratio[inarea])[prey][predl] = 0.0;
+      }
+      break;
+
+    case 6:
+      //Calculate the annual fishing level based on the available biomass of the selected stocks
+      if (TimeInfo->getStep() == 1) {
+        bio = 0.0;
+        for (prey = 0; prey < this->numPreys(); prey++)
+          if ((this->getPrey(prey)->isPreyArea(area)) && (selectprey[prey]))
+            bio += this->getPrey(prey)->getTotalBiomass(area);
+
+        calcquota[0] = calcQuota(bio);  //JMB all quotas are the same
+      }
+
+      tmp *= calcquota[0];
       if (tmp > 10.0) //JMB arbitrary value here ...
         handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
       for (prey = 0; prey < this->numPreys(); prey++) {
@@ -173,9 +264,6 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       handle.logMessage(LOGWARN, "Warning in quotapredator - unrecognised function", functionname);
       break;
   }
-
-  if (isZero(tmp)) //JMB no predation takes place on this timestep
-    return;
 
   for (prey = 0; prey < this->numPreys(); prey++) {
     if (isZero((*predratio[inarea])[prey][predl])) {
@@ -215,6 +303,7 @@ void QuotaPredator::adjustConsumption(int area, const TimeClass* const TimeInfo)
           tmp = maxRatio / ratio[preyl];
           overcons[inarea][predl] += (1.0 - tmp) * (*cons[inarea][prey])[predl][preyl];
           (*cons[inarea][prey])[predl][preyl] *= tmp;
+          (*usesuit[inarea][prey])[predl][preyl] *= tmp;
         }
       }
     }
@@ -254,3 +343,4 @@ double QuotaPredator::calcQuota(double biomass) {
     handle.logMessage(LOGWARN, "Warning in quotapredator - negative quota", quota);
   return quota;
 }
+

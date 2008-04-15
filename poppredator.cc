@@ -29,6 +29,7 @@ PopPredator::~PopPredator() {
     for (j = 0; j < consumption[i].Size(); j++) {
       delete consumption[i][j];
       delete cons[i][j];
+      delete usesuit[i][j];
     }
   }
   for (i = 0; i < predratio.Size(); i++)
@@ -95,6 +96,11 @@ void PopPredator::Reset(const TimeClass* const TimeInfo) {
       for (i = 0; i < this->numPreys(); i++)
         (*consumption[area][i]).setToZero();
 
+      //JMB only reset these if they are needed ...
+      for (i = 0; i < this->numPreys(); i++)
+        if ((hasoverconsumption[area]) || (this->didChange(i, TimeInfo)))
+          (*usesuit[area][i]) = this->getSuitability(i);
+
       if (hasoverconsumption[area]) {
         hasoverconsumption[area] = 0;
         overconsumption[area].setToZero();
@@ -135,11 +141,13 @@ void PopPredator::setPrey(PreyPtrVector& preyvec, Keeper* const keeper) {
   for (i = 0; i < numarea; i++) {
     cons.resize();
     consumption.resize();
+    usesuit.resize();
     predratio.resize(new DoubleMatrix(this->numPreys(), numlen, 0.0));
     for (j = 0; j < this->numPreys(); j++) {
       preylen = this->getPrey(j)->getLengthGroupDiv()->numLengthGroups();
       cons[i].resize(new DoubleMatrix(numlen, preylen, 0.0));
       consumption[i].resize(new DoubleMatrix(numlen, preylen, 0.0));
+      usesuit[i].resize(new DoubleMatrix(numlen, preylen, 0.0));
     }
   }
 

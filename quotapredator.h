@@ -66,9 +66,13 @@ protected:
    */
   FormulaVector quotalevel;
   /**
-   * \brief This is the calculated fishing quota
+   * \brief This is the DoubleVector used to store the calculated fishing quota
    */
-  double quota;
+  DoubleVector calcquota;
+  /**
+   * \brief This is the IntVector used to flag which preys are used to calculate the fishing quota levels
+   */
+  IntVector selectprey;
 };
 
 #endif

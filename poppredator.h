@@ -105,6 +105,13 @@ public:
    */
   virtual double getConsumptionRatio(int area, int prey, int len) const { return (*predratio[this->areaNum(area)])[prey][len]; };
   /**
+   * \brief This will return the suitability used by the predator for a given prey on a given area, adjusted to take any overconsumption into account
+   * \param area is the area that the consumption is being calculated on
+   * \param prey is the index for the prey
+   * \return usesuit, a DoubleMatrix containing the suitability by the predator
+   */
+  const DoubleMatrix& getUseSuitability(int area, int prey) const { return (*usesuit[this->areaNum(area)][prey]); };
+  /**
    * \brief This will select the preys that will be consumed by the predator
    * \param preyvec is the PreyPtrVector of all the available preys
    * \param keeper is the Keeper for the current model
@@ -159,6 +166,11 @@ protected:
    * \note The indices for this object are [area][prey][predator length]
    */
   DoubleMatrixPtrVector predratio;
+  /**
+   * \brief This is the DoubleMatrixPtrMatrix used to store suitability information for the predators on the current timestep, adjusted to take account of any overconsumption
+   * \note The indices for this object are [area][prey][predator length][prey length]
+   */
+  DoubleMatrixPtrMatrix usesuit;
   /**
    * \brief This is the IntVector used to store information on whether any overconsumption has occured on the current timestep
    */
